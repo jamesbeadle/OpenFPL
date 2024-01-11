@@ -6,7 +6,7 @@
   } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { Modal } from "@dfinity/gix-components";
   import { convertPlayerPosition, getFlagComponent } from "$lib/utils/Helpers";
-    import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
+  import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
 
   export let teamPlayers = writable<PlayerDTO[]>([]);
   export let selectedTeam: ClubDTO;
@@ -44,12 +44,14 @@
         secondaryColour={selectedTeam?.secondaryColourHex}
         thirdColour={selectedTeam?.thirdColourHex}
       />
-      <p class="text-center">{selectedTeam?.friendlyName}</p>  
+      <p class="text-center">{selectedTeam?.friendlyName}</p>
     </div>
     <div class="my-2 grid grid-cols-1 sm:grid-cols-2 gap-x-2">
       {#each $teamPlayers.sort((a, b) => convertPlayerPosition(a.position) - convertPlayerPosition(b.position)) as player}
         {@const selected = $selectedPlayers.some((p) => p.id === player.id)}
-        <div class="flex flex-row justify-between items-center p-2 border border-gray-600">
+        <div
+          class="flex flex-row justify-between items-center p-2 border border-gray-600"
+        >
           <div class="form-checkbox w-1/12">
             <label class="inline-flex items-center">
               <input
@@ -87,9 +89,8 @@
           </div>
         </div>
       {/each}
-
     </div>
-  
+
     <div class="items-center py-3 flex space-x-4 flex justify-end">
       <button
         class="default-button fpl-cancel-btn"

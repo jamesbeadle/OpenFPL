@@ -49,8 +49,8 @@
         $systemStore?.calculationSeasonId ?? 1,
         $systemStore?.calculationGameweek ?? 1
       );
-      //await monthlyLeaderboardStore.sync(); //TODO:Add back
-      //await seasonLeaderboardStore.sync(); //TODO:Add back
+      await monthlyLeaderboardStore.sync();
+      await seasonLeaderboardStore.sync();
 
       selectedSeasonId = $systemStore?.calculationSeasonId ?? 1;
       selectedGameweek = $systemStore?.calculationGameweek ?? 1;

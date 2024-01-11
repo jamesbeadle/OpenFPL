@@ -7,7 +7,7 @@
   import { Modal } from "@dfinity/gix-components";
   import LocalSpinner from "$lib/components/local-spinner.svelte";
   import type { PlayerDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  
+
   export let visible: boolean;
   export let cancelModal: () => void;
 
@@ -32,6 +32,7 @@
   onMount(async () => {
     try {
       await playerStore.sync();
+      isLoading = false;
     } catch (error) {
       toastsError({
         msg: { text: "Error fetching fixture information." },
@@ -65,7 +66,7 @@
     cancelModal();
   }
 
-  function resetForm(){
+  function resetForm() {
     selectedClubId = 0;
     selectedPlayerId = 0;
     leavingLeague = false;
@@ -96,12 +97,11 @@
             {/each}
           </select>
         </div>
-        
 
         {#if selectedClubId > 0}
           <div class="flex-col space-y-2">
             <p>Select a player to recall:</p>
-  
+
             <select
               class="p-2 fpl-dropdown my-4 min-w-[100px]"
               bind:value={selectedPlayerId}
@@ -116,7 +116,7 @@
           </div>
         {/if}
 
-        <div class="border-b border-gray-200"></div>
+        <div class="border-b border-gray-200" />
 
         <div class="items-center flex space-x-4">
           <button

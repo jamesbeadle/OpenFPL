@@ -123,7 +123,7 @@ function createFixtureStore() {
     sync,
     getNextFixture,
     updateFixture,
-    getPostponedFixtures
+    getPostponedFixtures,
   };
 }
 

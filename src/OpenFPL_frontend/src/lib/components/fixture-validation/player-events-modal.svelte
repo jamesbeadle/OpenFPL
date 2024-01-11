@@ -28,7 +28,7 @@
   let ownGoalSliderValue = 0;
   let penaltySaveSliderValue = 0;
   let penaltyMissSliderValue = 0;
-  
+
   let isSubmitDisabled: boolean = true;
   $: isSubmitDisabled =
     appearanceStart < 0 ||
@@ -36,93 +36,94 @@
     appearanceEnd < 0 ||
     appearanceEnd > 90;
 
-    function addPlayerEvents() {
+  function addPlayerEvents() {
     let newEvents: PlayerEventData[] = [];
 
     newEvents.push({
       playerId: player.id,
-      eventType: {Appearance: null},
+      eventType: { Appearance: null },
       eventStartMinute: Number(appearanceStart),
       eventEndMinute: Number(appearanceEnd),
       fixtureId: fixtureId,
-      clubId: player.clubId
+      clubId: player.clubId,
     });
 
-    goalMinutes.forEach(minute => {
+    goalMinutes.forEach((minute) => {
       newEvents.push({
         playerId: player.id,
-        eventType: {Goal: null},
+        eventType: { Goal: null },
         eventStartMinute: minute,
         eventEndMinute: minute,
         fixtureId: fixtureId,
-        clubId: player.clubId
+        clubId: player.clubId,
       });
     });
 
-    assistMinutes.forEach(minute => {
+    assistMinutes.forEach((minute) => {
       newEvents.push({
         playerId: player.id,
-        eventType: {GoalAssisted: null},
+        eventType: { GoalAssisted: null },
         eventStartMinute: minute,
         eventEndMinute: minute,
         fixtureId: fixtureId,
-        clubId: player.clubId
+        clubId: player.clubId,
       });
     });
 
-    ownGoalMinutes.forEach(minute => {
+    ownGoalMinutes.forEach((minute) => {
       newEvents.push({
         playerId: player.id,
-        eventType: {OwnGoal: null},
+        eventType: { OwnGoal: null },
         eventStartMinute: minute,
         eventEndMinute: minute,
         fixtureId: fixtureId,
-        clubId: player.clubId
+        clubId: player.clubId,
       });
     });
 
-    penaltySaveMinutes.forEach(minute => {
+    penaltySaveMinutes.forEach((minute) => {
       newEvents.push({
         playerId: player.id,
-        eventType: {PenaltySaved: null},
+        eventType: { PenaltySaved: null },
         eventStartMinute: minute,
         eventEndMinute: minute,
         fixtureId: fixtureId,
-        clubId: player.clubId
+        clubId: player.clubId,
       });
     });
 
-    penaltyMissedMinutes.forEach(minute => {
+    penaltyMissedMinutes.forEach((minute) => {
       newEvents.push({
         playerId: player.id,
-        eventType: {PenaltyMissed: null},
+        eventType: { PenaltyMissed: null },
         eventStartMinute: minute,
         eventEndMinute: minute,
         fixtureId: fixtureId,
-        clubId: player.clubId
+        clubId: player.clubId,
       });
     });
 
     if (selectedCard > 0) {
-      let cardType = selectedCard === 1 ? {YellowCard: null} : {RedCard: null};
+      let cardType =
+        selectedCard === 1 ? { YellowCard: null } : { RedCard: null };
       newEvents.push({
         playerId: player.id,
         eventType: cardType,
         eventStartMinute: 0,
         eventEndMinute: 0,
         fixtureId: fixtureId,
-        clubId: player.clubId
+        clubId: player.clubId,
       });
     }
 
     for (let i = 0; i < keeperSaves; i++) {
       newEvents.push({
         playerId: player.id,
-        eventType: {KeeperSave: null},
-        eventStartMinute: 0, 
+        eventType: { KeeperSave: null },
+        eventStartMinute: 0,
         eventEndMinute: 0,
         fixtureId: fixtureId,
-        clubId: player.clubId
+        clubId: player.clubId,
       });
     }
 
@@ -131,73 +132,68 @@
     closeModal();
   }
 
-  
   function addGoalEvent() {
     goalMinutes = [...goalMinutes, goalSliderValue];
   }
-  
+
   function addAssistEvent() {
     assistMinutes = [...assistMinutes, assistSliderValue];
   }
-  
+
   function addPenaltySaveEvent() {
     penaltySaveMinutes = [...penaltySaveMinutes, penaltySaveSliderValue];
   }
-  
+
   function addPenaltyMissEvent() {
     penaltyMissedMinutes = [...penaltyMissedMinutes, penaltyMissSliderValue];
   }
-  
+
   function addOwnGoalEvent() {
     ownGoalMinutes = [...ownGoalMinutes, ownGoalSliderValue];
   }
 
   function removeGoal(minute: number) {
-    goalMinutes = goalMinutes.filter(m => m !== minute);
+    goalMinutes = goalMinutes.filter((m) => m !== minute);
   }
 
   function removeAssist(minute: number) {
-    assistMinutes = assistMinutes.filter(m => m !== minute);
+    assistMinutes = assistMinutes.filter((m) => m !== minute);
   }
 
   function removePenaltySave(minute: number) {
-    penaltySaveMinutes = penaltySaveMinutes.filter(m => m !== minute);
+    penaltySaveMinutes = penaltySaveMinutes.filter((m) => m !== minute);
   }
 
   function removePenaltyMiss(minute: number) {
-    penaltyMissedMinutes = penaltyMissedMinutes.filter(m => m !== minute);
+    penaltyMissedMinutes = penaltyMissedMinutes.filter((m) => m !== minute);
   }
 
   function removeOwnGoal(minute: number) {
-    ownGoalMinutes = ownGoalMinutes.filter(m => m !== minute);
+    ownGoalMinutes = ownGoalMinutes.filter((m) => m !== minute);
   }
-
 </script>
 
 <Modal {visible} on:nnsClose={closeModal}>
   <div class="mx-4 p-4">
     <div class="flex justify-between items-center my-2">
-      <h3 class="default-header">
-        Add Events
-      </h3>
+      <h3 class="default-header">Add Events</h3>
       <button class="times-button" on:click={closeModal}>&times;</button>
     </div>
 
     <div class="flex justify-start items-center w-full">
       <div class="w-full flex-col space-y-4 mb-2">
-        
         <div class="flex flex-row items-center">
           <svelte:component
-              this={getFlagComponent(player.nationality)}
-              class="w-4 h-4 mr-2 hidden xs:flex"
-            />
+            this={getFlagComponent(player.nationality)}
+            class="w-4 h-4 mr-2 hidden xs:flex"
+          />
           <p>
             {player.firstName !== "" ? player.firstName.charAt(0) + "." : ""}
             {player.lastName}
           </p>
         </div>
 
-        <div class="border-b border-gray-200"></div>
+        <div class="border-b border-gray-200" />
 
         <div class="flex flex-row space-x-1">
           <div class="flex-col space-y-2 w-1/2">
@@ -212,7 +208,7 @@
               max="90"
             />
           </div>
-          
+
           <div class="flex-col space-y-2 w-1/2">
             <p>End Minute</p>
             <input
@@ -226,7 +222,7 @@
             />
           </div>
         </div>
-        
+
         <div class="flex-col space-y-2">
           <p>Select Cards:</p>
           <div class="flex flex-row">
@@ -254,22 +250,31 @@
               bind:group={selectedCard}
             />
             <p class="ml-2">Red Card</p>
-            
           </div>
-          
         </div>
 
         <div class="flex-col space-y-2">
           <p>Add Goals:</p>
           <p class="text-sm">Minute</p>
           <div class="flex flex-row">
-            <input type="range" class="w-11/12" min="0" max="90" bind:value={goalSliderValue}>
-            <button class="fpl-button w-1/12 ml-4 py-1" on:click={addGoalEvent}>+</button>
+            <input
+              type="range"
+              class="w-11/12"
+              min="0"
+              max="90"
+              bind:value={goalSliderValue}
+            />
+            <button class="fpl-button w-1/12 ml-4 py-1" on:click={addGoalEvent}
+              >+</button
+            >
           </div>
           <div class="flex flex-wrap">
             {#each goalMinutes as minute}
-              <div class="event-tag mt-2">{minute} Min
-                <button class="p-1" on:click={() => removeGoal(minute)}>x</button>
+              <div class="event-tag mt-2">
+                {minute} Min
+                <button class="p-1" on:click={() => removeGoal(minute)}
+                  >x</button
+                >
               </div>
             {/each}
           </div>
@@ -279,30 +284,53 @@
           <p>Add Assists:</p>
           <p class="text-sm">Minute</p>
           <div class="flex flex-row">
-            <input type="range" class="w-11/12" min="0" max="90" bind:value={assistSliderValue}>
-            <button class="fpl-button w-1/12 ml-4 py-1" on:click={addAssistEvent}>+</button>
+            <input
+              type="range"
+              class="w-11/12"
+              min="0"
+              max="90"
+              bind:value={assistSliderValue}
+            />
+            <button
+              class="fpl-button w-1/12 ml-4 py-1"
+              on:click={addAssistEvent}>+</button
+            >
           </div>
           <div class="flex flex-wrap">
             {#each assistMinutes as minute}
-              <div class="event-tag mt-2">{minute} Min
-                <button class="p-1" on:click={() => removeAssist(minute)}>x</button>
+              <div class="event-tag mt-2">
+                {minute} Min
+                <button class="p-1" on:click={() => removeAssist(minute)}
+                  >x</button
+                >
               </div>
             {/each}
           </div>
         </div>
 
-        
         <div class="flex-col space-y-2">
           <p>Add Own Goals:</p>
           <p class="text-sm">Minute</p>
           <div class="flex flex-row">
-            <input type="range" class="w-11/12" min="0" max="90" bind:value={ownGoalSliderValue}>
-            <button class="fpl-button w-1/12 ml-4 py-1" on:click={addOwnGoalEvent}>+</button>
+            <input
+              type="range"
+              class="w-11/12"
+              min="0"
+              max="90"
+              bind:value={ownGoalSliderValue}
+            />
+            <button
+              class="fpl-button w-1/12 ml-4 py-1"
+              on:click={addOwnGoalEvent}>+</button
+            >
           </div>
           <div class="flex flex-wrap">
             {#each ownGoalMinutes as minute}
-              <div class="event-tag mt-2">{minute} Min
-                <button class="p-1" on:click={() => removeOwnGoal(minute)}>x</button>
+              <div class="event-tag mt-2">
+                {minute} Min
+                <button class="p-1" on:click={() => removeOwnGoal(minute)}
+                  >x</button
+                >
               </div>
             {/each}
           </div>
@@ -325,13 +353,25 @@
             <p>Penalty Saved:</p>
             <p class="text-sm">Minute</p>
             <div class="flex flex-row">
-              <input type="range" class="w-11/12" min="0" max="90" bind:value={penaltySaveSliderValue}>
-              <button class="fpl-button w-1/12 ml-4 py-1" on:click={addPenaltySaveEvent}>+</button>
+              <input
+                type="range"
+                class="w-11/12"
+                min="0"
+                max="90"
+                bind:value={penaltySaveSliderValue}
+              />
+              <button
+                class="fpl-button w-1/12 ml-4 py-1"
+                on:click={addPenaltySaveEvent}>+</button
+              >
             </div>
             <div class="flex flex-wrap">
               {#each penaltySaveMinutes as minute}
-                <div class="event-tag mt-2">{minute} Min
-                  <button class="p-1" on:click={() => removePenaltySave(minute)}>x</button>
+                <div class="event-tag mt-2">
+                  {minute} Min
+                  <button class="p-1" on:click={() => removePenaltySave(minute)}
+                    >x</button
+                  >
                 </div>
               {/each}
             </div>
@@ -342,13 +382,25 @@
           <p>Penalty Missed:</p>
           <p class="text-sm">Minute</p>
           <div class="flex flex-row">
-            <input type="range" class="w-11/12" min="0" max="90" bind:value={penaltyMissSliderValue}>
-            <button class="fpl-button w-1/12 ml-4 py-1" on:click={addPenaltyMissEvent}>+</button>
+            <input
+              type="range"
+              class="w-11/12"
+              min="0"
+              max="90"
+              bind:value={penaltyMissSliderValue}
+            />
+            <button
+              class="fpl-button w-1/12 ml-4 py-1"
+              on:click={addPenaltyMissEvent}>+</button
+            >
           </div>
           <div class="flex flex-wrap">
             {#each penaltyMissedMinutes as minute}
-              <div class="event-tag mt-2">{minute} Min
-                <button class="p-1" on:click={() => removePenaltyMiss(minute)}>x</button>
+              <div class="event-tag mt-2">
+                {minute} Min
+                <button class="p-1" on:click={() => removePenaltyMiss(minute)}
+                  >x</button
+                >
               </div>
             {/each}
           </div>
@@ -362,11 +414,7 @@
             Done
           </button>
         </div>
-
       </div>
-
     </div>
-
-    
   </div>
 </Modal>

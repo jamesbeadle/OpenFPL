@@ -7,7 +7,7 @@
   import { Modal } from "@dfinity/gix-components";
   import LocalSpinner from "$lib/components/local-spinner.svelte";
   import type { PlayerPosition } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  
+
   export let visible: boolean;
   export let cancelModal: () => void;
 
@@ -36,9 +36,9 @@
     value > 200 ||
     nationalityId == 0;
 
-    $: if (isSubmitDisabled && showConfirm) {
-      showConfirm = false;
-    }
+  $: if (isSubmitDisabled && showConfirm) {
+    showConfirm = false;
+  }
 
   onMount(async () => {
     try {
@@ -76,7 +76,7 @@
     cancelModal();
   }
 
-  function resetForm(){
+  function resetForm() {
     selectedClubId = 0;
     selectedNationalityId = 0;
     selectedPosition = { Goalkeeper: null };
@@ -100,7 +100,7 @@
       <div class="w-full flex-col space-y-4 mb-2">
         <div class="flex-col space-y-2">
           <p>Select Club:</p>
-  
+
           <select
             class="p-2 fpl-dropdown min-w-[100px]"
             bind:value={selectedClubId}
@@ -122,17 +122,17 @@
             <option value={{ Midfielder: null }}>Midfielder</option>
             <option value={{ Forward: null }}>Forward</option>
           </select>
-        </div>  
+        </div>
         <div class="flex-col space-y-2">
           <p class="py-2">First Name:</p>
-  
+
           <input
             type="text"
             class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
             placeholder="First Name"
             bind:value={firstName}
           />
-        </div>  
+        </div>
         <div class="flex-col space-y-2">
           <p class="py-2">Last Name:</p>
 
@@ -142,7 +142,7 @@
             placeholder="First Name"
             bind:value={lastName}
           />
-        </div>  
+        </div>
         <div class="flex-col space-y-2">
           <p class="py-2">Shirt Number:</p>
 
@@ -155,7 +155,7 @@
             step="1"
             bind:value={shirtNumber}
           />
-        </div>  
+        </div>
         <div class="flex-col space-y-2">
           <p class="py-2">Value:</p>
 
@@ -166,7 +166,7 @@
             placeholder="Value"
             bind:value
           />
-        </div>  
+        </div>
         <div class="flex-col space-y-2">
           <p class="py-2">Date of Birth:</p>
 
@@ -175,7 +175,7 @@
             bind:value={dateOfBirth}
             class="input input-bordered"
           />
-        </div>  
+        </div>
         <div class="flex-col space-y-2">
           <p class="py-2">Nationality:</p>
 
@@ -183,13 +183,13 @@
             class="p-2 fpl-dropdown min-w-[100px] mb-2"
             bind:value={selectedNationalityId}
           >
-          {#each $countriesStore as country}
-            <option value={country.id}>{country.name}</option>
-          {/each}
+            {#each $countriesStore as country}
+              <option value={country.id}>{country.name}</option>
+            {/each}
           </select>
-        </div>  
+        </div>
 
-        <div class="border-b border-gray-200"></div>
+        <div class="border-b border-gray-200" />
 
         <div class="items-center flex space-x-4">
           <button

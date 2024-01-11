@@ -75,7 +75,7 @@ function createPlayerStore() {
   }
 
   async function getLoanedPlayers(clubId: number): Promise<PlayerDTO[]> {
-    let loanedPlayers = await actor.getLoanPlayers(clubId);
+    let loanedPlayers = await actor.getLoanedPlayers(clubId);
 
     if (isError(loanedPlayers)) {
       console.error("Error fetching loaned players");

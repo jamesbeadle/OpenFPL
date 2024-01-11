@@ -5,7 +5,7 @@
   import { Modal } from "@dfinity/gix-components";
   import LocalSpinner from "$lib/components/local-spinner.svelte";
   import type { PlayerDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  
+
   export let visible: boolean;
   export let cancelModal: () => void;
 
@@ -42,11 +42,11 @@
     cancelModal();
   }
 
-  function resetForm(){
+  function resetForm() {
     selectedClubId = 0;
     selectedPlayerId = 0;
     showConfirm = false;
-    clubPlayers = []
+    clubPlayers = [];
   }
 </script>
 
@@ -60,7 +60,7 @@
     <div class="flex justify-start items-center w-full">
       <div class="w-full flex-col space-y-4 mb-2">
         <div class="flex-col space-y-2">
-          <p>Select the player's club:</p> 
+          <p>Select the player's club:</p>
           <select
             class="p-2 fpl-dropdown min-w-[100px]"
             bind:value={selectedClubId}
@@ -70,7 +70,7 @@
               <option value={club.id}>{club.friendlyName}</option>
             {/each}
           </select>
-        </div> 
+        </div>
         {#if selectedClubId > 0}
           <div class="flex-col space-y-2">
             <p>Select a player to revalue down by £0.25m:</p>
@@ -87,8 +87,8 @@
             </select>
           </div>
         {/if}
-        
-        <div class="border-b border-gray-200"></div>
+
+        <div class="border-b border-gray-200" />
 
         <div class="items-center flex space-x-4">
           <button

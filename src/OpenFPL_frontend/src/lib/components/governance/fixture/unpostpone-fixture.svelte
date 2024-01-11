@@ -11,7 +11,7 @@
     ClubDTO,
     FixtureDTO,
   } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  
+
   export let visible: boolean;
   export let cancelModal: () => void;
 
@@ -21,18 +21,16 @@
   let date = "";
   let time = "";
   let dateTime = "";
-  
+
   let updatedFixtureGameweek: number;
   let updatedFixtureDate: number;
 
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
-  
+
   $: dateTime = date + "T" + time;
 
   $: isSubmitDisabled =
-    !selectedFixtureId ||
-    selectedFixtureId <= 0 ||
-    updatedFixtureDate == 0;
+    !selectedFixtureId || selectedFixtureId <= 0 || updatedFixtureDate == 0;
 
   let isLoading = true;
   let showConfirm = false;
@@ -80,7 +78,7 @@
     cancelModal();
   }
 
-  function resetForm(){
+  function resetForm() {
     date = "";
     time = "";
     dateTime = "";
@@ -99,7 +97,6 @@
 
     <div class="flex justify-start items-center w-full">
       <div class="w-full flex-col space-y-4 mb-2">
-        
         <div class="flex-col space-y-2">
           <p>Select Fixture:</p>
           <select
@@ -116,12 +113,12 @@
             {/each}
           </select>
         </div>
-        
-        <div class="border-b border-gray-200 my-4"></div>
+
+        <div class="border-b border-gray-200 my-4" />
         <p class="mr-2 my-2">Or set new date:</p>
         <div class="flex flex-row my-2">
           <p class="mr-2">Select Date:</p>
-          <input type="date" bind:value={date} class="input input-bordered" />  
+          <input type="date" bind:value={date} class="input input-bordered" />
         </div>
         <div class="flex flex-row my-2">
           <p class="mr-2">Select Time:</p>
@@ -129,7 +126,7 @@
         </div>
         <div class="flex flex-row my-2 items-center">
           <p class="mr-2">Select Gameweek:</p>
-          
+
           <select
             class="p-2 fpl-dropdown my-4 min-w-[100px]"
             bind:value={updatedFixtureGameweek}
@@ -141,7 +138,7 @@
           </select>
         </div>
 
-        <div class="border-b border-gray-200"></div>
+        <div class="border-b border-gray-200" />
 
         <div class="items-center flex space-x-4">
           <button

@@ -14,10 +14,10 @@
   let transferClubId: number = 0;
   let leavingLeague = false;
   let clubPlayers: PlayerDTO[] = [];
-  
+
   let isLoading = false;
   let showConfirm = false;
-  
+
   $: isSubmitDisabled =
     selectedPlayerId <= 0 || (!leavingLeague && selectedClubId <= 0);
 
@@ -45,12 +45,12 @@
     cancelModal();
   }
 
-  function resetForm(){
+  function resetForm() {
     selectedClubId = 0;
     selectedPlayerId = 0;
     leavingLeague = false;
     showConfirm = false;
-    clubPlayers = []
+    clubPlayers = [];
   }
 </script>
 
@@ -112,7 +112,7 @@
           {/if}
         {/if}
 
-        <div class="border-b border-gray-200"></div>
+        <div class="border-b border-gray-200" />
 
         <div class="items-center flex space-x-4">
           <button

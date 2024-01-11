@@ -3262,7 +3262,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "9zd4pg"
+  version_hash: "1fboic3"
 };
 function get_hooks() {
   return {};
@@ -3825,7 +3825,7 @@ const idlFactory = ({ IDL }) => {
     lastName: IDL.Text,
     firstName: IDL.Text
   });
-  const Result_16 = IDL.Variant({ ok: IDL.Vec(ClubDTO), err: Error2 });
+  const Result_17 = IDL.Variant({ ok: IDL.Vec(ClubDTO), err: Error2 });
   const CountryDTO = IDL.Record({
     id: CountryId,
     code: IDL.Text,
@@ -3837,7 +3837,7 @@ const idlFactory = ({ IDL }) => {
     ok: IDL.Vec(DataCacheDTO),
     err: Error2
   });
-  const Result_17 = IDL.Variant({ ok: IDL.Vec(FixtureDTO), err: Error2 });
+  const Result_9 = IDL.Variant({ ok: IDL.Vec(FixtureDTO), err: Error2 });
   const Result_6 = IDL.Variant({ ok: IDL.Vec(PlayerDTO), err: Error2 });
   const ManagerDTO = IDL.Record({
     username: IDL.Text,
@@ -3856,7 +3856,7 @@ const idlFactory = ({ IDL }) => {
     principalId: IDL.Text,
     seasonPositionText: IDL.Text
   });
-  const Result_15 = IDL.Variant({ ok: ManagerDTO, err: Error2 });
+  const Result_16 = IDL.Variant({ ok: ManagerDTO, err: Error2 });
   const ManagerGameweekDTO = IDL.Record({
     playerIds: IDL.Vec(PlayerId),
     teamValueQuarterMillions: IDL.Nat16,
@@ -3888,7 +3888,7 @@ const idlFactory = ({ IDL }) => {
     points: IDL.Int16,
     monthlyBonusesAvailable: IDL.Nat8
   });
-  const Result_14 = IDL.Variant({ ok: ManagerGameweekDTO, err: Error2 });
+  const Result_15 = IDL.Variant({ ok: ManagerGameweekDTO, err: Error2 });
   const LeaderboardEntry = IDL.Record({
     username: IDL.Text,
     positionText: IDL.Text,
@@ -3903,11 +3903,11 @@ const idlFactory = ({ IDL }) => {
     seasonId: SeasonId,
     entries: IDL.Vec(LeaderboardEntry)
   });
-  const Result_13 = IDL.Variant({
+  const Result_14 = IDL.Variant({
     ok: MonthlyLeaderboardDTO,
     err: Error2
   });
-  const Result_12 = IDL.Variant({
+  const Result_13 = IDL.Variant({
     ok: IDL.Vec(MonthlyLeaderboardDTO),
     err: Error2
   });
@@ -3947,7 +3947,7 @@ const idlFactory = ({ IDL }) => {
     lastName: IDL.Text,
     firstName: IDL.Text
   });
-  const Result_11 = IDL.Variant({ ok: PlayerDetailDTO, err: Error2 });
+  const Result_12 = IDL.Variant({ ok: PlayerDetailDTO, err: Error2 });
   const PlayerPointsDTO = IDL.Record({
     id: IDL.Nat16,
     clubId: ClubId,
@@ -3956,7 +3956,7 @@ const idlFactory = ({ IDL }) => {
     gameweek: GameweekNumber,
     points: IDL.Int16
   });
-  const Result_10 = IDL.Variant({
+  const Result_11 = IDL.Variant({
     ok: IDL.Vec(PlayerPointsDTO),
     err: Error2
   });
@@ -3973,7 +3973,7 @@ const idlFactory = ({ IDL }) => {
     position: PlayerPosition,
     points: IDL.Int16
   });
-  const Result_9 = IDL.Variant({
+  const Result_10 = IDL.Variant({
     ok: IDL.Vec(IDL.Tuple(IDL.Nat16, PlayerScoreDTO)),
     err: Error2
   });
@@ -4099,36 +4099,37 @@ const idlFactory = ({ IDL }) => {
     executeUnretirePlayer: IDL.Func([UnretirePlayerDTO], [], []),
     executeUpdateClub: IDL.Func([UpdateClubDTO], [], []),
     executeUpdatePlayer: IDL.Func([UpdatePlayerDTO], [], []),
-    getClubs: IDL.Func([], [Result_16], ["query"]),
+    getClubs: IDL.Func([], [Result_17], ["query"]),
     getCountries: IDL.Func([], [Result_19], ["query"]),
     getDataHashes: IDL.Func([], [Result_18], ["query"]),
-    getFixtures: IDL.Func([SeasonId], [Result_17], ["query"]),
-    getFormerClubs: IDL.Func([], [Result_16], ["query"]),
+    getFixtures: IDL.Func([SeasonId], [Result_9], ["query"]),
+    getFormerClubs: IDL.Func([], [Result_17], ["query"]),
     getLoanedPlayers: IDL.Func([ClubId], [Result_6], ["query"]),
-    getManager: IDL.Func([], [Result_15], []),
+    getManager: IDL.Func([], [Result_16], []),
     getManagerGameweek: IDL.Func(
       [IDL.Text, SeasonId, GameweekNumber],
-      [Result_14],
+      [Result_15],
       []
     ),
     getMonthlyLeaderboard: IDL.Func(
       [SeasonId, ClubId, CalendarMonth, IDL.Nat, IDL.Nat, IDL.Text],
-      [Result_13],
+      [Result_14],
       []
     ),
     getMonthlyLeaderboards: IDL.Func(
       [SeasonId, CalendarMonth],
-      [Result_12],
+      [Result_13],
       []
     ),
-    getPlayerDetails: IDL.Func([PlayerId, SeasonId], [Result_11], []),
+    getPlayerDetails: IDL.Func([PlayerId, SeasonId], [Result_12], []),
     getPlayerDetailsForGameweek: IDL.Func(
       [SeasonId, GameweekNumber],
-      [Result_10],
+      [Result_11],
       ["query"]
     ),
     getPlayers: IDL.Func([], [Result_6], ["query"]),
-    getPlayersMap: IDL.Func([SeasonId, GameweekNumber], [Result_9], []),
+    getPlayersMap: IDL.Func([SeasonId, GameweekNumber], [Result_10], []),
+    getPostponedFixtures: IDL.Func([], [Result_9], ["query"]),
     getProfile: IDL.Func([], [Result_8], []),
     getPublicProfile: IDL.Func(
       [IDL.Text, SeasonId, GameweekNumber],
@@ -4557,11 +4558,25 @@ function createFixtureStore() {
       throw error2;
     }
   }
+  async function getPostponedFixtures() {
+    try {
+      let result = await actor.getPostponedFixtures();
+      if (isError(result)) {
+        console.error("Error getting postponed fixtures");
+      }
+      let fixtures = result.ok;
+      return fixtures;
+    } catch (error2) {
+      console.error("Error getting postponed fixtures:", error2);
+      throw error2;
+    }
+  }
   return {
     subscribe: subscribe2,
     sync,
     getNextFixture,
-    updateFixture
+    updateFixture,
+    getPostponedFixtures
   };
 }
 const fixtureStore = createFixtureStore();
@@ -6811,7 +6826,7 @@ const Confirm_fixture_data_modal = create_ssr_component(($$result, $$props, $$bi
     $$bindings.closeModal(closeModal);
   return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
     default: () => {
-      return `<div class="p-4"><div class="flex justify-between items-center my-2"><h4 data-svelte-h="svelte-1yevh2p">Confirm Fixture Data</h4> <button class="text-black" data-svelte-h="svelte-naxdfo">✕</button></div> <div class="my-5" data-svelte-h="svelte-1kpybyt"><h1>Please confirm your fixture data.</h1> <p class="text-gray-600">You will not be able to edit your submission and entries that differ
+      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h4 data-svelte-h="svelte-1yevh2p">Confirm Fixture Data</h4> <button class="text-black" data-svelte-h="svelte-naxdfo">✕</button></div> <div class="my-5" data-svelte-h="svelte-1kpybyt"><h1>Please confirm your fixture data.</h1> <p class="text-gray-600">You will not be able to edit your submission and entries that differ
         from the accepted consensus data will not receive $FPL rewards. If
         consensus has already been reached for the fixture your submission will
         also not be counted.</p></div> <div class="flex justify-end gap-3"><button class="default-button fpl-cancel-btn" type="button" data-svelte-h="svelte-1n52tb1">Cancel</button> <button class="default-button fpl-button" data-svelte-h="svelte-1pog147">Confirm</button></div></div>`;
@@ -6830,7 +6845,7 @@ const Clear_draft_modal = create_ssr_component(($$result, $$props, $$bindings, s
     $$bindings.closeModal(closeModal);
   return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
     default: () => {
-      return `<div class="p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-rcqdii">Clear Draft</h3> <button class="times-button" data-svelte-h="svelte-2aq7vi">×</button></div> <p data-svelte-h="svelte-idipww">Please confirm you want to clear the draft from your cache.</p> <div class="items-center py-3 flex space-x-4"><button class="default-button fpl-cancel-btn" type="button" data-svelte-h="svelte-1husm0b">Cancel</button> <button class="default-button fpl-button" data-svelte-h="svelte-zv2dtu">Clear</button></div></div>`;
+      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-rcqdii">Clear Draft</h3> <button class="times-button" data-svelte-h="svelte-2aq7vi">×</button></div> <p data-svelte-h="svelte-idipww">Please confirm you want to clear the draft from your cache.</p> <div class="items-center py-3 flex space-x-4"><button class="default-button fpl-cancel-btn" type="button" data-svelte-h="svelte-1husm0b">Cancel</button> <button class="default-button fpl-button" data-svelte-h="svelte-zv2dtu">Clear</button></div></div>`;
     }
   })}`;
 });
@@ -6922,6 +6937,7 @@ const Page$a = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     {}
   )}`;
 });
+const localSpinner_svelte_svelte_type_style_lang = "";
 const Page$9 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {

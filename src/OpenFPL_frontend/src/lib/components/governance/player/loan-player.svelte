@@ -5,7 +5,7 @@
   import { Modal } from "@dfinity/gix-components";
   import LocalSpinner from "$lib/components/local-spinner.svelte";
   import type { PlayerDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  
+
   export let visible: boolean;
   export let cancelModal: () => void;
 
@@ -15,7 +15,7 @@
   let leavingLeague = false;
   let loanEndDate: number = 0;
   let clubPlayers: PlayerDTO[] = [];
-  
+
   let isLoading = false;
   let showConfirm = false;
 
@@ -26,7 +26,7 @@
 
   $: if (selectedClubId) {
     getClubPlayers();
-  }  
+  }
 
   $: if (isSubmitDisabled && showConfirm) {
     showConfirm = false;
@@ -50,7 +50,7 @@
     closeModal();
   }
 
-  function closeModal(){
+  function closeModal() {
     selectedClubId = 0;
     selectedPlayerId = 0;
     clubPlayers = [];
@@ -80,7 +80,7 @@
             {/each}
           </select>
         </div>
-      
+
         {#if selectedClubId > 0}
           <div class="flex-col space-y-2">
             <p>Select a player to loan:</p>
@@ -97,11 +97,8 @@
             </select>
           </div>
           <div class="flex-col space-y-2">
-          
             <div class="flex flex-row">
-              <p class="mr-2">
-                Player leaving Premier League
-              </p>
+              <p class="mr-2">Player leaving Premier League</p>
               <input type="checkbox" bind:checked={leavingLeague} />
             </div>
 
@@ -116,17 +113,15 @@
               >
                 <option value={0}>Select Club</option>
                 {#each $teamStore as club}
-                  <option value={club.id}
-                    >{club.friendlyName}</option
-                  >
+                  <option value={club.id}>{club.friendlyName}</option>
                 {/each}
               </select>
             {/if}
-          </div>  
-          
+          </div>
+
           <div class="flex-col space-y-2">
             <p>Loan End Date:</p>
-  
+
             <input
               type="date"
               bind:value={loanEndDate}
@@ -134,8 +129,8 @@
             />
           </div>
         {/if}
-        
-        <div class="border-b border-gray-200"></div>
+
+        <div class="border-b border-gray-200" />
 
         <div class="items-center flex space-x-4">
           <button

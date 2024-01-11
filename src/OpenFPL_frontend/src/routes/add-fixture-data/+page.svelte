@@ -20,7 +20,7 @@
     PlayerDTO,
     PlayerEventData,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  
+
   import Layout from "../Layout.svelte";
   import PlayerEventsModal from "$lib/components/fixture-validation/player-events-modal.svelte";
   import SelectPlayersModal from "$lib/components/fixture-validation/select-players-modal.svelte";
@@ -52,14 +52,13 @@
   let awayAssistsText = "";
 
   let isLoading = true;
-  
+
   $: fixtureId = Number($page.url.searchParams.get("id"));
 
   $: isSubmitDisabled =
     $playerEventData.length == 0 ||
     $playerEventData.filter((x) => convertEvent(x.eventType) == 0).length !=
       $selectedPlayers.length;
-
 
   onMount(async () => {
     try {
@@ -242,9 +241,10 @@
   {#if isLoading}
     <Spinner />
   {:else}
-    
     <div class="flex flex-row space-x-4 mb-4">
-      <div class="bg-panel-color rounded-md w-1/3 flex flex-row items-center justify-center space-x-4 py-4">
+      <div
+        class="bg-panel-color rounded-md w-1/3 flex flex-row items-center justify-center space-x-4 py-4"
+      >
         <div class="flex-col flex justify-center space-y-2">
           <BadgeIcon
             className="h-12"
@@ -252,7 +252,7 @@
             secondaryColour={homeTeam?.secondaryColourHex}
             thirdColour={homeTeam?.thirdColourHex}
           />
-          <p class="text-center text-sm">{homeTeam?.abbreviatedName}</p>  
+          <p class="text-center text-sm">{homeTeam?.abbreviatedName}</p>
         </div>
         <p class="text-4xl">0-0</p>
         <div class="flex-col flex justify-center space-y-2">
@@ -262,11 +262,12 @@
             secondaryColour={awayTeam?.secondaryColourHex}
             thirdColour={awayTeam?.thirdColourHex}
           />
-          <p class="text-center text-sm">{awayTeam?.abbreviatedName}</p>  
+          <p class="text-center text-sm">{awayTeam?.abbreviatedName}</p>
         </div>
-        
       </div>
-      <div class="bg-panel-color rounded-md w-2/3 flex flex-row space-x-4 p-4 text-gray-400 text-sm">
+      <div
+        class="bg-panel-color rounded-md w-2/3 flex flex-row space-x-4 p-4 text-gray-400 text-sm"
+      >
         <div class="w-1/2 flex-col space-y-4">
           <p>{homeTeam?.name}</p>
           <div class="flex flex-col space-y-2">
@@ -284,11 +285,8 @@
       </div>
     </div>
 
-
     <div class="bg-panel rounded-md">
-     
       <div class="flex flex-col">
-        
         <div class="flex w-full">
           <ul
             class="flex bg-light-gray px-4 pt-2 w-full border-b border-gray-700"
@@ -315,21 +313,21 @@
         </div>
         <div class="flex flex-row space-x-2 p-4 items-center">
           <p>Selected Players</p>
-          <div class="flex-grow"></div>
-          <button class="fpl-button default-button px-4 py-2 justify-end" on:click={showSelectPlayersModal}
-            >Select Players</button
+          <div class="flex-grow" />
+          <button
+            class="fpl-button default-button px-4 py-2 justify-end"
+            on:click={showSelectPlayersModal}>Select Players</button
           >
         </div>
         <div class="flex w-full flex-col">
-
           <div
-          class="flex flex-row items-center justify-between border border-gray-700 py-4 bg-light-gray"
-        >
-          <div class="w-1/6 px-4">#</div>
-          <div class="w-3/6 px-4">Player</div>
-          <div class="w-1/6 px-4">Events</div>
-          <div class="w-1/6 px-4">Action</div>
-        </div>
+            class="flex flex-row items-center justify-between border border-gray-700 py-4 bg-light-gray"
+          >
+            <div class="w-1/6 px-4">#</div>
+            <div class="w-3/6 px-4">Player</div>
+            <div class="w-1/6 px-4">Events</div>
+            <div class="w-1/6 px-4">Action</div>
+          </div>
 
           {#if activeTab === "home"}
             {#each $selectedPlayers.filter((x) => x.clubId === fixture?.homeClubId) as player (player.id)}
@@ -446,16 +444,12 @@
               <p class="p-4">No players selected.</p>
             {/if}
           {/if}
-
-
-
-
         </div>
         <div class="flex flex-row space-x-2 p-4 items-center justify-end">
-          
-          <div class="flex-grow"></div>
-          <button class="fpl-purple-btn default-button px-4 py-2" on:click={saveDraft}
-            >Save Draft</button
+          <div class="flex-grow" />
+          <button
+            class="fpl-purple-btn default-button px-4 py-2"
+            on:click={saveDraft}>Save Draft</button
           >
           <button
             class="fpl-purple-btn default-button px-4 py-2"
@@ -468,8 +462,8 @@
             disabled={isSubmitDisabled}>Submit Proposal</button
           >
         </div>
-        
-        <div class="border-b border-gray-600 mx-4"></div>
+
+        <div class="border-b border-gray-600 mx-4" />
 
         <div class="flex flex-row w-full m-4 text-sm">
           <div class="w-1/3 border-r border-gray-600 px-4">

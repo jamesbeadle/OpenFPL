@@ -29,7 +29,7 @@
   async function getClubPlayers() {
     clubPlayers = $playerStore.filter((x) => x.clubId == selectedClubId);
   }
-  
+
   function raiseProposal() {
     showConfirm = true;
   }
@@ -42,11 +42,11 @@
     cancelModal();
   }
 
-  function resetForm(){
+  function resetForm() {
     selectedClubId = 0;
     selectedPlayerId = 0;
     showConfirm = false;
-    clubPlayers = []
+    clubPlayers = [];
   }
 </script>
 
@@ -69,7 +69,7 @@
             {#each $teamStore as club}
               <option value={club.id}>{club.friendlyName}</option>
             {/each}
-          </select>  
+          </select>
         </div>
         {#if selectedClubId > 0}
           <div class="flex-col space-y-2">
@@ -85,10 +85,10 @@
                 >
               {/each}
             </select>
-          </div>  
+          </div>
         {/if}
-        
-        <div class="border-b border-gray-200"></div>
+
+        <div class="border-b border-gray-200" />
 
         <div class="items-center flex space-x-4">
           <button

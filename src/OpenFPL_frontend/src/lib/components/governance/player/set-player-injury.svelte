@@ -5,7 +5,7 @@
   import { Modal } from "@dfinity/gix-components";
   import LocalSpinner from "$lib/components/local-spinner.svelte";
   import type { PlayerDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-    
+
   export let visible: boolean;
   export let cancelModal: () => void;
 
@@ -20,7 +20,7 @@
 
   $: isSubmitDisabled =
     selectedPlayerId <= 0 || injuryEndDate == 0 || description.length == 0;
-  
+
   $: if (selectedClubId) {
     getClubPlayers();
   }
@@ -49,13 +49,13 @@
     cancelModal();
   }
 
-  function resetForm(){
+  function resetForm() {
     selectedClubId = 0;
     selectedPlayerId = 0;
     description = "";
     injuryEndDate = 0;
     showConfirm = false;
-    clubPlayers = []
+    clubPlayers = [];
   }
 </script>
 
@@ -79,7 +79,7 @@
             <option value={club.id}>{club.friendlyName}</option>
           {/each}
         </select>
-        
+
         {#if selectedClubId > 0}
           <p>Select a player to set as injured:</p>
 
@@ -113,7 +113,7 @@
           />
         {/if}
 
-        <div class="border-b border-gray-200"></div>
+        <div class="border-b border-gray-200" />
 
         <div class="items-center flex space-x-4">
           <button

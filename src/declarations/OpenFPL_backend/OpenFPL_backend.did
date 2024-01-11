@@ -133,10 +133,7 @@ type RetirePlayerDTO = record {
 };
 type Result_9 = variant {
   err : Error;
-  ok : vec record {
-    nat16;
-    PlayerScoreDTO;
-  };
+  ok : vec FixtureDTO;
 };
 type Result_8 = variant {
   err : Error;
@@ -216,35 +213,38 @@ type Result_18 = variant {
 };
 type Result_17 = variant {
   err : Error;
-  ok : vec FixtureDTO;
+  ok : vec ClubDTO;
 };
 type Result_16 = variant {
   err : Error;
-  ok : vec ClubDTO;
+  ok : ManagerDTO;
 };
 type Result_15 = variant {
   err : Error;
-  ok : ManagerDTO;
+  ok : ManagerGameweekDTO;
 };
 type Result_14 = variant {
   err : Error;
-  ok : ManagerGameweekDTO;
+  ok : MonthlyLeaderboardDTO;
 };
 type Result_13 = variant {
   err : Error;
-  ok : MonthlyLeaderboardDTO;
+  ok : vec MonthlyLeaderboardDTO;
 };
 type Result_12 = variant {
   err : Error;
-  ok : vec MonthlyLeaderboardDTO;
+  ok : PlayerDetailDTO;
 };
 type Result_11 = variant {
   err : Error;
-  ok : PlayerDetailDTO;
+  ok : vec PlayerPointsDTO;
 };
 type Result_10 = variant {
   err : Error;
-  ok : vec PlayerPointsDTO;
+  ok : vec record {
+    nat16;
+    PlayerScoreDTO;
+  };
 };
 type Result_1 = variant {
   err : Error;
@@ -697,20 +697,21 @@ service : {
   executeUnretirePlayer : (UnretirePlayerDTO) -> ();
   executeUpdateClub : (UpdateClubDTO) -> ();
   executeUpdatePlayer : (UpdatePlayerDTO) -> ();
-  getClubs : () -> (Result_16) query;
+  getClubs : () -> (Result_17) query;
   getCountries : () -> (Result_19) query;
   getDataHashes : () -> (Result_18) query;
-  getFixtures : (SeasonId) -> (Result_17) query;
-  getFormerClubs : () -> (Result_16) query;
+  getFixtures : (SeasonId) -> (Result_9) query;
+  getFormerClubs : () -> (Result_17) query;
   getLoanedPlayers : (ClubId) -> (Result_6) query;
-  getManager : () -> (Result_15);
-  getManagerGameweek : (text, SeasonId, GameweekNumber) -> (Result_14);
-  getMonthlyLeaderboard : (SeasonId, ClubId, CalendarMonth, nat, nat, text) -> (Result_13);
-  getMonthlyLeaderboards : (SeasonId, CalendarMonth) -> (Result_12);
-  getPlayerDetails : (PlayerId, SeasonId) -> (Result_11);
-  getPlayerDetailsForGameweek : (SeasonId, GameweekNumber) -> (Result_10) query;
+  getManager : () -> (Result_16);
+  getManagerGameweek : (text, SeasonId, GameweekNumber) -> (Result_15);
+  getMonthlyLeaderboard : (SeasonId, ClubId, CalendarMonth, nat, nat, text) -> (Result_14);
+  getMonthlyLeaderboards : (SeasonId, CalendarMonth) -> (Result_13);
+  getPlayerDetails : (PlayerId, SeasonId) -> (Result_12);
+  getPlayerDetailsForGameweek : (SeasonId, GameweekNumber) -> (Result_11) query;
   getPlayers : () -> (Result_6) query;
-  getPlayersMap : (SeasonId, GameweekNumber) -> (Result_9);
+  getPlayersMap : (SeasonId, GameweekNumber) -> (Result_10);
+  getPostponedFixtures : () -> (Result_9) query;
   getProfile : () -> (Result_8);
   getPublicProfile : (text, SeasonId, GameweekNumber) -> (Result_7);
   getRetiredPlayers : (ClubId) -> (Result_6) query;

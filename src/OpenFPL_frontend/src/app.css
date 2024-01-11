@@ -14,7 +14,7 @@
 .fpl-dropdown {
   background-color: #2e323a !important;
   border: none;
-  @apply rounded-sm
+  @apply rounded-sm;
 }
 
 .fpl-dropdown option {
@@ -225,10 +225,10 @@ input {
   @apply bg-panel-color w-full;
 }
 
-.event-tag{
+.event-tag {
   background-color: #2ce3a6;
   color: #161819;
-  @apply px-2
+  @apply px-2;
 }
 
 /* Extra small devices (portrait phones, less than 480px) */

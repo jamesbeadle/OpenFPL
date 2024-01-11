@@ -11,7 +11,7 @@
     PlayerDTO,
     PlayerPosition,
   } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  
+
   export let visible: boolean;
   export let cancelModal: () => void;
 
@@ -75,11 +75,11 @@
     cancelModal();
   }
 
-  function resetForm(){
+  function resetForm() {
     selectedClubId = 0;
     selectedPlayerId = 0;
     playerId = 0;
-    position = {Goalkeeper: null};
+    position = { Goalkeeper: null };
     firstName = "";
     lastName = "";
     shirtNumber = 0;
@@ -123,22 +123,20 @@
 
     <div class="flex justify-start items-center w-full">
       <div class="w-full flex-col space-y-4 mb-2">
-
         <div class="flex-col space-y-2">
           <p>Select the players club:</p>
           <select
             class="p-2 fpl-dropdown min-w-[100px]"
             bind:value={selectedClubId}
-          > 
+          >
             <option value={0}>Select Club</option>
             {#each $teamStore as club}
               <option value={club.id}>{club.friendlyName}</option>
             {/each}
-          </select>  
+          </select>
         </div>
 
         {#if selectedClubId > 0}
-
           <div class="flex-col space-y-2">
             <p>Select a player to update:</p>
             <select
@@ -167,7 +165,7 @@
                 <option value={{ Forward: null }}>Forward</option>
               </select>
             </div>
-    
+
             <div class="flex-col space-y-2">
               <p>First name:</p>
               <input
@@ -177,7 +175,7 @@
                 bind:value={firstName}
               />
             </div>
-    
+
             <div class="flex-col space-y-2">
               <p>Last name:</p>
               <input
@@ -187,7 +185,7 @@
                 bind:value={lastName}
               />
             </div>
-          
+
             <div class="flex-col space-y-2">
               <p>Shirt number:</p>
               <input
@@ -197,7 +195,7 @@
                 bind:value={shirtNumber}
               />
             </div>
-          
+
             <div class="flex-col space-y-2">
               <p>Date of birth:</p>
               <input
@@ -206,9 +204,9 @@
                 class="input input-bordered"
               />
             </div>
-          
+
             <div class="flex-col space-y-2">
-              <p>Nationality:</p>  
+              <p>Nationality:</p>
               <select
                 class="p-2 fpl-dropdown my-4 min-w-[100px]"
                 bind:value={nationalityId}
@@ -220,8 +218,8 @@
             </div>
           {/if}
         {/if}
-        
-        <div class="border-b border-gray-200"></div>
+
+        <div class="border-b border-gray-200" />
 
         <div class="items-center flex space-x-4">
           <button

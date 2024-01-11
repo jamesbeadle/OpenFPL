@@ -49,14 +49,14 @@
 
     gameweekDetail.events.forEach((evt) => {
       switch (evt.eventType) {
-        case {Appearance: null}:
+        case { Appearance: null }:
           appearanceEvents.push(evt);
           break;
-        case {GoalConceded: null}:
+        case { GoalConceded: null }:
           concededEvents.push(evt);
           goalConcededCount++;
           break;
-        case {KeeperSave: null}:
+        case { KeeperSave: null }:
           keeperSaveEvents.push(evt);
           keeperSaveCount++;
           break;

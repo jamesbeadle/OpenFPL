@@ -5,10 +5,8 @@
   import { governanceStore } from "$lib/stores/governance-store";
   import { Modal } from "@dfinity/gix-components";
   import LocalSpinner from "$lib/components/local-spinner.svelte";
-  import type {
-    ShirtType,
-  } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  
+  import type { ShirtType } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+
   export let visible: boolean;
   export let cancelModal: () => void;
 
@@ -73,7 +71,7 @@
     cancelModal();
   }
 
-  function resetForm(){
+  function resetForm() {
     selectedClubId = 0;
     name = "";
     friendlyName = "";
@@ -196,7 +194,7 @@
           </select>
         {/if}
 
-        <div class="border-b border-gray-200"></div>
+        <div class="border-b border-gray-200" />
 
         <div class="items-center flex space-x-4">
           <button

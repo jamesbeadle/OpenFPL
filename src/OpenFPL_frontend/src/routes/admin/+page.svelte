@@ -23,7 +23,7 @@
   import PromoteFormerClub from "$lib/components/governance/club/promote-former-club.svelte";
   import PromoteNewClub from "$lib/components/governance/club/promote-new-club.svelte";
   import UpdateClub from "$lib/components/governance/club/update-club.svelte";
-    import AddFixtureData from "$lib/components/governance/fixture/add-fixture-data.svelte";
+  import AddFixtureData from "$lib/components/governance/fixture/add-fixture-data.svelte";
 
   let showSystemStateModal: boolean = false;
   let showSnapshotModal: boolean = false;

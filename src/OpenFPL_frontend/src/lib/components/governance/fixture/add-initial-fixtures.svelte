@@ -4,7 +4,7 @@
   import { Modal } from "@dfinity/gix-components";
   import LocalSpinner from "$lib/components/local-spinner.svelte";
   import type { FixtureDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  
+
   interface UploadData {
     id: number;
     gameweek: number;
@@ -88,7 +88,7 @@
     cancelModal();
   }
 
-  function resetForm(){
+  function resetForm() {
     file = null;
     fixtureData = [];
   }
@@ -103,15 +103,17 @@
 
     <div class="flex justify-start items-center w-full">
       <div class="w-full flex-col space-y-4 mb-2">
-        
         <div class="flex-col space-y-2">
           <p>Please select a file to upload:</p>
-          <input class="my-4" type="file" accept=".csv" on:change={handleFileChange} />
-       
-        </div>  
+          <input
+            class="my-4"
+            type="file"
+            accept=".csv"
+            on:change={handleFileChange}
+          />
+        </div>
 
-        
-        <div class="border-b border-gray-200"></div>
+        <div class="border-b border-gray-200" />
 
         <div class="items-center flex space-x-4">
           <button

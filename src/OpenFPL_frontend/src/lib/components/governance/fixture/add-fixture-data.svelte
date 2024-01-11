@@ -10,7 +10,7 @@
     ClubDTO,
     FixtureDTO,
   } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  
+
   export let visible: boolean;
   export let cancelModal: () => void;
 
@@ -19,9 +19,7 @@
   let selectedFixtureId: number;
   let gameweekFixtures: FixtureDTO[] = [];
 
-  $: isSubmitDisabled =
-    !selectedFixtureId ||
-    selectedFixtureId <= 0;
+  $: isSubmitDisabled = !selectedFixtureId || selectedFixtureId <= 0;
 
   $: if (selectedFixtureId) {
     loadGameweekFixtures();
@@ -96,7 +94,7 @@
           </select>
         </div>
 
-        <div class="border-b border-gray-200"></div>
+        <div class="border-b border-gray-200" />
 
         <div class="items-center flex space-x-4">
           <button

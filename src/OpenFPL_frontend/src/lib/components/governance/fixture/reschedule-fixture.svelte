@@ -11,7 +11,7 @@
     ClubDTO,
     FixtureDTO,
   } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  
+
   export let visible: boolean;
   export let cancelModal: () => void;
 
@@ -88,7 +88,7 @@
     cancelModal();
   }
 
-  function resetForm(){
+  function resetForm() {
     date = "";
     time = "";
     dateTime = "";
@@ -137,20 +137,20 @@
             {/each}
           </select>
         </div>
-        
-        <div class="border-b border-gray-200"></div>      
+
+        <div class="border-b border-gray-200" />
 
         <div class="flex flex-row my-2">
           <p class="mr-2">Postpone Fixture:</p>
-          <input type="checkbox" bind:checked={isPostponed} />  
+          <input type="checkbox" bind:checked={isPostponed} />
         </div>
-        
+
         {#if !isPostponed}
-          <div class="border-b border-gray-200 my-4"></div>
+          <div class="border-b border-gray-200 my-4" />
           <p class="mr-2 my-2">Or set new date:</p>
           <div class="flex flex-row my-2">
             <p class="mr-2">Select Date:</p>
-            <input type="date" bind:value={date} class="input input-bordered" />  
+            <input type="date" bind:value={date} class="input input-bordered" />
           </div>
           <div class="flex flex-row my-2">
             <p class="mr-2">Select Time:</p>
@@ -158,7 +158,7 @@
           </div>
           <div class="flex flex-row my-2 items-center">
             <p class="mr-2">Select Gameweek:</p>
-            
+
             <select
               class="p-2 fpl-dropdown my-4 min-w-[100px]"
               bind:value={newGameweek}
@@ -169,10 +169,9 @@
               {/each}
             </select>
           </div>
-
         {/if}
 
-        <div class="border-b border-gray-200"></div>
+        <div class="border-b border-gray-200" />
 
         <div class="items-center flex space-x-4">
           <button

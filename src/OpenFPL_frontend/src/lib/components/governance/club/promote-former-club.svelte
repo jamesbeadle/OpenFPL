@@ -6,7 +6,7 @@
   import { Modal } from "@dfinity/gix-components";
   import LocalSpinner from "$lib/components/local-spinner.svelte";
   import type { ClubDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  
+
   export let visible: boolean;
   export let cancelModal: () => void;
 
@@ -49,10 +49,10 @@
     cancelModal();
   }
 
-  function resetForm(){
+  function resetForm() {
     selectedClubId = 0;
     showConfirm = false;
-    formerClubs = []
+    formerClubs = [];
   }
 </script>
 
@@ -65,7 +65,6 @@
 
     <div class="flex justify-start items-center w-full">
       <div class="w-full flex-col space-y-4 mb-2">
-        
         <div class="flex-col space-y-2">
           <select
             class="p-2 fpl-dropdown min-w-[100px]"
@@ -77,8 +76,8 @@
             {/each}
           </select>
         </div>
-        
-        <div class="border-b border-gray-200"></div>
+
+        <div class="border-b border-gray-200" />
 
         <div class="items-center flex space-x-4">
           <button
