@@ -87,6 +87,12 @@
             </select>
           </div>
         {/if}
+        
+        {#if selectedPlayerId > 0}
+          <p>
+            Current Value: <b>£{(($playerStore.find(x => x.id == selectedPlayerId)?.valueQuarterMillions ?? 0) / 4).toFixed(2)}m</b>
+          </p>
+        {/if}
 
         <div class="border-b border-gray-200" />
 

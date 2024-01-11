@@ -30,7 +30,8 @@
 
   onMount(async () => {
     try {
-      await playerStore.sync();
+      await teamStore.sync();
+      isLoading = false;
     } catch (error) {
       toastsError({
         msg: { text: "Error syncing club details." },
@@ -67,8 +68,8 @@
       return;
     }
     clubRetiredPlayers = await playerStore.getRetiredPlayers(selectedClubId);
+    isLoading = false;
   }
-  isLoading = false;
 </script>
 
 <Modal {visible} on:nnsClose={cancelModal}>
