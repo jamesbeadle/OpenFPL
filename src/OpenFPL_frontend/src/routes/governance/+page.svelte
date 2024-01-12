@@ -1,15 +1,14 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import Layout from "../Layout.svelte";
-  import { GovernanceCanister, ProposalRewardStatus, type Option, Topic, ProposalStatus } from "@dfinity/nns";
-  import { createAgent } from "@dfinity/utils";
-  import { get } from 'svelte/store';
+  import { GovernanceCanister } from "@dfinity/nns";
   import { authStore } from '$lib/stores/auth.store';
   import { ActorFactory } from "../../utils/ActorFactory";
-  import type { ProposalId } from "@dfinity/nns-proto/dist/proto/base_types_pb";
-  import type { ListProposalsRequest } from "@dfinity/nns";
+  import type { ListProposalsRequest, ProposalInfo } from "@dfinity/nns";
   
   let activeTab: string = "proposals";
+
+  let activeProposals: ProposalInfo[] = [];
 
   function setActiveTab(tab: string): void {
     activeTab = tab;
@@ -27,14 +26,15 @@
         
     const { listProposals } = GovernanceCanister.create(identityActor);
     let request: ListProposalsRequest = {
-      limit: 10,
-      beforeProposal: 0,
-      includeRewardStatus: 0,
-      excludeTopic: 0,
-      includeAllManageNeuronProposals: 0,
-      includeStatus: 0
+      limit: 100,
+      includeRewardStatus: [1],
+      excludeTopic: [0],
+      includeAllManageNeuronProposals: true,
+      includeStatus: [1],
+      beforeProposal: 0n
     };
-    const allProposals = await listProposals({request, certified: false});
+    let proposalResponse = await listProposals({request, certified: false});
+    activeProposals = proposalResponse.proposals;
     
 
   }
