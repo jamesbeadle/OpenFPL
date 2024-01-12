@@ -1,5 +1,6 @@
 <script lang="ts">
   import Layout from "../Layout.svelte";
+  
   let activeTab: string = "proposals";
 
   function setActiveTab(tab: string): void {
@@ -8,6 +9,14 @@
 </script>
 
 <!-- //TODO: List the proposals and add filters etc -->
+<!-- 
+
+import { GovernanceCanister } from "@dfinity/nns";
+import { createAgent } from "@dfinity/utils";
+
+
+
+-->
 <Layout>
   <div class="m-4">
     <div class="bg-panel rounded-md">
