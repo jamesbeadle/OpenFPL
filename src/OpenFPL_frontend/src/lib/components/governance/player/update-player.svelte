@@ -11,7 +11,7 @@
     PlayerDTO,
     PlayerPosition,
   } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-    import { convertDateInputToUnixNano, formatUnixToDateInputValue } from "$lib/utils/Helpers";
+    import { convertDateInputToUnixNano, formatUnixToDateInputValue, isError } from "$lib/utils/Helpers";
 
   export let visible: boolean;
   export let cancelModal: () => void;
@@ -90,7 +90,7 @@
 
     dateOfBirth = convertDateInputToUnixNano(displayDOB);
 
-    await governanceStore.updatePlayer(
+    let result = await governanceStore.updatePlayer(
       selectedClubId,
       position,
       firstName,
@@ -99,6 +99,14 @@
       dateOfBirth,
       nationalityId
     );
+    if (isError(result)) {
+      isLoading = false;
+      toastsError({
+        msg: { text: "Error submitting proposal." }
+      });
+      console.error("Error submitting proposal");
+      return;
+    }
     isLoading = false;
     resetForm();
     cancelModal();

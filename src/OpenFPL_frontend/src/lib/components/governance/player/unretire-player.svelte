@@ -7,6 +7,7 @@
   import { Modal } from "@dfinity/gix-components";
   import LocalSpinner from "$lib/components/local-spinner.svelte";
   import type { PlayerDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import { isError } from "$lib/utils/Helpers";
 
   export let visible: boolean;
   export let cancelModal: () => void;
@@ -49,7 +50,15 @@
 
   async function confirmProposal() {
     isLoading = true;
-    await governanceStore.unretirePlayer(selectedPlayerId);
+    let result = await governanceStore.unretirePlayer(selectedPlayerId);
+    if (isError(result)) {
+      isLoading = false;
+      toastsError({
+        msg: { text: "Error submitting proposal." }
+      });
+      console.error("Error submitting proposal");
+      return;
+    }
     isLoading = false;
     resetForm();
     cancelModal();

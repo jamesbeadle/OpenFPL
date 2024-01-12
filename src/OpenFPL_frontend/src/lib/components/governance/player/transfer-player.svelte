@@ -5,6 +5,8 @@
   import type { PlayerDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { teamStore } from "$lib/stores/team-store";
   import LocalSpinner from "$lib/components/local-spinner.svelte";
+    import { isError } from "$lib/utils/Helpers";
+    import { toastsError } from "$lib/stores/toasts-store";
 
   export let visible: boolean;
   export let cancelModal: () => void;
@@ -39,7 +41,16 @@
 
   async function confirmProposal() {
     isLoading = true;
-    await governanceStore.transferPlayer(selectedPlayerId, selectedClubId);
+    let result = await governanceStore.transferPlayer(selectedPlayerId, selectedClubId);
+    
+    if (isError(result)) {
+      isLoading = false;
+      toastsError({
+        msg: { text: "Error submitting proposal." }
+      });
+      console.error("Error submitting proposal");
+      return;
+    }
     isLoading = false;
     resetForm();
     cancelModal();

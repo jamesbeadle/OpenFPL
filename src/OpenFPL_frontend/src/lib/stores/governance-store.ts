@@ -10,7 +10,7 @@ import type {
 import { ActorFactory } from "../../utils/ActorFactory";
 
 function createGovernanceStore() {
-  async function revaluePlayerUp(playerId: number): Promise<void> {
+  async function revaluePlayerUp(playerId: number): Promise<any> {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
@@ -29,7 +29,7 @@ function createGovernanceStore() {
     }
   }
 
-  async function revaluePlayerDown(playerId: number): Promise<void> {
+  async function revaluePlayerDown(playerId: number): Promise<any> {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
@@ -53,7 +53,7 @@ function createGovernanceStore() {
     gameweek: number,
     fixtureId: number,
     playerEventData: PlayerEventData[]
-  ): Promise<void> {
+  ): Promise<any> {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
@@ -80,7 +80,7 @@ function createGovernanceStore() {
   async function addInitialFixtures(
     seasonId: number,
     seasonFixtures: FixtureDTO[]
-  ) {
+  ): Promise<any> {
     console.log(seasonId);
     if (seasonId == 0) {
       return;
@@ -116,7 +116,7 @@ function createGovernanceStore() {
     fixtureId: number,
     updatedFixtureGameweek: number,
     updatedFixtureDate: number
-  ): Promise<void> {
+  ): Promise<any> {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
@@ -144,7 +144,7 @@ function createGovernanceStore() {
     playerId: number,
     loanClubId: number,
     loanEndDate: number
-  ): Promise<void> {
+  ): Promise<any> {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
@@ -170,7 +170,7 @@ function createGovernanceStore() {
   async function transferPlayer(
     playerId: number,
     newClubId: number
-  ): Promise<void> {
+  ): Promise<any> {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
@@ -189,7 +189,7 @@ function createGovernanceStore() {
     }
   }
 
-  async function recallPlayer(playerId: number): Promise<void> {
+  async function recallPlayer(playerId: number): Promise<any> {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
@@ -217,7 +217,7 @@ function createGovernanceStore() {
     valueQuarterMillions: number,
     dateOfBirth: number,
     nationality: number
-  ): Promise<void> {
+  ): Promise<any> {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
@@ -253,7 +253,7 @@ function createGovernanceStore() {
     shirtNumber: number,
     dateOfBirth: bigint,
     nationalityId: number
-  ): Promise<void> {
+  ): Promise<any> {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
@@ -284,7 +284,7 @@ function createGovernanceStore() {
     playerId: number,
     description: string,
     expectedEndDate: number
-  ) {
+  ): Promise<any> {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
@@ -310,7 +310,7 @@ function createGovernanceStore() {
   async function retirePlayer(
     playerId: number,
     retirementDate: number
-  ): Promise<void> {
+  ): Promise<any> {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
@@ -329,7 +329,7 @@ function createGovernanceStore() {
     }
   }
 
-  async function unretirePlayer(playerId: number): Promise<void> {
+  async function unretirePlayer(playerId: number): Promise<any> {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
@@ -348,7 +348,7 @@ function createGovernanceStore() {
     }
   }
 
-  async function promoteFormerClub(clubId: number): Promise<void> {
+  async function promoteFormerClub(clubId: number): Promise<any> {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
@@ -375,7 +375,7 @@ function createGovernanceStore() {
     thirdColourHex: string,
     abbreviatedName: string,
     shirtType: ShirtType
-  ): Promise<void> {
+  ): Promise<any> {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
@@ -411,7 +411,7 @@ function createGovernanceStore() {
     thirdColourHex: string,
     abbreviatedName: string,
     shirtType: ShirtType
-  ): Promise<void> {
+  ): Promise<any> {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,

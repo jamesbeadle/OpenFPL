@@ -11,6 +11,7 @@
     ClubDTO,
     FixtureDTO,
   } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import { isError } from "$lib/utils/Helpers";
 
   export let visible: boolean;
   export let cancelModal: () => void;
@@ -67,12 +68,20 @@
 
   async function confirmProposal() {
     isLoading = true;
-    await governanceStore.rescheduleFixture(
+    let result = await governanceStore.rescheduleFixture(
       $systemStore?.calculationSeasonId ?? 0,
       selectedFixtureId,
       updatedFixtureGameweek ?? 1,
       updatedFixtureDate ?? 0
     );
+    if (isError(result)) {
+      isLoading = false;
+      toastsError({
+        msg: { text: "Error submitting proposal." }
+      });
+      console.error("Error submitting proposal");
+      return;
+    }
     isLoading = false;
     resetForm();
     cancelModal();
