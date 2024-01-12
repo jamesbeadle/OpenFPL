@@ -35,14 +35,15 @@
 
   onMount(async () => {
     try {
+      await teamStore.sync();
       await fixtureStore.sync();
       loadGameweekFixtures();
     } catch (error) {
       toastsError({
-        msg: { text: "Error syncing club details." },
+        msg: { text: "Error syncing proposal data." },
         err: error,
       });
-      console.error("Error syncing club details.", error);
+      console.error("Error syncing proposal data.", error);
     } finally {
       isLoading = false;
     }

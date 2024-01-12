@@ -7,7 +7,7 @@
   import { Modal } from "@dfinity/gix-components";
   import LocalSpinner from "$lib/components/local-spinner.svelte";
   import type { PlayerDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-    import { isError } from "$lib/utils/Helpers";
+  import { isError } from "$lib/utils/Helpers";
 
   export let visible: boolean;
   export let cancelModal: () => void;
@@ -32,14 +32,15 @@
 
   onMount(async () => {
     try {
+      await teamStore.sync();
       await playerStore.sync();
       isLoading = false;
     } catch (error) {
       toastsError({
-        msg: { text: "Error fetching fixture information." },
+        msg: { text: "Error syncing proposal data." },
         err: error,
       });
-      console.error("Error fetching fixture information.", error);
+      console.error("Error syncing proposal data.", error);
     } finally {
       isLoading = false;
     }

@@ -1,12 +1,13 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import { teamStore } from "$lib/stores/team-store";
   import { playerStore } from "$lib/stores/player-store";
   import { governanceStore } from "$lib/stores/governance-store";
   import { Modal } from "@dfinity/gix-components";
   import LocalSpinner from "$lib/components/local-spinner.svelte";
   import type { PlayerDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-    import { isError } from "$lib/utils/Helpers";
-    import { toastsError } from "$lib/stores/toasts-store";
+  import { isError } from "$lib/utils/Helpers";
+  import { toastsError } from "$lib/stores/toasts-store";
 
   export let visible: boolean;
   export let cancelModal: () => void;
@@ -30,6 +31,22 @@
   $: if (isSubmitDisabled && showConfirm) {
     showConfirm = false;
   }
+
+  onMount(async () => {
+    try {
+      await teamStore.sync();
+      await playerStore.sync();
+      isLoading = false;
+    } catch (error) {
+      toastsError({
+        msg: { text: "Error syncing proposal data." },
+        err: error,
+      });
+      console.error("Error syncing proposal data.", error);
+    } finally {
+      isLoading = false;
+    }
+  });
 
   async function getClubPlayers() {
     clubPlayers = $playerStore.filter((x) => x.clubId == selectedClubId);

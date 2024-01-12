@@ -4,8 +4,8 @@
   import { Modal } from "@dfinity/gix-components";
   import LocalSpinner from "$lib/components/local-spinner.svelte";
   import type { FixtureDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-    import { isError } from "$lib/utils/Helpers";
-    import { toastsError } from "$lib/stores/toasts-store";
+  import { isError } from "$lib/utils/Helpers";
+  import { toastsError } from "$lib/stores/toasts-store";
 
   interface UploadData {
     id: number;

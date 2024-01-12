@@ -1,11 +1,10 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import { toastsError } from "$lib/stores/toasts-store";
   import { governanceStore } from "$lib/stores/governance-store";
   import { Modal } from "@dfinity/gix-components";
   import LocalSpinner from "$lib/components/local-spinner.svelte";
   import type { ShirtType } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-    import { isError } from "$lib/utils/Helpers";
+  import { isError } from "$lib/utils/Helpers";
 
   export let visible: boolean;
   export let cancelModal: () => void;
@@ -18,7 +17,7 @@
   let thirdColourHex = "";
   let shirtType: ShirtType = { Filled: null };
 
-  let isLoading = true;
+  let isLoading = false;
   let showConfirm = false;
 
   $: isSubmitDisabled =
@@ -33,19 +32,6 @@
   }
 
   let shirtTypes: ShirtType[] = [{ Filled: null }, { Striped: null }];
-
-  onMount(async () => {
-    try {
-    } catch (error) {
-      toastsError({
-        msg: { text: "Error syncing club details." },
-        err: error,
-      });
-      console.error("Error syncing club details.", error);
-    } finally {
-      isLoading = false;
-    }
-  });
 
   function raiseProposal() {
     showConfirm = true;

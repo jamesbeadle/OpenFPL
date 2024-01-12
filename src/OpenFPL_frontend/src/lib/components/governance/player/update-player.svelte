@@ -54,7 +54,8 @@
 
   onMount(async () => {
     try {
-      playerStore.sync();
+      await playerStore.sync();
+      await teamStore.sync();
     } catch (error) {
       toastsError({
         msg: { text: "Error syncing player store." },

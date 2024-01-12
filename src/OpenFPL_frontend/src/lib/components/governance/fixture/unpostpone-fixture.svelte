@@ -42,13 +42,16 @@
 
   onMount(async () => {
     try {
+      await systemStore.sync();
+      await fixtureStore.sync();
+      await teamStore.sync();
       loadPostponedFixtures();
     } catch (error) {
       toastsError({
-        msg: { text: "Error loading postponed fixtures." },
+        msg: { text: "Error syncing proposal data." },
         err: error,
       });
-      console.error("Error loading postponed fixtures.", error);
+      console.error("Error syncing proposal data.", error);
     } finally {
       isLoading = false;
     }
