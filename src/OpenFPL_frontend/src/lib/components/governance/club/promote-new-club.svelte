@@ -7,7 +7,7 @@
   import { isError } from "$lib/utils/Helpers";
 
   export let visible: boolean;
-  export let cancelModal: () => void;
+  export let closeModal: () => void;
 
   let name = "";
   let friendlyName = "";
@@ -59,7 +59,7 @@
 
     isLoading = false;
     resetForm();
-    cancelModal();
+    closeModal();
   }
 
   function resetForm() {
@@ -86,6 +86,11 @@
   function handleThirdColorChange(event: Event) {
     const input = event.target as HTMLInputElement;
     thirdColourHex = input.value;
+  }
+
+  function cancelModal(){
+    resetForm();  
+    closeModal();
   }
 </script>
 

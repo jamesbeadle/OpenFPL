@@ -10,7 +10,7 @@
   import { isError } from "$lib/utils/Helpers";
 
   export let visible: boolean;
-  export let cancelModal: () => void;
+  export let closeModal: () => void;
 
   let selectedClubId: number = 0;
   let selectedNationalityId: number;
@@ -83,7 +83,7 @@
     }
     isLoading = false;
     resetForm();
-    cancelModal();
+    closeModal();
   }
 
   function resetForm() {
@@ -97,6 +97,12 @@
     value = 0;
     nationalityId = 0;
   }
+
+  function cancelModal(){
+    resetForm();  
+    closeModal();
+  }
+
 </script>
 
 <Modal {visible} on:nnsClose={cancelModal}>

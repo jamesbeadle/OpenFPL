@@ -10,7 +10,7 @@
   import { toastsError } from "$lib/stores/toasts-store";
 
   export let visible: boolean;
-  export let cancelModal: () => void;
+  export let closeModal: () => void;
 
   let selectedPlayerId: number = 0;
   let selectedClubId: number = 0;
@@ -70,7 +70,7 @@
     }
     isLoading = false;
     resetForm();
-    cancelModal();
+    closeModal();
   }
 
   function resetForm() {
@@ -79,6 +79,11 @@
     leavingLeague = false;
     showConfirm = false;
     clubPlayers = [];
+  }
+  
+  function cancelModal(){
+    resetForm();  
+    closeModal();
   }
 </script>
 

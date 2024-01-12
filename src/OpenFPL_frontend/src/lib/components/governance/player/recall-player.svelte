@@ -10,7 +10,7 @@
   import { isError } from "$lib/utils/Helpers";
 
   export let visible: boolean;
-  export let cancelModal: () => void;
+  export let closeModal: () => void;
 
   let selectedClubId: number = 0;
   let selectedPlayerId: number = 0;
@@ -73,7 +73,7 @@
     }
     isLoading = false;
     resetForm();
-    cancelModal();
+    closeModal();
   }
 
   function resetForm() {
@@ -83,6 +83,11 @@
     loanEndDate = 0;
     showConfirm = false;
     loanedPlayers = [];
+  }
+
+  function cancelModal(){
+    resetForm();  
+    closeModal();
   }
 </script>
 

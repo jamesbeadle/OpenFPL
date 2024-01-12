@@ -14,7 +14,7 @@
     import { isError } from "$lib/utils/Helpers";
 
   export let visible: boolean;
-  export let cancelModal: () => void;
+  export let closeModal: () => void;
 
   let selectedFixtureId: number = 0;
   let gameweekFixtures: FixtureDTO[] = [];
@@ -87,7 +87,7 @@
     }
     isLoading = false;
     resetForm();
-    cancelModal();
+    closeModal();
   }
 
   function resetForm() {
@@ -97,6 +97,11 @@
     updatedFixtureGameweek = 0;
     updatedFixtureDate = 0;
     showConfirm = false;
+  }
+
+  function cancelModal(){
+    resetForm();  
+    closeModal();
   }
 </script>
 

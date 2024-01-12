@@ -14,7 +14,7 @@
     import { convertDateInputToUnixNano, formatUnixToDateInputValue, isError } from "$lib/utils/Helpers";
 
   export let visible: boolean;
-  export let cancelModal: () => void;
+  export let closeModal: () => void;
 
   let selectedClubId: number = 0;
   let selectedPlayerId: number = 0;
@@ -110,7 +110,7 @@
     }
     isLoading = false;
     resetForm();
-    cancelModal();
+    closeModal();
   }
 
   function resetForm() {
@@ -166,6 +166,11 @@
     nationalityId = player.nationality ?? 0;
 
     displayDOB = formatUnixToDateInputValue(Number(player.dateOfBirth));
+  }
+
+  function cancelModal(){
+    resetForm();  
+    closeModal();
   }
 
 </script>

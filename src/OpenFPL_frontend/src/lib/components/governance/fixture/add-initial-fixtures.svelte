@@ -16,7 +16,7 @@
   }
 
   export let visible: boolean;
-  export let cancelModal: () => void;
+  export let closeModal: () => void;
 
   let file: File | null = null;
   let fixtureData: FixtureDTO[] = [];
@@ -95,12 +95,17 @@
     }
     isLoading = false;
     resetForm();
-    cancelModal();
+    closeModal();
   }
 
   function resetForm() {
     file = null;
     fixtureData = [];
+  }
+
+  function cancelModal(){
+    resetForm();  
+    closeModal();
   }
 </script>
 

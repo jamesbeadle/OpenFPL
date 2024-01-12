@@ -9,7 +9,7 @@
   import { isError } from "$lib/utils/Helpers";
 
   export let visible: boolean;
-  export let cancelModal: () => void;
+  export let closeModal: () => void;
 
   let formerClubs: ClubDTO[] = [];
   let selectedClubId: number = 0;
@@ -63,6 +63,11 @@
     selectedClubId = 0;
     showConfirm = false;
     formerClubs = [];
+  }
+
+  function cancelModal(){
+    resetForm();  
+    closeModal();
   }
 </script>
 
