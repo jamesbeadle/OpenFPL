@@ -1,19 +1,50 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import Layout from "../Layout.svelte";
+  import { GovernanceCanister, ProposalRewardStatus, type Option, Topic, ProposalStatus } from "@dfinity/nns";
+  import { createAgent } from "@dfinity/utils";
+  import { get } from 'svelte/store';
+  import { authStore } from '$lib/stores/auth.store';
+  import { ActorFactory } from "../../utils/ActorFactory";
+  import type { ProposalId } from "@dfinity/nns-proto/dist/proto/base_types_pb";
+  import type { ListProposalsRequest } from "@dfinity/nns";
   
   let activeTab: string = "proposals";
 
   function setActiveTab(tab: string): void {
     activeTab = tab;
   }
+
+  onMount(() => {
+    listProposals();
+  });
+
+  async function listProposals(){
+    const identityActor: any = await ActorFactory.createIdentityActor(
+      authStore,
+      process.env.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
+    ); //TODO: Create the governance canister 
+        
+    const { listProposals } = GovernanceCanister.create(identityActor);
+    let request: ListProposalsRequest = {
+      limit: 10,
+      beforeProposal: 0,
+      includeRewardStatus: 0,
+      excludeTopic: 0,
+      includeAllManageNeuronProposals: 0,
+      includeStatus: 0
+    };
+    const allProposals = await listProposals({request, certified: false});
+    
+
+  }
 </script>
 
 <!-- //TODO: List the proposals and add filters etc -->
 <!-- 
 
-import { GovernanceCanister } from "@dfinity/nns";
-import { createAgent } from "@dfinity/utils";
-
+//list all the active proposals
+//allow users to vote on the proposals
 
 
 -->
