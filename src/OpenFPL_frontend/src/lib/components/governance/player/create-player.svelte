@@ -157,7 +157,7 @@
           />
         </div>
         <div class="flex-col space-y-2">
-          <p class="py-2">Value:</p>
+          <p class="py-2">Value (£m):</p>
 
           <input
             type="number"

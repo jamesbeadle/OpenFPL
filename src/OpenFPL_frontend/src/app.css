@@ -12,7 +12,7 @@
 }
 
 .fpl-dropdown {
-  background-color: #2e323a !important;
+  background-color: transparent !important;
   border: none;
   @apply rounded-sm;
 }
@@ -24,6 +24,7 @@
 
 input {
   background-color: #2e323a !important;
+  color:white !important;
 }
 
 .bg-light-gray {

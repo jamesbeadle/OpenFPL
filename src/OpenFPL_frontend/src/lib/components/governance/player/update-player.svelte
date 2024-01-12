@@ -11,6 +11,7 @@
     PlayerDTO,
     PlayerPosition,
   } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import { convertDateInputToUnixNano, formatUnixToDateInputValue } from "$lib/utils/Helpers";
 
   export let visible: boolean;
   export let cancelModal: () => void;
@@ -18,23 +19,33 @@
   let selectedClubId: number = 0;
   let selectedPlayerId: number = 0;
   let clubPlayers: PlayerDTO[] = [];
-  let playerId: number = 0;
+
   let position: PlayerPosition;
   let firstName: string = "";
   let lastName: string = "";
   let shirtNumber: number;
   let dateOfBirth: bigint;
   let nationalityId: number;
+  let dropdownPosition = 0;
+  let displayDOB = "";
 
   let isLoading = true;
   let showConfirm = false;
 
+  $: if (selectedClubId) {
+    loadClubPlayers();
+  }
+
+  $: if (selectedPlayerId) {
+    loadPlayer();
+  }
+
   $: isSubmitDisabled =
-    (!isLoading && playerId <= 0) ||
+    (!isLoading && selectedPlayerId <= 0) ||
     firstName.length > 50 ||
-    lastName.length > 50 ||
-    (shirtNumber <= 0 && shirtNumber > 99) ||
-    dateOfBirth <= 0 ||
+    lastName.length == 0 || lastName.length > 50 ||
+    shirtNumber <= 0 || shirtNumber > 99 ||
+    displayDOB == "" ||
     nationalityId <= 0;
 
   $: if (isSubmitDisabled && showConfirm) {
@@ -61,6 +72,24 @@
 
   async function confirmProposal() {
     isLoading = true;
+
+    switch(dropdownPosition){
+      case 0:
+        position = {Goalkeeper:null};
+        break;
+      case 1:
+        position = {Defender:null};
+        break;
+      case 2:
+        position = {Midfielder:null};
+        break;
+      case 3:
+        position = {Forward:null};
+        break;
+    }
+
+    dateOfBirth = convertDateInputToUnixNano(displayDOB);
+
     await governanceStore.updatePlayer(
       selectedClubId,
       position,
@@ -78,7 +107,7 @@
   function resetForm() {
     selectedClubId = 0;
     selectedPlayerId = 0;
-    playerId = 0;
+    selectedPlayerId = 0;
     position = { Goalkeeper: null };
     firstName = "";
     lastName = "";
@@ -87,14 +116,6 @@
     nationalityId = 0;
     showConfirm = false;
     clubPlayers = [];
-  }
-
-  $: if (selectedClubId) {
-    loadClubPlayers();
-  }
-
-  $: if (selectedPlayerId) {
-    loadPlayer();
   }
 
   async function loadClubPlayers() {
@@ -106,12 +127,38 @@
   async function loadPlayer() {
     let selectedPlayer = clubPlayers.find((x) => x.id == selectedPlayerId);
     position = selectedPlayer?.position ?? { Goalkeeper: null };
-    firstName = selectedPlayer?.firstName ?? "";
-    lastName = selectedPlayer?.lastName ?? "";
-    shirtNumber = selectedPlayer?.shirtNumber ?? 0;
-    dateOfBirth = selectedPlayer?.dateOfBirth ?? 0n;
-    nationalityId = selectedPlayer?.nationality ?? 0;
+    
+    let positionText = Object.keys(selectedPlayer?.position ?? {Goalkeeper: null})[0];
+
+    switch(positionText){
+      case "Goalkeeper":
+        dropdownPosition = 0;
+        break;
+      case "Defender":
+        dropdownPosition = 1;
+        break;
+      case "Midfielder":
+        dropdownPosition = 2;
+        break;
+      case "Forward":
+        dropdownPosition = 3;
+        break;
+    }
+
+    updatePlayerInfo(selectedPlayer!);
+   
   }
+
+  function updatePlayerInfo(player: PlayerDTO) {
+    firstName = player.firstName ?? "";
+    lastName = player.lastName ?? "";
+    shirtNumber = player.shirtNumber ?? 0;
+    dateOfBirth = player.dateOfBirth ?? 0n;
+    nationalityId = player.nationality ?? 0;
+
+    displayDOB = formatUnixToDateInputValue(Number(player.dateOfBirth));
+  }
+
 </script>
 
 <Modal {visible} on:nnsClose={cancelModal}>
@@ -157,12 +204,12 @@
               <p>Select a player's position:</p>
               <select
                 class="p-2 fpl-dropdown my-4 min-w-[100px]"
-                bind:value={position}
+                bind:value={dropdownPosition}
               >
-                <option value={{ Goalkeeper: null }}>Goalkeeper</option>
-                <option value={{ Defender: null }}>Defender</option>
-                <option value={{ Midfielder: null }}>Midfielder</option>
-                <option value={{ Forward: null }}>Forward</option>
+                <option value={0}>Goalkeeper</option>
+                <option value={1}>Defender</option>
+                <option value={2}>Midfielder</option>
+                <option value={3}>Forward</option>
               </select>
             </div>
 
@@ -200,7 +247,7 @@
               <p>Date of birth:</p>
               <input
                 type="date"
-                bind:value={dateOfBirth}
+                bind:value={displayDOB}
                 class="input input-bordered"
               />
             </div>
