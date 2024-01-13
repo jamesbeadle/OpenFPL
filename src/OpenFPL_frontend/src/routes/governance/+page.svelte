@@ -9,6 +9,15 @@
   let activeTab: string = "proposals";
 
   let activeProposals: ProposalInfo[] = [];
+  let selectedProposalStatus = 1;
+
+  let proposalStatuses: [
+    { id: 1, description: "Open" },
+    { id: 2, description: "Rejected" },
+    { id: 3, description: "Accepted" },
+    { id: 4, description: "Executed" },
+    { id: 5, description: "Failed" }
+  ];
 
   function setActiveTab(tab: string): void {
     activeTab = tab;
@@ -30,24 +39,14 @@
       includeRewardStatus: [1],
       excludeTopic: [0],
       includeAllManageNeuronProposals: true,
-      includeStatus: [1],
+      includeStatus: [selectedProposalStatus],
       beforeProposal: 0n
     };
     let proposalResponse = await listProposals({request, certified: false});
     activeProposals = proposalResponse.proposals;
-    
-
   }
 </script>
 
-<!-- //TODO: List the proposals and add filters etc -->
-<!-- 
-
-//list all the active proposals
-//allow users to vote on the proposals
-
-
--->
 <Layout>
   <div class="m-4">
     <div class="bg-panel rounded-md">
@@ -65,15 +64,63 @@
       </ul>
 
       {#if activeTab === "proposals"}
-        <div class="p-4">
-          <p>Proposals will appear here after the SNS decentralisation sale.</p>
-          <p>
-            For now the OpenFPL team will continue to add fixture data through <a
-              class="text-blue-500"
-              href="/fixture-validation">this</a
-            > view.
-          </p>
+        
+        <div class="flex">
+          <select
+            class="p-2 fpl-dropdown my-4 min-w-[100px]"
+            bind:value={selectedProposalStatus}
+          >
+            {#each proposalStatuses as proposalType}
+              <option value={proposalType.id}>{proposalType.description}</option>
+            {/each}
+          </select>
         </div>
+
+        <div class="flex flex-col space-y-4 mt-4">
+          <div class="overflow-x-auto flex-1">
+            <div
+              class="flex justify-between p-2 border border-gray-700 py-4 bg-light-gray"
+            >
+              <div class="w-2/12">Id</div>
+              <div class="w-2/12">Proposal Type</div>
+              <div class="w-4/12">Details</div>
+              <div class="w-4/12">Voting</div>
+            </div>
+
+            <!--
+
+id: Option<ProposalId>;
+  ballots: Array<Ballot>;
+  rejectCost: E8s;
+  proposalTimestampSeconds: bigint;
+  rewardEventRound: bigint;
+  failedTimestampSeconds: bigint;
+  decidedTimestampSeconds: bigint;
+  deadlineTimestampSeconds: Option<bigint>;
+  latestTally: Option<Tally>;
+  proposal: Option<Proposal>;
+  proposer: Option<NeuronId>;
+  executedTimestampSeconds: bigint;
+  topic: Topic;
+  status: ProposalStatus;
+  rewardStatus: ProposalRewardStatus;
+
+            -->
+    
+            {#each activeProposals as proposal}
+              <div
+                class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer"
+              >
+                <div class="w-2/12">{proposal.id}</div>
+                <div class="w-2/12">{proposal.topic}</div>
+                <div class="w-4/12">{proposal.proposal}</div>
+                <div class="w-4/12">{proposal.ballots}</div>
+              </div>
+            {/each}
+          </div>
+        </div>
+
+
       {/if}
     </div>
   </div>
