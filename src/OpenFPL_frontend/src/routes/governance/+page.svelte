@@ -113,8 +113,12 @@ id: Option<ProposalId>;
               >
                 <div class="w-2/12">{proposal.id}</div>
                 <div class="w-2/12">{proposal.topic}</div>
-                <div class="w-4/12">{proposal.proposal}</div>
-                <div class="w-4/12">{proposal.ballots}</div>
+                <div class="w-4/12">{proposal.proposal?.title}</div>
+                <div class="w-4/12">{proposal.latestTally?.yes}</div>
+                <div class="w-4/12">{proposal.latestTally?.no}</div>
+                <div class="w-4/12">
+                  <button>Vote</button>
+                </div>
               </div>
             {/each}
           </div>
