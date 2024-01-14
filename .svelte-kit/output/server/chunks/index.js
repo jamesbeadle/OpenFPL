@@ -3,10 +3,10 @@ import * as devalue from "devalue";
 import { Buffer } from "buffer";
 import { parse, serialize } from "cookie";
 import * as set_cookie_parser from "set-cookie-parser";
+import { HttpAgent, Actor } from "@dfinity/agent";
 import { nonNullish, isNullish } from "@dfinity/utils";
 import "dompurify";
 import { AuthClient } from "@dfinity/auth-client";
-import { HttpAgent, Actor } from "@dfinity/agent";
 import "@dfinity/nns";
 let base = "";
 let assets = base;
@@ -3355,7 +3355,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "dki80v"
+  version_hash: "u0goe2"
 };
 function get_hooks() {
   return {};
@@ -4269,31 +4269,8 @@ const idlFactory = ({ IDL }) => {
     validateUpdatePlayer: IDL.Func([UpdatePlayerDTO], [Result], [])
   });
 };
-const canisterId = { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "TOKEN_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "DFX_NETWORK": "local" }.CANISTER_ID_OPENFPL_BACKEND || { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "TOKEN_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID;
-const createActor = (canisterId2, options2 = {}) => {
-  const agent = options2.agent || new HttpAgent({ ...options2.agentOptions });
-  if (options2.agent && options2.agentOptions) {
-    console.warn(
-      "Detected both agent and agentOptions passed to createActor. Ignoring agentOptions and proceeding with the provided agent."
-    );
-  }
-  {
-    agent.fetchRootKey().catch((err) => {
-      console.warn(
-        "Unable to fetch root key. Check to ensure that your local replica is running"
-      );
-      console.error(err);
-    });
-  }
-  return Actor.createActor(idlFactory, {
-    agent,
-    canisterId: canisterId2,
-    ...options2.actorOptions
-  });
-};
-canisterId ? createActor(canisterId) : void 0;
 class ActorFactory {
-  static createActor(idlFactory2, canisterId2 = "", identity = null, options2 = null) {
+  static createActor(idlFactory2, canisterId = "", identity = null, options2 = null) {
     const hostOptions = {
       host: "http://127.0.0.1:8080",
       identity
@@ -4318,11 +4295,11 @@ class ActorFactory {
     }
     return Actor.createActor(idlFactory2, {
       agent,
-      canisterId: canisterId2,
+      canisterId,
       ...options2?.actorOptions
     });
   }
-  static createIdentityActor(authStore2, canisterId2) {
+  static createIdentityActor(authStore2, canisterId) {
     let unsubscribe;
     return new Promise((resolve2, reject) => {
       unsubscribe = authStore2.subscribe((store) => {
@@ -4332,7 +4309,7 @@ class ActorFactory {
       });
     }).then((identity) => {
       unsubscribe();
-      return ActorFactory.createActor(idlFactory, canisterId2, identity);
+      return ActorFactory.createActor(idlFactory, canisterId, identity);
     });
   }
 }

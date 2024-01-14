@@ -77,7 +77,7 @@ const config: UserConfig = {
         manualChunks: (id) => {
           const folder = dirname(id);
 
-          const lazy = ["@dfinity/nns", "@dfinity/nns-proto"];
+          const lazy = ["@dfinity/nns"];
 
           if (
             ["@sveltejs", "svelte", "@dfinity/gix-components", ...lazy].find(
