@@ -76,7 +76,7 @@
     if (isError(result)) {
       isLoading = false;
       toastsError({
-        msg: { text: "Error submitting proposal." }
+        msg: { text: "Error submitting proposal." },
       });
       console.error("Error submitting proposal");
       return;
@@ -98,11 +98,10 @@
     nationalityId = 0;
   }
 
-  function cancelModal(){
-    resetForm();  
+  function cancelModal() {
+    resetForm();
     closeModal();
   }
-
 </script>
 
 <Modal {visible} on:nnsClose={cancelModal}>

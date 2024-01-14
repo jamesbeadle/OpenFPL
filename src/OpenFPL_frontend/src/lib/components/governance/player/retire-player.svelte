@@ -56,11 +56,14 @@
 
   async function confirmProposal() {
     isLoading = true;
-    let result = await governanceStore.retirePlayer(selectedPlayerId, retirementDate);
+    let result = await governanceStore.retirePlayer(
+      selectedPlayerId,
+      retirementDate
+    );
     if (isError(result)) {
       isLoading = false;
       toastsError({
-        msg: { text: "Error submitting proposal." }
+        msg: { text: "Error submitting proposal." },
       });
       console.error("Error submitting proposal");
       return;
@@ -78,8 +81,8 @@
     clubPlayers = [];
   }
 
-  function cancelModal(){
-    resetForm();  
+  function cancelModal() {
+    resetForm();
     closeModal();
   }
 </script>

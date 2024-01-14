@@ -39,3 +39,5 @@ export const createActor = (canisterId, options = {}) => {
     ...options.actorOptions,
   });
 };
+
+export const OpenFPL_backend = canisterId ? createActor(canisterId) : undefined;

@@ -2,21 +2,21 @@
   import { onMount } from "svelte";
   import Layout from "../Layout.svelte";
   import { GovernanceCanister } from "@dfinity/nns";
-  import { authStore } from '$lib/stores/auth.store';
+  import { authStore } from "$lib/stores/auth.store";
   import { ActorFactory } from "../../utils/ActorFactory";
   import type { ListProposalsRequest, ProposalInfo } from "@dfinity/nns";
-  
+
   let activeTab: string = "proposals";
 
   let activeProposals: ProposalInfo[] = [];
   let selectedProposalStatus = 1;
 
   let proposalStatuses: [
-    { id: 1, description: "Open" },
-    { id: 2, description: "Rejected" },
-    { id: 3, description: "Accepted" },
-    { id: 4, description: "Executed" },
-    { id: 5, description: "Failed" }
+    { id: 1; description: "Open" },
+    { id: 2; description: "Rejected" },
+    { id: 3; description: "Accepted" },
+    { id: 4; description: "Executed" },
+    { id: 5; description: "Failed" }
   ];
 
   function setActiveTab(tab: string): void {
@@ -27,12 +27,12 @@
     listProposals();
   });
 
-  async function listProposals(){
+  async function listProposals() {
     const identityActor: any = await ActorFactory.createIdentityActor(
       authStore,
       process.env.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
-    ); //TODO: Create the governance canister 
-        
+    ); //TODO: Create the governance canister
+
     const { listProposals } = GovernanceCanister.create(identityActor);
     let request: ListProposalsRequest = {
       limit: 100,
@@ -40,9 +40,9 @@
       excludeTopic: [0],
       includeAllManageNeuronProposals: true,
       includeStatus: [selectedProposalStatus],
-      beforeProposal: 0n
+      beforeProposal: 0n,
     };
-    let proposalResponse = await listProposals({request, certified: false});
+    let proposalResponse = await listProposals({ request, certified: false });
     activeProposals = proposalResponse.proposals;
   }
 </script>
@@ -64,14 +64,14 @@
       </ul>
 
       {#if activeTab === "proposals"}
-        
         <div class="flex">
           <select
             class="p-2 fpl-dropdown my-4 min-w-[100px]"
             bind:value={selectedProposalStatus}
           >
             {#each proposalStatuses as proposalType}
-              <option value={proposalType.id}>{proposalType.description}</option>
+              <option value={proposalType.id}>{proposalType.description}</option
+              >
             {/each}
           </select>
         </div>
@@ -106,7 +106,7 @@ id: Option<ProposalId>;
   rewardStatus: ProposalRewardStatus;
 
             -->
-    
+
             {#each activeProposals as proposal}
               <div
                 class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer"
@@ -123,8 +123,6 @@ id: Option<ProposalId>;
             {/each}
           </div>
         </div>
-
-
       {/if}
     </div>
   </div>

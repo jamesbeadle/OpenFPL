@@ -59,7 +59,7 @@
     if (isError(result)) {
       isLoading = false;
       toastsError({
-        msg: { text: "Error submitting proposal." }
+        msg: { text: "Error submitting proposal." },
       });
       console.error("Error submitting proposal");
       return;
@@ -74,10 +74,10 @@
     selectedPlayerId = 0;
     showConfirm = false;
     clubPlayers = [];
-  } 
+  }
 
-  function cancelModal(){
-    resetForm();  
+  function cancelModal() {
+    resetForm();
     closeModal();
   }
 </script>
@@ -119,10 +119,15 @@
             </select>
           </div>
         {/if}
-        
+
         {#if selectedPlayerId > 0}
           <p>
-            Current Value: <b>£{(($playerStore.find(x => x.id == selectedPlayerId)?.valueQuarterMillions ?? 0) / 4).toFixed(2)}m</b>
+            Current Value: <b
+              >£{(
+                ($playerStore.find((x) => x.id == selectedPlayerId)
+                  ?.valueQuarterMillions ?? 0) / 4
+              ).toFixed(2)}m</b
+            >
           </p>
         {/if}
 

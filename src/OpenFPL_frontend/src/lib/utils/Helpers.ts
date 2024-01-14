@@ -80,16 +80,16 @@ export function formatUnixToDateInputValue(unixNano: number) {
   let month = (date.getMonth() + 1).toString();
   let day = date.getDate().toString();
 
-  month = month.length < 2 ? '0' + month : month;
-  day = day.length < 2 ? '0' + day : day;
+  month = month.length < 2 ? "0" + month : month;
+  day = day.length < 2 ? "0" + day : day;
 
   return `${year}-${month}-${day}`;
 }
 
 export function convertDateInputToUnixNano(dateString: string): bigint {
-  const dateParts = dateString.split('-');
+  const dateParts = dateString.split("-");
   if (dateParts.length !== 3) {
-    throw new Error('Invalid date format. Expected YYYY-MM-DD');
+    throw new Error("Invalid date format. Expected YYYY-MM-DD");
   }
 
   const year = parseInt(dateParts[0], 10);
@@ -100,7 +100,6 @@ export function convertDateInputToUnixNano(dateString: string): bigint {
   const unixTimeMillis = date.getTime();
   return BigInt(unixTimeMillis) * BigInt(1000000);
 }
-
 
 export function getPositionText(position: Position): string {
   switch (position) {

@@ -45,11 +45,11 @@
   async function confirmProposal() {
     isLoading = true;
     let result = await governanceStore.promoteFormerClub(selectedClubId);
-   
+
     if (isError(result)) {
       isLoading = false;
       toastsError({
-        msg: { text: "Error submitting proposal." }
+        msg: { text: "Error submitting proposal." },
       });
       console.error("Error submitting proposal");
       return;
@@ -65,8 +65,8 @@
     formerClubs = [];
   }
 
-  function cancelModal(){
-    resetForm();  
+  function cancelModal() {
+    resetForm();
     closeModal();
   }
 </script>

@@ -11,7 +11,11 @@
     PlayerDTO,
     PlayerPosition,
   } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-    import { convertDateInputToUnixNano, formatUnixToDateInputValue, isError } from "$lib/utils/Helpers";
+  import {
+    convertDateInputToUnixNano,
+    formatUnixToDateInputValue,
+    isError,
+  } from "$lib/utils/Helpers";
 
   export let visible: boolean;
   export let closeModal: () => void;
@@ -43,8 +47,10 @@
   $: isSubmitDisabled =
     (!isLoading && selectedPlayerId <= 0) ||
     firstName.length > 50 ||
-    lastName.length == 0 || lastName.length > 50 ||
-    shirtNumber <= 0 || shirtNumber > 99 ||
+    lastName.length == 0 ||
+    lastName.length > 50 ||
+    shirtNumber <= 0 ||
+    shirtNumber > 99 ||
     displayDOB == "" ||
     nationalityId <= 0;
 
@@ -74,18 +80,18 @@
   async function confirmProposal() {
     isLoading = true;
 
-    switch(dropdownPosition){
+    switch (dropdownPosition) {
       case 0:
-        position = {Goalkeeper:null};
+        position = { Goalkeeper: null };
         break;
       case 1:
-        position = {Defender:null};
+        position = { Defender: null };
         break;
       case 2:
-        position = {Midfielder:null};
+        position = { Midfielder: null };
         break;
       case 3:
-        position = {Forward:null};
+        position = { Forward: null };
         break;
     }
 
@@ -103,7 +109,7 @@
     if (isError(result)) {
       isLoading = false;
       toastsError({
-        msg: { text: "Error submitting proposal." }
+        msg: { text: "Error submitting proposal." },
       });
       console.error("Error submitting proposal");
       return;
@@ -136,10 +142,12 @@
   async function loadPlayer() {
     let selectedPlayer = clubPlayers.find((x) => x.id == selectedPlayerId);
     position = selectedPlayer?.position ?? { Goalkeeper: null };
-    
-    let positionText = Object.keys(selectedPlayer?.position ?? {Goalkeeper: null})[0];
 
-    switch(positionText){
+    let positionText = Object.keys(
+      selectedPlayer?.position ?? { Goalkeeper: null }
+    )[0];
+
+    switch (positionText) {
       case "Goalkeeper":
         dropdownPosition = 0;
         break;
@@ -155,7 +163,6 @@
     }
 
     updatePlayerInfo(selectedPlayer!);
-   
   }
 
   function updatePlayerInfo(player: PlayerDTO) {
@@ -168,11 +175,10 @@
     displayDOB = formatUnixToDateInputValue(Number(player.dateOfBirth));
   }
 
-  function cancelModal(){
-    resetForm();  
+  function cancelModal() {
+    resetForm();
     closeModal();
   }
-
 </script>
 
 <Modal {visible} on:nnsClose={cancelModal}>

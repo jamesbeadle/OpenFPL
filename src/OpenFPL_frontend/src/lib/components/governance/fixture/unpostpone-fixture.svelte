@@ -11,7 +11,7 @@
     ClubDTO,
     FixtureDTO,
   } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-    import { isError } from "$lib/utils/Helpers";
+  import { isError } from "$lib/utils/Helpers";
 
   export let visible: boolean;
   export let closeModal: () => void;
@@ -80,7 +80,7 @@
     if (isError(result)) {
       isLoading = false;
       toastsError({
-        msg: { text: "Error submitting proposal." }
+        msg: { text: "Error submitting proposal." },
       });
       console.error("Error submitting proposal");
       return;
@@ -99,8 +99,8 @@
     showConfirm = false;
   }
 
-  function cancelModal(){
-    resetForm();  
+  function cancelModal() {
+    resetForm();
     closeModal();
   }
 </script>
