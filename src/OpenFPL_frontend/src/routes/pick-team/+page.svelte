@@ -353,9 +353,6 @@
       return;
     }
 
-    console.log("Team before update");
-    console.log($fantasyTeam);
-
     fantasyTeam.update((currentTeam) => {
       if (!currentTeam) return null;
       const newPlayerIds = Uint16Array.from(currentTeam.playerIds);
@@ -375,8 +372,6 @@
     }
 
     let updatedTeam = $fantasyTeam;
-    console.log("Team before update");
-    console.log(updatedTeam);
 
     if (
       updatedTeam.captainId > 0 &&
@@ -528,9 +523,7 @@
   }
 
   function setCaptain(playerId: number) {
-    console.log("Setting captain");
     if (newCaptainId == 0) {
-      console.log("Current captain 0");
       newCaptainId = playerId;
       changeCaptain();
       return;
@@ -544,7 +537,6 @@
 
   function updateCaptainIfNeeded(currentTeam: ProfileDTO) {
     if (currentTeam.playerIds.filter((x) => x == 0).length > 0) {
-      console.log("Team has spaces");
       return;
     }
 
@@ -552,7 +544,6 @@
       currentTeam.captainId > 0 &&
       currentTeam.playerIds.filter((x) => x == currentTeam.captainId).length > 0
     ) {
-      console.log("Team captain already set");
       return;
     }
 
@@ -816,7 +807,6 @@
   }
 
   function changeCaptain() {
-    console.log(`updating captain to ${newCaptainId}`);
     selectedPosition = -1;
     selectedColumn = -1;
     fantasyTeam.update((currentTeam) => {

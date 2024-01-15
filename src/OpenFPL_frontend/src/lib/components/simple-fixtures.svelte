@@ -39,8 +39,8 @@
   onMount(async () => {
     await teamStore.sync();
     if ($teamStore.length == 0) return;
-    await fixtureStore.sync();
     await systemStore.sync();
+    await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
     selectedGameweek = $systemStore?.calculationGameweek ?? 1;
     fixturesWithTeams = $fixtureStore.map((fixture) => ({
       fixture,

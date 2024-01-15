@@ -40,7 +40,6 @@ function createUserStore() {
 
   async function sync() {
     const localProfile = localStorage.getItem("user_profile_data");
-
     if (localProfile) {
       set(getProfileFromLocalStorage());
       return;
@@ -55,17 +54,12 @@ function createUserStore() {
       let getProfileResponse = await identityActor.getProfile();
       let error = isError(getProfileResponse);
       if (error) {
-        console.error("Error syncing user store");
-        return;
-      }
-
-      if (!getProfileResponse) {
-        await identityActor.createProfile();
-        getProfileResponse = await identityActor.getProfile();
-        if (isError(getProfileResponse)) {
-          console.error("Error syncing user store");
+        if (getProfileResponse.err.NotFound !== undefined) {
           return;
+        } else {
+          console.error("Error syncing user store"); 
         }
+        return;
       }
 
       let profileData = getProfileResponse.ok;

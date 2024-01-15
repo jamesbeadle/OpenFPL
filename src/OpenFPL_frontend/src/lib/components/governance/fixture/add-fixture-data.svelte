@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
   import { Modal } from "@dfinity/gix-components";
+  import { systemStore } from "$lib/stores/system-store";
   import { teamStore } from "$lib/stores/team-store";
   import { toastsError } from "$lib/stores/toasts-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
@@ -36,7 +37,8 @@
   onMount(async () => {
     try {
       await teamStore.sync();
-      await fixtureStore.sync();
+      await systemStore.sync();
+      await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
       loadGameweekFixtures();
     } catch (error) {
       toastsError({

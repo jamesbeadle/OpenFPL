@@ -14,24 +14,8 @@ This document provides detailed test cases for the OpenFPL application. Each tes
 - **Status**: Pass/Fail (to be filled after the test execution).
 - **Remarks**: Any additional comments or observations.
 
-## Example Test Cases
 
-### Test Case 1: User Registration
-
-- **Test Case ID**: TC_001
-- **Title**: User is able to register a new account.
-- **Description**: This test case ensures that the user can register a new account in the OpenFPL application.
-- **Preconditions**: The application is installed and opened to the registration screen.
-- **Test Steps**:
-  1. Navigate to the registration screen.
-  2. Enter a valid username, email, and password.
-  3. Click the 'Register' button.
-- **Expected Results**: The user should receive a confirmation message and be taken to the login screen.
-- **Actual Results**:
-- **Status**:
-- **Remarks**:
-
-Setup Testing Procedure
+Testing Procedure
 
 - Auto generate fixtures
 - Setup the system for each scenario

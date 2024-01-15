@@ -43,7 +43,7 @@
   onMount(async () => {
     try {
       await systemStore.sync();
-      await fixtureStore.sync();
+      await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
       await teamStore.sync();
       loadPostponedFixtures();
     } catch (error) {

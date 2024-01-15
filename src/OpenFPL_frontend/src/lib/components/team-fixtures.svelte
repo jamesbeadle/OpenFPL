@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { teamStore } from "$lib/stores/team-store";
+  import { systemStore } from "$lib/stores/system-store";
   import { toastsError } from "$lib/stores/toasts-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
@@ -44,7 +45,8 @@
     try {
       await teamStore.sync();
       if ($teamStore.length == 0) return;
-      await fixtureStore.sync();
+      await systemStore.sync();
+      await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
 
       fixturesWithTeams = $fixtureStore.map((fixture) => ({
         fixture,

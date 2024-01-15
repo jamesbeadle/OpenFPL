@@ -65,7 +65,7 @@
       await systemStore.sync();
       await teamStore.sync();
       if ($teamStore.length == 0) return;
-      await fixtureStore.sync();
+      await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
       await playerStore.sync();
 
       let teams = $teamStore;

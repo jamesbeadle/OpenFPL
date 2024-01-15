@@ -19,24 +19,17 @@ function createFixtureStore() {
     process.env.OPENFPL_BACKEND_CANISTER_ID
   );
 
-  let systemState: SystemStateDTO;
-  systemStore.subscribe((value) => {
-    systemState = value as SystemStateDTO;
-  });
-
-  async function sync() {
-    
-    console.log("a")
-    
+  async function sync(seasonId: number) {
+        
     const category = "fixtures";
     const newHashValues = await actor.getDataHashes();
-
+    
     let error = isError(newHashValues);
     if (error) {
       console.error("Error syncing fixture store");
       return;
     }
-
+    
     let dataCacheValues: DataCacheDTO[] = newHashValues.ok;
 
     let categoryHash =
@@ -46,7 +39,7 @@ function createFixtureStore() {
     const localHash = localStorage.getItem(`${category}_hash`);
 
     if (categoryHash?.hash != localHash) {
-      const result = await actor.getFixtures(systemState.calculationSeasonId);
+      const result = await actor.getFixtures(seasonId);
 
       if (isError(result)) {
         console.error("error syncing fixture store");
@@ -54,7 +47,6 @@ function createFixtureStore() {
       }
 
       let updatedFixturesData = result.ok;
-
       localStorage.setItem(
         category,
         JSON.stringify(updatedFixturesData, replacer)
@@ -74,9 +66,7 @@ function createFixtureStore() {
   }
 
   async function getNextFixture(): Promise<FixtureDTO | undefined> {
-    console.log("Getting fixtures");
     let fixtures: FixtureDTO[] = [];
-    await sync();
     await subscribe((value) => {
       fixtures = value;
     })();

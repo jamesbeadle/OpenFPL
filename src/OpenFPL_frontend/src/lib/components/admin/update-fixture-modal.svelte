@@ -57,8 +57,9 @@
         fixtureId: fixture.id,
         seasonId: fixture.seasonId,
       };
+      await systemStore.sync();
       await fixtureStore.updateFixture(updatedFixture);
-      fixtureStore.sync();
+      fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
 
       await closeModal();
       toastsShow({

@@ -30,7 +30,7 @@
       await authStore.sync();
       await systemStore.sync();
       await countriesStore.sync();
-      await fixtureStore.sync();
+      await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
       await teamStore.sync();
       await weeklyLeaderboardStore.sync(
         $systemStore?.calculationSeasonId ?? 0,

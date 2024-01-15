@@ -81,7 +81,6 @@ function createGovernanceStore() {
     seasonId: number,
     seasonFixtures: FixtureDTO[]
   ): Promise<any> {
-    console.log(seasonId);
     if (seasonId == 0) {
       return;
     }
@@ -98,8 +97,6 @@ function createGovernanceStore() {
       };
 
       let result = await identityActor.adminAddInitialFixtures(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
-      console.log(result);
-      console.log(seasonFixtures);
 
       if (isError(result)) {
         console.error("Error submitting proposal: ", result);

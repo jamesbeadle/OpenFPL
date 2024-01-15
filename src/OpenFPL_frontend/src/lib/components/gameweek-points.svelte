@@ -38,12 +38,11 @@
       if ($teamStore.length == 0) return;
 
       await systemStore.sync();
-      await fixtureStore.sync();
+      await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
       await authStore.sync();
       await playerEventsStore.sync();
 
       selectedGameweek = $systemStore?.calculationGameweek ?? 1;
-      console.log(selectedGameweek);
       activeSeasonName = $systemStore?.calculationSeasonName ?? "-";
       gameweeks = Array.from(
         { length: $systemStore?.calculationGameweek ?? 1 },
@@ -69,9 +68,6 @@
     if (!principal) {
       return;
     }
-
-    console.log(principal);
-    console.log(selectedGameweek);
 
     let fantasyTeam = await managerStore.getFantasyTeamForGameweek(
       principal?.toText(),
