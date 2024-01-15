@@ -25,6 +25,9 @@ function createFixtureStore() {
   });
 
   async function sync() {
+    
+    console.log("a")
+    
     const category = "fixtures";
     const newHashValues = await actor.getDataHashes();
 

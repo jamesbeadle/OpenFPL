@@ -12,7 +12,7 @@
   } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   export let visible: boolean;
-  export let cancelModal: () => void;
+  export let closeModal: () => void;
 
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
   let selectedGameweek: number = 1;
@@ -56,13 +56,14 @@
   async function selectFixure() {
     goto(`/add-fixture-data?id=${selectedFixtureId}`);
   }
+
 </script>
 
-<Modal {visible} on:nnsClose={cancelModal}>
+<Modal {visible} on:nnsClose={closeModal}>
   <div class="mx-4 p-4">
     <div class="flex justify-between items-center my-2">
       <h3 class="default-header">Add Fixture Data</h3>
-      <button class="times-button" on:click={cancelModal}>&times;</button>
+      <button class="times-button" on:click={closeModal}>&times;</button>
     </div>
 
     <div class="flex justify-start items-center w-full">
@@ -101,7 +102,7 @@
           <button
             class="px-4 py-2 default-button fpl-cancel-btn min-w-[150px]"
             type="button"
-            on:click={cancelModal}
+            on:click={closeModal}
           >
             Cancel
           </button>

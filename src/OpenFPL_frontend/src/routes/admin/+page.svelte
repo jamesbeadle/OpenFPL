@@ -218,68 +218,68 @@
 
     <RevaluePlayerUp
       visible={showRevaluePlayerUpModal}
-      cancelModal={hideRevaluePlayerUpModal}
+      closeModal={hideRevaluePlayerUpModal}
     />
     <RevaluePlayerDown
       visible={showRevaluePlayerDownModal}
-      cancelModal={hideRevaluePlayerDownModal}
+      closeModal={hideRevaluePlayerDownModal}
     />
     <AddInitialFixtures
       visible={showAddInitialFixturesModal}
-      cancelModal={hideAddInitialFixturesModal}
+      closeModal={hideAddInitialFixturesModal}
     />
 
     <RescheduleFixture
       visible={showRescheduleFixtureModal}
-      cancelModal={hideRescehduleFixturesModal}
+      closeModal={hideRescehduleFixturesModal}
     />
     <LoanPlayer
       visible={showLoanPlayerModal}
-      cancelModal={hideLoanPlayerModal}
+      closeModal={hideLoanPlayerModal}
     />
     <TransferPlayer
       visible={showTransferPlayerModal}
-      cancelModal={hideTransferPlayerModal}
+      closeModal={hideTransferPlayerModal}
     />
     <RecallPlayer
       visible={showRecallPlayerModal}
-      cancelModal={hideRecallPlayerModal}
+      closeModal={hideRecallPlayerModal}
     />
     <CreatePlayer
       visible={showCreatePlayerModal}
-      cancelModal={hideCreatePlayerModal}
+      closeModal={hideCreatePlayerModal}
     />
     <UpdatePlayer
       visible={showUpdatePlayerModal}
-      cancelModal={hideUpdatePlayerModal}
+      closeModal={hideUpdatePlayerModal}
     />
     <SetPlayerInjury
       visible={showSetPlayerInjuryModal}
-      cancelModal={hideSetPlayerInjuryModal}
+      closeModal={hideSetPlayerInjuryModal}
     />
     <RetirePlayer
       visible={showRetirePlayerModal}
-      cancelModal={hideRetirePlayerModal}
+      closeModal={hideRetirePlayerModal}
     />
     <UnretirePlayer
       visible={showUnretirePlayerModal}
-      cancelModal={hideUnretirePlayerModal}
+      closeModal={hideUnretirePlayerModal}
     />
     <PromoteFormerClub
       visible={showPromoteFormerClubModal}
-      cancelModal={hidePromoteFormerClubModal}
+      closeModal={hidePromoteFormerClubModal}
     />
     <PromoteNewClub
       visible={showPromoteNewClubModal}
-      cancelModal={hidePromoteNewClubModal}
+      closeModal={hidePromoteNewClubModal}
     />
     <UpdateClub
       visible={showUpdateClubModal}
-      cancelModal={hideUpdateClubModal}
+      closeModal={hideUpdateClubModal}
     />
     <AddFixtureData
       visible={showAddFixtureDataModal}
-      cancelModal={hideAddFixtureDataModal}
+      closeModal={hideAddFixtureDataModal}
     />
 
     <div class="m-4">

@@ -14,7 +14,7 @@
   import { isError } from "$lib/utils/Helpers";
 
   export let visible: boolean;
-  export let cancelModal: () => void;
+  export let closeModal: () => void;
 
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
   let selectedGameweek: number = 0;
@@ -107,6 +107,11 @@
     updatedFixtureGameweek = 0;
     updatedFixtureDate = 0;
     showConfirm = false;
+  }
+
+  function cancelModal() {
+    resetForm();
+    closeModal();
   }
 </script>
 
