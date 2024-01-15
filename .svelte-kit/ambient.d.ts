@@ -53,6 +53,7 @@ declare module '$env/static/private' {
 	export const npm_node_execpath: string;
 	export const SHLVL: string;
 	export const npm_config_noproxy: string;
+	export const MOTD_SHOWN: string;
 	export const HOME: string;
 	export const TERM_PROGRAM_VERSION: string;
 	export const TOKEN_NAME: string;
@@ -70,12 +71,12 @@ declare module '$env/static/private' {
 	export const WSL_DISTRO_NAME: string;
 	export const COLOR: string;
 	export const NVM_DIR: string;
-	export const npm_config_metrics_registry: string;
 	export const LOGNAME: string;
 	export const NAME: string;
 	export const WSL_INTEROP: string;
 	export const _: string;
 	export const npm_config_prefix: string;
+	export const npm_config_npm_version: string;
 	export const TERM: string;
 	export const npm_config_cache: string;
 	export const npm_config_node_gyp: string;
@@ -166,6 +167,7 @@ declare module '$env/dynamic/private' {
 		npm_node_execpath: string;
 		SHLVL: string;
 		npm_config_noproxy: string;
+		MOTD_SHOWN: string;
 		HOME: string;
 		TERM_PROGRAM_VERSION: string;
 		TOKEN_NAME: string;
@@ -183,12 +185,12 @@ declare module '$env/dynamic/private' {
 		WSL_DISTRO_NAME: string;
 		COLOR: string;
 		NVM_DIR: string;
-		npm_config_metrics_registry: string;
 		LOGNAME: string;
 		NAME: string;
 		WSL_INTEROP: string;
 		_: string;
 		npm_config_prefix: string;
+		npm_config_npm_version: string;
 		TERM: string;
 		npm_config_cache: string;
 		npm_config_node_gyp: string;

@@ -3,7 +3,8 @@
     "OpenFPL_backend": {
       "dependencies": ["token_canister"],
       "main": "src/OpenFPL_backend/main.mo",
-      "type": "motoko"
+      "type": "motoko",
+      "optimize": "cycles"
     },
     "OpenFPL_frontend": {
       "dependencies": ["OpenFPL_backend"],
@@ -35,7 +36,7 @@
   "defaults": {
     "build": {
       "args": "",
-      "packtool": ""
+      "packtool": "mops sources"
     }
   },
   "output_env_file": ".env",
