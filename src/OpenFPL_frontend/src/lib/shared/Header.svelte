@@ -31,13 +31,18 @@
       await systemStore.sync();
       await countriesStore.sync();
       await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
+      
+      if($fixtureStore.length == 0){
+        return;
+      }
+      
       await teamStore.sync();
+      await playerStore.sync();
+      await playerEventsStore.sync();
       await weeklyLeaderboardStore.sync(
         $systemStore?.calculationSeasonId ?? 0,
         $systemStore?.calculationGameweek ?? 0
       );
-      await playerStore.sync();
-      await playerEventsStore.sync();
     } catch (error) {
       toastsError({
         msg: { text: "Error syncing authentication." },
