@@ -16,7 +16,7 @@ function createTeamStore() {
   );
 
   async function sync() {
-    const category = "teams";
+    const category = "clubs";
     const newHashValues = await actor.getDataHashes();
 
     let error = isError(newHashValues);

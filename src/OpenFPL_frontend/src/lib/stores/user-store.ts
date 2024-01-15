@@ -57,7 +57,7 @@ function createUserStore() {
         if (getProfileResponse.err.NotFound !== undefined) {
           return;
         } else {
-          console.error("Error syncing user store"); 
+          console.error("Error syncing user store");
         }
         return;
       }

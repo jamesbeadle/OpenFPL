@@ -26,7 +26,7 @@
   import { weeklyLeaderboardStore } from "$lib/stores/weekly-leaderboard-store";
 
   let activeTab: string = "fixtures";
-  let managerCount = -1;
+  let managerCount = 0;
   let countdownDays = "00";
   let countdownHours = "00";
   let countdownMinutes = "00";
@@ -45,6 +45,7 @@
       await systemStore.sync();
       await teamStore.sync();
       await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
+      
       if ($teamStore.length == 0) return;
       if ($fixtureStore.length == 0) return;
 
@@ -168,7 +169,7 @@
                   <span class="content-panel-header"
                     >{nextFixtureHomeTeam
                       ? nextFixtureHomeTeam.abbreviatedName
-                      : ""}</span
+                      : "-"}</span
                   >
                 </a>
               </div>
@@ -197,7 +198,7 @@
                   <span class="content-panel-header"
                     >{nextFixtureAwayTeam
                       ? nextFixtureAwayTeam.abbreviatedName
-                      : ""}</span
+                      : "-"}</span
                   >
                 </a>
               </div>
@@ -250,7 +251,7 @@
                   <span class="content-panel-header">
                     {nextFixtureHomeTeam
                       ? nextFixtureHomeTeam.abbreviatedName
-                      : ""}
+                      : "-"}
                   </span>
                 </a>
               </div>
@@ -281,7 +282,7 @@
                   <span class="content-panel-header">
                     {nextFixtureAwayTeam
                       ? nextFixtureAwayTeam.abbreviatedName
-                      : ""}
+                      : "-"}
                   </span>
                 </a>
               </div>

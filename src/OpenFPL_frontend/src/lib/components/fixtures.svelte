@@ -49,6 +49,7 @@
 
       await systemStore.sync();
       await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
+      
       selectedGameweek = $systemStore?.calculationGameweek ?? 1;
       fixturesWithTeams = $fixtureStore.map((fixture) => ({
         fixture,

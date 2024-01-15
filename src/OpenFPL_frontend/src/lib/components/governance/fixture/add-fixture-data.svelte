@@ -58,7 +58,6 @@
   async function selectFixure() {
     goto(`/add-fixture-data?id=${selectedFixtureId}`);
   }
-
 </script>
 
 <Modal {visible} on:nnsClose={closeModal}>

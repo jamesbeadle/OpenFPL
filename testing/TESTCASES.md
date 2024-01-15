@@ -14,7 +14,6 @@ This document provides detailed test cases for the OpenFPL application. Each tes
 - **Status**: Pass/Fail (to be filled after the test execution).
 - **Remarks**: Any additional comments or observations.
 
-
 Testing Procedure
 
 - Auto generate fixtures

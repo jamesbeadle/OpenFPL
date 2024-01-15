@@ -4,12 +4,10 @@ import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
   DataCacheDTO,
   FixtureDTO,
-  SystemStateDTO,
   UpdateFixtureDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { isError, replacer } from "../utils/Helpers";
-import { systemStore } from "./system-store";
 
 function createFixtureStore() {
   const { subscribe, set } = writable<FixtureDTO[]>([]);
@@ -20,16 +18,15 @@ function createFixtureStore() {
   );
 
   async function sync(seasonId: number) {
-        
     const category = "fixtures";
     const newHashValues = await actor.getDataHashes();
-    
+
     let error = isError(newHashValues);
     if (error) {
       console.error("Error syncing fixture store");
       return;
     }
-    
+
     let dataCacheValues: DataCacheDTO[] = newHashValues.ok;
 
     let categoryHash =
@@ -37,7 +34,6 @@ function createFixtureStore() {
       null;
 
     const localHash = localStorage.getItem(`${category}_hash`);
-
     if (categoryHash?.hash != localHash) {
       const result = await actor.getFixtures(seasonId);
 

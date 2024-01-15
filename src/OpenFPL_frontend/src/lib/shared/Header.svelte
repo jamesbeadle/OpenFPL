@@ -31,11 +31,11 @@
       await systemStore.sync();
       await countriesStore.sync();
       await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
-      
-      if($fixtureStore.length == 0){
+
+      if ($fixtureStore.length == 0) {
         return;
       }
-      
+
       await teamStore.sync();
       await playerStore.sync();
       await playerEventsStore.sync();

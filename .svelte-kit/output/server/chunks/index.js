@@ -3355,7 +3355,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1aoawz9"
+  version_hash: "ooj6a8"
 };
 function get_hooks() {
   return {};
@@ -4523,8 +4523,11 @@ function createSystemStore() {
     let dataCacheValues = newHashValues.ok;
     let categoryHash = dataCacheValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(`${category}_hash`);
+    console.log(categoryHash?.hash != localHash);
     if (categoryHash?.hash != localHash) {
       let result = await actor.getSystemState();
+      console.log("result");
+      console.log(result);
       if (isError(result)) {
         console.error("Error syncing system store");
         return;
@@ -4585,11 +4588,7 @@ function createFixtureStore() {
     idlFactory,
     { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
   );
-  let systemState;
-  systemStore.subscribe((value) => {
-    systemState = value;
-  });
-  async function sync() {
+  async function sync(seasonId) {
     const category = "fixtures";
     const newHashValues = await actor.getDataHashes();
     let error2 = isError(newHashValues);
@@ -4601,7 +4600,7 @@ function createFixtureStore() {
     let categoryHash = dataCacheValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(`${category}_hash`);
     if (categoryHash?.hash != localHash) {
-      const result = await actor.getFixtures(systemState.calculationSeasonId);
+      const result = await actor.getFixtures(seasonId);
       if (isError(result)) {
         console.error("error syncing fixture store");
         return;
@@ -4625,9 +4624,7 @@ function createFixtureStore() {
     }
   }
   async function getNextFixture() {
-    console.log("Getting fixtures");
     let fixtures = [];
-    await sync();
     await subscribe2((value) => {
       fixtures = value;
     })();
@@ -6040,16 +6037,12 @@ function createUserStore() {
       let getProfileResponse = await identityActor.getProfile();
       let error2 = isError(getProfileResponse);
       if (error2) {
-        console.error("Error syncing user store");
-        return;
-      }
-      if (!getProfileResponse) {
-        await identityActor.createProfile();
-        getProfileResponse = await identityActor.getProfile();
-        if (isError(getProfileResponse)) {
-          console.error("Error syncing user store");
+        if (getProfileResponse.err.NotFound !== void 0) {
           return;
+        } else {
+          console.error("Error syncing user store");
         }
+        return;
       }
       let profileData = getProfileResponse.ok;
       if (profileData && profileData.profilePicture instanceof Uint8Array) {
@@ -6271,11 +6264,13 @@ const Header = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let currentBorder;
   let $page, $$unsubscribe_page;
   let $$unsubscribe_systemStore;
+  let $$unsubscribe_fixtureStore;
   let $authSignedInStore, $$unsubscribe_authSignedInStore;
   let $authIsAdmin, $$unsubscribe_authIsAdmin;
   let $userGetProfilePicture, $$unsubscribe_userGetProfilePicture;
   $$unsubscribe_page = subscribe(page, (value) => $page = value);
   $$unsubscribe_systemStore = subscribe(systemStore, (value) => value);
+  $$unsubscribe_fixtureStore = subscribe(fixtureStore, (value) => value);
   $$unsubscribe_authSignedInStore = subscribe(authSignedInStore, (value) => $authSignedInStore = value);
   $$unsubscribe_authIsAdmin = subscribe(authIsAdmin, (value) => $authIsAdmin = value);
   $$unsubscribe_userGetProfilePicture = subscribe(userGetProfilePicture, (value) => $userGetProfilePicture = value);
@@ -6298,6 +6293,7 @@ const Header = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   currentBorder = (route) => $page.url.pathname === route ? "active-border" : "";
   $$unsubscribe_page();
   $$unsubscribe_systemStore();
+  $$unsubscribe_fixtureStore();
   $$unsubscribe_authSignedInStore();
   $$unsubscribe_authIsAdmin();
   $$unsubscribe_userGetProfilePicture();
@@ -6624,7 +6620,6 @@ function createGovernanceStore() {
     }
   }
   async function addInitialFixtures(seasonId, seasonFixtures) {
-    console.log(seasonId);
     if (seasonId == 0) {
       return;
     }
@@ -6638,8 +6633,6 @@ function createGovernanceStore() {
         seasonFixtures
       };
       let result = await identityActor.adminAddInitialFixtures(dto);
-      console.log(result);
-      console.log(seasonFixtures);
       if (isError(result)) {
         console.error("Error submitting proposal: ", result);
         return;
