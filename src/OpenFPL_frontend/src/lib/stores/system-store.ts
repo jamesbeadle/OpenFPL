@@ -35,11 +35,8 @@ function createSystemStore() {
 
     const localHash = localStorage.getItem(`${category}_hash`);
 
-    console.log(categoryHash?.hash != localHash);
     if (categoryHash?.hash != localHash) {
       let result = await actor.getSystemState();
-      console.log("result");
-      console.log(result);
       if (isError(result)) {
         console.error("Error syncing system store");
         return;

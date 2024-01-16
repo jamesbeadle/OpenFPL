@@ -94,9 +94,7 @@ function createWeeklyLeaderboardStore() {
         }
       }
     }
-    console.log(
-      "//TODO: THIS SHOULD BE CALLED REPEATEDLY IF THERE IS NO DATA THEN NO ERRORS"
-    );
+    
     let leaderboardData = await actor.getWeeklyLeaderboard(
       seasonId,
       gameweek,
@@ -106,7 +104,6 @@ function createWeeklyLeaderboardStore() {
     );
 
     if (isError(leaderboardData)) {
-      console.error("Error fetching weekly leaderboard data");
       let emptyLeaderboard = {
         entries: [],
         gameweek: 0,

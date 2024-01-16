@@ -16,7 +16,7 @@
   let profile: Writable<ProfileDTO> = writable({
     playerIds: [],
     countrymenCountryId: 0,
-    username: "",
+    username: "Not Set",
     goalGetterPlayerId: 0,
     hatTrickHeroGameweek: 0,
     transfersAvailable: 3,

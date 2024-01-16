@@ -176,7 +176,6 @@ function createManagerStore() {
       const result = await identityActor.getManager();
 
       if (isError(result)) {
-        console.error("Error fetching fantasy team.");
         return newManager;
       }
 

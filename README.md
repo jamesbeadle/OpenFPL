@@ -1,44 +1,34 @@
-OpenFPL is a decentralised fantasy football application, pioneering the integration of blockchain technology into the world of fantasy sports. This project is built using Svelte, TypeScript, and Motoko, delivering a unique and engaging experience for fantasy football enthusiasts.
-
-Features
-Decentralised Platform: Ensuring transparent and secure fantasy football interactions.
-User-Friendly Interface: Developed with Svelte, offering a responsive and intuitive user experience.
-Blockchain Integration: Powered by Motoko, enabling reliable and efficient transactions.
+OpenFPL is a decentralised fantasy football application built on the Internet Computer blockchain using Svelte, TypeScript & Motoko.
 
 Getting Started
-Follow these steps to set up and run OpenFPL on your local machine for development and testing purposes.
+Follow these steps to setup OpenFPL on your local machine for development and testing purposes.
 
 Prerequisites
-Node.js
-Internet Computer blockchain access
-Installation
-Clone the repo
-sh
-Copy code
-git clone https://github.com/jamesbeadle/OpenFPL.git
-Install NPM packages
-sh
-Copy code
-npm install
-Usage
-For more examples on how to use OpenFPL, please refer to the Documentation.
+These steps assume that you already run IC projects within a local development environment, ensuring you have the experience to test this application.
+
+More information about the Internet Computer blockchain can be found at https://internetcomputer.org.
+
 
 Testing
-To ensure the highest quality and reliability of OpenFPL, comprehensive testing has been conducted. You can find detailed test cases and their outcomes in the Test Cases Document.
+Clone the repo and install dependencies using npm install. 
 
-Running Tests
-To run tests, use the following command:
+Create the token canister using the CrateTokenCanister.txt script.
 
-sh
-Copy code
-npm run test
-Contributing
-Contributions are what make the open-source community an amazing place to learn, inspire, and create. Any contributions you make are greatly appreciated.
+Run dfx deploy to deploy the Main canister and frontend canister.
 
-License
-Distributed under the MIT License. See LICENSE for more information.
+Within the CanisterIds.mo file update the local canister ids to the deployed canister ids.
 
-Contact
-OpenChat: beadle
+Within the Environment.mo ensure that you have set your network to local.
 
-Project Link: https://github.com/jamesbeadle/OpenFPL
+Redeploy the application with the updated canister id and environment files.
+
+
+Update Admin Principal
+For testing purposes you will need to update the admin principal to give you access to the admin dashboard. Here you can initialise system. You can find your principal in the profile section accessible via the navbar.
+
+Within the admin dashboard call the init function to create the initial set of Premier League teams.
+
+Seed the system with fixtures via the "Add Initial Fixtures" proposal type. A csv of fixtures can be found within the testing folder of this repository.
+
+You can now create a user through either picking a fantasy team and saving it, or going to the profile section and updating any of the default profile information.
+

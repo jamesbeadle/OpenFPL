@@ -28,7 +28,6 @@
   let maxValue = 0;
   let currentPage = 1;
   const pageSize = 10;
-  console.log($playerStore);
   $: filteredPlayers = $playerStore.filter((player) => {
     const normalizedFilterSurname = normalizeString(
       filterSurname.toLowerCase()

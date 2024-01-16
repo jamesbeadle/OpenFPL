@@ -46,7 +46,7 @@ function createMonthlyLeaderboardStore() {
       let result = await actor.getMonthlyLeaderboards();
 
       if (isError(result)) {
-        console.log("Error syncing monthly leaderboards");
+        console.error("Error syncing monthly leaderboards");
         return;
       }
 
@@ -119,7 +119,7 @@ function createMonthlyLeaderboardStore() {
     };
 
     if (isError(result)) {
-      console.log("Error fetching monthly leaderboard");
+      console.error("Error fetching monthly leaderboard");
       return emptyReturn;
     }
 

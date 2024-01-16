@@ -24,6 +24,8 @@
   import PromoteNewClub from "$lib/components/governance/club/promote-new-club.svelte";
   import UpdateClub from "$lib/components/governance/club/update-club.svelte";
   import AddFixtureData from "$lib/components/governance/fixture/add-fixture-data.svelte";
+  import { ActorFactory } from "../../utils/ActorFactory";
+  import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 
   let showSystemStateModal: boolean = false;
   let showSnapshotModal: boolean = false;
@@ -199,6 +201,15 @@
   function hideAddFixtureDataModal(): void {
     showAddFixtureDataModal = false;
   }
+
+  function init(){
+    localStorage.clear();
+    let actor: any = ActorFactory.createActor(
+      idlFactory,
+      process.env.OPENFPL_BACKEND_CANISTER_ID
+    );
+    actor.init();
+  }
 </script>
 
 <Layout>
@@ -291,6 +302,10 @@
 
         <p class="mt-2 mx-4">Just in case:</p>
         <div class="flex flex-wrap p-4">
+          <button
+            class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1"
+            on:click={init}>Init</button
+          >
           <button
             class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1"
             on:click={displaySystemStateModal}>System Status</button
