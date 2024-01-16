@@ -16,7 +16,7 @@
     {
       id: 1,
       name: "Goal Getter",
-      image: "goal-getter.png",
+      image: "/goal-getter.png",
       description:
         "Select a player you think will score in a game to receive a X3 mulitplier for each goal scored.",
       selectionType: BonusType.PLAYER,
@@ -24,7 +24,7 @@
     {
       id: 2,
       name: "Pass Master",
-      image: "pass-master.png",
+      image: "/pass-master.png",
       description:
         "Select a player you think will assist in a game to receive a X3 mulitplier for each assist.",
       selectionType: BonusType.PLAYER,
@@ -32,7 +32,7 @@
     {
       id: 3,
       name: "No Entry",
-      image: "no-entry.png",
+      image: "/no-entry.png",
       description:
         "Select a goalkeeper or defender you think will keep a clean sheet to receive a X3 multipler on their total score.",
       selectionType: BonusType.PLAYER,
@@ -40,7 +40,7 @@
     {
       id: 4,
       name: "Team Boost",
-      image: "team-boost.png",
+      image: "/team-boost.png",
       description:
         "Receive a X2 multiplier from all players from a single club that are in your team.",
       selectionType: BonusType.TEAM,
@@ -48,7 +48,7 @@
     {
       id: 5,
       name: "Safe Hands",
-      image: "safe-hands.png",
+      image: "/safe-hands.png",
       description:
         "Receive a X3 multiplier on your goalkeeper if they make 5 saves in a match.",
       selectionType: BonusType.AUTOMATIC,
@@ -56,7 +56,7 @@
     {
       id: 6,
       name: "Captain Fantastic",
-      image: "captain-fantastic.png",
+      image: "/captain-fantastic.png",
       description:
         "Receive a X2 multiplier on your team captain's score if they score a goal in a match.",
       selectionType: BonusType.AUTOMATIC,
@@ -64,14 +64,14 @@
     {
       id: 7,
       name: "Prospects",
-      image: "prospects.png",
+      image: "/prospects.png",
       description: "Receive a X2 multiplier for players under the age of 21.",
       selectionType: BonusType.AUTOMATIC,
     },
     {
       id: 8,
       name: "Countrymen",
-      image: "countrymen.png",
+      image: "/countrymen.png",
       description:
         "Receive a X2 multiplier for players of a selected nationality.",
       selectionType: BonusType.COUNTRY,
@@ -79,7 +79,7 @@
     {
       id: 9,
       name: "Brace Bonus",
-      image: "brace-bonus.png",
+      image: "/brace-bonus.png",
       description:
         "Receive a X2 multiplier on a player's score if they score 2 or more goals in a game. Applies to every player who scores a brace.",
       selectionType: BonusType.AUTOMATIC,
@@ -87,7 +87,7 @@
     {
       id: 10,
       name: "Hat-Trick Hero",
-      image: "hat-trick-hero.png",
+      image: "/hat-trick-hero.png",
       description:
         "Receive a X3 multiplier on a player's score if they score 3 or more goals in a game. Applies to every player who scores a hat-trick.",
       selectionType: BonusType.AUTOMATIC,

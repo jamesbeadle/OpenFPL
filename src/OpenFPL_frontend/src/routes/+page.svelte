@@ -231,7 +231,7 @@
             <div class="flex flex-row">
               <div class="flex justify-center">
                 <a
-                  class="flex flex-col items-center justify-left mt-4 lg:mt-3 xl:mt-6"
+                  class="flex flex-col items-center justify-left mt-5"
                   href={`/club?id=${
                     nextFixtureHomeTeam ? nextFixtureHomeTeam.id : -1
                   }`}
@@ -262,7 +262,7 @@
               </div>
               <div class="flex justify-center">
                 <a
-                  class="flex flex-col items-center justify-center mt-4 lg:mt-3 xl:mt-6"
+                  class="flex flex-col items-center justify-center mt-5"
                   href={`/club?id=${
                     nextFixtureAwayTeam ? nextFixtureAwayTeam.id : -1
                   }`}

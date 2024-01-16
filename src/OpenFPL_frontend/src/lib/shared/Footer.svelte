@@ -16,7 +16,7 @@
             rel="noopener noreferrer"
           >
             <img
-              src="openchat.png"
+              src="/openchat.png"
               class="h-4 w-auto mb-2 mr-2"
               alt="OpenChat"
             />
@@ -26,14 +26,14 @@
             target="_blank"
             rel="noopener noreferrer"
           >
-            <img src="twitter.png" class="h-4 w-auto mb-2 mr-2" alt="Twitter" />
+            <img src="/twitter.png" class="h-4 w-auto mb-2 mr-2" alt="Twitter" />
           </a>
           <a
             href="https://t.co/WmOhFA8JUR"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <img src="discord.png" class="h-4 w-auto mb-2 mr-2" alt="Discord" />
+            <img src="/discord.png" class="h-4 w-auto mb-2 mr-2" alt="Discord" />
           </a>
           <a
             href="https://t.co/vVkquMrdOu"
@@ -41,7 +41,7 @@
             rel="noopener noreferrer"
           >
             <img
-              src="telegram.png"
+              src="/telegram.png"
               class="h-4 w-auto mb-2 mr-2"
               alt="Telegram"
             />
@@ -51,7 +51,7 @@
             target="_blank"
             rel="noopener noreferrer"
           >
-            <img src="github.png" class="h-4 w-auto mb-2" alt="GitHub" />
+            <img src="/github.png" class="h-4 w-auto mb-2" alt="GitHub" />
           </a>
         </div>
       </div>

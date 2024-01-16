@@ -1068,7 +1068,7 @@
         {#if pitchView}
           <div class="relative w-full xl:w-1/2 mt-2">
             <img
-              src="pitch.png"
+              src="/pitch.png"
               alt="pitch"
               class="w-full h-auto"
               on:load={updatePitchHeight}
@@ -1080,7 +1080,7 @@
                   <div class="relative inline-block">
                     <img
                       class="h-6 sm:h-8 md:h-12 m-0 md:m-1"
-                      src="board.png"
+                      src="/board.png"
                       alt="OpenChat"
                     />
                     <div class="absolute top-0 left-0 w-full h-full">
@@ -1099,7 +1099,7 @@
                   <div class="relative inline-block">
                     <img
                       class="h-6 sm:h-8 md:h-12 m-0 md:m-1"
-                      src="board.png"
+                      src="/board.png"
                       alt="OpenChat"
                     />
                     <div class="absolute top-0 left-0 w-full h-full">

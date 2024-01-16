@@ -46,25 +46,25 @@
 
   function getBonusIcon(snapshot: FantasyTeamSnapshot) {
     if (snapshot.goalGetterGameweek === snapshot.gameweek) {
-      return `<img src="goal-getter.png" alt="Bonus" class="w-6 md:w-9" />`;
+      return `<img src="/goal-getter.png" alt="Bonus" class="w-6 md:w-9" />`;
     } else if (snapshot.passMasterGameweek === snapshot.gameweek) {
-      return `<img src="pass-master.png" alt="Bonus" class="w-6 md:w-9" />`;
+      return `<img src="/pass-master.png" alt="Bonus" class="w-6 md:w-9" />`;
     } else if (snapshot.noEntryGameweek === snapshot.gameweek) {
-      return `<img src="no-entry.png" alt="Bonus" class="w-6 md:w-9" />`;
+      return `<img src="/no-entry.png" alt="Bonus" class="w-6 md:w-9" />`;
     } else if (snapshot.teamBoostGameweek === snapshot.gameweek) {
-      return `<img src="team-boost.png" alt="Bonus" class="w-6 md:w-9" />`;
+      return `<img src="/team-boost.png" alt="Bonus" class="w-6 md:w-9" />`;
     } else if (snapshot.safeHandsGameweek === snapshot.gameweek) {
-      return `<img src="safe-hands.png" alt="Bonus" class="w-6 md:w-9" />`;
+      return `<img src="/safe-hands.png" alt="Bonus" class="w-6 md:w-9" />`;
     } else if (snapshot.captainFantasticGameweek === snapshot.gameweek) {
-      return `<img src="captain-fantastic.png" alt="Bonus" class="w-6 md:w-9" />`;
+      return `<img src="/captain-fantastic.png" alt="Bonus" class="w-6 md:w-9" />`;
     } else if (snapshot.prospectsGameweek === snapshot.gameweek) {
-      return `<img src="prospects.png" alt="Bonus" class="w-6 md:w-9" />`;
+      return `<img src="/prospects.png" alt="Bonus" class="w-6 md:w-9" />`;
     } else if (snapshot.countrymenGameweek === snapshot.gameweek) {
-      return `<img src="countryment.png" alt="Bonus" class="w-6 md:w-9" />`;
+      return `<img src="/countryment.png" alt="Bonus" class="w-6 md:w-9" />`;
     } else if (snapshot.braceBonusGameweek === snapshot.gameweek) {
-      return `<img src="brace-bonus.png" alt="Bonus" class="w-6 md:w-9" />`;
+      return `<img src="/brace-bonus.png" alt="Bonus" class="w-6 md:w-9" />`;
     } else if (snapshot.hatTrickHeroGameweek === snapshot.gameweek) {
-      return `<img src="hat-trick-hero.png" alt="Bonus" class="w-6 md:w-9" />`;
+      return `<img src="/hat-trick-hero.png" alt="Bonus" class="w-6 md:w-9" />`;
     } else {
       return "-";
     }

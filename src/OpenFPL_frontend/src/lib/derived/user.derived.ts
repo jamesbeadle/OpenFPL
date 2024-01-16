@@ -9,7 +9,7 @@ export const userGetProfilePicture: Readable<string> = derived(
     user.profilePicture !== undefined &&
     user.profilePicture.length > 0
       ? URL.createObjectURL(new Blob([new Uint8Array(user.profilePicture)]))
-      : "profile_placeholder.png"
+      : "/profile_placeholder.png"
 );
 
 export const userGetFavouriteTeam: Readable<number> = derived(

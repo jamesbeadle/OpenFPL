@@ -47,7 +47,7 @@
       const blobUrl =
         manager.profilePicture.length > 0
           ? URL.createObjectURL(blob)
-          : "profile_placeholder.png";
+          : "/profile_placeholder.png";
       profilePicture = blobUrl;
 
       joinedDate = getDateFromBigInt(Number(manager.createDate));

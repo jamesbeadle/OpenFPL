@@ -56,7 +56,7 @@
   $: profileSrc =
     $profile && $profile?.profilePicture && $profile?.profilePicture?.length > 0
       ? URL.createObjectURL(new Blob([new Uint8Array($profile.profilePicture)]))
-      : "profile_placeholder.png";
+      : "/profile_placeholder.png";
 
   $: gameweek = $systemStore?.calculationGameweek ?? 1;
 
@@ -281,7 +281,7 @@
               class="flex items-center p-4 md:p-2 rounded-lg shadow-md border border-gray-700"
             >
               <img
-                src="ICPCoin.png"
+                src="/ICPCoin.png"
                 alt="ICP"
                 class="h-12 w-12 md:h-9 md:w-9"
               />
@@ -294,7 +294,7 @@
               class="flex items-center p-4 rounded-lg shadow-md border border-gray-700"
             >
               <img
-                src="FPLCoin.png"
+                src="/FPLCoin.png"
                 alt="FPL"
                 class="h-12 w-12 md:h-9 md:w-9"
               />
@@ -307,7 +307,7 @@
               class="flex items-center p-4 rounded-lg shadow-md border border-gray-700"
             >
               <img
-                src="ckBTCCoin.png"
+                src="/ckBTCCoin.png"
                 alt="ICP"
                 class="h-12 w-12 md:h-9 md:w-9"
               />
@@ -320,7 +320,7 @@
               class="flex items-center p-4 rounded-lg shadow-md border border-gray-700"
             >
               <img
-                src="ckETHCoin.png"
+                src="/ckETHCoin.png"
                 alt="ICP"
                 class="h-12 w-12 md:h-9 md:w-9"
               />
