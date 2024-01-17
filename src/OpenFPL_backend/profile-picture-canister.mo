@@ -38,6 +38,9 @@ actor class ProfilePictureCanister() {
   public shared ({ caller }) func addProfilePicture(principalId : T.PrincipalId, profilePicture : Blob) : async () {
     assert not Principal.isAnonymous(caller);
     let callerPrincipalId = Principal.toText(caller);
+    Debug.print(debug_show "Checking principals");
+    Debug.print(debug_show callerPrincipalId);
+    Debug.print(debug_show main_canister_id);
     assert callerPrincipalId == main_canister_id;
 
     switch (currentBucketIndex) {

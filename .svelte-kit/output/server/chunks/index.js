@@ -3355,7 +3355,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "ooj6a8"
+  version_hash: "1erg7bn"
 };
 function get_hooks() {
   return {};
@@ -4104,6 +4104,7 @@ const idlFactory = ({ IDL }) => {
     gameweek: GameweekNumber
   });
   const Result_2 = IDL.Variant({ ok: WeeklyLeaderboardDTO, err: Error2 });
+  const Result_1 = IDL.Variant({ ok: IDL.Null, err: Error2 });
   const UpdateFantasyTeamDTO = IDL.Record({
     playerIds: IDL.Vec(PlayerId),
     countrymenCountryId: CountryId,
@@ -4127,7 +4128,6 @@ const idlFactory = ({ IDL }) => {
     passMasterPlayerId: PlayerId,
     captainId: PlayerId
   });
-  const Result_1 = IDL.Variant({ ok: IDL.Null, err: Error2 });
   const UpdateFixtureDTO = IDL.Record({
     status: FixtureStatusType,
     fixtureId: FixtureId,
@@ -4242,7 +4242,7 @@ const idlFactory = ({ IDL }) => {
       [Result_2],
       []
     ),
-    init: IDL.Func([], [], []),
+    init: IDL.Func([], [Result_1], []),
     isUsernameValid: IDL.Func([IDL.Text], [IDL.Bool], ["query"]),
     requestCanisterTopup: IDL.Func([], [], []),
     saveFantasyTeam: IDL.Func([UpdateFantasyTeamDTO], [Result_1], []),
@@ -4523,11 +4523,8 @@ function createSystemStore() {
     let dataCacheValues = newHashValues.ok;
     let categoryHash = dataCacheValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(`${category}_hash`);
-    console.log(categoryHash?.hash != localHash);
     if (categoryHash?.hash != localHash) {
       let result = await actor.getSystemState();
-      console.log("result");
-      console.log(result);
       if (isError(result)) {
         console.error("Error syncing system store");
         return;
@@ -4677,7 +4674,7 @@ function createTeamStore() {
     { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync() {
-    const category = "teams";
+    const category = "clubs";
     const newHashValues = await actor.getDataHashes();
     let error2 = isError(newHashValues);
     if (error2) {
@@ -5291,7 +5288,6 @@ function createManagerStore() {
       );
       const result = await identityActor.getManager();
       if (isError(result)) {
-        console.error("Error fetching fantasy team.");
         return newManager;
       }
       let fantasyTeam = result.ok;
@@ -5482,7 +5478,13 @@ function createWeeklyLeaderboardStore() {
     let categoryHash = dataCacheValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(`${category}_hash`);
     if (categoryHash?.hash != localHash) {
-      let result = await actor.getWeeklyLeaderboard(seasonId, gameweek, 100, 0);
+      let result = await actor.getWeeklyLeaderboard(
+        seasonId,
+        gameweek,
+        100,
+        0,
+        ""
+      );
       if (isError(result)) {
         let emptyLeaderboard = {
           entries: [],
@@ -5526,9 +5528,6 @@ function createWeeklyLeaderboardStore() {
         }
       }
     }
-    console.log(
-      "//TODO: THIS SHOULD BE CALLED REPEATEDLY IF THERE IS NO DATA THEN NO ERRORS"
-    );
     let leaderboardData = await actor.getWeeklyLeaderboard(
       seasonId,
       gameweek,
@@ -5537,7 +5536,6 @@ function createWeeklyLeaderboardStore() {
       searchTerm
     );
     if (isError(leaderboardData)) {
-      console.error("Error fetching weekly leaderboard data");
       let emptyLeaderboard = {
         entries: [],
         gameweek: 0,
@@ -6248,7 +6246,7 @@ const authIsAdmin = derived(
 );
 const userGetProfilePicture = derived(
   userStore,
-  (user) => user !== null && user !== void 0 && user.profilePicture !== void 0 && user.profilePicture.length > 0 ? URL.createObjectURL(new Blob([new Uint8Array(user.profilePicture)])) : "profile_placeholder.png"
+  (user) => user !== null && user !== void 0 && user.profilePicture !== void 0 && user.profilePicture.length > 0 ? URL.createObjectURL(new Blob([new Uint8Array(user.profilePicture)])) : "/profile_placeholder.png"
 );
 derived(
   userStore,
@@ -6310,7 +6308,7 @@ const JunoIcon = create_ssr_component(($$result, $$props, $$bindings, slots) => 
   return `<svg xmlns="http://www.w3.org/2000/svg"${add_attribute("class", className, 0)} fill="currentColor" viewBox="0 0 130 130"><g id="Layer_1-2"><g><path d="M91.99,64.798c0,-20.748 -16.845,-37.593 -37.593,-37.593l-0.003,-0c-20.749,-0 -37.594,16.845 -37.594,37.593l0,0.004c0,20.748 16.845,37.593 37.594,37.593l0.003,0c20.748,0 37.593,-16.845 37.593,-37.593l0,-0.004Z"></path><circle cx="87.153" cy="50.452" r="23.247" style="fill:#7888ff;"></circle></g></g></svg>`;
 });
 const Footer = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  return `<footer class="bg-gray-900 text-white py-3"><div class="container mx-1 xs:mx-2 md:mx-auto flex flex-col md:flex-row items-start md:items-center justify-between text-xs"><div class="flex-1" data-svelte-h="svelte-bvvjxr"><div class="flex justify-start"><div class="flex flex-row pl-4"><a href="https://oc.app/community/uf3iv-naaaa-aaaar-ar3ta-cai/?ref=zv6hh-xaaaa-aaaar-ac35q-cai" target="_blank" rel="noopener noreferrer"><img src="openchat.png" class="h-4 w-auto mb-2 mr-2" alt="OpenChat"></a> <a href="https://twitter.com/OpenFPL_DAO" target="_blank" rel="noopener noreferrer"><img src="twitter.png" class="h-4 w-auto mb-2 mr-2" alt="Twitter"></a> <a href="https://t.co/WmOhFA8JUR" target="_blank" rel="noopener noreferrer"><img src="discord.png" class="h-4 w-auto mb-2 mr-2" alt="Discord"></a> <a href="https://t.co/vVkquMrdOu" target="_blank" rel="noopener noreferrer"><img src="telegram.png" class="h-4 w-auto mb-2 mr-2" alt="Telegram"></a> <a href="https://github.com/jamesbeadle/OpenFPL" target="_blank" rel="noopener noreferrer"><img src="github.png" class="h-4 w-auto mb-2" alt="GitHub"></a></div></div> <div class="flex justify-start"><div class="flex flex-col md:flex-row md:space-x-2 pl-4"><a href="/whitepaper" class="hover:text-gray-300">Whitepaper</a> <span class="hidden md:flex">|</span> <a href="/gameplay-rules" class="hover:text-gray-300 md:hidden lg:block">Gameplay Rules</a> <a href="/gameplay-rules" class="hover:text-gray-300 hidden md:block lg:hidden">Rules</a> <span class="hidden md:flex">|</span> <a href="/terms" class="hover:text-gray-300">Terms &amp; Conditions</a></div></div></div> <div class="flex-0"><a href="/"><b class="px-4 mt-2 md:mt-0 md:px-10 flex items-center">${validate_component(OpenFPLIcon, "OpenFplIcon").$$render($$result, { className: "h-6 w-auto mr-2" }, {}, {})}OpenFPL</b></a></div> <div class="flex-1"><div class="flex justify-end"><div class="text-right px-4 md:px-0 mt-1 md:mt-0 md:mr-4"><a href="https://juno.build" target="_blank" class="hover:text-gray-300 flex items-center">Sponsored By juno.build
+  return `<footer class="bg-gray-900 text-white py-3"><div class="container mx-1 xs:mx-2 md:mx-auto flex flex-col md:flex-row items-start md:items-center justify-between text-xs"><div class="flex-1" data-svelte-h="svelte-108debi"><div class="flex justify-start"><div class="flex flex-row pl-4"><a href="https://oc.app/community/uf3iv-naaaa-aaaar-ar3ta-cai/?ref=zv6hh-xaaaa-aaaar-ac35q-cai" target="_blank" rel="noopener noreferrer"><img src="/openchat.png" class="h-4 w-auto mb-2 mr-2" alt="OpenChat"></a> <a href="https://github.com/jamesbeadle/OpenFPL" target="_blank" rel="noopener noreferrer"><img src="/github.png" class="h-4 w-auto mb-2" alt="GitHub"></a></div></div> <div class="flex justify-start"><div class="flex flex-col md:flex-row md:space-x-2 pl-4"><a href="/whitepaper" class="hover:text-gray-300">Whitepaper</a> <span class="hidden md:flex">|</span> <a href="/gameplay-rules" class="hover:text-gray-300 md:hidden lg:block">Gameplay Rules</a> <a href="/gameplay-rules" class="hover:text-gray-300 hidden md:block lg:hidden">Rules</a> <span class="hidden md:flex">|</span> <a href="/terms" class="hover:text-gray-300">Terms &amp; Conditions</a></div></div></div> <div class="flex-0"><a href="/"><b class="px-4 mt-2 md:mt-0 md:px-10 flex items-center">${validate_component(OpenFPLIcon, "OpenFplIcon").$$render($$result, { className: "h-6 w-auto mr-2" }, {}, {})}OpenFPL</b></a></div> <div class="flex-1"><div class="flex justify-end"><div class="text-right px-4 md:px-0 mt-1 md:mt-0 md:mr-4"><a href="https://juno.build" target="_blank" class="hover:text-gray-300 flex items-center">Sponsored By juno.build
             ${validate_component(JunoIcon, "JunoIcon").$$render($$result, { className: "h-8 w-auto ml-2" }, {}, {})}</a></div></div></div></div></footer>`;
 });
 const app = "";
@@ -6366,7 +6364,7 @@ function createMonthlyLeaderboardStore() {
     if (categoryHash?.hash != localHash) {
       let result = await actor.getMonthlyLeaderboards();
       if (isError(result)) {
-        console.log("Error syncing monthly leaderboards");
+        console.error("Error syncing monthly leaderboards");
         return;
       }
       let updatedLeaderboardData = result.ok;
@@ -6423,7 +6421,7 @@ function createMonthlyLeaderboardStore() {
       entries: []
     };
     if (isError(result)) {
-      console.log("Error fetching monthly leaderboard");
+      console.error("Error fetching monthly leaderboard");
       return emptyReturn;
     }
     let leaderboardData = result.ok;

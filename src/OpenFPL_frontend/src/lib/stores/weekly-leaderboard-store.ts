@@ -36,7 +36,13 @@ function createWeeklyLeaderboardStore() {
     const localHash = localStorage.getItem(`${category}_hash`);
 
     if (categoryHash?.hash != localHash) {
-      let result = await actor.getWeeklyLeaderboard(seasonId, gameweek, 100, 0, "");
+      let result = await actor.getWeeklyLeaderboard(
+        seasonId,
+        gameweek,
+        100,
+        0,
+        ""
+      );
 
       if (isError(result)) {
         let emptyLeaderboard = {
@@ -94,7 +100,7 @@ function createWeeklyLeaderboardStore() {
         }
       }
     }
-    
+
     let leaderboardData = await actor.getWeeklyLeaderboard(
       seasonId,
       gameweek,

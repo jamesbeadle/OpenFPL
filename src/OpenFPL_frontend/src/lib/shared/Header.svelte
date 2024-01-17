@@ -180,7 +180,7 @@
             <div class="relative inline-block">
               <button
                 on:click={toggleProfileDropdown}
-                class={`h-full flex items-center border rounded-sm ${currentBorder(
+                class={`h-full flex items-center rounded-sm ${currentBorder(
                   "/profile"
                 )}`}
               >
@@ -206,7 +206,7 @@
                         <img
                           src={$userGetProfilePicture}
                           alt="logo"
-                          class="w-8 h-8 my-2 ml-4 mr-2"
+                          class="h-8 my-2 ml-4 mr-2"
                         />
                         <p class="w-full min-w-[125px] max-w-[125px] truncate">
                           Profile

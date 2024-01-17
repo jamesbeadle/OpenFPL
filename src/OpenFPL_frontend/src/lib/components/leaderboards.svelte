@@ -306,16 +306,16 @@
       </div>
     </div>
 
-    <div class="flex items-center mb-4">
+    <div class="flex items-center mb-4 mx-3">
       <input
         type="text"
-        class="input-field"
-        placeholder="Search by manager..."
+        class="input-field p-2"
+        placeholder="Search for manager..."
         bind:value={searchInput}
         on:keydown={handleKeydown}
       />
       <button
-        class="ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        class="ml-2 py-2 px-4 rounded fpl-button"
         on:click={performSearch}
       >
         Search

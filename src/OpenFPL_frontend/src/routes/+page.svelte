@@ -45,7 +45,7 @@
       await systemStore.sync();
       await teamStore.sync();
       await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
-      
+
       if ($teamStore.length == 0) return;
       if ($fixtureStore.length == 0) return;
 

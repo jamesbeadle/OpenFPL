@@ -22,31 +22,6 @@
             />
           </a>
           <a
-            href="https://twitter.com/OpenFPL_DAO"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img src="/twitter.png" class="h-4 w-auto mb-2 mr-2" alt="Twitter" />
-          </a>
-          <a
-            href="https://t.co/WmOhFA8JUR"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img src="/discord.png" class="h-4 w-auto mb-2 mr-2" alt="Discord" />
-          </a>
-          <a
-            href="https://t.co/vVkquMrdOu"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img
-              src="/telegram.png"
-              class="h-4 w-auto mb-2 mr-2"
-              alt="Telegram"
-            />
-          </a>
-          <a
             href="https://github.com/jamesbeadle/OpenFPL"
             target="_blank"
             rel="noopener noreferrer"

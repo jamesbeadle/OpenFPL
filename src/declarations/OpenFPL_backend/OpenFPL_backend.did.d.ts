@@ -646,7 +646,7 @@ export interface _SERVICE {
     [SeasonId, GameweekNumber, bigint, bigint, string],
     Result_2
   >;
-  init: ActorMethod<[], undefined>;
+  init: ActorMethod<[], Result_1>;
   isUsernameValid: ActorMethod<[string], boolean>;
   requestCanisterTopup: ActorMethod<[], undefined>;
   saveFantasyTeam: ActorMethod<[UpdateFantasyTeamDTO], Result_1>;

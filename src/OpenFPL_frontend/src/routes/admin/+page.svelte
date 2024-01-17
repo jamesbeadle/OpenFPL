@@ -26,6 +26,8 @@
   import AddFixtureData from "$lib/components/governance/fixture/add-fixture-data.svelte";
   import { ActorFactory } from "../../utils/ActorFactory";
   import { idlFactory } from "../../../../declarations/OpenFPL_backend";
+  import { isError } from "$lib/utils/Helpers";
+  import { toastsError, toastsShow } from "$lib/stores/toasts-store";
 
   let showSystemStateModal: boolean = false;
   let showSnapshotModal: boolean = false;
@@ -202,13 +204,30 @@
     showAddFixtureDataModal = false;
   }
 
-  function init(){
+  async function init() {
+    isLoading = true;
+
     localStorage.clear();
     let actor: any = ActorFactory.createActor(
       idlFactory,
       process.env.OPENFPL_BACKEND_CANISTER_ID
     );
-    actor.init();
+    let result = await actor.init();
+
+    if (isError(result)) {
+      toastsError({
+        msg: { text: "Error submitting proposal." },
+      });
+      isLoading = false;
+    }
+
+    toastsShow({
+      text: "Application Initialised.",
+      level: "success",
+      duration: 2000,
+    });
+
+    isLoading = false;
   }
 </script>
 

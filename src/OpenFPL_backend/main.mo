@@ -289,7 +289,7 @@ actor Self {
     return await seasonManager.executeUpdateClub(updateClubDTO);
   };
 
-  public shared func init() : async () {
+  public shared func init() : async Result.Result<(), T.Error> {
 
     switch (cyclesCheckTimerId) {
       case (null) {
@@ -308,6 +308,7 @@ actor Self {
     seasonManager.setBackendCanisterController(Principal.fromActor(Self));
 
     seasonManager.init();
+    return #ok;
   };
 
   private func gameweekBeginExpiredCallback() : async () {
