@@ -41,7 +41,10 @@ function createUserStore() {
   async function sync() {
     const localProfile = localStorage.getItem("user_profile_data");
     if (localProfile) {
-      set(getProfileFromLocalStorage());
+      let localStorageProfile = getProfileFromLocalStorage();
+      console.log("Setting profile via sync 1")
+      console.log(localStorageProfile)
+      set(localStorageProfile);
       return;
     }
 
@@ -82,6 +85,9 @@ function createUserStore() {
           JSON.stringify(profileData, replacer)
         );
       }
+      
+      console.log("Setting profile via sync 2")
+      console.log(profileData)
       set(profileData);
     } catch (error) {
       console.error("Error fetching user profile:", error);
@@ -147,7 +153,7 @@ function createUserStore() {
 
   async function getProfile(): Promise<any> {
     try {
-      const identityActor = await ActorFactory.createIdentityActor(
+      const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
@@ -156,8 +162,11 @@ function createUserStore() {
         console.error("Error fetching profile");
         return;
       }
-      set(result);
-      return result;
+      let profile = result.ok;
+      console.log("Setting profile via get profile")
+      console.log(profile)
+      set(profile);
+      return profile;
     } catch (error) {
       console.error("Error getting profile:", error);
       throw error;
@@ -241,6 +250,8 @@ function createUserStore() {
         JSON.stringify(profileData, replacer)
       );
     }
+    console.log("Setting profile via cache profile")
+    console.log(profileData)
     set(profileData);
   }
 
