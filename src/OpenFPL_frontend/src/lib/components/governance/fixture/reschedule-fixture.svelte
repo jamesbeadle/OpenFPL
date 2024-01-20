@@ -26,15 +26,13 @@
   let time = "";
   let dateTime = "";
   let isPostponed = false;
-  let updatedFixtureGameweek: number;
-  let updatedFixtureDate: number;
 
   $: dateTime = date + "T" + time;
 
   $: isSubmitDisabled =
     !selectedFixtureId ||
     selectedFixtureId <= 0 ||
-    (!isPostponed && updatedFixtureDate == 0);
+    (!isPostponed && (date == "" || time == ""));
 
   $: if (selectedGameweek) {
     loadGameweekFixtures();
@@ -86,7 +84,7 @@
     let result = await governanceStore.rescheduleFixture(
       $systemStore?.calculationSeasonId ?? 0,
       selectedFixtureId,
-      updatedFixtureGameweek ?? 1,
+      newGameweek ?? 1,
       dateTime
     );
     if (isError(result)) {
@@ -107,8 +105,7 @@
     time = "";
     dateTime = "";
     isPostponed = false;
-    updatedFixtureGameweek = 0;
-    updatedFixtureDate = 0;
+    newGameweek = 0;
     showConfirm = false;
   }
 

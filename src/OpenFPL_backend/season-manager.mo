@@ -658,6 +658,7 @@ module {
 
     public func executeRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO) : async () {
       return await seasonComposite.executeRescheduleFixture(rescheduleFixtureDTO);
+      await updateCacheHash("fixtures");
     };
 
     public func validateRevaluePlayerUp(revaluePlayerUpDTO : DTOs.RevaluePlayerUpDTO) : async Result.Result<Text, Text> {
@@ -771,6 +772,7 @@ module {
 
     public func executeUnretirePlayer(unretirePlayerDTO : DTOs.UnretirePlayerDTO) : async () {
       return await playerComposite.executeUnretirePlayer(unretirePlayerDTO);
+      await updateCacheHash("players");
     };
 
     public func validatePromoteFormerClub(promoteFormerClubDTO : DTOs.PromoteFormerClubDTO) : async Result.Result<Text, Text> {
@@ -779,6 +781,7 @@ module {
 
     public func executePromoteFormerClub(promoteFormerClubDTO : DTOs.PromoteFormerClubDTO) : async () {
       return await clubComposite.executePromoteFormerClub(promoteFormerClubDTO);
+      await updateCacheHash("clubs");
     };
 
     public func validatePromoteNewClub(promoteNewClubDTO : DTOs.PromoteNewClubDTO) : async Result.Result<Text, Text> {
@@ -787,6 +790,7 @@ module {
 
     public func executePromoteNewClub(promoteNewClubDTO : DTOs.PromoteNewClubDTO) : async () {
       return await clubComposite.executePromoteNewClub(promoteNewClubDTO);
+      await updateCacheHash("clubs");
     };
 
     public func validateUpdateClub(updateClubDTO : DTOs.UpdateClubDTO) : async Result.Result<Text, Text> {
@@ -795,6 +799,7 @@ module {
 
     public func executeUpdateClub(updateClubDTO : DTOs.UpdateClubDTO) : async () {
       return await clubComposite.executeUpdateClub(updateClubDTO);
+      await updateCacheHash("clubs");
     };
 
     //Stable data getters and setters:

@@ -1058,7 +1058,8 @@ module {
     };
 
     public func executeAddInitialFixtures(addInitialFixturesDTO : DTOs.AddInitialFixturesDTO) : async () {
-
+      Debug.print("adding fixtures");
+      Debug.print(debug_show addInitialFixturesDTO);
       seasons := List.map<T.Season, T.Season>(
         seasons,
         func(season : T.Season) : T.Season {
@@ -1129,13 +1130,15 @@ module {
           return #err("Invalid: Season does not exist.");
         };
         case (?foundSeason) {
-          if (rescheduleFixtureDTO.updatedFixtureDate <= Time.now()) {
+          if (rescheduleFixtureDTO.updatedFixtureDate > 0 and rescheduleFixtureDTO.updatedFixtureDate <= Time.now()) {
             return #err("Invalid: Fixture date in the past.");
           };
 
-          if (rescheduleFixtureDTO.updatedFixtureGameweek < systemState.pickTeamGameweek) {
+          if (rescheduleFixtureDTO.updatedFixtureGameweek > 0 and rescheduleFixtureDTO.updatedFixtureGameweek < systemState.pickTeamGameweek) {
             return #err("Invalid: Fixture gameweek in the past.");
           };
+
+          Debug.print(debug_show foundSeason.fixtures);
 
           let fixture = List.find(
             foundSeason.fixtures,
@@ -1163,11 +1166,66 @@ module {
     public func executeRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO) : async () {
       Debug.print("Rescheduling fixtures");
       Debug.print(debug_show rescheduleFixtureDTO);
+
+
+      if(rescheduleFixtureDTO.updatedFixtureGameweek == 0 and rescheduleFixtureDTO.updatedFixtureDate == 0){
+        postponeFixture(rescheduleFixtureDTO);
+        return;
+      };  
+
+      if(rescheduleFixtureDTO.updatedFixtureDate > 0 and rescheduleFixtureDTO.updatedFixtureGameweek > 0){
+        rescheduleFixture(rescheduleFixtureDTO);
+        return;
+      };
+    };
+
+    private func rescheduleFixture(rescheduleFixtureDTO: DTOs.RescheduleFixtureDTO){
       seasons := List.map<T.Season, T.Season>(
         seasons,
         func(currentSeason : T.Season) : T.Season {
           if (currentSeason.id == rescheduleFixtureDTO.seasonId) {
+            let updatedSeason : T.Season = {
+              id = currentSeason.id;
+              name = currentSeason.name;
+              year = currentSeason.year;
+              fixtures = List.map<T.Fixture, T.Fixture>(
+                currentSeason.fixtures, 
+                func(currentFixture: T.Fixture) : T.Fixture {
+                  if(currentFixture.id == rescheduleFixtureDTO.fixtureId){
+                    return {
+                      awayClubId = currentFixture.awayClubId;
+                      awayGoals = currentFixture.awayGoals;
+                      events = currentFixture.events;
+                      gameweek = rescheduleFixtureDTO.updatedFixtureGameweek;
+                      highestScoringPlayerId = currentFixture.highestScoringPlayerId;
+                      homeClubId = currentFixture.homeClubId;
+                      homeGoals = currentFixture.homeGoals;
+                      id = currentFixture.id;
+                      kickOff = rescheduleFixtureDTO.updatedFixtureDate;
+                      seasonId = currentFixture.seasonId;
+                      status = currentFixture.status
+                    }
+                  }
+                  else{
+                    return currentFixture;
+                  }
+                }
+              );
+              postponedFixtures = currentSeason.postponedFixtures;
+            };
+            return updatedSeason;
+          } else {
+            return currentSeason;
+          };
+        },
+      );
+    };
 
+    private func postponeFixture(rescheduleFixtureDTO:  DTOs.RescheduleFixtureDTO){
+      seasons := List.map<T.Season, T.Season>(
+        seasons,
+        func(currentSeason : T.Season) : T.Season {
+          if (currentSeason.id == rescheduleFixtureDTO.seasonId) {
             var postponedFixtures = currentSeason.postponedFixtures;
             let postponedFixture = List.find<T.Fixture>(
               currentSeason.fixtures,
@@ -1204,6 +1262,7 @@ module {
         },
       );
     };
+
 
     public func createNewSeason(systemState : T.SystemState) {
       let existingSeason = List.find(
