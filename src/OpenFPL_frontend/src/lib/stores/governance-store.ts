@@ -39,7 +39,7 @@ function createGovernanceStore() {
       let result = await identityActor.adminRevaluePlayerUp(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
       console.log(result);
       if (isError(result)) {
-        console.error("Error submitting proposal");
+        console.error("Error submitting proposal: ", result);
         return;
       }
     } catch (error) {
@@ -62,7 +62,7 @@ function createGovernanceStore() {
       let result = await identityActor.adminRevaluePlayerDown(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
 
       if (isError(result)) {
-        console.error("Error submitting proposal");
+        console.error("Error submitting proposal: ", result);
         return;
       }
     } catch (error) {
@@ -93,7 +93,7 @@ function createGovernanceStore() {
       let result = await identityActor.adminSubmitFixtureData(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
 
       if (isError(result)) {
-        console.error("Error submitting proposal");
+        console.error("Error submitting proposal: ", result);
         return;
       }
     } catch (error) {
@@ -137,7 +137,7 @@ function createGovernanceStore() {
     seasonId: number,
     fixtureId: number,
     updatedFixtureGameweek: number,
-    updatedFixtureDate: number
+    updatedFixtureDate: string
   ): Promise<any> {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
@@ -145,17 +145,24 @@ function createGovernanceStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
 
+      const dateObject = new Date(updatedFixtureDate);
+      const timestampMilliseconds = dateObject.getTime();
+      const nanoseconds = BigInt(timestampMilliseconds) * BigInt(1000000);
+      
+      console.log("nanoseconds.toString()");
+      console.log(nanoseconds.toString());
+
       let dto: RescheduleFixtureDTO = {
         seasonId,
         fixtureId,
         updatedFixtureGameweek,
-        updatedFixtureDate: BigInt(updatedFixtureDate)
+        updatedFixtureDate: nanoseconds
       };
 
       let result = await identityActor.adminRescheduleFixture(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
 
       if (isError(result)) {
-        console.error("Error submitting proposal");
+        console.error("Error submitting proposal: ", result);
         return;
       }
     } catch (error) {
@@ -184,7 +191,7 @@ function createGovernanceStore() {
       let result = await identityActor.adminLoanPlayer(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
 
       if (isError(result)) {
-        console.error("Error submitting proposal");
+        console.error("Error submitting proposal: ", result);
         return;
       }
     } catch (error) {
@@ -210,7 +217,7 @@ function createGovernanceStore() {
       let result = await identityActor.adminTransferPlayer(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
 
       if (isError(result)) {
-        console.error("Error submitting proposal");
+        console.error("Error submitting proposal: ", result);
         return;
       }
     } catch (error) {
@@ -233,7 +240,7 @@ function createGovernanceStore() {
       let result = await identityActor.adminRecallPlayer(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
 
       if (isError(result)) {
-        console.error("Error submitting proposal");
+        console.error("Error submitting proposal: ", result);
         return;
       }
     } catch (error) {
@@ -272,7 +279,7 @@ function createGovernanceStore() {
       let result = await identityActor.adminCreatePlayer(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
 
       if (isError(result)) {
-        console.error("Error submitting proposal");
+        console.error("Error submitting proposal: ", result);
         return;
       }
     } catch (error) {
@@ -309,7 +316,7 @@ function createGovernanceStore() {
       let result = await identityActor.adminUpdatePlayer(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
 
       if (isError(result)) {
-        console.error("Error submitting proposal");
+        console.error("Error submitting proposal: ", result);
         return;
       }
     } catch (error) {
@@ -338,7 +345,7 @@ function createGovernanceStore() {
       let result = await identityActor.adminSetPlayerInjury(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
 
       if (isError(result)) {
-        console.error("Error submitting proposal");
+        console.error("Error submitting proposal: ", result);
         return;
       }
     } catch (error) {
@@ -365,7 +372,7 @@ function createGovernanceStore() {
       let result = await identityActor.adminRetirePlayer(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
 
       if (isError(result)) {
-        console.error("Error submitting proposal");
+        console.error("Error submitting proposal: ", result);
         return;
       }
     } catch (error) {
@@ -388,7 +395,7 @@ function createGovernanceStore() {
       let result = await identityActor.adminUnretirePlayer(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
 
       if (isError(result)) {
-        console.error("Error submitting proposal");
+        console.error("Error submitting proposal: ", result);
         return;
       }
     } catch (error) {
@@ -411,7 +418,7 @@ function createGovernanceStore() {
       let result = await identityActor.adminPromoteFormerClub(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
 
       if (isError(result)) {
-        console.error("Error submitting proposal");
+        console.error("Error submitting proposal: ", result);
         return;
       }
     } catch (error) {
@@ -448,7 +455,7 @@ function createGovernanceStore() {
       let result = await identityActor.adminPromoteNewClub(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
 
       if (isError(result)) {
-        console.error("Error submitting proposal");
+        console.error("Error submitting proposal: ", result);
         return;
       }
     } catch (error) {
@@ -487,7 +494,7 @@ function createGovernanceStore() {
       let result = await identityActor.adminUpdateClub(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
 
       if (isError(result)) {
-        console.error("Error submitting proposal");
+        console.error("Error submitting proposal: ", result);
         return;
       }
     } catch (error) {

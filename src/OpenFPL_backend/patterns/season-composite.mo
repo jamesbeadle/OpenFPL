@@ -1116,7 +1116,8 @@ module {
     };
 
     public func validateRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO, systemState : T.SystemState) : async Result.Result<Text, Text> {
-
+      Debug.print("rescheduleFixtureDTO.updatedFixtureDate");
+      Debug.print(debug_show rescheduleFixtureDTO);
       let currentSeason = List.find(
         seasons,
         func(season : T.Season) : Bool {
@@ -1160,6 +1161,8 @@ module {
     };
 
     public func executeRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO) : async () {
+      Debug.print("Rescheduling fixtures");
+      Debug.print(debug_show rescheduleFixtureDTO);
       seasons := List.map<T.Season, T.Season>(
         seasons,
         func(currentSeason : T.Season) : T.Season {
