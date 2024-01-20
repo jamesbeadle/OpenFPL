@@ -11,6 +11,7 @@ import Int "mo:base/Int";
 import Timer "mo:base/Timer";
 import Nat16 "mo:base/Nat16";
 import HashMap "mo:base/HashMap";
+import Debug "mo:base/Debug";
 import CanisterIds "../CanisterIds";
 import Countries "../Countries";
 import Utilities "../utilities";
@@ -400,6 +401,8 @@ module {
     };
 
     public func executeRevaluePlayerUp(revaluePlayerUpDTO : DTOs.RevaluePlayerUpDTO, systemState : T.SystemState) : async () {
+      Debug.print("Executing revalue up");
+
       var updatedPlayers = List.map<T.Player, T.Player>(
         players,
         func(p : T.Player) : T.Player {
@@ -421,7 +424,7 @@ module {
               firstName = p.firstName;
               lastName = p.lastName;
               shirtNumber = p.shirtNumber;
-              valueQuarterMillions = p.valueQuarterMillions;
+              valueQuarterMillions = newValue;
               dateOfBirth = p.dateOfBirth;
               nationality = p.nationality;
               seasons = p.seasons;

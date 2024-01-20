@@ -2,10 +2,25 @@ import { authStore } from "$lib/stores/auth.store";
 import { isError } from "$lib/utils/Helpers";
 import type {
   AddInitialFixturesDTO,
+  CreatePlayerDTO,
   FixtureDTO,
+  LoanPlayerDTO,
   PlayerEventData,
   PlayerPosition,
+  PromoteFormerClubDTO,
+  PromoteNewClubDTO,
+  RecallPlayerDTO,
+  RescheduleFixtureDTO,
+  RetirePlayerDTO,
+  RevaluePlayerDownDTO,
+  RevaluePlayerUpDTO,
+  SetPlayerInjuryDTO,
   ShirtType,
+  SubmitFixtureDataDTO,
+  TransferPlayerDTO,
+  UnretirePlayerDTO,
+  UpdateClubDTO,
+  UpdatePlayerDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 
@@ -17,8 +32,12 @@ function createGovernanceStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
 
-      let result = identityActor.adminRevaluePlayerUp(playerId); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
+      let dto: RevaluePlayerUpDTO = {
+        playerId: playerId
+      };
 
+      let result = await identityActor.adminRevaluePlayerUp(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
+      console.log(result);
       if (isError(result)) {
         console.error("Error submitting proposal");
         return;
@@ -36,7 +55,11 @@ function createGovernanceStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
 
-      let result = identityActor.adminRevaluePlayerDown(playerId); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
+      let dto: RevaluePlayerDownDTO = {
+        playerId: playerId
+      };
+
+      let result = await identityActor.adminRevaluePlayerDown(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
 
       if (isError(result)) {
         console.error("Error submitting proposal");
@@ -60,12 +83,14 @@ function createGovernanceStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
 
-      let result = identityActor.adminSubmitFixtureData(
+      let dto: SubmitFixtureDataDTO = {
         seasonId,
         gameweek,
         fixtureId,
         playerEventData
-      ); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
+      };
+
+      let result = await identityActor.adminSubmitFixtureData(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
 
       if (isError(result)) {
         console.error("Error submitting proposal");
@@ -120,12 +145,14 @@ function createGovernanceStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
 
-      let result = identityActor.adminRescheduleFixture(
+      let dto: RescheduleFixtureDTO = {
         seasonId,
         fixtureId,
         updatedFixtureGameweek,
-        updatedFixtureDate
-      ); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
+        updatedFixtureDate: BigInt(updatedFixtureDate)
+      };
+
+      let result = await identityActor.adminRescheduleFixture(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
 
       if (isError(result)) {
         console.error("Error submitting proposal");
@@ -148,11 +175,13 @@ function createGovernanceStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
 
-      let result = identityActor.adminLoanPlayer(
+      let dto: LoanPlayerDTO = {
         playerId,
         loanClubId,
-        loanEndDate
-      ); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
+        loanEndDate: BigInt(loanEndDate)
+      };
+
+      let result = await identityActor.adminLoanPlayer(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
 
       if (isError(result)) {
         console.error("Error submitting proposal");
@@ -174,7 +203,11 @@ function createGovernanceStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
 
-      let result = identityActor.adminTransferPlayer(playerId, newClubId); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
+      let dto: TransferPlayerDTO = {
+        playerId, newClubId
+      };
+
+      let result = await identityActor.adminTransferPlayer(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
 
       if (isError(result)) {
         console.error("Error submitting proposal");
@@ -193,7 +226,11 @@ function createGovernanceStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
 
-      let result = identityActor.adminRecallPlayer(playerId); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
+      let dto: RecallPlayerDTO = {
+        playerId
+      };
+
+      let result = await identityActor.adminRecallPlayer(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
 
       if (isError(result)) {
         console.error("Error submitting proposal");
@@ -221,16 +258,18 @@ function createGovernanceStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
 
-      let result = identityActor.adminCreatePlayer(
+      let dto: CreatePlayerDTO = {
         clubId,
         position,
         firstName,
         lastName,
         shirtNumber,
         valueQuarterMillions,
-        dateOfBirth,
+        dateOfBirth: BigInt(dateOfBirth),
         nationality
-      ); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
+      };
+
+      let result = await identityActor.adminCreatePlayer(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
 
       if (isError(result)) {
         console.error("Error submitting proposal");
@@ -249,7 +288,7 @@ function createGovernanceStore() {
     lastName: string,
     shirtNumber: number,
     dateOfBirth: bigint,
-    nationalityId: number
+    nationality: number
   ): Promise<any> {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
@@ -257,15 +296,17 @@ function createGovernanceStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
 
-      let result = identityActor.adminUpdatePlayer(
+      let dto: UpdatePlayerDTO = {
         playerId,
         position,
         firstName,
         lastName,
         shirtNumber,
-        dateOfBirth,
-        nationalityId
-      ); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
+        dateOfBirth: BigInt(dateOfBirth),
+        nationality
+      };
+
+      let result = await identityActor.adminUpdatePlayer(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
 
       if (isError(result)) {
         console.error("Error submitting proposal");
@@ -288,11 +329,13 @@ function createGovernanceStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
 
-      let result = identityActor.adminSetPlayerInjury(
+      let dto: SetPlayerInjuryDTO = {
         playerId,
         description,
-        expectedEndDate
-      ); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
+        expectedEndDate: BigInt(expectedEndDate)
+      };
+
+      let result = await identityActor.adminSetPlayerInjury(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
 
       if (isError(result)) {
         console.error("Error submitting proposal");
@@ -314,7 +357,12 @@ function createGovernanceStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
 
-      let result = identityActor.adminRetirePlayer(playerId, retirementDate); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
+      let dto: RetirePlayerDTO = {
+        playerId,
+        retirementDate: BigInt(retirementDate)
+      };
+
+      let result = await identityActor.adminRetirePlayer(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
 
       if (isError(result)) {
         console.error("Error submitting proposal");
@@ -333,7 +381,11 @@ function createGovernanceStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
 
-      let result = identityActor.adminUnretirePlayer(playerId); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
+      let dto: UnretirePlayerDTO = {
+        playerId
+      };
+
+      let result = await identityActor.adminUnretirePlayer(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
 
       if (isError(result)) {
         console.error("Error submitting proposal");
@@ -352,7 +404,11 @@ function createGovernanceStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
 
-      let result = identityActor.adminPromoteFormerClub(clubId); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
+      let dto: PromoteFormerClubDTO = {
+        clubId
+      };
+
+      let result = await identityActor.adminPromoteFormerClub(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
 
       if (isError(result)) {
         console.error("Error submitting proposal");
@@ -379,7 +435,7 @@ function createGovernanceStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
 
-      let result = identityActor.adminPromoteNewClub(
+      let dto: PromoteNewClubDTO = {
         name,
         friendlyName,
         primaryColourHex,
@@ -387,7 +443,9 @@ function createGovernanceStore() {
         thirdColourHex,
         abbreviatedName,
         shirtType
-      ); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
+      };
+
+      let result = await identityActor.adminPromoteNewClub(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
 
       if (isError(result)) {
         console.error("Error submitting proposal");
@@ -415,7 +473,7 @@ function createGovernanceStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
 
-      let result = identityActor.adminUpdateClub(
+      let dto: UpdateClubDTO = {
         clubId,
         name,
         friendlyName,
@@ -424,7 +482,9 @@ function createGovernanceStore() {
         thirdColourHex,
         abbreviatedName,
         shirtType
-      ); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
+      };
+
+      let result = await identityActor.adminUpdateClub(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
 
       if (isError(result)) {
         console.error("Error submitting proposal");
