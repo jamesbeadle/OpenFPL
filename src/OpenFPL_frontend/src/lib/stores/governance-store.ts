@@ -137,7 +137,8 @@ function createGovernanceStore() {
     seasonId: number,
     fixtureId: number,
     updatedFixtureGameweek: number,
-    updatedFixtureDate: string
+    updatedFixtureDate: string,
+    isPostponed: boolean
   ): Promise<any> {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
@@ -146,9 +147,14 @@ function createGovernanceStore() {
       );
 
       const dateObject = new Date(updatedFixtureDate);
+      console.log(updatedFixtureDate)
       const timestampMilliseconds = dateObject.getTime();
-      const nanoseconds = BigInt(timestampMilliseconds) * BigInt(1000000);
+      let nanoseconds = 0n;
       
+      if(!isPostponed){
+        nanoseconds = BigInt(timestampMilliseconds) * BigInt(1000000);
+      }
+       
       console.log("nanoseconds.toString()");
       console.log(nanoseconds.toString());
 

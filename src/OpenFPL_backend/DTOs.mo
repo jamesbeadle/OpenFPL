@@ -33,9 +33,18 @@ module DTOs {
     seasonFixtures : [DTOs.FixtureDTO];
   };
 
-  public type RescheduleFixtureDTO = {
-    seasonId : T.SeasonId;
+  public type MoveFixtureDTO = {
     fixtureId : T.FixtureId;
+    updatedFixtureGameweek : T.GameweekNumber;
+    updatedFixtureDate : Int;
+  };
+
+  public type PostponeFixtureDTO = {
+    fixtureId : T.FixtureId;
+  };
+
+  public type RescheduleFixtureDTO = {
+    postponedFixtureId : T.FixtureId;
     updatedFixtureGameweek : T.GameweekNumber;
     updatedFixtureDate : Int;
   };

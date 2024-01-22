@@ -1116,13 +1116,17 @@ module {
       return result;
     };
 
-    public func validateRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO, systemState : T.SystemState) : async Result.Result<Text, Text> {
-      Debug.print("rescheduleFixtureDTO.updatedFixtureDate");
-      Debug.print(debug_show rescheduleFixtureDTO);
-      let currentSeason = List.find(
+
+
+
+
+
+
+    public func validateMoveFixture(moveFixtureDTO : DTOs.MoveFixtureDTO, systemState : T.SystemState) : async Result.Result<Text, Text> {
+       let currentSeason = List.find(
         seasons,
         func(season : T.Season) : Bool {
-          return season.id == rescheduleFixtureDTO.seasonId;
+          return season.id == systemState.calculationSeasonId;
         },
       );
       switch (currentSeason) {
@@ -1130,20 +1134,18 @@ module {
           return #err("Invalid: Season does not exist.");
         };
         case (?foundSeason) {
-          if (rescheduleFixtureDTO.updatedFixtureDate > 0 and rescheduleFixtureDTO.updatedFixtureDate <= Time.now()) {
+          if (moveFixtureDTO.updatedFixtureDate <= Time.now()) {
             return #err("Invalid: Fixture date in the past.");
           };
 
-          if (rescheduleFixtureDTO.updatedFixtureGameweek > 0 and rescheduleFixtureDTO.updatedFixtureGameweek < systemState.pickTeamGameweek) {
+          if (moveFixtureDTO.updatedFixtureGameweek <= systemState.pickTeamGameweek) {
             return #err("Invalid: Fixture gameweek in the past.");
           };
-
-          Debug.print(debug_show foundSeason.fixtures);
 
           let fixture = List.find(
             foundSeason.fixtures,
             func(f : T.Fixture) : Bool {
-              return f.id == rescheduleFixtureDTO.fixtureId;
+              return f.id == moveFixtureDTO.fixtureId;
             },
           );
 
@@ -1163,27 +1165,17 @@ module {
       return #ok("Valid");
     };
 
-    public func executeRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO) : async () {
-      Debug.print("Rescheduling fixtures");
-      Debug.print(debug_show rescheduleFixtureDTO);
+    //todo: validate postpone fixtures
+
+    //todo: validate reschedule fixture
 
 
-      if(rescheduleFixtureDTO.updatedFixtureGameweek == 0 and rescheduleFixtureDTO.updatedFixtureDate == 0){
-        postponeFixture(rescheduleFixtureDTO);
-        return;
-      };  
 
-      if(rescheduleFixtureDTO.updatedFixtureDate > 0 and rescheduleFixtureDTO.updatedFixtureGameweek > 0){
-        rescheduleFixture(rescheduleFixtureDTO);
-        return;
-      };
-    };
-
-    private func rescheduleFixture(rescheduleFixtureDTO: DTOs.RescheduleFixtureDTO){
+    public func executeMoveFixture(moveFixtureDTO : DTOs.MoveFixtureDTO, seasonId: T.SeasonId) : async () {
       seasons := List.map<T.Season, T.Season>(
         seasons,
         func(currentSeason : T.Season) : T.Season {
-          if (currentSeason.id == rescheduleFixtureDTO.seasonId) {
+          if (currentSeason.id == seasonId) {
             let updatedSeason : T.Season = {
               id = currentSeason.id;
               name = currentSeason.name;
@@ -1191,17 +1183,17 @@ module {
               fixtures = List.map<T.Fixture, T.Fixture>(
                 currentSeason.fixtures, 
                 func(currentFixture: T.Fixture) : T.Fixture {
-                  if(currentFixture.id == rescheduleFixtureDTO.fixtureId){
+                  if(currentFixture.id == moveFixtureDTO.fixtureId){
                     return {
                       awayClubId = currentFixture.awayClubId;
                       awayGoals = currentFixture.awayGoals;
                       events = currentFixture.events;
-                      gameweek = rescheduleFixtureDTO.updatedFixtureGameweek;
+                      gameweek = moveFixtureDTO.updatedFixtureGameweek;
                       highestScoringPlayerId = currentFixture.highestScoringPlayerId;
                       homeClubId = currentFixture.homeClubId;
                       homeGoals = currentFixture.homeGoals;
                       id = currentFixture.id;
-                      kickOff = rescheduleFixtureDTO.updatedFixtureDate;
+                      kickOff = moveFixtureDTO.updatedFixtureDate;
                       seasonId = currentFixture.seasonId;
                       status = currentFixture.status
                     }
@@ -1221,16 +1213,17 @@ module {
       );
     };
 
-    private func postponeFixture(rescheduleFixtureDTO:  DTOs.RescheduleFixtureDTO){
+    public func executePostponeFixture(postponeFixtureDTO : DTOs.PostponeFixtureDTO, seasonId: T.SeasonId) : async () {
+     
       seasons := List.map<T.Season, T.Season>(
         seasons,
         func(currentSeason : T.Season) : T.Season {
-          if (currentSeason.id == rescheduleFixtureDTO.seasonId) {
+          if (currentSeason.id == seasonId) {
             var postponedFixtures = currentSeason.postponedFixtures;
             let postponedFixture = List.find<T.Fixture>(
               currentSeason.fixtures,
               func(fixture : T.Fixture) : Bool {
-                return fixture.id == rescheduleFixtureDTO.fixtureId;
+                return fixture.id == postponeFixtureDTO.fixtureId;
               },
             );
 
@@ -1244,7 +1237,7 @@ module {
             let updatedFixtures = List.filter<T.Fixture>(
               currentSeason.fixtures,
               func(fixture : T.Fixture) : Bool {
-                return fixture.id != rescheduleFixtureDTO.fixtureId;
+                return fixture.id != postponeFixtureDTO.fixtureId;
               },
             );
 
@@ -1262,6 +1255,18 @@ module {
         },
       );
     };
+
+    //execture reschedule fixture
+
+
+
+
+
+
+
+
+
+
 
 
     public func createNewSeason(systemState : T.SystemState) {

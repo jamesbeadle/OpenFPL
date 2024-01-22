@@ -193,6 +193,22 @@ actor Self {
     return await seasonManager.executeAddInitialFixtures(addInitialFixturesDTO);
   };
 
+  public shared func validateMoveFixture(moveFixtureDTO : DTOs.MoveFixtureDTO) : async Result.Result<Text, Text> {
+    return await seasonManager.validateMoveFixture(moveFixtureDTO);
+  };
+
+  public shared func executeMoveFixture(moveFixtureDTO : DTOs.MoveFixtureDTO) : async () {
+    return await seasonManager.executeMoveFixture(moveFixtureDTO);
+  };
+
+  public shared func validatePostponeFixture(postponeFixtureDTO : DTOs.PostponeFixtureDTO) : async Result.Result<Text, Text> {
+    return await seasonManager.validatePostponeFixture(postponeFixtureDTO);
+  };
+
+  public shared func executePostponeFixture(postponeFixtureDTO : DTOs.PostponeFixtureDTO) : async () {
+    return await seasonManager.executePostponeFixture(postponeFixtureDTO);
+  };
+
   public shared func validateRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO) : async Result.Result<Text, Text> {
     return await seasonManager.validateRescheduleFixture(rescheduleFixtureDTO);
   };

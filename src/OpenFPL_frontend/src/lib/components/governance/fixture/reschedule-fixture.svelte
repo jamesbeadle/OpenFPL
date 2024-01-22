@@ -85,7 +85,8 @@
       $systemStore?.calculationSeasonId ?? 0,
       selectedFixtureId,
       newGameweek ?? 1,
-      dateTime
+      dateTime,
+      isPostponed
     );
     if (isError(result)) {
       isLoading = false;
