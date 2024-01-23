@@ -239,6 +239,11 @@ export interface MonthlyLeaderboardDTO {
   seasonId: SeasonId;
   entries: Array<LeaderboardEntry>;
 }
+export interface MoveFixtureDTO {
+  fixtureId: FixtureId;
+  updatedFixtureGameweek: GameweekNumber;
+  updatedFixtureDate: bigint;
+}
 export interface PlayerDTO {
   id: number;
   status: PlayerStatus;
@@ -330,6 +335,9 @@ export type PlayerStatus =
   | { Former: null }
   | { Active: null }
   | { Retired: null };
+export interface PostponeFixtureDTO {
+  fixtureId: FixtureId;
+}
 export interface ProfileCanisterDTO {
   cycles: bigint;
   canisterId: string;
@@ -390,10 +398,9 @@ export interface RecallPlayerDTO {
   playerId: PlayerId;
 }
 export interface RescheduleFixtureDTO {
-  fixtureId: FixtureId;
+  postponedFixtureId: FixtureId;
   updatedFixtureGameweek: GameweekNumber;
   updatedFixtureDate: bigint;
-  seasonId: SeasonId;
 }
 export type Result = { ok: string } | { err: string };
 export type Result_1 = { ok: null } | { err: Error };
@@ -596,6 +603,8 @@ export interface _SERVICE {
   executeAddInitialFixtures: ActorMethod<[AddInitialFixturesDTO], undefined>;
   executeCreatePlayer: ActorMethod<[CreatePlayerDTO], undefined>;
   executeLoanPlayer: ActorMethod<[LoanPlayerDTO], undefined>;
+  executeMoveFixture: ActorMethod<[MoveFixtureDTO], undefined>;
+  executePostponeFixture: ActorMethod<[PostponeFixtureDTO], undefined>;
   executePromoteFormerClub: ActorMethod<[PromoteFormerClubDTO], undefined>;
   executePromoteNewClub: ActorMethod<[PromoteNewClubDTO], undefined>;
   executeRecallPlayer: ActorMethod<[RecallPlayerDTO], undefined>;
@@ -658,6 +667,8 @@ export interface _SERVICE {
   validateAddInitialFixtures: ActorMethod<[AddInitialFixturesDTO], Result>;
   validateCreatePlayer: ActorMethod<[CreatePlayerDTO], Result>;
   validateLoanPlayer: ActorMethod<[LoanPlayerDTO], Result>;
+  validateMoveFixture: ActorMethod<[MoveFixtureDTO], Result>;
+  validatePostponeFixture: ActorMethod<[PostponeFixtureDTO], Result>;
   validatePromoteFormerClub: ActorMethod<[PromoteFormerClubDTO], Result>;
   validatePromoteNewClub: ActorMethod<[PromoteNewClubDTO], Result>;
   validateRecallPlayer: ActorMethod<[RecallPlayerDTO], Result>;

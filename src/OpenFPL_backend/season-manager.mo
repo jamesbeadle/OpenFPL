@@ -652,12 +652,30 @@ module {
       rewardPools.put(seasonId, rewardPool);
     };
 
+    public func validateMoveFixture(moveFixtureDTO : DTOs.MoveFixtureDTO) : async Result.Result<Text, Text> {
+      return await seasonComposite.validateMoveFixture(moveFixtureDTO, systemState);
+    };
+
+    public func executeMoveFixture(moveFixtureDTO : DTOs.MoveFixtureDTO) : async () {
+      return await seasonComposite.executeMoveFixture(moveFixtureDTO, systemState);
+      await updateCacheHash("fixtures");
+    };
+
+    public func validatePostponeFixture(postponeFixtureDTO : DTOs.PostponeFixtureDTO) : async Result.Result<Text, Text> {
+      return await seasonComposite.validatePostponeFixture(postponeFixtureDTO, systemState);
+    };
+
+    public func executePostponeFixture(postponeFixtureDTO : DTOs.PostponeFixtureDTO) : async () {
+      return await seasonComposite.executePostponeFixture(postponeFixtureDTO, systemState);
+      await updateCacheHash("fixtures");
+    };
+
     public func validateRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO) : async Result.Result<Text, Text> {
       return await seasonComposite.validateRescheduleFixture(rescheduleFixtureDTO, systemState);
     };
 
     public func executeRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO) : async () {
-      return await seasonComposite.executeRescheduleFixture(rescheduleFixtureDTO);
+      return await seasonComposite.executeRescheduleFixture(rescheduleFixtureDTO, systemState);
       await updateCacheHash("fixtures");
     };
 

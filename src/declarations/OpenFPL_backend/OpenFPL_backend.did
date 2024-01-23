@@ -255,8 +255,7 @@ type Result = variant {
   ok : text;
 };
 type RescheduleFixtureDTO = record {
-  fixtureId : FixtureId;
-  seasonId : SeasonId;
+  postponedFixtureId : FixtureId;
   updatedFixtureDate : int;
   updatedFixtureGameweek : GameweekNumber;
 };
@@ -315,6 +314,7 @@ type ProfileCanisterDTO = record {
   canisterId : text;
   cycles : nat;
 };
+type PostponeFixtureDTO = record { fixtureId : FixtureId };
 type PlayerStatus = variant {
   Active;
   Former;
@@ -408,6 +408,11 @@ type PlayerDTO = record {
   status : PlayerStatus;
   totalPoints : int16;
   valueQuarterMillions : nat16;
+};
+type MoveFixtureDTO = record {
+  fixtureId : FixtureId;
+  updatedFixtureDate : int;
+  updatedFixtureGameweek : GameweekNumber;
 };
 type MonthlyLeaderboardDTO = record {
   clubId : ClubId;
@@ -684,6 +689,8 @@ service : {
   executeAddInitialFixtures : (AddInitialFixturesDTO) -> ();
   executeCreatePlayer : (CreatePlayerDTO) -> ();
   executeLoanPlayer : (LoanPlayerDTO) -> ();
+  executeMoveFixture : (MoveFixtureDTO) -> ();
+  executePostponeFixture : (PostponeFixtureDTO) -> ();
   executePromoteFormerClub : (PromoteFormerClubDTO) -> ();
   executePromoteNewClub : (PromoteNewClubDTO) -> ();
   executeRecallPlayer : (RecallPlayerDTO) -> ();
@@ -731,6 +738,8 @@ service : {
   validateAddInitialFixtures : (AddInitialFixturesDTO) -> (Result);
   validateCreatePlayer : (CreatePlayerDTO) -> (Result);
   validateLoanPlayer : (LoanPlayerDTO) -> (Result);
+  validateMoveFixture : (MoveFixtureDTO) -> (Result);
+  validatePostponeFixture : (PostponeFixtureDTO) -> (Result);
   validatePromoteFormerClub : (PromoteFormerClubDTO) -> (Result);
   validatePromoteNewClub : (PromoteNewClubDTO) -> (Result);
   validateRecallPlayer : (RecallPlayerDTO) -> (Result);

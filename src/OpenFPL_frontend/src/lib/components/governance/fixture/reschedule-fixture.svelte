@@ -77,9 +77,9 @@
   }
 
   async function confirmProposal() {
-    console.log("This")
-    console.log(selectedFixtureId)
-    
+    console.log("This");
+    console.log(selectedFixtureId);
+
     isLoading = true;
     let result = await governanceStore.rescheduleFixture(
       $systemStore?.calculationSeasonId ?? 0,

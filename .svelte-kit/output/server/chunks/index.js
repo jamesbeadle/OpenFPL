@@ -3355,7 +3355,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "q71n89"
+  version_hash: "1js3raw"
 };
 function get_hooks() {
   return {};
@@ -3872,10 +3872,9 @@ const idlFactory = ({ IDL }) => {
   });
   const RecallPlayerDTO = IDL.Record({ playerId: PlayerId });
   const RescheduleFixtureDTO = IDL.Record({
-    fixtureId: FixtureId,
+    postponedFixtureId: FixtureId,
     updatedFixtureGameweek: GameweekNumber,
-    updatedFixtureDate: IDL.Int,
-    seasonId: SeasonId
+    updatedFixtureDate: IDL.Int
   });
   const RetirePlayerDTO = IDL.Record({
     playerId: PlayerId,
@@ -3918,6 +3917,12 @@ const idlFactory = ({ IDL }) => {
     lastName: IDL.Text,
     firstName: IDL.Text
   });
+  const MoveFixtureDTO = IDL.Record({
+    fixtureId: FixtureId,
+    updatedFixtureGameweek: GameweekNumber,
+    updatedFixtureDate: IDL.Int
+  });
+  const PostponeFixtureDTO = IDL.Record({ fixtureId: FixtureId });
   const Result_17 = IDL.Variant({ ok: IDL.Vec(ClubDTO), err: Error2 });
   const CountryDTO = IDL.Record({
     id: CountryId,
@@ -4179,6 +4184,8 @@ const idlFactory = ({ IDL }) => {
     executeAddInitialFixtures: IDL.Func([AddInitialFixturesDTO], [], []),
     executeCreatePlayer: IDL.Func([CreatePlayerDTO], [], []),
     executeLoanPlayer: IDL.Func([LoanPlayerDTO], [], []),
+    executeMoveFixture: IDL.Func([MoveFixtureDTO], [], []),
+    executePostponeFixture: IDL.Func([PostponeFixtureDTO], [], []),
     executePromoteFormerClub: IDL.Func([PromoteFormerClubDTO], [], []),
     executePromoteNewClub: IDL.Func([PromoteNewClubDTO], [], []),
     executeRecallPlayer: IDL.Func([RecallPlayerDTO], [], []),
@@ -4254,6 +4261,8 @@ const idlFactory = ({ IDL }) => {
     validateAddInitialFixtures: IDL.Func([AddInitialFixturesDTO], [Result], []),
     validateCreatePlayer: IDL.Func([CreatePlayerDTO], [Result], []),
     validateLoanPlayer: IDL.Func([LoanPlayerDTO], [Result], []),
+    validateMoveFixture: IDL.Func([MoveFixtureDTO], [Result], []),
+    validatePostponeFixture: IDL.Func([PostponeFixtureDTO], [Result], []),
     validatePromoteFormerClub: IDL.Func([PromoteFormerClubDTO], [Result], []),
     validatePromoteNewClub: IDL.Func([PromoteNewClubDTO], [Result], []),
     validateRecallPlayer: IDL.Func([RecallPlayerDTO], [Result], []),
@@ -6580,12 +6589,13 @@ function createGovernanceStore() {
         authStore,
         { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      let result = await identityActor.adminRevaluePlayerUp({
+      let dto = {
         playerId
-      });
+      };
+      let result = await identityActor.adminRevaluePlayerUp(dto);
       console.log(result);
       if (isError(result)) {
-        console.error("Error submitting proposal");
+        console.error("Error submitting proposal: ", result);
         return;
       }
     } catch (error2) {
@@ -6599,9 +6609,12 @@ function createGovernanceStore() {
         authStore,
         { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      let result = await identityActor.adminRevaluePlayerDown(playerId);
+      let dto = {
+        playerId
+      };
+      let result = await identityActor.adminRevaluePlayerDown(dto);
       if (isError(result)) {
-        console.error("Error submitting proposal");
+        console.error("Error submitting proposal: ", result);
         return;
       }
     } catch (error2) {
@@ -6615,14 +6628,15 @@ function createGovernanceStore() {
         authStore,
         { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      let result = await identityActor.adminSubmitFixtureData(
+      let dto = {
         seasonId,
         gameweek,
         fixtureId,
         playerEventData
-      );
+      };
+      let result = await identityActor.adminSubmitFixtureData(dto);
       if (isError(result)) {
-        console.error("Error submitting proposal");
+        console.error("Error submitting proposal: ", result);
         return;
       }
     } catch (error2) {
@@ -6653,20 +6667,23 @@ function createGovernanceStore() {
       throw error2;
     }
   }
-  async function rescheduleFixture(seasonId, fixtureId, updatedFixtureGameweek, updatedFixtureDate) {
+  async function rescheduleFixture(fixtureId, updatedFixtureGameweek, updatedFixtureDate) {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
         { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      let result = await identityActor.adminRescheduleFixture(
-        seasonId,
-        fixtureId,
+      const dateObject = new Date(updatedFixtureDate);
+      const timestampMilliseconds = dateObject.getTime();
+      let nanoseconds = BigInt(timestampMilliseconds) * BigInt(1e6);
+      let dto = {
+        postponedFixtureId: fixtureId,
         updatedFixtureGameweek,
-        updatedFixtureDate
-      );
+        updatedFixtureDate: nanoseconds
+      };
+      let result = await identityActor.adminRescheduleFixture(dto);
       if (isError(result)) {
-        console.error("Error submitting proposal");
+        console.error("Error submitting proposal: ", result);
         return;
       }
     } catch (error2) {
@@ -6680,13 +6697,14 @@ function createGovernanceStore() {
         authStore,
         { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      let result = await identityActor.adminLoanPlayer(
+      let dto = {
         playerId,
         loanClubId,
-        loanEndDate
-      );
+        loanEndDate: BigInt(loanEndDate)
+      };
+      let result = await identityActor.adminLoanPlayer(dto);
       if (isError(result)) {
-        console.error("Error submitting proposal");
+        console.error("Error submitting proposal: ", result);
         return;
       }
     } catch (error2) {
@@ -6700,9 +6718,13 @@ function createGovernanceStore() {
         authStore,
         { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      let result = await identityActor.adminTransferPlayer(playerId, newClubId);
+      let dto = {
+        playerId,
+        newClubId
+      };
+      let result = await identityActor.adminTransferPlayer(dto);
       if (isError(result)) {
-        console.error("Error submitting proposal");
+        console.error("Error submitting proposal: ", result);
         return;
       }
     } catch (error2) {
@@ -6716,9 +6738,12 @@ function createGovernanceStore() {
         authStore,
         { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      let result = await identityActor.adminRecallPlayer(playerId);
+      let dto = {
+        playerId
+      };
+      let result = await identityActor.adminRecallPlayer(dto);
       if (isError(result)) {
-        console.error("Error submitting proposal");
+        console.error("Error submitting proposal: ", result);
         return;
       }
     } catch (error2) {
@@ -6732,18 +6757,19 @@ function createGovernanceStore() {
         authStore,
         { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      let result = await identityActor.adminCreatePlayer(
+      let dto = {
         clubId,
         position,
         firstName,
         lastName,
         shirtNumber,
         valueQuarterMillions,
-        dateOfBirth,
+        dateOfBirth: BigInt(dateOfBirth),
         nationality
-      );
+      };
+      let result = await identityActor.adminCreatePlayer(dto);
       if (isError(result)) {
-        console.error("Error submitting proposal");
+        console.error("Error submitting proposal: ", result);
         return;
       }
     } catch (error2) {
@@ -6751,23 +6777,24 @@ function createGovernanceStore() {
       throw error2;
     }
   }
-  async function updatePlayer(playerId, position, firstName, lastName, shirtNumber, dateOfBirth, nationalityId) {
+  async function updatePlayer(playerId, position, firstName, lastName, shirtNumber, dateOfBirth, nationality) {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
         { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      let result = await identityActor.adminUpdatePlayer(
+      let dto = {
         playerId,
         position,
         firstName,
         lastName,
         shirtNumber,
-        dateOfBirth,
-        nationalityId
-      );
+        dateOfBirth: BigInt(dateOfBirth),
+        nationality
+      };
+      let result = await identityActor.adminUpdatePlayer(dto);
       if (isError(result)) {
-        console.error("Error submitting proposal");
+        console.error("Error submitting proposal: ", result);
         return;
       }
     } catch (error2) {
@@ -6781,13 +6808,14 @@ function createGovernanceStore() {
         authStore,
         { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      let result = await identityActor.adminSetPlayerInjury(
+      let dto = {
         playerId,
         description,
-        expectedEndDate
-      );
+        expectedEndDate: BigInt(expectedEndDate)
+      };
+      let result = await identityActor.adminSetPlayerInjury(dto);
       if (isError(result)) {
-        console.error("Error submitting proposal");
+        console.error("Error submitting proposal: ", result);
         return;
       }
     } catch (error2) {
@@ -6801,12 +6829,13 @@ function createGovernanceStore() {
         authStore,
         { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      let result = await identityActor.adminRetirePlayer(
+      let dto = {
         playerId,
-        retirementDate
-      );
+        retirementDate: BigInt(retirementDate)
+      };
+      let result = await identityActor.adminRetirePlayer(dto);
       if (isError(result)) {
-        console.error("Error submitting proposal");
+        console.error("Error submitting proposal: ", result);
         return;
       }
     } catch (error2) {
@@ -6820,9 +6849,12 @@ function createGovernanceStore() {
         authStore,
         { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      let result = await identityActor.adminUnretirePlayer(playerId);
+      let dto = {
+        playerId
+      };
+      let result = await identityActor.adminUnretirePlayer(dto);
       if (isError(result)) {
-        console.error("Error submitting proposal");
+        console.error("Error submitting proposal: ", result);
         return;
       }
     } catch (error2) {
@@ -6836,9 +6868,12 @@ function createGovernanceStore() {
         authStore,
         { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      let result = await identityActor.adminPromoteFormerClub(clubId);
+      let dto = {
+        clubId
+      };
+      let result = await identityActor.adminPromoteFormerClub(dto);
       if (isError(result)) {
-        console.error("Error submitting proposal");
+        console.error("Error submitting proposal: ", result);
         return;
       }
     } catch (error2) {
@@ -6852,7 +6887,7 @@ function createGovernanceStore() {
         authStore,
         { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      let result = await identityActor.adminPromoteNewClub(
+      let dto = {
         name,
         friendlyName,
         primaryColourHex,
@@ -6860,9 +6895,10 @@ function createGovernanceStore() {
         thirdColourHex,
         abbreviatedName,
         shirtType
-      );
+      };
+      let result = await identityActor.adminPromoteNewClub(dto);
       if (isError(result)) {
-        console.error("Error submitting proposal");
+        console.error("Error submitting proposal: ", result);
         return;
       }
     } catch (error2) {
@@ -6876,7 +6912,7 @@ function createGovernanceStore() {
         authStore,
         { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      let result = await identityActor.adminUpdateClub(
+      let dto = {
         clubId,
         name,
         friendlyName,
@@ -6885,9 +6921,10 @@ function createGovernanceStore() {
         thirdColourHex,
         abbreviatedName,
         shirtType
-      );
+      };
+      let result = await identityActor.adminUpdateClub(dto);
       if (isError(result)) {
-        console.error("Error submitting proposal");
+        console.error("Error submitting proposal: ", result);
         return;
       }
     } catch (error2) {

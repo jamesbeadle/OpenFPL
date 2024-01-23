@@ -5,8 +5,10 @@ import type {
   CreatePlayerDTO,
   FixtureDTO,
   LoanPlayerDTO,
+  MoveFixtureDTO,
   PlayerEventData,
   PlayerPosition,
+  PostponeFixtureDTO,
   PromoteFormerClubDTO,
   PromoteNewClubDTO,
   RecallPlayerDTO,
@@ -33,7 +35,7 @@ function createGovernanceStore() {
       );
 
       let dto: RevaluePlayerUpDTO = {
-        playerId: playerId
+        playerId: playerId,
       };
 
       let result = await identityActor.adminRevaluePlayerUp(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
@@ -56,7 +58,7 @@ function createGovernanceStore() {
       );
 
       let dto: RevaluePlayerDownDTO = {
-        playerId: playerId
+        playerId: playerId,
       };
 
       let result = await identityActor.adminRevaluePlayerDown(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
@@ -87,7 +89,7 @@ function createGovernanceStore() {
         seasonId,
         gameweek,
         fixtureId,
-        playerEventData
+        playerEventData,
       };
 
       let result = await identityActor.adminSubmitFixtureData(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
@@ -133,12 +135,10 @@ function createGovernanceStore() {
     }
   }
 
-  async function rescheduleFixture(
-    seasonId: number,
+  async function moveFixture(
     fixtureId: number,
     updatedFixtureGameweek: number,
-    updatedFixtureDate: string,
-    isPostponed: boolean
+    updatedFixtureDate: string
   ): Promise<any> {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
@@ -147,22 +147,69 @@ function createGovernanceStore() {
       );
 
       const dateObject = new Date(updatedFixtureDate);
-      console.log(updatedFixtureDate)
       const timestampMilliseconds = dateObject.getTime();
-      let nanoseconds = 0n;
-      
-      if(!isPostponed){
-        nanoseconds = BigInt(timestampMilliseconds) * BigInt(1000000);
-      }
-       
-      console.log("nanoseconds.toString()");
-      console.log(nanoseconds.toString());
+      let nanoseconds = BigInt(timestampMilliseconds) * BigInt(1000000);
 
-      let dto: RescheduleFixtureDTO = {
-        seasonId,
+      let dto: MoveFixtureDTO = {
         fixtureId,
         updatedFixtureGameweek,
-        updatedFixtureDate: nanoseconds
+        updatedFixtureDate: nanoseconds,
+      };
+
+      let result = await identityActor.adminMoveFixture(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
+
+      if (isError(result)) {
+        console.error("Error submitting proposal: ", result);
+        return;
+      }
+    } catch (error) {
+      console.error("Error moving fixture:", error);
+      throw error;
+    }
+  }
+
+  async function postponeFixture(fixtureId: number): Promise<any> {
+    try {
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
+
+      let dto: PostponeFixtureDTO = {
+        fixtureId,
+      };
+
+      let result = await identityActor.adminPostponeFixture(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
+
+      if (isError(result)) {
+        console.error("Error submitting proposal: ", result);
+        return;
+      }
+    } catch (error) {
+      console.error("Error postponing fixture:", error);
+      throw error;
+    }
+  }
+
+  async function rescheduleFixture(
+    fixtureId: number,
+    updatedFixtureGameweek: number,
+    updatedFixtureDate: string
+  ): Promise<any> {
+    try {
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
+
+      const dateObject = new Date(updatedFixtureDate);
+      const timestampMilliseconds = dateObject.getTime();
+      let nanoseconds = BigInt(timestampMilliseconds) * BigInt(1000000);
+
+      let dto: RescheduleFixtureDTO = {
+        postponedFixtureId: fixtureId,
+        updatedFixtureGameweek,
+        updatedFixtureDate: nanoseconds,
       };
 
       let result = await identityActor.adminRescheduleFixture(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
@@ -191,7 +238,7 @@ function createGovernanceStore() {
       let dto: LoanPlayerDTO = {
         playerId,
         loanClubId,
-        loanEndDate: BigInt(loanEndDate)
+        loanEndDate: BigInt(loanEndDate),
       };
 
       let result = await identityActor.adminLoanPlayer(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
@@ -217,7 +264,8 @@ function createGovernanceStore() {
       );
 
       let dto: TransferPlayerDTO = {
-        playerId, newClubId
+        playerId,
+        newClubId,
       };
 
       let result = await identityActor.adminTransferPlayer(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
@@ -240,7 +288,7 @@ function createGovernanceStore() {
       );
 
       let dto: RecallPlayerDTO = {
-        playerId
+        playerId,
       };
 
       let result = await identityActor.adminRecallPlayer(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
@@ -279,7 +327,7 @@ function createGovernanceStore() {
         shirtNumber,
         valueQuarterMillions,
         dateOfBirth: BigInt(dateOfBirth),
-        nationality
+        nationality,
       };
 
       let result = await identityActor.adminCreatePlayer(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
@@ -316,7 +364,7 @@ function createGovernanceStore() {
         lastName,
         shirtNumber,
         dateOfBirth: BigInt(dateOfBirth),
-        nationality
+        nationality,
       };
 
       let result = await identityActor.adminUpdatePlayer(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
@@ -345,7 +393,7 @@ function createGovernanceStore() {
       let dto: SetPlayerInjuryDTO = {
         playerId,
         description,
-        expectedEndDate: BigInt(expectedEndDate)
+        expectedEndDate: BigInt(expectedEndDate),
       };
 
       let result = await identityActor.adminSetPlayerInjury(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
@@ -372,7 +420,7 @@ function createGovernanceStore() {
 
       let dto: RetirePlayerDTO = {
         playerId,
-        retirementDate: BigInt(retirementDate)
+        retirementDate: BigInt(retirementDate),
       };
 
       let result = await identityActor.adminRetirePlayer(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
@@ -395,7 +443,7 @@ function createGovernanceStore() {
       );
 
       let dto: UnretirePlayerDTO = {
-        playerId
+        playerId,
       };
 
       let result = await identityActor.adminUnretirePlayer(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
@@ -418,7 +466,7 @@ function createGovernanceStore() {
       );
 
       let dto: PromoteFormerClubDTO = {
-        clubId
+        clubId,
       };
 
       let result = await identityActor.adminPromoteFormerClub(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
@@ -455,7 +503,7 @@ function createGovernanceStore() {
         secondaryColourHex,
         thirdColourHex,
         abbreviatedName,
-        shirtType
+        shirtType,
       };
 
       let result = await identityActor.adminPromoteNewClub(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
@@ -494,7 +542,7 @@ function createGovernanceStore() {
         secondaryColourHex,
         thirdColourHex,
         abbreviatedName,
-        shirtType
+        shirtType,
       };
 
       let result = await identityActor.adminUpdateClub(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL

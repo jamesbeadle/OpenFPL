@@ -311,10 +311,9 @@ export const idlFactory = ({ IDL }) => {
   });
   const RecallPlayerDTO = IDL.Record({ playerId: PlayerId });
   const RescheduleFixtureDTO = IDL.Record({
-    fixtureId: FixtureId,
+    postponedFixtureId: FixtureId,
     updatedFixtureGameweek: GameweekNumber,
     updatedFixtureDate: IDL.Int,
-    seasonId: SeasonId,
   });
   const RetirePlayerDTO = IDL.Record({
     playerId: PlayerId,
@@ -357,6 +356,12 @@ export const idlFactory = ({ IDL }) => {
     lastName: IDL.Text,
     firstName: IDL.Text,
   });
+  const MoveFixtureDTO = IDL.Record({
+    fixtureId: FixtureId,
+    updatedFixtureGameweek: GameweekNumber,
+    updatedFixtureDate: IDL.Int,
+  });
+  const PostponeFixtureDTO = IDL.Record({ fixtureId: FixtureId });
   const Result_17 = IDL.Variant({ ok: IDL.Vec(ClubDTO), err: Error });
   const CountryDTO = IDL.Record({
     id: CountryId,
@@ -618,6 +623,8 @@ export const idlFactory = ({ IDL }) => {
     executeAddInitialFixtures: IDL.Func([AddInitialFixturesDTO], [], []),
     executeCreatePlayer: IDL.Func([CreatePlayerDTO], [], []),
     executeLoanPlayer: IDL.Func([LoanPlayerDTO], [], []),
+    executeMoveFixture: IDL.Func([MoveFixtureDTO], [], []),
+    executePostponeFixture: IDL.Func([PostponeFixtureDTO], [], []),
     executePromoteFormerClub: IDL.Func([PromoteFormerClubDTO], [], []),
     executePromoteNewClub: IDL.Func([PromoteNewClubDTO], [], []),
     executeRecallPlayer: IDL.Func([RecallPlayerDTO], [], []),
@@ -693,6 +700,8 @@ export const idlFactory = ({ IDL }) => {
     validateAddInitialFixtures: IDL.Func([AddInitialFixturesDTO], [Result], []),
     validateCreatePlayer: IDL.Func([CreatePlayerDTO], [Result], []),
     validateLoanPlayer: IDL.Func([LoanPlayerDTO], [Result], []),
+    validateMoveFixture: IDL.Func([MoveFixtureDTO], [Result], []),
+    validatePostponeFixture: IDL.Func([PostponeFixtureDTO], [Result], []),
     validatePromoteFormerClub: IDL.Func([PromoteFormerClubDTO], [Result], []),
     validatePromoteNewClub: IDL.Func([PromoteNewClubDTO], [Result], []),
     validateRecallPlayer: IDL.Func([RecallPlayerDTO], [Result], []),
