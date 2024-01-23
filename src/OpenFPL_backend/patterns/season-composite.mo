@@ -1165,11 +1165,77 @@ module {
       return #ok("Valid");
     };
 
-    //todo: validate postpone fixtures
+    public func validatePostponeFixture(postponeFixtureDTO : DTOs.PostponeFixtureDTO, systemState : T.SystemState) : async Result.Result<Text, Text> {
+       let currentSeason = List.find(
+        seasons,
+        func(season : T.Season) : Bool {
+          return season.id == systemState.calculationSeasonId;
+        },
+      );
+      switch (currentSeason) {
+        case (null) {
+          return #err("Invalid: Season does not exist.");
+        };
+        case (?foundSeason) {
+          
+          let fixture = List.find(
+            foundSeason.fixtures,
+            func(f : T.Fixture) : Bool {
+              return f.id == postponeFixtureDTO.fixtureId;
+            },
+          );
 
-    //todo: validate reschedule fixture
+          switch (fixture) {
+            case (null) {
+              return #err("Invalid: Cannot find fixture.");
+            };
+            case (?foundFixture) {
+              if (foundFixture.status == #Finalised) {
+                return #err("Invalid: Cannot postpone finalised fixture.");
+              };
+            };
+          };
+        };
+      };
 
+      return #ok("Valid");
+    };
 
+    public func validateRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO, systemState : T.SystemState) : async Result.Result<Text, Text> {
+       let currentSeason = List.find(
+        seasons,
+        func(season : T.Season) : Bool {
+          return season.id == systemState.calculationSeasonId;
+        },
+      );
+      switch (currentSeason) {
+        case (null) {
+          return #err("Invalid: Season does not exist.");
+        };
+        case (?foundSeason) {
+          
+          let fixture = List.find(
+            foundSeason.postponedFixtures,
+            func(f : T.Fixture) : Bool {
+              return f.id == rescheduleFixtureDTO.postponedFixtureId;
+            },
+          );
+
+          switch (fixture) {
+            case (null) {
+              return #err("Invalid: Cannot find postponed fixture.");
+            };
+            case (?foundFixture) {
+              if (foundFixture.status == #Finalised) {
+                return #err("Invalid: Cannot reschedule finalised fixture.");
+              };
+            };
+          };
+        };
+      };
+
+      return #ok("Valid");
+    };
 
     public func executeMoveFixture(moveFixtureDTO : DTOs.MoveFixtureDTO, seasonId: T.SeasonId) : async () {
       seasons := List.map<T.Season, T.Season>(
@@ -1256,19 +1322,56 @@ module {
       );
     };
 
-    //execture reschedule fixture
+    public func executeRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO, seasonId: T.SeasonId) : async () {
+      seasons := List.map<T.Season, T.Season>(
+        seasons,
+        func(currentSeason : T.Season) : T.Season {
+          if (currentSeason.id == seasonId) {
 
+            let updatedPostponedFixtures = List.filter<T.Fixture>(
+              currentSeason.postponedFixtures,
+              func(fixture : T.Fixture) : Bool {
+                return fixture.id != rescheduleFixtureDTO.postponedFixtureId;
+              },
+            );
 
-
-
-
-
-
-
-
-
-
-
+            let updatedSeason : T.Season = {
+              id = currentSeason.id;
+              name = currentSeason.name;
+              year = currentSeason.year;
+              fixtures = List.map<T.Fixture, T.Fixture>(
+                currentSeason.fixtures, 
+                func(currentFixture: T.Fixture) : T.Fixture {
+                  if(currentFixture.id == rescheduleFixtureDTO.postponedFixtureId){
+                    return {
+                      awayClubId = currentFixture.awayClubId;
+                      awayGoals = currentFixture.awayGoals;
+                      events = currentFixture.events;
+                      gameweek = rescheduleFixtureDTO.updatedFixtureGameweek;
+                      highestScoringPlayerId = currentFixture.highestScoringPlayerId;
+                      homeClubId = currentFixture.homeClubId;
+                      homeGoals = currentFixture.homeGoals;
+                      id = currentFixture.id;
+                      kickOff = rescheduleFixtureDTO.updatedFixtureDate;
+                      seasonId = currentFixture.seasonId;
+                      status = currentFixture.status
+                    }
+                  }
+                  else{
+                    return currentFixture;
+                  }
+                }
+              );
+              postponedFixtures = updatedPostponedFixtures;
+            };
+            return updatedSeason;
+          } else {
+            return currentSeason;
+          };
+        },
+      );
+    };
+    
     public func createNewSeason(systemState : T.SystemState) {
       let existingSeason = List.find(
         seasons,
