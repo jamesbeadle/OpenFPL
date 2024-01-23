@@ -562,6 +562,8 @@ function createGovernanceStore() {
     revaluePlayerDown,
     submitFixtureData,
     addInitialFixtures,
+    moveFixture,
+    postponeFixture,
     rescheduleFixture,
     loanPlayer,
     transferPlayer,

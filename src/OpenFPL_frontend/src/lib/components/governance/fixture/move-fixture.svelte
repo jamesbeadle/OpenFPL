@@ -17,9 +17,10 @@
   export let closeModal: () => void;
 
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
+  let selectedGameweek: number = 0;
   let newGameweek: number = 0;
   let selectedFixtureId: number = 0;
-  let postponedFixtures: FixtureDTO[] = [];
+  let gameweekFixtures: FixtureDTO[] = [];
 
   let date = "";
   let time = "";
@@ -31,26 +32,39 @@
     !selectedFixtureId ||
     selectedFixtureId <= 0;
 
-  onMount(async () => {
-    try {
-      postponedFixtures = await fixtureStore.getPostponedFixtures();
-    } catch (error) {
-      toastsError({
-        msg: { text: "Error fetching postponed fixtures." },
-        err: error,
-      });
-      console.error("Error fetching postponed fixtures:", error);
-    } finally {
-      isLoading = false;
-    }
-  });
-  
+  $: if (selectedGameweek) {
+    loadGameweekFixtures();
+  }
+
+  function loadGameweekFixtures() {
+    gameweekFixtures = $fixtureStore.filter(
+      (x) => x.gameweek == selectedGameweek
+    );
+  }
+
   let isLoading = true;
   let showConfirm = false;
 
   $: if (isSubmitDisabled && showConfirm) {
     showConfirm = false;
   }
+
+  onMount(async () => {
+    try {
+      await systemStore.sync();
+      await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
+      await teamStore.sync();
+      loadGameweekFixtures();
+    } catch (error) {
+      toastsError({
+        msg: { text: "Error syncing proposal data." },
+        err: error,
+      });
+      console.error("Error syncing proposal data.", error);
+    } finally {
+      isLoading = false;
+    }
+  });
 
   function getTeamById(teamId: number): ClubDTO {
     return $teamStore.find((x) => x.id === teamId)!;
@@ -61,11 +75,9 @@
   }
 
   async function confirmProposal() {
-    console.log("This");
-    console.log(selectedFixtureId);
 
     isLoading = true;
-    let result = await governanceStore.rescheduleFixture(
+    let result = await governanceStore.moveFixture(
       selectedFixtureId,
       newGameweek ?? 1,
       dateTime
@@ -100,21 +112,33 @@
 <Modal {visible} on:nnsClose={cancelModal}>
   <div class="mx-4 p-4">
     <div class="flex justify-between items-center my-2">
-      <h3 class="default-header">Reschedule Fixture</h3>
+      <h3 class="default-header">Move Fixture</h3>
       <button class="times-button" on:click={cancelModal}>&times;</button>
     </div>
 
     <div class="flex justify-start items-center w-full">
       <div class="w-full flex-col space-y-4 mb-2">
-        
         <div class="flex-col space-y-2">
-          <p>Select Postponed Fixture:</p>
+          <p>Select Gameweek:</p>
+          <select
+            class="p-2 fpl-dropdown my-4 min-w-[100px]"
+            bind:value={selectedGameweek}
+          >
+            <option value={0}>Select Gameweek</option>
+            {#each gameweeks as gameweek}
+              <option value={gameweek}>Gameweek {gameweek}</option>
+            {/each}
+          </select>
+        </div>
+
+        <div class="flex-col space-y-2">
+          <p>Select Fixture:</p>
           <select
             class="p-2 fpl-dropdown my-4 min-w-[100px]"
             bind:value={selectedFixtureId}
           >
             <option value={0}>Select Fixture</option>
-            {#each postponedFixtures as fixture}
+            {#each gameweekFixtures as fixture}
               {@const homeTeam = getTeamById(fixture.homeClubId)}
               {@const awayTeam = getTeamById(fixture.awayClubId)}
               <option value={fixture.id}

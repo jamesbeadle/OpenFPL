@@ -16,22 +16,24 @@
   export let visible: boolean;
   export let closeModal: () => void;
 
+  let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
+  let selectedGameweek: number = 0;
   let selectedFixtureId: number = 0;
   let gameweekFixtures: FixtureDTO[] = [];
 
-  let date = "";
-  let time = "";
-  let dateTime = "";
-
-  let updatedFixtureGameweek: number;
-  let updatedFixtureDate: number;
-
-  let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
-
-  $: dateTime = date + "T" + time;
-
   $: isSubmitDisabled =
-    !selectedFixtureId || selectedFixtureId <= 0 || updatedFixtureDate == 0;
+    !selectedFixtureId ||
+    selectedFixtureId <= 0;
+
+  $: if (selectedGameweek) {
+    loadGameweekFixtures();
+  }
+
+  function loadGameweekFixtures() {
+    gameweekFixtures = $fixtureStore.filter(
+      (x) => x.gameweek == selectedGameweek
+    );
+  }
 
   let isLoading = true;
   let showConfirm = false;
@@ -45,7 +47,7 @@
       await systemStore.sync();
       await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
       await teamStore.sync();
-      loadPostponedFixtures();
+      loadGameweekFixtures();
     } catch (error) {
       toastsError({
         msg: { text: "Error syncing proposal data." },
@@ -57,10 +59,6 @@
     }
   });
 
-  async function loadPostponedFixtures() {
-    gameweekFixtures = await fixtureStore.getPostponedFixtures();
-  }
-
   function getTeamById(teamId: number): ClubDTO {
     return $teamStore.find((x) => x.id === teamId)!;
   }
@@ -70,12 +68,12 @@
   }
 
   async function confirmProposal() {
+    console.log("This");
+    console.log(selectedFixtureId);
+
     isLoading = true;
-    let result = await governanceStore.rescheduleFixture(
-      $systemStore?.calculationSeasonId ?? 0,
-      selectedFixtureId,
-      updatedFixtureGameweek ?? 1,
-      updatedFixtureDate ?? 0
+    let result = await governanceStore.postponeFixture(
+      selectedFixtureId
     );
     if (isError(result)) {
       isLoading = false;
@@ -87,15 +85,10 @@
     }
     isLoading = false;
     resetForm();
-    closeModal();
+    cancelModal();
   }
 
   function resetForm() {
-    date = "";
-    time = "";
-    dateTime = "";
-    updatedFixtureGameweek = 0;
-    updatedFixtureDate = 0;
     showConfirm = false;
   }
 
@@ -108,12 +101,25 @@
 <Modal {visible} on:nnsClose={cancelModal}>
   <div class="mx-4 p-4">
     <div class="flex justify-between items-center my-2">
-      <h3 class="default-header">Reschedule Fixture</h3>
+      <h3 class="default-header">Postpone Fixture</h3>
       <button class="times-button" on:click={cancelModal}>&times;</button>
     </div>
 
     <div class="flex justify-start items-center w-full">
       <div class="w-full flex-col space-y-4 mb-2">
+        <div class="flex-col space-y-2">
+          <p>Select Gameweek:</p>
+          <select
+            class="p-2 fpl-dropdown my-4 min-w-[100px]"
+            bind:value={selectedGameweek}
+          >
+            <option value={0}>Select Gameweek</option>
+            {#each gameweeks as gameweek}
+              <option value={gameweek}>Gameweek {gameweek}</option>
+            {/each}
+          </select>
+        </div>
+
         <div class="flex-col space-y-2">
           <p>Select Fixture:</p>
           <select
@@ -131,29 +137,7 @@
           </select>
         </div>
 
-        <div class="border-b border-gray-200 my-4" />
-        <p class="mr-2 my-2">Or set new date:</p>
-        <div class="flex flex-row my-2">
-          <p class="mr-2">Select Date:</p>
-          <input type="date" bind:value={date} class="input input-bordered" />
-        </div>
-        <div class="flex flex-row my-2">
-          <p class="mr-2">Select Time:</p>
-          <input type="time" bind:value={time} class="input input-bordered" />
-        </div>
-        <div class="flex flex-row my-2 items-center">
-          <p class="mr-2">Select Gameweek:</p>
-
-          <select
-            class="p-2 fpl-dropdown my-4 min-w-[100px]"
-            bind:value={updatedFixtureGameweek}
-          >
-            <option value={0}>Select New Gameweek</option>
-            {#each gameweeks as gameweek}
-              <option value={gameweek}>Gameweek {gameweek}</option>
-            {/each}
-          </select>
-        </div>
+        <div class="border-b border-gray-200" />
 
         <div class="border-b border-gray-200" />
 

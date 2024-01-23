@@ -11,6 +11,8 @@
   import AddInitialFixtures from "$lib/components/governance/fixture/add-initial-fixtures.svelte";
   import RevaluePlayerUp from "$lib/components/governance/player/revalue-player-up.svelte";
   import RevaluePlayerDown from "$lib/components/governance/player/revalue-player-down.svelte";
+  import MoveFixture from "$lib/components/governance/fixture/move-fixture.svelte";
+  import PostponeFixture from "$lib/components/governance/fixture/postpone-fixture.svelte";
   import RescheduleFixture from "$lib/components/governance/fixture/reschedule-fixture.svelte";
   import LoanPlayer from "$lib/components/governance/player/loan-player.svelte";
   import TransferPlayer from "$lib/components/governance/player/transfer-player.svelte";
@@ -38,6 +40,8 @@
   let showRevaluePlayerUpModal: boolean = false;
   let showRevaluePlayerDownModal: boolean = false;
   let showAddInitialFixturesModal: boolean = false;
+  let showMoveFixtureModal: boolean = false;
+  let showPostponeFixtureModal: boolean = false;
   let showRescheduleFixtureModal: boolean = false;
   let showLoanPlayerModal: boolean = false;
   let showTransferPlayerModal: boolean = false;
@@ -98,6 +102,22 @@
 
   function hideAddInitialFixturesModal(): void {
     showAddInitialFixturesModal = false;
+  }
+
+  function displayMoveFixtureModal(): void {
+    showMoveFixtureModal = true;
+  }
+
+  function hideMoveFixturesModal(): void {
+    showMoveFixtureModal = false;
+  }
+
+  function displayPostponeFixtureModal(): void {
+    showPostponeFixtureModal = true;
+  }
+
+  function hidePostponeFixturesModal(): void {
+    showPostponeFixtureModal = false;
   }
 
   function displayRescheduleFixtureModal(): void {
@@ -258,7 +278,14 @@
       visible={showAddInitialFixturesModal}
       closeModal={hideAddInitialFixturesModal}
     />
-
+    <MoveFixture
+      visible={showMoveFixtureModal}
+      closeModal={hideMoveFixturesModal}
+    />
+    <PostponeFixture
+      visible={showPostponeFixtureModal}
+      closeModal={hidePostponeFixturesModal}
+    />
     <RescheduleFixture
       visible={showRescheduleFixtureModal}
       closeModal={hideRescehduleFixturesModal}
@@ -352,7 +379,15 @@
           >
           <button
             class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1"
-            on:click={displayRescheduleFixtureModal}>Reschedule Fixtures</button
+            on:click={displayMoveFixtureModal}>Move Fixture</button
+          >
+          <button
+            class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1"
+            on:click={displayPostponeFixtureModal}>Postpone Fixture</button
+          >
+          <button
+            class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1"
+            on:click={displayRescheduleFixtureModal}>Reschedule Fixture</button
           >
           <button
             class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1"
