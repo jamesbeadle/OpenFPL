@@ -672,6 +672,8 @@ service : {
   adminGetTimers : (text, nat, nat) -> (Result_21) query;
   adminGetWeeklyCanisters : (nat, nat) -> (Result_20);
   adminLoanPlayer : (LoanPlayerDTO) -> (Result);
+  adminMoveFixture : (MoveFixtureDTO) -> (Result);
+  adminPostponeFixture : (PostponeFixtureDTO) -> (Result);
   adminPromoteFormerClub : (PromoteFormerClubDTO) -> (Result);
   adminPromoteNewClub : (PromoteNewClubDTO) -> (Result);
   adminRecallPlayer : (RecallPlayerDTO) -> (Result);

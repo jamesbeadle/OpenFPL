@@ -586,6 +586,8 @@ export interface _SERVICE {
   adminGetTimers: ActorMethod<[string, bigint, bigint], Result_21>;
   adminGetWeeklyCanisters: ActorMethod<[bigint, bigint], Result_20>;
   adminLoanPlayer: ActorMethod<[LoanPlayerDTO], Result>;
+  adminMoveFixture: ActorMethod<[MoveFixtureDTO], Result>;
+  adminPostponeFixture: ActorMethod<[PostponeFixtureDTO], Result>;
   adminPromoteFormerClub: ActorMethod<[PromoteFormerClubDTO], Result>;
   adminPromoteNewClub: ActorMethod<[PromoteNewClubDTO], Result>;
   adminRecallPlayer: ActorMethod<[RecallPlayerDTO], Result>;

@@ -1128,11 +1128,11 @@ module {
           return #err("Invalid: Season does not exist.");
         };
         case (?foundSeason) {
-          if (moveFixtureDTO.updatedFixtureDate <= Time.now()) {
+          if (moveFixtureDTO.updatedFixtureDate < Time.now()) {
             return #err("Invalid: Fixture date in the past.");
           };
 
-          if (moveFixtureDTO.updatedFixtureGameweek <= systemState.pickTeamGameweek) {
+          if (moveFixtureDTO.updatedFixtureGameweek < systemState.pickTeamGameweek) {
             return #err("Invalid: Fixture gameweek in the past.");
           };
 

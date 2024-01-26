@@ -657,7 +657,7 @@ module {
     };
 
     public func executeMoveFixture(moveFixtureDTO : DTOs.MoveFixtureDTO) : async () {
-      return await seasonComposite.executeMoveFixture(moveFixtureDTO, systemState);
+      await seasonComposite.executeMoveFixture(moveFixtureDTO, systemState);
       await updateCacheHash("fixtures");
     };
 
@@ -666,7 +666,7 @@ module {
     };
 
     public func executePostponeFixture(postponeFixtureDTO : DTOs.PostponeFixtureDTO) : async () {
-      return await seasonComposite.executePostponeFixture(postponeFixtureDTO, systemState);
+      await seasonComposite.executePostponeFixture(postponeFixtureDTO, systemState);
       await updateCacheHash("fixtures");
     };
 
@@ -675,7 +675,7 @@ module {
     };
 
     public func executeRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO) : async () {
-      return await seasonComposite.executeRescheduleFixture(rescheduleFixtureDTO, systemState);
+      await seasonComposite.executeRescheduleFixture(rescheduleFixtureDTO, systemState);
       await updateCacheHash("fixtures");
     };
 
@@ -789,7 +789,7 @@ module {
     };
 
     public func executeUnretirePlayer(unretirePlayerDTO : DTOs.UnretirePlayerDTO) : async () {
-      return await playerComposite.executeUnretirePlayer(unretirePlayerDTO);
+      await playerComposite.executeUnretirePlayer(unretirePlayerDTO);
       await updateCacheHash("players");
     };
 
@@ -798,7 +798,7 @@ module {
     };
 
     public func executePromoteFormerClub(promoteFormerClubDTO : DTOs.PromoteFormerClubDTO) : async () {
-      return await clubComposite.executePromoteFormerClub(promoteFormerClubDTO);
+      await clubComposite.executePromoteFormerClub(promoteFormerClubDTO);
       await updateCacheHash("clubs");
     };
 
@@ -807,7 +807,7 @@ module {
     };
 
     public func executePromoteNewClub(promoteNewClubDTO : DTOs.PromoteNewClubDTO) : async () {
-      return await clubComposite.executePromoteNewClub(promoteNewClubDTO);
+      await clubComposite.executePromoteNewClub(promoteNewClubDTO);
       await updateCacheHash("clubs");
     };
 
@@ -816,7 +816,7 @@ module {
     };
 
     public func executeUpdateClub(updateClubDTO : DTOs.UpdateClubDTO) : async () {
-      return await clubComposite.executeUpdateClub(updateClubDTO);
+      await clubComposite.executeUpdateClub(updateClubDTO);
       await updateCacheHash("clubs");
     };
 

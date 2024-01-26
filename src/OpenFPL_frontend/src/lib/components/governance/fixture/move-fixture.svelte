@@ -28,9 +28,7 @@
 
   $: dateTime = date + "T" + time;
 
-  $: isSubmitDisabled =
-    !selectedFixtureId ||
-    selectedFixtureId <= 0;
+  $: isSubmitDisabled = !selectedFixtureId || selectedFixtureId <= 0;
 
   $: if (selectedGameweek) {
     loadGameweekFixtures();
@@ -75,7 +73,6 @@
   }
 
   async function confirmProposal() {
-
     isLoading = true;
     let result = await governanceStore.moveFixture(
       selectedFixtureId,
@@ -147,8 +144,6 @@
             {/each}
           </select>
         </div>
-
-        <div class="border-b border-gray-200" />
 
         <div class="border-b border-gray-200 my-4" />
         <p class="mr-2 my-2">Set new date:</p>

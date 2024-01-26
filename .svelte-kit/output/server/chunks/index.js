@@ -3355,7 +3355,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1js3raw"
+  version_hash: "1eodb30"
 };
 function get_hooks() {
   return {};
@@ -3860,6 +3860,12 @@ const idlFactory = ({ IDL }) => {
     playerId: PlayerId,
     loanClubId: ClubId
   });
+  const MoveFixtureDTO = IDL.Record({
+    fixtureId: FixtureId,
+    updatedFixtureGameweek: GameweekNumber,
+    updatedFixtureDate: IDL.Int
+  });
+  const PostponeFixtureDTO = IDL.Record({ fixtureId: FixtureId });
   const PromoteFormerClubDTO = IDL.Record({ clubId: ClubId });
   const PromoteNewClubDTO = IDL.Record({
     secondaryColourHex: IDL.Text,
@@ -3917,12 +3923,6 @@ const idlFactory = ({ IDL }) => {
     lastName: IDL.Text,
     firstName: IDL.Text
   });
-  const MoveFixtureDTO = IDL.Record({
-    fixtureId: FixtureId,
-    updatedFixtureGameweek: GameweekNumber,
-    updatedFixtureDate: IDL.Int
-  });
-  const PostponeFixtureDTO = IDL.Record({ fixtureId: FixtureId });
   const Result_17 = IDL.Variant({ ok: IDL.Vec(ClubDTO), err: Error2 });
   const CountryDTO = IDL.Record({
     id: CountryId,
@@ -4167,6 +4167,8 @@ const idlFactory = ({ IDL }) => {
     ),
     adminGetWeeklyCanisters: IDL.Func([IDL.Nat, IDL.Nat], [Result_20], []),
     adminLoanPlayer: IDL.Func([LoanPlayerDTO], [Result], []),
+    adminMoveFixture: IDL.Func([MoveFixtureDTO], [Result], []),
+    adminPostponeFixture: IDL.Func([PostponeFixtureDTO], [Result], []),
     adminPromoteFormerClub: IDL.Func([PromoteFormerClubDTO], [Result], []),
     adminPromoteNewClub: IDL.Func([PromoteNewClubDTO], [Result], []),
     adminRecallPlayer: IDL.Func([RecallPlayerDTO], [Result], []),
@@ -6593,7 +6595,6 @@ function createGovernanceStore() {
         playerId
       };
       let result = await identityActor.adminRevaluePlayerUp(dto);
-      console.log(result);
       if (isError(result)) {
         console.error("Error submitting proposal: ", result);
         return;
@@ -6664,6 +6665,50 @@ function createGovernanceStore() {
       }
     } catch (error2) {
       console.error("Error submitting fixture data:", error2);
+      throw error2;
+    }
+  }
+  async function moveFixture(fixtureId, updatedFixtureGameweek, updatedFixtureDate) {
+    try {
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
+      const dateObject = new Date(updatedFixtureDate);
+      const timestampMilliseconds = dateObject.getTime();
+      let nanoseconds = BigInt(timestampMilliseconds) * BigInt(1e6);
+      let dto = {
+        fixtureId,
+        updatedFixtureGameweek,
+        updatedFixtureDate: nanoseconds
+      };
+      let result = await identityActor.adminMoveFixture(dto);
+      console.log(result);
+      if (isError(result)) {
+        console.error("Error submitting proposal: ", result);
+        return;
+      }
+    } catch (error2) {
+      console.error("Error moving fixture:", error2);
+      throw error2;
+    }
+  }
+  async function postponeFixture(fixtureId) {
+    try {
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
+      let dto = {
+        fixtureId
+      };
+      let result = await identityActor.adminPostponeFixture(dto);
+      if (isError(result)) {
+        console.error("Error submitting proposal: ", result);
+        return;
+      }
+    } catch (error2) {
+      console.error("Error postponing fixture:", error2);
       throw error2;
     }
   }
@@ -6937,6 +6982,8 @@ function createGovernanceStore() {
     revaluePlayerDown,
     submitFixtureData,
     addInitialFixtures,
+    moveFixture,
+    postponeFixture,
     rescheduleFixture,
     loanPlayer,
     transferPlayer,

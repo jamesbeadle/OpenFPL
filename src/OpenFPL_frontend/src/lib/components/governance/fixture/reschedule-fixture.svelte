@@ -27,9 +27,7 @@
 
   $: dateTime = date + "T" + time;
 
-  $: isSubmitDisabled =
-    !selectedFixtureId ||
-    selectedFixtureId <= 0;
+  $: isSubmitDisabled = !selectedFixtureId || selectedFixtureId <= 0;
 
   onMount(async () => {
     try {
@@ -44,7 +42,7 @@
       isLoading = false;
     }
   });
-  
+
   let isLoading = true;
   let showConfirm = false;
 
@@ -106,7 +104,6 @@
 
     <div class="flex justify-start items-center w-full">
       <div class="w-full flex-col space-y-4 mb-2">
-        
         <div class="flex-col space-y-2">
           <p>Select Postponed Fixture:</p>
           <select

@@ -873,6 +873,30 @@ actor Self {
     return result;
   };
 
+  public shared ({ caller }) func adminMoveFixture(moveFixtureDTO : DTOs.MoveFixtureDTO) : async Result.Result<Text, Text> {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == TEMP_ADMIN_PRINCIPAL;
+    let result = await seasonManager.validateMoveFixture(moveFixtureDTO);
+    if (result == #ok("Valid")) {
+      await seasonManager.executeMoveFixture(moveFixtureDTO);
+      return #ok("Valid");
+    };
+    return result;
+  };
+
+  public shared ({ caller }) func adminPostponeFixture(postponeFixtureDTO : DTOs.PostponeFixtureDTO) : async Result.Result<Text, Text> {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == TEMP_ADMIN_PRINCIPAL;
+    let result = await seasonManager.validatePostponeFixture(postponeFixtureDTO);
+    if (result == #ok("Valid")) {
+      await seasonManager.executePostponeFixture(postponeFixtureDTO);
+      return #ok("Valid");
+    };
+    return result;
+  };
+
   public shared ({ caller }) func adminRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO) : async Result.Result<Text, Text> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);

@@ -299,6 +299,12 @@ export const idlFactory = ({ IDL }) => {
     playerId: PlayerId,
     loanClubId: ClubId,
   });
+  const MoveFixtureDTO = IDL.Record({
+    fixtureId: FixtureId,
+    updatedFixtureGameweek: GameweekNumber,
+    updatedFixtureDate: IDL.Int,
+  });
+  const PostponeFixtureDTO = IDL.Record({ fixtureId: FixtureId });
   const PromoteFormerClubDTO = IDL.Record({ clubId: ClubId });
   const PromoteNewClubDTO = IDL.Record({
     secondaryColourHex: IDL.Text,
@@ -356,12 +362,6 @@ export const idlFactory = ({ IDL }) => {
     lastName: IDL.Text,
     firstName: IDL.Text,
   });
-  const MoveFixtureDTO = IDL.Record({
-    fixtureId: FixtureId,
-    updatedFixtureGameweek: GameweekNumber,
-    updatedFixtureDate: IDL.Int,
-  });
-  const PostponeFixtureDTO = IDL.Record({ fixtureId: FixtureId });
   const Result_17 = IDL.Variant({ ok: IDL.Vec(ClubDTO), err: Error });
   const CountryDTO = IDL.Record({
     id: CountryId,
@@ -606,6 +606,8 @@ export const idlFactory = ({ IDL }) => {
     ),
     adminGetWeeklyCanisters: IDL.Func([IDL.Nat, IDL.Nat], [Result_20], []),
     adminLoanPlayer: IDL.Func([LoanPlayerDTO], [Result], []),
+    adminMoveFixture: IDL.Func([MoveFixtureDTO], [Result], []),
+    adminPostponeFixture: IDL.Func([PostponeFixtureDTO], [Result], []),
     adminPromoteFormerClub: IDL.Func([PromoteFormerClubDTO], [Result], []),
     adminPromoteNewClub: IDL.Func([PromoteNewClubDTO], [Result], []),
     adminRecallPlayer: IDL.Func([RecallPlayerDTO], [Result], []),

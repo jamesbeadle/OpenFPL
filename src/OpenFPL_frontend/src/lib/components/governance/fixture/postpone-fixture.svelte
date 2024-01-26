@@ -21,9 +21,7 @@
   let selectedFixtureId: number = 0;
   let gameweekFixtures: FixtureDTO[] = [];
 
-  $: isSubmitDisabled =
-    !selectedFixtureId ||
-    selectedFixtureId <= 0;
+  $: isSubmitDisabled = !selectedFixtureId || selectedFixtureId <= 0;
 
   $: if (selectedGameweek) {
     loadGameweekFixtures();
@@ -72,9 +70,7 @@
     console.log(selectedFixtureId);
 
     isLoading = true;
-    let result = await governanceStore.postponeFixture(
-      selectedFixtureId
-    );
+    let result = await governanceStore.postponeFixture(selectedFixtureId);
     if (isError(result)) {
       isLoading = false;
       toastsError({

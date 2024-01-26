@@ -39,7 +39,6 @@ function createGovernanceStore() {
       };
 
       let result = await identityActor.adminRevaluePlayerUp(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
-      console.log(result);
       if (isError(result)) {
         console.error("Error submitting proposal: ", result);
         return;
@@ -157,6 +156,7 @@ function createGovernanceStore() {
       };
 
       let result = await identityActor.adminMoveFixture(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
+      console.log(result);
 
       if (isError(result)) {
         console.error("Error submitting proposal: ", result);
