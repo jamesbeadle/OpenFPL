@@ -30,6 +30,7 @@
     getPositionAbbreviation,
     getAvailableFormations,
     convertPlayerPosition,
+    isJanuary
   } from "../../lib/utils/Helpers";
   import type {
     PlayerDTO,
@@ -92,6 +93,9 @@
   let canSellPlayer = true;
   let showUsernameModal = false;
   let newUsername = "test";
+  let transferWindowPlayed = false;
+  let transferWindowActive = false;
+  let transferWindowPlayedInSession = false;
 
   let isLoading = true;
 
@@ -123,6 +127,10 @@
         updatePitchHeight();
       }
 
+      if(isJanuary()){
+        transferWindowActive = true;
+      }
+
       async function loadData() {
         await systemStore.sync();
         await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
@@ -148,6 +156,8 @@
         fantasyTeam.set(userFantasyTeam);
 
         let principalId = $fantasyTeam?.principalId ?? "";
+        let transferWindowGameweek = $fantasyTeam?.transferWindowGameweek ?? 0;
+        transferWindowPlayed = (transferWindowGameweek > 0);
 
         if (principalId.length > 0) {
           newTeam = false;
@@ -155,9 +165,14 @@
         }
 
         if (!newTeam && activeGameweek > 1) {
-          transfersAvailable.set(userFantasyTeam.transfersAvailable);
-          if ($transfersAvailable <= 0) {
-            canSellPlayer = false;
+          if(userFantasyTeam.tranferWindowGameweek == activeGameweek){
+            transfersAvailable.set(Infinity);
+          }
+          else{
+            transfersAvailable.set(userFantasyTeam.transfersAvailable);
+            if ($transfersAvailable <= 0) {
+              canSellPlayer = false;
+            }
           }
         }
 
@@ -749,6 +764,12 @@
     updateCaptainIfNeeded($fantasyTeam!);
   }
 
+  function playTransferWindow(){
+    transferWindowPlayedInSession = true;
+    transferWindowPlayed = true;
+    transfersAvailable.set(Infinity);
+  }
+
   async function updateUsername() {
     if(newUsername == ""){
       return;
@@ -804,7 +825,8 @@
       await managerStore.saveFantasyTeam(
         team!,
         activeGameweek,
-        $bonusUsedInSession
+        $bonusUsedInSession,
+        transferWindowPlayedInSession
       );
       busyStore.stopBusy("save-team");
       toastsShow({
@@ -985,6 +1007,19 @@
           <div
             class="flex flex-col md:flex-row w-full md:justify-end gap-4 mr-0 md:mr-4 order-1 md:order-3 mt-2 md:mt-0"
           >
+            {#if transferWindowActive}
+              <button
+                disabled={transferWindowPlayed}
+                on:click={playTransferWindow}
+                class={`btn w-full md:w-auto px-4 py-2 rounded  
+                ${!transferWindowPlayed
+                    ? "fpl-purple-btn"
+                    : "bg-gray-500"
+                } text-white min-w-[125px]`}
+              >
+                Use Transfer Window Bonus
+              </button>
+            {/if}
             <button
               disabled={$fantasyTeam?.playerIds
                 ? $fantasyTeam?.playerIds.filter((x) => x === 0).length === 0

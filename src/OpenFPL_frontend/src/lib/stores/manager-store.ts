@@ -198,11 +198,13 @@ function createManagerStore() {
       let bonusPlayed = 0;
       let bonusPlayerId = 0;
       let bonusTeamId = 0;
+      let bonusCountryId = 0;
 
       if (bonusUsedInSession) {
-        bonusPlayed = getBonusPlayed(userFantasyTeam, activeGameweek);
         bonusPlayerId = getBonusPlayerId(userFantasyTeam, activeGameweek);
         bonusTeamId = getBonusTeamId(userFantasyTeam, activeGameweek);
+        bonusPlayed = getBonusPlayed(userFantasyTeam, activeGameweek);
+        bonusCountryId = getBonusCountryId(userFantasyTeam, activeGameweek);
       }
 
       const identityActor: any = await ActorFactory.createIdentityActor(
@@ -214,19 +216,19 @@ function createManagerStore() {
         playerIds : userFantasyTeam.playerIds,
         captainId :userFantasyTeam.captainId,
         goalGetterGameweek : bonusPlayed == 1 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
-        goalGetterPlayerId :0,
+        goalGetterPlayerId :bonusPlayerId,
         passMasterGameweek : bonusPlayed == 2 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
-        passMasterPlayerId :0,
+        passMasterPlayerId :bonusPlayerId,
         noEntryGameweek : bonusPlayed == 3 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
-        noEntryPlayerId :0,
+        noEntryPlayerId : bonusPlayerId,
         teamBoostGameweek : bonusPlayed == 4 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
-        teamBoostClubId :0,
+        teamBoostClubId : bonusTeamId,
         safeHandsGameweek : bonusPlayed == 5 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
-        safeHandsPlayerId :0,
+        safeHandsPlayerId : bonusPlayerId,
         captainFantasticGameweek : bonusPlayed == 6 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
-        captainFantasticPlayerId :0,
+        captainFantasticPlayerId : bonusPlayerId,
         countrymenGameweek : bonusPlayed == 7 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
-        countrymenCountryId :0,
+        countrymenCountryId : bonusCountryId,
         prospectsGameweek : bonusPlayed == 8 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
         braceBonusGameweek :bonusPlayed == 9 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
         hatTrickHeroGameweek : bonusPlayed == 10 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
@@ -338,6 +340,19 @@ function createManagerStore() {
     }
 
     return bonusTeamId;
+  }
+
+  function getBonusCountryId(
+    userFantasyTeam: ProfileDTO,
+    activeGameweek: number
+  ): number {
+    let bonusCountryId = 0;
+
+    if (userFantasyTeam.countrymenGameweek === activeGameweek) {
+      bonusCountryId = userFantasyTeam.countrymenCountryId;
+    }
+
+    return bonusCountryId;
   }
 
   async function snapshotFantasyTeams() {

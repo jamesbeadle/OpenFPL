@@ -170,6 +170,13 @@ export function calculateAgeFromNanoseconds(nanoseconds: number) {
   return age;
 }
 
+export function isJanuary(): boolean {
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth();
+  return currentMonth === 0;
+}
+
+
 export function getFlagComponent(countryId: number) {
   switch (countryId) {
     case 1:
