@@ -97,30 +97,6 @@ module {
             profilePicture = profilePicture;
             favouriteClubId = foundManager.favouriteClubId;
             createDate = foundManager.createDate;
-            transfersAvailable = foundManager.transfersAvailable;
-            monthlyBonusesAvailable = foundManager.monthlyBonusesAvailable;
-            bankQuarterMillions = foundManager.bankQuarterMillions;
-            playerIds = foundManager.playerIds;
-            captainId = foundManager.captainId;
-            goalGetterGameweek = foundManager.goalGetterGameweek;
-            goalGetterPlayerId = foundManager.goalGetterPlayerId;
-            passMasterGameweek = foundManager.passMasterGameweek;
-            passMasterPlayerId = foundManager.passMasterPlayerId;
-            noEntryGameweek = foundManager.noEntryGameweek;
-            noEntryPlayerId = foundManager.noEntryPlayerId;
-            teamBoostGameweek = foundManager.teamBoostGameweek;
-            teamBoostClubId = foundManager.teamBoostClubId;
-            safeHandsGameweek = foundManager.safeHandsGameweek;
-            safeHandsPlayerId = foundManager.safeHandsPlayerId;
-            captainFantasticGameweek = foundManager.captainFantasticGameweek;
-            captainFantasticPlayerId = foundManager.captainFantasticPlayerId;
-            countrymenGameweek = foundManager.countrymenGameweek;
-            countrymenCountryId = foundManager.countrymenCountryId;
-            prospectsGameweek = foundManager.prospectsGameweek;
-            braceBonusGameweek = foundManager.braceBonusGameweek;
-            hatTrickHeroGameweek = foundManager.hatTrickHeroGameweek;
-            transferWindowGameweek = foundManager.transferWindowGameweek;
-            history = List.toArray(foundManager.history);
           };
 
           return #ok(profileDTO);
@@ -128,7 +104,7 @@ module {
       };
     };
 
-    public func getPublicProfile(principalId : Text, seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async Result.Result<DTOs.PublicProfileDTO, T.Error> {
+    public func getCurrentTeam(principalId : Text) : async Result.Result<DTOs.PickTeamDTO, T.Error> {
 
       let manager = managers.get(principalId);
 
@@ -153,32 +129,35 @@ module {
             };
           };
 
-          var gameweeks : [T.FantasyTeamSnapshot] = [];
-
-          let season = List.find(
-            foundManager.history,
-            func(season : T.FantasyTeamSeason) : Bool {
-              return season.seasonId == seasonId;
-            },
-          );
-
-          switch (season) {
-            case (null) {};
-            case (?foundSeason) {
-              gameweeks := List.toArray(foundSeason.gameweeks);
-            };
-          };
-
-          let profileDTO : DTOs.PublicProfileDTO = {
+          let pickTeamDTO : DTOs.PickTeamDTO = {
             principalId = foundManager.principalId;
             username = foundManager.username;
-            profilePicture = profilePicture;
-            favouriteClubId = foundManager.favouriteClubId;
-            createDate = foundManager.createDate;
-            gameweeks = gameweeks;
+            transfersAvailable = foundManager.transfersAvailable;
+            monthlyBonusesAvailable = foundManager.monthlyBonusesAvailable;
+            bankQuarterMillions = foundManager.bankQuarterMillions;
+            playerIds = foundManager.playerIds;
+            captainId = foundManager.captainId;
+            goalGetterGameweek = foundManager.goalGetterGameweek;
+            goalGetterPlayerId = foundManager.goalGetterPlayerId;
+            passMasterGameweek = foundManager.passMasterGameweek;
+            passMasterPlayerId = foundManager.passMasterPlayerId;
+            noEntryGameweek = foundManager.noEntryGameweek;
+            noEntryPlayerId = foundManager.noEntryPlayerId;
+            teamBoostGameweek = foundManager.teamBoostGameweek;
+            teamBoostClubId = foundManager.teamBoostClubId;
+            safeHandsGameweek = foundManager.safeHandsGameweek;
+            safeHandsPlayerId = foundManager.safeHandsPlayerId;
+            captainFantasticGameweek = foundManager.captainFantasticGameweek;
+            captainFantasticPlayerId = foundManager.captainFantasticPlayerId;
+            countrymenGameweek = foundManager.countrymenGameweek;
+            countrymenCountryId = foundManager.countrymenCountryId;
+            prospectsGameweek = foundManager.prospectsGameweek;
+            braceBonusGameweek = foundManager.braceBonusGameweek;
+            hatTrickHeroGameweek = foundManager.hatTrickHeroGameweek;
+            transferWindowGameweek = foundManager.transferWindowGameweek;
           };
 
-          return #ok(profileDTO);
+          return #ok(pickTeamDTO);
         };
       };
     };
@@ -287,44 +266,6 @@ module {
       };
     };
 
-    public func getManagerGameweek(principalId : Text, seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async Result.Result<DTOs.ManagerGameweekDTO, T.Error> {
-
-      let manager = managers.get(principalId);
-      switch (manager) {
-        case (null) { return #err(#NotFound) };
-        case (?foundTeam) {
-
-          let teamHistory = foundTeam.history;
-          switch (teamHistory) {
-            case (null) { return #err(#NotFound) };
-            case (foundHistory) {
-              let foundSeason = List.find<T.FantasyTeamSeason>(
-                foundHistory,
-                func(season : T.FantasyTeamSeason) : Bool {
-                  return season.seasonId == seasonId;
-                },
-              );
-              switch (foundSeason) {
-                case (null) { return #err(#NotFound) };
-                case (?fs) {
-                  let foundGameweek = List.find<T.FantasyTeamSnapshot>(
-                    fs.gameweeks,
-                    func(gw : T.FantasyTeamSnapshot) : Bool {
-                      return gw.gameweek == gameweek;
-                    },
-                  );
-                  switch (foundGameweek) {
-                    case (null) { return #err(#NotFound) };
-                    case (?fgw) { return #ok(fgw) };
-                  };
-                };
-              };
-            };
-          };
-        };
-      };
-    };
-
     public func getTotalManagers() : Nat {
       let managersWithTeams = Iter.filter<T.Manager>(managers.vals(), func(manager : T.Manager) : Bool { Array.size(manager.playerIds) == 11 });
       return Iter.size(managersWithTeams);
@@ -352,13 +293,14 @@ module {
 
       switch (manager) {
         case (null) {
-          let createProfileDTO : DTOs.CreateProfileDTO = {
+          let createProfileDTO : DTOs.ProfileDTO = {
             principalId = principalId;
             username = updatedFantasyTeam.username;
             profilePicture = Blob.fromArray([]);
             favouriteClubId = 0;
             createDate = now();
             canUpdateFavouriteClub = true;
+            termsAccepted = false;
           };
           let newManager = buildNewManager(principalId, createProfileDTO, "");
           let updatedManager : T.Manager = {
@@ -444,13 +386,14 @@ module {
 
       switch (manager) {
         case (null) {
-          let createProfileDTO : DTOs.CreateProfileDTO = {
+          let createProfileDTO : DTOs.ProfileDTO = {
             principalId = principalId;
             username = updatedUsername;
             profilePicture = Blob.fromArray([]);
             favouriteClubId = 0;
             createDate = now();
             canUpdateFavouriteClub = true;
+            termsAccepted = false;
           };
           let newManager = buildNewManager(principalId, createProfileDTO, "");
           managers.put(principalId, newManager);
@@ -506,13 +449,14 @@ module {
       switch (manager) {
         case (null) {
 
-          let createProfileDTO : DTOs.CreateProfileDTO = {
+          let createProfileDTO : DTOs.ProfileDTO = {
             principalId = principalId;
             username = "";
             profilePicture = Blob.fromArray([]);
             favouriteClubId = favouriteClubId;
             createDate = now();
             canUpdateFavouriteClub = true;
+            termsAccepted = false;
           };
           let newManager = buildNewManager(principalId, createProfileDTO, "");
           managers.put(principalId, newManager);
@@ -571,13 +515,14 @@ module {
         case (null) {
           let profilePictureCanisterId = await setManagerProfileImage(principalId, profilePicture);
 
-          let createProfileDTO : DTOs.CreateProfileDTO = {
+          let createProfileDTO : DTOs.ProfileDTO = {
             principalId = principalId;
             username = "";
             profilePicture = profilePicture;
             favouriteClubId = 0;
             createDate = now();
             canUpdateFavouriteClub = true;
+            termsAccepted = false;
           };
 
           let newManager = buildNewManager(principalId, createProfileDTO, profilePictureCanisterId);
@@ -1030,7 +975,7 @@ module {
       return (sizeInKB <= 0 or sizeInKB > 500);
     };
 
-    private func buildNewManager(principalId : Text, createProfileDTO : DTOs.CreateProfileDTO, profilePictureCanisterId : Text) : T.Manager {
+    private func buildNewManager(principalId : Text, createProfileDTO : DTOs.ProfileDTO, profilePictureCanisterId : Text) : T.Manager {
       let newManager : T.Manager = {
         principalId = principalId;
         username = createProfileDTO.username;

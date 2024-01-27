@@ -125,23 +125,6 @@ module DTOs {
     shirtType : T.ShirtType;
   };
 
-  public type CreateProfileDTO = {
-    principalId : Text;
-    username : Text;
-    profilePicture : Blob;
-    favouriteClubId : Nat16;
-    createDate : Int;
-  };
-
-  public type PublicProfileDTO = {
-    principalId : Text;
-    username : Text;
-    profilePicture : Blob;
-    favouriteClubId : Nat16;
-    createDate : Int;
-    gameweeks : [T.FantasyTeamSnapshot];
-  };
-
   public type ProfileDTO = {
     principalId : Text;
     username : Text;
@@ -149,6 +132,11 @@ module DTOs {
     profilePicture : Blob;
     favouriteClubId : T.ClubId;
     createDate : Int;
+  };
+ 
+  public type PickTeamDTO = {
+    principalId : Text;
+    username : Text;
     transfersAvailable : Nat8;
     monthlyBonusesAvailable : Nat8;
     bankQuarterMillions : Nat16;
@@ -172,7 +160,24 @@ module DTOs {
     braceBonusGameweek : T.GameweekNumber;
     hatTrickHeroGameweek : T.GameweekNumber;
     transferWindowGameweek : T.GameweekNumber;
-    history : [T.FantasyTeamSeason];
+  };
+
+  public type ManagerDTO = {
+    principalId : Text;
+    username : Text;
+    profilePicture : Blob;
+    favouriteClubId : T.ClubId;
+    createDate : Int;
+    gameweeks : [T.FantasyTeamSnapshot];
+    weeklyPosition : Int;
+    monthlyPosition : Int;
+    seasonPosition : Int;
+    weeklyPositionText : Text;
+    monthlyPositionText : Text;
+    seasonPositionText : Text;
+    weeklyPoints : Int16;
+    monthlyPoints : Int16;
+    seasonPoints : Int16;
   };
 
   public type PlayerRatingsDTO = {
@@ -272,24 +277,6 @@ module DTOs {
     events : [T.PlayerEventData];
   };
 
-  public type ManagerDTO = {
-    principalId : Text;
-    username : Text;
-    profilePicture : Blob;
-    favouriteClubId : T.ClubId;
-    createDate : Int;
-    gameweeks : [T.FantasyTeamSnapshot];
-    weeklyPosition : Int;
-    monthlyPosition : Int;
-    seasonPosition : Int;
-    weeklyPositionText : Text;
-    monthlyPositionText : Text;
-    seasonPositionText : Text;
-    weeklyPoints : Int16;
-    monthlyPoints : Int16;
-    seasonPoints : Int16;
-  };
-
   public type UpdateSystemStateDTO = {
     pickTeamSeasonId : T.SeasonId;
     pickTeamGameweek : T.GameweekNumber;
@@ -379,38 +366,6 @@ module DTOs {
     hatTrickHeroGameweek : T.GameweekNumber;
     transferWindowGameweek : T.GameweekNumber;
     username : Text;
-  };
-
-  public type ManagerGameweekDTO = {
-    principalId : Text;
-    username : Text;
-    favouriteClubId : T.ClubId;
-    transfersAvailable : Nat8;
-    monthlyBonusesAvailable : Nat8;
-    bankQuarterMillions : Nat16;
-    teamValueQuarterMillions : Nat16;
-    playerIds : [T.PlayerId];
-    captainId : T.PlayerId;
-    gameweek : T.GameweekNumber;
-    goalGetterGameweek : T.GameweekNumber;
-    goalGetterPlayerId : T.PlayerId;
-    passMasterGameweek : T.GameweekNumber;
-    passMasterPlayerId : T.PlayerId;
-    noEntryGameweek : T.GameweekNumber;
-    noEntryPlayerId : T.PlayerId;
-    teamBoostGameweek : T.GameweekNumber;
-    teamBoostClubId : T.ClubId;
-    safeHandsGameweek : T.GameweekNumber;
-    safeHandsPlayerId : T.PlayerId;
-    captainFantasticGameweek : T.GameweekNumber;
-    captainFantasticPlayerId : T.PlayerId;
-    countrymenGameweek : T.GameweekNumber;
-    countrymenCountryId : T.CountryId;
-    prospectsGameweek : T.GameweekNumber;
-    braceBonusGameweek : T.GameweekNumber;
-    hatTrickHeroGameweek : T.GameweekNumber;
-    points : Int16;
-    transferWindowGameweek : T.GameweekNumber;
   };
 
   public type WeeklyCanisterDTO = {

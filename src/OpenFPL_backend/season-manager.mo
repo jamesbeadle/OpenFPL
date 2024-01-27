@@ -192,8 +192,8 @@ module {
       return await managerComposite.getProfile(principalId);
     };
 
-    public func getPublicProfile(principalId : Text, seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async Result.Result<DTOs.PublicProfileDTO, T.Error> {
-      return await managerComposite.getPublicProfile(principalId, seasonId, gameweek);
+    public func getCurrentTeam(principalId : Text) : async Result.Result<DTOs.PickTeamDTO, T.Error> {
+      return await managerComposite.getCurrentTeam(principalId);
     };
 
     public func getManager(principalId : Text) : async Result.Result<DTOs.ManagerDTO, T.Error> {
@@ -210,10 +210,6 @@ module {
       let seasonLeaderboardEntry = await leaderboardComposite.getSeasonLeaderboardEntry(principalId, systemState.calculationSeasonId);
 
       return await managerComposite.getManager(principalId, systemState.calculationSeasonId, weeklyLeaderboardEntry, monthlyLeaderboardEntry, seasonLeaderboardEntry);
-    };
-
-    public func getManagerGameweek(principalId : Text, seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async Result.Result<DTOs.ManagerGameweekDTO, T.Error> {
-      return await managerComposite.getManagerGameweek(principalId, seasonId, gameweek);
     };
 
     public func getTotalManagers() : Nat {
