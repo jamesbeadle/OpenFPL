@@ -8,6 +8,7 @@ import type {
   DataCacheDTO,
   FantasyTeamSnapshot,
   FixtureDTO,
+  ManagerDTO,
   PlayerDTO,
   PlayerDetailDTO,
   PlayerPointsDTO,
@@ -122,8 +123,8 @@ function createPlayerEventsStore() {
     fantasyTeam: FantasyTeamSnapshot,
     gameweek: number
   ): Promise<GameweekData[]> {
-    await sync();
 
+    await sync();
     let allPlayerEvents: PlayerPointsDTO[] = [];
 
     if (systemState?.calculationGameweek === gameweek) {

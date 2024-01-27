@@ -6,15 +6,15 @@ import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
   DataCacheDTO,
   FantasyTeamSnapshot,
-  ProfileDTO,
-  PublicProfileDTO,
+  ManagerDTO,
+  PickTeamDTO,
   SystemStateDTO,
   UpdateFantasyTeamDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 
 function createManagerStore() {
-  const { subscribe, set } = writable<ProfileDTO | null>(null);
+  const { subscribe, set } = writable<PickTeamDTO | null>(null);
 
   let systemState: SystemStateDTO;
   systemStore.subscribe((value) => {
@@ -59,7 +59,7 @@ function createManagerStore() {
     monthlyBonusesAvailable: 0,
   };
 
-  async function getManager(): Promise<ProfileDTO> {
+  async function getManager(): Promise<PickTeamDTO> {
     try {
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
@@ -83,7 +83,7 @@ function createManagerStore() {
 
   async function getPublicProfile(
     principalId: string
-  ): Promise<PublicProfileDTO> {
+  ): Promise<ManagerDTO> {
     try {
       let result = await actor.getPublicProfile(principalId);
 
@@ -189,7 +189,7 @@ function createManagerStore() {
   }
 
   async function saveFantasyTeam(
-    userFantasyTeam: ProfileDTO,
+    userFantasyTeam: PickTeamDTO,
     activeGameweek: number,
     bonusUsedInSession: boolean,
     transferWindowPlayedInSession: boolean
@@ -213,27 +213,59 @@ function createManagerStore() {
       );
 
       let dto: UpdateFantasyTeamDTO = {
-        playerIds : userFantasyTeam.playerIds,
-        captainId :userFantasyTeam.captainId,
-        goalGetterGameweek : bonusPlayed == 1 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
-        goalGetterPlayerId :bonusPlayerId,
-        passMasterGameweek : bonusPlayed == 2 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
-        passMasterPlayerId :bonusPlayerId,
-        noEntryGameweek : bonusPlayed == 3 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
-        noEntryPlayerId : bonusPlayerId,
-        teamBoostGameweek : bonusPlayed == 4 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
-        teamBoostClubId : bonusTeamId,
-        safeHandsGameweek : bonusPlayed == 5 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
-        safeHandsPlayerId : bonusPlayerId,
-        captainFantasticGameweek : bonusPlayed == 6 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
-        captainFantasticPlayerId : bonusPlayerId,
-        countrymenGameweek : bonusPlayed == 7 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
-        countrymenCountryId : bonusCountryId,
-        prospectsGameweek : bonusPlayed == 8 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
-        braceBonusGameweek :bonusPlayed == 9 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
-        hatTrickHeroGameweek : bonusPlayed == 10 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
-        transferWindowGameweek : transferWindowPlayedInSession ? activeGameweek : userFantasyTeam.transferWindowGameweek,
-        username : userFantasyTeam.username
+        playerIds: userFantasyTeam.playerIds,
+        captainId: userFantasyTeam.captainId,
+        goalGetterGameweek:
+          bonusPlayed == 1
+            ? activeGameweek
+            : userFantasyTeam.goalGetterGameweek,
+        goalGetterPlayerId: bonusPlayerId,
+        passMasterGameweek:
+          bonusPlayed == 2
+            ? activeGameweek
+            : userFantasyTeam.goalGetterGameweek,
+        passMasterPlayerId: bonusPlayerId,
+        noEntryGameweek:
+          bonusPlayed == 3
+            ? activeGameweek
+            : userFantasyTeam.goalGetterGameweek,
+        noEntryPlayerId: bonusPlayerId,
+        teamBoostGameweek:
+          bonusPlayed == 4
+            ? activeGameweek
+            : userFantasyTeam.goalGetterGameweek,
+        teamBoostClubId: bonusTeamId,
+        safeHandsGameweek:
+          bonusPlayed == 5
+            ? activeGameweek
+            : userFantasyTeam.goalGetterGameweek,
+        safeHandsPlayerId: bonusPlayerId,
+        captainFantasticGameweek:
+          bonusPlayed == 6
+            ? activeGameweek
+            : userFantasyTeam.goalGetterGameweek,
+        captainFantasticPlayerId: bonusPlayerId,
+        countrymenGameweek:
+          bonusPlayed == 7
+            ? activeGameweek
+            : userFantasyTeam.goalGetterGameweek,
+        countrymenCountryId: bonusCountryId,
+        prospectsGameweek:
+          bonusPlayed == 8
+            ? activeGameweek
+            : userFantasyTeam.goalGetterGameweek,
+        braceBonusGameweek:
+          bonusPlayed == 9
+            ? activeGameweek
+            : userFantasyTeam.goalGetterGameweek,
+        hatTrickHeroGameweek:
+          bonusPlayed == 10
+            ? activeGameweek
+            : userFantasyTeam.goalGetterGameweek,
+        transferWindowGameweek: transferWindowPlayedInSession
+          ? activeGameweek
+          : userFantasyTeam.transferWindowGameweek,
+        username: userFantasyTeam.username,
       };
 
       let result = await identityActor.saveFantasyTeam(dto);
@@ -252,7 +284,7 @@ function createManagerStore() {
   }
 
   function getBonusPlayed(
-    userFantasyTeam: ProfileDTO,
+    userFantasyTeam: PickTeamDTO,
     activeGameweek: number
   ): number {
     let bonusPlayed = 0;
@@ -301,7 +333,7 @@ function createManagerStore() {
   }
 
   function getBonusPlayerId(
-    userFantasyTeam: ProfileDTO,
+    userFantasyTeam: PickTeamDTO,
     activeGameweek: number
   ): number {
     let bonusPlayerId = 0;
@@ -330,7 +362,7 @@ function createManagerStore() {
   }
 
   function getBonusTeamId(
-    userFantasyTeam: ProfileDTO,
+    userFantasyTeam: PickTeamDTO,
     activeGameweek: number
   ): number {
     let bonusTeamId = 0;
@@ -343,7 +375,7 @@ function createManagerStore() {
   }
 
   function getBonusCountryId(
-    userFantasyTeam: ProfileDTO,
+    userFantasyTeam: PickTeamDTO,
     activeGameweek: number
   ): number {
     let bonusCountryId = 0;

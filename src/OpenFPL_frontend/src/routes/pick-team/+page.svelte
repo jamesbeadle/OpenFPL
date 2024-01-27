@@ -18,11 +18,9 @@
     getAvailableFormations,
     convertPlayerPosition,
     isJanuary,
-    allFormations
+    allFormations,
   } from "../../lib/utils/Helpers";
-  import type {
-    ProfileDTO,
-  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { PickTeamDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   let activeSeason: string;
   let activeGameweek: number;
@@ -33,7 +31,7 @@
   let newTeam = true;
   let isSaveButtonActive = false;
 
-  const fantasyTeam = writable<ProfileDTO | null>(null);
+  const fantasyTeam = writable<PickTeamDTO | null>(null);
   const transfersAvailable = writable(newTeam ? Infinity : 0);
   const bankBalance = writable(1200);
   const pitchView = writable(true);
@@ -71,8 +69,7 @@
 
   onMount(() => {
     try {
-
-      if(isJanuary()){
+      if (isJanuary()) {
         transferWindowActive = true;
       }
 
@@ -99,7 +96,7 @@
 
         let principalId = $fantasyTeam?.principalId ?? "";
         let transferWindowGameweek = $fantasyTeam?.transferWindowGameweek ?? 0;
-        transferWindowPlayed = (transferWindowGameweek > 0);
+        transferWindowPlayed = transferWindowGameweek > 0;
 
         if (principalId.length > 0) {
           newTeam = false;
@@ -107,10 +104,9 @@
         }
 
         if (!newTeam && activeGameweek > 1) {
-          if(userFantasyTeam.tranferWindowGameweek == activeGameweek){
+          if (userFantasyTeam.tranferWindowGameweek == activeGameweek) {
             transfersAvailable.set(Infinity);
-          }
-          else{
+          } else {
             transfersAvailable.set(userFantasyTeam.transfersAvailable);
             if ($transfersAvailable <= 0) {
               canSellPlayer = false;
@@ -157,7 +153,7 @@
     return setups;
   }
 
-  function getTeamFormation(team: ProfileDTO): string {
+  function getTeamFormation(team: PickTeamDTO): string {
     const positionCounts: Record<number, number> = { 0: 0, 1: 0, 2: 0, 3: 0 };
 
     team.playerIds.forEach((id) => {
@@ -252,7 +248,7 @@
     return true;
   }
 
-  function isBonusConditionMet(team: ProfileDTO | null): boolean {
+  function isBonusConditionMet(team: PickTeamDTO | null): boolean {
     if (!team) {
       return false;
     }
@@ -285,7 +281,7 @@
   }
 
   function isValidFormation(
-    team: ProfileDTO,
+    team: PickTeamDTO,
     selectedFormation: string
   ): boolean {
     const positionCounts: Record<number, number> = { 0: 0, 1: 0, 2: 0, 3: 0 };
@@ -316,7 +312,7 @@
     selectedColumn = -1;
     fantasyTeam.update((currentTeam) => {
       if (!currentTeam) return null;
-      return { ...currentTeam, captainId: newCaptainId };
+      return { ...currentTeam, captainId: $newCaptainId };
     });
     showCaptainModal = false;
   }
@@ -327,12 +323,8 @@
     <Spinner />
   {:else}
     <div>
-      <PickTeamHeader
-        {fantasyTeam}
-        {transfersAvailable}
-        {bankBalance}
-      />
-      <PickTeamButtons 
+      <PickTeamHeader {fantasyTeam} {transfersAvailable} {bankBalance} />
+      <PickTeamButtons
         {fantasyTeam}
         {transfersAvailable}
         {bankBalance}

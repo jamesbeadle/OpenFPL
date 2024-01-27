@@ -10,7 +10,7 @@ import type {
   PlayerDTO,
   PlayerEventType,
   PlayerPosition,
-  ProfileDTO,
+  PickTeamDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 export function formatUnixDateToReadable(unixNano: number) {
@@ -175,7 +175,6 @@ export function isJanuary(): boolean {
   const currentMonth = currentDate.getMonth();
   return currentMonth === 0;
 }
-
 
 export function getFlagComponent(countryId: number) {
   switch (countryId) {
@@ -658,7 +657,7 @@ function initTeamData(
 interface FormationDetails {
   positions: number[];
 }
-  
+
 export const allFormations: Record<string, FormationDetails> = {
   "3-4-3": { positions: [0, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3] },
   "3-5-2": { positions: [0, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3] },
@@ -671,7 +670,7 @@ export const allFormations: Record<string, FormationDetails> = {
 
 export function getAvailableFormations(
   players: PlayerDTO[],
-  team: ProfileDTO
+  team: PickTeamDTO
 ): string[] {
   const positionCounts: Record<number, number> = { 0: 0, 1: 0, 2: 0, 3: 0 };
   team.playerIds.forEach((id: number) => {

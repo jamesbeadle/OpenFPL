@@ -9,7 +9,7 @@
   },
   "_index.js": {
     "css": [
-      "_app/immutable/assets/index.bda5f1d2.css"
+      "_app/immutable/assets/index.28121524.css"
     ],
     "file": "chunks/index.js",
     "imports": [
@@ -20,7 +20,7 @@
     "file": "chunks/vendor.js"
   },
   "index.css": {
-    "file": "_app/immutable/assets/index.bda5f1d2.css",
+    "file": "_app/immutable/assets/index.28121524.css",
     "src": "index.css"
   },
   "node_modules/@dfinity/gix-components/dist/assets/logo-nns.svg": {

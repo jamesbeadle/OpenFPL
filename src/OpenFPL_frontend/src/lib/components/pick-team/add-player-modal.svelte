@@ -3,7 +3,7 @@
   import { writable } from "svelte/store";
   import type {
     PlayerDTO,
-    ProfileDTO,
+    PickTeamDTO,
   } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import AddIcon from "$lib/icons/AddIcon.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
@@ -16,7 +16,7 @@
   export let visible: boolean;
   export let closeAddPlayerModal: () => void;
   export let handlePlayerSelection: (player: PlayerDTO) => void;
-  export let fantasyTeam = writable<ProfileDTO | null>(null);
+  export let fantasyTeam = writable<PickTeamDTO | null>(null);
 
   export let filterPosition = -1;
   export let filterColumn = -1;

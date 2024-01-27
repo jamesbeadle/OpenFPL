@@ -28,7 +28,12 @@
 
   $: dateTime = date + "T" + time;
 
-  $: isSubmitDisabled = !selectedFixtureId || selectedFixtureId <= 0 || newGameweek <= 0 || date == "" || time == "";
+  $: isSubmitDisabled =
+    !selectedFixtureId ||
+    selectedFixtureId <= 0 ||
+    newGameweek <= 0 ||
+    date == "" ||
+    time == "";
 
   $: if (selectedGameweek) {
     loadGameweekFixtures();

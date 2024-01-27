@@ -133,7 +133,7 @@ module DTOs {
     favouriteClubId : T.ClubId;
     createDate : Int;
   };
- 
+
   public type PickTeamDTO = {
     principalId : Text;
     username : Text;

@@ -14,6 +14,7 @@
   } from "$lib/utils/Helpers";
   import type {
     ClubDTO,
+    FantasyTeamSnapshot,
     ManagerDTO,
     PlayerDTO,
     ProfileDTO,
@@ -32,7 +33,7 @@
   );
 
   export let selectedGameweek = writable<number | null>(null);
-  export let fantasyTeam = writable<ProfileDTO | null>(null);
+  export let fantasyTeam = writable<FantasyTeamSnapshot | null>(null);
   export let loadingGameweek: Writable<boolean>;
 
   let isLoading = false;
@@ -128,12 +129,12 @@
       let playerFixture = $fixtureStore.find(
         (x) =>
           x.gameweek === gameweekData.gameweek &&
-          (x.homeTeamId === playerTeamId || x.awayTeamId === playerTeamId)
+          (x.homeClubId === playerTeamId || x.awayClubId === playerTeamId)
       );
       let opponentId =
-        playerFixture?.homeTeamId === playerTeamId
-          ? playerFixture?.awayTeamId
-          : playerFixture?.homeTeamId;
+        playerFixture?.homeClubId === playerTeamId
+          ? playerFixture?.awayClubId
+          : playerFixture?.homeClubId;
       selectedOpponentTeam = $teamStore.find((x) => x.id === opponentId)!;
       showModal = true;
     } catch (error) {
@@ -259,9 +260,7 @@
                 </div>
                 <div class="w-2/12 flex items-center">
                   <svelte:component
-                    this={getFlagComponent(
-                      playerCountry ? playerCountry.name : ""
-                    )}
+                    this={getFlagComponent(data.player.nationality)}
                     class="w-4 h-4 mr-1 hidden md:flex"
                     size="100"
                   />

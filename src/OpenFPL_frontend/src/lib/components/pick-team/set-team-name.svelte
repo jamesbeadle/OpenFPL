@@ -33,10 +33,9 @@
     return await userStore.isUsernameAvailable(displayName);
   }
 
-  
   $: checkDisplayNameAvailability(newUsername);
-  $: isSubmitDisabled = !isDisplayNameValid(newUsername) || !isUsernameAvailable;
-
+  $: isSubmitDisabled =
+    !isDisplayNameValid(newUsername) || !isUsernameAvailable;
 </script>
 
 <Modal {visible} on:nnsClose={cancelModal}>

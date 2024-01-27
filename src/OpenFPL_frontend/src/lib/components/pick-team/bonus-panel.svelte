@@ -1,12 +1,12 @@
 <script lang="ts">
   import { writable } from "svelte/store";
-  import type { ProfileDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { Bonus } from "$lib/types/bonus";
   import { BonusType } from "$lib/enums/BonusType";
   import UseBonusModal from "$lib/components/pick-team/use-bonus-modal.svelte";
   import Tooltip from "../tooltip.svelte";
 
-  export let fantasyTeam = writable<ProfileDTO | null>(null);
+  export let fantasyTeam = writable<PickTeamDTO | null>(null);
   export let activeGameweek: number;
 
   let showModal: boolean = false;

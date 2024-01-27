@@ -20,11 +20,11 @@
     getPositionAbbreviation,
     convertPlayerPosition,
     isJanuary,
-    getFlagComponent
+    getFlagComponent,
   } from "../../../lib/utils/Helpers";
   import type {
     PlayerDTO,
-    ProfileDTO,
+    PickTeamDTO,
   } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   interface FormationDetails {
@@ -53,8 +53,8 @@
   let isSaveButtonActive = false;
 
   let sessionAddedPlayers: number[] = [];
-    
-  export let fantasyTeam: Writable<ProfileDTO | null>;
+
+  export let fantasyTeam: Writable<PickTeamDTO | null>;
   export let transfersAvailable: Writable<number>;
   export let bankBalance: Writable<number>;
   export let newCaptainId: Writable<number>;
@@ -97,12 +97,11 @@
         updatePitchHeight();
       }
 
-      if(isJanuary()){
+      if (isJanuary()) {
         transferWindowActive = true;
       }
 
       async function loadData() {
-
         activeSeason = $systemStore?.pickTeamSeasonName ?? "-";
         activeGameweek = $systemStore?.pickTeamGameweek ?? 1;
 
@@ -111,19 +110,17 @@
           pitchView = storedViewMode === "pitch";
         }
 
-        
         let transferWindowGameweek = $fantasyTeam?.transferWindowGameweek ?? 0;
-        transferWindowPlayed = (transferWindowGameweek > 0);
+        transferWindowPlayed = transferWindowGameweek > 0;
 
-        if(!$fantasyTeam){
+        if (!$fantasyTeam) {
           return;
         }
 
         if (!newTeam && activeGameweek > 1) {
-          if($fantasyTeam.tranferWindowGameweek == activeGameweek){
+          if ($fantasyTeam.transferWindowGameweek == activeGameweek) {
             transfersAvailable.set(Infinity);
-          }
-          else{
+          } else {
             transfersAvailable.set($fantasyTeam.transfersAvailable);
             if ($transfersAvailable <= 0) {
               canSellPlayer = false;
@@ -163,7 +160,7 @@
     }
     pitchHeight = pitchElement.clientHeight;
   }
-  
+
   function updateTeamValue() {
     const team = $fantasyTeam;
     if (team) {
@@ -191,7 +188,7 @@
     return setups;
   }
 
-  function getTeamFormation(team: ProfileDTO): string {
+  function getTeamFormation(team: PickTeamDTO): string {
     const positionCounts: Record<number, number> = { 0: 0, 1: 0, 2: 0, 3: 0 };
 
     team.playerIds.forEach((id) => {
@@ -270,7 +267,7 @@
 
   function canAddPlayerToCurrentFormation(
     player: PlayerDTO,
-    team: ProfileDTO,
+    team: PickTeamDTO,
     formation: string
   ): boolean {
     const positionCounts: { [key: number]: number } = {
@@ -305,7 +302,7 @@
 
   function addPlayerToTeam(
     player: PlayerDTO,
-    team: ProfileDTO,
+    team: PickTeamDTO,
     formation: string
   ) {
     const indexToAdd = getAvailablePositionIndex(
@@ -350,7 +347,7 @@
 
   function getAvailablePositionIndex(
     position: number,
-    team: ProfileDTO,
+    team: PickTeamDTO,
     formation: string
   ): number {
     const formationArray = formations[formation].positions;
@@ -363,7 +360,7 @@
   }
 
   function findValidFormationWithPlayer(
-    team: ProfileDTO,
+    team: PickTeamDTO,
     player: PlayerDTO
   ): string {
     const positionCounts: Record<number, number> = { 0: 0, 1: 0, 2: 0, 3: 0 };
@@ -422,7 +419,7 @@
   }
 
   function repositionPlayersForNewFormation(
-    team: ProfileDTO,
+    team: PickTeamDTO,
     newFormation: string
   ) {
     const newFormationArray = formations[newFormation].positions;
@@ -487,7 +484,7 @@
     });
   }
 
-  function getHighestValuedPlayerId(team: ProfileDTO): number {
+  function getHighestValuedPlayerId(team: PickTeamDTO): number {
     let highestValue = 0;
     let highestValuedPlayerId = 0;
 
@@ -539,7 +536,7 @@
     return true;
   }
 
-  function isBonusConditionMet(team: ProfileDTO | null): boolean {
+  function isBonusConditionMet(team: PickTeamDTO | null): boolean {
     if (!team) {
       return false;
     }
@@ -572,7 +569,7 @@
   }
 
   function isValidFormation(
-    team: ProfileDTO,
+    team: PickTeamDTO,
     selectedFormation: string
   ): boolean {
     const positionCounts: Record<number, number> = { 0: 0, 1: 0, 2: 0, 3: 0 };
@@ -669,21 +666,15 @@
               {@const actualIndex = getActualIndex(rowIndex, colIndex)}
               {@const playerIds = $fantasyTeam?.playerIds ?? []}
               {@const playerId = playerIds[actualIndex]}
-              {@const player = $playerStore.find(
-                (p) => p.id === playerId
-              )}
+              {@const player = $playerStore.find((p) => p.id === playerId)}
               <div
                 class="flex flex-col justify-center items-center flex-1 player-card"
               >
                 {#if playerId > 0 && player}
-                  {@const team = $teamStore.find(
-                    (x) => x.id === player.clubId
-                  )}
+                  {@const team = $teamStore.find((x) => x.id === player.clubId)}
                   <div class="flex flex-col items-center text-center">
                     <div class="flex justify-center items-center">
-                      <div
-                        class="flex justify-between items-end w-full"
-                      >
+                      <div class="flex justify-between items-end w-full">
                         {#if canSellPlayer && !sessionAddedPlayers.includes(player.id)}
                           <button
                             on:click={() => removePlayer(player.id)}
@@ -694,13 +685,9 @@
                             />
                           </button>
                         {:else}
-                          <div class="w-4 h-4 sm:w-6 sm:h-6 p-1">
-                            &nbsp;
-                          </div>
+                          <div class="w-4 h-4 sm:w-6 sm:h-6 p-1">&nbsp;</div>
                         {/if}
-                        <div
-                          class="flex justify-center items-center flex-grow"
-                        >
+                        <div class="flex justify-center items-center flex-grow">
                           <ShirtIcon
                             className="h-6 xs:h-12 sm:h-12 md:h-16 lg:h-20 xl:h-12 2xl:h-16"
                             primaryColour={team?.primaryColourHex}
@@ -751,9 +738,7 @@
                             : ""}
                           {player.lastName}
                         </p>
-                        <p
-                          class="xs:hidden truncate min-w-[50px] max-w-[50px]"
-                        >
+                        <p class="xs:hidden truncate min-w-[50px] max-w-[50px]">
                           {player.lastName}
                         </p>
                       </div>
@@ -772,9 +757,7 @@
                           thirdColour={team?.thirdColourHex}
                         />
                         <p class="truncate min-w-[50px] max-w-[50px]">
-                          £{(player.valueQuarterMillions / 4).toFixed(
-                            2
-                          )}m
+                          £{(player.valueQuarterMillions / 4).toFixed(2)}m
                         </p>
                       </div>
                     </div>
