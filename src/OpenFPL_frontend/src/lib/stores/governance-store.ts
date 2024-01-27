@@ -213,7 +213,7 @@ function createGovernanceStore() {
       };
 
       let result = await identityActor.adminRescheduleFixture(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
-
+      console.log(result);
       if (isError(result)) {
         console.error("Error submitting proposal: ", result);
         return;

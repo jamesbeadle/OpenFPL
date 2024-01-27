@@ -3355,7 +3355,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1eodb30"
+  version_hash: "11306zc"
 };
 function get_hooks() {
   return {};
@@ -6727,6 +6727,7 @@ function createGovernanceStore() {
         updatedFixtureDate: nanoseconds
       };
       let result = await identityActor.adminRescheduleFixture(dto);
+      console.log(result);
       if (isError(result)) {
         console.error("Error submitting proposal: ", result);
         return;
