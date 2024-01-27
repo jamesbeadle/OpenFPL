@@ -3355,7 +3355,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "15sc7iu"
+  version_hash: "1xymny2"
 };
 function get_hooks() {
   return {};
@@ -7255,11 +7255,11 @@ function isBonusConditionMet(team) {
   return true;
 }
 const Page$4 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let $$unsubscribe_newCaptainId;
   let $playerStore, $$unsubscribe_playerStore;
   let $fantasyTeam, $$unsubscribe_fantasyTeam;
   let $transfersAvailable, $$unsubscribe_transfersAvailable;
   let $bankBalance, $$unsubscribe_bankBalance;
-  let $$unsubscribe_newCaptainId;
   let $$unsubscribe_systemStore;
   $$unsubscribe_playerStore = subscribe(playerStore, (value) => $playerStore = value);
   $$unsubscribe_systemStore = subscribe(systemStore, (value) => value);
@@ -7375,11 +7375,11 @@ const Page$4 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
       }
     }
   }
+  $$unsubscribe_newCaptainId();
   $$unsubscribe_playerStore();
   $$unsubscribe_fantasyTeam();
   $$unsubscribe_transfersAvailable();
   $$unsubscribe_bankBalance();
-  $$unsubscribe_newCaptainId();
   $$unsubscribe_systemStore();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {

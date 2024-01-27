@@ -7,10 +7,10 @@ import * as FlagIcons from "svelte-flag-icons";
 import type {
   ClubDTO,
   FixtureStatusType,
+  PickTeamDTO,
   PlayerDTO,
   PlayerEventType,
   PlayerPosition,
-  PickTeamDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 export function formatUnixDateToReadable(unixNano: number) {

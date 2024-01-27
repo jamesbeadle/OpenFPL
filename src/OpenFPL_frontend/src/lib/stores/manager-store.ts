@@ -81,9 +81,7 @@ function createManagerStore() {
     }
   }
 
-  async function getPublicProfile(
-    principalId: string
-  ): Promise<ManagerDTO> {
+  async function getPublicProfile(principalId: string): Promise<ManagerDTO> {
     try {
       let result = await actor.getPublicProfile(principalId);
 

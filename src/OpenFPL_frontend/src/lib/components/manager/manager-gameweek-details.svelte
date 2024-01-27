@@ -15,9 +15,7 @@
   import type {
     ClubDTO,
     FantasyTeamSnapshot,
-    ManagerDTO,
     PlayerDTO,
-    ProfileDTO,
   } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
