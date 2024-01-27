@@ -9,6 +9,7 @@ import type {
   ProfileDTO,
   PublicProfileDTO,
   SystemStateDTO,
+  UpdateFantasyTeamDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 
@@ -190,7 +191,8 @@ function createManagerStore() {
   async function saveFantasyTeam(
     userFantasyTeam: ProfileDTO,
     activeGameweek: number,
-    bonusUsedInSession: boolean
+    bonusUsedInSession: boolean,
+    transferWindowPlayedInSession: boolean
   ): Promise<any> {
     try {
       let bonusPlayed = 0;
@@ -208,13 +210,31 @@ function createManagerStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
 
-      let result = await identityActor.saveFantasyTeam(
-        userFantasyTeam.playerIds,
-        userFantasyTeam.captainId,
-        bonusPlayed,
-        bonusPlayerId,
-        bonusTeamId
-      );
+      let dto: UpdateFantasyTeamDTO = {
+        playerIds : userFantasyTeam.playerIds,
+        captainId :userFantasyTeam.captainId,
+        goalGetterGameweek : bonusPlayed == 1 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
+        goalGetterPlayerId :0,
+        passMasterGameweek : bonusPlayed == 2 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
+        passMasterPlayerId :0,
+        noEntryGameweek : bonusPlayed == 3 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
+        noEntryPlayerId :0,
+        teamBoostGameweek : bonusPlayed == 4 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
+        teamBoostClubId :0,
+        safeHandsGameweek : bonusPlayed == 5 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
+        safeHandsPlayerId :0,
+        captainFantasticGameweek : bonusPlayed == 6 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
+        captainFantasticPlayerId :0,
+        countrymenGameweek : bonusPlayed == 7 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
+        countrymenCountryId :0,
+        prospectsGameweek : bonusPlayed == 8 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
+        braceBonusGameweek :bonusPlayed == 9 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
+        hatTrickHeroGameweek : bonusPlayed == 10 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
+        transferWindowGameweek : transferWindowPlayedInSession ? activeGameweek : userFantasyTeam.transferWindowGameweek,
+        username : userFantasyTeam.username
+      };
+
+      let result = await identityActor.saveFantasyTeam(dto);
 
       if (isError(result)) {
         console.error("Error saving fantasy team");

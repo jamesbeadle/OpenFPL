@@ -5,7 +5,7 @@
   export let visible: boolean;
   export let setUsername: () => void;
   export let cancelModal: () => void;
-  export let newUsername: string = "";
+  export let newUsername: string;
 
   let isUsernameAvailable = false;
 
@@ -33,12 +33,10 @@
     return await userStore.isUsernameAvailable(displayName);
   }
 
-  $: if (newUsername) {
-    checkDisplayNameAvailability(newUsername);
-  }
+  
+  $: checkDisplayNameAvailability(newUsername);
+  $: isSubmitDisabled = !isDisplayNameValid(newUsername) || !isUsernameAvailable;
 
-  $: isSubmitDisabled =
-    !isDisplayNameValid(newUsername) || !isUsernameAvailable;
 </script>
 
 <Modal {visible} on:nnsClose={cancelModal}>
@@ -68,7 +66,7 @@
         <button
           class={`px-4 py-2 ${
             isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"
-          } default-button fpl-purple-btn`}
+          } default-button`}
           type="submit"
           disabled={isSubmitDisabled}
         >

@@ -91,7 +91,7 @@
   const newCaptain = writable("");
   let canSellPlayer = true;
   let showUsernameModal = false;
-  let newUsername = "";
+  let newUsername = "test";
 
   let isLoading = true;
 
@@ -125,6 +125,7 @@
 
       async function loadData() {
         await systemStore.sync();
+        await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
         await teamStore.sync();
         await playerStore.sync();
 
@@ -143,7 +144,7 @@
         let nextFixture = await fixtureStore.getNextFixture();
 
         let userFantasyTeam = await managerStore.getFantasyTeam();
-
+        
         fantasyTeam.set(userFantasyTeam);
 
         let principalId = $fantasyTeam?.principalId ?? "";
@@ -172,7 +173,7 @@
           }
           return currentTeam;
         });
-        console.log(nextFixture)
+        
         nextFixtureDate = formatUnixDateToReadable(
           Number(nextFixture?.kickOff)
         );
@@ -748,7 +749,24 @@
     updateCaptainIfNeeded($fantasyTeam!);
   }
 
+  async function updateUsername() {
+    if(newUsername == ""){
+      return;
+    }
+    fantasyTeam.update((currentTeam) => {
+      if (!currentTeam) return null;
+      return {
+        ...currentTeam,
+        username: newUsername
+      };
+    });
+    showUsernameModal = false;
+    saveFantasyTeam();
+  };
+
   async function saveFantasyTeam() {
+    console.log("saving fantasy team")
+    console.log($fantasyTeam)
     if (!$fantasyTeam) {
       return;
     }
@@ -846,7 +864,7 @@
     />
     <SetTeamName
       visible={showUsernameModal}
-      setUsername={saveFantasyTeam}
+      setUsername={updateUsername}
       cancelModal={closeUsernameModal}
       {newUsername}
     />
