@@ -172,7 +172,7 @@
           }
           return currentTeam;
         });
-
+        console.log(nextFixture)
         nextFixtureDate = formatUnixDateToReadable(
           Number(nextFixture?.kickOff)
         );

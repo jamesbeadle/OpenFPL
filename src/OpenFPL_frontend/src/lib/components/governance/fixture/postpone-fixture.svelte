@@ -135,8 +135,6 @@
 
         <div class="border-b border-gray-200" />
 
-        <div class="border-b border-gray-200" />
-
         <div class="items-center flex space-x-4">
           <button
             class="px-4 py-2 default-button fpl-cancel-btn min-w-[150px]"
