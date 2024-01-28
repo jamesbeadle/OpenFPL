@@ -305,6 +305,21 @@ module {
         },
       );
 
+      var bonusPlayed = false;
+      
+      if (updatedFantasyTeam.goalGetterGameweek == systemState.pickTeamGameweek or 
+        updatedFantasyTeam.passMasterGameweek == systemState.pickTeamGameweek or 
+        updatedFantasyTeam.noEntryGameweek == systemState.pickTeamGameweek or 
+        updatedFantasyTeam.teamBoostGameweek == systemState.pickTeamGameweek or 
+        updatedFantasyTeam.safeHandsGameweek == systemState.pickTeamGameweek or
+        updatedFantasyTeam.captainFantasticGameweek == systemState.pickTeamGameweek or
+        updatedFantasyTeam.countrymenGameweek == systemState.pickTeamGameweek or 
+        updatedFantasyTeam.prospectsGameweek == systemState.pickTeamGameweek or
+        updatedFantasyTeam.braceBonusGameweek == systemState.pickTeamGameweek or
+        updatedFantasyTeam.hatTrickHeroGameweek == systemState.pickTeamGameweek){
+          bonusPlayed := true;
+      };
+
 
       switch (manager) {
         case (null) {
@@ -322,7 +337,7 @@ module {
           let updatedPlayerValues = Array.map<DTOs.PlayerDTO, Nat16>(updatedPlayers, func(player : DTOs.PlayerDTO) : Nat16 { return player.valueQuarterMillions });
           let updatedTeamValue = Array.foldLeft<Nat16, Nat16>(updatedPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
 
-          let monthlyBonuses = 2;
+          var monthlyBonuses: Nat8 = 2;
           if(bonusPlayed){
             monthlyBonuses := monthlyBonuses - 1;
           };
@@ -413,8 +428,7 @@ module {
 
           let transfersAvailable = foundManager.transfersAvailable - Nat8.fromNat(Array.size(playersAdded));
 
-          //TODO: Set the monthly bonuses available
-          let monthlyBonuses = foundManager.monthlyBonusesAvailable;
+          var monthlyBonuses = foundManager.monthlyBonusesAvailable;
           if(bonusPlayed){
             monthlyBonuses := monthlyBonuses - 1;
           };
@@ -427,7 +441,7 @@ module {
             termsAccepted = foundManager.termsAccepted;
             profilePictureCanisterId = foundManager.profilePictureCanisterId;
             transfersAvailable = transfersAvailable;
-            monthlyBonusesAvailable = foundManager.monthlyBonusesAvailable;
+            monthlyBonusesAvailable = monthlyBonuses;
             bankQuarterMillions = newBankBalance;
             playerIds = updatedFantasyTeam.playerIds;
             captainId = updatedFantasyTeam.captainId;
