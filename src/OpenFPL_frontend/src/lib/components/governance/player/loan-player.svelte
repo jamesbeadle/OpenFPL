@@ -15,9 +15,9 @@
   let loadnClubId: number = 0;
   let selectedPlayerId: number = 0;
   let leavingLeague = false;
-  
+
   let date = "";
-  
+
   let clubPlayers: PlayerDTO[] = [];
 
   let isLoading = false;
@@ -61,11 +61,7 @@
 
   async function confirmProposal() {
     isLoading = true;
-    await governanceStore.loanPlayer(
-      selectedPlayerId,
-      selectedClubId,
-      date
-    );
+    await governanceStore.loanPlayer(selectedPlayerId, selectedClubId, date);
     closeModal();
   }
 

@@ -27,6 +27,7 @@
   let isLoading = true;
 
   onMount(() => {
+    console.log($systemStore)
     activeSeason = $systemStore?.pickTeamSeasonName ?? "-";
     activeGameweek = $systemStore?.pickTeamGameweek ?? 1;
     try {

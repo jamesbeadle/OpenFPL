@@ -1,7 +1,7 @@
 <script lang="ts">
   import { userStore } from "$lib/stores/user-store";
   import { Modal } from "@dfinity/gix-components";
-    import type { Writable } from "svelte/store";
+  import type { Writable } from "svelte/store";
 
   export let visible: boolean;
   export let setUsername: () => void;

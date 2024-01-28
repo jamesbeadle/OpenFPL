@@ -348,7 +348,7 @@
   }
 
   async function updateUsername() {
-    console.log(newUsername)
+    console.log(newUsername);
     if ($newUsername == "") {
       return;
     }

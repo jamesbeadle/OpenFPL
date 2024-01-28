@@ -1333,14 +1333,13 @@ module {
     };
 
     public func removePlayerFromTeams(playerId : T.PlayerId, allPlayers : [DTOs.PlayerDTO]) : async () {
-      
-      
+
       let removedPlayer = Array.find<DTOs.PlayerDTO>(allPlayers, func(p) { p.id == playerId });
-      switch(removedPlayer){
-        case (null){
+      switch (removedPlayer) {
+        case (null) {
           return;
         };
-        case (?foundRemovedPlayer){
+        case (?foundRemovedPlayer) {
 
           let playerValue = foundRemovedPlayer.valueQuarterMillions;
           let managersWithPlayer = HashMap.mapFilter<T.PrincipalId, T.Manager, T.Manager>(
@@ -1371,7 +1370,9 @@ module {
                       ?p;
                     };
                     case (?h, ?p) {
-                      if (p.valueQuarterMillions > h.valueQuarterMillions) { ?p } else {
+                      if (p.valueQuarterMillions > h.valueQuarterMillions) {
+                        ?p;
+                      } else {
                         ?h;
                       };
                     };
@@ -1427,8 +1428,8 @@ module {
 
             managers.put(principalId, updatedManager);
           };
-          
-        }
+
+        };
       };
     };
 
