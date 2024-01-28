@@ -1333,88 +1333,102 @@ module {
     };
 
     public func removePlayerFromTeams(playerId : T.PlayerId, allPlayers : [DTOs.PlayerDTO]) : async () {
+      
+      
+      let removedPlayer = Array.find<DTOs.PlayerDTO>(allPlayers, func(p) { p.id == playerId });
+      switch(removedPlayer){
+        case (null){
+          return;
+        };
+        case (?foundRemovedPlayer){
 
-      let managersWithPlayer = HashMap.mapFilter<T.PrincipalId, T.Manager, T.Manager>(
-        managers,
-        Text.equal,
-        Text.hash,
-        func(k, v) = if (Array.find<T.PlayerId>(v.playerIds, func(id) { id == playerId }) == null) {
-          null;
-        } else { ?v },
-      );
-
-      for ((principalId, manager) in managersWithPlayer.entries()) {
-        let newPlayerIds = Array.map<T.PlayerId, T.PlayerId>(
-          manager.playerIds,
-          func(id) : T.PlayerId { if (id == playerId) { 0 } else { id } },
-        );
-
-        var captainId = manager.captainId;
-        if (captainId == playerId) {
-          let highestValuedPlayer = Array.foldLeft<T.PlayerId, ?DTOs.PlayerDTO>(
-            manager.playerIds,
-            null,
-            func(highest, id) : ?DTOs.PlayerDTO {
-              if (id == playerId or id == 0) { return highest };
-              let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p) { p.id == id });
-              switch (highest, player) {
-                case (null, ?p) {
-                  ?p;
-                };
-                case (?h, ?p) {
-                  if (p.valueQuarterMillions > h.valueQuarterMillions) { ?p } else {
-                    ?h;
-                  };
-                };
-                case (_, null) {
-                  highest;
-                };
-              };
-            },
+          let playerValue = foundRemovedPlayer.valueQuarterMillions;
+          let managersWithPlayer = HashMap.mapFilter<T.PrincipalId, T.Manager, T.Manager>(
+            managers,
+            Text.equal,
+            Text.hash,
+            func(k, v) = if (Array.find<T.PlayerId>(v.playerIds, func(id) { id == playerId }) == null) {
+              null;
+            } else { ?v },
           );
 
-          switch (highestValuedPlayer) {
-            case (?player) {
-              captainId := player.id;
+          for ((principalId, manager) in managersWithPlayer.entries()) {
+            let newPlayerIds = Array.map<T.PlayerId, T.PlayerId>(
+              manager.playerIds,
+              func(id) : T.PlayerId { if (id == playerId) { 0 } else { id } },
+            );
+
+            var captainId = manager.captainId;
+            if (captainId == playerId) {
+              let highestValuedPlayer = Array.foldLeft<T.PlayerId, ?DTOs.PlayerDTO>(
+                manager.playerIds,
+                null,
+                func(highest, id) : ?DTOs.PlayerDTO {
+                  if (id == playerId or id == 0) { return highest };
+                  let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p) { p.id == id });
+                  switch (highest, player) {
+                    case (null, ?p) {
+                      ?p;
+                    };
+                    case (?h, ?p) {
+                      if (p.valueQuarterMillions > h.valueQuarterMillions) { ?p } else {
+                        ?h;
+                      };
+                    };
+                    case (_, null) {
+                      highest;
+                    };
+                  };
+                },
+              );
+
+              switch (highestValuedPlayer) {
+                case (?player) {
+                  captainId := player.id;
+                };
+                case null {};
+              };
             };
-            case null {};
+
+            let newBankBalance = manager.bankQuarterMillions + playerValue;
+
+            let updatedManager : T.Manager = {
+              principalId = manager.principalId;
+              username = manager.username;
+              favouriteClubId = manager.favouriteClubId;
+              createDate = manager.createDate;
+              termsAccepted = manager.termsAccepted;
+              profilePictureCanisterId = manager.profilePictureCanisterId;
+              transfersAvailable = manager.transfersAvailable;
+              monthlyBonusesAvailable = manager.monthlyBonusesAvailable;
+              bankQuarterMillions = newBankBalance;
+              playerIds = newPlayerIds;
+              captainId = captainId;
+              goalGetterGameweek = manager.goalGetterGameweek;
+              goalGetterPlayerId = manager.goalGetterPlayerId;
+              passMasterGameweek = manager.passMasterGameweek;
+              passMasterPlayerId = manager.passMasterPlayerId;
+              noEntryGameweek = manager.noEntryGameweek;
+              noEntryPlayerId = manager.noEntryPlayerId;
+              teamBoostGameweek = manager.teamBoostGameweek;
+              teamBoostClubId = manager.teamBoostClubId;
+              safeHandsGameweek = manager.safeHandsGameweek;
+              safeHandsPlayerId = manager.safeHandsPlayerId;
+              captainFantasticGameweek = manager.captainFantasticGameweek;
+              captainFantasticPlayerId = manager.captainFantasticPlayerId;
+              countrymenGameweek = manager.countrymenGameweek;
+              countrymenCountryId = manager.countrymenCountryId;
+              prospectsGameweek = manager.prospectsGameweek;
+              braceBonusGameweek = manager.braceBonusGameweek;
+              hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
+              transferWindowGameweek = manager.transferWindowGameweek;
+              history = manager.history;
+            };
+
+            managers.put(principalId, updatedManager);
           };
-        };
-
-        let updatedManager : T.Manager = {
-          principalId = manager.principalId;
-          username = manager.username;
-          favouriteClubId = manager.favouriteClubId;
-          createDate = manager.createDate;
-          termsAccepted = manager.termsAccepted;
-          profilePictureCanisterId = manager.profilePictureCanisterId;
-          transfersAvailable = manager.transfersAvailable;
-          monthlyBonusesAvailable = manager.monthlyBonusesAvailable;
-          bankQuarterMillions = manager.bankQuarterMillions;
-          playerIds = newPlayerIds;
-          captainId = captainId;
-          goalGetterGameweek = manager.goalGetterGameweek;
-          goalGetterPlayerId = manager.goalGetterPlayerId;
-          passMasterGameweek = manager.passMasterGameweek;
-          passMasterPlayerId = manager.passMasterPlayerId;
-          noEntryGameweek = manager.noEntryGameweek;
-          noEntryPlayerId = manager.noEntryPlayerId;
-          teamBoostGameweek = manager.teamBoostGameweek;
-          teamBoostClubId = manager.teamBoostClubId;
-          safeHandsGameweek = manager.safeHandsGameweek;
-          safeHandsPlayerId = manager.safeHandsPlayerId;
-          captainFantasticGameweek = manager.captainFantasticGameweek;
-          captainFantasticPlayerId = manager.captainFantasticPlayerId;
-          countrymenGameweek = manager.countrymenGameweek;
-          countrymenCountryId = manager.countrymenCountryId;
-          prospectsGameweek = manager.prospectsGameweek;
-          braceBonusGameweek = manager.braceBonusGameweek;
-          hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
-          transferWindowGameweek = manager.transferWindowGameweek;
-          history = manager.history;
-        };
-
-        managers.put(principalId, updatedManager);
+          
+        }
       };
     };
 
