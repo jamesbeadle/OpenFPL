@@ -15,7 +15,9 @@
   let loadnClubId: number = 0;
   let selectedPlayerId: number = 0;
   let leavingLeague = false;
-  let loanEndDate: number = 0;
+  
+  let date = "";
+  
   let clubPlayers: PlayerDTO[] = [];
 
   let isLoading = false;
@@ -24,7 +26,7 @@
   $: isSubmitDisabled =
     selectedPlayerId <= 0 ||
     (!leavingLeague && selectedClubId <= 0) ||
-    loanEndDate == 0;
+    date == "";
 
   $: if (selectedClubId) {
     getClubPlayers();
@@ -62,7 +64,7 @@
     await governanceStore.loanPlayer(
       selectedPlayerId,
       selectedClubId,
-      loanEndDate
+      date
     );
     closeModal();
   }
@@ -140,14 +142,9 @@
             {/if}
           </div>
 
-          <div class="flex-col space-y-2">
-            <p>Loan End Date:</p>
-
-            <input
-              type="date"
-              bind:value={loanEndDate}
-              class="input input-bordered mb-4"
-            />
+          <div class="flex flex-row my-2">
+            <p class="mr-2">Select Date:</p>
+            <input type="date" bind:value={date} class="input input-bordered" />
           </div>
         {/if}
 

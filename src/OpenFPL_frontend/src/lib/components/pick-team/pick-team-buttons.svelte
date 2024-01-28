@@ -14,7 +14,7 @@
   import type { PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import ConfirmCaptainChange from "./confirm-captain-change.svelte";
   import SetTeamName from "./set-team-name.svelte";
-  import type { Writable } from "svelte/store";
+  import { writable, type Writable } from "svelte/store";
 
   export let fantasyTeam: Writable<PickTeamDTO | null>;
   export let transfersAvailable: Writable<number>;
@@ -28,13 +28,13 @@
   let activeSeason: string;
   let activeGameweek: number;
   let selectedFormation: string = "4-4-2";
+  let newUsername = writable("");
 
   let isSaveButtonActive = false;
   let showCaptainModal = false;
   let showUsernameModal = false;
 
   let bonusUsedInSession = false;
-  let newUsername = "";
   let transferWindowPlayed = false;
   let transferWindowActive = false;
   let transferWindowPlayedInSession = false;
@@ -348,14 +348,15 @@
   }
 
   async function updateUsername() {
-    if (newUsername == "") {
+    console.log(newUsername)
+    if ($newUsername == "") {
       return;
     }
     fantasyTeam.update((currentTeam) => {
       if (!currentTeam) return null;
       return {
         ...currentTeam,
-        username: newUsername,
+        username: $newUsername,
       };
     });
     showUsernameModal = false;

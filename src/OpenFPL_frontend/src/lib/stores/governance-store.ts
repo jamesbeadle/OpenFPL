@@ -227,7 +227,7 @@ function createGovernanceStore() {
   async function loanPlayer(
     playerId: number,
     loanClubId: number,
-    loanEndDate: number
+    loanEndDate: string
   ): Promise<any> {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
@@ -235,10 +235,14 @@ function createGovernanceStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
 
+      const dateObject = new Date(loanEndDate);
+      const timestampMilliseconds = dateObject.getTime();
+      let nanoseconds = BigInt(timestampMilliseconds) * BigInt(1000000);
+
       let dto: LoanPlayerDTO = {
         playerId,
         loanClubId,
-        loanEndDate: BigInt(loanEndDate),
+        loanEndDate: nanoseconds,
       };
 
       let result = await identityActor.adminLoanPlayer(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL

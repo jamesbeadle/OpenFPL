@@ -1,11 +1,12 @@
 <script lang="ts">
   import { userStore } from "$lib/stores/user-store";
   import { Modal } from "@dfinity/gix-components";
+    import type { Writable } from "svelte/store";
 
   export let visible: boolean;
   export let setUsername: () => void;
   export let cancelModal: () => void;
-  export let newUsername: string;
+  export let newUsername: Writable<string>;
 
   let isUsernameAvailable = false;
 
@@ -33,9 +34,9 @@
     return await userStore.isUsernameAvailable(displayName);
   }
 
-  $: checkDisplayNameAvailability(newUsername);
+  $: checkDisplayNameAvailability($newUsername);
   $: isSubmitDisabled =
-    !isDisplayNameValid(newUsername) || !isUsernameAvailable;
+    !isDisplayNameValid($newUsername) || !isUsernameAvailable;
 </script>
 
 <Modal {visible} on:nnsClose={cancelModal}>
@@ -51,7 +52,7 @@
           type="text"
           class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
           placeholder="New Team Name"
-          bind:value={newUsername}
+          bind:value={$newUsername}
         />
       </div>
       <div class="items-center py-3 flex space-x-4 flex-row">
