@@ -91,7 +91,7 @@
           pitchView.set(storedViewMode === "pitch");
         }
 
-        let userFantasyTeam = await managerStore.getFantasyTeam();
+        let userFantasyTeam = await managerStore.getCurrentTeam();
         fantasyTeam.set(userFantasyTeam);
 
         let principalId = $fantasyTeam?.principalId ?? "";
@@ -100,6 +100,8 @@
 
         if (principalId.length > 0) {
           newTeam = false;
+          console.log("setting bank balance")
+          console.log(userFantasyTeam)
           bankBalance.set(Number(userFantasyTeam.bankQuarterMillions));
         }
 

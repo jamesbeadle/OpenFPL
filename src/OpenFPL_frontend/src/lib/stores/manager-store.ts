@@ -166,13 +166,13 @@ function createManagerStore() {
     }
   }
 
-  async function getFantasyTeam(): Promise<any> {
+  async function getCurrentTeam(): Promise<any> {
     try {
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      const result = await identityActor.getManager();
+      const result = await identityActor.getCurrentTeam();
 
       if (isError(result)) {
         return newManager;
@@ -403,7 +403,7 @@ function createManagerStore() {
     getManager,
     getTotalManagers,
     getFantasyTeamForGameweek,
-    getFantasyTeam,
+    getCurrentTeam,
     saveFantasyTeam,
     snapshotFantasyTeams,
     getPublicProfile,

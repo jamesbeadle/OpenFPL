@@ -291,6 +291,21 @@ module {
         return #err(#InvalidTeamError);
       };
 
+      let updatedPlayers = Array.filter<DTOs.PlayerDTO>(
+        players,
+        func(player : DTOs.PlayerDTO) : Bool {
+          let playerId = player.id;
+          let isPlayerIdInNewTeam = Array.find(
+            updatedFantasyTeam.playerIds,
+            func(id : Nat16) : Bool {
+              return id == playerId;
+            },
+          );
+          return Option.isSome(isPlayerIdInNewTeam);
+        },
+      );
+
+
       switch (manager) {
         case (null) {
           let createProfileDTO : DTOs.ProfileDTO = {
@@ -303,6 +318,15 @@ module {
             termsAccepted = false;
           };
           let newManager = buildNewManager(principalId, createProfileDTO, "");
+              
+          let updatedPlayerValues = Array.map<DTOs.PlayerDTO, Nat16>(updatedPlayers, func(player : DTOs.PlayerDTO) : Nat16 { return player.valueQuarterMillions });
+          let updatedTeamValue = Array.foldLeft<Nat16, Nat16>(updatedPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
+
+          let monthlyBonuses = 2;
+          if(bonusPlayed){
+            monthlyBonuses := monthlyBonuses - 1;
+          };
+
           let updatedManager : T.Manager = {
             principalId = newManager.principalId;
             username = newManager.username;
@@ -311,8 +335,8 @@ module {
             termsAccepted = newManager.termsAccepted;
             profilePictureCanisterId = newManager.profilePictureCanisterId;
             transfersAvailable = newManager.transfersAvailable;
-            monthlyBonusesAvailable = newManager.monthlyBonusesAvailable;
-            bankQuarterMillions = newManager.bankQuarterMillions;
+            monthlyBonusesAvailable = monthlyBonuses;
+            bankQuarterMillions = 1200 - updatedTeamValue;
             playerIds = updatedFantasyTeam.playerIds;
             captainId = updatedFantasyTeam.captainId;
             goalGetterGameweek = updatedFantasyTeam.goalGetterGameweek;
@@ -339,6 +363,62 @@ module {
           return #ok();
         };
         case (?foundManager) {
+
+          let playersAdded = Array.filter<DTOs.PlayerDTO>(
+            updatedPlayers,
+            func(player : DTOs.PlayerDTO) : Bool {
+              let playerId = player.id;
+              let isPlayerIdInExistingTeam = Array.find(
+                foundManager.playerIds,
+                func(id : Nat16) : Bool {
+                  return id == playerId;
+                },
+              );
+              return Option.isNull(isPlayerIdInExistingTeam);
+            },
+          );
+
+          let playersRemoved = Array.filter<Nat16>(
+            foundManager.playerIds,
+            func(playerId : Nat16) : Bool {
+              let isPlayerIdInPlayers = Array.find(
+                updatedPlayers,
+                func(player : DTOs.PlayerDTO) : Bool {
+                  return player.id == playerId;
+                },
+              );
+              return Option.isNull(isPlayerIdInPlayers);
+            },
+          );
+
+          let spent = Array.foldLeft<DTOs.PlayerDTO, Nat16>(playersAdded, 0, func(sumSoFar, x) = sumSoFar + x.valueQuarterMillions);
+          var sold : Nat16 = 0;
+          for (i in Iter.range(0, Array.size(playersRemoved) -1)) {
+            let foundPlayer = List.find<DTOs.PlayerDTO>(
+              List.fromArray(players),
+              func(player : DTOs.PlayerDTO) : Bool {
+                return player.id == updatedFantasyTeam.noEntryPlayerId;
+              },
+            );
+            switch (foundPlayer) {
+              case (null) { };
+              case (?player) {
+                sold := sold + player.valueQuarterMillions;
+              };
+            };
+          };
+
+          let netSpendQMs : Nat16 = spent - sold;
+          let newBankBalance = foundManager.bankQuarterMillions - netSpendQMs;
+
+          let transfersAvailable = foundManager.transfersAvailable - Nat8.fromNat(Array.size(playersAdded));
+
+          //TODO: Set the monthly bonuses available
+          let monthlyBonuses = foundManager.monthlyBonusesAvailable;
+          if(bonusPlayed){
+            monthlyBonuses := monthlyBonuses - 1;
+          };
+          
           let updatedManager : T.Manager = {
             principalId = foundManager.principalId;
             username = foundManager.username;
@@ -346,9 +426,9 @@ module {
             createDate = foundManager.createDate;
             termsAccepted = foundManager.termsAccepted;
             profilePictureCanisterId = foundManager.profilePictureCanisterId;
-            transfersAvailable = foundManager.transfersAvailable;
+            transfersAvailable = transfersAvailable;
             monthlyBonusesAvailable = foundManager.monthlyBonusesAvailable;
-            bankQuarterMillions = foundManager.bankQuarterMillions;
+            bankQuarterMillions = newBankBalance;
             playerIds = updatedFantasyTeam.playerIds;
             captainId = updatedFantasyTeam.captainId;
             goalGetterGameweek = updatedFantasyTeam.goalGetterGameweek;

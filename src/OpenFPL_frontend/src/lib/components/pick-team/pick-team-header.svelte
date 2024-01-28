@@ -55,7 +55,7 @@
   }
 </script>
 
-<div class="hidden xl:flex page-header-wrapper">
+<div class="flex page-header-wrapper">
   <div class="content-panel lg:w-1/2">
     <div class="flex-grow mb-4 xl:mb-0">
       <p class="content-panel-header">Gameweek</p>
