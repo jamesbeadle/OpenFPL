@@ -100,8 +100,8 @@
 
         if (principalId.length > 0) {
           newTeam = false;
-          console.log("setting bank balance")
-          console.log(userFantasyTeam)
+          console.log("setting bank balance");
+          console.log(userFantasyTeam);
           bankBalance.set(Number(userFantasyTeam.bankQuarterMillions));
         }
 
@@ -325,7 +325,9 @@
     <Spinner />
   {:else}
     <div>
-      <PickTeamHeader {fantasyTeam} {transfersAvailable} {bankBalance} />
+      <div class="hidden md:flex">
+        <PickTeamHeader {fantasyTeam} {transfersAvailable} {bankBalance} />
+      </div>
       <PickTeamButtons
         {fantasyTeam}
         {transfersAvailable}
@@ -347,6 +349,9 @@
         />
         <div class="hidden xl:flex w-full xl:w-1/2 ml-2">
           <SimpleFixtures />
+        </div>
+        <div class="flex md:hidden w-full mt-4">
+          <PickTeamHeader {fantasyTeam} {transfersAvailable} {bankBalance} />
         </div>
       </div>
       <BonusPanel {fantasyTeam} {activeGameweek} />

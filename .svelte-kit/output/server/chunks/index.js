@@ -3355,7 +3355,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1xymny2"
+  version_hash: "urc1zz"
 };
 function get_hooks() {
   return {};
@@ -5247,13 +5247,13 @@ function createManagerStore() {
       throw error2;
     }
   }
-  async function getFantasyTeam() {
+  async function getCurrentTeam() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
         { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      const result = await identityActor.getManager();
+      const result = await identityActor.getCurrentTeam();
       if (isError(result)) {
         return newManager;
       }
@@ -5399,7 +5399,7 @@ function createManagerStore() {
     getManager,
     getTotalManagers,
     getFantasyTeamForGameweek,
-    getFantasyTeam,
+    getCurrentTeam,
     saveFantasyTeam,
     snapshotFantasyTeams,
     getPublicProfile

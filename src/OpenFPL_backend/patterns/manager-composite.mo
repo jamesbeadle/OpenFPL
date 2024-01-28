@@ -306,20 +306,12 @@ module {
       );
 
       var bonusPlayed = false;
-      
-      if (updatedFantasyTeam.goalGetterGameweek == systemState.pickTeamGameweek or 
-        updatedFantasyTeam.passMasterGameweek == systemState.pickTeamGameweek or 
-        updatedFantasyTeam.noEntryGameweek == systemState.pickTeamGameweek or 
-        updatedFantasyTeam.teamBoostGameweek == systemState.pickTeamGameweek or 
-        updatedFantasyTeam.safeHandsGameweek == systemState.pickTeamGameweek or
-        updatedFantasyTeam.captainFantasticGameweek == systemState.pickTeamGameweek or
-        updatedFantasyTeam.countrymenGameweek == systemState.pickTeamGameweek or 
-        updatedFantasyTeam.prospectsGameweek == systemState.pickTeamGameweek or
-        updatedFantasyTeam.braceBonusGameweek == systemState.pickTeamGameweek or
-        updatedFantasyTeam.hatTrickHeroGameweek == systemState.pickTeamGameweek){
-          bonusPlayed := true;
-      };
 
+      if (
+        updatedFantasyTeam.goalGetterGameweek == systemState.pickTeamGameweek or updatedFantasyTeam.passMasterGameweek == systemState.pickTeamGameweek or updatedFantasyTeam.noEntryGameweek == systemState.pickTeamGameweek or updatedFantasyTeam.teamBoostGameweek == systemState.pickTeamGameweek or updatedFantasyTeam.safeHandsGameweek == systemState.pickTeamGameweek or updatedFantasyTeam.captainFantasticGameweek == systemState.pickTeamGameweek or updatedFantasyTeam.countrymenGameweek == systemState.pickTeamGameweek or updatedFantasyTeam.prospectsGameweek == systemState.pickTeamGameweek or updatedFantasyTeam.braceBonusGameweek == systemState.pickTeamGameweek or updatedFantasyTeam.hatTrickHeroGameweek == systemState.pickTeamGameweek,
+      ) {
+        bonusPlayed := true;
+      };
 
       switch (manager) {
         case (null) {
@@ -333,12 +325,12 @@ module {
             termsAccepted = false;
           };
           let newManager = buildNewManager(principalId, createProfileDTO, "");
-              
+
           let updatedPlayerValues = Array.map<DTOs.PlayerDTO, Nat16>(updatedPlayers, func(player : DTOs.PlayerDTO) : Nat16 { return player.valueQuarterMillions });
           let updatedTeamValue = Array.foldLeft<Nat16, Nat16>(updatedPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
 
-          var monthlyBonuses: Nat8 = 2;
-          if(bonusPlayed){
+          var monthlyBonuses : Nat8 = 2;
+          if (bonusPlayed) {
             monthlyBonuses := monthlyBonuses - 1;
           };
 
@@ -416,7 +408,7 @@ module {
               },
             );
             switch (foundPlayer) {
-              case (null) { };
+              case (null) {};
               case (?player) {
                 sold := sold + player.valueQuarterMillions;
               };
@@ -429,10 +421,10 @@ module {
           let transfersAvailable = foundManager.transfersAvailable - Nat8.fromNat(Array.size(playersAdded));
 
           var monthlyBonuses = foundManager.monthlyBonusesAvailable;
-          if(bonusPlayed){
+          if (bonusPlayed) {
             monthlyBonuses := monthlyBonuses - 1;
           };
-          
+
           let updatedManager : T.Manager = {
             principalId = foundManager.principalId;
             username = foundManager.username;
