@@ -14,13 +14,13 @@
 
   let selectedClubId: number = 0;
   let selectedPlayerId: number = 0;
-  let retirementDate: number = 0;
+  let retirementDate: string = "";
   let clubPlayers: PlayerDTO[] = [];
 
   let isLoading = false;
   let showConfirm = false;
 
-  $: isSubmitDisabled = selectedPlayerId <= 0 || retirementDate == 0;
+  $: isSubmitDisabled = selectedPlayerId <= 0 || retirementDate == "";
 
   $: if (selectedClubId) {
     getClubPlayers();
@@ -76,7 +76,7 @@
   function resetForm() {
     selectedClubId = 0;
     selectedPlayerId = 0;
-    retirementDate = 0;
+    retirementDate = "";
     showConfirm = false;
     clubPlayers = [];
   }

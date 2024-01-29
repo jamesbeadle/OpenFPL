@@ -421,7 +421,7 @@ function createGovernanceStore() {
 
   async function retirePlayer(
     playerId: number,
-    retirementDate: number
+    retirementDate: string
   ): Promise<any> {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
@@ -429,9 +429,13 @@ function createGovernanceStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
 
+      const dateObject = new Date(retirementDate);
+      const timestampMilliseconds = dateObject.getTime();
+      let nanoseconds = BigInt(timestampMilliseconds) * BigInt(1000000);
+
       let dto: RetirePlayerDTO = {
         playerId,
-        retirementDate: BigInt(retirementDate),
+        retirementDate: nanoseconds,
       };
 
       let result = await identityActor.adminRetirePlayer(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
