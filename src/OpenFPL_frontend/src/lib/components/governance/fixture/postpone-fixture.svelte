@@ -66,8 +66,6 @@
   }
 
   async function confirmProposal() {
-    console.log("This");
-    console.log(selectedFixtureId);
 
     isLoading = true;
     let result = await governanceStore.postponeFixture(selectedFixtureId);

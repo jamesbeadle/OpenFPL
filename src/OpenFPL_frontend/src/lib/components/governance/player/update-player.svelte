@@ -98,7 +98,7 @@
     dateOfBirth = convertDateInputToUnixNano(displayDOB);
 
     let result = await governanceStore.updatePlayer(
-      selectedClubId,
+      selectedPlayerId,
       position,
       firstName,
       lastName,

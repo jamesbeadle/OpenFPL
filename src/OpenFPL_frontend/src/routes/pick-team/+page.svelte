@@ -100,8 +100,6 @@
 
         if (principalId.length > 0) {
           newTeam = false;
-          console.log("setting bank balance");
-          console.log(userFantasyTeam);
           bankBalance.set(Number(userFantasyTeam.bankQuarterMillions));
         }
 
@@ -346,6 +344,7 @@
           {changeCaptain}
           {newCaptainId}
           {setCaptain}
+          {pitchView}
         />
         <div class="hidden xl:flex w-full xl:w-1/2 ml-2">
           <SimpleFixtures />

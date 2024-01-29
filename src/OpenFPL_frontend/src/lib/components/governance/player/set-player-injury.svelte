@@ -15,14 +15,14 @@
   let selectedClubId: number = 0;
   let selectedPlayerId: number = 0;
   let description = "";
-  let injuryEndDate = 0;
+  let injuryEndDate = "";
   let clubPlayers: PlayerDTO[] = [];
 
   let isLoading = true;
   let showConfirm = false;
 
   $: isSubmitDisabled =
-    selectedPlayerId <= 0 || injuryEndDate == 0 || description.length == 0;
+    selectedPlayerId <= 0 || injuryEndDate == "" || description.length == 0;
 
   $: if (selectedClubId) {
     getClubPlayers();
@@ -80,7 +80,7 @@
     selectedClubId = 0;
     selectedPlayerId = 0;
     description = "";
-    injuryEndDate = 0;
+    injuryEndDate = "";
     showConfirm = false;
     clubPlayers = [];
   }

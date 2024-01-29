@@ -13,11 +13,10 @@
   export let closeModal: () => void;
 
   let selectedClubId: number = 0;
-  let selectedNationalityId: number;
   let selectedPosition: PlayerPosition;
   let firstName = "";
   let lastName = "";
-  let dateOfBirth = 0;
+  let dateOfBirth = "";
   let shirtNumber = 0;
   let value = 0;
   let nationalityId = 0;
@@ -28,14 +27,25 @@
   $: isSubmitDisabled =
     selectedClubId <= 0 ||
     nationalityId <= 0 ||
-    firstName.length <= 0 ||
-    firstName.length > 50 ||
-    dateOfBirth <= 0 ||
-    shirtNumber < 1 ||
+    lastName.length <= 0 ||
+    lastName.length > 50 ||
+    dateOfBirth == "" ||
+    shirtNumber <= 0 ||
     shirtNumber > 99 ||
     value <= 0 ||
     value > 200 ||
     nationalityId == 0;
+
+  $: if (isSubmitDisabled) {
+    console.log(`isSubmitDisabled: ${isSubmitDisabled}`);
+    console.log(`selectedClubId: ${selectedClubId}`);
+    console.log(`nationalityId: ${nationalityId}`);
+    console.log(`lastName.length: ${lastName.length}`);
+    console.log(`dateOfBirth: ${dateOfBirth}`);
+    console.log(`shirtNumber: ${shirtNumber}`);
+    console.log(`value: ${value}`);
+  }
+
 
   $: if (isSubmitDisabled && showConfirm) {
     showConfirm = false;
@@ -88,11 +98,10 @@
 
   function resetForm() {
     selectedClubId = 0;
-    selectedNationalityId = 0;
     selectedPosition = { Goalkeeper: null };
     firstName = "";
     lastName = "";
-    dateOfBirth = 0;
+    dateOfBirth = "";
     shirtNumber = 0;
     value = 0;
     nationalityId = 0;
@@ -196,8 +205,10 @@
 
           <select
             class="p-2 fpl-dropdown min-w-[100px] mb-2"
-            bind:value={selectedNationalityId}
+            bind:value={nationalityId}
           >
+            
+            <option value={0}>Select Nationality</option>
             {#each $countriesStore as country}
               <option value={country.id}>{country.name}</option>
             {/each}

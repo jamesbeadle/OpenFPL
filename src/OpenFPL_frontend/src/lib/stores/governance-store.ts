@@ -156,8 +156,7 @@ function createGovernanceStore() {
       };
 
       let result = await identityActor.adminMoveFixture(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
-      console.log(result);
-
+     
       if (isError(result)) {
         console.error("Error submitting proposal: ", result);
         return;
@@ -213,7 +212,7 @@ function createGovernanceStore() {
       };
 
       let result = await identityActor.adminRescheduleFixture(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
-      console.log(result);
+     
       if (isError(result)) {
         console.error("Error submitting proposal: ", result);
         return;
@@ -314,7 +313,7 @@ function createGovernanceStore() {
     lastName: string,
     shirtNumber: number,
     valueQuarterMillions: number,
-    dateOfBirth: number,
+    dateOfBirth: string,
     nationality: number
   ): Promise<any> {
     try {
@@ -323,6 +322,10 @@ function createGovernanceStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
 
+      const dateObject = new Date(dateOfBirth);
+      const timestampMilliseconds = dateObject.getTime();
+      let nanoseconds = BigInt(timestampMilliseconds) * BigInt(1000000);
+
       let dto: CreatePlayerDTO = {
         clubId,
         position,
@@ -330,7 +333,7 @@ function createGovernanceStore() {
         lastName,
         shirtNumber,
         valueQuarterMillions,
-        dateOfBirth: BigInt(dateOfBirth),
+        dateOfBirth: nanoseconds,
         nationality,
       };
 
@@ -386,18 +389,22 @@ function createGovernanceStore() {
   async function setPlayerInjury(
     playerId: number,
     description: string,
-    expectedEndDate: number
+    expectedEndDate: string
   ): Promise<any> {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
+      
+      const dateObject = new Date(expectedEndDate);
+      const timestampMilliseconds = dateObject.getTime();
+      let nanoseconds = BigInt(timestampMilliseconds) * BigInt(1000000);
 
       let dto: SetPlayerInjuryDTO = {
         playerId,
         description,
-        expectedEndDate: BigInt(expectedEndDate),
+        expectedEndDate: nanoseconds,
       };
 
       let result = await identityActor.adminSetPlayerInjury(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL

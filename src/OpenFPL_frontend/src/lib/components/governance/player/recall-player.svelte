@@ -14,8 +14,6 @@
 
   let selectedClubId: number = 0;
   let selectedPlayerId: number = 0;
-  let leavingLeague = false;
-  let loanEndDate: number = 0;
   let loanedPlayers: PlayerDTO[] = [];
 
   let isLoading = true;
@@ -23,8 +21,7 @@
 
   $: isSubmitDisabled =
     selectedPlayerId <= 0 ||
-    (!leavingLeague && selectedClubId <= 0) ||
-    loanEndDate == 0;
+    selectedClubId <= 0;
 
   $: if (isSubmitDisabled && showConfirm) {
     showConfirm = false;
@@ -79,8 +76,6 @@
   function resetForm() {
     selectedClubId = 0;
     selectedPlayerId = 0;
-    leavingLeague = false;
-    loanEndDate = 0;
     showConfirm = false;
     loanedPlayers = [];
   }

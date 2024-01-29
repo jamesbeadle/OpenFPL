@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { writable } from "svelte/store";
   import type { Writable } from "svelte/store";
   import { toastsError } from "$lib/stores/toasts-store";
   import { systemStore } from "$lib/stores/system-store";
@@ -41,12 +40,12 @@
     "5-3-2": { positions: [0, 1, 1, 1, 1, 1, 2, 2, 2, 3, 3] },
   };
 
+  export let pitchView: Writable<boolean>;
   let activeSeason: string;
   let activeGameweek: number;
   let selectedFormation: string = "4-4-2";
   let selectedPosition = -1;
   let selectedColumn = -1;
-  let pitchView = true;
   let showAddPlayer = false;
   let teamValue = 0;
   let newTeam = true;
@@ -107,7 +106,7 @@
 
         const storedViewMode = localStorage.getItem("viewMode");
         if (storedViewMode) {
-          pitchView = storedViewMode === "pitch";
+          pitchView.set(storedViewMode === "pitch");
         }
 
         let transferWindowGameweek = $fantasyTeam?.transferWindowGameweek ?? 0;
@@ -606,7 +605,7 @@
   {bankBalance}
 />
 
-{#if pitchView}
+{#if $pitchView}
   <div class="relative w-full xl:w-1/2 mt-2">
     <img
       src="/pitch.png"

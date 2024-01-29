@@ -60,7 +60,7 @@
     isLoading = true;
     let result = await governanceStore.transferPlayer(
       selectedPlayerId,
-      selectedClubId
+      transferClubId
     );
 
     if (isError(result)) {

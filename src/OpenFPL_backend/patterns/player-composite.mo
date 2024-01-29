@@ -20,7 +20,7 @@ import Players "../../../testing/players";
 module {
   public class PlayerComposite() {
 
-    private var nextPlayerId : T.PlayerId = 1;
+    private var nextPlayerId : T.PlayerId = 1000; //TODO: Set when you have uploaded the initial players
     private var players = List.fromArray<T.Player>([]);
     private var setAndBackupTimer : ?((duration : Timer.Duration, callbackName : Text) -> ()) = null;
     private var removeExpiredTimers : ?(() -> ()) = null;
