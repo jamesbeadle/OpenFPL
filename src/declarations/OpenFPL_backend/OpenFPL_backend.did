@@ -121,6 +121,11 @@ type SeasonLeaderboardCanister = record {
   seasonId : SeasonId;
 };
 type SeasonId = nat16;
+type SeasonDTO = record {
+  id : SeasonId;
+  name : text;
+  year : nat16;
+};
 type SeasonCanisterDTO = record {
   canister : SeasonLeaderboardCanister;
   cycles : nat;
@@ -133,26 +138,23 @@ type RetirePlayerDTO = record {
 };
 type Result_9 = variant {
   err : Error;
-  ok : vec record {
-    nat16;
-    PlayerScoreDTO;
-  };
+  ok : vec FixtureDTO;
 };
 type Result_8 = variant {
   err : Error;
-  ok : vec FixtureDTO;
+  ok : ProfileDTO;
 };
 type Result_7 = variant {
   err : Error;
-  ok : ProfileDTO;
+  ok : vec PlayerDTO;
 };
 type Result_6 = variant {
   err : Error;
-  ok : vec PlayerDTO;
+  ok : SeasonLeaderboardDTO;
 };
 type Result_5 = variant {
   err : Error;
-  ok : SeasonLeaderboardDTO;
+  ok : vec SeasonDTO;
 };
 type Result_4 = variant {
   err : Error;
@@ -162,41 +164,45 @@ type Result_3 = variant {
   err : Error;
   ok : nat;
 };
-type Result_28 = variant {
+type Result_29 = variant {
   err : Error;
   ok : AdminClubList;
 };
-type Result_27 = variant {
+type Result_28 = variant {
   err : Error;
   ok : AdminFixtureList;
 };
-type Result_26 = variant {
+type Result_27 = variant {
   err : Error;
   ok : AdminMainCanisterInfo;
 };
-type Result_25 = variant {
+type Result_26 = variant {
   err : Error;
   ok : AdminProfileList;
 };
-type Result_24 = variant {
+type Result_25 = variant {
   err : Error;
   ok : AdminMonthlyCanisterList;
 };
-type Result_23 = variant {
+type Result_24 = variant {
   err : Error;
   ok : AdminPlayerList;
 };
-type Result_22 = variant {
+type Result_23 = variant {
   err : Error;
   ok : AdminProfilePictureCanisterList;
 };
-type Result_21 = variant {
+type Result_22 = variant {
   err : Error;
   ok : AdminSeasonCanisterList;
 };
-type Result_20 = variant {
+type Result_21 = variant {
   err : Error;
   ok : AdminTimerList;
+};
+type Result_20 = variant {
+  err : Error;
+  ok : AdminWeeklyCanisterList;
 };
 type Result_2 = variant {
   err : Error;
@@ -204,43 +210,46 @@ type Result_2 = variant {
 };
 type Result_19 = variant {
   err : Error;
-  ok : AdminWeeklyCanisterList;
+  ok : vec CountryDTO;
 };
 type Result_18 = variant {
   err : Error;
-  ok : vec CountryDTO;
+  ok : PickTeamDTO;
 };
 type Result_17 = variant {
   err : Error;
-  ok : PickTeamDTO;
+  ok : vec DataCacheDTO;
 };
 type Result_16 = variant {
   err : Error;
-  ok : vec DataCacheDTO;
+  ok : vec ClubDTO;
 };
 type Result_15 = variant {
   err : Error;
-  ok : vec ClubDTO;
+  ok : ManagerDTO;
 };
 type Result_14 = variant {
   err : Error;
-  ok : ManagerDTO;
+  ok : MonthlyLeaderboardDTO;
 };
 type Result_13 = variant {
   err : Error;
-  ok : MonthlyLeaderboardDTO;
+  ok : vec MonthlyLeaderboardDTO;
 };
 type Result_12 = variant {
   err : Error;
-  ok : vec MonthlyLeaderboardDTO;
+  ok : PlayerDetailDTO;
 };
 type Result_11 = variant {
   err : Error;
-  ok : PlayerDetailDTO;
+  ok : vec PlayerPointsDTO;
 };
 type Result_10 = variant {
   err : Error;
-  ok : vec PlayerPointsDTO;
+  ok : vec record {
+    nat16;
+    PlayerScoreDTO;
+  };
 };
 type Result_1 = variant {
   err : Error;
@@ -612,16 +621,16 @@ type AddInitialFixturesDTO = record {
 service : {
   adminAddInitialFixtures : (AddInitialFixturesDTO) -> (Result);
   adminCreatePlayer : (CreatePlayerDTO) -> (Result);
-  adminGetClubs : (nat, nat) -> (Result_28) query;
-  adminGetFixtures : (SeasonId) -> (Result_27) query;
-  adminGetMainCanisterInfo : () -> (Result_26);
-  adminGetManagers : (nat, nat) -> (Result_25) query;
-  adminGetMonthlyCanisters : (nat, nat) -> (Result_24);
-  adminGetPlayers : (PlayerStatus) -> (Result_23) query;
-  adminGetProfileCanisters : (nat, nat) -> (Result_22);
-  adminGetSeasonCanisters : (nat, nat) -> (Result_21);
-  adminGetTimers : (text, nat, nat) -> (Result_20) query;
-  adminGetWeeklyCanisters : (nat, nat) -> (Result_19);
+  adminGetClubs : (nat, nat) -> (Result_29) query;
+  adminGetFixtures : (SeasonId) -> (Result_28) query;
+  adminGetMainCanisterInfo : () -> (Result_27);
+  adminGetManagers : (nat, nat) -> (Result_26) query;
+  adminGetMonthlyCanisters : (nat, nat) -> (Result_25);
+  adminGetPlayers : (PlayerStatus) -> (Result_24) query;
+  adminGetProfileCanisters : (nat, nat) -> (Result_23);
+  adminGetSeasonCanisters : (nat, nat) -> (Result_22);
+  adminGetTimers : (text, nat, nat) -> (Result_21) query;
+  adminGetWeeklyCanisters : (nat, nat) -> (Result_20);
   adminLoanPlayer : (LoanPlayerDTO) -> (Result);
   adminMoveFixture : (MoveFixtureDTO) -> (Result);
   adminPostponeFixture : (PostponeFixtureDTO) -> (Result);
@@ -657,24 +666,25 @@ service : {
   executeUnretirePlayer : (UnretirePlayerDTO) -> ();
   executeUpdateClub : (UpdateClubDTO) -> ();
   executeUpdatePlayer : (UpdatePlayerDTO) -> ();
-  getClubs : () -> (Result_15) query;
-  getCountries : () -> (Result_18) query;
-  getCurrentTeam : () -> (Result_17);
-  getDataHashes : () -> (Result_16) query;
-  getFixtures : (SeasonId) -> (Result_8) query;
-  getFormerClubs : () -> (Result_15) query;
-  getLoanedPlayers : (ClubId) -> (Result_6) query;
-  getManager : () -> (Result_14);
-  getMonthlyLeaderboard : (SeasonId, ClubId, CalendarMonth, nat, nat, text) -> (Result_13);
-  getMonthlyLeaderboards : (SeasonId, CalendarMonth) -> (Result_12);
-  getPlayerDetails : (PlayerId, SeasonId) -> (Result_11);
-  getPlayerDetailsForGameweek : (SeasonId, GameweekNumber) -> (Result_10) query;
-  getPlayers : () -> (Result_6) query;
-  getPlayersMap : (SeasonId, GameweekNumber) -> (Result_9);
-  getPostponedFixtures : () -> (Result_8) query;
-  getProfile : () -> (Result_7);
-  getRetiredPlayers : (ClubId) -> (Result_6) query;
-  getSeasonLeaderboard : (SeasonId, nat, nat, text) -> (Result_5);
+  getClubs : () -> (Result_16) query;
+  getCountries : () -> (Result_19) query;
+  getCurrentTeam : () -> (Result_18);
+  getDataHashes : () -> (Result_17) query;
+  getFixtures : (SeasonId) -> (Result_9) query;
+  getFormerClubs : () -> (Result_16) query;
+  getLoanedPlayers : (ClubId) -> (Result_7) query;
+  getManager : () -> (Result_15);
+  getMonthlyLeaderboard : (SeasonId, ClubId, CalendarMonth, nat, nat, text) -> (Result_14);
+  getMonthlyLeaderboards : (SeasonId, CalendarMonth) -> (Result_13);
+  getPlayerDetails : (PlayerId, SeasonId) -> (Result_12);
+  getPlayerDetailsForGameweek : (SeasonId, GameweekNumber) -> (Result_11) query;
+  getPlayers : () -> (Result_7) query;
+  getPlayersMap : (SeasonId, GameweekNumber) -> (Result_10);
+  getPostponedFixtures : () -> (Result_9) query;
+  getProfile : () -> (Result_8);
+  getRetiredPlayers : (ClubId) -> (Result_7) query;
+  getSeasonLeaderboard : (SeasonId, nat, nat, text) -> (Result_6);
+  getSeasons : () -> (Result_5) query;
   getSystemState : () -> (Result_4) query;
   getTotalManagers : () -> (Result_3) query;
   getWeeklyLeaderboard : (SeasonId, GameweekNumber, nat, nat, text) -> (Result_2);

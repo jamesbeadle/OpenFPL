@@ -64,7 +64,6 @@
   }
 
   async function confirmProposal() {
-
     isLoading = true;
     let result = await governanceStore.rescheduleFixture(
       selectedFixtureId,

@@ -244,7 +244,7 @@ function createUserStore() {
         JSON.stringify(profileData, replacer)
       );
     }
-    
+
     set(profileData);
   }
 

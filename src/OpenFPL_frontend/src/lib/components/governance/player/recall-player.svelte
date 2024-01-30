@@ -19,9 +19,7 @@
   let isLoading = true;
   let showConfirm = false;
 
-  $: isSubmitDisabled =
-    selectedPlayerId <= 0 ||
-    selectedClubId <= 0;
+  $: isSubmitDisabled = selectedPlayerId <= 0 || selectedClubId <= 0;
 
   $: if (isSubmitDisabled && showConfirm) {
     showConfirm = false;

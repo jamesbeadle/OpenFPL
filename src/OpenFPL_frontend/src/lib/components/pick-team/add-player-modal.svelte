@@ -52,7 +52,7 @@
     filteredPlayers.slice((currentPage - 1) * pageSize, currentPage * pageSize)
   );
 
-  $: if(paginatedPlayers) console.log(paginatedPlayers);
+  $: if (paginatedPlayers) console.log(paginatedPlayers);
 
   $: teamPlayerCounts = countPlayersByTeam($fantasyTeam?.playerIds ?? []);
   $: disableReasons = paginatedPlayers.map((player) =>
@@ -283,12 +283,12 @@
           class="flex items-center justify-between py-2 border-b border-gray-700 cursor-pointer"
         >
           <div class="w-1/12 text-center">
-            {#if Object.keys(player.position).includes('Goalkeeper')}GK{/if}
-            {#if Object.keys(player.position).includes('Defender')}DF{/if}
-            {#if Object.keys(player.position).includes('Midfielder')}MF{/if}
-            {#if Object.keys(player.position).includes('Forward')}FW{/if}
+            {#if Object.keys(player.position).includes("Goalkeeper")}GK{/if}
+            {#if Object.keys(player.position).includes("Defender")}DF{/if}
+            {#if Object.keys(player.position).includes("Midfielder")}MF{/if}
+            {#if Object.keys(player.position).includes("Forward")}FW{/if}
           </div>
-        
+
           <div class="w-2/12">
             {`${
               player.firstName.length > 0

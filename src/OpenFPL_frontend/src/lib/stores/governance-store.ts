@@ -156,7 +156,7 @@ function createGovernanceStore() {
       };
 
       let result = await identityActor.adminMoveFixture(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
-     
+
       if (isError(result)) {
         console.error("Error submitting proposal: ", result);
         return;
@@ -212,7 +212,7 @@ function createGovernanceStore() {
       };
 
       let result = await identityActor.adminRescheduleFixture(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
-     
+
       if (isError(result)) {
         console.error("Error submitting proposal: ", result);
         return;
@@ -396,7 +396,7 @@ function createGovernanceStore() {
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      
+
       const dateObject = new Date(expectedEndDate);
       const timestampMilliseconds = dateObject.getTime();
       let nanoseconds = BigInt(timestampMilliseconds) * BigInt(1000000);

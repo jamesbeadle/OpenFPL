@@ -362,35 +362,38 @@ export interface RescheduleFixtureDTO {
 }
 export type Result = { ok: string } | { err: string };
 export type Result_1 = { ok: null } | { err: Error };
-export type Result_10 = { ok: Array<PlayerPointsDTO> } | { err: Error };
-export type Result_11 = { ok: PlayerDetailDTO } | { err: Error };
-export type Result_12 = { ok: Array<MonthlyLeaderboardDTO> } | { err: Error };
-export type Result_13 = { ok: MonthlyLeaderboardDTO } | { err: Error };
-export type Result_14 = { ok: ManagerDTO } | { err: Error };
-export type Result_15 = { ok: Array<ClubDTO> } | { err: Error };
-export type Result_16 = { ok: Array<DataCacheDTO> } | { err: Error };
-export type Result_17 = { ok: PickTeamDTO } | { err: Error };
-export type Result_18 = { ok: Array<CountryDTO> } | { err: Error };
-export type Result_19 = { ok: AdminWeeklyCanisterList } | { err: Error };
+export type Result_10 =
+  | { ok: Array<[number, PlayerScoreDTO]> }
+  | { err: Error };
+export type Result_11 = { ok: Array<PlayerPointsDTO> } | { err: Error };
+export type Result_12 = { ok: PlayerDetailDTO } | { err: Error };
+export type Result_13 = { ok: Array<MonthlyLeaderboardDTO> } | { err: Error };
+export type Result_14 = { ok: MonthlyLeaderboardDTO } | { err: Error };
+export type Result_15 = { ok: ManagerDTO } | { err: Error };
+export type Result_16 = { ok: Array<ClubDTO> } | { err: Error };
+export type Result_17 = { ok: Array<DataCacheDTO> } | { err: Error };
+export type Result_18 = { ok: PickTeamDTO } | { err: Error };
+export type Result_19 = { ok: Array<CountryDTO> } | { err: Error };
 export type Result_2 = { ok: WeeklyLeaderboardDTO } | { err: Error };
-export type Result_20 = { ok: AdminTimerList } | { err: Error };
-export type Result_21 = { ok: AdminSeasonCanisterList } | { err: Error };
-export type Result_22 =
+export type Result_20 = { ok: AdminWeeklyCanisterList } | { err: Error };
+export type Result_21 = { ok: AdminTimerList } | { err: Error };
+export type Result_22 = { ok: AdminSeasonCanisterList } | { err: Error };
+export type Result_23 =
   | { ok: AdminProfilePictureCanisterList }
   | { err: Error };
-export type Result_23 = { ok: AdminPlayerList } | { err: Error };
-export type Result_24 = { ok: AdminMonthlyCanisterList } | { err: Error };
-export type Result_25 = { ok: AdminProfileList } | { err: Error };
-export type Result_26 = { ok: AdminMainCanisterInfo } | { err: Error };
-export type Result_27 = { ok: AdminFixtureList } | { err: Error };
-export type Result_28 = { ok: AdminClubList } | { err: Error };
+export type Result_24 = { ok: AdminPlayerList } | { err: Error };
+export type Result_25 = { ok: AdminMonthlyCanisterList } | { err: Error };
+export type Result_26 = { ok: AdminProfileList } | { err: Error };
+export type Result_27 = { ok: AdminMainCanisterInfo } | { err: Error };
+export type Result_28 = { ok: AdminFixtureList } | { err: Error };
+export type Result_29 = { ok: AdminClubList } | { err: Error };
 export type Result_3 = { ok: bigint } | { err: Error };
 export type Result_4 = { ok: SystemStateDTO } | { err: Error };
-export type Result_5 = { ok: SeasonLeaderboardDTO } | { err: Error };
-export type Result_6 = { ok: Array<PlayerDTO> } | { err: Error };
-export type Result_7 = { ok: ProfileDTO } | { err: Error };
-export type Result_8 = { ok: Array<FixtureDTO> } | { err: Error };
-export type Result_9 = { ok: Array<[number, PlayerScoreDTO]> } | { err: Error };
+export type Result_5 = { ok: Array<SeasonDTO> } | { err: Error };
+export type Result_6 = { ok: SeasonLeaderboardDTO } | { err: Error };
+export type Result_7 = { ok: Array<PlayerDTO> } | { err: Error };
+export type Result_8 = { ok: ProfileDTO } | { err: Error };
+export type Result_9 = { ok: Array<FixtureDTO> } | { err: Error };
 export interface RetirePlayerDTO {
   playerId: PlayerId;
   retirementDate: bigint;
@@ -404,6 +407,11 @@ export interface RevaluePlayerUpDTO {
 export interface SeasonCanisterDTO {
   cycles: bigint;
   canister: SeasonLeaderboardCanister;
+}
+export interface SeasonDTO {
+  id: SeasonId;
+  name: string;
+  year: number;
 }
 export type SeasonId = number;
 export interface SeasonLeaderboardCanister {
@@ -530,16 +538,16 @@ export interface WeeklyLeaderboardDTO {
 export interface _SERVICE {
   adminAddInitialFixtures: ActorMethod<[AddInitialFixturesDTO], Result>;
   adminCreatePlayer: ActorMethod<[CreatePlayerDTO], Result>;
-  adminGetClubs: ActorMethod<[bigint, bigint], Result_28>;
-  adminGetFixtures: ActorMethod<[SeasonId], Result_27>;
-  adminGetMainCanisterInfo: ActorMethod<[], Result_26>;
-  adminGetManagers: ActorMethod<[bigint, bigint], Result_25>;
-  adminGetMonthlyCanisters: ActorMethod<[bigint, bigint], Result_24>;
-  adminGetPlayers: ActorMethod<[PlayerStatus], Result_23>;
-  adminGetProfileCanisters: ActorMethod<[bigint, bigint], Result_22>;
-  adminGetSeasonCanisters: ActorMethod<[bigint, bigint], Result_21>;
-  adminGetTimers: ActorMethod<[string, bigint, bigint], Result_20>;
-  adminGetWeeklyCanisters: ActorMethod<[bigint, bigint], Result_19>;
+  adminGetClubs: ActorMethod<[bigint, bigint], Result_29>;
+  adminGetFixtures: ActorMethod<[SeasonId], Result_28>;
+  adminGetMainCanisterInfo: ActorMethod<[], Result_27>;
+  adminGetManagers: ActorMethod<[bigint, bigint], Result_26>;
+  adminGetMonthlyCanisters: ActorMethod<[bigint, bigint], Result_25>;
+  adminGetPlayers: ActorMethod<[PlayerStatus], Result_24>;
+  adminGetProfileCanisters: ActorMethod<[bigint, bigint], Result_23>;
+  adminGetSeasonCanisters: ActorMethod<[bigint, bigint], Result_22>;
+  adminGetTimers: ActorMethod<[string, bigint, bigint], Result_21>;
+  adminGetWeeklyCanisters: ActorMethod<[bigint, bigint], Result_20>;
   adminLoanPlayer: ActorMethod<[LoanPlayerDTO], Result>;
   adminMoveFixture: ActorMethod<[MoveFixtureDTO], Result>;
   adminPostponeFixture: ActorMethod<[PostponeFixtureDTO], Result>;
@@ -575,33 +583,34 @@ export interface _SERVICE {
   executeUnretirePlayer: ActorMethod<[UnretirePlayerDTO], undefined>;
   executeUpdateClub: ActorMethod<[UpdateClubDTO], undefined>;
   executeUpdatePlayer: ActorMethod<[UpdatePlayerDTO], undefined>;
-  getClubs: ActorMethod<[], Result_15>;
-  getCountries: ActorMethod<[], Result_18>;
-  getCurrentTeam: ActorMethod<[], Result_17>;
-  getDataHashes: ActorMethod<[], Result_16>;
-  getFixtures: ActorMethod<[SeasonId], Result_8>;
-  getFormerClubs: ActorMethod<[], Result_15>;
-  getLoanedPlayers: ActorMethod<[ClubId], Result_6>;
-  getManager: ActorMethod<[], Result_14>;
+  getClubs: ActorMethod<[], Result_16>;
+  getCountries: ActorMethod<[], Result_19>;
+  getCurrentTeam: ActorMethod<[], Result_18>;
+  getDataHashes: ActorMethod<[], Result_17>;
+  getFixtures: ActorMethod<[SeasonId], Result_9>;
+  getFormerClubs: ActorMethod<[], Result_16>;
+  getLoanedPlayers: ActorMethod<[ClubId], Result_7>;
+  getManager: ActorMethod<[], Result_15>;
   getMonthlyLeaderboard: ActorMethod<
     [SeasonId, ClubId, CalendarMonth, bigint, bigint, string],
-    Result_13
+    Result_14
   >;
-  getMonthlyLeaderboards: ActorMethod<[SeasonId, CalendarMonth], Result_12>;
-  getPlayerDetails: ActorMethod<[PlayerId, SeasonId], Result_11>;
+  getMonthlyLeaderboards: ActorMethod<[SeasonId, CalendarMonth], Result_13>;
+  getPlayerDetails: ActorMethod<[PlayerId, SeasonId], Result_12>;
   getPlayerDetailsForGameweek: ActorMethod<
     [SeasonId, GameweekNumber],
-    Result_10
+    Result_11
   >;
-  getPlayers: ActorMethod<[], Result_6>;
-  getPlayersMap: ActorMethod<[SeasonId, GameweekNumber], Result_9>;
-  getPostponedFixtures: ActorMethod<[], Result_8>;
-  getProfile: ActorMethod<[], Result_7>;
-  getRetiredPlayers: ActorMethod<[ClubId], Result_6>;
+  getPlayers: ActorMethod<[], Result_7>;
+  getPlayersMap: ActorMethod<[SeasonId, GameweekNumber], Result_10>;
+  getPostponedFixtures: ActorMethod<[], Result_9>;
+  getProfile: ActorMethod<[], Result_8>;
+  getRetiredPlayers: ActorMethod<[ClubId], Result_7>;
   getSeasonLeaderboard: ActorMethod<
     [SeasonId, bigint, bigint, string],
-    Result_5
+    Result_6
   >;
+  getSeasons: ActorMethod<[], Result_5>;
   getSystemState: ActorMethod<[], Result_4>;
   getTotalManagers: ActorMethod<[], Result_3>;
   getWeeklyLeaderboard: ActorMethod<

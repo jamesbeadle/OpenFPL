@@ -5,6 +5,7 @@ import type {
   DataCacheDTO,
   SystemStateDTO,
   UpdateSystemStateDTO,
+  SeasonDTO
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { isError, replacer } from "../utils/Helpers";
@@ -70,6 +71,21 @@ function createSystemStore() {
     return systemState;
   }
 
+  async function getSeasons(): Promise<SeasonDTO[]> {
+    try {
+      let result = await actor.getSeasons();
+
+      if (isError(result)) {
+        console.error("Error fetching seasons:");
+        return [];
+      }
+      return result;
+    } catch (error) {
+      console.error("Error fetching seasons:", error);
+      throw error;
+    }
+  }
+
   async function updateSystemState(
     systemState: UpdateSystemStateDTO
   ): Promise<any> {
@@ -97,6 +113,7 @@ function createSystemStore() {
     sync,
     getSystemState,
     updateSystemState,
+    getSeasons
   };
 }
 

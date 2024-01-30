@@ -46,7 +46,6 @@
     console.log(`value: ${value}`);
   }
 
-
   $: if (isSubmitDisabled && showConfirm) {
     showConfirm = false;
   }
@@ -207,7 +206,6 @@
             class="p-2 fpl-dropdown min-w-[100px] mb-2"
             bind:value={nationalityId}
           >
-            
             <option value={0}>Select Nationality</option>
             {#each $countriesStore as country}
               <option value={country.id}>{country.name}</option>

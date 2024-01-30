@@ -66,7 +66,6 @@
   }
 
   async function confirmProposal() {
-
     isLoading = true;
     let result = await governanceStore.postponeFixture(selectedFixtureId);
     if (isError(result)) {

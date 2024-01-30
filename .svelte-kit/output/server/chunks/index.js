@@ -3355,7 +3355,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "791gvl"
+  version_hash: "1wtgy5z"
 };
 function get_hooks() {
   return {};
@@ -3654,17 +3654,17 @@ const idlFactory = ({ IDL }) => {
     AlreadyExists: IDL.Null,
     InvalidTeamError: IDL.Null
   });
-  const Result_28 = IDL.Variant({ ok: AdminClubList, err: Error2 });
+  const Result_29 = IDL.Variant({ ok: AdminClubList, err: Error2 });
   const AdminFixtureList = IDL.Record({
     seasonId: SeasonId,
     fixtures: IDL.Vec(FixtureDTO)
   });
-  const Result_27 = IDL.Variant({ ok: AdminFixtureList, err: Error2 });
+  const Result_28 = IDL.Variant({ ok: AdminFixtureList, err: Error2 });
   const AdminMainCanisterInfo = IDL.Record({
     cycles: IDL.Nat,
     canisterId: IDL.Text
   });
-  const Result_26 = IDL.Variant({
+  const Result_27 = IDL.Variant({
     ok: AdminMainCanisterInfo,
     err: Error2
   });
@@ -3682,7 +3682,7 @@ const idlFactory = ({ IDL }) => {
     limit: IDL.Nat,
     profiles: IDL.Vec(ProfileDTO)
   });
-  const Result_25 = IDL.Variant({ ok: AdminProfileList, err: Error2 });
+  const Result_26 = IDL.Variant({ ok: AdminProfileList, err: Error2 });
   const CalendarMonth = IDL.Nat8;
   const MonthlyLeaderboardCanister = IDL.Record({
     month: CalendarMonth,
@@ -3700,7 +3700,7 @@ const idlFactory = ({ IDL }) => {
     limit: IDL.Nat,
     canisters: IDL.Vec(MonthlyCanisterDTO)
   });
-  const Result_24 = IDL.Variant({
+  const Result_25 = IDL.Variant({
     ok: AdminMonthlyCanisterList,
     err: Error2
   });
@@ -3727,7 +3727,7 @@ const idlFactory = ({ IDL }) => {
     playerStatus: PlayerStatus,
     players: IDL.Vec(PlayerDTO)
   });
-  const Result_23 = IDL.Variant({ ok: AdminPlayerList, err: Error2 });
+  const Result_24 = IDL.Variant({ ok: AdminPlayerList, err: Error2 });
   const ProfileCanisterDTO = IDL.Record({
     cycles: IDL.Nat,
     canisterId: IDL.Text
@@ -3736,7 +3736,7 @@ const idlFactory = ({ IDL }) => {
     totalEntries: IDL.Nat,
     canisters: IDL.Vec(ProfileCanisterDTO)
   });
-  const Result_22 = IDL.Variant({
+  const Result_23 = IDL.Variant({
     ok: AdminProfilePictureCanisterList,
     err: Error2
   });
@@ -3754,7 +3754,7 @@ const idlFactory = ({ IDL }) => {
     limit: IDL.Nat,
     canisters: IDL.Vec(SeasonCanisterDTO)
   });
-  const Result_21 = IDL.Variant({
+  const Result_22 = IDL.Variant({
     ok: AdminSeasonCanisterList,
     err: Error2
   });
@@ -3772,7 +3772,7 @@ const idlFactory = ({ IDL }) => {
     category: IDL.Text,
     cyclesWalletCheck: TimerDTO
   });
-  const Result_20 = IDL.Variant({ ok: AdminTimerList, err: Error2 });
+  const Result_21 = IDL.Variant({ ok: AdminTimerList, err: Error2 });
   const WeeklyLeaderboardCanister = IDL.Record({
     seasonId: SeasonId,
     gameweek: GameweekNumber,
@@ -3788,7 +3788,7 @@ const idlFactory = ({ IDL }) => {
     limit: IDL.Nat,
     canisters: IDL.Vec(WeeklyCanisterDTO)
   });
-  const Result_19 = IDL.Variant({
+  const Result_20 = IDL.Variant({
     ok: AdminWeeklyCanisterList,
     err: Error2
   });
@@ -3861,13 +3861,13 @@ const idlFactory = ({ IDL }) => {
     lastName: IDL.Text,
     firstName: IDL.Text
   });
-  const Result_15 = IDL.Variant({ ok: IDL.Vec(ClubDTO), err: Error2 });
+  const Result_16 = IDL.Variant({ ok: IDL.Vec(ClubDTO), err: Error2 });
   const CountryDTO = IDL.Record({
     id: CountryId,
     code: IDL.Text,
     name: IDL.Text
   });
-  const Result_18 = IDL.Variant({ ok: IDL.Vec(CountryDTO), err: Error2 });
+  const Result_19 = IDL.Variant({ ok: IDL.Vec(CountryDTO), err: Error2 });
   const PickTeamDTO = IDL.Record({
     playerIds: IDL.Vec(PlayerId),
     countrymenCountryId: CountryId,
@@ -3895,14 +3895,14 @@ const idlFactory = ({ IDL }) => {
     captainId: PlayerId,
     monthlyBonusesAvailable: IDL.Nat8
   });
-  const Result_17 = IDL.Variant({ ok: PickTeamDTO, err: Error2 });
+  const Result_18 = IDL.Variant({ ok: PickTeamDTO, err: Error2 });
   const DataCacheDTO = IDL.Record({ hash: IDL.Text, category: IDL.Text });
-  const Result_16 = IDL.Variant({
+  const Result_17 = IDL.Variant({
     ok: IDL.Vec(DataCacheDTO),
     err: Error2
   });
-  const Result_8 = IDL.Variant({ ok: IDL.Vec(FixtureDTO), err: Error2 });
-  const Result_6 = IDL.Variant({ ok: IDL.Vec(PlayerDTO), err: Error2 });
+  const Result_9 = IDL.Variant({ ok: IDL.Vec(FixtureDTO), err: Error2 });
+  const Result_7 = IDL.Variant({ ok: IDL.Vec(PlayerDTO), err: Error2 });
   const FantasyTeamSnapshot = IDL.Record({
     playerIds: IDL.Vec(PlayerId),
     teamValueQuarterMillions: IDL.Nat16,
@@ -3951,7 +3951,7 @@ const idlFactory = ({ IDL }) => {
     principalId: IDL.Text,
     seasonPositionText: IDL.Text
   });
-  const Result_14 = IDL.Variant({ ok: ManagerDTO, err: Error2 });
+  const Result_15 = IDL.Variant({ ok: ManagerDTO, err: Error2 });
   const LeaderboardEntry = IDL.Record({
     username: IDL.Text,
     positionText: IDL.Text,
@@ -3966,11 +3966,11 @@ const idlFactory = ({ IDL }) => {
     seasonId: SeasonId,
     entries: IDL.Vec(LeaderboardEntry)
   });
-  const Result_13 = IDL.Variant({
+  const Result_14 = IDL.Variant({
     ok: MonthlyLeaderboardDTO,
     err: Error2
   });
-  const Result_12 = IDL.Variant({
+  const Result_13 = IDL.Variant({
     ok: IDL.Vec(MonthlyLeaderboardDTO),
     err: Error2
   });
@@ -4010,7 +4010,7 @@ const idlFactory = ({ IDL }) => {
     lastName: IDL.Text,
     firstName: IDL.Text
   });
-  const Result_11 = IDL.Variant({ ok: PlayerDetailDTO, err: Error2 });
+  const Result_12 = IDL.Variant({ ok: PlayerDetailDTO, err: Error2 });
   const PlayerPointsDTO = IDL.Record({
     id: IDL.Nat16,
     clubId: ClubId,
@@ -4019,7 +4019,7 @@ const idlFactory = ({ IDL }) => {
     gameweek: GameweekNumber,
     points: IDL.Int16
   });
-  const Result_10 = IDL.Variant({
+  const Result_11 = IDL.Variant({
     ok: IDL.Vec(PlayerPointsDTO),
     err: Error2
   });
@@ -4036,17 +4036,23 @@ const idlFactory = ({ IDL }) => {
     position: PlayerPosition,
     points: IDL.Int16
   });
-  const Result_9 = IDL.Variant({
+  const Result_10 = IDL.Variant({
     ok: IDL.Vec(IDL.Tuple(IDL.Nat16, PlayerScoreDTO)),
     err: Error2
   });
-  const Result_7 = IDL.Variant({ ok: ProfileDTO, err: Error2 });
+  const Result_8 = IDL.Variant({ ok: ProfileDTO, err: Error2 });
   const SeasonLeaderboardDTO = IDL.Record({
     totalEntries: IDL.Nat,
     seasonId: SeasonId,
     entries: IDL.Vec(LeaderboardEntry)
   });
-  const Result_5 = IDL.Variant({ ok: SeasonLeaderboardDTO, err: Error2 });
+  const Result_6 = IDL.Variant({ ok: SeasonLeaderboardDTO, err: Error2 });
+  const SeasonDTO = IDL.Record({
+    id: SeasonId,
+    name: IDL.Text,
+    year: IDL.Nat16
+  });
+  const Result_5 = IDL.Variant({ ok: IDL.Vec(SeasonDTO), err: Error2 });
   const SystemStateDTO = IDL.Record({
     pickTeamSeasonId: SeasonId,
     pickTeamSeasonName: IDL.Text,
@@ -4108,20 +4114,20 @@ const idlFactory = ({ IDL }) => {
   return IDL.Service({
     adminAddInitialFixtures: IDL.Func([AddInitialFixturesDTO], [Result], []),
     adminCreatePlayer: IDL.Func([CreatePlayerDTO], [Result], []),
-    adminGetClubs: IDL.Func([IDL.Nat, IDL.Nat], [Result_28], ["query"]),
-    adminGetFixtures: IDL.Func([SeasonId], [Result_27], ["query"]),
-    adminGetMainCanisterInfo: IDL.Func([], [Result_26], []),
-    adminGetManagers: IDL.Func([IDL.Nat, IDL.Nat], [Result_25], ["query"]),
-    adminGetMonthlyCanisters: IDL.Func([IDL.Nat, IDL.Nat], [Result_24], []),
-    adminGetPlayers: IDL.Func([PlayerStatus], [Result_23], ["query"]),
-    adminGetProfileCanisters: IDL.Func([IDL.Nat, IDL.Nat], [Result_22], []),
-    adminGetSeasonCanisters: IDL.Func([IDL.Nat, IDL.Nat], [Result_21], []),
+    adminGetClubs: IDL.Func([IDL.Nat, IDL.Nat], [Result_29], ["query"]),
+    adminGetFixtures: IDL.Func([SeasonId], [Result_28], ["query"]),
+    adminGetMainCanisterInfo: IDL.Func([], [Result_27], []),
+    adminGetManagers: IDL.Func([IDL.Nat, IDL.Nat], [Result_26], ["query"]),
+    adminGetMonthlyCanisters: IDL.Func([IDL.Nat, IDL.Nat], [Result_25], []),
+    adminGetPlayers: IDL.Func([PlayerStatus], [Result_24], ["query"]),
+    adminGetProfileCanisters: IDL.Func([IDL.Nat, IDL.Nat], [Result_23], []),
+    adminGetSeasonCanisters: IDL.Func([IDL.Nat, IDL.Nat], [Result_22], []),
     adminGetTimers: IDL.Func(
       [IDL.Text, IDL.Nat, IDL.Nat],
-      [Result_20],
+      [Result_21],
       ["query"]
     ),
-    adminGetWeeklyCanisters: IDL.Func([IDL.Nat, IDL.Nat], [Result_19], []),
+    adminGetWeeklyCanisters: IDL.Func([IDL.Nat, IDL.Nat], [Result_20], []),
     adminLoanPlayer: IDL.Func([LoanPlayerDTO], [Result], []),
     adminMoveFixture: IDL.Func([MoveFixtureDTO], [Result], []),
     adminPostponeFixture: IDL.Func([PostponeFixtureDTO], [Result], []),
@@ -4157,40 +4163,41 @@ const idlFactory = ({ IDL }) => {
     executeUnretirePlayer: IDL.Func([UnretirePlayerDTO], [], []),
     executeUpdateClub: IDL.Func([UpdateClubDTO], [], []),
     executeUpdatePlayer: IDL.Func([UpdatePlayerDTO], [], []),
-    getClubs: IDL.Func([], [Result_15], ["query"]),
-    getCountries: IDL.Func([], [Result_18], ["query"]),
-    getCurrentTeam: IDL.Func([], [Result_17], []),
-    getDataHashes: IDL.Func([], [Result_16], ["query"]),
-    getFixtures: IDL.Func([SeasonId], [Result_8], ["query"]),
-    getFormerClubs: IDL.Func([], [Result_15], ["query"]),
-    getLoanedPlayers: IDL.Func([ClubId], [Result_6], ["query"]),
-    getManager: IDL.Func([], [Result_14], []),
+    getClubs: IDL.Func([], [Result_16], ["query"]),
+    getCountries: IDL.Func([], [Result_19], ["query"]),
+    getCurrentTeam: IDL.Func([], [Result_18], []),
+    getDataHashes: IDL.Func([], [Result_17], ["query"]),
+    getFixtures: IDL.Func([SeasonId], [Result_9], ["query"]),
+    getFormerClubs: IDL.Func([], [Result_16], ["query"]),
+    getLoanedPlayers: IDL.Func([ClubId], [Result_7], ["query"]),
+    getManager: IDL.Func([], [Result_15], []),
     getMonthlyLeaderboard: IDL.Func(
       [SeasonId, ClubId, CalendarMonth, IDL.Nat, IDL.Nat, IDL.Text],
-      [Result_13],
+      [Result_14],
       []
     ),
     getMonthlyLeaderboards: IDL.Func(
       [SeasonId, CalendarMonth],
-      [Result_12],
+      [Result_13],
       []
     ),
-    getPlayerDetails: IDL.Func([PlayerId, SeasonId], [Result_11], []),
+    getPlayerDetails: IDL.Func([PlayerId, SeasonId], [Result_12], []),
     getPlayerDetailsForGameweek: IDL.Func(
       [SeasonId, GameweekNumber],
-      [Result_10],
+      [Result_11],
       ["query"]
     ),
-    getPlayers: IDL.Func([], [Result_6], ["query"]),
-    getPlayersMap: IDL.Func([SeasonId, GameweekNumber], [Result_9], []),
-    getPostponedFixtures: IDL.Func([], [Result_8], ["query"]),
-    getProfile: IDL.Func([], [Result_7], []),
-    getRetiredPlayers: IDL.Func([ClubId], [Result_6], ["query"]),
+    getPlayers: IDL.Func([], [Result_7], ["query"]),
+    getPlayersMap: IDL.Func([SeasonId, GameweekNumber], [Result_10], []),
+    getPostponedFixtures: IDL.Func([], [Result_9], ["query"]),
+    getProfile: IDL.Func([], [Result_8], []),
+    getRetiredPlayers: IDL.Func([ClubId], [Result_7], ["query"]),
     getSeasonLeaderboard: IDL.Func(
       [SeasonId, IDL.Nat, IDL.Nat, IDL.Text],
-      [Result_5],
+      [Result_6],
       []
     ),
+    getSeasons: IDL.Func([], [Result_5], ["query"]),
     getSystemState: IDL.Func([], [Result_4], ["query"]),
     getTotalManagers: IDL.Func([], [Result_3], ["query"]),
     getWeeklyLeaderboard: IDL.Func(
@@ -6018,8 +6025,6 @@ function createUserStore() {
     const localProfile = localStorage.getItem("user_profile_data");
     if (localProfile) {
       let localStorageProfile = getProfileFromLocalStorage();
-      console.log("Setting profile via sync 1");
-      console.log(localStorageProfile);
       set(localStorageProfile);
       return;
     }
@@ -6057,8 +6062,6 @@ function createUserStore() {
           JSON.stringify(profileData, replacer)
         );
       }
-      console.log("Setting profile via sync 2");
-      console.log(profileData);
       set(profileData);
     } catch (error2) {
       console.error("Error fetching user profile:", error2);
@@ -6130,8 +6133,6 @@ function createUserStore() {
         return;
       }
       let profile = result.ok;
-      console.log("Setting profile via get profile");
-      console.log(profile);
       set(profile);
       return profile;
     } catch (error2) {
@@ -6208,8 +6209,6 @@ function createUserStore() {
         JSON.stringify(profileData, replacer)
       );
     }
-    console.log("Setting profile via cache profile");
-    console.log(profileData);
     set(profileData);
   }
   return {
@@ -6665,7 +6664,6 @@ function createGovernanceStore() {
         updatedFixtureDate: nanoseconds
       };
       let result = await identityActor.adminMoveFixture(dto);
-      console.log(result);
       if (isError(result)) {
         console.error("Error submitting proposal: ", result);
         return;
@@ -6709,7 +6707,6 @@ function createGovernanceStore() {
         updatedFixtureDate: nanoseconds
       };
       let result = await identityActor.adminRescheduleFixture(dto);
-      console.log(result);
       if (isError(result)) {
         console.error("Error submitting proposal: ", result);
         return;
@@ -6788,6 +6785,9 @@ function createGovernanceStore() {
         authStore,
         { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
+      const dateObject = new Date(dateOfBirth);
+      const timestampMilliseconds = dateObject.getTime();
+      let nanoseconds = BigInt(timestampMilliseconds) * BigInt(1e6);
       let dto = {
         clubId,
         position,
@@ -6795,7 +6795,7 @@ function createGovernanceStore() {
         lastName,
         shirtNumber,
         valueQuarterMillions,
-        dateOfBirth: BigInt(dateOfBirth),
+        dateOfBirth: nanoseconds,
         nationality
       };
       let result = await identityActor.adminCreatePlayer(dto);
@@ -6839,10 +6839,13 @@ function createGovernanceStore() {
         authStore,
         { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
+      const dateObject = new Date(expectedEndDate);
+      const timestampMilliseconds = dateObject.getTime();
+      let nanoseconds = BigInt(timestampMilliseconds) * BigInt(1e6);
       let dto = {
         playerId,
         description,
-        expectedEndDate: BigInt(expectedEndDate)
+        expectedEndDate: nanoseconds
       };
       let result = await identityActor.adminSetPlayerInjury(dto);
       if (isError(result)) {
@@ -6860,9 +6863,12 @@ function createGovernanceStore() {
         authStore,
         { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
+      const dateObject = new Date(retirementDate);
+      const timestampMilliseconds = dateObject.getTime();
+      let nanoseconds = BigInt(timestampMilliseconds) * BigInt(1e6);
       let dto = {
         playerId,
-        retirementDate: BigInt(retirementDate)
+        retirementDate: nanoseconds
       };
       let result = await identityActor.adminRetirePlayer(dto);
       if (isError(result)) {

@@ -87,6 +87,10 @@ actor Self {
     return #ok(seasonManager.getFixtures(seasonId));
   };
 
+  public shared query func getSeasons() : async Result.Result<[DTOs.SeasonDTO], T.Error> {
+    return #ok(seasonManager.getSeasons());
+  };
+
   public shared query func getPostponedFixtures() : async Result.Result<[DTOs.FixtureDTO], T.Error> {
     return #ok(seasonManager.getPostponedFixtures());
   };

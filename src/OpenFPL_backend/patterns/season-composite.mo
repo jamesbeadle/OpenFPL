@@ -89,6 +89,21 @@ module {
       };
     };
 
+    public func getSeasons() : [DTOs.SeasonDTO] {
+      return List.toArray(
+        List.map<T.Season, DTOs.SeasonDTO>(
+          seasons,
+          func(season : T.Season) : DTOs.SeasonDTO {
+            return {
+              id = season.id;
+              name = season.name;
+              year = season.year;
+            };
+          },
+        ),
+      );
+    };
+
     public func getPostponedFixtures(seasonId : T.SeasonId) : [DTOs.FixtureDTO] {
       let season = List.find(
         seasons,
