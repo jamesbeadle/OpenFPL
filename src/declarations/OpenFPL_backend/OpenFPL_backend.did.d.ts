@@ -440,9 +440,11 @@ export interface SystemStateDTO {
   pickTeamSeasonName: string;
   calculationSeasonName: string;
   calculationGameweek: GameweekNumber;
+  transferWindowActive: boolean;
   pickTeamGameweek: GameweekNumber;
   calculationMonth: CalendarMonth;
   calculationSeasonId: SeasonId;
+  onHold: boolean;
 }
 export interface TimerDTO {
   id: bigint;

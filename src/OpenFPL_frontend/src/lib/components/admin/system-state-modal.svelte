@@ -3,7 +3,10 @@
   import { systemStore } from "$lib/stores/system-store";
   import { authIsAdmin } from "$lib/derived/auth.derived";
   import { toastsError, toastsShow } from "$lib/stores/toasts-store";
-  import type { UpdateSystemStateDTO, SeasonDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type {
+    UpdateSystemStateDTO,
+    SeasonDTO,
+  } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { Modal } from "@dfinity/gix-components";
   import { getMonthFromNumber } from "$lib/utils/Helpers";
 
@@ -14,7 +17,7 @@
   let pickTeamSeasonId: number;
   let pickTeamGameweek: number;
   let calculationGameweek: number;
-  let transferWindowActive: boolean; //TODO: Get from backend if stored might just be a straight calculation
+  let transferWindowActive: boolean;
   let calculationMonth: number;
   let calculationSeasonId: number;
   let onHold: boolean;
@@ -33,7 +36,8 @@
     transferWindowActive = false;
     calculationMonth = $systemStore?.calculationMonth ?? 8;
     calculationSeasonId = $systemStore?.calculationSeasonId ?? 1;
-    onHold = false;
+    onHold = $systemStore?.onHold ?? false;
+    transferWindowActive = $systemStore?.transferWindowActive ?? false;
     isLoading = false;
   });
 

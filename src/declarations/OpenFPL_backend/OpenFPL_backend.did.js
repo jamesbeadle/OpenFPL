@@ -497,9 +497,11 @@ export const idlFactory = ({ IDL }) => {
     pickTeamSeasonName: IDL.Text,
     calculationSeasonName: IDL.Text,
     calculationGameweek: GameweekNumber,
+    transferWindowActive: IDL.Bool,
     pickTeamGameweek: GameweekNumber,
     calculationMonth: CalendarMonth,
     calculationSeasonId: SeasonId,
+    onHold: IDL.Bool,
   });
   const Result_4 = IDL.Variant({ ok: SystemStateDTO, err: Error });
   const Result_3 = IDL.Variant({ ok: IDL.Nat, err: Error });

@@ -11,6 +11,8 @@ module DTOs {
     pickTeamSeasonId : T.SeasonId;
     pickTeamSeasonName : Text;
     calculationSeasonName : Text;
+    transferWindowActive : Bool;
+    onHold : Bool;
   };
 
   public type RevaluePlayerUpDTO = {

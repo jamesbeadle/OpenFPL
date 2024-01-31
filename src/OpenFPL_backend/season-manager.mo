@@ -123,6 +123,8 @@ module {
         pickTeamSeasonId = systemState.pickTeamSeasonId;
         pickTeamSeasonName = pickTeamSeasonName;
         calculationSeasonName = calculationSeasonName;
+        transferWindowActive = systemState.transferWindowActive;
+        onHold = systemState.onHold;
       };
     };
 

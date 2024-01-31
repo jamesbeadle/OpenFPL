@@ -17,7 +17,6 @@
   import {
     getAvailableFormations,
     convertPlayerPosition,
-    isJanuary,
     allFormations,
   } from "../../lib/utils/Helpers";
   import type { PickTeamDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
@@ -48,7 +47,6 @@
   const newCaptainId = writable(0);
   let canSellPlayer = true;
   let transferWindowPlayed = false;
-  let transferWindowActive = false;
 
   let isLoading = true;
 
@@ -69,10 +67,6 @@
 
   onMount(() => {
     try {
-      if (isJanuary()) {
-        transferWindowActive = true;
-      }
-
       async function loadData() {
         await systemStore.sync();
         await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);

@@ -3,9 +3,9 @@ import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
   DataCacheDTO,
+  SeasonDTO,
   SystemStateDTO,
   UpdateSystemStateDTO,
-  SeasonDTO
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { isError, replacer } from "../utils/Helpers";
@@ -113,7 +113,7 @@ function createSystemStore() {
     sync,
     getSystemState,
     updateSystemState,
-    getSeasons
+    getSeasons,
   };
 }
 

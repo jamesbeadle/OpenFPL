@@ -18,7 +18,6 @@ module {
       stable_next_club_id : T.ClubId,
       stable_clubs : [T.Club],
     ) {
-
       nextClubId := stable_next_club_id;
       clubs := List.fromArray(stable_clubs);
     };

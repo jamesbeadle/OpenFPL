@@ -8,7 +8,6 @@
   import {
     getAvailableFormations,
     convertPlayerPosition,
-    isJanuary,
     allFormations,
   } from "../../../lib/utils/Helpers";
   import type { PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
@@ -36,7 +35,6 @@
 
   let bonusUsedInSession = false;
   let transferWindowPlayed = false;
-  let transferWindowActive = false;
   let transferWindowPlayedInSession = false;
   let isLoading = true;
 
@@ -56,10 +54,6 @@
 
   onMount(() => {
     try {
-      if (isJanuary()) {
-        transferWindowActive = true;
-      }
-
       async function loadData() {
         activeSeason = $systemStore?.pickTeamSeasonName ?? "-";
         activeGameweek = $systemStore?.pickTeamGameweek ?? 1;
@@ -486,7 +480,7 @@
     <div
       class="flex flex-col md:flex-row w-full md:justify-end gap-4 mr-0 md:mr-4 order-1 md:order-3 mt-2 md:mt-0"
     >
-      {#if transferWindowActive}
+      {#if $systemStore && $systemStore.transferWindowActive}
         <button
           disabled={transferWindowPlayed}
           on:click={playTransferWindow}
@@ -591,7 +585,7 @@
           Save
         </button>
       </div>
-      {#if transferWindowActive}
+      {#if $systemStore && $systemStore.transferWindowActive}
         <div class="flex flex-row mx-4 space-x-1 mb-4">
           <button
             disabled={transferWindowPlayed}

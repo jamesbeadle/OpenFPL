@@ -92,9 +92,11 @@ type SystemStateDTO = record {
   calculationMonth : CalendarMonth;
   calculationSeasonId : SeasonId;
   calculationSeasonName : text;
+  onHold : bool;
   pickTeamGameweek : GameweekNumber;
   pickTeamSeasonId : SeasonId;
   pickTeamSeasonName : text;
+  transferWindowActive : bool;
 };
 type SubmitFixtureDataDTO = record {
   fixtureId : FixtureId;

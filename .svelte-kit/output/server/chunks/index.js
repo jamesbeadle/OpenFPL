@@ -3355,7 +3355,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1wtgy5z"
+  version_hash: "1q9w1o5"
 };
 function get_hooks() {
   return {};
@@ -4058,9 +4058,11 @@ const idlFactory = ({ IDL }) => {
     pickTeamSeasonName: IDL.Text,
     calculationSeasonName: IDL.Text,
     calculationGameweek: GameweekNumber,
+    transferWindowActive: IDL.Bool,
     pickTeamGameweek: GameweekNumber,
     calculationMonth: CalendarMonth,
-    calculationSeasonId: SeasonId
+    calculationSeasonId: SeasonId,
+    onHold: IDL.Bool
   });
   const Result_4 = IDL.Variant({ ok: SystemStateDTO, err: Error2 });
   const Result_3 = IDL.Variant({ ok: IDL.Nat, err: Error2 });
@@ -4528,6 +4530,19 @@ function createSystemStore() {
     })();
     return systemState;
   }
+  async function getSeasons() {
+    try {
+      let result = await actor.getSeasons();
+      if (isError(result)) {
+        console.error("Error fetching seasons:");
+        return [];
+      }
+      return result;
+    } catch (error2) {
+      console.error("Error fetching seasons:", error2);
+      throw error2;
+    }
+  }
   async function updateSystemState(systemState) {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
@@ -4549,7 +4564,8 @@ function createSystemStore() {
     subscribe: subscribe2,
     sync,
     getSystemState,
-    updateSystemState
+    updateSystemState,
+    getSeasons
   };
 }
 const systemStore = createSystemStore();

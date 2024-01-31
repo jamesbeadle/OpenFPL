@@ -18,7 +18,6 @@
   import {
     getPositionAbbreviation,
     convertPlayerPosition,
-    isJanuary,
     getFlagComponent,
   } from "../../../lib/utils/Helpers";
   import type {
@@ -65,7 +64,6 @@
 
   let canSellPlayer = true;
   let transferWindowPlayed = false;
-  let transferWindowActive = false;
 
   let isLoading = true;
 
@@ -94,10 +92,6 @@
       if (typeof window !== "undefined") {
         window.addEventListener("resize", updatePitchHeight);
         updatePitchHeight();
-      }
-
-      if (isJanuary()) {
-        transferWindowActive = true;
       }
 
       async function loadData() {
