@@ -79,7 +79,7 @@ function createSystemStore() {
         console.error("Error fetching seasons:");
         return [];
       }
-      return result;
+      return result.ok;
     } catch (error) {
       console.error("Error fetching seasons:", error);
       throw error;

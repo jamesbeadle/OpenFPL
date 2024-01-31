@@ -8,7 +8,7 @@
     SeasonDTO,
   } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { Modal } from "@dfinity/gix-components";
-  import { getMonthFromNumber } from "$lib/utils/Helpers";
+  import { getMonthFromNumber, isError } from "$lib/utils/Helpers";
 
   export let visible: boolean;
   export let closeModal: () => void;
@@ -30,6 +30,9 @@
   onMount(async () => {
     await systemStore.sync();
     seasons = await systemStore.getSeasons();
+    
+    console.log("seasons")
+    console.log(seasons)
     calculationGameweek = $systemStore?.calculationGameweek ?? 1;
     pickTeamGameweek = $systemStore?.pickTeamGameweek ?? 1;
     pickTeamSeasonId = $systemStore?.pickTeamSeasonId ?? 1;
@@ -90,7 +93,7 @@
           class="w-full p-2 rounded-md fpl-dropdown"
         >
           {#each seasons as season}
-            <option value={season}>{season.name}</option>
+            <option value={season.id}>{season.name}</option>
           {/each}
         </select>
 
@@ -120,7 +123,7 @@
           class="w-full p-2 rounded-md fpl-dropdown"
         >
           {#each seasons as season}
-            <option value={season}>{season.name}</option>
+            <option value={season.id}>{season.name}</option>
           {/each}
         </select>
 
