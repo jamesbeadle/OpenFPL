@@ -22,14 +22,35 @@ actor class WeeklyLeaderboardCanister() {
     main_canister_id := CanisterIds.MAIN_CANISTER_LOCAL_ID;
   };
 
-  public shared ({ caller }) func addWeeklyLeaderboard(_seasonId : T.SeasonId, _gameweek : T.GameweekNumber, weeklyLeaderboard : T.WeeklyLeaderboard) : async () {
+  public shared ({ caller }) func createCanister(_seasonId : T.SeasonId, _gameweek : T.GameweekNumber, _totalEntries: Nat) : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == main_canister_id;
-
-    leaderboard := ?weeklyLeaderboard;
     seasonId := ?_seasonId;
     gameweek := ?_gameweek;
+    leaderboard := ?{  
+      seasonId = _seasonId;
+      gameweek = _gameweek;
+      entries = List.nil();
+      totalEntries = _totalEntries;
+    };
+  };
+
+  public shared ({ caller }) func addLeaderboardChunk(entriesChunk: List.List<T.LeaderboardEntry>) : async () {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == main_canister_id;
+    switch(leaderboard){
+      case (null){};
+      case (?foundLeaderboard){
+        leaderboard := ?{  
+          seasonId = foundLeaderboard.seasonId;
+          gameweek = foundLeaderboard.gameweek;
+          entries = List.append(foundLeaderboard.entries, entriesChunk);
+          totalEntries = foundLeaderboard.totalEntries;
+        };
+      }
+    };
   };
 
   public shared query ({ caller }) func getEntries(limit : Nat, offset : Nat, searchTerm : Text) : async ?DTOs.WeeklyLeaderboardDTO {

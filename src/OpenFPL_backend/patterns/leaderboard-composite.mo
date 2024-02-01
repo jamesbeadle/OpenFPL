@@ -14,6 +14,7 @@ import Cycles "mo:base/ExperimentalCycles";
 import Buffer "mo:base/Buffer";
 import Debug "mo:base/Debug";
 import TrieMap "mo:base/TrieMap";
+import Nat "mo:base/Nat";
 import WeeklyLeaderboardCanister "../weekly-leaderboard";
 import MonthlyLeaderboardCanister "../monthly-leaderboard";
 import SeasonLeaderboardCanister "../season-leaderboard";
@@ -490,12 +491,29 @@ module {
         return "";
       };
 
+      let maxEntriesPerChunk = 10_000;
+
       Cycles.add(2_000_000_000_000);
       let canister = await WeeklyLeaderboardCanister.WeeklyLeaderboardCanister();
       let IC : Management.Management = actor (ENV.Default);
       let _ = await Utilities.updateCanister_(canister, backendCanisterController, IC);
       let canister_principal = Principal.fromActor(canister);
-      await canister.addWeeklyLeaderboard(seasonId, gameweek, weeklyLeaderboard);
+          
+      let totalEntries = List.size(weeklyLeaderboard.entries);
+      await canister.createCanister(seasonId, gameweek, totalEntries);
+
+      var numChunks: Nat = 0;
+      if(totalEntries > 0){
+        numChunks := (totalEntries + maxEntriesPerChunk - 1) / maxEntriesPerChunk;
+      };
+      for (i in Iter.range(0, numChunks)) {
+        let startIdx = i * maxEntriesPerChunk;
+        
+        let droppedEntries = List.drop<T.LeaderboardEntry>(weeklyLeaderboard.entries, startIdx);
+        let leaderboardChunk = List.take<T.LeaderboardEntry>(droppedEntries, maxEntriesPerChunk);
+        await canister.addLeaderboardChunk(leaderboardChunk);
+      };
+      
       let canisterId = Principal.toText(canister_principal);
 
       switch (storeCanisterId) {
