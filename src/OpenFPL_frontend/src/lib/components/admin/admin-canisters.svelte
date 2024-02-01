@@ -10,10 +10,8 @@
     AdminProfilePictureCanisterList,
   } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { authStore } from "$lib/stores/auth.store";
+  import type { Writable } from "svelte/store";
   import { Spinner } from "@dfinity/gix-components";
-  //have a different array for each canister type as the table produces will have slightly different columns
-  //leaderboards will have season and gameweek etc
-  //profiles sho;ld have the number of pictures stored
 
   let selectedCanisterType = "WeeklyLeaderboard";
   let mainCanisterInfo: AdminMainCanisterInfo | null;
@@ -28,6 +26,7 @@
 
   onMount(async () => {
     try {
+      console.log("Loading Canisters")
       authStore.sync();
       await loadCanisterInfo();
     } catch (error) {
@@ -37,6 +36,7 @@
       });
       console.error("Error fetching gameweek points:", error);
     } finally {
+      console.log("is loading false")
       isLoading = false;
     }
   });
@@ -219,3 +219,4 @@
     </div>
   </div>
 {/if}
+

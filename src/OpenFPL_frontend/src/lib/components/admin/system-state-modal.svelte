@@ -30,9 +30,6 @@
   onMount(async () => {
     await systemStore.sync();
     seasons = await systemStore.getSeasons();
-    
-    console.log("seasons")
-    console.log(seasons)
     calculationGameweek = $systemStore?.calculationGameweek ?? 1;
     pickTeamGameweek = $systemStore?.pickTeamGameweek ?? 1;
     pickTeamSeasonId = $systemStore?.pickTeamSeasonId ?? 1;

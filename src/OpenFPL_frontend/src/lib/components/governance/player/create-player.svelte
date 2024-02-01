@@ -36,16 +36,6 @@
     value > 200 ||
     nationalityId == 0;
 
-  $: if (isSubmitDisabled) {
-    console.log(`isSubmitDisabled: ${isSubmitDisabled}`);
-    console.log(`selectedClubId: ${selectedClubId}`);
-    console.log(`nationalityId: ${nationalityId}`);
-    console.log(`lastName.length: ${lastName.length}`);
-    console.log(`dateOfBirth: ${dateOfBirth}`);
-    console.log(`shirtNumber: ${shirtNumber}`);
-    console.log(`value: ${value}`);
-  }
-
   $: if (isSubmitDisabled && showConfirm) {
     showConfirm = false;
   }

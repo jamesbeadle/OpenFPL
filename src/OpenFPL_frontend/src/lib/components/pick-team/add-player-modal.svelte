@@ -52,8 +52,6 @@
     filteredPlayers.slice((currentPage - 1) * pageSize, currentPage * pageSize)
   );
 
-  $: if (paginatedPlayers) console.log(paginatedPlayers);
-
   $: teamPlayerCounts = countPlayersByTeam($fantasyTeam?.playerIds ?? []);
   $: disableReasons = paginatedPlayers.map((player) =>
     reasonToDisablePlayer(player)

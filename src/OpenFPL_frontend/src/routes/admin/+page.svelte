@@ -1,12 +1,11 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import Layout from "../Layout.svelte";
+  
   import AdminCanisters from "$lib/components/admin/admin-canisters.svelte";
   import AdminFixtures from "$lib/components/admin/admin-fixtures.svelte";
   import AdminTimers from "$lib/components/admin/admin-timers.svelte";
   import SystemStateModal from "$lib/components/admin/system-state-modal.svelte";
   import SnapshotFantasyTeams from "$lib/components/admin/snapshot-fantasy-teams.svelte";
-  import { Spinner } from "@dfinity/gix-components";
   import AdminManagers from "$lib/components/admin/admin-managers.svelte";
   import AddInitialFixtures from "$lib/components/governance/fixture/add-initial-fixtures.svelte";
   import RevaluePlayerUp from "$lib/components/governance/player/revalue-player-up.svelte";
@@ -30,12 +29,13 @@
   import { idlFactory } from "../../../../declarations/OpenFPL_backend";
   import { isError } from "$lib/utils/Helpers";
   import { toastsError, toastsShow } from "$lib/stores/toasts-store";
-
+    import { Spinner } from "@dfinity/gix-components";
+  
   let showSystemStateModal: boolean = false;
   let showSnapshotModal: boolean = false;
 
   let activeTab: string = "canisters";
-  let isLoading = true;
+  let isLoading = false;
 
   let showRevaluePlayerUpModal: boolean = false;
   let showRevaluePlayerDownModal: boolean = false;
@@ -55,10 +55,6 @@
   let showPromoteNewClubModal: boolean = false;
   let showUpdateClubModal: boolean = false;
   let showAddFixtureDataModal: boolean = false;
-
-  onMount(async () => {
-    isLoading = false;
-  });
 
   function displaySystemStateModal(): void {
     showSystemStateModal = true;
@@ -255,11 +251,13 @@
   {#if isLoading}
     <Spinner />
   {:else}
-    <SystemStateModal
-      visible={showSystemStateModal}
-      closeModal={hideSystemStateModal}
-      cancelModal={hideSystemStateModal}
-    />
+    {#if showSystemStateModal}
+      <SystemStateModal
+        visible={showSystemStateModal}
+        closeModal={hideSystemStateModal}
+        cancelModal={hideSystemStateModal}
+      />
+    {/if}
     <SnapshotFantasyTeams
       visible={showSnapshotModal}
       closeModal={hideSnapshotModal}
