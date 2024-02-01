@@ -13,7 +13,6 @@ actor class MonthlyLeaderboardCanister() {
   private stable var leaderboard : ?T.ClubLeaderboard = null;
   private stable var seasonId : ?T.SeasonId = null;
   private stable var clubId : ?T.ClubId = null;
-  private stable var gameweek : ?T.GameweekNumber = null;
   private stable var month : ?T.CalendarMonth = null;
   private let cyclesCheckInterval : Nat = Utilities.getHour() * 24;
   private var cyclesCheckTimerId : ?Timer.TimerId = null;
@@ -24,15 +23,37 @@ actor class MonthlyLeaderboardCanister() {
     main_canister_id := CanisterIds.MAIN_CANISTER_LOCAL_ID;
   };
 
-  public shared ({ caller }) func addMonthlyLeaderboard(_seasonId : T.SeasonId, _gameweek : T.GameweekNumber, _clubId : T.ClubId, clubLeaderboard : T.ClubLeaderboard) : async () {
+  public shared ({ caller }) func createCanister(_seasonId : T.SeasonId, _month : T.CalendarMonth, _clubId : T.ClubId, _totalEntries: Nat) : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == main_canister_id;
-
-    leaderboard := ?clubLeaderboard;
     seasonId := ?_seasonId;
-    gameweek := ?_gameweek;
-    clubId := ?_clubId;
+    month := ?_month;
+    leaderboard := ?{  
+      seasonId = _seasonId;
+      month = _month;
+      clubId = _clubId;
+      entries = List.nil();
+      totalEntries = _totalEntries;
+    };
+  };
+
+  public shared ({ caller }) func addLeaderboardChunk(entriesChunk: List.List<T.LeaderboardEntry>) : async () {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == main_canister_id;
+    switch(leaderboard){
+      case (null){};
+      case (?foundLeaderboard){
+        leaderboard := ?{  
+          seasonId = foundLeaderboard.seasonId;
+          month = foundLeaderboard.month;
+          clubId = foundLeaderboard.clubId;
+          entries = List.append(foundLeaderboard.entries, entriesChunk);
+          totalEntries = foundLeaderboard.totalEntries;
+        };
+      }
+    };
   };
 
   public shared query ({ caller }) func getEntries(limit : Nat, offset : Nat, searchTerm : Text) : async ?DTOs.MonthlyLeaderboardDTO {
