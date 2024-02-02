@@ -1,6 +1,5 @@
 import T "../types";
 import DTOs "../DTOs";
-import HashMap "mo:base/HashMap";
 import Result "mo:base/Result";
 import Iter "mo:base/Iter";
 import List "mo:base/List";
@@ -310,7 +309,7 @@ module {
       };
     };
 
-    public func calculateLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth, managers : HashMap.HashMap<T.PrincipalId, T.Manager>) : async () {
+    public func calculateLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth, managers : TrieMap.TrieMap<T.PrincipalId, T.Manager>) : async () {
 
       let gameweekEntries = Array.map<(Text, T.Manager), T.LeaderboardEntry>(
         Iter.toArray(managers.entries()),
@@ -348,7 +347,7 @@ module {
       weeklyLeaderboardCanisters := List.append(weeklyLeaderboardCanisters, List.fromArray([gameweekCanisterInfo]));
     };
 
-    private func calculateMonthlyLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth, positionedGameweekEntries : ?(T.LeaderboardEntry, List.List<T.LeaderboardEntry>), managers : HashMap.HashMap<T.PrincipalId, T.Manager>) : async () {
+    private func calculateMonthlyLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth, positionedGameweekEntries : ?(T.LeaderboardEntry, List.List<T.LeaderboardEntry>), managers : TrieMap.TrieMap<T.PrincipalId, T.Manager>) : async () {
       let clubGroup = groupByTeam(managers);
 
       var monthGameweeks : List.List<Nat8> = List.nil();
@@ -418,8 +417,8 @@ module {
       };
     };
 
-    private func groupByTeam(managers : HashMap.HashMap<T.PrincipalId, T.Manager>) : HashMap.HashMap<T.ClubId, [(Text, T.Manager)]> {
-      let groupedTeams : HashMap.HashMap<T.ClubId, [(Text, T.Manager)]> = HashMap.HashMap<T.ClubId, [(Text, T.Manager)]>(10, Utilities.eqNat16, Utilities.hashNat16);
+    private func groupByTeam(managers : TrieMap.TrieMap<T.PrincipalId, T.Manager>) : TrieMap.TrieMap<T.ClubId, [(Text, T.Manager)]> {
+      let groupedTeams : TrieMap.TrieMap<T.ClubId, [(Text, T.Manager)]> = TrieMap.TrieMap<T.ClubId, [(Text, T.Manager)]>(Utilities.eqNat16, Utilities.hashNat16);
 
       for ((principalId, fantasyTeam) in managers.entries()) {
         let teamId = fantasyTeam.favouriteClubId;
@@ -462,7 +461,7 @@ module {
       };
     };
 
-    private func calculateSeasonLeaderboard(seasonId : T.SeasonId, managers : HashMap.HashMap<T.PrincipalId, T.Manager>) : async () {
+    private func calculateSeasonLeaderboard(seasonId : T.SeasonId, managers : TrieMap.TrieMap<T.PrincipalId, T.Manager>) : async () {
       let seasonEntries = Array.map<(Text, T.Manager), T.LeaderboardEntry>(
         Iter.toArray(managers.entries()),
         func(pair) {

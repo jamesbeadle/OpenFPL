@@ -10,12 +10,12 @@ import Array "mo:base/Array";
 import Int "mo:base/Int";
 import Timer "mo:base/Timer";
 import Nat16 "mo:base/Nat16";
-import HashMap "mo:base/HashMap";
 import Debug "mo:base/Debug";
 import CanisterIds "../CanisterIds";
 import Countries "../Countries";
 import Utilities "../utilities";
 import Players "../../../testing/players";
+import TrieMap "mo:base/TrieMap";
 
 module {
   public class PlayerComposite() {
@@ -219,7 +219,7 @@ module {
     };
 
     public func getPlayersMap(seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async [(Nat16, DTOs.PlayerScoreDTO)] {
-      var playersMap : HashMap.HashMap<Nat16, DTOs.PlayerScoreDTO> = HashMap.HashMap<Nat16, DTOs.PlayerScoreDTO>(500, Utilities.eqNat16, Utilities.hashNat16);
+      var playersMap : TrieMap.TrieMap<Nat16, DTOs.PlayerScoreDTO> = TrieMap.TrieMap<Nat16, DTOs.PlayerScoreDTO>(Utilities.eqNat16, Utilities.hashNat16);
       label playerMapLoop for (player in Iter.fromList(players)) {
         if (player.status == #OnLoan) {
           continue playerMapLoop;
@@ -1169,7 +1169,7 @@ module {
     public func addEventsToPlayers(playerEventData : [T.PlayerEventData], seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async () {
 
       var updatedSeasons : List.List<T.PlayerSeason> = List.nil<T.PlayerSeason>();
-      let playerEventsMap : HashMap.HashMap<Nat16, [T.PlayerEventData]> = HashMap.HashMap<Nat16, [T.PlayerEventData]>(200, Utilities.eqNat16, Utilities.hashNat16);
+      let playerEventsMap : TrieMap.TrieMap<Nat16, [T.PlayerEventData]> = TrieMap.TrieMap<Nat16, [T.PlayerEventData]>(Utilities.eqNat16, Utilities.hashNat16);
 
       for (event in Iter.fromArray(playerEventData)) {
         let playerId : Nat16 = event.playerId;

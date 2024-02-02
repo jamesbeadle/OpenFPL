@@ -5,7 +5,6 @@ import Option "mo:base/Option";
 import Nat8 "mo:base/Nat8";
 import Debug "mo:base/Debug";
 import Result "mo:base/Result";
-import HashMap "mo:base/HashMap";
 import Text "mo:base/Text";
 import Nat "mo:base/Nat";
 import Principal "mo:base/Principal";
@@ -19,6 +18,7 @@ import Int "mo:base/Int";
 import Time "mo:base/Time";
 import Float "mo:base/Float";
 import Int64 "mo:base/Int64";
+import TrieMap "mo:base/TrieMap";
 import SeasonComposite "patterns/season-composite";
 import PlayerComposite "patterns/player-composite";
 import ClubComposite "patterns/club-composite";
@@ -47,7 +47,7 @@ module {
       leaderboardComposite.setBackendCanisterController(controller);
     };
 
-    var rewardPools : HashMap.HashMap<T.SeasonId, T.RewardPool> = HashMap.HashMap<T.SeasonId, T.RewardPool>(100, Utilities.eqNat16, Utilities.hashNat16);
+    var rewardPools : TrieMap.TrieMap<T.SeasonId, T.RewardPool> = TrieMap.TrieMap<T.SeasonId, T.RewardPool>(Utilities.eqNat16, Utilities.hashNat16);
 
     private var systemState : T.SystemState = {
       calculationGameweek = 1;
@@ -832,9 +832,8 @@ module {
     };
 
     public func setStableRewardPools(stable_reward_pools : [(T.SeasonId, T.RewardPool)]) {
-      rewardPools := HashMap.fromIter<T.SeasonId, T.RewardPool>(
-        stable_reward_pools.vals(),
-        stable_reward_pools.size(),
+      rewardPools := TrieMap.fromEntries<T.SeasonId, T.RewardPool>(
+        Iter.fromArray(stable_reward_pools),
         Utilities.eqNat16,
         Utilities.hashNat16,
       );

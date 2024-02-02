@@ -12,7 +12,6 @@ import Int16 "mo:base/Int16";
 import Text "mo:base/Text";
 import Char "mo:base/Char";
 import TrieMap "mo:base/TrieMap";
-import HashMap "mo:base/HashMap";
 import Bool "mo:base/Bool";
 import Order "mo:base/Order";
 import Debug "mo:base/Debug";
@@ -664,7 +663,7 @@ module {
       var homeGoalsCount : Nat8 = 0;
       var awayGoalsCount : Nat8 = 0;
 
-      let playerEventsMap : HashMap.HashMap<T.PlayerId, [T.PlayerEventData]> = HashMap.HashMap<T.PlayerId, [T.PlayerEventData]>(200, Utilities.eqNat16, Utilities.hashNat16);
+      let playerEventsMap : TrieMap.TrieMap<T.PlayerId, [T.PlayerEventData]> = TrieMap.TrieMap<T.PlayerId, [T.PlayerEventData]>(Utilities.eqNat16, Utilities.hashNat16);
 
       for (event in Iter.fromArray(playerEvents)) {
         switch (event.eventType) {
@@ -698,7 +697,7 @@ module {
         };
       };
 
-      let playerScoresMap : HashMap.HashMap<Nat16, Int16> = HashMap.HashMap<Nat16, Int16>(200, Utilities.eqNat16, Utilities.hashNat16);
+      let playerScoresMap : TrieMap.TrieMap<Nat16, Int16> = TrieMap.TrieMap<Nat16, Int16>(Utilities.eqNat16, Utilities.hashNat16);
       for ((playerId, events) in playerEventsMap.entries()) {
         let currentPlayer = Array.find<DTOs.PlayerDTO>(
           players,
@@ -1024,7 +1023,7 @@ module {
             return #err("Invalid: There must be exactly 20 teams for a season.");
           };
 
-          let homeFixtureMap : HashMap.HashMap<T.ClubId, Int> = HashMap.HashMap<T.ClubId, Int>(20, Utilities.eqNat16, Utilities.hashNat16);
+          let homeFixtureMap : TrieMap.TrieMap<T.ClubId, Int> = TrieMap.TrieMap<T.ClubId, Int>(Utilities.eqNat16, Utilities.hashNat16);
 
           for (f in Iter.fromArray(addInitialFixturesDTO.seasonFixtures)) {
 
@@ -1039,7 +1038,7 @@ module {
             };
           };
 
-          let awayFixtureMap : HashMap.HashMap<T.ClubId, Int> = HashMap.HashMap<T.ClubId, Int>(20, Utilities.eqNat16, Utilities.hashNat16);
+          let awayFixtureMap : TrieMap.TrieMap<T.ClubId, Int> = TrieMap.TrieMap<T.ClubId, Int>(Utilities.eqNat16, Utilities.hashNat16);
 
           for (f in Iter.fromArray(addInitialFixturesDTO.seasonFixtures)) {
 

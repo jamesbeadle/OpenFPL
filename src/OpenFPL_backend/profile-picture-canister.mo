@@ -1,6 +1,6 @@
 import T "types";
 import List "mo:base/List";
-import HashMap "mo:base/HashMap";
+import TrieMap "mo:base/TrieMap";
 import Text "mo:base/Text";
 import Iter "mo:base/Iter";
 import Buffer "mo:base/Buffer";
@@ -33,14 +33,11 @@ actor class ProfilePictureCanister() {
   private let cyclesCheckInterval : Nat = Utilities.getHour() * 24;
   private var cyclesCheckTimerId : ?Timer.TimerId = null;
 
-  private var bucketMap : HashMap.HashMap<T.PrincipalId, Nat8> = HashMap.HashMap<T.PrincipalId, Nat8>(100, Text.equal, Text.hash);
+  private var bucketMap : TrieMap.TrieMap<T.PrincipalId, Nat8> = TrieMap.TrieMap<T.PrincipalId, Nat8>(Text.equal, Text.hash);
 
   public shared ({ caller }) func addProfilePicture(principalId : T.PrincipalId, profilePicture : Blob) : async () {
     assert not Principal.isAnonymous(caller);
     let callerPrincipalId = Principal.toText(caller);
-    Debug.print(debug_show "Checking principals");
-    Debug.print(debug_show callerPrincipalId);
-    Debug.print(debug_show main_canister_id);
     assert callerPrincipalId == main_canister_id;
 
     switch (currentBucketIndex) {
@@ -128,54 +125,48 @@ actor class ProfilePictureCanister() {
       case (?index) {
         switch (index) {
           case 0 {
-            let profilePictures = HashMap.fromIter<T.PrincipalId, Blob>(
-              bucket1.vals(),
-              bucket1.size(),
+            let profilePictures = TrieMap.fromEntries<T.PrincipalId, Blob>(
+              Iter.fromArray(bucket1),
               Text.equal,
               Text.hash,
             );
             return profilePictures.get(userPrincipal);
           };
           case 1 {
-            let profilePictures = HashMap.fromIter<T.PrincipalId, Blob>(
-              bucket2.vals(),
-              bucket2.size(),
+            let profilePictures = TrieMap.fromEntries<T.PrincipalId, Blob>(
+              Iter.fromArray(bucket2),
               Text.equal,
               Text.hash,
             );
             return profilePictures.get(userPrincipal);
           };
           case 2 {
-            let profilePictures = HashMap.fromIter<T.PrincipalId, Blob>(
-              bucket3.vals(),
-              bucket3.size(),
+            let profilePictures = TrieMap.fromEntries<T.PrincipalId, Blob>(
+              Iter.fromArray(bucket3),
               Text.equal,
               Text.hash,
             );
             return profilePictures.get(userPrincipal);
           };
           case 3 {
-            let profilePictures = HashMap.fromIter<T.PrincipalId, Blob>(
-              bucket4.vals(),
-              bucket4.size(),
+            let profilePictures = TrieMap.fromEntries<T.PrincipalId, Blob>(
+              Iter.fromArray(bucket4),
               Text.equal,
               Text.hash,
             );
             return profilePictures.get(userPrincipal);
           };
           case 4 {
-            let profilePictures = HashMap.fromIter<T.PrincipalId, Blob>(
-              bucket5.vals(),
-              bucket5.size(),
+            let profilePictures = TrieMap.fromEntries<T.PrincipalId, Blob>(
+              Iter.fromArray(bucket5),
               Text.equal,
               Text.hash,
             );
             return profilePictures.get(userPrincipal);
           };
           case 5 {
-            let profilePictures = HashMap.fromIter<T.PrincipalId, Blob>(
-              bucket6.vals(),
-              bucket6.size(),
+            let profilePictures = TrieMap.fromEntries<T.PrincipalId, Blob>(
+              Iter.fromArray(bucket6),
               Text.equal,
               Text.hash,
             );
@@ -231,13 +222,11 @@ actor class ProfilePictureCanister() {
   };
 
   system func postupgrade() {
-    bucketMap := HashMap.fromIter<T.PrincipalId, Nat8>(
-      stable_bucket_map.vals(),
-      stable_bucket_map.size(),
+    bucketMap := TrieMap.fromEntries<T.PrincipalId, Nat8>(
+      Iter.fromArray(stable_bucket_map),
       Text.equal,
       Text.hash,
     );
-
     setCheckCyclesTimer();
   };
 

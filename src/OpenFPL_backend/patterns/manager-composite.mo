@@ -5,7 +5,6 @@ import Blob "mo:base/Blob";
 import Text "mo:base/Text";
 import List "mo:base/List";
 import { now } = "mo:base/Time";
-import HashMap "mo:base/HashMap";
 import Iter "mo:base/Iter";
 import Array "mo:base/Array";
 import Nat16 "mo:base/Nat16";
@@ -28,15 +27,16 @@ import RewardPercentages "../utils/RewardPercentages";
 import Utilities "../utilities";
 import Token "../token";
 import SeasonLeaderboard "../season-leaderboard";
+import TrieMap "mo:base/TrieMap";
 
 module {
 
   public class ManagerComposite() {
     let tokenCanister = Token.Token();
-    private var managers : HashMap.HashMap<T.PrincipalId, T.Manager> = HashMap.HashMap<T.PrincipalId, T.Manager>(100, Text.equal, Text.hash);
-    private var profilePictureCanisterIds : HashMap.HashMap<T.PrincipalId, Text> = HashMap.HashMap<T.PrincipalId, Text>(100, Text.equal, Text.hash);
+    private var managers : TrieMap.TrieMap<T.PrincipalId, T.Manager> = TrieMap.TrieMap<T.PrincipalId, T.Manager>(Text.equal, Text.hash);
+    private var profilePictureCanisterIds : TrieMap.TrieMap<T.PrincipalId, Text> = TrieMap.TrieMap<T.PrincipalId, Text>(Text.equal, Text.hash);
     private var activeProfilePictureCanisterId = "";
-    private var teamValueLeaderboards : HashMap.HashMap<T.SeasonId, T.TeamValueLeaderboard> = HashMap.HashMap<T.SeasonId, T.TeamValueLeaderboard>(100, Utilities.eqNat16, Utilities.hashNat16);
+    private var teamValueLeaderboards : TrieMap.TrieMap<T.SeasonId, T.TeamValueLeaderboard> = TrieMap.TrieMap<T.SeasonId, T.TeamValueLeaderboard>(Utilities.eqNat16, Utilities.hashNat16);
 
     private var storeCanisterId : ?((canisterId : Text) -> async ()) = null;
     private var backendCanisterController : ?Principal = null;
@@ -162,7 +162,7 @@ module {
       };
     };
 
-    public func getManagers() : HashMap.HashMap<T.PrincipalId, T.Manager> {
+    public func getManagers() : TrieMap.TrieMap<T.PrincipalId, T.Manager> {
       return managers;
     };
 
@@ -988,8 +988,8 @@ module {
         return false;
       };
 
-      var teamPlayerCounts = HashMap.HashMap<Text, Nat8>(0, Text.equal, Text.hash);
-      var playerIdCounts = HashMap.HashMap<Text, Nat8>(0, Text.equal, Text.hash);
+      var teamPlayerCounts = TrieMap.TrieMap<Text, Nat8>(Text.equal, Text.hash);
+      var playerIdCounts = TrieMap.TrieMap<Text, Nat8>(Text.equal, Text.hash);
       var goalkeeperCount = 0;
       var defenderCount = 0;
       var midfielderCount = 0;
@@ -1099,7 +1099,7 @@ module {
     };
 
     public func calculateFantasyTeamScores(allPlayersList : [(T.PlayerId, DTOs.PlayerScoreDTO)], seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async () {
-      var allPlayers = HashMap.HashMap<T.PlayerId, DTOs.PlayerScoreDTO>(500, Utilities.eqNat16, Utilities.hashNat16);
+      var allPlayers = TrieMap.TrieMap<T.PlayerId, DTOs.PlayerScoreDTO>(Utilities.eqNat16, Utilities.hashNat16);
       for ((key, value) in Iter.fromArray(allPlayersList)) {
         allPlayers.put(key, value);
       };
@@ -1342,7 +1342,7 @@ module {
         case (?foundRemovedPlayer) {
 
           let playerValue = foundRemovedPlayer.valueQuarterMillions;
-          let managersWithPlayer = HashMap.mapFilter<T.PrincipalId, T.Manager, T.Manager>(
+          let managersWithPlayer = TrieMap.mapFilter<T.PrincipalId, T.Manager, T.Manager>(
             managers,
             Text.equal,
             Text.hash,
@@ -1846,8 +1846,8 @@ module {
     public func distributeMonthlyRewards(rewardPool : T.RewardPool, monthlyLeaderboard : DTOs.MonthlyLeaderboardDTO) : async () {
       let monthlyRewardAmount = rewardPool.monthlyLeaderboardPool / 9;
 
-      let clubManagers = HashMap.mapFilter<Text, T.Manager, T.Manager>(managers, Text.equal, Text.hash, func(principal : Text, manager : T.Manager) = if (manager.favouriteClubId == monthlyLeaderboard.clubId) { ?manager } else { null });
-      let otherClubManagers = HashMap.mapFilter<Text, T.Manager, T.Manager>(managers, Text.equal, Text.hash, func(principal : Text, manager : T.Manager) = if (manager.favouriteClubId > 0 and manager.favouriteClubId != monthlyLeaderboard.clubId) { ?manager } else { null });
+      let clubManagers = TrieMap.mapFilter<Text, T.Manager, T.Manager>(managers, Text.equal, Text.hash, func(principal : Text, manager : T.Manager) = if (manager.favouriteClubId == monthlyLeaderboard.clubId) { ?manager } else { null });
+      let otherClubManagers = TrieMap.mapFilter<Text, T.Manager, T.Manager>(managers, Text.equal, Text.hash, func(principal : Text, manager : T.Manager) = if (manager.favouriteClubId > 0 and manager.favouriteClubId != monthlyLeaderboard.clubId) { ?manager } else { null });
 
       let clubManagerCount = Iter.size(clubManagers.entries());
       let totalClubManagers = clubManagerCount + Iter.size(otherClubManagers.entries());
@@ -2014,7 +2014,7 @@ module {
     };
 
     public func distributeMostValuableTeamRewards(mostValuableTeamPool : Nat64, players : [DTOs.PlayerDTO], currentSeason : T.SeasonId) : async () {
-      let allFinalGameweekSnapshots = HashMap.mapFilter<T.PrincipalId, T.Manager, T.FantasyTeamSnapshot>(
+      let allFinalGameweekSnapshots = TrieMap.mapFilter<T.PrincipalId, T.Manager, T.FantasyTeamSnapshot>(
         managers,
         Text.equal,
         Text.hash,
@@ -2040,7 +2040,7 @@ module {
         },
       );
 
-      var teamValues : HashMap.HashMap<T.PrincipalId, Nat16> = HashMap.HashMap<T.PrincipalId, Nat16>(100, Text.equal, Text.hash);
+      var teamValues : TrieMap.TrieMap<T.PrincipalId, Nat16> = TrieMap.TrieMap<T.PrincipalId, Nat16>(Text.equal, Text.hash);
 
       for (snapshot in allFinalGameweekSnapshots.entries()) {
         let allPlayers = Array.filter<DTOs.PlayerDTO>(
@@ -2161,7 +2161,7 @@ module {
 
       for (highestScoringPlayerId in Iter.fromArray(highestScoringPlayerIds)) {
 
-        let managersWithPlayer = HashMap.mapFilter<T.PrincipalId, T.Manager, T.Manager>(
+        let managersWithPlayer = TrieMap.mapFilter<T.PrincipalId, T.Manager, T.Manager>(
           managers,
           Text.equal,
           Text.hash,
@@ -2345,9 +2345,8 @@ module {
     };
 
     public func setStableManagers(stable_managers : [(T.PrincipalId, T.Manager)]) {
-      managers := HashMap.fromIter<T.PrincipalId, T.Manager>(
-        stable_managers.vals(),
-        stable_managers.size(),
+      managers := TrieMap.fromEntries<T.PrincipalId, T.Manager>(
+        Iter.fromArray(stable_managers),
         Text.equal,
         Text.hash,
       );
@@ -2358,9 +2357,8 @@ module {
     };
 
     public func setStableProfilePictureCanisterIds(stable_profile_picture_canister_ids : [(T.PrincipalId, Text)]) {
-      profilePictureCanisterIds := HashMap.fromIter<T.PrincipalId, Text>(
-        stable_profile_picture_canister_ids.vals(),
-        stable_profile_picture_canister_ids.size(),
+      profilePictureCanisterIds := TrieMap.fromEntries<T.PrincipalId, Text>(
+        Iter.fromArray(stable_profile_picture_canister_ids),
         Text.equal,
         Text.hash,
       );
@@ -2379,9 +2377,8 @@ module {
     };
 
     public func setStableTeamValueLeaderboards(stable_team_value_leaderboards : [(T.SeasonId, T.TeamValueLeaderboard)]) {
-      teamValueLeaderboards := HashMap.fromIter<T.SeasonId, T.TeamValueLeaderboard>(
-        stable_team_value_leaderboards.vals(),
-        stable_team_value_leaderboards.size(),
+      teamValueLeaderboards := TrieMap.fromEntries<T.SeasonId, T.TeamValueLeaderboard>(
+        Iter.fromArray(stable_team_value_leaderboards),
         Utilities.eqNat16,
         Utilities.hashNat16,
       );
