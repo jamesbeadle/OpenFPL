@@ -23,8 +23,8 @@
   "devDependencies": {
     "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
     "@rollup/plugin-inject": "^5.0.5",
-    "@sveltejs/adapter-static": "^2.0.3",
-    "@sveltejs/kit": "^1.27.1",
+    "@sveltejs/adapter-static": "^3.0.0",
+    "@sveltejs/kit": "^2.0.3",
     "@types/node": "^20.10.2",
     "@typescript-eslint/eslint-plugin": "^6.9.0",
     "@typescript-eslint/parser": "^6.9.0",
@@ -50,6 +50,7 @@
     "@dfinity/candid": "^0.20.2",
     "@dfinity/gix-components": "^3.1.0",
     "@dfinity/nns": "^3.1.0",
+    "@dfinity/nns-proto": "^1.0.1",
     "@dfinity/principal": "^0.20.2",
     "@dfinity/utils": "^2.0.0",
     "@web3auth/mpc-core-kit": "^1.2.0",
