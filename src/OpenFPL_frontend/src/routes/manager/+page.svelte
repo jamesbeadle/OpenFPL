@@ -9,7 +9,7 @@
   import type {
     FantasyTeamSnapshot,
     ClubDTO,
-    PublicProfileDTO,
+    ManagerDTO,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import Layout from "../Layout.svelte";
   import ManagerGameweekDetails from "$lib/components/manager/manager-gameweek-details.svelte";
@@ -26,7 +26,7 @@
     Number($page.url.searchParams.get("gw")) ?? 1
   );
 
-  let manager: PublicProfileDTO;
+  let manager: ManagerDTO;
   let displayName = "";
   let favouriteTeam: ClubDTO | null = null;
   let selectedSeason = "";
@@ -55,7 +55,7 @@
         manager.favouriteClubId > 0
           ? $teamStore.find((x) => x.id == manager.favouriteClubId) ?? null
           : null;
-      viewGameweekDetail(manager.principalId, $selectedGameweek!);
+      viewGameweekDetail($selectedGameweek!);
     } catch (error) {
       toastsError({
         msg: { text: "Error fetching manager details." },
@@ -214,7 +214,6 @@
         {#if activeTab === "gameweeks"}
           <ManagerGameweeks
             {viewGameweekDetail}
-            {selectedGameweek}
             principalId={manager.principalId}
           />
         {/if}

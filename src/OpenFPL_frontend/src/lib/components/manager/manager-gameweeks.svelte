@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { writable, type Writable } from "svelte/store";
   import { page } from "$app/stores";
   import { systemStore } from "$lib/stores/system-store";
   import { playerStore } from "$lib/stores/player-store";
@@ -11,14 +10,12 @@
     ManagerDTO,
   } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
-  import type { GameweekData } from "$lib/interfaces/GameweekData";
   import { getFlagComponent } from "$lib/utils/Helpers";
   import { Spinner } from "@dfinity/gix-components";
   import { countriesStore } from "$lib/stores/country-store";
 
   export let principalId = "";
   export let viewGameweekDetail: (
-    principalId: string,
     selectedGameweek: number
   ) => void;
   let manager: ManagerDTO;
@@ -32,7 +29,7 @@
       await playerStore.sync();
       await countriesStore.sync();
 
-      manager = await managerStore.getManager();
+      manager = await managerStore.getPublicProfile(id);
     } catch (error) {
       toastsError({
         msg: { text: "Error fetching manager gameweeks." },
@@ -95,7 +92,7 @@
         <button
           class="w-full"
           on:click={() =>
-            viewGameweekDetail(gameweek.principalId, gameweek.gameweek)}
+            viewGameweekDetail(gameweek.gameweek)}
         >
           <div
             class="flex items-center text-left justify-between p-2 md:px-4 py-4 border-b border-gray-700 cursor-pointer"
@@ -104,7 +101,7 @@
             <div class="w-4/12 flex items-center">
               {#if playerCountry}
                 <svelte:component
-                  this={getFlagComponent(playerCountry.name)}
+                  this={getFlagComponent(captain?.nationality ?? 0)}
                   class="w-9 h-9 mr-4 hidden md:flex"
                   size="100"
                 />

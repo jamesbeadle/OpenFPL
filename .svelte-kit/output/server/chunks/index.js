@@ -3355,7 +3355,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "q5lzn7"
+  version_hash: "15mgipd"
 };
 function get_hooks() {
   return {};
@@ -3482,7 +3482,8 @@ const Error$1 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_page();
   return `<h1>${escape($page.status)}</h1> <p>${escape($page.error?.message)}</p>`;
 });
-const localIdentityCanisterId = {}.VITE_INTERNET_IDENTITY_CANISTER_ID;
+var define_import_meta_env_default = { VITE_AUTH_PROVIDER_URL: "http://localhost:4943/?canisterId=rdmx6-jaaaa-aaaaa-aaadq-cai", VITE_OPENFPL_BACKEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", VITE_OPENFPL_FRONTEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", VITE___CANDID_UI_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", VITE_TOKEN_CANISTER_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", BASE_URL: "/", MODE: "production", DEV: false, PROD: true, SSR: true };
+const localIdentityCanisterId = define_import_meta_env_default.VITE_INTERNET_IDENTITY_CANISTER_ID;
 const AUTH_MAX_TIME_TO_LIVE = BigInt(
   60 * 60 * 1e3 * 1e3 * 1e3 * 24 * 14
 );
@@ -4236,7 +4237,8 @@ const idlFactory = ({ IDL }) => {
     validateUpdatePlayer: IDL.Func([UpdatePlayerDTO], [Result], [])
   });
 };
-const canisterId = { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.CANISTER_ID_OPENFPL_BACKEND || { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID;
+var define_process_env_default$e = { OPENFPL_BACKEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENFPL_FRONTEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", __CANDID_UI_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", DFX_NETWORK: "local" };
+const canisterId = define_process_env_default$e.CANISTER_ID_OPENFPL_BACKEND || define_process_env_default$e.OPENFPL_BACKEND_CANISTER_ID;
 const createActor = (canisterId2, options2 = {}) => {
   const agent = options2.agent || new HttpAgent({ ...options2.agentOptions });
   if (options2.agent && options2.agentOptions) {
@@ -4259,6 +4261,7 @@ const createActor = (canisterId2, options2 = {}) => {
   });
 };
 canisterId ? createActor(canisterId) : void 0;
+var define_process_env_default$d = { OPENFPL_BACKEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENFPL_FRONTEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", __CANDID_UI_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", DFX_NETWORK: "local" };
 class ActorFactory {
   static createActor(idlFactory2, canisterId2 = "", identity = null, options2 = null) {
     const hostOptions = {
@@ -4275,7 +4278,7 @@ class ActorFactory {
       options2.agentOptions.host = hostOptions.host;
     }
     const agent = new HttpAgent({ ...options2.agentOptions });
-    if ({ "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.NODE_ENV !== "production") {
+    if (define_process_env_default$d.NODE_ENV !== "production") {
       agent.fetchRootKey().catch((err) => {
         console.warn(
           "Unable to fetch root key. Ensure your local replica is running"
@@ -4505,11 +4508,12 @@ function convertFixtureStatus(fixtureStatus) {
 function isError(response) {
   return response && response.err !== void 0;
 }
+var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENFPL_FRONTEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", __CANDID_UI_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", DFX_NETWORK: "local" };
 function createSystemStore() {
   const { subscribe: subscribe2, set } = writable(null);
   let actor = ActorFactory.createActor(
     idlFactory,
-    { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
+    define_process_env_default$c.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync() {
     let category = "system_state";
@@ -4570,7 +4574,7 @@ function createSystemStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$c.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.updateSystemState(systemState);
       if (isError(result)) {
@@ -4592,11 +4596,12 @@ function createSystemStore() {
   };
 }
 const systemStore = createSystemStore();
+var define_process_env_default$b = { OPENFPL_BACKEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENFPL_FRONTEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", __CANDID_UI_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", DFX_NETWORK: "local" };
 function createFixtureStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let actor = ActorFactory.createActor(
     idlFactory,
-    { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
+    define_process_env_default$b.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync(seasonId) {
     const category = "fixtures";
@@ -4650,7 +4655,7 @@ function createFixtureStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$b.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       await identityActor.updateFixture(updatedFixture);
     } catch (error2) {
@@ -4680,11 +4685,12 @@ function createFixtureStore() {
   };
 }
 const fixtureStore = createFixtureStore();
+var define_process_env_default$a = { OPENFPL_BACKEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENFPL_FRONTEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", __CANDID_UI_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", DFX_NETWORK: "local" };
 function createTeamStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let actor = ActorFactory.createActor(
     idlFactory,
-    { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
+    define_process_env_default$a.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync() {
     const category = "clubs";
@@ -4767,8 +4773,6 @@ const i18n = readable({
   lang: "en",
   ...en
 });
-const Back_svelte_svelte_type_style_lang = "";
-const Backdrop_svelte_svelte_type_style_lang = "";
 const css$b = {
   code: ".backdrop.svelte-1hcbgym{position:absolute;top:0;right:0;bottom:0;left:0;background:var(--backdrop);color:var(--backdrop-contrast);backdrop-filter:var(--backdrop-filter);z-index:var(--backdrop-z-index);touch-action:manipulation;cursor:pointer}.backdrop.disablePointerEvents.svelte-1hcbgym{cursor:inherit;pointer-events:none}",
   map: null
@@ -4785,7 +4789,6 @@ const Backdrop = create_ssr_component(($$result, $$props, $$bindings, slots) => 
   return `<div role="button" tabindex="-1"${add_attribute("aria-label", $i18n.core.close, 0)} class="${["backdrop svelte-1hcbgym", disablePointerEvents ? "disablePointerEvents" : ""].join(" ").trim()}" data-tid="backdrop"></div>`;
 });
 const layoutBottomOffset = writable(0);
-const BottomSheet_svelte_svelte_type_style_lang = "";
 const initBusyStore = () => {
   const DEFAULT_STATE = [];
   const { subscribe: subscribe2, update, set } = writable(DEFAULT_STATE);
@@ -4814,7 +4817,6 @@ const initBusyStore = () => {
 const busyStore = initBusyStore();
 const busy = derived(busyStore, ($busyStore) => $busyStore.length > 0);
 const busyMessage = derived(busyStore, ($busyStore) => $busyStore.reverse().find(({ text: text2 }) => nonNullish(text2))?.text);
-const Spinner_svelte_svelte_type_style_lang = "";
 const css$a = {
   code: ".medium.svelte-85668t{--spinner-size:30px}.small.svelte-85668t{--spinner-size:calc(var(--line-height-standard) * 1rem)}.tiny.svelte-85668t{--spinner-size:calc(var(--line-height-standard) * 0.5rem)}svg.svelte-85668t{width:var(--spinner-size);height:var(--spinner-size);animation:spinner-linear-rotate 2000ms linear infinite;position:absolute;top:calc(50% - var(--spinner-size) / 2);left:calc(50% - var(--spinner-size) / 2);--radius:45px;--circumference:calc(3.1415926536 * var(--radius) * 2);--start:calc((1 - 0.05) * var(--circumference));--end:calc((1 - 0.8) * var(--circumference))}svg.inline.svelte-85668t{display:inline-block;position:relative}circle.svelte-85668t{stroke-dasharray:var(--circumference);stroke-width:10%;transform-origin:50% 50% 0;transition-property:stroke;animation-name:spinner-stroke-rotate-100;animation-duration:4000ms;animation-timing-function:cubic-bezier(0.35, 0, 0.25, 1);animation-iteration-count:infinite;fill:transparent;stroke:currentColor;transition:stroke-dashoffset 225ms linear}@keyframes spinner-linear-rotate{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}@keyframes spinner-stroke-rotate-100{0%{stroke-dashoffset:var(--start);transform:rotate(0)}12.5%{stroke-dashoffset:var(--end);transform:rotate(0)}12.5001%{stroke-dashoffset:var(--end);transform:rotateX(180deg) rotate(72.5deg)}25%{stroke-dashoffset:var(--start);transform:rotateX(180deg) rotate(72.5deg)}25.0001%{stroke-dashoffset:var(--start);transform:rotate(270deg)}37.5%{stroke-dashoffset:var(--end);transform:rotate(270deg)}37.5001%{stroke-dashoffset:var(--end);transform:rotateX(180deg) rotate(161.5deg)}50%{stroke-dashoffset:var(--start);transform:rotateX(180deg) rotate(161.5deg)}50.0001%{stroke-dashoffset:var(--start);transform:rotate(180deg)}62.5%{stroke-dashoffset:var(--end);transform:rotate(180deg)}62.5001%{stroke-dashoffset:var(--end);transform:rotateX(180deg) rotate(251.5deg)}75%{stroke-dashoffset:var(--start);transform:rotateX(180deg) rotate(251.5deg)}75.0001%{stroke-dashoffset:var(--start);transform:rotate(90deg)}87.5%{stroke-dashoffset:var(--end);transform:rotate(90deg)}87.5001%{stroke-dashoffset:var(--end);transform:rotateX(180deg) rotate(341.5deg)}100%{stroke-dashoffset:var(--start);transform:rotateX(180deg) rotate(341.5deg)}}",
   map: null
@@ -4829,7 +4831,6 @@ const Spinner = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$result.css.add(css$a);
   return `  <svg class="${[escape(null_to_empty(size), true) + " svelte-85668t", inline ? "inline" : ""].join(" ").trim()}" preserveAspectRatio="xMidYMid meet" focusable="false" aria-hidden="true" data-tid="spinner" viewBox="0 0 100 100"><circle cx="50%" cy="50%" r="45" class="svelte-85668t"></circle></svg>`;
 });
-const BusyScreen_svelte_svelte_type_style_lang = "";
 const css$9 = {
   code: "div.svelte-14plyno{z-index:calc(var(--z-index) + 1000);position:fixed;top:0;right:0;bottom:0;left:0;background:var(--backdrop);color:var(--backdrop-contrast)}.content.svelte-14plyno{display:flex;flex-direction:column;justify-content:center;align-items:center}p.svelte-14plyno{padding-bottom:var(--padding);max-width:calc(var(--section-max-width) / 2)}",
   map: null
@@ -4850,27 +4851,18 @@ const IconCheckCircle = create_ssr_component(($$result, $$props, $$bindings, slo
     $$bindings.size(size);
   return `  <svg${add_attribute("width", size, 0)}${add_attribute("height", size, 0)} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="1.25" y="1.25" width="21.5" height="21.5" rx="10.75" fill="var(--icon-check-circle-background, transparent)"></rect><path d="M7 11L11 15L17 9" stroke="var(--icon-check-circle-color, currentColor)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><rect x="1.25" y="1.25" width="21.5" height="21.5" rx="10.75" stroke="var(--icon-check-circle-background, currentColor)" stroke-width="1.5"></rect></svg>`;
 });
-const Card_svelte_svelte_type_style_lang = "";
-const Checkbox_svelte_svelte_type_style_lang = "";
-const TestIdWrapper_svelte_svelte_type_style_lang = "";
-const Collapsible_svelte_svelte_type_style_lang = "";
-const Toolbar_svelte_svelte_type_style_lang = "";
 const IconClose = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let { size = `${DEFAULT_ICON_SIZE}px` } = $$props;
   if ($$props.size === void 0 && $$bindings.size && size !== void 0)
     $$bindings.size(size);
   return `  <svg${add_attribute("height", size, 0)}${add_attribute("width", size, 0)} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="14.4194" y="4.52441" width="1.5" height="14" rx="0.75" transform="rotate(45 14.4194 4.52441)" fill="currentColor"></rect><rect x="4.5199" y="5.58496" width="1.5" height="14" rx="0.75" transform="rotate(-45 4.5199 5.58496)" fill="currentColor"></rect></svg>`;
 });
-const MenuButton_svelte_svelte_type_style_lang = "";
-const Header_svelte_svelte_type_style_lang$1 = "";
-const Content_svelte_svelte_type_style_lang = "";
 const IconError = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let { size = `${DEFAULT_ICON_SIZE}px` } = $$props;
   if ($$props.size === void 0 && $$bindings.size && size !== void 0)
     $$bindings.size(size);
   return `  <svg xmlns="http://www.w3.org/2000/svg"${add_attribute("height", size, 0)} viewBox="0 0 24 24"${add_attribute("width", size, 0)} fill="currentColor"><path d="M0 0h24v24H0z" fill="none"></path><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"></path></svg>`;
 });
-const IconInfo_svelte_svelte_type_style_lang = "";
 const css$8 = {
   code: "svg.svelte-1lui9gh{vertical-align:middle}",
   map: null
@@ -4882,18 +4874,12 @@ const IconInfo = create_ssr_component(($$result, $$props, $$bindings, slots) => 
   $$result.css.add(css$8);
   return `  <svg${add_attribute("width", size, 0)}${add_attribute("height", size, 0)} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" data-tid="icon-info" class="svelte-1lui9gh"><path d="M10.2222 17.5C14.3643 17.5 17.7222 14.1421 17.7222 10C17.7222 5.85786 14.3643 2.5 10.2222 2.5C6.08003 2.5 2.72217 5.85786 2.72217 10C2.72217 14.1421 6.08003 17.5 10.2222 17.5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10.2222 13.3333V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10.2222 6.66699H10.2305" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>`;
 });
-const IconMeter_svelte_svelte_type_style_lang = "";
-const IconSync_svelte_svelte_type_style_lang = "";
 const IconWarning = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let { size = `${DEFAULT_ICON_SIZE}px` } = $$props;
   if ($$props.size === void 0 && $$bindings.size && size !== void 0)
     $$bindings.size(size);
   return `  <svg xmlns="http://www.w3.org/2000/svg"${add_attribute("height", size, 0)} viewBox="0 0 24 24"${add_attribute("width", size, 0)} fill="currentColor"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"></path></svg>`;
 });
-const Copy_svelte_svelte_type_style_lang = "";
-const Dropdown_svelte_svelte_type_style_lang = "";
-const ExternalLink_svelte_svelte_type_style_lang = "";
-const HeaderTitle_svelte_svelte_type_style_lang = "";
 let elementsCounters = {};
 const nextElementId = (prefix) => {
   elementsCounters = {
@@ -4902,14 +4888,6 @@ const nextElementId = (prefix) => {
   };
   return `${prefix}${elementsCounters[prefix]}`;
 };
-const InfiniteScroll_svelte_svelte_type_style_lang = "";
-const Input_svelte_svelte_type_style_lang = "";
-const InputRange_svelte_svelte_type_style_lang = "";
-const Island_svelte_svelte_type_style_lang = "";
-const ItemAction_svelte_svelte_type_style_lang = "";
-const KeyValuePair_svelte_svelte_type_style_lang = "";
-const KeyValuePairInfo_svelte_svelte_type_style_lang = "";
-const SplitPane_svelte_svelte_type_style_lang = "";
 var Theme;
 (function(Theme2) {
   Theme2["DARK"] = "dark";
@@ -4941,7 +4919,6 @@ const applyTheme = ({ theme: theme2, preserve = true }) => {
   }
 };
 initTheme();
-const MenuBackground_svelte_svelte_type_style_lang = "";
 var Menu;
 (function(Menu2) {
   Menu2["COLLAPSED"] = "collapsed";
@@ -4984,11 +4961,6 @@ const initMenuStore = () => {
 };
 const menuStore = initMenuStore();
 derived(menuStore, ($menuStore) => $menuStore === Menu.COLLAPSED);
-const Menu_svelte_svelte_type_style_lang = "";
-const StretchPane_svelte_svelte_type_style_lang = "";
-const LogoNNS_svelte_svelte_type_style_lang = "";
-const MenuItem_svelte_svelte_type_style_lang = "";
-const Modal_svelte_svelte_type_style_lang = "";
 const css$7 = {
   code: ".modal.svelte-1bbimtl.svelte-1bbimtl{position:fixed;top:0;right:0;bottom:0;left:0;z-index:var(--modal-z-index);touch-action:initial;cursor:initial}.wrapper.svelte-1bbimtl.svelte-1bbimtl{position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);display:flex;flex-direction:column;background:var(--overlay-background);color:var(--overlay-background-contrast);--button-secondary-background:var(--focus-background);overflow:hidden;box-sizing:border-box;box-shadow:var(--overlay-box-shadow)}.wrapper.svelte-1bbimtl .container-wrapper.svelte-1bbimtl{margin:var(--padding-1_5x) var(--padding-2x) auto;display:flex;flex-direction:column;gap:var(--padding-1_5x);flex:1;overflow:hidden}.wrapper.alert.svelte-1bbimtl.svelte-1bbimtl{width:var(--alert-width);max-width:var(--alert-max-width);max-height:var(--alert-max-height);border-radius:var(--alert-border-radius)}.wrapper.alert.svelte-1bbimtl .header.svelte-1bbimtl{padding:var(--alert-padding-y) var(--alert-padding-x) var(--padding)}.wrapper.alert.svelte-1bbimtl .container-wrapper.svelte-1bbimtl{margin-bottom:calc(var(--alert-padding-y) * 2 / 3)}.wrapper.alert.svelte-1bbimtl .content.svelte-1bbimtl{margin:0 0 calc(var(--alert-padding-y) / 2);padding:calc(var(--alert-padding-y) / 2) calc(var(--alert-padding-x) / 2) 0}.wrapper.alert.svelte-1bbimtl .footer.svelte-1bbimtl{padding:0 var(--alert-padding-x) calc(var(--alert-padding-y) * 2 / 3)}@media(min-width: 576px){.wrapper.alert.svelte-1bbimtl .footer.svelte-1bbimtl{justify-content:flex-end}}.wrapper.dialog.svelte-1bbimtl.svelte-1bbimtl{width:var(--dialog-width);max-width:var(--dialog-max-width);min-height:var(--dialog-min-height);height:var(--dialog-height);max-height:var(--dialog-max-height, 100%);border-radius:var(--dialog-border-radius)}@supports (-webkit-touch-callout: none){.wrapper.dialog.svelte-1bbimtl.svelte-1bbimtl{max-height:-webkit-fill-available}@media(min-width: 768px){.wrapper.dialog.svelte-1bbimtl.svelte-1bbimtl{max-height:var(--dialog-max-height, 100%)}}}.wrapper.dialog.svelte-1bbimtl .header.svelte-1bbimtl{padding:var(--dialog-padding-y) var(--padding-3x) var(--padding)}.wrapper.dialog.svelte-1bbimtl .container-wrapper.svelte-1bbimtl{margin-bottom:var(--dialog-padding-y)}.wrapper.dialog.svelte-1bbimtl .content.svelte-1bbimtl{margin:0;padding:var(--dialog-padding-y) var(--dialog-padding-x)}.header.svelte-1bbimtl.svelte-1bbimtl{display:grid;grid-template-columns:1fr auto 1fr;gap:var(--padding);z-index:var(--z-index);position:relative}.header.svelte-1bbimtl h2.svelte-1bbimtl{white-space:var(--text-white-space, nowrap);overflow:hidden;text-overflow:ellipsis;grid-column-start:2;text-align:center}.header.svelte-1bbimtl button.svelte-1bbimtl{display:flex;justify-content:center;align-items:center;padding:0;justify-self:flex-end}.header.svelte-1bbimtl button.svelte-1bbimtl:active,.header.svelte-1bbimtl button.svelte-1bbimtl:focus,.header.svelte-1bbimtl button.svelte-1bbimtl:hover{background:var(--background-shade);border-radius:var(--border-radius)}.content.svelte-1bbimtl.svelte-1bbimtl{overflow-y:var(--modal-content-overflow-y, auto);overflow-x:hidden}.container.svelte-1bbimtl.svelte-1bbimtl{position:relative;display:flex;flex-direction:column;flex:1;overflow:hidden;border-radius:16px;background:var(--overlay-content-background);color:var(--overlay-content-background-contrast)}",
   map: null
@@ -5020,23 +4992,6 @@ const Modal = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_i18n();
   return `${visible ? `<div class="modal svelte-1bbimtl"${add_attribute("role", role, 0)}${add_attribute("data-tid", testId, 0)}${add_attribute("aria-labelledby", showHeader ? modalTitleId : void 0, 0)}${add_attribute("aria-describedby", modalContentId, 0)}>${validate_component(Backdrop, "Backdrop").$$render($$result, { disablePointerEvents }, {}, {})} <div class="${escape(null_to_empty(`wrapper ${role}`), true) + " svelte-1bbimtl"}">${showHeader ? `<div class="header svelte-1bbimtl"><h2${add_attribute("id", modalTitleId, 0)} data-tid="modal-title" class="svelte-1bbimtl">${slots.title ? slots.title({}) : ``}</h2> ${!disablePointerEvents ? `<button data-tid="close-modal"${add_attribute("aria-label", $i18n.core.close, 0)} class="svelte-1bbimtl">${validate_component(IconClose, "IconClose").$$render($$result, { size: "24px" }, {}, {})}</button>` : ``}</div>` : ``} <div class="container-wrapper svelte-1bbimtl">${slots["sub-title"] ? slots["sub-title"]({}) : ``} <div class="container svelte-1bbimtl"><div class="${["content svelte-1bbimtl", role === "alert" ? "alert" : ""].join(" ").trim()}"${add_attribute("id", modalContentId, 0)}>${slots.default ? slots.default({}) : ``}</div></div></div> ${showFooterAlert ? `<div class="footer toolbar svelte-1bbimtl">${slots.footer ? slots.footer({}) : ``}</div>` : ``}</div></div>` : ``}`;
 });
-const Nav_svelte_svelte_type_style_lang = "";
-const PageBanner_svelte_svelte_type_style_lang = "";
-const Popover_svelte_svelte_type_style_lang = "";
-const ProgressBar_svelte_svelte_type_style_lang = "";
-const ProgressSteps_svelte_svelte_type_style_lang = "";
-const QRCode_svelte_svelte_type_style_lang = "";
-const QRCodeReader_svelte_svelte_type_style_lang = "";
-const QRCodeReaderModal_svelte_svelte_type_style_lang = "";
-const Section_svelte_svelte_type_style_lang = "";
-const Segment_svelte_svelte_type_style_lang = "";
-const SegmentButton_svelte_svelte_type_style_lang = "";
-const SkeletonText_svelte_svelte_type_style_lang = "";
-const SplitBlock_svelte_svelte_type_style_lang = "";
-const SplitContent_svelte_svelte_type_style_lang = "";
-const Tag_svelte_svelte_type_style_lang = "";
-const Toggle_svelte_svelte_type_style_lang = "";
-const ThemeToggle_svelte_svelte_type_style_lang = "";
 const initToastsStore = () => {
   const { subscribe: subscribe2, update, set } = writable([]);
   return {
@@ -5075,7 +5030,6 @@ const initToastsStore = () => {
   };
 };
 const toastsStore = initToastsStore();
-const Toast_svelte_svelte_type_style_lang = "";
 const css$6 = {
   code: ".toast.svelte-w1j1kj.svelte-w1j1kj{display:flex;justify-content:space-between;align-items:center;gap:var(--padding-1_5x);background:var(--overlay-background);color:var(--overlay-background-contrast);--button-secondary-background:var(--focus-background);border-radius:var(--border-radius);box-shadow:var(--strong-shadow, 8px 8px 16px 0 rgba(0, 0, 0, 0.25));padding:var(--padding-1_5x);box-sizing:border-box}.toast.inverted.svelte-w1j1kj.svelte-w1j1kj{background:var(--toast-inverted-background);color:var(--toast-inverted-background-contrast)}.toast.svelte-w1j1kj .icon.svelte-w1j1kj{line-height:0}.toast.svelte-w1j1kj .icon.success.svelte-w1j1kj{color:var(--positive-emphasis)}.toast.svelte-w1j1kj .icon.info.svelte-w1j1kj{color:var(--primary)}.toast.svelte-w1j1kj .icon.warn.svelte-w1j1kj{color:var(--warning-emphasis-shade)}.toast.svelte-w1j1kj .icon.error.svelte-w1j1kj{color:var(--negative-emphasis)}.toast.svelte-w1j1kj .msg.svelte-w1j1kj{flex-grow:1;margin:0;word-break:break-word}.toast.svelte-w1j1kj .msg.scroll.svelte-w1j1kj{overflow-y:auto;max-height:calc(var(--font-size-standard) * 3 * 1.3);line-height:normal}.toast.svelte-w1j1kj .msg.truncate.svelte-w1j1kj{white-space:var(--text-white-space, nowrap);overflow:hidden;text-overflow:ellipsis}.toast.svelte-w1j1kj .msg.truncate .title.svelte-w1j1kj{white-space:var(--text-white-space, nowrap);overflow:hidden;text-overflow:ellipsis}.toast.svelte-w1j1kj .msg.clamp.svelte-w1j1kj{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}.toast.svelte-w1j1kj .msg.clamp .title.svelte-w1j1kj{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}.toast.svelte-w1j1kj .title.svelte-w1j1kj{display:block;font-size:var(--font-size-standard);line-height:var(--line-height-standard);font-weight:var(--font-weight-bold);line-height:normal}.toast.svelte-w1j1kj button.close.svelte-w1j1kj{padding:0;line-height:0;color:inherit}",
   map: null
@@ -5124,7 +5078,6 @@ const Toast = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     (truncate ? "truncate" : "") + " " + (clamp ? "clamp" : "") + " " + (scroll ? "scroll" : "")
   ].join(" ").trim()}"${add_attribute("style", minHeightMessage, 0)}>${nonNullish(title) ? `<span class="title svelte-w1j1kj">${escape(title)}</span>` : ``} ${escape(text2)}</p> <button class="close svelte-w1j1kj"${add_attribute("aria-label", $i18n.core.close, 0)}>${validate_component(IconClose, "IconClose").$$render($$result, {}, {}, {})}</button> </div>`;
 });
-const Toasts_svelte_svelte_type_style_lang = "";
 const css$5 = {
   code: ".wrapper.svelte-24m335{position:fixed;left:50%;transform:translate(-50%, 0);bottom:calc(var(--layout-bottom-offset, 0) + var(--padding-2x));width:calc(100% - var(--padding-8x) - var(--padding-0_5x));display:flex;flex-direction:column;gap:var(--padding);z-index:var(--toast-info-z-index)}.wrapper.error.svelte-24m335{z-index:var(--toast-error-z-index)}@media(min-width: 1024px){.wrapper.svelte-24m335{max-width:calc(var(--section-max-width) - var(--padding-2x))}}.top.svelte-24m335{top:calc(var(--header-height) + var(--padding-3x));bottom:unset;width:calc(100% - var(--padding-6x))}@media(min-width: 1024px){.top.svelte-24m335{right:var(--padding-2x);left:unset;transform:none;max-width:calc(var(--section-max-width) / 1.5 - var(--padding-2x))}}",
   map: null
@@ -5151,7 +5104,6 @@ const Toasts = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     return `${validate_component(Toast, "Toast").$$render($$result, { msg }, {}, {})}`;
   })}</div>` : ``}`;
 });
-const WizardTransition_svelte_svelte_type_style_lang = "";
 const toastsShow = (msg) => toastsStore.show(msg);
 const toastsError = ({
   msg: { text: text2, ...rest },
@@ -5166,6 +5118,7 @@ const toastsError = ({
     level: "error"
   });
 };
+var define_process_env_default$9 = { OPENFPL_BACKEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENFPL_FRONTEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", __CANDID_UI_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", DFX_NETWORK: "local" };
 function createManagerStore() {
   const { subscribe: subscribe2, set } = writable(null);
   let systemState;
@@ -5174,7 +5127,7 @@ function createManagerStore() {
   });
   let actor = ActorFactory.createActor(
     idlFactory,
-    { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
+    define_process_env_default$9.OPENFPL_BACKEND_CANISTER_ID
   );
   let newManager = {
     playerIds: [],
@@ -5212,7 +5165,7 @@ function createManagerStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$9.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       let result = await identityActor.getManager();
       if (isError(result)) {
@@ -5297,7 +5250,7 @@ function createManagerStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$9.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.getCurrentTeam();
       if (isError(result)) {
@@ -5324,7 +5277,7 @@ function createManagerStore() {
       }
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$9.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       let dto = {
         playerIds: userFantasyTeam.playerIds,
@@ -5432,7 +5385,7 @@ function createManagerStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$9.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       await identityActor.snapshotFantasyTeams();
     } catch (error2) {
@@ -5452,11 +5405,12 @@ function createManagerStore() {
   };
 }
 createManagerStore();
+var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENFPL_FRONTEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", __CANDID_UI_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", DFX_NETWORK: "local" };
 function createCountriesStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let actor = ActorFactory.createActor(
     idlFactory,
-    { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
+    define_process_env_default$8.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync() {
     let category = "countries";
@@ -5498,13 +5452,14 @@ function createCountriesStore() {
   };
 }
 const countriesStore = createCountriesStore();
+var define_process_env_default$7 = { OPENFPL_BACKEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENFPL_FRONTEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", __CANDID_UI_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", DFX_NETWORK: "local" };
 function createWeeklyLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage2 = 25;
   const category = "weekly_leaderboard";
   let actor = ActorFactory.createActor(
     idlFactory,
-    { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
+    define_process_env_default$7.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync(seasonId, gameweek) {
     const newHashValues = await actor.getDataHashes();
@@ -5608,6 +5563,7 @@ function createWeeklyLeaderboardStore() {
   };
 }
 createWeeklyLeaderboardStore();
+var define_process_env_default$6 = { OPENFPL_BACKEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENFPL_FRONTEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", __CANDID_UI_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", DFX_NETWORK: "local" };
 function createPlayerStore() {
   const { subscribe: subscribe2, set } = writable([]);
   systemStore.subscribe((value) => {
@@ -5615,7 +5571,7 @@ function createPlayerStore() {
   fixtureStore.subscribe((value) => value);
   let actor = ActorFactory.createActor(
     idlFactory,
-    { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
+    define_process_env_default$6.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync() {
     let category = "players";
@@ -5676,6 +5632,7 @@ function createPlayerStore() {
   };
 }
 const playerStore = createPlayerStore();
+var define_process_env_default$5 = { OPENFPL_BACKEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENFPL_FRONTEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", __CANDID_UI_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", DFX_NETWORK: "local" };
 function createPlayerEventsStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let systemState;
@@ -5686,7 +5643,7 @@ function createPlayerEventsStore() {
   fixtureStore.subscribe((value) => allFixtures = value);
   let actor = ActorFactory.createActor(
     idlFactory,
-    { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
+    define_process_env_default$5.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync() {
     let category = "player_events";
@@ -6032,6 +5989,7 @@ function createPlayerEventsStore() {
   };
 }
 createPlayerEventsStore();
+var define_process_env_default$4 = { OPENFPL_BACKEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENFPL_FRONTEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", __CANDID_UI_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", DFX_NETWORK: "local" };
 function createUserStore() {
   const { subscribe: subscribe2, set } = writable(null);
   function uint8ArrayToBase64(bytes) {
@@ -6070,7 +6028,7 @@ function createUserStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$4.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       let getProfileResponse = await identityActor.getProfile();
       let error2 = isError(getProfileResponse);
@@ -6111,7 +6069,7 @@ function createUserStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$4.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.createProfile();
       if (isError(result)) {
@@ -6128,7 +6086,7 @@ function createUserStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$4.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.updateUsername(username);
       if (isError(result)) {
@@ -6146,7 +6104,7 @@ function createUserStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$4.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.updateFavouriteTeam(favouriteTeamId);
       if (isError(result)) {
@@ -6164,7 +6122,7 @@ function createUserStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$4.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.getProfile();
       if (isError(result)) {
@@ -6193,7 +6151,7 @@ function createUserStore() {
         try {
           const identityActor = await ActorFactory.createIdentityActor(
             authStore,
-            { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+            define_process_env_default$4.OPENFPL_BACKEND_CANISTER_ID ?? ""
           );
           const result = await identityActor.updateProfilePicture(uint8Array);
           if (isError(result)) {
@@ -6214,14 +6172,14 @@ function createUserStore() {
   async function isUsernameAvailable(username) {
     const identityActor = await ActorFactory.createIdentityActor(
       authStore,
-      { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default$4.OPENFPL_BACKEND_CANISTER_ID
     );
     return await identityActor.isUsernameValid(username);
   }
   async function cacheProfile() {
     const identityActor = await ActorFactory.createIdentityActor(
       authStore,
-      { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default$4.OPENFPL_BACKEND_CANISTER_ID
     );
     let getProfileResponse = await identityActor.getProfile();
     let error2 = isError(getProfileResponse);
@@ -6293,7 +6251,6 @@ derived(
   userStore,
   (user) => user !== null && user !== void 0 ? user.favouriteTeamId : 0
 );
-const Header_svelte_svelte_type_style_lang = "";
 const css$4 = {
   code: 'header.svelte-197nckd{background-color:rgba(36, 37, 41, 0.9)}.nav-underline.svelte-197nckd{position:relative;display:inline-block;color:white}.nav-underline.svelte-197nckd::after{content:"";position:absolute;width:100%;height:2px;background-color:#2ce3a6;bottom:0;left:0;transform:scaleX(0);transition:transform 0.3s ease-in-out;color:#2ce3a6}.nav-underline.svelte-197nckd:hover::after,.nav-underline.active.svelte-197nckd::after{transform:scaleX(1);color:#2ce3a6}.nav-underline.svelte-197nckd:hover::after{transform:scaleX(1);background-color:gray}.nav-button.svelte-197nckd{background-color:transparent}.nav-button.svelte-197nckd:hover{background-color:transparent;color:#2ce3a6;border:none}',
   map: null
@@ -6352,8 +6309,6 @@ const Footer = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   return `<footer class="bg-gray-900 text-white py-3"><div class="container mx-1 xs:mx-2 md:mx-auto flex flex-col md:flex-row items-start md:items-center justify-between text-xs"><div class="flex-1" data-svelte-h="svelte-108debi"><div class="flex justify-start"><div class="flex flex-row pl-4"><a href="https://oc.app/community/uf3iv-naaaa-aaaar-ar3ta-cai/?ref=zv6hh-xaaaa-aaaar-ac35q-cai" target="_blank" rel="noopener noreferrer"><img src="/openchat.png" class="h-4 w-auto mb-2 mr-2" alt="OpenChat"></a> <a href="https://github.com/jamesbeadle/OpenFPL" target="_blank" rel="noopener noreferrer"><img src="/github.png" class="h-4 w-auto mb-2" alt="GitHub"></a></div></div> <div class="flex justify-start"><div class="flex flex-col md:flex-row md:space-x-2 pl-4"><a href="/whitepaper" class="hover:text-gray-300">Whitepaper</a> <span class="hidden md:flex">|</span> <a href="/gameplay-rules" class="hover:text-gray-300 md:hidden lg:block">Gameplay Rules</a> <a href="/gameplay-rules" class="hover:text-gray-300 hidden md:block lg:hidden">Rules</a> <span class="hidden md:flex">|</span> <a href="/terms" class="hover:text-gray-300">Terms &amp; Conditions</a></div></div></div> <div class="flex-0"><a href="/"><b class="px-4 mt-2 md:mt-0 md:px-10 flex items-center">${validate_component(OpenFPLIcon, "OpenFplIcon").$$render($$result, { className: "h-6 w-auto mr-2" }, {}, {})}OpenFPL</b></a></div> <div class="flex-1"><div class="flex justify-end"><div class="text-right px-4 md:px-0 mt-1 md:mt-0 md:mr-4"><a href="https://juno.build" target="_blank" class="hover:text-gray-300 flex items-center">Sponsored By juno.build
             ${validate_component(JunoIcon, "JunoIcon").$$render($$result, { className: "h-8 w-auto ml-2" }, {}, {})}</a></div></div></div></div></footer>`;
 });
-const app = "";
-const Layout_svelte_svelte_type_style_lang = "";
 const css$3 = {
   code: "main.svelte-vmfccd{flex:1;display:flex;flex-direction:column}",
   map: null
@@ -6379,6 +6334,7 @@ const Layout = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }();
   }(init2())} ${validate_component(BusyScreen, "BusyScreen").$$render($$result, {}, {}, {})}`;
 });
+var define_process_env_default$3 = { OPENFPL_BACKEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENFPL_FRONTEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", __CANDID_UI_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", DFX_NETWORK: "local" };
 function createMonthlyLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage2 = 25;
@@ -6389,7 +6345,7 @@ function createMonthlyLeaderboardStore() {
   });
   let actor = ActorFactory.createActor(
     idlFactory,
-    { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
+    define_process_env_default$3.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync() {
     let category2 = "monthly_leaderboards";
@@ -6482,6 +6438,7 @@ function createMonthlyLeaderboardStore() {
   };
 }
 createMonthlyLeaderboardStore();
+var define_process_env_default$2 = { OPENFPL_BACKEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENFPL_FRONTEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", __CANDID_UI_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", DFX_NETWORK: "local" };
 function createSeasonLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage2 = 25;
@@ -6492,7 +6449,7 @@ function createSeasonLeaderboardStore() {
   });
   let actor = ActorFactory.createActor(
     idlFactory,
-    { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
+    define_process_env_default$2.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync() {
     let category2 = "season_leaderboard";
@@ -6582,7 +6539,6 @@ function createSeasonLeaderboardStore() {
   };
 }
 createSeasonLeaderboardStore();
-const _page_svelte_svelte_type_style_lang$1 = "";
 const css$2 = {
   code: ".w-v.svelte-18fkfyi{width:20px}",
   map: null
@@ -6604,12 +6560,13 @@ const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
+var define_process_env_default$1 = { OPENFPL_BACKEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENFPL_FRONTEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", __CANDID_UI_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", DFX_NETWORK: "local" };
 function createGovernanceStore() {
   async function revaluePlayerUp(playerId) {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$1.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       let dto = {
         playerId
@@ -6628,7 +6585,7 @@ function createGovernanceStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$1.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       let dto = {
         playerId
@@ -6647,7 +6604,7 @@ function createGovernanceStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$1.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       let dto = {
         seasonId,
@@ -6672,7 +6629,7 @@ function createGovernanceStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$1.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       let dto = {
         seasonId,
@@ -6692,7 +6649,7 @@ function createGovernanceStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$1.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const dateObject = new Date(updatedFixtureDate);
       const timestampMilliseconds = dateObject.getTime();
@@ -6716,7 +6673,7 @@ function createGovernanceStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$1.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       let dto = {
         fixtureId
@@ -6735,7 +6692,7 @@ function createGovernanceStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$1.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const dateObject = new Date(updatedFixtureDate);
       const timestampMilliseconds = dateObject.getTime();
@@ -6759,7 +6716,7 @@ function createGovernanceStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$1.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const dateObject = new Date(loanEndDate);
       const timestampMilliseconds = dateObject.getTime();
@@ -6783,7 +6740,7 @@ function createGovernanceStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$1.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       let dto = {
         playerId,
@@ -6803,7 +6760,7 @@ function createGovernanceStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$1.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       let dto = {
         playerId
@@ -6822,7 +6779,7 @@ function createGovernanceStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$1.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const dateObject = new Date(dateOfBirth);
       const timestampMilliseconds = dateObject.getTime();
@@ -6851,7 +6808,7 @@ function createGovernanceStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$1.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       let dto = {
         playerId,
@@ -6876,7 +6833,7 @@ function createGovernanceStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$1.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const dateObject = new Date(expectedEndDate);
       const timestampMilliseconds = dateObject.getTime();
@@ -6900,7 +6857,7 @@ function createGovernanceStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$1.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const dateObject = new Date(retirementDate);
       const timestampMilliseconds = dateObject.getTime();
@@ -6923,7 +6880,7 @@ function createGovernanceStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$1.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       let dto = {
         playerId
@@ -6942,7 +6899,7 @@ function createGovernanceStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$1.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       let dto = {
         clubId
@@ -6961,7 +6918,7 @@ function createGovernanceStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$1.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       let dto = {
         name,
@@ -6986,7 +6943,7 @@ function createGovernanceStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$1.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       let dto = {
         clubId,
@@ -7153,11 +7110,12 @@ const Page$a = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     {}
   )}`;
 });
+var define_process_env_default = { OPENFPL_BACKEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENFPL_FRONTEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", __CANDID_UI_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", DFX_NETWORK: "local" };
 function createAdminStore() {
   async function getMainCanisterInfo() {
     const identityActor = await ActorFactory.createIdentityActor(
       authStore,
-      { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default.OPENFPL_BACKEND_CANISTER_ID
     );
     const result = await identityActor.adminGetMainCanisterInfo();
     if (isError(result)) {
@@ -7170,7 +7128,7 @@ function createAdminStore() {
   async function getWeeklyCanisters(itemsPerPage2, currentPage) {
     const identityActor = await ActorFactory.createIdentityActor(
       authStore,
-      { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default.OPENFPL_BACKEND_CANISTER_ID
     );
     const limit = itemsPerPage2;
     const offset = (currentPage - 1) * limit;
@@ -7185,7 +7143,7 @@ function createAdminStore() {
   async function getMonthlyCanisters(itemsPerPage2, currentPage) {
     const identityActor = await ActorFactory.createIdentityActor(
       authStore,
-      { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default.OPENFPL_BACKEND_CANISTER_ID
     );
     const limit = itemsPerPage2;
     const offset = (currentPage - 1) * limit;
@@ -7200,7 +7158,7 @@ function createAdminStore() {
   async function getSeasonCanisters(itemsPerPage2, currentPage) {
     const identityActor = await ActorFactory.createIdentityActor(
       authStore,
-      { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default.OPENFPL_BACKEND_CANISTER_ID
     );
     const limit = itemsPerPage2;
     const offset = (currentPage - 1) * limit;
@@ -7215,7 +7173,7 @@ function createAdminStore() {
   async function getProfilePictureCanisters(itemsPerPage2, currentPage) {
     const identityActor = await ActorFactory.createIdentityActor(
       authStore,
-      { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default.OPENFPL_BACKEND_CANISTER_ID
     );
     const limit = itemsPerPage2;
     const offset = (currentPage - 1) * limit;
@@ -7230,7 +7188,7 @@ function createAdminStore() {
   async function getTimers(category, itemsPerPage2, currentPage) {
     const identityActor = await ActorFactory.createIdentityActor(
       authStore,
-      { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default.OPENFPL_BACKEND_CANISTER_ID
     );
     const limit = itemsPerPage2;
     const offset = (currentPage - 1) * limit;
@@ -7245,7 +7203,7 @@ function createAdminStore() {
   async function getFixtures(seasonId) {
     const identityActor = await ActorFactory.createIdentityActor(
       authStore,
-      { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default.OPENFPL_BACKEND_CANISTER_ID
     );
     const result = await identityActor.adminGetFixtures(seasonId);
     if (isError(result)) {
@@ -7258,7 +7216,7 @@ function createAdminStore() {
   async function getClubs(itemsPerPage2, currentPage) {
     const identityActor = await ActorFactory.createIdentityActor(
       authStore,
-      { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default.OPENFPL_BACKEND_CANISTER_ID
     );
     const limit = itemsPerPage2;
     const offset = (currentPage - 1) * limit;
@@ -7273,7 +7231,7 @@ function createAdminStore() {
   async function getPlayers(playerStatus) {
     const identityActor = await ActorFactory.createIdentityActor(
       authStore,
-      { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default.OPENFPL_BACKEND_CANISTER_ID
     );
     const result = await identityActor.adminGetPlayers(playerStatus);
     if (isError(result)) {
@@ -7286,7 +7244,7 @@ function createAdminStore() {
   async function getManagers(itemsPerPage2, currentPage) {
     const identityActor = await ActorFactory.createIdentityActor(
       authStore,
-      { "OPENFPL_BACKEND_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "__CANDID_UI_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "TOKEN_CANISTER_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default.OPENFPL_BACKEND_CANISTER_ID
     );
     const limit = itemsPerPage2;
     const offset = (currentPage - 1) * limit;
@@ -7383,7 +7341,6 @@ const Snapshot_fantasy_teams = create_ssr_component(($$result, $$props, $$bindin
     }
   })}`;
 });
-const localSpinner_svelte_svelte_type_style_lang = "";
 const css$1 = {
   code: ".local-spinner.svelte-l53cpe{border:5px solid rgba(255, 255, 255, 0.3);border-top:5px solid white;border-radius:50%;width:50px;height:50px;position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);animation:svelte-l53cpe-spin 1s linear infinite}@keyframes svelte-l53cpe-spin{0%{transform:translate(-50%, -50%) rotate(0deg)}100%{transform:translate(-50%, -50%) rotate(360deg)}}",
   map: null
@@ -8418,7 +8375,6 @@ const Page$8 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const _page_svelte_svelte_type_style_lang = "";
 const css = {
   code: ".striped.svelte-58jp75 tr.svelte-58jp75:nth-child(odd){background-color:rgba(46, 50, 58, 0.6)}",
   map: null
@@ -8495,8 +8451,6 @@ const Page$5 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const addPlayerModal_svelte_svelte_type_style_lang = "";
-const bonusPanel_svelte_svelte_type_style_lang = "";
 function getGridSetup(formation) {
   const formationSplits = formation.split("-").map(Number);
   const setups = [[1], ...formationSplits.map((s2) => Array(s2).fill(0).map((_, i) => i + 1))];
@@ -8692,7 +8646,6 @@ const Page$3 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const profileDetail_svelte_svelte_type_style_lang = "";
 const Page$2 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
@@ -8717,8 +8670,6 @@ const Page$1 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const dao_svelte_svelte_type_style_lang = "";
-const tokenomics_svelte_svelte_type_style_lang = "";
 const Vision = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   return `<div class="m-4" data-svelte-h="svelte-xgyb9x"><h1 class="default-header">Our Vision</h1> <p class="my-4">In an evolving landscape where blockchain technology is still unlocking its
     potential, the Internet Computer offers a promising platform for innovative

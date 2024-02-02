@@ -9,7 +9,7 @@
   },
   "_index.js": {
     "css": [
-      "_app/immutable/assets/index.28121524.css"
+      "_app/immutable/assets/index.lcinD9Tp.css"
     ],
     "file": "chunks/index.js",
     "imports": [
@@ -19,28 +19,24 @@
   "_vendor.js": {
     "file": "chunks/vendor.js"
   },
-  "index.css": {
-    "file": "_app/immutable/assets/index.28121524.css",
-    "src": "index.css"
-  },
   "node_modules/@dfinity/gix-components/dist/assets/logo-nns.svg": {
-    "file": "_app/immutable/assets/logo-nns.1ed1f865.svg",
+    "file": "_app/immutable/assets/logo-nns.Fc29ZABV.svg",
     "src": "node_modules/@dfinity/gix-components/dist/assets/logo-nns.svg"
   },
   "node_modules/@dfinity/gix-components/dist/assets/logo-onchain-dark.svg": {
-    "file": "_app/immutable/assets/logo-onchain-dark.9cb3296c.svg",
+    "file": "_app/immutable/assets/logo-onchain-dark.GgeU8CYh.svg",
     "src": "node_modules/@dfinity/gix-components/dist/assets/logo-onchain-dark.svg"
   },
   "node_modules/@dfinity/gix-components/dist/assets/logo-onchain-light.svg": {
-    "file": "_app/immutable/assets/logo-onchain-light.fa202b6e.svg",
+    "file": "_app/immutable/assets/logo-onchain-light.L_mfZB1R.svg",
     "src": "node_modules/@dfinity/gix-components/dist/assets/logo-onchain-light.svg"
   },
   "node_modules/@dfinity/gix-components/dist/assets/menu-bg-dark.png": {
-    "file": "_app/immutable/assets/menu-bg-dark.6f485986.png",
+    "file": "_app/immutable/assets/menu-bg-dark.ZKV8R0Pr.png",
     "src": "node_modules/@dfinity/gix-components/dist/assets/menu-bg-dark.png"
   },
   "node_modules/@dfinity/gix-components/dist/assets/menu-bg-light.png": {
-    "file": "_app/immutable/assets/menu-bg-light.fb6f88c4.png",
+    "file": "_app/immutable/assets/menu-bg-light.-QGL9V77.png",
     "src": "node_modules/@dfinity/gix-components/dist/assets/menu-bg-light.png"
   },
   "node_modules/@sveltejs/kit/src/runtime/components/error.svelte": {

@@ -290,7 +290,7 @@ function createPlayerEventsStore() {
       bonusPoints: 0,
       totalPoints: 0,
       isCaptain: false,
-      nationality: "",
+      nationalityId: player.nationality,
     };
 
     return playerGameweekDetails;

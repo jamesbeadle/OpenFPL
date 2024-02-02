@@ -22,7 +22,7 @@
 
     <div class="flex justify-start items-center w-full">
       <svelte:component
-        this={getFlagComponent(gameweekData.nationality)}
+        this={getFlagComponent(gameweekData.nationalityId)}
         class="h-20 w-20"
       />
       <div class="w-full flex-col space-y-4 mb-2">
