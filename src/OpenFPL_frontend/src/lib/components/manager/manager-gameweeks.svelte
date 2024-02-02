@@ -15,9 +15,7 @@
   import { countriesStore } from "$lib/stores/country-store";
 
   export let principalId = "";
-  export let viewGameweekDetail: (
-    selectedGameweek: number
-  ) => void;
+  export let viewGameweekDetail: (selectedGameweek: number) => void;
   let manager: ManagerDTO;
   let isLoading = true;
 
@@ -91,8 +89,7 @@
           : null}
         <button
           class="w-full"
-          on:click={() =>
-            viewGameweekDetail(gameweek.gameweek)}
+          on:click={() => viewGameweekDetail(gameweek.gameweek)}
         >
           <div
             class="flex items-center text-left justify-between p-2 md:px-4 py-4 border-b border-gray-700 cursor-pointer"
