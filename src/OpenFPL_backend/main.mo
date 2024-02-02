@@ -158,6 +158,7 @@ actor Self {
   };
 
   public shared ({ caller }) func saveFantasyTeam(fantasyTeam : DTOs.UpdateFantasyTeamDTO) : async Result.Result<(), T.Error> {
+    assert false;// TODO: Remove when the game begins
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     return await seasonManager.saveFantasyTeam(principalId, fantasyTeam);
