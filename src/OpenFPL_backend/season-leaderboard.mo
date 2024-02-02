@@ -24,31 +24,31 @@ actor class SeasonLeaderboardCanister() {
     main_canister_id := CanisterIds.MAIN_CANISTER_LOCAL_ID;
   };
 
-  public shared ({ caller }) func createCanister(_seasonId : T.SeasonId, _totalEntries: Nat) : async () {
+  public shared ({ caller }) func createCanister(_seasonId : T.SeasonId, _totalEntries : Nat) : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == main_canister_id;
     seasonId := ?_seasonId;
-    leaderboard := ?{  
+    leaderboard := ?{
       seasonId = _seasonId;
       entries = List.nil();
       totalEntries = _totalEntries;
     };
   };
 
-  public shared ({ caller }) func addLeaderboardChunk(entriesChunk: List.List<T.LeaderboardEntry>) : async () {
+  public shared ({ caller }) func addLeaderboardChunk(entriesChunk : List.List<T.LeaderboardEntry>) : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == main_canister_id;
-    switch(leaderboard){
-      case (null){};
-      case (?foundLeaderboard){
-        leaderboard := ?{  
+    switch (leaderboard) {
+      case (null) {};
+      case (?foundLeaderboard) {
+        leaderboard := ?{
           seasonId = foundLeaderboard.seasonId;
           entries = List.append(foundLeaderboard.entries, entriesChunk);
           totalEntries = foundLeaderboard.totalEntries;
         };
-      }
+      };
     };
   };
 

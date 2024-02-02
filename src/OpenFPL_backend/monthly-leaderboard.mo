@@ -23,13 +23,13 @@ actor class MonthlyLeaderboardCanister() {
     main_canister_id := CanisterIds.MAIN_CANISTER_LOCAL_ID;
   };
 
-  public shared ({ caller }) func createCanister(_seasonId : T.SeasonId, _month : T.CalendarMonth, _clubId : T.ClubId, _totalEntries: Nat) : async () {
+  public shared ({ caller }) func createCanister(_seasonId : T.SeasonId, _month : T.CalendarMonth, _clubId : T.ClubId, _totalEntries : Nat) : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == main_canister_id;
     seasonId := ?_seasonId;
     month := ?_month;
-    leaderboard := ?{  
+    leaderboard := ?{
       seasonId = _seasonId;
       month = _month;
       clubId = _clubId;
@@ -38,21 +38,21 @@ actor class MonthlyLeaderboardCanister() {
     };
   };
 
-  public shared ({ caller }) func addLeaderboardChunk(entriesChunk: List.List<T.LeaderboardEntry>) : async () {
+  public shared ({ caller }) func addLeaderboardChunk(entriesChunk : List.List<T.LeaderboardEntry>) : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == main_canister_id;
-    switch(leaderboard){
-      case (null){};
-      case (?foundLeaderboard){
-        leaderboard := ?{  
+    switch (leaderboard) {
+      case (null) {};
+      case (?foundLeaderboard) {
+        leaderboard := ?{
           seasonId = foundLeaderboard.seasonId;
           month = foundLeaderboard.month;
           clubId = foundLeaderboard.clubId;
           entries = List.append(foundLeaderboard.entries, entriesChunk);
           totalEntries = foundLeaderboard.totalEntries;
         };
-      }
+      };
     };
   };
 

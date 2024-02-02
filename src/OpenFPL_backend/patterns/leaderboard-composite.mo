@@ -497,22 +497,22 @@ module {
       let IC : Management.Management = actor (ENV.Default);
       let _ = await Utilities.updateCanister_(canister, backendCanisterController, IC);
       let canister_principal = Principal.fromActor(canister);
-          
+
       let totalEntries = List.size(weeklyLeaderboard.entries);
       await canister.createCanister(seasonId, gameweek, totalEntries);
 
-      var numChunks: Nat = 0;
-      if(totalEntries > 0){
+      var numChunks : Nat = 0;
+      if (totalEntries > 0) {
         numChunks := (totalEntries + maxEntriesPerChunk - 1) / maxEntriesPerChunk;
       };
       for (i in Iter.range(0, numChunks)) {
         let startIdx = i * maxEntriesPerChunk;
-        
+
         let droppedEntries = List.drop<T.LeaderboardEntry>(weeklyLeaderboard.entries, startIdx);
         let leaderboardChunk = List.take<T.LeaderboardEntry>(droppedEntries, maxEntriesPerChunk);
         await canister.addLeaderboardChunk(leaderboardChunk);
       };
-      
+
       let canisterId = Principal.toText(canister_principal);
 
       switch (storeCanisterId) {
@@ -538,23 +538,22 @@ module {
       let IC : Management.Management = actor (ENV.Default);
       let _ = await Utilities.updateCanister_(canister, backendCanisterController, IC);
       let canister_principal = Principal.fromActor(canister);
-      
+
       let totalEntries = List.size(monthlyLeaderboard.entries);
       await canister.createCanister(seasonId, month, clubId, totalEntries);
-      
 
-      var numChunks: Nat = 0;
-      if(totalEntries > 0){
+      var numChunks : Nat = 0;
+      if (totalEntries > 0) {
         numChunks := (totalEntries + maxEntriesPerChunk - 1) / maxEntriesPerChunk;
       };
       for (i in Iter.range(0, numChunks)) {
         let startIdx = i * maxEntriesPerChunk;
-        
+
         let droppedEntries = List.drop<T.LeaderboardEntry>(monthlyLeaderboard.entries, startIdx);
         let leaderboardChunk = List.take<T.LeaderboardEntry>(droppedEntries, maxEntriesPerChunk);
         await canister.addLeaderboardChunk(leaderboardChunk);
       };
-      
+
       let canisterId = Principal.toText(canister_principal);
 
       switch (storeCanisterId) {
@@ -580,17 +579,17 @@ module {
       let IC : Management.Management = actor (ENV.Default);
       let _ = await Utilities.updateCanister_(canister, backendCanisterController, IC);
       let canister_principal = Principal.fromActor(canister);
-          
+
       let totalEntries = List.size(seasonLeaderboard.entries);
       await canister.createCanister(seasonId, totalEntries);
 
-      var numChunks: Nat = 0;
-      if(totalEntries > 0){
+      var numChunks : Nat = 0;
+      if (totalEntries > 0) {
         numChunks := (totalEntries + maxEntriesPerChunk - 1) / maxEntriesPerChunk;
       };
       for (i in Iter.range(0, numChunks)) {
         let startIdx = i * maxEntriesPerChunk;
-        
+
         let droppedEntries = List.drop<T.LeaderboardEntry>(seasonLeaderboard.entries, startIdx);
         let leaderboardChunk = List.take<T.LeaderboardEntry>(droppedEntries, maxEntriesPerChunk);
         await canister.addLeaderboardChunk(leaderboardChunk);

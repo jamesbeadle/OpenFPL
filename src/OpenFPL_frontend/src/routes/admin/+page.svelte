@@ -1,6 +1,6 @@
 <script lang="ts">
   import Layout from "../Layout.svelte";
-  
+
   import AdminCanisters from "$lib/components/admin/admin-canisters.svelte";
   import AdminFixtures from "$lib/components/admin/admin-fixtures.svelte";
   import AdminTimers from "$lib/components/admin/admin-timers.svelte";
@@ -29,8 +29,8 @@
   import { idlFactory } from "../../../../declarations/OpenFPL_backend";
   import { isError } from "$lib/utils/Helpers";
   import { toastsError, toastsShow } from "$lib/stores/toasts-store";
-    import { Spinner } from "@dfinity/gix-components";
-  
+  import { Spinner } from "@dfinity/gix-components";
+
   let showSystemStateModal: boolean = false;
   let showSnapshotModal: boolean = false;
 
