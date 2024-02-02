@@ -3512,7 +3512,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1aenbyx"
+  version_hash: "ey5kr6"
 };
 async function get_hooks() {
   return {};
@@ -3642,7 +3642,7 @@ const Error$1 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_page();
   return `<h1>${escape($page.status)}</h1> <p>${escape($page.error?.message)}</p>`;
 });
-var define_import_meta_env_default = { VITE_AUTH_PROVIDER_URL: "http://localhost:4943/?canisterId=rdmx6-jaaaa-aaaaa-aaadq-cai", VITE_OPENFPL_BACKEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", VITE_OPENFPL_FRONTEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", VITE___CANDID_UI_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", VITE_TOKEN_CANISTER_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", BASE_URL: "/", MODE: "production", DEV: false, PROD: true, SSR: true };
+var define_import_meta_env_default = { VITE_AUTH_PROVIDER_URL: "http://localhost:4943/?canisterId=rdmx6-jaaaa-aaaaa-aaadq-cai", VITE_OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", VITE_OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", VITE_TOKEN_CANISTER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", BASE_URL: "/", MODE: "production", DEV: false, PROD: true, SSR: true };
 const localIdentityCanisterId = define_import_meta_env_default.VITE_INTERNET_IDENTITY_CANISTER_ID;
 const AUTH_MAX_TIME_TO_LIVE = BigInt(
   60 * 60 * 1e3 * 1e3 * 1e3 * 24 * 14
@@ -4397,7 +4397,7 @@ const idlFactory = ({ IDL }) => {
     validateUpdatePlayer: IDL.Func([UpdatePlayerDTO], [Result], [])
   });
 };
-var define_process_env_default$e = { OPENFPL_BACKEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENFPL_FRONTEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", __CANDID_UI_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$e = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
 const canisterId = define_process_env_default$e.CANISTER_ID_OPENFPL_BACKEND || define_process_env_default$e.OPENFPL_BACKEND_CANISTER_ID;
 const createActor = (canisterId2, options2 = {}) => {
   const agent = options2.agent || new HttpAgent({ ...options2.agentOptions });
@@ -4421,7 +4421,7 @@ const createActor = (canisterId2, options2 = {}) => {
   });
 };
 canisterId ? createActor(canisterId) : void 0;
-var define_process_env_default$d = { OPENFPL_BACKEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENFPL_FRONTEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", __CANDID_UI_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$d = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
 class ActorFactory {
   static createActor(idlFactory2, canisterId2 = "", identity = null, options2 = null) {
     const hostOptions = {
@@ -4668,7 +4668,7 @@ function convertFixtureStatus(fixtureStatus) {
 function isError(response) {
   return response && response.err !== void 0;
 }
-var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENFPL_FRONTEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", __CANDID_UI_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
 function createSystemStore() {
   const { subscribe: subscribe2, set } = writable(null);
   let actor = ActorFactory.createActor(
@@ -4756,7 +4756,7 @@ function createSystemStore() {
   };
 }
 const systemStore = createSystemStore();
-var define_process_env_default$b = { OPENFPL_BACKEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENFPL_FRONTEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", __CANDID_UI_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$b = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
 function createFixtureStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let actor = ActorFactory.createActor(
@@ -4845,7 +4845,7 @@ function createFixtureStore() {
   };
 }
 const fixtureStore = createFixtureStore();
-var define_process_env_default$a = { OPENFPL_BACKEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENFPL_FRONTEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", __CANDID_UI_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$a = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
 function createTeamStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let actor = ActorFactory.createActor(
@@ -5278,7 +5278,7 @@ const toastsError = ({
     level: "error"
   });
 };
-var define_process_env_default$9 = { OPENFPL_BACKEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENFPL_FRONTEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", __CANDID_UI_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$9 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
 function createManagerStore() {
   const { subscribe: subscribe2, set } = writable(null);
   let systemState;
@@ -5565,7 +5565,7 @@ function createManagerStore() {
   };
 }
 createManagerStore();
-var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENFPL_FRONTEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", __CANDID_UI_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
 function createCountriesStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let actor = ActorFactory.createActor(
@@ -5612,7 +5612,7 @@ function createCountriesStore() {
   };
 }
 const countriesStore = createCountriesStore();
-var define_process_env_default$7 = { OPENFPL_BACKEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENFPL_FRONTEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", __CANDID_UI_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$7 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
 function createWeeklyLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage2 = 25;
@@ -5723,7 +5723,7 @@ function createWeeklyLeaderboardStore() {
   };
 }
 createWeeklyLeaderboardStore();
-var define_process_env_default$6 = { OPENFPL_BACKEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENFPL_FRONTEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", __CANDID_UI_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$6 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
 function createPlayerStore() {
   const { subscribe: subscribe2, set } = writable([]);
   systemStore.subscribe((value) => {
@@ -5792,7 +5792,7 @@ function createPlayerStore() {
   };
 }
 const playerStore = createPlayerStore();
-var define_process_env_default$5 = { OPENFPL_BACKEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENFPL_FRONTEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", __CANDID_UI_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$5 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
 function createPlayerEventsStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let systemState;
@@ -6149,7 +6149,7 @@ function createPlayerEventsStore() {
   };
 }
 createPlayerEventsStore();
-var define_process_env_default$4 = { OPENFPL_BACKEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENFPL_FRONTEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", __CANDID_UI_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$4 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
 function createUserStore() {
   const { subscribe: subscribe2, set } = writable(null);
   function uint8ArrayToBase64(bytes) {
@@ -6493,7 +6493,7 @@ const Layout = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }();
   }(init2())} ${validate_component(BusyScreen, "BusyScreen").$$render($$result, {}, {}, {})}`;
 });
-var define_process_env_default$3 = { OPENFPL_BACKEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENFPL_FRONTEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", __CANDID_UI_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$3 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
 function createMonthlyLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage2 = 25;
@@ -6597,7 +6597,7 @@ function createMonthlyLeaderboardStore() {
   };
 }
 createMonthlyLeaderboardStore();
-var define_process_env_default$2 = { OPENFPL_BACKEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENFPL_FRONTEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", __CANDID_UI_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$2 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
 function createSeasonLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage2 = 25;
@@ -6719,7 +6719,7 @@ const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-var define_process_env_default$1 = { OPENFPL_BACKEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENFPL_FRONTEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", __CANDID_UI_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$1 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
 function createGovernanceStore() {
   async function revaluePlayerUp(playerId) {
     try {
@@ -7269,7 +7269,7 @@ const Page$a = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     {}
   )}`;
 });
-var define_process_env_default = { OPENFPL_BACKEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENFPL_FRONTEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", __CANDID_UI_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", DFX_NETWORK: "local" };
+var define_process_env_default = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", TOKEN_CANISTER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
 function createAdminStore() {
   async function getMainCanisterInfo() {
     const identityActor = await ActorFactory.createIdentityActor(

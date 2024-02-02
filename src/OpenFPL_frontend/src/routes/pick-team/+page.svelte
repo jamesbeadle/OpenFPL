@@ -20,6 +20,7 @@
     allFormations,
   } from "../../lib/utils/Helpers";
   import type { PickTeamDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import { goto } from "$app/navigation";
 
   let activeSeason: string;
   let activeGameweek: number;
@@ -67,6 +68,7 @@
 
   onMount(() => {
     try {
+      goto("/"); //TODO: This is removed when the game begins so people can pick a team
       async function loadData() {
         await systemStore.sync();
         await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
