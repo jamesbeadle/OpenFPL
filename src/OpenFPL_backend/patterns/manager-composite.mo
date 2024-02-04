@@ -600,6 +600,7 @@ module {
       switch (existingManager) {
         case (null) {
           let profilePictureCanisterId = await setManagerProfileImage(principalId, profilePicture);
+          activeProfilePictureCanisterId := profilePictureCanisterId;
 
           let createProfileDTO : DTOs.ProfileDTO = {
             principalId = principalId;
@@ -613,6 +614,7 @@ module {
 
           let newManager = buildNewManager(principalId, createProfileDTO, profilePictureCanisterId);
           managers.put(principalId, newManager);
+          profilePictureCanisterIds.put(principalId, profilePictureCanisterId);
 
           return #ok();
         };
@@ -620,6 +622,7 @@ module {
           var profilePictureCanisterId = "";
           if (foundManager.profilePictureCanisterId == "") {
             profilePictureCanisterId := await setManagerProfileImage(principalId, profilePicture);
+            activeProfilePictureCanisterId := profilePictureCanisterId;
 
             let updatedManager : T.Manager = {
               principalId = foundManager.principalId;
@@ -718,6 +721,7 @@ module {
       let IC : Management.Management = actor (ENV.Default);
       let _ = await Utilities.updateCanister_(canister, backendCanisterController, IC);
       let canister_principal = Principal.fromActor(canister);
+      
       await canister.addProfilePicture(principalId, profilePicture);
       let canisterId = Principal.toText(canister_principal);
 

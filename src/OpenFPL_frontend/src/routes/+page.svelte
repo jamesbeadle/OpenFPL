@@ -24,7 +24,7 @@
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import { Spinner } from "@dfinity/gix-components";
   import { weeklyLeaderboardStore } from "$lib/stores/weekly-leaderboard-store";
-    import OpenFplIcon from "$lib/icons/OpenFPLIcon.svelte";
+  import OpenFplIcon from "$lib/icons/OpenFPLIcon.svelte";
 
   let activeTab: string = "fixtures";
   let managerCount = 0;
@@ -111,8 +111,8 @@
 
   //TODO: Remove when the game begins:
 
-  const targetDate = new Date('June 1, 2024 00:00:00').getTime();
-  let countdown: string = '00d 00h 00m 00s';
+  const targetDate = new Date("June 1, 2024 00:00:00").getTime();
+  let countdown: string = "00d 00h 00m 00s";
   let interval: ReturnType<typeof setInterval>;
 
   onMount(() => {
@@ -123,15 +123,25 @@
 
       if (timeLeft < 0) {
         clearInterval(interval);
-        countdown = 'EXPIRED';
+        countdown = "EXPIRED";
         return;
       }
 
       // Time calculations for days, hours, minutes and seconds
-      const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
-      const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
-      const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
-      const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000).toString().padStart(2, '0');
+      const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24))
+        .toString()
+        .padStart(2, "0");
+      const hours = Math.floor(
+        (timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+      )
+        .toString()
+        .padStart(2, "0");
+      const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60))
+        .toString()
+        .padStart(2, "0");
+      const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000)
+        .toString()
+        .padStart(2, "0");
 
       countdown = `${days}d ${hours}h ${minutes}m ${seconds}s`;
     }, 1000);
@@ -141,10 +151,6 @@
     // Clear the interval when the component is destroyed
     clearInterval(interval);
   });
-
-
-
-
 </script>
 
 <Layout>
@@ -153,34 +159,46 @@
   {:else}
     <!-- Todo: This will be removed when the game begins -->
     <div class="flex flex-col lg:flex-row w-full">
-      <div class="flex flex-col items-center text-center p-4 lg:p-8 rounded-lg shadow-lg bg-panel-color w-full mx-2 lg:mx-16">
+      <div
+        class="flex flex-col items-center text-center p-4 lg:p-8 rounded-lg shadow-lg bg-panel-color w-full mx-2 lg:mx-16"
+      >
         <OpenFplIcon className="h-16 lg:h-64 w-auto mb-2 lg:mb-4" />
-        <div class="text-xl lg:text-3xl font-bold my-2 lg:my-4">{countdown}</div>
+        <div class="text-xl lg:text-3xl font-bold my-2 lg:my-4">
+          {countdown}
+        </div>
         <h2 class="text-md lg:text-xl my-2 lg:my-4">Until OpenFPL Begins</h2>
         <div class="horizontal-divider my-2 lg:my-4" />
         <h2 class="text-md lg:text-xl">2024/25 Prize Pool:</h2>
         <h2 class="text-lg lg:text-2xl font-bold">1,875,000 $FPL</h2>
         <div class="horizontal-divider my-2 lg:my-4" />
-        <div class="flex flex-col lg:flex-row space-y-2 lg:space-y-0 lg:space-x-4 w-full">
-          <button class="fpl-purple-btn w-full lg:flex-grow p-2 lg:p-4 rounded-md">Whitepaper</button>
-          <button class="fpl-purple-btn w-full lg:flex-grow p-2 lg:p-4 rounded-md">Clubs</button>
-          <button class="fpl-purple-btn w-full lg:flex-grow p-2 lg:p-4 rounded-md">Proposals</button>
+        <div
+          class="flex flex-col lg:flex-row space-y-2 lg:space-y-0 lg:space-x-4 w-full mt-2"
+        >
+          <a class="w-full lg:flex-grow" href="/whitepaper">
+            <button
+              class="fpl-purple-btn w-full lg:flex-grow p-2 lg:p-4 rounded-md"
+              >Whitepaper</button
+            >
+          </a>
+          <a class="w-full lg:flex-grow" href="/clubs">
+            <button
+              class="fpl-purple-btn w-full lg:flex-grow p-2 lg:p-4 rounded-md"
+              >Clubs</button
+            >
+          </a>
+          <a class="w-full lg:flex-grow" href="/governance">
+            <button
+              class="fpl-purple-btn w-full lg:flex-grow p-2 lg:p-4 rounded-md"
+              >Proposals</button
+            >
+          </a>
         </div>
       </div>
-      
+
       <div class="lg:w-1/4 w-full my-4 lg:my-0">
         <img alt="play" class="rounded-lg mx-auto" src="play.png" />
       </div>
     </div>
-    
-    
-
-        
-    
-
-
-
-
 
     <!-- Todo: This will be added back in when the game begins -->
     <!-- 

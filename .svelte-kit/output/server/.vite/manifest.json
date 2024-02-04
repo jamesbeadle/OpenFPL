@@ -9,7 +9,7 @@
   },
   "_index.js": {
     "css": [
-      "_app/immutable/assets/index.lJ5sRFEc.css"
+      "_app/immutable/assets/index.USi8Uar5.css"
     ],
     "file": "chunks/index.js",
     "imports": [
@@ -94,6 +94,14 @@
     ],
     "isEntry": true,
     "src": "src/OpenFPL_frontend/src/routes/club/+page.svelte"
+  },
+  "src/OpenFPL_frontend/src/routes/clubs/+page.svelte": {
+    "file": "entries/pages/clubs/_page.svelte.js",
+    "imports": [
+      "_index.js"
+    ],
+    "isEntry": true,
+    "src": "src/OpenFPL_frontend/src/routes/clubs/+page.svelte"
   },
   "src/OpenFPL_frontend/src/routes/gameplay-rules/+page.svelte": {
     "file": "entries/pages/gameplay-rules/_page.svelte.js",

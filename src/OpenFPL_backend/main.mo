@@ -326,6 +326,8 @@ actor Self {
     };
 
     seasonManager.setBackendCanisterController(Principal.fromActor(Self));
+    seasonManager.setTimerBackupFunction(timerComposite.setAndBackupTimer, timerComposite.removeExpiredTimers);
+    seasonManager.setStoreCanisterIdFunction(cyclesDispenser.storeCanisterId);
 
     seasonManager.init();
     return #ok;
@@ -376,9 +378,6 @@ actor Self {
     transferWindowStartCallback,
     transferWindowEndCallback,
   );
-
-  seasonManager.setTimerBackupFunction(timerComposite.setAndBackupTimer, timerComposite.removeExpiredTimers);
-  seasonManager.setStoreCanisterIdFunction(cyclesDispenser.storeCanisterId);
 
   //Stable backup:
   private stable var stable_timers : [T.TimerInfo] = [];
@@ -561,7 +560,7 @@ actor Self {
 
   /* Admin Section to be removed when DAO */
 
-  let TEMP_ADMIN_PRINCIPAL = "mb4l5-fry7f-anf7l-2jike-yd7r6-3qf3q-jorvy-o2yfj-x4s3f-xrvfr-eae";
+  let TEMP_ADMIN_PRINCIPAL = "4khjk-mso55-d5gd6-pudbp-627pj-ztvnn-ntn3p-vvujc-2x5dr-kv32c-2ae";
 
   //Getters for admin functions - //TODO: Can't be query as gets cycles?
   public shared ({ caller }) func adminGetMainCanisterInfo() : async Result.Result<DTOs.AdminMainCanisterInfo, T.Error> {

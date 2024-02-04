@@ -88,13 +88,13 @@ const initAuthStore = (): AuthStore => {
 
       await client.logout();
 
-      // This fix a "sign in -> sign out -> sign in again" flow without window reload.
       authClient = null;
 
       update((state: AuthStoreData) => ({
         ...state,
         identity: null,
       }));
+      localStorage.removeItem("user_profile_data");
     },
   };
 };

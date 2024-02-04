@@ -1072,8 +1072,6 @@ module {
     };
 
     public func executeAddInitialFixtures(addInitialFixturesDTO : DTOs.AddInitialFixturesDTO) : async () {
-      Debug.print("adding fixtures");
-      Debug.print(debug_show addInitialFixturesDTO);
       seasons := List.map<T.Season, T.Season>(
         seasons,
         func(season : T.Season) : T.Season {

@@ -401,8 +401,6 @@ module {
     };
 
     public func executeRevaluePlayerUp(revaluePlayerUpDTO : DTOs.RevaluePlayerUpDTO, systemState : T.SystemState) : async () {
-      Debug.print("Executing revalue up");
-
       var updatedPlayers = List.map<T.Player, T.Player>(
         players,
         func(p : T.Player) : T.Player {

@@ -7,7 +7,7 @@ const adminPrincipal =
 */
 
 const adminPrincipal =
-  "mb4l5-fry7f-anf7l-2jike-yd7r6-3qf3q-jorvy-o2yfj-x4s3f-xrvfr-eae";
+  "4khjk-mso55-d5gd6-pudbp-627pj-ztvnn-ntn3p-vvujc-2x5dr-kv32c-2ae";
 export const authSignedInStore: Readable<boolean> = derived(
   authStore,
   ({ identity }) => identity !== null && identity !== undefined

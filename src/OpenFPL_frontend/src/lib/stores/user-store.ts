@@ -185,6 +185,7 @@ function createUserStore() {
             process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
           );
           const result = await identityActor.updateProfilePicture(uint8Array);
+          console.log(result);
 
           if (isError(result)) {
             console.error("Error updating profile picture");

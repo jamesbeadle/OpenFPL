@@ -749,17 +749,13 @@ module {
     };
 
     public func executeUpdatePlayer(updatePlayerDTO : DTOs.UpdatePlayerDTO) : async () {
-      Debug.print("Updating player");
       let currentPlayerPosition = playerComposite.getPlayerPosition(updatePlayerDTO.playerId);
-      Debug.print(debug_show currentPlayerPosition);
       await playerComposite.executeUpdatePlayer(updatePlayerDTO);
       let players = playerComposite.getActivePlayers(systemState.calculationSeasonId);
 
-      Debug.print(debug_show updatePlayerDTO);
       switch (currentPlayerPosition) {
         case (null) { return };
         case (?foundPosition) {
-          Debug.print(debug_show foundPosition);
           var removePlayer = false;
           if (foundPosition != updatePlayerDTO.position) {
             await managerComposite.removePlayerFromTeams(updatePlayerDTO.playerId, players);
