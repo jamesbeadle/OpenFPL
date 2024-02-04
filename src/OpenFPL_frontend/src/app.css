@@ -150,6 +150,12 @@ input {
   @apply flex-shrink-0 w-px bg-gray-400 self-stretch;
 }
 
+.horizontal-divider {
+  min-height: 2px;
+  @apply flex-shrink-0 h-px bg-gray-400 self-stretch;
+}
+
+
 .panel-header {
   @apply text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-2xl font-bold;
 }

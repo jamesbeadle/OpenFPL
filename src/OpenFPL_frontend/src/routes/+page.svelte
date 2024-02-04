@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import { authStore } from "$lib/stores/auth.store";
   import { systemStore } from "$lib/stores/system-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
@@ -24,6 +24,7 @@
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import { Spinner } from "@dfinity/gix-components";
   import { weeklyLeaderboardStore } from "$lib/stores/weekly-leaderboard-store";
+    import OpenFplIcon from "$lib/icons/OpenFPLIcon.svelte";
 
   let activeTab: string = "fixtures";
   let managerCount = 0;
@@ -107,19 +108,82 @@
   function setActiveTab(tab: string): void {
     activeTab = tab;
   }
+
+  //TODO: Remove when the game begins:
+
+  const targetDate = new Date('June 1, 2024 00:00:00').getTime();
+  let countdown: string = '00d 00h 00m 00s';
+  let interval: ReturnType<typeof setInterval>;
+
+  onMount(() => {
+    // Start the countdown timer
+    interval = setInterval(() => {
+      const now = new Date().getTime();
+      const timeLeft = targetDate - now;
+
+      if (timeLeft < 0) {
+        clearInterval(interval);
+        countdown = 'EXPIRED';
+        return;
+      }
+
+      // Time calculations for days, hours, minutes and seconds
+      const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
+      const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
+      const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+      const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000).toString().padStart(2, '0');
+
+      countdown = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    }, 1000);
+  });
+
+  onDestroy(() => {
+    // Clear the interval when the component is destroyed
+    clearInterval(interval);
+  });
+
+
+
+
 </script>
 
 <Layout>
   {#if isLoading || !$systemStore}
     <Spinner />
   {:else}
-      <!-- Todo: This will be removed when the game begins -->
-      <h1>The game will begin in countdown to June 1st</h1>
-      <p>Check out your club and raise proposals to govern our data:</p>
-      <button>Clubs</button>
+    <!-- Todo: This will be removed when the game begins -->
+    <div class="flex flex-col lg:flex-row w-full">
+      <div class="flex flex-col items-center text-center p-4 lg:p-8 rounded-lg shadow-lg bg-panel-color w-full mx-2 lg:mx-16">
+        <OpenFplIcon className="h-16 lg:h-64 w-auto mb-2 lg:mb-4" />
+        <div class="text-xl lg:text-3xl font-bold my-2 lg:my-4">{countdown}</div>
+        <h2 class="text-md lg:text-xl my-2 lg:my-4">Until OpenFPL Begins</h2>
+        <div class="horizontal-divider my-2 lg:my-4" />
+        <h2 class="text-md lg:text-xl">2024/25 Prize Pool:</h2>
+        <h2 class="text-lg lg:text-2xl font-bold">1,875,000 $FPL</h2>
+        <div class="horizontal-divider my-2 lg:my-4" />
+        <div class="flex flex-col lg:flex-row space-y-2 lg:space-y-0 lg:space-x-4 w-full">
+          <button class="fpl-purple-btn w-full lg:flex-grow p-2 lg:p-4 rounded-md">Whitepaper</button>
+          <button class="fpl-purple-btn w-full lg:flex-grow p-2 lg:p-4 rounded-md">Clubs</button>
+          <button class="fpl-purple-btn w-full lg:flex-grow p-2 lg:p-4 rounded-md">Proposals</button>
+        </div>
+      </div>
+      
+      <div class="lg:w-1/4 w-full my-4 lg:my-0">
+        <img alt="play" class="rounded-lg mx-auto" src="play.png" />
+      </div>
+    </div>
+    
+    
 
-      <!-- Todo: This will be added back in when the game begins -->
-      <!-- 
+        
+    
+
+
+
+
+
+    <!-- Todo: This will be added back in when the game begins -->
+    <!-- 
       <div class="page-header-wrapper flex">
         <div class="content-panel lg:w-1/2">
           <div class="flex-grow">

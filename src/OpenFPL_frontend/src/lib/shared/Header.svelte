@@ -144,7 +144,7 @@
               <span class="flex items-center h-full px-4">Home</span>
             </a>
           </li>
-          
+
           <!-- Todo: Pick Team will be added back in when the game begins -->
           <!--
           <li class="mx-2 flex items-center h-16">
