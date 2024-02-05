@@ -721,7 +721,7 @@ module {
       let IC : Management.Management = actor (ENV.Default);
       let _ = await Utilities.updateCanister_(canister, backendCanisterController, IC);
       let canister_principal = Principal.fromActor(canister);
-      
+
       await canister.addProfilePicture(principalId, profilePicture);
       let canisterId = Principal.toText(canister_principal);
 

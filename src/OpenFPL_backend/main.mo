@@ -560,7 +560,7 @@ actor Self {
 
   /* Admin Section to be removed when DAO */
 
-  let TEMP_ADMIN_PRINCIPAL = "4khjk-mso55-d5gd6-pudbp-627pj-ztvnn-ntn3p-vvujc-2x5dr-kv32c-2ae";
+  let TEMP_ADMIN_PRINCIPAL = "vwign-z3gbe-23ozx-3lejk-kseg2-rr5h7-vdkyx-oorzu-mgmrg-yjhir-kqe";
 
   //Getters for admin functions - //TODO: Can't be query as gets cycles?
   public shared ({ caller }) func adminGetMainCanisterInfo() : async Result.Result<DTOs.AdminMainCanisterInfo, T.Error> {

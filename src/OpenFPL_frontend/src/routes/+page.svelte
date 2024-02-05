@@ -158,7 +158,7 @@
     <Spinner />
   {:else}
     <!-- Todo: This will be removed when the game begins -->
-    <div class="flex flex-col lg:flex-row w-full">
+    <div class="flex flex-col lg:flex-row w-full mt-4">
       <div
         class="flex flex-col items-center text-center p-4 lg:p-8 rounded-lg shadow-lg bg-panel-color w-full mx-2 lg:mx-16"
       >
