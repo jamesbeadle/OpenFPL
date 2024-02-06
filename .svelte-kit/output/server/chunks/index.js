@@ -3512,7 +3512,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1tzaddl"
+  version_hash: "4n8fj0"
 };
 async function get_hooks() {
   return {};
@@ -3642,7 +3642,7 @@ const Error$1 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_page();
   return `<h1>${escape($page.status)}</h1> <p>${escape($page.error?.message)}</p>`;
 });
-var define_import_meta_env_default = { VITE_AUTH_PROVIDER_URL: "https://identity.ic0.app", VITE_OPENFPL_BACKEND_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", VITE_OPENFPL_FRONTEND_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", VITE___CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", VITE_TOKEN_CANISTER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", BASE_URL: "/", MODE: "production", DEV: false, PROD: true, SSR: true };
+var define_import_meta_env_default = { VITE_AUTH_PROVIDER_URL: "http://localhost:4943/?canisterId=rdmx6-jaaaa-aaaaa-aaadq-cai", VITE_OPENFPL_BACKEND_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", VITE_OPENFPL_FRONTEND_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", VITE___CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", VITE_TOKEN_CANISTER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", BASE_URL: "/", MODE: "production", DEV: false, PROD: true, SSR: true };
 const localIdentityCanisterId = define_import_meta_env_default.VITE_INTERNET_IDENTITY_CANISTER_ID;
 const AUTH_MAX_TIME_TO_LIVE = BigInt(
   60 * 60 * 1e3 * 1e3 * 1e3 * 24 * 14
@@ -3686,7 +3686,7 @@ const initAuthStore = () => {
       // eslint-disable-next-line no-async-promise-executor
       new Promise(async (resolve2, reject) => {
         authClient = authClient ?? await createAuthClient();
-        const identityProvider = nonNullish(localIdentityCanisterId) ? `http://${localIdentityCanisterId}.localhost:8000` : `https://identity.${domain ?? "internetcomputer.org"}`;
+        const identityProvider = nonNullish(localIdentityCanisterId) ? `http://${localIdentityCanisterId}.localhost:8000` : domain;
         await authClient?.login({
           maxTimeToLive: AUTH_MAX_TIME_TO_LIVE,
           onSuccess: () => {
@@ -4437,6 +4437,7 @@ class ActorFactory {
     } else {
       options2.agentOptions.host = hostOptions.host;
     }
+    console.log(options2);
     const agent = new HttpAgent({ ...options2.agentOptions });
     {
       agent.fetchRootKey().catch((err) => {
@@ -4446,6 +4447,8 @@ class ActorFactory {
         console.error(err);
       });
     }
+    console.log("HERE2");
+    console.log(canisterId2);
     return Actor.createActor(idlFactory2, {
       agent,
       canisterId: canisterId2,
@@ -6393,7 +6396,7 @@ const WalletIcon = create_ssr_component(($$result, $$props, $$bindings, slots) =
     $$bindings.className(className);
   return `<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true"${add_attribute("class", className, 0)} fill="currentColor" viewBox="0 0 24 24"><path d="M12.136.326A1.5 1.5 0 0 1 14 1.78V3h.5A1.5 1.5 0 0 1 16 4.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 13.5v-9a1.5 1.5 0 0 1 1.432-1.499L12.136.326zM5.562 3H13V1.78a.5.5 0 0 0-.621-.484L5.562 3zM1.5 4a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-13z"></path><path d="M15.5,6.5v3a1,1,0,0,1-1,1h-3.5v-5H14.5A1,1,0,0,1,15.5,6.5Z"></path><path d="M12,8a.5,.5 0,1,1,.001,0Z"></path></svg>`;
 });
-const adminPrincipal = "vwign-z3gbe-23ozx-3lejk-kseg2-rr5h7-vdkyx-oorzu-mgmrg-yjhir-kqe";
+const adminPrincipal = "nr3dw-niubr-vvnjq-kctcw-xhoyw-yyuds-5tpxq-xw2o2-clc7m-xu5df-oae";
 const authSignedInStore = derived(
   authStore,
   ({ identity }) => identity !== null && identity !== void 0

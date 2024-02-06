@@ -152,7 +152,7 @@ export default defineConfig((): UserConfig => {
     ),
     ...readCanisterIds({ prefix: "VITE_" }),
   };
-  console.log(process.env)
+  
   return {
     ...config,
     // Backwards compatibility for auto generated types of dfx that are meant for webpack and process.env
