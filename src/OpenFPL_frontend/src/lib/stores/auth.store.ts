@@ -56,10 +56,9 @@ const initAuthStore = (): AuthStore => {
       // eslint-disable-next-line no-async-promise-executor
       new Promise<void>(async (resolve, reject) => {
         authClient = authClient ?? (await createAuthClient());
-
         const identityProvider = nonNullish(localIdentityCanisterId)
           ? `http://${localIdentityCanisterId}.localhost:8000`
-          : `https://identity.${domain ?? "internetcomputer.org"}`;
+          : domain;
 
         await authClient?.login({
           maxTimeToLive: AUTH_MAX_TIME_TO_LIVE,

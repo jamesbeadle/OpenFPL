@@ -30,6 +30,7 @@ export class ActorFactory {
       options.agentOptions.host = hostOptions.host;
     }
 
+    console.log(options)
     const agent = new HttpAgent({ ...options.agentOptions });
 
     if (process.env.DFX_NETWORK !== "ic") {
@@ -41,6 +42,8 @@ export class ActorFactory {
       });
     }
 
+    console.log("HERE2")
+    console.log(canisterId)
     return Actor.createActor(idlFactory, {
       agent,
       canisterId: canisterId,

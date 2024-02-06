@@ -138,18 +138,21 @@ const config: UserConfig = {
   },
 };
 
-export default defineConfig(({ mode }: UserConfig): UserConfig => {
+export default defineConfig((): UserConfig => {
   // Expand environment - .env files - with canister IDs
-  console.log("defining config");
-  console.log(`mode: ${mode}`);
-  const envVars = loadEnv(mode ?? 'development', process.cwd());
-console.log(envVars);
   process.env = {
     ...process.env,
-    ...loadEnv(mode ?? "development", process.cwd()),
+    ...loadEnv(
+      network === "ic"
+        ? "production"
+        : network === "staging"
+        ? "staging"
+        : "development",
+      process.cwd()
+    ),
     ...readCanisterIds({ prefix: "VITE_" }),
   };
-  console.log(process.env);
+  console.log(process.env)
   return {
     ...config,
     // Backwards compatibility for auto generated types of dfx that are meant for webpack and process.env
@@ -159,6 +162,7 @@ console.log(envVars);
         DFX_NETWORK: network,
       },
       VITE_APP_VERSION: JSON.stringify(version),
+      VITE_DFX_NETWORK: JSON.stringify(network),
     },
   };
 });

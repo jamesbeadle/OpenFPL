@@ -3512,7 +3512,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "v2qgdy"
+  version_hash: "1tzaddl"
 };
 async function get_hooks() {
   return {};
@@ -3642,7 +3642,7 @@ const Error$1 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_page();
   return `<h1>${escape($page.status)}</h1> <p>${escape($page.error?.message)}</p>`;
 });
-var define_import_meta_env_default = { VITE_OPENFPL_BACKEND_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", VITE_OPENFPL_FRONTEND_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", VITE___CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", VITE_TOKEN_CANISTER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", BASE_URL: "/", MODE: "production", DEV: false, PROD: true, SSR: true };
+var define_import_meta_env_default = { VITE_AUTH_PROVIDER_URL: "https://identity.ic0.app", VITE_OPENFPL_BACKEND_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", VITE_OPENFPL_FRONTEND_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", VITE___CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", VITE_TOKEN_CANISTER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", BASE_URL: "/", MODE: "production", DEV: false, PROD: true, SSR: true };
 const localIdentityCanisterId = define_import_meta_env_default.VITE_INTERNET_IDENTITY_CANISTER_ID;
 const AUTH_MAX_TIME_TO_LIVE = BigInt(
   60 * 60 * 1e3 * 1e3 * 1e3 * 24 * 14

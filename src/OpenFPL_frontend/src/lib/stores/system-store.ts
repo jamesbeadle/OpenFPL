@@ -12,7 +12,6 @@ import { isError, replacer } from "../utils/Helpers";
 
 function createSystemStore() {
   const { subscribe, set } = writable<SystemStateDTO | null>(null);
-
   let actor: any = ActorFactory.createActor(
     idlFactory,
     process.env.OPENFPL_BACKEND_CANISTER_ID
