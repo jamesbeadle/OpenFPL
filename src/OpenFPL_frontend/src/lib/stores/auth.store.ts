@@ -58,8 +58,8 @@ const initAuthStore = (): AuthStore => {
         authClient = authClient ?? (await createAuthClient());
 
         const identityProvider = nonNullish(localIdentityCanisterId)
-          ? `http://localhost:4943?canisterId=${localIdentityCanisterId}`
-          : `${domain ?? "https://identity.ic0.app"}`;
+          ? `http://${localIdentityCanisterId}.localhost:8000`
+          : `https://identity.${domain ?? "internetcomputer.org"}`;
 
         await authClient?.login({
           maxTimeToLive: AUTH_MAX_TIME_TO_LIVE,

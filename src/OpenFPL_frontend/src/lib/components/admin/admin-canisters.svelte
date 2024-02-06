@@ -26,7 +26,6 @@
 
   onMount(async () => {
     try {
-      console.log("Loading Canisters");
       authStore.sync();
       await loadCanisterInfo();
     } catch (error) {
@@ -36,7 +35,6 @@
       });
       console.error("Error fetching gameweek points:", error);
     } finally {
-      console.log("is loading false");
       isLoading = false;
     }
   });

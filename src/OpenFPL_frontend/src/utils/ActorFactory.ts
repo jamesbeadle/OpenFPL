@@ -32,7 +32,7 @@ export class ActorFactory {
 
     const agent = new HttpAgent({ ...options.agentOptions });
 
-    if (process.env.NODE_ENV !== "production") {
+    if (process.env.DFX_NETWORK !== "ic") {
       agent.fetchRootKey().catch((err) => {
         console.warn(
           "Unable to fetch root key. Ensure your local replica is running"

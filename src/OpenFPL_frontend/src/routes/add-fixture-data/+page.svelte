@@ -379,22 +379,23 @@
                       : ""
                   } ${player.lastName}`}
                 </div>
-                {#if convertPlayerPosition(player.position) == 0}<div
+
+                {#if Object.keys(player.position)[0] == "Goalkeeper"}<div
                     class="w-1/6 px-4"
                   >
                     GK
                   </div>{/if}
-                {#if convertPlayerPosition(player.position) == 1}<div
+                {#if Object.keys(player.position)[0] == "Defender"}<div
                     class="w-1/6 px-4"
                   >
                     DF
                   </div>{/if}
-                {#if convertPlayerPosition(player.position) == 2}<div
+                {#if Object.keys(player.position)[0] == "Midfielder"}<div
                     class="w-1/6 px-4"
                   >
                     MF
                   </div>{/if}
-                {#if convertPlayerPosition(player.position) == 3}<div
+                {#if Object.keys(player.position)[0] == "Forward"}<div
                     class="w-1/6 px-4"
                   >
                     FW

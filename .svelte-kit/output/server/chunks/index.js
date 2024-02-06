@@ -5,9 +5,9 @@ import { parse, serialize } from "cookie";
 import * as set_cookie_parser from "set-cookie-parser";
 import { nonNullish, isNullish } from "@dfinity/utils";
 import "dompurify";
-import { AuthClient } from "@dfinity/auth-client";
 import { HttpAgent, Actor } from "@dfinity/agent";
 import "@dfinity/nns";
+import { AuthClient } from "@dfinity/auth-client";
 let base = "";
 let assets = base;
 const initial = { base, assets };
@@ -3512,7 +3512,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1v3jmd7"
+  version_hash: "7bbdg0"
 };
 async function get_hooks() {
   return {};
@@ -3670,6 +3670,7 @@ const isNnsAlternativeOrigin = () => {
   return window.location.origin === NNS_IC_ORG_ALTERNATIVE_ORIGIN;
 };
 const initAuthStore = () => {
+  console.log(localIdentityCanisterId);
   const { subscribe: subscribe2, set, update } = writable({
     identity: void 0
   });
@@ -3686,7 +3687,7 @@ const initAuthStore = () => {
       // eslint-disable-next-line no-async-promise-executor
       new Promise(async (resolve2, reject) => {
         authClient = authClient ?? await createAuthClient();
-        const identityProvider = nonNullish(localIdentityCanisterId) ? `http://localhost:4943?canisterId=${localIdentityCanisterId}` : `${domain ?? "https://identity.ic0.app"}`;
+        const identityProvider = nonNullish(localIdentityCanisterId) ? `http://${localIdentityCanisterId}.localhost:8000` : `https://identity.${domain ?? "internetcomputer.org"}`;
         await authClient?.login({
           maxTimeToLive: AUTH_MAX_TIME_TO_LIVE,
           onSuccess: () => {
@@ -4425,6 +4426,7 @@ canisterId ? createActor(canisterId) : void 0;
 var define_process_env_default$d = { OPENFPL_BACKEND_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", OPENFPL_FRONTEND_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", TOKEN_CANISTER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
 class ActorFactory {
   static createActor(idlFactory2, canisterId2 = "", identity = null, options2 = null) {
+    console.log(define_process_env_default$d.DFX_NETWORK);
     const hostOptions = {
       host: `http://localhost:4943/?canisterId=rdmx6-jaaaa-aaaaa-aaadq-cai`,
       identity
@@ -4439,7 +4441,7 @@ class ActorFactory {
       options2.agentOptions.host = hostOptions.host;
     }
     const agent = new HttpAgent({ ...options2.agentOptions });
-    if (define_process_env_default$d.NODE_ENV !== "production") {
+    {
       agent.fetchRootKey().catch((err) => {
         console.warn(
           "Unable to fetch root key. Ensure your local replica is running"

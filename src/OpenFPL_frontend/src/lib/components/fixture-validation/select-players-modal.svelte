@@ -66,10 +66,10 @@
           </div>
           <div class="flex w-2/12 justify-center">
             <span>
-              {#if convertPlayerPosition(player.position) == 0}GK{/if}
-              {#if convertPlayerPosition(player.position) == 1}DF{/if}
-              {#if convertPlayerPosition(player.position) == 2}MF{/if}
-              {#if convertPlayerPosition(player.position) == 3}FW{/if}
+              {#if Object.keys(player.position)[0] == "Goalkeeper"}GK{/if}
+              {#if Object.keys(player.position)[0] == "Defender"}DF{/if}
+              {#if Object.keys(player.position)[0] == "Midfielder"}MF{/if}
+              {#if Object.keys(player.position)[0] == "Forward"}FW{/if}
             </span>
           </div>
           <div class="flex w-2/12 justify-center">
