@@ -44,6 +44,7 @@ declare module '$env/static/private' {
 	export const CANISTER_ID_OpenFPL_backend: string;
 	export const CANISTER_ID: string;
 	export const CANISTER_CANDID_PATH: string;
+	export const VITE_AUTH_PROVIDER_URL: string;
 	export const LESSOPEN: string;
 	export const USER: string;
 	export const npm_config_user_agent: string;
@@ -153,6 +154,7 @@ declare module '$env/dynamic/private' {
 		CANISTER_ID_OpenFPL_backend: string;
 		CANISTER_ID: string;
 		CANISTER_CANDID_PATH: string;
+		VITE_AUTH_PROVIDER_URL: string;
 		LESSOPEN: string;
 		USER: string;
 		npm_config_user_agent: string;
