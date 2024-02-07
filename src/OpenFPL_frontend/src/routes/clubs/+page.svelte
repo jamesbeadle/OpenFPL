@@ -2,33 +2,13 @@
   import { onMount } from "svelte";
   import { toastsError } from "$lib/stores/toasts-store";
   import { teamStore } from "$lib/stores/team-store";
-  import { fixtureStore } from "$lib/stores/fixture-store";
-  import { systemStore } from "$lib/stores/system-store";
-  import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import type { ClubDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
+  import Layout from "../Layout.svelte";
+    import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
 
-  let fixturesWithTeams: FixtureWithTeams[] = [];
-  let selectedGameweek: number;
-  let gameweeks = Array.from(
-    { length: $systemStore?.calculationGameweek ?? 1 },
-    (_, i) => i + 1
-  );
-  let tableData: any[] = [];
 
   onMount(async () => {
     try {
       await teamStore.sync();
-      if ($teamStore.length == 0) return;
-      await systemStore.sync();
-      await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
-      selectedGameweek = $systemStore?.calculationGameweek ?? 1;
-
-      fixturesWithTeams = $fixtureStore.map((fixture) => ({
-        fixture,
-        homeTeam: getTeamFromId(fixture.homeClubId),
-        awayTeam: getTeamFromId(fixture.awayClubId),
-      }));
     } catch (error) {
       toastsError({
         msg: { text: "Error fetching league table." },
@@ -36,26 +16,28 @@
       });
       console.error("Error fetching league table:", error);
     } finally {
+      
     }
   });
-
-  const changeGameweek = (delta: number) => {
-    selectedGameweek = Math.max(1, Math.min(38, selectedGameweek + delta));
-  };
-
-  function getTeamFromId(teamId: number): ClubDTO | undefined {
-    return $teamStore.find((team) => team.id === teamId);
-  }
 </script>
 
-<div class="page-header-wrapper flex">
-  <div class="content-panel">
-    <div class="flex-grow flex flex-col items-center">
-      <p class="content-panel-header">Clubs</p>
-      
-        {#each $teamStore as team}
-          <p>{team.name}</p>
+<Layout>
+  <div class="page-header-wrapper flex w-full">
+    <div class="content-panel w-full">
+      <div class="w-full grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
+        <p class="col-span-1 md:col-span-4 text-center w-full mb-4">Premier League Clubs</p>
+        {#each $teamStore.sort((a, b) => a.id - b.id) as team}
+          <div class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full">
+            <div class="flex items-center space-x-4 w-full">
+              <BadgeIcon primaryColour={team.primaryColourHex} secondaryColour={team.secondaryColourHex} thirdColour={team.thirdColourHex} className="w-8" />
+              <p class="flex-grow text-lg md:text-sm">{team.friendlyName}</p>
+              <button class="mt-auto fpl-button text-white font-bold py-2 px-4 rounded self-end">
+                View
+              </button>
+            </div>
+          </div>
         {/each}
+      </div>
     </div>
   </div>
-</div>
+</Layout>
