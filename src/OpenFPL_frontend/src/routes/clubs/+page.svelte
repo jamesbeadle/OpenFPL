@@ -31,9 +31,14 @@
             <div class="flex items-center space-x-4 w-full">
               <BadgeIcon primaryColour={team.primaryColourHex} secondaryColour={team.secondaryColourHex} thirdColour={team.thirdColourHex} className="w-8" />
               <p class="flex-grow text-lg md:text-sm">{team.friendlyName}</p>
-              <button class="mt-auto fpl-button text-white font-bold py-2 px-4 rounded self-end">
+              <a
+                class="mt-auto self-end"
+                href={`/club?id=${team.id}`}
+              >
+              <button class="fpl-button text-white font-bold py-2 px-4 rounded self-end">
                 View
               </button>
+              </a>
             </div>
           </div>
         {/each}

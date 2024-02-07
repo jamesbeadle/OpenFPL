@@ -101,10 +101,11 @@
 
   const getTeamPosition = (teamId: number) => {
     const position = tableData.findIndex((team) => team.id === teamId);
-    return position !== -1 ? position + 1 : "Not found";
+    return position !== -1 ? position + 1 : "-";
   };
 
   const getTeamPoints = (teamId: number) => {
+    if(!tableData || tableData.length == 0) { return 0; }
     const points = tableData.find((team) => team.id === teamId).points;
     return points;
   };
@@ -223,19 +224,32 @@
         <div class="vertical-divider" />
         <div class="flex-grow">
           <p class="content-panel-header">Most Points</p>
-          <p class="content-panel-stat">
-            <a href={`/player?id=${highestScoringPlayer?.id}`}
-              >{highestScoringPlayer?.lastName}</a
-            >
-          </p>
-          <p class="content-panel-header">
-            {getPositionText(
-              convertPlayerPosition(
-                highestScoringPlayer?.position ?? { Goalkeeper: null }
-              )
-            )}
-            ({highestScoringPlayer?.totalPoints})
-          </p>
+          {#if highestScoringPlayer?.totalPoints == 0}
+          
+            <p class="content-panel-stat">
+              -
+            </p>
+            <p class="content-panel-header">
+              -
+              ({highestScoringPlayer?.totalPoints})
+            </p>
+
+          {:else}
+            <p class="content-panel-stat">
+              <a href={`/player?id=${highestScoringPlayer?.id}`}
+                >{highestScoringPlayer?.lastName}</a
+              >
+            </p>
+            <p class="content-panel-header">
+              {getPositionText(
+                convertPlayerPosition(
+                  highestScoringPlayer?.position ?? { Goalkeeper: null }
+                )
+              )}
+              ({highestScoringPlayer?.totalPoints})
+            </p>
+
+          {/if}
         </div>
       </div>
     </div>

@@ -30,6 +30,7 @@
   import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
   import { Spinner } from "@dfinity/gix-components";
   import { Position } from "$lib/enums/Position";
+    import { countriesStore } from "$lib/stores/country-store";
 
   $: id = Number($page.url.searchParams.get("id"));
 
@@ -55,21 +56,23 @@
     try {
       await teamStore.sync();
       await systemStore.sync();
+      await countriesStore.sync();
       await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
 
       if ($teamStore.length == 0) return;
-      if ($fixtureStore.length == 0) return;
 
       await playerStore.sync();
+      
+      selectedPlayer = $playerStore.find((x) => x.id === id) ?? null;
+      team = $teamStore.find((x) => x.id === selectedPlayer?.clubId) ?? null;
+
+      if ($fixtureStore.length == 0) return;
 
       fixturesWithTeams = $fixtureStore.map((fixture) => ({
         fixture,
         homeTeam: getTeamFromId(fixture.homeClubId),
         awayTeam: getTeamFromId(fixture.awayClubId),
       }));
-
-      selectedPlayer = $playerStore.find((x) => x.id === id) ?? null;
-      team = $teamStore.find((x) => x.id === selectedPlayer?.clubId) ?? null;
 
       let teamFixtures = $fixtureStore.filter(
         (x) => x.homeClubId === team?.id || x.awayClubId === team?.id
@@ -149,22 +152,24 @@
         <div class="flex-grow">
           <p class="content-panel-header">{team?.name}</p>
           <p class="content-panel-stat">
-            {$playerStore.filter((x) => x.clubId == id).length}
+            {selectedPlayer?.totalPoints}
           </p>
-          <p class="content-panel-header">Total</p>
+          <p class="content-panel-header">Total Points</p>
         </div>
         <div class="vertical-divider" />
         <div class="flex-grow">
-          <p class="content-panel-header">League Position</p>
+          <p class="content-panel-header">{selectedPlayer?.firstName}</p>
           <p class="content-panel-stat">
             {selectedPlayer?.lastName}
           </p>
           <p class="content-panel-header">
-            <svelte:component
+            <span class="flex flex-row items-center">
+              <svelte:component
               this={getFlagComponent(selectedPlayer?.nationality ?? 0)}
               class="w-4 h-4 mr-1"
               size="100"
-            />{selectedPlayer?.firstName}
+            />{$countriesStore.find(x => x.id == selectedPlayer?.nationality)?.name}
+            </span>
           </p>
         </div>
       </div>
