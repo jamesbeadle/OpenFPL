@@ -3512,7 +3512,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "4n8fj0"
+  version_hash: "1vtpssb"
 };
 async function get_hooks() {
   return {};
@@ -4437,7 +4437,6 @@ class ActorFactory {
     } else {
       options2.agentOptions.host = hostOptions.host;
     }
-    console.log(options2);
     const agent = new HttpAgent({ ...options2.agentOptions });
     {
       agent.fetchRootKey().catch((err) => {
@@ -4447,8 +4446,6 @@ class ActorFactory {
         console.error(err);
       });
     }
-    console.log("HERE2");
-    console.log(canisterId2);
     return Actor.createActor(idlFactory2, {
       agent,
       canisterId: canisterId2,
