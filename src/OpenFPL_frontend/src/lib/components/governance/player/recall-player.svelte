@@ -94,7 +94,7 @@
     <div class="flex justify-start items-center w-full">
       <div class="w-full flex-col space-y-4 mb-2">
         <div class="flex-col space-y-2">
-          <p>Select the players club:</p>
+          <p>Select the player's club:</p>
           <select
             class="p-2 fpl-dropdown min-w-[100px]"
             bind:value={selectedClubId}

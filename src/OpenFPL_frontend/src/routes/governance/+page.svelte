@@ -74,7 +74,9 @@
             <option value={proposalType.id}>{proposalType.description}</option>
           {/each}
         </select>
+        <a href="/add-proposal">
         <button class="p-2 fpl-button text-white rounded-md">Raise Proposal</button>
+      </a>
       </div>
 
         <div class="flex flex-col space-y-4 mt-4">
