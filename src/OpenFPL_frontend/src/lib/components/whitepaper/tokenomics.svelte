@@ -338,7 +338,7 @@
       <td
         >The minimum ICP to be raised (otherwise sale fails and ICP returned).</td
       >
-      <td>250,000</td>
+      <td>500,000</td>
     </tr>
     <tr>
       <td>The ICP from the Community Fund.</td>
@@ -346,7 +346,7 @@
     </tr>
     <tr>
       <td>Sale start date.</td>
-      <td>1st February 2024</td>
+      <td>1st March 2024</td>
     </tr>
     <tr>
       <td>Minimum number of sale participants.</td>
@@ -358,7 +358,7 @@
     </tr>
     <tr>
       <td>Maximum ICP per buyer.</td>
-      <td>150,000</td>
+      <td>100,000</td>
     </tr>
   </table>
 

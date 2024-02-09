@@ -21,7 +21,15 @@
     another dimension to our engagement strategy.
   </p>
 
-  <h2 class="default-sub-header mt-4">January 2024: Shirt Production Begins</h2>
+  <h2 class="default-sub-header mt-4">
+    March 1st 2024: OpenFPL SNS Decentralisation Sale
+  </h2>
+  <p class="my-2">
+    We aim to begin our decentralisation sale on 1st March 2024, selling 25
+    million $FPL tokens (25%).
+  </p>
+
+  <h2 class="default-sub-header mt-4">April 2024: Shirt Production Begins</h2>
   <p class="my-2">
     We are actively engaged in shirt production for OpenFPL, moving beyond mere
     concepts to tangible products. Our collaboration with a UK supplier is set
@@ -41,7 +49,7 @@
   </p>
 
   <h2 class="default-sub-header mt-4">
-    February 2024: Online Marketing Campaigns
+    May 2024: Online Marketing Campaigns
   </h2>
   <p class="my-2">
     We are actively in discussions with a digital marketing agency, preparing to
@@ -56,15 +64,7 @@
     authentic and impactful.
   </p>
 
-  <h2 class="default-sub-header mt-4">
-    March 1st 2024: OpenFPL SNS Decentralisation Sale
-  </h2>
-  <p class="my-2">
-    We aim to begin our decentralisation sale on 1st March 2024, selling 25
-    million $FPL tokens (25%).
-  </p>
-
-  <h2 class="default-sub-header mt-4">April 2024: Private Leagues</h2>
+  <h2 class="default-sub-header mt-4">June 2024: Private Leagues</h2>
   <p class="my-2">
     The Private Leagues feature is the start of building your own OpenFPL
     community within the DAO. Managers will be able to create a Private League
@@ -74,7 +74,14 @@
     currency, amount and percentage payouts per finishing position.
   </p>
 
-  <h2 class="default-sub-header mt-4">April 2024: OpenFPL Events</h2>
+  <h2 class="default-sub-header mt-4">June 2024: OpenChat Integration</h2>
+  <p class="my-2">
+    Integrating OpenChat for seamless communication within the OpenFPL
+    community, providing updates and increasing engagement through group
+    channels and private league communication.
+  </p>
+
+  <h2 class="default-sub-header mt-4">July 2024: OpenFPL Events</h2>
   <p class="my-2">
     OpenFPL is set to create a series of interactive experiences at event
     locations in Premier League club cities, drawing inspiration from major UK
@@ -107,13 +114,6 @@
     Partnering with Premier League content creators to offer exclusive insights,
     with a unique monetization model for both free and subscription-based
     content.
-  </p>
-
-  <h2 class="default-sub-header mt-4">March 2025: OpenChat Integration</h2>
-  <p class="my-2">
-    Integrating OpenChat for seamless communication within the OpenFPL
-    community, providing updates and increasing engagement through group
-    channels.
   </p>
 
   <h2 class="default-sub-header mt-4">Future: 100% On-Chain AI</h2>

@@ -11,6 +11,7 @@ module Types {
   public type ProposalId = Nat;
   public type CountryId = Nat16;
   public type PrincipalId = Text;
+  public type CanisterId = Text;
 
   public type Error = {
     #NotFound;

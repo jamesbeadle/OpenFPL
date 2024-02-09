@@ -100,28 +100,11 @@
   <h2 class="default-header mt-4">Revenue Redistribution Plan</h2>
   <p class="my-2">
     In line with our commitment to directly benefit neuron holders, OpenFPL will
-    allocate 50% of any ICRC-1 token received by the DAO each month to neuron
-    holders.
+    use up to 50% of any ICRC-1 token received by the DAO to purchase $FPL from exchanges each month. 
+    We will only purchase enough $FPL to burn the total supply back down to 100m $FPL.
+    This is also attractive to investors as it will remove an inflationary pressures when holding an $FPL position.
   </p>
   <p class="my-2">
-    Distribution to neuron holders will be proportional to each neuron's total
-    $FPL value and its remaining duration. This ensures a fair and equitable
-    redistribution of revenue.
-  </p>
-  <p class="my-2">
-    Calculation for this distribution will be based on the status of FPL neurons
-    as at the end of each month, aligning with the DAO's transparent and
-    community-focused ethos.
-  </p>
-
-  <h2 class="default-header mt-4">Overall Revenue Philosophy</h2>
-  <p class="my-2">
-    OpenFPL’s revenue philosophy is rooted in creating a sustainable ecosystem
-    where the utility token maintains its value and relevance.
-  </p>
-  <p class="my-2">
-    The reinvestment of revenues into the DAO and direct distribution to neuron
-    holders are designed to foster a cycle of growth, user engagement, and
-    shared prosperity.
+    Any remaining ICRC-1 tokens earned by the DAO will remain liquid and can be used for whatever the DAO decides.
   </p>
 </div>

@@ -338,6 +338,11 @@ module {
 
       await managerComposite.calculateFantasyTeamScores(playerPointsMap, systemState.calculationSeasonId, systemState.calculationGameweek);
 
+      //TODO: GET THE MANAGER CANISTER INDEX IDS
+      //FOR EACH CANISTER GET THE MANAGERS TEAMS ONLY
+      //CALCULATE THE LEADERBOARD FOR THE MANAGERS
+      
+
       let managers = managerComposite.getManagers();
       await leaderboardComposite.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth, managers);
 
