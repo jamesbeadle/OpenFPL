@@ -11,16 +11,15 @@
   <h2 class="default-sub-header">DAO Reward Structure</h2>
   <p class="my-2">
     The DAO incentivizes participation through monthly minting of new FPL
-    tokens, calculated annually as 2.5% of the total $FPL supply as of August
-    1st. These tokens are allocated to:
+    tokens, calculated annually at 1.875% of the total $FPL supply as of August
+    1st.
   </p>
 
-  <ul class="list-disc ml-4">
-    <li>Gameplay Rewards (75%)</li>
-    <li>Governance Rewards (25%)</li>
-  </ul>
+  <p class="my-2">
+    Along with gameplay rewards, voting rewards are applied at a reward rate of 1% per year.
+  </p>
 
-  <h2 class="default-sub-header mt-4">Gameplay Rewards (75%)</h2>
+  <h2 class="default-sub-header mt-4">Gameplay Rewards</h2>
   <p class="my-2">
     The DAO is designed to reward users for their expertise in fantasy football,
     with rewards distributed weekly, monthly, and annually based on performance.
@@ -368,21 +367,6 @@
       transfers throughout the season.
     </li>
   </ul>
-
-  <h2 class="default-sub-header mt-4">Governance Rewards (25%)</h2>
-  <p class="my-2">
-    OpenFPL values neuron holders' contributions to maintaining up-to-date
-    Premier League data. Rewards are given for raising and voting on essential
-    proposals, such as scheduling, player transfers, and updating player
-    information. Failed proposals incur a 10 $FPL cost, contributing to the
-    DAO’s treasury.
-  </p>
-  <p class="my-4">
-    The OpenFPL DAO is an innovative approach to fantasy football, combining
-    real-time data accuracy with rewarding community involvement. By aligning
-    rewards with active participation, OpenFPL ensures a vibrant, informed, and
-    engaged user base.
-  </p>
 </div>
 
 <style>

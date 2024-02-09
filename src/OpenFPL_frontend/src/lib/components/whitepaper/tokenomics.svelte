@@ -404,7 +404,7 @@
 
   <h2 class="default-sub-header mt-4">Tokenomics</h2>
   <p class="my-2">
-    Each season, 2.5% of the total $FPL supply will be minted for DAO rewards.
+    Each season, 1.875% of the total $FPL supply will be minted for gameplay rewards.
     It will be ICP FA policy to raise proposals to use 50% of the revenue
     deposited into the DAO's treasury to purchase $FPL from exchanges. Using
     this available ICP, the DAO will purchase $FPL up to an amount that would
@@ -445,10 +445,7 @@
 
   <ul class="list-disc ml-4">
     <li>James Beadle - Founder, Lead Developer</li>
-    <li>DfinityDesigner - Designer</li>
-    <li>George - Community Manager</li>
-    <li>ICP_Insider - Blockchain Promoter</li>
-    <li>MadMaxIC - Gameplay Designer</li>
+    <li>George Robinson - Community Manager</li>
   </ul>
 
   <p class="my-2">

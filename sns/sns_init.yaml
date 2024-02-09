@@ -76,23 +76,21 @@ logo: logo.png
 
 # URL to the dapp controlled by the SNS project.
 # Must be a string from 10 to 512 bytes.
-url: https://forum.dfinity.org/thread-where-this-sns-is-discussed
+url: https://openfpl.xyz
 
 # Metadata for the NNS proposal required to create the SNS. This data will be
 # shown only in the NNS proposal.
 NnsProposal:
   # The title of the NNS proposal. Must be a string of 4 to 256 bytes.
-  title: "NNS Proposal to create an SNS named 'OpenFPL'"
+  title: "NNS Proposal to create the OpenFPL SNS"
 
   # The HTTPS address of additional content required to evaluate the NNS
   # proposal.
-  url: "https://forum.dfinity.org"
+  url: "https://openfpl.xyz/whitepaper"
 
   # The description of the proposal. Must be a string of 10 to 2,000 bytes.
   summary: >
     Proposal to create an SNS for the project OpenFPL.
-    The SNS will be initialized with the following neurons:
-    ...
 
 # If the SNS launch attempt fails, control over the dapp canister(s) is given to
 # these principals. In most use cases, this is chosen to be the original set of
@@ -145,7 +143,7 @@ Token:
 Proposals:
   # The cost of making an SNS proposal that is rejected by the SNS neuron
   # holders. This field is specified as a token. For example: "1 token".
-  rejection_fee: 10 token
+  rejection_fee: 10 tokens
 
   # The initial voting period of an SNS proposal. A proposal's voting period
   # may be increased during its lifecycle due to the wait-for-quiet algorithm
@@ -284,13 +282,13 @@ Voting:
   RewardRate:
     # The initial reward rate at which the SNS voting rewards will increase
     # per year. This field is specified as a percentage. For example: "15%".
-    initial: 2.5%
+    initial: 1%
 
     # The final reward rate at which the SNS voting rewards will increase
     # per year. This rate is reached after `transition_duration` and remains
     # at this level unless changed by an SNS proposal. This field is
     # specified as a percentage. For example: "5%".
-    final: 2.5%
+    final: 1%
 
     # The voting reward rate falls quadratically from `initial` to `final`
     # over the time period defined by `transition_duration`.
@@ -345,12 +343,12 @@ Distribution:
     # as the treasury. This is initialized in a special sub-account, as the
     # main account of Governance is the minting account of the SNS Ledger.
     # This field is specified as a token. For instance, "1 token".
-    governance: 2_000_000 tokens
+    governance: 51_000_000 tokens
 
     # The initial SNS token balance of the Swap canister is what will be
     # available for the decentralization swap. These tokens will be swapped
     # for ICP. This field is specified as a token. For instance, "1 token".
-    swap: 500_000 tokens
+    swap: 25_000_000 tokens
 
   # Checksum of the total number of tokens distributed in this section.
   # This field is specified as a token. For instance, "1 token".
@@ -358,7 +356,7 @@ Distribution:
   #      2 million    (governance)
   # + 500 thousand    (swap)
   # --------------
-  total: 2_501_000 tokens
+  total: 100_000_000 tokens
 
 # Configuration of the decentralization swap parameters. Choose these parameters
 # carefully, if a decentralization swap fails, the SNS will restore the dapp
@@ -421,7 +419,7 @@ Swap:
     # many neurons will be in each participant's neuron basket. Note that
     # the first neuron in each neuron basket will have zero dissolve delay.
     # This value should thus be greater than or equal to `2`.
-    events: 3
+    events: 5
 
     # The interval at which the schedule will be increased per event. The
     # first neuron in the basket will be unlocked with zero dissolve delay.
@@ -434,7 +432,7 @@ Swap:
     # neurons. While neuron basket neurons do not use `vesting_period`, they
     # have a vesting schedule. This field is specified as a duration. For
     # example: "1 month".
-    interval: 1 month
+    interval: 3 month
 
   # Absolute time of day when the decentralization swap is supposed to start.
   #
