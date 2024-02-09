@@ -489,6 +489,7 @@ actor Self {
     seasonManager.setStableDataHashes(stable_data_cache_hashes);
     seasonManager.setStableSystemState(stable_system_state);
     timerComposite.setStableTimers(stable_timers);
+    //TODO: SETSTABLE REWARD POOLS, CHECK ALL ARE DONE!
 
     seasonManager.setBackendCanisterController(Principal.fromActor(Self));
     seasonManager.setTimerBackupFunction(timerComposite.setAndBackupTimer, timerComposite.removeExpiredTimers);

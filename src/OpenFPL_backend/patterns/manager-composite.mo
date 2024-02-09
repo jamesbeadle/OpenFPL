@@ -526,58 +526,72 @@ module {
         return #err(#InvalidData);
       };
 
-      let manager = managers.get(principalId);
+      let managerCanisterIndex = managerIndexes.get(principalId);
 
-      switch (manager) {
-        case (null) {
-          let createProfileDTO : DTOs.ProfileDTO = {
-            principalId = principalId;
-            username = updatedUsername;
-            profilePicture = Blob.fromArray([]);
-            favouriteClubId = 0;
-            createDate = now();
-            canUpdateFavouriteClub = true;
-            termsAccepted = false;
-          };
-          let newManager = buildNewManager(principalId, createProfileDTO, "");
-          managers.put(principalId, newManager);
-          return #ok();
+      switch(managerCanisterIndex){
+        case (null){
+          return #err(#NotFound);
         };
-        case (?foundManager) {
-          let updatedManager : T.Manager = {
-            principalId = foundManager.principalId;
-            username = updatedUsername;
-            favouriteClubId = foundManager.favouriteClubId;
-            createDate = foundManager.createDate;
-            termsAccepted = foundManager.termsAccepted;
-            profilePictureCanisterId = foundManager.profilePictureCanisterId;
-            transfersAvailable = foundManager.transfersAvailable;
-            monthlyBonusesAvailable = foundManager.monthlyBonusesAvailable;
-            bankQuarterMillions = foundManager.bankQuarterMillions;
-            playerIds = foundManager.playerIds;
-            captainId = foundManager.captainId;
-            goalGetterGameweek = foundManager.goalGetterGameweek;
-            goalGetterPlayerId = foundManager.goalGetterPlayerId;
-            passMasterGameweek = foundManager.passMasterGameweek;
-            passMasterPlayerId = foundManager.passMasterPlayerId;
-            noEntryGameweek = foundManager.noEntryGameweek;
-            noEntryPlayerId = foundManager.noEntryPlayerId;
-            teamBoostGameweek = foundManager.teamBoostGameweek;
-            teamBoostClubId = foundManager.teamBoostClubId;
-            safeHandsGameweek = foundManager.safeHandsGameweek;
-            safeHandsPlayerId = foundManager.safeHandsPlayerId;
-            captainFantasticGameweek = foundManager.captainFantasticGameweek;
-            captainFantasticPlayerId = foundManager.captainFantasticPlayerId;
-            countrymenGameweek = foundManager.countrymenGameweek;
-            countrymenCountryId = foundManager.countrymenCountryId;
-            prospectsGameweek = foundManager.prospectsGameweek;
-            braceBonusGameweek = foundManager.braceBonusGameweek;
-            hatTrickHeroGameweek = foundManager.hatTrickHeroGameweek;
-            transferWindowGameweek = foundManager.transferWindowGameweek;
-            history = foundManager.history;
+        case (?foundIndex){
+          let manager_canister = actor (foundIndex) : actor {
+            getManager : (principalId : Text) -> async ?T.Manager;
+            updateManager : (manager : T.Manager) -> async ();
           };
-          managers.put(principalId, updatedManager);
-          return #ok();
+
+          let manager = await manager_canister.getManager(principalId);
+
+          switch (manager) {
+            case (null) {
+              let createProfileDTO : DTOs.ProfileDTO = {
+                principalId = principalId;
+                username = updatedUsername;
+                profilePicture = Blob.fromArray([]);
+                favouriteClubId = 0;
+                createDate = now();
+                canUpdateFavouriteClub = true;
+                termsAccepted = false;
+              };
+              let newManager = buildNewManager(principalId, createProfileDTO, "");
+              await manager_canister.updateManager(newManager);
+              return #ok();
+            };
+            case (?foundManager) {
+              let updatedManager : T.Manager = {
+                principalId = foundManager.principalId;
+                username = updatedUsername;
+                favouriteClubId = foundManager.favouriteClubId;
+                createDate = foundManager.createDate;
+                termsAccepted = foundManager.termsAccepted;
+                profilePictureCanisterId = foundManager.profilePictureCanisterId;
+                transfersAvailable = foundManager.transfersAvailable;
+                monthlyBonusesAvailable = foundManager.monthlyBonusesAvailable;
+                bankQuarterMillions = foundManager.bankQuarterMillions;
+                playerIds = foundManager.playerIds;
+                captainId = foundManager.captainId;
+                goalGetterGameweek = foundManager.goalGetterGameweek;
+                goalGetterPlayerId = foundManager.goalGetterPlayerId;
+                passMasterGameweek = foundManager.passMasterGameweek;
+                passMasterPlayerId = foundManager.passMasterPlayerId;
+                noEntryGameweek = foundManager.noEntryGameweek;
+                noEntryPlayerId = foundManager.noEntryPlayerId;
+                teamBoostGameweek = foundManager.teamBoostGameweek;
+                teamBoostClubId = foundManager.teamBoostClubId;
+                safeHandsGameweek = foundManager.safeHandsGameweek;
+                safeHandsPlayerId = foundManager.safeHandsPlayerId;
+                captainFantasticGameweek = foundManager.captainFantasticGameweek;
+                captainFantasticPlayerId = foundManager.captainFantasticPlayerId;
+                countrymenGameweek = foundManager.countrymenGameweek;
+                countrymenCountryId = foundManager.countrymenCountryId;
+                prospectsGameweek = foundManager.prospectsGameweek;
+                braceBonusGameweek = foundManager.braceBonusGameweek;
+                hatTrickHeroGameweek = foundManager.hatTrickHeroGameweek;
+                transferWindowGameweek = foundManager.transferWindowGameweek;
+                history = foundManager.history;
+              };
+              managers.put(principalId, updatedManager);
+              return #ok();
+            };
+          };
         };
       };
     };
