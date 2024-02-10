@@ -38,7 +38,7 @@ module {
     private var managerIndexes: TrieMap.TrieMap<T.PrincipalId, T.CanisterId> = TrieMap.TrieMap<T.PrincipalId, T.CanisterId>(Text.equal, Text.hash);
     private var managerCanisterIds: List.List<T.CanisterId> = List.nil();
     private var totalManagers: Nat = 0;
-    private var activeManagerCanisterId = "";
+    private var activeManagerCanisterIndex = 0;
     private var teamValueLeaderboards : TrieMap.TrieMap<T.SeasonId, T.TeamValueLeaderboard> = TrieMap.TrieMap<T.SeasonId, T.TeamValueLeaderboard>(Utilities.eqNat16, Utilities.hashNat16);
 
     private var storeCanisterId : ?((canisterId : Text) -> async ()) = null;
@@ -763,7 +763,7 @@ module {
         case (null) {};
         case (?hasManager){
         let canisterId = Principal.toText(canister_principal);
-          await canister.updateManager(principalId, hasManager);
+          await canister.updateManager(activeManagerCanisterIndex, hasManager);
         }
       };
 

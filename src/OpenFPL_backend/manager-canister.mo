@@ -47,7 +47,7 @@ actor class ManagerCanister() {
     return null;
   };
 
-  public shared query ({ caller }) func updateManager(managerGroupIndex: Nat8, updatedManager: T.Manager) : async () {
+  public shared query ({ caller }) func updateManager(managerGroupIndex: Nat, updatedManager: T.Manager) : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == main_canister_id;
@@ -55,7 +55,7 @@ actor class ManagerCanister() {
     for (managerGroup in Iter.fromArray<(T.PrincipalId, T.Manager)>(managerGroups)){
       
       let managerGroupsChunkBuffer = Buffer.fromArray<(T.PrincipalId, T.Manager)>([]);
-      let managers = managerGroups[Nat8.toNat(managerGroupIndex)];
+      let managers = managerGroups[managerGroupIndex];
       
       for(manager in Iter.fromArray<(T.PrincipalId, T.Manager)>(managers)){
         if(manager.0 == updatedManager.principalId){

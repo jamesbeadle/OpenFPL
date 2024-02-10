@@ -717,7 +717,7 @@ actor Self {
       });
     };
 
-    let dto : DTOs.AdminProfilePictureCanisterList = {
+    let dto : DTOs.AdminManagerCanisterList = {
       limit = limit;
       offset = offset;
       canisters = Buffer.toArray(canisterInfoBuffer);

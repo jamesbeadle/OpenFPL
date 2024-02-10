@@ -167,7 +167,7 @@ module DTOs {
   public type ManagerDTO = {
     principalId : Text;
     username : Text;
-    profilePicture : Blob;
+    profilePicture : ?Blob;
     favouriteClubId : T.ClubId;
     createDate : Int;
     gameweeks : [T.FantasyTeamSnapshot];
@@ -385,7 +385,7 @@ module DTOs {
     cycles : Nat;
   };
 
-  public type ProfileCanisterDTO = {
+  public type ManagerCanisterDTO = {
     canisterId : Text;
     cycles : Nat;
   };
@@ -417,8 +417,8 @@ module DTOs {
     totalEntries : Nat;
   };
 
-  public type AdminProfilePictureCanisterList = {
-    canisters : [ProfileCanisterDTO];
+  public type AdminManagerCanisterList = {
+    canisters : [ManagerCanisterDTO];
     totalEntries : Nat;
   };
 
