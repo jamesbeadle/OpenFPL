@@ -15,7 +15,7 @@ import Countries "Countries";
 import DTOs "DTOs";
 import SeasonManager "season-manager";
 import T "types";
-import TimerComposite "patterns/timer-composite";
+import TimerComposite "composites/timer-composite";
 import CyclesDispenser "cycles-dispenser";
 import TreasuryManager "treasury-manager";
 import Utilities "utilities";
@@ -65,9 +65,9 @@ actor Self {
     return await seasonManager.getCurrentTeam(Principal.toText(caller));
   };
 
-  public shared ({ caller }) func getManager() : async Result.Result<DTOs.ManagerDTO, T.Error> {
+  public shared ({ caller }) func getManager(managerId: Text) : async Result.Result<DTOs.ManagerDTO, T.Error> {
     assert not Principal.isAnonymous(caller);
-    return await seasonManager.getManager(Principal.toText(caller));
+    return await seasonManager.getManager(managerId);
   };
 
   //Query functions:

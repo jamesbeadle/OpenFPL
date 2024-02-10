@@ -100,7 +100,7 @@
         }
 
         if (!newTeam && activeGameweek > 1) {
-          if (userFantasyTeam.tranferWindowGameweek == activeGameweek) {
+          if (userFantasyTeam.transferWindowGameweek == activeGameweek) {
             transfersAvailable.set(Infinity);
           } else {
             transfersAvailable.set(userFantasyTeam.transfersAvailable);

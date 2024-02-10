@@ -59,28 +59,6 @@ function createManagerStore() {
     monthlyBonusesAvailable: 0,
   };
 
-  async function getManager(): Promise<PickTeamDTO> {
-    try {
-      const identityActor: any = await ActorFactory.createIdentityActor(
-        authStore,
-        process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
-      );
-
-      let result = await identityActor.getManager();
-
-      if (isError(result)) {
-        console.error("Error getting manager.");
-        set(newManager);
-      }
-
-      let manager = result.ok;
-      return manager;
-    } catch (error) {
-      console.error("Error fetching manager for gameweek:", error);
-      throw error;
-    }
-  }
-
   async function getPublicProfile(principalId: string): Promise<ManagerDTO> {
     try {
       let result = await actor.getPublicProfile(principalId);
@@ -166,7 +144,7 @@ function createManagerStore() {
     }
   }
 
-  async function getCurrentTeam(): Promise<any> {
+  async function getCurrentTeam(): Promise<PickTeamDTO> {
     try {
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
@@ -400,7 +378,6 @@ function createManagerStore() {
 
   return {
     subscribe,
-    getManager,
     getTotalManagers,
     getFantasyTeamForGameweek,
     getCurrentTeam,

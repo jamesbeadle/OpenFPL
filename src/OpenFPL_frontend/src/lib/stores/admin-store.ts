@@ -94,7 +94,7 @@ function createAdminStore() {
     return canisterDTOs;
   }
 
-  async function getProfilePictureCanisters(
+  async function getManagerCanisters(
     itemsPerPage: number,
     currentPage: number
   ): Promise<AdminProfilePictureCanisterList | null> {
@@ -104,7 +104,7 @@ function createAdminStore() {
     );
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
-    const result = await identityActor.adminGetProfileCanisters(limit, offset);
+    const result = await identityActor.adminGetManagerCanisters(limit, offset);
 
     if (isError(result)) {
       console.error("Error fetching profile picture canister info");
@@ -189,36 +189,16 @@ function createAdminStore() {
     return playerDTOs;
   }
 
-  async function getManagers(
-    itemsPerPage: number,
-    currentPage: number
-  ): Promise<AdminProfileList | null> {
-    const identityActor: any = await ActorFactory.createIdentityActor(
-      authStore,
-      process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
-    );
-    const limit = itemsPerPage;
-    const offset = (currentPage - 1) * limit;
-    const result = await identityActor.adminGetManagers(limit, offset);
-    if (isError(result)) {
-      console.error("Error fetching manager info");
-      return null;
-    }
-    let managerDTOs: AdminProfileList = result.ok;
-    return managerDTOs;
-  }
-
   return {
     getMainCanisterInfo,
     getWeeklyCanisters,
     getMonthlyCanisters,
     getSeasonCanisters,
-    getProfilePictureCanisters,
+    getManagerCanisters,
     getTimers,
     getFixtures,
     getClubs,
-    getPlayers,
-    getManagers,
+    getPlayers
   };
 }
 

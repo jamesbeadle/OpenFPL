@@ -12,6 +12,7 @@ import TrieMap "mo:base/TrieMap";
 import Trie "mo:base/Trie";
 import Buffer "mo:base/Buffer";
 import Nat8 "mo:base/Nat8";
+import Time "mo:base/Time";
 import CanisterIds "CanisterIds";
 import Utilities "utilities";
 import Environment "Environment";
@@ -120,7 +121,7 @@ actor class ManagerCanister() {
     managerGroups := Buffer.toArray<[T.Manager]>(managerGroupsChunkBuffer);
 
     if(not managerFound){
-      addNewManager(updateManagerDTO);
+      addManager(updateManagerDTO);
     };
   };
 
@@ -138,38 +139,39 @@ actor class ManagerCanister() {
         continue managerGroupLoop;
       };
       if(counter == activeGroupIndex){
+        
         let newManager: T.Manager = {
           managerGroupIndex = newManagerDTO.managerGroupIndex;
           principalId = newManagerDTO.principalId;
           username = newManagerDTO.username;
           termsAccepted = false;
-          favouriteClubId = 0;
-          createDate = now;
-          transfersAvailable = newManagerDTO.transfersAvailable;
-          monthlyBonusesAvailable = newManagerDTO.managerGroupIndex;
-          bankQuarterMillions = newManagerDTO.managerGroupIndex;
-          playerIds = newManagerDTO.managerGroupIndex;
-          captainId = newManagerDTO.managerGroupIndex;
-          goalGetterGameweek = newManagerDTO.managerGroupIndex;
-          goalGetterPlayerId = newManagerDTO.managerGroupIndex;
-          passMasterGameweek = newManagerDTO.managerGroupIndex;
-          passMasterPlayerId = newManagerDTO.managerGroupIndex;
-          noEntryGameweek = newManagerDTO.managerGroupIndex;
-          noEntryPlayerId = newManagerDTO.managerGroupIndex;
-          teamBoostGameweek = newManagerDTO.managerGroupIndex;
-          teamBoostClubId = newManagerDTO.managerGroupIndex;
-          safeHandsGameweek = newManagerDTO.managerGroupIndex;
-          safeHandsPlayerId = newManagerDTO.managerGroupIndex;
-          captainFantasticGameweek = newManagerDTO.managerGroupIndex;
-          captainFantasticPlayerId = newManagerDTO.managerGroupIndex;
-          countrymenGameweek = newManagerDTO.managerGroupIndex;
-          countrymenCountryId = newManagerDTO.managerGroupIndex;
-          prospectsGameweek = newManagerDTO.managerGroupIndex;
-          braceBonusGameweek = newManagerDTO.managerGroupIndex;
-          hatTrickHeroGameweek = newManagerDTO.managerGroupIndex;
-          transferWindowGameweek = newManagerDTO.managerGroupIndex;
-          history = newManagerDTO.managerGroupIndex;
-          profilePicture= newManagerDTO.managerGroupIndex;
+          favouriteClubId = newManagerDTO.favouriteClubId;
+          bankQuarterMillions = newManagerDTO.bankQuarterMillions;
+          playerIds = newManagerDTO.playerIds;
+          captainId = newManagerDTO.captainId;
+          goalGetterGameweek = newManagerDTO.goalGetterGameweek;
+          goalGetterPlayerId = newManagerDTO.goalGetterPlayerId;
+          passMasterGameweek = newManagerDTO.passMasterGameweek;
+          passMasterPlayerId = newManagerDTO.passMasterPlayerId;
+          noEntryGameweek = newManagerDTO.noEntryGameweek;
+          noEntryPlayerId = newManagerDTO.noEntryPlayerId;
+          teamBoostGameweek = newManagerDTO.teamBoostGameweek;
+          teamBoostClubId = newManagerDTO.teamBoostClubId;
+          safeHandsGameweek = newManagerDTO.safeHandsGameweek;
+          safeHandsPlayerId = newManagerDTO.safeHandsPlayerId;
+          captainFantasticGameweek = newManagerDTO.captainFantasticGameweek;
+          captainFantasticPlayerId = newManagerDTO.captainFantasticPlayerId;
+          countrymenGameweek = newManagerDTO.countrymenGameweek;
+          countrymenCountryId = newManagerDTO.countrymenCountryId;
+          prospectsGameweek = newManagerDTO.prospectsGameweek;
+          braceBonusGameweek = newManagerDTO.braceBonusGameweek;
+          hatTrickHeroGameweek = newManagerDTO.hatTrickHeroGameweek;
+          transferWindowGameweek = newManagerDTO.transferWindowGameweek;
+          createDate = Time.now();
+          history = List.nil();
+          monthlyBonusesAvailable = 2;
+          profilePicture = newManagerDTO.profilePicture;
+          transfersAvailable = 2;
         };
         let groupManagers = List.append<T.Manager>(List.fromArray(managerGroup), List.make(newManager));
         managerGroupsChunkBuffer.add(List.toArray<T.Manager>(groupManagers));

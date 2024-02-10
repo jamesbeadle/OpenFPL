@@ -370,6 +370,9 @@ module DTOs {
     username : Text;
     principalId : Text;
     managerGroupIndex: Nat8; 
+    favouriteClubId: T.ClubId;
+    bankQuarterMillions: Nat16;
+    profilePicture: ?Blob;
   };
 
   public type WeeklyCanisterDTO = {

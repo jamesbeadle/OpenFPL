@@ -35,14 +35,14 @@ module {
 
     let tokenCanister = Token.Token();
 
-    //private var managerIndexes: TrieMap.TrieMap<T.PrincipalId, T.CanisterId> = TrieMap.TrieMap<T.PrincipalId, T.CanisterId>(Text.equal, Text.hash);
     private var managerCanisterIds: [T.CanisterId] = [];
     private var totalManagers: Nat = 0;
     private var activeManagerCanisterIndex: Nat8 = 0;
-    private var teamValueLeaderboards : TrieMap.TrieMap<T.SeasonId, T.TeamValueLeaderboard> = TrieMap.TrieMap<T.SeasonId, T.TeamValueLeaderboard>(Utilities.eqNat16, Utilities.hashNat16);
 
     private var storeCanisterId : ?((canisterId : Text) -> async ()) = null;
     private var backendCanisterController : ?Principal = null;
+
+    private var teamValueLeaderboards : TrieMap.TrieMap<T.SeasonId, T.TeamValueLeaderboard> = TrieMap.TrieMap<T.SeasonId, T.TeamValueLeaderboard>(Utilities.eqNat16, Utilities.hashNat16);
 
     private var seasonRewards : List.List<T.SeasonRewards> = List.nil();
     private var monthlyRewards : List.List<T.MonthlyRewards> = List.nil();
@@ -149,7 +149,6 @@ module {
       };
     };
       
-
     public func getManagerCanisters() : List.List<T.CanisterId> {
       return List.fromArray(managerCanisterIds);
     };
@@ -158,12 +157,16 @@ module {
       return totalManagers;
     };
 
-    public func saveFantasyTeam(managerGroupIndex: Nat, updatedFantasyTeamDTO : DTOs.UpdateFantasyTeamDTO, systemState : T.SystemState, players : [DTOs.PlayerDTO]) : async Result.Result<(), T.Error> {
+
+
+
+
+    public func saveFantasyTeam(managerGroupIndex: Nat, updatedFantasyTeamDTO : DTOs.UpdateManagerDTO, systemState : T.SystemState, players : [DTOs.PlayerDTO]) : async Result.Result<(), T.Error> {
 
       let managerCanisterId = managerCanisterIds[managerGroupIndex];
       
       let manager_canister = actor (managerCanisterId) : actor {
-        updateManager : DTOs.UpdateFantasyTeamDTO -> async ?T.Manager;
+        updateManager : DTOs.UpdateManagerDTO -> async ?T.Manager;
       };
 
       let manager = await manager_canister.updateManager(updatedFantasyTeamDTO);
@@ -405,46 +408,6 @@ module {
       };
     };
 
-    private func setManagerProfileImage(principalId : Text, profilePicture : Blob) : async Text {
-      if (activeProfilePictureCanisterId == "") {
-        return await createProfileCanister(principalId, profilePicture);
-      } else {
-        let profilePictureCanister = actor (activeProfilePictureCanisterId) : actor {
-          hasSpaceAvailable : () -> async Bool;
-          addProfilePicture : (principalId : T.PrincipalId, profilePicture : Blob) -> async ();
-        };
-
-        let hasSpaceAvailable = await profilePictureCanister.hasSpaceAvailable();
-        if (hasSpaceAvailable) {
-          await profilePictureCanister.addProfilePicture(principalId, profilePicture);
-          return activeProfilePictureCanisterId;
-        } else {
-          return await createProfileCanister(principalId, profilePicture);
-        };
-      };
-    };
-
-    private func updateCanister_(a : actor {}) : async () {
-      let cid = { canister_id = Principal.fromActor(a) };
-      let IC : Management.Management = actor (ENV.Default);
-      switch (backendCanisterController) {
-        case (null) {};
-        case (?controller) {
-          await (
-            IC.update_settings({
-              canister_id = cid.canister_id;
-              settings = {
-                controllers = ?[controller];
-                compute_allocation = null;
-                memory_allocation = null;
-                freezing_threshold = ?31_540_000;
-              };
-            }),
-          );
-        };
-      };
-    };
-
     private func createManager(principalId : Text, manager : ?T.Manager) : async Text {
       if (backendCanisterController == null) {
         return "";
@@ -523,7 +486,7 @@ module {
       };
     };
 
-    private func invalidBonuses(updatedFantasyTeam : DTOs.UpdateFantasyTeamDTO, existingFantasyTeam : ?T.Manager, systemState : T.SystemState, players : [DTOs.PlayerDTO]) : Bool {
+    private func invalidBonuses(updatedFantasyTeam : DTOs.UpdateManagerDTO, existingFantasyTeam : ?T.Manager, systemState : T.SystemState, players : [DTOs.PlayerDTO]) : Bool {
 
       var bonusesPlayed = 0;
       if (updatedFantasyTeam.goalGetterGameweek == systemState.pickTeamGameweek) {
@@ -630,7 +593,7 @@ module {
       return false;
     };
 
-    private func invalidTransfers(updatedFantasyTeam : DTOs.UpdateFantasyTeamDTO, existingFantasyTeam : ?T.Manager, systemState : T.SystemState, players : [DTOs.PlayerDTO]) : Bool {
+    private func invalidTransfers(updatedFantasyTeam : DTOs.UpdateManagerDTO, existingFantasyTeam : ?T.Manager, systemState : T.SystemState, players : [DTOs.PlayerDTO]) : Bool {
 
       if (updatedFantasyTeam.transferWindowGameweek == systemState.pickTeamGameweek and not systemState.transferWindowActive) {
         return true;
@@ -726,7 +689,7 @@ module {
       return false;
     };
 
-    private func invalidTeamComposition(updatedFantasyTeam : DTOs.UpdateFantasyTeamDTO, players : [DTOs.PlayerDTO]) : Bool {
+    private func invalidTeamComposition(updatedFantasyTeam : DTOs.UpdateManagerDTO, players : [DTOs.PlayerDTO]) : Bool {
 
       let newTeamPlayers = Array.filter(
         players,
@@ -848,6 +811,7 @@ module {
         hatTrickHeroGameweek = 0;
         transferWindowGameweek = 0;
         history = List.nil<T.FantasyTeamSeason>();
+        managerGroupIndex = activeManagerCanisterIndex;
       };
 
       return newManager;
