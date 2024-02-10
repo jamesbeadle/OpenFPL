@@ -368,6 +368,8 @@ module DTOs {
     hatTrickHeroGameweek : T.GameweekNumber;
     transferWindowGameweek : T.GameweekNumber;
     username : Text;
+    principalId : Text;
+    managerGroupIndex: Nat8; 
   };
 
   public type WeeklyCanisterDTO = {
