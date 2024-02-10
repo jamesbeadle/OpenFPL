@@ -157,11 +157,11 @@ actor Self {
     return await seasonManager.updateProfilePicture(principalId, profilePicture);
   };
 
-  public shared ({ caller }) func saveFantasyTeam(fantasyTeam : DTOs.UpdateFantasyTeamDTO) : async Result.Result<(), T.Error> {
+  public shared ({ caller }) func saveFantasyTeam(fantasyTeam : DTOs.UpdateManagerDTO) : async Result.Result<(), T.Error> {
     assert false; // TODO: Remove when the game begins
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    return await seasonManager.saveFantasyTeam(principalId, fantasyTeam);
+    return await seasonManager.saveFantasyTeam(fantasyTeam.managerGroupIndex, principalId, fantasyTeam);
   };
 
   //Governance canister validation and execution functions:

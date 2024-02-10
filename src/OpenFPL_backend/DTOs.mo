@@ -346,7 +346,7 @@ module DTOs {
     totalEntries : Nat;
   };
 
-  public type UpdateFantasyTeamDTO = {
+  public type UpdateManagerDTO = {
     playerIds : [T.PlayerId];
     captainId : T.PlayerId;
     goalGetterGameweek : T.GameweekNumber;

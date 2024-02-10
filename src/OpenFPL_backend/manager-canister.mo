@@ -54,12 +54,11 @@ actor class ManagerCanister() {
   };
 
   //getProfile ProfileDTO
-
-  public shared query ({ caller }) func updateFantasyTeam(updateFantasyTeamDTO: DTOs.UpdateFantasyTeamDTO) : async () {
+  public shared query ({ caller }) func updateManager(updateManagerDTO: DTOs.UpdateManagerDTO) : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == main_canister_id;
-
+    
     let foundManager = null;
     let managerGroupsChunkBuffer = Buffer.fromArray<[T.Manager]>([]);
     var managerFound = false;
@@ -70,16 +69,16 @@ actor class ManagerCanister() {
         managerGroupsChunkBuffer.add(managerGroup);
         continue managerGroupLoop;
       };
-      let managers = managerGroups[Nat8.toNat(updateFantasyTeamDTO.managerGroupIndex)];
+      let managers = managerGroups[Nat8.toNat(updateManagerDTO.managerGroupIndex)];
       
       let managersChunkBuffer = Buffer.fromArray<T.Manager>([]);
       for(manager in Iter.fromArray<T.Manager>(managers)){
-        if(manager.principalId == updateFantasyTeamDTO.principalId){
+        if(manager.principalId == updateManagerDTO.principalId){
           managerFound := true;
           let updatedManager : T.Manager = {
-            principalId = updateFantasyTeamDTO.principalId;
-            managerGroupIndex = updateFantasyTeamDTO.managerGroupIndex;
-            username = updateFantasyTeamDTO.username;
+            principalId = updateManagerDTO.principalId;
+            managerGroupIndex = updateManagerDTO.managerGroupIndex;
+            username = updateManagerDTO.username;
             favouriteClubId = manager.favouriteClubId;
             createDate = manager.createDate;
             termsAccepted = manager.termsAccepted;
@@ -87,26 +86,26 @@ actor class ManagerCanister() {
             transfersAvailable = manager.transfersAvailable;
             monthlyBonusesAvailable = manager.monthlyBonusesAvailable;
             bankQuarterMillions = manager.bankQuarterMillions;
-            playerIds = updateFantasyTeamDTO.playerIds;
-            captainId = updateFantasyTeamDTO.captainId;
-            goalGetterGameweek = updateFantasyTeamDTO.goalGetterGameweek;
-            goalGetterPlayerId = updateFantasyTeamDTO.goalGetterPlayerId;
-            passMasterGameweek = updateFantasyTeamDTO.passMasterGameweek;
-            passMasterPlayerId = updateFantasyTeamDTO.passMasterPlayerId;
-            noEntryGameweek = updateFantasyTeamDTO.noEntryGameweek;
-            noEntryPlayerId = updateFantasyTeamDTO.noEntryPlayerId;
-            teamBoostGameweek = updateFantasyTeamDTO.teamBoostGameweek;
-            teamBoostClubId = updateFantasyTeamDTO.teamBoostClubId;
-            safeHandsGameweek = updateFantasyTeamDTO.safeHandsGameweek;
-            safeHandsPlayerId = updateFantasyTeamDTO.safeHandsPlayerId;
-            captainFantasticGameweek = updateFantasyTeamDTO.captainFantasticGameweek;
-            captainFantasticPlayerId = updateFantasyTeamDTO.captainFantasticPlayerId;
-            countrymenGameweek = updateFantasyTeamDTO.countrymenGameweek;
-            countrymenCountryId = updateFantasyTeamDTO.countrymenCountryId;
-            prospectsGameweek = updateFantasyTeamDTO.prospectsGameweek;
-            braceBonusGameweek = updateFantasyTeamDTO.braceBonusGameweek;
-            hatTrickHeroGameweek = updateFantasyTeamDTO.hatTrickHeroGameweek;
-            transferWindowGameweek = updateFantasyTeamDTO.transferWindowGameweek;
+            playerIds = updateManagerDTO.playerIds;
+            captainId = updateManagerDTO.captainId;
+            goalGetterGameweek = updateManagerDTO.goalGetterGameweek;
+            goalGetterPlayerId = updateManagerDTO.goalGetterPlayerId;
+            passMasterGameweek = updateManagerDTO.passMasterGameweek;
+            passMasterPlayerId = updateManagerDTO.passMasterPlayerId;
+            noEntryGameweek = updateManagerDTO.noEntryGameweek;
+            noEntryPlayerId = updateManagerDTO.noEntryPlayerId;
+            teamBoostGameweek = updateManagerDTO.teamBoostGameweek;
+            teamBoostClubId = updateManagerDTO.teamBoostClubId;
+            safeHandsGameweek = updateManagerDTO.safeHandsGameweek;
+            safeHandsPlayerId = updateManagerDTO.safeHandsPlayerId;
+            captainFantasticGameweek = updateManagerDTO.captainFantasticGameweek;
+            captainFantasticPlayerId = updateManagerDTO.captainFantasticPlayerId;
+            countrymenGameweek = updateManagerDTO.countrymenGameweek;
+            countrymenCountryId = updateManagerDTO.countrymenCountryId;
+            prospectsGameweek = updateManagerDTO.prospectsGameweek;
+            braceBonusGameweek = updateManagerDTO.braceBonusGameweek;
+            hatTrickHeroGameweek = updateManagerDTO.hatTrickHeroGameweek;
+            transferWindowGameweek = updateManagerDTO.transferWindowGameweek;
             history = manager.history;
           };
           managersChunkBuffer.add(updatedManager);
@@ -121,34 +120,77 @@ actor class ManagerCanister() {
     managerGroups := Buffer.toArray<[T.Manager]>(managerGroupsChunkBuffer);
 
     if(not managerFound){
-      addNewManager(updateFantasyTeamDTO);
+      addNewManager(updateManagerDTO);
     };
   };
 
-  private func addNewManager(updateFantasyTeamDTO: DTOs.UpdateFantasyTeamDTO) : () {
-    
-  };
+  private func addManager(newManagerDTO: DTOs.UpdateManagerDTO) : () {
+    let foundManager = null;
+    let managerGroupsChunkBuffer = Buffer.fromArray<[T.Manager]>([]);
+    var managerFound = false;
 
-  public shared query ({ caller }) func updateManager(managerGroupIndex: Nat8, updatedManager: T.Manager) : async () {
-    assert not Principal.isAnonymous(caller);
-    let principalId = Principal.toText(caller);
-    assert principalId == main_canister_id;
-
-    for (managerGroup in Iter.fromArray<(T.PrincipalId, T.Manager)>(managerGroups)){
+    var counter = 0;
       
-      let managerGroupsChunkBuffer = Buffer.fromArray<(T.PrincipalId, T.Manager)>([]);
-      let managers = managerGroups[Nat8.toNat(managerGroupIndex)];
+    label managerGroupLoop for(managerGroup in Iter.fromArray(managerGroups)){
       
-      for(manager in Iter.fromArray<(T.PrincipalId, T.Manager)>(managers)){
-        if(manager.0 == updatedManager.principalId){
-          managerGroupsChunkBuffer.add((manager.0, updatedManager));
-        }
-        else{
-          managerGroupsChunkBuffer.add((manager.0, manager.1));
-        }
+      if(managerFound){
+        managerGroupsChunkBuffer.add(managerGroup);
+        continue managerGroupLoop;
       };
+      if(counter == activeGroupIndex){
+        let newManager: T.Manager = {
+          managerGroupIndex = newManagerDTO.managerGroupIndex;
+          principalId = newManagerDTO.principalId;
+          username = newManagerDTO.username;
+          termsAccepted = false;
+          favouriteClubId = 0;
+          createDate = now;
+          transfersAvailable = newManagerDTO.transfersAvailable;
+          monthlyBonusesAvailable = newManagerDTO.managerGroupIndex;
+          bankQuarterMillions = newManagerDTO.managerGroupIndex;
+          playerIds = newManagerDTO.managerGroupIndex;
+          captainId = newManagerDTO.managerGroupIndex;
+          goalGetterGameweek = newManagerDTO.managerGroupIndex;
+          goalGetterPlayerId = newManagerDTO.managerGroupIndex;
+          passMasterGameweek = newManagerDTO.managerGroupIndex;
+          passMasterPlayerId = newManagerDTO.managerGroupIndex;
+          noEntryGameweek = newManagerDTO.managerGroupIndex;
+          noEntryPlayerId = newManagerDTO.managerGroupIndex;
+          teamBoostGameweek = newManagerDTO.managerGroupIndex;
+          teamBoostClubId = newManagerDTO.managerGroupIndex;
+          safeHandsGameweek = newManagerDTO.managerGroupIndex;
+          safeHandsPlayerId = newManagerDTO.managerGroupIndex;
+          captainFantasticGameweek = newManagerDTO.managerGroupIndex;
+          captainFantasticPlayerId = newManagerDTO.managerGroupIndex;
+          countrymenGameweek = newManagerDTO.managerGroupIndex;
+          countrymenCountryId = newManagerDTO.managerGroupIndex;
+          prospectsGameweek = newManagerDTO.managerGroupIndex;
+          braceBonusGameweek = newManagerDTO.managerGroupIndex;
+          hatTrickHeroGameweek = newManagerDTO.managerGroupIndex;
+          transferWindowGameweek = newManagerDTO.managerGroupIndex;
+          history = newManagerDTO.managerGroupIndex;
+          profilePicture= newManagerDTO.managerGroupIndex;
+        };
+        let groupManagers = List.append<T.Manager>(List.fromArray(managerGroup), List.make(newManager));
+        managerGroupsChunkBuffer.add(List.toArray<T.Manager>(groupManagers));
+      }
+      else{
+        managerGroupsChunkBuffer.add(managerGroup);
+      };
+      counter := counter + 1;
     };
+
+    managerGroups := Buffer.toArray<[T.Manager]>(managerGroupsChunkBuffer);
   };
+
+
+
+
+
+
+
+
+
 
   system func preupgrade() {
   };

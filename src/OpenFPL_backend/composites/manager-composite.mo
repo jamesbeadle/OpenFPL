@@ -160,7 +160,6 @@ module {
 
     public func saveFantasyTeam(managerGroupIndex: Nat, updatedFantasyTeamDTO : DTOs.UpdateFantasyTeamDTO, systemState : T.SystemState, players : [DTOs.PlayerDTO]) : async Result.Result<(), T.Error> {
 
-
       let managerCanisterId = managerCanisterIds[managerGroupIndex];
       
       let manager_canister = actor (managerCanisterId) : actor {
