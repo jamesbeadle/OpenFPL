@@ -22,6 +22,7 @@ module Types {
     #InvalidTeamError;
     #InvalidData;
     #SystemOnHold;
+    #CanisterCreateError;
   };
 
   public type PlayerPosition = {
@@ -105,7 +106,7 @@ module Types {
     hatTrickHeroGameweek : GameweekNumber;
     transferWindowGameweek : GameweekNumber;
     history : List.List<FantasyTeamSeason>;
-    profilePicture: Blob;
+    profilePicture: ?Blob;
   };
 
   public type FantasyTeamSeason = {

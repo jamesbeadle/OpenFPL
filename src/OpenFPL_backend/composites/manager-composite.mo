@@ -748,28 +748,33 @@ module {
       };
     };
 
-    private func createProfileCanister(principalId : Text, profilePicture : Blob) : async Text {
+    private func createManager(principalId : Text, manager : ?T.Manager) : async Text {
       if (backendCanisterController == null) {
         return "";
       };
 
       Cycles.add(2_000_000_000_000);
-      let canister = await ProfilePictureCanister.ProfilePictureCanister();
+      let canister = await ManagerCanister.ManagerCanister();
       let IC : Management.Management = actor (ENV.Default);
       let _ = await Utilities.updateCanister_(canister, backendCanisterController, IC);
       let canister_principal = Principal.fromActor(canister);
 
-      await canister.addProfilePicture(principalId, profilePicture);
-      let canisterId = Principal.toText(canister_principal);
+      switch(manager){
+        case (null) {};
+        case (?hasManager){
+        let canisterId = Principal.toText(canister_principal);
+          await canister.updateManager(principalId, hasManager);
+        }
+      };
 
       switch (storeCanisterId) {
         case (null) {};
         case (?actualFunction) {
-          await actualFunction(canisterId);
+          await actualFunction(Principal.toText(canister_principal));
         };
       };
 
-      return canisterId;
+      return Principal.toText(canister_principal);
     };
 
     public func isUsernameValid(username : Text, principalId : Text) : Bool {
@@ -1103,13 +1108,14 @@ module {
     };
 
     private func buildNewManager(principalId : Text, createProfileDTO : DTOs.ProfileDTO, profilePictureCanisterId : Text) : T.Manager {
+      
       let newManager : T.Manager = {
         principalId = principalId;
         username = createProfileDTO.username;
         favouriteClubId = createProfileDTO.favouriteClubId;
         createDate = createProfileDTO.createDate;
         termsAccepted = false;
-        profilePictureCanisterId = profilePictureCanisterId;
+        profilePicture = createProfileDTO.profilePicture;
         transfersAvailable = 3;
         monthlyBonusesAvailable = 2;
         bankQuarterMillions = 1200;
@@ -1144,6 +1150,14 @@ module {
       for ((key, value) in Iter.fromArray(allPlayersList)) {
         allPlayers.put(key, value);
       };
+
+      //loop through all the manager canister ids
+
+      //then create the leaderboard chunk up to the 10MB that can be transferred so 2K 
+      
+
+
+
 
       for ((key, value) in managers.entries()) {
 
@@ -2572,4 +2586,23 @@ module {
       };
     };
   };
+
+  public func init() {
+    activeManagerCaniser := await createManagerCanister();
+  };
+
+  private func createManagerCanister() : async Result.Result<Text, T.Error>{
+
+    Cycles.add(2_000_000_000_000);
+    let canister = await ManagerCanister.ManagerCanister();
+    let IC : Management.Management = actor (ENV.Default);
+    let _ = await Utilities.updateCanister_(canister, backendCanisterController, IC);
+    let canister_principal = Principal.fromActor(canister);
+    
+    if(canister_principal == ""){
+      return #err(CanisterCreateError);
+    };
+
+    return result;
+  }
 };

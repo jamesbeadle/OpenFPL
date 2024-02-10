@@ -10,16 +10,17 @@ import Order "mo:base/Order";
 import Text "mo:base/Text";
 import TrieMap "mo:base/TrieMap";
 import Trie "mo:base/Trie";
+import Buffer "mo:base/Buffer";
 import CanisterIds "CanisterIds";
 import Utilities "utilities";
 import Environment "Environment";
 
 actor class ManagerCanister() {
-  private var managers : TrieMap.TrieMap<T.PrincipalId, T.Manager> = TrieMap.TrieMap<T.PrincipalId, T.Manager>(Text.equal, Text.hash);
   
-
+  private stable var managerGroups : [(T.PrincipalId, T.Manager)] = [];
   private let cyclesCheckInterval : Nat = Utilities.getHour() * 24;
   private var cyclesCheckTimerId : ?Timer.TimerId = null;
+  private var activeGroupIndex = 0;
 
   let network = Environment.DFX_NETWORK;
   var main_canister_id = CanisterIds.MAIN_CANISTER_IC_ID;
@@ -32,36 +33,37 @@ actor class ManagerCanister() {
     let principalId = Principal.toText(caller);
     assert principalId == main_canister_id;
   };
-
-  public shared ({ caller }) func getManager(principalId : T.PrincipalId) : async ?T.Manager {
+  public shared ({ caller }) func getManager(managerGroup: Nat8) : async ?T.Manager {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == main_canister_id;
     return managers.get(principalId);
   };
 
-  public shared query ({ caller }) func updateManager(manager: T.Manager) : async () {
+  public shared query ({ caller }) func updateManager(managerPrincipal: Text, updatedManager: T.Manager) : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == main_canister_id;
-    managers.put(manager.principalId, manager);
-  };
+    
+    let managerChunkBuffer = Buffer.fromArray<T.Manager>([]); 
 
+    label managerLoop for(manager in Iter.fromArray(managerGroups)){
+      
+      if(manager.0 == managerPrincipal){
+        managerChunkBuffer.add(updatedManager);
+        break managerLoop;
+      };
 
-  private stable var stable_managers : [(T.PrincipalId, T.Manager)] = [];
-  private func getStableManagers() : [(T.PrincipalId, T.Manager)] {
-    Iter.toArray(managers.entries());
+      managerChunkBuffer.add(manager);
+      break managerLoop;
+    };
   };
 
   system func preupgrade() {
-    stable_managers := getStableManagers();
   };
 
   system func postupgrade() {
     setCheckCyclesTimer();
-    for ((principalId, manager) in stable_managers.vals()) {
-      managers.put(principalId, manager);
-    };
   };
 
 
@@ -69,7 +71,7 @@ actor class ManagerCanister() {
 
     let balance = Cycles.balance();
 
-    if (balance < 500000000000) {
+    if (balance < 2_000_000_000_000) {
       let openfpl_backend_canister = actor (main_canister_id) : actor {
         requestCanisterTopup : () -> async ();
       };

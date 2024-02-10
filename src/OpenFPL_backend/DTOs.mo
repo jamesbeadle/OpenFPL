@@ -131,7 +131,7 @@ module DTOs {
     principalId : Text;
     username : Text;
     termsAccepted : Bool;
-    profilePicture : Blob;
+    profilePicture : ?Blob;
     favouriteClubId : T.ClubId;
     createDate : Int;
   };
