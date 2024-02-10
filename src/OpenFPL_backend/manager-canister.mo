@@ -11,13 +11,14 @@ import Text "mo:base/Text";
 import TrieMap "mo:base/TrieMap";
 import Trie "mo:base/Trie";
 import Buffer "mo:base/Buffer";
+import Nat8 "mo:base/Nat8";
 import CanisterIds "CanisterIds";
 import Utilities "utilities";
 import Environment "Environment";
 
 actor class ManagerCanister() {
   
-  private stable var managerGroups : [(T.PrincipalId, T.Manager)] = [];
+  private stable var managerGroups = [];
   private let cyclesCheckInterval : Nat = Utilities.getHour() * 24;
   private var cyclesCheckTimerId : ?Timer.TimerId = null;
   private var activeGroupIndex = 0;
@@ -33,29 +34,37 @@ actor class ManagerCanister() {
     let principalId = Principal.toText(caller);
     assert principalId == main_canister_id;
   };
-  public shared ({ caller }) func getManager(managerGroup: Nat8) : async ?T.Manager {
+  public shared ({ caller }) func getManager(managerGroup: Nat8, managerPrincipal: Text) : async ?T.Manager {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == main_canister_id;
-    return managers.get(principalId);
+    let managers = managerGroups[Nat8.toNat(managerGroup)];
+    for(manager in Iter.fromArray<(T.PrincipalId, T.Manager)>(managers)){
+      if(manager.0 == managerPrincipal){
+        return ?manager.1;
+      };
+    };
+    return null;
   };
 
-  public shared query ({ caller }) func updateManager(managerPrincipal: Text, updatedManager: T.Manager) : async () {
+  public shared query ({ caller }) func updateManager(managerGroupIndex: Nat8, updatedManager: T.Manager) : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == main_canister_id;
-    
-    let managerChunkBuffer = Buffer.fromArray<T.Manager>([]); 
 
-    label managerLoop for(manager in Iter.fromArray(managerGroups)){
+    for (managerGroup in Iter.fromArray<(T.PrincipalId, T.Manager)>(managerGroups)){
       
-      if(manager.0 == managerPrincipal){
-        managerChunkBuffer.add(updatedManager);
-        break managerLoop;
+      let managerGroupsChunkBuffer = Buffer.fromArray<(T.PrincipalId, T.Manager)>([]);
+      let managers = managerGroups[Nat8.toNat(managerGroupIndex)];
+      
+      for(manager in Iter.fromArray<(T.PrincipalId, T.Manager)>(managers)){
+        if(manager.0 == updatedManager.principalId){
+          managerGroupsChunkBuffer.add((manager.0, updatedManager));
+        }
+        else{
+          managerGroupsChunkBuffer.add((manager.0, manager.1));
+        }
       };
-
-      managerChunkBuffer.add(manager);
-      break managerLoop;
     };
   };
 
