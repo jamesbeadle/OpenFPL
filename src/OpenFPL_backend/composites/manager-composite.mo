@@ -321,6 +321,11 @@ module {
 
       switch(managerCanisterIndex){
         case (null){
+          //TODO: Create Manager Canister
+
+
+
+
           return #err(#NotFound);
         };
         case (?foundIndex){
@@ -530,6 +535,10 @@ module {
 
       switch(managerCanisterIndex){
         case (null){
+
+
+          //TODO: Create Manager Canister
+
           return #err(#NotFound);
         };
         case (?foundIndex){

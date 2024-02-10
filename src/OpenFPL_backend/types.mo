@@ -79,7 +79,6 @@ module Types {
     principalId : Text;
     username : Text;
     termsAccepted : Bool;
-    profilePictureCanisterId : Text;
     favouriteClubId : ClubId;
     createDate : Int;
     transfersAvailable : Nat8;
@@ -106,6 +105,7 @@ module Types {
     hatTrickHeroGameweek : GameweekNumber;
     transferWindowGameweek : GameweekNumber;
     history : List.List<FantasyTeamSeason>;
+    profilePicture: Blob;
   };
 
   public type FantasyTeamSeason = {
