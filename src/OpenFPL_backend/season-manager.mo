@@ -848,20 +848,20 @@ module {
       managerComposite.setStableManagers(stable_managers);
     };
 
-    public func getStableProfilePictureCanisterIds() : [(T.PrincipalId, Text)] {
-      return managerComposite.getStableProfilePictureCanisterIds();
+    public func getStableManagerCanisterIds() : [(T.PrincipalId, Text)] {
+      return managerComposite.getStableManagerCanisterIds();
     };
 
-    public func setStableProfilePictureCanisterIds(stable_profile_picture_canister_ids : [(T.PrincipalId, Text)]) {
-      managerComposite.setStableProfilePictureCanisterIds(stable_profile_picture_canister_ids);
+    public func setStableManagerCanisterIds(stable_manager_canister_ids : [(T.PrincipalId, Text)]) {
+      managerComposite.setStableManagerCanisterIds(stable_manager_canister_ids);
     };
 
-    public func getStableActiveProfilePictureCanisterId() : Text {
-      return managerComposite.getStableActiveProfilePictureCanisterId();
+    public func getStableActiveManagerCanisterId() : Text {
+      return managerComposite.getStableActiveManagerCanisterId();
     };
 
-    public func setStableActiveProfilePictureCanisterId(stable_active_profile_picture_canister_id : Text) {
-      managerComposite.setStableActiveProfilePictureCanisterId(stable_active_profile_picture_canister_id);
+    public func setStableActiveManagerCanisterId(stable_active_profile_picture_canister_id : Text) {
+      managerComposite.setStableActiveManagerCanisterId(stable_active_profile_picture_canister_id);
     };
 
     public func getStableTeamValueLeaderboards() : [(T.SeasonId, T.TeamValueLeaderboard)] {
@@ -1133,6 +1133,7 @@ module {
       seasonComposite.init();
       clubComposite.init();
       playerComposite.init();
+      managerComposite.init();
     };
 
   };

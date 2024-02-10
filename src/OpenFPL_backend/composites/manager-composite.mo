@@ -22,7 +22,7 @@ import Int16 "mo:base/Int16";
 import Debug "mo:base/Debug";
 import Management "../modules/Management";
 import ENV "../utils/Env";
-import ProfilePictureCanister "../profile-picture-canister";
+import ManagerCanister "../manager-canister";
 import RewardPercentages "../utils/RewardPercentages";
 import Utilities "../utilities";
 import Token "../token";
@@ -32,13 +32,13 @@ import TrieMap "mo:base/TrieMap";
 module {
 
   public class ManagerComposite() {
+
     let tokenCanister = Token.Token();
+
     private var managerIndexes: TrieMap.TrieMap<T.PrincipalId, T.CanisterId> = TrieMap.TrieMap<T.PrincipalId, T.CanisterId>(Text.equal, Text.hash);
     private var managerCanisterIds: List.List<T.CanisterId> = List.nil();
     private var totalManagers: Nat = 0;
-    //private var managers : TrieMap.TrieMap<T.PrincipalId, T.Manager> = TrieMap.TrieMap<T.PrincipalId, T.Manager>(Text.equal, Text.hash);
-    private var profilePictureCanisterIds : TrieMap.TrieMap<T.PrincipalId, Text> = TrieMap.TrieMap<T.PrincipalId, Text>(Text.equal, Text.hash);
-    private var activeProfilePictureCanisterId = "";
+    private var activeManagerCanisterId = "";
     private var teamValueLeaderboards : TrieMap.TrieMap<T.SeasonId, T.TeamValueLeaderboard> = TrieMap.TrieMap<T.SeasonId, T.TeamValueLeaderboard>(Utilities.eqNat16, Utilities.hashNat16);
 
     private var storeCanisterId : ?((canisterId : Text) -> async ()) = null;
@@ -89,26 +89,11 @@ module {
             };
             case (?foundManager) {
 
-              var profilePicture = Blob.fromArray([]);
-
-              if (Text.size(foundManager.profilePictureCanisterId) > 0) {
-                let profile_picture_canister = actor (foundManager.profilePictureCanisterId) : actor {
-                  getProfilePicture : (principalId : Text) -> async ?Blob;
-                };
-                let fetchedProfilePicture = await profile_picture_canister.getProfilePicture(foundManager.principalId);
-                switch (fetchedProfilePicture) {
-                  case (null) {};
-                  case (?foundProfilePicture) {
-                    profilePicture := foundProfilePicture;
-                  };
-                };
-              };
-
               let profileDTO : DTOs.ProfileDTO = {
                 principalId = foundManager.principalId;
                 username = foundManager.username;
                 termsAccepted = foundManager.termsAccepted;
-                profilePicture = profilePicture;
+                profilePicture = foundManager.profilePicture;
                 favouriteClubId = foundManager.favouriteClubId;
                 createDate = foundManager.createDate;
               };
@@ -142,21 +127,6 @@ module {
               return #err(#NotFound);
             };
             case (?foundManager) {
-
-              var profilePicture = Blob.fromArray([]);
-
-              if (Text.size(foundManager.profilePictureCanisterId) > 0) {
-                let profile_picture_canister = actor (foundManager.profilePictureCanisterId) : actor {
-                  getProfilePicture : (principalId : Text) -> async ?Blob;
-                };
-                let fetchedProfilePicture = await profile_picture_canister.getProfilePicture(foundManager.principalId);
-                switch (fetchedProfilePicture) {
-                  case (null) {};
-                  case (?foundProfilePicture) {
-                    profilePicture := foundProfilePicture;
-                  };
-                };
-              };
 
               let pickTeamDTO : DTOs.PickTeamDTO = {
                 principalId = foundManager.principalId;
@@ -273,24 +243,10 @@ module {
                 };
               };
 
-              var profilePicture = Blob.fromArray([]);
-              if (Text.size(foundManager.profilePictureCanisterId) > 0) {
-                let profile_picture_canister = actor (foundManager.profilePictureCanisterId) : actor {
-                  getProfilePicture : (principalId : Text) -> async ?Blob;
-                };
-                let fetchedProfilePicture = await profile_picture_canister.getProfilePicture(foundManager.principalId);
-                switch (fetchedProfilePicture) {
-                  case (null) {};
-                  case (?foundProfilePicture) {
-                    profilePicture := foundProfilePicture;
-                  };
-                };
-              };
-
               let managerDTO : DTOs.ManagerDTO = {
                 principalId = foundManager.principalId;
                 username = foundManager.username;
-                profilePicture = profilePicture;
+                profilePicture = foundManager.profilePicture;
                 favouriteClubId = foundManager.favouriteClubId;
                 createDate = foundManager.createDate;
                 gameweeks = gameweeks;
@@ -401,7 +357,7 @@ module {
                 favouriteClubId = newManager.favouriteClubId;
                 createDate = newManager.createDate;
                 termsAccepted = newManager.termsAccepted;
-                profilePictureCanisterId = newManager.profilePictureCanisterId;
+                profilePicture = newManager.profilePicture;
                 transfersAvailable = newManager.transfersAvailable;
                 monthlyBonusesAvailable = monthlyBonuses;
                 bankQuarterMillions = 1200 - updatedTeamValue;
@@ -492,7 +448,7 @@ module {
                 favouriteClubId = foundManager.favouriteClubId;
                 createDate = foundManager.createDate;
                 termsAccepted = foundManager.termsAccepted;
-                profilePictureCanisterId = foundManager.profilePictureCanisterId;
+                profilePicture = foundManager.profilePicture;
                 transfersAvailable = transfersAvailable;
                 monthlyBonusesAvailable = monthlyBonuses;
                 bankQuarterMillions = newBankBalance;
@@ -571,7 +527,7 @@ module {
                 favouriteClubId = foundManager.favouriteClubId;
                 createDate = foundManager.createDate;
                 termsAccepted = foundManager.termsAccepted;
-                profilePictureCanisterId = foundManager.profilePictureCanisterId;
+                profilePicture = foundManager.profilePicture;
                 transfersAvailable = foundManager.transfersAvailable;
                 monthlyBonusesAvailable = foundManager.monthlyBonusesAvailable;
                 bankQuarterMillions = foundManager.bankQuarterMillions;
@@ -639,7 +595,7 @@ module {
             favouriteClubId = favouriteClubId;
             createDate = foundManager.createDate;
             termsAccepted = foundManager.termsAccepted;
-            profilePictureCanisterId = foundManager.profilePictureCanisterId;
+            profilePicture = foundManager.profilePicture;
             transfersAvailable = foundManager.transfersAvailable;
             monthlyBonusesAvailable = foundManager.monthlyBonusesAvailable;
             bankQuarterMillions = foundManager.bankQuarterMillions;

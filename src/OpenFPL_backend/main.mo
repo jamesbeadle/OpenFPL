@@ -428,8 +428,7 @@ actor Self {
     stable_timers := timerComposite.getStableTimers();
     stable_reward_pools := seasonManager.getStableRewardPools();
     stable_managers := seasonManager.getStableManagers();
-    stable_profile_picture_canister_ids := seasonManager.getStableProfilePictureCanisterIds();
-    stable_active_profile_picture_canister_id := seasonManager.getStableActiveProfilePictureCanisterId();
+    stable_active_Manager_canister_id := seasonManager.getStableActiveManagerId();
     stable_team_value_leaderboards := seasonManager.getStableTeamValueLeaderboards();
     stable_season_rewards := seasonManager.getStableSeasonRewards();
     stable_monthly_rewards := seasonManager.getStableMonthlyRewards();
@@ -460,9 +459,10 @@ actor Self {
 
   system func postupgrade() {
     cyclesDispenser.setStableCanisterIds(stable_canister_ids);
+    seasonManager.stableStableRewardPools(stable_reward_pools);
     seasonManager.setStableManagers(stable_managers);
-    seasonManager.setStableProfilePictureCanisterIds(stable_profile_picture_canister_ids);
-    seasonManager.setStableActiveProfilePictureCanisterId(stable_active_profile_picture_canister_id);
+    seasonManager.setStableManagerCanisterIds(stable_profile_picture_canister_ids);
+    seasonManager.setStableActiveManagerCanisterId(stable_active_Manager_canister_id);
     seasonManager.setStableTeamValueLeaderboards(stable_team_value_leaderboards);
     seasonManager.setStableSeasonRewards(stable_season_rewards);
     seasonManager.setStableMonthlyRewards(stable_monthly_rewards);
@@ -683,12 +683,12 @@ actor Self {
     return #ok(dto);
   };
 
-  public shared ({ caller }) func adminGetProfileCanisters(limit : Nat, offset : Nat) : async Result.Result<DTOs.AdminProfilePictureCanisterList, T.Error> {
+  public shared ({ caller }) func adminGetManagerCanisters(limit : Nat, offset : Nat) : async Result.Result<DTOs.AdminManagerCanisterList, T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == TEMP_ADMIN_PRINCIPAL;
 
-    let profileCanisters = seasonManager.getStableProfilePictureCanisterIds();
+    let profileCanisters = seasonManager.getStableManagers();
 
     let uniqueCanisterIds = Buffer.fromArray<Text>([]);
 
