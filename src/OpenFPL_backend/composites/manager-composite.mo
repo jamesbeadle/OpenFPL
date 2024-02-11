@@ -28,6 +28,7 @@ import Utilities "../utilities";
 import Token "../token";
 import SeasonLeaderboard "../season-leaderboard";
 import TrieMap "mo:base/TrieMap";
+import Error "mo:base/Error";
 
 module {
 
@@ -35,7 +36,8 @@ module {
 
     let tokenCanister = Token.Token();
 
-    private var managerCanisterIds: [T.CanisterId] = [];
+    private var managerCanisterIds: TrieMap.TrieMap<T.PrincipalId, T.CanisterId> = TrieMap.TrieMap<T.PrincipalId, T.CanisterId>(Text.equal, Text.hash);
+    
     private var totalManagers: Nat = 0;
     private var activeManagerCanisterIndex: Nat8 = 0;
 
@@ -68,36 +70,42 @@ module {
       storeCanisterId := ?_storeCanisterId;
     };
 
-    public func getStableManagerCanisterIds() : async [Text]{
-      return managerCanisterIds;
+    public func getStableManagerCanisterIds() : async [(T.PrincipalId, T.CanisterId)]{
+      return Iter.toArray(managerCanisterIds.entries());
     };
 
-    public func getProfile(managerGroupIndex: Nat, principalId : Text) : async Result.Result<DTOs.ProfileDTO, T.Error> {
-
-      let managerCanisterId = managerCanisterIds[managerGroupIndex];
+    public func getProfile(principalId : Text) : async Result.Result<DTOs.ProfileDTO, T.Error> {
       
-      let manager_canister = actor (managerCanisterId) : actor {
-        getManager : T.PrincipalId -> async ?T.Manager;
-      };
+      let managerCanisterId = managerCanisterIds.get(principalId);
 
-      let manager = await manager_canister.getManager(principalId);
-      
-      switch(manager){
+      switch(managerCanisterId){
         case (null){
           return #err(#NotFound);
         };
-        case (?foundManager){
-          let profileDTO: DTOs.ProfileDTO = {
-            principalId = principalId;
-            username = foundManager.username;
-            termsAccepted = foundManager.termsAccepted;
-            profilePicture = foundManager.profilePicture;
-            favouriteClubId = foundManager.favouriteClubId;
-            createDate = foundManager.createDate;
+        case (?foundCanisterId){
+          let manager_canister = actor (foundCanisterId) : actor {
+            getManager : T.PrincipalId -> async ?T.Manager;
           };
-          return #ok(profileDTO);
+
+          let manager = await manager_canister.getManager(principalId);
+          switch(manager){
+            case (null){
+              return #err(#NotFound);
+            };
+            case (?foundManager){
+              let profileDTO: DTOs.ProfileDTO = {
+                principalId = principalId;
+                username = foundManager.username;
+                termsAccepted = foundManager.termsAccepted;
+                profilePicture = foundManager.profilePicture;
+                favouriteClubId = foundManager.favouriteClubId;
+                createDate = foundManager.createDate;
+              };
+              return #ok(profileDTO);
+            };
+          } 
         };
-      } 
+      };
     };
 
     public func getCurrentTeam(managerGroupIndex: Nat, principalId : Text) : async Result.Result<DTOs.PickTeamDTO, T.Error> {
@@ -148,31 +156,35 @@ module {
         };
       };
     };
-      
-    public func getManagerCanisters() : List.List<T.CanisterId> {
-      return List.fromArray(managerCanisterIds);
-    };
 
     public func getTotalManagers() : Nat {
       return totalManagers;
     };
 
+    public func saveFantasyTeam(updatedFantasyTeamDTO : DTOs.UpdateManagerDTO, systemState : T.SystemState, players : [DTOs.PlayerDTO]) : async Result.Result<(), T.Error> {
 
-
-
-
-    public func saveFantasyTeam(managerGroupIndex: Nat, updatedFantasyTeamDTO : DTOs.UpdateManagerDTO, systemState : T.SystemState, players : [DTOs.PlayerDTO]) : async Result.Result<(), T.Error> {
-
-      let managerCanisterId = managerCanisterIds[managerGroupIndex];
-      
-      let manager_canister = actor (managerCanisterId) : actor {
-        updateManager : DTOs.UpdateManagerDTO -> async ?T.Manager;
+      //TODO: logic checks on the fantasy team before saving
+      if(invalidBonuses(updatedFantasyTeamDTO, systemState, players)){
+        return #err(#InvalidTeamError);
       };
 
-      let manager = await manager_canister.updateManager(updatedFantasyTeamDTO);
+      let managerCanisterId = managerCanisterIds.get(updatedFantasyTeamDTO.principalId);
+
+       switch(managerCanisterId){
+        case (null){
+          return #err(#NotFound);
+        };
+        case (?foundCanisterId){
+          let manager_canister = actor (foundCanisterId) : actor {
+            updateManager : DTOs.UpdateManagerDTO -> async Result.Result<(), T.Error>;
+          };
+
+          await manager_canister.updateManager(updatedFantasyTeamDTO);
+        };
+       };
     };
 
-    public func updateUsername(managerGroupIndex: Nat8, principalId : T.PrincipalId, updatedUsername : Text) : async Result.Result<(), T.Error> {
+    public func updateUsername(principalId : T.PrincipalId, updatedUsername : Text) : async Result.Result<(), T.Error> {
       if (not isUsernameValid(updatedUsername)) {
         return #err(#InvalidData);
       };
@@ -181,82 +193,74 @@ module {
         return #err(#InvalidData);
       };
 
+      let managerCanisterId = managerCanisterIds.get(principalId);
 
-
-
-
-
-
-      let managerCanisterIndex = managerIndexes.get(principalId);
-
-      switch(managerCanisterIndex){
+      switch(managerCanisterId){
         case (null){
-
-
-          //TODO: Create Manager Canister
-
           return #err(#NotFound);
         };
-        case (?foundIndex){
-          let manager_canister = actor (foundIndex) : actor {
-            getManager : (principalId : Text) -> async ?T.Manager;
-            updateManager : (manager : T.Manager) -> async ();
-          };
+        case (?foundCanisterId){
+          
+      
+      let manager_canister = actor (foundCanisterId) : actor {
+        getManager : (principalId : Text) -> async ?T.Manager;
+        updateManager : DTOs.UpdateManagerDTO -> async Result.Result<(), T.Error>;
+        addManager : DTOs.UpdateManagerDTO -> async Result.Result<(), T.Error>;
+      };
+         
+      let manager = await manager_canister.getManager(principalId);
 
-          let manager = await manager_canister.getManager(principalId);
-
-          switch (manager) {
-            case (null) {
-              let createProfileDTO : DTOs.ProfileDTO = {
-                principalId = principalId;
-                username = updatedUsername;
-                profilePicture = Blob.fromArray([]);
-                favouriteClubId = 0;
-                createDate = now();
-                canUpdateFavouriteClub = true;
-                termsAccepted = false;
-              };
-              let newManager = buildNewManager(principalId, createProfileDTO, "");
-              await manager_canister.updateManager(newManager);
-              return #ok();
-            };
-            case (?foundManager) {
-              let updatedManager : T.Manager = {
-                principalId = foundManager.principalId;
-                username = updatedUsername;
-                favouriteClubId = foundManager.favouriteClubId;
-                createDate = foundManager.createDate;
-                termsAccepted = foundManager.termsAccepted;
-                profilePicture = foundManager.profilePicture;
-                transfersAvailable = foundManager.transfersAvailable;
-                monthlyBonusesAvailable = foundManager.monthlyBonusesAvailable;
-                bankQuarterMillions = foundManager.bankQuarterMillions;
-                playerIds = foundManager.playerIds;
-                captainId = foundManager.captainId;
-                goalGetterGameweek = foundManager.goalGetterGameweek;
-                goalGetterPlayerId = foundManager.goalGetterPlayerId;
-                passMasterGameweek = foundManager.passMasterGameweek;
-                passMasterPlayerId = foundManager.passMasterPlayerId;
-                noEntryGameweek = foundManager.noEntryGameweek;
-                noEntryPlayerId = foundManager.noEntryPlayerId;
-                teamBoostGameweek = foundManager.teamBoostGameweek;
-                teamBoostClubId = foundManager.teamBoostClubId;
-                safeHandsGameweek = foundManager.safeHandsGameweek;
-                safeHandsPlayerId = foundManager.safeHandsPlayerId;
-                captainFantasticGameweek = foundManager.captainFantasticGameweek;
-                captainFantasticPlayerId = foundManager.captainFantasticPlayerId;
-                countrymenGameweek = foundManager.countrymenGameweek;
-                countrymenCountryId = foundManager.countrymenCountryId;
-                prospectsGameweek = foundManager.prospectsGameweek;
-                braceBonusGameweek = foundManager.braceBonusGameweek;
-                hatTrickHeroGameweek = foundManager.hatTrickHeroGameweek;
-                transferWindowGameweek = foundManager.transferWindowGameweek;
-                history = foundManager.history;
-              };
-              managers.put(principalId, updatedManager);
-              return #ok();
-            };
+      switch (manager) {
+        case (null) {
+          let createProfileDTO : DTOs.ProfileDTO = {
+            principalId = principalId;
+            username = updatedUsername;
+            profilePicture = null;
+            favouriteClubId = 0;
+            createDate = now();
+            canUpdateFavouriteClub = true;
+            termsAccepted = false;
           };
+          let newManager = buildNewManager(principalId, createProfileDTO, "");
+          return await manager_canister.addManager(newManager);
+        };
+        case (?foundManager) {
+          let updatedManager : T.Manager = {
+            principalId = foundManager.principalId;
+            username = updatedUsername;
+            favouriteClubId = foundManager.favouriteClubId;
+            createDate = foundManager.createDate;
+            termsAccepted = foundManager.termsAccepted;
+            profilePicture = foundManager.profilePicture;
+            transfersAvailable = foundManager.transfersAvailable;
+            monthlyBonusesAvailable = foundManager.monthlyBonusesAvailable;
+            bankQuarterMillions = foundManager.bankQuarterMillions;
+            playerIds = foundManager.playerIds;
+            captainId = foundManager.captainId;
+            goalGetterGameweek = foundManager.goalGetterGameweek;
+            goalGetterPlayerId = foundManager.goalGetterPlayerId;
+            passMasterGameweek = foundManager.passMasterGameweek;
+            passMasterPlayerId = foundManager.passMasterPlayerId;
+            noEntryGameweek = foundManager.noEntryGameweek;
+            noEntryPlayerId = foundManager.noEntryPlayerId;
+            teamBoostGameweek = foundManager.teamBoostGameweek;
+            teamBoostClubId = foundManager.teamBoostClubId;
+            safeHandsGameweek = foundManager.safeHandsGameweek;
+            safeHandsPlayerId = foundManager.safeHandsPlayerId;
+            captainFantasticGameweek = foundManager.captainFantasticGameweek;
+            captainFantasticPlayerId = foundManager.captainFantasticPlayerId;
+            countrymenGameweek = foundManager.countrymenGameweek;
+            countrymenCountryId = foundManager.countrymenCountryId;
+            prospectsGameweek = foundManager.prospectsGameweek;
+            braceBonusGameweek = foundManager.braceBonusGameweek;
+            hatTrickHeroGameweek = foundManager.hatTrickHeroGameweek;
+            transferWindowGameweek = foundManager.transferWindowGameweek;
+            history = foundManager.history;
+          };
+          managers.put(principalId, updatedManager);
+          return #ok();
+        };
+      };
         };
       };
     };
@@ -486,7 +490,7 @@ module {
       };
     };
 
-    private func invalidBonuses(updatedFantasyTeam : DTOs.UpdateManagerDTO, existingFantasyTeam : ?T.Manager, systemState : T.SystemState, players : [DTOs.PlayerDTO]) : Bool {
+    private func invalidBonuses(updatedFantasyTeam : DTOs.UpdateManagerDTO, systemState : T.SystemState, players : [DTOs.PlayerDTO]) : Bool {
 
       var bonusesPlayed = 0;
       if (updatedFantasyTeam.goalGetterGameweek == systemState.pickTeamGameweek) {
@@ -548,46 +552,6 @@ module {
 
       if (bonusesPlayed > 1) {
         return true;
-      };
-
-      switch (existingFantasyTeam) {
-        case (null) {};
-        case (?foundTeam) {
-          if (updatedFantasyTeam.goalGetterGameweek == systemState.pickTeamGameweek and foundTeam.goalGetterGameweek != 0) {
-            return true;
-          };
-          if (updatedFantasyTeam.passMasterGameweek == systemState.pickTeamGameweek and foundTeam.passMasterGameweek != 0) {
-            return true;
-          };
-          if (updatedFantasyTeam.noEntryGameweek == systemState.pickTeamGameweek and foundTeam.noEntryGameweek != 0) {
-            return true;
-          };
-          if (updatedFantasyTeam.teamBoostGameweek == systemState.pickTeamGameweek and foundTeam.teamBoostGameweek != 0) {
-            return true;
-          };
-          if (updatedFantasyTeam.safeHandsGameweek == systemState.pickTeamGameweek and foundTeam.safeHandsGameweek != 0) {
-            return true;
-          };
-          if (updatedFantasyTeam.captainFantasticGameweek == systemState.pickTeamGameweek and foundTeam.captainFantasticGameweek != 0) {
-            return true;
-          };
-          if (updatedFantasyTeam.countrymenGameweek == systemState.pickTeamGameweek and foundTeam.countrymenGameweek != 0) {
-            return true;
-          };
-          if (updatedFantasyTeam.prospectsGameweek == systemState.pickTeamGameweek and foundTeam.prospectsGameweek != 0) {
-            return true;
-          };
-          if (updatedFantasyTeam.braceBonusGameweek == systemState.pickTeamGameweek and foundTeam.braceBonusGameweek != 0) {
-            return true;
-          };
-          if (updatedFantasyTeam.hatTrickHeroGameweek == systemState.pickTeamGameweek and foundTeam.hatTrickHeroGameweek != 0) {
-            return true;
-          };
-
-          if (Int64.fromNat64(Nat64.fromNat(Nat8.toNat(foundTeam.monthlyBonusesAvailable) - bonusesPlayed)) < 0) {
-            return true;
-          };
-        };
       };
 
       return false;
@@ -1126,7 +1090,7 @@ module {
               favouriteClubId = manager.favouriteClubId;
               createDate = manager.createDate;
               termsAccepted = manager.termsAccepted;
-              profilePictureCanisterId = manager.profilePictureCanisterId;
+              profilePicture = manager.profilePicture;
               transfersAvailable = manager.transfersAvailable;
               monthlyBonusesAvailable = manager.monthlyBonusesAvailable;
               bankQuarterMillions = newBankBalance;
@@ -1151,6 +1115,7 @@ module {
               hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
               transferWindowGameweek = manager.transferWindowGameweek;
               history = manager.history;
+              managerGroupIndex = manager.managerGroupIndex
             };
 
             managers.put(principalId, updatedManager);

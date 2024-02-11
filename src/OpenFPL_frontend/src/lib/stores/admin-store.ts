@@ -94,26 +94,6 @@ function createAdminStore() {
     return canisterDTOs;
   }
 
-  async function getManagerCanisters(
-    itemsPerPage: number,
-    currentPage: number
-  ): Promise<AdminProfilePictureCanisterList | null> {
-    const identityActor: any = await ActorFactory.createIdentityActor(
-      authStore,
-      process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
-    );
-    const limit = itemsPerPage;
-    const offset = (currentPage - 1) * limit;
-    const result = await identityActor.adminGetManagerCanisters(limit, offset);
-
-    if (isError(result)) {
-      console.error("Error fetching profile picture canister info");
-      return null;
-    }
-    let canisterDTOs: AdminProfilePictureCanisterList = result.ok;
-    return canisterDTOs;
-  }
-
   async function getTimers(
     category: string,
     itemsPerPage: number,
@@ -194,7 +174,6 @@ function createAdminStore() {
     getWeeklyCanisters,
     getMonthlyCanisters,
     getSeasonCanisters,
-    getManagerCanisters,
     getTimers,
     getFixtures,
     getClubs,

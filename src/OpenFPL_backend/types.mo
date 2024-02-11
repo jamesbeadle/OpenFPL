@@ -77,7 +77,6 @@ module Types {
   };
 
   public type Manager = {
-    managerGroupIndex: Nat8;
     principalId : Text;
     username : Text;
     termsAccepted : Bool;
