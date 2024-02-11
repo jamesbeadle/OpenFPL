@@ -453,7 +453,6 @@ actor Self {
     stable_next_season_id := seasonManager.getStableNextSeasonId();
     stable_next_fixture_id := seasonManager.getStableNextFixtureId();
     stable_data_cache_hashes := seasonManager.getStableDataHashes();
-    stable_system_state := seasonManager.getStableSystemState();
     stable_canister_ids := cyclesDispenser.getStableCanisterIds();
   };
 
@@ -487,7 +486,6 @@ actor Self {
     seasonManager.setStableNextSeasonId(stable_next_season_id);
     seasonManager.setStableNextFixtureId(stable_next_fixture_id);
     seasonManager.setStableDataHashes(stable_data_cache_hashes);
-    seasonManager.setStableSystemState(stable_system_state);
     timerComposite.setStableTimers(stable_timers);
     //TODO: SETSTABLE REWARD POOLS, CHECK ALL ARE DONE!
 

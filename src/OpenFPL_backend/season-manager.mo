@@ -49,14 +49,14 @@ module {
 
     var rewardPools : TrieMap.TrieMap<T.SeasonId, T.RewardPool> = TrieMap.TrieMap<T.SeasonId, T.RewardPool>(Utilities.eqNat16, Utilities.hashNat16);
 
-    private var systemState : T.SystemState = {
+    private stable var systemState : T.SystemState = {
       calculationGameweek = 1;
       calculationMonth = 8;
       calculationSeasonId = 1;
       pickTeamGameweek = 1;
       pickTeamSeasonId = 1;
       transferWindowActive = false;
-      onHold = false;
+      onHold = true;
     };
 
     private var dataCacheHashes : List.List<T.DataCache> = List.fromArray([
@@ -1054,10 +1054,6 @@ module {
 
     public func setStableDataHashes(stable_data_cache_hashes : [T.DataCache]) {
       dataCacheHashes := List.fromArray(stable_data_cache_hashes);
-    };
-
-    public func getStableSystemState() : T.SystemState {
-      return systemState;
     };
 
     public func setStableSystemState(stable_system_state : T.SystemState) {
