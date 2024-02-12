@@ -463,14 +463,6 @@
               on:click={() => setActiveTab("fixtures")}>Fixtures</button
             >
           </li>
-          <li class={`mr-4 ${activeTab === "managers" ? "active-tab" : ""}`}>
-            <button
-              class={`p-2 ${
-                activeTab === "managers" ? "text-white" : "text-gray-400"
-              }`}
-              on:click={() => setActiveTab("managers")}>Managers</button
-            >
-          </li>
         </ul>
 
         {#if activeTab === "canisters"}
@@ -479,8 +471,6 @@
           <AdminTimers />
         {:else if activeTab === "fixtures"}
           <AdminFixtures />
-        {:else if activeTab === "managers"}
-          <AdminManagers />
         {/if}
       </div>
     </div>

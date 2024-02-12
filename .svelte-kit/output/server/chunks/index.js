@@ -3512,7 +3512,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "ez6tcv"
+  version_hash: "15m1eri"
 };
 async function get_hooks() {
   return {};
@@ -8676,11 +8676,7 @@ const Page$a = create_ssr_component(($$result, $$props, $$bindings, slots) => {
         "class",
         `p-2 ${"text-gray-400"}`,
         0
-      )}>Fixtures</button></li> <li${add_attribute("class", `mr-4 ${""}`, 0)}><button${add_attribute(
-        "class",
-        `p-2 ${"text-gray-400"}`,
-        0
-      )}>Managers</button></li></ul> ${`${validate_component(Admin_canisters, "AdminCanisters").$$render($$result, {}, {}, {})}`}</div></div>`}`;
+      )}>Fixtures</button></li></ul> ${`${validate_component(Admin_canisters, "AdminCanisters").$$render($$result, {}, {}, {})}`}</div></div>`}`;
     }
   })}`;
 });
