@@ -346,7 +346,7 @@ module DTOs {
     totalEntries : Nat;
   };
 
-  public type UpdateManagerDTO = {
+  public type UpdateTeamSelectionDTO = {
     playerIds : [T.PlayerId];
     captainId : T.PlayerId;
     goalGetterGameweek : T.GameweekNumber;
@@ -367,10 +367,21 @@ module DTOs {
     braceBonusGameweek : T.GameweekNumber;
     hatTrickHeroGameweek : T.GameweekNumber;
     transferWindowGameweek : T.GameweekNumber;
+    principalId : Text;
+  };
+
+  public type UpdateUsernameDTO = {
+    principalId : Text;
     username : Text;
+  };
+
+  public type UpdateFavouriteClubDTO = {
     principalId : Text;
     favouriteClubId: T.ClubId;
-    bankQuarterMillions: Nat16;
+  };
+
+  public type UpdateProfilePictureDTO = {
+    principalId : Text;
     profilePicture: ?Blob;
   };
 

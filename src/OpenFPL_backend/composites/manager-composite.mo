@@ -181,6 +181,7 @@ module {
       if (systemState.onHold) {
         return #err(#SystemOnHold);
       };
+      
       //TODO: logic checks on the fantasy team before saving
       if(invalidBonuses(updatedFantasyTeamDTO, systemState, players)){
         return #err(#InvalidTeamError);
@@ -194,8 +195,11 @@ module {
         };
         case (?foundCanisterId){
           let manager_canister = actor (foundCanisterId) : actor {
+            getManager()
             updateManager : DTOs.UpdateManagerDTO -> async Result.Result<(), T.Error>;
           };
+
+          //TODO: Perform checks here
 
           await manager_canister.updateManager(updatedFantasyTeamDTO);
         };
@@ -215,9 +219,11 @@ module {
 
       switch(managerCanisterId){
         case (null){
-          return #err(#NotFound);
+          //TODO: Add the manager
         };
         case (?foundCanisterId){
+
+          //TODO: Just call update username on manager canister
           let manager_canister = actor (foundCanisterId) : actor {
             getManager : (principalId : Text) -> async ?T.Manager;
             updateManager : DTOs.UpdateManagerDTO -> async Result.Result<(), T.Error>;
@@ -646,6 +652,7 @@ module {
 
       return false;
     };
+
 
     private func invalidTeamComposition(updatedFantasyTeam : DTOs.UpdateManagerDTO, players : [DTOs.PlayerDTO]) : Bool {
 
