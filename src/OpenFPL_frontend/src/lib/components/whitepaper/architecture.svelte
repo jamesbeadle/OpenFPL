@@ -8,8 +8,13 @@
     performance even as user numbers grow. Here's how the system is structured:
   </p>
 
-  <h2 class="default-sub-header mt-4">Profile Data</h2>
+  <h2 class="default-sub-header mt-4">Manager Data</h2>
   <p class="my-2">
+
+    
+
+
+
     OpenFPL allocates approximately 254 bytes for a profile record. This means
     that a single Profile Canister could hold more than 16m profiles, scaling to
     a size larger than the market leader.

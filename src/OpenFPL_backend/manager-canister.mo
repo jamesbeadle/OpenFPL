@@ -1364,7 +1364,7 @@ actor class ManagerCanister() {
     };
 
     let managerGroupCount = managerBuffer.size();
-    if (managerGroupCount > 2000) {
+    if (managerGroupCount > 1000) {
       activeGroupIndex := activeGroupIndex + 1;
     };
 

@@ -328,7 +328,7 @@ module {
 
           let canisterManagerCount = await manager_canister.getTotalManagers();
 
-          if (canisterManagerCount >= 24000) {
+          if (canisterManagerCount >= 12000) {
             let newManagerCanisterId = await createManagerCanister();
 
             let new_manager_canister = actor (newManagerCanisterId) : actor {
@@ -489,7 +489,7 @@ module {
 
           let canisterManagerCount = await manager_canister.getTotalManagers();
 
-          if (canisterManagerCount >= 24000) {
+          if (canisterManagerCount >= 12000) {
             let newManagerCanisterId = await createManagerCanister();
 
             let new_manager_canister = actor (newManagerCanisterId) : actor {
@@ -582,7 +582,7 @@ module {
 
           let canisterManagerCount = await manager_canister.getTotalManagers();
 
-          if (canisterManagerCount >= 24000) {
+          if (canisterManagerCount >= 12000) {
             let newManagerCanisterId = await createManagerCanister();
 
             let new_manager_canister = actor (newManagerCanisterId) : actor {
@@ -681,7 +681,7 @@ module {
 
           let canisterManagerCount = await manager_canister.getTotalManagers();
 
-          if (canisterManagerCount >= 24000) {
+          if (canisterManagerCount >= 12000) {
             let newManagerCanisterId = await createManagerCanister();
 
             let new_manager_canister = actor (newManagerCanisterId) : actor {
