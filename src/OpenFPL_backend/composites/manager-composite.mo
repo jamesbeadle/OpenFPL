@@ -97,14 +97,14 @@ module {
                 if (managerSeason.seasonId == calculationSeasonId) {
 
                   var weeklyPosition : Int = 0;
-                  var weeklyPositionText = "";
                   var weeklyPoints : Int16 = 0;
                   var monthlyPosition : Int = 0;
-                  var monthlyPositionText = "";
                   var monthlyPoints : Int16 = 0;
                   var seasonPosition : Int = 0;
-                  var seasonPositionText = "";
                   var seasonPoints : Int16 = 0;
+                  var weeklyPositionText = "N/A";
+                  var monthlyPositionText = "N/A";
+                  var seasonPositionText = "N/A";
 
                   switch (weeklyLeaderboardEntry) {
                     case (null) {};
