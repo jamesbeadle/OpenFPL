@@ -189,13 +189,110 @@ module {
 
       let managerCanisterId = managerCanisterIds.get(updatedFantasyTeamDTO.principalId);
 
-       switch(managerCanisterId){
+      var result: Result.Result<(), T.Error> = #err(#NotFound);
+
+      switch(managerCanisterId){
         case (null){
+          
+          let updatedPlayers = Array.filter<DTOs.PlayerDTO>(
+            players,
+            func(player : DTOs.PlayerDTO) : Bool {
+              let playerId = player.id;
+              let isPlayerIdInNewTeam = Array.find(
+                updatedFantasyTeamDTO.playerIds,
+                func(id : Nat16) : Bool {
+                  return id == playerId;
+                },
+              );
+              return Option.isSome(isPlayerIdInNewTeam);
+            },
+          );
+
+          let playersAdded = Array.filter<DTOs.PlayerDTO>(
+            updatedPlayers,
+            func(player : DTOs.PlayerDTO) : Bool {
+              let playerId = player.id;
+              let isPlayerIdInExistingTeam = Array.find(
+                updatedFantasyTeamDTO.playerIds,
+                func(id : Nat16) : Bool {
+                  return id == playerId;
+                },
+              );
+              return Option.isNull(isPlayerIdInExistingTeam);
+            },
+          );
+          
+          let spent = Array.foldLeft<DTOs.PlayerDTO, Nat16>(playersAdded, 0, func(sumSoFar, x) = sumSoFar + x.valueQuarterMillions);
+
+          var bonusPlayed = updatedFantasyTeamDTO.goalGetterGameweek == systemState.pickTeamGameweek or
+            updatedFantasyTeamDTO.passMasterGameweek == systemState.pickTeamGameweek or
+            updatedFantasyTeamDTO.noEntryGameweek == systemState.pickTeamGameweek or
+            updatedFantasyTeamDTO.teamBoostGameweek == systemState.pickTeamGameweek or
+            updatedFantasyTeamDTO.safeHandsGameweek == systemState.pickTeamGameweek or
+            updatedFantasyTeamDTO.captainFantasticGameweek == systemState.pickTeamGameweek or
+            updatedFantasyTeamDTO.countrymenGameweek == systemState.pickTeamGameweek or
+            updatedFantasyTeamDTO.prospectsGameweek == systemState.pickTeamGameweek or
+            updatedFantasyTeamDTO.braceBonusGameweek == systemState.pickTeamGameweek or
+            updatedFantasyTeamDTO.hatTrickHeroGameweek == systemState.pickTeamGameweek;
 
 
-          //TODO: Create manager with fantasy team
+          var monthlyBonuses: Nat8 = 2;
+          if (bonusPlayed) {
+            monthlyBonuses := monthlyBonuses - 1;
+          };
 
-          return #err(#NotFound);
+          let newManager: T.Manager = {
+            principalId = updatedFantasyTeamDTO.principalId;
+            username = "";
+            favouriteClubId = 0;
+            createDate = Time.now();
+            termsAccepted = false;
+            profilePicture = null;
+            transfersAvailable = 2;
+            monthlyBonusesAvailable = monthlyBonuses;
+            bankQuarterMillions = 1200 - spent;
+            playerIds = updatedFantasyTeamDTO.playerIds;
+            captainId = updatedFantasyTeamDTO.captainId;
+            goalGetterGameweek = updatedFantasyTeamDTO.goalGetterGameweek;
+            goalGetterPlayerId = updatedFantasyTeamDTO.goalGetterPlayerId;
+            passMasterGameweek = updatedFantasyTeamDTO.passMasterGameweek;
+            passMasterPlayerId = updatedFantasyTeamDTO.passMasterPlayerId;
+            noEntryGameweek = updatedFantasyTeamDTO.noEntryGameweek;
+            noEntryPlayerId = updatedFantasyTeamDTO.noEntryPlayerId;
+            teamBoostGameweek = updatedFantasyTeamDTO.teamBoostGameweek;
+            teamBoostClubId = updatedFantasyTeamDTO.teamBoostClubId;
+            safeHandsGameweek = updatedFantasyTeamDTO.safeHandsGameweek;
+            safeHandsPlayerId = updatedFantasyTeamDTO.safeHandsPlayerId;
+            captainFantasticGameweek = updatedFantasyTeamDTO.captainFantasticGameweek;
+            captainFantasticPlayerId = updatedFantasyTeamDTO.captainFantasticPlayerId;
+            countrymenGameweek = updatedFantasyTeamDTO.countrymenGameweek;
+            countrymenCountryId = updatedFantasyTeamDTO.countrymenCountryId;
+            prospectsGameweek = updatedFantasyTeamDTO.prospectsGameweek;
+            braceBonusGameweek = updatedFantasyTeamDTO.braceBonusGameweek;
+            hatTrickHeroGameweek = updatedFantasyTeamDTO.hatTrickHeroGameweek;
+            transferWindowGameweek = 0;
+            history = List.nil();
+          };
+
+          let manager_canister = actor (activeManagerCanisterId) : actor {
+            addNewManager : (manager: T.Manager) -> async Result.Result<(), T.Error>;
+            getTotalManagers : () -> async Nat;
+          };
+          
+          let canisterManagerCount = await manager_canister.getTotalManagers();
+
+          if(canisterManagerCount >= 24000){
+            let newManagerCanisterId = await createManagerCanister();
+
+            let new_manager_canister = actor (newManagerCanisterId) : actor {
+              addNewManager : (manager: T.Manager) -> async Result.Result<(), T.Error>;
+            };
+            result := await new_manager_canister.addNewManager(newManager);
+          }else{
+            result := await manager_canister.addNewManager(newManager);
+          };
+          totalManagers := totalManagers + 1;
+
         };
         case (?foundCanisterId){
           let manager_canister = actor (foundCanisterId) : actor {
@@ -289,12 +386,13 @@ module {
                 monthlyBonuses := monthlyBonuses - 1;
               };
 
-              //TODO: Perform checks here
               return await manager_canister.updateTeamSelection(updatedFantasyTeamDTO, transfersAvailable, monthlyBonuses, newBankBalance);
             };
           };
         };
-       };
+      };
+      
+      return result;
     };
 
     //TODO
@@ -1878,8 +1976,12 @@ module {
     };
     
     //Esnure I init all the things i need
-    public func init() : async () {
-      activeManagerCanisterId := await createManagerCanister();
+    public func init() : async Result.Result<(), T.Error> {
+      let result = await createManagerCanister();
+      if(result == ""){
+        return #err(#CanisterCreateError);
+      };
+      return #ok;
     };
 
     private func createManagerCanister() : async Text{
@@ -1892,13 +1994,14 @@ module {
       let canisterId = Principal.toText(canister_principal);
       
       if(canisterId == ""){
-        return #err(#CanisterCreateError);
+        return canisterId;
       };
       
       let uniqueCanisterIdBuffer = Buffer.fromArray<T.CanisterId>(List.toArray(uniqueManagerCanisterIds));
-      uniqueCanisterIdBuffer.add(canister_principal);
-      uniqueManagerCanisterIds := Buffer.toArray(uniqueCanisterIdBuffer);
-      return result;
+      uniqueCanisterIdBuffer.add(canisterId);
+      uniqueManagerCanisterIds := List.fromArray(Buffer.toArray(uniqueCanisterIdBuffer));
+      activeManagerCanisterId := canisterId;
+      return canisterId;
     }
   };
 };
