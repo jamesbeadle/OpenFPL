@@ -47,13 +47,6 @@ actor class ManagerCanister() {
     main_canister_id := CanisterIds.MAIN_CANISTER_LOCAL_ID;
   };
 
-  public shared ({ caller }) func createCanister(_seasonId : T.SeasonId, _totalEntries : Nat) : async () {
-    assert not Principal.isAnonymous(caller);
-    let principalId = Principal.toText(caller);
-    assert principalId == main_canister_id;
-  };
-
-  //update team selection
   public shared ({ caller }) func updateTeamSelection(updateManagerDTO : DTOs.UpdateTeamSelectionDTO, transfersAvailable : Nat8, monthlyBonuses : Nat8, newBankBalance : Nat16) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
@@ -228,7 +221,6 @@ actor class ManagerCanister() {
     };
   };
 
-  //update username
   public shared ({ caller }) func updateUsername(dto : DTOs.UpdateUsernameDTO) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
@@ -403,7 +395,6 @@ actor class ManagerCanister() {
     };
   };
 
-  //update profile picture
   public shared ({ caller }) func updateProfilePicture(dto : DTOs.UpdateProfilePictureDTO) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
@@ -578,7 +569,6 @@ actor class ManagerCanister() {
     };
   };
 
-  //update favourite club
   public shared ({ caller }) func updateFavouriteClub(dto : DTOs.UpdateFavouriteClubDTO) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
@@ -753,7 +743,6 @@ actor class ManagerCanister() {
     };
   };
 
-  //get manager
   public shared ({ caller }) func getManager(managerPrincipal : Text) : async ?T.Manager {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
@@ -1292,8 +1281,6 @@ actor class ManagerCanister() {
       };
     };
   };
-
-  //add new manager
 
   public shared ({ caller }) func addNewManager(newManager : T.Manager) : async Result.Result<(), T.Error> {
 
@@ -1917,6 +1904,178 @@ actor class ManagerCanister() {
     };
 
     return managers;
+  };
+
+  public shared ({caller}) func calculateFantasyTeamScores(allPlayersList : [(T.PlayerId, DTOs.PlayerScoreDTO)], allPlayers: [DTOs.PlayerDTO], seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async (){
+    
+    let playerIdTrie: TrieMap.TrieMap<T.PlayerId, DTOs.PlayerScoreDTO> = TrieMap.TrieMap<T.PlayerId, DTOs.PlayerScoreDTO>(Utilities.eqNat16, Utilities.hashNat16);
+    for (player in Iter.fromArray(allPlayersList)){
+      playerIdTrie.put(player.0, player.1)
+    };
+
+    for(index in Iter.range(0,10)){
+      var managers: [T.Manager] = [];
+      var managersBuffer = Buffer.fromArray<T.Manager>([]);
+      switch(index){
+        case 0{
+          managers := managerGroup1;
+        };
+        case 1{
+          managers := managerGroup2;
+        };
+        case 2{
+          managers := managerGroup3;
+        };
+        case 3{
+          managers := managerGroup4;
+        };
+        case 4{
+          managers := managerGroup5;
+        };
+        case 5{
+          managers := managerGroup6;
+        };
+        case 6{
+          managers := managerGroup7;
+        };
+        case 7{
+          managers := managerGroup8;
+        };
+        case 8{
+          managers := managerGroup9;
+        };
+        case 9{
+          managers := managerGroup10;
+        };
+        case 10{
+          managers := managerGroup11;
+        };
+        case 11{
+          managers := managerGroup12;
+        };
+        case _ {}
+      };  
+      for (value in Iter.fromArray(managers)) {
+
+        let currentSeason = List.find<T.FantasyTeamSeason>(
+          value.history,
+          func(teamSeason : T.FantasyTeamSeason) : Bool {
+            return teamSeason.seasonId == seasonId;
+          },
+        );
+
+        switch (currentSeason) {
+          case (null) {};
+          case (?foundSeason) {
+            let currentSnapshot = List.find<T.FantasyTeamSnapshot>(
+              foundSeason.gameweeks,
+              func(snapshot : T.FantasyTeamSnapshot) : Bool {
+                return snapshot.gameweek == gameweek;
+              },
+            );
+            switch (currentSnapshot) {
+              case (null) {};
+              case (?foundSnapshot) {
+
+                var totalTeamPoints : Int16 = 0;
+                for (playerId in Iter.fromArray(foundSnapshot.playerIds)) {
+                  let playerData = playerIdTrie.get(playerId);
+                  switch (playerData) {
+                    case (null) {};
+                    case (?player) {
+
+                      var totalScore : Int16 = player.points;
+
+                      // Goal Getter
+                      if (foundSnapshot.goalGetterGameweek == gameweek and foundSnapshot.goalGetterPlayerId == playerId) {
+                        totalScore += calculateGoalPoints(player.position, player.goalsScored);
+                      };
+
+                      // Pass Master
+                      if (foundSnapshot.passMasterGameweek == gameweek and foundSnapshot.passMasterPlayerId == playerId) {
+                        totalScore += calculateAssistPoints(player.position, player.assists);
+                      };
+
+                      // No Entry
+                      if (foundSnapshot.noEntryGameweek == gameweek and (player.position == #Goalkeeper or player.position == #Defender) and player.goalsConceded == 0) {
+                        totalScore := totalScore * 3;
+                      };
+
+                      // Team Boost
+                      if (foundSnapshot.teamBoostGameweek == gameweek and player.clubId == foundSnapshot.teamBoostClubId) {
+                        totalScore := totalScore * 2;
+                      };
+
+                      // Safe Hands
+                      if (foundSnapshot.safeHandsGameweek == gameweek and player.position == #Goalkeeper and player.saves > 4) {
+                        totalScore := totalScore * 3;
+                      };
+
+                      // Captain Fantastic
+                      if (foundSnapshot.captainFantasticGameweek == gameweek and foundSnapshot.captainId == playerId and player.goalsScored > 0) {
+                        totalScore := totalScore * 2;
+                      };
+
+                      // Countrymen
+                      if (foundSnapshot.countrymenGameweek == gameweek and foundSnapshot.countrymenCountryId == player.nationality) {
+                        totalScore := totalScore * 2;
+                      };
+
+                      // Prospects
+                      if (foundSnapshot.prospectsGameweek == gameweek and Utilities.calculateAgeFromUnix(player.dateOfBirth) < 21) {
+                        totalScore := totalScore * 2;
+                      };
+
+                      // Brace Bonus
+                      if (foundSnapshot.braceBonusGameweek == gameweek and player.goalsScored >= 2) {
+                        totalScore := totalScore * 2;
+                      };
+
+                      // Hat Trick Hero
+                      if (foundSnapshot.hatTrickHeroGameweek == gameweek and player.goalsScored >= 3) {
+                        totalScore := totalScore * 3;
+                      };
+
+                      // Handle captain bonus
+                      if (playerId == foundSnapshot.captainId) {
+                        totalScore := totalScore * 2;
+                      };
+
+                      totalTeamPoints += totalScore;
+                    };
+                  };
+                };
+                
+                
+                let allPlayerValues = Array.map<DTOs.PlayerDTO, Nat16>(allPlayers, func(player : DTOs.PlayerDTO) : Nat16 { return player.valueQuarterMillions });
+
+                let totalTeamValue = Array.foldLeft<Nat16, Nat16>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
+               
+                updateSnapshotPoints(value.principalId, seasonId, gameweek, totalTeamPoints, totalTeamValue);
+              };
+            };
+          };
+        };
+      }; 
+    }
+  };
+  
+  private func calculateGoalPoints(position : T.PlayerPosition, goalsScored : Int16) : Int16 {
+    switch (position) {
+      case (#Goalkeeper) { return 40 * goalsScored };
+      case (#Defender) { return 40 * goalsScored };
+      case (#Midfielder) { return 30 * goalsScored };
+      case (#Forward) { return 20 * goalsScored };
+    };
+  };
+
+  private func calculateAssistPoints(position : T.PlayerPosition, assists : Int16) : Int16 {
+    switch (position) {
+      case (#Goalkeeper) { return 30 * assists };
+      case (#Defender) { return 30 * assists };
+      case (#Midfielder) { return 20 * assists };
+      case (#Forward) { return 20 * assists };
+    };
   };
 
   system func preupgrade() {
