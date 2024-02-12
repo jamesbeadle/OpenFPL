@@ -1564,41 +1564,35 @@ module {
     };
 
     public func distributeMostValuableTeamRewards(mostValuableTeamPool : Nat64, players : [DTOs.PlayerDTO], currentSeason : T.SeasonId) : async () {
-      let allFinalGameweekSnapshots = TrieMap.mapFilter<T.PrincipalId, T.Manager, T.FantasyTeamSnapshot>(
-        managers,
-        Text.equal,
-        Text.hash,
-        func(k, v) : ?T.FantasyTeamSnapshot {
-          let gameweek38Snapshot = List.foldLeft<T.FantasyTeamSeason, ?T.FantasyTeamSnapshot>(
-            v.history,
-            null,
-            func(acc : ?T.FantasyTeamSnapshot, season : T.FantasyTeamSeason) : ?T.FantasyTeamSnapshot {
-              switch (acc) {
-                case (?_) { acc };
-                case null {
-                  List.find<T.FantasyTeamSnapshot>(
-                    season.gameweeks,
-                    func(snapshot) : Bool {
-                      snapshot.gameweek == 38;
-                    },
-                  );
-                };
-              };
-            },
-          );
-          return gameweek38Snapshot;
-        },
-      );
+      
+      //call each canister and get the top 100 most valuable teams
+
+      //combine and distribute rewards
+      let gameweek38Snapshots = Buffer.fromArray<T.FantasyTeamSnapshot>([]);
+      let mostValuableTeamsBuffer = Buffer.fromArray<T.FantasyTeamSnapshot>([]);
+      for(canisterId in Iter.fromList(uniqueManagerCanisterIds)){
+        let manager_canister = actor (canisterId) : actor {
+          getGameweek38Snapshots : () -> async [T.FantasyTeamSnapshot];
+          getMostValuableTeams : () -> async [T.FantasyTeamSnapshot];
+        };
+
+        let gameweek38Snapshots = await manager_canister.getGameweek38Snapshots();
+
+        let mostValuableTeams = await manager_canister.getMostValuableTeams();
+        mostValuableTeamsBuffer.append(Buffer.fromArray(mostValuableTeams));
+      };
+      
+      let allFinalGameweekSnapshots = Buffer.toArray(gameweek38Snapshots);
 
       var teamValues : TrieMap.TrieMap<T.PrincipalId, Nat16> = TrieMap.TrieMap<T.PrincipalId, Nat16>(Text.equal, Text.hash);
 
-      for (snapshot in allFinalGameweekSnapshots.entries()) {
+      for (snapshot in Iter.fromArray(allFinalGameweekSnapshots)) {
         let allPlayers = Array.filter<DTOs.PlayerDTO>(
           players,
           func(player : DTOs.PlayerDTO) : Bool {
             let playerId = player.id;
             let isPlayerIdInNewTeam = Array.find(
-              snapshot.1.playerIds,
+              snapshot.playerIds,
               func(id : Nat16) : Bool {
                 return id == playerId;
               },
@@ -1609,7 +1603,7 @@ module {
 
         let allPlayerValues = Array.map<DTOs.PlayerDTO, Nat16>(allPlayers, func(player : DTOs.PlayerDTO) : Nat16 { return player.valueQuarterMillions });
         let totalTeamValue = Array.foldLeft<Nat16, Nat16>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
-        teamValues.put(snapshot.0, totalTeamValue);
+        teamValues.put(snapshot.principalId, totalTeamValue);
       };
 
       let teamValuesArray : [(T.PrincipalId, Nat16)] = Iter.toArray(teamValues.entries());

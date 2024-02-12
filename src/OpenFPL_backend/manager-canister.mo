@@ -1129,6 +1129,218 @@ actor class ManagerCanister() {
     };
     return Buffer.toArray(allManagersBuffer);
   };
+  
+  public shared ({ caller }) func getGameweek38Snapshots() : async [T.FantasyTeamSnapshot] {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == main_canister_id;
+    
+    let allManagersBuffer = Buffer.fromArray<T.FantasyTeamSnapshot>([]);
+    for(index in Iter.range(0,11)){
+      switch(index){
+        case 0 {
+          for(manager in Iter.fromArray(managerGroup2)){
+            let gameweek38Snapshot = List.foldLeft<T.FantasyTeamSeason, ?T.FantasyTeamSnapshot>(
+              manager.history,
+              null,
+              getGameweek38,
+            );
+            switch(gameweek38Snapshot){
+              case (null){};
+              case (?foundSnapshot){
+                allManagersBuffer.add(foundSnapshot);
+              }
+            }
+          };
+        };
+        case 1 {
+          for(manager in Iter.fromArray(managerGroup2)){
+            let gameweek38Snapshot = List.foldLeft<T.FantasyTeamSeason, ?T.FantasyTeamSnapshot>(
+              manager.history,
+              null,
+              getGameweek38,
+            );
+            switch(gameweek38Snapshot){
+              case (null){};
+              case (?foundSnapshot){
+                allManagersBuffer.add(foundSnapshot);
+              }
+            }
+          };
+        };
+        case 2 {
+          for(manager in Iter.fromArray(managerGroup3)){
+            let gameweek38Snapshot = List.foldLeft<T.FantasyTeamSeason, ?T.FantasyTeamSnapshot>(
+              manager.history,
+              null,
+              getGameweek38,
+            );
+            switch(gameweek38Snapshot){
+              case (null){};
+              case (?foundSnapshot){
+                allManagersBuffer.add(foundSnapshot);
+              }
+            }
+          };
+        };
+        case 3 {
+          for(manager in Iter.fromArray(managerGroup4)){
+            let gameweek38Snapshot = List.foldLeft<T.FantasyTeamSeason, ?T.FantasyTeamSnapshot>(
+              manager.history,
+              null,
+              getGameweek38,
+            );
+            switch(gameweek38Snapshot){
+              case (null){};
+              case (?foundSnapshot){
+                allManagersBuffer.add(foundSnapshot);
+              }
+            }
+          };
+        };
+        case 4 {
+          for(manager in Iter.fromArray(managerGroup5)){
+            let gameweek38Snapshot = List.foldLeft<T.FantasyTeamSeason, ?T.FantasyTeamSnapshot>(
+              manager.history,
+              null,
+              getGameweek38,
+            );
+            switch(gameweek38Snapshot){
+              case (null){};
+              case (?foundSnapshot){
+                allManagersBuffer.add(foundSnapshot);
+              }
+            }
+          };
+        };
+        case 5 {
+          for(manager in Iter.fromArray(managerGroup6)){
+            let gameweek38Snapshot = List.foldLeft<T.FantasyTeamSeason, ?T.FantasyTeamSnapshot>(
+              manager.history,
+              null,
+              getGameweek38,
+            );
+            switch(gameweek38Snapshot){
+              case (null){};
+              case (?foundSnapshot){
+                allManagersBuffer.add(foundSnapshot);
+              }
+            }
+          };
+        };
+        case 6 {
+          for(manager in Iter.fromArray(managerGroup7)){
+            let gameweek38Snapshot = List.foldLeft<T.FantasyTeamSeason, ?T.FantasyTeamSnapshot>(
+              manager.history,
+              null,
+              getGameweek38,
+            );
+            switch(gameweek38Snapshot){
+              case (null){};
+              case (?foundSnapshot){
+                allManagersBuffer.add(foundSnapshot);
+              }
+            }
+          };
+        };
+        case 7 {
+          for(manager in Iter.fromArray(managerGroup8)){
+            let gameweek38Snapshot = List.foldLeft<T.FantasyTeamSeason, ?T.FantasyTeamSnapshot>(
+              manager.history,
+              null,
+              getGameweek38,
+            );
+            switch(gameweek38Snapshot){
+              case (null){};
+              case (?foundSnapshot){
+                allManagersBuffer.add(foundSnapshot);
+              }
+            }
+          };
+        };
+        case 8 {
+          for(manager in Iter.fromArray(managerGroup9)){
+            let gameweek38Snapshot = List.foldLeft<T.FantasyTeamSeason, ?T.FantasyTeamSnapshot>(
+              manager.history,
+              null,
+              getGameweek38,
+            );
+            switch(gameweek38Snapshot){
+              case (null){};
+              case (?foundSnapshot){
+                allManagersBuffer.add(foundSnapshot);
+              }
+            }
+          };
+        };
+        case 9 {
+          for(manager in Iter.fromArray(managerGroup10)){
+            let gameweek38Snapshot = List.foldLeft<T.FantasyTeamSeason, ?T.FantasyTeamSnapshot>(
+              manager.history,
+              null,
+              getGameweek38,
+            );
+            switch(gameweek38Snapshot){
+              case (null){};
+              case (?foundSnapshot){
+                allManagersBuffer.add(foundSnapshot);
+              }
+            }
+          };
+        };
+        case 10 {
+          for(manager in Iter.fromArray(managerGroup11)){
+            let gameweek38Snapshot = List.foldLeft<T.FantasyTeamSeason, ?T.FantasyTeamSnapshot>(
+              manager.history,
+              null,
+              getGameweek38,
+            );
+            switch(gameweek38Snapshot){
+              case (null){};
+              case (?foundSnapshot){
+                allManagersBuffer.add(foundSnapshot);
+              }
+            }
+          };
+        };
+        case 11 {
+          for(manager in Iter.fromArray(managerGroup12)){
+            let gameweek38Snapshot = List.foldLeft<T.FantasyTeamSeason, ?T.FantasyTeamSnapshot>(
+              manager.history,
+              null,
+              getGameweek38,
+            );
+            switch(gameweek38Snapshot){
+              case (null){};
+              case (?foundSnapshot){
+                allManagersBuffer.add(foundSnapshot);
+              }
+            }
+          };
+        };
+        case _ {
+
+        };
+
+      }
+    };
+    return Buffer.toArray(allManagersBuffer);
+  };
+
+  
+  let getGameweek38 = func(acc : ?T.FantasyTeamSnapshot, season : T.FantasyTeamSeason) : ?T.FantasyTeamSnapshot {
+    switch (acc) {
+      case (?_) { acc };
+      case null {
+        List.find<T.FantasyTeamSnapshot>(
+          season.gameweeks,
+          func(snapshot) : Bool {
+            snapshot.gameweek == 38;
+          },
+        );
+      };
+    };
+  };
 
   //add new manager
 
