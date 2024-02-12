@@ -49,7 +49,7 @@ module {
 
     var rewardPools : TrieMap.TrieMap<T.SeasonId, T.RewardPool> = TrieMap.TrieMap<T.SeasonId, T.RewardPool>(Utilities.eqNat16, Utilities.hashNat16);
 
-  //TODO BACKUP
+    //TODO BACKUP
     private var systemState : T.SystemState = {
       calculationGameweek = 1;
       calculationMonth = 8;
@@ -207,13 +207,13 @@ module {
 
       let weeklyLeaderboardEntry = await leaderboardComposite.getWeeklyLeaderboardEntry(principalId, systemState.calculationSeasonId, systemState.calculationGameweek);
 
-      var managerFavouriteClub: T.ClubId = 0;
+      var managerFavouriteClub : T.ClubId = 0;
       let result = await managerComposite.getFavouriteClub(principalId);
       switch (result) {
         case (#ok(favouriteClubId)) {
           managerFavouriteClub := favouriteClubId;
         };
-        case _{}
+        case _ {};
       };
       var monthlyLeaderboardEntry : ?DTOs.LeaderboardEntryDTO = null;
       if (managerFavouriteClub > 0) {
@@ -247,11 +247,11 @@ module {
       return await managerComposite.updateProfilePicture(principalId, profilePicture);
     };
 
-    public func isUsernameValid(username: Text) : Bool{
+    public func isUsernameValid(username : Text) : Bool {
       return managerComposite.isUsernameValid(username);
     };
 
-    public func isUsernameTaken(username: Text, principalId: Text) : Bool{
+    public func isUsernameTaken(username : Text, principalId : Text) : Bool {
       return managerComposite.isUsernameTaken(username, principalId);
     };
 
@@ -845,7 +845,6 @@ module {
         Utilities.hashNat16,
       );
     };
-
 
     public func getStableManagerCanisterIds() : [(T.PrincipalId, T.CanisterId)] {
       return managerComposite.getStableManagerCanisterIds();

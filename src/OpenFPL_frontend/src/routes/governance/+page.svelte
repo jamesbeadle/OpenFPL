@@ -12,12 +12,12 @@
   let selectedProposalStatus = 1;
 
   const proposalStatuses = [
-  { id: 1, description: "Open" },
-  { id: 2, description: "Rejected" },
-  { id: 3, description: "Accepted" },
-  { id: 4, description: "Executed" },
-  { id: 5, description: "Failed" }
-];
+    { id: 1, description: "Open" },
+    { id: 2, description: "Rejected" },
+    { id: 3, description: "Accepted" },
+    { id: 4, description: "Executed" },
+    { id: 5, description: "Failed" },
+  ];
 
   function setActiveTab(tab: string): void {
     activeTab = tab;
@@ -28,8 +28,8 @@
   });
 
   async function listProposals() {
-    if(!process.env.OPENFPL_GOVERNANCE_CANISTER_ID){
-      console.log("HERE")
+    if (!process.env.OPENFPL_GOVERNANCE_CANISTER_ID) {
+      console.log("HERE");
       return;
     }
     const identityActor: any = await ActorFactory.createIdentityActor(
@@ -68,16 +68,22 @@
       </ul>
 
       {#if activeTab === "proposals"}
-      <div class="flex justify-between items-center mx-4 mt-4">
-        <select class="fpl-dropdown min-w-[100px]" bind:value={selectedProposalStatus}>
-          {#each proposalStatuses as proposalType}
-            <option value={proposalType.id}>{proposalType.description}</option>
-          {/each}
-        </select>
-        <a href="/add-proposal">
-        <button class="p-2 fpl-button text-white rounded-md">Raise Proposal</button>
-      </a>
-      </div>
+        <div class="flex justify-between items-center mx-4 mt-4">
+          <select
+            class="fpl-dropdown min-w-[100px]"
+            bind:value={selectedProposalStatus}
+          >
+            {#each proposalStatuses as proposalType}
+              <option value={proposalType.id}>{proposalType.description}</option
+              >
+            {/each}
+          </select>
+          <a href="/add-proposal">
+            <button class="p-2 fpl-button text-white rounded-md"
+              >Raise Proposal</button
+            >
+          </a>
+        </div>
 
         <div class="flex flex-col space-y-4 mt-4">
           <div class="overflow-x-auto flex-1">
@@ -89,7 +95,7 @@
               <div class="w-4/12">Details</div>
               <div class="w-4/12">Voting</div>
             </div>
-            
+
             {#each activeProposals as proposal}
               <div
                 class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer"

@@ -105,7 +105,9 @@
   };
 
   const getTeamPoints = (teamId: number) => {
-    if(!tableData || tableData.length == 0) { return 0; }
+    if (!tableData || tableData.length == 0) {
+      return 0;
+    }
     const points = tableData.find((team) => team.id === teamId).points;
     return points;
   };
@@ -225,15 +227,10 @@
         <div class="flex-grow">
           <p class="content-panel-header">Most Points</p>
           {#if highestScoringPlayer?.totalPoints == 0}
-          
-            <p class="content-panel-stat">
-              -
-            </p>
+            <p class="content-panel-stat">-</p>
             <p class="content-panel-header">
-              -
-              ({highestScoringPlayer?.totalPoints})
+              - ({highestScoringPlayer?.totalPoints})
             </p>
-
           {:else}
             <p class="content-panel-stat">
               <a href={`/player?id=${highestScoringPlayer?.id}`}
@@ -248,7 +245,6 @@
               )}
               ({highestScoringPlayer?.totalPoints})
             </p>
-
           {/if}
         </div>
       </div>

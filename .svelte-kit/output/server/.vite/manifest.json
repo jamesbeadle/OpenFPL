@@ -9,7 +9,7 @@
   },
   "_index.js": {
     "css": [
-      "_app/immutable/assets/index.USi8Uar5.css"
+      "_app/immutable/assets/index.LowOqC7e.css"
     ],
     "file": "chunks/index.js",
     "imports": [
@@ -78,6 +78,14 @@
     ],
     "isEntry": true,
     "src": "src/OpenFPL_frontend/src/routes/add-fixture-data/+page.svelte"
+  },
+  "src/OpenFPL_frontend/src/routes/add-proposal/+page.svelte": {
+    "file": "entries/pages/add-proposal/_page.svelte.js",
+    "imports": [
+      "_index.js"
+    ],
+    "isEntry": true,
+    "src": "src/OpenFPL_frontend/src/routes/add-proposal/+page.svelte"
   },
   "src/OpenFPL_frontend/src/routes/admin/+page.svelte": {
     "file": "entries/pages/admin/_page.svelte.js",

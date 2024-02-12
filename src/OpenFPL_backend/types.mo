@@ -106,7 +106,7 @@ module Types {
     hatTrickHeroGameweek : GameweekNumber;
     transferWindowGameweek : GameweekNumber;
     history : List.List<FantasyTeamSeason>;
-    profilePicture: ?Blob;
+    profilePicture : ?Blob;
   };
 
   public type FantasyTeamSeason = {

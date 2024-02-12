@@ -65,7 +65,7 @@ actor Self {
     return await seasonManager.getCurrentTeam(Principal.toText(caller));
   };
 
-  public shared ({ caller }) func getManager(managerId: Text) : async Result.Result<DTOs.ManagerDTO, T.Error> {
+  public shared ({ caller }) func getManager(managerId : Text) : async Result.Result<DTOs.ManagerDTO, T.Error> {
     assert not Principal.isAnonymous(caller);
     return await seasonManager.getManager(managerId);
   };
@@ -136,8 +136,8 @@ actor Self {
   public shared query ({ caller }) func isUsernameValid(username : Text) : async Bool {
     assert not Principal.isAnonymous(caller);
     let usernameValid = seasonManager.isUsernameValid(username);
-    let usernameTaken =  seasonManager.isUsernameTaken(username, Principal.toText(caller));
-    return usernameValid and not usernameTaken; 
+    let usernameTaken = seasonManager.isUsernameTaken(username, Principal.toText(caller));
+    return usernameValid and not usernameTaken;
   };
 
   //Update functions:
@@ -163,7 +163,7 @@ actor Self {
     assert false; // TODO: Remove when the game begins
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert fantasyTeam.principalId == principalId;  
+    assert fantasyTeam.principalId == principalId;
     return await seasonManager.saveFantasyTeam(principalId, fantasyTeam);
   };
 
@@ -385,11 +385,11 @@ actor Self {
   //Stable backup:
   private stable var stable_timers : [T.TimerInfo] = [];
   private stable var stable_reward_pools : [(T.SeasonId, T.RewardPool)] = [];
-  private stable var stable_manager_canister_ids: [(T.PrincipalId, T.CanisterId)] = [];
-  private stable var stable_manager_usernames: [(T.PrincipalId, Text)] = [];
-  private stable var stable_unique_manager_canister_ids: [T.CanisterId] = [];
-  private stable var stable_total_managers: Nat = 0;
-  private stable var stable_active_manager_canister_id: Text = "";
+  private stable var stable_manager_canister_ids : [(T.PrincipalId, T.CanisterId)] = [];
+  private stable var stable_manager_usernames : [(T.PrincipalId, Text)] = [];
+  private stable var stable_unique_manager_canister_ids : [T.CanisterId] = [];
+  private stable var stable_total_managers : Nat = 0;
+  private stable var stable_active_manager_canister_id : Text = "";
   private stable var stable_team_value_leaderboards : [(T.SeasonId, T.TeamValueLeaderboard)] = [];
   private stable var stable_season_rewards : [T.SeasonRewards] = [];
   private stable var stable_monthly_rewards : [T.MonthlyRewards] = [];

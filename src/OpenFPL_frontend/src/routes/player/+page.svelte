@@ -30,7 +30,7 @@
   import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
   import { Spinner } from "@dfinity/gix-components";
   import { Position } from "$lib/enums/Position";
-    import { countriesStore } from "$lib/stores/country-store";
+  import { countriesStore } from "$lib/stores/country-store";
 
   $: id = Number($page.url.searchParams.get("id"));
 
@@ -62,7 +62,7 @@
       if ($teamStore.length == 0) return;
 
       await playerStore.sync();
-      
+
       selectedPlayer = $playerStore.find((x) => x.id === id) ?? null;
       team = $teamStore.find((x) => x.id === selectedPlayer?.clubId) ?? null;
 
@@ -165,10 +165,12 @@
           <p class="content-panel-header">
             <span class="flex flex-row items-center">
               <svelte:component
-              this={getFlagComponent(selectedPlayer?.nationality ?? 0)}
-              class="w-4 h-4 mr-1"
-              size="100"
-            />{$countriesStore.find(x => x.id == selectedPlayer?.nationality)?.name}
+                this={getFlagComponent(selectedPlayer?.nationality ?? 0)}
+                class="w-4 h-4 mr-1"
+                size="100"
+              />{$countriesStore.find(
+                (x) => x.id == selectedPlayer?.nationality
+              )?.name}
             </span>
           </p>
         </div>

@@ -3512,7 +3512,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1vtpssb"
+  version_hash: "ez6tcv"
 };
 async function get_hooks() {
   return {};
@@ -3814,37 +3814,35 @@ const idlFactory = ({ IDL }) => {
     InvalidData: IDL.Null,
     SystemOnHold: IDL.Null,
     AlreadyExists: IDL.Null,
+    CanisterCreateError: IDL.Null,
     InvalidTeamError: IDL.Null
   });
-  const Result_29 = IDL.Variant({ ok: AdminClubList, err: Error2 });
+  const Result_28 = IDL.Variant({ ok: AdminClubList, err: Error2 });
   const AdminFixtureList = IDL.Record({
     seasonId: SeasonId,
     fixtures: IDL.Vec(FixtureDTO)
   });
-  const Result_28 = IDL.Variant({ ok: AdminFixtureList, err: Error2 });
+  const Result_27 = IDL.Variant({ ok: AdminFixtureList, err: Error2 });
   const AdminMainCanisterInfo = IDL.Record({
     cycles: IDL.Nat,
     canisterId: IDL.Text
   });
-  const Result_27 = IDL.Variant({
+  const Result_26 = IDL.Variant({
     ok: AdminMainCanisterInfo,
     err: Error2
   });
-  const ProfileDTO = IDL.Record({
-    username: IDL.Text,
-    termsAccepted: IDL.Bool,
-    createDate: IDL.Int,
-    favouriteClubId: ClubId,
-    profilePicture: IDL.Vec(IDL.Nat8),
-    principalId: IDL.Text
+  const ManagerCanisterDTO = IDL.Record({
+    cycles: IDL.Nat,
+    canisterId: IDL.Text
   });
-  const AdminProfileList = IDL.Record({
+  const AdminManagerCanisterList = IDL.Record({
     totalEntries: IDL.Nat,
-    offset: IDL.Nat,
-    limit: IDL.Nat,
-    profiles: IDL.Vec(ProfileDTO)
+    canisters: IDL.Vec(ManagerCanisterDTO)
   });
-  const Result_26 = IDL.Variant({ ok: AdminProfileList, err: Error2 });
+  const Result_25 = IDL.Variant({
+    ok: AdminManagerCanisterList,
+    err: Error2
+  });
   const CalendarMonth = IDL.Nat8;
   const MonthlyLeaderboardCanister = IDL.Record({
     month: CalendarMonth,
@@ -3862,7 +3860,7 @@ const idlFactory = ({ IDL }) => {
     limit: IDL.Nat,
     canisters: IDL.Vec(MonthlyCanisterDTO)
   });
-  const Result_25 = IDL.Variant({
+  const Result_24 = IDL.Variant({
     ok: AdminMonthlyCanisterList,
     err: Error2
   });
@@ -3889,19 +3887,7 @@ const idlFactory = ({ IDL }) => {
     playerStatus: PlayerStatus,
     players: IDL.Vec(PlayerDTO)
   });
-  const Result_24 = IDL.Variant({ ok: AdminPlayerList, err: Error2 });
-  const ProfileCanisterDTO = IDL.Record({
-    cycles: IDL.Nat,
-    canisterId: IDL.Text
-  });
-  const AdminProfilePictureCanisterList = IDL.Record({
-    totalEntries: IDL.Nat,
-    canisters: IDL.Vec(ProfileCanisterDTO)
-  });
-  const Result_23 = IDL.Variant({
-    ok: AdminProfilePictureCanisterList,
-    err: Error2
-  });
+  const Result_23 = IDL.Variant({ ok: AdminPlayerList, err: Error2 });
   const SeasonLeaderboardCanister = IDL.Record({
     seasonId: SeasonId,
     canisterId: IDL.Text
@@ -4108,7 +4094,7 @@ const idlFactory = ({ IDL }) => {
     monthlyPosition: IDL.Int,
     seasonPosition: IDL.Int,
     monthlyPositionText: IDL.Text,
-    profilePicture: IDL.Vec(IDL.Nat8),
+    profilePicture: IDL.Opt(IDL.Vec(IDL.Nat8)),
     seasonPoints: IDL.Int16,
     principalId: IDL.Text,
     seasonPositionText: IDL.Text
@@ -4202,6 +4188,14 @@ const idlFactory = ({ IDL }) => {
     ok: IDL.Vec(IDL.Tuple(IDL.Nat16, PlayerScoreDTO)),
     err: Error2
   });
+  const ProfileDTO = IDL.Record({
+    username: IDL.Text,
+    termsAccepted: IDL.Bool,
+    createDate: IDL.Int,
+    favouriteClubId: ClubId,
+    profilePicture: IDL.Opt(IDL.Vec(IDL.Nat8)),
+    principalId: IDL.Text
+  });
   const Result_8 = IDL.Variant({ ok: ProfileDTO, err: Error2 });
   const SeasonLeaderboardDTO = IDL.Record({
     totalEntries: IDL.Nat,
@@ -4236,10 +4230,9 @@ const idlFactory = ({ IDL }) => {
   });
   const Result_2 = IDL.Variant({ ok: WeeklyLeaderboardDTO, err: Error2 });
   const Result_1 = IDL.Variant({ ok: IDL.Null, err: Error2 });
-  const UpdateFantasyTeamDTO = IDL.Record({
+  const UpdateTeamSelectionDTO = IDL.Record({
     playerIds: IDL.Vec(PlayerId),
     countrymenCountryId: CountryId,
-    username: IDL.Text,
     goalGetterPlayerId: PlayerId,
     hatTrickHeroGameweek: GameweekNumber,
     teamBoostGameweek: GameweekNumber,
@@ -4256,6 +4249,7 @@ const idlFactory = ({ IDL }) => {
     noEntryGameweek: GameweekNumber,
     prospectsGameweek: GameweekNumber,
     safeHandsGameweek: GameweekNumber,
+    principalId: IDL.Text,
     passMasterPlayerId: PlayerId,
     captainId: PlayerId
   });
@@ -4278,13 +4272,12 @@ const idlFactory = ({ IDL }) => {
   return IDL.Service({
     adminAddInitialFixtures: IDL.Func([AddInitialFixturesDTO], [Result], []),
     adminCreatePlayer: IDL.Func([CreatePlayerDTO], [Result], []),
-    adminGetClubs: IDL.Func([IDL.Nat, IDL.Nat], [Result_29], ["query"]),
-    adminGetFixtures: IDL.Func([SeasonId], [Result_28], ["query"]),
-    adminGetMainCanisterInfo: IDL.Func([], [Result_27], []),
-    adminGetManagers: IDL.Func([IDL.Nat, IDL.Nat], [Result_26], ["query"]),
-    adminGetMonthlyCanisters: IDL.Func([IDL.Nat, IDL.Nat], [Result_25], []),
-    adminGetPlayers: IDL.Func([PlayerStatus], [Result_24], ["query"]),
-    adminGetProfileCanisters: IDL.Func([IDL.Nat, IDL.Nat], [Result_23], []),
+    adminGetClubs: IDL.Func([IDL.Nat, IDL.Nat], [Result_28], ["query"]),
+    adminGetFixtures: IDL.Func([SeasonId], [Result_27], ["query"]),
+    adminGetMainCanisterInfo: IDL.Func([], [Result_26], []),
+    adminGetManagerCanisters: IDL.Func([IDL.Nat, IDL.Nat], [Result_25], []),
+    adminGetMonthlyCanisters: IDL.Func([IDL.Nat, IDL.Nat], [Result_24], []),
+    adminGetPlayers: IDL.Func([PlayerStatus], [Result_23], ["query"]),
     adminGetSeasonCanisters: IDL.Func([IDL.Nat, IDL.Nat], [Result_22], []),
     adminGetTimers: IDL.Func(
       [IDL.Text, IDL.Nat, IDL.Nat],
@@ -4334,7 +4327,7 @@ const idlFactory = ({ IDL }) => {
     getFixtures: IDL.Func([SeasonId], [Result_9], ["query"]),
     getFormerClubs: IDL.Func([], [Result_16], ["query"]),
     getLoanedPlayers: IDL.Func([ClubId], [Result_7], ["query"]),
-    getManager: IDL.Func([], [Result_15], []),
+    getManager: IDL.Func([IDL.Text], [Result_15], []),
     getMonthlyLeaderboard: IDL.Func(
       [SeasonId, ClubId, CalendarMonth, IDL.Nat, IDL.Nat, IDL.Text],
       [Result_14],
@@ -4372,7 +4365,7 @@ const idlFactory = ({ IDL }) => {
     init: IDL.Func([], [Result_1], []),
     isUsernameValid: IDL.Func([IDL.Text], [IDL.Bool], ["query"]),
     requestCanisterTopup: IDL.Func([], [], []),
-    saveFantasyTeam: IDL.Func([UpdateFantasyTeamDTO], [Result_1], []),
+    saveFantasyTeam: IDL.Func([UpdateTeamSelectionDTO], [Result_1], []),
     updateFavouriteClub: IDL.Func([ClubId], [Result_1], []),
     updateFixture: IDL.Func([UpdateFixtureDTO], [Result_1], []),
     updateProfilePicture: IDL.Func([IDL.Vec(IDL.Nat8)], [Result_1], []),
@@ -5321,24 +5314,6 @@ function createManagerStore() {
     captainId: 0,
     monthlyBonusesAvailable: 0
   };
-  async function getManager() {
-    try {
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        define_process_env_default$9.OPENFPL_BACKEND_CANISTER_ID ?? ""
-      );
-      let result = await identityActor.getManager();
-      if (isError(result)) {
-        console.error("Error getting manager.");
-        set(newManager);
-      }
-      let manager = result.ok;
-      return manager;
-    } catch (error) {
-      console.error("Error fetching manager for gameweek:", error);
-      throw error;
-    }
-  }
   async function getPublicProfile(principalId) {
     try {
       let result = await actor.getPublicProfile(principalId);
@@ -5555,7 +5530,6 @@ function createManagerStore() {
   }
   return {
     subscribe: subscribe2,
-    getManager,
     getTotalManagers,
     getFantasyTeamForGameweek,
     getCurrentTeam,
@@ -6713,7 +6687,7 @@ function createSeasonLeaderboardStore() {
   };
 }
 createSeasonLeaderboardStore();
-const Page$c = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$d = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_systemStore;
   let $$unsubscribe_teamStore;
   let $$unsubscribe_fixtureStore;
@@ -7196,7 +7170,7 @@ const Clear_draft_modal = create_ssr_component(($$result, $$props, $$bindings, s
     }
   })}`;
 });
-const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$c = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let fixtureId;
   let $playerEventData, $$unsubscribe_playerEventData = noop, $$subscribe_playerEventData = () => ($$unsubscribe_playerEventData(), $$unsubscribe_playerEventData = subscribe(playerEventData, ($$value) => $playerEventData = $$value), playerEventData);
   let $systemStore, $$unsubscribe_systemStore;
@@ -7283,237 +7257,6 @@ const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     {},
     {}
   )}`;
-});
-var define_process_env_default = { OPENFPL_BACKEND_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", OPENFPL_FRONTEND_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", TOKEN_CANISTER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
-function createAdminStore() {
-  async function getMainCanisterInfo() {
-    const identityActor = await ActorFactory.createIdentityActor(
-      authStore,
-      define_process_env_default.OPENFPL_BACKEND_CANISTER_ID
-    );
-    const result = await identityActor.adminGetMainCanisterInfo();
-    if (isError(result)) {
-      console.error("Error fetching main canister info");
-      return null;
-    }
-    let mainCanisterInfo = result.ok;
-    return mainCanisterInfo;
-  }
-  async function getWeeklyCanisters(itemsPerPage2, currentPage) {
-    const identityActor = await ActorFactory.createIdentityActor(
-      authStore,
-      define_process_env_default.OPENFPL_BACKEND_CANISTER_ID
-    );
-    const limit = itemsPerPage2;
-    const offset = (currentPage - 1) * limit;
-    const result = await identityActor.adminGetWeeklyCanisters(limit, offset);
-    if (isError(result)) {
-      console.error("Error fetching weekly canister info");
-      return null;
-    }
-    let canisterDTOs = result.ok;
-    return canisterDTOs;
-  }
-  async function getMonthlyCanisters(itemsPerPage2, currentPage) {
-    const identityActor = await ActorFactory.createIdentityActor(
-      authStore,
-      define_process_env_default.OPENFPL_BACKEND_CANISTER_ID
-    );
-    const limit = itemsPerPage2;
-    const offset = (currentPage - 1) * limit;
-    const result = await identityActor.adminGetMonthlyCanisters(limit, offset);
-    if (isError(result)) {
-      console.error("Error fetching monthly canister info");
-      return null;
-    }
-    let canisterDTOs = result.ok;
-    return canisterDTOs;
-  }
-  async function getSeasonCanisters(itemsPerPage2, currentPage) {
-    const identityActor = await ActorFactory.createIdentityActor(
-      authStore,
-      define_process_env_default.OPENFPL_BACKEND_CANISTER_ID
-    );
-    const limit = itemsPerPage2;
-    const offset = (currentPage - 1) * limit;
-    const result = await identityActor.adminGetSeasonCanisters(limit, offset);
-    if (isError(result)) {
-      console.error("Error fetching season canister info");
-      return null;
-    }
-    let canisterDTOs = result.ok;
-    return canisterDTOs;
-  }
-  async function getProfilePictureCanisters(itemsPerPage2, currentPage) {
-    const identityActor = await ActorFactory.createIdentityActor(
-      authStore,
-      define_process_env_default.OPENFPL_BACKEND_CANISTER_ID
-    );
-    const limit = itemsPerPage2;
-    const offset = (currentPage - 1) * limit;
-    const result = await identityActor.adminGetProfileCanisters(limit, offset);
-    if (isError(result)) {
-      console.error("Error fetching profile picture canister info");
-      return null;
-    }
-    let canisterDTOs = result.ok;
-    return canisterDTOs;
-  }
-  async function getTimers(category, itemsPerPage2, currentPage) {
-    const identityActor = await ActorFactory.createIdentityActor(
-      authStore,
-      define_process_env_default.OPENFPL_BACKEND_CANISTER_ID
-    );
-    const limit = itemsPerPage2;
-    const offset = (currentPage - 1) * limit;
-    const result = await identityActor.adminGetTimers(category, limit, offset);
-    if (isError(result)) {
-      console.error("Error fetching timer info");
-      return null;
-    }
-    let timerDTOs = result.ok;
-    return timerDTOs;
-  }
-  async function getFixtures(seasonId) {
-    const identityActor = await ActorFactory.createIdentityActor(
-      authStore,
-      define_process_env_default.OPENFPL_BACKEND_CANISTER_ID
-    );
-    const result = await identityActor.adminGetFixtures(seasonId);
-    if (isError(result)) {
-      console.error("Error fetching fixture info");
-      return null;
-    }
-    let fixtureDTOs = result.ok;
-    return fixtureDTOs;
-  }
-  async function getClubs(itemsPerPage2, currentPage) {
-    const identityActor = await ActorFactory.createIdentityActor(
-      authStore,
-      define_process_env_default.OPENFPL_BACKEND_CANISTER_ID
-    );
-    const limit = itemsPerPage2;
-    const offset = (currentPage - 1) * limit;
-    const result = await identityActor.adminGetClubs(limit, offset);
-    if (isError(result)) {
-      console.error("Error fetching club info");
-      return null;
-    }
-    let clubDTOs = result.ok;
-    return clubDTOs;
-  }
-  async function getPlayers(playerStatus) {
-    const identityActor = await ActorFactory.createIdentityActor(
-      authStore,
-      define_process_env_default.OPENFPL_BACKEND_CANISTER_ID
-    );
-    const result = await identityActor.adminGetPlayers(playerStatus);
-    if (isError(result)) {
-      console.error("Error fetching player info");
-      return null;
-    }
-    let playerDTOs = result.ok;
-    return playerDTOs;
-  }
-  async function getManagers(itemsPerPage2, currentPage) {
-    const identityActor = await ActorFactory.createIdentityActor(
-      authStore,
-      define_process_env_default.OPENFPL_BACKEND_CANISTER_ID
-    );
-    const limit = itemsPerPage2;
-    const offset = (currentPage - 1) * limit;
-    const result = await identityActor.adminGetManagers(limit, offset);
-    if (isError(result)) {
-      console.error("Error fetching manager info");
-      return null;
-    }
-    let managerDTOs = result.ok;
-    return managerDTOs;
-  }
-  return {
-    getMainCanisterInfo,
-    getWeeklyCanisters,
-    getMonthlyCanisters,
-    getSeasonCanisters,
-    getProfilePictureCanisters,
-    getTimers,
-    getFixtures,
-    getClubs,
-    getPlayers,
-    getManagers
-  };
-}
-const adminStore = createAdminStore();
-let itemsPerPage = 25;
-let totalPages = 0;
-const Admin_canisters = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let selectedCanisterType = "WeeklyLeaderboard";
-  let mainCanisterInfo;
-  let weeklyLeaderboardCanisters;
-  let currentPage = 1;
-  let isLoading = true;
-  async function loadCanisterInfo() {
-    isLoading = true;
-    mainCanisterInfo = await adminStore.getMainCanisterInfo();
-    switch (selectedCanisterType) {
-      case "WeeklyLeaderboard":
-        weeklyLeaderboardCanisters = await adminStore.getWeeklyCanisters(itemsPerPage, currentPage);
-        break;
-      case "MonthlyLeaderboard":
-        await adminStore.getMonthlyCanisters(itemsPerPage, currentPage);
-        break;
-      case "SeasonLeaderboard":
-        await adminStore.getSeasonCanisters(itemsPerPage, currentPage);
-        break;
-      case "Profile":
-        await adminStore.getProfilePictureCanisters(itemsPerPage, currentPage);
-        break;
-    }
-    isLoading = false;
-  }
-  {
-    {
-      currentPage = 1;
-      loadCanisterInfo();
-    }
-  }
-  return `${isLoading ? `${validate_component(Spinner, "Spinner").$$render($$result, {}, {}, {})}` : `<div class="m-4"><p class="text-xl" data-svelte-h="svelte-1b7iiyf">OpenFPL Main Canister</p> <p>Id: ${escape(mainCanisterInfo?.canisterId)}</p> <p>Cycles: ${escape(mainCanisterInfo?.cycles)}</p> <div class="flex mt-4"><div class="flex items-center"><p data-svelte-h="svelte-hfe5vq">Type:</p> <select class="px-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"><option${add_attribute("value", "WeeklyLeaderboard", 0)} data-svelte-h="svelte-1ca1sqc">WeeklyLeaderboard</option><option${add_attribute("value", "MonthlyLeaderboard", 0)} data-svelte-h="svelte-5la73i">MonthlyLeaderboard</option><option${add_attribute("value", "SeasonLeaderboard", 0)} data-svelte-h="svelte-10n8lr4">SeasonLeaderboard</option><option${add_attribute("value", "Profile", 0)} data-svelte-h="svelte-lxxxyk">Profile</option></select></div></div> <div class="flex" data-svelte-h="svelte-192o23h"><div class="w-1/4"><p>Canister Id</p></div> <div class="w-1/4"><p>Cycles Balanace</p></div> <div class="w-1/4"><p>Options</p></div></div> ${weeklyLeaderboardCanisters ? `${each(weeklyLeaderboardCanisters.canisters, (canister) => {
-    return `<div class="flex"><div class="w-1/4"><p>${escape(canister.canister)}</p></div> <div class="w-1/4"><p>${escape(canister.cycles)}</p></div> <div class="w-1/4" data-svelte-h="svelte-10454dm"><p>...</p></div> </div>`;
-  })} ${weeklyLeaderboardCanisters.canisters.length == 0 ? `<p data-svelte-h="svelte-gtwg1n">No Canisters Found</p>` : ``}` : ``} ${``} ${``} ${``} <div class="flex justify-center items-center mt-4 mb-4"><button ${currentPage === 1 ? "disabled" : ""}${add_attribute(
-    "class",
-    `${currentPage === 1 ? "bg-gray-500" : "fpl-button"}
-        disabled:bg-gray-400 disabled:text-gray-700 disabled:cursor-not-allowed min-w-[100px] default-button`,
-    0
-  )}>Previous</button> <span class="px-4">Page ${escape(currentPage)}</span> <button ${currentPage >= totalPages ? "disabled" : ""}${add_attribute(
-    "class",
-    `${currentPage >= totalPages ? "bg-gray-500" : "fpl-button"} 
-          disabled:bg-gray-400 disabled:text-gray-700 disabled:cursor-not-allowed min-w-[100px] default-button`,
-    0
-  )}>Next</button></div></div>`}`;
-});
-const Snapshot_fantasy_teams = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let $authIsAdmin, $$unsubscribe_authIsAdmin;
-  $$unsubscribe_authIsAdmin = subscribe(authIsAdmin, (value) => $authIsAdmin = value);
-  let { visible } = $$props;
-  let { closeModal } = $$props;
-  let { cancelModal } = $$props;
-  if ($$props.visible === void 0 && $$bindings.visible && visible !== void 0)
-    $$bindings.visible(visible);
-  if ($$props.closeModal === void 0 && $$bindings.closeModal && closeModal !== void 0)
-    $$bindings.closeModal(closeModal);
-  if ($$props.cancelModal === void 0 && $$bindings.cancelModal && cancelModal !== void 0)
-    $$bindings.cancelModal(cancelModal);
-  $$unsubscribe_authIsAdmin();
-  return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
-    default: () => {
-      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-1bt7rj6">Snapshot Fantasy Teams</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <p data-svelte-h="svelte-qrb1h6">Are you sure you want to snapshot the fantasy teams?</p> <button${add_attribute(
-        "class",
-        `px-4 py-2 ${!$authIsAdmin ? "bg-gray-500" : "fpl-purple-btn"} 
-      default-button fpl-button`,
-        0
-      )} ${!$authIsAdmin ? "disabled" : ""}>Update</button></div>`;
-    }
-  })}`;
 });
 const css$1 = {
   code: ".local-spinner.svelte-pvdm52{border:5px solid rgba(255, 255, 255, 0.3);border-top:5px solid white;border-radius:50%;width:50px;height:50px;position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);animation:svelte-pvdm52-spin 1s linear infinite}@keyframes svelte-pvdm52-spin{0%{transform:translate(-50%, -50%) rotate(0deg)}100%{transform:translate(-50%, -50%) rotate(360deg)}}",
@@ -7815,7 +7558,7 @@ const Loan_player = create_ssr_component(($$result, $$props, $$bindings, slots) 
   $$unsubscribe_teamStore();
   return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
     default: () => {
-      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-yv1guj">Loan Player</h3> <button class="times-button" data-svelte-h="svelte-2aq7vi">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><div class="flex-col space-y-2"><p data-svelte-h="svelte-blvgh1">Select the players club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($teamStore, (club) => {
+      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-yv1guj">Loan Player</h3> <button class="times-button" data-svelte-h="svelte-2aq7vi">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><div class="flex-col space-y-2"><p data-svelte-h="svelte-1tp620s">Select the player&#39;s club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($teamStore, (club) => {
         return `<option${add_attribute("value", club.id, 0)}>${escape(club.friendlyName)}</option>`;
       })}</select></div> ${``} <div class="border-b border-gray-200"></div> <div class="items-center flex space-x-4"><button class="px-4 py-2 default-button fpl-cancel-btn min-w-[150px]" type="button" data-svelte-h="svelte-19jfrwv">Cancel</button> <button${add_attribute(
         "class",
@@ -7855,7 +7598,7 @@ const Transfer_player = create_ssr_component(($$result, $$props, $$bindings, slo
   $$unsubscribe_teamStore();
   return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
     default: () => {
-      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-eogsmc">Transfer Player</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><p data-svelte-h="svelte-blvgh1">Select the players club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($teamStore, (club) => {
+      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-eogsmc">Transfer Player</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><p data-svelte-h="svelte-1tp620s">Select the player&#39;s club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($teamStore, (club) => {
         return `<option${add_attribute("value", club.id, 0)}>${escape(club.friendlyName)}</option>`;
       })}</select> ${``} <div class="border-b border-gray-200"></div> <div class="items-center flex space-x-4"><button class="px-4 py-2 default-button fpl-cancel-btn min-w-[150px]" type="button" data-svelte-h="svelte-19jfrwv">Cancel</button> <button${add_attribute(
         "class",
@@ -7892,7 +7635,7 @@ const Recall_player = create_ssr_component(($$result, $$props, $$bindings, slots
   $$unsubscribe_teamStore();
   return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
     default: () => {
-      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-awztf2">Recall Player</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><div class="flex-col space-y-2"><p data-svelte-h="svelte-blvgh1">Select the players club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($teamStore, (club) => {
+      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-awztf2">Recall Player</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><div class="flex-col space-y-2"><p data-svelte-h="svelte-1tp620s">Select the player&#39;s club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($teamStore, (club) => {
         return `<option${add_attribute("value", club.id, 0)}>${escape(club.friendlyName)}</option>`;
       })}</select></div> ${``} <div class="border-b border-gray-200"></div> <div class="items-center flex space-x-4"><button class="px-4 py-2 default-button fpl-cancel-btn min-w-[150px]" type="button" data-svelte-h="svelte-19jfrwv">Cancel</button> <button${add_attribute(
         "class",
@@ -7986,7 +7729,7 @@ const Update_player = create_ssr_component(($$result, $$props, $$bindings, slots
   $$unsubscribe_countriesStore();
   return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
     default: () => {
-      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-111jmmy">Update Player</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><div class="flex-col space-y-2"><p data-svelte-h="svelte-blvgh1">Select the players club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($teamStore, (club) => {
+      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-111jmmy">Update Player</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><div class="flex-col space-y-2"><p data-svelte-h="svelte-1tp620s">Select the player&#39;s club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($teamStore, (club) => {
         return `<option${add_attribute("value", club.id, 0)}>${escape(club.friendlyName)}</option>`;
       })}</select></div> ${``} <div class="border-b border-gray-200"></div> <div class="items-center flex space-x-4"><button class="px-4 py-2 default-button fpl-cancel-btn min-w-[150px]" type="button" data-svelte-h="svelte-19jfrwv">Cancel</button> <button${add_attribute(
         "class",
@@ -8026,7 +7769,7 @@ const Set_player_injury = create_ssr_component(($$result, $$props, $$bindings, s
   $$unsubscribe_teamStore();
   return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
     default: () => {
-      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-1epdx5w">Set Player Injury</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><p data-svelte-h="svelte-blvgh1">Select the players club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($teamStore, (club) => {
+      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-1epdx5w">Set Player Injury</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><p data-svelte-h="svelte-1tp620s">Select the player&#39;s club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($teamStore, (club) => {
         return `<option${add_attribute("value", club.id, 0)}>${escape(club.friendlyName)}</option>`;
       })}</select> ${``} <div class="border-b border-gray-200"></div> <div class="items-center flex space-x-4"><button class="px-4 py-2 default-button fpl-cancel-btn min-w-[150px]" type="button" data-svelte-h="svelte-19jfrwv">Cancel</button> <button${add_attribute(
         "class",
@@ -8066,7 +7809,7 @@ const Retire_player = create_ssr_component(($$result, $$props, $$bindings, slots
   $$unsubscribe_teamStore();
   return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
     default: () => {
-      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-181rwt8">Retire Player</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><p data-svelte-h="svelte-blvgh1">Select the players club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($teamStore, (club) => {
+      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-181rwt8">Retire Player</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><p data-svelte-h="svelte-1tp620s">Select the player&#39;s club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($teamStore, (club) => {
         return `<option${add_attribute("value", club.id, 0)}>${escape(club.friendlyName)}</option>`;
       })}</select> ${``} <div class="border-b border-gray-200"></div> <div class="items-center flex space-x-4"><button class="px-4 py-2 default-button fpl-cancel-btn min-w-[150px]" type="button" data-svelte-h="svelte-19jfrwv">Cancel</button> <button${add_attribute(
         "class",
@@ -8103,7 +7846,7 @@ const Unretire_player = create_ssr_component(($$result, $$props, $$bindings, slo
   $$unsubscribe_teamStore();
   return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
     default: () => {
-      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-1s9cm8h">Unretire Player</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><div class="flex-col space-y-2"><p data-svelte-h="svelte-blvgh1">Select the players club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($teamStore, (club) => {
+      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-1s9cm8h">Unretire Player</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><div class="flex-col space-y-2"><p data-svelte-h="svelte-1tp620s">Select the player&#39;s club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($teamStore, (club) => {
         return `<option${add_attribute("value", club.id, 0)}>${escape(club.friendlyName)}</option>`;
       })}</select></div> ${``} <div class="border-b border-gray-200"></div> <div class="items-center flex space-x-4"><button class="px-4 py-2 default-button fpl-cancel-btn min-w-[150px]" type="button" data-svelte-h="svelte-19jfrwv">Cancel</button> <button${add_attribute(
         "class",
@@ -8268,6 +8011,428 @@ const Add_fixture_data = create_ssr_component(($$result, $$props, $$bindings, sl
                         px-4 py-2 default-button min-w-[150px]`,
         0
       )} ${isSubmitDisabled ? "disabled" : ""}>Add Fixture Data</button></div></div></div> ${`${validate_component(Local_spinner, "LocalSpinner").$$render($$result, {}, {}, {})}`}</div>`;
+    }
+  })}`;
+});
+const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let showRevaluePlayerUpModal = false;
+  let showRevaluePlayerDownModal = false;
+  let showAddInitialFixturesModal = false;
+  let showMoveFixtureModal = false;
+  let showPostponeFixtureModal = false;
+  let showRescheduleFixtureModal = false;
+  let showLoanPlayerModal = false;
+  let showTransferPlayerModal = false;
+  let showRecallPlayerModal = false;
+  let showCreatePlayerModal = false;
+  let showUpdatePlayerModal = false;
+  let showSetPlayerInjuryModal = false;
+  let showRetirePlayerModal = false;
+  let showUnretirePlayerModal = false;
+  let showPromoteFormerClubModal = false;
+  let showPromoteNewClubModal = false;
+  let showUpdateClubModal = false;
+  let showAddFixtureDataModal = false;
+  function hideRevaluePlayerUpModal() {
+    showRevaluePlayerUpModal = false;
+  }
+  function hideRevaluePlayerDownModal() {
+    showRevaluePlayerDownModal = false;
+  }
+  function hideAddInitialFixturesModal() {
+    showAddInitialFixturesModal = false;
+  }
+  function hideMoveFixturesModal() {
+    showMoveFixtureModal = false;
+  }
+  function hidePostponeFixturesModal() {
+    showPostponeFixtureModal = false;
+  }
+  function hideRescehduleFixturesModal() {
+    showRescheduleFixtureModal = false;
+  }
+  function hideLoanPlayerModal() {
+    showLoanPlayerModal = false;
+  }
+  function hideTransferPlayerModal() {
+    showTransferPlayerModal = false;
+  }
+  function hideRecallPlayerModal() {
+    showRecallPlayerModal = false;
+  }
+  function hideCreatePlayerModal() {
+    showCreatePlayerModal = false;
+  }
+  function hideUpdatePlayerModal() {
+    showUpdatePlayerModal = false;
+  }
+  function hideSetPlayerInjuryModal() {
+    showSetPlayerInjuryModal = false;
+  }
+  function hideRetirePlayerModal() {
+    showRetirePlayerModal = false;
+  }
+  function hideUnretirePlayerModal() {
+    showUnretirePlayerModal = false;
+  }
+  function hidePromoteFormerClubModal() {
+    showPromoteFormerClubModal = false;
+  }
+  function hidePromoteNewClubModal() {
+    showPromoteNewClubModal = false;
+  }
+  function hideUpdateClubModal() {
+    showUpdateClubModal = false;
+  }
+  function hideAddFixtureDataModal() {
+    showAddFixtureDataModal = false;
+  }
+  return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
+    default: () => {
+      return `${validate_component(Revalue_player_up, "RevaluePlayerUp").$$render(
+        $$result,
+        {
+          visible: showRevaluePlayerUpModal,
+          closeModal: hideRevaluePlayerUpModal
+        },
+        {},
+        {}
+      )} ${validate_component(Revalue_player_down, "RevaluePlayerDown").$$render(
+        $$result,
+        {
+          visible: showRevaluePlayerDownModal,
+          closeModal: hideRevaluePlayerDownModal
+        },
+        {},
+        {}
+      )} ${validate_component(Add_initial_fixtures, "AddInitialFixtures").$$render(
+        $$result,
+        {
+          visible: showAddInitialFixturesModal,
+          closeModal: hideAddInitialFixturesModal
+        },
+        {},
+        {}
+      )} ${validate_component(Move_fixture, "MoveFixture").$$render(
+        $$result,
+        {
+          visible: showMoveFixtureModal,
+          closeModal: hideMoveFixturesModal
+        },
+        {},
+        {}
+      )} ${validate_component(Postpone_fixture, "PostponeFixture").$$render(
+        $$result,
+        {
+          visible: showPostponeFixtureModal,
+          closeModal: hidePostponeFixturesModal
+        },
+        {},
+        {}
+      )} ${validate_component(Reschedule_fixture, "RescheduleFixture").$$render(
+        $$result,
+        {
+          visible: showRescheduleFixtureModal,
+          closeModal: hideRescehduleFixturesModal
+        },
+        {},
+        {}
+      )} ${validate_component(Loan_player, "LoanPlayer").$$render(
+        $$result,
+        {
+          visible: showLoanPlayerModal,
+          closeModal: hideLoanPlayerModal
+        },
+        {},
+        {}
+      )} ${validate_component(Transfer_player, "TransferPlayer").$$render(
+        $$result,
+        {
+          visible: showTransferPlayerModal,
+          closeModal: hideTransferPlayerModal
+        },
+        {},
+        {}
+      )} ${validate_component(Recall_player, "RecallPlayer").$$render(
+        $$result,
+        {
+          visible: showRecallPlayerModal,
+          closeModal: hideRecallPlayerModal
+        },
+        {},
+        {}
+      )} ${validate_component(Create_player, "CreatePlayer").$$render(
+        $$result,
+        {
+          visible: showCreatePlayerModal,
+          closeModal: hideCreatePlayerModal
+        },
+        {},
+        {}
+      )} ${validate_component(Update_player, "UpdatePlayer").$$render(
+        $$result,
+        {
+          visible: showUpdatePlayerModal,
+          closeModal: hideUpdatePlayerModal
+        },
+        {},
+        {}
+      )} ${validate_component(Set_player_injury, "SetPlayerInjury").$$render(
+        $$result,
+        {
+          visible: showSetPlayerInjuryModal,
+          closeModal: hideSetPlayerInjuryModal
+        },
+        {},
+        {}
+      )} ${validate_component(Retire_player, "RetirePlayer").$$render(
+        $$result,
+        {
+          visible: showRetirePlayerModal,
+          closeModal: hideRetirePlayerModal
+        },
+        {},
+        {}
+      )} ${validate_component(Unretire_player, "UnretirePlayer").$$render(
+        $$result,
+        {
+          visible: showUnretirePlayerModal,
+          closeModal: hideUnretirePlayerModal
+        },
+        {},
+        {}
+      )} ${validate_component(Promote_former_club, "PromoteFormerClub").$$render(
+        $$result,
+        {
+          visible: showPromoteFormerClubModal,
+          closeModal: hidePromoteFormerClubModal
+        },
+        {},
+        {}
+      )} ${validate_component(Promote_new_club, "PromoteNewClub").$$render(
+        $$result,
+        {
+          visible: showPromoteNewClubModal,
+          closeModal: hidePromoteNewClubModal
+        },
+        {},
+        {}
+      )} ${validate_component(Update_club, "UpdateClub").$$render(
+        $$result,
+        {
+          visible: showUpdateClubModal,
+          closeModal: hideUpdateClubModal
+        },
+        {},
+        {}
+      )} ${validate_component(Add_fixture_data, "AddFixtureData").$$render(
+        $$result,
+        {
+          visible: showAddFixtureDataModal,
+          closeModal: hideAddFixtureDataModal
+        },
+        {},
+        {}
+      )} <div class="m-4"><div class="bg-panel rounded-md"><ul class="flex rounded-t-lg bg-light-gray border-b border-gray-700 px-4 pt-2" data-svelte-h="svelte-18bk998"><li class="mr-4 active-tab"><button class="text-white">Raise Proposal</button></li></ul> <p class="m-4" data-svelte-h="svelte-fij59x">Player proposals</p> <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4 mx-4"><div class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"><div class="flex items-center w-full"><button class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1 w-full" data-svelte-h="svelte-72lk56">Revalue Player Up</button></div></div> <div class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"><div class="flex items-center space-x-4 w-full"><button class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1 w-full" data-svelte-h="svelte-1rxmlhe">Revalue Player Down</button></div></div> <div class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"><div class="flex items-center space-x-4 w-full"><button class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1 w-full" data-svelte-h="svelte-zwn9vo">Loan Player</button></div></div> <div class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"><div class="flex items-center space-x-4 w-full"><button class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1 w-full" data-svelte-h="svelte-17ctatm">Transfer Player</button></div></div> <div class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"><div class="flex items-center space-x-4 w-full"><button class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1 w-full" data-svelte-h="svelte-muicqu">Recall Player</button></div></div> <div class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"><div class="flex items-center space-x-4 w-full"><button class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1 w-full" data-svelte-h="svelte-1k130gg">Create Player</button></div></div> <div class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"><div class="flex items-center space-x-4 w-full"><button class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1 w-full" data-svelte-h="svelte-104xva">Update Player</button></div></div> <div class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"><div class="flex items-center space-x-4 w-full"><button class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1 w-full" data-svelte-h="svelte-1k3k226">Set Player Injury</button></div></div> <div class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"><div class="flex items-center space-x-4 w-full"><button class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1 w-full" data-svelte-h="svelte-5hhgma">Retire Player</button></div></div> <div class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"><div class="flex items-center space-x-4 w-full"><button class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1 w-full" data-svelte-h="svelte-1gkx6yc">Unretire Player</button></div></div></div> <p class="m-4" data-svelte-h="svelte-11opyhx">Fixture proposals</p> <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4 mx-4"><div class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"><div class="flex items-center space-x-4 w-full"><button class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1 w-full" data-svelte-h="svelte-15xq52m">Add Fixture Data</button></div></div> <div class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"><div class="flex items-center space-x-4 w-full"><button class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1 w-full" data-svelte-h="svelte-1v20vcq">Add Initial Fixtures</button></div></div> <div class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"><div class="flex items-center space-x-4 w-full"><button class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1 w-full" data-svelte-h="svelte-1tbcn66">Move Fixture</button></div></div> <div class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"><div class="flex items-center space-x-4 w-full"><button class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1 w-full" data-svelte-h="svelte-1ln289y">Postpone Fixture</button></div></div> <div class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"><div class="flex items-center space-x-4 w-full"><button class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1 w-full" data-svelte-h="svelte-ybpkhm">Reschedule Fixture</button></div></div></div> <p class="m-4" data-svelte-h="svelte-ujx3lm">Club proposals</p> <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4 mx-4 mb-4"><div class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"><div class="flex items-center space-x-4 w-full"><button class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1 w-full" data-svelte-h="svelte-tgkj3u">Promote Former Club</button></div></div> <div class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"><div class="flex items-center space-x-4 w-full"><button class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1 w-full" data-svelte-h="svelte-5oqelw">Promote New Club</button></div></div> <div class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"><div class="flex items-center space-x-4 w-full"><button class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1 w-full" data-svelte-h="svelte-1bkfns6">Update Club</button></div></div></div></div></div>`;
+    }
+  })}`;
+});
+var define_process_env_default = { OPENFPL_BACKEND_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", OPENFPL_FRONTEND_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", TOKEN_CANISTER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
+function createAdminStore() {
+  async function getMainCanisterInfo() {
+    const identityActor = await ActorFactory.createIdentityActor(
+      authStore,
+      define_process_env_default.OPENFPL_BACKEND_CANISTER_ID
+    );
+    const result = await identityActor.adminGetMainCanisterInfo();
+    if (isError(result)) {
+      console.error("Error fetching main canister info");
+      return null;
+    }
+    let mainCanisterInfo = result.ok;
+    return mainCanisterInfo;
+  }
+  async function getWeeklyCanisters(itemsPerPage2, currentPage) {
+    const identityActor = await ActorFactory.createIdentityActor(
+      authStore,
+      define_process_env_default.OPENFPL_BACKEND_CANISTER_ID
+    );
+    const limit = itemsPerPage2;
+    const offset = (currentPage - 1) * limit;
+    const result = await identityActor.adminGetWeeklyCanisters(limit, offset);
+    if (isError(result)) {
+      console.error("Error fetching weekly canister info");
+      return null;
+    }
+    let canisterDTOs = result.ok;
+    return canisterDTOs;
+  }
+  async function getMonthlyCanisters(itemsPerPage2, currentPage) {
+    const identityActor = await ActorFactory.createIdentityActor(
+      authStore,
+      define_process_env_default.OPENFPL_BACKEND_CANISTER_ID
+    );
+    const limit = itemsPerPage2;
+    const offset = (currentPage - 1) * limit;
+    const result = await identityActor.adminGetMonthlyCanisters(limit, offset);
+    if (isError(result)) {
+      console.error("Error fetching monthly canister info");
+      return null;
+    }
+    let canisterDTOs = result.ok;
+    return canisterDTOs;
+  }
+  async function getSeasonCanisters(itemsPerPage2, currentPage) {
+    const identityActor = await ActorFactory.createIdentityActor(
+      authStore,
+      define_process_env_default.OPENFPL_BACKEND_CANISTER_ID
+    );
+    const limit = itemsPerPage2;
+    const offset = (currentPage - 1) * limit;
+    const result = await identityActor.adminGetSeasonCanisters(limit, offset);
+    if (isError(result)) {
+      console.error("Error fetching season canister info");
+      return null;
+    }
+    let canisterDTOs = result.ok;
+    return canisterDTOs;
+  }
+  async function getTimers(category, itemsPerPage2, currentPage) {
+    const identityActor = await ActorFactory.createIdentityActor(
+      authStore,
+      define_process_env_default.OPENFPL_BACKEND_CANISTER_ID
+    );
+    const limit = itemsPerPage2;
+    const offset = (currentPage - 1) * limit;
+    const result = await identityActor.adminGetTimers(category, limit, offset);
+    if (isError(result)) {
+      console.error("Error fetching timer info");
+      return null;
+    }
+    let timerDTOs = result.ok;
+    return timerDTOs;
+  }
+  async function getFixtures(seasonId) {
+    const identityActor = await ActorFactory.createIdentityActor(
+      authStore,
+      define_process_env_default.OPENFPL_BACKEND_CANISTER_ID
+    );
+    const result = await identityActor.adminGetFixtures(seasonId);
+    if (isError(result)) {
+      console.error("Error fetching fixture info");
+      return null;
+    }
+    let fixtureDTOs = result.ok;
+    return fixtureDTOs;
+  }
+  async function getClubs(itemsPerPage2, currentPage) {
+    const identityActor = await ActorFactory.createIdentityActor(
+      authStore,
+      define_process_env_default.OPENFPL_BACKEND_CANISTER_ID
+    );
+    const limit = itemsPerPage2;
+    const offset = (currentPage - 1) * limit;
+    const result = await identityActor.adminGetClubs(limit, offset);
+    if (isError(result)) {
+      console.error("Error fetching club info");
+      return null;
+    }
+    let clubDTOs = result.ok;
+    return clubDTOs;
+  }
+  async function getPlayers(playerStatus) {
+    const identityActor = await ActorFactory.createIdentityActor(
+      authStore,
+      define_process_env_default.OPENFPL_BACKEND_CANISTER_ID
+    );
+    const result = await identityActor.adminGetPlayers(playerStatus);
+    if (isError(result)) {
+      console.error("Error fetching player info");
+      return null;
+    }
+    let playerDTOs = result.ok;
+    return playerDTOs;
+  }
+  return {
+    getMainCanisterInfo,
+    getWeeklyCanisters,
+    getMonthlyCanisters,
+    getSeasonCanisters,
+    getTimers,
+    getFixtures,
+    getClubs,
+    getPlayers
+  };
+}
+const adminStore = createAdminStore();
+let itemsPerPage = 25;
+let totalPages = 0;
+const Admin_canisters = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let selectedCanisterType = "WeeklyLeaderboard";
+  let mainCanisterInfo;
+  let weeklyLeaderboardCanisters;
+  let currentPage = 1;
+  let isLoading = true;
+  async function loadCanisterInfo() {
+    isLoading = true;
+    mainCanisterInfo = await adminStore.getMainCanisterInfo();
+    switch (selectedCanisterType) {
+      case "WeeklyLeaderboard":
+        weeklyLeaderboardCanisters = await adminStore.getWeeklyCanisters(itemsPerPage, currentPage);
+        break;
+      case "MonthlyLeaderboard":
+        await adminStore.getMonthlyCanisters(itemsPerPage, currentPage);
+        break;
+      case "SeasonLeaderboard":
+        await adminStore.getSeasonCanisters(itemsPerPage, currentPage);
+        break;
+      case "Profile":
+        await adminStore.getProfilePictureCanisters(itemsPerPage, currentPage);
+        break;
+    }
+    isLoading = false;
+  }
+  {
+    {
+      currentPage = 1;
+      loadCanisterInfo();
+    }
+  }
+  return `${isLoading ? `${validate_component(Spinner, "Spinner").$$render($$result, {}, {}, {})}` : `<div class="m-4"><p class="text-xl" data-svelte-h="svelte-1b7iiyf">OpenFPL Main Canister</p> <p>Id: ${escape(mainCanisterInfo?.canisterId)}</p> <p>Cycles: ${escape(mainCanisterInfo?.cycles)}</p> <div class="flex mt-4"><div class="flex items-center"><p data-svelte-h="svelte-hfe5vq">Type:</p> <select class="px-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"><option${add_attribute("value", "WeeklyLeaderboard", 0)} data-svelte-h="svelte-1ca1sqc">WeeklyLeaderboard</option><option${add_attribute("value", "MonthlyLeaderboard", 0)} data-svelte-h="svelte-5la73i">MonthlyLeaderboard</option><option${add_attribute("value", "SeasonLeaderboard", 0)} data-svelte-h="svelte-10n8lr4">SeasonLeaderboard</option><option${add_attribute("value", "Profile", 0)} data-svelte-h="svelte-lxxxyk">Profile</option></select></div></div> <div class="flex" data-svelte-h="svelte-192o23h"><div class="w-1/4"><p>Canister Id</p></div> <div class="w-1/4"><p>Cycles Balanace</p></div> <div class="w-1/4"><p>Options</p></div></div> ${weeklyLeaderboardCanisters ? `${each(weeklyLeaderboardCanisters.canisters, (canister) => {
+    return `<div class="flex"><div class="w-1/4"><p>${escape(canister.canister)}</p></div> <div class="w-1/4"><p>${escape(canister.cycles)}</p></div> <div class="w-1/4" data-svelte-h="svelte-10454dm"><p>...</p></div> </div>`;
+  })} ${weeklyLeaderboardCanisters.canisters.length == 0 ? `<p data-svelte-h="svelte-gtwg1n">No Canisters Found</p>` : ``}` : ``} ${``} ${``} ${``} <div class="flex justify-center items-center mt-4 mb-4"><button ${currentPage === 1 ? "disabled" : ""}${add_attribute(
+    "class",
+    `${currentPage === 1 ? "bg-gray-500" : "fpl-button"}
+        disabled:bg-gray-400 disabled:text-gray-700 disabled:cursor-not-allowed min-w-[100px] default-button`,
+    0
+  )}>Previous</button> <span class="px-4">Page ${escape(currentPage)}</span> <button ${currentPage >= totalPages ? "disabled" : ""}${add_attribute(
+    "class",
+    `${currentPage >= totalPages ? "bg-gray-500" : "fpl-button"} 
+          disabled:bg-gray-400 disabled:text-gray-700 disabled:cursor-not-allowed min-w-[100px] default-button`,
+    0
+  )}>Next</button></div></div>`}`;
+});
+const Snapshot_fantasy_teams = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let $authIsAdmin, $$unsubscribe_authIsAdmin;
+  $$unsubscribe_authIsAdmin = subscribe(authIsAdmin, (value) => $authIsAdmin = value);
+  let { visible } = $$props;
+  let { closeModal } = $$props;
+  let { cancelModal } = $$props;
+  if ($$props.visible === void 0 && $$bindings.visible && visible !== void 0)
+    $$bindings.visible(visible);
+  if ($$props.closeModal === void 0 && $$bindings.closeModal && closeModal !== void 0)
+    $$bindings.closeModal(closeModal);
+  if ($$props.cancelModal === void 0 && $$bindings.cancelModal && cancelModal !== void 0)
+    $$bindings.cancelModal(cancelModal);
+  $$unsubscribe_authIsAdmin();
+  return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
+    default: () => {
+      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-1bt7rj6">Snapshot Fantasy Teams</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <p data-svelte-h="svelte-qrb1h6">Are you sure you want to snapshot the fantasy teams?</p> <button${add_attribute(
+        "class",
+        `px-4 py-2 ${!$authIsAdmin ? "bg-gray-500" : "fpl-purple-btn"} 
+      default-button fpl-button`,
+        0
+      )} ${!$authIsAdmin ? "disabled" : ""}>Update</button></div>`;
     }
   })}`;
 });
@@ -8550,42 +8715,26 @@ const Page$9 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   })}`;
 });
 const Page$8 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let $$unsubscribe_teamStore;
-  let $$unsubscribe_fixtureStore;
-  let $systemStore, $$unsubscribe_systemStore;
-  $$unsubscribe_teamStore = subscribe(teamStore, (value) => value);
-  $$unsubscribe_fixtureStore = subscribe(fixtureStore, (value) => value);
-  $$unsubscribe_systemStore = subscribe(systemStore, (value) => $systemStore = value);
-  let selectedGameweek;
-  let gameweeks = Array.from(
-    {
-      length: $systemStore?.calculationGameweek ?? 1
-    },
-    (_, i) => i + 1
-  );
-  let tableData = [];
+  let $teamStore, $$unsubscribe_teamStore;
+  $$unsubscribe_teamStore = subscribe(teamStore, (value) => $teamStore = value);
   $$unsubscribe_teamStore();
-  $$unsubscribe_fixtureStore();
-  $$unsubscribe_systemStore();
-  return `<div class="flex flex-col sm:flex-row gap-4 sm:gap-8"><div class="flex items-center space-x-2 ml-4"><button${add_attribute("class", `${"fpl-button"} default-button`, 0)} ${""}>&lt;</button> <select class="p-2 fpl-dropdown mx-0 md:mx-2 min-w-[100px]">${each(gameweeks, (gameweek) => {
-    return `<option${add_attribute("value", gameweek, 0)}>Gameweek ${escape(gameweek)}</option>`;
-  })}</select> <button${add_attribute(
-    "class",
-    `${selectedGameweek === $systemStore?.calculationGameweek ? "bg-gray-500" : "fpl-button"} default-button ml-1`,
-    0
-  )} ${selectedGameweek === $systemStore?.calculationGameweek ? "disabled" : ""}>&gt;</button></div></div> <div class="flex flex-col space-y-4 mt-4"><div class="overflow-x-auto flex-1"><div class="flex justify-between p-2 border border-gray-700 py-4 bg-light-gray" data-svelte-h="svelte-1xvpyzy"><div class="w-2/12 text-center">Pos</div> <div class="w-6/12">Team</div> <div class="w-1/12">P</div> <div class="hidden sm:flex w-1/12 text-center">W</div> <div class="hidden sm:flex w-1/12 text-center">D</div> <div class="hidden sm:flex w-1/12 text-center">L</div> <div class="hidden sm:flex w-1/12 text-center">GF</div> <div class="hidden sm:flex w-1/12 text-center">GA</div> <div class="w-1/12">GD</div> <div class="w-1/12">PTS</div></div> ${each(tableData, (team, idx) => {
-    return `<div class="flex items-center justify-between py-4 border-b border-gray-700 cursor-pointer"><div class="w-2/12 text-center">${escape(idx + 1)}</div> <a class="w-6/12 flex items-center justify-start"${add_attribute("href", `/club?id=${team.id}`, 0)}>${validate_component(BadgeIcon, "BadgeIcon").$$render(
-      $$result,
-      {
-        primaryColour: team.primaryColourHex,
-        secondaryColour: team.secondaryColourHex,
-        thirdColour: team.thirdColourHex,
-        className: "w-6 h-6 mr-2"
-      },
-      {},
-      {}
-    )} ${escape(team.friendlyName)}</a> <div class="w-1/12">${escape(team.played)}</div> <div class="hidden sm:flex w-1/12">${escape(team.wins)}</div> <div class="hidden sm:flex w-1/12">${escape(team.draws)}</div> <div class="hidden sm:flex w-1/12">${escape(team.losses)}</div> <div class="hidden sm:flex w-1/12">${escape(team.goalsFor)}</div> <div class="hidden sm:flex w-1/12">${escape(team.goalsAgainst)}</div> <div class="w-1/12">${escape(team.goalsFor - team.goalsAgainst)}</div> <div class="w-1/12">${escape(team.points)}</div> </div>`;
-  })} ${Object.entries(tableData).length == 0 ? `<p class="px-4 py-4" data-svelte-h="svelte-z5l4wh">No table data.</p>` : ``}</div></div>`;
+  return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
+    default: () => {
+      return `<div class="page-header-wrapper flex w-full"><div class="content-panel w-full"><div class="w-full grid grid-cols-1 md:grid-cols-4 gap-4 mt-4"><p class="col-span-1 md:col-span-4 text-center w-full mb-4" data-svelte-h="svelte-gufabx">Premier League Clubs</p> ${each($teamStore.sort((a, b) => a.id - b.id), (team) => {
+        return `<div class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"><div class="flex items-center space-x-4 w-full">${validate_component(BadgeIcon, "BadgeIcon").$$render(
+          $$result,
+          {
+            primaryColour: team.primaryColourHex,
+            secondaryColour: team.secondaryColourHex,
+            thirdColour: team.thirdColourHex,
+            className: "w-8"
+          },
+          {},
+          {}
+        )} <p class="flex-grow text-lg md:text-sm">${escape(team.friendlyName)}</p> <a class="mt-auto self-end"${add_attribute("href", `/club?id=${team.id}`, 0)}><button class="fpl-button text-white font-bold py-2 px-4 rounded self-end" data-svelte-h="svelte-1bk95qn">View</button> </a></div> </div>`;
+      })}</div></div></div>`;
+    }
+  })}`;
 });
 const css = {
   code: ".striped.svelte-a09ql9 tr.svelte-a09ql9:nth-child(odd){background-color:rgba(46, 50, 58, 0.6)}",
@@ -8622,16 +8771,22 @@ const Page$7 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
 });
 const Page$6 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let activeProposals = [];
-  let proposalStatuses;
+  const proposalStatuses = [
+    { id: 1, description: "Open" },
+    { id: 2, description: "Rejected" },
+    { id: 3, description: "Accepted" },
+    { id: 4, description: "Executed" },
+    { id: 5, description: "Failed" }
+  ];
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
       return `<div class="m-4"><div class="bg-panel rounded-md"><ul class="flex rounded-t-lg bg-light-gray border-b border-gray-700 px-4 pt-2"><li${add_attribute("class", `mr-4 ${"active-tab"}`, 0)}><button${add_attribute(
         "class",
         `p-2 ${"text-white"}`,
         0
-      )}>Proposals</button></li></ul> ${`<div class="flex"><select class="p-2 fpl-dropdown my-4 min-w-[100px]">${each(proposalStatuses, (proposalType) => {
+      )}>Proposals</button></li></ul> ${`<div class="flex justify-between items-center mx-4 mt-4"><select class="fpl-dropdown min-w-[100px]">${each(proposalStatuses, (proposalType) => {
         return `<option${add_attribute("value", proposalType.id, 0)}>${escape(proposalType.description)}</option>`;
-      })}</select></div> <div class="flex flex-col space-y-4 mt-4"><div class="overflow-x-auto flex-1"><div class="flex justify-between p-2 border border-gray-700 py-4 bg-light-gray" data-svelte-h="svelte-1hkhhiw"><div class="w-2/12">Id</div> <div class="w-2/12">Proposal Type</div> <div class="w-4/12">Details</div> <div class="w-4/12">Voting</div></div>  ${each(activeProposals, (proposal) => {
+      })}</select> <a href="/add-proposal" data-svelte-h="svelte-rozslz"><button class="p-2 fpl-button text-white rounded-md">Raise Proposal</button></a></div> <div class="flex flex-col space-y-4 mt-4"><div class="overflow-x-auto flex-1"><div class="flex justify-between p-2 border border-gray-700 py-4 bg-light-gray" data-svelte-h="svelte-1hkhhiw"><div class="w-2/12">Id</div> <div class="w-2/12">Proposal Type</div> <div class="w-4/12">Details</div> <div class="w-4/12">Voting</div></div> ${each(activeProposals, (proposal) => {
         return `<div class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer"><div class="w-2/12">${escape(proposal.id)}</div> <div class="w-2/12">${escape(proposal.topic)}</div> <div class="w-4/12">${escape(proposal.proposal?.title)}</div> <div class="w-4/12">${escape(proposal.latestTally?.yes)}</div> <div class="w-4/12">${escape(proposal.latestTally?.no)}</div> <div class="w-4/12" data-svelte-h="svelte-1e9yq30"><button>Vote</button></div> </div>`;
       })}</div></div>`}</div></div>`;
     }
@@ -8834,11 +8989,13 @@ const Page$3 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_playerStore;
   let $systemStore, $$unsubscribe_systemStore;
   let $page, $$unsubscribe_page;
+  let $$unsubscribe_countriesStore;
   $$unsubscribe_teamStore = subscribe(teamStore, (value) => $teamStore = value);
   $$unsubscribe_fixtureStore = subscribe(fixtureStore, (value) => $fixtureStore = value);
   $$unsubscribe_playerStore = subscribe(playerStore, (value) => value);
   $$unsubscribe_systemStore = subscribe(systemStore, (value) => $systemStore = value);
   $$unsubscribe_page = subscribe(page, (value) => $page = value);
+  $$unsubscribe_countriesStore = subscribe(countriesStore, (value) => value);
   let selectedGameweek = $systemStore?.pickTeamGameweek ?? 1;
   let fixturesWithTeams = [];
   Number($page.url.searchParams.get("id"));
@@ -8852,6 +9009,7 @@ const Page$3 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_playerStore();
   $$unsubscribe_systemStore();
   $$unsubscribe_page();
+  $$unsubscribe_countriesStore();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
       return `${`${validate_component(Spinner, "Spinner").$$render($$result, {}, {}, {})}`}`;
@@ -8937,7 +9095,7 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
 export {
   Error$1 as E,
   Layout$1 as L,
-  Page$c as P,
+  Page$d as P,
   Server as S,
   set_building as a,
   set_manifest as b,
@@ -8947,18 +9105,19 @@ export {
   set_read_implementation as f,
   get_hooks as g,
   set_safe_public_env as h,
-  Page$b as i,
-  Page$a as j,
-  Page$9 as k,
-  Page$8 as l,
-  Page$7 as m,
-  Page$6 as n,
+  Page$c as i,
+  Page$b as j,
+  Page$a as k,
+  Page$9 as l,
+  Page$8 as m,
+  Page$7 as n,
   options as o,
-  Page$5 as p,
-  Page$4 as q,
-  Page$3 as r,
+  Page$6 as p,
+  Page$5 as q,
+  Page$4 as r,
   set_assets as s,
-  Page$2 as t,
-  Page$1 as u,
-  Page as v
+  Page$3 as t,
+  Page$2 as u,
+  Page$1 as v,
+  Page as w
 };

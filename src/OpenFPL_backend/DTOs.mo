@@ -377,12 +377,12 @@ module DTOs {
 
   public type UpdateFavouriteClubDTO = {
     principalId : Text;
-    favouriteClubId: T.ClubId;
+    favouriteClubId : T.ClubId;
   };
 
   public type UpdateProfilePictureDTO = {
     principalId : Text;
-    profilePicture: ?Blob;
+    profilePicture : ?Blob;
   };
 
   public type AddNewManagerDTO = {
@@ -408,8 +408,8 @@ module DTOs {
     transferWindowGameweek : T.GameweekNumber;
     principalId : Text;
     username : Text;
-    favouriteClubId: T.ClubId;
-    profilePicture: ?Blob;
+    favouriteClubId : T.ClubId;
+    profilePicture : ?Blob;
   };
 
   public type WeeklyCanisterDTO = {

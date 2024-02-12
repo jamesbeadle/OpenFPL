@@ -48,9 +48,7 @@
     football communities and providing value to our NFT investors.
   </p>
 
-  <h2 class="default-sub-header mt-4">
-    May 2024: Online Marketing Campaigns
-  </h2>
+  <h2 class="default-sub-header mt-4">May 2024: Online Marketing Campaigns</h2>
   <p class="my-2">
     We are actively in discussions with a digital marketing agency, preparing to
     launch campaigns aimed at organically growing our base of genuine managers.

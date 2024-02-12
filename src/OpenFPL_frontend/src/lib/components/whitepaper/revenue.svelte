@@ -100,11 +100,13 @@
   <h2 class="default-header mt-4">Revenue Redistribution Plan</h2>
   <p class="my-2">
     In line with our commitment to directly benefit neuron holders, OpenFPL will
-    use up to 50% of any ICRC-1 token received by the DAO to purchase $FPL from exchanges each month. 
-    We will only purchase enough $FPL to burn the total supply back down to 100m $FPL.
-    This is also attractive to investors as it will remove an inflationary pressures when holding an $FPL position.
+    use up to 50% of any ICRC-1 token received by the DAO to purchase $FPL from
+    exchanges each month. We will only purchase enough $FPL to burn the total
+    supply back down to 100m $FPL. This is also attractive to investors as it
+    will remove an inflationary pressures when holding an $FPL position.
   </p>
   <p class="my-2">
-    Any remaining ICRC-1 tokens earned by the DAO will remain liquid and can be used for whatever the DAO decides.
+    Any remaining ICRC-1 tokens earned by the DAO will remain liquid and can be
+    used for whatever the DAO decides.
   </p>
 </div>

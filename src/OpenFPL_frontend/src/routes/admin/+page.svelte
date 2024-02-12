@@ -6,7 +6,6 @@
   import AdminTimers from "$lib/components/admin/admin-timers.svelte";
   import SystemStateModal from "$lib/components/admin/system-state-modal.svelte";
   import SnapshotFantasyTeams from "$lib/components/admin/snapshot-fantasy-teams.svelte";
-  import AdminManagers from "$lib/components/admin/admin-managers.svelte";
   import AddInitialFixtures from "$lib/components/governance/fixture/add-initial-fixtures.svelte";
   import RevaluePlayerUp from "$lib/components/governance/player/revalue-player-up.svelte";
   import RevaluePlayerDown from "$lib/components/governance/player/revalue-player-down.svelte";

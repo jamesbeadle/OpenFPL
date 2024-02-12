@@ -19,6 +19,29 @@ type ValueHistory = record {
   oldValue : nat16;
   seasonId : nat16;
 };
+type UpdateTeamSelectionDTO = record {
+  braceBonusGameweek : GameweekNumber;
+  captainFantasticGameweek : GameweekNumber;
+  captainFantasticPlayerId : PlayerId;
+  captainId : PlayerId;
+  countrymenCountryId : CountryId;
+  countrymenGameweek : GameweekNumber;
+  goalGetterGameweek : GameweekNumber;
+  goalGetterPlayerId : PlayerId;
+  hatTrickHeroGameweek : GameweekNumber;
+  noEntryGameweek : GameweekNumber;
+  noEntryPlayerId : PlayerId;
+  passMasterGameweek : GameweekNumber;
+  passMasterPlayerId : PlayerId;
+  playerIds : vec PlayerId;
+  principalId : text;
+  prospectsGameweek : GameweekNumber;
+  safeHandsGameweek : GameweekNumber;
+  safeHandsPlayerId : PlayerId;
+  teamBoostClubId : ClubId;
+  teamBoostGameweek : GameweekNumber;
+  transferWindowGameweek : GameweekNumber;
+};
 type UpdateSystemStateDTO = record {
   calculationGameweek : GameweekNumber;
   calculationMonth : CalendarMonth;
@@ -43,29 +66,6 @@ type UpdateFixtureDTO = record {
   kickOff : int;
   seasonId : SeasonId;
   status : FixtureStatusType;
-};
-type UpdateFantasyTeamDTO = record {
-  braceBonusGameweek : GameweekNumber;
-  captainFantasticGameweek : GameweekNumber;
-  captainFantasticPlayerId : PlayerId;
-  captainId : PlayerId;
-  countrymenCountryId : CountryId;
-  countrymenGameweek : GameweekNumber;
-  goalGetterGameweek : GameweekNumber;
-  goalGetterPlayerId : PlayerId;
-  hatTrickHeroGameweek : GameweekNumber;
-  noEntryGameweek : GameweekNumber;
-  noEntryPlayerId : PlayerId;
-  passMasterGameweek : GameweekNumber;
-  passMasterPlayerId : PlayerId;
-  playerIds : vec PlayerId;
-  prospectsGameweek : GameweekNumber;
-  safeHandsGameweek : GameweekNumber;
-  safeHandsPlayerId : PlayerId;
-  teamBoostClubId : ClubId;
-  teamBoostGameweek : GameweekNumber;
-  transferWindowGameweek : GameweekNumber;
-  username : text;
 };
 type UpdateClubDTO = record {
   abbreviatedName : text;
@@ -166,33 +166,29 @@ type Result_3 = variant {
   err : Error;
   ok : nat;
 };
-type Result_29 = variant {
+type Result_28 = variant {
   err : Error;
   ok : AdminClubList;
 };
-type Result_28 = variant {
+type Result_27 = variant {
   err : Error;
   ok : AdminFixtureList;
 };
-type Result_27 = variant {
+type Result_26 = variant {
   err : Error;
   ok : AdminMainCanisterInfo;
 };
-type Result_26 = variant {
-  err : Error;
-  ok : AdminProfileList;
-};
 type Result_25 = variant {
   err : Error;
-  ok : AdminMonthlyCanisterList;
+  ok : AdminManagerCanisterList;
 };
 type Result_24 = variant {
   err : Error;
-  ok : AdminPlayerList;
+  ok : AdminMonthlyCanisterList;
 };
 type Result_23 = variant {
   err : Error;
-  ok : AdminProfilePictureCanisterList;
+  ok : AdminPlayerList;
 };
 type Result_22 = variant {
   err : Error;
@@ -281,13 +277,9 @@ type ProfileDTO = record {
   createDate : int;
   favouriteClubId : ClubId;
   principalId : text;
-  profilePicture : blob;
+  profilePicture : opt blob;
   termsAccepted : bool;
   username : text;
-};
-type ProfileCanisterDTO = record {
-  canisterId : text;
-  cycles : nat;
 };
 type PostponeFixtureDTO = record { fixtureId : FixtureId };
 type PlayerStatus = variant {
@@ -441,7 +433,7 @@ type ManagerDTO = record {
   monthlyPosition : int;
   monthlyPositionText : text;
   principalId : text;
-  profilePicture : blob;
+  profilePicture : opt blob;
   seasonPoints : int16;
   seasonPosition : int;
   seasonPositionText : text;
@@ -449,6 +441,10 @@ type ManagerDTO = record {
   weeklyPoints : int16;
   weeklyPosition : int;
   weeklyPositionText : text;
+};
+type ManagerCanisterDTO = record {
+  canisterId : text;
+  cycles : nat;
 };
 type LoanPlayerDTO = record {
   loanClubId : ClubId;
@@ -521,6 +517,7 @@ type FantasyTeamSnapshot = record {
 };
 type Error = variant {
   AlreadyExists;
+  CanisterCreateError;
   DecodeError;
   InvalidData;
   InvalidTeamError;
@@ -582,16 +579,6 @@ type AdminSeasonCanisterList = record {
   offset : nat;
   totalEntries : nat;
 };
-type AdminProfilePictureCanisterList = record {
-  canisters : vec ProfileCanisterDTO;
-  totalEntries : nat;
-};
-type AdminProfileList = record {
-  limit : nat;
-  offset : nat;
-  profiles : vec ProfileDTO;
-  totalEntries : nat;
-};
 type AdminPlayerList = record {
   playerStatus : PlayerStatus;
   players : vec PlayerDTO;
@@ -600,6 +587,10 @@ type AdminMonthlyCanisterList = record {
   canisters : vec MonthlyCanisterDTO;
   limit : nat;
   offset : nat;
+  totalEntries : nat;
+};
+type AdminManagerCanisterList = record {
+  canisters : vec ManagerCanisterDTO;
   totalEntries : nat;
 };
 type AdminMainCanisterInfo = record {
@@ -623,13 +614,12 @@ type AddInitialFixturesDTO = record {
 service : {
   adminAddInitialFixtures : (AddInitialFixturesDTO) -> (Result);
   adminCreatePlayer : (CreatePlayerDTO) -> (Result);
-  adminGetClubs : (nat, nat) -> (Result_29) query;
-  adminGetFixtures : (SeasonId) -> (Result_28) query;
-  adminGetMainCanisterInfo : () -> (Result_27);
-  adminGetManagers : (nat, nat) -> (Result_26) query;
-  adminGetMonthlyCanisters : (nat, nat) -> (Result_25);
-  adminGetPlayers : (PlayerStatus) -> (Result_24) query;
-  adminGetProfileCanisters : (nat, nat) -> (Result_23);
+  adminGetClubs : (nat, nat) -> (Result_28) query;
+  adminGetFixtures : (SeasonId) -> (Result_27) query;
+  adminGetMainCanisterInfo : () -> (Result_26);
+  adminGetManagerCanisters : (nat, nat) -> (Result_25);
+  adminGetMonthlyCanisters : (nat, nat) -> (Result_24);
+  adminGetPlayers : (PlayerStatus) -> (Result_23) query;
   adminGetSeasonCanisters : (nat, nat) -> (Result_22);
   adminGetTimers : (text, nat, nat) -> (Result_21) query;
   adminGetWeeklyCanisters : (nat, nat) -> (Result_20);
@@ -675,7 +665,7 @@ service : {
   getFixtures : (SeasonId) -> (Result_9) query;
   getFormerClubs : () -> (Result_16) query;
   getLoanedPlayers : (ClubId) -> (Result_7) query;
-  getManager : () -> (Result_15);
+  getManager : (text) -> (Result_15);
   getMonthlyLeaderboard : (SeasonId, ClubId, CalendarMonth, nat, nat, text) -> (Result_14);
   getMonthlyLeaderboards : (SeasonId, CalendarMonth) -> (Result_13);
   getPlayerDetails : (PlayerId, SeasonId) -> (Result_12);
@@ -693,7 +683,7 @@ service : {
   init : () -> (Result_1);
   isUsernameValid : (text) -> (bool) query;
   requestCanisterTopup : () -> ();
-  saveFantasyTeam : (UpdateFantasyTeamDTO) -> (Result_1);
+  saveFantasyTeam : (UpdateTeamSelectionDTO) -> (Result_1);
   updateFavouriteClub : (ClubId) -> (Result_1);
   updateFixture : (UpdateFixtureDTO) -> (Result_1);
   updateProfilePicture : (blob) -> (Result_1);

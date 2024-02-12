@@ -16,7 +16,8 @@
   </p>
 
   <p class="my-2">
-    Along with gameplay rewards, voting rewards are applied at a reward rate of 1% per year.
+    Along with gameplay rewards, voting rewards are applied at a reward rate of
+    1% per year.
   </p>
 
   <h2 class="default-sub-header mt-4">Gameplay Rewards</h2>

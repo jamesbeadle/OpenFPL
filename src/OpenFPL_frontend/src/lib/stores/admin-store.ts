@@ -5,8 +5,6 @@ import type {
   AdminMainCanisterInfo,
   AdminMonthlyCanisterList,
   AdminPlayerList,
-  AdminProfileList,
-  AdminProfilePictureCanisterList,
   AdminSeasonCanisterList,
   AdminTimerList,
   AdminWeeklyCanisterList,
@@ -177,7 +175,7 @@ function createAdminStore() {
     getTimers,
     getFixtures,
     getClubs,
-    getPlayers
+    getPlayers,
   };
 }
 
