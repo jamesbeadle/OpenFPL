@@ -14,6 +14,7 @@ import Buffer "mo:base/Buffer";
 import Debug "mo:base/Debug";
 import TrieMap "mo:base/TrieMap";
 import Nat "mo:base/Nat";
+import Text "mo:base/Text";
 import WeeklyLeaderboardCanister "../weekly-leaderboard";
 import MonthlyLeaderboardCanister "../monthly-leaderboard";
 import SeasonLeaderboardCanister "../season-leaderboard";
@@ -309,8 +310,11 @@ module {
       };
     };
 
-    public func calculateLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth, managers : TrieMap.TrieMap<T.PrincipalId, T.Manager>) : async () {
+    public func calculateLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth, uniqueManagerCanisterIds: [T.CanisterId]) : async () {
 
+
+
+      let managers : TrieMap.TrieMap<T.PrincipalId, T.Manager> = TrieMap.TrieMap<T.PrincipalId, T.Manager>(Text.equal, Text.hash);
       let gameweekEntries = Array.map<(Text, T.Manager), T.LeaderboardEntry>(
         Iter.toArray(managers.entries()),
         func(pair) {

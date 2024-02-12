@@ -161,6 +161,7 @@ actor Self {
     assert false; // TODO: Remove when the game begins
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
+    assert fantasyTeam.principalId == principalId;  
     return await seasonManager.saveFantasyTeam(fantasyTeam.managerGroupIndex, principalId, fantasyTeam);
   };
 

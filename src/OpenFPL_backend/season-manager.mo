@@ -206,8 +206,14 @@ module {
 
       let weeklyLeaderboardEntry = await leaderboardComposite.getWeeklyLeaderboardEntry(principalId, systemState.calculationSeasonId, systemState.calculationGameweek);
 
-      let managerFavouriteClub = managerComposite.getFavouriteClub(principalId);
-
+      var managerFavouriteClub: T.ClubId = 0;
+      let result = await managerComposite.getFavouriteClub(principalId);
+      switch (result) {
+        case (#ok(favouriteClubId)) {
+          managerFavouriteClub := favouriteClubId;
+        };
+        case _{}
+      };
       var monthlyLeaderboardEntry : ?DTOs.LeaderboardEntryDTO = null;
       if (managerFavouriteClub > 0) {
         monthlyLeaderboardEntry := await leaderboardComposite.getMonthlyLeaderboardEntry(principalId, systemState.calculationSeasonId, systemState.calculationMonth, managerFavouriteClub);
@@ -215,28 +221,24 @@ module {
 
       let seasonLeaderboardEntry = await leaderboardComposite.getSeasonLeaderboardEntry(principalId, systemState.calculationSeasonId);
 
-      return await managerComposite.getManager(principalId, systemState.calculationSeasonId, weeklyLeaderboardEntry, monthlyLeaderboardEntry, seasonLeaderboardEntry);
+      return await managerComposite.getManagerDTO(principalId, systemState.calculationSeasonId, weeklyLeaderboardEntry, monthlyLeaderboardEntry, seasonLeaderboardEntry);
     };
 
     public func getTotalManagers() : Nat {
       return managerComposite.getTotalManagers();
     };
 
-    public func saveFantasyTeam(managerGroupIndex: Nat8, principalId : Text, updatedFantasyTeam : DTOs.UpdateFantasyTeamDTO) : async Result.Result<(), T.Error> {
+    public func saveFantasyTeam(managerGroupIndex: Nat8, principalId : Text, updatedFantasyTeam : DTOs.UpdateTeamSelectionDTO) : async Result.Result<(), T.Error> {
       let players = playerComposite.getActivePlayers(systemState.calculationSeasonId);
-      return await managerComposite.saveFantasyTeam(managerGroupIndex, managerGroupIndex, principalId, updatedFantasyTeam, systemState, players);
+      return await managerComposite.saveFantasyTeam(updatedFantasyTeam, systemState, players);
     };
 
     public func updateUsername(principalId : Text, updatedUsername : Text) : async Result.Result<(), T.Error> {
       return await managerComposite.updateUsername(principalId, updatedUsername);
     };
 
-    public func isUsernameValid(username : Text, principalId : Text) : Bool {
-      return managerComposite.isUsernameValid(username, principalId);
-    };
-
-    public func updateFavouriteClub(principalId : Text, clubId : T.ClubId) : async Result.Result<(), T.Error> {
-      return await managerComposite.updateFavouriteClub(principalId, clubId, systemState);
+    public func updateFavouriteClub(principalId : Text, clubId : T.ClubId, allClubs: [T.Club]) : async Result.Result<(), T.Error> {
+      return await managerComposite.updateFavouriteClub(principalId, clubId, systemState, allClubs);
     };
 
     public func updateProfilePicture(principalId : Text, profilePicture : Blob) : async Result.Result<(), T.Error> {
@@ -338,13 +340,7 @@ module {
 
       await managerComposite.calculateFantasyTeamScores(playerPointsMap, systemState.calculationSeasonId, systemState.calculationGameweek);
 
-      //TODO: GET THE MANAGER CANISTER INDEX IDS
-      //FOR EACH CANISTER GET THE MANAGERS TEAMS ONLY
-      //CALCULATE THE LEADERBOARD FOR THE MANAGERS
-      
-
-      let managers = managerComposite.getManagers();
-      await leaderboardComposite.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth, managers);
+      await leaderboardComposite.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth, uniqueManagerCanisterIds);
 
       await payRewards();
       await incrementSystemState();
@@ -366,7 +362,7 @@ module {
 
       let gameweekComplete = seasonComposite.checkGameweekComplete(systemState);
       if (gameweekComplete) {
-        managerComposite.resetTransfers();
+        await managerComposite.resetTransfers();
         let seasonComplete = seasonComposite.checkSeasonComplete(systemState);
         if (seasonComplete) {
 
@@ -375,13 +371,13 @@ module {
           currentMonth := 8;
           currentGameweek := 1;
           setTransferWindowTimers();
-          managerComposite.resetFantasyTeams();
+          await managerComposite.resetFantasyTeams();
           await calculateRewardPool(currentSeasonId);
         };
 
         let monthComplete = seasonComposite.checkMonthComplete(systemState);
         if (monthComplete) {
-          managerComposite.resetBonusesAvailable();
+          await managerComposite.resetBonusesAvailable();
           if (currentMonth == 12) {
             currentMonth := 1;
           } else {

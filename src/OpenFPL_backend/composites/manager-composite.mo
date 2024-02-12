@@ -93,6 +93,61 @@ module {
 
 
 
+    public func getManager(principalId: T.PrincipalId, systemState: T.SystemState, calculationSeasonId: T.SeasonId, weeklyLeaderboardEntry: T.LeaderboardEntry, monthlyLeaderboardEntry: T.LeaderboardEntry, seasonLeaderboardEntry: T.LeaderboardEntry) : async Result.Result<DTOs.ManagerDTO, T.Error> {
+      
+      let managerCanisterId = managerCanisterIds.get(principalId);
+
+      switch(managerCanisterId){
+        case (null){
+          return #err(#NotFound);
+        };
+        case (?foundCanisterId){
+          let manager_canister = actor (foundCanisterId) : actor {
+            getManager : T.PrincipalId -> async ?T.Manager;
+          };
+
+          let manager = await manager_canister.getManager(principalId);
+          switch(manager){
+            case (null){
+              return #err(#NotFound);
+            };
+            case (?foundManager){
+
+              //get the gameweeks just for this season
+              let managerGameweeksBuffer = Buffer.fromArray<T.FantasyTeamSeason>([]); 
+
+              for(managerSeason in Iter.fromList(foundManager.history)){
+                if(managerSeason.seasonId == calculationSeasonId){
+
+                  let managerDTO: DTOs.ManagerDTO = {
+                    principalId = principalId;
+                    username = foundManager.username;
+                    profilePicture = foundManager.profilePicture;
+                    favouriteClubId = foundManager.favouriteClubId;
+                    createDate = foundManager.createDate;
+                    gameweeks = List.toArray(managerSeason.gameweeks);
+                    weeklyPosition = weeklyLeaderboardEntry.position;
+                    monthlyPosition = monthlyLeaderboardEntry.position;
+                    seasonPosition = seasonLeaderboardEntry.position;
+                    weeklyPositionText = weeklyLeaderboardEntry.positionText;
+                    monthlyPositionText = monthlyLeaderboardEntry.positionText;
+                    seasonPositionText = seasonLeaderboardEntry.positionText;
+                    weeklyPoints = weeklyLeaderboardEntry.points;
+                    monthlyPoints = monthlyLeaderboardEntry.points;
+                    seasonPoints = seasonLeaderboardEntry.points;
+        
+                  };
+                  return #ok(managerDTO);
+
+
+                }
+              };
+              return #err(#NotFound);
+            };
+          } 
+        };
+      };
+    };
 
 
     public func getProfile(principalId : Text) : async Result.Result<DTOs.ProfileDTO, T.Error> {
