@@ -267,7 +267,7 @@ module {
       systemState := updatedSystemState;
 
       let players = playerComposite.getActivePlayers(systemState.calculationSeasonId);
-      managerComposite.snapshotFantasyTeams(systemState.calculationSeasonId, systemState.calculationGameweek, players);
+      await managerComposite.snapshotFantasyTeams(systemState.calculationSeasonId, systemState.calculationGameweek, players);
       await updateCacheHash("system_state");
     };
 
@@ -854,12 +854,12 @@ module {
       managerComposite.setStableManagerCanisterIds(stable_manager_usernames);
     };
 
-    public func getStableUniqueManagerCanisterIds() : [(T.PrincipalId, Text)] {
+    public func getStableUniqueManagerCanisterIds() : [T.CanisterId] {
       return managerComposite.getStableUniqueManagerCanisterIds();
     };
 
     public func setStableUniqueManagerCanisterIds(stable_unique_manager_canister_ids : [T.CanisterId]) {
-      managerComposite.setStableManagerCanisterIds(stable_unique_manager_canister_ids);
+      managerComposite.setStableUniqueManagerCanisterIds(stable_unique_manager_canister_ids);
     };
 
     public func getStableTotalManagers() : Nat {
@@ -867,7 +867,7 @@ module {
     };
 
     public func setStableTotalManagers(stable_total_managers : Nat) {
-      managerComposite.setStableManagerCanisterIds(stable_total_managers);
+      managerComposite.setStableTotalManagers(stable_total_managers);
     };
 
     public func getStableActiveManagerCanisterId() : T.CanisterId {
@@ -1135,15 +1135,11 @@ module {
       };
     };
 
-    public func adminGetManagers(limit : Nat, offset : Nat) : DTOs.AdminProfileList {
-      return managerComposite.adminGetManagers(limit, offset);
-    };
-
     public func init() {
       seasonComposite.init();
       clubComposite.init();
       playerComposite.init();
-      managerComposite.init();
+      //managerComposite.init();
     };
 
   };

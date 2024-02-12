@@ -75,40 +75,6 @@ module {
 
 
 
-//redo: merge with stable functions at bottom and redo
-    public func getStableManagerCanisterIds() : [(T.PrincipalId, T.CanisterId)]{
-      return Iter.toArray(managerCanisterIds.entries());
-    };
-
-    public func setStableManagerCanisterIds(stable_manager_canister_ids: [(T.PrincipalId, T.CanisterId)]) : (){
-      let canisterIds: TrieMap.TrieMap<T.PrincipalId, T.CanisterId> = TrieMap.TrieMap<T.PrincipalId, T.CanisterId>(Text.equal, Text.hash);
-
-      for(canisterId in Iter.fromArray(stable_manager_canister_ids)){
-        canisterIds.put(canisterId);
-      };
-      managerCanisterIds := canisterIds;
-    };
-
-    public func getStableUniqueManagerCanisterIds() : [T.CanisterId]{
-      return List.toArray(uniqueManagerCanisterIds);
-    };
-
-    public func setStableUniqueManagerCanisterIds(stable_unique_manager_canister_ids: [T.CanisterId]) : (){
-      let canisterIdBuffer = Buffer.fromArray<T.CanisterId>([]);
-      
-      for(canisterId in Iter.fromArray(stable_unique_manager_canister_ids)){
-        canisterIdBuffer.add(canisterId);
-      };
-      uniqueManagerCanisterIds := List.fromArray(Buffer.toArray(canisterIdBuffer));
-    };
-
-    public func getStableManagerUsernames() : [(T.PrincipalId, T.CanisterId)]{
-      return Iter.toArray(managerUsernames.entries());
-    };
-
-
-
-
 
 
     public func getManager(principalId: T.PrincipalId, calculationSeasonId: T.SeasonId, weeklyLeaderboardEntry: ?DTOs.LeaderboardEntryDTO, monthlyLeaderboardEntry: ?DTOs.LeaderboardEntryDTO, seasonLeaderboardEntry: ?DTOs.LeaderboardEntryDTO) : async Result.Result<DTOs.ManagerDTO, T.Error> {
@@ -1978,6 +1944,69 @@ module {
     };
 
     //TODO: Redo stable storage
+
+
+
+
+
+//redo: merge with stable functions at bottom and redo
+  
+
+    public func getStableManagerCanisterIds() : [(T.PrincipalId, T.CanisterId)]{
+      return Iter.toArray(managerCanisterIds.entries());
+    };
+
+    public func setStableManagerCanisterIds(stable_manager_canister_ids: [(T.PrincipalId, T.CanisterId)]) : (){
+      let canisterIds: TrieMap.TrieMap<T.PrincipalId, T.CanisterId> = TrieMap.TrieMap<T.PrincipalId, T.CanisterId>(Text.equal, Text.hash);
+
+      for(canisterId in Iter.fromArray(stable_manager_canister_ids)){
+        canisterIds.put(canisterId);
+      };
+      managerCanisterIds := canisterIds;
+    };
+
+    public func getStableManagerUsernames() : [(T.PrincipalId, Text)]{
+      return Iter.toArray(managerUsernames.entries());
+    };
+
+    public func setStableManagerUsernames(stable_manager_usernames: [(T.PrincipalId, Text)]) : (){
+      let usernames: TrieMap.TrieMap<T.PrincipalId, T.CanisterId> = TrieMap.TrieMap<T.PrincipalId, T.CanisterId>(Text.equal, Text.hash);
+
+      for(username in Iter.fromArray(stable_manager_usernames)){
+        usernames.put(username);
+      };
+      managerUsernames := usernames;
+    };
+
+    public func getStableUniqueManagerCanisterIds() : [T.CanisterId]{
+      return List.toArray(uniqueManagerCanisterIds);
+    };
+
+    public func setStableUniqueManagerCanisterIds(stable_unique_manager_canister_ids: [T.CanisterId]) : (){
+      let canisterIdBuffer = Buffer.fromArray<T.CanisterId>([]);
+      
+      for(canisterId in Iter.fromArray(stable_unique_manager_canister_ids)){
+        canisterIdBuffer.add(canisterId);
+      };
+      uniqueManagerCanisterIds := List.fromArray(Buffer.toArray(canisterIdBuffer));
+    };
+
+    public func getStableTotalManagers() : Nat {
+      return totalManagers;
+    };
+
+    public func setStableTotalManagers(stable_total_managers: Nat) : (){
+      totalManagers := stable_total_managers;
+    };
+
+    public func getStableActiveManagerCanisterId() : Text {
+      return activeManagerCanisterId;
+    };
+
+    public func setStableActiveManagerCanisterId(stable_active_manager_canister_id: Text) : (){
+      activeManagerCanisterId := stable_active_manager_canister_id;
+    };
+
     public func getStableTeamValueLeaderboards() : [(T.SeasonId, T.TeamValueLeaderboard)] {
       return Iter.toArray(teamValueLeaderboards.entries());
     };
