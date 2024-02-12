@@ -176,6 +176,7 @@ module {
       return totalManagers;
     };
 
+    //TODO
     public func saveFantasyTeam(updatedFantasyTeamDTO : DTOs.UpdateTeamSelectionDTO, systemState : T.SystemState, players : [DTOs.PlayerDTO]) : async Result.Result<(), T.Error> {
 
       if (systemState.onHold) {
@@ -296,6 +297,7 @@ module {
        };
     };
 
+    //TODO
     public func updateUsername(principalId : T.PrincipalId, updatedUsername : Text) : async Result.Result<(), T.Error> {
       if (not isUsernameValid(updatedUsername)) {
         return #err(#InvalidData);
@@ -354,10 +356,16 @@ module {
           let canisterManagerCount = await manager_canister.getTotalManagers();
 
           if(canisterManagerCount >= 24000){
-            await createNewManagerCanister();
-          };
+            let newManagerCanisterId = await createManagerCanister();
 
-          result := await manager_canister.addNewManager(newManager);
+            let new_manager_canister = actor (newManagerCanisterId) : actor {
+              addNewManager : (manager: T.Manager) -> async Result.Result<(), T.Error>;
+            };
+            result := await new_manager_canister.addNewManager(newManager);
+          }else{
+            result := await manager_canister.addNewManager(newManager);
+          };
+          totalManagers := totalManagers + 1;
         };
         case (?foundCanisterId){
 
@@ -376,14 +384,19 @@ module {
       return #err(#NotFound);
     };
 
+    //TODO
     public func updateFavouriteClub(principalId : T.PrincipalId, favouriteClubId : T.ClubId, systemState : T.SystemState) : async Result.Result<(), T.Error> {
+
+      //TODO: Add checks to enforce favourite club change rules
+      //greater than 0
+      //not already changed this season
+      //if changed but gameweek 1 still then ok
 
       let managerCanisterId = managerCanisterIds.get(principalId);
 
       switch(managerCanisterId){
         case (null){
 
-          //todo create manager with favourite club
 
 
           return #err(#NotFound);
@@ -451,6 +464,7 @@ module {
       };
     };
 
+    //TODO
     public func updateProfilePicture(principalId : T.PrincipalId, profilePicture : Blob) : async Result.Result<(), T.Error> {
 
       if (invalidProfilePicture(profilePicture)) {
@@ -466,8 +480,7 @@ module {
         case (?foundCanisterId){
           let manager_canister = actor (foundCanisterId) : actor {
             getManager : (principalId : Text) -> async ?T.Manager;
-            updateManager : DTOs.UpdateManagerDTO -> async Result.Result<(), T.Error>;
-            addManager : DTOs.UpdateManagerDTO -> async Result.Result<(), T.Error>;
+            updateProfilePicture : DTOs.UpdateProfilePictureDTO -> async Result.Result<(), T.Error>;
           };
             
           let manager = await manager_canister.getManager(principalId);
@@ -525,6 +538,13 @@ module {
         };
       };
     };
+
+
+
+
+
+
+    //Should be good:
 
     public func isUsernameValid(username : Text) : Bool {
       if (Text.size(username) < 3 or Text.size(username) > 20) {
@@ -834,45 +854,6 @@ module {
       return (sizeInKB <= 0 or sizeInKB > 500);
     };
 
-    private func buildNewManager(principalId : Text, createProfileDTO : DTOs.ProfileDTO, profilePictureCanisterId : Text) : T.Manager {
-      
-      let newManager : T.Manager = {
-        principalId = principalId;
-        username = createProfileDTO.username;
-        favouriteClubId = createProfileDTO.favouriteClubId;
-        createDate = createProfileDTO.createDate;
-        termsAccepted = false;
-        profilePicture = createProfileDTO.profilePicture;
-        transfersAvailable = 3;
-        monthlyBonusesAvailable = 2;
-        bankQuarterMillions = 1200;
-        playerIds = [];
-        captainId = 0;
-        goalGetterGameweek = 0;
-        goalGetterPlayerId = 0;
-        passMasterGameweek = 0;
-        passMasterPlayerId = 0;
-        noEntryGameweek = 0;
-        noEntryPlayerId = 0;
-        teamBoostGameweek = 0;
-        teamBoostClubId = 0;
-        safeHandsGameweek = 0;
-        safeHandsPlayerId = 0;
-        captainFantasticGameweek = 0;
-        captainFantasticPlayerId = 0;
-        countrymenGameweek = 0;
-        countrymenCountryId = 0;
-        prospectsGameweek = 0;
-        braceBonusGameweek = 0;
-        hatTrickHeroGameweek = 0;
-        transferWindowGameweek = 0;
-        history = List.nil<T.FantasyTeamSeason>();
-        managerGroupIndex = activeManagerCanisterIndex;
-      };
-
-      return newManager;
-    };
-
     public func calculateFantasyTeamScores(allPlayersList : [(T.PlayerId, DTOs.PlayerScoreDTO)], seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async () {
       var allPlayers = TrieMap.TrieMap<T.PlayerId, DTOs.PlayerScoreDTO>(Utilities.eqNat16, Utilities.hashNat16);
       for ((key, value) in Iter.fromArray(allPlayersList)) {
@@ -1007,8 +988,6 @@ module {
       };
     };
 
-    
-
     private func updateSnapshotPoints(principalId : Text, seasonId : Nat16, gameweek : Nat8, teamPoints : Int16) : async () {
 
       let managerCanisterId = managerCanisterIds.get(principalId);
@@ -1098,6 +1077,9 @@ module {
       await distributeSeasonATHScoreRewards(rewardPool.allTimeSeasonHighScorePool, seasonLeaderboard);
       await distributeMostValuableTeamRewards(rewardPool.mostValuableTeamPool, players, seasonId);
     };
+
+
+    //Need to redo
 
     public func distributeWeeklyRewards(weeklyRewardPool : Nat64, weeklyLeaderboard : DTOs.WeeklyLeaderboardDTO) : async () {
       let weeklyRewardAmount = weeklyRewardPool / 38;
@@ -1893,27 +1875,27 @@ module {
         totalEntries = Array.size(allManagers);
       };
     };
-  };
 
-  public func init() {
-    activeManagerCaniser := await createManagerCanister();
-  };
-
-  private func createManagerCanister() : async Result.Result<Text, T.Error>{
-
-    Cycles.add(2_000_000_000_000);
-    let canister = await ManagerCanister.ManagerCanister();
-    let IC : Management.Management = actor (ENV.Default);
-    let _ = await Utilities.updateCanister_(canister, backendCanisterController, IC);
-    let canister_principal = Principal.fromActor(canister);
-    
-    if(canister_principal == ""){
-      return #err(CanisterCreateError);
+    public func init() : async () {
+      activeManagerCanisterId := await createManagerCanister();
     };
-    
-    let uniqueCanisterIdBuffer = Buffer.fromArray(List.toArray(uniqueManagerCanisterIds));
-    uniqueCanisterIdBuffer.add(canister_principal);
-    uniqueManagerCanisterIds := Buffer.toArray(uniqueCanisterIdBuffer);
-    return result;
-  }
+
+    private func createManagerCanister() : async Text{
+
+      Cycles.add(2_000_000_000_000);
+      let canister = await ManagerCanister.ManagerCanister();
+      let IC : Management.Management = actor (ENV.Default);
+      let _ = await Utilities.updateCanister_(canister, backendCanisterController, IC);
+      let canister_principal = Principal.fromActor(canister);
+      
+      if(canister_principal == ""){
+        return #err(CanisterCreateError);
+      };
+      
+      let uniqueCanisterIdBuffer = Buffer.fromArray(List.toArray(uniqueManagerCanisterIds));
+      uniqueCanisterIdBuffer.add(canister_principal);
+      uniqueManagerCanisterIds := Buffer.toArray(uniqueCanisterIdBuffer);
+      return result;
+    }
+  };
 };

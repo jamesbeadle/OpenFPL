@@ -961,7 +961,76 @@ actor class ManagerCanister() {
 
   public shared ({ caller }) func addNewManager(newManager: T.Manager) : async Result.Result<(), T.Error> {
     
+    var managerBuffer = Buffer.fromArray<T.Manager>([]);
     //for the current manager group with space
+    switch(activeGroupIndex){
+      case 0{
+        managerBuffer := Buffer.fromArray(managerGroup1);
+        managerBuffer.add(newManager);
+        managerGroup1 := Buffer.toArray(managerBuffer);
+      };
+      case 1{
+        managerBuffer := Buffer.fromArray(managerGroup2);
+        managerBuffer.add(newManager);
+        managerGroup2 := Buffer.toArray(managerBuffer);
+      };
+      case 2{
+        managerBuffer := Buffer.fromArray(managerGroup3);
+        managerBuffer.add(newManager);
+        managerGroup3 := Buffer.toArray(managerBuffer);
+      };
+      case 3{
+        managerBuffer := Buffer.fromArray(managerGroup4);
+        managerBuffer.add(newManager);
+        managerGroup4 := Buffer.toArray(managerBuffer);
+      };
+      case 4{
+        managerBuffer := Buffer.fromArray(managerGroup5);
+        managerBuffer.add(newManager);
+        managerGroup5 := Buffer.toArray(managerBuffer);
+      };
+      case 5{
+        managerBuffer := Buffer.fromArray(managerGroup6);
+        managerBuffer.add(newManager);
+        managerGroup6 := Buffer.toArray(managerBuffer);
+      };
+      case 6{
+        managerBuffer := Buffer.fromArray(managerGroup7);
+        managerBuffer.add(newManager);
+        managerGroup7 := Buffer.toArray(managerBuffer);
+      };
+      case 7{
+        managerBuffer := Buffer.fromArray(managerGroup8);
+        managerBuffer.add(newManager);
+        managerGroup8 := Buffer.toArray(managerBuffer);
+      };
+      case 8{
+        managerBuffer := Buffer.fromArray(managerGroup9);
+        managerBuffer.add(newManager);
+        managerGroup9 := Buffer.toArray(managerBuffer);
+      };
+      case 9{
+        managerBuffer := Buffer.fromArray(managerGroup10);
+        managerBuffer.add(newManager);
+        managerGroup10 := Buffer.toArray(managerBuffer);
+      };
+      case 10{
+        managerBuffer := Buffer.fromArray(managerGroup11);
+        managerBuffer.add(newManager);
+        managerGroup11 := Buffer.toArray(managerBuffer);
+      };
+      case 11{
+        managerBuffer := Buffer.fromArray(managerGroup12);
+        managerBuffer.add(newManager);
+        managerGroup12 := Buffer.toArray(managerBuffer);
+      };
+      case _{}
+    };
+    
+    let managerGroupCount = managerBuffer.size();
+    if(managerGroupCount > 2000){
+      activeGroupIndex := activeGroupIndex + 1;
+    };
     
     return #ok();
   };
