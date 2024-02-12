@@ -385,6 +385,33 @@ module DTOs {
     profilePicture: ?Blob;
   };
 
+  public type AddNewManagerDTO = {
+    playerIds : [T.PlayerId];
+    captainId : T.PlayerId;
+    goalGetterGameweek : T.GameweekNumber;
+    goalGetterPlayerId : T.PlayerId;
+    passMasterGameweek : T.GameweekNumber;
+    passMasterPlayerId : T.PlayerId;
+    noEntryGameweek : T.GameweekNumber;
+    noEntryPlayerId : T.PlayerId;
+    teamBoostGameweek : T.GameweekNumber;
+    teamBoostClubId : T.ClubId;
+    safeHandsGameweek : T.GameweekNumber;
+    safeHandsPlayerId : T.PlayerId;
+    captainFantasticGameweek : T.GameweekNumber;
+    captainFantasticPlayerId : T.PlayerId;
+    countrymenGameweek : T.GameweekNumber;
+    countrymenCountryId : T.CountryId;
+    prospectsGameweek : T.GameweekNumber;
+    braceBonusGameweek : T.GameweekNumber;
+    hatTrickHeroGameweek : T.GameweekNumber;
+    transferWindowGameweek : T.GameweekNumber;
+    principalId : Text;
+    username : Text;
+    favouriteClubId: T.ClubId;
+    profilePicture: ?Blob;
+  };
+
   public type WeeklyCanisterDTO = {
     canister : T.WeeklyLeaderboardCanister;
     cycles : Nat;
