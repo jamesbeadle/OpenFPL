@@ -49,7 +49,8 @@ module {
 
     var rewardPools : TrieMap.TrieMap<T.SeasonId, T.RewardPool> = TrieMap.TrieMap<T.SeasonId, T.RewardPool>(Utilities.eqNat16, Utilities.hashNat16);
 
-    private stable var systemState : T.SystemState = {
+  //TODO BACKUP
+    private var systemState : T.SystemState = {
       calculationGameweek = 1;
       calculationMonth = 8;
       calculationSeasonId = 1;
@@ -221,7 +222,7 @@ module {
 
       let seasonLeaderboardEntry = await leaderboardComposite.getSeasonLeaderboardEntry(principalId, systemState.calculationSeasonId);
 
-      return await managerComposite.getManagerDTO(principalId, systemState.calculationSeasonId, weeklyLeaderboardEntry, monthlyLeaderboardEntry, seasonLeaderboardEntry);
+      return await managerComposite.getManager(principalId, systemState.calculationSeasonId, weeklyLeaderboardEntry, monthlyLeaderboardEntry, seasonLeaderboardEntry);
     };
 
     public func getTotalManagers() : Nat {
@@ -340,7 +341,7 @@ module {
 
       await managerComposite.calculateFantasyTeamScores(playerPointsMap, systemState.calculationSeasonId, systemState.calculationGameweek);
 
-      await leaderboardComposite.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth, uniqueManagerCanisterIds);
+      await leaderboardComposite.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth, managerComposite.getStableUniqueManagerCanisterIds());
 
       await payRewards();
       await incrementSystemState();

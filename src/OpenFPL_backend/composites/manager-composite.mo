@@ -80,7 +80,7 @@ module {
       return Iter.toArray(managerCanisterIds.entries());
     };
 
-    public func getStableUniqueManagerCanisterIds() : async [T.CanisterId]{
+    public func getStableUniqueManagerCanisterIds() : [T.CanisterId]{
       return List.toArray(uniqueManagerCanisterIds);
     };
 
@@ -93,7 +93,7 @@ module {
 
 
 
-    public func getManager(principalId: T.PrincipalId, systemState: T.SystemState, calculationSeasonId: T.SeasonId, weeklyLeaderboardEntry: T.LeaderboardEntry, monthlyLeaderboardEntry: T.LeaderboardEntry, seasonLeaderboardEntry: T.LeaderboardEntry) : async Result.Result<DTOs.ManagerDTO, T.Error> {
+    public func getManager(principalId: T.PrincipalId, calculationSeasonId: T.SeasonId, weeklyLeaderboardEntry: ?DTOs.LeaderboardEntryDTO, monthlyLeaderboardEntry: ?DTOs.LeaderboardEntryDTO, seasonLeaderboardEntry: ?DTOs.LeaderboardEntryDTO) : async Result.Result<DTOs.ManagerDTO, T.Error> {
       
       let managerCanisterId = managerCanisterIds.get(principalId);
 
@@ -112,12 +112,27 @@ module {
               return #err(#NotFound);
             };
             case (?foundManager){
-
-              //get the gameweeks just for this season
               let managerGameweeksBuffer = Buffer.fromArray<T.FantasyTeamSeason>([]); 
 
               for(managerSeason in Iter.fromList(foundManager.history)){
                 if(managerSeason.seasonId == calculationSeasonId){
+
+                  var weeklyPosition: Int = 0;
+                  var weeklyPositionText = "";
+                  var weeklyPoints: Int16 = 0;
+                  var monthlyPosition: Int = 0;
+                  var monthlyPositionText = "";
+                  var monthlyPoints: Int16 = 0;
+                  var seasonPosition: Int = 0;
+                  var seasonPositionText = "";
+                  var seasonPoints: Int16 = 0;
+
+                  switch(weeklyLeaderboardEntry) {
+                    case(null) {  };
+                    case(?foundEntry) { 
+                      weeklyPosition := foundEntry.position;
+                    };
+                  };
 
                   let managerDTO: DTOs.ManagerDTO = {
                     principalId = principalId;
@@ -126,15 +141,15 @@ module {
                     favouriteClubId = foundManager.favouriteClubId;
                     createDate = foundManager.createDate;
                     gameweeks = List.toArray(managerSeason.gameweeks);
-                    weeklyPosition = weeklyLeaderboardEntry.position;
-                    monthlyPosition = monthlyLeaderboardEntry.position;
-                    seasonPosition = seasonLeaderboardEntry.position;
-                    weeklyPositionText = weeklyLeaderboardEntry.positionText;
-                    monthlyPositionText = monthlyLeaderboardEntry.positionText;
-                    seasonPositionText = seasonLeaderboardEntry.positionText;
-                    weeklyPoints = weeklyLeaderboardEntry.points;
-                    monthlyPoints = monthlyLeaderboardEntry.points;
-                    seasonPoints = seasonLeaderboardEntry.points;
+                    weeklyPosition = weeklyPosition;
+                    monthlyPosition = monthlyPosition;
+                    seasonPosition = seasonPosition;
+                    weeklyPositionText = weeklyPositionText;
+                    monthlyPositionText = monthlyPositionText;
+                    seasonPositionText = seasonPositionText;
+                    weeklyPoints = weeklyPoints;
+                    monthlyPoints = monthlyPoints;
+                    seasonPoints = seasonPoints;
         
                   };
                   return #ok(managerDTO);
