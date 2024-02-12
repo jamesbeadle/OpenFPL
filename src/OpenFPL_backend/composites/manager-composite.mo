@@ -2003,7 +2003,7 @@ module {
       return activeManagerCanisterId;
     };
 
-    public func setStableActiveManagerCanisterId(stable_active_manager_canister_id: Text) : (){
+    public func setStableActiveManagerCanisterId(stable_active_manager_canister_id: T.CanisterId) : (){
       activeManagerCanisterId := stable_active_manager_canister_id;
     };
 

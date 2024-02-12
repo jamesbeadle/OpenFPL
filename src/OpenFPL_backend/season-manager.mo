@@ -229,7 +229,7 @@ module {
       return managerComposite.getTotalManagers();
     };
 
-    public func saveFantasyTeam(managerGroupIndex: Nat8, principalId : Text, updatedFantasyTeam : DTOs.UpdateTeamSelectionDTO) : async Result.Result<(), T.Error> {
+    public func saveFantasyTeam(principalId : Text, updatedFantasyTeam : DTOs.UpdateTeamSelectionDTO) : async Result.Result<(), T.Error> {
       let players = playerComposite.getActivePlayers(systemState.calculationSeasonId);
       return await managerComposite.saveFantasyTeam(updatedFantasyTeam, systemState, players);
     };
@@ -238,7 +238,8 @@ module {
       return await managerComposite.updateUsername(principalId, updatedUsername);
     };
 
-    public func updateFavouriteClub(principalId : Text, clubId : T.ClubId, allClubs: [T.Club]) : async Result.Result<(), T.Error> {
+    public func updateFavouriteClub(principalId : Text, clubId : T.ClubId) : async Result.Result<(), T.Error> {
+      let allClubs = clubComposite.getClubs();
       return await managerComposite.updateFavouriteClub(principalId, clubId, systemState, allClubs);
     };
 

@@ -157,12 +157,12 @@ actor Self {
     return await seasonManager.updateProfilePicture(principalId, profilePicture);
   };
 
-  public shared ({ caller }) func saveFantasyTeam(fantasyTeam : DTOs.UpdateManagerDTO) : async Result.Result<(), T.Error> {
+  public shared ({ caller }) func saveFantasyTeam(fantasyTeam : DTOs.UpdateTeamSelectionDTO) : async Result.Result<(), T.Error> {
     assert false; // TODO: Remove when the game begins
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert fantasyTeam.principalId == principalId;  
-    return await seasonManager.saveFantasyTeam(fantasyTeam.managerGroupIndex, principalId, fantasyTeam);
+    return await seasonManager.saveFantasyTeam(principalId, fantasyTeam);
   };
 
   //Governance canister validation and execution functions:
@@ -385,9 +385,9 @@ actor Self {
   private stable var stable_reward_pools : [(T.SeasonId, T.RewardPool)] = [];
   private stable var stable_manager_canister_ids: [(T.PrincipalId, T.CanisterId)] = [];
   private stable var stable_manager_usernames: [(T.PrincipalId, Text)] = [];
-  private stable var stable_unique_manager_canister_ids: [(T.PrincipalId, T.CanisterId)] = [];
+  private stable var stable_unique_manager_canister_ids: [T.CanisterId] = [];
   private stable var stable_total_managers: Nat = 0;
-  private stable var stable_active_manager_canister_id: Nat = 0;
+  private stable var stable_active_manager_canister_id: Text = "";
   private stable var stable_team_value_leaderboards : [(T.SeasonId, T.TeamValueLeaderboard)] = [];
   private stable var stable_season_rewards : [T.SeasonRewards] = [];
   private stable var stable_monthly_rewards : [T.MonthlyRewards] = [];
@@ -464,7 +464,6 @@ actor Self {
 
   system func postupgrade() {
     cyclesDispenser.setStableCanisterIds(stable_canister_ids);
-    seasonManager.stableStableRewardPools(stable_reward_pools);
     seasonManager.setStableManagerCanisterIds(stable_manager_canister_ids);
     seasonManager.setStableManagerUsernames(stable_manager_usernames);
     seasonManager.setStableUniqueManagerCanisterIds(stable_unique_manager_canister_ids);
@@ -495,11 +494,10 @@ actor Self {
     seasonManager.setStableNextFixtureId(stable_next_fixture_id);
     seasonManager.setStableDataHashes(stable_data_cache_hashes);
     timerComposite.setStableTimers(stable_timers);
-    //TODO: SETSTABLE REWARD POOLS, CHECK ALL ARE DONE!
-
     seasonManager.setBackendCanisterController(Principal.fromActor(Self));
     seasonManager.setTimerBackupFunction(timerComposite.setAndBackupTimer, timerComposite.removeExpiredTimers);
     seasonManager.setStoreCanisterIdFunction(cyclesDispenser.storeCanisterId);
+    seasonManager.setStableStableRewardPools(stable_reward_pools);
     setCheckCyclesTimer();
     setCheckCyclesWalletTimer();
   };
@@ -694,22 +692,12 @@ actor Self {
     let principalId = Principal.toText(caller);
     assert principalId == TEMP_ADMIN_PRINCIPAL;
 
-    let profileCanisters = seasonManager.getStableManagers();
+    let uniqueCanisterIds = seasonManager.getStableUniqueManagerCanisterIds();
 
-    let uniqueCanisterIds = Buffer.fromArray<Text>([]);
-
-    for (canister in Iter.fromArray(profileCanisters)) {
-      if (not Buffer.contains<Text>(uniqueCanisterIds, canister.1, func(a : Text, b : Text) : Bool { a == b })) {
-        uniqueCanisterIds.add(canister.1);
-      };
-    };
-
-    let uniqueCanisterArray = Buffer.toArray(uniqueCanisterIds);
-
-    let droppedEntries = List.drop<Text>(List.fromArray(uniqueCanisterArray), offset);
+    let droppedEntries = List.drop<Text>(List.fromArray(uniqueCanisterIds), offset);
     let paginatedEntries = List.take<Text>(droppedEntries, limit);
 
-    let canisterInfoBuffer = Buffer.fromArray<DTOs.ProfileCanisterDTO>([]);
+    let canisterInfoBuffer = Buffer.fromArray<DTOs.ManagerCanisterDTO>([]);
 
     for (canisterId in Iter.fromList(paginatedEntries)) {
       let profile_picture_caniter = actor (canisterId) : actor {
@@ -727,7 +715,7 @@ actor Self {
       limit = limit;
       offset = offset;
       canisters = Buffer.toArray(canisterInfoBuffer);
-      totalEntries = Array.size(profileCanisters);
+      totalEntries = Array.size(uniqueCanisterIds);
     };
 
     return #ok(dto);
@@ -810,15 +798,6 @@ actor Self {
     return #ok(seasonManager.adminGetPlayers(status));
   };
 
-  public shared query ({ caller }) func adminGetManagers(limit : Nat, offset : Nat) : async Result.Result<DTOs.AdminProfileList, T.Error> {
-    assert not Principal.isAnonymous(caller);
-    let principalId = Principal.toText(caller);
-    assert principalId == TEMP_ADMIN_PRINCIPAL;
-    return #ok(seasonManager.adminGetManagers(limit, offset));
-  };
-
-  //Update system state
-  //Remove a canister timer
   public shared ({ caller }) func updateSystemState(updateSystemState : DTOs.UpdateSystemStateDTO) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
