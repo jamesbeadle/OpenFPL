@@ -956,6 +956,179 @@ actor class ManagerCanister() {
     };
     return [];
   };
+  
+  public shared ({ caller }) func getManagersWithPlayer(playerId: T.PlayerId) : async [T.PrincipalId] {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == main_canister_id;
+    
+    let allManagersBuffer = Buffer.fromArray<T.PrincipalId>([]);
+    for(index in Iter.range(0,11)){
+      switch(index){
+        case 0 {
+          for(manager in Iter.fromArray(managerGroup1)){
+             let isPlayerInTeam = Array.find(
+              manager.playerIds,
+              func(pId : T.PlayerId) : Bool {
+                return pId == playerId;
+              },
+            );
+            if(Option.isSome(isPlayerInTeam)){
+              allManagersBuffer.add(manager.principalId);
+            };
+          };
+        };
+        case 1 {
+          for(manager in Iter.fromArray(managerGroup2)){
+             let isPlayerInTeam = Array.find(
+              manager.playerIds,
+              func(pId : T.PlayerId) : Bool {
+                return pId == playerId;
+              },
+            );
+            if(Option.isSome(isPlayerInTeam)){
+              allManagersBuffer.add(manager.principalId);
+            };
+          };
+        };
+        case 2 {
+          for(manager in Iter.fromArray(managerGroup3)){
+             let isPlayerInTeam = Array.find(
+              manager.playerIds,
+              func(pId : T.PlayerId) : Bool {
+                return pId == playerId;
+              },
+            );
+            if(Option.isSome(isPlayerInTeam)){
+              allManagersBuffer.add(manager.principalId);
+            };
+          };
+        };
+        case 3 {
+          for(manager in Iter.fromArray(managerGroup4)){
+            let isPlayerInTeam = Array.find(
+              manager.playerIds,
+              func(pId : T.PlayerId) : Bool {
+                return pId == playerId;
+              },
+            );
+            if(Option.isSome(isPlayerInTeam)){
+              allManagersBuffer.add(manager.principalId);
+            };
+          };
+        };
+        case 4 {
+          for(manager in Iter.fromArray(managerGroup5)){
+            let isPlayerInTeam = Array.find(
+              manager.playerIds,
+              func(pId : T.PlayerId) : Bool {
+                return pId == playerId;
+              },
+            );
+            if(Option.isSome(isPlayerInTeam)){
+              allManagersBuffer.add(manager.principalId);
+            };
+          };
+        };
+        case 5 {
+          for(manager in Iter.fromArray(managerGroup6)){
+            let isPlayerInTeam = Array.find(
+              manager.playerIds,
+              func(pId : T.PlayerId) : Bool {
+                return pId == playerId;
+              },
+            );
+            if(Option.isSome(isPlayerInTeam)){
+              allManagersBuffer.add(manager.principalId);
+            };
+          };
+        };
+        case 6 {
+          for(manager in Iter.fromArray(managerGroup7)){
+            let isPlayerInTeam = Array.find(
+              manager.playerIds,
+              func(pId : T.PlayerId) : Bool {
+                return pId == playerId;
+              },
+            );
+            if(Option.isSome(isPlayerInTeam)){
+              allManagersBuffer.add(manager.principalId);
+            };
+          };
+        };
+        case 7 {
+          for(manager in Iter.fromArray(managerGroup8)){
+            let isPlayerInTeam = Array.find(
+              manager.playerIds,
+              func(pId : T.PlayerId) : Bool {
+                return pId == playerId;
+              },
+            );
+            if(Option.isSome(isPlayerInTeam)){
+              allManagersBuffer.add(manager.principalId);
+            };
+          };
+        };
+        case 8 {
+          for(manager in Iter.fromArray(managerGroup9)){
+            let isPlayerInTeam = Array.find(
+              manager.playerIds,
+              func(pId : T.PlayerId) : Bool {
+                return pId == playerId;
+              },
+            );
+            if(Option.isSome(isPlayerInTeam)){
+              allManagersBuffer.add(manager.principalId);
+            };
+          };
+        };
+        case 9 {
+          for(manager in Iter.fromArray(managerGroup10)){
+            let isPlayerInTeam = Array.find(
+              manager.playerIds,
+              func(pId : T.PlayerId) : Bool {
+                return pId == playerId;
+              },
+            );
+            if(Option.isSome(isPlayerInTeam)){
+              allManagersBuffer.add(manager.principalId);
+            };
+          };
+        };
+        case 10 {
+          for(manager in Iter.fromArray(managerGroup11)){
+            let isPlayerInTeam = Array.find(
+              manager.playerIds,
+              func(pId : T.PlayerId) : Bool {
+                return pId == playerId;
+              },
+            );
+            if(Option.isSome(isPlayerInTeam)){
+              allManagersBuffer.add(manager.principalId);
+            };
+          };
+        };
+        case 11 {
+          for(manager in Iter.fromArray(managerGroup12)){
+            let isPlayerInTeam = Array.find(
+              manager.playerIds,
+              func(pId : T.PlayerId) : Bool {
+                return pId == playerId;
+              },
+            );
+            if(Option.isSome(isPlayerInTeam)){
+              allManagersBuffer.add(manager.principalId);
+            };
+          };
+        };
+        case _ {
+
+        };
+
+      }
+    };
+    return Buffer.toArray(allManagersBuffer);
+  };
 
   //add new manager
 
