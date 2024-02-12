@@ -464,7 +464,7 @@ module {
         return #err(#InvalidData);
       };
 
-      if (usernameTaken(updatedUsername, principalId)) {
+      if (isUsernameTaken(updatedUsername, principalId)) {
         return #err(#InvalidData);
       };
 
@@ -769,7 +769,7 @@ module {
       return true;
     };
 
-    public func usernameTaken(username : Text, principalId : Text) : Bool {
+    public func isUsernameTaken(username : Text, principalId : Text) : Bool {
       
       for (managerUsername in managerUsernames.entries()) {
         if (managerUsername.1 == username and managerUsername.0 != principalId) {

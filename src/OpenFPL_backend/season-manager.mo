@@ -247,6 +247,14 @@ module {
       return await managerComposite.updateProfilePicture(principalId, profilePicture);
     };
 
+    public func isUsernameValid(username: Text) : Bool{
+      return managerComposite.isUsernameValid(username);
+    };
+
+    public func isUsernameTaken(username: Text, principalId: Text) : Bool{
+      return managerComposite.isUsernameTaken(username, principalId);
+    };
+
     //Timer call back events
     public func gameweekBeginExpired() : async () {
 

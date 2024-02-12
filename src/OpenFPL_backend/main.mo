@@ -135,7 +135,9 @@ actor Self {
 
   public shared query ({ caller }) func isUsernameValid(username : Text) : async Bool {
     assert not Principal.isAnonymous(caller);
-    return seasonManager.isUsernameValid(username, Principal.toText(caller));
+    let usernameValid = seasonManager.isUsernameValid(username);
+    let usernameTaken =  seasonManager.isUsernameTaken(username, Principal.toText(caller));
+    return usernameValid and not usernameTaken; 
   };
 
   //Update functions:
@@ -497,7 +499,7 @@ actor Self {
     seasonManager.setBackendCanisterController(Principal.fromActor(Self));
     seasonManager.setTimerBackupFunction(timerComposite.setAndBackupTimer, timerComposite.removeExpiredTimers);
     seasonManager.setStoreCanisterIdFunction(cyclesDispenser.storeCanisterId);
-    seasonManager.setStableStableRewardPools(stable_reward_pools);
+    seasonManager.setStableRewardPools(stable_reward_pools);
     setCheckCyclesTimer();
     setCheckCyclesWalletTimer();
   };
