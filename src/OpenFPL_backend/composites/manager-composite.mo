@@ -1717,6 +1717,7 @@ module {
       return await tokenCanister.mintToTreasury(Nat64.toNat(fpl));
     };
 
+    //TODO: Redo stable storage
     public func getStableTeamValueLeaderboards() : [(T.SeasonId, T.TeamValueLeaderboard)] {
       return Iter.toArray(teamValueLeaderboards.entries());
     };
@@ -1875,7 +1876,8 @@ module {
         totalEntries = Array.size(allManagers);
       };
     };
-
+    
+    //Esnure I init all the things i need
     public func init() : async () {
       activeManagerCanisterId := await createManagerCanister();
     };
@@ -1887,12 +1889,13 @@ module {
       let IC : Management.Management = actor (ENV.Default);
       let _ = await Utilities.updateCanister_(canister, backendCanisterController, IC);
       let canister_principal = Principal.fromActor(canister);
+      let canisterId = Principal.toText(canister_principal);
       
-      if(canister_principal == ""){
-        return #err(CanisterCreateError);
+      if(canisterId == ""){
+        return #err(#CanisterCreateError);
       };
       
-      let uniqueCanisterIdBuffer = Buffer.fromArray(List.toArray(uniqueManagerCanisterIds));
+      let uniqueCanisterIdBuffer = Buffer.fromArray<T.CanisterId>(List.toArray(uniqueManagerCanisterIds));
       uniqueCanisterIdBuffer.add(canister_principal);
       uniqueManagerCanisterIds := Buffer.toArray(uniqueCanisterIdBuffer);
       return result;
