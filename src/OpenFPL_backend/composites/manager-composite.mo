@@ -76,15 +76,33 @@ module {
 
 
 //redo: merge with stable functions at bottom and redo
-    public func getStableManagerCanisterIds() : async [(T.PrincipalId, T.CanisterId)]{
+    public func getStableManagerCanisterIds() : [(T.PrincipalId, T.CanisterId)]{
       return Iter.toArray(managerCanisterIds.entries());
+    };
+
+    public func setStableManagerCanisterIds(stable_manager_canister_ids: [(T.PrincipalId, T.CanisterId)]) : (){
+      let canisterIds: TrieMap.TrieMap<T.PrincipalId, T.CanisterId> = TrieMap.TrieMap<T.PrincipalId, T.CanisterId>(Text.equal, Text.hash);
+
+      for(canisterId in Iter.fromArray(stable_manager_canister_ids)){
+        canisterIds.put(canisterId);
+      };
+      managerCanisterIds := canisterIds;
     };
 
     public func getStableUniqueManagerCanisterIds() : [T.CanisterId]{
       return List.toArray(uniqueManagerCanisterIds);
     };
 
-    public func getStableManagerUsernames() : async [(T.PrincipalId, T.CanisterId)]{
+    public func setStableUniqueManagerCanisterIds(stable_unique_manager_canister_ids: [T.CanisterId]) : (){
+      let canisterIdBuffer = Buffer.fromArray<T.CanisterId>([]);
+      
+      for(canisterId in Iter.fromArray(stable_unique_manager_canister_ids)){
+        canisterIdBuffer.add(canisterId);
+      };
+      uniqueManagerCanisterIds := List.fromArray(Buffer.toArray(canisterIdBuffer));
+    };
+
+    public func getStableManagerUsernames() : [(T.PrincipalId, T.CanisterId)]{
       return Iter.toArray(managerUsernames.entries());
     };
 

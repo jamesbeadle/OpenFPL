@@ -837,28 +837,45 @@ module {
       );
     };
 
-    public func getStableManagers() : [(Text, T.Manager)] {
-      return managerComposite.getStableManagers();
-    };
 
-    public func setStableManagers(stable_managers : [(Text, T.Manager)]) {
-      managerComposite.setStableManagers(stable_managers);
-    };
-
-    public func getStableManagerCanisterIds() : [(T.PrincipalId, Text)] {
+    public func getStableManagerCanisterIds() : [(T.PrincipalId, T.CanisterId)] {
       return managerComposite.getStableManagerCanisterIds();
     };
 
-    public func setStableManagerCanisterIds(stable_manager_canister_ids : [(T.PrincipalId, Text)]) {
+    public func setStableManagerCanisterIds(stable_manager_canister_ids : [(T.PrincipalId, T.CanisterId)]) {
       managerComposite.setStableManagerCanisterIds(stable_manager_canister_ids);
     };
 
-    public func getStableActiveManagerCanisterId() : Text {
+    public func getStableManagerUsernames() : [(T.PrincipalId, Text)] {
+      return managerComposite.getStableManagerUsernames();
+    };
+
+    public func setStableManagerUsernames(stable_manager_usernames : [(T.PrincipalId, Text)]) {
+      managerComposite.setStableManagerCanisterIds(stable_manager_usernames);
+    };
+
+    public func getStableUniqueManagerCanisterIds() : [(T.PrincipalId, Text)] {
+      return managerComposite.getStableUniqueManagerCanisterIds();
+    };
+
+    public func setStableUniqueManagerCanisterIds(stable_unique_manager_canister_ids : [T.CanisterId]) {
+      managerComposite.setStableManagerCanisterIds(stable_unique_manager_canister_ids);
+    };
+
+    public func getStableTotalManagers() : Nat {
+      return managerComposite.getStableTotalManagers();
+    };
+
+    public func setStableTotalManagers(stable_total_managers : Nat) {
+      managerComposite.setStableManagerCanisterIds(stable_total_managers);
+    };
+
+    public func getStableActiveManagerCanisterId() : T.CanisterId {
       return managerComposite.getStableActiveManagerCanisterId();
     };
 
-    public func setStableActiveManagerCanisterId(stable_active_profile_picture_canister_id : Text) {
-      managerComposite.setStableActiveManagerCanisterId(stable_active_profile_picture_canister_id);
+    public func setStableActiveManagerCanisterId(stable_active_manager_canister_id : T.CanisterId) {
+      managerComposite.setStableActiveManagerCanisterId(stable_active_manager_canister_id);
     };
 
     public func getStableTeamValueLeaderboards() : [(T.SeasonId, T.TeamValueLeaderboard)] {

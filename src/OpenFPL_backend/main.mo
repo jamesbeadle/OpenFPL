@@ -383,9 +383,11 @@ actor Self {
   //Stable backup:
   private stable var stable_timers : [T.TimerInfo] = [];
   private stable var stable_reward_pools : [(T.SeasonId, T.RewardPool)] = [];
-  private stable var stable_managers : [(Text, T.Manager)] = [];
-  private stable var stable_profile_picture_canister_ids : [(T.PrincipalId, Text)] = [];
-  private stable var stable_active_profile_picture_canister_id : Text = "";
+  private stable var stable_manager_canister_ids: [(T.PrincipalId, T.CanisterId)] = [];
+  private stable var stable_manager_usernames: [(T.PrincipalId, Text)] = [];
+  private stable var stable_unique_manager_canister_ids: [(T.PrincipalId, T.CanisterId)] = [];
+  private stable var stable_total_managers: Nat = 0;
+  private stable var stable_active_manager_canister_id: Nat = 0;
   private stable var stable_team_value_leaderboards : [(T.SeasonId, T.TeamValueLeaderboard)] = [];
   private stable var stable_season_rewards : [T.SeasonRewards] = [];
   private stable var stable_monthly_rewards : [T.MonthlyRewards] = [];
@@ -428,8 +430,11 @@ actor Self {
   system func preupgrade() {
     stable_timers := timerComposite.getStableTimers();
     stable_reward_pools := seasonManager.getStableRewardPools();
-    stable_managers := seasonManager.getStableManagers();
-    stable_active_Manager_canister_id := seasonManager.getStableActiveManagerId();
+    stable_manager_canister_ids := seasonManager.getStableManagerCanisterIds();
+    stable_manager_usernames := seasonManager.getStableManagerUsernames();
+    stable_unique_manager_canister_ids := seasonManager.getStableUniqueManagerCanisterIds();
+    stable_total_managers := seasonManager.getStableTotalManagers();
+    stable_active_manager_canister_id := seasonManager.getStableActiveManagerCanisterId();
     stable_team_value_leaderboards := seasonManager.getStableTeamValueLeaderboards();
     stable_season_rewards := seasonManager.getStableSeasonRewards();
     stable_monthly_rewards := seasonManager.getStableMonthlyRewards();
@@ -460,9 +465,11 @@ actor Self {
   system func postupgrade() {
     cyclesDispenser.setStableCanisterIds(stable_canister_ids);
     seasonManager.stableStableRewardPools(stable_reward_pools);
-    seasonManager.setStableManagers(stable_managers);
-    seasonManager.setStableManagerCanisterIds(stable_profile_picture_canister_ids);
-    seasonManager.setStableActiveManagerCanisterId(stable_active_Manager_canister_id);
+    seasonManager.setStableManagerCanisterIds(stable_manager_canister_ids);
+    seasonManager.setStableManagerUsernames(stable_manager_usernames);
+    seasonManager.setStableUniqueManagerCanisterIds(stable_unique_manager_canister_ids);
+    seasonManager.setStableTotalManagers(stable_total_managers);
+    seasonManager.setStableActiveManagerCanisterId(stable_active_manager_canister_id);
     seasonManager.setStableTeamValueLeaderboards(stable_team_value_leaderboards);
     seasonManager.setStableSeasonRewards(stable_season_rewards);
     seasonManager.setStableMonthlyRewards(stable_monthly_rewards);
