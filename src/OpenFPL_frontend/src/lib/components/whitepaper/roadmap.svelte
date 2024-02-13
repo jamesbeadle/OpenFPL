@@ -12,21 +12,21 @@
   </p>
 
   <h2 class="default-sub-header mt-4">
-    January 2024: 'The OpenFPL Podcast' Launch
+    March 1st 2024: OpenFPL SNS Decentralisation Sale
+  </h2>
+  <p class="my-2">
+    We aim to begin our decentralisation sale on 1st March 2024, selling 25
+    million $FPL tokens (25%).
+  </p>
+
+  <h2 class="default-sub-header mt-4">
+    March 2024: 'The OpenFPL Podcast' Launch
   </h2>
   <p class="my-2">
     Starting with a main podcast, we aim to expand into fan-focused podcasts,
     emulating the model of successful platforms like Arsenal Fan TV. Initially
     audio-based, these podcasts will eventually include video content, adding
     another dimension to our engagement strategy.
-  </p>
-
-  <h2 class="default-sub-header mt-4">
-    March 1st 2024: OpenFPL SNS Decentralisation Sale
-  </h2>
-  <p class="my-2">
-    We aim to begin our decentralisation sale on 1st March 2024, selling 25
-    million $FPL tokens (25%).
   </p>
 
   <h2 class="default-sub-header mt-4">April 2024: Shirt Production Begins</h2>

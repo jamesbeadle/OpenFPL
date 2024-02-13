@@ -36,6 +36,7 @@
     in each partition to 1,000. This gives plenty of storage and calculation
     overhead for future features.
   </p>
+  <h2 class="default-sub-header mt-4">Leaderboard Data</h2>
   <p class="my-2">
     A leaderboard canister holds an array of leaderboard entries, with each
     entry taking up roughly 121 bytes of space. This means the leaderboard

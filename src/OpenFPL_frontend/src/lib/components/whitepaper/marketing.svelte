@@ -6,11 +6,8 @@
   </p>
 
   <h2 class="default-header mb-4">Online Marketing Strategy</h2>
-  <h2 class="default-header">Collaboration with Digitial Marketing Agency</h2>
   <p class="my-2">
-    We are engaging with a digital marketing agency known for their experience
-    working with startups in the digital space. This agency is in the process of
-    finalising plans for a comprehensive online marketing campaign. The campaign
+    After the SNS we will begin a comprehensive online marketing campaign. The campaign
     will focus on PPC (Pay-Per-Click) and SEO (Search Engine Optimisation)
     strategies, with an emphasis on reaching specific user groups effectively.
   </p>
