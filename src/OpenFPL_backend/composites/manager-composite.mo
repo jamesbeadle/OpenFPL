@@ -1087,7 +1087,7 @@ module {
       };
     };
 
-    public func resetFantasyTeams(seasonId: T.SeaasonId) : async () {
+    public func resetFantasyTeams(seasonId: T.SeasonId) : async () {
       for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
 
         let manager_canister = actor (canisterId) : actor {
