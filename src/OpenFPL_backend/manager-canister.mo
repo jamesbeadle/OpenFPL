@@ -1315,7 +1315,7 @@ actor class ManagerCanister() {
     return #ok();
   };
 
-  public shared ({ caller }) func updateSnapshotPoints(principalId : Text, seasonId : Nat16, gameweek : Nat8, teamPoints : Int16, teamValueQuarterMillions : Nat16) : () {
+  public shared ({ caller }) func updateSnapshotPoints(principalId : Text, seasonId : Nat16, gameweek : T.GameweekNumber, month: T.CalendarMonth, teamPoints : Int16, teamValueQuarterMillions : Nat16) : () {
 
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
@@ -1337,12 +1337,29 @@ actor class ManagerCanister() {
                     teamHistoryBuffer.add({
                       seasonId = seasonId;
                       totalPoints = teamPoints;
-                      gameweeks = List.fromArray([mergeManagerSnapshot(manager, gameweek, teamPoints, teamValueQuarterMillions)]);
+                      gameweeks = List.fromArray([mergeManagerSnapshot(manager, gameweek, month, teamPoints, teamPoints, teamPoints, teamValueQuarterMillions)]);
                     });
                     managerBuffer.add(mergeManagerHistory(manager, List.fromArray(Buffer.toArray(teamHistoryBuffer))));
                   };
                   case (existingHistory) {
-                    let updatedHistory = mergeExistingHistory(existingHistory, mergeManagerSnapshot(manager, gameweek, teamPoints, teamValueQuarterMillions), seasonId, gameweek, manager, teamPoints, teamValueQuarterMillions);
+                    
+                    var seasonPoints: Int16 = 0;
+                    var monthlyPoints: Int16 = 0;
+                    for(season in Iter.fromList(existingHistory)){
+                      if(season.seasonId == seasonId){
+                        for(seasonGameweek in Iter.fromList(season.gameweeks)){
+                          seasonPoints := seasonPoints + seasonGameweek.points;
+                          if(seasonGameweek.month == month){
+                            monthlyPoints := monthlyPoints + seasonGameweek.points;
+                          };
+                        }
+                      };
+                    };
+                    monthlyPoints := monthlyPoints + teamPoints;
+                    seasonPoints := seasonPoints + teamPoints;
+
+                    let newSnapshot = mergeManagerSnapshot(manager, gameweek, month, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
+                    let updatedHistory = mergeExistingHistory(existingHistory, newSnapshot, seasonId, gameweek, month, manager, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
                     managerBuffer.add(mergeManagerHistory(manager, updatedHistory));
                   };
                 };
@@ -1363,12 +1380,29 @@ actor class ManagerCanister() {
                     teamHistoryBuffer.add({
                       seasonId = seasonId;
                       totalPoints = teamPoints;
-                      gameweeks = List.fromArray([mergeManagerSnapshot(manager, gameweek, teamPoints, teamValueQuarterMillions)]);
+                      gameweeks = List.fromArray([mergeManagerSnapshot(manager, gameweek, month, teamPoints, teamPoints, teamPoints, teamValueQuarterMillions)]);
                     });
                     managerBuffer.add(mergeManagerHistory(manager, List.fromArray(Buffer.toArray(teamHistoryBuffer))));
                   };
                   case (existingHistory) {
-                    let updatedHistory = mergeExistingHistory(existingHistory, mergeManagerSnapshot(manager, gameweek, teamPoints, teamValueQuarterMillions), seasonId, gameweek, manager, teamPoints, teamValueQuarterMillions);
+                    
+                    var seasonPoints: Int16 = 0;
+                    var monthlyPoints: Int16 = 0;
+                    for(season in Iter.fromList(existingHistory)){
+                      if(season.seasonId == seasonId){
+                        for(seasonGameweek in Iter.fromList(season.gameweeks)){
+                          seasonPoints := seasonPoints + seasonGameweek.points;
+                          if(seasonGameweek.month == month){
+                            monthlyPoints := monthlyPoints + seasonGameweek.points;
+                          };
+                        }
+                      };
+                    };
+                    monthlyPoints := monthlyPoints + teamPoints;
+                    seasonPoints := seasonPoints + teamPoints;
+
+                    let newSnapshot = mergeManagerSnapshot(manager, gameweek, month, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
+                    let updatedHistory = mergeExistingHistory(existingHistory, newSnapshot, seasonId, gameweek, month, manager, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
                     managerBuffer.add(mergeManagerHistory(manager, updatedHistory));
                   };
                 };
@@ -1389,12 +1423,29 @@ actor class ManagerCanister() {
                     teamHistoryBuffer.add({
                       seasonId = seasonId;
                       totalPoints = teamPoints;
-                      gameweeks = List.fromArray([mergeManagerSnapshot(manager, gameweek, teamPoints, teamValueQuarterMillions)]);
+                      gameweeks = List.fromArray([mergeManagerSnapshot(manager, gameweek, month, teamPoints, teamPoints, teamPoints, teamValueQuarterMillions)]);
                     });
                     managerBuffer.add(mergeManagerHistory(manager, List.fromArray(Buffer.toArray(teamHistoryBuffer))));
                   };
                   case (existingHistory) {
-                    let updatedHistory = mergeExistingHistory(existingHistory, mergeManagerSnapshot(manager, gameweek, teamPoints, teamValueQuarterMillions), seasonId, gameweek, manager, teamPoints, teamValueQuarterMillions);
+                    
+                    var seasonPoints: Int16 = 0;
+                    var monthlyPoints: Int16 = 0;
+                    for(season in Iter.fromList(existingHistory)){
+                      if(season.seasonId == seasonId){
+                        for(seasonGameweek in Iter.fromList(season.gameweeks)){
+                          seasonPoints := seasonPoints + seasonGameweek.points;
+                          if(seasonGameweek.month == month){
+                            monthlyPoints := monthlyPoints + seasonGameweek.points;
+                          };
+                        }
+                      };
+                    };
+                    monthlyPoints := monthlyPoints + teamPoints;
+                    seasonPoints := seasonPoints + teamPoints;
+
+                    let newSnapshot = mergeManagerSnapshot(manager, gameweek, month, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
+                    let updatedHistory = mergeExistingHistory(existingHistory, newSnapshot, seasonId, gameweek, month, manager, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
                     managerBuffer.add(mergeManagerHistory(manager, updatedHistory));
                   };
                 };
@@ -1415,12 +1466,29 @@ actor class ManagerCanister() {
                     teamHistoryBuffer.add({
                       seasonId = seasonId;
                       totalPoints = teamPoints;
-                      gameweeks = List.fromArray([mergeManagerSnapshot(manager, gameweek, teamPoints, teamValueQuarterMillions)]);
+                      gameweeks = List.fromArray([mergeManagerSnapshot(manager, gameweek, month, teamPoints, teamPoints, teamPoints, teamValueQuarterMillions)]);
                     });
                     managerBuffer.add(mergeManagerHistory(manager, List.fromArray(Buffer.toArray(teamHistoryBuffer))));
                   };
                   case (existingHistory) {
-                    let updatedHistory = mergeExistingHistory(existingHistory, mergeManagerSnapshot(manager, gameweek, teamPoints, teamValueQuarterMillions), seasonId, gameweek, manager, teamPoints, teamValueQuarterMillions);
+                    
+                    var seasonPoints: Int16 = 0;
+                    var monthlyPoints: Int16 = 0;
+                    for(season in Iter.fromList(existingHistory)){
+                      if(season.seasonId == seasonId){
+                        for(seasonGameweek in Iter.fromList(season.gameweeks)){
+                          seasonPoints := seasonPoints + seasonGameweek.points;
+                          if(seasonGameweek.month == month){
+                            monthlyPoints := monthlyPoints + seasonGameweek.points;
+                          };
+                        }
+                      };
+                    };
+                    monthlyPoints := monthlyPoints + teamPoints;
+                    seasonPoints := seasonPoints + teamPoints;
+
+                    let newSnapshot = mergeManagerSnapshot(manager, gameweek, month, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
+                    let updatedHistory = mergeExistingHistory(existingHistory, newSnapshot, seasonId, gameweek, month, manager, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
                     managerBuffer.add(mergeManagerHistory(manager, updatedHistory));
                   };
                 };
@@ -1441,12 +1509,29 @@ actor class ManagerCanister() {
                     teamHistoryBuffer.add({
                       seasonId = seasonId;
                       totalPoints = teamPoints;
-                      gameweeks = List.fromArray([mergeManagerSnapshot(manager, gameweek, teamPoints, teamValueQuarterMillions)]);
+                      gameweeks = List.fromArray([mergeManagerSnapshot(manager, gameweek, month, teamPoints, teamPoints, teamPoints, teamValueQuarterMillions)]);
                     });
                     managerBuffer.add(mergeManagerHistory(manager, List.fromArray(Buffer.toArray(teamHistoryBuffer))));
                   };
                   case (existingHistory) {
-                    let updatedHistory = mergeExistingHistory(existingHistory, mergeManagerSnapshot(manager, gameweek, teamPoints, teamValueQuarterMillions), seasonId, gameweek, manager, teamPoints, teamValueQuarterMillions);
+                    
+                    var seasonPoints: Int16 = 0;
+                    var monthlyPoints: Int16 = 0;
+                    for(season in Iter.fromList(existingHistory)){
+                      if(season.seasonId == seasonId){
+                        for(seasonGameweek in Iter.fromList(season.gameweeks)){
+                          seasonPoints := seasonPoints + seasonGameweek.points;
+                          if(seasonGameweek.month == month){
+                            monthlyPoints := monthlyPoints + seasonGameweek.points;
+                          };
+                        }
+                      };
+                    };
+                    monthlyPoints := monthlyPoints + teamPoints;
+                    seasonPoints := seasonPoints + teamPoints;
+
+                    let newSnapshot = mergeManagerSnapshot(manager, gameweek, month, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
+                    let updatedHistory = mergeExistingHistory(existingHistory, newSnapshot, seasonId, gameweek, month, manager, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
                     managerBuffer.add(mergeManagerHistory(manager, updatedHistory));
                   };
                 };
@@ -1467,12 +1552,29 @@ actor class ManagerCanister() {
                     teamHistoryBuffer.add({
                       seasonId = seasonId;
                       totalPoints = teamPoints;
-                      gameweeks = List.fromArray([mergeManagerSnapshot(manager, gameweek, teamPoints, teamValueQuarterMillions)]);
+                      gameweeks = List.fromArray([mergeManagerSnapshot(manager, gameweek, month, teamPoints, teamPoints, teamPoints, teamValueQuarterMillions)]);
                     });
                     managerBuffer.add(mergeManagerHistory(manager, List.fromArray(Buffer.toArray(teamHistoryBuffer))));
                   };
                   case (existingHistory) {
-                    let updatedHistory = mergeExistingHistory(existingHistory, mergeManagerSnapshot(manager, gameweek, teamPoints, teamValueQuarterMillions), seasonId, gameweek, manager, teamPoints, teamValueQuarterMillions);
+                    
+                    var seasonPoints: Int16 = 0;
+                    var monthlyPoints: Int16 = 0;
+                    for(season in Iter.fromList(existingHistory)){
+                      if(season.seasonId == seasonId){
+                        for(seasonGameweek in Iter.fromList(season.gameweeks)){
+                          seasonPoints := seasonPoints + seasonGameweek.points;
+                          if(seasonGameweek.month == month){
+                            monthlyPoints := monthlyPoints + seasonGameweek.points;
+                          };
+                        }
+                      };
+                    };
+                    monthlyPoints := monthlyPoints + teamPoints;
+                    seasonPoints := seasonPoints + teamPoints;
+
+                    let newSnapshot = mergeManagerSnapshot(manager, gameweek, month, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
+                    let updatedHistory = mergeExistingHistory(existingHistory, newSnapshot, seasonId, gameweek, month, manager, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
                     managerBuffer.add(mergeManagerHistory(manager, updatedHistory));
                   };
                 };
@@ -1493,12 +1595,29 @@ actor class ManagerCanister() {
                     teamHistoryBuffer.add({
                       seasonId = seasonId;
                       totalPoints = teamPoints;
-                      gameweeks = List.fromArray([mergeManagerSnapshot(manager, gameweek, teamPoints, teamValueQuarterMillions)]);
+                      gameweeks = List.fromArray([mergeManagerSnapshot(manager, gameweek, month, teamPoints, teamPoints, teamPoints, teamValueQuarterMillions)]);
                     });
                     managerBuffer.add(mergeManagerHistory(manager, List.fromArray(Buffer.toArray(teamHistoryBuffer))));
                   };
                   case (existingHistory) {
-                    let updatedHistory = mergeExistingHistory(existingHistory, mergeManagerSnapshot(manager, gameweek, teamPoints, teamValueQuarterMillions), seasonId, gameweek, manager, teamPoints, teamValueQuarterMillions);
+                    
+                    var seasonPoints: Int16 = 0;
+                    var monthlyPoints: Int16 = 0;
+                    for(season in Iter.fromList(existingHistory)){
+                      if(season.seasonId == seasonId){
+                        for(seasonGameweek in Iter.fromList(season.gameweeks)){
+                          seasonPoints := seasonPoints + seasonGameweek.points;
+                          if(seasonGameweek.month == month){
+                            monthlyPoints := monthlyPoints + seasonGameweek.points;
+                          };
+                        }
+                      };
+                    };
+                    monthlyPoints := monthlyPoints + teamPoints;
+                    seasonPoints := seasonPoints + teamPoints;
+
+                    let newSnapshot = mergeManagerSnapshot(manager, gameweek, month, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
+                    let updatedHistory = mergeExistingHistory(existingHistory, newSnapshot, seasonId, gameweek, month, manager, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
                     managerBuffer.add(mergeManagerHistory(manager, updatedHistory));
                   };
                 };
@@ -1519,12 +1638,29 @@ actor class ManagerCanister() {
                     teamHistoryBuffer.add({
                       seasonId = seasonId;
                       totalPoints = teamPoints;
-                      gameweeks = List.fromArray([mergeManagerSnapshot(manager, gameweek, teamPoints, teamValueQuarterMillions)]);
+                      gameweeks = List.fromArray([mergeManagerSnapshot(manager, gameweek, month, teamPoints, teamPoints, teamPoints, teamValueQuarterMillions)]);
                     });
                     managerBuffer.add(mergeManagerHistory(manager, List.fromArray(Buffer.toArray(teamHistoryBuffer))));
                   };
                   case (existingHistory) {
-                    let updatedHistory = mergeExistingHistory(existingHistory, mergeManagerSnapshot(manager, gameweek, teamPoints, teamValueQuarterMillions), seasonId, gameweek, manager, teamPoints, teamValueQuarterMillions);
+                    
+                    var seasonPoints: Int16 = 0;
+                    var monthlyPoints: Int16 = 0;
+                    for(season in Iter.fromList(existingHistory)){
+                      if(season.seasonId == seasonId){
+                        for(seasonGameweek in Iter.fromList(season.gameweeks)){
+                          seasonPoints := seasonPoints + seasonGameweek.points;
+                          if(seasonGameweek.month == month){
+                            monthlyPoints := monthlyPoints + seasonGameweek.points;
+                          };
+                        }
+                      };
+                    };
+                    monthlyPoints := monthlyPoints + teamPoints;
+                    seasonPoints := seasonPoints + teamPoints;
+
+                    let newSnapshot = mergeManagerSnapshot(manager, gameweek, month, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
+                    let updatedHistory = mergeExistingHistory(existingHistory, newSnapshot, seasonId, gameweek, month, manager, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
                     managerBuffer.add(mergeManagerHistory(manager, updatedHistory));
                   };
                 };
@@ -1545,12 +1681,30 @@ actor class ManagerCanister() {
                     teamHistoryBuffer.add({
                       seasonId = seasonId;
                       totalPoints = teamPoints;
-                      gameweeks = List.fromArray([mergeManagerSnapshot(manager, gameweek, teamPoints, teamValueQuarterMillions)]);
+                      gameweeks = List.fromArray([mergeManagerSnapshot(manager, gameweek, month, teamPoints, teamPoints, teamPoints, teamValueQuarterMillions)]);
                     });
                     managerBuffer.add(mergeManagerHistory(manager, List.fromArray(Buffer.toArray(teamHistoryBuffer))));
                   };
                   case (existingHistory) {
-                    let updatedHistory = mergeExistingHistory(existingHistory, mergeManagerSnapshot(manager, gameweek, teamPoints, teamValueQuarterMillions), seasonId, gameweek, manager, teamPoints, teamValueQuarterMillions);
+                    
+                    
+                    var seasonPoints: Int16 = 0;
+                    var monthlyPoints: Int16 = 0;
+                    for(season in Iter.fromList(existingHistory)){
+                      if(season.seasonId == seasonId){
+                        for(seasonGameweek in Iter.fromList(season.gameweeks)){
+                          seasonPoints := seasonPoints + seasonGameweek.points;
+                          if(seasonGameweek.month == month){
+                            monthlyPoints := monthlyPoints + seasonGameweek.points;
+                          };
+                        }
+                      };
+                    };
+                    monthlyPoints := monthlyPoints + teamPoints;
+                    seasonPoints := seasonPoints + teamPoints;
+
+                    let newSnapshot = mergeManagerSnapshot(manager, gameweek, month, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
+                    let updatedHistory = mergeExistingHistory(existingHistory, newSnapshot, seasonId, gameweek, month, manager, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
                     managerBuffer.add(mergeManagerHistory(manager, updatedHistory));
                   };
                 };
@@ -1571,12 +1725,29 @@ actor class ManagerCanister() {
                     teamHistoryBuffer.add({
                       seasonId = seasonId;
                       totalPoints = teamPoints;
-                      gameweeks = List.fromArray([mergeManagerSnapshot(manager, gameweek, teamPoints, teamValueQuarterMillions)]);
+                      gameweeks = List.fromArray([mergeManagerSnapshot(manager, gameweek, month, teamPoints, teamPoints, teamPoints, teamValueQuarterMillions)]);
                     });
                     managerBuffer.add(mergeManagerHistory(manager, List.fromArray(Buffer.toArray(teamHistoryBuffer))));
                   };
                   case (existingHistory) {
-                    let updatedHistory = mergeExistingHistory(existingHistory, mergeManagerSnapshot(manager, gameweek, teamPoints, teamValueQuarterMillions), seasonId, gameweek, manager, teamPoints, teamValueQuarterMillions);
+                    
+                    var seasonPoints: Int16 = 0;
+                    var monthlyPoints: Int16 = 0;
+                    for(season in Iter.fromList(existingHistory)){
+                      if(season.seasonId == seasonId){
+                        for(seasonGameweek in Iter.fromList(season.gameweeks)){
+                          seasonPoints := seasonPoints + seasonGameweek.points;
+                          if(seasonGameweek.month == month){
+                            monthlyPoints := monthlyPoints + seasonGameweek.points;
+                          };
+                        }
+                      };
+                    };
+                    monthlyPoints := monthlyPoints + teamPoints;
+                    seasonPoints := seasonPoints + teamPoints;
+
+                    let newSnapshot = mergeManagerSnapshot(manager, gameweek, month, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
+                    let updatedHistory = mergeExistingHistory(existingHistory, newSnapshot, seasonId, gameweek, month, manager, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
                     managerBuffer.add(mergeManagerHistory(manager, updatedHistory));
                   };
                 };
@@ -1598,12 +1769,29 @@ actor class ManagerCanister() {
                     teamHistoryBuffer.add({
                       seasonId = seasonId;
                       totalPoints = teamPoints;
-                      gameweeks = List.fromArray([mergeManagerSnapshot(manager, gameweek, teamPoints, teamValueQuarterMillions)]);
+                      gameweeks = List.fromArray([mergeManagerSnapshot(manager, gameweek, month, teamPoints, teamPoints, teamPoints, teamValueQuarterMillions)]);
                     });
                     managerBuffer.add(mergeManagerHistory(manager, List.fromArray(Buffer.toArray(teamHistoryBuffer))));
                   };
                   case (existingHistory) {
-                    let updatedHistory = mergeExistingHistory(existingHistory, mergeManagerSnapshot(manager, gameweek, teamPoints, teamValueQuarterMillions), seasonId, gameweek, manager, teamPoints, teamValueQuarterMillions);
+                    
+                    var seasonPoints: Int16 = 0;
+                    var monthlyPoints: Int16 = 0;
+                    for(season in Iter.fromList(existingHistory)){
+                      if(season.seasonId == seasonId){
+                        for(seasonGameweek in Iter.fromList(season.gameweeks)){
+                          seasonPoints := seasonPoints + seasonGameweek.points;
+                          if(seasonGameweek.month == month){
+                            monthlyPoints := monthlyPoints + seasonGameweek.points;
+                          };
+                        }
+                      };
+                    };
+                    monthlyPoints := monthlyPoints + teamPoints;
+                    seasonPoints := seasonPoints + teamPoints;
+
+                    let newSnapshot = mergeManagerSnapshot(manager, gameweek, month, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
+                    let updatedHistory = mergeExistingHistory(existingHistory, newSnapshot, seasonId, gameweek, month, manager, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
                     managerBuffer.add(mergeManagerHistory(manager, updatedHistory));
                   };
                 };
@@ -1624,12 +1812,29 @@ actor class ManagerCanister() {
                     teamHistoryBuffer.add({
                       seasonId = seasonId;
                       totalPoints = teamPoints;
-                      gameweeks = List.fromArray([mergeManagerSnapshot(manager, gameweek, teamPoints, teamValueQuarterMillions)]);
+                      gameweeks = List.fromArray([mergeManagerSnapshot(manager, gameweek, month, teamPoints, teamPoints, teamPoints, teamValueQuarterMillions)]);
                     });
                     managerBuffer.add(mergeManagerHistory(manager, List.fromArray(Buffer.toArray(teamHistoryBuffer))));
                   };
                   case (existingHistory) {
-                    let updatedHistory = mergeExistingHistory(existingHistory, mergeManagerSnapshot(manager, gameweek, teamPoints, teamValueQuarterMillions), seasonId, gameweek, manager, teamPoints, teamValueQuarterMillions);
+                    
+                    var seasonPoints: Int16 = 0;
+                    var monthlyPoints: Int16 = 0;
+                    for(season in Iter.fromList(existingHistory)){
+                      if(season.seasonId == seasonId){
+                        for(seasonGameweek in Iter.fromList(season.gameweeks)){
+                          seasonPoints := seasonPoints + seasonGameweek.points;
+                          if(seasonGameweek.month == month){
+                            monthlyPoints := monthlyPoints + seasonGameweek.points;
+                          };
+                        }
+                      };
+                    };
+                    monthlyPoints := monthlyPoints + teamPoints;
+                    seasonPoints := seasonPoints + teamPoints;
+
+                    let newSnapshot = mergeManagerSnapshot(manager, gameweek, month, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
+                    let updatedHistory = mergeExistingHistory(existingHistory, newSnapshot, seasonId, gameweek, month, manager, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
                     managerBuffer.add(mergeManagerHistory(manager, updatedHistory));
                   };
                 };
@@ -1646,7 +1851,7 @@ actor class ManagerCanister() {
     };
   };
 
-  private func mergeManagerSnapshot(manager : T.Manager, gameweek : T.GameweekNumber, points : Int16, teamValueQuarterMillions : Nat16) : T.FantasyTeamSnapshot {
+  private func mergeManagerSnapshot(manager : T.Manager, gameweek : T.GameweekNumber, month: T.CalendarMonth, weeklyPoints : Int16, monthlyPoints : Int16, seasonPoints : Int16, teamValueQuarterMillions : Nat16) : T.FantasyTeamSnapshot {
     return {
       principalId = manager.principalId;
       username = manager.username;
@@ -1679,14 +1884,15 @@ actor class ManagerCanister() {
       history = manager.history;
       profilePicture = manager.profilePicture;
       gameweek = gameweek;
-      points = points;
-      monthlyPoints = manager.monthlyPoints + points;
-      seasonPoints = manager.seasonPoints + points;
+      points = weeklyPoints;
+      monthlyPoints = monthlyPoints;
+      seasonPoints = seasonPoints;
       teamValueQuarterMillions = teamValueQuarterMillions;
+      month = month;
     };
   };
 
-  private func mergeExistingHistory(existingHistory : List.List<T.FantasyTeamSeason>, fantasyTeamSnapshot : T.FantasyTeamSnapshot, seasonId : T.SeasonId, gameweek : T.GameweekNumber, manager : T.Manager, teamPoints : Int16, teamValueQuarterMillions : Nat16) : List.List<T.FantasyTeamSeason> {
+  private func mergeExistingHistory(existingHistory : List.List<T.FantasyTeamSeason>, fantasyTeamSnapshot : T.FantasyTeamSnapshot, seasonId : T.SeasonId, gameweek : T.GameweekNumber, month: T.CalendarMonth, manager : T.Manager, weeklyPoints : Int16, monthlyPoints : Int16, seasonPoints : Int16, teamValueQuarterMillions : Nat16) : List.List<T.FantasyTeamSeason> {
 
     let teamHistoryBuffer = Buffer.fromArray<T.FantasyTeamSeason>([]);
 
@@ -1696,7 +1902,7 @@ actor class ManagerCanister() {
 
         for (snapshot in List.toIter<T.FantasyTeamSnapshot>(season.gameweeks)) {
           if (snapshot.gameweek == gameweek) {
-            snapshotBuffer.add(mergeManagerSnapshot(manager, gameweek, teamPoints, teamValueQuarterMillions));
+            snapshotBuffer.add(mergeManagerSnapshot(manager, gameweek, month, weeklyPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions));
           } else { snapshotBuffer.add(snapshot) };
         };
 
