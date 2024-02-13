@@ -1314,7 +1314,7 @@ actor class ManagerCanister() {
 
     return #ok();
   };
-
+  
   public shared ({ caller }) func updateSnapshotPoints(principalId : Text, seasonId : Nat16, gameweek : Nat8, teamPoints : Int16, teamValueQuarterMillions : Nat16) : () {
 
     assert not Principal.isAnonymous(caller);

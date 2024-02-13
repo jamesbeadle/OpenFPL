@@ -1081,21 +1081,6 @@ module {
       };
     };
 
-    private func updateSnapshotPoints(principalId : Text, seasonId : Nat16, gameweek : Nat8, teamPoints : Int16, teamValueQuarterMillions: Nat16) : async () {
-
-      let managerCanisterId = managerCanisterIds.get(principalId);
-      switch (managerCanisterId) {
-        case (null) {};
-        case (?foundCanisterId) {
-          let manager_canister = actor (foundCanisterId) : actor {
-            updateSnapshotPoints : (T.PrincipalId, T.SeasonId, gameweek : T.GameweekNumber, points : Int16, teamValueQuarterMillions : Nat16) -> async ();
-          };
-
-          await manager_canister.updateSnapshotPoints(principalId, seasonId, gameweek, teamPoints, teamValueQuarterMillions);
-        };
-      };
-    };
-
     public func removePlayerFromTeams(playerId : T.PlayerId, allPlayers : [DTOs.PlayerDTO]) : async () {
       for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
 
