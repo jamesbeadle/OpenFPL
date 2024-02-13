@@ -1818,14 +1818,46 @@ actor class ManagerCanister() {
             };
           };
           if (playerRemoved) {
+            var captainId = manager.captainId;
+            if(captainId == removePlayerId){
+              let highestValuedPlayer = Array.foldLeft<T.PlayerId, ?DTOs.PlayerDTO>(
+                manager.playerIds,
+                null,
+                func(highest, id) : ?DTOs.PlayerDTO {
+                  if (id == removePlayerId or id == 0) { return highest };
+                  let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p) { p.id == id });
+                  switch (highest, player) {
+                    case (null, ?p) {
+                      ?p;
+                    };
+                    case (?h, ?p) {
+                      if (p.valueQuarterMillions > h.valueQuarterMillions) {
+                        ?p;
+                      } else {
+                        ?h;
+                      };
+                    };
+                    case (_, null) {
+                      highest;
+                    };
+                  };
+                },
+              );
+              switch (highestValuedPlayer) {
+                case (?player) {
+                  captainId := player.id;
+                };
+                case null {};
+              };
+            };
             let newManager : T.Manager = {
               principalId = manager.principalId;
               username = manager.username;
               termsAccepted = manager.termsAccepted;
               favouriteClubId = manager.favouriteClubId;
-              bankQuarterMillions = manager.bankQuarterMillions;
+              bankQuarterMillions = manager.bankQuarterMillions + playerValue;
               playerIds = Buffer.toArray(playerIdBuffer);
-              captainId = manager.captainId;
+              captainId = captainId;
               goalGetterGameweek = manager.goalGetterGameweek;
               goalGetterPlayerId = manager.goalGetterPlayerId;
               passMasterGameweek = manager.passMasterGameweek;

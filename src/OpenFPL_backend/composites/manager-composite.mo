@@ -281,6 +281,10 @@ module {
 
           let spent = Array.foldLeft<DTOs.PlayerDTO, Nat16>(playersAdded, 0, func(sumSoFar, x) = sumSoFar + x.valueQuarterMillions);
 
+          if(spent > 1200){
+            return #err(#InvalidTeamError);
+          };
+
           var bonusPlayed = updatedFantasyTeamDTO.goalGetterGameweek == systemState.pickTeamGameweek or updatedFantasyTeamDTO.passMasterGameweek == systemState.pickTeamGameweek or updatedFantasyTeamDTO.noEntryGameweek == systemState.pickTeamGameweek or updatedFantasyTeamDTO.teamBoostGameweek == systemState.pickTeamGameweek or updatedFantasyTeamDTO.safeHandsGameweek == systemState.pickTeamGameweek or updatedFantasyTeamDTO.captainFantasticGameweek == systemState.pickTeamGameweek or updatedFantasyTeamDTO.countrymenGameweek == systemState.pickTeamGameweek or updatedFantasyTeamDTO.prospectsGameweek == systemState.pickTeamGameweek or updatedFantasyTeamDTO.braceBonusGameweek == systemState.pickTeamGameweek or updatedFantasyTeamDTO.hatTrickHeroGameweek == systemState.pickTeamGameweek;
 
           var monthlyBonuses : Nat8 = 2;
@@ -413,14 +417,52 @@ module {
 
               let netSpendQMs : Nat16 = spent - sold;
               let newBankBalance = foundManager.bankQuarterMillions - netSpendQMs;
+              if(newBankBalance > 0){
+                return #err(#InvalidTeamError);
+              };
 
               let transfersAvailable = foundManager.transfersAvailable - Nat8.fromNat(Array.size(playersAdded));
 
               var bonusPlayed = updatedFantasyTeamDTO.goalGetterGameweek == systemState.pickTeamGameweek or updatedFantasyTeamDTO.passMasterGameweek == systemState.pickTeamGameweek or updatedFantasyTeamDTO.noEntryGameweek == systemState.pickTeamGameweek or updatedFantasyTeamDTO.teamBoostGameweek == systemState.pickTeamGameweek or updatedFantasyTeamDTO.safeHandsGameweek == systemState.pickTeamGameweek or updatedFantasyTeamDTO.captainFantasticGameweek == systemState.pickTeamGameweek or updatedFantasyTeamDTO.countrymenGameweek == systemState.pickTeamGameweek or updatedFantasyTeamDTO.prospectsGameweek == systemState.pickTeamGameweek or updatedFantasyTeamDTO.braceBonusGameweek == systemState.pickTeamGameweek or updatedFantasyTeamDTO.hatTrickHeroGameweek == systemState.pickTeamGameweek;
-
+              
               var monthlyBonuses = foundManager.monthlyBonusesAvailable;
               if (bonusPlayed) {
                 monthlyBonuses := monthlyBonuses - 1;
+              };
+
+              if(monthlyBonuses < 0){
+                return #err(#InvalidTeamError);
+              };
+
+              if (updatedFantasyTeamDTO.goalGetterGameweek == systemState.pickTeamGameweek and foundManager.goalGetterGameweek != 0) {
+                return #err(#InvalidTeamError);
+              };
+              if (updatedFantasyTeamDTO.passMasterGameweek == systemState.pickTeamGameweek and foundManager.passMasterGameweek != 0) {
+                return #err(#InvalidTeamError);
+              };
+              if (updatedFantasyTeamDTO.noEntryGameweek == systemState.pickTeamGameweek and foundManager.noEntryGameweek != 0) {
+                return #err(#InvalidTeamError);
+              };
+              if (updatedFantasyTeamDTO.teamBoostGameweek == systemState.pickTeamGameweek and foundManager.teamBoostGameweek != 0) {
+                return #err(#InvalidTeamError);
+              };
+              if (updatedFantasyTeamDTO.safeHandsGameweek == systemState.pickTeamGameweek and foundManager.safeHandsGameweek != 0) {
+                return #err(#InvalidTeamError);
+              };
+              if (updatedFantasyTeamDTO.captainFantasticGameweek == systemState.pickTeamGameweek and foundManager.captainFantasticGameweek != 0) {
+                return #err(#InvalidTeamError);
+              };
+              if (updatedFantasyTeamDTO.countrymenGameweek == systemState.pickTeamGameweek and foundManager.countrymenGameweek != 0) {
+                return #err(#InvalidTeamError);
+              };
+              if (updatedFantasyTeamDTO.prospectsGameweek == systemState.pickTeamGameweek and foundManager.prospectsGameweek != 0) {
+                return #err(#InvalidTeamError);
+              };
+              if (updatedFantasyTeamDTO.braceBonusGameweek == systemState.pickTeamGameweek and foundManager.braceBonusGameweek != 0) {
+                return #err(#InvalidTeamError);
+              };
+              if (updatedFantasyTeamDTO.hatTrickHeroGameweek == systemState.pickTeamGameweek and foundManager.hatTrickHeroGameweek != 0) {
+                return #err(#InvalidTeamError);
               };
 
               return await manager_canister.updateTeamSelection(updatedFantasyTeamDTO, transfersAvailable, monthlyBonuses, newBankBalance);
@@ -789,10 +831,10 @@ module {
           },
         );
         switch (bonusPlayer) {
-          case (null) { return false };
+          case (null) { return true };
           case (?player) {
             if (player.position != #Goalkeeper and player.position != #Defender) {
-              return false;
+              return true;
             };
           };
         };
@@ -809,9 +851,9 @@ module {
           },
         );
         switch (bonusPlayer) {
-          case (null) { return false };
+          case (null) { return true };
           case (?player) {
-            if (player.position != #Goalkeeper) { return false };
+            if (player.position != #Goalkeeper) { return true };
           };
         };
         bonusesPlayed += 1;
