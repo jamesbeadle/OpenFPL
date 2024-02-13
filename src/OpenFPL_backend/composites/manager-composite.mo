@@ -341,10 +341,12 @@ module {
             result := await new_manager_canister.addNewManager(newManager);
             totalManagers := totalManagers + 1;
             activeManagerCanisterId := newManagerCanisterId;
+            managerCanisterIds.put(newManager.principalId, newManagerCanisterId);
             return result;
           } else {
             totalManagers := totalManagers + 1;
             result := await manager_canister.addNewManager(newManager);
+            managerCanisterIds.put(newManager.principalId, activeManagerCanisterId);
           };
         };
         case (?foundCanisterId) {
@@ -542,10 +544,12 @@ module {
             result := await new_manager_canister.addNewManager(newManager);
             totalManagers := totalManagers + 1;
             activeManagerCanisterId := newManagerCanisterId;
+            managerCanisterIds.put(newManager.principalId, newManagerCanisterId);
             return result;
           } else {
             totalManagers := totalManagers + 1;
             result := await manager_canister.addNewManager(newManager);
+            managerCanisterIds.put(newManager.principalId, activeManagerCanisterId);
             return result;
           };
         };
@@ -647,12 +651,14 @@ module {
             result := await new_manager_canister.addNewManager(newManager);
             totalManagers := totalManagers + 1;
             activeManagerCanisterId := newManagerCanisterId;
+            managerCanisterIds.put(newManager.principalId, newManagerCanisterId);
             return result;
           } else {
             Debug.print("Adding manager to existing canister");
             Debug.print(debug_show newManager);
             totalManagers := totalManagers + 1;
             result := await manager_canister.addNewManager(newManager);
+            managerCanisterIds.put(newManager.principalId, activeManagerCanisterId);
             return result;
           };
         };
@@ -752,10 +758,12 @@ module {
             result := await new_manager_canister.addNewManager(newManager);
             totalManagers := totalManagers + 1;
             activeManagerCanisterId := newManagerCanisterId;
+            managerCanisterIds.put(newManager.principalId, newManagerCanisterId);
             return result;
           } else {
             totalManagers := totalManagers + 1;
             result := await manager_canister.addNewManager(newManager);
+            managerCanisterIds.put(newManager.principalId, activeManagerCanisterId);
             return result;
           };
         };

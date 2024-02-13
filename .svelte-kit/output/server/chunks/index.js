@@ -3512,7 +3512,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "amit8x"
+  version_hash: "8p15f9"
 };
 async function get_hooks() {
   return {};
@@ -6146,10 +6146,10 @@ function createUserStore() {
     const storedData = localStorage.getItem("user_profile_data");
     if (storedData) {
       const profileData = JSON.parse(storedData);
-      if (profileData && typeof profileData.profilePicture === "string") {
-        profileData.profilePicture = base64ToUint8Array(
-          profileData.profilePicture
-        );
+      if (typeof profileData.profilePicture === "string") {
+        profileData.profilePicture = [
+          base64ToUint8Array(profileData.profilePicture)
+        ];
       }
       return profileData;
     }
@@ -6168,6 +6168,8 @@ function createUserStore() {
         define_process_env_default$4.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       let getProfileResponse = await identityActor.getProfile();
+      console.log("getProfileResponse");
+      console.log(getProfileResponse);
       let error = isError(getProfileResponse);
       if (error) {
         if (getProfileResponse.err.NotFound !== void 0) {
@@ -6221,11 +6223,13 @@ function createUserStore() {
   }
   async function updateUsername(username) {
     try {
+      console.log(define_process_env_default$4.OPENFPL_BACKEND_CANISTER_ID);
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
         define_process_env_default$4.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.updateUsername(username);
+      console.log(result);
       if (isError(result)) {
         console.error("Error updating username");
         return;
@@ -6243,7 +6247,8 @@ function createUserStore() {
         authStore,
         define_process_env_default$4.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      const result = await identityActor.updateFavouriteTeam(favouriteTeamId);
+      const result = await identityActor.updateFavouriteClub(favouriteTeamId);
+      console.log(result);
       if (isError(result)) {
         console.error("Error updating favourite team");
         return;

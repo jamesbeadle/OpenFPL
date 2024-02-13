@@ -53,15 +53,16 @@
 
   let unsubscribeUserProfile: () => void;
 
-  $: profileSrc = $profile?.profilePicture?.length > 0
-  ? URL.createObjectURL(
-      new Blob([
-        $profile.profilePicture[0] instanceof Uint8Array
-          ? $profile.profilePicture[0]
-          : new Uint8Array($profile.profilePicture[0] || [])
-      ])
-    )
-  : "/profile_placeholder.png";
+  $: profileSrc =
+    $profile?.profilePicture?.length > 0
+      ? URL.createObjectURL(
+          new Blob([
+            $profile.profilePicture[0] instanceof Uint8Array
+              ? $profile.profilePicture[0]
+              : new Uint8Array($profile.profilePicture[0] || []),
+          ])
+        )
+      : "/profile_placeholder.png";
 
   $: gameweek = $systemStore?.calculationGameweek ?? 1;
 
