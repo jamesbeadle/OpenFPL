@@ -1656,11 +1656,7 @@ actor class ManagerCanister() {
     return #ok();
   };
 
-  public shared ({ caller }) func updateSnapshotPoints(principalId : Text, seasonId : Nat16, gameweek : T.GameweekNumber, month: T.CalendarMonth, teamPoints : Int16, teamValueQuarterMillions : Nat16) : () {
-
-    assert not Principal.isAnonymous(caller);
-    let principalId = Principal.toText(caller);
-    assert principalId == main_canister_id;
+  private func updateSnapshotPoints(principalId : Text, seasonId : Nat16, gameweek : T.GameweekNumber, month: T.CalendarMonth, teamPoints : Int16, teamValueQuarterMillions : Nat16) : () {
 
     let managerBuffer = Buffer.fromArray<T.Manager>([]);
     let managerGroupIndex = managerGroupIndexes.get(principalId);
