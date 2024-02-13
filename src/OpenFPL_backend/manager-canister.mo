@@ -1023,7 +1023,7 @@ actor class ManagerCanister() {
   };
 
 //TODO: NEEDS SEASON ID?
-  public shared ({ caller }) func getGameweek38Snapshots() : async [T.FantasyTeamSnapshot] {
+  public shared ({ caller }) func getGameweek38Snapshots(seasonId: T.SeasonId) : async [T.FantasyTeamSnapshot] {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == main_canister_id;
@@ -1033,8 +1033,14 @@ actor class ManagerCanister() {
       switch (index) {
         case 0 {
           for (manager in Iter.fromArray(managerGroup2)) {
-            let gameweek38Snapshot = List.foldLeft<T.FantasyTeamSeason, ?T.FantasyTeamSnapshot>(
+            let currentSeason = List.filter<T.FantasyTeamSeason>(
               manager.history,
+              func(season : T.FantasyTeamSeason) : Bool {
+                return season.seasonId == seasonId;
+              },
+            );
+            let gameweek38Snapshot = List.foldLeft<T.FantasyTeamSeason, ?T.FantasyTeamSnapshot>(
+              currentSeason,
               null,
               getGameweek38,
             );
@@ -2680,12 +2686,12 @@ actor class ManagerCanister() {
     return Buffer.toArray(managerIdBuffer);
   };
 
-  public shared ({ caller }) func getMostValuableTeams (players: [DTOs.PlayerDTO]) : async [T.FantasyTeamSnapshot]{
+  public shared ({ caller }) func getMostValuableTeams (players: [DTOs.PlayerDTO], seasonId: T.SeasonId) : async [T.FantasyTeamSnapshot]{
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == main_canister_id;
 
-    let allFinalGameweekSnapshots = await getGameweek38Snapshots();
+    let allFinalGameweekSnapshots = await getGameweek38Snapshots(seasonId);
 
     var teamValues : TrieMap.TrieMap<T.PrincipalId, T.FantasyTeamSnapshot> = TrieMap.TrieMap<T.PrincipalId, T.FantasyTeamSnapshot>(Text.equal, Text.hash);
 

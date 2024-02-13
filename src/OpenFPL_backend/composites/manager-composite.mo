@@ -1465,12 +1465,12 @@ module {
       for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
         let manager_canister = actor (canisterId) : actor {
           getGameweek38Snapshots : () -> async [T.FantasyTeamSnapshot];
-          getMostValuableTeams : () -> async [T.FantasyTeamSnapshot];
+          getMostValuableTeams : T.SeasonId -> async [T.FantasyTeamSnapshot];
         };
 
         let gameweek38Snapshots = await manager_canister.getGameweek38Snapshots();
 
-        let mostValuableTeams = await manager_canister.getMostValuableTeams();
+        let mostValuableTeams = await manager_canister.getMostValuableTeams(currentSeason);
         mostValuableTeamsBuffer.append(Buffer.fromArray(mostValuableTeams));
       };
 

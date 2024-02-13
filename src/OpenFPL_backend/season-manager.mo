@@ -49,7 +49,6 @@ module {
 
     var rewardPools : TrieMap.TrieMap<T.SeasonId, T.RewardPool> = TrieMap.TrieMap<T.SeasonId, T.RewardPool>(Utilities.eqNat16, Utilities.hashNat16);
 
-    //TODO BACKUP
     private var systemState : T.SystemState = {
       calculationGameweek = 1;
       calculationMonth = 8;
