@@ -310,12 +310,18 @@ module {
       };
     };
 
-    //TODO: Needs to calculate with merge
     public func calculateLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth, uniqueManagerCanisterIds : [T.CanisterId]) : async () {
 
       let fantasyTeamSnapshotsBuffer = Buffer.fromArray<T.FantasyTeamSnapshot>([]);
+      
+      for (canisterId in Iter.fromArray(uniqueManagerCanisterIds)) {
+        let manager_canister = actor (canisterId) : actor {
+          getSnapshots : (seasonId : T.SeasonId, gameweek : T.GameweekNumber) -> async [T.FantasyTeamSnapshot];
+        };
 
-      //get all fantasy team snapshots
+        let snapshots = await manager_canister.getSnapshots(seasonId, gameweek);
+        fantasyTeamSnapshotsBuffer.append(Buffer.fromArray(snapshots));
+      };
       
       await calculateWeeklyLeaderboards(seasonId, gameweek, Buffer.toArray(fantasyTeamSnapshotsBuffer));
       await calculateMonthlyLeaderboards(seasonId, gameweek, month, Buffer.toArray(fantasyTeamSnapshotsBuffer));

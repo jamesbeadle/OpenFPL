@@ -1022,6 +1022,347 @@ actor class ManagerCanister() {
     return Buffer.toArray(allManagersBuffer);
   };
 
+  public shared ({ caller }) func getSnapshots(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async [T.FantasyTeamSnapshot] {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == main_canister_id;
+
+    let allManagersBuffer = Buffer.fromArray<T.FantasyTeamSnapshot>([]);
+    for (index in Iter.range(0, 11)) {
+      switch (index) {
+        case 0 {
+          for (manager in Iter.fromArray(managerGroup2)) {
+            let currentSeason = List.find<T.FantasyTeamSeason>(
+              manager.history,
+              func(season : T.FantasyTeamSeason) : Bool {
+                return season.seasonId == seasonId;
+              },
+            );
+            switch (currentSeason) {
+              case (null) {};
+              case (?foundSeason) {
+                let foundSnapshot = List.find<T.FantasyTeamSnapshot>(
+                  foundSeason.gameweeks,
+                  func(foundGameweek : T.FantasyTeamSnapshot) : Bool {
+                    return foundGameweek.gameweek == gameweek;
+                  },
+                );
+                switch(foundSnapshot){
+                  case (null){};
+                  case (?snapshot){
+                    allManagersBuffer.add(snapshot);
+                  }
+                }
+              };
+            };
+          };
+        };
+        case 1 {
+          for (manager in Iter.fromArray(managerGroup2)) {
+            let currentSeason = List.find<T.FantasyTeamSeason>(
+              manager.history,
+              func(season : T.FantasyTeamSeason) : Bool {
+                return season.seasonId == seasonId;
+              },
+            );
+            switch (currentSeason) {
+              case (null) {};
+              case (?foundSeason) {
+                let foundSnapshot = List.find<T.FantasyTeamSnapshot>(
+                  foundSeason.gameweeks,
+                  func(foundGameweek : T.FantasyTeamSnapshot) : Bool {
+                    return foundGameweek.gameweek == gameweek;
+                  },
+                );
+                switch(foundSnapshot){
+                  case (null){};
+                  case (?snapshot){
+                    allManagersBuffer.add(snapshot);
+                  }
+                }
+              };
+            };
+          };
+        };
+        case 2 {
+          for (manager in Iter.fromArray(managerGroup3)) {
+            let currentSeason = List.find<T.FantasyTeamSeason>(
+              manager.history,
+              func(season : T.FantasyTeamSeason) : Bool {
+                return season.seasonId == seasonId;
+              },
+            );
+            switch (currentSeason) {
+              case (null) {};
+              case (?foundSeason) {
+                let foundSnapshot = List.find<T.FantasyTeamSnapshot>(
+                  foundSeason.gameweeks,
+                  func(foundGameweek : T.FantasyTeamSnapshot) : Bool {
+                    return foundGameweek.gameweek == gameweek;
+                  },
+                );
+                switch(foundSnapshot){
+                  case (null){};
+                  case (?snapshot){
+                    allManagersBuffer.add(snapshot);
+                  }
+                }
+              };
+            };
+          };
+        };
+        case 3 {
+          for (manager in Iter.fromArray(managerGroup4)) {
+            let currentSeason = List.find<T.FantasyTeamSeason>(
+              manager.history,
+              func(season : T.FantasyTeamSeason) : Bool {
+                return season.seasonId == seasonId;
+              },
+            );
+            switch (currentSeason) {
+              case (null) {};
+              case (?foundSeason) {
+                let foundSnapshot = List.find<T.FantasyTeamSnapshot>(
+                  foundSeason.gameweeks,
+                  func(foundGameweek : T.FantasyTeamSnapshot) : Bool {
+                    return foundGameweek.gameweek == gameweek;
+                  },
+                );
+                switch(foundSnapshot){
+                  case (null){};
+                  case (?snapshot){
+                    allManagersBuffer.add(snapshot);
+                  }
+                }
+              };
+            };
+          };
+        };
+        case 4 {
+          for (manager in Iter.fromArray(managerGroup5)) {
+            let currentSeason = List.find<T.FantasyTeamSeason>(
+              manager.history,
+              func(season : T.FantasyTeamSeason) : Bool {
+                return season.seasonId == seasonId;
+              },
+            );
+            switch (currentSeason) {
+              case (null) {};
+              case (?foundSeason) {
+                let foundSnapshot = List.find<T.FantasyTeamSnapshot>(
+                  foundSeason.gameweeks,
+                  func(foundGameweek : T.FantasyTeamSnapshot) : Bool {
+                    return foundGameweek.gameweek == gameweek;
+                  },
+                );
+                switch(foundSnapshot){
+                  case (null){};
+                  case (?snapshot){
+                    allManagersBuffer.add(snapshot);
+                  }
+                }
+              };
+            };
+          };
+        };
+        case 5 {
+          for (manager in Iter.fromArray(managerGroup6)) {
+            let currentSeason = List.find<T.FantasyTeamSeason>(
+              manager.history,
+              func(season : T.FantasyTeamSeason) : Bool {
+                return season.seasonId == seasonId;
+              },
+            );
+            switch (currentSeason) {
+              case (null) {};
+              case (?foundSeason) {
+                let foundSnapshot = List.find<T.FantasyTeamSnapshot>(
+                  foundSeason.gameweeks,
+                  func(foundGameweek : T.FantasyTeamSnapshot) : Bool {
+                    return foundGameweek.gameweek == gameweek;
+                  },
+                );
+                switch(foundSnapshot){
+                  case (null){};
+                  case (?snapshot){
+                    allManagersBuffer.add(snapshot);
+                  }
+                }
+              };
+            };
+          };
+        };
+        case 6 {
+          for (manager in Iter.fromArray(managerGroup7)) {
+            let currentSeason = List.find<T.FantasyTeamSeason>(
+              manager.history,
+              func(season : T.FantasyTeamSeason) : Bool {
+                return season.seasonId == seasonId;
+              },
+            );
+            switch (currentSeason) {
+              case (null) {};
+              case (?foundSeason) {
+                let foundSnapshot = List.find<T.FantasyTeamSnapshot>(
+                  foundSeason.gameweeks,
+                  func(foundGameweek : T.FantasyTeamSnapshot) : Bool {
+                    return foundGameweek.gameweek == gameweek;
+                  },
+                );
+                switch(foundSnapshot){
+                  case (null){};
+                  case (?snapshot){
+                    allManagersBuffer.add(snapshot);
+                  }
+                }
+              };
+            };
+          };
+        };
+        case 7 {
+          for (manager in Iter.fromArray(managerGroup8)) {
+            let currentSeason = List.find<T.FantasyTeamSeason>(
+              manager.history,
+              func(season : T.FantasyTeamSeason) : Bool {
+                return season.seasonId == seasonId;
+              },
+            );
+            switch (currentSeason) {
+              case (null) {};
+              case (?foundSeason) {
+                let foundSnapshot = List.find<T.FantasyTeamSnapshot>(
+                  foundSeason.gameweeks,
+                  func(foundGameweek : T.FantasyTeamSnapshot) : Bool {
+                    return foundGameweek.gameweek == gameweek;
+                  },
+                );
+                switch(foundSnapshot){
+                  case (null){};
+                  case (?snapshot){
+                    allManagersBuffer.add(snapshot);
+                  }
+                }
+              };
+            };
+          };
+        };
+        case 8 {
+          for (manager in Iter.fromArray(managerGroup9)) {
+            let currentSeason = List.find<T.FantasyTeamSeason>(
+              manager.history,
+              func(season : T.FantasyTeamSeason) : Bool {
+                return season.seasonId == seasonId;
+              },
+            );
+            switch (currentSeason) {
+              case (null) {};
+              case (?foundSeason) {
+                let foundSnapshot = List.find<T.FantasyTeamSnapshot>(
+                  foundSeason.gameweeks,
+                  func(foundGameweek : T.FantasyTeamSnapshot) : Bool {
+                    return foundGameweek.gameweek == gameweek;
+                  },
+                );
+                switch(foundSnapshot){
+                  case (null){};
+                  case (?snapshot){
+                    allManagersBuffer.add(snapshot);
+                  }
+                }
+              };
+            };
+          };
+        };
+        case 9 {
+          for (manager in Iter.fromArray(managerGroup10)) {
+            let currentSeason = List.find<T.FantasyTeamSeason>(
+              manager.history,
+              func(season : T.FantasyTeamSeason) : Bool {
+                return season.seasonId == seasonId;
+              },
+            );
+            switch (currentSeason) {
+              case (null) {};
+              case (?foundSeason) {
+                let foundSnapshot = List.find<T.FantasyTeamSnapshot>(
+                  foundSeason.gameweeks,
+                  func(foundGameweek : T.FantasyTeamSnapshot) : Bool {
+                    return foundGameweek.gameweek == gameweek;
+                  },
+                );
+                switch(foundSnapshot){
+                  case (null){};
+                  case (?snapshot){
+                    allManagersBuffer.add(snapshot);
+                  }
+                }
+              };
+            };
+          };
+        };
+        case 10 {
+          for (manager in Iter.fromArray(managerGroup11)) {
+            let currentSeason = List.find<T.FantasyTeamSeason>(
+              manager.history,
+              func(season : T.FantasyTeamSeason) : Bool {
+                return season.seasonId == seasonId;
+              },
+            );
+            switch (currentSeason) {
+              case (null) {};
+              case (?foundSeason) {
+                let foundSnapshot = List.find<T.FantasyTeamSnapshot>(
+                  foundSeason.gameweeks,
+                  func(foundGameweek : T.FantasyTeamSnapshot) : Bool {
+                    return foundGameweek.gameweek == gameweek;
+                  },
+                );
+                switch(foundSnapshot){
+                  case (null){};
+                  case (?snapshot){
+                    allManagersBuffer.add(snapshot);
+                  }
+                }
+              };
+            };
+          };
+        };
+        case 11 {
+          for (manager in Iter.fromArray(managerGroup12)) {
+            let currentSeason = List.find<T.FantasyTeamSeason>(
+              manager.history,
+              func(season : T.FantasyTeamSeason) : Bool {
+                return season.seasonId == seasonId;
+              },
+            );
+            switch (currentSeason) {
+              case (null) {};
+              case (?foundSeason) {
+                let foundSnapshot = List.find<T.FantasyTeamSnapshot>(
+                  foundSeason.gameweeks,
+                  func(foundGameweek : T.FantasyTeamSnapshot) : Bool {
+                    return foundGameweek.gameweek == gameweek;
+                  },
+                );
+                switch(foundSnapshot){
+                  case (null){};
+                  case (?snapshot){
+                    allManagersBuffer.add(snapshot);
+                  }
+                }
+              };
+            };
+          };
+        };
+        case _ {
+
+        };
+
+      };
+    };
+    return Buffer.toArray(allManagersBuffer);
+  };
+
   public shared ({ caller }) func getGameweek38Snapshots(seasonId: T.SeasonId) : async [T.FantasyTeamSnapshot] {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
