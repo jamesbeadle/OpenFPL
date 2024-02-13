@@ -2103,7 +2103,7 @@ actor class ManagerCanister() {
     return managers;
   };
 
-  public shared ({caller}) func calculateFantasyTeamScores(allPlayersList : [(T.PlayerId, DTOs.PlayerScoreDTO)], allPlayers: [DTOs.PlayerDTO], seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async (){
+  public shared ({caller}) func calculateFantasyTeamScores(allPlayersList : [(T.PlayerId, DTOs.PlayerScoreDTO)], allPlayers: [DTOs.PlayerDTO], seasonId : T.SeasonId, gameweek : T.GameweekNumber, month: T.CalendarMonth) : async (){
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == main_canister_id;
@@ -2251,7 +2251,7 @@ actor class ManagerCanister() {
 
                 let totalTeamValue = Array.foldLeft<Nat16, Nat16>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
                
-                updateSnapshotPoints(value.principalId, seasonId, gameweek, totalTeamPoints, totalTeamValue);
+                updateSnapshotPoints(value.principalId, seasonId, gameweek, month, totalTeamPoints, totalTeamValue);
               };
             };
           };

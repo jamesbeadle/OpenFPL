@@ -1066,7 +1066,7 @@ module {
       return (sizeInKB <= 0 or sizeInKB > 500);
     };
 
-    public func calculateFantasyTeamScores(allPlayersList : [(T.PlayerId, DTOs.PlayerScoreDTO)], seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async () {
+    public func calculateFantasyTeamScores(allPlayersList : [(T.PlayerId, DTOs.PlayerScoreDTO)], seasonId : T.SeasonId, gameweek : T.GameweekNumber, month: T.CalendarMonth) : async () {
       var allPlayers = TrieMap.TrieMap<T.PlayerId, DTOs.PlayerScoreDTO>(Utilities.eqNat16, Utilities.hashNat16);
       for ((key, value) in Iter.fromArray(allPlayersList)) {
         allPlayers.put(key, value);
@@ -1074,10 +1074,10 @@ module {
 
       for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
         let manager_canister = actor (canisterId) : actor {
-          calculateFantasyTeamScores : (allPlayersList : [(T.PlayerId, DTOs.PlayerScoreDTO)], seasonId : T.SeasonId, gameweek : T.GameweekNumber) -> async ();
+          calculateFantasyTeamScores : (allPlayersList : [(T.PlayerId, DTOs.PlayerScoreDTO)], seasonId : T.SeasonId, gameweek : T.GameweekNumber, month: T.CalendarMonth) -> async ();
         };
 
-        return await manager_canister.calculateFantasyTeamScores(allPlayersList, seasonId, gameweek);
+        return await manager_canister.calculateFantasyTeamScores(allPlayersList, seasonId, gameweek, month);
       };
     };
 
