@@ -1583,6 +1583,11 @@ actor class ManagerCanister() {
   };
 
   public shared ({ caller }) func addNewManager(newManager : T.Manager) : async Result.Result<(), T.Error> {
+    Debug.print("add new manager");
+    Debug.print(debug_show newManager);
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == main_canister_id;
 
     var managerBuffer = Buffer.fromArray<T.Manager>([]);
     //for the current manager group with space
@@ -1654,6 +1659,7 @@ actor class ManagerCanister() {
     if (managerGroupCount > 1000) {
       activeGroupIndex := activeGroupIndex + 1;
     };
+    totalManagers := totalManagers + 1;
 
     return #ok();
   };

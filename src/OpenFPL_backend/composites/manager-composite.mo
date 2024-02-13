@@ -339,11 +339,13 @@ module {
               addNewManager : (manager : T.Manager) -> async Result.Result<(), T.Error>;
             };
             result := await new_manager_canister.addNewManager(newManager);
+            totalManagers := totalManagers + 1;
+            activeManagerCanisterId := newManagerCanisterId;
+            return result;
           } else {
+            totalManagers := totalManagers + 1;
             result := await manager_canister.addNewManager(newManager);
           };
-          totalManagers := totalManagers + 1;
-
         };
         case (?foundCanisterId) {
           let manager_canister = actor (foundCanisterId) : actor {
@@ -538,10 +540,14 @@ module {
               addNewManager : (manager : T.Manager) -> async Result.Result<(), T.Error>;
             };
             result := await new_manager_canister.addNewManager(newManager);
+            totalManagers := totalManagers + 1;
+            activeManagerCanisterId := newManagerCanisterId;
+            return result;
           } else {
+            totalManagers := totalManagers + 1;
             result := await manager_canister.addNewManager(newManager);
+            return result;
           };
-          totalManagers := totalManagers + 1;
         };
         case (?foundCanisterId) {
 
@@ -565,6 +571,11 @@ module {
 
     public func updateFavouriteClub(principalId : T.PrincipalId, favouriteClubId : T.ClubId, systemState : T.SystemState, activeClubs : [T.Club]) : async Result.Result<(), T.Error> {
 
+      Debug.print("Manager Composite: Updating Favourite Club");
+      Debug.print(debug_show principalId);
+      Debug.print(debug_show favouriteClubId);
+      Debug.print(debug_show systemState);
+      Debug.print(debug_show activeClubs);
       let isClubActive = Array.find(
         activeClubs,
         func(club : T.Club) : Bool {
@@ -634,10 +645,16 @@ module {
               addNewManager : (manager : T.Manager) -> async Result.Result<(), T.Error>;
             };
             result := await new_manager_canister.addNewManager(newManager);
+            totalManagers := totalManagers + 1;
+            activeManagerCanisterId := newManagerCanisterId;
+            return result;
           } else {
+            Debug.print("Adding manager to existing canister");
+            Debug.print(debug_show newManager);
+            totalManagers := totalManagers + 1;
             result := await manager_canister.addNewManager(newManager);
+            return result;
           };
-          totalManagers := totalManagers + 1;
         };
         case (?foundCanisterId) {
 
@@ -733,10 +750,14 @@ module {
               addNewManager : (manager : T.Manager) -> async Result.Result<(), T.Error>;
             };
             result := await new_manager_canister.addNewManager(newManager);
+            totalManagers := totalManagers + 1;
+            activeManagerCanisterId := newManagerCanisterId;
+            return result;
           } else {
+            totalManagers := totalManagers + 1;
             result := await manager_canister.addNewManager(newManager);
+            return result;
           };
-          totalManagers := totalManagers + 1;
         };
         case (?foundCanisterId) {
 
@@ -756,8 +777,6 @@ module {
 
       return #err(#NotFound);
     };
-
-    //Should be good:
 
     public func isUsernameValid(username : Text) : Bool {
       if (Text.size(username) < 3 or Text.size(username) > 20) {
