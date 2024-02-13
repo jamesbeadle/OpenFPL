@@ -381,7 +381,7 @@ module {
           currentMonth := 8;
           currentGameweek := 1;
           setTransferWindowTimers();
-          await managerComposite.resetFantasyTeams();
+          await managerComposite.resetFantasyTeams(currentSeasonId);
           await calculateRewardPool(currentSeasonId);
         };
 
