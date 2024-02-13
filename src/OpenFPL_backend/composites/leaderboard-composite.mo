@@ -357,7 +357,6 @@ module {
       weeklyLeaderboardCanisters := List.append(weeklyLeaderboardCanisters, List.fromArray([gameweekCanisterInfo]));
     };
 
-//TODO: Need to use month being stored with snapshot
     private func calculateMonthlyLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth, snapshots: [T.FantasyTeamSnapshot]) : async () {
       let clubGroup = groupByTeam(snapshots);
       
