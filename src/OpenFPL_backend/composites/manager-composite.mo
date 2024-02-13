@@ -281,7 +281,7 @@ module {
 
           let spent = Array.foldLeft<DTOs.PlayerDTO, Nat16>(playersAdded, 0, func(sumSoFar, x) = sumSoFar + x.valueQuarterMillions);
 
-          if(spent > 1200){
+          if (spent > 1200) {
             return #err(#InvalidTeamError);
           };
 
@@ -417,20 +417,20 @@ module {
 
               let netSpendQMs : Nat16 = spent - sold;
               let newBankBalance = foundManager.bankQuarterMillions - netSpendQMs;
-              if(newBankBalance > 0){
+              if (newBankBalance > 0) {
                 return #err(#InvalidTeamError);
               };
 
               let transfersAvailable = foundManager.transfersAvailable - Nat8.fromNat(Array.size(playersAdded));
 
               var bonusPlayed = updatedFantasyTeamDTO.goalGetterGameweek == systemState.pickTeamGameweek or updatedFantasyTeamDTO.passMasterGameweek == systemState.pickTeamGameweek or updatedFantasyTeamDTO.noEntryGameweek == systemState.pickTeamGameweek or updatedFantasyTeamDTO.teamBoostGameweek == systemState.pickTeamGameweek or updatedFantasyTeamDTO.safeHandsGameweek == systemState.pickTeamGameweek or updatedFantasyTeamDTO.captainFantasticGameweek == systemState.pickTeamGameweek or updatedFantasyTeamDTO.countrymenGameweek == systemState.pickTeamGameweek or updatedFantasyTeamDTO.prospectsGameweek == systemState.pickTeamGameweek or updatedFantasyTeamDTO.braceBonusGameweek == systemState.pickTeamGameweek or updatedFantasyTeamDTO.hatTrickHeroGameweek == systemState.pickTeamGameweek;
-              
+
               var monthlyBonuses = foundManager.monthlyBonusesAvailable;
               if (bonusPlayed) {
                 monthlyBonuses := monthlyBonuses - 1;
               };
 
-              if(monthlyBonuses < 0){
+              if (monthlyBonuses < 0) {
                 return #err(#InvalidTeamError);
               };
 
@@ -548,7 +548,7 @@ module {
           let manager_canister = actor (foundCanisterId) : actor {
             updateUsername : (dto : DTOs.UpdateUsernameDTO) -> async Result.Result<(), T.Error>;
           };
-          let dto: DTOs.UpdateUsernameDTO = {
+          let dto : DTOs.UpdateUsernameDTO = {
             principalId = principalId;
             username = updatedUsername;
           };
@@ -1066,7 +1066,7 @@ module {
       return (sizeInKB <= 0 or sizeInKB > 500);
     };
 
-    public func calculateFantasyTeamScores(allPlayersList : [(T.PlayerId, DTOs.PlayerScoreDTO)], seasonId : T.SeasonId, gameweek : T.GameweekNumber, month: T.CalendarMonth) : async () {
+    public func calculateFantasyTeamScores(allPlayersList : [(T.PlayerId, DTOs.PlayerScoreDTO)], seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) : async () {
       var allPlayers = TrieMap.TrieMap<T.PlayerId, DTOs.PlayerScoreDTO>(Utilities.eqNat16, Utilities.hashNat16);
       for ((key, value) in Iter.fromArray(allPlayersList)) {
         allPlayers.put(key, value);
@@ -1074,7 +1074,7 @@ module {
 
       for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
         let manager_canister = actor (canisterId) : actor {
-          calculateFantasyTeamScores : (allPlayersList : [(T.PlayerId, DTOs.PlayerScoreDTO)], seasonId : T.SeasonId, gameweek : T.GameweekNumber, month: T.CalendarMonth) -> async ();
+          calculateFantasyTeamScores : (allPlayersList : [(T.PlayerId, DTOs.PlayerScoreDTO)], seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) -> async ();
         };
 
         return await manager_canister.calculateFantasyTeamScores(allPlayersList, seasonId, gameweek, month);
@@ -1092,11 +1092,11 @@ module {
       };
     };
 
-    public func snapshotFantasyTeams(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month: T.CalendarMonth, players : [DTOs.PlayerDTO]) : async () {
+    public func snapshotFantasyTeams(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth, players : [DTOs.PlayerDTO]) : async () {
       for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
 
         let manager_canister = actor (canisterId) : actor {
-          snapshotFantasyTeams : (seasonId : T.SeasonId, gameweek : T.GameweekNumber, month: T.CalendarMonth) -> async ();
+          snapshotFantasyTeams : (seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) -> async ();
         };
 
         await manager_canister.snapshotFantasyTeams(seasonId, gameweek, month);
@@ -1125,7 +1125,7 @@ module {
       };
     };
 
-    public func resetFantasyTeams(seasonId: T.SeasonId) : async () {
+    public func resetFantasyTeams(seasonId : T.SeasonId) : async () {
       for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
 
         let manager_canister = actor (canisterId) : actor {

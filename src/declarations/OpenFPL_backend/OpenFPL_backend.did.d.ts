@@ -98,6 +98,7 @@ export type Error =
   | { InvalidTeamError: null };
 export interface FantasyTeamSnapshot {
   playerIds: Uint16Array | number[];
+  month: CalendarMonth;
   teamValueQuarterMillions: number;
   countrymenCountryId: CountryId;
   username: string;
@@ -109,6 +110,7 @@ export interface FantasyTeamSnapshot {
   countrymenGameweek: GameweekNumber;
   bankQuarterMillions: number;
   noEntryPlayerId: PlayerId;
+  monthlyPoints: number;
   safeHandsPlayerId: PlayerId;
   braceBonusGameweek: GameweekNumber;
   favouriteClubId: ClubId;
@@ -117,6 +119,7 @@ export interface FantasyTeamSnapshot {
   goalGetterGameweek: GameweekNumber;
   captainFantasticPlayerId: PlayerId;
   gameweek: GameweekNumber;
+  seasonPoints: number;
   transferWindowGameweek: GameweekNumber;
   noEntryGameweek: GameweekNumber;
   prospectsGameweek: GameweekNumber;

@@ -147,7 +147,7 @@ module Types {
     monthlyPoints : Int16;
     seasonPoints : Int16;
     transferWindowGameweek : GameweekNumber;
-    month: CalendarMonth;
+    month : CalendarMonth;
   };
 
   public type Season = {

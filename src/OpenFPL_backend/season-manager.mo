@@ -168,7 +168,7 @@ module {
       return playerComposite.getPlayerDetailsForGameweek(seasonId, gameweek);
     };
 
-    public func getPlayerDetails(playerId : T.PlayerId, seasonId : T.SeasonId) : DTOs.PlayerDetailDTO{
+    public func getPlayerDetails(playerId : T.PlayerId, seasonId : T.SeasonId) : DTOs.PlayerDetailDTO {
       return playerComposite.getPlayerDetails(playerId, seasonId);
     };
 

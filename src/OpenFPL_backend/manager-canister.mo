@@ -1022,7 +1022,7 @@ actor class ManagerCanister() {
     return Buffer.toArray(allManagersBuffer);
   };
 
-  public shared ({ caller }) func getSnapshots(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async [T.FantasyTeamSnapshot] {
+  public shared ({ caller }) func getSnapshots(seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async [T.FantasyTeamSnapshot] {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == main_canister_id;
@@ -1047,12 +1047,12 @@ actor class ManagerCanister() {
                     return foundGameweek.gameweek == gameweek;
                   },
                 );
-                switch(foundSnapshot){
-                  case (null){};
-                  case (?snapshot){
+                switch (foundSnapshot) {
+                  case (null) {};
+                  case (?snapshot) {
                     allManagersBuffer.add(snapshot);
-                  }
-                }
+                  };
+                };
               };
             };
           };
@@ -1074,12 +1074,12 @@ actor class ManagerCanister() {
                     return foundGameweek.gameweek == gameweek;
                   },
                 );
-                switch(foundSnapshot){
-                  case (null){};
-                  case (?snapshot){
+                switch (foundSnapshot) {
+                  case (null) {};
+                  case (?snapshot) {
                     allManagersBuffer.add(snapshot);
-                  }
-                }
+                  };
+                };
               };
             };
           };
@@ -1101,12 +1101,12 @@ actor class ManagerCanister() {
                     return foundGameweek.gameweek == gameweek;
                   },
                 );
-                switch(foundSnapshot){
-                  case (null){};
-                  case (?snapshot){
+                switch (foundSnapshot) {
+                  case (null) {};
+                  case (?snapshot) {
                     allManagersBuffer.add(snapshot);
-                  }
-                }
+                  };
+                };
               };
             };
           };
@@ -1128,12 +1128,12 @@ actor class ManagerCanister() {
                     return foundGameweek.gameweek == gameweek;
                   },
                 );
-                switch(foundSnapshot){
-                  case (null){};
-                  case (?snapshot){
+                switch (foundSnapshot) {
+                  case (null) {};
+                  case (?snapshot) {
                     allManagersBuffer.add(snapshot);
-                  }
-                }
+                  };
+                };
               };
             };
           };
@@ -1155,12 +1155,12 @@ actor class ManagerCanister() {
                     return foundGameweek.gameweek == gameweek;
                   },
                 );
-                switch(foundSnapshot){
-                  case (null){};
-                  case (?snapshot){
+                switch (foundSnapshot) {
+                  case (null) {};
+                  case (?snapshot) {
                     allManagersBuffer.add(snapshot);
-                  }
-                }
+                  };
+                };
               };
             };
           };
@@ -1182,12 +1182,12 @@ actor class ManagerCanister() {
                     return foundGameweek.gameweek == gameweek;
                   },
                 );
-                switch(foundSnapshot){
-                  case (null){};
-                  case (?snapshot){
+                switch (foundSnapshot) {
+                  case (null) {};
+                  case (?snapshot) {
                     allManagersBuffer.add(snapshot);
-                  }
-                }
+                  };
+                };
               };
             };
           };
@@ -1209,12 +1209,12 @@ actor class ManagerCanister() {
                     return foundGameweek.gameweek == gameweek;
                   },
                 );
-                switch(foundSnapshot){
-                  case (null){};
-                  case (?snapshot){
+                switch (foundSnapshot) {
+                  case (null) {};
+                  case (?snapshot) {
                     allManagersBuffer.add(snapshot);
-                  }
-                }
+                  };
+                };
               };
             };
           };
@@ -1236,12 +1236,12 @@ actor class ManagerCanister() {
                     return foundGameweek.gameweek == gameweek;
                   },
                 );
-                switch(foundSnapshot){
-                  case (null){};
-                  case (?snapshot){
+                switch (foundSnapshot) {
+                  case (null) {};
+                  case (?snapshot) {
                     allManagersBuffer.add(snapshot);
-                  }
-                }
+                  };
+                };
               };
             };
           };
@@ -1263,12 +1263,12 @@ actor class ManagerCanister() {
                     return foundGameweek.gameweek == gameweek;
                   },
                 );
-                switch(foundSnapshot){
-                  case (null){};
-                  case (?snapshot){
+                switch (foundSnapshot) {
+                  case (null) {};
+                  case (?snapshot) {
                     allManagersBuffer.add(snapshot);
-                  }
-                }
+                  };
+                };
               };
             };
           };
@@ -1290,12 +1290,12 @@ actor class ManagerCanister() {
                     return foundGameweek.gameweek == gameweek;
                   },
                 );
-                switch(foundSnapshot){
-                  case (null){};
-                  case (?snapshot){
+                switch (foundSnapshot) {
+                  case (null) {};
+                  case (?snapshot) {
                     allManagersBuffer.add(snapshot);
-                  }
-                }
+                  };
+                };
               };
             };
           };
@@ -1317,12 +1317,12 @@ actor class ManagerCanister() {
                     return foundGameweek.gameweek == gameweek;
                   },
                 );
-                switch(foundSnapshot){
-                  case (null){};
-                  case (?snapshot){
+                switch (foundSnapshot) {
+                  case (null) {};
+                  case (?snapshot) {
                     allManagersBuffer.add(snapshot);
-                  }
-                }
+                  };
+                };
               };
             };
           };
@@ -1344,12 +1344,12 @@ actor class ManagerCanister() {
                     return foundGameweek.gameweek == gameweek;
                   },
                 );
-                switch(foundSnapshot){
-                  case (null){};
-                  case (?snapshot){
+                switch (foundSnapshot) {
+                  case (null) {};
+                  case (?snapshot) {
                     allManagersBuffer.add(snapshot);
-                  }
-                }
+                  };
+                };
               };
             };
           };
@@ -1363,7 +1363,7 @@ actor class ManagerCanister() {
     return Buffer.toArray(allManagersBuffer);
   };
 
-  public shared ({ caller }) func getGameweek38Snapshots(seasonId: T.SeasonId) : async [T.FantasyTeamSnapshot] {
+  public shared ({ caller }) func getGameweek38Snapshots(seasonId : T.SeasonId) : async [T.FantasyTeamSnapshot] {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == main_canister_id;
@@ -1656,7 +1656,7 @@ actor class ManagerCanister() {
     return #ok();
   };
 
-  private func updateSnapshotPoints(principalId : Text, seasonId : Nat16, gameweek : T.GameweekNumber, month: T.CalendarMonth, teamPoints : Int16, teamValueQuarterMillions : Nat16) : () {
+  private func updateSnapshotPoints(principalId : Text, seasonId : Nat16, gameweek : T.GameweekNumber, month : T.CalendarMonth, teamPoints : Int16, teamValueQuarterMillions : Nat16) : () {
 
     let managerBuffer = Buffer.fromArray<T.Manager>([]);
     let managerGroupIndex = managerGroupIndexes.get(principalId);
@@ -1679,17 +1679,17 @@ actor class ManagerCanister() {
                     managerBuffer.add(mergeManagerHistory(manager, List.fromArray(Buffer.toArray(teamHistoryBuffer))));
                   };
                   case (existingHistory) {
-                    
-                    var seasonPoints: Int16 = 0;
-                    var monthlyPoints: Int16 = 0;
-                    for(season in Iter.fromList(existingHistory)){
-                      if(season.seasonId == seasonId){
-                        for(seasonGameweek in Iter.fromList(season.gameweeks)){
+
+                    var seasonPoints : Int16 = 0;
+                    var monthlyPoints : Int16 = 0;
+                    for (season in Iter.fromList(existingHistory)) {
+                      if (season.seasonId == seasonId) {
+                        for (seasonGameweek in Iter.fromList(season.gameweeks)) {
                           seasonPoints := seasonPoints + seasonGameweek.points;
-                          if(seasonGameweek.month == month){
+                          if (seasonGameweek.month == month) {
                             monthlyPoints := monthlyPoints + seasonGameweek.points;
                           };
-                        }
+                        };
                       };
                     };
                     monthlyPoints := monthlyPoints + teamPoints;
@@ -1722,17 +1722,17 @@ actor class ManagerCanister() {
                     managerBuffer.add(mergeManagerHistory(manager, List.fromArray(Buffer.toArray(teamHistoryBuffer))));
                   };
                   case (existingHistory) {
-                    
-                    var seasonPoints: Int16 = 0;
-                    var monthlyPoints: Int16 = 0;
-                    for(season in Iter.fromList(existingHistory)){
-                      if(season.seasonId == seasonId){
-                        for(seasonGameweek in Iter.fromList(season.gameweeks)){
+
+                    var seasonPoints : Int16 = 0;
+                    var monthlyPoints : Int16 = 0;
+                    for (season in Iter.fromList(existingHistory)) {
+                      if (season.seasonId == seasonId) {
+                        for (seasonGameweek in Iter.fromList(season.gameweeks)) {
                           seasonPoints := seasonPoints + seasonGameweek.points;
-                          if(seasonGameweek.month == month){
+                          if (seasonGameweek.month == month) {
                             monthlyPoints := monthlyPoints + seasonGameweek.points;
                           };
-                        }
+                        };
                       };
                     };
                     monthlyPoints := monthlyPoints + teamPoints;
@@ -1765,17 +1765,17 @@ actor class ManagerCanister() {
                     managerBuffer.add(mergeManagerHistory(manager, List.fromArray(Buffer.toArray(teamHistoryBuffer))));
                   };
                   case (existingHistory) {
-                    
-                    var seasonPoints: Int16 = 0;
-                    var monthlyPoints: Int16 = 0;
-                    for(season in Iter.fromList(existingHistory)){
-                      if(season.seasonId == seasonId){
-                        for(seasonGameweek in Iter.fromList(season.gameweeks)){
+
+                    var seasonPoints : Int16 = 0;
+                    var monthlyPoints : Int16 = 0;
+                    for (season in Iter.fromList(existingHistory)) {
+                      if (season.seasonId == seasonId) {
+                        for (seasonGameweek in Iter.fromList(season.gameweeks)) {
                           seasonPoints := seasonPoints + seasonGameweek.points;
-                          if(seasonGameweek.month == month){
+                          if (seasonGameweek.month == month) {
                             monthlyPoints := monthlyPoints + seasonGameweek.points;
                           };
-                        }
+                        };
                       };
                     };
                     monthlyPoints := monthlyPoints + teamPoints;
@@ -1808,17 +1808,17 @@ actor class ManagerCanister() {
                     managerBuffer.add(mergeManagerHistory(manager, List.fromArray(Buffer.toArray(teamHistoryBuffer))));
                   };
                   case (existingHistory) {
-                    
-                    var seasonPoints: Int16 = 0;
-                    var monthlyPoints: Int16 = 0;
-                    for(season in Iter.fromList(existingHistory)){
-                      if(season.seasonId == seasonId){
-                        for(seasonGameweek in Iter.fromList(season.gameweeks)){
+
+                    var seasonPoints : Int16 = 0;
+                    var monthlyPoints : Int16 = 0;
+                    for (season in Iter.fromList(existingHistory)) {
+                      if (season.seasonId == seasonId) {
+                        for (seasonGameweek in Iter.fromList(season.gameweeks)) {
                           seasonPoints := seasonPoints + seasonGameweek.points;
-                          if(seasonGameweek.month == month){
+                          if (seasonGameweek.month == month) {
                             monthlyPoints := monthlyPoints + seasonGameweek.points;
                           };
-                        }
+                        };
                       };
                     };
                     monthlyPoints := monthlyPoints + teamPoints;
@@ -1851,17 +1851,17 @@ actor class ManagerCanister() {
                     managerBuffer.add(mergeManagerHistory(manager, List.fromArray(Buffer.toArray(teamHistoryBuffer))));
                   };
                   case (existingHistory) {
-                    
-                    var seasonPoints: Int16 = 0;
-                    var monthlyPoints: Int16 = 0;
-                    for(season in Iter.fromList(existingHistory)){
-                      if(season.seasonId == seasonId){
-                        for(seasonGameweek in Iter.fromList(season.gameweeks)){
+
+                    var seasonPoints : Int16 = 0;
+                    var monthlyPoints : Int16 = 0;
+                    for (season in Iter.fromList(existingHistory)) {
+                      if (season.seasonId == seasonId) {
+                        for (seasonGameweek in Iter.fromList(season.gameweeks)) {
                           seasonPoints := seasonPoints + seasonGameweek.points;
-                          if(seasonGameweek.month == month){
+                          if (seasonGameweek.month == month) {
                             monthlyPoints := monthlyPoints + seasonGameweek.points;
                           };
-                        }
+                        };
                       };
                     };
                     monthlyPoints := monthlyPoints + teamPoints;
@@ -1894,17 +1894,17 @@ actor class ManagerCanister() {
                     managerBuffer.add(mergeManagerHistory(manager, List.fromArray(Buffer.toArray(teamHistoryBuffer))));
                   };
                   case (existingHistory) {
-                    
-                    var seasonPoints: Int16 = 0;
-                    var monthlyPoints: Int16 = 0;
-                    for(season in Iter.fromList(existingHistory)){
-                      if(season.seasonId == seasonId){
-                        for(seasonGameweek in Iter.fromList(season.gameweeks)){
+
+                    var seasonPoints : Int16 = 0;
+                    var monthlyPoints : Int16 = 0;
+                    for (season in Iter.fromList(existingHistory)) {
+                      if (season.seasonId == seasonId) {
+                        for (seasonGameweek in Iter.fromList(season.gameweeks)) {
                           seasonPoints := seasonPoints + seasonGameweek.points;
-                          if(seasonGameweek.month == month){
+                          if (seasonGameweek.month == month) {
                             monthlyPoints := monthlyPoints + seasonGameweek.points;
                           };
-                        }
+                        };
                       };
                     };
                     monthlyPoints := monthlyPoints + teamPoints;
@@ -1937,17 +1937,17 @@ actor class ManagerCanister() {
                     managerBuffer.add(mergeManagerHistory(manager, List.fromArray(Buffer.toArray(teamHistoryBuffer))));
                   };
                   case (existingHistory) {
-                    
-                    var seasonPoints: Int16 = 0;
-                    var monthlyPoints: Int16 = 0;
-                    for(season in Iter.fromList(existingHistory)){
-                      if(season.seasonId == seasonId){
-                        for(seasonGameweek in Iter.fromList(season.gameweeks)){
+
+                    var seasonPoints : Int16 = 0;
+                    var monthlyPoints : Int16 = 0;
+                    for (season in Iter.fromList(existingHistory)) {
+                      if (season.seasonId == seasonId) {
+                        for (seasonGameweek in Iter.fromList(season.gameweeks)) {
                           seasonPoints := seasonPoints + seasonGameweek.points;
-                          if(seasonGameweek.month == month){
+                          if (seasonGameweek.month == month) {
                             monthlyPoints := monthlyPoints + seasonGameweek.points;
                           };
-                        }
+                        };
                       };
                     };
                     monthlyPoints := monthlyPoints + teamPoints;
@@ -1980,17 +1980,17 @@ actor class ManagerCanister() {
                     managerBuffer.add(mergeManagerHistory(manager, List.fromArray(Buffer.toArray(teamHistoryBuffer))));
                   };
                   case (existingHistory) {
-                    
-                    var seasonPoints: Int16 = 0;
-                    var monthlyPoints: Int16 = 0;
-                    for(season in Iter.fromList(existingHistory)){
-                      if(season.seasonId == seasonId){
-                        for(seasonGameweek in Iter.fromList(season.gameweeks)){
+
+                    var seasonPoints : Int16 = 0;
+                    var monthlyPoints : Int16 = 0;
+                    for (season in Iter.fromList(existingHistory)) {
+                      if (season.seasonId == seasonId) {
+                        for (seasonGameweek in Iter.fromList(season.gameweeks)) {
                           seasonPoints := seasonPoints + seasonGameweek.points;
-                          if(seasonGameweek.month == month){
+                          if (seasonGameweek.month == month) {
                             monthlyPoints := monthlyPoints + seasonGameweek.points;
                           };
-                        }
+                        };
                       };
                     };
                     monthlyPoints := monthlyPoints + teamPoints;
@@ -2023,18 +2023,17 @@ actor class ManagerCanister() {
                     managerBuffer.add(mergeManagerHistory(manager, List.fromArray(Buffer.toArray(teamHistoryBuffer))));
                   };
                   case (existingHistory) {
-                    
-                    
-                    var seasonPoints: Int16 = 0;
-                    var monthlyPoints: Int16 = 0;
-                    for(season in Iter.fromList(existingHistory)){
-                      if(season.seasonId == seasonId){
-                        for(seasonGameweek in Iter.fromList(season.gameweeks)){
+
+                    var seasonPoints : Int16 = 0;
+                    var monthlyPoints : Int16 = 0;
+                    for (season in Iter.fromList(existingHistory)) {
+                      if (season.seasonId == seasonId) {
+                        for (seasonGameweek in Iter.fromList(season.gameweeks)) {
                           seasonPoints := seasonPoints + seasonGameweek.points;
-                          if(seasonGameweek.month == month){
+                          if (seasonGameweek.month == month) {
                             monthlyPoints := monthlyPoints + seasonGameweek.points;
                           };
-                        }
+                        };
                       };
                     };
                     monthlyPoints := monthlyPoints + teamPoints;
@@ -2067,17 +2066,17 @@ actor class ManagerCanister() {
                     managerBuffer.add(mergeManagerHistory(manager, List.fromArray(Buffer.toArray(teamHistoryBuffer))));
                   };
                   case (existingHistory) {
-                    
-                    var seasonPoints: Int16 = 0;
-                    var monthlyPoints: Int16 = 0;
-                    for(season in Iter.fromList(existingHistory)){
-                      if(season.seasonId == seasonId){
-                        for(seasonGameweek in Iter.fromList(season.gameweeks)){
+
+                    var seasonPoints : Int16 = 0;
+                    var monthlyPoints : Int16 = 0;
+                    for (season in Iter.fromList(existingHistory)) {
+                      if (season.seasonId == seasonId) {
+                        for (seasonGameweek in Iter.fromList(season.gameweeks)) {
                           seasonPoints := seasonPoints + seasonGameweek.points;
-                          if(seasonGameweek.month == month){
+                          if (seasonGameweek.month == month) {
                             monthlyPoints := monthlyPoints + seasonGameweek.points;
                           };
-                        }
+                        };
                       };
                     };
                     monthlyPoints := monthlyPoints + teamPoints;
@@ -2111,17 +2110,17 @@ actor class ManagerCanister() {
                     managerBuffer.add(mergeManagerHistory(manager, List.fromArray(Buffer.toArray(teamHistoryBuffer))));
                   };
                   case (existingHistory) {
-                    
-                    var seasonPoints: Int16 = 0;
-                    var monthlyPoints: Int16 = 0;
-                    for(season in Iter.fromList(existingHistory)){
-                      if(season.seasonId == seasonId){
-                        for(seasonGameweek in Iter.fromList(season.gameweeks)){
+
+                    var seasonPoints : Int16 = 0;
+                    var monthlyPoints : Int16 = 0;
+                    for (season in Iter.fromList(existingHistory)) {
+                      if (season.seasonId == seasonId) {
+                        for (seasonGameweek in Iter.fromList(season.gameweeks)) {
                           seasonPoints := seasonPoints + seasonGameweek.points;
-                          if(seasonGameweek.month == month){
+                          if (seasonGameweek.month == month) {
                             monthlyPoints := monthlyPoints + seasonGameweek.points;
                           };
-                        }
+                        };
                       };
                     };
                     monthlyPoints := monthlyPoints + teamPoints;
@@ -2154,17 +2153,17 @@ actor class ManagerCanister() {
                     managerBuffer.add(mergeManagerHistory(manager, List.fromArray(Buffer.toArray(teamHistoryBuffer))));
                   };
                   case (existingHistory) {
-                    
-                    var seasonPoints: Int16 = 0;
-                    var monthlyPoints: Int16 = 0;
-                    for(season in Iter.fromList(existingHistory)){
-                      if(season.seasonId == seasonId){
-                        for(seasonGameweek in Iter.fromList(season.gameweeks)){
+
+                    var seasonPoints : Int16 = 0;
+                    var monthlyPoints : Int16 = 0;
+                    for (season in Iter.fromList(existingHistory)) {
+                      if (season.seasonId == seasonId) {
+                        for (seasonGameweek in Iter.fromList(season.gameweeks)) {
                           seasonPoints := seasonPoints + seasonGameweek.points;
-                          if(seasonGameweek.month == month){
+                          if (seasonGameweek.month == month) {
                             monthlyPoints := monthlyPoints + seasonGameweek.points;
                           };
-                        }
+                        };
                       };
                     };
                     monthlyPoints := monthlyPoints + teamPoints;
@@ -2188,7 +2187,7 @@ actor class ManagerCanister() {
     };
   };
 
-  private func mergeManagerSnapshot(manager : T.Manager, gameweek : T.GameweekNumber, month: T.CalendarMonth, weeklyPoints : Int16, monthlyPoints : Int16, seasonPoints : Int16, teamValueQuarterMillions : Nat16) : T.FantasyTeamSnapshot {
+  private func mergeManagerSnapshot(manager : T.Manager, gameweek : T.GameweekNumber, month : T.CalendarMonth, weeklyPoints : Int16, monthlyPoints : Int16, seasonPoints : Int16, teamValueQuarterMillions : Nat16) : T.FantasyTeamSnapshot {
     return {
       principalId = manager.principalId;
       username = manager.username;
@@ -2229,7 +2228,7 @@ actor class ManagerCanister() {
     };
   };
 
-  private func mergeExistingHistory(existingHistory : List.List<T.FantasyTeamSeason>, fantasyTeamSnapshot : T.FantasyTeamSnapshot, seasonId : T.SeasonId, gameweek : T.GameweekNumber, month: T.CalendarMonth, manager : T.Manager, weeklyPoints : Int16, monthlyPoints : Int16, seasonPoints : Int16, teamValueQuarterMillions : Nat16) : List.List<T.FantasyTeamSeason> {
+  private func mergeExistingHistory(existingHistory : List.List<T.FantasyTeamSeason>, fantasyTeamSnapshot : T.FantasyTeamSnapshot, seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth, manager : T.Manager, weeklyPoints : Int16, monthlyPoints : Int16, seasonPoints : Int16, teamValueQuarterMillions : Nat16) : List.List<T.FantasyTeamSeason> {
 
     let teamHistoryBuffer = Buffer.fromArray<T.FantasyTeamSeason>([]);
 
@@ -2364,7 +2363,7 @@ actor class ManagerCanister() {
           };
           if (playerRemoved) {
             var captainId = manager.captainId;
-            if(captainId == removePlayerId){
+            if (captainId == removePlayerId) {
               let highestValuedPlayer = Array.foldLeft<T.PlayerId, ?DTOs.PlayerDTO>(
                 manager.playerIds,
                 null,
@@ -2440,58 +2439,58 @@ actor class ManagerCanister() {
     return managers;
   };
 
-  public shared ({caller}) func calculateFantasyTeamScores(allPlayersList : [(T.PlayerId, DTOs.PlayerScoreDTO)], allPlayers: [DTOs.PlayerDTO], seasonId : T.SeasonId, gameweek : T.GameweekNumber, month: T.CalendarMonth) : async (){
+  public shared ({ caller }) func calculateFantasyTeamScores(allPlayersList : [(T.PlayerId, DTOs.PlayerScoreDTO)], allPlayers : [DTOs.PlayerDTO], seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == main_canister_id;
 
-    let playerIdTrie: TrieMap.TrieMap<T.PlayerId, DTOs.PlayerScoreDTO> = TrieMap.TrieMap<T.PlayerId, DTOs.PlayerScoreDTO>(Utilities.eqNat16, Utilities.hashNat16);
-    for (player in Iter.fromArray(allPlayersList)){
-      playerIdTrie.put(player.0, player.1)
+    let playerIdTrie : TrieMap.TrieMap<T.PlayerId, DTOs.PlayerScoreDTO> = TrieMap.TrieMap<T.PlayerId, DTOs.PlayerScoreDTO>(Utilities.eqNat16, Utilities.hashNat16);
+    for (player in Iter.fromArray(allPlayersList)) {
+      playerIdTrie.put(player.0, player.1);
     };
 
-    for(index in Iter.range(0,11)){
-      var managers: [T.Manager] = [];
+    for (index in Iter.range(0, 11)) {
+      var managers : [T.Manager] = [];
       var managersBuffer = Buffer.fromArray<T.Manager>([]);
-      switch(index){
-        case 0{
+      switch (index) {
+        case 0 {
           managers := managerGroup1;
         };
-        case 1{
+        case 1 {
           managers := managerGroup2;
         };
-        case 2{
+        case 2 {
           managers := managerGroup3;
         };
-        case 3{
+        case 3 {
           managers := managerGroup4;
         };
-        case 4{
+        case 4 {
           managers := managerGroup5;
         };
-        case 5{
+        case 5 {
           managers := managerGroup6;
         };
-        case 6{
+        case 6 {
           managers := managerGroup7;
         };
-        case 7{
+        case 7 {
           managers := managerGroup8;
         };
-        case 8{
+        case 8 {
           managers := managerGroup9;
         };
-        case 9{
+        case 9 {
           managers := managerGroup10;
         };
-        case 10{
+        case 10 {
           managers := managerGroup11;
         };
-        case 11{
+        case 11 {
           managers := managerGroup12;
         };
-        case _ {}
-      };  
+        case _ {};
+      };
       for (value in Iter.fromArray(managers)) {
 
         let currentSeason = List.find<T.FantasyTeamSeason>(
@@ -2582,21 +2581,20 @@ actor class ManagerCanister() {
                     };
                   };
                 };
-                
-                
+
                 let allPlayerValues = Array.map<DTOs.PlayerDTO, Nat16>(allPlayers, func(player : DTOs.PlayerDTO) : Nat16 { return player.valueQuarterMillions });
 
                 let totalTeamValue = Array.foldLeft<Nat16, Nat16>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
-               
+
                 updateSnapshotPoints(value.principalId, seasonId, gameweek, month, totalTeamPoints, totalTeamValue);
               };
             };
           };
         };
-      }; 
-    }
+      };
+    };
   };
-  
+
   private func calculateGoalPoints(position : T.PlayerPosition, goalsScored : Int16) : Int16 {
     switch (position) {
       case (#Goalkeeper) { return 40 * goalsScored };
@@ -2615,66 +2613,66 @@ actor class ManagerCanister() {
     };
   };
 
-  public shared ({ caller }) func getTotalManagers() : async Nat{
+  public shared ({ caller }) func getTotalManagers() : async Nat {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == main_canister_id;
     return totalManagers;
   };
 
-  public shared ({ caller }) func snapshotFantasyTeams (seasonId : T.SeasonId, gameweek : T.GameweekNumber, month: T.CalendarMonth, players: [DTOs.PlayerDTO]) : async (){
+  public shared ({ caller }) func snapshotFantasyTeams(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth, players : [DTOs.PlayerDTO]) : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == main_canister_id;
-    
-    for(index in Iter.range(0,11)){
-      switch(index){
-        case 0{
+
+    for (index in Iter.range(0, 11)) {
+      switch (index) {
+        case 0 {
           managerGroup1 := snapshotManagers(managerGroup1, seasonId, gameweek, month, players);
         };
-        case 1{
+        case 1 {
           managerGroup2 := snapshotManagers(managerGroup2, seasonId, gameweek, month, players);
         };
-        case 2{
+        case 2 {
           managerGroup3 := snapshotManagers(managerGroup3, seasonId, gameweek, month, players);
         };
-        case 3{
+        case 3 {
           managerGroup4 := snapshotManagers(managerGroup4, seasonId, gameweek, month, players);
         };
-        case 4{
+        case 4 {
           managerGroup5 := snapshotManagers(managerGroup5, seasonId, gameweek, month, players);
         };
-        case 5{
+        case 5 {
           managerGroup6 := snapshotManagers(managerGroup6, seasonId, gameweek, month, players);
         };
-        case 6{
+        case 6 {
           managerGroup7 := snapshotManagers(managerGroup7, seasonId, gameweek, month, players);
         };
-        case 7{
+        case 7 {
           managerGroup8 := snapshotManagers(managerGroup8, seasonId, gameweek, month, players);
         };
-        case 8{
+        case 8 {
           managerGroup9 := snapshotManagers(managerGroup9, seasonId, gameweek, month, players);
         };
-        case 9{
+        case 9 {
           managerGroup10 := snapshotManagers(managerGroup10, seasonId, gameweek, month, players);
         };
-        case 10{
+        case 10 {
           managerGroup11 := snapshotManagers(managerGroup11, seasonId, gameweek, month, players);
         };
-        case 11{
+        case 11 {
           managerGroup12 := snapshotManagers(managerGroup12, seasonId, gameweek, month, players);
         };
         case _ {
 
-        }
-      }
+        };
+      };
     };
   };
 
-  private func snapshotManagers(managers: [T.Manager], seasonId : T.SeasonId, gameweek : T.GameweekNumber, month: T.CalendarMonth, players: [DTOs.PlayerDTO]) : [T.Manager]{
+  private func snapshotManagers(managers : [T.Manager], seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth, players : [DTOs.PlayerDTO]) : [T.Manager] {
     let managerBuffer = Buffer.fromArray<T.Manager>([]);
-    for(manager in Iter.fromArray(managers)){
+    for (manager in Iter.fromArray(managers)) {
 
       var seasonFound = false;
       var updatedSeasons = List.map<T.FantasyTeamSeason, T.FantasyTeamSeason>(
@@ -2741,7 +2739,6 @@ actor class ManagerCanister() {
               seasonPoints = 0;
             };
 
-
             let updatedGameweeks = List.push(newSnapshot, otherSeasonGameweeks);
 
             return {
@@ -2754,7 +2751,7 @@ actor class ManagerCanister() {
         },
       );
 
-      let updatedManager: T.Manager = {
+      let updatedManager : T.Manager = {
 
         principalId = manager.principalId;
         username = manager.username;
@@ -2792,62 +2789,61 @@ actor class ManagerCanister() {
     return Buffer.toArray(managerBuffer);
   };
 
-  public shared ({ caller }) func resetBonusesAvailable (seasonId : T.SeasonId) : async (){
+  public shared ({ caller }) func resetBonusesAvailable(seasonId : T.SeasonId) : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == main_canister_id;
-    
-    for(index in Iter.range(0,11)){
-      switch(index){
-        case 0{
+
+    for (index in Iter.range(0, 11)) {
+      switch (index) {
+        case 0 {
           managerGroup1 := resetManagerBonuses(managerGroup1, seasonId);
         };
-        case 1{
+        case 1 {
           managerGroup2 := resetManagerBonuses(managerGroup2, seasonId);
         };
-        case 2{
+        case 2 {
           managerGroup3 := resetManagerBonuses(managerGroup3, seasonId);
         };
-        case 3{
+        case 3 {
           managerGroup4 := resetManagerBonuses(managerGroup4, seasonId);
         };
-        case 4{
+        case 4 {
           managerGroup5 := resetManagerBonuses(managerGroup5, seasonId);
         };
-        case 5{
+        case 5 {
           managerGroup6 := resetManagerBonuses(managerGroup6, seasonId);
         };
-        case 6{
+        case 6 {
           managerGroup7 := resetManagerBonuses(managerGroup7, seasonId);
         };
-        case 7{
+        case 7 {
           managerGroup8 := resetManagerBonuses(managerGroup8, seasonId);
         };
-        case 8{
+        case 8 {
           managerGroup9 := resetManagerBonuses(managerGroup9, seasonId);
         };
-        case 9{
+        case 9 {
           managerGroup10 := resetManagerBonuses(managerGroup10, seasonId);
         };
-        case 10{
+        case 10 {
           managerGroup11 := resetManagerBonuses(managerGroup11, seasonId);
         };
-        case 11{
+        case 11 {
           managerGroup12 := resetManagerBonuses(managerGroup12, seasonId);
         };
         case _ {
 
-        }
-      }
+        };
+      };
     };
   };
 
-  private func resetManagerBonuses(managers: [T.Manager], seasonId : T.SeasonId) : [T.Manager]{
+  private func resetManagerBonuses(managers : [T.Manager], seasonId : T.SeasonId) : [T.Manager] {
     let managerBuffer = Buffer.fromArray<T.Manager>([]);
-    for(manager in Iter.fromArray(managers)){
+    for (manager in Iter.fromArray(managers)) {
 
-
-      let updatedManager: T.Manager = {
+      let updatedManager : T.Manager = {
         principalId = manager.principalId;
         username = manager.username;
         termsAccepted = manager.termsAccepted;
@@ -2884,60 +2880,60 @@ actor class ManagerCanister() {
     return Buffer.toArray(managerBuffer);
   };
 
-  public shared ({ caller }) func resetFantasyTeams (seasonId : T.SeasonId) : async (){
+  public shared ({ caller }) func resetFantasyTeams(seasonId : T.SeasonId) : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == main_canister_id;
-    
-    for(index in Iter.range(0,11)){
-      switch(index){
-        case 0{
+
+    for (index in Iter.range(0, 11)) {
+      switch (index) {
+        case 0 {
           managerGroup1 := resetManagers(managerGroup1, seasonId);
         };
-        case 1{
+        case 1 {
           managerGroup2 := resetManagers(managerGroup2, seasonId);
         };
-        case 2{
+        case 2 {
           managerGroup3 := resetManagers(managerGroup3, seasonId);
         };
-        case 3{
+        case 3 {
           managerGroup4 := resetManagers(managerGroup4, seasonId);
         };
-        case 4{
+        case 4 {
           managerGroup5 := resetManagers(managerGroup5, seasonId);
         };
-        case 5{
+        case 5 {
           managerGroup6 := resetManagers(managerGroup6, seasonId);
         };
-        case 6{
+        case 6 {
           managerGroup7 := resetManagers(managerGroup7, seasonId);
         };
-        case 7{
+        case 7 {
           managerGroup8 := resetManagers(managerGroup8, seasonId);
         };
-        case 8{
+        case 8 {
           managerGroup9 := resetManagers(managerGroup9, seasonId);
         };
-        case 9{
+        case 9 {
           managerGroup10 := resetManagers(managerGroup10, seasonId);
         };
-        case 10{
+        case 10 {
           managerGroup11 := resetManagers(managerGroup11, seasonId);
         };
-        case 11{
+        case 11 {
           managerGroup12 := resetManagers(managerGroup12, seasonId);
         };
         case _ {
 
-        }
-      }
+        };
+      };
     };
   };
 
-  private func resetManagers(managers: [T.Manager], seasonId : T.SeasonId) : [T.Manager]{
+  private func resetManagers(managers : [T.Manager], seasonId : T.SeasonId) : [T.Manager] {
     let managerBuffer = Buffer.fromArray<T.Manager>([]);
-    for(manager in Iter.fromArray(managers)){
-      let updatedManager: T.Manager = {
+    for (manager in Iter.fromArray(managers)) {
+      let updatedManager : T.Manager = {
         principalId = manager.principalId;
         username = manager.username;
         termsAccepted = manager.termsAccepted;
@@ -2948,7 +2944,7 @@ actor class ManagerCanister() {
         transfersAvailable = 3;
         monthlyBonusesAvailable = 2;
         bankQuarterMillions = 1200;
-        playerIds = [0,0,0,0,0,0,0,0,0,0,0];
+        playerIds = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         captainId = 0;
         goalGetterGameweek = 0;
         goalGetterPlayerId = 0;
@@ -2974,60 +2970,60 @@ actor class ManagerCanister() {
     return Buffer.toArray(managerBuffer);
   };
 
-  public shared ({ caller }) func resetWeeklyTransfers () : async (){
+  public shared ({ caller }) func resetWeeklyTransfers() : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == main_canister_id;
-    
-    for(index in Iter.range(0,11)){
-      switch(index){
-        case 0{
+
+    for (index in Iter.range(0, 11)) {
+      switch (index) {
+        case 0 {
           managerGroup1 := resetManagerWeeklyTransfers(managerGroup1);
         };
-        case 1{
+        case 1 {
           managerGroup2 := resetManagerWeeklyTransfers(managerGroup2);
         };
-        case 2{
+        case 2 {
           managerGroup3 := resetManagerWeeklyTransfers(managerGroup3);
         };
-        case 3{
+        case 3 {
           managerGroup4 := resetManagerWeeklyTransfers(managerGroup4);
         };
-        case 4{
+        case 4 {
           managerGroup5 := resetManagerWeeklyTransfers(managerGroup5);
         };
-        case 5{
+        case 5 {
           managerGroup6 := resetManagerWeeklyTransfers(managerGroup6);
         };
-        case 6{
+        case 6 {
           managerGroup7 := resetManagerWeeklyTransfers(managerGroup7);
         };
-        case 7{
+        case 7 {
           managerGroup8 := resetManagerWeeklyTransfers(managerGroup8);
         };
-        case 8{
+        case 8 {
           managerGroup9 := resetManagerWeeklyTransfers(managerGroup9);
         };
-        case 9{
+        case 9 {
           managerGroup10 := resetManagerWeeklyTransfers(managerGroup10);
         };
-        case 10{
+        case 10 {
           managerGroup11 := resetManagerWeeklyTransfers(managerGroup11);
         };
-        case 11{
+        case 11 {
           managerGroup12 := resetManagerWeeklyTransfers(managerGroup12);
         };
         case _ {
 
-        }
-      }
+        };
+      };
     };
   };
 
-  private func resetManagerWeeklyTransfers(managers: [T.Manager]) : [T.Manager]{
+  private func resetManagerWeeklyTransfers(managers : [T.Manager]) : [T.Manager] {
     let managerBuffer = Buffer.fromArray<T.Manager>([]);
-    for(manager in Iter.fromArray(managers)){
-      let updatedManager: T.Manager = {
+    for (manager in Iter.fromArray(managers)) {
+      let updatedManager : T.Manager = {
         principalId = manager.principalId;
         username = manager.username;
         termsAccepted = manager.termsAccepted;
@@ -3064,208 +3060,208 @@ actor class ManagerCanister() {
     return Buffer.toArray(managerBuffer);
   };
 
-  public shared ({ caller }) func getClubManagers (clubId : T.ClubId) : async [T.PrincipalId]{
+  public shared ({ caller }) func getClubManagers(clubId : T.ClubId) : async [T.PrincipalId] {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == main_canister_id;
-    
+
     let clubManagerIdBuffer = Buffer.fromArray<T.PrincipalId>([]);
 
-    for(index in Iter.range(0,11)){
-      switch(index){
-        case 0{
+    for (index in Iter.range(0, 11)) {
+      switch (index) {
+        case 0 {
           let clubManagerIds = getGroupClubManagerIds(managerGroup1, clubId);
-          for(managerId in Iter.fromArray(clubManagerIds)){
+          for (managerId in Iter.fromArray(clubManagerIds)) {
             clubManagerIdBuffer.add(managerId);
-          }
+          };
         };
-        case 1{
+        case 1 {
           let clubManagerIds = getGroupClubManagerIds(managerGroup2, clubId);
-          for(managerId in Iter.fromArray(clubManagerIds)){
+          for (managerId in Iter.fromArray(clubManagerIds)) {
             clubManagerIdBuffer.add(managerId);
-          }
+          };
         };
-        case 2{
+        case 2 {
           let clubManagerIds = getGroupClubManagerIds(managerGroup3, clubId);
-          for(managerId in Iter.fromArray(clubManagerIds)){
+          for (managerId in Iter.fromArray(clubManagerIds)) {
             clubManagerIdBuffer.add(managerId);
-          }
+          };
         };
-        case 3{
+        case 3 {
           let clubManagerIds = getGroupClubManagerIds(managerGroup4, clubId);
-          for(managerId in Iter.fromArray(clubManagerIds)){
+          for (managerId in Iter.fromArray(clubManagerIds)) {
             clubManagerIdBuffer.add(managerId);
-          }
+          };
         };
-        case 4{
+        case 4 {
           let clubManagerIds = getGroupClubManagerIds(managerGroup5, clubId);
-          for(managerId in Iter.fromArray(clubManagerIds)){
+          for (managerId in Iter.fromArray(clubManagerIds)) {
             clubManagerIdBuffer.add(managerId);
-          }
+          };
         };
-        case 5{
+        case 5 {
           let clubManagerIds = getGroupClubManagerIds(managerGroup6, clubId);
-          for(managerId in Iter.fromArray(clubManagerIds)){
+          for (managerId in Iter.fromArray(clubManagerIds)) {
             clubManagerIdBuffer.add(managerId);
-          }
+          };
         };
-        case 6{
+        case 6 {
           let clubManagerIds = getGroupClubManagerIds(managerGroup7, clubId);
-          for(managerId in Iter.fromArray(clubManagerIds)){
+          for (managerId in Iter.fromArray(clubManagerIds)) {
             clubManagerIdBuffer.add(managerId);
-          }
+          };
         };
-        case 7{
+        case 7 {
           let clubManagerIds = getGroupClubManagerIds(managerGroup8, clubId);
-          for(managerId in Iter.fromArray(clubManagerIds)){
+          for (managerId in Iter.fromArray(clubManagerIds)) {
             clubManagerIdBuffer.add(managerId);
-          }
+          };
         };
-        case 8{
+        case 8 {
           let clubManagerIds = getGroupClubManagerIds(managerGroup9, clubId);
-          for(managerId in Iter.fromArray(clubManagerIds)){
+          for (managerId in Iter.fromArray(clubManagerIds)) {
             clubManagerIdBuffer.add(managerId);
-          }
+          };
         };
-        case 9{
+        case 9 {
           let clubManagerIds = getGroupClubManagerIds(managerGroup10, clubId);
-          for(managerId in Iter.fromArray(clubManagerIds)){
+          for (managerId in Iter.fromArray(clubManagerIds)) {
             clubManagerIdBuffer.add(managerId);
-          }
+          };
         };
-        case 10{
+        case 10 {
           let clubManagerIds = getGroupClubManagerIds(managerGroup11, clubId);
-          for(managerId in Iter.fromArray(clubManagerIds)){
+          for (managerId in Iter.fromArray(clubManagerIds)) {
             clubManagerIdBuffer.add(managerId);
-          }
+          };
         };
-        case 11{
+        case 11 {
           let clubManagerIds = getGroupClubManagerIds(managerGroup12, clubId);
-          for(managerId in Iter.fromArray(clubManagerIds)){
+          for (managerId in Iter.fromArray(clubManagerIds)) {
             clubManagerIdBuffer.add(managerId);
-          }
+          };
         };
         case _ {
 
-        }
-      }
+        };
+      };
     };
-    
+
     return Buffer.toArray(clubManagerIdBuffer);
   };
 
-  private func getGroupClubManagerIds(managers: [T.Manager], clubId : T.ClubId) : [T.PrincipalId]{
+  private func getGroupClubManagerIds(managers : [T.Manager], clubId : T.ClubId) : [T.PrincipalId] {
     let managerIdBuffer = Buffer.fromArray<T.PrincipalId>([]);
-    for(manager in Iter.fromArray(managers)){
-      if(manager.favouriteClubId == clubId){
+    for (manager in Iter.fromArray(managers)) {
+      if (manager.favouriteClubId == clubId) {
         managerIdBuffer.add(manager.principalId);
       };
     };
     return Buffer.toArray(managerIdBuffer);
   };
 
-  public shared ({ caller }) func getNonClubManagers (clubId : T.ClubId) : async Nat{
+  public shared ({ caller }) func getNonClubManagers(clubId : T.ClubId) : async Nat {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == main_canister_id;
-    
+
     let clubManagerIdBuffer = Buffer.fromArray<T.PrincipalId>([]);
 
-    for(index in Iter.range(0,11)){
-      switch(index){
-        case 0{
+    for (index in Iter.range(0, 11)) {
+      switch (index) {
+        case 0 {
           let clubManagerIds = getGroupNonClubManagerIds(managerGroup1, clubId);
-          for(managerId in Iter.fromArray(clubManagerIds)){
+          for (managerId in Iter.fromArray(clubManagerIds)) {
             clubManagerIdBuffer.add(managerId);
-          }
+          };
         };
-        case 1{
+        case 1 {
           let clubManagerIds = getGroupNonClubManagerIds(managerGroup2, clubId);
-          for(managerId in Iter.fromArray(clubManagerIds)){
+          for (managerId in Iter.fromArray(clubManagerIds)) {
             clubManagerIdBuffer.add(managerId);
-          }
+          };
         };
-        case 2{
+        case 2 {
           let clubManagerIds = getGroupNonClubManagerIds(managerGroup3, clubId);
-          for(managerId in Iter.fromArray(clubManagerIds)){
+          for (managerId in Iter.fromArray(clubManagerIds)) {
             clubManagerIdBuffer.add(managerId);
-          }
+          };
         };
-        case 3{
+        case 3 {
           let clubManagerIds = getGroupNonClubManagerIds(managerGroup4, clubId);
-          for(managerId in Iter.fromArray(clubManagerIds)){
+          for (managerId in Iter.fromArray(clubManagerIds)) {
             clubManagerIdBuffer.add(managerId);
-          }
+          };
         };
-        case 4{
+        case 4 {
           let clubManagerIds = getGroupNonClubManagerIds(managerGroup5, clubId);
-          for(managerId in Iter.fromArray(clubManagerIds)){
+          for (managerId in Iter.fromArray(clubManagerIds)) {
             clubManagerIdBuffer.add(managerId);
-          }
+          };
         };
-        case 5{
+        case 5 {
           let clubManagerIds = getGroupNonClubManagerIds(managerGroup6, clubId);
-          for(managerId in Iter.fromArray(clubManagerIds)){
+          for (managerId in Iter.fromArray(clubManagerIds)) {
             clubManagerIdBuffer.add(managerId);
-          }
+          };
         };
-        case 6{
+        case 6 {
           let clubManagerIds = getGroupNonClubManagerIds(managerGroup7, clubId);
-          for(managerId in Iter.fromArray(clubManagerIds)){
+          for (managerId in Iter.fromArray(clubManagerIds)) {
             clubManagerIdBuffer.add(managerId);
-          }
+          };
         };
-        case 7{
+        case 7 {
           let clubManagerIds = getGroupNonClubManagerIds(managerGroup8, clubId);
-          for(managerId in Iter.fromArray(clubManagerIds)){
+          for (managerId in Iter.fromArray(clubManagerIds)) {
             clubManagerIdBuffer.add(managerId);
-          }
+          };
         };
-        case 8{
+        case 8 {
           let clubManagerIds = getGroupNonClubManagerIds(managerGroup9, clubId);
-          for(managerId in Iter.fromArray(clubManagerIds)){
+          for (managerId in Iter.fromArray(clubManagerIds)) {
             clubManagerIdBuffer.add(managerId);
-          }
+          };
         };
-        case 9{
+        case 9 {
           let clubManagerIds = getGroupNonClubManagerIds(managerGroup10, clubId);
-          for(managerId in Iter.fromArray(clubManagerIds)){
+          for (managerId in Iter.fromArray(clubManagerIds)) {
             clubManagerIdBuffer.add(managerId);
-          }
+          };
         };
-        case 10{
+        case 10 {
           let clubManagerIds = getGroupNonClubManagerIds(managerGroup11, clubId);
-          for(managerId in Iter.fromArray(clubManagerIds)){
+          for (managerId in Iter.fromArray(clubManagerIds)) {
             clubManagerIdBuffer.add(managerId);
-          }
+          };
         };
-        case 11{
+        case 11 {
           let clubManagerIds = getGroupNonClubManagerIds(managerGroup12, clubId);
-          for(managerId in Iter.fromArray(clubManagerIds)){
+          for (managerId in Iter.fromArray(clubManagerIds)) {
             clubManagerIdBuffer.add(managerId);
-          }
+          };
         };
         case _ {
 
-        }
-      }
+        };
+      };
     };
-    
+
     return clubManagerIdBuffer.size();
-    
+
   };
 
-  private func getGroupNonClubManagerIds(managers: [T.Manager], clubId : T.ClubId) : [T.PrincipalId]{
+  private func getGroupNonClubManagerIds(managers : [T.Manager], clubId : T.ClubId) : [T.PrincipalId] {
     let managerIdBuffer = Buffer.fromArray<T.PrincipalId>([]);
-    for(manager in Iter.fromArray(managers)){
-      if(manager.favouriteClubId != clubId and manager.favouriteClubId > 0){
+    for (manager in Iter.fromArray(managers)) {
+      if (manager.favouriteClubId != clubId and manager.favouriteClubId > 0) {
         managerIdBuffer.add(manager.principalId);
       };
     };
     return Buffer.toArray(managerIdBuffer);
   };
 
-  public shared ({ caller }) func getMostValuableTeams (players: [DTOs.PlayerDTO], seasonId: T.SeasonId) : async [T.FantasyTeamSnapshot]{
+  public shared ({ caller }) func getMostValuableTeams(players : [DTOs.PlayerDTO], seasonId : T.SeasonId) : async [T.FantasyTeamSnapshot] {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == main_canister_id;
@@ -3292,8 +3288,8 @@ actor class ManagerCanister() {
       let allPlayerValues = Array.map<DTOs.PlayerDTO, Nat16>(allPlayers, func(player : DTOs.PlayerDTO) : Nat16 { return player.valueQuarterMillions });
       let totalTeamValue = Array.foldLeft<Nat16, Nat16>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
 
-      let updatedSnapshot: T.FantasyTeamSnapshot = {
-       
+      let updatedSnapshot : T.FantasyTeamSnapshot = {
+
         bankQuarterMillions = snapshot.bankQuarterMillions;
         braceBonusGameweek = snapshot.braceBonusGameweek;
         captainFantasticGameweek = snapshot.captainFantasticGameweek;
@@ -3340,13 +3336,13 @@ actor class ManagerCanister() {
     };
 
     let sortedTeamValuesArray = Array.sort(teamValuesArray, compare);
-    
+
     var counter = 0;
-    var lastScore: Int16 = 0;
+    var lastScore : Int16 = 0;
 
     let snapshotBuffer = Buffer.fromArray<T.FantasyTeamSnapshot>([]);
-    label teamLoop for(team in Iter.fromArray(sortedTeamValuesArray)){
-      if(counter >= 100 and team.1.points < lastScore){
+    label teamLoop for (team in Iter.fromArray(sortedTeamValuesArray)) {
+      if (counter >= 100 and team.1.points < lastScore) {
         break teamLoop;
       };
       snapshotBuffer.add(team.1);

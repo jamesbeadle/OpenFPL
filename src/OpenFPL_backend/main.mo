@@ -122,7 +122,7 @@ actor Self {
   public shared query func getPlayersMap(seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async Result.Result<[(Nat16, DTOs.PlayerScoreDTO)], T.Error> {
     return #ok(seasonManager.getPlayersMap(seasonId, gameweek));
   };
-  
+
   public shared query ({ caller }) func getPlayerDetails(playerId : T.PlayerId, seasonId : T.SeasonId) : async Result.Result<DTOs.PlayerDetailDTO, T.Error> {
     return #ok(seasonManager.getPlayerDetails(playerId, seasonId));
   };

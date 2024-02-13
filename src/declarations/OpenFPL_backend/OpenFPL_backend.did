@@ -497,7 +497,9 @@ type FantasyTeamSnapshot = record {
   goalGetterGameweek : GameweekNumber;
   goalGetterPlayerId : PlayerId;
   hatTrickHeroGameweek : GameweekNumber;
+  month : CalendarMonth;
   monthlyBonusesAvailable : nat8;
+  monthlyPoints : int16;
   noEntryGameweek : GameweekNumber;
   noEntryPlayerId : PlayerId;
   passMasterGameweek : GameweekNumber;
@@ -508,6 +510,7 @@ type FantasyTeamSnapshot = record {
   prospectsGameweek : GameweekNumber;
   safeHandsGameweek : GameweekNumber;
   safeHandsPlayerId : PlayerId;
+  seasonPoints : int16;
   teamBoostClubId : ClubId;
   teamBoostGameweek : GameweekNumber;
   teamValueQuarterMillions : nat16;
@@ -668,10 +671,10 @@ service : {
   getManager : (text) -> (Result_15);
   getMonthlyLeaderboard : (SeasonId, ClubId, CalendarMonth, nat, nat, text) -> (Result_14);
   getMonthlyLeaderboards : (SeasonId, CalendarMonth) -> (Result_13);
-  getPlayerDetails : (PlayerId, SeasonId) -> (Result_12);
+  getPlayerDetails : (PlayerId, SeasonId) -> (Result_12) query;
   getPlayerDetailsForGameweek : (SeasonId, GameweekNumber) -> (Result_11) query;
   getPlayers : () -> (Result_7) query;
-  getPlayersMap : (SeasonId, GameweekNumber) -> (Result_10);
+  getPlayersMap : (SeasonId, GameweekNumber) -> (Result_10) query;
   getPostponedFixtures : () -> (Result_9) query;
   getProfile : () -> (Result_8);
   getRetiredPlayers : (ClubId) -> (Result_7) query;

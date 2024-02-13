@@ -313,7 +313,7 @@ module {
     public func calculateLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth, uniqueManagerCanisterIds : [T.CanisterId]) : async () {
 
       let fantasyTeamSnapshotsBuffer = Buffer.fromArray<T.FantasyTeamSnapshot>([]);
-      
+
       for (canisterId in Iter.fromArray(uniqueManagerCanisterIds)) {
         let manager_canister = actor (canisterId) : actor {
           getSnapshots : (seasonId : T.SeasonId, gameweek : T.GameweekNumber) -> async [T.FantasyTeamSnapshot];
@@ -322,14 +322,14 @@ module {
         let snapshots = await manager_canister.getSnapshots(seasonId, gameweek);
         fantasyTeamSnapshotsBuffer.append(Buffer.fromArray(snapshots));
       };
-      
+
       await calculateWeeklyLeaderboards(seasonId, gameweek, Buffer.toArray(fantasyTeamSnapshotsBuffer));
       await calculateMonthlyLeaderboards(seasonId, gameweek, month, Buffer.toArray(fantasyTeamSnapshotsBuffer));
       await calculateSeasonLeaderboard(seasonId, Buffer.toArray(fantasyTeamSnapshotsBuffer));
 
     };
 
-    private func calculateWeeklyLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, snapshots: [T.FantasyTeamSnapshot]) : async () {
+    private func calculateWeeklyLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, snapshots : [T.FantasyTeamSnapshot]) : async () {
       let gameweekEntries = Array.map<T.FantasyTeamSnapshot, T.LeaderboardEntry>(
         snapshots,
         func(snapshot) {
@@ -357,16 +357,16 @@ module {
       weeklyLeaderboardCanisters := List.append(weeklyLeaderboardCanisters, List.fromArray([gameweekCanisterInfo]));
     };
 
-    private func calculateMonthlyLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth, snapshots: [T.FantasyTeamSnapshot]) : async () {
+    private func calculateMonthlyLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth, snapshots : [T.FantasyTeamSnapshot]) : async () {
       let clubGroup = groupByTeam(snapshots);
-      
+
       var updatedLeaderboards = List.nil<T.ClubLeaderboard>();
 
       for ((clubId, userTeams) : (T.ClubId, [T.FantasyTeamSnapshot]) in clubGroup.entries()) {
 
         let filteredTeams = List.filter<T.FantasyTeamSnapshot>(
           List.fromArray(userTeams),
-          func(snapshot: T.FantasyTeamSnapshot) : Bool {
+          func(snapshot : T.FantasyTeamSnapshot) : Bool {
             return snapshot.favouriteClubId != 0;
           },
         );
@@ -427,7 +427,7 @@ module {
       return groupedTeams;
     };
 
-    private func calculateSeasonLeaderboard(seasonId : T.SeasonId, snapshots: [T.FantasyTeamSnapshot]) : async () {
+    private func calculateSeasonLeaderboard(seasonId : T.SeasonId, snapshots : [T.FantasyTeamSnapshot]) : async () {
       let seasonEntries = Array.map<T.FantasyTeamSnapshot, T.LeaderboardEntry>(
         snapshots,
         func(snapshot) {

@@ -330,6 +330,7 @@ export const idlFactory = ({ IDL }) => {
   const Result_7 = IDL.Variant({ ok: IDL.Vec(PlayerDTO), err: Error });
   const FantasyTeamSnapshot = IDL.Record({
     playerIds: IDL.Vec(PlayerId),
+    month: CalendarMonth,
     teamValueQuarterMillions: IDL.Nat16,
     countrymenCountryId: CountryId,
     username: IDL.Text,
@@ -341,6 +342,7 @@ export const idlFactory = ({ IDL }) => {
     countrymenGameweek: GameweekNumber,
     bankQuarterMillions: IDL.Nat16,
     noEntryPlayerId: PlayerId,
+    monthlyPoints: IDL.Int16,
     safeHandsPlayerId: PlayerId,
     braceBonusGameweek: GameweekNumber,
     favouriteClubId: ClubId,
@@ -349,6 +351,7 @@ export const idlFactory = ({ IDL }) => {
     goalGetterGameweek: GameweekNumber,
     captainFantasticPlayerId: PlayerId,
     gameweek: GameweekNumber,
+    seasonPoints: IDL.Int16,
     transferWindowGameweek: GameweekNumber,
     noEntryGameweek: GameweekNumber,
     prospectsGameweek: GameweekNumber,
@@ -615,14 +618,14 @@ export const idlFactory = ({ IDL }) => {
       [Result_13],
       []
     ),
-    getPlayerDetails: IDL.Func([PlayerId, SeasonId], [Result_12], []),
+    getPlayerDetails: IDL.Func([PlayerId, SeasonId], [Result_12], ["query"]),
     getPlayerDetailsForGameweek: IDL.Func(
       [SeasonId, GameweekNumber],
       [Result_11],
       ["query"]
     ),
     getPlayers: IDL.Func([], [Result_7], ["query"]),
-    getPlayersMap: IDL.Func([SeasonId, GameweekNumber], [Result_10], []),
+    getPlayersMap: IDL.Func([SeasonId, GameweekNumber], [Result_10], ["query"]),
     getPostponedFixtures: IDL.Func([], [Result_9], ["query"]),
     getProfile: IDL.Func([], [Result_8], []),
     getRetiredPlayers: IDL.Func([ClubId], [Result_7], ["query"]),
