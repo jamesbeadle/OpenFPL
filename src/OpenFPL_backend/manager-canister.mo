@@ -40,6 +40,7 @@ actor class ManagerCanister() {
   private let cyclesCheckInterval : Nat = Utilities.getHour() * 24;
   private var cyclesCheckTimerId : ?Timer.TimerId = null;
   private var activeGroupIndex = 0;
+  private stable var totalManagers = 0;
 
   let network = Environment.DFX_NETWORK;
   var main_canister_id = CanisterIds.MAIN_CANISTER_IC_ID;
@@ -846,56 +847,6 @@ actor class ManagerCanister() {
         return null;
       };
     };
-  };
-
-  //get managers
-  public shared ({ caller }) func getManagers(managerGroup : Nat8) : async [T.Manager] {
-    assert not Principal.isAnonymous(caller);
-    let principalId = Principal.toText(caller);
-    assert principalId == main_canister_id;
-
-    switch (managerGroup) {
-      case 0 {
-        return managerGroup1;
-      };
-      case 1 {
-        return managerGroup2;
-      };
-      case 2 {
-        return managerGroup3;
-      };
-      case 3 {
-        return managerGroup4;
-      };
-      case 4 {
-        return managerGroup5;
-      };
-      case 5 {
-        return managerGroup6;
-      };
-      case 6 {
-        return managerGroup7;
-      };
-      case 7 {
-        return managerGroup8;
-      };
-      case 8 {
-        return managerGroup9;
-      };
-      case 9 {
-        return managerGroup10;
-      };
-      case 10 {
-        return managerGroup11;
-      };
-      case 11 {
-        return managerGroup12;
-      };
-      case _ {
-
-      };
-    };
-    return [];
   };
 
   public shared ({ caller }) func getManagersWithPlayer(playerId : T.PlayerId) : async [T.PrincipalId] {
@@ -1907,7 +1858,10 @@ actor class ManagerCanister() {
   };
 
   public shared ({caller}) func calculateFantasyTeamScores(allPlayersList : [(T.PlayerId, DTOs.PlayerScoreDTO)], allPlayers: [DTOs.PlayerDTO], seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async (){
-    
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == main_canister_id;
+
     let playerIdTrie: TrieMap.TrieMap<T.PlayerId, DTOs.PlayerScoreDTO> = TrieMap.TrieMap<T.PlayerId, DTOs.PlayerScoreDTO>(Utilities.eqNat16, Utilities.hashNat16);
     for (player in Iter.fromArray(allPlayersList)){
       playerIdTrie.put(player.0, player.1)
@@ -2076,6 +2030,63 @@ actor class ManagerCanister() {
       case (#Midfielder) { return 20 * assists };
       case (#Forward) { return 20 * assists };
     };
+  };
+
+  public shared ({ caller }) func getTotalManagers() : async Nat{
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == main_canister_id;
+    return totalManagers;
+  };
+
+  public shared ({ caller }) func snapshotFantasyTeams (seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async (){
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == main_canister_id;
+    //TODO: Complete
+    
+  };
+  public shared ({ caller }) func resetTransfers () : async (){
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == main_canister_id;
+    //TODO: Complete
+    
+  };
+  public shared ({ caller }) func resetBonusesAvailable () : async (){
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == main_canister_id;
+    //TODO: Complete
+    
+  };
+  public shared ({ caller }) func resetFantasyTeams () : async (){
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == main_canister_id;
+    //TODO: Complete
+    
+  };
+  public shared ({ caller }) func getClubManagers (clubId : T.ClubId) : async [T.PrincipalId]{
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == main_canister_id;
+    //TODO: Complete
+    
+  };
+  public shared ({ caller }) func getNonClubManagers (clubId : T.ClubId) : async Nat{
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == main_canister_id;
+    //TODO: Complete
+    
+  };
+  public shared ({ caller }) func getMostValuableTeams () : async [T.FantasyTeamSnapshot]{
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == main_canister_id;
+    //TODO: Complete
+    
   };
 
   system func preupgrade() {
