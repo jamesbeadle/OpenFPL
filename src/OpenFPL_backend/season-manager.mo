@@ -846,6 +846,14 @@ module {
       );
     };
 
+    public func getStableSystemState() : T.SystemState {
+      return systemState;
+    };
+
+    public func setStableSystemState(stable_system_state : T.SystemState) {
+      systemState := stable_system_state;
+    };
+
     public func getStableManagerCanisterIds() : [(T.PrincipalId, T.CanisterId)] {
       return managerComposite.getStableManagerCanisterIds();
     };
@@ -1076,10 +1084,6 @@ module {
 
     public func setStableDataHashes(stable_data_cache_hashes : [T.DataCache]) {
       dataCacheHashes := List.fromArray(stable_data_cache_hashes);
-    };
-
-    public func setStableSystemState(stable_system_state : T.SystemState) {
-      systemState := stable_system_state;
     };
 
     /* Admin Functions to Remove  */

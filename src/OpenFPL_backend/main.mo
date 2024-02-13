@@ -462,6 +462,7 @@ actor Self {
     stable_next_fixture_id := seasonManager.getStableNextFixtureId();
     stable_data_cache_hashes := seasonManager.getStableDataHashes();
     stable_canister_ids := cyclesDispenser.getStableCanisterIds();
+    stable_system_state := seasonManager.getStableSystemState();
   };
 
   system func postupgrade() {
