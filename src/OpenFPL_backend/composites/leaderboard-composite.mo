@@ -357,29 +357,10 @@ module {
       weeklyLeaderboardCanisters := List.append(weeklyLeaderboardCanisters, List.fromArray([gameweekCanisterInfo]));
     };
 
+//TODO: Need to use month being stored with snapshot
     private func calculateMonthlyLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth, snapshots: [T.FantasyTeamSnapshot]) : async () {
       let clubGroup = groupByTeam(snapshots);
-
-      var monthGameweeks : List.List<Nat8> = List.nil();
-      var gameweekMonth : Nat8 = 0;
-      let gameweekFixtures : [T.Fixture] = [];
-
-      if (gameweekFixtures.size() > 0) {
-        gameweekMonth := Utilities.unixTimeToMonth(Utilities.getLatestFixtureTime(gameweekFixtures));
-        monthGameweeks := List.append(monthGameweeks, List.fromArray([gameweek]));
-
-        var currentGameweek = gameweek;
-        label gwLoop while (currentGameweek > 1) {
-          currentGameweek -= 1;
-          let currentMonth = Utilities.unixTimeToMonth(Utilities.getLatestFixtureTime(gameweekFixtures));
-          if (currentMonth == gameweekMonth) {
-            monthGameweeks := List.append(monthGameweeks, List.fromArray([currentGameweek]));
-          } else {
-            break gwLoop;
-          };
-        };
-      };
-
+      
       var updatedLeaderboards = List.nil<T.ClubLeaderboard>();
 
       for ((clubId, userTeams) : (T.ClubId, [T.FantasyTeamSnapshot]) in clubGroup.entries()) {
@@ -403,7 +384,7 @@ module {
 
         let clubMonthlyLeaderboard : T.ClubLeaderboard = {
           seasonId = seasonId;
-          month = gameweekMonth;
+          month = month;
           clubId = clubId;
           entries = positionedMonthlyEntries;
           totalEntries = List.size(positionedMonthlyEntries);
