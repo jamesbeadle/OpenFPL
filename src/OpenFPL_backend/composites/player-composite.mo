@@ -20,7 +20,7 @@ import TrieMap "mo:base/TrieMap";
 module {
   public class PlayerComposite() {
 
-    private var nextPlayerId : T.PlayerId = 1000; //TODO: Set when you have uploaded the initial players
+    private var nextPlayerId : T.PlayerId = 560;
     private var players = List.fromArray<T.Player>([]);
     private var setAndBackupTimer : ?((duration : Timer.Duration, callbackName : Text) -> ()) = null;
     private var removeExpiredTimers : ?(() -> ()) = null;

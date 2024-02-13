@@ -1456,10 +1456,6 @@ module {
     };
 
     public func distributeMostValuableTeamRewards(mostValuableTeamPool : Nat64, players : [DTOs.PlayerDTO], currentSeason : T.SeasonId) : async () {
-
-      //call each canister and get the top 100 most valuable teams
-
-      //combine and distribute rewards
       let gameweek38Snapshots = Buffer.fromArray<T.FantasyTeamSnapshot>([]);
       let mostValuableTeamsBuffer = Buffer.fromArray<T.FantasyTeamSnapshot>([]);
       for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {

@@ -1022,7 +1022,6 @@ actor class ManagerCanister() {
     return Buffer.toArray(allManagersBuffer);
   };
 
-//TODO: NEEDS SEASON ID?
   public shared ({ caller }) func getGameweek38Snapshots(seasonId: T.SeasonId) : async [T.FantasyTeamSnapshot] {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
