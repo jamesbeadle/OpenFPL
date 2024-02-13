@@ -2389,6 +2389,96 @@ actor class ManagerCanister() {
     return Buffer.toArray(managerBuffer);
   };
 
+  public shared ({ caller }) func resetWeeklyTransfers () : async (){
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == main_canister_id;
+    
+    for(index in Iter.range(0,11)){
+      switch(index){
+        case 0{
+          managerGroup1 := resetManagerWeeklyTransfers(managerGroup1);
+        };
+        case 1{
+          managerGroup2 := resetManagerWeeklyTransfers(managerGroup2);
+        };
+        case 2{
+          managerGroup3 := resetManagerWeeklyTransfers(managerGroup3);
+        };
+        case 3{
+          managerGroup4 := resetManagerWeeklyTransfers(managerGroup4);
+        };
+        case 4{
+          managerGroup5 := resetManagerWeeklyTransfers(managerGroup5);
+        };
+        case 5{
+          managerGroup6 := resetManagerWeeklyTransfers(managerGroup6);
+        };
+        case 6{
+          managerGroup7 := resetManagerWeeklyTransfers(managerGroup7);
+        };
+        case 7{
+          managerGroup8 := resetManagerWeeklyTransfers(managerGroup8);
+        };
+        case 8{
+          managerGroup9 := resetManagerWeeklyTransfers(managerGroup9);
+        };
+        case 9{
+          managerGroup10 := resetManagerWeeklyTransfers(managerGroup10);
+        };
+        case 10{
+          managerGroup11 := resetManagerWeeklyTransfers(managerGroup11);
+        };
+        case 11{
+          managerGroup12 := resetManagerWeeklyTransfers(managerGroup12);
+        };
+        case _ {
+
+        }
+      }
+    };
+  };
+
+  private func resetManagerWeeklyTransfers(managers: [T.Manager]) : [T.Manager]{
+    let managerBuffer = Buffer.fromArray<T.Manager>([]);
+    for(manager in Iter.fromArray(managers)){
+      let updatedManager: T.Manager = {
+        principalId = manager.principalId;
+        username = manager.username;
+        termsAccepted = manager.termsAccepted;
+        favouriteClubId = manager.favouriteClubId;
+        createDate = manager.createDate;
+        history = manager.history;
+        profilePicture = manager.profilePicture;
+        transfersAvailable = 3;
+        monthlyBonusesAvailable = manager.monthlyBonusesAvailable;
+        bankQuarterMillions = manager.bankQuarterMillions;
+        playerIds = manager.playerIds;
+        captainId = manager.captainId;
+        goalGetterGameweek = manager.goalGetterGameweek;
+        goalGetterPlayerId = manager.goalGetterPlayerId;
+        passMasterGameweek = manager.passMasterGameweek;
+        passMasterPlayerId = manager.passMasterPlayerId;
+        noEntryGameweek = manager.noEntryGameweek;
+        noEntryPlayerId = manager.noEntryPlayerId;
+        teamBoostGameweek = manager.teamBoostGameweek;
+        teamBoostClubId = manager.teamBoostClubId;
+        safeHandsGameweek = manager.safeHandsGameweek;
+        safeHandsPlayerId = manager.safeHandsPlayerId;
+        captainFantasticGameweek = manager.captainFantasticGameweek;
+        captainFantasticPlayerId = manager.captainFantasticPlayerId;
+        countrymenGameweek = manager.countrymenGameweek;
+        countrymenCountryId = manager.countrymenCountryId;
+        prospectsGameweek = manager.prospectsGameweek;
+        braceBonusGameweek = manager.braceBonusGameweek;
+        hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
+        transferWindowGameweek = manager.transferWindowGameweek;
+      };
+      managerBuffer.add(updatedManager);
+    };
+    return Buffer.toArray(managerBuffer);
+  };
+
   public shared ({ caller }) func getClubManagers (clubId : T.ClubId) : async [T.PrincipalId]{
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);

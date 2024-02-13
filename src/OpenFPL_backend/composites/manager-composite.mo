@@ -1087,6 +1087,17 @@ module {
       };
     };
 
+    public func resetWeeklyTransfers() : async () {
+      for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
+
+        let manager_canister = actor (canisterId) : actor {
+          resetWeeklyTransfers : () -> async ();
+        };
+
+        await manager_canister.resetWeeklyTransfers();
+      };
+    };
+
     public func resetFantasyTeams(seasonId: T.SeasonId) : async () {
       for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
 

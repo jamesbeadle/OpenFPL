@@ -372,7 +372,7 @@ module {
 
       let gameweekComplete = seasonComposite.checkGameweekComplete(systemState);
       if (gameweekComplete) {
-        await managerComposite.resetTransfers();
+        await managerComposite.resetWeeklyTransfers();
         let seasonComplete = seasonComposite.checkSeasonComplete(systemState);
         if (seasonComplete) {
 
