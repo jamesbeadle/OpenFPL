@@ -28,11 +28,10 @@ function createUserStore() {
     const storedData = localStorage.getItem("user_profile_data");
     if (storedData) {
       const profileData: ProfileDTO = JSON.parse(storedData);
-      if (profileData && typeof profileData.profilePicture === "string") {
-        profileData.profilePicture = base64ToUint8Array(
-          profileData.profilePicture
-        );
-      }
+      // Assuming profileData.profilePicture is a base64 string before being converted.
+      if (typeof profileData.profilePicture === 'string') {
+        profileData.profilePicture = [base64ToUint8Array(profileData.profilePicture)];
+      } 
       return profileData;
     }
     return null;
@@ -111,11 +110,13 @@ function createUserStore() {
 
   async function updateUsername(username: string): Promise<any> {
     try {
+      console.log(process.env.OPENFPL_BACKEND_CANISTER_ID)
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.updateUsername(username);
+      console.log(result)
       if (isError(result)) {
         console.error("Error updating username");
         return;
@@ -134,7 +135,8 @@ function createUserStore() {
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      const result = await identityActor.updateFavouriteTeam(favouriteTeamId);
+      const result = await identityActor.updateFavouriteClub(favouriteTeamId);
+      console.log(result)
       if (isError(result)) {
         console.error("Error updating favourite team");
         return;

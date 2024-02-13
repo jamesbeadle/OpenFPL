@@ -17,6 +17,7 @@ import Option "mo:base/Option";
 import Int64 "mo:base/Int64";
 import Nat64 "mo:base/Nat64";
 import Result "mo:base/Result";
+import Debug "mo:base/Debug";
 import CanisterIds "CanisterIds";
 import Utilities "utilities";
 import Environment "Environment";
@@ -223,6 +224,7 @@ actor class ManagerCanister() {
   };
 
   public shared ({ caller }) func updateUsername(dto : DTOs.UpdateUsernameDTO) : async Result.Result<(), T.Error> {
+    Debug.print("updating usersname in canister");
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == main_canister_id;

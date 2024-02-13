@@ -7,9 +7,10 @@
 
   <h2 class="default-header mb-4">Online Marketing Strategy</h2>
   <p class="my-2">
-    After the SNS we will begin a comprehensive online marketing campaign. The campaign
-    will focus on PPC (Pay-Per-Click) and SEO (Search Engine Optimisation)
-    strategies, with an emphasis on reaching specific user groups effectively.
+    After the SNS we will begin a comprehensive online marketing campaign. The
+    campaign will focus on PPC (Pay-Per-Click) and SEO (Search Engine
+    Optimisation) strategies, with an emphasis on reaching specific user groups
+    effectively.
   </p>
 
   <h2 class="default-header mt-4">Initial Strategy and Goals</h2>

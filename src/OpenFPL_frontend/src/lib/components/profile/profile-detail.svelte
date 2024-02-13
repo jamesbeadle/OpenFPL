@@ -16,7 +16,7 @@
   let profile: Writable<ProfileDTO> = writable({
     playerIds: [],
     countrymenCountryId: 0,
-    username: "Not Set",
+    username: "",
     goalGetterPlayerId: 0,
     hatTrickHeroGameweek: 0,
     transfersAvailable: 3,
@@ -53,16 +53,21 @@
 
   let unsubscribeUserProfile: () => void;
 
-  $: profileSrc =
-    $profile && $profile?.profilePicture && $profile?.profilePicture?.length > 0
-      ? URL.createObjectURL(new Blob([new Uint8Array($profile.profilePicture)]))
-      : "/profile_placeholder.png";
+  $: profileSrc = $profile?.profilePicture?.length > 0
+  ? URL.createObjectURL(
+      new Blob([
+        $profile.profilePicture[0] instanceof Uint8Array
+          ? $profile.profilePicture[0]
+          : new Uint8Array($profile.profilePicture[0] || [])
+      ])
+    )
+  : "/profile_placeholder.png";
 
   $: gameweek = $systemStore?.calculationGameweek ?? 1;
 
   $: teamName =
     $teamStore.find((x) => x.id == $profile?.favouriteClubId)?.friendlyName ??
-    "Not Set";
+    "";
 
   let isLoading = true;
 
@@ -233,7 +238,7 @@
         <div class="md:ml-4 md:px-4 px-4 mt-2 md:mt-1 rounded-lg">
           <p class="mb-1">Display Name:</p>
           <h2 class="default-header mb-1 md:mb-2">
-            {$profile?.username}
+            {$profile?.username == "" ? "Not Set" : $profile?.username}
           </h2>
           <button
             class="text-sm md:text-sm p-1 md:p-2 px-2 md:px-4 rounded fpl-button"
@@ -243,7 +248,7 @@
           </button>
           <p class="mb-1 mt-4">Favourite Team:</p>
           <h2 class="default-header mb-1 md:mb-2">
-            {teamName}
+            {teamName == "" ? "Not Set" : teamName}
           </h2>
           <button
             class={`p-1 md:p-2 px-2 md:px-4 ${
