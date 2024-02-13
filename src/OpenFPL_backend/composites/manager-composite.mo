@@ -1076,17 +1076,6 @@ module {
       };
     };
 
-    public func resetTransfers() : async () {
-      for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
-
-        let manager_canister = actor (canisterId) : actor {
-          resetTransfers : () -> async ();
-        };
-
-        await manager_canister.resetTransfers();
-      };
-    };
-
     public func resetBonusesAvailable() : async () {
       for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
 
