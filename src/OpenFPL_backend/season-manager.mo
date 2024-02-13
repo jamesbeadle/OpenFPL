@@ -1146,11 +1146,11 @@ module {
       };
     };
 
-    public func init() {
+    public func init() : async () {
       seasonComposite.init();
       clubComposite.init();
       playerComposite.init();
-      //managerComposite.init();
+      await managerComposite.init();
     };
 
   };

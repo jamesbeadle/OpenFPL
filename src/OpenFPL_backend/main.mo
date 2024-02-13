@@ -330,7 +330,7 @@ actor Self {
     seasonManager.setTimerBackupFunction(timerComposite.setAndBackupTimer, timerComposite.removeExpiredTimers);
     seasonManager.setStoreCanisterIdFunction(cyclesDispenser.storeCanisterId);
 
-    seasonManager.init();
+    await seasonManager.init();
     return #ok;
   };
 

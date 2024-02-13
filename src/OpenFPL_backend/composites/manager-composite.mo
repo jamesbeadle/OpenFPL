@@ -1978,12 +1978,9 @@ module {
       return canisterId;
     };
 
-    public func init() : async Result.Result<(), T.Error> {
+    public func init() : async () {
       let result = await createManagerCanister();
-      if (result == "") {
-        return #err(#CanisterCreateError);
-      };
-      return #ok;
+      activeManagerCanisterId := result;
     };
   };
 };
