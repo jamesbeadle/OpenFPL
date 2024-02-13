@@ -1314,7 +1314,7 @@ actor class ManagerCanister() {
 
     return #ok();
   };
-  
+
   public shared ({ caller }) func updateSnapshotPoints(principalId : Text, seasonId : Nat16, gameweek : Nat8, teamPoints : Int16, teamValueQuarterMillions : Nat16) : () {
 
     assert not Principal.isAnonymous(caller);
@@ -1680,6 +1680,8 @@ actor class ManagerCanister() {
       profilePicture = manager.profilePicture;
       gameweek = gameweek;
       points = points;
+      monthlyPoints = manager.monthlyPoints + points;
+      seasonPoints = manager.seasonPoints + points;
       teamValueQuarterMillions = teamValueQuarterMillions;
     };
   };

@@ -144,6 +144,8 @@ module Types {
     braceBonusGameweek : GameweekNumber;
     hatTrickHeroGameweek : GameweekNumber;
     points : Int16;
+    monthlyPoints : Int16;
+    seasonPoints : Int16;
     transferWindowGameweek : GameweekNumber;
   };
 
