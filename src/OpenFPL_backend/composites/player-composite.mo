@@ -218,7 +218,7 @@ module {
       return Buffer.toArray(playerDetailsBuffer);
     };
 
-    public func getPlayersMap(seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async [(Nat16, DTOs.PlayerScoreDTO)] {
+    public func getPlayersMap(seasonId : T.SeasonId, gameweek : T.GameweekNumber) : [(Nat16, DTOs.PlayerScoreDTO)] {
       var playersMap : TrieMap.TrieMap<Nat16, DTOs.PlayerScoreDTO> = TrieMap.TrieMap<Nat16, DTOs.PlayerScoreDTO>(Utilities.eqNat16, Utilities.hashNat16);
       label playerMapLoop for (player in Iter.fromList(players)) {
         if (player.status == #OnLoan) {
@@ -273,7 +273,7 @@ module {
       return Iter.toArray(playersMap.entries());
     };
 
-    public func getPlayerDetails(playerId : T.PlayerId, seasonId : T.SeasonId) : async Result.Result<DTOs.PlayerDetailDTO, T.Error> {
+    public func getPlayerDetails(playerId : T.PlayerId, seasonId : T.SeasonId) : DTOs.PlayerDetailDTO {
 
       var clubId : T.ClubId = 0;
       var position : T.PlayerPosition = #Goalkeeper;
@@ -344,7 +344,7 @@ module {
         };
       };
 
-      return #ok({
+      return {
         id = playerId;
         clubId = clubId;
         position = position;
@@ -362,7 +362,7 @@ module {
         injuryHistory = injuryHistory;
         retirementDate = retirementDate;
         gameweeks = Buffer.toArray<DTOs.PlayerGameweekDTO>(gameweeksBuffer);
-      });
+      };
     };
 
     public func getPlayerPosition(playerId : T.PlayerId) : ?T.PlayerPosition {

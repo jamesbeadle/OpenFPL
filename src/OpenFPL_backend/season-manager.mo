@@ -168,13 +168,13 @@ module {
       return playerComposite.getPlayerDetailsForGameweek(seasonId, gameweek);
     };
 
-    public func getPlayerDetails(playerId : T.PlayerId, seasonId : T.SeasonId) : async Result.Result<DTOs.PlayerDetailDTO, T.Error> {
-      return await playerComposite.getPlayerDetails(playerId, seasonId);
+    public func getPlayerDetails(playerId : T.PlayerId, seasonId : T.SeasonId) : DTOs.PlayerDetailDTO{
+      return playerComposite.getPlayerDetails(playerId, seasonId);
     };
 
-    public func getPlayersMap(seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async Result.Result<[(Nat16, DTOs.PlayerScoreDTO)], T.Error> {
-      let result = await playerComposite.getPlayersMap(seasonId, gameweek);
-      return #ok(result);
+    public func getPlayersMap(seasonId : T.SeasonId, gameweek : T.GameweekNumber) : [(Nat16, DTOs.PlayerScoreDTO)] {
+      let result = playerComposite.getPlayersMap(seasonId, gameweek);
+      return result;
     };
 
     public func getWeeklyLeaderboard(seasonId : T.SeasonId, gameweek : T.GameweekNumber, limit : Nat, offset : Nat, searchTerm : Text) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
@@ -345,7 +345,7 @@ module {
         };
       };
 
-      let playerPointsMap = await playerComposite.getPlayersMap(systemState.calculationSeasonId, systemState.calculationGameweek);
+      let playerPointsMap = playerComposite.getPlayersMap(systemState.calculationSeasonId, systemState.calculationGameweek);
 
       await managerComposite.calculateFantasyTeamScores(playerPointsMap, systemState.calculationSeasonId, systemState.calculationGameweek);
 
