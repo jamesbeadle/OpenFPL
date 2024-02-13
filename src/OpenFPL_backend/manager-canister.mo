@@ -2285,7 +2285,7 @@ actor class ManagerCanister() {
     return totalManagers;
   };
 
-  public shared ({ caller }) func snapshotFantasyTeams (seasonId : T.SeasonId, gameweek : T.GameweekNumber, players: [DTOs.PlayerDTO]) : async (){
+  public shared ({ caller }) func snapshotFantasyTeams (seasonId : T.SeasonId, gameweek : T.GameweekNumber, month: T.CalendarMonth, players: [DTOs.PlayerDTO]) : async (){
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == main_canister_id;
@@ -2293,40 +2293,40 @@ actor class ManagerCanister() {
     for(index in Iter.range(0,11)){
       switch(index){
         case 0{
-          managerGroup1 := snapshotManagers(managerGroup1, seasonId, gameweek, players);
+          managerGroup1 := snapshotManagers(managerGroup1, seasonId, gameweek, month, players);
         };
         case 1{
-          managerGroup2 := snapshotManagers(managerGroup2, seasonId, gameweek, players);
+          managerGroup2 := snapshotManagers(managerGroup2, seasonId, gameweek, month, players);
         };
         case 2{
-          managerGroup3 := snapshotManagers(managerGroup3, seasonId, gameweek, players);
+          managerGroup3 := snapshotManagers(managerGroup3, seasonId, gameweek, month, players);
         };
         case 3{
-          managerGroup4 := snapshotManagers(managerGroup4, seasonId, gameweek, players);
+          managerGroup4 := snapshotManagers(managerGroup4, seasonId, gameweek, month, players);
         };
         case 4{
-          managerGroup5 := snapshotManagers(managerGroup5, seasonId, gameweek, players);
+          managerGroup5 := snapshotManagers(managerGroup5, seasonId, gameweek, month, players);
         };
         case 5{
-          managerGroup6 := snapshotManagers(managerGroup6, seasonId, gameweek, players);
+          managerGroup6 := snapshotManagers(managerGroup6, seasonId, gameweek, month, players);
         };
         case 6{
-          managerGroup7 := snapshotManagers(managerGroup7, seasonId, gameweek, players);
+          managerGroup7 := snapshotManagers(managerGroup7, seasonId, gameweek, month, players);
         };
         case 7{
-          managerGroup8 := snapshotManagers(managerGroup8, seasonId, gameweek, players);
+          managerGroup8 := snapshotManagers(managerGroup8, seasonId, gameweek, month, players);
         };
         case 8{
-          managerGroup9 := snapshotManagers(managerGroup9, seasonId, gameweek, players);
+          managerGroup9 := snapshotManagers(managerGroup9, seasonId, gameweek, month, players);
         };
         case 9{
-          managerGroup10 := snapshotManagers(managerGroup10, seasonId, gameweek, players);
+          managerGroup10 := snapshotManagers(managerGroup10, seasonId, gameweek, month, players);
         };
         case 10{
-          managerGroup11 := snapshotManagers(managerGroup11, seasonId, gameweek, players);
+          managerGroup11 := snapshotManagers(managerGroup11, seasonId, gameweek, month, players);
         };
         case 11{
-          managerGroup12 := snapshotManagers(managerGroup12, seasonId, gameweek, players);
+          managerGroup12 := snapshotManagers(managerGroup12, seasonId, gameweek, month, players);
         };
         case _ {
 
@@ -2335,7 +2335,7 @@ actor class ManagerCanister() {
     };
   };
 
-  private func snapshotManagers(managers: [T.Manager], seasonId : T.SeasonId, gameweek : T.GameweekNumber, players: [DTOs.PlayerDTO]) : [T.Manager]{
+  private func snapshotManagers(managers: [T.Manager], seasonId : T.SeasonId, gameweek : T.GameweekNumber, month: T.CalendarMonth, players: [DTOs.PlayerDTO]) : [T.Manager]{
     let managerBuffer = Buffer.fromArray<T.Manager>([]);
     for(manager in Iter.fromArray(managers)){
 
@@ -2399,6 +2399,9 @@ actor class ManagerCanister() {
               transferWindowGameweek = manager.transferWindowGameweek;
               monthlyBonusesAvailable = manager.monthlyBonusesAvailable;
               teamValueQuarterMillions = totalTeamValue;
+              month = month;
+              monthlyPoints = 0;
+              seasonPoints = 0;
             };
 
 
@@ -2983,7 +2986,9 @@ actor class ManagerCanister() {
         transferWindowGameweek = snapshot.transferWindowGameweek;
         transfersAvailable = snapshot.transfersAvailable;
         username = snapshot.username;
-
+        month = snapshot.month;
+        monthlyPoints = snapshot.monthlyPoints;
+        seasonPoints = snapshot.seasonPoints;
       };
 
       teamValues.put(snapshot.principalId, updatedSnapshot);
