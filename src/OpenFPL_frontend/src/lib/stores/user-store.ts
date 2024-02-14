@@ -14,13 +14,9 @@ function createUserStore() {
   }
 
   async function sync() {
-    console.log("syncing")
     let localStorageString = localStorage.getItem("user_profile_data");
-    if(localStorageString){
+    if (localStorageString) {
       const localProfile = JSON.parse(localStorageString);
-      console.log("Local storage profile picture:", localProfile.profilePicture);
-
-      console.log("set profile 1")
       set(localProfile);
       return;
     }
@@ -46,13 +42,15 @@ function createUserStore() {
       let byteArray;
       if (profileData && profileData.profilePicture) {
         let base64Picture;
-        if (Array.isArray(profileData.profilePicture) && profileData.profilePicture[0] instanceof Uint8Array) {
+        if (
+          Array.isArray(profileData.profilePicture) &&
+          profileData.profilePicture[0] instanceof Uint8Array
+        ) {
           byteArray = profileData.profilePicture[0];
           base64Picture = uint8ArrayToBase64(byteArray);
         } else if (profileData.profilePicture instanceof Uint8Array) {
           base64Picture = uint8ArrayToBase64(profileData.profilePicture);
         } else {
-          console.log("Setting default 1")
           base64Picture = "/profile_placeholder.png";
         }
 
@@ -73,7 +71,6 @@ function createUserStore() {
         );
       }
 
-      console.log("set profile 2")
       set(profileData);
     } catch (error) {
       console.error("Error fetching user profile:", error);
@@ -139,6 +136,7 @@ function createUserStore() {
 
   async function getProfile(): Promise<any> {
     try {
+      console.log("getting proile")
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
@@ -175,7 +173,7 @@ function createUserStore() {
             process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
           );
           const result = await identityActor.updateProfilePicture(uint8Array);
-
+          console.log(result);
           if (isError(result)) {
             console.error("Error updating profile picture");
             return;
@@ -215,26 +213,34 @@ function createUserStore() {
     }
 
     let profileData = getProfileResponse.ok;
-
+    let byteArray;
+    console.log(profileData);
     if (profileData && profileData.profilePicture) {
-      const byteArray = profileData.profilePicture instanceof Uint8Array
-        ? profileData.profilePicture
-        : new Uint8Array(profileData.profilePicture);
-      const base64Picture = uint8ArrayToBase64(byteArray);
-
-      
-        localStorage.setItem(
+      let base64Picture;
+      if (
+        Array.isArray(profileData.profilePicture) &&
+        profileData.profilePicture[0] instanceof Uint8Array
+      ) {
+        byteArray = profileData.profilePicture[0];
+        base64Picture = uint8ArrayToBase64(byteArray);
+      } else if (profileData.profilePicture instanceof Uint8Array) {
+        base64Picture = uint8ArrayToBase64(profileData.profilePicture);
+      } else {
+        base64Picture = "/profile_placeholder.png";
+      }
+      profileData = 
+      {
+        ...profileData,
+        profilePicture: base64Picture,
+      };
+      localStorage.setItem(
         "user_profile_data",
-        JSON.stringify(
-          {
-            ...profileData,
-            profilePicture: base64Picture,
-          },
+        JSON.stringify(profileData,
           replacer
         )
       );
     } else {
-        localStorage.setItem(
+      localStorage.setItem(
         "user_profile_data",
         JSON.stringify(profileData, replacer)
       );

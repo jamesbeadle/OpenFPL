@@ -8,7 +8,7 @@ import type {
   FantasyTeamSnapshot,
   ManagerDTO,
   PickTeamDTO,
-  SystemStateDTO
+  SystemStateDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 
@@ -244,7 +244,7 @@ function createManagerStore() {
         transfersAvailable: 0,
         bankQuarterMillions: 0,
         principalId: "",
-        monthlyBonusesAvailable: 0
+        monthlyBonusesAvailable: 0,
       };
 
       let result = await identityActor.saveFantasyTeam(dto);

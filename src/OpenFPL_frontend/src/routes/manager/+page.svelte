@@ -43,13 +43,15 @@
       manager = await managerStore.getPublicProfile(id ?? "");
       displayName =
         manager.username === manager.principalId ? "Unknown" : manager.username;
-              
+
       let profilePicture = manager?.profilePicture as unknown as string;
-      let profileSrc = typeof profilePicture === 'string' && profilePicture.startsWith('data:image')
-        ? profilePicture
-        : "/profile_placeholder.png";
-        profilePicture = profileSrc;
-        
+      let profileSrc =
+        typeof profilePicture === "string" &&
+        profilePicture.startsWith("data:image")
+          ? profilePicture
+          : "/profile_placeholder.png";
+      profilePicture = profileSrc;
+
       joinedDate = getDateFromBigInt(Number(manager.createDate));
       favouriteTeam =
         manager.favouriteClubId > 0

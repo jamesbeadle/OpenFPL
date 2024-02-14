@@ -40,7 +40,7 @@ actor class ManagerCanister() {
   private stable var managerGroup12 : [T.Manager] = [];
   private let cyclesCheckInterval : Nat = Utilities.getHour() * 24;
   private var cyclesCheckTimerId : ?Timer.TimerId = null;
-  private var activeGroupIndex: Nat8 = 0;
+  private var activeGroupIndex : Nat8 = 0;
   private stable var totalManagers = 0;
 
   let network = Environment.DFX_NETWORK;
@@ -226,7 +226,7 @@ actor class ManagerCanister() {
   public shared ({ caller }) func updateUsername(dto : DTOs.UpdateUsernameDTO) : async Result.Result<(), T.Error> {
     Debug.print("In Manager Canister: Update Username");
     Debug.print(debug_show dto);
-   assert not Principal.isAnonymous(caller);
+    assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == main_canister_id;
 
@@ -1587,7 +1587,7 @@ actor class ManagerCanister() {
   };
 
   public shared ({ caller }) func addNewManager(newManager : T.Manager) : async Result.Result<(), T.Error> {
-     assert not Principal.isAnonymous(caller);
+    assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == main_canister_id;
 

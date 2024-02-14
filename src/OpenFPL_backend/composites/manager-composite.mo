@@ -485,8 +485,7 @@ module {
         Debug.print("username invalid");
         return #err(#InvalidData);
       };
-      
-      
+
       if (isUsernameTaken(updatedUsername, principalId)) {
         Debug.print("username taken");
         return #err(#InvalidData);
@@ -576,7 +575,7 @@ module {
           Debug.print(debug_show result);
           managerUsernames.put(principalId, updatedUsername);
           Debug.print("username ok");
-          return #ok();
+          return result;
         };
       };
       return #err(#NotFound);
@@ -692,6 +691,7 @@ module {
           };
 
           result := await manager_canister.updateFavouriteClub(dto);
+          return result;
         };
       };
 
@@ -782,6 +782,7 @@ module {
           };
 
           result := await manager_canister.updateProfilePicture(dto);
+          return result;
         };
       };
 

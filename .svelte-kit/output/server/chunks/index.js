@@ -3512,7 +3512,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "8p15f9"
+  version_hash: "1wxcpxa"
 };
 async function get_hooks() {
   return {};
@@ -5319,7 +5319,7 @@ function createManagerStore() {
   };
   async function getPublicProfile(principalId) {
     try {
-      let result = await actor.getPublicProfile(principalId);
+      let result = await actor.getManager(principalId);
       if (isError(result)) {
         console.error("Error getting public profile");
       }
@@ -5438,7 +5438,11 @@ function createManagerStore() {
         braceBonusGameweek: bonusPlayed == 9 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
         hatTrickHeroGameweek: bonusPlayed == 10 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
         transferWindowGameweek: transferWindowPlayedInSession ? activeGameweek : userFantasyTeam.transferWindowGameweek,
-        username: userFantasyTeam.username
+        username: userFantasyTeam.username,
+        transfersAvailable: 0,
+        bankQuarterMillions: 0,
+        principalId: "",
+        monthlyBonusesAvailable: 0
       };
       let result = await identityActor.saveFantasyTeam(dto);
       if (isError(result)) {
@@ -6133,33 +6137,11 @@ function createUserStore() {
     const binary = Array.from(bytes).map((byte) => String.fromCharCode(byte)).join("");
     return btoa(binary);
   }
-  function base64ToUint8Array(base642) {
-    const binary_string = atob(base642);
-    const len = binary_string.length;
-    const bytes = new Uint8Array(len);
-    for (let i = 0; i < len; i++) {
-      bytes[i] = binary_string.charCodeAt(i);
-    }
-    return bytes;
-  }
-  function getProfileFromLocalStorage() {
-    const storedData = localStorage.getItem("user_profile_data");
-    if (storedData) {
-      const profileData = JSON.parse(storedData);
-      if (typeof profileData.profilePicture === "string") {
-        profileData.profilePicture = [
-          base64ToUint8Array(profileData.profilePicture)
-        ];
-      }
-      return profileData;
-    }
-    return null;
-  }
   async function sync() {
-    const localProfile = localStorage.getItem("user_profile_data");
-    if (localProfile) {
-      let localStorageProfile = getProfileFromLocalStorage();
-      set(localStorageProfile);
+    let localStorageString = localStorage.getItem("user_profile_data");
+    if (localStorageString) {
+      const localProfile = JSON.parse(localStorageString);
+      set(localProfile);
       return;
     }
     try {
@@ -6168,8 +6150,6 @@ function createUserStore() {
         define_process_env_default$4.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       let getProfileResponse = await identityActor.getProfile();
-      console.log("getProfileResponse");
-      console.log(getProfileResponse);
       let error = isError(getProfileResponse);
       if (error) {
         if (getProfileResponse.err.NotFound !== void 0) {
@@ -6180,8 +6160,17 @@ function createUserStore() {
         return;
       }
       let profileData = getProfileResponse.ok;
-      if (profileData && profileData.profilePicture instanceof Uint8Array) {
-        const base64Picture = uint8ArrayToBase64(profileData.profilePicture);
+      let byteArray;
+      if (profileData && profileData.profilePicture) {
+        let base64Picture;
+        if (Array.isArray(profileData.profilePicture) && profileData.profilePicture[0] instanceof Uint8Array) {
+          byteArray = profileData.profilePicture[0];
+          base64Picture = uint8ArrayToBase64(byteArray);
+        } else if (profileData.profilePicture instanceof Uint8Array) {
+          base64Picture = uint8ArrayToBase64(profileData.profilePicture);
+        } else {
+          base64Picture = "/profile_placeholder.png";
+        }
         localStorage.setItem(
           "user_profile_data",
           JSON.stringify(
@@ -6223,13 +6212,11 @@ function createUserStore() {
   }
   async function updateUsername(username) {
     try {
-      console.log(define_process_env_default$4.OPENFPL_BACKEND_CANISTER_ID);
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
         define_process_env_default$4.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.updateUsername(username);
-      console.log(result);
       if (isError(result)) {
         console.error("Error updating username");
         return;
@@ -6248,7 +6235,6 @@ function createUserStore() {
         define_process_env_default$4.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.updateFavouriteClub(favouriteTeamId);
-      console.log(result);
       if (isError(result)) {
         console.error("Error updating favourite team");
         return;
@@ -6296,6 +6282,7 @@ function createUserStore() {
             define_process_env_default$4.OPENFPL_BACKEND_CANISTER_ID ?? ""
           );
           const result = await identityActor.updateProfilePicture(uint8Array);
+          console.log(result);
           if (isError(result)) {
             console.error("Error updating profile picture");
             return;
@@ -6330,8 +6317,18 @@ function createUserStore() {
       return;
     }
     let profileData = getProfileResponse.ok;
-    if (profileData && profileData.profilePicture instanceof Uint8Array) {
-      const base64Picture = uint8ArrayToBase64(profileData.profilePicture);
+    let byteArray;
+    console.log(profileData);
+    if (profileData && profileData.profilePicture) {
+      let base64Picture;
+      if (Array.isArray(profileData.profilePicture) && profileData.profilePicture[0] instanceof Uint8Array) {
+        byteArray = profileData.profilePicture[0];
+        base64Picture = uint8ArrayToBase64(byteArray);
+      } else if (profileData.profilePicture instanceof Uint8Array) {
+        base64Picture = uint8ArrayToBase64(profileData.profilePicture);
+      } else {
+        base64Picture = "/profile_placeholder.png";
+      }
       localStorage.setItem(
         "user_profile_data",
         JSON.stringify(
@@ -6358,7 +6355,6 @@ function createUserStore() {
     getProfile,
     updateProfilePicture,
     createProfile,
-    getProfileFromLocalStorage,
     isUsernameAvailable
   };
 }
@@ -6386,7 +6382,17 @@ const authIsAdmin = derived(
 );
 const userGetProfilePicture = derived(
   userStore,
-  (user) => user !== null && user !== void 0 && user.profilePicture !== void 0 && user.profilePicture.length > 0 ? URL.createObjectURL(new Blob([new Uint8Array(user.profilePicture)])) : "/profile_placeholder.png"
+  ($user) => {
+    if ($user && $user.profilePicture && typeof $user.profilePicture === "string") {
+      if ($user.profilePicture.startsWith("data:image")) {
+        return $user.profilePicture;
+      } else {
+        return `data:image/jpeg;base64,${$user.profilePicture}`;
+      }
+    } else {
+      return "/profile_placeholder.png";
+    }
+  }
 );
 derived(
   userStore,

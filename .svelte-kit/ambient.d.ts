@@ -28,6 +28,8 @@
 declare module '$env/static/private' {
 	export const DFX_VERSION: string;
 	export const DFX_NETWORK: string;
+	export const CANISTER_CANDID_PATH_OpenFPL_backend: string;
+	export const CANISTER_CANDID_PATH_OPENFPL_BACKEND: string;
 	export const TOKEN_CANISTER_CANISTER_ID: string;
 	export const CANISTER_ID_TOKEN_CANISTER: string;
 	export const CANISTER_ID_token_canister: string;
@@ -143,6 +145,8 @@ declare module '$env/dynamic/private' {
 	export const env: {
 		DFX_VERSION: string;
 		DFX_NETWORK: string;
+		CANISTER_CANDID_PATH_OpenFPL_backend: string;
+		CANISTER_CANDID_PATH_OPENFPL_BACKEND: string;
 		TOKEN_CANISTER_CANISTER_ID: string;
 		CANISTER_ID_TOKEN_CANISTER: string;
 		CANISTER_ID_token_canister: string;
