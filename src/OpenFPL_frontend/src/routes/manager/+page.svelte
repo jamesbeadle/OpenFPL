@@ -43,13 +43,13 @@
       manager = await managerStore.getPublicProfile(id ?? "");
       displayName =
         manager.username === manager.principalId ? "Unknown" : manager.username;
-      const blob = new Blob([new Uint8Array(manager.profilePicture)]);
-      const blobUrl =
-        manager.profilePicture.length > 0
-          ? URL.createObjectURL(blob)
-          : "/profile_placeholder.png";
-      profilePicture = blobUrl;
-
+              
+      let profilePicture = manager?.profilePicture as unknown as string;
+      let profileSrc = typeof profilePicture === 'string' && profilePicture.startsWith('data:image')
+        ? profilePicture
+        : "/profile_placeholder.png";
+        profilePicture = profileSrc;
+        
       joinedDate = getDateFromBigInt(Number(manager.createDate));
       favouriteTeam =
         manager.favouriteClubId > 0

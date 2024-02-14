@@ -12,6 +12,7 @@
   import { getDateFromBigInt } from "$lib/utils/Helpers";
   import CopyIcon from "$lib/icons/CopyIcon.svelte";
   import { authStore } from "$lib/stores/auth.store";
+  import { userGetProfilePicture } from "$lib/derived/user.derived";
 
   let profile: Writable<ProfileDTO> = writable({
     playerIds: [],
@@ -52,17 +53,6 @@
   let joinedDate = "";
 
   let unsubscribeUserProfile: () => void;
-
-  $: profileSrc =
-    $profile?.profilePicture?.length > 0
-      ? URL.createObjectURL(
-          new Blob([
-            $profile.profilePicture[0] instanceof Uint8Array
-              ? $profile.profilePicture[0]
-              : new Uint8Array($profile.profilePicture[0] || []),
-          ])
-        )
-      : "/profile_placeholder.png";
 
   $: gameweek = $systemStore?.calculationGameweek ?? 1;
 
@@ -159,14 +149,6 @@
       const profileData = await userStore.getProfile();
 
       setProfile(profileData);
-      if (
-        profileData &&
-        profileData.profilePicture &&
-        profileData.profilePicture.length > 0
-      ) {
-        const blob = new Blob([new Uint8Array(profileData.profilePicture)]);
-        profileSrc = URL.createObjectURL(blob);
-      }
       toastsShow({
         text: "Profile image updated.",
         level: "success",
@@ -217,7 +199,7 @@
     <div class="flex flex-wrap">
       <div class="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 px-2">
         <div class="group flex flex-col md:block">
-          <img src={profileSrc} alt="Profile" class="w-full mb-1 rounded-lg" />
+          <img src={$userGetProfilePicture} alt="Profile" class="w-full mb-1 rounded-lg" />
 
           <div class="file-upload-wrapper mt-4">
             <button class="btn-file-upload fpl-button" on:click={clickFileInput}

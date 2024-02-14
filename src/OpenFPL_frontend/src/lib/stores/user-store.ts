@@ -1,7 +1,6 @@
 import { authStore } from "$lib/stores/auth.store";
 import { isError, replacer } from "$lib/utils/Helpers";
 import { writable } from "svelte/store";
-import type { ProfileDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 
 function createUserStore() {
@@ -14,36 +13,15 @@ function createUserStore() {
     return btoa(binary);
   }
 
-  function base64ToUint8Array(base64: string): Uint8Array {
-    const binary_string = atob(base64);
-    const len = binary_string.length;
-    const bytes = new Uint8Array(len);
-    for (let i = 0; i < len; i++) {
-      bytes[i] = binary_string.charCodeAt(i);
-    }
-    return bytes;
-  }
-
-  function getProfileFromLocalStorage(): ProfileDTO | null {
-    const storedData = localStorage.getItem("user_profile_data");
-    if (storedData) {
-      const profileData: ProfileDTO = JSON.parse(storedData);
-      // Assuming profileData.profilePicture is a base64 string before being converted.
-      if (typeof profileData.profilePicture === "string") {
-        profileData.profilePicture = [
-          base64ToUint8Array(profileData.profilePicture),
-        ];
-      }
-      return profileData;
-    }
-    return null;
-  }
-
   async function sync() {
-    const localProfile = localStorage.getItem("user_profile_data");
-    if (localProfile) {
-      let localStorageProfile = getProfileFromLocalStorage();
-      set(localStorageProfile);
+    console.log("syncing")
+    let localStorageString = localStorage.getItem("user_profile_data");
+    if(localStorageString){
+      const localProfile = JSON.parse(localStorageString);
+      console.log("Local storage profile picture:", localProfile.profilePicture);
+
+      console.log("set profile 1")
+      set(localProfile);
       return;
     }
 
@@ -54,8 +32,6 @@ function createUserStore() {
       );
 
       let getProfileResponse = await identityActor.getProfile();
-      console.log("getProfileResponse");
-      console.log(getProfileResponse);
       let error = isError(getProfileResponse);
       if (error) {
         if (getProfileResponse.err.NotFound !== undefined) {
@@ -67,9 +43,19 @@ function createUserStore() {
       }
 
       let profileData = getProfileResponse.ok;
+      let byteArray;
+      if (profileData && profileData.profilePicture) {
+        let base64Picture;
+        if (Array.isArray(profileData.profilePicture) && profileData.profilePicture[0] instanceof Uint8Array) {
+          byteArray = profileData.profilePicture[0];
+          base64Picture = uint8ArrayToBase64(byteArray);
+        } else if (profileData.profilePicture instanceof Uint8Array) {
+          base64Picture = uint8ArrayToBase64(profileData.profilePicture);
+        } else {
+          console.log("Setting default 1")
+          base64Picture = "/profile_placeholder.png";
+        }
 
-      if (profileData && profileData.profilePicture instanceof Uint8Array) {
-        const base64Picture = uint8ArrayToBase64(profileData.profilePicture);
         localStorage.setItem(
           "user_profile_data",
           JSON.stringify(
@@ -87,6 +73,7 @@ function createUserStore() {
         );
       }
 
+      console.log("set profile 2")
       set(profileData);
     } catch (error) {
       console.error("Error fetching user profile:", error);
@@ -114,13 +101,11 @@ function createUserStore() {
 
   async function updateUsername(username: string): Promise<any> {
     try {
-      console.log(process.env.OPENFPL_BACKEND_CANISTER_ID);
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.updateUsername(username);
-      console.log(result);
       if (isError(result)) {
         console.error("Error updating username");
         return;
@@ -140,7 +125,6 @@ function createUserStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.updateFavouriteClub(favouriteTeamId);
-      console.log(result);
       if (isError(result)) {
         console.error("Error updating favourite team");
         return;
@@ -232,9 +216,14 @@ function createUserStore() {
 
     let profileData = getProfileResponse.ok;
 
-    if (profileData && profileData.profilePicture instanceof Uint8Array) {
-      const base64Picture = uint8ArrayToBase64(profileData.profilePicture);
-      localStorage.setItem(
+    if (profileData && profileData.profilePicture) {
+      const byteArray = profileData.profilePicture instanceof Uint8Array
+        ? profileData.profilePicture
+        : new Uint8Array(profileData.profilePicture);
+      const base64Picture = uint8ArrayToBase64(byteArray);
+
+      
+        localStorage.setItem(
         "user_profile_data",
         JSON.stringify(
           {
@@ -245,7 +234,7 @@ function createUserStore() {
         )
       );
     } else {
-      localStorage.setItem(
+        localStorage.setItem(
         "user_profile_data",
         JSON.stringify(profileData, replacer)
       );
@@ -262,7 +251,6 @@ function createUserStore() {
     getProfile,
     updateProfilePicture,
     createProfile,
-    getProfileFromLocalStorage,
     isUsernameAvailable,
   };
 }

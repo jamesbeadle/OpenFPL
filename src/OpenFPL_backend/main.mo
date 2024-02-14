@@ -148,8 +148,6 @@ actor Self {
   public shared ({ caller }) func updateFavouriteClub(favouriteClubId : T.ClubId) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    Debug.print("Main: Updating Favourite Club");
-    Debug.print(debug_show favouriteClubId);
     return await seasonManager.updateFavouriteClub(principalId, favouriteClubId);
   };
 

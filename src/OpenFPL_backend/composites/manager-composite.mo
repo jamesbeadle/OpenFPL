@@ -143,7 +143,6 @@ module {
     };
 
     public func getProfile(principalId : Text) : async Result.Result<DTOs.ProfileDTO, T.Error> {
-
       let managerCanisterId = managerCanisterIds.get(principalId);
 
       switch (managerCanisterId) {
@@ -161,6 +160,8 @@ module {
               return #err(#NotFound);
             };
             case (?foundManager) {
+              Debug.print("FOUND MANAGER");
+              Debug.print(debug_show foundManager);
               let profileDTO : DTOs.ProfileDTO = {
                 principalId = principalId;
                 username = foundManager.username;
@@ -479,15 +480,21 @@ module {
     };
 
     public func updateUsername(principalId : T.PrincipalId, updatedUsername : Text) : async Result.Result<(), T.Error> {
+      Debug.print("updating username");
       if (not isUsernameValid(updatedUsername)) {
+        Debug.print("username invalid");
         return #err(#InvalidData);
       };
-
+      
+      
       if (isUsernameTaken(updatedUsername, principalId)) {
+        Debug.print("username taken");
         return #err(#InvalidData);
       };
 
       let managerCanisterId = managerCanisterIds.get(principalId);
+      Debug.print("managerCanisterId");
+      Debug.print(debug_show managerCanisterId);
 
       var result : Result.Result<(), T.Error> = #err(#NotFound);
 
@@ -550,11 +557,13 @@ module {
             totalManagers := totalManagers + 1;
             result := await manager_canister.addNewManager(newManager);
             managerCanisterIds.put(newManager.principalId, activeManagerCanisterId);
+            managerUsernames.put(principalId, updatedUsername);
             return result;
           };
         };
         case (?foundCanisterId) {
 
+          Debug.print(debug_show foundCanisterId);
           let manager_canister = actor (foundCanisterId) : actor {
             updateUsername : (dto : DTOs.UpdateUsernameDTO) -> async Result.Result<(), T.Error>;
           };
@@ -563,23 +572,18 @@ module {
             username = updatedUsername;
           };
           result := await manager_canister.updateUsername(dto);
+          Debug.print("debug_show result");
+          Debug.print(debug_show result);
+          managerUsernames.put(principalId, updatedUsername);
+          Debug.print("username ok");
+          return #ok();
         };
-      };
-
-      if (result == #ok) {
-        managerUsernames.put(principalId, updatedUsername);
-        return #ok();
       };
       return #err(#NotFound);
     };
 
     public func updateFavouriteClub(principalId : T.PrincipalId, favouriteClubId : T.ClubId, systemState : T.SystemState, activeClubs : [T.Club]) : async Result.Result<(), T.Error> {
 
-      Debug.print("Manager Composite: Updating Favourite Club");
-      Debug.print(debug_show principalId);
-      Debug.print(debug_show favouriteClubId);
-      Debug.print(debug_show systemState);
-      Debug.print(debug_show activeClubs);
       let isClubActive = Array.find(
         activeClubs,
         func(club : T.Club) : Bool {
@@ -654,8 +658,6 @@ module {
             managerCanisterIds.put(newManager.principalId, newManagerCanisterId);
             return result;
           } else {
-            Debug.print("Adding manager to existing canister");
-            Debug.print(debug_show newManager);
             totalManagers := totalManagers + 1;
             result := await manager_canister.addNewManager(newManager);
             managerCanisterIds.put(newManager.principalId, activeManagerCanisterId);
@@ -808,14 +810,13 @@ module {
     };
 
     public func isUsernameTaken(username : Text, principalId : Text) : Bool {
-
       for (managerUsername in managerUsernames.entries()) {
         if (managerUsername.1 == username and managerUsername.0 != principalId) {
-          return false;
+          return true;
         };
       };
 
-      return true;
+      return false;
     };
 
     public func getFavouriteClub(principalId : Text) : async Result.Result<T.ClubId, T.Error> {

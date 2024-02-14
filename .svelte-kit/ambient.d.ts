@@ -28,8 +28,6 @@
 declare module '$env/static/private' {
 	export const DFX_VERSION: string;
 	export const DFX_NETWORK: string;
-	export const CANISTER_CANDID_PATH_OpenFPL_backend: string;
-	export const CANISTER_CANDID_PATH_OPENFPL_BACKEND: string;
 	export const TOKEN_CANISTER_CANISTER_ID: string;
 	export const CANISTER_ID_TOKEN_CANISTER: string;
 	export const CANISTER_ID_token_canister: string;
@@ -52,9 +50,10 @@ declare module '$env/static/private' {
 	export const npm_node_execpath: string;
 	export const SHLVL: string;
 	export const npm_config_noproxy: string;
+	export const MOTD_SHOWN: string;
 	export const HOME: string;
-	export const NVM_BIN: string;
 	export const TERM_PROGRAM_VERSION: string;
+	export const NVM_BIN: string;
 	export const VSCODE_IPC_HOOK_CLI: string;
 	export const npm_package_json: string;
 	export const NVM_INC: string;
@@ -70,8 +69,8 @@ declare module '$env/static/private' {
 	export const WAYLAND_DISPLAY: string;
 	export const LOGNAME: string;
 	export const NAME: string;
-	export const PULSE_SERVER: string;
 	export const WSL_INTEROP: string;
+	export const PULSE_SERVER: string;
 	export const _: string;
 	export const npm_config_prefix: string;
 	export const npm_config_npm_version: string;
@@ -85,8 +84,8 @@ declare module '$env/static/private' {
 	export const DISPLAY: string;
 	export const LANG: string;
 	export const LS_COLORS: string;
-	export const TERM_PROGRAM: string;
 	export const VSCODE_GIT_IPC_HANDLE: string;
+	export const TERM_PROGRAM: string;
 	export const npm_lifecycle_script: string;
 	export const SHELL: string;
 	export const npm_package_version: string;
@@ -101,8 +100,8 @@ declare module '$env/static/private' {
 	export const XDG_DATA_DIRS: string;
 	export const npm_config_global_prefix: string;
 	export const npm_command: string;
-	export const HOSTTYPE: string;
 	export const WSL2_GUI_APPS_ENABLED: string;
+	export const HOSTTYPE: string;
 	export const WSLENV: string;
 	export const INIT_CWD: string;
 	export const EDITOR: string;
@@ -144,8 +143,6 @@ declare module '$env/dynamic/private' {
 	export const env: {
 		DFX_VERSION: string;
 		DFX_NETWORK: string;
-		CANISTER_CANDID_PATH_OpenFPL_backend: string;
-		CANISTER_CANDID_PATH_OPENFPL_BACKEND: string;
 		TOKEN_CANISTER_CANISTER_ID: string;
 		CANISTER_ID_TOKEN_CANISTER: string;
 		CANISTER_ID_token_canister: string;
@@ -168,9 +165,10 @@ declare module '$env/dynamic/private' {
 		npm_node_execpath: string;
 		SHLVL: string;
 		npm_config_noproxy: string;
+		MOTD_SHOWN: string;
 		HOME: string;
-		NVM_BIN: string;
 		TERM_PROGRAM_VERSION: string;
+		NVM_BIN: string;
 		VSCODE_IPC_HOOK_CLI: string;
 		npm_package_json: string;
 		NVM_INC: string;
@@ -186,8 +184,8 @@ declare module '$env/dynamic/private' {
 		WAYLAND_DISPLAY: string;
 		LOGNAME: string;
 		NAME: string;
-		PULSE_SERVER: string;
 		WSL_INTEROP: string;
+		PULSE_SERVER: string;
 		_: string;
 		npm_config_prefix: string;
 		npm_config_npm_version: string;
@@ -201,8 +199,8 @@ declare module '$env/dynamic/private' {
 		DISPLAY: string;
 		LANG: string;
 		LS_COLORS: string;
-		TERM_PROGRAM: string;
 		VSCODE_GIT_IPC_HANDLE: string;
+		TERM_PROGRAM: string;
 		npm_lifecycle_script: string;
 		SHELL: string;
 		npm_package_version: string;
@@ -217,8 +215,8 @@ declare module '$env/dynamic/private' {
 		XDG_DATA_DIRS: string;
 		npm_config_global_prefix: string;
 		npm_command: string;
-		HOSTTYPE: string;
 		WSL2_GUI_APPS_ENABLED: string;
+		HOSTTYPE: string;
 		WSLENV: string;
 		INIT_CWD: string;
 		EDITOR: string;

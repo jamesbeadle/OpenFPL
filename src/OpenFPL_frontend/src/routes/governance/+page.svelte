@@ -29,7 +29,6 @@
 
   async function listProposals() {
     if (!process.env.OPENFPL_GOVERNANCE_CANISTER_ID) {
-      console.log("HERE");
       return;
     }
     const identityActor: any = await ActorFactory.createIdentityActor(
