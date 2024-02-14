@@ -1,17 +1,10 @@
 import { authStore } from "$lib/stores/auth.store";
-import { isError, replacer } from "$lib/utils/Helpers";
+import { isError, replacer, uint8ArrayToBase64 } from "$lib/utils/Helpers";
 import { writable } from "svelte/store";
 import { ActorFactory } from "../../utils/ActorFactory";
 
 function createUserStore() {
   const { subscribe, set } = writable<any>(null);
-
-  function uint8ArrayToBase64(bytes: Uint8Array): string {
-    const binary = Array.from(bytes)
-      .map((byte) => String.fromCharCode(byte))
-      .join("");
-    return btoa(binary);
-  }
 
   async function sync() {
     let localStorageString = localStorage.getItem("user_profile_data");
@@ -200,6 +193,7 @@ function createUserStore() {
   }
 
   async function cacheProfile() {
+    console.log("caching profile data");
     const identityActor: any = await ActorFactory.createIdentityActor(
       authStore,
       process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
@@ -233,6 +227,8 @@ function createUserStore() {
         ...profileData,
         profilePicture: base64Picture,
       };
+      console.log("profileData")
+      console.log(profileData)
       localStorage.setItem(
         "user_profile_data",
         JSON.stringify(profileData,
