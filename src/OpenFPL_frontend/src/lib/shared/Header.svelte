@@ -14,7 +14,7 @@
   import WalletIcon from "$lib/icons/WalletIcon.svelte";
   import { onMount, onDestroy } from "svelte";
   import { goto } from "$app/navigation";
-  import { authSignedInStore, authIsAdmin } from "$lib/derived/auth.derived";
+  import { authSignedInStore } from "$lib/derived/auth.derived";
   import { userGetProfilePicture } from "$lib/derived/user.derived";
 
   let menuOpen = false;
@@ -168,18 +168,6 @@
               <span class="flex items-center h-full px-4">Governance</span>
             </a>
           </li>
-          {#if $authIsAdmin}
-            <li class="mx-2 flex items-center h-16">
-              <a
-                href="/admin"
-                class="flex items-center h-full nav-underline hover:text-gray-400 ${currentClass(
-                  '/admin'
-                )}"
-              >
-                <span class="flex items-center h-full px-4">Admin</span>
-              </a>
-            </li>
-          {/if}
           <li class="flex flex-1 items-center">
             <div class="relative inline-block">
               <button
