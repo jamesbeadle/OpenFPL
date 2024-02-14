@@ -205,7 +205,7 @@ function createUserStore() {
 
     let profileData = getProfileResponse.ok;
     let byteArray;
-    
+
     if (profileData && profileData.profilePicture) {
       let base64Picture;
       if (
@@ -219,17 +219,14 @@ function createUserStore() {
       } else {
         base64Picture = "/profile_placeholder.png";
       }
-      profileData = 
-      {
+      profileData = {
         ...profileData,
         profilePicture: base64Picture,
       };
-      
+
       localStorage.setItem(
         "user_profile_data",
-        JSON.stringify(profileData,
-          replacer
-        )
+        JSON.stringify(profileData, replacer)
       );
     } else {
       localStorage.setItem(
