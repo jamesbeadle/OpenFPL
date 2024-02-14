@@ -129,7 +129,6 @@ function createUserStore() {
 
   async function getProfile(): Promise<any> {
     try {
-      console.log("getting proile")
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
@@ -166,7 +165,6 @@ function createUserStore() {
             process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
           );
           const result = await identityActor.updateProfilePicture(uint8Array);
-          console.log(result);
           if (isError(result)) {
             console.error("Error updating profile picture");
             return;
@@ -193,7 +191,6 @@ function createUserStore() {
   }
 
   async function cacheProfile() {
-    console.log("caching profile data");
     const identityActor: any = await ActorFactory.createIdentityActor(
       authStore,
       process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
@@ -208,7 +205,7 @@ function createUserStore() {
 
     let profileData = getProfileResponse.ok;
     let byteArray;
-    console.log(profileData);
+    
     if (profileData && profileData.profilePicture) {
       let base64Picture;
       if (
@@ -227,8 +224,7 @@ function createUserStore() {
         ...profileData,
         profilePicture: base64Picture,
       };
-      console.log("profileData")
-      console.log(profileData)
+      
       localStorage.setItem(
         "user_profile_data",
         JSON.stringify(profileData,

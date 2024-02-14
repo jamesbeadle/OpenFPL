@@ -160,8 +160,6 @@ module {
               return #err(#NotFound);
             };
             case (?foundManager) {
-              Debug.print("FOUND MANAGER");
-              Debug.print(debug_show foundManager);
               let profileDTO : DTOs.ProfileDTO = {
                 principalId = principalId;
                 username = foundManager.username;
@@ -480,20 +478,15 @@ module {
     };
 
     public func updateUsername(principalId : T.PrincipalId, updatedUsername : Text) : async Result.Result<(), T.Error> {
-      Debug.print("updating username");
       if (not isUsernameValid(updatedUsername)) {
-        Debug.print("username invalid");
         return #err(#InvalidData);
       };
 
       if (isUsernameTaken(updatedUsername, principalId)) {
-        Debug.print("username taken");
         return #err(#InvalidData);
       };
 
       let managerCanisterId = managerCanisterIds.get(principalId);
-      Debug.print("managerCanisterId");
-      Debug.print(debug_show managerCanisterId);
 
       var result : Result.Result<(), T.Error> = #err(#NotFound);
 
@@ -562,7 +555,6 @@ module {
         };
         case (?foundCanisterId) {
 
-          Debug.print(debug_show foundCanisterId);
           let manager_canister = actor (foundCanisterId) : actor {
             updateUsername : (dto : DTOs.UpdateUsernameDTO) -> async Result.Result<(), T.Error>;
           };
@@ -571,10 +563,7 @@ module {
             username = updatedUsername;
           };
           result := await manager_canister.updateUsername(dto);
-          Debug.print("debug_show result");
-          Debug.print(debug_show result);
           managerUsernames.put(principalId, updatedUsername);
-          Debug.print("username ok");
           return result;
         };
       };

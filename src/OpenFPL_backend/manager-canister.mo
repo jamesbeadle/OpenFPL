@@ -224,22 +224,17 @@ actor class ManagerCanister() {
   };
 
   public shared ({ caller }) func updateUsername(dto : DTOs.UpdateUsernameDTO) : async Result.Result<(), T.Error> {
-    Debug.print("In Manager Canister: Update Username");
-    Debug.print(debug_show dto);
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == main_canister_id;
 
     let managerBuffer = Buffer.fromArray<T.Manager>([]);
     let managerGroupIndex = managerGroupIndexes.get(dto.principalId);
-    Debug.print(debug_show managerGroupIndex);
     switch (managerGroupIndex) {
       case (null) {};
       case (?foundGroupIndex) {
         switch (foundGroupIndex) {
           case 0 {
-            Debug.print(debug_show "managerGroup1");
-            Debug.print(debug_show managerGroup1);
             for (manager in Iter.fromArray(managerGroup1)) {
               if (manager.principalId == dto.principalId) {
                 managerBuffer.add(mergeManagerUsername(manager, dto.username));
