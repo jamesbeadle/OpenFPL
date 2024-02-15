@@ -1,4 +1,7 @@
 import { authStore } from "$lib/stores/auth.store";
+import { GovernanceCanister } from "@dfinity/nns";
+import { SnsGovernanceCanister } from "@dfinity/sns";
+import { playerStore } from "$lib/stores/player-store";
 import { isError } from "$lib/utils/Helpers";
 import type {
   AddInitialFixturesDTO,
@@ -25,6 +28,9 @@ import type {
   UpdatePlayerDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
+import type { Action, MakeProposalRequest, NeuronId, Option } from "@dfinity/nns";
+import { ManageNeuron } from "@dfinity/nns-proto";
+import type { HttpAgent } from "@dfinity/agent";
 
 function createGovernanceStore() {
   async function revaluePlayerUp(playerId: number): Promise<any> {
@@ -51,14 +57,56 @@ function createGovernanceStore() {
 
   async function revaluePlayerDown(playerId: number): Promise<any> {
     try {
-      const identityActor = await ActorFactory.createIdentityActor(
+      
+      const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
-      );
+        process.env.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
+      ); //TODO: Create the governance canister
 
-      let dto: RevaluePlayerDownDTO = {
-        playerId: playerId,
-      };
+      const { listNeurons  } = GovernanceCanister.create(identityActor);
+
+      const governanceAgent: HttpAgent = ActorFactory.getAgent(process.env.OPENFPL_GOVERNANCE_CANISTER_ID, identityActor, null);
+
+      const { metadata: governanceMetadata } = SnsGovernanceCanister.create({
+        agent: governanceAgent,
+        canisterId: identityActor,
+      });
+      const metadata = await governanceMetadata({ certified: true });
+      
+      
+      let userNeurons = await listNeurons({certified: true});
+      await playerStore.sync();
+      let player = playerStore.subscribe(players => {
+        let player = players.find(x => x.id == playerId);
+          if(!player){
+            return;
+          }
+  
+          
+          if(userNeurons.length > 0){
+            const neuronId: Option<NeuronId> = userNeurons[0].neuronId;
+                  
+            let dto: RevaluePlayerDownDTO = {
+              playerId: playerId,
+            };
+/*            
+            let makeProposalRequest: MakeProposalRequest = {
+              neuronId: neuronId,
+              title: `Revalue ${player.lastName} value down.`,
+              url: "openfpl.xyz/governance",
+              summary: `Revalue ${player.lastName} value down from £${(player.valueQuarterMillions / 4).toFixed(2).toLocaleString()}m -> £${((player.valueQuarterMillions - 1)/4).toFixed(2).toLocaleString()}m).`,
+              action:  action
+                
+            };
+            await makeProposal(makeProposalRequest);
+            */
+          }
+        }
+      );
+      /*
+      activeProposals = proposalResponse.proposals;
+
+
 
       let result = await identityActor.adminRevaluePlayerDown(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
 
@@ -66,6 +114,7 @@ function createGovernanceStore() {
         console.error("Error submitting proposal: ", result);
         return;
       }
+      */
     } catch (error) {
       console.error("Error submitting fixture data:", error);
       throw error;
