@@ -30,61 +30,41 @@ import type {
 import { ActorFactory } from "../../utils/ActorFactory";
 import type { HttpAgent } from "@dfinity/agent";
 import type { Command, ExecuteGenericNervousSystemFunction, GetProposal, RegisterVote } from "@dfinity/sns/dist/candid/sns_governance";
+import { fixtureStore } from "./fixture-store";
+import { systemStore } from "./system-store";
 
 function createGovernanceStore() {
   async function revaluePlayerUp(playerId: number): Promise<any> {
     try {
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
-      );
+      await playerStore.sync();
+        
 
-      let dto: RevaluePlayerUpDTO = {
+      let allPlayers: PlayerDTO[] = [];
+      const unsubscribe = playerStore.subscribe((players) => {
+        allPlayers = players;
+      });
+      unsubscribe();
+
+      var dto: RevaluePlayerUpDTO = {
         playerId: playerId,
       };
-
-      let result = await identityActor.adminRevaluePlayerUp(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
-      if (isError(result)) {
-        console.error("Error submitting proposal: ", result);
-        return;
-      }
-    } catch (error) {
-      console.error("Error submitting fixture data:", error);
-      throw error;
-    }
-  }
-
-  async function revaluePlayerDown(playerId: number): Promise<any> {
-    try {
-    await playerStore.sync();
       
+      const identityActor: any = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
+      ); //TODO: Post SNS add in governance canister references
 
-    let allPlayers: PlayerDTO[] = [];
-    const unsubscribe = playerStore.subscribe((players) => {
-      allPlayers = players;
-    });
-    unsubscribe();
+      const governanceAgent: HttpAgent = ActorFactory.getAgent(process.env.OPENFPL_GOVERNANCE_CANISTER_ID, identityActor, null);
 
-    var dto: RevaluePlayerDownDTO = {
-      playerId: playerId,
-    };
-    
-    const identityActor: any = await ActorFactory.createIdentityActor(
-      authStore,
-      process.env.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
-    ); //TODO: Post SNS add in governance canister references
+      const { manageNeuron: governanceManageNeuron, listNeurons: governanceListNeurons } = SnsGovernanceCanister.create({
+        agent: governanceAgent,
+        canisterId: identityActor,
+      });
 
-    const governanceAgent: HttpAgent = ActorFactory.getAgent(process.env.OPENFPL_GOVERNANCE_CANISTER_ID, identityActor, null);
-
-    const { manageNeuron: governanceManageNeuron, listNeurons: governanceListNeurons } = SnsGovernanceCanister.create({
-      agent: governanceAgent,
-      canisterId: identityActor,
-    });
-
-    const userNeurons = await governanceListNeurons({ 
-      principal: identityActor.principal,
-      limit: 100,
-      beforeNeuronId: {id: []}});
+      const userNeurons = await governanceListNeurons({ 
+        principal: identityActor.principal,
+        limit: 10,
+        beforeNeuronId: {id: []}});
       if(userNeurons.length > 0){
         const jsonString = JSON.stringify(dto);
 
@@ -92,7 +72,73 @@ function createGovernanceStore() {
         const payload = encoder.encode(jsonString);
 
         const fn: ExecuteGenericNervousSystemFunction = {
-          function_id: 1n,
+          function_id: 1000n,
+          payload: payload
+        }
+
+        let player = allPlayers.find(x => x.id == playerId);
+        if(player){
+          const command: Command = {MakeProposal: {
+            title: `Revalue ${player.lastName} value up.`,
+            url: "openfpl.xyz/governance",
+            summary: `Revalue ${player.lastName} value up from £${(player.valueQuarterMillions / 4).toFixed(2).toLocaleString()}m -> £${((player.valueQuarterMillions + 1)/4).toFixed(2).toLocaleString()}m).`,
+            action:  [{ ExecuteGenericNervousSystemFunction : fn }]
+          }};
+
+          const neuronId = userNeurons[0].id[0];
+          if(!neuronId){
+            return;
+          }
+          
+          await governanceManageNeuron({ subaccount: neuronId.id, command: [command]});
+
+        }
+      }
+    } catch (error) {
+      console.error("Error revaluing player up:", error);
+      throw error;
+    }
+  }
+
+  async function revaluePlayerDown(playerId: number): Promise<any> {
+    try {
+      await playerStore.sync();
+        
+
+      let allPlayers: PlayerDTO[] = [];
+      const unsubscribe = playerStore.subscribe((players) => {
+        allPlayers = players;
+      });
+      unsubscribe();
+
+      var dto: RevaluePlayerDownDTO = {
+        playerId: playerId,
+      };
+      
+      const identityActor: any = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
+      ); //TODO: Post SNS add in governance canister references
+
+      const governanceAgent: HttpAgent = ActorFactory.getAgent(process.env.OPENFPL_GOVERNANCE_CANISTER_ID, identityActor, null);
+
+      const { manageNeuron: governanceManageNeuron, listNeurons: governanceListNeurons } = SnsGovernanceCanister.create({
+        agent: governanceAgent,
+        canisterId: identityActor,
+      });
+
+      const userNeurons = await governanceListNeurons({ 
+        principal: identityActor.principal,
+        limit: 10,
+        beforeNeuronId: {id: []}});
+      if(userNeurons.length > 0){
+        const jsonString = JSON.stringify(dto);
+
+        const encoder = new TextEncoder();
+        const payload = encoder.encode(jsonString);
+
+        const fn: ExecuteGenericNervousSystemFunction = {
+          function_id: 2000n,
           payload: payload
         }
 
@@ -115,7 +161,7 @@ function createGovernanceStore() {
         }
       }
     } catch (error) {
-      console.error("Error submitting fixture data:", error);
+      console.error("Error revaluing player down:", error);
       throw error;
     }
   }
@@ -127,10 +173,24 @@ function createGovernanceStore() {
     playerEventData: PlayerEventData[]
   ): Promise<any> {
     try {
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
-      );
+      await systemStore.sync();
+      let seasonId = 0;
+
+      const unsubscribeSystemStore = systemStore.subscribe((systemState) => {
+        if(systemState){
+          seasonId = systemState?.calculationSeasonId;
+        }
+      });
+      unsubscribeSystemStore();
+
+      await fixtureStore.sync(seasonId);
+        
+
+      let allFixtures: FixtureDTO[] = [];
+      const unsubscribeFixtureStore = fixtureStore.subscribe((fixtures) => {
+        allFixtures = fixtures;
+      });
+      unsubscribeFixtureStore();
 
       let dto: SubmitFixtureDataDTO = {
         seasonId,
@@ -138,15 +198,57 @@ function createGovernanceStore() {
         fixtureId,
         playerEventData,
       };
+      
+      const identityActor: any = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
+      ); //TODO: Post SNS add in governance canister references
 
-      let result = await identityActor.adminSubmitFixtureData(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
+      const governanceAgent: HttpAgent = ActorFactory.getAgent(process.env.OPENFPL_GOVERNANCE_CANISTER_ID, identityActor, null);
 
-      if (isError(result)) {
-        console.error("Error submitting proposal: ", result);
-        return;
+      const { manageNeuron: governanceManageNeuron, listNeurons: governanceListNeurons } = SnsGovernanceCanister.create({
+        agent: governanceAgent,
+        canisterId: identityActor,
+      });
+
+      const userNeurons = await governanceListNeurons({ 
+        principal: identityActor.principal,
+        limit: 10,
+        beforeNeuronId: {id: []}});
+      if(userNeurons.length > 0){
+        const jsonString = JSON.stringify(dto);
+
+        const encoder = new TextEncoder();
+        const payload = encoder.encode(jsonString);
+
+        const fn: ExecuteGenericNervousSystemFunction = {
+          function_id: 3000n,
+          payload: payload
+        }
+
+        let fixture = allFixtures.find(x => x.id == fixtureId);
+        if(fixture){
+          let homeClub = clubs.find(x => x.id == fixture?.homeClubId);
+          let awayClub = clubs.find(x => x.id == fixture?.awayClubId);
+          
+          const command: Command = {MakeProposal: {
+            title: `Fixture Data for ${homeClub.friendlyName} v  ${awayClub?.friendlyName}.`,
+            url: "openfpl.xyz/governance",
+            summary:  `Fixture Data for ${homeClub.friendlyName} v  ${awayClub?.friendlyName}.`,
+            action:  [{ ExecuteGenericNervousSystemFunction : fn }]
+          }};
+
+          const neuronId = userNeurons[0].id[0];
+          if(!neuronId){
+            return;
+          }
+          
+          await governanceManageNeuron({ subaccount: neuronId.id, command: [command]});
+
+        }
       }
     } catch (error) {
-      console.error("Error submitting fixture data:", error);
+      console.error("Error revaluing player down:", error);
       throw error;
     }
   }
@@ -155,6 +257,58 @@ function createGovernanceStore() {
     seasonId: number,
     seasonFixtures: FixtureDTO[]
   ): Promise<any> {
+    try {
+      
+      let dto: AddInitialFixturesDTO = {
+        seasonId,
+        seasonFixtures,
+      };
+      
+      const identityActor: any = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
+      ); //TODO: Post SNS add in governance canister references
+
+      const governanceAgent: HttpAgent = ActorFactory.getAgent(process.env.OPENFPL_GOVERNANCE_CANISTER_ID, identityActor, null);
+
+      const { manageNeuron: governanceManageNeuron, listNeurons: governanceListNeurons } = SnsGovernanceCanister.create({
+        agent: governanceAgent,
+        canisterId: identityActor,
+      });
+
+      const userNeurons = await governanceListNeurons({ 
+        principal: identityActor.principal,
+        limit: 10,
+        beforeNeuronId: {id: []}});
+      if(userNeurons.length > 0){
+        const jsonString = JSON.stringify(dto);
+
+        const encoder = new TextEncoder();
+        const payload = encoder.encode(jsonString);
+
+        const fn: ExecuteGenericNervousSystemFunction = {
+          function_id: 2000n,
+          payload: payload
+        }
+        
+        const command: Command = {MakeProposal: {
+          title: `Add initial fixtures for season ${seasonName}.`,
+          url: "openfpl.xyz/governance",
+          summary: `Revalue ${player.lastName} value down from £${(player.valueQuarterMillions / 4).toFixed(2).toLocaleString()}m -> £${((player.valueQuarterMillions - 1)/4).toFixed(2).toLocaleString()}m).`,
+          action:  [{ ExecuteGenericNervousSystemFunction : fn }]
+        }};
+
+        const neuronId = userNeurons[0].id[0];
+        if(!neuronId){
+          return;
+        }
+        
+        await governanceManageNeuron({ subaccount: neuronId.id, command: [command]});
+      }
+    } catch (error) {
+      console.error("Error revaluing player down:", error);
+      throw error;
+    }
     if (seasonId == 0) {
       return;
     }
@@ -164,11 +318,6 @@ function createGovernanceStore() {
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-
-      let dto: AddInitialFixturesDTO = {
-        seasonId,
-        seasonFixtures,
-      };
 
       let result = await identityActor.adminAddInitialFixtures(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
 
