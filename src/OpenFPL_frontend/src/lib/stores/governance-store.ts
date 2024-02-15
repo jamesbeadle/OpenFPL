@@ -76,58 +76,53 @@ function createGovernanceStore() {
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
-      ); //TODO: Create the governance canister
-
+      ); //TODO: Post SNS add in governance canister references
 
       const governanceAgent: HttpAgent = ActorFactory.getAgent(process.env.OPENFPL_GOVERNANCE_CANISTER_ID, identityActor, null);
 
-      const { manageNeuron: governanceManageNeuron } = SnsGovernanceCanister.create({
+      const { manageNeuron: governanceManageNeuron, listNeurons: governanceListNeurons } = SnsGovernanceCanister.create({
         agent: governanceAgent,
         canisterId: identityActor,
       });
-      const jsonString = JSON.stringify(dto);
 
-      const encoder = new TextEncoder();
-      const payload = encoder.encode(jsonString);
+      const userNeurons = await governanceListNeurons({ 
+        principal: identityActor.principal,
+        limit: 100,
+        beforeNeuronId: {id: []}});
+      
+      let proposalRaised = false;
+      for(const neuron of userNeurons){
+        if(!proposalRaised){
+          const jsonString = JSON.stringify(dto);
 
-      const fn: ExecuteGenericNervousSystemFunction = {
-        function_id: 1n,
-        payload: payload
-      }
+          const encoder = new TextEncoder();
+          const payload = encoder.encode(jsonString);
 
-      let player = allPlayers.find(x => x.id == playerId);
-      if(player){
-        const command: Command = {MakeProposal: {
-          title: `Revalue ${player.lastName} value down.`,
-          url: "openfpl.xyz/governance",
-          summary: `Revalue ${player.lastName} value down from £${(player.valueQuarterMillions / 4).toFixed(2).toLocaleString()}m -> £${((player.valueQuarterMillions - 1)/4).toFixed(2).toLocaleString()}m).`,
-          action:  [{ ExecuteGenericNervousSystemFunction : fn }]
-        }};
-        
-        const manageNeuronResponse = await governanceManageNeuron({ subaccount: [], command: [command]});
-      }
-      /*
-         
-  
-          
-          if(userNeurons.length > 0){
-            const neuronId: Option<NeuronId> = userNeurons[0].neuronId;
-                  
-            
+          const fn: ExecuteGenericNervousSystemFunction = {
+            function_id: 1n,
+            payload: payload
+          }
+
+          let player = allPlayers.find(x => x.id == playerId);
+          if(player){
+            const command: Command = {MakeProposal: {
+              title: `Revalue ${player.lastName} value down.`,
+              url: "openfpl.xyz/governance",
+              summary: `Revalue ${player.lastName} value down from £${(player.valueQuarterMillions / 4).toFixed(2).toLocaleString()}m -> £${((player.valueQuarterMillions - 1)/4).toFixed(2).toLocaleString()}m).`,
+              action:  [{ ExecuteGenericNervousSystemFunction : fn }]
+            }};
+
+            const neuronId = neuron.id[0]; // This is now of type NeuronId
+            if(!neuronId){
+              return;
+            }
+            const manageNeuronResponse = await governanceManageNeuron({ subaccount: neuronId.id, command: [command]});
+          }
+          else{
+            //vote
           }
         }
-      );
-      activeProposals = proposalResponse.proposals;
-
-
-
-      let result = await identityActor.adminRevaluePlayerDown(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
-
-      if (isError(result)) {
-        console.error("Error submitting proposal: ", result);
-        return;
       }
-      */
     } catch (error) {
       console.error("Error submitting fixture data:", error);
       throw error;
