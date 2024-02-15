@@ -85,9 +85,14 @@ function createGovernanceStore() {
         agent: governanceAgent,
         canisterId: identityActor,
       });
+      const jsonString = JSON.stringify(dto);
+
+      const encoder = new TextEncoder();
+      const payload = encoder.encode(jsonString);
+
       const fn: ExecuteGenericNervousSystemFunction = {
         function_id: 1n,
-        payload: []
+        payload: payload
       }
 
       let player = allPlayers.find(x => x.id == playerId);
