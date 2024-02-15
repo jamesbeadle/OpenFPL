@@ -7,7 +7,6 @@ import { fixtureStore } from "./fixture-store";
 import { systemStore } from "./system-store";
 import { teamStore } from "./team-store";
 import { playerStore } from "$lib/stores/player-store";
-import { isError } from "$lib/utils/Helpers";
 import type {
   AddInitialFixturesDTO,
   ClubDTO,
@@ -421,7 +420,7 @@ function createGovernanceStore() {
         }
       }
     } catch (error) {
-      console.error("Error submitting fixture data:", error);
+      console.error("Error moving fixture:", error);
       throw error;
     }
   }
@@ -512,7 +511,7 @@ function createGovernanceStore() {
         }
       }
     } catch (error) {
-      console.error("Error submitting fixture data:", error);
+      console.error("Error postponing fixture:", error);
       throw error;
     }
   }
@@ -613,7 +612,7 @@ function createGovernanceStore() {
         }
       }
     } catch (error) {
-      console.error("Error submitting fixture data:", error);
+      console.error("Error rescheduling fixture:", error);
       throw error;
     }
   }
@@ -708,7 +707,7 @@ function createGovernanceStore() {
         }
       }
     } catch (error) {
-      console.error("Error submitting fixture data:", error);
+      console.error("Error transferring player:", error);
       throw error;
     }
   }
@@ -799,7 +798,7 @@ function createGovernanceStore() {
         }
       }
     } catch (error) {
-      console.error("Error submitting fixture data:", error);
+      console.error("Error loaning player:", error);
       throw error;
     }
   }
@@ -881,7 +880,7 @@ function createGovernanceStore() {
         }
       }
     } catch (error) {
-      console.error("Error submitting fixture data:", error);
+      console.error("Error recalling player loan:", error);
       throw error;
     }
   }
@@ -971,7 +970,7 @@ function createGovernanceStore() {
           await governanceManageNeuron({ subaccount: neuronId.id, command: [command]});
         }
     } catch (error) {
-      console.error("Error submitting fixture data:", error);
+      console.error("Error creating player:", error);
       throw error;
     }
   }
@@ -1067,7 +1066,7 @@ function createGovernanceStore() {
         }
       }
     } catch (error) {
-      console.error("Error submitting fixture data:", error);
+      console.error("Error updating player:", error);
       throw error;
     }
   }
@@ -1158,7 +1157,7 @@ function createGovernanceStore() {
         }
       }
     } catch (error) {
-      console.error("Error submitting fixture data:", error);
+      console.error("Error setting player injury:", error);
       throw error;
     }
   }
@@ -1247,7 +1246,7 @@ function createGovernanceStore() {
         }
       }
     } catch (error) {
-      console.error("Error submitting fixture data:", error);
+      console.error("Error retiring player:", error);
       throw error;
     }
   }
@@ -1328,7 +1327,7 @@ function createGovernanceStore() {
         }
       }
     } catch (error) {
-      console.error("Error submitting fixture data:", error);
+      console.error("Error unretiring player:", error);
       throw error;
     }
   }
@@ -1406,7 +1405,7 @@ function createGovernanceStore() {
 
         }
     } catch (error) {
-      console.error("Error submitting fixture data:", error);
+      console.error("Error promoting former club:", error);
       throw error;
     }
   }
@@ -1475,7 +1474,7 @@ function createGovernanceStore() {
 
       }
     } catch (error) {
-      console.error("Error submitting fixture data:", error);
+      console.error("Error promoting new club:", error);
       throw error;
     }
   }
@@ -1578,7 +1577,7 @@ function createGovernanceStore() {
 
       }
     } catch (error) {
-      console.error("Error submitting fixture data:", error);
+      console.error("Error updating club:", error);
       throw error;
     }
   }
