@@ -8,6 +8,7 @@ import type {
   FixtureDTO,
   LoanPlayerDTO,
   MoveFixtureDTO,
+  PlayerDTO,
   PlayerEventData,
   PlayerPosition,
   PostponeFixtureDTO,
@@ -59,63 +60,58 @@ function createGovernanceStore() {
       
       
       
-      let userNeurons = await listNeurons({certified: true});
+      //let userNeurons = await listNeurons({certified: true});
       await playerStore.sync();
-      let player = playerStore.subscribe(players => {
-        let player = players.find(x => x.id == playerId);
-          if(!player){
-            return;
-          }
+      
+
+    let allPlayers: PlayerDTO[] = [];
+    const unsubscribe = playerStore.subscribe((players) => {
+      allPlayers = players;
+    });
+    unsubscribe();
+      var dto: RevaluePlayerDownDTO = {
+        playerId: playerId,
+      };
+      
+      const identityActor: any = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
+      ); //TODO: Create the governance canister
+
+
+      const governanceAgent: HttpAgent = ActorFactory.getAgent(process.env.OPENFPL_GOVERNANCE_CANISTER_ID, identityActor, null);
+
+      const { manageNeuron: governanceManageNeuron } = SnsGovernanceCanister.create({
+        agent: governanceAgent,
+        canisterId: identityActor,
+      });
+      const fn: ExecuteGenericNervousSystemFunction = {
+        function_id: 1n,
+        payload: []
+      }
+
+      let player = allPlayers.find(x => x.id == playerId);
+      if(player){
+        const command: Command = {MakeProposal: {
+          title: `Revalue ${player.lastName} value down.`,
+          url: "openfpl.xyz/governance",
+          summary: `Revalue ${player.lastName} value down from £${(player.valueQuarterMillions / 4).toFixed(2).toLocaleString()}m -> £${((player.valueQuarterMillions - 1)/4).toFixed(2).toLocaleString()}m).`,
+          action:  [{ ExecuteGenericNervousSystemFunction : fn }]
+        }};
+        
+        const manageNeuronResponse = await governanceManageNeuron({ subaccount: [], command: [command]});
+      }
+      /*
+         
   
           
           if(userNeurons.length > 0){
             const neuronId: Option<NeuronId> = userNeurons[0].neuronId;
                   
-            let dto: RevaluePlayerDownDTO = {
-              playerId: playerId,
-            };
-
-                  
-            const identityActor: any = await ActorFactory.createIdentityActor(
-              authStore,
-              process.env.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
-            ); //TODO: Create the governance canister
-
-
-            const governanceAgent: HttpAgent = ActorFactory.getAgent(process.env.OPENFPL_GOVERNANCE_CANISTER_ID, identityActor, null);
-
-            const { manageNeuron: governanceManageNeuron } = SnsGovernanceCanister.create({
-              agent: governanceAgent,
-              canisterId: identityActor,
-            });
-            const fn: ExecuteGenericNervousSystemFunction = {
-              function_id: 1n,
-              payload: []
-            }
-            const command: Command = {MakeProposal: {
-              title: `Revalue ${player.lastName} value down.`,
-              url: "openfpl.xyz/governance",
-              summary: `Revalue ${player.lastName} value down from £${(player.valueQuarterMillions / 4).toFixed(2).toLocaleString()}m -> £${((player.valueQuarterMillions - 1)/4).toFixed(2).toLocaleString()}m).`,
-              action:  [{ ExecuteGenericNervousSystemFunction : fn }]
-            }};
-/*            
-      const manageNeuron = await governanceManageNeuron({ subaccount: [], command: {
-        [command]
-      } });
-            let makeProposalRequest: MakeProposalRequest = {
-              neuronId: neuronId,
-              title: `Revalue ${player.lastName} value down.`,
-              url: "openfpl.xyz/governance",
-              summary: `Revalue ${player.lastName} value down from £${(player.valueQuarterMillions / 4).toFixed(2).toLocaleString()}m -> £${((player.valueQuarterMillions - 1)/4).toFixed(2).toLocaleString()}m).`,
-              action:  action
-                
-            };
-            await makeProposal(makeProposalRequest);
-            */
+            
           }
         }
       );
-      /*
       activeProposals = proposalResponse.proposals;
 
 
