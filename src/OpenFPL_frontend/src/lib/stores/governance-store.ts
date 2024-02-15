@@ -1,5 +1,11 @@
-import { authStore } from "$lib/stores/auth.store";
+
 import { SnsGovernanceCanister } from "@dfinity/sns";
+import type { HttpAgent } from "@dfinity/agent";
+import type { Command, ExecuteGenericNervousSystemFunction } from "@dfinity/sns/dist/candid/sns_governance";
+import { authStore } from "$lib/stores/auth.store";
+import { fixtureStore } from "./fixture-store";
+import { systemStore } from "./system-store";
+import { teamStore } from "./team-store";
 import { playerStore } from "$lib/stores/player-store";
 import { isError } from "$lib/utils/Helpers";
 import type {
@@ -16,25 +22,18 @@ import type {
   PromoteFormerClubDTO,
   PromoteNewClubDTO,
   RecallPlayerDTO,
-  RescheduleFixtureDTO,
   RetirePlayerDTO,
   RevaluePlayerDownDTO,
   RevaluePlayerUpDTO,
   SetPlayerInjuryDTO,
   ShirtType,
   SubmitFixtureDataDTO,
-  SystemStateDTO,
   TransferPlayerDTO,
   UnretirePlayerDTO,
   UpdateClubDTO,
   UpdatePlayerDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
-import type { HttpAgent } from "@dfinity/agent";
-import type { Command, ExecuteGenericNervousSystemFunction, GetProposal, RegisterVote } from "@dfinity/sns/dist/candid/sns_governance";
-import { fixtureStore } from "./fixture-store";
-import { systemStore } from "./system-store";
-import { teamStore } from "./team-store";
 
 function createGovernanceStore() {
   async function revaluePlayerUp(playerId: number): Promise<any> {
@@ -457,14 +456,8 @@ function createGovernanceStore() {
       });
       unsubscribeFixtureStore();
 
-      const dateObject = new Date(updatedFixtureDate);
-      const timestampMilliseconds = dateObject.getTime();
-      let nanoseconds = BigInt(timestampMilliseconds) * BigInt(1000000);
-
-      let dto: MoveFixtureDTO = {
+      let dto: PostponeFixtureDTO = {
         fixtureId,
-        updatedFixtureGameweek,
-        updatedFixtureDate: nanoseconds,
       };
       
       const identityActor: any = await ActorFactory.createIdentityActor(
@@ -503,7 +496,7 @@ function createGovernanceStore() {
           }
           
           const command: Command = {MakeProposal: {
-            title: `Move fixture ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`,
+            title: `Postpone fixture ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`,
             url: "openfpl.xyz/governance",
             summary:  `Fixture Data for ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`,
             action:  [{ ExecuteGenericNervousSystemFunction : fn }]
@@ -520,26 +513,6 @@ function createGovernanceStore() {
       }
     } catch (error) {
       console.error("Error submitting fixture data:", error);
-      throw error;
-    }
-    try {
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
-      );
-
-      let dto: PostponeFixtureDTO = {
-        fixtureId,
-      };
-
-      let result = await identityActor.adminPostponeFixture(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
-
-      if (isError(result)) {
-        console.error("Error submitting proposal: ", result);
-        return;
-      }
-    } catch (error) {
-      console.error("Error postponing fixture:", error);
       throw error;
     }
   }
@@ -763,7 +736,7 @@ function createGovernanceStore() {
           allPlayers = players;
         }
       });
-      unsubscribeTeamStore();
+      unsubscribePlayerStore();
 
       const dateObject = new Date(loanEndDate);
       const timestampMilliseconds = dateObject.getTime();
@@ -833,7 +806,9 @@ function createGovernanceStore() {
 
   async function recallPlayer(playerId: number): Promise<any> {
     try {
+      
       await teamStore.sync();
+      await playerStore.sync();
       
       let clubs: ClubDTO[] = [];
       const unsubscribeTeamStore = teamStore.subscribe((teams) => {
@@ -842,24 +817,14 @@ function createGovernanceStore() {
         }
       });
       unsubscribeTeamStore();
-
-      let seasonId = 0;
-
-      const unsubscribeSystemStore = systemStore.subscribe((systemState) => {
-        if(systemState){
-          seasonId = systemState?.calculationSeasonId;
+      
+      let allPlayers: PlayerDTO[] = [];
+      const unsubscribePlayerStore = playerStore.subscribe((players) => {
+        if(players){
+          allPlayers = players;
         }
       });
-      unsubscribeSystemStore();
-
-      await fixtureStore.sync(seasonId);
-        
-
-      let allFixtures: FixtureDTO[] = [];
-      const unsubscribeFixtureStore = fixtureStore.subscribe((fixtures) => {
-        allFixtures = fixtures;
-      });
-      unsubscribeFixtureStore();
+      unsubscribePlayerStore();
 
       let dto: RecallPlayerDTO = {
         playerId,
@@ -892,18 +857,17 @@ function createGovernanceStore() {
           payload: payload
         }
 
-        let fixture = allFixtures.find(x => x.id == fixtureId);
-        if(fixture){
-          let homeClub = clubs.find(x => x.id == fixture?.homeClubId);
-          let awayClub = clubs.find(x => x.id == fixture?.awayClubId);
-          if(!homeClub || !awayClub){
+        let player = allPlayers.find(x => x.id == playerId);
+        if(player){
+          let club = clubs.find(x => x.id == player?.clubId);
+          if(!club){
             return;
           }
           
           const command: Command = {MakeProposal: {
-            title: `Move fixture ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`,
+            title: `Recall ${player.firstName} ${player?.lastName} loan.`,
             url: "openfpl.xyz/governance",
-            summary:  `Fixture Data for ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`,
+            summary:   `Recall ${player.firstName} ${player?.lastName} loan.`,
             action:  [{ ExecuteGenericNervousSystemFunction : fn }]
           }};
 
@@ -933,7 +897,9 @@ function createGovernanceStore() {
     nationality: number
   ): Promise<any> {
     try {
+      
       await teamStore.sync();
+      await playerStore.sync();
       
       let clubs: ClubDTO[] = [];
       const unsubscribeTeamStore = teamStore.subscribe((teams) => {
@@ -942,24 +908,6 @@ function createGovernanceStore() {
         }
       });
       unsubscribeTeamStore();
-
-      let seasonId = 0;
-
-      const unsubscribeSystemStore = systemStore.subscribe((systemState) => {
-        if(systemState){
-          seasonId = systemState?.calculationSeasonId;
-        }
-      });
-      unsubscribeSystemStore();
-
-      await fixtureStore.sync(seasonId);
-        
-
-      let allFixtures: FixtureDTO[] = [];
-      const unsubscribeFixtureStore = fixtureStore.subscribe((fixtures) => {
-        allFixtures = fixtures;
-      });
-      unsubscribeFixtureStore();
 
       const dateObject = new Date(dateOfBirth);
       const timestampMilliseconds = dateObject.getTime();
@@ -1002,19 +950,16 @@ function createGovernanceStore() {
           function_id: 11000n,
           payload: payload
         }
-
-        let fixture = allFixtures.find(x => x.id == fixtureId);
-        if(fixture){
-          let homeClub = clubs.find(x => x.id == fixture?.homeClubId);
-          let awayClub = clubs.find(x => x.id == fixture?.awayClubId);
-          if(!homeClub || !awayClub){
+        
+          let club = clubs.find(x => x.id == clubId);
+          if(!club){
             return;
           }
           
           const command: Command = {MakeProposal: {
-            title: `Move fixture ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`,
+            title: `Create New Player: ${firstName} v ${lastName}.`,
             url: "openfpl.xyz/governance",
-            summary:  `Fixture Data for ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`,
+            summary: `Create New Player: ${firstName} v ${lastName}.`,
             action:  [{ ExecuteGenericNervousSystemFunction : fn }]
           }};
 
@@ -1024,9 +969,7 @@ function createGovernanceStore() {
           }
           
           await governanceManageNeuron({ subaccount: neuronId.id, command: [command]});
-
         }
-      }
     } catch (error) {
       console.error("Error submitting fixture data:", error);
       throw error;
@@ -1043,7 +986,9 @@ function createGovernanceStore() {
     nationality: number
   ): Promise<any> {
     try {
+      
       await teamStore.sync();
+      await playerStore.sync();
       
       let clubs: ClubDTO[] = [];
       const unsubscribeTeamStore = teamStore.subscribe((teams) => {
@@ -1052,24 +997,14 @@ function createGovernanceStore() {
         }
       });
       unsubscribeTeamStore();
-
-      let seasonId = 0;
-
-      const unsubscribeSystemStore = systemStore.subscribe((systemState) => {
-        if(systemState){
-          seasonId = systemState?.calculationSeasonId;
+      
+      let allPlayers: PlayerDTO[] = [];
+      const unsubscribePlayerStore = playerStore.subscribe((players) => {
+        if(players){
+          allPlayers = players;
         }
       });
-      unsubscribeSystemStore();
-
-      await fixtureStore.sync(seasonId);
-        
-
-      let allFixtures: FixtureDTO[] = [];
-      const unsubscribeFixtureStore = fixtureStore.subscribe((fixtures) => {
-        allFixtures = fixtures;
-      });
-      unsubscribeFixtureStore();
+      unsubscribePlayerStore();
 
       let dto: UpdatePlayerDTO = {
         playerId,
@@ -1108,18 +1043,17 @@ function createGovernanceStore() {
           payload: payload
         }
 
-        let fixture = allFixtures.find(x => x.id == fixtureId);
-        if(fixture){
-          let homeClub = clubs.find(x => x.id == fixture?.homeClubId);
-          let awayClub = clubs.find(x => x.id == fixture?.awayClubId);
-          if(!homeClub || !awayClub){
+        let player = allPlayers.find(x => x.id == playerId);
+        if(player){
+          let club = clubs.find(x => x.id == player?.clubId);
+          if(!club){
             return;
           }
           
           const command: Command = {MakeProposal: {
-            title: `Move fixture ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`,
+            title: `Update ${player.firstName} ${player.lastName} details.`,
             url: "openfpl.xyz/governance",
-            summary:  `Fixture Data for ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`,
+            summary:  `Update ${player.firstName} ${player.lastName} details.`,
             action:  [{ ExecuteGenericNervousSystemFunction : fn }]
           }};
 
@@ -1145,6 +1079,7 @@ function createGovernanceStore() {
   ): Promise<any> {
     try {
       await teamStore.sync();
+      await playerStore.sync();
       
       let clubs: ClubDTO[] = [];
       const unsubscribeTeamStore = teamStore.subscribe((teams) => {
@@ -1153,24 +1088,14 @@ function createGovernanceStore() {
         }
       });
       unsubscribeTeamStore();
-
-      let seasonId = 0;
-
-      const unsubscribeSystemStore = systemStore.subscribe((systemState) => {
-        if(systemState){
-          seasonId = systemState?.calculationSeasonId;
+      
+      let allPlayers: PlayerDTO[] = [];
+      const unsubscribePlayerStore = playerStore.subscribe((players) => {
+        if(players){
+          allPlayers = players;
         }
       });
-      unsubscribeSystemStore();
-
-      await fixtureStore.sync(seasonId);
-        
-
-      let allFixtures: FixtureDTO[] = [];
-      const unsubscribeFixtureStore = fixtureStore.subscribe((fixtures) => {
-        allFixtures = fixtures;
-      });
-      unsubscribeFixtureStore();
+      unsubscribePlayerStore();
 
       const dateObject = new Date(expectedEndDate);
       const timestampMilliseconds = dateObject.getTime();
@@ -1209,18 +1134,17 @@ function createGovernanceStore() {
           payload: payload
         }
 
-        let fixture = allFixtures.find(x => x.id == fixtureId);
-        if(fixture){
-          let homeClub = clubs.find(x => x.id == fixture?.homeClubId);
-          let awayClub = clubs.find(x => x.id == fixture?.awayClubId);
-          if(!homeClub || !awayClub){
+        let player = allPlayers.find(x => x.id == playerId);
+        if(player){
+          let club = clubs.find(x => x.id == player?.clubId);
+          if(!club){
             return;
           }
           
           const command: Command = {MakeProposal: {
-            title: `Move fixture ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`,
+            title: `Set Player Injury for ${player.firstName} ${player.lastName}.`,
             url: "openfpl.xyz/governance",
-            summary:  `Fixture Data for ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`,
+            summary:  `Set Player Injury for ${player.firstName} ${player.lastName}.`,
             action:  [{ ExecuteGenericNervousSystemFunction : fn }]
           }};
 
@@ -1245,6 +1169,7 @@ function createGovernanceStore() {
   ): Promise<any> {
     try {
       await teamStore.sync();
+      await playerStore.sync();
       
       let clubs: ClubDTO[] = [];
       const unsubscribeTeamStore = teamStore.subscribe((teams) => {
@@ -1253,24 +1178,14 @@ function createGovernanceStore() {
         }
       });
       unsubscribeTeamStore();
-
-      let seasonId = 0;
-
-      const unsubscribeSystemStore = systemStore.subscribe((systemState) => {
-        if(systemState){
-          seasonId = systemState?.calculationSeasonId;
+      
+      let allPlayers: PlayerDTO[] = [];
+      const unsubscribePlayerStore = playerStore.subscribe((players) => {
+        if(players){
+          allPlayers = players;
         }
       });
-      unsubscribeSystemStore();
-
-      await fixtureStore.sync(seasonId);
-        
-
-      let allFixtures: FixtureDTO[] = [];
-      const unsubscribeFixtureStore = fixtureStore.subscribe((fixtures) => {
-        allFixtures = fixtures;
-      });
-      unsubscribeFixtureStore();
+      unsubscribePlayerStore();
 
       const dateObject = new Date(retirementDate);
       const timestampMilliseconds = dateObject.getTime();
@@ -1308,18 +1223,17 @@ function createGovernanceStore() {
           payload: payload
         }
 
-        let fixture = allFixtures.find(x => x.id == fixtureId);
-        if(fixture){
-          let homeClub = clubs.find(x => x.id == fixture?.homeClubId);
-          let awayClub = clubs.find(x => x.id == fixture?.awayClubId);
-          if(!homeClub || !awayClub){
+        let player = allPlayers.find(x => x.id == playerId);
+        if(player){
+          let club = clubs.find(x => x.id == player?.clubId);
+          if(!club){
             return;
           }
           
           const command: Command = {MakeProposal: {
-            title: `Move fixture ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`,
+            title: `Retire ${player.firstName} ${player.lastName}.`,
             url: "openfpl.xyz/governance",
-            summary:  `Fixture Data for ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`,
+            summary:  `Retire ${player.firstName} ${player.lastName}.`,
             action:  [{ ExecuteGenericNervousSystemFunction : fn }]
           }};
 
@@ -1341,6 +1255,7 @@ function createGovernanceStore() {
   async function unretirePlayer(playerId: number): Promise<any> {
     try {
       await teamStore.sync();
+      await playerStore.sync();
       
       let clubs: ClubDTO[] = [];
       const unsubscribeTeamStore = teamStore.subscribe((teams) => {
@@ -1349,24 +1264,14 @@ function createGovernanceStore() {
         }
       });
       unsubscribeTeamStore();
-
-      let seasonId = 0;
-
-      const unsubscribeSystemStore = systemStore.subscribe((systemState) => {
-        if(systemState){
-          seasonId = systemState?.calculationSeasonId;
+      
+      let allPlayers: PlayerDTO[] = [];
+      const unsubscribePlayerStore = playerStore.subscribe((players) => {
+        if(players){
+          allPlayers = players;
         }
       });
-      unsubscribeSystemStore();
-
-      await fixtureStore.sync(seasonId);
-        
-
-      let allFixtures: FixtureDTO[] = [];
-      const unsubscribeFixtureStore = fixtureStore.subscribe((fixtures) => {
-        allFixtures = fixtures;
-      });
-      unsubscribeFixtureStore();
+      unsubscribePlayerStore();
 
       let dto: UnretirePlayerDTO = {
         playerId,
@@ -1399,18 +1304,17 @@ function createGovernanceStore() {
           payload: payload
         }
 
-        let fixture = allFixtures.find(x => x.id == fixtureId);
-        if(fixture){
-          let homeClub = clubs.find(x => x.id == fixture?.homeClubId);
-          let awayClub = clubs.find(x => x.id == fixture?.awayClubId);
-          if(!homeClub || !awayClub){
+        let player = allPlayers.find(x => x.id == playerId);
+        if(player){
+          let club = clubs.find(x => x.id == player?.clubId);
+          if(!club){
             return;
           }
           
           const command: Command = {MakeProposal: {
-            title: `Move fixture ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`,
+            title: `Unretire ${player.firstName} ${player.lastName}.`,
             url: "openfpl.xyz/governance",
-            summary:  `Fixture Data for ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`,
+            summary:  `Unretire ${player.firstName} ${player.lastName}.`,
             action:  [{ ExecuteGenericNervousSystemFunction : fn }]
           }};
 
@@ -1450,15 +1354,6 @@ function createGovernanceStore() {
       });
       unsubscribeSystemStore();
 
-      await fixtureStore.sync(seasonId);
-        
-
-      let allFixtures: FixtureDTO[] = [];
-      const unsubscribeFixtureStore = fixtureStore.subscribe((fixtures) => {
-        allFixtures = fixtures;
-      });
-      unsubscribeFixtureStore();
-
       let dto: PromoteFormerClubDTO = {
         clubId,
       };
@@ -1489,19 +1384,16 @@ function createGovernanceStore() {
           function_id: 16000n,
           payload: payload
         }
-
-        let fixture = allFixtures.find(x => x.id == fixtureId);
-        if(fixture){
-          let homeClub = clubs.find(x => x.id == fixture?.homeClubId);
-          let awayClub = clubs.find(x => x.id == fixture?.awayClubId);
-          if(!homeClub || !awayClub){
+        
+          let club = clubs.find(x => x.id == clubId);
+          if(!club){
             return;
           }
           
           const command: Command = {MakeProposal: {
-            title: `Move fixture ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`,
+            title: `Promote ${club.friendlyName}.`,
             url: "openfpl.xyz/governance",
-            summary:  `Fixture Data for ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`,
+            summary: `Promote ${club.friendlyName}.`,
             action:  [{ ExecuteGenericNervousSystemFunction : fn }]
           }};
 
@@ -1513,7 +1405,6 @@ function createGovernanceStore() {
           await governanceManageNeuron({ subaccount: neuronId.id, command: [command]});
 
         }
-      }
     } catch (error) {
       console.error("Error submitting fixture data:", error);
       throw error;
@@ -1530,34 +1421,7 @@ function createGovernanceStore() {
     shirtType: ShirtType
   ): Promise<any> {
     try {
-      await teamStore.sync();
       
-      let clubs: ClubDTO[] = [];
-      const unsubscribeTeamStore = teamStore.subscribe((teams) => {
-        if(teams){
-          clubs = teams;
-        }
-      });
-      unsubscribeTeamStore();
-
-      let seasonId = 0;
-
-      const unsubscribeSystemStore = systemStore.subscribe((systemState) => {
-        if(systemState){
-          seasonId = systemState?.calculationSeasonId;
-        }
-      });
-      unsubscribeSystemStore();
-
-      await fixtureStore.sync(seasonId);
-        
-
-      let allFixtures: FixtureDTO[] = [];
-      const unsubscribeFixtureStore = fixtureStore.subscribe((fixtures) => {
-        allFixtures = fixtures;
-      });
-      unsubscribeFixtureStore();
-
       let dto: PromoteNewClubDTO = {
         name,
         friendlyName,
@@ -1594,30 +1458,21 @@ function createGovernanceStore() {
           function_id: 17000n,
           payload: payload
         }
+  
+        const command: Command = {MakeProposal: {
+          title: `Promote ${friendlyName}.`,
+          url: "openfpl.xyz/governance",
+          summary:  `Promote ${friendlyName}.`,
+          action:  [{ ExecuteGenericNervousSystemFunction : fn }]
+        }};
 
-        let fixture = allFixtures.find(x => x.id == fixtureId);
-        if(fixture){
-          let homeClub = clubs.find(x => x.id == fixture?.homeClubId);
-          let awayClub = clubs.find(x => x.id == fixture?.awayClubId);
-          if(!homeClub || !awayClub){
-            return;
-          }
-          
-          const command: Command = {MakeProposal: {
-            title: `Move fixture ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`,
-            url: "openfpl.xyz/governance",
-            summary:  `Fixture Data for ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`,
-            action:  [{ ExecuteGenericNervousSystemFunction : fn }]
-          }};
-
-          const neuronId = userNeurons[0].id[0];
-          if(!neuronId){
-            return;
-          }
-          
-          await governanceManageNeuron({ subaccount: neuronId.id, command: [command]});
-
+        const neuronId = userNeurons[0].id[0];
+        if(!neuronId){
+          return;
         }
+        
+        await governanceManageNeuron({ subaccount: neuronId.id, command: [command]});
+
       }
     } catch (error) {
       console.error("Error submitting fixture data:", error);
@@ -1702,29 +1557,25 @@ function createGovernanceStore() {
           payload: payload
         }
 
-        let fixture = allFixtures.find(x => x.id == fixtureId);
-        if(fixture){
-          let homeClub = clubs.find(x => x.id == fixture?.homeClubId);
-          let awayClub = clubs.find(x => x.id == fixture?.awayClubId);
-          if(!homeClub || !awayClub){
-            return;
-          }
-          
-          const command: Command = {MakeProposal: {
-            title: `Move fixture ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`,
-            url: "openfpl.xyz/governance",
-            summary:  `Fixture Data for ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`,
-            action:  [{ ExecuteGenericNervousSystemFunction : fn }]
-          }};
-
-          const neuronId = userNeurons[0].id[0];
-          if(!neuronId){
-            return;
-          }
-          
-          await governanceManageNeuron({ subaccount: neuronId.id, command: [command]});
-
+        let club = clubs.find(x => x.id == clubId);
+        if(!club){
+          return;
         }
+        
+        const command: Command = {MakeProposal: {
+          title: `Update ${club.friendlyName} club details.`,
+          url: "openfpl.xyz/governance",
+          summary:  `Update ${club.friendlyName} club details.`,
+          action:  [{ ExecuteGenericNervousSystemFunction : fn }]
+        }};
+
+        const neuronId = userNeurons[0].id[0];
+        if(!neuronId){
+          return;
+        }
+        
+        await governanceManageNeuron({ subaccount: neuronId.id, command: [command]});
+
       }
     } catch (error) {
       console.error("Error submitting fixture data:", error);
