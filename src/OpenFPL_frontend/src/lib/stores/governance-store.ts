@@ -1,5 +1,4 @@
 import { authStore } from "$lib/stores/auth.store";
-import { GovernanceCanister } from "@dfinity/nns";
 import { SnsGovernanceCanister } from "@dfinity/sns";
 import { playerStore } from "$lib/stores/player-store";
 import { isError } from "$lib/utils/Helpers";
@@ -28,9 +27,9 @@ import type {
   UpdatePlayerDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
-import type { Action, MakeProposalRequest, NeuronId, Option } from "@dfinity/nns";
-import { ManageNeuron } from "@dfinity/nns-proto";
 import type { HttpAgent } from "@dfinity/agent";
+import type { Action } from "@dfinity/sns/dist/types/types/actions";
+import type { Command, ExecuteGenericNervousSystemFunction } from "@dfinity/sns/dist/candid/sns_governance";
 
 function createGovernanceStore() {
   async function revaluePlayerUp(playerId: number): Promise<any> {
@@ -58,20 +57,6 @@ function createGovernanceStore() {
   async function revaluePlayerDown(playerId: number): Promise<any> {
     try {
       
-      const identityActor: any = await ActorFactory.createIdentityActor(
-        authStore,
-        process.env.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
-      ); //TODO: Create the governance canister
-
-      const { listNeurons  } = GovernanceCanister.create(identityActor);
-
-      const governanceAgent: HttpAgent = ActorFactory.getAgent(process.env.OPENFPL_GOVERNANCE_CANISTER_ID, identityActor, null);
-
-      const { metadata: governanceMetadata } = SnsGovernanceCanister.create({
-        agent: governanceAgent,
-        canisterId: identityActor,
-      });
-      const metadata = await governanceMetadata({ certified: true });
       
       
       let userNeurons = await listNeurons({certified: true});
@@ -89,7 +74,34 @@ function createGovernanceStore() {
             let dto: RevaluePlayerDownDTO = {
               playerId: playerId,
             };
+
+                  
+            const identityActor: any = await ActorFactory.createIdentityActor(
+              authStore,
+              process.env.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
+            ); //TODO: Create the governance canister
+
+
+            const governanceAgent: HttpAgent = ActorFactory.getAgent(process.env.OPENFPL_GOVERNANCE_CANISTER_ID, identityActor, null);
+
+            const { manageNeuron: governanceManageNeuron } = SnsGovernanceCanister.create({
+              agent: governanceAgent,
+              canisterId: identityActor,
+            });
+            const fn: ExecuteGenericNervousSystemFunction = {
+              function_id: 1n,
+              payload: []
+            }
+            const command: Command = {MakeProposal: {
+              title: `Revalue ${player.lastName} value down.`,
+              url: "openfpl.xyz/governance",
+              summary: `Revalue ${player.lastName} value down from £${(player.valueQuarterMillions / 4).toFixed(2).toLocaleString()}m -> £${((player.valueQuarterMillions - 1)/4).toFixed(2).toLocaleString()}m).`,
+              action:  [{ ExecuteGenericNervousSystemFunction : fn }]
+            }};
 /*            
+      const manageNeuron = await governanceManageNeuron({ subaccount: [], command: {
+        [command]
+      } });
             let makeProposalRequest: MakeProposalRequest = {
               neuronId: neuronId,
               title: `Revalue ${player.lastName} value down.`,
