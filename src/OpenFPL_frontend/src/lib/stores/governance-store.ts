@@ -29,8 +29,7 @@ import type {
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import type { HttpAgent } from "@dfinity/agent";
-import type { Action } from "@dfinity/sns/dist/types/types/actions";
-import type { Command, ExecuteGenericNervousSystemFunction } from "@dfinity/sns/dist/candid/sns_governance";
+import type { Command, ExecuteGenericNervousSystemFunction, GetProposal, RegisterVote } from "@dfinity/sns/dist/candid/sns_governance";
 
 function createGovernanceStore() {
   async function revaluePlayerUp(playerId: number): Promise<any> {
@@ -57,11 +56,7 @@ function createGovernanceStore() {
 
   async function revaluePlayerDown(playerId: number): Promise<any> {
     try {
-      
-      
-      
-      //let userNeurons = await listNeurons({certified: true});
-      await playerStore.sync();
+    await playerStore.sync();
       
 
     let allPlayers: PlayerDTO[] = [];
@@ -69,58 +64,54 @@ function createGovernanceStore() {
       allPlayers = players;
     });
     unsubscribe();
-      var dto: RevaluePlayerDownDTO = {
-        playerId: playerId,
-      };
-      
-      const identityActor: any = await ActorFactory.createIdentityActor(
-        authStore,
-        process.env.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
-      ); //TODO: Post SNS add in governance canister references
 
-      const governanceAgent: HttpAgent = ActorFactory.getAgent(process.env.OPENFPL_GOVERNANCE_CANISTER_ID, identityActor, null);
+    var dto: RevaluePlayerDownDTO = {
+      playerId: playerId,
+    };
+    
+    const identityActor: any = await ActorFactory.createIdentityActor(
+      authStore,
+      process.env.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
+    ); //TODO: Post SNS add in governance canister references
 
-      const { manageNeuron: governanceManageNeuron, listNeurons: governanceListNeurons } = SnsGovernanceCanister.create({
-        agent: governanceAgent,
-        canisterId: identityActor,
-      });
+    const governanceAgent: HttpAgent = ActorFactory.getAgent(process.env.OPENFPL_GOVERNANCE_CANISTER_ID, identityActor, null);
 
-      const userNeurons = await governanceListNeurons({ 
-        principal: identityActor.principal,
-        limit: 100,
-        beforeNeuronId: {id: []}});
-      
-      let proposalRaised = false;
-      for(const neuron of userNeurons){
-        if(!proposalRaised){
-          const jsonString = JSON.stringify(dto);
+    const { manageNeuron: governanceManageNeuron, listNeurons: governanceListNeurons } = SnsGovernanceCanister.create({
+      agent: governanceAgent,
+      canisterId: identityActor,
+    });
 
-          const encoder = new TextEncoder();
-          const payload = encoder.encode(jsonString);
+    const userNeurons = await governanceListNeurons({ 
+      principal: identityActor.principal,
+      limit: 100,
+      beforeNeuronId: {id: []}});
+      if(userNeurons.length > 0){
+        const jsonString = JSON.stringify(dto);
 
-          const fn: ExecuteGenericNervousSystemFunction = {
-            function_id: 1n,
-            payload: payload
+        const encoder = new TextEncoder();
+        const payload = encoder.encode(jsonString);
+
+        const fn: ExecuteGenericNervousSystemFunction = {
+          function_id: 1n,
+          payload: payload
+        }
+
+        let player = allPlayers.find(x => x.id == playerId);
+        if(player){
+          const command: Command = {MakeProposal: {
+            title: `Revalue ${player.lastName} value down.`,
+            url: "openfpl.xyz/governance",
+            summary: `Revalue ${player.lastName} value down from £${(player.valueQuarterMillions / 4).toFixed(2).toLocaleString()}m -> £${((player.valueQuarterMillions - 1)/4).toFixed(2).toLocaleString()}m).`,
+            action:  [{ ExecuteGenericNervousSystemFunction : fn }]
+          }};
+
+          const neuronId = userNeurons[0].id[0];
+          if(!neuronId){
+            return;
           }
+          
+          await governanceManageNeuron({ subaccount: neuronId.id, command: [command]});
 
-          let player = allPlayers.find(x => x.id == playerId);
-          if(player){
-            const command: Command = {MakeProposal: {
-              title: `Revalue ${player.lastName} value down.`,
-              url: "openfpl.xyz/governance",
-              summary: `Revalue ${player.lastName} value down from £${(player.valueQuarterMillions / 4).toFixed(2).toLocaleString()}m -> £${((player.valueQuarterMillions - 1)/4).toFixed(2).toLocaleString()}m).`,
-              action:  [{ ExecuteGenericNervousSystemFunction : fn }]
-            }};
-
-            const neuronId = neuron.id[0]; // This is now of type NeuronId
-            if(!neuronId){
-              return;
-            }
-            const manageNeuronResponse = await governanceManageNeuron({ subaccount: neuronId.id, command: [command]});
-          }
-          else{
-            //vote
-          }
         }
       }
     } catch (error) {
