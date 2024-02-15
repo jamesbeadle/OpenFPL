@@ -490,7 +490,7 @@ function createGovernanceStore() {
         const payload = encoder.encode(jsonString);
 
         const fn: ExecuteGenericNervousSystemFunction = {
-          function_id: 5000n,
+          function_id: 6000n,
           payload: payload
         }
 
@@ -611,7 +611,7 @@ function createGovernanceStore() {
         const payload = encoder.encode(jsonString);
 
         const fn: ExecuteGenericNervousSystemFunction = {
-          function_id: 5000n,
+          function_id: 7000n,
           payload: payload
         }
 
@@ -627,6 +627,101 @@ function createGovernanceStore() {
             title: `Move fixture ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`,
             url: "openfpl.xyz/governance",
             summary:  `Fixture Data for ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`,
+            action:  [{ ExecuteGenericNervousSystemFunction : fn }]
+          }};
+
+          const neuronId = userNeurons[0].id[0];
+          if(!neuronId){
+            return;
+          }
+          
+          await governanceManageNeuron({ subaccount: neuronId.id, command: [command]});
+
+        }
+      }
+    } catch (error) {
+      console.error("Error submitting fixture data:", error);
+      throw error;
+    }
+  }
+
+  async function transferPlayer(
+    playerId: number,
+    newClubId: number
+  ): Promise<any> {
+    try {
+      await teamStore.sync();
+      await playerStore.sync();
+      
+      let clubs: ClubDTO[] = [];
+      const unsubscribeTeamStore = teamStore.subscribe((teams) => {
+        if(teams){
+          clubs = teams;
+        }
+      });
+      unsubscribeTeamStore();
+      
+      let allPlayers: PlayerDTO[] = [];
+      const unsubscribePlayerStore = playerStore.subscribe((players) => {
+        if(players){
+          allPlayers = players;
+        }
+      });
+      unsubscribeTeamStore();
+
+      let dto: TransferPlayerDTO = {
+        playerId,
+        newClubId,
+      };
+      
+      const identityActor: any = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
+      ); //TODO: Post SNS add in governance canister references
+
+      const governanceAgent: HttpAgent = ActorFactory.getAgent(process.env.OPENFPL_GOVERNANCE_CANISTER_ID, identityActor, null);
+
+      const { manageNeuron: governanceManageNeuron, listNeurons: governanceListNeurons } = SnsGovernanceCanister.create({
+        agent: governanceAgent,
+        canisterId: identityActor,
+      });
+
+      const userNeurons = await governanceListNeurons({ 
+        principal: identityActor.principal,
+        limit: 10,
+        beforeNeuronId: {id: []}});
+      if(userNeurons.length > 0){
+        const jsonString = JSON.stringify(dto);
+
+        const encoder = new TextEncoder();
+        const payload = encoder.encode(jsonString);
+
+        const fn: ExecuteGenericNervousSystemFunction = {
+          function_id: 8000n,
+          payload: payload
+        }
+
+        let player = allPlayers.find(x => x.id == playerId);
+        if(player){
+          let currentClub = clubs.find(x => x.id == player?.clubId);
+          let newClub = clubs.find(x => x.id == newClubId);
+          if(!currentClub){
+            return;
+          }
+
+          let title = "";
+          if(newClubId == 0){
+            title = `Transfer ${player.firstName} ${player.lastName} outside of Premier League.`;
+          }
+
+          if(newClub){
+            title = `Transfer ${player.firstName} ${player.lastName} to ${newClub.friendlyName}`;
+          }
+          
+          const command: Command = {MakeProposal: {
+            title: title,
+            url: "openfpl.xyz/governance",
+            summary:  title,
             action:  [{ ExecuteGenericNervousSystemFunction : fn }]
           }};
 
@@ -703,7 +798,7 @@ function createGovernanceStore() {
         const payload = encoder.encode(jsonString);
 
         const fn: ExecuteGenericNervousSystemFunction = {
-          function_id: 5000n,
+          function_id: 9000n,
           payload: payload
         }
 
@@ -718,101 +813,6 @@ function createGovernanceStore() {
             title: `Loan ${player.firstName} to ${club?.friendlyName}.`,
             url: "openfpl.xyz/governance",
             summary:  `Loan ${player.firstName} to ${club?.friendlyName}.`,
-            action:  [{ ExecuteGenericNervousSystemFunction : fn }]
-          }};
-
-          const neuronId = userNeurons[0].id[0];
-          if(!neuronId){
-            return;
-          }
-          
-          await governanceManageNeuron({ subaccount: neuronId.id, command: [command]});
-
-        }
-      }
-    } catch (error) {
-      console.error("Error submitting fixture data:", error);
-      throw error;
-    }
-  }
-
-  async function transferPlayer(
-    playerId: number,
-    newClubId: number
-  ): Promise<any> {
-    try {
-      await teamStore.sync();
-      await playerStore.sync();
-      
-      let clubs: ClubDTO[] = [];
-      const unsubscribeTeamStore = teamStore.subscribe((teams) => {
-        if(teams){
-          clubs = teams;
-        }
-      });
-      unsubscribeTeamStore();
-      
-      let allPlayers: PlayerDTO[] = [];
-      const unsubscribePlayerStore = playerStore.subscribe((players) => {
-        if(players){
-          allPlayers = players;
-        }
-      });
-      unsubscribeTeamStore();
-
-      let dto: TransferPlayerDTO = {
-        playerId,
-        newClubId,
-      };
-      
-      const identityActor: any = await ActorFactory.createIdentityActor(
-        authStore,
-        process.env.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
-      ); //TODO: Post SNS add in governance canister references
-
-      const governanceAgent: HttpAgent = ActorFactory.getAgent(process.env.OPENFPL_GOVERNANCE_CANISTER_ID, identityActor, null);
-
-      const { manageNeuron: governanceManageNeuron, listNeurons: governanceListNeurons } = SnsGovernanceCanister.create({
-        agent: governanceAgent,
-        canisterId: identityActor,
-      });
-
-      const userNeurons = await governanceListNeurons({ 
-        principal: identityActor.principal,
-        limit: 10,
-        beforeNeuronId: {id: []}});
-      if(userNeurons.length > 0){
-        const jsonString = JSON.stringify(dto);
-
-        const encoder = new TextEncoder();
-        const payload = encoder.encode(jsonString);
-
-        const fn: ExecuteGenericNervousSystemFunction = {
-          function_id: 5000n,
-          payload: payload
-        }
-
-        let player = allPlayers.find(x => x.id == playerId);
-        if(player){
-          let currentClub = clubs.find(x => x.id == player?.clubId);
-          let newClub = clubs.find(x => x.id == newClubId);
-          if(!currentClub){
-            return;
-          }
-
-          let title = "";
-          if(newClubId == 0){
-            title = `Transfer ${player.firstName} ${player.lastName} outside of Premier League.`;
-          }
-
-          if(newClub){
-            title = `Transfer ${player.firstName} ${player.lastName} to ${newClub.friendlyName}`;
-          }
-          
-          const command: Command = {MakeProposal: {
-            title: title,
-            url: "openfpl.xyz/governance",
-            summary:  title,
             action:  [{ ExecuteGenericNervousSystemFunction : fn }]
           }};
 
@@ -888,7 +888,7 @@ function createGovernanceStore() {
         const payload = encoder.encode(jsonString);
 
         const fn: ExecuteGenericNervousSystemFunction = {
-          function_id: 5000n,
+          function_id: 10000n,
           payload: payload
         }
 
@@ -999,7 +999,7 @@ function createGovernanceStore() {
         const payload = encoder.encode(jsonString);
 
         const fn: ExecuteGenericNervousSystemFunction = {
-          function_id: 5000n,
+          function_id: 11000n,
           payload: payload
         }
 
@@ -1104,7 +1104,7 @@ function createGovernanceStore() {
         const payload = encoder.encode(jsonString);
 
         const fn: ExecuteGenericNervousSystemFunction = {
-          function_id: 5000n,
+          function_id: 12000n,
           payload: payload
         }
 
@@ -1205,7 +1205,7 @@ function createGovernanceStore() {
         const payload = encoder.encode(jsonString);
 
         const fn: ExecuteGenericNervousSystemFunction = {
-          function_id: 5000n,
+          function_id: 13000n,
           payload: payload
         }
 
@@ -1304,7 +1304,7 @@ function createGovernanceStore() {
         const payload = encoder.encode(jsonString);
 
         const fn: ExecuteGenericNervousSystemFunction = {
-          function_id: 5000n,
+          function_id: 14000n,
           payload: payload
         }
 
@@ -1395,7 +1395,7 @@ function createGovernanceStore() {
         const payload = encoder.encode(jsonString);
 
         const fn: ExecuteGenericNervousSystemFunction = {
-          function_id: 5000n,
+          function_id: 15000n,
           payload: payload
         }
 
@@ -1486,7 +1486,7 @@ function createGovernanceStore() {
         const payload = encoder.encode(jsonString);
 
         const fn: ExecuteGenericNervousSystemFunction = {
-          function_id: 5000n,
+          function_id: 16000n,
           payload: payload
         }
 
@@ -1591,7 +1591,7 @@ function createGovernanceStore() {
         const payload = encoder.encode(jsonString);
 
         const fn: ExecuteGenericNervousSystemFunction = {
-          function_id: 5000n,
+          function_id: 17000n,
           payload: payload
         }
 
@@ -1698,7 +1698,7 @@ function createGovernanceStore() {
         const payload = encoder.encode(jsonString);
 
         const fn: ExecuteGenericNervousSystemFunction = {
-          function_id: 5000n,
+          function_id: 18000n,
           payload: payload
         }
 
