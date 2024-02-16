@@ -110,7 +110,7 @@
   </h2>
   <p class="my-2">
     Partnering with Premier League content creators to offer exclusive insights,
-    with a unique monetization model for both free and subscription-based
+    with a unique monetisation model for both free and subscription-based
     content.
   </p>
 
