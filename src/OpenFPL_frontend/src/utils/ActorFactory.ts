@@ -52,7 +52,7 @@ export class ActorFactory {
     canisterId: string = "",
     identity: OptionIdentity = null,
     options: any = null
-  ) : HttpAgent{
+  ): HttpAgent {
     const hostOptions = {
       host:
         process.env.DFX_NETWORK === "ic"
@@ -87,7 +87,6 @@ export class ActorFactory {
       return ActorFactory.createActor(canister, canisterId, identity);
     });
   }
-  
 
   static createGovernanceAgent(authStore: AuthStore, canisterId: string) {
     let unsubscribe: Unsubscriber;

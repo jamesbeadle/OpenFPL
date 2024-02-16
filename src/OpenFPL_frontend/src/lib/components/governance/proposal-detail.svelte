@@ -39,23 +39,23 @@
     neurons.forEach((neuron) => {
       const neuronId = neuron.id[0];
 
-      if(!neuronId){
+      if (!neuronId) {
         return;
       }
-        
+
       switch (vote) {
         case "Yes":
           registerVote({
             proposalId: proposal.id[0]!,
             vote: SnsVote.Yes,
-            neuronId: neuronId
+            neuronId: neuronId,
           });
           break;
         case "No":
           registerVote({
             proposalId: proposal.id[0]!,
             vote: SnsVote.No,
-            neuronId: neuronId
+            neuronId: neuronId,
           });
           break;
       }
