@@ -41,36 +41,6 @@
           Gameplay
         </button>
       </li>
-      <li class={`mr-4 ${activeTab === "roadmap" ? "active-tab" : ""}`}>
-        <button
-          class={`p-2 ${
-            activeTab === "roadmap" ? "text-white" : "text-gray-400"
-          }`}
-          on:click={() => setActiveTab("roadmap")}
-        >
-          Roadmap
-        </button>
-      </li>
-      <li class={`mr-4 ${activeTab === "marketing" ? "active-tab" : ""}`}>
-        <button
-          class={`p-2 ${
-            activeTab === "marketing" ? "text-white" : "text-gray-400"
-          }`}
-          on:click={() => setActiveTab("marketing")}
-        >
-          Marketing
-        </button>
-      </li>
-      <li class={`mr-4 ${activeTab === "revenue" ? "active-tab" : ""}`}>
-        <button
-          class={`p-2 ${
-            activeTab === "revenue" ? "text-white" : "text-gray-400"
-          }`}
-          on:click={() => setActiveTab("revenue")}
-        >
-          Revenue
-        </button>
-      </li>
       <li class={`mr-4 ${activeTab === "dao" ? "active-tab" : ""}`}>
         <button
           class={`p-2 ${activeTab === "dao" ? "text-white" : "text-gray-400"}`}
@@ -89,6 +59,26 @@
           Tokenomics
         </button>
       </li>
+      <li class={`mr-4 ${activeTab === "revenue" ? "active-tab" : ""}`}>
+        <button
+          class={`p-2 ${
+            activeTab === "revenue" ? "text-white" : "text-gray-400"
+          }`}
+          on:click={() => setActiveTab("revenue")}
+        >
+          Revenue
+        </button>
+      </li>
+      <li class={`mr-4 ${activeTab === "marketing" ? "active-tab" : ""}`}>
+        <button
+          class={`p-2 ${
+            activeTab === "marketing" ? "text-white" : "text-gray-400"
+          }`}
+          on:click={() => setActiveTab("marketing")}
+        >
+          Marketing
+        </button>
+      </li>
       <li class={`mr-4 ${activeTab === "architecture" ? "active-tab" : ""}`}>
         <button
           class={`p-2 ${
@@ -99,6 +89,16 @@
           Architecture
         </button>
       </li>
+      <li class={`mr-4 ${activeTab === "roadmap" ? "active-tab" : ""}`}>
+        <button
+          class={`p-2 ${
+            activeTab === "roadmap" ? "text-white" : "text-gray-400"
+          }`}
+          on:click={() => setActiveTab("roadmap")}
+        >
+          Roadmap
+        </button>
+      </li>
     </ul>
 
     {#if activeTab === "vision"}
@@ -107,10 +107,10 @@
       <Gameplay />
     {:else if activeTab === "roadmap"}
       <Roadmap />
-    {:else if activeTab === "marketing"}
-      <Marketing />
     {:else if activeTab === "revenue"}
       <Revenue />
+    {:else if activeTab === "marketing"}
+      <Marketing />
     {:else if activeTab === "dao"}
       <Dao />
     {:else if activeTab === "tokenomics"}
