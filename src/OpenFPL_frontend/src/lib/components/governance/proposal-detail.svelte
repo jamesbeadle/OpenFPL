@@ -1,15 +1,15 @@
 <script lang="ts">
   import { Modal } from "@dfinity/gix-components";
   import LocalSpinner from "$lib/components/local-spinner.svelte";
-  import type { ProposalInfo } from "@dfinity/nns";
   import { authStore } from "$lib/stores/auth.store";
   import { ActorFactory } from "../../../utils/ActorFactory";
-  import { GovernanceCanister, Vote } from "@dfinity/nns";
+  import { SnsGovernanceCanister, SnsVote } from "@dfinity/sns";
+  import type { ProposalData } from "@dfinity/sns/dist/candid/sns_governance";
 
   export let visible: boolean;
   export let closeModal: () => void;
 
-  export let proposal: ProposalInfo;
+  export let proposal: ProposalData;
 
   let isLoading = true;
   let showConfirm = false;
@@ -33,23 +33,29 @@
     ); //TODO: Create the governance canister
 
     const { listNeurons, registerVote } =
-      GovernanceCanister.create(identityActor);
+      SnsGovernanceCanister.create(identityActor);
     let neurons = await listNeurons({ certified: false });
 
-    neurons.forEach((element) => {
+    neurons.forEach((neuron) => {
+      const neuronId = neuron.id[0];
+
+      if(!neuronId){
+        return;
+      }
+        
       switch (vote) {
         case "Yes":
           registerVote({
-            neuronId: element.neuronId,
-            proposalId: proposal.id!,
-            vote: Vote.Yes,
+            proposalId: proposal.id[0]!,
+            vote: SnsVote.Yes,
+            neuronId: neuronId
           });
           break;
         case "No":
           registerVote({
-            neuronId: element.neuronId,
-            proposalId: proposal.id!,
-            vote: Vote.No,
+            proposalId: proposal.id[0]!,
+            vote: SnsVote.No,
+            neuronId: neuronId
           });
           break;
       }
@@ -81,10 +87,10 @@
     <div class="flex justify-start items-center w-full">
       <div class="w-full flex-col space-y-4 mb-2">
         <div class="flex-col space-y-2">
-          <p>{proposal.proposal?.title}</p>
-          <p>{proposal.proposal?.summary}</p>
-          <p>{proposal.latestTally?.yes}</p>
-          <p>{proposal.latestTally?.no}</p>
+          <p>{proposal.proposal[0]?.title}</p>
+          <p>{proposal.proposal[0]?.summary}</p>
+          <p>{proposal.latest_tally[0]?.yes}</p>
+          <p>{proposal.latest_tally[0]?.no}</p>
 
           <div class="border-b border-gray-200" />
 
