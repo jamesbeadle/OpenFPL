@@ -2,7 +2,7 @@
   <h1 class="default-header">Roadmap</h1>
   <p class="my-4">We have an ambitious roadmap of features:</p>
   <h2 class="default-sub-header mt-4">
-    Jan - Feb 2024: SNS Testflight Testing
+    Jan - Feb 2024: SNS Testing
   </h2>
   <p class="my-2">
     We will perform comprehensive testing of the OpenFPL gameplay and governance
@@ -15,18 +15,8 @@
     March 1st 2024: OpenFPL SNS Decentralisation Sale
   </h2>
   <p class="my-2">
-    We aim to begin our decentralisation sale on 1st March 2024, selling 25
+    We aim to begin our decentralisation sale in March 2024, selling 25
     million $FPL tokens (25%).
-  </p>
-
-  <h2 class="default-sub-header mt-4">
-    March 2024: 'The OpenFPL Podcast' Launch
-  </h2>
-  <p class="my-2">
-    Starting with a main podcast, we aim to expand into fan-focused podcasts,
-    emulating the model of successful platforms like Arsenal Fan TV. Initially
-    audio-based, these podcasts will eventually include video content, adding
-    another dimension to our engagement strategy.
   </p>
 
   <h2 class="default-sub-header mt-4">April 2024: Shirt Production Begins</h2>
@@ -79,6 +69,16 @@
     channels and private league communication.
   </p>
 
+  <h2 class="default-sub-header mt-4">
+    July 2024: 'The OpenFPL Podcast' Launch
+  </h2>
+  <p class="my-2">
+    Starting with a main podcast, we aim to expand into fan-focused podcasts,
+    emulating the model of successful platforms like Arsenal Fan TV. Initially
+    audio-based, these podcasts will eventually include video content, adding
+    another dimension to our engagement strategy.
+  </p>
+
   <h2 class="default-sub-header mt-4">July 2024: OpenFPL Events</h2>
   <p class="my-2">
     OpenFPL is set to create a series of interactive experiences at event
@@ -110,7 +110,7 @@
   </h2>
   <p class="my-2">
     Partnering with Premier League content creators to offer exclusive insights,
-    with a unique monetization model for both free and subscription-based
+    with a unique monetisation model for both free and subscription-based
     content.
   </p>
 

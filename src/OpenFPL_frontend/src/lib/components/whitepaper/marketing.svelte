@@ -7,29 +7,13 @@
 
   <h2 class="default-header mb-4">Online Marketing Strategy</h2>
   <p class="my-2">
-    After the SNS we will begin a comprehensive online marketing campaign. The
-    campaign will focus on PPC (Pay-Per-Click) and SEO (Search Engine
-    Optimisation) strategies, with an emphasis on reaching specific user groups
-    effectively.
-  </p>
-
-  <h2 class="default-header mt-4">Initial Strategy and Goals</h2>
-  <p class="my-2">
-    We will have a particular focus on the UK market for initial traction.
-    Tracking success through KPIs, focusing on manager sign-ups and event
-    attendance.
+    After the SNS we will begin a comprehensive online marketing campaign on all major social media platforms using our existing talented team.
   </p>
 
   <h2 class="default-header mt-4">OpenFPL's Initiatives</h2>
   <p class="my-2">
-    Our approach is to seamlessly integrate OpenFPL's online marketing campaigns
-    with our broader initiatives. A key focus will be on targeted local
-    advertising, aiming to highlight the distribution of 200 junior football
-    club kits to grassroots football causes across the UK. Additionally, we've
-    created a return on investment (ROI) leaderboard for each of our NFT
-    collections. This leaderboard will highlight and market the clubs that are
-    the most active and supportive in our network. The aim is to boost purchases
-    through the ICPFA shop.
+    OpenFPL's will integrate its online marketing campaigns with its broader initiatives. A key focus will be on targeted local
+    advertising, aiming to highlight the distribution of 200 junior football club kits to grassroots football causes across the UK. 
   </p>
   <p class="my-2">
     In November 2023, a proposal was passed in the OpenChat DAO for them to
@@ -83,13 +67,5 @@
   <p class="my-2">
     We will be exploring opportunities to replicate this event model in other
     regions, expanding OpenFPL's global footprint.
-  </p>
-
-  <h2 class="default-header mt-4">Overall Approach</h2>
-  <p class="my-2">
-    The marketing plan aims to be dynamic, adapting to the evolving needs of
-    OpenFPL and the response from the target audience. The digital agency and
-    OpenFPL will work closely to ensure that the campaigns are coherent,
-    data-driven, and aligned with OpenFPL’s overall branding and objectives.
   </p>
 </div>

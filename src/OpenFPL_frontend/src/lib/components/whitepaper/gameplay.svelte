@@ -1,11 +1,9 @@
 <div class="m-4">
   <h1 class="default-header">OpenFPL Gameplay</h1>
   <p class="my-4">
-    At OpenFPL, our gameplay rules are designed to create an immersive,
-    engaging, and unique fantasy football experience. We understand the passion
-    and strategy that goes into fantasy football, and our gameplay rules are
-    crafted to reflect this, enhancing the fun and competitiveness of each
-    gameweek.
+    OpenFPL has been designed to create a unique and engaging fantasy football experience. 
+    We understand the passion and strategy that goes into fantasy football, and our gameplay rules are
+    crafted to reflect this, enhancing the fun and competitiveness of each gameweek.
   </p>
 
   <h2 class="default-header">Starting Funds and Team Composition</h2>
@@ -24,27 +22,26 @@
 
   <h2 class="default-header mt-4">Transfers and Team Management</h2>
   <p class="my-2">
-    Flexibility is a cornerstone of our gameplay. Users can make up to three
-    transfers per week, allowing for dynamic team management and adaptation to
-    the ever-changing football landscape. These transfers don't roll over,
-    encouraging active participation each week. There are no substitutes in our
+    We want to give managers flexibility so users can make up to three transfers per week, 
+    allowing managers to make a wider range of changes each week to reflect the complex scenarios managers forsee. 
+    These transfers don't roll over, encouraging active participation each week. There are no substitutes in our
     game, eliminating the frustration of unused bench points.
   </p>
-  <p class="my-2">
+  <p class="my-4">
     Each January, users can overhaul their team completely once, adding another
     strategic layer to the game reflecting the January transfer window.
   </p>
-  <p class="my-2">
+  <p class="my-4">
     If a player is loaned or transferred from a club they are removed from any
     fantasy team that contains them. This will leave a space in your team you
     must fill when saving your team next.
   </p>
-  <p class="my-2">
+  <p class="my-4">
     If the DAO votes to change a player's position, for example from a forward
     to a midfielder, then the player is again removed from any fantasy team that
     contains them.
   </p>
-  <p class="my-2">
+  <p class="my-4">
     Scores will still be calculated on teams with less than 11 players that have
     not updated their team since an automatic system change.
   </p>
@@ -288,14 +285,10 @@
       the fixture will be awarded.
     </li>
   </ul>
-  <p class="my-2">
-    Each January, users can overhaul their team completely once, adding another
-    strategic layer to the game reflecting the January transfer window.
-  </p>
 
   <p class="my-4">
     OpenFPL's gameplay combines strategic team management, a dynamic scoring
-    system, and diverse bonuses, offering a unique and competitive fantasy
+    system, and diverse bonuses to create a unique and competitive fantasy
     football experience. Each decision impacts your journey through the Premier
     League season, where football knowledge and strategy lead to rewarding
     outcomes.

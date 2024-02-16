@@ -1085,72 +1085,12 @@ module {
       dataCacheHashes := List.fromArray(stable_data_cache_hashes);
     };
 
-    /* Admin Functions to Remove  */
-
-    public func updateSystemState(updatedSystemStateDTO : DTOs.UpdateSystemStateDTO) : async Result.Result<(), T.Error> {
-
-      let pickTeamSeason = seasonComposite.getSeason(updatedSystemStateDTO.pickTeamSeasonId);
-
-      systemState := {
-        pickTeamSeasonId = updatedSystemStateDTO.pickTeamSeasonId;
-        pickTeamGameweek = updatedSystemStateDTO.pickTeamGameweek;
-        calculationGameweek = updatedSystemStateDTO.calculationGameweek;
-        calculationMonth = updatedSystemStateDTO.calculationMonth;
-        calculationSeasonId = updatedSystemStateDTO.calculationSeasonId;
-        transferWindowActive = updatedSystemStateDTO.transferWindowActive;
-        onHold = updatedSystemStateDTO.onHold;
-      };
-      return #ok;
-    };
-
-    public func updateFixture(updateFixtureDTO : DTOs.UpdateFixtureDTO) : async Result.Result<(), T.Error> {
-      return await seasonComposite.updateFixture(updateFixtureDTO);
-    };
-
-    public func adminGetFixtures(seasonId : T.SeasonId) : DTOs.AdminFixtureList {
-
-      let fixtures = getFixtures(seasonId);
-
-      return {
-        seasonId = seasonId;
-        fixtures = fixtures;
-      };
-    };
-
-    public func adminGetClubs(limit : Nat, offset : Nat) : DTOs.AdminClubList {
-      let clubs = getClubs();
-      let droppedEntries = List.drop<DTOs.ClubDTO>(List.fromArray(clubs), offset);
-      let paginatedEntries = List.take<DTOs.ClubDTO>(droppedEntries, limit);
-
-      return {
-        clubs = List.toArray(paginatedEntries);
-        limit = limit;
-        offset = offset;
-        totalEntries = Array.size(clubs);
-      };
-    };
-
-    public func adminGetPlayers(status : T.PlayerStatus) : DTOs.AdminPlayerList {
-      let players = getPlayers();
-
-      let filteredPlayers = Array.filter<DTOs.PlayerDTO>(
-        players,
-        func(player : DTOs.PlayerDTO) : Bool {
-          return player.status == status;
-        },
-      );
-
-      return {
-        players = filteredPlayers;
-        playerStatus = status;
-      };
-    };
-
     public func init() : async () {
       seasonComposite.init();
       clubComposite.init();
       playerComposite.init();
       await managerComposite.init();
+      //TODO: Add prior managers
     };
 
   };

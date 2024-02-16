@@ -5,55 +5,6 @@ export interface AddInitialFixturesDTO {
   seasonId: SeasonId;
   seasonFixtures: Array<FixtureDTO>;
 }
-export interface AdminClubList {
-  totalEntries: bigint;
-  clubs: Array<ClubDTO>;
-  offset: bigint;
-  limit: bigint;
-}
-export interface AdminFixtureList {
-  seasonId: SeasonId;
-  fixtures: Array<FixtureDTO>;
-}
-export interface AdminMainCanisterInfo {
-  cycles: bigint;
-  canisterId: string;
-}
-export interface AdminManagerCanisterList {
-  totalEntries: bigint;
-  canisters: Array<ManagerCanisterDTO>;
-}
-export interface AdminMonthlyCanisterList {
-  totalEntries: bigint;
-  offset: bigint;
-  limit: bigint;
-  canisters: Array<MonthlyCanisterDTO>;
-}
-export interface AdminPlayerList {
-  playerStatus: PlayerStatus;
-  players: Array<PlayerDTO>;
-}
-export interface AdminSeasonCanisterList {
-  totalEntries: bigint;
-  offset: bigint;
-  limit: bigint;
-  canisters: Array<SeasonCanisterDTO>;
-}
-export interface AdminTimerList {
-  timers: Array<TimerDTO>;
-  totalEntries: bigint;
-  offset: bigint;
-  limit: bigint;
-  cyclesCheck: TimerDTO;
-  category: string;
-  cyclesWalletCheck: TimerDTO;
-}
-export interface AdminWeeklyCanisterList {
-  totalEntries: bigint;
-  offset: bigint;
-  limit: bigint;
-  canisters: Array<WeeklyCanisterDTO>;
-}
 export type CalendarMonth = number;
 export interface ClubDTO {
   id: ClubId;
@@ -167,10 +118,6 @@ export interface LoanPlayerDTO {
   playerId: PlayerId;
   loanClubId: ClubId;
 }
-export interface ManagerCanisterDTO {
-  cycles: bigint;
-  canisterId: string;
-}
 export interface ManagerDTO {
   username: string;
   weeklyPosition: bigint;
@@ -187,16 +134,6 @@ export interface ManagerDTO {
   seasonPoints: number;
   principalId: string;
   seasonPositionText: string;
-}
-export interface MonthlyCanisterDTO {
-  cycles: bigint;
-  canister: MonthlyLeaderboardCanister;
-}
-export interface MonthlyLeaderboardCanister {
-  month: CalendarMonth;
-  clubId: ClubId;
-  seasonId: SeasonId;
-  canisterId: string;
 }
 export interface MonthlyLeaderboardDTO {
   month: number;
@@ -374,15 +311,6 @@ export type Result_17 = { ok: Array<DataCacheDTO> } | { err: Error };
 export type Result_18 = { ok: PickTeamDTO } | { err: Error };
 export type Result_19 = { ok: Array<CountryDTO> } | { err: Error };
 export type Result_2 = { ok: WeeklyLeaderboardDTO } | { err: Error };
-export type Result_20 = { ok: AdminWeeklyCanisterList } | { err: Error };
-export type Result_21 = { ok: AdminTimerList } | { err: Error };
-export type Result_22 = { ok: AdminSeasonCanisterList } | { err: Error };
-export type Result_23 = { ok: AdminPlayerList } | { err: Error };
-export type Result_24 = { ok: AdminMonthlyCanisterList } | { err: Error };
-export type Result_25 = { ok: AdminManagerCanisterList } | { err: Error };
-export type Result_26 = { ok: AdminMainCanisterInfo } | { err: Error };
-export type Result_27 = { ok: AdminFixtureList } | { err: Error };
-export type Result_28 = { ok: AdminClubList } | { err: Error };
 export type Result_3 = { ok: bigint } | { err: Error };
 export type Result_4 = { ok: SystemStateDTO } | { err: Error };
 export type Result_5 = { ok: Array<SeasonDTO> } | { err: Error };
@@ -400,20 +328,12 @@ export interface RevaluePlayerDownDTO {
 export interface RevaluePlayerUpDTO {
   playerId: PlayerId;
 }
-export interface SeasonCanisterDTO {
-  cycles: bigint;
-  canister: SeasonLeaderboardCanister;
-}
 export interface SeasonDTO {
   id: SeasonId;
   name: string;
   year: number;
 }
 export type SeasonId = number;
-export interface SeasonLeaderboardCanister {
-  seasonId: SeasonId;
-  canisterId: string;
-}
 export interface SeasonLeaderboardDTO {
   totalEntries: bigint;
   seasonId: SeasonId;
@@ -442,11 +362,6 @@ export interface SystemStateDTO {
   calculationSeasonId: SeasonId;
   onHold: boolean;
 }
-export interface TimerDTO {
-  id: bigint;
-  callbackName: string;
-  triggerTime: bigint;
-}
 export interface TransferPlayerDTO {
   playerId: PlayerId;
   newClubId: ClubId;
@@ -464,13 +379,6 @@ export interface UpdateClubDTO {
   shirtType: ShirtType;
   primaryColourHex: string;
 }
-export interface UpdateFixtureDTO {
-  status: FixtureStatusType;
-  fixtureId: FixtureId;
-  seasonId: SeasonId;
-  kickOff: bigint;
-  gameweek: GameweekNumber;
-}
 export interface UpdatePlayerDTO {
   dateOfBirth: bigint;
   playerId: PlayerId;
@@ -479,15 +387,6 @@ export interface UpdatePlayerDTO {
   position: PlayerPosition;
   lastName: string;
   firstName: string;
-}
-export interface UpdateSystemStateDTO {
-  pickTeamSeasonId: SeasonId;
-  calculationGameweek: GameweekNumber;
-  transferWindowActive: boolean;
-  pickTeamGameweek: GameweekNumber;
-  calculationMonth: CalendarMonth;
-  calculationSeasonId: SeasonId;
-  onHold: boolean;
 }
 export interface UpdateTeamSelectionDTO {
   playerIds: Uint16Array | number[];
@@ -518,15 +417,6 @@ export interface ValueHistory {
   seasonId: number;
   gameweek: number;
 }
-export interface WeeklyCanisterDTO {
-  cycles: bigint;
-  canister: WeeklyLeaderboardCanister;
-}
-export interface WeeklyLeaderboardCanister {
-  seasonId: SeasonId;
-  gameweek: GameweekNumber;
-  canisterId: string;
-}
 export interface WeeklyLeaderboardDTO {
   totalEntries: bigint;
   seasonId: SeasonId;
@@ -534,33 +424,6 @@ export interface WeeklyLeaderboardDTO {
   gameweek: GameweekNumber;
 }
 export interface _SERVICE {
-  adminAddInitialFixtures: ActorMethod<[AddInitialFixturesDTO], Result>;
-  adminCreatePlayer: ActorMethod<[CreatePlayerDTO], Result>;
-  adminGetClubs: ActorMethod<[bigint, bigint], Result_28>;
-  adminGetFixtures: ActorMethod<[SeasonId], Result_27>;
-  adminGetMainCanisterInfo: ActorMethod<[], Result_26>;
-  adminGetManagerCanisters: ActorMethod<[bigint, bigint], Result_25>;
-  adminGetMonthlyCanisters: ActorMethod<[bigint, bigint], Result_24>;
-  adminGetPlayers: ActorMethod<[PlayerStatus], Result_23>;
-  adminGetSeasonCanisters: ActorMethod<[bigint, bigint], Result_22>;
-  adminGetTimers: ActorMethod<[string, bigint, bigint], Result_21>;
-  adminGetWeeklyCanisters: ActorMethod<[bigint, bigint], Result_20>;
-  adminLoanPlayer: ActorMethod<[LoanPlayerDTO], Result>;
-  adminMoveFixture: ActorMethod<[MoveFixtureDTO], Result>;
-  adminPostponeFixture: ActorMethod<[PostponeFixtureDTO], Result>;
-  adminPromoteFormerClub: ActorMethod<[PromoteFormerClubDTO], Result>;
-  adminPromoteNewClub: ActorMethod<[PromoteNewClubDTO], Result>;
-  adminRecallPlayer: ActorMethod<[RecallPlayerDTO], Result>;
-  adminRescheduleFixture: ActorMethod<[RescheduleFixtureDTO], Result>;
-  adminRetirePlayer: ActorMethod<[RetirePlayerDTO], Result>;
-  adminRevaluePlayerDown: ActorMethod<[RevaluePlayerDownDTO], Result>;
-  adminRevaluePlayerUp: ActorMethod<[RevaluePlayerUpDTO], Result>;
-  adminSetPlayerInjury: ActorMethod<[SetPlayerInjuryDTO], Result>;
-  adminSubmitFixtureData: ActorMethod<[SubmitFixtureDataDTO], Result>;
-  adminTransferPlayer: ActorMethod<[TransferPlayerDTO], Result>;
-  adminUnretirePlayer: ActorMethod<[UnretirePlayerDTO], Result>;
-  adminUpdateClub: ActorMethod<[UpdateClubDTO], Result>;
-  adminUpdatePlayer: ActorMethod<[UpdatePlayerDTO], Result>;
   burnICPToCycles: ActorMethod<[bigint], undefined>;
   executeAddInitialFixtures: ActorMethod<[AddInitialFixturesDTO], undefined>;
   executeCreatePlayer: ActorMethod<[CreatePlayerDTO], undefined>;
@@ -619,9 +482,7 @@ export interface _SERVICE {
   requestCanisterTopup: ActorMethod<[], undefined>;
   saveFantasyTeam: ActorMethod<[UpdateTeamSelectionDTO], Result_1>;
   updateFavouriteClub: ActorMethod<[ClubId], Result_1>;
-  updateFixture: ActorMethod<[UpdateFixtureDTO], Result_1>;
   updateProfilePicture: ActorMethod<[Uint8Array | number[]], Result_1>;
-  updateSystemState: ActorMethod<[UpdateSystemStateDTO], Result_1>;
   updateUsername: ActorMethod<[string], Result_1>;
   validateAddInitialFixtures: ActorMethod<[AddInitialFixturesDTO], Result>;
   validateCreatePlayer: ActorMethod<[CreatePlayerDTO], Result>;

@@ -10,7 +10,7 @@
 
   <h2 class="default-sub-header">DAO Reward Structure</h2>
   <p class="my-2">
-    The DAO incentivizes participation through monthly minting of new FPL
+    The DAO incentivises participation through monthly minting of new FPL
     tokens, calculated annually at 1.875% of the total $FPL supply as of August
     1st.
   </p>

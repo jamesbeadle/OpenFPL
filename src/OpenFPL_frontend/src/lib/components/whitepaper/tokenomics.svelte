@@ -3,7 +3,7 @@
 
   <h2 class="default-sub-header">Utility and Functionality</h2>
   <p class="my-2">
-    OpenFPL will be revenue generating, the most important role of the Utility
+    OpenFPL will be revenue generating and the most important role of the $FPL utility
     token is to manage the OpenFPL treasury. The token is also used throughout
     the OpenFPL ecosystem:
   </p>
@@ -23,7 +23,7 @@
       Used for customisable entry fee (along with any ICRC-1 token) requirements
       for private leagues.
     </li>
-    <li>Purchase of Merchandise from the ICPFA shop.</li>
+    <li>Purchase of merchandise from the ICPFA shop.</li>
     <li>Reward content creators for engagement on a football video reel.</li>
     <li>
       Facilitate subscriptions to access premium football content from creators.
@@ -43,16 +43,17 @@
   </ul>
 
   <p class="my-2">
-    The ICPFA team members will receive their $FPL within 5 baskets of equal
-    neurons. The neurons will contain the following configuration:
+    Each SNS decentralisation swap participant will receive their $FPL within 5
+    baskets of equal neurons. The neurons will contain the following
+    configuration:
   </p>
-
+  
   <ul class="list-disc ml-4">
-    <li>Basket 1: Locked for 3 months with a 3 month dissolve delay.</li>
-    <li>Basket 2: Locked for 6 months with a 3 month dissolve delay.</li>
-    <li>Basket 3: Locked for 12 months with a 3 month dissolve delay.</li>
-    <li>Basket 4: Locked for 18 months with a 3 month dissolve delay.</li>
-    <li>Basket 5: Locked for 24 months with a 3 month dissolve delay.</li>
+    <li>Basket 1: Unlocked with zero dissolve delay.</li>
+    <li>Basket 2: Unlocked with a 6 month dissolve delay.</li>
+    <li>Basket 3: Unlocked with a 12 month dissolve delay.</li>
+    <li>Basket 4: Unlocked with a 18 month dissolve delay.</li>
+    <li>Basket 5: Unlocked with a 24 month dissolve delay.</li>
   </ul>
 
   <p class="my-2">
@@ -67,39 +68,25 @@
     <li>Basket 4: Locked for 18 months with a 1 month dissolve delay.</li>
     <li>Basket 5: Locked for 24 months with a 1 month dissolve delay.</li>
   </ul>
-
+  
   <p class="my-2">
-    Each SNS decentralisation swap participant will receive their $FPL within 5
-    baskets of equal neurons. The neurons will contain the following
-    configuration:
+    The ICPFA team members will receive their $FPL within 5 baskets of equal
+    neurons. The neurons will contain the following configuration:
   </p>
 
   <ul class="list-disc ml-4">
-    <li>Basket 1: Unlocked with zero dissolve delay.</li>
-    <li>Basket 2: Unlocked with 3 months dissolve delay.</li>
-    <li>Basket 3: Unlocked with 6 months dissolve delay.</li>
-    <li>Basket 4: Unlocked with 9 months dissolve delay.</li>
-    <li>Basket 5: Unlocked with 12 months dissolve delay.</li>
+    <li>Basket 1: Locked for 3 months with a 3 month dissolve delay.</li>
+    <li>Basket 2: Locked for 6 months with a 3 month dissolve delay.</li>
+    <li>Basket 3: Locked for 12 months with a 3 month dissolve delay.</li>
+    <li>Basket 4: Locked for 18 months with a 3 month dissolve delay.</li>
+    <li>Basket 5: Locked for 24 months with a 3 month dissolve delay.</li>
   </ul>
 
   <h2 class="default-sub-header mt-4">DAO Valuation</h2>
-  <p class="my-2">
-    We have used the discounted cashflow method to value the DAO. The following
-    assumptions have been made:
+  <p class="my-4">
+    We have used the discounted cashflow method to value the DAO:
   </p>
-
-  <ul class="list-disc ml-4">
-    <li>We can grow to the size of our Web2 competitor over 8 years.</li>
-    <li>Assumed 10% user conversion, each setting up a league at 1 ICP.</li>
-    <li>
-      Estimated 5% user content subscription rate at 5 ICP/month with 5% of this
-      revenue going to the DAO.
-    </li>
-    <li>Estimated 5% users spend 10ICP per year.</li>
-  </ul>
-
-  <p class="mt-8">The financials below are in ICP</p>
-  <p class="text-xs">(ICP/USD = ~$5):</p>
+  <p class="text-xs">The financials below are in ICP(ICP/USD = ~$13.50):</p>
   <div class="hidden md:flex">
     <table
       class="w-full text-right border-collapse striped mb-8 mt-4 text-xs lg:text-base"
@@ -137,14 +124,14 @@
       </tr>
       <tr>
         <td class="text-left px-4">Private Leagues</td>
-        <td>1,000</td>
-        <td>5,000</td>
-        <td>25,000</td>
-        <td>100,000</td>
+        <td>500</td>
+        <td>2,500</td>
+        <td>12,500</td>
+        <td>50,000</td>
+        <td>125,000</td>
         <td>250,000</td>
+        <td>375,000</td>
         <td>500,000</td>
-        <td>750,000</td>
-        <td>1,000,000</td>
       </tr>
 
       <tr>
@@ -161,29 +148,53 @@
 
       <tr>
         <td class="text-left px-4">Content Subscriptions</td>
-        <td>125</td>
-        <td>625</td>
-        <td>3,125</td>
-        <td>12,500</td>
-        <td>31,250</td>
-        <td>62,500</td>
-        <td>93,750</td>
-        <td>125,000</td>
+        <td>10</td>
+        <td>50</td>
+        <td>250</td>
+        <td>1,000</td>
+        <td>2,500</td>
+        <td>5,000</td>
+        <td>7,500</td>
+        <td>10,000</td>
+      </tr>
+
+      <tr>
+        <td class="text-left px-4">Advertising</td>
+        <td>1,930</td>
+        <td>9,648</td>
+        <td>48,241</td>
+        <td>192,963</td>
+        <td>482,407</td>
+        <td>964,815</td>
+        <td>1,447,222</td>
+        <td>1,929,630</td>
+      </tr>
+
+      <tr>
+        <td class="text-left px-4">API Data Feed Subscriptions</td>
+        <td>370</td>
+        <td>1,850</td>
+        <td>9,250</td>
+        <td>37,000</td>
+        <td>92,500</td>
+        <td>185,000</td>
+        <td>277,500</td>
+        <td>370,000</td>
       </tr>
       <tr>
         <td colspan="9" class="h-6"><span /></td>
       </tr>
 
       <tr class="font-bold">
-        <td class="text-left px-4">Total</td>
-        <td>6,125</td>
-        <td>30,625</td>
-        <td>153,125</td>
-        <td>612,500</td>
-        <td>1,531,250</td>
-        <td>3,062,500</td>
-        <td>4,593,750</td>
-        <td>6,125,000</td>
+        <td class="text-left px-4">Total Revenue</td>
+        <td>7,810</td>
+        <td>39,048</td>
+        <td>195,241</td>
+        <td>780,963</td>
+        <td>1,952,407</td>
+        <td>3,904,815</td>
+        <td>5,857,222</td>
+        <td>7,809,630</td>
       </tr>
 
       <tr>
@@ -191,12 +202,23 @@
       </tr>
 
       <tr class="font-bold">
-        <td class="text-left px-4" colspan="8">SNS Value (25%)</td>
-        <td>1,531,250</td>
+        <td class="text-left px-4" colspan="8">DAO Valuation:</td>
+        <td>10,834,969</td>
       </tr>
     </table>
+    
   </div>
-
+  <p>The following assumptions have been made:</p>
+  <ul class="list-disc ml-4">
+    <li>We can grow to the size of our Web2 competitor over 8 years.</li>
+    <li>Assumed 5% user conversion, each setting up a league at 1 ICP.</li>
+    <li>
+      Estimated 5% user content subscription rate at 5 ICP/month with 5% of this
+      revenue going to the DAO.
+    </li>
+    <li>Estimated 5% users spending 10ICP per year on merchandise.</li>
+    <li>In game advertising charged at $0.5 per mile.</li>
+  </ul>
   <table class="w-full text-right border-collapse striped mb-8 mt-4 md:hidden">
     <tr class="text-right">
       <th class="text-left">Year</th>
@@ -223,10 +245,10 @@
     </tr>
     <tr>
       <td class="text-left">Private Leagues</td>
-      <td>1,000</td>
-      <td>5,000</td>
-      <td>25,000</td>
-      <td>100,000</td>
+      <td>500</td>
+      <td>2,500</td>
+      <td>12,500</td>
+      <td>50,000</td>
     </tr>
 
     <tr>
@@ -239,10 +261,39 @@
 
     <tr>
       <td class="text-left">Content Subscriptions</td>
-      <td>125</td>
-      <td>625</td>
-      <td>3,125</td>
-      <td>12,500</td>
+      <td>10</td>
+      <td>50</td>
+      <td>250</td>
+      <td>1,000</td>
+    </tr>
+    
+
+    <tr>
+      <td class="text-left">Advertising</td>
+      <td>482,407</td>
+      <td>964,815</td>
+      <td>1,447,222</td>
+      <td>1,929,630</td>
+    </tr>
+
+    <tr>
+      <td class="text-left">API Data Feed Subscriptions</td>
+      <td>370</td>
+      <td>1,850</td>
+      <td>9,250</td>
+      <td>37,000</td>
+    </tr>
+
+    <tr>
+      <td colspan="5" class="h-6"><span /></td>
+    </tr>
+
+    <tr class="font-bold">
+      <td class="text-left">Total</td>
+      <td>~0.007m</td>
+      <td>~0.039m</td>
+      <td>~0.19m</td>
+      <td>~0.78m</td>
     </tr>
   </table>
 
@@ -272,10 +323,10 @@
     </tr>
     <tr>
       <td class="text-left">Private Leagues</td>
+      <td>0.125m</td>
       <td>0.25m</td>
+      <td>0.375m</td>
       <td>0.5m</td>
-      <td>0.75m</td>
-      <td>1m</td>
     </tr>
 
     <tr>
@@ -288,21 +339,38 @@
 
     <tr>
       <td class="text-left">Content Subscriptions</td>
-      <td>0.3125m</td>
-      <td>0.625m</td>
-      <td>0.9375m</td>
-      <td>0.125m</td>
+      <td>2,500</td>
+      <td>5,000</td>
+      <td>7,500</td>
+      <td>10,000</td>
     </tr>
+    
+    <tr>
+      <td class="text-left">Advertising</td>
+      <td>0.48m</td>
+      <td>0.96m</td>
+      <td>1.44m</td>
+      <td>1.92m</td>
+    </tr>
+
+    <tr>
+      <td class="text-left">API Data Feed Subscriptions</td>
+      <td>0.09m</td>
+      <td>0.18m</td>
+      <td>0.27m</td>
+      <td>0.37m</td>
+    </tr>
+
     <tr>
       <td colspan="5" class="h-6"><span /></td>
     </tr>
 
     <tr class="font-bold">
       <td class="text-left">Total</td>
-      <td>~1.5m</td>
-      <td>~3m</td>
-      <td>~4.5m</td>
-      <td>~6m</td>
+      <td>~1.95m</td>
+      <td>~3.9m</td>
+      <td>~5.8m</td>
+      <td>~7.8m</td>
     </tr>
 
     <tr>
@@ -346,7 +414,7 @@
     </tr>
     <tr>
       <td>Sale start date.</td>
-      <td>1st March 2024</td>
+      <td>15th March 2024</td>
     </tr>
     <tr>
       <td>Minimum number of sale participants.</td>
@@ -413,10 +481,9 @@
 
   <h2 class="default-sub-header mt-4">ICP FA Overview</h2>
   <p class="my-2">
-    Managed by founder James Beadle, the ICP FA oversees the development,
-    marketing, and management of OpenFPL. The aim is to build a strong team to
+    ICPFA oversees the development, marketing, and management of OpenFPL. The aim is to build a strong team to
     guide OpenFPL's growth and bring new users to the ICP blockchain.
-    Additionally, 25% of James' staked maturity earnings will contribute to the
+    Additionally, 25% of the ICPFA's earned maturity interest will contribute to the
     ICP FA Community Fund, supporting grassroots football projects.
   </p>
 

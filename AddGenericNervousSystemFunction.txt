@@ -101,16 +101,66 @@ quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-
     }
 )' > message.json
 
+//Move Fixture
+
+quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-proposal $PROPOSAL_NEURON_ID --proposal '(
+    record {
+        title = "Add a new custom SNS function to \"Move a Fixture \"";          
+        url = "https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo";        
+        summary = "Adding a new generic proposal that allows the DAO to move a fixture.";
+        action = opt variant {
+            AddGenericNervousSystemFunction = record {
+                id = 5000 : nat64;
+                name = "Move a Fixture";
+                description = opt "Import the specified proposals group into the specified community.";
+                function_type = opt variant { 
+                    GenericNervousSystemFunction = record { 
+                        validator_canister_id = opt principal "bboqb-jiaaa-aaaal-qb6ea-cai"; 
+                        target_canister_id = opt principal "bboqb-jiaaa-aaaal-qb6ea-cai"; 
+                        validator_method_name = opt "validateMoveFixture";                         
+                        target_method_name = opt "executeMoveFixture";
+                    } 
+                };
+            }
+        };
+    }
+)' > message.json
+
+//postpone fixture
+
+quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-proposal $PROPOSAL_NEURON_ID --proposal '(
+    record {
+        title = "Add a new custom SNS function to \"Postpone a Fixture \"";          
+        url = "https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo";        
+        summary = "Adding a new generic proposal that allows the DAO to postpone a fixture.";
+        action = opt variant {
+            AddGenericNervousSystemFunction = record {
+                id = 6000 : nat64;
+                name = "Postpone a Fixture";
+                description = opt "Import the specified proposals group into the specified community.";
+                function_type = opt variant { 
+                    GenericNervousSystemFunction = record { 
+                        validator_canister_id = opt principal "bboqb-jiaaa-aaaal-qb6ea-cai"; 
+                        target_canister_id = opt principal "bboqb-jiaaa-aaaal-qb6ea-cai"; 
+                        validator_method_name = opt "validatePostponeFixture";                         
+                        target_method_name = opt "executePostponeFixture";
+                    } 
+                };
+            }
+        };
+    }
+)' > message.json
+
 //Reschedule Fixture
 
 quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-proposal $PROPOSAL_NEURON_ID --proposal '(
     record {
-        title = "Add a new custom SNS function to \"Reschedule a Fixture \"";          
+        title = "Add a new custom SNS function to \"Rescehdule a Fixture \"";          
         url = "https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo";        
         summary = "Adding a new generic proposal that allows the DAO to reschedule a fixture.";
         action = opt variant {
             AddGenericNervousSystemFunction = record {
-                id = 5000 : nat64;
+                id = 7000 : nat64;
                 name = "Reschedule a Fixture";
                 description = opt "Import the specified proposals group into the specified community.";
                 function_type = opt variant { 
@@ -135,7 +185,7 @@ quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-
         summary = "Adding a new generic proposal that allows the DAO to transfer a player.";
         action = opt variant {
             AddGenericNervousSystemFunction = record {
-                id = 6000 : nat64;
+                id = 8000 : nat64;
                 name = "Transfer a Player";
                 description = opt "Import the specified proposals group into the specified community.";
                 function_type = opt variant { 
@@ -160,7 +210,7 @@ quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-
         summary = "Adding a new generic proposal that allows the DAO to loan a player.";
         action = opt variant {
             AddGenericNervousSystemFunction = record {
-                id = 7000 : nat64;
+                id = 9000 : nat64;
                 name = "Loan a Player";
                 description = opt "Import the specified proposals group into the specified community.";
                 function_type = opt variant { 
@@ -185,7 +235,7 @@ quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-
         summary = "Adding a new generic proposal that allows the DAO to recall a player.";
         action = opt variant {
             AddGenericNervousSystemFunction = record {
-                id = 8000 : nat64;
+                id = 10000 : nat64;
                 name = "Recall a Player";
                 description = opt "Import the specified proposals group into the specified community.";
                 function_type = opt variant { 
@@ -201,17 +251,17 @@ quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-
     }
 )' > message.json
 
-//Add New Player
+//Create Player
 
 quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-proposal $PROPOSAL_NEURON_ID --proposal '(
     record {
-        title = "Add a new custom SNS function to \"Add New Player\"";          
+        title = "Add a new custom SNS function to \"Create a Player\"";          
         url = "https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo";        
-        summary = "Adding a new generic proposal that allows the DAO to add a new player.";
+        summary = "Adding a new generic proposal that allows the DAO to create a new player.";
         action = opt variant {
             AddGenericNervousSystemFunction = record {
-                id = 9000 : nat64;
-                name = "Add New Player";
+                id = 11000 : nat64;
+                name = "Create Player";
                 description = opt "Import the specified proposals group into the specified community.";
                 function_type = opt variant { 
                     GenericNervousSystemFunction = record { 
@@ -235,7 +285,7 @@ quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-
         summary = "Adding a new generic proposal that allows the DAO to update a player.";
         action = opt variant {
             AddGenericNervousSystemFunction = record {
-                id = 10000 : nat64;
+                id = 12000 : nat64;
                 name = "Update Player";
                 description = opt "Import the specified proposals group into the specified community.";
                 function_type = opt variant { 
@@ -260,7 +310,7 @@ quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-
         summary = "Adding a new generic proposal that allows the DAO to set a player's injury status.";
         action = opt variant {
             AddGenericNervousSystemFunction = record {
-                id = 11000 : nat64;
+                id = 13000 : nat64;
                 name = "Set Player Injury";
                 description = opt "Import the specified proposals group into the specified community.";
                 function_type = opt variant { 
@@ -285,7 +335,7 @@ quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-
         summary = "Adding a new generic proposal that allows the DAO to retire a player.";
         action = opt variant {
             AddGenericNervousSystemFunction = record {
-                id = 12000 : nat64;
+                id = 14000 : nat64;
                 name = "Retire Player";
                 description = opt "Import the specified proposals group into the specified community.";
                 function_type = opt variant { 
@@ -310,7 +360,7 @@ quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-
         summary = "Adding a new generic proposal that allows the DAO to unretire a player.";
         action = opt variant {
             AddGenericNervousSystemFunction = record {
-                id = 13000 : nat64;
+                id = 15000 : nat64;
                 name = "Unretire Player";
                 description = opt "Import the specified proposals group into the specified community.";
                 function_type = opt variant { 
@@ -335,7 +385,7 @@ quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-
         summary = "Adding a new generic proposal that allows the DAO to promote a team has previously paritipated in an OpenFPL season.";
         action = opt variant {
             AddGenericNervousSystemFunction = record {
-                id = 14000 : nat64;
+                id = 16000 : nat64;
                 name = "Promote Former Team";
                 description = opt "Import the specified proposals group into the specified community.";
                 function_type = opt variant { 
@@ -360,7 +410,7 @@ quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-
         summary = "Adding a new generic proposal that allows the DAO to promote a new team to the Premier Legaue.";
         action = opt variant {
             AddGenericNervousSystemFunction = record {
-                id = 15000 : nat64;
+                id = 17000 : nat64;
                 name = "Promote New Team";
                 description = opt "Import the specified proposals group into the specified community.";
                 function_type = opt variant { 
@@ -385,7 +435,7 @@ quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-
         summary = "Adding a new generic proposal that allows the DAO to update an existing team.";
         action = opt variant {
             AddGenericNervousSystemFunction = record {
-                id = 16000 : nat64;
+                id = 18000 : nat64;
                 name = "Update Team";
                 description = opt "Import the specified proposals group into the specified community.";
                 function_type = opt variant { 

@@ -1452,12 +1452,6 @@ module {
       nextFixtureId := stable_next_fixture_id;
     };
 
-    /* Admin Functions to be removed */
-    public func updateFixture(updateFixtureDTO : DTOs.UpdateFixtureDTO) : async Result.Result<(), T.Error> {
-
-      return #ok;
-    };
-
     public func init() {
       seasons := List.fromArray<T.Season>([{
         id = 1;
