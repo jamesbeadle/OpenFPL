@@ -8,24 +8,22 @@
 
   <h2 class="default-header">Starting Funds and Team Composition</h2>
   <p class="my-2">
-    Each user begins their journey with £300m, a budget to strategically build
-    their dream team. The value of players fluctuates based on community ratings
-    within the DAO. If a player's performance garners enough votes, their value
-    can either increase or decrease by £0.25m each gameweek.
+    Each user begins their season with a £300m budget to build their fantasy team. 
+    A player's value can change based on their performance if a proposal is raised to change their value up or down.
+    If the proposal passes, their value can either increase or decrease by £0.25m each gameweek.
   </p>
   <p class="my-2">
-    In terms of team structure, each user's team consists of 11 players. Picking
-    from a range of clubs is key, so a maximum of two players from any single
+    A user's team consists of 11 players. 
+    Picking from a range of clubs is key, so a maximum of 2 players from any single
     club can be selected. Teams must adhere to a valid formation: 1 goalkeeper,
     3-5 defenders, 3-5 midfielders, and 1-3 strikers.
   </p>
 
   <h2 class="default-header mt-4">Transfers and Team Management</h2>
   <p class="my-2">
-    We want to give managers flexibility so users can make up to three transfers per week, 
-    allowing managers to make a wider range of changes each week to reflect the complex scenarios managers forsee. 
-    These transfers don't roll over, encouraging active participation each week. There are no substitutes in our
-    game, eliminating the frustration of unused bench points.
+    To give managers flexibility, we give you 3 new transfers each week. 
+    These transfers don't roll over, encouraging active participation each week. 
+    There are no substitutes in our game, eliminating the frustration of unused bench points.
   </p>
   <p class="my-4">
     Each January, users can overhaul their team completely once, adding another
@@ -162,15 +160,11 @@
 
   <h2 class="default-header mt-4">Bonuses</h2>
   <p class="my-2">
-    OpenFPL elevates the gameplay with a diverse set of bonuses. These bonuses
-    play a pivotal role in keeping OpenFPL's gameplay both fresh and
-    exhilarating. Their strategic implementation allows for significant shifts
-    in the leaderboard, ensuring that the competition remains open and dynamic.
-    With these bonuses, any user, regardless of their position, has the
-    potential to make a substantial leap in the rankings. This unpredictability
-    means that victory is within reach for every participant, fostering a
-    thrilling environment where every gameweek holds the promise of a shake-up
-    at the top of the leaderboard. Our bonuses are as follows:
+    OpenFPL elevates the gameplay with a diverse set of bonuses. 
+    These bonuses are designed to allow significant shifts in the leadeboard, 
+    ensuring that the competition remains interesting. Users can only play 2 bonuses per month, 
+    further fostering repeated engagement while avoiding all bonuses being played at once.
+    Our bonuses are as follows:
   </p>
 
   <div class="flex flex-row">

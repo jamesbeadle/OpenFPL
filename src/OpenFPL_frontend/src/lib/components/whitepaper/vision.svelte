@@ -7,10 +7,10 @@
     <i>"How do you introduce the most new users to the Internet Computer Blockchain?"</i>.
   </p>
   <p class="my-4">
-    Football is the most popular sport in the world, with billions of fans, its leading fantasy football game engages 
-    over 10 million players a season. OpenFPL is the better, more equitable, 
-    decentralised fantasy football platform for footballing fans worldwide. 
-    We have used our footballing knowledge to create more engaging game, coupled with token distribution to ensure 
+    Football is the most popular sport in the world, with billions of fans, the leading fantasy football game engages 
+    over 10 million players a season. OpenFPL is a better, more equitable, 
+    decentralised fantasy football platform for football fans worldwide. 
+    We have used our football knowledge to create a more engaging game, coupled with token distribution to ensure 
     users are more equitably rewarded for their successful pariticipation.
   </p>
   <p class="my-4 default-header">
@@ -21,19 +21,18 @@
     The IC's unique architecture allows the interface the user engages with to be stored on the network, 
     bypassing the big tech companies who do not have an interest in providing decentralised services.
     The IC not only has the capabilities to shift power structures in the tech world, 
-    it is built with it's own decentralised service creation infrastructure that allow services like OpenFPL to become
-    Decentralised Autonomous Organisation's (DAOs). OpenFPL aims to transform fantasy Premier League football using this DAO architecture 
-    into a decentralised service that is more engaging for it's users, rewarding football fans for their insight and participation in football. 
+    it is built with its own decentralised service creation infrastructure that allow services like OpenFPL to become
+    Decentralised Autonomous Organisations (DAOs). OpenFPL aims to transform fantasy Premier League football using this DAO architecture 
+    into a decentralised service that is more engaging for its users, rewarding football fans for their insight and participation in football. 
   </p>
   <p class="my-4">
     OpenFPL is more than a decentralised service, it is a brand that has multiple viable revenue streams. 
     The ICPFA aims to distribute this value to token holders through inflation resistant tokenomics. 
-    Through a mechanisation or purchasing & burning exchange $FPL, we aim to keep the total supply at 100m, 
-    whilst building up a healthy treasury for the DAO to utilise as it wishes.
+    Through a mechanisation of purchasing & burning exchange $FPL, we aim to keep the total supply at 100 million, 
+    while building up a healthy treasury for the DAO to utilise as it wishes.
   </p>
   <p class="my-4">
-    OpenFPL is focused on the footballing community. We aim to create a platform 
-    Premier League fans feel at home using, with their input shaping the service. 
+    OpenFPL aims to create a platform Premier League fans feel at home using, with their input shaping the service. 
     Our features are designed to enhance user engagement on the platform. 
     These include more detailed and varied gameplay, community-based player valuations, 
     customisable private leagues, and collaborations with football content creators. 
@@ -42,7 +41,7 @@
   </p>
   <p class="my-4">
     Our vision for OpenFPL encompasses a commitment to societal impact,
-    specifically through our organisation, the ICPFA. The ICP will be focused on supporting grassroots football initiatives,
+    specifically through our organisation, the ICPFA. The ICPFA will be focused on supporting grassroots football initiatives,
     demonstrating our belief in OpenFPL's ability to bring about positive change in the football community using the IC.
   </p>
   <p class="my-4 mb-4">

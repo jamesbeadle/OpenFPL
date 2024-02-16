@@ -473,18 +473,18 @@
   <h2 class="default-sub-header mt-4">Tokenomics</h2>
   <p class="my-2">
     Each season, 1.875% of the total $FPL supply will be minted for gameplay
-    rewards. It will be ICP FA policy to raise proposals to use 50% of the
+    rewards. It will be ICPFA policy to raise proposals to use 50% of the
     revenue deposited into the DAO's treasury to purchase $FPL from exchanges.
     Using this available ICP, the DAO will purchase $FPL up to an amount that
     would burn the total supply back to 100m $FPL.
   </p>
 
-  <h2 class="default-sub-header mt-4">ICP FA Overview</h2>
+  <h2 class="default-sub-header mt-4">ICPFA Overview</h2>
   <p class="my-2">
     ICPFA oversees the development, marketing, and management of OpenFPL. The aim is to build a strong team to
     guide OpenFPL's growth and bring new users to the ICP blockchain.
     Additionally, 25% of the ICPFA's earned maturity interest will contribute to the
-    ICP FA Community Fund, supporting grassroots football projects.
+    ICPFA Community Fund, supporting grassroots football projects.
   </p>
 
   <p class="my-2">
@@ -516,7 +516,7 @@
   </ul>
 
   <p class="my-2">
-    More details about the ICP FA and its members can be found at <a
+    More details about the ICPFA and its members can be found at <a
       class="text-blue-500"
       href="https://icpfa.org/team">icpfa.org/team</a
     >.
