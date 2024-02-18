@@ -16,6 +16,7 @@ import Countries "../Countries";
 import Utilities "../utilities";
 import Players "../../../testing/players";
 import TrieMap "mo:base/TrieMap";
+import Governance "../sns-wrappers/governance";
 
 module {
   public class PlayerComposite() {
@@ -397,13 +398,6 @@ module {
         };
         case (?foundPlayer) {};
       };
-
-      //TODO: Ensure there are no existing revaluation proposals for a player
-      //Create instance of SNS governance canister
-      //Search it for proposals of this type
-      //if exist don't raise duplicate
-
-
 
       return #ok("Valid");
     };
