@@ -54,8 +54,7 @@ module {
       GenericError : { error_code : Nat; message : Text };
     };
 
-    let token_canister = "tlwi3-3aaaa-aaaaa-aaapq-cai";
-    let token_canister_actor = actor (token_canister) : actor {
+    let token_canister_actor = actor (token_canister_id) : actor {
       icrc1_name : () -> async Text;
       icrc1_total_supply : () -> async Nat;
       icrc1_balance_of : (account : Account) -> async Nat;
