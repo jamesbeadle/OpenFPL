@@ -1139,13 +1139,13 @@ module {
       };
     };
 
-    public func payWeeklyRewards(rewardPool : T.RewardPool, weeklyLeaderboard : DTOs.WeeklyLeaderboardDTO, fixtures : List.List<DTOs.FixtureDTO>, uniqueManagerCanisterIds: List.List<T.CanisterId>) : async () {
+    public func payWeeklyRewards(rewardPool : T.RewardPool, weeklyLeaderboard : DTOs.WeeklyLeaderboardDTO, fixtures : List.List<DTOs.FixtureDTO>) : async () {
       await distributeWeeklyRewards(rewardPool.weeklyLeaderboardPool, weeklyLeaderboard);
       await distributeHighestScoringPlayerRewards(weeklyLeaderboard.seasonId, weeklyLeaderboard.gameweek, rewardPool.highestScoringMatchPlayerPool, fixtures, uniqueManagerCanisterIds);
       await distributeWeeklyATHScoreRewards(rewardPool.allTimeWeeklyHighScorePool, weeklyLeaderboard);
     };
 
-    public func payMonthlyRewards(rewardPool : T.RewardPool, monthlyLeaderboard : DTOs.MonthlyLeaderboardDTO, uniqueManagerCanisterIds: List.List<T.CanisterId>) : async () {
+    public func payMonthlyRewards(rewardPool : T.RewardPool, monthlyLeaderboard : DTOs.MonthlyLeaderboardDTO) : async () {
       await distributeMonthlyRewards(rewardPool, monthlyLeaderboard, uniqueManagerCanisterIds);
     };
 
@@ -1153,7 +1153,7 @@ module {
       await distributeMonthlyATHScoreRewards(rewardPool.allTimeMonthlyHighScorePool, monthlyLeaderboards);
     };
 
-    public func paySeasonRewards(rewardPool : T.RewardPool, seasonLeaderboard : DTOs.SeasonLeaderboardDTO, players : [DTOs.PlayerDTO], seasonId : T.SeasonId, uniqueManagerCanisterIds: List.List<T.CanisterId>) : async () {
+    public func paySeasonRewards(rewardPool : T.RewardPool, seasonLeaderboard : DTOs.SeasonLeaderboardDTO, players : [DTOs.PlayerDTO], seasonId : T.SeasonId) : async () {
       await distributeSeasonRewards(rewardPool.seasonLeaderboardPool, seasonLeaderboard, uniqueManagerCanisterIds);
       await distributeSeasonATHScoreRewards(rewardPool.allTimeSeasonHighScorePool, seasonLeaderboard);
       await distributeMostValuableTeamRewards(rewardPool.mostValuableTeamPool, players, seasonId, uniqueManagerCanisterIds);
