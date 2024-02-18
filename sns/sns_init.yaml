@@ -323,7 +323,7 @@ Distribution:
   #
   # For example:
   #  - principal: hpikg-6exdt-jn33w-ndty3-fc7jc-tl2lr-buih3-cs3y7-tftkp-sfp62-gqe
-  #    stake: 1_000 tokens
+  #    stake: 20_000 tokens
   #    memo: 0
   #    dissolve_delay: 2 years
   #    vesting_period: 4 years
@@ -339,55 +339,3080 @@ Distribution:
       vesting_period: 4 years
 
       # ICPFA Neurons
-    - principal: ICP_INSIDER_INSERT_PRINCIPAL
-      stake: 1_000 tokens
+    - principal: DFINITY_DESIGNER_INSERT_PRINCIPAL
+      stake: 200_000 tokens
       memo: 0
       dissolve_delay: 3 months
       vesting_period: 3 months
-    - principal: YOUR_PRINCIPAL_ID
-      stake: 1_000 tokens
+    - principal: DFINITY_DESIGNER_INSERT_PRINCIPAL
+      stake: 200_000 tokens
       memo: 0
       dissolve_delay: 3 months
       vesting_period: 6 months
-    - principal: YOUR_PRINCIPAL_ID
-      stake: 1_000 tokens
+    - principal: DFINITY_DESIGNER_INSERT_PRINCIPAL
+      stake: 200_000 tokens
       memo: 0
       dissolve_delay: 3 months
       vesting_period: 12 months
-    - principal: YOUR_PRINCIPAL_ID
-      stake: 1_000 tokens
+    - principal: DFINITY_DESIGNER_INSERT_PRINCIPAL
+      stake: 200_000 tokens
       memo: 0
       dissolve_delay: 3 months
       vesting_period: 18 months
-    - principal: YOUR_PRINCIPAL_ID
-      stake: 1_000 tokens
+    - principal: DFINITY_DESIGNER_INSERT_PRINCIPAL
+      stake: 200_000 tokens
+      memo: 0
+      dissolve_delay: 3 months
+      vesting_period: 24 months
+    - principal: ICP_INSIDER_INSERT_PRINCIPAL
+      stake: 200_000 tokens
+      memo: 0
+      dissolve_delay: 3 months
+      vesting_period: 3 months
+    - principal: ICP_INSIDER_INSERT_PRINCIPAL
+      stake: 200_000 tokens
+      memo: 0
+      dissolve_delay: 3 months
+      vesting_period: 6 months
+    - principal: ICP_INSIDER_INSERT_PRINCIPAL
+      stake: 200_000 tokens
+      memo: 0
+      dissolve_delay: 3 months
+      vesting_period: 12 months
+    - principal: ICP_INSIDER_INSERT_PRINCIPAL
+      stake: 200_000 tokens
+      memo: 0
+      dissolve_delay: 3 months
+      vesting_period: 18 months
+    - principal: ICP_INSIDER_INSERT_PRINCIPAL
+      stake: 200_000 tokens
+      memo: 0
+      dissolve_delay: 3 months
+      vesting_period: 24 months
+    - principal: DAYDRINKR_INSERT_PRINCIPAL
+      stake: 200_000 tokens
+      memo: 0
+      dissolve_delay: 3 months
+      vesting_period: 3 months
+    - principal: DAYDRINKR_INSERT_PRINCIPAL
+      stake: 200_000 tokens
+      memo: 0
+      dissolve_delay: 3 months
+      vesting_period: 6 months
+    - principal: DAYDRINKR_INSERT_PRINCIPAL
+      stake: 200_000 tokens
+      memo: 0
+      dissolve_delay: 3 months
+      vesting_period: 12 months
+    - principal: DAYDRINKR_INSERT_PRINCIPAL
+      stake: 200_000 tokens
+      memo: 0
+      dissolve_delay: 3 months
+      vesting_period: 18 months
+    - principal: DAYDRINKR_INSERT_PRINCIPAL
+      stake: 200_000 tokens
       memo: 0
       dissolve_delay: 3 months
       vesting_period: 24 months
 
       #Funded Neurons
-    - principal: YOUR_PRINCIPAL_ID
-      stake: 1_000 tokens
+    - principal: FUNDED_NFT0_INSERT_PRINCIPAL
+      stake: 20_000 tokens
       memo: 0
       dissolve_delay: 1 months
       vesting_period: 0 months
-    - principal: YOUR_PRINCIPAL_ID
-      stake: 1_000 tokens
+    - principal: FUNDED_NFT0_INSERT_PRINCIPAL
+      stake: 20_000 tokens
       memo: 0
       dissolve_delay: 1 months
       vesting_period: 6 months
-    - principal: YOUR_PRINCIPAL_ID
-      stake: 1_000 tokens
+    - principal: FUNDED_NFT0_INSERT_PRINCIPAL
+      stake: 20_000 tokens
       memo: 0
       dissolve_delay: 1 months
       vesting_period: 12 months
-    - principal: YOUR_PRINCIPAL_ID
-      stake: 1_000 tokens
+    - principal: FUNDED_NFT0_INSERT_PRINCIPAL
+      stake: 20_000 tokens
       memo: 0
       dissolve_delay: 1 months
       vesting_period: 18 months
-    - principal: YOUR_PRINCIPAL_ID
-      stake: 1_000 tokens
+    - principal: FUNDED_NFT0_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT1_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT1_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT1_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT1_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT1_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT2_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT2_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT2_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT2_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT2_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT3_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT3_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT3_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT3_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT3_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT4_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT4_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT4_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT4_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT4_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT5_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT5_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT5_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT5_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT5_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT6_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT6_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT6_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT6_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT6_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT7_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT7_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT7_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT7_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT7_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT8_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT8_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT8_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT8_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT8_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT9_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT9_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NF9_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT9_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT9_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT10_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT10_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT10_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT10_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT10_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT11_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT11_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT11_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT11_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT11_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT12_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT12_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT12_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT12_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT12_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT13_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT13_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT13_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT13_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT13_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT14_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT14_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT14_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT14_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT14_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT15_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT15_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT15_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT15_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT15_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT16_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT16_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT16_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT16_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT16_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT17_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT17_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT17_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT17_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT17_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT18_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT18_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT18_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT18_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT18_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT19_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT19_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT19_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT19_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT19_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT20_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT20_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT20_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT20_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT20_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT21_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT21_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT21_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT21_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT21_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT22_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT22_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT22_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT22_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT22_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT23_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT23_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT23_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT23_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT23_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT24_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT24_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT24_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT24_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT24_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT25_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT25_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT25_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT25_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT25_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT26_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT26_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT26_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT26_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT26_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT27_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT27_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT27_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT27_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT27_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT28_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT28_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT28_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT28_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT28_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT29_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT29_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NF29_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT29_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT29_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT30_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT30_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT30_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT30_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT30_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT31_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT31_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT31_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT31_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT31_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT32_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT32_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT32_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT32_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT32_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT33_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT33_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT33_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT33_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT33_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT34_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT34_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT34_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT34_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT34_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT35_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT35_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT35_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT35_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT35_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT36_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT36_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT36_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT36_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT36_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT37_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT37_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT37_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT37_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT37_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT38_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT38_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT38_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT38_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT38_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT39_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT39_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NF39_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT39_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT39_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT40_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT40_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT40_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT40_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT40_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT41_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT41_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT41_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT41_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT41_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT42_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT42_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT42_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT42_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT42_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT43_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT43_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT43_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT43_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT43_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT44_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT44_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT44_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT44_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT44_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT45_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT45_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT45_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT45_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT45_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT46_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT46_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT46_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT46_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT46_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT47_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT47_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT47_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT47_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT47_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT48_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT48_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT48_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT48_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT48_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT49_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT49_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NF49_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT49_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT49_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT50_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT50_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT50_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT50_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT50_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT51_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT51_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT51_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT51_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT51_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT52_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT52_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT52_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT52_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT52_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT53_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT53_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT53_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT53_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT53_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT54_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT54_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT54_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT54_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT54_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT55_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT55_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT55_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT55_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT55_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT56_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT56_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT56_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT56_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT56_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT57_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT57_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT57_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT57_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT57_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT58_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT58_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT58_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT58_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT58_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT59_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT59_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT59_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT59_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT59_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT60_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT60_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT60_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT60_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT60_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT61_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT61_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT61_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT61_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT61_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT62_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT62_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT62_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT62_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT62_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT63_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT63_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT63_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT63_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT63_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT64_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT64_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT64_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT64_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT64_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT65_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT65_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT65_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT65_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT65_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT66_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT66_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT66_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT66_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT66_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT67_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT67_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT67_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT67_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT67_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT68_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT68_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT68_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT68_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT68_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT69_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT69_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT69_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT69_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT69_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT70_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT70_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT70_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT70_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT70_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT71_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT71_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT71_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT71_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT71_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT72_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT72_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT72_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT72_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT72_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT73_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT73_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT73_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT73_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT73_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT74_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT74_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT74_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT74_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT74_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT75_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT75_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT75_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT75_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT75_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT76_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT76_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT76_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT76_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT76_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT77_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT77_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT77_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT77_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT77_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT78_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT78_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT78_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT78_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT78_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT79_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT79_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT79_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT79_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT79_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT80_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT80_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT80_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT80_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT80_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT81_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT81_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT81_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT81_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT81_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT82_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT82_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT82_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT82_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT82_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT83_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT83_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT83_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT83_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT83_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT84_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT84_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT84_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT84_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT84_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT85_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT85_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT85_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT85_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT85_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT86_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT86_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT86_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT86_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT86_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT87_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT87_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT87_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT87_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT87_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT88_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT88_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT88_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT88_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT88_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT89_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT89_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT89_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT89_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT89_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT90_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT90_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT90_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT90_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT90_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT91_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT91_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT91_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT91_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT91_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT92_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT92_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT92_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT92_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT92_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT93_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT93_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT93_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT93_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT93_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT94_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT94_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT94_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT94_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT94_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT95_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT95_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT95_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT95_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT95_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT96_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NF96_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT96_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT96_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT96_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT97_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT97_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT97_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT97_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT97_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT98_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT98_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT98_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT98_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT98_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT99_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT99_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT99_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT99_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT99_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT100_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT100_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT100_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT100_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT100_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT101_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT101_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT101_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT101_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT101_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT102_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT102_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT102_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT102_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT102_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT103_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT103_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT103_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT103_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT103_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT104_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT104_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT104_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT104_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT104_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT105_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT105_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT105_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT105_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT105_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT106_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT106_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT106_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT106_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT106_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT107_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT107_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT107_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT107_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT107_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT108_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT108_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT108_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT108_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT108_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT109_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT109_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT109_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT109_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT109_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT110_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT110_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT110_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT110_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT110_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT111_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT111_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT111_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT111_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT111_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT112_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT112_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT112_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT112_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT112_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT113_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT113_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT113_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT113_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT113_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT114_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT114_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT114_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT114_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT114_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT115_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT115_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NF11T5_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT115_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT115_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT116_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT116_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT116_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT116_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT116_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT117_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT117_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT117_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT117_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT117_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT118_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT118_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT118_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT118_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT118_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+    - principal: FUNDED_NFT119_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: FUNDED_NFT119_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: FUNDED_NFT119_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: FUNDED_NFT119_INSERT_PRINCIPAL
+      stake: 20_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: FUNDED_NFT119_INSERT_PRINCIPAL
+      stake: 20_000 tokens
       memo: 0
       dissolve_delay: 1 months
       vesting_period: 24 months
@@ -398,7 +3423,7 @@ Distribution:
     # as the treasury. This is initialized in a special sub-account, as the
     # main account of Governance is the minting account of the SNS Ledger.
     # This field is specified as a token. For instance, "1 token".
-    governance: 51_000_000 tokens
+    governance: 520_000_000 tokens
 
     # The initial SNS token balance of the Swap canister is what will be
     # available for the decentralization swap. These tokens will be swapped
@@ -407,7 +3432,7 @@ Distribution:
 
   # Checksum of the total number of tokens distributed in this section.
   # This field is specified as a token. For instance, "1 token".
-  #          1_000    (neuron)
+  #          20_000    (neuron)
   #      2 million    (governance)
   # + 500 thousand    (swap)
   # --------------
@@ -437,7 +3462,7 @@ Swap:
   # direct participants (`minimum_participants`) is reached (otherwise, it
   # would be aborted).
   # Must be at least `min_participants * minimum_direct_participation_icp`.
-  maximum_direct_participation_icp: 1_000_000 tokens
+  maximum_direct_participation_icp: 20_000_000 tokens
 
   # The minimum amount of ICP that each participant must contribute
   # to participate. This field is specified as a token. For instance,
