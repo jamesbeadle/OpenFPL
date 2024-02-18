@@ -33,12 +33,12 @@ declare module '$env/static/private' {
 	export const INTERNET_IDENTITY_CANISTER_ID: string;
 	export const CANISTER_ID_INTERNET_IDENTITY: string;
 	export const CANISTER_ID_internet_identity: string;
-	export const OPENFPL_FRONTEND_CANISTER_ID: string;
-	export const CANISTER_ID_OPENFPL_FRONTEND: string;
-	export const CANISTER_ID_OpenFPL_frontend: string;
 	export const OPENFPL_BACKEND_CANISTER_ID: string;
 	export const CANISTER_ID_OPENFPL_BACKEND: string;
 	export const CANISTER_ID_OpenFPL_backend: string;
+	export const OPENFPL_FRONTEND_CANISTER_ID: string;
+	export const CANISTER_ID_OPENFPL_FRONTEND: string;
+	export const CANISTER_ID_OpenFPL_frontend: string;
 	export const CANISTER_ID: string;
 	export const CANISTER_CANDID_PATH: string;
 	export const VITE_AUTH_PROVIDER_URL: string;
@@ -57,6 +57,7 @@ declare module '$env/static/private' {
 	export const npm_package_json: string;
 	export const NVM_INC: string;
 	export const VSCODE_GIT_ASKPASS_MAIN: string;
+	export const NIX_PROFILES: string;
 	export const VSCODE_GIT_ASKPASS_NODE: string;
 	export const npm_config_userconfig: string;
 	export const npm_config_local_prefix: string;
@@ -90,6 +91,7 @@ declare module '$env/static/private' {
 	export const npm_package_version: string;
 	export const npm_lifecycle_event: string;
 	export const LESSCLOSE: string;
+	export const NIX_SSL_CERT_FILE: string;
 	export const VSCODE_GIT_ASKPASS_EXTRA_ARGS: string;
 	export const npm_config_globalconfig: string;
 	export const npm_config_init_module: string;
@@ -146,12 +148,12 @@ declare module '$env/dynamic/private' {
 		INTERNET_IDENTITY_CANISTER_ID: string;
 		CANISTER_ID_INTERNET_IDENTITY: string;
 		CANISTER_ID_internet_identity: string;
-		OPENFPL_FRONTEND_CANISTER_ID: string;
-		CANISTER_ID_OPENFPL_FRONTEND: string;
-		CANISTER_ID_OpenFPL_frontend: string;
 		OPENFPL_BACKEND_CANISTER_ID: string;
 		CANISTER_ID_OPENFPL_BACKEND: string;
 		CANISTER_ID_OpenFPL_backend: string;
+		OPENFPL_FRONTEND_CANISTER_ID: string;
+		CANISTER_ID_OPENFPL_FRONTEND: string;
+		CANISTER_ID_OpenFPL_frontend: string;
 		CANISTER_ID: string;
 		CANISTER_CANDID_PATH: string;
 		VITE_AUTH_PROVIDER_URL: string;
@@ -170,6 +172,7 @@ declare module '$env/dynamic/private' {
 		npm_package_json: string;
 		NVM_INC: string;
 		VSCODE_GIT_ASKPASS_MAIN: string;
+		NIX_PROFILES: string;
 		VSCODE_GIT_ASKPASS_NODE: string;
 		npm_config_userconfig: string;
 		npm_config_local_prefix: string;
@@ -203,6 +206,7 @@ declare module '$env/dynamic/private' {
 		npm_package_version: string;
 		npm_lifecycle_event: string;
 		LESSCLOSE: string;
+		NIX_SSL_CERT_FILE: string;
 		VSCODE_GIT_ASKPASS_EXTRA_ARGS: string;
 		npm_config_globalconfig: string;
 		npm_config_init_module: string;

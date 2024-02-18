@@ -333,7 +333,7 @@ Distribution:
     #
     # For testing, propose_sns.sh will fill this in automatically.
 
-      #JB MAIN
+    #JB MAIN
     - principal: agy5w-dlcen-pkrgo-pgfrz-3eqf2-xfwvr-qcvwn-nlhyu-77fsb-wgc37-nqe
       stake: 5_000_000 tokens
       memo: 0

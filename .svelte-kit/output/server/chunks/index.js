@@ -3513,7 +3513,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "qxlncs"
+  version_hash: "18kavsm"
 };
 async function get_hooks() {
   return {};
@@ -4585,28 +4585,10 @@ function createSystemStore() {
       throw error;
     }
   }
-  async function updateSystemState(systemState) {
-    try {
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        define_process_env_default$b.OPENFPL_BACKEND_CANISTER_ID ?? ""
-      );
-      const result = await identityActor.updateSystemState(systemState);
-      if (isError(result)) {
-        console.error("Error fetching system state.");
-      }
-      sync();
-      return result;
-    } catch (error) {
-      console.error("Error updating system state:", error);
-      throw error;
-    }
-  }
   return {
     subscribe: subscribe2,
     sync,
     getSystemState,
-    updateSystemState,
     getSeasons
   };
 }
@@ -6231,7 +6213,7 @@ const userGetProfilePicture = derived(
           if ($user.profilePicture.startsWith("data:image")) {
             base64Picture = $user.profilePicture;
           } else {
-            return "/profile_placeholder.png";
+            return `data:[<mediatype>];base64, ${$user.profilePicture}`;
           }
         }
       }
