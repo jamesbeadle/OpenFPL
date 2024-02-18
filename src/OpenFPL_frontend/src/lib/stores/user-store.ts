@@ -1,5 +1,5 @@
 import { authStore } from "$lib/stores/auth.store";
-import { isError, replacer, uint8ArrayToBase64 } from "$lib/utils/Helpers";
+import { isError } from "$lib/utils/Helpers";
 import { writable } from "svelte/store";
 import { ActorFactory } from "../../utils/ActorFactory";
 
@@ -15,6 +15,8 @@ function createUserStore() {
     }
 
     try {
+      console.log("syncing auth store");
+      console.log(process.env.OPENFPL_BACKEND_CANISTER_ID);
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
@@ -32,38 +34,6 @@ function createUserStore() {
       }
 
       let profileData = getProfileResponse.ok;
-      let byteArray;
-      if (profileData && profileData.profilePicture) {
-        let base64Picture;
-        if (
-          Array.isArray(profileData.profilePicture) &&
-          profileData.profilePicture[0] instanceof Uint8Array
-        ) {
-          byteArray = profileData.profilePicture[0];
-          base64Picture = uint8ArrayToBase64(byteArray);
-        } else if (profileData.profilePicture instanceof Uint8Array) {
-          base64Picture = uint8ArrayToBase64(profileData.profilePicture);
-        } else {
-          base64Picture = "/profile_placeholder.png";
-        }
-
-        localStorage.setItem(
-          "user_profile_data",
-          JSON.stringify(
-            {
-              ...profileData,
-              profilePicture: base64Picture,
-            },
-            replacer
-          )
-        );
-      } else {
-        localStorage.setItem(
-          "user_profile_data",
-          JSON.stringify(profileData, replacer)
-        );
-      }
-
       set(profileData);
     } catch (error) {
       console.error("Error fetching user profile:", error);
@@ -204,36 +174,6 @@ function createUserStore() {
     }
 
     let profileData = getProfileResponse.ok;
-    let byteArray;
-
-    if (profileData && profileData.profilePicture) {
-      let base64Picture;
-      if (
-        Array.isArray(profileData.profilePicture) &&
-        profileData.profilePicture[0] instanceof Uint8Array
-      ) {
-        byteArray = profileData.profilePicture[0];
-        base64Picture = uint8ArrayToBase64(byteArray);
-      } else if (profileData.profilePicture instanceof Uint8Array) {
-        base64Picture = uint8ArrayToBase64(profileData.profilePicture);
-      } else {
-        base64Picture = "/profile_placeholder.png";
-      }
-      profileData = {
-        ...profileData,
-        profilePicture: base64Picture,
-      };
-
-      localStorage.setItem(
-        "user_profile_data",
-        JSON.stringify(profileData, replacer)
-      );
-    } else {
-      localStorage.setItem(
-        "user_profile_data",
-        JSON.stringify(profileData, replacer)
-      );
-    }
 
     set(profileData);
   }

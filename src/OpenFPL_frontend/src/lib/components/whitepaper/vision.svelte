@@ -25,25 +25,24 @@
     shift power structures in the tech world, it is built with its own
     decentralised service creation infrastructure that allow services like
     OpenFPL to become Decentralised Autonomous Organisations (DAOs). OpenFPL
-    aims to transform fantasy Premier League football using this DAO
-    architecture into a decentralised service that is more engaging for its
-    users, rewarding football fans for their insight and participation in
-    football.
+    will transform fantasy Premier League football using this DAO architecture
+    into a decentralised service that is more engaging for its users, rewarding
+    football fans for their insight and participation in football.
   </p>
   <p class="my-4">
     OpenFPL is more than a decentralised service, it is a brand that has
-    multiple viable revenue streams. The ICPFA aims to distribute this value to
+    multiple viable revenue streams. The ICPFA will distribute this value to
     token holders through inflation resistant tokenomics. Through a
     mechanisation of purchasing & burning exchange $FPL, we aim to keep the
     total supply at 100 million, while building up a healthy treasury for the
     DAO to utilise as it wishes.
   </p>
   <p class="my-4">
-    OpenFPL aims to create a platform Premier League fans feel at home using,
-    with their input shaping the service. Our features are designed to enhance
-    user engagement on the platform. These include more detailed and varied
-    gameplay, community-based player valuations, customisable private leagues,
-    and collaborations with football content creators. As we attract more users,
+    OpenFPL will create a platform Premier League fans feel at home using, with
+    their input shaping the service. Our features are designed to enhance user
+    engagement on the platform. These include more detailed and varied gameplay,
+    community-based player valuations, customisable private leagues, and
+    collaborations with football content creators. As we attract more users,
     engagement within the OpenFPL ecosystem will grow, which should contribute
     to the growth and value of the $FPL governance token.
   </p>

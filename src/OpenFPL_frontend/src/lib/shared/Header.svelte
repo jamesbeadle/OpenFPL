@@ -256,7 +256,7 @@
               >
                 <span class="flex items-center h-full w-full">
                   <img
-                    src={`data:[<mediatype>];base64, ${$userGetProfilePicture}`}
+                    src={$userGetProfilePicture}
                     alt="logo"
                     class="w-8 h-8 rounded-sm"
                   />

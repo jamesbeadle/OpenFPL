@@ -38,13 +38,13 @@ actor class ManagerCanister() {
   private stable var managerGroup10 : [T.Manager] = [];
   private stable var managerGroup11 : [T.Manager] = [];
   private stable var managerGroup12 : [T.Manager] = [];
-  private let cyclesCheckInterval : Nat = Utilities.getHour() * 24;
-  private var cyclesCheckTimerId : ?Timer.TimerId = null;
-  private var activeGroupIndex : Nat8 = 0;
+  private stable let cyclesCheckInterval : Nat = Utilities.getHour() * 24;
+  private stable var cyclesCheckTimerId : ?Timer.TimerId = null;
+  private stable var activeGroupIndex : Nat8 = 0;
   private stable var totalManagers = 0;
 
   let network = Environment.DFX_NETWORK;
-  var main_canister_id = CanisterIds.MAIN_CANISTER_IC_ID;
+  private stable var main_canister_id = CanisterIds.MAIN_CANISTER_IC_ID;
   if (network == "local") {
     main_canister_id := CanisterIds.MAIN_CANISTER_LOCAL_ID;
   };

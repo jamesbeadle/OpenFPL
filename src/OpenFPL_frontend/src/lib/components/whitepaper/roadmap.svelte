@@ -84,7 +84,7 @@
     brands like IBM, Ford and Coca-Cola. Planned from Q2 2024 onwards, these
     events will leverage the expertise of OpenFPL founder James Beadle. With his
     experience in creating successful and engaging interactive experiences,
-    James aims to play a key role in educating attendees about OpenFPL, Internet
+    James will play a key role in educating attendees about OpenFPL, Internet
     Identity and the range of other IC dApps available.
   </p>
 

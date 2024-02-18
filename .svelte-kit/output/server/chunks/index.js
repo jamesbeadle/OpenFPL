@@ -3513,7 +3513,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "18kavsm"
+  version_hash: "1ec3ltf"
 };
 async function get_hooks() {
   return {};
@@ -5969,6 +5969,8 @@ function createUserStore() {
       return;
     }
     try {
+      console.log("syncing auth store");
+      console.log(define_process_env_default$3.OPENFPL_BACKEND_CANISTER_ID);
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
         define_process_env_default$3.OPENFPL_BACKEND_CANISTER_ID ?? ""
@@ -5984,33 +5986,6 @@ function createUserStore() {
         return;
       }
       let profileData = getProfileResponse.ok;
-      let byteArray;
-      if (profileData && profileData.profilePicture) {
-        let base64Picture;
-        if (Array.isArray(profileData.profilePicture) && profileData.profilePicture[0] instanceof Uint8Array) {
-          byteArray = profileData.profilePicture[0];
-          base64Picture = uint8ArrayToBase64(byteArray);
-        } else if (profileData.profilePicture instanceof Uint8Array) {
-          base64Picture = uint8ArrayToBase64(profileData.profilePicture);
-        } else {
-          base64Picture = "/profile_placeholder.png";
-        }
-        localStorage.setItem(
-          "user_profile_data",
-          JSON.stringify(
-            {
-              ...profileData,
-              profilePicture: base64Picture
-            },
-            replacer
-          )
-        );
-      } else {
-        localStorage.setItem(
-          "user_profile_data",
-          JSON.stringify(profileData, replacer)
-        );
-      }
       set(profileData);
     } catch (error) {
       console.error("Error fetching user profile:", error);
@@ -6140,31 +6115,6 @@ function createUserStore() {
       return;
     }
     let profileData = getProfileResponse.ok;
-    let byteArray;
-    if (profileData && profileData.profilePicture) {
-      let base64Picture;
-      if (Array.isArray(profileData.profilePicture) && profileData.profilePicture[0] instanceof Uint8Array) {
-        byteArray = profileData.profilePicture[0];
-        base64Picture = uint8ArrayToBase64(byteArray);
-      } else if (profileData.profilePicture instanceof Uint8Array) {
-        base64Picture = uint8ArrayToBase64(profileData.profilePicture);
-      } else {
-        base64Picture = "/profile_placeholder.png";
-      }
-      profileData = {
-        ...profileData,
-        profilePicture: base64Picture
-      };
-      localStorage.setItem(
-        "user_profile_data",
-        JSON.stringify(profileData, replacer)
-      );
-    } else {
-      localStorage.setItem(
-        "user_profile_data",
-        JSON.stringify(profileData, replacer)
-      );
-    }
     set(profileData);
   }
   return {
@@ -6200,24 +6150,20 @@ const userGetProfilePicture = derived(
   ($user) => {
     let byteArray;
     if ($user && $user.profilePicture) {
-      let base64Picture = "/profile_placeholder.png";
       if (Array.isArray($user.profilePicture) && $user.profilePicture[0] instanceof Uint8Array) {
         byteArray = $user.profilePicture[0];
-        base64Picture = `data:[<mediatype>];base64, ${uint8ArrayToBase64(
-          byteArray
-        )}`;
+        return `data:[<mediatype>];base64, ${uint8ArrayToBase64(byteArray)}`;
       } else if ($user.profilePicture instanceof Uint8Array) {
-        base64Picture = uint8ArrayToBase64($user.profilePicture);
+        return uint8ArrayToBase64($user.profilePicture);
       } else {
         if (typeof $user.profilePicture === "string") {
           if ($user.profilePicture.startsWith("data:image")) {
-            base64Picture = $user.profilePicture;
+            return $user.profilePicture;
           } else {
             return `data:[<mediatype>];base64, ${$user.profilePicture}`;
           }
         }
       }
-      return base64Picture;
     }
     return "/profile_placeholder.png";
   }
@@ -6266,7 +6212,7 @@ const Header = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_authSignedInStore();
   $$unsubscribe_userGetProfilePicture();
   return `<header class="svelte-tlhn8x"><nav class="text-white"><div class="px-4 h-16 flex justify-between items-center w-full"><a href="/" class="hover:text-gray-400 flex items-center">${validate_component(OpenFPLIcon, "OpenFPLIcon").$$render($$result, { className: "h-8 w-auto" }, {}, {})}<b class="ml-2" data-svelte-h="svelte-6ko9z9">OpenFPL</b></a> <button class="menu-toggle md:hidden focus:outline-none" data-svelte-h="svelte-1xcvmve"><svg width="24" height="18" viewBox="0 0 24 18" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="2" rx="1" fill="currentColor"></rect><rect y="8" width="24" height="2" rx="1" fill="currentColor"></rect><rect y="16" width="24" height="2" rx="1" fill="currentColor"></rect></svg></button> ${$authSignedInStore ? `<ul class="hidden md:flex h-16"><li class="mx-2 flex items-center h-16"><a href="/" class="${"flex items-center h-full nav-underline hover:text-gray-400 $" + escape(currentClass("/"), true) + " svelte-tlhn8x"}"><span class="flex items-center h-full px-4" data-svelte-h="svelte-fx32ra">Home</span></a></li>   <li class="mx-2 flex items-center h-16"><a href="/governance" class="${"flex items-center h-full nav-underline hover:text-gray-400 $" + escape(currentClass("/governance"), true) + " svelte-tlhn8x"}"><span class="flex items-center h-full px-4" data-svelte-h="svelte-qfd2bh">Governance</span></a></li> <li class="flex flex-1 items-center"><div class="relative inline-block"><button class="${escape(null_to_empty(`h-full flex items-center rounded-sm ${currentBorder("/profile")}`), true) + " svelte-tlhn8x"}"><img${add_attribute("src", $userGetProfilePicture, 0)} alt="Profile" class="h-12 rounded-sm profile-pic" aria-label="Toggle Profile"></button> <div class="${escape(null_to_empty(`absolute right-0 top-full w-48 bg-black rounded-b-md rounded-l-md shadow-lg z-50 profile-dropdown ${showProfileDropdown ? "block" : "hidden"}`), true) + " svelte-tlhn8x"}"><ul class="text-gray-700"><li><a href="/profile" class="flex items-center h-full w-full nav-underline hover:text-gray-400 svelte-tlhn8x"><span class="flex items-center h-full w-full"><img${add_attribute("src", $userGetProfilePicture, 0)} alt="logo" class="h-8 my-2 ml-4 mr-2"> <p class="w-full min-w-[125px] max-w-[125px] truncate" data-svelte-h="svelte-1mjctb">Profile</p></span></a></li> <li><button class="flex items-center justify-center px-4 pb-2 pt-1 text-white rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button svelte-tlhn8x">Disconnect
-                      ${validate_component(WalletIcon, "WalletIcon").$$render($$result, { className: "ml-2 h-6 w-6 mt-1" }, {}, {})}</button></li></ul></div></div></li></ul> <div class="${escape(null_to_empty(`mobile-menu-panel absolute top-12 right-2.5 bg-black rounded-lg shadow-md z-10 p-2 ${"hidden"} md:hidden`), true) + " svelte-tlhn8x"}"><ul class="flex flex-col"><li class="p-2"><a href="/" class="${escape(null_to_empty(`nav-underline hover:text-gray-400 ${currentClass("/")}`), true) + " svelte-tlhn8x"}">Home</a></li> <li class="p-2"><a href="/pick-team" class="${escape(null_to_empty(currentClass("/pick-team")), true) + " svelte-tlhn8x"}">Squad Selection</a></li> <li class="p-2"><a href="/governance" class="${escape(null_to_empty(currentClass("/governance")), true) + " svelte-tlhn8x"}">Governance</a></li> <li class="p-2"><a href="/profile" class="${"flex h-full w-full nav-underline hover:text-gray-400 w-full $" + escape(currentClass("/profile"), true) + " svelte-tlhn8x"}"><span class="flex items-center h-full w-full"><img${add_attribute("src", `data:[<mediatype>];base64, ${$userGetProfilePicture}`, 0)} alt="logo" class="w-8 h-8 rounded-sm"> <p class="w-full min-w-[100px] max-w-[100px] truncate p-2" data-svelte-h="svelte-f2gegq">Profile</p></span></a></li> <li class="px-2"><button class="flex h-full w-full hover:text-gray-400 w-full items-center">Disconnect
+                      ${validate_component(WalletIcon, "WalletIcon").$$render($$result, { className: "ml-2 h-6 w-6 mt-1" }, {}, {})}</button></li></ul></div></div></li></ul> <div class="${escape(null_to_empty(`mobile-menu-panel absolute top-12 right-2.5 bg-black rounded-lg shadow-md z-10 p-2 ${"hidden"} md:hidden`), true) + " svelte-tlhn8x"}"><ul class="flex flex-col"><li class="p-2"><a href="/" class="${escape(null_to_empty(`nav-underline hover:text-gray-400 ${currentClass("/")}`), true) + " svelte-tlhn8x"}">Home</a></li> <li class="p-2"><a href="/pick-team" class="${escape(null_to_empty(currentClass("/pick-team")), true) + " svelte-tlhn8x"}">Squad Selection</a></li> <li class="p-2"><a href="/governance" class="${escape(null_to_empty(currentClass("/governance")), true) + " svelte-tlhn8x"}">Governance</a></li> <li class="p-2"><a href="/profile" class="${"flex h-full w-full nav-underline hover:text-gray-400 w-full $" + escape(currentClass("/profile"), true) + " svelte-tlhn8x"}"><span class="flex items-center h-full w-full"><img${add_attribute("src", $userGetProfilePicture, 0)} alt="logo" class="w-8 h-8 rounded-sm"> <p class="w-full min-w-[100px] max-w-[100px] truncate p-2" data-svelte-h="svelte-f2gegq">Profile</p></span></a></li> <li class="px-2"><button class="flex h-full w-full hover:text-gray-400 w-full items-center">Disconnect
                 ${validate_component(WalletIcon, "WalletIcon").$$render($$result, { className: "ml-2 h-6 w-6 mt-1" }, {}, {})}</button></li></ul></div>` : `<ul class="hidden md:flex"><li class="mx-2 flex items-center h-16"><button class="flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button svelte-tlhn8x">Connect
               ${validate_component(WalletIcon, "WalletIcon").$$render($$result, { className: "ml-2 h-6 w-6 mt-1" }, {}, {})}</button></li></ul> <div class="${escape(null_to_empty(`mobile-menu-panel absolute top-12 right-2.5 bg-black rounded-lg shadow-md z-10 p-2 ${"hidden"} md:hidden`), true) + " svelte-tlhn8x"}"><ul class="flex flex-col"><li class="p-2"><button class="flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button svelte-tlhn8x">Connect
                 ${validate_component(WalletIcon, "WalletIcon").$$render($$result, { className: "ml-2 h-6 w-6 mt-1" }, {}, {})}</button></li></ul></div>`}</div></nav> </header>`;
@@ -9457,7 +9403,7 @@ const Page$1 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   })}`;
 });
 const Vision = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  return `<div class="m-4" data-svelte-h="svelte-1itjw9p"><h1 class="default-header">Our Vision</h1> <p class="my-4">OpenFPL was created as our answer to the question:</p> <p class="my-2"><i>&quot;How do you introduce the most new users to the Internet Computer
+  return `<div class="m-4" data-svelte-h="svelte-nvmvhm"><h1 class="default-header">Our Vision</h1> <p class="my-4">OpenFPL was created as our answer to the question:</p> <p class="my-2"><i>&quot;How do you introduce the most new users to the Internet Computer
       Blockchain?&quot;</i>.</p> <p class="my-4">Football is the most popular sport in the world, with billions of fans, the
     leading fantasy football game engages over 10 million players a season.
     OpenFPL is a better, more equitable, decentralised fantasy football platform
@@ -9471,19 +9417,18 @@ const Vision = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     shift power structures in the tech world, it is built with its own
     decentralised service creation infrastructure that allow services like
     OpenFPL to become Decentralised Autonomous Organisations (DAOs). OpenFPL
-    aims to transform fantasy Premier League football using this DAO
-    architecture into a decentralised service that is more engaging for its
-    users, rewarding football fans for their insight and participation in
-    football.</p> <p class="my-4">OpenFPL is more than a decentralised service, it is a brand that has
-    multiple viable revenue streams. The ICPFA aims to distribute this value to
+    will transform fantasy Premier League football using this DAO architecture
+    into a decentralised service that is more engaging for its users, rewarding
+    football fans for their insight and participation in football.</p> <p class="my-4">OpenFPL is more than a decentralised service, it is a brand that has
+    multiple viable revenue streams. The ICPFA will distribute this value to
     token holders through inflation resistant tokenomics. Through a
     mechanisation of purchasing &amp; burning exchange $FPL, we aim to keep the
     total supply at 100 million, while building up a healthy treasury for the
-    DAO to utilise as it wishes.</p> <p class="my-4">OpenFPL aims to create a platform Premier League fans feel at home using,
-    with their input shaping the service. Our features are designed to enhance
-    user engagement on the platform. These include more detailed and varied
-    gameplay, community-based player valuations, customisable private leagues,
-    and collaborations with football content creators. As we attract more users,
+    DAO to utilise as it wishes.</p> <p class="my-4">OpenFPL will create a platform Premier League fans feel at home using, with
+    their input shaping the service. Our features are designed to enhance user
+    engagement on the platform. These include more detailed and varied gameplay,
+    community-based player valuations, customisable private leagues, and
+    collaborations with football content creators. As we attract more users,
     engagement within the OpenFPL ecosystem will grow, which should contribute
     to the growth and value of the $FPL governance token.</p> <p class="my-4">Our vision for OpenFPL encompasses a commitment to societal impact,
     specifically through our organisation, the ICPFA. The ICPFA will be focused
