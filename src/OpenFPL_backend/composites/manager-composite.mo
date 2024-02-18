@@ -45,7 +45,7 @@ module {
     private var storeCanisterId : ?((canisterId : Text) -> async ()) = null;
     private var backendCanisterController : ?Principal = null;
 
-    private let rewards: Rewards.Rewards = Rewards.Rewards();
+    private let rewards : Rewards.Rewards = Rewards.Rewards();
 
     public func setBackendCanisterController(controller : Principal) {
       backendCanisterController := ?controller;
@@ -1160,24 +1160,24 @@ module {
     };
 
     public func distributeWeeklyRewards(weeklyRewardPool : Nat64, weeklyLeaderboard : DTOs.WeeklyLeaderboardDTO) : async () {
-      
+
       await rewards.distributeWeeklyRewards(weeklyRewardPool, weeklyLeaderboard);
 
     };
 
-    public func distributeMonthlyRewards(rewardPool : T.RewardPool, monthlyLeaderboard : DTOs.MonthlyLeaderboardDTO, uniqueManagerCanisterIds: List.List<T.CanisterId>) : async () {
+    public func distributeMonthlyRewards(rewardPool : T.RewardPool, monthlyLeaderboard : DTOs.MonthlyLeaderboardDTO, uniqueManagerCanisterIds : List.List<T.CanisterId>) : async () {
       await rewards.distributeMonthlyRewards(rewardPool, monthlyLeaderboard, uniqueManagerCanisterIds);
     };
 
-    public func distributeSeasonRewards(seasonRewardPool : Nat64, seasonLeaderboard : DTOs.SeasonLeaderboardDTO, uniqueManagerCanisterIds: List.List<T.CanisterId>) : async () {
+    public func distributeSeasonRewards(seasonRewardPool : Nat64, seasonLeaderboard : DTOs.SeasonLeaderboardDTO, uniqueManagerCanisterIds : List.List<T.CanisterId>) : async () {
       await rewards.distributeSeasonRewards(seasonRewardPool, seasonLeaderboard, uniqueManagerCanisterIds);
     };
 
-    public func distributeMostValuableTeamRewards(mostValuableTeamPool : Nat64, players : [DTOs.PlayerDTO], currentSeason : T.SeasonId, uniqueManagerCanisterIds: List.List<T.CanisterId>) : async () {
+    public func distributeMostValuableTeamRewards(mostValuableTeamPool : Nat64, players : [DTOs.PlayerDTO], currentSeason : T.SeasonId, uniqueManagerCanisterIds : List.List<T.CanisterId>) : async () {
       await rewards.distributeMostValuableTeamRewards(mostValuableTeamPool, players, currentSeason, uniqueManagerCanisterIds);
     };
 
-    public func distributeHighestScoringPlayerRewards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, highestScoringPlayerRewardPool : Nat64, fixtures : List.List<DTOs.FixtureDTO>, uniqueManagerCanisterIds: List.List<T.CanisterId>) : async () {
+    public func distributeHighestScoringPlayerRewards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, highestScoringPlayerRewardPool : Nat64, fixtures : List.List<DTOs.FixtureDTO>, uniqueManagerCanisterIds : List.List<T.CanisterId>) : async () {
       await rewards.distributeHighestScoringPlayerRewards(seasonId, gameweek, highestScoringPlayerRewardPool, fixtures, uniqueManagerCanisterIds);
     };
 
@@ -1190,7 +1190,7 @@ module {
     };
 
     public func distributeSeasonATHScoreRewards(seasonRewardPool : Nat64, seasonLeaderboard : DTOs.SeasonLeaderboardDTO) : async () {
-     await rewards.distributeSeasonATHScoreRewards(seasonRewardPool, seasonLeaderboard, uniqueManagerCanisterIds);
+      await rewards.distributeSeasonATHScoreRewards(seasonRewardPool, seasonLeaderboard, uniqueManagerCanisterIds);
     };
 
     public func getStableManagerCanisterIds() : [(T.PrincipalId, T.CanisterId)] {

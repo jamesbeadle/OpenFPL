@@ -16,7 +16,6 @@ import Countries "../Countries";
 import Utilities "../utilities";
 import Players "../../../testing/players";
 import TrieMap "mo:base/TrieMap";
-import Governance "../sns-wrappers/governance";
 
 module {
   public class PlayerComposite() {

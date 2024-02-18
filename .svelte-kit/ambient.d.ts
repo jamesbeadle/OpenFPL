@@ -33,12 +33,12 @@ declare module '$env/static/private' {
 	export const INTERNET_IDENTITY_CANISTER_ID: string;
 	export const CANISTER_ID_INTERNET_IDENTITY: string;
 	export const CANISTER_ID_internet_identity: string;
-	export const OPENFPL_BACKEND_CANISTER_ID: string;
-	export const CANISTER_ID_OPENFPL_BACKEND: string;
-	export const CANISTER_ID_OpenFPL_backend: string;
 	export const OPENFPL_FRONTEND_CANISTER_ID: string;
 	export const CANISTER_ID_OPENFPL_FRONTEND: string;
 	export const CANISTER_ID_OpenFPL_frontend: string;
+	export const OPENFPL_BACKEND_CANISTER_ID: string;
+	export const CANISTER_ID_OPENFPL_BACKEND: string;
+	export const CANISTER_ID_OpenFPL_backend: string;
 	export const CANISTER_ID: string;
 	export const CANISTER_CANDID_PATH: string;
 	export const VITE_AUTH_PROVIDER_URL: string;
@@ -51,7 +51,6 @@ declare module '$env/static/private' {
 	export const SHLVL: string;
 	export const npm_config_noproxy: string;
 	export const HOME: string;
-	export const MOTD_SHOWN: string;
 	export const NVM_BIN: string;
 	export const TERM_PROGRAM_VERSION: string;
 	export const VSCODE_IPC_HOOK_CLI: string;
@@ -147,12 +146,12 @@ declare module '$env/dynamic/private' {
 		INTERNET_IDENTITY_CANISTER_ID: string;
 		CANISTER_ID_INTERNET_IDENTITY: string;
 		CANISTER_ID_internet_identity: string;
-		OPENFPL_BACKEND_CANISTER_ID: string;
-		CANISTER_ID_OPENFPL_BACKEND: string;
-		CANISTER_ID_OpenFPL_backend: string;
 		OPENFPL_FRONTEND_CANISTER_ID: string;
 		CANISTER_ID_OPENFPL_FRONTEND: string;
 		CANISTER_ID_OpenFPL_frontend: string;
+		OPENFPL_BACKEND_CANISTER_ID: string;
+		CANISTER_ID_OPENFPL_BACKEND: string;
+		CANISTER_ID_OpenFPL_backend: string;
 		CANISTER_ID: string;
 		CANISTER_CANDID_PATH: string;
 		VITE_AUTH_PROVIDER_URL: string;
@@ -165,7 +164,6 @@ declare module '$env/dynamic/private' {
 		SHLVL: string;
 		npm_config_noproxy: string;
 		HOME: string;
-		MOTD_SHOWN: string;
 		NVM_BIN: string;
 		TERM_PROGRAM_VERSION: string;
 		VSCODE_IPC_HOOK_CLI: string;

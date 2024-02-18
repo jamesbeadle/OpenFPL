@@ -52,7 +52,7 @@ module {
     private var seasonATHPrizePool : Nat64 = 0;
 
     public func distributeWeeklyRewards(weeklyRewardPool : Nat64, weeklyLeaderboard : DTOs.WeeklyLeaderboardDTO) : async () {
-      
+
       let weeklyRewardAmount = weeklyRewardPool / 38;
       await mintToTreasury(weeklyRewardAmount);
 
@@ -135,7 +135,7 @@ module {
       weeklyRewards := List.append(weeklyRewards, List.make<T.WeeklyRewards>(newWeeklyRewards));
     };
 
-    public func distributeMonthlyRewards(rewardPool : T.RewardPool, monthlyLeaderboard : DTOs.MonthlyLeaderboardDTO, uniqueManagerCanisterIds: List.List<T.CanisterId>) : async () {
+    public func distributeMonthlyRewards(rewardPool : T.RewardPool, monthlyLeaderboard : DTOs.MonthlyLeaderboardDTO, uniqueManagerCanisterIds : List.List<T.CanisterId>) : async () {
       let monthlyRewardAmount = rewardPool.monthlyLeaderboardPool / 9;
       await mintToTreasury(monthlyRewardAmount);
 
@@ -243,10 +243,10 @@ module {
       monthlyRewards := List.append(monthlyRewards, List.make<T.MonthlyRewards>(newMonthlyRewards));
     };
 
-    public func distributeSeasonRewards(seasonRewardPool : Nat64, seasonLeaderboard : DTOs.SeasonLeaderboardDTO, uniqueManagerCanisterIds: List.List<T.CanisterId>) : async () {
-      
+    public func distributeSeasonRewards(seasonRewardPool : Nat64, seasonLeaderboard : DTOs.SeasonLeaderboardDTO, uniqueManagerCanisterIds : List.List<T.CanisterId>) : async () {
+
       await mintToTreasury(seasonRewardPool);
-      
+
       var payouts = List.nil<Float>();
       var currentEntries = List.fromArray(seasonLeaderboard.entries);
 
@@ -324,10 +324,10 @@ module {
       seasonRewards := List.append(seasonRewards, List.make<T.SeasonRewards>(newSeasonRewards));
     };
 
-    public func distributeMostValuableTeamRewards(mostValuableTeamPool : Nat64, players : [DTOs.PlayerDTO], currentSeason : T.SeasonId, uniqueManagerCanisterIds: List.List<T.CanisterId>) : async () {
-      
+    public func distributeMostValuableTeamRewards(mostValuableTeamPool : Nat64, players : [DTOs.PlayerDTO], currentSeason : T.SeasonId, uniqueManagerCanisterIds : List.List<T.CanisterId>) : async () {
+
       await mintToTreasury(mostValuableTeamPool);
-      
+
       let gameweek38Snapshots = Buffer.fromArray<T.FantasyTeamSnapshot>([]);
       let mostValuableTeamsBuffer = Buffer.fromArray<T.FantasyTeamSnapshot>([]);
       for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
@@ -448,10 +448,10 @@ module {
       //TODO: Implement with sns token canister
     };
 
-    public func distributeHighestScoringPlayerRewards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, highestScoringPlayerRewardPool : Nat64, fixtures : List.List<DTOs.FixtureDTO>, uniqueManagerCanisterIds: List.List<T.CanisterId>) : async () {
-      
+    public func distributeHighestScoringPlayerRewards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, highestScoringPlayerRewardPool : Nat64, fixtures : List.List<DTOs.FixtureDTO>, uniqueManagerCanisterIds : List.List<T.CanisterId>) : async () {
+
       await mintToTreasury(highestScoringPlayerRewardPool);
-      
+
       let highestScoringPlayerIdBuffer = Buffer.fromArray<T.PlayerId>([]);
 
       for (fixture in Iter.fromList(fixtures)) {
@@ -504,7 +504,7 @@ module {
       //TODO: Implement with sns token canister
     };
 
-    public func distributeWeeklyATHScoreRewards(weeklyRewardPool : Nat64, weeklyLeaderboard : DTOs.WeeklyLeaderboardDTO, uniqueManagerCanisterIds: List.List<T.CanisterId>) : async () {
+    public func distributeWeeklyATHScoreRewards(weeklyRewardPool : Nat64, weeklyLeaderboard : DTOs.WeeklyLeaderboardDTO, uniqueManagerCanisterIds : List.List<T.CanisterId>) : async () {
       let weeklyATHReward = weeklyRewardPool / 38;
       await mintToTreasury(weeklyATHReward);
 
@@ -549,7 +549,7 @@ module {
       };
     };
 
-    public func distributeMonthlyATHScoreRewards(monthlyRewardPool : Nat64, monthlyLeaderboards : [DTOs.MonthlyLeaderboardDTO], uniqueManagerCanisterIds: List.List<T.CanisterId>) : async () {
+    public func distributeMonthlyATHScoreRewards(monthlyRewardPool : Nat64, monthlyLeaderboards : [DTOs.MonthlyLeaderboardDTO], uniqueManagerCanisterIds : List.List<T.CanisterId>) : async () {
       let monthlyATHReward = monthlyRewardPool / 9;
       await mintToTreasury(monthlyATHReward);
 
@@ -601,7 +601,7 @@ module {
       };
     };
 
-    public func distributeSeasonATHScoreRewards(seasonRewardPool : Nat64, seasonLeaderboard : DTOs.SeasonLeaderboardDTO, uniqueManagerCanisterIds: List.List<T.CanisterId>) : async () {
+    public func distributeSeasonATHScoreRewards(seasonRewardPool : Nat64, seasonLeaderboard : DTOs.SeasonLeaderboardDTO, uniqueManagerCanisterIds : List.List<T.CanisterId>) : async () {
       await mintToTreasury(seasonRewardPool);
       let maybeLastHighScore = List.last<T.HighScoreRecord>(seasonAllTimeHighScores);
       var highestSeasonScore : Int16 = 0;
@@ -644,11 +644,6 @@ module {
         weeklyATHPrizePool := weeklyATHPrizePool + seasonRewardPool;
       };
     };
-
-
-
-
-
 
     private func findTiedEntries(entries : List.List<T.LeaderboardEntry>, points : Int16) : List.List<T.LeaderboardEntry> {
       var tiedEntries = List.nil<T.LeaderboardEntry>();

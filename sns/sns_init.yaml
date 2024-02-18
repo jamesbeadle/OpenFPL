@@ -332,13 +332,14 @@ Distribution:
     # principals of your intended genesis neurons.
     #
     # For testing, propose_sns.sh will fill this in automatically.
-    - principal: YOUR_PRINCIPAL_ID
-      stake: 1_000 tokens
+    - principal: JB_INSERT_PRINCIPAL
+      stake: 5_000_000 tokens
       memo: 0
       dissolve_delay: 2 years
       vesting_period: 4 years
+
       # ICPFA Neurons
-    - principal: YOUR_PRINCIPAL_ID
+    - principal: ICP_INSIDER_INSERT_PRINCIPAL
       stake: 1_000 tokens
       memo: 0
       dissolve_delay: 3 months
