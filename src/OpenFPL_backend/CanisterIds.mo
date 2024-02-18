@@ -8,4 +8,5 @@ module CanisterIds {
   public let MAIN_CANISTER_IC_ID = "bboqb-jiaaa-aaaal-qb6ea-cai";
   public let TOKEN_CANISTER_IC_ID = "hwd4h-eyaaa-aaaal-qb6ra-cai";
   public let CYCLES_MINTING_CANISTER_IC_ID = "rkp4c-7iaaa-aaaaa-aaaca-cai";
+  public let GOVERNANCE_CANISTER_IC_ID = ""; //TODO: Post SNS add governace canister ID
 };

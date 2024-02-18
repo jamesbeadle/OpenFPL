@@ -26,7 +26,7 @@ import ManagerCanister "../manager-canister";
 import RewardPercentages "../utils/RewardPercentages";
 import Rewards "./rewards-composite";
 import Utilities "../utilities";
-import Token "../token";
+import Token "../sns-wrappers/token";
 import SeasonLeaderboard "../season-leaderboard";
 import TrieMap "mo:base/TrieMap";
 import Error "mo:base/Error";

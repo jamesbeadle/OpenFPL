@@ -397,6 +397,14 @@ module {
         };
         case (?foundPlayer) {};
       };
+
+      //TODO: Ensure there are no existing revaluation proposals for a player
+      //Create instance of SNS governance canister
+      //Search it for proposals of this type
+      //if exist don't raise duplicate
+
+
+
       return #ok("Valid");
     };
 

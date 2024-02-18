@@ -5,10 +5,10 @@ import Time "mo:base/Time";
 import Int64 "mo:base/Int64";
 import Array "mo:base/Array";
 import Result "mo:base/Result";
-import Account "lib/Account";
-import CanisterIds "CanisterIds";
-import T "types";
-import Environment "Environment";
+import Account "../lib/Account";
+import CanisterIds "../CanisterIds";
+import T "../types";
+import Environment "../Environment";
 
 module {
 

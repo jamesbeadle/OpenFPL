@@ -27,7 +27,7 @@ import LeaderboardComposite "composites/leaderboard-composite";
 import SHA224 "./lib/SHA224";
 import Utilities "utilities";
 import CanisterIds "CanisterIds";
-import Token "token";
+import Token "sns-wrappers/token";
 
 module {
 
