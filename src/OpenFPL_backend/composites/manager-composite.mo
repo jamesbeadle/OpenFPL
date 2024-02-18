@@ -1159,91 +1159,26 @@ module {
       await distributeMostValuableTeamRewards(rewardPool.mostValuableTeamPool, players, seasonId, uniqueManagerCanisterIds);
     };
 
-    //Need to redo
-
     public func distributeWeeklyRewards(weeklyRewardPool : Nat64, weeklyLeaderboard : DTOs.WeeklyLeaderboardDTO) : async () {
       
       await rewards.distributeWeeklyRewards(weeklyRewardPool, weeklyLeaderboard);
-      //TODO: Implement with sns token canister
 
-    };
-
-    private func findTiedEntries(entries : List.List<T.LeaderboardEntry>, points : Int16) : List.List<T.LeaderboardEntry> {
-      var tiedEntries = List.nil<T.LeaderboardEntry>();
-      var currentEntries = entries;
-
-      label currentLoop while (not List.isNil(currentEntries)) {
-        let (currentEntry, rest) = List.pop(currentEntries);
-        currentEntries := rest;
-
-        switch (currentEntry) {
-          case (null) {};
-          case (?entry) {
-            if (entry.points == points) {
-              tiedEntries := List.push(entry, tiedEntries);
-            } else {
-              break currentLoop;
-            };
-          };
-        };
-      };
-
-      return List.reverse(tiedEntries);
-    };
-
-    private func calculateTiePayouts(tiedEntries : List.List<T.LeaderboardEntry>, scaledPercentages : [Float], startPosition : Nat) : List.List<Float> {
-      let numTiedEntries = List.size(tiedEntries);
-      var totalPayout : Float = 0.0;
-      let endPosition : Int = startPosition + numTiedEntries - 1;
-
-      label posLoop for (i in Iter.range(startPosition, endPosition)) {
-        if (i > 100) {
-          break posLoop;
-        };
-        totalPayout += scaledPercentages[i - 1];
-      };
-
-      let equalPayout = totalPayout / Float.fromInt(numTiedEntries);
-      let payouts = List.replicate<Float>(numTiedEntries, equalPayout);
-
-      return payouts;
-    };
-
-    private func scalePercentages(fixedPercentages : [Float], numParticipants : Nat) : [Float] {
-      var totalPercentage : Float = 0.0;
-      for (i in Iter.range(0, numParticipants)) {
-        totalPercentage += fixedPercentages[i];
-      };
-
-      let scalingFactor : Float = 100.0 / totalPercentage;
-
-      var scaledPercentagesBuffer = Buffer.fromArray<Float>([]);
-      for (i in Iter.range(0, numParticipants)) {
-        let scaledValue = fixedPercentages[i] * scalingFactor;
-        scaledPercentagesBuffer.add(scaledValue);
-      };
-
-      return Buffer.toArray(scaledPercentagesBuffer);
     };
 
     public func distributeMonthlyRewards(rewardPool : T.RewardPool, monthlyLeaderboard : DTOs.MonthlyLeaderboardDTO, uniqueManagerCanisterIds: List.List<T.CanisterId>) : async () {
       await rewards.distributeMonthlyRewards(rewardPool, monthlyLeaderboard, uniqueManagerCanisterIds);
-      //TODO: Implement with sns token canister
     };
 
     public func distributeSeasonRewards(seasonRewardPool : Nat64, seasonLeaderboard : DTOs.SeasonLeaderboardDTO, uniqueManagerCanisterIds: List.List<T.CanisterId>) : async () {
       await rewards.distributeSeasonRewards(seasonRewardPool, seasonLeaderboard, uniqueManagerCanisterIds);
-      //TODO: Implement with sns token canister
     };
 
     public func distributeMostValuableTeamRewards(mostValuableTeamPool : Nat64, players : [DTOs.PlayerDTO], currentSeason : T.SeasonId, uniqueManagerCanisterIds: List.List<T.CanisterId>) : async () {
       await rewards.distributeMostValuableTeamRewards(mostValuableTeamPool, players, currentSeason, uniqueManagerCanisterIds);
-      //TODO: Implement with sns token canister
     };
 
     public func distributeHighestScoringPlayerRewards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, highestScoringPlayerRewardPool : Nat64, fixtures : List.List<DTOs.FixtureDTO>, uniqueManagerCanisterIds: List.List<T.CanisterId>) : async () {
       await rewards.distributeHighestScoringPlayerRewards(seasonId, gameweek, highestScoringPlayerRewardPool, fixtures, uniqueManagerCanisterIds);
-      //TODO: Implement with sns token canister
     };
 
     public func distributeWeeklyATHScoreRewards(weeklyRewardPool : Nat64, weeklyLeaderboard : DTOs.WeeklyLeaderboardDTO) : async () {

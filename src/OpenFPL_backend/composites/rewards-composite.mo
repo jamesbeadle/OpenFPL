@@ -51,29 +51,10 @@ module {
     private var monthlyATHPrizePool : Nat64 = 0;
     private var seasonATHPrizePool : Nat64 = 0;
 
-    public func payWeeklyRewards(rewardPool : T.RewardPool, weeklyLeaderboard : DTOs.WeeklyLeaderboardDTO, fixtures : List.List<DTOs.FixtureDTO>, uniqueManagerCanisterIds: List.List<T.CanisterId>) : async () {
-      await distributeWeeklyRewards(rewardPool.weeklyLeaderboardPool, weeklyLeaderboard);
-      await distributeHighestScoringPlayerRewards(weeklyLeaderboard.seasonId, weeklyLeaderboard.gameweek, rewardPool.highestScoringMatchPlayerPool, fixtures, uniqueManagerCanisterIds);
-      await distributeWeeklyATHScoreRewards(rewardPool.allTimeWeeklyHighScorePool, weeklyLeaderboard, uniqueManagerCanisterIds);
-    };
-
-    public func payMonthlyRewards(rewardPool : T.RewardPool, monthlyLeaderboard : DTOs.MonthlyLeaderboardDTO, uniqueManagerCanisterIds: List.List<T.CanisterId>) : async () {
-      await distributeMonthlyRewards(rewardPool, monthlyLeaderboard, uniqueManagerCanisterIds);
-    };
-
-    public func payATHMonthlyRewards(rewardPool : T.RewardPool, monthlyLeaderboards : [DTOs.MonthlyLeaderboardDTO], uniqueManagerCanisterIds: List.List<T.CanisterId>) : async () {
-      await distributeMonthlyATHScoreRewards(rewardPool.allTimeMonthlyHighScorePool, monthlyLeaderboards, uniqueManagerCanisterIds);
-    };
-
-    public func paySeasonRewards(rewardPool : T.RewardPool, seasonLeaderboard : DTOs.SeasonLeaderboardDTO, players : [DTOs.PlayerDTO], seasonId : T.SeasonId, uniqueManagerCanisterIds: List.List<T.CanisterId>) : async () {
-      await distributeSeasonRewards(rewardPool.seasonLeaderboardPool, seasonLeaderboard, uniqueManagerCanisterIds);
-      await distributeSeasonATHScoreRewards(rewardPool.allTimeSeasonHighScorePool, seasonLeaderboard, uniqueManagerCanisterIds);
-      await distributeMostValuableTeamRewards(rewardPool.mostValuableTeamPool, players, seasonId, uniqueManagerCanisterIds);
-    };
-
     //Need to redo
 
     public func distributeWeeklyRewards(weeklyRewardPool : Nat64, weeklyLeaderboard : DTOs.WeeklyLeaderboardDTO) : async () {
+      
       let weeklyRewardAmount = weeklyRewardPool / 38;
       var payouts = List.nil<Float>();
       var currentEntries = List.fromArray(weeklyLeaderboard.entries);
@@ -154,64 +135,6 @@ module {
       weeklyRewards := List.append(weeklyRewards, List.make<T.WeeklyRewards>(newWeeklyRewards));
       //TODO: Implement with sns token canister
 
-    };
-
-    private func findTiedEntries(entries : List.List<T.LeaderboardEntry>, points : Int16) : List.List<T.LeaderboardEntry> {
-      var tiedEntries = List.nil<T.LeaderboardEntry>();
-      var currentEntries = entries;
-
-      label currentLoop while (not List.isNil(currentEntries)) {
-        let (currentEntry, rest) = List.pop(currentEntries);
-        currentEntries := rest;
-
-        switch (currentEntry) {
-          case (null) {};
-          case (?entry) {
-            if (entry.points == points) {
-              tiedEntries := List.push(entry, tiedEntries);
-            } else {
-              break currentLoop;
-            };
-          };
-        };
-      };
-
-      return List.reverse(tiedEntries);
-    };
-
-    private func calculateTiePayouts(tiedEntries : List.List<T.LeaderboardEntry>, scaledPercentages : [Float], startPosition : Nat) : List.List<Float> {
-      let numTiedEntries = List.size(tiedEntries);
-      var totalPayout : Float = 0.0;
-      let endPosition : Int = startPosition + numTiedEntries - 1;
-
-      label posLoop for (i in Iter.range(startPosition, endPosition)) {
-        if (i > 100) {
-          break posLoop;
-        };
-        totalPayout += scaledPercentages[i - 1];
-      };
-
-      let equalPayout = totalPayout / Float.fromInt(numTiedEntries);
-      let payouts = List.replicate<Float>(numTiedEntries, equalPayout);
-
-      return payouts;
-    };
-
-    private func scalePercentages(fixedPercentages : [Float], numParticipants : Nat) : [Float] {
-      var totalPercentage : Float = 0.0;
-      for (i in Iter.range(0, numParticipants)) {
-        totalPercentage += fixedPercentages[i];
-      };
-
-      let scalingFactor : Float = 100.0 / totalPercentage;
-
-      var scaledPercentagesBuffer = Buffer.fromArray<Float>([]);
-      for (i in Iter.range(0, numParticipants)) {
-        let scaledValue = fixedPercentages[i] * scalingFactor;
-        scaledPercentagesBuffer.add(scaledValue);
-      };
-
-      return Buffer.toArray(scaledPercentagesBuffer);
     };
 
     public func distributeMonthlyRewards(rewardPool : T.RewardPool, monthlyLeaderboard : DTOs.MonthlyLeaderboardDTO, uniqueManagerCanisterIds: List.List<T.CanisterId>) : async () {
@@ -714,6 +637,64 @@ module {
         await mintToTreasury(seasonRewardPool);
         weeklyATHPrizePool := weeklyATHPrizePool + seasonRewardPool;
       };
+    };
+
+    private func findTiedEntries(entries : List.List<T.LeaderboardEntry>, points : Int16) : List.List<T.LeaderboardEntry> {
+      var tiedEntries = List.nil<T.LeaderboardEntry>();
+      var currentEntries = entries;
+
+      label currentLoop while (not List.isNil(currentEntries)) {
+        let (currentEntry, rest) = List.pop(currentEntries);
+        currentEntries := rest;
+
+        switch (currentEntry) {
+          case (null) {};
+          case (?entry) {
+            if (entry.points == points) {
+              tiedEntries := List.push(entry, tiedEntries);
+            } else {
+              break currentLoop;
+            };
+          };
+        };
+      };
+
+      return List.reverse(tiedEntries);
+    };
+
+    private func calculateTiePayouts(tiedEntries : List.List<T.LeaderboardEntry>, scaledPercentages : [Float], startPosition : Nat) : List.List<Float> {
+      let numTiedEntries = List.size(tiedEntries);
+      var totalPayout : Float = 0.0;
+      let endPosition : Int = startPosition + numTiedEntries - 1;
+
+      label posLoop for (i in Iter.range(startPosition, endPosition)) {
+        if (i > 100) {
+          break posLoop;
+        };
+        totalPayout += scaledPercentages[i - 1];
+      };
+
+      let equalPayout = totalPayout / Float.fromInt(numTiedEntries);
+      let payouts = List.replicate<Float>(numTiedEntries, equalPayout);
+
+      return payouts;
+    };
+
+    private func scalePercentages(fixedPercentages : [Float], numParticipants : Nat) : [Float] {
+      var totalPercentage : Float = 0.0;
+      for (i in Iter.range(0, numParticipants)) {
+        totalPercentage += fixedPercentages[i];
+      };
+
+      let scalingFactor : Float = 100.0 / totalPercentage;
+
+      var scaledPercentagesBuffer = Buffer.fromArray<Float>([]);
+      for (i in Iter.range(0, numParticipants)) {
+        let scaledValue = fixedPercentages[i] * scalingFactor;
+        scaledPercentagesBuffer.add(scaledValue);
+      };
+
+      return Buffer.toArray(scaledPercentagesBuffer);
     };
 
     private func payReward(principalId : T.PrincipalId, fpl : Nat64) : async () {
