@@ -1255,6 +1255,8 @@ module {
       };
 
       weeklyRewards := List.append(weeklyRewards, List.make<T.WeeklyRewards>(newWeeklyRewards));
+      //TODO: Implement with sns token canister
+
     };
 
     private func findTiedEntries(entries : List.List<T.LeaderboardEntry>, points : Int16) : List.List<T.LeaderboardEntry> {
@@ -1420,6 +1422,7 @@ module {
         rewards = List.fromArray(Buffer.toArray(rewardBuffer));
       };
       monthlyRewards := List.append(monthlyRewards, List.make<T.MonthlyRewards>(newMonthlyRewards));
+      //TODO: Implement with sns token canister
     };
 
     public func distributeSeasonRewards(seasonRewardPool : Nat64, seasonLeaderboard : DTOs.SeasonLeaderboardDTO) : async () {
@@ -1498,6 +1501,7 @@ module {
         rewards = List.fromArray(Buffer.toArray(rewardBuffer));
       };
       seasonRewards := List.append(seasonRewards, List.make<T.SeasonRewards>(newSeasonRewards));
+      //TODO: Implement with sns token canister
     };
 
     public func distributeMostValuableTeamRewards(mostValuableTeamPool : Nat64, players : [DTOs.PlayerDTO], currentSeason : T.SeasonId) : async () {
@@ -1618,6 +1622,7 @@ module {
         rewards = List.fromArray(Buffer.toArray(rewardBuffer));
       };
       mostValuableTeamRewards := List.append(mostValuableTeamRewards, List.make<T.SeasonRewards>(newMVTRewards));
+      //TODO: Implement with sns token canister
     };
 
     public func distributeHighestScoringPlayerRewards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, highestScoringPlayerRewardPool : Nat64, fixtures : List.List<DTOs.FixtureDTO>) : async () {
@@ -1671,6 +1676,7 @@ module {
         };
         highScoringPlayerRewards := List.append(highScoringPlayerRewards, List.make<T.SeasonRewards>(newHSPRewards));
       };
+      //TODO: Implement with sns token canister
     };
 
     public func distributeWeeklyATHScoreRewards(weeklyRewardPool : Nat64, weeklyLeaderboard : DTOs.WeeklyLeaderboardDTO) : async () {

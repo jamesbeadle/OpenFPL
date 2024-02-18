@@ -3513,7 +3513,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1arg7ry"
+  version_hash: "3nxtrn"
 };
 async function get_hooks() {
   return {};
@@ -3643,8 +3643,6 @@ const Error$1 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_page();
   return `<h1>${escape($page.status)}</h1> <p>${escape($page.error?.message)}</p>`;
 });
-var define_import_meta_env_default = { VITE_AUTH_PROVIDER_URL: "http://localhost:4943/?canisterId=rdmx6-jaaaa-aaaaa-aaadq-cai", VITE_OPENFPL_BACKEND_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", VITE_OPENFPL_FRONTEND_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", VITE___CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", VITE_TOKEN_CANISTER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", BASE_URL: "/", MODE: "production", DEV: false, PROD: true, SSR: true };
-const localIdentityCanisterId = define_import_meta_env_default.VITE_INTERNET_IDENTITY_CANISTER_ID;
 const AUTH_MAX_TIME_TO_LIVE = BigInt(
   60 * 60 * 1e3 * 1e3 * 1e3 * 24 * 14
 );
@@ -3687,7 +3685,7 @@ const initAuthStore = () => {
       // eslint-disable-next-line no-async-promise-executor
       new Promise(async (resolve2, reject) => {
         authClient = authClient ?? await createAuthClient();
-        const identityProvider = nonNullish(localIdentityCanisterId) ? `http://${localIdentityCanisterId}.localhost:8000` : domain;
+        const identityProvider = domain;
         await authClient?.login({
           maxTimeToLive: AUTH_MAX_TIME_TO_LIVE,
           onSuccess: () => {
@@ -3859,16 +3857,6 @@ const idlFactory = ({ IDL }) => {
     lastName: IDL.Text,
     firstName: IDL.Text
   });
-  const ClubDTO = IDL.Record({
-    id: ClubId,
-    secondaryColourHex: IDL.Text,
-    name: IDL.Text,
-    friendlyName: IDL.Text,
-    thirdColourHex: IDL.Text,
-    abbreviatedName: IDL.Text,
-    shirtType: ShirtType,
-    primaryColourHex: IDL.Text
-  });
   const Error2 = IDL.Variant({
     DecodeError: IDL.Null,
     NotAllowed: IDL.Null,
@@ -3879,6 +3867,17 @@ const idlFactory = ({ IDL }) => {
     AlreadyExists: IDL.Null,
     CanisterCreateError: IDL.Null,
     InvalidTeamError: IDL.Null
+  });
+  const Result_20 = IDL.Variant({ ok: IDL.Text, err: Error2 });
+  const ClubDTO = IDL.Record({
+    id: ClubId,
+    secondaryColourHex: IDL.Text,
+    name: IDL.Text,
+    friendlyName: IDL.Text,
+    thirdColourHex: IDL.Text,
+    abbreviatedName: IDL.Text,
+    shirtType: ShirtType,
+    primaryColourHex: IDL.Text
   });
   const Result_16 = IDL.Variant({ ok: IDL.Vec(ClubDTO), err: Error2 });
   const CountryDTO = IDL.Record({
@@ -4123,7 +4122,6 @@ const idlFactory = ({ IDL }) => {
     gameweek: GameweekNumber
   });
   const Result_2 = IDL.Variant({ ok: WeeklyLeaderboardDTO, err: Error2 });
-  const Result_1 = IDL.Variant({ ok: IDL.Null, err: Error2 });
   const UpdateTeamSelectionDTO = IDL.Record({
     playerIds: IDL.Vec(PlayerId),
     countrymenCountryId: CountryId,
@@ -4147,6 +4145,7 @@ const idlFactory = ({ IDL }) => {
     passMasterPlayerId: PlayerId,
     captainId: PlayerId
   });
+  const Result_1 = IDL.Variant({ ok: IDL.Null, err: Error2 });
   const Result = IDL.Variant({ ok: IDL.Text, err: IDL.Text });
   return IDL.Service({
     burnICPToCycles: IDL.Func([IDL.Nat64], [], []),
@@ -4168,6 +4167,7 @@ const idlFactory = ({ IDL }) => {
     executeUnretirePlayer: IDL.Func([UnretirePlayerDTO], [], []),
     executeUpdateClub: IDL.Func([UpdateClubDTO], [], []),
     executeUpdatePlayer: IDL.Func([UpdatePlayerDTO], [], []),
+    getBackendCanisterId: IDL.Func([], [Result_20], ["query"]),
     getClubs: IDL.Func([], [Result_16], ["query"]),
     getCountries: IDL.Func([], [Result_19], ["query"]),
     getCurrentTeam: IDL.Func([], [Result_18], []),
@@ -4210,7 +4210,6 @@ const idlFactory = ({ IDL }) => {
       [Result_2],
       []
     ),
-    init: IDL.Func([], [Result_1], []),
     isUsernameValid: IDL.Func([IDL.Text], [IDL.Bool], ["query"]),
     requestCanisterTopup: IDL.Func([], [], []),
     saveFantasyTeam: IDL.Func([UpdateTeamSelectionDTO], [Result_1], []),
@@ -4237,7 +4236,7 @@ const idlFactory = ({ IDL }) => {
     validateUpdatePlayer: IDL.Func([UpdatePlayerDTO], [Result], [])
   });
 };
-var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", OPENFPL_FRONTEND_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", TOKEN_CANISTER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
+var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", TOKEN_CANISTER_CANISTER_ID: "hwd4h-eyaaa-aaaal-qb6ra-cai", DFX_NETWORK: "ic" };
 const canisterId = define_process_env_default$c.CANISTER_ID_OPENFPL_BACKEND || define_process_env_default$c.OPENFPL_BACKEND_CANISTER_ID;
 const createActor = (canisterId2, options2 = {}) => {
   const agent = options2.agent || new HttpAgent({ ...options2.agentOptions });
@@ -4245,14 +4244,6 @@ const createActor = (canisterId2, options2 = {}) => {
     console.warn(
       "Detected both agent and agentOptions passed to createActor. Ignoring agentOptions and proceeding with the provided agent."
     );
-  }
-  {
-    agent.fetchRootKey().catch((err) => {
-      console.warn(
-        "Unable to fetch root key. Check to ensure that your local replica is running"
-      );
-      console.error(err);
-    });
   }
   return Actor.createActor(idlFactory, {
     agent,
@@ -4264,7 +4255,7 @@ canisterId ? createActor(canisterId) : void 0;
 class ActorFactory {
   static createActor(idlFactory2, canisterId2 = "", identity = null, options2 = null) {
     const hostOptions = {
-      host: `http://localhost:4943/?canisterId=rdmx6-jaaaa-aaaaa-aaadq-cai`,
+      host: `https://${canisterId2}.icp-api.io`,
       identity
     };
     if (!options2) {
@@ -4277,14 +4268,6 @@ class ActorFactory {
       options2.agentOptions.host = hostOptions.host;
     }
     const agent = new HttpAgent({ ...options2.agentOptions });
-    {
-      agent.fetchRootKey().catch((err) => {
-        console.warn(
-          "Unable to fetch root key. Ensure your local replica is running"
-        );
-        console.error(err);
-      });
-    }
     return Actor.createActor(idlFactory2, {
       agent,
       canisterId: canisterId2,
@@ -4293,7 +4276,7 @@ class ActorFactory {
   }
   static getAgent(canisterId2 = "", identity = null, options2 = null) {
     const hostOptions = {
-      host: `http://localhost:4943/?canisterId=rdmx6-jaaaa-aaaaa-aaadq-cai`,
+      host: `https://${canisterId2}.icp-api.io`,
       identity
     };
     if (!options2) {
@@ -4540,7 +4523,7 @@ function convertFixtureStatus(fixtureStatus) {
 function isError(response) {
   return response && response.err !== void 0;
 }
-var define_process_env_default$b = { OPENFPL_BACKEND_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", OPENFPL_FRONTEND_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", TOKEN_CANISTER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
+var define_process_env_default$b = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", TOKEN_CANISTER_CANISTER_ID: "hwd4h-eyaaa-aaaal-qb6ra-cai", DFX_NETWORK: "ic" };
 function createSystemStore() {
   const { subscribe: subscribe2, set } = writable(null);
   let actor = ActorFactory.createActor(
@@ -4628,7 +4611,7 @@ function createSystemStore() {
   };
 }
 const systemStore = createSystemStore();
-var define_process_env_default$a = { OPENFPL_BACKEND_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", OPENFPL_FRONTEND_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", TOKEN_CANISTER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
+var define_process_env_default$a = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", TOKEN_CANISTER_CANISTER_ID: "hwd4h-eyaaa-aaaal-qb6ra-cai", DFX_NETWORK: "ic" };
 function createFixtureStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let actor = ActorFactory.createActor(
@@ -4683,18 +4666,6 @@ function createFixtureStore() {
       (fixture) => new Date(Number(fixture.kickOff) / 1e6) > now
     );
   }
-  async function updateFixture(updatedFixture) {
-    try {
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        define_process_env_default$a.OPENFPL_BACKEND_CANISTER_ID ?? ""
-      );
-      await identityActor.updateFixture(updatedFixture);
-    } catch (error) {
-      console.error("Error updating fixtures:", error);
-      throw error;
-    }
-  }
   async function getPostponedFixtures() {
     try {
       let result = await actor.getPostponedFixtures();
@@ -4712,12 +4683,11 @@ function createFixtureStore() {
     subscribe: subscribe2,
     sync,
     getNextFixture,
-    updateFixture,
     getPostponedFixtures
   };
 }
 const fixtureStore = createFixtureStore();
-var define_process_env_default$9 = { OPENFPL_BACKEND_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", OPENFPL_FRONTEND_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", TOKEN_CANISTER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
+var define_process_env_default$9 = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", TOKEN_CANISTER_CANISTER_ID: "hwd4h-eyaaa-aaaal-qb6ra-cai", DFX_NETWORK: "ic" };
 function createTeamStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let actor = ActorFactory.createActor(
@@ -5150,7 +5120,7 @@ const toastsError = ({
     level: "error"
   });
 };
-var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", OPENFPL_FRONTEND_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", TOKEN_CANISTER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
+var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", TOKEN_CANISTER_CANISTER_ID: "hwd4h-eyaaa-aaaal-qb6ra-cai", DFX_NETWORK: "ic" };
 function createManagerStore() {
   const { subscribe: subscribe2, set } = writable(null);
   let systemState;
@@ -5422,7 +5392,7 @@ function createManagerStore() {
   };
 }
 createManagerStore();
-var define_process_env_default$7 = { OPENFPL_BACKEND_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", OPENFPL_FRONTEND_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", TOKEN_CANISTER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
+var define_process_env_default$7 = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", TOKEN_CANISTER_CANISTER_ID: "hwd4h-eyaaa-aaaal-qb6ra-cai", DFX_NETWORK: "ic" };
 function createCountriesStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let actor = ActorFactory.createActor(
@@ -5469,7 +5439,7 @@ function createCountriesStore() {
   };
 }
 const countriesStore = createCountriesStore();
-var define_process_env_default$6 = { OPENFPL_BACKEND_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", OPENFPL_FRONTEND_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", TOKEN_CANISTER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
+var define_process_env_default$6 = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", TOKEN_CANISTER_CANISTER_ID: "hwd4h-eyaaa-aaaal-qb6ra-cai", DFX_NETWORK: "ic" };
 function createWeeklyLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage = 25;
@@ -5580,7 +5550,7 @@ function createWeeklyLeaderboardStore() {
   };
 }
 createWeeklyLeaderboardStore();
-var define_process_env_default$5 = { OPENFPL_BACKEND_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", OPENFPL_FRONTEND_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", TOKEN_CANISTER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
+var define_process_env_default$5 = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", TOKEN_CANISTER_CANISTER_ID: "hwd4h-eyaaa-aaaal-qb6ra-cai", DFX_NETWORK: "ic" };
 function createPlayerStore() {
   const { subscribe: subscribe2, set } = writable([]);
   systemStore.subscribe((value) => {
@@ -5649,7 +5619,7 @@ function createPlayerStore() {
   };
 }
 const playerStore = createPlayerStore();
-var define_process_env_default$4 = { OPENFPL_BACKEND_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", OPENFPL_FRONTEND_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", TOKEN_CANISTER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
+var define_process_env_default$4 = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", TOKEN_CANISTER_CANISTER_ID: "hwd4h-eyaaa-aaaal-qb6ra-cai", DFX_NETWORK: "ic" };
 function createPlayerEventsStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let systemState;
@@ -6006,7 +5976,7 @@ function createPlayerEventsStore() {
   };
 }
 createPlayerEventsStore();
-var define_process_env_default$3 = { OPENFPL_BACKEND_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", OPENFPL_FRONTEND_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", TOKEN_CANISTER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
+var define_process_env_default$3 = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", TOKEN_CANISTER_CANISTER_ID: "hwd4h-eyaaa-aaaal-qb6ra-cai", DFX_NETWORK: "ic" };
 function createUserStore() {
   const { subscribe: subscribe2, set } = writable(null);
   async function sync() {
@@ -6261,7 +6231,7 @@ const userGetProfilePicture = derived(
           if ($user.profilePicture.startsWith("data:image")) {
             base64Picture = $user.profilePicture;
           } else {
-            base64Picture = `data:[<mediatype>];base64, ${$user.profilePicture}`;
+            return "/profile_placeholder.png";
           }
         }
       }
@@ -6369,7 +6339,7 @@ const BadgeIcon = create_ssr_component(($$result, $$props, $$bindings, slots) =>
     $$bindings.thirdColour(thirdColour);
   return `<svg xmlns="http://www.w3.org/2000/svg"${add_attribute("class", className, 0)} fill="currentColor" viewBox="0 0 814 814"><path d="M407 33.9165C295.984 33.9165 135.667 118.708 135.667 118.708V508.75C135.667 508.75 141.044 561.82 152.625 593.541C194.871 709.259 407 780.083 407 780.083C407 780.083 619.129 709.259 661.375 593.541C672.956 561.82 678.333 508.75 678.333 508.75V118.708C678.333 118.708 518.016 33.9165 407 33.9165Z"${add_attribute("fill", primaryColour, 0)}></path><path d="M712.25 101.75V493.013C712.25 649.097 603.581 689.831 407 814C210.419 689.831 101.75 649.063 101.75 493.013V101.75C167.718 45.2448 282.729 0 407 0C531.271 0 646.282 45.2448 712.25 101.75ZM644.417 135.361C585.775 96.052 496.506 67.8333 407.237 67.8333C317.223 67.8333 228.124 96.1198 169.583 135.361V492.979C169.583 595.712 225.817 622.235 407 734.025C587.979 622.337 644.417 595.814 644.417 492.979V135.361Z"${add_attribute("fill", thirdColour, 0)}></path><path d="M407.237 135.667C464.862 135.667 527.811 150.42 576.583 174.467V493.012C576.583 547.347 562.542 558.539 407 654.422L407.237 135.667Z"${add_attribute("fill", secondaryColour, 0)}></path></svg>`;
 });
-var define_process_env_default$2 = { OPENFPL_BACKEND_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", OPENFPL_FRONTEND_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", TOKEN_CANISTER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
+var define_process_env_default$2 = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", TOKEN_CANISTER_CANISTER_ID: "hwd4h-eyaaa-aaaal-qb6ra-cai", DFX_NETWORK: "ic" };
 function createMonthlyLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage = 25;
@@ -6473,7 +6443,7 @@ function createMonthlyLeaderboardStore() {
   };
 }
 createMonthlyLeaderboardStore();
-var define_process_env_default$1 = { OPENFPL_BACKEND_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", OPENFPL_FRONTEND_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", TOKEN_CANISTER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
+var define_process_env_default$1 = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", TOKEN_CANISTER_CANISTER_ID: "hwd4h-eyaaa-aaaal-qb6ra-cai", DFX_NETWORK: "ic" };
 function createSeasonLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage = 25;
@@ -6595,7 +6565,7 @@ const Page$c = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-var define_process_env_default = { OPENFPL_BACKEND_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", OPENFPL_FRONTEND_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", TOKEN_CANISTER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
+var define_process_env_default = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", TOKEN_CANISTER_CANISTER_ID: "hwd4h-eyaaa-aaaal-qb6ra-cai", DFX_NETWORK: "ic" };
 function createGovernanceStore() {
   async function revaluePlayerUp(playerId) {
     try {
@@ -9505,33 +9475,40 @@ const Page$1 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   })}`;
 });
 const Vision = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  return `<div class="m-4" data-svelte-h="svelte-xgyb9x"><h1 class="default-header">Our Vision</h1> <p class="my-4">In an evolving landscape where blockchain technology is still unlocking its
-    potential, the Internet Computer offers a promising platform for innovative
-    applications. OpenFPL is one such initiative, aiming to transform fantasy
-    Premier League football into a more engaging and decentralised experience.</p> <p class="my-4">Our goal is to develop this popular service into a decentralised autonomous
-    organisation (DAO), rewarding fans for their insight and participation in
-    football.</p> <p class="my-4">Our vision for OpenFPL encompasses a commitment to societal impact,
-    specifically through meaningful contributions to the ICPFA community fund.
-    This effort is focused on supporting grassroots football initiatives,
-    demonstrating our belief in OpenFPL&#39;s ability to bring about positive change
-    in the football community.</p> <p class="my-4">OpenFPL aims to be recognised as more than just a digital platform; we
-    aspire to build a brand that creates diverse revenue opportunities. We aim
-    to distribute this revenue to token holders through the purchase and burning
-    of $FPL from exchanges, aiming to increase the utility token&#39;s value.</p> <p class="my-4">Central to OpenFPL is our community focus. We strive to create a space where
-    Premier League fans feel at home, with their input shaping the service. Our
-    features, including community-based player valuations, customisable private
-    leagues, and collaborations with football content creators, are all aimed at
-    enhancing user engagement. As we attract more users, we expect an increased
-    demand for our services, which will contribute to the growth and value of
-    our governance token, $FPL.</p> <p class="my-4">In essence, OpenFPL represents a unique blend of football passion and
-    blockchain innovation. Our approach is about more than just reinventing
-    fantasy sports; it&#39;s about building a vibrant community, pushing
-    technological boundaries, and generating new economic opportunities. OpenFPL
-    seeks to redefine the way fans engage with the sport they love, making a
-    real impact in the football world.</p> <p class="my-4">Innovation is at the heart of OpenFPL. We are excited about exploring the
-    possibilities of integrating on-chain AI to assist managers with team
-    selection. This endeavor is not just about enhancing the user experience;
-    it&#39;s about exploring new frontiers for blockchain technology in sports.</p></div>`;
+  return `<div class="m-4" data-svelte-h="svelte-1itjw9p"><h1 class="default-header">Our Vision</h1> <p class="my-4">OpenFPL was created as our answer to the question:</p> <p class="my-2"><i>&quot;How do you introduce the most new users to the Internet Computer
+      Blockchain?&quot;</i>.</p> <p class="my-4">Football is the most popular sport in the world, with billions of fans, the
+    leading fantasy football game engages over 10 million players a season.
+    OpenFPL is a better, more equitable, decentralised fantasy football platform
+    for football fans worldwide. We have used our football knowledge to create a
+    more engaging game, coupled with token distribution to ensure users are more
+    equitably rewarded for their successful pariticipation.</p> <p class="my-4 default-header">Why The Internet Computer?</p> <p>The Internet Computer (IC) is the only computer system in the world that
+    allows users of an online service to truly own that service. The IC&#39;s unique
+    architecture allows the interface the user engages with to be stored on the
+    network, bypassing the big tech companies who do not have an interest in
+    providing decentralised services. The IC not only has the capabilities to
+    shift power structures in the tech world, it is built with its own
+    decentralised service creation infrastructure that allow services like
+    OpenFPL to become Decentralised Autonomous Organisations (DAOs). OpenFPL
+    aims to transform fantasy Premier League football using this DAO
+    architecture into a decentralised service that is more engaging for its
+    users, rewarding football fans for their insight and participation in
+    football.</p> <p class="my-4">OpenFPL is more than a decentralised service, it is a brand that has
+    multiple viable revenue streams. The ICPFA aims to distribute this value to
+    token holders through inflation resistant tokenomics. Through a
+    mechanisation of purchasing &amp; burning exchange $FPL, we aim to keep the
+    total supply at 100 million, while building up a healthy treasury for the
+    DAO to utilise as it wishes.</p> <p class="my-4">OpenFPL aims to create a platform Premier League fans feel at home using,
+    with their input shaping the service. Our features are designed to enhance
+    user engagement on the platform. These include more detailed and varied
+    gameplay, community-based player valuations, customisable private leagues,
+    and collaborations with football content creators. As we attract more users,
+    engagement within the OpenFPL ecosystem will grow, which should contribute
+    to the growth and value of the $FPL governance token.</p> <p class="my-4">Our vision for OpenFPL encompasses a commitment to societal impact,
+    specifically through our organisation, the ICPFA. The ICPFA will be focused
+    on supporting grassroots football initiatives, demonstrating our belief in
+    OpenFPL&#39;s ability to bring about positive change in the football community
+    using the IC.</p> <p class="my-4 mb-4">In essence OpenFPL will be the world&#39;s game on the world&#39;s computer. A truly
+    decentralised service, the fans home for Premier League football.</p></div>`;
 });
 const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
@@ -9540,19 +9517,19 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
         "class",
         `p-2 ${"text-gray-400"}`,
         0
-      )}>Gameplay</button></li> <li${add_attribute("class", `mr-4 ${""}`, 0)}><button${add_attribute("class", `p-2 ${"text-gray-400"}`, 0)}>Roadmap</button></li> <li${add_attribute("class", `mr-4 ${""}`, 0)}><button${add_attribute(
+      )}>Gameplay</button></li> <li${add_attribute("class", `mr-4 ${""}`, 0)}><button${add_attribute("class", `p-2 ${"text-gray-400"}`, 0)}>DAO</button></li> <li${add_attribute("class", `mr-4 ${""}`, 0)}><button${add_attribute(
         "class",
         `p-2 ${"text-gray-400"}`,
         0
-      )}>Marketing</button></li> <li${add_attribute("class", `mr-4 ${""}`, 0)}><button${add_attribute("class", `p-2 ${"text-gray-400"}`, 0)}>Revenue</button></li> <li${add_attribute("class", `mr-4 ${""}`, 0)}><button${add_attribute("class", `p-2 ${"text-gray-400"}`, 0)}>DAO</button></li> <li${add_attribute("class", `mr-4 ${""}`, 0)}><button${add_attribute(
+      )}>Tokenomics</button></li> <li${add_attribute("class", `mr-4 ${""}`, 0)}><button${add_attribute("class", `p-2 ${"text-gray-400"}`, 0)}>Revenue</button></li> <li${add_attribute("class", `mr-4 ${""}`, 0)}><button${add_attribute(
         "class",
         `p-2 ${"text-gray-400"}`,
         0
-      )}>Tokenomics</button></li> <li${add_attribute("class", `mr-4 ${""}`, 0)}><button${add_attribute(
+      )}>Marketing</button></li> <li${add_attribute("class", `mr-4 ${""}`, 0)}><button${add_attribute(
         "class",
         `p-2 ${"text-gray-400"}`,
         0
-      )}>Architecture</button></li></ul> ${`${validate_component(Vision, "Vision").$$render($$result, {}, {}, {})}`}</div>`;
+      )}>Architecture</button></li> <li${add_attribute("class", `mr-4 ${""}`, 0)}><button${add_attribute("class", `p-2 ${"text-gray-400"}`, 0)}>Roadmap</button></li></ul> ${`${validate_component(Vision, "Vision").$$render($$result, {}, {}, {})}`}</div>`;
     }
   })}`;
 });

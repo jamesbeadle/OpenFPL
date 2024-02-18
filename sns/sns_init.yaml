@@ -337,6 +337,7 @@ Distribution:
       memo: 0
       dissolve_delay: 2 years
       vesting_period: 4 years
+      # ICPFA Neurons
     - principal: YOUR_PRINCIPAL_ID
       stake: 1_000 tokens
       memo: 0
@@ -362,6 +363,34 @@ Distribution:
       memo: 0
       dissolve_delay: 3 months
       vesting_period: 24 months
+
+      #Funded Neurons
+    - principal: YOUR_PRINCIPAL_ID
+      stake: 1_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: YOUR_PRINCIPAL_ID
+      stake: 1_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 6 months
+    - principal: YOUR_PRINCIPAL_ID
+      stake: 1_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 12 months
+    - principal: YOUR_PRINCIPAL_ID
+      stake: 1_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 18 months
+    - principal: YOUR_PRINCIPAL_ID
+      stake: 1_000 tokens
+      memo: 0
+      dissolve_delay: 1 months
+      vesting_period: 24 months
+
   # The initial SNS token balances of the various canisters of the SNS.
   InitialBalances:
     # The initial SNS token balance of the SNS Governance canister is known

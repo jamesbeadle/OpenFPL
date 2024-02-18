@@ -3,14 +3,17 @@
 
   <p class="my-2">
     OpenFPL is a progressive web application, built with Svelte and Motoko. The
-    Github is publicly available at github.com/jamesbeadle/openfpl. OpenFPL's
-    architecture is designed for scalability and efficiency, ensuring robust
-    performance even as user numbers grow. Here's how the system is structured:
+    Github is publicly available <a
+      class="underline"
+      href="github.com/jamesbeadle/openfpl">here</a
+    >. OpenFPL's architecture is designed for scalability and efficiency,
+    ensuring robust performance even as user numbers grow. Here's how the system
+    is structured:
   </p>
 
   <h2 class="default-sub-header mt-4">Main Backend Canister</h2>
   <p class="my-2">
-    OpenFPL' Main Backend Canister stores indexes for a managers principal and
+    OpenFPL' Main Backend Canister stores indexes for a manager's principal and
     canister Id for efficient data retrieval. The Main Backend Canister also
     stores a dictionary of each users principal and username for efficient
     existing username checks.
@@ -25,9 +28,9 @@
 
   <h2 class="default-sub-header mt-4">Manager Data</h2>
   <p class="my-2">
-    A snapshot of a fantasy team is around 147 bytes. So if a managers players
+    A snapshot of a fantasy team is around 147 bytes. So if a manager's players
     for 100 seasons that is a total history of 546 KB (100 x 38 x 147 bytes).
-    With the managers current team, including a 100KB profile picture a manager
+    With the manager's current team, including a 100KB profile picture a manager
     object could take around 646KB of space.
   </p>
   <p class="my-2">

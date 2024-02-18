@@ -1,9 +1,7 @@
 <div class="m-4">
   <h1 class="default-header">Roadmap</h1>
   <p class="my-4">We have an ambitious roadmap of features:</p>
-  <h2 class="default-sub-header mt-4">
-    Jan - Feb 2024: SNS Testing
-  </h2>
+  <h2 class="default-sub-header mt-4">Jan - Feb 2024: SNS Testing</h2>
   <p class="my-2">
     We will perform comprehensive testing of the OpenFPL gameplay and governance
     features. Detailed descriptions and outcomes of various use case tests,
@@ -15,8 +13,8 @@
     March 1st 2024: OpenFPL SNS Decentralisation Sale
   </h2>
   <p class="my-2">
-    We aim to begin our decentralisation sale in March 2024, selling 25
-    million $FPL tokens (25%).
+    We aim to begin our decentralisation sale in March 2024, selling 25 million
+    $FPL tokens (25%).
   </p>
 
   <h2 class="default-sub-header mt-4">April 2024: Shirt Production Begins</h2>

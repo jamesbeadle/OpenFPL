@@ -2,13 +2,11 @@ import {
   AUTH_MAX_TIME_TO_LIVE,
   AUTH_POPUP_HEIGHT,
   AUTH_POPUP_WIDTH,
-  localIdentityCanisterId,
 } from "$lib/constants/app.constants";
 import type { OptionIdentity } from "$lib/types/identity";
 import { createAuthClient } from "$lib/utils/auth.utils";
 import { popupCenter } from "$lib/utils/window.utils";
 import type { AuthClient } from "@dfinity/auth-client";
-import { nonNullish } from "@dfinity/utils";
 import { writable, type Readable } from "svelte/store";
 
 export interface AuthStoreData {
@@ -56,9 +54,7 @@ const initAuthStore = (): AuthStore => {
       // eslint-disable-next-line no-async-promise-executor
       new Promise<void>(async (resolve, reject) => {
         authClient = authClient ?? (await createAuthClient());
-        const identityProvider = nonNullish(localIdentityCanisterId)
-          ? `http://${localIdentityCanisterId}.localhost:8000`
-          : domain;
+        const identityProvider = domain;
 
         await authClient?.login({
           maxTimeToLive: AUTH_MAX_TIME_TO_LIVE,

@@ -311,6 +311,7 @@ export type Result_17 = { ok: Array<DataCacheDTO> } | { err: Error };
 export type Result_18 = { ok: PickTeamDTO } | { err: Error };
 export type Result_19 = { ok: Array<CountryDTO> } | { err: Error };
 export type Result_2 = { ok: WeeklyLeaderboardDTO } | { err: Error };
+export type Result_20 = { ok: string } | { err: Error };
 export type Result_3 = { ok: bigint } | { err: Error };
 export type Result_4 = { ok: SystemStateDTO } | { err: Error };
 export type Result_5 = { ok: Array<SeasonDTO> } | { err: Error };
@@ -443,6 +444,7 @@ export interface _SERVICE {
   executeUnretirePlayer: ActorMethod<[UnretirePlayerDTO], undefined>;
   executeUpdateClub: ActorMethod<[UpdateClubDTO], undefined>;
   executeUpdatePlayer: ActorMethod<[UpdatePlayerDTO], undefined>;
+  getBackendCanisterId: ActorMethod<[], Result_20>;
   getClubs: ActorMethod<[], Result_16>;
   getCountries: ActorMethod<[], Result_19>;
   getCurrentTeam: ActorMethod<[], Result_18>;
@@ -477,7 +479,6 @@ export interface _SERVICE {
     [SeasonId, GameweekNumber, bigint, bigint, string],
     Result_2
   >;
-  init: ActorMethod<[], Result_1>;
   isUsernameValid: ActorMethod<[string], boolean>;
   requestCanisterTopup: ActorMethod<[], undefined>;
   saveFantasyTeam: ActorMethod<[UpdateTeamSelectionDTO], Result_1>;

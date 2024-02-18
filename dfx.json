@@ -1,7 +1,7 @@
 {
   "canisters": {
     "OpenFPL_backend": {
-      "dependencies": ["token_canister"],
+      "dependencies": [],
       "main": "src/OpenFPL_backend/main.mo",
       "type": "motoko",
       "optimize": "cycles"
@@ -25,12 +25,6 @@
       },
       "type": "custom",
       "wasm": ""
-    },
-    "token_canister": {
-      "build": "",
-      "candid": "src/token-canister/icrc1-ledger.did",
-      "type": "custom",
-      "wasm": "src/token-canister/icrc1-ledger.wasm"
     }
   },
   "defaults": {

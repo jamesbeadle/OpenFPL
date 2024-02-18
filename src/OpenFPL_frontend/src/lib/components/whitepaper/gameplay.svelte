@@ -1,29 +1,32 @@
 <div class="m-4">
   <h1 class="default-header">OpenFPL Gameplay</h1>
   <p class="my-4">
-    OpenFPL has been designed to create a unique and engaging fantasy football experience. 
-    We understand the passion and strategy that goes into fantasy football, and our gameplay rules are
-    crafted to reflect this, enhancing the fun and competitiveness of each gameweek.
+    OpenFPL has been designed to create a unique and engaging fantasy football
+    experience. We understand the passion and strategy that goes into fantasy
+    football, and our gameplay rules are crafted to reflect this, enhancing the
+    fun and competitiveness of each gameweek.
   </p>
 
   <h2 class="default-header">Starting Funds and Team Composition</h2>
   <p class="my-2">
-    Each user begins their season with a £300m budget to build their fantasy team. 
-    A player's value can change based on their performance if a proposal is raised to change their value up or down.
-    If the proposal passes, their value can either increase or decrease by £0.25m each gameweek.
+    Each user begins their season with a £300m budget to build their fantasy
+    team. A player's value can change based on their performance if a proposal
+    is raised to change their value up or down. If the proposal passes, their
+    value can either increase or decrease by £0.25m each gameweek.
   </p>
   <p class="my-2">
-    A user's team consists of 11 players. 
-    Picking from a range of clubs is key, so a maximum of 2 players from any single
-    club can be selected. Teams must adhere to a valid formation: 1 goalkeeper,
-    3-5 defenders, 3-5 midfielders, and 1-3 strikers.
+    A user's team consists of 11 players. Picking from a range of clubs is key,
+    so a maximum of 2 players from any single club can be selected. Teams must
+    adhere to a valid formation: 1 goalkeeper, 3-5 defenders, 3-5 midfielders,
+    and 1-3 strikers.
   </p>
 
   <h2 class="default-header mt-4">Transfers and Team Management</h2>
   <p class="my-2">
-    To give managers flexibility, we give you 3 new transfers each week. 
-    These transfers don't roll over, encouraging active participation each week. 
-    There are no substitutes in our game, eliminating the frustration of unused bench points.
+    To give managers flexibility, we give you 3 new transfers each week. These
+    transfers don't roll over, encouraging active participation each week. There
+    are no substitutes in our game, eliminating the frustration of unused bench
+    points.
   </p>
   <p class="my-4">
     Each January, users can overhaul their team completely once, adding another
@@ -160,11 +163,11 @@
 
   <h2 class="default-header mt-4">Bonuses</h2>
   <p class="my-2">
-    OpenFPL elevates the gameplay with a diverse set of bonuses. 
-    These bonuses are designed to allow significant shifts in the leadeboard, 
-    ensuring that the competition remains interesting. Users can only play 2 bonuses per month, 
-    further fostering repeated engagement while avoiding all bonuses being played at once.
-    Our bonuses are as follows:
+    OpenFPL elevates the gameplay with a diverse set of bonuses. These bonuses
+    are designed to allow significant shifts in the leadeboard, ensuring that
+    the competition remains interesting. Users can only play 2 bonuses per
+    month, further fostering repeated engagement while avoiding all bonuses
+    being played at once. Our bonuses are as follows:
   </p>
 
   <div class="flex flex-row">
@@ -257,9 +260,9 @@
   <h2 class="default-header mt-4">Abandonded Fixtures</h2>
   <p class="my-2">
     When a fixture is abandonded it will remain in the fixtures list for a
-    gameweek, marked as abandonded. Rewards for gameweeks where a fixture is
-    abandonded will be witheld until the Premier League decide whether one of
-    the follow scenarios occur:
+    gameweek, awaiting the Premier League's decision. Rewards for gameweeks
+    where a fixture is abandonded will be witheld until the Premier League
+    decide whether one of the follow scenarios occur:
   </p>
 
   <ul class="list-disc ml-4">

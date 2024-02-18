@@ -3,9 +3,9 @@
 
   <h2 class="default-sub-header">Utility and Functionality</h2>
   <p class="my-2">
-    OpenFPL will be revenue generating and the most important role of the $FPL utility
-    token is to manage the OpenFPL treasury. The token is also used throughout
-    the OpenFPL ecosystem:
+    OpenFPL will be revenue generating and the most important role of the $FPL
+    utility token is to manage the OpenFPL treasury. The token is also used
+    throughout the OpenFPL ecosystem:
   </p>
 
   <ul class="list-disc ml-4">
@@ -47,7 +47,7 @@
     baskets of equal neurons. The neurons will contain the following
     configuration:
   </p>
-  
+
   <ul class="list-disc ml-4">
     <li>Basket 1: Unlocked with zero dissolve delay.</li>
     <li>Basket 2: Unlocked with a 6 month dissolve delay.</li>
@@ -68,7 +68,7 @@
     <li>Basket 4: Locked for 18 months with a 1 month dissolve delay.</li>
     <li>Basket 5: Locked for 24 months with a 1 month dissolve delay.</li>
   </ul>
-  
+
   <p class="my-2">
     The ICPFA team members will receive their $FPL within 5 baskets of equal
     neurons. The neurons will contain the following configuration:
@@ -203,13 +203,12 @@
 
       <tr class="font-bold">
         <td class="text-left px-4" colspan="8">DAO Valuation:</td>
-        <td>10,834,969</td>
+        <td><b>10,834,969 ICP</b></td>
       </tr>
     </table>
-    
   </div>
   <p>The following assumptions have been made:</p>
-  <ul class="list-disc ml-4">
+  <ul class="list-disc ml-4 text-xs">
     <li>We can grow to the size of our Web2 competitor over 8 years.</li>
     <li>Assumed 5% user conversion, each setting up a league at 1 ICP.</li>
     <li>
@@ -217,7 +216,7 @@
       revenue going to the DAO.
     </li>
     <li>Estimated 5% users spending 10ICP per year on merchandise.</li>
-    <li>In game advertising charged at $0.5 per mile.</li>
+    <li>In game advertising charged at $0.50 cost per mile.</li>
   </ul>
   <table class="w-full text-right border-collapse striped mb-8 mt-4 md:hidden">
     <tr class="text-right">
@@ -266,7 +265,6 @@
       <td>250</td>
       <td>1,000</td>
     </tr>
-    
 
     <tr>
       <td class="text-left">Advertising</td>
@@ -344,7 +342,7 @@
       <td>7,500</td>
       <td>10,000</td>
     </tr>
-    
+
     <tr>
       <td class="text-left">Advertising</td>
       <td>0.48m</td>
@@ -466,14 +464,14 @@
 
   <p class="my-2">
     This treasury balance will be topped up with the DAO's revenue, with 50%
-    being paid to neuron holders. Any excess balance can be utilised where the
-    DAO sees fit.
+    being use to buy back & burn $FPL with any excess balance can available for
+    the DAO to use.
   </p>
 
   <h2 class="default-sub-header mt-4">Tokenomics</h2>
   <p class="my-2">
     Each season, 1.875% of the total $FPL supply will be minted for gameplay
-    rewards. It will be ICPFA policy to raise proposals to use 50% of the
+    rewards. It will be ICPFA policy to raise proposals to use up to 50% of the
     revenue deposited into the DAO's treasury to purchase $FPL from exchanges.
     Using this available ICP, the DAO will purchase $FPL up to an amount that
     would burn the total supply back to 100m $FPL.
@@ -481,10 +479,12 @@
 
   <h2 class="default-sub-header mt-4">ICPFA Overview</h2>
   <p class="my-2">
-    ICPFA oversees the development, marketing, and management of OpenFPL. The aim is to build a strong team to
-    guide OpenFPL's growth and bring new users to the ICP blockchain.
-    Additionally, 25% of the ICPFA's earned maturity interest will contribute to the
-    ICPFA Community Fund, supporting grassroots football projects.
+    The ICPFA oversees the development, marketing, and management of OpenFPL.
+    The aim is to build a strong team to guide OpenFPL's growth and bring new
+    users to the ICP blockchain. Additionally, 25% of the ICPFA's earned
+    maturity interest will contribute to the ICPFA Community Fund, supporting
+    grassroots football projects. Maturity interest will be claimed
+    retrospectively after it has been earned by the ICPFA.
   </p>
 
   <p class="my-2">
@@ -499,7 +499,7 @@
     </li>
     <li>
       Hiring of a frontend and backend developer to assist the founder with the
-      day to day development workload.
+      development on the private leagues and mobile app features.
     </li>
     <li>
       Hiring of a UAT Test Engineer to ensure all ICPFA products are of the

@@ -309,7 +309,11 @@ actor Self {
   public shared func executeUpdateClub(updateClubDTO : DTOs.UpdateClubDTO) : async () {
     return await seasonManager.executeUpdateClub(updateClubDTO);
   };
+  public shared query func getBackendCanisterId() : async Result.Result<Text, T.Error> {
+    return #ok(Principal.toText(Principal.fromActor(Self)));
+  };
 
+  /*
   public shared func init() : async Result.Result<(), T.Error> {
 
     switch (cyclesCheckTimerId) {
@@ -333,7 +337,7 @@ actor Self {
     await seasonManager.init();
     return #ok;
   };
-
+*/
   private func gameweekBeginExpiredCallback() : async () {
     await seasonManager.gameweekBeginExpired();
     timerComposite.removeExpiredTimers();

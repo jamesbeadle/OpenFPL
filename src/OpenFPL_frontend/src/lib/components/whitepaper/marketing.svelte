@@ -7,13 +7,16 @@
 
   <h2 class="default-header mb-4">Online Marketing Strategy</h2>
   <p class="my-2">
-    After the SNS we will begin a comprehensive online marketing campaign on all major social media platforms using our existing talented team.
+    After the SNS we will begin a comprehensive online marketing campaign on all
+    major social media platforms using our existing talented team.
   </p>
 
   <h2 class="default-header mt-4">OpenFPL's Initiatives</h2>
   <p class="my-2">
-    OpenFPL's will integrate its online marketing campaigns with its broader initiatives. A key focus will be on targeted local
-    advertising, aiming to highlight the distribution of 200 junior football club kits to grassroots football causes across the UK. 
+    OpenFPL's will integrate its online marketing campaigns with its broader
+    initiatives. A key focus will be on targeted local advertising, aiming to
+    highlight the distribution of 200 junior football club kits to grassroots
+    football causes across the UK.
   </p>
   <p class="my-2">
     In November 2023, a proposal was passed in the OpenChat DAO for them to

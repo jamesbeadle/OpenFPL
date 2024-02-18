@@ -1,10 +1,8 @@
-import { authStore } from "$lib/stores/auth.store";
 import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
   DataCacheDTO,
   FixtureDTO,
-  UpdateFixtureDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { isError, replacer } from "../utils/Helpers";
@@ -76,21 +74,6 @@ function createFixtureStore() {
     );
   }
 
-  async function updateFixture(
-    updatedFixture: UpdateFixtureDTO
-  ): Promise<void> {
-    try {
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
-      );
-      await identityActor.updateFixture(updatedFixture);
-    } catch (error) {
-      console.error("Error updating fixtures:", error);
-      throw error;
-    }
-  }
-
   async function getPostponedFixtures(): Promise<FixtureDTO[]> {
     try {
       let result = await actor.getPostponedFixtures();
@@ -111,7 +94,6 @@ function createFixtureStore() {
     subscribe,
     sync,
     getNextFixture,
-    updateFixture,
     getPostponedFixtures,
   };
 }

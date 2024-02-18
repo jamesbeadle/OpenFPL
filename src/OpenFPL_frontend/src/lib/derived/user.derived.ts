@@ -23,7 +23,7 @@ export const userGetProfilePicture: Readable<string> = derived(
           if ($user.profilePicture.startsWith("data:image")) {
             base64Picture = $user.profilePicture;
           } else {
-            base64Picture = `data:[<mediatype>];base64, ${$user.profilePicture}`;
+            return "/profile_placeholder.png";
           }
         }
       }

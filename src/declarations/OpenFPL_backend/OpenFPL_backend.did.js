@@ -135,16 +135,6 @@ export const idlFactory = ({ IDL }) => {
     lastName: IDL.Text,
     firstName: IDL.Text,
   });
-  const ClubDTO = IDL.Record({
-    id: ClubId,
-    secondaryColourHex: IDL.Text,
-    name: IDL.Text,
-    friendlyName: IDL.Text,
-    thirdColourHex: IDL.Text,
-    abbreviatedName: IDL.Text,
-    shirtType: ShirtType,
-    primaryColourHex: IDL.Text,
-  });
   const Error = IDL.Variant({
     DecodeError: IDL.Null,
     NotAllowed: IDL.Null,
@@ -155,6 +145,17 @@ export const idlFactory = ({ IDL }) => {
     AlreadyExists: IDL.Null,
     CanisterCreateError: IDL.Null,
     InvalidTeamError: IDL.Null,
+  });
+  const Result_20 = IDL.Variant({ ok: IDL.Text, err: Error });
+  const ClubDTO = IDL.Record({
+    id: ClubId,
+    secondaryColourHex: IDL.Text,
+    name: IDL.Text,
+    friendlyName: IDL.Text,
+    thirdColourHex: IDL.Text,
+    abbreviatedName: IDL.Text,
+    shirtType: ShirtType,
+    primaryColourHex: IDL.Text,
   });
   const Result_16 = IDL.Variant({ ok: IDL.Vec(ClubDTO), err: Error });
   const CountryDTO = IDL.Record({
@@ -399,7 +400,6 @@ export const idlFactory = ({ IDL }) => {
     gameweek: GameweekNumber,
   });
   const Result_2 = IDL.Variant({ ok: WeeklyLeaderboardDTO, err: Error });
-  const Result_1 = IDL.Variant({ ok: IDL.Null, err: Error });
   const UpdateTeamSelectionDTO = IDL.Record({
     playerIds: IDL.Vec(PlayerId),
     countrymenCountryId: CountryId,
@@ -423,6 +423,7 @@ export const idlFactory = ({ IDL }) => {
     passMasterPlayerId: PlayerId,
     captainId: PlayerId,
   });
+  const Result_1 = IDL.Variant({ ok: IDL.Null, err: Error });
   const Result = IDL.Variant({ ok: IDL.Text, err: IDL.Text });
   return IDL.Service({
     burnICPToCycles: IDL.Func([IDL.Nat64], [], []),
@@ -444,6 +445,7 @@ export const idlFactory = ({ IDL }) => {
     executeUnretirePlayer: IDL.Func([UnretirePlayerDTO], [], []),
     executeUpdateClub: IDL.Func([UpdateClubDTO], [], []),
     executeUpdatePlayer: IDL.Func([UpdatePlayerDTO], [], []),
+    getBackendCanisterId: IDL.Func([], [Result_20], ["query"]),
     getClubs: IDL.Func([], [Result_16], ["query"]),
     getCountries: IDL.Func([], [Result_19], ["query"]),
     getCurrentTeam: IDL.Func([], [Result_18], []),
@@ -486,7 +488,6 @@ export const idlFactory = ({ IDL }) => {
       [Result_2],
       []
     ),
-    init: IDL.Func([], [Result_1], []),
     isUsernameValid: IDL.Func([IDL.Text], [IDL.Bool], ["query"]),
     requestCanisterTopup: IDL.Func([], [], []),
     saveFantasyTeam: IDL.Func([UpdateTeamSelectionDTO], [Result_1], []),
