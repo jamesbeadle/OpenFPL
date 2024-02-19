@@ -14,14 +14,15 @@ export PEM_FILE="/home/user/.config/dfx/identity/$(dfx identity whoami)/identity
 quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-proposal $PROPOSAL_NEURON_ID --proposal '(
     record {
         title = "Stake 80% of funds raised";
-        url = "https://sns-examples.com/proposal/1";
+        url = "https://nns.com/proposal/1";
         summary = "Proposal to stake 80% of funds raised.";
         action = opt variant {
-            Motion = record {
-
-                motion_text = "I hereby raise the motion that the use of the SNS shall commence";
-
-            }        
+            TransferSnsTreasuryFunds = record {
+                from_treasury = 1 : int32;
+                to_principal = opt principal "NEURON?!"; //TODO 
+                to_subaccount = null;
+                memo = null;
+                amount_e8s = 8_000_000_000_000_000 : nat64;      
         };
     }
 )' > message.json
@@ -29,69 +30,26 @@ quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-
 quill send message.json
 
 # Proposal 2
-quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-proposal $PROPOSAL_NEURON_ID --proposal '(
+quill sns make-proposal <PROPOSER_NEURON_ID> --proposal '(
     record {
-        title = "Pay ICPFA 5% of funds raised";
-        url = "https://sns-examples.com/proposal/2";
-        summary = "Proposal to pay 5% of funds raised to ICPFA.";
+        title = "Transfer 5% of funds raised to ICPFA";
+        url = "https://sns-examples.com/proposal/42";
+        summary = "Transfer 5% of funds raised to ICPFA";
         action = opt variant {
-            Motion = record {
-
-                motion_text = "I hereby raise the motion that the use of the SNS shall commence";
-
-            }        
+            TransferSnsTreasuryFunds = record {
+                from_treasury = 1 : int32;
+                to_principal = opt principal "agy5w-dlcen-pkrgo-pgfrz-3eqf2-xfwvr-qcvwn-nlhyu-77fsb-wgc37-nqe";
+                to_subaccount = null;
+                memo = null;
+                amount_e8s = 500_000_000_000_000 : nat64;
+            };
         };
-    }
-)' > message.json
-
-quill send message.json
-
-# Proposal 3
-quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-proposal $PROPOSAL_NEURON_ID --proposal '(
-    record {
-        title = "Pay ICPFA 5% of funds raised";
-        url = "https://sns-examples.com/proposal/2";
-        summary = "Transfer liquidity <UP TO 10%> to <EXCHANGE_SONIC>.";
-        action = opt variant {
-            Motion = record {
-                motion_text = "I hereby raise the motion that the use of the SNS shall commence";
-
-            }        
-        };
-    }
-)' > message.json
-
-quill send message.json
-
-# Proposal 4
-quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-proposal $PROPOSAL_NEURON_ID --proposal '(
-    record {
-        title = "Pay ICPFA 5% of funds raised";
-        url = "https://sns-examples.com/proposal/2";
-        summary = "Transfer liquidity <UP TO 10%> to <EXCHANGE_ICPSWAP>.";
-        action = opt variant {
-            Motion = record {
-                motion_text = "I hereby raise the motion that the use of the SNS shall commence";
-
-            }        
-        };
-    }
+    };
 )' > message.json
 
 quill send message.json
 
 # Proposal 5
-quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-proposal $PROPOSAL_NEURON_ID --proposal '(
-    record {
-        title = "Update SNS Canister Ids";
-        url = "https://sns-examples.com/proposal/2";
-        summary = "Update application SNS canister ids.";
-        action = opt variant {
-            Motion = record {
-                motion_text = "I hereby raise the motion that the use of the SNS shall commence";
-            }        
-        };
-    }
-)' > message.json
-
+export $WASM_PATH="/home/user/new_wasm.wasm"
+quill sns make-upgrade-canister-proposal --target-canister-id "bboqb-jiaaa-aaaal-qb6ea-cai" --wasm-path $WASM_PATH $PROPOSAL_NEURON_ID > message.json
 quill send message.json
