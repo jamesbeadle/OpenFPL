@@ -15,8 +15,6 @@ function createUserStore() {
     }
 
     try {
-      console.log("syncing auth store");
-      console.log(process.env.OPENFPL_BACKEND_CANISTER_ID);
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""

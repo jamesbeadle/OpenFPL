@@ -1092,6 +1092,9 @@ module {
       await managerComposite.init();
       //TODO: Add prior managers
     };
+    public func getMainCanisterId() : async Text {
+      return await managerComposite.getMainCanisterId();
+    }
 
   };
 };

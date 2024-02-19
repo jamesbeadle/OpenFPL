@@ -3513,7 +3513,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1ec3ltf"
+  version_hash: "1qku9cs"
 };
 async function get_hooks() {
   return {};
@@ -4175,6 +4175,7 @@ const idlFactory = ({ IDL }) => {
     getFixtures: IDL.Func([SeasonId], [Result_9], ["query"]),
     getFormerClubs: IDL.Func([], [Result_16], ["query"]),
     getLoanedPlayers: IDL.Func([ClubId], [Result_7], ["query"]),
+    getMainCanisterId: IDL.Func([], [IDL.Text], []),
     getManager: IDL.Func([IDL.Text], [Result_15], []),
     getMonthlyLeaderboard: IDL.Func(
       [SeasonId, ClubId, CalendarMonth, IDL.Nat, IDL.Nat, IDL.Text],

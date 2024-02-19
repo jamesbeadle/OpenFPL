@@ -567,4 +567,7 @@ actor Self {
     };
     setCheckCyclesTimer();
   };
+  public shared ({ caller }) func getMainCanisterId() : async Text {
+    return await seasonManager.getMainCanisterId();
+  };
 };

@@ -452,6 +452,7 @@ export interface _SERVICE {
   getFixtures: ActorMethod<[SeasonId], Result_9>;
   getFormerClubs: ActorMethod<[], Result_16>;
   getLoanedPlayers: ActorMethod<[ClubId], Result_7>;
+  getMainCanisterId: ActorMethod<[], string>;
   getManager: ActorMethod<[string], Result_15>;
   getMonthlyLeaderboard: ActorMethod<
     [SeasonId, ClubId, CalendarMonth, bigint, bigint, string],

@@ -1368,5 +1368,16 @@ module {
       let result = await createManagerCanister();
       activeManagerCanisterId := result;
     };
+
+    public func getMainCanisterId() : async Text {
+      switch (backendCanisterController) {
+        case (null) {
+          return "";
+        };
+        case (?found) {
+          return Principal.toText(found);
+        };
+      };
+    };
   };
 };

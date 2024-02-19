@@ -3401,5 +3401,8 @@ actor class ManagerCanister() {
     return Cycles.balance();
   };
 
+  public func getMainCanisterId() : async Text {
+    return main_canister_id;
+  };
   setCheckCyclesTimer();
 };

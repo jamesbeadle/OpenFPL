@@ -509,6 +509,7 @@ service : {
   getFixtures : (SeasonId) -> (Result_9) query;
   getFormerClubs : () -> (Result_16) query;
   getLoanedPlayers : (ClubId) -> (Result_7) query;
+  getMainCanisterId : () -> (text);
   getManager : (text) -> (Result_15);
   getMonthlyLeaderboard : (SeasonId, ClubId, CalendarMonth, nat, nat, text) -> (Result_14);
   getMonthlyLeaderboards : (SeasonId, CalendarMonth) -> (Result_13);
