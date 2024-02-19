@@ -28,18 +28,18 @@ git clone https://github.com/jamesbeadle/OpenFPL.git
 cd OpenFPL
 ```
 
-# If using npm
+If using npm:
 
 ```bash
 npm install
 ```
 
-# If using yarn
+If using yarn:
 ```bash
 yarn install
 ```
 
-1. Deploy the application:
+3. Deploy the application:
 ```bash
 dfx deploy --network=local
 ```
