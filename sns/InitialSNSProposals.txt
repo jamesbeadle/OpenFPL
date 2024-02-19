@@ -1,0 +1,95 @@
+
+# helpful definitions (only need to set these once). This is a sample neuron ID to be replaced after the SNS with ICPFA neuron.
+export PROPOSAL_NEURON_ID="594fd5d8dce3e793c3e421e1b87d55247627f8a63473047671f7f5ccc48eda63"
+# example path for the PEM file. This is a sample PEM file path.
+export PEM_FILE="/home/user/.config/dfx/identity/$(dfx identity whoami)/identity.pem"
+
+# Note: <PROPOSAL_TYPE> is replaced with "Motion" and <PARAMETERS_OF_PROPOSAL_TYPE> with the parameters for the Motion proposal
+
+
+# Proposal 1
+
+quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-proposal $PROPOSAL_NEURON_ID --proposal '(
+    record {
+        title = "Stake 80% of funds raised";
+        url = "https://sns-examples.com/proposal/1";
+        summary = "Proposal to stake 80% of funds raised.";
+        action = opt variant {
+            Motion = record {
+
+                motion_text = "I hereby raise the motion that the use of the SNS shall commence";
+
+            }        
+        };
+    }
+)' > message.json
+
+quill send message.json
+
+# Proposal 2
+quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-proposal $PROPOSAL_NEURON_ID --proposal '(
+    record {
+        title = "Pay ICPFA 5% of funds raised";
+        url = "https://sns-examples.com/proposal/2";
+        summary = "Proposal to pay 5% of funds raised to ICPFA.";
+        action = opt variant {
+            Motion = record {
+
+                motion_text = "I hereby raise the motion that the use of the SNS shall commence";
+
+            }        
+        };
+    }
+)' > message.json
+
+quill send message.json
+
+# Proposal 3
+quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-proposal $PROPOSAL_NEURON_ID --proposal '(
+    record {
+        title = "Pay ICPFA 5% of funds raised";
+        url = "https://sns-examples.com/proposal/2";
+        summary = "Transfer liquidity <UP TO 10%> to <EXCHANGE_SONIC>.";
+        action = opt variant {
+            Motion = record {
+                motion_text = "I hereby raise the motion that the use of the SNS shall commence";
+
+            }        
+        };
+    }
+)' > message.json
+
+quill send message.json
+
+# Proposal 4
+quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-proposal $PROPOSAL_NEURON_ID --proposal '(
+    record {
+        title = "Pay ICPFA 5% of funds raised";
+        url = "https://sns-examples.com/proposal/2";
+        summary = "Transfer liquidity <UP TO 10%> to <EXCHANGE_ICPSWAP>.";
+        action = opt variant {
+            Motion = record {
+                motion_text = "I hereby raise the motion that the use of the SNS shall commence";
+
+            }        
+        };
+    }
+)' > message.json
+
+quill send message.json
+
+# Proposal 5
+quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-proposal $PROPOSAL_NEURON_ID --proposal '(
+    record {
+        title = "Update SNS Canister Ids";
+        url = "https://sns-examples.com/proposal/2";
+        summary = "Update application SNS canister ids.";
+        action = opt variant {
+            Motion = record {
+                motion_text = "I hereby raise the motion that the use of the SNS shall commence";
+            }        
+        };
+    }
+)' > message.json
+
+quill send message.json
