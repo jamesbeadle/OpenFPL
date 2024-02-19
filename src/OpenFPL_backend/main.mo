@@ -314,6 +314,8 @@ actor Self {
   };
 
   /*
+    //Remove Post SNS, for Dev Post Testing Only
+  */
   public shared func init() : async Result.Result<(), T.Error> {
 
     switch (cyclesCheckTimerId) {
@@ -337,7 +339,7 @@ actor Self {
     await seasonManager.init();
     return #ok;
   };
-*/
+
   private func gameweekBeginExpiredCallback() : async () {
     await seasonManager.gameweekBeginExpired();
     timerComposite.removeExpiredTimers();

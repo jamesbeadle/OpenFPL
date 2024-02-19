@@ -22,30 +22,37 @@ More information about the Internet Computer blockchain can be found at https://
 
 ```bash
 git clone https://github.com/jamesbeadle/OpenFPL.git
+```
+2. Navigate to the directory:
+```bash
 cd OpenFPL
+```
+
 # If using npm
+
+```bash
 npm install
+```
 
 # If using yarn
+```bash
 yarn install
 ```
 
-Running the Application
-To run the application, follow these steps:
+1. Deploy the application:
+```bash
+dfx deploy --network=local
+```
+2. Within the CanisterIds.mo file, update MAIN_CANISTER_LOCAL_ID to your deployed OpenFPL_backend canister.
+
+3. Redeploy the OpenFPL_backend file with the updated canister.
+
+4. Fabricate some cycles for the main backend canister:
 
 ```bash
-Run dfx deploy to deploy the Main canister and frontend canister.
-Within the CanisterIds.mo file update the local canister ids to the deployed canister ids.
-Within the Environment.mo ensure that you have set your network to local.
-Redeploy the application with the updated canister id and environment files.
 dfx ledger fabricate-cycles --canister OpenFPL_backend
-Within the admin dashboard call the init function to create the initial set of Premier League teams.
-Test creating a user through the profile section
-Copy code
-# Command to start the application
-npm start
-Seed the system with fixtures via the "Add Initial Fixtures" proposal type. A csv of fixtures can be found within the testing folder of this repository.
 ```
 
+5. Load the OpenFPL_backend canister init() function through the backend candid interface.
 
-
+6. Test the current state of the live app by connecting with your internet identity and updating your profile information. 
