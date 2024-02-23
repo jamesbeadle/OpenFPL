@@ -1034,7 +1034,7 @@ Distribution:
       memo: 0
       dissolve_delay: 1 months
       vesting_period: 6 months
-    - principal: FUNDED_NF9_INSERT_PRINCIPAL
+    - principal: FUNDED_NFT9_INSERT_PRINCIPAL
       stake: 20_000 tokens
       memo: 0
       dissolve_delay: 1 months
@@ -1534,7 +1534,7 @@ Distribution:
       memo: 0
       dissolve_delay: 1 months
       vesting_period: 6 months
-    - principal: FUNDED_NF29_INSERT_PRINCIPAL
+    - principal: FUNDED_NFT29_INSERT_PRINCIPAL
       stake: 20_000 tokens
       memo: 0
       dissolve_delay: 1 months
@@ -2034,7 +2034,7 @@ Distribution:
       memo: 0
       dissolve_delay: 1 months
       vesting_period: 6 months
-    - principal: FUNDED_NF49_INSERT_PRINCIPAL
+    - principal: FUNDED_NFT49_INSERT_PRINCIPAL
       stake: 20_000 tokens
       memo: 0
       dissolve_delay: 1 months
