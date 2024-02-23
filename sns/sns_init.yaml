@@ -3806,7 +3806,7 @@ Distribution:
     # as the treasury. This is initialized in a special sub-account, as the
     # main account of Governance is the minting account of the SNS Ledger.
     # This field is specified as a token. For instance, "1 token".
-    governance: 520_000_000 tokens
+    governance: 51_000_000 tokens
 
     # The initial SNS token balance of the Swap canister is what will be
     # available for the decentralization swap. These tokens will be swapped
@@ -3845,7 +3845,7 @@ Swap:
   # direct participants (`minimum_participants`) is reached (otherwise, it
   # would be aborted).
   # Must be at least `min_participants * minimum_direct_participation_icp`.
-  maximum_direct_participation_icp: 20_000_000 tokens
+  maximum_direct_participation_icp: 1_000_000 tokens
 
   # The minimum amount of ICP that each participant must contribute
   # to participate. This field is specified as a token. For instance,
