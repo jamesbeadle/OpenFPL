@@ -3159,7 +3159,7 @@ Distribution:
       memo: 0
       dissolve_delay: 1 months
       vesting_period: 6 months
-    - principal: FUNDED_NFT94_INSER5pl3h-3efjc-rxb2k-62fmr-fibzq-a2lii-c4l2s-quh2n-73ghp-wwupv-haeT_PRINCIPAL
+    - principal: 5pl3h-3efjc-rxb2k-62fmr-fibzq-a2lii-c4l2s-quh2n-73ghp-wwupv-hae
       stake: 20_000 tokens
       memo: 0
       dissolve_delay: 1 months
@@ -3574,27 +3574,27 @@ Distribution:
       memo: 0
       dissolve_delay: 1 months
       vesting_period: 24 months
-    - principal: FUNDED_NFT111_INSERT_PRINCIPAL
+    - principal: l3xt4-pp4ym-4u5vg-kwu73-myavv-bymkt-2qlxw-2wt6g-sny2q-mfoir-kqe
       stake: 20_000 tokens
       memo: 0
       dissolve_delay: 1 months
       vesting_period: 0 months
-    - principal: FUNDED_NFT111_INSERT_PRINCIPAL
+    - principal: l3xt4-pp4ym-4u5vg-kwu73-myavv-bymkt-2qlxw-2wt6g-sny2q-mfoir-kqe
       stake: 20_000 tokens
       memo: 0
       dissolve_delay: 1 months
       vesting_period: 6 months
-    - principal: FUNDED_NFT111_INSERT_PRINCIPAL
+    - principal: l3xt4-pp4ym-4u5vg-kwu73-myavv-bymkt-2qlxw-2wt6g-sny2q-mfoir-kqe
       stake: 20_000 tokens
       memo: 0
       dissolve_delay: 1 months
       vesting_period: 12 months
-    - principal: FUNDED_NFT111_INSERT_PRINCIPAL
+    - principal: l3xt4-pp4ym-4u5vg-kwu73-myavv-bymkt-2qlxw-2wt6g-sny2q-mfoir-kqe
       stake: 20_000 tokens
       memo: 0
       dissolve_delay: 1 months
       vesting_period: 18 months
-    - principal: FUNDED_NFT111_INSERT_PRINCIPAL
+    - principal: l3xt4-pp4ym-4u5vg-kwu73-myavv-bymkt-2qlxw-2wt6g-sny2q-mfoir-kqe
       stake: 20_000 tokens
       memo: 0
       dissolve_delay: 1 months
