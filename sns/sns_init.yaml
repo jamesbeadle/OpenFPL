@@ -1449,27 +1449,27 @@ Distribution:
       memo: 0
       dissolve_delay: 1 months
       vesting_period: 24 months
-    - principal: FUNDED_NFT26_INSERT_PRINCIPAL
+    - principal: mhbvf-r6nsn-3xyoq-f6ykg-dar2d-qhgbk-t7gns-c4qgv-p6ft6-sf73m-mae
       stake: 20_000 tokens
       memo: 0
       dissolve_delay: 1 months
       vesting_period: 0 months
-    - principal: FUNDED_NFT26_INSERT_PRINCIPAL
+    - principal: mhbvf-r6nsn-3xyoq-f6ykg-dar2d-qhgbk-t7gns-c4qgv-p6ft6-sf73m-mae
       stake: 20_000 tokens
       memo: 0
       dissolve_delay: 1 months
       vesting_period: 6 months
-    - principal: FUNDED_NFT26_INSERT_PRINCIPAL
+    - principal: mhbvf-r6nsn-3xyoq-f6ykg-dar2d-qhgbk-t7gns-c4qgv-p6ft6-sf73m-mae
       stake: 20_000 tokens
       memo: 0
       dissolve_delay: 1 months
       vesting_period: 12 months
-    - principal: FUNDED_NFT26_INSERT_PRINCIPAL
+    - principal: mhbvf-r6nsn-3xyoq-f6ykg-dar2d-qhgbk-t7gns-c4qgv-p6ft6-sf73m-mae
       stake: 20_000 tokens
       memo: 0
       dissolve_delay: 1 months
       vesting_period: 18 months
-    - principal: FUNDED_NFT26_INSERT_PRINCIPAL
+    - principal: mhbvf-r6nsn-3xyoq-f6ykg-dar2d-qhgbk-t7gns-c4qgv-p6ft6-sf73m-mae
       stake: 20_000 tokens
       memo: 0
       dissolve_delay: 1 months
