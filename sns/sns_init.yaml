@@ -116,7 +116,6 @@ dapp_canisters:
   # For testing, propose_sns.sh will fill this in automatically.
   - bboqb-jiaaa-aaaal-qb6ea-cai
   - bgpwv-eqaaa-aaaal-qb6eq-cai
-  - hwd4h-eyaaa-aaaal-qb6ra-cai
 
 # Configuration of SNS tokens in the SNS Ledger canister deployed as part
 # of the SNS.
@@ -130,7 +129,7 @@ Token:
   symbol: FPL
 
   # SNS ledger transaction fee.
-  transaction_fee: 10_000 e8s
+  transaction_fee: 0.001 tokens
 
   # Path to the SNS token logo on your local filesystem. The path is relative
   # to the configuration file location, unless an absolute path is given.
@@ -189,7 +188,7 @@ Voting:
   #
   # Users cannot access the SNS tokens used to stake neurons (until the neuron
   # is dissolved). This field is specified as a duration. For example: "6 months".
-  minimum_dissolve_delay: 1 month
+  minimum_dissolve_delay: 30 days
 
   # Configuration of voting power bonuses that are applied to neurons to
   # incentivize alignment with the best interest of the DAO. Note, these
@@ -220,7 +219,7 @@ Voting:
       # This parameter sets the maximum dissolve delay a neuron can have.
       # When reached, the maximum dissolve delay bonus will be applied.
       # This field is specified as a duration. For example: "8 years".
-      duration: 1 year
+      duration: 365 days
       # If a neuron's dissolve delay is `duration`, its voting power will
       # be increased by the dissolve delay `bonus` amount.
       # This field is specified as a percentage. For instance,
@@ -253,7 +252,7 @@ Voting:
       # the maximum age bonus. Once this age is reached, the neuron will
       # continue to age, but no more bonus will be applied. This field
       # is specified as a duration. For example: "2 years".
-      duration: 0.5 years
+      duration: 182 days
       # If a neuron's age is `duration` or older, its voting power will be
       # increased by this age`bonus` amount.
       # This field is specified as a percentage. For instance,
@@ -3872,7 +3871,7 @@ Swap:
   # are allowed.
   #
   # Each list element must be an ISO 3166-1 alpha-2 country code.
-  restricted_countries:
+  restricted_countries: [ "AF", "BY", "BA", "BI", "CF", "KP", "CD", "IR", "IQ", "LB", "LY", "ML", "ME", "MM", "NI", "RU", "RS", "SO", "SD", "SY", "UA", "VE", "YE", "ZW" ]
 
   # Configuration of the vesting schedule of the neuron basket, i.e., the SNS
   # neurons that a participants will receive from a successful
