@@ -470,7 +470,7 @@ Distribution:
       memo: 0
       dissolve_delay: 3 months
       vesting_period: 12 months
-    - principal: lrrzf2-et43f-2kvuj-dydrc-enntx-tetji-ct2si-bxsc3-kpyzz-5r2fz-jqe
+    - principal: rrzf2-et43f-2kvuj-dydrc-enntx-tetji-ct2si-bxsc3-kpyzz-5r2fz-jqe
       stake: 10_000 tokens
       memo: 0
       dissolve_delay: 3 months
@@ -2973,27 +2973,27 @@ Distribution:
       memo: 0
       dissolve_delay: 1 months
       vesting_period: 24 months
-    - principal: cakml-xqt2h-5itil-fypzi-szxb4-6kvas-pey64-rjzt4-iebcx-dpf2f-yq
+    - principal: cakml-xqt2h-5itil-fypzi-szxb4-6kvas-pey64-rjzt4-iebcx-dpf2f-yqe
       stake: 20_000 tokens
       memo: 0
       dissolve_delay: 1 months
       vesting_period: 0 months
-    - principal: cakml-xqt2h-5itil-fypzi-szxb4-6kvas-pey64-rjzt4-iebcx-dpf2f-yq
+    - principal: cakml-xqt2h-5itil-fypzi-szxb4-6kvas-pey64-rjzt4-iebcx-dpf2f-yqe
       stake: 20_000 tokens
       memo: 0
       dissolve_delay: 1 months
       vesting_period: 6 months
-    - principal: cakml-xqt2h-5itil-fypzi-szxb4-6kvas-pey64-rjzt4-iebcx-dpf2f-yq
+    - principal: cakml-xqt2h-5itil-fypzi-szxb4-6kvas-pey64-rjzt4-iebcx-dpf2f-yqe
       stake: 20_000 tokens
       memo: 0
       dissolve_delay: 1 months
       vesting_period: 12 months
-    - principal: cakml-xqt2h-5itil-fypzi-szxb4-6kvas-pey64-rjzt4-iebcx-dpf2f-yq
+    - principal: cakml-xqt2h-5itil-fypzi-szxb4-6kvas-pey64-rjzt4-iebcx-dpf2f-yqe
       stake: 20_000 tokens
       memo: 0
       dissolve_delay: 1 months
       vesting_period: 18 months
-    - principal: cakml-xqt2h-5itil-fypzi-szxb4-6kvas-pey64-rjzt4-iebcx-dpf2f-yq
+    - principal: cakml-xqt2h-5itil-fypzi-szxb4-6kvas-pey64-rjzt4-iebcx-dpf2f-yqe
       stake: 20_000 tokens
       memo: 0
       dissolve_delay: 1 months
