@@ -220,6 +220,7 @@ actor class ManagerCanister() {
       hatTrickHeroGameweek = dto.hatTrickHeroGameweek;
       transferWindowGameweek = dto.transferWindowGameweek;
       history = manager.history;
+      profilePictureType = manager.profilePictureType;
     };
   };
 
@@ -394,6 +395,7 @@ actor class ManagerCanister() {
       transferWindowGameweek = manager.transferWindowGameweek;
       history = manager.history;
       profilePicture = manager.profilePicture;
+      profilePictureType = manager.profilePictureType;
     };
   };
 
@@ -411,7 +413,7 @@ actor class ManagerCanister() {
           case 0 {
             for (manager in Iter.fromArray(managerGroup1)) {
               if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeManagerProfilePicture(manager, dto.profilePicture));
+                managerBuffer.add(mergeManagerProfilePicture(manager, dto.profilePicture, dto.extension));
               } else {
                 managerBuffer.add(manager);
               };
@@ -421,7 +423,7 @@ actor class ManagerCanister() {
           case 1 {
             for (manager in Iter.fromArray(managerGroup2)) {
               if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeManagerProfilePicture(manager, dto.profilePicture));
+                managerBuffer.add(mergeManagerProfilePicture(manager, dto.profilePicture, dto.extension));
               } else {
                 managerBuffer.add(manager);
               };
@@ -431,7 +433,7 @@ actor class ManagerCanister() {
           case 2 {
             for (manager in Iter.fromArray(managerGroup3)) {
               if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeManagerProfilePicture(manager, dto.profilePicture));
+                managerBuffer.add(mergeManagerProfilePicture(manager, dto.profilePicture, dto.extension));
               } else {
                 managerBuffer.add(manager);
               };
@@ -441,7 +443,7 @@ actor class ManagerCanister() {
           case 3 {
             for (manager in Iter.fromArray(managerGroup4)) {
               if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeManagerProfilePicture(manager, dto.profilePicture));
+                managerBuffer.add(mergeManagerProfilePicture(manager, dto.profilePicture, dto.extension));
               } else {
                 managerBuffer.add(manager);
               };
@@ -451,7 +453,7 @@ actor class ManagerCanister() {
           case 4 {
             for (manager in Iter.fromArray(managerGroup5)) {
               if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeManagerProfilePicture(manager, dto.profilePicture));
+                managerBuffer.add(mergeManagerProfilePicture(manager, dto.profilePicture, dto.extension));
               } else {
                 managerBuffer.add(manager);
               };
@@ -461,7 +463,7 @@ actor class ManagerCanister() {
           case 5 {
             for (manager in Iter.fromArray(managerGroup6)) {
               if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeManagerProfilePicture(manager, dto.profilePicture));
+                managerBuffer.add(mergeManagerProfilePicture(manager, dto.profilePicture, dto.extension));
               } else {
                 managerBuffer.add(manager);
               };
@@ -471,7 +473,7 @@ actor class ManagerCanister() {
           case 6 {
             for (manager in Iter.fromArray(managerGroup7)) {
               if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeManagerProfilePicture(manager, dto.profilePicture));
+                managerBuffer.add(mergeManagerProfilePicture(manager, dto.profilePicture, dto.extension));
               } else {
                 managerBuffer.add(manager);
               };
@@ -481,7 +483,7 @@ actor class ManagerCanister() {
           case 7 {
             for (manager in Iter.fromArray(managerGroup8)) {
               if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeManagerProfilePicture(manager, dto.profilePicture));
+                managerBuffer.add(mergeManagerProfilePicture(manager, dto.profilePicture, dto.extension));
               } else {
                 managerBuffer.add(manager);
               };
@@ -491,7 +493,7 @@ actor class ManagerCanister() {
           case 8 {
             for (manager in Iter.fromArray(managerGroup9)) {
               if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeManagerProfilePicture(manager, dto.profilePicture));
+                managerBuffer.add(mergeManagerProfilePicture(manager, dto.profilePicture, dto.extension));
               } else {
                 managerBuffer.add(manager);
               };
@@ -501,7 +503,7 @@ actor class ManagerCanister() {
           case 9 {
             for (manager in Iter.fromArray(managerGroup10)) {
               if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeManagerProfilePicture(manager, dto.profilePicture));
+                managerBuffer.add(mergeManagerProfilePicture(manager, dto.profilePicture, dto.extension));
               } else {
                 managerBuffer.add(manager);
               };
@@ -511,7 +513,7 @@ actor class ManagerCanister() {
           case 10 {
             for (manager in Iter.fromArray(managerGroup11)) {
               if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeManagerProfilePicture(manager, dto.profilePicture));
+                managerBuffer.add(mergeManagerProfilePicture(manager, dto.profilePicture, dto.extension));
               } else {
                 managerBuffer.add(manager);
               };
@@ -521,7 +523,7 @@ actor class ManagerCanister() {
           case 11 {
             for (manager in Iter.fromArray(managerGroup12)) {
               if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeManagerProfilePicture(manager, dto.profilePicture));
+                managerBuffer.add(mergeManagerProfilePicture(manager, dto.profilePicture, dto.extension));
               } else {
                 managerBuffer.add(manager);
               };
@@ -536,7 +538,7 @@ actor class ManagerCanister() {
     return #ok();
   };
 
-  private func mergeManagerProfilePicture(manager : T.Manager, profilePicture : ?Blob) : T.Manager {
+  private func mergeManagerProfilePicture(manager : T.Manager, profilePicture : ?Blob, extension: Text) : T.Manager {
     return {
       principalId = manager.principalId;
       username = manager.username;
@@ -568,6 +570,7 @@ actor class ManagerCanister() {
       transferWindowGameweek = manager.transferWindowGameweek;
       history = manager.history;
       profilePicture = profilePicture;
+      profilePictureType = extension;
     };
   };
 
@@ -742,6 +745,7 @@ actor class ManagerCanister() {
       transferWindowGameweek = manager.transferWindowGameweek;
       history = manager.history;
       profilePicture = manager.profilePicture;
+      profilePictureType = manager.profilePictureType;
     };
   };
 
@@ -2297,6 +2301,7 @@ actor class ManagerCanister() {
       transferWindowGameweek = manager.transferWindowGameweek;
       history = history;
       profilePicture = manager.profilePicture;
+      profilePictureType = manager.profilePictureType;
     };
   };
 
@@ -2430,6 +2435,7 @@ actor class ManagerCanister() {
               monthlyBonusesAvailable = manager.monthlyBonusesAvailable;
               profilePicture = manager.profilePicture;
               transfersAvailable = manager.transfersAvailable;
+              profilePictureType = manager.profilePictureType;
             };
 
             managerBuffer.add(newManager);
@@ -2788,6 +2794,7 @@ actor class ManagerCanister() {
         transferWindowGameweek = manager.transferWindowGameweek;
         history = updatedSeasons;
         profilePicture = manager.profilePicture;
+      profilePictureType = manager.profilePictureType;
       };
       managerBuffer.add(updatedManager);
     };
@@ -2856,6 +2863,7 @@ actor class ManagerCanister() {
         createDate = manager.createDate;
         history = manager.history;
         profilePicture = manager.profilePicture;
+        profilePictureType = manager.profilePictureType;
         transfersAvailable = manager.transfersAvailable;
         monthlyBonusesAvailable = 2;
         bankQuarterMillions = manager.bankQuarterMillions;
@@ -2946,6 +2954,7 @@ actor class ManagerCanister() {
         createDate = manager.createDate;
         history = manager.history;
         profilePicture = manager.profilePicture;
+        profilePictureType = manager.profilePictureType;
         transfersAvailable = 3;
         monthlyBonusesAvailable = 2;
         bankQuarterMillions = 1200;
@@ -3036,6 +3045,7 @@ actor class ManagerCanister() {
         createDate = manager.createDate;
         history = manager.history;
         profilePicture = manager.profilePicture;
+        profilePictureType = manager.profilePictureType;
         transfersAvailable = 3;
         monthlyBonusesAvailable = manager.monthlyBonusesAvailable;
         bankQuarterMillions = manager.bankQuarterMillions;

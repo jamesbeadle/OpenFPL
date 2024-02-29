@@ -21,24 +21,6 @@ function createUserStore() {
     }
   }
 
-  async function createProfile(): Promise<any> {
-    try {
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
-      );
-      const result = await identityActor.createProfile();
-      if (isError(result)) {
-        console.error("Error creating profile");
-        return;
-      }
-      return result;
-    } catch (error) {
-      console.error("Error updating username:", error);
-      throw error;
-    }
-  }
-
   async function updateUsername(username: string): Promise<any> {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
@@ -80,6 +62,9 @@ function createUserStore() {
   async function updateProfilePicture(picture: File): Promise<any> {
     try {
       const maxPictureSize = 1000;
+      const extension = getFileExtensionFromFile(picture);
+
+
 
       if (picture.size > maxPictureSize * 1024) {
         return null;
@@ -94,7 +79,7 @@ function createUserStore() {
             authStore,
             process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
           );
-          const result = await identityActor.updateProfilePicture(uint8Array);
+          const result = await identityActor.updateProfilePicture(uint8Array, extension);
           if (isError(result)) {
             console.error("Error updating profile picture");
             return;
@@ -111,6 +96,18 @@ function createUserStore() {
       throw error;
     }
   }
+
+  function getFileExtensionFromFile(file: File): string {
+    // Use the name property of the File object to get the filename
+    const filename = file.name;
+  
+    // Extract the extension
+    const lastIndex = filename.lastIndexOf('.');
+  
+    // Return the extension, ensuring it doesn't return -1 for files without an extension
+    return lastIndex !== -1 ? filename.substring(lastIndex + 1) : '';
+  }
+  
 
   async function isUsernameAvailable(username: string): Promise<boolean> {
     const identityActor: any = await ActorFactory.createIdentityActor(
@@ -144,7 +141,6 @@ function createUserStore() {
     updateUsername,
     updateFavouriteTeam,
     updateProfilePicture,
-    createProfile,
     isUsernameAvailable,
   };
 }

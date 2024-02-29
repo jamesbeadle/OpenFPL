@@ -150,6 +150,7 @@ module {
                 username = foundManager.username;
                 termsAccepted = foundManager.termsAccepted;
                 profilePicture = foundManager.profilePicture;
+                profilePictureType = foundManager.profilePictureType;
                 favouriteClubId = foundManager.favouriteClubId;
                 createDate = foundManager.createDate;
               };
@@ -283,6 +284,7 @@ module {
             createDate = Time.now();
             termsAccepted = false;
             profilePicture = null;
+            profilePictureType = "";
             transfersAvailable = 2;
             monthlyBonusesAvailable = monthlyBonuses;
             bankQuarterMillions = 1200 - spent;
@@ -485,6 +487,7 @@ module {
             createDate = Time.now();
             termsAccepted = false;
             profilePicture = null;
+            profilePictureType = "";
             transfersAvailable = 0;
             monthlyBonusesAvailable = 0;
             bankQuarterMillions = 1200;
@@ -585,6 +588,7 @@ module {
             createDate = Time.now();
             termsAccepted = false;
             profilePicture = null;
+            profilePictureType = "";
             transfersAvailable = 0;
             monthlyBonusesAvailable = 0;
             bankQuarterMillions = 1200;
@@ -672,7 +676,7 @@ module {
       return #err(#NotFound);
     };
 
-    public func updateProfilePicture(principalId : T.PrincipalId, profilePicture : Blob) : async Result.Result<(), T.Error> {
+    public func updateProfilePicture(principalId : T.PrincipalId, profilePicture : Blob, profilePictureType: Text) : async Result.Result<(), T.Error> {
 
       if (invalidProfilePicture(profilePicture)) {
 
@@ -691,6 +695,7 @@ module {
             createDate = Time.now();
             termsAccepted = false;
             profilePicture = ?profilePicture;
+            profilePictureType = profilePictureType;
             transfersAvailable = 0;
             monthlyBonusesAvailable = 0;
             bankQuarterMillions = 1200;
@@ -753,6 +758,7 @@ module {
           let dto : DTOs.UpdateProfilePictureDTO = {
             principalId = principalId;
             profilePicture = ?profilePicture;
+            extension = profilePictureType;
           };
 
           result := await manager_canister.updateProfilePicture(dto);
