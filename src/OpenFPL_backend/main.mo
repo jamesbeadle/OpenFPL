@@ -151,10 +151,10 @@ actor Self {
     return await seasonManager.updateFavouriteClub(principalId, favouriteClubId);
   };
 
-  public shared ({ caller }) func updateProfilePicture(profilePicture : Blob) : async Result.Result<(), T.Error> {
+  public shared ({ caller }) func updateProfilePicture(profilePicture : Blob, extension: Text) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    return await seasonManager.updateProfilePicture(principalId, profilePicture);
+    return await seasonManager.updateProfilePicture(principalId, profilePicture, extension);
   };
 
   public shared ({ caller }) func saveFantasyTeam(fantasyTeam : DTOs.UpdateTeamSelectionDTO) : async Result.Result<(), T.Error> {

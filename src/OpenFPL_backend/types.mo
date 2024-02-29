@@ -107,6 +107,7 @@ module Types {
     transferWindowGameweek : GameweekNumber;
     history : List.List<FantasyTeamSeason>;
     profilePicture : ?Blob;
+    profilePictureType: Text;
   };
 
   public type FantasyTeamSeason = {
