@@ -5,27 +5,32 @@ import { derived, type Readable } from "svelte/store";
 export const userGetProfilePicture: Readable<string> = derived(
   userStore,
   ($user) => {
-    let byteArray;
-    if ($user && $user.profilePicture) {
-      if (
-        Array.isArray($user.profilePicture) &&
-        $user.profilePicture[0] instanceof Uint8Array
-      ) {
-        byteArray = $user.profilePicture[0];
-        return `data:[<mediatype>];base64, ${uint8ArrayToBase64(byteArray)}`;
-      } else if ($user.profilePicture instanceof Uint8Array) {
-        return uint8ArrayToBase64($user.profilePicture);
-      } else {
-        if (typeof $user.profilePicture === "string") {
-          if ($user.profilePicture.startsWith("data:image")) {
-            return $user.profilePicture;
-          } else {
-            return `data:[<mediatype>];base64, ${$user.profilePicture}`;
+    try{
+      let byteArray;
+      if ($user && $user.profilePicture) {
+        if (
+          Array.isArray($user.profilePicture) &&
+          $user.profilePicture[0] instanceof Uint8Array
+        ) {
+          byteArray = $user.profilePicture[0];
+          return `data:[<mediatype>];base64,${uint8ArrayToBase64(byteArray)}`;
+        } else if ($user.profilePicture instanceof Uint8Array) {
+          return `data:[<mediatype>];base64,${uint8ArrayToBase64($user.profilePicture)}`;
+        } else {
+          if (typeof $user.profilePicture === "string") {
+            if ($user.profilePicture.startsWith("data:image")) {
+              return $user.profilePicture;
+            } else {
+              return `data:[<mediatype>];base64,${$user.profilePicture}`;
+            }
           }
         }
       }
+      return "/profile_placeholder.png";
+    } catch (error) {
+      console.error(error);
+      return "/profile_placeholder.png";
     }
-    return "/profile_placeholder.png";
   }
 );
 

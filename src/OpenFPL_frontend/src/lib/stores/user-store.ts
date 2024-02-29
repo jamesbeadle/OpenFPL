@@ -13,26 +13,8 @@ function createUserStore() {
       set(localProfile);
       return;
     }
-
     try {
-      const identityActor: any = await ActorFactory.createIdentityActor(
-        authStore,
-        process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
-      );
-
-      let getProfileResponse = await identityActor.getProfile();
-      let error = isError(getProfileResponse);
-      if (error) {
-        if (getProfileResponse.err.NotFound !== undefined) {
-          return;
-        } else {
-          console.error("Error syncing user store");
-        }
-        return;
-      }
-
-      let profileData = getProfileResponse.ok;
-      set(profileData);
+      await cacheProfile();
     } catch (error) {
       console.error("Error fetching user profile:", error);
       throw error;
@@ -91,26 +73,6 @@ function createUserStore() {
       return result;
     } catch (error) {
       console.error("Error updating favourite team:", error);
-      throw error;
-    }
-  }
-
-  async function getProfile(): Promise<any> {
-    try {
-      const identityActor: any = await ActorFactory.createIdentityActor(
-        authStore,
-        process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
-      );
-      const result = await identityActor.getProfile();
-      if (isError(result)) {
-        console.error("Error fetching profile");
-        return;
-      }
-      let profile = result.ok;
-      set(profile);
-      return profile;
-    } catch (error) {
-      console.error("Error getting profile:", error);
       throw error;
     }
   }
@@ -181,7 +143,6 @@ function createUserStore() {
     sync,
     updateUsername,
     updateFavouriteTeam,
-    getProfile,
     updateProfilePicture,
     createProfile,
     isUsernameAvailable,
