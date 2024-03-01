@@ -219,7 +219,7 @@ Voting:
       # This parameter sets the maximum dissolve delay a neuron can have.
       # When reached, the maximum dissolve delay bonus will be applied.
       # This field is specified as a duration. For example: "8 years".
-      duration: 365 days
+      duration: 24 months
       # If a neuron's dissolve delay is `duration`, its voting power will
       # be increased by the dissolve delay `bonus` amount.
       # This field is specified as a percentage. For instance,
@@ -348,3456 +348,386 @@ Distribution:
 
       #RESERVED 1
     - principal: agy5w-dlcen-pkrgo-pgfrz-3eqf2-xfwvr-qcvwn-nlhyu-77fsb-wgc37-nqe
-      stake: 50_000 tokens
+      stake: 250_000 tokens
       memo: 2
       dissolve_delay: 3 months
       vesting_period: 3 months
-    - principal: agy5w-dlcen-pkrgo-pgfrz-3eqf2-xfwvr-qcvwn-nlhyu-77fsb-wgc37-nqe
-      stake: 50_000 tokens
-      memo: 3
-      dissolve_delay: 3 months
-      vesting_period: 6 months
-    - principal: agy5w-dlcen-pkrgo-pgfrz-3eqf2-xfwvr-qcvwn-nlhyu-77fsb-wgc37-nqe
-      stake: 50_000 tokens
-      memo: 4
-      dissolve_delay: 3 months
-      vesting_period: 12 months
-    - principal: agy5w-dlcen-pkrgo-pgfrz-3eqf2-xfwvr-qcvwn-nlhyu-77fsb-wgc37-nqe
-      stake: 50_000 tokens
-      memo: 5
-      dissolve_delay: 3 months
-      vesting_period: 18 months
-    - principal: agy5w-dlcen-pkrgo-pgfrz-3eqf2-xfwvr-qcvwn-nlhyu-77fsb-wgc37-nqe
-      stake: 50_000 tokens
-      memo: 6
-      dissolve_delay: 3 months
-      vesting_period: 24 months
 
       #RESERVED 2
     - principal: hu7wv-h3szc-cmatb-zq5hd-zbyqs-ubaav-vhr3p-uynin-e2cxh-mhlod-uae
+      stake: 250_000 tokens
+      memo: 3
+      dissolve_delay: 3 months
+      vesting_period: 3 months
+
+      #RESERVED 3
+    - principal: 5pl3h-3efjc-rxb2k-62fmr-fibzq-a2lii-c4l2s-quh2n-73ghp-wwupv-hae
+      stake: 250_000 tokens
+      memo: 4
+      dissolve_delay: 3 months
+      vesting_period: 3 months
+
+      #RESERVED 4
+    - principal: lfvoe-mgffq-hr6u6-kaqlk-acymb-ir2hs-nxsqb-hhgjc-epwst-lqnqr-jqe
+      stake: 50_000 tokens
+      memo: 5
+      dissolve_delay: 3 months
+      vesting_period: 3 months
+
+      #RESERVED 5
+    - principal: rrzf2-et43f-2kvuj-dydrc-enntx-tetji-ct2si-bxsc3-kpyzz-5r2fz-jqe
+      stake: 50_000 tokens
+      memo: 6
+      dissolve_delay: 3 months
+      vesting_period: 3 months
+
+      #RESERVED 6
+    - principal: jtxaq-ejark-iiyjb-wwws3-pjhbh-udxzs-u3f2c-p6aca-56shc-j5szo-3ae
       stake: 50_000 tokens
       memo: 7
       dissolve_delay: 3 months
       vesting_period: 3 months
-    - principal: hu7wv-h3szc-cmatb-zq5hd-zbyqs-ubaav-vhr3p-uynin-e2cxh-mhlod-uae
-      stake: 50_000 tokens
-      memo: 8
-      dissolve_delay: 3 months
-      vesting_period: 6 months
-    - principal: hu7wv-h3szc-cmatb-zq5hd-zbyqs-ubaav-vhr3p-uynin-e2cxh-mhlod-uae
-      stake: 50_000 tokens
-      memo: 9
-      dissolve_delay: 3 months
-      vesting_period: 12 months
-    - principal: hu7wv-h3szc-cmatb-zq5hd-zbyqs-ubaav-vhr3p-uynin-e2cxh-mhlod-uae
-      stake: 50_000 tokens
-      memo: 10
-      dissolve_delay: 3 months
-      vesting_period: 18 months
-    - principal: hu7wv-h3szc-cmatb-zq5hd-zbyqs-ubaav-vhr3p-uynin-e2cxh-mhlod-uae
-      stake: 50_000 tokens
-      memo: 11
-      dissolve_delay: 3 months
-      vesting_period: 24 months
-
-      #RESERVED 3
-    - principal: 5pl3h-3efjc-rxb2k-62fmr-fibzq-a2lii-c4l2s-quh2n-73ghp-wwupv-hae
-      stake: 50_000 tokens
-      memo: 12
-      dissolve_delay: 3 months
-      vesting_period: 3 months
-    - principal: 5pl3h-3efjc-rxb2k-62fmr-fibzq-a2lii-c4l2s-quh2n-73ghp-wwupv-hae
-      stake: 50_000 tokens
-      memo: 13
-      dissolve_delay: 3 months
-      vesting_period: 6 months
-    - principal: 5pl3h-3efjc-rxb2k-62fmr-fibzq-a2lii-c4l2s-quh2n-73ghp-wwupv-hae
-      stake: 50_000 tokens
-      memo: 14
-      dissolve_delay: 3 months
-      vesting_period: 12 months
-    - principal: 5pl3h-3efjc-rxb2k-62fmr-fibzq-a2lii-c4l2s-quh2n-73ghp-wwupv-hae
-      stake: 50_000 tokens
-      memo: 15
-      dissolve_delay: 3 months
-      vesting_period: 18 months
-    - principal: 5pl3h-3efjc-rxb2k-62fmr-fibzq-a2lii-c4l2s-quh2n-73ghp-wwupv-hae
-      stake: 50_000 tokens
-      memo: 16
-      dissolve_delay: 3 months
-      vesting_period: 24 months
-
-      #RESERVED 4
-    - principal: lfvoe-mgffq-hr6u6-kaqlk-acymb-ir2hs-nxsqb-hhgjc-epwst-lqnqr-jqe
-      stake: 10_000 tokens
-      memo: 17
-      dissolve_delay: 3 months
-      vesting_period: 3 months
-    - principal: lfvoe-mgffq-hr6u6-kaqlk-acymb-ir2hs-nxsqb-hhgjc-epwst-lqnqr-jqe
-      stake: 10_000 tokens
-      memo: 18
-      dissolve_delay: 3 months
-      vesting_period: 6 months
-    - principal: lfvoe-mgffq-hr6u6-kaqlk-acymb-ir2hs-nxsqb-hhgjc-epwst-lqnqr-jqe
-      stake: 10_000 tokens
-      memo: 19
-      dissolve_delay: 3 months
-      vesting_period: 12 months
-    - principal: lfvoe-mgffq-hr6u6-kaqlk-acymb-ir2hs-nxsqb-hhgjc-epwst-lqnqr-jqe
-      stake: 10_000 tokens
-      memo: 20
-      dissolve_delay: 3 months
-      vesting_period: 18 months
-    - principal: lfvoe-mgffq-hr6u6-kaqlk-acymb-ir2hs-nxsqb-hhgjc-epwst-lqnqr-jqe
-      stake: 10_000 tokens
-      memo: 21
-      dissolve_delay: 3 months
-      vesting_period: 24 months
-
-      #RESERVED 5
-    - principal: rrzf2-et43f-2kvuj-dydrc-enntx-tetji-ct2si-bxsc3-kpyzz-5r2fz-jqe
-      stake: 10_000 tokens
-      memo: 22
-      dissolve_delay: 3 months
-      vesting_period: 3 months
-    - principal: rrzf2-et43f-2kvuj-dydrc-enntx-tetji-ct2si-bxsc3-kpyzz-5r2fz-jqe
-      stake: 10_000 tokens
-      memo: 23
-      dissolve_delay: 3 months
-      vesting_period: 6 months
-    - principal: rrzf2-et43f-2kvuj-dydrc-enntx-tetji-ct2si-bxsc3-kpyzz-5r2fz-jqe
-      stake: 10_000 tokens
-      memo: 24
-      dissolve_delay: 3 months
-      vesting_period: 12 months
-    - principal: rrzf2-et43f-2kvuj-dydrc-enntx-tetji-ct2si-bxsc3-kpyzz-5r2fz-jqe
-      stake: 10_000 tokens
-      memo: 25
-      dissolve_delay: 3 months
-      vesting_period: 18 months
-    - principal: rrzf2-et43f-2kvuj-dydrc-enntx-tetji-ct2si-bxsc3-kpyzz-5r2fz-jqe
-      stake: 10_000 tokens
-      memo: 26
-      dissolve_delay: 3 months
-      vesting_period: 24 months
-
-      #RESERVED 6
-    - principal: jtxaq-ejark-iiyjb-wwws3-pjhbh-udxzs-u3f2c-p6aca-56shc-j5szo-3ae
-      stake: 10_000 tokens
-      memo: 27
-      dissolve_delay: 3 months
-      vesting_period: 3 months
-    - principal: jtxaq-ejark-iiyjb-wwws3-pjhbh-udxzs-u3f2c-p6aca-56shc-j5szo-3ae
-      stake: 10_000 tokens
-      memo: 28
-      dissolve_delay: 3 months
-      vesting_period: 6 months
-    - principal: jtxaq-ejark-iiyjb-wwws3-pjhbh-udxzs-u3f2c-p6aca-56shc-j5szo-3ae
-      stake: 10_000 tokens
-      memo: 29
-      dissolve_delay: 3 months
-      vesting_period: 12 months
-    - principal: jtxaq-ejark-iiyjb-wwws3-pjhbh-udxzs-u3f2c-p6aca-56shc-j5szo-3ae
-      stake: 10_000 tokens
-      memo: 30
-      dissolve_delay: 3 months
-      vesting_period: 18 months
-    - principal: jtxaq-ejark-iiyjb-wwws3-pjhbh-udxzs-u3f2c-p6aca-56shc-j5szo-3ae
-      stake: 10_000 tokens
-      memo: 31
-      dissolve_delay: 3 months
-      vesting_period: 24 months
 
       #RESERVED 7
     - principal: 4y3zj-poab4-bzp5v-g23th-qqrvt-65e6x-7xvik-woyvt-njie7-ylpny-3ae
-      stake: 10_000 tokens
-      memo: 32
+      stake: 50_000 tokens
+      memo: 8
       dissolve_delay: 3 months
       vesting_period: 3 months
-    - principal: 4y3zj-poab4-bzp5v-g23th-qqrvt-65e6x-7xvik-woyvt-njie7-ylpny-3ae
-      stake: 10_000 tokens
-      memo: 33
-      dissolve_delay: 3 months
-      vesting_period: 6 months
-    - principal: 4y3zj-poab4-bzp5v-g23th-qqrvt-65e6x-7xvik-woyvt-njie7-ylpny-3ae
-      stake: 10_000 tokens
-      memo: 34
-      dissolve_delay: 3 months
-      vesting_period: 12 months
-    - principal: 4y3zj-poab4-bzp5v-g23th-qqrvt-65e6x-7xvik-woyvt-njie7-ylpny-3ae
-      stake: 10_000 tokens
-      memo: 35
-      dissolve_delay: 3 months
-      vesting_period: 18 months
-    - principal: 4y3zj-poab4-bzp5v-g23th-qqrvt-65e6x-7xvik-woyvt-njie7-ylpny-3ae
-      stake: 10_000 tokens
-      memo: 36
-      dissolve_delay: 3 months
-      vesting_period: 24 months
 
       #BETA PRIZE 1
     - principal: xptx6-5sizh-ux35q-sxtjw-bxfj3-i3oej-mpe2z-5mish-g2j4x-igjso-dqe
-      stake: 50_000 tokens
-      memo: 37
+      stake: 250_000 tokens
+      memo: 9
       dissolve_delay: 3 months
       vesting_period: 3 months
-    - principal: xptx6-5sizh-ux35q-sxtjw-bxfj3-i3oej-mpe2z-5mish-g2j4x-igjso-dqe
-      stake: 50_000 tokens
-      memo: 38
-      dissolve_delay: 3 months
-      vesting_period: 6 months
-    - principal: xptx6-5sizh-ux35q-sxtjw-bxfj3-i3oej-mpe2z-5mish-g2j4x-igjso-dqe
-      stake: 50_000 tokens
-      memo: 39
-      dissolve_delay: 3 months
-      vesting_period: 12 months
-    - principal: xptx6-5sizh-ux35q-sxtjw-bxfj3-i3oej-mpe2z-5mish-g2j4x-igjso-dqe
-      stake: 50_000 tokens
-      memo: 40
-      dissolve_delay: 3 months
-      vesting_period: 18 months
-    - principal: xptx6-5sizh-ux35q-sxtjw-bxfj3-i3oej-mpe2z-5mish-g2j4x-igjso-dqe
-      stake: 50_000 tokens
-      memo: 41
-      dissolve_delay: 3 months
-      vesting_period: 24 months
 
       #BETA PRIZE 2
     - principal: jt2t5-irfzd-ob5yo-ahsjp-ijauc-p7ico-az52t-s6fib-ppx5p-bfaxn-kqe
-      stake: 20_000 tokens
-      memo: 42
+      stake: 100_000 tokens
+      memo: 10
       dissolve_delay: 3 months
       vesting_period: 3 months
-    - principal: jt2t5-irfzd-ob5yo-ahsjp-ijauc-p7ico-az52t-s6fib-ppx5p-bfaxn-kqe
-      stake: 20_000 tokens
-      memo: 43
-      dissolve_delay: 3 months
-      vesting_period: 6 months
-    - principal: jt2t5-irfzd-ob5yo-ahsjp-ijauc-p7ico-az52t-s6fib-ppx5p-bfaxn-kqe
-      stake: 20_000 tokens
-      memo: 44
-      dissolve_delay: 3 months
-      vesting_period: 12 months
-    - principal: jt2t5-irfzd-ob5yo-ahsjp-ijauc-p7ico-az52t-s6fib-ppx5p-bfaxn-kqe
-      stake: 20_000 tokens
-      memo: 45
-      dissolve_delay: 3 months
-      vesting_period: 18 months
-    - principal: jt2t5-irfzd-ob5yo-ahsjp-ijauc-p7ico-az52t-s6fib-ppx5p-bfaxn-kqe
-      stake: 20_000 tokens
-      memo: 46
-      dissolve_delay: 3 months
-      vesting_period: 24 months
 
       #BETA PRIZE 3
     - principal: pimyx-6eb62-ceob6-pepql-pjmw6-thmso-smrgz-7oxvp-nrh7s-7xsga-vae
-      stake: 10_000 tokens
-      memo: 47
+      stake: 50_000 tokens
+      memo: 11
       dissolve_delay: 3 months
       vesting_period: 3 months
-    - principal: pimyx-6eb62-ceob6-pepql-pjmw6-thmso-smrgz-7oxvp-nrh7s-7xsga-vae
-      stake: 10_000 tokens
-      memo: 48
-      dissolve_delay: 3 months
-      vesting_period: 6 months
-    - principal: pimyx-6eb62-ceob6-pepql-pjmw6-thmso-smrgz-7oxvp-nrh7s-7xsga-vae
-      stake: 10_000 tokens
-      memo: 49
-      dissolve_delay: 3 months
-      vesting_period: 12 months
-    - principal: pimyx-6eb62-ceob6-pepql-pjmw6-thmso-smrgz-7oxvp-nrh7s-7xsga-vae
-      stake: 10_000 tokens
-      memo: 50
-      dissolve_delay: 3 months
-      vesting_period: 18 months
-    - principal: pimyx-6eb62-ceob6-pepql-pjmw6-thmso-smrgz-7oxvp-nrh7s-7xsga-vae
-      stake: 10_000 tokens
-      memo: 51
-      dissolve_delay: 3 months
-      vesting_period: 24 months
 
       #PROMOTER 1
     - principal: agy5w-dlcen-pkrgo-pgfrz-3eqf2-xfwvr-qcvwn-nlhyu-77fsb-wgc37-nqe
-      stake: 200_000 tokens
-      memo: 52
+      stake: 1_000_000 tokens
+      memo: 12
       dissolve_delay: 3 months
       vesting_period: 3 months
-    - principal: agy5w-dlcen-pkrgo-pgfrz-3eqf2-xfwvr-qcvwn-nlhyu-77fsb-wgc37-nqe
-      stake: 200_000 tokens
-      memo: 53
-      dissolve_delay: 3 months
-      vesting_period: 6 months
-    - principal: agy5w-dlcen-pkrgo-pgfrz-3eqf2-xfwvr-qcvwn-nlhyu-77fsb-wgc37-nqe
-      stake: 200_000 tokens
-      memo: 54
-      dissolve_delay: 3 months
-      vesting_period: 12 months
-    - principal: agy5w-dlcen-pkrgo-pgfrz-3eqf2-xfwvr-qcvwn-nlhyu-77fsb-wgc37-nqe
-      stake: 200_000 tokens
-      memo: 55
-      dissolve_delay: 3 months
-      vesting_period: 18 months
-    - principal: agy5w-dlcen-pkrgo-pgfrz-3eqf2-xfwvr-qcvwn-nlhyu-77fsb-wgc37-nqe
-      stake: 200_000 tokens
-      memo: 56
-      dissolve_delay: 3 months
-      vesting_period: 24 months
 
       #PROMOTER 2
     - principal: agy5w-dlcen-pkrgo-pgfrz-3eqf2-xfwvr-qcvwn-nlhyu-77fsb-wgc37-nqe
-      stake: 200_000 tokens
-      memo: 57
+      stake: 1_000_000 tokens
+      memo: 13
       dissolve_delay: 3 months
       vesting_period: 3 months
-    - principal: agy5w-dlcen-pkrgo-pgfrz-3eqf2-xfwvr-qcvwn-nlhyu-77fsb-wgc37-nqe
-      stake: 200_000 tokens
-      memo: 58
-      dissolve_delay: 3 months
-      vesting_period: 6 months
-    - principal: agy5w-dlcen-pkrgo-pgfrz-3eqf2-xfwvr-qcvwn-nlhyu-77fsb-wgc37-nqe
-      stake: 200_000 tokens
-      memo: 59
-      dissolve_delay: 3 months
-      vesting_period: 12 months
-    - principal: agy5w-dlcen-pkrgo-pgfrz-3eqf2-xfwvr-qcvwn-nlhyu-77fsb-wgc37-nqe
-      stake: 200_000 tokens
-      memo: 60
-      dissolve_delay: 3 months
-      vesting_period: 18 months
-    - principal: agy5w-dlcen-pkrgo-pgfrz-3eqf2-xfwvr-qcvwn-nlhyu-77fsb-wgc37-nqe
-      stake: 200_000 tokens
-      memo: 61
-      dissolve_delay: 3 months
-      vesting_period: 24 months
 
       # ICPFA Neurons
     - principal: natw7-46btz-jg353-vuknm-l6v3g-me75m-e3s5g-opez6-bzouz-gjelo-6ae
-      stake: 200_000 tokens
-      memo: 62
-      dissolve_delay: 3 months
-      vesting_period: 3 months
-    - principal: natw7-46btz-jg353-vuknm-l6v3g-me75m-e3s5g-opez6-bzouz-gjelo-6ae
-      stake: 200_000 tokens
-      memo: 63
-      dissolve_delay: 3 months
-      vesting_period: 6 months
-    - principal: natw7-46btz-jg353-vuknm-l6v3g-me75m-e3s5g-opez6-bzouz-gjelo-6ae
-      stake: 200_000 tokens
-      memo: 64
-      dissolve_delay: 3 months
-      vesting_period: 12 months
-    - principal: natw7-46btz-jg353-vuknm-l6v3g-me75m-e3s5g-opez6-bzouz-gjelo-6ae
-      stake: 200_000 tokens
-      memo: 65
-      dissolve_delay: 3 months
-      vesting_period: 18 months
-    - principal: natw7-46btz-jg353-vuknm-l6v3g-me75m-e3s5g-opez6-bzouz-gjelo-6ae
-      stake: 200_000 tokens
-      memo: 66
-      dissolve_delay: 3 months
-      vesting_period: 24 months
-    - principal: saw7k-3vflg-gg6ci-plkdc-3lhsh-huley-llpjr-fqjfm-bhxl5-34evi-iae
-      stake: 200_000 tokens
-      memo: 67
+      stake: 1_000_000 tokens
+      memo: 14
       dissolve_delay: 3 months
       vesting_period: 3 months
     - principal: saw7k-3vflg-gg6ci-plkdc-3lhsh-huley-llpjr-fqjfm-bhxl5-34evi-iae
-      stake: 200_000 tokens
-      memo: 68
-      dissolve_delay: 3 months
-      vesting_period: 6 months
-    - principal: saw7k-3vflg-gg6ci-plkdc-3lhsh-huley-llpjr-fqjfm-bhxl5-34evi-iae
-      stake: 200_000 tokens
-      memo: 69
-      dissolve_delay: 3 months
-      vesting_period: 12 months
-    - principal: saw7k-3vflg-gg6ci-plkdc-3lhsh-huley-llpjr-fqjfm-bhxl5-34evi-iae
-      stake: 200_000 tokens
-      memo: 70
-      dissolve_delay: 3 months
-      vesting_period: 18 months
-    - principal: saw7k-3vflg-gg6ci-plkdc-3lhsh-huley-llpjr-fqjfm-bhxl5-34evi-iae
-      stake: 200_000 tokens
-      memo: 71
-      dissolve_delay: 3 months
-      vesting_period: 24 months
-    - principal: pimyx-6eb62-ceob6-pepql-pjmw6-thmso-smrgz-7oxvp-nrh7s-7xsga-vae
-      stake: 200_000 tokens
-      memo: 72
+      stake: 1_000_000 tokens
+      memo: 15
       dissolve_delay: 3 months
       vesting_period: 3 months
     - principal: pimyx-6eb62-ceob6-pepql-pjmw6-thmso-smrgz-7oxvp-nrh7s-7xsga-vae
-      stake: 200_000 tokens
-      memo: 73
-      dissolve_delay: 3 months
-      vesting_period: 6 months
-    - principal: pimyx-6eb62-ceob6-pepql-pjmw6-thmso-smrgz-7oxvp-nrh7s-7xsga-vae
-      stake: 200_000 tokens
-      memo: 74
-      dissolve_delay: 3 months
-      vesting_period: 12 months
-    - principal: pimyx-6eb62-ceob6-pepql-pjmw6-thmso-smrgz-7oxvp-nrh7s-7xsga-vae
-      stake: 200_000 tokens
-      memo: 75
-      dissolve_delay: 3 months
-      vesting_period: 18 months
-    - principal: pimyx-6eb62-ceob6-pepql-pjmw6-thmso-smrgz-7oxvp-nrh7s-7xsga-vae
-      stake: 200_000 tokens
-      memo: 76
-      dissolve_delay: 3 months
-      vesting_period: 24 months
-    - principal: mvfpx-yiwic-vfpe3-tcwyz-lzzcf-mn53a-s7vbj-md6xn-mqvyl-c5yzu-tae
-      stake: 100_000 tokens
-      memo: 77
+      stake: 1_000_000 tokens
+      memo: 16
       dissolve_delay: 3 months
       vesting_period: 3 months
     - principal: mvfpx-yiwic-vfpe3-tcwyz-lzzcf-mn53a-s7vbj-md6xn-mqvyl-c5yzu-tae
-      stake: 100_000 tokens
-      memo: 78
-      dissolve_delay: 3 months
-      vesting_period: 6 months
-    - principal: mvfpx-yiwic-vfpe3-tcwyz-lzzcf-mn53a-s7vbj-md6xn-mqvyl-c5yzu-tae
-      stake: 100_000 tokens
-      memo: 79
-      dissolve_delay: 3 months
-      vesting_period: 12 months
-    - principal: mvfpx-yiwic-vfpe3-tcwyz-lzzcf-mn53a-s7vbj-md6xn-mqvyl-c5yzu-tae
-      stake: 100_000 tokens
-      memo: 80
-      dissolve_delay: 3 months
-      vesting_period: 18 months
-    - principal: mvfpx-yiwic-vfpe3-tcwyz-lzzcf-mn53a-s7vbj-md6xn-mqvyl-c5yzu-tae
-      stake: 100_000 tokens
-      memo: 81
-      dissolve_delay: 3 months
-      vesting_period: 24 months
-    - principal: gmhzd-h3kke-73f3i-64hpm-trtl2-p7xdh-h6g4n-txyod-u4lf7-bpbib-sqe
-      stake: 20_000 tokens
-      memo: 82
+      stake: 500_000 tokens
+      memo: 17
       dissolve_delay: 3 months
       vesting_period: 3 months
     - principal: gmhzd-h3kke-73f3i-64hpm-trtl2-p7xdh-h6g4n-txyod-u4lf7-bpbib-sqe
-      stake: 20_000 tokens
-      memo: 83
+      stake: 100_000 tokens
+      memo: 18
       dissolve_delay: 3 months
-      vesting_period: 6 months
-    - principal: gmhzd-h3kke-73f3i-64hpm-trtl2-p7xdh-h6g4n-txyod-u4lf7-bpbib-sqe
-      stake: 20_000 tokens
-      memo: 84
-      dissolve_delay: 3 months
-      vesting_period: 12 months
-    - principal: gmhzd-h3kke-73f3i-64hpm-trtl2-p7xdh-h6g4n-txyod-u4lf7-bpbib-sqe
-      stake: 20_000 tokens
-      memo: 85
-      dissolve_delay: 3 months
-      vesting_period: 18 months
-    - principal: gmhzd-h3kke-73f3i-64hpm-trtl2-p7xdh-h6g4n-txyod-u4lf7-bpbib-sqe
-      stake: 20_000 tokens
-      memo: 86
-      dissolve_delay: 3 months
-      vesting_period: 24 months
+      vesting_period: 3 months
 
       #Funded Neurons
-    - principal: 5rmrr-jnzf2-zqdaw-6qej6-hzkut-qy2am-n2efa-js27k-u5jb7-to5ej-2qe
-      stake: 20_000 tokens
-      memo: 87
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 5rmrr-jnzf2-zqdaw-6qej6-hzkut-qy2am-n2efa-js27k-u5jb7-to5ej-2qe
-      stake: 20_000 tokens
-      memo: 88
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5rmrr-jnzf2-zqdaw-6qej6-hzkut-qy2am-n2efa-js27k-u5jb7-to5ej-2qe
-      stake: 20_000 tokens
-      memo: 89
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5rmrr-jnzf2-zqdaw-6qej6-hzkut-qy2am-n2efa-js27k-u5jb7-to5ej-2qe
-      stake: 20_000 tokens
-      memo: 90
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5rmrr-jnzf2-zqdaw-6qej6-hzkut-qy2am-n2efa-js27k-u5jb7-to5ej-2qe
-      stake: 20_000 tokens
-      memo: 91
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 92
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 93
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 94
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 95
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 96
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 97
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 98
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 99
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 100
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 101
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: bdjyr-r4v6q-l6yqs-i5nk4-zhmdw-nnymn-art62-nqog5-q4ktl-yq2iz-jae
-      stake: 20_000 tokens
-      memo: 102
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: bdjyr-r4v6q-l6yqs-i5nk4-zhmdw-nnymn-art62-nqog5-q4ktl-yq2iz-jae
-      stake: 20_000 tokens
-      memo: 103
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: bdjyr-r4v6q-l6yqs-i5nk4-zhmdw-nnymn-art62-nqog5-q4ktl-yq2iz-jae
-      stake: 20_000 tokens
-      memo: 104
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: bdjyr-r4v6q-l6yqs-i5nk4-zhmdw-nnymn-art62-nqog5-q4ktl-yq2iz-jae
-      stake: 20_000 tokens
-      memo: 105
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: bdjyr-r4v6q-l6yqs-i5nk4-zhmdw-nnymn-art62-nqog5-q4ktl-yq2iz-jae
-      stake: 20_000 tokens
-      memo: 106
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 107
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 108
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 109
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 110
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 111
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 112
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 113
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 114
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 115
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 116
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 117
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 118
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 119
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 120
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 121
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: pzah7-uya76-viufh-t7g3s-nnrue-ivhgn-jkom7-fopz3-v3qka-lctbq-rqe
-      stake: 20_000 tokens
-      memo: 122
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: pzah7-uya76-viufh-t7g3s-nnrue-ivhgn-jkom7-fopz3-v3qka-lctbq-rqe
-      stake: 20_000 tokens
-      memo: 123
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: pzah7-uya76-viufh-t7g3s-nnrue-ivhgn-jkom7-fopz3-v3qka-lctbq-rqe
-      stake: 20_000 tokens
-      memo: 124
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: pzah7-uya76-viufh-t7g3s-nnrue-ivhgn-jkom7-fopz3-v3qka-lctbq-rqe
-      stake: 20_000 tokens
-      memo: 125
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: pzah7-uya76-viufh-t7g3s-nnrue-ivhgn-jkom7-fopz3-v3qka-lctbq-rqe
-      stake: 20_000 tokens
-      memo: 126
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: xekqt-5tpha-ncs5c-w6ctw-uv2vh-hrqze-p43yn-ihrvo-bc3f3-rtqck-nqe
-      stake: 20_000 tokens
-      memo: 127
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: xekqt-5tpha-ncs5c-w6ctw-uv2vh-hrqze-p43yn-ihrvo-bc3f3-rtqck-nqe
-      stake: 20_000 tokens
-      memo: 128
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: xekqt-5tpha-ncs5c-w6ctw-uv2vh-hrqze-p43yn-ihrvo-bc3f3-rtqck-nqe
-      stake: 20_000 tokens
-      memo: 129
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: xekqt-5tpha-ncs5c-w6ctw-uv2vh-hrqze-p43yn-ihrvo-bc3f3-rtqck-nqe
-      stake: 20_000 tokens
-      memo: 130
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: xekqt-5tpha-ncs5c-w6ctw-uv2vh-hrqze-p43yn-ihrvo-bc3f3-rtqck-nqe
-      stake: 20_000 tokens
-      memo: 131
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: n3z2z-c6m7i-ktcqi-3zpof-fzriz-i3vvz-7ensp-2yfyp-ydudd-64ebg-5ae
-      stake: 20_000 tokens
-      memo: 132
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: n3z2z-c6m7i-ktcqi-3zpof-fzriz-i3vvz-7ensp-2yfyp-ydudd-64ebg-5ae
-      stake: 20_000 tokens
-      memo: 133
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: n3z2z-c6m7i-ktcqi-3zpof-fzriz-i3vvz-7ensp-2yfyp-ydudd-64ebg-5ae
-      stake: 20_000 tokens
-      memo: 134
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: n3z2z-c6m7i-ktcqi-3zpof-fzriz-i3vvz-7ensp-2yfyp-ydudd-64ebg-5ae
-      stake: 20_000 tokens
-      memo: 135
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: n3z2z-c6m7i-ktcqi-3zpof-fzriz-i3vvz-7ensp-2yfyp-ydudd-64ebg-5ae
-      stake: 20_000 tokens
-      memo: 136
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: ozs4q-xo5xp-mz7dh-khz7m-i6kl5-om5jk-u5wxw-tmcnm-ofsqx-a6xvl-jqe
-      stake: 20_000 tokens
-      memo: 137
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: ozs4q-xo5xp-mz7dh-khz7m-i6kl5-om5jk-u5wxw-tmcnm-ofsqx-a6xvl-jqe
-      stake: 20_000 tokens
-      memo: 138
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: ozs4q-xo5xp-mz7dh-khz7m-i6kl5-om5jk-u5wxw-tmcnm-ofsqx-a6xvl-jqe
-      stake: 20_000 tokens
-      memo: 139
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: ozs4q-xo5xp-mz7dh-khz7m-i6kl5-om5jk-u5wxw-tmcnm-ofsqx-a6xvl-jqe
-      stake: 20_000 tokens
-      memo: 140
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: ozs4q-xo5xp-mz7dh-khz7m-i6kl5-om5jk-u5wxw-tmcnm-ofsqx-a6xvl-jqe
-      stake: 20_000 tokens
-      memo: 141
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: fufhj-lbeaw-my6ip-bb56z-fuyrs-725sx-evuk5-wxaii-vmuhk-bkvml-wqe
-      stake: 20_000 tokens
-      memo: 142
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: fufhj-lbeaw-my6ip-bb56z-fuyrs-725sx-evuk5-wxaii-vmuhk-bkvml-wqe
-      stake: 20_000 tokens
-      memo: 143
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: fufhj-lbeaw-my6ip-bb56z-fuyrs-725sx-evuk5-wxaii-vmuhk-bkvml-wqe
-      stake: 20_000 tokens
-      memo: 144
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: fufhj-lbeaw-my6ip-bb56z-fuyrs-725sx-evuk5-wxaii-vmuhk-bkvml-wqe
-      stake: 20_000 tokens
-      memo: 145
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: fufhj-lbeaw-my6ip-bb56z-fuyrs-725sx-evuk5-wxaii-vmuhk-bkvml-wqe
-      stake: 20_000 tokens
-      memo: 146
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: gfpnm-rtzql-7yntk-g3iup-d62ro-ynpfa-5m2au-evs4t-3gkvt-yrqlv-6qe
-      stake: 20_000 tokens
-      memo: 147
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: gfpnm-rtzql-7yntk-g3iup-d62ro-ynpfa-5m2au-evs4t-3gkvt-yrqlv-6qe
-      stake: 20_000 tokens
-      memo: 148
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: gfpnm-rtzql-7yntk-g3iup-d62ro-ynpfa-5m2au-evs4t-3gkvt-yrqlv-6qe
-      stake: 20_000 tokens
-      memo: 149
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: gfpnm-rtzql-7yntk-g3iup-d62ro-ynpfa-5m2au-evs4t-3gkvt-yrqlv-6qe
-      stake: 20_000 tokens
-      memo: 150
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: gfpnm-rtzql-7yntk-g3iup-d62ro-ynpfa-5m2au-evs4t-3gkvt-yrqlv-6qe
-      stake: 20_000 tokens
-      memo: 151
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: az4qr-yxlwz-iebbz-4tdjs-nrsl5-ifqqg-m4bwf-c43up-yagup-4xo6w-oqe
-      stake: 20_000 tokens
-      memo: 152
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: az4qr-yxlwz-iebbz-4tdjs-nrsl5-ifqqg-m4bwf-c43up-yagup-4xo6w-oqe
-      stake: 20_000 tokens
-      memo: 153
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: az4qr-yxlwz-iebbz-4tdjs-nrsl5-ifqqg-m4bwf-c43up-yagup-4xo6w-oqe
-      stake: 20_000 tokens
-      memo: 154
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: az4qr-yxlwz-iebbz-4tdjs-nrsl5-ifqqg-m4bwf-c43up-yagup-4xo6w-oqe
-      stake: 20_000 tokens
-      memo: 155
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: az4qr-yxlwz-iebbz-4tdjs-nrsl5-ifqqg-m4bwf-c43up-yagup-4xo6w-oqe
-      stake: 20_000 tokens
-      memo: 156
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: saw7k-3vflg-gg6ci-plkdc-3lhsh-huley-llpjr-fqjfm-bhxl5-34evi-iae
-      stake: 20_000 tokens
-      memo: 157
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: saw7k-3vflg-gg6ci-plkdc-3lhsh-huley-llpjr-fqjfm-bhxl5-34evi-iae
-      stake: 20_000 tokens
-      memo: 158
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: saw7k-3vflg-gg6ci-plkdc-3lhsh-huley-llpjr-fqjfm-bhxl5-34evi-iae
-      stake: 20_000 tokens
-      memo: 159
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: saw7k-3vflg-gg6ci-plkdc-3lhsh-huley-llpjr-fqjfm-bhxl5-34evi-iae
-      stake: 20_000 tokens
-      memo: 160
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: saw7k-3vflg-gg6ci-plkdc-3lhsh-huley-llpjr-fqjfm-bhxl5-34evi-iae
-      stake: 20_000 tokens
-      memo: 161
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 162
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 163
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 164
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 165
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 166
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 167
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 168
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 169
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 170
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 171
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: lvt3h-yipvp-zrryv-iibqg-rjxut-i7hb5-uxzlf-v2yxf-2fvck-asrne-4qe
-      stake: 20_000 tokens
-      memo: 172
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: lvt3h-yipvp-zrryv-iibqg-rjxut-i7hb5-uxzlf-v2yxf-2fvck-asrne-4qe
-      stake: 20_000 tokens
-      memo: 173
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: lvt3h-yipvp-zrryv-iibqg-rjxut-i7hb5-uxzlf-v2yxf-2fvck-asrne-4qe
-      stake: 20_000 tokens
-      memo: 174
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: lvt3h-yipvp-zrryv-iibqg-rjxut-i7hb5-uxzlf-v2yxf-2fvck-asrne-4qe
-      stake: 20_000 tokens
-      memo: 175
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: lvt3h-yipvp-zrryv-iibqg-rjxut-i7hb5-uxzlf-v2yxf-2fvck-asrne-4qe
-      stake: 20_000 tokens
-      memo: 176
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: saw7k-3vflg-gg6ci-plkdc-3lhsh-huley-llpjr-fqjfm-bhxl5-34evi-iae
-      stake: 20_000 tokens
-      memo: 177
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: saw7k-3vflg-gg6ci-plkdc-3lhsh-huley-llpjr-fqjfm-bhxl5-34evi-iae
-      stake: 20_000 tokens
-      memo: 178
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: saw7k-3vflg-gg6ci-plkdc-3lhsh-huley-llpjr-fqjfm-bhxl5-34evi-iae
-      stake: 20_000 tokens
-      memo: 179
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: saw7k-3vflg-gg6ci-plkdc-3lhsh-huley-llpjr-fqjfm-bhxl5-34evi-iae
-      stake: 20_000 tokens
-      memo: 180
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: saw7k-3vflg-gg6ci-plkdc-3lhsh-huley-llpjr-fqjfm-bhxl5-34evi-iae
-      stake: 20_000 tokens
-      memo: 181
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 182
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 183
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 184
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 185
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 186
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: cmoc7-5ncrz-xlp2z-4msvg-qz6lp-ijffr-zb3um-nt5jy-pdpog-hy2u3-lqe
-      stake: 20_000 tokens
-      memo: 187
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: cmoc7-5ncrz-xlp2z-4msvg-qz6lp-ijffr-zb3um-nt5jy-pdpog-hy2u3-lqe
-      stake: 20_000 tokens
-      memo: 188
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: cmoc7-5ncrz-xlp2z-4msvg-qz6lp-ijffr-zb3um-nt5jy-pdpog-hy2u3-lqe
-      stake: 20_000 tokens
-      memo: 189
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: cmoc7-5ncrz-xlp2z-4msvg-qz6lp-ijffr-zb3um-nt5jy-pdpog-hy2u3-lqe
-      stake: 20_000 tokens
-      memo: 190
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: cmoc7-5ncrz-xlp2z-4msvg-qz6lp-ijffr-zb3um-nt5jy-pdpog-hy2u3-lqe
-      stake: 20_000 tokens
-      memo: 200
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 3dfgu-kpesv-4dja7-wudid-t4xdc-iwiri-rg45w-ymodx-frl2k-mejiy-cae
-      stake: 20_000 tokens
-      memo: 201
+    - principal: 2qr33-7bdmx-vdlbs-ugjj3-d6zhv-wsrwl-ftn5p-cp2cp-e4oam-krcit-bqe
+      stake: 100_000 tokens
+      memo: 19
       dissolve_delay: 1 months
       vesting_period: 0 months
     - principal: 3dfgu-kpesv-4dja7-wudid-t4xdc-iwiri-rg45w-ymodx-frl2k-mejiy-cae
-      stake: 20_000 tokens
-      memo: 202
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 3dfgu-kpesv-4dja7-wudid-t4xdc-iwiri-rg45w-ymodx-frl2k-mejiy-cae
-      stake: 20_000 tokens
-      memo: 203
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 3dfgu-kpesv-4dja7-wudid-t4xdc-iwiri-rg45w-ymodx-frl2k-mejiy-cae
-      stake: 20_000 tokens
-      memo: 204
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 3dfgu-kpesv-4dja7-wudid-t4xdc-iwiri-rg45w-ymodx-frl2k-mejiy-cae
-      stake: 20_000 tokens
-      memo: 205
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 206
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 207
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 208
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 209
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 210
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 211
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 212
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 213
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 214
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 215
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 2qr33-7bdmx-vdlbs-ugjj3-d6zhv-wsrwl-ftn5p-cp2cp-e4oam-krcit-bqe
-      stake: 20_000 tokens
-      memo: 216
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 2qr33-7bdmx-vdlbs-ugjj3-d6zhv-wsrwl-ftn5p-cp2cp-e4oam-krcit-bqe
-      stake: 20_000 tokens
-      memo: 217
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 2qr33-7bdmx-vdlbs-ugjj3-d6zhv-wsrwl-ftn5p-cp2cp-e4oam-krcit-bqe
-      stake: 20_000 tokens
-      memo: 218
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 2qr33-7bdmx-vdlbs-ugjj3-d6zhv-wsrwl-ftn5p-cp2cp-e4oam-krcit-bqe
-      stake: 20_000 tokens
-      memo: 219
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 2qr33-7bdmx-vdlbs-ugjj3-d6zhv-wsrwl-ftn5p-cp2cp-e4oam-krcit-bqe
-      stake: 20_000 tokens
-      memo: 220
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: mvfpx-yiwic-vfpe3-tcwyz-lzzcf-mn53a-s7vbj-md6xn-mqvyl-c5yzu-tae
-      stake: 20_000 tokens
-      memo: 221
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: mvfpx-yiwic-vfpe3-tcwyz-lzzcf-mn53a-s7vbj-md6xn-mqvyl-c5yzu-tae
-      stake: 20_000 tokens
-      memo: 222
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: mvfpx-yiwic-vfpe3-tcwyz-lzzcf-mn53a-s7vbj-md6xn-mqvyl-c5yzu-tae
-      stake: 20_000 tokens
-      memo: 223
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: mvfpx-yiwic-vfpe3-tcwyz-lzzcf-mn53a-s7vbj-md6xn-mqvyl-c5yzu-tae
-      stake: 20_000 tokens
-      memo: 224
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: mvfpx-yiwic-vfpe3-tcwyz-lzzcf-mn53a-s7vbj-md6xn-mqvyl-c5yzu-tae
-      stake: 20_000 tokens
-      memo: 225
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: mhbvf-r6nsn-3xyoq-f6ykg-dar2d-qhgbk-t7gns-c4qgv-p6ft6-sf73m-mae
-      stake: 20_000 tokens
-      memo: 226
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: mhbvf-r6nsn-3xyoq-f6ykg-dar2d-qhgbk-t7gns-c4qgv-p6ft6-sf73m-mae
-      stake: 20_000 tokens
-      memo: 227
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: mhbvf-r6nsn-3xyoq-f6ykg-dar2d-qhgbk-t7gns-c4qgv-p6ft6-sf73m-mae
-      stake: 20_000 tokens
-      memo: 228
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: mhbvf-r6nsn-3xyoq-f6ykg-dar2d-qhgbk-t7gns-c4qgv-p6ft6-sf73m-mae
-      stake: 20_000 tokens
-      memo: 229
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: mhbvf-r6nsn-3xyoq-f6ykg-dar2d-qhgbk-t7gns-c4qgv-p6ft6-sf73m-mae
-      stake: 20_000 tokens
-      memo: 230
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: yiv4y-g2mx3-4iyfg-iysqd-uoonk-23xa5-jltij-f4ffb-4s4rp-a4h7r-uqe
-      stake: 20_000 tokens
-      memo: 231
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: yiv4y-g2mx3-4iyfg-iysqd-uoonk-23xa5-jltij-f4ffb-4s4rp-a4h7r-uqe
-      stake: 20_000 tokens
-      memo: 232
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: yiv4y-g2mx3-4iyfg-iysqd-uoonk-23xa5-jltij-f4ffb-4s4rp-a4h7r-uqe
-      stake: 20_000 tokens
-      memo: 233
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: yiv4y-g2mx3-4iyfg-iysqd-uoonk-23xa5-jltij-f4ffb-4s4rp-a4h7r-uqe
-      stake: 20_000 tokens
-      memo: 234
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: yiv4y-g2mx3-4iyfg-iysqd-uoonk-23xa5-jltij-f4ffb-4s4rp-a4h7r-uqe
-      stake: 20_000 tokens
-      memo: 235
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: jeo24-eiokv-u76jo-z43ql-gkvvs-u4m6x-j3tan-fgoac-7bjm3-i3lrm-gae
-      stake: 20_000 tokens
-      memo: 236
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: jeo24-eiokv-u76jo-z43ql-gkvvs-u4m6x-j3tan-fgoac-7bjm3-i3lrm-gae
-      stake: 20_000 tokens
-      memo: 237
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: jeo24-eiokv-u76jo-z43ql-gkvvs-u4m6x-j3tan-fgoac-7bjm3-i3lrm-gae
-      stake: 20_000 tokens
-      memo: 238
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: jeo24-eiokv-u76jo-z43ql-gkvvs-u4m6x-j3tan-fgoac-7bjm3-i3lrm-gae
-      stake: 20_000 tokens
-      memo: 239
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: jeo24-eiokv-u76jo-z43ql-gkvvs-u4m6x-j3tan-fgoac-7bjm3-i3lrm-gae
-      stake: 20_000 tokens
-      memo: 240
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 241
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 242
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 243
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 244
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 245
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 246
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 247
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 248
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 249
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 250
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: pzah7-uya76-viufh-t7g3s-nnrue-ivhgn-jkom7-fopz3-v3qka-lctbq-rqe
-      stake: 20_000 tokens
-      memo: 251
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: pzah7-uya76-viufh-t7g3s-nnrue-ivhgn-jkom7-fopz3-v3qka-lctbq-rqe
-      stake: 20_000 tokens
-      memo: 252
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: pzah7-uya76-viufh-t7g3s-nnrue-ivhgn-jkom7-fopz3-v3qka-lctbq-rqe
-      stake: 20_000 tokens
-      memo: 253
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: pzah7-uya76-viufh-t7g3s-nnrue-ivhgn-jkom7-fopz3-v3qka-lctbq-rqe
-      stake: 20_000 tokens
-      memo: 254
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: pzah7-uya76-viufh-t7g3s-nnrue-ivhgn-jkom7-fopz3-v3qka-lctbq-rqe
-      stake: 20_000 tokens
-      memo: 255
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: mvfpx-yiwic-vfpe3-tcwyz-lzzcf-mn53a-s7vbj-md6xn-mqvyl-c5yzu-tae
-      stake: 20_000 tokens
-      memo: 256
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: mvfpx-yiwic-vfpe3-tcwyz-lzzcf-mn53a-s7vbj-md6xn-mqvyl-c5yzu-tae
-      stake: 20_000 tokens
-      memo: 257
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: mvfpx-yiwic-vfpe3-tcwyz-lzzcf-mn53a-s7vbj-md6xn-mqvyl-c5yzu-tae
-      stake: 20_000 tokens
-      memo: 258
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: mvfpx-yiwic-vfpe3-tcwyz-lzzcf-mn53a-s7vbj-md6xn-mqvyl-c5yzu-tae
-      stake: 20_000 tokens
-      memo: 259
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: mvfpx-yiwic-vfpe3-tcwyz-lzzcf-mn53a-s7vbj-md6xn-mqvyl-c5yzu-tae
-      stake: 20_000 tokens
-      memo: 260
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5sise-hw7oe-5n7vi-p742f-iqck3-bgqun-zivuk-wvuln-b5ezc-nxd6k-sae
-      stake: 20_000 tokens
-      memo: 261
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 5sise-hw7oe-5n7vi-p742f-iqck3-bgqun-zivuk-wvuln-b5ezc-nxd6k-sae
-      stake: 20_000 tokens
-      memo: 262
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5sise-hw7oe-5n7vi-p742f-iqck3-bgqun-zivuk-wvuln-b5ezc-nxd6k-sae
-      stake: 20_000 tokens
-      memo: 263
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5sise-hw7oe-5n7vi-p742f-iqck3-bgqun-zivuk-wvuln-b5ezc-nxd6k-sae
-      stake: 20_000 tokens
-      memo: 264
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5sise-hw7oe-5n7vi-p742f-iqck3-bgqun-zivuk-wvuln-b5ezc-nxd6k-sae
-      stake: 20_000 tokens
-      memo: 265
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 6iqwa-havf6-hxlmj-qz4u7-gdfac-mcok2-qdvjj-jtjez-hj4xa-fqhms-lqe
-      stake: 20_000 tokens
-      memo: 266
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 6iqwa-havf6-hxlmj-qz4u7-gdfac-mcok2-qdvjj-jtjez-hj4xa-fqhms-lqe
-      stake: 20_000 tokens
-      memo: 267
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 6iqwa-havf6-hxlmj-qz4u7-gdfac-mcok2-qdvjj-jtjez-hj4xa-fqhms-lqe
-      stake: 20_000 tokens
-      memo: 268
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 6iqwa-havf6-hxlmj-qz4u7-gdfac-mcok2-qdvjj-jtjez-hj4xa-fqhms-lqe
-      stake: 20_000 tokens
-      memo: 269
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 6iqwa-havf6-hxlmj-qz4u7-gdfac-mcok2-qdvjj-jtjez-hj4xa-fqhms-lqe
-      stake: 20_000 tokens
-      memo: 270
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 6iqwa-havf6-hxlmj-qz4u7-gdfac-mcok2-qdvjj-jtjez-hj4xa-fqhms-lqe
-      stake: 20_000 tokens
-      memo: 271
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 6iqwa-havf6-hxlmj-qz4u7-gdfac-mcok2-qdvjj-jtjez-hj4xa-fqhms-lqe
-      stake: 20_000 tokens
-      memo: 272
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 6iqwa-havf6-hxlmj-qz4u7-gdfac-mcok2-qdvjj-jtjez-hj4xa-fqhms-lqe
-      stake: 20_000 tokens
-      memo: 273
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 6iqwa-havf6-hxlmj-qz4u7-gdfac-mcok2-qdvjj-jtjez-hj4xa-fqhms-lqe
-      stake: 20_000 tokens
-      memo: 274
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 6iqwa-havf6-hxlmj-qz4u7-gdfac-mcok2-qdvjj-jtjez-hj4xa-fqhms-lqe
-      stake: 20_000 tokens
-      memo: 275
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 276
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 277
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 278
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 279
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 280
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: ut3om-xj5jt-j4x4a-oo5mx-pgdee-hejuo-3i4xp-qwfjj-chnhr-j75ap-yae
-      stake: 20_000 tokens
-      memo: 281
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: ut3om-xj5jt-j4x4a-oo5mx-pgdee-hejuo-3i4xp-qwfjj-chnhr-j75ap-yae
-      stake: 20_000 tokens
-      memo: 282
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: ut3om-xj5jt-j4x4a-oo5mx-pgdee-hejuo-3i4xp-qwfjj-chnhr-j75ap-yae
-      stake: 20_000 tokens
-      memo: 283
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: ut3om-xj5jt-j4x4a-oo5mx-pgdee-hejuo-3i4xp-qwfjj-chnhr-j75ap-yae
-      stake: 20_000 tokens
-      memo: 284
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: ut3om-xj5jt-j4x4a-oo5mx-pgdee-hejuo-3i4xp-qwfjj-chnhr-j75ap-yae
-      stake: 20_000 tokens
-      memo: 285
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: mdqrd-ckw4u-malee-uqjaj-33q2l-o6nqb-urav4-mh3zu-bqb7h-c66bv-kae
-      stake: 20_000 tokens
-      memo: 286
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: mdqrd-ckw4u-malee-uqjaj-33q2l-o6nqb-urav4-mh3zu-bqb7h-c66bv-kae
-      stake: 20_000 tokens
-      memo: 287
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: mdqrd-ckw4u-malee-uqjaj-33q2l-o6nqb-urav4-mh3zu-bqb7h-c66bv-kae
-      stake: 20_000 tokens
-      memo: 288
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: mdqrd-ckw4u-malee-uqjaj-33q2l-o6nqb-urav4-mh3zu-bqb7h-c66bv-kae
-      stake: 20_000 tokens
-      memo: 289
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: mdqrd-ckw4u-malee-uqjaj-33q2l-o6nqb-urav4-mh3zu-bqb7h-c66bv-kae
-      stake: 20_000 tokens
-      memo: 290
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: yiv4y-g2mx3-4iyfg-iysqd-uoonk-23xa5-jltij-f4ffb-4s4rp-a4h7r-uqe
-      stake: 20_000 tokens
-      memo: 291
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: yiv4y-g2mx3-4iyfg-iysqd-uoonk-23xa5-jltij-f4ffb-4s4rp-a4h7r-uqe
-      stake: 20_000 tokens
-      memo: 292
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: yiv4y-g2mx3-4iyfg-iysqd-uoonk-23xa5-jltij-f4ffb-4s4rp-a4h7r-uqe
-      stake: 20_000 tokens
-      memo: 293
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: yiv4y-g2mx3-4iyfg-iysqd-uoonk-23xa5-jltij-f4ffb-4s4rp-a4h7r-uqe
-      stake: 20_000 tokens
-      memo: 294
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: yiv4y-g2mx3-4iyfg-iysqd-uoonk-23xa5-jltij-f4ffb-4s4rp-a4h7r-uqe
-      stake: 20_000 tokens
-      memo: 295
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: fkxku-5wudo-ikqfq-fpmrx-llpol-dcusl-s6zbr-da7hi-jo33b-p7bvv-rqe
-      stake: 20_000 tokens
-      memo: 296
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: fkxku-5wudo-ikqfq-fpmrx-llpol-dcusl-s6zbr-da7hi-jo33b-p7bvv-rqe
-      stake: 20_000 tokens
-      memo: 297
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: fkxku-5wudo-ikqfq-fpmrx-llpol-dcusl-s6zbr-da7hi-jo33b-p7bvv-rqe
-      stake: 20_000 tokens
-      memo: 298
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: fkxku-5wudo-ikqfq-fpmrx-llpol-dcusl-s6zbr-da7hi-jo33b-p7bvv-rqe
-      stake: 20_000 tokens
-      memo: 299
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: fkxku-5wudo-ikqfq-fpmrx-llpol-dcusl-s6zbr-da7hi-jo33b-p7bvv-rqe
-      stake: 20_000 tokens
-      memo: 300
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 301
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 302
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 303
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 304
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 305
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 306
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 307
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 308
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 309
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 310
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 311
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 312
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 313
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 314
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 315
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 316
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 317
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 318
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 319
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 320
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 321
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 322
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 323
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 324
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 325
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 326
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 327
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 328
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 329
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 330
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: dfrrb-iw7vg-3sgns-uwbuj-dmel7-qlt6i-ryb6c-npa3n-rwcm3-uc7v7-tqe
-      stake: 20_000 tokens
-      memo: 331
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: dfrrb-iw7vg-3sgns-uwbuj-dmel7-qlt6i-ryb6c-npa3n-rwcm3-uc7v7-tqe
-      stake: 20_000 tokens
-      memo: 332
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: dfrrb-iw7vg-3sgns-uwbuj-dmel7-qlt6i-ryb6c-npa3n-rwcm3-uc7v7-tqe
-      stake: 20_000 tokens
-      memo: 333
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: dfrrb-iw7vg-3sgns-uwbuj-dmel7-qlt6i-ryb6c-npa3n-rwcm3-uc7v7-tqe
-      stake: 20_000 tokens
-      memo: 334
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: dfrrb-iw7vg-3sgns-uwbuj-dmel7-qlt6i-ryb6c-npa3n-rwcm3-uc7v7-tqe
-      stake: 20_000 tokens
-      memo: 335
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: veuuk-uia3z-bwq3s-pqeo6-4ndws-2na3w-2v2v3-xjilw-ohvoh-3zg4v-mqe
-      stake: 20_000 tokens
-      memo: 336
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: veuuk-uia3z-bwq3s-pqeo6-4ndws-2na3w-2v2v3-xjilw-ohvoh-3zg4v-mqe
-      stake: 20_000 tokens
-      memo: 337
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: veuuk-uia3z-bwq3s-pqeo6-4ndws-2na3w-2v2v3-xjilw-ohvoh-3zg4v-mqe
-      stake: 20_000 tokens
-      memo: 338
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: veuuk-uia3z-bwq3s-pqeo6-4ndws-2na3w-2v2v3-xjilw-ohvoh-3zg4v-mqe
-      stake: 20_000 tokens
-      memo: 339
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: veuuk-uia3z-bwq3s-pqeo6-4ndws-2na3w-2v2v3-xjilw-ohvoh-3zg4v-mqe
-      stake: 20_000 tokens
-      memo: 340
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 341
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 342
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 343
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 344
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 345
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 346
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 347
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 348
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 349
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 350
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: lvt3h-yipvp-zrryv-iibqg-rjxut-i7hb5-uxzlf-v2yxf-2fvck-asrne-4qe
-      stake: 20_000 tokens
-      memo: 351
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: lvt3h-yipvp-zrryv-iibqg-rjxut-i7hb5-uxzlf-v2yxf-2fvck-asrne-4qe
-      stake: 20_000 tokens
-      memo: 352
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: lvt3h-yipvp-zrryv-iibqg-rjxut-i7hb5-uxzlf-v2yxf-2fvck-asrne-4qe
-      stake: 20_000 tokens
-      memo: 353
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: lvt3h-yipvp-zrryv-iibqg-rjxut-i7hb5-uxzlf-v2yxf-2fvck-asrne-4qe
-      stake: 20_000 tokens
-      memo: 354
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: lvt3h-yipvp-zrryv-iibqg-rjxut-i7hb5-uxzlf-v2yxf-2fvck-asrne-4qe
-      stake: 20_000 tokens
-      memo: 355
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: mvfpx-yiwic-vfpe3-tcwyz-lzzcf-mn53a-s7vbj-md6xn-mqvyl-c5yzu-tae
-      stake: 20_000 tokens
-      memo: 356
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: mvfpx-yiwic-vfpe3-tcwyz-lzzcf-mn53a-s7vbj-md6xn-mqvyl-c5yzu-tae
-      stake: 20_000 tokens
-      memo: 357
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: mvfpx-yiwic-vfpe3-tcwyz-lzzcf-mn53a-s7vbj-md6xn-mqvyl-c5yzu-tae
-      stake: 20_000 tokens
-      memo: 358
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: mvfpx-yiwic-vfpe3-tcwyz-lzzcf-mn53a-s7vbj-md6xn-mqvyl-c5yzu-tae
-      stake: 20_000 tokens
-      memo: 359
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: mvfpx-yiwic-vfpe3-tcwyz-lzzcf-mn53a-s7vbj-md6xn-mqvyl-c5yzu-tae
-      stake: 20_000 tokens
-      memo: 360
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: kqprg-cobbv-6dxo7-yd53x-cmgbq-tk3lh-lfu6o-2czd5-iui6g-v6d6z-3qe
-      stake: 20_000 tokens
-      memo: 361
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: kqprg-cobbv-6dxo7-yd53x-cmgbq-tk3lh-lfu6o-2czd5-iui6g-v6d6z-3qe
-      stake: 20_000 tokens
-      memo: 362
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: kqprg-cobbv-6dxo7-yd53x-cmgbq-tk3lh-lfu6o-2czd5-iui6g-v6d6z-3qe
-      stake: 20_000 tokens
-      memo: 363
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: kqprg-cobbv-6dxo7-yd53x-cmgbq-tk3lh-lfu6o-2czd5-iui6g-v6d6z-3qe
-      stake: 20_000 tokens
-      memo: 364
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: kqprg-cobbv-6dxo7-yd53x-cmgbq-tk3lh-lfu6o-2czd5-iui6g-v6d6z-3qe
-      stake: 20_000 tokens
-      memo: 365
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 366
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 367
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 368
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 369
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 370
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 371
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 372
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 373
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 374
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 375
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: ob3vm-ygzgo-6av2i-wx4ol-zkvfq-6zxh4-rb7bw-4tox4-w7xjy-aavdc-zae
-      stake: 20_000 tokens
-      memo: 376
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: ob3vm-ygzgo-6av2i-wx4ol-zkvfq-6zxh4-rb7bw-4tox4-w7xjy-aavdc-zae
-      stake: 20_000 tokens
-      memo: 377
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: ob3vm-ygzgo-6av2i-wx4ol-zkvfq-6zxh4-rb7bw-4tox4-w7xjy-aavdc-zae
-      stake: 20_000 tokens
-      memo: 378
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: ob3vm-ygzgo-6av2i-wx4ol-zkvfq-6zxh4-rb7bw-4tox4-w7xjy-aavdc-zae
-      stake: 20_000 tokens
-      memo: 379
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: ob3vm-ygzgo-6av2i-wx4ol-zkvfq-6zxh4-rb7bw-4tox4-w7xjy-aavdc-zae
-      stake: 20_000 tokens
-      memo: 380
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: c6t77-24bha-3capl-455wx-menwb-wh3ey-xmyp6-ykads-p4jj6-isibw-yae
-      stake: 20_000 tokens
-      memo: 381
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: c6t77-24bha-3capl-455wx-menwb-wh3ey-xmyp6-ykads-p4jj6-isibw-yae
-      stake: 20_000 tokens
-      memo: 382
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: c6t77-24bha-3capl-455wx-menwb-wh3ey-xmyp6-ykads-p4jj6-isibw-yae
-      stake: 20_000 tokens
-      memo: 383
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: c6t77-24bha-3capl-455wx-menwb-wh3ey-xmyp6-ykads-p4jj6-isibw-yae
-      stake: 20_000 tokens
-      memo: 384
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: c6t77-24bha-3capl-455wx-menwb-wh3ey-xmyp6-ykads-p4jj6-isibw-yae
-      stake: 20_000 tokens
-      memo: 385
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: saw7k-3vflg-gg6ci-plkdc-3lhsh-huley-llpjr-fqjfm-bhxl5-34evi-iae
-      stake: 20_000 tokens
-      memo: 386
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: saw7k-3vflg-gg6ci-plkdc-3lhsh-huley-llpjr-fqjfm-bhxl5-34evi-iae
-      stake: 20_000 tokens
-      memo: 387
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: saw7k-3vflg-gg6ci-plkdc-3lhsh-huley-llpjr-fqjfm-bhxl5-34evi-iae
-      stake: 20_000 tokens
-      memo: 388
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: saw7k-3vflg-gg6ci-plkdc-3lhsh-huley-llpjr-fqjfm-bhxl5-34evi-iae
-      stake: 20_000 tokens
-      memo: 389
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: saw7k-3vflg-gg6ci-plkdc-3lhsh-huley-llpjr-fqjfm-bhxl5-34evi-iae
-      stake: 20_000 tokens
-      memo: 390
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: lvt3h-yipvp-zrryv-iibqg-rjxut-i7hb5-uxzlf-v2yxf-2fvck-asrne-4qe
-      stake: 20_000 tokens
-      memo: 391
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: lvt3h-yipvp-zrryv-iibqg-rjxut-i7hb5-uxzlf-v2yxf-2fvck-asrne-4qe
-      stake: 20_000 tokens
-      memo: 392
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: lvt3h-yipvp-zrryv-iibqg-rjxut-i7hb5-uxzlf-v2yxf-2fvck-asrne-4qe
-      stake: 20_000 tokens
-      memo: 393
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: lvt3h-yipvp-zrryv-iibqg-rjxut-i7hb5-uxzlf-v2yxf-2fvck-asrne-4qe
-      stake: 20_000 tokens
-      memo: 394
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: lvt3h-yipvp-zrryv-iibqg-rjxut-i7hb5-uxzlf-v2yxf-2fvck-asrne-4qe
-      stake: 20_000 tokens
-      memo: 395
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: lvt3h-yipvp-zrryv-iibqg-rjxut-i7hb5-uxzlf-v2yxf-2fvck-asrne-4qe
-      stake: 20_000 tokens
-      memo: 396
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: lvt3h-yipvp-zrryv-iibqg-rjxut-i7hb5-uxzlf-v2yxf-2fvck-asrne-4qe
-      stake: 20_000 tokens
-      memo: 397
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: lvt3h-yipvp-zrryv-iibqg-rjxut-i7hb5-uxzlf-v2yxf-2fvck-asrne-4qe
-      stake: 20_000 tokens
-      memo: 398
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: lvt3h-yipvp-zrryv-iibqg-rjxut-i7hb5-uxzlf-v2yxf-2fvck-asrne-4qe
-      stake: 20_000 tokens
-      memo: 399
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: lvt3h-yipvp-zrryv-iibqg-rjxut-i7hb5-uxzlf-v2yxf-2fvck-asrne-4qe
-      stake: 20_000 tokens
-      memo: 400
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5sise-hw7oe-5n7vi-p742f-iqck3-bgqun-zivuk-wvuln-b5ezc-nxd6k-sae
-      stake: 20_000 tokens
-      memo: 401
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 5sise-hw7oe-5n7vi-p742f-iqck3-bgqun-zivuk-wvuln-b5ezc-nxd6k-sae
-      stake: 20_000 tokens
-      memo: 402
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5sise-hw7oe-5n7vi-p742f-iqck3-bgqun-zivuk-wvuln-b5ezc-nxd6k-sae
-      stake: 20_000 tokens
-      memo: 403
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5sise-hw7oe-5n7vi-p742f-iqck3-bgqun-zivuk-wvuln-b5ezc-nxd6k-sae
-      stake: 20_000 tokens
-      memo: 404
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5sise-hw7oe-5n7vi-p742f-iqck3-bgqun-zivuk-wvuln-b5ezc-nxd6k-sae
-      stake: 20_000 tokens
-      memo: 405
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5sise-hw7oe-5n7vi-p742f-iqck3-bgqun-zivuk-wvuln-b5ezc-nxd6k-sae
-      stake: 20_000 tokens
-      memo: 406
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 5sise-hw7oe-5n7vi-p742f-iqck3-bgqun-zivuk-wvuln-b5ezc-nxd6k-sae
-      stake: 20_000 tokens
-      memo: 407
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5sise-hw7oe-5n7vi-p742f-iqck3-bgqun-zivuk-wvuln-b5ezc-nxd6k-sae
-      stake: 20_000 tokens
-      memo: 408
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5sise-hw7oe-5n7vi-p742f-iqck3-bgqun-zivuk-wvuln-b5ezc-nxd6k-sae
-      stake: 20_000 tokens
-      memo: 409
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5sise-hw7oe-5n7vi-p742f-iqck3-bgqun-zivuk-wvuln-b5ezc-nxd6k-sae
-      stake: 20_000 tokens
-      memo: 410
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: tlapy-5v4jb-jcz6j-n2oz7-tqjg5-4aoc5-hdaon-hch22-r7mv5-iu6lj-pqe
-      stake: 20_000 tokens
-      memo: 411
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: tlapy-5v4jb-jcz6j-n2oz7-tqjg5-4aoc5-hdaon-hch22-r7mv5-iu6lj-pqe
-      stake: 20_000 tokens
-      memo: 412
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: tlapy-5v4jb-jcz6j-n2oz7-tqjg5-4aoc5-hdaon-hch22-r7mv5-iu6lj-pqe
-      stake: 20_000 tokens
-      memo: 413
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: tlapy-5v4jb-jcz6j-n2oz7-tqjg5-4aoc5-hdaon-hch22-r7mv5-iu6lj-pqe
-      stake: 20_000 tokens
-      memo: 414
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: tlapy-5v4jb-jcz6j-n2oz7-tqjg5-4aoc5-hdaon-hch22-r7mv5-iu6lj-pqe
-      stake: 20_000 tokens
-      memo: 415
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: jbe6m-zpztp-gxzj3-a7oxb-igzo7-azaef-4usu3-xtswb-th2gv-5o7nu-zae
-      stake: 20_000 tokens
-      memo: 416
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: jbe6m-zpztp-gxzj3-a7oxb-igzo7-azaef-4usu3-xtswb-th2gv-5o7nu-zae
-      stake: 20_000 tokens
-      memo: 417
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: jbe6m-zpztp-gxzj3-a7oxb-igzo7-azaef-4usu3-xtswb-th2gv-5o7nu-zae
-      stake: 20_000 tokens
-      memo: 418
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: jbe6m-zpztp-gxzj3-a7oxb-igzo7-azaef-4usu3-xtswb-th2gv-5o7nu-zae
-      stake: 20_000 tokens
-      memo: 419
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: jbe6m-zpztp-gxzj3-a7oxb-igzo7-azaef-4usu3-xtswb-th2gv-5o7nu-zae
-      stake: 20_000 tokens
-      memo: 420
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5eoy3-7c3mm-3to7b-lnvpz-vwex7-onqap-wfp7x-3ca57-p3mwl-wspuw-6ae
-      stake: 20_000 tokens
-      memo: 421
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 5eoy3-7c3mm-3to7b-lnvpz-vwex7-onqap-wfp7x-3ca57-p3mwl-wspuw-6ae
-      stake: 20_000 tokens
-      memo: 422
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5eoy3-7c3mm-3to7b-lnvpz-vwex7-onqap-wfp7x-3ca57-p3mwl-wspuw-6ae
-      stake: 20_000 tokens
-      memo: 423
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5eoy3-7c3mm-3to7b-lnvpz-vwex7-onqap-wfp7x-3ca57-p3mwl-wspuw-6ae
-      stake: 20_000 tokens
-      memo: 424
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5eoy3-7c3mm-3to7b-lnvpz-vwex7-onqap-wfp7x-3ca57-p3mwl-wspuw-6ae
-      stake: 20_000 tokens
-      memo: 425
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: fusjd-zu3yn-amv3e-n2jkv-3vs3e-3qy6e-5ximl-q75qu-mtk7q-mk7br-4qe
-      stake: 20_000 tokens
-      memo: 426
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: fusjd-zu3yn-amv3e-n2jkv-3vs3e-3qy6e-5ximl-q75qu-mtk7q-mk7br-4qe
-      stake: 20_000 tokens
-      memo: 427
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: fusjd-zu3yn-amv3e-n2jkv-3vs3e-3qy6e-5ximl-q75qu-mtk7q-mk7br-4qe
-      stake: 20_000 tokens
-      memo: 428
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: fusjd-zu3yn-amv3e-n2jkv-3vs3e-3qy6e-5ximl-q75qu-mtk7q-mk7br-4qe
-      stake: 20_000 tokens
-      memo: 429
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: fusjd-zu3yn-amv3e-n2jkv-3vs3e-3qy6e-5ximl-q75qu-mtk7q-mk7br-4qe
-      stake: 20_000 tokens
-      memo: 430
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: bjl4i-fyipq-zlait-dxuop-2yslo-i2ir4-kqxcv-xmk7f-enyo4-u3nwt-yae
-      stake: 20_000 tokens
-      memo: 431
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: bjl4i-fyipq-zlait-dxuop-2yslo-i2ir4-kqxcv-xmk7f-enyo4-u3nwt-yae
-      stake: 20_000 tokens
-      memo: 432
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: bjl4i-fyipq-zlait-dxuop-2yslo-i2ir4-kqxcv-xmk7f-enyo4-u3nwt-yae
-      stake: 20_000 tokens
-      memo: 433
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: bjl4i-fyipq-zlait-dxuop-2yslo-i2ir4-kqxcv-xmk7f-enyo4-u3nwt-yae
-      stake: 20_000 tokens
-      memo: 434
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: bjl4i-fyipq-zlait-dxuop-2yslo-i2ir4-kqxcv-xmk7f-enyo4-u3nwt-yae
-      stake: 20_000 tokens
-      memo: 435
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 436
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 437
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 438
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 439
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 440
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: dsje4-zqhrr-dddpb-v44dj-i6ybo-ign2l-yceew-tuldo-tvjcc-qffwv-6ae
-      stake: 20_000 tokens
-      memo: 441
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: dsje4-zqhrr-dddpb-v44dj-i6ybo-ign2l-yceew-tuldo-tvjcc-qffwv-6ae
-      stake: 20_000 tokens
-      memo: 442
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: dsje4-zqhrr-dddpb-v44dj-i6ybo-ign2l-yceew-tuldo-tvjcc-qffwv-6ae
-      stake: 20_000 tokens
-      memo: 443
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: dsje4-zqhrr-dddpb-v44dj-i6ybo-ign2l-yceew-tuldo-tvjcc-qffwv-6ae
-      stake: 20_000 tokens
-      memo: 444
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: dsje4-zqhrr-dddpb-v44dj-i6ybo-ign2l-yceew-tuldo-tvjcc-qffwv-6ae
-      stake: 20_000 tokens
-      memo: 445
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5sise-hw7oe-5n7vi-p742f-iqck3-bgqun-zivuk-wvuln-b5ezc-nxd6k-sae
-      stake: 20_000 tokens
-      memo: 446
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 5sise-hw7oe-5n7vi-p742f-iqck3-bgqun-zivuk-wvuln-b5ezc-nxd6k-sae
-      stake: 20_000 tokens
-      memo: 447
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5sise-hw7oe-5n7vi-p742f-iqck3-bgqun-zivuk-wvuln-b5ezc-nxd6k-sae
-      stake: 20_000 tokens
-      memo: 448
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5sise-hw7oe-5n7vi-p742f-iqck3-bgqun-zivuk-wvuln-b5ezc-nxd6k-sae
-      stake: 20_000 tokens
-      memo: 449
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5sise-hw7oe-5n7vi-p742f-iqck3-bgqun-zivuk-wvuln-b5ezc-nxd6k-sae
-      stake: 20_000 tokens
-      memo: 450
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 451
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 452
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 453
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 454
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 455
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 6iqwa-havf6-hxlmj-qz4u7-gdfac-mcok2-qdvjj-jtjez-hj4xa-fqhms-lqe
-      stake: 20_000 tokens
-      memo: 456
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 6iqwa-havf6-hxlmj-qz4u7-gdfac-mcok2-qdvjj-jtjez-hj4xa-fqhms-lqe
-      stake: 20_000 tokens
-      memo: 457
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 6iqwa-havf6-hxlmj-qz4u7-gdfac-mcok2-qdvjj-jtjez-hj4xa-fqhms-lqe
-      stake: 20_000 tokens
-      memo: 458
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 6iqwa-havf6-hxlmj-qz4u7-gdfac-mcok2-qdvjj-jtjez-hj4xa-fqhms-lqe
-      stake: 20_000 tokens
-      memo: 459
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 6iqwa-havf6-hxlmj-qz4u7-gdfac-mcok2-qdvjj-jtjez-hj4xa-fqhms-lqe
-      stake: 20_000 tokens
-      memo: 460
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: iiodm-2goob-cwr3y-s7cpb-5jspj-cqx6r-6uqon-q3kbh-hk762-rmasr-tqe
-      stake: 20_000 tokens
-      memo: 461
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: iiodm-2goob-cwr3y-s7cpb-5jspj-cqx6r-6uqon-q3kbh-hk762-rmasr-tqe
-      stake: 20_000 tokens
-      memo: 462
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: iiodm-2goob-cwr3y-s7cpb-5jspj-cqx6r-6uqon-q3kbh-hk762-rmasr-tqe
-      stake: 20_000 tokens
-      memo: 463
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: iiodm-2goob-cwr3y-s7cpb-5jspj-cqx6r-6uqon-q3kbh-hk762-rmasr-tqe
-      stake: 20_000 tokens
-      memo: 464
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: iiodm-2goob-cwr3y-s7cpb-5jspj-cqx6r-6uqon-q3kbh-hk762-rmasr-tqe
-      stake: 20_000 tokens
-      memo: 465
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 466
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 467
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 468
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 469
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 470
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 4rsxf-lektz-dof5f-hbyxu-f5pid-atppb-b6fvm-borg4-qy6zp-z4ogg-qae
-      stake: 20_000 tokens
-      memo: 471
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 4rsxf-lektz-dof5f-hbyxu-f5pid-atppb-b6fvm-borg4-qy6zp-z4ogg-qae
-      stake: 20_000 tokens
-      memo: 472
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 4rsxf-lektz-dof5f-hbyxu-f5pid-atppb-b6fvm-borg4-qy6zp-z4ogg-qae
-      stake: 20_000 tokens
-      memo: 473
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 4rsxf-lektz-dof5f-hbyxu-f5pid-atppb-b6fvm-borg4-qy6zp-z4ogg-qae
-      stake: 20_000 tokens
-      memo: 474
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 4rsxf-lektz-dof5f-hbyxu-f5pid-atppb-b6fvm-borg4-qy6zp-z4ogg-qae
-      stake: 20_000 tokens
-      memo: 475
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: wpczz-tfov4-yghro-bypjo-gzacf-ynqf3-rbzpz-nlkui-lrhld-igtzy-qqe
-      stake: 20_000 tokens
-      memo: 476
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: wpczz-tfov4-yghro-bypjo-gzacf-ynqf3-rbzpz-nlkui-lrhld-igtzy-qqe
-      stake: 20_000 tokens
-      memo: 477
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: wpczz-tfov4-yghro-bypjo-gzacf-ynqf3-rbzpz-nlkui-lrhld-igtzy-qqe
-      stake: 20_000 tokens
-      memo: 478
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: wpczz-tfov4-yghro-bypjo-gzacf-ynqf3-rbzpz-nlkui-lrhld-igtzy-qqe
-      stake: 20_000 tokens
-      memo: 479
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: wpczz-tfov4-yghro-bypjo-gzacf-ynqf3-rbzpz-nlkui-lrhld-igtzy-qqe
-      stake: 20_000 tokens
-      memo: 480
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: kf423-kpqna-2af3b-43q7l-5x3ly-dgchw-i6jtb-h7p7c-tqavl-d23nn-sqe
-      stake: 20_000 tokens
-      memo: 481
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: kf423-kpqna-2af3b-43q7l-5x3ly-dgchw-i6jtb-h7p7c-tqavl-d23nn-sqe
-      stake: 20_000 tokens
-      memo: 482
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: kf423-kpqna-2af3b-43q7l-5x3ly-dgchw-i6jtb-h7p7c-tqavl-d23nn-sqe
-      stake: 20_000 tokens
-      memo: 483
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: kf423-kpqna-2af3b-43q7l-5x3ly-dgchw-i6jtb-h7p7c-tqavl-d23nn-sqe
-      stake: 20_000 tokens
-      memo: 484
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: kf423-kpqna-2af3b-43q7l-5x3ly-dgchw-i6jtb-h7p7c-tqavl-d23nn-sqe
-      stake: 20_000 tokens
-      memo: 485
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: lvt3h-yipvp-zrryv-iibqg-rjxut-i7hb5-uxzlf-v2yxf-2fvck-asrne-4qe
-      stake: 20_000 tokens
-      memo: 486
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: lvt3h-yipvp-zrryv-iibqg-rjxut-i7hb5-uxzlf-v2yxf-2fvck-asrne-4qe
-      stake: 20_000 tokens
-      memo: 487
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: lvt3h-yipvp-zrryv-iibqg-rjxut-i7hb5-uxzlf-v2yxf-2fvck-asrne-4qe
-      stake: 20_000 tokens
-      memo: 488
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: lvt3h-yipvp-zrryv-iibqg-rjxut-i7hb5-uxzlf-v2yxf-2fvck-asrne-4qe
-      stake: 20_000 tokens
-      memo: 489
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: lvt3h-yipvp-zrryv-iibqg-rjxut-i7hb5-uxzlf-v2yxf-2fvck-asrne-4qe
-      stake: 20_000 tokens
-      memo: 490
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: wpczz-tfov4-yghro-bypjo-gzacf-ynqf3-rbzpz-nlkui-lrhld-igtzy-qqe
-      stake: 20_000 tokens
-      memo: 491
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: wpczz-tfov4-yghro-bypjo-gzacf-ynqf3-rbzpz-nlkui-lrhld-igtzy-qqe
-      stake: 20_000 tokens
-      memo: 492
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: wpczz-tfov4-yghro-bypjo-gzacf-ynqf3-rbzpz-nlkui-lrhld-igtzy-qqe
-      stake: 20_000 tokens
-      memo: 493
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: wpczz-tfov4-yghro-bypjo-gzacf-ynqf3-rbzpz-nlkui-lrhld-igtzy-qqe
-      stake: 20_000 tokens
-      memo: 494
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: wpczz-tfov4-yghro-bypjo-gzacf-ynqf3-rbzpz-nlkui-lrhld-igtzy-qqe
-      stake: 20_000 tokens
-      memo: 495
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: mkf6l-vpkmr-3pveg-gh4ct-zr6ys-qi6nd-qohg7-kh46e-5jhjd-cg3ec-zqe
-      stake: 20_000 tokens
-      memo: 496
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: mkf6l-vpkmr-3pveg-gh4ct-zr6ys-qi6nd-qohg7-kh46e-5jhjd-cg3ec-zqe
-      stake: 20_000 tokens
-      memo: 497
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: mkf6l-vpkmr-3pveg-gh4ct-zr6ys-qi6nd-qohg7-kh46e-5jhjd-cg3ec-zqe
-      stake: 20_000 tokens
-      memo: 498
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: mkf6l-vpkmr-3pveg-gh4ct-zr6ys-qi6nd-qohg7-kh46e-5jhjd-cg3ec-zqe
-      stake: 20_000 tokens
-      memo: 499
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: mkf6l-vpkmr-3pveg-gh4ct-zr6ys-qi6nd-qohg7-kh46e-5jhjd-cg3ec-zqe
-      stake: 20_000 tokens
-      memo: 500
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 62o4h-kc2ss-mbl66-5z27s-5ljq5-7u6bv-ukyv3-scsuq-weoso-whvrb-bae
-      stake: 20_000 tokens
-      memo: 501
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 62o4h-kc2ss-mbl66-5z27s-5ljq5-7u6bv-ukyv3-scsuq-weoso-whvrb-bae
-      stake: 20_000 tokens
-      memo: 502
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 62o4h-kc2ss-mbl66-5z27s-5ljq5-7u6bv-ukyv3-scsuq-weoso-whvrb-bae
-      stake: 20_000 tokens
-      memo: 503
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 62o4h-kc2ss-mbl66-5z27s-5ljq5-7u6bv-ukyv3-scsuq-weoso-whvrb-bae
-      stake: 20_000 tokens
-      memo: 504
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 62o4h-kc2ss-mbl66-5z27s-5ljq5-7u6bv-ukyv3-scsuq-weoso-whvrb-bae
-      stake: 20_000 tokens
-      memo: 505
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 506
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 507
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 508
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 509
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 510
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 511
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 512
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 513
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 514
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 515
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 516
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 517
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 518
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 519
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 520
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: w7vmk-hjaph-lcvtr-v4hzf-n2gdh-gigrq-ztjvn-ayquv-amjwg-ub66v-kqe
-      stake: 20_000 tokens
-      memo: 521
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: w7vmk-hjaph-lcvtr-v4hzf-n2gdh-gigrq-ztjvn-ayquv-amjwg-ub66v-kqe
-      stake: 20_000 tokens
-      memo: 522
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: w7vmk-hjaph-lcvtr-v4hzf-n2gdh-gigrq-ztjvn-ayquv-amjwg-ub66v-kqe
-      stake: 20_000 tokens
-      memo: 523
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: w7vmk-hjaph-lcvtr-v4hzf-n2gdh-gigrq-ztjvn-ayquv-amjwg-ub66v-kqe
-      stake: 20_000 tokens
-      memo: 524
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: w7vmk-hjaph-lcvtr-v4hzf-n2gdh-gigrq-ztjvn-ayquv-amjwg-ub66v-kqe
-      stake: 20_000 tokens
-      memo: 525
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: mkf6l-vpkmr-3pveg-gh4ct-zr6ys-qi6nd-qohg7-kh46e-5jhjd-cg3ec-zqe
-      stake: 20_000 tokens
-      memo: 526
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: mkf6l-vpkmr-3pveg-gh4ct-zr6ys-qi6nd-qohg7-kh46e-5jhjd-cg3ec-zqe
-      stake: 20_000 tokens
-      memo: 527
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: mkf6l-vpkmr-3pveg-gh4ct-zr6ys-qi6nd-qohg7-kh46e-5jhjd-cg3ec-zqe
-      stake: 20_000 tokens
-      memo: 528
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: mkf6l-vpkmr-3pveg-gh4ct-zr6ys-qi6nd-qohg7-kh46e-5jhjd-cg3ec-zqe
-      stake: 20_000 tokens
-      memo: 529
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: mkf6l-vpkmr-3pveg-gh4ct-zr6ys-qi6nd-qohg7-kh46e-5jhjd-cg3ec-zqe
-      stake: 20_000 tokens
-      memo: 530
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: cakml-xqt2h-5itil-fypzi-szxb4-6kvas-pey64-rjzt4-iebcx-dpf2f-yqe
-      stake: 20_000 tokens
-      memo: 531
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: cakml-xqt2h-5itil-fypzi-szxb4-6kvas-pey64-rjzt4-iebcx-dpf2f-yqe
-      stake: 20_000 tokens
-      memo: 532
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: cakml-xqt2h-5itil-fypzi-szxb4-6kvas-pey64-rjzt4-iebcx-dpf2f-yqe
-      stake: 20_000 tokens
-      memo: 533
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: cakml-xqt2h-5itil-fypzi-szxb4-6kvas-pey64-rjzt4-iebcx-dpf2f-yqe
-      stake: 20_000 tokens
-      memo: 534
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: cakml-xqt2h-5itil-fypzi-szxb4-6kvas-pey64-rjzt4-iebcx-dpf2f-yqe
-      stake: 20_000 tokens
-      memo: 535
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 536
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 537
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 538
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 539
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 540
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 3eyiv-3cnee-rd5rf-zdkiy-i4oc4-skogg-obsbk-vi5hh-wjuan-bjkcf-iae
-      stake: 20_000 tokens
-      memo: 541
+      stake: 100_000 tokens
+      memo: 20
       dissolve_delay: 1 months
       vesting_period: 0 months
     - principal: 3eyiv-3cnee-rd5rf-zdkiy-i4oc4-skogg-obsbk-vi5hh-wjuan-bjkcf-iae
-      stake: 20_000 tokens
-      memo: 542
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 3eyiv-3cnee-rd5rf-zdkiy-i4oc4-skogg-obsbk-vi5hh-wjuan-bjkcf-iae
-      stake: 20_000 tokens
-      memo: 543
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 3eyiv-3cnee-rd5rf-zdkiy-i4oc4-skogg-obsbk-vi5hh-wjuan-bjkcf-iae
-      stake: 20_000 tokens
-      memo: 544
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 3eyiv-3cnee-rd5rf-zdkiy-i4oc4-skogg-obsbk-vi5hh-wjuan-bjkcf-iae
-      stake: 20_000 tokens
-      memo: 545
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 6iqwa-havf6-hxlmj-qz4u7-gdfac-mcok2-qdvjj-jtjez-hj4xa-fqhms-lqe
-      stake: 20_000 tokens
-      memo: 546
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 6iqwa-havf6-hxlmj-qz4u7-gdfac-mcok2-qdvjj-jtjez-hj4xa-fqhms-lqe
-      stake: 20_000 tokens
-      memo: 547
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 6iqwa-havf6-hxlmj-qz4u7-gdfac-mcok2-qdvjj-jtjez-hj4xa-fqhms-lqe
-      stake: 20_000 tokens
-      memo: 548
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 6iqwa-havf6-hxlmj-qz4u7-gdfac-mcok2-qdvjj-jtjez-hj4xa-fqhms-lqe
-      stake: 20_000 tokens
-      memo: 549
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 6iqwa-havf6-hxlmj-qz4u7-gdfac-mcok2-qdvjj-jtjez-hj4xa-fqhms-lqe
-      stake: 20_000 tokens
-      memo: 550
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 551
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 552
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 553
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 554
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 555
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 556
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 557
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 558
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 559
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 560
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: saw7k-3vflg-gg6ci-plkdc-3lhsh-huley-llpjr-fqjfm-bhxl5-34evi-iae
-      stake: 20_000 tokens
-      memo: 561
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: saw7k-3vflg-gg6ci-plkdc-3lhsh-huley-llpjr-fqjfm-bhxl5-34evi-iae
-      stake: 20_000 tokens
-      memo: 562
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: saw7k-3vflg-gg6ci-plkdc-3lhsh-huley-llpjr-fqjfm-bhxl5-34evi-iae
-      stake: 20_000 tokens
-      memo: 563
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: saw7k-3vflg-gg6ci-plkdc-3lhsh-huley-llpjr-fqjfm-bhxl5-34evi-iae
-      stake: 20_000 tokens
-      memo: 564
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: saw7k-3vflg-gg6ci-plkdc-3lhsh-huley-llpjr-fqjfm-bhxl5-34evi-iae
-      stake: 20_000 tokens
-      memo: 565
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5pl3h-3efjc-rxb2k-62fmr-fibzq-a2lii-c4l2s-quh2n-73ghp-wwupv-hae
-      stake: 20_000 tokens
-      memo: 566
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 5pl3h-3efjc-rxb2k-62fmr-fibzq-a2lii-c4l2s-quh2n-73ghp-wwupv-hae
-      stake: 20_000 tokens
-      memo: 567
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5pl3h-3efjc-rxb2k-62fmr-fibzq-a2lii-c4l2s-quh2n-73ghp-wwupv-hae
-      stake: 20_000 tokens
-      memo: 568
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5pl3h-3efjc-rxb2k-62fmr-fibzq-a2lii-c4l2s-quh2n-73ghp-wwupv-hae
-      stake: 20_000 tokens
-      memo: 569
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5pl3h-3efjc-rxb2k-62fmr-fibzq-a2lii-c4l2s-quh2n-73ghp-wwupv-hae
-      stake: 20_000 tokens
-      memo: 570
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: jtxaq-ejark-iiyjb-wwws3-pjhbh-udxzs-u3f2c-p6aca-56shc-j5szo-3ae
-      stake: 20_000 tokens
-      memo: 571
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: jtxaq-ejark-iiyjb-wwws3-pjhbh-udxzs-u3f2c-p6aca-56shc-j5szo-3ae
-      stake: 20_000 tokens
-      memo: 572
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: jtxaq-ejark-iiyjb-wwws3-pjhbh-udxzs-u3f2c-p6aca-56shc-j5szo-3ae
-      stake: 20_000 tokens
-      memo: 573
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: jtxaq-ejark-iiyjb-wwws3-pjhbh-udxzs-u3f2c-p6aca-56shc-j5szo-3ae
-      stake: 20_000 tokens
-      memo: 574
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: jtxaq-ejark-iiyjb-wwws3-pjhbh-udxzs-u3f2c-p6aca-56shc-j5szo-3ae
-      stake: 20_000 tokens
-      memo: 575
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: c6t77-24bha-3capl-455wx-menwb-wh3ey-xmyp6-ykads-p4jj6-isibw-yae
-      stake: 20_000 tokens
-      memo: 576
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: c6t77-24bha-3capl-455wx-menwb-wh3ey-xmyp6-ykads-p4jj6-isibw-yae
-      stake: 20_000 tokens
-      memo: 577
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: c6t77-24bha-3capl-455wx-menwb-wh3ey-xmyp6-ykads-p4jj6-isibw-yae
-      stake: 20_000 tokens
-      memo: 578
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: c6t77-24bha-3capl-455wx-menwb-wh3ey-xmyp6-ykads-p4jj6-isibw-yae
-      stake: 20_000 tokens
-      memo: 579
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: c6t77-24bha-3capl-455wx-menwb-wh3ey-xmyp6-ykads-p4jj6-isibw-yae
-      stake: 20_000 tokens
-      memo: 580
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: sjs5k-bycyr-6jbui-w5cl2-lalql-n4iv7-peaox-c65u4-emjhx-uplc6-3qe
-      stake: 20_000 tokens
-      memo: 581
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: sjs5k-bycyr-6jbui-w5cl2-lalql-n4iv7-peaox-c65u4-emjhx-uplc6-3qe
-      stake: 20_000 tokens
-      memo: 582
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: sjs5k-bycyr-6jbui-w5cl2-lalql-n4iv7-peaox-c65u4-emjhx-uplc6-3qe
-      stake: 20_000 tokens
-      memo: 583
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: sjs5k-bycyr-6jbui-w5cl2-lalql-n4iv7-peaox-c65u4-emjhx-uplc6-3qe
-      stake: 20_000 tokens
-      memo: 584
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: sjs5k-bycyr-6jbui-w5cl2-lalql-n4iv7-peaox-c65u4-emjhx-uplc6-3qe
-      stake: 20_000 tokens
-      memo: 585
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: zdxgx-w4fjs-xox5p-k4vre-f5can-kiktw-v566e-55y2x-3jwpc-wm7c6-4qe
-      stake: 20_000 tokens
-      memo: 586
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: zdxgx-w4fjs-xox5p-k4vre-f5can-kiktw-v566e-55y2x-3jwpc-wm7c6-4qe
-      stake: 20_000 tokens
-      memo: 587
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: zdxgx-w4fjs-xox5p-k4vre-f5can-kiktw-v566e-55y2x-3jwpc-wm7c6-4qe
-      stake: 20_000 tokens
-      memo: 588
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: zdxgx-w4fjs-xox5p-k4vre-f5can-kiktw-v566e-55y2x-3jwpc-wm7c6-4qe
-      stake: 20_000 tokens
-      memo: 589
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: zdxgx-w4fjs-xox5p-k4vre-f5can-kiktw-v566e-55y2x-3jwpc-wm7c6-4qe
-      stake: 20_000 tokens
-      memo: 590
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 3wqbb-tckrb-4kx7b-5kawo-4dptm-oo63u-gnqkr-lgrvs-so6jf-e5mrl-bqe
-      stake: 20_000 tokens
-      memo: 591
+      stake: 100_000 tokens
+      memo: 21
       dissolve_delay: 1 months
       vesting_period: 0 months
     - principal: 3wqbb-tckrb-4kx7b-5kawo-4dptm-oo63u-gnqkr-lgrvs-so6jf-e5mrl-bqe
-      stake: 20_000 tokens
-      memo: 592
+      stake: 100_000 tokens
+      memo: 22
       dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 3wqbb-tckrb-4kx7b-5kawo-4dptm-oo63u-gnqkr-lgrvs-so6jf-e5mrl-bqe
-      stake: 20_000 tokens
-      memo: 593
+      vesting_period: 0 months
+    - principal: 4rsxf-lektz-dof5f-hbyxu-f5pid-atppb-b6fvm-borg4-qy6zp-z4ogg-qae
+      stake: 100_000 tokens
+      memo: 23
       dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 3wqbb-tckrb-4kx7b-5kawo-4dptm-oo63u-gnqkr-lgrvs-so6jf-e5mrl-bqe
-      stake: 20_000 tokens
-      memo: 594
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 3wqbb-tckrb-4kx7b-5kawo-4dptm-oo63u-gnqkr-lgrvs-so6jf-e5mrl-bqe
-      stake: 20_000 tokens
-      memo: 595
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 596
+      vesting_period: 0 months
+    - principal: 5eoy3-7c3mm-3to7b-lnvpz-vwex7-onqap-wfp7x-3ca57-p3mwl-wspuw-6ae
+      stake: 100_000 tokens
+      memo: 24
       dissolve_delay: 1 months
       vesting_period: 0 months
     - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 597
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 598
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 599
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 600
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 601
+      stake: 4_200_000 tokens
+      memo: 25
       dissolve_delay: 1 months
       vesting_period: 0 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 602
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 603
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 604
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 605
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 606
+    - principal: 5pl3h-3efjc-rxb2k-62fmr-fibzq-a2lii-c4l2s-quh2n-73ghp-wwupv-hae
+      stake: 100_000 tokens
+      memo: 26
       dissolve_delay: 1 months
       vesting_period: 0 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 607
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 608
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 609
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 610
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 611
+    - principal: 5rmrr-jnzf2-zqdaw-6qej6-hzkut-qy2am-n2efa-js27k-u5jb7-to5ej-2qe
+      stake: 100_000 tokens
+      memo: 27
       dissolve_delay: 1 months
       vesting_period: 0 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 612
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 613
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 614
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 615
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 616
+    - principal: 5sise-hw7oe-5n7vi-p742f-iqck3-bgqun-zivuk-wvuln-b5ezc-nxd6k-sae
+      stake: 400_000 tokens
+      memo: 28
       dissolve_delay: 1 months
       vesting_period: 0 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 617
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 618
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 619
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 620
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: saw7k-3vflg-gg6ci-plkdc-3lhsh-huley-llpjr-fqjfm-bhxl5-34evi-iae
-      stake: 20_000 tokens
-      memo: 621
+    - principal: 62o4h-kc2ss-mbl66-5z27s-5ljq5-7u6bv-ukyv3-scsuq-weoso-whvrb-bae
+      stake: 100_000 tokens
+      memo: 29
       dissolve_delay: 1 months
       vesting_period: 0 months
-    - principal: saw7k-3vflg-gg6ci-plkdc-3lhsh-huley-llpjr-fqjfm-bhxl5-34evi-iae
-      stake: 20_000 tokens
-      memo: 622
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: saw7k-3vflg-gg6ci-plkdc-3lhsh-huley-llpjr-fqjfm-bhxl5-34evi-iae
-      stake: 20_000 tokens
-      memo: 623
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: saw7k-3vflg-gg6ci-plkdc-3lhsh-huley-llpjr-fqjfm-bhxl5-34evi-iae
-      stake: 20_000 tokens
-      memo: 624
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: saw7k-3vflg-gg6ci-plkdc-3lhsh-huley-llpjr-fqjfm-bhxl5-34evi-iae
-      stake: 20_000 tokens
-      memo: 625
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: yiv4y-g2mx3-4iyfg-iysqd-uoonk-23xa5-jltij-f4ffb-4s4rp-a4h7r-uqe
-      stake: 20_000 tokens
-      memo: 626
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: yiv4y-g2mx3-4iyfg-iysqd-uoonk-23xa5-jltij-f4ffb-4s4rp-a4h7r-uqe
-      stake: 20_000 tokens
-      memo: 627
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: yiv4y-g2mx3-4iyfg-iysqd-uoonk-23xa5-jltij-f4ffb-4s4rp-a4h7r-uqe
-      stake: 20_000 tokens
-      memo: 628
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: yiv4y-g2mx3-4iyfg-iysqd-uoonk-23xa5-jltij-f4ffb-4s4rp-a4h7r-uqe
-      stake: 20_000 tokens
-      memo: 629
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: yiv4y-g2mx3-4iyfg-iysqd-uoonk-23xa5-jltij-f4ffb-4s4rp-a4h7r-uqe
-      stake: 20_000 tokens
-      memo: 630
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: vxzzq-mf7rm-g5hck-ofygy-lgbgd-wgprm-djuim-g6z2s-y36db-vcu5z-4ae
-      stake: 20_000 tokens
-      memo: 631
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: vxzzq-mf7rm-g5hck-ofygy-lgbgd-wgprm-djuim-g6z2s-y36db-vcu5z-4ae
-      stake: 20_000 tokens
-      memo: 632
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: vxzzq-mf7rm-g5hck-ofygy-lgbgd-wgprm-djuim-g6z2s-y36db-vcu5z-4ae
-      stake: 20_000 tokens
-      memo: 633
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: vxzzq-mf7rm-g5hck-ofygy-lgbgd-wgprm-djuim-g6z2s-y36db-vcu5z-4ae
-      stake: 20_000 tokens
-      memo: 634
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: vxzzq-mf7rm-g5hck-ofygy-lgbgd-wgprm-djuim-g6z2s-y36db-vcu5z-4ae
-      stake: 20_000 tokens
-      memo: 635
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 636
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 637
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 638
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 639
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 640
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: a4n7b-blydr-uefpu-dgcmr-dk55c-uzcpo-yyryk-c4fac-x7t32-5fuiu-oae
-      stake: 20_000 tokens
-      memo: 641
-      dissolve_delay: 1 months
-      vesting_period: 0 months
-    - principal: a4n7b-blydr-uefpu-dgcmr-dk55c-uzcpo-yyryk-c4fac-x7t32-5fuiu-oae
-      stake: 20_000 tokens
-      memo: 642
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: a4n7b-blydr-uefpu-dgcmr-dk55c-uzcpo-yyryk-c4fac-x7t32-5fuiu-oae
-      stake: 20_000 tokens
-      memo: 643
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: a4n7b-blydr-uefpu-dgcmr-dk55c-uzcpo-yyryk-c4fac-x7t32-5fuiu-oae
-      stake: 20_000 tokens
-      memo: 644
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: a4n7b-blydr-uefpu-dgcmr-dk55c-uzcpo-yyryk-c4fac-x7t32-5fuiu-oae
-      stake: 20_000 tokens
-      memo: 645
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 6pbrx-5t7hs-xwdwn-q3nec-mzk7a-fip3v-sqdbq-duyp5-e5g3m-5wb6f-zqe
-      stake: 20_000 tokens
-      memo: 646
+    - principal: 6iqwa-havf6-hxlmj-qz4u7-gdfac-mcok2-qdvjj-jtjez-hj4xa-fqhms-lqe
+      stake: 400_000 tokens
+      memo: 30
       dissolve_delay: 1 months
       vesting_period: 0 months
     - principal: 6pbrx-5t7hs-xwdwn-q3nec-mzk7a-fip3v-sqdbq-duyp5-e5g3m-5wb6f-zqe
-      stake: 20_000 tokens
-      memo: 647
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 6pbrx-5t7hs-xwdwn-q3nec-mzk7a-fip3v-sqdbq-duyp5-e5g3m-5wb6f-zqe
-      stake: 20_000 tokens
-      memo: 648
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 6pbrx-5t7hs-xwdwn-q3nec-mzk7a-fip3v-sqdbq-duyp5-e5g3m-5wb6f-zqe
-      stake: 20_000 tokens
-      memo: 649
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 6pbrx-5t7hs-xwdwn-q3nec-mzk7a-fip3v-sqdbq-duyp5-e5g3m-5wb6f-zqe
-      stake: 20_000 tokens
-      memo: 650
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: l3xt4-pp4ym-4u5vg-kwu73-myavv-bymkt-2qlxw-2wt6g-sny2q-mfoir-kqe
-      stake: 20_000 tokens
-      memo: 651
+      stake: 100_000 tokens
+      memo: 31
       dissolve_delay: 1 months
       vesting_period: 0 months
-    - principal: l3xt4-pp4ym-4u5vg-kwu73-myavv-bymkt-2qlxw-2wt6g-sny2q-mfoir-kqe
-      stake: 20_000 tokens
-      memo: 652
+    - principal: a4n7b-blydr-uefpu-dgcmr-dk55c-uzcpo-yyryk-c4fac-x7t32-5fuiu-oae
+      stake: 100_000 tokens
+      memo: 32
       dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: l3xt4-pp4ym-4u5vg-kwu73-myavv-bymkt-2qlxw-2wt6g-sny2q-mfoir-kqe
-      stake: 20_000 tokens
-      memo: 653
+      vesting_period: 0 months
+    - principal: az4qr-yxlwz-iebbz-4tdjs-nrsl5-ifqqg-m4bwf-c43up-yagup-4xo6w-oqe
+      stake: 100_000 tokens
+      memo: 33
       dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: l3xt4-pp4ym-4u5vg-kwu73-myavv-bymkt-2qlxw-2wt6g-sny2q-mfoir-kqe
-      stake: 20_000 tokens
-      memo: 654
+      vesting_period: 0 months
+    - principal: bdjyr-r4v6q-l6yqs-i5nk4-zhmdw-nnymn-art62-nqog5-q4ktl-yq2iz-jae
+      stake: 100_000 tokens
+      memo: 34
       dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: l3xt4-pp4ym-4u5vg-kwu73-myavv-bymkt-2qlxw-2wt6g-sny2q-mfoir-kqe
-      stake: 20_000 tokens
-      memo: 655
+      vesting_period: 0 months
+    - principal: bjl4i-fyipq-zlait-dxuop-2yslo-i2ir4-kqxcv-xmk7f-enyo4-u3nwt-yae
+      stake: 100_000 tokens
+      memo: 35
       dissolve_delay: 1 months
-      vesting_period: 24 months
+      vesting_period: 0 months
+    - principal: c6t77-24bha-3capl-455wx-menwb-wh3ey-xmyp6-ykads-p4jj6-isibw-yae
+      stake: 200_000 tokens
+      memo: 36
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: cakml-xqt2h-5itil-fypzi-szxb4-6kvas-pey64-rjzt4-iebcx-dpf2f-yqe
+      stake: 100_000 tokens
+      memo: 37
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: cmoc7-5ncrz-xlp2z-4msvg-qz6lp-ijffr-zb3um-nt5jy-pdpog-hy2u3-lqe
+      stake: 100_000 tokens
+      memo: 38
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: dfrrb-iw7vg-3sgns-uwbuj-dmel7-qlt6i-ryb6c-npa3n-rwcm3-uc7v7-tqe
+      stake: 100_000 tokens
+      memo: 39
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: dsje4-zqhrr-dddpb-v44dj-i6ybo-ign2l-yceew-tuldo-tvjcc-qffwv-6ae
+      stake: 100_000 tokens
+      memo: 40
+      dissolve_delay: 1 months
+      vesting_period: 0 months
     - principal: en32d-qgizg-er7ll-kslzy-yaqcb-eecxq-m6guz-ssqvz-m3zpa-fvlpk-cqe
-      stake: 20_000 tokens
-      memo: 656
+      stake: 100_000 tokens
+      memo: 41
       dissolve_delay: 1 months
       vesting_period: 0 months
-    - principal: en32d-qgizg-er7ll-kslzy-yaqcb-eecxq-m6guz-ssqvz-m3zpa-fvlpk-cqe
-      stake: 20_000 tokens
-      memo: 657
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: en32d-qgizg-er7ll-kslzy-yaqcb-eecxq-m6guz-ssqvz-m3zpa-fvlpk-cqe
-      stake: 20_000 tokens
-      memo: 658
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: en32d-qgizg-er7ll-kslzy-yaqcb-eecxq-m6guz-ssqvz-m3zpa-fvlpk-cqe
-      stake: 20_000 tokens
-      memo: 659
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: en32d-qgizg-er7ll-kslzy-yaqcb-eecxq-m6guz-ssqvz-m3zpa-fvlpk-cqe
-      stake: 20_000 tokens
-      memo: 660
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: saw7k-3vflg-gg6ci-plkdc-3lhsh-huley-llpjr-fqjfm-bhxl5-34evi-iae
-      stake: 20_000 tokens
-      memo: 661
+    - principal: fkxku-5wudo-ikqfq-fpmrx-llpol-dcusl-s6zbr-da7hi-jo33b-p7bvv-rqe
+      stake: 100_000 tokens
+      memo: 42
       dissolve_delay: 1 months
       vesting_period: 0 months
-    - principal: saw7k-3vflg-gg6ci-plkdc-3lhsh-huley-llpjr-fqjfm-bhxl5-34evi-iae
-      stake: 20_000 tokens
-      memo: 662
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: saw7k-3vflg-gg6ci-plkdc-3lhsh-huley-llpjr-fqjfm-bhxl5-34evi-iae
-      stake: 20_000 tokens
-      memo: 663
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: saw7k-3vflg-gg6ci-plkdc-3lhsh-huley-llpjr-fqjfm-bhxl5-34evi-iae
-      stake: 20_000 tokens
-      memo: 664
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: saw7k-3vflg-gg6ci-plkdc-3lhsh-huley-llpjr-fqjfm-bhxl5-34evi-iae
-      stake: 20_000 tokens
-      memo: 665
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 666
+    - principal: fufhj-lbeaw-my6ip-bb56z-fuyrs-725sx-evuk5-wxaii-vmuhk-bkvml-wqe
+      stake: 100_000 tokens
+      memo: 43
       dissolve_delay: 1 months
       vesting_period: 0 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 667
+    - principal: fusjd-zu3yn-amv3e-n2jkv-3vs3e-3qy6e-5ximl-q75qu-mtk7q-mk7br-4qe
+      stake: 100_000 tokens
+      memo: 44
       dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 668
+      vesting_period: 0 months
+    - principal: gfpnm-rtzql-7yntk-g3iup-d62ro-ynpfa-5m2au-evs4t-3gkvt-yrqlv-6qe
+      stake: 100_000 tokens
+      memo: 45
       dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 669
+      vesting_period: 0 months
+    - principal: iiodm-2goob-cwr3y-s7cpb-5jspj-cqx6r-6uqon-q3kbh-hk762-rmasr-tqe
+      stake: 100_000 tokens
+      memo: 46
       dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 670
+      vesting_period: 0 months
+    - principal: jbe6m-zpztp-gxzj3-a7oxb-igzo7-azaef-4usu3-xtswb-th2gv-5o7nu-zae
+      stake: 100_000 tokens
+      memo: 47
       dissolve_delay: 1 months
-      vesting_period: 24 months
+      vesting_period: 0 months
+    - principal: jeo24-eiokv-u76jo-z43ql-gkvvs-u4m6x-j3tan-fgoac-7bjm3-i3lrm-gae
+      stake: 100_000 tokens
+      memo: 48
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: jtxaq-ejark-iiyjb-wwws3-pjhbh-udxzs-u3f2c-p6aca-56shc-j5szo-3ae
+      stake: 100_000 tokens
+      memo: 49
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: kf423-kpqna-2af3b-43q7l-5x3ly-dgchw-i6jtb-h7p7c-tqavl-d23nn-sqe
+      stake: 100_000 tokens
+      memo: 50
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: kqprg-cobbv-6dxo7-yd53x-cmgbq-tk3lh-lfu6o-2czd5-iui6g-v6d6z-3qe
+      stake: 100_000 tokens
+      memo: 51
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: l3xt4-pp4ym-4u5vg-kwu73-myavv-bymkt-2qlxw-2wt6g-sny2q-mfoir-kqe
+      stake: 100_000 tokens
+      memo: 52
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: lvt3h-yipvp-zrryv-iibqg-rjxut-i7hb5-uxzlf-v2yxf-2fvck-asrne-4qe
+      stake: 500_000 tokens
+      memo: 53
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: mdqrd-ckw4u-malee-uqjaj-33q2l-o6nqb-urav4-mh3zu-bqb7h-c66bv-kae
+      stake: 100_000 tokens
+      memo: 54
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: mhbvf-r6nsn-3xyoq-f6ykg-dar2d-qhgbk-t7gns-c4qgv-p6ft6-sf73m-mae
+      stake: 100_000 tokens
+      memo: 55
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: mkf6l-vpkmr-3pveg-gh4ct-zr6ys-qi6nd-qohg7-kh46e-5jhjd-cg3ec-zqe
+      stake: 200_000 tokens
+      memo: 56
+      dissolve_delay: 1 months
+      vesting_period: 0 months
     - principal: mvfpx-yiwic-vfpe3-tcwyz-lzzcf-mn53a-s7vbj-md6xn-mqvyl-c5yzu-tae
-      stake: 20_000 tokens
-      memo: 671
+      stake: 400_000 tokens
+      memo: 57
       dissolve_delay: 1 months
       vesting_period: 0 months
-    - principal: mvfpx-yiwic-vfpe3-tcwyz-lzzcf-mn53a-s7vbj-md6xn-mqvyl-c5yzu-tae
-      stake: 20_000 tokens
-      memo: 672
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: mvfpx-yiwic-vfpe3-tcwyz-lzzcf-mn53a-s7vbj-md6xn-mqvyl-c5yzu-tae
-      stake: 20_000 tokens
-      memo: 673
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: mvfpx-yiwic-vfpe3-tcwyz-lzzcf-mn53a-s7vbj-md6xn-mqvyl-c5yzu-tae
-      stake: 20_000 tokens
-      memo: 674
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: mvfpx-yiwic-vfpe3-tcwyz-lzzcf-mn53a-s7vbj-md6xn-mqvyl-c5yzu-tae
-      stake: 20_000 tokens
-      memo: 675
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 676
+    - principal: n3z2z-c6m7i-ktcqi-3zpof-fzriz-i3vvz-7ensp-2yfyp-ydudd-64ebg-5ae
+      stake: 100_000 tokens
+      memo: 58
       dissolve_delay: 1 months
       vesting_period: 0 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 677
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 678
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 679
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 680
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 681
+    - principal: ob3vm-ygzgo-6av2i-wx4ol-zkvfq-6zxh4-rb7bw-4tox4-w7xjy-aavdc-zae
+      stake: 100_000 tokens
+      memo: 59
       dissolve_delay: 1 months
       vesting_period: 0 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 682
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 683
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 684
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 685
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 686
+    - principal: ozs4q-xo5xp-mz7dh-khz7m-i6kl5-om5jk-u5wxw-tmcnm-ofsqx-a6xvl-jqe
+      stake: 100_000 tokens
+      memo: 60
       dissolve_delay: 1 months
       vesting_period: 0 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 687
-      dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 688
-      dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 689
-      dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: 5fvnz-tzbbx-bapyb-2qv7u-vpelr-vhb2q-3ii53-f4oon-bjilc-6v2rp-zqe
-      stake: 20_000 tokens
-      memo: 690
-      dissolve_delay: 1 months
-      vesting_period: 24 months
-    - principal: saw7k-3vflg-gg6ci-plkdc-3lhsh-huley-llpjr-fqjfm-bhxl5-34evi-iae
-      stake: 20_000 tokens
-      memo: 691
+    - principal: pzah7-uya76-viufh-t7g3s-nnrue-ivhgn-jkom7-fopz3-v3qka-lctbq-rqe
+      stake: 200_000 tokens
+      memo: 61
       dissolve_delay: 1 months
       vesting_period: 0 months
     - principal: saw7k-3vflg-gg6ci-plkdc-3lhsh-huley-llpjr-fqjfm-bhxl5-34evi-iae
-      stake: 20_000 tokens
-      memo: 692
+      stake: 700_000 tokens
+      memo: 62
       dissolve_delay: 1 months
-      vesting_period: 6 months
-    - principal: saw7k-3vflg-gg6ci-plkdc-3lhsh-huley-llpjr-fqjfm-bhxl5-34evi-iae
-      stake: 20_000 tokens
-      memo: 693
+      vesting_period: 0 months
+    - principal: sjs5k-bycyr-6jbui-w5cl2-lalql-n4iv7-peaox-c65u4-emjhx-uplc6-3qe
+      stake: 100_000 tokens
+      memo: 63
       dissolve_delay: 1 months
-      vesting_period: 12 months
-    - principal: saw7k-3vflg-gg6ci-plkdc-3lhsh-huley-llpjr-fqjfm-bhxl5-34evi-iae
-      stake: 20_000 tokens
-      memo: 694
+      vesting_period: 0 months
+    - principal: tlapy-5v4jb-jcz6j-n2oz7-tqjg5-4aoc5-hdaon-hch22-r7mv5-iu6lj-pqe
+      stake: 100_000 tokens
+      memo: 64
       dissolve_delay: 1 months
-      vesting_period: 18 months
-    - principal: saw7k-3vflg-gg6ci-plkdc-3lhsh-huley-llpjr-fqjfm-bhxl5-34evi-iae
-      stake: 20_000 tokens
-      memo: 695
+      vesting_period: 0 months
+    - principal: ut3om-xj5jt-j4x4a-oo5mx-pgdee-hejuo-3i4xp-qwfjj-chnhr-j75ap-yae
+      stake: 100_000 tokens
+      memo: 65
       dissolve_delay: 1 months
-      vesting_period: 24 months
+      vesting_period: 0 months
+    - principal: veuuk-uia3z-bwq3s-pqeo6-4ndws-2na3w-2v2v3-xjilw-ohvoh-3zg4v-mqe
+      stake: 100_000 tokens
+      memo: 66
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: vxzzq-mf7rm-g5hck-ofygy-lgbgd-wgprm-djuim-g6z2s-y36db-vcu5z-4ae
+      stake: 100_000 tokens
+      memo: 67
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: w7vmk-hjaph-lcvtr-v4hzf-n2gdh-gigrq-ztjvn-ayquv-amjwg-ub66v-kqe
+      stake: 100_000 tokens
+      memo: 68
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: wpczz-tfov4-yghro-bypjo-gzacf-ynqf3-rbzpz-nlkui-lrhld-igtzy-qqe
+      stake: 200_000 tokens
+      memo: 69
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: xekqt-5tpha-ncs5c-w6ctw-uv2vh-hrqze-p43yn-ihrvo-bc3f3-rtqck-nqe
+      stake: 100_000 tokens
+      memo: 70
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: yiv4y-g2mx3-4iyfg-iysqd-uoonk-23xa5-jltij-f4ffb-4s4rp-a4h7r-uqe
+      stake: 300_000 tokens
+      memo: 71
+      dissolve_delay: 1 months
+      vesting_period: 0 months
+    - principal: zdxgx-w4fjs-xox5p-k4vre-f5can-kiktw-v566e-55y2x-3jwpc-wm7c6-4qe
+      stake: 100_000 tokens
+      memo: 72
+      dissolve_delay: 1 months
+      vesting_period: 0 months
 
   # The initial SNS token balances of the various canisters of the SNS.
   InitialBalances:
@@ -3871,7 +801,33 @@ Swap:
   # are allowed.
   #
   # Each list element must be an ISO 3166-1 alpha-2 country code.
-  restricted_countries: [ "AF", "BY", "BA", "BI", "CF", "KP", "CD", "IR", "IQ", "LB", "LY", "ML", "ME", "MM", "NI", "RU", "RS", "SO", "SD", "SY", "UA", "VE", "YE", "ZW" ]
+  restricted_countries:
+    [
+      "AF",
+      "BY",
+      "BA",
+      "BI",
+      "CF",
+      "KP",
+      "CD",
+      "IR",
+      "IQ",
+      "LB",
+      "LY",
+      "ML",
+      "ME",
+      "MM",
+      "NI",
+      "RU",
+      "RS",
+      "SO",
+      "SD",
+      "SY",
+      "UA",
+      "VE",
+      "YE",
+      "ZW",
+    ]
 
   # Configuration of the vesting schedule of the neuron basket, i.e., the SNS
   # neurons that a participants will receive from a successful
