@@ -242,8 +242,8 @@ module {
       return await managerComposite.updateFavouriteClub(principalId, clubId, systemState, allClubs);
     };
 
-    public func updateProfilePicture(principalId : Text, profilePicture : Blob) : async Result.Result<(), T.Error> {
-      return await managerComposite.updateProfilePicture(principalId, profilePicture);
+    public func updateProfilePicture(principalId : Text, profilePicture : Blob, profilePictureType: Text) : async Result.Result<(), T.Error> {
+      return await managerComposite.updateProfilePicture(principalId, profilePicture, profilePictureType);
     };
 
     public func isUsernameValid(username : Text) : Bool {

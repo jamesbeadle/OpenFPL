@@ -132,6 +132,7 @@ module DTOs {
     username : Text;
     termsAccepted : Bool;
     profilePicture : ?Blob;
+    profilePictureType: Text;
     favouriteClubId : T.ClubId;
     createDate : Int;
   };
@@ -383,6 +384,7 @@ module DTOs {
   public type UpdateProfilePictureDTO = {
     principalId : Text;
     profilePicture : ?Blob;
+    extension: Text;
   };
 
   public type AddNewManagerDTO = {
