@@ -365,6 +365,7 @@ export const idlFactory = ({ IDL }) => {
     createDate: IDL.Int,
     favouriteClubId: ClubId,
     profilePicture: IDL.Opt(IDL.Vec(IDL.Nat8)),
+    profilePictureType: IDL.Text,
     principalId: IDL.Text,
   });
   const Result_8 = IDL.Variant({ ok: ProfileDTO, err: Error });
@@ -400,6 +401,7 @@ export const idlFactory = ({ IDL }) => {
     gameweek: GameweekNumber,
   });
   const Result_2 = IDL.Variant({ ok: WeeklyLeaderboardDTO, err: Error });
+  const Result_1 = IDL.Variant({ ok: IDL.Null, err: Error });
   const UpdateTeamSelectionDTO = IDL.Record({
     playerIds: IDL.Vec(PlayerId),
     countrymenCountryId: CountryId,
@@ -423,7 +425,6 @@ export const idlFactory = ({ IDL }) => {
     passMasterPlayerId: PlayerId,
     captainId: PlayerId,
   });
-  const Result_1 = IDL.Variant({ ok: IDL.Null, err: Error });
   const Result = IDL.Variant({ ok: IDL.Text, err: IDL.Text });
   return IDL.Service({
     burnICPToCycles: IDL.Func([IDL.Nat64], [], []),
@@ -489,11 +490,16 @@ export const idlFactory = ({ IDL }) => {
       [Result_2],
       []
     ),
+    init: IDL.Func([], [Result_1], []),
     isUsernameValid: IDL.Func([IDL.Text], [IDL.Bool], ["query"]),
     requestCanisterTopup: IDL.Func([], [], []),
     saveFantasyTeam: IDL.Func([UpdateTeamSelectionDTO], [Result_1], []),
     updateFavouriteClub: IDL.Func([ClubId], [Result_1], []),
-    updateProfilePicture: IDL.Func([IDL.Vec(IDL.Nat8)], [Result_1], []),
+    updateProfilePicture: IDL.Func(
+      [IDL.Vec(IDL.Nat8), IDL.Text],
+      [Result_1],
+      []
+    ),
     updateUsername: IDL.Func([IDL.Text], [Result_1], []),
     validateAddInitialFixtures: IDL.Func([AddInitialFixturesDTO], [Result], []),
     validateCreatePlayer: IDL.Func([CreatePlayerDTO], [Result], []),

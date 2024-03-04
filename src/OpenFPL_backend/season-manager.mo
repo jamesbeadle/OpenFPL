@@ -242,7 +242,7 @@ module {
       return await managerComposite.updateFavouriteClub(principalId, clubId, systemState, allClubs);
     };
 
-    public func updateProfilePicture(principalId : Text, profilePicture : Blob, profilePictureType: Text) : async Result.Result<(), T.Error> {
+    public func updateProfilePicture(principalId : Text, profilePicture : Blob, profilePictureType : Text) : async Result.Result<(), T.Error> {
       return await managerComposite.updateProfilePicture(principalId, profilePicture, profilePictureType);
     };
 

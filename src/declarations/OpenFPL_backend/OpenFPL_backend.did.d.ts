@@ -274,6 +274,7 @@ export interface ProfileDTO {
   createDate: bigint;
   favouriteClubId: ClubId;
   profilePicture: [] | [Uint8Array | number[]];
+  profilePictureType: string;
   principalId: string;
 }
 export interface PromoteFormerClubDTO {
@@ -480,11 +481,12 @@ export interface _SERVICE {
     [SeasonId, GameweekNumber, bigint, bigint, string],
     Result_2
   >;
+  init: ActorMethod<[], Result_1>;
   isUsernameValid: ActorMethod<[string], boolean>;
   requestCanisterTopup: ActorMethod<[], undefined>;
   saveFantasyTeam: ActorMethod<[UpdateTeamSelectionDTO], Result_1>;
   updateFavouriteClub: ActorMethod<[ClubId], Result_1>;
-  updateProfilePicture: ActorMethod<[Uint8Array | number[]], Result_1>;
+  updateProfilePicture: ActorMethod<[Uint8Array | number[], string], Result_1>;
   updateUsername: ActorMethod<[string], Result_1>;
   validateAddInitialFixtures: ActorMethod<[AddInitialFixturesDTO], Result>;
   validateCreatePlayer: ActorMethod<[CreatePlayerDTO], Result>;

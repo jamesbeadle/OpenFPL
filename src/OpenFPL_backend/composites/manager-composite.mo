@@ -676,7 +676,7 @@ module {
       return #err(#NotFound);
     };
 
-    public func updateProfilePicture(principalId : T.PrincipalId, profilePicture : Blob, profilePictureType: Text) : async Result.Result<(), T.Error> {
+    public func updateProfilePicture(principalId : T.PrincipalId, profilePicture : Blob, profilePictureType : Text) : async Result.Result<(), T.Error> {
 
       if (invalidProfilePicture(profilePicture)) {
 

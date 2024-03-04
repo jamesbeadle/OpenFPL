@@ -538,7 +538,7 @@ actor class ManagerCanister() {
     return #ok();
   };
 
-  private func mergeManagerProfilePicture(manager : T.Manager, profilePicture : ?Blob, extension: Text) : T.Manager {
+  private func mergeManagerProfilePicture(manager : T.Manager, profilePicture : ?Blob, extension : Text) : T.Manager {
     return {
       principalId = manager.principalId;
       username = manager.username;
@@ -2794,7 +2794,7 @@ actor class ManagerCanister() {
         transferWindowGameweek = manager.transferWindowGameweek;
         history = updatedSeasons;
         profilePicture = manager.profilePicture;
-      profilePictureType = manager.profilePictureType;
+        profilePictureType = manager.profilePictureType;
       };
       managerBuffer.add(updatedManager);
     };

@@ -7,7 +7,7 @@ OpenFPL is a decentralised fantasy football application built on the Internet Co
 ## Features
 
 - Unique Gameplay: A wide range of gameplay rules mirroring the varying elements of the football gameplay.
-- Fully Decentralised: Built to run as a DAO using the IC's Service Nervous System (SNS). 
+- Fully Decentralised: Built to run as a DAO using the IC's Service Nervous System (SNS).
 - Consensus Data: Runs fully on-chain using "consensus data" to take ownership of Premier League football data.
 
 ## Prerequisites
@@ -23,7 +23,9 @@ More information about the Internet Computer blockchain can be found at https://
 ```bash
 git clone https://github.com/jamesbeadle/OpenFPL.git
 ```
+
 2. Navigate to the directory:
+
 ```bash
 cd OpenFPL
 ```
@@ -35,14 +37,17 @@ npm install
 ```
 
 If using yarn:
+
 ```bash
 yarn install
 ```
 
 3. Deploy the application:
+
 ```bash
 dfx deploy --network=local
 ```
+
 2. Within the CanisterIds.mo file, update MAIN_CANISTER_LOCAL_ID to your deployed OpenFPL_backend canister.
 
 3. Redeploy the OpenFPL_backend file with the updated canister.
@@ -55,4 +60,4 @@ dfx ledger fabricate-cycles --canister OpenFPL_backend
 
 5. Load the OpenFPL_backend canister init() function through the backend candid interface.
 
-6. Test the current state of the live app by connecting with your internet identity and updating your profile information. 
+6. Test the current state of the live app by connecting with your internet identity and updating your profile information.

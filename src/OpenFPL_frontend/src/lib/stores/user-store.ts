@@ -64,8 +64,6 @@ function createUserStore() {
       const maxPictureSize = 1000;
       const extension = getFileExtensionFromFile(picture);
 
-
-
       if (picture.size > maxPictureSize * 1024) {
         return null;
       }
@@ -79,7 +77,10 @@ function createUserStore() {
             authStore,
             process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
           );
-          const result = await identityActor.updateProfilePicture(uint8Array, extension);
+          const result = await identityActor.updateProfilePicture(
+            uint8Array,
+            extension
+          );
           if (isError(result)) {
             console.error("Error updating profile picture");
             return;
@@ -100,14 +101,13 @@ function createUserStore() {
   function getFileExtensionFromFile(file: File): string {
     // Use the name property of the File object to get the filename
     const filename = file.name;
-  
+
     // Extract the extension
-    const lastIndex = filename.lastIndexOf('.');
-  
+    const lastIndex = filename.lastIndexOf(".");
+
     // Return the extension, ensuring it doesn't return -1 for files without an extension
-    return lastIndex !== -1 ? filename.substring(lastIndex + 1) : '';
+    return lastIndex !== -1 ? filename.substring(lastIndex + 1) : "";
   }
-  
 
   async function isUsernameAvailable(username: string): Promise<boolean> {
     const identityActor: any = await ActorFactory.createIdentityActor(

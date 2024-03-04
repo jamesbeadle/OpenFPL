@@ -208,6 +208,7 @@ type ProfileDTO = record {
   favouriteClubId : ClubId;
   principalId : text;
   profilePicture : opt blob;
+  profilePictureType : text;
   termsAccepted : bool;
   username : text;
 };
@@ -525,11 +526,12 @@ service : {
   getSystemState : () -> (Result_4) query;
   getTotalManagers : () -> (Result_3) query;
   getWeeklyLeaderboard : (SeasonId, GameweekNumber, nat, nat, text) -> (Result_2);
+  init : () -> (Result_1);
   isUsernameValid : (text) -> (bool) query;
   requestCanisterTopup : () -> ();
   saveFantasyTeam : (UpdateTeamSelectionDTO) -> (Result_1);
   updateFavouriteClub : (ClubId) -> (Result_1);
-  updateProfilePicture : (blob) -> (Result_1);
+  updateProfilePicture : (blob, text) -> (Result_1);
   updateUsername : (text) -> (Result_1);
   validateAddInitialFixtures : (AddInitialFixturesDTO) -> (Result);
   validateCreatePlayer : (CreatePlayerDTO) -> (Result);

@@ -3513,7 +3513,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1qku9cs"
+  version_hash: "12qpi47"
 };
 async function get_hooks() {
   return {};
@@ -4087,6 +4087,7 @@ const idlFactory = ({ IDL }) => {
     createDate: IDL.Int,
     favouriteClubId: ClubId,
     profilePicture: IDL.Opt(IDL.Vec(IDL.Nat8)),
+    profilePictureType: IDL.Text,
     principalId: IDL.Text
   });
   const Result_8 = IDL.Variant({ ok: ProfileDTO, err: Error2 });
@@ -4122,6 +4123,7 @@ const idlFactory = ({ IDL }) => {
     gameweek: GameweekNumber
   });
   const Result_2 = IDL.Variant({ ok: WeeklyLeaderboardDTO, err: Error2 });
+  const Result_1 = IDL.Variant({ ok: IDL.Null, err: Error2 });
   const UpdateTeamSelectionDTO = IDL.Record({
     playerIds: IDL.Vec(PlayerId),
     countrymenCountryId: CountryId,
@@ -4145,7 +4147,6 @@ const idlFactory = ({ IDL }) => {
     passMasterPlayerId: PlayerId,
     captainId: PlayerId
   });
-  const Result_1 = IDL.Variant({ ok: IDL.Null, err: Error2 });
   const Result = IDL.Variant({ ok: IDL.Text, err: IDL.Text });
   return IDL.Service({
     burnICPToCycles: IDL.Func([IDL.Nat64], [], []),
@@ -4211,11 +4212,16 @@ const idlFactory = ({ IDL }) => {
       [Result_2],
       []
     ),
+    init: IDL.Func([], [Result_1], []),
     isUsernameValid: IDL.Func([IDL.Text], [IDL.Bool], ["query"]),
     requestCanisterTopup: IDL.Func([], [], []),
     saveFantasyTeam: IDL.Func([UpdateTeamSelectionDTO], [Result_1], []),
     updateFavouriteClub: IDL.Func([ClubId], [Result_1], []),
-    updateProfilePicture: IDL.Func([IDL.Vec(IDL.Nat8)], [Result_1], []),
+    updateProfilePicture: IDL.Func(
+      [IDL.Vec(IDL.Nat8), IDL.Text],
+      [Result_1],
+      []
+    ),
     updateUsername: IDL.Func([IDL.Text], [Result_1], []),
     validateAddInitialFixtures: IDL.Func([AddInitialFixturesDTO], [Result], []),
     validateCreatePlayer: IDL.Func([CreatePlayerDTO], [Result], []),
@@ -4873,6 +4879,12 @@ const nextElementId = (prefix) => {
   };
   return `${prefix}${elementsCounters[prefix]}`;
 };
+const Html = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let { text: text2 = void 0 } = $$props;
+  if ($$props.text === void 0 && $$bindings.text && text2 !== void 0)
+    $$bindings.text(text2);
+  return `${``}`;
+});
 var Theme;
 (function(Theme2) {
   Theme2["DARK"] = "dark";
@@ -5038,6 +5050,7 @@ const Toast = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let position;
   let icon;
   let theme2;
+  let renderAsHtml;
   let scroll;
   let truncate;
   let clamp;
@@ -5053,7 +5066,7 @@ const Toast = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   if ($$props.msg === void 0 && $$bindings.msg && msg !== void 0)
     $$bindings.msg(msg);
   $$result.css.add(css$5);
-  ({ text: text2, level, spinner, title, overflow, position, icon, theme: theme2 } = msg);
+  ({ text: text2, level, spinner, title, overflow, position, icon, theme: theme2, renderAsHtml } = msg);
   scroll = overflow === void 0 || overflow === "scroll";
   truncate = overflow === "truncate";
   clamp = overflow === "clamp";
@@ -5061,7 +5074,7 @@ const Toast = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   return `<div role="dialog" class="${escape(null_to_empty(`toast ${theme2 ?? "themed"}`), true) + " svelte-w1j1kj"}"><div class="${"icon " + escape(level, true) + " svelte-w1j1kj"}" aria-hidden="true">${spinner ? `${validate_component(Spinner, "Spinner").$$render($$result, { size: "small", inline: true }, {}, {})}` : `${nonNullish(icon) ? `${validate_component(icon || missing_component, "svelte:component").$$render($$result, {}, {}, {})}` : `${iconMapper(level) ? `${validate_component(iconMapper(level) || missing_component, "svelte:component").$$render($$result, { size: DEFAULT_ICON_SIZE }, {}, {})}` : ``}`}`}</div> <p class="${[
     "msg svelte-w1j1kj",
     (truncate ? "truncate" : "") + " " + (clamp ? "clamp" : "") + " " + (scroll ? "scroll" : "")
-  ].join(" ").trim()}"${add_attribute("style", minHeightMessage, 0)}>${nonNullish(title) ? `<span class="title svelte-w1j1kj">${escape(title)}</span>` : ``} ${escape(text2)}</p> <button class="close svelte-w1j1kj"${add_attribute("aria-label", $i18n.core.close, 0)}>${validate_component(IconClose, "IconClose").$$render($$result, {}, {}, {})}</button> </div>`;
+  ].join(" ").trim()}"${add_attribute("style", minHeightMessage, 0)}>${nonNullish(title) ? `<span class="title svelte-w1j1kj">${escape(title)}</span>` : ``} ${renderAsHtml ? `${validate_component(Html, "Html").$$render($$result, { text: text2 }, {}, {})}` : `${escape(text2)}`}</p> <button class="close svelte-w1j1kj"${add_attribute("aria-label", $i18n.core.close, 0)}>${validate_component(IconClose, "IconClose").$$render($$result, {}, {}, {})}</button> </div>`;
 });
 const css$4 = {
   code: ".wrapper.svelte-24m335{position:fixed;left:50%;transform:translate(-50%, 0);bottom:calc(var(--layout-bottom-offset, 0) + var(--padding-2x));width:calc(100% - var(--padding-8x) - var(--padding-0_5x));display:flex;flex-direction:column;gap:var(--padding);z-index:var(--toast-info-z-index)}.wrapper.error.svelte-24m335{z-index:var(--toast-error-z-index)}@media(min-width: 1024px){.wrapper.svelte-24m335{max-width:calc(var(--section-max-width) - var(--padding-2x))}}.top.svelte-24m335{top:calc(var(--header-height) + var(--padding-3x));bottom:unset;width:calc(100% - var(--padding-6x))}@media(min-width: 1024px){.top.svelte-24m335{right:var(--padding-2x);left:unset;transform:none;max-width:calc(var(--section-max-width) / 1.5 - var(--padding-2x))}}",
@@ -5970,43 +5983,9 @@ function createUserStore() {
       return;
     }
     try {
-      console.log("syncing auth store");
-      console.log(define_process_env_default$3.OPENFPL_BACKEND_CANISTER_ID);
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        define_process_env_default$3.OPENFPL_BACKEND_CANISTER_ID ?? ""
-      );
-      let getProfileResponse = await identityActor.getProfile();
-      let error = isError(getProfileResponse);
-      if (error) {
-        if (getProfileResponse.err.NotFound !== void 0) {
-          return;
-        } else {
-          console.error("Error syncing user store");
-        }
-        return;
-      }
-      let profileData = getProfileResponse.ok;
-      set(profileData);
+      await cacheProfile();
     } catch (error) {
       console.error("Error fetching user profile:", error);
-      throw error;
-    }
-  }
-  async function createProfile() {
-    try {
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        define_process_env_default$3.OPENFPL_BACKEND_CANISTER_ID ?? ""
-      );
-      const result = await identityActor.createProfile();
-      if (isError(result)) {
-        console.error("Error creating profile");
-        return;
-      }
-      return result;
-    } catch (error) {
-      console.error("Error updating username:", error);
       throw error;
     }
   }
@@ -6046,28 +6025,10 @@ function createUserStore() {
       throw error;
     }
   }
-  async function getProfile() {
-    try {
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        define_process_env_default$3.OPENFPL_BACKEND_CANISTER_ID ?? ""
-      );
-      const result = await identityActor.getProfile();
-      if (isError(result)) {
-        console.error("Error fetching profile");
-        return;
-      }
-      let profile = result.ok;
-      set(profile);
-      return profile;
-    } catch (error) {
-      console.error("Error getting profile:", error);
-      throw error;
-    }
-  }
   async function updateProfilePicture(picture) {
     try {
       const maxPictureSize = 1e3;
+      const extension = getFileExtensionFromFile(picture);
       if (picture.size > maxPictureSize * 1024) {
         return null;
       }
@@ -6081,7 +6042,10 @@ function createUserStore() {
             authStore,
             define_process_env_default$3.OPENFPL_BACKEND_CANISTER_ID ?? ""
           );
-          const result = await identityActor.updateProfilePicture(uint8Array);
+          const result = await identityActor.updateProfilePicture(
+            uint8Array,
+            extension
+          );
           if (isError(result)) {
             console.error("Error updating profile picture");
             return;
@@ -6096,6 +6060,11 @@ function createUserStore() {
       console.error("Error updating username:", error);
       throw error;
     }
+  }
+  function getFileExtensionFromFile(file) {
+    const filename = file.name;
+    const lastIndex = filename.lastIndexOf(".");
+    return lastIndex !== -1 ? filename.substring(lastIndex + 1) : "";
   }
   async function isUsernameAvailable(username) {
     const identityActor = await ActorFactory.createIdentityActor(
@@ -6123,9 +6092,7 @@ function createUserStore() {
     sync,
     updateUsername,
     updateFavouriteTeam,
-    getProfile,
     updateProfilePicture,
-    createProfile,
     isUsernameAvailable
   };
 }
@@ -6149,24 +6116,31 @@ const authSignedInStore = derived(
 const userGetProfilePicture = derived(
   userStore,
   ($user) => {
-    let byteArray;
-    if ($user && $user.profilePicture) {
-      if (Array.isArray($user.profilePicture) && $user.profilePicture[0] instanceof Uint8Array) {
-        byteArray = $user.profilePicture[0];
-        return `data:[<mediatype>];base64, ${uint8ArrayToBase64(byteArray)}`;
-      } else if ($user.profilePicture instanceof Uint8Array) {
-        return uint8ArrayToBase64($user.profilePicture);
-      } else {
-        if (typeof $user.profilePicture === "string") {
-          if ($user.profilePicture.startsWith("data:image")) {
-            return $user.profilePicture;
-          } else {
-            return `data:[<mediatype>];base64, ${$user.profilePicture}`;
+    try {
+      let byteArray;
+      if ($user && $user.profilePicture) {
+        if (Array.isArray($user.profilePicture) && $user.profilePicture[0] instanceof Uint8Array) {
+          byteArray = $user.profilePicture[0];
+          return `data:image/${$user.profilePictureType};base64,${uint8ArrayToBase64(byteArray)}`;
+        } else if ($user.profilePicture instanceof Uint8Array) {
+          return `data:${$user.profilePictureType};base64,${uint8ArrayToBase64(
+            $user.profilePicture
+          )}`;
+        } else {
+          if (typeof $user.profilePicture === "string") {
+            if ($user.profilePicture.startsWith("data:image")) {
+              return $user.profilePicture;
+            } else {
+              return `data:${$user.profilePictureType};base64,${$user.profilePicture}`;
+            }
           }
         }
       }
+      return "/profile_placeholder.png";
+    } catch (error) {
+      console.error(error);
+      return "/profile_placeholder.png";
     }
-    return "/profile_placeholder.png";
   }
 );
 derived(
