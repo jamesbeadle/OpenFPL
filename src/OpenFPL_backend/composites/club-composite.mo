@@ -14,14 +14,6 @@ module {
     private var clubs = List.fromArray<T.Club>([]);
     private var relegatedClubs = List.fromArray<T.Club>([]);
 
-    public func setStableData(
-      stable_next_club_id : T.ClubId,
-      stable_clubs : [T.Club],
-    ) {
-      nextClubId := stable_next_club_id;
-      clubs := List.fromArray(stable_clubs);
-    };
-
     public func getClubs() : [T.Club] {
       let clubsArray = List.toArray(clubs);
       let sortedArray = Array.sort(

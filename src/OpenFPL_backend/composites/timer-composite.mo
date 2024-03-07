@@ -40,10 +40,6 @@ module {
       transferWindowEndCallback := ?_transferWindowEndCallback;
     };
 
-    public func setStableData(stable_timers : [T.TimerInfo]) {
-      timers := stable_timers;
-    };
-
     public func setTimer(time : Int, callbackName : Text) {
       let duration : Timer.Duration = #seconds(Int.abs(time - Time.now()));
       setAndBackupTimer(duration, callbackName);

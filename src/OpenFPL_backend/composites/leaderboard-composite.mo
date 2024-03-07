@@ -29,17 +29,6 @@ module {
     private var storeCanisterId : ?((canisterId : Text) -> async ()) = null;
     private var backendCanisterController : ?Principal = null;
 
-    public func setStableData(
-      stable_season_leaderboard_canisters : [T.SeasonLeaderboardCanister],
-      stable_monthly_leaderboard_canisters : [T.MonthlyLeaderboardCanister],
-      stable_weekly_leaderboard_canisters : [T.WeeklyLeaderboardCanister],
-    ) {
-
-      seasonLeaderboardCanisters := List.fromArray(stable_season_leaderboard_canisters);
-      monthlyLeaderboardCanisters := List.fromArray(stable_monthly_leaderboard_canisters);
-      weeklyLeaderboardCanisters := List.fromArray(stable_weekly_leaderboard_canisters);
-    };
-
     public func setStoreCanisterIdFunction(
       _storeCanisterId : (canisterId : Text) -> async (),
     ) {

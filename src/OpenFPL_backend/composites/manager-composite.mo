@@ -1254,6 +1254,14 @@ module {
       activeManagerCanisterId := stable_active_manager_canister_id;
     };
 
+    public func getStableBackendCanisterController() : ?Principal {
+      return backendCanisterController;
+    };
+
+    public func setStableBackendCanisterController(stable_backend_canister_controller : ?Principal) : () {
+      backendCanisterController := stable_backend_canister_controller;
+    };
+
     public func getStableTeamValueLeaderboards() : [(T.SeasonId, T.TeamValueLeaderboard)] {
       return rewards.getStableTeamValueLeaderboards();
     };
@@ -1342,11 +1350,11 @@ module {
       return rewards.setStableMonthlyATHPrizePool(stable_monthly_ath_prize_pool);
     };
 
-    public func getSeasonATHPrizePool() : Nat64 {
+    public func getStableSeasonATHPrizePool() : Nat64 {
       return rewards.getSeasonATHPrizePool();
     };
 
-    public func setSeasonATHPrizePool(stable_season_ath_prize_pool : Nat64) {
+    public func setStableSeasonATHPrizePool(stable_season_ath_prize_pool : Nat64) {
       return rewards.setSeasonATHPrizePool(stable_season_ath_prize_pool);
     };
 

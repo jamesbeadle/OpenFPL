@@ -25,11 +25,6 @@ module {
     private var setAndBackupTimer : ?((duration : Timer.Duration, callbackName : Text) -> ()) = null;
     private var removeExpiredTimers : ?(() -> ()) = null;
 
-    public func setStableData(stable_next_player_id : T.PlayerId, stable_players : [T.Player]) {
-      nextPlayerId := stable_next_player_id;
-      players := List.fromArray(stable_players);
-    };
-
     public func setTimerBackupFunction(
       _setAndBackupTimer : (duration : Timer.Duration, callbackName : Text) -> (),
       _removeExpiredTimers : () -> (),
