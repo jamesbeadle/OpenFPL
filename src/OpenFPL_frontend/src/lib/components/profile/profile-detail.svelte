@@ -14,38 +14,6 @@
   import { authStore } from "$lib/stores/auth.store";
   import { userGetProfilePicture } from "$lib/derived/user.derived";
 
-  let profile: Writable<ProfileDTO> = writable({
-    playerIds: [],
-    countrymenCountryId: 0,
-    username: "",
-    goalGetterPlayerId: 0,
-    hatTrickHeroGameweek: 0,
-    transfersAvailable: 3,
-    termsAccepted: false,
-    teamBoostGameweek: 0,
-    captainFantasticGameweek: 0,
-    createDate: 0n,
-    countrymenGameweek: 0,
-    bankQuarterMillions: 1200,
-    noEntryPlayerId: 0,
-    safeHandsPlayerId: 0,
-    history: [],
-    braceBonusGameweek: 0,
-    favouriteClubId: 0,
-    passMasterGameweek: 0,
-    teamBoostClubId: 0,
-    goalGetterGameweek: 0,
-    captainFantasticPlayerId: 0,
-    profilePicture: [],
-    transferWindowGameweek: 0,
-    noEntryGameweek: 0,
-    prospectsGameweek: 0,
-    safeHandsGameweek: 0,
-    principalId: $authStore?.identity?.getPrincipal().toString() ?? "",
-    passMasterPlayerId: 0,
-    captainId: 0,
-    monthlyBonusesAvailable: 0,
-  });
   let showUsernameModal: boolean = false;
   let showFavouriteTeamModal: boolean = false;
   let fileInput: HTMLInputElement;
@@ -57,7 +25,7 @@
   $: gameweek = $systemStore?.calculationGameweek ?? 1;
 
   $: teamName =
-    $teamStore.find((x) => x.id == $profile?.favouriteClubId)?.friendlyName ??
+    $teamStore.find((x) => x.id == $userStore?.favouriteClubId)?.friendlyName ??
     "";
 
   let isLoading = true;
@@ -72,7 +40,6 @@
         if (!value) {
           return;
         }
-        setProfile(value);
         joinedDate = getDateFromBigInt(Number(value.createDate));
       });
     } catch (error) {
@@ -86,19 +53,12 @@
     }
   });
 
-  function setProfile(updatedProfile: any) {
-    if (updatedProfile) {
-      profile.set(updatedProfile);
-    }
-  }
-
   function displayUsernameModal(): void {
     showUsernameModal = true;
   }
 
   async function closeUsernameModal() {
-    const profileData = await userStore.getProfile();
-    setProfile(profileData);
+    await userStore.cacheProfile();
     showUsernameModal = false;
   }
 
@@ -111,8 +71,7 @@
   }
 
   async function closeFavouriteTeamModal() {
-    const profileData = await userStore.getProfile();
-    setProfile(profileData);
+    await userStore.cacheProfile();
     showFavouriteTeamModal = false;
   }
 
@@ -145,10 +104,9 @@
 
     try {
       await userStore.updateProfilePicture(file);
+      await userStore.cacheProfile();
       await userStore.sync();
-      const profileData = await userStore.getProfile();
 
-      setProfile(profileData);
       toastsShow({
         text: "Profile image updated.",
         level: "success",
@@ -167,7 +125,7 @@
 
   async function copyTextAndShowToast() {
     try {
-      const textToCopy = $profile ? $profile.principalId : "";
+      const textToCopy = $userStore ? $userStore.principalId : "";
       await navigator.clipboard.writeText(textToCopy);
       toastsShow({
         text: "Copied to clipboard.",
@@ -184,13 +142,13 @@
   <Spinner />
 {:else}
   <UpdateUsernameModal
-    newUsername={$profile ? $profile.username : ""}
+    newUsername={$userStore ? $userStore.username : ""}
     visible={showUsernameModal}
     closeModal={closeUsernameModal}
     cancelModal={cancelUsernameModal}
   />
   <UpdateFavouriteTeamModal
-    newFavouriteTeam={$profile ? $profile.favouriteClubId : 0}
+    newFavouriteTeam={$userStore ? $userStore.favouriteClubId : 0}
     visible={showFavouriteTeamModal}
     closeModal={closeFavouriteTeamModal}
     cancelModal={cancelFavouriteTeamModal}
@@ -225,7 +183,7 @@
         <div class="md:ml-4 md:px-4 px-4 mt-2 md:mt-1 rounded-lg">
           <p class="mb-1">Display Name:</p>
           <h2 class="default-header mb-1 md:mb-2">
-            {$profile?.username == "" ? "Not Set" : $profile?.username}
+            {$userStore?.username == "" ? "Not Set" : $userStore?.username}
           </h2>
           <button
             class="text-sm md:text-sm p-1 md:p-2 px-2 md:px-4 rounded fpl-button"
@@ -239,12 +197,12 @@
           </h2>
           <button
             class={`p-1 md:p-2 px-2 md:px-4 ${
-              gameweek > 1 && ($profile?.favouriteClubId ?? 0) > 0
+              gameweek > 1 && ($userStore?.favouriteClubId ?? 0) > 0
                 ? "bg-gray-500"
                 : "fpl-button"
             } rounded`}
             on:click={displayFavouriteTeamModal}
-            disabled={gameweek > 1 && ($profile?.favouriteClubId ?? 0) > 0}
+            disabled={gameweek > 1 && ($userStore?.favouriteClubId ?? 0) > 0}
           >
             Update
           </button>
@@ -258,7 +216,7 @@
               class="flex items-center text-left"
               on:click={copyTextAndShowToast}
             >
-              <span>{$profile.principalId}</span>
+              <span>{$userStore.principalId}</span>
               <CopyIcon className="w-7 xs:w-6 text-left" fill="#FFFFFF" />
             </button>
           </div>

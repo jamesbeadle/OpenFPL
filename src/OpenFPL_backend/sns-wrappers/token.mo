@@ -15,10 +15,7 @@ module {
   public class Token() {
 
     let network = Environment.DFX_NETWORK;
-    var token_canister_id = CanisterIds.TOKEN_CANISTER_IC_ID; //TODO: UPDATE POST SNS
-    if (network == "local") {
-      token_canister_id := CanisterIds.TOKEN_CANISTER_LOCAL_ID;
-    };
+    var token_canister_id = CanisterIds.TOKEN_CANISTER_IC_ID;
 
     type Tokens = Nat;
     type BlockIndex = Nat;

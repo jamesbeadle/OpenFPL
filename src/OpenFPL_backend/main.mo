@@ -409,8 +409,7 @@ actor Self {
   private stable var stable_unique_manager_canister_ids : [T.CanisterId] = [];
   private stable var stable_total_managers : Nat = 0;
   private stable var stable_active_manager_canister_id : Text = "";
-  private stable var stable_backend_canister_controller : ?Principal = null;
-  
+
   //Rewards
   private stable var stable_team_value_leaderboards : [(T.SeasonId, T.TeamValueLeaderboard)] = [];
   private stable var stable_season_rewards : [T.SeasonRewards] = [];
@@ -424,26 +423,26 @@ actor Self {
   private stable var stable_weekly_ath_prize_pool : Nat64 = 0;
   private stable var stable_monthly_ath_prize_pool : Nat64 = 0;
   private stable var stable_season_ath_prize_pool : Nat64 = 0;
-  
+
   //Player Composite
   private stable var stable_next_player_id : T.PlayerId = 1;
   private stable var stable_players : [T.Player] = [];
-  
+
   //Club Composite
   private stable var stable_clubs : [T.Club] = [];
   private stable var stable_relegated_clubs : [T.Club] = [];
   private stable var stable_next_club_id : T.ClubId = 1;
-  
+
   //Season Composite
   private stable var stable_seasons : [T.Season] = [];
   private stable var stable_next_season_id : T.SeasonId = 1;
   private stable var stable_next_fixture_id : T.FixtureId = 1;
-  
+
   //Leaderboard Composite
   private stable var stable_season_leaderboard_canisters : [T.SeasonLeaderboardCanister] = [];
   private stable var stable_monthly_leaderboard_canisters : [T.MonthlyLeaderboardCanister] = [];
   private stable var stable_weekly_leaderboard_canisters : [T.WeeklyLeaderboardCanister] = [];
-  
+
   private stable var stable_timers : [T.TimerInfo] = [];
   private stable var stable_canister_ids : [Text] = [];
 
@@ -458,8 +457,7 @@ actor Self {
     stable_unique_manager_canister_ids := seasonManager.getStableUniqueManagerCanisterIds();
     stable_total_managers := seasonManager.getStableTotalManagers();
     stable_active_manager_canister_id := seasonManager.getStableActiveManagerCanisterId();
-    stable_backend_canister_controller := seasonManager.getStableBackendCanisterController();
-  
+
     //Rewards
     stable_team_value_leaderboards := seasonManager.getStableTeamValueLeaderboards();
     stable_season_rewards := seasonManager.getStableSeasonRewards();
@@ -473,26 +471,26 @@ actor Self {
     stable_weekly_ath_prize_pool := seasonManager.getStableWeeklyATHPrizePool();
     stable_monthly_ath_prize_pool := seasonManager.getStableMonthlyATHPrizePool();
     stable_season_ath_prize_pool := seasonManager.getStableSeasonATHPrizePool();
-    
+
     //Player Composite
     stable_next_player_id := seasonManager.getStableNextPlayerId();
     stable_players := seasonManager.getStablePlayers();
-  
+
     //Club Composite
     stable_clubs := seasonManager.getStableClubs();
     stable_relegated_clubs := seasonManager.getStableRelegatedClubs();
     stable_next_club_id := seasonManager.getStableNextClubId();
-    
+
     //Season Composite
     stable_seasons := seasonManager.getStableSeasons();
     stable_next_season_id := seasonManager.getStableNextSeasonId();
     stable_next_fixture_id := seasonManager.getStableNextFixtureId();
-    
+
     //Leaderboard Composite
     stable_season_leaderboard_canisters := seasonManager.getStableSeasonLeaderboardCanisters();
     stable_monthly_leaderboard_canisters := seasonManager.getStableMonthlyLeaderboardCanisters();
     stable_weekly_leaderboard_canisters := seasonManager.getStableWeeklyLeaderboardCanisters();
-  
+
     stable_timers := timerComposite.getStableTimers();
     stable_canister_ids := cyclesDispenser.getStableCanisterIds();
   };
@@ -508,8 +506,7 @@ actor Self {
     seasonManager.setStableUniqueManagerCanisterIds(stable_unique_manager_canister_ids);
     seasonManager.setStableTotalManagers(stable_total_managers);
     seasonManager.setStableActiveManagerCanisterId(stable_active_manager_canister_id);
-    seasonManager.setStableBackendCanisterController(stable_backend_canister_controller);
-    
+
     //Rewards
     seasonManager.setStableTeamValueLeaderboards(stable_team_value_leaderboards);
     seasonManager.setStableSeasonRewards(stable_season_rewards);
@@ -523,29 +520,29 @@ actor Self {
     seasonManager.setStableWeeklyATHPrizePool(stable_weekly_ath_prize_pool);
     seasonManager.setStableMonthlyATHPrizePool(stable_monthly_ath_prize_pool);
     seasonManager.setStableSeasonATHPrizePool(stable_season_ath_prize_pool);
-    
+
     //Player Composite
     seasonManager.setStablePlayers(stable_players);
     seasonManager.setStableNextPlayerId(stable_next_player_id);
-    
+
     //Club Composite
     seasonManager.setStableClubs(stable_clubs);
     seasonManager.setStableRelegatedClubs(stable_relegated_clubs);
     seasonManager.setStableNextClubId(stable_next_club_id);
-    
+
     //Season Composite
     seasonManager.setStableSeasons(stable_seasons);
     seasonManager.setStableNextSeasonId(stable_next_season_id);
     seasonManager.setStableNextFixtureId(stable_next_fixture_id);
-    
+
     //Leaderboard Composite
     seasonManager.setStableSeasonLeaderboardCanisters(stable_season_leaderboard_canisters);
     seasonManager.setStableMonthlyLeaderboardCanisters(stable_monthly_leaderboard_canisters);
     seasonManager.setStableWeeklyLeaderboardCanisters(stable_weekly_leaderboard_canisters);
-    
+
     cyclesDispenser.setStableCanisterIds(stable_canister_ids);
     timerComposite.setStableTimers(stable_timers);
-    
+
     seasonManager.setBackendCanisterController(Principal.fromActor(Self));
     seasonManager.setTimerBackupFunction(timerComposite.setAndBackupTimer, timerComposite.removeExpiredTimers);
     seasonManager.setStoreCanisterIdFunction(cyclesDispenser.storeCanisterId);
@@ -612,8 +609,5 @@ actor Self {
       await burnICPToCycles(Nat64.fromNat(targetBalance - available));
     };
     setCheckCyclesTimer();
-  };
-  public shared ({ caller }) func getMainCanisterId() : async Text {
-    return await seasonManager.getMainCanisterId();
   };
 };

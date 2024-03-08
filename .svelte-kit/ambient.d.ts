@@ -114,7 +114,6 @@ declare module '$env/static/private' {
 	export const EDITOR: string;
 	export const VITE_OPENFPL_BACKEND_CANISTER_ID: string;
 	export const VITE_OPENFPL_FRONTEND_CANISTER_ID: string;
-	export const VITE_TOKEN_CANISTER_CANISTER_ID: string;
 }
 
 /**
@@ -234,7 +233,6 @@ declare module '$env/dynamic/private' {
 		EDITOR: string;
 		VITE_OPENFPL_BACKEND_CANISTER_ID: string;
 		VITE_OPENFPL_FRONTEND_CANISTER_ID: string;
-		VITE_TOKEN_CANISTER_CANISTER_ID: string;
 		[key: `PUBLIC_${string}`]: undefined;
 		[key: `${string}`]: string | undefined;
 	}

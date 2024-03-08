@@ -30,6 +30,8 @@ import Token "../sns-wrappers/token";
 import SeasonLeaderboard "../season-leaderboard";
 import TrieMap "mo:base/TrieMap";
 import Error "mo:base/Error";
+import Environment "../Environment";
+import CanisterIds "../CanisterIds";
 
 module {
 
@@ -43,13 +45,8 @@ module {
     private var activeManagerCanisterId : T.CanisterId = "";
 
     private var storeCanisterId : ?((canisterId : Text) -> async ()) = null;
-    private var backendCanisterController : ?Principal = null;
 
     private let rewards : Rewards.Rewards = Rewards.Rewards();
-
-    public func setBackendCanisterController(controller : Principal) {
-      backendCanisterController := ?controller;
-    };
 
     public func setStoreCanisterIdFunction(
       _storeCanisterId : (canisterId : Text) -> async (),
@@ -1254,14 +1251,6 @@ module {
       activeManagerCanisterId := stable_active_manager_canister_id;
     };
 
-    public func getStableBackendCanisterController() : ?Principal {
-      return backendCanisterController;
-    };
-
-    public func setStableBackendCanisterController(stable_backend_canister_controller : ?Principal) : () {
-      backendCanisterController := stable_backend_canister_controller;
-    };
-
     public func getStableTeamValueLeaderboards() : [(T.SeasonId, T.TeamValueLeaderboard)] {
       return rewards.getStableTeamValueLeaderboards();
     };
@@ -1363,7 +1352,16 @@ module {
       Cycles.add(2_000_000_000_000);
       let canister = await ManagerCanister.ManagerCanister();
       let IC : Management.Management = actor (ENV.Default);
-      let _ = await Utilities.updateCanister_(canister, backendCanisterController, IC);
+      var principal : ?Principal = null;
+      if (Environment.DFX_NETWORK == "local") {
+        principal := ?Principal.fromText(CanisterIds.MAIN_CANISTER_LOCAL_ID);
+        let _ = await Utilities.updateCanister_(canister, principal, IC);
+      };
+      if (Environment.DFX_NETWORK == "ic") {
+        principal := ?Principal.fromText(CanisterIds.MAIN_CANISTER_IC_ID);
+        let _ = await Utilities.updateCanister_(canister, principal, IC);
+      };
+
       let canister_principal = Principal.fromActor(canister);
       let canisterId = Principal.toText(canister_principal);
 
@@ -1381,17 +1379,6 @@ module {
     public func init() : async () {
       let result = await createManagerCanister();
       activeManagerCanisterId := result;
-    };
-
-    public func getMainCanisterId() : async Text {
-      switch (backendCanisterController) {
-        case (null) {
-          return "";
-        };
-        case (?found) {
-          return Principal.toText(found);
-        };
-      };
     };
   };
 };

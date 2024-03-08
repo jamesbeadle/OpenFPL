@@ -142,6 +142,7 @@ function createUserStore() {
     updateFavouriteTeam,
     updateProfilePicture,
     isUsernameAvailable,
+    cacheProfile,
   };
 }
 

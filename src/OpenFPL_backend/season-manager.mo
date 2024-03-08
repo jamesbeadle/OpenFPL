@@ -43,7 +43,6 @@ module {
     let leaderboardComposite = LeaderboardComposite.LeaderboardComposite();
 
     public func setBackendCanisterController(controller : Principal) {
-      managerComposite.setBackendCanisterController(controller);
       leaderboardComposite.setBackendCanisterController(controller);
     };
 
@@ -893,14 +892,6 @@ module {
       managerComposite.setStableActiveManagerCanisterId(stable_active_manager_canister_id);
     };
 
-    public func getStableBackendCanisterController() : ?Principal {
-      return managerComposite.getStableBackendCanisterController();
-    };
-
-    public func setStableBackendCanisterController(stable_backend_canister_controller : ?Principal) {
-      managerComposite.setStableBackendCanisterController(stable_backend_canister_controller);
-    };
-
     public func getStableTeamValueLeaderboards() : [(T.SeasonId, T.TeamValueLeaderboard)] {
       return managerComposite.getStableTeamValueLeaderboards();
     };
@@ -1100,9 +1091,6 @@ module {
       await managerComposite.init();
       //TODO: Add prior managers
     };
-    public func getMainCanisterId() : async Text {
-      return await managerComposite.getMainCanisterId();
-    }
 
   };
 };
