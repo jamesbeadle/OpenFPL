@@ -1,9 +1,6 @@
 import T "types";
 import DTOs "DTOs";
 import List "mo:base/List";
-import Option "mo:base/Option";
-import Nat8 "mo:base/Nat8";
-import Debug "mo:base/Debug";
 import Result "mo:base/Result";
 import Text "mo:base/Text";
 import Nat "mo:base/Nat";
@@ -16,8 +13,6 @@ import Array "mo:base/Array";
 import Order "mo:base/Order";
 import Int "mo:base/Int";
 import Time "mo:base/Time";
-import Float "mo:base/Float";
-import Int64 "mo:base/Int64";
 import TrieMap "mo:base/TrieMap";
 import SeasonComposite "composites/season-composite";
 import PlayerComposite "composites/player-composite";
@@ -26,7 +21,6 @@ import ManagerComposite "composites/manager-composite";
 import LeaderboardComposite "composites/leaderboard-composite";
 import SHA224 "./lib/SHA224";
 import Utilities "utilities";
-import CanisterIds "CanisterIds";
 import Token "sns-wrappers/token";
 
 module {
@@ -147,11 +141,11 @@ module {
       return playerComposite.getActivePlayers(systemState.calculationSeasonId);
     };
 
-    public func getLoanedPlayers(clubId : T.ClubId) : [DTOs.PlayerDTO] {
+    public func getLoanedPlayers(clubId: T.ClubId) : [DTOs.PlayerDTO] {
       return playerComposite.getLoanedPlayers(clubId);
     };
 
-    public func getRetiredPlayers(clubId : T.ClubId) : [DTOs.PlayerDTO] {
+    public func getRetiredPlayers(clubId: T.ClubId) : [DTOs.PlayerDTO] {
       return playerComposite.getRetiredPlayers(clubId);
     };
 
@@ -227,7 +221,7 @@ module {
       return managerComposite.getTotalManagers();
     };
 
-    public func saveFantasyTeam(principalId : Text, updatedFantasyTeam : DTOs.UpdateTeamSelectionDTO) : async Result.Result<(), T.Error> {
+    public func saveFantasyTeam(updatedFantasyTeam : DTOs.UpdateTeamSelectionDTO) : async Result.Result<(), T.Error> {
       let players = playerComposite.getActivePlayers(systemState.calculationSeasonId);
       return await managerComposite.saveFantasyTeam(updatedFantasyTeam, systemState, players);
     };
@@ -273,18 +267,17 @@ module {
 
       systemState := updatedSystemState;
 
-      let players = playerComposite.getActivePlayers(systemState.calculationSeasonId);
-      await managerComposite.snapshotFantasyTeams(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth, players);
+      await managerComposite.snapshotFantasyTeams(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
       await updateCacheHash("system_state");
     };
 
     public func gameKickOffExpiredCallback() : async () {
-      seasonComposite.setFixturesToActive(systemState.calculationSeasonId, systemState.calculationGameweek);
+      seasonComposite.setFixturesToActive(systemState.calculationSeasonId);
       await updateCacheHash("fixtures");
     };
 
     public func gameCompletedExpiredCallback() : async () {
-      seasonComposite.setFixturesToCompleted(systemState.calculationSeasonId, systemState.calculationGameweek);
+      seasonComposite.setFixturesToCompleted(systemState.calculationSeasonId);
       await updateCacheHash("fixtures");
     };
 
@@ -430,9 +423,6 @@ module {
       switch (rewardPool) {
         case (null) {};
         case (?foundRewardPool) {
-          var calculationGameweek = systemState.calculationGameweek;
-          var calculationMonth = systemState.calculationMonth;
-          var calculationSeasonId = systemState.calculationSeasonId;
 
           let gameweekComplete = seasonComposite.checkGameweekComplete(systemState);
           if (gameweekComplete) {
@@ -633,7 +623,6 @@ module {
           case (null) {};
           case (?actualFunction) {
             let durationToKickOff : Timer.Duration = #nanoseconds(Int.abs(fixture.kickOff - Time.now()));
-            let durationToGameOver : Timer.Duration = #nanoseconds(Int.abs(fixture.kickOff + (Utilities.getHour() * 2) - Time.now()));
             actualFunction(durationToKickOff, "gameKickOffExpired");
             actualFunction(durationToKickOff, "gameCompletedExpired");
           };
@@ -765,7 +754,6 @@ module {
       switch (currentPlayerPosition) {
         case (null) { return };
         case (?foundPosition) {
-          var removePlayer = false;
           if (foundPosition != updatePlayerDTO.position) {
             await managerComposite.removePlayerFromTeams(updatePlayerDTO.playerId, players);
           };

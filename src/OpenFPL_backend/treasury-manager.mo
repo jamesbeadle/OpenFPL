@@ -1,18 +1,9 @@
 import Account "./lib/Account";
 import ICPLedger "./def/Ledger";
-import Float "mo:base/Float";
 import Int "mo:base/Int";
-import Int64 "mo:base/Int64";
 import Nat64 "mo:base/Nat64";
-import Types "types";
 import Time "mo:base/Time";
-import Result "mo:base/Result";
 import Principal "mo:base/Principal";
-import Iter "mo:base/Iter";
-import Buffer "mo:base/Buffer";
-import Text "mo:base/Text";
-import Blob "mo:base/Blob";
-import DTOs "DTOs";
 import CanisterIds "CanisterIds";
 import Environment "Environment";
 
@@ -73,7 +64,7 @@ module {
         return;
       };
 
-      let result = await ledger.transfer({
+      let _ = await ledger.transfer({
         memo = memo_txt_tpup;
         from_subaccount = null;
         to = target_account;

@@ -14,7 +14,6 @@ import Char "mo:base/Char";
 import TrieMap "mo:base/TrieMap";
 import Bool "mo:base/Bool";
 import Order "mo:base/Order";
-import Debug "mo:base/Debug";
 import Utilities "../utilities";
 
 module {
@@ -187,7 +186,7 @@ module {
       return Buffer.toArray(uniqueKickOffTimes);
     };
 
-    public func setFixturesToActive(seasonId : T.SeasonId, gamweek : T.GameweekNumber) {
+    public func setFixturesToActive(seasonId : T.SeasonId) {
 
       let currentSeason = List.find<T.Season>(
         seasons,
@@ -249,7 +248,7 @@ module {
 
     };
 
-    public func setFixturesToCompleted(seasonId : T.SeasonId, gamweek : T.GameweekNumber) {
+    public func setFixturesToCompleted(seasonId : T.SeasonId) {
       let currentSeason = List.find<T.Season>(
         seasons,
         func(season : T.Season) : Bool {
@@ -879,17 +878,6 @@ module {
             return false;
           };
 
-          let sortedFixtures = Array.sort(
-            gameweekFixtures,
-            func(a : T.Fixture, b : T.Fixture) : Order.Order {
-              if (a.kickOff < b.kickOff) { return #greater };
-              if (a.kickOff == b.kickOff) { return #equal };
-              return #less;
-            },
-          );
-
-          let latestCompletedFixture = sortedFixtures[0];
-
           if (systemState.calculationGameweek >= 38) {
             return true;
           };
@@ -982,15 +970,6 @@ module {
 
           if (List.size(filteredFixtures) > 0) {
             return #err("Invalid: Fixtures not for current season.");
-          };
-
-          let findIndex = func(arr : [T.ClubId], value : T.ClubId) : ?Nat {
-            for (i in Array.keys(arr)) {
-              if (arr[i] == value) {
-                return ?(i);
-              };
-            };
-            return null;
           };
 
           if (Array.size(addInitialFixturesDTO.seasonFixtures) != 380) {

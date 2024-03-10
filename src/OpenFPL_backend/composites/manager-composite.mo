@@ -64,8 +64,6 @@ module {
               return #err(#NotFound);
             };
             case (?foundManager) {
-              let managerGameweeksBuffer = Buffer.fromArray<T.FantasyTeamSeason>([]);
-
               for (managerSeason in Iter.fromList(foundManager.history)) {
                 if (managerSeason.seasonId == calculationSeasonId) {
 
@@ -83,6 +81,20 @@ module {
                     case (null) {};
                     case (?foundEntry) {
                       weeklyPosition := foundEntry.position;
+                    };
+                  };
+
+                  switch (monthlyLeaderboardEntry) {
+                    case (null) {};
+                    case (?foundEntry) {
+                      monthlyPosition := foundEntry.position;
+                    };
+                  };
+
+                  switch (seasonLeaderboardEntry) {
+                    case (null) {};
+                    case (?foundEntry) {
+                      seasonPosition := foundEntry.position;
                     };
                   };
 
@@ -217,6 +229,10 @@ module {
         return #err(#InvalidTeamError);
       };
 
+      if (invalidTeamComposition(updatedFantasyTeamDTO, players)) {
+        return #err(#InvalidTeamError);
+      };
+
       let managerCanisterId = managerCanisterIds.get(updatedFantasyTeamDTO.principalId);
 
       var result : Result.Result<(), T.Error> = #err(#NotFound);
@@ -302,6 +318,13 @@ module {
           let manager_canister = actor (activeManagerCanisterId) : actor {
             addNewManager : (manager : T.Manager) -> async Result.Result<(), T.Error>;
             getTotalManagers : () -> async Nat;
+            getManager : (principalId: T.PrincipalId) -> async ?T.Manager;
+          };
+
+          let foundManager = await manager_canister.getManager(updatedFantasyTeamDTO.principalId);
+          
+          if (invalidTransfers(updatedFantasyTeamDTO, foundManager, systemState, players)) {
+            return #err(#InvalidTeamError);
           };
 
           let canisterManagerCount = await manager_canister.getTotalManagers();
@@ -1089,7 +1112,7 @@ module {
       };
     };
 
-    public func snapshotFantasyTeams(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth, players : [DTOs.PlayerDTO]) : async () {
+    public func snapshotFantasyTeams(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) : async () {
       for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
 
         let manager_canister = actor (canisterId) : actor {
@@ -1164,7 +1187,7 @@ module {
     };
 
     public func distributeSeasonRewards(seasonRewardPool : Nat64, seasonLeaderboard : DTOs.SeasonLeaderboardDTO, uniqueManagerCanisterIds : List.List<T.CanisterId>) : async () {
-      await rewards.distributeSeasonRewards(seasonRewardPool, seasonLeaderboard, uniqueManagerCanisterIds);
+      await rewards.distributeSeasonRewards(seasonRewardPool, seasonLeaderboard);
     };
 
     public func distributeMostValuableTeamRewards(mostValuableTeamPool : Nat64, players : [DTOs.PlayerDTO], currentSeason : T.SeasonId, uniqueManagerCanisterIds : List.List<T.CanisterId>) : async () {
@@ -1176,15 +1199,15 @@ module {
     };
 
     public func distributeWeeklyATHScoreRewards(weeklyRewardPool : Nat64, weeklyLeaderboard : DTOs.WeeklyLeaderboardDTO) : async () {
-      await rewards.distributeWeeklyATHScoreRewards(weeklyRewardPool, weeklyLeaderboard, uniqueManagerCanisterIds);
+      await rewards.distributeWeeklyATHScoreRewards(weeklyRewardPool, weeklyLeaderboard);
     };
 
     public func distributeMonthlyATHScoreRewards(monthlyRewardPool : Nat64, monthlyLeaderboards : [DTOs.MonthlyLeaderboardDTO]) : async () {
-      await rewards.distributeMonthlyATHScoreRewards(monthlyRewardPool, monthlyLeaderboards, uniqueManagerCanisterIds);
+      await rewards.distributeMonthlyATHScoreRewards(monthlyRewardPool, monthlyLeaderboards);
     };
 
     public func distributeSeasonATHScoreRewards(seasonRewardPool : Nat64, seasonLeaderboard : DTOs.SeasonLeaderboardDTO) : async () {
-      await rewards.distributeSeasonATHScoreRewards(seasonRewardPool, seasonLeaderboard, uniqueManagerCanisterIds);
+      await rewards.distributeSeasonATHScoreRewards(seasonRewardPool, seasonLeaderboard);
     };
 
     public func getStableManagerCanisterIds() : [(T.PrincipalId, T.CanisterId)] {

@@ -10,8 +10,6 @@ import Array "mo:base/Array";
 import Int "mo:base/Int";
 import Timer "mo:base/Timer";
 import Nat16 "mo:base/Nat16";
-import Debug "mo:base/Debug";
-import CanisterIds "../CanisterIds";
 import Countries "../Countries";
 import Utilities "../utilities";
 import Players "../../../testing/players";
@@ -114,12 +112,12 @@ module {
       return List.toArray(playerDTOs);
     };
 
-    public func getLoanedPlayers(clubId : T.ClubId) : [DTOs.PlayerDTO] {
+    public func getLoanedPlayers(clubId: T.ClubId) : [DTOs.PlayerDTO] {
 
       let loanedPlayers = List.filter<T.Player>(
         players,
         func(player : T.Player) : Bool {
-          return player.status == #OnLoan;
+          return player.status == #OnLoan and player.clubId == clubId;
         },
       );
 
@@ -145,12 +143,12 @@ module {
       return List.toArray(playerDTOs);
     };
 
-    public func getRetiredPlayers(clubId : T.ClubId) : [DTOs.PlayerDTO] {
+    public func getRetiredPlayers(clubId: T.ClubId) : [DTOs.PlayerDTO] {
 
       let retiredPlayers = List.filter<T.Player>(
         players,
         func(player : T.Player) : Bool {
-          return player.status == #Retired;
+          return player.status == #Retired and player.clubId == clubId;
         },
       );
 
@@ -1245,7 +1243,6 @@ module {
                         events = List.fromArray<T.PlayerEventData>(playerEventMap.1);
                         points = score;
                       };
-                      let updatedGameweeks = List.append<T.PlayerGameweek>(season.gameweeks, List.fromArray<T.PlayerGameweek>([newGameweek]));
                       let updatedSeason : T.PlayerSeason = {
                         id = season.id;
                         gameweeks = List.append<T.PlayerGameweek>(season.gameweeks, List.fromArray<T.PlayerGameweek>([newGameweek]));
