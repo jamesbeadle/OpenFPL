@@ -3,25 +3,20 @@ import Buffer "mo:base/Buffer";
 import Cycles "mo:base/ExperimentalCycles";
 import Int "mo:base/Int";
 import Iter "mo:base/Iter";
-import List "mo:base/List";
 import Principal "mo:base/Principal";
 import Result "mo:base/Result";
 import Time "mo:base/Time";
 import Timer "mo:base/Timer";
 import Nat64 "mo:base/Nat64";
-import Debug "mo:base/Debug";
 
 import Countries "Countries";
 import DTOs "DTOs";
 import SeasonManager "season-manager";
 import T "types";
-import TimerComposite "composites/timer-composite";
 import CyclesDispenser "cycles-dispenser";
 import TreasuryManager "treasury-manager";
 import Utilities "utilities";
 import Account "lib/Account";
-import Environment "Environment";
-import CanisterIds "CanisterIds";
 
 actor Self {
   let seasonManager = SeasonManager.SeasonManager();
@@ -123,7 +118,7 @@ actor Self {
     return #ok(seasonManager.getPlayersMap(seasonId, gameweek));
   };
 
-  public shared query ({ caller }) func getPlayerDetails(playerId : T.PlayerId, seasonId : T.SeasonId) : async Result.Result<DTOs.PlayerDetailDTO, T.Error> {
+  public shared query func getPlayerDetails(playerId : T.PlayerId, seasonId : T.SeasonId) : async Result.Result<DTOs.PlayerDetailDTO, T.Error> {
     return #ok(seasonManager.getPlayerDetails(playerId, seasonId));
   };
 
@@ -530,7 +525,6 @@ actor Self {
     seasonManager.setStableWeeklyLeaderboardCanisters(stable_weekly_leaderboard_canisters);
 
     cyclesDispenser.setStableCanisterIds(stable_canister_ids);
-    timers := stable_timers;
 
     seasonManager.setBackendCanisterController(Principal.fromActor(Self));
     seasonManager.setTimerBackupFunction(setAndBackupTimer, removeExpiredTimers);
@@ -556,6 +550,41 @@ actor Self {
     };
     nextWalletCheckTime := Time.now() + cyclesCheckWalletInterval;
     cyclesCheckWalletTimerId := ?Timer.setTimer<system>(#nanoseconds(cyclesCheckWalletInterval), checkCanisterWalletBalance);
+    
+    
+      let currentTime = Time.now();
+      for (timerInfo in Iter.fromArray(timers)) {
+        let remainingDuration = timerInfo.triggerTime - currentTime;
+
+        if (remainingDuration > 0) {
+          let duration : Timer.Duration = #nanoseconds(Int.abs(remainingDuration));
+
+          switch (timerInfo.callbackName) {
+            case "gameweekBeginExpired" {
+              ignore Timer.setTimer<system>(duration, gameweekBeginExpiredCallback);
+            };
+            case "gameKickOffExpired" {
+              ignore Timer.setTimer<system>(duration, gameKickOffExpiredCallback);
+            };
+            case "gameCompletedExpired" {
+              ignore Timer.setTimer<system>(duration, gameCompletedExpiredCallback);
+            };
+            case "loanExpired" {
+              ignore Timer.setTimer<system>(duration, loanExpiredCallback);
+            };
+            case "injuryExpired" {
+              ignore Timer.setTimer<system>(duration, injuryExpiredCallback);
+            };
+            case "transferWindowStart" {
+              ignore Timer.setTimer<system>(duration, transferWindowStartCallback);
+            };
+            case "transferWindowEnd" {
+              ignore Timer.setTimer<system>(duration, transferWindowEndCallback);
+            };
+            case _ {};
+          };
+        };
+      };
   };
 
   public shared ({ caller }) func requestCanisterTopup() : async () {
@@ -684,67 +713,5 @@ actor Self {
       timers := Buffer.toArray(timerBuffer);
     };
 
-    private func recreateTimers() {
-      let currentTime = Time.now();
-      for (timerInfo in Iter.fromArray(timers)) {
-        let remainingDuration = timerInfo.triggerTime - currentTime;
-
-        if (remainingDuration > 0) {
-          let duration : Timer.Duration = #nanoseconds(Int.abs(remainingDuration));
-
-          switch (timerInfo.callbackName) {
-            case "gameweekBeginExpired" {
-              switch (gameweekBeginExpiredCallback) {
-                case null {};
-                case (?callback) { ignore Timer.setTimer<system>(duration, callback) };
-              };
-            };
-            case "gameKickOffExpired" {
-              switch (gameKickOffExpiredCallback) {
-                case null {};
-                case (?callback) { ignore Timer.setTimer<system>(duration, callback) };
-              };
-            };
-            case "gameCompletedExpired" {
-              switch (gameCompletedExpiredCallback) {
-                case null {};
-                case (?callback) { ignore Timer.setTimer<system>(duration, callback) };
-              };
-            };
-            case "loanExpired" {
-              switch (loanExpiredCallback) {
-                case null {};
-                case (?callback) { ignore Timer.setTimer<system>(duration, callback) };
-              };
-            };
-            case "injuryExpired" {
-              switch (injuryExpiredCallback) {
-                case null {};
-                case (?callback) { ignore Timer.setTimer<system>(duration, callback) };
-              };
-            };
-            case "transferWindowStart" {
-              switch (transferWindowStartCallback) {
-                case null {};
-                case (?callback) { ignore Timer.setTimer<system>(duration, callback) };
-              };
-            };
-            case "transferWindowEnd" {
-              switch (transferWindowEndCallback) {
-                case null {};
-                case (?callback) { ignore Timer.setTimer<system>(duration, callback) };
-              };
-            };
-            case _ {};
-          };
-        };
-      };
-    };
-
     private func defaultCallback() : async () {};
-
-    public func setStableTimers(stable_timers : [T.TimerInfo]) {
-      timers := stable_timers;
-      recreateTimers();
-    };
 };

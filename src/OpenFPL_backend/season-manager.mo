@@ -371,7 +371,7 @@ module {
           currentSeasonId := seasonComposite.getStableNextSeasonId();
           currentMonth := 8;
           currentGameweek := 1;
-          setTransferWindowTimers();
+          await setTransferWindowTimers();
           await managerComposite.resetFantasyTeams(currentSeasonId);
           await calculateRewardPool(currentSeasonId);
         };
@@ -401,7 +401,7 @@ module {
       systemState := updatedSystemState;
     };
 
-    private func setTransferWindowTimers() {
+    private func setTransferWindowTimers() : async () {
       switch (setAndBackupTimer) {
         case (null) {};
         case (?actualFunction) {
@@ -610,21 +610,21 @@ module {
       switch (setAndBackupTimer) {
         case (null) {};
         case (?actualFunction) {
-          actualFunction(durationToHourBeforeFirstFixture, "gameweekBeginExpired");
+          await actualFunction(durationToHourBeforeFirstFixture, "gameweekBeginExpired");
         };
       };
 
-      setKickOffTimers(fixtures);
+      await setKickOffTimers(fixtures);
     };
 
-    private func setKickOffTimers(gameweekFixtures : [DTOs.FixtureDTO]) {
+    private func setKickOffTimers(gameweekFixtures : [DTOs.FixtureDTO]) : async () {
       for (fixture in Iter.fromArray(gameweekFixtures)) {
         switch (setAndBackupTimer) {
           case (null) {};
           case (?actualFunction) {
             let durationToKickOff : Timer.Duration = #nanoseconds(Int.abs(fixture.kickOff - Time.now()));
-            actualFunction(durationToKickOff, "gameKickOffExpired");
-            actualFunction(durationToKickOff, "gameCompletedExpired");
+            await actualFunction(durationToKickOff, "gameKickOffExpired");
+            await actualFunction(durationToKickOff, "gameCompletedExpired");
           };
         };
       };

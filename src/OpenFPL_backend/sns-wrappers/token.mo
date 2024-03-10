@@ -4,17 +4,13 @@ import Blob "mo:base/Blob";
 import Time "mo:base/Time";
 import Int64 "mo:base/Int64";
 import Array "mo:base/Array";
-import Result "mo:base/Result";
 import Account "../lib/Account";
 import CanisterIds "../CanisterIds";
-import T "../types";
-import Environment "../Environment";
 
 module {
 
   public class Token() {
 
-    let network = Environment.DFX_NETWORK;
     var token_canister_id = CanisterIds.TOKEN_CANISTER_IC_ID;
 
     type Tokens = Nat;
@@ -87,7 +83,7 @@ module {
         memo = Blob.fromArray([]);
         created_at_time = Int64.toNat64(Int64.fromInt(Time.now()));
       };
-      let result = await token_canister_actor.icrc1_transfer(transferArgs);
+      let _ = await token_canister_actor.icrc1_transfer(transferArgs);
     };
 
     public func mintToTreasury(amount : Nat) : async () {
@@ -105,7 +101,7 @@ module {
         memo = Blob.fromArray([]);
         created_at_time = Int64.toNat64(Int64.fromInt(Time.now()));
       };
-      let result = await token_canister_actor.icrc1_transfer(transferArgs);
+      let _ = await token_canister_actor.icrc1_transfer(transferArgs);
     };
   };
 };
