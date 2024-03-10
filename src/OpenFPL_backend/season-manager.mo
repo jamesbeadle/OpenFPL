@@ -27,7 +27,7 @@ module {
 
   public class SeasonManager() {
 
-    private var setAndBackupTimer : ?((duration : Timer.Duration, callbackName : Text) -> ()) = null;
+    private var setAndBackupTimer : ?((duration : Timer.Duration, callbackName : Text) -> async ()) = null;
     private var storeCanisterId : ?((canisterId : Text) -> async ()) = null;
 
     let managerComposite = ManagerComposite.ManagerComposite();
@@ -65,7 +65,7 @@ module {
     ]);
 
     public func setTimerBackupFunction(
-      _setAndBackupTimer : (duration : Timer.Duration, callbackName : Text) -> (),
+      _setAndBackupTimer : (duration : Timer.Duration, callbackName : Text) -> async (),
       _removeExpiredTimers : () -> (),
     ) {
       playerComposite.setTimerBackupFunction(_setAndBackupTimer, _removeExpiredTimers);
@@ -412,8 +412,8 @@ module {
           let transferWindowStartDate : Timer.Duration = #nanoseconds(Int.abs(jan1Date - Time.now()));
           let transferWindowEndDate : Timer.Duration = #nanoseconds(Int.abs(jan31Date - Time.now()));
 
-          actualFunction(transferWindowStartDate, "transferWindowStart");
-          actualFunction(transferWindowEndDate, "transferWindowEnd");
+          await actualFunction(transferWindowStartDate, "transferWindowStart");
+          await actualFunction(transferWindowEndDate, "transferWindowEnd");
         };
       };
     };

@@ -20,11 +20,11 @@ module {
 
     private var nextPlayerId : T.PlayerId = 560;
     private var players = List.fromArray<T.Player>([]);
-    private var setAndBackupTimer : ?((duration : Timer.Duration, callbackName : Text) -> ()) = null;
+    private var setAndBackupTimer : ?((duration : Timer.Duration, callbackName : Text) -> async ()) = null;
     private var removeExpiredTimers : ?(() -> ()) = null;
 
     public func setTimerBackupFunction(
-      _setAndBackupTimer : (duration : Timer.Duration, callbackName : Text) -> (),
+      _setAndBackupTimer : (duration : Timer.Duration, callbackName : Text) -> async (),
       _removeExpiredTimers : () -> (),
     ) {
       setAndBackupTimer := ?_setAndBackupTimer;
@@ -597,7 +597,7 @@ module {
           switch (setAndBackupTimer) {
             case (null) {};
             case (?actualFunction) {
-              actualFunction(loanTimerDuration, "loanExpired");
+              await actualFunction(loanTimerDuration, "loanExpired");
             };
           };
         };
@@ -1046,7 +1046,7 @@ module {
       switch (setAndBackupTimer) {
         case (null) {};
         case (?actualFunction) {
-          actualFunction(playerInjuryDuration, "injuryExpired");
+          await actualFunction(playerInjuryDuration, "injuryExpired");
         };
       };
     };

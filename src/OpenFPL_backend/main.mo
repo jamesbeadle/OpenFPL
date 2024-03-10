@@ -320,7 +320,7 @@ actor Self {
 
     switch (cyclesCheckTimerId) {
       case (null) {
-        setCheckCyclesTimer();
+        await setCheckCyclesTimer();
       };
       case (?id) {};
     };
@@ -480,7 +480,7 @@ actor Self {
     stable_monthly_leaderboard_canisters := seasonManager.getStableMonthlyLeaderboardCanisters();
     stable_weekly_leaderboard_canisters := seasonManager.getStableWeeklyLeaderboardCanisters();
 
-    stable_timers := timerComposite.getStableTimers();
+    stable_timers := timers;
     stable_canister_ids := cyclesDispenser.getStableCanisterIds();
   };
 
@@ -530,13 +530,32 @@ actor Self {
     seasonManager.setStableWeeklyLeaderboardCanisters(stable_weekly_leaderboard_canisters);
 
     cyclesDispenser.setStableCanisterIds(stable_canister_ids);
-    timerComposite.setStableTimers(stable_timers);
+    timers := stable_timers;
 
     seasonManager.setBackendCanisterController(Principal.fromActor(Self));
-    seasonManager.setTimerBackupFunction(timerComposite.setAndBackupTimer, timerComposite.removeExpiredTimers);
+    seasonManager.setTimerBackupFunction(setAndBackupTimer, removeExpiredTimers);
     seasonManager.setStoreCanisterIdFunction(cyclesDispenser.storeCanisterId);
-    setCheckCyclesTimer();
-    await setCheckCyclesWalletTimer();
+    
+    switch (cyclesCheckTimerId) {
+      case (null) {};
+      case (?id) {
+        Timer.cancelTimer(id);
+        cyclesCheckTimerId := null;
+      };
+    };
+    nextCyclesCheckTime := Time.now() + cyclesCheckInterval;
+    cyclesCheckTimerId := ?Timer.setTimer<system>(#nanoseconds(cyclesCheckInterval), checkCanisterCycles);
+
+    
+    switch (cyclesCheckWalletTimerId) {
+      case (null) {};
+      case (?id) {
+        Timer.cancelTimer(id);
+        cyclesCheckWalletTimerId := null;
+      };
+    };
+    nextWalletCheckTime := Time.now() + cyclesCheckWalletInterval;
+    cyclesCheckWalletTimerId := ?Timer.setTimer<system>(#nanoseconds(cyclesCheckWalletInterval), checkCanisterWalletBalance);
   };
 
   public shared ({ caller }) func requestCanisterTopup() : async () {
@@ -545,11 +564,11 @@ actor Self {
     await cyclesDispenser.requestCanisterTopup(principalId);
   };
 
-  private func setCheckCyclesTimer() {
+  private func setCheckCyclesTimer() : async () {
     switch (cyclesCheckTimerId) {
       case (null) {};
       case (?id) {
-        Timer.cancelTimer<system>(id);
+        Timer.cancelTimer(id);
         cyclesCheckTimerId := null;
       };
     };
@@ -564,7 +583,7 @@ actor Self {
     if (balance < 500_000_000_000) {
       await requestCanisterTopup();
     };
-    setCheckCyclesTimer();
+    await setCheckCyclesTimer();
   };
 
   private func setCheckCyclesWalletTimer() : async () {
@@ -597,17 +616,17 @@ actor Self {
     if (available < topupThreshold) {
       await burnICPToCycles(Nat64.fromNat(targetBalance - available));
     };
-    setCheckCyclesTimer();
+    await setCheckCyclesTimer();
   };
 
 
     var timers : [T.TimerInfo] = [];
     public func setTimer(time : Int, callbackName : Text) : async () {
       let duration : Timer.Duration = #seconds(Int.abs(time - Time.now()));
-      setAndBackupTimer(duration, callbackName);
+      await setAndBackupTimer(duration, callbackName);
     };
 
-    public func removeExpiredTimers() : () {
+    private func removeExpiredTimers() : () {
       let currentTime = Time.now();
       timers := Array.filter<T.TimerInfo>(
         timers,
@@ -617,49 +636,28 @@ actor Self {
       );
     };
 
-    public func setAndBackupTimer(duration : Timer.Duration, callbackName : Text) {
+    private func setAndBackupTimer(duration : Timer.Duration, callbackName : Text) : async () {
       let jobId : Timer.TimerId = switch (callbackName) {
         case "gameweekBeginExpired" {
-          switch (gameweekBeginExpiredCallback) {
-            case null { Timer.setTimer<system>(duration, defaultCallback) };
-            case (?callback) { Timer.setTimer<system>(duration, callback) };
-          };
+         Timer.setTimer<system>(duration, gameweekBeginExpiredCallback); 
         };
         case "gameKickOffExpired" {
-          switch (gameKickOffExpiredCallback) {
-            case null { Timer.setTimer<system>(duration, defaultCallback) };
-            case (?callback) { Timer.setTimer<system>(duration, callback) };
-          };
+          Timer.setTimer<system>(duration, gameKickOffExpiredCallback);
         };
         case "gameCompletedExpired" {
-          switch (gameCompletedExpiredCallback) {
-            case null { Timer.setTimer<system>(duration, defaultCallback) };
-            case (?callback) { Timer.setTimer<system>(duration, callback) };
-          };
+         Timer.setTimer<system>(duration, gameCompletedExpiredCallback);
         };
         case "loanExpired" {
-          switch (loanExpiredCallback) {
-            case null { Timer.setTimer<system>(duration, defaultCallback) };
-            case (?callback) { Timer.setTimer<system>(duration, callback) };
-          };
+         Timer.setTimer<system>(duration, loanExpiredCallback);
         };
         case "injuryExpired" {
-          switch (injuryExpiredCallback) {
-            case null { Timer.setTimer<system>(duration, defaultCallback) };
-            case (?callback) { Timer.setTimer<system>(duration, callback) };
-          };
+         Timer.setTimer<system>(duration, injuryExpiredCallback);
         };
         case "transferWindowStart" {
-          switch (transferWindowStartCallback) {
-            case null { Timer.setTimer<system>(duration, defaultCallback) };
-            case (?callback) { Timer.setTimer<system>(duration, callback) };
-          };
+         Timer.setTimer<system>(duration, transferWindowStartCallback);
         };
         case "transferWindowEnd" {
-          switch (transferWindowEndCallback) {
-            case null { Timer.setTimer<system>(duration, defaultCallback) };
-            case (?callback) { Timer.setTimer<system>(duration, callback) };
-          };
+         Timer.setTimer<system>(duration, transferWindowEndCallback);
         };
         case _ {
           Timer.setTimer<system>(duration, defaultCallback);
