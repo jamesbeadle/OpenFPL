@@ -3513,7 +3513,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1a0krr2"
+  version_hash: "16cwlmd"
 };
 async function get_hooks() {
   return {};
@@ -4215,6 +4215,7 @@ const idlFactory = ({ IDL }) => {
     isUsernameValid: IDL.Func([IDL.Text], [IDL.Bool], ["query"]),
     requestCanisterTopup: IDL.Func([], [], []),
     saveFantasyTeam: IDL.Func([UpdateTeamSelectionDTO], [Result_1], []),
+    setTimer: IDL.Func([IDL.Int, IDL.Text], [], []),
     updateFavouriteClub: IDL.Func([ClubId], [Result_1], []),
     updateProfilePicture: IDL.Func(
       [IDL.Vec(IDL.Nat8), IDL.Text],
@@ -4243,7 +4244,7 @@ const idlFactory = ({ IDL }) => {
   });
 };
 var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", DFX_NETWORK: "ic" };
-const canisterId = define_process_env_default$c.CANISTER_ID_OPENFPL_BACKEND || define_process_env_default$c.OPENFPL_BACKEND_CANISTER_ID;
+const canisterId = define_process_env_default$c.CANISTER_ID_OPENFPL_BACKEND;
 const createActor = (canisterId2, options2 = {}) => {
   const agent = options2.agent || new HttpAgent({ ...options2.agentOptions });
   if (options2.agent && options2.agentOptions) {

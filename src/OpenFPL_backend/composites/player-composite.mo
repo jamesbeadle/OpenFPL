@@ -112,7 +112,7 @@ module {
       return List.toArray(playerDTOs);
     };
 
-    public func getLoanedPlayers(clubId: T.ClubId) : [DTOs.PlayerDTO] {
+    public func getLoanedPlayers(clubId : T.ClubId) : [DTOs.PlayerDTO] {
 
       let loanedPlayers = List.filter<T.Player>(
         players,
@@ -143,7 +143,7 @@ module {
       return List.toArray(playerDTOs);
     };
 
-    public func getRetiredPlayers(clubId: T.ClubId) : [DTOs.PlayerDTO] {
+    public func getRetiredPlayers(clubId : T.ClubId) : [DTOs.PlayerDTO] {
 
       let retiredPlayers = List.filter<T.Player>(
         players,

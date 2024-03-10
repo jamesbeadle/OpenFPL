@@ -108,7 +108,7 @@ actor class _WeeklyLeaderboardCanister() {
   system func preupgrade() {};
 
   system func postupgrade() {
-    
+
     switch (cyclesCheckTimerId) {
       case (null) {};
       case (?id) {

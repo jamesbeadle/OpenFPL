@@ -529,6 +529,7 @@ service : {
   isUsernameValid : (text) -> (bool) query;
   requestCanisterTopup : () -> ();
   saveFantasyTeam : (UpdateTeamSelectionDTO) -> (Result_1);
+  setTimer : (int, text) -> ();
   updateFavouriteClub : (ClubId) -> (Result_1);
   updateProfilePicture : (blob, text) -> (Result_1);
   updateUsername : (text) -> (Result_1);

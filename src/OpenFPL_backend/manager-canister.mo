@@ -184,7 +184,7 @@ actor class _ManagerCanister() {
   };
 
   private func mergeTeamSelection(dto : DTOs.UpdateTeamSelectionDTO, manager : T.Manager, transfersAvailable : Nat8, monthlyBonusesAvailable : Nat8, newBankBalance : Nat16) : T.Manager {
-    return  {
+    return {
       principalId = manager.principalId;
       username = manager.username;
       favouriteClubId = manager.favouriteClubId;

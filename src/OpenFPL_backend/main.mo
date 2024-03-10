@@ -529,7 +529,7 @@ actor Self {
     seasonManager.setBackendCanisterController(Principal.fromActor(Self));
     seasonManager.setTimerBackupFunction(setAndBackupTimer, removeExpiredTimers);
     seasonManager.setStoreCanisterIdFunction(cyclesDispenser.storeCanisterId);
-    
+
     switch (cyclesCheckTimerId) {
       case (null) {};
       case (?id) {
@@ -540,7 +540,6 @@ actor Self {
     nextCyclesCheckTime := Time.now() + cyclesCheckInterval;
     cyclesCheckTimerId := ?Timer.setTimer<system>(#nanoseconds(cyclesCheckInterval), checkCanisterCycles);
 
-    
     switch (cyclesCheckWalletTimerId) {
       case (null) {};
       case (?id) {
@@ -550,41 +549,40 @@ actor Self {
     };
     nextWalletCheckTime := Time.now() + cyclesCheckWalletInterval;
     cyclesCheckWalletTimerId := ?Timer.setTimer<system>(#nanoseconds(cyclesCheckWalletInterval), checkCanisterWalletBalance);
-    
-    
-      let currentTime = Time.now();
-      for (timerInfo in Iter.fromArray(timers)) {
-        let remainingDuration = timerInfo.triggerTime - currentTime;
 
-        if (remainingDuration > 0) {
-          let duration : Timer.Duration = #nanoseconds(Int.abs(remainingDuration));
+    let currentTime = Time.now();
+    for (timerInfo in Iter.fromArray(timers)) {
+      let remainingDuration = timerInfo.triggerTime - currentTime;
 
-          switch (timerInfo.callbackName) {
-            case "gameweekBeginExpired" {
-              ignore Timer.setTimer<system>(duration, gameweekBeginExpiredCallback);
-            };
-            case "gameKickOffExpired" {
-              ignore Timer.setTimer<system>(duration, gameKickOffExpiredCallback);
-            };
-            case "gameCompletedExpired" {
-              ignore Timer.setTimer<system>(duration, gameCompletedExpiredCallback);
-            };
-            case "loanExpired" {
-              ignore Timer.setTimer<system>(duration, loanExpiredCallback);
-            };
-            case "injuryExpired" {
-              ignore Timer.setTimer<system>(duration, injuryExpiredCallback);
-            };
-            case "transferWindowStart" {
-              ignore Timer.setTimer<system>(duration, transferWindowStartCallback);
-            };
-            case "transferWindowEnd" {
-              ignore Timer.setTimer<system>(duration, transferWindowEndCallback);
-            };
-            case _ {};
+      if (remainingDuration > 0) {
+        let duration : Timer.Duration = #nanoseconds(Int.abs(remainingDuration));
+
+        switch (timerInfo.callbackName) {
+          case "gameweekBeginExpired" {
+            ignore Timer.setTimer<system>(duration, gameweekBeginExpiredCallback);
           };
+          case "gameKickOffExpired" {
+            ignore Timer.setTimer<system>(duration, gameKickOffExpiredCallback);
+          };
+          case "gameCompletedExpired" {
+            ignore Timer.setTimer<system>(duration, gameCompletedExpiredCallback);
+          };
+          case "loanExpired" {
+            ignore Timer.setTimer<system>(duration, loanExpiredCallback);
+          };
+          case "injuryExpired" {
+            ignore Timer.setTimer<system>(duration, injuryExpiredCallback);
+          };
+          case "transferWindowStart" {
+            ignore Timer.setTimer<system>(duration, transferWindowStartCallback);
+          };
+          case "transferWindowEnd" {
+            ignore Timer.setTimer<system>(duration, transferWindowEndCallback);
+          };
+          case _ {};
         };
       };
+    };
   };
 
   public shared ({ caller }) func requestCanisterTopup() : async () {
@@ -648,70 +646,69 @@ actor Self {
     await setCheckCyclesTimer();
   };
 
+  var timers : [T.TimerInfo] = [];
+  public func setTimer(time : Int, callbackName : Text) : async () {
+    let duration : Timer.Duration = #seconds(Int.abs(time - Time.now()));
+    await setAndBackupTimer(duration, callbackName);
+  };
 
-    var timers : [T.TimerInfo] = [];
-    public func setTimer(time : Int, callbackName : Text) : async () {
-      let duration : Timer.Duration = #seconds(Int.abs(time - Time.now()));
-      await setAndBackupTimer(duration, callbackName);
+  private func removeExpiredTimers() : () {
+    let currentTime = Time.now();
+    timers := Array.filter<T.TimerInfo>(
+      timers,
+      func(timer : T.TimerInfo) : Bool {
+        return timer.triggerTime > currentTime;
+      },
+    );
+  };
+
+  private func setAndBackupTimer(duration : Timer.Duration, callbackName : Text) : async () {
+    let jobId : Timer.TimerId = switch (callbackName) {
+      case "gameweekBeginExpired" {
+        Timer.setTimer<system>(duration, gameweekBeginExpiredCallback);
+      };
+      case "gameKickOffExpired" {
+        Timer.setTimer<system>(duration, gameKickOffExpiredCallback);
+      };
+      case "gameCompletedExpired" {
+        Timer.setTimer<system>(duration, gameCompletedExpiredCallback);
+      };
+      case "loanExpired" {
+        Timer.setTimer<system>(duration, loanExpiredCallback);
+      };
+      case "injuryExpired" {
+        Timer.setTimer<system>(duration, injuryExpiredCallback);
+      };
+      case "transferWindowStart" {
+        Timer.setTimer<system>(duration, transferWindowStartCallback);
+      };
+      case "transferWindowEnd" {
+        Timer.setTimer<system>(duration, transferWindowEndCallback);
+      };
+      case _ {
+        Timer.setTimer<system>(duration, defaultCallback);
+      };
     };
 
-    private func removeExpiredTimers() : () {
-      let currentTime = Time.now();
-      timers := Array.filter<T.TimerInfo>(
-        timers,
-        func(timer : T.TimerInfo) : Bool {
-          return timer.triggerTime > currentTime;
-        },
-      );
+    let triggerTime = switch (duration) {
+      case (#seconds s) {
+        Time.now() + s * 1_000_000_000;
+      };
+      case (#nanoseconds ns) {
+        Time.now() + ns;
+      };
     };
 
-    private func setAndBackupTimer(duration : Timer.Duration, callbackName : Text) : async () {
-      let jobId : Timer.TimerId = switch (callbackName) {
-        case "gameweekBeginExpired" {
-         Timer.setTimer<system>(duration, gameweekBeginExpiredCallback); 
-        };
-        case "gameKickOffExpired" {
-          Timer.setTimer<system>(duration, gameKickOffExpiredCallback);
-        };
-        case "gameCompletedExpired" {
-         Timer.setTimer<system>(duration, gameCompletedExpiredCallback);
-        };
-        case "loanExpired" {
-         Timer.setTimer<system>(duration, loanExpiredCallback);
-        };
-        case "injuryExpired" {
-         Timer.setTimer<system>(duration, injuryExpiredCallback);
-        };
-        case "transferWindowStart" {
-         Timer.setTimer<system>(duration, transferWindowStartCallback);
-        };
-        case "transferWindowEnd" {
-         Timer.setTimer<system>(duration, transferWindowEndCallback);
-        };
-        case _ {
-          Timer.setTimer<system>(duration, defaultCallback);
-        };
-      };
-
-      let triggerTime = switch (duration) {
-        case (#seconds s) {
-          Time.now() + s * 1_000_000_000;
-        };
-        case (#nanoseconds ns) {
-          Time.now() + ns;
-        };
-      };
-
-      let newTimerInfo : T.TimerInfo = {
-        id = jobId;
-        triggerTime = triggerTime;
-        callbackName = callbackName;
-      };
-
-      var timerBuffer = Buffer.fromArray<T.TimerInfo>(timers);
-      timerBuffer.add(newTimerInfo);
-      timers := Buffer.toArray(timerBuffer);
+    let newTimerInfo : T.TimerInfo = {
+      id = jobId;
+      triggerTime = triggerTime;
+      callbackName = callbackName;
     };
 
-    private func defaultCallback() : async () {};
+    var timerBuffer = Buffer.fromArray<T.TimerInfo>(timers);
+    timerBuffer.add(newTimerInfo);
+    timers := Buffer.toArray(timerBuffer);
+  };
+
+  private func defaultCallback() : async () {};
 };

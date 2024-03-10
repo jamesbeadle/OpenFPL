@@ -134,7 +134,7 @@ actor class _MonthlyLeaderboardCanister() {
     await setCheckCyclesTimer();
   };
 
-  private func setCheckCyclesTimer() : async (){
+  private func setCheckCyclesTimer() : async () {
     switch (cyclesCheckTimerId) {
       case (null) {};
       case (?id) {

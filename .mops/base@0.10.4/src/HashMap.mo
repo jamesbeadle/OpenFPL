@@ -55,7 +55,7 @@ module {
   public class HashMap<K, V>(
     initCapacity : Nat,
     keyEq : (K, K) -> Bool,
-    keyHash : K -> Hash.Hash
+    keyHash : K -> Hash.Hash,
   ) {
 
     var table : [var KVs<K, V>] = [var];
@@ -88,10 +88,10 @@ module {
       let h = Prim.nat32ToNat(keyHash(key));
       let m = table.size();
       let v = if (m > 0) {
-        AssocList.find<Key<K>, V>(table[h % m], keyHash_(key), keyHashEq)
+        AssocList.find<Key<K>, V>(table[h % m], keyHash_(key), keyHashEq);
       } else {
-        null
-      }
+        null;
+      };
     };
 
     /// Insert the value `value` with key `key`. Overwrites any existing entry with key `key`.
@@ -130,12 +130,12 @@ module {
       if (_count >= table.size()) {
         let size = if (_count == 0) {
           if (initCapacity > 0) {
-            initCapacity
+            initCapacity;
           } else {
-            1
-          }
+            1;
+          };
         } else {
-          table.size() * 2
+          table.size() * 2;
         };
         let table2 = A.init<KVs<K, V>>(size, null);
         for (i in table.keys()) {
@@ -146,12 +146,12 @@ module {
               case (?((k, v), kvsTail)) {
                 let pos2 = Nat32.toNat(k.0) % table2.size(); // critical: uses saved hash. no re-hash.
                 table2[pos2] := ?((k, v), table2[pos2]);
-                kvs := kvsTail
-              }
-            }
-          }
+                kvs := kvsTail;
+              };
+            };
+          };
         };
-        table := table2
+        table := table2;
       };
       let h = Prim.nat32ToNat(keyHash(key));
       let pos = h % table.size();
@@ -159,9 +159,9 @@ module {
       table[pos] := kvs2;
       switch (ov) {
         case null { _count += 1 };
-        case _ {}
+        case _ {};
       };
-      ov
+      ov;
     };
 
     /// Deletes the entry with the key `key`. Has no effect if `key` is not
@@ -206,12 +206,12 @@ module {
         table[pos] := kvs2;
         switch (ov) {
           case null {};
-          case _ { _count -= 1 }
+          case _ { _count -= 1 };
         };
-        ov
+        ov;
       } else {
-        null
-      }
+        null;
+      };
     };
 
     /// Returns an Iterator (`Iter`) over the keys of the map.
@@ -238,7 +238,7 @@ module {
     ///
     /// Space: O(1)
     public func keys() : Iter.Iter<K> {
-      Iter.map(entries(), func(kv : (K, V)) : K { kv.0 })
+      Iter.map(entries(), func(kv : (K, V)) : K { kv.0 });
     };
 
     /// Returns an Iterator (`Iter`) over the values of the map.
@@ -265,7 +265,7 @@ module {
     ///
     /// Space: O(1)
     public func vals() : Iter.Iter<V> {
-      Iter.map(entries(), func(kv : (K, V)) : V { kv.1 })
+      Iter.map(entries(), func(kv : (K, V)) : V { kv.1 });
     };
 
     /// Returns an Iterator (`Iter`) over the key-value pairs in the map.
@@ -294,7 +294,7 @@ module {
     /// Space: O(1)
     public func entries() : Iter.Iter<(K, V)> {
       if (table.size() == 0) {
-        object { public func next() : ?(K, V) { null } }
+        object { public func next() : ?(K, V) { null } };
       } else {
         object {
           var kvs = table[0];
@@ -303,21 +303,21 @@ module {
             switch kvs {
               case (?(kv, kvs2)) {
                 kvs := kvs2;
-                ?(kv.0.1, kv.1)
+                ?(kv.0.1, kv.1);
               };
               case null {
                 if (nextTablePos < table.size()) {
                   kvs := table[nextTablePos];
                   nextTablePos += 1;
-                  next()
+                  next();
                 } else {
-                  null
-                }
-              }
-            }
-          }
-        }
-      }
+                  null;
+                };
+              };
+            };
+          };
+        };
+      };
     };
 
   };
@@ -341,13 +341,13 @@ module {
   public func clone<K, V>(
     map : HashMap<K, V>,
     keyEq : (K, K) -> Bool,
-    keyHash : K -> Hash.Hash
+    keyHash : K -> Hash.Hash,
   ) : HashMap<K, V> {
     let h2 = HashMap<K, V>(map.size(), keyEq, keyHash);
     for ((k, v) in map.entries()) {
-      h2.put(k, v)
+      h2.put(k, v);
     };
-    h2
+    h2;
   };
 
   /// Returns a new map, containing all entries given by the iterator `iter`.
@@ -370,13 +370,13 @@ module {
     iter : Iter.Iter<(K, V)>,
     initCapacity : Nat,
     keyEq : (K, K) -> Bool,
-    keyHash : K -> Hash.Hash
+    keyHash : K -> Hash.Hash,
   ) : HashMap<K, V> {
     let h = HashMap<K, V>(initCapacity, keyEq, keyHash);
     for ((k, v) in iter) {
-      h.put(k, v)
+      h.put(k, v);
     };
-    h
+    h;
   };
 
   /// Creates a new map by applying `f` to each entry in `hashMap`. Each entry
@@ -401,14 +401,14 @@ module {
     hashMap : HashMap<K, V1>,
     keyEq : (K, K) -> Bool,
     keyHash : K -> Hash.Hash,
-    f : (K, V1) -> V2
+    f : (K, V1) -> V2,
   ) : HashMap<K, V2> {
     let h2 = HashMap<K, V2>(hashMap.size(), keyEq, keyHash);
     for ((k, v1) in hashMap.entries()) {
       let v2 = f(k, v1);
-      h2.put(k, v2)
+      h2.put(k, v2);
     };
-    h2
+    h2;
   };
 
   /// Creates a new map by applying `f` to each entry in `hashMap`. For each entry
@@ -440,18 +440,18 @@ module {
     hashMap : HashMap<K, V1>,
     keyEq : (K, K) -> Bool,
     keyHash : K -> Hash.Hash,
-    f : (K, V1) -> ?V2
+    f : (K, V1) -> ?V2,
   ) : HashMap<K, V2> {
     let h2 = HashMap<K, V2>(hashMap.size(), keyEq, keyHash);
     for ((k, v1) in hashMap.entries()) {
       switch (f(k, v1)) {
         case null {};
         case (?v2) {
-          h2.put(k, v2)
-        }
-      }
+          h2.put(k, v2);
+        };
+      };
     };
-    h2
+    h2;
   };
 
-}
+};

@@ -128,11 +128,20 @@ module {
     };
 
     public func getProfile(principalId : Text) : async Result.Result<DTOs.ProfileDTO, T.Error> {
+      let emptyDTO: DTOs.ProfileDTO = {
+        principalId = principalId;
+        username  = "";
+        termsAccepted = false;
+        profilePicture = null;
+        profilePictureType = "";
+        favouriteClubId = 0;
+        createDate = 0;
+      };
       let managerCanisterId = managerCanisterIds.get(principalId);
 
       switch (managerCanisterId) {
         case (null) {
-          return #err(#NotFound);
+          return #ok(emptyDTO);
         };
         case (?foundCanisterId) {
           let manager_canister = actor (foundCanisterId) : actor {
@@ -142,7 +151,7 @@ module {
           let manager = await manager_canister.getManager(principalId);
           switch (manager) {
             case (null) {
-              return #err(#NotFound);
+              return #ok(emptyDTO);
             };
             case (?foundManager) {
               let profileDTO : DTOs.ProfileDTO = {
@@ -318,11 +327,11 @@ module {
           let manager_canister = actor (activeManagerCanisterId) : actor {
             addNewManager : (manager : T.Manager) -> async Result.Result<(), T.Error>;
             getTotalManagers : () -> async Nat;
-            getManager : (principalId: T.PrincipalId) -> async ?T.Manager;
+            getManager : (principalId : T.PrincipalId) -> async ?T.Manager;
           };
 
           let foundManager = await manager_canister.getManager(updatedFantasyTeamDTO.principalId);
-          
+
           if (invalidTransfers(updatedFantasyTeamDTO, foundManager, systemState, players)) {
             return #err(#InvalidTeamError);
           };

@@ -493,6 +493,7 @@ export const idlFactory = ({ IDL }) => {
     isUsernameValid: IDL.Func([IDL.Text], [IDL.Bool], ["query"]),
     requestCanisterTopup: IDL.Func([], [], []),
     saveFantasyTeam: IDL.Func([UpdateTeamSelectionDTO], [Result_1], []),
+    setTimer: IDL.Func([IDL.Int, IDL.Text], [], []),
     updateFavouriteClub: IDL.Func([ClubId], [Result_1], []),
     updateProfilePicture: IDL.Func(
       [IDL.Vec(IDL.Nat8), IDL.Text],

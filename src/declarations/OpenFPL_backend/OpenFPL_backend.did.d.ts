@@ -484,6 +484,7 @@ export interface _SERVICE {
   isUsernameValid: ActorMethod<[string], boolean>;
   requestCanisterTopup: ActorMethod<[], undefined>;
   saveFantasyTeam: ActorMethod<[UpdateTeamSelectionDTO], Result_1>;
+  setTimer: ActorMethod<[bigint, string], undefined>;
   updateFavouriteClub: ActorMethod<[ClubId], Result_1>;
   updateProfilePicture: ActorMethod<[Uint8Array | number[], string], Result_1>;
   updateUsername: ActorMethod<[string], Result_1>;
@@ -507,4 +508,4 @@ export interface _SERVICE {
   validateUpdatePlayer: ActorMethod<[UpdatePlayerDTO], Result>;
 }
 export declare const idlFactory: IDL.InterfaceFactory;
-export declare const init: ({ IDL }: { IDL: IDL }) => IDL.Type[];
+export declare const init: (args: { IDL: typeof IDL }) => IDL.Type[];

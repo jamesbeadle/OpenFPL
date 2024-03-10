@@ -108,7 +108,7 @@ module {
   /// Int64.toText(-123456) // => "-123456"
   /// ```
   public func toText(x : Int64) : Text {
-    Int.toText(toInt(x))
+    Int.toText(toInt(x));
   };
 
   /// Returns the absolute value of `x`.
@@ -120,7 +120,7 @@ module {
   /// Int64.abs(-123456) // => +123_456
   /// ```
   public func abs(x : Int64) : Int64 {
-    fromInt(Int.abs(toInt(x)))
+    fromInt(Int.abs(toInt(x)));
   };
 
   /// Returns the minimum of `x` and `y`.
@@ -130,7 +130,7 @@ module {
   /// Int64.min(+2, -3) // => -3
   /// ```
   public func min(x : Int64, y : Int64) : Int64 {
-    if (x < y) { x } else { y }
+    if (x < y) { x } else { y };
   };
 
   /// Returns the maximum of `x` and `y`.
@@ -140,7 +140,7 @@ module {
   /// Int64.max(+2, -3) // => +2
   /// ```
   public func max(x : Int64, y : Int64) : Int64 {
-    if (x < y) { y } else { x }
+    if (x < y) { y } else { x };
   };
 
   /// Equality function for Int64 types.
@@ -254,7 +254,7 @@ module {
   /// Array.sort([1, -2, -3] : [Int64], Int64.compare) // => [-3, -2, 1]
   /// ```
   public func compare(x : Int64, y : Int64) : { #less; #equal; #greater } {
-    if (x < y) { #less } else if (x == y) { #equal } else { #greater }
+    if (x < y) { #less } else if (x == y) { #equal } else { #greater };
   };
 
   /// Returns the negation of `x`, `-x`.
@@ -516,7 +516,7 @@ module {
   /// Int64.bittest(128, 7) // => true
   /// ```
   public func bittest(x : Int64, p : Nat) : Bool {
-    Prim.btstInt64(x, Prim.intToInt64(p))
+    Prim.btstInt64(x, Prim.intToInt64(p));
   };
 
   /// Returns the value of setting bit `p` in `x` to `1`.
@@ -527,7 +527,7 @@ module {
   /// Int64.bitset(0, 7) // => +128
   /// ```
   public func bitset(x : Int64, p : Nat) : Int64 {
-    x | (1 << Prim.intToInt64(p))
+    x | (1 << Prim.intToInt64(p));
   };
 
   /// Returns the value of clearing bit `p` in `x` to `0`.
@@ -538,7 +538,7 @@ module {
   /// Int64.bitclear(-1, 7) // => -129
   /// ```
   public func bitclear(x : Int64, p : Nat) : Int64 {
-    x & ^(1 << Prim.intToInt64(p))
+    x & ^(1 << Prim.intToInt64(p));
   };
 
   /// Returns the value of flipping bit `p` in `x`.
@@ -549,7 +549,7 @@ module {
   /// Int64.bitflip(255, 7) // => +127
   /// ```
   public func bitflip(x : Int64, p : Nat) : Int64 {
-    x ^ (1 << Prim.intToInt64(p))
+    x ^ (1 << Prim.intToInt64(p));
   };
 
   /// Returns the count of non-zero bits in `x`.
@@ -635,5 +635,5 @@ module {
   /// to the existing `**%` operator) is so that you can use it as a function
   /// value to pass to a higher order function. It is not possible to use `**%`
   /// as a function value at the moment.
-  public func powWrap(x : Int64, y : Int64) : Int64 { x **% y }
-}
+  public func powWrap(x : Int64, y : Int64) : Int64 { x **% y };
+};
