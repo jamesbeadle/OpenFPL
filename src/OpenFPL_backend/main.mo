@@ -560,12 +560,12 @@ actor Self {
     switch (cyclesCheckTimerId) {
       case (null) {};
       case (?id) {
-        Timer.cancelTimer(id);
+        Timer.cancelTimer<system>(id);
         cyclesCheckTimerId := null;
       };
     };
     nextCyclesCheckTime := Time.now() + cyclesCheckInterval;
-    cyclesCheckTimerId := ?Timer.setTimer(#nanoseconds(cyclesCheckInterval), checkCanisterCycles);
+    cyclesCheckTimerId := ?Timer.setTimer<system>(#nanoseconds(cyclesCheckInterval), checkCanisterCycles);
   };
 
   private func checkCanisterCycles() : async () {
@@ -582,12 +582,12 @@ actor Self {
     switch (cyclesCheckWalletTimerId) {
       case (null) {};
       case (?id) {
-        Timer.cancelTimer(id);
+        Timer.cancelTimer<system>(id);
         cyclesCheckWalletTimerId := null;
       };
     };
     nextWalletCheckTime := Time.now() + cyclesCheckWalletInterval;
-    cyclesCheckWalletTimerId := ?Timer.setTimer(#nanoseconds(cyclesCheckWalletInterval), checkCanisterWalletBalance);
+    cyclesCheckWalletTimerId := ?Timer.setTimer<system>(#nanoseconds(cyclesCheckWalletInterval), checkCanisterWalletBalance);
   };
 
   public func burnICPToCycles(requestedCycles : Nat64) : async () {

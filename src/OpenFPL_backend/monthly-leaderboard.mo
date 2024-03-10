@@ -128,7 +128,7 @@ actor class MonthlyLeaderboardCanister() {
     setCheckCyclesTimer();
   };
 
-  private func setCheckCyclesTimer() {
+  private func setCheckCyclesTimer() : async (){
     switch (cyclesCheckTimerId) {
       case (null) {};
       case (?id) {
@@ -136,7 +136,7 @@ actor class MonthlyLeaderboardCanister() {
         cyclesCheckTimerId := null;
       };
     };
-    cyclesCheckTimerId := ?Timer.setTimer(#nanoseconds(cyclesCheckInterval), checkCanisterCycles);
+    cyclesCheckTimerId := ?Timer.setTimer<system>(#nanoseconds(cyclesCheckInterval), checkCanisterCycles);
   };
 
   public func topupCanister() : async () {

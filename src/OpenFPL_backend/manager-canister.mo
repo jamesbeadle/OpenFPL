@@ -9,20 +9,15 @@ import Array "mo:base/Array";
 import Order "mo:base/Order";
 import Text "mo:base/Text";
 import TrieMap "mo:base/TrieMap";
-import Trie "mo:base/Trie";
 import Buffer "mo:base/Buffer";
 import Nat8 "mo:base/Nat8";
-import Time "mo:base/Time";
 import Option "mo:base/Option";
-import Int64 "mo:base/Int64";
-import Nat64 "mo:base/Nat64";
 import Result "mo:base/Result";
-import Debug "mo:base/Debug";
 import CanisterIds "CanisterIds";
 import Utilities "utilities";
 import Environment "Environment";
 
-actor class ManagerCanister() {
+actor class _ManagerCanister() {
 
   private var managerGroupIndexes : TrieMap.TrieMap<T.PrincipalId, Nat8> = TrieMap.TrieMap<T.PrincipalId, Nat8>(Text.equal, Text.hash);
   private stable var stable_manager_group_indexes : [(T.PrincipalId, Nat8)] = [];
@@ -189,7 +184,7 @@ actor class ManagerCanister() {
   };
 
   private func mergeTeamSelection(dto : DTOs.UpdateTeamSelectionDTO, manager : T.Manager, transfersAvailable : Nat8, monthlyBonusesAvailable : Nat8, newBankBalance : Nat16) : T.Manager {
-    return let updatedManager : T.Manager = {
+    return  {
       principalId = manager.principalId;
       username = manager.username;
       favouriteClubId = manager.favouriteClubId;
@@ -3375,7 +3370,14 @@ actor class ManagerCanister() {
     for (index in Iter.fromArray(stable_manager_group_indexes)) {
       managerGroupIndexes.put(index.0, index.1);
     };
-    setCheckCyclesTimer();
+    switch (cyclesCheckTimerId) {
+      case (null) {};
+      case (?id) {
+        Timer.cancelTimer(id);
+        cyclesCheckTimerId := null;
+      };
+    };
+    cyclesCheckTimerId := ?Timer.setTimer<system>(#nanoseconds(cyclesCheckInterval), checkCanisterCycles);
   };
 
   private func checkCanisterCycles() : async () {
@@ -3388,10 +3390,10 @@ actor class ManagerCanister() {
       };
       await openfpl_backend_canister.requestCanisterTopup();
     };
-    setCheckCyclesTimer();
+    await setCheckCyclesTimer();
   };
 
-  private func setCheckCyclesTimer() {
+  private func setCheckCyclesTimer() : async () {
     switch (cyclesCheckTimerId) {
       case (null) {};
       case (?id) {
@@ -3399,7 +3401,7 @@ actor class ManagerCanister() {
         cyclesCheckTimerId := null;
       };
     };
-    cyclesCheckTimerId := ?Timer.setTimer(#nanoseconds(cyclesCheckInterval), checkCanisterCycles);
+    cyclesCheckTimerId := ?Timer.setTimer<system>(#nanoseconds(cyclesCheckInterval), checkCanisterCycles);
   };
 
   public func topupCanister() : async () {
@@ -3414,5 +3416,4 @@ actor class ManagerCanister() {
   public func getMainCanisterId() : async Text {
     return main_canister_id;
   };
-  setCheckCyclesTimer();
 };

@@ -57,11 +57,14 @@
   </ul>
 
   <p class="my-2">
-    Due to an upper limit of 100 neurons being specified when creating a DAO each ICPFA team member and funded NFT holder will receive their $FPL within a single neuron with a 1 month dissolve delay.
+    Due to an upper limit of 100 neurons being specified when creating a DAO
+    each ICPFA team member and funded NFT holder will receive their $FPL within
+    a single neuron with a 1 month dissolve delay.
   </p>
 
   <p class="my-2">
-    The OpenFPL founder, James Beadle, will receive his neuron locked for 4 years with a 2 year dissolve delay.
+    The OpenFPL founder, James Beadle, will receive his neuron locked for 4
+    years with a 2 year dissolve delay.
   </p>
 
   <h2 class="default-sub-header mt-4">DAO Valuation</h2>

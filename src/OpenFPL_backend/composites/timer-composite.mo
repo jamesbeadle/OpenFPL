@@ -40,9 +40,9 @@ module {
       transferWindowEndCallback := ?_transferWindowEndCallback;
     };
 
-    public func setTimer(time : Int, callbackName : Text) {
+    public func setTimer(time : Int, callbackName : Text) : async () {
       let duration : Timer.Duration = #seconds(Int.abs(time - Time.now()));
-      setAndBackupTimer(duration, callbackName);
+      await setAndBackupTimer(duration, callbackName);
     };
 
     public func removeExpiredTimers() : () {
@@ -55,52 +55,52 @@ module {
       );
     };
 
-    public func setAndBackupTimer(duration : Timer.Duration, callbackName : Text) {
+    public func setAndBackupTimer(duration : Timer.Duration, callbackName : Text) : async () {
       let jobId : Timer.TimerId = switch (callbackName) {
         case "gameweekBeginExpired" {
           switch (gameweekBeginExpiredCallback) {
-            case null { Timer.setTimer(duration, defaultCallback) };
-            case (?callback) { Timer.setTimer(duration, callback) };
+            case null { Timer.setTimer<system>(duration, defaultCallback) };
+            case (?callback) { Timer.setTimer<system>(duration, callback) };
           };
         };
         case "gameKickOffExpired" {
           switch (gameKickOffExpiredCallback) {
-            case null { Timer.setTimer(duration, defaultCallback) };
-            case (?callback) { Timer.setTimer(duration, callback) };
+            case null { Timer.setTimer<system>(duration, defaultCallback) };
+            case (?callback) { Timer.setTimer<system>(duration, callback) };
           };
         };
         case "gameCompletedExpired" {
           switch (gameCompletedExpiredCallback) {
-            case null { Timer.setTimer(duration, defaultCallback) };
-            case (?callback) { Timer.setTimer(duration, callback) };
+            case null { Timer.setTimer<system>(duration, defaultCallback) };
+            case (?callback) { Timer.setTimer<system>(duration, callback) };
           };
         };
         case "loanExpired" {
           switch (loanExpiredCallback) {
-            case null { Timer.setTimer(duration, defaultCallback) };
-            case (?callback) { Timer.setTimer(duration, callback) };
+            case null { Timer.setTimer<system>(duration, defaultCallback) };
+            case (?callback) { Timer.setTimer<system>(duration, callback) };
           };
         };
         case "injuryExpired" {
           switch (injuryExpiredCallback) {
-            case null { Timer.setTimer(duration, defaultCallback) };
-            case (?callback) { Timer.setTimer(duration, callback) };
+            case null { Timer.setTimer<system>(duration, defaultCallback) };
+            case (?callback) { Timer.setTimer<system>(duration, callback) };
           };
         };
         case "transferWindowStart" {
           switch (transferWindowStartCallback) {
-            case null { Timer.setTimer(duration, defaultCallback) };
-            case (?callback) { Timer.setTimer(duration, callback) };
+            case null { Timer.setTimer<system>(duration, defaultCallback) };
+            case (?callback) { Timer.setTimer<system>(duration, callback) };
           };
         };
         case "transferWindowEnd" {
           switch (transferWindowEndCallback) {
-            case null { Timer.setTimer(duration, defaultCallback) };
-            case (?callback) { Timer.setTimer(duration, callback) };
+            case null { Timer.setTimer<system>(duration, defaultCallback) };
+            case (?callback) { Timer.setTimer<system>(duration, callback) };
           };
         };
         case _ {
-          Timer.setTimer(duration, defaultCallback);
+          Timer.setTimer<system>(duration, defaultCallback);
         };
       };
 
@@ -124,7 +124,7 @@ module {
       timers := Buffer.toArray(timerBuffer);
     };
 
-    private func recreateTimers() {
+    private func recreateTimers() : async () {
       let currentTime = Time.now();
       for (timerInfo in Iter.fromArray(timers)) {
         let remainingDuration = timerInfo.triggerTime - currentTime;
@@ -187,9 +187,9 @@ module {
       return timers;
     };
 
-    public func setStableTimers(stable_timers : [T.TimerInfo]) {
+    public func setStableTimers(stable_timers : [T.TimerInfo]) : async () {
       timers := stable_timers;
-      recreateTimers();
+      await recreateTimers();
     };
   };
 };
