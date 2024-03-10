@@ -1,13 +1,10 @@
 import T "../types";
-import DTOs "../DTOs";
-import List "mo:base/List";
 import Time "mo:base/Time";
 import Iter "mo:base/Iter";
 import Array "mo:base/Array";
 import Timer "mo:base/Timer";
 import Int "mo:base/Int";
 import Buffer "mo:base/Buffer";
-import Utilities "../utilities";
 
 module {
   public class TimerComposite() {
@@ -136,43 +133,43 @@ module {
             case "gameweekBeginExpired" {
               switch (gameweekBeginExpiredCallback) {
                 case null {};
-                case (?callback) { ignore Timer.setTimer(duration, callback) };
+                case (?callback) { ignore Timer.setTimer<system>(duration, callback) };
               };
             };
             case "gameKickOffExpired" {
               switch (gameKickOffExpiredCallback) {
                 case null {};
-                case (?callback) { ignore Timer.setTimer(duration, callback) };
+                case (?callback) { ignore Timer.setTimer<system>(duration, callback) };
               };
             };
             case "gameCompletedExpired" {
               switch (gameCompletedExpiredCallback) {
                 case null {};
-                case (?callback) { ignore Timer.setTimer(duration, callback) };
+                case (?callback) { ignore Timer.setTimer<system>(duration, callback) };
               };
             };
             case "loanExpired" {
               switch (loanExpiredCallback) {
                 case null {};
-                case (?callback) { ignore Timer.setTimer(duration, callback) };
+                case (?callback) { ignore Timer.setTimer<system>(duration, callback) };
               };
             };
             case "injuryExpired" {
               switch (injuryExpiredCallback) {
                 case null {};
-                case (?callback) { ignore Timer.setTimer(duration, callback) };
+                case (?callback) { ignore Timer.setTimer<system>(duration, callback) };
               };
             };
             case "transferWindowStart" {
               switch (transferWindowStartCallback) {
                 case null {};
-                case (?callback) { ignore Timer.setTimer(duration, callback) };
+                case (?callback) { ignore Timer.setTimer<system>(duration, callback) };
               };
             };
             case "transferWindowEnd" {
               switch (transferWindowEndCallback) {
                 case null {};
-                case (?callback) { ignore Timer.setTimer(duration, callback) };
+                case (?callback) { ignore Timer.setTimer<system>(duration, callback) };
               };
             };
             case _ {};

@@ -24,7 +24,6 @@ module {
           return #greater;
         },
       );
-      let sortedClubs = List.fromArray(sortedArray);
       return sortedArray;
     };
 
@@ -38,7 +37,6 @@ module {
           return #greater;
         },
       );
-      let sortedClubs = List.fromArray(sortedArray);
       return sortedArray;
     };
 

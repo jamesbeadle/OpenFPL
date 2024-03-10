@@ -9,10 +9,9 @@ import CanisterIds "CanisterIds";
 import Utilities "utilities";
 import Environment "Environment";
 
-actor class MonthlyLeaderboardCanister() {
+actor class _MonthlyLeaderboardCanister() {
   private stable var leaderboard : ?T.ClubLeaderboard = null;
   private stable var seasonId : ?T.SeasonId = null;
-  private stable var clubId : ?T.ClubId = null;
   private stable var month : ?T.CalendarMonth = null;
   private let cyclesCheckInterval : Nat = Utilities.getHour() * 24;
   private var cyclesCheckTimerId : ?Timer.TimerId = null;
@@ -99,7 +98,7 @@ actor class MonthlyLeaderboardCanister() {
         return null;
       };
       case (?foundLeaderboard) {
-        let foundEntry = List.find<T.LeaderboardEntry>(
+        let _ = List.find<T.LeaderboardEntry>(
           foundLeaderboard.entries,
           func(entry : DTOs.LeaderboardEntryDTO) : Bool {
             return entry.principalId == principalId;
@@ -112,7 +111,14 @@ actor class MonthlyLeaderboardCanister() {
   system func preupgrade() {};
 
   system func postupgrade() {
-    setCheckCyclesTimer();
+    switch (cyclesCheckTimerId) {
+      case (null) {};
+      case (?id) {
+        Timer.cancelTimer(id);
+        cyclesCheckTimerId := null;
+      };
+    };
+    cyclesCheckTimerId := ?Timer.setTimer<system>(#nanoseconds(cyclesCheckInterval), checkCanisterCycles);
   };
 
   private func checkCanisterCycles() : async () {
@@ -125,7 +131,7 @@ actor class MonthlyLeaderboardCanister() {
       };
       await openfpl_backend_canister.requestCanisterTopup();
     };
-    setCheckCyclesTimer();
+    await setCheckCyclesTimer();
   };
 
   private func setCheckCyclesTimer() : async (){
@@ -141,12 +147,10 @@ actor class MonthlyLeaderboardCanister() {
 
   public func topupCanister() : async () {
     let amount = Cycles.available();
-    let accepted = Cycles.accept(amount);
+    let _ = Cycles.accept<system>(amount);
   };
 
   public func getCyclesBalance() : async Nat {
     return Cycles.balance();
   };
-
-  setCheckCyclesTimer();
 };

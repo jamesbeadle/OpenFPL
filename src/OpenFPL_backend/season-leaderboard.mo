@@ -4,7 +4,6 @@ import List "mo:base/List";
 import Cycles "mo:base/ExperimentalCycles";
 import Timer "mo:base/Timer";
 import Principal "mo:base/Principal";
-import Iter "mo:base/Iter";
 import Array "mo:base/Array";
 import Order "mo:base/Order";
 import Text "mo:base/Text";
@@ -12,7 +11,7 @@ import CanisterIds "CanisterIds";
 import Utilities "utilities";
 import Environment "Environment";
 
-actor class SeasonLeaderboardCanister() {
+actor class _SeasonLeaderboardCanister() {
   private stable var leaderboard : ?T.SeasonLeaderboard = null;
   private stable var seasonId : ?T.SeasonId = null;
   private let cyclesCheckInterval : Nat = Utilities.getHour() * 24;
@@ -95,7 +94,7 @@ actor class SeasonLeaderboardCanister() {
         let qualifyingEntriesWithIndex = Array.filter(
           entriesWithIndex,
           func(pair : (T.LeaderboardEntry, Nat)) : Bool {
-            let (entry, index) = pair;
+            let (_, index) = pair;
             index <= lastIndexForPrizes;
           },
         );
@@ -165,7 +164,7 @@ actor class SeasonLeaderboardCanister() {
         return null;
       };
       case (?foundLeaderboard) {
-        let foundEntry = List.find<T.LeaderboardEntry>(
+        let _ = List.find<T.LeaderboardEntry>(
           foundLeaderboard.entries,
           func(entry : DTOs.LeaderboardEntryDTO) : Bool {
             return entry.principalId == principalId;
@@ -178,7 +177,14 @@ actor class SeasonLeaderboardCanister() {
   system func preupgrade() {};
 
   system func postupgrade() {
-    setCheckCyclesTimer();
+    switch (cyclesCheckTimerId) {
+      case (null) {};
+      case (?id) {
+        Timer.cancelTimer(id);
+        cyclesCheckTimerId := null;
+      };
+    };
+    cyclesCheckTimerId := ?Timer.setTimer<system>(#nanoseconds(cyclesCheckInterval), checkCanisterCycles);
   };
 
   private func checkCanisterCycles() : async () {
@@ -191,10 +197,10 @@ actor class SeasonLeaderboardCanister() {
       };
       await openfpl_backend_canister.requestCanisterTopup();
     };
-    setCheckCyclesTimer();
+    await setCheckCyclesTimer();
   };
 
-  private func setCheckCyclesTimer() {
+  private func setCheckCyclesTimer() : async () {
     switch (cyclesCheckTimerId) {
       case (null) {};
       case (?id) {
@@ -202,17 +208,15 @@ actor class SeasonLeaderboardCanister() {
         cyclesCheckTimerId := null;
       };
     };
-    cyclesCheckTimerId := ?Timer.setTimer(#nanoseconds(cyclesCheckInterval), checkCanisterCycles);
+    cyclesCheckTimerId := ?Timer.setTimer<system>(#nanoseconds(cyclesCheckInterval), checkCanisterCycles);
   };
 
   public func topupCanister() : async () {
     let amount = Cycles.available();
-    let accepted = Cycles.accept(amount);
+    let _ = Cycles.accept<system>(amount);
   };
 
   public func getCyclesBalance() : async Nat {
     return Cycles.balance();
   };
-
-  setCheckCyclesTimer();
 };

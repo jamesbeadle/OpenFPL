@@ -9,7 +9,7 @@ import CanisterIds "CanisterIds";
 import Utilities "utilities";
 import Environment "Environment";
 
-actor class WeeklyLeaderboardCanister() {
+actor class _WeeklyLeaderboardCanister() {
   private stable var leaderboard : ?T.WeeklyLeaderboard = null;
   private stable var seasonId : ?T.SeasonId = null;
   private stable var gameweek : ?T.GameweekNumber = null;
@@ -95,7 +95,7 @@ actor class WeeklyLeaderboardCanister() {
         return null;
       };
       case (?foundLeaderboard) {
-        let foundEntry = List.find<T.LeaderboardEntry>(
+        let _ = List.find<T.LeaderboardEntry>(
           foundLeaderboard.entries,
           func(entry : DTOs.LeaderboardEntryDTO) : Bool {
             return entry.principalId == principalId;
@@ -108,7 +108,15 @@ actor class WeeklyLeaderboardCanister() {
   system func preupgrade() {};
 
   system func postupgrade() {
-    setCheckCyclesTimer();
+    
+    switch (cyclesCheckTimerId) {
+      case (null) {};
+      case (?id) {
+        Timer.cancelTimer(id);
+        cyclesCheckTimerId := null;
+      };
+    };
+    cyclesCheckTimerId := ?Timer.setTimer<system>(#nanoseconds(cyclesCheckInterval), checkCanisterCycles);
   };
 
   private func checkCanisterCycles() : async () {
@@ -121,10 +129,10 @@ actor class WeeklyLeaderboardCanister() {
       };
       await openfpl_backend_canister.requestCanisterTopup();
     };
-    setCheckCyclesTimer();
+    await setCheckCyclesTimer();
   };
 
-  private func setCheckCyclesTimer() {
+  private func setCheckCyclesTimer() : async () {
     switch (cyclesCheckTimerId) {
       case (null) {};
       case (?id) {
@@ -132,17 +140,15 @@ actor class WeeklyLeaderboardCanister() {
         cyclesCheckTimerId := null;
       };
     };
-    cyclesCheckTimerId := ?Timer.setTimer(#nanoseconds(cyclesCheckInterval), checkCanisterCycles);
+    cyclesCheckTimerId := ?Timer.setTimer<system>(#nanoseconds(cyclesCheckInterval), checkCanisterCycles);
   };
 
   public func topupCanister() : async () {
     let amount = Cycles.available();
-    let accepted = Cycles.accept(amount);
+    let _ = Cycles.accept<system>(amount);
   };
 
   public func getCyclesBalance() : async Nat {
     return Cycles.balance();
   };
-
-  setCheckCyclesTimer();
 };

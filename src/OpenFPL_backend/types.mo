@@ -1,6 +1,6 @@
 import List "mo:base/List";
 
-module Types {
+module _Types {
 
   public type FixtureId = Nat32;
   public type SeasonId = Nat16;

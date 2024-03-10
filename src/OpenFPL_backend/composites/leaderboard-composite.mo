@@ -11,7 +11,6 @@ import Management "../modules/Management";
 import ENV "../utils/Env";
 import Cycles "mo:base/ExperimentalCycles";
 import Buffer "mo:base/Buffer";
-import Debug "mo:base/Debug";
 import TrieMap "mo:base/TrieMap";
 import Nat "mo:base/Nat";
 import Text "mo:base/Text";
@@ -381,10 +380,8 @@ module {
         updatedLeaderboards := List.append<T.ClubLeaderboard>(updatedLeaderboards, List.fromArray([clubMonthlyLeaderboard]));
       };
 
-      var monthlyLeaderboards = List.nil<T.ClubLeaderboard>();
-
       for (leaderboard in Iter.fromList(updatedLeaderboards)) {
-        let monthlyLeaderboardCanisterId = await createMonthlyLeaderboardCanister(seasonId, gameweek, month, leaderboard.clubId, leaderboard);
+        let monthlyLeaderboardCanisterId = await createMonthlyLeaderboardCanister(seasonId, month, leaderboard.clubId, leaderboard);
 
         let clubCanisterInfo : T.MonthlyLeaderboardCanister = {
           seasonId = seasonId;
@@ -447,8 +444,8 @@ module {
 
       let maxEntriesPerChunk = 10_000;
 
-      Cycles.add(2_000_000_000_000);
-      let canister = await WeeklyLeaderboardCanister.WeeklyLeaderboardCanister();
+      Cycles.add<system>(2_000_000_000_000);
+      let canister = await WeeklyLeaderboardCanister._WeeklyLeaderboardCanister();
       let IC : Management.Management = actor (ENV.Default);
       let _ = await Utilities.updateCanister_(canister, backendCanisterController, IC);
       let canister_principal = Principal.fromActor(canister);
@@ -480,7 +477,7 @@ module {
       return canisterId;
     };
 
-    private func createMonthlyLeaderboardCanister(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth, clubId : T.ClubId, monthlyLeaderboard : T.ClubLeaderboard) : async Text {
+    private func createMonthlyLeaderboardCanister(seasonId : T.SeasonId, month : T.CalendarMonth, clubId : T.ClubId, monthlyLeaderboard : T.ClubLeaderboard) : async Text {
 
       if (backendCanisterController == null) {
         return "";
@@ -488,8 +485,8 @@ module {
 
       let maxEntriesPerChunk = 10_000;
 
-      Cycles.add(2_000_000_000_000);
-      let canister = await MonthlyLeaderboardCanister.MonthlyLeaderboardCanister();
+      Cycles.add<system>(2_000_000_000_000);
+      let canister = await MonthlyLeaderboardCanister._MonthlyLeaderboardCanister();
       let IC : Management.Management = actor (ENV.Default);
       let _ = await Utilities.updateCanister_(canister, backendCanisterController, IC);
       let canister_principal = Principal.fromActor(canister);
@@ -529,8 +526,8 @@ module {
 
       let maxEntriesPerChunk = 10_000;
 
-      Cycles.add(2_000_000_000_000);
-      let canister = await SeasonLeaderboardCanister.SeasonLeaderboardCanister();
+      Cycles.add<system>(2_000_000_000_000);
+      let canister = await SeasonLeaderboardCanister._SeasonLeaderboardCanister();
       let IC : Management.Management = actor (ENV.Default);
       let _ = await Utilities.updateCanister_(canister, backendCanisterController, IC);
       let canister_principal = Principal.fromActor(canister);

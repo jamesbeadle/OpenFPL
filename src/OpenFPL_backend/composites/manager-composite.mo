@@ -4,32 +4,23 @@ import Result "mo:base/Result";
 import Blob "mo:base/Blob";
 import Text "mo:base/Text";
 import List "mo:base/List";
-import { now } = "mo:base/Time";
 import Iter "mo:base/Iter";
 import Array "mo:base/Array";
 import Nat16 "mo:base/Nat16";
 import Nat8 "mo:base/Nat8";
-import Int64 "mo:base/Int64";
 import Nat64 "mo:base/Nat64";
 import Cycles "mo:base/ExperimentalCycles";
 import Principal "mo:base/Principal";
 import Buffer "mo:base/Buffer";
-import Float "mo:base/Float";
 import Option "mo:base/Option";
 import Time "mo:base/Time";
-import Order "mo:base/Order";
 import Int16 "mo:base/Int16";
-import Debug "mo:base/Debug";
 import Management "../modules/Management";
 import ENV "../utils/Env";
 import ManagerCanister "../manager-canister";
-import RewardPercentages "../utils/RewardPercentages";
 import Rewards "./rewards-composite";
 import Utilities "../utilities";
-import Token "../sns-wrappers/token";
-import SeasonLeaderboard "../season-leaderboard";
 import TrieMap "mo:base/TrieMap";
-import Error "mo:base/Error";
 import Environment "../Environment";
 import CanisterIds "../CanisterIds";
 
@@ -1349,8 +1340,8 @@ module {
 
     private func createManagerCanister() : async Text {
 
-      Cycles.add(2_000_000_000_000);
-      let canister = await ManagerCanister.ManagerCanister();
+      Cycles.add<system>(2_000_000_000_000);
+      let canister = await ManagerCanister._ManagerCanister();
       let IC : Management.Management = actor (ENV.Default);
       var principal : ?Principal = null;
       if (Environment.DFX_NETWORK == "local") {

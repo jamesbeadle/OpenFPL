@@ -2246,6 +2246,8 @@ actor class _ManagerCanister() {
           } else { snapshotBuffer.add(snapshot) };
         };
 
+        snapshotBuffer.add(fantasyTeamSnapshot);
+
         let gameweekSnapshots = Buffer.toArray<T.FantasyTeamSnapshot>(snapshotBuffer);
 
         let totalSeasonPoints = Array.foldLeft<T.FantasyTeamSnapshot, Int16>(gameweekSnapshots, 0, func(sumSoFar, x) = sumSoFar + x.points);
@@ -2457,7 +2459,6 @@ actor class _ManagerCanister() {
 
     for (index in Iter.range(0, 11)) {
       var managers : [T.Manager] = [];
-      var managersBuffer = Buffer.fromArray<T.Manager>([]);
       switch (index) {
         case 0 {
           managers := managerGroup1;
@@ -2796,7 +2797,7 @@ actor class _ManagerCanister() {
     return Buffer.toArray(managerBuffer);
   };
 
-  public shared ({ caller }) func resetBonusesAvailable(seasonId : T.SeasonId) : async () {
+  public shared ({ caller }) func resetBonusesAvailable() : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == main_canister_id;
@@ -2804,40 +2805,40 @@ actor class _ManagerCanister() {
     for (index in Iter.range(0, 11)) {
       switch (index) {
         case 0 {
-          managerGroup1 := resetManagerBonuses(managerGroup1, seasonId);
+          managerGroup1 := resetManagerBonuses(managerGroup1);
         };
         case 1 {
-          managerGroup2 := resetManagerBonuses(managerGroup2, seasonId);
+          managerGroup2 := resetManagerBonuses(managerGroup2);
         };
         case 2 {
-          managerGroup3 := resetManagerBonuses(managerGroup3, seasonId);
+          managerGroup3 := resetManagerBonuses(managerGroup3);
         };
         case 3 {
-          managerGroup4 := resetManagerBonuses(managerGroup4, seasonId);
+          managerGroup4 := resetManagerBonuses(managerGroup4);
         };
         case 4 {
-          managerGroup5 := resetManagerBonuses(managerGroup5, seasonId);
+          managerGroup5 := resetManagerBonuses(managerGroup5);
         };
         case 5 {
-          managerGroup6 := resetManagerBonuses(managerGroup6, seasonId);
+          managerGroup6 := resetManagerBonuses(managerGroup6);
         };
         case 6 {
-          managerGroup7 := resetManagerBonuses(managerGroup7, seasonId);
+          managerGroup7 := resetManagerBonuses(managerGroup7);
         };
         case 7 {
-          managerGroup8 := resetManagerBonuses(managerGroup8, seasonId);
+          managerGroup8 := resetManagerBonuses(managerGroup8);
         };
         case 8 {
-          managerGroup9 := resetManagerBonuses(managerGroup9, seasonId);
+          managerGroup9 := resetManagerBonuses(managerGroup9);
         };
         case 9 {
-          managerGroup10 := resetManagerBonuses(managerGroup10, seasonId);
+          managerGroup10 := resetManagerBonuses(managerGroup10);
         };
         case 10 {
-          managerGroup11 := resetManagerBonuses(managerGroup11, seasonId);
+          managerGroup11 := resetManagerBonuses(managerGroup11);
         };
         case 11 {
-          managerGroup12 := resetManagerBonuses(managerGroup12, seasonId);
+          managerGroup12 := resetManagerBonuses(managerGroup12);
         };
         case _ {
 
@@ -2846,7 +2847,7 @@ actor class _ManagerCanister() {
     };
   };
 
-  private func resetManagerBonuses(managers : [T.Manager], seasonId : T.SeasonId) : [T.Manager] {
+  private func resetManagerBonuses(managers : [T.Manager]) : [T.Manager] {
     let managerBuffer = Buffer.fromArray<T.Manager>([]);
     for (manager in Iter.fromArray(managers)) {
 
@@ -2888,7 +2889,7 @@ actor class _ManagerCanister() {
     return Buffer.toArray(managerBuffer);
   };
 
-  public shared ({ caller }) func resetFantasyTeams(seasonId : T.SeasonId) : async () {
+  public shared ({ caller }) func resetFantasyTeams() : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == main_canister_id;
@@ -2896,40 +2897,40 @@ actor class _ManagerCanister() {
     for (index in Iter.range(0, 11)) {
       switch (index) {
         case 0 {
-          managerGroup1 := resetManagers(managerGroup1, seasonId);
+          managerGroup1 := resetManagers(managerGroup1);
         };
         case 1 {
-          managerGroup2 := resetManagers(managerGroup2, seasonId);
+          managerGroup2 := resetManagers(managerGroup2);
         };
         case 2 {
-          managerGroup3 := resetManagers(managerGroup3, seasonId);
+          managerGroup3 := resetManagers(managerGroup3);
         };
         case 3 {
-          managerGroup4 := resetManagers(managerGroup4, seasonId);
+          managerGroup4 := resetManagers(managerGroup4);
         };
         case 4 {
-          managerGroup5 := resetManagers(managerGroup5, seasonId);
+          managerGroup5 := resetManagers(managerGroup5);
         };
         case 5 {
-          managerGroup6 := resetManagers(managerGroup6, seasonId);
+          managerGroup6 := resetManagers(managerGroup6);
         };
         case 6 {
-          managerGroup7 := resetManagers(managerGroup7, seasonId);
+          managerGroup7 := resetManagers(managerGroup7);
         };
         case 7 {
-          managerGroup8 := resetManagers(managerGroup8, seasonId);
+          managerGroup8 := resetManagers(managerGroup8);
         };
         case 8 {
-          managerGroup9 := resetManagers(managerGroup9, seasonId);
+          managerGroup9 := resetManagers(managerGroup9);
         };
         case 9 {
-          managerGroup10 := resetManagers(managerGroup10, seasonId);
+          managerGroup10 := resetManagers(managerGroup10);
         };
         case 10 {
-          managerGroup11 := resetManagers(managerGroup11, seasonId);
+          managerGroup11 := resetManagers(managerGroup11);
         };
         case 11 {
-          managerGroup12 := resetManagers(managerGroup12, seasonId);
+          managerGroup12 := resetManagers(managerGroup12);
         };
         case _ {
 
@@ -2938,7 +2939,7 @@ actor class _ManagerCanister() {
     };
   };
 
-  private func resetManagers(managers : [T.Manager], seasonId : T.SeasonId) : [T.Manager] {
+  private func resetManagers(managers : [T.Manager]) : [T.Manager] {
     let managerBuffer = Buffer.fromArray<T.Manager>([]);
     for (manager in Iter.fromArray(managers)) {
       let updatedManager : T.Manager = {
@@ -3406,7 +3407,7 @@ actor class _ManagerCanister() {
 
   public func topupCanister() : async () {
     let amount = Cycles.available();
-    let accepted = Cycles.accept(amount);
+    let _ = Cycles.accept<system>(amount);
   };
 
   public func getCyclesBalance() : async Nat {

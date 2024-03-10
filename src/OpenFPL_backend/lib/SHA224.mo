@@ -6,7 +6,6 @@ import Nat32 "mo:base/Nat32";
 import Nat64 "mo:base/Nat64";
 import Time "mo:base/Time";
 import Int "mo:base/Int";
-import Buffer "mo:base/Buffer";
 
 module {
 
@@ -268,12 +267,6 @@ module {
     let newHash = sha224(timestampBytes);
     let newHashText = byteArrayToHex(newHash);
     return newHashText;
-  };
-
-  private func concatArrays(arr1 : [Nat8], arr2 : [Nat8]) : [Nat8] {
-    let buffer = Buffer.fromArray<Nat8>(arr1);
-    buffer.append(Buffer.fromArray<Nat8>(arr2));
-    return Buffer.toArray<Nat8>(buffer);
   };
 
   private func intToBytes(n : Int) : [Nat8] {
