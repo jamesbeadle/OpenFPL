@@ -746,13 +746,13 @@ Swap:
   # to the deadline or the maximum target being reached, and if there are less
   # than `minimum_participants` (here, only direct participants are counted),
   # the swap will be committed.
-  minimum_participants: 500
+  minimum_participants: 100
 
   # Minimum amount of ICP from direct participants. This amount is required for
   # the swap to succeed. If this amount is not achieved, the swap will be
   # aborted (instead of committed) when the due date/time occurs.
   # Must be smaller than or equal than `maximum_direct_participation_icp`.
-  minimum_direct_participation_icp: 500_000 tokens
+  minimum_direct_participation_icp: 100 tokens
 
   # Maximum amount of ICP from direct participants. If this amount is achieved,
   # the swap will finalize immediately, without waiting for the due date/time;
@@ -836,7 +836,7 @@ Swap:
     # neurons. While neuron basket neurons do not use `vesting_period`, they
     # have a vesting schedule. This field is specified as a duration. For
     # example: "1 month".
-    interval: 6 month
+    interval: 3 months
 
   # Absolute time of day when the decentralization swap is supposed to start.
   #

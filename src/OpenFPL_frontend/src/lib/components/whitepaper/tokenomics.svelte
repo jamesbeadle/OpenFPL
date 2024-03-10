@@ -50,37 +50,19 @@
 
   <ul class="list-disc ml-4">
     <li>Basket 1: Unlocked with zero dissolve delay.</li>
-    <li>Basket 2: Unlocked with a 6 month dissolve delay.</li>
-    <li>Basket 3: Unlocked with a 12 month dissolve delay.</li>
-    <li>Basket 4: Unlocked with a 18 month dissolve delay.</li>
-    <li>Basket 5: Unlocked with a 24 month dissolve delay.</li>
+    <li>Basket 2: Unlocked with a 3 month dissolve delay.</li>
+    <li>Basket 3: Unlocked with a 6 month dissolve delay.</li>
+    <li>Basket 4: Unlocked with a 9 month dissolve delay.</li>
+    <li>Basket 5: Unlocked with a 12 month dissolve delay.</li>
   </ul>
 
   <p class="my-2">
-    Each Funded NFT holder will receive their $FPL within 5 baskets of equal
-    neurons. The neurons will contain the following configuration:
+    Due to an upper limit of 100 neurons being specified when creating a DAO each ICPFA team member and funded NFT holder will receive their $FPL within a single neuron with a 1 month dissolve delay.
   </p>
-
-  <ul class="list-disc ml-4">
-    <li>Basket 1: Unlocked with a dissolve delay of 30 days.</li>
-    <li>Basket 2: Locked for 6 months with a 1 month dissolve delay.</li>
-    <li>Basket 3: Locked for 12 months with a 1 month dissolve delay.</li>
-    <li>Basket 4: Locked for 18 months with a 1 month dissolve delay.</li>
-    <li>Basket 5: Locked for 24 months with a 1 month dissolve delay.</li>
-  </ul>
 
   <p class="my-2">
-    The ICPFA team members will receive their $FPL within 5 baskets of equal
-    neurons. The neurons will contain the following configuration:
+    The OpenFPL founder, James Beadle, will receive his neuron locked for 4 years with a 2 year dissolve delay.
   </p>
-
-  <ul class="list-disc ml-4">
-    <li>Basket 1: Locked for 3 months with a 3 month dissolve delay.</li>
-    <li>Basket 2: Locked for 6 months with a 3 month dissolve delay.</li>
-    <li>Basket 3: Locked for 12 months with a 3 month dissolve delay.</li>
-    <li>Basket 4: Locked for 18 months with a 3 month dissolve delay.</li>
-    <li>Basket 5: Locked for 24 months with a 3 month dissolve delay.</li>
-  </ul>
 
   <h2 class="default-sub-header mt-4">DAO Valuation</h2>
   <p class="my-4">
@@ -404,7 +386,7 @@
       <td
         >The minimum ICP to be raised (otherwise sale fails and ICP returned).</td
       >
-      <td>500,000</td>
+      <td>100</td>
     </tr>
     <tr>
       <td>The ICP from the Community Fund.</td>
@@ -416,7 +398,7 @@
     </tr>
     <tr>
       <td>Minimum number of sale participants.</td>
-      <td>500</td>
+      <td>100</td>
     </tr>
     <tr>
       <td>Minimum ICP per buyer.</td>
