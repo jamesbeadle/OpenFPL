@@ -341,10 +341,17 @@ Distribution:
 
       #ICPFA LIQUID PRIZES
     - principal: agy5w-dlcen-pkrgo-pgfrz-3eqf2-xfwvr-qcvwn-nlhyu-77fsb-wgc37-nqe
-      stake: 450_000 tokens
+      stake: 350_000 tokens
       memo: 1
       dissolve_delay: 0 years
       vesting_period: 0 years
+
+      #REM.CODES
+    - principal: swlp6-6qujk-ozivy-wtwp2-rkvp5-figiu-j7mdt-rztl2-jgvfg-bn4jg-bqe
+      stake: 100_000 tokens
+      memo: 1
+      dissolve_delay: 1 months
+      vesting_period: 0 months
 
       #RESERVED 1
     - principal: agy5w-dlcen-pkrgo-pgfrz-3eqf2-xfwvr-qcvwn-nlhyu-77fsb-wgc37-nqe
