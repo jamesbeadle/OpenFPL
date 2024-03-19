@@ -1,17 +1,6 @@
 import Principal "mo:base/Principal";
 import Cycles "mo:base/ExperimentalCycles";
-/*
-use ic_cdk::api::call::CallResult;
-use ic_cdk::api::management_canister::ecdsa::{EcdsaCurve, EcdsaKeyId, EcdsaPublicKeyArgument, SignWithEcdsaArgument};
-use ic_cdk::api::management_canister::http_request::{
-    CanisterHttpRequestArgument, HttpHeader, HttpMethod, TransformContext, TransformFunc,
-};
-use ic_transport_types::{to_request_id, EnvelopeContent};
-use serde::Serialize;
-use sha256::sha256;
-use tracing::{error, info};
-use types::CanisterId;
-*/
+
 module {
     type IC = actor {
         ecdsa_public_key : ({
