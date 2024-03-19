@@ -1,3 +1,11 @@
+import Result "mo:base/Result";
+import Blob "mo:base/Blob";
+import Bool "mo:base/Bool";
+import HashMap "mo:base/HashMap";
+import Random "mo:base/Random";
+import Array "mo:base/Array";
+import SHA256 "mo:sha256/SHA256";
+
 /*
 use crate::guards::caller_is_governance_principal;
 use crate::{read_state, RuntimeState};
@@ -20,80 +28,146 @@ use utils::canister::get_random_seed;
 
 module {
      
-
+    
+    type CanisterId = Principal;
     type PrepareResult = {
         nns_governance_canister_id: CanisterId;
         nns_ledger_canister_id: CanisterId;
         principal: Principal;
     };
+    type Cycles = Nat;
+    type BlockIndex = Nat64;
+    type Args = {
+        block_index: BlockIndex;
+        canister_id: CanisterId;
+    };
+    type NotifyError = {
+        #Refunded : {
+            reason: Text;
+            block_index: ?BlockIndex;
+        };
+        #InvalidTransaction : (Text);
+        #TransactionTooOld : (BlockIndex);
+        #Processing;
+        #Other : {
+            error_code: Nat64;
+            error_message: Text;
+        };
+    };
+    
+    type Hash = Blob;
+    type Response = Result.Result<Cycles, NotifyError>;
+    type TimestampNanos = Nat64;
+    type TimestampMillis = Nat64;
+
+    type Environment = {
+        now_nanos: shared () -> async TimestampNanos;
+        caller: shared () -> async Principal;
+        canister_id: shared () -> async Principal;
+        cycles_balance: shared () -> async Cycles;
+        rng: shared {seed: Nat} -> async Nat;
+        arg_data_raw: shared () -> async Blob;
+        now: shared () -> async TimestampMillis;
+        entropy: shared () -> async Hash;
+    };
+    type Timestamped<T> = {
+        value: T;
+        timestamp: TimestampMillis;
+    };
+    type Milliseconds = Nat64;
+    type Document = {
+        fields: Blob;
+        age: ?Milliseconds;
+    };
+    
+    type Cryptocurrency = {
+        #InternetComputer;
+        #FPL;
+        #CKBTC;
+        #CKETH;
+        #CHAT;
+        #Other: (Text);
+    };
+
+    type PrizeData = {
+        token: Cryptocurrency;
+        ledger_canister_id: CanisterId;
+        prizes: Blob;
+        end_date: TimestampMillis;
+    };
+
+    type Data = {
+        user_index_canister_id: CanisterId;
+        admins: HashMap.HashMap<Principal, ()>;
+        avatar: Timestamped<?Document>;
+        test_mode: Bool;
+        username: Text;
+        prize_data: ?PrizeData;
+        mean_time_between_prizes: TimestampMillis;
+        prizes_sent: Blob;
+        groups: HashMap.HashMap<CanisterId, ()>;
+        started: Bool;
+        rng_seed: Blob;
+    };
+
+
+    type RuntimeState = {
+        env: Environment;
+        data: Data;
+    };
 
     public func stake_nns_neuron(_args: Args): async Response {
-        let random_bytes = await get_random_seed();
+        let random_bytes = await Random.blob();
+        let array = Blob.toArray(random_bytes);
+        let first8Bytes = Array.subArray(array, 0, 8);
         
-        
-        let nonce: Nat64 = from_be_bytes(7306897292049529674);
-
-        //let nonce: Nat64 = from_be_bytes(random_bytes[..8].try_into().unwrap());
-        let PrepareResult = {
-            nns_governance_canister_id;
-            nns_ledger_canister_id;
-            principal;
-        };// = read_state(prepare);
-
+        let nonce: Nat64 = from_be_bytes(first8Bytes.try_into().unwrap());
         let subaccount = compute_neuron_staking_subaccount_bytes(principal, nonce);
 
-        match icrc_ledger_canister_c2c_client::icrc1_transfer(
-            nns_ledger_canister_id,
-            &TransferArg {
-                from_subaccount: None,
-                to: Account {
-                    owner: nns_governance_canister_id,
-                    subaccount: Some(subaccount),
-                },
-                fee: Some(10_000u32.into()),
-                created_at_time: None,
-                memo: Some(nonce.into()),
-                amount: 100_000_000u32.into(), // 1 ICP
-            },
-        )
-        .await
-        {
-            Ok(Ok(_)) => {}
-            Ok(Err(error)) => {
-                error!(?error, "Transfer error");
-                return InternalError(format!("{error:?}"));
-            }
-            Err(error) => return InternalError(format!("{error:?}")),
+        try {
+        
+            await ledger.transfer({
+                memo = Some(nonce.into());
+                from_subaccount = None;
+                to = Account.accountIdentifier(nns_governance_canister_id, Some(subaccount));
+                amount = 100_000_000u32.into();
+                fee = Some(10_000u32.into());
+                created_at_time = ?{ timestamp_nanos = Nat64.fromNat(Int.abs(Time.now())) };
+            });
+
+            #ok();
+
+        } catch (error) {
+            #err("Error transferring ICP")
         };
 
-        match nns_governance_canister_c2c_client::manage_neuron(
-            nns_governance_canister_id,
-            &ManageNeuron {
-                id: None,
-                neuron_id_or_subaccount: None,
-                command: Some(Command::ClaimOrRefresh(ClaimOrRefresh {
-                    by: Some(By::MemoAndController(MemoAndController {
-                        controller: Some(principal),
-                        memo: nonce,
-                    })),
-                })),
-            },
-        )
-        .await
-        {
-            Ok(response) => match response.command {
-                Some(manage_neuron_response::Command::ClaimOrRefresh(c)) => {
-                    let neuron_id = c.refreshed_neuron_id.unwrap().id;
-                    info!(neuron_id, "Staked new NNS neuron");
-                    Success(neuron_id)
+        try {
+            let manage_neuron_response = await nns_governance_canister_c2c_client.manage_neuron(
+                nns_governance_canister_id,
+                {
+                    id = None;
+                    neuron_id_or_subaccount = None;
+                    command = {
+                        by = {
+                            controller = principal;
+                            memo = nonce;
+                        };
+                    }
+                },
+            );
+
+            switch(manage_neuron_response){
+                case (null) {
+                    #err("Error staking neuron");
+                };
+                case (?response){
+                    let neuron_id = response.refreshed_neuron_id.unwrap().id;
+                    #ok("Neuron staked: ", neuron_id);
                 }
-                response => {
-                    error!(?response, "Governance error");
-                    InternalError(format!("{response:?}"))
-                }
-            },
-            Err(error) => InternalError(format!("{error:?}")),
-        }
+            };
+        } catch (error) {
+            #err("Error staking neuron");
+        };
     };
 
     func from_be_bytes() : Nat64 {
@@ -106,11 +180,23 @@ module {
 
     };
 
-    func prepare(state: &RuntimeState) : PrepareResult {
+    func computeNeuronStakingSubaccountBytes(controller: Principal, nonce: Nat64): Blob {
+        let domain: Blob = Text.encodeUtf8("neuron-stake");
+        let domainLength: Blob = Nat8Array.fromArray([0x0c]);
+    
+        let hasher = Sha.sha256();
+        hasher.update(domainLength);
+        hasher.update(domain);
+        hasher.update(Principal.toBlob(controller));
+        hasher.update(Binary.BigEndian.fromNat64(nonce));
+        return hasher.digest();
+    };
+
+    func prepare(state: ?RuntimeState) : PrepareResult {
         let result: PrepareResult = {
-            nns_governance_canister_id: state.data.nns_governance_canister_id,
-            nns_ledger_canister_id: state.data.nns_ledger_canister_id,
-            principal: state.data.get_principal(),
+            nns_governance_canister_id = state.data.nns_governance_canister_id;
+            nns_ledger_canister_id = state.data.nns_ledger_canister_id;
+            principal = state.data.get_principal();
         }
     };
 }
