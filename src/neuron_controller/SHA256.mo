@@ -2,7 +2,7 @@ import SHA2 "SHA2";
 
 import Hash "./Hash";
 
-module SHA224 {
+module {
     // Initial hash value, H(0).
     private let H256 : [Nat32] = [
         0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c,

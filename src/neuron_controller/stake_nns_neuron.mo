@@ -3,8 +3,17 @@ import Blob "mo:base/Blob";
 import Bool "mo:base/Bool";
 import HashMap "mo:base/HashMap";
 import Random "mo:base/Random";
-import Array "mo:base/Array";
-import SHA256 "mo:sha256/SHA256";
+import Account "../OpenFPL_backend/lib/Account";
+import Text "mo:base/Text";
+import Principal "mo:base/Principal";
+import Nat64 "mo:base/Nat64";
+import Int "mo:base/Int";
+import Time "mo:base/Time";
+import SHA256 "./SHA256";
+import Binary "Binary";
+import Ledger "Ledger";
+import NNSGovernance "NNSGovernance";
+import Environment "../OpenFPL_backend/Environment";
 
 /*
 use crate::guards::caller_is_governance_principal;
@@ -28,6 +37,8 @@ use utils::canister::get_random_seed;
 
 module {
      
+    private let ledger : Ledger.Interface = actor (Ledger.CANISTER_ID);
+    private let nns_governance : NNSGovernance.Interface = actor (NNSGovernance.CANISTER_ID);
     
     type CanisterId = Principal;
     type PrepareResult = {
@@ -116,34 +127,32 @@ module {
         data: Data;
     };
 
-    public func stake_nns_neuron(_args: Args): async Response {
+    public func stake_nns_neuron(_args: Args, principal: Principal): async Response {
         let random_bytes = await Random.blob();
         let array = Blob.toArray(random_bytes);
-        let first8Bytes = Array.subArray(array, 0, 8);
-        
-        let nonce: Nat64 = from_be_bytes(first8Bytes.try_into().unwrap());
-        let subaccount = compute_neuron_staking_subaccount_bytes(principal, nonce);
+
+        let nonce: Nat64 = Binary.BigEndian.toNat64(array);
 
         try {
         
-            await ledger.transfer({
-                memo = Some(nonce.into());
-                from_subaccount = None;
-                to = Account.accountIdentifier(nns_governance_canister_id, Some(subaccount));
-                amount = 100_000_000u32.into();
-                fee = Some(10_000u32.into());
+            let subaccount = computeNeuronStakingSubaccountBytes(principal, nonce);
+
+            let _ = await ledger.transfer({
+                memo = nonce;
+                from_subaccount = null;
+                to = Account.accountIdentifier(Principal.fromText(Environment.SNS_GOVERNANCE_CANISTER_ID), subaccount);
+                amount = {e8s = 100_000_000};
+                fee = { e8s = 10_000 };
                 created_at_time = ?{ timestamp_nanos = Nat64.fromNat(Int.abs(Time.now())) };
             });
 
-            #ok();
-
         } catch (error) {
-            #err("Error transferring ICP")
+            
         };
 
         try {
-            let manage_neuron_response = await nns_governance_canister_c2c_client.manage_neuron(
-                nns_governance_canister_id,
+            let manage_neuron_response = await nns_governance.manage_neuron(
+                Environment.NNS_GOVERNANCE_CANISTER_ID,
                 {
                     id = None;
                     neuron_id_or_subaccount = None;
@@ -170,33 +179,15 @@ module {
         };
     };
 
-    func from_be_bytes() : Nat64 {
-        let nonce: Nat64 = 7306897292049529674;
-        let buf = Buffer.Buffer<Nat8>(0);
-
-        NatX.encodeNat64(buffer, nonce, #msb)
-
-        Buffer.toArray(buffer);
-
-    };
-
     func computeNeuronStakingSubaccountBytes(controller: Principal, nonce: Nat64): Blob {
         let domain: Blob = Text.encodeUtf8("neuron-stake");
-        let domainLength: Blob = Nat8Array.fromArray([0x0c]);
+        let domainLength: Blob = Blob.fromArray([0x0c]);
     
-        let hasher = Sha.sha256();
-        hasher.update(domainLength);
-        hasher.update(domain);
-        hasher.update(Principal.toBlob(controller));
-        hasher.update(Binary.BigEndian.fromNat64(nonce));
-        return hasher.digest();
-    };
-
-    func prepare(state: ?RuntimeState) : PrepareResult {
-        let result: PrepareResult = {
-            nns_governance_canister_id = state.data.nns_governance_canister_id;
-            nns_ledger_canister_id = state.data.nns_ledger_canister_id;
-            principal = state.data.get_principal();
-        }
+        let hasher = SHA256.New();
+        hasher.write(Blob.toArray(domainLength));
+        hasher.write(Blob.toArray(domain));
+        hasher.write(Blob.toArray(Principal.toBlob(controller)));
+        hasher.write(Binary.BigEndian.fromNat64(nonce));
+        return Blob.fromArray(hasher.sum([]));
     };
 }
