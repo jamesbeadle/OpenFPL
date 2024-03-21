@@ -15,26 +15,6 @@ import Ledger "Ledger";
 import NNSGovernance "NNSGovernance";
 import Environment "../OpenFPL_backend/Environment";
 
-/*
-use crate::guards::caller_is_governance_principal;
-use crate::{read_state, RuntimeState};
-use candid::Principal;
-use canister_api_macros::proposal;
-use canister_tracing_macros::trace;
-use icrc_ledger_types::icrc1::account::Account;
-use icrc_ledger_types::icrc1::transfer::TransferArg;
-use ledger_utils::compute_neuron_staking_subaccount_bytes;
-use neuron_controller_canister::stake_nns_neuron::{Response::*, *};
-use nns_governance_canister::types::manage_neuron::claim_or_refresh::{By, MemoAndController};
-use nns_governance_canister::types::manage_neuron::{ClaimOrRefresh, Command};
-use nns_governance_canister::types::{manage_neuron_response, ManageNeuron};
-use tracing::{error, info};
-use types::CanisterId;
-use utils::canister::get_random_seed;
-#[proposal(guard = "caller_is_governance_principal")]
-#[trace]
-*/
-
 module {
      
     private let ledger : Ledger.Interface = actor (Ledger.CANISTER_ID);
@@ -152,32 +132,43 @@ module {
 
         try {
 
-            let myCommand : NNSGovernance.Command = #ClaimOrRefresh {
-                    by: ?NNSGovernance.By = ? #MemoAndController {
-                    controller = ?principal;
-                    memo = nonce;
-                };
-            };
-
             let manage_neuron_response = await nns_governance.manage_neuron(
                 {
                     id = null;
-                    command = ?myCommand;
+                    command = ? #ClaimOrRefresh {
+                        by: ?NNSGovernance.By = ? #MemoAndController {
+                            controller = ?principal;
+                            memo = nonce;
+                        };
+                    };
                     neuron_id_or_subaccount = null;
                 }
             );
 
-            switch(manage_neuron_response){
+            switch(manage_neuron_response.command){
                 case (null) {
-                    #err("Error staking neuron");
+                    #err(#InvalidTransaction "Error staking neuron");
                 };
-                case (?response){
-                    let neuron_id = response.refreshed_neuron_id.unwrap().id;
-                    #ok("Neuron staked: ", neuron_id);
+                case (?response) {
+                    switch(response){
+                        case (#ClaimOrRefresh(crResponse)) {
+                            switch(crResponse.refreshed_neuron_id){
+                                case null{
+                                    #err(#InvalidTransaction "Error staking neuron");
+                                };
+                                case (?neuronId){
+                                    #ok(Nat64.toNat(neuronId.id));
+                                }
+                            };
+                        };
+                        case _{
+                            #err(#InvalidTransaction "Error staking neuron");
+                        };
+                    };
                 }
             };
         } catch (error) {
-            #err("Error staking neuron");
+            #err(#InvalidTransaction "Error staking neuron");
         };
     };
 
