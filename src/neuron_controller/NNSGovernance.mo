@@ -3,19 +3,19 @@ module {
 
   type AccountIdentifier = Blob;
   type Action = {
-  RegisterKnownNeuron : KnownNeuron;
-  ManageNeuron : ManageNeuron;
-  CreateServiceNervousSystem : CreateServiceNervousSystem;
-  ExecuteNnsFunction : ExecuteNnsFunction;
-  RewardNodeProvider : RewardNodeProvider;
-  OpenSnsTokenSwap : OpenSnsTokenSwap;
-  SetSnsTokenSwapOpenTimeWindow : SetSnsTokenSwapOpenTimeWindow;
-  SetDefaultFollowees : SetDefaultFollowees;
-  RewardNodeProviders : RewardNodeProviders;
-  ManageNetworkEconomics : NetworkEconomics;
-  ApproveGenesisKyc : ApproveGenesisKyc;
-  AddOrRemoveNodeProvider : AddOrRemoveNodeProvider;
-  Motion : Motion;
+  #RegisterKnownNeuron : KnownNeuron;
+  #ManageNeuron : ManageNeuron;
+  #CreateServiceNervousSystem : CreateServiceNervousSystem;
+  #ExecuteNnsFunction : ExecuteNnsFunction;
+  #RewardNodeProvider : RewardNodeProvider;
+  #OpenSnsTokenSwap : OpenSnsTokenSwap;
+  #SetSnsTokenSwapOpenTimeWindow : SetSnsTokenSwapOpenTimeWindow;
+  #SetDefaultFollowees : SetDefaultFollowees;
+  #RewardNodeProviders : RewardNodeProviders;
+  #ManageNetworkEconomics : NetworkEconomics;
+  #ApproveGenesisKyc : ApproveGenesisKyc;
+  #AddOrRemoveNodeProvider : AddOrRemoveNodeProvider;
+  #Motion : Motion;
 };
 type AddHotKey = { new_hot_key : ?Principal };
 type AddOrRemoveNodeProvider =  { change : ?Change };
@@ -23,10 +23,10 @@ type Amount = { e8s : Nat64 };
 type ApproveGenesisKyc = { Principals : [Principal] };
 type Ballot = { vote : Int32; voting_power : Nat64 };
 type BallotInfo = { vote : Int32; proposal_id : ?NeuronId };
-type By = {
-  NeuronIdOrSubaccount : {};
-  MemoAndController : ClaimOrRefreshNeuronFromAccount;
-  Memo : Nat64;
+public type By = {
+  #NeuronIdOrSubaccount : {};
+  #MemoAndController : ClaimOrRefreshNeuronFromAccount;
+  #Memo : Nat64;
 };
 type Canister = { id : ?Principal };
 type CanisterStatusResultV2 = {
@@ -51,56 +51,56 @@ type CfParticipant = {
   hotkey_Principal : Text;
   cf_neurons : [CfNeuron];
 };
-type Change = { ToRemove : NodeProvider; ToAdd : NodeProvider };
+type Change = { #ToRemove : NodeProvider; #ToAdd : NodeProvider };
 type ChangeAutoStakeMaturity = {
   requested_setting_for_auto_stake_maturity : Bool;
 };
-type ClaimOrRefresh = { by : ?By };
-type ClaimOrRefreshNeuronFromAccount = {
+public type ClaimOrRefresh = { by : ?By };
+public type ClaimOrRefreshNeuronFromAccount = {
   controller : ?Principal;
   memo : Nat64;
 };
 type ClaimOrRefreshNeuronFromAccountResponse = { result : ?Result_1 };
 type ClaimOrRefreshResponse = { refreshed_neuron_id : ?NeuronId };
-type Command = {
-  Spawn : Spawn;
-  Split : Split;
-  Follow : Follow;
-  ClaimOrRefresh : ClaimOrRefresh;
-  Configure : Configure;
-  RegisterVote : RegisterVote;
-  Merge : Merge;
-  DisburseToNeuron : DisburseToNeuron;
-  MakeProposal : Proposal;
-  StakeMaturity : StakeMaturity;
-  MergeMaturity : MergeMaturity;
-  Disburse : Disburse;
+public type Command = {
+  #Spawn : Spawn;
+  #Split : Split;
+  #Follow : Follow;
+  #ClaimOrRefresh : ClaimOrRefresh;
+  #Configure : Configure;
+  #RegisterVote : RegisterVote;
+  #Merge : Merge;
+  #DisburseToNeuron : DisburseToNeuron;
+  #MakeProposal : Proposal;
+  #StakeMaturity : StakeMaturity;
+  #MergeMaturity : MergeMaturity;
+  #Disburse : Disburse;
 };
 type Command_1 = {
-  Error : GovernanceError;
-  Spawn : SpawnResponse;
-  Split : SpawnResponse;
-  Follow : {};
-  ClaimOrRefresh : ClaimOrRefreshResponse;
-  Configure : {};
-  RegisterVote : {};
-  Merge : MergeResponse;
-  DisburseToNeuron : SpawnResponse;
-  MakeProposal : MakeProposalResponse;
-  StakeMaturity : StakeMaturityResponse;
-  MergeMaturity : MergeMaturityResponse;
-  Disburse : DisburseResponse;
+  #Error : GovernanceError;
+  #Spawn : SpawnResponse;
+  #Split : SpawnResponse;
+  #Follow : {};
+  #ClaimOrRefresh : ClaimOrRefreshResponse;
+  #Configure : {};
+  #RegisterVote : {};
+  #Merge : MergeResponse;
+  #DisburseToNeuron : SpawnResponse;
+  #MakeProposal : MakeProposalResponse;
+  #StakeMaturity : StakeMaturityResponse;
+  #MergeMaturity : MergeMaturityResponse;
+  #Disburse : DisburseResponse;
 };
 type Command_2 = {
-  Spawn : NeuronId;
-  Split : Split;
-  Configure : Configure;
-  Merge : Merge;
-  DisburseToNeuron : DisburseToNeuron;
-  SyncCommand : {};
-  ClaimOrRefreshNeuron : ClaimOrRefresh;
-  MergeMaturity : MergeMaturity;
-  Disburse : Disburse;
+  #Spawn : NeuronId;
+  #Split : Split;
+  #Configure : Configure;
+  #Merge : Merge;
+  #DisburseToNeuron : DisburseToNeuron;
+  #SyncCommand : {};
+  #ClaimOrRefreshNeuron : ClaimOrRefresh;
+  #MergeMaturity : MergeMaturity;
+  #Disburse : Disburse;
 };
 type Committed = {
   total_direct_contribution_icp_e8s : ?Nat64;
@@ -146,8 +146,8 @@ type DisburseToNeuron = {
   nonce : Nat64;
 };
 type DissolveState = {
-  DissolveDelaySeconds : Nat64;
-  WhenDissolvedTimestampSeconds : Nat64;
+  #DissolveDelaySeconds : Nat64;
+  #WhenDissolvedTimestampSeconds : Nat64;
 };
 type Duration = { seconds : ?Nat64 };
 type ExecuteNnsFunction = { nns_function : Int32; payload : [Nat8] };
@@ -372,8 +372,8 @@ type NeuronDistribution = {
 };
 type NeuronId = { id : Nat64 };
 type NeuronIdOrSubaccount = {
-  Subaccount : [Nat8];
-  NeuronId : NeuronId;
+  #Subaccount : [Nat8];
+  #NeuronId : NeuronId;
 };
 type NeuronInFlightCommand = {
   command : ?Command_2;
@@ -460,15 +460,15 @@ type OpenSnsTokenSwap = {
   params : ?Params;
 };
 type Operation = {
-  RemoveHotKey : RemoveHotKey;
-  AddHotKey : AddHotKey;
-  ChangeAutoStakeMaturity : ChangeAutoStakeMaturity;
-  StopDissolving : {};
-  StartDissolving : {};
-  IncreaseDissolveDelay : IncreaseDissolveDelay;
-  JoinCommunityFund : {};
-  LeaveCommunityFund : {};
-  SetDissolveTimestamp : SetDissolveTimestamp;
+  #RemoveHotKey : RemoveHotKey;
+  #AddHotKey : AddHotKey;
+  #ChangeAutoStakeMaturity : ChangeAutoStakeMaturity;
+  #StopDissolving : {};
+  #StartDissolving : {};
+  #IncreaseDissolveDelay : IncreaseDissolveDelay;
+  #JoinCommunityFund : {};
+  #LeaveCommunityFund : {};
+  #SetDissolveTimestamp : SetDissolveTimestamp;
 };
 type Params = {
   min_participant_icp_e8s : Nat64;
@@ -484,7 +484,7 @@ type Params = {
   max_direct_participation_icp_e8s : ?Nat64;
 };
 type Percentage = { basis_points : ?Nat64 };
-type Progress = { LastNeuronId : NeuronId };
+type Progress = { #LastNeuronId : NeuronId };
 type Proposal = {
   url : Text;
   title : ?Text;
@@ -532,17 +532,17 @@ type ProposalInfo = {
 };
 type RegisterVote = { vote : Int32; proposal : ?NeuronId };
 type RemoveHotKey = { hot_key_to_remove : ?Principal };
-type Result = { ok: Ok; Err : GovernanceError };
-type Result_1 = { Error : GovernanceError; NeuronId : NeuronId };
-type Result_10 = { Ok : Ok_1; Err : GovernanceError };
-type Result_2 = { Ok : Neuron; Err : GovernanceError };
-type Result_3 = { Ok : GovernanceCachedMetrics; Err : GovernanceError };
-type Result_4 = { Ok : RewardNodeProviders; Err : GovernanceError };
-type Result_5 = { Ok : NeuronInfo; Err : GovernanceError };
-type Result_6 = { Ok : Ok; Err : GovernanceError };
-type Result_7 = { Ok : NodeProvider; Err : GovernanceError };
-type Result_8 = { Committed : Committed; Aborted : {} };
-type Result_9 = { Committed : Committed_1; Aborted : {} };
+type Result = { #Ok; #Err : GovernanceError };
+type Result_1 = { #Error : GovernanceError; #NeuronId : NeuronId };
+type Result_10 = { #Ok : Ok_1; #Err : GovernanceError };
+type Result_2 = { #Ok : Neuron; #Err : GovernanceError };
+type Result_3 = { #Ok : GovernanceCachedMetrics; #Err : GovernanceError };
+type Result_4 = { #Ok : RewardNodeProviders; #Err : GovernanceError };
+type Result_5 = { #Ok : NeuronInfo; #Err : GovernanceError };
+type Result_6 = { #Ok : Ok; #Err : GovernanceError };
+type Result_7 = { #Ok : NodeProvider; #Err : GovernanceError };
+type Result_8 = { #Committed : Committed; #Aborted : {} };
+type Result_9 = { #Committed : Committed_1; #Aborted : {} };
 type RewardEvent = {
   rounds_since_last_distribution : ?Nat64;
   day_after_genesis : Nat64;
@@ -553,8 +553,8 @@ type RewardEvent = {
   settled_proposals : [NeuronId];
 };
 type RewardMode = {
-  RewardToNeuron : RewardToNeuron;
-  RewardToAccount : RewardToAccount;
+  #RewardToNeuron : RewardToNeuron;
+  #RewardToAccount : RewardToAccount;
 };
 type RewardNodeProvider = {
   node_provider : ?NodeProvider;

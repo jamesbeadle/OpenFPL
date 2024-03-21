@@ -132,11 +132,11 @@ module {
         let array = Blob.toArray(random_bytes);
 
         let nonce: Nat64 = Binary.BigEndian.toNat64(array);
+        let subaccount = computeNeuronStakingSubaccountBytes(principal, nonce);
 
         try {
         
-            let subaccount = computeNeuronStakingSubaccountBytes(principal, nonce);
-
+        
             let _ = await ledger.transfer({
                 memo = nonce;
                 from_subaccount = null;
@@ -151,18 +151,20 @@ module {
         };
 
         try {
+
+            let myCommand : NNSGovernance.Command = #ClaimOrRefresh {
+                    by: ?NNSGovernance.By = ? #MemoAndController {
+                    controller = ?principal;
+                    memo = nonce;
+                };
+            };
+
             let manage_neuron_response = await nns_governance.manage_neuron(
-                Environment.NNS_GOVERNANCE_CANISTER_ID,
                 {
                     id = null;
+                    command = ?myCommand;
                     neuron_id_or_subaccount = null;
-                    command = {
-                        by = {
-                            controller = principal;
-                            memo = nonce;
-                        };
-                    }
-                },
+                }
             );
 
             switch(manage_neuron_response){
