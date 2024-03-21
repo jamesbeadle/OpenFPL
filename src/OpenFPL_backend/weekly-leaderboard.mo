@@ -5,7 +5,6 @@ import Cycles "mo:base/ExperimentalCycles";
 import Timer "mo:base/Timer";
 import Principal "mo:base/Principal";
 import Text "mo:base/Text";
-import CanisterIds "CanisterIds";
 import Utilities "utilities";
 import Environment "Environment";
 
@@ -16,11 +15,7 @@ actor class _WeeklyLeaderboardCanister() {
   private let cyclesCheckInterval : Nat = Utilities.getHour() * 24;
   private var cyclesCheckTimerId : ?Timer.TimerId = null;
 
-  let network = Environment.DFX_NETWORK;
-  var main_canister_id = CanisterIds.MAIN_CANISTER_IC_ID;
-  if (network == "local") {
-    main_canister_id := CanisterIds.MAIN_CANISTER_LOCAL_ID;
-  };
+  var main_canister_id = Environment.BACKEND_CANISTER_ID;
 
   public shared ({ caller }) func createCanister(_seasonId : T.SeasonId, _gameweek : T.GameweekNumber, _totalEntries : Nat) : async () {
     assert not Principal.isAnonymous(caller);

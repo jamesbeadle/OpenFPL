@@ -22,7 +22,6 @@ import Rewards "./rewards-composite";
 import Utilities "../utilities";
 import TrieMap "mo:base/TrieMap";
 import Environment "../Environment";
-import CanisterIds "../CanisterIds";
 
 module {
 
@@ -1375,16 +1374,9 @@ module {
       Cycles.add<system>(2_000_000_000_000);
       let canister = await ManagerCanister._ManagerCanister();
       let IC : Management.Management = actor (ENV.Default);
-      var principal : ?Principal = null;
-      if (Environment.DFX_NETWORK == "local") {
-        principal := ?Principal.fromText(CanisterIds.MAIN_CANISTER_LOCAL_ID);
-        let _ = await Utilities.updateCanister_(canister, principal, IC);
-      };
-      if (Environment.DFX_NETWORK == "ic") {
-        principal := ?Principal.fromText(CanisterIds.MAIN_CANISTER_IC_ID);
-        let _ = await Utilities.updateCanister_(canister, principal, IC);
-      };
-
+      let principal = ?Principal.fromText(Environment.BACKEND_CANISTER_ID);
+      let _ = await Utilities.updateCanister_(canister, principal, IC);
+    
       let canister_principal = Principal.fromActor(canister);
       let canisterId = Principal.toText(canister_principal);
 

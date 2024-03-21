@@ -4,7 +4,6 @@ import Int "mo:base/Int";
 import Nat64 "mo:base/Nat64";
 import Time "mo:base/Time";
 import Principal "mo:base/Principal";
-import CanisterIds "CanisterIds";
 import Environment "Environment";
 
 module {
@@ -31,13 +30,8 @@ module {
         return;
       };
 
-      let network = Environment.DFX_NETWORK;
-      var main_canister_id = CanisterIds.MAIN_CANISTER_IC_ID;
-      var cycles_minting_canister_id = CanisterIds.CYCLES_MINTING_CANISTER_IC_ID;
-      if (network == "local") {
-        cycles_minting_canister_id := CanisterIds.CYCLES_MINTING_CANISTER_LOCAL_ID;
-        main_canister_id := CanisterIds.MAIN_CANISTER_LOCAL_ID;
-      };
+      var main_canister_id = Environment.BACKEND_CANISTER_ID;
+      var cycles_minting_canister_id = Environment.CYCLES_MINTING_CANISTER_ID;
 
       let cycles_minting_canister = actor (cycles_minting_canister_id) : actor {
         get_icp_xdr_conversion_rate : () -> async ConversionRateResponse;
