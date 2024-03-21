@@ -154,8 +154,8 @@ module {
             let manage_neuron_response = await nns_governance.manage_neuron(
                 Environment.NNS_GOVERNANCE_CANISTER_ID,
                 {
-                    id = None;
-                    neuron_id_or_subaccount = None;
+                    id = null;
+                    neuron_id_or_subaccount = null;
                     command = {
                         by = {
                             controller = principal;
