@@ -127,7 +127,7 @@ module {
             });
 
         } catch (error) {
-            
+            return #err(#InvalidTransaction "Error transferring neuron funds");
         };
 
         try {
