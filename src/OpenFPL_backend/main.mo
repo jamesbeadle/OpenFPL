@@ -17,11 +17,14 @@ import CyclesDispenser "cycles-dispenser";
 import TreasuryManager "treasury-manager";
 import Utilities "utilities";
 import Account "lib/Account";
+import NeuronController "../neuron_controller/neuron-controller";
+import Environment "Environment";
 
 actor Self {
   let seasonManager = SeasonManager.SeasonManager();
   let cyclesDispenser = CyclesDispenser.CyclesDispenser();
   let treasuryManager = TreasuryManager.TreasuryManager();
+  let neuronController = NeuronController.NeuronController();
   private let cyclesCheckInterval : Nat = Utilities.getHour() * 24;
   private let cyclesCheckWalletInterval : Nat = Utilities.getHour() * 24;
 
@@ -307,6 +310,24 @@ actor Self {
   public shared query func getBackendCanisterId() : async Result.Result<Text, T.Error> {
     return #ok(Principal.toText(Principal.fromActor(Self)));
   };
+
+  //staking functions
+
+  public shared  func executeStakeICP() : async () {
+    let _ = await neuronController.stake_nns_neuron({
+        block_index = 0;
+        canister_id = Principal.fromText(Environment.BACKEND_CANISTER_ID);
+      }, Principal.fromText(Environment.BACKEND_CANISTER_ID));
+    return;
+
+    //call manage nns neuron to configure neuron
+
+    //transfer icp to the neuron
+
+    //call claim or refresh on the neuron
+  };
+
+  
 
   /*
     //Remove Post SNS, for Dev Post Testing Only

@@ -17,6 +17,7 @@ import Environment "../OpenFPL_backend/Environment";
 
 module {
      
+  public class NeuronController() {
     private let ledger : Ledger.Interface = actor (Ledger.CANISTER_ID);
     private let nns_governance : NNSGovernance.Interface = actor (NNSGovernance.CANISTER_ID);
     
@@ -183,4 +184,5 @@ module {
         hasher.write(Binary.BigEndian.fromNat64(nonce));
         return Blob.fromArray(hasher.sum([]));
     };
+  }
 }
