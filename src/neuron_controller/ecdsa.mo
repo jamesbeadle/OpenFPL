@@ -1,7 +1,7 @@
 import Principal "mo:base/Principal";
 import Cycles "mo:base/ExperimentalCycles";
 
-module {
+actor {
     type IC = actor {
         ecdsa_public_key : ({
             canister_id : ?Principal;
@@ -20,7 +20,7 @@ module {
     type EcdsaKeyId = { name : Text; curve : EcdsaCurve };
     type EcdsaCurve = { #secp256k1 };
 
-    public func get_key_id(is_local_dev_mode: Bool) : EcdsaKeyId {
+    public func get_key_id(is_local_dev_mode: Bool) : async EcdsaKeyId {
         let key_name = if is_local_dev_mode { "dfx_test_key" } else { "key_1" };
 
         let key: EcdsaKeyId = {
