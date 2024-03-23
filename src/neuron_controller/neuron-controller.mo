@@ -15,9 +15,7 @@ import Ledger "Ledger";
 import NNSGovernance "NNSGovernance";
 import Environment "../OpenFPL_backend/Environment";
 
-module {
-     
-  public class NeuronController() {
+actor NeuronController {
     private let ledger : Ledger.Interface = actor (Ledger.CANISTER_ID);
     private let nns_governance : NNSGovernance.Interface = actor (NNSGovernance.CANISTER_ID);
     
@@ -121,7 +119,7 @@ module {
             let _ = await ledger.transfer({
                 memo = nonce;
                 from_subaccount = null;
-                to = Account.accountIdentifier(Principal.fromText(Environment.SNS_GOVERNANCE_CANISTER_ID), subaccount);
+                to = Account.accountIdentifier(Principal.fromText(Environment.NNS_GOVERNANCE_CANISTER_ID), subaccount);
                 amount = {e8s = 100_000_000};
                 fee = { e8s = 10_000 };
                 created_at_time = ?{ timestamp_nanos = Nat64.fromNat(Int.abs(Time.now())) };
@@ -184,5 +182,4 @@ module {
         hasher.write(Binary.BigEndian.fromNat64(nonce));
         return Blob.fromArray(hasher.sum([]));
     };
-  }
 }
