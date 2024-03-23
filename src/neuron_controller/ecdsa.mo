@@ -2,6 +2,7 @@ import Principal "mo:base/Principal";
 import Cycles "mo:base/ExperimentalCycles";
 import Result "mo:base/Result";
 import Blob "mo:base/Blob";
+import Trie "mo:base/Trie";
 import T "../OpenFPL_backend/types";
 import SHA256 "./SHA256";
 
@@ -21,8 +22,35 @@ actor Self {
     
     let ic : IC = actor("aaaaa-aa");
         
+    type CanisterId = Principal;
     type EcdsaKeyId = { name : Text; curve : EcdsaCurve };
     type EcdsaCurve = { #secp256k1 };
+    
+    type Label = Trie.Trie<Blob,Blob>;
+    type EnvelopeContent = {
+        #Call : {
+            nonce : ?Blob;
+            ingress_expiry : Nat64;
+            sender : Principal;
+            canister_id : Principal;
+            method_name : Text;
+            arg : Blob;
+        };
+        #ReadState : {
+            ingress_expiry : Nat64;
+            sender : Principal;
+            paths : [[Label]];
+        };
+        #Query : {
+            ingress_expiry : Nat64;
+            sender : Principal;
+            canister_id : Principal;
+            method_name : Text;
+            arg : Blob;
+            nonce : ?Blob;
+        };
+    };
+    
     type CanisterEcdsaRequest = {
         envelope_content: EnvelopeContent;
         request_url: Text;
