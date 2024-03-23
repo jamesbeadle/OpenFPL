@@ -1,7 +1,11 @@
 import Principal "mo:base/Principal";
 import Cycles "mo:base/ExperimentalCycles";
+import Result "mo:base/Result";
+import Blob "mo:base/Blob";
+import T "../OpenFPL_backend/types";
+import SHA256 "./SHA256";
 
-module {
+actor Self {
     type IC = actor {
         ecdsa_public_key : ({
             canister_id : ?Principal;
@@ -19,8 +23,15 @@ module {
         
     type EcdsaKeyId = { name : Text; curve : EcdsaCurve };
     type EcdsaCurve = { #secp256k1 };
+    type CanisterEcdsaRequest = {
+        envelope_content: EnvelopeContent;
+        request_url: Text;
+        public_key: Blob;
+        key_id: EcdsaKeyId;
+        this_canister_id: CanisterId;
+    };
 
-    public func get_key_id(is_local_dev_mode: Bool) : EcdsaKeyId {
+    public func get_key_id(is_local_dev_mode: Bool) : async EcdsaKeyId {
         let key_name = if is_local_dev_mode { "dfx_test_key" } else { "key_1" };
 
         let key: EcdsaKeyId = {
@@ -31,13 +42,12 @@ module {
         return key;
     };
 
-    public shared (msg) func get_public_key() : async { #Ok : { public_key: Blob }; #Err : Text } {
-        let caller = Principal.toBlob(msg.caller);
+    public func get_public_key(key_id: EcdsaKeyId) : async { #Ok : { public_key: Blob }; #Err : Text } {
         try {
             let { public_key } = await ic.ecdsa_public_key({
                 canister_id = null;
-                derivation_path = [ caller ];
-                key_id = { curve = #secp256k1; name = "dfx_test_key" };
+                derivation_path = [ ];
+                key_id = key_id;
             });
             #Ok({ public_key })
         } catch (err) {
@@ -45,19 +55,34 @@ module {
         }
     };
 
-    public shared (msg) func sign(key_id: EcdsaKeyId, message: Blob) : async { #Ok : { signature: Blob }; #Err : Text } {
+    //OC Functions:
+    
+    public func make_canister_call_via_ecdsa(request: CanisterEcdsaRequest) : async Result.Result<Text, Text> {
+        try{
+            let body = await sign_envelope(request.envelope_content, request.public_key, request.key_id);
+            let response = ic.http_request();
+            return #ok(response);
+        } catch (error){
+            return #err(#ECDSAError)
+        };
+    };
+
+    //sign_envelope
+
+    public shared func sign(key_id: EcdsaKeyId, message: Blob) : async Result.Result<Blob, T.Error> {
         try {
-            let caller = Principal.toBlob(msg.caller);
-            Cycles.add<system>(10_000_000_000);
+            let hasher = SHA256.New();
+            hasher.write(Blob.toArray(message));
+            let message_hash = Blob.fromArray(hasher.sum([]));
+            
             let result = await ic.sign_with_ecdsa({
-                message_hash = message;
-                derivation_path = [ caller ];
+                message_hash = message_hash;
+                derivation_path = [ ];
                 key_id = key_id;
             });
-
-            #Ok(result);
+            return #ok(result.signature);
         } catch (err) {
-            #Err("Error signing message.");
+            #err(#ECSDAError);
         }
     };
 }

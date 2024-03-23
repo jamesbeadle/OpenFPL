@@ -23,6 +23,7 @@ module _Types {
     #InvalidData;
     #SystemOnHold;
     #CanisterCreateError;
+    #ECSDAError;
   };
 
   public type PlayerPosition = {
