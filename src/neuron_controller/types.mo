@@ -102,6 +102,14 @@ module _Types {
     };
 
     type Label = Trie.Trie<Blob,Blob>;
+
+    
+
+    public type Envelope = {
+        content: EnvelopeContent;
+        sender_pubkey: ?Blob;
+        sender_sig: ?Blob;
+    };
     
     public type EnvelopeContent = {
         #Call : {
