@@ -105,8 +105,9 @@ type RuntimeState = {
 actor Self {
     private let ledger : Ledger.Interface = actor (Ledger.CANISTER_ID);
     private let nns_governance : NNSGovernance.Interface = actor (NNSGovernance.CANISTER_ID);
+    private stable var neuronId: Nat64 = 0;
     
-    public func stake_nns_neuron(_args: Args, principal: Principal): async Response {
+    public func stake_nns_neuron(principal: Principal): async Response {
         let random_bytes = await Random.blob();
         let array = Blob.toArray(random_bytes);
 
@@ -153,8 +154,8 @@ actor Self {
                                 case null{
                                     #err(#InvalidTransaction "Error staking neuron");
                                 };
-                                case (?neuronId){
-                                    #ok(Nat64.toNat(neuronId.id));
+                                case (?returnedNeuronId){
+                                    neuronId := returnedNeuronId.id;
                                 }
                             };
                         };
@@ -167,6 +168,10 @@ actor Self {
         } catch (error) {
             #err(#InvalidTransaction "Error staking neuron");
         };
+    };
+
+    public shared query func getNeuronId() : async Nat64 {
+        return neuronId;
     };
 
     func computeNeuronStakingSubaccountBytes(controller: Principal, nonce: Nat64): Blob {

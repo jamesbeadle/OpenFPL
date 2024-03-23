@@ -310,6 +310,19 @@ actor Self {
     return #ok(Principal.toText(Principal.fromActor(Self)));
   };
 
+  public shared func validateStakeNNSNeuron() : async Result.Result<Text, Text> {
+    //validate nns neuron staking
+    //check the caller is the canister
+    //don't have this as public so only the governance canister can call it, check the caller is the governance canister
+  };
+
+  public shared func executeStakeNNSNeuron() : async () {
+    //conversion of sec1 to duh then principal
+    //call neuron controller canister stake nns neuron
+    //pass in principal
+    
+  };
+
   /*
     //Remove Post SNS, for Dev Post Testing Only
   */

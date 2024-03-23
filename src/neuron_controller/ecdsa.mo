@@ -4,7 +4,7 @@ import Result "mo:base/Result";
 import Blob "mo:base/Blob";
 import Trie "mo:base/Trie";
 import T "../OpenFPL_backend/types";
-import SHA256 "./SHA256";
+import SHA256 "./SHA256";   
 
 actor Self {
     type IC = actor {
@@ -96,21 +96,22 @@ actor Self {
     };
 
     public func sign_envelope(content: EnvelopeContent, public_key: Blob, key_id: EcdsaKeyId) : async CallResult<Blob> {
-        let request_id = to_request_id(&content).unwrap();
+        let request_id = to_request_id(content);
 
-        let signature = sign(key_id, &request_id.signable()).await?;
+        let signature = await sign(key_id, request_id.signable());
 
         let envelope = Envelope {
-            content: content.clone(),
-            sender_pubkey: Some(public_key),
-            sender_sig: Some(signature.clone()),
+            content: content;
+            sender_pubkey: public_key;
+            sender_sig: signature;
         };
 
-        let mut serialized_bytes = Vec::new();
-        let mut serializer = serde_cbor::Serializer::new(&mut serialized_bytes);
+        let serialized_bytes = Blob.fromArray([]);
+        
+        //let serializer:  //Serializer::new(&mut serialized_bytes);
         serializer.self_describe().unwrap();
-        envelope.serialize(&mut serializer).unwrap();
-
+        //envelope.serialize(&mut serializer).unwrap();
+/*
         info!(
             request_id = String::from(request_id),
             signature = hex::encode(signature),
@@ -118,7 +119,8 @@ actor Self {
         );
 
         Ok(serialized_bytes)
-    }
+        */
+    };
 
     public shared func sign(key_id: EcdsaKeyId, message: Blob) : async Result.Result<Blob, T.Error> {
         try {
