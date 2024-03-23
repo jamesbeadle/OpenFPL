@@ -95,7 +95,30 @@ actor Self {
         };
     };
 
-    //sign_envelope
+    public func sign_envelope(content: EnvelopeContent, public_key: Blob, key_id: EcdsaKeyId) : async CallResult<Blob> {
+        let request_id = to_request_id(&content).unwrap();
+
+        let signature = sign(key_id, &request_id.signable()).await?;
+
+        let envelope = Envelope {
+            content: content.clone(),
+            sender_pubkey: Some(public_key),
+            sender_sig: Some(signature.clone()),
+        };
+
+        let mut serialized_bytes = Vec::new();
+        let mut serializer = serde_cbor::Serializer::new(&mut serialized_bytes);
+        serializer.self_describe().unwrap();
+        envelope.serialize(&mut serializer).unwrap();
+
+        info!(
+            request_id = String::from(request_id),
+            signature = hex::encode(signature),
+            "Signed envelope"
+        );
+
+        Ok(serialized_bytes)
+    }
 
     public shared func sign(key_id: EcdsaKeyId, message: Blob) : async Result.Result<Blob, T.Error> {
         try {
