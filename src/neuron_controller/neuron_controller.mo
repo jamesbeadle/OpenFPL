@@ -14,6 +14,7 @@ import NNSGovernance "NNSGovernance";
 import Environment "../OpenFPL_backend/Environment";
 import T "types";
 import TimeConstants "time";
+import ECDSA "ecdsa";
 
 
 actor Self {
@@ -86,13 +87,13 @@ actor Self {
     };
 
     //manage neuron
-    public shared func manage_nns_neuron(neuronId: Nat64, command: NNSGovernance.Command): async T.Response {
+    public shared func manage_nns_neuron(neuronId: Nat64, command: NNSGovernance.Command): async Result.Result<Text, Text> {
         await manage_nns_neuron_impl(neuronId, command);
     };
 
-    private func manage_nns_neuron_impl(neuron_id: Nat64, command: NNSGovernance.Command) : async T.Response {
+    private func manage_nns_neuron_impl(neuron_id: Nat64, command: NNSGovernance.Command) : async Result.Result<Text, Text> {
         let request = prepare_canister_call_via_ecdsa(
-            Environment.NNS_GOVERNANCE_CANISTER_ID,
+            Principal.fromText(Environment.NNS_GOVERNANCE_CANISTER_ID),
             "manage_neuron",
             #ManageNeuron(neuron_id, command),
         );
@@ -146,31 +147,35 @@ actor Self {
     };
 
     
-    public func make_canister_call_via_ecdsa(request: CanisterEcdsaRequest) : async Result.Result<String, String> {
-    let body = await sign_envelope(request.envelope_content, request.public_key, request.key_id);
-    
-    let (response,) = IC.http_request(
-        CanisterHttpRequestArgument {
-            url = request.request_url;
-            max_response_bytes = ?(1024 * 1024);
-            method = HttpMethod.POST;
-            headers = vec![HttpHeader {
-                name = "content-type";
-                value = "application/cbor";
-            }];
-            body = ?body;
-            transform = ?TransformContext {
-                function = TransformFunc::new(request.this_canister_id, "transform_http_response".to_string()),
-                context = Blob.fromArray([]);
+    public func make_canister_call_via_ecdsa(request: T.CanisterEcdsaRequest) : async Result.Result<Text, Text> {
+        let ecsda = ECDSA.ECDSA();
+        let body = await ecsda.sign_envelope(request.envelope_content, request.public_key, request.key_id);
+        
+        let (response,) = await IC.http_request(
+            CanisterHttpRequestArgument {
+                url = request.request_url;
+                max_response_bytes = ?(1024 * 1024);
+                method = HttpMethod.POST;
+                headers = vec![HttpHeader {
+                    name = "content-type";
+                    value = "application/cbor";
+                }];
+                body = ?body;
+                transform = ?TransformContext {
+                    function = #TransformFunc(request.this_canister_id, "transform_http_response".to_string());
+                    context = Blob.fromArray([]);
+                };
             },
-        },
-        100_000_000_000,
-    )
-    .await
-    .map_err(|error| format!("Failed to make http request: {error:?}"))?;
+            100_000_000_000,
+        );
 
-    Ok(String::from_utf8(response.body).unwrap())
-}
+        if(response.error){    
+            return #err("Failed to make http request: " # response.error);
+        };
+        
+        
+        return #ok(from_utf8(response.body))
+    };
 
     private func get_principal() : Principal{
 

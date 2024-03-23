@@ -126,4 +126,8 @@ module _Types {
             nonce : ?Blob;
         };
     };
+
+    public type Error = {
+        #ECSDAError;
+    };
 }
