@@ -23,8 +23,6 @@ actor Self {
     let ic : IC = actor("aaaaa-aa");
         
     type CanisterId = Principal;
-    type EcdsaKeyId = { name : Text; curve : EcdsaCurve };
-    type EcdsaCurve = { #secp256k1 };
     
     type Label = Trie.Trie<Blob,Blob>;
     type EnvelopeContent = {
@@ -49,14 +47,6 @@ actor Self {
             arg : Blob;
             nonce : ?Blob;
         };
-    };
-    
-    type CanisterEcdsaRequest = {
-        envelope_content: EnvelopeContent;
-        request_url: Text;
-        public_key: Blob;
-        key_id: EcdsaKeyId;
-        this_canister_id: CanisterId;
     };
 
     public func get_key_id(is_local_dev_mode: Bool) : async EcdsaKeyId {
