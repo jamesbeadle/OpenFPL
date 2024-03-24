@@ -1,8 +1,6 @@
 import Principal "mo:base/Principal";
-import Cycles "mo:base/ExperimentalCycles";
 import Result "mo:base/Result";
 import Blob "mo:base/Blob";
-import Trie "mo:base/Trie";
 import Types "types";
 import SHA256 "./SHA256";   
 import RT "./http_loopback/Runtime";

@@ -17,6 +17,26 @@ quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-
     }
 )' > message.json
 
+//Configure the DAOs neuron
+
+//set dissolve delay
+$ target/release/quill --pem-file private.pem neuron-manage NEURONID --additional-dissolve-delay-seconds 31557600 > message.json
+
+//set follower to openchat 8 year neuron
+quill neuron-manage 17682165960669268263 --follow all
+
+//Proposal to fund the neuron
+quill neuron-stake --amount <amount> --name <neuron name>
+
+quill neuron-stake --amount 50 --name primary
+quill neuron-stake --name primary --already-transferred
+    //Transfer Treasury Funds to neuron
+
+//Proposal to fund ICPFA
+    //Transfer Treasury Funds to ICPFA
+
+//Proposal to update the coin picture
+
 
 # Proposal 1
 
@@ -67,16 +87,4 @@ quill send message.json
 
 //After the neuron is created get neuron id and run
 
-//Configure Neuron Proposal
-    //8 Years
-    //80%
-    //Disburse interest to ICPFA
-
-//Proposal to fund the neuron
-    //Transfer Treasury Funds to neuron
-
-//Proposal to fund ICPFA
-    //Transfer Treasury Funds to ICPFA
-
-//Proposal to update the coin picture
 

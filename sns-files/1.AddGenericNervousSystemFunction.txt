@@ -1,3 +1,5 @@
+//TODO: Proposal 1 update canister ids!
+
 
 //Create NNS PROPOSAL_NEURON_ID
 quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-proposal $PROPOSAL_NEURON_ID --proposal '(
