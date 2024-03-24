@@ -7,7 +7,7 @@ quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-
         summary = "Adding a new generic proposal that creates the DAO's neuron with 1 ICP to be funded by the DAO's treasury.";
         action = opt variant {
             AddGenericNervousSystemFunction = record {
-                id = 17000 : nat64;
+                id = 19000 : nat64;
                 name = "Create DAO neuron.";
                 description = opt "To enable 80% of the treasury to be staked for 8 years a neuron needs to be created before being configured and then funded.
                 This proposal creates a neuron with 1 ICP.";
@@ -23,7 +23,6 @@ quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-
         };
     }
 )' > message.json
-
 
 //Revalue Players Up
 

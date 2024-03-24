@@ -33,6 +33,8 @@ actor Self {
   private var nextCyclesCheckTime : Int = 0;
   private var nextWalletCheckTime : Int = 0;
 
+  private stable var neuronCreated = false;
+
   //Functions containing inter-canister calls that cannot be query functions:
   public shared func getWeeklyLeaderboard(seasonId : T.SeasonId, gameweek : T.GameweekNumber, limit : Nat, offset : Nat, searchTerm : Text) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
     return await seasonManager.getWeeklyLeaderboard(seasonId, gameweek, limit, offset, searchTerm);
@@ -311,7 +313,12 @@ actor Self {
   };
 
   public shared func validateCreateDAONeuron() : async Result.Result<Text, Text> {
-    return #ok("Good");
+    if(neuronCreated){
+      return #err("Neuron already created");
+    };
+    
+    
+    return #ok("Can create neuron");
     //TODO: Ensure that all the callers of canisters are the SNS governance canister
       //surely I mark this function differently somehow to stop others just randomly calling it
 
@@ -319,44 +326,33 @@ actor Self {
   };
 
   public shared func executeCreateDAONeuron() : async () {
-    let neuron_controller = actor (Environment.NEURON_CONTROLLER_CANISTER_ID) : actor {
-          stake_nns_neuron : T.PrincipalId -> async ?NeuronTypes.Response;
+    if(neuronCreated){
+      return;
     };
 
-      //conversion of sec1 to duh then principal
-      //call neuron controller canister stake nns neuron
-      //pass in principal
+    let neuron_controller = actor (Environment.NEURON_CONTROLLER_CANISTER_ID) : actor {
+      stake_nns_neuron : T.PrincipalId -> async ?NeuronTypes.Response;
+    };
+
+    //TODO:
+    //conversion of sec1 to duh then principal
+    //call neuron controller canister stake nns neuron
+    //pass in principal
     let callerPrincipal = "";
 
-    let _ = await neuron_controller.stake_nns_neuron(callerPrincipal);
+    let response = await neuron_controller.stake_nns_neuron(callerPrincipal);
+    
+    //TODO: Check response before setting
+    neuronCreated := true;
     
   };
 
-  /*
-    //Remove Post SNS, for Dev Post Testing Only
-  */
-  public shared func init() : async Result.Result<(), T.Error> {
-
-    switch (cyclesCheckTimerId) {
-      case (null) {
-        await setCheckCyclesTimer();
-      };
-      case (?id) {};
+  public shared func getNeuronId() : async Nat64 {
+    let neuron_controller = actor (Environment.NEURON_CONTROLLER_CANISTER_ID) : actor {
+      getNeuronId : () -> async Nat64;
     };
 
-    switch (cyclesCheckWalletTimerId) {
-      case (null) {
-        await setCheckCyclesWalletTimer();
-      };
-      case (?id) {};
-    };
-
-    seasonManager.setBackendCanisterController(Principal.fromActor(Self));
-    seasonManager.setTimerBackupFunction(setAndBackupTimer, removeExpiredTimers);
-    seasonManager.setStoreCanisterIdFunction(cyclesDispenser.storeCanisterId);
-
-    await seasonManager.init();
-    return #ok;
+    return await neuron_controller.getNeuronId();
   };
 
   private func gameweekBeginExpiredCallback() : async () {
@@ -635,18 +631,6 @@ actor Self {
       await requestCanisterTopup();
     };
     await setCheckCyclesTimer();
-  };
-
-  private func setCheckCyclesWalletTimer() : async () {
-    switch (cyclesCheckWalletTimerId) {
-      case (null) {};
-      case (?id) {
-        Timer.cancelTimer(id);
-        cyclesCheckWalletTimerId := null;
-      };
-    };
-    nextWalletCheckTime := Time.now() + cyclesCheckWalletInterval;
-    cyclesCheckWalletTimerId := ?Timer.setTimer<system>(#nanoseconds(cyclesCheckWalletInterval), checkCanisterWalletBalance);
   };
 
   public func burnICPToCycles(requestedCycles : Nat64) : async () {

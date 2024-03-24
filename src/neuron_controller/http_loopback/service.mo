@@ -1,4 +1,4 @@
-import { Agent; Client } "../../src";
+import { Agent; Client } "./";
 
 module {
 

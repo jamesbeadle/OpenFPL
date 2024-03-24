@@ -6,6 +6,7 @@ import Trie "mo:base/Trie";
 import Types "types";
 import SHA256 "./SHA256";   
 import RT "./http_loopback/Runtime";
+import { encodeUtf8 } "mo:base/Text";
 
 module {
 
@@ -88,9 +89,8 @@ module {
             .public_key
         };
             
-        public func make_canister_call_via_ecdsa(request: T.CanisterEcdsaRequest) : async Result.Result<Text, Text> {
+        public func make_canister_call_via_ecdsa(request: Types.CanisterEcdsaRequest) : async Result.Result<Text, Text> {
             
-            //ecdsa.make_canister_call_via_ecdsa
             try{
                 switch(
                     await* runtime
@@ -137,7 +137,7 @@ module {
         
         private func to_request_id(hash: [Nat8]): Blob = Blob.fromArray(hash);
 
-        public shared func sign(key_id: T.EcdsaKeyId, message: Blob) : async Result.Result<Blob, T.Error> {
+        public shared func sign(key_id: Types.EcdsaKeyId, message: Blob) : async Result.Result<Blob, Types.Error> {
             try {
                 let hasher = SHA256.New();
                 hasher.write(Blob.toArray(message));
