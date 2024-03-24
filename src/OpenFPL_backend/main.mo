@@ -17,8 +17,8 @@ import CyclesDispenser "cycles-dispenser";
 import TreasuryManager "treasury-manager";
 import Utilities "utilities";
 import Account "lib/Account";
-import NeuronController "../neuron_controller/neuron-controller";
 import Environment "Environment";
+import NeuronTypes "../neuron_controller/types";
 
 actor Self {
   let seasonManager = SeasonManager.SeasonManager();
@@ -310,16 +310,25 @@ actor Self {
     return #ok(Principal.toText(Principal.fromActor(Self)));
   };
 
-  public shared func validateStakeNNSNeuron() : async Result.Result<Text, Text> {
-    //validate nns neuron staking
-    //check the caller is the canister
-    //don't have this as public so only the governance canister can call it, check the caller is the governance canister
+  public shared func validateCreateDAONeuron() : async Result.Result<Text, Text> {
+    return #ok("Good");
+    //TODO: Ensure that all the callers of canisters are the SNS governance canister
+      //surely I mark this function differently somehow to stop others just randomly calling it
+
+
   };
 
-  public shared func executeStakeNNSNeuron() : async () {
-    //conversion of sec1 to duh then principal
-    //call neuron controller canister stake nns neuron
-    //pass in principal
+  public shared func executeCreateDAONeuron() : async () {
+    let neuron_controller = actor (Environment.NEURON_CONTROLLER_CANISTER_ID) : actor {
+          stake_nns_neuron : T.PrincipalId -> async ?NeuronTypes.Response;
+    };
+
+      //conversion of sec1 to duh then principal
+      //call neuron controller canister stake nns neuron
+      //pass in principal
+    let callerPrincipal = "";
+
+    let _ = await neuron_controller.stake_nns_neuron(callerPrincipal);
     
   };
 
