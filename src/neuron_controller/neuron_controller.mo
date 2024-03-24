@@ -178,7 +178,7 @@ actor Self {
     };
 
     private func get_principal() : Principal{
-
+        Principal.fromText(Environment.NEURON_CONTROLLER_CANISTER_ID);
     };
 
     

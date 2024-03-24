@@ -7,6 +7,7 @@ module Environment {
   public let NNS_GOVERNANCE_CANISTER_ID = "rrkah-fqaaa-aaaaa-aaaaq-cai";
   public let SNS_GOVERNANCE_CANISTER_ID = ""; //TODO: Update post SNS
   public let SNS_LEDGER_CANISTER_ID = ""; //TODO: Update post SNS
+  public let NEURON_CONTROLLER_CANISTER_ID = ""; //TODO: Set after the SNS
 
 };
 

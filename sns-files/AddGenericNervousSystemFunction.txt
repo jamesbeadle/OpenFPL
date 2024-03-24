@@ -1,4 +1,30 @@
 
+//Create NNS PROPOSAL_NEURON_ID
+quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-proposal $PROPOSAL_NEURON_ID --proposal '(
+    record {
+        title = "Create SNS Controlled Neuron";          
+        url = "https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo";        
+        summary = "Adding a new generic proposal that creates the DAO's neuron with 1 ICP to be funded by the DAO's treasury.";
+        action = opt variant {
+            AddGenericNervousSystemFunction = record {
+                id = 17000 : nat64;
+                name = "Create DAO neuron.";
+                description = opt "To enable 80% of the treasury to be staked for 8 years a neuron needs to be created before being configured and then funded.
+                This proposal creates a neuron with 1 ICP.";
+                function_type = opt variant { 
+                    GenericNervousSystemFunction = record { 
+                        validator_canister_id = opt principal "bboqb-jiaaa-aaaal-qb6ea-cai"; 
+                        target_canister_id = opt principal "bboqb-jiaaa-aaaal-qb6ea-cai"; 
+                        validator_method_name = opt "validateCreateDAONeuron";                         
+                        target_method_name = opt "executeCreateDAONeuron";
+                    } 
+                };
+            }
+        };
+    }
+)' > message.json
+
+
 //Revalue Players Up
 
 quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-proposal $PROPOSAL_NEURON_ID --proposal '(
