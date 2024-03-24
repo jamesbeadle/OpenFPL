@@ -5,3 +5,5 @@ StableTrieMap = "https://github.com/NatLabs/StableTrieMap#main@4781cb03efd34b124
 StableBuffer = "https://github.com/canscale/StableBuffer#v0.2.0@1af0e8814bac5ca7ed23a6c094204b46d9056c2e"
 itertools = "0.2.1"
 tecdsa = "0.0.4"
+rep-indy-hash = "0.1.1"
+cbor = "0.1.3"

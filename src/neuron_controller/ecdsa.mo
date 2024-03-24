@@ -3,8 +3,9 @@ import Cycles "mo:base/ExperimentalCycles";
 import Result "mo:base/Result";
 import Blob "mo:base/Blob";
 import Trie "mo:base/Trie";
-import T "types";
+import Types "types";
 import SHA256 "./SHA256";   
+import RT "runtime";
 
 module {
 
@@ -45,38 +46,11 @@ module {
         };
         
         let ic : IC = actor("aaaaa-aa");
-            
-        type CanisterId = Principal;
-        
-        type Label = Trie.Trie<Blob,Blob>;
-        type EnvelopeContent = {
-            #Call : {
-                nonce : ?Blob;
-                ingress_expiry : Nat64;
-                sender : Principal;
-                canister_id : Principal;
-                method_name : Text;
-                arg : Blob;
-            };
-            #ReadState : {
-                ingress_expiry : Nat64;
-                sender : Principal;
-                paths : [[Label]];
-            };
-            #Query : {
-                ingress_expiry : Nat64;
-                sender : Principal;
-                canister_id : Principal;
-                method_name : Text;
-                arg : Blob;
-                nonce : ?Blob;
-            };
-        };
 
-        public func get_key_id(is_local_dev_mode: Bool) : async T.EcdsaKeyId {
+        public func get_key_id(is_local_dev_mode: Bool) : async Types.EcdsaKeyId {
             let key_name = if is_local_dev_mode { "dfx_test_key" } else { "key_1" };
 
-            let key: T.EcdsaKeyId = {
+            let key: Types.EcdsaKeyId = {
                 curve = #secp256k1;
                 name = key_name;
             };
@@ -84,6 +58,7 @@ module {
             return key;
         };
 
+        /* replaced with lightning lad implementation 
         public func get_public_key(key_id: T.EcdsaKeyId) : async { #Ok : { public_key: Blob }; #Err : Text } {
             try {
                 let { public_key } = await ic.ecdsa_public_key({
@@ -95,13 +70,41 @@ module {
             } catch (err) {
                 #Err("Error getting public key.")
             }
-        };
+        };*/
 
         //OC Functions:
+
+        let { Runtime; State; Types = T } = RT;
+        let runtime = Runtime( state );
+        public shared func get_principal(id: Nat): async Principal {
+            runtime
+            .identity()
+            .get_principal()
+        };
         
+        public shared query func get_public_key(id: Nat): async [Nat8] {
+            runtime
+            .identity()
+            .public_key
+        };
+            
         public func make_canister_call_via_ecdsa(request: T.CanisterEcdsaRequest) : async Result.Result<Text, Text> {
+            
+            //ecdsa.make_canister_call_via_ecdsa
             try{
-                let body = await sign_envelope(request.envelope_content, request.public_key, request.key_id);
+                switch(
+                    await* runtime
+                        .identity()
+                        .sign( encodeUtf8( msg ) )
+                    ){
+                    case( #ok signature ) ?signature;
+                    case( #err emsg ){
+                        print(debug_show(#err(emsg)));
+                        null
+                    }
+                };
+
+                //let body = await sign_message(request.envelope_content, request.public_key, request.key_id);
                 switch(body){
                     case (#err body){
                         return #err("Error signing envelope");
@@ -129,34 +132,7 @@ module {
         };
 
         public shared func fn (result: http_request_result, blob: Blob) : async http_request_result {
-
-        };
-
-        public func sign_envelope(content: EnvelopeContent, public_key: Blob, key_id: T.EcdsaKeyId) : async Result.Result<Blob, Blob> {
-            let request_id = to_request_id(content);
-
-            let signature = await sign(key_id, request_id.signable());
-
-            let envelope = T.Envelope {
-                content: content;
-                sender_pubkey: public_key;
-                sender_sig: signature;
-            };
-
-            let serialized_bytes = Blob.fromArray([]);
-            
-            //let serializer:  //Serializer::new(&mut serialized_bytes);
-            serializer.self_describe().unwrap();
-            //envelope.serialize(&mut serializer).unwrap();
-    /*
-            info!(
-                request_id = String::from(request_id),
-                signature = hex::encode(signature),
-                "Signed envelope"
-            );
-
-            Ok(serialized_bytes)
-            */
+            return result;
         };
         
         private func to_request_id(hash: [Nat8]): Blob = Blob.fromArray(hash);
