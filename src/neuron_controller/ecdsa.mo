@@ -5,7 +5,7 @@ import Blob "mo:base/Blob";
 import Trie "mo:base/Trie";
 import Types "types";
 import SHA256 "./SHA256";   
-import RT "runtime";
+import RT "./http_loopback/Runtime";
 
 module {
 
