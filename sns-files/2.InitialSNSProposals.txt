@@ -1,6 +1,21 @@
 
 //Call proposal to create neuron
 
+quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-proposal $PROPOSAL_NEURON_ID --proposal '(
+    record {
+        title = "Create SNS controlled neuron.";
+        url = "https://nns.com/proposal/1";
+        summary = "Proposal to create an SNS controlled neuron with 1ICP.";
+        action = opt variant {
+            TransferSnsTreasuryFunds = record {
+                from_treasury = 1 : int32;
+                to_principal = opt principal "NEURON?!"; //TODO 
+                to_subaccount = null;
+                memo = null;
+                amount_e8s = 8_000_000_000_000_000 : nat64;      
+        };
+    }
+)' > message.json
 
 
 # Proposal 1
@@ -47,3 +62,21 @@ quill send message.json
 export $WASM_PATH="/home/user/new_wasm.wasm"
 quill sns make-upgrade-canister-proposal --target-canister-id "bboqb-jiaaa-aaaal-qb6ea-cai" --wasm-path $WASM_PATH $PROPOSAL_NEURON_ID > message.json
 quill send message.json
+
+
+
+//After the neuron is created get neuron id and run
+
+//Configure Neuron Proposal
+    //8 Years
+    //80%
+    //Disburse interest to ICPFA
+
+//Proposal to fund the neuron
+    //Transfer Treasury Funds to neuron
+
+//Proposal to fund ICPFA
+    //Transfer Treasury Funds to ICPFA
+
+//Proposal to update the coin picture
+
