@@ -123,6 +123,9 @@ module {
         };
 
         public func sign_envelope(content: Types.EnvelopeContent, public_key: Blob, key_id: Types.EcdsaKeyId): async* Types.Response {
+            
+            let signature = sign(key_id, public_key);
+            
             switch(content){
                 case (#Call {nonce; ingress_expiry; sender; canister_id; method_name; arg}){
                     let hash : [Nat8] = hash_content( {
@@ -134,7 +137,7 @@ module {
 
                     let request_id : Blob = to_request_id( hash );
                     let message_id : Blob = to_message_id( hash );
-                    switch( await* identity.sign(message_id) ){
+                    switch( await* signature.sign(message_id) ){
                         case( #err msg ) #err(msg);
                         case( #ok sig ){
                             let envelope = Cbor.load([]);
