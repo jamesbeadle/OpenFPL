@@ -3,7 +3,6 @@ import Result "mo:base/Result";
 import Blob "mo:base/Blob";
 import Types "types";
 import SHA256 "./SHA256";   
-import RT "./http_loopback/Runtime";
 import { encodeUtf8 } "mo:base/Text";
 
 module {
@@ -69,7 +68,7 @@ module {
             } catch (err) {
                 #Err("Error getting public key.")
             }
-        };*/
+        };
 
         //OC Functions:
 
@@ -86,23 +85,12 @@ module {
             .identity()
             .public_key
         };
-            
+            */
         public func make_canister_call_via_ecdsa(request: Types.CanisterEcdsaRequest) : async Result.Result<Text, Text> {
             
             try{
-                switch(
-                    await* runtime
-                        .identity()
-                        .sign( encodeUtf8( msg ) )
-                    ){
-                    case( #ok signature ) ?signature;
-                    case( #err emsg ){
-                        print(debug_show(#err(emsg)));
-                        null
-                    }
-                };
 
-                //let body = await sign_message(request.envelope_content, request.public_key, request.key_id);
+                let body = await sign_envelope(request.envelope_content, request.public_key, request.key_id);
                 switch(body){
                     case (#err body){
                         return #err("Error signing envelope");
@@ -127,6 +115,22 @@ module {
             } catch (error){
                 return #err("Error making canister call via ecdsa");
             };
+        };
+
+        public func sign_envelope(content: Types.EnvelopeContent, public_key: Blob, key_id: Types.EcdsaKeyId): async* Types.Response {
+            let hash : [Nat8] = hash_content( content );
+            let request_id : Types.RequestId = to_request_id( hash );
+            let message_id : Blob = to_message_id( hash );
+            switch( await* identity.sign(message_id) ){
+            case( #err msg ) #err(msg);
+            case( #ok sig ){
+                let envelope = Cbor.load([]);
+                envelope.set( "content", #majorType5(map_content( request )) );
+                envelope.set( "sender_pubkey", #majorType2( identity.public_key) );
+                envelope.set( "sender_sig", #majorType2(Blob.toArray(sig)) );
+                #ok(request_id, Cbor.dump(envelope))
+            }
+            }
         };
 
         public shared func fn (result: http_request_result, blob: Blob) : async http_request_result {
