@@ -8,6 +8,7 @@ import T "./http_loopback/Agent/types";
 import Hash "mo:rep-indy-hash";
 import { toBlob = principalToBlob; fromText = principalFromText } "mo:base/Principal";
 import { init; mapEntries; tabulate } "mo:base/Array";
+import Nat64 "mo:base/Nat64";
 
 module {
 
@@ -122,19 +123,31 @@ module {
         };
 
         public func sign_envelope(content: Types.EnvelopeContent, public_key: Blob, key_id: Types.EcdsaKeyId): async* Types.Response {
-            let hash : [Nat8] = hash_content( content );
-            let request_id : Blob = to_request_id( hash );
-            let message_id : Blob = to_message_id( hash );
-            switch( await* identity.sign(message_id) ){
-            case( #err msg ) #err(msg);
-            case( #ok sig ){
-                let envelope = Cbor.load([]);
-                envelope.set( "content", #majorType5(map_content( request )) );
-                envelope.set( "sender_pubkey", #majorType2( identity.public_key) );
-                envelope.set( "sender_sig", #majorType2(Blob.toArray(sig)) );
-                #ok(request_id, Cbor.dump(envelope))
-            }
-            }
+            switch(content){
+                case (#Call {nonce; ingress_expiry; sender; canister_id; method_name; arg}){
+                    let hash : [Nat8] = hash_content( {
+                        request = #query_method;
+                        ingress_expiry = Nat64.toNat(ingress_expiry);
+                        sender = Principal.toBlob(sender);
+                        nonce = nonce;
+                    });
+
+                    let request_id : Blob = to_request_id( hash );
+                    let message_id : Blob = to_message_id( hash );
+                    switch( await* identity.sign(message_id) ){
+                        case( #err msg ) #err(msg);
+                        case( #ok sig ){
+                            let envelope = Cbor.load([]);
+                            envelope.set( "content", #majorType5(map_content( request )) );
+                            envelope.set( "sender_pubkey", #majorType2( identity.public_key) );
+                            envelope.set( "sender_sig", #majorType2(Blob.toArray(sig)) );
+                            #ok(request_id, Cbor.dump(envelope))
+                        }
+                    }
+
+                };
+                case _ { };
+            };
         };
 
         func hash_content(req: T.Request): [Nat8] {
