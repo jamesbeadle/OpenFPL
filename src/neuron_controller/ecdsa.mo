@@ -3,7 +3,11 @@ import Result "mo:base/Result";
 import Blob "mo:base/Blob";
 import Types "types";
 import SHA256 "./SHA256";   
-import { encodeUtf8 } "mo:base/Text";
+import Buffer "mo:base/Buffer";
+import T "./http_loopback/Agent/types";
+import Hash "mo:rep-indy-hash";
+import { toBlob = principalToBlob; fromText = principalFromText } "mo:base/Principal";
+import { init; mapEntries; tabulate } "mo:base/Array";
 
 module {
 
@@ -119,7 +123,7 @@ module {
 
         public func sign_envelope(content: Types.EnvelopeContent, public_key: Blob, key_id: Types.EcdsaKeyId): async* Types.Response {
             let hash : [Nat8] = hash_content( content );
-            let request_id : Types.RequestId = to_request_id( hash );
+            let request_id : Blob = to_request_id( hash );
             let message_id : Blob = to_message_id( hash );
             switch( await* identity.sign(message_id) ){
             case( #err msg ) #err(msg);
@@ -133,11 +137,55 @@ module {
             }
         };
 
+        func hash_content(req: T.Request): [Nat8] {
+            let buffer = Buffer.Buffer<(Text, Hash.Value)>(4);
+            buffer.add( ("sender", #Blob(req.sender)) );
+            buffer.add( ("ingress_expiry", #Nat(req.ingress_expiry)) );
+            switch( req.nonce ){
+            case( ?nonce ) buffer.add(("nonce", #Blob(nonce)));
+            case null ();
+            };
+            switch( req.request ){
+            case( #update_method params ){
+                buffer.add(("request_type", #Text("call")));
+                buffer.add(("canister_id", #Blob(principalToBlob(principalFromText(params.canister_id)))));
+                buffer.add(("method_name", #Text(params.method_name)));
+                buffer.add(("arg", #Blob(params.arg)));
+            };
+            case( #query_method params ){
+                buffer.add(("request_type", #Text("query")));
+                buffer.add(("canister_id", #Blob(principalToBlob(principalFromText(params.canister_id)))));
+                buffer.add(("method_name", #Text(params.method_name)));
+                buffer.add(("arg", #Blob(params.arg)));
+            };
+            case( #read_state params ){
+                buffer.add(("request_type", #Text("read_state")));
+                buffer.add(("paths",
+                #Array( mapEntries<[Blob], Hash.Value>(params.paths, func(state_path, _): Hash.Value {
+                    #Array( mapEntries<Blob, Hash.Value>(state_path, func(path_label, _): Hash.Value {
+                    #Blob(path_label)
+                    }))
+                }))
+                ))
+            }};
+            Hash.hash_val( #Map( Buffer.toArray<(Text, Hash.Value)>( buffer ) ) )
+        };
+
         public shared func fn (result: http_request_result, blob: Blob) : async http_request_result {
             return result;
         };
         
         private func to_request_id(hash: [Nat8]): Blob = Blob.fromArray(hash);
+
+        private let IC_REQUEST_DOMAIN_SEPERATOR : [Nat8] = [10, 105, 99, 45, 114, 101, 113, 117, 101, 115, 116]; // "\0Aic-request";
+        private func to_message_id(hash: [Nat8]): Blob {
+            Blob.fromArray(
+            tabulate<Nat8>(43, func(i) = 
+                if ( i < 11 ) IC_REQUEST_DOMAIN_SEPERATOR[i]
+                else hash[i - 11]
+            )
+            )
+        };
 
         public shared func sign(key_id: Types.EcdsaKeyId, message: Blob) : async Result.Result<Blob, Types.Error> {
             try {
