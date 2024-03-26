@@ -9,6 +9,9 @@ import Hash "mo:rep-indy-hash";
 import { toBlob = principalToBlob; fromText = principalFromText } "mo:base/Principal";
 import { init; mapEntries; tabulate } "mo:base/Array";
 import Nat64 "mo:base/Nat64";
+import Nat "mo:base/Nat";
+import Cbor "http_loopback/Cbor";
+import Agent "http_loopback/Agent";
 
 module {
 
@@ -91,6 +94,7 @@ module {
             .public_key
         };
             */
+        type Agent = Agent.Agent;
         public func make_canister_call_via_ecdsa(request: Types.CanisterEcdsaRequest) : async Result.Result<Text, Text> {
             
             try{
@@ -124,33 +128,65 @@ module {
 
         public func sign_envelope(content: Types.EnvelopeContent, public_key: Blob, key_id: Types.EcdsaKeyId): async* Types.Response {
             
-            let signature = sign(key_id, public_key);
+            let signature = await sign(key_id, public_key);
             
             switch(content){
                 case (#Call {nonce; ingress_expiry; sender; canister_id; method_name; arg}){
-                    let hash : [Nat8] = hash_content( {
-                        request = #query_method;
-                        ingress_expiry = Nat64.toNat(ingress_expiry);
-                        sender = Principal.toBlob(sender);
-                        nonce = nonce;
-                    });
 
-                    let request_id : Blob = to_request_id( hash );
-                    let message_id : Blob = to_message_id( hash );
-                    switch( await* signature.sign(message_id) ){
-                        case( #err msg ) #err(msg);
+                    switch( signature ){
+                        case( #err msg ) #err(#Other {error_code = 0; error_message = "Invalid signature"});
                         case( #ok sig ){
                             let envelope = Cbor.load([]);
-                            envelope.set( "content", #majorType5(map_content( request )) );
-                            envelope.set( "sender_pubkey", #majorType2( identity.public_key) );
+                            envelope.set( "content", #majorType5(map_content( 
+                                {
+                                    request = arg;
+                                    ingress_expiry = Nat64.toNat(ingress_expiry);
+                                    sender = Principal.toBlob(sender);
+                                    nonce = nonce;
+                                } )) );
+                            envelope.set( "sender_pubkey", #majorType2( Blob.toArray(public_key)) );
                             envelope.set( "sender_sig", #majorType2(Blob.toArray(sig)) );
-                            #ok(request_id, Cbor.dump(envelope))
+                            #ok(request_id)
                         }
                     }
 
                 };
                 case _ { };
             };
+        };
+
+        func map_content(req: T.Request): Cbor.CborMap {
+            let content = Cbor.load([]);
+            content.set( "sender", #majorType2(Blob.toArray(req.sender)) );
+            content.set( "ingress_expiry", #majorType0(Nat64.fromNat(req.ingress_expiry)) );
+            switch( req.nonce ){
+            case( ?nonce ) content.set( "nonce", #majorType2(Blob.toArray(nonce)) );
+            case null ();
+            };
+            switch( req.request ){
+            case( #update_method params ){
+                content.set( "request_type", #majorType3("call") );
+                content.set( "canister_id", #majorType2(Blob.toArray(principalToBlob(principalFromText(params.canister_id)))) );
+                content.set( "method_name", #majorType3(params.method_name) );
+                content.set( "arg", #majorType2(Blob.toArray(params.arg)) );
+            };
+            case( #query_method params ){
+                content.set( "request_type", #majorType3("query") );
+                content.set( "canister_id", #majorType2(Blob.toArray(principalToBlob(principalFromText(params.canister_id)))) );
+                content.set( "method_name", #majorType3(params.method_name) );
+                content.set( "arg", #majorType2(Blob.toArray(params.arg)) );
+            };
+            case( #read_state params ){
+                content.set( "request_type", #majorType3("read_state") );
+                content.set( "paths",
+                #majorType4( mapEntries<[Blob], T.CborArray>(params.paths, func(state_path, _): T.CborArray {
+                    #majorType4( mapEntries<Blob, T.CborBytes>(state_path, func(path_label, _): T.CborBytes {
+                    #majorType2( Blob.toArray(path_label) )
+                    }))
+                }))
+                )
+            }};
+            content.map_cbor()
         };
 
         func hash_content(req: T.Request): [Nat8] {

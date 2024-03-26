@@ -21,6 +21,7 @@ actor Self {
     private let ledger : Ledger.Interface = actor (Ledger.CANISTER_ID);
     private let nns_governance : NNSGovernance.Interface = actor (NNSGovernance.CANISTER_ID);
     private stable var neuronId: Nat64 = 0;
+    let IC_URL = ""; //TODO SET
     
     public shared func stake_nns_neuron(principal: Principal): async T.Response {
         let random_bytes = await Random.blob();
@@ -134,7 +135,7 @@ actor Self {
             sender = get_principal();
             canister_id = canister_id;
             method_name = method_name;
-            arg: args;
+            arg = args;
         };
 
         return {
