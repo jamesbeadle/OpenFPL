@@ -108,6 +108,7 @@ module {
         };
 
         func to_request_id(hash: [Nat8]): Blob = Blob.fromArray(hash);
+        
         public func sign_envelope(content: Types.EnvelopeContent, public_key: Blob, key_id: Types.EcdsaKeyId): async Result.Result<Blob, Text> {
             let request_id = to_request_id(content);
 
