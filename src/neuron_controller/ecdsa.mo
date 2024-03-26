@@ -18,16 +18,24 @@ module {
 
     public class ECDSA() {
 
-        type http_header = {
+        type TransformFunction = shared query TransformArgs -> async HttpResponsePayload;
+
+        type TransformArgs = {
+            response : HttpResponsePayload;
+            context : Blob;
+        };
+
+        type HttpResponsePayload = {
+            status : Nat;
+            headers : [HttpHeader];
+            body : [Nat8];
+        };
+
+        public type HttpHeader = {
             name : Text;
             value : Text;
         };
 
-        type http_request_result = {
-            status : Nat;
-            headers : [http_header];
-            body : Blob;
-        };
         type IC = actor {
             ecdsa_public_key : ({
                 canister_id : ?Principal;
@@ -43,13 +51,13 @@ module {
                 url : Text;
                 max_response_bytes : ?Nat64;
                 method : { #get; #head; #post };
-                headers : [http_header];
+                headers : [HttpHeader];
                 body : ?Blob;
                 transform : ?{
-                    function : ?(shared (response : http_request_result, context : Blob)  -> async (http_request_result));
+                    function : TransformFunction;
                     context : Blob;
                 };
-            }) -> async (http_request_result);
+            }) -> async (HttpResponsePayload);
         };
         
         let ic : IC = actor("aaaaa-aa");
@@ -75,14 +83,14 @@ module {
                         return #err("Error signing envelope");
                     };
                     case (#ok body){
-                        let headers: [http_header] = [{name = "content-type"; value = "application/cbor"}];
+                        let headers: [HttpHeader] = [{name = "content-type"; value = "application/cbor"}];
                         let maxResponse: Nat64 = 1024 * 1024;
                         let response = await ic.http_request({
                             body = ?body; 
                             headers = headers; 
                             max_response_bytes = ?maxResponse;
                             method = #post;
-                            transform = ?{context = Blob.fromArray([]); function = ?fn};
+                            transform = ?{context = Blob.fromArray([]); function = fn};
                             url = request.request_url;
                         });
                         if(response.status == 200){
@@ -96,8 +104,14 @@ module {
             };
         };
 
+        public shared query func fn (result: TransformArgs) : async HttpResponsePayload {
+            return result.response;
+        };
+
+        func to_request_id(hash: [Nat8]): Blob = Blob.fromArray(hash);
         public func sign_envelope(content: Types.EnvelopeContent, public_key: Blob, key_id: Types.EcdsaKeyId): async Result.Result<Blob, Text> {
-            
+            let request_id = to_request_id(content);
+
             let signature = await sign(key_id, public_key);
             
             switch(content){
@@ -113,7 +127,7 @@ module {
                                 request = #read_state({
                                     canister_id = ""; //WHICH_CANISTER_ID;
                                     max_response_bytes = ?(0); //DEFAULT_MAX_RESPONSE_BYTES;
-                                    paths = [[ encodeUtf8("request_status"), req_id ]];
+                                    paths = [[ encodeUtf8("request_status"), request_id ]]; //??????
                                 });
                                 sender = Principal.toBlob(sender);
                             };
