@@ -5,7 +5,6 @@ import Types "types";
 import SHA256 "./SHA256";   
 import Nat64 "mo:base/Nat64";
 import Nat "mo:base/Nat";
-import Cbor "mo:Cbor";
 
 module {
 
@@ -89,7 +88,7 @@ module {
             };
         };
 
-        public func sign_envelope(content: Types.EnvelopeContent, public_key: Blob, key_id: Types.EcdsaKeyId): async* Types.Response {
+        public func sign_envelope(content: Types.EnvelopeContent, public_key: Blob, key_id: Types.EcdsaKeyId): async Types.Response {
             
             let signature = await sign(key_id, public_key);
             
