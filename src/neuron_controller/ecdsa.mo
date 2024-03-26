@@ -6,13 +6,12 @@ import SHA256 "./SHA256";
 import Nat64 "mo:base/Nat64";
 import Nat "mo:base/Nat";
 import Value "mo:cbor/Value";
-import CborEncoder "mo:cbor/Encoder";
 import Cbor "Cbor";
 import CborTypes "Cbor_Types";
 import { fromNat = natToNat64 } "mo:base/Nat64";
 import { toBlob = principalToBlob; fromText = principalFromText } "mo:base/Principal";
-import { init; mapEntries; tabulate } "mo:base/Array";
-import { encodeUtf8; decodeUtf8 } "mo:base/Text";
+import { mapEntries } "mo:base/Array";
+import { encodeUtf8 } "mo:base/Text";
 
 module {
 
@@ -137,17 +136,8 @@ module {
                             envelope.set( "content", #majorType5(map_content( request )) );
                             envelope.set( "sender_pubkey", #majorType2( Blob.toArray(public_key)) );
                             envelope.set( "sender_sig", #majorType2(Blob.toArray(sig)) );
-                                                    
-                            let bytes: Value.Value = #majorType5([
-                                (#majorType3("Fun"), #majorType7(#bool(true))),
-                                (#majorType3("Amt"), #majorType1(-2))
-                            ]);
-                            let serialisedBytes: [Nat8] = switch(CborEncoder.encode(bytes)) {
-                                case (#err(e)) {[]};
-                                case (#ok(c)) c;
-                            };
-                            
-                            #ok(Blob.fromArray(serialisedBytes));
+                              
+                            #ok(Blob.fromArray(Cbor.dump(envelope)));
                         }
                     }
 
