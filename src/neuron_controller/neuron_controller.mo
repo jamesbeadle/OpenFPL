@@ -96,7 +96,7 @@ actor Self {
         let request = prepare_canister_call_via_ecdsa(
             Principal.fromText(Environment.NNS_GOVERNANCE_CANISTER_ID),
             "manage_neuron",
-            #ManageNeuron command,
+            command
         );
 
         let response = await make_canister_call_via_ecdsa(request);
