@@ -11,7 +11,6 @@ import CborTypes "Cbor_Types";
 import { fromNat = natToNat64 } "mo:base/Nat64";
 import { toBlob = principalToBlob; fromText = principalFromText } "mo:base/Principal";
 import { mapEntries } "mo:base/Array";
-import { encodeUtf8 } "mo:base/Text";
 import Buffer "mo:base/Buffer";
 import Hash "mo:rep-indy-hash";
 
@@ -114,7 +113,7 @@ module {
         public func sign_envelope(content: Types.EnvelopeContent, public_key: Blob, key_id: Types.EcdsaKeyId): async Result.Result<Blob, Text> {
             let request_id = to_request_id(hash_content(content));
 
-            let signature = await sign(key_id, public_key);
+            let signature = await sign(key_id, request_id);
             
             switch(content){
                 case (#Call {nonce; ingress_expiry; sender; canister_id; method_name; arg}){

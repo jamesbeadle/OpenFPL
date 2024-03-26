@@ -96,7 +96,7 @@ actor Self {
         let request = prepare_canister_call_via_ecdsa(
             Principal.fromText(Environment.NNS_GOVERNANCE_CANISTER_ID),
             "manage_neuron",
-            #ManageNeuron(neuron_id, command),
+            #ManageNeuron command,
         );
 
         let response = await make_canister_call_via_ecdsa(request);
@@ -126,11 +126,9 @@ actor Self {
     ) : T.CanisterEcdsaRequest {
         let currentTime = Time.now(); //Hamish To Confirm
         let array = Binary.BigEndian.fromNat64(Nat64.fromIntWrap(currentTime));
-
-        let nonce: Nat64 = Binary.BigEndian.toNat64(array);
         
         let envelope_content: T.EnvelopeContent = #Call {
-            nonce = ?nonce;
+            nonce = ?Blob.fromArray(array);
             ingress_expiry = currentTime + 5 * TimeConstants.MINUTE_IN_MS * TimeConstants.NANOS_PER_MILLISECOND;
             sender = get_principal();
             canister_id = canister_id;
