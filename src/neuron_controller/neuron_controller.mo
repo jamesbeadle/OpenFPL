@@ -129,11 +129,11 @@ actor Self {
         
         let envelope_content: T.EnvelopeContent = #Call {
             nonce = ?Blob.fromArray(array);
-            ingress_expiry = currentTime + 5 * TimeConstants.MINUTE_IN_MS * TimeConstants.NANOS_PER_MILLISECOND;
+            ingress_expiry = Nat64.fromIntWrap(currentTime + 5) * TimeConstants.MINUTE_IN_MS * TimeConstants.NANOS_PER_MILLISECOND;
             sender = get_principal();
             canister_id = canister_id;
             method_name = method_name;
-            arg = args;
+            arg = to_candid(args);
         };
 
         return {
