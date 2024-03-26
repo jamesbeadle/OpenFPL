@@ -1,6 +1,7 @@
-import T "types";
-import C "content";
-import { HashTree = HT } "tree";
+import T "Cbor_Types";
+import C "Cbor_Content";
+import { HashTree = HT } "Cbor_Tree";
+
 module {
 
   public type Key = T.Key;

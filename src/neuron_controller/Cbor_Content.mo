@@ -5,7 +5,7 @@ import { print; trap } "mo:base/Debug";
 import { mapEntries } "mo:base/Array";
 import { decode } "mo:cbor/Decoder";
 import { encode } "mo:cbor/Encoder";
-import T "types";
+import T "Cbor_Types";
 
 module {
 

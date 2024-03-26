@@ -1,7 +1,7 @@
 import { toArray = bufferToArray; fromArray = bufferFromArray } "mo:base/Buffer";
 import { fromArray = blobFromArray } "mo:base/Blob";
 import { trap; print } "mo:base/Debug";
-import T "types";
+import T "Cbor_Types";
 
 module {
 

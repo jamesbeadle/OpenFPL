@@ -43,4 +43,33 @@ module {
     bounds: [var Nat32],
   )];
 
+  public type ReadRequest = {
+    max_response_bytes: ?Nat64;
+    canister_id: Text;
+    paths : Paths
+  };
+
+  public type CallRequest = {
+    max_response_bytes: ?Nat64;
+    canister_id: Text;
+    method_name: Text;
+    arg: Blob
+  };
+
+  public type RequestType = {
+    #read_state: ReadRequest;
+    #query_method: CallRequest;
+    #update_method: CallRequest;
+  };
+
+  public type Request = {
+    request: RequestType;
+    ingress_expiry: Nat;
+    sender: Blob;
+    nonce: ?Blob;
+  };
+
+  public type Paths = [[Blob]];
+
+  public type CborBytes = { #majorType2 : [Nat8] };
 };
