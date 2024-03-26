@@ -12,6 +12,8 @@ import { fromNat = natToNat64 } "mo:base/Nat64";
 import { toBlob = principalToBlob; fromText = principalFromText } "mo:base/Principal";
 import { mapEntries } "mo:base/Array";
 import { encodeUtf8 } "mo:base/Text";
+import Buffer "mo:base/Buffer";
+import Hash "mo:rep-indy-hash";
 
 module {
 
@@ -110,7 +112,7 @@ module {
         func to_request_id(hash: [Nat8]): Blob = Blob.fromArray(hash);
         
         public func sign_envelope(content: Types.EnvelopeContent, public_key: Blob, key_id: Types.EcdsaKeyId): async Result.Result<Blob, Text> {
-            let request_id = to_request_id(content);
+            let request_id = to_request_id(hash_content(content));
 
             let signature = await sign(key_id, public_key);
             
@@ -147,6 +149,25 @@ module {
             };
         };
 
+
+        func hash_content(req: Types.EnvelopeContent): [Nat8] {
+            switch(req){
+                case (#Call request){
+                    let buffer = Buffer.Buffer<(Text, Hash.Value)>(4);
+                    buffer.add( ("sender", #Blob(Principal.toBlob(request.sender))) );
+                    buffer.add( ("ingress_expiry", #Nat(Nat64.toNat(request.ingress_expiry))) );
+                    buffer.add(("request_type", #Text("call")));
+                    buffer.add(("canister_id", #Blob(principalToBlob(request.canister_id))));
+                    buffer.add(("method_name", #Text(request.method_name)));
+                    buffer.add(("arg", #Blob(request.arg)));
+
+                    Hash.hash_val( #Map( Buffer.toArray<(Text, Hash.Value)>( buffer ) ) )
+                };
+                case _ {
+                  return [];  
+                };
+            };
+        };
                 
         func map_content(req: CborTypes.Request): Cbor.CborMap {
             let content = Cbor.load([]);
