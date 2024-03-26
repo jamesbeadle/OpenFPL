@@ -126,10 +126,11 @@ module {
                             let request: CborTypes.Request = {
                                 ingress_expiry = Nat64.toNat(ingress_expiry);
                                 nonce = nonce;
-                                request = #read_state({
-                                    canister_id = ""; //WHICH_CANISTER_ID;
-                                    max_response_bytes = ?(0); //DEFAULT_MAX_RESPONSE_BYTES;
-                                    paths = [[ encodeUtf8("request_status"), request_id ]]; //??????
+                                request = #query_method({
+                                    arg = arg;
+                                    canister_id = Principal.toText(canister_id);
+                                    max_response_bytes = ?(0);
+                                    method_name = method_name;
                                 });
                                 sender = Principal.toBlob(sender);
                             };

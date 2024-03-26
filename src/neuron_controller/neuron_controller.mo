@@ -129,7 +129,7 @@ actor Self {
 
         let nonce: Nat64 = Binary.BigEndian.toNat64(array);
         
-        let envelope_content: T.EnvelopeContent = {
+        let envelope_content: T.EnvelopeContent = #Call {
             nonce = ?nonce;
             ingress_expiry = currentTime + 5 * TimeConstants.MINUTE_IN_MS * TimeConstants.NANOS_PER_MILLISECOND;
             sender = get_principal();
