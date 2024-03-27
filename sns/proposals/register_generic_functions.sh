@@ -119,7 +119,7 @@ PROPOSAL="(
 
 ../utils/submit_proposal.sh "$PROPOSAL"
 
-echo "Register Generic Proposal Function 6 with SNS"
+echo "Register Generic Proposal Function 5 with SNS"
 
 //submit fixture data
 
@@ -148,7 +148,7 @@ PROPOSAL="(
 
 ../utils/submit_proposal.sh "$PROPOSAL"
 
-echo "Register Generic Proposal Function 7 with SNS"
+echo "Register Generic Proposal Function 6 with SNS"
 
 //add initial fixtures
 
@@ -177,7 +177,7 @@ PROPOSAL="(
 
 ../utils/submit_proposal.sh "$PROPOSAL"
 
-echo "Register Generic Proposal Function 8 with SNS"
+echo "Register Generic Proposal Function 7 with SNS"
 
 //Move Fixture
 
@@ -206,7 +206,7 @@ PROPOSAL="(
 
 ../utils/submit_proposal.sh "$PROPOSAL"
 
-echo "Register Generic Proposal Function 9 with SNS"
+echo "Register Generic Proposal Function 8 with SNS"
 
 //postpone fixture
 
@@ -235,7 +235,7 @@ PROPOSAL="(
 
 ../utils/submit_proposal.sh "$PROPOSAL"
 
-echo "Register Generic Proposal Function 10 with SNS"
+echo "Register Generic Proposal Function 9 with SNS"
 
 //Reschedule Fixture
 
@@ -264,7 +264,7 @@ PROPOSAL="(
 
 ../utils/submit_proposal.sh "$PROPOSAL"
 
-echo "Register Generic Proposal Function 11 with SNS"
+echo "Register Generic Proposal Function 10 with SNS"
 
 //Transfer Player
 
@@ -293,7 +293,7 @@ PROPOSAL="(
 
 ../utils/submit_proposal.sh "$PROPOSAL"
 
-echo "Register Generic Proposal Function 12 with SNS"
+echo "Register Generic Proposal Function 11 with SNS"
 
 //Loan Player
 
@@ -322,7 +322,7 @@ PROPOSAL="(
 
 ../utils/submit_proposal.sh "$PROPOSAL"
 
-echo "Register Generic Proposal Function 13 with SNS"
+echo "Register Generic Proposal Function 12 with SNS"
 
 //Recall Player
 
@@ -351,7 +351,7 @@ PROPOSAL="(
 
 ../utils/submit_proposal.sh "$PROPOSAL"
 
-echo "Register Generic Proposal Function 14 with SNS"
+echo "Register Generic Proposal Function 13 with SNS"
 
 //Create Player
 
@@ -380,7 +380,7 @@ PROPOSAL="(
 
 ../utils/submit_proposal.sh "$PROPOSAL"
 
-echo "Register Generic Proposal Function 15 with SNS"
+echo "Register Generic Proposal Function 14 with SNS"
 
 //Update Player
 
@@ -409,7 +409,7 @@ PROPOSAL="(
 
 ../utils/submit_proposal.sh "$PROPOSAL"
 
-echo "Register Generic Proposal Function 16 with SNS"
+echo "Register Generic Proposal Function 15 with SNS"
 
 //Set Player Injury
 
@@ -438,7 +438,7 @@ PROPOSAL="(
 
 ../utils/submit_proposal.sh "$PROPOSAL"
 
-echo "Register Generic Proposal Function 17 with SNS"
+echo "Register Generic Proposal Function 16 with SNS"
 
 //Player Retirement Proposal
 
@@ -467,7 +467,7 @@ PROPOSAL="(
 
 ../utils/submit_proposal.sh "$PROPOSAL"
 
-echo "Register Generic Proposal Function 18 with SNS"
+echo "Register Generic Proposal Function 17 with SNS"
 
 //Unretire Player Proposal
 
@@ -496,7 +496,7 @@ PROPOSAL="(
 
 ../utils/submit_proposal.sh "$PROPOSAL"
 
-echo "Register Generic Proposal Function 19 with SNS"
+echo "Register Generic Proposal Function 18 with SNS"
 
 //Promote Former Team
 
@@ -525,7 +525,7 @@ PROPOSAL="(
 
 ../utils/submit_proposal.sh "$PROPOSAL"
 
-echo "Register Generic Proposal Function 20 with SNS"
+echo "Register Generic Proposal Function 19 with SNS"
 
 //Promote New Team
 
@@ -554,7 +554,7 @@ PROPOSAL="(
 
 ../utils/submit_proposal.sh "$PROPOSAL"
 
-echo "Register Generic Proposal Function 21 with SNS"
+echo "Register Generic Proposal Function 20 with SNS"
 
 //Update Team
 
