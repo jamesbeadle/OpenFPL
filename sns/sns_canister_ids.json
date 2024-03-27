@@ -1,0 +1,22 @@
+{
+    "sns_governance": {
+      "ic": "2jvtu-yqaaa-aaaaq-aaama-cai",
+      "ic_test": "t5cdl-3iaaa-aaaak-qbumq-cai"
+    },
+    "sns_index": {
+      "ic": "2awyi-oyaaa-aaaaq-aaanq-cai",
+      "ic_test": "tubix-naaaa-aaaak-qbuna-cai"
+    },
+    "sns_ledger": {
+      "ic": "2ouva-viaaa-aaaaq-aaamq-cai",
+      "ic_test": "ttaod-ayaaa-aaaak-qbunq-cai"
+    },
+    "sns_root": {
+      "ic": "3e3x2-xyaaa-aaaaq-aaalq-cai",
+      "ic_test": "tgh7o-bqaaa-aaaak-qbuoa-cai"
+    },
+    "sns_swap": {
+      "ic": "2hx64-daaaa-aaaaq-aaana-cai",
+      "ic_test": "tbgz2-miaaa-aaaak-qbuoq-cai"
+    }
+  }

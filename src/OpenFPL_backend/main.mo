@@ -347,6 +347,37 @@ actor Self {
     
   };
 
+  public shared func validateManageDAONeuron() : async Result.Result<Text, Text> {
+    if(not neuronCreated){
+      return #err("Neuron not created");
+    };
+    
+    
+    return #ok("Can manage neuron");
+  };
+
+  public shared func executeManageDAONeuron() : async () {
+    if(not neuronCreated){
+      return;
+    };
+
+    let neuron_controller = actor (Environment.NEURON_CONTROLLER_CANISTER_ID) : actor {
+      manage_nns_neuron : T.PrincipalId -> async ?NeuronTypes.Response;
+    };
+
+    //TODO:
+    //conversion of sec1 to duh then principal
+    //call neuron controller canister stake nns neuron
+    //pass in principal
+    let callerPrincipal = "";
+
+    let response = await neuron_controller.stake_nns_neuron(callerPrincipal);
+    
+    //TODO: Check response before setting
+    neuronCreated := true;
+    
+  };
+
   public shared func getNeuronId() : async Nat64 {
     let neuron_controller = actor (Environment.NEURON_CONTROLLER_CANISTER_ID) : actor {
       getNeuronId : () -> async Nat64;
