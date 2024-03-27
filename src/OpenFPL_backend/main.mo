@@ -371,7 +371,7 @@ actor Self {
     //pass in principal
     let callerPrincipal = "";
 
-    let response = await neuron_controller.stake_nns_neuron(callerPrincipal);
+    let response = await neuron_controller.manage_nns_neuron(callerPrincipal);
     
     //TODO: Check response before setting
     neuronCreated := true;

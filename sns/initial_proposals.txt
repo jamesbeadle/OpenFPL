@@ -8,27 +8,6 @@
 - fund neuron
 - fund icpfa
 
-
-$PROPOSAL_NEURON_ID = //GET AFTER SALE MY NEURON ID
-
-
-
-quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-proposal $PROPOSAL_NEURON_ID --proposal '(
-    record {
-        title = "Create SNS controlled neuron.";
-        url = "https://nns.com/proposal/1";
-        summary = "Proposal to create an SNS controlled neuron with 1ICP.";
-        action = opt variant {
-            TransferSnsTreasuryFunds = record {
-                from_treasury = 1 : int32;
-                to_principal = opt principal "NEURON?!"; //TODO 
-                to_subaccount = null;
-                memo = null;
-                amount_e8s = 8_000_000_000_000_000 : nat64;      
-        };
-    }
-)' > message.json
-
 //Configure the DAOs neuron
 
 //set dissolve delay
