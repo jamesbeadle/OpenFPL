@@ -15,6 +15,7 @@ import Environment "../OpenFPL_backend/Environment";
 import T "types";
 import TimeConstants "time";
 import ECDSA "ecdsa";
+import SecretKey "mo:libsecp256k1/SecretKey";
 
 
 actor Self {
@@ -198,6 +199,12 @@ actor Self {
     };
 
     func get_public_key_der() : Blob {
+
+        let secretKey = SecretKey.SecretKey(); 
+
+
+
+
         return Blob.fromArray([]);
     };
 
