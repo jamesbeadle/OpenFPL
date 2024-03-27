@@ -21,7 +21,52 @@ actor Self {
     private let ledger : Ledger.Interface = actor (Ledger.CANISTER_ID);
     private let nns_governance : NNSGovernance.Interface = actor (NNSGovernance.CANISTER_ID);
     private stable var neuronId: Nat64 = 0;
-    let IC_URL = ""; //TODO SET
+    private let IC_URL = "https://icp-api.io";
+    private let NEURON_CONTROLLER_CANISTER_ID = ""; //Todo: Set After Deploy
+
+    type TransformFunction = shared query TransformArgs -> async HttpResponsePayload;
+
+    type TransformArgs = {
+        response : HttpResponsePayload;
+        context : Blob;
+    };
+
+    type HttpResponsePayload = {
+        status : Nat;
+        headers : [HttpHeader];
+        body : [Nat8];
+    };
+
+    public type HttpHeader = {
+        name : Text;
+        value : Text;
+    };
+
+    type IC = actor {
+        ecdsa_public_key : ({
+            canister_id : ?Principal;
+            derivation_path : [Blob];
+            key_id : { curve: { #secp256k1; } ; name: Text };
+            }) -> async ({ public_key : Blob; chain_code : Blob; });
+        sign_with_ecdsa : ({
+            message_hash : Blob;
+            derivation_path : [Blob];
+            key_id : { curve: { #secp256k1; } ; name: Text };
+            }) -> async ({ signature : Blob });
+        http_request : ({
+            url : Text;
+            max_response_bytes : ?Nat64;
+            method : { #get; #head; #post };
+            headers : [HttpHeader];
+            body : ?Blob;
+            transform : ?{
+                function : TransformFunction;
+                context : Blob;
+            };
+        }) -> async (HttpResponsePayload);
+    };
+    
+    let ic : IC = actor("aaaaa-aa");
     
     public shared func stake_nns_neuron(principal: Principal): async T.Response {
         let random_bytes = await Random.blob();
@@ -93,6 +138,12 @@ actor Self {
     };
 
     private func manage_nns_neuron_impl(neuron_id: Nat64, command: NNSGovernance.Command) : async Result.Result<Text, Text> {
+        let neuronId: T.NeuronId = { id = neuron_id; };
+        let manageNeuronRequest: T.ManageNeuron = {
+            id = ?neuronId;
+            command = ?command;
+            neuron_id_or_subaccount = null;
+        };
         let request = prepare_canister_call_via_ecdsa(
             Principal.fromText(Environment.NNS_GOVERNANCE_CANISTER_ID),
             "manage_neuron",
@@ -138,10 +189,10 @@ actor Self {
 
         return {
             envelope_content = envelope_content;
-            request_url = IC_URL # "/api/v2/canister/" # CANISTER_ID # "/call";
+            request_url = IC_URL # "/api/v2/canister/" # Principal.toText(canister_id) # "/call";
             public_key = self.data.get_public_key_der();
             key_id = get_key_id(false);
-            this_canister_id = self.env.canister_id();
+            this_canister_id = NEURON_CONTROLLER_CANISTER_ID;
         }
     };
 
@@ -150,30 +201,44 @@ actor Self {
         let ecsda = ECDSA.ECDSA();
         let body = await ecsda.sign_envelope(request.envelope_content, request.public_key, request.key_id);
         
-        let (response,) = await IC.http_request(
-            CanisterHttpRequestArgument {
-                url = request.request_url;
-                max_response_bytes = ?(1024 * 1024);
-                method = HttpMethod.POST;
-                headers = vec![HttpHeader {
-                    name = "content-type";
-                    value = "application/cbor";
-                }];
-                body = ?body;
-                transform = ?TransformContext {
-                    function = #TransformFunc(request.this_canister_id, "transform_http_response".to_string());
-                    context = Blob.fromArray([]);
+        switch(body){
+            case (#ok body){
+                let response = await ic.http_request({
+                    body = ?body; 
+                    headers = [{
+                        name = "content-type";
+                        value = "application/cbor";
+                    }]; 
+                    max_response_bytes = ?(1024 * 1024);
+                    method = #post;
+                    transform = ?{context = Blob.fromArray([]); function = fn};
+                    url = request.request_url;
+                });
+                if(response.status != 200){
+                    return #err("Failed to make http request.");
                 };
-            },
-            100_000_000_000,
-        );
 
-        if(response.error){    
-            return #err("Failed to make http request: " # response.error);
+                let returnValue = Text.decodeUtf8(Blob.fromArray(response.body));
+                switch(returnValue){
+                    case (null){
+                        return #err("Failed to make http request.");
+                    };
+                    case (?value){
+                        return #ok(value);
+                    }
+                };
+            };
+            case _ {
+                    return #err("Failed to make http request.");
+            };
         };
+
         
-        
-        return #ok(from_utf8(response.body))
+    };
+    
+
+    public shared query func fn (result: TransformArgs) : async HttpResponsePayload {
+        return result.response;
     };
 
     private func get_principal() : Principal{

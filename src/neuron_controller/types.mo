@@ -2,7 +2,6 @@ import Result "mo:base/Result";
 import HashMap "mo:base/HashMap";
 import Trie "mo:base/Trie";
 module _Types {
-        
     public type CanisterId = Principal;
     type PrepareResult = {
         nns_governance_canister_id: CanisterId;
@@ -138,4 +137,67 @@ module _Types {
     public type Error = {
         #ECSDAError;
     };
+
+
+    //neuron types
+    
+        
+    public type NeuronId = { id: Nat64 };
+        
+    public type Spawn = { percentage_to_spawn: ?Nat32; new_controller: ?Principal; nonce: ?Nat64 };
+
+    public type Follow = { topic: Int32; followees: [NeuronId] };
+
+    public type ClaimOrRefresh = { by: ?By };
+
+    public type Configure = { operation: ?Operation };
+
+    public type StakeMaturity = { percentage_to_stake: ?Nat32 };
+
+    public type Disburse = { to_account: ?AccountIdentifier; amount: ?Amount };
+
+    public type By = { #NeuronIdOrSubaccount; #MemoAndController: ClaimOrRefreshNeuronFromAccount; #Memo: Nat64 };
+
+    public type Amount = { e8s: Nat64 };
+
+    public type AccountIdentifier = { hash: [Nat8] };
+
+    public type ClaimOrRefreshNeuronFromAccount = { controller: ?Principal; memo: Nat64 };
+
+    public type SetDissolveTimestamp = { dissolve_timestamp_seconds: Nat64 };
+
+    public type IncreaseDissolveDelay = { additional_dissolve_delay_seconds: Nat32 };
+
+    public type ChangeAutoStakeMaturity = { requested_setting_for_auto_stake_maturity: Bool };
+
+    public type GovernanceError = { error_message: Text; error_type: Int32 };
+
+    public type SpawnResponse = { created_neuron_id: ?NeuronId };
+
+    public type ClaimOrRefreshResponse = { refreshed_neuron_id: ?NeuronId };
+
+    public type StakeMaturityResponse = { maturity_e8s: Nat64; stake_maturity_e8s: Nat64 };
+
+    public type DisburseResponse = { transfer_block_height: Nat64 };
+            
+    public type Command = {
+        #Spawn: Spawn;
+        #Follow: Follow;
+        #ClaimOrRefresh: ClaimOrRefresh;
+        #Configure: Configure;
+        #StakeMaturity: StakeMaturityResponse;
+        #Disburse: Disburse;
+    };
+    
+    public type ManageNeuron = { id: ?NeuronId; command: ?Command; neuron_id_or_subaccount: ?NeuronIdOrSubaccount };
+    
+    public type Operation = {
+        #StopDissolving;
+        #StartDissolving;
+        #ChangeAutoStakeMaturity: ChangeAutoStakeMaturity;
+        #IncreaseDissolveDelay: IncreaseDissolveDelay;
+        #SetDissolveTimestamp: SetDissolveTimestamp;
+    };
+
+    public type NeuronIdOrSubaccount = { #Subaccount : [Nat8]; #NeuronId : NeuronId };
 }
