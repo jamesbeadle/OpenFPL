@@ -1,10 +1,13 @@
+//Run:
+- register generic functions
+- stake neuron
+- configure neuron
 
-//Configure Neuron
-//Test Proposal: Add second ICP to neuron
-//Fund Proposal: Transfer 80% treasury to neuron
-//Fund Proposal: Transfer 5% treasury to ICPFA
+//Can be done via normal proposals
+- test neuron transfer
+- fund neuron
+- fund icpfa
 
-//Call proposal to create neuron
 
 $PROPOSAL_NEURON_ID = //GET AFTER SALE MY NEURON ID
 
