@@ -143,11 +143,12 @@ actor Self {
             id = ?neuronId;
             command = ?command;
             neuron_id_or_subaccount = null;
-        };
+        }; //Hamish: Why am i not using this?!
+
         let request = prepare_canister_call_via_ecdsa(
             Principal.fromText(Environment.NNS_GOVERNANCE_CANISTER_ID),
             "manage_neuron",
-            command
+            manageNeuronRequest
         );
 
         let response = await make_canister_call_via_ecdsa(request);
@@ -173,7 +174,7 @@ actor Self {
     private func prepare_canister_call_via_ecdsa(
         canister_id: T.CanisterId,
         method_name: Text,
-        args: NNSGovernance.Command,
+        args: T.ManageNeuron,
     ) : T.CanisterEcdsaRequest {
         let currentTime = Time.now(); //Hamish To Confirm
         let array = Binary.BigEndian.fromNat64(Nat64.fromIntWrap(currentTime));
