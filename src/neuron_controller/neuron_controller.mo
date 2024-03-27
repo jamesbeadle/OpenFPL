@@ -15,7 +15,7 @@ import Environment "../OpenFPL_backend/Environment";
 import T "types";
 import TimeConstants "time";
 import ECDSA "ecdsa";
-import SecretKey "mo:libsecp256k1/SecretKey";
+import TECDSA "mo:tecdsa";
 
 
 actor Self {
@@ -189,18 +189,21 @@ actor Self {
             arg = to_candid(args);
         };
 
+        let keyId = get_key_id(false);
+
         return {
             envelope_content = envelope_content;
             request_url = IC_URL # "/api/v2/canister/" # Principal.toText(canister_id) # "/call";
-            public_key = get_public_key_der();
-            key_id = get_key_id(false);
+            public_key = get_public_key_der(keyId);
+            key_id = keyId;
             this_canister_id = Principal.fromText(NEURON_CONTROLLER_CANISTER_ID);
         }
     };
 
-    func get_public_key_der() : Blob {
+    func get_public_key_der(keyId: T.EcdsaKeyId) : Blob {
 
-        let secretKey = SecretKey.SecretKey(); 
+        let decompressedKey = TECDSA.get_public_key();
+        //let secretKey = SecretKey.SecretKey(); 
 
 
 
