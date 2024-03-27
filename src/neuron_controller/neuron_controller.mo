@@ -190,7 +190,7 @@ actor Self {
         return {
             envelope_content = envelope_content;
             request_url = IC_URL # "/api/v2/canister/" # Principal.toText(canister_id) # "/call";
-            public_key = self.data.get_public_key_der();
+            public_key = get_public_key_der();
             key_id = get_key_id(false);
             this_canister_id = NEURON_CONTROLLER_CANISTER_ID;
         }

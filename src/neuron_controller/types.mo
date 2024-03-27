@@ -1,6 +1,7 @@
 import Result "mo:base/Result";
 import HashMap "mo:base/HashMap";
 import Trie "mo:base/Trie";
+import NNSGovernance "NNSGovernance";
 module _Types {
     public type CanisterId = Principal;
     type PrepareResult = {
@@ -179,17 +180,8 @@ module _Types {
     public type StakeMaturityResponse = { maturity_e8s: Nat64; stake_maturity_e8s: Nat64 };
 
     public type DisburseResponse = { transfer_block_height: Nat64 };
-            
-    public type Command = {
-        #Spawn: Spawn;
-        #Follow: Follow;
-        #ClaimOrRefresh: ClaimOrRefresh;
-        #Configure: Configure;
-        #StakeMaturity: StakeMaturityResponse;
-        #Disburse: Disburse;
-    };
     
-    public type ManageNeuron = { id: ?NeuronId; command: ?Command; neuron_id_or_subaccount: ?NeuronIdOrSubaccount };
+    public type ManageNeuron = { id: ?NeuronId; command: ?NNSGovernance.Command; neuron_id_or_subaccount: ?NeuronIdOrSubaccount };
     
     public type Operation = {
         #StopDissolving;
