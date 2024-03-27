@@ -193,7 +193,20 @@ actor Self {
             request_url = IC_URL # "/api/v2/canister/" # Principal.toText(canister_id) # "/call";
             public_key = get_public_key_der();
             key_id = get_key_id(false);
-            this_canister_id = NEURON_CONTROLLER_CANISTER_ID;
+            this_canister_id = Principal.fromText(NEURON_CONTROLLER_CANISTER_ID);
+        }
+    };
+
+    func get_public_key_der() : Blob {
+        return Blob.fromArray([]);
+    };
+
+    func get_key_id(is_local_dev_mode: Bool) : T.EcdsaKeyId {
+        let key_name = if is_local_dev_mode { "dfx_test_key" } else { "key_1" };
+
+        return {
+            curve = #secp256k1;
+            name = key_name;
         }
     };
 
