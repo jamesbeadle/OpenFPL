@@ -1,6 +1,6 @@
-import { Nonce; Ledger } "mo:utilities";
-import { nat64FromNat } "mo:base/Nat64";
+import Utilities "mo:utilities";
 import Principal "mo:base/Principal";
+import Nat64 "mo:base/Nat64";
 import Loopback "mo:http-loopback";
 import ECDSA "mo:tecdsa";
 import U "utils";
@@ -15,7 +15,7 @@ shared actor class NeuronController() = self {
 
   let { FEES = { ID = FEE_ID; APP = FEE_AMT } } = Loopback.Client;
 
-  let { Address; Subaccount; AccountIdentifier } = Ledger;
+  let { Address; Subaccount; AccountIdentifier } = Utilities.Ledger;
 
 
   // stable variable - state
@@ -36,7 +36,7 @@ shared actor class NeuronController() = self {
   //
   // Returns a Nat64 identifier for the canister's NNS neuron
   //
-  public query func getNeuronId(): async Nat64 = state.neuron_id;
+  public query func getNeuronId(): async Nat64 { state.neuron_id };
 
 
   // query method - getAccountIdentifier()
@@ -44,7 +44,10 @@ shared actor class NeuronController() = self {
   // Return the AccountIdentifier (Blob) of the canister's ECDSA default subaccount
   //
   public query func getAccountIdentifier(): async T.AccountIdentifier {
-    let p : Principal = Identity.Identity( state.ecdsa_identity ).get_principal();
+    
+    let ecdsa_client = ECDSA.Client.Client( state.ecdsa_client);
+
+    let p : Principal = Identity.Identity( state.ecdsa_identity, ecdsa_client ).get_principal();
     AccountIdentifier.from_principal(p, null)
   };
 
@@ -54,7 +57,8 @@ shared actor class NeuronController() = self {
   // Return the Ledger address (Text) of the canister's ECDSA default subaccount
   //
   public query func getLedgerAddress(): async T.Address {
-    let p : Principal = Identity.Identity( state.ecdsa_identity ).get_principal();
+    let ecdsa_client = ECDSA.Client.Client( state.ecdsa_client);
+    let p : Principal = Identity.Identity( state.ecdsa_identity, ecdsa_client ).get_principal();
     Address.from_principal(p, null)
   };
 
@@ -64,9 +68,10 @@ shared actor class NeuronController() = self {
   // Return the Ledger address (text) of the neuron's subaccount
   //
   public query func getNeuronAddress(): async T.Address {
-    let p : Principal = Identity.Identity( state.ecdsa_identity ).get_principal();
-    let sa : T.Subaccount = U.neuron_subaccount(p, state.neuron_index);
-    Address.from_principal(state.governance_canister, ?sa)
+    let ecdsa_client = ECDSA.Client.Client( state.ecdsa_client);
+    let p : Principal = Identity.Identity( state.ecdsa_identity, ecdsa_client ).get_principal();
+    let sa : T.Address = U.neuron_subaccount(p, state.neuron_index);
+    Address.from_principal(Principal.fromText(state.governance_canister), ?sa)
   };
 
 
@@ -101,7 +106,7 @@ shared actor class NeuronController() = self {
 
     if ( state.neuron_id > 0 ) return #ok( state.neuron_id );
 
-    let nonce : Nat64 = nat64FromNat( Nonce.Nonce( state.nonce ).next() );
+    let nonce : Nat64 = Nat64.fromNat( Utilities.Nonce.Nonce( state.nonce ).next() );
 
     let subaccount = U.neuron_subaccount(p, nonce);
 
