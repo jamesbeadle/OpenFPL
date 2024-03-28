@@ -18,7 +18,7 @@ module {
 
     let loopback_client = Loopback.Client.Client(state.loopback_client, transformFn);
 
-    let loopback_agent = Loopback.Agent.Agent(state.loopback_agent, loopback_client, identity);
+    let loopback_agent = Loopback.Agent.Agent(state.loopback_agent, loopback_client, ecdsa_identity);
 
     public func transfer(args: T.LedgerArgs): async* T.LedgerResponse {
       switch(
@@ -27,7 +27,7 @@ module {
             max_response_bytes = null;
             canister_id = state.ledger_canister;
             method_name = "transfer";
-            arg = to_candid( request );
+            arg = to_candid( args );
           }
         )
       ){
@@ -51,7 +51,7 @@ module {
 
     let loopback_client = Loopback.Client.Client(state.loopback_client, transformFn);
 
-    let loopback_agent = Loopback.Agent.Agent(state.loopback_agent, loopback_client, identity);
+    let loopback_agent = Loopback.Agent.Agent(state.loopback_agent, loopback_client, ecdsa_identity);
 
     public func manage_neuron(request: T.ManageNeuron): async* T.NeuronResponse {
       switch(
