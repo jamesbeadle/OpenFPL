@@ -85,7 +85,7 @@ shared actor class NeuronController() = self {
 
     let governance_client = U.GovernanceClient(state, transform);
 
-    let request : T.ManageNeuron = { command = ?cmd; id = ?state.neuron_id; neuron_id_or_subaccount = null };
+    let request : T.ManageNeuron = { command = ?cmd; id = ?{id = state.neuron_id}; neuron_id_or_subaccount = null };
 
     await* governance_client.manage_neuron( request );
 
@@ -174,7 +174,7 @@ shared actor class NeuronController() = self {
     await* S.load(state, {
       ecdsa_seed = ?["OpenFPL"];
       path = "/api/v2/canister/";
-      nonce = Nonce.State.init();
+      nonce = Utilities.Nonce.State.init();
       self = Principal.fromActor( self );
       ecdsa_key = SECP256K1.ID.KEY_1;
       ledger_canister = "ryjl3-tyaaa-aaaaa-aaaba-cai";
