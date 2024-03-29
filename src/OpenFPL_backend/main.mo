@@ -344,7 +344,7 @@ actor Self {
     assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     return await seasonManager.executeUpdateClub(updateClubDTO);
   };
-  public shared ({ caller }) query func getBackendCanisterId() : async Result.Result<Text, T.Error> {
+  public shared query func getBackendCanisterId() : async Result.Result<Text, T.Error> {
     return #ok(Principal.toText(Principal.fromActor(Self)));
   };
 
