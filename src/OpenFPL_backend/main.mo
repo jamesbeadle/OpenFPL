@@ -319,10 +319,6 @@ actor Self {
     
     
     return #ok("Can create neuron");
-    //TODO: Ensure that all the callers of canisters are the SNS governance canister
-      //surely I mark this function differently somehow to stop others just randomly calling it
-
-
   };
 
   public shared func executeCreateDAONeuron() : async () {
@@ -331,18 +327,11 @@ actor Self {
     };
 
     let neuron_controller = actor (Environment.NEURON_CONTROLLER_CANISTER_ID) : actor {
-      stake_nns_neuron : T.PrincipalId -> async ?NeuronTypes.Response;
+      stake_nns_neuron : () -> async ?NeuronTypes.Response;
     };
 
-    //TODO:
-    //conversion of sec1 to duh then principal
-    //call neuron controller canister stake nns neuron
-    //pass in principal
-    let callerPrincipal = "";
-
-    let response = await neuron_controller.stake_nns_neuron(callerPrincipal);
+    let _ = await neuron_controller.stake_nns_neuron();
     
-    //TODO: Check response before setting
     neuronCreated := true;
     
   };
@@ -356,24 +345,17 @@ actor Self {
     return #ok("Can manage neuron");
   };
 
-  public shared func executeManageDAONeuron() : async () {
+  public shared func executeManageDAONeuron(command: NeuronTypes.Command) : async () {
     if(not neuronCreated){
       return;
     };
 
     let neuron_controller = actor (Environment.NEURON_CONTROLLER_CANISTER_ID) : actor {
-      manage_nns_neuron : T.PrincipalId -> async ?NeuronTypes.Response;
+      manage_neuron : NeuronTypes.Command -> async ?NeuronTypes.Response;
     };
-
-    //TODO:
-    //conversion of sec1 to duh then principal
-    //call neuron controller canister stake nns neuron
-    //pass in principal
-    let callerPrincipal = "";
-
-    let response = await neuron_controller.manage_nns_neuron(callerPrincipal);
     
-    //TODO: Check response before setting
+    let _ = await neuron_controller.manage_neuron(command);
+    
     neuronCreated := true;
     
   };
