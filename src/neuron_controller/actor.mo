@@ -1,6 +1,7 @@
 import Utilities "mo:utilities";
 import Principal "mo:base/Principal";
 import Nat64 "mo:base/Nat64";
+import Blob "mo:base/Blob";
 import Loopback "mo:http-loopback";
 import ECDSA "mo:tecdsa";
 import U "utils";
@@ -48,7 +49,7 @@ shared actor class NeuronController() = self {
     let ecdsa_client = ECDSA.Client.Client( state.ecdsa_client);
 
     let p : Principal = Identity.Identity( state.ecdsa_identity, ecdsa_client ).get_principal();
-    AccountIdentifier.from_principal(p, null)
+    { hash = Blob.toArray(Principal.toBlob(p)) }
   };
 
 
