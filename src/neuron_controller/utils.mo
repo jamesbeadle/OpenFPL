@@ -76,7 +76,7 @@ module {
 
   };
 
-    public func neuron_subaccount(p: Principal, n: Nat64): T.Address {
+    public func neuron_address(p: Principal, n: Nat64): T.Address {
       let index_bytes = Buffer.Buffer<Nat8>(0);
       encodeNat64(index_bytes, n, #msb);
       let digest = Sha256.Digest(#sha256);

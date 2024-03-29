@@ -20,5 +20,6 @@ Backend Automated Tests (To be implemented)
 - when removing players from due to transfers or loan or position changes then ensure that the captain is set to a valid player
 - ensure that a players value is always in 0.25m units when entering with a backend check
 - ensure shirt number can't be greater than 99 on backend
+- only 2 bonuses can be played in a calendar month
 
 */

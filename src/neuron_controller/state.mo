@@ -1,8 +1,6 @@
 import { toText = principalToText } "mo:base/Principal";
-import { Fees; Nonce; Cycles } "mo:utilities";
-import { init = initArray } "mo:base/Array";
+import { Fees; Nonce; } "mo:utilities";
 import Loopback "mo:http-loopback";
-import List "mo:base/List";
 import ECDSA "mo:tecdsa";
 
 module { 

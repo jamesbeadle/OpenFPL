@@ -30,8 +30,6 @@ module {
 
   public type LedgerResponse = { #ok : TransferResult; #err: Loopback.Client.Error };
 
-  public type NeuronResponse = { #ok : ManageNeuronResponse; #err: Loopback.Client.Error };
-
   public let { Http } = Loopback;
 
   public type Command = {
@@ -66,6 +64,8 @@ module {
   public type NeuronId = { id: Nat64 };
 
   public type Agent = Loopback.Agent;
+
+  public type NeuronResponse = { #ok : ManageNeuronResponse; #err: Loopback.Client.Error };
 
   public type NeuronIdOrSubaccount = { #Subaccount : [Nat8]; #NeuronId : NeuronId };
 
@@ -111,11 +111,12 @@ module {
 
   public type StakeMaturityResponse = { maturity_e8s: Nat64; stake_maturity_e8s: Nat64 };
 
+  public type BlockIndex = Nat64;
+  
   public type DisburseResponse = { transfer_block_height: Nat64 };
 
   public type Response = Result.Result<Nat, NotifyError>;
 
-  public type BlockIndex = Nat64;
   public type NotifyError = {
     #Refunded : {
       reason: Text;

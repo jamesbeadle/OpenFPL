@@ -1,7 +1,6 @@
 import Utilities "mo:utilities";
-import Principal "mo:base/Principal";
 import Nat64 "mo:base/Nat64";
-import Blob "mo:base/Blob";
+import Principal "mo:base/Principal";
 import Loopback "mo:http-loopback";
 import ECDSA "mo:tecdsa";
 import U "utils";
@@ -12,11 +11,13 @@ shared actor class NeuronController() = self {
 
   let MIN_FEE : Nat64 = 10_000;
 
-  let { SECP256K1; Identity } = ECDSA;
+  let { SECP256K1; Identity; Client } = ECDSA;
+
+  let { Nonce; Ledger } = Utilities;
 
   let { FEES = { ID = FEE_ID; APP = FEE_AMT } } = Loopback.Client;
 
-  let { Address; Subaccount; AccountIdentifier } = Utilities.Ledger;
+  let { Address; AccountIdentifier } = Ledger;
 
 
   // stable variable - state
@@ -44,12 +45,10 @@ shared actor class NeuronController() = self {
   //
   // Return the AccountIdentifier (Blob) of the canister's ECDSA default subaccount
   //
-  public query func getAccountIdentifier(): async T.AccountIdentifier {
-    
-    let ecdsa_client = ECDSA.Client.Client( state.ecdsa_client);
-
-    let p : Principal = Identity.Identity( state.ecdsa_identity, ecdsa_client ).get_principal();
-    { hash = Blob.toArray(Principal.toBlob(p)) }
+  public query func getAccountIdentifier(): async T.AccountId {
+    let client = Client.Client( state.ecdsa_client );
+    let p : Principal = Identity.Identity(state.ecdsa_identity, client).get_principal();
+    AccountIdentifier.from_principal(p, null)
   };
 
 
@@ -58,8 +57,8 @@ shared actor class NeuronController() = self {
   // Return the Ledger address (Text) of the canister's ECDSA default subaccount
   //
   public query func getLedgerAddress(): async T.Address {
-    let ecdsa_client = ECDSA.Client.Client( state.ecdsa_client);
-    let p : Principal = Identity.Identity( state.ecdsa_identity, ecdsa_client ).get_principal();
+    let client = Client.Client( state.ecdsa_client );
+    let p : Principal = Identity.Identity(state.ecdsa_identity, client).get_principal();
     Address.from_principal(p, null)
   };
 
@@ -69,10 +68,9 @@ shared actor class NeuronController() = self {
   // Return the Ledger address (text) of the neuron's subaccount
   //
   public query func getNeuronAddress(): async T.Address {
-    let ecdsa_client = ECDSA.Client.Client( state.ecdsa_client);
-    let p : Principal = Identity.Identity( state.ecdsa_identity, ecdsa_client ).get_principal();
-    let sa : T.Address = U.neuron_subaccount(p, state.neuron_index);
-    Address.from_principal(Principal.fromText(state.governance_canister), ?sa)
+    let client = Client.Client( state.ecdsa_client );
+    let p : Principal = Identity.Identity(state.ecdsa_identity, client).get_principal();
+    U.neuron_address(p, state.neuron_index);
   };
 
 
@@ -86,7 +84,7 @@ shared actor class NeuronController() = self {
 
     let governance_client = U.GovernanceClient(state, transform);
 
-    let request : T.ManageNeuron = { command = ?cmd; id = ?{id = state.neuron_id}; neuron_id_or_subaccount = null };
+    let request : T.ManageNeuron = { command = ?cmd; id = ?{ id = state.neuron_id }; neuron_id_or_subaccount = null };
 
     await* governance_client.manage_neuron( request );
 
@@ -105,11 +103,15 @@ shared actor class NeuronController() = self {
 
     assert Principal.isController( caller );
 
-    if ( state.neuron_id > 0 ) return #ok( state.neuron_id );
+    if ( state.neuron_id > 0 ) return #ok({ command = ?#ClaimOrRefresh({ refreshed_neuron_id = ?{ id = state.neuron_id }}) });
 
-    let nonce : Nat64 = Nat64.fromNat( Utilities.Nonce.Nonce( state.nonce ).next() );
+    let client = Client.Client( state.ecdsa_client );
+    
+    let p : Principal = Identity.Identity(state.ecdsa_identity, client).get_principal();
 
-    let subaccount = U.neuron_subaccount(p, nonce);
+    let nonce : Nat64 = Nat64.fromNat( Nonce.Nonce( state.nonce ).next() );
+
+    let to_account = Address.to_identifier( U.neuron_address(p, nonce) );
 
     let ledger_client = U.LedgerClient(state, transform);
 
@@ -123,7 +125,7 @@ shared actor class NeuronController() = self {
         to = to_account;
       }
     )){
-      case( #err msg ) #err(msg);
+      case( #err msg ) return #err(msg);
       case _ ()
     };
 
@@ -132,12 +134,7 @@ shared actor class NeuronController() = self {
     switch( await* governance_client.manage_neuron({
       id = null;
       neuron_id_or_subaccount = null;
-      command = ?#ClaimOrRefresh({
-        by = ?#MemoAndController({
-          controller = ?runtime.identity().get_principal();
-          memo = nonce
-        })
-      })
+      command = ?#ClaimOrRefresh({ by = ?#MemoAndController({ controller = ?p; memo = nonce }) })
     })){
       case( #err msg ) #err(msg);
       case( #ok resp ) {
@@ -152,8 +149,9 @@ shared actor class NeuronController() = self {
             };
             state.neuron_id := nid.id;
             state.neuron_index := nonce;
-            #ok( state.neuron_id )
+            #ok({command = ?#ClaimOrRefresh({ refreshed_neuron_id = ?{id = state.neuron_id}})});
           };
+          case _ return #err(#other("unexpected command response: " # debug_show(cmd_resp)))
         };
       };
     };
@@ -175,7 +173,7 @@ shared actor class NeuronController() = self {
     await* S.load(state, {
       ecdsa_seed = ?["OpenFPL"];
       path = "/api/v2/canister/";
-      nonce = Utilities.Nonce.State.init();
+      nonce = Nonce.State.init();
       self = Principal.fromActor( self );
       ecdsa_key = SECP256K1.ID.KEY_1;
       ledger_canister = "ryjl3-tyaaa-aaaaa-aaaba-cai";
