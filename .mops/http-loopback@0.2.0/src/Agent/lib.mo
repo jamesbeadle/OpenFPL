@@ -18,7 +18,7 @@ module {
   public type Identity = T.Identity;
 
   public type Bytearray = T.Bytearray;
-
+  
   public type RequestId = T.RequestId;
 
   public type Candid = T.Candid;
@@ -32,4 +32,4 @@ module {
   public type RequestType = T.RequestType;
 
   public type Request = T.Request;
-};
+}

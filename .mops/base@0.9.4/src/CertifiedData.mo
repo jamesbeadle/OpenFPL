@@ -50,4 +50,4 @@ module {
   /// See a full example on how to use certified variables here: https://github.com/dfinity/examples/tree/master/motoko/cert-var
   ///
   public let getCertificate : () -> ?Blob = Prim.getCertificate;
-};
+}

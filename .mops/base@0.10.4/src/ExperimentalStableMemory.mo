@@ -350,4 +350,4 @@ module {
   /// ```
   public let storeBlob : (offset : Nat64, value : Blob) -> () = Prim.stableMemoryStoreBlob;
 
-};
+}

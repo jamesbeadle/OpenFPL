@@ -89,7 +89,7 @@ module {
   /// ```
   public func compare(b1 : Blob, b2 : Blob) : { #less; #equal; #greater } {
     let c = Prim.blobCompare(b1, b2);
-    if (c < 0) #less else if (c == 0) #equal else #greater;
+    if (c < 0) #less else if (c == 0) #equal else #greater
   };
 
   /// Equality function for `Blob` types.
@@ -202,6 +202,6 @@ module {
   /// to pass to a higher order function. It is not possible to use `>=` as a
   /// function value at the moment.
   public func greaterOrEqual(blob1 : Blob, blob2 : Blob) : Bool {
-    blob1 >= blob2;
-  };
-};
+    blob1 >= blob2
+  }
+}

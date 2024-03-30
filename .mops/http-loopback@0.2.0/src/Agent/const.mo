@@ -6,4 +6,4 @@ module {
 
   public let REQUEST_TYPE_CALL : Text = "call";
 
-};
+}

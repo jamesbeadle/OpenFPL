@@ -71,7 +71,7 @@ module {
   /// Float.isNaN(0.0/0.0) // => true
   /// ```
   public func isNaN(number : Float) : Bool {
-    number != number;
+    number != number
   };
 
   /// Returns the absolute value of `x`.
@@ -421,7 +421,7 @@ module {
     case (#exp(prec)) { Prim.floatToFormattedText(x, prec, 1) };
     case (#gen(prec)) { Prim.floatToFormattedText(x, prec, 2) };
     case (#hex(prec)) { Prim.floatToFormattedText(x, prec, 3) };
-    case (#exact) { Prim.floatToFormattedText(x, 17, 2) };
+    case (#exact) { Prim.floatToFormattedText(x, 17, 2) }
   };
 
   /// Conversion to Text. Use `format(fmt, x)` for more detailed control.
@@ -524,7 +524,7 @@ module {
   public func equalWithin(x : Float, y : Float, epsilon : Float) : Bool {
     if (not (epsilon >= 0.0)) {
       // also considers NaN, not identical to `epsilon < 0.0`
-      Prim.trap("epsilon must be greater or equal 0.0");
+      Prim.trap("epsilon must be greater or equal 0.0")
     };
     x == y or abs(x - y) <= epsilon // `x == y` to also consider infinity equal
   };
@@ -553,7 +553,7 @@ module {
   /// Float.notEqual(-12.3, -1.23e1, epsilon) // => false
   /// ```
   public func notEqualWithin(x : Float, y : Float, epsilon : Float) : Bool {
-    not equalWithin(x, y, epsilon);
+    not equalWithin(x, y, epsilon)
   };
 
   /// Returns `x < y`.
@@ -655,23 +655,23 @@ module {
   public func compare(x : Float, y : Float) : { #less; #equal; #greater } {
     if (isNaN(x)) {
       if (isNegative(x)) {
-        if (isNaN(y) and isNegative(y)) { #equal } else { #less };
+        if (isNaN(y) and isNegative(y)) { #equal } else { #less }
       } else {
-        if (isNaN(y) and not isNegative(y)) { #equal } else { #greater };
-      };
+        if (isNaN(y) and not isNegative(y)) { #equal } else { #greater }
+      }
     } else if (isNaN(y)) {
       if (isNegative(y)) {
-        #greater;
+        #greater
       } else {
-        #less;
-      };
+        #less
+      }
     } else {
-      if (x == y) { #equal } else if (x < y) { #less } else { #greater };
-    };
+      if (x == y) { #equal } else if (x < y) { #less } else { #greater }
+    }
   };
 
   func isNegative(number : Float) : Bool {
-    copySign(1.0, number) < 0.0;
+    copySign(1.0, number) < 0.0
   };
 
   /// Returns the negation of `x`, `-x` .
@@ -851,4 +851,4 @@ module {
   /// ```
   public func pow(x : Float, y : Float) : Float { x ** y };
 
-};
+}

@@ -16,7 +16,7 @@ module {
   public type CborValue = Cbor.Value;
 
   public type CborMap = [CborEntry];
-
+  
   public type CborArray = [CborValue];
 
   public type CborEntry = (CborValue, CborValue);
@@ -33,16 +33,14 @@ module {
   };
 
   public type HashTree = {
-    lookup : (Path) -> ?Blob;
+    lookup: (Path) -> ?Blob;
   };
 
-  public type Map = [
-    var ?(
-      keys : [var ?Key],
-      values : [var ?CborValue],
-      indexes : [var Nat],
-      bounds : [var Nat32],
-    ),
-  ];
+  public type Map = [var ?(
+    keys: [var ?Key],
+    values: [var ?CborValue],
+    indexes: [var Nat],
+    bounds: [var Nat32],
+  )];
 
 };

@@ -65,4 +65,4 @@ module {
   /// ```
   public let message : (error : Error) -> Text = Prim.errorMessage;
 
-};
+}

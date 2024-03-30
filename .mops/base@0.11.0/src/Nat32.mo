@@ -47,7 +47,7 @@ module {
   /// Nat32.fromNat16(123); // => 123 : Nat32
   /// ```
   public func fromNat16(x : Nat16) : Nat32 {
-    Prim.nat16ToNat32(x);
+    Prim.nat16ToNat32(x)
   };
 
   /// Converts a 32-bit unsigned integer to a 16-bit unsigned integer.
@@ -59,7 +59,7 @@ module {
   /// Nat32.toNat16(123); // => 123 : Nat16
   /// ```
   public func toNat16(x : Nat32) : Nat16 {
-    Prim.nat32ToNat16(x);
+    Prim.nat32ToNat16(x)
   };
 
   /// Converts a 64-bit unsigned integer to a 32-bit unsigned integer.
@@ -71,7 +71,7 @@ module {
   /// Nat32.fromNat64(123); // => 123 : Nat32
   /// ```
   public func fromNat64(x : Nat64) : Nat32 {
-    Prim.nat64ToNat32(x);
+    Prim.nat64ToNat32(x)
   };
 
   /// Converts a 32-bit unsigned integer to a 64-bit unsigned integer.
@@ -81,7 +81,7 @@ module {
   /// Nat32.toNat64(123); // => 123 : Nat64
   /// ```
   public func toNat64(x : Nat32) : Nat64 {
-    Prim.nat32ToNat64(x);
+    Prim.nat32ToNat64(x)
   };
 
   /// Converts a signed integer with infinite precision to a 32-bit unsigned integer.
@@ -102,7 +102,7 @@ module {
   /// Nat32.toText(1234); // => "1234" : Text
   /// ```
   public func toText(x : Nat32) : Text {
-    Nat.toText(toNat(x));
+    Nat.toText(toNat(x))
   };
 
   /// Returns the minimum of `x` and `y`.
@@ -112,7 +112,7 @@ module {
   /// Nat32.min(123, 456); // => 123 : Nat32
   /// ```
   public func min(x : Nat32, y : Nat32) : Nat32 {
-    if (x < y) { x } else { y };
+    if (x < y) { x } else { y }
   };
 
   /// Returns the maximum of `x` and `y`.
@@ -122,7 +122,7 @@ module {
   /// Nat32.max(123, 456); // => 456 : Nat32
   /// ```
   public func max(x : Nat32, y : Nat32) : Nat32 {
-    if (x < y) { y } else { x };
+    if (x < y) { y } else { x }
   };
 
   /// Equality function for Nat32 types.
@@ -240,7 +240,7 @@ module {
   /// Array.sort([2, 3, 1] : [Nat32], Nat32.compare) // => [1, 2, 3]
   /// ```
   public func compare(x : Nat32, y : Nat32) : { #less; #equal; #greater } {
-    if (x < y) { #less } else if (x == y) { #equal } else { #greater };
+    if (x < y) { #less } else if (x == y) { #equal } else { #greater }
   };
 
   /// Returns the sum of `x` and `y`, `x + y`.
@@ -470,7 +470,7 @@ module {
   /// Nat32.bittest(5, 2); // => true
   /// ```
   public func bittest(x : Nat32, p : Nat) : Bool {
-    Prim.btstNat32(x, Prim.natToNat32(p));
+    Prim.btstNat32(x, Prim.natToNat32(p))
   };
 
   /// Returns the value of setting bit `p mod 32` in `x` to `1`.
@@ -480,7 +480,7 @@ module {
   /// Nat32.bitset(5, 1); // => 7
   /// ```
   public func bitset(x : Nat32, p : Nat) : Nat32 {
-    x | (1 << Prim.natToNat32(p));
+    x | (1 << Prim.natToNat32(p))
   };
 
   /// Returns the value of clearing bit `p mod 32` in `x` to `0`.
@@ -490,7 +490,7 @@ module {
   /// Nat32.bitclear(5, 2); // => 1
   /// ```
   public func bitclear(x : Nat32, p : Nat) : Nat32 {
-    x & ^(1 << Prim.natToNat32(p));
+    x & ^(1 << Prim.natToNat32(p))
   };
 
   /// Returns the value of flipping bit `p mod 32` in `x`.
@@ -500,7 +500,7 @@ module {
   /// Nat32.bitflip(5, 2); // => 1
   /// ```
   public func bitflip(x : Nat32, p : Nat) : Nat32 {
-    x ^ (1 << Prim.natToNat32(p));
+    x ^ (1 << Prim.natToNat32(p))
   };
 
   /// Returns the count of non-zero bits in `x`.
@@ -583,4 +583,4 @@ module {
   /// as a function value at the moment.
   public func powWrap(x : Nat32, y : Nat32) : Nat32 { x **% y };
 
-};
+}

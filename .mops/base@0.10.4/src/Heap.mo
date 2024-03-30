@@ -46,7 +46,7 @@ module {
     ///
     /// Space: `O(log(n))`
     public func put(x : X) {
-      heap := merge(heap, ?(1, x, null, null), compare);
+      heap := merge(heap, ?(1, x, null, null), compare)
     };
 
     /// Return the minimal element in the heap, or `null` if the heap is empty.
@@ -66,8 +66,8 @@ module {
     public func peekMin() : ?X {
       switch heap {
         case (null) { null };
-        case (?(_, x, _, _)) { ?x };
-      };
+        case (?(_, x, _, _)) { ?x }
+      }
     };
 
     /// Delete the minimal element in the heap, if it exists.
@@ -88,8 +88,8 @@ module {
     public func deleteMin() {
       switch heap {
         case null {};
-        case (?(_, _, a, b)) { heap := merge(a, b, compare) };
-      };
+        case (?(_, _, a, b)) { heap := merge(a, b, compare) }
+      }
     };
 
     /// Delete and return the minimal element in the heap, if it exists.
@@ -111,9 +111,9 @@ module {
         case null { null };
         case (?(_, x, a, b)) {
           heap := merge(a, b, compare);
-          ?x;
-        };
-      };
+          ?x
+        }
+      }
     };
 
     /// Return a snapshot of the internal functional tree representation as sharable data.
@@ -133,7 +133,7 @@ module {
     ///
     /// Space: `O(1)`
     public func share() : Tree<X> {
-      heap;
+      heap
     };
 
     /// Rewraps a snapshot of a heap (obtained by `share()`) in a `Heap` instance.
@@ -158,7 +158,7 @@ module {
     ///
     /// Space: `O(1)`.
     public func unsafeUnshare(tree : Tree<X>) {
-      heap := tree;
+      heap := tree
     };
 
   };
@@ -166,16 +166,16 @@ module {
   func rank<X>(heap : Tree<X>) : Int {
     switch heap {
       case null { 0 };
-      case (?(r, _, _, _)) { r };
-    };
+      case (?(r, _, _, _)) { r }
+    }
   };
 
   func makeT<X>(x : X, a : Tree<X>, b : Tree<X>) : Tree<X> {
     if (rank(a) >= rank(b)) {
-      ?(rank(b) + 1, x, a, b);
+      ?(rank(b) + 1, x, a, b)
     } else {
-      ?(rank(a) + 1, x, b, a);
-    };
+      ?(rank(a) + 1, x, b, a)
+    }
   };
 
   func merge<X>(h1 : Tree<X>, h2 : Tree<X>, compare : (X, X) -> O.Order) : Tree<X> {
@@ -185,10 +185,10 @@ module {
       case (?(_, x, a, b), ?(_, y, c, d)) {
         switch (compare(x, y)) {
           case (#less) { makeT(x, a, merge(b, h2, compare)) };
-          case _ { makeT(y, c, merge(d, h1, compare)) };
-        };
-      };
-    };
+          case _ { makeT(y, c, merge(d, h1, compare)) }
+        }
+      }
+    }
   };
 
   /// Returns a new `Heap`, containing all entries given by the iterator `iter`.
@@ -213,21 +213,21 @@ module {
         switch (xs) {
           case (null) { null };
           case (?(hd, null)) { ?(hd, null) };
-          case (?(h1, ?(h2, tl))) { ?(merge(h1, h2, compare), join(tl)) };
-        };
+          case (?(h1, ?(h2, tl))) { ?(merge(h1, h2, compare), join(tl)) }
+        }
       };
       switch (xs) {
         case null { P.unreachable() };
         case (?(hd, null)) { hd };
-        case _ { build(join(xs)) };
-      };
+        case _ { build(join(xs)) }
+      }
     };
     let list = I.toList(I.map(iter, func(x : X) : Tree<X> { ?(1, x, null, null) }));
     if (not L.isNil(list)) {
       let t = build(list);
-      heap.unsafeUnshare(t);
+      heap.unsafeUnshare(t)
     };
-    heap;
+    heap
   };
 
-};
+}

@@ -54,7 +54,7 @@ module {
     let post = Prim.performanceCounter(0);
     // performance_counter costs around 200 extra instructions, we perform an empty measurement to decide the overhead
     let overhead = pre - init;
-    post - pre - overhead;
+    post - pre - overhead
   };
 
   /// Returns the current value of IC _performance counter_ `counter`.
@@ -80,6 +80,6 @@ module {
   /// work();
   /// let diff : Nat64 = IC.performanceCounter(1) - c1;
   /// ```
-  public let performanceCounter : (counter : Nat32) -> (value : Nat64) = Prim.performanceCounter;
+  public let performanceCounter : (counter : Nat32) -> (value: Nat64) = Prim.performanceCounter;
 
-};
+}

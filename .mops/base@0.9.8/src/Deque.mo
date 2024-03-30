@@ -59,22 +59,22 @@ module {
   /// Space: `O(1)`.
   public func isEmpty<T>(deque : Deque<T>) : Bool {
     switch deque {
-      case (f, r) { List.isNil(f) and List.isNil(r) };
-    };
+      case (f, r) { List.isNil(f) and List.isNil(r) }
+    }
   };
 
   func check<T>(q : Deque<T>) : Deque<T> {
     switch q {
       case (null, r) {
         let (a, b) = List.split(List.size(r) / 2, r);
-        (List.reverse(b), a);
+        (List.reverse(b), a)
       };
       case (f, null) {
         let (a, b) = List.split(List.size(f) / 2, f);
-        (a, List.reverse(b));
+        (a, List.reverse(b))
       };
-      case q { q };
-    };
+      case q { q }
+    }
   };
 
   /// Insert a new element on the front end of a deque.
@@ -95,7 +95,7 @@ module {
   ///
   /// `n` denotes the number of elements stored in the deque.
   public func pushFront<T>(deque : Deque<T>, element : T) : Deque<T> {
-    check(List.push(element, deque.0), deque.1);
+    check(List.push(element, deque.0), deque.1)
   };
 
   /// Inspect the optional element on the front end of a deque.
@@ -117,8 +117,8 @@ module {
     switch deque {
       case (?(x, f), r) { ?x };
       case (null, ?(x, r)) { ?x };
-      case _ { null };
-    };
+      case _ { null }
+    }
   };
 
   /// Remove the element on the front end of a deque.
@@ -154,8 +154,8 @@ module {
     switch deque {
       case (?(x, f), r) { ?(x, check(f, r)) };
       case (null, ?(x, r)) { ?(x, check(null, r)) };
-      case _ { null };
-    };
+      case _ { null }
+    }
   };
 
   /// Insert a new element on the back end of a deque.
@@ -176,7 +176,7 @@ module {
   ///
   /// `n` denotes the number of elements stored in the deque.
   public func pushBack<T>(deque : Deque<T>, element : T) : Deque<T> {
-    check(deque.0, List.push(element, deque.1));
+    check(deque.0, List.push(element, deque.1))
   };
 
   /// Inspect the optional element on the back end of a deque.
@@ -198,8 +198,8 @@ module {
     switch deque {
       case (f, ?(x, r)) { ?x };
       case (?(x, r), null) { ?x };
-      case _ { null };
-    };
+      case _ { null }
+    }
   };
 
   /// Remove the element on the back end of a deque.
@@ -237,7 +237,7 @@ module {
     switch deque {
       case (f, ?(x, r)) { ?(check(f, r), x) };
       case (?(x, f), null) { ?(check(f, null), x) };
-      case _ { null };
-    };
-  };
-};
+      case _ { null }
+    }
+  }
+}
