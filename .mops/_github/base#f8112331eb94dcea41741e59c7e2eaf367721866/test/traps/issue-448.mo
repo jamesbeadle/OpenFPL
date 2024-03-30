@@ -1,9 +1,9 @@
 import Trie "mo:base/Trie";
 import Text "mo:base/Text";
 
-func key(t : Text) : Trie.Key<Text> = {key = t; hash = Text.hash(t)};
+func key(t : Text) : Trie.Key<Text> = { key = t; hash = Text.hash(t) };
 
-var trie = Trie.empty<Text,Nat>();
+var trie = Trie.empty<Text, Nat>();
 
 trie := Trie.put(trie, key "hello", Text.equal, 42).0;
 trie := Trie.put(trie, key "bye", Text.equal, 42).0;

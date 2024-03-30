@@ -28,5 +28,5 @@ module {
   public type ReturnAmount = T.ReturnAmount;
 
   public type ChangeRequestArg = T.ChangeRequestArg;
-  
-}
+
+};

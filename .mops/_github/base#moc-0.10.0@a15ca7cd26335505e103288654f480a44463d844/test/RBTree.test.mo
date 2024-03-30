@@ -143,10 +143,10 @@ run(
           let empty = o.share();
           o.unshare(saved);
           let restored = o.share();
-          empty == #leaf and restored == saved;
+          empty == #leaf and restored == saved
         },
         M.equals(T.bool(true))
-      ),
+      )
     ]
   )
 );
@@ -222,10 +222,10 @@ run(
           let empty = o.share();
           o.unshare(saved);
           let restored = o.share();
-          empty == #leaf and restored == saved;
+          empty == #leaf and restored == saved
         },
         M.equals(T.bool(true))
-      ),
+      )
     ]
   )
 );
@@ -278,10 +278,10 @@ run(
           let empty = o.share();
           o.unshare(saved);
           let restored = o.share();
-          empty == #leaf and restored == saved;
+          empty == #leaf and restored == saved
         },
         M.equals(T.bool(true))
-      ),
+      )
     ]
   )
 );
@@ -587,7 +587,7 @@ run(
           let empty = o.share();
           o.unshare(saved);
           let restored = o.share();
-          empty == #leaf and restored == saved;
+          empty == #leaf and restored == saved
         },
         M.equals(T.bool(true))
       )

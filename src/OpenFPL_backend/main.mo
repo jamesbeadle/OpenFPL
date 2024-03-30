@@ -183,12 +183,11 @@ actor Self {
   };
 
   //TODO
-  private func proposalExists () : Bool {
+  private func proposalExists() : Bool {
 
     //check the active proposals in the governance canister
     //might have to get them in batches
     //if one is the same then return true
-
 
     return true;
   };
@@ -363,17 +362,16 @@ actor Self {
 
   public shared ({ caller }) func validateCreateDAONeuron() : async Result.Result<Text, Text> {
     assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-    if(neuronCreated){
+    if (neuronCreated) {
       return #err("Neuron already created");
     };
-    
-    
+
     return #ok("Can create neuron");
   };
 
   public shared ({ caller }) func executeCreateDAONeuron() : async () {
     assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-    if(neuronCreated){
+    if (neuronCreated) {
       return;
     };
 
@@ -382,35 +380,34 @@ actor Self {
     };
 
     let _ = await neuron_controller.stake_nns_neuron();
-    
+
     neuronCreated := true;
-    
+
   };
 
   public shared ({ caller }) func validateManageDAONeuron() : async Result.Result<Text, Text> {
     assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-    if(not neuronCreated){
+    if (not neuronCreated) {
       return #err("Neuron not created");
     };
-    
-    
+
     return #ok("Can manage neuron");
   };
 
-  public shared ({ caller }) func executeManageDAONeuron(command: NeuronTypes.Command) : async () {
+  public shared ({ caller }) func executeManageDAONeuron(command : NeuronTypes.Command) : async () {
     assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-    if(not neuronCreated){
+    if (not neuronCreated) {
       return;
     };
 
     let neuron_controller = actor (Environment.NEURON_CONTROLLER_CANISTER_ID) : actor {
       manage_neuron : NeuronTypes.Command -> async ?NeuronTypes.Response;
     };
-    
+
     let _ = await neuron_controller.manage_neuron(command);
-    
+
     neuronCreated := true;
-    
+
   };
 
   public shared func getNeuronId() : async Nat64 {

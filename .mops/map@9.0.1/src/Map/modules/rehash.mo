@@ -1,6 +1,14 @@
 import Const "../const";
 import Types "../types";
-import { Array_init = initArray; natToNat32 = nat32; nat32ToNat = nat; clzNat32; nat32ToNat64; nat64ToNat32; trap } "mo:prim";
+import {
+  Array_init = initArray;
+  natToNat32 = nat32;
+  nat32ToNat = nat;
+  clzNat32;
+  nat32ToNat64;
+  nat64ToNat32;
+  trap;
+} "mo:prim";
 
 module {
   type Map<K, V> = Types.Map<K, V>;
@@ -21,7 +29,7 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func rehash<K, V>(map: Map<K, V>, hashUtils: HashUtils<K>) {
+  public func rehash<K, V>(map : Map<K, V>, hashUtils : HashUtils<K>) {
     let data = switch (map[DATA]) { case (?data) data; case (_) return };
 
     let bounds = data.3;
@@ -37,7 +45,7 @@ module {
     let newKeys = initArray<?K>(newCapacityNat, null);
     let newValues = initArray<?V>(newCapacityNat, null);
     let newIndexes = initArray<Nat>(nat(newCapacity *% 2), NULL);
-    var newIndex = 0:Nat32;
+    var newIndex = 0 : Nat32;
 
     let getHash = hashUtils.0;
     let values = data.1;

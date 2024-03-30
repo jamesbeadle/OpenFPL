@@ -9,5 +9,5 @@ module {
 
   public let NULL = 0x3fffffff;
 
-  public let MAX_CAPACITY = 0x3fffffff:Nat32;
+  public let MAX_CAPACITY = 0x3fffffff : Nat32;
 };

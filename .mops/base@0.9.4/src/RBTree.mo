@@ -38,7 +38,6 @@
 /// * Ken Friis Larsen's [RedBlackMap.sml](https://github.com/kfl/mosml/blob/master/src/mosmllib/Redblackmap.sml), which itself is based on:
 /// * Stefan Kahrs, "Red-black trees with types", Journal of Functional Programming, 11(4): 425-432 (2001), [version 1 in web appendix](http://www.cs.ukc.ac.uk/people/staff/smk/redblack/rb.html).
 
-
 import Debug "Debug";
 import I "Iter";
 import List "List";
@@ -66,10 +65,8 @@ module {
   /// Leaves are considered implicitly black.
   public type Tree<K, V> = {
     #node : (Color, Tree<K, V>, (K, ?V), Tree<K, V>);
-    #leaf
+    #leaf;
   };
-
-
 
   /// A map from keys of type `K` to values of type `V` implemented as a red-black tree.
   /// The entries of key-value pairs are ordered by `compare` function applied to the keys.
@@ -114,7 +111,7 @@ module {
     /// Runtime: `O(1)`.
     /// Space: `O(1)`.
     public func share() : Tree<K, V> {
-      tree
+      tree;
     };
 
     /// Reset the current state of the tree object from a functional tree representation.
@@ -135,9 +132,8 @@ module {
     /// Runtime: `O(1)`.
     /// Space: `O(1)`.
     public func unshare(t : Tree<K, V>) : () {
-      tree := t
+      tree := t;
     };
-
 
     /// Retrieve the value associated with a given key, if present. Returns `null`, if the key is absent.
     /// The key is searched according to the `compare` function defined on the class instantiation.
@@ -158,7 +154,7 @@ module {
     ///
     /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
     public func get(key : K) : ?V {
-      getRec(key, compare, tree)
+      getRec(key, compare, tree);
     };
 
     /// Replace the value associated with a given key, if the key is present.
@@ -187,7 +183,7 @@ module {
     public func replace(key : K, value : V) : ?V {
       let (t, res) = insert(tree, compare, key, value);
       tree := t;
-      res
+      res;
     };
 
     /// Insert a key-value entry in the tree. If the key already exists, it overwrites the associated value.
@@ -210,7 +206,7 @@ module {
     /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
     public func put(key : K, value : V) {
       let (t, res) = insert(tree, compare, key, value);
-      tree := t
+      tree := t;
     };
 
     /// Delete the entry associated with a given key, if the key exists.
@@ -236,7 +232,7 @@ module {
     /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
     public func delete(key : K) {
       let (res, t) = removeRec(key, compare, tree);
-      tree := t
+      tree := t;
     };
 
     /// Remove the entry associated with a given key, if the key exists, and return the associated value.
@@ -262,7 +258,7 @@ module {
     public func remove(key : K) : ?V {
       let (res, t) = removeRec(key, compare, tree);
       tree := t;
-      res
+      res;
     };
 
     /// An iterator for the key-value entries of the map, in ascending key order.
@@ -363,26 +359,26 @@ module {
           case (_, null) { null };
           case (_, ?(#tr(#leaf), ts)) {
             trees := ts;
-            next()
+            next();
           };
           case (_, ?(#xy(xy), ts)) {
             trees := ts;
             switch (xy.1) {
               case null { next() };
-              case (?y) { ?(xy.0, y) }
-            }
+              case (?y) { ?(xy.0, y) };
+            };
           };
           case (#fwd, ?(#tr(#node(_, l, xy, r)), ts)) {
             trees := ?(#tr(l), ?(#xy(xy), ?(#tr(r), ts)));
-            next()
+            next();
           };
           case (#bwd, ?(#tr(#node(_, l, xy, r)), ts)) {
             trees := ?(#tr(r), ?(#xy(xy), ?(#tr(l), ts)));
-            next()
-          }
-        }
-      }
-    }
+            next();
+          };
+        };
+      };
+    };
   };
 
   /// Remove the value associated with a given key.
@@ -398,10 +394,10 @@ module {
         switch (compare(x, xy.0)) {
           case (#less) { getRec(x, compare, l) };
           case (#equal) { xy.1 };
-          case (#greater) { getRec(x, compare, r) }
-        }
-      }
-    }
+          case (#greater) { getRec(x, compare, r) };
+        };
+      };
+    };
   };
 
   /// Determine the size of the tree as the number of key-value entries.
@@ -428,107 +424,108 @@ module {
     switch t {
       case (#leaf) { 0 };
       case (#node(_, l, xy, r)) {
-        size(l) + size(r) + (switch (xy.1) { case null 0; case _ 1 })
-      }
-    }
+        size(l) + size(r) + (switch (xy.1) { case null 0; case _ 1 });
+      };
+    };
   };
 
   func redden<X, Y>(t : Tree<X, Y>) : Tree<X, Y> {
     switch t {
-      case (#node (#B, l, xy, r)) {
-        (#node (#R, l, xy, r))
-      };
+      case (#node(#B, l, xy, r)) { (#node(#R, l, xy, r)) };
       case _ {
-        Debug.trap "RBTree.red"
-      }
-    }
+        Debug.trap "RBTree.red";
+      };
+    };
   };
 
-  func lbalance<X,Y>(left : Tree<X, Y>, xy : (X,?Y), right : Tree<X, Y>) : Tree<X,Y> {
+  func lbalance<X, Y>(left : Tree<X, Y>, xy : (X, ?Y), right : Tree<X, Y>) : Tree<X, Y> {
     switch (left, right) {
       case (#node(#R, #node(#R, l1, xy1, r1), xy2, r2), r) {
         #node(
           #R,
           #node(#B, l1, xy1, r1),
           xy2,
-          #node(#B, r2, xy, r))
+          #node(#B, r2, xy, r),
+        );
       };
       case (#node(#R, l1, xy1, #node(#R, l2, xy2, r2)), r) {
         #node(
           #R,
           #node(#B, l1, xy1, l2),
           xy2,
-          #node(#B, r2, xy, r))
+          #node(#B, r2, xy, r),
+        );
       };
       case _ {
-         #node(#B, left, xy, right)
-      }
-    }
+        #node(#B, left, xy, right);
+      };
+    };
   };
 
-  func rbalance<X,Y>(left : Tree<X, Y>, xy : (X,?Y), right : Tree<X, Y>) : Tree<X,Y> {
+  func rbalance<X, Y>(left : Tree<X, Y>, xy : (X, ?Y), right : Tree<X, Y>) : Tree<X, Y> {
     switch (left, right) {
       case (l, #node(#R, l1, xy1, #node(#R, l2, xy2, r2))) {
         #node(
           #R,
           #node(#B, l, xy, l1),
           xy1,
-          #node(#B, l2, xy2, r2))
+          #node(#B, l2, xy2, r2),
+        );
       };
       case (l, #node(#R, #node(#R, l1, xy1, r1), xy2, r2)) {
         #node(
           #R,
           #node(#B, l, xy, l1),
           xy1,
-          #node(#B, r1, xy2, r2))
+          #node(#B, r1, xy2, r2),
+        );
       };
       case _ {
-        #node(#B, left, xy, right)
+        #node(#B, left, xy, right);
       };
-    }
+    };
   };
 
   func insert<X, Y>(
     tree : Tree<X, Y>,
     compare : (X, X) -> O.Order,
     x : X,
-    y : Y
-  )
-  : (Tree<X,Y>, ?Y) {
+    y : Y,
+  ) : (Tree<X, Y>, ?Y) {
     var y0 : ?Y = null;
-    func ins(tree : Tree<X,Y>) : Tree<X,Y> {
+    func ins(tree : Tree<X, Y>) : Tree<X, Y> {
       switch tree {
         case (#leaf) {
-          #node(#R, #leaf, (x,?y), #leaf)
+          #node(#R, #leaf, (x, ?y), #leaf);
         };
         case (#node(#B, left, xy, right)) {
-          switch (compare (x, xy.0)) {
+          switch (compare(x, xy.0)) {
             case (#less) {
-              lbalance(ins left, xy, right)
+              lbalance(ins left, xy, right);
             };
             case (#greater) {
-              rbalance(left, xy, ins right)
+              rbalance(left, xy, ins right);
             };
             case (#equal) {
               y0 := xy.1;
-              #node(#B, left, (x,?y), right)
-            }
-          }
+              #node(#B, left, (x, ?y), right);
+            };
+          };
         };
         case (#node(#R, left, xy, right)) {
-          switch (compare (x, xy.0)) {
+          switch (compare(x, xy.0)) {
             case (#less) {
-              #node(#R, ins left, xy, right)
+              #node(#R, ins left, xy, right);
             };
             case (#greater) {
-              #node(#R, left, xy, ins right)
+              #node(#R, left, xy, ins right);
             };
             case (#equal) {
               y0 := xy.1;
-              #node(#R, left, (x,?y), right)
-            }
-          }
-        }
+              #node(#R, left, (x, ?y), right);
+            };
+          };
+        };
       };
     };
     switch (ins tree) {
@@ -539,135 +536,146 @@ module {
     };
   };
 
-
-  func balLeft<X,Y>(left : Tree<X, Y>, xy : (X,?Y), right : Tree<X, Y>) : Tree<X,Y> {
+  func balLeft<X, Y>(left : Tree<X, Y>, xy : (X, ?Y), right : Tree<X, Y>) : Tree<X, Y> {
     switch (left, right) {
       case (#node(#R, l1, xy1, r1), r) {
         #node(
           #R,
           #node(#B, l1, xy1, r1),
           xy,
-          r)
+          r,
+        );
       };
       case (_, #node(#B, l2, xy2, r2)) {
-        rbalance(left, xy, #node(#R, l2, xy2, r2))
+        rbalance(left, xy, #node(#R, l2, xy2, r2));
       };
       case (_, #node(#R, #node(#B, l2, xy2, r2), xy3, r3)) {
-        #node(#R,
+        #node(
+          #R,
           #node(#B, left, xy, l2),
           xy2,
-          rbalance(r2, xy3, redden r3))
+          rbalance(r2, xy3, redden r3),
+        );
       };
       case _ { Debug.trap "balLeft" };
-    }
+    };
   };
 
-  func balRight<X,Y>(left : Tree<X, Y>, xy : (X,?Y), right : Tree<X, Y>) : Tree<X,Y> {
+  func balRight<X, Y>(left : Tree<X, Y>, xy : (X, ?Y), right : Tree<X, Y>) : Tree<X, Y> {
     switch (left, right) {
       case (l, #node(#R, l1, xy1, r1)) {
-        #node(#R,
+        #node(
+          #R,
           l,
           xy,
-          #node(#B, l1, xy1, r1))
+          #node(#B, l1, xy1, r1),
+        );
       };
       case (#node(#B, l1, xy1, r1), r) {
         lbalance(#node(#R, l1, xy1, r1), xy, r);
       };
       case (#node(#R, l1, xy1, #node(#B, l2, xy2, r2)), r3) {
-        #node(#R,
+        #node(
+          #R,
           lbalance(redden l1, xy1, l2),
           xy2,
-          #node(#B, r2, xy, r3))
+          #node(#B, r2, xy, r3),
+        );
       };
       case _ { Debug.trap "balRight" };
-    }
+    };
   };
 
-  func append<X,Y>(left : Tree<X, Y>, right: Tree<X, Y>) : Tree<X, Y> {
+  func append<X, Y>(left : Tree<X, Y>, right : Tree<X, Y>) : Tree<X, Y> {
     switch (left, right) {
-      case (#leaf,  _) { right };
-      case (_,  #leaf) { left };
-      case (#node (#R, l1, xy1, r1),
-            #node (#R, l2, xy2, r2)) {
-        switch (append (r1, l2)) {
-          case (#node (#R, l3, xy3, r3)) {
+      case (#leaf, _) { right };
+      case (_, #leaf) { left };
+      case (
+        #node(#R, l1, xy1, r1),
+        #node(#R, l2, xy2, r2),
+      ) {
+        switch (append(r1, l2)) {
+          case (#node(#R, l3, xy3, r3)) {
             #node(
               #R,
               #node(#R, l1, xy1, l3),
               xy3,
-              #node(#R, r3, xy2, r2))
+              #node(#R, r3, xy2, r2),
+            );
           };
           case r1l2 {
-            #node(#R, l1, xy1, #node(#R, r1l2, xy2, r2))
-          }
-        }
+            #node(#R, l1, xy1, #node(#R, r1l2, xy2, r2));
+          };
+        };
       };
       case (t1, #node(#R, l2, xy2, r2)) {
-        #node(#R, append(t1, l2), xy2, r2)
+        #node(#R, append(t1, l2), xy2, r2);
       };
       case (#node(#R, l1, xy1, r1), t2) {
-        #node(#R, l1, xy1, append(r1, t2))
+        #node(#R, l1, xy1, append(r1, t2));
       };
-      case (#node(#B, l1, xy1, r1), #node (#B, l2, xy2, r2)) {
-        switch (append (r1, l2)) {
-          case (#node (#R, l3, xy3, r3)) {
-            #node(#R,
+      case (#node(#B, l1, xy1, r1), #node(#B, l2, xy2, r2)) {
+        switch (append(r1, l2)) {
+          case (#node(#R, l3, xy3, r3)) {
+            #node(
+              #R,
               #node(#B, l1, xy1, l3),
               xy3,
-              #node(#B, r3, xy2, r2))
+              #node(#B, r3, xy2, r2),
+            );
           };
           case r1l2 {
-            balLeft (
+            balLeft(
               l1,
               xy1,
-              #node(#B, r1l2, xy2, r2)
-            )
-          }
-        }
-      }
-    }
+              #node(#B, r1l2, xy2, r2),
+            );
+          };
+        };
+      };
+    };
   };
 
-  func remove<X, Y>(tree : Tree<X, Y>, compare : (X, X) -> O.Order, x : X) : (Tree<X,Y>, ?Y) {
+  func remove<X, Y>(tree : Tree<X, Y>, compare : (X, X) -> O.Order, x : X) : (Tree<X, Y>, ?Y) {
     var y0 : ?Y = null;
-    func delNode(left : Tree<X,Y>, xy : (X, ?Y), right : Tree<X,Y>) : Tree<X,Y> {
-      switch (compare (x, xy.0)) {
+    func delNode(left : Tree<X, Y>, xy : (X, ?Y), right : Tree<X, Y>) : Tree<X, Y> {
+      switch (compare(x, xy.0)) {
         case (#less) {
           let newLeft = del left;
           switch left {
             case (#node(#B, _, _, _)) {
-              balLeft(newLeft, xy, right)
+              balLeft(newLeft, xy, right);
             };
             case _ {
-              #node(#R, newLeft, xy, right)
-            }
-          }
+              #node(#R, newLeft, xy, right);
+            };
+          };
         };
         case (#greater) {
           let newRight = del right;
           switch right {
             case (#node(#B, _, _, _)) {
-              balRight(left, xy, newRight)
+              balRight(left, xy, newRight);
             };
             case _ {
-              #node(#R, left, xy, newRight)
-            }
-          }
+              #node(#R, left, xy, newRight);
+            };
+          };
         };
         case (#equal) {
           y0 := xy.1;
-          append(left, right)
+          append(left, right);
         };
-      }
+      };
     };
-    func del(tree : Tree<X,Y>) : Tree<X,Y> {
+    func del(tree : Tree<X, Y>) : Tree<X, Y> {
       switch tree {
         case (#leaf) {
-          tree
+          tree;
         };
         case (#node(_, left, xy, right)) {
-          delNode(left, xy, right)
-        }
+          delNode(left, xy, right);
+        };
       };
     };
     switch (del(tree)) {
@@ -678,4 +686,4 @@ module {
     };
   }
 
-}
+};

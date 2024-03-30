@@ -71,6 +71,61 @@ export const idlFactory = ({ IDL }) => {
     playerId: PlayerId,
     loanClubId: ClubId,
   });
+  const Spawn = IDL.Record({
+    percentage_to_spawn: IDL.Opt(IDL.Nat32),
+    new_controller: IDL.Opt(IDL.Principal),
+    nonce: IDL.Opt(IDL.Nat64),
+  });
+  const NeuronId = IDL.Record({ id: IDL.Nat64 });
+  const Follow = IDL.Record({
+    topic: IDL.Int32,
+    followees: IDL.Vec(NeuronId),
+  });
+  const ClaimOrRefreshNeuronFromAccount = IDL.Record({
+    controller: IDL.Opt(IDL.Principal),
+    memo: IDL.Nat64,
+  });
+  const By = IDL.Variant({
+    NeuronIdOrSubaccount: IDL.Null,
+    MemoAndController: ClaimOrRefreshNeuronFromAccount,
+    Memo: IDL.Nat64,
+  });
+  const ClaimOrRefresh = IDL.Record({ by: IDL.Opt(By) });
+  const ChangeAutoStakeMaturity = IDL.Record({
+    requested_setting_for_auto_stake_maturity: IDL.Bool,
+  });
+  const IncreaseDissolveDelay = IDL.Record({
+    additional_dissolve_delay_seconds: IDL.Nat32,
+  });
+  const SetDissolveTimestamp = IDL.Record({
+    dissolve_timestamp_seconds: IDL.Nat64,
+  });
+  const Operation = IDL.Variant({
+    ChangeAutoStakeMaturity: ChangeAutoStakeMaturity,
+    StopDissolving: IDL.Null,
+    StartDissolving: IDL.Null,
+    IncreaseDissolveDelay: IncreaseDissolveDelay,
+    SetDissolveTimestamp: SetDissolveTimestamp,
+  });
+  const Configure = IDL.Record({ operation: IDL.Opt(Operation) });
+  const StakeMaturityResponse = IDL.Record({
+    maturity_e8s: IDL.Nat64,
+    stake_maturity_e8s: IDL.Nat64,
+  });
+  const AccountIdentifier = IDL.Record({ hash: IDL.Vec(IDL.Nat8) });
+  const Amount = IDL.Record({ e8s: IDL.Nat64 });
+  const Disburse = IDL.Record({
+    to_account: IDL.Opt(AccountIdentifier),
+    amount: IDL.Opt(Amount),
+  });
+  const Command = IDL.Variant({
+    Spawn: Spawn,
+    Follow: Follow,
+    ClaimOrRefresh: ClaimOrRefresh,
+    Configure: Configure,
+    StakeMaturity: StakeMaturityResponse,
+    Disburse: Disburse,
+  });
   const MoveFixtureDTO = IDL.Record({
     fixtureId: FixtureId,
     updatedFixtureGameweek: GameweekNumber,
@@ -401,7 +456,6 @@ export const idlFactory = ({ IDL }) => {
     gameweek: GameweekNumber,
   });
   const Result_2 = IDL.Variant({ ok: WeeklyLeaderboardDTO, err: Error });
-  const Result_1 = IDL.Variant({ ok: IDL.Null, err: Error });
   const UpdateTeamSelectionDTO = IDL.Record({
     playerIds: IDL.Vec(PlayerId),
     countrymenCountryId: CountryId,
@@ -425,12 +479,15 @@ export const idlFactory = ({ IDL }) => {
     passMasterPlayerId: PlayerId,
     captainId: PlayerId,
   });
+  const Result_1 = IDL.Variant({ ok: IDL.Null, err: Error });
   const Result = IDL.Variant({ ok: IDL.Text, err: IDL.Text });
   return IDL.Service({
     burnICPToCycles: IDL.Func([IDL.Nat64], [], []),
     executeAddInitialFixtures: IDL.Func([AddInitialFixturesDTO], [], []),
+    executeCreateDAONeuron: IDL.Func([], [], []),
     executeCreatePlayer: IDL.Func([CreatePlayerDTO], [], []),
     executeLoanPlayer: IDL.Func([LoanPlayerDTO], [], []),
+    executeManageDAONeuron: IDL.Func([Command], [], []),
     executeMoveFixture: IDL.Func([MoveFixtureDTO], [], []),
     executePostponeFixture: IDL.Func([PostponeFixtureDTO], [], []),
     executePromoteFormerClub: IDL.Func([PromoteFormerClubDTO], [], []),
@@ -465,6 +522,7 @@ export const idlFactory = ({ IDL }) => {
       [Result_13],
       []
     ),
+    getNeuronId: IDL.Func([], [IDL.Nat64], []),
     getPlayerDetails: IDL.Func([PlayerId, SeasonId], [Result_12], ["query"]),
     getPlayerDetailsForGameweek: IDL.Func(
       [SeasonId, GameweekNumber],
@@ -489,7 +547,6 @@ export const idlFactory = ({ IDL }) => {
       [Result_2],
       []
     ),
-    init: IDL.Func([], [Result_1], []),
     isUsernameValid: IDL.Func([IDL.Text], [IDL.Bool], ["query"]),
     requestCanisterTopup: IDL.Func([], [], []),
     saveFantasyTeam: IDL.Func([UpdateTeamSelectionDTO], [Result_1], []),
@@ -502,8 +559,10 @@ export const idlFactory = ({ IDL }) => {
     ),
     updateUsername: IDL.Func([IDL.Text], [Result_1], []),
     validateAddInitialFixtures: IDL.Func([AddInitialFixturesDTO], [Result], []),
+    validateCreateDAONeuron: IDL.Func([], [Result], []),
     validateCreatePlayer: IDL.Func([CreatePlayerDTO], [Result], []),
     validateLoanPlayer: IDL.Func([LoanPlayerDTO], [Result], []),
+    validateManageDAONeuron: IDL.Func([], [Result], []),
     validateMoveFixture: IDL.Func([MoveFixtureDTO], [Result], []),
     validatePostponeFixture: IDL.Func([PostponeFixtureDTO], [Result], []),
     validatePromoteFormerClub: IDL.Func([PromoteFormerClubDTO], [Result], []),

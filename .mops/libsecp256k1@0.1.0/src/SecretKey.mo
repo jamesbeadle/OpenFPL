@@ -9,23 +9,23 @@ import Scalar "core/scalar";
 import Choice "subtle";
 
 module {
-    public class SecretKey(
-        scalar_: Scalar.Scalar
-    ) {
-        public let scalar = scalar_;
-    };
+  public class SecretKey(
+    scalar_ : Scalar.Scalar,
+  ) {
+    public let scalar = scalar_;
+  };
 
-    public func parse(
-        p: [Nat8]
-    ): Result.Result<SecretKey, Error.Error> {
-        if(p.size() != Utils.SECRET_KEY_SIZE) {
-            return #err(#InvalidInputLength);
-        };
-        let elem = Scalar.Scalar();
-        if(not Choice.from(elem.set_b32(p, 0))) {
-            return #ok(SecretKey(elem));
-        } else {
-            return #err(#InvalidSecretKey);
-        };
+  public func parse(
+    p : [Nat8],
+  ) : Result.Result<SecretKey, Error.Error> {
+    if (p.size() != Utils.SECRET_KEY_SIZE) {
+      return #err(#InvalidInputLength);
     };
+    let elem = Scalar.Scalar();
+    if (not Choice.from(elem.set_b32(p, 0))) {
+      return #ok(SecretKey(elem));
+    } else {
+      return #err(#InvalidSecretKey);
+    };
+  };
 };

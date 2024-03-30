@@ -41,7 +41,16 @@ module {
 
   public let { filter; filterDesc; clone; cloneDesc } = Clone;
 
-  public let { find; findDesc; some; someDesc; every; everyDesc; forEach; forEachDesc } = Find;
+  public let {
+    find;
+    findDesc;
+    some;
+    someDesc;
+    every;
+    everyDesc;
+    forEach;
+    forEachDesc;
+  } = Find;
 
   public let { fromIter; fromIterDesc; fromIterMap; fromIterMapDesc } = FromIter;
 

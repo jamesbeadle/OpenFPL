@@ -31,12 +31,11 @@ map1.delete(3);
 map1.delete(4);
 map1.put(4, 14);
 
-
-func toSortedArray(map : TrieMap.TrieMap<Nat,Nat>) : [(Nat, Nat)] {
-  Array.sort<(Nat,Nat)>(Iter.toArray(map.entries()), func ((k1,v1), (k2,v2)) : Order.Order { Nat.compare(k1, k2) });
+func toSortedArray(map : TrieMap.TrieMap<Nat, Nat>) : [(Nat, Nat)] {
+  Array.sort<(Nat, Nat)>(Iter.toArray(map.entries()), func((k1, v1), (k2, v2)) : Order.Order { Nat.compare(k1, k2) })
 };
 
-func sort<T>(iter : Iter.Iter<T>, compare: (T, T) -> Order.Order) : [T] {
+func sort<T>(iter : Iter.Iter<T>, compare : (T, T) -> Order.Order) : [T] {
   Array.sort<T>(Iter.toArray(iter), compare)
 };
 
@@ -58,7 +57,7 @@ let suite = Suite.suite(
       do {
         let map = TrieMap.clone(map1, Nat.equal, hashNat);
         map.put(5, 15);
-        toSortedArray(map);
+        toSortedArray(map)
       },
       arrayTest([(0, 10), (2, 12), (4, 14), (5, 15)])
     ),
@@ -68,7 +67,7 @@ let suite = Suite.suite(
         let map = TrieMap.clone(map1, Nat.equal, hashNat);
         map.put(0, 20);
         map.put(4, 24);
-        toSortedArray(map);
+        toSortedArray(map)
       },
       arrayTest([(0, 20), (2, 12), (4, 24)])
     ),

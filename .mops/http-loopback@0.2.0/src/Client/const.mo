@@ -1,5 +1,3 @@
-
-
 module {
 
   public let DEFAULT_MAX_RESPONSE_BYTES : Nat64 = 20_000_000;
@@ -38,4 +36,4 @@ module {
 
   };
 
-}
+};

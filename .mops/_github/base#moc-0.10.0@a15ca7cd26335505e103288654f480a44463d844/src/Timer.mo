@@ -13,10 +13,12 @@ module {
   public type Duration = { #seconds : Nat; #nanoseconds : Nat };
   public type TimerId = Nat;
 
-  func toNanos(d : Duration) : Nat64 =
-    fromIntWrap (switch d {
+  func toNanos(d : Duration) : Nat64 = fromIntWrap(
+    switch d {
       case (#seconds s) s * 1000_000_000;
-      case (#nanoseconds ns) ns });
+      case (#nanoseconds ns) ns
+    }
+  );
 
   /// Installs a one-off timer that upon expiration after given duration `d`
   /// executes the future `job()`.

@@ -1,10 +1,8 @@
-The Motoko base library
-=======================
+# The Motoko base library
 
 This repository contains the Motoko base library. It is intended to be used with the [`moc` compiler](https://github.com/dfinity/motoko) (and tools that wrap it, like `dfx`).
 
-Usage
------
+## Usage
 
 If you are installing Motoko through the DFINITY SDK releases, then this base
 library is already included.
@@ -20,12 +18,11 @@ If you build your project using the [Vessel package manager] your package-set mo
   }
 ```
 
-The package _name_ `"base"` appears when importing its modules in Motoko (e.g., `import "mo:base/Nat"`).  The _repo_ may either be your local clone path, or this public repository url, as above.  The _version_ can be any git branch or tag name (such as `version = "moc-0.8.4"`).  There are no dependencies.  See the [Vessel package manager] docs for more details.
+The package _name_ `"base"` appears when importing its modules in Motoko (e.g., `import "mo:base/Nat"`). The _repo_ may either be your local clone path, or this public repository url, as above. The _version_ can be any git branch or tag name (such as `version = "moc-0.8.4"`). There are no dependencies. See the [Vessel package manager] docs for more details.
 
 [Vessel package manager]: https://github.com/dfinity/vessel
 
-Building & Testing
-------------------
+## Building & Testing
 
 Run the following commands to configure your local development branch:
 
@@ -42,12 +39,11 @@ npm test
 npm run prettier:format
 ```
 
-The test runner will automatically detect the `moc` compiler from your system path or `dfx` installation. 
+The test runner will automatically detect the `moc` compiler from your system path or `dfx` installation.
 
 Running the tests locally also requires [Wasmtime](https://wasmtime.dev/) and [Vessel](https://github.com/dfinity/vessel) to be installed on your system.
 
-Documentation
--------------
+## Documentation
 
 The documentation can be generated in `doc/` by running
 
@@ -57,8 +53,7 @@ The documentation can be generated in `doc/` by running
 
 which creates `_out/html/index.html`.
 
-The `next-moc` branch
----------------------
+## The `next-moc` branch
 
 The `next-moc` branch contains changes that make base compatible with the
 in-development version of `moc`. This repository's public CI does _not_ run
@@ -66,7 +61,6 @@ on that branch.
 
 External contributions are best made against `master`.
 
-Contributing
-------------
+## Contributing
 
 Please read the [Interface Design Guide for Motoko Base Library](doc/design.md) before making a pull request.

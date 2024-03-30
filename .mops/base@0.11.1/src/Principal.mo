@@ -64,12 +64,12 @@ module {
     sha224.writeBlob(toBlob(principal));
     switch subAccount {
       case (?subAccount) {
-        sha224.writeBlob(subAccount)
+        sha224.writeBlob(subAccount);
       };
       case (null) {
         let defaultSubAccount = Array.tabulate<Nat8>(32, func _ = 0);
-        sha224.writeArray(defaultSubAccount)
-      }
+        sha224.writeArray(defaultSubAccount);
+      };
     };
 
     let hashSum = sha224.sum();
@@ -77,7 +77,7 @@ module {
     // hashBlob is a CRC32 implementation
     let crc32Bytes = nat32ToByteArray(Prim.hashBlob hashSum);
 
-    Blob.fromArray(Array.append(crc32Bytes, Blob.toArray(hashSum)))
+    Blob.fromArray(Array.append(crc32Bytes, Blob.toArray(hashSum)));
   };
 
   /// Convert a `Principal` to its `Blob` (bytes) representation.
@@ -159,15 +159,15 @@ module {
   public func compare(principal1 : Principal, principal2 : Principal) : {
     #less;
     #equal;
-    #greater
+    #greater;
   } {
     if (principal1 < principal2) {
-      #less
+      #less;
     } else if (principal1 == principal2) {
-      #equal
+      #equal;
     } else {
-      #greater
-    }
+      #greater;
+    };
   };
 
   /// Equality function for Principal types.
@@ -195,7 +195,7 @@ module {
   /// Buffer.equal(buffer1, buffer2, Principal.equal) // => true
   /// ```
   public func equal(principal1 : Principal, principal2 : Principal) : Bool {
-    principal1 == principal2
+    principal1 == principal2;
   };
 
   /// Inequality function for Principal types.
@@ -214,7 +214,7 @@ module {
   /// value to pass to a higher order function. It is not possible to use `!=`
   /// as a function value at the moment.
   public func notEqual(principal1 : Principal, principal2 : Principal) : Bool {
-    principal1 != principal2
+    principal1 != principal2;
   };
 
   /// "Less than" function for Principal types.
@@ -233,7 +233,7 @@ module {
   /// value to pass to a higher order function. It is not possible to use `<`
   /// as a function value at the moment.
   public func less(principal1 : Principal, principal2 : Principal) : Bool {
-    principal1 < principal2
+    principal1 < principal2;
   };
 
   /// "Less than or equal to" function for Principal types.
@@ -252,7 +252,7 @@ module {
   /// value to pass to a higher order function. It is not possible to use `<=`
   /// as a function value at the moment.
   public func lessOrEqual(principal1 : Principal, principal2 : Principal) : Bool {
-    principal1 <= principal2
+    principal1 <= principal2;
   };
 
   /// "Greater than" function for Principal types.
@@ -271,7 +271,7 @@ module {
   /// value to pass to a higher order function. It is not possible to use `>`
   /// as a function value at the moment.
   public func greater(principal1 : Principal, principal2 : Principal) : Bool {
-    principal1 > principal2
+    principal1 > principal2;
   };
 
   /// "Greater than or equal to" function for Principal types.
@@ -290,7 +290,7 @@ module {
   /// value to pass to a higher order function. It is not possible to use `>=`
   /// as a function value at the moment.
   public func greaterOrEqual(principal1 : Principal, principal2 : Principal) : Bool {
-    principal1 >= principal2
+    principal1 >= principal2;
   };
 
   /**
@@ -373,7 +373,7 @@ module {
       0xffc00b31,
       0x68581511,
       0x64f98fa7,
-      0xbefa4fa4
+      0xbefa4fa4,
     ],
     [
       // 256
@@ -384,8 +384,8 @@ module {
       0x510e527f,
       0x9b05688c,
       0x1f83d9ab,
-      0x5be0cd19
-    ]
+      0x5be0cd19,
+    ],
   ];
 
   let rot = Nat32.bitrotRight;
@@ -421,7 +421,7 @@ module {
       s4 := ivs[iv][4];
       s5 := ivs[iv][5];
       s6 := ivs[iv][6];
-      s7 := ivs[iv][7]
+      s7 := ivs[iv][7];
     };
 
     reset();
@@ -437,9 +437,9 @@ module {
         if (i_msg == 16) {
           process_block();
           i_msg := 0;
-          i_block +%= 1
-        }
-      }
+          i_block +%= 1;
+        };
+      };
     };
 
     private func process_block() : () {
@@ -1130,7 +1130,7 @@ module {
       s4 +%= e;
       s5 +%= f;
       s6 +%= g;
-      s7 +%= h
+      s7 +%= h;
     };
 
     public func writeIter(iter : { next() : ?Nat8 }) : () {
@@ -1138,13 +1138,13 @@ module {
         switch (iter.next()) {
           case (?val) {
             writeByte(val);
-            continue reading
+            continue reading;
           };
           case (null) {
-            break reading
-          }
-        }
-      }
+            break reading;
+          };
+        };
+      };
     };
 
     public func writeArray(arr : [Nat8]) : () = writeIter(arr.vals());
@@ -1155,7 +1155,7 @@ module {
       // t = bytes in the last incomplete block (0-63)
       let t : Nat8 = (i_msg << 2) +% 4 -% i_byte;
       // p = length of padding (1-64)
-      var p : Nat8 = if (t < 56) (56 -% t) else (120 -% t);
+      var p : Nat8 = if (t < 56)(56 -% t) else (120 -% t);
       // n_bits = length of message in bits
       let n_bits : Nat64 = ((i_block << 6) +% Nat64.fromIntWrap(Nat8.toNat(t))) << 3;
 
@@ -1164,7 +1164,7 @@ module {
       p -%= 1;
       while (p != 0) {
         writeByte(0x00);
-        p -%= 1
+        p -%= 1;
       };
 
       // write length (8 bytes)
@@ -1209,14 +1209,14 @@ module {
       digest[26] := Nat8.fromIntWrap(Nat32.toNat((s6 >> 8) & 0xff));
       digest[27] := Nat8.fromIntWrap(Nat32.toNat(s6 & 0xff));
 
-      return Blob.fromArrayMut(digest)
-    }
+      return Blob.fromArrayMut(digest);
+    };
   }; // class SHA224
 
   func nat32ToByteArray(n : Nat32) : [Nat8] {
     func byte(n : Nat32) : Nat8 {
-      Nat8.fromNat(Nat32.toNat(n & 0xff))
+      Nat8.fromNat(Nat32.toNat(n & 0xff));
     };
-    [byte(n >> 24), byte(n >> 16), byte(n >> 8), byte(n)]
-  }
-}
+    [byte(n >> 24), byte(n >> 16), byte(n >> 8), byte(n)];
+  };
+};

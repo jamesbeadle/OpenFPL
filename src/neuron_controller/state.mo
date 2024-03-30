@@ -1,9 +1,9 @@
 import { toText = principalToText } "mo:base/Principal";
-import { Fees; Nonce; } "mo:utilities";
+import { Fees; Nonce } "mo:utilities";
 import Loopback "mo:http-loopback";
 import ECDSA "mo:tecdsa";
 
-module { 
+module {
 
   public type AsyncReturn<T> = ECDSA.Identity.AsyncReturn<T>;
 
@@ -33,7 +33,7 @@ module {
     var ledger_canister : Text;
     var neuron_id : Nat64;
     var neuron_index : Nat64;
-  }; 
+  };
 
   public func empty() : State = {
     var self = "";
@@ -50,9 +50,9 @@ module {
     var neuron_index = 0;
   };
 
-  public func load(state: State, params : InitParams): async* AsyncReturn<()> {
+  public func load(state : State, params : InitParams) : async AsyncReturn<()> {
 
-    state.self := principalToText( params.self );
+    state.self := principalToText(params.self);
 
     state.ledger_canister := params.ledger_canister;
 
@@ -60,7 +60,7 @@ module {
 
     Fees.State.load(
       state.fees,
-      { fees = params.fees }
+      { fees = params.fees },
     );
 
     Loopback.Client.State.load(
@@ -69,37 +69,40 @@ module {
         path = params.path;
         domain = params.domain;
         nonce = state.nonce;
-        fees = state.fees
-      }
+        fees = state.fees;
+      },
     );
 
     Loopback.Agent.State.load(
       state.loopback_agent,
-      { ingress_expiry = params.ingress_expiry }
+      { ingress_expiry = params.ingress_expiry },
     );
 
-    ECDSA.Client.State.load(state.ecdsa_client, {
-      canister_id = params.management_canister;
-      fees = state.fees;
-    });
+    ECDSA.Client.State.load(
+      state.ecdsa_client,
+      {
+        canister_id = params.management_canister;
+        fees = state.fees;
+      },
+    );
 
-    switch(
-      await* ECDSA.Identity.State.load(
+    switch (
+      await ECDSA.Identity.State.load(
         state.ecdsa_identity,
         {
           client = ECDSA.Client.Client(state.ecdsa_client);
           seed_phrase = params.ecdsa_seed;
           key_id = {
             curve = ECDSA.SECP256K1.CURVE;
-            name = params.ecdsa_key
-          }
-        }
-      )
-    ){
+            name = params.ecdsa_key;
+          };
+        },
+      ),
+    ) {
 
-      case( #ok _ ) #ok( state.initialized := true );
+      case (#ok _) #ok(state.initialized := true);
 
-      case( #err msg ) #err(msg)
+      case (#err msg) #err(msg)
 
     }
 

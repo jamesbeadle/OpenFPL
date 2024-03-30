@@ -124,8 +124,7 @@ module {
       for (i in it) {
         if (8 : Nat8 <= pp) {
           acc := acc * 256 + Prim.nat8ToNat(i)
-        }
-        else if (0 : Nat8 == pp) {
+        } else if (0 : Nat8 == pp) {
           return ?acc
         } else {
           acc *= Prim.nat8ToNat(1 << pp);
@@ -134,9 +133,7 @@ module {
         };
         pp -= 8
       };
-      if (0 : Nat8 == pp)
-        ?acc
-      else null
+      if (0 : Nat8 == pp) ?acc else null
     };
 
     /// Counts the number of heads in `n` fair coin tosses.
@@ -163,9 +160,7 @@ module {
         };
         nn -= 8
       };
-      if (0 : Nat8 == nn)
-        ?acc
-      else null
+      if (0 : Nat8 == nn) ?acc else null
     }
   };
 
@@ -229,8 +224,7 @@ module {
     };
     if (0 : Nat8 == pp) {
       return acc
-    }
-    else Prim.trap("Random.rangeFrom")
+    } else Prim.trap("Random.rangeFrom")
   };
 
   /// Counts the number of heads in `n` coin tosses.
@@ -263,8 +257,7 @@ module {
     };
     if (0 : Nat8 == nn) {
       return acc
-    }
-    else Prim.trap("Random.binomialFrom")
+    } else Prim.trap("Random.binomialFrom")
   }
 
 }

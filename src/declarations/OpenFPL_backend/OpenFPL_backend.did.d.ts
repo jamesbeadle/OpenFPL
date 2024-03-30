@@ -1,11 +1,32 @@
 import type { ActorMethod } from "@dfinity/agent";
 import type { IDL } from "@dfinity/candid";
+import type { Principal } from "@dfinity/principal";
 
+export interface AccountIdentifier {
+  hash: Uint8Array | number[];
+}
 export interface AddInitialFixturesDTO {
   seasonId: SeasonId;
   seasonFixtures: Array<FixtureDTO>;
 }
+export interface Amount {
+  e8s: bigint;
+}
+export type By =
+  | { NeuronIdOrSubaccount: null }
+  | { MemoAndController: ClaimOrRefreshNeuronFromAccount }
+  | { Memo: bigint };
 export type CalendarMonth = number;
+export interface ChangeAutoStakeMaturity {
+  requested_setting_for_auto_stake_maturity: boolean;
+}
+export interface ClaimOrRefresh {
+  by: [] | [By];
+}
+export interface ClaimOrRefreshNeuronFromAccount {
+  controller: [] | [Principal];
+  memo: bigint;
+}
 export interface ClubDTO {
   id: ClubId;
   secondaryColourHex: string;
@@ -17,6 +38,16 @@ export interface ClubDTO {
   primaryColourHex: string;
 }
 export type ClubId = number;
+export type Command =
+  | { Spawn: Spawn }
+  | { Follow: Follow }
+  | { ClaimOrRefresh: ClaimOrRefresh }
+  | { Configure: Configure }
+  | { StakeMaturity: StakeMaturityResponse }
+  | { Disburse: Disburse };
+export interface Configure {
+  operation: [] | [Operation];
+}
 export interface CountryDTO {
   id: CountryId;
   code: string;
@@ -36,6 +67,10 @@ export interface CreatePlayerDTO {
 export interface DataCacheDTO {
   hash: string;
   category: string;
+}
+export interface Disburse {
+  to_account: [] | [AccountIdentifier];
+  amount: [] | [Amount];
 }
 export type Error =
   | { DecodeError: null }
@@ -100,7 +135,14 @@ export type FixtureStatusType =
   | { Finalised: null }
   | { Active: null }
   | { Complete: null };
+export interface Follow {
+  topic: number;
+  followees: Array<NeuronId>;
+}
 export type GameweekNumber = number;
+export interface IncreaseDissolveDelay {
+  additional_dissolve_delay_seconds: number;
+}
 export interface InjuryHistory {
   description: string;
   injuryStartDate: bigint;
@@ -147,6 +189,17 @@ export interface MoveFixtureDTO {
   updatedFixtureGameweek: GameweekNumber;
   updatedFixtureDate: bigint;
 }
+export interface NeuronId {
+  id: bigint;
+}
+export type Operation =
+  | {
+      ChangeAutoStakeMaturity: ChangeAutoStakeMaturity;
+    }
+  | { StopDissolving: null }
+  | { StartDissolving: null }
+  | { IncreaseDissolveDelay: IncreaseDissolveDelay }
+  | { SetDissolveTimestamp: SetDissolveTimestamp };
 export interface PickTeamDTO {
   playerIds: Uint16Array | number[];
   countrymenCountryId: CountryId;
@@ -341,12 +394,24 @@ export interface SeasonLeaderboardDTO {
   seasonId: SeasonId;
   entries: Array<LeaderboardEntry>;
 }
+export interface SetDissolveTimestamp {
+  dissolve_timestamp_seconds: bigint;
+}
 export interface SetPlayerInjuryDTO {
   playerId: PlayerId;
   description: string;
   expectedEndDate: bigint;
 }
 export type ShirtType = { Filled: null } | { Striped: null };
+export interface Spawn {
+  percentage_to_spawn: [] | [number];
+  new_controller: [] | [Principal];
+  nonce: [] | [bigint];
+}
+export interface StakeMaturityResponse {
+  maturity_e8s: bigint;
+  stake_maturity_e8s: bigint;
+}
 export interface SubmitFixtureDataDTO {
   fixtureId: FixtureId;
   seasonId: SeasonId;
@@ -428,8 +493,10 @@ export interface WeeklyLeaderboardDTO {
 export interface _SERVICE {
   burnICPToCycles: ActorMethod<[bigint], undefined>;
   executeAddInitialFixtures: ActorMethod<[AddInitialFixturesDTO], undefined>;
+  executeCreateDAONeuron: ActorMethod<[], undefined>;
   executeCreatePlayer: ActorMethod<[CreatePlayerDTO], undefined>;
   executeLoanPlayer: ActorMethod<[LoanPlayerDTO], undefined>;
+  executeManageDAONeuron: ActorMethod<[Command], undefined>;
   executeMoveFixture: ActorMethod<[MoveFixtureDTO], undefined>;
   executePostponeFixture: ActorMethod<[PostponeFixtureDTO], undefined>;
   executePromoteFormerClub: ActorMethod<[PromoteFormerClubDTO], undefined>;
@@ -459,6 +526,7 @@ export interface _SERVICE {
     Result_14
   >;
   getMonthlyLeaderboards: ActorMethod<[SeasonId, CalendarMonth], Result_13>;
+  getNeuronId: ActorMethod<[], bigint>;
   getPlayerDetails: ActorMethod<[PlayerId, SeasonId], Result_12>;
   getPlayerDetailsForGameweek: ActorMethod<
     [SeasonId, GameweekNumber],
@@ -480,7 +548,6 @@ export interface _SERVICE {
     [SeasonId, GameweekNumber, bigint, bigint, string],
     Result_2
   >;
-  init: ActorMethod<[], Result_1>;
   isUsernameValid: ActorMethod<[string], boolean>;
   requestCanisterTopup: ActorMethod<[], undefined>;
   saveFantasyTeam: ActorMethod<[UpdateTeamSelectionDTO], Result_1>;
@@ -489,8 +556,10 @@ export interface _SERVICE {
   updateProfilePicture: ActorMethod<[Uint8Array | number[], string], Result_1>;
   updateUsername: ActorMethod<[string], Result_1>;
   validateAddInitialFixtures: ActorMethod<[AddInitialFixturesDTO], Result>;
+  validateCreateDAONeuron: ActorMethod<[], Result>;
   validateCreatePlayer: ActorMethod<[CreatePlayerDTO], Result>;
   validateLoanPlayer: ActorMethod<[LoanPlayerDTO], Result>;
+  validateManageDAONeuron: ActorMethod<[], Result>;
   validateMoveFixture: ActorMethod<[MoveFixtureDTO], Result>;
   validatePostponeFixture: ActorMethod<[PostponeFixtureDTO], Result>;
   validatePromoteFormerClub: ActorMethod<[PromoteFormerClubDTO], Result>;

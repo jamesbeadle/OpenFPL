@@ -48,7 +48,7 @@ module {
   /// Nat64.fromNat32(123); // => 123 : Nat64
   /// ```
   public func fromNat32(x : Nat32) : Nat64 {
-    Prim.nat32ToNat64(x)
+    Prim.nat32ToNat64(x);
   };
 
   /// Converts a 64-bit unsigned integer to a 32-bit unsigned integer.
@@ -60,7 +60,7 @@ module {
   /// Nat64.toNat32(123); // => 123 : Nat32
   /// ```
   public func toNat32(x : Nat64) : Nat32 {
-    Prim.nat64ToNat32(x)
+    Prim.nat64ToNat32(x);
   };
 
   /// Converts a signed integer with infinite precision to a 64-bit unsigned integer.
@@ -81,7 +81,7 @@ module {
   /// Nat64.toText(1234); // => "1234" : Text
   /// ```
   public func toText(x : Nat64) : Text {
-    Nat.toText(toNat(x))
+    Nat.toText(toNat(x));
   };
 
   /// Returns the minimum of `x` and `y`.
@@ -91,7 +91,7 @@ module {
   /// Nat64.min(123, 456); // => 123 : Nat64
   /// ```
   public func min(x : Nat64, y : Nat64) : Nat64 {
-    if (x < y) { x } else { y }
+    if (x < y) { x } else { y };
   };
 
   /// Returns the maximum of `x` and `y`.
@@ -101,7 +101,7 @@ module {
   /// Nat64.max(123, 456); // => 456 : Nat64
   /// ```
   public func max(x : Nat64, y : Nat64) : Nat64 {
-    if (x < y) { y } else { x }
+    if (x < y) { y } else { x };
   };
 
   /// Equality function for Nat64 types.
@@ -219,7 +219,7 @@ module {
   /// Array.sort([2, 3, 1] : [Nat64], Nat64.compare) // => [1, 2, 3]
   /// ```
   public func compare(x : Nat64, y : Nat64) : { #less; #equal; #greater } {
-    if (x < y) { #less } else if (x == y) { #equal } else { #greater }
+    if (x < y) { #less } else if (x == y) { #equal } else { #greater };
   };
 
   /// Returns the sum of `x` and `y`, `x + y`.
@@ -449,7 +449,7 @@ module {
   /// Nat64.bittest(5, 2); // => true
   /// ```
   public func bittest(x : Nat64, p : Nat) : Bool {
-    Prim.btstNat64(x, Prim.natToNat64(p))
+    Prim.btstNat64(x, Prim.natToNat64(p));
   };
 
   /// Returns the value of setting bit `p mod 64` in `x` to `1`.
@@ -459,7 +459,7 @@ module {
   /// Nat64.bitset(5, 1); // => 7
   /// ```
   public func bitset(x : Nat64, p : Nat) : Nat64 {
-    x | (1 << Prim.natToNat64(p))
+    x | (1 << Prim.natToNat64(p));
   };
 
   /// Returns the value of clearing bit `p mod 64` in `x` to `0`.
@@ -469,7 +469,7 @@ module {
   /// Nat64.bitclear(5, 2); // => 1
   /// ```
   public func bitclear(x : Nat64, p : Nat) : Nat64 {
-    x & ^(1 << Prim.natToNat64(p))
+    x & ^(1 << Prim.natToNat64(p));
   };
 
   /// Returns the value of flipping bit `p mod 64` in `x`.
@@ -479,7 +479,7 @@ module {
   /// Nat64.bitflip(5, 2); // => 1
   /// ```
   public func bitflip(x : Nat64, p : Nat) : Nat64 {
-    x ^ (1 << Prim.natToNat64(p))
+    x ^ (1 << Prim.natToNat64(p));
   };
 
   /// Returns the count of non-zero bits in `x`.
@@ -562,4 +562,4 @@ module {
   /// as a function value at the moment.
   public func powWrap(x : Nat64, y : Nat64) : Nat64 { x **% y };
 
-}
+};

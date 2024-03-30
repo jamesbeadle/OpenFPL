@@ -82,11 +82,11 @@ module {
   ///
   /// *Runtime and space assumes that `equal` runs in O(1) time and space.
   public func replace<K, V>(
-      map : AssocList<K, V>,
-      key : K,
-      equal : (K, K) -> Bool,
-      value : ?V
-    ) : (AssocList<K, V>, ?V) {
+    map : AssocList<K, V>,
+    key : K,
+    equal : (K, K) -> Bool,
+    value : ?V
+  ) : (AssocList<K, V>, ?V) {
     var prev : ?V = null;
     func del(al : AssocList<K, V>) : AssocList<K, V> {
       switch (al) {
@@ -109,13 +109,9 @@ module {
     };
     let map1 = del(map);
     switch value {
-      case (?value) {
-        (?((key, value), map1), prev)
-      };
-      case null {
-        (map1, prev)
-      };
-    };
+      case (?value) { (?((key, value), map1), prev) };
+      case null { (map1, prev) }
+    }
   };
 
   /// Produces a new map containing all entries from `map1` whose keys are not

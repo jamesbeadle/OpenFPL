@@ -38,7 +38,7 @@ actor class _ManagerCanister() {
   private stable var totalManagers = 0;
 
   private stable var main_canister_id = Environment.BACKEND_CANISTER_ID;
-  
+
   public shared ({ caller }) func updateTeamSelection(updateManagerDTO : DTOs.UpdateTeamSelectionDTO, transfersAvailable : Nat8, monthlyBonuses : Nat8, newBankBalance : Nat16) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);

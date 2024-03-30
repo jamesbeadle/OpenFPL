@@ -75,7 +75,7 @@ module {
   /// Nat8.toText(123); // => "123" : Text
   /// ```
   public func toText(x : Nat8) : Text {
-    Nat.toText(toNat(x))
+    Nat.toText(toNat(x));
   };
 
   /// Returns the minimum of `x` and `y`.
@@ -85,7 +85,7 @@ module {
   /// Nat8.min(123, 200); // => 123 : Nat8
   /// ```
   public func min(x : Nat8, y : Nat8) : Nat8 {
-    if (x < y) { x } else { y }
+    if (x < y) { x } else { y };
   };
 
   /// Returns the maximum of `x` and `y`.
@@ -95,7 +95,7 @@ module {
   /// Nat8.max(123, 200); // => 200 : Nat8
   /// ```
   public func max(x : Nat8, y : Nat8) : Nat8 {
-    if (x < y) { y } else { x }
+    if (x < y) { y } else { x };
   };
 
   /// Equality function for Nat8 types.
@@ -213,7 +213,7 @@ module {
   /// Array.sort([2, 3, 1] : [Nat8], Nat8.compare) // => [1, 2, 3]
   /// ```
   public func compare(x : Nat8, y : Nat8) : { #less; #equal; #greater } {
-    if (x < y) { #less } else if (x == y) { #equal } else { #greater }
+    if (x < y) { #less } else if (x == y) { #equal } else { #greater };
   };
 
   /// Returns the sum of `x` and `y`, `x + y`.
@@ -444,7 +444,7 @@ module {
   /// Nat8.bittest(5, 2); // => true
   /// ```
   public func bittest(x : Nat8, p : Nat) : Bool {
-    Prim.btstNat8(x, Prim.natToNat8(p))
+    Prim.btstNat8(x, Prim.natToNat8(p));
   };
 
   /// Returns the value of setting bit `p mod 8` in `x` to `1`.
@@ -454,7 +454,7 @@ module {
   /// Nat8.bitset(5, 1); // => 7
   /// ```
   public func bitset(x : Nat8, p : Nat) : Nat8 {
-    x | (1 << Prim.natToNat8(p))
+    x | (1 << Prim.natToNat8(p));
   };
 
   /// Returns the value of clearing bit `p mod 8` in `x` to `0`.
@@ -464,7 +464,7 @@ module {
   /// Nat8.bitclear(5, 2); // => 1
   /// ```
   public func bitclear(x : Nat8, p : Nat) : Nat8 {
-    x & ^(1 << Prim.natToNat8(p))
+    x & ^(1 << Prim.natToNat8(p));
   };
 
   /// Returns the value of flipping bit `p mod 8` in `x`.
@@ -474,7 +474,7 @@ module {
   /// Nat8.bitflip(5, 2); // => 1
   /// ```
   public func bitflip(x : Nat8, p : Nat) : Nat8 {
-    x ^ (1 << Prim.natToNat8(p))
+    x ^ (1 << Prim.natToNat8(p));
   };
 
   /// Returns the count of non-zero bits in `x`.
@@ -556,4 +556,4 @@ module {
   /// as a function value at the moment.
   public func powWrap(x : Nat8, y : Nat8) : Nat8 { x **% y };
 
-}
+};

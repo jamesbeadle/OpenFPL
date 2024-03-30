@@ -22,6 +22,7 @@ Binary.LittleEndian.fromNat16(0xFF)
 
 Binary.BigEndian.fromNat16(0xFF)
 // [0, 255]
+
 ```
 
 ## Hex
@@ -34,10 +35,12 @@ Encode an array of unsigned 8-bit integers in hexadecimal format.
 
 ```motoko
 encode(ns : [Nat8]) : Text
+
 ```
 
 Decode an array of unsigned 8-bit integers in hexadecimal format.
 
 ```motoko
-decode(t : Text) : Result<[Nat8],Text>
+decode(t : Text) : Result<[Nat8], Text>
+
 ```

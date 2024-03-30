@@ -1,8 +1,10 @@
 module {
 
   public type Timestamp = Nat64;
-  
-  public type IC = actor {http_request : HttpRequestArgs -> async HttpResponsePayload};
+
+  public type IC = actor {
+    http_request : HttpRequestArgs -> async HttpResponsePayload;
+  };
 
   public type HttpRequestArgs = {
     url : Text;
@@ -53,4 +55,4 @@ module {
     context : Blob;
   };
 
-}
+};

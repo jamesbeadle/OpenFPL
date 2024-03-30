@@ -10,7 +10,7 @@ import Buffer "mo:base/Buffer";
 import Iter "mo:base/Iter";
 
 module {
-    public func appendArrayToBuffer<T>(buffer: Buffer.Buffer<T>, array: [T]) {
-        Iter.iterate(Iter.fromArray(array), func(x : T, ix : Nat) { buffer.add(x) });
-    };
-}
+  public func appendArrayToBuffer<T>(buffer : Buffer.Buffer<T>, array : [T]) {
+    Iter.iterate(Iter.fromArray(array), func(x : T, ix : Nat) { buffer.add(x) });
+  };
+};

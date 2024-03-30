@@ -19,4 +19,4 @@ module {
 
   public type Error = T.Error;
 
-}
+};

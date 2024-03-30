@@ -122,15 +122,15 @@ module {
   public func compare(principal1 : Principal, principal2 : Principal) : {
     #less;
     #equal;
-    #greater
+    #greater;
   } {
     if (principal1 < principal2) {
-      #less
+      #less;
     } else if (principal1 == principal2) {
-      #equal
+      #equal;
     } else {
-      #greater
-    }
+      #greater;
+    };
   };
 
   /// Equality function for Principal types.
@@ -158,7 +158,7 @@ module {
   /// Buffer.equal(buffer1, buffer2, Principal.equal) // => true
   /// ```
   public func equal(principal1 : Principal, principal2 : Principal) : Bool {
-    principal1 == principal2
+    principal1 == principal2;
   };
 
   /// Inequality function for Principal types.
@@ -177,7 +177,7 @@ module {
   /// value to pass to a higher order function. It is not possible to use `!=`
   /// as a function value at the moment.
   public func notEqual(principal1 : Principal, principal2 : Principal) : Bool {
-    principal1 != principal2
+    principal1 != principal2;
   };
 
   /// "Less than" function for Principal types.
@@ -196,7 +196,7 @@ module {
   /// value to pass to a higher order function. It is not possible to use `<`
   /// as a function value at the moment.
   public func less(principal1 : Principal, principal2 : Principal) : Bool {
-    principal1 < principal2
+    principal1 < principal2;
   };
 
   /// "Less than or equal to" function for Principal types.
@@ -215,7 +215,7 @@ module {
   /// value to pass to a higher order function. It is not possible to use `<=`
   /// as a function value at the moment.
   public func lessOrEqual(principal1 : Principal, principal2 : Principal) : Bool {
-    principal1 <= principal2
+    principal1 <= principal2;
   };
 
   /// "Greater than" function for Principal types.
@@ -234,7 +234,7 @@ module {
   /// value to pass to a higher order function. It is not possible to use `>`
   /// as a function value at the moment.
   public func greater(principal1 : Principal, principal2 : Principal) : Bool {
-    principal1 > principal2
+    principal1 > principal2;
   };
 
   /// "Greater than or equal to" function for Principal types.
@@ -253,6 +253,6 @@ module {
   /// value to pass to a higher order function. It is not possible to use `>=`
   /// as a function value at the moment.
   public func greaterOrEqual(principal1 : Principal, principal2 : Principal) : Bool {
-    principal1 >= principal2
-  }
-}
+    principal1 >= principal2;
+  };
+};

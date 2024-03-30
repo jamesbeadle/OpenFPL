@@ -76,32 +76,32 @@ module {
   public func equal<T>(s1 : Set<T>, s2 : Set<T>, eq : (T, T) -> Bool) : Bool {
     if (Trie.size(s1) != Trie.size(s2)) return false;
     for (k in keys(s1)) {
-      if (Trie.find<T,()>(s2, k, eq) == null) {
-        return false;
+      if (Trie.find<T, ()>(s2, k, eq) == null) {
+        return false
       }
     };
-    return true;
+    return true
   };
 
   /// The number of set elements, set's cardinality.
   public func size<T>(s : Set<T>) : Nat {
-    Trie.size(s);
+    Trie.size(s)
   };
 
   /// Test if `s` is the empty set.
   public func isEmpty<T>(s : Set<T>) : Bool {
-    Trie.size(s) == 0;
+    Trie.size(s) == 0
   };
 
   /// Test if `s1` is a subset of `s2`.
   public func isSubset<T>(s1 : Set<T>, s2 : Set<T>, eq : (T, T) -> Bool) : Bool {
     if (Trie.size(s1) > Trie.size(s2)) return false;
     for (k in keys(s1)) {
-      if (Trie.find<T,()>(s2, k, eq) == null) {
-        return false;
+      if (Trie.find<T, ()>(s2, k, eq) == null) {
+        return false
       }
     };
-    return true;
+    return true
   };
 
   /// Test if a set contains a given element.

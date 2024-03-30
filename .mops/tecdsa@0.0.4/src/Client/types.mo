@@ -14,16 +14,20 @@ module {
 
   public type Curve = { #secp256k1 };
 
-  public type KeyId = {curve: Curve; name : Text};
+  public type KeyId = { curve : Curve; name : Text };
 
-  public type Params = {key_id: KeyId; derivation_path: [Blob]; canister_id: ?Principal};
+  public type Params = {
+    key_id : KeyId;
+    derivation_path : [Blob];
+    canister_id : ?Principal;
+  };
 
-  public type AsyncReturn<T> = { #ok: T; #err: AsyncError };
+  public type AsyncReturn<T> = { #ok : T; #err : AsyncError };
 
   public type AsyncError = {
-    #fee_not_defined: Text;
-    #trapped: Text;
-    #other: Text;
+    #fee_not_defined : Text;
+    #trapped : Text;
+    #other : Text;
   };
 
   public type ReturnFee = Fees.Return;
@@ -32,13 +36,13 @@ module {
     ecdsa_public_key : ({
       canister_id : ?Principal;
       derivation_path : [Blob];
-      key_id : { curve: { #secp256k1; } ; name: Text };
-    }) -> async ({ public_key : Blob; chain_code : Blob; });
+      key_id : { curve : { #secp256k1 }; name : Text };
+    }) -> async ({ public_key : Blob; chain_code : Blob });
     sign_with_ecdsa : ({
       message_hash : Blob;
       derivation_path : [Blob];
-      key_id : { curve: { #secp256k1; } ; name: Text };
+      key_id : { curve : { #secp256k1 }; name : Text };
     }) -> async ({ signature : Blob });
   };
 
-}
+};

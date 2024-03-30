@@ -20,33 +20,33 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func peek<K, V>(map: Map<K, V>): ?(K, V) {
+  public func peek<K, V>(map : Map<K, V>) : ?(K, V) {
     let data = switch (map[DATA]) { case (?data) data; case (_) return null };
 
-    let index = nat((data.3[BACK] -% 1) % nat32(data.0.size()));
+    let index = nat((data.3 [BACK] -% 1) % nat32(data.0.size()));
 
-    switch (data.0[index]) {
-      case (?key) ?(key, switch (data.1[index]) { case (?value) value; case (_) trap("unreachable") });
+    switch (data.0 [index]) {
+      case (?key) ?(key, switch (data.1 [index]) { case (?value) value; case (_) trap("unreachable") });
       case (_) null;
     };
   };
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func peekFront<K, V>(map: Map<K, V>): ?(K, V) {
+  public func peekFront<K, V>(map : Map<K, V>) : ?(K, V) {
     let data = switch (map[DATA]) { case (?data) data; case (_) return null };
 
-    let index = nat((data.3[FRONT] +% 1) % nat32(data.0.size()));
+    let index = nat((data.3 [FRONT] +% 1) % nat32(data.0.size()));
 
-    switch (data.0[index]) {
-      case (?key) ?(key, switch (data.1[index]) { case (?value) value; case (_) trap("unreachable") });
+    switch (data.0 [index]) {
+      case (?key) ?(key, switch (data.1 [index]) { case (?value) value; case (_) trap("unreachable") });
       case (_) null;
     };
   };
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func pop<K, V>(map: Map<K, V>, hashUtils: HashUtils<K>): ?(K, V) {
+  public func pop<K, V>(map : Map<K, V>, hashUtils : HashUtils<K>) : ?(K, V) {
     let data = switch (map[DATA]) { case (?data) data; case (_) return null };
 
     let keys = data.0;
@@ -56,9 +56,12 @@ module {
     var back = (bounds[BACK] -% 1) % capacity;
     let backNat = nat(back);
 
-    let targetKey = switch (keys[backNat]) { case (?key) key; case (_) trap("unreachable") };
+    let targetKey = switch (keys[backNat]) {
+      case (?key) key;
+      case (_) trap("unreachable");
+    };
 
-    let hashIndex = nat(hashUtils.0(targetKey) % capacity +% capacity);
+    let hashIndex = nat(hashUtils.0 (targetKey) % capacity +% capacity);
     let indexes = data.2;
     var index = indexes[hashIndex];
     var prevIndex = NULL;
@@ -66,13 +69,13 @@ module {
     loop if (index == NULL) {
       return null;
     } else if (index == backNat) {
-      let value = data.1[index];
+      let value = data.1 [index];
       let newSize = bounds[SIZE] -% 1;
 
       bounds[SIZE] := newSize;
 
       keys[index] := null;
-      data.1[index] := null;
+      data.1 [index] := null;
 
       if (prevIndex == NULL) indexes[hashIndex] := indexes[index] else indexes[prevIndex] := indexes[index];
 
@@ -95,7 +98,7 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func popFront<K, V>(map: Map<K, V>, hashUtils: HashUtils<K>): ?(K, V) {
+  public func popFront<K, V>(map : Map<K, V>, hashUtils : HashUtils<K>) : ?(K, V) {
     let data = switch (map[DATA]) { case (?data) data; case (_) return null };
 
     let keys = data.0;
@@ -105,9 +108,12 @@ module {
     var front = (bounds[FRONT] +% 1) % capacity;
     let frontNat = nat(front);
 
-    let targetKey = switch (keys[frontNat]) { case (?key) key; case (_) trap("unreachable") };
+    let targetKey = switch (keys[frontNat]) {
+      case (?key) key;
+      case (_) trap("unreachable");
+    };
 
-    let hashIndex = nat(hashUtils.0(targetKey) % capacity +% capacity);
+    let hashIndex = nat(hashUtils.0 (targetKey) % capacity +% capacity);
     let indexes = data.2;
     var index = indexes[hashIndex];
     var prevIndex = NULL;
@@ -115,13 +121,13 @@ module {
     loop if (index == NULL) {
       return null;
     } else if (index == frontNat) {
-      let value = data.1[index];
+      let value = data.1 [index];
       let newSize = bounds[SIZE] -% 1;
 
       bounds[SIZE] := newSize;
 
       keys[index] := null;
-      data.1[index] := null;
+      data.1 [index] := null;
 
       if (prevIndex == NULL) indexes[hashIndex] := indexes[index] else indexes[prevIndex] := indexes[index];
 
@@ -144,7 +150,7 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func cycle<K, V>(map: Map<K, V>, hashUtils: HashUtils<K>): ?(K, V) {
+  public func cycle<K, V>(map : Map<K, V>, hashUtils : HashUtils<K>) : ?(K, V) {
     let data = switch (map[DATA]) { case (?data) data; case (_) return null };
 
     let keys = data.0;
@@ -155,9 +161,12 @@ module {
     let backNat = nat(back);
     let targetKeyOpt = keys[backNat];
 
-    let targetKey = switch (targetKeyOpt) { case (?key) key; case (_) trap("unreachable") };
+    let targetKey = switch (targetKeyOpt) {
+      case (?key) key;
+      case (_) trap("unreachable");
+    };
 
-    let hashIndex = nat(hashUtils.0(targetKey) % capacity +% capacity);
+    let hashIndex = nat(hashUtils.0 (targetKey) % capacity +% capacity);
     let indexes = data.2;
     var index = indexes[hashIndex];
     var prevIndex = NULL;
@@ -195,7 +204,7 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func cycleFront<K, V>(map: Map<K, V>, hashUtils: HashUtils<K>): ?(K, V) {
+  public func cycleFront<K, V>(map : Map<K, V>, hashUtils : HashUtils<K>) : ?(K, V) {
     let data = switch (map[DATA]) { case (?data) data; case (_) return null };
 
     let keys = data.0;
@@ -206,9 +215,12 @@ module {
     let frontNat = nat(front);
     let targetKeyOpt = keys[frontNat];
 
-    let targetKey = switch (targetKeyOpt) { case (?key) key; case (_) trap("unreachable") };
+    let targetKey = switch (targetKeyOpt) {
+      case (?key) key;
+      case (_) trap("unreachable");
+    };
 
-    let hashIndex = nat(hashUtils.0(targetKey) % capacity +% capacity);
+    let hashIndex = nat(hashUtils.0 (targetKey) % capacity +% capacity);
     let indexes = data.2;
     var index = indexes[hashIndex];
     var prevIndex = NULL;

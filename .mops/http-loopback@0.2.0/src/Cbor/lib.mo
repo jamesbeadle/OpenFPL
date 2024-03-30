@@ -21,34 +21,34 @@ module {
 
   public let { load; dump; populated; from_cbor_map } = C;
 
-  public func getNat64(v: CborValue): ?Nat64 {
+  public func getNat64(v : CborValue) : ?Nat64 {
     let #majorType0(value) = v else { return null };
-    ?value
+    ?value;
   };
 
-  public func getBytearray(v: CborValue): ?[Nat8] {
+  public func getBytearray(v : CborValue) : ?[Nat8] {
     let #majorType2(value) = v else { return null };
-    ?value
+    ?value;
   };
 
-  public func getText(v: CborValue): ?Text {
+  public func getText(v : CborValue) : ?Text {
     let #majorType3(value) = v else { return null };
-    ?value
+    ?value;
   };
 
-  public func getContentMap(v: CborValue): ?ContentMap {
-    let #majorType2( bytes ) = v else { return null };
-    ?load( bytes )
+  public func getContentMap(v : CborValue) : ?ContentMap {
+    let #majorType2(bytes) = v else { return null };
+    ?load(bytes);
   };
 
-  public func getArray(v: CborValue): ?CborArray{
-    let #majorType4( arr ) = v else { return null };
-    ?arr
+  public func getArray(v : CborValue) : ?CborArray {
+    let #majorType4(arr) = v else { return null };
+    ?arr;
   };
 
-  public func getMap(v: CborValue): ?CborMap{
-    let #majorType5( map ) = v else { return null };
-    ?map
+  public func getMap(v : CborValue) : ?CborMap {
+    let #majorType5(map) = v else { return null };
+    ?map;
   };
 
 };

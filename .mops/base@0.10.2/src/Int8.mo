@@ -103,7 +103,7 @@ module {
   /// Int8.toText(-123) // => "-123"
   /// ```
   public func toText(x : Int8) : Text {
-    Int.toText(toInt(x))
+    Int.toText(toInt(x));
   };
 
   /// Returns the absolute value of `x`.
@@ -115,7 +115,7 @@ module {
   /// Int8.abs(-123) // => +123
   /// ```
   public func abs(x : Int8) : Int8 {
-    fromInt(Int.abs(toInt(x)))
+    fromInt(Int.abs(toInt(x)));
   };
 
   /// Returns the minimum of `x` and `y`.
@@ -125,7 +125,7 @@ module {
   /// Int8.min(+2, -3) // => -3
   /// ```
   public func min(x : Int8, y : Int8) : Int8 {
-    if (x < y) { x } else { y }
+    if (x < y) { x } else { y };
   };
 
   /// Returns the maximum of `x` and `y`.
@@ -135,7 +135,7 @@ module {
   /// Int8.max(+2, -3) // => +2
   /// ```
   public func max(x : Int8, y : Int8) : Int8 {
-    if (x < y) { y } else { x }
+    if (x < y) { y } else { x };
   };
 
   /// Equality function for Int8 types.
@@ -249,7 +249,7 @@ module {
   /// Array.sort([1, -2, -3] : [Int8], Int8.compare) // => [-3, -2, 1]
   /// ```
   public func compare(x : Int8, y : Int8) : { #less; #equal; #greater } {
-    if (x < y) { #less } else if (x == y) { #equal } else { #greater }
+    if (x < y) { #less } else if (x == y) { #equal } else { #greater };
   };
 
   /// Returns the negation of `x`, `-x`.
@@ -510,7 +510,7 @@ module {
   /// Int8.bittest(64, 6) // => true
   /// ```
   public func bittest(x : Int8, p : Nat) : Bool {
-    Prim.btstInt8(x, Prim.intToInt8(p))
+    Prim.btstInt8(x, Prim.intToInt8(p));
   };
 
   /// Returns the value of setting bit `p` in `x` to `1`.
@@ -521,7 +521,7 @@ module {
   /// Int8.bitset(0, 6) // => +64
   /// ```
   public func bitset(x : Int8, p : Nat) : Int8 {
-    x | (1 << Prim.intToInt8(p))
+    x | (1 << Prim.intToInt8(p));
   };
 
   /// Returns the value of clearing bit `p` in `x` to `0`.
@@ -532,7 +532,7 @@ module {
   /// Int8.bitclear(-1, 6) // => -65
   /// ```
   public func bitclear(x : Int8, p : Nat) : Int8 {
-    x & ^(1 << Prim.intToInt8(p))
+    x & ^(1 << Prim.intToInt8(p));
   };
 
   /// Returns the value of flipping bit `p` in `x`.
@@ -543,7 +543,7 @@ module {
   /// Int8.bitflip(127, 6) // => +63
   /// ```
   public func bitflip(x : Int8, p : Nat) : Int8 {
-    x ^ (1 << Prim.intToInt8(p))
+    x ^ (1 << Prim.intToInt8(p));
   };
 
   /// Returns the count of non-zero bits in `x`.
@@ -631,4 +631,4 @@ module {
   /// as a function value at the moment.
   public func powWrap(x : Int8, y : Int8) : Int8 { x **% y };
 
-}
+};

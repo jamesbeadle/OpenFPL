@@ -20,12 +20,12 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func remove<K>(map: Set<K>, hashUtils: HashUtils<K>, keyParam: K): Bool {
+  public func remove<K>(map : Set<K>, hashUtils : HashUtils<K>, keyParam : K) : Bool {
     let data = switch (map[DATA]) { case (?data) data; case (_) return false };
 
     let keys = data.0;
     let capacity = nat32(keys.size());
-    let hashIndex = nat(hashUtils.0(keyParam) % capacity +% capacity);
+    let hashIndex = nat(hashUtils.0 (keyParam) % capacity +% capacity);
 
     let indexes = data.1;
     var index = indexes[hashIndex];
@@ -33,7 +33,7 @@ module {
 
     loop if (index == NULL) {
       return false;
-    } else if (hashUtils.1(switch (keys[index]) { case (?key) key; case (_) trap("unreachable") }, keyParam)) {
+    } else if (hashUtils.1 (switch (keys[index]) { case (?key) key; case (_) trap("unreachable") }, keyParam)) {
       let bounds = data.2;
       let newSize = bounds[SIZE] -% 1;
 
@@ -87,12 +87,12 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func delete<K>(map: Set<K>, hashUtils: HashUtils<K>, keyParam: K) {
+  public func delete<K>(map : Set<K>, hashUtils : HashUtils<K>, keyParam : K) {
     let data = switch (map[DATA]) { case (?data) data; case (_) return };
 
     let keys = data.0;
     let capacity = nat32(keys.size());
-    let hashIndex = nat(hashUtils.0(keyParam) % capacity +% capacity);
+    let hashIndex = nat(hashUtils.0 (keyParam) % capacity +% capacity);
 
     let indexes = data.1;
     var index = indexes[hashIndex];
@@ -100,7 +100,7 @@ module {
 
     loop if (index == NULL) {
       return;
-    } else if (hashUtils.1(switch (keys[index]) { case (?key) key; case (_) trap("unreachable") }, keyParam)) {
+    } else if (hashUtils.1 (switch (keys[index]) { case (?key) key; case (_) trap("unreachable") }, keyParam)) {
       let bounds = data.2;
       let newSize = bounds[SIZE] -% 1;
 

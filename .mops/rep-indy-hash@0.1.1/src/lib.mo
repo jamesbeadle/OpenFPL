@@ -1,4 +1,3 @@
-
 import Sha256 "mo:sha2/Sha256";
 import Text "mo:base/Text";
 import Array "mo:base/Array";
@@ -12,37 +11,42 @@ import IntX "mo:motoko_numbers/IntX";
 
 module {
   /// The Type used to express ICRC3 values
-  public type Value = { 
-    #Blob : Blob; 
-    #Text : Text; 
+  public type Value = {
+    #Blob : Blob;
+    #Text : Text;
     #Nat : Nat;
     #Int : Int;
-    #Array : [Value]; 
-    #Map : [(Text, Value)]; 
+    #Array : [Value];
+    #Map : [(Text, Value)];
   };
 
   // Also see https://github.com/dfinity/ic-hs/blob/master/src/IC/HTTP/RequestId.hs
 
   ///Creates the represntatinally independent hash of a Value
   public func hash_val(v : Value) : [Nat8] {
-    encode_val(v) |> Sha256.fromArray(#sha256, _) |> Blob.toArray _
+    encode_val(v) |> Sha256.fromArray(#sha256, _) |> Blob.toArray _;
   };
 
   func encode_val(v : Value) : [Nat8] {
     switch (v) {
-      case (#Blob(b))   { Blob.toArray(b) };
+      case (#Blob(b)) { Blob.toArray(b) };
       case (#Text(t)) { Blob.toArray(Text.encodeUtf8(t)) };
-      case (#Nat(n))    { leb128(n) };
-      case (#Int(i))    { sleb128(i) };
-      case (#Array(a))  { arrayConcat(Iter.map(a.vals(), hash_val)); };
-      case (#Map(m))    {
-        let entries : Buffer.Buffer<Blob> = Buffer.fromIter(Iter.map(m.vals(), func ((k : Text, v : Value)) : Blob {
-            Blob.fromArray(arrayConcat([ hash_val(#Text(k)), hash_val(v) ].vals()));
-        }));
+      case (#Nat(n)) { leb128(n) };
+      case (#Int(i)) { sleb128(i) };
+      case (#Array(a)) { arrayConcat(Iter.map(a.vals(), hash_val)) };
+      case (#Map(m)) {
+        let entries : Buffer.Buffer<Blob> = Buffer.fromIter(
+          Iter.map(
+            m.vals(),
+            func((k : Text, v : Value)) : Blob {
+              Blob.fromArray(arrayConcat([hash_val(#Text(k)), hash_val(v)].vals()));
+            },
+          ),
+        );
         entries.sort(Blob.compare); // No Array.compare, so go through blob
         arrayConcat(Iter.map(entries.vals(), Blob.toArray));
-      }
-    }
+      };
+    };
   };
 
   func leb128(nat : Nat) : [Nat8] {
@@ -55,7 +59,7 @@ module {
       };
       Vec.add(buf, Nat8.fromIntWrap(n) | 0x80);
       n /= 128;
-    }
+    };
   };
 
   func sleb128(i : Int) : [Nat8] {
@@ -107,7 +111,7 @@ module {
   // Array concat
   func arrayConcat<X>(as : Iter.Iter<[X]>) : [X] {
     let buf = Vec.new<X>();
-    for(thisItem in as){
+    for (thisItem in as) {
       Vec.addFromIter(buf, thisItem.vals());
     };
     Vec.toArray(buf);

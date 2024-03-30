@@ -74,6 +74,15 @@ type SubmitFixtureDataDTO = record {
   playerEventData : vec PlayerEventData;
   seasonId : SeasonId;
 };
+type StakeMaturityResponse = record {
+  maturity_e8s : nat64;
+  stake_maturity_e8s : nat64;
+};
+type Spawn = record {
+  new_controller : opt principal;
+  nonce : opt nat64;
+  percentage_to_spawn : opt nat32;
+};
 type ShirtType = variant {
   Filled;
   Striped;
@@ -83,6 +92,7 @@ type SetPlayerInjuryDTO = record {
   expectedEndDate : int;
   playerId : PlayerId;
 };
+type SetDissolveTimestamp = record { dissolve_timestamp_seconds : nat64 };
 type SeasonLeaderboardDTO = record {
   entries : vec LeaderboardEntry;
   seasonId : SeasonId;
@@ -334,6 +344,14 @@ type PickTeamDTO = record {
   transfersAvailable : nat8;
   username : text;
 };
+type Operation = variant {
+  ChangeAutoStakeMaturity : ChangeAutoStakeMaturity;
+  IncreaseDissolveDelay : IncreaseDissolveDelay;
+  SetDissolveTimestamp : SetDissolveTimestamp;
+  StartDissolving;
+  StopDissolving;
+};
+type NeuronId = record { id : nat64 };
 type MoveFixtureDTO = record {
   fixtureId : FixtureId;
   updatedFixtureDate : int;
@@ -380,7 +398,14 @@ type InjuryHistory = record {
   expectedEndDate : int;
   injuryStartDate : int;
 };
+type IncreaseDissolveDelay = record {
+  additional_dissolve_delay_seconds : nat32;
+};
 type GameweekNumber = nat8;
+type Follow = record {
+  followees : vec NeuronId;
+  topic : int32;
+};
 type FixtureStatusType = variant {
   Active;
   Complete;
@@ -446,6 +471,10 @@ type Error = variant {
   NotFound;
   SystemOnHold;
 };
+type Disburse = record {
+  amount : opt Amount;
+  to_account : opt AccountIdentifier;
+};
 type DataCacheDTO = record {
   category : text;
   hash : text;
@@ -466,6 +495,15 @@ type CountryDTO = record {
   id : CountryId;
   name : text;
 };
+type Configure = record { operation : opt Operation };
+type Command = variant {
+  ClaimOrRefresh : ClaimOrRefresh;
+  Configure : Configure;
+  Disburse : Disburse;
+  Follow : Follow;
+  Spawn : Spawn;
+  StakeMaturity : StakeMaturityResponse;
+};
 type ClubId = nat16;
 type ClubDTO = record {
   abbreviatedName : text;
@@ -477,16 +515,33 @@ type ClubDTO = record {
   shirtType : ShirtType;
   thirdColourHex : text;
 };
+type ClaimOrRefreshNeuronFromAccount = record {
+  controller : opt principal;
+  memo : nat64;
+};
+type ClaimOrRefresh = record { by : opt By };
+type ChangeAutoStakeMaturity = record {
+  requested_setting_for_auto_stake_maturity : bool;
+};
 type CalendarMonth = nat8;
+type By = variant {
+  Memo : nat64;
+  MemoAndController : ClaimOrRefreshNeuronFromAccount;
+  NeuronIdOrSubaccount;
+};
+type Amount = record { e8s : nat64 };
 type AddInitialFixturesDTO = record {
   seasonFixtures : vec FixtureDTO;
   seasonId : SeasonId;
 };
+type AccountIdentifier = record { hash : vec nat8 };
 service : {
   burnICPToCycles : (nat64) -> ();
   executeAddInitialFixtures : (AddInitialFixturesDTO) -> ();
+  executeCreateDAONeuron : () -> ();
   executeCreatePlayer : (CreatePlayerDTO) -> ();
   executeLoanPlayer : (LoanPlayerDTO) -> ();
+  executeManageDAONeuron : (Command) -> ();
   executeMoveFixture : (MoveFixtureDTO) -> ();
   executePostponeFixture : (PostponeFixtureDTO) -> ();
   executePromoteFormerClub : (PromoteFormerClubDTO) -> ();
@@ -513,6 +568,7 @@ service : {
   getManager : (text) -> (Result_15);
   getMonthlyLeaderboard : (SeasonId, ClubId, CalendarMonth, nat, nat, text) -> (Result_14);
   getMonthlyLeaderboards : (SeasonId, CalendarMonth) -> (Result_13);
+  getNeuronId : () -> (nat64);
   getPlayerDetails : (PlayerId, SeasonId) -> (Result_12) query;
   getPlayerDetailsForGameweek : (SeasonId, GameweekNumber) -> (Result_11) query;
   getPlayers : () -> (Result_7) query;
@@ -525,7 +581,6 @@ service : {
   getSystemState : () -> (Result_4) query;
   getTotalManagers : () -> (Result_3) query;
   getWeeklyLeaderboard : (SeasonId, GameweekNumber, nat, nat, text) -> (Result_2);
-  init : () -> (Result_1);
   isUsernameValid : (text) -> (bool) query;
   requestCanisterTopup : () -> ();
   saveFantasyTeam : (UpdateTeamSelectionDTO) -> (Result_1);
@@ -534,8 +589,10 @@ service : {
   updateProfilePicture : (blob, text) -> (Result_1);
   updateUsername : (text) -> (Result_1);
   validateAddInitialFixtures : (AddInitialFixturesDTO) -> (Result);
+  validateCreateDAONeuron : () -> (Result);
   validateCreatePlayer : (CreatePlayerDTO) -> (Result);
   validateLoanPlayer : (LoanPlayerDTO) -> (Result);
+  validateManageDAONeuron : () -> (Result);
   validateMoveFixture : (MoveFixtureDTO) -> (Result);
   validatePostponeFixture : (PostponeFixtureDTO) -> (Result);
   validatePromoteFormerClub : (PromoteFormerClubDTO) -> (Result);

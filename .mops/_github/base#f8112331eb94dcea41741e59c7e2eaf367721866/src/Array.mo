@@ -725,10 +725,13 @@ module {
   /// let subArray = Array.subArray<Nat>(array, 2, 3);
   /// Runtime: O(length);
   /// Space: O(length);
-  public func subArray<X>(arr: [X], start: Nat, length: Nat): [X] {
+  public func subArray<X>(arr : [X], start : Nat, length : Nat) : [X] {
     if (start + length > arr.size()) { Prim.trap("Array.subArray") };
-    tabulate<X>(length, func(i) {
-      arr[start + i]
-    });
-  };
-};
+    tabulate<X>(
+      length,
+      func(i) {
+        arr[start + i]
+      }
+    )
+  }
+}

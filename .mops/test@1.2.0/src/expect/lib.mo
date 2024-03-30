@@ -1,4 +1,4 @@
-import {bindCompare; fail = _fail} "./utils";
+import { bindCompare; fail = _fail } "./utils";
 import ExpectInt "./expect-int";
 import ExpectInt8 "./expect-int8";
 import ExpectInt16 "./expect-int16";
@@ -19,26 +19,26 @@ import ExpectOption "./expect-option";
 import ExpectResult "./expect-result";
 
 module {
-	public let expect = {
-		bool = ExpectBool.ExpectBool;
-		int = ExpectInt.ExpectInt;
-		int8 = ExpectInt8.ExpectInt8;
-		int16 = ExpectInt16.ExpectInt16;
-		int32 = ExpectInt32.ExpectInt32;
-		int64 = ExpectInt64.ExpectInt64;
-		nat = ExpectNat.ExpectNat;
-		nat8 = ExpectNat8.ExpectNat8;
-		nat16 = ExpectNat16.ExpectNat16;
-		nat32 = ExpectNat32.ExpectNat32;
-		nat64 = ExpectNat64.ExpectNat64;
-		char = ExpectChar.ExpectChar;
-		text = ExpectText.ExpectText;
-		array = ExpectArray.ExpectArray;
-		blob = ExpectBlob.ExpectBlob;
-		principal = ExpectPrincipal.ExpectPrincipal;
-		option = ExpectOption.ExpectOption;
-		result = ExpectResult.ExpectResult;
-	};
+  public let expect = {
+    bool = ExpectBool.ExpectBool;
+    int = ExpectInt.ExpectInt;
+    int8 = ExpectInt8.ExpectInt8;
+    int16 = ExpectInt16.ExpectInt16;
+    int32 = ExpectInt32.ExpectInt32;
+    int64 = ExpectInt64.ExpectInt64;
+    nat = ExpectNat.ExpectNat;
+    nat8 = ExpectNat8.ExpectNat8;
+    nat16 = ExpectNat16.ExpectNat16;
+    nat32 = ExpectNat32.ExpectNat32;
+    nat64 = ExpectNat64.ExpectNat64;
+    char = ExpectChar.ExpectChar;
+    text = ExpectText.ExpectText;
+    array = ExpectArray.ExpectArray;
+    blob = ExpectBlob.ExpectBlob;
+    principal = ExpectPrincipal.ExpectPrincipal;
+    option = ExpectOption.ExpectOption;
+    result = ExpectResult.ExpectResult;
+  };
 
-	public let fail = _fail;
+  public let fail = _fail;
 };

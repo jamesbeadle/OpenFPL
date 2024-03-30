@@ -21,8 +21,8 @@ module {
   /// ```
   public func compose<A, B, C>(f : B -> C, g : A -> B) : A -> C {
     func(x : A) : C {
-      f(g(x))
-    }
+      f(g(x));
+    };
   };
 
   /// The `identity` function returns its argument.
@@ -42,5 +42,5 @@ module {
   /// assert const<Nat, Text>(10)("hello") == 10;
   /// assert const(true)(20) == true;
   /// ```
-  public func const<A, B>(x : A) : B -> A = func _ = x
-}
+  public func const<A, B>(x : A) : B -> A = func _ = x;
+};
