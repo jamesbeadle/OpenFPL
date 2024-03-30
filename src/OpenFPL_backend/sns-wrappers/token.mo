@@ -5,13 +5,13 @@ import Time "mo:base/Time";
 import Int64 "mo:base/Int64";
 import Array "mo:base/Array";
 import Account "../lib/Account";
-import CanisterIds "../CanisterIds";
+import Environment "../Environment";
 
 module {
 
   public class Token() {
 
-    var token_canister_id = CanisterIds.TOKEN_CANISTER_IC_ID;
+    var token_canister_id = Environment.SNS_LEDGER_CANISTER_ID;
 
     type Tokens = Nat;
     type BlockIndex = Nat;

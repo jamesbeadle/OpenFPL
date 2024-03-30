@@ -1,0 +1,16 @@
+[package]
+name = "utilities"
+version = "2.0.2"
+description = "Simple, helpful class objects"
+repository = "https://github.com/bittoko/utils"
+keywords = [ "utilities", "utils", "common", "nonce" ]
+license = "MIT"
+
+[dependencies]
+test = "1.2.0"
+xtended-numbers = "0.2.1"
+base = "0.11.1"
+map = "9.0.1"
+
+[toolchain]
+moc = "0.11.1"

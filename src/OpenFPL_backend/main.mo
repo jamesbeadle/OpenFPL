@@ -8,6 +8,7 @@ import Result "mo:base/Result";
 import Time "mo:base/Time";
 import Timer "mo:base/Timer";
 import Nat64 "mo:base/Nat64";
+import Bool "mo:base/Bool";
 
 import Countries "Countries";
 import DTOs "DTOs";
@@ -17,6 +18,8 @@ import CyclesDispenser "cycles-dispenser";
 import TreasuryManager "treasury-manager";
 import Utilities "utilities";
 import Account "lib/Account";
+import Environment "Environment";
+import NeuronTypes "../neuron_controller/types";
 
 actor Self {
   let seasonManager = SeasonManager.SeasonManager();
@@ -30,6 +33,8 @@ actor Self {
 
   private var nextCyclesCheckTime : Int = 0;
   private var nextWalletCheckTime : Int = 0;
+
+  private stable var neuronCreated = false;
 
   //Functions containing inter-canister calls that cannot be query functions:
   public shared func getWeeklyLeaderboard(seasonId : T.SeasonId, gameweek : T.GameweekNumber, limit : Nat, offset : Nat, searchTerm : Text) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
@@ -161,178 +166,259 @@ actor Self {
   };
 
   //Governance canister validation and execution functions:
-  public shared func validateRevaluePlayerUp(revaluePlayerUpDTO : DTOs.RevaluePlayerUpDTO) : async Result.Result<Text, Text> {
+  public shared ({ caller }) func validateRevaluePlayerUp(revaluePlayerUpDTO : DTOs.RevaluePlayerUpDTO) : async Result.Result<Text, Text> {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     return await seasonManager.validateRevaluePlayerUp(revaluePlayerUpDTO);
   };
 
-  public shared func executeRevaluePlayerUp(revaluePlayerUpDTO : DTOs.RevaluePlayerUpDTO) : async () {
+  public shared ({ caller }) func executeRevaluePlayerUp(revaluePlayerUpDTO : DTOs.RevaluePlayerUpDTO) : async () {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     return await seasonManager.executeRevaluePlayerUp(revaluePlayerUpDTO);
   };
 
-  public shared func validateRevaluePlayerDown(revaluePlayerDownDTO : DTOs.RevaluePlayerDownDTO) : async Result.Result<Text, Text> {
+  public shared ({ caller }) func validateRevaluePlayerDown(revaluePlayerDownDTO : DTOs.RevaluePlayerDownDTO) : async Result.Result<Text, Text> {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
+    assert not proposalExists();
     return await seasonManager.validateRevaluePlayerDown(revaluePlayerDownDTO);
   };
 
-  public shared func executeRevaluePlayerDown(revaluePlayerDownDTO : DTOs.RevaluePlayerDownDTO) : async () {
+  //TODO
+  private func proposalExists () : Bool {
+
+    //check the active proposals in the governance canister
+    //might have to get them in batches
+    //if one is the same then return true
+
+
+    return true;
+  };
+
+  public shared ({ caller }) func executeRevaluePlayerDown(revaluePlayerDownDTO : DTOs.RevaluePlayerDownDTO) : async () {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     return await seasonManager.executeRevaluePlayerDown(revaluePlayerDownDTO);
   };
 
-  public shared func validateSubmitFixtureData(submitFixtureData : DTOs.SubmitFixtureDataDTO) : async Result.Result<Text, Text> {
+  public shared ({ caller }) func validateSubmitFixtureData(submitFixtureData : DTOs.SubmitFixtureDataDTO) : async Result.Result<Text, Text> {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     return await seasonManager.validateSubmitFixtureData(submitFixtureData);
   };
 
-  public shared func executeSubmitFixtureData(submitFixtureData : DTOs.SubmitFixtureDataDTO) : async () {
+  public shared ({ caller }) func executeSubmitFixtureData(submitFixtureData : DTOs.SubmitFixtureDataDTO) : async () {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     return await seasonManager.executeSubmitFixtureData(submitFixtureData);
   };
 
-  public shared func validateAddInitialFixtures(addInitialFixturesDTO : DTOs.AddInitialFixturesDTO) : async Result.Result<Text, Text> {
+  public shared ({ caller }) func validateAddInitialFixtures(addInitialFixturesDTO : DTOs.AddInitialFixturesDTO) : async Result.Result<Text, Text> {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     return await seasonManager.validateAddInitialFixtures(addInitialFixturesDTO);
   };
 
-  public shared func executeAddInitialFixtures(addInitialFixturesDTO : DTOs.AddInitialFixturesDTO) : async () {
+  public shared ({ caller }) func executeAddInitialFixtures(addInitialFixturesDTO : DTOs.AddInitialFixturesDTO) : async () {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     return await seasonManager.executeAddInitialFixtures(addInitialFixturesDTO);
   };
 
-  public shared func validateMoveFixture(moveFixtureDTO : DTOs.MoveFixtureDTO) : async Result.Result<Text, Text> {
+  public shared ({ caller }) func validateMoveFixture(moveFixtureDTO : DTOs.MoveFixtureDTO) : async Result.Result<Text, Text> {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     return await seasonManager.validateMoveFixture(moveFixtureDTO);
   };
 
-  public shared func executeMoveFixture(moveFixtureDTO : DTOs.MoveFixtureDTO) : async () {
+  public shared ({ caller }) func executeMoveFixture(moveFixtureDTO : DTOs.MoveFixtureDTO) : async () {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     return await seasonManager.executeMoveFixture(moveFixtureDTO);
   };
 
-  public shared func validatePostponeFixture(postponeFixtureDTO : DTOs.PostponeFixtureDTO) : async Result.Result<Text, Text> {
+  public shared ({ caller }) func validatePostponeFixture(postponeFixtureDTO : DTOs.PostponeFixtureDTO) : async Result.Result<Text, Text> {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     return await seasonManager.validatePostponeFixture(postponeFixtureDTO);
   };
 
-  public shared func executePostponeFixture(postponeFixtureDTO : DTOs.PostponeFixtureDTO) : async () {
+  public shared ({ caller }) func executePostponeFixture(postponeFixtureDTO : DTOs.PostponeFixtureDTO) : async () {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     return await seasonManager.executePostponeFixture(postponeFixtureDTO);
   };
 
-  public shared func validateRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO) : async Result.Result<Text, Text> {
+  public shared ({ caller }) func validateRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO) : async Result.Result<Text, Text> {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     return await seasonManager.validateRescheduleFixture(rescheduleFixtureDTO);
   };
 
-  public shared func executeRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO) : async () {
+  public shared ({ caller }) func executeRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO) : async () {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     return await seasonManager.executeRescheduleFixture(rescheduleFixtureDTO);
   };
 
-  public shared func validateLoanPlayer(loanPlayerDTO : DTOs.LoanPlayerDTO) : async Result.Result<Text, Text> {
+  public shared ({ caller }) func validateLoanPlayer(loanPlayerDTO : DTOs.LoanPlayerDTO) : async Result.Result<Text, Text> {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     return await seasonManager.validateLoanPlayer(loanPlayerDTO);
   };
 
-  public shared func executeLoanPlayer(loanPlayerDTO : DTOs.LoanPlayerDTO) : async () {
+  public shared ({ caller }) func executeLoanPlayer(loanPlayerDTO : DTOs.LoanPlayerDTO) : async () {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     return await seasonManager.executeLoanPlayer(loanPlayerDTO);
   };
 
-  public shared func validateTransferPlayer(transferPlayerDTO : DTOs.TransferPlayerDTO) : async Result.Result<Text, Text> {
+  public shared ({ caller }) func validateTransferPlayer(transferPlayerDTO : DTOs.TransferPlayerDTO) : async Result.Result<Text, Text> {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     return await seasonManager.validateTransferPlayer(transferPlayerDTO);
   };
 
-  public shared func executeTransferPlayer(transferPlayerDTO : DTOs.TransferPlayerDTO) : async () {
+  public shared ({ caller }) func executeTransferPlayer(transferPlayerDTO : DTOs.TransferPlayerDTO) : async () {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     return await seasonManager.executeTransferPlayer(transferPlayerDTO);
   };
 
-  public shared func validateRecallPlayer(recallPlayerDTO : DTOs.RecallPlayerDTO) : async Result.Result<Text, Text> {
+  public shared ({ caller }) func validateRecallPlayer(recallPlayerDTO : DTOs.RecallPlayerDTO) : async Result.Result<Text, Text> {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     return await seasonManager.validateRecallPlayer(recallPlayerDTO);
   };
 
-  public shared func executeRecallPlayer(recallPlayerDTO : DTOs.RecallPlayerDTO) : async () {
+  public shared ({ caller }) func executeRecallPlayer(recallPlayerDTO : DTOs.RecallPlayerDTO) : async () {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     return await seasonManager.executeRecallPlayer(recallPlayerDTO);
   };
 
-  public shared func validateCreatePlayer(createPlayerDTO : DTOs.CreatePlayerDTO) : async Result.Result<Text, Text> {
+  public shared ({ caller }) func validateCreatePlayer(createPlayerDTO : DTOs.CreatePlayerDTO) : async Result.Result<Text, Text> {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     return await seasonManager.validateCreatePlayer(createPlayerDTO);
   };
 
-  public shared func executeCreatePlayer(createPlayerDTO : DTOs.CreatePlayerDTO) : async () {
+  public shared ({ caller }) func executeCreatePlayer(createPlayerDTO : DTOs.CreatePlayerDTO) : async () {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     return await seasonManager.executeCreatePlayer(createPlayerDTO);
   };
 
-  public shared func validateUpdatePlayer(updatePlayerDTO : DTOs.UpdatePlayerDTO) : async Result.Result<Text, Text> {
+  public shared ({ caller }) func validateUpdatePlayer(updatePlayerDTO : DTOs.UpdatePlayerDTO) : async Result.Result<Text, Text> {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     return await seasonManager.validateUpdatePlayer(updatePlayerDTO);
   };
 
-  public shared func executeUpdatePlayer(updatePlayerDTO : DTOs.UpdatePlayerDTO) : async () {
+  public shared ({ caller }) func executeUpdatePlayer(updatePlayerDTO : DTOs.UpdatePlayerDTO) : async () {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     return await seasonManager.executeUpdatePlayer(updatePlayerDTO);
   };
 
-  public shared func validateSetPlayerInjury(setPlayerInjuryDTO : DTOs.SetPlayerInjuryDTO) : async Result.Result<Text, Text> {
+  public shared ({ caller }) func validateSetPlayerInjury(setPlayerInjuryDTO : DTOs.SetPlayerInjuryDTO) : async Result.Result<Text, Text> {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     return await seasonManager.validateSetPlayerInjury(setPlayerInjuryDTO);
   };
 
-  public shared func executeSetPlayerInjury(setPlayerInjuryDTO : DTOs.SetPlayerInjuryDTO) : async () {
+  public shared ({ caller }) func executeSetPlayerInjury(setPlayerInjuryDTO : DTOs.SetPlayerInjuryDTO) : async () {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     return await seasonManager.executeSetPlayerInjury(setPlayerInjuryDTO);
   };
 
-  public shared func validateRetirePlayer(retirePlayerDTO : DTOs.RetirePlayerDTO) : async Result.Result<Text, Text> {
+  public shared ({ caller }) func validateRetirePlayer(retirePlayerDTO : DTOs.RetirePlayerDTO) : async Result.Result<Text, Text> {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     return await seasonManager.validateRetirePlayer(retirePlayerDTO);
   };
 
-  public shared func executeRetirePlayer(retirePlayerDTO : DTOs.RetirePlayerDTO) : async () {
+  public shared ({ caller }) func executeRetirePlayer(retirePlayerDTO : DTOs.RetirePlayerDTO) : async () {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     return await seasonManager.executeRetirePlayer(retirePlayerDTO);
   };
 
-  public shared func validateUnretirePlayer(unretirePlayerDTO : DTOs.UnretirePlayerDTO) : async Result.Result<Text, Text> {
+  public shared ({ caller }) func validateUnretirePlayer(unretirePlayerDTO : DTOs.UnretirePlayerDTO) : async Result.Result<Text, Text> {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     return await seasonManager.validateUnretirePlayer(unretirePlayerDTO);
   };
 
-  public shared func executeUnretirePlayer(unretirePlayerDTO : DTOs.UnretirePlayerDTO) : async () {
+  public shared ({ caller }) func executeUnretirePlayer(unretirePlayerDTO : DTOs.UnretirePlayerDTO) : async () {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     return await seasonManager.executeUnretirePlayer(unretirePlayerDTO);
   };
 
-  public shared func validatePromoteFormerClub(promoteFormerClubDTO : DTOs.PromoteFormerClubDTO) : async Result.Result<Text, Text> {
+  public shared ({ caller }) func validatePromoteFormerClub(promoteFormerClubDTO : DTOs.PromoteFormerClubDTO) : async Result.Result<Text, Text> {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     return await seasonManager.validatePromoteFormerClub(promoteFormerClubDTO);
   };
 
-  public shared func executePromoteFormerClub(promoteFormerClubDTO : DTOs.PromoteFormerClubDTO) : async () {
+  public shared ({ caller }) func executePromoteFormerClub(promoteFormerClubDTO : DTOs.PromoteFormerClubDTO) : async () {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     return await seasonManager.executePromoteFormerClub(promoteFormerClubDTO);
   };
 
-  public shared func validatePromoteNewClub(promoteNewClubDTO : DTOs.PromoteNewClubDTO) : async Result.Result<Text, Text> {
+  public shared ({ caller }) func validatePromoteNewClub(promoteNewClubDTO : DTOs.PromoteNewClubDTO) : async Result.Result<Text, Text> {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     return await seasonManager.validatePromoteNewClub(promoteNewClubDTO);
   };
 
-  public shared func executePromoteNewClub(promoteNewClubDTO : DTOs.PromoteNewClubDTO) : async () {
+  public shared ({ caller }) func executePromoteNewClub(promoteNewClubDTO : DTOs.PromoteNewClubDTO) : async () {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     return await seasonManager.executePromoteNewClub(promoteNewClubDTO);
   };
 
-  public shared func validateUpdateClub(updateClubDTO : DTOs.UpdateClubDTO) : async Result.Result<Text, Text> {
+  public shared ({ caller }) func validateUpdateClub(updateClubDTO : DTOs.UpdateClubDTO) : async Result.Result<Text, Text> {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     return await seasonManager.validateUpdateClub(updateClubDTO);
   };
 
-  public shared func executeUpdateClub(updateClubDTO : DTOs.UpdateClubDTO) : async () {
+  public shared ({ caller }) func executeUpdateClub(updateClubDTO : DTOs.UpdateClubDTO) : async () {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     return await seasonManager.executeUpdateClub(updateClubDTO);
   };
   public shared query func getBackendCanisterId() : async Result.Result<Text, T.Error> {
     return #ok(Principal.toText(Principal.fromActor(Self)));
   };
 
-  /*
-    //Remove Post SNS, for Dev Post Testing Only
-  */
-  public shared func init() : async Result.Result<(), T.Error> {
+  public shared ({ caller }) func validateCreateDAONeuron() : async Result.Result<Text, Text> {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
+    if(neuronCreated){
+      return #err("Neuron already created");
+    };
+    
+    
+    return #ok("Can create neuron");
+  };
 
-    switch (cyclesCheckTimerId) {
-      case (null) {
-        await setCheckCyclesTimer();
-      };
-      case (?id) {};
+  public shared ({ caller }) func executeCreateDAONeuron() : async () {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
+    if(neuronCreated){
+      return;
     };
 
-    switch (cyclesCheckWalletTimerId) {
-      case (null) {
-        await setCheckCyclesWalletTimer();
-      };
-      case (?id) {};
+    let neuron_controller = actor (Environment.NEURON_CONTROLLER_CANISTER_ID) : actor {
+      stake_nns_neuron : () -> async ?NeuronTypes.Response;
     };
 
-    seasonManager.setBackendCanisterController(Principal.fromActor(Self));
-    seasonManager.setTimerBackupFunction(setAndBackupTimer, removeExpiredTimers);
-    seasonManager.setStoreCanisterIdFunction(cyclesDispenser.storeCanisterId);
+    let _ = await neuron_controller.stake_nns_neuron();
+    
+    neuronCreated := true;
+    
+  };
 
-    await seasonManager.init();
-    return #ok;
+  public shared ({ caller }) func validateManageDAONeuron() : async Result.Result<Text, Text> {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
+    if(not neuronCreated){
+      return #err("Neuron not created");
+    };
+    
+    
+    return #ok("Can manage neuron");
+  };
+
+  public shared ({ caller }) func executeManageDAONeuron(command: NeuronTypes.Command) : async () {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
+    if(not neuronCreated){
+      return;
+    };
+
+    let neuron_controller = actor (Environment.NEURON_CONTROLLER_CANISTER_ID) : actor {
+      manage_neuron : NeuronTypes.Command -> async ?NeuronTypes.Response;
+    };
+    
+    let _ = await neuron_controller.manage_neuron(command);
+    
+    neuronCreated := true;
+    
+  };
+
+  public shared func getNeuronId() : async Nat64 {
+    let neuron_controller = actor (Environment.NEURON_CONTROLLER_CANISTER_ID) : actor {
+      getNeuronId : () -> async Nat64;
+    };
+
+    return await neuron_controller.getNeuronId();
   };
 
   private func gameweekBeginExpiredCallback() : async () {
@@ -611,18 +697,6 @@ actor Self {
       await requestCanisterTopup();
     };
     await setCheckCyclesTimer();
-  };
-
-  private func setCheckCyclesWalletTimer() : async () {
-    switch (cyclesCheckWalletTimerId) {
-      case (null) {};
-      case (?id) {
-        Timer.cancelTimer(id);
-        cyclesCheckWalletTimerId := null;
-      };
-    };
-    nextWalletCheckTime := Time.now() + cyclesCheckWalletInterval;
-    cyclesCheckWalletTimerId := ?Timer.setTimer<system>(#nanoseconds(cyclesCheckWalletInterval), checkCanisterWalletBalance);
   };
 
   public func burnICPToCycles(requestedCycles : Nat64) : async () {

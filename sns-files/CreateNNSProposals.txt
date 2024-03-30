@@ -1,8 +1,0 @@
-//Add root canister as OpenFPL_backend
-dfx sns prepare-canisters add-nns-root bboqb-jiaaa-aaaal-qb6ea-cai
-
-//Revoke developer principal
-dfx canister call bboqb-jiaaa-aaaal-qb6ea-cai revoke_permission '(record {of_principal = principal agy5w-dlcen-pkrgo-pgfrz-3eqf2-xfwvr-qcvwn-nlhyu-77fsb-wgc37-nqe; permission = variant { Commit;};})'
-
-//raise proposal
-dfx sns propose --network ic --neuron 15949719352790841058 sns_init.yaml

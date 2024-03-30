@@ -13,7 +13,6 @@ import Buffer "mo:base/Buffer";
 import Nat8 "mo:base/Nat8";
 import Option "mo:base/Option";
 import Result "mo:base/Result";
-import CanisterIds "CanisterIds";
 import Utilities "utilities";
 import Environment "Environment";
 
@@ -38,12 +37,8 @@ actor class _ManagerCanister() {
   private stable var activeGroupIndex : Nat8 = 0;
   private stable var totalManagers = 0;
 
-  let network = Environment.DFX_NETWORK;
-  private stable var main_canister_id = CanisterIds.MAIN_CANISTER_IC_ID;
-  if (network == "local") {
-    main_canister_id := CanisterIds.MAIN_CANISTER_LOCAL_ID;
-  };
-
+  private stable var main_canister_id = Environment.BACKEND_CANISTER_ID;
+  
   public shared ({ caller }) func updateTeamSelection(updateManagerDTO : DTOs.UpdateTeamSelectionDTO, transfersAvailable : Nat8, monthlyBonuses : Nat8, newBankBalance : Nat16) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);

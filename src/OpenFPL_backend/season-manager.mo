@@ -1077,7 +1077,6 @@ module {
       clubComposite.init();
       playerComposite.init();
       await managerComposite.init();
-      //TODO: Add prior managers
     };
 
   };

@@ -1,0 +1,24 @@
+[package]
+name = "tecdsa"
+version = "0.0.4"
+description = "Generate and manage tECDSA identities"
+repository = "https://github.com/bittoko/tecdsa"
+keywords = [
+  "ecdsa",
+  "identities",
+  "signature",
+  "crypto",
+  "threshold",
+  "tecdsa"
+]
+license = "MIT"
+
+[dependencies]
+test = "1.2.0"
+sha2 = "0.0.5"
+base = "0.11.1"
+utilities = "2.0.0"
+stable-buffer = "1.0.1"
+
+[toolchain]
+moc = "0.11.1"

@@ -1,0 +1,13 @@
+
+Scenarios to be tested
+
+- Searching for a username on leaderboard
+- Saving fixture data entered as a draft
+- Removing players from you team ensuring the team rules are adhered to
+    - Transfers available
+    - Unlimited transfer rules
+	- Formation change scenarios
+
+- All toast messages are as expected
+- You can filter proposals by status
+- You can vote on proposals
