@@ -17,3 +17,5 @@ src/declarations/
 node_modules/
 dist/
 
+.mops/
+
