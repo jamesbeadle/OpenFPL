@@ -1,0 +1,81 @@
+//Run:
+- register generic functions
+- stake neuron
+- configure neuron
+
+//Can be done via normal proposals
+- test neuron transfer
+- fund neuron
+- fund icpfa
+
+//Configure the DAOs neuron
+
+//set dissolve delay
+$ target/release/quill --pem-file private.pem neuron-manage NEURONID --additional-dissolve-delay-seconds 31557600 > message.json
+
+//set follower to openchat 8 year neuron
+quill neuron-manage 17682165960669268263 --follow all
+
+//Proposal to fund the neuron
+quill neuron-stake --amount <amount> --name <neuron name>
+
+quill neuron-stake --amount 50 --name primary
+quill neuron-stake --name primary --already-transferred
+    //Transfer Treasury Funds to neuron
+
+//Proposal to fund ICPFA
+    //Transfer Treasury Funds to ICPFA
+
+//Proposal to update the coin picture
+
+
+# Proposal 1
+
+quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-proposal $PROPOSAL_NEURON_ID --proposal '(
+    record {
+        title = "Stake 80% of funds raised";
+        url = "https://nns.com/proposal/1";
+        summary = "Proposal to stake 80% of funds raised.";
+        action = opt variant {
+            TransferSnsTreasuryFunds = record {
+                from_treasury = 1 : int32;
+                to_principal = opt principal "NEURON?!"; //TODO 
+                to_subaccount = null;
+                memo = null;
+                amount_e8s = 8_000_000_000_000_000 : nat64;      
+        };
+    }
+)' > message.json
+
+quill send message.json
+
+# Proposal 2
+quill sns make-proposal <PROPOSER_NEURON_ID> --proposal '(
+    record {
+        title = "Transfer 5% of funds raised to ICPFA";
+        url = "https://sns-examples.com/proposal/42";
+        summary = "Transfer 5% of funds raised to ICPFA";
+        action = opt variant {
+            TransferSnsTreasuryFunds = record {
+                from_treasury = 1 : int32;
+                to_principal = opt principal "agy5w-dlcen-pkrgo-pgfrz-3eqf2-xfwvr-qcvwn-nlhyu-77fsb-wgc37-nqe";
+                to_subaccount = null;
+                memo = null;
+                amount_e8s = 500_000_000_000_000 : nat64;
+            };
+        };
+    };
+)' > message.json
+
+quill send message.json
+
+# Proposal 5
+export $WASM_PATH="/home/user/new_wasm.wasm"
+quill sns make-upgrade-canister-proposal --target-canister-id "bboqb-jiaaa-aaaal-qb6ea-cai" --wasm-path $WASM_PATH $PROPOSAL_NEURON_ID > message.json
+quill send message.json
+
+
+
+//After the neuron is created get neuron id and run
+
+
