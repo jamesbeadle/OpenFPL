@@ -1,4 +1,3 @@
-
 module Environment {
 
   public let DFX_NETWORK = "ic";
@@ -10,4 +9,3 @@ module Environment {
   public let NEURON_CONTROLLER_CANISTER_ID = ""; //TODO: Set after the SNS
 
 };
-

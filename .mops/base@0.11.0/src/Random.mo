@@ -71,7 +71,7 @@ module {
     /// random.byte() // => ?20
     /// ```
     public func byte() : ?Nat8 {
-      it.next();
+      it.next()
     };
 
     /// Bool iterator splitting up a byte of entropy into 8 bits
@@ -85,15 +85,15 @@ module {
             case (?w) {
               byte := w;
               mask := 0x40;
-              ?(0 : Nat8 != byte & (0x80 : Nat8));
-            };
-          };
+              ?(0 : Nat8 != byte & (0x80 : Nat8))
+            }
+          }
         } else {
           let m = mask;
           mask >>= (1 : Nat8);
-          ?(0 : Nat8 != byte & m);
-        };
-      };
+          ?(0 : Nat8 != byte & m)
+        }
+      }
     };
 
     /// Simulates a coin toss. Both outcomes have equal probability.
@@ -106,7 +106,7 @@ module {
     /// random.coin() // => ?false
     /// ```
     public func coin() : ?Bool {
-      bit.next();
+      bit.next()
     };
 
     /// Uniformly distributes outcomes in the numeric range [0 .. 2^p - 1].
@@ -123,17 +123,20 @@ module {
       var acc : Nat = 0;
       for (i in it) {
         if (8 : Nat8 <= pp) {
-          acc := acc * 256 + Prim.nat8ToNat(i);
-        } else if (0 : Nat8 == pp) {
-          return ?acc;
+          acc := acc * 256 + Prim.nat8ToNat(i)
+        }
+        else if (0 : Nat8 == pp) {
+          return ?acc
         } else {
           acc *= Prim.nat8ToNat(1 << pp);
           let mask : Nat8 = 0xff >> (8 - pp);
-          return ?(acc + Prim.nat8ToNat(i & mask));
+          return ?(acc + Prim.nat8ToNat(i & mask))
         };
-        pp -= 8;
+        pp -= 8
       };
-      if (0 : Nat8 == pp) ?acc else null;
+      if (0 : Nat8 == pp)
+        ?acc
+      else null
     };
 
     /// Counts the number of heads in `n` fair coin tosses.
@@ -150,18 +153,20 @@ module {
       var acc : Nat8 = 0;
       for (i in it) {
         if (8 : Nat8 <= nn) {
-          acc +%= Prim.popcntNat8(i);
+          acc +%= Prim.popcntNat8(i)
         } else if (0 : Nat8 == nn) {
-          return ?acc;
+          return ?acc
         } else {
           let mask : Nat8 = 0xff << (8 - nn);
           let residue = Prim.popcntNat8(i & mask);
-          return ?(acc +% residue);
+          return ?(acc +% residue)
         };
-        nn -= 8;
+        nn -= 8
       };
-      if (0 : Nat8 == nn) ?acc else null;
-    };
+      if (0 : Nat8 == nn)
+        ?acc
+      else null
+    }
   };
 
   /// Distributes outcomes in the numeric range [0 .. 255].
@@ -175,8 +180,8 @@ module {
   public func byteFrom(seed : Blob) : Nat8 {
     switch (seed.vals().next()) {
       case (?w) { w };
-      case _ { Prim.trap "Random.byteFrom" };
-    };
+      case _ { Prim.trap "Random.byteFrom" }
+    }
   };
 
   /// Simulates a coin toss.
@@ -190,8 +195,8 @@ module {
   public func coinFrom(seed : Blob) : Bool {
     switch (seed.vals().next()) {
       case (?w) { w > (127 : Nat8) };
-      case _ { Prim.trap "Random.coinFrom" };
-    };
+      case _ { Prim.trap "Random.coinFrom" }
+    }
   };
 
   /// Distributes outcomes in the numeric range [0 .. 2^p - 1].
@@ -203,7 +208,7 @@ module {
   /// Random.rangeFrom(32, seed) // => 348746249
   /// ```
   public func rangeFrom(p : Nat8, seed : Blob) : Nat {
-    rangeIter(p, seed.vals());
+    rangeIter(p, seed.vals())
   };
 
   // internal worker method, expects iterator with sufficient supply
@@ -212,19 +217,20 @@ module {
     var acc : Nat = 0;
     for (i in it) {
       if (8 : Nat8 <= pp) {
-        acc := acc * 256 + Prim.nat8ToNat(i);
+        acc := acc * 256 + Prim.nat8ToNat(i)
       } else if (0 : Nat8 == pp) {
-        return acc;
+        return acc
       } else {
         acc *= Prim.nat8ToNat(1 << pp);
         let mask : Nat8 = 0xff >> (8 - pp);
-        return acc + Prim.nat8ToNat(i & mask);
+        return acc + Prim.nat8ToNat(i & mask)
       };
-      pp -= 8;
+      pp -= 8
     };
     if (0 : Nat8 == pp) {
-      return acc;
-    } else Prim.trap("Random.rangeFrom");
+      return acc
+    }
+    else Prim.trap("Random.rangeFrom")
   };
 
   /// Counts the number of heads in `n` coin tosses.
@@ -236,7 +242,7 @@ module {
   /// Random.binomialFrom(5, seed) // => 1
   /// ```
   public func binomialFrom(n : Nat8, seed : Blob) : Nat8 {
-    binomialIter(n, seed.vals());
+    binomialIter(n, seed.vals())
   };
 
   // internal worker method, expects iterator with sufficient supply
@@ -245,19 +251,20 @@ module {
     var acc : Nat8 = 0;
     for (i in it) {
       if (8 : Nat8 <= nn) {
-        acc +%= Prim.popcntNat8(i);
+        acc +%= Prim.popcntNat8(i)
       } else if (0 : Nat8 == nn) {
-        return acc;
+        return acc
       } else {
         let mask : Nat8 = 0xff << (8 - nn);
         let residue = Prim.popcntNat8(i & mask);
-        return (acc +% residue);
+        return (acc +% residue)
       };
-      nn -= 8;
+      nn -= 8
     };
     if (0 : Nat8 == nn) {
-      return acc;
-    } else Prim.trap("Random.binomialFrom");
+      return acc
+    }
+    else Prim.trap("Random.binomialFrom")
   }
 
-};
+}

@@ -127,9 +127,9 @@ module {
     };
 
     public func getProfile(principalId : Text) : async Result.Result<DTOs.ProfileDTO, T.Error> {
-      let emptyDTO: DTOs.ProfileDTO = {
+      let emptyDTO : DTOs.ProfileDTO = {
         principalId = principalId;
-        username  = "";
+        username = "";
         termsAccepted = false;
         profilePicture = null;
         profilePictureType = "";
@@ -1376,7 +1376,7 @@ module {
       let IC : Management.Management = actor (ENV.Default);
       let principal = ?Principal.fromText(Environment.BACKEND_CANISTER_ID);
       let _ = await Utilities.updateCanister_(canister, principal, IC);
-    
+
       let canister_principal = Principal.fromActor(canister);
       let canisterId = Principal.toText(canister_principal);
 

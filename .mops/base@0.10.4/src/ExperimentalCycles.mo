@@ -148,4 +148,4 @@ module {
   /// ```
   public let refunded : () -> (amount : Nat) = Prim.cyclesRefunded;
 
-};
+}

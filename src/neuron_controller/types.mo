@@ -59,13 +59,13 @@ module {
     #SetDissolveTimestamp: SetDissolveTimestamp;
   };
 
+  public type NeuronResponse = { #ok : ManageNeuronResponse; #err: Loopback.Client.Error };
+
   public type State = State.State;
 
   public type NeuronId = { id: Nat64 };
 
   public type Agent = Loopback.Agent;
-
-  public type NeuronResponse = { #ok : ManageNeuronResponse; #err: Loopback.Client.Error };
 
   public type NeuronIdOrSubaccount = { #Subaccount : [Nat8]; #NeuronId : NeuronId };
 

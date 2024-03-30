@@ -24,7 +24,7 @@ module {
   /// Int.abs(-12) // => 12
   /// ```
   public func abs(x : Int) : Nat {
-    Prim.abs(x);
+    Prim.abs(x)
   };
 
   /// Converts an integer number to its textual representation. Textual
@@ -36,7 +36,7 @@ module {
   /// ```
   public func toText(x : Int) : Text {
     if (x == 0) {
-      return "0";
+      return "0"
     };
 
     let isNegative = x < 0;
@@ -59,13 +59,13 @@ module {
           case 7 { "7" };
           case 8 { "8" };
           case 9 { "9" };
-          case _ { Prelude.unreachable() };
-        },
+          case _ { Prelude.unreachable() }
+        }
       ) # text;
-      int := int / base;
+      int := int / base
     };
 
-    return if isNegative { "-" # text } else { text };
+    return if isNegative { "-" # text } else { text }
   };
 
   /// Returns the minimum of `x` and `y`.
@@ -75,7 +75,7 @@ module {
   /// Int.min(2, -3) // => -3
   /// ```
   public func min(x : Int, y : Int) : Int {
-    if (x < y) { x } else { y };
+    if (x < y) { x } else { y }
   };
 
   /// Returns the maximum of `x` and `y`.
@@ -85,7 +85,7 @@ module {
   /// Int.max(2, -3) // => 2
   /// ```
   public func max(x : Int, y : Int) : Int {
-    if (x < y) { y } else { x };
+    if (x < y) { y } else { x }
   };
 
   // this is a local copy of deprecated Hash.hashNat8 (redefined to suppress the warning)
@@ -94,12 +94,12 @@ module {
     for (natOfKey in key.vals()) {
       hash := hash +% natOfKey;
       hash := hash +% hash << 10;
-      hash := hash ^ (hash >> 6);
+      hash := hash ^ (hash >> 6)
     };
     hash := hash +% hash << 3;
     hash := hash ^ (hash >> 11);
     hash := hash +% hash << 15;
-    return hash;
+    return hash
   };
 
   /// Computes a hash from the least significant 32-bits of `i`, ignoring other bits.
@@ -111,8 +111,8 @@ module {
       j & (255 << 0),
       j & (255 << 8),
       j & (255 << 16),
-      j & (255 << 24),
-    ]);
+      j & (255 << 24)
+    ])
   };
 
   /// Computes an accumulated hash from `h1` and the least significant 32-bits of `i`, ignoring other bits in `i`.
@@ -125,8 +125,8 @@ module {
       j & (255 << 0),
       j & (255 << 8),
       j & (255 << 16),
-      j & (255 << 24),
-    ]);
+      j & (255 << 24)
+    ])
   };
 
   /// Equality function for Int types.
@@ -240,7 +240,7 @@ module {
   /// Array.sort([1, -2, -3], Int.compare) // => [-3, -2, 1]
   /// ```
   public func compare(x : Int, y : Int) : { #less; #equal; #greater } {
-    if (x < y) { #less } else if (x == y) { #equal } else { #greater };
+    if (x < y) { #less } else if (x == y) { #equal } else { #greater }
   };
 
   /// Returns the negation of `x`, `-x` .
@@ -367,4 +367,4 @@ module {
   /// as a function value at the moment.
   public func pow(x : Int, y : Int) : Int { x ** y };
 
-};
+}

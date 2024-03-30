@@ -24,11 +24,11 @@ Before contributing, consider the following:
 
 - If you want to contribute directly to this repository, typical fixes might include any of the following:
 
-  - Fixes to resolve bugs or documentation errors
-  - Code improvements
-  - Feature requests
+    - Fixes to resolve bugs or documentation errors
+    - Code improvements
+    - Feature requests
 
-  Note that any contribution to this repository must be submitted in the form of a **pull request**.
+    Note that any contribution to this repository must be submitted in the form of a **pull request**.
 
 - If you are creating a pull request, be sure that the pull request only implements one fix or suggestion.
 
@@ -55,9 +55,9 @@ To open a new issue:
 
 1. Type a title and description, then click **Submit new issue**.
 
-   Be as clear and descriptive as possible.
+    Be as clear and descriptive as possible.
 
-   For any problem, describe it in detail, including details about the crate, the version of the code you are using, the results you expected, and how the actual results differed from your expectations.
+    For any problem, describe it in detail, including details about the crate, the version of the code you are using, the results you expected, and how the actual results differed from your expectations.
 
 ### Submitting a pull request
 
@@ -73,33 +73,32 @@ If you want to submit a pull request to fix an issue or add a feature, here's a 
 
 1. Create a new branch for your fix by running a command similar to the following:
 
-   ```bash
-   git checkout -b my-branch-name-here
-   ```
+    ```bash
+    git checkout -b my-branch-name-here
+    ```
 
 1. Open the file you want to fix in a text editor and make the appropriate changes for the issue you are trying to address.
 
 1. Add the file contents of the changed files to the index `git` uses to manage the state of the project by running a command similar to the following:
 
-   ```bash
-   git add path-to-changed-file
-   ```
-
+    ```bash
+    git add path-to-changed-file
+    ```
 1. Commit your changes to store the contents you added to the index along with a descriptive message by running a command similar to the following:
 
-   ```bash
-   git commit -m "Description of the fix being committed."
-   ```
+    ```bash
+    git commit -m "Description of the fix being committed."
+    ```
 
 1. Push the changes to the remote repository by running a command similar to the following:
 
-   ```bash
-   git push origin my-branch-name-here
-   ```
+    ```bash
+    git push origin my-branch-name-here
+    ```
 
 1. Create a new pull request for the branch you pushed to the upstream GitHub repository.
 
-   Provide a title that includes a short description of the changes made.
+    Provide a title that includes a short description of the changes made.
 
 1. Wait for the pull request to be reviewed.
 

@@ -1,8 +1,8 @@
 [dependencies]
 base = "0.11.0"
-array = "https://github.com/aviate-labs/array.mo#v0.2.0@863a668bcbb3c3799a62c36b2cba2c32d1fcc433"
-StableTrieMap = "https://github.com/NatLabs/StableTrieMap#main@4781cb03efd34b124c22396c69710b374366c797"
-StableBuffer = "https://github.com/canscale/StableBuffer#v0.2.0@1af0e8814bac5ca7ed23a6c094204b46d9056c2e"
+array = "https://github.com/aviate-labs/array.mo"
+StableTrieMap = "https://github.com/NatLabs/StableTrieMap"
+StableBuffer = "https://github.com/canscale/StableBuffer"
 itertools = "0.2.1"
 tecdsa = "0.0.4"
 cbor = "0.1.3"

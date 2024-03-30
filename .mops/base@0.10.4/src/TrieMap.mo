@@ -77,9 +77,9 @@ module {
       map := map2;
       switch (ov) {
         case null { _size += 1 };
-        case _ {};
+        case _ {}
       };
-      ov;
+      ov
     };
 
     /// Gets the value associated with the key `key` in an option, or `null` if it
@@ -98,7 +98,7 @@ module {
     /// map is using a constant time and space equality and hash function.
     public func get(key : K) : ?V {
       let keyObj = { key; hash = hashOf(key) };
-      T.find<K, V>(map, keyObj, isEq);
+      T.find<K, V>(map, keyObj, isEq)
     };
 
     /// Delete the entry associated with key `key`, if it exists. If the key is
@@ -142,9 +142,9 @@ module {
       map := t;
       switch (ov) {
         case null {};
-        case (?_) { _size -= 1 };
+        case (?_) { _size -= 1 }
       };
-      ov;
+      ov
     };
 
     /// Returns an iterator over the keys of the map.
@@ -173,7 +173,7 @@ module {
     /// *The above runtime and space are for the construction of the iterator.
     /// The iteration itself takes linear time and logarithmic space to execute.
     public func keys() : I.Iter<K> {
-      I.map(entries(), func(kv : (K, V)) : K { kv.0 });
+      I.map(entries(), func(kv : (K, V)) : K { kv.0 })
     };
 
     /// Returns an iterator over the values in the map.
@@ -202,7 +202,7 @@ module {
     /// *The above runtime and space are for the construction of the iterator.
     /// The iteration itself takes linear time and logarithmic space to execute.
     public func vals() : I.Iter<V> {
-      I.map(entries(), func(kv : (K, V)) : V { kv.1 });
+      I.map(entries(), func(kv : (K, V)) : V { kv.1 })
     };
 
     /// Returns an iterator over the entries (key-value pairs) in the map.
@@ -240,26 +240,26 @@ module {
               switch trie {
                 case (#empty) {
                   stack := stack2;
-                  next();
+                  next()
                 };
                 case (#leaf({ keyvals = null })) {
                   stack := stack2;
-                  next();
+                  next()
                 };
                 case (#leaf({ size = c; keyvals = ?((k, v), kvs) })) {
                   stack := ?(#leaf({ size = c -1; keyvals = kvs }), stack2);
-                  ?(k.key, v);
+                  ?(k.key, v)
                 };
                 case (#branch(br)) {
                   stack := ?(br.left, ?(br.right, stack2));
-                  next();
-                };
-              };
-            };
-          };
-        };
-      };
-    };
+                  next()
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   };
 
   /// Produce a copy of `map`, using `keyEq` to compare keys and `keyHash` to
@@ -283,13 +283,13 @@ module {
   public func clone<K, V>(
     map : TrieMap<K, V>,
     keyEq : (K, K) -> Bool,
-    keyHash : K -> Hash.Hash,
+    keyHash : K -> Hash.Hash
   ) : TrieMap<K, V> {
     let h2 = TrieMap<K, V>(keyEq, keyHash);
     for ((k, v) in map.entries()) {
-      h2.put(k, v);
+      h2.put(k, v)
     };
-    h2;
+    h2
   };
 
   /// Create a new map from the entries in `entries`, using `keyEq` to compare
@@ -310,13 +310,13 @@ module {
   public func fromEntries<K, V>(
     entries : I.Iter<(K, V)>,
     keyEq : (K, K) -> Bool,
-    keyHash : K -> Hash.Hash,
+    keyHash : K -> Hash.Hash
   ) : TrieMap<K, V> {
     let h = TrieMap<K, V>(keyEq, keyHash);
     for ((k, v) in entries) {
-      h.put(k, v);
+      h.put(k, v)
     };
-    h;
+    h
   };
 
   /// Transform (map) the values in `map` using function `f`, retaining the keys.
@@ -341,14 +341,14 @@ module {
     map : TrieMap<K, V1>,
     keyEq : (K, K) -> Bool,
     keyHash : K -> Hash.Hash,
-    f : (K, V1) -> V2,
+    f : (K, V1) -> V2
   ) : TrieMap<K, V2> {
     let h2 = TrieMap<K, V2>(keyEq, keyHash);
     for ((k, v1) in map.entries()) {
       let v2 = f(k, v1);
-      h2.put(k, v2);
+      h2.put(k, v2)
     };
-    h2;
+    h2
   };
 
   /// Transform (map) the values in `map` using function `f`, discarding entries
@@ -380,17 +380,17 @@ module {
     map : TrieMap<K, V1>,
     keyEq : (K, K) -> Bool,
     keyHash : K -> Hash.Hash,
-    f : (K, V1) -> ?V2,
+    f : (K, V1) -> ?V2
   ) : TrieMap<K, V2> {
     let h2 = TrieMap<K, V2>(keyEq, keyHash);
     for ((k, v1) in map.entries()) {
       switch (f(k, v1)) {
         case null {};
         case (?v2) {
-          h2.put(k, v2);
-        };
-      };
+          h2.put(k, v2)
+        }
+      }
     };
-    h2;
-  };
-};
+    h2
+  }
+}
