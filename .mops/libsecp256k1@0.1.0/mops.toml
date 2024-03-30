@@ -1,8 +1,0 @@
-[package]
-name = "libsecp256k1"
-version = "0.1.0"
-description = "Motoko port of libsecp256k1"
-repository = "https://github.com/av1ctor/libsecp256k1.mo"
-
-[dependencies]
-base = "https://github.com/dfinity/motoko-base#f8112331eb94dcea41741e59c7e2eaf367721866"
