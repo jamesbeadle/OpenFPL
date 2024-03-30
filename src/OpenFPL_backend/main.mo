@@ -8,6 +8,7 @@ import Result "mo:base/Result";
 import Time "mo:base/Time";
 import Timer "mo:base/Timer";
 import Nat64 "mo:base/Nat64";
+import Bool "mo:base/Bool";
 
 import Countries "Countries";
 import DTOs "DTOs";
@@ -177,7 +178,19 @@ actor Self {
 
   public shared ({ caller }) func validateRevaluePlayerDown(revaluePlayerDownDTO : DTOs.RevaluePlayerDownDTO) : async Result.Result<Text, Text> {
     assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
+    assert not proposalExists();
     return await seasonManager.validateRevaluePlayerDown(revaluePlayerDownDTO);
+  };
+
+  //TODO
+  private func proposalExists () : Bool {
+
+    //check the active proposals in the governance canister
+    //might have to get them in batches
+    //if one is the same then return true
+
+
+    return true;
   };
 
   public shared ({ caller }) func executeRevaluePlayerDown(revaluePlayerDownDTO : DTOs.RevaluePlayerDownDTO) : async () {
