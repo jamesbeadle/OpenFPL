@@ -23,14 +23,14 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func fromIter<K>(iter : IterNext<K>, hashUtils : HashUtils<K>) : Set<K> {
-    let map = [var null] : Set<K>;
+  public func fromIter<K>(iter: IterNext<K>, hashUtils: HashUtils<K>): Set<K> {
+    let map = [var null]:Set<K>;
 
     var dataOpt = map[DATA];
-    var front = 1 : Nat32;
-    var back = 1 : Nat32;
-    var size = 1 : Nat32;
-    var capacity = 2 : Nat32;
+    var front = 1:Nat32;
+    var back = 1:Nat32;
+    var size = 1:Nat32;
+    var capacity = 2:Nat32;
 
     for (item in iter) label loopBody {
       let data = switch (dataOpt) {
@@ -46,7 +46,7 @@ module {
       };
 
       let keys = data.0;
-      let hashIndex = nat(hashUtils.0 (item) % capacity +% capacity);
+      let hashIndex = nat(hashUtils.0(item) % capacity +% capacity);
 
       let indexes = data.1;
       let firstIndex = indexes[hashIndex];
@@ -77,8 +77,8 @@ module {
 
           switch (dataOpt) {
             case (?data) {
-              front := data.2 [FRONT];
-              back := data.2 [BACK];
+              front := data.2[FRONT];
+              back := data.2[BACK];
               capacity := nat32(data.0.size());
             };
 
@@ -90,7 +90,7 @@ module {
       } else {
         let key = keys[index];
 
-        if (hashUtils.1 (switch (key) { case (?key) key; case (_) trap("unreachable") }, item)) {
+        if (hashUtils.1(switch (key) { case (?key) key; case (_) trap("unreachable") }, item)) {
           let index32 = nat32(index);
 
           if (index32 != (back -% 1) % capacity) {
@@ -125,8 +125,8 @@ module {
 
               switch (dataOpt) {
                 case (?data) {
-                  front := data.2 [FRONT];
-                  back := data.2 [BACK];
+                  front := data.2[FRONT];
+                  back := data.2[BACK];
                   capacity := nat32(data.0.size());
                 };
 
@@ -160,14 +160,14 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func fromIterDesc<K>(iter : IterNext<K>, hashUtils : HashUtils<K>) : Set<K> {
-    let map = [var null] : Set<K>;
+  public func fromIterDesc<K>(iter: IterNext<K>, hashUtils: HashUtils<K>): Set<K> {
+    let map = [var null]:Set<K>;
 
     var dataOpt = map[DATA];
-    var front = 0 : Nat32;
-    var back = 0 : Nat32;
-    var size = 1 : Nat32;
-    var capacity = 2 : Nat32;
+    var front = 0:Nat32;
+    var back = 0:Nat32;
+    var size = 1:Nat32;
+    var capacity = 2:Nat32;
 
     for (item in iter) label loopBody {
       let data = switch (dataOpt) {
@@ -183,7 +183,7 @@ module {
       };
 
       let keys = data.0;
-      let hashIndex = nat(hashUtils.0 (item) % capacity +% capacity);
+      let hashIndex = nat(hashUtils.0(item) % capacity +% capacity);
 
       let indexes = data.1;
       let firstIndex = indexes[hashIndex];
@@ -214,8 +214,8 @@ module {
 
           switch (dataOpt) {
             case (?data) {
-              front := data.2 [FRONT];
-              back := data.2 [BACK];
+              front := data.2[FRONT];
+              back := data.2[BACK];
               capacity := nat32(data.0.size());
             };
 
@@ -227,7 +227,7 @@ module {
       } else {
         let key = keys[index];
 
-        if (hashUtils.1 (switch (key) { case (?key) key; case (_) trap("unreachable") }, item)) {
+        if (hashUtils.1(switch (key) { case (?key) key; case (_) trap("unreachable") }, item)) {
           let index32 = nat32(index);
 
           if (index32 != (front +% 1) % capacity) {
@@ -262,8 +262,8 @@ module {
 
               switch (dataOpt) {
                 case (?data) {
-                  back := data.2 [BACK];
-                  front := data.2 [FRONT];
+                  back := data.2[BACK];
+                  front := data.2[FRONT];
                   capacity := nat32(data.0.size());
                 };
 
@@ -297,14 +297,14 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func fromIterMap<K, T>(iter : IterNext<T>, hashUtils : HashUtils<K>, mapItem : (T) -> ?K) : Set<K> {
-    let map = [var null] : Set<K>;
+  public func fromIterMap<K, T>(iter: IterNext<T>, hashUtils: HashUtils<K>, mapItem: (T) -> ?K): Set<K> {
+    let map = [var null]:Set<K>;
 
     var dataOpt = map[DATA];
-    var front = 1 : Nat32;
-    var back = 1 : Nat32;
-    var size = 1 : Nat32;
-    var capacity = 2 : Nat32;
+    var front = 1:Nat32;
+    var back = 1:Nat32;
+    var size = 1:Nat32;
+    var capacity = 2:Nat32;
 
     for (item in iter) label loopBody switch (mapItem(item)) {
       case (?item) {
@@ -321,7 +321,7 @@ module {
         };
 
         let keys = data.0;
-        let hashIndex = nat(hashUtils.0 (item) % capacity +% capacity);
+        let hashIndex = nat(hashUtils.0(item) % capacity +% capacity);
 
         let indexes = data.1;
         let firstIndex = indexes[hashIndex];
@@ -352,8 +352,8 @@ module {
 
             switch (dataOpt) {
               case (?data) {
-                front := data.2 [FRONT];
-                back := data.2 [BACK];
+                front := data.2[FRONT];
+                back := data.2[BACK];
                 capacity := nat32(data.0.size());
               };
 
@@ -365,7 +365,7 @@ module {
         } else {
           let key = keys[index];
 
-          if (hashUtils.1 (switch (key) { case (?key) key; case (_) trap("unreachable") }, item)) {
+          if (hashUtils.1(switch (key) { case (?key) key; case (_) trap("unreachable") }, item)) {
             let index32 = nat32(index);
 
             if (index32 != (back -% 1) % capacity) {
@@ -400,8 +400,8 @@ module {
 
                 switch (dataOpt) {
                   case (?data) {
-                    front := data.2 [FRONT];
-                    back := data.2 [BACK];
+                    front := data.2[FRONT];
+                    back := data.2[BACK];
                     capacity := nat32(data.0.size());
                   };
 
@@ -438,14 +438,14 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func fromIterMapDesc<K, T>(iter : IterNext<T>, hashUtils : HashUtils<K>, mapItem : (T) -> ?K) : Set<K> {
-    let map = [var null] : Set<K>;
+  public func fromIterMapDesc<K, T>(iter: IterNext<T>, hashUtils: HashUtils<K>, mapItem: (T) -> ?K): Set<K> {
+    let map = [var null]:Set<K>;
 
     var dataOpt = map[DATA];
-    var front = 0 : Nat32;
-    var back = 0 : Nat32;
-    var size = 1 : Nat32;
-    var capacity = 2 : Nat32;
+    var front = 0:Nat32;
+    var back = 0:Nat32;
+    var size = 1:Nat32;
+    var capacity = 2:Nat32;
 
     for (item in iter) label loopBody switch (mapItem(item)) {
       case (?item) {
@@ -462,7 +462,7 @@ module {
         };
 
         let keys = data.0;
-        let hashIndex = nat(hashUtils.0 (item) % capacity +% capacity);
+        let hashIndex = nat(hashUtils.0(item) % capacity +% capacity);
 
         let indexes = data.1;
         let firstIndex = indexes[hashIndex];
@@ -493,8 +493,8 @@ module {
 
             switch (dataOpt) {
               case (?data) {
-                front := data.2 [FRONT];
-                back := data.2 [BACK];
+                front := data.2[FRONT];
+                back := data.2[BACK];
                 capacity := nat32(data.0.size());
               };
 
@@ -506,7 +506,7 @@ module {
         } else {
           let key = keys[index];
 
-          if (hashUtils.1 (switch (key) { case (?key) key; case (_) trap("unreachable") }, item)) {
+          if (hashUtils.1(switch (key) { case (?key) key; case (_) trap("unreachable") }, item)) {
             let index32 = nat32(index);
 
             if (index32 != (front +% 1) % capacity) {
@@ -541,8 +541,8 @@ module {
 
                 switch (dataOpt) {
                   case (?data) {
-                    back := data.2 [BACK];
-                    front := data.2 [FRONT];
+                    back := data.2[BACK];
+                    front := data.2[FRONT];
                     capacity := nat32(data.0.size());
                   };
 

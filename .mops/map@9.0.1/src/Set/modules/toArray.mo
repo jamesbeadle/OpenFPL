@@ -1,12 +1,6 @@
 import Const "../const";
 import Types "../types";
-import {
-  Array_tabulate = tabulateArray;
-  Array_init = initArray;
-  natToNat32 = nat32;
-  nat32ToNat = nat;
-  trap;
-} "mo:prim";
+import { Array_tabulate = tabulateArray; Array_init = initArray; natToNat32 = nat32; nat32ToNat = nat; trap } "mo:prim";
 
 module {
   type Set<K> = Types.Set<K>;
@@ -21,54 +15,48 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func toArray<K>(map : Set<K>) : [K] {
+  public func toArray<K>(map: Set<K>): [K] {
     let data = switch (map[DATA]) { case (?data) data; case (_) return [] };
 
     let capacity = nat32(data.0.size());
-    var index = data.2 [FRONT];
+    var index = data.2[FRONT];
 
-    tabulateArray<K>(
-      nat(data.2 [SIZE]),
-      func(i) = loop {
-        index := (index +% 1) % capacity;
+    tabulateArray<K>(nat(data.2[SIZE]), func(i) = loop {
+      index := (index +% 1) % capacity;
 
-        switch (data.0 [nat(index)]) { case (?key) return key; case (null) {} };
-      },
-    );
+      switch (data.0[nat(index)]) { case (?key) return key; case (null) {} };
+    });
   };
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func toArrayDesc<K>(map : Set<K>) : [K] {
+  public func toArrayDesc<K>(map: Set<K>): [K] {
     let data = switch (map[DATA]) { case (?data) data; case (_) return [] };
 
     let capacity = nat32(data.0.size());
-    var index = data.2 [BACK];
+    var index = data.2[BACK];
 
-    tabulateArray<K>(
-      nat(data.2 [SIZE]),
-      func(i) = loop {
-        index := (index -% 1) % capacity;
+    tabulateArray<K>(nat(data.2[SIZE]), func(i) = loop {
+      index := (index -% 1) % capacity;
 
-        switch (data.0 [nat(index)]) { case (?key) return key; case (_) {} };
-      },
-    );
+      switch (data.0[nat(index)]) { case (?key) return key; case (_) {} };
+    });
   };
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func toArrayMap<K, T>(map : Set<K>, mapEntry : (K) -> ?T) : [T] {
+  public func toArrayMap<K, T>(map: Set<K>, mapEntry: (K) -> ?T): [T] {
     let data = switch (map[DATA]) { case (?data) data; case (_) return [] };
 
     let keys = data.0;
     let capacity = nat32(keys.size());
 
-    var array = [var null, null] : [var ?T];
-    var arraySize = 2 : Nat32;
-    var arrayIndex = 0 : Nat32;
+    var array = [var null, null]:[var ?T];
+    var arraySize = 2:Nat32;
+    var arrayIndex = 0:Nat32;
 
-    let lastIndex = data.2 [BACK];
-    var index = (data.2 [FRONT] +% 1) % capacity;
+    let lastIndex = data.2[BACK];
+    var index = (data.2[FRONT] +% 1) % capacity;
 
     while (index != lastIndex) {
       switch (keys[nat(index)]) {
@@ -107,18 +95,18 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func toArrayMapDesc<K, T>(map : Set<K>, mapEntry : (K) -> ?T) : [T] {
+  public func toArrayMapDesc<K, T>(map: Set<K>, mapEntry: (K) -> ?T): [T] {
     let data = switch (map[DATA]) { case (?data) data; case (_) return [] };
 
     let keys = data.0;
     let capacity = nat32(keys.size());
 
-    var array = [var null, null] : [var ?T];
-    var arraySize = 2 : Nat32;
-    var arrayIndex = 0 : Nat32;
+    var array = [var null, null]:[var ?T];
+    var arraySize = 2:Nat32;
+    var arrayIndex = 0:Nat32;
 
-    let lastIndex = data.2 [FRONT];
-    var index = (data.2 [BACK] -% 1) % capacity;
+    let lastIndex = data.2[FRONT];
+    var index = (data.2[BACK] -% 1) % capacity;
 
     while (index != lastIndex) {
       switch (keys[nat(index)]) {

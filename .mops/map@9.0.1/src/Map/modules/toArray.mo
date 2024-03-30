@@ -1,12 +1,6 @@
 import Const "../const";
 import Types "../types";
-import {
-  Array_tabulate = tabulateArray;
-  Array_init = initArray;
-  natToNat32 = nat32;
-  nat32ToNat = nat;
-  trap;
-} "mo:prim";
+import { Array_tabulate = tabulateArray; Array_init = initArray; natToNat32 = nat32; nat32ToNat = nat; trap } "mo:prim";
 
 module {
   type Map<K, V> = Types.Map<K, V>;
@@ -21,65 +15,59 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func toArray<K, V>(map : Map<K, V>) : [(K, V)] {
+  public func toArray<K, V>(map: Map<K, V>): [(K, V)] {
     let data = switch (map[DATA]) { case (?data) data; case (_) return [] };
 
     let capacity = nat32(data.0.size());
-    var index = data.3 [FRONT];
+    var index = data.3[FRONT];
 
-    tabulateArray<(K, V)>(
-      nat(data.3 [SIZE]),
-      func(i) = loop {
-        index := (index +% 1) % capacity;
+    tabulateArray<(K, V)>(nat(data.3[SIZE]), func(i) = loop {
+      index := (index +% 1) % capacity;
 
-        let indexNat = nat(index);
+      let indexNat = nat(index);
 
-        switch (data.0 [indexNat]) {
-          case (?key) return (key, switch (data.1 [indexNat]) { case (?value) value; case (_) trap("unreachable") });
-          case (_) {};
-        };
-      },
-    );
+      switch (data.0[indexNat]) {
+        case (?key) return (key, switch (data.1[indexNat]) { case (?value) value; case (_) trap("unreachable") });
+        case (_) {};
+      };
+    });
   };
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func toArrayDesc<K, V>(map : Map<K, V>) : [(K, V)] {
+  public func toArrayDesc<K, V>(map: Map<K, V>): [(K, V)] {
     let data = switch (map[DATA]) { case (?data) data; case (_) return [] };
 
     let capacity = nat32(data.0.size());
-    var index = data.3 [BACK];
+    var index = data.3[BACK];
 
-    tabulateArray<(K, V)>(
-      nat(data.3 [SIZE]),
-      func(i) = loop {
-        index := (index -% 1) % capacity;
+    tabulateArray<(K, V)>(nat(data.3[SIZE]), func(i) = loop {
+      index := (index -% 1) % capacity;
 
-        let indexNat = nat(index);
+      let indexNat = nat(index);
 
-        switch (data.0 [indexNat]) {
-          case (?key) return (key, switch (data.1 [indexNat]) { case (?value) value; case (_) trap("unreachable") });
-          case (_) {};
-        };
-      },
-    );
+      switch (data.0[indexNat]) {
+        case (?key) return (key, switch (data.1[indexNat]) { case (?value) value; case (_) trap("unreachable") });
+        case (_) {};
+      };
+    });
   };
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func toArrayMap<K, V, T>(map : Map<K, V>, mapEntry : (K, V) -> ?T) : [T] {
+  public func toArrayMap<K, V, T>(map: Map<K, V>, mapEntry: (K, V) -> ?T): [T] {
     let data = switch (map[DATA]) { case (?data) data; case (_) return [] };
 
     let values = data.1;
     let keys = data.0;
     let capacity = nat32(keys.size());
 
-    var array = [var null, null] : [var ?T];
-    var arraySize = 2 : Nat32;
-    var arrayIndex = 0 : Nat32;
+    var array = [var null, null]:[var ?T];
+    var arraySize = 2:Nat32;
+    var arrayIndex = 0:Nat32;
 
-    let lastIndex = data.3 [BACK];
-    var index = (data.3 [FRONT] +% 1) % capacity;
+    let lastIndex = data.3[BACK];
+    var index = (data.3[FRONT] +% 1) % capacity;
 
     while (index != lastIndex) {
       let indexNat = nat(index);
@@ -120,19 +108,19 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func toArrayMapDesc<K, V, T>(map : Map<K, V>, mapEntry : (K, V) -> ?T) : [T] {
+  public func toArrayMapDesc<K, V, T>(map: Map<K, V>, mapEntry: (K, V) -> ?T): [T] {
     let data = switch (map[DATA]) { case (?data) data; case (_) return [] };
 
     let values = data.1;
     let keys = data.0;
     let capacity = nat32(keys.size());
 
-    var array = [var null, null] : [var ?T];
-    var arraySize = 2 : Nat32;
-    var arrayIndex = 0 : Nat32;
+    var array = [var null, null]:[var ?T];
+    var arraySize = 2:Nat32;
+    var arrayIndex = 0:Nat32;
 
-    let lastIndex = data.3 [FRONT];
-    var index = (data.3 [BACK] -% 1) % capacity;
+    let lastIndex = data.3[FRONT];
+    var index = (data.3[BACK] -% 1) % capacity;
 
     while (index != lastIndex) {
       let indexNat = nat(index);

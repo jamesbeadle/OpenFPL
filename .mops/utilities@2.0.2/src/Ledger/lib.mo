@@ -10,9 +10,9 @@ module {
   public let { transfer; balance } = M;
 
   public type Memo = T.Memo;
-
+  
   public type Address = T.Address;
-
+    
   public type Subaccount = T.Subaccount;
 
   public type AccountIdentifier = T.AccountIdentifier;
@@ -22,7 +22,7 @@ module {
   public let { Interface } = T;
 
   public module Subaccount = {
-
+    
     public let { nat_to_subaccount = from_nat } = Address;
 
   };

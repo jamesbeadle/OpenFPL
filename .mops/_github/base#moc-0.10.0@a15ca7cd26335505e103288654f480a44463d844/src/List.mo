@@ -371,7 +371,7 @@ module {
   ///
   /// Space: O(size*size)
   public func flatten<T>(l : List<List<T>>) : List<T> {
-    //FIXME: this is quadratic, not linear https://github.com/dfinity/motoko-base/issues/459
+  //FIXME: this is quadratic, not linear https://github.com/dfinity/motoko-base/issues/459
     foldLeft<List<T>, List<T>>(l, null, func(a, b) { append<T>(a, b) })
   };
 
@@ -612,7 +612,7 @@ module {
   ///
   /// *Runtime and space assumes that argument `compare` runs in O(1) time and space.
   public func compare<T>(l1 : List<T>, l2 : List<T>, compare : (T, T) -> Order.Order) : Order.Order {
-    compareAux<T>(l1, l2, compare)
+     compareAux<T>(l1, l2, compare);
   };
 
   private func equalAux<T>(l1 : List<T>, l2 : List<T>, equal : (T, T) -> Bool) : Bool {
@@ -621,7 +621,7 @@ module {
         equal(h1, h2) and equalAux<T>(t1, t2, equal)
       };
       case (null, null) { true };
-      case _ { false }
+      case _ { false };
     }
   };
   /// Compare two lists for equality using the argument function `equal` to determine equality of their elements.
@@ -643,7 +643,7 @@ module {
   ///
   /// *Runtime and space assumes that argument `equal` runs in O(1) time and space.
   public func equal<T>(l1 : List<T>, l2 : List<T>, equal : (T, T) -> Bool) : Bool {
-    equalAux<T>(l1, l2, equal)
+    equalAux<T>(l1, l2, equal);
   };
 
   /// Generate a list based on a length and a function that maps from

@@ -14,11 +14,15 @@ import T "mo:matchers/Testable";
 import M "mo:matchers/Matchers";
 
 /*
- * A note about the following test data.There are three functions that returns * test maps : newMap;
-newCollidedMap;
-and newEmptyMap.newMap returns a map that is * populate but has not resized.newCollidedMap returns a map that is populated * and has gone through multiple resizes;
-with some forced collisions.newEmptyMap * returns an empty map.* * There are functions that sort the keys and values by the number N;
-and returns * the entries as an array.*/
+* A note about the following test data. There are three functions that returns
+* test maps: newMap, newCollidedMap, and newEmptyMap. newMap returns a map that is
+* populate but has not resized. newCollidedMap returns a map that is populated
+* and has gone through multiple resizes, with some forced collisions. newEmptyMap
+* returns an empty map.
+*
+* There are functions that sort the keys and values by the number N, and returns
+* the entries as an array.
+*/
 
 // Small map that has not resized
 let smallSize = 6;

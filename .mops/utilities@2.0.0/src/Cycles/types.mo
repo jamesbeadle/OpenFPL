@@ -3,7 +3,7 @@ import State "state";
 module {
 
   public type State = State.State;
-
+  
   public type Status = ?((Principal, Nat), Status);
 
   public type StatusResponse = { status : Status };
@@ -14,7 +14,7 @@ module {
 
   public type ChangeRequest = { args : [ChangeRequestArg] };
 
-  public type Return<T> = { response : T; trapped : [Text] };
+  public type Return<T> = { response: T; trapped: [Text] };
 
   public type ReturnStatus = Return<StatusResponse>;
 
@@ -22,7 +22,7 @@ module {
 
   public type ChangeRequestArg = {
     #AddAdmin : Principal;
-    #RemoveAdmin : Principal;
+    #RemoveAdmin: Principal;
     #AddClient : Principal;
     #RemoveClient : Principal;
   };
@@ -33,9 +33,9 @@ module {
     release : Nat -> ();
     reserve : Nat -> Bool;
     set_canister_id : Principal -> ();
-    status : StatusRequest -> async * ReturnStatus;
-    transfer : TransferRequest -> async * ReturnAmount;
-    change : ChangeRequest -> async * Return<()>;
+    status : StatusRequest -> async* ReturnStatus;
+    transfer : TransferRequest -> async* ReturnAmount;
+    change : ChangeRequest -> async* Return<()>;
   };
 
   public type Interface = actor {

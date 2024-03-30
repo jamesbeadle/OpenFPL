@@ -397,7 +397,7 @@ module {
   /// ```
   public func replace<K, V>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool, v : ?V) : (Trie<K, V>, ?V) {
     let key_eq = equalKey(k_eq);
-    var replacedValue : ?V = null;
+    var replacedValue: ?V = null;
 
     func recursiveReplace(t : Trie<K, V>, bitpos : Nat) : Trie<K, V> {
       switch t {

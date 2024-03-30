@@ -11,4 +11,5 @@ module {
   /// `trap(t)` traps execution with a user-provided message.
   public let trap : Text -> None = Prim.trap;
 
-};
+
+}

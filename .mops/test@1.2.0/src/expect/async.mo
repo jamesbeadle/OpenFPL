@@ -1,8 +1,8 @@
-import { bindCompare; fail = _fail } "./utils";
+import {bindCompare; fail = _fail} "./utils";
 import ExpectCall "./expect-call";
 
 module {
-  public let expectAsync = {
-    call = ExpectCall.ExpectCall;
-  };
+	public let expectAsync = {
+		call = ExpectCall.ExpectCall;
+	};
 };

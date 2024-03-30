@@ -4,7 +4,7 @@ import S "state";
 module {
 
   public type Fee = C.Fee;
-
+  
   public type Fees = C.Fees;
 
   public type Return = C.Return;
@@ -15,6 +15,6 @@ module {
 
   public let { Fees } = C;
 
-  public let State = S;
+  public let State = S; 
 
 };

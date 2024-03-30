@@ -363,7 +363,7 @@ module {
   };
 
   /// Splits the input `Text` with the specified `Pattern`.
-  ///
+  /// 
   /// Two fields are separated by exactly one match.
   ///
   /// ```motoko include=import

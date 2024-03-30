@@ -20,7 +20,7 @@ module {
   public type KeyId = T.KeyId;
 
   public let PublicKey = PK;
-
+  
   public type PublicKey = T.PublicKey;
 
   public let { SECP256K1 } = Const;

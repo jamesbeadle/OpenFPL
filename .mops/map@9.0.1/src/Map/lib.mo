@@ -39,27 +39,9 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public let {
-    mapFilter;
-    mapFilterDesc;
-    filter;
-    filterDesc;
-    map;
-    mapDesc;
-    clone;
-    cloneDesc;
-  } = Clone;
+  public let { mapFilter; mapFilterDesc; filter; filterDesc; map; mapDesc; clone; cloneDesc } = Clone;
 
-  public let {
-    find;
-    findDesc;
-    some;
-    someDesc;
-    every;
-    everyDesc;
-    forEach;
-    forEachDesc;
-  } = Find;
+  public let { find; findDesc; some; someDesc; every; everyDesc; forEach; forEachDesc } = Find;
 
   public let { fromIter; fromIterDesc; fromIterMap; fromIterMapDesc } = FromIter;
 
@@ -69,35 +51,11 @@ module {
 
   public let { keys; keysDesc; vals; valsDesc; entries; entriesDesc } = Iterate;
 
-  public let {
-    keysFrom;
-    keysFromDesc;
-    valsFrom;
-    valsFromDesc;
-    entriesFrom;
-    entriesFromDesc;
-  } = Iterate;
+  public let { keysFrom; keysFromDesc; valsFrom; valsFromDesc; entriesFrom; entriesFromDesc } = Iterate;
 
-  public let {
-    put;
-    putFront;
-    set;
-    setFront;
-    add;
-    addFront;
-    replace;
-    update;
-    updateFront;
-  } = Put;
+  public let { put; putFront; set; setFront; add; addFront; replace; update; updateFront } = Put;
 
-  public let {
-    putMove;
-    putMoveFront;
-    replaceMove;
-    replaceMoveFront;
-    updateMove;
-    updateMoveFront;
-  } = Put;
+  public let { putMove; putMoveFront; replaceMove; replaceMoveFront; updateMove; updateMoveFront } = Put;
 
   public let { peek; peekFront; pop; popFront; cycle; cycleFront } = Queue;
 

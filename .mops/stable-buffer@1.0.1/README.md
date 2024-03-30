@@ -1,13 +1,11 @@
 # stable-buffer
 
 ## Description
-
 Stable buffers allow you to store and retrieve fixed-size blocks (Blob) in stable memory regions.
 
 Data block size is configured during state initialization. See Example below.
 
 ## Types
-
 ```
   public type Block = Blob;
 
@@ -39,7 +37,6 @@ Data block size is configured during state initialization. See Example below.
 ```
 
 ## Example
-
 ```
 import SB "../../src";
 import { range; toArray } "mo:base/Iter";
@@ -49,7 +46,7 @@ import Blob "mo:base/Blob";
 actor {
 
   stable let state = SB.State.init({size=122; capacity=1000});
-
+  
   let buffer = SB.StableBuffer( state );
 
   public query func capacity(): async Nat { buffer.capacity() };

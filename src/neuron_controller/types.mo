@@ -59,6 +59,8 @@ module {
     #SetDissolveTimestamp: SetDissolveTimestamp;
   };
 
+  public type NeuronResponse = { #ok : ManageNeuronResponse; #err: Loopback.Client.Error };
+
   public type State = State.State;
 
   public type NeuronId = { id: Nat64 };

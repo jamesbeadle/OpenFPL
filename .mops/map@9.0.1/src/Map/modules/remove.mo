@@ -20,12 +20,12 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func remove<K, V>(map : Map<K, V>, hashUtils : HashUtils<K>, keyParam : K) : ?V {
+  public func remove<K, V>(map: Map<K, V>, hashUtils: HashUtils<K>, keyParam: K): ?V {
     let data = switch (map[DATA]) { case (?data) data; case (_) return null };
 
     let keys = data.0;
     let capacity = nat32(keys.size());
-    let hashIndex = nat(hashUtils.0 (keyParam) % capacity +% capacity);
+    let hashIndex = nat(hashUtils.0(keyParam) % capacity +% capacity);
 
     let indexes = data.2;
     var index = indexes[hashIndex];
@@ -33,15 +33,15 @@ module {
 
     loop if (index == NULL) {
       return null;
-    } else if (hashUtils.1 (switch (keys[index]) { case (?key) key; case (_) trap("unreachable") }, keyParam)) {
-      let value = data.1 [index];
+    } else if (hashUtils.1(switch (keys[index]) { case (?key) key; case (_) trap("unreachable") }, keyParam)) {
+      let value = data.1[index];
       let bounds = data.3;
       let newSize = bounds[SIZE] -% 1;
 
       bounds[SIZE] := newSize;
 
       keys[index] := null;
-      data.1 [index] := null;
+      data.1[index] := null;
 
       if (prevIndex == NULL) indexes[hashIndex] := indexes[index] else indexes[prevIndex] := indexes[index];
 
@@ -89,12 +89,12 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func delete<K, V>(map : Map<K, V>, hashUtils : HashUtils<K>, keyParam : K) {
+  public func delete<K, V>(map: Map<K, V>, hashUtils: HashUtils<K>, keyParam: K) {
     let data = switch (map[DATA]) { case (?data) data; case (_) return };
 
     let keys = data.0;
     let capacity = nat32(keys.size());
-    let hashIndex = nat(hashUtils.0 (keyParam) % capacity +% capacity);
+    let hashIndex = nat(hashUtils.0(keyParam) % capacity +% capacity);
 
     let indexes = data.2;
     var index = indexes[hashIndex];
@@ -102,14 +102,14 @@ module {
 
     loop if (index == NULL) {
       return;
-    } else if (hashUtils.1 (switch (keys[index]) { case (?key) key; case (_) trap("unreachable") }, keyParam)) {
+    } else if (hashUtils.1(switch (keys[index]) { case (?key) key; case (_) trap("unreachable") }, keyParam)) {
       let bounds = data.3;
       let newSize = bounds[SIZE] -% 1;
 
       bounds[SIZE] := newSize;
 
       keys[index] := null;
-      data.1 [index] := null;
+      data.1[index] := null;
 
       if (prevIndex == NULL) indexes[hashIndex] := indexes[index] else indexes[prevIndex] := indexes[index];
 

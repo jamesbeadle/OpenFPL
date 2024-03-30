@@ -9,7 +9,7 @@ import T "mo:matchers/Testable";
 import M "mo:matchers/Matchers";
 
 let nat8Testable : T.Testable<Nat8> = object {
-  public func display(n : Nat8) : Text {
+  public func display(n: Nat8) : Text {
     Nat8.toText(n)
   };
   public func equals(first : Nat8, second : Nat8) : Bool {
@@ -20,52 +20,53 @@ let nat8Testable : T.Testable<Nat8> = object {
 func nat8(n : Nat8) : T.TestableItem<Nat8> = {
   item = n;
   display = nat8Testable.display;
-  equals = nat8Testable.equals
+  equals = nat8Testable.equals;
 };
 
 let { run; test; suite } = Suite;
 
 func toBits(b : Blob) : Nat -> Bool {
-  let bytes = Blob.toArray(b);
-  func(n : Nat) : Bool {
-    let byte = bytes[n / 8];
-    let mask = 0x80 >> (Nat8.fromNat(n % 8));
-    0 != byte & mask
-  }
+   let bytes = Blob.toArray(b);
+   func (n : Nat) : Bool {
+     let byte = bytes[n / 8];
+     let mask = 0x80 >> (Nat8.fromNat(n % 8));
+     0 != byte & mask
+   }
 };
 
+
 func toWords(b : Blob, bits : Nat) : Nat -> Nat {
-  let bytes = Blob.toArray(b);
-  func(n : Nat) : Nat {
-    let o = n / bits / 8;
-    var acc = 0;
-    var i = 0;
-    while (i < bits / 8) {
-      let byte = bytes[o + i];
-      acc := acc * 256 + Nat8.toNat(byte);
-      i += 1
-    };
-    acc
-  }
+   let bytes = Blob.toArray(b);
+   func (n : Nat) : Nat {
+     let o = n/bits/8;
+     var acc = 0;
+     var i = 0;
+     while (i < bits / 8) {
+       let byte = bytes[o + i];
+       acc := acc * 256 + Nat8.toNat(byte);
+       i += 1;
+     };
+     acc
+   }
 };
 
 func toPopcounts(b : Blob, bits : Nat) : Nat -> Nat8 {
-  let bytes = Blob.toArray(b);
-  func(n : Nat) : Nat8 {
-    let o = n / bits / 8;
-    var acc : Nat8 = 0;
-    var i = 0;
-    while (i < bits / 8) {
-      let byte = bytes[o + i];
-      acc := Nat8.bitcountNonZero(byte);
-      i += 1
-    };
-    acc
-  }
+   let bytes = Blob.toArray(b);
+   func (n : Nat) : Nat8 {
+     let o = n/bits/8;
+     var acc : Nat8 = 0;
+     var i = 0;
+     while (i < bits / 8) {
+       let byte = bytes[o + i];
+       acc := Nat8.bitcountNonZero(byte);
+       i += 1;
+     };
+     acc
+   }
 };
 
 run(
-  suite(
+   suite(
     "random-coin",
     [
       test(
@@ -91,14 +92,14 @@ run(
           let f = Random.Finite(blob);
           let bits = toBits(blob);
           var i = 0;
-          var max = blob.size() * 8;
+          var max = blob.size()*8;
           var eq = true;
           while (i < max) {
             eq := eq and f.coin() == ?bits(i);
-            i += 1
+            i += 1;
           };
-          eq
-        },
+          eq;
+         },
         M.equals(T.bool(true))
       ),
 
@@ -130,7 +131,7 @@ run(
         Random.Finite("\00").range(16),
         M.equals(T.optional(T.natTestable, null : ?Nat))
       ),
-      test(
+       test(
         "random 2 byte range 16",
         Random.Finite("\FF\FF").range(16),
         M.equals(T.optional(T.natTestable, ?65535 : ?Nat))
@@ -148,10 +149,10 @@ run(
           var eq = true;
           while (i < max) {
             eq := eq and f.range(Nat8.fromNat(bits)) == ?words(i);
-            i += 1
+            i += 1;
           };
-          eq
-        },
+          eq;
+         },
         M.equals(T.bool(true))
       ),
 
@@ -167,10 +168,10 @@ run(
           var eq = true;
           while (i < max) {
             eq := eq and f.range(Nat8.fromNat(bits)) == ?words(i);
-            i += 1
+            i += 1;
           };
-          eq
-        },
+          eq;
+         },
         M.equals(T.bool(true))
       ),
 
@@ -186,10 +187,10 @@ run(
           var eq = true;
           while (i < max) {
             eq := eq and f.range(Nat8.fromNat(bits)) == ?words(i);
-            i += 1
+            i += 1;
           };
-          eq
-        },
+          eq;
+         },
         M.equals(T.bool(true))
       ),
 
@@ -254,10 +255,10 @@ run(
           var eq = true;
           while (i < max) {
             eq := eq and f.binomial(Nat8.fromNat(bits)) == ?popcounts(i);
-            i += 1
+            i += 1;
           };
-          eq
-        },
+          eq;
+         },
         M.equals(T.bool(true))
       ),
 
@@ -273,10 +274,10 @@ run(
           var eq = true;
           while (i < max) {
             eq := eq and f.binomial(Nat8.fromNat(bits)) == ?popcounts(i);
-            i += 1
+            i += 1;
           };
-          eq
-        },
+          eq;
+         },
         M.equals(T.bool(true))
       ),
 
@@ -292,10 +293,10 @@ run(
           var eq = true;
           while (i < max) {
             eq := eq and f.binomial(Nat8.fromNat(bits)) == ?popcounts(i);
-            i += 1
+            i += 1;
           };
-          eq
-        },
+          eq;
+         },
         M.equals(T.bool(true))
       ),
 
@@ -304,7 +305,7 @@ run(
 );
 
 run(
-  suite(
+   suite(
     "random-coinFrom",
     [
       test(
@@ -331,42 +332,43 @@ run(
   )
 );
 
+
 run(
   suite(
     "random-rangeFrom",
     [
       test(
         "random 1 byte range 8 FF",
-        Random.rangeFrom(8, "\FF"),
+        Random.rangeFrom(8,"\FF"),
         M.equals(T.nat(255))
       ),
       test(
         "random 1 byte range 8 CAFE",
-        Random.rangeFrom(8, "\CAFE"),
+        Random.rangeFrom(8,"\CAFE"),
         M.equals(T.nat(0xCA))
       ),
       test(
         "random 1 byte range 8 00",
-        Random.rangeFrom(8, "\00"),
+        Random.rangeFrom(8,"\00"),
         M.equals(T.nat(0))
       ),
       test(
         "random 2 byte range 16 0000",
-        Random.rangeFrom(16, "\00\00"),
+        Random.rangeFrom(16,"\00\00"),
         M.equals(T.nat(0))
       ),
       test(
         "random 2 byte range 16 CAFEBA",
-        Random.rangeFrom(16, "\CA\FE\BA"),
+        Random.rangeFrom(16,"\CA\FE\BA"),
         M.equals(T.nat(0xCAFE))
       ),
       test(
         "random 2 byte range 16 FF",
-        Random.rangeFrom(16, "\FF\FF"),
+        Random.rangeFrom(16,"\FF\FF"),
         M.equals(T.nat(65535))
-      )
-    ]
-  )
+      ),
+  ]
+ )
 );
 
 run(
@@ -375,36 +377,36 @@ run(
     [
       test(
         "random 1 byte range 8 FF",
-        Random.rangeFrom(8, "\FF"),
+        Random.rangeFrom(8,"\FF"),
         M.equals(T.nat(255))
       ),
       test(
         "random 1 byte range 8 CAFE",
-        Random.rangeFrom(8, "\CAFE"),
+        Random.rangeFrom(8,"\CAFE"),
         M.equals(T.nat(0xCA))
       ),
       test(
         "random 1 byte range 8 00",
-        Random.rangeFrom(8, "\00"),
+        Random.rangeFrom(8,"\00"),
         M.equals(T.nat(0))
       ),
       test(
         "random 2 byte range 16 0000",
-        Random.rangeFrom(16, "\00\00"),
+        Random.rangeFrom(16,"\00\00"),
         M.equals(T.nat(0))
       ),
       test(
         "random 2 byte range 16 CAFEBA",
-        Random.rangeFrom(16, "\CA\FE\BA"),
+        Random.rangeFrom(16,"\CA\FE\BA"),
         M.equals(T.nat(0xCAFE))
       ),
       test(
         "random 2 byte range 16 FFFF",
-        Random.rangeFrom(16, "\FF\FF"),
+        Random.rangeFrom(16,"\FF\FF"),
         M.equals(T.nat(65535))
-      )
-    ]
-  )
+      ),
+  ]
+ )
 );
 
 run(
@@ -413,36 +415,36 @@ run(
     [
       test(
         "random 1 byte range 8 FF",
-        Random.binomialFrom(8, "\FF"),
+        Random.binomialFrom(8,"\FF"),
         M.equals(nat8(8))
       ),
       test(
         "random 1 byte range 8 CAFE",
-        Random.binomialFrom(8, "\CAFE"),
+        Random.binomialFrom(8,"\CAFE"),
         M.equals(nat8(Nat8.bitcountNonZero(0xCA)))
       ),
       test(
         "random 1 byte range 8 00",
-        Random.binomialFrom(8, "\00"),
+        Random.binomialFrom(8,"\00"),
         M.equals(nat8(0))
       ),
       test(
         "random 2 byte range 16 0000",
-        Random.binomialFrom(16, "\00\00"),
+        Random.binomialFrom(16,"\00\00"),
         M.equals(nat8(0))
       ),
       test(
         "random 2 byte range 16 CAFEBA",
-        Random.binomialFrom(16, "\CA\FE\BA"),
+        Random.binomialFrom(16,"\CA\FE\BA"),
         M.equals(nat8(Nat8.fromNat(Nat16.toNat(Nat16.bitcountNonZero(0xCAFE)))))
       ),
       test(
         "random 2 byte range 16 FFFF",
-        Random.binomialFrom(16, "\FF\FF"),
+        Random.binomialFrom(16,"\FF\FF"),
         M.equals(nat8(16))
-      )
-    ]
-  )
+      ),
+  ]
+ )
 );
 
 run(
@@ -478,10 +480,11 @@ run(
         "random byte FFFF",
         Random.byteFrom("\FF\FF"),
         M.equals(nat8(255))
-      )
-    ]
-  )
+      ),
+  ]
+ )
 );
+
 
 run(
   suite(
@@ -507,7 +510,7 @@ run(
         Random.Finite("\CA").byte(),
         M.equals(T.optional(nat8Testable, ?0xCA : ?Nat8))
       ),
-      test(
+       test(
         "random byte CAFE",
         Random.Finite("\CA\FE").byte(),
         M.equals(T.optional(nat8Testable, ?0xCA : ?Nat8))
@@ -525,13 +528,13 @@ run(
           var eq = true;
           while (i < max) {
             eq := eq and f.byte() == ?(Nat8.fromNat(bytes(i)));
-            i += 1
+            i += 1;
           };
-          eq
-        },
+          eq;
+         },
         M.equals(T.bool(true))
       ),
 
     ]
   )
-)
+);

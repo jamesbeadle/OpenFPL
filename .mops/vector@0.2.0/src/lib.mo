@@ -415,7 +415,7 @@ module {
         vec.data_blocks[Nat(((i << lz2) >> 16) ^ (0x10000 >> lz2))][Nat(i & (0xFFFF >> lz2))];
       } else {
         vec.data_blocks[Nat(((i << lz2) >> 15) ^ (0x18000 >> lz2))][Nat(i & (0x7FFF >> lz2))];
-      },
+      }
     ) {
       case (?result) return result;
       case (_) Prim.trap "Vector index out of bounds in get";

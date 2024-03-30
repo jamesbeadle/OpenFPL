@@ -13,15 +13,15 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func find<K, V>(map : Map<K, V>, acceptEntry : (K, V) -> Bool) : ?(K, V) {
+  public func find<K, V>(map: Map<K, V>, acceptEntry: (K, V) -> Bool): ?(K, V) {
     let data = switch (map[DATA]) { case (?data) data; case (_) return null };
 
     let values = data.1;
     let keys = data.0;
     let capacity = nat32(keys.size());
 
-    let lastIndex = data.3 [BACK];
-    var index = (data.3 [FRONT] +% 1) % capacity;
+    let lastIndex = data.3[BACK];
+    var index = (data.3[FRONT] +% 1) % capacity;
 
     while (index != lastIndex) {
       let indexNat = nat(index);
@@ -44,15 +44,15 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func findDesc<K, V>(map : Map<K, V>, acceptEntry : (K, V) -> Bool) : ?(K, V) {
+  public func findDesc<K, V>(map: Map<K, V>, acceptEntry: (K, V) -> Bool): ?(K, V) {
     let data = switch (map[DATA]) { case (?data) data; case (_) return null };
 
     let values = data.1;
     let keys = data.0;
     let capacity = nat32(keys.size());
 
-    let lastIndex = data.3 [FRONT];
-    var index = (data.3 [BACK] -% 1) % capacity;
+    let lastIndex = data.3[FRONT];
+    var index = (data.3[BACK] -% 1) % capacity;
 
     while (index != lastIndex) {
       let indexNat = nat(index);
@@ -75,15 +75,15 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func some<K, V>(map : Map<K, V>, acceptEntry : (K, V) -> Bool) : Bool {
+  public func some<K, V>(map: Map<K, V>, acceptEntry: (K, V) -> Bool): Bool {
     let data = switch (map[DATA]) { case (?data) data; case (_) return false };
 
     let values = data.1;
     let keys = data.0;
     let capacity = nat32(keys.size());
 
-    let lastIndex = data.3 [BACK];
-    var index = (data.3 [FRONT] +% 1) % capacity;
+    let lastIndex = data.3[BACK];
+    var index = (data.3[FRONT] +% 1) % capacity;
 
     while (index != lastIndex) {
       let indexNat = nat(index);
@@ -106,15 +106,15 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func someDesc<K, V>(map : Map<K, V>, acceptEntry : (K, V) -> Bool) : Bool {
+  public func someDesc<K, V>(map: Map<K, V>, acceptEntry: (K, V) -> Bool): Bool {
     let data = switch (map[DATA]) { case (?data) data; case (_) return false };
 
     let values = data.1;
     let keys = data.0;
     let capacity = nat32(keys.size());
 
-    let lastIndex = data.3 [FRONT];
-    var index = (data.3 [BACK] -% 1) % capacity;
+    let lastIndex = data.3[FRONT];
+    var index = (data.3[BACK] -% 1) % capacity;
 
     while (index != lastIndex) {
       let indexNat = nat(index);
@@ -137,15 +137,15 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func every<K, V>(map : Map<K, V>, acceptEntry : (K, V) -> Bool) : Bool {
+  public func every<K, V>(map: Map<K, V>, acceptEntry: (K, V) -> Bool): Bool {
     let data = switch (map[DATA]) { case (?data) data; case (_) return true };
 
     let values = data.1;
     let keys = data.0;
     let capacity = nat32(keys.size());
 
-    let lastIndex = data.3 [BACK];
-    var index = (data.3 [FRONT] +% 1) % capacity;
+    let lastIndex = data.3[BACK];
+    var index = (data.3[FRONT] +% 1) % capacity;
 
     while (index != lastIndex) {
       let indexNat = nat(index);
@@ -168,15 +168,15 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func everyDesc<K, V>(map : Map<K, V>, acceptEntry : (K, V) -> Bool) : Bool {
+  public func everyDesc<K, V>(map: Map<K, V>, acceptEntry: (K, V) -> Bool): Bool {
     let data = switch (map[DATA]) { case (?data) data; case (_) return true };
 
     let values = data.1;
     let keys = data.0;
     let capacity = nat32(keys.size());
 
-    let lastIndex = data.3 [FRONT];
-    var index = (data.3 [BACK] -% 1) % capacity;
+    let lastIndex = data.3[FRONT];
+    var index = (data.3[BACK] -% 1) % capacity;
 
     while (index != lastIndex) {
       let indexNat = nat(index);
@@ -199,15 +199,15 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func forEach<K, V>(map : Map<K, V>, mapEntry : (K, V) -> ()) {
+  public func forEach<K, V>(map: Map<K, V>, mapEntry: (K, V) -> ()) {
     let data = switch (map[DATA]) { case (?data) data; case (_) return };
 
     let values = data.1;
     let keys = data.0;
     let capacity = nat32(keys.size());
 
-    let lastIndex = data.3 [BACK];
-    var index = (data.3 [FRONT] +% 1) % capacity;
+    let lastIndex = data.3[BACK];
+    var index = (data.3[FRONT] +% 1) % capacity;
 
     while (index != lastIndex) {
       let indexNat = nat(index);
@@ -223,15 +223,15 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func forEachDesc<K, V>(map : Map<K, V>, mapEntry : (K, V) -> ()) {
+  public func forEachDesc<K, V>(map: Map<K, V>, mapEntry: (K, V) -> ()) {
     let data = switch (map[DATA]) { case (?data) data; case (_) return };
 
     let values = data.1;
     let keys = data.0;
     let capacity = nat32(keys.size());
 
-    let lastIndex = data.3 [FRONT];
-    var index = (data.3 [BACK] -% 1) % capacity;
+    let lastIndex = data.3[FRONT];
+    var index = (data.3[BACK] -% 1) % capacity;
 
     while (index != lastIndex) {
       let indexNat = nat(index);

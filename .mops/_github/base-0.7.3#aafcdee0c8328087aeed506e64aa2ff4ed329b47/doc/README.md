@@ -1,4 +1,5 @@
-# Reference manual generation
+Reference manual generation
+===========================
 
 This directory contains the setup to create the reference manual.
 

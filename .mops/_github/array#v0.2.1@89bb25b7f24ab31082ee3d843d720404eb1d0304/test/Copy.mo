@@ -7,12 +7,12 @@ let n = init<Nat>(10, 0);
 let m = toArray(range(0, 9));
 
 copy(n, m);
-assert (freeze(n) == m);
+assert(freeze(n) == m);
 
 // copy(n[5:], m)
 copyOffset(n, 5, m, 0);
-assert (freeze(n) == [0, 1, 2, 3, 4, 0, 1, 2, 3, 4]);
+assert(freeze(n) == [0, 1, 2, 3, 4, 0, 1, 2, 3, 4]);
 
 // copy(n[6:], n)
 copyOffsetVar(n, 6, n, 0);
-assert (freeze(n) == [0, 1, 2, 3, 4, 0, 0, 1, 2, 3]);
+assert(freeze(n) == [0, 1, 2, 3, 4, 0, 0, 1, 2, 3]);

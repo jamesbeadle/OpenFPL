@@ -105,6 +105,7 @@ module {
   /// ```
   public let grow : (region : Region, newPages : Nat64) -> (oldPages : Nat64) = Prim.regionGrow;
 
+
   /// Within `region`, load a `Nat8` value from `offset`.
   /// Traps on an out-of-bounds access.
   ///
@@ -313,6 +314,7 @@ module {
   /// ```
   public let storeInt64 : (region : Region, offset : Nat64, value : Int64) -> () = Prim.regionStoreInt64;
 
+
   /// Within `region`, loads a `Float` value from the given `offset`.
   /// Traps on an out-of-bounds access.
   ///
@@ -337,7 +339,7 @@ module {
   /// Region.storeFloat(region, offset, value);
   /// Region.loadFloat(region, offset) // => 1.25
   /// ```
-  public let storeFloat : (region : Region, offset : Nat64, value : Float) -> () = Prim.regionStoreFloat;
+  public let storeFloat : (region: Region, offset : Nat64, value : Float) -> () = Prim.regionStoreFloat;
 
   /// Within `region,` load `size` bytes starting from `offset` as a `Blob`.
   /// Traps on an out-of-bounds access.
@@ -371,4 +373,4 @@ module {
   /// ```
   public let storeBlob : (region : Region, offset : Nat64, value : Blob) -> () = Prim.regionStoreBlob;
 
-};
+}

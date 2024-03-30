@@ -76,8 +76,8 @@ module {
       func _ {
         switch (cs.next()) {
           case (?c) { c };
-          case (null) { Prim.trap("Text.toArray") }
-        }
+          case (null) { Prim.trap("Text.toArray") };
+        };
       }
     )
   };
@@ -95,13 +95,13 @@ module {
   public func toVarArray(t : Text) : [var Char] {
     let n = t.size();
     if (n == 0) {
-      return [var]
+      return [var];
     };
     let array = Prim.Array_init<Char>(n, ' ');
     var i = 0;
     for (c in t.chars()) {
       array[i] := c;
-      i += 1
+      i += 1;
     };
     array
   };
@@ -412,7 +412,7 @@ module {
   };
 
   /// Splits the input `Text` with the specified `Pattern`.
-  ///
+  /// 
   /// Two fields are separated by exactly one match.
   ///
   /// ```motoko include=import

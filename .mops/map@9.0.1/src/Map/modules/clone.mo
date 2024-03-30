@@ -20,22 +20,19 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func mapFilter<K, V1, V2>(map : Map<K, V1>, hashUtils : HashUtils<K>, mapEntry : (K, V1) -> ?V2) : Map<K, V2> {
-    let data = switch (map[DATA]) {
-      case (?data) data;
-      case (_) return [var null];
-    };
+  public func mapFilter<K, V1, V2>(map: Map<K, V1>, hashUtils: HashUtils<K>, mapEntry: (K, V1) -> ?V2): Map<K, V2> {
+    let data = switch (map[DATA]) { case (?data) data; case (_) return [var null] };
 
     let capacity = nat32(data.0.size());
 
-    let newMap = [var null] : Map<K, V2>;
+    let newMap = [var null]:Map<K, V2>;
 
-    let lastIndex = data.3 [BACK];
-    var index = (data.3 [FRONT] +% 1) % capacity;
+    let lastIndex = data.3[BACK];
+    var index = (data.3[FRONT] +% 1) % capacity;
 
     while (index != lastIndex) {
-      switch (data.0 [nat(index)]) {
-        case (?someKey) switch (mapEntry(someKey, switch (data.1 [nat(index)]) { case (?value) value; case (_) trap("unreachable") })) {
+      switch (data.0[nat(index)]) {
+        case (?someKey) switch (mapEntry(someKey, switch (data.1[nat(index)]) { case (?value) value; case (_) trap("unreachable") })) {
           case (null) {};
           case (newValue) ignore putMove(newMap, hashUtils, someKey, newValue);
         };
@@ -51,22 +48,19 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func mapFilterDesc<K, V1, V2>(map : Map<K, V1>, hashUtils : HashUtils<K>, mapEntry : (K, V1) -> ?V2) : Map<K, V2> {
-    let data = switch (map[DATA]) {
-      case (?data) data;
-      case (_) return [var null];
-    };
+  public func mapFilterDesc<K, V1, V2>(map: Map<K, V1>, hashUtils: HashUtils<K>, mapEntry: (K, V1) -> ?V2): Map<K, V2> {
+    let data = switch (map[DATA]) { case (?data) data; case (_) return [var null] };
 
     let capacity = nat32(data.0.size());
 
-    let newMap = [var null] : Map<K, V2>;
+    let newMap = [var null]:Map<K, V2>;
 
-    let lastIndex = data.3 [FRONT];
-    var index = (data.3 [BACK] -% 1) % capacity;
+    let lastIndex = data.3[FRONT];
+    var index = (data.3[BACK] -% 1) % capacity;
 
     while (index != lastIndex) {
-      switch (data.0 [nat(index)]) {
-        case (?someKey) switch (mapEntry(someKey, switch (data.1 [nat(index)]) { case (?value) value; case (_) trap("unreachable") })) {
+      switch (data.0[nat(index)]) {
+        case (?someKey) switch (mapEntry(someKey, switch (data.1[nat(index)]) { case (?value) value; case (_) trap("unreachable") })) {
           case (null) {};
           case (newValue) ignore putMove(newMap, hashUtils, someKey, newValue);
         };
@@ -82,23 +76,20 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func filter<K, V>(map : Map<K, V>, hashUtils : HashUtils<K>, acceptEntry : (K, V) -> Bool) : Map<K, V> {
-    let data = switch (map[DATA]) {
-      case (?data) data;
-      case (_) return [var null];
-    };
+  public func filter<K, V>(map: Map<K, V>, hashUtils: HashUtils<K>, acceptEntry: (K, V) -> Bool): Map<K, V> {
+    let data = switch (map[DATA]) { case (?data) data; case (_) return [var null] };
 
     let capacity = nat32(data.0.size());
 
-    let newMap = [var null] : Map<K, V>;
+    let newMap = [var null]:Map<K, V>;
 
-    let lastIndex = data.3 [BACK];
-    var index = (data.3 [FRONT] +% 1) % capacity;
+    let lastIndex = data.3[BACK];
+    var index = (data.3[FRONT] +% 1) % capacity;
 
     while (index != lastIndex) {
-      switch (data.0 [nat(index)]) {
+      switch (data.0[nat(index)]) {
         case (?someKey) {
-          let value = data.1 [nat(index)];
+          let value = data.1[nat(index)];
 
           if (acceptEntry(someKey, switch (value) { case (?value) value; case (_) trap("unreachable") })) {
             ignore putMove(newMap, hashUtils, someKey, value);
@@ -116,23 +107,20 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func filterDesc<K, V>(map : Map<K, V>, hashUtils : HashUtils<K>, acceptEntry : (K, V) -> Bool) : Map<K, V> {
-    let data = switch (map[DATA]) {
-      case (?data) data;
-      case (_) return [var null];
-    };
+  public func filterDesc<K, V>(map: Map<K, V>, hashUtils: HashUtils<K>, acceptEntry: (K, V) -> Bool): Map<K, V> {
+    let data = switch (map[DATA]) { case (?data) data; case (_) return [var null] };
 
     let capacity = nat32(data.0.size());
 
-    let newMap = [var null] : Map<K, V>;
+    let newMap = [var null]:Map<K, V>;
 
-    let lastIndex = data.3 [FRONT];
-    var index = (data.3 [BACK] -% 1) % capacity;
+    let lastIndex = data.3[FRONT];
+    var index = (data.3[BACK] -% 1) % capacity;
 
     while (index != lastIndex) {
-      switch (data.0 [nat(index)]) {
+      switch (data.0[nat(index)]) {
         case (?someKey) {
-          let value = data.1 [nat(index)];
+          let value = data.1[nat(index)];
 
           if (acceptEntry(someKey, switch (value) { case (?value) value; case (_) trap("unreachable") })) {
             ignore putMove(newMap, hashUtils, someKey, value);
@@ -150,11 +138,8 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func map<K, V1, V2>(map : Map<K, V1>, hashUtils : HashUtils<K>, mapEntry : (K, V1) -> V2) : Map<K, V2> {
-    let data = switch (map[DATA]) {
-      case (?data) data;
-      case (_) return [var null];
-    };
+  public func map<K, V1, V2>(map: Map<K, V1>, hashUtils: HashUtils<K>, mapEntry: (K, V1) -> V2): Map<K, V2> {
+    let data = switch (map[DATA]) { case (?data) data; case (_) return [var null] };
 
     let indexes = data.2;
     let values = data.1;
@@ -209,11 +194,8 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func mapDesc<K, V1, V2>(map : Map<K, V1>, hashUtils : HashUtils<K>, mapEntry : (K, V1) -> V2) : Map<K, V2> {
-    let data = switch (map[DATA]) {
-      case (?data) data;
-      case (_) return [var null];
-    };
+  public func mapDesc<K, V1, V2>(map: Map<K, V1>, hashUtils: HashUtils<K>, mapEntry: (K, V1) -> V2): Map<K, V2> {
+    let data = switch (map[DATA]) { case (?data) data; case (_) return [var null] };
 
     let indexes = data.2;
     let values = data.1;
@@ -270,11 +252,8 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func clone<K, V>(map : Map<K, V>) : Map<K, V> {
-    let data = switch (map[DATA]) {
-      case (?data) data;
-      case (_) return [var null];
-    };
+  public func clone<K, V>(map: Map<K, V>): Map<K, V> {
+    let data = switch (map[DATA]) { case (?data) data; case (_) return [var null] };
 
     let indexes = data.2;
     let values = data.1;
@@ -329,11 +308,8 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func cloneDesc<K, V>(map : Map<K, V>) : Map<K, V> {
-    let data = switch (map[DATA]) {
-      case (?data) data;
-      case (_) return [var null];
-    };
+  public func cloneDesc<K, V>(map: Map<K, V>): Map<K, V> {
+    let data = switch (map[DATA]) { case (?data) data; case (_) return [var null] };
 
     let indexes = data.2;
     let values = data.1;

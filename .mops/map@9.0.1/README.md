@@ -12,7 +12,6 @@ Map.delete(map, nhash, 1);
 # Table of contents
 
 ## [**Map** interface description](#map-interface-description-1)
-
 - [Initializing / measuring](#initializing--measuring)
   - [**new**](#new)
   - [**clear**](#clear)
@@ -94,7 +93,6 @@ Map.delete(map, nhash, 1);
   - [**rehash**](#rehash)
 
 ## [**Set** interface description](#set-interface-description-1)
-
 - [Initializing / measuring](#initializing--measuring-1)
   - [**new**](#new-1)
   - [**clear**](#clear-1)
@@ -154,7 +152,6 @@ Map.delete(map, nhash, 1);
   - [**rehash**](#rehash-1)
 
 ## [**Iterator** interface description](#iterator-interface-description-1)
-
 - [Moving a pointer](#moving-a-pointer)
   - [**prev**](#prev)
   - [**next**](#next)
@@ -171,7 +168,6 @@ Map.delete(map, nhash, 1);
   - [**reset**](#reset)
 
 ## [**Hash Utils**](#hash-utils-1)
-
 - [Calculating hashes](#calculating-hashes)
   - [**hashInt**](#hashint)
   - [**hashInt8**](#hashint8)
@@ -228,12 +224,12 @@ func new<K, V>(): Map<K, V>
 
 Creates and returns an empty **Map**. Empty **Map** has a special optimization and takes only **12 bytes** of space. The **Map** structure will be initialized only after the insertion of the **first** **entry** and will occupy minimum **112 bytes**.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(1)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(1)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -245,12 +241,12 @@ func clear<K, V>(map: Map<K, V>): ()
 
 Removes all entries from the **Map**.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(1)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(1)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -262,12 +258,12 @@ func size<K, V>(map: Map<K, V>): Nat
 
 Returns the amount of entries in the **Map**.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(1)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(1)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -279,12 +275,12 @@ func empty<K, V>(map: Map<K, V>): Bool
 
 Returns a boolean indicating whether the **Map** is empty (has zero entries) or not.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(1)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(1)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -298,12 +294,12 @@ Creates a new **Map**, initializes it with the single provided **(key, value)** 
 
 Requires [**Hash Utils**](#hash-utils-1) to be provided as the first argument.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(1)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(1)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ## Inserting / updating
 
@@ -325,12 +321,12 @@ Most **put** calls will not cause any space allocations and will be executed in 
 
 **Map** being full does not necessarily mean **size == capacity** as on deletion holes (unused array indexes) may (if a deletion happens inside the **Map**) or may not (if you delete the **first** or the **last** **entry**) be created.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -352,12 +348,12 @@ Most **putFront** calls will not cause any space allocations and will be execute
 
 **Map** being full does not necessarily mean **size == capacity** as on deletion holes (unused array indexes) may (if a deletion happens inside the **Map**) or may not (if you delete the **first** or the **last** **entry**) be created.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -381,12 +377,12 @@ Most **set** calls will not cause any space allocations and will be executed in 
 
 **Map** being full does not necessarily mean **size == capacity** as on deletion holes (unused array indexes) may (if a deletion happens inside the **Map**) or may not (if you delete the **first** or the **last** **entry**) be created.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -410,12 +406,12 @@ Most **setFront** calls will not cause any space allocations and will be execute
 
 **Map** being full does not necessarily mean **size == capacity** as on deletion holes (unused array indexes) may (if a deletion happens inside the **Map**) or may not (if you delete the **first** or the **last** **entry**) be created.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -437,12 +433,12 @@ Most **add** calls will not cause any space allocations and will be executed in 
 
 **Map** being full does not necessarily mean **size == capacity** as on deletion holes (unused array indexes) may (if a deletion happens inside the **Map**) or may not (if you delete the **first** or the **last** **entry**) be created.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -464,12 +460,12 @@ Most **addFront** calls will not cause any space allocations and will be execute
 
 **Map** being full does not necessarily mean **size == capacity** as on deletion holes (unused array indexes) may (if a deletion happens inside the **Map**) or may not (if you delete the **first** or the **last** **entry**) be created.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -487,12 +483,12 @@ Requires [**Hash Utils**](#hash-utils-1) to be provided as the second argument.
 
 If the **Map** is empty, on the first insert the **Map** structure will be initialized which will take additional **100 bytes** of space. The minimum amount of space a non-empty **Map** can occupy is **112 bytes**.
 
-| Complexity      |                                           |
-| --------------- | ----------------------------------------- |
-| Runtime average | **O(1)**                                  |
-| Runtime max     | **O(n)** unlikely under normal conditions |
-| Space average   | **O(1)**                                  |
-| Space max       | **O(1)**                                  |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)** unlikely under normal conditions|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -514,12 +510,12 @@ Most **update** calls will not cause any space allocations and will be executed 
 
 **Map** being full does not necessarily mean **size == capacity** as on deletion holes (unused array indexes) may (if a deletion happens inside the **Map**) or may not (if you delete the **first** or the **last** **entry**) be created.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -541,12 +537,12 @@ Most **updateFront** calls will not cause any space allocations and will be exec
 
 **Map** being full does not necessarily mean **size == capacity** as on deletion holes (unused array indexes) may (if a deletion happens inside the **Map**) or may not (if you delete the **first** or the **last** **entry**) be created.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -570,12 +566,12 @@ Most **putMove** calls will not cause any space allocations and will be executed
 
 **Map** being full does not necessarily mean **size == capacity** as on deletion holes (unused array indexes) may (if a deletion happens inside the **Map**) or may not (if you delete the **first** or the **last** **entry**) be created.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -599,12 +595,12 @@ Most **putMoveFront** calls will not cause any space allocations and will be exe
 
 **Map** being full does not necessarily mean **size == capacity** as on deletion holes (unused array indexes) may (if a deletion happens inside the **Map**) or may not (if you delete the **first** or the **last** **entry**) be created.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -628,12 +624,12 @@ Most **replaceMove** calls will not cause any space allocations and will be exec
 
 **Map** being full does not necessarily mean **size == capacity** as on deletion holes (unused array indexes) may (if a deletion happens inside the **Map**) or may not (if you delete the **first** or the **last** **entry**) be created.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -657,12 +653,12 @@ Most **replaceMoveFront** calls will not cause any space allocations and will be
 
 **Map** being full does not necessarily mean **size == capacity** as on deletion holes (unused array indexes) may (if a deletion happens inside the **Map**) or may not (if you delete the **first** or the **last** **entry**) be created.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -686,12 +682,12 @@ Most **updateMove** calls will not cause any space allocations and will be execu
 
 **Map** being full does not necessarily mean **size == capacity** as on deletion holes (unused array indexes) may (if a deletion happens inside the **Map**) or may not (if you delete the **first** or the **last** **entry**) be created.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -715,12 +711,12 @@ Most **updateMoveFront** calls will not cause any space allocations and will be 
 
 **Map** being full does not necessarily mean **size == capacity** as on deletion holes (unused array indexes) may (if a deletion happens inside the **Map**) or may not (if you delete the **first** or the **last** **entry**) be created.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(n)**|
 
 ## Getting
 
@@ -734,12 +730,12 @@ If the provided **key** is present in the **Map**, returns the corresponding **v
 
 Requires [**Hash Utils**](#hash-utils-1) to be provided as the second argument.
 
-| Complexity      |                                           |
-| --------------- | ----------------------------------------- |
-| Runtime average | **O(1)**                                  |
-| Runtime max     | **O(n)** unlikely under normal conditions |
-| Space average   | **O(1)**                                  |
-| Space max       | **O(1)**                                  |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)** unlikely under normal conditions|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -753,12 +749,12 @@ If the provided **key** is present in the **Map**, returns **true**. Otherwise, 
 
 Requires [**Hash Utils**](#hash-utils-1) to be provided as the second argument.
 
-| Complexity      |                                           |
-| --------------- | ----------------------------------------- |
-| Runtime average | **O(1)**                                  |
-| Runtime max     | **O(n)** unlikely under normal conditions |
-| Space average   | **O(1)**                                  |
-| Space max       | **O(1)**                                  |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)** unlikely under normal conditions|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -774,12 +770,12 @@ If the provided **key** is present in the **Map**, returns **true**. Otherwise, 
 
 Requires [**Hash Utils**](#hash-utils-1) to be provided as the second argument.
 
-| Complexity      |                                           |
-| --------------- | ----------------------------------------- |
-| Runtime average | **O(1)**                                  |
-| Runtime max     | **O(n)** unlikely under normal conditions |
-| Space average   | **O(1)**                                  |
-| Space max       | **O(1)**                                  |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)** unlikely under normal conditions|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ## Deleting
 
@@ -799,12 +795,12 @@ If the size of the **Map** after the deletion is less than **3 / 8 of capacity**
 
 If [**rehash**](#rehash) is not called and the **entry** is being removed from the **front** or the **back** of the **Map**, all holes before the new **first** or after the new **last** **entry** will be eliminated.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -826,12 +822,12 @@ If the size of the **Map** after the deletion is less than **3 / 8 of capacity**
 
 If [**rehash**](#rehash) is not called and the **entry** is being removed from the **front** or the **back** of the **Map**, all holes before the new **first** or after the new **last** **entry** will be eliminated.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(n)**|
 
 ## Performing queue operations
 
@@ -843,12 +839,12 @@ func peek<K, V>(map: Map<K, V>): ?(K, V)
 
 If the **Map** is not empty, returns the **last** **(key, value)** pair in the **Map**. Otherwise, returns **null**.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(1)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(1)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -860,12 +856,12 @@ func peekFront<K, V>(map: Map<K, V>): ?(K, V)
 
 If the **Map** is not empty, returns the **first** **(key, value)** pair in the **Map**. Otherwise, returns **null**.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(1)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(1)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -885,12 +881,12 @@ If the size of the **Map** after the deletion is less than **3 / 8 of capacity**
 
 If [**rehash**](#rehash) is not called, all holes after the new **last** **entry** will be eliminated.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -910,12 +906,12 @@ If the size of the **Map** after the deletion is less than **3 / 8 of capacity**
 
 If [**rehash**](#rehash) is not called, all holes before the new **first** **entry** will be eliminated.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -931,12 +927,12 @@ If the **Map** is not empty, moves the **last** **(key, value)** pair in the **M
 
 Requires [**Hash Utils**](#hash-utils-1) to be provided as the second argument.
 
-| Complexity      |                                           |
-| --------------- | ----------------------------------------- |
-| Runtime average | **O(1)**                                  |
-| Runtime max     | **O(n)** unlikely under normal conditions |
-| Space average   | **O(1)**                                  |
-| Space max       | **O(1)**                                  |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)** unlikely under normal conditions|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -952,12 +948,12 @@ If the **Map** is not empty, moves the **first** **(key, value)** pair in the **
 
 Requires [**Hash Utils**](#hash-utils-1) to be provided as the second argument.
 
-| Complexity      |                                           |
-| --------------- | ----------------------------------------- |
-| Runtime average | **O(1)**                                  |
-| Runtime max     | **O(n)** unlikely under normal conditions |
-| Space average   | **O(1)**                                  |
-| Space max       | **O(1)**                                  |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)** unlikely under normal conditions|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ## Mapping / filtering / cloning
 
@@ -969,12 +965,12 @@ func mapFilter<K, V1, V2>(map: Map<K, V1>, hashUtils: HashUtils<K>, mapEntry: (K
 
 For every **entry** in the **Map**, from the **first** to the **last** **entry** (in ascending order) calls the provided **mapEntry** function with **(key, value)** parameters. Constructs a new **Map** with all **(key, mapEntry result)** pairs for which **mapEntry** returned **non-null** result (in the same order **mapEntry** was called). Skips all entries for which **acceptEntry** returned **null**. Returns the new **Map**.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(n)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(n)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -986,12 +982,12 @@ func mapFilterDesc<K, V1, V2>(map: Map<K, V1>, hashUtils: HashUtils<K>, mapEntry
 
 For every **entry** in the **Map**, from the **last** to the **first** **entry** (in descending order) calls the provided **mapEntry** function with **(key, value)** parameters. Constructs a new **Map** with all **(key, mapEntry result)** pairs for which **mapEntry** returned **non-null** result (in the same order **mapEntry** was called). Skips all entries for which **acceptEntry** returned **null**. Returns the new **Map**.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(n)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(n)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -1003,12 +999,12 @@ func filter<K, V>(map: Map<K, V>, hashUtils: HashUtils<K>, acceptEntry: (K, V) -
 
 For every **entry** in the **Map**, from the **first** to the **last** **entry** (in ascending order) calls the provided **acceptEntry** function with **(key, value)** parameters. Constructs a new **Map** with all **(key, value)** pairs for which **acceptEntry** returned **true** (in the same order **acceptEntry** was called). Skips all entries for which **acceptEntry** returned **false**. Returns the new **Map**.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(n)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(n)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -1020,12 +1016,12 @@ func filterDesc<K, V>(map: Map<K, V>, hashUtils: HashUtils<K>, acceptEntry: (K, 
 
 For every **entry** in the **Map**, from the **last** to the **first** **entry** (in descending order) calls the provided **acceptEntry** function with **(key, value)** parameters. Constructs a new **Map** with all **(key, value)** pairs for which **acceptEntry** returned **true** (in the same order **acceptEntry** was called). Skips all entries for which **acceptEntry** returned **false**. Returns the new **Map**.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(n)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(n)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -1037,12 +1033,12 @@ func map<K, V1, V2>(map: Map<K, V1>, hashUtils: HashUtils<K>, mapEntry: (K, V1) 
 
 For every **entry** in the **Map**, from the **first** to the **last** **entry** (in ascending order) calls the provided **mapEntry** function with **(key, value)** parameters. Constructs a new **Map** with all **(key, mapEntry result)** pairs (in the same order **mapEntry** was called). Returns the new **Map**.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(n)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(n)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -1054,12 +1050,12 @@ func mapDesc<K, V1, V2>(map: Map<K, V1>, hashUtils: HashUtils<K>, mapEntry: (K, 
 
 For every **entry** in the **Map**, from the **last** to the **first** **entry** (in descending order) calls the provided **mapEntry** function with **(key, value)** parameters. Constructs a new **Map** with all **(key, mapEntry result)** pairs (in the same order **mapEntry** was called). Returns the new **Map**.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(n)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(n)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -1071,12 +1067,12 @@ func clone<K, V>(map: Map<K, V>): Map<K, V>
 
 Iterates through the **Map** from the **first** to the **last** **entry** (in ascending order) and copies each **entry** into the new **Map** (in the order of iteration). Returns the new **Map**.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(n)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(n)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -1088,12 +1084,12 @@ func cloneDesc<K, V>(map: Map<K, V>): Map<K, V>
 
 Iterates through the **Map** from the **last** to the **first** **entry** (in descending order) and copies each **entry** into the new **Map** (in the order of iteration). Returns the new **Map**.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(n)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(n)**|
+|Space max|**O(n)**|
 
 ## Iterating
 
@@ -1107,12 +1103,12 @@ Creates an iterator object over the keys of the **Map** which starts at the **fi
 
 All **Map** iterators are reusable, meaning after returning **null** once (at the end of iteration), iterators end up in their initial state and a new iteration cycle can be started without creating a new iterator object.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(1)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(1)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -1126,12 +1122,12 @@ Creates an iterator object over the keys of the **Map** which starts at the **la
 
 All **Map** iterators are reusable, meaning after returning **null** once (at the end of iteration), iterators end up in their initial state and a new iteration cycle can be started without creating a new iterator object.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(1)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(1)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -1145,12 +1141,12 @@ Creates an iterator object over the values of the **Map** which starts at the **
 
 All **Map** iterators are reusable, meaning after returning **null** once (at the end of iteration), iterators end up in their initial state and a new iteration cycle can be started without creating a new iterator object.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(1)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(1)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -1164,12 +1160,12 @@ Creates an iterator object over the values of the **Map** which starts at the **
 
 All **Map** iterators are reusable, meaning after returning **null** once (at the end of iteration), iterators end up in their initial state and a new iteration cycle can be started without creating a new iterator object.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(1)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(1)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -1183,12 +1179,12 @@ Creates an iterator object over the **(key, value)** pairs of the **Map** which 
 
 All **Map** iterators are reusable, meaning after returning **null** once (at the end of iteration), iterators end up in their initial state and a new iteration cycle can be started without creating a new iterator object.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(1)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(1)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -1202,12 +1198,12 @@ Creates an iterator object over the **(key, value)** pairs of the **Map** which 
 
 All **Map** iterators are reusable, meaning after returning **null** once (at the end of iteration), iterators end up in their initial state and a new iteration cycle can be started without creating a new iterator object.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(1)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(1)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -1225,12 +1221,12 @@ Requires [**Hash Utils**](#hash-utils-1) to be provided as the second argument.
 
 All **Map** iterators are reusable, meaning after returning **null** once (at the end of iteration), iterators end up in their initial state (initial state in this case corresponds to the **first** **key** and not to the found **key**) and a new iteration cycle can be started without creating a new iterator object.
 
-| Complexity      |                                           |
-| --------------- | ----------------------------------------- |
-| Runtime average | **O(1)**                                  |
-| Runtime max     | **O(n)** unlikely under normal conditions |
-| Space average   | **O(1)**                                  |
-| Space max       | **O(1)**                                  |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)** unlikely under normal conditions|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -1248,12 +1244,12 @@ Requires [**Hash Utils**](#hash-utils-1) to be provided as the second argument.
 
 All **Map** iterators are reusable, meaning after returning **null** once (at the end of iteration), iterators end up in their initial state (initial state in this case corresponds to the **last** **key** and not to the found **key**) and a new iteration cycle can be started without creating a new iterator object.
 
-| Complexity      |                                           |
-| --------------- | ----------------------------------------- |
-| Runtime average | **O(1)**                                  |
-| Runtime max     | **O(n)** unlikely under normal conditions |
-| Space average   | **O(1)**                                  |
-| Space max       | **O(1)**                                  |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)** unlikely under normal conditions|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -1271,12 +1267,12 @@ Requires [**Hash Utils**](#hash-utils-1) to be provided as the second argument.
 
 All **Map** iterators are reusable, meaning after returning **null** once (at the end of iteration), iterators end up in their initial state (initial state in this case corresponds to the **first** **value** and not to the **value** associated with the found **key**) and a new iteration cycle can be started without creating a new iterator object.
 
-| Complexity      |                                           |
-| --------------- | ----------------------------------------- |
-| Runtime average | **O(1)**                                  |
-| Runtime max     | **O(n)** unlikely under normal conditions |
-| Space average   | **O(1)**                                  |
-| Space max       | **O(1)**                                  |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)** unlikely under normal conditions|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -1294,12 +1290,12 @@ Requires [**Hash Utils**](#hash-utils-1) to be provided as the second argument.
 
 All **Map** iterators are reusable, meaning after returning **null** once (at the end of iteration), iterators end up in their initial state (initial state in this case corresponds to the **last** **value** and not to the **value** associated with the found **key**) and a new iteration cycle can be started without creating a new iterator object.
 
-| Complexity      |                                           |
-| --------------- | ----------------------------------------- |
-| Runtime average | **O(1)**                                  |
-| Runtime max     | **O(n)** unlikely under normal conditions |
-| Space average   | **O(1)**                                  |
-| Space max       | **O(1)**                                  |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)** unlikely under normal conditions|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -1317,12 +1313,12 @@ Requires [**Hash Utils**](#hash-utils-1) to be provided as the second argument.
 
 All **Map** iterators are reusable, meaning after returning **null** once (at the end of iteration), iterators end up in their initial state (initial state in this case corresponds to the **first** **entry** and not to the **entry** with the found **key**) and a new iteration cycle can be started without creating a new iterator object.
 
-| Complexity      |                                           |
-| --------------- | ----------------------------------------- |
-| Runtime average | **O(1)**                                  |
-| Runtime max     | **O(n)** unlikely under normal conditions |
-| Space average   | **O(1)**                                  |
-| Space max       | **O(1)**                                  |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)** unlikely under normal conditions|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -1340,12 +1336,12 @@ Requires [**Hash Utils**](#hash-utils-1) to be provided as the second argument.
 
 All **Map** iterators are reusable, meaning after returning **null** once (at the end of iteration), iterators end up in their initial state (initial state in this case corresponds to the **last** **entry** and not to the **entry** with the found **key**) and a new iteration cycle can be started without creating a new iterator object.
 
-| Complexity      |                                           |
-| --------------- | ----------------------------------------- |
-| Runtime average | **O(1)**                                  |
-| Runtime max     | **O(n)** unlikely under normal conditions |
-| Space average   | **O(1)**                                  |
-| Space max       | **O(1)**                                  |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)** unlikely under normal conditions|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ## Searching
 
@@ -1357,12 +1353,12 @@ func find<K, V>(map: Map<K, V>, acceptEntry: (K, V) -> Bool): ?(K, V)
 
 For every **entry** in the **Map**, from the **first** to the **last** **entry** (in ascending order) calls the provided **acceptEntry** function with **(key, value)** parameters until the **acceptEntry** function returns **true**. If **true** is returned, returns the current **(key, value)** pair immediately. If **acceptEntry** didn't return **true** for any **entry**, returns **null**.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -1374,12 +1370,12 @@ func findDesc<K, V>(map: Map<K, V>, acceptEntry: (K, V) -> Bool): ?(K, V)
 
 For every **entry** in the **Map**, from the **last** to the **first** **entry** (in descending order) calls the provided **acceptEntry** function with **(key, value)** parameters until the **acceptEntry** function returns **true**. If **true** is returned, returns the current **(key, value)** pair immediately. If **acceptEntry** didn't return **true** for any **entry**, returns **null**.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -1391,12 +1387,12 @@ func some<K, V>(map: Map<K, V>, acceptEntry: (K, V) -> Bool): Bool
 
 For every **entry** in the **Map**, from the **first** to the **last** **entry** (in ascending order) calls the provided **acceptEntry** function with **(key, value)** parameters until the **acceptEntry** function returns **true**. If **true** is returned, returns **true** immediately. If **acceptEntry** didn't return **true** for any **entry**, returns **false**.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -1408,12 +1404,12 @@ func someDesc<K, V>(map: Map<K, V>, acceptEntry: (K, V) -> Bool): Bool
 
 For every **entry** in the **Map**, from the **last** to the **first** **entry** (in descending order) calls the provided **acceptEntry** function with **(key, value)** parameters until the **acceptEntry** function returns **true**. If **true** is returned, returns **true** immediately. If **acceptEntry** didn't return **true** for any **entry**, returns **false**.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -1425,12 +1421,12 @@ func every<K, V>(map: Map<K, V>, acceptEntry: (K, V) -> Bool): Bool
 
 For every **entry** in the **Map**, from the **first** to the **last** **entry** (in ascending order) calls the provided **acceptEntry** function with **(key, value)** parameters until the **acceptEntry** function returns **false**. If **false** is returned, returns **false** immediately. If **acceptEntry** didn't return **false** for any **entry**, returns **true**.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -1442,12 +1438,12 @@ func everyDesc<K, V>(map: Map<K, V>, acceptEntry: (K, V) -> Bool): Bool
 
 For every **entry** in the **Map**, from the **last** to the **first** **entry** (in descending order) calls the provided **acceptEntry** function with **(key, value)** parameters until the **acceptEntry** function returns **false**. If **false** is returned, returns **false** immediately. If **acceptEntry** didn't return **false** for any **entry**, returns **true**.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -1459,12 +1455,12 @@ func forEach<K, V>(map: Map<K, V>, mapEntry: (K, V) -> ()): ()
 
 For every **entry** in the **Map**, from the **first** to the **last** **entry** (in ascending order) calls the provided **mapEntry** function with **(key, value)** parameters.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -1476,12 +1472,12 @@ func forEachDesc<K, V>(map: Map<K, V>, mapEntry: (K, V) -> ()): ()
 
 For every **entry** in the **Map**, from the **last** to the **first** **entry** (in descending order) calls the provided **mapEntry** function with **(key, value)** parameters.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ## Constructing from iterators
 
@@ -1495,12 +1491,12 @@ Creates a new empty **Map**. For every **(key, value)** pair in the iterator, in
 
 Requires [**Hash Utils**](#hash-utils-1) to be provided as the second argument.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(n)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(n)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -1514,12 +1510,12 @@ Creates a new empty **Map**. For every **(key, value)** pair in the iterator, in
 
 Requires [**Hash Utils**](#hash-utils-1) to be provided as the second argument.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(n)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(n)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -1533,12 +1529,12 @@ Creates a new empty **Map**. For every item in the iterator, calls the provided 
 
 Requires [**Hash Utils**](#hash-utils-1) to be provided as the second argument.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(n)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(n)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -1552,12 +1548,12 @@ Creates a new empty **Map**. For every item in the iterator, calls the provided 
 
 Requires [**Hash Utils**](#hash-utils-1) to be provided as the second argument.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(n)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(n)**|
+|Space max|**O(n)**|
 
 ## Converting to arrays
 
@@ -1569,12 +1565,12 @@ func toArray<K, V>(map: Map<K, V>): [(K, V)]
 
 Constructs a new array with all **(key, value)** pairs present in the **Map**, from the **first** to the **last** **entry** (in ascending order). Returns the array.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(n)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(n)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -1586,12 +1582,12 @@ func toArrayDesc<K, V>(map: Map<K, V>): [(K, V)]
 
 Constructs a new array with all **(key, value)** pairs present in the **Map**, from the **last** to the **first** **entry** (in descending order). Returns the array.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(n)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(n)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -1603,12 +1599,12 @@ func toArrayMap<K, V, T>(map: Map<K, V>, mapEntry: (K, V) -> ?T): [T]
 
 For every **entry** in the **Map**, from the **first** to the **last** **entry** (in ascending order), calls the provided **mapEntry** function with **(key, value)** parameters. Constructs a new array with all **non-null** **mapEntry result** items (in the same order **mapEntry** was called). Skips all **null** **mapEntry result** items. Returns the array.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(n)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(n)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -1620,12 +1616,12 @@ func toArrayMapDesc<K, V, T>(map: Map<K, V>, mapEntry: (K, V) -> ?T): [T]
 
 For every **entry** in the **Map**, from the **last** to the **first** **entry** (in descending order), calls the provided **mapEntry** function with **(key, value)** parameters. Constructs a new array with all **non-null** **mapEntry result** items (in the same order **mapEntry** was called). Skips all **null** **mapEntry result** items. Returns the array.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(n)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(n)**|
+|Space max|**O(n)**|
 
 ## Rehashing
 
@@ -1641,12 +1637,12 @@ Requires [**Hash Utils**](#hash-utils-1) to be provided as the second argument.
 
 This method is usually called under the hood on inserts (when the **Map** is full) and deletes (when the **Map** size is less than **3 / 8 of capacity**). It is not necessary to call this method manually under normal conditions.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(n)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(n)**|
+|Space max|**O(n)**|
 
 # **Set** interface description
 
@@ -1668,12 +1664,12 @@ func new<K>(): Set<K>
 
 Creates and returns an empty **Set**. Empty **Set** has a special optimization and takes only **12 bytes** of space. The **Set** structure will be initialized only after the insertion of the **first** **key** and will occupy minimum **92 bytes**.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(1)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(1)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -1685,12 +1681,12 @@ func clear<K>(set: Set<K>): ()
 
 Removes all keys from the **Set**.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(1)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(1)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -1702,12 +1698,12 @@ func size<K>(set: Set<K>): Nat
 
 Returns the amount of keys in the **Set**.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(1)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(1)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -1719,12 +1715,12 @@ func empty<K>(set: Set<K>): Bool
 
 Returns a boolean indicating whether the **Set** is empty (has zero keys) or not.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(1)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(1)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -1738,12 +1734,12 @@ Creates a new **Set**, initializes it with the single provided **key** and retur
 
 Requires [**Hash Utils**](#hash-utils-1) to be provided as the first argument.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(1)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(1)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ## Inserting / updating
 
@@ -1765,12 +1761,12 @@ Most **put** calls will not cause any space allocations and will be executed in 
 
 **Set** being full does not necessarily mean **size == capacity** as on deletion holes (unused array indexes) may (if a deletion happens inside the **Set**) or may not (if you delete the **first** or the **last** **key**) be created.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -1792,12 +1788,12 @@ Most **putFront** calls will not cause any space allocations and will be execute
 
 **Set** being full does not necessarily mean **size == capacity** as on deletion holes (unused array indexes) may (if a deletion happens inside the **Set**) or may not (if you delete the **first** or the **last** **key**) be created.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -1821,12 +1817,12 @@ Most **add** calls will not cause any space allocations and will be executed in 
 
 **Set** being full does not necessarily mean **size == capacity** as on deletion holes (unused array indexes) may (if a deletion happens inside the **Set**) or may not (if you delete the **first** or the **last** **key**) be created.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -1850,12 +1846,12 @@ Most **addFront** calls will not cause any space allocations and will be execute
 
 **Set** being full does not necessarily mean **size == capacity** as on deletion holes (unused array indexes) may (if a deletion happens inside the **Set**) or may not (if you delete the **first** or the **last** **key**) be created.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -1879,12 +1875,12 @@ Most **putMove** calls will not cause any space allocations and will be executed
 
 **Set** being full does not necessarily mean **size == capacity** as on deletion holes (unused array indexes) may (if a deletion happens inside the **Set**) or may not (if you delete the **first** or the **last** **key**) be created.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -1908,12 +1904,12 @@ Most **putMoveFront** calls will not cause any space allocations and will be exe
 
 **Set** being full does not necessarily mean **size == capacity** as on deletion holes (unused array indexes) may (if a deletion happens inside the **Set**) or may not (if you delete the **first** or the **last** **key**) be created.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(n)**|
 
 ## Getting
 
@@ -1927,12 +1923,12 @@ If the provided **key** is present in the **Set**, returns **true**. Otherwise, 
 
 Requires [**Hash Utils**](#hash-utils-1) to be provided as the second argument.
 
-| Complexity      |                                           |
-| --------------- | ----------------------------------------- |
-| Runtime average | **O(1)**                                  |
-| Runtime max     | **O(n)** unlikely under normal conditions |
-| Space average   | **O(1)**                                  |
-| Space max       | **O(1)**                                  |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)** unlikely under normal conditions|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -1948,12 +1944,12 @@ If the provided **key** is present in the **Set**, returns **true**. Otherwise, 
 
 Requires [**Hash Utils**](#hash-utils-1) to be provided as the second argument.
 
-| Complexity      |                                           |
-| --------------- | ----------------------------------------- |
-| Runtime average | **O(1)**                                  |
-| Runtime max     | **O(n)** unlikely under normal conditions |
-| Space average   | **O(1)**                                  |
-| Space max       | **O(1)**                                  |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)** unlikely under normal conditions|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ## Deleting
 
@@ -1973,12 +1969,12 @@ If the size of the **Set** after the deletion is less than **3 / 8 of capacity**
 
 If [**rehash**](#rehash-1) is not called and the **key** is being removed from the **front** or the **back** of the **Set**, all holes before the new **first** or after the new **last** **key** will be eliminated.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -2000,12 +1996,12 @@ If the size of the **Set** after the deletion is less than **3 / 8 of capacity**
 
 If [**rehash**](#rehash-1) is not called and the **key** is being removed from the **front** or the **back** of the **Set**, all holes before the new **first** or after the new **last** **key** will be eliminated.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(n)**|
 
 ## Performing queue operations
 
@@ -2017,12 +2013,12 @@ func peek<K>(set: Set<K>): ?K
 
 If the **Set** is not empty, returns the **last** **key** in the **Set**. Otherwise, returns **null**.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(1)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(1)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -2034,12 +2030,12 @@ func peekFront<K>(set: Set<K>): ?K
 
 If the **Set** is not empty, returns the **first** **key** in the **Set**. Otherwise, returns **null**.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(1)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(1)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -2059,12 +2055,12 @@ If the size of the **Set** after the deletion is less than **3 / 8 of capacity**
 
 If [**rehash**](#rehash-1) is not called, all holes after the new **last** **key** will be eliminated.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -2084,12 +2080,12 @@ If the size of the **Set** after the deletion is less than **3 / 8 of capacity**
 
 If [**rehash**](#rehash-1) is not called, all holes before the new **first** **key** will be eliminated.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -2105,12 +2101,12 @@ If the **Set** is not empty, moves the **last** **key** in the **Set** to the **
 
 Requires [**Hash Utils**](#hash-utils-1) to be provided as the second argument.
 
-| Complexity      |                                           |
-| --------------- | ----------------------------------------- |
-| Runtime average | **O(1)**                                  |
-| Runtime max     | **O(n)** unlikely under normal conditions |
-| Space average   | **O(1)**                                  |
-| Space max       | **O(1)**                                  |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)** unlikely under normal conditions|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -2126,12 +2122,12 @@ If the **Set** is not empty, moves the **first** **key** in the **Set** to the *
 
 Requires [**Hash Utils**](#hash-utils-1) to be provided as the second argument.
 
-| Complexity      |                                           |
-| --------------- | ----------------------------------------- |
-| Runtime average | **O(1)**                                  |
-| Runtime max     | **O(n)** unlikely under normal conditions |
-| Space average   | **O(1)**                                  |
-| Space max       | **O(1)**                                  |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)** unlikely under normal conditions|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ## Filtering / cloning
 
@@ -2143,12 +2139,12 @@ func filter<K>(set: Set<K>, hashUtils: HashUtils<K>, acceptKey: (K) -> Bool): Se
 
 For every **key** in the **Set**, from the **first** to the **last** **key** (in ascending order) calls the provided **acceptKey** function. Constructs a new **Set** with all keys for which **acceptKey** returned **true** (in the same order **acceptKey** was called). Skips all keys for which **acceptKey** returned **false**. Returns the new **Set**.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(n)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(n)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -2160,12 +2156,12 @@ func filterDesc<K>(set: Set<K>, hashUtils: HashUtils<K>, acceptKey: (K) -> Bool)
 
 For every **key** in the **Set**, from the **last** to the **first** **key** (in descending order) calls the provided **acceptKey** function. Constructs a new **Set** with all keys for which **acceptKey** returned **true** (in the same order **acceptKey** was called). Skips all keys for which **acceptKey** returned **false**. Returns the new **Set**.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(n)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(n)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -2177,12 +2173,12 @@ func clone<K>(set: Set<K>): Set<K>
 
 Iterates through the **Set** from the **first** to the **last** **key** (in ascending order) and copies each **key** into the new **Set** (in the order of iteration). Returns the new **Set**.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(n)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(n)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -2194,12 +2190,12 @@ func cloneDesc<K>(set: Set<K>): Set<K>
 
 Iterates through the **Set** from the **last** to the **first** **key** (in descending order) and copies each **key** into the new **Set** (in the order of iteration). Returns the new **Set**.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(n)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(n)**|
+|Space max|**O(n)**|
 
 ## Iterating
 
@@ -2213,12 +2209,12 @@ Creates an iterator object over the keys of the **Set** which starts at the **fi
 
 All **Set** iterators are reusable, meaning after returning **null** once (at the end of iteration), iterators end up in their initial state and a new iteration cycle can be started without creating a new iterator object.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(1)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(1)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -2232,12 +2228,12 @@ Creates an iterator object over the keys of the **Set** which starts at the **la
 
 All **Set** iterators are reusable, meaning after returning **null** once (at the end of iteration), iterators end up in their initial state and a new iteration cycle can be started without creating a new iterator object.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(1)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(1)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -2255,12 +2251,12 @@ Requires [**Hash Utils**](#hash-utils-1) to be provided as the second argument.
 
 All **Set** iterators are reusable, meaning after returning **null** once (at the end of iteration), iterators end up in their initial state (initial state in this case corresponds to the **first** **key** and not to the found **key**) and a new iteration cycle can be started without creating a new iterator object.
 
-| Complexity      |                                           |
-| --------------- | ----------------------------------------- |
-| Runtime average | **O(1)**                                  |
-| Runtime max     | **O(n)** unlikely under normal conditions |
-| Space average   | **O(1)**                                  |
-| Space max       | **O(1)**                                  |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)** unlikely under normal conditions|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -2278,12 +2274,12 @@ Requires [**Hash Utils**](#hash-utils-1) to be provided as the second argument.
 
 All **Set** iterators are reusable, meaning after returning **null** once (at the end of iteration), iterators end up in their initial state (initial state in this case corresponds to the **last** **key** and not to the found **key**) and a new iteration cycle can be started without creating a new iterator object.
 
-| Complexity      |                                           |
-| --------------- | ----------------------------------------- |
-| Runtime average | **O(1)**                                  |
-| Runtime max     | **O(n)** unlikely under normal conditions |
-| Space average   | **O(1)**                                  |
-| Space max       | **O(1)**                                  |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)** unlikely under normal conditions|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ## Searching
 
@@ -2295,12 +2291,12 @@ func find<K>(set: Set<K>, acceptKey: (K) -> Bool): ?K
 
 For every **key** in the **Set**, from the **first** to the **last** **key** (in ascending order) calls the provided **acceptKey** function until the **acceptKey** function returns **true**. If **true** is returned, returns the current **key** immediately. If **acceptKey** didn't return **true** for any **key**, returns **null**.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -2312,12 +2308,12 @@ func findDesc<K>(set: Set<K>, acceptKey: (K) -> Bool): ?K
 
 For every **key** in the **Set**, from the **last** to the **first** **key** (in descending order) calls the provided **acceptKey** function until the **acceptKey** function returns **true**. If **true** is returned, returns the current **key** immediately. If **acceptKey** didn't return **true** for any **key**, returns **null**.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -2329,12 +2325,12 @@ func some<K>(set: Set<K>, acceptKey: (K) -> Bool): Bool
 
 For every **key** in the **Set**, from the **first** to the **last** **key** (in ascending order) calls the provided **acceptKey** function until the **acceptKey** function returns **true**. If **true** is returned, returns **true** immediately. If **acceptKey** didn't return **true** for any **key**, returns **false**.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -2346,12 +2342,12 @@ func someDesc<K>(set: Set<K>, acceptKey: (K) -> Bool): Bool
 
 For every **key** in the **Set**, from the **last** to the **first** **key** (in descending order) calls the provided **acceptKey** function until the **acceptKey** function returns **true**. If **true** is returned, returns **true** immediately. If **acceptKey** didn't return **true** for any **key**, returns **false**.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -2363,12 +2359,12 @@ func every<K>(set: Set<K>, acceptKey: (K) -> Bool): Bool
 
 For every **key** in the **Set**, from the **first** to the **last** **key** (in ascending order) calls the provided **acceptKey** function until the **acceptKey** function returns **false**. If **false** is returned, returns **false** immediately. If **acceptKey** didn't return **false** for any **key**, returns **true**.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -2380,12 +2376,12 @@ func everyDesc<K>(set: Set<K>, acceptKey: (K) -> Bool): Bool
 
 For every **key** in the **Set**, from the **last** to the **first** **key** (in descending order) calls the provided **acceptKey** function until the **acceptKey** function returns **false**. If **false** is returned, returns **false** immediately. If **acceptKey** didn't return **false** for any **key**, returns **true**.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -2397,12 +2393,12 @@ func forEach<K>(set: Set<K>, mapKey: (K) -> ()): ()
 
 For every **key** in the **Set**, from the **first** to the **last** **key** (in ascending order) calls the provided **mapKey** function.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -2414,12 +2410,12 @@ func forEachDesc<K>(set: Set<K>, mapKey: (K) -> ()): ()
 
 For every **key** in the **Set**, from the **last** to the **first** **key** (in descending order) calls the provided **mapKey** function.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ## Constructing from iterators
 
@@ -2433,12 +2429,12 @@ Creates a new empty **Set**. For every **key** in the iterator, inserts the **ke
 
 Requires [**Hash Utils**](#hash-utils-1) to be provided as the second argument.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(n)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(n)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -2452,12 +2448,12 @@ Creates a new empty **Set**. For every **key** in the iterator, inserts the **ke
 
 Requires [**Hash Utils**](#hash-utils-1) to be provided as the second argument.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(n)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(n)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -2471,12 +2467,12 @@ Creates a new empty **Set**. For every item in the iterator, calls the provided 
 
 Requires [**Hash Utils**](#hash-utils-1) to be provided as the second argument.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(n)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(n)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -2490,12 +2486,12 @@ Creates a new empty **Set**. For every item in the iterator, calls the provided 
 
 Requires [**Hash Utils**](#hash-utils-1) to be provided as the second argument.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(n)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(n)**|
+|Space max|**O(n)**|
 
 ## Converting to arrays
 
@@ -2507,12 +2503,12 @@ func toArray<K>(set: Set<K>): [K]
 
 Constructs a new array with all keys present in the **Set**, from the **first** to the **last** **key** (in ascending order). Returns the array.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(n)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(n)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -2524,12 +2520,12 @@ func toArrayDesc<K>(set: Set<K>): [K]
 
 Constructs a new array with all keys present in the **Set**, from the **last** to the **first** **key** (in descending order). Returns the array.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(n)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(n)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -2541,12 +2537,12 @@ func toArrayMap<K, T>(set: Set<K>, mapKey: (K) -> ?T): [T]
 
 For every **key** in the **Set**, from the **first** to the **last** **key** (in ascending order), calls the provided **mapKey** function. Constructs a new array with all **non-null** **mapKey result** items (in the same order **mapKey** was called). Skips all **null** **mapKey result** items. Returns the array.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(n)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(n)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -2558,12 +2554,12 @@ func toArrayMapDesc<K, T>(set: Set<K>, mapKey: (K) -> ?T): [T]
 
 For every **key** in the **Set**, from the **last** to the **first** **key** (in descending order), calls the provided **mapKey** function. Constructs a new array with all **non-null** **mapKey result** items (in the same order **mapKey** was called). Skips all **null** **mapKey result** items. Returns the array.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(n)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(n)**|
+|Space max|**O(n)**|
 
 ## Rehashing
 
@@ -2579,12 +2575,12 @@ Requires [**Hash Utils**](#hash-utils-1) to be provided as the second argument.
 
 This method is usually called under the hood on inserts (when the **Set** is full) and deletes (when the **Set** size is less than **3 / 8 of capacity**). It is not necessary to call this method manually under normal conditions.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(n)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(n)**|
+|Space max|**O(n)**|
 
 # **Iterator** interface description
 
@@ -2617,12 +2613,12 @@ func prev(): ?(K, V)
 
 Sets the **started** flag to **true**. If the **Map**/**Set** is empty, returns **null**. Otherwise, moves the iterator pointer to the previous **key**/**value**/**entry** for ascending iterators and to the next **key**/**value**/**entry** for descending iterators and saves the pointer position in the iterator object. If the current **entry** before the pointer move was the **first** **entry** for ascending iterators or the **last** **entry** for descending iterators, the iterator ends up in its initial position and in the finished state, the new iteration cycle can be started and the method returns **null**. Otherwise returns the **key**/**value**/**entry** which becomes current after a pointer move.
 
-| Complexity      |                                           |
-| --------------- | ----------------------------------------- |
-| Runtime average | **O(1)**                                  |
-| Runtime max     | **O(n)** unlikely under normal conditions |
-| Space average   | **O(1)**                                  |
-| Space max       | **O(1)**                                  |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)** unlikely under normal conditions|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -2638,12 +2634,12 @@ func next(): ?(K, V)
 
 Sets the **started** flag to **true**. If the **Map**/**Set** is empty, returns **null**. Otherwise, moves the iterator pointer to the next **key**/**value**/**entry** for ascending iterators and to the previous **key**/**value**/**entry** for descending iterators and saves the pointer position in the iterator object. If the current **entry** before the pointer move was the **last** **entry** for ascending iterators or the **first** **entry** for descending iterators, the iterator ends up in its initial position and in the finished state, the new iteration cycle can be started and the method returns **null**. Otherwise returns the **key**/**value**/**entry** which becomes current after a pointer move.
 
-| Complexity      |                                           |
-| --------------- | ----------------------------------------- |
-| Runtime average | **O(1)**                                  |
-| Runtime max     | **O(n)** unlikely under normal conditions |
-| Space average   | **O(1)**                                  |
-| Space max       | **O(1)**                                  |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)** unlikely under normal conditions|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -2661,12 +2657,12 @@ If the **Map**/**Set** is empty, returns **null**. Otherwise, moves the iterator
 
 This operation is the same as [**prev**](#prev) but doesn't save the pointer position, meaning the return value will be the same but the iterator object state won't change after the operation. It also doesn't change the **started** flag.
 
-| Complexity      |                                           |
-| --------------- | ----------------------------------------- |
-| Runtime average | **O(1)**                                  |
-| Runtime max     | **O(n)** unlikely under normal conditions |
-| Space average   | **O(1)**                                  |
-| Space max       | **O(1)**                                  |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)** unlikely under normal conditions|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -2684,12 +2680,12 @@ If the **Map**/**Set** is empty, returns **null**. Otherwise, moves the iterator
 
 This operation is the same as [**next**](#next) but doesn't save the pointer position, meaning the return value will be the same but the iterator object state won't change after the operation. It also doesn't change the **started** flag.
 
-| Complexity      |                                           |
-| --------------- | ----------------------------------------- |
-| Runtime average | **O(1)**                                  |
-| Runtime max     | **O(n)** unlikely under normal conditions |
-| Space average   | **O(1)**                                  |
-| Space max       | **O(1)**                                  |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)** unlikely under normal conditions|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -2707,12 +2703,12 @@ Sets the **started** flag to **true**. If the **Map**/**Set** is empty, returns 
 
 This operation is the same as [**prev**](#prev) but always returns the iterator object.
 
-| Complexity      |                                           |
-| --------------- | ----------------------------------------- |
-| Runtime average | **O(1)**                                  |
-| Runtime max     | **O(n)** unlikely under normal conditions |
-| Space average   | **O(1)**                                  |
-| Space max       | **O(1)**                                  |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)** unlikely under normal conditions|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -2730,12 +2726,12 @@ Sets the **started** flag to **true**. If the **Map**/**Set** is empty, returns 
 
 This operation is the same as [**next**](#next) but always returns the iterator object.
 
-| Complexity      |                                           |
-| --------------- | ----------------------------------------- |
-| Runtime average | **O(1)**                                  |
-| Runtime max     | **O(n)** unlikely under normal conditions |
-| Space average   | **O(1)**                                  |
-| Space max       | **O(1)**                                  |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(n)** unlikely under normal conditions|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ## Getting current item
 
@@ -2751,12 +2747,12 @@ func current(): ?(K, V)
 
 If the **Map**/**Set** is empty or the iterator is in its initial position, returns **null**, otherwise returns the current **key**/**value**/**entry**.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(1)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(1)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ## Getting iterator state
 
@@ -2768,12 +2764,12 @@ func started(): Bool
 
 Returns **true** if any [**prev**](#prev)/[**next**](#next)/[**movePrev**](#moveprev)/[**moveNext**](#movenext) method was called after the iterator object was created or reset with the [**reset**](#reset) method. Otherwise, returns **false**.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(1)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(1)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -2785,12 +2781,12 @@ func finished(): Bool
 
 Returns **true** if the iterator was [**started**](#started) (meaning any [**prev**](#prev)/[**next**](#next)/[**movePrev**](#moveprev)/[**moveNext**](#movenext) method was called after the iterator object was created or reset with the [**reset**](#reset) method) and is currently in its initial position. Otherwise, returns **false**.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(1)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(1)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ## Resetting
 
@@ -2806,12 +2802,12 @@ func reset(): Iter<(K, V)>
 
 Resets the **started** flag to **false**. Resets the iterator to its initial position. Returns the iterator object.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(1)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(1)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 # **Hash Utils**
 
@@ -2838,12 +2834,12 @@ This function is exposed separately, although most of the time you will be using
 
 [New best known functions](https://github.com/skeeto/hash-prospector/issues/19)
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(1)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(1)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ### `hashInt8`
 
@@ -2859,12 +2855,12 @@ This function is exposed separately, although most of the time you will be using
 
 [New best known functions](https://github.com/skeeto/hash-prospector/issues/19)
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(1)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(1)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ### `hashInt16`
 
@@ -2880,12 +2876,12 @@ This function is exposed separately, although most of the time you will be using
 
 [New best known functions](https://github.com/skeeto/hash-prospector/issues/19)
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(1)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(1)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ### `hashInt32`
 
@@ -2901,12 +2897,12 @@ This function is exposed separately, although most of the time you will be using
 
 [New best known functions](https://github.com/skeeto/hash-prospector/issues/19)
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(1)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(1)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -2924,12 +2920,12 @@ This function is exposed separately, although most of the time you will be using
 
 [New best known functions](https://github.com/skeeto/hash-prospector/issues/19)
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(1)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(1)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ### `hashNat`
 
@@ -2945,12 +2941,12 @@ This function is exposed separately, although most of the time you will be using
 
 [New best known functions](https://github.com/skeeto/hash-prospector/issues/19)
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(1)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(1)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ### `hashNat8`
 
@@ -2966,12 +2962,12 @@ This function is exposed separately, although most of the time you will be using
 
 [New best known functions](https://github.com/skeeto/hash-prospector/issues/19)
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(1)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(1)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ### `hashNat16`
 
@@ -2987,12 +2983,12 @@ This function is exposed separately, although most of the time you will be using
 
 [New best known functions](https://github.com/skeeto/hash-prospector/issues/19)
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(1)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(1)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ### `hashNat32`
 
@@ -3008,12 +3004,12 @@ This function is exposed separately, although most of the time you will be using
 
 [New best known functions](https://github.com/skeeto/hash-prospector/issues/19)
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(1)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(1)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -3031,12 +3027,12 @@ This function is exposed separately, although most of the time you will be using
 
 [New best known functions](https://github.com/skeeto/hash-prospector/issues/19)
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(1)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(1)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -3052,12 +3048,12 @@ This function is exposed separately, although most of the time you will be using
 
 > **NOTE:** Currently, this is the only hash function in the library that can (occasionally) allocate additional temporary space. Allocation happens at the **text to blob** conversion step (when the internal text representation consists of multiple substrings). This will be a subject to change when we have optimized **for in** text iteration that does not create an iterator object under the hood.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(n)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(n)**|
 
 ---
 
@@ -3071,12 +3067,12 @@ Converts the **key** to blob. Calculates the hash using the internal hash functi
 
 This function is exposed separately, although most of the time you will be using it as a part of [**phash**](#phash).
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(1)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(1)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -3090,12 +3086,12 @@ Calculates the hash using the internal hash function for blob, which is based on
 
 This function is exposed separately, although most of the time you will be using it as a part of [**bhash**](#bhash).
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(n)** |
-| Runtime max     | **O(n)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(n)**|
+|Runtime max|**O(n)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -3109,19 +3105,19 @@ Returns numeric alternatives for **true** and **false** values.
 
 This function is exposed separately, although most of the time you will be using it as a part of [**lhash**](#lhash).
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(1)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(1)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ## Composite utils
 
 ### `ihash`
 
 ```ts
-let ihash: HashUtils<Int> = (hashInt, areEqual);
+let ihash: HashUtils<Int> = (hashInt, areEqual)
 ```
 
 Composite utils for **Int** keys that allow calculating hashes using [**hashInt**](#hashint) function and checking equality.
@@ -3133,7 +3129,7 @@ A lot of **Map**/**Set** methods require [**Hash Utils**](#hash-utils-1) to be p
 ### `i8hash`
 
 ```ts
-let i8hash: HashUtils<Int8> = (hashInt8, areEqual);
+let i8hash: HashUtils<Int8> = (hashInt8, areEqual)
 ```
 
 Composite utils for **Int8** keys that allow calculating hashes using [**hashInt8**](#hashint8) function and checking equality.
@@ -3145,7 +3141,7 @@ A lot of **Map**/**Set** methods require [**Hash Utils**](#hash-utils-1) to be p
 ### `i16hash`
 
 ```ts
-let i16hash: HashUtils<Int16> = (hashInt16, areEqual);
+let i16hash: HashUtils<Int16> = (hashInt16, areEqual)
 ```
 
 Composite utils for **Int16** keys that allow calculating hashes using [**hashInt16**](#hashint16) function and checking equality.
@@ -3157,7 +3153,7 @@ A lot of **Map**/**Set** methods require [**Hash Utils**](#hash-utils-1) to be p
 ### `i32hash`
 
 ```ts
-let i32hash: HashUtils<Int32> = (hashInt32, areEqual);
+let i32hash: HashUtils<Int32> = (hashInt32, areEqual)
 ```
 
 Composite utils for **Int32** keys that allow calculating hashes using [**hashInt32**](#hashint32) function and checking equality.
@@ -3169,7 +3165,7 @@ A lot of **Map**/**Set** methods require [**Hash Utils**](#hash-utils-1) to be p
 ### `i64hash`
 
 ```ts
-let i64hash: HashUtils<Int64> = (hashInt64, areEqual);
+let i64hash: HashUtils<Int64> = (hashInt64, areEqual)
 ```
 
 Composite utils for **Int64** keys that allow calculating hashes using [**hashInt64**](#hashint64) function and checking equality.
@@ -3181,7 +3177,7 @@ A lot of **Map**/**Set** methods require [**Hash Utils**](#hash-utils-1) to be p
 ### `nhash`
 
 ```ts
-let nhash: HashUtils<Nat> = (hashNat, areEqual);
+let nhash: HashUtils<Nat> = (hashNat, areEqual)
 ```
 
 Composite utils for **Nat** keys that allow calculating hashes using [**hashNat**](#hashnat) function and checking equality.
@@ -3193,7 +3189,7 @@ A lot of **Map**/**Set** methods require [**Hash Utils**](#hash-utils-1) to be p
 ### `n8hash`
 
 ```ts
-let n8hash: HashUtils<Nat8> = (hashNat8, areEqual);
+let n8hash: HashUtils<Nat8> = (hashNat8, areEqual)
 ```
 
 Composite utils for **Nat8** keys that allow calculating hashes using [**hashNat8**](#hashnat8) function and checking equality.
@@ -3205,7 +3201,7 @@ A lot of **Map**/**Set** methods require [**Hash Utils**](#hash-utils-1) to be p
 ### `n16hash`
 
 ```ts
-let n16hash: HashUtils<Nat16> = (hashNat16, areEqual);
+let n16hash: HashUtils<Nat16> = (hashNat16, areEqual)
 ```
 
 Composite utils for **Nat16** keys that allow calculating hashes using [**hashNat16**](#hashnat16) function and checking equality.
@@ -3217,7 +3213,7 @@ A lot of **Map**/**Set** methods require [**Hash Utils**](#hash-utils-1) to be p
 ### `n32hash`
 
 ```ts
-let n32hash: HashUtils<Nat32> = (hashNat32, areEqual);
+let n32hash: HashUtils<Nat32> = (hashNat32, areEqual)
 ```
 
 Composite utils for **Nat32** keys that allow calculating hashes using [**hashNat32**](#hashnat32) function and checking equality.
@@ -3229,7 +3225,7 @@ A lot of **Map**/**Set** methods require [**Hash Utils**](#hash-utils-1) to be p
 ### `n64hash`
 
 ```ts
-let n64hash: HashUtils<Nat64> = (hashNat64, areEqual);
+let n64hash: HashUtils<Nat64> = (hashNat64, areEqual)
 ```
 
 Composite utils for **Nat64** keys that allow calculating hashes using [**hashNat64**](#hashnat64) function and checking equality.
@@ -3241,7 +3237,7 @@ A lot of **Map**/**Set** methods require [**Hash Utils**](#hash-utils-1) to be p
 ### `thash`
 
 ```ts
-let thash: HashUtils<Text> = (hashText, areEqual);
+let thash: HashUtils<Text> = (hashText, areEqual)
 ```
 
 Composite utils for **Text** keys that allow calculating hashes using [**hashText**](#hashtext) function and checking equality.
@@ -3253,7 +3249,7 @@ A lot of **Map**/**Set** methods require [**Hash Utils**](#hash-utils-1) to be p
 ### `phash`
 
 ```ts
-let phash: HashUtils<Principal> = (hashPrincipal, areEqual);
+let phash: HashUtils<Principal> = (hashPrincipal, areEqual)
 ```
 
 Composite utils for **Principal** keys that allow calculating hashes using [**hashPrincipal**](#hashprincipal) function and checking equality.
@@ -3265,7 +3261,7 @@ A lot of **Map**/**Set** methods require [**Hash Utils**](#hash-utils-1) to be p
 ### `bhash`
 
 ```ts
-let bhash: HashUtils<Blob> = (hashBlob, areEqual);
+let bhash: HashUtils<Blob> = (hashBlob, areEqual)
 ```
 
 Composite utils for **Blob** keys that allow calculating hashes using [**hashBlob**](#hashblob) function and checking equality.
@@ -3277,7 +3273,7 @@ A lot of **Map**/**Set** methods require [**Hash Utils**](#hash-utils-1) to be p
 ### `lhash`
 
 ```ts
-let lhash: HashUtils<Bool> = (hashBool, areEqual);
+let lhash: HashUtils<Bool> = (hashBool, areEqual)
 ```
 
 Composite utils for **Bool** keys that allow calculating hashes using [**hashBool**](#hashbool) function and checking equality.
@@ -3294,12 +3290,12 @@ func combineHash<K1, K2>(hashUtils1: HashUtils<K1>, hashUtils2: HashUtils<K2>): 
 
 Constructs new [**Hash Utils**](#hash-utils-1) capable of handling composite keys (tuples of **2** components). Takes **2** [**Hash Utils**](#hash-utils-1) as an input which will handle the first and the second component of a composite **key** separately. The combined [**Hash Utils**](#hash-utils-1) will handle the merging of both hashes and ensuring that equality function returns **true** only when both components are equal. Returns the new [**Hash Utils**](#hash-utils-1).
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(1)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(1)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -3313,12 +3309,12 @@ Constructs new [**Hash Utils**](#hash-utils-1) with its hashing component being 
 
 > **WARNING:** Incorrect usage of this function can result in a corrupted **Map**/**Set** state.
 
-| Complexity      |          |
-| --------------- | -------- |
-| Runtime average | **O(1)** |
-| Runtime max     | **O(1)** |
-| Space average   | **O(1)** |
-| Space max       | **O(1)** |
+|Complexity||
+|-|-|
+|Runtime average|**O(1)**|
+|Runtime max|**O(1)**|
+|Space average|**O(1)**|
+|Space max|**O(1)**|
 
 ---
 
@@ -3332,9 +3328,9 @@ Constructs new [**Hash Utils**](#hash-utils-1) with its hashing component being 
 
 > **WARNING:** Incorrect usage of this function can result in a corrupted **Map**/**Set** state.
 
-| Complexity      |                      |
-| --------------- | -------------------- |
-| Runtime average | depends on arguments |
-| Runtime max     | depends on arguments |
-| Space average   | depends on arguments |
-| Space max       | depends on arguments |
+|Complexity||
+|-|-|
+|Runtime average|depends on arguments|
+|Runtime max|depends on arguments|
+|Space average|depends on arguments|
+|Space max|depends on arguments|

@@ -19,34 +19,25 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func keys<K, V>(map : Map<K, V>) : Iter<K> {
+  public func keys<K, V>(map: Map<K, V>): Iter<K> {
     let dataOpt = map[DATA];
 
-    let capacity = switch (dataOpt) {
-      case (?data) nat32(data.0.size());
-      case (_) 0 : Nat32;
-    };
-    let front = switch (dataOpt) {
-      case (?data) data.3 [FRONT];
-      case (_) 0 : Nat32;
-    };
-    let back = switch (dataOpt) {
-      case (?data) data.3 [BACK];
-      case (_) 0 : Nat32;
-    };
+    let capacity = switch (dataOpt) { case (?data) nat32(data.0.size()); case (_) 0:Nat32 };
+    let front = switch (dataOpt) { case (?data) data.3[FRONT]; case (_) 0:Nat32 };
+    let back = switch (dataOpt) { case (?data) data.3[BACK]; case (_) 0:Nat32 };
 
     var started = false;
     var iterIndex = front;
 
     let iter = {
-      prev = func() : ?K {
+      prev = func(): ?K {
         started := true;
 
         switch (dataOpt) {
           case (?data) loop {
-            iterIndex := if (iterIndex == front)(back -% 1) % capacity else (iterIndex -% 1) % capacity;
+            iterIndex := if (iterIndex == front) (back -% 1) % capacity else (iterIndex -% 1) % capacity;
 
-            switch (data.0 [nat(iterIndex)]) {
+            switch (data.0[nat(iterIndex)]) {
               case (null) if (iterIndex == front) return null;
               case (key) return key;
             };
@@ -56,14 +47,14 @@ module {
         };
       };
 
-      next = func() : ?K {
+      next = func(): ?K {
         started := true;
 
         switch (dataOpt) {
           case (?data) loop {
-            iterIndex := if (iterIndex == back)(front +% 1) % capacity else (iterIndex +% 1) % capacity;
+            iterIndex := if (iterIndex == back) (front +% 1) % capacity else (iterIndex +% 1) % capacity;
 
-            switch (data.0 [nat(iterIndex)]) {
+            switch (data.0[nat(iterIndex)]) {
               case (null) if (iterIndex == back) return null;
               case (key) return key;
             };
@@ -73,14 +64,14 @@ module {
         };
       };
 
-      peekPrev = func() : ?K {
+      peekPrev = func(): ?K {
         var newIndex = iterIndex;
 
         switch (dataOpt) {
           case (?data) loop {
-            newIndex := if (newIndex == front)(back -% 1) % capacity else (newIndex -% 1) % capacity;
+            newIndex := if (newIndex == front) (back -% 1) % capacity else (newIndex -% 1) % capacity;
 
-            switch (data.0 [nat(newIndex)]) {
+            switch (data.0[nat(newIndex)]) {
               case (null) if (newIndex == front) return null;
               case (key) return key;
             };
@@ -90,14 +81,14 @@ module {
         };
       };
 
-      peekNext = func() : ?K {
+      peekNext = func(): ?K {
         var newIndex = iterIndex;
 
         switch (dataOpt) {
           case (?data) loop {
-            newIndex := if (newIndex == back)(front +% 1) % capacity else (newIndex +% 1) % capacity;
+            newIndex := if (newIndex == back) (front +% 1) % capacity else (newIndex +% 1) % capacity;
 
-            switch (data.0 [nat(newIndex)]) {
+            switch (data.0[nat(newIndex)]) {
               case (null) if (newIndex == back) return null;
               case (key) return key;
             };
@@ -107,14 +98,14 @@ module {
         };
       };
 
-      movePrev = func() : Iter<K> {
+      movePrev = func(): Iter<K> {
         started := true;
 
         switch (dataOpt) {
           case (?data) loop {
-            iterIndex := if (iterIndex == front)(back -% 1) % capacity else (iterIndex -% 1) % capacity;
+            iterIndex := if (iterIndex == front) (back -% 1) % capacity else (iterIndex -% 1) % capacity;
 
-            switch (data.0 [nat(iterIndex)]) {
+            switch (data.0[nat(iterIndex)]) {
               case (null) if (iterIndex == front) return iter;
               case (_) return iter;
             };
@@ -124,14 +115,14 @@ module {
         };
       };
 
-      moveNext = func() : Iter<K> {
+      moveNext = func(): Iter<K> {
         started := true;
 
         switch (dataOpt) {
           case (?data) loop {
-            iterIndex := if (iterIndex == back)(front +% 1) % capacity else (iterIndex +% 1) % capacity;
+            iterIndex := if (iterIndex == back) (front +% 1) % capacity else (iterIndex +% 1) % capacity;
 
-            switch (data.0 [nat(iterIndex)]) {
+            switch (data.0[nat(iterIndex)]) {
               case (null) if (iterIndex == back) return iter;
               case (_) return iter;
             };
@@ -141,25 +132,22 @@ module {
         };
       };
 
-      current = func() : ?K {
+      current = func(): ?K {
         switch (dataOpt) {
-          case (?data) switch (data.0 [nat(iterIndex)]) {
-            case (null) null;
-            case (key) key;
-          };
+          case (?data) switch (data.0[nat(iterIndex)]) { case (null) null; case (key) key };
           case (_) null;
         };
       };
 
-      started = func() : Bool {
+      started = func(): Bool {
         started;
       };
 
-      finished = func() : Bool {
+      finished = func(): Bool {
         started and (iterIndex == front or iterIndex == back);
       };
 
-      reset = func() : Iter<K> {
+      reset = func(): Iter<K> {
         started := false;
 
         iterIndex := front;
@@ -171,34 +159,25 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func keysDesc<K, V>(map : Map<K, V>) : Iter<K> {
+  public func keysDesc<K, V>(map: Map<K, V>): Iter<K> {
     let dataOpt = map[DATA];
 
-    let capacity = switch (dataOpt) {
-      case (?data) nat32(data.0.size());
-      case (_) 0 : Nat32;
-    };
-    let front = switch (dataOpt) {
-      case (?data) data.3 [FRONT];
-      case (_) 0 : Nat32;
-    };
-    let back = switch (dataOpt) {
-      case (?data) data.3 [BACK];
-      case (_) 0 : Nat32;
-    };
+    let capacity = switch (dataOpt) { case (?data) nat32(data.0.size()); case (_) 0:Nat32 };
+    let front = switch (dataOpt) { case (?data) data.3[FRONT]; case (_) 0:Nat32 };
+    let back = switch (dataOpt) { case (?data) data.3[BACK]; case (_) 0:Nat32 };
 
     var started = false;
     var iterIndex = back;
 
     let iter = {
-      prev = func() : ?K {
+      prev = func(): ?K {
         started := true;
 
         switch (dataOpt) {
           case (?data) loop {
-            iterIndex := if (iterIndex == back)(front +% 1) % capacity else (iterIndex +% 1) % capacity;
+            iterIndex := if (iterIndex == back) (front +% 1) % capacity else (iterIndex +% 1) % capacity;
 
-            switch (data.0 [nat(iterIndex)]) {
+            switch (data.0[nat(iterIndex)]) {
               case (null) if (iterIndex == back) return null;
               case (key) return key;
             };
@@ -208,14 +187,14 @@ module {
         };
       };
 
-      next = func() : ?K {
+      next = func(): ?K {
         started := true;
 
         switch (dataOpt) {
           case (?data) loop {
-            iterIndex := if (iterIndex == front)(back -% 1) % capacity else (iterIndex -% 1) % capacity;
+            iterIndex := if (iterIndex == front) (back -% 1) % capacity else (iterIndex -% 1) % capacity;
 
-            switch (data.0 [nat(iterIndex)]) {
+            switch (data.0[nat(iterIndex)]) {
               case (null) if (iterIndex == front) return null;
               case (key) return key;
             };
@@ -225,14 +204,14 @@ module {
         };
       };
 
-      peekPrev = func() : ?K {
+      peekPrev = func(): ?K {
         var newIndex = iterIndex;
 
         switch (dataOpt) {
           case (?data) loop {
-            newIndex := if (newIndex == back)(front +% 1) % capacity else (newIndex +% 1) % capacity;
+            newIndex := if (newIndex == back) (front +% 1) % capacity else (newIndex +% 1) % capacity;
 
-            switch (data.0 [nat(newIndex)]) {
+            switch (data.0[nat(newIndex)]) {
               case (null) if (newIndex == back) return null;
               case (key) return key;
             };
@@ -242,14 +221,14 @@ module {
         };
       };
 
-      peekNext = func() : ?K {
+      peekNext = func(): ?K {
         var newIndex = iterIndex;
 
         switch (dataOpt) {
           case (?data) loop {
-            newIndex := if (newIndex == front)(back -% 1) % capacity else (newIndex -% 1) % capacity;
+            newIndex := if (newIndex == front) (back -% 1) % capacity else (newIndex -% 1) % capacity;
 
-            switch (data.0 [nat(newIndex)]) {
+            switch (data.0[nat(newIndex)]) {
               case (null) if (newIndex == front) return null;
               case (key) return key;
             };
@@ -259,14 +238,14 @@ module {
         };
       };
 
-      movePrev = func() : Iter<K> {
+      movePrev = func(): Iter<K> {
         started := true;
 
         switch (dataOpt) {
           case (?data) loop {
-            iterIndex := if (iterIndex == back)(front +% 1) % capacity else (iterIndex +% 1) % capacity;
+            iterIndex := if (iterIndex == back) (front +% 1) % capacity else (iterIndex +% 1) % capacity;
 
-            switch (data.0 [nat(iterIndex)]) {
+            switch (data.0[nat(iterIndex)]) {
               case (null) if (iterIndex == back) return iter;
               case (_) return iter;
             };
@@ -276,14 +255,14 @@ module {
         };
       };
 
-      moveNext = func() : Iter<K> {
+      moveNext = func(): Iter<K> {
         started := true;
 
         switch (dataOpt) {
           case (?data) loop {
-            iterIndex := if (iterIndex == front)(back -% 1) % capacity else (iterIndex -% 1) % capacity;
+            iterIndex := if (iterIndex == front) (back -% 1) % capacity else (iterIndex -% 1) % capacity;
 
-            switch (data.0 [nat(iterIndex)]) {
+            switch (data.0[nat(iterIndex)]) {
               case (null) if (iterIndex == front) return iter;
               case (_) return iter;
             };
@@ -293,25 +272,22 @@ module {
         };
       };
 
-      current = func() : ?K {
+      current = func(): ?K {
         switch (dataOpt) {
-          case (?data) switch (data.0 [nat(iterIndex)]) {
-            case (null) null;
-            case (key) key;
-          };
+          case (?data) switch (data.0[nat(iterIndex)]) { case (null) null; case (key) key };
           case (_) null;
         };
       };
 
-      started = func() : Bool {
+      started = func(): Bool {
         started;
       };
 
-      finished = func() : Bool {
+      finished = func(): Bool {
         started and (iterIndex == front or iterIndex == back);
       };
 
-      reset = func() : Iter<K> {
+      reset = func(): Iter<K> {
         started := false;
 
         iterIndex := back;
@@ -323,34 +299,25 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func vals<K, V>(map : Map<K, V>) : Iter<V> {
+  public func vals<K, V>(map: Map<K, V>): Iter<V> {
     let dataOpt = map[DATA];
 
-    let capacity = switch (dataOpt) {
-      case (?data) nat32(data.0.size());
-      case (_) 0 : Nat32;
-    };
-    let front = switch (dataOpt) {
-      case (?data) data.3 [FRONT];
-      case (_) 0 : Nat32;
-    };
-    let back = switch (dataOpt) {
-      case (?data) data.3 [BACK];
-      case (_) 0 : Nat32;
-    };
+    let capacity = switch (dataOpt) { case (?data) nat32(data.0.size()); case (_) 0:Nat32 };
+    let front = switch (dataOpt) { case (?data) data.3[FRONT]; case (_) 0:Nat32 };
+    let back = switch (dataOpt) { case (?data) data.3[BACK]; case (_) 0:Nat32 };
 
     var started = false;
     var iterIndex = front;
 
     let iter = {
-      prev = func() : ?V {
+      prev = func(): ?V {
         started := true;
 
         switch (dataOpt) {
           case (?data) loop {
-            iterIndex := if (iterIndex == front)(back -% 1) % capacity else (iterIndex -% 1) % capacity;
+            iterIndex := if (iterIndex == front) (back -% 1) % capacity else (iterIndex -% 1) % capacity;
 
-            switch (data.1 [nat(iterIndex)]) {
+            switch (data.1[nat(iterIndex)]) {
               case (null) if (iterIndex == front) return null;
               case (value) return value;
             };
@@ -360,14 +327,14 @@ module {
         };
       };
 
-      next = func() : ?V {
+      next = func(): ?V {
         started := true;
 
         switch (dataOpt) {
           case (?data) loop {
-            iterIndex := if (iterIndex == back)(front +% 1) % capacity else (iterIndex +% 1) % capacity;
+            iterIndex := if (iterIndex == back) (front +% 1) % capacity else (iterIndex +% 1) % capacity;
 
-            switch (data.1 [nat(iterIndex)]) {
+            switch (data.1[nat(iterIndex)]) {
               case (null) if (iterIndex == back) return null;
               case (value) return value;
             };
@@ -377,14 +344,14 @@ module {
         };
       };
 
-      peekPrev = func() : ?V {
+      peekPrev = func(): ?V {
         var newIndex = iterIndex;
 
         switch (dataOpt) {
           case (?data) loop {
-            newIndex := if (newIndex == front)(back -% 1) % capacity else (newIndex -% 1) % capacity;
+            newIndex := if (newIndex == front) (back -% 1) % capacity else (newIndex -% 1) % capacity;
 
-            switch (data.1 [nat(newIndex)]) {
+            switch (data.1[nat(newIndex)]) {
               case (null) if (newIndex == front) return null;
               case (value) return value;
             };
@@ -394,14 +361,14 @@ module {
         };
       };
 
-      peekNext = func() : ?V {
+      peekNext = func(): ?V {
         var newIndex = iterIndex;
 
         switch (dataOpt) {
           case (?data) loop {
-            newIndex := if (newIndex == back)(front +% 1) % capacity else (newIndex +% 1) % capacity;
+            newIndex := if (newIndex == back) (front +% 1) % capacity else (newIndex +% 1) % capacity;
 
-            switch (data.1 [nat(newIndex)]) {
+            switch (data.1[nat(newIndex)]) {
               case (null) if (newIndex == back) return null;
               case (value) return value;
             };
@@ -411,14 +378,14 @@ module {
         };
       };
 
-      movePrev = func() : Iter<V> {
+      movePrev = func(): Iter<V> {
         started := true;
 
         switch (dataOpt) {
           case (?data) loop {
-            iterIndex := if (iterIndex == front)(back -% 1) % capacity else (iterIndex -% 1) % capacity;
+            iterIndex := if (iterIndex == front) (back -% 1) % capacity else (iterIndex -% 1) % capacity;
 
-            switch (data.1 [nat(iterIndex)]) {
+            switch (data.1[nat(iterIndex)]) {
               case (null) if (iterIndex == front) return iter;
               case (_) return iter;
             };
@@ -428,14 +395,14 @@ module {
         };
       };
 
-      moveNext = func() : Iter<V> {
+      moveNext = func(): Iter<V> {
         started := true;
 
         switch (dataOpt) {
           case (?data) loop {
-            iterIndex := if (iterIndex == back)(front +% 1) % capacity else (iterIndex +% 1) % capacity;
+            iterIndex := if (iterIndex == back) (front +% 1) % capacity else (iterIndex +% 1) % capacity;
 
-            switch (data.1 [nat(iterIndex)]) {
+            switch (data.1[nat(iterIndex)]) {
               case (null) if (iterIndex == back) return iter;
               case (_) return iter;
             };
@@ -445,25 +412,22 @@ module {
         };
       };
 
-      current = func() : ?V {
+      current = func(): ?V {
         switch (dataOpt) {
-          case (?data) switch (data.1 [nat(iterIndex)]) {
-            case (null) null;
-            case (value) value;
-          };
+          case (?data) switch (data.1[nat(iterIndex)]) { case (null) null; case (value) value };
           case (_) null;
         };
       };
 
-      started = func() : Bool {
+      started = func(): Bool {
         started;
       };
 
-      finished = func() : Bool {
+      finished = func(): Bool {
         started and (iterIndex == front or iterIndex == back);
       };
 
-      reset = func() : Iter<V> {
+      reset = func(): Iter<V> {
         started := false;
 
         iterIndex := front;
@@ -475,34 +439,25 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func valsDesc<K, V>(map : Map<K, V>) : Iter<V> {
+  public func valsDesc<K, V>(map: Map<K, V>): Iter<V> {
     let dataOpt = map[DATA];
 
-    let capacity = switch (dataOpt) {
-      case (?data) nat32(data.0.size());
-      case (_) 0 : Nat32;
-    };
-    let front = switch (dataOpt) {
-      case (?data) data.3 [FRONT];
-      case (_) 0 : Nat32;
-    };
-    let back = switch (dataOpt) {
-      case (?data) data.3 [BACK];
-      case (_) 0 : Nat32;
-    };
+    let capacity = switch (dataOpt) { case (?data) nat32(data.0.size()); case (_) 0:Nat32 };
+    let front = switch (dataOpt) { case (?data) data.3[FRONT]; case (_) 0:Nat32 };
+    let back = switch (dataOpt) { case (?data) data.3[BACK]; case (_) 0:Nat32 };
 
     var started = false;
     var iterIndex = back;
 
     let iter = {
-      prev = func() : ?V {
+      prev = func(): ?V {
         started := true;
 
         switch (dataOpt) {
           case (?data) loop {
-            iterIndex := if (iterIndex == back)(front +% 1) % capacity else (iterIndex +% 1) % capacity;
+            iterIndex := if (iterIndex == back) (front +% 1) % capacity else (iterIndex +% 1) % capacity;
 
-            switch (data.1 [nat(iterIndex)]) {
+            switch (data.1[nat(iterIndex)]) {
               case (null) if (iterIndex == back) return null;
               case (value) return value;
             };
@@ -512,14 +467,14 @@ module {
         };
       };
 
-      next = func() : ?V {
+      next = func(): ?V {
         started := true;
 
         switch (dataOpt) {
           case (?data) loop {
-            iterIndex := if (iterIndex == front)(back -% 1) % capacity else (iterIndex -% 1) % capacity;
+            iterIndex := if (iterIndex == front) (back -% 1) % capacity else (iterIndex -% 1) % capacity;
 
-            switch (data.1 [nat(iterIndex)]) {
+            switch (data.1[nat(iterIndex)]) {
               case (null) if (iterIndex == front) return null;
               case (value) return value;
             };
@@ -529,14 +484,14 @@ module {
         };
       };
 
-      peekPrev = func() : ?V {
+      peekPrev = func(): ?V {
         var newIndex = iterIndex;
 
         switch (dataOpt) {
           case (?data) loop {
-            newIndex := if (newIndex == back)(front +% 1) % capacity else (newIndex +% 1) % capacity;
+            newIndex := if (newIndex == back) (front +% 1) % capacity else (newIndex +% 1) % capacity;
 
-            switch (data.1 [nat(newIndex)]) {
+            switch (data.1[nat(newIndex)]) {
               case (null) if (newIndex == back) return null;
               case (value) return value;
             };
@@ -546,14 +501,14 @@ module {
         };
       };
 
-      peekNext = func() : ?V {
+      peekNext = func(): ?V {
         var newIndex = iterIndex;
 
         switch (dataOpt) {
           case (?data) loop {
-            newIndex := if (newIndex == front)(back -% 1) % capacity else (newIndex -% 1) % capacity;
+            newIndex := if (newIndex == front) (back -% 1) % capacity else (newIndex -% 1) % capacity;
 
-            switch (data.1 [nat(newIndex)]) {
+            switch (data.1[nat(newIndex)]) {
               case (null) if (newIndex == front) return null;
               case (value) return value;
             };
@@ -563,14 +518,14 @@ module {
         };
       };
 
-      movePrev = func() : Iter<V> {
+      movePrev = func(): Iter<V> {
         started := true;
 
         switch (dataOpt) {
           case (?data) loop {
-            iterIndex := if (iterIndex == back)(front +% 1) % capacity else (iterIndex +% 1) % capacity;
+            iterIndex := if (iterIndex == back) (front +% 1) % capacity else (iterIndex +% 1) % capacity;
 
-            switch (data.1 [nat(iterIndex)]) {
+            switch (data.1[nat(iterIndex)]) {
               case (null) if (iterIndex == back) return iter;
               case (_) return iter;
             };
@@ -580,14 +535,14 @@ module {
         };
       };
 
-      moveNext = func() : Iter<V> {
+      moveNext = func(): Iter<V> {
         started := true;
 
         switch (dataOpt) {
           case (?data) loop {
-            iterIndex := if (iterIndex == front)(back -% 1) % capacity else (iterIndex -% 1) % capacity;
+            iterIndex := if (iterIndex == front) (back -% 1) % capacity else (iterIndex -% 1) % capacity;
 
-            switch (data.1 [nat(iterIndex)]) {
+            switch (data.1[nat(iterIndex)]) {
               case (null) if (iterIndex == front) return iter;
               case (_) return iter;
             };
@@ -597,25 +552,22 @@ module {
         };
       };
 
-      current = func() : ?V {
+      current = func(): ?V {
         switch (dataOpt) {
-          case (?data) switch (data.1 [nat(iterIndex)]) {
-            case (null) null;
-            case (value) value;
-          };
+          case (?data) switch (data.1[nat(iterIndex)]) { case (null) null; case (value) value };
           case (_) null;
         };
       };
 
-      started = func() : Bool {
+      started = func(): Bool {
         started;
       };
 
-      finished = func() : Bool {
+      finished = func(): Bool {
         started and (iterIndex == front or iterIndex == back);
       };
 
-      reset = func() : Iter<V> {
+      reset = func(): Iter<V> {
         started := false;
 
         iterIndex := back;
@@ -627,37 +579,28 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func entries<K, V>(map : Map<K, V>) : Iter<(K, V)> {
+  public func entries<K, V>(map: Map<K, V>): Iter<(K, V)> {
     let dataOpt = map[DATA];
 
-    let capacity = switch (dataOpt) {
-      case (?data) nat32(data.0.size());
-      case (_) 0 : Nat32;
-    };
-    let front = switch (dataOpt) {
-      case (?data) data.3 [FRONT];
-      case (_) 0 : Nat32;
-    };
-    let back = switch (dataOpt) {
-      case (?data) data.3 [BACK];
-      case (_) 0 : Nat32;
-    };
+    let capacity = switch (dataOpt) { case (?data) nat32(data.0.size()); case (_) 0:Nat32 };
+    let front = switch (dataOpt) { case (?data) data.3[FRONT]; case (_) 0:Nat32 };
+    let back = switch (dataOpt) { case (?data) data.3[BACK]; case (_) 0:Nat32 };
 
     var started = false;
     var iterIndex = front;
 
     let iter = {
-      prev = func() : ?(K, V) {
+      prev = func(): ?(K, V) {
         started := true;
 
         switch (dataOpt) {
           case (?data) loop {
-            iterIndex := if (iterIndex == front)(back -% 1) % capacity else (iterIndex -% 1) % capacity;
+            iterIndex := if (iterIndex == front) (back -% 1) % capacity else (iterIndex -% 1) % capacity;
 
             let iterIndexNat = nat(iterIndex);
 
-            switch (data.0 [iterIndexNat]) {
-              case (?key) return ?(key, switch (data.1 [iterIndexNat]) { case (?value) value; case (_) trap("unreachable") });
+            switch (data.0[iterIndexNat]) {
+              case (?key) return ?(key, switch (data.1[iterIndexNat]) { case (?value) value; case (_) trap("unreachable") });
               case (_) if (iterIndex == front) return null;
             };
           };
@@ -666,17 +609,17 @@ module {
         };
       };
 
-      next = func() : ?(K, V) {
+      next = func(): ?(K, V) {
         started := true;
 
         switch (dataOpt) {
           case (?data) loop {
-            iterIndex := if (iterIndex == back)(front +% 1) % capacity else (iterIndex +% 1) % capacity;
+            iterIndex := if (iterIndex == back) (front +% 1) % capacity else (iterIndex +% 1) % capacity;
 
             let iterIndexNat = nat(iterIndex);
 
-            switch (data.0 [iterIndexNat]) {
-              case (?key) return ?(key, switch (data.1 [iterIndexNat]) { case (?value) value; case (_) trap("unreachable") });
+            switch (data.0[iterIndexNat]) {
+              case (?key) return ?(key, switch (data.1[iterIndexNat]) { case (?value) value; case (_) trap("unreachable") });
               case (_) if (iterIndex == back) return null;
             };
           };
@@ -685,17 +628,17 @@ module {
         };
       };
 
-      peekPrev = func() : ?(K, V) {
+      peekPrev = func(): ?(K, V) {
         var newIndex = iterIndex;
 
         switch (dataOpt) {
           case (?data) loop {
-            newIndex := if (newIndex == front)(back -% 1) % capacity else (newIndex -% 1) % capacity;
+            newIndex := if (newIndex == front) (back -% 1) % capacity else (newIndex -% 1) % capacity;
 
             let iterIndexNat = nat(iterIndex);
 
-            switch (data.0 [iterIndexNat]) {
-              case (?key) return ?(key, switch (data.1 [iterIndexNat]) { case (?value) value; case (_) trap("unreachable") });
+            switch (data.0[iterIndexNat]) {
+              case (?key) return ?(key, switch (data.1[iterIndexNat]) { case (?value) value; case (_) trap("unreachable") });
               case (_) if (newIndex == front) return null;
             };
           };
@@ -704,17 +647,17 @@ module {
         };
       };
 
-      peekNext = func() : ?(K, V) {
+      peekNext = func(): ?(K, V) {
         var newIndex = iterIndex;
 
         switch (dataOpt) {
           case (?data) loop {
-            newIndex := if (newIndex == back)(front +% 1) % capacity else (newIndex +% 1) % capacity;
+            newIndex := if (newIndex == back) (front +% 1) % capacity else (newIndex +% 1) % capacity;
 
             let iterIndexNat = nat(iterIndex);
 
-            switch (data.0 [iterIndexNat]) {
-              case (?key) return ?(key, switch (data.1 [iterIndexNat]) { case (?value) value; case (_) trap("unreachable") });
+            switch (data.0[iterIndexNat]) {
+              case (?key) return ?(key, switch (data.1[iterIndexNat]) { case (?value) value; case (_) trap("unreachable") });
               case (_) if (newIndex == back) return null;
             };
           };
@@ -723,14 +666,14 @@ module {
         };
       };
 
-      movePrev = func() : Iter<(K, V)> {
+      movePrev = func(): Iter<(K, V)> {
         started := true;
 
         switch (dataOpt) {
           case (?data) loop {
-            iterIndex := if (iterIndex == front)(back -% 1) % capacity else (iterIndex -% 1) % capacity;
+            iterIndex := if (iterIndex == front) (back -% 1) % capacity else (iterIndex -% 1) % capacity;
 
-            switch (data.0 [nat(iterIndex)]) {
+            switch (data.0[nat(iterIndex)]) {
               case (null) if (iterIndex == front) return iter;
               case (_) return iter;
             };
@@ -740,14 +683,14 @@ module {
         };
       };
 
-      moveNext = func() : Iter<(K, V)> {
+      moveNext = func(): Iter<(K, V)> {
         started := true;
 
         switch (dataOpt) {
           case (?data) loop {
-            iterIndex := if (iterIndex == back)(front +% 1) % capacity else (iterIndex +% 1) % capacity;
+            iterIndex := if (iterIndex == back) (front +% 1) % capacity else (iterIndex +% 1) % capacity;
 
-            switch (data.0 [nat(iterIndex)]) {
+            switch (data.0[nat(iterIndex)]) {
               case (null) if (iterIndex == back) return iter;
               case (_) return iter;
             };
@@ -757,13 +700,13 @@ module {
         };
       };
 
-      current = func() : ?(K, V) {
+      current = func(): ?(K, V) {
         switch (dataOpt) {
           case (?data) {
             let iterIndexNat = nat(iterIndex);
 
-            switch (data.0 [iterIndexNat]) {
-              case (?key) return ?(key, switch (data.1 [iterIndexNat]) { case (?value) value; case (_) trap("unreachable") });
+            switch (data.0[iterIndexNat]) {
+              case (?key) return ?(key, switch (data.1[iterIndexNat]) { case (?value) value; case (_) trap("unreachable") });
               case (_) null;
             };
           };
@@ -772,15 +715,15 @@ module {
         };
       };
 
-      started = func() : Bool {
+      started = func(): Bool {
         started;
       };
 
-      finished = func() : Bool {
+      finished = func(): Bool {
         started and (iterIndex == front or iterIndex == back);
       };
 
-      reset = func() : Iter<(K, V)> {
+      reset = func(): Iter<(K, V)> {
         started := false;
 
         iterIndex := front;
@@ -792,37 +735,28 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func entriesDesc<K, V>(map : Map<K, V>) : Iter<(K, V)> {
+  public func entriesDesc<K, V>(map: Map<K, V>): Iter<(K, V)> {
     let dataOpt = map[DATA];
 
-    let capacity = switch (dataOpt) {
-      case (?data) nat32(data.0.size());
-      case (_) 0 : Nat32;
-    };
-    let front = switch (dataOpt) {
-      case (?data) data.3 [FRONT];
-      case (_) 0 : Nat32;
-    };
-    let back = switch (dataOpt) {
-      case (?data) data.3 [BACK];
-      case (_) 0 : Nat32;
-    };
+    let capacity = switch (dataOpt) { case (?data) nat32(data.0.size()); case (_) 0:Nat32 };
+    let front = switch (dataOpt) { case (?data) data.3[FRONT]; case (_) 0:Nat32 };
+    let back = switch (dataOpt) { case (?data) data.3[BACK]; case (_) 0:Nat32 };
 
     var started = false;
     var iterIndex = back;
 
     let iter = {
-      prev = func() : ?(K, V) {
+      prev = func(): ?(K, V) {
         started := true;
 
         switch (dataOpt) {
           case (?data) loop {
-            iterIndex := if (iterIndex == back)(front +% 1) % capacity else (iterIndex +% 1) % capacity;
+            iterIndex := if (iterIndex == back) (front +% 1) % capacity else (iterIndex +% 1) % capacity;
 
             let iterIndexNat = nat(iterIndex);
 
-            switch (data.0 [iterIndexNat]) {
-              case (?key) return ?(key, switch (data.1 [iterIndexNat]) { case (?value) value; case (_) trap("unreachable") });
+            switch (data.0[iterIndexNat]) {
+              case (?key) return ?(key, switch (data.1[iterIndexNat]) { case (?value) value; case (_) trap("unreachable") });
               case (_) if (iterIndex == back) return null;
             };
           };
@@ -831,17 +765,17 @@ module {
         };
       };
 
-      next = func() : ?(K, V) {
+      next = func(): ?(K, V) {
         started := true;
 
         switch (dataOpt) {
           case (?data) loop {
-            iterIndex := if (iterIndex == front)(back -% 1) % capacity else (iterIndex -% 1) % capacity;
+            iterIndex := if (iterIndex == front) (back -% 1) % capacity else (iterIndex -% 1) % capacity;
 
             let iterIndexNat = nat(iterIndex);
 
-            switch (data.0 [iterIndexNat]) {
-              case (?key) return ?(key, switch (data.1 [iterIndexNat]) { case (?value) value; case (_) trap("unreachable") });
+            switch (data.0[iterIndexNat]) {
+              case (?key) return ?(key, switch (data.1[iterIndexNat]) { case (?value) value; case (_) trap("unreachable") });
               case (_) if (iterIndex == front) return null;
             };
           };
@@ -850,17 +784,17 @@ module {
         };
       };
 
-      peekPrev = func() : ?(K, V) {
+      peekPrev = func(): ?(K, V) {
         var newIndex = iterIndex;
 
         switch (dataOpt) {
           case (?data) loop {
-            newIndex := if (newIndex == back)(front +% 1) % capacity else (newIndex +% 1) % capacity;
+            newIndex := if (newIndex == back) (front +% 1) % capacity else (newIndex +% 1) % capacity;
 
             let iterIndexNat = nat(iterIndex);
 
-            switch (data.0 [iterIndexNat]) {
-              case (?key) return ?(key, switch (data.1 [iterIndexNat]) { case (?value) value; case (_) trap("unreachable") });
+            switch (data.0[iterIndexNat]) {
+              case (?key) return ?(key, switch (data.1[iterIndexNat]) { case (?value) value; case (_) trap("unreachable") });
               case (_) if (newIndex == back) return null;
             };
           };
@@ -869,17 +803,17 @@ module {
         };
       };
 
-      peekNext = func() : ?(K, V) {
+      peekNext = func(): ?(K, V) {
         var newIndex = iterIndex;
 
         switch (dataOpt) {
           case (?data) loop {
-            newIndex := if (newIndex == front)(back -% 1) % capacity else (newIndex -% 1) % capacity;
+            newIndex := if (newIndex == front) (back -% 1) % capacity else (newIndex -% 1) % capacity;
 
             let iterIndexNat = nat(iterIndex);
 
-            switch (data.0 [iterIndexNat]) {
-              case (?key) return ?(key, switch (data.1 [iterIndexNat]) { case (?value) value; case (_) trap("unreachable") });
+            switch (data.0[iterIndexNat]) {
+              case (?key) return ?(key, switch (data.1[iterIndexNat]) { case (?value) value; case (_) trap("unreachable") });
               case (_) if (newIndex == front) return null;
             };
           };
@@ -888,14 +822,14 @@ module {
         };
       };
 
-      movePrev = func() : Iter<(K, V)> {
+      movePrev = func(): Iter<(K, V)> {
         started := true;
 
         switch (dataOpt) {
           case (?data) loop {
-            iterIndex := if (iterIndex == back)(front +% 1) % capacity else (iterIndex +% 1) % capacity;
+            iterIndex := if (iterIndex == back) (front +% 1) % capacity else (iterIndex +% 1) % capacity;
 
-            switch (data.0 [nat(iterIndex)]) {
+            switch (data.0[nat(iterIndex)]) {
               case (null) if (iterIndex == back) return iter;
               case (_) return iter;
             };
@@ -905,14 +839,14 @@ module {
         };
       };
 
-      moveNext = func() : Iter<(K, V)> {
+      moveNext = func(): Iter<(K, V)> {
         started := true;
 
         switch (dataOpt) {
           case (?data) loop {
-            iterIndex := if (iterIndex == front)(back -% 1) % capacity else (iterIndex -% 1) % capacity;
+            iterIndex := if (iterIndex == front) (back -% 1) % capacity else (iterIndex -% 1) % capacity;
 
-            switch (data.0 [nat(iterIndex)]) {
+            switch (data.0[nat(iterIndex)]) {
               case (null) if (iterIndex == front) return iter;
               case (_) return iter;
             };
@@ -922,13 +856,13 @@ module {
         };
       };
 
-      current = func() : ?(K, V) {
+      current = func(): ?(K, V) {
         switch (dataOpt) {
           case (?data) {
             let iterIndexNat = nat(iterIndex);
 
-            switch (data.0 [iterIndexNat]) {
-              case (?key) return ?(key, switch (data.1 [iterIndexNat]) { case (?value) value; case (_) trap("unreachable") });
+            switch (data.0[iterIndexNat]) {
+              case (?key) return ?(key, switch (data.1[iterIndexNat]) { case (?value) value; case (_) trap("unreachable") });
               case (_) null;
             };
           };
@@ -937,15 +871,15 @@ module {
         };
       };
 
-      started = func() : Bool {
+      started = func(): Bool {
         started;
       };
 
-      finished = func() : Bool {
+      finished = func(): Bool {
         started and (iterIndex == front or iterIndex == back);
       };
 
-      reset = func() : Iter<(K, V)> {
+      reset = func(): Iter<(K, V)> {
         started := false;
 
         iterIndex := back;
@@ -957,58 +891,38 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func keysFrom<K, V>(map : Map<K, V>, hashUtils : HashUtils<K>, keyParam : ?K) : Iter<K> {
+  public func keysFrom<K, V>(map: Map<K, V>, hashUtils: HashUtils<K>, keyParam: ?K): Iter<K> {
     let dataOpt = map[DATA];
 
-    let capacity = switch (dataOpt) {
-      case (?data) nat32(data.0.size());
-      case (_) 0 : Nat32;
-    };
-    let front = switch (dataOpt) {
-      case (?data) data.3 [FRONT];
-      case (_) 0 : Nat32;
-    };
-    let back = switch (dataOpt) {
-      case (?data) data.3 [BACK];
-      case (_) 0 : Nat32;
-    };
-    let keys = switch (dataOpt) {
-      case (?data) data.0;
-      case (_)[var] : [var ?K];
-    };
-    let indexes = switch (dataOpt) {
-      case (?data) data.2;
-      case (_)[var] : [var Nat];
-    };
+    let capacity = switch (dataOpt) { case (?data) nat32(data.0.size()); case (_) 0:Nat32 };
+    let front = switch (dataOpt) { case (?data) data.3[FRONT]; case (_) 0:Nat32 };
+    let back = switch (dataOpt) { case (?data) data.3[BACK]; case (_) 0:Nat32 };
+    let keys = switch (dataOpt) { case (?data) data.0; case (_) [var]:[var ?K] };
+    let indexes = switch (dataOpt) { case (?data) data.2; case (_) [var]:[var Nat] };
 
-    var index = switch (keyParam) {
-      case (?someKey) indexes[nat(hashUtils.0 (someKey) % capacity +% capacity)];
-      case (_) NULL;
-    };
+    var index = switch (keyParam) { case (?someKey) indexes[nat(hashUtils.0(someKey) % capacity +% capacity)]; case (_) NULL };
 
-    loop if (
-      (
-        index == NULL,
-      ) or (
-        hashUtils.1 (
-          switch (keys[index]) { case (?key) key; case (_) trap("unreachable") },
-          switch (keyParam) { case (?key) key; case (_) trap("unreachable") },
-        ),
-      ),
-    ) {
+    loop if ((
+      index == NULL
+    ) or (
+      hashUtils.1(
+        switch (keys[index]) { case (?key) key; case (_) trap("unreachable") },
+        switch (keyParam) { case (?key) key; case (_) trap("unreachable") },
+      )
+    )) {
       var started = index != NULL;
 
       var iterIndex = if (index != NULL) nat32(index) else front;
 
       return let iter = {
-        prev = func() : ?K {
+        prev = func(): ?K {
           started := true;
 
           switch (dataOpt) {
             case (?data) loop {
-              iterIndex := if (iterIndex == front)(back -% 1) % capacity else (iterIndex -% 1) % capacity;
+              iterIndex := if (iterIndex == front) (back -% 1) % capacity else (iterIndex -% 1) % capacity;
 
-              switch (data.0 [nat(iterIndex)]) {
+              switch (data.0[nat(iterIndex)]) {
                 case (null) if (iterIndex == front) return null;
                 case (key) return key;
               };
@@ -1018,14 +932,14 @@ module {
           };
         };
 
-        next = func() : ?K {
+        next = func(): ?K {
           started := true;
 
           switch (dataOpt) {
             case (?data) loop {
-              iterIndex := if (iterIndex == back)(front +% 1) % capacity else (iterIndex +% 1) % capacity;
+              iterIndex := if (iterIndex == back) (front +% 1) % capacity else (iterIndex +% 1) % capacity;
 
-              switch (data.0 [nat(iterIndex)]) {
+              switch (data.0[nat(iterIndex)]) {
                 case (null) if (iterIndex == back) return null;
                 case (key) return key;
               };
@@ -1035,14 +949,14 @@ module {
           };
         };
 
-        peekPrev = func() : ?K {
+        peekPrev = func(): ?K {
           var newIndex = iterIndex;
 
           switch (dataOpt) {
             case (?data) loop {
-              newIndex := if (newIndex == front)(back -% 1) % capacity else (newIndex -% 1) % capacity;
+              newIndex := if (newIndex == front) (back -% 1) % capacity else (newIndex -% 1) % capacity;
 
-              switch (data.0 [nat(newIndex)]) {
+              switch (data.0[nat(newIndex)]) {
                 case (null) if (newIndex == front) return null;
                 case (key) return key;
               };
@@ -1052,14 +966,14 @@ module {
           };
         };
 
-        peekNext = func() : ?K {
+        peekNext = func(): ?K {
           var newIndex = iterIndex;
 
           switch (dataOpt) {
             case (?data) loop {
-              newIndex := if (newIndex == back)(front +% 1) % capacity else (newIndex +% 1) % capacity;
+              newIndex := if (newIndex == back) (front +% 1) % capacity else (newIndex +% 1) % capacity;
 
-              switch (data.0 [nat(newIndex)]) {
+              switch (data.0[nat(newIndex)]) {
                 case (null) if (newIndex == back) return null;
                 case (key) return key;
               };
@@ -1069,14 +983,14 @@ module {
           };
         };
 
-        movePrev = func() : Iter<K> {
+        movePrev = func(): Iter<K> {
           started := true;
 
           switch (dataOpt) {
             case (?data) loop {
-              iterIndex := if (iterIndex == front)(back -% 1) % capacity else (iterIndex -% 1) % capacity;
+              iterIndex := if (iterIndex == front) (back -% 1) % capacity else (iterIndex -% 1) % capacity;
 
-              switch (data.0 [nat(iterIndex)]) {
+              switch (data.0[nat(iterIndex)]) {
                 case (null) if (iterIndex == front) return iter;
                 case (_) return iter;
               };
@@ -1086,14 +1000,14 @@ module {
           };
         };
 
-        moveNext = func() : Iter<K> {
+        moveNext = func(): Iter<K> {
           started := true;
 
           switch (dataOpt) {
             case (?data) loop {
-              iterIndex := if (iterIndex == back)(front +% 1) % capacity else (iterIndex +% 1) % capacity;
+              iterIndex := if (iterIndex == back) (front +% 1) % capacity else (iterIndex +% 1) % capacity;
 
-              switch (data.0 [nat(iterIndex)]) {
+              switch (data.0[nat(iterIndex)]) {
                 case (null) if (iterIndex == back) return iter;
                 case (_) return iter;
               };
@@ -1103,25 +1017,22 @@ module {
           };
         };
 
-        current = func() : ?K {
+        current = func(): ?K {
           switch (dataOpt) {
-            case (?data) switch (data.0 [nat(iterIndex)]) {
-              case (null) null;
-              case (key) key;
-            };
+            case (?data) switch (data.0[nat(iterIndex)]) { case (null) null; case (key) key };
             case (_) null;
           };
         };
 
-        started = func() : Bool {
+        started = func(): Bool {
           started;
         };
 
-        finished = func() : Bool {
+        finished = func(): Bool {
           started and (iterIndex == front or iterIndex == back);
         };
 
-        reset = func() : Iter<K> {
+        reset = func(): Iter<K> {
           started := false;
 
           iterIndex := front;
@@ -1136,58 +1047,38 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func keysFromDesc<K, V>(map : Map<K, V>, hashUtils : HashUtils<K>, keyParam : ?K) : Iter<K> {
+  public func keysFromDesc<K, V>(map: Map<K, V>, hashUtils: HashUtils<K>, keyParam: ?K): Iter<K> {
     let dataOpt = map[DATA];
 
-    let capacity = switch (dataOpt) {
-      case (?data) nat32(data.0.size());
-      case (_) 0 : Nat32;
-    };
-    let front = switch (dataOpt) {
-      case (?data) data.3 [FRONT];
-      case (_) 0 : Nat32;
-    };
-    let back = switch (dataOpt) {
-      case (?data) data.3 [BACK];
-      case (_) 0 : Nat32;
-    };
-    let keys = switch (dataOpt) {
-      case (?data) data.0;
-      case (_)[var] : [var ?K];
-    };
-    let indexes = switch (dataOpt) {
-      case (?data) data.2;
-      case (_)[var] : [var Nat];
-    };
+    let capacity = switch (dataOpt) { case (?data) nat32(data.0.size()); case (_) 0:Nat32 };
+    let front = switch (dataOpt) { case (?data) data.3[FRONT]; case (_) 0:Nat32 };
+    let back = switch (dataOpt) { case (?data) data.3[BACK]; case (_) 0:Nat32 };
+    let keys = switch (dataOpt) { case (?data) data.0; case (_) [var]:[var ?K] };
+    let indexes = switch (dataOpt) { case (?data) data.2; case (_) [var]:[var Nat] };
 
-    var index = switch (keyParam) {
-      case (?someKey) indexes[nat(hashUtils.0 (someKey) % capacity +% capacity)];
-      case (_) NULL;
-    };
+    var index = switch (keyParam) { case (?someKey) indexes[nat(hashUtils.0(someKey) % capacity +% capacity)]; case (_) NULL };
 
-    loop if (
-      (
-        index == NULL,
-      ) or (
-        hashUtils.1 (
-          switch (keys[index]) { case (?key) key; case (_) trap("unreachable") },
-          switch (keyParam) { case (?key) key; case (_) trap("unreachable") },
-        ),
-      ),
-    ) {
+    loop if ((
+      index == NULL
+    ) or (
+      hashUtils.1(
+        switch (keys[index]) { case (?key) key; case (_) trap("unreachable") },
+        switch (keyParam) { case (?key) key; case (_) trap("unreachable") },
+      )
+    )) {
       var started = index != NULL;
 
       var iterIndex = if (index != NULL) nat32(index) else front;
 
       return let iter = {
-        prev = func() : ?K {
+        prev = func(): ?K {
           started := true;
 
           switch (dataOpt) {
             case (?data) loop {
-              iterIndex := if (iterIndex == back)(front +% 1) % capacity else (iterIndex +% 1) % capacity;
+              iterIndex := if (iterIndex == back) (front +% 1) % capacity else (iterIndex +% 1) % capacity;
 
-              switch (data.0 [nat(iterIndex)]) {
+              switch (data.0[nat(iterIndex)]) {
                 case (null) if (iterIndex == back) return null;
                 case (key) return key;
               };
@@ -1197,14 +1088,14 @@ module {
           };
         };
 
-        next = func() : ?K {
+        next = func(): ?K {
           started := true;
 
           switch (dataOpt) {
             case (?data) loop {
-              iterIndex := if (iterIndex == front)(back -% 1) % capacity else (iterIndex -% 1) % capacity;
+              iterIndex := if (iterIndex == front) (back -% 1) % capacity else (iterIndex -% 1) % capacity;
 
-              switch (data.0 [nat(iterIndex)]) {
+              switch (data.0[nat(iterIndex)]) {
                 case (null) if (iterIndex == front) return null;
                 case (key) return key;
               };
@@ -1214,14 +1105,14 @@ module {
           };
         };
 
-        peekPrev = func() : ?K {
+        peekPrev = func(): ?K {
           var newIndex = iterIndex;
 
           switch (dataOpt) {
             case (?data) loop {
-              newIndex := if (newIndex == back)(front +% 1) % capacity else (newIndex +% 1) % capacity;
+              newIndex := if (newIndex == back) (front +% 1) % capacity else (newIndex +% 1) % capacity;
 
-              switch (data.0 [nat(newIndex)]) {
+              switch (data.0[nat(newIndex)]) {
                 case (null) if (newIndex == back) return null;
                 case (key) return key;
               };
@@ -1231,14 +1122,14 @@ module {
           };
         };
 
-        peekNext = func() : ?K {
+        peekNext = func(): ?K {
           var newIndex = iterIndex;
 
           switch (dataOpt) {
             case (?data) loop {
-              newIndex := if (newIndex == front)(back -% 1) % capacity else (newIndex -% 1) % capacity;
+              newIndex := if (newIndex == front) (back -% 1) % capacity else (newIndex -% 1) % capacity;
 
-              switch (data.0 [nat(newIndex)]) {
+              switch (data.0[nat(newIndex)]) {
                 case (null) if (newIndex == front) return null;
                 case (key) return key;
               };
@@ -1248,14 +1139,14 @@ module {
           };
         };
 
-        movePrev = func() : Iter<K> {
+        movePrev = func(): Iter<K> {
           started := true;
 
           switch (dataOpt) {
             case (?data) loop {
-              iterIndex := if (iterIndex == back)(front +% 1) % capacity else (iterIndex +% 1) % capacity;
+              iterIndex := if (iterIndex == back) (front +% 1) % capacity else (iterIndex +% 1) % capacity;
 
-              switch (data.0 [nat(iterIndex)]) {
+              switch (data.0[nat(iterIndex)]) {
                 case (null) if (iterIndex == back) return iter;
                 case (_) return iter;
               };
@@ -1265,14 +1156,14 @@ module {
           };
         };
 
-        moveNext = func() : Iter<K> {
+        moveNext = func(): Iter<K> {
           started := true;
 
           switch (dataOpt) {
             case (?data) loop {
-              iterIndex := if (iterIndex == front)(back -% 1) % capacity else (iterIndex -% 1) % capacity;
+              iterIndex := if (iterIndex == front) (back -% 1) % capacity else (iterIndex -% 1) % capacity;
 
-              switch (data.0 [nat(iterIndex)]) {
+              switch (data.0[nat(iterIndex)]) {
                 case (null) if (iterIndex == front) return iter;
                 case (_) return iter;
               };
@@ -1282,25 +1173,22 @@ module {
           };
         };
 
-        current = func() : ?K {
+        current = func(): ?K {
           switch (dataOpt) {
-            case (?data) switch (data.0 [nat(iterIndex)]) {
-              case (null) null;
-              case (key) key;
-            };
+            case (?data) switch (data.0[nat(iterIndex)]) { case (null) null; case (key) key };
             case (_) null;
           };
         };
 
-        started = func() : Bool {
+        started = func(): Bool {
           started;
         };
 
-        finished = func() : Bool {
+        finished = func(): Bool {
           started and (iterIndex == front or iterIndex == back);
         };
 
-        reset = func() : Iter<K> {
+        reset = func(): Iter<K> {
           started := false;
 
           iterIndex := back;
@@ -1315,58 +1203,38 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func valsFrom<K, V>(map : Map<K, V>, hashUtils : HashUtils<K>, keyParam : ?K) : Iter<V> {
+  public func valsFrom<K, V>(map: Map<K, V>, hashUtils: HashUtils<K>, keyParam: ?K): Iter<V> {
     let dataOpt = map[DATA];
 
-    let capacity = switch (dataOpt) {
-      case (?data) nat32(data.0.size());
-      case (_) 0 : Nat32;
-    };
-    let front = switch (dataOpt) {
-      case (?data) data.3 [FRONT];
-      case (_) 0 : Nat32;
-    };
-    let back = switch (dataOpt) {
-      case (?data) data.3 [BACK];
-      case (_) 0 : Nat32;
-    };
-    let keys = switch (dataOpt) {
-      case (?data) data.0;
-      case (_)[var] : [var ?K];
-    };
-    let indexes = switch (dataOpt) {
-      case (?data) data.2;
-      case (_)[var] : [var Nat];
-    };
+    let capacity = switch (dataOpt) { case (?data) nat32(data.0.size()); case (_) 0:Nat32 };
+    let front = switch (dataOpt) { case (?data) data.3[FRONT]; case (_) 0:Nat32 };
+    let back = switch (dataOpt) { case (?data) data.3[BACK]; case (_) 0:Nat32 };
+    let keys = switch (dataOpt) { case (?data) data.0; case (_) [var]:[var ?K] };
+    let indexes = switch (dataOpt) { case (?data) data.2; case (_) [var]:[var Nat] };
 
-    var index = switch (keyParam) {
-      case (?someKey) indexes[nat(hashUtils.0 (someKey) % capacity +% capacity)];
-      case (_) NULL;
-    };
+    var index = switch (keyParam) { case (?someKey) indexes[nat(hashUtils.0(someKey) % capacity +% capacity)]; case (_) NULL };
 
-    loop if (
-      (
-        index == NULL,
-      ) or (
-        hashUtils.1 (
-          switch (keys[index]) { case (?key) key; case (_) trap("unreachable") },
-          switch (keyParam) { case (?key) key; case (_) trap("unreachable") },
-        ),
-      ),
-    ) {
+    loop if ((
+      index == NULL
+    ) or (
+      hashUtils.1(
+        switch (keys[index]) { case (?key) key; case (_) trap("unreachable") },
+        switch (keyParam) { case (?key) key; case (_) trap("unreachable") },
+      )
+    )) {
       var started = index != NULL;
 
       var iterIndex = if (index != NULL) nat32(index) else front;
 
       return let iter = {
-        prev = func() : ?V {
+        prev = func(): ?V {
           started := true;
 
           switch (dataOpt) {
             case (?data) loop {
-              iterIndex := if (iterIndex == front)(back -% 1) % capacity else (iterIndex -% 1) % capacity;
+              iterIndex := if (iterIndex == front) (back -% 1) % capacity else (iterIndex -% 1) % capacity;
 
-              switch (data.1 [nat(iterIndex)]) {
+              switch (data.1[nat(iterIndex)]) {
                 case (null) if (iterIndex == front) return null;
                 case (value) return value;
               };
@@ -1376,14 +1244,14 @@ module {
           };
         };
 
-        next = func() : ?V {
+        next = func(): ?V {
           started := true;
 
           switch (dataOpt) {
             case (?data) loop {
-              iterIndex := if (iterIndex == back)(front +% 1) % capacity else (iterIndex +% 1) % capacity;
+              iterIndex := if (iterIndex == back) (front +% 1) % capacity else (iterIndex +% 1) % capacity;
 
-              switch (data.1 [nat(iterIndex)]) {
+              switch (data.1[nat(iterIndex)]) {
                 case (null) if (iterIndex == back) return null;
                 case (value) return value;
               };
@@ -1393,14 +1261,14 @@ module {
           };
         };
 
-        peekPrev = func() : ?V {
+        peekPrev = func(): ?V {
           var newIndex = iterIndex;
 
           switch (dataOpt) {
             case (?data) loop {
-              newIndex := if (newIndex == front)(back -% 1) % capacity else (newIndex -% 1) % capacity;
+              newIndex := if (newIndex == front) (back -% 1) % capacity else (newIndex -% 1) % capacity;
 
-              switch (data.1 [nat(newIndex)]) {
+              switch (data.1[nat(newIndex)]) {
                 case (null) if (newIndex == front) return null;
                 case (value) return value;
               };
@@ -1410,14 +1278,14 @@ module {
           };
         };
 
-        peekNext = func() : ?V {
+        peekNext = func(): ?V {
           var newIndex = iterIndex;
 
           switch (dataOpt) {
             case (?data) loop {
-              newIndex := if (newIndex == back)(front +% 1) % capacity else (newIndex +% 1) % capacity;
+              newIndex := if (newIndex == back) (front +% 1) % capacity else (newIndex +% 1) % capacity;
 
-              switch (data.1 [nat(newIndex)]) {
+              switch (data.1[nat(newIndex)]) {
                 case (null) if (newIndex == back) return null;
                 case (value) return value;
               };
@@ -1427,14 +1295,14 @@ module {
           };
         };
 
-        movePrev = func() : Iter<V> {
+        movePrev = func(): Iter<V> {
           started := true;
 
           switch (dataOpt) {
             case (?data) loop {
-              iterIndex := if (iterIndex == front)(back -% 1) % capacity else (iterIndex -% 1) % capacity;
+              iterIndex := if (iterIndex == front) (back -% 1) % capacity else (iterIndex -% 1) % capacity;
 
-              switch (data.1 [nat(iterIndex)]) {
+              switch (data.1[nat(iterIndex)]) {
                 case (null) if (iterIndex == front) return iter;
                 case (_) return iter;
               };
@@ -1444,14 +1312,14 @@ module {
           };
         };
 
-        moveNext = func() : Iter<V> {
+        moveNext = func(): Iter<V> {
           started := true;
 
           switch (dataOpt) {
             case (?data) loop {
-              iterIndex := if (iterIndex == back)(front +% 1) % capacity else (iterIndex +% 1) % capacity;
+              iterIndex := if (iterIndex == back) (front +% 1) % capacity else (iterIndex +% 1) % capacity;
 
-              switch (data.1 [nat(iterIndex)]) {
+              switch (data.1[nat(iterIndex)]) {
                 case (null) if (iterIndex == back) return iter;
                 case (_) return iter;
               };
@@ -1461,25 +1329,22 @@ module {
           };
         };
 
-        current = func() : ?V {
+        current = func(): ?V {
           switch (dataOpt) {
-            case (?data) switch (data.1 [nat(iterIndex)]) {
-              case (null) null;
-              case (value) value;
-            };
+            case (?data) switch (data.1[nat(iterIndex)]) { case (null) null; case (value) value };
             case (_) null;
           };
         };
 
-        started = func() : Bool {
+        started = func(): Bool {
           started;
         };
 
-        finished = func() : Bool {
+        finished = func(): Bool {
           started and (iterIndex == front or iterIndex == back);
         };
 
-        reset = func() : Iter<V> {
+        reset = func(): Iter<V> {
           started := false;
 
           iterIndex := front;
@@ -1494,58 +1359,38 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func valsFromDesc<K, V>(map : Map<K, V>, hashUtils : HashUtils<K>, keyParam : ?K) : Iter<V> {
+  public func valsFromDesc<K, V>(map: Map<K, V>, hashUtils: HashUtils<K>, keyParam: ?K): Iter<V> {
     let dataOpt = map[DATA];
 
-    let capacity = switch (dataOpt) {
-      case (?data) nat32(data.0.size());
-      case (_) 0 : Nat32;
-    };
-    let front = switch (dataOpt) {
-      case (?data) data.3 [FRONT];
-      case (_) 0 : Nat32;
-    };
-    let back = switch (dataOpt) {
-      case (?data) data.3 [BACK];
-      case (_) 0 : Nat32;
-    };
-    let keys = switch (dataOpt) {
-      case (?data) data.0;
-      case (_)[var] : [var ?K];
-    };
-    let indexes = switch (dataOpt) {
-      case (?data) data.2;
-      case (_)[var] : [var Nat];
-    };
+    let capacity = switch (dataOpt) { case (?data) nat32(data.0.size()); case (_) 0:Nat32 };
+    let front = switch (dataOpt) { case (?data) data.3[FRONT]; case (_) 0:Nat32 };
+    let back = switch (dataOpt) { case (?data) data.3[BACK]; case (_) 0:Nat32 };
+    let keys = switch (dataOpt) { case (?data) data.0; case (_) [var]:[var ?K] };
+    let indexes = switch (dataOpt) { case (?data) data.2; case (_) [var]:[var Nat] };
 
-    var index = switch (keyParam) {
-      case (?someKey) indexes[nat(hashUtils.0 (someKey) % capacity +% capacity)];
-      case (_) NULL;
-    };
+    var index = switch (keyParam) { case (?someKey) indexes[nat(hashUtils.0(someKey) % capacity +% capacity)]; case (_) NULL };
 
-    loop if (
-      (
-        index == NULL,
-      ) or (
-        hashUtils.1 (
-          switch (keys[index]) { case (?key) key; case (_) trap("unreachable") },
-          switch (keyParam) { case (?key) key; case (_) trap("unreachable") },
-        ),
-      ),
-    ) {
+    loop if ((
+      index == NULL
+    ) or (
+      hashUtils.1(
+        switch (keys[index]) { case (?key) key; case (_) trap("unreachable") },
+        switch (keyParam) { case (?key) key; case (_) trap("unreachable") },
+      )
+    )) {
       var started = index != NULL;
 
       var iterIndex = if (index != NULL) nat32(index) else front;
 
       return let iter = {
-        prev = func() : ?V {
+        prev = func(): ?V {
           started := true;
 
           switch (dataOpt) {
             case (?data) loop {
-              iterIndex := if (iterIndex == back)(front +% 1) % capacity else (iterIndex +% 1) % capacity;
+              iterIndex := if (iterIndex == back) (front +% 1) % capacity else (iterIndex +% 1) % capacity;
 
-              switch (data.1 [nat(iterIndex)]) {
+              switch (data.1[nat(iterIndex)]) {
                 case (null) if (iterIndex == back) return null;
                 case (value) return value;
               };
@@ -1555,14 +1400,14 @@ module {
           };
         };
 
-        next = func() : ?V {
+        next = func(): ?V {
           started := true;
 
           switch (dataOpt) {
             case (?data) loop {
-              iterIndex := if (iterIndex == front)(back -% 1) % capacity else (iterIndex -% 1) % capacity;
+              iterIndex := if (iterIndex == front) (back -% 1) % capacity else (iterIndex -% 1) % capacity;
 
-              switch (data.1 [nat(iterIndex)]) {
+              switch (data.1[nat(iterIndex)]) {
                 case (null) if (iterIndex == front) return null;
                 case (value) return value;
               };
@@ -1572,14 +1417,14 @@ module {
           };
         };
 
-        peekPrev = func() : ?V {
+        peekPrev = func(): ?V {
           var newIndex = iterIndex;
 
           switch (dataOpt) {
             case (?data) loop {
-              newIndex := if (newIndex == back)(front +% 1) % capacity else (newIndex +% 1) % capacity;
+              newIndex := if (newIndex == back) (front +% 1) % capacity else (newIndex +% 1) % capacity;
 
-              switch (data.1 [nat(newIndex)]) {
+              switch (data.1[nat(newIndex)]) {
                 case (null) if (newIndex == back) return null;
                 case (value) return value;
               };
@@ -1589,14 +1434,14 @@ module {
           };
         };
 
-        peekNext = func() : ?V {
+        peekNext = func(): ?V {
           var newIndex = iterIndex;
 
           switch (dataOpt) {
             case (?data) loop {
-              newIndex := if (newIndex == front)(back -% 1) % capacity else (newIndex -% 1) % capacity;
+              newIndex := if (newIndex == front) (back -% 1) % capacity else (newIndex -% 1) % capacity;
 
-              switch (data.1 [nat(newIndex)]) {
+              switch (data.1[nat(newIndex)]) {
                 case (null) if (newIndex == front) return null;
                 case (value) return value;
               };
@@ -1606,14 +1451,14 @@ module {
           };
         };
 
-        movePrev = func() : Iter<V> {
+        movePrev = func(): Iter<V> {
           started := true;
 
           switch (dataOpt) {
             case (?data) loop {
-              iterIndex := if (iterIndex == back)(front +% 1) % capacity else (iterIndex +% 1) % capacity;
+              iterIndex := if (iterIndex == back) (front +% 1) % capacity else (iterIndex +% 1) % capacity;
 
-              switch (data.1 [nat(iterIndex)]) {
+              switch (data.1[nat(iterIndex)]) {
                 case (null) if (iterIndex == back) return iter;
                 case (_) return iter;
               };
@@ -1623,14 +1468,14 @@ module {
           };
         };
 
-        moveNext = func() : Iter<V> {
+        moveNext = func(): Iter<V> {
           started := true;
 
           switch (dataOpt) {
             case (?data) loop {
-              iterIndex := if (iterIndex == front)(back -% 1) % capacity else (iterIndex -% 1) % capacity;
+              iterIndex := if (iterIndex == front) (back -% 1) % capacity else (iterIndex -% 1) % capacity;
 
-              switch (data.1 [nat(iterIndex)]) {
+              switch (data.1[nat(iterIndex)]) {
                 case (null) if (iterIndex == front) return iter;
                 case (_) return iter;
               };
@@ -1640,25 +1485,22 @@ module {
           };
         };
 
-        current = func() : ?V {
+        current = func(): ?V {
           switch (dataOpt) {
-            case (?data) switch (data.1 [nat(iterIndex)]) {
-              case (null) null;
-              case (value) value;
-            };
+            case (?data) switch (data.1[nat(iterIndex)]) { case (null) null; case (value) value };
             case (_) null;
           };
         };
 
-        started = func() : Bool {
+        started = func(): Bool {
           started;
         };
 
-        finished = func() : Bool {
+        finished = func(): Bool {
           started and (iterIndex == front or iterIndex == back);
         };
 
-        reset = func() : Iter<V> {
+        reset = func(): Iter<V> {
           started := false;
 
           iterIndex := back;
@@ -1673,61 +1515,41 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func entriesFrom<K, V>(map : Map<K, V>, hashUtils : HashUtils<K>, keyParam : ?K) : Iter<(K, V)> {
+  public func entriesFrom<K, V>(map: Map<K, V>, hashUtils: HashUtils<K>, keyParam: ?K): Iter<(K, V)> {
     let dataOpt = map[DATA];
 
-    let capacity = switch (dataOpt) {
-      case (?data) nat32(data.0.size());
-      case (_) 0 : Nat32;
-    };
-    let front = switch (dataOpt) {
-      case (?data) data.3 [FRONT];
-      case (_) 0 : Nat32;
-    };
-    let back = switch (dataOpt) {
-      case (?data) data.3 [BACK];
-      case (_) 0 : Nat32;
-    };
-    let keys = switch (dataOpt) {
-      case (?data) data.0;
-      case (_)[var] : [var ?K];
-    };
-    let indexes = switch (dataOpt) {
-      case (?data) data.2;
-      case (_)[var] : [var Nat];
-    };
+    let capacity = switch (dataOpt) { case (?data) nat32(data.0.size()); case (_) 0:Nat32 };
+    let front = switch (dataOpt) { case (?data) data.3[FRONT]; case (_) 0:Nat32 };
+    let back = switch (dataOpt) { case (?data) data.3[BACK]; case (_) 0:Nat32 };
+    let keys = switch (dataOpt) { case (?data) data.0; case (_) [var]:[var ?K] };
+    let indexes = switch (dataOpt) { case (?data) data.2; case (_) [var]:[var Nat] };
 
-    var index = switch (keyParam) {
-      case (?someKey) indexes[nat(hashUtils.0 (someKey) % capacity +% capacity)];
-      case (_) NULL;
-    };
+    var index = switch (keyParam) { case (?someKey) indexes[nat(hashUtils.0(someKey) % capacity +% capacity)]; case (_) NULL };
 
-    loop if (
-      (
-        index == NULL,
-      ) or (
-        hashUtils.1 (
-          switch (keys[index]) { case (?key) key; case (_) trap("unreachable") },
-          switch (keyParam) { case (?key) key; case (_) trap("unreachable") },
-        ),
-      ),
-    ) {
+    loop if ((
+      index == NULL
+    ) or (
+      hashUtils.1(
+        switch (keys[index]) { case (?key) key; case (_) trap("unreachable") },
+        switch (keyParam) { case (?key) key; case (_) trap("unreachable") },
+      )
+    )) {
       var started = index != NULL;
 
       var iterIndex = if (index != NULL) nat32(index) else front;
 
       return let iter = {
-        prev = func() : ?(K, V) {
+        prev = func(): ?(K, V) {
           started := true;
 
           switch (dataOpt) {
             case (?data) loop {
-              iterIndex := if (iterIndex == front)(back -% 1) % capacity else (iterIndex -% 1) % capacity;
+              iterIndex := if (iterIndex == front) (back -% 1) % capacity else (iterIndex -% 1) % capacity;
 
               let iterIndexNat = nat(iterIndex);
 
-              switch (data.0 [iterIndexNat]) {
-                case (?key) return ?(key, switch (data.1 [iterIndexNat]) { case (?value) value; case (_) trap("unreachable") });
+              switch (data.0[iterIndexNat]) {
+                case (?key) return ?(key, switch (data.1[iterIndexNat]) { case (?value) value; case (_) trap("unreachable") });
                 case (_) if (iterIndex == front) return null;
               };
             };
@@ -1736,17 +1558,17 @@ module {
           };
         };
 
-        next = func() : ?(K, V) {
+        next = func(): ?(K, V) {
           started := true;
 
           switch (dataOpt) {
             case (?data) loop {
-              iterIndex := if (iterIndex == back)(front +% 1) % capacity else (iterIndex +% 1) % capacity;
+              iterIndex := if (iterIndex == back) (front +% 1) % capacity else (iterIndex +% 1) % capacity;
 
               let iterIndexNat = nat(iterIndex);
 
-              switch (data.0 [iterIndexNat]) {
-                case (?key) return ?(key, switch (data.1 [iterIndexNat]) { case (?value) value; case (_) trap("unreachable") });
+              switch (data.0[iterIndexNat]) {
+                case (?key) return ?(key, switch (data.1[iterIndexNat]) { case (?value) value; case (_) trap("unreachable") });
                 case (_) if (iterIndex == back) return null;
               };
             };
@@ -1755,17 +1577,17 @@ module {
           };
         };
 
-        peekPrev = func() : ?(K, V) {
+        peekPrev = func(): ?(K, V) {
           var newIndex = iterIndex;
 
           switch (dataOpt) {
             case (?data) loop {
-              newIndex := if (newIndex == front)(back -% 1) % capacity else (newIndex -% 1) % capacity;
+              newIndex := if (newIndex == front) (back -% 1) % capacity else (newIndex -% 1) % capacity;
 
               let iterIndexNat = nat(iterIndex);
 
-              switch (data.0 [iterIndexNat]) {
-                case (?key) return ?(key, switch (data.1 [iterIndexNat]) { case (?value) value; case (_) trap("unreachable") });
+              switch (data.0[iterIndexNat]) {
+                case (?key) return ?(key, switch (data.1[iterIndexNat]) { case (?value) value; case (_) trap("unreachable") });
                 case (_) if (newIndex == front) return null;
               };
             };
@@ -1774,17 +1596,17 @@ module {
           };
         };
 
-        peekNext = func() : ?(K, V) {
+        peekNext = func(): ?(K, V) {
           var newIndex = iterIndex;
 
           switch (dataOpt) {
             case (?data) loop {
-              newIndex := if (newIndex == back)(front +% 1) % capacity else (newIndex +% 1) % capacity;
+              newIndex := if (newIndex == back) (front +% 1) % capacity else (newIndex +% 1) % capacity;
 
               let iterIndexNat = nat(iterIndex);
 
-              switch (data.0 [iterIndexNat]) {
-                case (?key) return ?(key, switch (data.1 [iterIndexNat]) { case (?value) value; case (_) trap("unreachable") });
+              switch (data.0[iterIndexNat]) {
+                case (?key) return ?(key, switch (data.1[iterIndexNat]) { case (?value) value; case (_) trap("unreachable") });
                 case (_) if (newIndex == back) return null;
               };
             };
@@ -1793,14 +1615,14 @@ module {
           };
         };
 
-        movePrev = func() : Iter<(K, V)> {
+        movePrev = func(): Iter<(K, V)> {
           started := true;
 
           switch (dataOpt) {
             case (?data) loop {
-              iterIndex := if (iterIndex == front)(back -% 1) % capacity else (iterIndex -% 1) % capacity;
+              iterIndex := if (iterIndex == front) (back -% 1) % capacity else (iterIndex -% 1) % capacity;
 
-              switch (data.0 [nat(iterIndex)]) {
+              switch (data.0[nat(iterIndex)]) {
                 case (null) if (iterIndex == front) return iter;
                 case (_) return iter;
               };
@@ -1810,14 +1632,14 @@ module {
           };
         };
 
-        moveNext = func() : Iter<(K, V)> {
+        moveNext = func(): Iter<(K, V)> {
           started := true;
 
           switch (dataOpt) {
             case (?data) loop {
-              iterIndex := if (iterIndex == back)(front +% 1) % capacity else (iterIndex +% 1) % capacity;
+              iterIndex := if (iterIndex == back) (front +% 1) % capacity else (iterIndex +% 1) % capacity;
 
-              switch (data.0 [nat(iterIndex)]) {
+              switch (data.0[nat(iterIndex)]) {
                 case (null) if (iterIndex == back) return iter;
                 case (_) return iter;
               };
@@ -1827,13 +1649,13 @@ module {
           };
         };
 
-        current = func() : ?(K, V) {
+        current = func(): ?(K, V) {
           switch (dataOpt) {
             case (?data) {
               let iterIndexNat = nat(iterIndex);
 
-              switch (data.0 [iterIndexNat]) {
-                case (?key) return ?(key, switch (data.1 [iterIndexNat]) { case (?value) value; case (_) trap("unreachable") });
+              switch (data.0[iterIndexNat]) {
+                case (?key) return ?(key, switch (data.1[iterIndexNat]) { case (?value) value; case (_) trap("unreachable") });
                 case (_) null;
               };
             };
@@ -1842,15 +1664,15 @@ module {
           };
         };
 
-        started = func() : Bool {
+        started = func(): Bool {
           started;
         };
 
-        finished = func() : Bool {
+        finished = func(): Bool {
           started and (iterIndex == front or iterIndex == back);
         };
 
-        reset = func() : Iter<(K, V)> {
+        reset = func(): Iter<(K, V)> {
           started := false;
 
           iterIndex := front;
@@ -1865,61 +1687,41 @@ module {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public func entriesFromDesc<K, V>(map : Map<K, V>, hashUtils : HashUtils<K>, keyParam : ?K) : Iter<(K, V)> {
+  public func entriesFromDesc<K, V>(map: Map<K, V>, hashUtils: HashUtils<K>, keyParam: ?K): Iter<(K, V)> {
     let dataOpt = map[DATA];
 
-    let capacity = switch (dataOpt) {
-      case (?data) nat32(data.0.size());
-      case (_) 0 : Nat32;
-    };
-    let front = switch (dataOpt) {
-      case (?data) data.3 [FRONT];
-      case (_) 0 : Nat32;
-    };
-    let back = switch (dataOpt) {
-      case (?data) data.3 [BACK];
-      case (_) 0 : Nat32;
-    };
-    let keys = switch (dataOpt) {
-      case (?data) data.0;
-      case (_)[var] : [var ?K];
-    };
-    let indexes = switch (dataOpt) {
-      case (?data) data.2;
-      case (_)[var] : [var Nat];
-    };
+    let capacity = switch (dataOpt) { case (?data) nat32(data.0.size()); case (_) 0:Nat32 };
+    let front = switch (dataOpt) { case (?data) data.3[FRONT]; case (_) 0:Nat32 };
+    let back = switch (dataOpt) { case (?data) data.3[BACK]; case (_) 0:Nat32 };
+    let keys = switch (dataOpt) { case (?data) data.0; case (_) [var]:[var ?K] };
+    let indexes = switch (dataOpt) { case (?data) data.2; case (_) [var]:[var Nat] };
 
-    var index = switch (keyParam) {
-      case (?someKey) indexes[nat(hashUtils.0 (someKey) % capacity +% capacity)];
-      case (_) NULL;
-    };
+    var index = switch (keyParam) { case (?someKey) indexes[nat(hashUtils.0(someKey) % capacity +% capacity)]; case (_) NULL };
 
-    loop if (
-      (
-        index == NULL,
-      ) or (
-        hashUtils.1 (
-          switch (keys[index]) { case (?key) key; case (_) trap("unreachable") },
-          switch (keyParam) { case (?key) key; case (_) trap("unreachable") },
-        ),
-      ),
-    ) {
+    loop if ((
+      index == NULL
+    ) or (
+      hashUtils.1(
+        switch (keys[index]) { case (?key) key; case (_) trap("unreachable") },
+        switch (keyParam) { case (?key) key; case (_) trap("unreachable") },
+      )
+    )) {
       var started = index != NULL;
 
       var iterIndex = if (index != NULL) nat32(index) else front;
 
       return let iter = {
-        prev = func() : ?(K, V) {
+        prev = func(): ?(K, V) {
           started := true;
 
           switch (dataOpt) {
             case (?data) loop {
-              iterIndex := if (iterIndex == back)(front +% 1) % capacity else (iterIndex +% 1) % capacity;
+              iterIndex := if (iterIndex == back) (front +% 1) % capacity else (iterIndex +% 1) % capacity;
 
               let iterIndexNat = nat(iterIndex);
 
-              switch (data.0 [iterIndexNat]) {
-                case (?key) return ?(key, switch (data.1 [iterIndexNat]) { case (?value) value; case (_) trap("unreachable") });
+              switch (data.0[iterIndexNat]) {
+                case (?key) return ?(key, switch (data.1[iterIndexNat]) { case (?value) value; case (_) trap("unreachable") });
                 case (_) if (iterIndex == back) return null;
               };
             };
@@ -1928,17 +1730,17 @@ module {
           };
         };
 
-        next = func() : ?(K, V) {
+        next = func(): ?(K, V) {
           started := true;
 
           switch (dataOpt) {
             case (?data) loop {
-              iterIndex := if (iterIndex == front)(back -% 1) % capacity else (iterIndex -% 1) % capacity;
+              iterIndex := if (iterIndex == front) (back -% 1) % capacity else (iterIndex -% 1) % capacity;
 
               let iterIndexNat = nat(iterIndex);
 
-              switch (data.0 [iterIndexNat]) {
-                case (?key) return ?(key, switch (data.1 [iterIndexNat]) { case (?value) value; case (_) trap("unreachable") });
+              switch (data.0[iterIndexNat]) {
+                case (?key) return ?(key, switch (data.1[iterIndexNat]) { case (?value) value; case (_) trap("unreachable") });
                 case (_) if (iterIndex == front) return null;
               };
             };
@@ -1947,17 +1749,17 @@ module {
           };
         };
 
-        peekPrev = func() : ?(K, V) {
+        peekPrev = func(): ?(K, V) {
           var newIndex = iterIndex;
 
           switch (dataOpt) {
             case (?data) loop {
-              newIndex := if (newIndex == back)(front +% 1) % capacity else (newIndex +% 1) % capacity;
+              newIndex := if (newIndex == back) (front +% 1) % capacity else (newIndex +% 1) % capacity;
 
               let iterIndexNat = nat(iterIndex);
 
-              switch (data.0 [iterIndexNat]) {
-                case (?key) return ?(key, switch (data.1 [iterIndexNat]) { case (?value) value; case (_) trap("unreachable") });
+              switch (data.0[iterIndexNat]) {
+                case (?key) return ?(key, switch (data.1[iterIndexNat]) { case (?value) value; case (_) trap("unreachable") });
                 case (_) if (newIndex == back) return null;
               };
             };
@@ -1966,17 +1768,17 @@ module {
           };
         };
 
-        peekNext = func() : ?(K, V) {
+        peekNext = func(): ?(K, V) {
           var newIndex = iterIndex;
 
           switch (dataOpt) {
             case (?data) loop {
-              newIndex := if (newIndex == front)(back -% 1) % capacity else (newIndex -% 1) % capacity;
+              newIndex := if (newIndex == front) (back -% 1) % capacity else (newIndex -% 1) % capacity;
 
               let iterIndexNat = nat(iterIndex);
 
-              switch (data.0 [iterIndexNat]) {
-                case (?key) return ?(key, switch (data.1 [iterIndexNat]) { case (?value) value; case (_) trap("unreachable") });
+              switch (data.0[iterIndexNat]) {
+                case (?key) return ?(key, switch (data.1[iterIndexNat]) { case (?value) value; case (_) trap("unreachable") });
                 case (_) if (newIndex == front) return null;
               };
             };
@@ -1985,14 +1787,14 @@ module {
           };
         };
 
-        movePrev = func() : Iter<(K, V)> {
+        movePrev = func(): Iter<(K, V)> {
           started := true;
 
           switch (dataOpt) {
             case (?data) loop {
-              iterIndex := if (iterIndex == back)(front +% 1) % capacity else (iterIndex +% 1) % capacity;
+              iterIndex := if (iterIndex == back) (front +% 1) % capacity else (iterIndex +% 1) % capacity;
 
-              switch (data.0 [nat(iterIndex)]) {
+              switch (data.0[nat(iterIndex)]) {
                 case (null) if (iterIndex == back) return iter;
                 case (_) return iter;
               };
@@ -2002,14 +1804,14 @@ module {
           };
         };
 
-        moveNext = func() : Iter<(K, V)> {
+        moveNext = func(): Iter<(K, V)> {
           started := true;
 
           switch (dataOpt) {
             case (?data) loop {
-              iterIndex := if (iterIndex == front)(back -% 1) % capacity else (iterIndex -% 1) % capacity;
+              iterIndex := if (iterIndex == front) (back -% 1) % capacity else (iterIndex -% 1) % capacity;
 
-              switch (data.0 [nat(iterIndex)]) {
+              switch (data.0[nat(iterIndex)]) {
                 case (null) if (iterIndex == front) return iter;
                 case (_) return iter;
               };
@@ -2019,13 +1821,13 @@ module {
           };
         };
 
-        current = func() : ?(K, V) {
+        current = func(): ?(K, V) {
           switch (dataOpt) {
             case (?data) {
               let iterIndexNat = nat(iterIndex);
 
-              switch (data.0 [iterIndexNat]) {
-                case (?key) return ?(key, switch (data.1 [iterIndexNat]) { case (?value) value; case (_) trap("unreachable") });
+              switch (data.0[iterIndexNat]) {
+                case (?key) return ?(key, switch (data.1[iterIndexNat]) { case (?value) value; case (_) trap("unreachable") });
                 case (_) null;
               };
             };
@@ -2034,15 +1836,15 @@ module {
           };
         };
 
-        started = func() : Bool {
+        started = func(): Bool {
           started;
         };
 
-        finished = func() : Bool {
+        finished = func(): Bool {
           started and (iterIndex == front or iterIndex == back);
         };
 
-        reset = func() : Iter<(K, V)> {
+        reset = func(): Iter<(K, V)> {
           started := false;
 
           iterIndex := back;

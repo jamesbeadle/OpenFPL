@@ -4,10 +4,10 @@ module {
   public type DecodingError = {
     #unexpectedEndOfBytes;
     #unexpectedBreak;
-    #invalid : Text;
+    #invalid: Text;
   };
 
   public type EncodingError = {
-    #invalidValue : Text;
+    #invalidValue: Text;
   };
-};
+}

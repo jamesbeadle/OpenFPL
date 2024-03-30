@@ -1,17 +1,17 @@
 import { fromText = principalFromText } "mo:base/Principal";
 
-module {
+module { 
 
   public type Predecessors = { #null_ };
 
   public type State = {
-    var canister_id : Principal;
+    var canister_id: Principal;
     var server : ?Principal;
     var clients : [Principal];
     var admins : [Principal];
     var minimum_balance : Nat;
-    var reserved : Nat;
-  };
+    var reserved : Nat
+  }; 
 
   public type InitParams = {
     subaccount : Nat;
@@ -22,7 +22,7 @@ module {
     self : Principal;
   };
 
-  public func init(params : InitParams) : State = {
+  public func init(params: InitParams): State = {
     var reserved = 0;
     var subaccount = null;
     var canister_id = principalFromText("aaaaa-aa");
@@ -32,4 +32,4 @@ module {
     var admins = params.admins;
   };
 
-};
+}
