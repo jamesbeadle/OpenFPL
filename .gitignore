@@ -18,4 +18,4 @@ node_modules/
 dist/
 
 .mops/
-sns/utils/ic_admin
+sns/utils/ic_admin.pem
