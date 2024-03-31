@@ -4,5 +4,8 @@
   },
   "OpenFPL_frontend": {
     "ic": "bgpwv-eqaaa-aaaal-qb6eq-cai"
+  },
+  "neuron_controller": {
+    "ic": "hqfmc-cqaaa-aaaal-qitcq-cai"
   }
 }
