@@ -11,15 +11,14 @@ echo "Register Generic Proposal Function 1 with SNS"
 
 PROPOSAL="(
     record {
-        title = \"Add Generic Proposal type to create SNS controlled neuron\";          
+        title = \"Create CreateDAONeuron Callback Function\";          
         url = \"https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo\";        
-        summary = \"Adding a new generic proposal that creates the DAO's neuron with 1 ICP to be funded by the DAO's treasury.\";
+        summary = \"Proposal to create the endpoint for adding the callback function for creating the DAO controlled neuron.\";
         action = opt variant {
             AddGenericNervousSystemFunction = record {
                 id = 19000 : nat64;
-                name = \"Create DAO neuron.\";
-                description = opt \"To create the callback functions for creating the DAO controlled neuron with 1 ICP.
-                This proposal creates a neuron with 1 ICP.\";
+                name = \"Add CreateDAONeuron Callback Function.\";
+                description = opt \"Proposal to create the endpoint for adding the callback function for creating the DAO controlled neuron.\";
                 function_type = opt variant { 
                     GenericNervousSystemFunction = record { 
                         validator_canister_id = opt principal \"bboqb-jiaaa-aaaal-qb6ea-cai\"; 
@@ -39,15 +38,14 @@ echo "Register Generic Proposal Function 2 with SNS"
 
 PROPOSAL="(
     record {
-        title = \"Add Generic Proposal type to create manage SNS controlled neuron endpoints.\";          
+        title = \"Create ExecuteManageNeuron Callback Function.\";          
         url = \"https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo\";        
-        summary = \"Adding a new generic proposal that creates the DAO's neuron with 1 ICP to be funded by the DAO's treasury.\";
+        summary = \"Proposal to create the endpoint for adding the callback function for managing the DAO controlled neuron.\";
         action = opt variant {
             AddGenericNervousSystemFunction = record {
                 id = 20000 : nat64;
-                name = \"Manage DAO neuron.\";
-                description = opt \"To create the callback functions for managing the DAO controlled neuron.
-                This proposal creates a neuron with 1 ICP.\";
+                name = \"Add ManageDAONeuron Callback Function.\";
+                description = opt \"Proposal to create the endpoint for adding the callback function for managing the DAO controlled neuron.\";
                 function_type = opt variant { 
                     GenericNervousSystemFunction = record { 
                         validator_canister_id = opt principal \"bboqb-jiaaa-aaaal-qb6ea-cai\"; 
@@ -67,14 +65,14 @@ echo "Register Generic Proposal Function 3 with SNS"
 
 PROPOSAL="(
     record {
-        title = \"Add a new custom SNS function to increase a Player's Value\";          
+        title = \"Create RevaluePlayerUp Callback Function\";          
         url = \"https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo\";        
-        summary = \"Adding a new generic proposal that allows the DAO to increase a player's value.\";
+        summary = \"Proposal to create the endpoint for adding the callback function for increasing a Premier League player's value.\";
         action = opt variant {
             AddGenericNervousSystemFunction = record {
                 id = 1000 : nat64;
-                name = \"Increase Player Value.\";
-                description = opt \"Import the specified proposals group into the specified community.\";
+                name = \"Add RevaluePlayerUp Callback Function.\";
+                description = opt \"Proposal to create the endpoint for adding the callback function for increasing a Premier League player's value.\";
                 function_type = opt variant { 
                     GenericNervousSystemFunction = record { 
                         validator_canister_id = opt principal \"bboqb-jiaaa-aaaal-qb6ea-cai\"; 
@@ -96,14 +94,14 @@ echo "Register Generic Proposal Function 4 with SNS"
 
 PROPOSAL="(
     record {
-        title = \"Add a new custom SNS function to decrease a Player's Value \";          
+        title = \"Create RevaluePlayerDown Callback Function\";          
         url = \"https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo\";        
-        summary = \"Adding a new generic proposal that allows the DAO to decrease a player's value.\";
+        summary = \"Proposal to create the endpoint for adding the callback function for decreasing a Premier League player's value.\";
         action = opt variant {
             AddGenericNervousSystemFunction = record {
                 id = 2000 : nat64;
-                name = \"Decrease Player Value\";
-                description = opt \"Import the specified proposals group into the specified community.\";
+                name = \"Add RevaluePlayerDown Callback Function.\";
+                description = opt \"Proposal to create the endpoint for adding the callback function for decreasing a Premier League player's value.\";
                 function_type = opt variant { 
                     GenericNervousSystemFunction = record { 
                         validator_canister_id = opt principal \"bboqb-jiaaa-aaaal-qb6ea-cai\"; 
@@ -125,14 +123,14 @@ echo "Register Generic Proposal Function 5 with SNS"
 
 PROPOSAL="(
     record {
-        title = \"Add a new custom SNS function to Submit Fixture Data \";          
+        title = \"Create SubmitFixtureData Callback Function\";          
         url = \"https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo\";        
-        summary = \"Adding a new generic proposal that allows the DAO to submit fixture data.\";
+        summary = \"Proposal to create the endpoint for adding the callback function for submitting Premier League match fixture data.\";
         action = opt variant {
             AddGenericNervousSystemFunction = record {
                 id = 3000 : nat64;
-                name = \"Submit Fixture Data\";
-                description = opt \"Import the specified proposals group into the specified community.\";
+                name = \"Add SubmitFixtureData Callback Function\";
+                description = opt \"Proposal to create the endpoint for adding the callback function for submitting Premier League match fixture data.\";
                 function_type = opt variant { 
                     GenericNervousSystemFunction = record { 
                         validator_canister_id = opt principal \"bboqb-jiaaa-aaaal-qb6ea-cai\"; 
@@ -154,14 +152,14 @@ echo "Register Generic Proposal Function 6 with SNS"
 
 PROPOSAL="(
     record {
-        title = \"Add a new custom SNS function to Add Initial Fixtures \";          
+        title = \"Create AddIntitialFixtures Callback Function\";          
         url = \"https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo\";        
-        summary = \"Adding a new generic proposal that allows the DAO to add the initial fixtures to a season.\";
+        summary = \"Proposal to create the endpoint for adding the callback function to add the initial fixtures of the season.\";
         action = opt variant {
             AddGenericNervousSystemFunction = record {
                 id = 4000 : nat64;
-                name = "Add Initial Fixtures";
-                description = opt \"Import the specified proposals group into the specified community.\";
+                name = "Add AddIntitialFixtures Callback Function";
+                description = opt \"Proposal to create the endpoint for adding the callback function to add the initial fixtures of the season.\";
                 function_type = opt variant { 
                     GenericNervousSystemFunction = record { 
                         validator_canister_id = opt principal \"bboqb-jiaaa-aaaal-qb6ea-cai\"; 
@@ -183,14 +181,14 @@ echo "Register Generic Proposal Function 7 with SNS"
 
 PROPOSAL="(
     record {
-        title = \"Add a new custom SNS function to Move a Fixture \";          
+        title = \"Create MoveFixture Callback Function\";          
         url = \"https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo\";        
-        summary = \"Adding a new generic proposal that allows the DAO to move a fixture.\";
+        summary = \"Proposal to create the endpoint for adding the callback function to move a fixture.\";
         action = opt variant {
             AddGenericNervousSystemFunction = record {
                 id = 5000 : nat64;
-                name = \"Move a Fixture\";
-                description = opt \"Import the specified proposals group into the specified community.\";
+                name = \"Add MoveFixture Callback Function.\";
+                description = opt \"Proposal to create the endpoint for adding the callback function to move a fixture.\";
                 function_type = opt variant { 
                     GenericNervousSystemFunction = record { 
                         validator_canister_id = opt principal \"bboqb-jiaaa-aaaal-qb6ea-cai\"; 
@@ -212,14 +210,14 @@ echo "Register Generic Proposal Function 8 with SNS"
 
 PROPOSAL="(
     record {
-        title = \"Add a new custom SNS function to Postpone a Fixture \";          
+        title = \"Create PostponeFixture Callback Function\";          
         url = \"https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo\";        
-        summary = \"Adding a new generic proposal that allows the DAO to postpone a fixture.\";
+        summary = \"Proposal to create the endpoint for adding the callback function to postpone a fixture.\";
         action = opt variant {
             AddGenericNervousSystemFunction = record {
                 id = 6000 : nat64;
-                name = \"Postpone a Fixture\";
-                description = opt \"Import the specified proposals group into the specified community.\";
+                name = \"Add PostponeFixture Callback Function.\";
+                description = opt \"Proposal to create the endpoint for adding the callback function to postpone a fixture.\";
                 function_type = opt variant { 
                     GenericNervousSystemFunction = record { 
                         validator_canister_id = opt principal \"bboqb-jiaaa-aaaal-qb6ea-cai\"; 
@@ -241,14 +239,14 @@ echo "Register Generic Proposal Function 9 with SNS"
 
 PROPOSAL="(
     record {
-        title = \"Add a new custom SNS function to Rescehdule a Fixture \";          
+        title = \"Create RescheduleFixture Callback Function\";          
         url = \"https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo\";        
-        summary = \"Adding a new generic proposal that allows the DAO to reschedule a fixture.\";
+        summary = \"Proposal to create the endpoint for adding the callback function to reschedule a fixture.\";
         action = opt variant {
             AddGenericNervousSystemFunction = record {
                 id = 7000 : nat64;
-                name = \"Reschedule a Fixture\";
-                description = opt \"Import the specified proposals group into the specified community.\";
+                name = \"Add RescheduleFixture Callback Function.\";
+                description = opt \"Proposal to create the endpoint for adding the callback function to reschedule a fixture.\";
                 function_type = opt variant { 
                     GenericNervousSystemFunction = record { 
                         validator_canister_id = opt principal \"bboqb-jiaaa-aaaal-qb6ea-cai\"; 
@@ -270,14 +268,14 @@ echo "Register Generic Proposal Function 10 with SNS"
 
 PROPOSAL="(
     record {
-        title = \"Add a new custom SNS function to Transfer a Player\";          
+        title = \"Create TransferPlayer Callback Function\";          
         url = \"https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo\";        
-        summary = \"Adding a new generic proposal that allows the DAO to transfer a player.\";
+        summary = \"Proposal to create the endpoint for adding the callback function to transfer a player.\";
         action = opt variant {
             AddGenericNervousSystemFunction = record {
                 id = 8000 : nat64;
-                name = \"Transfer a Player\";
-                description = opt \"Import the specified proposals group into the specified community.\";
+                name = \"Add TransferPlayer Callback Function.\";
+                description = opt \"Proposal to create the endpoint for adding the callback function to transfer a player.\";
                 function_type = opt variant { 
                     GenericNervousSystemFunction = record { 
                         validator_canister_id = opt principal \"bboqb-jiaaa-aaaal-qb6ea-cai\"; 
@@ -299,14 +297,14 @@ echo "Register Generic Proposal Function 11 with SNS"
 
 PROPOSAL="(
     record {
-        title = \"Add a new custom SNS function to Loan a Player\";          
+        title = \"Create LoanPlayer Callback Function\";          
         url = \"https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo\";        
-        summary = \"Adding a new generic proposal that allows the DAO to loan a player.\";
+        summary = \"Proposal to create the endpoint for adding the callback function to loan a player.\";
         action = opt variant {
             AddGenericNervousSystemFunction = record {
                 id = 9000 : nat64;
-                name = \"Loan a Player\";
-                description = opt \"Import the specified proposals group into the specified community.\";
+                name = \"Add LoanPlayer Callback Function\";
+                description = opt \"Proposal to create the endpoint for adding the callback function to loan a player.\";
                 function_type = opt variant { 
                     GenericNervousSystemFunction = record { 
                         validator_canister_id = opt principal \"bboqb-jiaaa-aaaal-qb6ea-cai\"; 
@@ -328,14 +326,14 @@ echo "Register Generic Proposal Function 12 with SNS"
 
 PROPOSAL="(
     record {
-        title = \"Add a new custom SNS function to Recall a Player\";          
+        title = \"Create RecallPlayer Callback Function\";          
         url = \"https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo\";        
-        summary = \"Adding a new generic proposal that allows the DAO to recall a player.\";
+        summary = \"Proposal to create the endpoint for adding the callback function to recall a player.\";
         action = opt variant {
             AddGenericNervousSystemFunction = record {
                 id = 10000 : nat64;
-                name = \"Recall a Player\";
-                description = opt \"Import the specified proposals group into the specified community.\";
+                name = \"Add RecallPlayer Callback Function\";
+                description = opt \"Proposal to create the endpoint for adding the callback function to recall a player.\";
                 function_type = opt variant { 
                     GenericNervousSystemFunction = record { 
                         validator_canister_id = opt principal \"bboqb-jiaaa-aaaal-qb6ea-cai\"; 
@@ -357,14 +355,14 @@ echo "Register Generic Proposal Function 13 with SNS"
 
 PROPOSAL="(
     record {
-        title = \"Add a new custom SNS function to Create a Player\";          
+        title = \"Create CreatePlayer Callback Function\";          
         url = \"https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo\";        
-        summary = \"Adding a new generic proposal that allows the DAO to create a new player.\";
+        summary = \"Proposal to create the endpoint for adding the callback function to create a new player.\";
         action = opt variant {
             AddGenericNervousSystemFunction = record {
                 id = 11000 : nat64;
-                name = \"Create Player\";
-                description = opt \"Import the specified proposals group into the specified community.\";
+                name = \"Add CreatePlayer Callback Function\";
+                description = opt \"Proposal to create the endpoint for adding the callback function to create a new player.\";
                 function_type = opt variant { 
                     GenericNervousSystemFunction = record { 
                         validator_canister_id = opt principal \"bboqb-jiaaa-aaaal-qb6ea-cai\"; 
@@ -386,14 +384,14 @@ echo "Register Generic Proposal Function 14 with SNS"
 
 PROPOSAL="(
     record {
-        title = \"Add a new custom SNS function to Update Player\";          
+        title = \"Create UpdatePlayer Callback Function\";          
         url = \"https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo\";        
-        summary = \"Adding a new generic proposal that allows the DAO to update a player.\";
+        summary = \"Proposal to create the endpoint for adding the callback function to update a new player.\";
         action = opt variant {
             AddGenericNervousSystemFunction = record {
                 id = 12000 : nat64;
-                name = \"Update Player\";
-                description = opt \"Import the specified proposals group into the specified community.\";
+                name = \"Add UpdatePlayer Callback Function\";
+                description = opt \"Proposal to create the endpoint for adding the callback function to update a new player.\";
                 function_type = opt variant { 
                     GenericNervousSystemFunction = record { 
                         validator_canister_id = opt principal \"bboqb-jiaaa-aaaal-qb6ea-cai\"; 
@@ -415,14 +413,14 @@ echo "Register Generic Proposal Function 15 with SNS"
 
 PROPOSAL="(
     record {
-        title = \"Add a new custom SNS function to Set Player Injury\";          
+        title = \"Create SetPlayerInjury Callback Function\";          
         url = \"https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo\";        
-        summary = \"Adding a new generic proposal that allows the DAO to set a player's injury status.\";
+        summary = \"Proposal to create the endpoint for adding the callback function to set a players injury.\";
         action = opt variant {
             AddGenericNervousSystemFunction = record {
                 id = 13000 : nat64;
-                name = \"Set Player Injury\";
-                description = opt \"Import the specified proposals group into the specified community.\";
+                name = \"Add SetPlayerInjury Callback Function\";
+                description = opt \"Proposal to create the endpoint for adding the callback function to set a players injury.\";
                 function_type = opt variant { 
                     GenericNervousSystemFunction = record { 
                         validator_canister_id = opt principal \"bboqb-jiaaa-aaaal-qb6ea-cai\"; 
@@ -444,14 +442,14 @@ echo "Register Generic Proposal Function 16 with SNS"
 
 PROPOSAL="(
     record {
-        title = \"Add a new custom SNS function to Retire a Player\";          
+        title = \"Create RetirePlayer Callback Function\";          
         url = \"https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo\";        
-        summary = \"Adding a new generic proposal that allows the DAO to retire a player.\";
+        summary = \"Proposal to create the endpoint for adding the callback function to retire a player.\";
         action = opt variant {
             AddGenericNervousSystemFunction = record {
                 id = 14000 : nat64;
-                name = \"Retire Player\";
-                description = opt \"Import the specified proposals group into the specified community.\";
+                name = \"Add RetirePlayer Callback Function\";
+                description = opt \"Proposal to create the endpoint for adding the callback function to retire a player.\";
                 function_type = opt variant { 
                     GenericNervousSystemFunction = record { 
                         validator_canister_id = opt principal \"bboqb-jiaaa-aaaal-qb6ea-cai\"; 
@@ -473,14 +471,14 @@ echo "Register Generic Proposal Function 17 with SNS"
 
 PROPOSAL="(
     record {
-        title = \"Add a new custom SNS function to Unretire a Player\";          
+        title = \"Create UnretirePlayer Callback Function\";          
         url = \"https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo\";        
-        summary = \"Adding a new generic proposal that allows the DAO to unretire a player.\";
+        summary = \"Proposal to create the endpoint for adding the callback function to unretire a player.\";
         action = opt variant {
             AddGenericNervousSystemFunction = record {
                 id = 15000 : nat64;
-                name = \"Unretire Player\";
-                description = opt \"Import the specified proposals group into the specified community.\";
+                name = \"Add UnretirePlayer Callback Function\";
+                description = opt \"Proposal to create the endpoint for adding the callback function to unretire a player.\";
                 function_type = opt variant { 
                     GenericNervousSystemFunction = record { 
                         validator_canister_id = opt principal \"bboqb-jiaaa-aaaal-qb6ea-cai\"; 
@@ -502,14 +500,14 @@ echo "Register Generic Proposal Function 18 with SNS"
 
 PROPOSAL="(
     record {
-        title = \"Add a new custom SNS function to Promote Former Team\";          
+        title = \"Create PromoteFormerTeam Callback Function\";          
         url = \"https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo\";        
-        summary = \"Adding a new generic proposal that allows the DAO to promote a team has previously paritipated in an OpenFPL season.\";
+        summary = \"Proposal to create the endpoint for adding the callback function to promote a former club into the Premier League.\";
         action = opt variant {
             AddGenericNervousSystemFunction = record {
                 id = 16000 : nat64;
-                name = \"Promote Former Team\";
-                description = opt \"Import the specified proposals group into the specified community.\";
+                name = \"Add PromoteFormerTeam Callback Function\";
+                description = opt \"Proposal to create the endpoint for adding the callback function to promote a former club into the Premier League.\";
                 function_type = opt variant { 
                     GenericNervousSystemFunction = record { 
                         validator_canister_id = opt principal \"bboqb-jiaaa-aaaal-qb6ea-cai\"; 
@@ -531,14 +529,14 @@ echo "Register Generic Proposal Function 19 with SNS"
 
 PROPOSAL="(
     record {
-        title = \"Add a new custom SNS function to Promote New Team\";          
+        title = \"Create PromoteNewTeam Callback Function\";          
         url = \"https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo\";        
-        summary = \"Adding a new generic proposal that allows the DAO to promote a new team to the Premier Legaue.\";
+        summary = \"Proposal to create the endpoint for adding the callback function to promote a new club into the Premier League.\";
         action = opt variant {
             AddGenericNervousSystemFunction = record {
                 id = 17000 : nat64;
-                name = \"Promote New Team\";
-                description = opt \"Import the specified proposals group into the specified community.\";
+                name = \"Add PromoteNewTeam Callback Function\";
+                description = opt \"Proposal to create the endpoint for adding the callback function to promote a new club into the Premier League.\";
                 function_type = opt variant { 
                     GenericNervousSystemFunction = record { 
                         validator_canister_id = opt principal \"bboqb-jiaaa-aaaal-qb6ea-cai\"; 
@@ -560,14 +558,14 @@ echo "Register Generic Proposal Function 20 with SNS"
 
 PROPOSAL="(
     record {
-        title = \"Add a new custom SNS function to Update a Team\";          
+        title = \"Create UpdateTeam Callback Function\";          
         url = \"https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo\";        
-        summary = \"Adding a new generic proposal that allows the DAO to update an existing team.\";
+        summary = \"Proposal to create the endpoint for adding the callback function to update a Premier League club's details.\";
         action = opt variant {
             AddGenericNervousSystemFunction = record {
                 id = 18000 : nat64;
-                name = \"Update Team\";
-                description = opt \"Import the specified proposals group into the specified community.\";
+                name = \"Add UpdateTeam Callback Function\";
+                description = opt \"Proposal to create the endpoint for adding the callback function to update a Premier League club's details.\";
                 function_type = opt variant { 
                     GenericNervousSystemFunction = record { 
                         validator_canister_id = opt principal \"bboqb-jiaaa-aaaal-qb6ea-cai\"; 
