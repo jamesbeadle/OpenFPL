@@ -1,5 +1,4 @@
 module Environment {
-
   public let DFX_NETWORK = "ic";
   public let CYCLES_MINTING_CANISTER_ID = "rkp4c-7iaaa-aaaaa-aaaca-cai";
   public let BACKEND_CANISTER_ID = "bboqb-jiaaa-aaaal-qb6ea-cai";
