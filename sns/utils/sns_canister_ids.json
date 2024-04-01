@@ -1,17 +1,8 @@
 {
-  "sns_governance": {
-    "ic": "detjl-sqaaa-aaaaq-aacqa-cai"
-  },
-  "sns_index": {
-    "ic": "dnqcx-eyaaa-aaaaq-aacrq-cai"
-  },
-  "sns_ledger": {
-    "ic": "ddsp7-7iaaa-aaaaq-aacqq-cai"
-  },
-  "sns_root": {
-    "ic": "gyito-zyaaa-aaaaq-aacpq-cai"
-  },
-  "sns_swap": {
-    "ic": "dkred-jaaaa-aaaaq-aacra-cai"
-  }
+  "dapp_canister_id_list": [],
+  "governance_canister_id": "detjl-sqaaa-aaaaq-aacqa-cai",
+  "index_canister_id": "dnqcx-eyaaa-aaaaq-aacrq-cai",
+  "ledger_canister_id": "ddsp7-7iaaa-aaaaq-aacqq-cai",
+  "root_canister_id": "gyito-zyaaa-aaaaq-aacpq-cai",
+  "swap_canister_id": "dkred-jaaaa-aaaaq-aacra-cai"
 }
