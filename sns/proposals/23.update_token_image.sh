@@ -5,7 +5,7 @@ SCRIPT=$(readlink -f "$0")
 SCRIPT_DIR=$(dirname "$SCRIPT")
 cd $SCRIPT_DIR
 
-PROPOSAL="(record { subaccount = ${NEURON_ID} ; command = opt variant {MakeProposal = record {
+PROPOSAL="(record {
         title = \"Update logo\";
         url = \"https://github.com/jamesbeadle/OpenFPL\";
         summary = \"Update logo\";
@@ -17,6 +17,6 @@ PROPOSAL="(record { subaccount = ${NEURON_ID} ; command = opt variant {MakePropo
                 description  = null;
             }
         }
-}} })"
+ })"
 
 ../utils/submit_proposal.sh "$PROPOSAL"
