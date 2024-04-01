@@ -310,7 +310,7 @@ PROPOSAL="(
                         validator_canister_id = opt principal \"bboqb-jiaaa-aaaal-qb6ea-cai\"; 
                         target_canister_id = opt principal \"bboqb-jiaaa-aaaal-qb6ea-cai\"; 
                         validator_method_name = opt \"validateLoanPlayer\";                         
-                        target_method_name = opt \"executeTransferPlayer\";
+                        target_method_name = opt \"executeLoanPlayer\";
                     } 
                 };
             }
