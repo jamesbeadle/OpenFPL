@@ -343,7 +343,7 @@ module {
 
       await leaderboardComposite.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth, managerComposite.getStableUniqueManagerCanisterIds());
 
-      await payRewards();
+      await payRewards(); 
       await incrementSystemState();
 
       await updateCacheHash("players");
@@ -419,6 +419,7 @@ module {
     };
 
     private func payRewards() : async () {
+      return; //Remove when ready
       let rewardPool = rewardPools.get(systemState.calculationSeasonId);
       switch (rewardPool) {
         case (null) {};

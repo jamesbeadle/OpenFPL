@@ -164,9 +164,9 @@ shared actor class NeuronController() = self {
   //
   // If called again, this method will simply return "ok";
   //
-  public shared ({caller}) func init() : async T.AsyncReturn<()> {
+  public shared func init() : async T.AsyncReturn<()> {
 
-    assert Principal.isController( caller );
+    //assert Principal.isController( caller );
 
     if ( state.initialized == true ) return #ok();
 
