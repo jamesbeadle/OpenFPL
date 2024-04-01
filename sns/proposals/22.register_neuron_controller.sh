@@ -1,0 +1,2 @@
+
+./register_canister_with_sns.sh hqfmc-cqaaa-aaaal-qitcq-cai "Register neuron_controller as an SNS controlled canister." "https://github.com/jamesbeadle/OpenFPL/blob/master/src/neuron_controller/actor.mo" "This canister is responsible for controlling the DAO's first neuron."
