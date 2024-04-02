@@ -20,11 +20,13 @@ import Utilities "utilities";
 import Account "lib/Account";
 import Environment "Environment";
 import NeuronTypes "../neuron_controller/types";
+import GovernanceManager "governance-manager";
 
 actor Self {
   let seasonManager = SeasonManager.SeasonManager();
   let cyclesDispenser = CyclesDispenser.CyclesDispenser();
   let treasuryManager = TreasuryManager.TreasuryManager();
+  let governanceManager = GovernanceManager.GovernanceManager();
   private let cyclesCheckInterval : Nat = Utilities.getHour() * 24;
   private let cyclesCheckWalletInterval : Nat = Utilities.getHour() * 24;
 
@@ -168,6 +170,10 @@ actor Self {
   //Governance canister validation and execution functions:
   public shared ({ caller }) func validateRevaluePlayerUp(revaluePlayerUpDTO : DTOs.RevaluePlayerUpDTO) : async Result.Result<Text, Text> {
     assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
+    
+    let proposalFound = await governanceManager.revaluePlayerUpProposalExists(revaluePlayerUpDTO); 
+    assert not proposalFound;
+
     return await seasonManager.validateRevaluePlayerUp(revaluePlayerUpDTO);
   };
 
@@ -178,18 +184,11 @@ actor Self {
 
   public shared ({ caller }) func validateRevaluePlayerDown(revaluePlayerDownDTO : DTOs.RevaluePlayerDownDTO) : async Result.Result<Text, Text> {
     assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-    assert not proposalExists();
+    
+    let proposalFound = await governanceManager.revaluePlayerDownProposalExists(revaluePlayerDownDTO); 
+    assert not proposalFound;
+    
     return await seasonManager.validateRevaluePlayerDown(revaluePlayerDownDTO);
-  };
-
-  //TODO
-  private func proposalExists() : Bool {
-
-    //check the active proposals in the governance canister
-    //might have to get them in batches
-    //if one is the same then return true
-
-    return true;
   };
 
   public shared ({ caller }) func executeRevaluePlayerDown(revaluePlayerDownDTO : DTOs.RevaluePlayerDownDTO) : async () {
@@ -199,6 +198,10 @@ actor Self {
 
   public shared ({ caller }) func validateSubmitFixtureData(submitFixtureData : DTOs.SubmitFixtureDataDTO) : async Result.Result<Text, Text> {
     assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
+    
+    let proposalFound = await governanceManager.submitFixtureDataProposalExists(submitFixtureData); 
+    assert not proposalFound;
+    
     return await seasonManager.validateSubmitFixtureData(submitFixtureData);
   };
 
@@ -209,6 +212,10 @@ actor Self {
 
   public shared ({ caller }) func validateAddInitialFixtures(addInitialFixturesDTO : DTOs.AddInitialFixturesDTO) : async Result.Result<Text, Text> {
     assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
+    
+    let proposalFound = await governanceManager.addInitialFixturesProposalExists(addInitialFixturesDTO); 
+    assert not proposalFound;
+    
     return await seasonManager.validateAddInitialFixtures(addInitialFixturesDTO);
   };
 
@@ -219,6 +226,10 @@ actor Self {
 
   public shared ({ caller }) func validateMoveFixture(moveFixtureDTO : DTOs.MoveFixtureDTO) : async Result.Result<Text, Text> {
     assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
+    
+    let proposalFound = await governanceManager.moveFixtureProposalExists(moveFixtureDTO); 
+    assert not proposalFound;
+    
     return await seasonManager.validateMoveFixture(moveFixtureDTO);
   };
 
@@ -229,6 +240,10 @@ actor Self {
 
   public shared ({ caller }) func validatePostponeFixture(postponeFixtureDTO : DTOs.PostponeFixtureDTO) : async Result.Result<Text, Text> {
     assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
+    
+    let proposalFound = await governanceManager.postponeFixtureProposalExists(postponeFixtureDTO); 
+    assert not proposalFound;
+    
     return await seasonManager.validatePostponeFixture(postponeFixtureDTO);
   };
 
@@ -239,6 +254,10 @@ actor Self {
 
   public shared ({ caller }) func validateRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO) : async Result.Result<Text, Text> {
     assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
+    
+    let proposalFound = await governanceManager.rescheduleFixtureProposalExists(rescheduleFixtureDTO); 
+    assert not proposalFound;
+    
     return await seasonManager.validateRescheduleFixture(rescheduleFixtureDTO);
   };
 
@@ -249,6 +268,10 @@ actor Self {
 
   public shared ({ caller }) func validateLoanPlayer(loanPlayerDTO : DTOs.LoanPlayerDTO) : async Result.Result<Text, Text> {
     assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
+    
+    let proposalFound = await governanceManager.loanPlayerProposalExists(loanPlayerDTO); 
+    assert not proposalFound;
+    
     return await seasonManager.validateLoanPlayer(loanPlayerDTO);
   };
 
@@ -259,6 +282,10 @@ actor Self {
 
   public shared ({ caller }) func validateTransferPlayer(transferPlayerDTO : DTOs.TransferPlayerDTO) : async Result.Result<Text, Text> {
     assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
+    
+    let proposalFound = await governanceManager.transferPlayerProposalExists(transferPlayerDTO); 
+    assert not proposalFound;
+    
     return await seasonManager.validateTransferPlayer(transferPlayerDTO);
   };
 
@@ -269,6 +296,10 @@ actor Self {
 
   public shared ({ caller }) func validateRecallPlayer(recallPlayerDTO : DTOs.RecallPlayerDTO) : async Result.Result<Text, Text> {
     assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
+    
+    let proposalFound = await governanceManager.recallPlayerProposalExists(recallPlayerDTO); 
+    assert not proposalFound;
+    
     return await seasonManager.validateRecallPlayer(recallPlayerDTO);
   };
 
@@ -279,6 +310,10 @@ actor Self {
 
   public shared ({ caller }) func validateCreatePlayer(createPlayerDTO : DTOs.CreatePlayerDTO) : async Result.Result<Text, Text> {
     assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
+    
+    let proposalFound = await governanceManager.createPlayerProposalExists(createPlayerDTO); 
+    assert not proposalFound;
+    
     return await seasonManager.validateCreatePlayer(createPlayerDTO);
   };
 
@@ -289,6 +324,10 @@ actor Self {
 
   public shared ({ caller }) func validateUpdatePlayer(updatePlayerDTO : DTOs.UpdatePlayerDTO) : async Result.Result<Text, Text> {
     assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
+    
+    let proposalFound = await governanceManager.updatePlayerProposalExists(updatePlayerDTO); 
+    assert not proposalFound;
+    
     return await seasonManager.validateUpdatePlayer(updatePlayerDTO);
   };
 
@@ -299,6 +338,10 @@ actor Self {
 
   public shared ({ caller }) func validateSetPlayerInjury(setPlayerInjuryDTO : DTOs.SetPlayerInjuryDTO) : async Result.Result<Text, Text> {
     assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
+    
+    let proposalFound = await governanceManager.setPlayerInjuryProposalExists(setPlayerInjuryDTO); 
+    assert not proposalFound;
+    
     return await seasonManager.validateSetPlayerInjury(setPlayerInjuryDTO);
   };
 
@@ -309,6 +352,10 @@ actor Self {
 
   public shared ({ caller }) func validateRetirePlayer(retirePlayerDTO : DTOs.RetirePlayerDTO) : async Result.Result<Text, Text> {
     assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
+    
+    let proposalFound = await governanceManager.retirePlayerProposalExists(retirePlayerDTO); 
+    assert not proposalFound;
+    
     return await seasonManager.validateRetirePlayer(retirePlayerDTO);
   };
 
@@ -319,6 +366,10 @@ actor Self {
 
   public shared ({ caller }) func validateUnretirePlayer(unretirePlayerDTO : DTOs.UnretirePlayerDTO) : async Result.Result<Text, Text> {
     assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
+    
+    let proposalFound = await governanceManager.unretirePlayerProposalExists(unretirePlayerDTO); 
+    assert not proposalFound;
+    
     return await seasonManager.validateUnretirePlayer(unretirePlayerDTO);
   };
 
@@ -329,6 +380,10 @@ actor Self {
 
   public shared ({ caller }) func validatePromoteFormerClub(promoteFormerClubDTO : DTOs.PromoteFormerClubDTO) : async Result.Result<Text, Text> {
     assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
+    
+    let proposalFound = await governanceManager.promoteFormerClubProposalExists(promoteFormerClubDTO); 
+    assert not proposalFound;
+    
     return await seasonManager.validatePromoteFormerClub(promoteFormerClubDTO);
   };
 
@@ -339,6 +394,10 @@ actor Self {
 
   public shared ({ caller }) func validatePromoteNewClub(promoteNewClubDTO : DTOs.PromoteNewClubDTO) : async Result.Result<Text, Text> {
     assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
+    
+    let proposalFound = await governanceManager.promoteNewClubProposalExists(promoteNewClubDTO); 
+    assert not proposalFound;
+    
     return await seasonManager.validatePromoteNewClub(promoteNewClubDTO);
   };
 
@@ -349,6 +408,10 @@ actor Self {
 
   public shared ({ caller }) func validateUpdateClub(updateClubDTO : DTOs.UpdateClubDTO) : async Result.Result<Text, Text> {
     assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
+    
+    let proposalFound = await governanceManager.updateClubProposalExists(updateClubDTO); 
+    assert not proposalFound;
+    
     return await seasonManager.validateUpdateClub(updateClubDTO);
   };
 
