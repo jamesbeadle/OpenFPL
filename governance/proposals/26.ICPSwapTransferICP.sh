@@ -23,7 +23,8 @@ PROPOSAL="(
         \";
         action = opt variant {  
             TransferSnsTreasuryFunds = record {  
-                TO_PRINCIPAL=\"opt principal yco2w-2iaaa-aaaag-qjqoa-cai\";
+                
+                TO_PRINCIPAL=\"opt principal \"yco2w-2iaaa-aaaag-qjqoa-cai\"\";
                 TO_SUBACCOUNT=\"opt record { subaccount=vec { 10: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 2: nat8; 0: nat8; 0: nat8; 160: nat8; 1: nat8; 1: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8 }}\";
                 AMOUNT=\"810000000000\";
                 FROM_TREASURY=\"1\";             
