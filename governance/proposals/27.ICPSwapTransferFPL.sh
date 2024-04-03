@@ -14,7 +14,7 @@ PROPOSAL="(
         title = \"Transfer 1,000,000 FPL to FPL/ICP pool on ICPSwap\";  
         url = \"https://nns.ic0.app/proposal/?u=gyito-zyaaa-aaaaq-aacpq-cai&proposal=25\";  
         summary = \"
-            This is the first of 2 proposals which add liquidity to the FPL/ICP pool on ICPSwap.
+            This is the second of 2 proposals which add liquidity to the FPL/ICP pool on ICPSwap.
             
             https://info.icpswap.com/swap/pool/details/yco2w-2iaaa-aaaag-qjqoa-cai
 
@@ -23,11 +23,10 @@ PROPOSAL="(
         \";
         action = opt variant {  
             TransferSnsTreasuryFunds = record {  
-                from_treasury = 1 : int32;  
-	            to_principal = opt principal "";  
-	            to_subaccount = null;  
-	            memo = null;  
-	            amount_e8s = 1_000_000_000_000_000 : nat64;              
+                TO_PRINCIPAL="opt principal \"yco2w-2iaaa-aaaag-qjqoa-cai\""
+                TO_SUBACCOUNT="opt record { subaccount=vec { 10: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 2: nat8; 0: nat8; 0: nat8; 160: nat8; 1: nat8; 1: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8 }}"
+                AMOUNT="100000000000000"
+                FROM_TREASURY="2"
             }  
         };  
     })"
