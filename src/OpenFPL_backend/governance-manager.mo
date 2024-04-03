@@ -11,6 +11,7 @@ module {
 
     
     public func revaluePlayerUpProposalExists(dto: DTOs.RevaluePlayerUpDTO) : async Bool {    
+      
       let proposals = await governance.list_proposals({
         include_reward_status = [0];
         before_proposal = ?{ id = 0};
