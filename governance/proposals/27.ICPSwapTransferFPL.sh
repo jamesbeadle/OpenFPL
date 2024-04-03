@@ -22,15 +22,14 @@ PROPOSAL="(
             https://nns.ic0.app/proposal/?u=gyito-zyaaa-aaaaq-aacpq-cai&proposal=25
         \";
         action = opt variant {  
-            TransferSnsTreasuryFunds = record {  
-                TO_PRINCIPAL="opt principal \"yco2w-2iaaa-aaaag-qjqoa-cai\""
-                TO_SUBACCOUNT="opt record { subaccount=vec { 10: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 2: nat8; 0: nat8; 0: nat8; 160: nat8; 1: nat8; 1: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8 }}"
-                AMOUNT="100000000000000"
-                FROM_TREASURY="2"
+            TransferSnsTreasuryFunds = record {
+               from_treasury=2:int32; 
+               amount_e8s=100000000000000:nat64; 
+               to_principal=opt principal \"yco2w-2iaaa-aaaag-qjqoa-cai\"; 
+               to_subaccount=opt record { subaccount=vec { 10: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 2: nat8; 0: nat8; 0: nat8; 160: nat8; 1: nat8; 1: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8; 0: nat8 }}; 
+               memo=null;
             }  
         };  
     })"
 
 ../utils/submit_proposal.sh "$PROPOSAL"
-
-#On completion use OpenFPL Backend to obtain neuron id
