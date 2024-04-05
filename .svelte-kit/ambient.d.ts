@@ -29,10 +29,15 @@ declare module '$env/static/private' {
 	export const DFX_VERSION: string;
 	export const DFX_NETWORK: string;
 	export const CANISTER_CANDID_PATH_OPENFPL_BACKEND: string;
-	export const CANISTER_ID_INTERNET_IDENTITY: string;
 	export const CANISTER_ID_OPENFPL_FRONTEND: string;
+	export const CANISTER_ID_SNS_SWAP: string;
+	export const CANISTER_ID_SNS_INDEX: string;
+	export const CANISTER_ID_SNS_GOVERNANCE: string;
 	export const CANISTER_ID_OPENFPL_BACKEND: string;
+	export const CANISTER_ID_INTERNET_IDENTITY: string;
+	export const CANISTER_ID_SNS_LEDGER: string;
 	export const CANISTER_ID_NEURON_CONTROLLER: string;
+	export const CANISTER_ID_SNS_ROOT: string;
 	export const CANISTER_ID: string;
 	export const CANISTER_CANDID_PATH: string;
 	export const VITE_AUTH_PROVIDER_URL: string;
@@ -45,6 +50,7 @@ declare module '$env/static/private' {
 	export const SHLVL: string;
 	export const npm_config_noproxy: string;
 	export const HOME: string;
+	export const MOTD_SHOWN: string;
 	export const NVM_BIN: string;
 	export const TERM_PROGRAM_VERSION: string;
 	export const VSCODE_IPC_HOOK_CLI: string;
@@ -101,14 +107,13 @@ declare module '$env/static/private' {
 	export const npm_command: string;
 	export const HOSTTYPE: string;
 	export const MANPATH: string;
+	export const NODE_ENV: string;
 	export const WSL2_GUI_APPS_ENABLED: string;
 	export const WSLENV: string;
 	export const INIT_CWD: string;
 	export const EDITOR: string;
-	export const NODE_ENV: string;
 	export const VITE_OPENFPL_BACKEND_CANISTER_ID: string;
 	export const VITE_OPENFPL_FRONTEND_CANISTER_ID: string;
-	export const VITE___CANDID_UI_CANISTER_ID: string;
 	export const VITE_NEURON_CONTROLLER_CANISTER_ID: string;
 }
 
@@ -144,10 +149,15 @@ declare module '$env/dynamic/private' {
 		DFX_VERSION: string;
 		DFX_NETWORK: string;
 		CANISTER_CANDID_PATH_OPENFPL_BACKEND: string;
-		CANISTER_ID_INTERNET_IDENTITY: string;
 		CANISTER_ID_OPENFPL_FRONTEND: string;
+		CANISTER_ID_SNS_SWAP: string;
+		CANISTER_ID_SNS_INDEX: string;
+		CANISTER_ID_SNS_GOVERNANCE: string;
 		CANISTER_ID_OPENFPL_BACKEND: string;
+		CANISTER_ID_INTERNET_IDENTITY: string;
+		CANISTER_ID_SNS_LEDGER: string;
 		CANISTER_ID_NEURON_CONTROLLER: string;
+		CANISTER_ID_SNS_ROOT: string;
 		CANISTER_ID: string;
 		CANISTER_CANDID_PATH: string;
 		VITE_AUTH_PROVIDER_URL: string;
@@ -160,6 +170,7 @@ declare module '$env/dynamic/private' {
 		SHLVL: string;
 		npm_config_noproxy: string;
 		HOME: string;
+		MOTD_SHOWN: string;
 		NVM_BIN: string;
 		TERM_PROGRAM_VERSION: string;
 		VSCODE_IPC_HOOK_CLI: string;
@@ -216,14 +227,13 @@ declare module '$env/dynamic/private' {
 		npm_command: string;
 		HOSTTYPE: string;
 		MANPATH: string;
+		NODE_ENV: string;
 		WSL2_GUI_APPS_ENABLED: string;
 		WSLENV: string;
 		INIT_CWD: string;
 		EDITOR: string;
-		NODE_ENV: string;
 		VITE_OPENFPL_BACKEND_CANISTER_ID: string;
 		VITE_OPENFPL_FRONTEND_CANISTER_ID: string;
-		VITE___CANDID_UI_CANISTER_ID: string;
 		VITE_NEURON_CONTROLLER_CANISTER_ID: string;
 		[key: `PUBLIC_${string}`]: undefined;
 		[key: `${string}`]: string | undefined;

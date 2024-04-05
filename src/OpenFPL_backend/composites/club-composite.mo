@@ -40,7 +40,7 @@ module {
       return sortedArray;
     };
 
-    public func validatePromoteFormerClub(promoteFormerClubDTO : DTOs.PromoteFormerClubDTO) : async Result.Result<Text, Text> {
+    public func validatePromoteFormerClub(promoteFormerClubDTO : DTOs.PromoteFormerClubDTO) : Result.Result<Text, Text> {
       if (List.size(clubs) >= 20) {
         return #err("Invalid: League cannot contain more than 20 teams.");
       };
@@ -72,7 +72,7 @@ module {
       };
     };
 
-    public func validatePromoteNewClub(promoteNewClubDTO : DTOs.PromoteNewClubDTO) : async Result.Result<Text, Text> {
+    public func validatePromoteNewClub(promoteNewClubDTO : DTOs.PromoteNewClubDTO) : Result.Result<Text, Text> {
 
       if (List.size(clubs) >= 20) {
         return #err("Invalid: League cannot contain more than 20 teams.");
@@ -120,7 +120,7 @@ module {
       nextClubId += 1;
     };
 
-    public func validateUpdateClub(updateClubDTO : DTOs.UpdateClubDTO) : async Result.Result<Text, Text> {
+    public func validateUpdateClub(updateClubDTO : DTOs.UpdateClubDTO) : Result.Result<Text, Text> {
       let club = List.find(
         clubs,
         func(c : T.Club) : Bool {

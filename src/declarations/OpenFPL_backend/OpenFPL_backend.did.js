@@ -558,26 +558,58 @@ export const idlFactory = ({ IDL }) => {
       []
     ),
     updateUsername: IDL.Func([IDL.Text], [Result_1], []),
-    validateAddInitialFixtures: IDL.Func([AddInitialFixturesDTO], [Result], []),
-    validateCreateDAONeuron: IDL.Func([], [Result], []),
-    validateCreatePlayer: IDL.Func([CreatePlayerDTO], [Result], []),
-    validateLoanPlayer: IDL.Func([LoanPlayerDTO], [Result], []),
+    validateAddInitialFixtures: IDL.Func(
+      [AddInitialFixturesDTO],
+      [Result],
+      ["query"]
+    ),
+    validateCreateDAONeuron: IDL.Func([], [Result], ["query"]),
+    validateCreatePlayer: IDL.Func([CreatePlayerDTO], [Result], ["query"]),
+    validateLoanPlayer: IDL.Func([LoanPlayerDTO], [Result], ["query"]),
     validateManageDAONeuron: IDL.Func([], [Result], []),
-    validateMoveFixture: IDL.Func([MoveFixtureDTO], [Result], []),
-    validatePostponeFixture: IDL.Func([PostponeFixtureDTO], [Result], []),
-    validatePromoteFormerClub: IDL.Func([PromoteFormerClubDTO], [Result], []),
-    validatePromoteNewClub: IDL.Func([PromoteNewClubDTO], [Result], []),
-    validateRecallPlayer: IDL.Func([RecallPlayerDTO], [Result], []),
-    validateRescheduleFixture: IDL.Func([RescheduleFixtureDTO], [Result], []),
-    validateRetirePlayer: IDL.Func([RetirePlayerDTO], [Result], []),
-    validateRevaluePlayerDown: IDL.Func([RevaluePlayerDownDTO], [Result], []),
-    validateRevaluePlayerUp: IDL.Func([RevaluePlayerUpDTO], [Result], []),
-    validateSetPlayerInjury: IDL.Func([SetPlayerInjuryDTO], [Result], []),
-    validateSubmitFixtureData: IDL.Func([SubmitFixtureDataDTO], [Result], []),
-    validateTransferPlayer: IDL.Func([TransferPlayerDTO], [Result], []),
-    validateUnretirePlayer: IDL.Func([UnretirePlayerDTO], [Result], []),
-    validateUpdateClub: IDL.Func([UpdateClubDTO], [Result], []),
-    validateUpdatePlayer: IDL.Func([UpdatePlayerDTO], [Result], []),
+    validateMoveFixture: IDL.Func([MoveFixtureDTO], [Result], ["query"]),
+    validatePostponeFixture: IDL.Func(
+      [PostponeFixtureDTO],
+      [Result],
+      ["query"]
+    ),
+    validatePromoteFormerClub: IDL.Func(
+      [PromoteFormerClubDTO],
+      [Result],
+      ["query"]
+    ),
+    validatePromoteNewClub: IDL.Func([PromoteNewClubDTO], [Result], ["query"]),
+    validateRecallPlayer: IDL.Func([RecallPlayerDTO], [Result], ["query"]),
+    validateRescheduleFixture: IDL.Func(
+      [RescheduleFixtureDTO],
+      [Result],
+      ["query"]
+    ),
+    validateRetirePlayer: IDL.Func([RetirePlayerDTO], [Result], ["query"]),
+    validateRevaluePlayerDown: IDL.Func(
+      [RevaluePlayerDownDTO],
+      [Result],
+      ["query"]
+    ),
+    validateRevaluePlayerUp: IDL.Func(
+      [RevaluePlayerUpDTO],
+      [Result],
+      ["query"]
+    ),
+    validateSetPlayerInjury: IDL.Func(
+      [SetPlayerInjuryDTO],
+      [Result],
+      ["query"]
+    ),
+    validateSubmitFixtureData: IDL.Func(
+      [SubmitFixtureDataDTO],
+      [Result],
+      ["query"]
+    ),
+    validateTransferPlayer: IDL.Func([TransferPlayerDTO], [Result], ["query"]),
+    validateUnretirePlayer: IDL.Func([UnretirePlayerDTO], [Result], ["query"]),
+    validateUpdateClub: IDL.Func([UpdateClubDTO], [Result], ["query"]),
+    validateUpdatePlayer: IDL.Func([UpdatePlayerDTO], [Result], ["query"]),
   });
 };
 export const init = ({ IDL }) => {

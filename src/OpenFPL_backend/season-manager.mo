@@ -322,8 +322,8 @@ module {
     };
 
     //Governance validation and execution functions
-    public func validateSubmitFixtureData(submitFixtureDataDTO : DTOs.SubmitFixtureDataDTO) : async Result.Result<Text, Text> {
-      return await seasonComposite.validateSubmitFixtureData(submitFixtureDataDTO);
+    public func validateSubmitFixtureData(submitFixtureDataDTO : DTOs.SubmitFixtureDataDTO) : Result.Result<Text, Text> {
+      return seasonComposite.validateSubmitFixtureData(submitFixtureDataDTO);
     };
 
     public func executeSubmitFixtureData(submitFixtureData : DTOs.SubmitFixtureDataDTO) : async () {
@@ -553,9 +553,9 @@ module {
       };
     };
 
-    public func validateAddInitialFixtures(addInitialFixturesDTO : DTOs.AddInitialFixturesDTO) : async Result.Result<Text, Text> {
+    public func validateAddInitialFixtures(addInitialFixturesDTO : DTOs.AddInitialFixturesDTO) : Result.Result<Text, Text> {
       let clubs = clubComposite.getClubs();
-      return await seasonComposite.validateAddInitialFixtures(addInitialFixturesDTO, clubs);
+      return seasonComposite.validateAddInitialFixtures(addInitialFixturesDTO, clubs);
     };
 
     public func executeAddInitialFixtures(addInitialFixturesDTO : DTOs.AddInitialFixturesDTO) : async () {
@@ -653,8 +653,8 @@ module {
       rewardPools.put(seasonId, rewardPool);
     };
 
-    public func validateMoveFixture(moveFixtureDTO : DTOs.MoveFixtureDTO) : async Result.Result<Text, Text> {
-      return await seasonComposite.validateMoveFixture(moveFixtureDTO, systemState);
+    public func validateMoveFixture(moveFixtureDTO : DTOs.MoveFixtureDTO) : Result.Result<Text, Text> {
+      return seasonComposite.validateMoveFixture(moveFixtureDTO, systemState);
     };
 
     public func executeMoveFixture(moveFixtureDTO : DTOs.MoveFixtureDTO) : async () {
@@ -662,8 +662,8 @@ module {
       await updateCacheHash("fixtures");
     };
 
-    public func validatePostponeFixture(postponeFixtureDTO : DTOs.PostponeFixtureDTO) : async Result.Result<Text, Text> {
-      return await seasonComposite.validatePostponeFixture(postponeFixtureDTO, systemState);
+    public func validatePostponeFixture(postponeFixtureDTO : DTOs.PostponeFixtureDTO) : Result.Result<Text, Text> {
+      return seasonComposite.validatePostponeFixture(postponeFixtureDTO, systemState);
     };
 
     public func executePostponeFixture(postponeFixtureDTO : DTOs.PostponeFixtureDTO) : async () {
@@ -671,8 +671,8 @@ module {
       await updateCacheHash("fixtures");
     };
 
-    public func validateRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO) : async Result.Result<Text, Text> {
-      return await seasonComposite.validateRescheduleFixture(rescheduleFixtureDTO, systemState);
+    public func validateRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO) : Result.Result<Text, Text> {
+      return seasonComposite.validateRescheduleFixture(rescheduleFixtureDTO, systemState);
     };
 
     public func executeRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO) : async () {
@@ -680,8 +680,8 @@ module {
       await updateCacheHash("fixtures");
     };
 
-    public func validateRevaluePlayerUp(revaluePlayerUpDTO : DTOs.RevaluePlayerUpDTO) : async Result.Result<Text, Text> {
-      return await playerComposite.validateRevaluePlayerUp(revaluePlayerUpDTO);
+    public func validateRevaluePlayerUp(revaluePlayerUpDTO : DTOs.RevaluePlayerUpDTO) : Result.Result<Text, Text> {
+      return playerComposite.validateRevaluePlayerUp(revaluePlayerUpDTO);
     };
 
     public func executeRevaluePlayerUp(revaluePlayerUpDTO : DTOs.RevaluePlayerUpDTO) : async () {
@@ -689,8 +689,8 @@ module {
       await updateCacheHash("players");
     };
 
-    public func validateRevaluePlayerDown(revaluePlayerDownDTO : DTOs.RevaluePlayerDownDTO) : async Result.Result<Text, Text> {
-      return await playerComposite.validateRevaluePlayerDown(revaluePlayerDownDTO);
+    public func validateRevaluePlayerDown(revaluePlayerDownDTO : DTOs.RevaluePlayerDownDTO) : Result.Result<Text, Text> {
+      return playerComposite.validateRevaluePlayerDown(revaluePlayerDownDTO);
     };
 
     public func executeRevaluePlayerDown(revaluePlayerDownDTO : DTOs.RevaluePlayerDownDTO) : async () {
@@ -698,9 +698,9 @@ module {
       await updateCacheHash("players");
     };
 
-    public func validateLoanPlayer(loanPlayerDTO : DTOs.LoanPlayerDTO) : async Result.Result<Text, Text> {
+    public func validateLoanPlayer(loanPlayerDTO : DTOs.LoanPlayerDTO) : Result.Result<Text, Text> {
       let clubs = clubComposite.getClubs();
-      return await playerComposite.validateLoanPlayer(loanPlayerDTO, List.fromArray(clubs));
+      return playerComposite.validateLoanPlayer(loanPlayerDTO, List.fromArray(clubs));
     };
 
     public func executeLoanPlayer(loanPlayerDTO : DTOs.LoanPlayerDTO) : async () {
@@ -710,9 +710,9 @@ module {
       await updateCacheHash("players");
     };
 
-    public func validateTransferPlayer(transferPlayerDTO : DTOs.TransferPlayerDTO) : async Result.Result<Text, Text> {
+    public func validateTransferPlayer(transferPlayerDTO : DTOs.TransferPlayerDTO) : Result.Result<Text, Text> {
       let clubs = clubComposite.getClubs();
-      return await playerComposite.validateTransferPlayer(transferPlayerDTO, List.fromArray(clubs));
+      return playerComposite.validateTransferPlayer(transferPlayerDTO, List.fromArray(clubs));
     };
 
     public func executeTransferPlayer(transferPlayerDTO : DTOs.TransferPlayerDTO) : async () {
@@ -722,8 +722,8 @@ module {
       await updateCacheHash("players");
     };
 
-    public func validateRecallPlayer(recallPlayerDTO : DTOs.RecallPlayerDTO) : async Result.Result<Text, Text> {
-      return await playerComposite.validateRecallPlayer(recallPlayerDTO);
+    public func validateRecallPlayer(recallPlayerDTO : DTOs.RecallPlayerDTO) : Result.Result<Text, Text> {
+      return playerComposite.validateRecallPlayer(recallPlayerDTO);
     };
 
     public func executeRecallPlayer(recallPlayerDTO : DTOs.RecallPlayerDTO) : async () {
@@ -733,9 +733,9 @@ module {
       await updateCacheHash("players");
     };
 
-    public func validateCreatePlayer(createPlayerDTO : DTOs.CreatePlayerDTO) : async Result.Result<Text, Text> {
+    public func validateCreatePlayer(createPlayerDTO : DTOs.CreatePlayerDTO) : Result.Result<Text, Text> {
       let clubs = clubComposite.getClubs();
-      return await playerComposite.validateCreatePlayer(createPlayerDTO, List.fromArray(clubs));
+      return playerComposite.validateCreatePlayer(createPlayerDTO, List.fromArray(clubs));
     };
 
     public func executeCreatePlayer(createPlayerDTO : DTOs.CreatePlayerDTO) : async () {
@@ -743,8 +743,8 @@ module {
       await updateCacheHash("players");
     };
 
-    public func validateUpdatePlayer(updatePlayerDTO : DTOs.UpdatePlayerDTO) : async Result.Result<Text, Text> {
-      return await playerComposite.validateUpdatePlayer(updatePlayerDTO);
+    public func validateUpdatePlayer(updatePlayerDTO : DTOs.UpdatePlayerDTO) : Result.Result<Text, Text> {
+      return playerComposite.validateUpdatePlayer(updatePlayerDTO);
     };
 
     public func executeUpdatePlayer(updatePlayerDTO : DTOs.UpdatePlayerDTO) : async () {
@@ -764,8 +764,8 @@ module {
       };
     };
 
-    public func validateSetPlayerInjury(setPlayerInjuryDTO : DTOs.SetPlayerInjuryDTO) : async Result.Result<Text, Text> {
-      return await playerComposite.validateSetPlayerInjury(setPlayerInjuryDTO);
+    public func validateSetPlayerInjury(setPlayerInjuryDTO : DTOs.SetPlayerInjuryDTO) : Result.Result<Text, Text> {
+      return playerComposite.validateSetPlayerInjury(setPlayerInjuryDTO);
     };
 
     public func executeSetPlayerInjury(setPlayerInjuryDTO : DTOs.SetPlayerInjuryDTO) : async () {
@@ -773,8 +773,8 @@ module {
       await updateCacheHash("players");
     };
 
-    public func validateRetirePlayer(retirePlayerDTO : DTOs.RetirePlayerDTO) : async Result.Result<Text, Text> {
-      return await playerComposite.validateRetirePlayer(retirePlayerDTO);
+    public func validateRetirePlayer(retirePlayerDTO : DTOs.RetirePlayerDTO) : Result.Result<Text, Text> {
+      return playerComposite.validateRetirePlayer(retirePlayerDTO);
     };
 
     public func executeRetirePlayer(retirePlayerDTO : DTOs.RetirePlayerDTO) : async () {
@@ -784,8 +784,8 @@ module {
       await updateCacheHash("players");
     };
 
-    public func validateUnretirePlayer(unretirePlayerDTO : DTOs.UnretirePlayerDTO) : async Result.Result<Text, Text> {
-      return await playerComposite.validateUnretirePlayer(unretirePlayerDTO);
+    public func validateUnretirePlayer(unretirePlayerDTO : DTOs.UnretirePlayerDTO) : Result.Result<Text, Text> {
+      return playerComposite.validateUnretirePlayer(unretirePlayerDTO);
     };
 
     public func executeUnretirePlayer(unretirePlayerDTO : DTOs.UnretirePlayerDTO) : async () {
@@ -793,8 +793,8 @@ module {
       await updateCacheHash("players");
     };
 
-    public func validatePromoteFormerClub(promoteFormerClubDTO : DTOs.PromoteFormerClubDTO) : async Result.Result<Text, Text> {
-      return await clubComposite.validatePromoteFormerClub(promoteFormerClubDTO);
+    public func validatePromoteFormerClub(promoteFormerClubDTO : DTOs.PromoteFormerClubDTO) : Result.Result<Text, Text> {
+      return clubComposite.validatePromoteFormerClub(promoteFormerClubDTO);
     };
 
     public func executePromoteFormerClub(promoteFormerClubDTO : DTOs.PromoteFormerClubDTO) : async () {
@@ -802,8 +802,8 @@ module {
       await updateCacheHash("clubs");
     };
 
-    public func validatePromoteNewClub(promoteNewClubDTO : DTOs.PromoteNewClubDTO) : async Result.Result<Text, Text> {
-      return await clubComposite.validatePromoteNewClub(promoteNewClubDTO);
+    public func validatePromoteNewClub(promoteNewClubDTO : DTOs.PromoteNewClubDTO) : Result.Result<Text, Text> {
+      return clubComposite.validatePromoteNewClub(promoteNewClubDTO);
     };
 
     public func executePromoteNewClub(promoteNewClubDTO : DTOs.PromoteNewClubDTO) : async () {
@@ -811,8 +811,8 @@ module {
       await updateCacheHash("clubs");
     };
 
-    public func validateUpdateClub(updateClubDTO : DTOs.UpdateClubDTO) : async Result.Result<Text, Text> {
-      return await clubComposite.validateUpdateClub(updateClubDTO);
+    public func validateUpdateClub(updateClubDTO : DTOs.UpdateClubDTO) : Result.Result<Text, Text> {
+      return clubComposite.validateUpdateClub(updateClubDTO);
     };
 
     public func executeUpdateClub(updateClubDTO : DTOs.UpdateClubDTO) : async () {

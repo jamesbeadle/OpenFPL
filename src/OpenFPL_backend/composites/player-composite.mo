@@ -376,7 +376,7 @@ module {
       };
     };
 
-    public func validateRevaluePlayerUp(revaluePlayerUpDTO : DTOs.RevaluePlayerUpDTO) : async Result.Result<Text, Text> {
+    public func validateRevaluePlayerUp(revaluePlayerUpDTO : DTOs.RevaluePlayerUpDTO) : Result.Result<Text, Text> {
       let player = List.find<T.Player>(
         players,
         func(p : T.Player) : Bool {
@@ -439,7 +439,7 @@ module {
       players := updatedPlayers;
     };
 
-    public func validateRevaluePlayerDown(revaluePlayerDownDTO : DTOs.RevaluePlayerDownDTO) : async Result.Result<Text, Text> {
+    public func validateRevaluePlayerDown(revaluePlayerDownDTO : DTOs.RevaluePlayerDownDTO) : Result.Result<Text, Text> {
       let player = List.find<T.Player>(
         players,
         func(p : T.Player) : Bool {
@@ -503,7 +503,7 @@ module {
       players := updatedPlayers;
     };
 
-    public func validateLoanPlayer(loanPlayerDTO : DTOs.LoanPlayerDTO, clubs : List.List<T.Club>) : async Result.Result<Text, Text> {
+    public func validateLoanPlayer(loanPlayerDTO : DTOs.LoanPlayerDTO, clubs : List.List<T.Club>) : Result.Result<Text, Text> {
       if (loanPlayerDTO.loanEndDate <= Time.now()) {
         return #err("Invalid: Loan end date must be in the future.");
       };
@@ -604,7 +604,7 @@ module {
       };
     };
 
-    public func validateTransferPlayer(transferPlayerDTO : DTOs.TransferPlayerDTO, clubs : List.List<T.Club>) : async Result.Result<Text, Text> {
+    public func validateTransferPlayer(transferPlayerDTO : DTOs.TransferPlayerDTO, clubs : List.List<T.Club>) : Result.Result<Text, Text> {
       let player = List.find<T.Player>(
         players,
         func(p : T.Player) : Bool {
@@ -693,7 +693,7 @@ module {
       };
     };
 
-    public func validateRecallPlayer(recallPlayerDTO : DTOs.RecallPlayerDTO) : async Result.Result<Text, Text> {
+    public func validateRecallPlayer(recallPlayerDTO : DTOs.RecallPlayerDTO) : Result.Result<Text, Text> {
       let player = List.find<T.Player>(
         players,
         func(p : T.Player) : Bool {
@@ -813,7 +813,7 @@ module {
       };
     };
 
-    public func validateCreatePlayer(createPlayerDTO : DTOs.CreatePlayerDTO, clubs : List.List<T.Club>) : async Result.Result<Text, Text> {
+    public func validateCreatePlayer(createPlayerDTO : DTOs.CreatePlayerDTO, clubs : List.List<T.Club>) : Result.Result<Text, Text> {
 
       let newClub = List.find<T.Club>(
         clubs,
@@ -877,7 +877,7 @@ module {
       nextPlayerId += 1;
     };
 
-    public func validateUpdatePlayer(updatePlayerDTO : DTOs.UpdatePlayerDTO) : async Result.Result<Text, Text> {
+    public func validateUpdatePlayer(updatePlayerDTO : DTOs.UpdatePlayerDTO) : Result.Result<Text, Text> {
 
       let player = List.find<T.Player>(
         players,
@@ -948,7 +948,7 @@ module {
       );
     };
 
-    public func validateSetPlayerInjury(setPlayerInjuryDTO : DTOs.SetPlayerInjuryDTO) : async Result.Result<Text, Text> {
+    public func validateSetPlayerInjury(setPlayerInjuryDTO : DTOs.SetPlayerInjuryDTO) : Result.Result<Text, Text> {
       let player = List.find<T.Player>(
         players,
         func(p : T.Player) : Bool {
@@ -1051,7 +1051,7 @@ module {
       };
     };
 
-    public func validateRetirePlayer(retirePlayerDTO : DTOs.RetirePlayerDTO) : async Result.Result<Text, Text> {
+    public func validateRetirePlayer(retirePlayerDTO : DTOs.RetirePlayerDTO) : Result.Result<Text, Text> {
       let player = List.find<T.Player>(
         players,
         func(p : T.Player) : Bool {
@@ -1107,7 +1107,7 @@ module {
       };
     };
 
-    public func validateUnretirePlayer(unretirePlayerDTO : DTOs.UnretirePlayerDTO) : async Result.Result<Text, Text> {
+    public func validateUnretirePlayer(unretirePlayerDTO : DTOs.UnretirePlayerDTO) : Result.Result<Text, Text> {
 
       let playerToUnretire = List.find<T.Player>(players, func(p : T.Player) { p.id == unretirePlayerDTO.playerId and p.status == #Retired });
       switch (playerToUnretire) {

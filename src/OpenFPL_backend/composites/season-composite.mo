@@ -309,7 +309,7 @@ module {
 
     };
 
-    public func validateSubmitFixtureData(submitFixtureDataDTO : DTOs.SubmitFixtureDataDTO) : async Result.Result<Text, Text> {
+    public func validateSubmitFixtureData(submitFixtureDataDTO : DTOs.SubmitFixtureDataDTO) : Result.Result<Text, Text> {
 
       let validPlayerEvents = validatePlayerEvents(submitFixtureDataDTO.playerEventData);
       if (not validPlayerEvents) {
@@ -947,7 +947,7 @@ module {
       return false;
     };
 
-    public func validateAddInitialFixtures(addInitialFixturesDTO : DTOs.AddInitialFixturesDTO, clubs : [T.Club]) : async Result.Result<Text, Text> {
+    public func validateAddInitialFixtures(addInitialFixturesDTO : DTOs.AddInitialFixturesDTO, clubs : [T.Club]) : Result.Result<Text, Text> {
 
       let currentSeason = List.find(
         seasons,
@@ -1096,7 +1096,7 @@ module {
       return result;
     };
 
-    public func validateMoveFixture(moveFixtureDTO : DTOs.MoveFixtureDTO, systemState : T.SystemState) : async Result.Result<Text, Text> {
+    public func validateMoveFixture(moveFixtureDTO : DTOs.MoveFixtureDTO, systemState : T.SystemState) : Result.Result<Text, Text> {
       let currentSeason = List.find(
         seasons,
         func(season : T.Season) : Bool {
@@ -1180,7 +1180,7 @@ module {
       );
     };
 
-    public func validatePostponeFixture(postponeFixtureDTO : DTOs.PostponeFixtureDTO, systemState : T.SystemState) : async Result.Result<Text, Text> {
+    public func validatePostponeFixture(postponeFixtureDTO : DTOs.PostponeFixtureDTO, systemState : T.SystemState) : Result.Result<Text, Text> {
       let currentSeason = List.find(
         seasons,
         func(season : T.Season) : Bool {
@@ -1259,7 +1259,7 @@ module {
       );
     };
 
-    public func validateRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO, systemState : T.SystemState) : async Result.Result<Text, Text> {
+    public func validateRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO, systemState : T.SystemState) : Result.Result<Text, Text> {
       let currentSeason = List.find(
         seasons,
         func(season : T.Season) : Bool {

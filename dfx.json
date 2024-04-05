@@ -30,10 +30,10 @@
       },
       "type": "custom",
       "wasm": ""
-    }, 
+    },
     "sns_governance": {
       "build": "",
-      "candid": "sns/candid/sns_governance.did",
+      "candid": "governance/candid/sns_governance.did",
       "remote": {
         "id": {
           "ic": "detjl-sqaaa-aaaaq-aacqa-cai",
@@ -45,7 +45,7 @@
     },
     "sns_index": {
       "build": "",
-      "candid": "sns/candid/sns_index.did",
+      "candid": "governance/candid/sns_index.did",
       "remote": {
         "id": {
           "ic": "dnqcx-eyaaa-aaaaq-aacrq-cai",
@@ -57,7 +57,7 @@
     },
     "sns_ledger": {
       "build": "",
-      "candid": "sns/candid/sns_ledger.did",
+      "candid": "governance/candid/sns_ledger.did",
       "remote": {
         "id": {
           "ic": "ddsp7-7iaaa-aaaaq-aacqq-cai",
@@ -69,7 +69,7 @@
     },
     "sns_root": {
       "build": "",
-      "candid": "sns/candid/sns_root.did",
+      "candid": "governance/candid/sns_root.did",
       "remote": {
         "id": {
           "ic": "gyito-zyaaa-aaaaq-aacpq-cai",
@@ -81,7 +81,7 @@
     },
     "sns_swap": {
       "build": "",
-      "candid": "sns/candid/sns_swap.did",
+      "candid": "governance/candid/sns_swap.did",
       "remote": {
         "id": {
           "ic": "dkred-jaaaa-aaaaq-aacra-cai",
