@@ -4,8 +4,9 @@ set -euo pipefail
 
 cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
 
-# Deploy test canister
-./deploy_test_canister.sh
+# Deploy frontend canister
+./deploy_backend_canister.sh
+./deploy_frontend_canister.sh
 
 # assert the default greeting text
 [ "$(./bin/dfx canister call test greet "M")" == '("Hoi, M!")' ] && echo "OK" || exit 1
