@@ -9,7 +9,7 @@ cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
 
 export NAME="OpenFPL_backend"
 export WASM_FILE_NAME="${NAME}.wasm"
-export WASM_LOCATION=".dfx/${DX_NETWORK}/canisters/${NAME}"
+export WASM_LOCATION="../../.dfx/${DX_NETWORK}/canisters/${NAME}"
 export WASM="${WASM_LOCATION}/OpenFPL_backend.wasm"
 
 if [ -f "./sns_canister_ids.json" ]
