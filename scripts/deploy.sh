@@ -32,17 +32,3 @@ fi
 
 IDENTITY_CANISTER_ID=$(dfx canister --network $NETWORK id internet_identity)
 NEURON_CONTROLLER_CANISTER_ID=$(dfx canister --network $NETWORK id neuron_controller)
-
-cargo run \
-  --manifest-path backend/canister_installer/Cargo.toml -- \
-  --url $IC_URL \
-  --test-mode $TEST_MODE \
-  --controller $IDENTITY \
-  --internet_identity $IDENTITY_CANISTER_ID \
-  --nns-root $NNS_ROOT_CANISTER_ID \
-  --nns-governance $NNS_GOVERNANCE_CANISTER_ID \
-  --nns-internet-identity $NNS_INTERNET_IDENTITY_CANISTER_ID \
-  --nns-ledger $NNS_LEDGER_CANISTER_ID \
-  --nns-cmc $NNS_CMC_CANISTER_ID \
-  --nns-sns-wasm $NNS_SNS_WASM_CANISTER_ID \
-  --nns-index $NNS_INDEX_CANISTER_ID \

@@ -10,7 +10,9 @@ SCRIPT_DIR=$(dirname "$SCRIPT")
 cd $SCRIPT_DIR/..
 
 # Create and install the NNS canisters
-dfx extension install nns --version 0.3.1 >& /dev/null
+echo "installing extesion"
+dfx extension install nns # --version 0.4.0 #>& /dev/null
+echo "done"
 dfx --identity $IDENTITY nns install
 
 NNS_ROOT_CANISTER_ID=r7inp-6aaaa-aaaaa-aaabq-cai
