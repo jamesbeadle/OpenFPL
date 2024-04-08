@@ -13,7 +13,7 @@ cd $SCRIPT_DIR/..
 echo "installing extesion"
 dfx extension install nns # --version 0.4.0 #>& /dev/null
 echo "done"
-dfx --identity $IDENTITY nns install
+#dfx --identity $IDENTITY nns install
 
 NNS_ROOT_CANISTER_ID=r7inp-6aaaa-aaaaa-aaabq-cai
 NNS_GOVERNANCE_CANISTER_ID=rrkah-fqaaa-aaaaa-aaaaq-cai

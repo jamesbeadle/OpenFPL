@@ -20,9 +20,12 @@ SCRIPT=$(readlink -f "$0")
 SCRIPT_DIR=$(dirname "$SCRIPT")
 cd $SCRIPT_DIR/..
 
+#pull identity canister
+dfx deps pull --network local
+dfx deps pull --network local
+
 dfx deploy --network local --identity $IDENTITY 
 
-IDENTITY_CANISTER_ID=$(dfx canister --network $NETWORK id internet_identity)
 NEURON_CONTROLLER_CANISTER_ID=$(dfx canister --network $NETWORK id neuron_controller)
 OPENFPL_BACKEND_CANISTER_ID=$(dfx canister --network $NETWORK id OpenFPL_backend)
 

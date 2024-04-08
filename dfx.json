@@ -20,16 +20,8 @@
       "type": "motoko"
     },
     "internet_identity": {
-      "build": "",
-      "candid": "candid/internet_identity.did",
-      "remote": {
-        "id": {
-          "ic": "rdmx6-jaaaa-aaaaa-aaadq-cai",
-          "local": "rdmx6-jaaaa-aaaaa-aaadq-cai"
-        }
-      },
-      "type": "custom",
-      "wasm": ""
+      "id": "rdmx6-jaaaa-aaaaa-aaadq-cai",
+      "type": "pull"
     },
     "sns_governance": {
       "build": "",
