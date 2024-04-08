@@ -23,10 +23,6 @@ NNS_CMC_CANISTER_ID=rkp4c-7iaaa-aaaaa-aaaca-cai
 NNS_SNS_WASM_CANISTER_ID=qaa6y-5yaaa-aaaaa-aaafa-cai
 NNS_INDEX_CANISTER_ID=qhbym-qaaaa-aaaaa-aaafq-cai
 
-# Create the OpenFPL canisters
-dfx --identity $IDENTITY canister create --no-wallet --with-cycles 100000000000000 OpenFPL_backend
-dfx --identity $IDENTITY canister create --no-wallet --with-cycles 100000000000000 internet_identity
-
 # Install the OpenFPL canisters
 ./scripts/deploy.sh local \
     http://127.0.0.1:8080/ \

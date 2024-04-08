@@ -20,15 +20,10 @@ SCRIPT=$(readlink -f "$0")
 SCRIPT_DIR=$(dirname "$SCRIPT")
 cd $SCRIPT_DIR/..
 
-if [ $WASM_SRC = "build" ]
-then
-    ./scripts/generate-all-canister-wasms.sh
-elif [ $WASM_SRC != "local" ]
-then
-    ./scripts/download-all-canister-wasms.sh $WASM_SRC || exit 1
-fi
-
-./scripts/download-canister-wasm-dfx.sh event_store
+dfx deploy --network local --identity $IDENTITY 
 
 IDENTITY_CANISTER_ID=$(dfx canister --network $NETWORK id internet_identity)
 NEURON_CONTROLLER_CANISTER_ID=$(dfx canister --network $NETWORK id neuron_controller)
+OPENFPL_BACKEND_CANISTER_ID=$(dfx canister --network $NETWORK id OpenFPL_backend)
+
+
