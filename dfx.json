@@ -82,12 +82,6 @@
       },
       "type": "custom",
       "wasm": ""
-    },
-    "test_ledger": {
-      "build": "",
-      "candid": "",
-      "type": "custom",
-      "wasm": "wasms/icrc_ledger.wasm.gz"
     }
   },
   "defaults": {

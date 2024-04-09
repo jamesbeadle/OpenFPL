@@ -13,7 +13,7 @@ cd $SCRIPT_DIR/..
 echo "installing extesion"
 dfx extension install nns # --version 0.4.0 #>& /dev/null
 echo "done"
-#dfx --identity $IDENTITY nns install
+#dfx --identity $IDENTITY nns install - moved to extension
 
 NNS_ROOT_CANISTER_ID=r7inp-6aaaa-aaaaa-aaabq-cai
 NNS_GOVERNANCE_CANISTER_ID=rrkah-fqaaa-aaaaa-aaaaq-cai
@@ -36,6 +36,3 @@ NNS_INDEX_CANISTER_ID=qhbym-qaaaa-aaaaa-aaafq-cai
     $NNS_SNS_WASM_CANISTER_ID \
     $NNS_INDEX_CANISTER_ID \
     true \
-
-./scripts/deploy-test-ledger.sh $IDENTITY
-./scripts/mint-test-tokens.sh "dccg7-xmaaa-aaaaa-qaamq-cai" $IDENTITY
