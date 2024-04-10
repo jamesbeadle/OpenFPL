@@ -1,25 +1,17 @@
+
 #!/bin/bash
 
-# Set current directory to the directory this script is in
+# Set current directory to the scripts root
 SCRIPT=$(readlink -f "$0")
 SCRIPT_DIR=$(dirname "$SCRIPT")
-cd $SCRIPT_DIR
+cd $SCRIPT_DIR/..
 
-echo "Create DAO Neuron"
+TITLE="Create DAO Controlled Neuron with 1 ICP"
+SUMMARY="This proposal will create a DAO controlled neuron through calling the registered generic function CreateDAONeuron"
+URL="https://github.com/jamesbeadle/OpenFPL/tree/master/src/neuron_controller"
+ARGS="(null)"
+FUNCTION_ID=19000
 
-PROPOSAL="(
-    record {  
-        title = \"Create DAO Controlled Neuron with 1 ICP\";  
-        url = \"https://openfpl.xyz/whitepaper/\";  
-        summary = \"This proposal will create a DAO controlled neuron through calling the registered generic function CreateDAONeuron\";
-        action = opt variant {  
-            ExecuteGenericNervousSystemFunction = record {  
-                function_id=19000;
-                payload=null;
-            }  
-        };  
-    })"
+# Submit the proposal
 
-../utils/submit_proposal.sh "$PROPOSAL"
-
-#On completion use OpenFPL Backend to obtain neuron id
+./utils/make_custom_function_proposal.sh $FUNCTION_ID "$TITLE" "$SUMMARY" "$URL" "$ARGS"
