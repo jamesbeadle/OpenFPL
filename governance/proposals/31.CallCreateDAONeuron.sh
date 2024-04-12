@@ -9,7 +9,7 @@ cd $SCRIPT_DIR/..
 TITLE="Create DAO Controlled Neuron with 1 ICP"
 SUMMARY="This proposal will create a DAO controlled neuron through calling the registered generic function CreateDAONeuron"
 URL="https://github.com/jamesbeadle/OpenFPL/tree/master/src/neuron_controller"
-ARGS="(null)"
+ARGS="()"
 FUNCTION_ID=19000
 
 # Submit the proposal

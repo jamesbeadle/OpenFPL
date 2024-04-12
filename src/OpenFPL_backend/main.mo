@@ -354,13 +354,13 @@ actor Self {
     return #ok(Principal.toText(Principal.fromActor(Self)));
   };
 
-  public shared query ({ caller }) func validateCreateDAONeuron() : async Result.Result<Text, Text> {
+  public shared query ({ caller }) func validateCreateDAONeuron() : async T.RustResult {
     assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     if (neuronCreated) {
-      return #err("Neuron already created");
+      return #Err("Neuron already created");
     };
 
-    return #ok("Can create neuron");
+    return #Ok();
   };
 
   public shared ({ caller }) func executeCreateDAONeuron() : async () {

@@ -13,10 +13,10 @@ URL=$4
 ARGS=$5
 
 # Candid encode the payload as binary
-#PAYLOAD=$(didc encode "$ARGS" --format blob)
+PAYLOAD=$(didc encode "$ARGS" --format blob)
 
 # Build the proposal candid
-PROPOSAL="(record { title=\"$TITLE\"; url=\"$URL\"; summary=\"$SUMMARY\"; action=opt variant {ExecuteGenericNervousSystemFunction = record {function_id=($FUNCTION_ID:nat64); payload=()}}})"
+PROPOSAL="(record { title=\"$TITLE\"; url=\"$URL\"; summary=\"$SUMMARY\"; action=opt variant {ExecuteGenericNervousSystemFunction = record {function_id=($FUNCTION_ID:nat64); payload=$PAYLOAD}}})"
 
 # Make the proposal
 ./submit_proposal.sh "$PROPOSAL"
