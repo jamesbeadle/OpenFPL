@@ -403,7 +403,6 @@ actor Self {
     neuronCreated := true;
 
   };
-
   public shared func getNeuronId() : async Nat64 {
     let neuron_controller = actor (Environment.NEURON_CONTROLLER_CANISTER_ID) : actor {
       getNeuronId : () -> async Nat64;
@@ -446,6 +445,65 @@ actor Self {
     await seasonManager.transferWindowEndCallback();
     removeExpiredTimers();
   };
+
+  //Private league functionality
+
+  
+
+  public shared func getPrivateLeagueTable() : async (){
+    
+  };
+
+  public shared func getPrivateLeagueMembers() : async (){
+
+  };
+
+  public shared func agreePrivateLeagueTerms() : async (){
+
+  };
+
+  public shared func getICRC1TokenList() : async (){
+
+  };
+
+  public shared func setupPrivateLeague() : async (){
+
+  };
+
+  public shared func searchUsername() : async (){
+
+  };
+
+  public shared func inviteUserToLeague() : async () {
+    //check max 10000
+  };
+
+  public shared func updateLeagueProfilePicture() : async () {
+
+  };
+
+  public shared func updateLeagueBannerPicture() : async () {
+
+  };
+
+  public shared func updateLeagueName() : async () {
+
+  };
+
+  public shared func updateLeagueColours() : async () {
+
+  };
+
+  public shared func acceptLeagueInvite() : async () {
+//check max 10000
+  };
+
+  public shared func payLeagueEntryFee() : async () {
+    //check max 10000
+  };
+
+  
+
 
   //Stable variables backup:
 
