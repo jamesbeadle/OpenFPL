@@ -440,4 +440,14 @@ module DTOs {
     callbackName : Text;
   };
 
+  public type LeagueMemberDTO = {
+    principalId : T.PrincipalId;
+    username: Text;
+    added: Int;
+  };
+
+  public type CreatePrivateLeagueDTO = {
+    
+  };
+
 };
