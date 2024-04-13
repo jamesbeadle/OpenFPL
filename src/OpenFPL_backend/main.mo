@@ -20,12 +20,13 @@ import Utilities "utilities";
 import Account "lib/Account";
 import Environment "Environment";
 import NeuronTypes "../neuron_controller/types";
+import PrivateLeaguesManager "private-leagues-manager";
 
 actor Self {
   let seasonManager = SeasonManager.SeasonManager();
   let cyclesDispenser = CyclesDispenser.CyclesDispenser();
   let treasuryManager = TreasuryManager.TreasuryManager();
-  let privateLeaguesManager = PrivateLeagues.PrivateLeagues();
+  let privateLeaguesManager = PrivateLeaguesManager.PrivateLeaguesManager();
   private let cyclesCheckInterval : Nat = Utilities.getHour() * 24;
   private let cyclesCheckWalletInterval : Nat = Utilities.getHour() * 24;
 
@@ -449,12 +450,22 @@ actor Self {
 
   //Private league functionality
 
-  public shared ({ caller }) func getPrivateLeagueTable(canisterId: T.CanisterId) : async (){
+  public shared ({ caller }) func getPrivateLeagueWeeklyLeaderboard(canisterId: T.CanisterId) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error>{
     assert(privateLeagues.isLeagueMember(canisterId));
-    return privateLeagues.getLeagueTable(canisterId);
+    return privateLeagues.getWeeklyLeaderboard(canisterId);
   };
 
-  public shared func getPrivateLeagueMembers() : async (){
+  public shared ({ caller }) func getPrivateLeagueMonthlyLeaderboard(canisterId: T.CanisterId) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error>{
+    assert(privateLeagues.isLeagueMember(canisterId));
+    return privateLeagues.getMonthlyLeaderboard(canisterId);
+  };
+
+  public shared ({ caller }) func getPrivateLeagueSeasonLeaderboard(canisterId: T.CanisterId) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error>{
+    assert(privateLeagues.isLeagueMember(canisterId));
+    return privateLeagues.getSeasonLeaderboard(canisterId);
+  };
+
+  public shared func getPrivateLeagueMembers() : async Result.Result<[DTOs.LeagueMember], T.Error>{
     assert(privateLeagues.isLeagueMember(canisterId));
     return privateLeagues.getLeagueMembers(canisterId);
   };

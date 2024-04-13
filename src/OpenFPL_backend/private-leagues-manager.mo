@@ -1,7 +1,7 @@
 
 module {
 
-  public class PrivateLeagues() {
+  public class PrivateLeaguesManager() {
 
     
 

@@ -321,6 +321,8 @@ module {
             hatTrickHeroGameweek = updatedFantasyTeamDTO.hatTrickHeroGameweek;
             transferWindowGameweek = 0;
             history = List.nil();
+            ownedPrivateLeagues = List.nil();
+            privateLeagueMemberships = List.nil();
           };
 
           let manager_canister = actor (activeManagerCanisterId) : actor {
@@ -531,7 +533,8 @@ module {
             hatTrickHeroGameweek = 0;
             transferWindowGameweek = 0;
             history = List.nil();
-
+            ownedPrivateLeagues = List.nil();
+            privateLeagueMemberships = List.nil();
           };
 
           let manager_canister = actor (activeManagerCanisterId) : actor {
@@ -632,7 +635,8 @@ module {
             hatTrickHeroGameweek = 0;
             transferWindowGameweek = 0;
             history = List.nil();
-
+            ownedPrivateLeagues = List.nil();
+            privateLeagueMemberships = List.nil();
           };
 
           let manager_canister = actor (activeManagerCanisterId) : actor {
@@ -739,7 +743,8 @@ module {
             hatTrickHeroGameweek = 0;
             transferWindowGameweek = 0;
             history = List.nil();
-
+            ownedPrivateLeagues = List.nil();
+            privateLeagueMemberships = List.nil();
           };
 
           let manager_canister = actor (activeManagerCanisterId) : actor {
