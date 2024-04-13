@@ -383,6 +383,7 @@ export interface RevaluePlayerDownDTO {
 export interface RevaluePlayerUpDTO {
   playerId: PlayerId;
 }
+export type RustResult = { Ok: null } | { Err: string };
 export interface SeasonDTO {
   id: SeasonId;
   name: string;
@@ -491,6 +492,8 @@ export interface WeeklyLeaderboardDTO {
   gameweek: GameweekNumber;
 }
 export interface _SERVICE {
+  acceptLeagueInvite: ActorMethod<[], undefined>;
+  agreePrivateLeagueTerms: ActorMethod<[], undefined>;
   burnICPToCycles: ActorMethod<[bigint], undefined>;
   executeAddInitialFixtures: ActorMethod<[AddInitialFixturesDTO], undefined>;
   executeCreateDAONeuron: ActorMethod<[], undefined>;
@@ -519,6 +522,7 @@ export interface _SERVICE {
   getDataHashes: ActorMethod<[], Result_17>;
   getFixtures: ActorMethod<[SeasonId], Result_9>;
   getFormerClubs: ActorMethod<[], Result_16>;
+  getICRC1TokenList: ActorMethod<[], undefined>;
   getLoanedPlayers: ActorMethod<[ClubId], Result_7>;
   getManager: ActorMethod<[string], Result_15>;
   getMonthlyLeaderboard: ActorMethod<
@@ -535,6 +539,8 @@ export interface _SERVICE {
   getPlayers: ActorMethod<[], Result_7>;
   getPlayersMap: ActorMethod<[SeasonId, GameweekNumber], Result_10>;
   getPostponedFixtures: ActorMethod<[], Result_9>;
+  getPrivateLeagueMembers: ActorMethod<[], undefined>;
+  getPrivateLeagueTable: ActorMethod<[], undefined>;
   getProfile: ActorMethod<[], Result_8>;
   getRetiredPlayers: ActorMethod<[ClubId], Result_7>;
   getSeasonLeaderboard: ActorMethod<
@@ -548,15 +554,23 @@ export interface _SERVICE {
     [SeasonId, GameweekNumber, bigint, bigint, string],
     Result_2
   >;
+  inviteUserToLeague: ActorMethod<[], undefined>;
   isUsernameValid: ActorMethod<[string], boolean>;
+  payLeagueEntryFee: ActorMethod<[], undefined>;
   requestCanisterTopup: ActorMethod<[], undefined>;
   saveFantasyTeam: ActorMethod<[UpdateTeamSelectionDTO], Result_1>;
+  searchUsername: ActorMethod<[], undefined>;
   setTimer: ActorMethod<[bigint, string], undefined>;
+  setupPrivateLeague: ActorMethod<[], undefined>;
   updateFavouriteClub: ActorMethod<[ClubId], Result_1>;
+  updateLeagueBannerPicture: ActorMethod<[], undefined>;
+  updateLeagueColours: ActorMethod<[], undefined>;
+  updateLeagueName: ActorMethod<[], undefined>;
+  updateLeagueProfilePicture: ActorMethod<[], undefined>;
   updateProfilePicture: ActorMethod<[Uint8Array | number[], string], Result_1>;
   updateUsername: ActorMethod<[string], Result_1>;
   validateAddInitialFixtures: ActorMethod<[AddInitialFixturesDTO], Result>;
-  validateCreateDAONeuron: ActorMethod<[], Result>;
+  validateCreateDAONeuron: ActorMethod<[], RustResult>;
   validateCreatePlayer: ActorMethod<[CreatePlayerDTO], Result>;
   validateLoanPlayer: ActorMethod<[LoanPlayerDTO], Result>;
   validateManageDAONeuron: ActorMethod<[], Result>;

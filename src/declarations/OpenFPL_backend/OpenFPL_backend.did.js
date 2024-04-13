@@ -481,7 +481,10 @@ export const idlFactory = ({ IDL }) => {
   });
   const Result_1 = IDL.Variant({ ok: IDL.Null, err: Error });
   const Result = IDL.Variant({ ok: IDL.Text, err: IDL.Text });
+  const RustResult = IDL.Variant({ Ok: IDL.Null, Err: IDL.Text });
   return IDL.Service({
+    acceptLeagueInvite: IDL.Func([], [], []),
+    agreePrivateLeagueTerms: IDL.Func([], [], []),
     burnICPToCycles: IDL.Func([IDL.Nat64], [], []),
     executeAddInitialFixtures: IDL.Func([AddInitialFixturesDTO], [], []),
     executeCreateDAONeuron: IDL.Func([], [], []),
@@ -510,6 +513,7 @@ export const idlFactory = ({ IDL }) => {
     getDataHashes: IDL.Func([], [Result_17], ["query"]),
     getFixtures: IDL.Func([SeasonId], [Result_9], ["query"]),
     getFormerClubs: IDL.Func([], [Result_16], ["query"]),
+    getICRC1TokenList: IDL.Func([], [], []),
     getLoanedPlayers: IDL.Func([ClubId], [Result_7], ["query"]),
     getManager: IDL.Func([IDL.Text], [Result_15], []),
     getMonthlyLeaderboard: IDL.Func(
@@ -532,6 +536,8 @@ export const idlFactory = ({ IDL }) => {
     getPlayers: IDL.Func([], [Result_7], ["query"]),
     getPlayersMap: IDL.Func([SeasonId, GameweekNumber], [Result_10], ["query"]),
     getPostponedFixtures: IDL.Func([], [Result_9], ["query"]),
+    getPrivateLeagueMembers: IDL.Func([], [], []),
+    getPrivateLeagueTable: IDL.Func([], [], []),
     getProfile: IDL.Func([], [Result_8], []),
     getRetiredPlayers: IDL.Func([ClubId], [Result_7], ["query"]),
     getSeasonLeaderboard: IDL.Func(
@@ -547,11 +553,19 @@ export const idlFactory = ({ IDL }) => {
       [Result_2],
       []
     ),
+    inviteUserToLeague: IDL.Func([], [], []),
     isUsernameValid: IDL.Func([IDL.Text], [IDL.Bool], ["query"]),
+    payLeagueEntryFee: IDL.Func([], [], []),
     requestCanisterTopup: IDL.Func([], [], []),
     saveFantasyTeam: IDL.Func([UpdateTeamSelectionDTO], [Result_1], []),
+    searchUsername: IDL.Func([], [], []),
     setTimer: IDL.Func([IDL.Int, IDL.Text], [], []),
+    setupPrivateLeague: IDL.Func([], [], []),
     updateFavouriteClub: IDL.Func([ClubId], [Result_1], []),
+    updateLeagueBannerPicture: IDL.Func([], [], []),
+    updateLeagueColours: IDL.Func([], [], []),
+    updateLeagueName: IDL.Func([], [], []),
+    updateLeagueProfilePicture: IDL.Func([], [], []),
     updateProfilePicture: IDL.Func(
       [IDL.Vec(IDL.Nat8), IDL.Text],
       [Result_1],
@@ -563,7 +577,7 @@ export const idlFactory = ({ IDL }) => {
       [Result],
       ["query"]
     ),
-    validateCreateDAONeuron: IDL.Func([], [Result], ["query"]),
+    validateCreateDAONeuron: IDL.Func([], [RustResult], ["query"]),
     validateCreatePlayer: IDL.Func([CreatePlayerDTO], [Result], ["query"]),
     validateLoanPlayer: IDL.Func([LoanPlayerDTO], [Result], ["query"]),
     validateManageDAONeuron: IDL.Func([], [Result], []),

@@ -109,6 +109,8 @@ module _Types {
     history : List.List<FantasyTeamSeason>;
     profilePicture : ?Blob;
     profilePictureType : Text;
+    ownedPrivateLeagues: List.List<CanisterId>;
+    privateLeagueMemberships: List.List<CanisterId>;
   };
 
   public type FantasyTeamSeason = {

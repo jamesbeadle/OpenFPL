@@ -211,6 +211,8 @@ actor class _ManagerCanister() {
       transferWindowGameweek = dto.transferWindowGameweek;
       history = manager.history;
       profilePictureType = manager.profilePictureType;
+      ownedPrivateLeagues = manager.ownedPrivateLeagues;
+      privateLeagueMemberships = manager.privateLeagueMemberships;
     };
   };
 
@@ -386,6 +388,8 @@ actor class _ManagerCanister() {
       history = manager.history;
       profilePicture = manager.profilePicture;
       profilePictureType = manager.profilePictureType;
+      ownedPrivateLeagues = manager.ownedPrivateLeagues;
+      privateLeagueMemberships = manager.privateLeagueMemberships;
     };
   };
 
@@ -561,6 +565,8 @@ actor class _ManagerCanister() {
       history = manager.history;
       profilePicture = profilePicture;
       profilePictureType = extension;
+      ownedPrivateLeagues = manager.ownedPrivateLeagues;
+      privateLeagueMemberships = manager.privateLeagueMemberships;
     };
   };
 
@@ -736,6 +742,8 @@ actor class _ManagerCanister() {
       history = manager.history;
       profilePicture = manager.profilePicture;
       profilePictureType = manager.profilePictureType;
+      ownedPrivateLeagues = manager.ownedPrivateLeagues;
+      privateLeagueMemberships = manager.privateLeagueMemberships;
     };
   };
 
@@ -2294,6 +2302,8 @@ actor class _ManagerCanister() {
       history = history;
       profilePicture = manager.profilePicture;
       profilePictureType = manager.profilePictureType;
+      ownedPrivateLeagues = manager.ownedPrivateLeagues;
+      privateLeagueMemberships = manager.privateLeagueMemberships;
     };
   };
 
@@ -2428,6 +2438,8 @@ actor class _ManagerCanister() {
               profilePicture = manager.profilePicture;
               transfersAvailable = manager.transfersAvailable;
               profilePictureType = manager.profilePictureType;
+              ownedPrivateLeagues = manager.ownedPrivateLeagues;
+              privateLeagueMemberships = manager.privateLeagueMemberships;
             };
 
             managerBuffer.add(newManager);
@@ -2786,6 +2798,8 @@ actor class _ManagerCanister() {
         history = updatedSeasons;
         profilePicture = manager.profilePicture;
         profilePictureType = manager.profilePictureType;
+        ownedPrivateLeagues = manager.ownedPrivateLeagues;
+        privateLeagueMemberships = manager.privateLeagueMemberships;
       };
       managerBuffer.add(updatedManager);
     };
@@ -2878,6 +2892,8 @@ actor class _ManagerCanister() {
         braceBonusGameweek = manager.braceBonusGameweek;
         hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
         transferWindowGameweek = manager.transferWindowGameweek;
+        ownedPrivateLeagues = manager.ownedPrivateLeagues;
+        privateLeagueMemberships = manager.privateLeagueMemberships;
       };
       managerBuffer.add(updatedManager);
     };
@@ -2969,6 +2985,8 @@ actor class _ManagerCanister() {
         braceBonusGameweek = 0;
         hatTrickHeroGameweek = 0;
         transferWindowGameweek = 0;
+        ownedPrivateLeagues = manager.ownedPrivateLeagues;
+        privateLeagueMemberships = manager.privateLeagueMemberships;
       };
       managerBuffer.add(updatedManager);
     };
@@ -3060,6 +3078,8 @@ actor class _ManagerCanister() {
         braceBonusGameweek = manager.braceBonusGameweek;
         hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
         transferWindowGameweek = manager.transferWindowGameweek;
+        ownedPrivateLeagues = manager.ownedPrivateLeagues;
+        privateLeagueMemberships = manager.privateLeagueMemberships;
       };
       managerBuffer.add(updatedManager);
     };

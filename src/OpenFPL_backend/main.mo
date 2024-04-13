@@ -25,6 +25,7 @@ actor Self {
   let seasonManager = SeasonManager.SeasonManager();
   let cyclesDispenser = CyclesDispenser.CyclesDispenser();
   let treasuryManager = TreasuryManager.TreasuryManager();
+  let privateLeaguesManager = PrivateLeagues.PrivateLeagues();
   private let cyclesCheckInterval : Nat = Utilities.getHour() * 24;
   private let cyclesCheckWalletInterval : Nat = Utilities.getHour() * 24;
 
@@ -448,30 +449,30 @@ actor Self {
 
   //Private league functionality
 
-  
-
-  public shared func getPrivateLeagueTable() : async (){
-    
+  public shared ({ caller }) func getPrivateLeagueTable(canisterId: T.CanisterId) : async (){
+    assert(privateLeagues.isLeagueMember(canisterId));
+    return privateLeagues.getLeagueTable(canisterId);
   };
 
   public shared func getPrivateLeagueMembers() : async (){
-
+    assert(privateLeagues.isLeagueMember(canisterId));
+    return privateLeagues.getLeagueMembers(canisterId);
   };
 
-  public shared func agreePrivateLeagueTerms() : async (){
+  public shared func createPrivateLeague(newPrivateLeague: DTOs.CreatePrivateLeagueDTO) : async Result.Result<Text, T.Error>{
+    assert(newPrivateLeague.termsAgreed);
+    
+    //Check private league has all the required correct information
+    
+    //check user can afford private league
+      //if icp
+      //if fpl
 
+    privateLeagues.createPrivateLeague(newPrivateLeague);
   };
 
-  public shared func getICRC1TokenList() : async (){
-
-  };
-
-  public shared func setupPrivateLeague() : async (){
-
-  };
-
-  public shared func searchUsername() : async (){
-
+  public shared func searchUsername(username: Text) : async (){
+    return seasonManager.getUserbyUsername(username);
   };
 
   public shared func inviteUserToLeague() : async () {
@@ -495,14 +496,17 @@ actor Self {
   };
 
   public shared func acceptLeagueInvite() : async () {
-//check max 10000
+    //check max 10000
   };
 
   public shared func payLeagueEntryFee() : async () {
     //check max 10000
   };
 
-  
+  public shared func getICRC1TokenList() : async (){
+    //TODO
+    //get a list of all ICRC1 tokens SNS and non SNS
+  };
 
 
   //Stable variables backup:
