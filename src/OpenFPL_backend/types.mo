@@ -394,4 +394,9 @@ module _Types {
     seasonId : SeasonId;
     canisterId : Text;
   };
+
+  public type LeagueMember = {
+    principalId: PrincipalId;
+    joinedDate: Int;
+  };
 };

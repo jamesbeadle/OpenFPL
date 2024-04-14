@@ -8,7 +8,7 @@ module {
     
     private var canisterIds: [T.CanisterId] = [];
 
-    public func isLeagueMember(canisterId: T.CanisterId, calledId: T.PrincipalId) : Bool {
+    public func isLeagueMember(canisterId: T.CanisterId, callerId: T.PrincipalId) : Bool {
       return false; //todo
     };
 
