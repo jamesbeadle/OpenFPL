@@ -2,6 +2,7 @@ import T "types";
 import Cycles "mo:base/ExperimentalCycles";
 import Timer "mo:base/Timer";
 import Iter "mo:base/Iter";
+import Principal "mo:base/Principal";
 import Utilities "utilities";
 import Environment "Environment";
 
@@ -12,8 +13,9 @@ actor class _PrivateLeague() {
 
     private var leagueMembers: [T.LeagueMember] = [];
 
-    public shared ({ caller }) func isLeagueMember(canisterId: T.CanisterId, callerId: T.PrincipalId) : Bool {
+    public shared ({ caller }) func isLeagueMember(callerId: T.PrincipalId) : async Bool {
         assert not Principal.isAnonymous(caller);
+        assert (Principal.toText(caller) == main_canister_id);
         let principalId = Principal.toText(caller);
         assert principalId == main_canister_id;
 
@@ -22,115 +24,8 @@ actor class _PrivateLeague() {
                 return true;
             }
         };
-        
+
         return false;
-    };
-
-    
-
-    public shared ({ caller }) func getManager(managerPrincipal : Text) : async ?T.Manager {
-        assert not Principal.isAnonymous(caller);
-        let principalId = Principal.toText(caller);
-        assert principalId == main_canister_id;
-
-        let managerGroupIndex = managerGroupIndexes.get(managerPrincipal);
-        switch (managerGroupIndex) {
-        case (null) {
-            return null;
-        };
-        case (?foundIndex) {
-            switch (foundIndex) {
-            case (0) {
-                for (manager in Iter.fromArray<T.Manager>(managerGroup1)) {
-                if (manager.principalId == managerPrincipal) {
-                    return ?manager;
-                };
-                };
-            };
-            case (1) {
-                for (manager in Iter.fromArray<T.Manager>(managerGroup2)) {
-                if (manager.principalId == managerPrincipal) {
-                    return ?manager;
-                };
-                };
-            };
-            case (2) {
-                for (manager in Iter.fromArray<T.Manager>(managerGroup3)) {
-                if (manager.principalId == managerPrincipal) {
-                    return ?manager;
-                };
-                };
-            };
-            case (3) {
-                for (manager in Iter.fromArray<T.Manager>(managerGroup4)) {
-                if (manager.principalId == managerPrincipal) {
-                    return ?manager;
-                };
-                };
-            };
-            case (4) {
-                for (manager in Iter.fromArray<T.Manager>(managerGroup5)) {
-                if (manager.principalId == managerPrincipal) {
-                    return ?manager;
-                };
-                };
-            };
-            case (5) {
-                for (manager in Iter.fromArray<T.Manager>(managerGroup6)) {
-                if (manager.principalId == managerPrincipal) {
-                    return ?manager;
-                };
-                };
-            };
-            case (6) {
-                for (manager in Iter.fromArray<T.Manager>(managerGroup7)) {
-                if (manager.principalId == managerPrincipal) {
-                    return ?manager;
-                };
-                };
-            };
-            case (7) {
-                for (manager in Iter.fromArray<T.Manager>(managerGroup8)) {
-                if (manager.principalId == managerPrincipal) {
-                    return ?manager;
-                };
-                };
-            };
-            case (8) {
-                for (manager in Iter.fromArray<T.Manager>(managerGroup9)) {
-                if (manager.principalId == managerPrincipal) {
-                    return ?manager;
-                };
-                };
-            };
-            case (9) {
-                for (manager in Iter.fromArray<T.Manager>(managerGroup10)) {
-                if (manager.principalId == managerPrincipal) {
-                    return ?manager;
-                };
-                };
-            };
-            case (10) {
-                for (manager in Iter.fromArray<T.Manager>(managerGroup11)) {
-                if (manager.principalId == managerPrincipal) {
-                    return ?manager;
-                };
-                };
-            };
-            case (11) {
-                for (manager in Iter.fromArray<T.Manager>(managerGroup12)) {
-                if (manager.principalId == managerPrincipal) {
-                    return ?manager;
-                };
-                };
-            };
-            case _ {
-
-            };
-            };
-            return null;
-        };
-        };
     };
 
     system func preupgrade() {};
