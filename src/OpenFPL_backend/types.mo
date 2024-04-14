@@ -395,6 +395,10 @@ module _Types {
     canisterId : Text;
   };
 
+  public type PrivateLeague = {
+
+  };
+
   public type LeagueMember = {
     principalId: PrincipalId;
     joinedDate: Int;

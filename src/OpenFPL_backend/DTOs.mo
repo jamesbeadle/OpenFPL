@@ -447,7 +447,7 @@ module DTOs {
   };
 
   public type CreatePrivateLeagueDTO = {
-    
+    termsAgreed: Bool;
   };
 
 };

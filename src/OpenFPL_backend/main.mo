@@ -459,27 +459,28 @@ actor Self {
   public shared ({ caller }) func getPrivateLeagueMonthlyLeaderboard(canisterId: T.CanisterId, seasonId : T.SeasonId, month: T.CalendarMonth, limit : Nat, offset : Nat ) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error>{
     assert not Principal.isAnonymous(caller);
     assert(await privateLeaguesManager.isLeagueMember(canisterId, Principal.toText(caller)));
-    return await privateLeaguesManager.getMonthlyLeaderboard(canisterId);
+    return await privateLeaguesManager.getMonthlyLeaderboard(canisterId, seasonId, month, limit, offset);
   };
 
   public shared ({ caller }) func getPrivateLeagueSeasonLeaderboard(canisterId: T.CanisterId, seasonId : T.SeasonId, limit : Nat, offset : Nat) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error>{
     assert not Principal.isAnonymous(caller);
     assert(await privateLeaguesManager.isLeagueMember(canisterId, Principal.toText(caller)));
-    return await privateLeaguesManager.getSeasonLeaderboard(canisterId);
+    return await privateLeaguesManager.getSeasonLeaderboard(canisterId, seasonId, limit, offset);
   };
 
-  public shared ({ caller }) func getPrivateLeagueMembers(canisterId: T.CanisterId) : async Result.Result<[DTOs.LeagueMemberDTO], T.Error>{
+  public shared ({ caller }) func getPrivateLeagueMembers(canisterId: T.CanisterId, limit : Nat, offset : Nat) : async Result.Result<[DTOs.LeagueMemberDTO], T.Error>{
     assert not Principal.isAnonymous(caller);
     assert(await privateLeaguesManager.isLeagueMember(canisterId, Principal.toText(caller)));
-    return await privateLeaguesManager.getLeagueMembers(canisterId);
+    return await privateLeaguesManager.getLeagueMembers(canisterId, limit, offset);
   };
 
   public shared ({ caller }) func createPrivateLeague(newPrivateLeague: DTOs.CreatePrivateLeagueDTO) : async Result.Result<(), T.Error>{
     assert not Principal.isAnonymous(caller);
     assert(newPrivateLeague.termsAgreed);
-    assert(privateLeaguesManager.canAffordPrivateLeague(caller));
     assert(privateLeaguesManager.privateLeagueIsValid(newPrivateLeague));
-    return await privateLeagues.createPrivateLeague(newPrivateLeague);
+    assert(privateLeaguesManager.nameAvailable(caller));
+    assert(privateLeaguesManager.canAffordPrivateLeague(caller));
+    return await privateLeaguesManager.createPrivateLeague(newPrivateLeague);
   };
 
   public shared ({ caller }) func searchUsername(username: Text) : async Result.Result<DTOs.LeagueMemberDTO, T.Error> {

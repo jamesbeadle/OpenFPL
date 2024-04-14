@@ -824,6 +824,57 @@ module {
       return false;
     };
 
+    public func searchByUsername(username : Text) : async ?DTOs.ManagerDTO {
+      
+      var principalId = "";
+      
+      label usernameLoop for (managerUsername in managerUsernames.entries()) {
+        if (managerUsername.1 == username) {
+          principalId := managerUsername.0;
+          break usernameLoop;
+        };
+      };
+
+      label managerCanisterLoop for (managerCanisterId in managerCanisterIds.entries()){
+        if(managerCanisterId.0 == principalId){
+          
+          let manager_canister = actor (managerCanisterId.1) : actor {
+            getManager : T.PrincipalId -> async ?T.Manager;
+          };
+
+          let manager = await manager_canister.getManager(principalId);
+          switch(manager){
+            case (null){ return null; };
+            case (?foundManager){
+
+              let dto : DTOs.ManagerDTO = {
+                principalId = foundManager.principalId;
+                username = foundManager.username;
+                profilePicture = foundManager.profilePicture;
+                favouriteClubId = foundManager.favouriteClubId;
+                createDate  = foundManager.createDate;
+                gameweeks = [];
+                weeklyPosition = 0;
+                monthlyPosition = 0;
+                seasonPosition = 0;
+                weeklyPositionText  = "";
+                monthlyPositionText = "";
+                seasonPositionText = "";
+                weeklyPoints = 0;
+                monthlyPoints = 0;
+                seasonPoints = 0;
+
+              };
+              return ?dto;
+
+            }
+          }
+        };
+      };
+
+      return null;
+    };
+
     public func getFavouriteClub(principalId : Text) : async Result.Result<T.ClubId, T.Error> {
       let managerCanisterId = managerCanisterIds.get(principalId);
 

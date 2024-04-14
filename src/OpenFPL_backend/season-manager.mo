@@ -247,6 +247,10 @@ module {
       return managerComposite.isUsernameTaken(username, principalId);
     };
 
+    public func searchByUsername(username : Text) : DTOs.ManagerDTO {
+      return managerComposite.searchByUsername(username);
+    };
+
     //Timer call back events
     public func gameweekBeginExpired() : async () {
 

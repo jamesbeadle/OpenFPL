@@ -7,6 +7,7 @@ module {
 
   public class PrivateLeaguesManager() {
     
+    //let allPrivateLeagues //todo 
 
     public func isLeagueMember(canisterId: T.CanisterId, callerId: T.PrincipalId) : async Bool {
       let private_league_canister = actor (canisterId) : actor {
@@ -40,6 +41,37 @@ module {
       return #ok(await private_league_canister.getMonthlyLeaderboard(seasonId, limit, offset));
     };
     
+    public func getLeagueMembers(canisterId: T.CanisterId, limit : Nat, offset : Nat) : async Result.Result<[DTOs.LeagueMemberDTO], T.Error> {
+      let private_league_canister = actor (canisterId) : actor {
+        getLeagueMembers : (limit : Nat, offset : Nat) -> async [DTOs.LeagueMemberDTO];
+      };
+
+      return #ok(await private_league_canister.getLeagueMembers(limit, offset));
+    };
+
+    public func privateLeagueIsValid(privateLeague: T.PrivateLeague) : Bool{
+      return false;
+    };
+
+    public func nameAvailable(privateLeagueName: Text) : Bool{
+      return false;
+    };
+
+    public func canAffordPrivateLeague(caller: T.PrincipalId) : Bool{
+      return false;
+    };
+
+    public func createPrivateLeague(newPrivateLeague: T.PrivateLeague) : () {
+
+    };
+
+    public func leagueHasSpace(canisterId: T.CanisterId) : async Bool {
+      let private_league_canister = actor (canisterId) : actor {
+        leagueHasSpace : () -> async Bool;
+      };
+
+      return #ok(await private_league_canister.leagueHasSpace());
+    };
 
   };
 };
