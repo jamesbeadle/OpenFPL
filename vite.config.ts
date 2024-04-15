@@ -106,7 +106,7 @@ const config: UserConfig = {
   // proxy /api to port 4943 during development
   server: {
     proxy: {
-      "/api": "http://localhost:4943",
+      "/api": "http://localhost:8080",
     },
     watch: {
       ignored: ["**/.dfx/**", "**/.github/**"],

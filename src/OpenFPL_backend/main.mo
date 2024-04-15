@@ -474,6 +474,7 @@ actor Self {
     return await privateLeaguesManager.getLeagueMembers(canisterId, limit, offset);
   };
 
+/*
   public shared ({ caller }) func createPrivateLeague(newPrivateLeague: DTOs.CreatePrivateLeagueDTO) : async Result.Result<(), T.Error>{
     assert not Principal.isAnonymous(caller);
     assert(newPrivateLeague.termsAgreed);
@@ -537,7 +538,7 @@ actor Self {
     //TODO
     //get a list of all ICRC1 tokens SNS and non SNS
   };
-
+*/
 
   //Stable variables backup:
 

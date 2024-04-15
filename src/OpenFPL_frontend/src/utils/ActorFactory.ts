@@ -16,7 +16,7 @@ export class ActorFactory {
       host:
         process.env.DFX_NETWORK === "ic"
           ? `https://${canisterId}.icp-api.io`
-          : `http://localhost:4943/?canisterId=rdmx6-jaaaa-aaaaa-aaadq-cai`,
+          : `http://localhost:8080/?canisterId=rdmx6-jaaaa-aaaaa-aaadq-cai`,
       identity: identity,
     };
 
@@ -57,7 +57,7 @@ export class ActorFactory {
       host:
         process.env.DFX_NETWORK === "ic"
           ? `https://${canisterId}.icp-api.io`
-          : `http://localhost:4943/?canisterId=rdmx6-jaaaa-aaaaa-aaadq-cai`,
+          : `http://localhost:8080/?canisterId=rdmx6-jaaaa-aaaaa-aaadq-cai`,
       identity: identity,
     };
 

@@ -70,7 +70,7 @@ module {
         leagueHasSpace : () -> async Bool;
       };
 
-      return #ok(await private_league_canister.leagueHasSpace());
+      return await private_league_canister.leagueHasSpace();
     };
 
   };

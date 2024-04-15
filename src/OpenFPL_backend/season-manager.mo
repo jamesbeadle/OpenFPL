@@ -247,8 +247,8 @@ module {
       return managerComposite.isUsernameTaken(username, principalId);
     };
 
-    public func searchByUsername(username : Text) : DTOs.ManagerDTO {
-      return managerComposite.searchByUsername(username);
+    public func searchByUsername(username : Text) : async ?DTOs.ManagerDTO {
+      return await managerComposite.searchByUsername(username);
     };
 
     //Timer call back events

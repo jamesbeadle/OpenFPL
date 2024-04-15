@@ -3513,7 +3513,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1do9hbx"
+  version_hash: "6ivb1u"
 };
 async function get_hooks() {
   return {};
@@ -3923,7 +3923,7 @@ const idlFactory = ({ IDL }) => {
     CanisterCreateError: IDL.Null,
     InvalidTeamError: IDL.Null
   });
-  const Result_20 = IDL.Variant({ ok: IDL.Text, err: Error2 });
+  const Result_21 = IDL.Variant({ ok: IDL.Text, err: Error2 });
   const ClubDTO = IDL.Record({
     id: ClubId,
     secondaryColourHex: IDL.Text,
@@ -3934,13 +3934,13 @@ const idlFactory = ({ IDL }) => {
     shirtType: ShirtType,
     primaryColourHex: IDL.Text
   });
-  const Result_16 = IDL.Variant({ ok: IDL.Vec(ClubDTO), err: Error2 });
+  const Result_17 = IDL.Variant({ ok: IDL.Vec(ClubDTO), err: Error2 });
   const CountryDTO = IDL.Record({
     id: CountryId,
     code: IDL.Text,
     name: IDL.Text
   });
-  const Result_19 = IDL.Variant({ ok: IDL.Vec(CountryDTO), err: Error2 });
+  const Result_20 = IDL.Variant({ ok: IDL.Vec(CountryDTO), err: Error2 });
   const PickTeamDTO = IDL.Record({
     playerIds: IDL.Vec(PlayerId),
     countrymenCountryId: CountryId,
@@ -3968,13 +3968,13 @@ const idlFactory = ({ IDL }) => {
     captainId: PlayerId,
     monthlyBonusesAvailable: IDL.Nat8
   });
-  const Result_18 = IDL.Variant({ ok: PickTeamDTO, err: Error2 });
+  const Result_19 = IDL.Variant({ ok: PickTeamDTO, err: Error2 });
   const DataCacheDTO = IDL.Record({ hash: IDL.Text, category: IDL.Text });
-  const Result_17 = IDL.Variant({
+  const Result_18 = IDL.Variant({
     ok: IDL.Vec(DataCacheDTO),
     err: Error2
   });
-  const Result_9 = IDL.Variant({ ok: IDL.Vec(FixtureDTO), err: Error2 });
+  const Result_11 = IDL.Variant({ ok: IDL.Vec(FixtureDTO), err: Error2 });
   const PlayerStatus = IDL.Variant({
     OnLoan: IDL.Null,
     Former: IDL.Null,
@@ -4047,7 +4047,7 @@ const idlFactory = ({ IDL }) => {
     principalId: IDL.Text,
     seasonPositionText: IDL.Text
   });
-  const Result_15 = IDL.Variant({ ok: ManagerDTO, err: Error2 });
+  const Result_16 = IDL.Variant({ ok: ManagerDTO, err: Error2 });
   const LeaderboardEntry = IDL.Record({
     username: IDL.Text,
     positionText: IDL.Text,
@@ -4062,11 +4062,8 @@ const idlFactory = ({ IDL }) => {
     seasonId: SeasonId,
     entries: IDL.Vec(LeaderboardEntry)
   });
-  const Result_14 = IDL.Variant({
-    ok: MonthlyLeaderboardDTO,
-    err: Error2
-  });
-  const Result_13 = IDL.Variant({
+  const Result_9 = IDL.Variant({ ok: MonthlyLeaderboardDTO, err: Error2 });
+  const Result_15 = IDL.Variant({
     ok: IDL.Vec(MonthlyLeaderboardDTO),
     err: Error2
   });
@@ -4106,7 +4103,7 @@ const idlFactory = ({ IDL }) => {
     lastName: IDL.Text,
     firstName: IDL.Text
   });
-  const Result_12 = IDL.Variant({ ok: PlayerDetailDTO, err: Error2 });
+  const Result_14 = IDL.Variant({ ok: PlayerDetailDTO, err: Error2 });
   const PlayerPointsDTO = IDL.Record({
     id: IDL.Nat16,
     clubId: ClubId,
@@ -4115,7 +4112,7 @@ const idlFactory = ({ IDL }) => {
     gameweek: GameweekNumber,
     points: IDL.Int16
   });
-  const Result_11 = IDL.Variant({
+  const Result_13 = IDL.Variant({
     ok: IDL.Vec(PlayerPointsDTO),
     err: Error2
   });
@@ -4132,10 +4129,34 @@ const idlFactory = ({ IDL }) => {
     position: PlayerPosition,
     points: IDL.Int16
   });
-  const Result_10 = IDL.Variant({
+  const Result_12 = IDL.Variant({
     ok: IDL.Vec(IDL.Tuple(IDL.Nat16, PlayerScoreDTO)),
     err: Error2
   });
+  const CanisterId = IDL.Text;
+  const PrincipalId = IDL.Text;
+  const LeagueMemberDTO = IDL.Record({
+    added: IDL.Int,
+    username: IDL.Text,
+    principalId: PrincipalId
+  });
+  const Result_10 = IDL.Variant({
+    ok: IDL.Vec(LeagueMemberDTO),
+    err: Error2
+  });
+  const SeasonLeaderboardDTO = IDL.Record({
+    totalEntries: IDL.Nat,
+    seasonId: SeasonId,
+    entries: IDL.Vec(LeaderboardEntry)
+  });
+  const Result_6 = IDL.Variant({ ok: SeasonLeaderboardDTO, err: Error2 });
+  const WeeklyLeaderboardDTO = IDL.Record({
+    totalEntries: IDL.Nat,
+    seasonId: SeasonId,
+    entries: IDL.Vec(LeaderboardEntry),
+    gameweek: GameweekNumber
+  });
+  const Result_2 = IDL.Variant({ ok: WeeklyLeaderboardDTO, err: Error2 });
   const ProfileDTO = IDL.Record({
     username: IDL.Text,
     termsAccepted: IDL.Bool,
@@ -4146,12 +4167,6 @@ const idlFactory = ({ IDL }) => {
     principalId: IDL.Text
   });
   const Result_8 = IDL.Variant({ ok: ProfileDTO, err: Error2 });
-  const SeasonLeaderboardDTO = IDL.Record({
-    totalEntries: IDL.Nat,
-    seasonId: SeasonId,
-    entries: IDL.Vec(LeaderboardEntry)
-  });
-  const Result_6 = IDL.Variant({ ok: SeasonLeaderboardDTO, err: Error2 });
   const SeasonDTO = IDL.Record({
     id: SeasonId,
     name: IDL.Text,
@@ -4171,13 +4186,6 @@ const idlFactory = ({ IDL }) => {
   });
   const Result_4 = IDL.Variant({ ok: SystemStateDTO, err: Error2 });
   const Result_3 = IDL.Variant({ ok: IDL.Nat, err: Error2 });
-  const WeeklyLeaderboardDTO = IDL.Record({
-    totalEntries: IDL.Nat,
-    seasonId: SeasonId,
-    entries: IDL.Vec(LeaderboardEntry),
-    gameweek: GameweekNumber
-  });
-  const Result_2 = IDL.Variant({ ok: WeeklyLeaderboardDTO, err: Error2 });
   const UpdateTeamSelectionDTO = IDL.Record({
     playerIds: IDL.Vec(PlayerId),
     countrymenCountryId: CountryId,
@@ -4205,8 +4213,6 @@ const idlFactory = ({ IDL }) => {
   const Result = IDL.Variant({ ok: IDL.Text, err: IDL.Text });
   const RustResult = IDL.Variant({ Ok: IDL.Null, Err: IDL.Text });
   return IDL.Service({
-    acceptLeagueInvite: IDL.Func([], [], []),
-    agreePrivateLeagueTerms: IDL.Func([], [], []),
     burnICPToCycles: IDL.Func([IDL.Nat64], [], []),
     executeAddInitialFixtures: IDL.Func([AddInitialFixturesDTO], [], []),
     executeCreateDAONeuron: IDL.Func([], [], []),
@@ -4228,38 +4234,55 @@ const idlFactory = ({ IDL }) => {
     executeUnretirePlayer: IDL.Func([UnretirePlayerDTO], [], []),
     executeUpdateClub: IDL.Func([UpdateClubDTO], [], []),
     executeUpdatePlayer: IDL.Func([UpdatePlayerDTO], [], []),
-    getBackendCanisterId: IDL.Func([], [Result_20], ["query"]),
-    getClubs: IDL.Func([], [Result_16], ["query"]),
-    getCountries: IDL.Func([], [Result_19], ["query"]),
-    getCurrentTeam: IDL.Func([], [Result_18], []),
-    getDataHashes: IDL.Func([], [Result_17], ["query"]),
-    getFixtures: IDL.Func([SeasonId], [Result_9], ["query"]),
-    getFormerClubs: IDL.Func([], [Result_16], ["query"]),
-    getICRC1TokenList: IDL.Func([], [], []),
+    getBackendCanisterId: IDL.Func([], [Result_21], ["query"]),
+    getClubs: IDL.Func([], [Result_17], ["query"]),
+    getCountries: IDL.Func([], [Result_20], ["query"]),
+    getCurrentTeam: IDL.Func([], [Result_19], []),
+    getDataHashes: IDL.Func([], [Result_18], ["query"]),
+    getFixtures: IDL.Func([SeasonId], [Result_11], ["query"]),
+    getFormerClubs: IDL.Func([], [Result_17], ["query"]),
     getLoanedPlayers: IDL.Func([ClubId], [Result_7], ["query"]),
-    getManager: IDL.Func([IDL.Text], [Result_15], []),
+    getManager: IDL.Func([IDL.Text], [Result_16], []),
     getMonthlyLeaderboard: IDL.Func(
       [SeasonId, ClubId, CalendarMonth, IDL.Nat, IDL.Nat, IDL.Text],
-      [Result_14],
+      [Result_9],
       []
     ),
     getMonthlyLeaderboards: IDL.Func(
       [SeasonId, CalendarMonth],
-      [Result_13],
+      [Result_15],
       []
     ),
     getNeuronId: IDL.Func([], [IDL.Nat64], []),
-    getPlayerDetails: IDL.Func([PlayerId, SeasonId], [Result_12], ["query"]),
+    getPlayerDetails: IDL.Func([PlayerId, SeasonId], [Result_14], ["query"]),
     getPlayerDetailsForGameweek: IDL.Func(
       [SeasonId, GameweekNumber],
-      [Result_11],
+      [Result_13],
       ["query"]
     ),
     getPlayers: IDL.Func([], [Result_7], ["query"]),
-    getPlayersMap: IDL.Func([SeasonId, GameweekNumber], [Result_10], ["query"]),
-    getPostponedFixtures: IDL.Func([], [Result_9], ["query"]),
-    getPrivateLeagueMembers: IDL.Func([], [], []),
-    getPrivateLeagueTable: IDL.Func([], [], []),
+    getPlayersMap: IDL.Func([SeasonId, GameweekNumber], [Result_12], ["query"]),
+    getPostponedFixtures: IDL.Func([], [Result_11], ["query"]),
+    getPrivateLeagueMembers: IDL.Func(
+      [CanisterId, IDL.Nat, IDL.Nat],
+      [Result_10],
+      []
+    ),
+    getPrivateLeagueMonthlyLeaderboard: IDL.Func(
+      [CanisterId, SeasonId, CalendarMonth, IDL.Nat, IDL.Nat],
+      [Result_9],
+      []
+    ),
+    getPrivateLeagueSeasonLeaderboard: IDL.Func(
+      [CanisterId, SeasonId, IDL.Nat, IDL.Nat],
+      [Result_6],
+      []
+    ),
+    getPrivateLeagueWeeklyLeaderboard: IDL.Func(
+      [CanisterId, SeasonId, GameweekNumber, IDL.Nat, IDL.Nat],
+      [Result_2],
+      []
+    ),
     getProfile: IDL.Func([], [Result_8], []),
     getRetiredPlayers: IDL.Func([ClubId], [Result_7], ["query"]),
     getSeasonLeaderboard: IDL.Func(
@@ -4275,19 +4298,11 @@ const idlFactory = ({ IDL }) => {
       [Result_2],
       []
     ),
-    inviteUserToLeague: IDL.Func([], [], []),
     isUsernameValid: IDL.Func([IDL.Text], [IDL.Bool], ["query"]),
-    payLeagueEntryFee: IDL.Func([], [], []),
     requestCanisterTopup: IDL.Func([], [], []),
     saveFantasyTeam: IDL.Func([UpdateTeamSelectionDTO], [Result_1], []),
-    searchUsername: IDL.Func([], [], []),
     setTimer: IDL.Func([IDL.Int, IDL.Text], [], []),
-    setupPrivateLeague: IDL.Func([], [], []),
     updateFavouriteClub: IDL.Func([ClubId], [Result_1], []),
-    updateLeagueBannerPicture: IDL.Func([], [], []),
-    updateLeagueColours: IDL.Func([], [], []),
-    updateLeagueName: IDL.Func([], [], []),
-    updateLeagueProfilePicture: IDL.Func([], [], []),
     updateProfilePicture: IDL.Func(
       [IDL.Vec(IDL.Nat8), IDL.Text],
       [Result_1],
