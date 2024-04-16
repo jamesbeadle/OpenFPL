@@ -3513,7 +3513,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "6ivb1u"
+  version_hash: "33gtgf"
 };
 async function get_hooks() {
   return {};
@@ -3923,7 +3923,7 @@ const idlFactory = ({ IDL }) => {
     CanisterCreateError: IDL.Null,
     InvalidTeamError: IDL.Null
   });
-  const Result_21 = IDL.Variant({ ok: IDL.Text, err: Error2 });
+  const Result_22 = IDL.Variant({ ok: IDL.Text, err: Error2 });
   const ClubDTO = IDL.Record({
     id: ClubId,
     secondaryColourHex: IDL.Text,
@@ -3934,13 +3934,13 @@ const idlFactory = ({ IDL }) => {
     shirtType: ShirtType,
     primaryColourHex: IDL.Text
   });
-  const Result_17 = IDL.Variant({ ok: IDL.Vec(ClubDTO), err: Error2 });
+  const Result_18 = IDL.Variant({ ok: IDL.Vec(ClubDTO), err: Error2 });
   const CountryDTO = IDL.Record({
     id: CountryId,
     code: IDL.Text,
     name: IDL.Text
   });
-  const Result_20 = IDL.Variant({ ok: IDL.Vec(CountryDTO), err: Error2 });
+  const Result_21 = IDL.Variant({ ok: IDL.Vec(CountryDTO), err: Error2 });
   const PickTeamDTO = IDL.Record({
     playerIds: IDL.Vec(PlayerId),
     countrymenCountryId: CountryId,
@@ -3968,13 +3968,13 @@ const idlFactory = ({ IDL }) => {
     captainId: PlayerId,
     monthlyBonusesAvailable: IDL.Nat8
   });
-  const Result_19 = IDL.Variant({ ok: PickTeamDTO, err: Error2 });
+  const Result_20 = IDL.Variant({ ok: PickTeamDTO, err: Error2 });
   const DataCacheDTO = IDL.Record({ hash: IDL.Text, category: IDL.Text });
-  const Result_18 = IDL.Variant({
+  const Result_19 = IDL.Variant({
     ok: IDL.Vec(DataCacheDTO),
     err: Error2
   });
-  const Result_11 = IDL.Variant({ ok: IDL.Vec(FixtureDTO), err: Error2 });
+  const Result_12 = IDL.Variant({ ok: IDL.Vec(FixtureDTO), err: Error2 });
   const PlayerStatus = IDL.Variant({
     OnLoan: IDL.Null,
     Former: IDL.Null,
@@ -4047,7 +4047,7 @@ const idlFactory = ({ IDL }) => {
     principalId: IDL.Text,
     seasonPositionText: IDL.Text
   });
-  const Result_16 = IDL.Variant({ ok: ManagerDTO, err: Error2 });
+  const Result_17 = IDL.Variant({ ok: ManagerDTO, err: Error2 });
   const LeaderboardEntry = IDL.Record({
     username: IDL.Text,
     positionText: IDL.Text,
@@ -4062,8 +4062,11 @@ const idlFactory = ({ IDL }) => {
     seasonId: SeasonId,
     entries: IDL.Vec(LeaderboardEntry)
   });
-  const Result_9 = IDL.Variant({ ok: MonthlyLeaderboardDTO, err: Error2 });
-  const Result_15 = IDL.Variant({
+  const Result_10 = IDL.Variant({
+    ok: MonthlyLeaderboardDTO,
+    err: Error2
+  });
+  const Result_16 = IDL.Variant({
     ok: IDL.Vec(MonthlyLeaderboardDTO),
     err: Error2
   });
@@ -4103,7 +4106,7 @@ const idlFactory = ({ IDL }) => {
     lastName: IDL.Text,
     firstName: IDL.Text
   });
-  const Result_14 = IDL.Variant({ ok: PlayerDetailDTO, err: Error2 });
+  const Result_15 = IDL.Variant({ ok: PlayerDetailDTO, err: Error2 });
   const PlayerPointsDTO = IDL.Record({
     id: IDL.Nat16,
     clubId: ClubId,
@@ -4112,7 +4115,7 @@ const idlFactory = ({ IDL }) => {
     gameweek: GameweekNumber,
     points: IDL.Int16
   });
-  const Result_13 = IDL.Variant({
+  const Result_14 = IDL.Variant({
     ok: IDL.Vec(PlayerPointsDTO),
     err: Error2
   });
@@ -4129,7 +4132,7 @@ const idlFactory = ({ IDL }) => {
     position: PlayerPosition,
     points: IDL.Int16
   });
-  const Result_12 = IDL.Variant({
+  const Result_13 = IDL.Variant({
     ok: IDL.Vec(IDL.Tuple(IDL.Nat16, PlayerScoreDTO)),
     err: Error2
   });
@@ -4140,7 +4143,7 @@ const idlFactory = ({ IDL }) => {
     username: IDL.Text,
     principalId: PrincipalId
   });
-  const Result_10 = IDL.Variant({
+  const Result_11 = IDL.Variant({
     ok: IDL.Vec(LeagueMemberDTO),
     err: Error2
   });
@@ -4157,6 +4160,18 @@ const idlFactory = ({ IDL }) => {
     gameweek: GameweekNumber
   });
   const Result_2 = IDL.Variant({ ok: WeeklyLeaderboardDTO, err: Error2 });
+  const PrivateLeagueDTO = IDL.Record({
+    created: IDL.Int,
+    name: IDL.Text,
+    memberCount: IDL.Int,
+    seasonPosition: IDL.Nat,
+    canisterId: CanisterId
+  });
+  const PrivateLeaguesDTO = IDL.Record({
+    totalEntries: IDL.Nat,
+    entries: IDL.Vec(PrivateLeagueDTO)
+  });
+  const Result_9 = IDL.Variant({ ok: PrivateLeaguesDTO, err: Error2 });
   const ProfileDTO = IDL.Record({
     username: IDL.Text,
     termsAccepted: IDL.Bool,
@@ -4234,43 +4249,43 @@ const idlFactory = ({ IDL }) => {
     executeUnretirePlayer: IDL.Func([UnretirePlayerDTO], [], []),
     executeUpdateClub: IDL.Func([UpdateClubDTO], [], []),
     executeUpdatePlayer: IDL.Func([UpdatePlayerDTO], [], []),
-    getBackendCanisterId: IDL.Func([], [Result_21], ["query"]),
-    getClubs: IDL.Func([], [Result_17], ["query"]),
-    getCountries: IDL.Func([], [Result_20], ["query"]),
-    getCurrentTeam: IDL.Func([], [Result_19], []),
-    getDataHashes: IDL.Func([], [Result_18], ["query"]),
-    getFixtures: IDL.Func([SeasonId], [Result_11], ["query"]),
-    getFormerClubs: IDL.Func([], [Result_17], ["query"]),
+    getBackendCanisterId: IDL.Func([], [Result_22], ["query"]),
+    getClubs: IDL.Func([], [Result_18], ["query"]),
+    getCountries: IDL.Func([], [Result_21], ["query"]),
+    getCurrentTeam: IDL.Func([], [Result_20], []),
+    getDataHashes: IDL.Func([], [Result_19], ["query"]),
+    getFixtures: IDL.Func([SeasonId], [Result_12], ["query"]),
+    getFormerClubs: IDL.Func([], [Result_18], ["query"]),
     getLoanedPlayers: IDL.Func([ClubId], [Result_7], ["query"]),
-    getManager: IDL.Func([IDL.Text], [Result_16], []),
+    getManager: IDL.Func([IDL.Text], [Result_17], []),
     getMonthlyLeaderboard: IDL.Func(
       [SeasonId, ClubId, CalendarMonth, IDL.Nat, IDL.Nat, IDL.Text],
-      [Result_9],
+      [Result_10],
       []
     ),
     getMonthlyLeaderboards: IDL.Func(
       [SeasonId, CalendarMonth],
-      [Result_15],
+      [Result_16],
       []
     ),
     getNeuronId: IDL.Func([], [IDL.Nat64], []),
-    getPlayerDetails: IDL.Func([PlayerId, SeasonId], [Result_14], ["query"]),
+    getPlayerDetails: IDL.Func([PlayerId, SeasonId], [Result_15], ["query"]),
     getPlayerDetailsForGameweek: IDL.Func(
       [SeasonId, GameweekNumber],
-      [Result_13],
+      [Result_14],
       ["query"]
     ),
     getPlayers: IDL.Func([], [Result_7], ["query"]),
-    getPlayersMap: IDL.Func([SeasonId, GameweekNumber], [Result_12], ["query"]),
-    getPostponedFixtures: IDL.Func([], [Result_11], ["query"]),
+    getPlayersMap: IDL.Func([SeasonId, GameweekNumber], [Result_13], ["query"]),
+    getPostponedFixtures: IDL.Func([], [Result_12], ["query"]),
     getPrivateLeagueMembers: IDL.Func(
       [CanisterId, IDL.Nat, IDL.Nat],
-      [Result_10],
+      [Result_11],
       []
     ),
     getPrivateLeagueMonthlyLeaderboard: IDL.Func(
       [CanisterId, SeasonId, CalendarMonth, IDL.Nat, IDL.Nat],
-      [Result_9],
+      [Result_10],
       []
     ),
     getPrivateLeagueSeasonLeaderboard: IDL.Func(
@@ -4283,6 +4298,7 @@ const idlFactory = ({ IDL }) => {
       [Result_2],
       []
     ),
+    getPrivateLeagues: IDL.Func([], [Result_9], []),
     getProfile: IDL.Func([], [Result_8], []),
     getRetiredPlayers: IDL.Func([ClubId], [Result_7], ["query"]),
     getSeasonLeaderboard: IDL.Func(
@@ -4390,7 +4406,7 @@ canisterId ? createActor(canisterId) : void 0;
 class ActorFactory {
   static createActor(idlFactory2, canisterId2 = "", identity = null, options2 = null) {
     const hostOptions = {
-      host: `http://localhost:4943/?canisterId=rdmx6-jaaaa-aaaaa-aaadq-cai`,
+      host: `http://localhost:8080/?canisterId=rdmx6-jaaaa-aaaaa-aaadq-cai`,
       identity
     };
     if (!options2) {
@@ -4419,7 +4435,7 @@ class ActorFactory {
   }
   static getAgent(canisterId2 = "", identity = null, options2 = null) {
     const hostOptions = {
-      host: `http://localhost:4943/?canisterId=rdmx6-jaaaa-aaaaa-aaadq-cai`,
+      host: `http://localhost:8080/?canisterId=rdmx6-jaaaa-aaaaa-aaadq-cai`,
       identity
     };
     if (!options2) {
@@ -6584,7 +6600,7 @@ function createSeasonLeaderboardStore() {
   };
 }
 createSeasonLeaderboardStore();
-const Page$c = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$e = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_systemStore;
   let $$unsubscribe_teamStore;
   let $$unsubscribe_fixtureStore;
@@ -8091,7 +8107,7 @@ const Clear_draft_modal = create_ssr_component(($$result, $$props, $$bindings, s
     }
   })}`;
 });
-const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$d = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let fixtureId;
   let $playerEventData, $$unsubscribe_playerEventData = noop, $$subscribe_playerEventData = () => ($$unsubscribe_playerEventData(), $$unsubscribe_playerEventData = subscribe(playerEventData, ($$value) => $playerEventData = $$value), playerEventData);
   let $systemStore, $$unsubscribe_systemStore;
@@ -8935,7 +8951,7 @@ const Add_fixture_data = create_ssr_component(($$result, $$props, $$bindings, sl
     }
   })}`;
 });
-const Page$a = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$c = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let showRevaluePlayerUpModal = false;
   let showRevaluePlayerDownModal = false;
   let showAddInitialFixturesModal = false;
@@ -9158,7 +9174,7 @@ const Page$a = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$9 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $teamStore, $$unsubscribe_teamStore;
   let $$unsubscribe_playerStore;
   let $$unsubscribe_fixtureStore;
@@ -9188,7 +9204,7 @@ const Page$9 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$8 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$a = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $teamStore, $$unsubscribe_teamStore;
   $$unsubscribe_teamStore = subscribe(teamStore, (value) => $teamStore = value);
   $$unsubscribe_teamStore();
@@ -9214,7 +9230,7 @@ const css = {
   code: ".striped.svelte-a09ql9 tr.svelte-a09ql9:nth-child(odd){background-color:rgba(46, 50, 58, 0.6)}",
   map: null
 };
-const Page$7 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$9 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$result.css.add(css);
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
@@ -9243,7 +9259,7 @@ const Page$7 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$6 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$8 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let activeProposals = [];
   const proposalStatuses = [
     { id: 1, description: "Open" },
@@ -9266,7 +9282,10 @@ const Page$6 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$5 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$7 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  return `  `;
+});
+const Page$6 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_selectedGameweek;
   let $$unsubscribe_loadingGameweekDetail;
   let $$unsubscribe_teamStore;
@@ -9291,6 +9310,19 @@ const Page$5 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
       return `${`${validate_component(Spinner, "Spinner").$$render($$result, {}, {}, {})}`}`;
     }
   })}`;
+});
+const Create_private_league = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  return `    `;
+});
+const Page$5 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let $leagues, $$unsubscribe_leagues;
+  const leagues = writable(null);
+  $$unsubscribe_leagues = subscribe(leagues, (value) => $leagues = value);
+  const showCreateLeagueModal = writable(false);
+  $$unsubscribe_leagues();
+  return `${showCreateLeagueModal ? `${validate_component(Create_private_league, "CreateLeagueModal").$$render($$result, {}, {}, {})}` : ``} <div class="p-4"><button class="btn bg-blue-500 text-white mb-4" data-svelte-h="svelte-xdt5nb">Create New League</button> <div class="overflow-x-auto"><table class="table-auto w-full"><thead data-svelte-h="svelte-1vpwkom"><tr><th class="text-left">League Name</th> <th class="text-left">Members</th> <th class="text-left">Season Position</th> <th class="text-left">Options</th></tr></thead> <tbody>${$leagues ? `${each($leagues.entries, (league) => {
+    return `<tr class="hover:bg-gray-100 cursor-pointer"><td>${escape(league.name)}</td> <td>${escape(league.memberCount)}</td> <td>${escape(league.seasonPosition)}</td> <td data-svelte-h="svelte-1ruq9yh"><button class="p-2 text-gray-600 hover:text-gray-800">⋮</button></td> </tr>`;
+  })}` : `<p data-svelte-h="svelte-1hecc6e">You are not a member of any leagues.</p>`}</tbody></table></div></div>`;
 });
 function getGridSetup(formation) {
   const formationSplits = formation.split("-").map(Number);
@@ -9575,7 +9607,7 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
 export {
   Error$1 as E,
   Layout$1 as L,
-  Page$c as P,
+  Page$e as P,
   Server as S,
   set_building as a,
   set_manifest as b,
@@ -9585,18 +9617,20 @@ export {
   set_read_implementation as f,
   get_hooks as g,
   set_safe_public_env as h,
-  Page$b as i,
-  Page$a as j,
-  Page$9 as k,
-  Page$8 as l,
-  Page$7 as m,
-  Page$6 as n,
+  Page$d as i,
+  Page$c as j,
+  Page$b as k,
+  Page$a as l,
+  Page$9 as m,
+  Page$8 as n,
   options as o,
-  Page$5 as p,
-  Page$4 as q,
-  Page$3 as r,
+  Page$7 as p,
+  Page$6 as q,
+  Page$5 as r,
   set_assets as s,
-  Page$2 as t,
-  Page$1 as u,
-  Page as v
+  Page$4 as t,
+  Page$3 as u,
+  Page$2 as v,
+  Page$1 as w,
+  Page as x
 };

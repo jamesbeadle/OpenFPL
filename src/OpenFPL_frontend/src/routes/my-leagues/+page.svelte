@@ -2,29 +2,28 @@
     import { onMount } from 'svelte';
     import { writable } from 'svelte/store';
     import CreateLeagueModal from '$lib/components/private-leagues/create-private-league.svelte';
-    import type { PrivateLeague } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import type { PrivateLeaguesDTO, PrivateLeagueDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import Layout from '../Layout.svelte';
     
-    const leagues: PrivateLeague = writable([]);
-    const showModal = writable(false);
-  
-    type League = {
-      id: number;
-      name: string;
-      membersCount: number;
-      seasonPosition: number;
-    };
+    const leagues = writable<PrivateLeaguesDTO | null>(null);
+    const showCreateLeagueModal = writable(false);
   
     function fetchLeagues() {
-      const dummyData: League[] = [
-        { id: 1, name: 'League One', membersCount: 10, seasonPosition: 1 },
-        { id: 2, name: 'League Two', membersCount: 8, seasonPosition: 2 },
+      const dummyLeagues: PrivateLeagueDTO[] = [
+        { canisterId: "1", name: 'OpenFPL Team', memberCount: 10n, seasonPosition: 1n, created: BigInt(Date.now()) },
+        { canisterId: "2", name: 'OpenChat', memberCount: 10000n, seasonPosition: 3n, created: BigInt(Date.now()) },
+        { canisterId: "3", name: 'Dragginz', memberCount: 5000n, seasonPosition: 2n, created: BigInt(Date.now()) },
         // Add more dummy leagues
       ];
-      leagues.set(dummyData);
+
+      leagues.set({
+        entries: dummyLeagues,
+        totalEntries: 2n
+      });
     }
   
-    function handleCreateLeague(event) {
-      console.log('League to create:', event.detail);
+    function handleCreateLeague() {
+      
       // Add league creation logic here
       fetchLeagues();
     }
@@ -33,33 +32,48 @@
       fetchLeagues();
     });
   </script>
-  
-  <CreateLeagueModal on:createLeague={handleCreateLeague} on:closeModal={() => showModal.set(false)} bind:isVisible={showModal} />
-  
-  <div class="p-4">
-    <button class="btn bg-blue-500 text-white mb-4" on:click={() => showModal.set(true)}>Create New League</button>
-  
-    <div class="overflow-x-auto">
-      <table class="table-auto w-full">
-        <thead>
-          <tr>
-            <th class="text-left">League Name</th>
-            <th class="text-left">Members</th>
-            <th class="text-left">Season Position</th>
-            <th class="text-left">Options</th>
-          </tr>
-        </thead>
-        <tbody>
-          {#each $leagues as league (league.id)}
-            <tr class="hover:bg-gray-100 cursor-pointer">
-              <td>{league.name}</td>
-              <td>{league.membersCount}</td>
-              <td>{league.seasonPosition}</td>
-              <td><button class="p-2 text-gray-600 hover:text-gray-800">⋮</button></td>
-            </tr>
-          {/each}
-        </tbody>
-      </table>
+
+  {#if showCreateLeagueModal}
+    <CreateLeagueModal on:createLeague={handleCreateLeague} on:closeModal={() => showCreateLeagueModal.set(false)} />
+  {/if}
+
+  <Layout>
+    <div class="m-4">
+      <div class="bg-panel rounded-md">
+
+        <div class="p-4">
+          <div class="p-4 flex justify-end">
+            <button class="fpl-button text-white rounded-md p-2" on:click={() => showCreateLeagueModal.set(true)}>
+              Create New League
+            </button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="table-auto w-full my-4">
+              <thead>
+                <tr>
+                  <th class="text-left">League Name</th>
+                  <th class="text-left">Members</th>
+                  <th class="text-left">Season Position</th>
+                  <th class="text-left">Options</th>
+                </tr>
+              </thead>
+              <tbody>
+                {#if $leagues}
+                  {#each $leagues.entries as league (league.canisterId)}
+                    <tr class="hover:bg-gray-800 cursor-pointer">
+                      <td>{league.name}</td>
+                      <td>{league.memberCount}</td>
+                      <td>{league.seasonPosition}</td>
+                      <td><button class="p-2 text-gray-600 hover:text-gray-800">⋮</button></td>
+                    </tr>
+                  {/each}
+                {:else}
+                    <p>You are not a member of any leagues.</p>
+                {/if}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-  
+  </Layout>

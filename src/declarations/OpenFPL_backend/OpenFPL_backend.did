@@ -133,7 +133,7 @@ type RetirePlayerDTO =
 type Result_9 = 
  variant {
    err: Error;
-   ok: MonthlyLeaderboardDTO;
+   ok: PrivateLeaguesDTO;
  };
 type Result_8 = 
  variant {
@@ -165,15 +165,20 @@ type Result_3 =
    err: Error;
    ok: nat;
  };
-type Result_21 = 
+type Result_22 = 
  variant {
    err: Error;
    ok: text;
  };
-type Result_20 = 
+type Result_21 = 
  variant {
    err: Error;
    ok: vec CountryDTO;
+ };
+type Result_20 = 
+ variant {
+   err: Error;
+   ok: PickTeamDTO;
  };
 type Result_2 = 
  variant {
@@ -183,39 +188,34 @@ type Result_2 =
 type Result_19 = 
  variant {
    err: Error;
-   ok: PickTeamDTO;
+   ok: vec DataCacheDTO;
  };
 type Result_18 = 
  variant {
    err: Error;
-   ok: vec DataCacheDTO;
+   ok: vec ClubDTO;
  };
 type Result_17 = 
  variant {
    err: Error;
-   ok: vec ClubDTO;
+   ok: ManagerDTO;
  };
 type Result_16 = 
  variant {
    err: Error;
-   ok: ManagerDTO;
+   ok: vec MonthlyLeaderboardDTO;
  };
 type Result_15 = 
  variant {
    err: Error;
-   ok: vec MonthlyLeaderboardDTO;
+   ok: PlayerDetailDTO;
  };
 type Result_14 = 
  variant {
    err: Error;
-   ok: PlayerDetailDTO;
- };
-type Result_13 = 
- variant {
-   err: Error;
    ok: vec PlayerPointsDTO;
  };
-type Result_12 = 
+type Result_13 = 
  variant {
    err: Error;
    ok: vec record {
@@ -223,15 +223,20 @@ type Result_12 =
              PlayerScoreDTO;
            };
  };
-type Result_11 = 
+type Result_12 = 
  variant {
    err: Error;
    ok: vec FixtureDTO;
  };
-type Result_10 = 
+type Result_11 = 
  variant {
    err: Error;
    ok: vec LeagueMemberDTO;
+ };
+type Result_10 = 
+ variant {
+   err: Error;
+   ok: MonthlyLeaderboardDTO;
  };
 type Result_1 = 
  variant {
@@ -270,6 +275,19 @@ type ProfileDTO =
    profilePictureType: text;
    termsAccepted: bool;
    username: text;
+ };
+type PrivateLeaguesDTO = 
+ record {
+   entries: vec PrivateLeagueDTO;
+   totalEntries: nat;
+ };
+type PrivateLeagueDTO = 
+ record {
+   canisterId: CanisterId;
+   created: int;
+   memberCount: int;
+   name: text;
+   seasonPosition: nat;
  };
 type PrincipalId = text;
 type PostponeFixtureDTO = record {fixtureId: FixtureId;};
@@ -644,32 +662,33 @@ service : {
   executeUnretirePlayer: (UnretirePlayerDTO) -> ();
   executeUpdateClub: (UpdateClubDTO) -> ();
   executeUpdatePlayer: (UpdatePlayerDTO) -> ();
-  getBackendCanisterId: () -> (Result_21) query;
-  getClubs: () -> (Result_17) query;
-  getCountries: () -> (Result_20) query;
-  getCurrentTeam: () -> (Result_19);
-  getDataHashes: () -> (Result_18) query;
-  getFixtures: (SeasonId) -> (Result_11) query;
-  getFormerClubs: () -> (Result_17) query;
+  getBackendCanisterId: () -> (Result_22) query;
+  getClubs: () -> (Result_18) query;
+  getCountries: () -> (Result_21) query;
+  getCurrentTeam: () -> (Result_20);
+  getDataHashes: () -> (Result_19) query;
+  getFixtures: (SeasonId) -> (Result_12) query;
+  getFormerClubs: () -> (Result_18) query;
   getLoanedPlayers: (ClubId) -> (Result_7) query;
-  getManager: (text) -> (Result_16);
+  getManager: (text) -> (Result_17);
   getMonthlyLeaderboard: (SeasonId, ClubId, CalendarMonth, nat, nat, 
-   text) -> (Result_9);
-  getMonthlyLeaderboards: (SeasonId, CalendarMonth) -> (Result_15);
+   text) -> (Result_10);
+  getMonthlyLeaderboards: (SeasonId, CalendarMonth) -> (Result_16);
   getNeuronId: () -> (nat64);
-  getPlayerDetails: (PlayerId, SeasonId) -> (Result_14) query;
+  getPlayerDetails: (PlayerId, SeasonId) -> (Result_15) query;
   getPlayerDetailsForGameweek: (SeasonId, GameweekNumber) ->
-   (Result_13) query;
+   (Result_14) query;
   getPlayers: () -> (Result_7) query;
-  getPlayersMap: (SeasonId, GameweekNumber) -> (Result_12) query;
-  getPostponedFixtures: () -> (Result_11) query;
-  getPrivateLeagueMembers: (CanisterId, nat, nat) -> (Result_10);
+  getPlayersMap: (SeasonId, GameweekNumber) -> (Result_13) query;
+  getPostponedFixtures: () -> (Result_12) query;
+  getPrivateLeagueMembers: (CanisterId, nat, nat) -> (Result_11);
   getPrivateLeagueMonthlyLeaderboard: (CanisterId, SeasonId, CalendarMonth,
-   nat, nat) -> (Result_9);
+   nat, nat) -> (Result_10);
   getPrivateLeagueSeasonLeaderboard: (CanisterId, SeasonId, nat, nat) ->
    (Result_6);
   getPrivateLeagueWeeklyLeaderboard: (CanisterId, SeasonId, GameweekNumber,
    nat, nat) -> (Result_2);
+  getPrivateLeagues: () -> (Result_9);
   getProfile: () -> (Result_8);
   getRetiredPlayers: (ClubId) -> (Result_7) query;
   getSeasonLeaderboard: (SeasonId, nat, nat, text) -> (Result_6);

@@ -450,6 +450,14 @@ actor Self {
 
   //Private league functionality
 
+  public shared ({ caller }) func getPrivateLeagues() : async Result.Result<DTOs.PrivateLeaguesDTO, T.Error> {
+    let privateLeagues: DTOs.PrivateLeaguesDTO = {
+      entries = [];
+      totalEntries = 0;
+    };
+    return #ok(privateLeagues);
+  };
+
   public shared ({ caller }) func getPrivateLeagueWeeklyLeaderboard(canisterId: T.CanisterId, seasonId : T.SeasonId, gameweek: T.GameweekNumber, limit : Nat, offset : Nat) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error>{
     assert not Principal.isAnonymous(caller);
     assert(await privateLeaguesManager.isLeagueMember(canisterId, Principal.toText(caller)));

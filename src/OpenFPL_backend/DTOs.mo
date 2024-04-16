@@ -450,4 +450,17 @@ module DTOs {
     termsAgreed: Bool;
   };
 
+  public type PrivateLeaguesDTO = {
+    entries : [PrivateLeagueDTO];
+    totalEntries : Nat;
+  };
+
+  public type PrivateLeagueDTO = {
+    canisterId: T.CanisterId;
+    name: Text;
+    created: Int;
+    memberCount: Int;
+    seasonPosition: Nat;
+  };
+
 };
