@@ -396,7 +396,9 @@ module _Types {
   };
 
   public type PrivateLeague = {
-
+    name: Text;
+    maxEntrants: Nat16;
+    profilePicture: Blob;
   };
 
   public type LeagueMember = {

@@ -75,7 +75,7 @@
   
 {#if $visible}
     <WizardModal {steps} bind:currentStep bind:this={modal} on:nnsClose={closeModal}>
-            
+        <div class="p-4">
         {#if currentStep?.name === "LeagueDetails"}
         <LeagueDetailsForm />
 
@@ -111,5 +111,6 @@
                 Next
             </button>
         {/if}
+    </div>
     </WizardModal>
 {/if}
