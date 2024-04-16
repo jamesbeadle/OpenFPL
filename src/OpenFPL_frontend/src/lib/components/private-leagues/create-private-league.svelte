@@ -15,6 +15,11 @@
     } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     import { toastsError } from "$lib/stores/toasts-store";
     import { Modal, WizardModal, type WizardStep, type WizardSteps } from "@dfinity/gix-components";
+    import LeagueDetailsForm from "./league-details-form.svelte";
+    import EntryRequirements from "./entry-requirements.svelte";
+    import PrizeSetup from "./prize-setup.svelte";
+    import AgreeTerms from "./agree-terms.svelte";
+    import Payment from "./payment.svelte";
     
     export let visible = writable(false);
 
@@ -43,7 +48,7 @@
         title: "Enter your league details:"
     };
     let modal: WizardModal;
-    const next = () => modal.next();
+    
     const steps: WizardSteps = [
         {
             name: "LeagueDetails",
@@ -68,31 +73,43 @@
     ];
   </script>
   
-  <Modal visible={$visible} on:nnsClose={closeModal}>
-    <div class="p-2">
-      
-      <WizardModal {steps} bind:currentStep bind:this={modal} on:nnsClose={() => ($visible = false)}>
-        <svelte:fragment slot="title">Create Private League</svelte:fragment>
-  
+{#if $visible}
+    <WizardModal {steps} bind:currentStep bind:this={modal} on:nnsClose={closeModal}>
+            
         {#if currentStep?.name === "LeagueDetails"}
-          <p>Step to enter the controller</p>
-  
-          <button class="primary" on:click={modal.next}>
-              Next
-          </button>
+        <LeagueDetailsForm />
+
+        <button class="primary" on:click={modal.next}>
+            Next
+        </button>
         {/if}
         {#if currentStep?.name === "EntryRequirements"}
-          <p>Step to confirm the controller</p>
-        {/if}
-      </WizardModal>
+            <EntryRequirements />
 
-    </div>
-  </Modal>
-  
-  <style>
-    .active {
-      background-color: #2ce3a6;
-      color: white;
-    }
-  </style>
-  
+            <button class="primary" on:click={modal.next}>
+                Next
+            </button>
+        {/if}
+        {#if currentStep?.name === "PrizeDistribution"}
+            <PrizeSetup />
+
+            <button class="primary" on:click={modal.next}>
+                Next
+            </button>
+        {/if}
+        {#if currentStep?.name === "Terms"}
+            <AgreeTerms />
+
+            <button class="primary" on:click={modal.next}>
+                Next
+            </button>
+        {/if}
+        {#if currentStep?.name === "Payment"}
+            <Payment />
+
+            <button class="primary" on:click={modal.next}>
+                Next
+            </button>
+        {/if}
+    </WizardModal>
+{/if}
