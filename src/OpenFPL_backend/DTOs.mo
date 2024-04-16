@@ -462,5 +462,6 @@ module DTOs {
     memberCount: Int;
     seasonPosition: Nat;
   };
+  
 
 };

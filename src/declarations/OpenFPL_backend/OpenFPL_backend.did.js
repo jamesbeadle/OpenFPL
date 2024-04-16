@@ -1,4 +1,17 @@
 export const idlFactory = ({ IDL }) => {
+  const CreatePrivateLeagueDTO = IDL.Record({ termsAgreed: IDL.Bool });
+  const Error = IDL.Variant({
+    DecodeError: IDL.Null,
+    NotAllowed: IDL.Null,
+    NotFound: IDL.Null,
+    NotAuthorized: IDL.Null,
+    InvalidData: IDL.Null,
+    SystemOnHold: IDL.Null,
+    AlreadyExists: IDL.Null,
+    CanisterCreateError: IDL.Null,
+    InvalidTeamError: IDL.Null,
+  });
+  const Result_1 = IDL.Variant({ ok: IDL.Null, err: Error });
   const SeasonId = IDL.Nat16;
   const FixtureStatusType = IDL.Variant({
     Unplayed: IDL.Null,
@@ -189,17 +202,6 @@ export const idlFactory = ({ IDL }) => {
     position: PlayerPosition,
     lastName: IDL.Text,
     firstName: IDL.Text,
-  });
-  const Error = IDL.Variant({
-    DecodeError: IDL.Null,
-    NotAllowed: IDL.Null,
-    NotFound: IDL.Null,
-    NotAuthorized: IDL.Null,
-    InvalidData: IDL.Null,
-    SystemOnHold: IDL.Null,
-    AlreadyExists: IDL.Null,
-    CanisterCreateError: IDL.Null,
-    InvalidTeamError: IDL.Null,
   });
   const Result_22 = IDL.Variant({ ok: IDL.Text, err: Error });
   const ClubDTO = IDL.Record({
@@ -502,11 +504,11 @@ export const idlFactory = ({ IDL }) => {
     passMasterPlayerId: PlayerId,
     captainId: PlayerId,
   });
-  const Result_1 = IDL.Variant({ ok: IDL.Null, err: Error });
   const Result = IDL.Variant({ ok: IDL.Text, err: IDL.Text });
   const RustResult = IDL.Variant({ Ok: IDL.Null, Err: IDL.Text });
   return IDL.Service({
     burnICPToCycles: IDL.Func([IDL.Nat64], [], []),
+    createPrivateLeague: IDL.Func([CreatePrivateLeagueDTO], [Result_1], []),
     executeAddInitialFixtures: IDL.Func([AddInitialFixturesDTO], [], []),
     executeCreateDAONeuron: IDL.Func([], [], []),
     executeCreatePlayer: IDL.Func([CreatePlayerDTO], [], []),

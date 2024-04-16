@@ -3513,7 +3513,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "33gtgf"
+  version_hash: "1s0q2e7"
 };
 async function get_hooks() {
   return {};
@@ -3721,6 +3721,19 @@ const initAuthStore = () => {
 };
 const authStore = initAuthStore();
 const idlFactory = ({ IDL }) => {
+  const CreatePrivateLeagueDTO = IDL.Record({ termsAgreed: IDL.Bool });
+  const Error2 = IDL.Variant({
+    DecodeError: IDL.Null,
+    NotAllowed: IDL.Null,
+    NotFound: IDL.Null,
+    NotAuthorized: IDL.Null,
+    InvalidData: IDL.Null,
+    SystemOnHold: IDL.Null,
+    AlreadyExists: IDL.Null,
+    CanisterCreateError: IDL.Null,
+    InvalidTeamError: IDL.Null
+  });
+  const Result_1 = IDL.Variant({ ok: IDL.Null, err: Error2 });
   const SeasonId = IDL.Nat16;
   const FixtureStatusType = IDL.Variant({
     Unplayed: IDL.Null,
@@ -3911,17 +3924,6 @@ const idlFactory = ({ IDL }) => {
     position: PlayerPosition,
     lastName: IDL.Text,
     firstName: IDL.Text
-  });
-  const Error2 = IDL.Variant({
-    DecodeError: IDL.Null,
-    NotAllowed: IDL.Null,
-    NotFound: IDL.Null,
-    NotAuthorized: IDL.Null,
-    InvalidData: IDL.Null,
-    SystemOnHold: IDL.Null,
-    AlreadyExists: IDL.Null,
-    CanisterCreateError: IDL.Null,
-    InvalidTeamError: IDL.Null
   });
   const Result_22 = IDL.Variant({ ok: IDL.Text, err: Error2 });
   const ClubDTO = IDL.Record({
@@ -4224,11 +4226,11 @@ const idlFactory = ({ IDL }) => {
     passMasterPlayerId: PlayerId,
     captainId: PlayerId
   });
-  const Result_1 = IDL.Variant({ ok: IDL.Null, err: Error2 });
   const Result = IDL.Variant({ ok: IDL.Text, err: IDL.Text });
   const RustResult = IDL.Variant({ Ok: IDL.Null, Err: IDL.Text });
   return IDL.Service({
     burnICPToCycles: IDL.Func([IDL.Nat64], [], []),
+    createPrivateLeague: IDL.Func([CreatePrivateLeagueDTO], [Result_1], []),
     executeAddInitialFixtures: IDL.Func([AddInitialFixturesDTO], [], []),
     executeCreateDAONeuron: IDL.Func([], [], []),
     executeCreatePlayer: IDL.Func([CreatePlayerDTO], [], []),
@@ -9312,17 +9314,42 @@ const Page$6 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   })}`;
 });
 const Create_private_league = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  return `    `;
+  let { visible } = $$props;
+  let { closeModal } = $$props;
+  let { handleCreateLeague } = $$props;
+  let { privateLeague = writable(null) } = $$props;
+  if ($$props.visible === void 0 && $$bindings.visible && visible !== void 0)
+    $$bindings.visible(visible);
+  if ($$props.closeModal === void 0 && $$bindings.closeModal && closeModal !== void 0)
+    $$bindings.closeModal(closeModal);
+  if ($$props.handleCreateLeague === void 0 && $$bindings.handleCreateLeague && handleCreateLeague !== void 0)
+    $$bindings.handleCreateLeague(handleCreateLeague);
+  if ($$props.privateLeague === void 0 && $$bindings.privateLeague && privateLeague !== void 0)
+    $$bindings.privateLeague(privateLeague);
+  return `      ${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
+    default: () => {
+      return `<div class="p-2"><div class="flex justify-between items-center"><h3 class="default-header" data-svelte-h="svelte-m2farc">Create Private League</h3> <button class="times-button" data-svelte-h="svelte-1xats1q">×</button></div> <p data-svelte-h="svelte-18wfaie">shit</p></div>`;
+    }
+  })}`;
 });
+const pageSize = 10;
 const Page$5 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $leagues, $$unsubscribe_leagues;
   const leagues = writable(null);
   $$unsubscribe_leagues = subscribe(leagues, (value) => $leagues = value);
   const showCreateLeagueModal = writable(false);
+  let currentPage = 1;
   $$unsubscribe_leagues();
-  return `${showCreateLeagueModal ? `${validate_component(Create_private_league, "CreateLeagueModal").$$render($$result, {}, {}, {})}` : ``} <div class="p-4"><button class="btn bg-blue-500 text-white mb-4" data-svelte-h="svelte-xdt5nb">Create New League</button> <div class="overflow-x-auto"><table class="table-auto w-full"><thead data-svelte-h="svelte-1vpwkom"><tr><th class="text-left">League Name</th> <th class="text-left">Members</th> <th class="text-left">Season Position</th> <th class="text-left">Options</th></tr></thead> <tbody>${$leagues ? `${each($leagues.entries, (league) => {
-    return `<tr class="hover:bg-gray-100 cursor-pointer"><td>${escape(league.name)}</td> <td>${escape(league.memberCount)}</td> <td>${escape(league.seasonPosition)}</td> <td data-svelte-h="svelte-1ruq9yh"><button class="p-2 text-gray-600 hover:text-gray-800">⋮</button></td> </tr>`;
-  })}` : `<p data-svelte-h="svelte-1hecc6e">You are not a member of any leagues.</p>`}</tbody></table></div></div>`;
+  return `${showCreateLeagueModal ? `${validate_component(Create_private_league, "CreateLeagueModal").$$render($$result, {}, {}, {})}` : ``} ${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
+    default: () => {
+      return `<div class="m-4"><div class="bg-panel rounded-md"><div class="py-4"><div class="flex justify-between items-center p-4"><div data-svelte-h="svelte-caz7ur">Private Leagues</div> <button class="fpl-button text-white rounded-md p-2" data-svelte-h="svelte-1u65rpy">Create New League</button></div> <div class="overflow-x-auto flex-1"><div class="flex justify-between border border-gray-700 py-2 bg-light-gray border-b border-gray-700 p-4" data-svelte-h="svelte-e3dkh2"><div class="w-3/6">League Name</div> <div class="w-1/6">Members</div> <div class="w-1/6">Season Position</div> <div class="w-1/6"></div></div> ${$leagues ? `${each($leagues.entries, (league) => {
+        return `<div class="flex items-center justify-between border-b border-gray-700 cursor-pointer p-4"><div class="w-3/6">${escape(league.name)}</div> <div class="w-1/6">${escape(league.memberCount)}</div> <div class="w-1/6">${escape(league.seasonPosition)}</div> <div class="w-1/6 flex justify-center items-center" data-svelte-h="svelte-li25cb"><button class="rounded fpl-button flex items-center px-4 py-2">View
+                    </button></div> </div>`;
+      })} <div class="justify-center mt-4 overflow-x-auto px-4"><div class="flex space-x-1 min-w-max">${each(Array(Math.ceil(Number($leagues.totalEntries) / pageSize)), (_, index) => {
+        return `<button${add_attribute("class", `px-4 py-2 rounded-md ${index + 1 === currentPage ? "fpl-button" : ""}`, 0)}>${escape(index + 1)} </button>`;
+      })}</div></div>` : `<p data-svelte-h="svelte-1hecc6e">You are not a member of any leagues.</p>`}</div></div></div></div>`;
+    }
+  })}`;
 });
 function getGridSetup(formation) {
   const formationSplits = formation.split("-").map(Number);

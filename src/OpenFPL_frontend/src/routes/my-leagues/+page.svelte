@@ -41,7 +41,7 @@
   </script>
 
   {#if showCreateLeagueModal}
-    <CreateLeagueModal on:createLeague={handleCreateLeague} on:closeModal={() => showCreateLeagueModal.set(false)} />
+    <CreateLeagueModal visible={showCreateLeagueModal} {handleCreateLeague} closeModal={() => showCreateLeagueModal.set(false)} />
   {/if}
 
   <Layout>

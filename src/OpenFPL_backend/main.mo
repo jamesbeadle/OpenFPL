@@ -481,16 +481,19 @@ actor Self {
     assert(await privateLeaguesManager.isLeagueMember(canisterId, Principal.toText(caller)));
     return await privateLeaguesManager.getLeagueMembers(canisterId, limit, offset);
   };
-
-/*
+  
   public shared ({ caller }) func createPrivateLeague(newPrivateLeague: DTOs.CreatePrivateLeagueDTO) : async Result.Result<(), T.Error>{
     assert not Principal.isAnonymous(caller);
     assert(newPrivateLeague.termsAgreed);
+    /*
     assert(privateLeaguesManager.privateLeagueIsValid(newPrivateLeague));
     assert(privateLeaguesManager.nameAvailable(caller));
     assert(privateLeaguesManager.canAffordPrivateLeague(caller));
-    return await privateLeaguesManager.createPrivateLeague(newPrivateLeague);
+    */
+    return #ok(await privateLeaguesManager.createPrivateLeague(newPrivateLeague));
   };
+
+/*
 
   public shared ({ caller }) func searchUsername(username: Text) : async Result.Result<DTOs.LeagueMemberDTO, T.Error> {
     assert not Principal.isAnonymous(caller);

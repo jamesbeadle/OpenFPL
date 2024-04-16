@@ -65,6 +65,9 @@ export interface CreatePlayerDTO {
   lastName: string;
   firstName: string;
 }
+export interface CreatePrivateLeagueDTO {
+  termsAgreed: boolean;
+}
 export interface DataCacheDTO {
   hash: string;
   category: string;
@@ -513,6 +516,7 @@ export interface WeeklyLeaderboardDTO {
 }
 export interface _SERVICE {
   burnICPToCycles: ActorMethod<[bigint], undefined>;
+  createPrivateLeague: ActorMethod<[CreatePrivateLeagueDTO], Result_1>;
   executeAddInitialFixtures: ActorMethod<[AddInitialFixturesDTO], undefined>;
   executeCreateDAONeuron: ActorMethod<[], undefined>;
   executeCreatePlayer: ActorMethod<[CreatePlayerDTO], undefined>;

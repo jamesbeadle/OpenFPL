@@ -61,7 +61,7 @@ module {
       return false;
     };
 
-    public func createPrivateLeague(newPrivateLeague: T.PrivateLeague) : () {
+    public func createPrivateLeague(newPrivateLeague: DTOs.CreatePrivateLeagueDTO) : async () {
 
     };
 

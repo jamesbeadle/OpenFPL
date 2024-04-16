@@ -576,6 +576,7 @@ type DataCacheDTO =
    category: text;
    hash: text;
  };
+type CreatePrivateLeagueDTO = record {termsAgreed: bool;};
 type CreatePlayerDTO = 
  record {
    clubId: ClubId;
@@ -642,6 +643,7 @@ type AddInitialFixturesDTO =
 type AccountIdentifier = record {hash: vec nat8;};
 service : {
   burnICPToCycles: (nat64) -> ();
+  createPrivateLeague: (CreatePrivateLeagueDTO) -> (Result_1);
   executeAddInitialFixtures: (AddInitialFixturesDTO) -> ();
   executeCreateDAONeuron: () -> ();
   executeCreatePlayer: (CreatePlayerDTO) -> ();
