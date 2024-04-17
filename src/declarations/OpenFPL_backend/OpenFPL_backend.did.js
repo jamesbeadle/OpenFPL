@@ -1,5 +1,17 @@
 export const idlFactory = ({ IDL }) => {
-  const CreatePrivateLeagueDTO = IDL.Record({ termsAgreed: IDL.Bool });
+  const EntryRequirement = IDL.Variant({
+    InviteOnly: IDL.Null,
+    PaidEntry: IDL.Null,
+    FreeEntry: IDL.Null,
+  });
+  const CreatePrivateLeagueDTO = IDL.Record({
+    adminFee: IDL.Nat8,
+    name: IDL.Text,
+    entryRequirement: EntryRequirement,
+    entrants: IDL.Nat16,
+    termsAgreed: IDL.Bool,
+    leaguePhoto: IDL.Opt(IDL.Vec(IDL.Nat8)),
+  });
   const Error = IDL.Variant({
     DecodeError: IDL.Null,
     NotAllowed: IDL.Null,

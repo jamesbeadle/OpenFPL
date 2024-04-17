@@ -66,7 +66,12 @@ export interface CreatePlayerDTO {
   firstName: string;
 }
 export interface CreatePrivateLeagueDTO {
+  adminFee: number;
+  name: string;
+  entryRequirement: EntryRequirement;
+  entrants: number;
   termsAgreed: boolean;
+  leaguePhoto: [] | [Uint8Array | number[]];
 }
 export interface DataCacheDTO {
   hash: string;
@@ -76,6 +81,10 @@ export interface Disburse {
   to_account: [] | [AccountIdentifier];
   amount: [] | [Amount];
 }
+export type EntryRequirement =
+  | { InviteOnly: null }
+  | { PaidEntry: null }
+  | { FreeEntry: null };
 export type Error =
   | { DecodeError: null }
   | { NotAllowed: null }

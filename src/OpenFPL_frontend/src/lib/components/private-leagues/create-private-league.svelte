@@ -77,35 +77,38 @@
     <WizardModal {steps} bind:currentStep bind:this={modal} on:nnsClose={closeModal}>
         <div class="p-4">
         {#if currentStep?.name === "LeagueDetails"}
-        <LeagueDetailsForm />
+        <LeagueDetailsForm {privateLeague} />
 
         <button class="primary" on:click={modal.next}>
             Next
         </button>
         {/if}
         {#if currentStep?.name === "EntryRequirements"}
-            <EntryRequirements />
+            <EntryRequirements {privateLeague} />
 
+            <button class="primary" on:click={modal.back}>
+                Back
+            </button>
             <button class="primary" on:click={modal.next}>
                 Next
             </button>
         {/if}
         {#if currentStep?.name === "PrizeDistribution"}
-            <PrizeSetup />
+            <PrizeSetup {privateLeague} />
 
             <button class="primary" on:click={modal.next}>
                 Next
             </button>
         {/if}
         {#if currentStep?.name === "Terms"}
-            <AgreeTerms />
+            <AgreeTerms {privateLeague} />
 
             <button class="primary" on:click={modal.next}>
                 Next
             </button>
         {/if}
         {#if currentStep?.name === "Payment"}
-            <Payment />
+            <Payment {privateLeague} />
 
             <button class="primary" on:click={modal.next}>
                 Next

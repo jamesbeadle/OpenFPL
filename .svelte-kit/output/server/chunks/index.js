@@ -3513,7 +3513,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1s0q2e7"
+  version_hash: "nh1t1v"
 };
 async function get_hooks() {
   return {};
@@ -3721,7 +3721,19 @@ const initAuthStore = () => {
 };
 const authStore = initAuthStore();
 const idlFactory = ({ IDL }) => {
-  const CreatePrivateLeagueDTO = IDL.Record({ termsAgreed: IDL.Bool });
+  const EntryRequirement = IDL.Variant({
+    InviteOnly: IDL.Null,
+    PaidEntry: IDL.Null,
+    FreeEntry: IDL.Null
+  });
+  const CreatePrivateLeagueDTO = IDL.Record({
+    adminFee: IDL.Nat8,
+    name: IDL.Text,
+    entryRequirement: EntryRequirement,
+    entrants: IDL.Nat16,
+    termsAgreed: IDL.Bool,
+    leaguePhoto: IDL.Opt(IDL.Vec(IDL.Nat8))
+  });
   const Error2 = IDL.Variant({
     DecodeError: IDL.Null,
     NotAllowed: IDL.Null,
@@ -4918,7 +4930,7 @@ const i18n = readable({
   lang: "en",
   ...en
 });
-const css$a = {
+const css$b = {
   code: ".backdrop.svelte-whxjdd{position:absolute;top:0;right:0;bottom:0;left:0;background:var(--backdrop);color:var(--backdrop-contrast);-webkit-backdrop-filter:var(--backdrop-filter);backdrop-filter:var(--backdrop-filter);z-index:var(--backdrop-z-index);touch-action:manipulation;cursor:pointer}.backdrop.disablePointerEvents.svelte-whxjdd{cursor:inherit;pointer-events:none}",
   map: null
 };
@@ -4929,7 +4941,7 @@ const Backdrop = create_ssr_component(($$result, $$props, $$bindings, slots) => 
   createEventDispatcher();
   if ($$props.disablePointerEvents === void 0 && $$bindings.disablePointerEvents && disablePointerEvents !== void 0)
     $$bindings.disablePointerEvents(disablePointerEvents);
-  $$result.css.add(css$a);
+  $$result.css.add(css$b);
   $$unsubscribe_i18n();
   return `<div role="button" tabindex="-1"${add_attribute("aria-label", $i18n.core.close, 0)} class="${["backdrop svelte-whxjdd", disablePointerEvents ? "disablePointerEvents" : ""].join(" ").trim()}" data-tid="backdrop"></div>`;
 });
@@ -4962,7 +4974,7 @@ const initBusyStore = () => {
 const busyStore = initBusyStore();
 const busy = derived(busyStore, ($busyStore) => $busyStore.length > 0);
 const busyMessage = derived(busyStore, ($busyStore) => $busyStore.reverse().find(({ text: text2 }) => nonNullish(text2))?.text);
-const css$9 = {
+const css$a = {
   code: ".medium.svelte-85668t{--spinner-size:30px}.small.svelte-85668t{--spinner-size:calc(var(--line-height-standard) * 1rem)}.tiny.svelte-85668t{--spinner-size:calc(var(--line-height-standard) * 0.5rem)}svg.svelte-85668t{width:var(--spinner-size);height:var(--spinner-size);animation:spinner-linear-rotate 2000ms linear infinite;position:absolute;top:calc(50% - var(--spinner-size) / 2);left:calc(50% - var(--spinner-size) / 2);--radius:45px;--circumference:calc(3.1415926536 * var(--radius) * 2);--start:calc((1 - 0.05) * var(--circumference));--end:calc((1 - 0.8) * var(--circumference))}svg.inline.svelte-85668t{display:inline-block;position:relative}circle.svelte-85668t{stroke-dasharray:var(--circumference);stroke-width:10%;transform-origin:50% 50% 0;transition-property:stroke;animation-name:spinner-stroke-rotate-100;animation-duration:4000ms;animation-timing-function:cubic-bezier(0.35, 0, 0.25, 1);animation-iteration-count:infinite;fill:transparent;stroke:currentColor;transition:stroke-dashoffset 225ms linear}@keyframes spinner-linear-rotate{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}@keyframes spinner-stroke-rotate-100{0%{stroke-dashoffset:var(--start);transform:rotate(0)}12.5%{stroke-dashoffset:var(--end);transform:rotate(0)}12.5001%{stroke-dashoffset:var(--end);transform:rotateX(180deg) rotate(72.5deg)}25%{stroke-dashoffset:var(--start);transform:rotateX(180deg) rotate(72.5deg)}25.0001%{stroke-dashoffset:var(--start);transform:rotate(270deg)}37.5%{stroke-dashoffset:var(--end);transform:rotate(270deg)}37.5001%{stroke-dashoffset:var(--end);transform:rotateX(180deg) rotate(161.5deg)}50%{stroke-dashoffset:var(--start);transform:rotateX(180deg) rotate(161.5deg)}50.0001%{stroke-dashoffset:var(--start);transform:rotate(180deg)}62.5%{stroke-dashoffset:var(--end);transform:rotate(180deg)}62.5001%{stroke-dashoffset:var(--end);transform:rotateX(180deg) rotate(251.5deg)}75%{stroke-dashoffset:var(--start);transform:rotateX(180deg) rotate(251.5deg)}75.0001%{stroke-dashoffset:var(--start);transform:rotate(90deg)}87.5%{stroke-dashoffset:var(--end);transform:rotate(90deg)}87.5001%{stroke-dashoffset:var(--end);transform:rotateX(180deg) rotate(341.5deg)}100%{stroke-dashoffset:var(--start);transform:rotateX(180deg) rotate(341.5deg)}}",
   map: null
 };
@@ -4973,10 +4985,10 @@ const Spinner = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     $$bindings.inline(inline);
   if ($$props.size === void 0 && $$bindings.size && size !== void 0)
     $$bindings.size(size);
-  $$result.css.add(css$9);
+  $$result.css.add(css$a);
   return `  <svg class="${[escape(null_to_empty(size), true) + " svelte-85668t", inline ? "inline" : ""].join(" ").trim()}" preserveAspectRatio="xMidYMid meet" focusable="false" aria-hidden="true" data-tid="spinner" viewBox="0 0 100 100"><circle cx="50%" cy="50%" r="45" class="svelte-85668t"></circle></svg>`;
 });
-const css$8 = {
+const css$9 = {
   code: "div.svelte-14plyno{z-index:calc(var(--z-index) + 1000);position:fixed;top:0;right:0;bottom:0;left:0;background:var(--backdrop);color:var(--backdrop-contrast)}.content.svelte-14plyno{display:flex;flex-direction:column;justify-content:center;align-items:center}p.svelte-14plyno{padding-bottom:var(--padding);max-width:calc(var(--section-max-width) / 2)}",
   map: null
 };
@@ -4985,7 +4997,7 @@ const BusyScreen = create_ssr_component(($$result, $$props, $$bindings, slots) =
   let $busyMessage, $$unsubscribe_busyMessage;
   $$unsubscribe_busy = subscribe(busy, (value) => $busy = value);
   $$unsubscribe_busyMessage = subscribe(busyMessage, (value) => $busyMessage = value);
-  $$result.css.add(css$8);
+  $$result.css.add(css$9);
   $$unsubscribe_busy();
   $$unsubscribe_busyMessage();
   return ` ${$busy ? `<div data-tid="busy" class="svelte-14plyno"><div class="content svelte-14plyno">${nonNullish($busyMessage) ? `<p class="svelte-14plyno">${escape($busyMessage)}</p>` : ``} <span>${validate_component(Spinner, "Spinner").$$render($$result, { inline: true }, {}, {})}</span></div></div>` : ``}`;
@@ -5008,7 +5020,7 @@ const IconError = create_ssr_component(($$result, $$props, $$bindings, slots) =>
     $$bindings.size(size);
   return `  <svg xmlns="http://www.w3.org/2000/svg"${add_attribute("height", size, 0)} viewBox="0 0 24 24"${add_attribute("width", size, 0)} fill="currentColor"><path d="M0 0h24v24H0z" fill="none"></path><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"></path></svg>`;
 });
-const css$7 = {
+const css$8 = {
   code: "svg.svelte-1lui9gh{vertical-align:middle}",
   map: null
 };
@@ -5016,7 +5028,7 @@ const IconInfo = create_ssr_component(($$result, $$props, $$bindings, slots) => 
   let { size = `${DEFAULT_ICON_SIZE}px` } = $$props;
   if ($$props.size === void 0 && $$bindings.size && size !== void 0)
     $$bindings.size(size);
-  $$result.css.add(css$7);
+  $$result.css.add(css$8);
   return `  <svg${add_attribute("width", size, 0)}${add_attribute("height", size, 0)} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" data-tid="icon-info" class="svelte-1lui9gh"><path d="M10.2222 17.5C14.3643 17.5 17.7222 14.1421 17.7222 10C17.7222 5.85786 14.3643 2.5 10.2222 2.5C6.08003 2.5 2.72217 5.85786 2.72217 10C2.72217 14.1421 6.08003 17.5 10.2222 17.5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10.2222 13.3333V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10.2222 6.66699H10.2305" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>`;
 });
 const IconWarning = create_ssr_component(($$result, $$props, $$bindings, slots) => {
@@ -5112,7 +5124,7 @@ const initMenuStore = () => {
 };
 const menuStore = initMenuStore();
 derived(menuStore, ($menuStore) => $menuStore === Menu.COLLAPSED);
-const css$6 = {
+const css$7 = {
   code: ".modal.svelte-1bbimtl.svelte-1bbimtl{position:fixed;top:0;right:0;bottom:0;left:0;z-index:var(--modal-z-index);touch-action:initial;cursor:initial}.wrapper.svelte-1bbimtl.svelte-1bbimtl{position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);display:flex;flex-direction:column;background:var(--overlay-background);color:var(--overlay-background-contrast);--button-secondary-background:var(--focus-background);overflow:hidden;box-sizing:border-box;box-shadow:var(--overlay-box-shadow)}.wrapper.svelte-1bbimtl .container-wrapper.svelte-1bbimtl{margin:var(--padding-1_5x) var(--padding-2x) auto;display:flex;flex-direction:column;gap:var(--padding-1_5x);flex:1;overflow:hidden}.wrapper.alert.svelte-1bbimtl.svelte-1bbimtl{width:var(--alert-width);max-width:var(--alert-max-width);max-height:var(--alert-max-height);border-radius:var(--alert-border-radius)}.wrapper.alert.svelte-1bbimtl .header.svelte-1bbimtl{padding:var(--alert-padding-y) var(--alert-padding-x) var(--padding)}.wrapper.alert.svelte-1bbimtl .container-wrapper.svelte-1bbimtl{margin-bottom:calc(var(--alert-padding-y) * 2 / 3)}.wrapper.alert.svelte-1bbimtl .content.svelte-1bbimtl{margin:0 0 calc(var(--alert-padding-y) / 2);padding:calc(var(--alert-padding-y) / 2) calc(var(--alert-padding-x) / 2) 0}.wrapper.alert.svelte-1bbimtl .footer.svelte-1bbimtl{padding:0 var(--alert-padding-x) calc(var(--alert-padding-y) * 2 / 3)}@media(min-width: 576px){.wrapper.alert.svelte-1bbimtl .footer.svelte-1bbimtl{justify-content:flex-end}}.wrapper.dialog.svelte-1bbimtl.svelte-1bbimtl{width:var(--dialog-width);max-width:var(--dialog-max-width);min-height:var(--dialog-min-height);height:var(--dialog-height);max-height:var(--dialog-max-height, 100%);border-radius:var(--dialog-border-radius)}@supports (-webkit-touch-callout: none){.wrapper.dialog.svelte-1bbimtl.svelte-1bbimtl{max-height:-webkit-fill-available}@media(min-width: 768px){.wrapper.dialog.svelte-1bbimtl.svelte-1bbimtl{max-height:var(--dialog-max-height, 100%)}}}.wrapper.dialog.svelte-1bbimtl .header.svelte-1bbimtl{padding:var(--dialog-padding-y) var(--padding-3x) var(--padding)}.wrapper.dialog.svelte-1bbimtl .container-wrapper.svelte-1bbimtl{margin-bottom:var(--dialog-padding-y)}.wrapper.dialog.svelte-1bbimtl .content.svelte-1bbimtl{margin:0;padding:var(--dialog-padding-y) var(--dialog-padding-x)}.header.svelte-1bbimtl.svelte-1bbimtl{display:grid;grid-template-columns:1fr auto 1fr;gap:var(--padding);z-index:var(--z-index);position:relative}.header.svelte-1bbimtl h2.svelte-1bbimtl{white-space:var(--text-white-space, nowrap);overflow:hidden;text-overflow:ellipsis;grid-column-start:2;text-align:center}.header.svelte-1bbimtl button.svelte-1bbimtl{display:flex;justify-content:center;align-items:center;padding:0;justify-self:flex-end}.header.svelte-1bbimtl button.svelte-1bbimtl:active,.header.svelte-1bbimtl button.svelte-1bbimtl:focus,.header.svelte-1bbimtl button.svelte-1bbimtl:hover{background:var(--background-shade);border-radius:var(--border-radius)}.content.svelte-1bbimtl.svelte-1bbimtl{overflow-y:var(--modal-content-overflow-y, auto);overflow-x:hidden}.container.svelte-1bbimtl.svelte-1bbimtl{position:relative;display:flex;flex-direction:column;flex:1;overflow:hidden;border-radius:16px;background:var(--overlay-content-background);color:var(--overlay-content-background-contrast)}",
   map: null
 };
@@ -5137,7 +5149,7 @@ const Modal = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     $$bindings.testId(testId);
   if ($$props.disablePointerEvents === void 0 && $$bindings.disablePointerEvents && disablePointerEvents !== void 0)
     $$bindings.disablePointerEvents(disablePointerEvents);
-  $$result.css.add(css$6);
+  $$result.css.add(css$7);
   showHeader = nonNullish($$slots.title);
   showFooterAlert = nonNullish($$slots.footer) && role === "alert";
   $$unsubscribe_i18n();
@@ -5181,7 +5193,7 @@ const initToastsStore = () => {
   };
 };
 const toastsStore = initToastsStore();
-const css$5 = {
+const css$6 = {
   code: ".toast.svelte-w1j1kj.svelte-w1j1kj{display:flex;justify-content:space-between;align-items:center;gap:var(--padding-1_5x);background:var(--overlay-background);color:var(--overlay-background-contrast);--button-secondary-background:var(--focus-background);border-radius:var(--border-radius);box-shadow:var(--strong-shadow, 8px 8px 16px 0 rgba(0, 0, 0, 0.25));padding:var(--padding-1_5x);box-sizing:border-box}.toast.inverted.svelte-w1j1kj.svelte-w1j1kj{background:var(--toast-inverted-background);color:var(--toast-inverted-background-contrast)}.toast.svelte-w1j1kj .icon.svelte-w1j1kj{line-height:0}.toast.svelte-w1j1kj .icon.success.svelte-w1j1kj{color:var(--positive-emphasis)}.toast.svelte-w1j1kj .icon.info.svelte-w1j1kj{color:var(--primary)}.toast.svelte-w1j1kj .icon.warn.svelte-w1j1kj{color:var(--warning-emphasis-shade)}.toast.svelte-w1j1kj .icon.error.svelte-w1j1kj{color:var(--negative-emphasis)}.toast.svelte-w1j1kj .msg.svelte-w1j1kj{flex-grow:1;margin:0;word-break:break-word}.toast.svelte-w1j1kj .msg.scroll.svelte-w1j1kj{overflow-y:auto;max-height:calc(var(--font-size-standard) * 3 * 1.3);line-height:normal}.toast.svelte-w1j1kj .msg.truncate.svelte-w1j1kj{white-space:var(--text-white-space, nowrap);overflow:hidden;text-overflow:ellipsis}.toast.svelte-w1j1kj .msg.truncate .title.svelte-w1j1kj{white-space:var(--text-white-space, nowrap);overflow:hidden;text-overflow:ellipsis}.toast.svelte-w1j1kj .msg.clamp.svelte-w1j1kj{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}.toast.svelte-w1j1kj .msg.clamp .title.svelte-w1j1kj{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}.toast.svelte-w1j1kj .title.svelte-w1j1kj{display:block;font-size:var(--font-size-standard);line-height:var(--line-height-standard);font-weight:var(--font-weight-bold);line-height:normal}.toast.svelte-w1j1kj button.close.svelte-w1j1kj{padding:0;line-height:0;color:inherit}",
   map: null
 };
@@ -5219,7 +5231,7 @@ const Toast = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   onDestroy(cleanUpAutoHide);
   if ($$props.msg === void 0 && $$bindings.msg && msg !== void 0)
     $$bindings.msg(msg);
-  $$result.css.add(css$5);
+  $$result.css.add(css$6);
   ({ text: text2, level, spinner, title, overflow, position, icon, theme: theme2, renderAsHtml } = msg);
   scroll = overflow === void 0 || overflow === "scroll";
   truncate = overflow === "truncate";
@@ -5230,7 +5242,7 @@ const Toast = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     (truncate ? "truncate" : "") + " " + (clamp ? "clamp" : "") + " " + (scroll ? "scroll" : "")
   ].join(" ").trim()}"${add_attribute("style", minHeightMessage, 0)}>${nonNullish(title) ? `<span class="title svelte-w1j1kj">${escape(title)}</span>` : ``} ${renderAsHtml ? `${validate_component(Html, "Html").$$render($$result, { text: text2 }, {}, {})}` : `${escape(text2)}`}</p> <button class="close svelte-w1j1kj"${add_attribute("aria-label", $i18n.core.close, 0)}>${validate_component(IconClose, "IconClose").$$render($$result, {}, {}, {})}</button> </div>`;
 });
-const css$4 = {
+const css$5 = {
   code: ".wrapper.svelte-24m335{position:fixed;left:50%;transform:translate(-50%, 0);bottom:calc(var(--layout-bottom-offset, 0) + var(--padding-2x));width:calc(100% - var(--padding-8x) - var(--padding-0_5x));display:flex;flex-direction:column;gap:var(--padding);z-index:var(--toast-info-z-index)}.wrapper.error.svelte-24m335{z-index:var(--toast-error-z-index)}@media(min-width: 1024px){.wrapper.svelte-24m335{max-width:calc(var(--section-max-width) - var(--padding-2x))}}.top.svelte-24m335{top:calc(var(--header-height) + var(--padding-3x));bottom:unset;width:calc(100% - var(--padding-6x))}@media(min-width: 1024px){.top.svelte-24m335{right:var(--padding-2x);left:unset;transform:none;max-width:calc(var(--section-max-width) / 1.5 - var(--padding-2x))}}",
   map: null
 };
@@ -5244,7 +5256,7 @@ const Toasts = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let hasErrors;
   if ($$props.position === void 0 && $$bindings.position && position !== void 0)
     $$bindings.position(position);
-  $$result.css.add(css$4);
+  $$result.css.add(css$5);
   toasts = $toastsStore.filter(({ position: pos }) => (pos ?? "bottom") === position);
   hasErrors = toasts.find(({ level }) => ["error", "warn"].includes(level)) !== void 0;
   $$unsubscribe_toastsStore();
@@ -5255,6 +5267,95 @@ const Toasts = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   ].join(" ").trim()}"${add_attribute("style", `--layout-bottom-offset: ${$layoutBottomOffset}px`, 0)}>${each(toasts, (msg) => {
     return `${validate_component(Toast, "Toast").$$render($$result, { msg }, {}, {})}`;
   })}</div>` : ``}`;
+});
+const css$4 = {
+  code: "div.svelte-j8eaq1{width:100%}",
+  map: null
+};
+const DEFAULT_OFFSET = 200;
+const WizardTransition = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let { transition = { diff: 0 } } = $$props;
+  let absolutOffset = DEFAULT_OFFSET;
+  if ($$props.transition === void 0 && $$bindings.transition && transition !== void 0)
+    $$bindings.transition(transition);
+  $$result.css.add(css$4);
+  transition.diff === 0 ? 0 : transition.diff > 0 ? absolutOffset : -absolutOffset;
+  return `<div class="svelte-j8eaq1">${slots.default ? slots.default({}) : ``}</div>`;
+});
+class WizardStepsState {
+  currentStep;
+  currentStepIndex = 0;
+  previousStepIndex = 0;
+  steps;
+  constructor(steps) {
+    this.steps = steps;
+    this.currentStep = this.steps[0];
+  }
+  next() {
+    if (this.currentStepIndex < this.steps.length - 1) {
+      this.move(this.currentStepIndex + 1);
+    }
+    return this;
+  }
+  get diff() {
+    return this.currentStepIndex - this.previousStepIndex;
+  }
+  back() {
+    if (this.currentStepIndex > 0) {
+      this.move(this.currentStepIndex - 1);
+    }
+    return this;
+  }
+  set(newStep) {
+    this.move(newStep);
+    return this;
+  }
+  move(nextStep) {
+    this.previousStepIndex = this.currentStepIndex;
+    this.currentStepIndex = nextStep;
+    this.currentStep = this.steps[this.currentStepIndex];
+  }
+}
+const WizardModal = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let { steps } = $$props;
+  let { disablePointerEvents = false } = $$props;
+  let { testId = void 0 } = $$props;
+  let stepState;
+  let { currentStep } = $$props;
+  let transition;
+  const next = () => stepState = stepState.next();
+  const back = () => stepState = stepState.back();
+  const set = (step) => stepState = stepState.set(step);
+  createEventDispatcher();
+  if ($$props.steps === void 0 && $$bindings.steps && steps !== void 0)
+    $$bindings.steps(steps);
+  if ($$props.disablePointerEvents === void 0 && $$bindings.disablePointerEvents && disablePointerEvents !== void 0)
+    $$bindings.disablePointerEvents(disablePointerEvents);
+  if ($$props.testId === void 0 && $$bindings.testId && testId !== void 0)
+    $$bindings.testId(testId);
+  if ($$props.currentStep === void 0 && $$bindings.currentStep && currentStep !== void 0)
+    $$bindings.currentStep(currentStep);
+  if ($$props.next === void 0 && $$bindings.next && next !== void 0)
+    $$bindings.next(next);
+  if ($$props.back === void 0 && $$bindings.back && back !== void 0)
+    $$bindings.back(back);
+  if ($$props.set === void 0 && $$bindings.set && set !== void 0)
+    $$bindings.set(set);
+  stepState = new WizardStepsState(steps);
+  ({ currentStep } = stepState);
+  transition = { diff: stepState.diff };
+  return `${`${validate_component(Modal, "Modal").$$render($$result, { testId, disablePointerEvents }, {}, {
+    title: () => {
+      return `${slots.title ? slots.title({ slot: "title" }) : ``}`;
+    },
+    default: () => {
+      return `${validate_component(WizardTransition, "WizardTransition").$$render($$result, { transition }, {}, {
+        default: () => {
+          return `${slots.default ? slots.default({}) : ``}`;
+        }
+      })}`;
+    }
+  })}`}`;
 });
 const toastsShow = (msg) => toastsStore.show(msg);
 const toastsError = ({
@@ -9313,11 +9414,74 @@ const Page$6 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
+const League_details_form = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let leagueName = "";
+  let maxEntrants = 1e4;
+  let leaguePictureName = "No file chosen";
+  let { privateLeague = writable(null) } = $$props;
+  if ($$props.privateLeague === void 0 && $$bindings.privateLeague && privateLeague !== void 0)
+    $$bindings.privateLeague(privateLeague);
+  return `<div class="container mx-auto p-4"><p class="text-xl mb-2" data-svelte-h="svelte-1gmgvj4">League Details</p> <div class="mb-4"><label class="block text-sm font-bold mb-2" for="league-name" data-svelte-h="svelte-1gd5i82">League Name:</label> <input type="text" class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline" id="league-name"${add_attribute("value", leagueName, 0)}></div> <div class="file-upload-wrapper mt-4"><label class="block text-sm font-bold mb-2">League Photo:
+        <div class="file-upload-details"><span>${escape(leaguePictureName)}</span></div> <input type="file" id="profile-image" accept="image/*" class="file-input"></label></div> <div class="mb-4"><label class="block text-sm font-bold mb-2" for="league-name" data-svelte-h="svelte-5x2hld">Max Entrants:</label> <input type="number" min="2" max="10000" class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline" id="max-entrants"${add_attribute("value", maxEntrants, 0)}></div></div>`;
+});
+const Entry_requirements = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let { privateLeague = writable(null) } = $$props;
+  if ($$props.privateLeague === void 0 && $$bindings.privateLeague && privateLeague !== void 0)
+    $$bindings.privateLeague(privateLeague);
+  return ``;
+});
+const Prize_setup = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let { privateLeague = writable(null) } = $$props;
+  if ($$props.privateLeague === void 0 && $$bindings.privateLeague && privateLeague !== void 0)
+    $$bindings.privateLeague(privateLeague);
+  return ``;
+});
+const Agree_terms = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let { privateLeague = writable(null) } = $$props;
+  if ($$props.privateLeague === void 0 && $$bindings.privateLeague && privateLeague !== void 0)
+    $$bindings.privateLeague(privateLeague);
+  return ``;
+});
+const Payment = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let { privateLeague = writable(null) } = $$props;
+  if ($$props.privateLeague === void 0 && $$bindings.privateLeague && privateLeague !== void 0)
+    $$bindings.privateLeague(privateLeague);
+  return ``;
+});
 const Create_private_league = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let { visible } = $$props;
+  let $visible, $$unsubscribe_visible;
+  let { visible = writable(false) } = $$props;
+  $$unsubscribe_visible = subscribe(visible, (value) => $visible = value);
   let { closeModal } = $$props;
   let { handleCreateLeague } = $$props;
   let { privateLeague = writable(null) } = $$props;
+  let currentStep = {
+    name: "LeagueDetails",
+    title: "Enter your league details:"
+  };
+  let modal;
+  const steps = [
+    {
+      name: "LeagueDetails",
+      title: "Enter your league details:"
+    },
+    {
+      name: "EntryRequirements",
+      title: "Setup your league entry requirements:"
+    },
+    {
+      name: "PrizeDistribution",
+      title: "Setup your league prize distribution:"
+    },
+    {
+      name: "Terms",
+      title: "Agree OpenFPL private league terms and conditions:"
+    },
+    {
+      name: "Payment",
+      title: "Purchase your private league:"
+    }
+  ];
   if ($$props.visible === void 0 && $$bindings.visible && visible !== void 0)
     $$bindings.visible(visible);
   if ($$props.closeModal === void 0 && $$bindings.closeModal && closeModal !== void 0)
@@ -9326,11 +9490,34 @@ const Create_private_league = create_ssr_component(($$result, $$props, $$binding
     $$bindings.handleCreateLeague(handleCreateLeague);
   if ($$props.privateLeague === void 0 && $$bindings.privateLeague && privateLeague !== void 0)
     $$bindings.privateLeague(privateLeague);
-  return `      ${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
-    default: () => {
-      return `<div class="p-2"><div class="flex justify-between items-center"><h3 class="default-header" data-svelte-h="svelte-m2farc">Create Private League</h3> <button class="times-button" data-svelte-h="svelte-1xats1q">×</button></div> <p data-svelte-h="svelte-18wfaie">shit</p></div>`;
-    }
-  })}`;
+  let $$settled;
+  let $$rendered;
+  let previous_head = $$result.head;
+  do {
+    $$settled = true;
+    $$result.head = previous_head;
+    $$rendered = `      ${$visible ? `${validate_component(WizardModal, "WizardModal").$$render(
+      $$result,
+      { steps, currentStep, this: modal },
+      {
+        currentStep: ($$value) => {
+          currentStep = $$value;
+          $$settled = false;
+        },
+        this: ($$value) => {
+          modal = $$value;
+          $$settled = false;
+        }
+      },
+      {
+        default: () => {
+          return `<div class="p-4">${currentStep?.name === "LeagueDetails" ? `${validate_component(League_details_form, "LeagueDetailsForm").$$render($$result, { privateLeague }, {}, {})} <button class="primary" data-svelte-h="svelte-1q6wkdm">Next</button>` : ``} ${currentStep?.name === "EntryRequirements" ? `${validate_component(Entry_requirements, "EntryRequirements").$$render($$result, { privateLeague }, {}, {})} <button class="primary" data-svelte-h="svelte-ured62">Next</button>` : ``} ${currentStep?.name === "PrizeDistribution" ? `${validate_component(Prize_setup, "PrizeSetup").$$render($$result, { privateLeague }, {}, {})} <button class="primary" data-svelte-h="svelte-ured62">Next</button>` : ``} ${currentStep?.name === "Terms" ? `${validate_component(Agree_terms, "AgreeTerms").$$render($$result, { privateLeague }, {}, {})} <button class="primary" data-svelte-h="svelte-ured62">Next</button>` : ``} ${currentStep?.name === "Payment" ? `${validate_component(Payment, "Payment").$$render($$result, { privateLeague }, {}, {})} <button class="primary" data-svelte-h="svelte-ured62">Next</button>` : ``}</div>`;
+        }
+      }
+    )}` : ``}`;
+  } while (!$$settled);
+  $$unsubscribe_visible();
+  return $$rendered;
 });
 const pageSize = 10;
 const Page$5 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
@@ -9339,8 +9526,46 @@ const Page$5 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_leagues = subscribe(leagues, (value) => $leagues = value);
   const showCreateLeagueModal = writable(false);
   let currentPage = 1;
+  function fetchLeagues() {
+    const dummyLeagues = [
+      {
+        canisterId: "1",
+        name: "OpenFPL Team",
+        memberCount: 10n,
+        seasonPosition: 1n,
+        created: BigInt(Date.now())
+      },
+      {
+        canisterId: "2",
+        name: "OpenChat",
+        memberCount: 10000n,
+        seasonPosition: 3n,
+        created: BigInt(Date.now())
+      },
+      {
+        canisterId: "3",
+        name: "Dragginz",
+        memberCount: 5000n,
+        seasonPosition: 2n,
+        created: BigInt(Date.now())
+      }
+    ];
+    leagues.set({ entries: dummyLeagues, totalEntries: 2n });
+  }
+  function handleCreateLeague() {
+    fetchLeagues();
+  }
   $$unsubscribe_leagues();
-  return `${showCreateLeagueModal ? `${validate_component(Create_private_league, "CreateLeagueModal").$$render($$result, {}, {}, {})}` : ``} ${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
+  return `${showCreateLeagueModal ? `${validate_component(Create_private_league, "CreateLeagueModal").$$render(
+    $$result,
+    {
+      visible: showCreateLeagueModal,
+      handleCreateLeague,
+      closeModal: () => showCreateLeagueModal.set(false)
+    },
+    {},
+    {}
+  )}` : ``} ${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
       return `<div class="m-4"><div class="bg-panel rounded-md"><div class="py-4"><div class="flex justify-between items-center p-4"><div data-svelte-h="svelte-caz7ur">Private Leagues</div> <button class="fpl-button text-white rounded-md p-2" data-svelte-h="svelte-1u65rpy">Create New League</button></div> <div class="overflow-x-auto flex-1"><div class="flex justify-between border border-gray-700 py-2 bg-light-gray border-b border-gray-700 p-4" data-svelte-h="svelte-e3dkh2"><div class="w-3/6">League Name</div> <div class="w-1/6">Members</div> <div class="w-1/6">Season Position</div> <div class="w-1/6"></div></div> ${$leagues ? `${each($leagues.entries, (league) => {
         return `<div class="flex items-center justify-between border-b border-gray-700 cursor-pointer p-4"><div class="w-3/6">${escape(league.name)}</div> <div class="w-1/6">${escape(league.memberCount)}</div> <div class="w-1/6">${escape(league.seasonPosition)}</div> <div class="w-1/6 flex justify-center items-center" data-svelte-h="svelte-li25cb"><button class="rounded fpl-button flex items-center px-4 py-2">View

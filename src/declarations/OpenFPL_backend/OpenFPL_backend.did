@@ -566,6 +566,12 @@ type Error =
    NotFound;
    SystemOnHold;
  };
+type EntryRequirement = 
+ variant {
+   FreeEntry;
+   InviteOnly;
+   PaidEntry;
+ };
 type Disburse = 
  record {
    amount: opt Amount;
@@ -576,7 +582,15 @@ type DataCacheDTO =
    category: text;
    hash: text;
  };
-type CreatePrivateLeagueDTO = record {termsAgreed: bool;};
+type CreatePrivateLeagueDTO = 
+ record {
+   adminFee: nat8;
+   entrants: nat16;
+   entryRequirement: EntryRequirement;
+   leaguePhoto: opt blob;
+   name: text;
+   termsAgreed: bool;
+ };
 type CreatePlayerDTO = 
  record {
    clubId: ClubId;

@@ -405,4 +405,11 @@ module _Types {
     principalId: PrincipalId;
     joinedDate: Int;
   };
+
+  public type EntryRequirement = {
+    #FreeEntry;
+    #InviteOnly;
+    #PaidEntry;
+    #PaidInviteEntry;
+  };
 };
