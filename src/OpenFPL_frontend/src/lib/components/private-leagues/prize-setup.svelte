@@ -3,6 +3,7 @@
     import type { CreatePrivateLeagueDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
     let numberOfWinners = writable(10); // Example number of winners
+    let individualPercentages = writable([]);
 
     // This derived store calculates the percentages based on the number of winners
     let percentages = derived(numberOfWinners, $numberOfWinners => {
@@ -18,9 +19,14 @@
         for (let i = 1; i <= $numberOfWinners; i++) {
             shares.push((1 / i) / harmonicSum);
         }
+         // Convert shares to percentages and reverse to give higher values to lower indices
+         let percentages = shares.map(x => x * 100);
 
-        // Convert shares to percentages and reverse to give higher values to lower indices
-        return shares.map(x => x * 100);
+        // Adjust the last element to ensure the sum is exactly 100%
+        let total = percentages.reduce((acc, curr) => acc + curr, 0);
+        percentages[percentages.length - 1] += 100 - total;
+
+        return percentages;
     });
 
     export let privateLeague = writable<CreatePrivateLeagueDTO | null>(null);
@@ -33,14 +39,14 @@
         <label class="block text-sm font-bold mb-2" for="league-name">
           Number of Winners:
         </label>
-        <input type="number" step="1" min="1" max="1000" bind:value={numberOfWinners} class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline" id="max-entrants" />
+        <input type="number" step="1" min="1" max="1000" bind:value={$numberOfWinners} class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline" id="max-entrants" />
     </div>
     
     
     <div class="mb-4">
-        <label class="block text-sm font-bold mb-2">
+        <p class="block text-sm font-bold mb-2">
           Percentage Split:
-        </label>
+        </p>
         {#each $percentages as percent, index (index)}
             <div class="mb-2">
                 <input type="number" min="0" max="100" bind:value={$percentages[index]} class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id={`winner-${index}`} />
