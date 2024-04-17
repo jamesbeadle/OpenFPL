@@ -3,26 +3,20 @@
     import type { CreatePrivateLeagueDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
     let numberOfWinners = writable(10); // Example number of winners
-    let individualPercentages = writable([]);
-
-    // This derived store calculates the percentages based on the number of winners
+    
     let percentages = derived(numberOfWinners, $numberOfWinners => {
         let shares = [];
         let harmonicSum = 0;
 
-        // Calculate the harmonic sum for normalization
         for (let i = 1; i <= $numberOfWinners; i++) {
             harmonicSum += 1 / i;
         }
 
-        // Calculate each percentage based on the harmonic sum
         for (let i = 1; i <= $numberOfWinners; i++) {
             shares.push((1 / i) / harmonicSum);
         }
-         // Convert shares to percentages and reverse to give higher values to lower indices
          let percentages = shares.map(x => x * 100);
 
-        // Adjust the last element to ensure the sum is exactly 100%
         let total = percentages.reduce((acc, curr) => acc + curr, 0);
         percentages[percentages.length - 1] += 100 - total;
 

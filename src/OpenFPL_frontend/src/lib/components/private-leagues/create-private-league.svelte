@@ -96,6 +96,9 @@
         {#if currentStep?.name === "PrizeDistribution"}
             <PrizeSetup {privateLeague} />
 
+            <button class="primary" on:click={modal.back}>
+                Back
+            </button>
             <button class="primary" on:click={modal.next}>
                 Next
             </button>
@@ -103,6 +106,9 @@
         {#if currentStep?.name === "Terms"}
             <AgreeTerms {privateLeague} />
 
+            <button class="primary" on:click={modal.back}>
+                Back
+            </button>
             <button class="primary" on:click={modal.next}>
                 Next
             </button>
@@ -110,6 +116,9 @@
         {#if currentStep?.name === "Payment"}
             <Payment {privateLeague} />
 
+            <button class="primary" on:click={modal.back}>
+                Back
+            </button>
             <button class="primary" on:click={modal.next}>
                 Next
             </button>
