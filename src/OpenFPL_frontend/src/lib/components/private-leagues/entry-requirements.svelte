@@ -30,21 +30,6 @@
       </select>
   </div>
 
-  <div class="mb-4">
-      <label class="block text-sm font-bold mb-2" for="entry-token">
-          Entry Token:
-      </label>
-      <select
-          id="entry-token"
-          class="p-2 fpl-dropdown my-4 min-w-[100px]"
-          bind:value={selectedEntryType} 
-      >
-          <option value={0}>FPL</option>
-          <option value={1}>ICP</option>
-          <option value={2}>CHAT</option>
-          <option value={3}>Dragginz</option>
-      </select>
-  </div>
 
   {#if selectedEntryType === 1 || selectedEntryType === 3}
       <div class="mb-4">

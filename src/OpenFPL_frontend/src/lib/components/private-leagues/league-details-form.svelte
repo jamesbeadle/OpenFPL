@@ -9,6 +9,7 @@
     let leaguePicture: File;
     let leaguePictureName: string = 'No file chosen';
     export let privateLeague = writable<CreatePrivateLeagueDTO | null>(null);
+    let selectedLeagueToken = 0;
 
     const leagueNameUnique = writable(true); 
     
@@ -68,6 +69,23 @@
       </label>
       <input type="number" min="2" max="10000" bind:value={maxEntrants} class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline" id="max-entrants" />
     </div>
+
+      
+    <div>
+      <label class="block text-sm font-bold" for="entry-token">
+          League Token:
+      </label>
+      <select
+          id="entry-token"
+          class="p-2 fpl-dropdown min-w-[100px]"
+          bind:value={selectedLeagueToken} 
+      >
+          <option value={0}>FPL</option>
+          <option value={1}>ICP</option>
+          <option value={2}>CHAT</option>
+          <option value={3}>Dragginz</option>
+      </select>
+  </div>
     
   </div>
   
