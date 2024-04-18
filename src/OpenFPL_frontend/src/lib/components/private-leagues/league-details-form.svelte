@@ -44,19 +44,18 @@
   </script>
   
   <div class="container mx-auto p-4">
-    <p class="text-xl mb-2">League Details</p>
   
     <div class="mb-4">
-      <label class="block text-sm font-bold mb-2" for="league-name">
+      <label class="block text-sm mb-2" for="league-name">
         League Name:
       </label>
       <input type="text" bind:value={leagueName} class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline" id="league-name" />
     </div>
   
-    <div class="file-upload-wrapper mt-4">
-      <label class="block text-sm font-bold mb-2">
+    <div class="file-upload-wrapper mb-4">
+      <label class="block text-sm mb-2">
         League Photo:
-        <div class="file-upload-details">
+        <div class="text-xs">
           <span>{leaguePictureName}</span>
         </div>
         <input type="file" id="profile-image" accept="image/*" bind:this={fileInputProfile} on:change={handleLeaguePictureChange} class="file-input" />
@@ -64,7 +63,7 @@
     </div>
   
     <div class="mb-4">
-      <label class="block text-sm font-bold mb-2" for="league-name">
+      <label class="block text-sm mb-2" for="league-name">
         Max Entrants:
       </label>
       <input type="number" min="2" max="10000" bind:value={maxEntrants} class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline" id="max-entrants" />

@@ -20,6 +20,7 @@
     import PrizeSetup from "./prize-setup.svelte";
     import AgreeTerms from "./agree-terms.svelte";
     import Payment from "./payment.svelte";
+    import OpenFplIcon from "$lib/icons/OpenFPLIcon.svelte";
     
     export let visible = writable(false);
 
@@ -76,52 +77,64 @@
 {#if $visible}
     <WizardModal {steps} bind:currentStep bind:this={modal} on:nnsClose={closeModal}>
         <div class="p-4">
+            <div class="flex justify-between items-center">
+                <p class="text-xl mt-2">Create Private League</p>
+                <OpenFplIcon className="w-6 mr-2" />
+            </div>
         {#if currentStep?.name === "LeagueDetails"}
         <LeagueDetailsForm {privateLeague} />
 
-        <button class="primary" on:click={modal.next}>
-            Next
-        </button>
+        
+        <div class="flex justify-end mt-4 space-x-2 mb-4 mr-4">
+            <button class="fpl-button px-4 py-2 rounded-sm" on:click={modal.next}>
+                Next
+            </button>
+        </div>
         {/if}
         {#if currentStep?.name === "EntryRequirements"}
             <EntryRequirements {privateLeague} />
 
-            <button class="primary" on:click={modal.back}>
-                Back
-            </button>
-            <button class="primary" on:click={modal.next}>
-                Next
-            </button>
+            <div class="flex justify-end mt-4 space-x-2 mb-4 mr-4">
+                <button class="fpl-button px-4 py-2 rounded-sm" on:click={modal.back}>
+                    Back
+                </button>
+                <button class="fpl-button px-4 py-2 rounded-sm" on:click={modal.next}>
+                    Next
+                </button>
+            </div>
         {/if}
         {#if currentStep?.name === "PrizeDistribution"}
             <PrizeSetup {privateLeague} />
 
-            <button class="primary" on:click={modal.back}>
-                Back
-            </button>
-            <button class="primary" on:click={modal.next}>
-                Next
-            </button>
+            <div class="flex justify-end mt-4 space-x-2 mb-4 mr-4">
+                <button class="fpl-button px-4 py-2 rounded-sm" on:click={modal.back}>
+                    Back
+                </button>
+                <button class="fpl-button px-4 py-2 rounded-sm" on:click={modal.next}>
+                    Next
+                </button>
+            </div>
         {/if}
         {#if currentStep?.name === "Terms"}
             <AgreeTerms {privateLeague} />
 
-            <button class="primary" on:click={modal.back}>
-                Back
-            </button>
-            <button class="primary" on:click={modal.next}>
-                Next
-            </button>
+            <div class="flex justify-end mt-4 space-x-2 mb-4 mr-4">
+                <button class="fpl-button px-4 py-2 rounded-sm" on:click={modal.back}>
+                    Back
+                </button>
+                <button class="fpl-button px-4 py-2 rounded-sm" on:click={modal.next}>
+                    Next
+                </button>
+            </div>
         {/if}
         {#if currentStep?.name === "Payment"}
             <Payment {privateLeague} />
 
-            <button class="primary" on:click={modal.back}>
-                Back
-            </button>
-            <button class="primary" on:click={modal.next}>
-                Next
-            </button>
+            <div class="flex justify-end mt-4 space-x-2 mb-4 mr-4">
+                <button class="fpl-button px-4 py-2 rounded-sm mr-4" on:click={modal.back}>
+                    Back
+                </button>
+            </div>
         {/if}
     </div>
     </WizardModal>
