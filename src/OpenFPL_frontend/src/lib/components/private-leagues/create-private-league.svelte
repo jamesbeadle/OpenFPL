@@ -81,10 +81,22 @@
         }
     ];
 
+    function nextStep(){
+        modal.next;
+        currentStepIndex.set($currentStepIndex + 1);
+    }
+
+    function priorStep(){
+        modal.back;
+        currentStepIndex.set($currentStepIndex - 1);
+    }
+
     
     let pips = derived(currentStepIndex, $currentStepIndex => 
         steps.map((_, index) => index <= $currentStepIndex)
     );
+
+    $: backButtonVisible = $currentStepIndex > 0;
 
     $: nextButtonVisible = 
         ($currentStepIndex === 0 && 
@@ -123,6 +135,7 @@
                 <Payment {privateLeague} />
             {/if}
             
+        <div class="horizontal-divider my-2" />
             <div class="flex flex-row m-4 items-center">
             
                 <div class="pips-container w-1/2">
@@ -131,9 +144,14 @@
                     {/each}
                 </div>
 
-                <div class="flex justify-end mt-4 space-x-2 mr-4 w-1/2">
+                <div class="flex justify-end space-x-2 mr-4 w-1/2">
+                    {#if backButtonVisible}
+                        <button class="fpl-button px-4 py-2 rounded-sm" on:click={priorStep}>
+                            Back
+                        </button>
+                    {/if}
                     {#if nextButtonVisible}
-                        <button class="fpl-button px-4 py-2 rounded-sm" on:click={modal.next}>
+                        <button class="fpl-button px-4 py-2 rounded-sm" on:click={nextStep}>
                             Next
                         </button>
                     {/if}
