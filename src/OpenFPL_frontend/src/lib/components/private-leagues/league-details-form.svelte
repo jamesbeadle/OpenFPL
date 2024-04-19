@@ -8,7 +8,14 @@
     let maxEntrants: number = 10000;
     let leaguePicture: File;
     let leaguePictureName: string = 'No file chosen';
-    export let privateLeague = writable<CreatePrivateLeagueDTO | null>(null);
+    export let privateLeague = writable<CreatePrivateLeagueDTO>({
+      adminFee: 0,
+      name: "",
+      entryRequirement: {FreeEntry : null},
+      entrants: 0,
+      termsAgreed: false,
+      leaguePhoto: []
+    });
     let selectedLeagueToken = 0;
 
     const leagueNameUnique = writable(true); 
@@ -36,15 +43,25 @@
     }
       
     onMount(() => {
-      // Additional initialization if needed
+      //Todo: Fetch Tokens
     });
 
     $: if (leagueName) {
-      checkLeagueNameUnique(leagueName);
+      //checkLeagueNameUnique(leagueName); //TODO
+      privateLeague.update(current => {
+          return { ...current, name: leagueName };
+      });
     }
+
+    $: if (maxEntrants) {
+      privateLeague.update(current => {
+          return { ...current, entrants: maxEntrants };
+      });
+    }
+    
   </script>
   
-  <div class="container mx-auto p-4">
+  <div class="container mx-auto px-4 pt-4">
   
     <div class="mb-4">
       <label class="block text-sm mb-2" for="league-name">
@@ -64,12 +81,11 @@
     </div>
   
     <div class="mb-4">
-      <label class="block text-sm mb-2" for="league-name">
+      <label class="block text-sm mb-2" for="max-entrants">
         Max Entrants:
       </label>
       <input type="number" min="2" max="10000" bind:value={maxEntrants} class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline" id="max-entrants" />
     </div>
-
       
     <div>
       <label class="block text-sm font-bold" for="entry-token">
@@ -85,7 +101,7 @@
           <option value={2}>CHAT</option>
           <option value={3}>Dragginz</option>
       </select>
-  </div>
+    </div>
     
   </div>
   

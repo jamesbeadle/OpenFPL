@@ -9,7 +9,7 @@
 
 <script lang="ts">
     import { onMount } from "svelte";
-    import { writable } from "svelte/store";
+    import { writable, derived } from 'svelte/store';
     import type {
         CreatePrivateLeagueDTO
     } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
@@ -23,10 +23,18 @@
     import OpenFplIcon from "$lib/icons/OpenFPLIcon.svelte";
     
     export let visible = writable(false);
+    let currentStepIndex = writable(0);
 
     export let closeModal: () => void;
     export let handleCreateLeague: (privateLeague: CreatePrivateLeagueDTO) => void;
-    export let privateLeague = writable<CreatePrivateLeagueDTO | null>(null);
+    export let privateLeague = writable<CreatePrivateLeagueDTO>({
+      adminFee: 0,
+      name: "",
+      entryRequirement: {FreeEntry : null},
+      entrants: 0,
+      termsAgreed: false,
+      leaguePhoto: []
+    });
   
     let isLoading = true;
   
@@ -72,6 +80,19 @@
             title: "Purchase your private league:"
         }
     ];
+
+    
+    let pips = derived(currentStepIndex, $currentStepIndex => 
+        steps.map((_, index) => index <= $currentStepIndex)
+    );
+
+    $: nextButtonVisible = 
+        ($currentStepIndex === 0 && 
+            ($privateLeague && $privateLeague.name && $privateLeague.name.length > 2) && ($privateLeague.entrants > 1 && $privateLeague.entrants <= 10000));
+
+    $: if ($privateLeague) {
+      console.log($privateLeague.entrants)
+    }
   </script>
   
 {#if $visible}
@@ -81,61 +102,62 @@
                 <p class="text-xl mt-2">Create Private League</p>
                 <OpenFplIcon className="w-6 mr-2" />
             </div>
-        {#if currentStep?.name === "LeagueDetails"}
-        <LeagueDetailsForm {privateLeague} />
 
-        
-        <div class="flex justify-end mt-4 space-x-2 mb-4 mr-4">
-            <button class="fpl-button px-4 py-2 rounded-sm" on:click={modal.next}>
-                Next
-            </button>
-        </div>
-        {/if}
-        {#if currentStep?.name === "EntryRequirements"}
-            <EntryRequirements {privateLeague} />
+            {#if currentStep?.name === "LeagueDetails"}
+                <LeagueDetailsForm {privateLeague} />
+            {/if}
 
-            <div class="flex justify-end mt-4 space-x-2 mb-4 mr-4">
-                <button class="fpl-button px-4 py-2 rounded-sm" on:click={modal.back}>
-                    Back
-                </button>
-                <button class="fpl-button px-4 py-2 rounded-sm" on:click={modal.next}>
-                    Next
-                </button>
+            {#if currentStep?.name === "EntryRequirements"}
+                <EntryRequirements {privateLeague} />
+            {/if}
+
+            {#if currentStep?.name === "PrizeDistribution"}
+                <PrizeSetup {privateLeague} />
+            {/if}
+            
+            {#if currentStep?.name === "Terms"}
+                <AgreeTerms {privateLeague} />
+            {/if}
+            
+            {#if currentStep?.name === "Payment"}
+                <Payment {privateLeague} />
+            {/if}
+            
+            <div class="flex flex-row m-4 items-center">
+            
+                <div class="pips-container w-1/2">
+                    {#each $pips as pip, index}
+                        <div class="pip {pip ? 'active' : ''}" />
+                    {/each}
+                </div>
+
+                <div class="flex justify-end mt-4 space-x-2 mr-4 w-1/2">
+                    {#if nextButtonVisible}
+                        <button class="fpl-button px-4 py-2 rounded-sm" on:click={modal.next}>
+                            Next
+                        </button>
+                    {/if}
+                </div>
+
             </div>
-        {/if}
-        {#if currentStep?.name === "PrizeDistribution"}
-            <PrizeSetup {privateLeague} />
 
-            <div class="flex justify-end mt-4 space-x-2 mb-4 mr-4">
-                <button class="fpl-button px-4 py-2 rounded-sm" on:click={modal.back}>
-                    Back
-                </button>
-                <button class="fpl-button px-4 py-2 rounded-sm" on:click={modal.next}>
-                    Next
-                </button>
-            </div>
-        {/if}
-        {#if currentStep?.name === "Terms"}
-            <AgreeTerms {privateLeague} />
-
-            <div class="flex justify-end mt-4 space-x-2 mb-4 mr-4">
-                <button class="fpl-button px-4 py-2 rounded-sm" on:click={modal.back}>
-                    Back
-                </button>
-                <button class="fpl-button px-4 py-2 rounded-sm" on:click={modal.next}>
-                    Next
-                </button>
-            </div>
-        {/if}
-        {#if currentStep?.name === "Payment"}
-            <Payment {privateLeague} />
-
-            <div class="flex justify-end mt-4 space-x-2 mb-4 mr-4">
-                <button class="fpl-button px-4 py-2 rounded-sm mr-4" on:click={modal.back}>
-                    Back
-                </button>
-            </div>
-        {/if}
     </div>
     </WizardModal>
 {/if}
+
+<style>
+    .pips-container {
+        display: flex;
+        justify-content: left;
+    }
+    .pip {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: lightgrey;
+        margin: 0 5px;
+    }
+    .pip.active {
+        background-color: #2ce3a6; /* Adjust the color based on your UI theme */
+    }
+</style>
