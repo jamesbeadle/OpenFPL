@@ -149,9 +149,17 @@
                         <button class="fpl-button px-4 py-2 rounded-sm" on:click={priorStep}>
                             Back
                         </button>
+                    {:else}    
+                        <button class="bg-gray-800 px-4 py-2 rounded-sm text-gray-400">
+                            Back
+                        </button>
                     {/if}
                     {#if nextButtonVisible}
                         <button class="fpl-button px-4 py-2 rounded-sm" on:click={nextStep}>
+                            Next
+                        </button>
+                    {:else}    
+                        <button class="bg-gray-800 px-4 py-2 rounded-sm text-gray-400">
                             Next
                         </button>
                     {/if}
