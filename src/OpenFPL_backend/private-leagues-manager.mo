@@ -49,7 +49,7 @@ module {
       return #ok(await private_league_canister.getLeagueMembers(limit, offset));
     };
 
-    public func privateLeagueIsValid(privateLeague: T.PrivateLeague) : Bool{
+    public func privateLeagueIsValid(privateLeague: DTOs.CreatePrivateLeagueDTO) : Bool{
       return false;
     };
 
@@ -71,6 +71,14 @@ module {
       };
 
       return await private_league_canister.leagueHasSpace();
+    };
+
+    public func calculateLeaderboards() : async (){
+      //for each private league loop through and calculate the leaderboards
+    };
+
+    public func payRewards() : async (){
+      //for each private league loop through and calculate rewards
     };
 
   };

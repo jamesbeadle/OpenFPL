@@ -22,6 +22,7 @@ import LeaderboardComposite "composites/leaderboard-composite";
 import SHA224 "./lib/SHA224";
 import Utilities "utilities";
 import Token "sns-wrappers/token";
+import PrivateLeaguesManager "private-leagues-manager";
 
 module {
 
@@ -35,6 +36,7 @@ module {
     let clubComposite = ClubComposite.ClubComposite();
     let seasonComposite = SeasonComposite.SeasonComposite();
     let leaderboardComposite = LeaderboardComposite.LeaderboardComposite();
+    let privateLeaguesManager = PrivateLeaguesManager.PrivateLeaguesManager();
 
     public func setBackendCanisterController(controller : Principal) {
       leaderboardComposite.setBackendCanisterController(controller);
@@ -346,10 +348,12 @@ module {
       await managerComposite.calculateFantasyTeamScores(playerPointsMap, systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
 
       await leaderboardComposite.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth, managerComposite.getStableUniqueManagerCanisterIds());
-
       await payRewards(); 
       await incrementSystemState();
 
+      await privateLeaguesManager.calculateLeaderboards();
+      await privateLeaguesManager.payRewards();
+      
       await updateCacheHash("players");
       await updateCacheHash("player_events");
       await updateCacheHash("fixtures");
@@ -655,6 +659,43 @@ module {
       };
 
       rewardPools.put(seasonId, rewardPool);
+    };
+
+    
+    public func isPrivateLeagueMember(canisterId: T.CanisterId, callerId: T.PrincipalId) : async Bool {
+      return await privateLeaguesManager.isLeagueMember(canisterId, callerId);
+    };
+    
+    public func getPrivateLeagueWeeklyLeaderboard(canisterId: T.CanisterId, seasonId: T.SeasonId, gameweek: T.GameweekNumber, limit : Nat, offset : Nat) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
+      await privateLeaguesManager.getWeeklyLeaderboard(canisterId, seasonId, gameweek, limit, offset);
+    };  
+
+    public func getPrivateLeagueMonthlyLeaderboard(canisterId: T.CanisterId, seasonId : T.SeasonId, month: T.CalendarMonth, limit : Nat, offset : Nat) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error> {
+      await privateLeaguesManager.getMonthlyLeaderboard(canisterId, seasonId, month, limit, offset);
+    };
+
+    public func getPrivateLeagueSeasonLeaderboard(canisterId: T.CanisterId, seasonId : T.SeasonId, limit : Nat, offset : Nat) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error> {
+      await privateLeaguesManager.getSeasonLeaderboard(canisterId, seasonId, limit, offset)
+    };
+    
+    public func getPrivateLeagueMembers(canisterId: T.CanisterId, limit : Nat, offset : Nat) : async Result.Result<[DTOs.LeagueMemberDTO], T.Error> {
+      await privateLeaguesManager.getLeagueMembers(canisterId, limit, offset);
+    };
+
+    public func privateLeagueIsValid(privateLeague: DTOs.CreatePrivateLeagueDTO) : Bool{
+      return privateLeaguesManager.privateLeagueIsValid(privateLeague);
+    };
+
+    public func createPrivateLeague(newPrivateLeague: DTOs.CreatePrivateLeagueDTO) : async () {
+      return await privateLeaguesManager.createPrivateLeague(newPrivateLeague);
+    };
+
+    public func nameAvailable(privateLeagueName: Text) : Bool{
+      return privateLeaguesManager.nameAvailable(privateLeagueName);
+    };
+
+    public func canAffordPrivateLeague(caller: T.PrincipalId) : Bool{
+      return privateLeaguesManager.canAffordPrivateLeague(caller);
     };
 
     public func validateMoveFixture(moveFixtureDTO : DTOs.MoveFixtureDTO) : Result.Result<Text, Text> {

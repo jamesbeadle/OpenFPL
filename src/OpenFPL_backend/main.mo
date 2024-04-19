@@ -20,13 +20,11 @@ import Utilities "utilities";
 import Account "lib/Account";
 import Environment "Environment";
 import NeuronTypes "../neuron_controller/types";
-import PrivateLeaguesManager "private-leagues-manager";
 
 actor Self {
   let seasonManager = SeasonManager.SeasonManager();
   let cyclesDispenser = CyclesDispenser.CyclesDispenser();
   let treasuryManager = TreasuryManager.TreasuryManager();
-  let privateLeaguesManager = PrivateLeaguesManager.PrivateLeaguesManager();
   private let cyclesCheckInterval : Nat = Utilities.getHour() * 24;
   private let cyclesCheckWalletInterval : Nat = Utilities.getHour() * 24;
 
@@ -460,37 +458,35 @@ actor Self {
 
   public shared ({ caller }) func getPrivateLeagueWeeklyLeaderboard(canisterId: T.CanisterId, seasonId : T.SeasonId, gameweek: T.GameweekNumber, limit : Nat, offset : Nat) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error>{
     assert not Principal.isAnonymous(caller);
-    assert(await privateLeaguesManager.isLeagueMember(canisterId, Principal.toText(caller)));
-    return await privateLeaguesManager.getWeeklyLeaderboard(canisterId, seasonId, gameweek, limit, offset);
+    assert(await seasonManager.isPrivateLeagueMember(canisterId, Principal.toText(caller)));
+    return await seasonManager.getPrivateLeagueWeeklyLeaderboard(canisterId, seasonId, gameweek, limit, offset);
   };
 
   public shared ({ caller }) func getPrivateLeagueMonthlyLeaderboard(canisterId: T.CanisterId, seasonId : T.SeasonId, month: T.CalendarMonth, limit : Nat, offset : Nat ) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error>{
     assert not Principal.isAnonymous(caller);
-    assert(await privateLeaguesManager.isLeagueMember(canisterId, Principal.toText(caller)));
-    return await privateLeaguesManager.getMonthlyLeaderboard(canisterId, seasonId, month, limit, offset);
+    assert(await seasonManager.isPrivateLeagueMember(canisterId, Principal.toText(caller)));
+    return await seasonManager.getPrivateLeagueMonthlyLeaderboard(canisterId, seasonId, month, limit, offset);
   };
 
   public shared ({ caller }) func getPrivateLeagueSeasonLeaderboard(canisterId: T.CanisterId, seasonId : T.SeasonId, limit : Nat, offset : Nat) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error>{
     assert not Principal.isAnonymous(caller);
-    assert(await privateLeaguesManager.isLeagueMember(canisterId, Principal.toText(caller)));
-    return await privateLeaguesManager.getSeasonLeaderboard(canisterId, seasonId, limit, offset);
+    assert(await seasonManager.isPrivateLeagueMember(canisterId, Principal.toText(caller)));
+    return await seasonManager.getPrivateLeagueSeasonLeaderboard(canisterId, seasonId, limit, offset);
   };
 
   public shared ({ caller }) func getPrivateLeagueMembers(canisterId: T.CanisterId, limit : Nat, offset : Nat) : async Result.Result<[DTOs.LeagueMemberDTO], T.Error>{
     assert not Principal.isAnonymous(caller);
-    assert(await privateLeaguesManager.isLeagueMember(canisterId, Principal.toText(caller)));
-    return await privateLeaguesManager.getLeagueMembers(canisterId, limit, offset);
+    assert(await seasonManager.isPrivateLeagueMember(canisterId, Principal.toText(caller)));
+    return await seasonManager.getPrivateLeagueMembers(canisterId, limit, offset);
   };
   
   public shared ({ caller }) func createPrivateLeague(newPrivateLeague: DTOs.CreatePrivateLeagueDTO) : async Result.Result<(), T.Error>{
     assert not Principal.isAnonymous(caller);
     assert(newPrivateLeague.termsAgreed);
-    /*
-    assert(privateLeaguesManager.privateLeagueIsValid(newPrivateLeague));
-    assert(privateLeaguesManager.nameAvailable(caller));
-    assert(privateLeaguesManager.canAffordPrivateLeague(caller));
-    */
-    return #ok(await privateLeaguesManager.createPrivateLeague(newPrivateLeague));
+    assert(seasonManager.privateLeagueIsValid(newPrivateLeague));
+    assert(seasonManager.nameAvailable(newPrivateLeague.name));
+    assert(seasonManager.canAffordPrivateLeague(Principal.toText(caller)));
+    return #ok(await seasonManager.createPrivateLeague(newPrivateLeague));
   };
 
 /*
