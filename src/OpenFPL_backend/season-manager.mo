@@ -697,15 +697,6 @@ module {
       return privateLeaguesManager.canAffordPrivateLeague(caller);
     };
 
-      
-    public func getLeaderboardEntries(canisterId: T.CanisterId, managerIds: [T.PrincipalId]) : async [T.LeaderboardEntry] {
-      let manager_canister = actor (canisterId) : actor {
-        getLeaderboardEntries : (managerIds: [T.PrincipalId], seasonId: T.SeasonId, gameweek: T.GameweekNumber) -> async [T.LeaderboardEntry];
-      };
-
-      return await manager_canister.getLeaderboardEntries(managerIds, systemState.calculationSeasonId, systemState.calculationGameweek);
-    };
-
     public func validateMoveFixture(moveFixtureDTO : DTOs.MoveFixtureDTO) : Result.Result<Text, Text> {
       return seasonComposite.validateMoveFixture(moveFixtureDTO, systemState);
     };

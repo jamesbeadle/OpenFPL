@@ -37,6 +37,12 @@ actor class _PrivateLeague() {
         return false;
     };
 
+    public shared ({ caller }) func updateManager(manager: T.Manager){
+        //TODO: Check caller is one of the allowed private league canisters
+
+        //TODO: Update just the information required for the league to keep the data light
+    };
+
     public shared ({ caller }) func calculateLeaderboards() : async () {
         assert not Principal.isAnonymous(caller);
         assert (Principal.toText(caller) == main_canister_id);
@@ -51,16 +57,7 @@ actor class _PrivateLeague() {
             };
         };
 
-        let openfpl_backend_canister = actor (main_canister_id) : actor {
-            getLeaderboardEntries : (canisterId: T.CanisterId) -> async [T.LeaderboardEntry];
-        };
-
-        let leaderboardEntries = Buffer.fromArray<T.LeaderboardEntry>([]);
-
-        for (canisterId in Iter.fromArray(Buffer.toArray(uniqueCanisterIds))) {
-            leaderboardEntries.append(Buffer.fromArray(await openfpl_backend_canister.getLeaderboardEntries(canisterId)));
-        };
-        
+        //now the managers have been updated calculate the leaderboards for the current state
 
         //calculate leaderboards for gameweek, month and season
 

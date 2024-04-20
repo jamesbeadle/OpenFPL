@@ -489,11 +489,6 @@ actor Self {
     return #ok(await seasonManager.createPrivateLeague(newPrivateLeague));
   };
 
-  public shared ({ caller }) func getLeaderboardEntries(canisterId: T.CanisterId, managerIds: [T.PrincipalId]) : async [T.LeaderboardEntry] {
-    //TODO: Check if caller is one of the private league canisters
-    return await seasonManager.getLeaderboardEntries(canisterId, managerIds);
-  };
-
 /*
 
   public shared ({ caller }) func searchUsername(username: Text) : async Result.Result<DTOs.LeagueMemberDTO, T.Error> {
@@ -765,6 +760,19 @@ actor Self {
         };
       };
     };
+
+    beginOpenFPL();
+  };
+
+  private stable var gameBegun = false;
+
+  private func beginOpenFPL () : () {
+    if(gameBegun){
+      return;
+    };
+    //Check the cycles balance on the wallet
+
+    //Set the backend 
   };
 
   public shared ({ caller }) func requestCanisterTopup() : async () {

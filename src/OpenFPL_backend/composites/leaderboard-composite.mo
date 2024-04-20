@@ -300,6 +300,8 @@ module {
 
     public func calculateLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth, uniqueManagerCanisterIds : [T.CanisterId]) : async () {
 
+      //TODO: Make more efficient
+
       let fantasyTeamSnapshotsBuffer = Buffer.fromArray<T.FantasyTeamSnapshot>([]);
 
       for (canisterId in Iter.fromArray(uniqueManagerCanisterIds)) {
