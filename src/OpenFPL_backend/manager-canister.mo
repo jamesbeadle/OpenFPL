@@ -3377,6 +3377,413 @@ actor class _ManagerCanister() {
     };
     return Buffer.toArray(snapshotBuffer);
   };
+  
+  public shared ({ caller }) func getLeaderboardEntries(managerIds : [T.PrincipalId], seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async [T.LeaderboardEntry] {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == main_canister_id;
+
+    let leaderboardEntries = Buffer.fromArray<T.LeaderboardEntry>([]);
+
+    for(manager in Iter.fromArray(managerGroup1)){
+      let isManagerInGroup = Array.find(
+        managerIds,
+        func(id : T.PrincipalId) : Bool {
+          return id == manager.principalId;
+        },
+      );
+
+      if(Option.isSome(isManagerInGroup)){
+        switch (manager.history) {
+          case (null) {};
+          case (existingHistory) {
+            for (season in Iter.fromList(existingHistory)) {
+              if (season.seasonId == seasonId) {
+                for (seasonGameweek in Iter.fromList(season.gameweeks)) {
+                  if (seasonGameweek.gameweek == gameweek) {
+                    let entry: T.LeaderboardEntry = {
+                      position = 0;
+                      positionText = "";
+                      username = manager.username;
+                      principalId = manager.principalId;
+                      points = seasonGameweek.points;
+                    };
+                    leaderboardEntries.add(entry);
+                  };
+                };
+              };
+            };
+          };
+        };
+      };
+    };
+    
+    for(manager in Iter.fromArray(managerGroup2)){
+      let isManagerInGroup = Array.find(
+        managerIds,
+        func(id : T.PrincipalId) : Bool {
+          return id == manager.principalId;
+        },
+      );
+
+      if(Option.isSome(isManagerInGroup)){
+        switch (manager.history) {
+          case (null) {};
+          case (existingHistory) {
+            for (season in Iter.fromList(existingHistory)) {
+              if (season.seasonId == seasonId) {
+                for (seasonGameweek in Iter.fromList(season.gameweeks)) {
+                  if (seasonGameweek.gameweek == gameweek) {
+                    let entry: T.LeaderboardEntry = {
+                      position = 0;
+                      positionText = "";
+                      username = manager.username;
+                      principalId = manager.principalId;
+                      points = seasonGameweek.points;
+                    };
+                    leaderboardEntries.add(entry);
+                  };
+                };
+              };
+            };
+          };
+        };
+      };
+    };
+    
+    for(manager in Iter.fromArray(managerGroup3)){
+      let isManagerInGroup = Array.find(
+        managerIds,
+        func(id : T.PrincipalId) : Bool {
+          return id == manager.principalId;
+        },
+      );
+
+      if(Option.isSome(isManagerInGroup)){
+        switch (manager.history) {
+          case (null) {};
+          case (existingHistory) {
+            for (season in Iter.fromList(existingHistory)) {
+              if (season.seasonId == seasonId) {
+                for (seasonGameweek in Iter.fromList(season.gameweeks)) {
+                  if (seasonGameweek.gameweek == gameweek) {
+                    let entry: T.LeaderboardEntry = {
+                      position = 0;
+                      positionText = "";
+                      username = manager.username;
+                      principalId = manager.principalId;
+                      points = seasonGameweek.points;
+                    };
+                    leaderboardEntries.add(entry);
+                  };
+                };
+              };
+            };
+          };
+        };
+      };
+    };
+    
+    for(manager in Iter.fromArray(managerGroup4)){
+      let isManagerInGroup = Array.find(
+        managerIds,
+        func(id : T.PrincipalId) : Bool {
+          return id == manager.principalId;
+        },
+      );
+
+      if(Option.isSome(isManagerInGroup)){
+        switch (manager.history) {
+          case (null) {};
+          case (existingHistory) {
+            for (season in Iter.fromList(existingHistory)) {
+              if (season.seasonId == seasonId) {
+                for (seasonGameweek in Iter.fromList(season.gameweeks)) {
+                  if (seasonGameweek.gameweek == gameweek) {
+                    let entry: T.LeaderboardEntry = {
+                      position = 0;
+                      positionText = "";
+                      username = manager.username;
+                      principalId = manager.principalId;
+                      points = seasonGameweek.points;
+                    };
+                    leaderboardEntries.add(entry);
+                  };
+                };
+              };
+            };
+          };
+        };
+      };
+    };
+
+    for(manager in Iter.fromArray(managerGroup5)){
+      let isManagerInGroup = Array.find(
+        managerIds,
+        func(id : T.PrincipalId) : Bool {
+          return id == manager.principalId;
+        },
+      );
+
+      if(Option.isSome(isManagerInGroup)){
+        switch (manager.history) {
+          case (null) {};
+          case (existingHistory) {
+            for (season in Iter.fromList(existingHistory)) {
+              if (season.seasonId == seasonId) {
+                for (seasonGameweek in Iter.fromList(season.gameweeks)) {
+                  if (seasonGameweek.gameweek == gameweek) {
+                    let entry: T.LeaderboardEntry = {
+                      position = 0;
+                      positionText = "";
+                      username = manager.username;
+                      principalId = manager.principalId;
+                      points = seasonGameweek.points;
+                    };
+                    leaderboardEntries.add(entry);
+                  };
+                };
+              };
+            };
+          };
+        };
+      };
+    };
+
+    for(manager in Iter.fromArray(managerGroup6)){
+      let isManagerInGroup = Array.find(
+        managerIds,
+        func(id : T.PrincipalId) : Bool {
+          return id == manager.principalId;
+        },
+      );
+
+      if(Option.isSome(isManagerInGroup)){
+        switch (manager.history) {
+          case (null) {};
+          case (existingHistory) {
+            for (season in Iter.fromList(existingHistory)) {
+              if (season.seasonId == seasonId) {
+                for (seasonGameweek in Iter.fromList(season.gameweeks)) {
+                  if (seasonGameweek.gameweek == gameweek) {
+                    let entry: T.LeaderboardEntry = {
+                      position = 0;
+                      positionText = "";
+                      username = manager.username;
+                      principalId = manager.principalId;
+                      points = seasonGameweek.points;
+                    };
+                    leaderboardEntries.add(entry);
+                  };
+                };
+              };
+            };
+          };
+        };
+      };
+    };
+
+    for(manager in Iter.fromArray(managerGroup7)){
+      let isManagerInGroup = Array.find(
+        managerIds,
+        func(id : T.PrincipalId) : Bool {
+          return id == manager.principalId;
+        },
+      );
+
+      if(Option.isSome(isManagerInGroup)){
+        switch (manager.history) {
+          case (null) {};
+          case (existingHistory) {
+            for (season in Iter.fromList(existingHistory)) {
+              if (season.seasonId == seasonId) {
+                for (seasonGameweek in Iter.fromList(season.gameweeks)) {
+                  if (seasonGameweek.gameweek == gameweek) {
+                    let entry: T.LeaderboardEntry = {
+                      position = 0;
+                      positionText = "";
+                      username = manager.username;
+                      principalId = manager.principalId;
+                      points = seasonGameweek.points;
+                    };
+                    leaderboardEntries.add(entry);
+                  };
+                };
+              };
+            };
+          };
+        };
+      };
+    };
+
+    for(manager in Iter.fromArray(managerGroup8)){
+      let isManagerInGroup = Array.find(
+        managerIds,
+        func(id : T.PrincipalId) : Bool {
+          return id == manager.principalId;
+        },
+      );
+
+      if(Option.isSome(isManagerInGroup)){
+        switch (manager.history) {
+          case (null) {};
+          case (existingHistory) {
+            for (season in Iter.fromList(existingHistory)) {
+              if (season.seasonId == seasonId) {
+                for (seasonGameweek in Iter.fromList(season.gameweeks)) {
+                  if (seasonGameweek.gameweek == gameweek) {
+                    let entry: T.LeaderboardEntry = {
+                      position = 0;
+                      positionText = "";
+                      username = manager.username;
+                      principalId = manager.principalId;
+                      points = seasonGameweek.points;
+                    };
+                    leaderboardEntries.add(entry);
+                  };
+                };
+              };
+            };
+          };
+        };
+      };
+    };
+
+    for(manager in Iter.fromArray(managerGroup9)){
+      let isManagerInGroup = Array.find(
+        managerIds,
+        func(id : T.PrincipalId) : Bool {
+          return id == manager.principalId;
+        },
+      );
+
+      if(Option.isSome(isManagerInGroup)){
+        switch (manager.history) {
+          case (null) {};
+          case (existingHistory) {
+            for (season in Iter.fromList(existingHistory)) {
+              if (season.seasonId == seasonId) {
+                for (seasonGameweek in Iter.fromList(season.gameweeks)) {
+                  if (seasonGameweek.gameweek == gameweek) {
+                    let entry: T.LeaderboardEntry = {
+                      position = 0;
+                      positionText = "";
+                      username = manager.username;
+                      principalId = manager.principalId;
+                      points = seasonGameweek.points;
+                    };
+                    leaderboardEntries.add(entry);
+                  };
+                };
+              };
+            };
+          };
+        };
+      };
+    };
+
+    for(manager in Iter.fromArray(managerGroup10)){
+      let isManagerInGroup = Array.find(
+        managerIds,
+        func(id : T.PrincipalId) : Bool {
+          return id == manager.principalId;
+        },
+      );
+
+      if(Option.isSome(isManagerInGroup)){
+        switch (manager.history) {
+          case (null) {};
+          case (existingHistory) {
+            for (season in Iter.fromList(existingHistory)) {
+              if (season.seasonId == seasonId) {
+                for (seasonGameweek in Iter.fromList(season.gameweeks)) {
+                  if (seasonGameweek.gameweek == gameweek) {
+                    let entry: T.LeaderboardEntry = {
+                      position = 0;
+                      positionText = "";
+                      username = manager.username;
+                      principalId = manager.principalId;
+                      points = seasonGameweek.points;
+                    };
+                    leaderboardEntries.add(entry);
+                  };
+                };
+              };
+            };
+          };
+        };
+      };
+    };
+
+    for(manager in Iter.fromArray(managerGroup11)){
+      let isManagerInGroup = Array.find(
+        managerIds,
+        func(id : T.PrincipalId) : Bool {
+          return id == manager.principalId;
+        },
+      );
+
+      if(Option.isSome(isManagerInGroup)){
+        switch (manager.history) {
+          case (null) {};
+          case (existingHistory) {
+            for (season in Iter.fromList(existingHistory)) {
+              if (season.seasonId == seasonId) {
+                for (seasonGameweek in Iter.fromList(season.gameweeks)) {
+                  if (seasonGameweek.gameweek == gameweek) {
+                    let entry: T.LeaderboardEntry = {
+                      position = 0;
+                      positionText = "";
+                      username = manager.username;
+                      principalId = manager.principalId;
+                      points = seasonGameweek.points;
+                    };
+                    leaderboardEntries.add(entry);
+                  };
+                };
+              };
+            };
+          };
+        };
+      };
+    };
+
+    for(manager in Iter.fromArray(managerGroup12)){
+      let isManagerInGroup = Array.find(
+        managerIds,
+        func(id : T.PrincipalId) : Bool {
+          return id == manager.principalId;
+        },
+      );
+
+      if(Option.isSome(isManagerInGroup)){
+        switch (manager.history) {
+          case (null) {};
+          case (existingHistory) {
+            for (season in Iter.fromList(existingHistory)) {
+              if (season.seasonId == seasonId) {
+                for (seasonGameweek in Iter.fromList(season.gameweeks)) {
+                  if (seasonGameweek.gameweek == gameweek) {
+                    let entry: T.LeaderboardEntry = {
+                      position = 0;
+                      positionText = "";
+                      username = manager.username;
+                      principalId = manager.principalId;
+                      points = seasonGameweek.points;
+                    };
+                    leaderboardEntries.add(entry);
+                  };
+                };
+              };
+            };
+          };
+        };
+      };
+    };
+
+    return Buffer.toArray(leaderboardEntries);
+
+  };
 
   system func preupgrade() {
     stable_manager_group_indexes := Iter.toArray(managerGroupIndexes.entries());

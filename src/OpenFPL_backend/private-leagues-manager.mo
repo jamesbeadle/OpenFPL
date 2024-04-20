@@ -74,11 +74,7 @@ module {
     };
 
     public func calculateLeaderboards() : async (){
-      //for each private league loop through and calculate the leaderboards
-    };
-
-    public func payRewards() : async (){
-      //for each private league loop through and calculate rewards
+      //for each private league loop through and calculate the leaderboards and pay rewards
     };
 
   };

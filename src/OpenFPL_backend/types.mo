@@ -403,6 +403,7 @@ module _Types {
 
   public type LeagueMember = {
     principalId: PrincipalId;
+    canisterId: CanisterId;
     joinedDate: Int;
   };
 
