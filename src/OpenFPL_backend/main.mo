@@ -490,6 +490,7 @@ actor Self {
   };
 
   public shared ({ caller }) func getLeaderboardEntries(canisterId: T.CanisterId, managerIds: [T.PrincipalId]) : async [T.LeaderboardEntry] {
+    //TODO: Check if caller is one of the private league canisters
     return await seasonManager.getLeaderboardEntries(canisterId, managerIds);
   };
 

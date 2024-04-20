@@ -38,6 +38,10 @@ actor class _PrivateLeague() {
     };
 
     public shared ({ caller }) func calculateLeaderboards() : async () {
+        assert not Principal.isAnonymous(caller);
+        assert (Principal.toText(caller) == main_canister_id);
+        let principalId = Principal.toText(caller);
+        assert principalId == main_canister_id;
         
         let uniqueCanisterIds = Buffer.fromArray<T.CanisterId>([]);
 
@@ -51,61 +55,21 @@ actor class _PrivateLeague() {
             getLeaderboardEntries : (canisterId: T.CanisterId) -> async [T.LeaderboardEntry];
         };
 
+        let leaderboardEntries = Buffer.fromArray<T.LeaderboardEntry>([]);
+
         for (canisterId in Iter.fromArray(Buffer.toArray(uniqueCanisterIds))) {
-            
-            let leaderboardEntries = await openfpl_backend_canister.getLeaderboardEntries(canisterId);
-
-            //Put leaderboard entries in this gameweek
-
-            //Position leaderboard entries
-
-            //Update monthly leaderboard entries 
-
-            //Update Season Leaderboard entries
+            leaderboardEntries.append(Buffer.fromArray(await openfpl_backend_canister.getLeaderboardEntries(canisterId)));
         };
-
-        //pay rewards based on leaderboard entries
-
-      //when the leaderboards are updated just pay rewards based on those leaderboards
-      
-
-      //call the canister to get the managers current weekly scores passing in the ids of the users
-        //what is the maximum amount I can actually transfer here?
-    
-
-        //for each manager I need their team to calculate their leaderboard
-        //but I've already calculated their score so I just need to get it
-
-        //group all manager canister ids and make a single call to get their information by canister to save space
-            //will i need to store the users canister id 
-
-        //For each member of the league
-            //getWeeklyLeaderboardScore
-            //getMonthlyLeaderboardScore
-            //getSeasonLeaderboardScore
         
-        //when this has been updated check if you need to pay rewards
 
+        //calculate leaderboards for gameweek, month and season
 
-        
-        /*
-        let fantasyTeamSnapshotsBuffer = Buffer.fromArray<T.FantasyTeamSnapshot>([]);
+        //Store leaderboard entries in the gameweek, month and season
 
-        for (canisterId in Iter.fromArray(uniqueManagerCanisterIds)) {
-            let manager_canister = actor (canisterId) : actor {
-            getSnapshots : (seasonId : T.SeasonId, gameweek : T.GameweekNumber) -> async [T.FantasyTeamSnapshot];
-            };
+        //Pay leaderboard rewards based on gameweek, month and season
 
-            let snapshots = await manager_canister.getSnapshots(seasonId, gameweek);
-            fantasyTeamSnapshotsBuffer.append(Buffer.fromArray(snapshots));
-        };
-        */
+        //increment the system state
 
-        await calculateWeeklyLeaderboards(seasonId, gameweek, Buffer.toArray(fantasyTeamSnapshotsBuffer));
-        await calculateMonthlyLeaderboards(seasonId, gameweek, month, Buffer.toArray(fantasyTeamSnapshotsBuffer));
-        await calculateSeasonLeaderboard(seasonId, Buffer.toArray(fantasyTeamSnapshotsBuffer));
-        await payRewards();
-        await incrementState();
     };
 
     system func preupgrade() {};
