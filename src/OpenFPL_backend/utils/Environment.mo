@@ -5,9 +5,11 @@ module Environment {
   public let FRONTEND_CANISTER_ID = "bgpwv-eqaaa-aaaal-qb6eq-cai";
   public let NEURON_CONTROLLER_CANISTER_ID = "hqfmc-cqaaa-aaaal-qitcq-cai";
   public let NNS_GOVERNANCE_CANISTER_ID = "rrkah-fqaaa-aaaaa-aaaaq-cai";
+  public let NNS_LEDGER_CANISTER_ID = "ryjl3-tyaaa-aaaaa-aaaba-cai"; 
   public let SNS_GOVERNANCE_CANISTER_ID = "detjl-sqaaa-aaaaq-aacqa-cai";
   public let SNS_LEDGER_CANISTER_ID = "ddsp7-7iaaa-aaaaq-aacqq-cai";
   public let SNS_ROOT_CANISTER_ID = "gyito-zyaaa-aaaaq-aacpq-cai";
   public let SNS_INDEX_CANISTER_ID = "dnqcx-eyaaa-aaaaq-aacrq-cai";
   public let SNS_SWAP_CANISTER_ID = "dkred-jaaaa-aaaaq-aacra-cai";
+  public let Default = "aaaaa-aa";
 };

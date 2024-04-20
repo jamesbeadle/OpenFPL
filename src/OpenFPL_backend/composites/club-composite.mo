@@ -5,7 +5,7 @@ import Result "mo:base/Result";
 import Array "mo:base/Array";
 import Order "mo:base/Order";
 import Text "mo:base/Text";
-import Utilities "../utilities";
+import Utilities "../utils/utilities";
 
 module {
 

@@ -2,10 +2,9 @@ import Hash "mo:base/Hash";
 import Nat32 "mo:base/Nat32";
 import Nat16 "mo:base/Nat16";
 import Nat8 "mo:base/Nat8";
-import T "./types";
+import T "../types";
 import Iter "mo:base/Iter";
 import Array "mo:base/Array";
-import List "mo:base/List";
 import Time "mo:base/Time";
 import Nat "mo:base/Nat";
 import Nat64 "mo:base/Nat64";
@@ -14,7 +13,7 @@ import Text "mo:base/Text";
 import Int16 "mo:base/Int16";
 import Float "mo:base/Float";
 import Principal "mo:base/Principal";
-import Management "./modules/Management";
+import Management "../modules/Management";
 
 module {
 

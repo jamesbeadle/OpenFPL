@@ -20,7 +20,7 @@ import ClubComposite "composites/club-composite";
 import ManagerComposite "composites/manager-composite";
 import LeaderboardComposite "composites/leaderboard-composite";
 import SHA224 "./lib/SHA224";
-import Utilities "utilities";
+import Utilities "utils/utilities";
 import Token "sns-wrappers/token";
 import PrivateLeaguesManager "private-leagues-manager";
 

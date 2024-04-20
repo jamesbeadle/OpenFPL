@@ -13,8 +13,8 @@ import Nat64 "mo:base/Nat64";
 import T "types";
 import DTOs "DTOs";
 import Countries "Countries";
-import Environment "Environment";
-import Utilities "utilities";
+import Environment "utils/Environment";
+import Utilities "utils/utilities";
 import NeuronTypes "../neuron_controller/types";
 import Account "lib/Account";
 

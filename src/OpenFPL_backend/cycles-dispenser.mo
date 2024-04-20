@@ -1,6 +1,6 @@
 import Cycles "mo:base/ExperimentalCycles";
 import List "mo:base/List";
-import Environment "Environment";
+import Environment "utils/Environment";
 
 module {
 

@@ -6,17 +6,18 @@ import List "mo:base/List";
 import Array "mo:base/Array";
 import Int "mo:base/Int";
 import Principal "mo:base/Principal";
-import Utilities "../utilities";
+import Utilities "../utils/utilities";
 import Management "../modules/Management";
-import ENV "../utils/Env";
+import Environment "../utils/Environment";
 import Cycles "mo:base/ExperimentalCycles";
 import Buffer "mo:base/Buffer";
 import TrieMap "mo:base/TrieMap";
 import Nat "mo:base/Nat";
 import Text "mo:base/Text";
-import WeeklyLeaderboardCanister "../weekly-leaderboard";
-import MonthlyLeaderboardCanister "../monthly-leaderboard";
-import SeasonLeaderboardCanister "../season-leaderboard";
+import WeeklyLeaderboardCanister "../canister_definitions/weekly-leaderboard";
+import MonthlyLeaderboardCanister "../canister_definitions/monthly-leaderboard";
+import SeasonLeaderboardCanister "../canister_definitions/season-leaderboard";
+import Environment "../utils/Environment";
 
 module {
 
@@ -448,7 +449,7 @@ module {
 
       Cycles.add<system>(2_000_000_000_000);
       let canister = await WeeklyLeaderboardCanister._WeeklyLeaderboardCanister();
-      let IC : Management.Management = actor (ENV.Default);
+      let IC : Management.Management = actor (Environment.Default);
       let _ = await Utilities.updateCanister_(canister, backendCanisterController, IC);
       let canister_principal = Principal.fromActor(canister);
 
@@ -489,7 +490,7 @@ module {
 
       Cycles.add<system>(2_000_000_000_000);
       let canister = await MonthlyLeaderboardCanister._MonthlyLeaderboardCanister();
-      let IC : Management.Management = actor (ENV.Default);
+      let IC : Management.Management = actor (Environment.Default);
       let _ = await Utilities.updateCanister_(canister, backendCanisterController, IC);
       let canister_principal = Principal.fromActor(canister);
 
@@ -530,7 +531,7 @@ module {
 
       Cycles.add<system>(2_000_000_000_000);
       let canister = await SeasonLeaderboardCanister._SeasonLeaderboardCanister();
-      let IC : Management.Management = actor (ENV.Default);
+      let IC : Management.Management = actor (Environment.Default);
       let _ = await Utilities.updateCanister_(canister, backendCanisterController, IC);
       let canister_principal = Principal.fromActor(canister);
 

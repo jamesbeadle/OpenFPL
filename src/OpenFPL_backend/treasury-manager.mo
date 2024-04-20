@@ -4,7 +4,7 @@ import Int "mo:base/Int";
 import Nat64 "mo:base/Nat64";
 import Time "mo:base/Time";
 import Principal "mo:base/Principal";
-import Environment "Environment";
+import Environment "utils/Environment";
 
 module {
 

@@ -5,7 +5,7 @@ import Time "mo:base/Time";
 import Int64 "mo:base/Int64";
 import Array "mo:base/Array";
 import Account "../lib/Account";
-import Environment "../Environment";
+import Environment "../utils/Environment";
 
 module {
 
