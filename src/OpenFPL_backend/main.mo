@@ -1,4 +1,5 @@
 import Array "mo:base/Array";
+import Bool "mo:base/Bool";
 import Buffer "mo:base/Buffer";
 import Cycles "mo:base/ExperimentalCycles";
 import Int "mo:base/Int";
@@ -8,50 +9,29 @@ import Result "mo:base/Result";
 import Time "mo:base/Time";
 import Timer "mo:base/Timer";
 import Nat64 "mo:base/Nat64";
-import Bool "mo:base/Bool";
 
-import Countries "Countries";
-import DTOs "DTOs";
-import SeasonManager "season-manager";
 import T "types";
-import CyclesDispenser "cycles-dispenser";
-import TreasuryManager "treasury-manager";
-import Utilities "utilities";
-import Account "lib/Account";
+import DTOs "DTOs";
+import Countries "Countries";
 import Environment "Environment";
+import Utilities "utilities";
 import NeuronTypes "../neuron_controller/types";
+import Account "lib/Account";
+
+import SeasonManager "season-manager";
+import TreasuryManager "treasury-manager";
+import CyclesDispenser "cycles-dispenser";
 
 actor Self {
-  let seasonManager = SeasonManager.SeasonManager();
-  let cyclesDispenser = CyclesDispenser.CyclesDispenser();
-  let treasuryManager = TreasuryManager.TreasuryManager();
+  private let seasonManager = SeasonManager.SeasonManager();
+  private let treasuryManager = TreasuryManager.TreasuryManager();
+  private let cyclesDispenser = CyclesDispenser.CyclesDispenser();
   private let cyclesCheckInterval : Nat = Utilities.getHour() * 24;
   private let cyclesCheckWalletInterval : Nat = Utilities.getHour() * 24;
 
   private var cyclesCheckTimerId : ?Timer.TimerId = null;
   private var cyclesCheckWalletTimerId : ?Timer.TimerId = null;
 
-  private var nextCyclesCheckTime : Int = 0;
-  private var nextWalletCheckTime : Int = 0;
-
-  private stable var neuronCreated = false;
-
-  //Functions containing inter-canister calls that cannot be query functions:
-  public shared func getWeeklyLeaderboard(seasonId : T.SeasonId, gameweek : T.GameweekNumber, limit : Nat, offset : Nat, searchTerm : Text) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
-    return await seasonManager.getWeeklyLeaderboard(seasonId, gameweek, limit, offset, searchTerm);
-  };
-
-  public shared func getMonthlyLeaderboards(seasonId : T.SeasonId, month : T.CalendarMonth) : async Result.Result<[DTOs.MonthlyLeaderboardDTO], T.Error> {
-    return await seasonManager.getMonthlyLeaderboards(seasonId, month);
-  };
-
-  public shared func getMonthlyLeaderboard(seasonId : T.SeasonId, clubId : T.ClubId, month : T.CalendarMonth, limit : Nat, offset : Nat, searchTerm : Text) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error> {
-    return await seasonManager.getMonthlyLeaderboard(seasonId, month, clubId, limit, offset, searchTerm);
-  };
-
-  public shared func getSeasonLeaderboard(seasonId : T.SeasonId, limit : Nat, offset : Nat, searchTerm : Text) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error> {
-    return await seasonManager.getSeasonLeaderboard(seasonId, limit, offset, searchTerm);
-  };
 
   //Manager calls
 
@@ -69,8 +49,29 @@ actor Self {
     assert not Principal.isAnonymous(caller);
     return await seasonManager.getManager(managerId);
   };
+  
+
+  //Leaderboard calls:
+
+  public shared func getWeeklyLeaderboard(seasonId : T.SeasonId, gameweek : T.GameweekNumber, limit : Nat, offset : Nat, searchTerm : Text) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
+    return await seasonManager.getWeeklyLeaderboard(seasonId, gameweek, limit, offset, searchTerm);
+  };
+
+  public shared func getMonthlyLeaderboards(seasonId : T.SeasonId, month : T.CalendarMonth) : async Result.Result<[DTOs.MonthlyLeaderboardDTO], T.Error> {
+    return await seasonManager.getMonthlyLeaderboards(seasonId, month);
+  };
+
+  public shared func getMonthlyLeaderboard(seasonId : T.SeasonId, clubId : T.ClubId, month : T.CalendarMonth, limit : Nat, offset : Nat, searchTerm : Text) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error> {
+    return await seasonManager.getMonthlyLeaderboard(seasonId, month, clubId, limit, offset, searchTerm);
+  };
+
+  public shared func getSeasonLeaderboard(seasonId : T.SeasonId, limit : Nat, offset : Nat, searchTerm : Text) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error> {
+    return await seasonManager.getSeasonLeaderboard(seasonId, limit, offset, searchTerm);
+  };
+
 
   //Query functions:
+
   public shared query func getClubs() : async Result.Result<[DTOs.ClubDTO], T.Error> {
     return #ok(seasonManager.getClubs());
   };
@@ -138,7 +139,9 @@ actor Self {
     return usernameValid and not usernameTaken;
   };
 
+
   //Update functions:
+
   public shared ({ caller }) func updateUsername(username : Text) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
@@ -165,13 +168,13 @@ actor Self {
     return await seasonManager.saveFantasyTeam(fantasyTeam);
   };
 
+
   //Governance canister validation and execution functions:
+
   public shared query ({ caller }) func validateRevaluePlayerUp(revaluePlayerUpDTO : DTOs.RevaluePlayerUpDTO) : async Result.Result<Text, Text> {
     assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     
-    //Todo: Implement when can make cross subnet call
-    //let proposalFound = await governanceManager.revaluePlayerUpProposalExists(revaluePlayerUpDTO); 
-    //assert not proposalFound;
+    //Todo when functionality available: Make cross subnet call to governance canister to see if proposal exists
 
     return seasonManager.validateRevaluePlayerUp(revaluePlayerUpDTO);
   };
@@ -350,34 +353,6 @@ actor Self {
     assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     return await seasonManager.executeUpdateClub(updateClubDTO);
   };
-  public shared query func getBackendCanisterId() : async Result.Result<Text, T.Error> {
-    return #ok(Principal.toText(Principal.fromActor(Self)));
-  };
-
-  public shared query ({ caller }) func validateCreateDAONeuron() : async T.RustResult {
-    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-    if (neuronCreated) {
-      return #Err("Neuron already created");
-    };
-
-    return #Ok();
-  };
-
-  public shared ({ caller }) func executeCreateDAONeuron() : async () {
-    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-    if (neuronCreated) {
-      return;
-    };
-
-    let neuron_controller = actor (Environment.NEURON_CONTROLLER_CANISTER_ID) : actor {
-      stake_nns_neuron : () -> async ?NeuronTypes.Response;
-    };
-
-    let _ = await neuron_controller.stake_nns_neuron();
-
-    neuronCreated := true;
-
-  };
 
   public shared ({ caller }) func validateManageDAONeuron() : async Result.Result<Text, Text> {
     assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
@@ -403,6 +378,10 @@ actor Self {
     neuronCreated := true;
 
   };
+
+  
+  //Function to get the neuron controller neuron id
+  
   public shared func getNeuronId() : async Nat64 {
     let neuron_controller = actor (Environment.NEURON_CONTROLLER_CANISTER_ID) : actor {
       getNeuronId : () -> async Nat64;
@@ -410,6 +389,9 @@ actor Self {
 
     return await neuron_controller.getNeuronId();
   };
+
+
+  //Game logic callback functions
 
   private func gameweekBeginExpiredCallback() : async () {
     await seasonManager.gameweekBeginExpired();
@@ -446,7 +428,8 @@ actor Self {
     removeExpiredTimers();
   };
 
-  //Private league functionality
+
+  //Private league functions
 
   public shared ({ caller }) func getPrivateLeagues() : async Result.Result<DTOs.PrivateLeaguesDTO, T.Error> {
     let privateLeagues: DTOs.PrivateLeaguesDTO = {
@@ -607,6 +590,9 @@ actor Self {
   private stable var stable_timers : [T.TimerInfo] = [];
   private stable var stable_canister_ids : [Text] = [];
 
+  private var nextCyclesCheckTime : Int = 0;
+  private var nextWalletCheckTime : Int = 0;
+
   system func preupgrade() {
     stable_reward_pools := seasonManager.getStableRewardPools();
     stable_system_state := seasonManager.getStableSystemState();
@@ -764,16 +750,8 @@ actor Self {
     beginOpenFPL();
   };
 
-  private stable var gameBegun = false;
+  
 
-  private func beginOpenFPL () : () {
-    if(gameBegun){
-      return;
-    };
-    //Check the cycles balance on the wallet
-
-    //Set the backend 
-  };
 
   public shared ({ caller }) func requestCanisterTopup() : async () {
     assert not Principal.isAnonymous(caller);
@@ -889,4 +867,50 @@ actor Self {
   };
 
   private func defaultCallback() : async () {};
+
+
+  //TODO: Remove Temporary Functions
+
+  //The following stable variables can be removed when the neuron has been created and the app has been initialised
+  private stable var neuronCreated = false;
+  private stable var openFPLInitialised = false;
+
+  
+  //Can remove after the DAOs neuron is created
+  public shared query ({ caller }) func validateCreateDAONeuron() : async T.RustResult {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
+    if (neuronCreated) {
+      return #Err("Neuron already created");
+    };
+
+    return #Ok();
+  };
+
+  //can remove after the DAOs neuron is created
+  public shared ({ caller }) func executeCreateDAONeuron() : async () {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
+    if (neuronCreated) {
+      return;
+    };
+
+    let neuron_controller = actor (Environment.NEURON_CONTROLLER_CANISTER_ID) : actor {
+      stake_nns_neuron : () -> async ?NeuronTypes.Response;
+    };
+
+    let _ = await neuron_controller.stake_nns_neuron();
+
+    neuronCreated := true;
+
+  };
+
+  //Can be removed when the game has successfully been initialsed
+  private func beginOpenFPL () : () {
+    if(openFPLInitialised){
+      return;
+    };
+    //Check the cycles balance on the wallet
+
+    //Set the backend 
+  };
+
 };
