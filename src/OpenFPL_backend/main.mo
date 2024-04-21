@@ -400,7 +400,6 @@ actor Self {
     return await neuron_controller.getNeuronId();
   };
 
-
   //Game logic callback functions
 
   private func gameweekBeginExpiredCallback() : async () {
@@ -551,20 +550,44 @@ actor Self {
     return await seasonManager.acceptLeagueInvite(canisterId, Principal.toText(caller));
   };
 
-  public shared ({ caller }) func enterLeague(canisterId) : async () {
+  public shared ({ caller }) func enterLeague(canisterId: T.CanisterId) : async () {
+    assert not Principal.isAnonymous(caller);
+    assert(await seasonManager.leagueHasSpace(canisterId));
 
+    let isLeagueMember = await seasonManager.isLeagueMember(canisterId, Principal.toText(caller));
+    assert not isLeagueMember;
+
+    //check the league is free entry
+
+    //add the user to the league
   };
 
   public shared ({ caller }) func enterLeagueWithFee(canisterId: T.CanisterId) : async () {
-    
+    assert not Principal.isAnonymous(caller);
+    assert(await seasonManager.leagueHasSpace(canisterId));
+
+    let isLeagueMember = await seasonManager.isLeagueMember(canisterId, Principal.toText(caller));
+    assert not isLeagueMember;
+
+    //check the user can afford the entry fee
+
+    //add the user to the league
   };
 
   public shared ({ caller }) func acceptInviteAndPayFee(canisterId: T.CanisterId) : async () {
+    assert not Principal.isAnonymous(caller);
+    assert(await seasonManager.leagueHasSpace(canisterId));
+
+    let isLeagueMember = await seasonManager.isLeagueMember(canisterId, Principal.toText(caller));
+    assert not isLeagueMember;
+
     //check they have an invite
     //check they can afford the fee
   };
 
-  public shared ({ caller }) func getTokenList() : async Result.Result<[T.TokenInfo], T.Error> {};
+  public shared ({ caller }) func getTokenList() : async Result.Result<[T.TokenInfo], T.Error> {
+    //get all the icrc-1 tokens the league can be setup with
+  };
 
   
   
