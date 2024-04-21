@@ -7,6 +7,7 @@ import Principal "mo:base/Principal";
 import Environment "utils/Environment";
 import DTOs "DTOs";
 import T "types";
+import Tokens "Tokens";
 
 module {
 
@@ -19,6 +20,7 @@ module {
     let icp_fee : Nat64 = 10_000;
     let memo_txt_tpup : Nat64 = 0x50555054;
     private let ledger : ICPLedger.Interface = actor (ICPLedger.CANISTER_ID);
+    private var tokenList: [T.TokenInfo] = Tokens.tokens;
 
     public func getUserAccountBalance(defaultAccount : Principal, user : Principal) : async Nat64 {
       let source_account = Account.accountIdentifier(defaultAccount, Account.principalToSubaccount(user));
@@ -78,6 +80,10 @@ module {
 
     public func executeAddNewToken(newTokenDTO : DTOs.NewTokenDTO) : async () {
       
+    };
+
+    public func getTokenList() : [T.TokenInfo] {
+      return tokenList;
     };
 
   };

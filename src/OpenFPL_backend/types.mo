@@ -413,4 +413,9 @@ module _Types {
     #PaidEntry;
     #PaidInviteEntry;
   };
+
+  public type TokenInfo = {
+    ticker: Text;
+    canisterId: CanisterId;
+  };
 };

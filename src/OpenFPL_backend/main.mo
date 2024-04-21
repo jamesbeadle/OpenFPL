@@ -586,7 +586,8 @@ actor Self {
   };
 
   public shared ({ caller }) func getTokenList() : async Result.Result<[T.TokenInfo], T.Error> {
-    //get all the icrc-1 tokens the league can be setup with
+    assert not Principal.isAnonymous(caller);
+    return treasuryManager.getTokenList();
   };
 
 
@@ -603,7 +604,7 @@ actor Self {
     homepageFixturesGameweek = 1;
     homepageManagerGameweek = 1;
     transferWindowActive = false;
-    onHold = false;
+    onHold = true;
   };
   private stable var stable_data_cache_hashes : [T.DataCache] = [];
 
