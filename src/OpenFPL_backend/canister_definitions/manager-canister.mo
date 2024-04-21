@@ -1,5 +1,5 @@
-import T "types";
-import DTOs "DTOs";
+import T "../types";
+import DTOs "../DTOs";
 import List "mo:base/List";
 import Cycles "mo:base/ExperimentalCycles";
 import Timer "mo:base/Timer";
@@ -13,8 +13,8 @@ import Buffer "mo:base/Buffer";
 import Nat8 "mo:base/Nat8";
 import Option "mo:base/Option";
 import Result "mo:base/Result";
-import Utilities "utilities";
-import Environment "Environment";
+import Utilities "../utils/utilities";
+import Environment "../utils/Environment";
 
 actor class _ManagerCanister() {
 

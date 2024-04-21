@@ -16,12 +16,11 @@ import Option "mo:base/Option";
 import Time "mo:base/Time";
 import Int16 "mo:base/Int16";
 import Management "../modules/Management";
-import ENV "../utils/Env";
-import ManagerCanister "../manager-canister";
+import ManagerCanister "../canister_definitions/manager-canister";
 import Rewards "./rewards-composite";
-import Utilities "../utilities";
+import Utilities "../utils/utilities";
 import TrieMap "mo:base/TrieMap";
-import Environment "../Environment";
+import Environment "../utils/Environment";
 
 module {
 
@@ -1429,7 +1428,7 @@ module {
 
       Cycles.add<system>(2_000_000_000_000);
       let canister = await ManagerCanister._ManagerCanister();
-      let IC : Management.Management = actor (ENV.Default);
+      let IC : Management.Management = actor (Environment.Default);
       let principal = ?Principal.fromText(Environment.BACKEND_CANISTER_ID);
       let _ = await Utilities.updateCanister_(canister, principal, IC);
 
