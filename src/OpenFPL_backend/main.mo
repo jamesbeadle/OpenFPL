@@ -589,31 +589,6 @@ actor Self {
     //get all the icrc-1 tokens the league can be setup with
   };
 
-  
-  
-  //enterleaguewithfee
-
-  //acceptinviteandpayfee
-
-  //get token list
-
-  //TODO: Add governance function to add new token canister
-
-/*
-
-  public shared func payLeagueEntryFee() : async () {
-    assert not Principal.isAnonymous(caller);
-    assert(await privateLeaguesManager.isLeagueMember(canisterId, Principal.toText(caller)));
-    //check max 10000
-  };
-
-  public shared func getICRC1TokenList() : async (){
-    assert not Principal.isAnonymous(caller);
-    assert(await privateLeaguesManager.isLeagueMember(canisterId, Principal.toText(caller)));
-    //TODO
-    //get a list of all ICRC1 tokens SNS and non SNS
-  };
-*/
 
   //Stable variables backup:
 
