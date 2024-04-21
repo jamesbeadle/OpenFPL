@@ -443,16 +443,24 @@ actor Self {
           let private_league_canister = actor (privateLeagueCanisterId) : actor {
             getPrivateLeague : () -> async DTOs.PrivateLeagueDTO;
           };
+          let privateLeague = await private_league_canister.getPrivateLeague();
+          privateLeaguesBuffer.add({
+            canisterId = privateLeagueCanisterId;
+            created = Time.now();
+            memberCount = privateLeague.memberCount;
+            name = dto.username;
+            seasonPosition = 0;
+          });
         };
+          
+        let privateLeagues: DTOs.PrivateLeaguesDTO = {
+          entries = Buffer.toArray(privateLeaguesBuffer);
+          totalEntries = privateLeaguesBuffer.size();
+        };
+        return #ok(privateLeagues);
       };
       case _ { return #err(#NotFound)};
     };
-    
-    let privateLeagues: DTOs.PrivateLeaguesDTO = {
-      entries = [];
-      totalEntries = 0;
-    };
-    return #ok(privateLeagues);
   };
 
   public shared ({ caller }) func getPrivateLeagueWeeklyLeaderboard(canisterId: T.CanisterId, seasonId : T.SeasonId, gameweek: T.GameweekNumber, limit : Nat, offset : Nat) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error>{
