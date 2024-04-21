@@ -70,8 +70,10 @@ module {
       return false;
     };
 
-    public func createPrivateLeague(newPrivateLeague: DTOs.CreatePrivateLeagueDTO) : async () {
+    public func createPrivateLeague(newPrivateLeague: DTOs.CreatePrivateLeagueDTO) : async Result.Result<(), T.Error> {
       //TODO: TAKE PAYMENT
+      //TODO
+      return #ok();
     };
 
     public func leagueHasSpace(canisterId: T.CanisterId) : async Bool {
@@ -90,24 +92,48 @@ module {
       return await private_league_canister.isLeagueAdmin(principalId);
     };
 
-    public func inviteUserToLeague(canisterId: T.CanisterId, managerId: T.PrincipalId) : async (){
+    public func inviteUserToLeague(canisterId: T.CanisterId, managerId: T.PrincipalId) : async Result.Result<(), T.Error>{
+      //TODO
+      return #ok();
+    };
+
+    public func acceptLeagueInvite(canisterId: T.CanisterId, managerId: T.PrincipalId) : async Result.Result<(), T.Error>{
+      //TODO
+      return #ok();
 
     };
 
-    public func acceptLeagueInvite(canisterId: T.CanisterId, managerId: T.PrincipalId) : async (){
+    public func updateLeaguePicture(canisterId: T.CanisterId, picture: Blob) : async Result.Result<(), T.Error>{
+      //TODO
+      return #ok();
 
     };
 
-    public func updateLeaguePicture(canisterId: T.CanisterId, picture: Blob) : async (){
+    public func updateLeagueBanner(canisterId: T.CanisterId, banner: Blob) : async Result.Result<(), T.Error>{
+      //TODO
+      return #ok();
 
     };
 
-    public func updateLeagueBanner(canisterId: T.CanisterId, banner: Blob) : async (){
+    public func updateLeagueName(canisterId: T.CanisterId, text: Text) : async Result.Result<(), T.Error>{
+      //TODO
+      return #ok();
 
     };
 
-    public func updateLeagueName(canisterId: T.CanisterId, text: Text) : async (){
+    public func enterLeague(canisterId: T.CanisterId, managerId: T.PrincipalId) : async Result.Result<(), T.Error>{
+      //TODO
+      return #ok();
 
+    };
+
+
+    public func getPrivateLeague(canisterId: T.CanisterId) : async DTOs.PrivateLeagueDTO {
+      let private_league_canister = actor (canisterId) : actor {
+        getPrivateLeague : () -> async DTOs.PrivateLeagueDTO;
+      };
+
+      return await private_league_canister.getPrivateLeague();
     };
 
     public func calculateLeaderboards() : async (){

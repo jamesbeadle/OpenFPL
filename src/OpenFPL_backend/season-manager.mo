@@ -889,7 +889,7 @@ module {
       return privateLeaguesManager.privateLeagueIsValid(privateLeague);
     };
 
-    public func createPrivateLeague(newPrivateLeague: DTOs.CreatePrivateLeagueDTO) : async () {
+    public func createPrivateLeague(newPrivateLeague: DTOs.CreatePrivateLeagueDTO) : async Result.Result<(), T.Error> {
       return await privateLeaguesManager.createPrivateLeague(newPrivateLeague);
     };
 
@@ -913,24 +913,32 @@ module {
       return await privateLeaguesManager.isLeagueAdmin(canisterId, principalId);
     };
 
-    public func inviteUserToLeague(canisterId: T.CanisterId, managerId: T.PrincipalId) : async () {
+    public func inviteUserToLeague(canisterId: T.CanisterId, managerId: T.PrincipalId) : async Result.Result<(), T.Error> {
       return await privateLeaguesManager.inviteUserToLeague(canisterId, managerId);
     };
 
-    public func acceptLeagueInvite(canisterId: T.CanisterId, managerId: T.PrincipalId) : async () {
+    public func acceptLeagueInvite(canisterId: T.CanisterId, managerId: T.PrincipalId) : async Result.Result<(), T.Error> {
       return await privateLeaguesManager.acceptLeagueInvite(canisterId, managerId);
     };
 
-    public func updateLeaguePicture(canisterId: T.CanisterId, picture: Blob) : async () {
+    public func updateLeaguePicture(canisterId: T.CanisterId, picture: Blob) : async Result.Result<(), T.Error> {
       return await privateLeaguesManager.updateLeaguePicture(canisterId, picture);
     };
 
-    public func updateLeagueBanner(canisterId: T.CanisterId, banner: Blob) : async () {
+    public func updateLeagueBanner(canisterId: T.CanisterId, banner: Blob) : async Result.Result<(), T.Error> {
       return await privateLeaguesManager.updateLeagueBanner(canisterId, banner);
     };
 
-    public func updateLeagueName(canisterId: T.CanisterId, name: Text) : async () {
+    public func updateLeagueName(canisterId: T.CanisterId, name: Text) : async Result.Result<(), T.Error> {
       return await privateLeaguesManager.updateLeagueName(canisterId, name);
+    };
+
+    public func getPrivateLeague(canisterId: T.CanisterId) : async DTOs.PrivateLeagueDTO {
+      return await privateLeaguesManager.getPrivateLeague(canisterId);
+    };
+
+    public func enterLeague(canisterId: T.CanisterId, managerId: T.PrincipalId) : async Result.Result<(), T.Error> {
+      return await privateLeaguesManager.enterLeague(canisterId, managerId);
     };
 
 

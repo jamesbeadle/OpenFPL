@@ -2,10 +2,10 @@
     import { onMount } from 'svelte';
     import { writable } from 'svelte/store';
     import CreateLeagueModal from '$lib/components/private-leagues/create-private-league.svelte';
-    import type { PrivateLeaguesDTO, PrivateLeagueDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import type { ManagerPrivateLeaguesDTO, PrivateLeagueDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     import Layout from '../Layout.svelte';
     
-    const leagues = writable<PrivateLeaguesDTO | null>(null);
+    const leagues = writable<ManagerPrivateLeaguesDTO | null>(null);
     const showCreateLeagueModal = writable(false);
 
     let currentPage = 1;

@@ -440,17 +440,17 @@ actor Self {
 
   //Private league functions
   //TODO
-  public shared ({ caller }) func getPrivateLeagues() : async Result.Result<DTOs.PrivateLeaguesDTO, T.Error> {
+  public shared ({ caller }) func getPrivateLeagues() : async Result.Result<DTOs.ManagerPrivateLeaguesDTO, T.Error> {
     assert not Principal.isAnonymous(caller);
     
     let user = await seasonManager.getManager(Principal.toText(caller));
 
     switch(user){
       case (#ok dto){
-        let privateLeaguesBuffer = Buffer.fromArray<DTOs.PrivateLeagueDTO>([]);
+        let privateLeaguesBuffer = Buffer.fromArray<DTOs.ManagerPrivateLeagueDTO>([]);
         for(privateLeagueCanisterId in Iter.fromArray(dto.privateLeagueMemberships)){
           let private_league_canister = actor (privateLeagueCanisterId) : actor {
-            getPrivateLeague : () -> async DTOs.PrivateLeagueDTO;
+            getPrivateLeague : () -> async DTOs.ManagerPrivateLeagueDTO;
           };
           let privateLeague = await private_league_canister.getPrivateLeague();
           privateLeaguesBuffer.add({
@@ -462,7 +462,7 @@ actor Self {
           });
         };
           
-        let privateLeagues: DTOs.PrivateLeaguesDTO = {
+        let privateLeagues: DTOs.ManagerPrivateLeaguesDTO = {
           entries = Buffer.toArray(privateLeaguesBuffer);
           totalEntries = privateLeaguesBuffer.size();
         };
@@ -510,7 +510,7 @@ actor Self {
     return await seasonManager.getManagerByUsername(username);
   };
 
-  public shared ({ caller }) func inviteUserToLeague(canisterId: T.CanisterId, managerId: T.PrincipalId) : async () {
+  public shared ({ caller }) func inviteUserToLeague(canisterId: T.CanisterId, managerId: T.PrincipalId) : Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     assert await seasonManager.isLeagueAdmin(canisterId, Principal.toText(caller));
 
@@ -522,19 +522,19 @@ actor Self {
     return await seasonManager.inviteUserToLeague(canisterId, managerId);
   };
 
-  public shared ({ caller }) func updateLeaguePicture(canisterId: T.CanisterId, picture: Blob) : async () {
+  public shared ({ caller }) func updateLeaguePicture(canisterId: T.CanisterId, picture: Blob) : Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     assert await seasonManager.isLeagueAdmin(canisterId, Principal.toText(caller));
     await seasonManager.updateLeaguePicture(canisterId, picture);
   };
 
-  public shared ({ caller }) func updateLeagueBanner(canisterId: T.CanisterId, banner: Blob) : async () {
+  public shared ({ caller }) func updateLeagueBanner(canisterId: T.CanisterId, banner: Blob) : Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     assert await seasonManager.isLeagueAdmin(canisterId, Principal.toText(caller));
     await seasonManager.updateLeagueBanner(canisterId, banner);
   };
 
-  public shared ({ caller }) func updateLeagueName(canisterId: T.CanisterId, name: Text) : async () {
+  public shared ({ caller }) func updateLeagueName(canisterId: T.CanisterId, name: Text) : Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     assert await seasonManager.isLeagueAdmin(canisterId, Principal.toText(caller));
     await seasonManager.updateLeagueName(canisterId, name);
@@ -557,14 +557,13 @@ actor Self {
     let isLeagueMember = await seasonManager.isLeagueMember(canisterId, Principal.toText(caller));
     assert not isLeagueMember;
 
-    //check the league is free entry
     let league = await seasonManager.getPrivateLeague(canisterId);
-    if(not league.entryType == #FreeEntry){
-      return;
+    switch(league.entryType){
+      case (#FreeEntry){
+        await seasonManager.enterLeague(canisterId, Principal.toText(caller));
+      };
+      case _ {};
     };
-
-    //add the user to the league
-    await seasonManager.enterLeague(canisterId, Principal.toText(caller));
   };
 
   public shared ({ caller }) func enterLeagueWithFee(canisterId: T.CanisterId) : async () {

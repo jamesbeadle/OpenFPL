@@ -456,12 +456,12 @@ module DTOs {
     adminFee: Nat8;
   };
 
-  public type PrivateLeaguesDTO = {
-    entries : [PrivateLeagueDTO];
+  public type ManagerPrivateLeaguesDTO = {
+    entries : [ManagerPrivateLeagueDTO];
     totalEntries : Nat;
   };
 
-  public type PrivateLeagueDTO = {
+  public type ManagerPrivateLeagueDTO = {
     canisterId: T.CanisterId;
     name: Text;
     created: Int;
@@ -473,6 +473,15 @@ module DTOs {
     canisterId: T.CanisterId;
     symbol: Text;
     image: Text;
+  };
+
+  public type PrivateLeagueDTO = {
+    name: Text;
+    maxEntrants: Nat16;
+    entrants: Nat16;
+    picture: Blob;
+    banner: Blob;
+    entryType: T.EntryRequirement;
   };
   
 

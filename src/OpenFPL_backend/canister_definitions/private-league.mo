@@ -23,6 +23,13 @@ actor class _PrivateLeague() {
     private stable var currentMonth: T.CalendarMonth = 0;
     private stable var currentGameweek: T.GameweekNumber = 0;
 
+    public shared ({ caller }) func getManagerPrivateLeague() : async DTOs.ManagerPrivateLeagueDTO {
+        assert not Principal.isAnonymous(caller);
+        let principalId = Principal.toText(caller);
+        assert principalId == main_canister_id;
+
+    };
+
     public shared ({ caller }) func getPrivateLeague() : async DTOs.PrivateLeagueDTO {
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
