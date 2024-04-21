@@ -439,7 +439,7 @@ actor Self {
 
 
   //Private league functions
-  //TODO
+  
   public shared ({ caller }) func getPrivateLeagues() : async Result.Result<DTOs.ManagerPrivateLeaguesDTO, T.Error> {
     assert not Principal.isAnonymous(caller);
     
@@ -571,38 +571,27 @@ actor Self {
   public shared ({ caller }) func enterLeagueWithFee(canisterId: T.CanisterId) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     assert(await seasonManager.leagueHasSpace(canisterId));
+    let userPrincipal = Principal.toText(caller);
 
-    let isLeagueMember = await seasonManager.isLeagueMember(canisterId, Principal.toText(caller));
+    let isLeagueMember = await seasonManager.isLeagueMember(canisterId, userPrincipal);
     assert not isLeagueMember;
 
-    //check the user can afford the entry fee
-    assert(await treasuryManager.canAffordEntryFee(canisterId, Principal.toText(caller)));
-
-    //Pay the league entry fee
-    await treasuryManager.payEntryFee(canisterId, Principal.toText(caller));
-
-    //add the user to the league
-    await seasonManager.enterLeague(canisterId, Principal.toText(caller));
+    assert(await treasuryManager.canAffordEntryFee(canisterId, userPrincipal));
+    await treasuryManager.payEntryFee(canisterId, userPrincipal);
+    await seasonManager.enterLeague(canisterId, userPrincipal);
   };
 
   public shared ({ caller }) func acceptInviteAndPayFee(canisterId: T.CanisterId) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     assert(await seasonManager.leagueHasSpace(canisterId));
+    let userPrincipal = Principal.toText(caller);
 
-    let isLeagueMember = await seasonManager.isLeagueMember(canisterId, Principal.toText(caller));
+    let isLeagueMember = await seasonManager.isLeagueMember(canisterId, userPrincipal);
     assert not isLeagueMember;
-
-    //check they have an invite
     assert(await seasonManager.inviteExists(canisterId, Principal.toText(caller)));
-
-    //check they can afford the fee
-    assert(await treasuryManager.canAffordEntryFee(canisterId, Principal.toText(caller)));
-
-    //Pay the league entry fee
-    await treasuryManager.payEntryFee(canisterId, Principal.toText(caller));
-
-    //add the user to the league
-    await seasonManager.acceptInvite(canisterId, Principal.toText(caller));
+    assert(await treasuryManager.canAffordEntryFee(canisterId, userPrincipal));
+    await treasuryManager.payEntryFee(canisterId, userPrincipal);
+    await seasonManager.acceptInvite(canisterId, userPrincipal);
   };
 
   public shared ({ caller }) func getTokenList() : async Result.Result<[T.TokenInfo], T.Error> {
