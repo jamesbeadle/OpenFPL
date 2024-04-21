@@ -127,6 +127,14 @@ module {
 
     };
 
+    public func inviteExists(canisterId: T.CanisterId, managerId: T.PrincipalId) : async () {
+      //TODO
+    };
+
+    public func acceptInvite(canisterId: T.CanisterId, managerId: T.PrincipalId) : async Result.Result<(), T.Error> {
+      //TODO
+      return #ok();
+    };
 
     public func getPrivateLeague(canisterId: T.CanisterId) : async DTOs.PrivateLeagueDTO {
       let private_league_canister = actor (canisterId) : actor {

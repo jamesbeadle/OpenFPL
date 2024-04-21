@@ -941,6 +941,14 @@ module {
       return await privateLeaguesManager.enterLeague(canisterId, managerId);
     };
 
+    public func inviteExists(canisterId: T.CanisterId, managerId: T.PrincipalId) : async () {
+      return await privateLeaguesManager.inviteExists(canisterId, managerId);
+    };
+
+    public func acceptInvite(canisterId: T.CanisterId, managerId: T.PrincipalId) : async Result.Result<(), T.Error> {
+      return await privateLeaguesManager.acceptInvite(canisterId, managerId);
+    };
+
 
     //Stable data getters and setters:
 

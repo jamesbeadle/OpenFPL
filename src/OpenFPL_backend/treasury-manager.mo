@@ -80,11 +80,19 @@ module {
 
     public func executeAddNewToken(newTokenDTO : DTOs.NewTokenDTO) : async () {
       //TODO: Add the new token
-      
+
     };
 
     public func getTokenList() : [T.TokenInfo] {
       return tokenList;
+    };
+
+    public func canAffordEntryFee(canisterId: T.CanisterId, managerId: T.PrincipalId) : {
+
+    };
+
+    public func payEntryFee(canisterId: T.CanisterId, managerId: T.PrincipalId){
+
     };
 
   };

@@ -502,7 +502,7 @@ actor Self {
     assert(seasonManager.privateLeagueIsValid(newPrivateLeague));
     assert(seasonManager.nameAvailable(newPrivateLeague.name));
     assert(seasonManager.canAffordPrivateLeague(Principal.toText(caller)));
-    return #ok(await seasonManager.createPrivateLeague(newPrivateLeague));
+    return await seasonManager.createPrivateLeague(newPrivateLeague);
   };
 
   public shared ({ caller }) func searchUsername(username: Text) : async Result.Result<DTOs.ManagerDTO, T.Error> {
@@ -510,7 +510,7 @@ actor Self {
     return await seasonManager.getManagerByUsername(username);
   };
 
-  public shared ({ caller }) func inviteUserToLeague(canisterId: T.CanisterId, managerId: T.PrincipalId) : Result.Result<(), T.Error> {
+  public shared ({ caller }) func inviteUserToLeague(canisterId: T.CanisterId, managerId: T.PrincipalId) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     assert await seasonManager.isLeagueAdmin(canisterId, Principal.toText(caller));
 
@@ -522,25 +522,25 @@ actor Self {
     return await seasonManager.inviteUserToLeague(canisterId, managerId);
   };
 
-  public shared ({ caller }) func updateLeaguePicture(canisterId: T.CanisterId, picture: Blob) : Result.Result<(), T.Error> {
+  public shared ({ caller }) func updateLeaguePicture(canisterId: T.CanisterId, picture: Blob) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     assert await seasonManager.isLeagueAdmin(canisterId, Principal.toText(caller));
     await seasonManager.updateLeaguePicture(canisterId, picture);
   };
 
-  public shared ({ caller }) func updateLeagueBanner(canisterId: T.CanisterId, banner: Blob) : Result.Result<(), T.Error> {
+  public shared ({ caller }) func updateLeagueBanner(canisterId: T.CanisterId, banner: Blob) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     assert await seasonManager.isLeagueAdmin(canisterId, Principal.toText(caller));
     await seasonManager.updateLeagueBanner(canisterId, banner);
   };
 
-  public shared ({ caller }) func updateLeagueName(canisterId: T.CanisterId, name: Text) : Result.Result<(), T.Error> {
+  public shared ({ caller }) func updateLeagueName(canisterId: T.CanisterId, name: Text) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     assert await seasonManager.isLeagueAdmin(canisterId, Principal.toText(caller));
     await seasonManager.updateLeagueName(canisterId, name);
   };
 
-  public shared ({ caller }) func acceptLeagueInvite(canisterId: T.CanisterId){
+  public shared ({ caller }) func acceptLeagueInvite(canisterId: T.CanisterId) : async Result.Result<(), T.Error>{
     assert not Principal.isAnonymous(caller);
     assert(await seasonManager.leagueHasSpace(canisterId));
 
@@ -550,7 +550,7 @@ actor Self {
     return await seasonManager.acceptLeagueInvite(canisterId, Principal.toText(caller));
   };
 
-  public shared ({ caller }) func enterLeague(canisterId: T.CanisterId) : async () {
+  public shared ({ caller }) func enterLeague(canisterId: T.CanisterId) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     assert(await seasonManager.leagueHasSpace(canisterId));
 
@@ -562,11 +562,13 @@ actor Self {
       case (#FreeEntry){
         await seasonManager.enterLeague(canisterId, Principal.toText(caller));
       };
-      case _ {};
+      case _ {
+        return (#err(#NotFound));
+      };
     };
   };
 
-  public shared ({ caller }) func enterLeagueWithFee(canisterId: T.CanisterId) : async () {
+  public shared ({ caller }) func enterLeagueWithFee(canisterId: T.CanisterId) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     assert(await seasonManager.leagueHasSpace(canisterId));
 
@@ -574,7 +576,7 @@ actor Self {
     assert not isLeagueMember;
 
     //check the user can afford the entry fee
-    assert(treasuryManager.canAffordEntryFee(Principal.toText(caller)));
+    assert(treasuryManager.canAffordEntryFee(canisterId, Principal.toText(caller)));
 
     //Pay the league entry fee
     await treasuryManager.payEntryFee(canisterId, Principal.toText(caller));
@@ -583,7 +585,7 @@ actor Self {
     await seasonManager.enterLeagueWithFee(canisterId, Principal.toText(caller));
   };
 
-  public shared ({ caller }) func acceptInviteAndPayFee(canisterId: T.CanisterId) : async () {
+  public shared ({ caller }) func acceptInviteAndPayFee(canisterId: T.CanisterId) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     assert(await seasonManager.leagueHasSpace(canisterId));
 
@@ -600,7 +602,7 @@ actor Self {
     await treasuryManager.payEntryFee(canisterId, Principal.toText(caller));
 
     //add the user to the league
-    await seasonManager.acceptInviteAndPayFee(canisterId, Principal.toText(caller));
+    await seasonManager.acceptInvite(canisterId, Principal.toText(caller));
   };
 
   public shared ({ caller }) func getTokenList() : async Result.Result<[T.TokenInfo], T.Error> {
