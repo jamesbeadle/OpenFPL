@@ -102,6 +102,14 @@ module {
 
     };
 
+    public func updateLeagueBanner(canisterId: T.CanisterId, banner: Blob) : async (){
+
+    };
+
+    public func updateLeagueName(canisterId: T.CanisterId, text: Text) : async (){
+
+    };
+
     public func calculateLeaderboards() : async (){
       for(canisterId in Iter.fromArray(privateLeagueCanisterIds)){
         let private_league_canister = actor (canisterId) : actor {

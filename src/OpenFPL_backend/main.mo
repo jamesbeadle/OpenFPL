@@ -513,6 +513,24 @@ actor Self {
     return await seasonManager.inviteUserToLeague(canisterId, managerId);
   };
 
+  public shared ({ caller }) func updateLeaguePicture(canisterId: T.CanisterId, picture: Blob) : async () {
+    assert not Principal.isAnonymous(caller);
+    assert await seasonManager.isLeagueAdmin(canisterId, Principal.toText(caller));
+    await seasonManager.updateLeaguePicture(canisterId, picture);
+  };
+
+  public shared ({ caller }) func updateLeagueBanner(canisterId: T.CanisterId, banner: Blob) : async () {
+    assert not Principal.isAnonymous(caller);
+    assert await seasonManager.isLeagueAdmin(canisterId, Principal.toText(caller));
+    await seasonManager.updateLeagueBanner(canisterId, banner);
+  };
+
+  public shared ({ caller }) func updateLeagueName(canisterId: T.CanisterId, name: Text) : async () {
+    assert not Principal.isAnonymous(caller);
+    assert await seasonManager.isLeagueAdmin(canisterId, Principal.toText(caller));
+    await seasonManager.updateLeagueName(canisterId, name);
+  };
+
   public shared ({ caller }) func acceptLeagueInvite(canisterId: T.CanisterId){
     assert not Principal.isAnonymous(caller);
     assert(await seasonManager.leagueHasSpace(canisterId));
@@ -523,40 +541,13 @@ actor Self {
     return await seasonManager.acceptLeagueInvite(canisterId, Principal.toText(caller));
   };
 
-  public shared ({ caller }) func updateLeaguePicture(canisterId: T.CanisterId, picture: Blob) : async () {
-    assert not Principal.isAnonymous(caller);
-    assert await seasonManager.isLeagueAdmin(canisterId, Principal.toText(caller));
-    await seasonManager.updateLeaguePicture(canisterId, picture);
-  };
+  //enterleaguewithfee
+
+  //acceptinviteandpayfee
+
+  //get token list
 
 /*
-
-
-
-
-  public shared ({ caller }) func updateLeagueBannerPicture() : async () {
-    assert not Principal.isAnonymous(caller);
-    assert(await privateLeaguesManager.isLeagueMember(canisterId, Principal.toText(caller)));
-
-  };
-
-  public shared func updateLeagueName() : async () {
-    assert not Principal.isAnonymous(caller);
-    assert(await privateLeaguesManager.isLeagueMember(canisterId, Principal.toText(caller)));
-
-  };
-
-  public shared func updateLeagueColours() : async () {
-    assert not Principal.isAnonymous(caller);
-    assert(await privateLeaguesManager.isLeagueMember(canisterId, Principal.toText(caller)));
-
-  };
-
-  public shared func acceptLeagueInvite() : async () {
-    assert not Principal.isAnonymous(caller);
-    assert(await privateLeaguesManager.isLeagueMember(canisterId, Principal.toText(caller)));
-    //check max 10000
-  };
 
   public shared func payLeagueEntryFee() : async () {
     assert not Principal.isAnonymous(caller);

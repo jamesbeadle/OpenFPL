@@ -925,6 +925,14 @@ module {
       return await privateLeaguesManager.updateLeaguePicture(canisterId, picture);
     };
 
+    public func updateLeagueBanner(canisterId: T.CanisterId, banner: Blob) : async () {
+      return await privateLeaguesManager.updateLeagueBanner(canisterId, banner);
+    };
+
+    public func updateLeagueName(canisterId: T.CanisterId, name: Text) : async () {
+      return await privateLeaguesManager.updateLeagueName(canisterId, name);
+    };
+
 
     //Stable data getters and setters:
 
