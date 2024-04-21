@@ -430,7 +430,7 @@ actor Self {
 
 
   //Private league functions
-
+  //TODO
   public shared ({ caller }) func getPrivateLeagues() : async Result.Result<DTOs.PrivateLeaguesDTO, T.Error> {
     let privateLeagues: DTOs.PrivateLeaguesDTO = {
       entries = [];
@@ -587,6 +587,9 @@ actor Self {
   private stable var stable_monthly_leaderboard_canisters : [T.MonthlyLeaderboardCanister] = [];
   private stable var stable_weekly_leaderboard_canisters : [T.WeeklyLeaderboardCanister] = [];
 
+  //Private Leagues
+  private stable var stable_private_league_canister_ids: [T.CanisterId] = [];
+
   private stable var stable_timers : [T.TimerInfo] = [];
   private stable var stable_canister_ids : [Text] = [];
 
@@ -637,6 +640,9 @@ actor Self {
     stable_season_leaderboard_canisters := seasonManager.getStableSeasonLeaderboardCanisters();
     stable_monthly_leaderboard_canisters := seasonManager.getStableMonthlyLeaderboardCanisters();
     stable_weekly_leaderboard_canisters := seasonManager.getStableWeeklyLeaderboardCanisters();
+
+    //Private Leagues
+    stable_private_league_canister_ids := seasonManager.getStablePrivateLeagueCanisterIds();
 
     stable_timers := timers;
     stable_canister_ids := cyclesDispenser.getStableCanisterIds();
@@ -769,11 +775,6 @@ actor Self {
 
 
   //Canister cycle topup functions
-
-  //Need to loop through all the possible canisters that have been created
-    //check the cycles balance
-    //topup if needed
-  
   
   private func setCheckCyclesTimer() : async () {
     switch (cyclesCheckTimerId) {

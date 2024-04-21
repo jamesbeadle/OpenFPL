@@ -2,12 +2,21 @@
 import T "types";
 import DTOs "DTOs";
 import Result "mo:base/Result";
+import Iter "mo:base/Iter";
 
 module {
 
   public class PrivateLeaguesManager() {
     
-    //let allPrivateLeagues //todo 
+    private var privateLeagueCanisterIds: [T.CanisterId] = [];
+
+    public func getStablePrivateLeagueCanisterIds() : [T.CanisterId] {
+      return privateLeagueCanisterIds;
+    };
+
+    public func setStablePrivateLeagueCanisterIds(stable_private_league_canister_ids: [T.CanisterId]) {
+      privateLeagueCanisterIds := stable_private_league_canister_ids;
+    };
 
     public func isLeagueMember(canisterId: T.CanisterId, callerId: T.PrincipalId) : async Bool {
       let private_league_canister = actor (canisterId) : actor {
@@ -74,7 +83,13 @@ module {
     };
 
     public func calculateLeaderboards() : async (){
-      //for each private league loop through and calculate the leaderboards and pay rewards
+      for(canisterId in Iter.fromArray(privateLeagueCanisterIds)){
+        let private_league_canister = actor (canisterId) : actor {
+          calculateLeaderboard : () -> async ();
+        };
+
+        return await private_league_canister.calculateLeaderboard();
+      };
     };
 
   };

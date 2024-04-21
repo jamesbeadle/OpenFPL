@@ -1152,6 +1152,14 @@ module {
       dataCacheHashes := List.fromArray(stable_data_cache_hashes);
     };
 
+    public func getStablePrivateLeagueCanisterIds() : [T.CanisterId] {
+      return privateLeaguesManager.getStablePrivateLeagueCanisterIds();
+    };
+
+    public func setStablePrivateLeagueCanisterIds(stable_private_league_canister_ids: [T.CanisterId]) {
+      privateLeaguesManager.setStablePrivateLeagueCanisterIds(stable_private_league_canister_ids);
+    };
+
 
     //Temp functions
 
