@@ -917,6 +917,14 @@ module {
       return await privateLeaguesManager.inviteUserToLeague(canisterId, managerId);
     };
 
+    public func acceptLeagueInvite(canisterId: T.CanisterId, managerId: T.PrincipalId) : async () {
+      return await privateLeaguesManager.acceptLeagueInvite(canisterId, managerId);
+    };
+
+    public func updateLeaguePicture(canisterId: T.CanisterId, picture: Blob) : async () {
+      return await privateLeaguesManager.updateLeaguePicture(canisterId, picture);
+    };
+
 
     //Stable data getters and setters:
 

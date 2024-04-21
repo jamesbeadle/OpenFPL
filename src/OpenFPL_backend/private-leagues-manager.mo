@@ -71,7 +71,7 @@ module {
     };
 
     public func createPrivateLeague(newPrivateLeague: DTOs.CreatePrivateLeagueDTO) : async () {
-
+      //TODO: TAKE PAYMENT
     };
 
     public func leagueHasSpace(canisterId: T.CanisterId) : async Bool {
@@ -91,6 +91,14 @@ module {
     };
 
     public func inviteUserToLeague(canisterId: T.CanisterId, managerId: T.PrincipalId) : async (){
+
+    };
+
+    public func acceptLeagueInvite(canisterId: T.CanisterId, managerId: T.PrincipalId) : async (){
+
+    };
+
+    public func updateLeaguePicture(canisterId: T.CanisterId, picture: Blob) : async (){
 
     };
 
