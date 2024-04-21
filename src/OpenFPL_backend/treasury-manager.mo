@@ -79,6 +79,7 @@ module {
     };
 
     public func executeAddNewToken(newTokenDTO : DTOs.NewTokenDTO) : async () {
+      //TODO: Add the new token
       
     };
 

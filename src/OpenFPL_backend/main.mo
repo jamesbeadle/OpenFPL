@@ -558,8 +558,13 @@ actor Self {
     assert not isLeagueMember;
 
     //check the league is free entry
+    let league = await seasonManager.getPrivateLeague(canisterId);
+    if(not league.entryType == #FreeEntry){
+      return;
+    };
 
     //add the user to the league
+    await seasonManager.enterLeague(canisterId, Principal.toText(caller));
   };
 
   public shared ({ caller }) func enterLeagueWithFee(canisterId: T.CanisterId) : async () {
@@ -570,8 +575,13 @@ actor Self {
     assert not isLeagueMember;
 
     //check the user can afford the entry fee
+    assert(treasuryManager.canAffordEntryFee(Principal.toText(caller)));
+
+    //Pay the league entry fee
+    await treasuryManager.payEntryFee(canisterId, Principal.toText(caller));
 
     //add the user to the league
+    await seasonManager.enterLeagueWithFee(canisterId, Principal.toText(caller));
   };
 
   public shared ({ caller }) func acceptInviteAndPayFee(canisterId: T.CanisterId) : async () {
@@ -582,7 +592,16 @@ actor Self {
     assert not isLeagueMember;
 
     //check they have an invite
+    assert(seasonManager.inviteExists(canisterId, Principal.toText(caller)));
+
     //check they can afford the fee
+    assert(treasuryManager.canAffordEntryFee(Principal.toText(caller)));
+
+    //Pay the league entry fee
+    await treasuryManager.payEntryFee(canisterId, Principal.toText(caller));
+
+    //add the user to the league
+    await seasonManager.acceptInviteAndPayFee(canisterId, Principal.toText(caller));
   };
 
   public shared ({ caller }) func getTokenList() : async Result.Result<[T.TokenInfo], T.Error> {
