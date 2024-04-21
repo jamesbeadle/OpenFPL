@@ -496,12 +496,12 @@ actor Self {
     return #ok(await seasonManager.createPrivateLeague(newPrivateLeague));
   };
 
+  public shared ({ caller }) func searchUsername(username: Text) : async Result.Result<DTOs.ManagerDTO, T.Error> {
+    assert not Principal.isAnonymous(caller);
+    return await seasonManager.getManagerByUsername(username);
+  };
 /*
 
-  public shared ({ caller }) func searchUsername(username: Text) : async Result.Result<DTOs.LeagueMemberDTO, T.Error> {
-    assert not Principal.isAnonymous(caller);
-    return await seasonManager.getUserbyUsername(username);
-  };
 
   public shared ({ caller }) func inviteUserToLeague() : async () {
     assert not Principal.isAnonymous(caller);

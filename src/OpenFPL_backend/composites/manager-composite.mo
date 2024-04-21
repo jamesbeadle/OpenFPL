@@ -125,6 +125,64 @@ module {
       };
     };
 
+    public func getManagerByUsername(username : Text) : async Result.Result<DTOs.ManagerDTO, T.Error> {
+
+      for (managerUsername in managerUsernames.entries()){
+        if(managerUsername.1 == username){
+          let managerPrincipalId = managerUsername.0;
+          let managerCanisterId = managerCanisterIds.get(managerPrincipalId);
+          switch(managerCanisterId){
+            case null { return #err(#NotFound) };
+            case (?foundCanisterId) {
+              let manager_canister = actor (foundCanisterId) : actor {
+                getManager : T.PrincipalId -> async ?T.Manager;
+              };
+
+              let manager = await manager_canister.getManager(managerPrincipalId);
+              switch (manager) {
+                case (null) {
+                  return #err(#NotFound);
+                };
+                case (?foundManager) {
+                  
+                  var weeklyPosition : Int = 0;
+                  var weeklyPoints : Int16 = 0;
+                  var monthlyPosition : Int = 0;
+                  var monthlyPoints : Int16 = 0;
+                  var seasonPosition : Int = 0;
+                  var seasonPoints : Int16 = 0;
+                  var weeklyPositionText = "N/A";
+                  var monthlyPositionText = "N/A";
+                  var seasonPositionText = "N/A";
+                  
+                  let managerDTO : DTOs.ManagerDTO = {
+                    principalId = managerPrincipalId;
+                    username = foundManager.username;
+                    profilePicture = foundManager.profilePicture;
+                    favouriteClubId = foundManager.favouriteClubId;
+                    createDate = foundManager.createDate;
+                    gameweeks = [];
+                    weeklyPosition = weeklyPosition;
+                    monthlyPosition = monthlyPosition;
+                    seasonPosition = seasonPosition;
+                    weeklyPositionText = weeklyPositionText;
+                    monthlyPositionText = monthlyPositionText;
+                    seasonPositionText = seasonPositionText;
+                    weeklyPoints = weeklyPoints;
+                    monthlyPoints = monthlyPoints;
+                    seasonPoints = seasonPoints;
+                    privateLeagueMemberships = List.toArray(foundManager.privateLeagueMemberships);
+                  };
+                  return #ok(managerDTO);
+                };
+              };
+            }
+          };
+        };
+      };
+      return #err(#NotFound);
+    };
+
     public func getProfile(principalId : Text) : async Result.Result<DTOs.ProfileDTO, T.Error> {
       let emptyDTO : DTOs.ProfileDTO = {
         principalId = principalId;

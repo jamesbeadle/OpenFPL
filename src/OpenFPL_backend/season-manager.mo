@@ -233,6 +233,10 @@ module {
       return await managerComposite.getManager(principalId, systemState.calculationSeasonId, weeklyLeaderboardEntry, monthlyLeaderboardEntry, seasonLeaderboardEntry);
     };
 
+    public func getManagerByUsername(username: Text) : async Result.Result<DTOs.ManagerDTO, T.Error> {
+      return await managerComposite.getManagerByUsername(username);
+    };
+
     public func getTotalManagers() : Nat {
       return managerComposite.getTotalManagers();
     };
