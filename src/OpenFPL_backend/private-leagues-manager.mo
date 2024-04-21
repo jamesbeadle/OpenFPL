@@ -82,6 +82,18 @@ module {
       return await private_league_canister.leagueHasSpace();
     };
 
+    public func isLeagueAdmin(canisterId: T.CanisterId, principalId: T.PrincipalId) : async Bool {
+      let private_league_canister = actor (canisterId) : actor {
+        isLeagueAdmin : (principalId: T.PrincipalId) -> async Bool;
+      };
+
+      return await private_league_canister.isLeagueAdmin(principalId);
+    };
+
+    public func inviteUserToLeague(canisterId: T.CanisterId, managerId: T.PrincipalId) : async (){
+
+    };
+
     public func calculateLeaderboards() : async (){
       for(canisterId in Iter.fromArray(privateLeagueCanisterIds)){
         let private_league_canister = actor (canisterId) : actor {

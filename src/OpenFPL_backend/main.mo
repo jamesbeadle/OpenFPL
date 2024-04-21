@@ -500,15 +500,22 @@ actor Self {
     assert not Principal.isAnonymous(caller);
     return await seasonManager.getManagerByUsername(username);
   };
+
+  public shared ({ caller }) func inviteUserToLeague(canisterId: T.CanisterId, managerId: T.PrincipalId) : async () {
+    assert not Principal.isAnonymous(caller);
+    assert await seasonManager.isLeagueAdmin(canisterId, Principal.toText(caller));
+
+    assert(await seasonManager.leagueHasSpace(canisterId));
+    
+    let isLeagueMember = await seasonManager.isLeagueMember(canisterId, Principal.toText(caller));
+    assert not isLeagueMember;
+
+    return seasonManager.inviteUserToLeague(managerId);
+  };
+
 /*
 
 
-  public shared ({ caller }) func inviteUserToLeague() : async () {
-    assert not Principal.isAnonymous(caller);
-    assert(await privateLeaguesManager.leagueHasSpace(canisterId));
-    assert(await privateLeaguesManager.isLeagueMember(canisterId, Principal.toText(caller)));
-    return seasonManager.inviteUserToLeague(username);
-  };
 
   public shared ({ caller }) func updateLeagueProfilePicture() : async () {
     assert not Principal.isAnonymous(caller);

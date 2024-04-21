@@ -901,6 +901,22 @@ module {
       return privateLeaguesManager.canAffordPrivateLeague(caller);
     };
 
+    public func leagueHasSpace(canisterId: T.CanisterId) : async Bool {
+      return await privateLeaguesManager.leagueHasSpace(canisterId);
+    };
+
+    public func isLeagueMember(canisterId: T.CanisterId, managerId: T.PrincipalId) : async Bool {
+      return await privateLeaguesManager.isLeagueMember(canisterId, managerId);
+    };
+
+    public func isLeagueAdmin(canisterId: T.CanisterId, principalId: T.PrincipalId) : async Bool {
+      return await privateLeaguesManager.isLeagueAdmin(canisterId, principalId);
+    };
+
+    public func inviteUserToLeague(canisterId: T.CanisterId, managerId: T.PrincipalId) : async () {
+      return await privateLeaguesManager.inviteUserToLeague(canisterId, managerId);
+    };
+
 
     //Stable data getters and setters:
 

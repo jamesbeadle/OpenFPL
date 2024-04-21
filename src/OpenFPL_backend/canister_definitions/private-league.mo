@@ -1,5 +1,5 @@
 import T "../types";
-import DTOs "../dtos";
+import DTOs "../DTOs";
 import Cycles "mo:base/ExperimentalCycles";
 import Timer "mo:base/Timer";
 import Iter "mo:base/Iter";
@@ -27,14 +27,7 @@ actor class _PrivateLeague() {
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
         assert principalId == main_canister_id;
-
-        for(member in Iter.fromArray(leagueMembers)){
-            if(member.principalId == callerId){
-                return true;
-            }
-        };
-
-        return false;
+        
     };
 
     public shared ({ caller }) func isLeagueMember(callerId: T.PrincipalId) : async Bool {
@@ -49,6 +42,10 @@ actor class _PrivateLeague() {
         };
 
         return false;
+    };
+
+    public shared ({ caller }) func inviteUserToLeague(principalId: T.PrincipalId) : async (){
+        //send an invite to the user to join the league
     };
 
     public shared ({ caller }) func updateManager(manager: T.Manager){
