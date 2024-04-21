@@ -11,7 +11,7 @@ import Int "mo:base/Int";
 import Timer "mo:base/Timer";
 import Nat16 "mo:base/Nat16";
 import Countries "../Countries";
-import Utilities "../utilities";
+import Utilities "../utils/utilities";
 import Players "../../../testing/players";
 import TrieMap "mo:base/TrieMap";
 

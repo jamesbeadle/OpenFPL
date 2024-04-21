@@ -14,7 +14,7 @@ import Char "mo:base/Char";
 import TrieMap "mo:base/TrieMap";
 import Bool "mo:base/Bool";
 import Order "mo:base/Order";
-import Utilities "../utilities";
+import Utilities "../utils/utilities";
 
 module {
 

@@ -750,15 +750,31 @@ actor Self {
     beginOpenFPL();
   };
 
-  
+  //Canister wallet topup functions
 
+  private func checkCanisterWalletBalance() : async () {
+    let topupThreshold : Nat = 500_000_000_000_000;
+    let targetBalance : Nat = 1_000_000_000_000_000;
+    let available = Cycles.available();
 
-  public shared ({ caller }) func requestCanisterTopup() : async () {
-    assert not Principal.isAnonymous(caller);
-    let principalId = Principal.toText(caller);
-    await cyclesDispenser.requestCanisterTopup(principalId);
+    if (available < topupThreshold) {
+      await burnICPToCycles(Nat64.fromNat(targetBalance - available));
+    };
   };
 
+  public func burnICPToCycles(requestedCycles : Nat64) : async () {
+    let treasuryAccount = getTreasuryAccount();
+    await treasuryManager.sendICPForCycles(treasuryAccount, requestedCycles);
+  };
+
+
+  //Canister cycle topup functions
+
+  //Need to loop through all the possible canisters that have been created
+    //check the cycles balance
+    //topup if needed
+  
+  
   private func setCheckCyclesTimer() : async () {
     switch (cyclesCheckTimerId) {
       case (null) {};
@@ -771,6 +787,15 @@ actor Self {
     cyclesCheckTimerId := ?Timer.setTimer<system>(#nanoseconds(cyclesCheckInterval), checkCanisterCycles);
   };
 
+  
+
+
+  public shared ({ caller }) func requestCanisterTopup() : async () {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    await cyclesDispenser.requestCanisterTopup(principalId);
+  };
+
   private func checkCanisterCycles() : async () {
 
     let balance = Cycles.balance();
@@ -781,28 +806,16 @@ actor Self {
     await setCheckCyclesTimer();
   };
 
-  public func burnICPToCycles(requestedCycles : Nat64) : async () {
-    let treasuryAccount = getTreasuryAccount();
-    await treasuryManager.sendICPForCycles(treasuryAccount, requestedCycles);
-  };
-
   private func getTreasuryAccount() : Account.AccountIdentifier {
     let actorPrincipal : Principal = Principal.fromActor(Self);
     Account.accountIdentifier(actorPrincipal, Account.defaultSubaccount());
   };
 
-  private func checkCanisterWalletBalance() : async () {
-    let topupThreshold : Nat = 750_000_000_000_000;
-    let targetBalance : Nat = 1_000_000_000_000_000;
-    let available = Cycles.available();
 
-    if (available < topupThreshold) {
-      await burnICPToCycles(Nat64.fromNat(targetBalance - available));
-    };
-    await setCheckCyclesTimer();
-  };
 
-  var timers : [T.TimerInfo] = [];
+  //System timer functions
+
+  private var timers : [T.TimerInfo] = [];
   public func setTimer(time : Int, callbackName : Text) : async () {
     let duration : Timer.Duration = #seconds(Int.abs(time - Time.now()));
     await setAndBackupTimer(duration, callbackName);
@@ -911,6 +924,10 @@ actor Self {
     //Check the cycles balance on the wallet
 
     //Set the backend 
+
+    //relegate teams that went down
+
+    //set the system so you can pick team
   };
 
 };
