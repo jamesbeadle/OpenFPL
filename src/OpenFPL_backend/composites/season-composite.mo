@@ -309,11 +309,11 @@ module {
 
     };
 
-    public func validateSubmitFixtureData(submitFixtureDataDTO : DTOs.SubmitFixtureDataDTO) : Result.Result<Text, Text> {
+    public func validateSubmitFixtureData(submitFixtureDataDTO : DTOs.SubmitFixtureDataDTO) : T.RustResult {
 
       let validPlayerEvents = validatePlayerEvents(submitFixtureDataDTO.playerEventData);
       if (not validPlayerEvents) {
-        return #err("Invalid: Player events are not valid.");
+        return #Err("Invalid: Player events are not valid.");
       };
 
       let currentSeason = List.find<T.Season>(
@@ -325,7 +325,7 @@ module {
 
       switch (currentSeason) {
         case (null) {
-          return #err("Invalid: Cannot find season.");
+          return #Err("Invalid: Cannot find season.");
         };
         case (?foundSeason) {
           let fixture = List.find<T.Fixture>(
@@ -336,18 +336,18 @@ module {
           );
           switch (fixture) {
             case (null) {
-              return #err("Invalid: Cannot find fixture.");
+              return #Err("Invalid: Cannot find fixture.");
             };
             case (?foundFixture) {
               if (foundFixture.status != #Complete) {
-                return #err("Invalid: Fixture status is not set to complete.");
+                return #Err("Invalid: Fixture status is not set to complete.");
               };
             };
           };
         };
       };
 
-      return #ok("Valid");
+      return #Ok();
     };
 
     private func validatePlayerEvents(playerEvents : [T.PlayerEventData]) : Bool {
@@ -947,7 +947,7 @@ module {
       return false;
     };
 
-    public func validateAddInitialFixtures(addInitialFixturesDTO : DTOs.AddInitialFixturesDTO, clubs : [T.Club]) : Result.Result<Text, Text> {
+    public func validateAddInitialFixtures(addInitialFixturesDTO : DTOs.AddInitialFixturesDTO, clubs : [T.Club]) : T.RustResult {
 
       let currentSeason = List.find(
         seasons,
@@ -957,7 +957,7 @@ module {
       );
       switch (currentSeason) {
         case (null) {
-          return #err("Invalid: Season does not exist.");
+          return #Err("Invalid: Season does not exist.");
         };
         case (?foundSeason) {
           //ensure all fixtures have the current seasons id
@@ -969,11 +969,11 @@ module {
           );
 
           if (List.size(filteredFixtures) > 0) {
-            return #err("Invalid: Fixtures not for current season.");
+            return #Err("Invalid: Fixtures not for current season.");
           };
 
           if (Array.size(addInitialFixturesDTO.seasonFixtures) != 380) {
-            return #err("Invalid: There must be 380 fixtures for a season.");
+            return #Err("Invalid: There must be 380 fixtures for a season.");
           };
 
           let clubIds = Array.map<T.Club, T.ClubId>(clubs, func(c : T.Club) : T.ClubId { return c.id });
@@ -988,7 +988,7 @@ module {
 
           let uniqueClubIds = Buffer.toArray<T.ClubId>(uniqueClubIdsBuffer);
           if (Array.size(uniqueClubIds) != 20) {
-            return #err("Invalid: There must be exactly 20 teams for a season.");
+            return #Err("Invalid: There must be exactly 20 teams for a season.");
           };
 
           let homeFixtureMap : TrieMap.TrieMap<T.ClubId, Int> = TrieMap.TrieMap<T.ClubId, Int>(Utilities.eqNat16, Utilities.hashNat16);
@@ -1023,20 +1023,20 @@ module {
 
           for (map in homeFixtureMap.entries()) {
             if (map.1 != 19) {
-              return #err("Invlid: Each team must have 19 home games.");
+              return #Err("Invlid: Each team must have 19 home games.");
             };
           };
 
           for (map in awayFixtureMap.entries()) {
             if (map.1 != 19) {
-              return #err("Invlid: Each team must have 19 away games.");
+              return #Err("Invlid: Each team must have 19 away games.");
             };
           };
 
         };
       };
 
-      return #ok("Valid");
+      return #Ok();
     };
 
     public func executeAddInitialFixtures(addInitialFixturesDTO : DTOs.AddInitialFixturesDTO) : async () {
@@ -1096,7 +1096,7 @@ module {
       return result;
     };
 
-    public func validateMoveFixture(moveFixtureDTO : DTOs.MoveFixtureDTO, systemState : T.SystemState) : Result.Result<Text, Text> {
+    public func validateMoveFixture(moveFixtureDTO : DTOs.MoveFixtureDTO, systemState : T.SystemState) : T.RustResult {
       let currentSeason = List.find(
         seasons,
         func(season : T.Season) : Bool {
@@ -1105,15 +1105,15 @@ module {
       );
       switch (currentSeason) {
         case (null) {
-          return #err("Invalid: Season does not exist.");
+          return #Err("Invalid: Season does not exist.");
         };
         case (?foundSeason) {
           if (moveFixtureDTO.updatedFixtureDate < Time.now()) {
-            return #err("Invalid: Fixture date in the past.");
+            return #Err("Invalid: Fixture date in the past.");
           };
 
           if (moveFixtureDTO.updatedFixtureGameweek < systemState.pickTeamGameweek) {
-            return #err("Invalid: Fixture gameweek in the past.");
+            return #Err("Invalid: Fixture gameweek in the past.");
           };
 
           let fixture = List.find(
@@ -1125,18 +1125,18 @@ module {
 
           switch (fixture) {
             case (null) {
-              return #err("Invalid: Cannot find fixture.");
+              return #Err("Invalid: Cannot find fixture.");
             };
             case (?foundFixture) {
               if (foundFixture.status == #Finalised) {
-                return #err("Invalid: Cannot reschedule finalised fixture.");
+                return #Err("Invalid: Cannot reschedule finalised fixture.");
               };
             };
           };
         };
       };
 
-      return #ok("Valid");
+      return #Ok();
     };
 
     public func executeMoveFixture(moveFixtureDTO : DTOs.MoveFixtureDTO, systemState : T.SystemState) : async () {
@@ -1180,7 +1180,7 @@ module {
       );
     };
 
-    public func validatePostponeFixture(postponeFixtureDTO : DTOs.PostponeFixtureDTO, systemState : T.SystemState) : Result.Result<Text, Text> {
+    public func validatePostponeFixture(postponeFixtureDTO : DTOs.PostponeFixtureDTO, systemState : T.SystemState) : T.RustResult {
       let currentSeason = List.find(
         seasons,
         func(season : T.Season) : Bool {
@@ -1189,7 +1189,7 @@ module {
       );
       switch (currentSeason) {
         case (null) {
-          return #err("Invalid: Season does not exist.");
+          return #Err("Invalid: Season does not exist.");
         };
         case (?foundSeason) {
 
@@ -1202,18 +1202,18 @@ module {
 
           switch (fixture) {
             case (null) {
-              return #err("Invalid: Cannot find fixture.");
+              return #Err("Invalid: Cannot find fixture.");
             };
             case (?foundFixture) {
               if (foundFixture.status == #Finalised) {
-                return #err("Invalid: Cannot postpone finalised fixture.");
+                return #Err("Invalid: Cannot postpone finalised fixture.");
               };
             };
           };
         };
       };
 
-      return #ok("Valid");
+      return #Ok();
     };
 
     public func executePostponeFixture(postponeFixtureDTO : DTOs.PostponeFixtureDTO, systemState : T.SystemState) : async () {
@@ -1259,7 +1259,7 @@ module {
       );
     };
 
-    public func validateRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO, systemState : T.SystemState) : Result.Result<Text, Text> {
+    public func validateRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO, systemState : T.SystemState) : T.RustResult {
       let currentSeason = List.find(
         seasons,
         func(season : T.Season) : Bool {
@@ -1268,7 +1268,7 @@ module {
       );
       switch (currentSeason) {
         case (null) {
-          return #err("Invalid: Season does not exist.");
+          return #Err("Invalid: Season does not exist.");
         };
         case (?foundSeason) {
 
@@ -1281,18 +1281,18 @@ module {
 
           switch (fixture) {
             case (null) {
-              return #err("Invalid: Cannot find postponed fixture.");
+              return #Err("Invalid: Cannot find postponed fixture.");
             };
             case (?foundFixture) {
               if (foundFixture.status == #Finalised) {
-                return #err("Invalid: Cannot reschedule finalised fixture.");
+                return #Err("Invalid: Cannot reschedule finalised fixture.");
               };
             };
           };
         };
       };
 
-      return #ok("Valid");
+      return #Ok();
     };
 
     public func executeRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO, systemState : T.SystemState) : async () {

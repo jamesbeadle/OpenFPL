@@ -40,20 +40,20 @@ module {
       return sortedArray;
     };
 
-    public func validatePromoteFormerClub(promoteFormerClubDTO : DTOs.PromoteFormerClubDTO) : Result.Result<Text, Text> {
+    public func validatePromoteFormerClub(promoteFormerClubDTO : DTOs.PromoteFormerClubDTO) : T.RustResult {
       if (List.size(clubs) >= 20) {
-        return #err("Invalid: League cannot contain more than 20 teams.");
+        return #Err("Invalid: League cannot contain more than 20 teams.");
       };
 
       let clubToPromote = List.find<T.Club>(relegatedClubs, func(c : T.Club) { c.id == promoteFormerClubDTO.clubId });
       switch (clubToPromote) {
         case (null) {
-          return #err("Invalid: Cannot find relegated club.");
+          return #Err("Invalid: Cannot find relegated club.");
         };
         case (?foundClub) {};
       };
 
-      return #ok("Valid");
+      return #Ok();
     };
 
     public func executePromoteFormerClub(promoteFormerClubDTO : DTOs.PromoteFormerClubDTO) : async () {
@@ -72,37 +72,37 @@ module {
       };
     };
 
-    public func validatePromoteNewClub(promoteNewClubDTO : DTOs.PromoteNewClubDTO) : Result.Result<Text, Text> {
+    public func validatePromoteNewClub(promoteNewClubDTO : DTOs.PromoteNewClubDTO) : T.RustResult {
 
       if (List.size(clubs) >= 20) {
-        return #err("Invalid: League cannot contain more than 20 teams.");
+        return #Err("Invalid: League cannot contain more than 20 teams.");
       };
 
       if (Text.size(promoteNewClubDTO.name) > 100) {
-        return #err("Invalid: Club name cannot be greater than 100 characters.");
+        return #Err("Invalid: Club name cannot be greater than 100 characters.");
       };
 
       if (Text.size(promoteNewClubDTO.friendlyName) > 50) {
-        return #err("Invalid: Club friendly name cannot be greater than 50 characters.");
+        return #Err("Invalid: Club friendly name cannot be greater than 50 characters.");
       };
 
       if (Text.size(promoteNewClubDTO.abbreviatedName) != 3) {
-        return #err("Invalid: Club abbreviated name must be 3 characters.");
+        return #Err("Invalid: Club abbreviated name must be 3 characters.");
       };
 
       if (not Utilities.validateHexColor(promoteNewClubDTO.primaryColourHex)) {
-        return #err("Invalid: Invalid primary hex colour.");
+        return #Err("Invalid: Invalid primary hex colour.");
       };
 
       if (not Utilities.validateHexColor(promoteNewClubDTO.secondaryColourHex)) {
-        return #err("Invalid: Invalid secondary hex colour.");
+        return #Err("Invalid: Invalid secondary hex colour.");
       };
 
       if (not Utilities.validateHexColor(promoteNewClubDTO.thirdColourHex)) {
-        return #err("Invalid: Invalid third hex colour.");
+        return #Err("Invalid: Invalid third hex colour.");
       };
 
-      return #ok("Valid");
+      return #Ok();
     };
 
     public func executePromoteNewClub(promoteNewClubDTO : DTOs.PromoteNewClubDTO) : async () {
@@ -120,7 +120,7 @@ module {
       nextClubId += 1;
     };
 
-    public func validateUpdateClub(updateClubDTO : DTOs.UpdateClubDTO) : Result.Result<Text, Text> {
+    public func validateUpdateClub(updateClubDTO : DTOs.UpdateClubDTO) : T.RustResult {
       let club = List.find(
         clubs,
         func(c : T.Club) : Bool {
@@ -130,37 +130,37 @@ module {
 
       switch (club) {
         case (null) {
-          return #err("Invalid: No club found to update.");
+          return #Err("Invalid: No club found to update.");
         };
         case (?foundTeam) {
 
           if (Text.size(foundTeam.name) > 100) {
-            return #err("Invalid: Club name must be less than 100 characters.");
+            return #Err("Invalid: Club name must be less than 100 characters.");
           };
 
           if (Text.size(foundTeam.friendlyName) > 50) {
-            return #err("Invalid: Club friendly name must be less than 50 characters.");
+            return #Err("Invalid: Club friendly name must be less than 50 characters.");
           };
 
           if (Text.size(foundTeam.abbreviatedName) != 3) {
-            return #err("Invalid: Club abbreviated name must be 3 characters.");
+            return #Err("Invalid: Club abbreviated name must be 3 characters.");
           };
 
           if (not Utilities.validateHexColor(foundTeam.primaryColourHex)) {
-            return #err("Invalid: Primary hex colour invalid.");
+            return #Err("Invalid: Primary hex colour invalid.");
           };
 
           if (not Utilities.validateHexColor(foundTeam.secondaryColourHex)) {
-            return #err("Invalid: Secondary hex colour invalid.");
+            return #Err("Invalid: Secondary hex colour invalid.");
           };
 
           if (not Utilities.validateHexColor(foundTeam.thirdColourHex)) {
-            return #err("Invalid: Third hex colour invalid.");
+            return #Err("Invalid: Third hex colour invalid.");
           };
         };
       };
 
-      return #ok("Valid");
+      return #Ok();
     };
 
     public func executeUpdateClub(updateClubDTO : DTOs.UpdateClubDTO) : async () {

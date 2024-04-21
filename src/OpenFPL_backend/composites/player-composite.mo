@@ -376,7 +376,7 @@ module {
       };
     };
 
-    public func validateRevaluePlayerUp(revaluePlayerUpDTO : DTOs.RevaluePlayerUpDTO) : Result.Result<Text, Text> {
+    public func validateRevaluePlayerUp(revaluePlayerUpDTO : DTOs.RevaluePlayerUpDTO) : T.RustResult {
       let player = List.find<T.Player>(
         players,
         func(p : T.Player) : Bool {
@@ -386,12 +386,12 @@ module {
 
       switch (player) {
         case (null) {
-          return #err("Invalid: Cannot find player.");
+          return #Err("Invalid: Cannot find player.");
         };
         case (?foundPlayer) {};
       };
 
-      return #ok("Valid");
+      return #Ok();
     };
 
     public func executeRevaluePlayerUp(revaluePlayerUpDTO : DTOs.RevaluePlayerUpDTO, systemState : T.SystemState) : async () {
@@ -439,7 +439,7 @@ module {
       players := updatedPlayers;
     };
 
-    public func validateRevaluePlayerDown(revaluePlayerDownDTO : DTOs.RevaluePlayerDownDTO) : Result.Result<Text, Text> {
+    public func validateRevaluePlayerDown(revaluePlayerDownDTO : DTOs.RevaluePlayerDownDTO) : T.RustResult {
       let player = List.find<T.Player>(
         players,
         func(p : T.Player) : Bool {
@@ -449,11 +449,11 @@ module {
 
       switch (player) {
         case (null) {
-          return #err("Invalid: Cannot find player.");
+          return #Err("Invalid: Cannot find player.");
         };
         case (?foundPlayer) {};
       };
-      return #ok("Valid");
+      return #Ok();
     };
 
     public func executeRevaluePlayerDown(revaluePlayerDownDTO : DTOs.RevaluePlayerDownDTO, systemState : T.SystemState) : async () {
@@ -503,9 +503,9 @@ module {
       players := updatedPlayers;
     };
 
-    public func validateLoanPlayer(loanPlayerDTO : DTOs.LoanPlayerDTO, clubs : List.List<T.Club>) : Result.Result<Text, Text> {
+    public func validateLoanPlayer(loanPlayerDTO : DTOs.LoanPlayerDTO, clubs : List.List<T.Club>) : T.RustResult {
       if (loanPlayerDTO.loanEndDate <= Time.now()) {
-        return #err("Invalid: Loan end date must be in the future.");
+        return #Err("Invalid: Loan end date must be in the future.");
       };
 
       let player = List.find<T.Player>(
@@ -517,11 +517,11 @@ module {
 
       switch (player) {
         case (null) {
-          return #err("Invalid: Cannot find player to loan.");
+          return #Err("Invalid: Cannot find player to loan.");
         };
         case (?foundPlayer) {
           if (foundPlayer.status == #OnLoan) {
-            return #err("Invalid: Player already on loan.");
+            return #Err("Invalid: Player already on loan.");
           };
         };
       };
@@ -537,13 +537,13 @@ module {
 
         switch (loanClub) {
           case (null) {
-            return #err("Invalid: Loan club does not exist.");
+            return #Err("Invalid: Loan club does not exist.");
           };
           case (?foundTeam) {};
         };
       };
 
-      return #ok("Valid");
+      return #Ok();
     };
 
     public func executeLoanPlayer(loanPlayerDTO : DTOs.LoanPlayerDTO, systemState : T.SystemState) : async () {
@@ -604,7 +604,7 @@ module {
       };
     };
 
-    public func validateTransferPlayer(transferPlayerDTO : DTOs.TransferPlayerDTO, clubs : List.List<T.Club>) : Result.Result<Text, Text> {
+    public func validateTransferPlayer(transferPlayerDTO : DTOs.TransferPlayerDTO, clubs : List.List<T.Club>) : T.RustResult {
       let player = List.find<T.Player>(
         players,
         func(p : T.Player) : Bool {
@@ -614,7 +614,7 @@ module {
 
       switch (player) {
         case (null) {
-          return #err("Invalid: Cannot find player to transfer.");
+          return #Err("Invalid: Cannot find player to transfer.");
         };
         case (?foundPlayer) {};
       };
@@ -630,13 +630,13 @@ module {
 
         switch (newClub) {
           case (null) {
-            return #err("Invalid: New club does not exist.");
+            return #Err("Invalid: New club does not exist.");
           };
           case (?foundTeam) {};
         };
       };
 
-      return #ok("Valid");
+      return #Ok();
     };
 
     public func executeTransferPlayer(transferPlayerDTO : DTOs.TransferPlayerDTO, systemState : T.SystemState) : async () {
@@ -693,7 +693,7 @@ module {
       };
     };
 
-    public func validateRecallPlayer(recallPlayerDTO : DTOs.RecallPlayerDTO) : Result.Result<Text, Text> {
+    public func validateRecallPlayer(recallPlayerDTO : DTOs.RecallPlayerDTO) : T.RustResult {
       let player = List.find<T.Player>(
         players,
         func(p : T.Player) : Bool {
@@ -703,16 +703,16 @@ module {
 
       switch (player) {
         case (null) {
-          return #err("Invalid: Cannot find player to recall.");
+          return #Err("Invalid: Cannot find player to recall.");
         };
         case (?foundPlayer) {
           if (foundPlayer.status != #OnLoan) {
-            return #err("Invalid: Player is not on loan to recall.");
+            return #Err("Invalid: Player is not on loan to recall.");
           };
         };
       };
 
-      return #ok("Valid");
+      return #Ok();
     };
 
     public func executeRecallPlayer(recallPlayerDTO : DTOs.RecallPlayerDTO) : async () {
@@ -813,7 +813,7 @@ module {
       };
     };
 
-    public func validateCreatePlayer(createPlayerDTO : DTOs.CreatePlayerDTO, clubs : List.List<T.Club>) : Result.Result<Text, Text> {
+    public func validateCreatePlayer(createPlayerDTO : DTOs.CreatePlayerDTO, clubs : List.List<T.Club>) : T.RustResult {
 
       let newClub = List.find<T.Club>(
         clubs,
@@ -824,32 +824,32 @@ module {
 
       switch (newClub) {
         case (null) {
-          return #err("Invalid: Player club does not exist.");
+          return #Err("Invalid: Player club does not exist.");
         };
         case (?foundTeam) {};
       };
 
       if (Text.size(createPlayerDTO.firstName) > 50) {
-        return #err("Invalid: Player first name greater than 50 characters.");
+        return #Err("Invalid: Player first name greater than 50 characters.");
       };
 
       if (Text.size(createPlayerDTO.lastName) > 50) {
-        return #err("Invalid: Player last name greater than 50 characters.");
+        return #Err("Invalid: Player last name greater than 50 characters.");
       };
 
       let playerCountry = Array.find<T.Country>(Countries.countries, func(country : T.Country) : Bool { return country.id == createPlayerDTO.nationality });
       switch (playerCountry) {
         case (null) {
-          return #err("Invalid: Country not found.");
+          return #Err("Invalid: Country not found.");
         };
         case (?foundCountry) {};
       };
 
       if (Utilities.calculateAgeFromUnix(createPlayerDTO.dateOfBirth) < 16) {
-        return #err("Invalid: Player under 16 years of age.");
+        return #Err("Invalid: Player under 16 years of age.");
       };
 
-      return #ok("Valid");
+      return #Ok();
     };
 
     public func executeCreatePlayer(createPlayerDTO : DTOs.CreatePlayerDTO) : async () {
@@ -877,7 +877,7 @@ module {
       nextPlayerId += 1;
     };
 
-    public func validateUpdatePlayer(updatePlayerDTO : DTOs.UpdatePlayerDTO) : Result.Result<Text, Text> {
+    public func validateUpdatePlayer(updatePlayerDTO : DTOs.UpdatePlayerDTO) : T.RustResult {
 
       let player = List.find<T.Player>(
         players,
@@ -888,32 +888,32 @@ module {
 
       switch (player) {
         case (null) {
-          return #err("Invalid: Cannot find player to update.");
+          return #Err("Invalid: Cannot find player to update.");
         };
         case (?foundPlayer) {};
       };
 
       if (Text.size(updatePlayerDTO.firstName) > 50) {
-        return #err("Invalid: Player first name greater than 50 characters.");
+        return #Err("Invalid: Player first name greater than 50 characters.");
       };
 
       if (Text.size(updatePlayerDTO.lastName) > 50) {
-        return #err("Invalid: Player last name greater than 50 characters.");
+        return #Err("Invalid: Player last name greater than 50 characters.");
       };
 
       let playerCountry = Array.find<T.Country>(Countries.countries, func(country : T.Country) : Bool { return country.id == updatePlayerDTO.nationality });
       switch (playerCountry) {
         case (null) {
-          return #err("Invalid: Country not found.");
+          return #Err("Invalid: Country not found.");
         };
         case (?foundCountry) {};
       };
 
       if (Utilities.calculateAgeFromUnix(updatePlayerDTO.dateOfBirth) < 16) {
-        return #err("Invalid: Player under 16 years of age.");
+        return #Err("Invalid: Player under 16 years of age.");
       };
 
-      return #ok("Valid");
+      return #Ok();
     };
 
     public func executeUpdatePlayer(updatePlayerDTO : DTOs.UpdatePlayerDTO) : async () {
@@ -948,7 +948,7 @@ module {
       );
     };
 
-    public func validateSetPlayerInjury(setPlayerInjuryDTO : DTOs.SetPlayerInjuryDTO) : Result.Result<Text, Text> {
+    public func validateSetPlayerInjury(setPlayerInjuryDTO : DTOs.SetPlayerInjuryDTO) : T.RustResult {
       let player = List.find<T.Player>(
         players,
         func(p : T.Player) : Bool {
@@ -958,12 +958,12 @@ module {
 
       switch (player) {
         case (null) {
-          return #err("Invalid: Cannot find player.");
+          return #Err("Invalid: Cannot find player.");
         };
         case (?foundPlayer) {};
       };
 
-      return #ok("Valid");
+      return #Ok();
     };
 
     public func executeSetPlayerInjury(setPlayerInjuryDTO : DTOs.SetPlayerInjuryDTO) : async () {
@@ -1051,7 +1051,7 @@ module {
       };
     };
 
-    public func validateRetirePlayer(retirePlayerDTO : DTOs.RetirePlayerDTO) : Result.Result<Text, Text> {
+    public func validateRetirePlayer(retirePlayerDTO : DTOs.RetirePlayerDTO) : T.RustResult {
       let player = List.find<T.Player>(
         players,
         func(p : T.Player) : Bool {
@@ -1061,12 +1061,12 @@ module {
 
       switch (player) {
         case (null) {
-          return #err("Invalid: Cannot find player to retire.");
+          return #Err("Invalid: Cannot find player to retire.");
         };
         case (?foundPlayer) {};
       };
 
-      return #ok("Valid");
+      return #Ok();
     };
 
     public func executeRetirePlayer(retirePlayerDTO : DTOs.RetirePlayerDTO) : async () {
@@ -1107,17 +1107,17 @@ module {
       };
     };
 
-    public func validateUnretirePlayer(unretirePlayerDTO : DTOs.UnretirePlayerDTO) : Result.Result<Text, Text> {
+    public func validateUnretirePlayer(unretirePlayerDTO : DTOs.UnretirePlayerDTO) : T.RustResult {
 
       let playerToUnretire = List.find<T.Player>(players, func(p : T.Player) { p.id == unretirePlayerDTO.playerId and p.status == #Retired });
       switch (playerToUnretire) {
         case (null) {
-          return #err("Invalid: Cannot find player");
+          return #Err("Invalid: Cannot find player");
         };
         case (?foundPlayer) {};
       };
 
-      return #ok("Valid");
+      return #Ok();
     };
 
     public func executeUnretirePlayer(unretirePlayerDTO : DTOs.UnretirePlayerDTO) : async () {

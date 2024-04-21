@@ -181,6 +181,7 @@ module DTOs {
     weeklyPoints : Int16;
     monthlyPoints : Int16;
     seasonPoints : Int16;
+    privateLeagueMemberships: [T.CanisterId];
   };
 
   public type PlayerRatingsDTO = {

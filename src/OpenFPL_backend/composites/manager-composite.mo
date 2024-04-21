@@ -112,7 +112,7 @@ module {
                     weeklyPoints = weeklyPoints;
                     monthlyPoints = monthlyPoints;
                     seasonPoints = seasonPoints;
-
+                    privateLeagueMemberships = List.toArray(foundManager.privateLeagueMemberships);
                   };
                   return #ok(managerDTO);
 
@@ -862,6 +862,7 @@ module {
                 weeklyPoints = 0;
                 monthlyPoints = 0;
                 seasonPoints = 0;
+                privateLeagueMemberships = [];
 
               };
               return ?dto;

@@ -619,7 +619,7 @@ module {
     
     //Governance validation and execution functions
 
-    public func validateAddInitialFixtures(addInitialFixturesDTO : DTOs.AddInitialFixturesDTO) : Result.Result<Text, Text> {
+    public func validateAddInitialFixtures(addInitialFixturesDTO : DTOs.AddInitialFixturesDTO) : T.RustResult {
       let clubs = clubComposite.getClubs();
       return seasonComposite.validateAddInitialFixtures(addInitialFixturesDTO, clubs);
     };
@@ -654,7 +654,7 @@ module {
       await updateCacheHash("fixtures");
     };
 
-    public func validateSubmitFixtureData(submitFixtureDataDTO : DTOs.SubmitFixtureDataDTO) : Result.Result<Text, Text> {
+    public func validateSubmitFixtureData(submitFixtureDataDTO : DTOs.SubmitFixtureDataDTO) : T.RustResult {
       return seasonComposite.validateSubmitFixtureData(submitFixtureDataDTO);
     };
 
@@ -691,7 +691,7 @@ module {
       await updateCacheHash("system_state");
     };
 
-    public func validateMoveFixture(moveFixtureDTO : DTOs.MoveFixtureDTO) : Result.Result<Text, Text> {
+    public func validateMoveFixture(moveFixtureDTO : DTOs.MoveFixtureDTO) : T.RustResult {
       return seasonComposite.validateMoveFixture(moveFixtureDTO, systemState);
     };
 
@@ -700,7 +700,7 @@ module {
       await updateCacheHash("fixtures");
     };
 
-    public func validatePostponeFixture(postponeFixtureDTO : DTOs.PostponeFixtureDTO) : Result.Result<Text, Text> {
+    public func validatePostponeFixture(postponeFixtureDTO : DTOs.PostponeFixtureDTO) : T.RustResult {
       return seasonComposite.validatePostponeFixture(postponeFixtureDTO, systemState);
     };
 
@@ -709,7 +709,7 @@ module {
       await updateCacheHash("fixtures");
     };
 
-    public func validateRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO) : Result.Result<Text, Text> {
+    public func validateRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO) : T.RustResult {
       return seasonComposite.validateRescheduleFixture(rescheduleFixtureDTO, systemState);
     };
 
@@ -718,7 +718,7 @@ module {
       await updateCacheHash("fixtures");
     };
 
-    public func validateRevaluePlayerUp(revaluePlayerUpDTO : DTOs.RevaluePlayerUpDTO) : Result.Result<Text, Text> {
+    public func validateRevaluePlayerUp(revaluePlayerUpDTO : DTOs.RevaluePlayerUpDTO) : T.RustResult {
       return playerComposite.validateRevaluePlayerUp(revaluePlayerUpDTO);
     };
 
@@ -727,7 +727,7 @@ module {
       await updateCacheHash("players");
     };
 
-    public func validateRevaluePlayerDown(revaluePlayerDownDTO : DTOs.RevaluePlayerDownDTO) : Result.Result<Text, Text> {
+    public func validateRevaluePlayerDown(revaluePlayerDownDTO : DTOs.RevaluePlayerDownDTO) : T.RustResult {
       return playerComposite.validateRevaluePlayerDown(revaluePlayerDownDTO);
     };
 
@@ -736,7 +736,7 @@ module {
       await updateCacheHash("players");
     };
 
-    public func validateLoanPlayer(loanPlayerDTO : DTOs.LoanPlayerDTO) : Result.Result<Text, Text> {
+    public func validateLoanPlayer(loanPlayerDTO : DTOs.LoanPlayerDTO) : T.RustResult {
       let clubs = clubComposite.getClubs();
       return playerComposite.validateLoanPlayer(loanPlayerDTO, List.fromArray(clubs));
     };
@@ -748,7 +748,7 @@ module {
       await updateCacheHash("players");
     };
 
-    public func validateTransferPlayer(transferPlayerDTO : DTOs.TransferPlayerDTO) : Result.Result<Text, Text> {
+    public func validateTransferPlayer(transferPlayerDTO : DTOs.TransferPlayerDTO) : T.RustResult {
       let clubs = clubComposite.getClubs();
       return playerComposite.validateTransferPlayer(transferPlayerDTO, List.fromArray(clubs));
     };
@@ -760,7 +760,7 @@ module {
       await updateCacheHash("players");
     };
 
-    public func validateRecallPlayer(recallPlayerDTO : DTOs.RecallPlayerDTO) : Result.Result<Text, Text> {
+    public func validateRecallPlayer(recallPlayerDTO : DTOs.RecallPlayerDTO) : T.RustResult {
       return playerComposite.validateRecallPlayer(recallPlayerDTO);
     };
 
@@ -771,7 +771,7 @@ module {
       await updateCacheHash("players");
     };
 
-    public func validateCreatePlayer(createPlayerDTO : DTOs.CreatePlayerDTO) : Result.Result<Text, Text> {
+    public func validateCreatePlayer(createPlayerDTO : DTOs.CreatePlayerDTO) : T.RustResult {
       let clubs = clubComposite.getClubs();
       return playerComposite.validateCreatePlayer(createPlayerDTO, List.fromArray(clubs));
     };
@@ -781,7 +781,7 @@ module {
       await updateCacheHash("players");
     };
 
-    public func validateUpdatePlayer(updatePlayerDTO : DTOs.UpdatePlayerDTO) : Result.Result<Text, Text> {
+    public func validateUpdatePlayer(updatePlayerDTO : DTOs.UpdatePlayerDTO) : T.RustResult {
       return playerComposite.validateUpdatePlayer(updatePlayerDTO);
     };
 
@@ -802,7 +802,7 @@ module {
       };
     };
 
-    public func validateSetPlayerInjury(setPlayerInjuryDTO : DTOs.SetPlayerInjuryDTO) : Result.Result<Text, Text> {
+    public func validateSetPlayerInjury(setPlayerInjuryDTO : DTOs.SetPlayerInjuryDTO) : T.RustResult {
       return playerComposite.validateSetPlayerInjury(setPlayerInjuryDTO);
     };
 
@@ -811,7 +811,7 @@ module {
       await updateCacheHash("players");
     };
 
-    public func validateRetirePlayer(retirePlayerDTO : DTOs.RetirePlayerDTO) : Result.Result<Text, Text> {
+    public func validateRetirePlayer(retirePlayerDTO : DTOs.RetirePlayerDTO) : T.RustResult {
       return playerComposite.validateRetirePlayer(retirePlayerDTO);
     };
 
@@ -822,7 +822,7 @@ module {
       await updateCacheHash("players");
     };
 
-    public func validateUnretirePlayer(unretirePlayerDTO : DTOs.UnretirePlayerDTO) : Result.Result<Text, Text> {
+    public func validateUnretirePlayer(unretirePlayerDTO : DTOs.UnretirePlayerDTO) : T.RustResult {
       return playerComposite.validateUnretirePlayer(unretirePlayerDTO);
     };
 
@@ -831,7 +831,7 @@ module {
       await updateCacheHash("players");
     };
 
-    public func validatePromoteFormerClub(promoteFormerClubDTO : DTOs.PromoteFormerClubDTO) : Result.Result<Text, Text> {
+    public func validatePromoteFormerClub(promoteFormerClubDTO : DTOs.PromoteFormerClubDTO) : T.RustResult {
       return clubComposite.validatePromoteFormerClub(promoteFormerClubDTO);
     };
 
@@ -840,7 +840,7 @@ module {
       await updateCacheHash("clubs");
     };
 
-    public func validatePromoteNewClub(promoteNewClubDTO : DTOs.PromoteNewClubDTO) : Result.Result<Text, Text> {
+    public func validatePromoteNewClub(promoteNewClubDTO : DTOs.PromoteNewClubDTO) : T.RustResult {
       return clubComposite.validatePromoteNewClub(promoteNewClubDTO);
     };
 
@@ -849,7 +849,7 @@ module {
       await updateCacheHash("clubs");
     };
 
-    public func validateUpdateClub(updateClubDTO : DTOs.UpdateClubDTO) : Result.Result<Text, Text> {
+    public func validateUpdateClub(updateClubDTO : DTOs.UpdateClubDTO) : T.RustResult {
       return clubComposite.validateUpdateClub(updateClubDTO);
     };
 

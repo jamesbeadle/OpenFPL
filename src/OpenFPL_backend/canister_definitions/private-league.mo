@@ -1,11 +1,12 @@
-import T "types";
+import T "../types";
+import DTOs "../dtos";
 import Cycles "mo:base/ExperimentalCycles";
 import Timer "mo:base/Timer";
 import Iter "mo:base/Iter";
 import Principal "mo:base/Principal";
 import Buffer "mo:base/Buffer";
-import Utilities "utilities";
-import Environment "Environment";
+import Utilities "../utils/utilities";
+import Environment "../utils/Environment";
 
 actor class _PrivateLeague() {
     private let cyclesCheckInterval : Nat = Utilities.getHour() * 24;
@@ -22,9 +23,22 @@ actor class _PrivateLeague() {
     private stable var currentMonth: T.CalendarMonth = 0;
     private stable var currentGameweek: T.GameweekNumber = 0;
 
+    public shared ({ caller }) func getPrivateLeague() : async DTOs.PrivateLeagueDTO {
+        assert not Principal.isAnonymous(caller);
+        let principalId = Principal.toText(caller);
+        assert principalId == main_canister_id;
+
+        for(member in Iter.fromArray(leagueMembers)){
+            if(member.principalId == callerId){
+                return true;
+            }
+        };
+
+        return false;
+    };
+
     public shared ({ caller }) func isLeagueMember(callerId: T.PrincipalId) : async Bool {
         assert not Principal.isAnonymous(caller);
-        assert (Principal.toText(caller) == main_canister_id);
         let principalId = Principal.toText(caller);
         assert principalId == main_canister_id;
 
@@ -45,7 +59,6 @@ actor class _PrivateLeague() {
 
     public shared ({ caller }) func calculateLeaderboards() : async () {
         assert not Principal.isAnonymous(caller);
-        assert (Principal.toText(caller) == main_canister_id);
         let principalId = Principal.toText(caller);
         assert principalId == main_canister_id;
         
