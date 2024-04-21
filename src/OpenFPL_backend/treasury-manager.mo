@@ -74,7 +74,7 @@ module {
       });
     };
 
-    public func validateAddNewToken(newTokenDTO : DTOs.NewTokenDTO) : async T.RustResult {
+    public func validateAddNewToken(newTokenDTO : DTOs.NewTokenDTO) : T.RustResult {
       return #Err("");
     };
 

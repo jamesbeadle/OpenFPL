@@ -354,7 +354,7 @@ actor Self {
     return await seasonManager.executeUpdateClub(updateClubDTO);
   };
 
-  public shared ({ caller }) func validateManageDAONeuron() : async T.RustResult {
+  public shared query ({ caller }) func validateManageDAONeuron() : async T.RustResult {
     assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     if (not neuronCreated) {
       return #Err("Neuron not created");
@@ -381,7 +381,7 @@ actor Self {
 
   public shared query ({ caller }) func validateAddNewToken(newTokenDTO : DTOs.NewTokenDTO) : async T.RustResult {
     assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-    return treasuryManager.validateAddNewToken(newTokenDTO);
+    return #ok(treasuryManager.validateAddNewToken(newTokenDTO));
   };
 
   public shared ({ caller }) func executeAddNewToken(newTokenDTO : DTOs.NewTokenDTO) : async () {
@@ -587,7 +587,7 @@ actor Self {
 
   public shared ({ caller }) func getTokenList() : async Result.Result<[T.TokenInfo], T.Error> {
     assert not Principal.isAnonymous(caller);
-    return treasuryManager.getTokenList();
+    return #ok(treasuryManager.getTokenList());
   };
 
 
