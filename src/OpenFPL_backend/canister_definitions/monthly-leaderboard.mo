@@ -1,12 +1,12 @@
-import T "types";
-import DTOs "DTOs";
+import T "../types";
+import DTOs "../DTOs";
 import List "mo:base/List";
 import Cycles "mo:base/ExperimentalCycles";
 import Timer "mo:base/Timer";
 import Principal "mo:base/Principal";
 import Text "mo:base/Text";
-import Utilities "utilities";
-import Environment "Environment";
+import Utilities "../utils/utilities";
+import Environment "../utils/Environment";
 
 actor class _MonthlyLeaderboardCanister() {
   private stable var leaderboard : ?T.ClubLeaderboard = null;

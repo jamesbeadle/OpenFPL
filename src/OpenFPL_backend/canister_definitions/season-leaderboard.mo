@@ -1,5 +1,5 @@
-import T "types";
-import DTOs "DTOs";
+import T "../types";
+import DTOs "../DTOs";
 import List "mo:base/List";
 import Cycles "mo:base/ExperimentalCycles";
 import Timer "mo:base/Timer";
@@ -7,8 +7,8 @@ import Principal "mo:base/Principal";
 import Array "mo:base/Array";
 import Order "mo:base/Order";
 import Text "mo:base/Text";
-import Utilities "utilities";
-import Environment "Environment";
+import Utilities "../utils/utilities";
+import Environment "../utils/Environment";
 
 actor class _SeasonLeaderboardCanister() {
   private stable var leaderboard : ?T.SeasonLeaderboard = null;

@@ -17,7 +17,6 @@ import Text "mo:base/Text";
 import WeeklyLeaderboardCanister "../canister_definitions/weekly-leaderboard";
 import MonthlyLeaderboardCanister "../canister_definitions/monthly-leaderboard";
 import SeasonLeaderboardCanister "../canister_definitions/season-leaderboard";
-import Environment "../utils/Environment";
 
 module {
 
