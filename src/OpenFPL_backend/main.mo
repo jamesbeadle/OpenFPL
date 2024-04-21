@@ -379,6 +379,16 @@ actor Self {
 
   };
 
+  public shared query ({ caller }) func validateAddNewToken(newTokenDTO : DTOs.NewTokenDTO) : async T.RustResult {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
+    return treasuryManager.validateAddNewToken(newTokenDTO);
+  };
+
+  public shared ({ caller }) func executeAddNewToken(newTokenDTO : DTOs.NewTokenDTO) : async () {
+    assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
+    return await treasuryManager.executeAddNewToken(newTokenDTO);
+  };
+
   
   //Function to get the neuron controller neuron id
   
@@ -541,11 +551,30 @@ actor Self {
     return await seasonManager.acceptLeagueInvite(canisterId, Principal.toText(caller));
   };
 
+  public shared ({ caller }) func enterLeague(canisterId) : async () {
+
+  };
+
+  public shared ({ caller }) func enterLeagueWithFee(canisterId: T.CanisterId) : async () {
+    
+  };
+
+  public shared ({ caller }) func acceptInviteAndPayFee(canisterId: T.CanisterId) : async () {
+    //check they have an invite
+    //check they can afford the fee
+  };
+
+  public shared ({ caller }) func getTokenList() : async Result.Result<[T.TokenInfo], T.Error> {};
+
+  
+  
   //enterleaguewithfee
 
   //acceptinviteandpayfee
 
   //get token list
+
+  //TODO: Add governance function to add new token canister
 
 /*
 

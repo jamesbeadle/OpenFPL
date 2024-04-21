@@ -5,6 +5,8 @@ import Nat64 "mo:base/Nat64";
 import Time "mo:base/Time";
 import Principal "mo:base/Principal";
 import Environment "utils/Environment";
+import DTOs "DTOs";
+import T "types";
 
 module {
 
@@ -68,6 +70,14 @@ module {
           timestamp_nanos = Nat64.fromNat(Int.abs(Time.now()));
         };
       });
+    };
+
+    public func validateAddNewToken(newTokenDTO : DTOs.NewTokenDTO) : async T.RustResult {
+      return #Err("");
+    };
+
+    public func executeAddNewToken(newTokenDTO : DTOs.NewTokenDTO) : async () {
+      
     };
 
   };

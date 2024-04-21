@@ -468,6 +468,12 @@ module DTOs {
     memberCount: Int;
     seasonPosition: Nat;
   };
+
+  public type NewTokenDTO = {
+    canisterId: T.CanisterId;
+    symbol: Text;
+    image: Text;
+  };
   
 
 };
