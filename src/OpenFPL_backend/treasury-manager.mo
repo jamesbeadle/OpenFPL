@@ -87,11 +87,11 @@ module {
       return tokenList;
     };
 
-    public func canAffordEntryFee(canisterId: T.CanisterId, managerId: T.PrincipalId) : {
-
+    public func canAffordEntryFee(canisterId: T.CanisterId, managerId: T.PrincipalId) : async Bool {
+      return false; //TODO
     };
 
-    public func payEntryFee(canisterId: T.CanisterId, managerId: T.PrincipalId){
+    public func payEntryFee(canisterId: T.CanisterId, managerId: T.PrincipalId) : async (){
 
     };
 

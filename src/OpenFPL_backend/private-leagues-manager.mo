@@ -127,8 +127,9 @@ module {
 
     };
 
-    public func inviteExists(canisterId: T.CanisterId, managerId: T.PrincipalId) : async () {
+    public func inviteExists(canisterId: T.CanisterId, managerId: T.PrincipalId) : async Bool {
       //TODO
+      return false;
     };
 
     public func acceptInvite(canisterId: T.CanisterId, managerId: T.PrincipalId) : async Result.Result<(), T.Error> {

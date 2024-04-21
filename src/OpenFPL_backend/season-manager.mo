@@ -941,7 +941,7 @@ module {
       return await privateLeaguesManager.enterLeague(canisterId, managerId);
     };
 
-    public func inviteExists(canisterId: T.CanisterId, managerId: T.PrincipalId) : async () {
+    public func inviteExists(canisterId: T.CanisterId, managerId: T.PrincipalId) : async Bool {
       return await privateLeaguesManager.inviteExists(canisterId, managerId);
     };
 

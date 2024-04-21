@@ -381,7 +381,7 @@ actor Self {
 
   public shared query ({ caller }) func validateAddNewToken(newTokenDTO : DTOs.NewTokenDTO) : async T.RustResult {
     assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-    return #ok(treasuryManager.validateAddNewToken(newTokenDTO));
+    return treasuryManager.validateAddNewToken(newTokenDTO);
   };
 
   public shared ({ caller }) func executeAddNewToken(newTokenDTO : DTOs.NewTokenDTO) : async () {
@@ -576,13 +576,13 @@ actor Self {
     assert not isLeagueMember;
 
     //check the user can afford the entry fee
-    assert(treasuryManager.canAffordEntryFee(canisterId, Principal.toText(caller)));
+    assert(await treasuryManager.canAffordEntryFee(canisterId, Principal.toText(caller)));
 
     //Pay the league entry fee
     await treasuryManager.payEntryFee(canisterId, Principal.toText(caller));
 
     //add the user to the league
-    await seasonManager.enterLeagueWithFee(canisterId, Principal.toText(caller));
+    await seasonManager.enterLeague(canisterId, Principal.toText(caller));
   };
 
   public shared ({ caller }) func acceptInviteAndPayFee(canisterId: T.CanisterId) : async Result.Result<(), T.Error> {
@@ -593,10 +593,10 @@ actor Self {
     assert not isLeagueMember;
 
     //check they have an invite
-    assert(seasonManager.inviteExists(canisterId, Principal.toText(caller)));
+    assert(await seasonManager.inviteExists(canisterId, Principal.toText(caller)));
 
     //check they can afford the fee
-    assert(treasuryManager.canAffordEntryFee(Principal.toText(caller)));
+    assert(await treasuryManager.canAffordEntryFee(canisterId, Principal.toText(caller)));
 
     //Pay the league entry fee
     await treasuryManager.payEntryFee(canisterId, Principal.toText(caller));
