@@ -53,10 +53,6 @@ actor class _PrivateLeague() {
         return false;
     };
 
-    public shared ({ caller }) func inviteUserToLeague(principalId: T.PrincipalId) : async (){
-        //send an invite to the user to join the league
-    };
-
     public shared ({ caller }) func updateManager(manager: T.Manager){
         //TODO: Check caller is one of the allowed private league canisters
 
@@ -132,6 +128,46 @@ actor class _PrivateLeague() {
         assert principalId == main_canister_id;
         return #err(#NotFound);
 
+    };
+
+    public shared ({ caller }) func inviteUserToLeague(managerId: T.PrincipalId) : async Result.Result<(), T.Error> {
+        //todo
+        return #ok();
+    };
+
+    public shared ({ caller }) func acceptLeagueInvite(managerId: T.PrincipalId) : async Result.Result<(), T.Error> {
+        //todo
+        return #ok();
+    };
+
+    public shared ({ caller }) func updateLeaguePicture(managerId: T.PrincipalId, picture: Blob) : async Result.Result<(), T.Error> {
+        //todo
+        return #ok();
+    };
+
+    public shared ({ caller }) func updateLeagueBanner(managerId: T.PrincipalId, banner: Blob) : async Result.Result<(), T.Error> {
+        //todo
+        return #ok();
+    };
+
+    public shared ({ caller }) func updateLeagueName(managerId: T.PrincipalId, name: Text) : async Result.Result<(), T.Error> {
+        //todo
+        return #ok();
+    };
+
+    public shared ({ caller }) func enterLeague(managerId: T.PrincipalId) : async Result.Result<(), T.Error> {
+        //todo
+        return #ok();
+    };
+
+    public shared ({ caller }) func inviteExists(managerId: T.PrincipalId) : async Result.Result<Bool, T.Error> {
+        //todo
+        return #ok();
+    };
+
+    public shared ({ caller }) func acceptInvite(managerId: T.PrincipalId) : async Result.Result<(), T.Error> {
+        //todo
+        return #ok();
     };
 
     system func preupgrade() {};
