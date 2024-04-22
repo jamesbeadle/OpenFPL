@@ -418,5 +418,6 @@ module _Types {
   public type TokenInfo = {
     ticker: Text;
     canisterId: CanisterId;
+    tokenImageURL: Text;
   };
 };

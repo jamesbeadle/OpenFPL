@@ -471,8 +471,8 @@ module DTOs {
 
   public type NewTokenDTO = {
     canisterId: T.CanisterId;
-    symbol: Text;
-    image: Text;
+    ticker: Text;
+    tokenImageURL: Text;
   };
 
   public type PrivateLeagueDTO = {

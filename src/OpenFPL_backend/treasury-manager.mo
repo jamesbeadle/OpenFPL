@@ -4,6 +4,8 @@ import Int "mo:base/Int";
 import Nat64 "mo:base/Nat64";
 import Time "mo:base/Time";
 import Principal "mo:base/Principal";
+import Iter "mo:base/Iter";
+import Buffer "mo:base/Buffer";
 import Environment "utils/Environment";
 import DTOs "DTOs";
 import T "types";
@@ -75,12 +77,22 @@ module {
     };
 
     public func validateAddNewToken(newTokenDTO : DTOs.NewTokenDTO) : T.RustResult {
-      return #Err("");
+      for(token in Iter.fromArray(tokenList)){
+        if(newTokenDTO.canisterId == token.canisterId){
+          return #Err("Token canister already exists.");
+        }
+      };
+      return #Ok;
     };
 
     public func executeAddNewToken(newTokenDTO : DTOs.NewTokenDTO) : async () {
-      //TODO: Add the new token
-
+      let newTokenList = Buffer.fromArray<T.TokenInfo>(tokenList);
+      newTokenList.add({
+        canisterId = newTokenDTO.canisterId;
+        ticker = newTokenDTO.ticker;
+        tokenImageURL = newTokenDTO.tokenImageURL;
+      });
+      tokenList := newTokenList;
     };
 
     public func getTokenList() : [T.TokenInfo] {
