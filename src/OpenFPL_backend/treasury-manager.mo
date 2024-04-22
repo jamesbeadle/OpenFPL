@@ -6,10 +6,13 @@ import Time "mo:base/Time";
 import Principal "mo:base/Principal";
 import Iter "mo:base/Iter";
 import Buffer "mo:base/Buffer";
+import Text "mo:base/Text";
+import Blob "mo:base/Blob";
 import Environment "utils/Environment";
 import DTOs "DTOs";
 import T "types";
 import Tokens "Tokens";
+import SNSToken "sns-wrappers/ledger";
 
 module {
 
@@ -92,19 +95,47 @@ module {
         ticker = newTokenDTO.ticker;
         tokenImageURL = newTokenDTO.tokenImageURL;
       });
-      tokenList := newTokenList;
+      tokenList := Buffer.toArray(newTokenList);
     };
 
     public func getTokenList() : [T.TokenInfo] {
       return tokenList;
     };
 
-    public func canAffordEntryFee(canisterId: T.CanisterId, managerId: T.PrincipalId) : async Bool {
-      return false; //TODO
+    public func canAffordEntryFee(defaultAccount: Principal, canisterId: T.CanisterId, managerId: T.PrincipalId) : async Bool {
+      
+      //get the entry details for the league
+      let entryFee: Nat64 = 0;
+
+      let ledger : SNSToken.Interface = actor (canisterId);
+      
+      let source_account = Account.accountIdentifier(defaultAccount, Account.principalToSubaccount(Principal.fromText(managerId)));
+      let checkAccount : SNSToken.Account = {
+        owner = Principal.fromBlob(source_account);
+        subaccount = null;
+      };
+
+      let balance = Nat64.fromNat(await ledger.icrc1_balance_of(checkAccount));
+
+      return balance >= entryFee;
     };
 
-    public func payEntryFee(canisterId: T.CanisterId, managerId: T.PrincipalId) : async (){
+    public func payEntryFee(defaultAccount: Principal, canisterId: T.CanisterId, managerId: T.PrincipalId) : async (){
+      
+      //get the entry details for the league
+      let entryFee: Nat = 0;
+      let token_fee: Nat = 0;
 
+      let ledger : SNSToken.Interface = actor (canisterId);
+      
+      let _ = await ledger.icrc1_transfer({
+        memo = ?Blob.fromArray([]);
+        from_subaccount = ?Account.principalToSubaccount(Principal.fromText(managerId));
+        to = {owner = defaultAccount; subaccount = ?Account.defaultSubaccount()};
+        amount = entryFee - token_fee ;
+        fee = ?token_fee;
+        created_at_time = ?Nat64.fromNat(Int.abs(Time.now()));
+      });
     };
 
   };
