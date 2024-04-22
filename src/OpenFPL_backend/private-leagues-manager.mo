@@ -130,10 +130,6 @@ module {
       return true;
     };
 
-    public func canAffordPrivateLeague(caller: T.PrincipalId) : Bool{
-      return false;
-    };
-
     public func createPrivateLeague(newPrivateLeague: DTOs.CreatePrivateLeagueDTO) : async Result.Result<(), T.Error> {
       //TODO: TAKE PAYMENT
       

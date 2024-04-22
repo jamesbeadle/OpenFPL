@@ -15,7 +15,6 @@ import Order "mo:base/Order";
 import Int16 "mo:base/Int16";
 import RewardPercentages "../utils/RewardPercentages";
 import Utilities "../utils/utilities";
-import Token "../sns-wrappers/token";
 import TrieMap "mo:base/TrieMap";
 
 module {

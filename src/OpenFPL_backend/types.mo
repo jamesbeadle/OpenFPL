@@ -401,6 +401,9 @@ module _Types {
     maxEntrants: Nat16;
     picture: Blob;
     banner: Blob;
+    tokenId: TokenId;
+    entryFee: Nat;
+    adminFee: Nat8;
   };
 
   public type LeagueMember = {
@@ -417,9 +420,15 @@ module _Types {
   };
 
   public type TokenInfo = {
+    id: TokenId;
     ticker: Text;
     canisterId: CanisterId;
     tokenImageURL: Text;
-    tokenId: TokenId;
+    fee: Nat;
+  };
+
+  public type PaymentChoice = {
+    #ICP;
+    #FPL;
   };
 };

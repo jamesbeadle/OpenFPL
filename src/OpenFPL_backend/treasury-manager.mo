@@ -6,7 +6,7 @@ import Time "mo:base/Time";
 import Principal "mo:base/Principal";
 import Iter "mo:base/Iter";
 import Buffer "mo:base/Buffer";
-import Text "mo:base/Text";
+import Result "mo:base/Result";
 import Blob "mo:base/Blob";
 import Environment "utils/Environment";
 import DTOs "DTOs";
@@ -26,6 +26,8 @@ module {
     let memo_txt_tpup : Nat64 = 0x50555054;
     private let ledger : ICPLedger.Interface = actor (ICPLedger.CANISTER_ID);
     private var tokenList: [T.TokenInfo] = Tokens.tokens;
+    private var nextTokenId : Nat16 = 35;
+    //TODO: NEED STABLE BACKUP OF THESE
 
     public func getUserAccountBalance(defaultAccount : Principal, user : Principal) : async Nat64 {
       let source_account = Account.accountIdentifier(defaultAccount, Account.principalToSubaccount(user));
@@ -91,18 +93,53 @@ module {
     public func executeAddNewToken(newTokenDTO : DTOs.NewTokenDTO) : async () {
       let newTokenList = Buffer.fromArray<T.TokenInfo>(tokenList);
       newTokenList.add({
+        id = nextTokenId;
         canisterId = newTokenDTO.canisterId;
         ticker = newTokenDTO.ticker;
         tokenImageURL = newTokenDTO.tokenImageURL;
+        fee = newTokenDTO.fee;
       });
       tokenList := Buffer.toArray(newTokenList);
+      nextTokenId := nextTokenId + 1;
     };
 
     public func getTokenList() : [T.TokenInfo] {
       return tokenList;
     };
 
-    public func canAffordEntryFee(defaultAccount: Principal, leagueCanisterId: T.CanisterId, managerId: T.PrincipalId, tokenId: T.TokenId) : async Bool {
+    
+
+    public func canAffordPrivateLeague(defaultAccount: Principal, managerId: T.PrincipalId, paymentChoice: T.PaymentChoice) : async Bool{
+      
+      var ledgerCanisterId = "";
+      var entryFee: Nat64 = 0;
+
+      switch(paymentChoice){
+        case (#ICP){
+          ledgerCanisterId := "";
+          entryFee := 0; //TODO What is 1 ICP get from football god
+        };
+        case (#FPL){
+          //todo get FPL amount
+          ledgerCanisterId := "";
+          entryFee := 0;
+        };
+      };
+      
+      let ledger : SNSToken.Interface = actor (ledgerCanisterId);
+
+      let source_account = Account.accountIdentifier(defaultAccount, Account.principalToSubaccount(Principal.fromText(managerId)));
+      let checkAccount : SNSToken.Account = {
+        owner = Principal.fromBlob(source_account);
+        subaccount = null;
+      };
+
+      let balance = Nat64.fromNat(await ledger.icrc1_balance_of(checkAccount));
+
+      return balance >= entryFee;
+    };
+
+    public func canAffordEntryFee(defaultAccount: Principal, canisterId: T.CanisterId, managerId: T.PrincipalId, tokenId: T.TokenId) : async Bool {
         
       let private_league_canister = actor (canisterId) : actor {
         getPrivateLeague : () -> async Result.Result<DTOs.PrivateLeagueDTO, T.Error>;
@@ -111,10 +148,7 @@ module {
       let privateLeague = await private_league_canister.getPrivateLeague();
 
       switch(privateLeague){
-        case (null) {
-          return false;
-        };
-        case (?foundPrivateLeague){
+        case (#ok foundPrivateLeague){
           let tokenId = foundPrivateLeague.tokenId;
           for(token in Iter.fromArray(tokenList)){
             if(token.id == tokenId){
@@ -126,12 +160,16 @@ module {
                 subaccount = null;
               };
 
-              let balance = Nat64.fromNat(await ledger.icrc1_balance_of(checkAccount));
+              let balance = await ledger.icrc1_balance_of(checkAccount);
 
-              return balance >= token.entryFee;
+              return balance >= foundPrivateLeague.entryFee;
             };
-          }
-        }
+          };
+          return false;
+        };
+        case _ {
+          return false;
+        };
       };
     };
 
@@ -145,10 +183,8 @@ module {
       let privateLeague = await private_league_canister.getPrivateLeague();
 
       switch(privateLeague){
-        case (null) {
-          return false;
-        };
-        case (?foundPrivateLeague){
+        case (#ok foundPrivateLeague){
+          
           let tokenId = foundPrivateLeague.tokenId;
           for(token in Iter.fromArray(tokenList)){
             if(token.id == tokenId){
@@ -158,13 +194,14 @@ module {
                 memo = ?Blob.fromArray([]);
                 from_subaccount = ?Account.principalToSubaccount(Principal.fromText(managerId));
                 to = {owner = defaultAccount; subaccount = ?Account.defaultSubaccount()};
-                amount = entryFee - token_fee ;
-                fee = ?token_fee;
+                amount = foundPrivateLeague.entryFee - token.fee ;
+                fee = ?token.fee;
                 created_at_time = ?Nat64.fromNat(Int.abs(Time.now()));
               });
             };
           }
-        }
+        };
+        case (_){};
       };
     };
 

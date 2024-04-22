@@ -501,7 +501,7 @@ actor Self {
     assert(newPrivateLeague.termsAgreed);
     assert(seasonManager.privateLeagueIsValid(newPrivateLeague));
     assert(seasonManager.nameAvailable(newPrivateLeague.name));
-    assert(seasonManager.canAffordPrivateLeague(Principal.toText(caller)));
+    assert(treasuryManager.canAffordPrivateLeague(Principal.toText(caller)));
     return await seasonManager.createPrivateLeague(newPrivateLeague);
   };
 

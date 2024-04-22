@@ -896,10 +896,6 @@ module {
       return privateLeaguesManager.nameAvailable(privateLeagueName);
     };
 
-    public func canAffordPrivateLeague(caller: T.PrincipalId) : Bool{
-      return privateLeaguesManager.canAffordPrivateLeague(caller);
-    };
-
     public func leagueHasSpace(canisterId: T.CanisterId) : async Bool {
       return await privateLeaguesManager.leagueHasSpace(canisterId);
     };

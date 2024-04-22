@@ -455,7 +455,8 @@ module DTOs {
     termsAgreed: Bool;
     entryRequirement: T.EntryRequirement;
     adminFee: Nat8;
-    entryFee: Nat64;
+    entryFee: Nat;
+    paymentChoice: T.PaymentChoice;
   };
 
   public type ManagerPrivateLeaguesDTO = {
@@ -475,6 +476,7 @@ module DTOs {
     canisterId: T.CanisterId;
     ticker: Text;
     tokenImageURL: Text;
+    fee: Nat;
   };
 
   public type PrivateLeagueDTO = {
@@ -484,6 +486,9 @@ module DTOs {
     picture: Blob;
     banner: Blob;
     entryType: T.EntryRequirement;
+    tokenId: T.TokenId;
+    entryFee: Nat;
+    adminFee: Nat8;
   };
   
 
