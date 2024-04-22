@@ -162,7 +162,7 @@ actor class _PrivateLeague() {
 
     public shared ({ caller }) func inviteExists(managerId: T.PrincipalId) : async Result.Result<Bool, T.Error> {
         //todo
-        return #ok();
+        return #ok(true);
     };
 
     public shared ({ caller }) func acceptInvite(managerId: T.PrincipalId) : async Result.Result<(), T.Error> {

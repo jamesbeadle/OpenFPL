@@ -22,6 +22,14 @@ module {
       privateLeagueCanisterIds := stable_private_league_canister_ids;
     };
 
+    public func getStablePrivateLeagueNameIndex() : [(T.CanisterId, Text)] {
+      return privateLeagueNameIndex;
+    };
+
+    public func setStablePrivateLeagueNameIndex(stable_private_league_NameIndex: [(T.CanisterId, Text)]) {
+      privateLeagueNameIndex := stable_private_league_NameIndex;
+    };
+
     public func isLeagueMember(canisterId: T.CanisterId, callerId: T.PrincipalId) : async Bool {
       let private_league_canister = actor (canisterId) : actor {
         isLeagueMember : (callerId : T.PrincipalId) -> async Bool;

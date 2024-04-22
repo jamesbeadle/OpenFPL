@@ -660,6 +660,7 @@ actor Self {
 
   //Private Leagues
   private stable var stable_private_league_canister_ids: [T.CanisterId] = [];
+  private stable var stable_private_league_name_index: [(T.CanisterId, Text)] = [];
 
   private stable var stable_timers : [T.TimerInfo] = [];
   private stable var stable_canister_ids : [Text] = [];
@@ -714,6 +715,7 @@ actor Self {
 
     //Private Leagues
     stable_private_league_canister_ids := seasonManager.getStablePrivateLeagueCanisterIds();
+    stable_private_league_name_index := seasonManager.getStablePrivateLeagueNameIndex();
 
     stable_timers := timers;
     stable_canister_ids := cyclesDispenser.getStableCanisterIds();
@@ -763,6 +765,10 @@ actor Self {
     seasonManager.setStableSeasonLeaderboardCanisters(stable_season_leaderboard_canisters);
     seasonManager.setStableMonthlyLeaderboardCanisters(stable_monthly_leaderboard_canisters);
     seasonManager.setStableWeeklyLeaderboardCanisters(stable_weekly_leaderboard_canisters);
+
+    //Private Leagues
+    seasonManager.setStablePrivateLeagueCanisterIds(stable_private_league_canister_ids);
+    seasonManager.setStablePrivateLeagueNameIndex(stable_private_league_name_index);
 
     cyclesDispenser.setStableCanisterIds(stable_canister_ids);
 
