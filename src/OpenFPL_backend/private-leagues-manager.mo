@@ -72,7 +72,11 @@ module {
 
     public func createPrivateLeague(newPrivateLeague: DTOs.CreatePrivateLeagueDTO) : async Result.Result<(), T.Error> {
       //TODO: TAKE PAYMENT
-      //TODO
+      
+      //create canister
+
+      //set up canister
+
       return #ok();
     };
 
@@ -148,10 +152,10 @@ module {
     public func calculateLeaderboards() : async (){
       for(canisterId in Iter.fromArray(privateLeagueCanisterIds)){
         let private_league_canister = actor (canisterId) : actor {
-          calculateLeaderboard : () -> async ();
+          calculateLeaderboards : () -> async ();
         };
 
-        return await private_league_canister.calculateLeaderboard();
+        return await private_league_canister.calculateLeaderboards();
       };
     };
 
