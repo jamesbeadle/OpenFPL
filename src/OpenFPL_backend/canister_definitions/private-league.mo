@@ -5,6 +5,7 @@ import Timer "mo:base/Timer";
 import Iter "mo:base/Iter";
 import Principal "mo:base/Principal";
 import Buffer "mo:base/Buffer";
+import Result "mo:base/Result";
 import Utilities "../utils/utilities";
 import Environment "../utils/Environment";
 
@@ -22,19 +23,20 @@ actor class _PrivateLeague() {
     private stable var currentSeasonId: T.SeasonId = 0;
     private stable var currentMonth: T.CalendarMonth = 0;
     private stable var currentGameweek: T.GameweekNumber = 0;
-
-    public shared ({ caller }) func getManagerPrivateLeague() : async DTOs.ManagerPrivateLeagueDTO {
+    
+    public shared ({ caller }) func getPrivateLeague() : async Result.Result<DTOs.PrivateLeagueDTO, T.Error> {
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
         assert principalId == main_canister_id;
-
+        return #err(#NotFound);
+        
     };
 
-    public shared ({ caller }) func getPrivateLeague() : async DTOs.PrivateLeagueDTO {
+    public shared ({ caller }) func getManagerPrivateLeague(managerId: T.PrincipalId) : async Result.Result<DTOs.ManagerPrivateLeagueDTO, T.Error> {
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
         assert principalId == main_canister_id;
-        
+        return #err(#NotFound);
     };
 
     public shared ({ caller }) func isLeagueMember(callerId: T.PrincipalId) : async Bool {
@@ -83,6 +85,52 @@ actor class _PrivateLeague() {
         //Pay leaderboard rewards based on gameweek, month and season
 
         //increment the system state
+
+    };
+
+    public shared ({ caller }) func getWeeklyLeaderboard(seasonId : T.SeasonId, gameweek: T.GameweekNumber, limit : Nat, offset : Nat) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
+        assert not Principal.isAnonymous(caller);
+        let principalId = Principal.toText(caller);
+        assert principalId == main_canister_id;
+        return #err(#NotFound);
+    };
+
+    public shared ({ caller }) func getMonthlyLeaderboard(seasonId : T.SeasonId, month: T.CalendarMonth, limit : Nat, offset : Nat) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error> {
+        assert not Principal.isAnonymous(caller);
+        let principalId = Principal.toText(caller);
+        assert principalId == main_canister_id;
+        return #err(#NotFound);
+
+    };
+
+    public shared ({ caller }) func getSeasonLeaderboard(seasonId : T.SeasonId, limit : Nat, offset : Nat) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error> {
+        assert not Principal.isAnonymous(caller);
+        let principalId = Principal.toText(caller);
+        assert principalId == main_canister_id;
+        return #err(#NotFound);
+
+    };
+
+    public shared ({ caller }) func getLeagueMembers(limit : Nat, offset : Nat) : async Result.Result<[DTOs.LeagueMemberDTO], T.Error> {
+        assert not Principal.isAnonymous(caller);
+        let principalId = Principal.toText(caller);
+        assert principalId == main_canister_id;
+        return #err(#NotFound);
+    };
+
+    public shared ({ caller }) func leagueHasSpace() : async Result.Result<Bool, T.Error> {
+        assert not Principal.isAnonymous(caller);
+        let principalId = Principal.toText(caller);
+        assert principalId == main_canister_id;
+        return #err(#NotFound);
+
+    };
+
+    public shared ({ caller }) func isLeagueAdmin() : async Result.Result<Bool, T.Error> {
+        assert not Principal.isAnonymous(caller);
+        let principalId = Principal.toText(caller);
+        assert principalId == main_canister_id;
+        return #err(#NotFound);
 
     };
 

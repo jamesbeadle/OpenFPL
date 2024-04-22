@@ -442,17 +442,17 @@ actor Self {
   
   public shared ({ caller }) func getPrivateLeagues() : async Result.Result<DTOs.ManagerPrivateLeaguesDTO, T.Error> {
     assert not Principal.isAnonymous(caller);
-    
-    let user = await seasonManager.getManager(Principal.toText(caller));
+    let managerId = Principal.toText(caller);
+    let user = await seasonManager.getManager(managerId);
 
     switch(user){
       case (#ok dto){
         let privateLeaguesBuffer = Buffer.fromArray<DTOs.ManagerPrivateLeagueDTO>([]);
         for(privateLeagueCanisterId in Iter.fromArray(dto.privateLeagueMemberships)){
           let private_league_canister = actor (privateLeagueCanisterId) : actor {
-            getPrivateLeague : () -> async DTOs.ManagerPrivateLeagueDTO;
+            getManagerPrivateLeague : (managerId: T.PrincipalId) -> async DTOs.ManagerPrivateLeagueDTO;
           };
-          let privateLeague = await private_league_canister.getPrivateLeague();
+          let privateLeague = await private_league_canister.getManagerPrivateLeague(managerId);
           privateLeaguesBuffer.add({
             canisterId = privateLeagueCanisterId;
             created = Time.now();

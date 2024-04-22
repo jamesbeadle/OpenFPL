@@ -105,7 +105,7 @@ module {
     public func canAffordEntryFee(defaultAccount: Principal, leagueCanisterId: T.CanisterId, managerId: T.PrincipalId, tokenId: T.TokenId) : async Bool {
         
       let private_league_canister = actor (canisterId) : actor {
-        getPrivateLeague : () -> async DTOs.PrivateLeagueDTO;
+        getPrivateLeague : () -> async Result.Result<DTOs.PrivateLeagueDTO, T.Error>;
       };
 
       let privateLeague = await private_league_canister.getPrivateLeague();
@@ -128,7 +128,7 @@ module {
 
               let balance = Nat64.fromNat(await ledger.icrc1_balance_of(checkAccount));
 
-              return balance >= entryFee;
+              return balance >= token.entryFee;
             };
           }
         }
@@ -139,7 +139,7 @@ module {
 
         
       let private_league_canister = actor (canisterId) : actor {
-        getPrivateLeague : () -> async DTOs.PrivateLeagueDTO;
+        getPrivateLeague : () -> async Result.Result<DTOs.PrivateLeagueDTO, T.Error>;
       };
 
       let privateLeague = await private_league_canister.getPrivateLeague();

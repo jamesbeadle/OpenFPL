@@ -28,34 +28,34 @@ module {
     
     public func getWeeklyLeaderboard(canisterId: T.CanisterId, seasonId: T.SeasonId, gameweek: T.GameweekNumber, limit : Nat, offset : Nat) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
       let private_league_canister = actor (canisterId) : actor {
-        getWeeklyLeaderboard : (seasonId : T.SeasonId, gameweek: T.GameweekNumber, limit : Nat, offset : Nat) -> async DTOs.WeeklyLeaderboardDTO;
+        getWeeklyLeaderboard : (seasonId : T.SeasonId, gameweek: T.GameweekNumber, limit : Nat, offset : Nat) -> async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error>;
       };
 
-      return #ok(await private_league_canister.getWeeklyLeaderboard(seasonId, gameweek, limit, offset));
+      return await private_league_canister.getWeeklyLeaderboard(seasonId, gameweek, limit, offset);
     };
 
     public func getMonthlyLeaderboard(canisterId: T.CanisterId, seasonId : T.SeasonId, month: T.CalendarMonth, limit : Nat, offset : Nat) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error> {
       let private_league_canister = actor (canisterId) : actor {
-        getMonthlyLeaderboard : (seasonId : T.SeasonId, month: T.CalendarMonth, limit : Nat, offset : Nat) -> async DTOs.MonthlyLeaderboardDTO;
+        getMonthlyLeaderboard : (seasonId : T.SeasonId, month: T.CalendarMonth, limit : Nat, offset : Nat) -> async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error>;
       };
 
-      return #ok(await private_league_canister.getMonthlyLeaderboard(seasonId, month, limit, offset));
+      return await private_league_canister.getMonthlyLeaderboard(seasonId, month, limit, offset);
     };
 
     public func getSeasonLeaderboard(canisterId: T.CanisterId, seasonId : T.SeasonId, limit : Nat, offset : Nat) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error> {
       let private_league_canister = actor (canisterId) : actor {
-        getMonthlyLeaderboard : (seasonId : T.SeasonId, limit : Nat, offset : Nat) -> async DTOs.MonthlyLeaderboardDTO;
+        getSeasonLeaderboard : (seasonId : T.SeasonId, limit : Nat, offset : Nat) -> async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error>;
       };
 
-      return #ok(await private_league_canister.getMonthlyLeaderboard(seasonId, limit, offset));
+      return await private_league_canister.getSeasonLeaderboard(seasonId, limit, offset);
     };
     
     public func getLeagueMembers(canisterId: T.CanisterId, limit : Nat, offset : Nat) : async Result.Result<[DTOs.LeagueMemberDTO], T.Error> {
       let private_league_canister = actor (canisterId) : actor {
-        getLeagueMembers : (limit : Nat, offset : Nat) -> async [DTOs.LeagueMemberDTO];
+        getLeagueMembers : (limit : Nat, offset : Nat) -> async Result.Result<[DTOs.LeagueMemberDTO], T.Error>;
       };
 
-      return #ok(await private_league_canister.getLeagueMembers(limit, offset));
+      return await private_league_canister.getLeagueMembers(limit, offset);
     };
 
     public func privateLeagueIsValid(privateLeague: DTOs.CreatePrivateLeagueDTO) : Bool{
@@ -76,17 +76,17 @@ module {
       return #ok();
     };
 
-    public func leagueHasSpace(canisterId: T.CanisterId) : async Bool {
+    public func leagueHasSpace(canisterId: T.CanisterId) : async Result.Result<Bool, T.Error> {
       let private_league_canister = actor (canisterId) : actor {
-        leagueHasSpace : () -> async Bool;
+        leagueHasSpace : () -> async Result.Result<Bool, T.Error>;
       };
 
       return await private_league_canister.leagueHasSpace();
     };
 
-    public func isLeagueAdmin(canisterId: T.CanisterId, principalId: T.PrincipalId) : async Bool {
+    public func isLeagueAdmin(canisterId: T.CanisterId, principalId: T.PrincipalId) : async Result.Result<Bool, T.Error> {
       let private_league_canister = actor (canisterId) : actor {
-        isLeagueAdmin : (principalId: T.PrincipalId) -> async Bool;
+        isLeagueAdmin : (principalId: T.PrincipalId) -> async Result.Result<Bool, T.Error>;
       };
 
       return await private_league_canister.isLeagueAdmin(principalId);
@@ -137,9 +137,9 @@ module {
       return #ok();
     };
 
-    public func getPrivateLeague(canisterId: T.CanisterId) : async DTOs.PrivateLeagueDTO {
+    public func getPrivateLeague(canisterId: T.CanisterId) : async Result.Result<DTOs.PrivateLeagueDTO, T.Error> {
       let private_league_canister = actor (canisterId) : actor {
-        getPrivateLeague : () -> async DTOs.PrivateLeagueDTO;
+        getPrivateLeague : () -> async Result.Result<DTOs.PrivateLeagueDTO, T.Error>;
       };
 
       return await private_league_canister.getPrivateLeague();
