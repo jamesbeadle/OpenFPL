@@ -450,10 +450,12 @@ module DTOs {
   public type CreatePrivateLeagueDTO = {
     name: Text;
     entrants: Nat16;
-    leaguePhoto: ?Blob;
+    photo: ?Blob;
+    banner: ?Blob;
     termsAgreed: Bool;
     entryRequirement: T.EntryRequirement;
     adminFee: Nat8;
+    entryFee: Nat64;
   };
 
   public type ManagerPrivateLeaguesDTO = {

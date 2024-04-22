@@ -3,12 +3,16 @@ import T "types";
 import DTOs "DTOs";
 import Result "mo:base/Result";
 import Iter "mo:base/Iter";
+import Text "mo:base/Text";
+import Array "mo:base/Array";
+import Blob "mo:base/Blob";
 
 module {
 
   public class PrivateLeaguesManager() {
     
     private var privateLeagueCanisterIds: [T.CanisterId] = [];
+    private var privateLeagueNameIndex: [(T.CanisterId, Text)] = [];
 
     public func getStablePrivateLeagueCanisterIds() : [T.CanisterId] {
       return privateLeagueCanisterIds;
@@ -59,11 +63,63 @@ module {
     };
 
     public func privateLeagueIsValid(privateLeague: DTOs.CreatePrivateLeagueDTO) : Bool{
-      return false;
+      if(Text.size(privateLeague.name) < 2 or Text.size(privateLeague.name) > 20){
+        return false;
+      };
+
+      if(privateLeague.entrants < 2 or privateLeague.entrants > 1000){
+        return false;
+      };
+
+      switch(privateLeague.photo){
+        case null {};
+        case (?foundPicture){
+          let pictureSizeKB = Array.size(Blob.toArray(foundPicture)) / 1024;
+          if(pictureSizeKB <= 0 or pictureSizeKB > 500){
+            return false;
+          };
+        }
+      };
+
+      switch(privateLeague.banner){
+        case null {};
+        case (?foundBanner){
+          let bannerSizeKB = Array.size(Blob.toArray(foundBanner)) / 1024;
+          if(bannerSizeKB <= 0 or bannerSizeKB > 500){
+            return false;
+          };
+        }
+      };
+
+      if(privateLeague.adminFee < 0 or privateLeague.adminFee > 5){
+        return false;
+      };
+
+      switch(privateLeague.entryRequirement){
+        case (#FreeEntry){};
+        case (#InviteOnly){};
+        case (#PaidEntry){
+          if(privateLeague.entryFee <= 0){
+            return false;
+          };
+        };
+        case (#PaidInviteEntry){
+          if(privateLeague.entryFee <= 0){
+            return false;
+          };
+        };
+      };
+      
+      return true;
     };
 
     public func nameAvailable(privateLeagueName: Text) : Bool{
-      return false;
+      for(name in Iter.fromArray(privateLeagueNameIndex)){
+        if(name.1 == privateLeagueName){
+          return false;
+        }
+      };
+      return true;
     };
 
     public func canAffordPrivateLeague(caller: T.PrincipalId) : Bool{

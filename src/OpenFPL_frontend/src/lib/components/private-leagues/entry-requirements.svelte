@@ -36,7 +36,7 @@
           <label class="block text-sm font-bold mb-2" for="entry-fee">
               Entry Fee:
           </label>
-          <input type="number" step="0.0000001" min="2" max="10000" bind:value={entryFee} class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline" id="entry-fee" />
+          <input type="number" step="0.0000001" min="2" max="1000" bind:value={entryFee} class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline" id="entry-fee" />
       </div>
 
       <div class="mb-4">

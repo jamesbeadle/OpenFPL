@@ -5,7 +5,7 @@
   
     let leagueName: string = '';
     let fileInputProfile: HTMLInputElement;
-    let maxEntrants: number = 10000;
+    let maxEntrants: number = 1000;
     let leaguePicture: File;
     let leaguePictureName: string = 'No file chosen';
     export let privateLeague = writable<CreatePrivateLeagueDTO>({
@@ -84,7 +84,7 @@
       <label class="block text-sm mb-2" for="max-entrants">
         Max Entrants:
       </label>
-      <input type="number" min="2" max="10000" bind:value={maxEntrants} class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline" id="max-entrants" />
+      <input type="number" min="2" max="1000" bind:value={maxEntrants} class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline" id="max-entrants" />
     </div>
       
     <div>
