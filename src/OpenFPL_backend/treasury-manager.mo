@@ -102,26 +102,46 @@ module {
       return tokenList;
     };
 
-    public func canAffordEntryFee(defaultAccount: Principal, canisterId: T.CanisterId, managerId: T.PrincipalId) : async Bool {
-      
-      //get the entry details for the league
-      let entryFee: Nat64 = 0;
-
-      let ledger : SNSToken.Interface = actor (canisterId);
-      
-      let source_account = Account.accountIdentifier(defaultAccount, Account.principalToSubaccount(Principal.fromText(managerId)));
-      let checkAccount : SNSToken.Account = {
-        owner = Principal.fromBlob(source_account);
-        subaccount = null;
+    public func canAffordEntryFee(defaultAccount: Principal, leagueCanisterId: T.CanisterId, managerId: T.PrincipalId, tokenId: T.TokenId) : async Bool {
+        
+      let private_league_canister = actor (canisterId) : actor {
+        getPrivateLeague : () -> async DTOs.PrivateLeagueDTO;
       };
 
-      let balance = Nat64.fromNat(await ledger.icrc1_balance_of(checkAccount));
+      let privateLeague = await private_league_canister.getPrivateLeague();
 
-      return balance >= entryFee;
+      switch(privateLeague){
+        case (null) {
+          return false;
+        };
+        case (?foundPrivateLeague){
+          let tokenId = foundPrivateLeague.tokenId;
+          for(token in Iter.fromArray(tokenList)){
+            if(token.id == tokenId){
+              let ledger : SNSToken.Interface = actor (token.canisterId);
+
+              let source_account = Account.accountIdentifier(defaultAccount, Account.principalToSubaccount(Principal.fromText(managerId)));
+              let checkAccount : SNSToken.Account = {
+                owner = Principal.fromBlob(source_account);
+                subaccount = null;
+              };
+
+              let balance = Nat64.fromNat(await ledger.icrc1_balance_of(checkAccount));
+
+              return balance >= entryFee;
+            };
+          }
+        }
+      };
     };
 
     public func payEntryFee(defaultAccount: Principal, canisterId: T.CanisterId, managerId: T.PrincipalId) : async (){
       
+      let private_league_canister = actor (canisterId) : actor {
+        getEntryFee : () -> async Nat64;
+      };
+
+      let entryFee: Nat64 = await private_league_canister.getEntryFee();
       //get the entry details for the league
       let entryFee: Nat = 0;
       let token_fee: Nat = 0;

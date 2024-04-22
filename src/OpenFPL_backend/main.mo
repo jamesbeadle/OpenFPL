@@ -579,6 +579,7 @@ actor Self {
     assert(await treasuryManager.canAffordEntryFee(canisterId, userPrincipal));
     await treasuryManager.payEntryFee(canisterId, userPrincipal);
     await seasonManager.enterLeague(canisterId, userPrincipal);
+
   };
 
   public shared ({ caller }) func acceptInviteAndPayFee(canisterId: T.CanisterId) : async Result.Result<(), T.Error> {

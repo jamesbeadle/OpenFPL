@@ -13,6 +13,7 @@ module _Types {
   public type PrincipalId = Text;
   public type CanisterId = Text;
   public type RustResult = { #Ok; #Err : Text };
+  public type TokenId = Nat16;
 
   public type Error = {
     #NotFound;
@@ -419,5 +420,6 @@ module _Types {
     ticker: Text;
     canisterId: CanisterId;
     tokenImageURL: Text;
+    tokenId: TokenId;
   };
 };
