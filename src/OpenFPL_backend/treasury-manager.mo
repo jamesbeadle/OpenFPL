@@ -136,26 +136,36 @@ module {
     };
 
     public func payEntryFee(defaultAccount: Principal, canisterId: T.CanisterId, managerId: T.PrincipalId) : async (){
-      
+
+        
       let private_league_canister = actor (canisterId) : actor {
-        getEntryFee : () -> async Nat64;
+        getPrivateLeague : () -> async DTOs.PrivateLeagueDTO;
       };
 
-      let entryFee: Nat64 = await private_league_canister.getEntryFee();
-      //get the entry details for the league
-      let entryFee: Nat = 0;
-      let token_fee: Nat = 0;
+      let privateLeague = await private_league_canister.getPrivateLeague();
 
-      let ledger : SNSToken.Interface = actor (canisterId);
-      
-      let _ = await ledger.icrc1_transfer({
-        memo = ?Blob.fromArray([]);
-        from_subaccount = ?Account.principalToSubaccount(Principal.fromText(managerId));
-        to = {owner = defaultAccount; subaccount = ?Account.defaultSubaccount()};
-        amount = entryFee - token_fee ;
-        fee = ?token_fee;
-        created_at_time = ?Nat64.fromNat(Int.abs(Time.now()));
-      });
+      switch(privateLeague){
+        case (null) {
+          return false;
+        };
+        case (?foundPrivateLeague){
+          let tokenId = foundPrivateLeague.tokenId;
+          for(token in Iter.fromArray(tokenList)){
+            if(token.id == tokenId){
+              let ledger : SNSToken.Interface = actor (token.canisterId);
+              
+              let _ = await ledger.icrc1_transfer({
+                memo = ?Blob.fromArray([]);
+                from_subaccount = ?Account.principalToSubaccount(Principal.fromText(managerId));
+                to = {owner = defaultAccount; subaccount = ?Account.defaultSubaccount()};
+                amount = entryFee - token_fee ;
+                fee = ?token_fee;
+                created_at_time = ?Nat64.fromNat(Int.abs(Time.now()));
+              });
+            };
+          }
+        }
+      };
     };
 
   };
