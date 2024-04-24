@@ -38,6 +38,5 @@ module Tokens {
     { id = 32; ticker = "TENDY"; canisterId = "iozql-7iaaa-aaaah-advvq-cai"; tokenImageURL = ""; fee = 0 },
     { id = 33; ticker = "TAL"; canisterId = "gnc5v-fyaaa-aaaar-qab2q-cai"; tokenImageURL = ""; fee = 0 },
     { id = 34; ticker = "ICS"; canisterId = "ca6gz-lqaaa-aaaaq-aacwa-cai"; tokenImageURL = ""; fee = 0}
-    
    ];
 };

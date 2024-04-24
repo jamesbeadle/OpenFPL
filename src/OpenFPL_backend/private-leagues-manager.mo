@@ -26,8 +26,8 @@ module {
       return privateLeagueNameIndex;
     };
 
-    public func setStablePrivateLeagueNameIndex(stable_private_league_NameIndex: [(T.CanisterId, Text)]) {
-      privateLeagueNameIndex := stable_private_league_NameIndex;
+    public func setStablePrivateLeagueNameIndex(stable_private_league_name_index: [(T.CanisterId, Text)]) {
+      privateLeagueNameIndex := stable_private_league_name_index;
     };
 
     public func isLeagueMember(canisterId: T.CanisterId, callerId: T.PrincipalId) : async Bool {
@@ -133,24 +133,50 @@ module {
     public func createPrivateLeague(newPrivateLeague: DTOs.CreatePrivateLeagueDTO) : async Result.Result<(), T.Error> {
       //TODO: TAKE PAYMENT
       
+    /*
+      let entry_fee : Nat64 = 100_000_000;
+      let icp_fee : Nat64 = 10_000;
+
+      switch(newPrivateLeague.paymentChoice){
+        case (#ICP) {
+
+        };
+        case (#FPL) {
+          let ledger : SNSToken.Interface = actor (ledgerCanisterId);
+
+        };
+      };
+      let _ = await ledger.transfer({
+        memo = 0;
+        from_subaccount = ?Account.principalToSubaccount(user);
+        to = Account.accountIdentifier(defaultAccount, Account.defaultSubaccount());
+        amount = { e8s = entry_fee - icp_fee };
+        fee = { e8s = icp_fee };
+        created_at_time = ?{
+          timestamp_nanos = Nat64.fromNat(Int.abs(Time.now()));
+        };
+      });
+
+      //add name to index
+      
       //create canister
 
       //set up canister
-
+*/
       return #ok();
     };
 
-    public func leagueHasSpace(canisterId: T.CanisterId) : async Result.Result<Bool, T.Error> {
+    public func leagueHasSpace(canisterId: T.CanisterId) : async Bool {
       let private_league_canister = actor (canisterId) : actor {
-        leagueHasSpace : () -> async Result.Result<Bool, T.Error>;
+        leagueHasSpace : () -> async Bool;
       };
 
       return await private_league_canister.leagueHasSpace();
     };
 
-    public func isLeagueAdmin(canisterId: T.CanisterId, principalId: T.PrincipalId) : async Result.Result<Bool, T.Error> {
+    public func isLeagueAdmin(canisterId: T.CanisterId, principalId: T.PrincipalId) : async Bool {
       let private_league_canister = actor (canisterId) : actor {
-        isLeagueAdmin : (principalId: T.PrincipalId) -> async Result.Result<Bool, T.Error>;
+        isLeagueAdmin : (principalId: T.PrincipalId) -> async Bool;
       };
 
       return await private_league_canister.isLeagueAdmin(principalId);
@@ -204,9 +230,9 @@ module {
       return await private_league_canister.enterLeague(managerId);
     };
 
-    public func inviteExists(canisterId: T.CanisterId, managerId: T.PrincipalId) : async Result.Result<Bool, T.Error> {
+    public func inviteExists(canisterId: T.CanisterId, managerId: T.PrincipalId) : async Bool {
       let private_league_canister = actor (canisterId) : actor {
-        inviteExists : (managerId: T.PrincipalId) -> async Result.Result<Bool, T.Error>;
+        inviteExists : (managerId: T.PrincipalId) -> async Bool;
       };
 
       return await private_league_canister.inviteExists(managerId);

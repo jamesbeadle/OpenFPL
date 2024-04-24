@@ -54,6 +54,9 @@ actor class _PrivateLeague() {
     };
 
     public shared ({ caller }) func updateManager(manager: T.Manager){
+        assert not Principal.isAnonymous(caller);
+        let principalId = Principal.toText(caller);
+        assert principalId == main_canister_id; //Need to check that this canister is one of the manager canisters or make the change via the backend
         //TODO: Check caller is one of the allowed private league canisters
 
         //TODO: Update just the information required for the league to keep the data light
@@ -114,19 +117,18 @@ actor class _PrivateLeague() {
         return #err(#NotFound);
     };
 
-    public shared ({ caller }) func leagueHasSpace() : async Result.Result<Bool, T.Error> {
+    public shared ({ caller }) func leagueHasSpace() : async Bool {
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
         assert principalId == main_canister_id;
-        return #err(#NotFound);
-
+        return false;
     };
 
-    public shared ({ caller }) func isLeagueAdmin() : async Result.Result<Bool, T.Error> {
+    public shared ({ caller }) func isLeagueAdmin() : async Bool {
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
         assert principalId == main_canister_id;
-        return #err(#NotFound);
+        return false;
 
     };
 

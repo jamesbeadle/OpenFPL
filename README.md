@@ -16,15 +16,49 @@ These steps assume that you already run IC projects within a local development e
 
 More information about the Internet Computer blockchain can be found at https://internetcomputer.org.
 
-## Installation
+## Install SNS
 
-1. Clone the repository:
+To run OpenFPL you will need to setup a local version of the NNS containing the FPL utility token with users after the SNS sale. To get to this state follow these steps:
+
+1. Clone the sns testing repo into your linux root directory:
+
+```bash
+git clone https://github.com/dfinity/sns-testing.git
+```
+2. Clone the OpenFPL repository:
 
 ```bash
 git clone https://github.com/jamesbeadle/OpenFPL.git
 ```
+SNS_TESTING_INSTANCE=$(
+   docker run -p 8000:8000 -p 8080:8080 -v "`pwd`":/dapp -d ghcr.io/dfinity/sns-testing:main dfx start --clean
+)
+while ! docker logs $SNS_TESTING_INSTANCE 2>&1 | grep -m 1 'Dashboard:'
+do
+   echo "Awaiting local replica ..."
+   sleep 3
+done
 
-2. Navigate to the directory:
+docker exec -it $SNS_TESTING_INSTANCE bash setup_locally.sh
+
+docker kill $SNS_TESTING_INSTANCE
+
+docker exec -it $SNS_TESTING_INSTANCE bash
+
+./cleanup.sh  # from Bash
+
+SNS_TESTING_INSTANCE=$(
+   docker run -p 8000:8000 -p 8080:8080 -v "`pwd`":/dapp -d ghcr.io/dfinity/sns-testing:main dfx start --clean
+)
+while ! docker logs $SNS_TESTING_INSTANCE 2>&1 | grep -m 1 'Dashboard:'
+do
+   echo "Awaiting local replica ..."
+   sleep 3
+done
+
+
+
+3. Navigate to the  directory:
 
 ```bash
 cd OpenFPL

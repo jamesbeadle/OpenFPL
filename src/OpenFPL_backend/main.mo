@@ -23,13 +23,15 @@ import TreasuryManager "treasury-manager";
 import CyclesDispenser "cycles-dispenser";
 
 actor Self {
+  
   private let seasonManager = SeasonManager.SeasonManager();
   private let treasuryManager = TreasuryManager.TreasuryManager();
   private let cyclesDispenser = CyclesDispenser.CyclesDispenser();
-  private let cyclesCheckInterval : Nat = Utilities.getHour() * 24;
-  private let cyclesCheckWalletInterval : Nat = Utilities.getHour() * 24;
 
+  private let cyclesCheckInterval : Nat = Utilities.getHour() * 24;
   private var cyclesCheckTimerId : ?Timer.TimerId = null;
+  
+  private let cyclesCheckWalletInterval : Nat = Utilities.getHour() * 24;
   private var cyclesCheckWalletTimerId : ?Timer.TimerId = null;
 
 
@@ -501,7 +503,7 @@ actor Self {
     assert(newPrivateLeague.termsAgreed);
     assert(seasonManager.privateLeagueIsValid(newPrivateLeague));
     assert(seasonManager.nameAvailable(newPrivateLeague.name));
-    assert(treasuryManager.canAffordPrivateLeague(Principal.toText(caller)));
+    assert(await treasuryManager.canAffordPrivateLeague(Principal.fromActor(Self), Principal.toText(caller), newPrivateLeague.paymentChoice));
     return await seasonManager.createPrivateLeague(newPrivateLeague);
   };
 
@@ -557,15 +559,20 @@ actor Self {
     let isLeagueMember = await seasonManager.isLeagueMember(canisterId, Principal.toText(caller));
     assert not isLeagueMember;
 
-    let league = await seasonManager.getPrivateLeague(canisterId);
-    switch(league.entryType){
-      case (#FreeEntry){
-        await seasonManager.enterLeague(canisterId, Principal.toText(caller));
+    let privateLeague = await seasonManager.getPrivateLeague(canisterId);
+    switch(privateLeague){
+      case (#ok foundPrivateLeague){
+        switch(foundPrivateLeague.entryType){
+          case (#FreeEntry){
+            await seasonManager.enterLeague(canisterId, Principal.toText(caller));
+          };
+          case _ {
+            return (#err(#NotFound));
+          };
+        };
       };
-      case _ {
-        return (#err(#NotFound));
-      };
-    };
+      case _ { #err(#NotFound) };
+    };    
   };
 
   public shared ({ caller }) func enterLeagueWithFee(canisterId: T.CanisterId) : async Result.Result<(), T.Error> {
@@ -576,9 +583,17 @@ actor Self {
     let isLeagueMember = await seasonManager.isLeagueMember(canisterId, userPrincipal);
     assert not isLeagueMember;
 
-    assert(await treasuryManager.canAffordEntryFee(canisterId, userPrincipal));
-    await treasuryManager.payEntryFee(canisterId, userPrincipal);
-    await seasonManager.enterLeague(canisterId, userPrincipal);
+    let privateLeague = await seasonManager.getPrivateLeague(canisterId);
+    switch(privateLeague){
+      case (#ok foundPrivateLeague){
+        assert(await treasuryManager.canAffordEntryFee(Principal.fromActor(Self), canisterId, userPrincipal, foundPrivateLeague.tokenId));
+        await treasuryManager.payEntryFee(Principal.fromActor(Self), canisterId, userPrincipal);
+        await seasonManager.enterLeague(canisterId, userPrincipal);
+      };
+      case _ { #err(#NotFound) };
+    };
+
+    
 
   };
 
@@ -590,9 +605,16 @@ actor Self {
     let isLeagueMember = await seasonManager.isLeagueMember(canisterId, userPrincipal);
     assert not isLeagueMember;
     assert(await seasonManager.inviteExists(canisterId, Principal.toText(caller)));
-    assert(await treasuryManager.canAffordEntryFee(canisterId, userPrincipal));
-    await treasuryManager.payEntryFee(canisterId, userPrincipal);
-    await seasonManager.acceptInvite(canisterId, userPrincipal);
+    
+    let privateLeague = await seasonManager.getPrivateLeague(canisterId);
+    switch(privateLeague){
+      case (#ok foundPrivateLeague){
+        assert(await treasuryManager.canAffordEntryFee(Principal.fromActor(Self), canisterId, userPrincipal, foundPrivateLeague.tokenId));
+        await treasuryManager.payEntryFee(Principal.fromActor(Self), canisterId, userPrincipal);
+        await seasonManager.acceptInvite(canisterId, userPrincipal);
+      };
+      case _ { #err(#NotFound) };
+    };
   };
 
   public shared ({ caller }) func getTokenList() : async Result.Result<[T.TokenInfo], T.Error> {

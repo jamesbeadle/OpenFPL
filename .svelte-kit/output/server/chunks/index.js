@@ -3513,7 +3513,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "nh1t1v"
+  version_hash: "1hzlna4"
 };
 async function get_hooks() {
   return {};
@@ -3721,19 +3721,7 @@ const initAuthStore = () => {
 };
 const authStore = initAuthStore();
 const idlFactory = ({ IDL }) => {
-  const EntryRequirement = IDL.Variant({
-    InviteOnly: IDL.Null,
-    PaidEntry: IDL.Null,
-    FreeEntry: IDL.Null
-  });
-  const CreatePrivateLeagueDTO = IDL.Record({
-    adminFee: IDL.Nat8,
-    name: IDL.Text,
-    entryRequirement: EntryRequirement,
-    entrants: IDL.Nat16,
-    termsAgreed: IDL.Bool,
-    leaguePhoto: IDL.Opt(IDL.Vec(IDL.Nat8))
-  });
+  const CanisterId = IDL.Text;
   const Error2 = IDL.Variant({
     DecodeError: IDL.Null,
     NotAllowed: IDL.Null,
@@ -3745,7 +3733,25 @@ const idlFactory = ({ IDL }) => {
     CanisterCreateError: IDL.Null,
     InvalidTeamError: IDL.Null
   });
-  const Result_1 = IDL.Variant({ ok: IDL.Null, err: Error2 });
+  const Result = IDL.Variant({ ok: IDL.Null, err: Error2 });
+  const EntryRequirement = IDL.Variant({
+    InviteOnly: IDL.Null,
+    PaidEntry: IDL.Null,
+    PaidInviteEntry: IDL.Null,
+    FreeEntry: IDL.Null
+  });
+  const PaymentChoice = IDL.Variant({ FPL: IDL.Null, ICP: IDL.Null });
+  const CreatePrivateLeagueDTO = IDL.Record({
+    adminFee: IDL.Nat8,
+    name: IDL.Text,
+    banner: IDL.Opt(IDL.Vec(IDL.Nat8)),
+    entryRequirement: EntryRequirement,
+    entrants: IDL.Nat16,
+    photo: IDL.Opt(IDL.Vec(IDL.Nat8)),
+    entryFee: IDL.Nat,
+    paymentChoice: PaymentChoice,
+    termsAgreed: IDL.Bool
+  });
   const SeasonId = IDL.Nat16;
   const FixtureStatusType = IDL.Variant({
     Unplayed: IDL.Null,
@@ -3794,6 +3800,12 @@ const idlFactory = ({ IDL }) => {
   const AddInitialFixturesDTO = IDL.Record({
     seasonId: SeasonId,
     seasonFixtures: IDL.Vec(FixtureDTO)
+  });
+  const NewTokenDTO = IDL.Record({
+    fee: IDL.Nat,
+    ticker: IDL.Text,
+    tokenImageURL: IDL.Text,
+    canisterId: CanisterId
   });
   const CountryId = IDL.Nat16;
   const PlayerPosition = IDL.Variant({
@@ -3937,7 +3949,6 @@ const idlFactory = ({ IDL }) => {
     lastName: IDL.Text,
     firstName: IDL.Text
   });
-  const Result_22 = IDL.Variant({ ok: IDL.Text, err: Error2 });
   const ClubDTO = IDL.Record({
     id: ClubId,
     secondaryColourHex: IDL.Text,
@@ -3988,7 +3999,7 @@ const idlFactory = ({ IDL }) => {
     ok: IDL.Vec(DataCacheDTO),
     err: Error2
   });
-  const Result_12 = IDL.Variant({ ok: IDL.Vec(FixtureDTO), err: Error2 });
+  const Result_13 = IDL.Variant({ ok: IDL.Vec(FixtureDTO), err: Error2 });
   const PlayerStatus = IDL.Variant({
     OnLoan: IDL.Null,
     Former: IDL.Null,
@@ -4008,7 +4019,7 @@ const idlFactory = ({ IDL }) => {
     lastName: IDL.Text,
     firstName: IDL.Text
   });
-  const Result_7 = IDL.Variant({ ok: IDL.Vec(PlayerDTO), err: Error2 });
+  const Result_8 = IDL.Variant({ ok: IDL.Vec(PlayerDTO), err: Error2 });
   const CalendarMonth = IDL.Nat8;
   const FantasyTeamSnapshot = IDL.Record({
     playerIds: IDL.Vec(PlayerId),
@@ -4056,12 +4067,13 @@ const idlFactory = ({ IDL }) => {
     monthlyPosition: IDL.Int,
     seasonPosition: IDL.Int,
     monthlyPositionText: IDL.Text,
+    privateLeagueMemberships: IDL.Vec(CanisterId),
     profilePicture: IDL.Opt(IDL.Vec(IDL.Nat8)),
     seasonPoints: IDL.Int16,
     principalId: IDL.Text,
     seasonPositionText: IDL.Text
   });
-  const Result_17 = IDL.Variant({ ok: ManagerDTO, err: Error2 });
+  const Result_1 = IDL.Variant({ ok: ManagerDTO, err: Error2 });
   const LeaderboardEntry = IDL.Record({
     username: IDL.Text,
     positionText: IDL.Text,
@@ -4076,11 +4088,11 @@ const idlFactory = ({ IDL }) => {
     seasonId: SeasonId,
     entries: IDL.Vec(LeaderboardEntry)
   });
-  const Result_10 = IDL.Variant({
+  const Result_11 = IDL.Variant({
     ok: MonthlyLeaderboardDTO,
     err: Error2
   });
-  const Result_16 = IDL.Variant({
+  const Result_17 = IDL.Variant({
     ok: IDL.Vec(MonthlyLeaderboardDTO),
     err: Error2
   });
@@ -4120,7 +4132,7 @@ const idlFactory = ({ IDL }) => {
     lastName: IDL.Text,
     firstName: IDL.Text
   });
-  const Result_15 = IDL.Variant({ ok: PlayerDetailDTO, err: Error2 });
+  const Result_16 = IDL.Variant({ ok: PlayerDetailDTO, err: Error2 });
   const PlayerPointsDTO = IDL.Record({
     id: IDL.Nat16,
     clubId: ClubId,
@@ -4129,7 +4141,7 @@ const idlFactory = ({ IDL }) => {
     gameweek: GameweekNumber,
     points: IDL.Int16
   });
-  const Result_14 = IDL.Variant({
+  const Result_15 = IDL.Variant({
     ok: IDL.Vec(PlayerPointsDTO),
     err: Error2
   });
@@ -4146,18 +4158,17 @@ const idlFactory = ({ IDL }) => {
     position: PlayerPosition,
     points: IDL.Int16
   });
-  const Result_13 = IDL.Variant({
+  const Result_14 = IDL.Variant({
     ok: IDL.Vec(IDL.Tuple(IDL.Nat16, PlayerScoreDTO)),
     err: Error2
   });
-  const CanisterId = IDL.Text;
   const PrincipalId = IDL.Text;
   const LeagueMemberDTO = IDL.Record({
     added: IDL.Int,
     username: IDL.Text,
     principalId: PrincipalId
   });
-  const Result_11 = IDL.Variant({
+  const Result_12 = IDL.Variant({
     ok: IDL.Vec(LeagueMemberDTO),
     err: Error2
   });
@@ -4166,7 +4177,7 @@ const idlFactory = ({ IDL }) => {
     seasonId: SeasonId,
     entries: IDL.Vec(LeaderboardEntry)
   });
-  const Result_6 = IDL.Variant({ ok: SeasonLeaderboardDTO, err: Error2 });
+  const Result_7 = IDL.Variant({ ok: SeasonLeaderboardDTO, err: Error2 });
   const WeeklyLeaderboardDTO = IDL.Record({
     totalEntries: IDL.Nat,
     seasonId: SeasonId,
@@ -4174,18 +4185,21 @@ const idlFactory = ({ IDL }) => {
     gameweek: GameweekNumber
   });
   const Result_2 = IDL.Variant({ ok: WeeklyLeaderboardDTO, err: Error2 });
-  const PrivateLeagueDTO = IDL.Record({
+  const ManagerPrivateLeagueDTO = IDL.Record({
     created: IDL.Int,
     name: IDL.Text,
     memberCount: IDL.Int,
     seasonPosition: IDL.Nat,
     canisterId: CanisterId
   });
-  const PrivateLeaguesDTO = IDL.Record({
+  const ManagerPrivateLeaguesDTO = IDL.Record({
     totalEntries: IDL.Nat,
-    entries: IDL.Vec(PrivateLeagueDTO)
+    entries: IDL.Vec(ManagerPrivateLeagueDTO)
   });
-  const Result_9 = IDL.Variant({ ok: PrivateLeaguesDTO, err: Error2 });
+  const Result_10 = IDL.Variant({
+    ok: ManagerPrivateLeaguesDTO,
+    err: Error2
+  });
   const ProfileDTO = IDL.Record({
     username: IDL.Text,
     termsAccepted: IDL.Bool,
@@ -4195,13 +4209,13 @@ const idlFactory = ({ IDL }) => {
     profilePictureType: IDL.Text,
     principalId: IDL.Text
   });
-  const Result_8 = IDL.Variant({ ok: ProfileDTO, err: Error2 });
+  const Result_9 = IDL.Variant({ ok: ProfileDTO, err: Error2 });
   const SeasonDTO = IDL.Record({
     id: SeasonId,
     name: IDL.Text,
     year: IDL.Nat16
   });
-  const Result_5 = IDL.Variant({ ok: IDL.Vec(SeasonDTO), err: Error2 });
+  const Result_6 = IDL.Variant({ ok: IDL.Vec(SeasonDTO), err: Error2 });
   const SystemStateDTO = IDL.Record({
     pickTeamSeasonId: SeasonId,
     pickTeamSeasonName: IDL.Text,
@@ -4213,7 +4227,16 @@ const idlFactory = ({ IDL }) => {
     calculationSeasonId: SeasonId,
     onHold: IDL.Bool
   });
-  const Result_4 = IDL.Variant({ ok: SystemStateDTO, err: Error2 });
+  const Result_5 = IDL.Variant({ ok: SystemStateDTO, err: Error2 });
+  const TokenId = IDL.Nat16;
+  const TokenInfo = IDL.Record({
+    id: TokenId,
+    fee: IDL.Nat,
+    ticker: IDL.Text,
+    tokenImageURL: IDL.Text,
+    canisterId: CanisterId
+  });
+  const Result_4 = IDL.Variant({ ok: IDL.Vec(TokenInfo), err: Error2 });
   const Result_3 = IDL.Variant({ ok: IDL.Nat, err: Error2 });
   const UpdateTeamSelectionDTO = IDL.Record({
     playerIds: IDL.Vec(PlayerId),
@@ -4238,12 +4261,14 @@ const idlFactory = ({ IDL }) => {
     passMasterPlayerId: PlayerId,
     captainId: PlayerId
   });
-  const Result = IDL.Variant({ ok: IDL.Text, err: IDL.Text });
   const RustResult = IDL.Variant({ Ok: IDL.Null, Err: IDL.Text });
   return IDL.Service({
+    acceptLeagueInvite: IDL.Func([CanisterId], [Result], []),
     burnICPToCycles: IDL.Func([IDL.Nat64], [], []),
-    createPrivateLeague: IDL.Func([CreatePrivateLeagueDTO], [Result_1], []),
+    createPrivateLeague: IDL.Func([CreatePrivateLeagueDTO], [Result], []),
+    enterLeague: IDL.Func([CanisterId], [Result], []),
     executeAddInitialFixtures: IDL.Func([AddInitialFixturesDTO], [], []),
+    executeAddNewToken: IDL.Func([NewTokenDTO], [], []),
     executeCreateDAONeuron: IDL.Func([], [], []),
     executeCreatePlayer: IDL.Func([CreatePlayerDTO], [], []),
     executeLoanPlayer: IDL.Func([LoanPlayerDTO], [], []),
@@ -4263,48 +4288,47 @@ const idlFactory = ({ IDL }) => {
     executeUnretirePlayer: IDL.Func([UnretirePlayerDTO], [], []),
     executeUpdateClub: IDL.Func([UpdateClubDTO], [], []),
     executeUpdatePlayer: IDL.Func([UpdatePlayerDTO], [], []),
-    getBackendCanisterId: IDL.Func([], [Result_22], ["query"]),
     getClubs: IDL.Func([], [Result_18], ["query"]),
     getCountries: IDL.Func([], [Result_21], ["query"]),
     getCurrentTeam: IDL.Func([], [Result_20], []),
     getDataHashes: IDL.Func([], [Result_19], ["query"]),
-    getFixtures: IDL.Func([SeasonId], [Result_12], ["query"]),
+    getFixtures: IDL.Func([SeasonId], [Result_13], ["query"]),
     getFormerClubs: IDL.Func([], [Result_18], ["query"]),
-    getLoanedPlayers: IDL.Func([ClubId], [Result_7], ["query"]),
-    getManager: IDL.Func([IDL.Text], [Result_17], []),
+    getLoanedPlayers: IDL.Func([ClubId], [Result_8], ["query"]),
+    getManager: IDL.Func([IDL.Text], [Result_1], []),
     getMonthlyLeaderboard: IDL.Func(
       [SeasonId, ClubId, CalendarMonth, IDL.Nat, IDL.Nat, IDL.Text],
-      [Result_10],
+      [Result_11],
       []
     ),
     getMonthlyLeaderboards: IDL.Func(
       [SeasonId, CalendarMonth],
-      [Result_16],
+      [Result_17],
       []
     ),
     getNeuronId: IDL.Func([], [IDL.Nat64], []),
-    getPlayerDetails: IDL.Func([PlayerId, SeasonId], [Result_15], ["query"]),
+    getPlayerDetails: IDL.Func([PlayerId, SeasonId], [Result_16], ["query"]),
     getPlayerDetailsForGameweek: IDL.Func(
       [SeasonId, GameweekNumber],
-      [Result_14],
+      [Result_15],
       ["query"]
     ),
-    getPlayers: IDL.Func([], [Result_7], ["query"]),
-    getPlayersMap: IDL.Func([SeasonId, GameweekNumber], [Result_13], ["query"]),
-    getPostponedFixtures: IDL.Func([], [Result_12], ["query"]),
+    getPlayers: IDL.Func([], [Result_8], ["query"]),
+    getPlayersMap: IDL.Func([SeasonId, GameweekNumber], [Result_14], ["query"]),
+    getPostponedFixtures: IDL.Func([], [Result_13], ["query"]),
     getPrivateLeagueMembers: IDL.Func(
       [CanisterId, IDL.Nat, IDL.Nat],
-      [Result_11],
+      [Result_12],
       []
     ),
     getPrivateLeagueMonthlyLeaderboard: IDL.Func(
       [CanisterId, SeasonId, CalendarMonth, IDL.Nat, IDL.Nat],
-      [Result_10],
+      [Result_11],
       []
     ),
     getPrivateLeagueSeasonLeaderboard: IDL.Func(
       [CanisterId, SeasonId, IDL.Nat, IDL.Nat],
-      [Result_6],
+      [Result_7],
       []
     ),
     getPrivateLeagueWeeklyLeaderboard: IDL.Func(
@@ -4312,88 +4336,107 @@ const idlFactory = ({ IDL }) => {
       [Result_2],
       []
     ),
-    getPrivateLeagues: IDL.Func([], [Result_9], []),
-    getProfile: IDL.Func([], [Result_8], []),
-    getRetiredPlayers: IDL.Func([ClubId], [Result_7], ["query"]),
+    getPrivateLeagues: IDL.Func([], [Result_10], []),
+    getProfile: IDL.Func([], [Result_9], []),
+    getRetiredPlayers: IDL.Func([ClubId], [Result_8], ["query"]),
     getSeasonLeaderboard: IDL.Func(
       [SeasonId, IDL.Nat, IDL.Nat, IDL.Text],
-      [Result_6],
+      [Result_7],
       []
     ),
-    getSeasons: IDL.Func([], [Result_5], ["query"]),
-    getSystemState: IDL.Func([], [Result_4], ["query"]),
+    getSeasons: IDL.Func([], [Result_6], ["query"]),
+    getSystemState: IDL.Func([], [Result_5], ["query"]),
+    getTokenList: IDL.Func([], [Result_4], []),
     getTotalManagers: IDL.Func([], [Result_3], ["query"]),
     getWeeklyLeaderboard: IDL.Func(
       [SeasonId, GameweekNumber, IDL.Nat, IDL.Nat, IDL.Text],
       [Result_2],
       []
     ),
+    inviteUserToLeague: IDL.Func([CanisterId, PrincipalId], [Result], []),
     isUsernameValid: IDL.Func([IDL.Text], [IDL.Bool], ["query"]),
     requestCanisterTopup: IDL.Func([], [], []),
-    saveFantasyTeam: IDL.Func([UpdateTeamSelectionDTO], [Result_1], []),
+    saveFantasyTeam: IDL.Func([UpdateTeamSelectionDTO], [Result], []),
+    searchUsername: IDL.Func([IDL.Text], [Result_1], []),
     setTimer: IDL.Func([IDL.Int, IDL.Text], [], []),
-    updateFavouriteClub: IDL.Func([ClubId], [Result_1], []),
-    updateProfilePicture: IDL.Func(
-      [IDL.Vec(IDL.Nat8), IDL.Text],
-      [Result_1],
+    updateFavouriteClub: IDL.Func([ClubId], [Result], []),
+    updateLeagueBanner: IDL.Func([CanisterId, IDL.Vec(IDL.Nat8)], [Result], []),
+    updateLeagueName: IDL.Func([CanisterId, IDL.Text], [Result], []),
+    updateLeaguePicture: IDL.Func(
+      [CanisterId, IDL.Vec(IDL.Nat8)],
+      [Result],
       []
     ),
-    updateUsername: IDL.Func([IDL.Text], [Result_1], []),
+    updateProfilePicture: IDL.Func([IDL.Vec(IDL.Nat8), IDL.Text], [Result], []),
+    updateUsername: IDL.Func([IDL.Text], [Result], []),
     validateAddInitialFixtures: IDL.Func(
       [AddInitialFixturesDTO],
-      [Result],
+      [RustResult],
       ["query"]
     ),
+    validateAddNewToken: IDL.Func([NewTokenDTO], [RustResult], ["query"]),
     validateCreateDAONeuron: IDL.Func([], [RustResult], ["query"]),
-    validateCreatePlayer: IDL.Func([CreatePlayerDTO], [Result], ["query"]),
-    validateLoanPlayer: IDL.Func([LoanPlayerDTO], [Result], ["query"]),
-    validateManageDAONeuron: IDL.Func([], [Result], []),
-    validateMoveFixture: IDL.Func([MoveFixtureDTO], [Result], ["query"]),
+    validateCreatePlayer: IDL.Func([CreatePlayerDTO], [RustResult], ["query"]),
+    validateLoanPlayer: IDL.Func([LoanPlayerDTO], [RustResult], ["query"]),
+    validateManageDAONeuron: IDL.Func([], [RustResult], ["query"]),
+    validateMoveFixture: IDL.Func([MoveFixtureDTO], [RustResult], ["query"]),
     validatePostponeFixture: IDL.Func(
       [PostponeFixtureDTO],
-      [Result],
+      [RustResult],
       ["query"]
     ),
     validatePromoteFormerClub: IDL.Func(
       [PromoteFormerClubDTO],
-      [Result],
+      [RustResult],
       ["query"]
     ),
-    validatePromoteNewClub: IDL.Func([PromoteNewClubDTO], [Result], ["query"]),
-    validateRecallPlayer: IDL.Func([RecallPlayerDTO], [Result], ["query"]),
+    validatePromoteNewClub: IDL.Func(
+      [PromoteNewClubDTO],
+      [RustResult],
+      ["query"]
+    ),
+    validateRecallPlayer: IDL.Func([RecallPlayerDTO], [RustResult], ["query"]),
     validateRescheduleFixture: IDL.Func(
       [RescheduleFixtureDTO],
-      [Result],
+      [RustResult],
       ["query"]
     ),
-    validateRetirePlayer: IDL.Func([RetirePlayerDTO], [Result], ["query"]),
+    validateRetirePlayer: IDL.Func([RetirePlayerDTO], [RustResult], ["query"]),
     validateRevaluePlayerDown: IDL.Func(
       [RevaluePlayerDownDTO],
-      [Result],
+      [RustResult],
       ["query"]
     ),
     validateRevaluePlayerUp: IDL.Func(
       [RevaluePlayerUpDTO],
-      [Result],
+      [RustResult],
       ["query"]
     ),
     validateSetPlayerInjury: IDL.Func(
       [SetPlayerInjuryDTO],
-      [Result],
+      [RustResult],
       ["query"]
     ),
     validateSubmitFixtureData: IDL.Func(
       [SubmitFixtureDataDTO],
-      [Result],
+      [RustResult],
       ["query"]
     ),
-    validateTransferPlayer: IDL.Func([TransferPlayerDTO], [Result], ["query"]),
-    validateUnretirePlayer: IDL.Func([UnretirePlayerDTO], [Result], ["query"]),
-    validateUpdateClub: IDL.Func([UpdateClubDTO], [Result], ["query"]),
-    validateUpdatePlayer: IDL.Func([UpdatePlayerDTO], [Result], ["query"])
+    validateTransferPlayer: IDL.Func(
+      [TransferPlayerDTO],
+      [RustResult],
+      ["query"]
+    ),
+    validateUnretirePlayer: IDL.Func(
+      [UnretirePlayerDTO],
+      [RustResult],
+      ["query"]
+    ),
+    validateUpdateClub: IDL.Func([UpdateClubDTO], [RustResult], ["query"]),
+    validateUpdatePlayer: IDL.Func([UpdatePlayerDTO], [RustResult], ["query"])
   });
 };
-var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", __CANDID_UI_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", OPENFPL_FRONTEND_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", NEURON_CONTROLLER_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DFX_NETWORK: "local" };
 const canisterId = define_process_env_default$c.CANISTER_ID_OPENFPL_BACKEND;
 const createActor = (canisterId2, options2 = {}) => {
   const agent = options2.agent || new HttpAgent({ ...options2.agentOptions });
@@ -4696,7 +4739,7 @@ function convertFixtureStatus(fixtureStatus) {
 function isError(response) {
   return response && response.err !== void 0;
 }
-var define_process_env_default$b = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", __CANDID_UI_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$b = { OPENFPL_BACKEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", OPENFPL_FRONTEND_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", NEURON_CONTROLLER_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DFX_NETWORK: "local" };
 function createSystemStore() {
   const { subscribe: subscribe2, set } = writable(null);
   let actor = ActorFactory.createActor(
@@ -4766,7 +4809,7 @@ function createSystemStore() {
   };
 }
 const systemStore = createSystemStore();
-var define_process_env_default$a = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", __CANDID_UI_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$a = { OPENFPL_BACKEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", OPENFPL_FRONTEND_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", NEURON_CONTROLLER_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DFX_NETWORK: "local" };
 function createFixtureStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let actor = ActorFactory.createActor(
@@ -4842,7 +4885,7 @@ function createFixtureStore() {
   };
 }
 const fixtureStore = createFixtureStore();
-var define_process_env_default$9 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", __CANDID_UI_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$9 = { OPENFPL_BACKEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", OPENFPL_FRONTEND_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", NEURON_CONTROLLER_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DFX_NETWORK: "local" };
 function createTeamStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let actor = ActorFactory.createActor(
@@ -4930,7 +4973,7 @@ const i18n = readable({
   lang: "en",
   ...en
 });
-const css$b = {
+const css$c = {
   code: ".backdrop.svelte-whxjdd{position:absolute;top:0;right:0;bottom:0;left:0;background:var(--backdrop);color:var(--backdrop-contrast);-webkit-backdrop-filter:var(--backdrop-filter);backdrop-filter:var(--backdrop-filter);z-index:var(--backdrop-z-index);touch-action:manipulation;cursor:pointer}.backdrop.disablePointerEvents.svelte-whxjdd{cursor:inherit;pointer-events:none}",
   map: null
 };
@@ -4941,7 +4984,7 @@ const Backdrop = create_ssr_component(($$result, $$props, $$bindings, slots) => 
   createEventDispatcher();
   if ($$props.disablePointerEvents === void 0 && $$bindings.disablePointerEvents && disablePointerEvents !== void 0)
     $$bindings.disablePointerEvents(disablePointerEvents);
-  $$result.css.add(css$b);
+  $$result.css.add(css$c);
   $$unsubscribe_i18n();
   return `<div role="button" tabindex="-1"${add_attribute("aria-label", $i18n.core.close, 0)} class="${["backdrop svelte-whxjdd", disablePointerEvents ? "disablePointerEvents" : ""].join(" ").trim()}" data-tid="backdrop"></div>`;
 });
@@ -4974,7 +5017,7 @@ const initBusyStore = () => {
 const busyStore = initBusyStore();
 const busy = derived(busyStore, ($busyStore) => $busyStore.length > 0);
 const busyMessage = derived(busyStore, ($busyStore) => $busyStore.reverse().find(({ text: text2 }) => nonNullish(text2))?.text);
-const css$a = {
+const css$b = {
   code: ".medium.svelte-85668t{--spinner-size:30px}.small.svelte-85668t{--spinner-size:calc(var(--line-height-standard) * 1rem)}.tiny.svelte-85668t{--spinner-size:calc(var(--line-height-standard) * 0.5rem)}svg.svelte-85668t{width:var(--spinner-size);height:var(--spinner-size);animation:spinner-linear-rotate 2000ms linear infinite;position:absolute;top:calc(50% - var(--spinner-size) / 2);left:calc(50% - var(--spinner-size) / 2);--radius:45px;--circumference:calc(3.1415926536 * var(--radius) * 2);--start:calc((1 - 0.05) * var(--circumference));--end:calc((1 - 0.8) * var(--circumference))}svg.inline.svelte-85668t{display:inline-block;position:relative}circle.svelte-85668t{stroke-dasharray:var(--circumference);stroke-width:10%;transform-origin:50% 50% 0;transition-property:stroke;animation-name:spinner-stroke-rotate-100;animation-duration:4000ms;animation-timing-function:cubic-bezier(0.35, 0, 0.25, 1);animation-iteration-count:infinite;fill:transparent;stroke:currentColor;transition:stroke-dashoffset 225ms linear}@keyframes spinner-linear-rotate{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}@keyframes spinner-stroke-rotate-100{0%{stroke-dashoffset:var(--start);transform:rotate(0)}12.5%{stroke-dashoffset:var(--end);transform:rotate(0)}12.5001%{stroke-dashoffset:var(--end);transform:rotateX(180deg) rotate(72.5deg)}25%{stroke-dashoffset:var(--start);transform:rotateX(180deg) rotate(72.5deg)}25.0001%{stroke-dashoffset:var(--start);transform:rotate(270deg)}37.5%{stroke-dashoffset:var(--end);transform:rotate(270deg)}37.5001%{stroke-dashoffset:var(--end);transform:rotateX(180deg) rotate(161.5deg)}50%{stroke-dashoffset:var(--start);transform:rotateX(180deg) rotate(161.5deg)}50.0001%{stroke-dashoffset:var(--start);transform:rotate(180deg)}62.5%{stroke-dashoffset:var(--end);transform:rotate(180deg)}62.5001%{stroke-dashoffset:var(--end);transform:rotateX(180deg) rotate(251.5deg)}75%{stroke-dashoffset:var(--start);transform:rotateX(180deg) rotate(251.5deg)}75.0001%{stroke-dashoffset:var(--start);transform:rotate(90deg)}87.5%{stroke-dashoffset:var(--end);transform:rotate(90deg)}87.5001%{stroke-dashoffset:var(--end);transform:rotateX(180deg) rotate(341.5deg)}100%{stroke-dashoffset:var(--start);transform:rotateX(180deg) rotate(341.5deg)}}",
   map: null
 };
@@ -4985,10 +5028,10 @@ const Spinner = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     $$bindings.inline(inline);
   if ($$props.size === void 0 && $$bindings.size && size !== void 0)
     $$bindings.size(size);
-  $$result.css.add(css$a);
+  $$result.css.add(css$b);
   return `  <svg class="${[escape(null_to_empty(size), true) + " svelte-85668t", inline ? "inline" : ""].join(" ").trim()}" preserveAspectRatio="xMidYMid meet" focusable="false" aria-hidden="true" data-tid="spinner" viewBox="0 0 100 100"><circle cx="50%" cy="50%" r="45" class="svelte-85668t"></circle></svg>`;
 });
-const css$9 = {
+const css$a = {
   code: "div.svelte-14plyno{z-index:calc(var(--z-index) + 1000);position:fixed;top:0;right:0;bottom:0;left:0;background:var(--backdrop);color:var(--backdrop-contrast)}.content.svelte-14plyno{display:flex;flex-direction:column;justify-content:center;align-items:center}p.svelte-14plyno{padding-bottom:var(--padding);max-width:calc(var(--section-max-width) / 2)}",
   map: null
 };
@@ -4997,7 +5040,7 @@ const BusyScreen = create_ssr_component(($$result, $$props, $$bindings, slots) =
   let $busyMessage, $$unsubscribe_busyMessage;
   $$unsubscribe_busy = subscribe(busy, (value) => $busy = value);
   $$unsubscribe_busyMessage = subscribe(busyMessage, (value) => $busyMessage = value);
-  $$result.css.add(css$9);
+  $$result.css.add(css$a);
   $$unsubscribe_busy();
   $$unsubscribe_busyMessage();
   return ` ${$busy ? `<div data-tid="busy" class="svelte-14plyno"><div class="content svelte-14plyno">${nonNullish($busyMessage) ? `<p class="svelte-14plyno">${escape($busyMessage)}</p>` : ``} <span>${validate_component(Spinner, "Spinner").$$render($$result, { inline: true }, {}, {})}</span></div></div>` : ``}`;
@@ -5020,7 +5063,7 @@ const IconError = create_ssr_component(($$result, $$props, $$bindings, slots) =>
     $$bindings.size(size);
   return `  <svg xmlns="http://www.w3.org/2000/svg"${add_attribute("height", size, 0)} viewBox="0 0 24 24"${add_attribute("width", size, 0)} fill="currentColor"><path d="M0 0h24v24H0z" fill="none"></path><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"></path></svg>`;
 });
-const css$8 = {
+const css$9 = {
   code: "svg.svelte-1lui9gh{vertical-align:middle}",
   map: null
 };
@@ -5028,7 +5071,7 @@ const IconInfo = create_ssr_component(($$result, $$props, $$bindings, slots) => 
   let { size = `${DEFAULT_ICON_SIZE}px` } = $$props;
   if ($$props.size === void 0 && $$bindings.size && size !== void 0)
     $$bindings.size(size);
-  $$result.css.add(css$8);
+  $$result.css.add(css$9);
   return `  <svg${add_attribute("width", size, 0)}${add_attribute("height", size, 0)} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" data-tid="icon-info" class="svelte-1lui9gh"><path d="M10.2222 17.5C14.3643 17.5 17.7222 14.1421 17.7222 10C17.7222 5.85786 14.3643 2.5 10.2222 2.5C6.08003 2.5 2.72217 5.85786 2.72217 10C2.72217 14.1421 6.08003 17.5 10.2222 17.5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10.2222 13.3333V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10.2222 6.66699H10.2305" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>`;
 });
 const IconWarning = create_ssr_component(($$result, $$props, $$bindings, slots) => {
@@ -5124,7 +5167,7 @@ const initMenuStore = () => {
 };
 const menuStore = initMenuStore();
 derived(menuStore, ($menuStore) => $menuStore === Menu.COLLAPSED);
-const css$7 = {
+const css$8 = {
   code: ".modal.svelte-1bbimtl.svelte-1bbimtl{position:fixed;top:0;right:0;bottom:0;left:0;z-index:var(--modal-z-index);touch-action:initial;cursor:initial}.wrapper.svelte-1bbimtl.svelte-1bbimtl{position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);display:flex;flex-direction:column;background:var(--overlay-background);color:var(--overlay-background-contrast);--button-secondary-background:var(--focus-background);overflow:hidden;box-sizing:border-box;box-shadow:var(--overlay-box-shadow)}.wrapper.svelte-1bbimtl .container-wrapper.svelte-1bbimtl{margin:var(--padding-1_5x) var(--padding-2x) auto;display:flex;flex-direction:column;gap:var(--padding-1_5x);flex:1;overflow:hidden}.wrapper.alert.svelte-1bbimtl.svelte-1bbimtl{width:var(--alert-width);max-width:var(--alert-max-width);max-height:var(--alert-max-height);border-radius:var(--alert-border-radius)}.wrapper.alert.svelte-1bbimtl .header.svelte-1bbimtl{padding:var(--alert-padding-y) var(--alert-padding-x) var(--padding)}.wrapper.alert.svelte-1bbimtl .container-wrapper.svelte-1bbimtl{margin-bottom:calc(var(--alert-padding-y) * 2 / 3)}.wrapper.alert.svelte-1bbimtl .content.svelte-1bbimtl{margin:0 0 calc(var(--alert-padding-y) / 2);padding:calc(var(--alert-padding-y) / 2) calc(var(--alert-padding-x) / 2) 0}.wrapper.alert.svelte-1bbimtl .footer.svelte-1bbimtl{padding:0 var(--alert-padding-x) calc(var(--alert-padding-y) * 2 / 3)}@media(min-width: 576px){.wrapper.alert.svelte-1bbimtl .footer.svelte-1bbimtl{justify-content:flex-end}}.wrapper.dialog.svelte-1bbimtl.svelte-1bbimtl{width:var(--dialog-width);max-width:var(--dialog-max-width);min-height:var(--dialog-min-height);height:var(--dialog-height);max-height:var(--dialog-max-height, 100%);border-radius:var(--dialog-border-radius)}@supports (-webkit-touch-callout: none){.wrapper.dialog.svelte-1bbimtl.svelte-1bbimtl{max-height:-webkit-fill-available}@media(min-width: 768px){.wrapper.dialog.svelte-1bbimtl.svelte-1bbimtl{max-height:var(--dialog-max-height, 100%)}}}.wrapper.dialog.svelte-1bbimtl .header.svelte-1bbimtl{padding:var(--dialog-padding-y) var(--padding-3x) var(--padding)}.wrapper.dialog.svelte-1bbimtl .container-wrapper.svelte-1bbimtl{margin-bottom:var(--dialog-padding-y)}.wrapper.dialog.svelte-1bbimtl .content.svelte-1bbimtl{margin:0;padding:var(--dialog-padding-y) var(--dialog-padding-x)}.header.svelte-1bbimtl.svelte-1bbimtl{display:grid;grid-template-columns:1fr auto 1fr;gap:var(--padding);z-index:var(--z-index);position:relative}.header.svelte-1bbimtl h2.svelte-1bbimtl{white-space:var(--text-white-space, nowrap);overflow:hidden;text-overflow:ellipsis;grid-column-start:2;text-align:center}.header.svelte-1bbimtl button.svelte-1bbimtl{display:flex;justify-content:center;align-items:center;padding:0;justify-self:flex-end}.header.svelte-1bbimtl button.svelte-1bbimtl:active,.header.svelte-1bbimtl button.svelte-1bbimtl:focus,.header.svelte-1bbimtl button.svelte-1bbimtl:hover{background:var(--background-shade);border-radius:var(--border-radius)}.content.svelte-1bbimtl.svelte-1bbimtl{overflow-y:var(--modal-content-overflow-y, auto);overflow-x:hidden}.container.svelte-1bbimtl.svelte-1bbimtl{position:relative;display:flex;flex-direction:column;flex:1;overflow:hidden;border-radius:16px;background:var(--overlay-content-background);color:var(--overlay-content-background-contrast)}",
   map: null
 };
@@ -5149,7 +5192,7 @@ const Modal = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     $$bindings.testId(testId);
   if ($$props.disablePointerEvents === void 0 && $$bindings.disablePointerEvents && disablePointerEvents !== void 0)
     $$bindings.disablePointerEvents(disablePointerEvents);
-  $$result.css.add(css$7);
+  $$result.css.add(css$8);
   showHeader = nonNullish($$slots.title);
   showFooterAlert = nonNullish($$slots.footer) && role === "alert";
   $$unsubscribe_i18n();
@@ -5193,7 +5236,7 @@ const initToastsStore = () => {
   };
 };
 const toastsStore = initToastsStore();
-const css$6 = {
+const css$7 = {
   code: ".toast.svelte-w1j1kj.svelte-w1j1kj{display:flex;justify-content:space-between;align-items:center;gap:var(--padding-1_5x);background:var(--overlay-background);color:var(--overlay-background-contrast);--button-secondary-background:var(--focus-background);border-radius:var(--border-radius);box-shadow:var(--strong-shadow, 8px 8px 16px 0 rgba(0, 0, 0, 0.25));padding:var(--padding-1_5x);box-sizing:border-box}.toast.inverted.svelte-w1j1kj.svelte-w1j1kj{background:var(--toast-inverted-background);color:var(--toast-inverted-background-contrast)}.toast.svelte-w1j1kj .icon.svelte-w1j1kj{line-height:0}.toast.svelte-w1j1kj .icon.success.svelte-w1j1kj{color:var(--positive-emphasis)}.toast.svelte-w1j1kj .icon.info.svelte-w1j1kj{color:var(--primary)}.toast.svelte-w1j1kj .icon.warn.svelte-w1j1kj{color:var(--warning-emphasis-shade)}.toast.svelte-w1j1kj .icon.error.svelte-w1j1kj{color:var(--negative-emphasis)}.toast.svelte-w1j1kj .msg.svelte-w1j1kj{flex-grow:1;margin:0;word-break:break-word}.toast.svelte-w1j1kj .msg.scroll.svelte-w1j1kj{overflow-y:auto;max-height:calc(var(--font-size-standard) * 3 * 1.3);line-height:normal}.toast.svelte-w1j1kj .msg.truncate.svelte-w1j1kj{white-space:var(--text-white-space, nowrap);overflow:hidden;text-overflow:ellipsis}.toast.svelte-w1j1kj .msg.truncate .title.svelte-w1j1kj{white-space:var(--text-white-space, nowrap);overflow:hidden;text-overflow:ellipsis}.toast.svelte-w1j1kj .msg.clamp.svelte-w1j1kj{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}.toast.svelte-w1j1kj .msg.clamp .title.svelte-w1j1kj{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}.toast.svelte-w1j1kj .title.svelte-w1j1kj{display:block;font-size:var(--font-size-standard);line-height:var(--line-height-standard);font-weight:var(--font-weight-bold);line-height:normal}.toast.svelte-w1j1kj button.close.svelte-w1j1kj{padding:0;line-height:0;color:inherit}",
   map: null
 };
@@ -5231,7 +5274,7 @@ const Toast = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   onDestroy(cleanUpAutoHide);
   if ($$props.msg === void 0 && $$bindings.msg && msg !== void 0)
     $$bindings.msg(msg);
-  $$result.css.add(css$6);
+  $$result.css.add(css$7);
   ({ text: text2, level, spinner, title, overflow, position, icon, theme: theme2, renderAsHtml } = msg);
   scroll = overflow === void 0 || overflow === "scroll";
   truncate = overflow === "truncate";
@@ -5242,7 +5285,7 @@ const Toast = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     (truncate ? "truncate" : "") + " " + (clamp ? "clamp" : "") + " " + (scroll ? "scroll" : "")
   ].join(" ").trim()}"${add_attribute("style", minHeightMessage, 0)}>${nonNullish(title) ? `<span class="title svelte-w1j1kj">${escape(title)}</span>` : ``} ${renderAsHtml ? `${validate_component(Html, "Html").$$render($$result, { text: text2 }, {}, {})}` : `${escape(text2)}`}</p> <button class="close svelte-w1j1kj"${add_attribute("aria-label", $i18n.core.close, 0)}>${validate_component(IconClose, "IconClose").$$render($$result, {}, {}, {})}</button> </div>`;
 });
-const css$5 = {
+const css$6 = {
   code: ".wrapper.svelte-24m335{position:fixed;left:50%;transform:translate(-50%, 0);bottom:calc(var(--layout-bottom-offset, 0) + var(--padding-2x));width:calc(100% - var(--padding-8x) - var(--padding-0_5x));display:flex;flex-direction:column;gap:var(--padding);z-index:var(--toast-info-z-index)}.wrapper.error.svelte-24m335{z-index:var(--toast-error-z-index)}@media(min-width: 1024px){.wrapper.svelte-24m335{max-width:calc(var(--section-max-width) - var(--padding-2x))}}.top.svelte-24m335{top:calc(var(--header-height) + var(--padding-3x));bottom:unset;width:calc(100% - var(--padding-6x))}@media(min-width: 1024px){.top.svelte-24m335{right:var(--padding-2x);left:unset;transform:none;max-width:calc(var(--section-max-width) / 1.5 - var(--padding-2x))}}",
   map: null
 };
@@ -5256,7 +5299,7 @@ const Toasts = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let hasErrors;
   if ($$props.position === void 0 && $$bindings.position && position !== void 0)
     $$bindings.position(position);
-  $$result.css.add(css$5);
+  $$result.css.add(css$6);
   toasts = $toastsStore.filter(({ position: pos }) => (pos ?? "bottom") === position);
   hasErrors = toasts.find(({ level }) => ["error", "warn"].includes(level)) !== void 0;
   $$unsubscribe_toastsStore();
@@ -5268,7 +5311,7 @@ const Toasts = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     return `${validate_component(Toast, "Toast").$$render($$result, { msg }, {}, {})}`;
   })}</div>` : ``}`;
 });
-const css$4 = {
+const css$5 = {
   code: "div.svelte-j8eaq1{width:100%}",
   map: null
 };
@@ -5278,7 +5321,7 @@ const WizardTransition = create_ssr_component(($$result, $$props, $$bindings, sl
   let absolutOffset = DEFAULT_OFFSET;
   if ($$props.transition === void 0 && $$bindings.transition && transition !== void 0)
     $$bindings.transition(transition);
-  $$result.css.add(css$4);
+  $$result.css.add(css$5);
   transition.diff === 0 ? 0 : transition.diff > 0 ? absolutOffset : -absolutOffset;
   return `<div class="svelte-j8eaq1">${slots.default ? slots.default({}) : ``}</div>`;
 });
@@ -5371,7 +5414,7 @@ const toastsError = ({
     level: "error"
   });
 };
-var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", __CANDID_UI_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", OPENFPL_FRONTEND_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", NEURON_CONTROLLER_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DFX_NETWORK: "local" };
 function createManagerStore() {
   const { subscribe: subscribe2, set } = writable(null);
   let systemState;
@@ -5643,7 +5686,7 @@ function createManagerStore() {
   };
 }
 createManagerStore();
-var define_process_env_default$7 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", __CANDID_UI_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$7 = { OPENFPL_BACKEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", OPENFPL_FRONTEND_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", NEURON_CONTROLLER_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DFX_NETWORK: "local" };
 function createCountriesStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let actor = ActorFactory.createActor(
@@ -5690,7 +5733,7 @@ function createCountriesStore() {
   };
 }
 const countriesStore = createCountriesStore();
-var define_process_env_default$6 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", __CANDID_UI_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$6 = { OPENFPL_BACKEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", OPENFPL_FRONTEND_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", NEURON_CONTROLLER_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DFX_NETWORK: "local" };
 function createWeeklyLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage = 25;
@@ -5801,7 +5844,7 @@ function createWeeklyLeaderboardStore() {
   };
 }
 createWeeklyLeaderboardStore();
-var define_process_env_default$5 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", __CANDID_UI_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$5 = { OPENFPL_BACKEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", OPENFPL_FRONTEND_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", NEURON_CONTROLLER_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DFX_NETWORK: "local" };
 function createPlayerStore() {
   const { subscribe: subscribe2, set } = writable([]);
   systemStore.subscribe((value) => {
@@ -5870,7 +5913,7 @@ function createPlayerStore() {
   };
 }
 const playerStore = createPlayerStore();
-var define_process_env_default$4 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", __CANDID_UI_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$4 = { OPENFPL_BACKEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", OPENFPL_FRONTEND_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", NEURON_CONTROLLER_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DFX_NETWORK: "local" };
 function createPlayerEventsStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let systemState;
@@ -6227,7 +6270,7 @@ function createPlayerEventsStore() {
   };
 }
 createPlayerEventsStore();
-var define_process_env_default$3 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", __CANDID_UI_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$3 = { OPENFPL_BACKEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", OPENFPL_FRONTEND_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", NEURON_CONTROLLER_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DFX_NETWORK: "local" };
 function createUserStore() {
   const { subscribe: subscribe2, set } = writable(null);
   async function sync() {
@@ -6403,7 +6446,7 @@ derived(
   userStore,
   (user) => user !== null && user !== void 0 ? user.favouriteTeamId : 0
 );
-const css$3 = {
+const css$4 = {
   code: 'header.svelte-tlhn8x{background-color:rgba(36, 37, 41, 0.9)}.nav-underline.svelte-tlhn8x{position:relative;display:inline-block;color:white}.nav-underline.svelte-tlhn8x::after{content:"";position:absolute;width:100%;height:2px;background-color:#2ce3a6;bottom:0;left:0;transform:scaleX(0);transition:transform 0.3s ease-in-out;color:#2ce3a6}.nav-underline.svelte-tlhn8x:hover::after,.nav-underline.active.svelte-tlhn8x::after{transform:scaleX(1);color:#2ce3a6}.nav-underline.svelte-tlhn8x:hover::after{transform:scaleX(1);background-color:gray}.nav-button.svelte-tlhn8x{background-color:transparent}.nav-button.svelte-tlhn8x:hover{background-color:transparent;color:#2ce3a6;border:none}',
   map: null
 };
@@ -6434,7 +6477,7 @@ const Header = create_ssr_component(($$result, $$props, $$bindings, slots) => {
       }
     }
   }
-  $$result.css.add(css$3);
+  $$result.css.add(css$4);
   currentClass = (route) => $page.url.pathname === route ? "text-blue-500 nav-underline active" : "nav-underline";
   currentBorder = (route) => $page.url.pathname === route ? "active-border" : "";
   $$unsubscribe_page();
@@ -6458,7 +6501,7 @@ const Footer = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   return `<footer class="bg-gray-900 text-white py-3"><div class="container mx-1 xs:mx-2 md:mx-auto flex flex-col md:flex-row items-start md:items-center justify-between text-xs"><div class="flex-1" data-svelte-h="svelte-108debi"><div class="flex justify-start"><div class="flex flex-row pl-4"><a href="https://oc.app/community/uf3iv-naaaa-aaaar-ar3ta-cai/?ref=zv6hh-xaaaa-aaaar-ac35q-cai" target="_blank" rel="noopener noreferrer"><img src="/openchat.png" class="h-4 w-auto mb-2 mr-2" alt="OpenChat"></a> <a href="https://github.com/jamesbeadle/OpenFPL" target="_blank" rel="noopener noreferrer"><img src="/github.png" class="h-4 w-auto mb-2" alt="GitHub"></a></div></div> <div class="flex justify-start"><div class="flex flex-col md:flex-row md:space-x-2 pl-4"><a href="/whitepaper" class="hover:text-gray-300">Whitepaper</a> <span class="hidden md:flex">|</span> <a href="/gameplay-rules" class="hover:text-gray-300 md:hidden lg:block">Gameplay Rules</a> <a href="/gameplay-rules" class="hover:text-gray-300 hidden md:block lg:hidden">Rules</a> <span class="hidden md:flex">|</span> <a href="/terms" class="hover:text-gray-300">Terms &amp; Conditions</a></div></div></div> <div class="flex-0"><a href="/"><b class="px-4 mt-2 md:mt-0 md:px-10 flex items-center">${validate_component(OpenFPLIcon, "OpenFplIcon").$$render($$result, { className: "h-6 w-auto mr-2" }, {}, {})}OpenFPL</b></a></div> <div class="flex-1"><div class="flex justify-end"><div class="text-right px-4 md:px-0 mt-1 md:mt-0 md:mr-4"><a href="https://juno.build" target="_blank" class="hover:text-gray-300 flex items-center">Sponsored By juno.build
             ${validate_component(JunoIcon, "JunoIcon").$$render($$result, { className: "h-8 w-auto ml-2" }, {}, {})}</a></div></div></div></div></footer>`;
 });
-const css$2 = {
+const css$3 = {
   code: "main.svelte-cbh2q9{flex:1;display:flex;flex-direction:column}",
   map: null
 };
@@ -6471,7 +6514,7 @@ const Layout = create_ssr_component(($$result, $$props, $$bindings, slots) => {
       return;
     }
   };
-  $$result.css.add(css$2);
+  $$result.css.add(css$3);
   $$unsubscribe_authStore();
   return ` ${function(__value) {
     if (is_promise(__value)) {
@@ -6498,7 +6541,7 @@ const BadgeIcon = create_ssr_component(($$result, $$props, $$bindings, slots) =>
     $$bindings.thirdColour(thirdColour);
   return `<svg xmlns="http://www.w3.org/2000/svg"${add_attribute("class", className, 0)} fill="currentColor" viewBox="0 0 814 814"><path d="M407 33.9165C295.984 33.9165 135.667 118.708 135.667 118.708V508.75C135.667 508.75 141.044 561.82 152.625 593.541C194.871 709.259 407 780.083 407 780.083C407 780.083 619.129 709.259 661.375 593.541C672.956 561.82 678.333 508.75 678.333 508.75V118.708C678.333 118.708 518.016 33.9165 407 33.9165Z"${add_attribute("fill", primaryColour, 0)}></path><path d="M712.25 101.75V493.013C712.25 649.097 603.581 689.831 407 814C210.419 689.831 101.75 649.063 101.75 493.013V101.75C167.718 45.2448 282.729 0 407 0C531.271 0 646.282 45.2448 712.25 101.75ZM644.417 135.361C585.775 96.052 496.506 67.8333 407.237 67.8333C317.223 67.8333 228.124 96.1198 169.583 135.361V492.979C169.583 595.712 225.817 622.235 407 734.025C587.979 622.337 644.417 595.814 644.417 492.979V135.361Z"${add_attribute("fill", thirdColour, 0)}></path><path d="M407.237 135.667C464.862 135.667 527.811 150.42 576.583 174.467V493.012C576.583 547.347 562.542 558.539 407 654.422L407.237 135.667Z"${add_attribute("fill", secondaryColour, 0)}></path></svg>`;
 });
-var define_process_env_default$2 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", __CANDID_UI_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$2 = { OPENFPL_BACKEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", OPENFPL_FRONTEND_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", NEURON_CONTROLLER_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DFX_NETWORK: "local" };
 function createMonthlyLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage = 25;
@@ -6602,7 +6645,7 @@ function createMonthlyLeaderboardStore() {
   };
 }
 createMonthlyLeaderboardStore();
-var define_process_env_default$1 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", __CANDID_UI_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$1 = { OPENFPL_BACKEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", OPENFPL_FRONTEND_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", NEURON_CONTROLLER_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DFX_NETWORK: "local" };
 function createSeasonLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage = 25;
@@ -6724,7 +6767,7 @@ const Page$e = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-var define_process_env_default = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", __CANDID_UI_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
+var define_process_env_default = { OPENFPL_BACKEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", OPENFPL_FRONTEND_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", NEURON_CONTROLLER_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DFX_NETWORK: "local" };
 function createGovernanceStore() {
   async function revaluePlayerUp(playerId) {
     try {
@@ -8298,12 +8341,12 @@ const Page$d = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     {}
   )}`;
 });
-const css$1 = {
+const css$2 = {
   code: ".local-spinner.svelte-pvdm52{border:5px solid rgba(255, 255, 255, 0.3);border-top:5px solid white;border-radius:50%;width:50px;height:50px;position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);animation:svelte-pvdm52-spin 1s linear infinite}@keyframes svelte-pvdm52-spin{0%{transform:translate(-50%, -50%) rotate(0deg)}100%{transform:translate(-50%, -50%) rotate(360deg)}}",
   map: null
 };
 const Local_spinner = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  $$result.css.add(css$1);
+  $$result.css.add(css$2);
   return `<div class="local-spinner svelte-pvdm52"></div>`;
 });
 const Add_initial_fixtures = create_ssr_component(($$result, $$props, $$bindings, slots) => {
@@ -9329,12 +9372,12 @@ const Page$a = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const css = {
+const css$1 = {
   code: ".striped.svelte-a09ql9 tr.svelte-a09ql9:nth-child(odd){background-color:rgba(46, 50, 58, 0.6)}",
   map: null
 };
 const Page$9 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  $$result.css.add(css);
+  $$result.css.add(css$1);
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
       return `<div class="bg-panel rounded-md p-4 mt-4" data-svelte-h="svelte-1c0sjgs"><h1 class="default-header">OpenFPL Gameplay Rules</h1> <div><p class="my-2">Please see the below OpenFPL fantasy football gameplay rules.</p> <p class="my-2">Each user begins with £300m to purchase players for their team. The
@@ -9416,45 +9459,116 @@ const Page$6 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
 });
 const League_details_form = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let leagueName = "";
-  let maxEntrants = 1e4;
+  let maxEntrants = 1e3;
   let leaguePictureName = "No file chosen";
-  let { privateLeague = writable(null) } = $$props;
+  let { privateLeague = writable({
+    adminFee: 0,
+    name: "",
+    entryRequirement: { FreeEntry: null },
+    entrants: 0,
+    termsAgreed: false,
+    leaguePhoto: []
+  }) } = $$props;
   if ($$props.privateLeague === void 0 && $$bindings.privateLeague && privateLeague !== void 0)
     $$bindings.privateLeague(privateLeague);
-  return `<div class="container mx-auto p-4"><p class="text-xl mb-2" data-svelte-h="svelte-1gmgvj4">League Details</p> <div class="mb-4"><label class="block text-sm font-bold mb-2" for="league-name" data-svelte-h="svelte-1gd5i82">League Name:</label> <input type="text" class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline" id="league-name"${add_attribute("value", leagueName, 0)}></div> <div class="file-upload-wrapper mt-4"><label class="block text-sm font-bold mb-2">League Photo:
-        <div class="file-upload-details"><span>${escape(leaguePictureName)}</span></div> <input type="file" id="profile-image" accept="image/*" class="file-input"></label></div> <div class="mb-4"><label class="block text-sm font-bold mb-2" for="league-name" data-svelte-h="svelte-5x2hld">Max Entrants:</label> <input type="number" min="2" max="10000" class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline" id="max-entrants"${add_attribute("value", maxEntrants, 0)}></div></div>`;
+  {
+    {
+      privateLeague.update((current) => {
+        return { ...current, entrants: maxEntrants };
+      });
+    }
+  }
+  return `<div class="container mx-auto px-4 pt-4"><div class="mb-4"><label class="block text-sm mb-2" for="league-name" data-svelte-h="svelte-1na500r">League Name:</label> <input type="text" class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline" id="league-name"${add_attribute("value", leagueName, 0)}></div> <div class="file-upload-wrapper mb-4"><label class="block text-sm mb-2">League Photo:
+        <div class="text-xs"><span>${escape(leaguePictureName)}</span></div> <input type="file" id="profile-image" accept="image/*" class="file-input"></label></div> <div class="mb-4"><label class="block text-sm mb-2" for="max-entrants" data-svelte-h="svelte-kubq9b">Max Entrants:</label> <input type="number" min="2" max="1000" class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline" id="max-entrants"${add_attribute("value", maxEntrants, 0)}></div> <div><label class="block text-sm font-bold" for="entry-token" data-svelte-h="svelte-1hu93vt">League Token:</label> <select id="entry-token" class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-dflbn6">FPL</option><option${add_attribute("value", 1, 0)} data-svelte-h="svelte-1fymy1v">ICP</option><option${add_attribute("value", 2, 0)} data-svelte-h="svelte-12fiheu">CHAT</option><option${add_attribute("value", 3, 0)} data-svelte-h="svelte-usaqyl">Dragginz</option></select></div></div>`;
 });
+let accountBalance = 1e3;
 const Entry_requirements = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let creatorPrizePool = 0;
   let { privateLeague = writable(null) } = $$props;
   if ($$props.privateLeague === void 0 && $$bindings.privateLeague && privateLeague !== void 0)
     $$bindings.privateLeague(privateLeague);
-  return ``;
+  return `<div class="container mx-auto p-4"><p class="text-xl mb-2" data-svelte-h="svelte-18wtvzv">Entry Requirements</p> <div class="mb-4"><label class="block text-sm font-bold mb-2" for="entry-type" data-svelte-h="svelte-1bktuog">Entry Type:</label> <select id="entry-type" class="p-2 fpl-dropdown my-4 min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-10ug6uw">Free Entry</option><option${add_attribute("value", 1, 0)} data-svelte-h="svelte-1tymnkz">Paid Entry</option><option${add_attribute("value", 2, 0)} data-svelte-h="svelte-1e921rp">Invite Entry</option><option${add_attribute("value", 3, 0)} data-svelte-h="svelte-1mvuv80">Paid Invite Entry</option></select></div> ${``} <div class="mb-4"><label class="block text-sm font-bold mb-2" for="creator-prize-pool" data-svelte-h="svelte-9btatd">Creator Prize Pool:</label> <input type="number" step="1" min="0" class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline" id="creator-prize-pool"${add_attribute("value", creatorPrizePool, 0)}></div> <div class="mb-4"><label class="block text-sm font-bold mb-2" data-svelte-h="svelte-6tssxn">Your Account Balance:</label> <p>${escape(accountBalance)} ICP</p></div></div>`;
 });
 const Prize_setup = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let $numberOfWinners, $$unsubscribe_numberOfWinners;
+  let $percentages, $$unsubscribe_percentages;
+  let numberOfWinners = writable(10);
+  $$unsubscribe_numberOfWinners = subscribe(numberOfWinners, (value) => $numberOfWinners = value);
+  let percentages = derived(numberOfWinners, ($numberOfWinners2) => {
+    let shares = [];
+    let harmonicSum = 0;
+    for (let i = 1; i <= $numberOfWinners2; i++) {
+      harmonicSum += 1 / i;
+    }
+    for (let i = 1; i <= $numberOfWinners2; i++) {
+      shares.push(1 / i / harmonicSum);
+    }
+    let percentages2 = shares.map((x) => x * 100);
+    let total = percentages2.reduce((acc, curr) => acc + curr, 0);
+    percentages2[percentages2.length - 1] += 100 - total;
+    return percentages2;
+  });
+  $$unsubscribe_percentages = subscribe(percentages, (value) => $percentages = value);
   let { privateLeague = writable(null) } = $$props;
   if ($$props.privateLeague === void 0 && $$bindings.privateLeague && privateLeague !== void 0)
     $$bindings.privateLeague(privateLeague);
-  return ``;
+  $$unsubscribe_numberOfWinners();
+  $$unsubscribe_percentages();
+  return `<div class="container mx-auto p-4"><p class="text-xl mb-2" data-svelte-h="svelte-gkgwk">Prize Setup</p> <div class="mb-4"><label class="block text-sm font-bold mb-2" for="league-name" data-svelte-h="svelte-1btdpww">Number of Winners:</label> <input type="number" step="1" min="1" max="1000" class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline" id="max-entrants"${add_attribute("value", $numberOfWinners, 0)}></div> <div class="mb-4"><p class="block text-sm font-bold mb-2" data-svelte-h="svelte-1g71c53">Percentage Split:</p> ${each($percentages, (percent, index) => {
+    return `<div class="mb-2"><input type="number" min="0" max="100" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"${add_attribute("id", `winner-${index}`, 0)}${add_attribute("value", $percentages[index], 0)}> </div>`;
+  })} ${$percentages.reduce((total, curr) => total + curr, 0) !== 100 ? `<p class="text-red-500 text-xs italic" data-svelte-h="svelte-9qw4x2">Total percentage must equal 100%.</p>` : ``}</div></div>`;
 });
 const Agree_terms = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let { privateLeague = writable(null) } = $$props;
   if ($$props.privateLeague === void 0 && $$bindings.privateLeague && privateLeague !== void 0)
     $$bindings.privateLeague(privateLeague);
-  return ``;
+  return `<div class="container mx-auto px-4 py-8" data-svelte-h="svelte-15akzys"><h1 class="text-3xl font-bold text-center mb-6">OpenFPL Private League Terms &amp; Conditions</h1> <div class="space-y-4 text-sm"><p>These Terms and Conditions govern your use of the private league features provided by OpenFPL. 
+            By participating in any private league, you agree to these terms.</p> <p>Private leagues on OpenFPL are funded using ICRC-1 tokens. 
+            Participants may be required to contribute a predetermined number of tokens to join a private league. 
+            The distribution of tokens and any potential winnings are subject to the specific rules set forth by the league&#39;s creator.</p> <ul class="list-disc list-inside"><li>Entry requirements and fees.</li> <li>Distribution of winnings.</li> <li>Setting the league admin fee.</li></ul> <p>It is your responsibility to clearly communicate these rules to all participants before the start of the league. 
+            OpenFPL is not responsible for the enforcement of individual league rules and operates only as a platform provider.</p> <p>You are responsible for ensuring that your participation in private leagues complies with all applicable laws and regulations 
+            in your jurisdiction. OpenFPL disclaims all liability for any illegal use of the platform by its users.</p> <p>OpenFPL provides the platform for private leagues &quot;as is&quot; and &quot;as available,&quot; without any warranties of any kind. 
+            We do not guarantee the continuous, uninterrupted or error-free operation of the platform, 
+            nor do we guarantee the outcomes of any games or leagues conducted on our platform.</p> <p>To the fullest extent permitted by law, OpenFPL shall not be liable for any indirect, incidental, special, consequential, or punitive damages, 
+            or any loss of profits or revenues, whether incurred directly or indirectly, or any loss of data, use, goodwill, 
+            or other intangible losses resulting from:</p> <ul class="list-disc list-inside ml-4"><li>Your access to, use of, or inability to access or use the services;</li> <li>Any conduct or content of any third party on the services;</li> <li>Unauthorized access, use, or alteration of your transmissions or content.</li></ul> <p>If you have any questions about these Terms and Conditions, please contact us at 
+            <a href="https://oc.app/community/uf3iv-naaaa-aaaar-ar3ta-cai/?ref=zv6hh-xaaaa-aaaar-ac35q-cai" class="text-blue-600 hover:text-blue-800">OpenFPL Community Support
+            </a>.</p> <div class="mt-6 flex items-center"><input type="checkbox" id="agreeTerms" name="agreeTerms" class="w-4 h-4 border-gray-300 rounded focus:ring-blue-500"> <label for="agreeTerms" class="ml-2 block text-sm">I agree to the OpenFPL Private League Terms &amp; Conditions</label></div></div></div>`;
 });
 const Payment = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let fplBalance;
+  let icpBalance;
   let { privateLeague = writable(null) } = $$props;
   if ($$props.privateLeague === void 0 && $$bindings.privateLeague && privateLeague !== void 0)
     $$bindings.privateLeague(privateLeague);
-  return ``;
+  return `<div class="container mx-auto px-4 py-8"><p class="text-xl mb-2" data-svelte-h="svelte-4k0p">Payment</p> <div class="mb-4"><p>FPL Balance: ${escape(fplBalance)}</p> <p>ICP Balance: ${escape(icpBalance)}</p></div> <div class="grid grid-cols-2 gap-4"><button class="fpl-button px-4 py-2 rounded-md" data-svelte-h="svelte-1x3bu33">Purchase with 250 FPL</button> <button class="fpl-button px-4 py-2 rounded-md" data-svelte-h="svelte-1nlxozb">Purchase with 1 ICP</button></div> <div class="text-sm mt-4" data-svelte-h="svelte-54tdyj"><p>* Purchasing in FPL will burn the tokens and reduce the token supply.</p> <p>* Purchasing in ICP will add funds to the DAO&#39;s treasury.</p></div></div>`;
 });
+const css = {
+  code: ".pips-container.svelte-wusr0z{display:flex;justify-content:left}.pip.svelte-wusr0z{width:10px;height:10px;border-radius:50%;background-color:lightgrey;margin:0 5px}.pip.active.svelte-wusr0z{background-color:#2ce3a6}",
+  map: null
+};
 const Create_private_league = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let backButtonVisible;
+  let nextButtonVisible;
+  let $privateLeague, $$unsubscribe_privateLeague;
+  let $currentStepIndex, $$unsubscribe_currentStepIndex;
   let $visible, $$unsubscribe_visible;
+  let $pips, $$unsubscribe_pips;
   let { visible = writable(false) } = $$props;
   $$unsubscribe_visible = subscribe(visible, (value) => $visible = value);
+  let currentStepIndex = writable(0);
+  $$unsubscribe_currentStepIndex = subscribe(currentStepIndex, (value) => $currentStepIndex = value);
   let { closeModal } = $$props;
   let { handleCreateLeague } = $$props;
-  let { privateLeague = writable(null) } = $$props;
+  let { privateLeague = writable({
+    adminFee: 0,
+    name: "",
+    entryRequirement: { FreeEntry: null },
+    entrants: 0,
+    termsAgreed: false,
+    leaguePhoto: []
+  }) } = $$props;
+  $$unsubscribe_privateLeague = subscribe(privateLeague, (value) => $privateLeague = value);
   let currentStep = {
     name: "LeagueDetails",
     title: "Enter your league details:"
@@ -9482,6 +9596,8 @@ const Create_private_league = create_ssr_component(($$result, $$props, $$binding
       title: "Purchase your private league:"
     }
   ];
+  let pips = derived(currentStepIndex, ($currentStepIndex2) => steps.map((_, index) => index <= $currentStepIndex2));
+  $$unsubscribe_pips = subscribe(pips, (value) => $pips = value);
   if ($$props.visible === void 0 && $$bindings.visible && visible !== void 0)
     $$bindings.visible(visible);
   if ($$props.closeModal === void 0 && $$bindings.closeModal && closeModal !== void 0)
@@ -9490,12 +9606,20 @@ const Create_private_league = create_ssr_component(($$result, $$props, $$binding
     $$bindings.handleCreateLeague(handleCreateLeague);
   if ($$props.privateLeague === void 0 && $$bindings.privateLeague && privateLeague !== void 0)
     $$bindings.privateLeague(privateLeague);
+  $$result.css.add(css);
   let $$settled;
   let $$rendered;
   let previous_head = $$result.head;
   do {
     $$settled = true;
     $$result.head = previous_head;
+    backButtonVisible = $currentStepIndex > 0;
+    nextButtonVisible = $currentStepIndex === 0 && ($privateLeague && $privateLeague.name && $privateLeague.name.length > 2) && ($privateLeague.entrants > 1 && $privateLeague.entrants <= 1e3);
+    {
+      if ($privateLeague) {
+        console.log($privateLeague.entrants);
+      }
+    }
     $$rendered = `      ${$visible ? `${validate_component(WizardModal, "WizardModal").$$render(
       $$result,
       { steps, currentStep, this: modal },
@@ -9511,12 +9635,17 @@ const Create_private_league = create_ssr_component(($$result, $$props, $$binding
       },
       {
         default: () => {
-          return `<div class="p-4">${currentStep?.name === "LeagueDetails" ? `${validate_component(League_details_form, "LeagueDetailsForm").$$render($$result, { privateLeague }, {}, {})} <button class="primary" data-svelte-h="svelte-1q6wkdm">Next</button>` : ``} ${currentStep?.name === "EntryRequirements" ? `${validate_component(Entry_requirements, "EntryRequirements").$$render($$result, { privateLeague }, {}, {})} <button class="primary" data-svelte-h="svelte-ured62">Next</button>` : ``} ${currentStep?.name === "PrizeDistribution" ? `${validate_component(Prize_setup, "PrizeSetup").$$render($$result, { privateLeague }, {}, {})} <button class="primary" data-svelte-h="svelte-ured62">Next</button>` : ``} ${currentStep?.name === "Terms" ? `${validate_component(Agree_terms, "AgreeTerms").$$render($$result, { privateLeague }, {}, {})} <button class="primary" data-svelte-h="svelte-ured62">Next</button>` : ``} ${currentStep?.name === "Payment" ? `${validate_component(Payment, "Payment").$$render($$result, { privateLeague }, {}, {})} <button class="primary" data-svelte-h="svelte-ured62">Next</button>` : ``}</div>`;
+          return `<div class="p-4"><div class="flex justify-between items-center"><p class="text-xl mt-2" data-svelte-h="svelte-1sfhxr1">Create Private League</p> ${validate_component(OpenFPLIcon, "OpenFplIcon").$$render($$result, { className: "w-6 mr-2" }, {}, {})}</div> ${currentStep?.name === "LeagueDetails" ? `${validate_component(League_details_form, "LeagueDetailsForm").$$render($$result, { privateLeague }, {}, {})}` : ``} ${currentStep?.name === "EntryRequirements" ? `${validate_component(Entry_requirements, "EntryRequirements").$$render($$result, { privateLeague }, {}, {})}` : ``} ${currentStep?.name === "PrizeDistribution" ? `${validate_component(Prize_setup, "PrizeSetup").$$render($$result, { privateLeague }, {}, {})}` : ``} ${currentStep?.name === "Terms" ? `${validate_component(Agree_terms, "AgreeTerms").$$render($$result, { privateLeague }, {}, {})}` : ``} ${currentStep?.name === "Payment" ? `${validate_component(Payment, "Payment").$$render($$result, { privateLeague }, {}, {})}` : ``} <div class="horizontal-divider my-2"></div> <div class="flex flex-row m-4 items-center"><div class="pips-container w-1/2 svelte-wusr0z">${each($pips, (pip, index) => {
+            return `<div class="${"pip " + escape(pip ? "active" : "", true) + " svelte-wusr0z"}"></div>`;
+          })}</div> <div class="flex justify-end space-x-2 mr-4 w-1/2">${backButtonVisible ? `<button class="fpl-button px-4 py-2 rounded-sm" data-svelte-h="svelte-qkcshm">Back</button>` : `<button class="bg-gray-800 px-4 py-2 rounded-sm text-gray-400" data-svelte-h="svelte-1xngkp">Back</button>`} ${nextButtonVisible ? `<button class="fpl-button px-4 py-2 rounded-sm" data-svelte-h="svelte-umtn6t">Next</button>` : `<button class="bg-gray-800 px-4 py-2 rounded-sm text-gray-400" data-svelte-h="svelte-1w83lu7">Next</button>`}</div></div></div>`;
         }
       }
     )}` : ``}`;
   } while (!$$settled);
+  $$unsubscribe_privateLeague();
+  $$unsubscribe_currentStepIndex();
   $$unsubscribe_visible();
+  $$unsubscribe_pips();
   return $$rendered;
 });
 const pageSize = 10;

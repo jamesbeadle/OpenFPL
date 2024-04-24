@@ -105,9 +105,7 @@ module {
 
     public func getTokenList() : [T.TokenInfo] {
       return tokenList;
-    };
-
-    
+    };  
 
     public func canAffordPrivateLeague(defaultAccount: Principal, managerId: T.PrincipalId, paymentChoice: T.PaymentChoice) : async Bool{
       
@@ -120,7 +118,7 @@ module {
           entryFee := 0; //TODO What is 1 ICP get from football god
         };
         case (#FPL){
-          //todo get FPL amount
+          //todo get FPL amount using ICP Swap
           ledgerCanisterId := "";
           entryFee := 0;
         };
@@ -175,7 +173,6 @@ module {
 
     public func payEntryFee(defaultAccount: Principal, canisterId: T.CanisterId, managerId: T.PrincipalId) : async (){
 
-        
       let private_league_canister = actor (canisterId) : actor {
         getPrivateLeague : () -> async Result.Result<DTOs.PrivateLeagueDTO, T.Error>;
       };

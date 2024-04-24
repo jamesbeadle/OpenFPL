@@ -21,7 +21,6 @@ module {
 
   public class Rewards() {
 
-    let tokenCanister = Token.Token();
     private var teamValueLeaderboards : TrieMap.TrieMap<T.SeasonId, T.TeamValueLeaderboard> = TrieMap.TrieMap<T.SeasonId, T.TeamValueLeaderboard>(Utilities.eqNat16, Utilities.hashNat16);
 
     private var seasonRewards : List.List<T.SeasonRewards> = List.nil();
@@ -688,11 +687,11 @@ module {
     };
 
     private func payReward(principalId : T.PrincipalId, fpl : Nat64) : async () {
-      return await tokenCanister.transferToken(principalId, Nat64.toNat(fpl));
+      //return await tokenCanister.transferToken(principalId, Nat64.toNat(fpl));
     };
 
     private func mintToTreasury(fpl : Nat64) : async () {
-      return await tokenCanister.mintToTreasury(Nat64.toNat(fpl));
+      //return await tokenCanister.mintToTreasury(Nat64.toNat(fpl));
     };
 
     public func getStableTeamValueLeaderboards() : [(T.SeasonId, T.TeamValueLeaderboard)] {

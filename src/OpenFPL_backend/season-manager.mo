@@ -490,8 +490,8 @@ module {
     };
 
 
-    //Reward functions
-
+    //Reward function
+    
     private func calculateRewardPool(seasonId : T.SeasonId) : async () {
 
       let tokenCanisterInstance = Token.Token();
@@ -928,7 +928,7 @@ module {
       return await privateLeaguesManager.updateLeagueName(canisterId, name);
     };
 
-    public func getPrivateLeague(canisterId: T.CanisterId) : async DTOs.PrivateLeagueDTO {
+    public func getPrivateLeague(canisterId: T.CanisterId) : async Result.Result<DTOs.PrivateLeagueDTO, T.Error> {
       return await privateLeaguesManager.getPrivateLeague(canisterId);
     };
 
@@ -936,7 +936,7 @@ module {
       return await privateLeaguesManager.enterLeague(canisterId, managerId);
     };
 
-    public func inviteExists(canisterId: T.CanisterId, managerId: T.PrincipalId) : async Bool {
+    public func inviteExists(canisterId: T.CanisterId, managerId: T.PrincipalId) :  async Bool {
       return await privateLeaguesManager.inviteExists(canisterId, managerId);
     };
 
@@ -1205,6 +1205,14 @@ module {
 
     public func setStablePrivateLeagueCanisterIds(stable_private_league_canister_ids: [T.CanisterId]) {
       privateLeaguesManager.setStablePrivateLeagueCanisterIds(stable_private_league_canister_ids);
+    };
+
+    public func getStablePrivateLeagueNameIndex() : [(T.CanisterId, Text)] {
+      return privateLeaguesManager.getStablePrivateLeagueNameIndex();
+    };
+
+    public func setStablePrivateLeagueNameIndex(stable_private_league_name_index: [(T.CanisterId, Text)]) {
+      privateLeaguesManager.setStablePrivateLeagueNameIndex(stable_private_league_name_index);
     };
 
 
