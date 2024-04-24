@@ -14,6 +14,7 @@ import Order "mo:base/Order";
 import Int "mo:base/Int";
 import Time "mo:base/Time";
 import TrieMap "mo:base/TrieMap";
+import Nat64 "mo:base/Nat64";
 import SeasonComposite "composites/season-composite";
 import PlayerComposite "composites/player-composite";
 import ClubComposite "composites/club-composite";
@@ -22,6 +23,8 @@ import LeaderboardComposite "composites/leaderboard-composite";
 import SHA224 "./lib/SHA224";
 import Utilities "utils/utilities";
 import PrivateLeaguesManager "private-leagues-manager";
+import SNSToken "sns-wrappers/ledger";
+import Environment "utils/Environment";
 
 module {
 
@@ -494,8 +497,9 @@ module {
     
     private func calculateRewardPool(seasonId : T.SeasonId) : async () {
 
-      let tokenCanisterInstance = Token.Token();
-      let totalSupply : Nat64 = await tokenCanisterInstance.getTotalSupply();
+      let ledger : SNSToken.Interface = actor (Environment.SNS_LEDGER_CANISTER_ID);
+      
+      let totalSupply : Nat64 = Nat64.fromNat(await ledger.icrc1_total_supply());
 
       let seasonTokensMinted = Utilities.nat64Percentage(totalSupply, 0.01875);
 
