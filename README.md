@@ -25,18 +25,20 @@ To run OpenFPL you will need to setup a local version of the NNS containing the 
 ```bash
 git clone https://github.com/dfinity/sns-testing.git
 ```
+
 2. Clone the OpenFPL repository:
 
 ```bash
 git clone https://github.com/jamesbeadle/OpenFPL.git
 ```
+
 SNS_TESTING_INSTANCE=$(
-   docker run -p 8000:8000 -p 8080:8080 -v "`pwd`":/dapp -d ghcr.io/dfinity/sns-testing:main dfx start --clean
+docker run -p 8000:8000 -p 8080:8080 -v "`pwd`":/dapp -d ghcr.io/dfinity/sns-testing:main dfx start --clean
 )
 while ! docker logs $SNS_TESTING_INSTANCE 2>&1 | grep -m 1 'Dashboard:'
 do
-   echo "Awaiting local replica ..."
-   sleep 3
+echo "Awaiting local replica ..."
+sleep 3
 done
 
 docker exec -it $SNS_TESTING_INSTANCE bash setup_locally.sh
@@ -45,20 +47,18 @@ docker kill $SNS_TESTING_INSTANCE
 
 docker exec -it $SNS_TESTING_INSTANCE bash
 
-./cleanup.sh  # from Bash
+./cleanup.sh # from Bash
 
 SNS_TESTING_INSTANCE=$(
-   docker run -p 8000:8000 -p 8080:8080 -v "`pwd`":/dapp -d ghcr.io/dfinity/sns-testing:main dfx start --clean
+docker run -p 8000:8000 -p 8080:8080 -v "`pwd`":/dapp -d ghcr.io/dfinity/sns-testing:main dfx start --clean
 )
 while ! docker logs $SNS_TESTING_INSTANCE 2>&1 | grep -m 1 'Dashboard:'
 do
-   echo "Awaiting local replica ..."
-   sleep 3
+echo "Awaiting local replica ..."
+sleep 3
 done
 
-
-
-3. Navigate to the  directory:
+3. Navigate to the directory:
 
 ```bash
 cd OpenFPL

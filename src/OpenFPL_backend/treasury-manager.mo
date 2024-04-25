@@ -22,7 +22,10 @@ module {
       data : Nat;
     };
 
+    let icp_entry_fee : Nat64 = 100_000_000;
+    
     let icp_fee : Nat64 = 10_000;
+    let fpl_fee_fee : Nat64 = 10_000;
     let memo_txt_tpup : Nat64 = 0x50555054;
     private let ledger : ICPLedger.Interface = actor (ICPLedger.CANISTER_ID);
     private var tokenList: [T.TokenInfo] = Tokens.tokens;
@@ -107,6 +110,8 @@ module {
       return tokenList;
     };  
 
+
+
     public func canAffordPrivateLeague(defaultAccount: Principal, managerId: T.PrincipalId, paymentChoice: T.PaymentChoice) : async Bool{
       
       var ledgerCanisterId = "";
@@ -114,12 +119,12 @@ module {
 
       switch(paymentChoice){
         case (#ICP){
-          ledgerCanisterId := "";
+          ledgerCanisterId := Environment.NNS_LEDGER_CANISTER_ID;
           entryFee := 0; //TODO What is 1 ICP get from football god
         };
         case (#FPL){
           //todo get FPL amount using ICP Swap
-          ledgerCanisterId := "";
+          ledgerCanisterId := Environment.SNS_LEDGER_CANISTER_ID;
           entryFee := 0;
         };
       };

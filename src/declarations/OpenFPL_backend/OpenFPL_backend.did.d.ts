@@ -543,10 +543,12 @@ export interface WeeklyLeaderboardDTO {
   gameweek: GameweekNumber;
 }
 export interface _SERVICE {
+  acceptInviteAndPayFee: ActorMethod<[CanisterId], Result>;
   acceptLeagueInvite: ActorMethod<[CanisterId], Result>;
   burnICPToCycles: ActorMethod<[bigint], undefined>;
   createPrivateLeague: ActorMethod<[CreatePrivateLeagueDTO], Result>;
   enterLeague: ActorMethod<[CanisterId], Result>;
+  enterLeagueWithFee: ActorMethod<[CanisterId], Result>;
   executeAddInitialFixtures: ActorMethod<[AddInitialFixturesDTO], undefined>;
   executeAddNewToken: ActorMethod<[NewTokenDTO], undefined>;
   executeCreateDAONeuron: ActorMethod<[], undefined>;

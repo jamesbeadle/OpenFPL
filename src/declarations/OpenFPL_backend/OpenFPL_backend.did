@@ -677,10 +677,12 @@ type AddInitialFixturesDTO =
  };
 type AccountIdentifier = record {hash: vec nat8;};
 service : {
+  acceptInviteAndPayFee: (CanisterId) -> (Result);
   acceptLeagueInvite: (CanisterId) -> (Result);
   burnICPToCycles: (nat64) -> ();
   createPrivateLeague: (CreatePrivateLeagueDTO) -> (Result);
   enterLeague: (CanisterId) -> (Result);
+  enterLeagueWithFee: (CanisterId) -> (Result);
   executeAddInitialFixtures: (AddInitialFixturesDTO) -> ();
   executeAddNewToken: (NewTokenDTO) -> ();
   executeCreateDAONeuron: () -> ();

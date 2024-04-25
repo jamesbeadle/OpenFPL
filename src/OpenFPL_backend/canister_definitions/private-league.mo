@@ -6,6 +6,8 @@ import Iter "mo:base/Iter";
 import Principal "mo:base/Principal";
 import Buffer "mo:base/Buffer";
 import Result "mo:base/Result";
+import Array "mo:base/Array";
+import Nat16 "mo:base/Nat16";
 import Utilities "../utils/utilities";
 import Environment "../utils/Environment";
 
@@ -23,19 +25,52 @@ actor class _PrivateLeague() {
     private stable var currentSeasonId: T.SeasonId = 0;
     private stable var currentMonth: T.CalendarMonth = 0;
     private stable var currentGameweek: T.GameweekNumber = 0;
+    private stable var privateLeague: ?T.PrivateLeague = null;
     
     public shared ({ caller }) func getPrivateLeague() : async Result.Result<DTOs.PrivateLeagueDTO, T.Error> {
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
         assert principalId == main_canister_id;
-        return #err(#NotFound);
-        
+
+        switch(privateLeague){
+            case (null) { #err(#NotFound) };
+            case (?foundPrivateLeague){
+                #ok({
+                    name = foundPrivateLeague.name;
+                    maxEntrants = foundPrivateLeague.maxEntrants;
+                    entrants = Nat16.fromNat(Array.size(leagueMembers));
+                    picture = foundPrivateLeague.picture;
+                    banner = foundPrivateLeague.banner;
+                    entryType = foundPrivateLeague.entryType;
+                    tokenId = foundPrivateLeague.tokenId;
+                    entryFee = foundPrivateLeague.entryFee;
+                    adminFee = foundPrivateLeague.adminFee; 
+                });
+            }
+        };
     };
 
-    public shared ({ caller }) func getManagerPrivateLeague(managerId: T.PrincipalId) : async Result.Result<DTOs.ManagerPrivateLeagueDTO, T.Error> {
+    public shared ({ caller }) func getManagerPrivateLeague(managerId: T.PrincipalId, seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async Result.Result<DTOs.ManagerPrivateLeagueDTO, T.Error> {
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
         assert principalId == main_canister_id;
+
+        for(weeklyLeaderboard in Iter.fromArray(weeklyLeaderboards)){
+            if(weeklyLeaderboard.0 == seasonId){
+                for (gw in Iter.fromArray(weeklyLeaderboard.1)){
+                    if(gw.0 == gameweek){
+                        
+                    }
+                }
+            };
+        };
+
+        for(member in Iter.fromArray(leagueMembers)){
+            if(member.principalId == managerId){
+                
+            };
+        };
+
         return #err(#NotFound);
     };
 

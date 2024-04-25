@@ -541,10 +541,12 @@ export const idlFactory = ({ IDL }) => {
   });
   const RustResult = IDL.Variant({ Ok: IDL.Null, Err: IDL.Text });
   return IDL.Service({
+    acceptInviteAndPayFee: IDL.Func([CanisterId], [Result], []),
     acceptLeagueInvite: IDL.Func([CanisterId], [Result], []),
     burnICPToCycles: IDL.Func([IDL.Nat64], [], []),
     createPrivateLeague: IDL.Func([CreatePrivateLeagueDTO], [Result], []),
     enterLeague: IDL.Func([CanisterId], [Result], []),
+    enterLeagueWithFee: IDL.Func([CanisterId], [Result], []),
     executeAddInitialFixtures: IDL.Func([AddInitialFixturesDTO], [], []),
     executeAddNewToken: IDL.Func([NewTokenDTO], [], []),
     executeCreateDAONeuron: IDL.Func([], [], []),

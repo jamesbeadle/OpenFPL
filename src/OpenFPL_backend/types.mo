@@ -404,6 +404,7 @@ module _Types {
     tokenId: TokenId;
     entryFee: Nat;
     adminFee: Nat8;
+    entryType: EntryRequirement;
   };
 
   public type LeagueMember = {

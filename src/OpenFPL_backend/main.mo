@@ -447,30 +447,40 @@ actor Self {
     let managerId = Principal.toText(caller);
     let user = await seasonManager.getManager(managerId);
 
-    switch(user){
-      case (#ok dto){
-        let privateLeaguesBuffer = Buffer.fromArray<DTOs.ManagerPrivateLeagueDTO>([]);
-        for(privateLeagueCanisterId in Iter.fromArray(dto.privateLeagueMemberships)){
-          let private_league_canister = actor (privateLeagueCanisterId) : actor {
-            getManagerPrivateLeague : (managerId: T.PrincipalId) -> async DTOs.ManagerPrivateLeagueDTO;
+    let systemState = await getSystemState();
+    switch(systemState){
+      case (#ok foundState){
+
+        switch(user){
+          case (#ok managerDTO){
+            let privateLeaguesBuffer = Buffer.fromArray<DTOs.ManagerPrivateLeagueDTO>([]);
+            for(privateLeagueCanisterId in Iter.fromArray(managerDTO.privateLeagueMemberships)){
+              let private_league_canister = actor (privateLeagueCanisterId) : actor {
+                getManagerPrivateLeague : (managerId: T.PrincipalId, seasonId: T.SeasonId, gameweek: T.GameweekNumber) -> async DTOs.ManagerPrivateLeagueDTO;
+              };
+              let privateLeague = await private_league_canister.getManagerPrivateLeague(managerId, foundState.calculationSeasonId, foundState.calculationGameweek);
+              privateLeaguesBuffer.add({
+                canisterId = privateLeagueCanisterId;
+                created = privateLeague.created;
+                memberCount = privateLeague.memberCount;
+                name = managerDTO.username;
+                seasonPosition = privateLeague.seasonPosition;
+              });
+            };
+              
+            let privateLeagues: DTOs.ManagerPrivateLeaguesDTO = {
+              entries = Buffer.toArray(privateLeaguesBuffer);
+              totalEntries = privateLeaguesBuffer.size();
+            };
+            return #ok(privateLeagues);
           };
-          let privateLeague = await private_league_canister.getManagerPrivateLeague(managerId);
-          privateLeaguesBuffer.add({
-            canisterId = privateLeagueCanisterId;
-            created = Time.now();
-            memberCount = privateLeague.memberCount;
-            name = dto.username;
-            seasonPosition = 0;
-          });
+          case _ { return #err(#NotFound)};
         };
-          
-        let privateLeagues: DTOs.ManagerPrivateLeaguesDTO = {
-          entries = Buffer.toArray(privateLeaguesBuffer);
-          totalEntries = privateLeaguesBuffer.size();
-        };
-        return #ok(privateLeagues);
+
       };
-      case _ { return #err(#NotFound)};
+      case _ {
+        return #err(#NotFound)
+      };
     };
   };
 
