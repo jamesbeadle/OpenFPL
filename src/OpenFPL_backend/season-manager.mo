@@ -51,6 +51,7 @@ module {
 
     public func setBackendCanisterController(controller : Principal) {
       leaderboardComposite.setBackendCanisterController(controller);
+      privateLeaguesManager.setBackendCanisterController(controller);
     };
 
 

@@ -490,6 +490,9 @@ module DTOs {
     entryFee: Nat;
     adminFee: Nat8;
   };
+
+  type CoinIdInfo = {coinId: Nat; coinSubId: Nat};
+  public type ICPCoinsResponse = {coinIdInfo: CoinIdInfo; pairName: Text; price: Float};
   
 
 };

@@ -6,6 +6,20 @@ import Iter "mo:base/Iter";
 import Text "mo:base/Text";
 import Array "mo:base/Array";
 import Blob "mo:base/Blob";
+import Buffer "mo:base/Buffer";
+import Principal "mo:base/Principal";
+import SNSToken "sns-wrappers/ledger";
+import Account "./lib/Account";
+import Cycles "mo:base/ExperimentalCycles";
+import Float "mo:base/Float";
+import Nat64 "mo:base/Nat64";
+import Int64 "mo:base/Int64";
+import Int "mo:base/Int";
+import Time "mo:base/Time";
+import PrivateLeague "canister_definitions/private-league";
+import Management "./modules/Management";
+import Utilities "./utils/utilities";
+import Environment "./utils/Environment";
 
 module {
 
@@ -13,6 +27,11 @@ module {
     
     private var privateLeagueCanisterIds: [T.CanisterId] = [];
     private var privateLeagueNameIndex: [(T.CanisterId, Text)] = [];
+    private var backendCanisterController : ?Principal = null;
+
+    public func setBackendCanisterController(controller : Principal) {
+      backendCanisterController := ?controller;
+    };
 
     public func getStablePrivateLeagueCanisterIds() : [T.CanisterId] {
       return privateLeagueCanisterIds;
@@ -130,39 +149,57 @@ module {
       return true;
     };
 
-    public func createPrivateLeague(newPrivateLeague: DTOs.CreatePrivateLeagueDTO) : async Result.Result<(), T.Error> {
-      //TODO: TAKE PAYMENT
+    public func createPrivateLeague(defaultAccount : Principal, leagueCreatorId: Principal, newPrivateLeague: DTOs.CreatePrivateLeagueDTO) : async Result.Result<(), T.Error> {
       
-    /*
-      let entry_fee : Nat64 = 100_000_000;
-      let icp_fee : Nat64 = 10_000;
+      var ledgerCanisterId = Environment.NNS_LEDGER_CANISTER_ID;
+      var entryFee: Nat64 = 100_000_000;
+      var fee: Nat64 = 10_000;
 
       switch(newPrivateLeague.paymentChoice){
-        case (#ICP) {
+        case (#ICP){ };
+        case (#FPL){
+          
+          let icp_coins_canister = actor (Environment.ICP_COINS_CANISTER_ID) : actor {
+            get_latest : () -> async [DTOs.ICPCoinsResponse];
+          };
 
-        };
-        case (#FPL) {
-          let ledger : SNSToken.Interface = actor (ledgerCanisterId);
+          let allCoins = await icp_coins_canister.get_latest();
+          for(coinRecord in Iter.fromArray(allCoins)){
+            if(coinRecord.pairName == "FPL/ICP"){
+              if(coinRecord.price <= 0){
+                return #err(#InvalidData);
+              };
+              entryFee := Int64.toNat64(Float.toInt64(1 / coinRecord.price));
+            }
+          };
 
+          ledgerCanisterId := Environment.SNS_LEDGER_CANISTER_ID;
+          fee := 100_000; 
         };
       };
-      let _ = await ledger.transfer({
-        memo = 0;
-        from_subaccount = ?Account.principalToSubaccount(user);
-        to = Account.accountIdentifier(defaultAccount, Account.defaultSubaccount());
-        amount = { e8s = entry_fee - icp_fee };
-        fee = { e8s = icp_fee };
-        created_at_time = ?{
-          timestamp_nanos = Nat64.fromNat(Int.abs(Time.now()));
-        };
+      
+      let ledger : SNSToken.Interface = actor (ledgerCanisterId);
+     
+      let _ = await ledger.icrc1_transfer ({
+        memo = ?Text.encodeUtf8("0");
+        from_subaccount = ?Account.principalToSubaccount(leagueCreatorId);
+        to = { owner = defaultAccount; subaccount = ?Account.defaultSubaccount() };
+        amount = Nat64.toNat(entryFee - fee);
+        fee = ?Nat64.toNat(fee);
+        created_at_time = ?Nat64.fromNat(Int.abs(Time.now()))
       });
 
-      //add name to index
-      
       //create canister
+      Cycles.add<system>(2_000_000_000_000);
+      let canister = await PrivateLeague._PrivateLeague();
+      let IC : Management.Management = actor (Environment.Default);
+      let _ = await Utilities.updateCanister_(canister, backendCanisterController, IC);
+      let canister_principal = Principal.fromActor(canister);
 
-      //set up canister
-*/
+      let nameIndexBuffer = Buffer.fromArray<(T.CanisterId, Text)>(privateLeagueNameIndex);
+      nameIndexBuffer.add((Principal.toText(canister_principal),newPrivateLeague.name));
+      privateLeagueNameIndex := Buffer.toArray(nameIndexBuffer);
+
       return #ok();
     };
 

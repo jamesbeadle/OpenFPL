@@ -12,4 +12,5 @@ module Environment {
   public let SNS_INDEX_CANISTER_ID = "dnqcx-eyaaa-aaaaq-aacrq-cai";
   public let SNS_SWAP_CANISTER_ID = "dkred-jaaaa-aaaaq-aacra-cai";
   public let Default = "aaaaa-aa";
+  public let ICP_COINS_CANISTER_ID = "u45jl-liaaa-aaaam-abppa-cai";
 };
