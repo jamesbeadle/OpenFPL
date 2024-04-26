@@ -2,13 +2,14 @@
 
 ## Summary
 
-OpenFPL is a decentralised fantasy football application built on the Internet Computer blockchain using Svelte, TypeScript & Motoko.
+OpenFPL is a decentralised fantasy football application built on the Internet Computer blockchain using Motoko, Svelte, TypeScript & Tailwind CSS.
 
 ## Features
 
 - Unique Gameplay: A wide range of gameplay rules mirroring the varying elements of the football gameplay.
 - Fully Decentralised: Built to run as a DAO using the IC's Service Nervous System (SNS).
 - Consensus Data: Runs fully on-chain using "consensus data" to take ownership of Premier League football data.
+- Private Leagues: Build your own customised community & rewards structure and play among your friends.
 
 ## Prerequisites
 
@@ -18,80 +19,73 @@ More information about the Internet Computer blockchain can be found at https://
 
 ## Install SNS
 
-To run OpenFPL you will need to setup a local version of the NNS containing the FPL utility token with users after the SNS sale. To get to this state follow these steps:
+To run OpenFPL you will need to setup a local version of the NNS containing the FPL utility token with users after the SNS sale. 
 
-1. Clone the sns testing repo into your linux root directory:
+To get to this state follow these steps:
 
-```bash
-git clone https://github.com/dfinity/sns-testing.git
-```
-
-2. Clone the OpenFPL repository:
+1. Clone OpenFPL & the sns testing repo into your linux root directory:
 
 ```bash
 git clone https://github.com/jamesbeadle/OpenFPL.git
 ```
 
-SNS_TESTING_INSTANCE=$(
-docker run -p 8000:8000 -p 8080:8080 -v "`pwd`":/dapp -d ghcr.io/dfinity/sns-testing:main dfx start --clean
-)
-while ! docker logs $SNS_TESTING_INSTANCE 2>&1 | grep -m 1 'Dashboard:'
-do
-echo "Awaiting local replica ..."
-sleep 3
-done
-
-docker exec -it $SNS_TESTING_INSTANCE bash setup_locally.sh
-
-docker kill $SNS_TESTING_INSTANCE
-
-docker exec -it $SNS_TESTING_INSTANCE bash
-
-./cleanup.sh # from Bash
-
-SNS_TESTING_INSTANCE=$(
-docker run -p 8000:8000 -p 8080:8080 -v "`pwd`":/dapp -d ghcr.io/dfinity/sns-testing:main dfx start --clean
-)
-while ! docker logs $SNS_TESTING_INSTANCE 2>&1 | grep -m 1 'Dashboard:'
-do
-echo "Awaiting local replica ..."
-sleep 3
-done
-
-3. Navigate to the directory:
-
 ```bash
-cd OpenFPL
+git clone https://github.com/dfinity/sns-testing.git
 ```
 
-If using npm:
+2. Load the sns-testing solution in VSCode and run the following command:
 
 ```bash
-npm install
+./install.sh
 ```
 
-If using yarn:
+2. In a separate linux terminal, from the sns-testing directory, run the following command:
 
 ```bash
-yarn install
+./setup_locally.sh
 ```
 
-3. Deploy the application:
+Overwrite any existing canisters if the terminal asks by using the 'y' key. 
+
+Make note of the deployed SNS governance canister id from the sns_canister_ids.json file.
+
+3. In the sns-testing solution VSCode terminal run the following command to set the ICP/XDR exchange rate:
 
 ```bash
-dfx deploy --network=local
+./set-icp-xdr-rate.sh 10000
 ```
 
-2. Within the CanisterIds.mo file, update MAIN_CANISTER_LOCAL_ID to your deployed OpenFPL_backend canister.
+4. Load the OpenFPL solution in VSCode and deploy the application using the following command:
 
-3. Redeploy the OpenFPL_backend file with the updated canister.
-
-4. Fabricate some cycles for the main backend canister:
-
-```bash
-dfx ledger fabricate-cycles --canister OpenFPL_backend
+```dfx deploy --network=local
 ```
 
-5. Load the OpenFPL_backend canister init() function through the backend candid interface.
+Make note of the frontend and backend canister ids.
 
-6. Test the current state of the live app by connecting with your internet identity and updating your profile information.
+5. Withing the OpenFPL repository, update the frontend and backend canister ids listed as DAO controlled canisters within sns_init.yaml.
+
+6. Deploy the SNS from the sns-testing repository by running the following commands:
+
+```
+ SNS_GOVERNANCE_CANISTER_ID="<INSERT DEPLOYED SNS GOVERNANCE CANISTER ID>"
+NUM_PARTICIPANTS=100
+ICP_PER_PARTICIPANT=10000
+./let_nns_control_dapp.sh
+./propose_sns.sh
+./participate_sns_swap.sh $NUM_PARTICIPANTS $ICP_PER_PARTICIPANT 
+```
+7. You can then access the NNS containing OpenFPL from the following link:
+
+http://qsgjb-riaaa-aaaaa-aaaga-cai.localhost:8080/
+
+Create a new test user and make a note of their principal id.
+
+8. Mint FPL tokens for your users by running the following command:
+
+ dfx canister call "${SNS_GOVERNANCE_CANISTER_ID}" mint_tokens "(record{recipient=opt record{owner=opt principal \"${PRINCIPAL}\"};amount_e8s=opt 1_0000_000_000_000_000:opt nat64})" --network "$NETWORK" 
+    
+Now stake the tokens and when raising propsals with this user they will pass immediately.
+
+9. Run dfx identity get-principal to get the principal of the current dfx user. Add this user as a hotkey to your initially created user.
+
+10. Run the create SNS setup files script
