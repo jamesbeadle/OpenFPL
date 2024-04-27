@@ -27,7 +27,6 @@ module {
     let icp_entry_fee : Nat64 = 100_000_000;
     
     let icp_fee : Nat64 = 10_000;
-    let fpl_fee_fee : Nat64 = 10_000;
     let memo_txt_tpup : Nat64 = 0x50555054;
     private let ledger : ICPLedger.Interface = actor (ICPLedger.CANISTER_ID);
     private var tokenList: [T.TokenInfo] = Tokens.tokens;
@@ -129,7 +128,7 @@ module {
           };
 
           let allCoins = await icp_coins_canister.get_latest();
-          
+
           for(coinRecord in Iter.fromArray(allCoins)){
             if(coinRecord.pairName == "FPL/ICP"){
               if(coinRecord.price <= 0){

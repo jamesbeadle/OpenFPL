@@ -9,6 +9,7 @@ import Result "mo:base/Result";
 import Array "mo:base/Array";
 import Nat16 "mo:base/Nat16";
 import List "mo:base/List";
+import Time "mo:base/Time";
 import Utilities "../utils/utilities";
 import Environment "../utils/Environment";
 import Constants "../utils/Constants";
@@ -26,9 +27,6 @@ actor class _PrivateLeague() {
     private stable var monthlyLeaderboards: [(T.SeasonId, [(T.CalendarMonth, [T.LeaderboardEntry])])] = [];
     private stable var seasonLeaderboards: [(T.SeasonId, [T.LeaderboardEntry])] = [];
 
-    private stable var currentSeasonId: T.SeasonId = 0;
-    private stable var currentMonth: T.CalendarMonth = 0;
-    private stable var currentGameweek: T.GameweekNumber = 0;
     private stable var privateLeague: ?T.PrivateLeague = null;
     
     public shared ({ caller }) func getPrivateLeague() : async Result.Result<DTOs.PrivateLeagueDTO, T.Error> {
@@ -266,49 +264,197 @@ actor class _PrivateLeague() {
         return false;
     };
 
-    public shared ({ caller }) func inviteUserToLeague(managerId: T.PrincipalId) : async Result.Result<(), T.Error> {
+    public shared ({ caller }) func inviteUserToLeague(managerId: T.PrincipalId, sentBy: T.PrincipalId) : async Result.Result<(), T.Error> {
+        assert not Principal.isAnonymous(caller);
+        let principalId = Principal.toText(caller);
+        assert principalId == main_canister_id;
         
-        //create an invite the user can see
-        //record the invite in the private league for when it's accepted
+        switch(privateLeague){
+            case null {};
+            case (?foundPrivateLeague){
+
+                let leagueInvite: T.LeagueInvite = {
+                    from = sentBy;
+                    inviteStatus = #Sent;
+                    leagueCanisterId = foundPrivateLeague.canisterId;
+                    sent = Time.now();
+                    to = managerId;
+                };
+
+                let leagueInvitesBuffer = Buffer.fromArray<T.LeagueInvite>(leagueInvites);
+                leagueInvitesBuffer.add(leagueInvite);
+
+                leagueInvites := Buffer.toArray(leagueInvitesBuffer);
+                return #ok();
+            }
+        };
+
+        return #err(#NotFound);
+    };
+
+    public shared ({ caller }) func acceptLeagueInvite(managerId: T.PrincipalId, username: Text) : async Result.Result<(), T.Error> {
+        assert not Principal.isAnonymous(caller);
+        let principalId = Principal.toText(caller);
+        assert principalId == main_canister_id;
+
+        let leagueInviteBuffer = Buffer.fromArray<T.LeagueInvite>([]);
+        for(leagueInvite in Iter.fromArray(leagueInvites)){
+            if(leagueInvite.to == managerId){
+                leagueInviteBuffer.add({
+                    from = leagueInvite.from;
+                    inviteStatus = #Accepted;
+                    leagueCanisterId = leagueInvite.leagueCanisterId;
+                    sent = leagueInvite.sent;
+                    to = leagueInvite.to
+                });
+            }
+            else{
+                leagueInviteBuffer.add(leagueInvite);
+            }
+        };
+
+        leagueInvites := Buffer.toArray(leagueInviteBuffer);
         
-        
-        //todo
+        return await enterLeague(managerId, username);
+    };
+
+    public shared ({ caller }) func rejectLeagueInvite(managerId: T.PrincipalId) : async Result.Result<(), T.Error> {
+        assert not Principal.isAnonymous(caller);
+        let principalId = Principal.toText(caller);
+        assert principalId == main_canister_id;
+
+        let leagueInviteBuffer = Buffer.fromArray<T.LeagueInvite>([]);
+        for(leagueInvite in Iter.fromArray(leagueInvites)){
+            if(leagueInvite.to == managerId){
+                leagueInviteBuffer.add({
+                    from = leagueInvite.from;
+                    inviteStatus = #Rejected;
+                    leagueCanisterId = leagueInvite.leagueCanisterId;
+                    sent = leagueInvite.sent;
+                    to = leagueInvite.to
+                });
+            }
+            else{
+                leagueInviteBuffer.add(leagueInvite);
+            }
+        };
+
+        leagueInvites := Buffer.toArray(leagueInviteBuffer);
         return #ok();
     };
 
-    public shared ({ caller }) func acceptLeagueInvite(managerId: T.PrincipalId) : async Result.Result<(), T.Error> {
-        //todo
-        return #ok();
+    public shared ({ caller }) func updateLeaguePicture(picture: Blob) : async Result.Result<(), T.Error> {
+        assert not Principal.isAnonymous(caller);
+        let principalId = Principal.toText(caller);
+        assert principalId == main_canister_id;
+
+        switch(privateLeague){
+            case null {};
+            case (?foundPrivateLeague){
+
+                privateLeague := ?{
+                    canisterId = foundPrivateLeague.canisterId;
+                    name = foundPrivateLeague.name;
+                    maxEntrants = foundPrivateLeague.maxEntrants;
+                    picture = picture;
+                    banner = foundPrivateLeague.banner;
+                    tokenId = foundPrivateLeague.tokenId;
+                    entryFee = foundPrivateLeague.entryFee;
+                    adminFee = foundPrivateLeague.adminFee;
+                    entryType = foundPrivateLeague.entryType;
+                };
+                return #ok();
+            }
+        };
+        return #err(#NotFound);
     };
 
-    public shared ({ caller }) func updateLeaguePicture(managerId: T.PrincipalId, picture: Blob) : async Result.Result<(), T.Error> {
-        //todo
-        return #ok();
+    public shared ({ caller }) func updateLeagueBanner(banner: Blob) : async Result.Result<(), T.Error> {
+        assert not Principal.isAnonymous(caller);
+        let principalId = Principal.toText(caller);
+        assert principalId == main_canister_id;
+
+        switch(privateLeague){
+            case null {};
+            case (?foundPrivateLeague){
+
+                privateLeague := ?{
+                    canisterId = foundPrivateLeague.canisterId;
+                    name = foundPrivateLeague.name;
+                    maxEntrants = foundPrivateLeague.maxEntrants;
+                    picture = foundPrivateLeague.picture;
+                    banner = banner;
+                    tokenId = foundPrivateLeague.tokenId;
+                    entryFee = foundPrivateLeague.entryFee;
+                    adminFee = foundPrivateLeague.adminFee;
+                    entryType = foundPrivateLeague.entryType;
+                };
+                return #ok();
+            }
+        };
+        return #err(#NotFound);
     };
 
-    public shared ({ caller }) func updateLeagueBanner(managerId: T.PrincipalId, banner: Blob) : async Result.Result<(), T.Error> {
-        //todo
-        return #ok();
+    public shared ({ caller }) func updateLeagueName(name: Text) : async Result.Result<(), T.Error> {
+        assert not Principal.isAnonymous(caller);
+        let principalId = Principal.toText(caller);
+        assert principalId == main_canister_id;
+
+        switch(privateLeague){
+            case null {};
+            case (?foundPrivateLeague){
+
+                privateLeague := ?{
+                    canisterId = foundPrivateLeague.canisterId;
+                    name = name;
+                    maxEntrants = foundPrivateLeague.maxEntrants;
+                    picture = foundPrivateLeague.picture;
+                    banner = foundPrivateLeague.banner;
+                    tokenId = foundPrivateLeague.tokenId;
+                    entryFee = foundPrivateLeague.entryFee;
+                    adminFee = foundPrivateLeague.adminFee;
+                    entryType = foundPrivateLeague.entryType;
+                };
+                return #ok();
+            }
+        };
+        return #err(#NotFound);
     };
 
-    public shared ({ caller }) func updateLeagueName(managerId: T.PrincipalId, name: Text) : async Result.Result<(), T.Error> {
-        //todo
-        return #ok();
-    };
+    public shared ({ caller }) func enterLeague(managerId: T.PrincipalId, username: Text) : async Result.Result<(), T.Error> {
+        assert not Principal.isAnonymous(caller);
+        let principalId = Principal.toText(caller);
+        assert principalId == main_canister_id;
 
-    public shared ({ caller }) func enterLeague(managerId: T.PrincipalId) : async Result.Result<(), T.Error> {
-        //todo
-        return #ok();
+        switch(privateLeague){
+            case null {};
+            case (?foundPrivateLeague){
+                let leagueMembersBuffer = Buffer.fromArray<T.LeagueMember>(leagueMembers);
+                leagueMembersBuffer.add({
+                    canisterId = foundPrivateLeague.canisterId;
+                    joinedDate = Time.now();
+                    principalId = managerId;
+                    username = username;
+                });
+                leagueMembers := Buffer.toArray(leagueMembersBuffer);
+                return #ok();
+            }
+        };
+        return #err(#NotFound);
     };
 
     public shared ({ caller }) func inviteExists(managerId: T.PrincipalId) : async Result.Result<Bool, T.Error> {
-        //todo
-        return #ok(true);
-    };
-
-    public shared ({ caller }) func acceptInvite(managerId: T.PrincipalId) : async Result.Result<(), T.Error> {
-        //todo
-        return #ok();
+        assert not Principal.isAnonymous(caller);
+        let principalId = Principal.toText(caller);
+        assert principalId == main_canister_id;
+        
+        for(invite in Iter.fromArray(leagueInvites)){
+            if(invite.to == managerId and invite.inviteStatus == #Sent){
+                return #ok(true);
+            };
+        };
+        
+        return #ok(false);
     };
 
     system func preupgrade() {};

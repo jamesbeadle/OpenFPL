@@ -4,7 +4,6 @@ import List "mo:base/List";
 import Buffer "mo:base/Buffer";
 import Iter "mo:base/Iter";
 import Time "mo:base/Time";
-import Result "mo:base/Result";
 import Array "mo:base/Array";
 import Nat8 "mo:base/Nat8";
 import Nat16 "mo:base/Nat16";

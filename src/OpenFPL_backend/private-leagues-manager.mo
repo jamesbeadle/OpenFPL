@@ -223,12 +223,12 @@ module {
 
     public func getPrivateLeagueInvites(managerId: T.PrincipalId) : Result.Result<[DTOs.PrivateLeagueInviteDTO], T.Error> {
 
-    let filteredInvites = Array.filter<(T.PrincipalId, T.LeagueInvite)>(
-      unacceptedInvites,
-      func(invite : (T.PrincipalId, T.LeagueInvite)) : Bool {
-        return invite.0 == managerId;
-      },
-    );
+      let filteredInvites = Array.filter<(T.PrincipalId, T.LeagueInvite)>(
+        unacceptedInvites,
+        func(invite : (T.PrincipalId, T.LeagueInvite)) : Bool {
+          return invite.0 == managerId;
+        },
+      );
 
       let inviteDTOs = Array.map<(T.PrincipalId, T.LeagueInvite), DTOs.PrivateLeagueInviteDTO>(
         filteredInvites,
@@ -246,22 +246,22 @@ module {
       return #ok(inviteDTOs);
     };
 
-    public func inviteUserToLeague(canisterId: T.CanisterId, managerId: T.PrincipalId) : async Result.Result<(), T.Error>{
+    public func inviteUserToLeague(canisterId: T.CanisterId, managerId: T.PrincipalId, callerId: T.PrincipalId) : async Result.Result<(), T.Error>{
       let private_league_canister = actor (canisterId) : actor {
-        inviteUserToLeague : (managerId: T.PrincipalId) -> async Result.Result<(), T.Error>;
+        inviteUserToLeague : (managerId: T.PrincipalId, sentBy: T.PrincipalId) -> async Result.Result<(), T.Error>;
       };
 
       //TODO: Add unaccepted league invite
 
-      return await private_league_canister.inviteUserToLeague(managerId);
+      return await private_league_canister.inviteUserToLeague(managerId, callerId);
     };
 
-    public func acceptLeagueInvite(canisterId: T.CanisterId, managerId: T.PrincipalId) : async Result.Result<(), T.Error>{
+    public func acceptLeagueInvite(canisterId: T.CanisterId, managerId: T.PrincipalId, username: Text) : async Result.Result<(), T.Error>{
       let private_league_canister = actor (canisterId) : actor {
-        acceptLeagueInvite : (managerId: T.PrincipalId) -> async Result.Result<(), T.Error>;
+        acceptLeagueInvite : (managerId: T.PrincipalId, username: Text) -> async Result.Result<(), T.Error>;
       };
 
-      return await private_league_canister.acceptLeagueInvite(managerId);
+      return await private_league_canister.acceptLeagueInvite(managerId, username);
     };
 
     public func updateLeaguePicture(canisterId: T.CanisterId, picture: Blob) : async Result.Result<(), T.Error>{
@@ -304,12 +304,20 @@ module {
       return await private_league_canister.inviteExists(managerId);
     };
 
-    public func acceptInvite(canisterId: T.CanisterId, managerId: T.PrincipalId) : async Result.Result<(), T.Error> {
+    public func acceptInvite(canisterId: T.CanisterId, managerId: T.PrincipalId, username: Text) : async Result.Result<(), T.Error> {
       let private_league_canister = actor (canisterId) : actor {
-        acceptInvite : (managerId: T.PrincipalId) -> async Result.Result<(), T.Error>;
+        acceptLeagueInvite : (managerId: T.PrincipalId, username: Text) -> async Result.Result<(), T.Error>;
       };
 
-      return await private_league_canister.acceptInvite(managerId);
+      return await private_league_canister.acceptLeagueInvite(managerId, username);
+    };
+
+    public func rejectInvite(canisterId: T.CanisterId, managerId: T.PrincipalId) : async Result.Result<(), T.Error> {
+      let private_league_canister = actor (canisterId) : actor {
+        rejectLeagueInvite : (managerId: T.PrincipalId) -> async Result.Result<(), T.Error>;
+      };
+
+      return await private_league_canister.rejectLeagueInvite(managerId);
     };
 
     public func getPrivateLeague(canisterId: T.CanisterId) : async Result.Result<DTOs.PrivateLeagueDTO, T.Error> {

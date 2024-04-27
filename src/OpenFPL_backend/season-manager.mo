@@ -913,12 +913,19 @@ module {
       return await privateLeaguesManager.isLeagueAdmin(canisterId, principalId);
     };
 
-    public func inviteUserToLeague(canisterId: T.CanisterId, managerId: T.PrincipalId) : async Result.Result<(), T.Error> {
-      return await privateLeaguesManager.inviteUserToLeague(canisterId, managerId);
+    public func inviteUserToLeague(canisterId: T.CanisterId, managerId: T.PrincipalId, callerId: T.PrincipalId) : async Result.Result<(), T.Error> {
+      return await privateLeaguesManager.inviteUserToLeague(canisterId, managerId, callerId);
     };
 
     public func acceptLeagueInvite(canisterId: T.CanisterId, managerId: T.PrincipalId) : async Result.Result<(), T.Error> {
-      return await privateLeaguesManager.acceptLeagueInvite(canisterId, managerId);
+      let manager = await getManager(managerId);
+      switch(manager){
+        case (#ok foundManager){
+          return await privateLeaguesManager.acceptLeagueInvite(canisterId, managerId, foundManager.username);
+        };
+        case _ {};
+      };
+      return #err(#NotFound);
     };
 
     public func updateLeaguePicture(canisterId: T.CanisterId, picture: Blob) : async Result.Result<(), T.Error> {
