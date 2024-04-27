@@ -514,7 +514,7 @@ actor Self {
     assert(seasonManager.privateLeagueIsValid(newPrivateLeague));
     assert(seasonManager.nameAvailable(newPrivateLeague.name));
     assert(await treasuryManager.canAffordPrivateLeague(Principal.fromActor(Self), Principal.toText(caller), newPrivateLeague.paymentChoice));
-    return await seasonManager.createPrivateLeague(newPrivateLeague);
+    return await seasonManager.createPrivateLeague(Principal.fromActor(Self), caller, newPrivateLeague);
   };
 
   public shared ({ caller }) func searchUsername(username: Text) : async Result.Result<DTOs.ManagerDTO, T.Error> {

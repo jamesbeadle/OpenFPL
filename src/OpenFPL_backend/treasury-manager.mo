@@ -8,6 +8,8 @@ import Iter "mo:base/Iter";
 import Buffer "mo:base/Buffer";
 import Result "mo:base/Result";
 import Blob "mo:base/Blob";
+import Int64 "mo:base/Int64";
+import Float "mo:base/Float";
 import Environment "utils/Environment";
 import DTOs "DTOs";
 import T "types";
@@ -114,18 +116,31 @@ module {
 
     public func canAffordPrivateLeague(defaultAccount: Principal, managerId: T.PrincipalId, paymentChoice: T.PaymentChoice) : async Bool{
       
-      var ledgerCanisterId = "";
-      var entryFee: Nat64 = 0;
+      var ledgerCanisterId = Environment.NNS_LEDGER_CANISTER_ID;
+      var entryFee: Nat64 = 100_000_000;
+      var fee: Nat64 = 10_000;
 
       switch(paymentChoice){
-        case (#ICP){
-          ledgerCanisterId := Environment.NNS_LEDGER_CANISTER_ID;
-          entryFee := 0; //TODO What is 1 ICP get from football god
-        };
+        case (#ICP){ };
         case (#FPL){
-          //todo get FPL amount using ICP Swap
+          
+          let icp_coins_canister = actor (Environment.ICP_COINS_CANISTER_ID) : actor {
+            get_latest : () -> async [DTOs.ICPCoinsResponse];
+          };
+
+          let allCoins = await icp_coins_canister.get_latest();
+          
+          for(coinRecord in Iter.fromArray(allCoins)){
+            if(coinRecord.pairName == "FPL/ICP"){
+              if(coinRecord.price <= 0){
+                return false;
+              };
+              entryFee := Int64.toNat64(Float.toInt64(1 / coinRecord.price));
+            }
+          };
+
           ledgerCanisterId := Environment.SNS_LEDGER_CANISTER_ID;
-          entryFee := 0;
+          fee := 100_000; 
         };
       };
       

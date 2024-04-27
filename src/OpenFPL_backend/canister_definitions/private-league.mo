@@ -54,12 +54,19 @@ actor class _PrivateLeague() {
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
         assert principalId == main_canister_id;
+        var seasonPosition = 0;
+        var seasonPositionText = "";
 
         for(weeklyLeaderboard in Iter.fromArray(weeklyLeaderboards)){
             if(weeklyLeaderboard.0 == seasonId){
                 for (gw in Iter.fromArray(weeklyLeaderboard.1)){
                     if(gw.0 == gameweek){
-                        
+                        for(entry in Iter.fromArray(gw.1)){
+                            if(entry.principalId == managerId){
+                                seasonPosition := entry.position;
+                                seasonPositionText := entry.positionText;
+                            }
+                        };
                     }
                 }
             };
@@ -67,7 +74,19 @@ actor class _PrivateLeague() {
 
         for(member in Iter.fromArray(leagueMembers)){
             if(member.principalId == managerId){
-                
+                switch(privateLeague){
+                    case (null) {};
+                    case (?foundPrivateLeague){
+                        return #ok({
+                            canisterId = foundPrivateLeague.canisterId;
+                            created = member.joinedDate;
+                            memberCount = Array.size(leagueMembers);
+                            name = foundPrivateLeague.name;
+                            seasonPosition = seasonPosition;
+                            seasonPositionText = seasonPositionText;
+                        });
+                    }
+                }
             };
         };
 
@@ -86,15 +105,6 @@ actor class _PrivateLeague() {
         };
 
         return false;
-    };
-
-    public shared ({ caller }) func updateManager(manager: T.Manager){
-        assert not Principal.isAnonymous(caller);
-        let principalId = Principal.toText(caller);
-        assert principalId == main_canister_id; //Need to check that this canister is one of the manager canisters or make the change via the backend
-        //TODO: Check caller is one of the allowed private league canisters
-
-        //TODO: Update just the information required for the league to keep the data light
     };
 
     public shared ({ caller }) func calculateLeaderboards() : async () {

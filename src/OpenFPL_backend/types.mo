@@ -397,6 +397,7 @@ module _Types {
   };
 
   public type PrivateLeague = {
+    canisterId: Text;
     name: Text;
     maxEntrants: Nat16;
     picture: Blob;

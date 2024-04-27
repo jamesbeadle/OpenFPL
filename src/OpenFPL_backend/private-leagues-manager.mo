@@ -189,7 +189,6 @@ module {
         created_at_time = ?Nat64.fromNat(Int.abs(Time.now()))
       });
 
-      //create canister
       Cycles.add<system>(2_000_000_000_000);
       let canister = await PrivateLeague._PrivateLeague();
       let IC : Management.Management = actor (Environment.Default);

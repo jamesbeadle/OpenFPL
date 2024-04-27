@@ -470,6 +470,7 @@ module DTOs {
     created: Int;
     memberCount: Int;
     seasonPosition: Nat;
+    seasonPositionText: Text;
   };
 
   public type NewTokenDTO = {

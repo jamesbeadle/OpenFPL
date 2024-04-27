@@ -893,8 +893,8 @@ module {
       return privateLeaguesManager.privateLeagueIsValid(privateLeague);
     };
 
-    public func createPrivateLeague(newPrivateLeague: DTOs.CreatePrivateLeagueDTO) : async Result.Result<(), T.Error> {
-      return await privateLeaguesManager.createPrivateLeague(newPrivateLeague);
+    public func createPrivateLeague(defaultAccount: Principal, managerId: Principal, newPrivateLeague: DTOs.CreatePrivateLeagueDTO) : async Result.Result<(), T.Error> {
+      return await privateLeaguesManager.createPrivateLeague(defaultAccount, managerId, newPrivateLeague);
     };
 
     public func nameAvailable(privateLeagueName: Text) : Bool{
