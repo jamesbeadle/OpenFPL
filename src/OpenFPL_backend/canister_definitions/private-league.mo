@@ -10,6 +10,7 @@ import Array "mo:base/Array";
 import Nat16 "mo:base/Nat16";
 import Utilities "../utils/utilities";
 import Environment "../utils/Environment";
+import Constants "../utils/Constants";
 
 actor class _PrivateLeague() {
     private let cyclesCheckInterval : Nat = Utilities.getHour() * 24;
@@ -166,7 +167,10 @@ actor class _PrivateLeague() {
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
         assert principalId == main_canister_id;
-        return false;
+        if(Array.size(leagueMembers) >= Constants.MAX_PRIVATE_LEAGUE_SIZE){
+            return false;
+        };
+        return true;
     };
 
     public shared ({ caller }) func isLeagueAdmin() : async Bool {
