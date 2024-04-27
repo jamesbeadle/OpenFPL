@@ -18,6 +18,7 @@ actor class _PrivateLeague() {
     private var main_canister_id = Environment.BACKEND_CANISTER_ID;
 
     private var leagueMembers: [T.LeagueMember] = [];
+    private var leagueAdmins: [T.PrincipalId] = [];
 
     private stable var weeklyLeaderboards: [(T.SeasonId, [(T.GameweekNumber, [T.LeaderboardEntry])])] = [];
     private stable var monthlyLeaderboards: [(T.SeasonId, [(T.CalendarMonth, [T.LeaderboardEntry])])] = [];
@@ -177,8 +178,10 @@ actor class _PrivateLeague() {
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
         assert principalId == main_canister_id;
-        return false;
 
+        
+
+        return false;
     };
 
     public shared ({ caller }) func inviteUserToLeague(managerId: T.PrincipalId) : async Result.Result<(), T.Error> {
@@ -232,6 +235,17 @@ actor class _PrivateLeague() {
         };
         };
         cyclesCheckTimerId := ?Timer.setTimer<system>(#nanoseconds(cyclesCheckInterval), checkCanisterCycles);
+    };
+
+    public shared ({ caller }) func setAdmin(userId: T.PrincipalId) : async Result.Result<(), T.Error>{
+        assert not Principal.isAnonymous(caller);
+        let principalId = Principal.toText(caller);
+        assert principalId == main_canister_id;
+
+        let adminBuffer = Buffer.fromArray<T.PrincipalId>(leagueAdmins);
+        adminBuffer.add(userId);
+        leagueAdmins := Buffer.toArray(adminBuffer);
+        return #ok();
     };
 
     private func checkCanisterCycles() : async () {

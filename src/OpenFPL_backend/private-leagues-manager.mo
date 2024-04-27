@@ -195,6 +195,8 @@ module {
       let _ = await Utilities.updateCanister_(canister, backendCanisterController, IC);
       let canister_principal = Principal.fromActor(canister);
 
+      let _ = await canister.setAdmin(Principal.toText(leagueCreatorId));
+
       let nameIndexBuffer = Buffer.fromArray<(T.CanisterId, Text)>(privateLeagueNameIndex);
       nameIndexBuffer.add((Principal.toText(canister_principal),newPrivateLeague.name));
       privateLeagueNameIndex := Buffer.toArray(nameIndexBuffer);
