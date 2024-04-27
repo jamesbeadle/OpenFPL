@@ -952,11 +952,6 @@ module {
       return await privateLeaguesManager.inviteExists(canisterId, managerId);
     };
 
-    public func acceptInvite(canisterId: T.CanisterId, managerId: T.PrincipalId) : async Result.Result<(), T.Error> {
-      return await privateLeaguesManager.acceptInvite(canisterId, managerId);
-    };
-
-
     //Stable data getters and setters:
 
     public func getStableRewardPools() : [(T.SeasonId, T.RewardPool)] {

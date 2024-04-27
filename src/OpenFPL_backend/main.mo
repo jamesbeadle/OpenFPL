@@ -532,7 +532,7 @@ actor Self {
     let isLeagueMember = await seasonManager.isLeagueMember(canisterId, Principal.toText(caller));
     assert not isLeagueMember;
 
-    return await seasonManager.inviteUserToLeague(canisterId, managerId);
+    return await seasonManager.inviteUserToLeague(canisterId, managerId, Principal.toText(caller));
   };
 
   public shared ({ caller }) func updateLeaguePicture(canisterId: T.CanisterId, picture: Blob) : async Result.Result<(), T.Error> {
@@ -603,9 +603,6 @@ actor Self {
       };
       case _ { #err(#NotFound) };
     };
-
-    
-
   };
 
   public shared ({ caller }) func acceptInviteAndPayFee(canisterId: T.CanisterId) : async Result.Result<(), T.Error> {
@@ -622,7 +619,7 @@ actor Self {
       case (#ok foundPrivateLeague){
         assert(await treasuryManager.canAffordEntryFee(Principal.fromActor(Self), canisterId, userPrincipal, foundPrivateLeague.tokenId));
         await treasuryManager.payEntryFee(Principal.fromActor(Self), canisterId, userPrincipal);
-        await seasonManager.acceptInvite(canisterId, userPrincipal);
+        await seasonManager.acceptLeagueInvite(canisterId, userPrincipal);
       };
       case _ { #err(#NotFound) };
     };
