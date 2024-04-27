@@ -412,6 +412,7 @@ module _Types {
     principalId: PrincipalId;
     canisterId: CanisterId;
     joinedDate: Int;
+    username: Text;
   };
 
   public type EntryRequirement = {
@@ -432,5 +433,19 @@ module _Types {
   public type PaymentChoice = {
     #ICP;
     #FPL;
+  };
+
+  public type LeagueInvite = {
+    inviteStatus: InviteStatus;
+    sent: Int;
+    to: PrincipalId;
+    from: PrincipalId;
+    leagueCanisterId: CanisterId;
+  };
+
+  public type InviteStatus = {
+    #Sent;
+    #Accepted;
+    #Rejected;
   };
 };

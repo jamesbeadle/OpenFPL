@@ -20,6 +20,7 @@ actor class _PrivateLeague() {
 
     private var leagueMembers: [T.LeagueMember] = [];
     private var leagueAdmins: [T.PrincipalId] = [];
+    private var leagueInvites: [T.LeagueInvite] = [];
 
     private stable var weeklyLeaderboards: [(T.SeasonId, [(T.GameweekNumber, [T.LeaderboardEntry])])] = [];
     private stable var monthlyLeaderboards: [(T.SeasonId, [(T.CalendarMonth, [T.LeaderboardEntry])])] = [];
@@ -94,20 +95,6 @@ actor class _PrivateLeague() {
         };
 
         return #err(#NotFound);
-    };
-
-    public shared ({ caller }) func isLeagueMember(callerId: T.PrincipalId) : async Bool {
-        assert not Principal.isAnonymous(caller);
-        let principalId = Principal.toText(caller);
-        assert principalId == main_canister_id;
-
-        for(member in Iter.fromArray(leagueMembers)){
-            if(member.principalId == callerId){
-                return true;
-            }
-        };
-
-        return false;
     };
 
     public shared ({ caller }) func calculateLeaderboards() : async () {
@@ -221,7 +208,24 @@ actor class _PrivateLeague() {
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
         assert principalId == main_canister_id;
-        return #err(#NotFound);
+
+        let filteredEntries = List.fromArray(leagueMembers);
+
+        let droppedEntries = List.drop<T.LeagueMember>(filteredEntries, offset);
+        let paginatedEntries = List.take<T.LeagueMember>(droppedEntries, limit);
+
+        let leagueMemberDTOs = List.map<T.LeagueMember, DTOs.LeagueMemberDTO>(
+            paginatedEntries,
+            func(leagueMember : T.LeagueMember) : DTOs.LeagueMemberDTO {
+              return {
+                added = leagueMember.joinedDate;
+                principalId = leagueMember.principalId;
+                username = leagueMember.username;
+              };
+            },
+          );
+
+        return #ok(List.toArray(leagueMemberDTOs));
     };
 
     public shared ({ caller }) func leagueHasSpace() : async Bool {
@@ -234,17 +238,40 @@ actor class _PrivateLeague() {
         return true;
     };
 
-    public shared ({ caller }) func isLeagueAdmin() : async Bool {
+    public shared ({ caller }) func isLeagueMember(callerId: T.PrincipalId) : async Bool {
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
         assert principalId == main_canister_id;
 
-        
+        for(member in Iter.fromArray(leagueMembers)){
+            if(member.principalId == callerId){
+                return true;
+            }
+        };
+
+        return false;
+    };
+
+    public shared ({ caller }) func isLeagueAdmin(callerId: T.PrincipalId) : async Bool {
+        assert not Principal.isAnonymous(caller);
+        let principalId = Principal.toText(caller);
+        assert principalId == main_canister_id;
+
+        for(admin in Iter.fromArray(leagueAdmins)){
+            if(admin == callerId){
+                return true;
+            }
+        };
 
         return false;
     };
 
     public shared ({ caller }) func inviteUserToLeague(managerId: T.PrincipalId) : async Result.Result<(), T.Error> {
+        
+        //create an invite the user can see
+        //record the invite in the private league for when it's accepted
+        
+        
         //todo
         return #ok();
     };

@@ -496,4 +496,12 @@ module DTOs {
   public type ICPCoinsResponse = {coinIdInfo: CoinIdInfo; pairName: Text; price: Float};
   
 
+  public type PrivateLeagueInviteDTO = {
+    inviteStatus: T.InviteStatus;
+    sent: Int;
+    to: T.PrincipalId;
+    from: T.PrincipalId;
+    leagueCanisterId: T.CanisterId;
+  };
+
 };

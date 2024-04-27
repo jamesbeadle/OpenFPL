@@ -28,6 +28,7 @@ module {
     private var privateLeagueCanisterIds: [T.CanisterId] = [];
     private var privateLeagueNameIndex: [(T.CanisterId, Text)] = [];
     private var backendCanisterController : ?Principal = null;
+    private var unacceptedInvites: [(T.PrincipalId, T.LeagueInvite)] = [];
 
     public func setBackendCanisterController(controller : Principal) {
       backendCanisterController := ?controller;
@@ -220,10 +221,37 @@ module {
       return await private_league_canister.isLeagueAdmin(principalId);
     };
 
+    public func getPrivateLeagueInvites(managerId: T.PrincipalId) : Result.Result<[DTOs.PrivateLeagueInviteDTO], T.Error> {
+
+    let filteredInvites = Array.filter<(T.PrincipalId, T.LeagueInvite)>(
+      unacceptedInvites,
+      func(invite : (T.PrincipalId, T.LeagueInvite)) : Bool {
+        return invite.0 == managerId;
+      },
+    );
+
+      let inviteDTOs = Array.map<(T.PrincipalId, T.LeagueInvite), DTOs.PrivateLeagueInviteDTO>(
+        filteredInvites,
+        func(invite : (T.PrincipalId, T.LeagueInvite)) : DTOs.PrivateLeagueInviteDTO {
+          return {
+            inviteStatus = #Sent;
+            sent = invite.1.sent;
+            to = invite.1.to;
+            from = invite.1.from;
+            leagueCanisterId = invite.1.leagueCanisterId;
+          };
+        },
+      );
+
+      return #ok(inviteDTOs);
+    };
+
     public func inviteUserToLeague(canisterId: T.CanisterId, managerId: T.PrincipalId) : async Result.Result<(), T.Error>{
       let private_league_canister = actor (canisterId) : actor {
         inviteUserToLeague : (managerId: T.PrincipalId) -> async Result.Result<(), T.Error>;
       };
+
+      //TODO: Add unaccepted league invite
 
       return await private_league_canister.inviteUserToLeague(managerId);
     };
