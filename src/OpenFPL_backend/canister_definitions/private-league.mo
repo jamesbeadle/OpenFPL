@@ -8,6 +8,7 @@ import Buffer "mo:base/Buffer";
 import Result "mo:base/Result";
 import Array "mo:base/Array";
 import Nat16 "mo:base/Nat16";
+import List "mo:base/List";
 import Utilities "../utils/utilities";
 import Environment "../utils/Environment";
 import Constants "../utils/Constants";
@@ -138,6 +139,28 @@ actor class _PrivateLeague() {
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
         assert principalId == main_canister_id;
+
+        for(seasonLeaderboard in Iter.fromArray(weeklyLeaderboards)){
+            if(seasonLeaderboard.0 == seasonId){
+                for(leaderboard in Iter.fromArray(seasonLeaderboard.1)){
+                    if(leaderboard.0 == gameweek){
+
+                        let filteredEntries = List.fromArray(leaderboard.1);
+
+                        let droppedEntries = List.drop<T.LeaderboardEntry>(filteredEntries, offset);
+                        let paginatedEntries = List.take<T.LeaderboardEntry>(droppedEntries, limit);
+
+                        return #ok({
+                            entries = List.toArray(paginatedEntries);
+                            gameweek = leaderboard.0;
+                            seasonId = seasonLeaderboard.0;
+                            totalEntries = Array.size(leaderboard.1);
+                        });
+                    }
+                }
+            };
+        };
+
         return #err(#NotFound);
     };
 
@@ -145,16 +168,53 @@ actor class _PrivateLeague() {
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
         assert principalId == main_canister_id;
-        return #err(#NotFound);
 
+        for(seasonLeaderboard in Iter.fromArray(monthlyLeaderboards)){
+            if(seasonLeaderboard.0 == seasonId){
+                for(leaderboard in Iter.fromArray(seasonLeaderboard.1)){
+                    if(leaderboard.0 == month){
+
+                        let filteredEntries = List.fromArray(leaderboard.1);
+
+                        let droppedEntries = List.drop<T.LeaderboardEntry>(filteredEntries, offset);
+                        let paginatedEntries = List.take<T.LeaderboardEntry>(droppedEntries, limit);
+
+                        return #ok({
+                            entries = List.toArray(paginatedEntries);
+                            month = leaderboard.0;
+                            seasonId = seasonLeaderboard.0;
+                            totalEntries = Array.size(leaderboard.1);
+                            clubId = 0;
+                        });
+                    }
+                }
+            };
+        };
+
+        return #err(#NotFound);
     };
 
     public shared ({ caller }) func getSeasonLeaderboard(seasonId : T.SeasonId, limit : Nat, offset : Nat) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error> {
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
         assert principalId == main_canister_id;
-        return #err(#NotFound);
 
+        for(seasonLeaderboard in Iter.fromArray(seasonLeaderboards)){
+            if(seasonLeaderboard.0 == seasonId){
+                let filteredEntries = List.fromArray(seasonLeaderboard.1);
+
+                let droppedEntries = List.drop<T.LeaderboardEntry>(filteredEntries, offset);
+                let paginatedEntries = List.take<T.LeaderboardEntry>(droppedEntries, limit);
+
+                return #ok({
+                    entries = List.toArray(paginatedEntries);
+                    seasonId = seasonLeaderboard.0;
+                    totalEntries = Array.size(seasonLeaderboard.1);
+                });
+            };
+        };
+
+        return #err(#NotFound);
     };
 
     public shared ({ caller }) func getLeagueMembers(limit : Nat, offset : Nat) : async Result.Result<[DTOs.LeagueMemberDTO], T.Error> {

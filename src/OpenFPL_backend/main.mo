@@ -465,6 +465,7 @@ actor Self {
                 memberCount = privateLeague.memberCount;
                 name = managerDTO.username;
                 seasonPosition = privateLeague.seasonPosition;
+                seasonPositionText = privateLeague.seasonPositionText;
               });
             };
               
