@@ -23,8 +23,6 @@ module {
     public type ConversionRateResponse = {
       data : Nat;
     };
-
-    let icp_entry_fee : Nat64 = 100_000_000;
     
     let icp_fee : Nat64 = 10_000;
     let memo_txt_tpup : Nat64 = 0x50555054;
@@ -156,7 +154,7 @@ module {
       return balance >= entryFee;
     };
 
-    public func canAffordEntryFee(defaultAccount: Principal, canisterId: T.CanisterId, managerId: T.PrincipalId, tokenId: T.TokenId) : async Bool {
+    public func canAffordEntryFee(defaultAccount: Principal, canisterId: T.CanisterId, managerId: T.PrincipalId) : async Bool {
         
       let private_league_canister = actor (canisterId) : actor {
         getPrivateLeague : () -> async Result.Result<DTOs.PrivateLeagueDTO, T.Error>;
@@ -166,9 +164,8 @@ module {
 
       switch(privateLeague){
         case (#ok foundPrivateLeague){
-          let tokenId = foundPrivateLeague.tokenId;
           for(token in Iter.fromArray(tokenList)){
-            if(token.id == tokenId){
+            if(token.id == foundPrivateLeague.tokenId){
               let ledger : SNSToken.Interface = actor (token.canisterId);
 
               let source_account = Account.accountIdentifier(defaultAccount, Account.principalToSubaccount(Principal.fromText(managerId)));

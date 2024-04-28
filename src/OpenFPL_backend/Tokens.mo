@@ -4,8 +4,8 @@ import T "types";
 module Tokens {
 
   public let tokens : [T.TokenInfo] = [ 
-    { id = 1; ticker = "FPL"; canisterId = "ddsp7-7iaaa-aaaaq-aacqq-cai"; tokenImageURL = ""; fee = 0; },
-    { id = 2; ticker = "ICP"; canisterId = "ryjl3-tyaaa-aaaaa-aaaba-cai"; tokenImageURL = ""; fee = 0; },
+    { id = 1; ticker = "FPL"; canisterId = "ddsp7-7iaaa-aaaaq-aacqq-cai"; tokenImageURL = ""; fee = 1_000; },
+    { id = 2; ticker = "ICP"; canisterId = "ryjl3-tyaaa-aaaaa-aaaba-cai"; tokenImageURL = ""; fee = 10_000; },
     { id = 3; ticker = "ckBTC"; canisterId = "mxzaz-hqaaa-aaaar-qaada-cai"; tokenImageURL = ""; fee = 0; },
     { id = 4; ticker = "ckETH"; canisterId = "ss2fx-dyaaa-aaaar-qacoq-cai"; tokenImageURL = ""; fee = 0; },
     { id = 5; ticker = "OGY"; canisterId = "rd6wb-lyaaa-aaaaj-acvla-cai"; tokenImageURL = ""; fee = 0; },

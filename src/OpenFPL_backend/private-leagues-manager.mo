@@ -251,7 +251,17 @@ module {
         inviteUserToLeague : (managerId: T.PrincipalId, sentBy: T.PrincipalId) -> async Result.Result<(), T.Error>;
       };
 
-      //TODO: Add unaccepted league invite
+      let unacceptedInvitesBuffer = Buffer.fromArray<(T.PrincipalId, T.LeagueInvite)>(unacceptedInvites);
+
+      unacceptedInvitesBuffer.add(managerId, {
+        from = callerId;
+        inviteStatus = #Sent;
+        leagueCanisterId = canisterId;
+        sent = Time.now();
+        to = managerId;
+      });
+
+      unacceptedInvites := Buffer.toArray(unacceptedInvitesBuffer);
 
       return await private_league_canister.inviteUserToLeague(managerId, callerId);
     };

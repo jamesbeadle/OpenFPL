@@ -594,15 +594,9 @@ actor Self {
     let isLeagueMember = await seasonManager.isLeagueMember(canisterId, userPrincipal);
     assert not isLeagueMember;
 
-    let privateLeague = await seasonManager.getPrivateLeague(canisterId);
-    switch(privateLeague){
-      case (#ok foundPrivateLeague){
-        assert(await treasuryManager.canAffordEntryFee(Principal.fromActor(Self), canisterId, userPrincipal, foundPrivateLeague.tokenId));
-        await treasuryManager.payEntryFee(Principal.fromActor(Self), canisterId, userPrincipal);
-        await seasonManager.enterLeague(canisterId, userPrincipal);
-      };
-      case _ { #err(#NotFound) };
-    };
+    assert(await treasuryManager.canAffordEntryFee(Principal.fromActor(Self), canisterId, userPrincipal));
+    await treasuryManager.payEntryFee(Principal.fromActor(Self), canisterId, userPrincipal);
+    await seasonManager.enterLeague(canisterId, userPrincipal);
   };
 
   public shared ({ caller }) func acceptInviteAndPayFee(canisterId: T.CanisterId) : async Result.Result<(), T.Error> {
@@ -614,15 +608,9 @@ actor Self {
     assert not isLeagueMember;
     assert(await seasonManager.inviteExists(canisterId, Principal.toText(caller)));
     
-    let privateLeague = await seasonManager.getPrivateLeague(canisterId);
-    switch(privateLeague){
-      case (#ok foundPrivateLeague){
-        assert(await treasuryManager.canAffordEntryFee(Principal.fromActor(Self), canisterId, userPrincipal, foundPrivateLeague.tokenId));
-        await treasuryManager.payEntryFee(Principal.fromActor(Self), canisterId, userPrincipal);
-        await seasonManager.acceptLeagueInvite(canisterId, userPrincipal);
-      };
-      case _ { #err(#NotFound) };
-    };
+    assert(await treasuryManager.canAffordEntryFee(Principal.fromActor(Self), canisterId, userPrincipal));
+    await treasuryManager.payEntryFee(Principal.fromActor(Self), canisterId, userPrincipal);
+    await seasonManager.acceptLeagueInvite(canisterId, userPrincipal);
   };
 
   public shared ({ caller }) func getTokenList() : async Result.Result<[T.TokenInfo], T.Error> {
