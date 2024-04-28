@@ -29,7 +29,7 @@
     isLoading = true;
     const identityActor: any = await ActorFactory.createIdentityActor(
       authStore,
-      process.env.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
+      process.env.CANISTER_ID_SNS_GOVERNANCE ?? ""
     ); //TODO: Create the governance canister
 
     const { listNeurons, registerVote } =

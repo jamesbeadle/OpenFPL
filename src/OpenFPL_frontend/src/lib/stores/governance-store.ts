@@ -53,11 +53,11 @@ function createGovernanceStore() {
 
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
-      ); //TODO: Post SNS add in governance canister references
+        process.env.CANISTER_ID_SNS_GOVERNANCE ?? ""
+      );
 
       const governanceAgent: HttpAgent = ActorFactory.getAgent(
-        process.env.OPENFPL_GOVERNANCE_CANISTER_ID,
+        process.env.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
         null
       );
@@ -139,11 +139,11 @@ function createGovernanceStore() {
 
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
-      ); //TODO: Post SNS add in governance canister references
+        process.env.CANISTER_ID_SNS_GOVERNANCE ?? ""
+      );
 
       const governanceAgent: HttpAgent = ActorFactory.getAgent(
-        process.env.OPENFPL_GOVERNANCE_CANISTER_ID,
+        process.env.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
         null
       );
@@ -243,11 +243,11 @@ function createGovernanceStore() {
 
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
-      ); //TODO: Post SNS add in governance canister references
+        process.env.CANISTER_ID_SNS_GOVERNANCE ?? ""
+      );
 
       const governanceAgent: HttpAgent = ActorFactory.getAgent(
-        process.env.OPENFPL_GOVERNANCE_CANISTER_ID,
+        process.env.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
         null
       );
@@ -332,11 +332,11 @@ function createGovernanceStore() {
 
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
-      ); //TODO: Post SNS add in governance canister references
+        process.env.CANISTER_ID_SNS_GOVERNANCE ?? ""
+      );
 
       const governanceAgent: HttpAgent = ActorFactory.getAgent(
-        process.env.OPENFPL_GOVERNANCE_CANISTER_ID,
+        process.env.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
         null
       );
@@ -435,11 +435,11 @@ function createGovernanceStore() {
 
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
-      ); //TODO: Post SNS add in governance canister references
+        process.env.CANISTER_ID_SNS_GOVERNANCE ?? ""
+      );
 
       const governanceAgent: HttpAgent = ActorFactory.getAgent(
-        process.env.OPENFPL_GOVERNANCE_CANISTER_ID,
+        process.env.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
         null
       );
@@ -537,11 +537,11 @@ function createGovernanceStore() {
 
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
-      ); //TODO: Post SNS add in governance canister references
+        process.env.CANISTER_ID_SNS_GOVERNANCE ?? ""
+      );
 
       const governanceAgent: HttpAgent = ActorFactory.getAgent(
-        process.env.OPENFPL_GOVERNANCE_CANISTER_ID,
+        process.env.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
         null
       );
@@ -649,11 +649,11 @@ function createGovernanceStore() {
 
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
-      ); //TODO: Post SNS add in governance canister references
+        process.env.CANISTER_ID_SNS_GOVERNANCE ?? ""
+      );
 
       const governanceAgent: HttpAgent = ActorFactory.getAgent(
-        process.env.OPENFPL_GOVERNANCE_CANISTER_ID,
+        process.env.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
         null
       );
@@ -747,11 +747,11 @@ function createGovernanceStore() {
 
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
-      ); //TODO: Post SNS add in governance canister references
+        process.env.CANISTER_ID_SNS_GOVERNANCE ?? ""
+      );
 
       const governanceAgent: HttpAgent = ActorFactory.getAgent(
-        process.env.OPENFPL_GOVERNANCE_CANISTER_ID,
+        process.env.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
         null
       );
@@ -860,11 +860,11 @@ function createGovernanceStore() {
 
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
-      ); //TODO: Post SNS add in governance canister references
+        process.env.CANISTER_ID_SNS_GOVERNANCE ?? ""
+      );
 
       const governanceAgent: HttpAgent = ActorFactory.getAgent(
-        process.env.OPENFPL_GOVERNANCE_CANISTER_ID,
+        process.env.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
         null
       );
@@ -953,11 +953,11 @@ function createGovernanceStore() {
 
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
-      ); //TODO: Post SNS add in governance canister references
+        process.env.CANISTER_ID_SNS_GOVERNANCE ?? ""
+      );
 
       const governanceAgent: HttpAgent = ActorFactory.getAgent(
-        process.env.OPENFPL_GOVERNANCE_CANISTER_ID,
+        process.env.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
         null
       );
@@ -1058,11 +1058,11 @@ function createGovernanceStore() {
 
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
-      ); //TODO: Post SNS add in governance canister references
+        process.env.CANISTER_ID_SNS_GOVERNANCE ?? ""
+      );
 
       const governanceAgent: HttpAgent = ActorFactory.getAgent(
-        process.env.OPENFPL_GOVERNANCE_CANISTER_ID,
+        process.env.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
         null
       );
@@ -1162,11 +1162,11 @@ function createGovernanceStore() {
 
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
-      ); //TODO: Post SNS add in governance canister references
+        process.env.CANISTER_ID_SNS_GOVERNANCE ?? ""
+      );
 
       const governanceAgent: HttpAgent = ActorFactory.getAgent(
-        process.env.OPENFPL_GOVERNANCE_CANISTER_ID,
+        process.env.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
         null
       );
@@ -1265,11 +1265,11 @@ function createGovernanceStore() {
 
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
-      ); //TODO: Post SNS add in governance canister references
+        process.env.CANISTER_ID_SNS_GOVERNANCE ?? ""
+      );
 
       const governanceAgent: HttpAgent = ActorFactory.getAgent(
-        process.env.OPENFPL_GOVERNANCE_CANISTER_ID,
+        process.env.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
         null
       );
@@ -1366,11 +1366,11 @@ function createGovernanceStore() {
 
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
-      ); //TODO: Post SNS add in governance canister references
+        process.env.CANISTER_ID_SNS_GOVERNANCE ?? ""
+      );
 
       const governanceAgent: HttpAgent = ActorFactory.getAgent(
-        process.env.OPENFPL_GOVERNANCE_CANISTER_ID,
+        process.env.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
         null
       );
@@ -1459,11 +1459,11 @@ function createGovernanceStore() {
 
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
-      ); //TODO: Post SNS add in governance canister references
+        process.env.CANISTER_ID_SNS_GOVERNANCE ?? ""
+      );
 
       const governanceAgent: HttpAgent = ActorFactory.getAgent(
-        process.env.OPENFPL_GOVERNANCE_CANISTER_ID,
+        process.env.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
         null
       );
@@ -1552,11 +1552,11 @@ function createGovernanceStore() {
 
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
-      ); //TODO: Post SNS add in governance canister references
+        process.env.CANISTER_ID_SNS_GOVERNANCE ?? ""
+      );
 
       const governanceAgent: HttpAgent = ActorFactory.getAgent(
-        process.env.OPENFPL_GOVERNANCE_CANISTER_ID,
+        process.env.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
         null
       );
@@ -1637,11 +1637,11 @@ function createGovernanceStore() {
 
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
-      ); //TODO: Post SNS add in governance canister references
+        process.env.CANISTER_ID_SNS_GOVERNANCE ?? ""
+      );
 
       const governanceAgent: HttpAgent = ActorFactory.getAgent(
-        process.env.OPENFPL_GOVERNANCE_CANISTER_ID,
+        process.env.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
         null
       );
@@ -1746,11 +1746,11 @@ function createGovernanceStore() {
 
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
-      ); //TODO: Post SNS add in governance canister references
+        process.env.CANISTER_ID_SNS_GOVERNANCE ?? ""
+      );
 
       const governanceAgent: HttpAgent = ActorFactory.getAgent(
-        process.env.OPENFPL_GOVERNANCE_CANISTER_ID,
+        process.env.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
         null
       );

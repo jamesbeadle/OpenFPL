@@ -683,6 +683,9 @@ actor Self {
   private stable var stable_timers : [T.TimerInfo] = [];
   private stable var stable_canister_ids : [Text] = [];
 
+  private stable var stable_token_list: [T.TokenInfo] = [];
+  private stable var stable_next_token_id : Nat16 = 0;
+
   private var nextCyclesCheckTime : Int = 0;
   private var nextWalletCheckTime : Int = 0;
 
@@ -737,6 +740,9 @@ actor Self {
 
     stable_timers := timers;
     stable_canister_ids := cyclesDispenser.getStableCanisterIds();
+
+    stable_token_list := treasuryManager.getStableTokenList();
+    stable_next_token_id := treasuryManager.getStableNextTokenId();
   };
 
   system func postupgrade() {
@@ -793,6 +799,10 @@ actor Self {
     seasonManager.setBackendCanisterController(Principal.fromActor(Self));
     seasonManager.setTimerBackupFunction(setAndBackupTimer, removeExpiredTimers);
     seasonManager.setStoreCanisterIdFunction(cyclesDispenser.storeCanisterId);
+
+    //Treasury Manager
+    treasuryManager.setStableTokenList(stable_token_list);
+    treasuryManager.setStableNextTokenId(stable_next_token_id);
 
     switch (cyclesCheckTimerId) {
       case (null) {};

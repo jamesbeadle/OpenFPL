@@ -29,7 +29,22 @@ module {
     private let ledger : ICPLedger.Interface = actor (ICPLedger.CANISTER_ID);
     private var tokenList: [T.TokenInfo] = Tokens.tokens;
     private var nextTokenId : Nat16 = 35;
-    //TODO: NEED STABLE BACKUP OF THESE
+
+    public func getStableTokenList() : [T.TokenInfo] {
+      return tokenList;
+    };
+
+    public func setStableTokenList(stable_token_list: [T.TokenInfo]){
+      tokenList := stable_token_list;
+    };
+
+    public func getStableNextTokenId() : Nat16 {
+      return nextTokenId;
+    };
+
+    public func setStableNextTokenId(stable_next_token_id: Nat16){
+      nextTokenId := stable_next_token_id;
+    };
 
     public func getUserAccountBalance(defaultAccount : Principal, user : Principal) : async Nat64 {
       let source_account = Account.accountIdentifier(defaultAccount, Account.principalToSubaccount(user));

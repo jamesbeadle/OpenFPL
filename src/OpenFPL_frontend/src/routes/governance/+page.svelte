@@ -28,13 +28,13 @@
   });
 
   async function listProposals() {
-    if (!process.env.OPENFPL_GOVERNANCE_CANISTER_ID) {
+    if (!process.env.CANISTER_ID_SNS_GOVERNANCE) {
       return;
     }
     const identityActor: any = await ActorFactory.createIdentityActor(
       authStore,
-      process.env.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
-    ); //TODO: Create the governance canister
+      process.env.CANISTER_ID_SNS_GOVERNANCE ?? ""
+    );
 
     const { listProposals } = GovernanceCanister.create(identityActor);
     let request: ListProposalsRequest = {
