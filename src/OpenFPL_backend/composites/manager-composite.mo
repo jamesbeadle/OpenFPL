@@ -284,6 +284,14 @@ module {
       return totalManagers;
     };
 
+    public func getManagerUsername(principalId: Text) : ?Text {
+      return managerUsernames.get(principalId);
+    };
+
+    public func getManagerCanisterId(principalId: Text) : ?T.CanisterId {
+      return managerCanisterIds.get(principalId);
+    };
+
     public func saveFantasyTeam(updatedFantasyTeamDTO : DTOs.UpdateTeamSelectionDTO, systemState : T.SystemState, players : [DTOs.PlayerDTO]) : async Result.Result<(), T.Error> {
 
       if (systemState.onHold) {

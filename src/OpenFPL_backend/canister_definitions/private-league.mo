@@ -10,6 +10,7 @@ import Array "mo:base/Array";
 import Nat16 "mo:base/Nat16";
 import List "mo:base/List";
 import Time "mo:base/Time";
+import Option "mo:base/Option";
 import Utilities "../utils/utilities";
 import Environment "../utils/Environment";
 import Constants "../utils/Constants";
@@ -26,6 +27,7 @@ actor class _PrivateLeague() {
     private stable var weeklyLeaderboards: [(T.SeasonId, [(T.GameweekNumber, [T.LeaderboardEntry])])] = [];
     private stable var monthlyLeaderboards: [(T.SeasonId, [(T.CalendarMonth, [T.LeaderboardEntry])])] = [];
     private stable var seasonLeaderboards: [(T.SeasonId, [T.LeaderboardEntry])] = [];
+    private stable var approvedManagerCanisterIds: [T.CanisterId] = [];
 
     private stable var privateLeague: ?T.PrivateLeague = null;
     
@@ -289,7 +291,7 @@ actor class _PrivateLeague() {
         return #err(#NotFound);
     };
 
-    public shared ({ caller }) func acceptLeagueInvite(managerId: T.PrincipalId, username: Text) : async Result.Result<(), T.Error> {
+    public shared ({ caller }) func acceptLeagueInvite(managerId: T.PrincipalId, managerCanisterId: T.CanisterId, username: Text) : async Result.Result<(), T.Error> {
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
         assert principalId == main_canister_id;
@@ -312,7 +314,7 @@ actor class _PrivateLeague() {
 
         leagueInvites := Buffer.toArray(leagueInviteBuffer);
         
-        return await enterLeague(managerId, username);
+        return await enterLeague(managerId, managerCanisterId, username);
     };
 
     public shared ({ caller }) func rejectLeagueInvite(managerId: T.PrincipalId) : async Result.Result<(), T.Error> {
@@ -418,7 +420,7 @@ actor class _PrivateLeague() {
         return #err(#NotFound);
     };
 
-    public shared ({ caller }) func enterLeague(managerId: T.PrincipalId, username: Text) : async Result.Result<(), T.Error> {
+    public shared ({ caller }) func enterLeague(managerId: T.PrincipalId, managerCanisterId: T.CanisterId, username: Text) : async Result.Result<(), T.Error> {
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
         assert principalId == main_canister_id;
@@ -434,6 +436,7 @@ actor class _PrivateLeague() {
                     username = username;
                 });
                 leagueMembers := Buffer.toArray(leagueMembersBuffer);
+                addApprovedManagerCanisterId(managerCanisterId);
                 return #ok();
             }
         };
@@ -452,6 +455,19 @@ actor class _PrivateLeague() {
         };
         
         return #ok(false);
+    };
+
+    private func addApprovedManagerCanisterId(canisterId: T.CanisterId) : () {
+        let canisterExists = Array.find(approvedManagerCanisterIds,
+            func(id : T.CanisterId) : Bool {
+                return id == canisterId;
+            },
+        );
+        if(Option.isNull(canisterExists)){
+            let canisterIdBuffer = Buffer.fromArray<T.CanisterId>(approvedManagerCanisterIds);
+            canisterIdBuffer.add(canisterId);
+            approvedManagerCanisterIds := Buffer.toArray(canisterIdBuffer);
+        };
     };
 
     system func preupgrade() {};

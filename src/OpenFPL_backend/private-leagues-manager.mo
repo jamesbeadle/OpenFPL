@@ -298,12 +298,12 @@ module {
       return await private_league_canister.updateLeagueName(name);
     };
 
-    public func enterLeague(canisterId: T.CanisterId, managerId: T.PrincipalId) : async Result.Result<(), T.Error>{
+    public func enterLeague(canisterId: T.CanisterId, managerId: T.PrincipalId, managerCanisterId: T.CanisterId, username: Text) : async Result.Result<(), T.Error>{
       let private_league_canister = actor (canisterId) : actor {
-        enterLeague : (managerId: T.PrincipalId) -> async Result.Result<(), T.Error>;
+        enterLeague : (managerId: T.PrincipalId, managerCanisterId: T.CanisterId, username: Text) -> async Result.Result<(), T.Error>;
       };
 
-      return await private_league_canister.enterLeague(managerId);
+      return await private_league_canister.enterLeague(managerId, managerCanisterId, username);
     };
 
     public func inviteExists(canisterId: T.CanisterId, managerId: T.PrincipalId) : async Bool {
@@ -314,12 +314,12 @@ module {
       return await private_league_canister.inviteExists(managerId);
     };
 
-    public func acceptInvite(canisterId: T.CanisterId, managerId: T.PrincipalId, username: Text) : async Result.Result<(), T.Error> {
+    public func acceptInvite(canisterId: T.CanisterId, managerId: T.PrincipalId, managerCanisterId: T.CanisterId, username: Text) : async Result.Result<(), T.Error> {
       let private_league_canister = actor (canisterId) : actor {
-        acceptLeagueInvite : (managerId: T.PrincipalId, username: Text) -> async Result.Result<(), T.Error>;
+        acceptLeagueInvite : (managerId: T.PrincipalId, managerCanisterId: T.CanisterId, username: Text) -> async Result.Result<(), T.Error>;
       };
 
-      return await private_league_canister.acceptLeagueInvite(managerId, username);
+      return await private_league_canister.acceptLeagueInvite(managerId, managerCanisterId, username);
     };
 
     public func rejectInvite(canisterId: T.CanisterId, managerId: T.PrincipalId) : async Result.Result<(), T.Error> {

@@ -1390,7 +1390,7 @@ module {
             postponedFixtures = List.nil<T.Fixture>();
           };
           seasons := List.append<T.Season>(seasons, List.make(newSeason));
-          nextSeasonId := nextSeasonId + 1;
+          nextSeasonId := nextSeasonId;
         };
       };
     };

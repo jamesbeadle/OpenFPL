@@ -563,19 +563,31 @@ actor Self {
     return await seasonManager.acceptLeagueInvite(canisterId, Principal.toText(caller));
   };
 
-  public shared ({ caller }) func enterLeague(canisterId: T.CanisterId) : async Result.Result<(), T.Error> {
+  public shared ({ caller }) func enterLeague(privateLeagueCanisterId: T.CanisterId) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
-    assert(await seasonManager.leagueHasSpace(canisterId));
+    assert(await seasonManager.leagueHasSpace(privateLeagueCanisterId));
 
-    let isLeagueMember = await seasonManager.isLeagueMember(canisterId, Principal.toText(caller));
+    let isLeagueMember = await seasonManager.isLeagueMember(privateLeagueCanisterId, Principal.toText(caller));
     assert not isLeagueMember;
 
-    let privateLeague = await seasonManager.getPrivateLeague(canisterId);
+    let privateLeague = await seasonManager.getPrivateLeague(privateLeagueCanisterId);
     switch(privateLeague){
       case (#ok foundPrivateLeague){
         switch(foundPrivateLeague.entryType){
           case (#FreeEntry){
-            await seasonManager.enterLeague(canisterId, Principal.toText(caller));
+            let managerCanisterId = seasonManager.getManagerCanisterId(Principal.toText(caller));
+            let managerUsername = seasonManager.getManagerUsername(Principal.toText(caller));
+            switch(managerCanisterId){
+              case null { return #err(#NotFound)};
+              case (?foundCanisterId){
+                switch(managerUsername){
+                  case null { return #err(#NotFound)};
+                  case (?foundUsername){
+                    await seasonManager.enterLeague(privateLeagueCanisterId, Principal.toText(caller), foundCanisterId, foundUsername);    
+                  }
+                }
+              }
+            };
           };
           case _ {
             return (#err(#NotFound));
@@ -596,7 +608,21 @@ actor Self {
 
     assert(await treasuryManager.canAffordEntryFee(Principal.fromActor(Self), canisterId, userPrincipal));
     await treasuryManager.payEntryFee(Principal.fromActor(Self), canisterId, userPrincipal);
-    await seasonManager.enterLeague(canisterId, userPrincipal);
+    
+    let managerCanisterId = seasonManager.getManagerCanisterId(Principal.toText(caller));
+    let managerUsername = seasonManager.getManagerUsername(Principal.toText(caller));
+    switch(managerCanisterId){
+      case null { return #err(#NotFound)};
+      case (?foundCanisterId){
+        switch(managerUsername){
+          case null { return #err(#NotFound)};
+          case (?foundUsername){
+            await seasonManager.enterLeague(canisterId, userPrincipal, foundCanisterId, foundUsername);
+          }
+        }
+      }
+    };
+    
   };
 
   public shared ({ caller }) func acceptInviteAndPayFee(canisterId: T.CanisterId) : async Result.Result<(), T.Error> {
