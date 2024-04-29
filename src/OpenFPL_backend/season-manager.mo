@@ -280,7 +280,6 @@ module {
 
     //Timer call back events
 
-    //TODO: NEED TO CONFIRM ALL LOGIC FOLLOWS
     public func gameweekBeginExpired() : async () {
 
       var pickTeamGameweek : T.GameweekNumber = 1;

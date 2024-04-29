@@ -100,13 +100,9 @@ actor class _PrivateLeague() {
         let principalId = Principal.toText(caller);
         assert principalId == main_canister_id;
         
-        let uniqueCanisterIds = Buffer.fromArray<T.CanisterId>([]);
+        //Calculate
 
-        for (leagueMember in Iter.fromArray(leagueMembers)) {
-            if (not Buffer.contains<T.CanisterId>(uniqueCanisterIds, leagueMember.canisterId, func(a : T.CanisterId, b : T.CanisterId) : Bool { a == b })) {
-                uniqueCanisterIds.add(leagueMember.canisterId);
-            };
-        };
+        
 
         //TODO
         //now the managers have been updated calculate the leaderboards for the current state
