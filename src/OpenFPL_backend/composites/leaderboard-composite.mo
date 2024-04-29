@@ -14,6 +14,8 @@ import Buffer "mo:base/Buffer";
 import TrieMap "mo:base/TrieMap";
 import Nat "mo:base/Nat";
 import Text "mo:base/Text";
+import Option "mo:base/Option";
+import Order "mo:base/Order";
 import WeeklyLeaderboardCanister "../canister_definitions/weekly-leaderboard";
 import MonthlyLeaderboardCanister "../canister_definitions/monthly-leaderboard";
 import SeasonLeaderboardCanister "../canister_definitions/season-leaderboard";
@@ -300,15 +302,8 @@ module {
 
     public func calculateLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth, uniqueManagerCanisterIds : [T.CanisterId]) : async () {
       
-      //TODO: Make more efficient
-      //get ordered snapshots from canister
-      //merge with existing snapshots to create increasing list
-      //go through and set positions 
-      //go through and set position texts
       
       var fantasyTeamSnapshots: [T.FantasyTeamSnapshot] = [];
-
-      let fantasyTeamSnapshotsBuffer = Buffer.fromArray<T.FantasyTeamSnapshot>([]);
 
       for (canisterId in Iter.fromArray(uniqueManagerCanisterIds)) {
         let manager_canister = actor (canisterId) : actor {
@@ -317,18 +312,62 @@ module {
 
         let orderedSnapshots = await manager_canister.getOrderedSnapshots(seasonId, gameweek);
 
-        fantasyTeamSnapshots := mergeSnapshots(fantasyTeamSnapshots, orderedSnapshots);
+        fantasyTeamSnapshots := mergeSortedArrays(fantasyTeamSnapshots, orderedSnapshots, compareSnapshots);
       };
-
+      
+      //TODO
+      ///go through and set positions 
+      //go through and set position texts
+      
       await calculateWeeklyLeaderboards(seasonId, gameweek, fantasyTeamSnapshots);
       await calculateMonthlyLeaderboards(seasonId, gameweek, month, fantasyTeamSnapshots);
       await calculateSeasonLeaderboard(seasonId, fantasyTeamSnapshots);
 
     };
 
-    private func mergeSnapshots(existingOrderedSnapshots: [T.FantasyTeamSnapshot], newSnapshots: [T.FantasyTeamSnapshot]) : [T.FantasyTeamSnapshot] {
-      return []; //TODO
+    private func compareSnapshots(a : T.FantasyTeamSnapshot, b : T.FantasyTeamSnapshot) : Order.Order {
+      if (a.points < b.points) { return #less };
+      if (a.points == b.points) { return #equal };
+      return #greater;
     };
+
+    public func mergeSortedArrays(arr1: [T.FantasyTeamSnapshot], arr2: [T.FantasyTeamSnapshot], compare: (T.FantasyTeamSnapshot, T.FantasyTeamSnapshot) -> Order.Order) : [T.FantasyTeamSnapshot] {
+      let mergedArray = Array.init<T.FantasyTeamSnapshot>(arr1.size() + arr2.size(), arr1[0]);
+      var i = 0;
+      var j = 0;
+      var k = 0;
+
+      while (i < arr1.size() and j < arr2.size()) {
+           switch (compare(arr1[i], arr2[j])) {
+            case (#less or #equal) {
+              mergedArray[k] := arr1[i];
+              i += 1;
+            };
+              
+            case (#greater){
+                mergedArray[k] := arr2[j];
+                j += 1;
+            };
+        };
+        k += 1;
+      };
+
+      while (i < arr1.size()) {
+          mergedArray[k] := arr1[i];
+          i += 1;
+          k += 1;
+      };
+
+      while (j < arr2.size()) {
+          mergedArray[k] := arr2[j];
+          j += 1;
+          k += 1;
+      };
+
+      return Array.freeze(mergedArray);
+  };
+
+
 
     private func calculateWeeklyLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, snapshots : [T.FantasyTeamSnapshot]) : async () {
       let gameweekEntries = Array.map<T.FantasyTeamSnapshot, T.LeaderboardEntry>(
