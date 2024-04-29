@@ -301,7 +301,6 @@ module {
 
     public func calculateLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth, uniqueManagerCanisterIds : [T.CanisterId]) : async () {
       
-      
       var fantasyTeamSnapshots: [T.FantasyTeamSnapshot] = [];
 
       for (canisterId in Iter.fromArray(uniqueManagerCanisterIds)) {

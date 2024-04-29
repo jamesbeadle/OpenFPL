@@ -2614,17 +2614,19 @@ actor class _ManagerCanister() {
                 let totalTeamValue = Array.foldLeft<Nat16, Nat16>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
 
                 updateSnapshotPoints(value.principalId, seasonId, gameweek, month, totalTeamPoints, totalTeamValue);
+
+                for(privateLeague in Iter.fromList(value.privateLeagueMemberships)){
+                  
+                  //create canister actor and send updated snapshot points
+
+
+                };
               };
             };
           };
         };
       };
     };
-
-    //get each manager in the canister and check their private leagues
-      //for each private league they are a member of call back to the OpenFPL backend canister
-        //make a call to update the private league 
-
 
   };
 

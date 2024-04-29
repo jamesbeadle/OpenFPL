@@ -97,27 +97,20 @@ actor class _PrivateLeague() {
         return #err(#NotFound);
     };
 
-    public shared ({ caller }) func calculateLeaderboards() : async () {
-        assert not Principal.isAnonymous(caller);
-        let principalId = Principal.toText(caller);
-        assert principalId == main_canister_id;
-        
-        //Calculate
-        
-
-        
-
-        //TODO
-        //now the managers have been updated calculate the leaderboards for the current state
-
-        //calculate leaderboards for gameweek, month and season
-
-        //Store leaderboard entries in the gameweek, month and season
-
-        //Pay leaderboard rewards based on gameweek, month and season
-
-        //increment the system state
-
+    public func calculateLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth, uniqueManagerCanisterIds : [T.CanisterId]) : async () {
+      
+        let fantasyTeamSnapshots = Array.sort(
+            allManagerSnapshots,
+            func(a : T.FantasyTeamSnapshot, b : T.FantasyTeamSnapshot) : Order.Order {
+                if (a.points < b.points) { return #greater };
+                if (a.points == b.points) { return #equal };
+                return #less;
+            },
+            );
+      
+        await calculateWeeklyLeaderboards(seasonId, gameweek, fantasyTeamSnapshots);
+        await calculateMonthlyLeaderboards(seasonId, gameweek, month, fantasyTeamSnapshots);
+        await calculateSeasonLeaderboard(seasonId, fantasyTeamSnapshots);
     };
 
     public shared ({ caller }) func getWeeklyLeaderboard(seasonId : T.SeasonId, gameweek: T.GameweekNumber, limit : Nat, offset : Nat) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
@@ -456,6 +449,22 @@ actor class _PrivateLeague() {
         };
         
         return #ok(false);
+    };
+
+    public shared ({ caller }) func updateManagerScore() : async () {
+        assert isApprovedManagerCanister(Principal.toText(caller));
+
+        //update the leaderboard entry
+        
+    };
+
+    private func isApprovedManagerCanister(canisterId: T.CanisterId) : Bool {
+        let canisterExists = Array.find(approvedManagerCanisterIds,
+            func(id : T.CanisterId) : Bool {
+                return id == canisterId;
+            },
+        );
+        return Option.isSome(canisterExists);
     };
 
     private func addApprovedManagerCanisterId(canisterId: T.CanisterId) : () {
