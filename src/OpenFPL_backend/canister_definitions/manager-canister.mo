@@ -1025,7 +1025,7 @@ actor class _ManagerCanister() {
     return Buffer.toArray(allManagersBuffer);
   };
 
-  public shared ({ caller }) func getSnapshots(seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async [T.FantasyTeamSnapshot] {
+  public shared ({ caller }) func getOrderedSnapshots(seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async [T.FantasyTeamSnapshot] {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == main_canister_id;
@@ -1363,7 +1363,18 @@ actor class _ManagerCanister() {
 
       };
     };
-    return Buffer.toArray(allManagersBuffer);
+
+    let allManagerSnapshots = Buffer.toArray(allManagersBuffer);
+    let sortedManagerSnapshots = Array.sort(
+      allManagerSnapshots,
+      func(a : T.FantasyTeamSnapshot, b : T.FantasyTeamSnapshot) : Order.Order {
+        if (a.points < b.points) { return #greater };
+        if (a.points == b.points) { return #equal };
+        return #less;
+      },
+    );
+
+    return sortedManagerSnapshots;
   };
 
   public shared ({ caller }) func getGameweek38Snapshots(seasonId : T.SeasonId) : async [T.FantasyTeamSnapshot] {

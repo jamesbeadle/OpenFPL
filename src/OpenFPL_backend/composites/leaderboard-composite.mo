@@ -299,24 +299,35 @@ module {
     };
 
     public func calculateLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth, uniqueManagerCanisterIds : [T.CanisterId]) : async () {
-
+      
       //TODO: Make more efficient
+      //get ordered snapshots from canister
+      //merge with existing snapshots to create increasing list
+      //go through and set positions 
+      //go through and set position texts
+      
+      var fantasyTeamSnapshots: [T.FantasyTeamSnapshot] = [];
 
       let fantasyTeamSnapshotsBuffer = Buffer.fromArray<T.FantasyTeamSnapshot>([]);
 
       for (canisterId in Iter.fromArray(uniqueManagerCanisterIds)) {
         let manager_canister = actor (canisterId) : actor {
-          getSnapshots : (seasonId : T.SeasonId, gameweek : T.GameweekNumber) -> async [T.FantasyTeamSnapshot];
+          getOrderedSnapshots : (seasonId : T.SeasonId, gameweek : T.GameweekNumber) -> async [T.FantasyTeamSnapshot];
         };
 
-        let snapshots = await manager_canister.getSnapshots(seasonId, gameweek);
-        fantasyTeamSnapshotsBuffer.append(Buffer.fromArray(snapshots));
+        let orderedSnapshots = await manager_canister.getOrderedSnapshots(seasonId, gameweek);
+
+        fantasyTeamSnapshots := mergeSnapshots(fantasyTeamSnapshots, orderedSnapshots);
       };
 
-      await calculateWeeklyLeaderboards(seasonId, gameweek, Buffer.toArray(fantasyTeamSnapshotsBuffer));
-      await calculateMonthlyLeaderboards(seasonId, gameweek, month, Buffer.toArray(fantasyTeamSnapshotsBuffer));
-      await calculateSeasonLeaderboard(seasonId, Buffer.toArray(fantasyTeamSnapshotsBuffer));
+      await calculateWeeklyLeaderboards(seasonId, gameweek, fantasyTeamSnapshots);
+      await calculateMonthlyLeaderboards(seasonId, gameweek, month, fantasyTeamSnapshots);
+      await calculateSeasonLeaderboard(seasonId, fantasyTeamSnapshots);
 
+    };
+
+    private func mergeSnapshots(existingOrderedSnapshots: [T.FantasyTeamSnapshot], newSnapshots: [T.FantasyTeamSnapshot]) : [T.FantasyTeamSnapshot] {
+      return []; //TODO
     };
 
     private func calculateWeeklyLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, snapshots : [T.FantasyTeamSnapshot]) : async () {
