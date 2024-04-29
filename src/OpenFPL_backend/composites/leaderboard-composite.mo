@@ -14,7 +14,6 @@ import Buffer "mo:base/Buffer";
 import TrieMap "mo:base/TrieMap";
 import Nat "mo:base/Nat";
 import Text "mo:base/Text";
-import Option "mo:base/Option";
 import Order "mo:base/Order";
 import WeeklyLeaderboardCanister "../canister_definitions/weekly-leaderboard";
 import MonthlyLeaderboardCanister "../canister_definitions/monthly-leaderboard";
@@ -315,14 +314,9 @@ module {
         fantasyTeamSnapshots := mergeSortedArrays(fantasyTeamSnapshots, orderedSnapshots, compareSnapshots);
       };
       
-      //TODO
-      ///go through and set positions 
-      //go through and set position texts
-      
       await calculateWeeklyLeaderboards(seasonId, gameweek, fantasyTeamSnapshots);
       await calculateMonthlyLeaderboards(seasonId, gameweek, month, fantasyTeamSnapshots);
       await calculateSeasonLeaderboard(seasonId, fantasyTeamSnapshots);
-
     };
 
     private func compareSnapshots(a : T.FantasyTeamSnapshot, b : T.FantasyTeamSnapshot) : Order.Order {
@@ -365,9 +359,7 @@ module {
       };
 
       return Array.freeze(mergedArray);
-  };
-
-
+    };
 
     private func calculateWeeklyLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, snapshots : [T.FantasyTeamSnapshot]) : async () {
       let gameweekEntries = Array.map<T.FantasyTeamSnapshot, T.LeaderboardEntry>(
