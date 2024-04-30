@@ -11,6 +11,7 @@ import Nat16 "mo:base/Nat16";
 import List "mo:base/List";
 import Time "mo:base/Time";
 import Option "mo:base/Option";
+import Order "mo:base/Order";
 import Utilities "../utils/utilities";
 import Environment "../utils/Environment";
 import Constants "../utils/Constants";
@@ -98,20 +99,51 @@ actor class _PrivateLeague() {
     };
 
     public func calculateLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth, uniqueManagerCanisterIds : [T.CanisterId]) : async () {
-      
+        await calculateWeeklyLeaderboards(seasonId, gameweek, fantasyTeamSnapshots);
+        await calculateMonthlyLeaderboards(seasonId, gameweek, month, fantasyTeamSnapshots);
+        await calculateSeasonLeaderboard(seasonId, fantasyTeamSnapshots);
+    };
+
+    private func calculateWeeklyLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, snapshots : [T.FantasyTeamSnapshot]) : async () {
         let fantasyTeamSnapshots = Array.sort(
-            allManagerSnapshots,
+            snapshots,
             func(a : T.FantasyTeamSnapshot, b : T.FantasyTeamSnapshot) : Order.Order {
                 if (a.points < b.points) { return #greater };
                 if (a.points == b.points) { return #equal };
                 return #less;
             },
-            );
-      
-        await calculateWeeklyLeaderboards(seasonId, gameweek, fantasyTeamSnapshots);
-        await calculateMonthlyLeaderboards(seasonId, gameweek, month, fantasyTeamSnapshots);
-        await calculateSeasonLeaderboard(seasonId, fantasyTeamSnapshots);
+        );
+
+        let gameweekEntries = Array.map<T.FantasyTeamSnapshot, T.LeaderboardEntry>(
+            snapshots,
+            func(snapshot) {
+            return createLeaderboardEntry(snapshot.principalId, snapshot.username, snapshot.points);
+            },
+        );
+      let sortedGameweekEntries = List.reverse(Utilities.mergeSortLeaderboard(List.fromArray(gameweekEntries)));
+      let positionedGameweekEntries = assignPositionText(sortedGameweekEntries);
+
+      let currentGameweekLeaderboard : T.WeeklyLeaderboard = {
+        seasonId = seasonId;
+        gameweek = gameweek;
+        entries = positionedGameweekEntries;
+        totalEntries = List.size(positionedGameweekEntries);
+      };
+
+      let gameweekLeaderboardCanisterId = await createWeeklyLeaderboardCanister(seasonId, gameweek, currentGameweekLeaderboard);
+
+      let gameweekCanisterInfo : T.WeeklyLeaderboardCanister = {
+        seasonId = seasonId;
+        gameweek = gameweek;
+        canisterId = gameweekLeaderboardCanisterId;
+      };
+
+      weeklyLeaderboardCanisters := List.append(weeklyLeaderboardCanisters, List.fromArray([gameweekCanisterInfo]));
     };
+
+    
+       
+      
 
     public shared ({ caller }) func getWeeklyLeaderboard(seasonId : T.SeasonId, gameweek: T.GameweekNumber, limit : Nat, offset : Nat) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
         assert not Principal.isAnonymous(caller);
@@ -451,10 +483,43 @@ actor class _PrivateLeague() {
         return #ok(false);
     };
 
-    public shared ({ caller }) func updateManagerScore() : async () {
+    public shared ({ caller }) func updateManagerScore(snapshot: T.FantasyTeamSnapshot) : async Result.Result<(), T.Error> {
         assert isApprovedManagerCanister(Principal.toText(caller));
+        
+        let weeklyLeaderboardEntry: T.LeaderboardEntry = {
+            position = 0;
+            positionText = "";
+            username = snapshot.username;
+            principalId = snapshot.principalId;
+            points = snapshot.points;
+        };
+        
+        let monthlyLeaderboardEntry: T.LeaderboardEntry = {
+            position = 0;
+            positionText = "";
+            username = snapshot.username;
+            principalId = snapshot.principalId;
+            points = snapshot.monthlyPoints;
+        };
+        
+        let seasonLeaderboardEntry: T.LeaderboardEntry = {
+            position = 0;
+            positionText = "";
+            username = snapshot.username;
+            principalId = snapshot.principalId;
+            points = snapshot.seasonPoints;
+        };
+
+        //loop through entries and find snapshot gameweek
+        
+        
+        //add a leaderboard entry for the manager
+        
 
         //update the leaderboard entry
+
+        //update the 
+        return #ok();
         
     };
 

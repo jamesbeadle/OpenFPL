@@ -367,7 +367,7 @@ module {
           return createLeaderboardEntry(snapshot.principalId, snapshot.username, snapshot.points);
         },
       );
-      let sortedGameweekEntries = List.reverse(mergeSort(List.fromArray(gameweekEntries)));
+      let sortedGameweekEntries = List.reverse(Utilities.mergeSortLeaderboard(List.fromArray(gameweekEntries)));
       let positionedGameweekEntries = assignPositionText(sortedGameweekEntries);
 
       let currentGameweekLeaderboard : T.WeeklyLeaderboard = {
@@ -409,7 +409,7 @@ module {
           },
         );
 
-        let sortedMonthEntries = List.reverse(mergeSort(monthEntries));
+        let sortedMonthEntries = List.reverse(Utilities.mergeSortLeaderboard(monthEntries));
         let positionedMonthlyEntries = assignPositionText(sortedMonthEntries);
 
         let clubMonthlyLeaderboard : T.ClubLeaderboard = {
@@ -463,7 +463,7 @@ module {
           return createLeaderboardEntry(snapshot.principalId, snapshot.username, snapshot.seasonPoints);
         },
       );
-      let sortedSeasonEntries = List.reverse(mergeSort(List.fromArray(seasonEntries)));
+      let sortedSeasonEntries = List.reverse(Utilities.mergeSortLeaderboard(List.fromArray(seasonEntries)));
       let positionedSeasonEntries = assignPositionText(sortedSeasonEntries);
 
       let currentSeasonLeaderboard : T.SeasonLeaderboard = {
@@ -642,20 +642,6 @@ module {
       };
 
       return List.map(sortedEntries, updatePosition);
-    };
-
-    private func compare(entry1 : T.LeaderboardEntry, entry2 : T.LeaderboardEntry) : Bool {
-      return entry1.points <= entry2.points;
-    };
-
-    func mergeSort(entries : List.List<T.LeaderboardEntry>) : List.List<T.LeaderboardEntry> {
-      let len = List.size(entries);
-      if (len <= 1) {
-        return entries;
-      } else {
-        let (firstHalf, secondHalf) = List.split(len / 2, entries);
-        return List.merge(mergeSort(firstHalf), mergeSort(secondHalf), compare);
-      };
     };
 
     public func getStableSeasonLeaderboardCanisters() : [T.SeasonLeaderboardCanister] {

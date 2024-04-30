@@ -13,6 +13,7 @@ import Text "mo:base/Text";
 import Int16 "mo:base/Int16";
 import Float "mo:base/Float";
 import Principal "mo:base/Principal";
+import List "mo:base/List";
 import Management "../modules/Management";
 
 module {
@@ -341,6 +342,22 @@ module {
         };
       },
     );
+  };
+
+  
+
+  public func mergeSortLeaderboard(entries : List.List<T.LeaderboardEntry>) : List.List<T.LeaderboardEntry> {
+    let len = List.size(entries);
+    if (len <= 1) {
+      return entries;
+    } else {
+      let (firstHalf, secondHalf) = List.split(len / 2, entries);
+      return List.merge(mergeSortLeaderboard(firstHalf), mergeSortLeaderboard(secondHalf), compareLeaderboardEntry);
+    };
+  };
+
+  private func compareLeaderboardEntry(entry1 : T.LeaderboardEntry, entry2 : T.LeaderboardEntry) : Bool {
+    return entry1.points <= entry2.points;
   };
 
 };
