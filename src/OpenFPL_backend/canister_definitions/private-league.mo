@@ -99,12 +99,24 @@ actor class _PrivateLeague() {
     };
 
     public func calculateLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth, uniqueManagerCanisterIds : [T.CanisterId]) : async () {
-        await calculateWeeklyLeaderboards(seasonId, gameweek, fantasyTeamSnapshots);
-        await calculateMonthlyLeaderboards(seasonId, gameweek, month, fantasyTeamSnapshots);
-        await calculateSeasonLeaderboard(seasonId, fantasyTeamSnapshots);
+        //await calculateWeeklyLeaderboards(seasonId, gameweek);
+        //await calculateMonthlyLeaderboards(seasonId, gameweek, month, fantasyTeamSnapshots);
+        //await calculateSeasonLeaderboard(seasonId, fantasyTeamSnapshots);
     };
 
     private func calculateWeeklyLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, snapshots : [T.FantasyTeamSnapshot]) : async () {
+        
+        let entryBuffer = Buffer.fromArray<T.LeaderboardEntry>([]);
+        label seasonLoop for(season in Iter.fromArray(weeklyLeaderboards)){
+            if(season.0 == seasonId){
+                for(gameweek in Iter.fromArray(season.1)){
+                    if(gameweek.0 == Iter.fromArray(gameweek)){
+                        entryBuffer.add(gameweek.1);
+                    };
+                };
+            };
+        };
+        
         let fantasyTeamSnapshots = Array.sort(
             snapshots,
             func(a : T.FantasyTeamSnapshot, b : T.FantasyTeamSnapshot) : Order.Order {

@@ -46,7 +46,7 @@ module {
     public func distributeWeeklyRewards(defaultAccount : Principal, weeklyRewardPool : Nat64, weeklyLeaderboard : DTOs.WeeklyLeaderboardDTO) : async () {
 
       let weeklyRewardAmount = weeklyRewardPool / 38;
-      await mintToTreasury(weeklyRewardAmount);
+      await mintToTreasury(weeklyRewardAmount, defaultAccount);
 
       var payouts = List.nil<Float>();
       var currentEntries = List.fromArray(weeklyLeaderboard.entries);
@@ -129,7 +129,7 @@ module {
 
     public func distributeMonthlyRewards(defaultAccount : Principal, rewardPool : T.RewardPool, monthlyLeaderboard : DTOs.MonthlyLeaderboardDTO, uniqueManagerCanisterIds : List.List<T.CanisterId>) : async () {
       let monthlyRewardAmount = rewardPool.monthlyLeaderboardPool / 9;
-      await mintToTreasury(monthlyRewardAmount);
+      await mintToTreasury(monthlyRewardAmount, defaultAccount);
 
       let clubManagersBuffer = Buffer.fromArray<T.PrincipalId>([]);
       var nonClubManagersCount : Nat = 0;
@@ -237,7 +237,7 @@ module {
 
     public func distributeSeasonRewards(defaultAccount : Principal, seasonRewardPool : Nat64, seasonLeaderboard : DTOs.SeasonLeaderboardDTO) : async () {
 
-      await mintToTreasury(seasonRewardPool);
+      await mintToTreasury(seasonRewardPool, defaultAccount);
 
       var payouts = List.nil<Float>();
       var currentEntries = List.fromArray(seasonLeaderboard.entries);
@@ -318,7 +318,7 @@ module {
 
     public func distributeMostValuableTeamRewards(defaultAccount : Principal, mostValuableTeamPool : Nat64, players : [DTOs.PlayerDTO], currentSeason : T.SeasonId, uniqueManagerCanisterIds : List.List<T.CanisterId>) : async () {
 
-      await mintToTreasury(mostValuableTeamPool);
+      await mintToTreasury(mostValuableTeamPool, defaultAccount);
 
       let gameweek38Snapshots = Buffer.fromArray<T.FantasyTeamSnapshot>([]);
       let mostValuableTeamsBuffer = Buffer.fromArray<T.FantasyTeamSnapshot>([]);
@@ -437,16 +437,11 @@ module {
         rewards = List.fromArray(Buffer.toArray(rewardBuffer));
       };
       mostValuableTeamRewards := List.append(mostValuableTeamRewards, List.make<T.SeasonRewards>(newMVTRewards));
-      
-      
-      
-      
-      //TODO: Implement with sns token canister
     };
 
     public func distributeHighestScoringPlayerRewards(defaultAccount : Principal, seasonId : T.SeasonId, gameweek : T.GameweekNumber, highestScoringPlayerRewardPool : Nat64, fixtures : List.List<DTOs.FixtureDTO>, uniqueManagerCanisterIds : List.List<T.CanisterId>) : async () {
 
-      await mintToTreasury(highestScoringPlayerRewardPool);
+      await mintToTreasury(highestScoringPlayerRewardPool, defaultAccount);
 
       let highestScoringPlayerIdBuffer = Buffer.fromArray<T.PlayerId>([]);
 
@@ -511,7 +506,7 @@ module {
 
     public func distributeWeeklyATHScoreRewards(defaultAccount : Principal, weeklyRewardPool : Nat64, weeklyLeaderboard : DTOs.WeeklyLeaderboardDTO) : async () {
       let weeklyATHReward = weeklyRewardPool / 38;
-      await mintToTreasury(weeklyATHReward);
+      await mintToTreasury(weeklyATHReward, defaultAccount);
 
       let maybeLastHighScore = List.last<T.HighScoreRecord>(weeklyAllTimeHighScores);
       var highestWeeklyScore : Int16 = 0;
@@ -556,7 +551,7 @@ module {
 
     public func distributeMonthlyATHScoreRewards(defaultAccount : Principal, monthlyRewardPool : Nat64, monthlyLeaderboards : [DTOs.MonthlyLeaderboardDTO]) : async () {
       let monthlyATHReward = monthlyRewardPool / 9;
-      await mintToTreasury(monthlyATHReward);
+      await mintToTreasury(monthlyATHReward, defaultAccount);
 
       let maybeLastHighScore = List.last<T.HighScoreRecord>(monthlyAllTimeHighScores);
       var highestMonthlyScore : Int16 = 0;
@@ -607,7 +602,7 @@ module {
     };
 
     public func distributeSeasonATHScoreRewards(defaultAccount : Principal, seasonRewardPool : Nat64, seasonLeaderboard : DTOs.SeasonLeaderboardDTO) : async () {
-      await mintToTreasury(seasonRewardPool);
+      await mintToTreasury(seasonRewardPool, defaultAccount);
       let maybeLastHighScore = List.last<T.HighScoreRecord>(seasonAllTimeHighScores);
       var highestSeasonScore : Int16 = 0;
       switch (maybeLastHighScore) {
@@ -708,23 +703,28 @@ module {
     };
 
     private func payReward(principalId : T.PrincipalId, fpl : Nat64, defaultAccount: Principal) : async () {
-      //TODO check with footballgod
       let ledger : SNSToken.Interface = actor (Environment.SNS_LEDGER_CANISTER_ID);
       
       let _ = await ledger.icrc1_transfer ({
         memo = ?Text.encodeUtf8("0");
-        from_subaccount = null;
+        from_subaccount = ?Account.principalToSubaccount(Principal.fromText(Environment.SNS_LEDGER_CANISTER_ID));
         to = { owner = defaultAccount; subaccount = ?Account.principalToSubaccount(Principal.fromText(principalId)) };
         amount = Nat64.toNat(fpl);
         fee = ?Nat64.toNat(Constants.FPL_TRANSACTION_FEE);
         created_at_time = ?Nat64.fromNat(Int.abs(Time.now()))
       });
-
     };
 
-    private func mintToTreasury(fpl : Nat64) : async () {
-      //TODO
-      //return await tokenCanister.mintToTreasury(Nat64.toNat(fpl));
+    private func mintToTreasury(fpl : Nat64, defaultAccount: Principal) : async () {
+      let ledger : SNSToken.Interface = actor (Environment.SNS_LEDGER_CANISTER_ID);
+      let _ = await ledger.icrc1_transfer({
+        memo = ?Text.encodeUtf8("0");
+        from_subaccount = null;
+        to = { owner = defaultAccount; subaccount = ?Account.principalToSubaccount(Principal.fromText(Environment.SNS_LEDGER_CANISTER_ID)) };
+        amount = Nat64.toNat(fpl);
+        fee = ?Nat64.toNat(Constants.FPL_TRANSACTION_FEE);
+        created_at_time = ?Nat64.fromNat(Int.abs(Time.now()))
+      });
     };
 
     public func getStableTeamValueLeaderboards() : [(T.SeasonId, T.TeamValueLeaderboard)] {
