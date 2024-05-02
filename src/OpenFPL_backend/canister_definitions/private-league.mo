@@ -103,8 +103,8 @@ actor class _PrivateLeague() {
         let principalId = Principal.toText(caller);
         assert principalId == main_canister_id;
         await calculateWeeklyLeaderboards(seasonId, gameweek);
-        await calculateMonthlyLeaderboards(seasonId, gameweek, month, fantasyTeamSnapshots);
-        await calculateSeasonLeaderboard(seasonId, fantasyTeamSnapshots);
+        await calculateMonthlyLeaderboards(seasonId, month);
+        await calculateSeasonLeaderboard(seasonId);
     };
 
     private func calculateWeeklyLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async () {
@@ -151,9 +151,82 @@ actor class _PrivateLeague() {
         weeklyLeaderboards := Buffer.toArray(weeklyLeaderboardsBuffer);
     };
 
+    private func calculateMonthlyLeaderboards(seasonId : T.SeasonId, month : T.CalendarMonth) : async () {
+        
+        let entryBuffer = Buffer.fromArray<T.LeaderboardEntry>([]);
+        label seasonLoop for(season in Iter.fromArray(monthlyLeaderboards)){
+            if(season.0 == seasonId){
+                for(gw in Iter.fromArray(season.1)){
+                    if(gw.0 == month){
+                        for(entry in Iter.fromList(gw.1.entries)){
+                            entryBuffer.add(entry);
+                        }
+                    };
+                };
+            };
+        };
+
+        let monthEntries = List.fromArray(Buffer.toArray(entryBuffer));
+        
+        let sortedMonthEntries = List.reverse(Utilities.mergeSortLeaderboard(monthEntries));
+        let positionedMonthEntries = Utilities.assignPositionText(sortedMonthEntries);
+
+        let currentMonthLeaderboard : T.MonthlyLeaderboard = {
+            seasonId = seasonId;
+            month = month;
+            entries = positionedMonthEntries;
+            totalEntries = List.size(positionedMonthEntries);
+        };
+        
+        let monthlyLeaderboardsBuffer = Buffer.fromArray<(T.SeasonId, [(T.CalendarMonth, T.MonthlyLeaderboard)])>([]);
     
-       
-      
+        for(season in Iter.fromArray(monthlyLeaderboards)) {
+            if(season.0 == seasonId){
+                let monthBuffer = Buffer.fromArray<(T.CalendarMonth, T.MonthlyLeaderboard)>(season.1);
+                for(gw in Iter.fromArray(season.1)){
+                    if(gw.0 == month){
+                        monthBuffer.add(gw.0, currentMonthLeaderboard);
+                    } else { monthBuffer.add(gw); }
+                };
+                monthlyLeaderboardsBuffer.add(season.0, Buffer.toArray(monthBuffer));
+            } else { monthlyLeaderboardsBuffer.add(season); }
+        };
+
+        monthlyLeaderboards := Buffer.toArray(monthlyLeaderboardsBuffer);
+    };
+
+    private func calculateSeasonLeaderboard(seasonId : T.SeasonId) : async () {
+        
+        let entryBuffer = Buffer.fromArray<T.LeaderboardEntry>([]);
+        label seasonLoop for(season in Iter.fromArray(seasonLeaderboards)){
+            if(season.0 == seasonId){
+                for(entry in Iter.fromList(season.1.entries)){
+                    entryBuffer.add(entry);
+                }
+            };
+        };
+
+        let seasonEntries = List.fromArray(Buffer.toArray(entryBuffer));
+        
+        let sortedSeasonEntries = List.reverse(Utilities.mergeSortLeaderboard(seasonEntries));
+        let positionedSeasonEntries = Utilities.assignPositionText(sortedSeasonEntries);
+
+        let currentSeasonLeaderboard : T.SeasonLeaderboard = {
+            seasonId = seasonId;
+            entries = positionedSeasonEntries;
+            totalEntries = List.size(positionedSeasonEntries);
+        };
+        
+        let seasonLeaderboardsBuffer = Buffer.fromArray<(T.SeasonId, T.SeasonLeaderboard)>([]);
+    
+        for(season in Iter.fromArray(seasonLeaderboards)) {
+            if(season.0 == seasonId){               
+                seasonLeaderboardsBuffer.add(season.0, currentSeasonLeaderboard);
+            } else { seasonLeaderboardsBuffer.add(season); }
+        };
+
+        seasonLeaderboards := Buffer.toArray(seasonLeaderboardsBuffer);
+    };
 
     public shared ({ caller }) func getWeeklyLeaderboard(seasonId : T.SeasonId, gameweek: T.GameweekNumber, limit : Nat, offset : Nat) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
         assert not Principal.isAnonymous(caller);
