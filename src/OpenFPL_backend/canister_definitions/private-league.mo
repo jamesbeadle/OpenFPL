@@ -606,6 +606,15 @@ actor class _PrivateLeague() {
         
     };
 
+    public shared ({ caller }) func payRewards() : async (){
+        assert not Principal.isAnonymous(caller);
+        let principalId = Principal.toText(caller);
+        assert principalId == main_canister_id;
+
+        //TODO: write
+
+    };
+
     private func isApprovedManagerCanister(canisterId: T.CanisterId) : Bool {
         let canisterExists = Array.find(approvedManagerCanisterIds,
             func(id : T.CanisterId) : Bool {

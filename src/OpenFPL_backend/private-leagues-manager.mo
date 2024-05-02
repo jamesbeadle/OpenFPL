@@ -338,13 +338,23 @@ module {
       return await private_league_canister.getPrivateLeague();
     };
 
-    public func calculateLeaderboards() : async (){
+    public func calculateLeaderboards(seasonId: T.SeasonId, month: T.CalendarMonth, gameweek: T.GameweekNumber) : async (){
       for(canisterId in Iter.fromArray(privateLeagueCanisterIds)){
         let private_league_canister = actor (canisterId) : actor {
-          calculateLeaderboards : () -> async ();
+          calculateLeaderboards : (seasonId: T.SeasonId, month: T.CalendarMonth, gameweek: T.GameweekNumber) -> async ();
         };
 
-        return await private_league_canister.calculateLeaderboards();
+        return await private_league_canister.calculateLeaderboards(seasonId, );
+      };
+    };
+
+    public func payRewards(seasonId: T.SeasonId, month: T.CalendarMonth, gameweek: T.GameweekNumber) : async (){
+      for(canisterId in Iter.fromArray(privateLeagueCanisterIds)){
+        let private_league_canister = actor (canisterId) : actor {
+          payRewards : (seasonId: T.SeasonId, month: T.CalendarMonth, gameweek: T.GameweekNumber) -> async ();
+        };
+
+        return await private_league_canister.payRewards();
       };
     };
 
