@@ -620,7 +620,8 @@ module {
 
       await managerComposite.calculateFantasyTeamScores(playerPointsMap, systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
       await leaderboardComposite.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth, managerComposite.getStableUniqueManagerCanisterIds());
-      await privateLeaguesManager.calculateLeaderboards();
+      await privateLeaguesManager.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
+      await privateLeaguesManager.payRewards();
       
       let rewardPool = rewardPools.get(systemState.calculationSeasonId);
       switch (rewardPool) {

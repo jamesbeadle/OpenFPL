@@ -14,6 +14,7 @@ import Int16 "mo:base/Int16";
 import Float "mo:base/Float";
 import Principal "mo:base/Principal";
 import List "mo:base/List";
+import Int "mo:base/Int";
 import Management "../modules/Management";
 
 module {
@@ -344,7 +345,37 @@ module {
     );
   };
 
-  
+  public func assignPositionText(sortedEntries : List.List<T.LeaderboardEntry>) : List.List<T.LeaderboardEntry> {
+    var position = 1;
+    var previousScore : ?Int16 = null;
+    var currentPosition = 1;
+
+    func updatePosition(entry : T.LeaderboardEntry) : T.LeaderboardEntry {
+      if (previousScore == null) {
+        previousScore := ?entry.points;
+        let updatedEntry = {
+          entry with position = position;
+          positionText = Int.toText(position);
+        };
+        currentPosition += 1;
+        return updatedEntry;
+      } else if (previousScore == ?entry.points) {
+        currentPosition += 1;
+        return { entry with position = position; positionText = "-" };
+      } else {
+        position := currentPosition;
+        previousScore := ?entry.points;
+        let updatedEntry = {
+          entry with position = position;
+          positionText = Int.toText(position);
+        };
+        currentPosition += 1;
+        return updatedEntry;
+      };
+    };
+
+    return List.map(sortedEntries, updatePosition);
+  };  
 
   public func mergeSortLeaderboard(entries : List.List<T.LeaderboardEntry>) : List.List<T.LeaderboardEntry> {
     let len = List.size(entries);

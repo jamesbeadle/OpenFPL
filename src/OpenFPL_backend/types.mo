@@ -309,6 +309,13 @@ module _Types {
     totalEntries : Nat;
   };
 
+  public type MonthlyLeaderboard = {
+    seasonId : SeasonId;
+    month : CalendarMonth;
+    entries : List.List<LeaderboardEntry>;
+    totalEntries : Nat;
+  };
+
   public type SeasonLeaderboard = {
     seasonId : SeasonId;
     entries : List.List<LeaderboardEntry>;

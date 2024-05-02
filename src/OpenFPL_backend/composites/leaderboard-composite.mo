@@ -4,7 +4,6 @@ import Result "mo:base/Result";
 import Iter "mo:base/Iter";
 import List "mo:base/List";
 import Array "mo:base/Array";
-import Int "mo:base/Int";
 import Principal "mo:base/Principal";
 import Utilities "../utils/utilities";
 import Management "../modules/Management";
@@ -368,7 +367,7 @@ module {
         },
       );
       let sortedGameweekEntries = List.reverse(Utilities.mergeSortLeaderboard(List.fromArray(gameweekEntries)));
-      let positionedGameweekEntries = assignPositionText(sortedGameweekEntries);
+      let positionedGameweekEntries = Utilities.assignPositionText(sortedGameweekEntries);
 
       let currentGameweekLeaderboard : T.WeeklyLeaderboard = {
         seasonId = seasonId;
@@ -410,7 +409,7 @@ module {
         );
 
         let sortedMonthEntries = List.reverse(Utilities.mergeSortLeaderboard(monthEntries));
-        let positionedMonthlyEntries = assignPositionText(sortedMonthEntries);
+        let positionedMonthlyEntries = Utilities.assignPositionText(sortedMonthEntries);
 
         let clubMonthlyLeaderboard : T.ClubLeaderboard = {
           seasonId = seasonId;
@@ -464,7 +463,7 @@ module {
         },
       );
       let sortedSeasonEntries = List.reverse(Utilities.mergeSortLeaderboard(List.fromArray(seasonEntries)));
-      let positionedSeasonEntries = assignPositionText(sortedSeasonEntries);
+      let positionedSeasonEntries = Utilities.assignPositionText(sortedSeasonEntries);
 
       let currentSeasonLeaderboard : T.SeasonLeaderboard = {
         seasonId = seasonId;
@@ -610,38 +609,6 @@ module {
         principalId = principalId;
         points = points;
       };
-    };
-
-    private func assignPositionText(sortedEntries : List.List<T.LeaderboardEntry>) : List.List<T.LeaderboardEntry> {
-      var position = 1;
-      var previousScore : ?Int16 = null;
-      var currentPosition = 1;
-
-      func updatePosition(entry : T.LeaderboardEntry) : T.LeaderboardEntry {
-        if (previousScore == null) {
-          previousScore := ?entry.points;
-          let updatedEntry = {
-            entry with position = position;
-            positionText = Int.toText(position);
-          };
-          currentPosition += 1;
-          return updatedEntry;
-        } else if (previousScore == ?entry.points) {
-          currentPosition += 1;
-          return { entry with position = position; positionText = "-" };
-        } else {
-          position := currentPosition;
-          previousScore := ?entry.points;
-          let updatedEntry = {
-            entry with position = position;
-            positionText = Int.toText(position);
-          };
-          currentPosition += 1;
-          return updatedEntry;
-        };
-      };
-
-      return List.map(sortedEntries, updatePosition);
     };
 
     public func getStableSeasonLeaderboardCanisters() : [T.SeasonLeaderboardCanister] {

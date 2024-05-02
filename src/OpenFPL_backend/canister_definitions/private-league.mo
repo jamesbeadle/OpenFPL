@@ -25,9 +25,9 @@ actor class _PrivateLeague() {
     private var leagueAdmins: [T.PrincipalId] = [];
     private var leagueInvites: [T.LeagueInvite] = [];
 
-    private stable var weeklyLeaderboards: [(T.SeasonId, [(T.GameweekNumber, [T.LeaderboardEntry])])] = [];
-    private stable var monthlyLeaderboards: [(T.SeasonId, [(T.CalendarMonth, [T.LeaderboardEntry])])] = [];
-    private stable var seasonLeaderboards: [(T.SeasonId, [T.LeaderboardEntry])] = [];
+    private stable var weeklyLeaderboards: [(T.SeasonId, [(T.GameweekNumber, T.WeeklyLeaderboard)])] = [];
+    private stable var monthlyLeaderboards: [(T.SeasonId, [(T.CalendarMonth, T.MonthlyLeaderboard)])] = [];
+    private stable var seasonLeaderboards: [(T.SeasonId, T.SeasonLeaderboard)] = [];
     private stable var approvedManagerCanisterIds: [T.CanisterId] = [];
 
     private stable var privateLeague: ?T.PrivateLeague = null;
@@ -66,7 +66,7 @@ actor class _PrivateLeague() {
             if(weeklyLeaderboard.0 == seasonId){
                 for (gw in Iter.fromArray(weeklyLeaderboard.1)){
                     if(gw.0 == gameweek){
-                        for(entry in Iter.fromArray(gw.1)){
+                        for(entry in Iter.fromList(gw.1.entries)){
                             if(entry.principalId == managerId){
                                 seasonPosition := entry.position;
                                 seasonPositionText := entry.positionText;
@@ -98,59 +98,57 @@ actor class _PrivateLeague() {
         return #err(#NotFound);
     };
 
-    public func calculateLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth, uniqueManagerCanisterIds : [T.CanisterId]) : async () {
-        //await calculateWeeklyLeaderboards(seasonId, gameweek);
-        //await calculateMonthlyLeaderboards(seasonId, gameweek, month, fantasyTeamSnapshots);
-        //await calculateSeasonLeaderboard(seasonId, fantasyTeamSnapshots);
+    public shared ({ caller }) func calculateLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) : async () {
+        assert not Principal.isAnonymous(caller);
+        let principalId = Principal.toText(caller);
+        assert principalId == main_canister_id;
+        await calculateWeeklyLeaderboards(seasonId, gameweek);
+        await calculateMonthlyLeaderboards(seasonId, gameweek, month, fantasyTeamSnapshots);
+        await calculateSeasonLeaderboard(seasonId, fantasyTeamSnapshots);
     };
 
-    private func calculateWeeklyLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, snapshots : [T.FantasyTeamSnapshot]) : async () {
+    private func calculateWeeklyLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async () {
         
         let entryBuffer = Buffer.fromArray<T.LeaderboardEntry>([]);
         label seasonLoop for(season in Iter.fromArray(weeklyLeaderboards)){
             if(season.0 == seasonId){
-                for(gameweek in Iter.fromArray(season.1)){
-                    if(gameweek.0 == Iter.fromArray(gameweek)){
-                        entryBuffer.add(gameweek.1);
+                for(gw in Iter.fromArray(season.1)){
+                    if(gw.0 == gameweek){
+                        for(entry in Iter.fromList(gw.1.entries)){
+                            entryBuffer.add(entry);
+                        }
                     };
                 };
             };
         };
+
+        let gameweekEntries = List.fromArray(Buffer.toArray(entryBuffer));
         
-        let fantasyTeamSnapshots = Array.sort(
-            snapshots,
-            func(a : T.FantasyTeamSnapshot, b : T.FantasyTeamSnapshot) : Order.Order {
-                if (a.points < b.points) { return #greater };
-                if (a.points == b.points) { return #equal };
-                return #less;
-            },
-        );
+        let sortedGameweekEntries = List.reverse(Utilities.mergeSortLeaderboard(gameweekEntries));
+        let positionedGameweekEntries = Utilities.assignPositionText(sortedGameweekEntries);
 
-        let gameweekEntries = Array.map<T.FantasyTeamSnapshot, T.LeaderboardEntry>(
-            snapshots,
-            func(snapshot) {
-            return createLeaderboardEntry(snapshot.principalId, snapshot.username, snapshot.points);
-            },
-        );
-      let sortedGameweekEntries = List.reverse(Utilities.mergeSortLeaderboard(List.fromArray(gameweekEntries)));
-      let positionedGameweekEntries = assignPositionText(sortedGameweekEntries);
+        let currentGameweekLeaderboard : T.WeeklyLeaderboard = {
+            seasonId = seasonId;
+            gameweek = gameweek;
+            entries = positionedGameweekEntries;
+            totalEntries = List.size(positionedGameweekEntries);
+        };
+        
+        let weeklyLeaderboardsBuffer = Buffer.fromArray<(T.SeasonId, [(T.GameweekNumber, T.WeeklyLeaderboard)])>([]);
+    
+        for(season in Iter.fromArray(weeklyLeaderboards)) {
+            if(season.0 == seasonId){
+                let gameweekBuffer = Buffer.fromArray<(T.GameweekNumber, T.WeeklyLeaderboard)>(season.1);
+                for(gw in Iter.fromArray(season.1)){
+                    if(gw.0 == gameweek){
+                        gameweekBuffer.add(gw.0, currentGameweekLeaderboard);
+                    } else { gameweekBuffer.add(gw); }
+                };
+                weeklyLeaderboardsBuffer.add(season.0, Buffer.toArray(gameweekBuffer));
+            } else { weeklyLeaderboardsBuffer.add(season); }
+        };
 
-      let currentGameweekLeaderboard : T.WeeklyLeaderboard = {
-        seasonId = seasonId;
-        gameweek = gameweek;
-        entries = positionedGameweekEntries;
-        totalEntries = List.size(positionedGameweekEntries);
-      };
-
-      let gameweekLeaderboardCanisterId = await createWeeklyLeaderboardCanister(seasonId, gameweek, currentGameweekLeaderboard);
-
-      let gameweekCanisterInfo : T.WeeklyLeaderboardCanister = {
-        seasonId = seasonId;
-        gameweek = gameweek;
-        canisterId = gameweekLeaderboardCanisterId;
-      };
-
-      weeklyLeaderboardCanisters := List.append(weeklyLeaderboardCanisters, List.fromArray([gameweekCanisterInfo]));
+        weeklyLeaderboards := Buffer.toArray(weeklyLeaderboardsBuffer);
     };
 
     
