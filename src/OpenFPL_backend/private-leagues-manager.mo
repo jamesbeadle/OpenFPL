@@ -378,22 +378,26 @@ module {
       };
     };
 
-    public func sendLeaderboards() : async () {
-      //TODO
-      
-      for(canisterId in Iter.fromList(value.privateLeagueMemberships)){
-        
-        //create canister actor and send updated snapshot points
-        let private_league_canister = actor (canisterId) : actor {
-          sendWeeklyLeadeboardEntry : (seasonId: T.SeasonId, gameweek: T.GameweekNumber, updatedEntry: T.LeaderboardEntry) -> async ();
-          sendMonthlyLeadeboardEntry : (seasonId: T.SeasonId, month: T.CalendarMonth, updatedEntry: T.LeaderboardEntry) -> async ();
-          sendSeasonLeadeboardEntry : (seasonId: T.SeasonId, updatedEntry: T.LeaderboardEntry) -> async ();
-        };
-
-        let _ = await private_league_canister.sendLeaderboardEntry(foundSnapshot);
-        //TODO ensure month leaderboard in private leagues are sorted 
+    public func sendWeeklyLeaderboardEntry(managerCanisterId: T.CanisterId, entry: T.LeaderboardEntry, seasonId: T.SeasonId, gameweek: T.Gameweek) : async () {
+      let private_league_canister = actor (managerCanisterId) : actor {
+        sendWeeklyLeadeboardEntry : (seasonId: T.SeasonId, gameweek: T.GameweekNumber, updatedEntry: T.LeaderboardEntry) -> async ();
       };
-    }
+      await sendWeeklyLeaderboardEntry(seasonId, gameweek, entry);
+    };
+
+    public func sendMonthlyLeaderboardEntry(managerCanisterId: T.CanisterId, entry: T.LeaderboardEntry, seasonId: T.SeasonId, gameweek: T.Gameweek) : async () {
+      let private_league_canister = actor (managerCanisterId) : actor {
+        sendMonthlyLeadeboardEntry : (seasonId: T.SeasonId, month: T.CalendarMonth, updatedEntry: T.LeaderboardEntry) -> async ();
+      };
+      await sendWeeklyLeaderboardEntry(seasonId, month, entry);
+    };
+
+    public func sendSeasonLeaderboardEntry(managerCanisterId: T.CanisterId, entry: T.LeaderboardEntry, seasonId: T.SeasonId, gameweek: T.Gameweek) : async () {
+      let private_league_canister = actor (managerCanisterId) : actor {
+        sendSeasonLeadeboardEntry : (seasonId: T.SeasonId, updatedEntry: T.LeaderboardEntry) -> async ();
+      };
+      await sendWeeklyLeaderboardEntry(seasonId, entry);
+    };
 
   };
 };
