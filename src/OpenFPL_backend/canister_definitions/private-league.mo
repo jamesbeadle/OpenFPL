@@ -39,9 +39,9 @@ actor class _PrivateLeague() {
 
     private stable var privateLeague: ?T.PrivateLeague = null;
 
-    private var seasonRewards : List.List<T.SeasonRewards> = List.nil(); //TODO not stable
-    private var monthlyRewards : List.List<T.MonthlyRewards> = List.nil();
-    private var weeklyRewards : List.List<T.WeeklyRewards> = List.nil();
+    private stable var seasonRewards : List.List<T.SeasonRewards> = List.nil();
+    private stable var monthlyRewards : List.List<T.MonthlyRewards> = List.nil();
+    private stable var weeklyRewards : List.List<T.WeeklyRewards> = List.nil();
     
     public shared ({ caller }) func getPrivateLeague() : async Result.Result<DTOs.PrivateLeagueDTO, T.Error> {
         assert not Principal.isAnonymous(caller);
@@ -201,6 +201,11 @@ actor class _PrivateLeague() {
             case (null) { };
         };
     };
+
+
+
+
+
 
     public func distributeWeeklyRewards(weeklyRewardPool : Nat64, weeklyLeaderboard : T.WeeklyLeaderboard) : async () {
 
@@ -463,6 +468,21 @@ actor class _PrivateLeague() {
       };
       seasonRewards := List.append(seasonRewards, List.make<T.SeasonRewards>(newSeasonRewards));
     };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     private func calculateWeeklyLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async () {
         
@@ -1092,8 +1112,6 @@ actor class _PrivateLeague() {
         };
         seasonLeaderboards := Buffer.toArray(seasonBuffer);
     };
-
-    
 
     private func isApprovedManagerCanister(canisterId: T.CanisterId) : Bool {
         let canisterExists = Array.find(approvedManagerCanisterIds,
