@@ -15,7 +15,6 @@ import Float "mo:base/Float";
 import Principal "mo:base/Principal";
 import List "mo:base/List";
 import Int "mo:base/Int";
-import Buffer "mo:base/Buffer";
 import Management "../modules/Management";
 
 module {
@@ -394,21 +393,30 @@ module {
 
   
 
-  public func scalePercentages(fixedPercentages : [Float], numParticipants : Nat) : [Float] {
-    var totalPercentage : Float = 0.0;
-    for (i in Iter.range(0, numParticipants)) {
-      totalPercentage += fixedPercentages[i];
+  public func scalePercentages(percentages : [Float], actualWinners : Nat) : [Float] {
+    let length: Int = Array.size(percentages);
+    
+    if (actualWinners == length) {
+        return percentages;
+    } else if (actualWinners < length) {
+        let truncated = Array.subArray(percentages, 0, actualWinners);
+        let sum = Array.foldLeft<Float, Float>(truncated, 0.0, func(x, y) { x + y });
+        return Array.map<Float, Float>(truncated, func(p) { (p / sum) * 100.0 });
+    } else {
+        let lengthNat: Nat = Nat64.toNat(Nat64.fromIntWrap(length) - 1);
+        let lastPercentage = percentages[lengthNat];
+        let extraWinners: Nat = actualWinners - lengthNat;
+        let tieShare = lastPercentage / Float.fromInt(extraWinners + 1);
+
+        let extended = Array.tabulate<Float>(actualWinners, func(i: Nat) : Float {
+            if (i < length - 1) {
+                return percentages[i];
+            } else {
+                return tieShare;
+            }
+        });
+        return extended;
     };
-
-    let scalingFactor : Float = 100.0 / totalPercentage;
-
-    var scaledPercentagesBuffer = Buffer.fromArray<Float>([]);
-    for (i in Iter.range(0, numParticipants)) {
-      let scaledValue = fixedPercentages[i] * scalingFactor;
-      scaledPercentagesBuffer.add(scaledValue);
-    };
-
-    return Buffer.toArray(scaledPercentagesBuffer);
   };
 
   public func findTiedEntries(entries : List.List<T.LeaderboardEntry>, points : Int16) : List.List<T.LeaderboardEntry> {

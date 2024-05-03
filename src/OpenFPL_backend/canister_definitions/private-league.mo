@@ -214,7 +214,7 @@ actor class _PrivateLeague() {
       var payouts = List.nil<Float>();
       var currentEntries = weeklyLeaderboard.entries;
 
-      let scaledPercentages = if (weeklyLeaderboard.totalEntries < 100) {
+      let scaledPercentages = if (weeklyLeaderboard.totalEntries != 100) {
         Utilities.scalePercentages(percentages, weeklyLeaderboard.totalEntries);
       } else {
         percentages;
@@ -265,8 +265,6 @@ actor class _PrivateLeague() {
         };
       };
 
-      //TODO: feels wrong like it's sending 0 amoutns?
-
       payouts := List.reverse(payouts);
       let payoutsArray = List.toArray(payouts);
       let rewardBuffer = Buffer.fromArray<T.RewardEntry>([]);
@@ -299,7 +297,7 @@ actor class _PrivateLeague() {
 
     public func distributeMonthlyRewards(monthlyRewardPool : Nat64, monthlyLeaderboard : T.MonthlyLeaderboard) : async () {
 
-      let monthlyRewardAmount = monthlyRewardPool / 12;
+      let monthlyRewardAmount = monthlyRewardPool / 10;
       
       var payouts = List.nil<Float>();
       var currentEntries = List.fromArray(monthlyLeaderboard.entries);

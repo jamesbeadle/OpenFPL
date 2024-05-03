@@ -128,7 +128,7 @@ module {
     };
 
     public func distributeMonthlyRewards(defaultAccount : Principal, rewardPool : T.RewardPool, monthlyLeaderboard : DTOs.ClubLeaderboardDTO, uniqueManagerCanisterIds : List.List<T.CanisterId>) : async () {
-      let monthlyRewardAmount = rewardPool.monthlyLeaderboardPool / 9;
+      let monthlyRewardAmount = rewardPool.monthlyLeaderboardPool / 10;
       await mintToTreasury(monthlyRewardAmount, defaultAccount);
 
       let clubManagersBuffer = Buffer.fromArray<T.PrincipalId>([]);

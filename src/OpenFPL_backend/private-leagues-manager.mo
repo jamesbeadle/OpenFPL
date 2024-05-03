@@ -378,22 +378,40 @@ module {
       };
     };
 
-    public func sendWeeklyLeaderboardEntry(managerCanisterId: T.CanisterId, entry: T.LeaderboardEntry, seasonId: T.SeasonId, gameweek: T.Gameweek) : async () {
-      let private_league_canister = actor (managerCanisterId) : actor {
+    public func sendWeeklyLeaderboardEntries(seasonId: T.SeasonId, gameweek: T.GameweekNumber, entries: [T.LeaderboardEntry], managerCanisterIdIndex: TrieMap.TrieMap<T.PrincipalId, T.CanisterId>) : async (){
+      for(entry in Iter.fromArray(entries)){
+        await sendWeeklyLeaderboardEntry(managerCanisterIdIndex.get(entry.principalId), entry, seasonId, gameweek);
+      }
+    };
+
+    public func sendMonthlyLeaderboardEntries(seasonId: T.SeasonId, month: T.CalendarMonth, entries: [T.LeaderboardEntry], managerCanisterIdIndex: TrieMap.TrieMap<T.PrincipalId, T.CanisterId>) : async () {
+      for(entry in Iter.fromArray(entries)){
+        await sendMonthlyLeaderboardEntry(managerCanisterIdIndex.get(entry.principalId), entry, seasonId, month);
+      }
+    };
+
+    public func sendSeasonLeaderboardEntries(seasonId: T.SeasonId, entries: [T.LeaderboardEntry], managerCanisterIdIndex: TrieMap.TrieMap<T.PrincipalId, T.CanisterId>) : async () {
+      for(entry in Iter.fromArray(entries)){
+        await sendSeasonLeaderboardEntry(managerCanisterIdIndex.get(entry.principalId), entry, seasonId);
+      }
+    };
+    
+    public func sendWeeklyLeaderboardEntry(privateLeagueCanisterId: T.CanisterId, entry: T.LeaderboardEntry, seasonId: T.SeasonId, gameweek: T.Gameweek) : async () {
+      let private_league_canister = actor (privateLeagueCanisterId) : actor {
         sendWeeklyLeadeboardEntry : (seasonId: T.SeasonId, gameweek: T.GameweekNumber, updatedEntry: T.LeaderboardEntry) -> async ();
       };
       await sendWeeklyLeaderboardEntry(seasonId, gameweek, entry);
     };
 
-    public func sendMonthlyLeaderboardEntry(managerCanisterId: T.CanisterId, entry: T.LeaderboardEntry, seasonId: T.SeasonId, gameweek: T.Gameweek) : async () {
-      let private_league_canister = actor (managerCanisterId) : actor {
+    public func sendMonthlyLeaderboardEntry(privateLeagueCanisterId: T.CanisterId, entry: T.LeaderboardEntry, seasonId: T.SeasonId, gameweek: T.Gameweek) : async () {
+      let private_league_canister = actor (privateLeagueCanisterId) : actor {
         sendMonthlyLeadeboardEntry : (seasonId: T.SeasonId, month: T.CalendarMonth, updatedEntry: T.LeaderboardEntry) -> async ();
       };
       await sendWeeklyLeaderboardEntry(seasonId, month, entry);
     };
 
-    public func sendSeasonLeaderboardEntry(managerCanisterId: T.CanisterId, entry: T.LeaderboardEntry, seasonId: T.SeasonId, gameweek: T.Gameweek) : async () {
-      let private_league_canister = actor (managerCanisterId) : actor {
+    public func sendSeasonLeaderboardEntry(privateLeagueCanisterId: T.CanisterId, entry: T.LeaderboardEntry, seasonId: T.SeasonId, gameweek: T.Gameweek) : async () {
+      let private_league_canister = actor (privateLeagueCanisterId) : actor {
         sendSeasonLeadeboardEntry : (seasonId: T.SeasonId, updatedEntry: T.LeaderboardEntry) -> async ();
       };
       await sendWeeklyLeaderboardEntry(seasonId, entry);
