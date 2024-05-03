@@ -11,7 +11,10 @@ import Nat16 "mo:base/Nat16";
 import List "mo:base/List";
 import Time "mo:base/Time";
 import Option "mo:base/Option";
-import Order "mo:base/Order";
+import Int64 "mo:base/Int64";
+import Float "mo:base/Float";
+import Text "mo:base/Text";
+import TrieMap "mo:base/TrieMap";
 import Utilities "../utils/utilities";
 import Environment "../utils/Environment";
 import Constants "../utils/Constants";
@@ -24,13 +27,21 @@ actor class _PrivateLeague() {
     private var leagueMembers: [T.LeagueMember] = [];
     private var leagueAdmins: [T.PrincipalId] = [];
     private var leagueInvites: [T.LeagueInvite] = [];
+    
+    private let percentages : [Float] = [];
 
+    
     private stable var weeklyLeaderboards: [(T.SeasonId, [(T.GameweekNumber, T.WeeklyLeaderboard)])] = [];
     private stable var monthlyLeaderboards: [(T.SeasonId, [(T.CalendarMonth, T.MonthlyLeaderboard)])] = [];
     private stable var seasonLeaderboards: [(T.SeasonId, T.SeasonLeaderboard)] = [];
     private stable var approvedManagerCanisterIds: [T.CanisterId] = [];
+    private stable var rewardPools: [(T.SeasonId, T.PrivateLeagueRewardPool)] = [];
 
     private stable var privateLeague: ?T.PrivateLeague = null;
+
+    private var seasonRewards : List.List<T.SeasonRewards> = List.nil(); //TODO not stable
+    private var monthlyRewards : List.List<T.MonthlyRewards> = List.nil();
+    private var weeklyRewards : List.List<T.WeeklyRewards> = List.nil();
     
     public shared ({ caller }) func getPrivateLeague() : async Result.Result<DTOs.PrivateLeagueDTO, T.Error> {
         assert not Principal.isAnonymous(caller);
@@ -105,6 +116,352 @@ actor class _PrivateLeague() {
         await calculateWeeklyLeaderboards(seasonId, gameweek);
         await calculateMonthlyLeaderboards(seasonId, month);
         await calculateSeasonLeaderboard(seasonId);
+    };
+
+    public shared ({ caller }) func payWeeklyRewards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) : async (){
+        assert not Principal.isAnonymous(caller);
+        let principalId = Principal.toText(caller);
+        assert principalId == main_canister_id;
+
+        let seasonRewardPool = Array.find<(T.SeasonId, T.PrivateLeagueRewardPool)>(
+            rewardPools,
+            func(pool : (T.SeasonId, T.PrivateLeagueRewardPool)) : Bool {
+                return pool.0 == seasonId;
+            },
+        );
+
+        switch(seasonRewardPool){
+            case (?foundRewardPool){
+        
+                label leaderboardLoop for(season in Iter.fromArray(weeklyLeaderboards)){
+                    if(season.0 == seasonId){
+                        for(gw in Iter.fromArray(season.1)){
+                            if(gw.0 == gameweek){
+                                await distributeWeeklyRewards(foundRewardPool.1.weeklyLeaderboardPool, gw.1);
+                                break leaderboardLoop;
+                            };
+                        };
+                    }
+                };
+            };
+            case (null) { };
+        };
+    };
+
+    public shared ({ caller }) func payMonthlyRewards(seasonId : T.SeasonId, month : T.CalendarMonth) : async (){
+        assert not Principal.isAnonymous(caller);
+        let principalId = Principal.toText(caller);
+        assert principalId == main_canister_id;
+
+        let seasonRewardPool = Array.find<(T.SeasonId, T.PrivateLeagueRewardPool)>(
+            rewardPools,
+            func(pool : (T.SeasonId, T.PrivateLeagueRewardPool)) : Bool {
+                return pool.0 == seasonId;
+            },
+        );
+
+        switch(seasonRewardPool){
+            case (?foundRewardPool){
+                label leaderboardLoop for(season in Iter.fromArray(monthlyLeaderboards)){
+                    if(season.0 == seasonId){
+                        for(mth in Iter.fromArray(season.1)){
+                            if(mth.0 == month){
+                                await distributeMonthlyRewards(foundRewardPool.1.monthlyLeaderboardPool, mth.1);
+                                break leaderboardLoop;
+                            };
+                        };
+                    }
+                };
+            };
+            case (null) { };
+        };
+    };
+
+    public shared ({ caller }) func paySeasonRewards(seasonId : T.SeasonId) : async (){
+        assert not Principal.isAnonymous(caller);
+        let principalId = Principal.toText(caller);
+        assert principalId == main_canister_id;
+        
+        let seasonRewardPool = Array.find<(T.SeasonId, T.PrivateLeagueRewardPool)>(
+            rewardPools,
+            func(pool : (T.SeasonId, T.PrivateLeagueRewardPool)) : Bool {
+                return pool.0 == seasonId;
+            },
+        );
+
+        switch(seasonRewardPool){
+            case (?foundRewardPool){
+                label leaderboardLoop for(season in Iter.fromArray(seasonLeaderboards)){
+                    if(season.0 == seasonId){
+                        await distributeSeasonRewards(foundRewardPool.1.seasonLeaderboardPool, season.1);
+                        break leaderboardLoop;
+                    }
+                };
+            };
+            case (null) { };
+        };
+    };
+
+    public func distributeWeeklyRewards(weeklyRewardPool : Nat64, weeklyLeaderboard : T.WeeklyLeaderboard) : async () {
+
+      let weeklyRewardAmount = weeklyRewardPool / 38;
+      
+      var payouts = List.nil<Float>();
+      var currentEntries = weeklyLeaderboard.entries;
+
+      let scaledPercentages = if (weeklyLeaderboard.totalEntries < 100) {
+        Utilities.scalePercentages(percentages, weeklyLeaderboard.totalEntries);
+      } else {
+        percentages;
+      };
+
+      while (not List.isNil(currentEntries)) {
+        let (currentEntry, rest) = List.pop(currentEntries);
+        currentEntries := rest;
+        switch (currentEntry) {
+          case (null) {};
+          case (?foundEntry) {
+            let (nextEntry, _) = List.pop(rest);
+            switch (nextEntry) {
+              case (null) {
+                let payout = scaledPercentages[foundEntry.position - 1];
+                payouts := List.push(payout, payouts);
+              };
+              case (?foundNextEntry) {
+                if (foundEntry.points == foundNextEntry.points) {
+                  let tiedEntries = Utilities.findTiedEntries(rest, foundEntry.points);
+                  let startPosition = foundEntry.position;
+                  let tiePayouts = Utilities.calculateTiePayouts(tiedEntries, scaledPercentages, startPosition);
+                  payouts := List.append(payouts, tiePayouts);
+
+                  var skipEntries = rest;
+                  label skipLoop while (not List.isNil(skipEntries)) {
+                    let (skipEntry, nextRest) = List.pop(skipEntries);
+                    skipEntries := nextRest;
+
+                    switch (skipEntry) {
+                      case (null) { break skipLoop };
+                      case (?entry) {
+                        if (entry.points != foundEntry.points) {
+                          currentEntries := skipEntries;
+                          break skipLoop;
+                        };
+                      };
+                    };
+                  };
+                } else {
+                  let payout = scaledPercentages[foundEntry.position - 1];
+                  payouts := List.push(payout, payouts);
+                };
+              };
+            };
+
+          };
+        };
+      };
+
+      //TODO: feels wrong like it's sending 0 amoutns?
+
+      payouts := List.reverse(payouts);
+      let payoutsArray = List.toArray(payouts);
+      let rewardBuffer = Buffer.fromArray<T.RewardEntry>([]);
+
+      for (leadeerboardEntry in Iter.fromArray(weeklyLeaderboards)) { //todo
+        let winner = weeklyLeaderboard.entries[key];
+        let prize = Int64.toNat64(Float.toInt64(payoutsArray[key])) * weeklyRewardAmount;
+        
+        let openfpl_backend_canister = actor (main_canister_id) : actor {
+            payPrivateLeagueRewards : (winnerPrincipalId: T.PrincipalId, prize: Nat64) -> async ();
+        };
+        await openfpl_backend_canister.payPrivateLeagueRewards(winner.principalId, prize);
+        
+        rewardBuffer.add({
+          principalId = winner.principalId;
+          rewardType = #WeeklyLeaderboard;
+          position = winner.position;
+          amount = prize;
+        });
+      };
+
+      let newWeeklyRewards : T.WeeklyRewards = {
+        seasonId = weeklyLeaderboard.seasonId;
+        gameweek = weeklyLeaderboard.gameweek;
+        rewards = List.fromArray(Buffer.toArray(rewardBuffer));
+      };
+
+      weeklyRewards := List.append(weeklyRewards, List.make<T.WeeklyRewards>(newWeeklyRewards));
+    };
+
+    public func distributeMonthlyRewards(monthlyRewardPool : Nat64, monthlyLeaderboard : T.MonthlyLeaderboard) : async () {
+
+      let monthlyRewardAmount = monthlyRewardPool / 12;
+      
+      var payouts = List.nil<Float>();
+      var currentEntries = List.fromArray(monthlyLeaderboard.entries);
+
+      let scaledPercentages = if (monthlyLeaderboard.totalEntries < 100) {
+        Utilities.scalePercentages(percentages, monthlyLeaderboard.totalEntries);
+      } else {
+        percentages;
+      };
+
+      while (not List.isNil(currentEntries)) {
+        let (currentEntry, rest) = List.pop(currentEntries);
+        currentEntries := rest;
+        switch (currentEntry) {
+          case (null) {};
+          case (?foundEntry) {
+            let (nextEntry, _) = List.pop(rest);
+            switch (nextEntry) {
+              case (null) {
+                let payout = scaledPercentages[foundEntry.position - 1];
+                payouts := List.push(payout, payouts);
+              };
+              case (?foundNextEntry) {
+                if (foundEntry.points == foundNextEntry.points) {
+                  let tiedEntries = Utilities.findTiedEntries(rest, foundEntry.points);
+                  let startPosition = foundEntry.position;
+                  let tiePayouts = Utilities.calculateTiePayouts(tiedEntries, scaledPercentages, startPosition);
+                  payouts := List.append(payouts, tiePayouts);
+
+                  var skipEntries = rest;
+                  label skipLoop while (not List.isNil(skipEntries)) {
+                    let (skipEntry, nextRest) = List.pop(skipEntries);
+                    skipEntries := nextRest;
+
+                    switch (skipEntry) {
+                      case (null) { break skipLoop };
+                      case (?entry) {
+                        if (entry.points != foundEntry.points) {
+                          currentEntries := skipEntries;
+                          break skipLoop;
+                        };
+                      };
+                    };
+                  };
+                } else {
+                  let payout = scaledPercentages[foundEntry.position - 1];
+                  payouts := List.push(payout, payouts);
+                };
+              };
+            };
+
+          };
+        };
+      };
+
+      payouts := List.reverse(payouts);
+      let payoutsArray = List.toArray(payouts);
+      let rewardBuffer = Buffer.fromArray<T.RewardEntry>([]);
+
+      for (key in monthlyLeaderboard.entries.keys()) {
+        let winner = monthlyLeaderboard.entries[key];
+        let prize = Int64.toNat64(Float.toInt64(payoutsArray[key])) * monthlyRewardAmount;
+        
+        let openfpl_backend_canister = actor (main_canister_id) : actor {
+            payPrivateLeagueRewards : (winnerPrincipalId: T.PrincipalId, prize: Nat64) -> async ();
+        };
+        await openfpl_backend_canister.payPrivateLeagueRewards(winner.principalId, prize);
+        
+        rewardBuffer.add({
+          principalId = winner.principalId;
+          rewardType = #MonthlyLeaderboard;
+          position = winner.position;
+          amount = prize;
+        });
+      };
+
+      let newMonthlyRewards : T.MonthlyRewards = {
+        seasonId = monthlyLeaderboard.seasonId;
+        month = monthlyLeaderboard.month;
+        rewards = List.fromArray(Buffer.toArray(rewardBuffer));
+      };
+
+      monthlyRewards := List.append(monthlyRewards, List.make<T.MonthlyRewards>(newMonthlyRewards));
+    };
+
+    public func distributeSeasonRewards(seasonRewardPool : Nat64, seasonLeaderboard : T.SeasonLeaderboard) : async () {
+
+      var payouts = List.nil<Float>();
+      var currentEntries = List.fromArray(seasonLeaderboard.entries);
+
+      let scaledPercentages = if (seasonLeaderboard.totalEntries < 100) {
+        Utilities.scalePercentages(percentages, seasonLeaderboard.totalEntries);
+      } else {
+        percentages;
+      };
+
+      while (not List.isNil(currentEntries)) {
+        let (currentEntry, rest) = List.pop(currentEntries);
+        currentEntries := rest;
+        switch (currentEntry) {
+          case (null) {};
+          case (?foundEntry) {
+            let (nextEntry, _) = List.pop(rest);
+            switch (nextEntry) {
+              case (null) {
+                let payout = scaledPercentages[foundEntry.position - 1];
+                payouts := List.push(payout, payouts);
+              };
+              case (?foundNextEntry) {
+                if (foundEntry.points == foundNextEntry.points) {
+                  let tiedEntries = Utilities.findTiedEntries(rest, foundEntry.points);
+                  let startPosition = foundEntry.position;
+                  let tiePayouts = Utilities.calculateTiePayouts(tiedEntries, scaledPercentages, startPosition);
+                  payouts := List.append(payouts, tiePayouts);
+
+                  var skipEntries = rest;
+                  label skipLoop while (not List.isNil(skipEntries)) {
+                    let (skipEntry, nextRest) = List.pop(skipEntries);
+                    skipEntries := nextRest;
+
+                    switch (skipEntry) {
+                      case (null) { break skipLoop };
+                      case (?entry) {
+                        if (entry.points != foundEntry.points) {
+                          currentEntries := skipEntries;
+                          break skipLoop;
+                        };
+                      };
+                    };
+                  };
+                } else {
+                  let payout = scaledPercentages[foundEntry.position - 1];
+                  payouts := List.push(payout, payouts);
+                };
+              };
+            };
+
+          };
+        };
+      };
+
+      payouts := List.reverse(payouts);
+      let payoutsArray = List.toArray(payouts);
+      let rewardBuffer = Buffer.fromArray<T.RewardEntry>([]);
+
+      for (key in seasonLeaderboard.entries.keys()) {
+        let winner = seasonLeaderboard.entries[key];
+        let prize = Int64.toNat64(Float.toInt64(payoutsArray[key])) * seasonRewardPool;
+        
+        let openfpl_backend_canister = actor (main_canister_id) : actor {
+            payPrivateLeagueRewards : (winnerPrincipalId: T.PrincipalId, prize: Nat64) -> async ();
+        };
+        await openfpl_backend_canister.payPrivateLeagueRewards(winner.principalId, prize);
+        
+        rewardBuffer.add({
+          principalId = winner.principalId;
+          rewardType = #WeeklyLeaderboard;
+          position = winner.position;
+          amount = prize;
+        });
+      };
+
+      let newSeasonRewards : T.SeasonRewards = {
+        seasonId = seasonLeaderboard.seasonId;
+        rewards = List.fromArray(Buffer.toArray(rewardBuffer));
+      };
+      seasonRewards := List.append(seasonRewards, List.make<T.SeasonRewards>(newSeasonRewards));
     };
 
     private func calculateWeeklyLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async () {
@@ -233,21 +590,19 @@ actor class _PrivateLeague() {
         let principalId = Principal.toText(caller);
         assert principalId == main_canister_id;
 
-        for(seasonLeaderboard in Iter.fromArray(weeklyLeaderboards)){
-            if(seasonLeaderboard.0 == seasonId){
-                for(leaderboard in Iter.fromArray(seasonLeaderboard.1)){
+        for(season in Iter.fromArray(weeklyLeaderboards)){
+            if(season.0 == seasonId){
+                for(leaderboard in Iter.fromArray(season.1)){
                     if(leaderboard.0 == gameweek){
-
-                        let filteredEntries = List.fromArray(leaderboard.1);
-
-                        let droppedEntries = List.drop<T.LeaderboardEntry>(filteredEntries, offset);
+                        
+                        let droppedEntries = List.drop<T.LeaderboardEntry>(leaderboard.1.entries, offset);
                         let paginatedEntries = List.take<T.LeaderboardEntry>(droppedEntries, limit);
 
                         return #ok({
                             entries = List.toArray(paginatedEntries);
                             gameweek = leaderboard.0;
-                            seasonId = seasonLeaderboard.0;
-                            totalEntries = Array.size(leaderboard.1);
+                            seasonId = season.0;
+                            totalEntries = List.size(leaderboard.1.entries);
                         });
                     }
                 }
@@ -266,9 +621,7 @@ actor class _PrivateLeague() {
             if(seasonLeaderboard.0 == seasonId){
                 for(leaderboard in Iter.fromArray(seasonLeaderboard.1)){
                     if(leaderboard.0 == month){
-
-                        let filteredEntries = List.fromArray(leaderboard.1);
-
+                        let filteredEntries = leaderboard.1.entries;
                         let droppedEntries = List.drop<T.LeaderboardEntry>(filteredEntries, offset);
                         let paginatedEntries = List.take<T.LeaderboardEntry>(droppedEntries, limit);
 
@@ -276,8 +629,7 @@ actor class _PrivateLeague() {
                             entries = List.toArray(paginatedEntries);
                             month = leaderboard.0;
                             seasonId = seasonLeaderboard.0;
-                            totalEntries = Array.size(leaderboard.1);
-                            clubId = 0;
+                            totalEntries = List.size(leaderboard.1.entries);
                         });
                     }
                 }
@@ -294,7 +646,7 @@ actor class _PrivateLeague() {
 
         for(seasonLeaderboard in Iter.fromArray(seasonLeaderboards)){
             if(seasonLeaderboard.0 == seasonId){
-                let filteredEntries = List.fromArray(seasonLeaderboard.1);
+                let filteredEntries = seasonLeaderboard.1.entries;
 
                 let droppedEntries = List.drop<T.LeaderboardEntry>(filteredEntries, offset);
                 let paginatedEntries = List.take<T.LeaderboardEntry>(droppedEntries, limit);
@@ -302,7 +654,7 @@ actor class _PrivateLeague() {
                 return #ok({
                     entries = List.toArray(paginatedEntries);
                     seasonId = seasonLeaderboard.0;
-                    totalEntries = Array.size(seasonLeaderboard.1);
+                    totalEntries = List.size(seasonLeaderboard.1.entries);
                 });
             };
         };
@@ -566,54 +918,182 @@ actor class _PrivateLeague() {
         return #ok(false);
     };
 
-    public shared ({ caller }) func updateManagerScore(snapshot: T.FantasyTeamSnapshot) : async Result.Result<(), T.Error> {
-        assert isApprovedManagerCanister(Principal.toText(caller));
-        
-        let weeklyLeaderboardEntry: T.LeaderboardEntry = {
-            position = 0;
-            positionText = "";
-            username = snapshot.username;
-            principalId = snapshot.principalId;
-            points = snapshot.points;
-        };
-        
-        let monthlyLeaderboardEntry: T.LeaderboardEntry = {
-            position = 0;
-            positionText = "";
-            username = snapshot.username;
-            principalId = snapshot.principalId;
-            points = snapshot.monthlyPoints;
-        };
-        
-        let seasonLeaderboardEntry: T.LeaderboardEntry = {
-            position = 0;
-            positionText = "";
-            username = snapshot.username;
-            principalId = snapshot.principalId;
-            points = snapshot.seasonPoints;
-        };
-
-        //loop through entries and find snapshot gameweek
-        
-        
-        //add a leaderboard entry for the manager
-        
-
-        //update the leaderboard entry
-
-        //update the 
-        return #ok();
-        
-    };
-
-    public shared ({ caller }) func payRewards() : async (){
+    public shared ({ caller }) func sendWeeklyLeadeboardEntry(seasonId: T.SeasonId, gameweek: T.GameweekNumber, updatedEntry: T.LeaderboardEntry) : async () {
         assert not Principal.isAnonymous(caller);
-        let principalId = Principal.toText(caller);
-        assert principalId == main_canister_id;
+        assert isApprovedManagerCanister(Principal.toText(caller));
 
-        //TODO: write
-
+        var seasonAdded = false;
+        let seasonBuffer = Buffer.fromArray<(T.SeasonId, [(T.GameweekNumber, T.WeeklyLeaderboard)])>([]);
+        for(season in Iter.fromArray(weeklyLeaderboards)){
+            if(season.0 == seasonId){
+                let seasonGameweekBuffer = Buffer.fromArray<(T.GameweekNumber, T.WeeklyLeaderboard)>([]);
+                var gameweekAdded = false;
+                for(gw in Iter.fromArray(season.1)){
+                    if(gw.0 == gameweek){
+                        let gameweekMangersBuffer = Buffer.fromArray<T.LeaderboardEntry>([]);
+                        var managerAdded = false;
+                        for(manager in Iter.fromList(gw.1.entries)){
+                            if(manager.principalId == updatedEntry.principalId){
+                                gameweekMangersBuffer.add(updatedEntry);
+                                managerAdded := true;
+                            } else {
+                                gameweekMangersBuffer.add(manager);
+                                managerAdded := true;
+                            };
+                        };
+                        if(not managerAdded){
+                            gameweekMangersBuffer.add(updatedEntry);
+                        };
+                        seasonGameweekBuffer.add(gw.0, 
+                        {
+                            entries = List.fromArray(Buffer.toArray(gameweekMangersBuffer));
+                            gameweek = gw.0;
+                            seasonId = season.0;
+                            totalEntries = gameweekMangersBuffer.size();
+                        });
+                        gameweekAdded := true;
+                    } else {
+                        seasonGameweekBuffer.add(gw);
+                        gameweekAdded := true;
+                    };
+                };
+                if(not gameweekAdded){
+                    seasonGameweekBuffer.add(gameweek, 
+                    {
+                        entries = List.fromArray([updatedEntry]);
+                        gameweek = gameweek;
+                        seasonId = seasonId;
+                        totalEntries = 1;
+                    });
+                };
+                seasonBuffer.add(seasonId, Buffer.toArray(seasonGameweekBuffer));
+                seasonAdded := true;
+            } else {
+                seasonBuffer.add(season);
+                seasonAdded := true;
+            };
+        };
+        if(not seasonAdded){
+            seasonBuffer.add(seasonId, [(gameweek, {
+                entries = List.fromArray([updatedEntry]);
+                gameweek = gameweek;
+                seasonId = seasonId;
+                totalEntries = 1;
+            })]);
+        };
+        weeklyLeaderboards := Buffer.toArray(seasonBuffer);
     };
+
+    public shared ({ caller }) func sendMonthlyLeaderboardEntry(seasonId: T.SeasonId, month: T.CalendarMonth, updatedEntry: T.LeaderboardEntry) : async() {
+        assert not Principal.isAnonymous(caller);
+        assert isApprovedManagerCanister(Principal.toText(caller));
+
+        var seasonAdded = false;
+        let seasonBuffer = Buffer.fromArray<(T.SeasonId, [(T.CalendarMonth, T.MonthlyLeaderboard)])>([]);
+        for(season in Iter.fromArray(monthlyLeaderboards)){
+            if(season.0 == seasonId){
+                let seasonMonthBuffer = Buffer.fromArray<(T.CalendarMonth, T.MonthlyLeaderboard)>([]);
+                var monthAdded = false;
+                for(mth in Iter.fromArray(season.1)){
+                    if(mth.0 == month){
+                        let monthMangersBuffer = Buffer.fromArray<T.LeaderboardEntry>([]);
+                        var managerAdded = false;
+                        for(manager in Iter.fromList(mth.1.entries)){
+                            if(manager.principalId == updatedEntry.principalId){
+                                monthMangersBuffer.add(updatedEntry);
+                                managerAdded := true;
+                            } else {
+                                monthMangersBuffer.add(manager);
+                                managerAdded := true;
+                            };
+                        };
+                        if(not managerAdded){
+                            monthMangersBuffer.add(updatedEntry);
+                        };
+                        seasonMonthBuffer.add(mth.0, 
+                        {
+                            entries = List.fromArray(Buffer.toArray(monthMangersBuffer));
+                            month = mth.0;
+                            seasonId = season.0;
+                            totalEntries = monthMangersBuffer.size();
+                        });
+                        monthAdded := true;
+                    } else {
+                        seasonMonthBuffer.add(mth);
+                        monthAdded := true;
+                    };
+                };
+                if(not monthAdded){
+                    seasonMonthBuffer.add(month, 
+                    {
+                        entries = List.fromArray([updatedEntry]);
+                        month = month;
+                        seasonId = seasonId;
+                        totalEntries = 1;
+                    });
+                };
+                seasonBuffer.add(seasonId, Buffer.toArray(seasonMonthBuffer));
+                seasonAdded := true;
+            } else {
+                seasonBuffer.add(season);
+                seasonAdded := true;
+            };
+        };
+        if(not seasonAdded){
+            seasonBuffer.add(seasonId, [(month, {
+                entries = List.fromArray([updatedEntry]);
+                month = month;
+                seasonId = seasonId;
+                totalEntries = 1;
+            })]);
+        };
+        monthlyLeaderboards := Buffer.toArray(seasonBuffer);
+    };
+
+    public shared ({ caller }) func sendSeasonLeaderboardEntry(seasonId: T.SeasonId, updatedEntry: T.LeaderboardEntry) : async () {
+        assert not Principal.isAnonymous(caller);
+        assert isApprovedManagerCanister(Principal.toText(caller));
+
+        var seasonAdded = false;
+        let seasonBuffer = Buffer.fromArray<(T.SeasonId, T.SeasonLeaderboard)>([]);
+        for(season in Iter.fromArray(seasonLeaderboards)){
+            if(season.0 == seasonId){
+                let seasonManagersBuffer = Buffer.fromArray<T.LeaderboardEntry>([]);
+                var managerAdded = false;
+                for(manager in Iter.fromList(season.1.entries)){
+                    if(manager.principalId == updatedEntry.principalId){
+                        seasonManagersBuffer.add(updatedEntry);
+                        managerAdded := true;
+                    } else {
+                        seasonManagersBuffer.add(manager);
+                        managerAdded := true;
+                    };
+                };
+                if(not managerAdded){
+                    seasonManagersBuffer.add(updatedEntry);
+                };      
+                seasonBuffer.add(seasonId, {
+                    entries = List.fromArray(Buffer.toArray(seasonManagersBuffer));
+                    seasonId = seasonId;
+                    totalEntries = seasonManagersBuffer.size();
+                });
+                seasonAdded := true;
+            } else {
+                seasonBuffer.add(season);
+                seasonAdded := true;
+            };
+        };
+        if(not seasonAdded){
+            seasonBuffer.add(seasonId, {
+                entries = List.fromArray([updatedEntry]);
+                seasonId = seasonId;
+                totalEntries = 1;
+            });
+        };
+        seasonLeaderboards := Buffer.toArray(seasonBuffer);
+    };
+
+    
 
     private func isApprovedManagerCanister(canisterId: T.CanisterId) : Bool {
         let canisterExists = Array.find(approvedManagerCanisterIds,

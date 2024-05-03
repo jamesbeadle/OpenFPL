@@ -170,10 +170,16 @@ module _Types {
     rewards : List.List<RewardEntry>;
   };
 
-  public type MonthlyRewards = {
+  public type MonthlyClubRewards = {
     seasonId : SeasonId;
     month : CalendarMonth;
     clubId : ClubId;
+    rewards : List.List<RewardEntry>;
+  };
+
+  public type MonthlyRewards = {
+    seasonId : SeasonId;
+    month : CalendarMonth;
     rewards : List.List<RewardEntry>;
   };
 
@@ -455,5 +461,13 @@ module _Types {
     #Sent;
     #Accepted;
     #Rejected;
+  };
+
+  public type PrivateLeagueRewardPool = {
+    seasonId : SeasonId;
+    seasonLeaderboardPool : Nat64;
+    monthlyLeaderboardPool : Nat64;
+    weeklyLeaderboardPool : Nat64;
+    mostValuableTeamPool : Nat64;
   };
 };

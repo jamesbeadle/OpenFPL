@@ -620,8 +620,9 @@ module {
 
       await managerComposite.calculateFantasyTeamScores(playerPointsMap, systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
       await leaderboardComposite.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth, managerComposite.getStableUniqueManagerCanisterIds());
+      await privateLeaguesManager.sendLeaderboards(leaderboardComposite.getLeaderboards(), systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
+      
       await privateLeaguesManager.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
-      await privateLeaguesManager.payRewards();
       
       let rewardPool = rewardPools.get(systemState.calculationSeasonId);
       switch (rewardPool) {
@@ -635,18 +636,21 @@ module {
           if(gameweekComplete){
             await managerComposite.resetWeeklyTransfers();
             await payWeeklyRewards(foundRewardPool);
+            await privateLeaguesManager.payWeeklyRewards();
             await incrementCalculationGameweek();
           };
 
           if(monthComplete){
             await managerComposite.resetBonusesAvailable();
             await payMonthlyRewards(foundRewardPool);
+            await privateLeaguesManager.payMonthlyRewards();
             await incrementCalculationMonth();
           };
 
           if(seasonComplete){
             await managerComposite.resetFantasyTeams(seasonComposite.getStableNextSeasonId());
             await paySeasonRewards(foundRewardPool);
+            await privateLeaguesManager.paySeasonRewards();
             await incrementCalculationSeason();
             
             seasonComposite.createNewSeason(systemState);

@@ -15,6 +15,7 @@ import Float "mo:base/Float";
 import Principal "mo:base/Principal";
 import List "mo:base/List";
 import Int "mo:base/Int";
+import Buffer "mo:base/Buffer";
 import Management "../modules/Management";
 
 module {
@@ -389,6 +390,68 @@ module {
 
   private func compareLeaderboardEntry(entry1 : T.LeaderboardEntry, entry2 : T.LeaderboardEntry) : Bool {
     return entry1.points <= entry2.points;
+  };
+
+  
+
+  public func scalePercentages(fixedPercentages : [Float], numParticipants : Nat) : [Float] {
+    var totalPercentage : Float = 0.0;
+    for (i in Iter.range(0, numParticipants)) {
+      totalPercentage += fixedPercentages[i];
+    };
+
+    let scalingFactor : Float = 100.0 / totalPercentage;
+
+    var scaledPercentagesBuffer = Buffer.fromArray<Float>([]);
+    for (i in Iter.range(0, numParticipants)) {
+      let scaledValue = fixedPercentages[i] * scalingFactor;
+      scaledPercentagesBuffer.add(scaledValue);
+    };
+
+    return Buffer.toArray(scaledPercentagesBuffer);
+  };
+
+  public func findTiedEntries(entries : List.List<T.LeaderboardEntry>, points : Int16) : List.List<T.LeaderboardEntry> {
+    var tiedEntries = List.nil<T.LeaderboardEntry>();
+    var currentEntries = entries;
+
+    label currentLoop while (not List.isNil(currentEntries)) {
+      let (currentEntry, rest) = List.pop(currentEntries);
+      currentEntries := rest;
+
+      switch (currentEntry) {
+        case (null) {};
+        case (?entry) {
+          if (entry.points == points) {
+            tiedEntries := List.push(entry, tiedEntries);
+          } else {
+            break currentLoop;
+          };
+        };
+      };
+    };
+
+    return List.reverse(tiedEntries);
+  };
+
+  
+
+  public func calculateTiePayouts(tiedEntries : List.List<T.LeaderboardEntry>, scaledPercentages : [Float], startPosition : Nat) : List.List<Float> {
+    let numTiedEntries = List.size(tiedEntries);
+    var totalPayout : Float = 0.0;
+    let endPosition : Int = startPosition + numTiedEntries - 1;
+
+    label posLoop for (i in Iter.range(startPosition, endPosition)) {
+      if (i > 100) {
+        break posLoop;
+      };
+      totalPayout += scaledPercentages[i - 1];
+    };
+
+    let equalPayout = totalPayout / Float.fromInt(numTiedEntries);
+    let payouts = List.replicate<Float>(numTiedEntries, equalPayout);
+
+    return payouts;
   };
 
 };

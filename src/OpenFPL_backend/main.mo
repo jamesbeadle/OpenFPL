@@ -644,6 +644,32 @@ actor Self {
     return #ok(treasuryManager.getTokenList());
   };
 
+  public shared ({ caller }) func payPrivateLeagueRewards(managerId : T.PrincipalId, fpl : Nat64) : () {
+    assert not Principal.isAnonymous(caller);
+    let privateLeagueCanisterId = Principal.toText(caller);
+    assert seasonManager.leagueExists(privateLeagueCanisterId);
+    assert seasonManager.managerInLeague(managerId, privateLeagueCanisterId);
+    seasonManager.payPrivateLeagueReward(privateLeagueCanisterId, managerId, fpl);
+    //TODO: 
+    //get the callers account balance
+        //this will be the balance owned by the DAO for the private league when it has been setup
+      
+      //the actual tokens are controller by the backend
+      
+      
+      
+    let ledger : SNSToken.Interface = actor (tokenCanisterId);
+      
+    let _ = await ledger.icrc1_transfer ({
+      memo = ?Text.encodeUtf8("0");
+        from_subaccount = ?Account.principalToSubaccount(Principal.fromText(tokenCanisterId));
+        to = { owner = defaultAccount; subaccount = ?Account.principalToSubaccount(Principal.fromText(principalId)) };
+        amount = Nat64.toNat(fpl);
+        fee = ?Nat64.toNat(Constants.FPL_TRANSACTION_FEE);
+        created_at_time = ?Nat64.fromNat(Int.abs(Time.now()))
+    });
+  };
+
 
   //Stable variables backup:
 

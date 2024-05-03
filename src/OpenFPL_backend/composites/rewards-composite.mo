@@ -52,7 +52,7 @@ module {
       var currentEntries = List.fromArray(weeklyLeaderboard.entries);
 
       let scaledPercentages = if (weeklyLeaderboard.totalEntries < 100) {
-        scalePercentages(RewardPercentages.percentages, weeklyLeaderboard.totalEntries);
+        Utilities.scalePercentages(RewardPercentages.percentages, weeklyLeaderboard.totalEntries);
       } else {
         RewardPercentages.percentages;
       };
@@ -71,9 +71,9 @@ module {
               };
               case (?foundNextEntry) {
                 if (foundEntry.points == foundNextEntry.points) {
-                  let tiedEntries = findTiedEntries(rest, foundEntry.points);
+                  let tiedEntries = Utilities.findTiedEntries(rest, foundEntry.points);
                   let startPosition = foundEntry.position;
-                  let tiePayouts = calculateTiePayouts(tiedEntries, scaledPercentages, startPosition);
+                  let tiePayouts = Utilities.calculateTiePayouts(tiedEntries, scaledPercentages, startPosition);
                   payouts := List.append(payouts, tiePayouts);
 
                   var skipEntries = rest;
@@ -127,7 +127,7 @@ module {
       weeklyRewards := List.append(weeklyRewards, List.make<T.WeeklyRewards>(newWeeklyRewards));
     };
 
-    public func distributeMonthlyRewards(defaultAccount : Principal, rewardPool : T.RewardPool, monthlyLeaderboard : DTOs.MonthlyLeaderboardDTO, uniqueManagerCanisterIds : List.List<T.CanisterId>) : async () {
+    public func distributeMonthlyRewards(defaultAccount : Principal, rewardPool : T.RewardPool, monthlyLeaderboard : DTOs.ClubLeaderboardDTO, uniqueManagerCanisterIds : List.List<T.CanisterId>) : async () {
       let monthlyRewardAmount = rewardPool.monthlyLeaderboardPool / 9;
       await mintToTreasury(monthlyRewardAmount, defaultAccount);
 
@@ -160,7 +160,7 @@ module {
       var currentEntries = List.fromArray(monthlyLeaderboard.entries);
 
       let scaledPercentages = if (monthlyLeaderboard.totalEntries < 100) {
-        scalePercentages(RewardPercentages.percentages, monthlyLeaderboard.totalEntries);
+        Utilities.scalePercentages(RewardPercentages.percentages, monthlyLeaderboard.totalEntries);
       } else {
         RewardPercentages.percentages;
       };
@@ -179,9 +179,9 @@ module {
               };
               case (?foundNextEntry) {
                 if (foundEntry.points == foundNextEntry.points) {
-                  let tiedEntries = findTiedEntries(rest, foundEntry.points);
+                  let tiedEntries = Utilities.findTiedEntries(rest, foundEntry.points);
                   let startPosition = foundEntry.position;
-                  let tiePayouts = calculateTiePayouts(tiedEntries, scaledPercentages, startPosition);
+                  let tiePayouts = Utilities.calculateTiePayouts(tiedEntries, scaledPercentages, startPosition);
                   payouts := List.append(payouts, tiePayouts);
 
                   var skipEntries = rest;
@@ -243,7 +243,7 @@ module {
       var currentEntries = List.fromArray(seasonLeaderboard.entries);
 
       let scaledPercentages = if (seasonLeaderboard.totalEntries < 100) {
-        scalePercentages(RewardPercentages.percentages, seasonLeaderboard.totalEntries);
+        Utilities.scalePercentages(RewardPercentages.percentages, seasonLeaderboard.totalEntries);
       } else {
         RewardPercentages.percentages;
       };
@@ -262,9 +262,9 @@ module {
               };
               case (?foundNextEntry) {
                 if (foundEntry.points == foundNextEntry.points) {
-                  let tiedEntries = findTiedEntries(rest, foundEntry.points);
+                  let tiedEntries = Utilities.findTiedEntries(rest, foundEntry.points);
                   let startPosition = foundEntry.position;
-                  let tiePayouts = calculateTiePayouts(tiedEntries, scaledPercentages, startPosition);
+                  let tiePayouts = Utilities.calculateTiePayouts(tiedEntries, scaledPercentages, startPosition);
                   payouts := List.append(payouts, tiePayouts);
 
                   var skipEntries = rest;
@@ -404,7 +404,7 @@ module {
       var scaledPercentages = RewardPercentages.percentages;
 
       if (List.size(rewardEntries) < 100) {
-        scaledPercentages := scalePercentages(RewardPercentages.percentages, List.size(rewardEntries));
+        scaledPercentages := Utilities.scalePercentages(RewardPercentages.percentages, List.size(rewardEntries));
       };
 
       let rewardEntriesArray = List.toArray(rewardEntries);
@@ -642,64 +642,6 @@ module {
       } else {
         weeklyATHPrizePool := weeklyATHPrizePool + seasonRewardPool;
       };
-    };
-
-    private func findTiedEntries(entries : List.List<T.LeaderboardEntry>, points : Int16) : List.List<T.LeaderboardEntry> {
-      var tiedEntries = List.nil<T.LeaderboardEntry>();
-      var currentEntries = entries;
-
-      label currentLoop while (not List.isNil(currentEntries)) {
-        let (currentEntry, rest) = List.pop(currentEntries);
-        currentEntries := rest;
-
-        switch (currentEntry) {
-          case (null) {};
-          case (?entry) {
-            if (entry.points == points) {
-              tiedEntries := List.push(entry, tiedEntries);
-            } else {
-              break currentLoop;
-            };
-          };
-        };
-      };
-
-      return List.reverse(tiedEntries);
-    };
-
-    private func calculateTiePayouts(tiedEntries : List.List<T.LeaderboardEntry>, scaledPercentages : [Float], startPosition : Nat) : List.List<Float> {
-      let numTiedEntries = List.size(tiedEntries);
-      var totalPayout : Float = 0.0;
-      let endPosition : Int = startPosition + numTiedEntries - 1;
-
-      label posLoop for (i in Iter.range(startPosition, endPosition)) {
-        if (i > 100) {
-          break posLoop;
-        };
-        totalPayout += scaledPercentages[i - 1];
-      };
-
-      let equalPayout = totalPayout / Float.fromInt(numTiedEntries);
-      let payouts = List.replicate<Float>(numTiedEntries, equalPayout);
-
-      return payouts;
-    };
-
-    private func scalePercentages(fixedPercentages : [Float], numParticipants : Nat) : [Float] {
-      var totalPercentage : Float = 0.0;
-      for (i in Iter.range(0, numParticipants)) {
-        totalPercentage += fixedPercentages[i];
-      };
-
-      let scalingFactor : Float = 100.0 / totalPercentage;
-
-      var scaledPercentagesBuffer = Buffer.fromArray<Float>([]);
-      for (i in Iter.range(0, numParticipants)) {
-        let scaledValue = fixedPercentages[i] * scalingFactor;
-        scaledPercentagesBuffer.add(scaledValue);
-      };
-
-      return Buffer.toArray(scaledPercentagesBuffer);
     };
 
     private func payReward(principalId : T.PrincipalId, fpl : Nat64, defaultAccount: Principal) : async () {

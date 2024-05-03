@@ -2615,16 +2615,6 @@ actor class _ManagerCanister() {
                 let totalTeamValue = Array.foldLeft<Nat16, Nat16>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
 
                 updateSnapshotPoints(value.principalId, seasonId, gameweek, month, totalTeamPoints, totalTeamValue);
-
-                for(canisterId in Iter.fromList(value.privateLeagueMemberships)){
-                  
-                  //create canister actor and send updated snapshot points
-                  let private_league_canister = actor (canisterId) : actor {
-                    updateManagerScore : (managerScore: T.FantasyTeamSnapshot) -> async Result.Result<(), T.Error>;
-                  };
-
-                  let _ = await private_league_canister.updateManagerScore(foundSnapshot);
-                };
               };
             };
           };

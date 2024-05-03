@@ -1292,7 +1292,7 @@ module {
       await distributeWeeklyATHScoreRewards(defaultAccount, rewardPool.allTimeWeeklyHighScorePool, weeklyLeaderboard);
     };
 
-    public func payMonthlyRewards(defaultAccount: Principal, rewardPool : T.RewardPool, monthlyLeaderboard : DTOs.MonthlyLeaderboardDTO) : async () {
+    public func payMonthlyRewards(defaultAccount: Principal, rewardPool : T.RewardPool, monthlyLeaderboard : DTOs.ClubLeaderboardDTO) : async () {
       await distributeMonthlyRewards(defaultAccount, rewardPool, monthlyLeaderboard, uniqueManagerCanisterIds);
     };
 
@@ -1310,7 +1310,7 @@ module {
       await rewards.distributeWeeklyRewards(defaultAccount, weeklyRewardPool, weeklyLeaderboard);
     };
 
-    public func distributeMonthlyRewards(defaultAccount : Principal, rewardPool : T.RewardPool, monthlyLeaderboard : DTOs.MonthlyLeaderboardDTO, uniqueManagerCanisterIds : List.List<T.CanisterId>) : async () {
+    public func distributeMonthlyRewards(defaultAccount : Principal, rewardPool : T.RewardPool, monthlyLeaderboard : DTOs.ClubLeaderboardDTO, uniqueManagerCanisterIds : List.List<T.CanisterId>) : async () {
       await rewards.distributeMonthlyRewards(defaultAccount, rewardPool, monthlyLeaderboard, uniqueManagerCanisterIds);
     };
 

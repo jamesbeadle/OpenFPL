@@ -328,10 +328,17 @@ module DTOs {
     totalEntries : Nat;
   };
 
-  public type MonthlyLeaderboardDTO = {
+  public type ClubLeaderboardDTO = {
     seasonId : T.SeasonId;
     month : Nat8;
     clubId : T.ClubId;
+    entries : [T.LeaderboardEntry];
+    totalEntries : Nat;
+  };
+
+  public type MonthlyLeaderboardDTO = {
+    seasonId : T.SeasonId;
+    month : Nat8;
     entries : [T.LeaderboardEntry];
     totalEntries : Nat;
   };

@@ -344,19 +344,56 @@ module {
           calculateLeaderboards : (seasonId: T.SeasonId, month: T.CalendarMonth, gameweek: T.GameweekNumber) -> async ();
         };
 
-        return await private_league_canister.calculateLeaderboards(seasonId, );
+        return await private_league_canister.calculateLeaderboards(seasonId, month, gameweek);
       };
     };
 
-    public func payRewards(seasonId: T.SeasonId, month: T.CalendarMonth, gameweek: T.GameweekNumber) : async (){
+    public func payWeeklyRewards(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async (){
       for(canisterId in Iter.fromArray(privateLeagueCanisterIds)){
         let private_league_canister = actor (canisterId) : actor {
-          payRewards : (seasonId: T.SeasonId, month: T.CalendarMonth, gameweek: T.GameweekNumber) -> async ();
+          payWeeklyRewards : (seasonId: T.SeasonId, gameweek: T.GameweekNumber) -> async ();
         };
 
-        return await private_league_canister.payRewards();
+        return await private_league_canister.payWeeklyRewards(seasonId, gameweek);
       };
     };
+
+    public func payMonthlyRewards(seasonId: T.SeasonId, month: T.CalendarMonth) : async (){
+      for(canisterId in Iter.fromArray(privateLeagueCanisterIds)){
+        let private_league_canister = actor (canisterId) : actor {
+          payMonthlyRewards : (seasonId: T.SeasonId, month: T.CalendarMonth) -> async ();
+        };
+
+        return await private_league_canister.payMonthlyRewards(seasonId, month, gameweek);
+      };
+    };
+
+    public func paySeasonRewards(seasonId: T.SeasonId) : async (){
+      for(canisterId in Iter.fromArray(privateLeagueCanisterIds)){
+        let private_league_canister = actor (canisterId) : actor {
+          paySeasonRewards : (seasonId: T.SeasonId) -> async ();
+        };
+
+        return await private_league_canister.payRewards(seasonId);
+      };
+    };
+
+    public func sendLeaderboards() : async () {
+      //TODO
+      
+      for(canisterId in Iter.fromList(value.privateLeagueMemberships)){
+        
+        //create canister actor and send updated snapshot points
+        let private_league_canister = actor (canisterId) : actor {
+          sendWeeklyLeadeboardEntry : (seasonId: T.SeasonId, gameweek: T.GameweekNumber, updatedEntry: T.LeaderboardEntry) -> async ();
+          sendMonthlyLeadeboardEntry : (seasonId: T.SeasonId, month: T.CalendarMonth, updatedEntry: T.LeaderboardEntry) -> async ();
+          sendSeasonLeadeboardEntry : (seasonId: T.SeasonId, updatedEntry: T.LeaderboardEntry) -> async ();
+        };
+
+        let _ = await private_league_canister.sendLeaderboardEntry(foundSnapshot);
+        //TODO ensure month leaderboard in private leagues are sorted 
+      };
+    }
 
   };
 };
