@@ -497,6 +497,7 @@ module DTOs {
     tokenId: T.TokenId;
     entryFee: Nat;
     adminFee: Nat8;
+    creatorPrincipalId: T.PrincipalId;
   };
 
   type CoinIdInfo = {coinId: Nat; coinSubId: Nat};

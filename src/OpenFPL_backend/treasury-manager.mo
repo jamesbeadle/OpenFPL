@@ -10,6 +10,7 @@ import Result "mo:base/Result";
 import Blob "mo:base/Blob";
 import Int64 "mo:base/Int64";
 import Float "mo:base/Float";
+import Nat8 "mo:base/Nat8";
 import Environment "utils/Environment";
 import DTOs "DTOs";
 import T "types";
@@ -212,7 +213,11 @@ module {
 
       switch(privateLeague){
         case (#ok foundPrivateLeague){
-          
+
+          //TODO: Check for admin fee
+          let adminFee: Nat = Nat8.toNat(foundPrivateLeague.adminFee) * foundPrivateLeague.entryFee / 100;
+          let remainingFee: Nat = foundPrivateLeague.entryFee - adminFee;
+
           let tokenId = foundPrivateLeague.tokenId;
           for(token in Iter.fromArray(tokenList)){
             if(token.id == tokenId){
@@ -222,7 +227,16 @@ module {
                 memo = ?Blob.fromArray([]);
                 from_subaccount = ?Account.principalToSubaccount(Principal.fromText(managerId));
                 to = {owner = defaultAccount; subaccount = ?Account.defaultSubaccount()};
-                amount = foundPrivateLeague.entryFee - token.fee ;
+                amount = remainingFee - token.fee ;
+                fee = ?token.fee;
+                created_at_time = ?Nat64.fromNat(Int.abs(Time.now()));
+              });
+              
+              let _ = await ledger.icrc1_transfer({
+                memo = ?Blob.fromArray([]);
+                from_subaccount = ?Account.principalToSubaccount(Principal.fromText(managerId));
+                to = {owner = defaultAccount; subaccount = ?Account.principalToSubaccount(Principal.fromText(foundPrivateLeague.creatorPrincipalId))};
+                amount = adminFee - token.fee ;
                 fee = ?token.fee;
                 created_at_time = ?Nat64.fromNat(Int.abs(Time.now()));
               });

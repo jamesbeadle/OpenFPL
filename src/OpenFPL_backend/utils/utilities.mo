@@ -391,8 +391,6 @@ module {
     return entry1.points <= entry2.points;
   };
 
-  
-
   public func scalePercentages(percentages : [Float], actualWinners : Nat) : [Float] {
     let length: Int = Array.size(percentages);
     
@@ -441,8 +439,6 @@ module {
 
     return List.reverse(tiedEntries);
   };
-
-  
 
   public func calculateTiePayouts(tiedEntries : List.List<T.LeaderboardEntry>, scaledPercentages : [Float], startPosition : Nat) : List.List<Float> {
     let numTiedEntries = List.size(tiedEntries);

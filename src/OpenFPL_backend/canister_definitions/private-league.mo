@@ -14,7 +14,6 @@ import Option "mo:base/Option";
 import Int64 "mo:base/Int64";
 import Float "mo:base/Float";
 import Text "mo:base/Text";
-import TrieMap "mo:base/TrieMap";
 import Utilities "../utils/utilities";
 import Environment "../utils/Environment";
 import Constants "../utils/Constants";
@@ -39,9 +38,9 @@ actor class _PrivateLeague() {
 
     private stable var privateLeague: ?T.PrivateLeague = null;
 
-    private stable var seasonRewards : List.List<T.SeasonRewards> = List.nil();
-    private stable var monthlyRewards : List.List<T.MonthlyRewards> = List.nil();
     private stable var weeklyRewards : List.List<T.WeeklyRewards> = List.nil();
+    private stable var monthlyRewards : List.List<T.MonthlyRewards> = List.nil();
+    private stable var seasonRewards : List.List<T.SeasonRewards> = List.nil();
     
     public shared ({ caller }) func getPrivateLeague() : async Result.Result<DTOs.PrivateLeagueDTO, T.Error> {
         assert not Principal.isAnonymous(caller);
@@ -132,7 +131,6 @@ actor class _PrivateLeague() {
 
         switch(seasonRewardPool){
             case (?foundRewardPool){
-        
                 label leaderboardLoop for(season in Iter.fromArray(weeklyLeaderboards)){
                     if(season.0 == seasonId){
                         for(gw in Iter.fromArray(season.1)){
@@ -209,262 +207,253 @@ actor class _PrivateLeague() {
 
     public func distributeWeeklyRewards(weeklyRewardPool : Nat64, weeklyLeaderboard : T.WeeklyLeaderboard) : async () {
 
-      let weeklyRewardAmount = weeklyRewardPool / 38;
-      
-      var payouts = List.nil<Float>();
-      var currentEntries = weeklyLeaderboard.entries;
+        let weeklyRewardAmount = weeklyRewardPool / 38;
+        var payouts = List.nil<Float>();
+        var currentEntries = weeklyLeaderboard.entries;
 
-      let scaledPercentages = if (weeklyLeaderboard.totalEntries != 100) {
-        Utilities.scalePercentages(percentages, weeklyLeaderboard.totalEntries);
-      } else {
-        percentages;
-      };
+        let scaledPercentages = Utilities.scalePercentages(percentages, weeklyLeaderboard.totalEntries);
 
-      while (not List.isNil(currentEntries)) {
-        let (currentEntry, rest) = List.pop(currentEntries);
-        currentEntries := rest;
-        switch (currentEntry) {
-          case (null) {};
-          case (?foundEntry) {
-            let (nextEntry, _) = List.pop(rest);
-            switch (nextEntry) {
-              case (null) {
-                let payout = scaledPercentages[foundEntry.position - 1];
-                payouts := List.push(payout, payouts);
-              };
-              case (?foundNextEntry) {
-                if (foundEntry.points == foundNextEntry.points) {
-                  let tiedEntries = Utilities.findTiedEntries(rest, foundEntry.points);
-                  let startPosition = foundEntry.position;
-                  let tiePayouts = Utilities.calculateTiePayouts(tiedEntries, scaledPercentages, startPosition);
-                  payouts := List.append(payouts, tiePayouts);
-
-                  var skipEntries = rest;
-                  label skipLoop while (not List.isNil(skipEntries)) {
-                    let (skipEntry, nextRest) = List.pop(skipEntries);
-                    skipEntries := nextRest;
-
-                    switch (skipEntry) {
-                      case (null) { break skipLoop };
-                      case (?entry) {
-                        if (entry.points != foundEntry.points) {
-                          currentEntries := skipEntries;
-                          break skipLoop;
-                        };
-                      };
+        while (not List.isNil(currentEntries)) {
+            let (currentEntry, rest) = List.pop(currentEntries);
+            currentEntries := rest;
+            switch (currentEntry) {
+            case (null) {};
+            case (?foundEntry) {
+                let (nextEntry, _) = List.pop(rest);
+                switch (nextEntry) {
+                    case (null) {
+                        let payout = scaledPercentages[foundEntry.position - 1];
+                        payouts := List.push(payout, payouts);
                     };
-                  };
-                } else {
-                  let payout = scaledPercentages[foundEntry.position - 1];
-                  payouts := List.push(payout, payouts);
+                    case (?foundNextEntry) {
+                        if (foundEntry.points == foundNextEntry.points) {
+                        let tiedEntries = Utilities.findTiedEntries(rest, foundEntry.points);
+                        let startPosition = foundEntry.position;
+                        let tiePayouts = Utilities.calculateTiePayouts(tiedEntries, scaledPercentages, startPosition);
+                        payouts := List.append(payouts, tiePayouts);
+
+                        var skipEntries = rest;
+                        label skipLoop while (not List.isNil(skipEntries)) {
+                            let (skipEntry, nextRest) = List.pop(skipEntries);
+                            skipEntries := nextRest;
+
+                            switch (skipEntry) {
+                            case (null) { break skipLoop };
+                            case (?entry) {
+                                if (entry.points != foundEntry.points) {
+                                currentEntries := skipEntries;
+                                break skipLoop;
+                                };
+                            };
+                            };
+                        };
+                        } else {
+                        let payout = scaledPercentages[foundEntry.position - 1];
+                        payouts := List.push(payout, payouts);
+                        };
+                    };
                 };
-              };
+
             };
-
-          };
+            };
         };
-      };
 
-      payouts := List.reverse(payouts);
-      let payoutsArray = List.toArray(payouts);
-      let rewardBuffer = Buffer.fromArray<T.RewardEntry>([]);
+        payouts := List.reverse(payouts);
+        let payoutsArray = List.toArray(payouts);
+        let rewardBuffer = Buffer.fromArray<T.RewardEntry>([]);
 
-      for (leadeerboardEntry in Iter.fromArray(weeklyLeaderboards)) { //todo
-        let winner = weeklyLeaderboard.entries[key];
-        let prize = Int64.toNat64(Float.toInt64(payoutsArray[key])) * weeklyRewardAmount;
-        
-        let openfpl_backend_canister = actor (main_canister_id) : actor {
-            payPrivateLeagueRewards : (winnerPrincipalId: T.PrincipalId, prize: Nat64) -> async ();
+        var key = 0;
+        for (winner in Iter.fromList(weeklyLeaderboard.entries)) {
+            
+            let prize = Int64.toNat64(Float.toInt64(payoutsArray[key])) * weeklyRewardAmount;
+            
+            let openfpl_backend_canister = actor (main_canister_id) : actor {
+                payPrivateLeagueRewards : (winnerPrincipalId: T.PrincipalId, prize: Nat64) -> async ();
+            };
+            
+            await openfpl_backend_canister.payPrivateLeagueRewards(winner.principalId, prize);
+            
+            rewardBuffer.add({
+                principalId = winner.principalId;
+                rewardType = #WeeklyLeaderboard;
+                position = winner.position;
+                amount = prize;
+            });
+            key += 1;
         };
-        await openfpl_backend_canister.payPrivateLeagueRewards(winner.principalId, prize);
-        
-        rewardBuffer.add({
-          principalId = winner.principalId;
-          rewardType = #WeeklyLeaderboard;
-          position = winner.position;
-          amount = prize;
-        });
-      };
 
-      let newWeeklyRewards : T.WeeklyRewards = {
-        seasonId = weeklyLeaderboard.seasonId;
-        gameweek = weeklyLeaderboard.gameweek;
-        rewards = List.fromArray(Buffer.toArray(rewardBuffer));
-      };
+        let newWeeklyRewards : T.WeeklyRewards = {
+            seasonId = weeklyLeaderboard.seasonId;
+            gameweek = weeklyLeaderboard.gameweek;
+            rewards = List.fromArray(Buffer.toArray(rewardBuffer));
+        };
 
-      weeklyRewards := List.append(weeklyRewards, List.make<T.WeeklyRewards>(newWeeklyRewards));
+        weeklyRewards := List.append(weeklyRewards, List.make<T.WeeklyRewards>(newWeeklyRewards));
     };
 
     public func distributeMonthlyRewards(monthlyRewardPool : Nat64, monthlyLeaderboard : T.MonthlyLeaderboard) : async () {
 
-      let monthlyRewardAmount = monthlyRewardPool / 10;
-      
-      var payouts = List.nil<Float>();
-      var currentEntries = List.fromArray(monthlyLeaderboard.entries);
+        let monthlyRewardAmount = monthlyRewardPool / 10;
+        var payouts = List.nil<Float>();
+        var currentEntries = monthlyLeaderboard.entries;
 
-      let scaledPercentages = if (monthlyLeaderboard.totalEntries < 100) {
-        Utilities.scalePercentages(percentages, monthlyLeaderboard.totalEntries);
-      } else {
-        percentages;
-      };
+        let scaledPercentages = Utilities.scalePercentages(percentages, monthlyLeaderboard.totalEntries);
 
-      while (not List.isNil(currentEntries)) {
-        let (currentEntry, rest) = List.pop(currentEntries);
-        currentEntries := rest;
-        switch (currentEntry) {
-          case (null) {};
-          case (?foundEntry) {
-            let (nextEntry, _) = List.pop(rest);
-            switch (nextEntry) {
-              case (null) {
-                let payout = scaledPercentages[foundEntry.position - 1];
-                payouts := List.push(payout, payouts);
-              };
-              case (?foundNextEntry) {
-                if (foundEntry.points == foundNextEntry.points) {
-                  let tiedEntries = Utilities.findTiedEntries(rest, foundEntry.points);
-                  let startPosition = foundEntry.position;
-                  let tiePayouts = Utilities.calculateTiePayouts(tiedEntries, scaledPercentages, startPosition);
-                  payouts := List.append(payouts, tiePayouts);
-
-                  var skipEntries = rest;
-                  label skipLoop while (not List.isNil(skipEntries)) {
-                    let (skipEntry, nextRest) = List.pop(skipEntries);
-                    skipEntries := nextRest;
-
-                    switch (skipEntry) {
-                      case (null) { break skipLoop };
-                      case (?entry) {
-                        if (entry.points != foundEntry.points) {
-                          currentEntries := skipEntries;
-                          break skipLoop;
-                        };
-                      };
-                    };
-                  };
-                } else {
-                  let payout = scaledPercentages[foundEntry.position - 1];
-                  payouts := List.push(payout, payouts);
+        while (not List.isNil(currentEntries)) {
+            let (currentEntry, rest) = List.pop(currentEntries);
+            currentEntries := rest;
+            switch (currentEntry) {
+            case (null) {};
+            case (?foundEntry) {
+                let (nextEntry, _) = List.pop(rest);
+                switch (nextEntry) {
+                case (null) {
+                    let payout = scaledPercentages[foundEntry.position - 1];
+                    payouts := List.push(payout, payouts);
                 };
-              };
+                case (?foundNextEntry) {
+                    if (foundEntry.points == foundNextEntry.points) {
+                    let tiedEntries = Utilities.findTiedEntries(rest, foundEntry.points);
+                    let startPosition = foundEntry.position;
+                    let tiePayouts = Utilities.calculateTiePayouts(tiedEntries, scaledPercentages, startPosition);
+                    payouts := List.append(payouts, tiePayouts);
+
+                    var skipEntries = rest;
+                    label skipLoop while (not List.isNil(skipEntries)) {
+                        let (skipEntry, nextRest) = List.pop(skipEntries);
+                        skipEntries := nextRest;
+
+                        switch (skipEntry) {
+                        case (null) { break skipLoop };
+                        case (?entry) {
+                            if (entry.points != foundEntry.points) {
+                            currentEntries := skipEntries;
+                            break skipLoop;
+                            };
+                        };
+                        };
+                    };
+                    } else {
+                    let payout = scaledPercentages[foundEntry.position - 1];
+                    payouts := List.push(payout, payouts);
+                    };
+                };
+                };
+
             };
-
-          };
+            };
         };
-      };
 
-      payouts := List.reverse(payouts);
-      let payoutsArray = List.toArray(payouts);
-      let rewardBuffer = Buffer.fromArray<T.RewardEntry>([]);
+        payouts := List.reverse(payouts);
+        let payoutsArray = List.toArray(payouts);
+        let rewardBuffer = Buffer.fromArray<T.RewardEntry>([]);
 
-      for (key in monthlyLeaderboard.entries.keys()) {
-        let winner = monthlyLeaderboard.entries[key];
-        let prize = Int64.toNat64(Float.toInt64(payoutsArray[key])) * monthlyRewardAmount;
-        
-        let openfpl_backend_canister = actor (main_canister_id) : actor {
-            payPrivateLeagueRewards : (winnerPrincipalId: T.PrincipalId, prize: Nat64) -> async ();
+        var key = 0;
+        for (winner in Iter.fromList(monthlyLeaderboard.entries)) {
+            let prize = Int64.toNat64(Float.toInt64(payoutsArray[key])) * monthlyRewardAmount;
+            
+            let openfpl_backend_canister = actor (main_canister_id) : actor {
+                payPrivateLeagueRewards : (winnerPrincipalId: T.PrincipalId, prize: Nat64) -> async ();
+            };
+            await openfpl_backend_canister.payPrivateLeagueRewards(winner.principalId, prize);
+            
+            rewardBuffer.add({
+                principalId = winner.principalId;
+                rewardType = #MonthlyLeaderboard;
+                position = winner.position;
+                amount = prize;
+            });
+            key += 1;
         };
-        await openfpl_backend_canister.payPrivateLeagueRewards(winner.principalId, prize);
-        
-        rewardBuffer.add({
-          principalId = winner.principalId;
-          rewardType = #MonthlyLeaderboard;
-          position = winner.position;
-          amount = prize;
-        });
-      };
 
-      let newMonthlyRewards : T.MonthlyRewards = {
-        seasonId = monthlyLeaderboard.seasonId;
-        month = monthlyLeaderboard.month;
-        rewards = List.fromArray(Buffer.toArray(rewardBuffer));
-      };
+        let newMonthlyRewards : T.MonthlyRewards = {
+            seasonId = monthlyLeaderboard.seasonId;
+            month = monthlyLeaderboard.month;
+            rewards = List.fromArray(Buffer.toArray(rewardBuffer));
+        };
 
-      monthlyRewards := List.append(monthlyRewards, List.make<T.MonthlyRewards>(newMonthlyRewards));
+        monthlyRewards := List.append(monthlyRewards, List.make<T.MonthlyRewards>(newMonthlyRewards));
     };
 
     public func distributeSeasonRewards(seasonRewardPool : Nat64, seasonLeaderboard : T.SeasonLeaderboard) : async () {
 
-      var payouts = List.nil<Float>();
-      var currentEntries = List.fromArray(seasonLeaderboard.entries);
+        var payouts = List.nil<Float>();
+        var currentEntries = seasonLeaderboard.entries;
 
-      let scaledPercentages = if (seasonLeaderboard.totalEntries < 100) {
-        Utilities.scalePercentages(percentages, seasonLeaderboard.totalEntries);
-      } else {
-        percentages;
-      };
+        let scaledPercentages = Utilities.scalePercentages(percentages, seasonLeaderboard.totalEntries);
 
-      while (not List.isNil(currentEntries)) {
-        let (currentEntry, rest) = List.pop(currentEntries);
-        currentEntries := rest;
-        switch (currentEntry) {
-          case (null) {};
-          case (?foundEntry) {
-            let (nextEntry, _) = List.pop(rest);
-            switch (nextEntry) {
-              case (null) {
-                let payout = scaledPercentages[foundEntry.position - 1];
-                payouts := List.push(payout, payouts);
-              };
-              case (?foundNextEntry) {
-                if (foundEntry.points == foundNextEntry.points) {
-                  let tiedEntries = Utilities.findTiedEntries(rest, foundEntry.points);
-                  let startPosition = foundEntry.position;
-                  let tiePayouts = Utilities.calculateTiePayouts(tiedEntries, scaledPercentages, startPosition);
-                  payouts := List.append(payouts, tiePayouts);
-
-                  var skipEntries = rest;
-                  label skipLoop while (not List.isNil(skipEntries)) {
-                    let (skipEntry, nextRest) = List.pop(skipEntries);
-                    skipEntries := nextRest;
-
-                    switch (skipEntry) {
-                      case (null) { break skipLoop };
-                      case (?entry) {
-                        if (entry.points != foundEntry.points) {
-                          currentEntries := skipEntries;
-                          break skipLoop;
-                        };
-                      };
-                    };
-                  };
-                } else {
-                  let payout = scaledPercentages[foundEntry.position - 1];
-                  payouts := List.push(payout, payouts);
+        while (not List.isNil(currentEntries)) {
+            let (currentEntry, rest) = List.pop(currentEntries);
+            currentEntries := rest;
+            switch (currentEntry) {
+            case (null) {};
+            case (?foundEntry) {
+                let (nextEntry, _) = List.pop(rest);
+                switch (nextEntry) {
+                case (null) {
+                    let payout = scaledPercentages[foundEntry.position - 1];
+                    payouts := List.push(payout, payouts);
                 };
-              };
+                case (?foundNextEntry) {
+                    if (foundEntry.points == foundNextEntry.points) {
+                    let tiedEntries = Utilities.findTiedEntries(rest, foundEntry.points);
+                    let startPosition = foundEntry.position;
+                    let tiePayouts = Utilities.calculateTiePayouts(tiedEntries, scaledPercentages, startPosition);
+                    payouts := List.append(payouts, tiePayouts);
+
+                    var skipEntries = rest;
+                    label skipLoop while (not List.isNil(skipEntries)) {
+                        let (skipEntry, nextRest) = List.pop(skipEntries);
+                        skipEntries := nextRest;
+
+                        switch (skipEntry) {
+                        case (null) { break skipLoop };
+                        case (?entry) {
+                            if (entry.points != foundEntry.points) {
+                            currentEntries := skipEntries;
+                            break skipLoop;
+                            };
+                        };
+                        };
+                    };
+                    } else {
+                    let payout = scaledPercentages[foundEntry.position - 1];
+                    payouts := List.push(payout, payouts);
+                    };
+                };
+                };
+
             };
-
-          };
+            };
         };
-      };
 
-      payouts := List.reverse(payouts);
-      let payoutsArray = List.toArray(payouts);
-      let rewardBuffer = Buffer.fromArray<T.RewardEntry>([]);
+        payouts := List.reverse(payouts);
+        let payoutsArray = List.toArray(payouts);
+        let rewardBuffer = Buffer.fromArray<T.RewardEntry>([]);
 
-      for (key in seasonLeaderboard.entries.keys()) {
-        let winner = seasonLeaderboard.entries[key];
-        let prize = Int64.toNat64(Float.toInt64(payoutsArray[key])) * seasonRewardPool;
-        
-        let openfpl_backend_canister = actor (main_canister_id) : actor {
-            payPrivateLeagueRewards : (winnerPrincipalId: T.PrincipalId, prize: Nat64) -> async ();
+        var key = 0;
+        for (winner in Iter.fromList(seasonLeaderboard.entries)) {
+            let prize = Int64.toNat64(Float.toInt64(payoutsArray[key])) * seasonRewardPool;
+            
+            let openfpl_backend_canister = actor (main_canister_id) : actor {
+                payPrivateLeagueRewards : (winnerPrincipalId: T.PrincipalId, prize: Nat64) -> async ();
+            };
+            await openfpl_backend_canister.payPrivateLeagueRewards(winner.principalId, prize);
+            
+            rewardBuffer.add({
+                principalId = winner.principalId;
+                rewardType = #WeeklyLeaderboard;
+                position = winner.position;
+                amount = prize;
+            });
+            key += 1;
         };
-        await openfpl_backend_canister.payPrivateLeagueRewards(winner.principalId, prize);
-        
-        rewardBuffer.add({
-          principalId = winner.principalId;
-          rewardType = #WeeklyLeaderboard;
-          position = winner.position;
-          amount = prize;
-        });
-      };
 
-      let newSeasonRewards : T.SeasonRewards = {
-        seasonId = seasonLeaderboard.seasonId;
-        rewards = List.fromArray(Buffer.toArray(rewardBuffer));
-      };
-      seasonRewards := List.append(seasonRewards, List.make<T.SeasonRewards>(newSeasonRewards));
+        let newSeasonRewards : T.SeasonRewards = {
+            seasonId = seasonLeaderboard.seasonId;
+            rewards = List.fromArray(Buffer.toArray(rewardBuffer));
+        };
+        seasonRewards := List.append(seasonRewards, List.make<T.SeasonRewards>(newSeasonRewards));
     };
 
 

@@ -51,11 +51,7 @@ module {
       var payouts = List.nil<Float>();
       var currentEntries = List.fromArray(weeklyLeaderboard.entries);
 
-      let scaledPercentages = if (weeklyLeaderboard.totalEntries < 100) {
-        Utilities.scalePercentages(RewardPercentages.percentages, weeklyLeaderboard.totalEntries);
-      } else {
-        RewardPercentages.percentages;
-      };
+      let scaledPercentages = Utilities.scalePercentages(RewardPercentages.percentages, weeklyLeaderboard.totalEntries);
 
       while (not List.isNil(currentEntries)) {
         let (currentEntry, rest) = List.pop(currentEntries);
@@ -159,11 +155,7 @@ module {
       var payouts = List.nil<Float>();
       var currentEntries = List.fromArray(monthlyLeaderboard.entries);
 
-      let scaledPercentages = if (monthlyLeaderboard.totalEntries < 100) {
-        Utilities.scalePercentages(RewardPercentages.percentages, monthlyLeaderboard.totalEntries);
-      } else {
-        RewardPercentages.percentages;
-      };
+      let scaledPercentages = Utilities.scalePercentages(RewardPercentages.percentages, monthlyLeaderboard.totalEntries);
 
       while (not List.isNil(currentEntries)) {
         let (currentEntry, rest) = List.pop(currentEntries);
@@ -242,12 +234,8 @@ module {
       var payouts = List.nil<Float>();
       var currentEntries = List.fromArray(seasonLeaderboard.entries);
 
-      let scaledPercentages = if (seasonLeaderboard.totalEntries < 100) {
-        Utilities.scalePercentages(RewardPercentages.percentages, seasonLeaderboard.totalEntries);
-      } else {
-        RewardPercentages.percentages;
-      };
-
+      let scaledPercentages = Utilities.scalePercentages(RewardPercentages.percentages, seasonLeaderboard.totalEntries);
+      
       while (not List.isNil(currentEntries)) {
         let (currentEntry, rest) = List.pop(currentEntries);
         currentEntries := rest;
