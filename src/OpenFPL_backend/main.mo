@@ -203,7 +203,7 @@ actor Self {
 
   public shared ({ caller }) func executeSubmitFixtureData(submitFixtureData : DTOs.SubmitFixtureDataDTO) : async () {
     assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-    return await seasonManager.executeSubmitFixtureData(submitFixtureData);
+    return await seasonManager.executeSubmitFixtureData(Principal.fromActor(Self), submitFixtureData);
   };
 
   public shared query ({ caller }) func validateAddInitialFixtures(addInitialFixturesDTO : DTOs.AddInitialFixturesDTO) : async T.RustResult {
@@ -644,30 +644,12 @@ actor Self {
     return #ok(treasuryManager.getTokenList());
   };
 
-  public shared ({ caller }) func payPrivateLeagueRewards(managerId : T.PrincipalId, fpl : Nat64) : () {
+  public shared ({ caller }) func payPrivateLeagueRewards(managerId : T.PrincipalId, amount : Nat64) : () {
     assert not Principal.isAnonymous(caller);
     let privateLeagueCanisterId = Principal.toText(caller);
     assert seasonManager.leagueExists(privateLeagueCanisterId);
-    assert seasonManager.managerInLeague(managerId, privateLeagueCanisterId);
-    seasonManager.payPrivateLeagueReward(privateLeagueCanisterId, managerId, fpl);
-    //TODO: 
-    //get the callers account balance
-        //this will be the balance owned by the DAO for the private league when it has been setup
-      
-      //the actual tokens are controller by the backend
-      
-      
-      
-    let ledger : SNSToken.Interface = actor (tokenCanisterId);
-      
-    let _ = await ledger.icrc1_transfer ({
-      memo = ?Text.encodeUtf8("0");
-        from_subaccount = ?Account.principalToSubaccount(Principal.fromText(tokenCanisterId));
-        to = { owner = defaultAccount; subaccount = ?Account.principalToSubaccount(Principal.fromText(principalId)) };
-        amount = Nat64.toNat(fpl);
-        fee = ?Nat64.toNat(Constants.FPL_TRANSACTION_FEE);
-        created_at_time = ?Nat64.fromNat(Int.abs(Time.now()))
-    });
+    assert seasonManager.isPrivateLeagueMember(managerId, privateLeagueCanisterId);
+    seasonManager.payPrivateLeagueReward(privateLeagueCanisterId, managerId, amount);
   };
 
 

@@ -25,6 +25,7 @@ import Utilities "utils/utilities";
 import PrivateLeaguesManager "private-leagues-manager";
 import SNSToken "sns-wrappers/ledger";
 import Environment "utils/Environment";
+import Account "lib/Account";
 
 module {
 
@@ -930,6 +931,42 @@ module {
 
     public func inviteExists(canisterId: T.CanisterId, managerId: T.PrincipalId) :  async Bool {
       return await privateLeaguesManager.inviteExists(canisterId, managerId);
+    };
+
+    public func payPrivateLeagueReward(defaultAccount: Principal, privateLeagueCanisterId: T.CanisterId, tokens: [T.TokenInfo], winnerPrincipal: T.PrincipalId, amount: Nat64) : async () {
+      
+      let privateLeague = await getPrivateLeague(privateLeagueCanisterId);
+
+      switch(privateLeague){
+        case (#ok foundPrivateLeague){
+
+          var tokenCanisterId = "";
+          var tokenTransactionFee: Nat = 0;
+          for(token in Iter.fromArray(tokens)){
+            if(token.id == foundPrivateLeague.tokenId){
+              tokenCanisterId := token.canisterId;
+              tokenTransactionFee := token.fee;
+            }
+          };
+
+          if(tokenCanisterId == ""){
+            return;
+          };
+      
+          let ledger : SNSToken.Interface = actor (tokenCanisterId);
+            
+          let _ = await ledger.icrc1_transfer ({
+            memo = ?Text.encodeUtf8("0");
+              from_subaccount = ?Account.principalToSubaccount(Principal.fromText(tokenCanisterId));
+              to = { owner = defaultAccount; subaccount = ?Account.principalToSubaccount(Principal.fromText(winnerPrincipal)) };
+              amount = Nat64.toNat(amount);
+              fee = ?tokenTransactionFee;
+              created_at_time = ?Nat64.fromNat(Int.abs(Time.now()))
+          });
+          
+        };
+        case (_){ };
+      };
     };
 
     //Stable data getters and setters:
