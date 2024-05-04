@@ -17,6 +17,7 @@ import Order "mo:base/Order";
 import WeeklyLeaderboardCanister "../canister_definitions/weekly-leaderboard";
 import MonthlyLeaderboardCanister "../canister_definitions/monthly-leaderboard";
 import SeasonLeaderboardCanister "../canister_definitions/season-leaderboard";
+import PrivateLeaguesManager "../private-leagues-manager";
 
 module {
 
@@ -611,9 +612,33 @@ module {
       };
     };
 
-    public func getWeeklyLeaderboardEntries(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async [T.LeaderboardEntry] {
-      //Todo
-      return [];
+    public func sendWeeklyLeaderboardEntries(privateLeaguesManager: PrivateLeaguesManager.PrivateLeaguesManager, seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async [T.LeaderboardEntry] {
+
+      let weeklyLeaderboardCanister = List.find<T.WeeklyLeaderboardCanister>(
+        weeklyLeaderboardCanisters,
+        func(weeklyLeaderboard : T.WeeklyLeaderboardCanister) : Bool {
+          return weeklyLeaderboard.seasonId == seasonId and weeklyLeaderboard.gameweek == gameweek;
+        },
+      );
+
+      switch(weeklyLeaderboardCanister){
+        case(?foundCanisterInfo){
+          let weekly_leaderboard_canister = actor (foundCanisterInfo.canisterId) : actor {
+            getEntries : (limit : Nat, offset : Nat, searchTerm : Text) -> async ?DTOs.WeeklyLeaderboardDTO;
+            getTotalEntries : () -> async Nat;
+          };
+
+          //get all the entry chunks then send to backend
+          //todo, ensure the private league manager function is setup to receive the chunks
+          await privateLeaguesManager.sendWeeklyLeaderboardEntries(systemState.calculationSeasonId, systemState.calculationGameweek, weeklyLeaderboardEntries, managerComposite.getManagerCanisterIds());
+          await privateLeaguesManager.sendMonthlyLeaderboardEntries(systemState.calculationSeasonId, systemState.calculationMonth, monthlyLeaderboardEntries, managerComposite.getManagerCanisterIds());
+          await privateLeaguesManager.sendSeasonLeaderboardEntries(systemState.calculationSeasonId, seasonLeaderboardEntries, managerComposite.getManagerCanisterIds());
+      
+        };
+        case (null){
+          return [];
+        }
+      };
     };
 
     public func getMonthlyLeaderboardEntries(seasonId: T.SeasonId, month: T.CalendarMonth) : async [T.LeaderboardEntry] {

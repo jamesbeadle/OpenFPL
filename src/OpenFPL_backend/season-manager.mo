@@ -622,13 +622,10 @@ module {
       await managerComposite.calculateFantasyTeamScores(playerPointsMap, systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
       await leaderboardComposite.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth, managerComposite.getStableUniqueManagerCanisterIds());
       
-      let weeklyLeaderboardEntries = await leaderboardComposite.getWeeklyLeaderboardEntries(systemState.calculationSeasonId, systemState.calculationGameweek);
-      let monthlyLeaderboardEntries = await leaderboardComposite.getMonthlyLeaderboardEntries(systemState.calculationSeasonId, systemState.calculationMonth);
-      let seasonLeaderboardEntries = await leaderboardComposite.getSeasonLeaderboardEntries(systemState.calculationSeasonId);
+      let weeklyLeaderboardEntries = await leaderboardComposite.sendWeeklyLeaderboardEntries(privateLeaguesManager, systemState.calculationSeasonId, systemState.calculationGameweek);
+      let monthlyLeaderboardEntries = await leaderboardComposite.sendMonthlyLeaderboardEntries(privateLeaguesManager, systemState.calculationSeasonId, systemState.calculationMonth);
+      let seasonLeaderboardEntries = await leaderboardComposite.sendSeasonLeaderboardEntries(privateLeaguesManager, systemState.calculationSeasonId);
 
-      await privateLeaguesManager.sendWeeklyLeaderboardEntries(systemState.calculationSeasonId, systemState.calculationGameweek, weeklyLeaderboardEntries, managerComposite.getManagerCanisterIds());
-      await privateLeaguesManager.sendMonthlyLeaderboardEntries(systemState.calculationSeasonId, systemState.calculationMonth, monthlyLeaderboardEntries, managerComposite.getManagerCanisterIds());
-      await privateLeaguesManager.sendSeasonLeaderboardEntries(systemState.calculationSeasonId, seasonLeaderboardEntries, managerComposite.getManagerCanisterIds());
       await privateLeaguesManager.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
       
       let rewardPool = rewardPools.get(systemState.calculationSeasonId);
@@ -846,7 +843,6 @@ module {
       await clubComposite.executeUpdateClub(updateClubDTO);
       await updateCacheHash("clubs");
     };
-
 
     //Private league functions
 
