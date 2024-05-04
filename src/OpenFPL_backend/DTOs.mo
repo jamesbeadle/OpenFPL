@@ -464,6 +464,7 @@ module DTOs {
     adminFee: Nat8;
     entryFee: Nat;
     paymentChoice: T.PaymentChoice;
+    tokenId: T.TokenId;
   };
 
   public type ManagerPrivateLeaguesDTO = {
@@ -491,8 +492,8 @@ module DTOs {
     name: Text;
     maxEntrants: Nat16;
     entrants: Nat16;
-    picture: Blob;
-    banner: Blob;
+    picture: ?Blob;
+    banner: ?Blob;
     entryType: T.EntryRequirement;
     tokenId: T.TokenId;
     entryFee: Nat;

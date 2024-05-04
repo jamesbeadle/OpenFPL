@@ -196,7 +196,7 @@ module {
       let _ = await Utilities.updateCanister_(canister, backendCanisterController, IC);
       let canister_principal = Principal.fromActor(canister);
 
-      let _ = await canister.setAdmin(Principal.toText(leagueCreatorId));
+      let _ = await canister.initPrivateLeague(Principal.toText(leagueCreatorId), newPrivateLeague);
 
       let nameIndexBuffer = Buffer.fromArray<(T.CanisterId, Text)>(privateLeagueNameIndex);
       nameIndexBuffer.add((Principal.toText(canister_principal),newPrivateLeague.name));
@@ -276,7 +276,7 @@ module {
 
     public func updateLeaguePicture(canisterId: T.CanisterId, picture: Blob) : async Result.Result<(), T.Error>{
       let private_league_canister = actor (canisterId) : actor {
-        updateLeaguePicture : (picture: Blob) -> async Result.Result<(), T.Error>;
+        updateLeaguePicture : (picture: ?Blob) -> async Result.Result<(), T.Error>;
       };
 
       return await private_league_canister.updateLeaguePicture(picture);
@@ -284,7 +284,7 @@ module {
 
     public func updateLeagueBanner(canisterId: T.CanisterId, banner: Blob) : async Result.Result<(), T.Error>{
       let private_league_canister = actor (canisterId) : actor {
-        updateLeagueBanner : (banner: Blob) -> async Result.Result<(), T.Error>;
+        updateLeagueBanner : (banner: ?Blob) -> async Result.Result<(), T.Error>;
       };
 
       return await private_league_canister.updateLeagueBanner(banner);

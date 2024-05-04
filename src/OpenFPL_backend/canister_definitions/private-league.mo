@@ -60,6 +60,7 @@ actor class _PrivateLeague() {
                     tokenId = foundPrivateLeague.tokenId;
                     entryFee = foundPrivateLeague.entryFee;
                     adminFee = foundPrivateLeague.adminFee; 
+                    creatorPrincipalId = foundPrivateLeague.createdById;
                 });
             }
         };
@@ -117,7 +118,7 @@ actor class _PrivateLeague() {
         await calculateSeasonLeaderboard(seasonId);
     };
 
-    public shared ({ caller }) func payWeeklyRewards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) : async (){
+    public shared ({ caller }) func payWeeklyRewards(seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async (){
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
         assert principalId == main_canister_id;
@@ -810,7 +811,7 @@ actor class _PrivateLeague() {
         return #ok();
     };
 
-    public shared ({ caller }) func updateLeaguePicture(picture: Blob) : async Result.Result<(), T.Error> {
+    public shared ({ caller }) func updateLeaguePicture(picture: ?Blob) : async Result.Result<(), T.Error> {
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
         assert principalId == main_canister_id;
@@ -829,6 +830,7 @@ actor class _PrivateLeague() {
                     entryFee = foundPrivateLeague.entryFee;
                     adminFee = foundPrivateLeague.adminFee;
                     entryType = foundPrivateLeague.entryType;
+                    createdById = foundPrivateLeague.createdById;
                 };
                 return #ok();
             }
@@ -836,7 +838,7 @@ actor class _PrivateLeague() {
         return #err(#NotFound);
     };
 
-    public shared ({ caller }) func updateLeagueBanner(banner: Blob) : async Result.Result<(), T.Error> {
+    public shared ({ caller }) func updateLeagueBanner(banner: ?Blob) : async Result.Result<(), T.Error> {
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
         assert principalId == main_canister_id;
@@ -855,6 +857,7 @@ actor class _PrivateLeague() {
                     entryFee = foundPrivateLeague.entryFee;
                     adminFee = foundPrivateLeague.adminFee;
                     entryType = foundPrivateLeague.entryType;
+                    createdById = foundPrivateLeague.createdById;
                 };
                 return #ok();
             }
@@ -881,6 +884,7 @@ actor class _PrivateLeague() {
                     entryFee = foundPrivateLeague.entryFee;
                     adminFee = foundPrivateLeague.adminFee;
                     entryType = foundPrivateLeague.entryType;
+                    createdById = foundPrivateLeague.createdById;
                 };
                 return #ok();
             }
@@ -1135,14 +1139,57 @@ actor class _PrivateLeague() {
         cyclesCheckTimerId := ?Timer.setTimer<system>(#nanoseconds(cyclesCheckInterval), checkCanisterCycles);
     };
 
-    public shared ({ caller }) func setAdmin(userId: T.PrincipalId) : async Result.Result<(), T.Error>{
+    public shared ({ caller }) func initPrivateLeague(createdById: T.PrincipalId, newPrivateLeague: DTOs.CreatePrivateLeagueDTO) : async Result.Result<(), T.Error>{
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
         assert principalId == main_canister_id;
 
         let adminBuffer = Buffer.fromArray<T.PrincipalId>(leagueAdmins);
-        adminBuffer.add(userId);
+        adminBuffer.add(createdById);
         leagueAdmins := Buffer.toArray(adminBuffer);
+
+        privateLeague := ?{
+            adminFee = newPrivateLeague.adminFee;
+            banner = newPrivateLeague.banner;
+            createdById = createdById;
+            entryFee = newPrivateLeague.entryFee;
+            entryType = newPrivateLeague.entryRequirement;
+            maxEntrants = newPrivateLeague.entrants;
+            name = newPrivateLeague.name;
+            picture = newPrivateLeague.photo;
+            tokenId = newPrivateLeague.tokenId;
+            canisterId = "";
+        };
+
+        return #ok();
+    };
+
+    public shared ({ caller }) func setCanisterId(canisterId: T.CanisterId) : async Result.Result<(), T.Error>{
+        assert not Principal.isAnonymous(caller);
+        let principalId = Principal.toText(caller);
+        assert principalId == main_canister_id;
+
+        switch(privateLeague){
+            case (?foundPrivateLeague){
+
+                privateLeague := ?{
+                    adminFee = foundPrivateLeague.adminFee;
+                    banner = foundPrivateLeague.banner;
+                    createdById = foundPrivateLeague.createdById;
+                    entryFee = foundPrivateLeague.entryFee;
+                    entryType = foundPrivateLeague.entryType;
+                    maxEntrants = foundPrivateLeague.maxEntrants;
+                    name = foundPrivateLeague.name;
+                    picture = foundPrivateLeague.picture;
+                    tokenId = foundPrivateLeague.tokenId;
+                    canisterId = canisterId;
+                };
+            };
+            case (null){
+                return #err(#NotFound);
+            };
+        };
+
         return #ok();
     };
 

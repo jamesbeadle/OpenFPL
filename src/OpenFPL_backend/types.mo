@@ -411,11 +411,12 @@ module _Types {
   };
 
   public type PrivateLeague = {
-    canisterId: Text;
+    canisterId: CanisterId;
+    createdById: PrincipalId;
     name: Text;
     maxEntrants: Nat16;
-    picture: Blob;
-    banner: Blob;
+    picture: ?Blob;
+    banner: ?Blob;
     tokenId: TokenId;
     entryFee: Nat;
     adminFee: Nat8;
