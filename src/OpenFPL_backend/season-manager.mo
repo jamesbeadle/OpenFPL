@@ -507,7 +507,7 @@ module {
       rewardPools.put(seasonId, rewardPool);
     };
 
-    private func payWeeklyRewards(rewardPool : T.RewardPool) : async () {
+    private func payWeeklyRewards(defaultAccount: Principal, rewardPool : T.RewardPool) : async () {
       let weeklyLeaderboardCanisterId = await leaderboardComposite.getWeeklyCanisterId(systemState.calculationSeasonId, systemState.calculationGameweek);
       switch (weeklyLeaderboardCanisterId) {
         case (null) {};
@@ -524,12 +524,12 @@ module {
               return fixture.gameweek == weeklyLeaderboard.gameweek;
             },
           );
-          await managerComposite.payWeeklyRewards(rewardPool, weeklyLeaderboard, List.fromArray(gameweekFixtures));
+          await managerComposite.payWeeklyRewards(defaultAccount, rewardPool, weeklyLeaderboard, systemState.calculationSeasonId, systemState.calculationGameweek, List.fromArray(gameweekFixtures));
         };
       };
     };
 
-    private func payMonthlyRewards(rewardPool : T.RewardPool) : async () {
+    private func payMonthlyRewards(defaultAccount: Principal, rewardPool : T.RewardPool) : async () {
       
       let clubs = clubComposite.getClubs();
       for (club in Iter.fromArray(clubs)) {
@@ -538,17 +538,17 @@ module {
           case (null) {};
           case (?canisterId) {
             let monthly_leaderboard_canister = actor (canisterId) : actor {
-              getRewardLeaderboard : () -> async DTOs.MonthlyLeaderboardDTO;
+              getRewardLeaderboard : () -> async DTOs.ClubLeaderboardDTO;
             };
 
             let monthlyLeaderboard = await monthly_leaderboard_canister.getRewardLeaderboard();
-            await managerComposite.payMonthlyRewards(rewardPool, monthlyLeaderboard);
+            await managerComposite.payMonthlyRewards(defaultAccount, rewardPool, monthlyLeaderboard);
           };
         };
       };
     };
 
-    private func paySeasonRewards(rewardPool : T.RewardPool) : async () {
+    private func paySeasonRewards(defaultAccount: Principal, rewardPool : T.RewardPool) : async () {
       let seasonLeaderboardCanisterId = await leaderboardComposite.getSeasonCanisterId(systemState.calculationSeasonId);
       switch (seasonLeaderboardCanisterId) {
         case (null) {};
@@ -558,7 +558,7 @@ module {
           };
           let players = playerComposite.getActivePlayers(systemState.calculationSeasonId);
           let seasonLeaderboard = await season_leaderboard_canister.getRewardLeaderboard();
-          await managerComposite.paySeasonRewards(rewardPool, seasonLeaderboard, players, systemState.calculationSeasonId);
+          await managerComposite.paySeasonRewards(defaultAccount, rewardPool, seasonLeaderboard, players, systemState.calculationSeasonId);
         };
       };
     };
@@ -605,7 +605,7 @@ module {
       return seasonComposite.validateSubmitFixtureData(submitFixtureDataDTO);
     };
 
-    public func executeSubmitFixtureData(submitFixtureData : DTOs.SubmitFixtureDataDTO) : async () {
+    public func executeSubmitFixtureData(defaultAccount: Principal, submitFixtureData : DTOs.SubmitFixtureDataDTO) : async () {
       let players = playerComposite.getActivePlayers(systemState.calculationSeasonId);
       let populatedPlayerEvents = await seasonComposite.populatePlayerEventData(submitFixtureData, players);
       switch (populatedPlayerEvents) {
@@ -623,7 +623,7 @@ module {
       
       await privateLeaguesManager.sendWeeklyLeaderboardEntries(systemState.calculationSeasonId, systemState.calculationGameweek, weeklyLeaderboardEntries);
       await privateLeaguesManager.sendMonthlyLeaderboardEntries(systemState.calculationSeasonId, systemState.calculationMonth, monthlyLeaderboardEntries);
-      await privateLeaguesManager.sendSeasonLeaderboardEntries(systemState.calculationSeasonId, systemState.calculationSeasonId, seasonLeaderboardEntries);
+      await privateLeaguesManager.sendSeasonLeaderboardEntries(systemState.calculationSeasonId, seasonLeaderboardEntries);
       await privateLeaguesManager.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
       
       let rewardPool = rewardPools.get(systemState.calculationSeasonId);
@@ -637,22 +637,22 @@ module {
 
           if(gameweekComplete){
             await managerComposite.resetWeeklyTransfers();
-            await payWeeklyRewards(foundRewardPool);
-            await privateLeaguesManager.payWeeklyRewards();
+            await payWeeklyRewards(defaultAccount, foundRewardPool);
+            await privateLeaguesManager.payWeeklyRewards(systemState.calculationSeasonId, systemState.calculationGameweek);
             await incrementCalculationGameweek();
           };
 
           if(monthComplete){
             await managerComposite.resetBonusesAvailable();
-            await payMonthlyRewards(foundRewardPool);
-            await privateLeaguesManager.payMonthlyRewards();
+            await payMonthlyRewards(defaultAccount, foundRewardPool);
+            await privateLeaguesManager.payMonthlyRewards(systemState.calculationSeasonId, systemState.calculationMonth);
             await incrementCalculationMonth();
           };
 
           if(seasonComplete){
             await managerComposite.resetFantasyTeams(seasonComposite.getStableNextSeasonId());
-            await paySeasonRewards(foundRewardPool);
-            await privateLeaguesManager.paySeasonRewards();
+            await paySeasonRewards(defaultAccount, foundRewardPool);
+            await privateLeaguesManager.paySeasonRewards(systemState.calculationSeasonId);
             await incrementCalculationSeason();
             
             seasonComposite.createNewSeason(systemState);
@@ -904,11 +904,11 @@ module {
       return #err(#NotFound);
     };
 
-    public func updateLeaguePicture(canisterId: T.CanisterId, picture: Blob) : async Result.Result<(), T.Error> {
+    public func updateLeaguePicture(canisterId: T.CanisterId, picture: ?Blob) : async Result.Result<(), T.Error> {
       return await privateLeaguesManager.updateLeaguePicture(canisterId, picture);
     };
 
-    public func updateLeagueBanner(canisterId: T.CanisterId, banner: Blob) : async Result.Result<(), T.Error> {
+    public func updateLeagueBanner(canisterId: T.CanisterId, banner: ?Blob) : async Result.Result<(), T.Error> {
       return await privateLeaguesManager.updateLeagueBanner(canisterId, banner);
     };
 

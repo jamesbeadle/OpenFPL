@@ -1292,12 +1292,13 @@ module {
       await rewards.distributeWeeklyATHScoreRewards(defaultAccount, rewardPool.allTimeWeeklyHighScorePool, weeklyLeaderboard);
      };
 
-    public func payMonthlyRewards(defaultAccount: Principal, rewardPool : T.RewardPool, monthlyLeaderboards : [DTOs.ClubLeaderboardDTO]) : async () {
-      for(leaderboard in Iter.fromArray(monthlyLeaderboards)){
-        await rewards.distributeMonthlyRewards(defaultAccount, rewardPool, leaderboard, uniqueManagerCanisterIds);
-      };
-      await rewards.distributeMonthlyATHScoreRewards(defaultAccount, rewardPool.allTimeMonthlyHighScorePool, monthlyLeaderboards); //TODO this needs to be based on the sum of all club leadeboards
-     };
+    public func payMonthlyRewards(defaultAccount: Principal, rewardPool : T.RewardPool, monthlyLeaderboard : DTOs.ClubLeaderboardDTO) : async () {
+      await rewards.distributeMonthlyRewards(defaultAccount, rewardPool, monthlyLeaderboard, uniqueManagerCanisterIds);
+    };
+
+    public func distributeMonthlyATHScoreRewards(defaultAccount: Principal, rewardPool : T.RewardPool, monthlyLeaderboards : [DTOs.ClubLeaderboardDTO]) : async () {
+      await rewards.distributeMonthlyATHScoreRewards(defaultAccount, rewardPool.allTimeMonthlyHighScorePool, monthlyLeaderboards);
+    };
 
     public func paySeasonRewards(defaultAccount: Principal, rewardPool : T.RewardPool, seasonLeaderboard : DTOs.SeasonLeaderboardDTO, players : [DTOs.PlayerDTO], seasonId : T.SeasonId) : async () {
       await rewards.distributeSeasonRewards(defaultAccount, rewardPool.seasonLeaderboardPool , seasonLeaderboard);
