@@ -213,11 +213,16 @@ module {
 
       switch(privateLeague){
         case (#ok foundPrivateLeague){
-
-          //TODO: Check for admin fee
-          let adminFee: Nat = Nat8.toNat(foundPrivateLeague.adminFee) * foundPrivateLeague.entryFee / 100;
-          let remainingFee: Nat = foundPrivateLeague.entryFee - adminFee;
-
+          
+          var hasAdminFee = false;
+          var adminFee: Nat = 0;
+          var remainingFee: Nat = 0;
+          if(foundPrivateLeague.adminFee > 0){
+            hasAdminFee := true;
+            adminFee := Nat8.toNat(foundPrivateLeague.adminFee) * foundPrivateLeague.entryFee / 100;
+            remainingFee := foundPrivateLeague.entryFee - adminFee;
+          };
+                    
           let tokenId = foundPrivateLeague.tokenId;
           for(token in Iter.fromArray(tokenList)){
             if(token.id == tokenId){
@@ -231,6 +236,10 @@ module {
                 fee = ?token.fee;
                 created_at_time = ?Nat64.fromNat(Int.abs(Time.now()));
               });
+
+              if(not hasAdminFee){
+                return;
+              };
               
               let _ = await ledger.icrc1_transfer({
                 memo = ?Blob.fromArray([]);

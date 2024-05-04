@@ -538,7 +538,7 @@ module {
     };
 
     public func distributeMonthlyATHScoreRewards(defaultAccount : Principal, monthlyRewardPool : Nat64, monthlyLeaderboards : [DTOs.MonthlyLeaderboardDTO]) : async () {
-      let monthlyATHReward = monthlyRewardPool / 9;
+      let monthlyATHReward = monthlyRewardPool / 10;
       await mintToTreasury(monthlyATHReward, defaultAccount);
 
       let maybeLastHighScore = List.last<T.HighScoreRecord>(monthlyAllTimeHighScores);
