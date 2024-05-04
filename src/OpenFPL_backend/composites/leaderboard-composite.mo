@@ -612,7 +612,7 @@ module {
       };
     };
 
-    public func sendWeeklyLeaderboardEntries(privateLeaguesManager: PrivateLeaguesManager.PrivateLeaguesManager, seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async [T.LeaderboardEntry] {
+    public func sendWeeklyLeaderboardEntries(privateLeaguesManager: PrivateLeaguesManager.PrivateLeaguesManager, seasonId: T.SeasonId, gameweek: T.GameweekNumber, managerCanisterIdIndex: TrieMap.TrieMap<T.PrincipalId, T.CanisterId>) : async () {
 
       let weeklyLeaderboardCanister = List.find<T.WeeklyLeaderboardCanister>(
         weeklyLeaderboardCanisters,
@@ -622,33 +622,114 @@ module {
       );
 
       switch(weeklyLeaderboardCanister){
+        case (null) {};
         case(?foundCanisterInfo){
           let weekly_leaderboard_canister = actor (foundCanisterInfo.canisterId) : actor {
             getEntries : (limit : Nat, offset : Nat, searchTerm : Text) -> async ?DTOs.WeeklyLeaderboardDTO;
             getTotalEntries : () -> async Nat;
           };
 
-          //get all the entry chunks then send to backend
-          //todo, ensure the private league manager function is setup to receive the chunks
-          await privateLeaguesManager.sendWeeklyLeaderboardEntries(systemState.calculationSeasonId, systemState.calculationGameweek, weeklyLeaderboardEntries, managerComposite.getManagerCanisterIds());
-          await privateLeaguesManager.sendMonthlyLeaderboardEntries(systemState.calculationSeasonId, systemState.calculationMonth, monthlyLeaderboardEntries, managerComposite.getManagerCanisterIds());
-          await privateLeaguesManager.sendSeasonLeaderboardEntries(systemState.calculationSeasonId, seasonLeaderboardEntries, managerComposite.getManagerCanisterIds());
-      
+          let totalEntries = await weekly_leaderboard_canister.getTotalEntries();
+          let chunkSize : Nat = 1000;
+          var offset : Nat = 0;
+
+          label here loop {
+            if (offset >= totalEntries) {
+              break here;
+            };
+
+            let entriesDTO = await weekly_leaderboard_canister.getEntries(chunkSize, offset, "");
+            switch (entriesDTO) {
+              case (?dto) {
+                await privateLeaguesManager.sendWeeklyLeaderboardEntries(seasonId, gameweek, dto.entries, managerCanisterIdIndex);
+              };
+              case (null) { };
+            };
+
+            offset += chunkSize;
+          } while (offset < totalEntries);
         };
-        case (null){
-          return [];
-        }
       };
     };
 
-    public func getMonthlyLeaderboardEntries(seasonId: T.SeasonId, month: T.CalendarMonth) : async [T.LeaderboardEntry] {
-      //Todo
-      return [];
+    public func getMonthlyLeaderboardEntries(privateLeaguesManager: PrivateLeaguesManager.PrivateLeaguesManager, seasonId: T.SeasonId, month: T.CalendarMonth, managerCanisterIdIndex: TrieMap.TrieMap<T.PrincipalId, T.CanisterId>) : async () {
+
+      let monthlyLeaderboardCanister = List.find<T.MonthlyLeaderboardCanister>(
+        monthlyLeaderboardCanisters,
+        func(monthlyLeaderboard : T.MonthlyLeaderboardCanister) : Bool {
+          return monthlyLeaderboard.seasonId == seasonId and monthlyLeaderboard.month == month;
+        },
+      );
+
+      switch(monthlyLeaderboardCanister){
+        case (null) {};
+        case(?foundCanisterInfo){
+          let monthly_leaderboard_canister = actor (foundCanisterInfo.canisterId) : actor {
+            getEntries : (limit : Nat, offset : Nat, searchTerm : Text) -> async ?DTOs.MonthlyLeaderboardDTO;
+            getTotalEntries : () -> async Nat;
+          };
+
+          let totalEntries = await monthly_leaderboard_canister.getTotalEntries();
+          let chunkSize : Nat = 1000;
+          var offset : Nat = 0;
+
+          label here loop {
+            if (offset >= totalEntries) {
+              break here;
+            };
+
+            let entriesDTO = await monthly_leaderboard_canister.getEntries(chunkSize, offset, "");
+            switch (entriesDTO) {
+              case (?dto) {
+                await privateLeaguesManager.sendMonthlyLeaderboardEntries(seasonId, month, dto.entries, managerCanisterIdIndex);
+              };
+              case (null) { };
+            };
+
+            offset += chunkSize;
+          } while (offset < totalEntries);
+        };
+      };
     };
 
-    public func getSeasonLeaderboardEntries(seasonId: T.SeasonId) : async [T.LeaderboardEntry] {
-      //Todo
-      return [];
+    public func getSeasonLeaderboardEntries(privateLeaguesManager: PrivateLeaguesManager.PrivateLeaguesManager, seasonId: T.SeasonId, managerCanisterIdIndex: TrieMap.TrieMap<T.PrincipalId, T.CanisterId>) : async () {
+
+      let seasonLeaderboardCanister = List.find<T.SeasonLeaderboardCanister>(
+        seasonLeaderboardCanisters,
+        func(seasonLeaderboard : T.SeasonLeaderboardCanister) : Bool {
+          return seasonLeaderboard.seasonId == seasonId;
+        },
+      );
+
+      switch(seasonLeaderboardCanister){
+        case (null) {};
+        case(?foundCanisterInfo){
+          let season_leaderboard_canister = actor (foundCanisterInfo.canisterId) : actor {
+            getEntries : (limit : Nat, offset : Nat, searchTerm : Text) -> async ?DTOs.SeasonLeaderboardDTO;
+            getTotalEntries : () -> async Nat;
+          };
+
+          let totalEntries = await season_leaderboard_canister.getTotalEntries();
+          let chunkSize : Nat = 1000;
+          var offset : Nat = 0;
+
+          label here loop {
+            if (offset >= totalEntries) {
+              break here;
+            };
+
+            let entriesDTO = await season_leaderboard_canister.getEntries(chunkSize, offset, "");
+            switch (entriesDTO) {
+              case (?dto) {
+                await privateLeaguesManager.sendSeasonLeaderboardEntries(seasonId, dto.entries, managerCanisterIdIndex);
+              };
+              case (null) { };
+            };
+
+            offset += chunkSize;
+          } while (offset < totalEntries);
+        };
+      };
     };
 
     public func getStableSeasonLeaderboardCanisters() : [T.SeasonLeaderboardCanister] {

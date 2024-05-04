@@ -103,6 +103,21 @@ actor class _MonthlyLeaderboardCanister() {
     };
   };
 
+  public shared query ({ caller }) func getTotalEntries() : async Nat {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == main_canister_id;
+
+    switch (leaderboard) {
+      case (null) {
+        return 0;
+      };
+      case (?foundLeaderboard) {
+        return List.size(foundLeaderboard.entries);
+      };
+    };
+  };
+
   system func preupgrade() {};
 
   system func postupgrade() {
