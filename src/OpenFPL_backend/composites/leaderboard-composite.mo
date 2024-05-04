@@ -611,6 +611,21 @@ module {
       };
     };
 
+    public func getWeeklyLeaderboardEntries(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async [T.LeaderboardEntry] {
+      //Todo
+      return [];
+    };
+
+    public func getMonthlyLeaderboardEntries(seasonId: T.SeasonId, month: T.CalendarMonth) : async [T.LeaderboardEntry] {
+      //Todo
+      return [];
+    };
+
+    public func getSeasonLeaderboardEntries(seasonId: T.SeasonId) : async [T.LeaderboardEntry] {
+      //Todo
+      return [];
+    };
+
     public func getStableSeasonLeaderboardCanisters() : [T.SeasonLeaderboardCanister] {
       return List.toArray(seasonLeaderboardCanisters);
     };

@@ -535,13 +535,13 @@ actor Self {
     return await seasonManager.inviteUserToLeague(canisterId, managerId, Principal.toText(caller));
   };
 
-  public shared ({ caller }) func updateLeaguePicture(canisterId: T.CanisterId, picture: Blob) : async Result.Result<(), T.Error> {
+  public shared ({ caller }) func updateLeaguePicture(canisterId: T.CanisterId, picture: ?Blob) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     assert await seasonManager.isLeagueAdmin(canisterId, Principal.toText(caller));
     await seasonManager.updateLeaguePicture(canisterId, picture);
   };
 
-  public shared ({ caller }) func updateLeagueBanner(canisterId: T.CanisterId, banner: Blob) : async Result.Result<(), T.Error> {
+  public shared ({ caller }) func updateLeagueBanner(canisterId: T.CanisterId, banner: ?Blob) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     assert await seasonManager.isLeagueAdmin(canisterId, Principal.toText(caller));
     await seasonManager.updateLeagueBanner(canisterId, banner);

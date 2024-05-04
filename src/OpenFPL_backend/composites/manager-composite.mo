@@ -292,6 +292,10 @@ module {
       return managerCanisterIds.get(principalId);
     };
 
+    public func getManagerCanisterIds() : TrieMap.TrieMap<T.PrincipalId, T.CanisterId> {
+      return managerCanisterIds;
+    };
+
     public func saveFantasyTeam(updatedFantasyTeamDTO : DTOs.UpdateTeamSelectionDTO, systemState : T.SystemState, players : [DTOs.PlayerDTO]) : async Result.Result<(), T.Error> {
 
       if (systemState.onHold) {

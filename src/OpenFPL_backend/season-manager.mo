@@ -621,9 +621,13 @@ module {
       await managerComposite.calculateFantasyTeamScores(playerPointsMap, systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
       await leaderboardComposite.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth, managerComposite.getStableUniqueManagerCanisterIds());
       
-      await privateLeaguesManager.sendWeeklyLeaderboardEntries(systemState.calculationSeasonId, systemState.calculationGameweek, weeklyLeaderboardEntries);
-      await privateLeaguesManager.sendMonthlyLeaderboardEntries(systemState.calculationSeasonId, systemState.calculationMonth, monthlyLeaderboardEntries);
-      await privateLeaguesManager.sendSeasonLeaderboardEntries(systemState.calculationSeasonId, seasonLeaderboardEntries);
+      let weeklyLeaderboardEntries = await leaderboardComposite.getWeeklyLeaderboardEntries(systemState.calculationSeasonId, systemState.calculationGameweek);
+      let monthlyLeaderboardEntries = await leaderboardComposite.getMonthlyLeaderboardEntries(systemState.calculationSeasonId, systemState.calculationMonth);
+      let seasonLeaderboardEntries = await leaderboardComposite.getSeasonLeaderboardEntries(systemState.calculationSeasonId);
+
+      await privateLeaguesManager.sendWeeklyLeaderboardEntries(systemState.calculationSeasonId, systemState.calculationGameweek, weeklyLeaderboardEntries, managerComposite.getManagerCanisterIds());
+      await privateLeaguesManager.sendMonthlyLeaderboardEntries(systemState.calculationSeasonId, systemState.calculationMonth, monthlyLeaderboardEntries, managerComposite.getManagerCanisterIds());
+      await privateLeaguesManager.sendSeasonLeaderboardEntries(systemState.calculationSeasonId, seasonLeaderboardEntries, managerComposite.getManagerCanisterIds());
       await privateLeaguesManager.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
       
       let rewardPool = rewardPools.get(systemState.calculationSeasonId);
