@@ -17,6 +17,7 @@ import Int64 "mo:base/Int64";
 import Int "mo:base/Int";
 import Time "mo:base/Time";
 import TrieMap "mo:base/TrieMap";
+import Option "mo:base/Option";
 import PrivateLeague "canister_definitions/private-league";
 import Management "./modules/Management";
 import Utilities "./utils/utilities";
@@ -431,6 +432,16 @@ module {
         sendSeasonLeadeboardEntry : (seasonId: T.SeasonId, updatedEntry: T.LeaderboardEntry) -> async ();
       };
       await private_league_canister.sendSeasonLeadeboardEntry(seasonId, entry);
+    };
+
+    public func leagueExists(canisterId: T.CanisterId) : Bool{
+      let leagueExists = Array.find(
+        privateLeagueCanisterIds,
+        func(id : T.CanisterId) : Bool {
+          return id == canisterId;
+        },
+      );
+      return Option.isSome(leagueExists);
     };
 
   };

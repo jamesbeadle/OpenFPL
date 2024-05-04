@@ -929,6 +929,10 @@ module {
       return await privateLeaguesManager.inviteExists(canisterId, managerId);
     };
 
+    public func leagueExists(privateLeagueCanisterId: T.CanisterId) : Bool {
+      return privateLeaguesManager.leagueExists(privateLeagueCanisterId);
+    };
+
     public func payPrivateLeagueReward(defaultAccount: Principal, privateLeagueCanisterId: T.CanisterId, tokens: [T.TokenInfo], winnerPrincipal: T.PrincipalId, amount: Nat64) : async () {
       
       let privateLeague = await getPrivateLeague(privateLeagueCanisterId);

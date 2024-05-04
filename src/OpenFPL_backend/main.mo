@@ -644,12 +644,12 @@ actor Self {
     return #ok(treasuryManager.getTokenList());
   };
 
-  public shared ({ caller }) func payPrivateLeagueRewards(managerId : T.PrincipalId, amount : Nat64) : () {
+  public shared ({ caller }) func payPrivateLeagueRewards(managerId : T.PrincipalId, amount : Nat64) : async () {
     assert not Principal.isAnonymous(caller);
     let privateLeagueCanisterId = Principal.toText(caller);
     assert seasonManager.leagueExists(privateLeagueCanisterId);
-    assert seasonManager.isPrivateLeagueMember(managerId, privateLeagueCanisterId);
-    seasonManager.payPrivateLeagueReward(privateLeagueCanisterId, managerId, amount);
+    assert await seasonManager.isPrivateLeagueMember(managerId, privateLeagueCanisterId);
+    await seasonManager.payPrivateLeagueReward(Principal.fromActor(Self), privateLeagueCanisterId, treasuryManager.getTokenList(), managerId, amount);
   };
 
 
