@@ -652,7 +652,7 @@ module {
       };
     };
 
-    public func getMonthlyLeaderboardEntries(privateLeaguesManager: PrivateLeaguesManager.PrivateLeaguesManager, seasonId: T.SeasonId, month: T.CalendarMonth, managerCanisterIdIndex: TrieMap.TrieMap<T.PrincipalId, T.CanisterId>) : async () {
+    public func sendMonthlyLeaderboardEntries(privateLeaguesManager: PrivateLeaguesManager.PrivateLeaguesManager, seasonId: T.SeasonId, month: T.CalendarMonth, managerCanisterIdIndex: TrieMap.TrieMap<T.PrincipalId, T.CanisterId>) : async () {
 
       let monthlyLeaderboardCanister = List.find<T.MonthlyLeaderboardCanister>(
         monthlyLeaderboardCanisters,
@@ -692,7 +692,7 @@ module {
       };
     };
 
-    public func getSeasonLeaderboardEntries(privateLeaguesManager: PrivateLeaguesManager.PrivateLeaguesManager, seasonId: T.SeasonId, managerCanisterIdIndex: TrieMap.TrieMap<T.PrincipalId, T.CanisterId>) : async () {
+    public func sendSeasonLeaderboardEntries(privateLeaguesManager: PrivateLeaguesManager.PrivateLeaguesManager, seasonId: T.SeasonId, managerCanisterIdIndex: TrieMap.TrieMap<T.PrincipalId, T.CanisterId>) : async () {
 
       let seasonLeaderboardCanister = List.find<T.SeasonLeaderboardCanister>(
         seasonLeaderboardCanisters,
