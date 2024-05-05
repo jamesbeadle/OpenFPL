@@ -3513,7 +3513,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1oq6vyr"
+  version_hash: "1dj334h"
 };
 async function get_hooks() {
   return {};
@@ -3734,6 +3734,7 @@ const idlFactory = ({ IDL }) => {
     InvalidTeamError: IDL.Null
   });
   const Result = IDL.Variant({ ok: IDL.Null, err: Error2 });
+  const TokenId = IDL.Nat16;
   const EntryRequirement = IDL.Variant({
     InviteOnly: IDL.Null,
     PaidEntry: IDL.Null,
@@ -3742,6 +3743,7 @@ const idlFactory = ({ IDL }) => {
   });
   const PaymentChoice = IDL.Variant({ FPL: IDL.Null, ICP: IDL.Null });
   const CreatePrivateLeagueDTO = IDL.Record({
+    tokenId: TokenId,
     adminFee: IDL.Nat8,
     name: IDL.Text,
     banner: IDL.Opt(IDL.Vec(IDL.Nat8)),
@@ -4037,6 +4039,7 @@ const idlFactory = ({ IDL }) => {
     noEntryPlayerId: PlayerId,
     monthlyPoints: IDL.Int16,
     safeHandsPlayerId: PlayerId,
+    seasonId: SeasonId,
     braceBonusGameweek: GameweekNumber,
     favouriteClubId: ClubId,
     passMasterGameweek: GameweekNumber,
@@ -4083,7 +4086,6 @@ const idlFactory = ({ IDL }) => {
   });
   const MonthlyLeaderboardDTO = IDL.Record({
     month: IDL.Nat8,
-    clubId: ClubId,
     totalEntries: IDL.Nat,
     seasonId: SeasonId,
     entries: IDL.Vec(LeaderboardEntry)
@@ -4190,6 +4192,7 @@ const idlFactory = ({ IDL }) => {
     name: IDL.Text,
     memberCount: IDL.Int,
     seasonPosition: IDL.Nat,
+    seasonPositionText: IDL.Text,
     canisterId: CanisterId
   });
   const ManagerPrivateLeaguesDTO = IDL.Record({
@@ -4228,7 +4231,6 @@ const idlFactory = ({ IDL }) => {
     onHold: IDL.Bool
   });
   const Result_5 = IDL.Variant({ ok: SystemStateDTO, err: Error2 });
-  const TokenId = IDL.Nat16;
   const TokenInfo = IDL.Record({
     id: TokenId,
     fee: IDL.Nat,
@@ -4357,15 +4359,20 @@ const idlFactory = ({ IDL }) => {
     ),
     inviteUserToLeague: IDL.Func([CanisterId, PrincipalId], [Result], []),
     isUsernameValid: IDL.Func([IDL.Text], [IDL.Bool], ["query"]),
+    payPrivateLeagueRewards: IDL.Func([PrincipalId, IDL.Nat64], [], []),
     requestCanisterTopup: IDL.Func([], [], []),
     saveFantasyTeam: IDL.Func([UpdateTeamSelectionDTO], [Result], []),
     searchUsername: IDL.Func([IDL.Text], [Result_1], []),
     setTimer: IDL.Func([IDL.Int, IDL.Text], [], []),
     updateFavouriteClub: IDL.Func([ClubId], [Result], []),
-    updateLeagueBanner: IDL.Func([CanisterId, IDL.Vec(IDL.Nat8)], [Result], []),
+    updateLeagueBanner: IDL.Func(
+      [CanisterId, IDL.Opt(IDL.Vec(IDL.Nat8))],
+      [Result],
+      []
+    ),
     updateLeagueName: IDL.Func([CanisterId, IDL.Text], [Result], []),
     updateLeaguePicture: IDL.Func(
-      [CanisterId, IDL.Vec(IDL.Nat8)],
+      [CanisterId, IDL.Opt(IDL.Vec(IDL.Nat8))],
       [Result],
       []
     ),
@@ -6784,10 +6791,10 @@ function createGovernanceStore() {
       };
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
+        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE ?? ""
       );
       const governanceAgent = ActorFactory.getAgent(
-        define_process_env_default.OPENFPL_GOVERNANCE_CANISTER_ID,
+        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
         null
       );
@@ -6849,10 +6856,10 @@ function createGovernanceStore() {
       };
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
+        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE ?? ""
       );
       const governanceAgent = ActorFactory.getAgent(
-        define_process_env_default.OPENFPL_GOVERNANCE_CANISTER_ID,
+        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
         null
       );
@@ -6925,10 +6932,10 @@ function createGovernanceStore() {
       };
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
+        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE ?? ""
       );
       const governanceAgent = ActorFactory.getAgent(
-        define_process_env_default.OPENFPL_GOVERNANCE_CANISTER_ID,
+        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
         null
       );
@@ -6998,10 +7005,10 @@ function createGovernanceStore() {
       };
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
+        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE ?? ""
       );
       const governanceAgent = ActorFactory.getAgent(
-        define_process_env_default.OPENFPL_GOVERNANCE_CANISTER_ID,
+        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
         null
       );
@@ -7080,10 +7087,10 @@ function createGovernanceStore() {
       };
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
+        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE ?? ""
       );
       const governanceAgent = ActorFactory.getAgent(
-        define_process_env_default.OPENFPL_GOVERNANCE_CANISTER_ID,
+        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
         null
       );
@@ -7165,10 +7172,10 @@ function createGovernanceStore() {
       };
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
+        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE ?? ""
       );
       const governanceAgent = ActorFactory.getAgent(
-        define_process_env_default.OPENFPL_GOVERNANCE_CANISTER_ID,
+        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
         null
       );
@@ -7255,10 +7262,10 @@ function createGovernanceStore() {
       };
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
+        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE ?? ""
       );
       const governanceAgent = ActorFactory.getAgent(
-        define_process_env_default.OPENFPL_GOVERNANCE_CANISTER_ID,
+        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
         null
       );
@@ -7336,10 +7343,10 @@ function createGovernanceStore() {
       };
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
+        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE ?? ""
       );
       const governanceAgent = ActorFactory.getAgent(
-        define_process_env_default.OPENFPL_GOVERNANCE_CANISTER_ID,
+        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
         null
       );
@@ -7428,10 +7435,10 @@ function createGovernanceStore() {
       };
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
+        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE ?? ""
       );
       const governanceAgent = ActorFactory.getAgent(
-        define_process_env_default.OPENFPL_GOVERNANCE_CANISTER_ID,
+        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
         null
       );
@@ -7507,10 +7514,10 @@ function createGovernanceStore() {
       };
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
+        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE ?? ""
       );
       const governanceAgent = ActorFactory.getAgent(
-        define_process_env_default.OPENFPL_GOVERNANCE_CANISTER_ID,
+        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
         null
       );
@@ -7589,10 +7596,10 @@ function createGovernanceStore() {
       };
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
+        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE ?? ""
       );
       const governanceAgent = ActorFactory.getAgent(
-        define_process_env_default.OPENFPL_GOVERNANCE_CANISTER_ID,
+        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
         null
       );
@@ -7671,10 +7678,10 @@ function createGovernanceStore() {
       };
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
+        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE ?? ""
       );
       const governanceAgent = ActorFactory.getAgent(
-        define_process_env_default.OPENFPL_GOVERNANCE_CANISTER_ID,
+        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
         null
       );
@@ -7755,10 +7762,10 @@ function createGovernanceStore() {
       };
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
+        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE ?? ""
       );
       const governanceAgent = ActorFactory.getAgent(
-        define_process_env_default.OPENFPL_GOVERNANCE_CANISTER_ID,
+        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
         null
       );
@@ -7838,10 +7845,10 @@ function createGovernanceStore() {
       };
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
+        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE ?? ""
       );
       const governanceAgent = ActorFactory.getAgent(
-        define_process_env_default.OPENFPL_GOVERNANCE_CANISTER_ID,
+        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
         null
       );
@@ -7917,10 +7924,10 @@ function createGovernanceStore() {
       };
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
+        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE ?? ""
       );
       const governanceAgent = ActorFactory.getAgent(
-        define_process_env_default.OPENFPL_GOVERNANCE_CANISTER_ID,
+        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
         null
       );
@@ -7995,10 +8002,10 @@ function createGovernanceStore() {
       };
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
+        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE ?? ""
       );
       const governanceAgent = ActorFactory.getAgent(
-        define_process_env_default.OPENFPL_GOVERNANCE_CANISTER_ID,
+        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
         null
       );
@@ -8061,10 +8068,10 @@ function createGovernanceStore() {
       };
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
+        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE ?? ""
       );
       const governanceAgent = ActorFactory.getAgent(
-        define_process_env_default.OPENFPL_GOVERNANCE_CANISTER_ID,
+        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
         null
       );
@@ -8145,10 +8152,10 @@ function createGovernanceStore() {
       };
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default.OPENFPL_GOVERNANCE_CANISTER_ID ?? ""
+        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE ?? ""
       );
       const governanceAgent = ActorFactory.getAgent(
-        define_process_env_default.OPENFPL_GOVERNANCE_CANISTER_ID,
+        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
         null
       );

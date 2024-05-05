@@ -145,8 +145,8 @@ module {
 
     //Game getters
 
-    public func getFixtures(seasonId : T.SeasonId) : [DTOs.FixtureDTO] {
-      return seasonComposite.getFixtures(seasonId);
+    public func getFixtures(dto: DTOs.GetFixturesDTO) : [DTOs.FixtureDTO] {
+      return seasonComposite.getFixtures(dto);
     };
 
     public func getSeasons() : [DTOs.SeasonDTO] {
@@ -190,21 +190,21 @@ module {
       return result;
     };
 
-    public func getWeeklyLeaderboard(seasonId : T.SeasonId, gameweek : T.GameweekNumber, limit : Nat, offset : Nat, searchTerm : Text) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
-      return await leaderboardComposite.getWeeklyLeaderboard(seasonId, gameweek, limit, offset, searchTerm);
+    public func getWeeklyLeaderboard(dto: DTOs.GetWeeklyLeaderboardDTO) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
+      return await leaderboardComposite.getWeeklyLeaderboard(dto);
     };
 
-    public func getMonthlyLeaderboard(seasonId : T.SeasonId, month : T.CalendarMonth, clubId : T.ClubId, limit : Nat, offset : Nat, searchTerm : Text) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error> {
-      return await leaderboardComposite.getMonthlyLeaderboard(seasonId, month, clubId, limit, offset, searchTerm);
+    public func getMonthlyLeaderboard(dto: DTOs.GetMonthlyLeaderboardDTO) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error> {
+      return await leaderboardComposite.getMonthlyLeaderboard(dto);
     };
 
-    public func getMonthlyLeaderboards(seasonId : T.SeasonId, month : T.CalendarMonth) : async Result.Result<[DTOs.MonthlyLeaderboardDTO], T.Error> {
+    public func getMonthlyLeaderboards(dto: DTOs.GetMonthlyLeaderboardsDTO) : async Result.Result<[DTOs.MonthlyLeaderboardDTO], T.Error> {
       let clubs = clubComposite.getClubs();
-      return await leaderboardComposite.getMonthlyLeaderboards(seasonId, month, clubs);
+      return await leaderboardComposite.getMonthlyLeaderboards(dto, clubs);
     };
 
-    public func getSeasonLeaderboard(seasonId : T.SeasonId, limit : Nat, offset : Nat, searchTerm : Text) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error> {
-      return await leaderboardComposite.getSeasonLeaderboard(seasonId, limit, offset, searchTerm);
+    public func getSeasonLeaderboard(dto: DTOs.GetSeasonLeaderboardDTO) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error> {
+      return await leaderboardComposite.getSeasonLeaderboard(dto);
     };
 
     public func getProfile(principalId : Text) : async Result.Result<DTOs.ProfileDTO, T.Error> {
@@ -223,12 +223,12 @@ module {
       return managerComposite.getManagerCanisterId(principalId);  
     };
 
-    public func getManager(principalId : Text) : async Result.Result<DTOs.ManagerDTO, T.Error> {
+    public func getManager(dto: DTOs.GetManagerDTO) : async Result.Result<DTOs.ManagerDTO, T.Error> {
 
-      let weeklyLeaderboardEntry = await leaderboardComposite.getWeeklyLeaderboardEntry(principalId, systemState.calculationSeasonId, systemState.calculationGameweek);
+      let weeklyLeaderboardEntry = await leaderboardComposite.getWeeklyLeaderboardEntry(dto.managerId, systemState.calculationSeasonId, systemState.calculationGameweek);
 
       var managerFavouriteClub : T.ClubId = 0;
-      let result = await managerComposite.getFavouriteClub(principalId);
+      let result = await managerComposite.getFavouriteClub(dto.managerId);
       switch (result) {
         case (#ok(favouriteClubId)) {
           managerFavouriteClub := favouriteClubId;
@@ -237,12 +237,12 @@ module {
       };
       var monthlyLeaderboardEntry : ?DTOs.LeaderboardEntryDTO = null;
       if (managerFavouriteClub > 0) {
-        monthlyLeaderboardEntry := await leaderboardComposite.getMonthlyLeaderboardEntry(principalId, systemState.calculationSeasonId, systemState.calculationMonth, managerFavouriteClub);
+        monthlyLeaderboardEntry := await leaderboardComposite.getMonthlyLeaderboardEntry(dto.managerId, systemState.calculationSeasonId, systemState.calculationMonth, managerFavouriteClub);
       };
 
-      let seasonLeaderboardEntry = await leaderboardComposite.getSeasonLeaderboardEntry(principalId, systemState.calculationSeasonId);
+      let seasonLeaderboardEntry = await leaderboardComposite.getSeasonLeaderboardEntry(dto.managerId, systemState.calculationSeasonId);
 
-      return await managerComposite.getManager(principalId, systemState.calculationSeasonId, weeklyLeaderboardEntry, monthlyLeaderboardEntry, seasonLeaderboardEntry);
+      return await managerComposite.getManager(dto.managerId, systemState.calculationSeasonId, weeklyLeaderboardEntry, monthlyLeaderboardEntry, seasonLeaderboardEntry);
     };
 
     public func getManagerByUsername(username: Text) : async Result.Result<DTOs.ManagerDTO, T.Error> {
@@ -440,7 +440,7 @@ module {
     };
 
     private func setGameweekTimers() : async () {
-      let fixtures = seasonComposite.getFixtures(systemState.calculationSeasonId);
+      let fixtures = seasonComposite.getFixtures({seasonId = systemState.calculationSeasonId});
       let filteredFilters = Array.filter<DTOs.FixtureDTO>(
         fixtures,
         func(fixture : DTOs.FixtureDTO) : Bool {
@@ -518,7 +518,7 @@ module {
           };
 
           let weeklyLeaderboard = await weekly_leaderboard_canister.getRewardLeaderboard();
-          let fixtures = seasonComposite.getFixtures(systemState.calculationSeasonId);
+          let fixtures = seasonComposite.getFixtures({seasonId = systemState.calculationSeasonId});
           let gameweekFixtures = Array.filter<DTOs.FixtureDTO>(
             fixtures,
             func(fixture : DTOs.FixtureDTO) : Bool {
@@ -895,7 +895,7 @@ module {
     };
 
     public func acceptLeagueInvite(canisterId: T.CanisterId, managerId: T.PrincipalId) : async Result.Result<(), T.Error> {
-      let manager = await getManager(managerId);
+      let manager = await getManager({managerId = managerId});
       switch(manager){
         case (#ok foundManager){
           return await privateLeaguesManager.acceptLeagueInvite(canisterId, managerId, foundManager.username);

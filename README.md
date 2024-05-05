@@ -19,7 +19,7 @@ More information about the Internet Computer blockchain can be found at https://
 
 ## Install SNS
 
-To run OpenFPL you will need to setup a local version of the NNS containing the FPL utility token with users after the SNS sale. 
+To run OpenFPL you will need to setup a local version of the NNS containing the FPL utility token with users after the SNS sale.
 
 To get to this state follow these steps:
 
@@ -45,7 +45,7 @@ git clone https://github.com/dfinity/sns-testing.git
 ./setup_locally.sh
 ```
 
-Overwrite any existing canisters if the terminal asks by using the 'y' key. 
+Overwrite any existing canisters if the terminal asks by using the 'y' key.
 
 Make note of the deployed SNS governance canister id from the sns_canister_ids.json file.
 
@@ -58,6 +58,7 @@ Make note of the deployed SNS governance canister id from the sns_canister_ids.j
 4. Load the OpenFPL solution in VSCode and deploy the application using the following command:
 
 ```dfx deploy --network=local
+
 ```
 
 Make note of the frontend and backend canister ids.
@@ -72,8 +73,9 @@ NUM_PARTICIPANTS=100
 ICP_PER_PARTICIPANT=10000
 ./let_nns_control_dapp.sh
 ./propose_sns.sh
-./participate_sns_swap.sh $NUM_PARTICIPANTS $ICP_PER_PARTICIPANT 
+./participate_sns_swap.sh $NUM_PARTICIPANTS $ICP_PER_PARTICIPANT
 ```
+
 7. You can then access the NNS containing OpenFPL from the following link:
 
 http://qsgjb-riaaa-aaaaa-aaaga-cai.localhost:8080/
@@ -82,8 +84,8 @@ Create a new test user and make a note of their principal id.
 
 8. Mint FPL tokens for your users by running the following command:
 
- dfx canister call "${SNS_GOVERNANCE_CANISTER_ID}" mint_tokens "(record{recipient=opt record{owner=opt principal \"${PRINCIPAL}\"};amount_e8s=opt 1_0000_000_000_000_000:opt nat64})" --network "$NETWORK" 
-    
+dfx canister call "${SNS_GOVERNANCE_CANISTER_ID}" mint_tokens "(record{recipient=opt record{owner=opt principal \"${PRINCIPAL}\"};amount_e8s=opt 1_0000_000_000_000_000:opt nat64})" --network "$NETWORK"
+
 Now stake the tokens and when raising propsals with this user they will pass immediately.
 
 9. Run dfx identity get-principal to get the principal of the current dfx user. Add this user as a hotkey to your initially created user.

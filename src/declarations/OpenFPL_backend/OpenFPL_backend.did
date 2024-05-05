@@ -442,7 +442,6 @@ type MoveFixtureDTO =
  };
 type MonthlyLeaderboardDTO = 
  record {
-   clubId: ClubId;
    entries: vec LeaderboardEntry;
    month: nat8;
    seasonId: SeasonId;
@@ -460,6 +459,7 @@ type ManagerPrivateLeagueDTO =
    memberCount: int;
    name: text;
    seasonPosition: nat;
+   seasonPositionText: text;
  };
 type ManagerDTO = 
  record {
@@ -563,6 +563,7 @@ type FantasyTeamSnapshot =
    prospectsGameweek: GameweekNumber;
    safeHandsGameweek: GameweekNumber;
    safeHandsPlayerId: PlayerId;
+   seasonId: SeasonId;
    seasonPoints: int16;
    teamBoostClubId: ClubId;
    teamBoostGameweek: GameweekNumber;
@@ -611,6 +612,7 @@ type CreatePrivateLeagueDTO =
    paymentChoice: PaymentChoice;
    photo: opt blob;
    termsAgreed: bool;
+   tokenId: TokenId;
  };
 type CreatePlayerDTO = 
  record {
@@ -741,14 +743,15 @@ service : {
    (Result_2);
   inviteUserToLeague: (CanisterId, PrincipalId) -> (Result);
   isUsernameValid: (text) -> (bool) query;
+  payPrivateLeagueRewards: (PrincipalId, nat64) -> ();
   requestCanisterTopup: () -> ();
   saveFantasyTeam: (UpdateTeamSelectionDTO) -> (Result);
   searchUsername: (text) -> (Result_1);
   setTimer: (int, text) -> ();
   updateFavouriteClub: (ClubId) -> (Result);
-  updateLeagueBanner: (CanisterId, blob) -> (Result);
+  updateLeagueBanner: (CanisterId, opt blob) -> (Result);
   updateLeagueName: (CanisterId, text) -> (Result);
-  updateLeaguePicture: (CanisterId, blob) -> (Result);
+  updateLeaguePicture: (CanisterId, opt blob) -> (Result);
   updateProfilePicture: (blob, text) -> (Result);
   updateUsername: (text) -> (Result);
   validateAddInitialFixtures: (AddInitialFixturesDTO) -> (RustResult) query;

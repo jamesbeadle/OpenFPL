@@ -12,6 +12,7 @@ export const idlFactory = ({ IDL }) => {
     InvalidTeamError: IDL.Null,
   });
   const Result = IDL.Variant({ ok: IDL.Null, err: Error });
+  const TokenId = IDL.Nat16;
   const EntryRequirement = IDL.Variant({
     InviteOnly: IDL.Null,
     PaidEntry: IDL.Null,
@@ -20,6 +21,7 @@ export const idlFactory = ({ IDL }) => {
   });
   const PaymentChoice = IDL.Variant({ FPL: IDL.Null, ICP: IDL.Null });
   const CreatePrivateLeagueDTO = IDL.Record({
+    tokenId: TokenId,
     adminFee: IDL.Nat8,
     name: IDL.Text,
     banner: IDL.Opt(IDL.Vec(IDL.Nat8)),
@@ -315,6 +317,7 @@ export const idlFactory = ({ IDL }) => {
     noEntryPlayerId: PlayerId,
     monthlyPoints: IDL.Int16,
     safeHandsPlayerId: PlayerId,
+    seasonId: SeasonId,
     braceBonusGameweek: GameweekNumber,
     favouriteClubId: ClubId,
     passMasterGameweek: GameweekNumber,
@@ -361,7 +364,6 @@ export const idlFactory = ({ IDL }) => {
   });
   const MonthlyLeaderboardDTO = IDL.Record({
     month: IDL.Nat8,
-    clubId: ClubId,
     totalEntries: IDL.Nat,
     seasonId: SeasonId,
     entries: IDL.Vec(LeaderboardEntry),
@@ -468,6 +470,7 @@ export const idlFactory = ({ IDL }) => {
     name: IDL.Text,
     memberCount: IDL.Int,
     seasonPosition: IDL.Nat,
+    seasonPositionText: IDL.Text,
     canisterId: CanisterId,
   });
   const ManagerPrivateLeaguesDTO = IDL.Record({
@@ -506,7 +509,6 @@ export const idlFactory = ({ IDL }) => {
     onHold: IDL.Bool,
   });
   const Result_5 = IDL.Variant({ ok: SystemStateDTO, err: Error });
-  const TokenId = IDL.Nat16;
   const TokenInfo = IDL.Record({
     id: TokenId,
     fee: IDL.Nat,
@@ -635,15 +637,20 @@ export const idlFactory = ({ IDL }) => {
     ),
     inviteUserToLeague: IDL.Func([CanisterId, PrincipalId], [Result], []),
     isUsernameValid: IDL.Func([IDL.Text], [IDL.Bool], ["query"]),
+    payPrivateLeagueRewards: IDL.Func([PrincipalId, IDL.Nat64], [], []),
     requestCanisterTopup: IDL.Func([], [], []),
     saveFantasyTeam: IDL.Func([UpdateTeamSelectionDTO], [Result], []),
     searchUsername: IDL.Func([IDL.Text], [Result_1], []),
     setTimer: IDL.Func([IDL.Int, IDL.Text], [], []),
     updateFavouriteClub: IDL.Func([ClubId], [Result], []),
-    updateLeagueBanner: IDL.Func([CanisterId, IDL.Vec(IDL.Nat8)], [Result], []),
+    updateLeagueBanner: IDL.Func(
+      [CanisterId, IDL.Opt(IDL.Vec(IDL.Nat8))],
+      [Result],
+      []
+    ),
     updateLeagueName: IDL.Func([CanisterId, IDL.Text], [Result], []),
     updateLeaguePicture: IDL.Func(
-      [CanisterId, IDL.Vec(IDL.Nat8)],
+      [CanisterId, IDL.Opt(IDL.Vec(IDL.Nat8))],
       [Result],
       []
     ),

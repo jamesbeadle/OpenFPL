@@ -3,6 +3,123 @@ import Nat "mo:base/Nat";
 
 module DTOs {
 
+  public type ProfileDTO = {
+    principalId : Text;
+    username : Text;
+    termsAccepted : Bool;
+    profilePicture : ?Blob;
+    profilePictureType : Text;
+    favouriteClubId : T.ClubId;
+    createDate : Int;
+  };
+
+  public type PickTeamDTO = {
+    principalId : Text;
+    username : Text;
+    transfersAvailable : Nat8;
+    monthlyBonusesAvailable : Nat8;
+    bankQuarterMillions : Nat16;
+    playerIds : [T.PlayerId];
+    captainId : T.PlayerId;
+    goalGetterGameweek : T.GameweekNumber;
+    goalGetterPlayerId : T.PlayerId;
+    passMasterGameweek : T.GameweekNumber;
+    passMasterPlayerId : T.PlayerId;
+    noEntryGameweek : T.GameweekNumber;
+    noEntryPlayerId : T.PlayerId;
+    teamBoostGameweek : T.GameweekNumber;
+    teamBoostClubId : T.ClubId;
+    safeHandsGameweek : T.GameweekNumber;
+    safeHandsPlayerId : T.PlayerId;
+    captainFantasticGameweek : T.GameweekNumber;
+    captainFantasticPlayerId : T.PlayerId;
+    countrymenGameweek : T.GameweekNumber;
+    countrymenCountryId : T.CountryId;
+    prospectsGameweek : T.GameweekNumber;
+    braceBonusGameweek : T.GameweekNumber;
+    hatTrickHeroGameweek : T.GameweekNumber;
+    transferWindowGameweek : T.GameweekNumber;
+  };
+
+  public type GetManagerDTO = {
+    managerId : Text;
+  };
+
+  public type ManagerDTO = {
+    principalId : Text;
+    username : Text;
+    profilePicture : ?Blob;
+    favouriteClubId : T.ClubId;
+    createDate : Int;
+    gameweeks : [T.FantasyTeamSnapshot];
+    weeklyPosition : Int;
+    monthlyPosition : Int;
+    seasonPosition : Int;
+    weeklyPositionText : Text;
+    monthlyPositionText : Text;
+    seasonPositionText : Text;
+    weeklyPoints : Int16;
+    monthlyPoints : Int16;
+    seasonPoints : Int16;
+    privateLeagueMemberships: [T.CanisterId];
+  };
+
+  public type GetWeeklyLeaderboardDTO = {
+    seasonId : T.SeasonId;
+    gameweek : T.GameweekNumber;
+    limit : Nat;
+    offset : Nat;
+    searchTerm : Text;
+  };
+
+  public type WeeklyLeaderboardDTO = {
+    seasonId : T.SeasonId;
+    gameweek : T.GameweekNumber;
+    entries : [T.LeaderboardEntry];
+    totalEntries : Nat;
+  };
+
+  public type GetMonthlyLeaderboardsDTO = {
+    seasonId : T.SeasonId;
+    month : T.CalendarMonth;
+  };
+
+  public type MonthlyLeaderboardDTO = {
+    seasonId : T.SeasonId;
+    month : Nat8;
+    entries : [T.LeaderboardEntry];
+    totalEntries : Nat;
+  };
+
+  public type GetMonthlyLeaderboardDTO = {
+    seasonId : T.SeasonId;
+    clubId : T.ClubId;
+    month : T.CalendarMonth;
+    limit : Nat;
+    offset : Nat;
+    searchTerm : Text;
+  };
+
+  public type GetSeasonLeaderboardDTO = {
+    seasonId : T.SeasonId;
+    limit : Nat;
+    offset : Nat;
+    searchTerm : Text;
+  };
+
+  public type SeasonLeaderboardDTO = {
+    seasonId : T.SeasonId;
+    entries : [T.LeaderboardEntry];
+    totalEntries : Nat;
+  };
+
+  public type GetFixturesDTO = {
+    seasonId: T.SeasonId;
+  };
+
+
+  
+
   public type SystemStateDTO = {
     calculationGameweek : T.GameweekNumber;
     calculationMonth : T.CalendarMonth;
@@ -125,63 +242,6 @@ module DTOs {
     thirdColourHex : Text;
     abbreviatedName : Text;
     shirtType : T.ShirtType;
-  };
-
-  public type ProfileDTO = {
-    principalId : Text;
-    username : Text;
-    termsAccepted : Bool;
-    profilePicture : ?Blob;
-    profilePictureType : Text;
-    favouriteClubId : T.ClubId;
-    createDate : Int;
-  };
-
-  public type PickTeamDTO = {
-    principalId : Text;
-    username : Text;
-    transfersAvailable : Nat8;
-    monthlyBonusesAvailable : Nat8;
-    bankQuarterMillions : Nat16;
-    playerIds : [T.PlayerId];
-    captainId : T.PlayerId;
-    goalGetterGameweek : T.GameweekNumber;
-    goalGetterPlayerId : T.PlayerId;
-    passMasterGameweek : T.GameweekNumber;
-    passMasterPlayerId : T.PlayerId;
-    noEntryGameweek : T.GameweekNumber;
-    noEntryPlayerId : T.PlayerId;
-    teamBoostGameweek : T.GameweekNumber;
-    teamBoostClubId : T.ClubId;
-    safeHandsGameweek : T.GameweekNumber;
-    safeHandsPlayerId : T.PlayerId;
-    captainFantasticGameweek : T.GameweekNumber;
-    captainFantasticPlayerId : T.PlayerId;
-    countrymenGameweek : T.GameweekNumber;
-    countrymenCountryId : T.CountryId;
-    prospectsGameweek : T.GameweekNumber;
-    braceBonusGameweek : T.GameweekNumber;
-    hatTrickHeroGameweek : T.GameweekNumber;
-    transferWindowGameweek : T.GameweekNumber;
-  };
-
-  public type ManagerDTO = {
-    principalId : Text;
-    username : Text;
-    profilePicture : ?Blob;
-    favouriteClubId : T.ClubId;
-    createDate : Int;
-    gameweeks : [T.FantasyTeamSnapshot];
-    weeklyPosition : Int;
-    monthlyPosition : Int;
-    seasonPosition : Int;
-    weeklyPositionText : Text;
-    monthlyPositionText : Text;
-    seasonPositionText : Text;
-    weeklyPoints : Int16;
-    monthlyPoints : Int16;
-    seasonPoints : Int16;
-    privateLeagueMemberships: [T.CanisterId];
   };
 
   public type PlayerRatingsDTO = {
@@ -321,30 +381,10 @@ module DTOs {
     hash : Text;
   };
 
-  public type WeeklyLeaderboardDTO = {
-    seasonId : T.SeasonId;
-    gameweek : T.GameweekNumber;
-    entries : [T.LeaderboardEntry];
-    totalEntries : Nat;
-  };
-
   public type ClubLeaderboardDTO = {
     seasonId : T.SeasonId;
     month : Nat8;
     clubId : T.ClubId;
-    entries : [T.LeaderboardEntry];
-    totalEntries : Nat;
-  };
-
-  public type MonthlyLeaderboardDTO = {
-    seasonId : T.SeasonId;
-    month : Nat8;
-    entries : [T.LeaderboardEntry];
-    totalEntries : Nat;
-  };
-
-  public type SeasonLeaderboardDTO = {
-    seasonId : T.SeasonId;
     entries : [T.LeaderboardEntry];
     totalEntries : Nat;
   };

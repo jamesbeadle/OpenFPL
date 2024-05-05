@@ -66,6 +66,7 @@ export interface CreatePlayerDTO {
   firstName: string;
 }
 export interface CreatePrivateLeagueDTO {
+  tokenId: TokenId;
   adminFee: number;
   name: string;
   banner: [] | [Uint8Array | number[]];
@@ -115,6 +116,7 @@ export interface FantasyTeamSnapshot {
   noEntryPlayerId: PlayerId;
   monthlyPoints: number;
   safeHandsPlayerId: PlayerId;
+  seasonId: SeasonId;
   braceBonusGameweek: GameweekNumber;
   favouriteClubId: ClubId;
   passMasterGameweek: GameweekNumber;
@@ -205,6 +207,7 @@ export interface ManagerPrivateLeagueDTO {
   name: string;
   memberCount: bigint;
   seasonPosition: bigint;
+  seasonPositionText: string;
   canisterId: CanisterId;
 }
 export interface ManagerPrivateLeaguesDTO {
@@ -213,7 +216,6 @@ export interface ManagerPrivateLeaguesDTO {
 }
 export interface MonthlyLeaderboardDTO {
   month: number;
-  clubId: ClubId;
   totalEntries: bigint;
   seasonId: SeasonId;
   entries: Array<LeaderboardEntry>;
@@ -622,14 +624,21 @@ export interface _SERVICE {
   >;
   inviteUserToLeague: ActorMethod<[CanisterId, PrincipalId], Result>;
   isUsernameValid: ActorMethod<[string], boolean>;
+  payPrivateLeagueRewards: ActorMethod<[PrincipalId, bigint], undefined>;
   requestCanisterTopup: ActorMethod<[], undefined>;
   saveFantasyTeam: ActorMethod<[UpdateTeamSelectionDTO], Result>;
   searchUsername: ActorMethod<[string], Result_1>;
   setTimer: ActorMethod<[bigint, string], undefined>;
   updateFavouriteClub: ActorMethod<[ClubId], Result>;
-  updateLeagueBanner: ActorMethod<[CanisterId, Uint8Array | number[]], Result>;
+  updateLeagueBanner: ActorMethod<
+    [CanisterId, [] | [Uint8Array | number[]]],
+    Result
+  >;
   updateLeagueName: ActorMethod<[CanisterId, string], Result>;
-  updateLeaguePicture: ActorMethod<[CanisterId, Uint8Array | number[]], Result>;
+  updateLeaguePicture: ActorMethod<
+    [CanisterId, [] | [Uint8Array | number[]]],
+    Result
+  >;
   updateProfilePicture: ActorMethod<[Uint8Array | number[], string], Result>;
   updateUsername: ActorMethod<[string], Result>;
   validateAddInitialFixtures: ActorMethod<[AddInitialFixturesDTO], RustResult>;

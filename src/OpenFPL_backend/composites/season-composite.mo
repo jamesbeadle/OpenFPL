@@ -41,11 +41,11 @@ module {
       };
     };
 
-    public func getFixtures(seasonId : T.SeasonId) : [DTOs.FixtureDTO] {
+    public func getFixtures(dto: DTOs.GetFixturesDTO) : [DTOs.FixtureDTO] {
       let season = List.find(
         seasons,
         func(season : T.Season) : Bool {
-          return season.id == seasonId;
+          return season.id == dto.seasonId;
         },
       );
       switch (season) {

@@ -47,28 +47,28 @@ actor Self {
     return await seasonManager.getCurrentTeam(Principal.toText(caller));
   };
 
-  public shared ({ caller }) func getManager(managerId : Text) : async Result.Result<DTOs.ManagerDTO, T.Error> {
+  public shared ({ caller }) func getManager(dto: DTOs.GetManagerDTO) : async Result.Result<DTOs.ManagerDTO, T.Error> {
     assert not Principal.isAnonymous(caller);
-    return await seasonManager.getManager(managerId);
+    return await seasonManager.getManager(dto);
   };
   
 
   //Leaderboard calls:
 
-  public shared func getWeeklyLeaderboard(seasonId : T.SeasonId, gameweek : T.GameweekNumber, limit : Nat, offset : Nat, searchTerm : Text) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
-    return await seasonManager.getWeeklyLeaderboard(seasonId, gameweek, limit, offset, searchTerm);
+  public shared func getWeeklyLeaderboard(dto: DTOs.GetWeeklyLeaderboardDTO) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
+    return await seasonManager.getWeeklyLeaderboard(dto);
   };
 
-  public shared func getMonthlyLeaderboards(seasonId : T.SeasonId, month : T.CalendarMonth) : async Result.Result<[DTOs.MonthlyLeaderboardDTO], T.Error> {
-    return await seasonManager.getMonthlyLeaderboards(seasonId, month);
+  public shared func getMonthlyLeaderboards(dto: DTOs.GetMonthlyLeaderboardsDTO) : async Result.Result<[DTOs.MonthlyLeaderboardDTO], T.Error> {
+    return await seasonManager.getMonthlyLeaderboards(dto);
   };
 
-  public shared func getMonthlyLeaderboard(seasonId : T.SeasonId, clubId : T.ClubId, month : T.CalendarMonth, limit : Nat, offset : Nat, searchTerm : Text) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error> {
-    return await seasonManager.getMonthlyLeaderboard(seasonId, month, clubId, limit, offset, searchTerm);
+  public shared func getMonthlyLeaderboard(dto: DTOs.GetMonthlyLeaderboardDTO) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error> {
+    return await seasonManager.getMonthlyLeaderboard(dto);
   };
 
-  public shared func getSeasonLeaderboard(seasonId : T.SeasonId, limit : Nat, offset : Nat, searchTerm : Text) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error> {
-    return await seasonManager.getSeasonLeaderboard(seasonId, limit, offset, searchTerm);
+  public shared func getSeasonLeaderboard(dto: DTOs.GetSeasonLeaderboardDTO) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error> {
+    return await seasonManager.getSeasonLeaderboard(dto);
   };
 
 
@@ -86,8 +86,8 @@ actor Self {
     return #ok(seasonManager.getDataHashes());
   };
 
-  public shared query func getFixtures(seasonId : T.SeasonId) : async Result.Result<[DTOs.FixtureDTO], T.Error> {
-    return #ok(seasonManager.getFixtures(seasonId));
+  public shared query func getFixtures(dto: DTOs.GetFixturesDTO) : async Result.Result<[DTOs.FixtureDTO], T.Error> {
+    return #ok(seasonManager.getFixtures(dto));
   };
 
   public shared query func getSeasons() : async Result.Result<[DTOs.SeasonDTO], T.Error> {
