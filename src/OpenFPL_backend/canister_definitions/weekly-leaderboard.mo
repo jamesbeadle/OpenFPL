@@ -48,7 +48,7 @@ actor class _WeeklyLeaderboardCanister() {
     };
   };
 
-  public shared query ({ caller }) func getEntries(limit : Nat, offset : Nat, searchTerm : Text) : async ?DTOs.WeeklyLeaderboardDTO {
+  public shared query ({ caller }) func getEntries(filters: DTOs.PaginationFiltersDTO, searchTerm : Text) : async ?DTOs.WeeklyLeaderboardDTO {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == main_canister_id;
@@ -65,8 +65,8 @@ actor class _WeeklyLeaderboardCanister() {
           },
         );
 
-        let droppedEntries = List.drop<T.LeaderboardEntry>(filteredEntries, offset);
-        let paginatedEntries = List.take<T.LeaderboardEntry>(droppedEntries, limit);
+        let droppedEntries = List.drop<T.LeaderboardEntry>(filteredEntries, filters.offset);
+        let paginatedEntries = List.take<T.LeaderboardEntry>(droppedEntries, filters.limit);
 
         let leaderboardDTO : DTOs.WeeklyLeaderboardDTO = {
           seasonId = foundLeaderboard.seasonId;

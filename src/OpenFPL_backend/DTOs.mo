@@ -117,8 +117,23 @@ module DTOs {
     seasonId: T.SeasonId;
   };
 
+  public type ClubFilterDTO = {
+    clubId: T.ClubId;
+  };
 
-  
+  public type GameweekFiltersDTO = {
+    seasonId : T.SeasonId;
+    gameweek : T.GameweekNumber;
+  };
+
+  public type GetPlayerDetailsDTO = {
+    playerId : T.PlayerId;
+    seasonId : T.SeasonId;
+  };
+
+  public type UsernameFilterDTO = {
+    username : Text
+  };
 
   public type SystemStateDTO = {
     calculationGameweek : T.GameweekNumber;
@@ -430,8 +445,8 @@ module DTOs {
   };
 
   public type UpdateProfilePictureDTO = {
-    principalId : Text;
-    profilePicture : ?Blob;
+    managerId : Text;
+    profilePicture : Blob;
     extension : Text;
   };
 
@@ -551,6 +566,64 @@ module DTOs {
     to: T.PrincipalId;
     from: T.PrincipalId;
     leagueCanisterId: T.CanisterId;
+  };
+
+  public type PaginationFiltersDTO = {
+    limit : Nat;
+    offset : Nat;
+  };
+
+  public type GetPrivateLeagueWeeklyLeaderboard = {
+    canisterId: T.CanisterId;
+    seasonId : T.SeasonId;
+    gameweek : T.GameweekNumber;
+    limit : Nat;
+    offset : Nat;
+  };
+
+  public type GetPrivateLeagueMonthlyLeaderboard = {
+    canisterId: T.CanisterId;
+    seasonId : T.SeasonId;
+    month : T.CalendarMonth;
+    limit : Nat;
+    offset : Nat;
+  };
+
+  public type GetPrivateLeagueSeasonLeaderboard = {
+    canisterId: T.CanisterId;
+    seasonId : T.SeasonId;
+    limit : Nat;
+    offset : Nat;
+  };
+
+  public type GetPrivateLeagueMembersDTO = {
+    canisterId: T.CanisterId;
+    filters: DTOs.PaginationFiltersDTO;
+  };
+
+  public type LeagueInviteDTO = {
+    canisterId: T.CanisterId;
+    managerId: T.PrincipalId;
+  };
+
+  public type UpdateLeaguePictureDTO = {
+     canisterId: T.CanisterId;
+     picture: ?Blob;
+  };
+
+  public type UpdateLeagueBannerDTO = {
+    canisterId: T.CanisterId;
+    banner: ?Blob;
+  };
+
+  public type UpdateLeagueNameDTO = {
+    canisterId: T.CanisterId;
+    name: Text;
+  };
+
+  public type PrivateLeagueRewardDTO = {
+    managerId : T.PrincipalId;
+    amount : Nat64;
   };
 
 };

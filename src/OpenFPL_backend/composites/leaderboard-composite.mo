@@ -105,10 +105,10 @@ module {
         };
         case (?foundCanister) {
           let weekly_leaderboard_canister = actor (foundCanister.canisterId) : actor {
-            getEntries : (limit : Nat, offset : Nat, searchTerm : Text) -> async ?DTOs.WeeklyLeaderboardDTO;
+            getEntries : (filters: DTOs.PaginationFiltersDTO, searchTerm : Text) -> async ?DTOs.WeeklyLeaderboardDTO;
           };
 
-          let leaderboardEntries = await weekly_leaderboard_canister.getEntries(dto.limit, dto.offset, dto.searchTerm);
+          let leaderboardEntries = await weekly_leaderboard_canister.getEntries(dto, dto.searchTerm);
           switch (leaderboardEntries) {
             case (null) {
               return #err(#NotFound);
@@ -140,10 +140,10 @@ module {
         };
         case (?foundCanister) {
           let monthly_leaderboard_canister = actor (foundCanister.canisterId) : actor {
-            getEntries : (limit : Nat, offset : Nat, searchTerm : Text) -> async ?DTOs.MonthlyLeaderboardDTO;
+            getEntries : (filters: DTOs.PaginationFiltersDTO, searchTerm : Text) -> async ?DTOs.MonthlyLeaderboardDTO;
           };
 
-          let leaderboardEntries = await monthly_leaderboard_canister.getEntries(dto.limit, dto.offset, dto.searchTerm);
+          let leaderboardEntries = await monthly_leaderboard_canister.getEntries(dto, dto.searchTerm);
           switch (leaderboardEntries) {
             case (null) {
               return #err(#NotFound);
@@ -174,10 +174,10 @@ module {
           case (null) {};
           case (?foundCanister) {
             let monthly_leaderboard_canister = actor (foundCanister.canisterId) : actor {
-              getEntries : (limit : Nat, offset : Nat) -> async ?DTOs.MonthlyLeaderboardDTO;
+              getEntries : (filters: DTOs.PaginationFiltersDTO) -> async ?DTOs.MonthlyLeaderboardDTO;
             };
 
-            let leaderboardEntries = await monthly_leaderboard_canister.getEntries(100, 0);
+            let leaderboardEntries = await monthly_leaderboard_canister.getEntries({ limit = 100; offset = 0 });
             switch (leaderboardEntries) {
               case (null) {};
               case (?foundLeaderboard) {
@@ -211,10 +211,10 @@ module {
         };
         case (?foundCanister) {
           let season_leaderboard_canister = actor (foundCanister.canisterId) : actor {
-            getEntries : (limit : Nat, offset : Nat, searchTerm : Text) -> async ?DTOs.SeasonLeaderboardDTO;
+            getEntries : (filters: DTOs.PaginationFiltersDTO, searchTerm : Text) -> async ?DTOs.SeasonLeaderboardDTO;
           };
 
-          let leaderboardEntries = await season_leaderboard_canister.getEntries(dto.limit, dto.offset, dto.searchTerm);
+          let leaderboardEntries = await season_leaderboard_canister.getEntries(dto, dto.searchTerm);
           switch (leaderboardEntries) {
             case (null) {
               return #err(#NotFound);
@@ -612,12 +612,12 @@ module {
       };
     };
 
-    public func sendWeeklyLeaderboardEntries(privateLeaguesManager: PrivateLeaguesManager.PrivateLeaguesManager, seasonId: T.SeasonId, gameweek: T.GameweekNumber, managerCanisterIdIndex: TrieMap.TrieMap<T.PrincipalId, T.CanisterId>) : async () {
+    public func sendWeeklyLeaderboardEntries(privateLeaguesManager: PrivateLeaguesManager.PrivateLeaguesManager, filters: DTOs.GameweekFiltersDTO, managerCanisterIdIndex: TrieMap.TrieMap<T.PrincipalId, T.CanisterId>) : async () {
 
       let weeklyLeaderboardCanister = List.find<T.WeeklyLeaderboardCanister>(
         weeklyLeaderboardCanisters,
         func(weeklyLeaderboard : T.WeeklyLeaderboardCanister) : Bool {
-          return weeklyLeaderboard.seasonId == seasonId and weeklyLeaderboard.gameweek == gameweek;
+          return weeklyLeaderboard.seasonId == filters.seasonId and weeklyLeaderboard.gameweek == filters.gameweek;
         },
       );
 
@@ -625,7 +625,7 @@ module {
         case (null) {};
         case(?foundCanisterInfo){
           let weekly_leaderboard_canister = actor (foundCanisterInfo.canisterId) : actor {
-            getEntries : (limit : Nat, offset : Nat, searchTerm : Text) -> async ?DTOs.WeeklyLeaderboardDTO;
+            getEntries : (filters: DTOs.PaginationFiltersDTO, searchTerm : Text) -> async ?DTOs.WeeklyLeaderboardDTO;
             getTotalEntries : () -> async Nat;
           };
 
@@ -638,10 +638,10 @@ module {
               break here;
             };
 
-            let entriesDTO = await weekly_leaderboard_canister.getEntries(chunkSize, offset, "");
+            let entriesDTO = await weekly_leaderboard_canister.getEntries({ limit = chunkSize; offset }, "");
             switch (entriesDTO) {
               case (?dto) {
-                await privateLeaguesManager.sendWeeklyLeaderboardEntries(seasonId, gameweek, dto.entries, managerCanisterIdIndex);
+                await privateLeaguesManager.sendWeeklyLeaderboardEntries(filters, dto.entries, managerCanisterIdIndex);
               };
               case (null) { };
             };
@@ -665,7 +665,7 @@ module {
         case (null) {};
         case(?foundCanisterInfo){
           let monthly_leaderboard_canister = actor (foundCanisterInfo.canisterId) : actor {
-            getEntries : (limit : Nat, offset : Nat, searchTerm : Text) -> async ?DTOs.MonthlyLeaderboardDTO;
+            getEntries : (filters: DTOs.PaginationFiltersDTO, searchTerm : Text) -> async ?DTOs.MonthlyLeaderboardDTO;
             getTotalEntries : () -> async Nat;
           };
 
@@ -678,7 +678,7 @@ module {
               break here;
             };
 
-            let entriesDTO = await monthly_leaderboard_canister.getEntries(chunkSize, offset, "");
+            let entriesDTO = await monthly_leaderboard_canister.getEntries({limit = chunkSize; offset }, "");
             switch (entriesDTO) {
               case (?dto) {
                 await privateLeaguesManager.sendMonthlyLeaderboardEntries(seasonId, month, dto.entries, managerCanisterIdIndex);
@@ -705,7 +705,7 @@ module {
         case (null) {};
         case(?foundCanisterInfo){
           let season_leaderboard_canister = actor (foundCanisterInfo.canisterId) : actor {
-            getEntries : (limit : Nat, offset : Nat, searchTerm : Text) -> async ?DTOs.SeasonLeaderboardDTO;
+            getEntries : (filters: DTOs.PaginationFiltersDTO, searchTerm : Text) -> async ?DTOs.SeasonLeaderboardDTO;
             getTotalEntries : () -> async Nat;
           };
 
@@ -718,7 +718,7 @@ module {
               break here;
             };
 
-            let entriesDTO = await season_leaderboard_canister.getEntries(chunkSize, offset, "");
+            let entriesDTO = await season_leaderboard_canister.getEntries({ limit = chunkSize; offset }, "");
             switch (entriesDTO) {
               case (?dto) {
                 await privateLeaguesManager.sendSeasonLeaderboardEntries(seasonId, dto.entries, managerCanisterIdIndex);

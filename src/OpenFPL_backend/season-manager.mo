@@ -161,12 +161,12 @@ module {
       return playerComposite.getActivePlayers(systemState.calculationSeasonId);
     };
 
-    public func getLoanedPlayers(clubId : T.ClubId) : [DTOs.PlayerDTO] {
-      return playerComposite.getLoanedPlayers(clubId);
+    public func getLoanedPlayers(dto: DTOs.ClubFilterDTO) : [DTOs.PlayerDTO] {
+      return playerComposite.getLoanedPlayers(dto);
     };
 
-    public func getRetiredPlayers(clubId : T.ClubId) : [DTOs.PlayerDTO] {
-      return playerComposite.getRetiredPlayers(clubId);
+    public func getRetiredPlayers(dto: DTOs.ClubFilterDTO) : [DTOs.PlayerDTO] {
+      return playerComposite.getRetiredPlayers(dto);
     };
 
     public func getClubs() : [DTOs.ClubDTO] {
@@ -177,16 +177,16 @@ module {
       return clubComposite.getFormerClubs();
     };
 
-    public func getPlayerDetailsForGameweek(seasonId : T.SeasonId, gameweek : T.GameweekNumber) : [DTOs.PlayerPointsDTO] {
-      return playerComposite.getPlayerDetailsForGameweek(seasonId, gameweek);
+    public func getPlayerDetailsForGameweek(dto: DTOs.GameweekFiltersDTO) : [DTOs.PlayerPointsDTO] {
+      return playerComposite.getPlayerDetailsForGameweek(dto);
     };
 
-    public func getPlayerDetails(playerId : T.PlayerId, seasonId : T.SeasonId) : DTOs.PlayerDetailDTO {
-      return playerComposite.getPlayerDetails(playerId, seasonId);
+    public func getPlayerDetails(dto: DTOs.GetPlayerDetailsDTO) : DTOs.PlayerDetailDTO {
+      return playerComposite.getPlayerDetails(dto);
     };
 
-    public func getPlayersMap(seasonId : T.SeasonId, gameweek : T.GameweekNumber) : [(Nat16, DTOs.PlayerScoreDTO)] {
-      let result = playerComposite.getPlayersMap(seasonId, gameweek);
+    public func getPlayersMap(dto: DTOs.GameweekFiltersDTO) : [(Nat16, DTOs.PlayerScoreDTO)] {
+      let result = playerComposite.getPlayersMap(dto);
       return result;
     };
 
@@ -253,12 +253,12 @@ module {
       return managerComposite.getTotalManagers();
     };
 
-    public func isUsernameValid(username : Text) : Bool {
-      return managerComposite.isUsernameValid(username);
+    public func isUsernameValid(dto: DTOs.UsernameFilterDTO) : Bool {
+      return managerComposite.isUsernameValid(dto.username);
     };
 
-    public func isUsernameTaken(username : Text, principalId : Text) : Bool {
-      return managerComposite.isUsernameTaken(username, principalId);
+    public func isUsernameTaken(dto: DTOs.UsernameFilterDTO, principalId : Text) : Bool {
+      return managerComposite.isUsernameTaken(dto.username, principalId);
     };
 
     public func searchByUsername(username : Text) : async ?DTOs.ManagerDTO {
@@ -282,8 +282,8 @@ module {
       return await managerComposite.updateFavouriteClub(principalId, clubId, systemState, allClubs);
     };
 
-    public func updateProfilePicture(principalId : Text, profilePicture : Blob, profilePictureType : Text) : async Result.Result<(), T.Error> {
-      return await managerComposite.updateProfilePicture(principalId, profilePicture, profilePictureType);
+    public func updateProfilePicture(dto: DTOs.UpdateProfilePictureDTO) : async Result.Result<(), T.Error> {
+      return await managerComposite.updateProfilePicture(dto);
     };
 
 
@@ -525,7 +525,7 @@ module {
               return fixture.gameweek == weeklyLeaderboard.gameweek;
             },
           );
-          await managerComposite.payWeeklyRewards(defaultAccount, rewardPool, weeklyLeaderboard, systemState.calculationSeasonId, systemState.calculationGameweek, List.fromArray(gameweekFixtures));
+          await managerComposite.payWeeklyRewards(defaultAccount, rewardPool, weeklyLeaderboard, { seasonId = systemState.calculationSeasonId; gameweek = systemState.calculationGameweek }, List.fromArray(gameweekFixtures));
         };
       };
     };
@@ -617,12 +617,12 @@ module {
         };
       };
 
-      let playerPointsMap = playerComposite.getPlayersMap(systemState.calculationSeasonId, systemState.calculationGameweek);
+      let playerPointsMap = playerComposite.getPlayersMap({ seasonId = systemState.calculationSeasonId; gameweek = systemState.calculationGameweek });
 
       await managerComposite.calculateFantasyTeamScores(playerPointsMap, systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
       await leaderboardComposite.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth, managerComposite.getStableUniqueManagerCanisterIds());
       
-      await leaderboardComposite.sendWeeklyLeaderboardEntries(privateLeaguesManager, systemState.calculationSeasonId, systemState.calculationGameweek, managerComposite.getManagerCanisterIds());
+      await leaderboardComposite.sendWeeklyLeaderboardEntries(privateLeaguesManager, { seasonId = systemState.calculationSeasonId; gameweek = systemState.calculationGameweek }, managerComposite.getManagerCanisterIds());
       await leaderboardComposite.sendMonthlyLeaderboardEntries(privateLeaguesManager, systemState.calculationSeasonId, systemState.calculationMonth, managerComposite.getManagerCanisterIds());
       await leaderboardComposite.sendSeasonLeaderboardEntries(privateLeaguesManager, systemState.calculationSeasonId, managerComposite.getManagerCanisterIds());
 
@@ -640,7 +640,7 @@ module {
           if(gameweekComplete){
             await managerComposite.resetWeeklyTransfers();
             await payWeeklyRewards(defaultAccount, foundRewardPool);
-            await privateLeaguesManager.payWeeklyRewards(systemState.calculationSeasonId, systemState.calculationGameweek);
+            await privateLeaguesManager.payWeeklyRewards({ seasonId = systemState.calculationSeasonId; gameweek = systemState.calculationGameweek });
             await incrementCalculationGameweek();
           };
 
@@ -850,20 +850,20 @@ module {
       return await privateLeaguesManager.isLeagueMember(canisterId, callerId);
     };
     
-    public func getPrivateLeagueWeeklyLeaderboard(canisterId: T.CanisterId, seasonId: T.SeasonId, gameweek: T.GameweekNumber, limit : Nat, offset : Nat) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
-      await privateLeaguesManager.getWeeklyLeaderboard(canisterId, seasonId, gameweek, limit, offset);
+    public func getPrivateLeagueWeeklyLeaderboard(dto: DTOs.GetPrivateLeagueWeeklyLeaderboard) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
+      await privateLeaguesManager.getWeeklyLeaderboard(dto);
     };  
 
-    public func getPrivateLeagueMonthlyLeaderboard(canisterId: T.CanisterId, seasonId : T.SeasonId, month: T.CalendarMonth, limit : Nat, offset : Nat) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error> {
-      await privateLeaguesManager.getMonthlyLeaderboard(canisterId, seasonId, month, limit, offset);
+    public func getPrivateLeagueMonthlyLeaderboard(dto: DTOs.GetPrivateLeagueMonthlyLeaderboard) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error> {
+      await privateLeaguesManager.getMonthlyLeaderboard(dto);
     };
 
-    public func getPrivateLeagueSeasonLeaderboard(canisterId: T.CanisterId, seasonId : T.SeasonId, limit : Nat, offset : Nat) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error> {
-      await privateLeaguesManager.getSeasonLeaderboard(canisterId, seasonId, limit, offset)
+    public func getPrivateLeagueSeasonLeaderboard(dto: DTOs.GetPrivateLeagueSeasonLeaderboard) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error> {
+      await privateLeaguesManager.getSeasonLeaderboard(dto)
     };
     
-    public func getPrivateLeagueMembers(canisterId: T.CanisterId, limit : Nat, offset : Nat) : async Result.Result<[DTOs.LeagueMemberDTO], T.Error> {
-      await privateLeaguesManager.getLeagueMembers(canisterId, limit, offset);
+    public func getPrivateLeagueMembers(dto: DTOs.GetPrivateLeagueMembersDTO) : async Result.Result<[DTOs.LeagueMemberDTO], T.Error> {
+      await privateLeaguesManager.getLeagueMembers(dto);
     };
 
     public func privateLeagueIsValid(privateLeague: DTOs.CreatePrivateLeagueDTO) : Bool{

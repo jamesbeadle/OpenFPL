@@ -3,7 +3,6 @@ import DTOs "../DTOs";
 import List "mo:base/List";
 import Buffer "mo:base/Buffer";
 import Iter "mo:base/Iter";
-import Result "mo:base/Result";
 import Time "mo:base/Time";
 import Text "mo:base/Text";
 import Array "mo:base/Array";
@@ -112,12 +111,12 @@ module {
       return List.toArray(playerDTOs);
     };
 
-    public func getLoanedPlayers(clubId : T.ClubId) : [DTOs.PlayerDTO] {
+    public func getLoanedPlayers(dto: DTOs.ClubFilterDTO) : [DTOs.PlayerDTO] {
 
       let loanedPlayers = List.filter<T.Player>(
         players,
         func(player : T.Player) : Bool {
-          return player.status == #OnLoan and player.clubId == clubId;
+          return player.status == #OnLoan and player.clubId == dto.clubId;
         },
       );
 
@@ -143,12 +142,12 @@ module {
       return List.toArray(playerDTOs);
     };
 
-    public func getRetiredPlayers(clubId : T.ClubId) : [DTOs.PlayerDTO] {
+    public func getRetiredPlayers(dto: DTOs.ClubFilterDTO) : [DTOs.PlayerDTO] {
 
       let retiredPlayers = List.filter<T.Player>(
         players,
         func(player : T.Player) : Bool {
-          return player.status == #Retired and player.clubId == clubId;
+          return player.status == #Retired and player.clubId == dto.clubId;
         },
       );
 
@@ -174,7 +173,7 @@ module {
       return List.toArray(playerDTOs);
     };
 
-    public func getPlayerDetailsForGameweek(seasonId : T.SeasonId, gameweek : T.GameweekNumber) : [DTOs.PlayerPointsDTO] {
+    public func getPlayerDetailsForGameweek(dto: DTOs.GameweekFiltersDTO) : [DTOs.PlayerPointsDTO] {
       var playerDetailsBuffer = Buffer.fromArray<DTOs.PlayerPointsDTO>([]);
 
       label playerDetailsLoop for (player in Iter.fromList(players)) {
@@ -182,9 +181,9 @@ module {
         var events : List.List<T.PlayerEventData> = List.nil();
 
         for (season in Iter.fromList(player.seasons)) {
-          if (season.id == seasonId) {
+          if (season.id == dto.seasonId) {
             for (gw in Iter.fromList(season.gameweeks)) {
-              if (gw.number == gameweek) {
+              if (gw.number == dto.gameweek) {
                 points := gw.points;
                 events := List.filter<T.PlayerEventData>(
                   gw.events,
@@ -203,7 +202,7 @@ module {
           clubId = player.clubId;
           position = player.position;
           events = List.toArray(events);
-          gameweek = gameweek;
+          gameweek = dto.gameweek;
         };
         playerDetailsBuffer.add(playerGameweek);
       };
@@ -211,7 +210,7 @@ module {
       return Buffer.toArray(playerDetailsBuffer);
     };
 
-    public func getPlayersMap(seasonId : T.SeasonId, gameweek : T.GameweekNumber) : [(Nat16, DTOs.PlayerScoreDTO)] {
+    public func getPlayersMap(dto: DTOs.GameweekFiltersDTO) : [(Nat16, DTOs.PlayerScoreDTO)] {
       var playersMap : TrieMap.TrieMap<Nat16, DTOs.PlayerScoreDTO> = TrieMap.TrieMap<Nat16, DTOs.PlayerScoreDTO>(Utilities.eqNat16, Utilities.hashNat16);
       label playerMapLoop for (player in Iter.fromList(players)) {
         if (player.status == #OnLoan) {
@@ -227,10 +226,10 @@ module {
         var dateOfBirth : Int = player.dateOfBirth;
 
         for (season in Iter.fromList(player.seasons)) {
-          if (season.id == seasonId) {
+          if (season.id == dto.seasonId) {
             for (gw in Iter.fromList(season.gameweeks)) {
 
-              if (gw.number == gameweek) {
+              if (gw.number == dto.gameweek) {
                 points := gw.points;
                 events := gw.events;
 
@@ -266,7 +265,7 @@ module {
       return Iter.toArray(playersMap.entries());
     };
 
-    public func getPlayerDetails(playerId : T.PlayerId, seasonId : T.SeasonId) : DTOs.PlayerDetailDTO {
+    public func getPlayerDetails(dto: DTOs.GetPlayerDetailsDTO) : DTOs.PlayerDetailDTO {
 
       var clubId : T.ClubId = 0;
       var position : T.PlayerPosition = #Goalkeeper;
@@ -288,7 +287,7 @@ module {
       let foundPlayer = List.find<T.Player>(
         players,
         func(player : T.Player) : Bool {
-          return player.id == playerId and player.status != #OnLoan;
+          return player.id == dto.playerId and player.status != #OnLoan;
         },
       );
 
@@ -310,7 +309,7 @@ module {
           injuryHistory := List.toArray<T.InjuryHistory>(player.injuryHistory);
           retirementDate := player.retirementDate;
 
-          let currentSeason = List.find<T.PlayerSeason>(player.seasons, func(ps : T.PlayerSeason) { ps.id == seasonId });
+          let currentSeason = List.find<T.PlayerSeason>(player.seasons, func(ps : T.PlayerSeason) { ps.id == dto.seasonId });
           switch (currentSeason) {
             case (null) {};
             case (?season) {
@@ -338,7 +337,7 @@ module {
       };
 
       return {
-        id = playerId;
+        id = dto.playerId;
         clubId = clubId;
         position = position;
         firstName = firstName;
@@ -347,7 +346,7 @@ module {
         valueQuarterMillions = valueQuarterMillions;
         dateOfBirth = dateOfBirth;
         nationality = nationality;
-        seasonId = seasonId;
+        seasonId = dto.seasonId;
         valueHistory = valueHistory;
         status = status;
         parentClubId = parentClubId;

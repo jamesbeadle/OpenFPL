@@ -110,56 +110,57 @@ actor Self {
     return #ok(seasonManager.getPlayers());
   };
 
-  public shared query func getLoanedPlayers(clubId : T.ClubId) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
-    return #ok(seasonManager.getLoanedPlayers(clubId));
+  public shared query func getLoanedPlayers(dto: DTOs.ClubFilterDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
+    return #ok(seasonManager.getLoanedPlayers(dto));
   };
 
-  public shared query func getRetiredPlayers(clubId : T.ClubId) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
-    return #ok(seasonManager.getRetiredPlayers(clubId));
+  public shared query func getRetiredPlayers(dto: DTOs.ClubFilterDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
+    return #ok(seasonManager.getRetiredPlayers(dto));
   };
 
-  public shared query func getPlayerDetailsForGameweek(seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async Result.Result<[DTOs.PlayerPointsDTO], T.Error> {
-    return #ok(seasonManager.getPlayerDetailsForGameweek(seasonId, gameweek));
+  public shared query func getPlayerDetailsForGameweek(dto: DTOs.GameweekFiltersDTO) : async Result.Result<[DTOs.PlayerPointsDTO], T.Error> {
+    return #ok(seasonManager.getPlayerDetailsForGameweek(dto));
   };
 
-  public shared query func getPlayersMap(seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async Result.Result<[(Nat16, DTOs.PlayerScoreDTO)], T.Error> {
-    return #ok(seasonManager.getPlayersMap(seasonId, gameweek));
+  public shared query func getPlayersMap(dto: DTOs.GameweekFiltersDTO) : async Result.Result<[(Nat16, DTOs.PlayerScoreDTO)], T.Error> {
+    return #ok(seasonManager.getPlayersMap(dto));
   };
 
-  public shared query func getPlayerDetails(playerId : T.PlayerId, seasonId : T.SeasonId) : async Result.Result<DTOs.PlayerDetailDTO, T.Error> {
-    return #ok(seasonManager.getPlayerDetails(playerId, seasonId));
+  public shared query func getPlayerDetails(dto: DTOs.GetPlayerDetailsDTO) : async Result.Result<DTOs.PlayerDetailDTO, T.Error> {
+    return #ok(seasonManager.getPlayerDetails(dto));
   };
 
   public shared query func getCountries() : async Result.Result<[DTOs.CountryDTO], T.Error> {
     return #ok(Countries.countries);
   };
 
-  public shared query ({ caller }) func isUsernameValid(username : Text) : async Bool {
+  public shared query ({ caller }) func isUsernameValid(dto: DTOs.UsernameFilterDTO) : async Bool {
     assert not Principal.isAnonymous(caller);
-    let usernameValid = seasonManager.isUsernameValid(username);
-    let usernameTaken = seasonManager.isUsernameTaken(username, Principal.toText(caller));
+    let usernameValid = seasonManager.isUsernameValid(dto);
+    let usernameTaken = seasonManager.isUsernameTaken(dto, Principal.toText(caller));
     return usernameValid and not usernameTaken;
   };
 
 
   //Update functions:
 
-  public shared ({ caller }) func updateUsername(username : Text) : async Result.Result<(), T.Error> {
+  public shared ({ caller }) func updateUsername(dto: DTOs.UsernameFilterDTO) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    return await seasonManager.updateUsername(principalId, username);
+    return await seasonManager.updateUsername(principalId, dto.username);
   };
 
-  public shared ({ caller }) func updateFavouriteClub(favouriteClubId : T.ClubId) : async Result.Result<(), T.Error> {
+  public shared ({ caller }) func updateFavouriteClub(dto: DTOs.ClubFilterDTO) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    return await seasonManager.updateFavouriteClub(principalId, favouriteClubId);
+    return await seasonManager.updateFavouriteClub(principalId, dto.clubId);
   };
 
-  public shared ({ caller }) func updateProfilePicture(profilePicture : Blob, extension : Text) : async Result.Result<(), T.Error> {
+  public shared ({ caller }) func updateProfilePicture(dto: DTOs.UpdateProfilePictureDTO) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    return await seasonManager.updateProfilePicture(principalId, profilePicture, extension);
+    assert principalId == dto.managerId;
+    return await seasonManager.updateProfilePicture(dto);
   };
 
   public shared ({ caller }) func saveFantasyTeam(fantasyTeam : DTOs.UpdateTeamSelectionDTO) : async Result.Result<(), T.Error> {
@@ -445,7 +446,7 @@ actor Self {
   public shared ({ caller }) func getPrivateLeagues() : async Result.Result<DTOs.ManagerPrivateLeaguesDTO, T.Error> {
     assert not Principal.isAnonymous(caller);
     let managerId = Principal.toText(caller);
-    let user = await seasonManager.getManager(managerId);
+    let user = await seasonManager.getManager({managerId});
 
     let systemState = await getSystemState();
     switch(systemState){
@@ -456,9 +457,9 @@ actor Self {
             let privateLeaguesBuffer = Buffer.fromArray<DTOs.ManagerPrivateLeagueDTO>([]);
             for(privateLeagueCanisterId in Iter.fromArray(managerDTO.privateLeagueMemberships)){
               let private_league_canister = actor (privateLeagueCanisterId) : actor {
-                getManagerPrivateLeague : (managerId: T.PrincipalId, seasonId: T.SeasonId, gameweek: T.GameweekNumber) -> async DTOs.ManagerPrivateLeagueDTO;
+                getManagerPrivateLeague : (managerId: T.PrincipalId, filters: DTOs.GameweekFiltersDTO) -> async DTOs.ManagerPrivateLeagueDTO;
               };
-              let privateLeague = await private_league_canister.getManagerPrivateLeague(managerId, foundState.calculationSeasonId, foundState.calculationGameweek);
+              let privateLeague = await private_league_canister.getManagerPrivateLeague(managerId, {seasonId = foundState.calculationSeasonId; gameweek = foundState.calculationGameweek});
               privateLeaguesBuffer.add({
                 canisterId = privateLeagueCanisterId;
                 created = privateLeague.created;
@@ -484,29 +485,32 @@ actor Self {
       };
     };
   };
-
-  public shared ({ caller }) func getPrivateLeagueWeeklyLeaderboard(canisterId: T.CanisterId, seasonId : T.SeasonId, gameweek: T.GameweekNumber, limit : Nat, offset : Nat) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error>{
+//todo: create dto
+  public shared ({ caller }) func getPrivateLeagueWeeklyLeaderboard(dto: DTOs.GetPrivateLeagueWeeklyLeaderboard) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error>{
     assert not Principal.isAnonymous(caller);
-    assert(await seasonManager.isPrivateLeagueMember(canisterId, Principal.toText(caller)));
-    return await seasonManager.getPrivateLeagueWeeklyLeaderboard(canisterId, seasonId, gameweek, limit, offset);
+    assert(await seasonManager.isPrivateLeagueMember(dto.canisterId, Principal.toText(caller)));
+    return await seasonManager.getPrivateLeagueWeeklyLeaderboard(dto);
   };
 
-  public shared ({ caller }) func getPrivateLeagueMonthlyLeaderboard(canisterId: T.CanisterId, seasonId : T.SeasonId, month: T.CalendarMonth, limit : Nat, offset : Nat ) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error>{
+//todo: create dto
+  public shared ({ caller }) func getPrivateLeagueMonthlyLeaderboard(dto: DTOs.GetPrivateLeagueMonthlyLeaderboard) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error>{
     assert not Principal.isAnonymous(caller);
-    assert(await seasonManager.isPrivateLeagueMember(canisterId, Principal.toText(caller)));
-    return await seasonManager.getPrivateLeagueMonthlyLeaderboard(canisterId, seasonId, month, limit, offset);
+    assert(await seasonManager.isPrivateLeagueMember(dto.canisterId, Principal.toText(caller)));
+    return await seasonManager.getPrivateLeagueMonthlyLeaderboard(dto);
   };
 
-  public shared ({ caller }) func getPrivateLeagueSeasonLeaderboard(canisterId: T.CanisterId, seasonId : T.SeasonId, limit : Nat, offset : Nat) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error>{
+//todo: create dto
+  public shared ({ caller }) func getPrivateLeagueSeasonLeaderboard(dto: DTOs.GetPrivateLeagueSeasonLeaderboard) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error>{
     assert not Principal.isAnonymous(caller);
-    assert(await seasonManager.isPrivateLeagueMember(canisterId, Principal.toText(caller)));
-    return await seasonManager.getPrivateLeagueSeasonLeaderboard(canisterId, seasonId, limit, offset);
+    assert(await seasonManager.isPrivateLeagueMember(dto.canisterId, Principal.toText(caller)));
+    return await seasonManager.getPrivateLeagueSeasonLeaderboard(dto);
   };
 
-  public shared ({ caller }) func getPrivateLeagueMembers(canisterId: T.CanisterId, limit : Nat, offset : Nat) : async Result.Result<[DTOs.LeagueMemberDTO], T.Error>{
+//todo: create dto
+  public shared ({ caller }) func getPrivateLeagueMembers(dto: DTOs.GetPrivateLeagueMembersDTO) : async Result.Result<[DTOs.LeagueMemberDTO], T.Error>{
     assert not Principal.isAnonymous(caller);
-    assert(await seasonManager.isPrivateLeagueMember(canisterId, Principal.toText(caller)));
-    return await seasonManager.getPrivateLeagueMembers(canisterId, limit, offset);
+    assert(await seasonManager.isPrivateLeagueMember(dto.canisterId, Principal.toText(caller)));
+    return await seasonManager.getPrivateLeagueMembers(dto);
   };
   
   public shared ({ caller }) func createPrivateLeague(newPrivateLeague: DTOs.CreatePrivateLeagueDTO) : async Result.Result<(), T.Error>{
@@ -518,41 +522,47 @@ actor Self {
     return await seasonManager.createPrivateLeague(Principal.fromActor(Self), caller, newPrivateLeague);
   };
 
-  public shared ({ caller }) func searchUsername(username: Text) : async Result.Result<DTOs.ManagerDTO, T.Error> {
+//todo: create dto
+  public shared ({ caller }) func searchUsername(dto: DTOs.UsernameFilterDTO) : async Result.Result<DTOs.ManagerDTO, T.Error> {
     assert not Principal.isAnonymous(caller);
-    return await seasonManager.getManagerByUsername(username);
+    return await seasonManager.getManagerByUsername(dto.username);
   };
 
-  public shared ({ caller }) func inviteUserToLeague(canisterId: T.CanisterId, managerId: T.PrincipalId) : async Result.Result<(), T.Error> {
+//todo: create dto
+  public shared ({ caller }) func inviteUserToLeague(dto: DTOs.LeagueInviteDTO) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
-    assert await seasonManager.isLeagueAdmin(canisterId, Principal.toText(caller));
+    assert await seasonManager.isLeagueAdmin(dto.canisterId, Principal.toText(caller));
 
-    assert(await seasonManager.leagueHasSpace(canisterId));
+    assert(await seasonManager.leagueHasSpace(dto.canisterId));
     
-    let isLeagueMember = await seasonManager.isLeagueMember(canisterId, Principal.toText(caller));
+    let isLeagueMember = await seasonManager.isLeagueMember(dto.canisterId, Principal.toText(caller));
     assert not isLeagueMember;
 
-    return await seasonManager.inviteUserToLeague(canisterId, managerId, Principal.toText(caller));
+    return await seasonManager.inviteUserToLeague(dto, Principal.toText(caller));
   };
 
-  public shared ({ caller }) func updateLeaguePicture(canisterId: T.CanisterId, picture: ?Blob) : async Result.Result<(), T.Error> {
+//todo: create dto
+  public shared ({ caller }) func updateLeaguePicture(dto: DTOs.UpdateLeaguePictureDTO) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
-    assert await seasonManager.isLeagueAdmin(canisterId, Principal.toText(caller));
-    await seasonManager.updateLeaguePicture(canisterId, picture);
+    assert await seasonManager.isLeagueAdmin(dto.canisterId, Principal.toText(caller));
+    await seasonManager.updateLeaguePicture(dto);
   };
 
-  public shared ({ caller }) func updateLeagueBanner(canisterId: T.CanisterId, banner: ?Blob) : async Result.Result<(), T.Error> {
+//todo: create dto
+  public shared ({ caller }) func updateLeagueBanner(dto: DTOs.UpdateLeagueBannerDTO) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     assert await seasonManager.isLeagueAdmin(canisterId, Principal.toText(caller));
     await seasonManager.updateLeagueBanner(canisterId, banner);
   };
 
-  public shared ({ caller }) func updateLeagueName(canisterId: T.CanisterId, name: Text) : async Result.Result<(), T.Error> {
+//todo: create dto
+  public shared ({ caller }) func updateLeagueName(dto: DTOs.UpdateLeagueNameDTO) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     assert await seasonManager.isLeagueAdmin(canisterId, Principal.toText(caller));
     await seasonManager.updateLeagueName(canisterId, name);
   };
 
+//todo: create dto
   public shared ({ caller }) func acceptLeagueInvite(canisterId: T.CanisterId) : async Result.Result<(), T.Error>{
     assert not Principal.isAnonymous(caller);
     assert(await seasonManager.leagueHasSpace(canisterId));
@@ -563,6 +573,7 @@ actor Self {
     return await seasonManager.acceptLeagueInvite(canisterId, Principal.toText(caller));
   };
 
+//todo: create dto
   public shared ({ caller }) func enterLeague(privateLeagueCanisterId: T.CanisterId) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     assert(await seasonManager.leagueHasSpace(privateLeagueCanisterId));
@@ -598,6 +609,7 @@ actor Self {
     };    
   };
 
+//todo: create dto
   public shared ({ caller }) func enterLeagueWithFee(canisterId: T.CanisterId) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     assert(await seasonManager.leagueHasSpace(canisterId));
@@ -625,6 +637,7 @@ actor Self {
     
   };
 
+//todo: create dto
   public shared ({ caller }) func acceptInviteAndPayFee(canisterId: T.CanisterId) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     assert(await seasonManager.leagueHasSpace(canisterId));
@@ -644,12 +657,13 @@ actor Self {
     return #ok(treasuryManager.getTokenList());
   };
 
-  public shared ({ caller }) func payPrivateLeagueRewards(managerId : T.PrincipalId, amount : Nat64) : async () {
+//todo: create dto
+  public shared ({ caller }) func payPrivateLeagueRewards(dto: DTOs.PrivateLeagueRewardDTO) : async () {
     assert not Principal.isAnonymous(caller);
     let privateLeagueCanisterId = Principal.toText(caller);
     assert seasonManager.leagueExists(privateLeagueCanisterId);
-    assert await seasonManager.isPrivateLeagueMember(managerId, privateLeagueCanisterId);
-    await seasonManager.payPrivateLeagueReward(Principal.fromActor(Self), privateLeagueCanisterId, treasuryManager.getTokenList(), managerId, amount);
+    assert await seasonManager.isPrivateLeagueMember(dto.managerId, privateLeagueCanisterId);
+    await seasonManager.payPrivateLeagueReward(Principal.fromActor(Self), privateLeagueCanisterId, treasuryManager.getTokenList(), dto.managerId, dto.amount);
   };
 
 

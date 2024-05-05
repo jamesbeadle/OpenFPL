@@ -554,12 +554,12 @@ module {
       return result;
     };
 
-    public func updateUsername(principalId : T.PrincipalId, updatedUsername : Text) : async Result.Result<(), T.Error> {
-      if (not isUsernameValid(updatedUsername)) {
+    public func updateUsername(principalId : T.PrincipalId, username: Text) : async Result.Result<(), T.Error> {
+      if (not isUsernameValid(username)) {
         return #err(#InvalidData);
       };
 
-      if (isUsernameTaken(updatedUsername, principalId)) {
+      if (isUsernameTaken(username, principalId)) {
         return #err(#InvalidData);
       };
 
@@ -572,7 +572,7 @@ module {
 
           let newManager : T.Manager = {
             principalId = principalId;
-            username = updatedUsername;
+            username = username;
             favouriteClubId = 0;
             createDate = Time.now();
             termsAccepted = false;
@@ -628,7 +628,7 @@ module {
             totalManagers := totalManagers + 1;
             result := await manager_canister.addNewManager(newManager);
             managerCanisterIds.put(newManager.principalId, activeManagerCanisterId);
-            managerUsernames.put(principalId, updatedUsername);
+            managerUsernames.put(principalId, username);
             return result;
           };
         };
@@ -637,12 +637,12 @@ module {
           let manager_canister = actor (foundCanisterId) : actor {
             updateUsername : (dto : DTOs.UpdateUsernameDTO) -> async Result.Result<(), T.Error>;
           };
-          let dto : DTOs.UpdateUsernameDTO = {
+          let updatedUsernameDTO : DTOs.UpdateUsernameDTO = {
             principalId = principalId;
-            username = updatedUsername;
+            username = username;
           };
-          result := await manager_canister.updateUsername(dto);
-          managerUsernames.put(principalId, updatedUsername);
+          result := await manager_canister.updateUsername(updatedUsernameDTO);
+          managerUsernames.put(principalId, username);
           return result;
         };
       };
@@ -768,26 +768,26 @@ module {
       return #err(#NotFound);
     };
 
-    public func updateProfilePicture(principalId : T.PrincipalId, profilePicture : Blob, profilePictureType : Text) : async Result.Result<(), T.Error> {
+    public func updateProfilePicture(dto: DTOs.UpdateProfilePictureDTO) : async Result.Result<(), T.Error> {
 
-      if (invalidProfilePicture(profilePicture)) {
+      if (invalidProfilePicture(dto.profilePicture)) {
 
         return #err(#InvalidData);
       };
 
-      let managerCanisterId = managerCanisterIds.get(principalId);
+      let managerCanisterId = managerCanisterIds.get(dto.managerId);
       var result : Result.Result<(), T.Error> = #err(#NotFound);
 
       switch (managerCanisterId) {
         case (null) {
           let newManager : T.Manager = {
-            principalId = principalId;
+            principalId = dto.managerId;
             username = "";
             favouriteClubId = 0;
             createDate = Time.now();
             termsAccepted = false;
-            profilePicture = ?profilePicture;
-            profilePictureType = profilePictureType;
+            profilePicture = ?dto.profilePicture;
+            profilePictureType = dto.extension;
             transfersAvailable = 0;
             monthlyBonusesAvailable = 0;
             bankQuarterMillions = 1200;
@@ -848,13 +848,13 @@ module {
             updateProfilePicture : (dto : DTOs.UpdateProfilePictureDTO) -> async Result.Result<(), T.Error>;
           };
 
-          let dto : DTOs.UpdateProfilePictureDTO = {
-            principalId = principalId;
-            profilePicture = ?profilePicture;
-            extension = profilePictureType;
+          let profilePictureDTO : DTOs.UpdateProfilePictureDTO = {
+            managerId = dto.managerId;
+            profilePicture = dto.profilePicture;
+            extension = dto.extension;
           };
 
-          result := await manager_canister.updateProfilePicture(dto);
+          result := await manager_canister.updateProfilePicture(profilePictureDTO);
           return result;
         };
       };
@@ -862,7 +862,7 @@ module {
       return #err(#NotFound);
     };
 
-    public func isUsernameValid(username : Text) : Bool {
+    public func isUsernameValid(username: Text) : Bool {
       if (Text.size(username) < 3 or Text.size(username) > 20) {
         return false;
       };
@@ -1290,11 +1290,11 @@ module {
       };
     };
 
-    public func payWeeklyRewards(defaultAccount: Principal, rewardPool : T.RewardPool, weeklyLeaderboard : DTOs.WeeklyLeaderboardDTO, seasonId: T.SeasonId, gameweek: T.GameweekNumber, fixtures : List.List<DTOs.FixtureDTO>) : async () {
+    public func payWeeklyRewards(defaultAccount: Principal, rewardPool : T.RewardPool, weeklyLeaderboard : DTOs.WeeklyLeaderboardDTO, filters: DTOs.GameweekFiltersDTO, fixtures : List.List<DTOs.FixtureDTO>) : async () {
       await rewards.distributeWeeklyRewards(defaultAccount, rewardPool.weeklyLeaderboardPool, weeklyLeaderboard);
-      await rewards.distributeHighestScoringPlayerRewards(defaultAccount, seasonId, gameweek, rewardPool.highestScoringMatchPlayerPool, fixtures, uniqueManagerCanisterIds);
+      await rewards.distributeHighestScoringPlayerRewards(defaultAccount, filters.seasonId, filters.gameweek, rewardPool.highestScoringMatchPlayerPool, fixtures, uniqueManagerCanisterIds);
       await rewards.distributeWeeklyATHScoreRewards(defaultAccount, rewardPool.allTimeWeeklyHighScorePool, weeklyLeaderboard);
-     };
+    };
 
     public func payMonthlyRewards(defaultAccount: Principal, rewardPool : T.RewardPool, monthlyLeaderboard : DTOs.ClubLeaderboardDTO) : async () {
       await rewards.distributeMonthlyRewards(defaultAccount, rewardPool, monthlyLeaderboard, uniqueManagerCanisterIds);
