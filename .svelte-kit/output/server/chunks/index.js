@@ -3513,7 +3513,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1dj334h"
+  version_hash: "9ay4v0"
 };
 async function get_hooks() {
   return {};
@@ -3961,13 +3961,13 @@ const idlFactory = ({ IDL }) => {
     shirtType: ShirtType,
     primaryColourHex: IDL.Text
   });
-  const Result_18 = IDL.Variant({ ok: IDL.Vec(ClubDTO), err: Error2 });
+  const Result_19 = IDL.Variant({ ok: IDL.Vec(ClubDTO), err: Error2 });
   const CountryDTO = IDL.Record({
     id: CountryId,
     code: IDL.Text,
     name: IDL.Text
   });
-  const Result_21 = IDL.Variant({ ok: IDL.Vec(CountryDTO), err: Error2 });
+  const Result_22 = IDL.Variant({ ok: IDL.Vec(CountryDTO), err: Error2 });
   const PickTeamDTO = IDL.Record({
     playerIds: IDL.Vec(PlayerId),
     countrymenCountryId: CountryId,
@@ -3995,13 +3995,15 @@ const idlFactory = ({ IDL }) => {
     captainId: PlayerId,
     monthlyBonusesAvailable: IDL.Nat8
   });
-  const Result_20 = IDL.Variant({ ok: PickTeamDTO, err: Error2 });
+  const Result_21 = IDL.Variant({ ok: PickTeamDTO, err: Error2 });
   const DataCacheDTO = IDL.Record({ hash: IDL.Text, category: IDL.Text });
-  const Result_19 = IDL.Variant({
+  const Result_20 = IDL.Variant({
     ok: IDL.Vec(DataCacheDTO),
     err: Error2
   });
+  const GetFixturesDTO = IDL.Record({ seasonId: SeasonId });
   const Result_13 = IDL.Variant({ ok: IDL.Vec(FixtureDTO), err: Error2 });
+  const ClubFilterDTO = IDL.Record({ clubId: ClubId });
   const PlayerStatus = IDL.Variant({
     OnLoan: IDL.Null,
     Former: IDL.Null,
@@ -4022,6 +4024,7 @@ const idlFactory = ({ IDL }) => {
     firstName: IDL.Text
   });
   const Result_8 = IDL.Variant({ ok: IDL.Vec(PlayerDTO), err: Error2 });
+  const GetManagerDTO = IDL.Record({ managerId: IDL.Text });
   const CalendarMonth = IDL.Nat8;
   const FantasyTeamSnapshot = IDL.Record({
     playerIds: IDL.Vec(PlayerId),
@@ -4077,6 +4080,30 @@ const idlFactory = ({ IDL }) => {
     seasonPositionText: IDL.Text
   });
   const Result_1 = IDL.Variant({ ok: ManagerDTO, err: Error2 });
+  const ManagerPrivateLeagueDTO = IDL.Record({
+    created: IDL.Int,
+    name: IDL.Text,
+    memberCount: IDL.Int,
+    seasonPosition: IDL.Nat,
+    seasonPositionText: IDL.Text,
+    canisterId: CanisterId
+  });
+  const ManagerPrivateLeaguesDTO = IDL.Record({
+    totalEntries: IDL.Nat,
+    entries: IDL.Vec(ManagerPrivateLeagueDTO)
+  });
+  const Result_18 = IDL.Variant({
+    ok: ManagerPrivateLeaguesDTO,
+    err: Error2
+  });
+  const GetMonthlyLeaderboardDTO = IDL.Record({
+    month: CalendarMonth,
+    clubId: ClubId,
+    offset: IDL.Nat,
+    seasonId: SeasonId,
+    limit: IDL.Nat,
+    searchTerm: IDL.Text
+  });
   const LeaderboardEntry = IDL.Record({
     username: IDL.Text,
     positionText: IDL.Text,
@@ -4090,13 +4117,21 @@ const idlFactory = ({ IDL }) => {
     seasonId: SeasonId,
     entries: IDL.Vec(LeaderboardEntry)
   });
-  const Result_11 = IDL.Variant({
+  const Result_10 = IDL.Variant({
     ok: MonthlyLeaderboardDTO,
     err: Error2
+  });
+  const GetMonthlyLeaderboardsDTO = IDL.Record({
+    month: CalendarMonth,
+    seasonId: SeasonId
   });
   const Result_17 = IDL.Variant({
     ok: IDL.Vec(MonthlyLeaderboardDTO),
     err: Error2
+  });
+  const GetPlayerDetailsDTO = IDL.Record({
+    playerId: PlayerId,
+    seasonId: SeasonId
   });
   const InjuryHistory = IDL.Record({
     description: IDL.Text,
@@ -4135,6 +4170,10 @@ const idlFactory = ({ IDL }) => {
     firstName: IDL.Text
   });
   const Result_16 = IDL.Variant({ ok: PlayerDetailDTO, err: Error2 });
+  const GameweekFiltersDTO = IDL.Record({
+    seasonId: SeasonId,
+    gameweek: GameweekNumber
+  });
   const PlayerPointsDTO = IDL.Record({
     id: IDL.Nat16,
     clubId: ClubId,
@@ -4164,15 +4203,37 @@ const idlFactory = ({ IDL }) => {
     ok: IDL.Vec(IDL.Tuple(IDL.Nat16, PlayerScoreDTO)),
     err: Error2
   });
+  const Result_12 = IDL.Variant({
+    ok: ManagerPrivateLeagueDTO,
+    err: Error2
+  });
+  const GetLeagueMembersDTO = IDL.Record({
+    offset: IDL.Nat,
+    limit: IDL.Nat,
+    canisterId: CanisterId
+  });
   const PrincipalId = IDL.Text;
   const LeagueMemberDTO = IDL.Record({
     added: IDL.Int,
     username: IDL.Text,
     principalId: PrincipalId
   });
-  const Result_12 = IDL.Variant({
+  const Result_11 = IDL.Variant({
     ok: IDL.Vec(LeagueMemberDTO),
     err: Error2
+  });
+  const GetPrivateLeagueMonthlyLeaderboard = IDL.Record({
+    month: CalendarMonth,
+    offset: IDL.Nat,
+    seasonId: SeasonId,
+    limit: IDL.Nat,
+    canisterId: CanisterId
+  });
+  const GetPrivateLeagueSeasonLeaderboard = IDL.Record({
+    offset: IDL.Nat,
+    seasonId: SeasonId,
+    limit: IDL.Nat,
+    canisterId: CanisterId
   });
   const SeasonLeaderboardDTO = IDL.Record({
     totalEntries: IDL.Nat,
@@ -4180,6 +4241,13 @@ const idlFactory = ({ IDL }) => {
     entries: IDL.Vec(LeaderboardEntry)
   });
   const Result_7 = IDL.Variant({ ok: SeasonLeaderboardDTO, err: Error2 });
+  const GetPrivateLeagueWeeklyLeaderboard = IDL.Record({
+    offset: IDL.Nat,
+    seasonId: SeasonId,
+    limit: IDL.Nat,
+    gameweek: GameweekNumber,
+    canisterId: CanisterId
+  });
   const WeeklyLeaderboardDTO = IDL.Record({
     totalEntries: IDL.Nat,
     seasonId: SeasonId,
@@ -4187,22 +4255,6 @@ const idlFactory = ({ IDL }) => {
     gameweek: GameweekNumber
   });
   const Result_2 = IDL.Variant({ ok: WeeklyLeaderboardDTO, err: Error2 });
-  const ManagerPrivateLeagueDTO = IDL.Record({
-    created: IDL.Int,
-    name: IDL.Text,
-    memberCount: IDL.Int,
-    seasonPosition: IDL.Nat,
-    seasonPositionText: IDL.Text,
-    canisterId: CanisterId
-  });
-  const ManagerPrivateLeaguesDTO = IDL.Record({
-    totalEntries: IDL.Nat,
-    entries: IDL.Vec(ManagerPrivateLeagueDTO)
-  });
-  const Result_10 = IDL.Variant({
-    ok: ManagerPrivateLeaguesDTO,
-    err: Error2
-  });
   const ProfileDTO = IDL.Record({
     username: IDL.Text,
     termsAccepted: IDL.Bool,
@@ -4213,6 +4265,12 @@ const idlFactory = ({ IDL }) => {
     principalId: IDL.Text
   });
   const Result_9 = IDL.Variant({ ok: ProfileDTO, err: Error2 });
+  const GetSeasonLeaderboardDTO = IDL.Record({
+    offset: IDL.Nat,
+    seasonId: SeasonId,
+    limit: IDL.Nat,
+    searchTerm: IDL.Text
+  });
   const SeasonDTO = IDL.Record({
     id: SeasonId,
     name: IDL.Text,
@@ -4240,6 +4298,22 @@ const idlFactory = ({ IDL }) => {
   });
   const Result_4 = IDL.Variant({ ok: IDL.Vec(TokenInfo), err: Error2 });
   const Result_3 = IDL.Variant({ ok: IDL.Nat, err: Error2 });
+  const GetWeeklyLeaderboardDTO = IDL.Record({
+    offset: IDL.Nat,
+    seasonId: SeasonId,
+    limit: IDL.Nat,
+    searchTerm: IDL.Text,
+    gameweek: GameweekNumber
+  });
+  const LeagueInviteDTO = IDL.Record({
+    managerId: PrincipalId,
+    canisterId: CanisterId
+  });
+  const UsernameFilterDTO = IDL.Record({ username: IDL.Text });
+  const PrivateLeagueRewardDTO = IDL.Record({
+    managerId: PrincipalId,
+    amount: IDL.Nat64
+  });
   const UpdateTeamSelectionDTO = IDL.Record({
     playerIds: IDL.Vec(PlayerId),
     countrymenCountryId: CountryId,
@@ -4262,6 +4336,23 @@ const idlFactory = ({ IDL }) => {
     principalId: IDL.Text,
     passMasterPlayerId: PlayerId,
     captainId: PlayerId
+  });
+  const UpdateLeagueBannerDTO = IDL.Record({
+    banner: IDL.Opt(IDL.Vec(IDL.Nat8)),
+    canisterId: CanisterId
+  });
+  const UpdateLeagueNameDTO = IDL.Record({
+    name: IDL.Text,
+    canisterId: CanisterId
+  });
+  const UpdateLeaguePictureDTO = IDL.Record({
+    picture: IDL.Opt(IDL.Vec(IDL.Nat8)),
+    canisterId: CanisterId
+  });
+  const UpdateProfilePictureDTO = IDL.Record({
+    managerId: IDL.Text,
+    profilePicture: IDL.Vec(IDL.Nat8),
+    extension: IDL.Text
   });
   const RustResult = IDL.Variant({ Ok: IDL.Null, Err: IDL.Text });
   return IDL.Service({
@@ -4292,92 +4383,73 @@ const idlFactory = ({ IDL }) => {
     executeUnretirePlayer: IDL.Func([UnretirePlayerDTO], [], []),
     executeUpdateClub: IDL.Func([UpdateClubDTO], [], []),
     executeUpdatePlayer: IDL.Func([UpdatePlayerDTO], [], []),
-    getClubs: IDL.Func([], [Result_18], ["query"]),
-    getCountries: IDL.Func([], [Result_21], ["query"]),
-    getCurrentTeam: IDL.Func([], [Result_20], []),
-    getDataHashes: IDL.Func([], [Result_19], ["query"]),
-    getFixtures: IDL.Func([SeasonId], [Result_13], ["query"]),
-    getFormerClubs: IDL.Func([], [Result_18], ["query"]),
-    getLoanedPlayers: IDL.Func([ClubId], [Result_8], ["query"]),
-    getManager: IDL.Func([IDL.Text], [Result_1], []),
+    getClubs: IDL.Func([], [Result_19], ["query"]),
+    getCountries: IDL.Func([], [Result_22], ["query"]),
+    getCurrentTeam: IDL.Func([], [Result_21], []),
+    getDataHashes: IDL.Func([], [Result_20], ["query"]),
+    getFixtures: IDL.Func([GetFixturesDTO], [Result_13], ["query"]),
+    getFormerClubs: IDL.Func([], [Result_19], ["query"]),
+    getLoanedPlayers: IDL.Func([ClubFilterDTO], [Result_8], ["query"]),
+    getManager: IDL.Func([GetManagerDTO], [Result_1], []),
+    getManagerPrivateLeagues: IDL.Func([], [Result_18], []),
     getMonthlyLeaderboard: IDL.Func(
-      [SeasonId, ClubId, CalendarMonth, IDL.Nat, IDL.Nat, IDL.Text],
-      [Result_11],
+      [GetMonthlyLeaderboardDTO],
+      [Result_10],
       []
     ),
     getMonthlyLeaderboards: IDL.Func(
-      [SeasonId, CalendarMonth],
+      [GetMonthlyLeaderboardsDTO],
       [Result_17],
       []
     ),
     getNeuronId: IDL.Func([], [IDL.Nat64], []),
-    getPlayerDetails: IDL.Func([PlayerId, SeasonId], [Result_16], ["query"]),
+    getPlayerDetails: IDL.Func([GetPlayerDetailsDTO], [Result_16], ["query"]),
     getPlayerDetailsForGameweek: IDL.Func(
-      [SeasonId, GameweekNumber],
+      [GameweekFiltersDTO],
       [Result_15],
       ["query"]
     ),
     getPlayers: IDL.Func([], [Result_8], ["query"]),
-    getPlayersMap: IDL.Func([SeasonId, GameweekNumber], [Result_14], ["query"]),
+    getPlayersMap: IDL.Func([GameweekFiltersDTO], [Result_14], ["query"]),
     getPostponedFixtures: IDL.Func([], [Result_13], ["query"]),
-    getPrivateLeagueMembers: IDL.Func(
-      [CanisterId, IDL.Nat, IDL.Nat],
-      [Result_12],
-      []
-    ),
+    getPrivateLeague: IDL.Func([CanisterId], [Result_12], []),
+    getPrivateLeagueMembers: IDL.Func([GetLeagueMembersDTO], [Result_11], []),
     getPrivateLeagueMonthlyLeaderboard: IDL.Func(
-      [CanisterId, SeasonId, CalendarMonth, IDL.Nat, IDL.Nat],
-      [Result_11],
+      [GetPrivateLeagueMonthlyLeaderboard],
+      [Result_10],
       []
     ),
     getPrivateLeagueSeasonLeaderboard: IDL.Func(
-      [CanisterId, SeasonId, IDL.Nat, IDL.Nat],
+      [GetPrivateLeagueSeasonLeaderboard],
       [Result_7],
       []
     ),
     getPrivateLeagueWeeklyLeaderboard: IDL.Func(
-      [CanisterId, SeasonId, GameweekNumber, IDL.Nat, IDL.Nat],
+      [GetPrivateLeagueWeeklyLeaderboard],
       [Result_2],
       []
     ),
-    getPrivateLeagues: IDL.Func([], [Result_10], []),
     getProfile: IDL.Func([], [Result_9], []),
-    getRetiredPlayers: IDL.Func([ClubId], [Result_8], ["query"]),
-    getSeasonLeaderboard: IDL.Func(
-      [SeasonId, IDL.Nat, IDL.Nat, IDL.Text],
-      [Result_7],
-      []
-    ),
+    getRetiredPlayers: IDL.Func([ClubFilterDTO], [Result_8], ["query"]),
+    getSeasonLeaderboard: IDL.Func([GetSeasonLeaderboardDTO], [Result_7], []),
     getSeasons: IDL.Func([], [Result_6], ["query"]),
     getSystemState: IDL.Func([], [Result_5], ["query"]),
     getTokenList: IDL.Func([], [Result_4], []),
     getTotalManagers: IDL.Func([], [Result_3], ["query"]),
-    getWeeklyLeaderboard: IDL.Func(
-      [SeasonId, GameweekNumber, IDL.Nat, IDL.Nat, IDL.Text],
-      [Result_2],
-      []
-    ),
-    inviteUserToLeague: IDL.Func([CanisterId, PrincipalId], [Result], []),
-    isUsernameValid: IDL.Func([IDL.Text], [IDL.Bool], ["query"]),
-    payPrivateLeagueRewards: IDL.Func([PrincipalId, IDL.Nat64], [], []),
+    getWeeklyLeaderboard: IDL.Func([GetWeeklyLeaderboardDTO], [Result_2], []),
+    inviteUserToLeague: IDL.Func([LeagueInviteDTO], [Result], []),
+    isUsernameValid: IDL.Func([UsernameFilterDTO], [IDL.Bool], ["query"]),
+    payPrivateLeagueRewards: IDL.Func([PrivateLeagueRewardDTO], [], []),
     requestCanisterTopup: IDL.Func([], [], []),
     saveFantasyTeam: IDL.Func([UpdateTeamSelectionDTO], [Result], []),
-    searchUsername: IDL.Func([IDL.Text], [Result_1], []),
+    searchUsername: IDL.Func([UsernameFilterDTO], [Result_1], []),
     setTimer: IDL.Func([IDL.Int, IDL.Text], [], []),
-    updateFavouriteClub: IDL.Func([ClubId], [Result], []),
-    updateLeagueBanner: IDL.Func(
-      [CanisterId, IDL.Opt(IDL.Vec(IDL.Nat8))],
-      [Result],
-      []
-    ),
-    updateLeagueName: IDL.Func([CanisterId, IDL.Text], [Result], []),
-    updateLeaguePicture: IDL.Func(
-      [CanisterId, IDL.Opt(IDL.Vec(IDL.Nat8))],
-      [Result],
-      []
-    ),
-    updateProfilePicture: IDL.Func([IDL.Vec(IDL.Nat8), IDL.Text], [Result], []),
-    updateUsername: IDL.Func([IDL.Text], [Result], []),
+    updateFavouriteClub: IDL.Func([ClubFilterDTO], [Result], []),
+    updateLeagueBanner: IDL.Func([UpdateLeagueBannerDTO], [Result], []),
+    updateLeagueName: IDL.Func([UpdateLeagueNameDTO], [Result], []),
+    updateLeaguePicture: IDL.Func([UpdateLeaguePictureDTO], [Result], []),
+    updateProfilePicture: IDL.Func([UpdateProfilePictureDTO], [Result], []),
+    updateUsername: IDL.Func([UsernameFilterDTO], [Result], []),
     validateAddInitialFixtures: IDL.Func(
       [AddInitialFixturesDTO],
       [RustResult],
@@ -4445,7 +4517,7 @@ const idlFactory = ({ IDL }) => {
     validateUpdatePlayer: IDL.Func([UpdatePlayerDTO], [RustResult], ["query"])
   });
 };
-var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", __CANDID_UI_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
 const canisterId = define_process_env_default$c.CANISTER_ID_OPENFPL_BACKEND;
 const createActor = (canisterId2, options2 = {}) => {
   const agent = options2.agent || new HttpAgent({ ...options2.agentOptions });
@@ -4748,7 +4820,7 @@ function convertFixtureStatus(fixtureStatus) {
 function isError(response) {
   return response && response.err !== void 0;
 }
-var define_process_env_default$b = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$b = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", __CANDID_UI_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
 function createSystemStore() {
   const { subscribe: subscribe2, set } = writable(null);
   let actor = ActorFactory.createActor(
@@ -4818,7 +4890,7 @@ function createSystemStore() {
   };
 }
 const systemStore = createSystemStore();
-var define_process_env_default$a = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$a = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", __CANDID_UI_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
 function createFixtureStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let actor = ActorFactory.createActor(
@@ -4894,7 +4966,7 @@ function createFixtureStore() {
   };
 }
 const fixtureStore = createFixtureStore();
-var define_process_env_default$9 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$9 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", __CANDID_UI_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
 function createTeamStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let actor = ActorFactory.createActor(
@@ -5423,7 +5495,7 @@ const toastsError = ({
     level: "error"
   });
 };
-var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", __CANDID_UI_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
 function createManagerStore() {
   const { subscribe: subscribe2, set } = writable(null);
   let systemState;
@@ -5695,7 +5767,7 @@ function createManagerStore() {
   };
 }
 createManagerStore();
-var define_process_env_default$7 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$7 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", __CANDID_UI_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
 function createCountriesStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let actor = ActorFactory.createActor(
@@ -5742,7 +5814,7 @@ function createCountriesStore() {
   };
 }
 const countriesStore = createCountriesStore();
-var define_process_env_default$6 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$6 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", __CANDID_UI_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
 function createWeeklyLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage = 25;
@@ -5853,7 +5925,7 @@ function createWeeklyLeaderboardStore() {
   };
 }
 createWeeklyLeaderboardStore();
-var define_process_env_default$5 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$5 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", __CANDID_UI_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
 function createPlayerStore() {
   const { subscribe: subscribe2, set } = writable([]);
   systemStore.subscribe((value) => {
@@ -5922,7 +5994,7 @@ function createPlayerStore() {
   };
 }
 const playerStore = createPlayerStore();
-var define_process_env_default$4 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$4 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", __CANDID_UI_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
 function createPlayerEventsStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let systemState;
@@ -6279,7 +6351,7 @@ function createPlayerEventsStore() {
   };
 }
 createPlayerEventsStore();
-var define_process_env_default$3 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$3 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", __CANDID_UI_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
 function createUserStore() {
   const { subscribe: subscribe2, set } = writable(null);
   async function sync() {
@@ -6550,7 +6622,7 @@ const BadgeIcon = create_ssr_component(($$result, $$props, $$bindings, slots) =>
     $$bindings.thirdColour(thirdColour);
   return `<svg xmlns="http://www.w3.org/2000/svg"${add_attribute("class", className, 0)} fill="currentColor" viewBox="0 0 814 814"><path d="M407 33.9165C295.984 33.9165 135.667 118.708 135.667 118.708V508.75C135.667 508.75 141.044 561.82 152.625 593.541C194.871 709.259 407 780.083 407 780.083C407 780.083 619.129 709.259 661.375 593.541C672.956 561.82 678.333 508.75 678.333 508.75V118.708C678.333 118.708 518.016 33.9165 407 33.9165Z"${add_attribute("fill", primaryColour, 0)}></path><path d="M712.25 101.75V493.013C712.25 649.097 603.581 689.831 407 814C210.419 689.831 101.75 649.063 101.75 493.013V101.75C167.718 45.2448 282.729 0 407 0C531.271 0 646.282 45.2448 712.25 101.75ZM644.417 135.361C585.775 96.052 496.506 67.8333 407.237 67.8333C317.223 67.8333 228.124 96.1198 169.583 135.361V492.979C169.583 595.712 225.817 622.235 407 734.025C587.979 622.337 644.417 595.814 644.417 492.979V135.361Z"${add_attribute("fill", thirdColour, 0)}></path><path d="M407.237 135.667C464.862 135.667 527.811 150.42 576.583 174.467V493.012C576.583 547.347 562.542 558.539 407 654.422L407.237 135.667Z"${add_attribute("fill", secondaryColour, 0)}></path></svg>`;
 });
-var define_process_env_default$2 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$2 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", __CANDID_UI_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
 function createMonthlyLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage = 25;
@@ -6654,7 +6726,7 @@ function createMonthlyLeaderboardStore() {
   };
 }
 createMonthlyLeaderboardStore();
-var define_process_env_default$1 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$1 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", __CANDID_UI_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
 function createSeasonLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage = 25;
@@ -6776,7 +6848,7 @@ const Page$e = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-var define_process_env_default = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
+var define_process_env_default = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", __CANDID_UI_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
 function createGovernanceStore() {
   async function revaluePlayerUp(playerId) {
     try {

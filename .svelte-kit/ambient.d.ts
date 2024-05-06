@@ -113,6 +113,7 @@ declare module '$env/static/private' {
 	export const NODE_ENV: string;
 	export const VITE_OPENFPL_BACKEND_CANISTER_ID: string;
 	export const VITE_OPENFPL_FRONTEND_CANISTER_ID: string;
+	export const VITE___CANDID_UI_CANISTER_ID: string;
 	export const VITE_NEURON_CONTROLLER_CANISTER_ID: string;
 }
 
@@ -232,6 +233,7 @@ declare module '$env/dynamic/private' {
 		NODE_ENV: string;
 		VITE_OPENFPL_BACKEND_CANISTER_ID: string;
 		VITE_OPENFPL_FRONTEND_CANISTER_ID: string;
+		VITE___CANDID_UI_CANISTER_ID: string;
 		VITE_NEURON_CONTROLLER_CANISTER_ID: string;
 		[key: `PUBLIC_${string}`]: undefined;
 		[key: `${string}`]: string | undefined;
