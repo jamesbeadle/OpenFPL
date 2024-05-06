@@ -65,7 +65,7 @@ Make note of the frontend and backend canister ids.
 
 5. Within the OpenFPL repository, update the frontend and backend canister ids listed as DAO controlled canisters within sns_init.yaml.
 
-6. Deploy the SNS from the sns-testing repository by running the following commands:
+6. Deploy the SNS from the sns-testing repository by running the following commands, replacing the SNS governance canister id:
 
 ```bash
 SNS_GOVERNANCE_CANISTER_ID="<INSERT DEPLOYED SNS GOVERNANCE CANISTER ID>"
