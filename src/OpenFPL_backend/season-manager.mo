@@ -5,7 +5,6 @@ import Result "mo:base/Result";
 import Text "mo:base/Text";
 import Nat "mo:base/Nat";
 import Principal "mo:base/Principal";
-import Blob "mo:base/Blob";
 import Iter "mo:base/Iter";
 import Buffer "mo:base/Buffer";
 import Timer "mo:base/Timer";
@@ -862,7 +861,7 @@ module {
       await privateLeaguesManager.getSeasonLeaderboard(dto)
     };
     
-    public func getPrivateLeagueMembers(dto: DTOs.GetPrivateLeagueMembersDTO) : async Result.Result<[DTOs.LeagueMemberDTO], T.Error> {
+    public func getPrivateLeagueMembers(dto: DTOs.GetLeagueMembersDTO) : async Result.Result<[DTOs.LeagueMemberDTO], T.Error> {
       await privateLeaguesManager.getLeagueMembers(dto);
     };
 
@@ -890,8 +889,8 @@ module {
       return await privateLeaguesManager.isLeagueAdmin(canisterId, principalId);
     };
 
-    public func inviteUserToLeague(canisterId: T.CanisterId, managerId: T.PrincipalId, callerId: T.PrincipalId) : async Result.Result<(), T.Error> {
-      return await privateLeaguesManager.inviteUserToLeague(canisterId, managerId, callerId);
+    public func inviteUserToLeague(dto: DTOs.LeagueInviteDTO, callerId: T.PrincipalId) : async Result.Result<(), T.Error> {
+      return await privateLeaguesManager.inviteUserToLeague(dto, callerId);
     };
 
     public func acceptLeagueInvite(canisterId: T.CanisterId, managerId: T.PrincipalId) : async Result.Result<(), T.Error> {
@@ -905,16 +904,16 @@ module {
       return #err(#NotFound);
     };
 
-    public func updateLeaguePicture(canisterId: T.CanisterId, picture: ?Blob) : async Result.Result<(), T.Error> {
-      return await privateLeaguesManager.updateLeaguePicture(canisterId, picture);
+    public func updateLeaguePicture(dto: DTOs.UpdateLeaguePictureDTO) : async Result.Result<(), T.Error> {
+      return await privateLeaguesManager.updateLeaguePicture(dto);
     };
 
-    public func updateLeagueBanner(canisterId: T.CanisterId, banner: ?Blob) : async Result.Result<(), T.Error> {
-      return await privateLeaguesManager.updateLeagueBanner(canisterId, banner);
+    public func updateLeagueBanner(dto: DTOs.UpdateLeagueBannerDTO) : async Result.Result<(), T.Error> {
+      return await privateLeaguesManager.updateLeagueBanner(dto);
     };
 
-    public func updateLeagueName(canisterId: T.CanisterId, name: Text) : async Result.Result<(), T.Error> {
-      return await privateLeaguesManager.updateLeagueName(canisterId, name);
+    public func updateLeagueName(dto: DTOs.UpdateLeagueNameDTO) : async Result.Result<(), T.Error> {
+      return await privateLeaguesManager.updateLeagueName(dto);
     };
 
     public func getPrivateLeague(canisterId: T.CanisterId) : async Result.Result<DTOs.PrivateLeagueDTO, T.Error> {

@@ -596,11 +596,6 @@ module DTOs {
     offset : Nat;
   };
 
-  public type GetPrivateLeagueMembersDTO = {
-    canisterId: T.CanisterId;
-    filters: DTOs.PaginationFiltersDTO;
-  };
-
   public type LeagueInviteDTO = {
     canisterId: T.CanisterId;
     managerId: T.PrincipalId;
@@ -625,5 +620,11 @@ module DTOs {
     managerId : T.PrincipalId;
     amount : Nat64;
   };
+
+  public type GetLeagueMembersDTO = {
+    canisterId: T.CanisterId;
+    limit : Nat;
+    offset : Nat;
+  }
 
 };
