@@ -625,6 +625,6 @@ module DTOs {
     canisterId: T.CanisterId;
     limit : Nat;
     offset : Nat;
-  }
+  };
 
 };

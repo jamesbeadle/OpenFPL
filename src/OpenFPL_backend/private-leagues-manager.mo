@@ -443,6 +443,5 @@ module {
       );
       return Option.isSome(leagueExists);
     };
-
   };
 };

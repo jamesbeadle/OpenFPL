@@ -443,7 +443,7 @@ actor Self {
 
   //Private league functions
   
-  public shared ({ caller }) func getPrivateLeagues() : async Result.Result<DTOs.ManagerPrivateLeaguesDTO, T.Error> {
+  public shared ({ caller }) func getManagerPrivateLeagues() : async Result.Result<DTOs.ManagerPrivateLeaguesDTO, T.Error> {
     assert not Principal.isAnonymous(caller);
     let managerId = Principal.toText(caller);
     let user = await seasonManager.getManager({managerId});
@@ -475,6 +475,41 @@ actor Self {
               totalEntries = privateLeaguesBuffer.size();
             };
             return #ok(privateLeagues);
+          };
+          case _ { return #err(#NotFound)};
+        };
+
+      };
+      case _ {
+        return #err(#NotFound)
+      };
+    };
+  };
+
+  public shared ({ caller }) func getPrivateLeague(privateLeagueCanisterId: T.CanisterId) : async Result.Result<DTOs.ManagerPrivateLeagueDTO, T.Error> {
+    assert not Principal.isAnonymous(caller);
+    let managerId = Principal.toText(caller);
+    let isLeagueMember = await seasonManager.isLeagueMember(privateLeagueCanisterId, managerId);
+    assert isLeagueMember;
+
+    let user = await seasonManager.getManager({managerId});
+    let systemState = await getSystemState();
+    switch(systemState){
+      case (#ok foundState){
+        switch(user){
+          case (#ok managerDTO){
+            let private_league_canister = actor (privateLeagueCanisterId) : actor {
+              getManagerPrivateLeague : (managerId: T.PrincipalId, filters: DTOs.GameweekFiltersDTO) -> async DTOs.ManagerPrivateLeagueDTO;
+            };
+            let privateLeague = await private_league_canister.getManagerPrivateLeague(managerId, {seasonId = foundState.calculationSeasonId; gameweek = foundState.calculationGameweek});
+            return #ok({
+              canisterId = privateLeagueCanisterId;
+              created = privateLeague.created;
+              memberCount = privateLeague.memberCount;
+              name = managerDTO.username;
+              seasonPosition = privateLeague.seasonPosition;
+              seasonPositionText = privateLeague.seasonPositionText;
+            });
           };
           case _ { return #err(#NotFound)};
         };
@@ -553,6 +588,8 @@ actor Self {
     assert await seasonManager.isLeagueAdmin(dto.canisterId, Principal.toText(caller));
     await seasonManager.updateLeagueName(dto);
   };
+
+  //todo: get league invites list for in profile
 
   public shared ({ caller }) func acceptLeagueInvite(canisterId: T.CanisterId) : async Result.Result<(), T.Error>{
     assert not Principal.isAnonymous(caller);
