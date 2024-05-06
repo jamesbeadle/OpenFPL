@@ -77,9 +77,7 @@ ICP_PER_PARTICIPANT=10000
 ```
 
 7. You can then access the NNS containing OpenFPL from the following link:
-
-http://qsgjb-riaaa-aaaaa-aaaga-cai.localhost:8080/
-
+- http://qsgjb-riaaa-aaaaa-aaaga-cai.localhost:8080/
 Create a new test user and make a note of their principal id.
 
 8. Mint FPL tokens for your users by running the following command:
