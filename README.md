@@ -6,7 +6,7 @@ OpenFPL is a decentralised fantasy football application built on the Internet Co
 
 ## Features
 
-- Unique Gameplay: A wide range of gameplay rules mirroring the varying elements of the football gameplay.
+- Unique Gameplay: A wide range of gameplay rules mirroring the varying elements of football gameplay.
 - Fully Decentralised: Built to run as a DAO using the IC's Service Nervous System (SNS).
 - Consensus Data: Runs fully on-chain using "consensus data" to take ownership of Premier League football data.
 - Private Leagues: Build your own customised community & rewards structure and play among your friends.
@@ -33,7 +33,7 @@ git clone https://github.com/jamesbeadle/OpenFPL.git
 git clone https://github.com/dfinity/sns-testing.git
 ```
 
-2. Load the sns-testing solution in VSCode and run the following command:
+2. Load the sns-testing solution in VSCode using WSL and run the following command:
 
 ```bash
 ./install.sh
@@ -57,18 +57,18 @@ Make note of the deployed SNS governance canister id from the sns_canister_ids.j
 
 4. Load the OpenFPL solution in VSCode and deploy the application using the following command:
 
-```dfx deploy --network=local
-
+```bash
+dfx deploy --network=local
 ```
 
 Make note of the frontend and backend canister ids.
 
-5. Withing the OpenFPL repository, update the frontend and backend canister ids listed as DAO controlled canisters within sns_init.yaml.
+5. Within the OpenFPL repository, update the frontend and backend canister ids listed as DAO controlled canisters within sns_init.yaml.
 
 6. Deploy the SNS from the sns-testing repository by running the following commands:
 
-```
- SNS_GOVERNANCE_CANISTER_ID="<INSERT DEPLOYED SNS GOVERNANCE CANISTER ID>"
+```bash
+SNS_GOVERNANCE_CANISTER_ID="<INSERT DEPLOYED SNS GOVERNANCE CANISTER ID>"
 NUM_PARTICIPANTS=100
 ICP_PER_PARTICIPANT=10000
 ./let_nns_control_dapp.sh
