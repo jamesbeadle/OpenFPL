@@ -485,28 +485,25 @@ actor Self {
       };
     };
   };
-//todo: create dto
+  
   public shared ({ caller }) func getPrivateLeagueWeeklyLeaderboard(dto: DTOs.GetPrivateLeagueWeeklyLeaderboard) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error>{
     assert not Principal.isAnonymous(caller);
     assert(await seasonManager.isPrivateLeagueMember(dto.canisterId, Principal.toText(caller)));
     return await seasonManager.getPrivateLeagueWeeklyLeaderboard(dto);
   };
 
-//todo: create dto
   public shared ({ caller }) func getPrivateLeagueMonthlyLeaderboard(dto: DTOs.GetPrivateLeagueMonthlyLeaderboard) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error>{
     assert not Principal.isAnonymous(caller);
     assert(await seasonManager.isPrivateLeagueMember(dto.canisterId, Principal.toText(caller)));
     return await seasonManager.getPrivateLeagueMonthlyLeaderboard(dto);
   };
 
-//todo: create dto
   public shared ({ caller }) func getPrivateLeagueSeasonLeaderboard(dto: DTOs.GetPrivateLeagueSeasonLeaderboard) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error>{
     assert not Principal.isAnonymous(caller);
     assert(await seasonManager.isPrivateLeagueMember(dto.canisterId, Principal.toText(caller)));
     return await seasonManager.getPrivateLeagueSeasonLeaderboard(dto);
   };
 
-//todo: create dto
   public shared ({ caller }) func getPrivateLeagueMembers(dto: DTOs.GetLeagueMembersDTO) : async Result.Result<[DTOs.LeagueMemberDTO], T.Error>{
     assert not Principal.isAnonymous(caller);
     assert(await seasonManager.isPrivateLeagueMember(dto.canisterId, Principal.toText(caller)));
@@ -522,7 +519,6 @@ actor Self {
     return await seasonManager.createPrivateLeague(Principal.fromActor(Self), caller, newPrivateLeague);
   };
 
-//todo: create dto
   public shared ({ caller }) func searchUsername(dto: DTOs.UsernameFilterDTO) : async Result.Result<DTOs.ManagerDTO, T.Error> {
     assert not Principal.isAnonymous(caller);
     return await seasonManager.getManagerByUsername(dto.username);
@@ -1061,7 +1057,7 @@ actor Self {
 
   };
 
-  //Can be removed when the game has successfully been initialsed
+  //TODO: Can be removed when the game has successfully been initialsed
   private func beginOpenFPL () : () {
     if(openFPLInitialised){
       return;
