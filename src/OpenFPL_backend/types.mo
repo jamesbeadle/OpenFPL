@@ -370,6 +370,7 @@ module _Types {
     calculationGameweek : GameweekNumber;
     calculationMonth : CalendarMonth;
     calculationSeasonId : SeasonId;
+    seasonActive : Bool;
     transferWindowActive : Bool;
     onHold : Bool;
   };

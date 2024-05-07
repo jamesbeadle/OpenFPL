@@ -63,6 +63,7 @@ module {
       calculationSeasonId = 1;
       pickTeamGameweek = 1;
       pickTeamSeasonId = 1;
+      seasonActive = false;
       transferWindowActive = false;
       onHold = true;
     };
@@ -302,6 +303,7 @@ module {
         pickTeamGameweek = pickTeamGameweek;
         pickTeamSeasonId = systemState.pickTeamSeasonId;
         transferWindowActive = systemState.transferWindowActive;
+        seasonActive = systemState.seasonActive;
         onHold = systemState.onHold;
       };
 
@@ -338,6 +340,7 @@ module {
         calculationSeasonId = systemState.calculationSeasonId;
         pickTeamGameweek = systemState.pickTeamGameweek;
         pickTeamSeasonId = systemState.pickTeamSeasonId;
+        seasonActive = systemState.seasonActive;
         transferWindowActive = true;
         onHold = systemState.onHold;
       };
@@ -353,6 +356,7 @@ module {
         calculationSeasonId = systemState.calculationSeasonId;
         pickTeamGameweek = systemState.pickTeamGameweek;
         pickTeamSeasonId = systemState.pickTeamSeasonId;
+        seasonActive = systemState.seasonActive;
         transferWindowActive = false;
         onHold = systemState.onHold;
       };
@@ -372,6 +376,7 @@ module {
         calculationSeasonId = systemState.calculationSeasonId;
         pickTeamSeasonId = systemState.pickTeamSeasonId;
         pickTeamGameweek = systemState.pickTeamGameweek;
+        seasonActive = systemState.seasonActive;
         transferWindowActive = systemState.transferWindowActive;
         onHold = systemState.onHold;
       };
@@ -394,6 +399,7 @@ module {
         calculationSeasonId = systemState.calculationSeasonId;
         pickTeamSeasonId = systemState.pickTeamSeasonId;
         pickTeamGameweek = systemState.pickTeamGameweek;
+        seasonActive = systemState.seasonActive;
         transferWindowActive = systemState.transferWindowActive;
         onHold = systemState.onHold;
       };
@@ -414,6 +420,7 @@ module {
         calculationSeasonId = nextSeasonId;
         pickTeamSeasonId = systemState.pickTeamSeasonId;
         pickTeamGameweek = systemState.pickTeamGameweek;
+        seasonActive = systemState.seasonActive;
         transferWindowActive = systemState.transferWindowActive;
         onHold = systemState.onHold;
       };
@@ -591,6 +598,7 @@ module {
         calculationSeasonId = addInitialFixturesDTO.seasonId;
         pickTeamSeasonId = addInitialFixturesDTO.seasonId;
         pickTeamGameweek = 1;
+        seasonActive = false;
         transferWindowActive = true;
         onHold = systemState.onHold;
       };
@@ -1240,9 +1248,19 @@ module {
 
 
     //Temp functions
-
-    //Initialise all data structures
+    
     public func init() : async () {
+      rewardPools.put(1, {
+        allTimeMonthlyHighScorePool = 9_375_000_000_000;
+        allTimeSeasonHighScorePool  = 9_375_000_000_000;
+        allTimeWeeklyHighScorePool = 9_375_000_000_000;
+        mostValuableTeamPool = 18_750_000_000_000;
+        highestScoringMatchPlayerPool = 18_750_000_000_000;
+        weeklyLeaderboardPool = 28_125_000_000_000;
+        monthlyLeaderboardPool = 37_500_000_000_000;
+        seasonLeaderboardPool = 56_250_000_000_000;
+        seasonId = 1;
+      });
       seasonComposite.init();
       clubComposite.init();
       playerComposite.init();

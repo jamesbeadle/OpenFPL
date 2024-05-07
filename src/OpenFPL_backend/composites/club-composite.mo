@@ -9,7 +9,7 @@ import Utilities "../utils/utilities";
 module {
 
   public class ClubComposite() {
-    private var nextClubId : T.ClubId = 1;
+    private var nextClubId : T.ClubId = 23;
     private var clubs = List.fromArray<T.Club>([]);
     private var relegatedClubs = List.fromArray<T.Club>([]);
 

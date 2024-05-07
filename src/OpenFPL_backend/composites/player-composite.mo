@@ -1334,8 +1334,8 @@ module {
     };
 
     public func init() {
-      let testPlayers = Players.Players();
-      players := List.fromArray(testPlayers.players);
+      let startingPlayers = Players.Players();
+      players := List.fromArray(startingPlayers.players);
     };
   };
 };

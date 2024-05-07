@@ -19,7 +19,7 @@ module {
 
   public class SeasonComposite() {
     private var seasons = List.fromArray<T.Season>([]);
-    private var nextSeasonId : T.SeasonId = 1;
+    private var nextSeasonId : T.SeasonId = 2;
     private var nextFixtureId : T.FixtureId = 1;
 
     public func getSeason(seasonId : T.SeasonId) : ?DTOs.SeasonDTO {
@@ -1422,8 +1422,8 @@ module {
     public func init() {
       seasons := List.fromArray<T.Season>([{
         id = 1;
-        name = "2023/24";
-        year = 2023;
+        name = "2024/25";
+        year = 2024;
         fixtures = List.nil();
         postponedFixtures = List.nil();
       }]);

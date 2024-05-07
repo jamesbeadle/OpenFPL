@@ -703,6 +703,7 @@ actor Self {
     pickTeamSeasonId = 1;
     homepageFixturesGameweek = 1;
     homepageManagerGameweek = 1;
+    seasonActive = false;
     transferWindowActive = false;
     onHold = true;
   };
@@ -1104,34 +1105,6 @@ actor Self {
     };
 
     await seasonManager.init();
-    await treasuryManager.init();
-    await cyclesDispenser.init();
-    
-
-    //set check cycles timer 
-    //set check wallets timer
-
-    //reset all managers
-
-    //reset all private leagues
-
-    //reset all canisters
-
-    //reset all indexes
-
-    //setup first season
-
-    //only include first 17 teams and wait for clean out of promoted teams
-
-    //ensure all timers are running
-
-    //Check the cycles balance on the wallet
-
-    //Set the backend 
-
-    //relegate teams that went down
-
-    //set the system so you can pick team
 
     openFPLInitialised := true;
   };
