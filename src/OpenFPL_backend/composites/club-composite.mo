@@ -1,7 +1,6 @@
 import T "../types";
 import DTOs "../DTOs";
 import List "mo:base/List";
-import Result "mo:base/Result";
 import Array "mo:base/Array";
 import Order "mo:base/Order";
 import Text "mo:base/Text";
@@ -382,6 +381,26 @@ module {
             shirtType = #Filled;
             primaryColourHex = "#F7CA3B";
           },
+          {
+            id = 21;
+            secondaryColourHex = "#FFFFFF";
+            name = "Leicester City";
+            friendlyName = "Leicester";
+            thirdColourHex = "#C8A851";
+            abbreviatedName = "LEI";
+            shirtType = #Filled;
+            primaryColourHex = "#2A4282";
+          },
+          {
+            id = 22;
+            secondaryColourHex = "#F4656B";
+            name = "Ipswich Town";
+            friendlyName = "Ipswich";
+            thirdColourHex = "#FFFFFF";
+            abbreviatedName = "IPS";
+            shirtType = #Filled;
+            primaryColourHex = "#6493E1";
+          }
         ]);
         relegatedClubs := List.fromArray<T.Club>([
           {

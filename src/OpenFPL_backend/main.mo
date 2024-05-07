@@ -929,8 +929,11 @@ actor Self {
         };
       };
     };
+    ignore Timer.setTimer<system>(#nanoseconds(Int.abs(Time.now() + 1)), postUpgradeCallback);
+  };
 
-    beginOpenFPL();
+  private func postUpgradeCallback() : async (){
+    await beginOpenFPL();
   };
 
   //Canister wallet topup functions
@@ -1095,10 +1098,18 @@ actor Self {
   };
 
   //TODO: Can be removed when the game has successfully been initialsed
-  private func beginOpenFPL () : () {
+  private func beginOpenFPL () : async () {
     if(openFPLInitialised){
       return;
     };
+
+    await seasonManager.init();
+    await treasuryManager.init();
+    await cyclesDispenser.init();
+    
+
+    //set check cycles timer 
+    //set check wallets timer
 
     //reset all managers
 
@@ -1121,6 +1132,8 @@ actor Self {
     //relegate teams that went down
 
     //set the system so you can pick team
+
+    openFPLInitialised := true;
   };
 
 };
