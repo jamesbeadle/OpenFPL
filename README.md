@@ -17,13 +17,13 @@ These steps assume that you already run IC projects within a local development e
 
 More information about the Internet Computer blockchain can be found at https://internetcomputer.org.
 
-## Install SNS
+## Setup Locally
 
 To run OpenFPL you will need to setup a local version of the NNS containing the FPL utility token with users after the SNS sale.
 
 To get to this state follow these steps:
 
-1. Clone OpenFPL & the sns testing repo into your linux root directory:
+1. Clone OpenFPL & the sns-testing repo into your linux root directory:
 
 ```bash
 git clone https://github.com/jamesbeadle/OpenFPL.git
@@ -33,25 +33,23 @@ git clone https://github.com/jamesbeadle/OpenFPL.git
 git clone https://github.com/dfinity/sns-testing.git
 ```
 
-2. Load the sns-testing solution in VSCode using WSL and run the following commands:
+2. Load a linux terminal window, navigate to the sns-testing directory and run the following commands:
 
 ```bash
 ./install.sh
 ```
 
-2. In a separate linux terminal, from the sns-testing directory, run the following commands:
-
 ```bash
 ./cleanup.sh
 ```
 
-3. Open a WSL terminal window and run dfx from the OpenFPL repository:
+3. Load a second linux terminal, navigate to the OpenFPL director and run:
 
 ```bash
 ./run_local_setup.sh
 ```
 
-4. Then go back to the sns repository and run:
+4. Within the first sns-testing linex terminal, run the following command:
 
 ```bash
 ./setup_locally.sh
@@ -61,7 +59,7 @@ Overwrite any existing canisters if the terminal asks by using the 'y' key.
 
 Make note of the deployed SNS governance canister id from the sns_canister_ids.json file.
 
-3. In the sns-testing solution VSCode terminal run the following command to set the ICP/XDR exchange rate:
+3. In the same sns-testing linux terminal, run the following command:
 
 ```bash
 ./set-icp-xdr-rate.sh 10000

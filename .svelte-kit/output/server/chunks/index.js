@@ -3513,7 +3513,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1h7delv"
+  version_hash: "jyse8s"
 };
 async function get_hooks() {
   return {};
@@ -4517,7 +4517,7 @@ const idlFactory = ({ IDL }) => {
     validateUpdatePlayer: IDL.Func([UpdatePlayerDTO], [RustResult], ["query"])
   });
 };
-var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
 const canisterId = define_process_env_default$c.CANISTER_ID_OPENFPL_BACKEND;
 const createActor = (canisterId2, options2 = {}) => {
   const agent = options2.agent || new HttpAgent({ ...options2.agentOptions });
@@ -4820,7 +4820,7 @@ function convertFixtureStatus(fixtureStatus) {
 function isError(response) {
   return response && response.err !== void 0;
 }
-var define_process_env_default$b = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$b = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
 function createSystemStore() {
   const { subscribe: subscribe2, set } = writable(null);
   let actor = ActorFactory.createActor(
@@ -4890,7 +4890,7 @@ function createSystemStore() {
   };
 }
 const systemStore = createSystemStore();
-var define_process_env_default$a = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$a = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
 function createFixtureStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let actor = ActorFactory.createActor(
@@ -4966,7 +4966,7 @@ function createFixtureStore() {
   };
 }
 const fixtureStore = createFixtureStore();
-var define_process_env_default$9 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$9 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
 function createTeamStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let actor = ActorFactory.createActor(
@@ -5495,7 +5495,7 @@ const toastsError = ({
     level: "error"
   });
 };
-var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
 function createManagerStore() {
   const { subscribe: subscribe2, set } = writable(null);
   let systemState;
@@ -5767,7 +5767,7 @@ function createManagerStore() {
   };
 }
 createManagerStore();
-var define_process_env_default$7 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$7 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
 function createCountriesStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let actor = ActorFactory.createActor(
@@ -5814,7 +5814,7 @@ function createCountriesStore() {
   };
 }
 const countriesStore = createCountriesStore();
-var define_process_env_default$6 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$6 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
 function createWeeklyLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage = 25;
@@ -5925,7 +5925,7 @@ function createWeeklyLeaderboardStore() {
   };
 }
 createWeeklyLeaderboardStore();
-var define_process_env_default$5 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$5 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
 function createPlayerStore() {
   const { subscribe: subscribe2, set } = writable([]);
   systemStore.subscribe((value) => {
@@ -5994,7 +5994,7 @@ function createPlayerStore() {
   };
 }
 const playerStore = createPlayerStore();
-var define_process_env_default$4 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$4 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
 function createPlayerEventsStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let systemState;
@@ -6351,7 +6351,7 @@ function createPlayerEventsStore() {
   };
 }
 createPlayerEventsStore();
-var define_process_env_default$3 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$3 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
 function createUserStore() {
   const { subscribe: subscribe2, set } = writable(null);
   async function sync() {
@@ -6566,7 +6566,7 @@ const Header = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_fixtureStore();
   $$unsubscribe_authSignedInStore();
   $$unsubscribe_userGetProfilePicture();
-  return `<header class="svelte-tlhn8x"><nav class="text-white"><div class="px-4 h-16 flex justify-between items-center w-full"><a href="/" class="hover:text-gray-400 flex items-center">${validate_component(OpenFPLIcon, "OpenFPLIcon").$$render($$result, { className: "h-8 w-auto" }, {}, {})}<b class="ml-2" data-svelte-h="svelte-6ko9z9">OpenFPL</b></a> <button class="menu-toggle md:hidden focus:outline-none" data-svelte-h="svelte-1xcvmve"><svg width="24" height="18" viewBox="0 0 24 18" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="2" rx="1" fill="currentColor"></rect><rect y="8" width="24" height="2" rx="1" fill="currentColor"></rect><rect y="16" width="24" height="2" rx="1" fill="currentColor"></rect></svg></button> ${$authSignedInStore ? `<ul class="hidden md:flex h-16"><li class="mx-2 flex items-center h-16"><a href="/" class="${"flex items-center h-full nav-underline hover:text-gray-400 $" + escape(currentClass("/"), true) + " svelte-tlhn8x"}"><span class="flex items-center h-full px-4" data-svelte-h="svelte-fx32ra">Home</span></a></li>   <li class="mx-2 flex items-center h-16"><a href="/governance" class="${"flex items-center h-full nav-underline hover:text-gray-400 $" + escape(currentClass("/governance"), true) + " svelte-tlhn8x"}"><span class="flex items-center h-full px-4" data-svelte-h="svelte-qfd2bh">Governance</span></a></li> <li class="flex flex-1 items-center"><div class="relative inline-block"><button class="${escape(null_to_empty(`h-full flex items-center rounded-sm ${currentBorder("/profile")}`), true) + " svelte-tlhn8x"}"><img${add_attribute("src", $userGetProfilePicture, 0)} alt="Profile" class="h-12 rounded-sm profile-pic" aria-label="Toggle Profile"></button> <div class="${escape(null_to_empty(`absolute right-0 top-full w-48 bg-black rounded-b-md rounded-l-md shadow-lg z-50 profile-dropdown ${showProfileDropdown ? "block" : "hidden"}`), true) + " svelte-tlhn8x"}"><ul class="text-gray-700"><li><a href="/profile" class="flex items-center h-full w-full nav-underline hover:text-gray-400 svelte-tlhn8x"><span class="flex items-center h-full w-full"><img${add_attribute("src", $userGetProfilePicture, 0)} alt="logo" class="h-8 my-2 ml-4 mr-2"> <p class="w-full min-w-[125px] max-w-[125px] truncate" data-svelte-h="svelte-1mjctb">Profile</p></span></a></li> <li><button class="flex items-center justify-center px-4 pb-2 pt-1 text-white rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button svelte-tlhn8x">Disconnect
+  return `<header class="svelte-tlhn8x"><nav class="text-white"><div class="px-4 h-16 flex justify-between items-center w-full"><a href="/" class="hover:text-gray-400 flex items-center">${validate_component(OpenFPLIcon, "OpenFPLIcon").$$render($$result, { className: "h-8 w-auto" }, {}, {})}<b class="ml-2" data-svelte-h="svelte-6ko9z9">OpenFPL</b></a> <button class="menu-toggle md:hidden focus:outline-none" data-svelte-h="svelte-1xcvmve"><svg width="24" height="18" viewBox="0 0 24 18" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="2" rx="1" fill="currentColor"></rect><rect y="8" width="24" height="2" rx="1" fill="currentColor"></rect><rect y="16" width="24" height="2" rx="1" fill="currentColor"></rect></svg></button> ${$authSignedInStore ? `<ul class="hidden md:flex h-16"><li class="mx-2 flex items-center h-16"><a href="/" class="${"flex items-center h-full nav-underline hover:text-gray-400 $" + escape(currentClass("/"), true) + " svelte-tlhn8x"}"><span class="flex items-center h-full px-4" data-svelte-h="svelte-fx32ra">Home</span></a></li> <li class="mx-2 flex items-center h-16"><a href="/pick-team" class="${"flex items-center h-full nav-underline hover:text-gray-400 $" + escape(currentClass("/pick-team"), true) + " svelte-tlhn8x"}"><span class="flex items-center h-full px-4" data-svelte-h="svelte-1k6m4hl">Squad Selection</span></a></li> <li class="mx-2 flex items-center h-16"><a href="/governance" class="${"flex items-center h-full nav-underline hover:text-gray-400 $" + escape(currentClass("/governance"), true) + " svelte-tlhn8x"}"><span class="flex items-center h-full px-4" data-svelte-h="svelte-qfd2bh">Governance</span></a></li> <li class="flex flex-1 items-center"><div class="relative inline-block"><button class="${escape(null_to_empty(`h-full flex items-center rounded-sm ${currentBorder("/profile")}`), true) + " svelte-tlhn8x"}"><img${add_attribute("src", $userGetProfilePicture, 0)} alt="Profile" class="h-12 rounded-sm profile-pic" aria-label="Toggle Profile"></button> <div class="${escape(null_to_empty(`absolute right-0 top-full w-48 bg-black rounded-b-md rounded-l-md shadow-lg z-50 profile-dropdown ${showProfileDropdown ? "block" : "hidden"}`), true) + " svelte-tlhn8x"}"><ul class="text-gray-700"><li><a href="/profile" class="flex items-center h-full w-full nav-underline hover:text-gray-400 svelte-tlhn8x"><span class="flex items-center h-full w-full"><img${add_attribute("src", $userGetProfilePicture, 0)} alt="logo" class="h-8 my-2 ml-4 mr-2"> <p class="w-full min-w-[125px] max-w-[125px] truncate" data-svelte-h="svelte-1mjctb">Profile</p></span></a></li> <li><button class="flex items-center justify-center px-4 pb-2 pt-1 text-white rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button svelte-tlhn8x">Disconnect
                       ${validate_component(WalletIcon, "WalletIcon").$$render($$result, { className: "ml-2 h-6 w-6 mt-1" }, {}, {})}</button></li></ul></div></div></li></ul> <div class="${escape(null_to_empty(`mobile-menu-panel absolute top-12 right-2.5 bg-black rounded-lg shadow-md z-10 p-2 ${"hidden"} md:hidden`), true) + " svelte-tlhn8x"}"><ul class="flex flex-col"><li class="p-2"><a href="/" class="${escape(null_to_empty(`nav-underline hover:text-gray-400 ${currentClass("/")}`), true) + " svelte-tlhn8x"}">Home</a></li> <li class="p-2"><a href="/pick-team" class="${escape(null_to_empty(currentClass("/pick-team")), true) + " svelte-tlhn8x"}">Squad Selection</a></li> <li class="p-2"><a href="/governance" class="${escape(null_to_empty(currentClass("/governance")), true) + " svelte-tlhn8x"}">Governance</a></li> <li class="p-2"><a href="/profile" class="${"flex h-full w-full nav-underline hover:text-gray-400 w-full $" + escape(currentClass("/profile"), true) + " svelte-tlhn8x"}"><span class="flex items-center h-full w-full"><img${add_attribute("src", $userGetProfilePicture, 0)} alt="logo" class="w-8 h-8 rounded-sm"> <p class="w-full min-w-[100px] max-w-[100px] truncate p-2" data-svelte-h="svelte-f2gegq">Profile</p></span></a></li> <li class="px-2"><button class="flex h-full w-full hover:text-gray-400 w-full items-center">Disconnect
                 ${validate_component(WalletIcon, "WalletIcon").$$render($$result, { className: "ml-2 h-6 w-6 mt-1" }, {}, {})}</button></li></ul></div>` : `<ul class="hidden md:flex"><li class="mx-2 flex items-center h-16"><button class="flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button svelte-tlhn8x">Connect
               ${validate_component(WalletIcon, "WalletIcon").$$render($$result, { className: "ml-2 h-6 w-6 mt-1" }, {}, {})}</button></li></ul> <div class="${escape(null_to_empty(`mobile-menu-panel absolute top-12 right-2.5 bg-black rounded-lg shadow-md z-10 p-2 ${"hidden"} md:hidden`), true) + " svelte-tlhn8x"}"><ul class="flex flex-col"><li class="p-2"><button class="flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button svelte-tlhn8x">Connect
@@ -6622,7 +6622,7 @@ const BadgeIcon = create_ssr_component(($$result, $$props, $$bindings, slots) =>
     $$bindings.thirdColour(thirdColour);
   return `<svg xmlns="http://www.w3.org/2000/svg"${add_attribute("class", className, 0)} fill="currentColor" viewBox="0 0 814 814"><path d="M407 33.9165C295.984 33.9165 135.667 118.708 135.667 118.708V508.75C135.667 508.75 141.044 561.82 152.625 593.541C194.871 709.259 407 780.083 407 780.083C407 780.083 619.129 709.259 661.375 593.541C672.956 561.82 678.333 508.75 678.333 508.75V118.708C678.333 118.708 518.016 33.9165 407 33.9165Z"${add_attribute("fill", primaryColour, 0)}></path><path d="M712.25 101.75V493.013C712.25 649.097 603.581 689.831 407 814C210.419 689.831 101.75 649.063 101.75 493.013V101.75C167.718 45.2448 282.729 0 407 0C531.271 0 646.282 45.2448 712.25 101.75ZM644.417 135.361C585.775 96.052 496.506 67.8333 407.237 67.8333C317.223 67.8333 228.124 96.1198 169.583 135.361V492.979C169.583 595.712 225.817 622.235 407 734.025C587.979 622.337 644.417 595.814 644.417 492.979V135.361Z"${add_attribute("fill", thirdColour, 0)}></path><path d="M407.237 135.667C464.862 135.667 527.811 150.42 576.583 174.467V493.012C576.583 547.347 562.542 558.539 407 654.422L407.237 135.667Z"${add_attribute("fill", secondaryColour, 0)}></path></svg>`;
 });
-var define_process_env_default$2 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$2 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
 function createMonthlyLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage = 25;
@@ -6726,7 +6726,7 @@ function createMonthlyLeaderboardStore() {
   };
 }
 createMonthlyLeaderboardStore();
-var define_process_env_default$1 = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
+var define_process_env_default$1 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
 function createSeasonLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage = 25;
@@ -6834,11 +6834,6 @@ const Page$e = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_systemStore = subscribe(systemStore, (value) => value);
   $$unsubscribe_teamStore = subscribe(teamStore, (value) => value);
   $$unsubscribe_fixtureStore = subscribe(fixtureStore, (value) => value);
-  (/* @__PURE__ */ new Date("June 1, 2024 00:00:00")).getTime();
-  let interval;
-  onDestroy(() => {
-    clearInterval(interval);
-  });
   $$unsubscribe_systemStore();
   $$unsubscribe_teamStore();
   $$unsubscribe_fixtureStore();
@@ -6848,7 +6843,7 @@ const Page$e = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-var define_process_env_default = { OPENFPL_BACKEND_CANISTER_ID: "bkyz2-fmaaa-aaaaa-qaaaq-cai", OPENFPL_FRONTEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", NEURON_CONTROLLER_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", DFX_NETWORK: "local" };
+var define_process_env_default = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
 function createGovernanceStore() {
   async function revaluePlayerUp(playerId) {
     try {
@@ -9548,7 +9543,11 @@ const League_details_form = create_ssr_component(($$result, $$props, $$bindings,
     entryRequirement: { FreeEntry: null },
     entrants: 0,
     termsAgreed: false,
-    leaguePhoto: []
+    tokenId: 0,
+    banner: [],
+    photo: [],
+    entryFee: 0n,
+    paymentChoice: { ICP: null }
   }) } = $$props;
   if ($$props.privateLeague === void 0 && $$bindings.privateLeague && privateLeague !== void 0)
     $$bindings.privateLeague(privateLeague);
