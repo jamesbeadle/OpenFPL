@@ -105,9 +105,3 @@ dfx identity get-principal
 ```
 
 14. Add the dfx user principal as a hotkey to your local NNS user's OpenFPL neuron.
-
-15. Within the OpenFPL VS Code terminal, run the following command:
-
-```bash
-./run_local_setup.sh
-```
