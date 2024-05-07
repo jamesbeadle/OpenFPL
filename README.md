@@ -33,13 +33,25 @@ git clone https://github.com/jamesbeadle/OpenFPL.git
 git clone https://github.com/dfinity/sns-testing.git
 ```
 
-2. Load the sns-testing solution in VSCode using WSL and run the following command:
+2. Load the sns-testing solution in VSCode using WSL and run the following commands:
 
 ```bash
 ./install.sh
 ```
 
-2. In a separate linux terminal, from the sns-testing directory, run the following command:
+2. In a separate linux terminal, from the sns-testing directory, run the following commands:
+
+```bash
+./cleanup.sh
+```
+
+3. Open a WSL terminal window and run dfx from the OpenFPL repository:
+
+```bash
+./run_local_setup.sh
+```
+
+4. Then go back to the sns repository and run:
 
 ```bash
 ./setup_locally.sh
@@ -58,6 +70,9 @@ Make note of the deployed SNS governance canister id from the sns_canister_ids.j
 4. Load the OpenFPL solution in VSCode and deploy the application using the following command:
 
 ```bash
+dfx deps pull
+dfx deps init
+dfx deps deploy
 dfx deploy --network=local
 ```
 
@@ -76,16 +91,28 @@ ICP_PER_PARTICIPANT=10000
 ./participate_sns_swap.sh $NUM_PARTICIPANTS $ICP_PER_PARTICIPANT
 ```
 
-7. You can then access the NNS containing OpenFPL from the following link:
-- http://qsgjb-riaaa-aaaaa-aaaga-cai.localhost:8080/
-Create a new test user and make a note of their principal id.
+7. You can then access the NNS containing OpenFPL from http://qsgjb-riaaa-aaaaa-aaaga-cai.localhost:8080/.
 
-8. Mint FPL tokens for your users by running the following command:
+8. Create a new test user in the local NNS and make a note of their principal id.
 
+9. Mint FPL tokens for your users by running the following command:
+
+```bash
 dfx canister call "${SNS_GOVERNANCE_CANISTER_ID}" mint_tokens "(record{recipient=opt record{owner=opt principal \"${PRINCIPAL}\"};amount_e8s=opt 1_0000_000_000_000_000:opt nat64})" --network "$NETWORK"
+```
 
-Now stake the tokens and when raising propsals with this user they will pass immediately.
+10. Stake the tokens so when you raise a proposal it will pass immediately.
 
-9. Run dfx identity get-principal to get the principal of the current dfx user. Add this user as a hotkey to your initially created user.
+11. Make a note of the identity of your current dfx user by running:
 
-10. Run the create SNS setup files script
+```bash
+dfx identity get-principal
+```
+
+12. Add the dfx user principal as a hotkey to your local NNS user's OpenFPL neuron.
+
+13. Within the OpenFPL VS Code terminal, run the following command:
+
+```bash
+./run_local_setup.sh
+```
