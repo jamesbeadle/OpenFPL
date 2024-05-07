@@ -144,9 +144,6 @@
               <span class="flex items-center h-full px-4">Home</span>
             </a>
           </li>
-
-          <!-- Todo: Pick Team will be added back in when the game begins -->
-          <!--
           <li class="mx-2 flex items-center h-16">
             <a
               href="/pick-team"
@@ -157,7 +154,6 @@
               <span class="flex items-center h-full px-4">Squad Selection</span>
             </a>
           </li>
-          -->
           <li class="mx-2 flex items-center h-16">
             <a
               href="/governance"

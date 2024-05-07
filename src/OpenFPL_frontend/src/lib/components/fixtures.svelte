@@ -204,7 +204,7 @@
       </div>
     {/each}
     {#if Object.entries(groupedFixtures).length == 0}
-      <p class="px-4 mb-4">No fixture data.</p>
+      <p class="px-4 mb-4">Fixtures for the season have not been announced.</p>
     {/if}
   </div>
 </div>

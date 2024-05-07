@@ -30,7 +30,7 @@
     const identityActor: any = await ActorFactory.createIdentityActor(
       authStore,
       process.env.CANISTER_ID_SNS_GOVERNANCE ?? ""
-    ); //TODO: Create the governance canister
+    );
 
     const { listNeurons, registerVote } =
       SnsGovernanceCanister.create(identityActor);

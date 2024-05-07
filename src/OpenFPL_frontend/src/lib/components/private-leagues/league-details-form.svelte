@@ -14,7 +14,11 @@
       entryRequirement: {FreeEntry : null},
       entrants: 0,
       termsAgreed: false,
-      leaguePhoto: []
+      tokenId: 0,
+      banner: [],
+      photo: [],
+      entryFee: 0n,
+      paymentChoice: { ICP: null }
     });
     let selectedLeagueToken = 0;
 

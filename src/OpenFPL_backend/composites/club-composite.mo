@@ -263,16 +263,6 @@ module {
             primaryColourHex = "#FFFFFF";
           },
           {
-            id = 6;
-            secondaryColourHex = "#A5D9F7";
-            name = "Burnley";
-            friendlyName = "Burnley";
-            thirdColourHex = "#FFFFFF";
-            abbreviatedName = "BUR";
-            shirtType = #Filled;
-            primaryColourHex = "#781932";
-          },
-          {
             id = 7;
             secondaryColourHex = "#FFFFFF";
             name = "Chelsea";
@@ -323,16 +313,6 @@ module {
             primaryColourHex = "#E50113";
           },
           {
-            id = 12;
-            secondaryColourHex = "#FFFFFF";
-            name = "Luton Town";
-            friendlyName = "Luton";
-            thirdColourHex = "#524360";
-            abbreviatedName = "LUT";
-            shirtType = #Filled;
-            primaryColourHex = "#F46038";
-          },
-          {
             id = 13;
             secondaryColourHex = "#FFFFFF";
             name = "Manchester City";
@@ -373,16 +353,6 @@ module {
             primaryColourHex = "#BB212A";
           },
           {
-            id = 17;
-            secondaryColourHex = "#CF1E25";
-            name = "Sheffield United";
-            friendlyName = "Sheffield United";
-            thirdColourHex = "#000000";
-            abbreviatedName = "SHE";
-            shirtType = #Striped;
-            primaryColourHex = "#FFFFFF";
-          },
-          {
             id = 18;
             secondaryColourHex = "#001952";
             name = "Tottenham Hotspur";
@@ -413,6 +383,37 @@ module {
             primaryColourHex = "#F7CA3B";
           },
         ]);
+        relegatedClubs := List.fromArray<T.Club>([
+          {
+            id = 6;
+            secondaryColourHex = "#A5D9F7";
+            name = "Burnley";
+            friendlyName = "Burnley";
+            thirdColourHex = "#FFFFFF";
+            abbreviatedName = "BUR";
+            shirtType = #Filled;
+            primaryColourHex = "#781932";
+          },
+          {
+            id = 12;
+            secondaryColourHex = "#FFFFFF";
+            name = "Luton Town";
+            friendlyName = "Luton";
+            thirdColourHex = "#524360";
+            abbreviatedName = "LUT";
+            shirtType = #Filled;
+            primaryColourHex = "#F46038";
+          },
+          {
+            id = 17;
+            secondaryColourHex = "#CF1E25";
+            name = "Sheffield United";
+            friendlyName = "Sheffield United";
+            thirdColourHex = "#000000";
+            abbreviatedName = "SHE";
+            shirtType = #Striped;
+            primaryColourHex = "#FFFFFF";
+          }]);
       };
     };
   };

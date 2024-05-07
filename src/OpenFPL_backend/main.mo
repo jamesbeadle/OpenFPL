@@ -1099,6 +1099,21 @@ actor Self {
     if(openFPLInitialised){
       return;
     };
+
+    //reset all managers
+
+    //reset all private leagues
+
+    //reset all canisters
+
+    //reset all indexes
+
+    //setup first season
+
+    //only include first 17 teams and wait for clean out of promoted teams
+
+    //ensure all timers are running
+
     //Check the cycles balance on the wallet
 
     //Set the backend 

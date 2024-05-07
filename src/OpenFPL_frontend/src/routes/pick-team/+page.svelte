@@ -68,7 +68,6 @@
 
   onMount(() => {
     try {
-      goto("/"); //TODO: This is removed when the game begins so people can pick a team
       async function loadData() {
         await systemStore.sync();
         await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
