@@ -19,10 +19,6 @@
       "main": "src/neuron_controller/actor.mo",
       "type": "motoko"
     },
-    "internet_identity": {
-      "id": "rdmx6-jaaaa-aaaaa-aaadq-cai",
-      "type": "pull"
-    },
     "sns_governance": {
       "build": "",
       "candid": "governance/candid/sns_governance.did",

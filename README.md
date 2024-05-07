@@ -49,7 +49,7 @@ git clone https://github.com/dfinity/sns-testing.git
 ./run_local_setup.sh
 ```
 
-4. Within the first sns-testing linex terminal, run the following command:
+4. Within the first sns-testing linux terminal, run the following command:
 
 ```bash
 ./setup_locally.sh
