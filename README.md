@@ -59,26 +59,23 @@ Overwrite any existing canisters if the terminal asks by using the 'y' key.
 
 Make note of the deployed SNS governance canister id from the sns_canister_ids.json file.
 
-3. In the same sns-testing linux terminal, run the following command:
+5. In the same sns-testing linux terminal, run the following command:
 
 ```bash
 ./set-icp-xdr-rate.sh 10000
 ```
 
-4. Load the OpenFPL solution in VSCode and deploy the application using the following command:
+6. Load the OpenFPL solution in VSCode and deploy the application using the following command:
 
 ```bash
-dfx deps pull
-dfx deps init
-dfx deps deploy
 dfx deploy --network=local
 ```
 
 Make note of the frontend and backend canister ids.
 
-5. Within the OpenFPL repository, update the frontend and backend canister ids listed as DAO controlled canisters within sns_init.yaml.
+7. Within the OpenFPL repository, update the frontend and backend canister ids listed as DAO controlled canisters within sns_init.yaml.
 
-6. Deploy the SNS from the sns-testing repository by running the following commands, replacing the SNS governance canister id:
+8. Deploy the SNS from the sns-testing repository by running the following commands, replacing the SNS governance canister id:
 
 ```bash
 SNS_GOVERNANCE_CANISTER_ID="<INSERT DEPLOYED SNS GOVERNANCE CANISTER ID>"
@@ -89,27 +86,27 @@ ICP_PER_PARTICIPANT=10000
 ./participate_sns_swap.sh $NUM_PARTICIPANTS $ICP_PER_PARTICIPANT
 ```
 
-7. You can then access the NNS containing OpenFPL from http://qsgjb-riaaa-aaaaa-aaaga-cai.localhost:8080/.
+9. You can then access the NNS containing OpenFPL from http://qsgjb-riaaa-aaaaa-aaaga-cai.localhost:8080/.
 
-8. Create a new test user in the local NNS and make a note of their principal id.
+10. Create a new test user in the local NNS and make a note of their principal id.
 
-9. Mint FPL tokens for your users by running the following command:
+11. Mint FPL tokens for your users by running the following command:
 
 ```bash
 dfx canister call "${SNS_GOVERNANCE_CANISTER_ID}" mint_tokens "(record{recipient=opt record{owner=opt principal \"${PRINCIPAL}\"};amount_e8s=opt 1_0000_000_000_000_000:opt nat64})" --network "$NETWORK"
 ```
 
-10. Stake the tokens so when you raise a proposal it will pass immediately.
+12. Stake the tokens so when you raise a proposal it will pass immediately.
 
-11. Make a note of the identity of your current dfx user by running:
+13. Make a note of the identity of your current dfx user by running:
 
 ```bash
 dfx identity get-principal
 ```
 
-12. Add the dfx user principal as a hotkey to your local NNS user's OpenFPL neuron.
+14. Add the dfx user principal as a hotkey to your local NNS user's OpenFPL neuron.
 
-13. Within the OpenFPL VS Code terminal, run the following command:
+15. Within the OpenFPL VS Code terminal, run the following command:
 
 ```bash
 ./run_local_setup.sh
