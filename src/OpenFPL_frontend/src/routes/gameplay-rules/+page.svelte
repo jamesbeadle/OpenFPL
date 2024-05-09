@@ -15,7 +15,8 @@
         value of a player can go up or down depending on how the player is rated
         in the DAO. Provided a certain voting threshold is reached for either a
         £0.25m increase or decrease, the player's value will change in that
-        gameweek.
+        gameweek. A players value can only change when the season is active 
+        (the first game has kicked off and the final game has not finished).
       </p>
 
       <p class="my-2">
