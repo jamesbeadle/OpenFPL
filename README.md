@@ -75,7 +75,9 @@ Make note of the frontend and backend canister ids.
 
 7. Within the OpenFPL repository, update the frontend and backend canister ids listed as DAO controlled canisters within sns_init.yaml.
 
-8. Deploy the SNS from the sns-testing repository by running the following commands, replacing the SNS governance canister id:
+8. Make a copy of the sns_init.yaml in the OpenFPL root directory into the sns-testing root directory.
+
+9. Deploy the SNS from the sns-testing repository by running the following commands, replacing the SNS governance canister id:
 
 ```bash
 SNS_GOVERNANCE_CANISTER_ID="<INSERT DEPLOYED SNS GOVERNANCE CANISTER ID>"
@@ -86,22 +88,30 @@ ICP_PER_PARTICIPANT=10000
 ./participate_sns_swap.sh $NUM_PARTICIPANTS $ICP_PER_PARTICIPANT
 ```
 
-9. You can then access the NNS containing OpenFPL from http://qsgjb-riaaa-aaaaa-aaaga-cai.localhost:8080/.
+10. You can then access the NNS containing OpenFPL from http://qsgjb-riaaa-aaaaa-aaaga-cai.localhost:8080/.
 
-10. Create a new test user in the local NNS and make a note of their principal id.
+11. Create a new test user in the local NNS and make a note of their principal id.
 
-11. Mint FPL tokens for your users by running the following command:
+12. Mint FPL tokens for your users by running the following command:
 
 ```bash
 dfx canister call "${SNS_GOVERNANCE_CANISTER_ID}" mint_tokens "(record{recipient=opt record{owner=opt principal \"${PRINCIPAL}\"};amount_e8s=opt 1_0000_000_000_000_000:opt nat64})" --network "$NETWORK"
 ```
 
-12. Stake the tokens so when you raise a proposal it will pass immediately.
+13. Stake the tokens so when you raise a proposal it will pass immediately.
 
-13. Make a note of the identity of your current dfx user by running:
+14. Make a note of the identity of your current dfx user by running:
 
 ```bash
 dfx identity get-principal
 ```
 
-14. Add the dfx user principal as a hotkey to your local NNS user's OpenFPL neuron.
+15. Add the dfx user principal as a hotkey to your local NNS user's OpenFPL neuron.
+
+16. Run the following command to raise all proposals existing in the live DAO:
+
+```bash
+./raise_all_proposals.sh
+```
+
+
