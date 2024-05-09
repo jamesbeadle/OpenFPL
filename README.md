@@ -108,10 +108,10 @@ dfx identity get-principal
 
 15. Add the dfx user principal as a hotkey to your local NNS user's OpenFPL neuron.
 
-16. Run the following command to raise all proposals existing in the live DAO:
+16. Within the OpenFPL VS Solution, from the root director, run the following command to raise all proposals existing in the live DAO:
 
 ```bash
-./raise_all_proposals.sh
+./governance/local/raise_all_proposals.sh
 ```
 
 
