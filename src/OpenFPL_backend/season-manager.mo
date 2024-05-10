@@ -14,6 +14,7 @@ import Int "mo:base/Int";
 import Time "mo:base/Time";
 import TrieMap "mo:base/TrieMap";
 import Nat64 "mo:base/Nat64";
+import Option "mo:base/Option";
 import SeasonComposite "composites/season-composite";
 import PlayerComposite "composites/player-composite";
 import ClubComposite "composites/club-composite";
@@ -303,7 +304,7 @@ module {
         pickTeamGameweek = pickTeamGameweek;
         pickTeamSeasonId = systemState.pickTeamSeasonId;
         transferWindowActive = systemState.transferWindowActive;
-        seasonActive = systemState.seasonActive;
+        seasonActive = true;
         onHold = systemState.onHold;
       };
 
@@ -320,6 +321,29 @@ module {
 
     public func gameCompletedExpiredCallback() : async () {
       seasonComposite.setFixturesToCompleted(systemState.calculationSeasonId);
+
+      let seasonFixtures = seasonComposite.getFixtures({seasonId = systemState.pickTeamSeasonId});
+      
+      let incompleteFixtures = Array.find<DTOs.FixtureDTO>(
+        seasonFixtures,
+        func(fixture : DTOs.FixtureDTO) : Bool {
+              return fixture.status != #Complete;
+        },
+      );
+
+      if(Option.isNull(incompleteFixtures)){
+        systemState := {
+          calculationGameweek = systemState.calculationGameweek;
+          calculationMonth = systemState.calculationMonth;
+          calculationSeasonId = systemState.calculationSeasonId;
+          pickTeamGameweek = systemState.pickTeamGameweek;
+          pickTeamSeasonId = systemState.pickTeamSeasonId;
+          seasonActive = false;
+          transferWindowActive = systemState.seasonActive;
+          onHold = systemState.onHold;
+        };
+      };
+      
       await updateCacheHash("fixtures");
     };
 
@@ -712,6 +736,9 @@ module {
     };
 
     public func validateRevaluePlayerUp(revaluePlayerUpDTO : DTOs.RevaluePlayerUpDTO) : T.RustResult {
+      if(not systemState.seasonActive){
+        return #Err("Season not active.");
+      };
       return playerComposite.validateRevaluePlayerUp(revaluePlayerUpDTO);
     };
 
@@ -721,6 +748,9 @@ module {
     };
 
     public func validateRevaluePlayerDown(revaluePlayerDownDTO : DTOs.RevaluePlayerDownDTO) : T.RustResult {
+      if(not systemState.seasonActive){
+        return #Err("Season not active.");
+      };
       return playerComposite.validateRevaluePlayerDown(revaluePlayerDownDTO);
     };
 
