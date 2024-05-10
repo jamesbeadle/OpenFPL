@@ -45,6 +45,7 @@ declare module '$env/static/private' {
 	export const USER: string;
 	export const npm_config_user_agent: string;
 	export const GIT_ASKPASS: string;
+	export const PRINCIPAL: string;
 	export const npm_node_execpath: string;
 	export const SHLVL: string;
 	export const npm_config_noproxy: string;
@@ -163,6 +164,7 @@ declare module '$env/dynamic/private' {
 		USER: string;
 		npm_config_user_agent: string;
 		GIT_ASKPASS: string;
+		PRINCIPAL: string;
 		npm_node_execpath: string;
 		SHLVL: string;
 		npm_config_noproxy: string;

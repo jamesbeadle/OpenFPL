@@ -57,8 +57,6 @@ git clone https://github.com/dfinity/sns-testing.git
 
 Overwrite any existing canisters if the terminal asks by using the 'y' key.
 
-Make note of the deployed SNS governance canister id from the sns_canister_ids.json file.
-
 5. In the same sns-testing linux terminal, run the following command:
 
 ```bash
@@ -88,30 +86,37 @@ ICP_PER_PARTICIPANT=10000
 ./participate_sns_swap.sh $NUM_PARTICIPANTS $ICP_PER_PARTICIPANT
 ```
 
-10. You can then access the NNS containing OpenFPL from http://qsgjb-riaaa-aaaaa-aaaga-cai.localhost:8080/.
+10. Make note of the deployed SNS governance canister id from the sns_canister_ids.json file. It will be the value for key "governance_canister_id". Then run the following command within the sns-testing terminal, replacing the canister id with your deployed governance canister id:
 
-11. Create a new test user in the local NNS and make a note of their principal id.
+```bash
+NETWORK=local
+SNS_GOVERNANCE_CANISTER_ID="a3shf-5eaaa-aaaaa-qaafa-cai"
+```
 
-12. Mint FPL tokens for your users by running the following command:
 
 ```bash
 dfx canister call "${SNS_GOVERNANCE_CANISTER_ID}" mint_tokens "(record{recipient=opt record{owner=opt principal \"${PRINCIPAL}\"};amount_e8s=opt 1_0000_000_000_000_000:opt nat64})" --network "$NETWORK"
 ```
 
-13. Stake the tokens so when you raise a proposal it will pass immediately.
+11. You can then access the NNS containing OpenFPL from http://qsgjb-riaaa-aaaaa-aaaga-cai.localhost:8080/.
 
-14. Make a note of the identity of your current dfx user by running:
+12. Create a new test user in the local NNS and make a note of their principal id.
+
+13. Mint FPL tokens for your users by running the following command:
+
+
+14. Stake the tokens so when you raise a proposal it will pass immediately.
+
+15. Make a note of the identity of your current dfx user by running:
 
 ```bash
 dfx identity get-principal
 ```
 
-15. Add the dfx user principal as a hotkey to your local NNS user's OpenFPL neuron.
+16. Add the dfx user principal as a hotkey to your local NNS user's OpenFPL neuron.
 
-16. Within the OpenFPL VS Solution, from the root director, run the following command to raise all proposals existing in the live DAO:
+17. Within the OpenFPL VS Solution, from the root director, run the following command to raise all proposals existing in the live DAO:
 
 ```bash
 ./governance/local/raise_all_proposals.sh
 ```
-
-
