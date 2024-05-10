@@ -1,5 +1,6 @@
 
 #Raise all live proposals
+./governance/proposals/23.update_token_image.sh
 
 #Add all generic functions
 ./governance/proposals/1-21.register_generic_functions.sh
