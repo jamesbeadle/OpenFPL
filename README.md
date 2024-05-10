@@ -93,7 +93,6 @@ NETWORK=local
 SNS_GOVERNANCE_CANISTER_ID="a3shf-5eaaa-aaaaa-qaafa-cai"
 ```
 
-
 ```bash
 dfx canister call "${SNS_GOVERNANCE_CANISTER_ID}" mint_tokens "(record{recipient=opt record{owner=opt principal \"${PRINCIPAL}\"};amount_e8s=opt 1_0000_000_000_000_000:opt nat64})" --network "$NETWORK"
 ```
@@ -103,7 +102,6 @@ dfx canister call "${SNS_GOVERNANCE_CANISTER_ID}" mint_tokens "(record{recipient
 12. Create a new test user in the local NNS and make a note of their principal id.
 
 13. Mint FPL tokens for your users by running the following command:
-
 
 14. Stake the tokens so when you raise a proposal it will pass immediately.
 

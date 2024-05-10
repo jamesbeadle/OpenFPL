@@ -54,6 +54,8 @@ declare module '$env/static/private' {
 	export const TERM_PROGRAM_VERSION: string;
 	export const VSCODE_IPC_HOOK_CLI: string;
 	export const npm_package_json: string;
+	export const IC_URL: string;
+	export const NETWORK: string;
 	export const NVM_INC: string;
 	export const HOMEBREW_PREFIX: string;
 	export const VSCODE_GIT_ASKPASS_MAIN: string;
@@ -75,8 +77,10 @@ declare module '$env/static/private' {
 	export const _: string;
 	export const npm_config_prefix: string;
 	export const npm_config_npm_version: string;
+	export const PEM_FILE: string;
 	export const TERM: string;
 	export const npm_config_cache: string;
+	export const WASM_FOLDER: string;
 	export const npm_config_node_gyp: string;
 	export const PATH: string;
 	export const HOMEBREW_CELLAR: string;
@@ -86,6 +90,7 @@ declare module '$env/static/private' {
 	export const DISPLAY: string;
 	export const LANG: string;
 	export const LS_COLORS: string;
+	export const PROPOSER_NEURON_ID: string;
 	export const TERM_PROGRAM: string;
 	export const VSCODE_GIT_IPC_HANDLE: string;
 	export const npm_lifecycle_script: string;
@@ -94,6 +99,7 @@ declare module '$env/static/private' {
 	export const npm_lifecycle_event: string;
 	export const LESSCLOSE: string;
 	export const NIX_SSL_CERT_FILE: string;
+	export const IDENTITY: string;
 	export const VSCODE_GIT_ASKPASS_EXTRA_ARGS: string;
 	export const npm_config_globalconfig: string;
 	export const npm_config_init_module: string;
@@ -113,6 +119,7 @@ declare module '$env/static/private' {
 	export const NODE_ENV: string;
 	export const VITE_OPENFPL_BACKEND_CANISTER_ID: string;
 	export const VITE_OPENFPL_FRONTEND_CANISTER_ID: string;
+	export const VITE___CANDID_UI_CANISTER_ID: string;
 	export const VITE_NEURON_CONTROLLER_CANISTER_ID: string;
 }
 
@@ -173,6 +180,8 @@ declare module '$env/dynamic/private' {
 		TERM_PROGRAM_VERSION: string;
 		VSCODE_IPC_HOOK_CLI: string;
 		npm_package_json: string;
+		IC_URL: string;
+		NETWORK: string;
 		NVM_INC: string;
 		HOMEBREW_PREFIX: string;
 		VSCODE_GIT_ASKPASS_MAIN: string;
@@ -194,8 +203,10 @@ declare module '$env/dynamic/private' {
 		_: string;
 		npm_config_prefix: string;
 		npm_config_npm_version: string;
+		PEM_FILE: string;
 		TERM: string;
 		npm_config_cache: string;
+		WASM_FOLDER: string;
 		npm_config_node_gyp: string;
 		PATH: string;
 		HOMEBREW_CELLAR: string;
@@ -205,6 +216,7 @@ declare module '$env/dynamic/private' {
 		DISPLAY: string;
 		LANG: string;
 		LS_COLORS: string;
+		PROPOSER_NEURON_ID: string;
 		TERM_PROGRAM: string;
 		VSCODE_GIT_IPC_HANDLE: string;
 		npm_lifecycle_script: string;
@@ -213,6 +225,7 @@ declare module '$env/dynamic/private' {
 		npm_lifecycle_event: string;
 		LESSCLOSE: string;
 		NIX_SSL_CERT_FILE: string;
+		IDENTITY: string;
 		VSCODE_GIT_ASKPASS_EXTRA_ARGS: string;
 		npm_config_globalconfig: string;
 		npm_config_init_module: string;
@@ -232,6 +245,7 @@ declare module '$env/dynamic/private' {
 		NODE_ENV: string;
 		VITE_OPENFPL_BACKEND_CANISTER_ID: string;
 		VITE_OPENFPL_FRONTEND_CANISTER_ID: string;
+		VITE___CANDID_UI_CANISTER_ID: string;
 		VITE_NEURON_CONTROLLER_CANISTER_ID: string;
 		[key: `PUBLIC_${string}`]: undefined;
 		[key: `${string}`]: string | undefined;
