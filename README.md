@@ -69,7 +69,7 @@ Overwrite any existing canisters if the terminal asks by using the 'y' key.
 dfx deploy --network=local
 ```
 
-Make note of the frontend and backend canister ids.
+Make note of the frontend, backend and neuron controller canister ids.
 
 7. Within the OpenFPL repository, update the frontend and backend canister ids listed as DAO controlled canisters within sns_init.yaml.
 
@@ -115,7 +115,19 @@ dfx identity get-principal
 
 16. Add the dfx user principal as a hotkey to your local NNS user's OpenFPL neuron.
 
-17. Within the OpenFPL VS Solution, from the root director, run the following command to raise all proposals existing in the live DAO:
+17. Add the neuron id to the command below and run it inside the OpenFPL VS Code terminal:
+
+export PROPOSER_NEURON_ID=18f84f58433627de8c490ed739371ed40e1c185587b272591525a3027b9e50cc
+export NETWORK=local
+export IDENTITY=default
+export IC_URL=http://localhost:8080
+
+export PEM_FILE=../../../.config/dfx/identity/default/identity.pem
+export WASM_FOLDER="../wasms"
+
+18. Within the ./governance/local/raise_all_proposals.sh update the neuron controller canister id.
+
+19. Within the OpenFPL VS Solution, from the root director, run the following command to raise all proposals existing in the live DAO:
 
 ```bash
 ./governance/local/raise_all_proposals.sh
