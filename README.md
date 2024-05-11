@@ -75,10 +75,9 @@ Make note of the frontend, backend and neuron controller canister ids.
 
 8. Make a copy of the sns_init.yaml in the OpenFPL root directory into the sns-testing root directory.
 
-9. Deploy the SNS from the sns-testing repository by running the following commands, replacing the SNS governance canister id:
+9. Deploy the SNS from the sns-testing repository by running the following commands:
 
 ```bash
-SNS_GOVERNANCE_CANISTER_ID="<INSERT DEPLOYED SNS GOVERNANCE CANISTER ID>"
 NUM_PARTICIPANTS=100
 ICP_PER_PARTICIPANT=10000
 ./let_nns_control_dapp.sh

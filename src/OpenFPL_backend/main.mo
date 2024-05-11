@@ -9,6 +9,9 @@ import Result "mo:base/Result";
 import Time "mo:base/Time";
 import Timer "mo:base/Timer";
 import Nat64 "mo:base/Nat64";
+import Nat "mo:base/Nat";
+import Debug "mo:base/Debug";
+import Blob "mo:base/Blob";
 
 import T "types";
 import DTOs "DTOs";
@@ -937,12 +940,26 @@ actor Self {
     await beginOpenFPL();
   };
 
+  public shared ({ caller }) func getCanisterTimerId() : async ?Int {
+    return cyclesCheckWalletTimerId;
+  };
+
+  public shared ({ caller }) func getCanisterCyclesBalance() : async Nat {
+    return Cycles.available();
+  };
+
+  public shared ({ caller }) func getTreasuryAccountPublic() : async Account.AccountIdentifier {
+    return getTreasuryAccount();
+  };
+
   //Canister wallet topup functions
 
   private func checkCanisterWalletBalance() : async () {
-    let topupThreshold : Nat = 500_000_000_000_000;
+    Debug.print("Checking canister wallet balance");
+    let topupThreshold : Nat = 500_000_000_000_000; //If below 100 trillion cycles then top up the wallet
     let targetBalance : Nat = 1_000_000_000_000_000;
     let available = Cycles.available();
+    Debug.print(Nat.toText(available));
 
     if (available < topupThreshold) {
       await burnICPToCycles(Nat64.fromNat(targetBalance - available));
@@ -950,6 +967,7 @@ actor Self {
   };
 
   public func burnICPToCycles(requestedCycles : Nat64) : async () {
+    Debug.print("burning ICP to cycles");
     let treasuryAccount = getTreasuryAccount();
     await treasuryManager.sendICPForCycles(treasuryAccount, requestedCycles);
   };
@@ -1099,7 +1117,7 @@ actor Self {
   };
 
   //TODO: Can be removed when the game has successfully been initialsed
-  private func beginOpenFPL () : async () {
+  public shared func beginOpenFPL () : async () {
     if(openFPLInitialised){
       return;
     };

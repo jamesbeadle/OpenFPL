@@ -701,7 +701,7 @@ type EntryRequirement =
 type Disburse = 
  record {
    amount: opt Amount;
-   to_account: opt AccountIdentifier;
+   to_account: opt AccountIdentifier__1;
  };
 type DataCacheDTO = 
  record {
@@ -785,10 +785,12 @@ type AddInitialFixturesDTO =
    seasonFixtures: vec FixtureDTO;
    seasonId: SeasonId;
  };
-type AccountIdentifier = record {hash: vec nat8;};
+type AccountIdentifier__1 = record {hash: vec nat8;};
+type AccountIdentifier = blob;
 service : {
   acceptInviteAndPayFee: (CanisterId) -> (Result);
   acceptLeagueInvite: (CanisterId) -> (Result);
+  beginOpenFPL: () -> ();
   burnICPToCycles: (nat64) -> ();
   createPrivateLeague: (CreatePrivateLeagueDTO) -> (Result);
   enterLeague: (CanisterId) -> (Result);
@@ -814,6 +816,8 @@ service : {
   executeUnretirePlayer: (UnretirePlayerDTO) -> ();
   executeUpdateClub: (UpdateClubDTO) -> ();
   executeUpdatePlayer: (UpdatePlayerDTO) -> ();
+  getCanisterCyclesBalance: () -> (nat);
+  getCanisterTimerId: () -> (opt int);
   getClubs: () -> (Result_19) query;
   getCountries: () -> (Result_22) query;
   getCurrentTeam: () -> (Result_21);
@@ -846,6 +850,7 @@ service : {
   getSystemState: () -> (Result_5) query;
   getTokenList: () -> (Result_4);
   getTotalManagers: () -> (Result_3) query;
+  getTreasuryAccountPublic: () -> (AccountIdentifier);
   getWeeklyLeaderboard: (GetWeeklyLeaderboardDTO) -> (Result_2);
   inviteUserToLeague: (LeagueInviteDTO) -> (Result);
   isUsernameValid: (UsernameFilterDTO) -> (bool) query;

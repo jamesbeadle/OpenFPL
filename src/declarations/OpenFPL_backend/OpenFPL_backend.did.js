@@ -151,10 +151,10 @@ export const idlFactory = ({ IDL }) => {
     maturity_e8s: IDL.Nat64,
     stake_maturity_e8s: IDL.Nat64,
   });
-  const AccountIdentifier = IDL.Record({ hash: IDL.Vec(IDL.Nat8) });
+  const AccountIdentifier__1 = IDL.Record({ hash: IDL.Vec(IDL.Nat8) });
   const Amount = IDL.Record({ e8s: IDL.Nat64 });
   const Disburse = IDL.Record({
-    to_account: IDL.Opt(AccountIdentifier),
+    to_account: IDL.Opt(AccountIdentifier__1),
     amount: IDL.Opt(Amount),
   });
   const Command = IDL.Variant({
@@ -576,6 +576,7 @@ export const idlFactory = ({ IDL }) => {
   });
   const Result_4 = IDL.Variant({ ok: IDL.Vec(TokenInfo), err: Error });
   const Result_3 = IDL.Variant({ ok: IDL.Nat, err: Error });
+  const AccountIdentifier = IDL.Vec(IDL.Nat8);
   const GetWeeklyLeaderboardDTO = IDL.Record({
     offset: IDL.Nat,
     seasonId: SeasonId,
@@ -636,6 +637,7 @@ export const idlFactory = ({ IDL }) => {
   return IDL.Service({
     acceptInviteAndPayFee: IDL.Func([CanisterId], [Result], []),
     acceptLeagueInvite: IDL.Func([CanisterId], [Result], []),
+    beginOpenFPL: IDL.Func([], [], []),
     burnICPToCycles: IDL.Func([IDL.Nat64], [], []),
     createPrivateLeague: IDL.Func([CreatePrivateLeagueDTO], [Result], []),
     enterLeague: IDL.Func([CanisterId], [Result], []),
@@ -661,6 +663,8 @@ export const idlFactory = ({ IDL }) => {
     executeUnretirePlayer: IDL.Func([UnretirePlayerDTO], [], []),
     executeUpdateClub: IDL.Func([UpdateClubDTO], [], []),
     executeUpdatePlayer: IDL.Func([UpdatePlayerDTO], [], []),
+    getCanisterCyclesBalance: IDL.Func([], [IDL.Nat], []),
+    getCanisterTimerId: IDL.Func([], [IDL.Opt(IDL.Int)], []),
     getClubs: IDL.Func([], [Result_19], ["query"]),
     getCountries: IDL.Func([], [Result_22], ["query"]),
     getCurrentTeam: IDL.Func([], [Result_21], []),
@@ -714,6 +718,7 @@ export const idlFactory = ({ IDL }) => {
     getSystemState: IDL.Func([], [Result_5], ["query"]),
     getTokenList: IDL.Func([], [Result_4], []),
     getTotalManagers: IDL.Func([], [Result_3], ["query"]),
+    getTreasuryAccountPublic: IDL.Func([], [AccountIdentifier], []),
     getWeeklyLeaderboard: IDL.Func([GetWeeklyLeaderboardDTO], [Result_2], []),
     inviteUserToLeague: IDL.Func([LeagueInviteDTO], [Result], []),
     isUsernameValid: IDL.Func([UsernameFilterDTO], [IDL.Bool], ["query"]),

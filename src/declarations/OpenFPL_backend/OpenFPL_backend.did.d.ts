@@ -2,7 +2,8 @@ import type { Principal } from "@dfinity/principal";
 import type { ActorMethod } from "@dfinity/agent";
 import type { IDL } from "@dfinity/candid";
 
-export interface AccountIdentifier {
+export type AccountIdentifier = Uint8Array | number[];
+export interface AccountIdentifier__1 {
   hash: Uint8Array | number[];
 }
 export interface AddInitialFixturesDTO {
@@ -85,7 +86,7 @@ export interface DataCacheDTO {
   category: string;
 }
 export interface Disburse {
-  to_account: [] | [AccountIdentifier];
+  to_account: [] | [AccountIdentifier__1];
   amount: [] | [Amount];
 }
 export type EntryRequirement =
@@ -643,6 +644,7 @@ export interface WeeklyLeaderboardDTO {
 export interface _SERVICE {
   acceptInviteAndPayFee: ActorMethod<[CanisterId], Result>;
   acceptLeagueInvite: ActorMethod<[CanisterId], Result>;
+  beginOpenFPL: ActorMethod<[], undefined>;
   burnICPToCycles: ActorMethod<[bigint], undefined>;
   createPrivateLeague: ActorMethod<[CreatePrivateLeagueDTO], Result>;
   enterLeague: ActorMethod<[CanisterId], Result>;
@@ -668,6 +670,8 @@ export interface _SERVICE {
   executeUnretirePlayer: ActorMethod<[UnretirePlayerDTO], undefined>;
   executeUpdateClub: ActorMethod<[UpdateClubDTO], undefined>;
   executeUpdatePlayer: ActorMethod<[UpdatePlayerDTO], undefined>;
+  getCanisterCyclesBalance: ActorMethod<[], bigint>;
+  getCanisterTimerId: ActorMethod<[], [] | [bigint]>;
   getClubs: ActorMethod<[], Result_19>;
   getCountries: ActorMethod<[], Result_22>;
   getCurrentTeam: ActorMethod<[], Result_21>;
@@ -706,6 +710,7 @@ export interface _SERVICE {
   getSystemState: ActorMethod<[], Result_5>;
   getTokenList: ActorMethod<[], Result_4>;
   getTotalManagers: ActorMethod<[], Result_3>;
+  getTreasuryAccountPublic: ActorMethod<[], AccountIdentifier>;
   getWeeklyLeaderboard: ActorMethod<[GetWeeklyLeaderboardDTO], Result_2>;
   inviteUserToLeague: ActorMethod<[LeagueInviteDTO], Result>;
   isUsernameValid: ActorMethod<[UsernameFilterDTO], boolean>;

@@ -114,7 +114,7 @@ dapp_canisters:
   # IDs of the canisters comprising your to-be-decentralized dapp.
   #
   # For testing, propose_sns.sh will fill this in automatically.
-  - bkyz2-fmaaa-aaaaa-qaaaq-cai
+  - be2us-64aaa-aaaaa-qaabq-cai
   - bd3sg-teaaa-aaaaa-qaaba-cai
 
 # Configuration of SNS tokens in the SNS Ledger canister deployed as part
