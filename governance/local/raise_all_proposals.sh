@@ -3,7 +3,7 @@
 ./governance/proposals/23.update_token_image.sh
 
 #Add all generic functions
-./governance/proposals/1-21.register_generic_functions.sh
+./governance/local/1-21.register_generic_functions.sh
 
 #Add SNS root as a controller to neuron controller canister
 dfx canister update-settings neuron_controller --add-controller b77ix-eeaaa-aaaaa-qaada-cai
