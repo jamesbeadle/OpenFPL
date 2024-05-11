@@ -92,16 +92,20 @@ NETWORK=local
 SNS_GOVERNANCE_CANISTER_ID="a3shf-5eaaa-aaaaa-qaafa-cai"
 ```
 
-```bash
-dfx canister call "${SNS_GOVERNANCE_CANISTER_ID}" mint_tokens "(record{recipient=opt record{owner=opt principal \"${PRINCIPAL}\"};amount_e8s=opt 1_0000_000_000_000_000:opt nat64})" --network "$NETWORK"
-```
-
 11. You can then access the NNS containing OpenFPL from http://qsgjb-riaaa-aaaaa-aaaga-cai.localhost:8080/.
 
-12. Create a new test user in the local NNS and make a note of their principal id.
+12. Create a new test user in the local NNS and make a note of their principal id. Set the principal id, updating the value to your local user's principal id:
+
+
+```bash
+PRINCIPAL="2syo2-cf2ig-ptf4n-75gqo-gq657-7nwon-qoik3-2ttyo-njnnf-ys33z-qqe"
+```
 
 13. Mint FPL tokens for your users by running the following command:
 
+```bash
+dfx canister call "${SNS_GOVERNANCE_CANISTER_ID}" mint_tokens "(record{recipient=opt record{owner=opt principal \"${PRINCIPAL}\"};amount_e8s=opt 1_0000_000_000_000_000:opt nat64})" --network "$NETWORK"
+```
 14. Stake the tokens so when you raise a proposal it will pass immediately.
 
 15. Make a note of the identity of your current dfx user by running:
@@ -114,6 +118,9 @@ dfx identity get-principal
 
 17. Add the neuron id to the command below and run it inside the OpenFPL VS Code terminal:
 
+
+```bash
+
 export PROPOSER_NEURON_ID=18f84f58433627de8c490ed739371ed40e1c185587b272591525a3027b9e50cc
 export NETWORK=local
 export IDENTITY=default
@@ -122,6 +129,7 @@ export IC_URL=http://localhost:8080
 export PEM_FILE=../../../.config/dfx/identity/default/identity.pem
 export WASM_FOLDER="../wasms"
 
+```
 18. Within the ./governance/local/raise_all_proposals.sh update the neuron controller canister id.
 
 19. Within the OpenFPL VS Solution, from the root director, run the following command to raise all proposals existing in the live DAO:
