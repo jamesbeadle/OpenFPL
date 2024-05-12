@@ -162,7 +162,7 @@ actor Self {
   public shared ({ caller }) func updateProfilePicture(dto: DTOs.UpdateProfilePictureDTO) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    return await seasonManager.updateProfilePicture({
+    return await seasonManager.updateProfilePicture(principalId, {
       extension = dto.extension;
       managerId = principalId;
       profilePicture = dto.profilePicture;
@@ -173,8 +173,7 @@ actor Self {
     assert not seasonManager.getSystemState().onHold;
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert fantasyTeam.principalId == principalId;
-    return await seasonManager.saveFantasyTeam(fantasyTeam);
+    return await seasonManager.saveFantasyTeam(principalId, fantasyTeam);
   };
 
 

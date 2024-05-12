@@ -269,9 +269,9 @@ module {
 
     //Game update functions
 
-    public func saveFantasyTeam(updatedFantasyTeam : DTOs.UpdateTeamSelectionDTO) : async Result.Result<(), T.Error> {
+    public func saveFantasyTeam(principalId: T.PrincipalId, updatedFantasyTeam : DTOs.UpdateTeamSelectionDTO) : async Result.Result<(), T.Error> {
       let players = playerComposite.getActivePlayers(systemState.calculationSeasonId);
-      return await managerComposite.saveFantasyTeam(updatedFantasyTeam, systemState, players);
+      return await managerComposite.saveFantasyTeam(principalId, updatedFantasyTeam, systemState, players);
     };
 
     public func updateUsername(principalId : Text, updatedUsername : Text) : async Result.Result<(), T.Error> {
@@ -283,8 +283,8 @@ module {
       return await managerComposite.updateFavouriteClub(principalId, clubId, systemState, allClubs);
     };
 
-    public func updateProfilePicture(dto: DTOs.UpdateProfilePictureDTO) : async Result.Result<(), T.Error> {
-      return await managerComposite.updateProfilePicture(dto);
+    public func updateProfilePicture(principalId: T.PrincipalId, dto: DTOs.UpdateProfilePictureDTO) : async Result.Result<(), T.Error> {
+      return await managerComposite.updateProfilePicture(principalId, dto);
     };
 
 
