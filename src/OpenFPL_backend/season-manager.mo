@@ -1276,6 +1276,14 @@ module {
       privateLeaguesManager.setStablePrivateLeagueNameIndex(stable_private_league_name_index);
     };
 
+    public func getStableUnacceptedInvites() : [(T.CanisterId, T.LeagueInvite)] {
+      return privateLeaguesManager.getStableUnacceptedInvites();
+    };
+
+    public func setStablePrivateLeagueUnacceptedInvites(stable_private_league_unaccepted_invites: [(T.CanisterId, T.LeagueInvite)]) {
+      privateLeaguesManager.setStableUnacceptedInvites(stable_private_league_unaccepted_invites);
+    };
+
 
     //Temp functions
     

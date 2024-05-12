@@ -19,6 +19,7 @@ import Environment "../utils/Environment";
 actor class _ManagerCanister() {
 
   private var managerGroupIndexes : TrieMap.TrieMap<T.PrincipalId, Nat8> = TrieMap.TrieMap<T.PrincipalId, Nat8>(Text.equal, Text.hash);
+
   private stable var stable_manager_group_indexes : [(T.PrincipalId, Nat8)] = [];
   private stable var managerGroup1 : [T.Manager] = [];
   private stable var managerGroup2 : [T.Manager] = [];
@@ -37,12 +38,10 @@ actor class _ManagerCanister() {
   private stable var activeGroupIndex : Nat8 = 0;
   private stable var totalManagers = 0;
 
-  private stable var main_canister_id = Environment.BACKEND_CANISTER_ID;
-
   public shared ({ caller }) func updateTeamSelection(updateManagerDTO : DTOs.UpdateTeamSelectionDTO, transfersAvailable : Nat8, monthlyBonuses : Nat8, newBankBalance : Nat16) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert principalId == main_canister_id;
+    assert principalId == Environment.BACKEND_CANISTER_ID;
 
     let managerBuffer = Buffer.fromArray<T.Manager>([]);
     let managerGroupIndex = managerGroupIndexes.get(updateManagerDTO.principalId);
@@ -219,7 +218,7 @@ actor class _ManagerCanister() {
   public shared ({ caller }) func updateUsername(dto : DTOs.UpdateUsernameDTO) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert principalId == main_canister_id;
+    assert principalId == Environment.BACKEND_CANISTER_ID;
 
     let managerBuffer = Buffer.fromArray<T.Manager>([]);
     let managerGroupIndex = managerGroupIndexes.get(dto.principalId);
@@ -396,7 +395,7 @@ actor class _ManagerCanister() {
   public shared ({ caller }) func updateProfilePicture(dto : DTOs.UpdateProfilePictureDTO) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert principalId == main_canister_id;
+    assert principalId == Environment.BACKEND_CANISTER_ID;
 
     let managerBuffer = Buffer.fromArray<T.Manager>([]);
     let managerGroupIndex = managerGroupIndexes.get(dto.managerId);
@@ -573,7 +572,7 @@ actor class _ManagerCanister() {
   public shared ({ caller }) func updateFavouriteClub(dto : DTOs.UpdateFavouriteClubDTO) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert principalId == main_canister_id;
+    assert principalId == Environment.BACKEND_CANISTER_ID;
 
     let managerBuffer = Buffer.fromArray<T.Manager>([]);
     let managerGroupIndex = managerGroupIndexes.get(dto.principalId);
@@ -750,7 +749,7 @@ actor class _ManagerCanister() {
   public shared ({ caller }) func getManager(managerPrincipal : Text) : async ?T.Manager {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert principalId == main_canister_id;
+    assert principalId == Environment.BACKEND_CANISTER_ID;
 
     let managerGroupIndex = managerGroupIndexes.get(managerPrincipal);
     switch (managerGroupIndex) {
@@ -855,7 +854,7 @@ actor class _ManagerCanister() {
   public shared ({ caller }) func getManagersWithPlayer(playerId : T.PlayerId) : async [T.PrincipalId] {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert principalId == main_canister_id;
+    assert principalId == Environment.BACKEND_CANISTER_ID;
 
     let allManagersBuffer = Buffer.fromArray<T.PrincipalId>([]);
     for (index in Iter.range(0, 11)) {
@@ -1028,7 +1027,7 @@ actor class _ManagerCanister() {
   public shared ({ caller }) func getOrderedSnapshots(seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async [T.FantasyTeamSnapshot] {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert principalId == main_canister_id;
+    assert principalId == Environment.BACKEND_CANISTER_ID;
 
     let allManagersBuffer = Buffer.fromArray<T.FantasyTeamSnapshot>([]);
     for (index in Iter.range(0, 11)) {
@@ -1380,7 +1379,7 @@ actor class _ManagerCanister() {
   public shared ({ caller }) func getGameweek38Snapshots(seasonId : T.SeasonId) : async [T.FantasyTeamSnapshot] {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert principalId == main_canister_id;
+    assert principalId == Environment.BACKEND_CANISTER_ID;
 
     let allManagersBuffer = Buffer.fromArray<T.FantasyTeamSnapshot>([]);
     for (index in Iter.range(0, 11)) {
@@ -1597,7 +1596,7 @@ actor class _ManagerCanister() {
   public shared ({ caller }) func addNewManager(newManager : T.Manager) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert principalId == main_canister_id;
+    assert principalId == Environment.BACKEND_CANISTER_ID;
 
     var managerBuffer = Buffer.fromArray<T.Manager>([]);
     //for the current manager group with space
@@ -2471,7 +2470,7 @@ actor class _ManagerCanister() {
   public shared ({ caller }) func calculateFantasyTeamScores(allPlayersList : [(T.PlayerId, DTOs.PlayerScoreDTO)], allPlayers : [DTOs.PlayerDTO], seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert principalId == main_canister_id;
+    assert principalId == Environment.BACKEND_CANISTER_ID;
 
     let playerIdTrie : TrieMap.TrieMap<T.PlayerId, DTOs.PlayerScoreDTO> = TrieMap.TrieMap<T.PlayerId, DTOs.PlayerScoreDTO>(Utilities.eqNat16, Utilities.hashNat16);
     for (player in Iter.fromArray(allPlayersList)) {
@@ -2645,14 +2644,14 @@ actor class _ManagerCanister() {
   public shared ({ caller }) func getTotalManagers() : async Nat {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert principalId == main_canister_id;
+    assert principalId == Environment.BACKEND_CANISTER_ID;
     return totalManagers;
   };
 
   public shared ({ caller }) func snapshotFantasyTeams(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth, players : [DTOs.PlayerDTO]) : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert principalId == main_canister_id;
+    assert principalId == Environment.BACKEND_CANISTER_ID;
 
     for (index in Iter.range(0, 11)) {
       switch (index) {
@@ -2850,7 +2849,7 @@ actor class _ManagerCanister() {
   public shared ({ caller }) func resetBonusesAvailable() : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert principalId == main_canister_id;
+    assert principalId == Environment.BACKEND_CANISTER_ID;
 
     for (index in Iter.range(0, 11)) {
       switch (index) {
@@ -2944,7 +2943,7 @@ actor class _ManagerCanister() {
   public shared ({ caller }) func resetFantasyTeams() : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert principalId == main_canister_id;
+    assert principalId == Environment.BACKEND_CANISTER_ID;
 
     for (index in Iter.range(0, 11)) {
       switch (index) {
@@ -3037,7 +3036,7 @@ actor class _ManagerCanister() {
   public shared ({ caller }) func resetWeeklyTransfers() : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert principalId == main_canister_id;
+    assert principalId == Environment.BACKEND_CANISTER_ID;
 
     for (index in Iter.range(0, 11)) {
       switch (index) {
@@ -3130,7 +3129,7 @@ actor class _ManagerCanister() {
   public shared ({ caller }) func getClubManagers(clubId : T.ClubId) : async [T.PrincipalId] {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert principalId == main_canister_id;
+    assert principalId == Environment.BACKEND_CANISTER_ID;
 
     let clubManagerIdBuffer = Buffer.fromArray<T.PrincipalId>([]);
 
@@ -3230,7 +3229,7 @@ actor class _ManagerCanister() {
   public shared ({ caller }) func getNonClubManagers(clubId : T.ClubId) : async Nat {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert principalId == main_canister_id;
+    assert principalId == Environment.BACKEND_CANISTER_ID;
 
     let clubManagerIdBuffer = Buffer.fromArray<T.PrincipalId>([]);
 
@@ -3331,7 +3330,7 @@ actor class _ManagerCanister() {
   public shared ({ caller }) func getMostValuableTeams(players : [DTOs.PlayerDTO], seasonId : T.SeasonId) : async [T.FantasyTeamSnapshot] {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert principalId == main_canister_id;
+    assert principalId == Environment.BACKEND_CANISTER_ID;
 
     let allFinalGameweekSnapshots = await getGameweek38Snapshots(seasonId);
 
@@ -3443,7 +3442,7 @@ actor class _ManagerCanister() {
     let balance = Cycles.balance();
 
     if (balance < 2_000_000_000_000) {
-      let openfpl_backend_canister = actor (main_canister_id) : actor {
+      let openfpl_backend_canister = actor (Environment.BACKEND_CANISTER_ID) : actor {
         requestCanisterTopup : () -> async ();
       };
       await openfpl_backend_canister.requestCanisterTopup();
@@ -3472,6 +3471,6 @@ actor class _ManagerCanister() {
   };
 
   public func getMainCanisterId() : async Text {
-    return main_canister_id;
+    return Environment.BACKEND_CANISTER_ID;
   };
 };

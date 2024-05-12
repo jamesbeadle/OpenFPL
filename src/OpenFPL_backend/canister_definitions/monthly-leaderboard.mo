@@ -12,15 +12,14 @@ actor class _MonthlyLeaderboardCanister() {
   private stable var leaderboard : ?T.ClubLeaderboard = null;
   private stable var seasonId : ?T.SeasonId = null;
   private stable var month : ?T.CalendarMonth = null;
-  private let cyclesCheckInterval : Nat = Utilities.getHour() * 24;
-  private var cyclesCheckTimerId : ?Timer.TimerId = null;
-
-  var main_canister_id = Environment.BACKEND_CANISTER_ID;
+  private stable var cyclesCheckTimerId : ?Timer.TimerId = null;
+  
+  private let cyclesCheckInterval : Nat = Utilities.getHour() * 24; //TODO: move
 
   public shared ({ caller }) func createCanister(_seasonId : T.SeasonId, _month : T.CalendarMonth, _clubId : T.ClubId, _totalEntries : Nat) : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert principalId == main_canister_id;
+    assert principalId == Environment.BACKEND_CANISTER_ID;
     seasonId := ?_seasonId;
     month := ?_month;
     leaderboard := ?{
@@ -35,7 +34,7 @@ actor class _MonthlyLeaderboardCanister() {
   public shared ({ caller }) func addLeaderboardChunk(entriesChunk : List.List<T.LeaderboardEntry>) : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert principalId == main_canister_id;
+    assert principalId == Environment.BACKEND_CANISTER_ID;
     switch (leaderboard) {
       case (null) {};
       case (?foundLeaderboard) {
@@ -53,7 +52,7 @@ actor class _MonthlyLeaderboardCanister() {
   public shared query ({ caller }) func getEntries(filters: DTOs.PaginationFiltersDTO, searchTerm : Text) : async ?DTOs.MonthlyLeaderboardDTO {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert principalId == main_canister_id;
+    assert principalId == Environment.BACKEND_CANISTER_ID;
 
     switch (leaderboard) {
       case (null) {
@@ -86,7 +85,7 @@ actor class _MonthlyLeaderboardCanister() {
   public shared query ({ caller }) func getEntry(principalId : Text) : async ?DTOs.LeaderboardEntryDTO {
     assert not Principal.isAnonymous(caller);
     let callerPrincipalId = Principal.toText(caller);
-    assert callerPrincipalId == main_canister_id;
+    assert callerPrincipalId == Environment.BACKEND_CANISTER_ID;
 
     switch (leaderboard) {
       case (null) {
@@ -106,7 +105,7 @@ actor class _MonthlyLeaderboardCanister() {
   public shared query ({ caller }) func getTotalEntries() : async Nat {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert principalId == main_canister_id;
+    assert principalId == Environment.BACKEND_CANISTER_ID;
 
     switch (leaderboard) {
       case (null) {
@@ -136,7 +135,7 @@ actor class _MonthlyLeaderboardCanister() {
     let balance = Cycles.balance();
 
     if (balance < 500000000000) {
-      let openfpl_backend_canister = actor (main_canister_id) : actor {
+      let openfpl_backend_canister = actor (Environment.BACKEND_CANISTER_ID) : actor {
         requestCanisterTopup : () -> async ();
       };
       await openfpl_backend_canister.requestCanisterTopup();

@@ -52,6 +52,14 @@ module {
       privateLeagueNameIndex := stable_private_league_name_index;
     };
 
+    public func getStableUnacceptedInvites() : [(T.PrincipalId, T.LeagueInvite)] {
+      return unacceptedInvites;
+    };
+
+    public func setStableUnacceptedInvites(stable_unaccepted_invites: [(T.PrincipalId, T.LeagueInvite)]) {
+      unacceptedInvites := stable_unaccepted_invites;
+    };
+
     public func isLeagueMember(canisterId: T.CanisterId, callerId: T.PrincipalId) : async Bool {
       let private_league_canister = actor (canisterId) : actor {
         isLeagueMember : (callerId : T.PrincipalId) -> async Bool;

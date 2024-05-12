@@ -755,6 +755,7 @@ actor Self {
   //Private Leagues
   private stable var stable_private_league_canister_ids: [T.CanisterId] = [];
   private stable var stable_private_league_name_index: [(T.CanisterId, Text)] = [];
+  private stable var stable_private_league_unaccepted_invites: [(T.PrincipalId, T.LeagueInvite)] = [];
 
   private stable var stable_timers : [T.TimerInfo] = [];
   private stable var stable_canister_ids : [Text] = [];
@@ -813,6 +814,7 @@ actor Self {
     //Private Leagues
     stable_private_league_canister_ids := seasonManager.getStablePrivateLeagueCanisterIds();
     stable_private_league_name_index := seasonManager.getStablePrivateLeagueNameIndex();
+    stable_private_league_unaccepted_invites := seasonManager.getStableUnacceptedInvites();
 
     stable_timers := timers;
     stable_canister_ids := cyclesDispenser.getStableCanisterIds();
@@ -869,6 +871,7 @@ actor Self {
     //Private Leagues
     seasonManager.setStablePrivateLeagueCanisterIds(stable_private_league_canister_ids);
     seasonManager.setStablePrivateLeagueNameIndex(stable_private_league_name_index);
+    seasonManager.setStablePrivateLeagueUnacceptedInvites(stable_private_league_unaccepted_invites);
 
     cyclesDispenser.setStableCanisterIds(stable_canister_ids);
 
@@ -1091,6 +1094,10 @@ actor Self {
   
   //Can remove after the DAOs neuron is created
   public shared query ({ caller }) func validateCreateDAONeuron() : async T.RustResult {
+    Debug.print("Validate create DAO neuron");
+    Debug.print(Principal.toText(caller));
+    Debug.print(Environment.SNS_GOVERNANCE_CANISTER_ID);
+    
     assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     if (neuronCreated) {
       return #Err("Neuron already created");

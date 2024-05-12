@@ -19,25 +19,19 @@ import Environment "../utils/Environment";
 import Constants "../utils/Constants";
 
 actor class _PrivateLeague() {
-    private let cyclesCheckInterval : Nat = Utilities.getHour() * 24;
-    private var cyclesCheckTimerId : ?Timer.TimerId = null;
-    private var main_canister_id = Environment.BACKEND_CANISTER_ID;
-
-    private var leagueMembers: [T.LeagueMember] = [];
-    private var leagueAdmins: [T.PrincipalId] = [];
-    private var leagueInvites: [T.LeagueInvite] = [];
+    private let cyclesCheckInterval : Nat = Utilities.getHour() * 24; //TODO: move
     
-    private let percentages : [Float] = [];
-
-    
+    private stable var cyclesCheckTimerId : ?Timer.TimerId = null;
+    private stable var privateLeague: ?T.PrivateLeague = null;
+    private stable let percentages : [Float] = [];
+    private stable var leagueMembers: [T.LeagueMember] = [];
+    private stable var leagueAdmins: [T.PrincipalId] = [];
+    private stable var leagueInvites: [T.LeagueInvite] = [];
+    private stable var approvedManagerCanisterIds: [T.CanisterId] = [];
     private stable var weeklyLeaderboards: [(T.SeasonId, [(T.GameweekNumber, T.WeeklyLeaderboard)])] = [];
     private stable var monthlyLeaderboards: [(T.SeasonId, [(T.CalendarMonth, T.MonthlyLeaderboard)])] = [];
     private stable var seasonLeaderboards: [(T.SeasonId, T.SeasonLeaderboard)] = [];
-    private stable var approvedManagerCanisterIds: [T.CanisterId] = [];
     private stable var rewardPools: [(T.SeasonId, T.PrivateLeagueRewardPool)] = [];
-
-    private stable var privateLeague: ?T.PrivateLeague = null;
-
     private stable var weeklyRewards : List.List<T.WeeklyRewards> = List.nil();
     private stable var monthlyRewards : List.List<T.MonthlyRewards> = List.nil();
     private stable var seasonRewards : List.List<T.SeasonRewards> = List.nil();
@@ -45,7 +39,7 @@ actor class _PrivateLeague() {
     public shared ({ caller }) func getPrivateLeague() : async Result.Result<DTOs.PrivateLeagueDTO, T.Error> {
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
-        assert principalId == main_canister_id;
+        assert principalId == Environment.BACKEND_CANISTER_ID;
 
         switch(privateLeague){
             case (null) { #err(#NotFound) };
@@ -69,7 +63,7 @@ actor class _PrivateLeague() {
     public shared ({ caller }) func getManagerPrivateLeague(managerId: T.PrincipalId, filters: DTOs.GameweekFiltersDTO) : async Result.Result<DTOs.ManagerPrivateLeagueDTO, T.Error> {
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
-        assert principalId == main_canister_id;
+        assert principalId == Environment.BACKEND_CANISTER_ID;
         var seasonPosition = 0;
         var seasonPositionText = "";
 
@@ -112,7 +106,7 @@ actor class _PrivateLeague() {
     public shared ({ caller }) func calculateLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) : async () {
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
-        assert principalId == main_canister_id;
+        assert principalId == Environment.BACKEND_CANISTER_ID;
         await calculateWeeklyLeaderboards(seasonId, gameweek);
         await calculateMonthlyLeaderboards(seasonId, month);
         await calculateSeasonLeaderboard(seasonId);
@@ -121,7 +115,7 @@ actor class _PrivateLeague() {
     public shared ({ caller }) func payWeeklyRewards(seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async (){
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
-        assert principalId == main_canister_id;
+        assert principalId == Environment.BACKEND_CANISTER_ID;
 
         let seasonRewardPool = Array.find<(T.SeasonId, T.PrivateLeagueRewardPool)>(
             rewardPools,
@@ -150,7 +144,7 @@ actor class _PrivateLeague() {
     public shared ({ caller }) func payMonthlyRewards(seasonId : T.SeasonId, month : T.CalendarMonth) : async (){
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
-        assert principalId == main_canister_id;
+        assert principalId == Environment.BACKEND_CANISTER_ID;
 
         let seasonRewardPool = Array.find<(T.SeasonId, T.PrivateLeagueRewardPool)>(
             rewardPools,
@@ -179,7 +173,7 @@ actor class _PrivateLeague() {
     public shared ({ caller }) func paySeasonRewards(seasonId : T.SeasonId) : async (){
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
-        assert principalId == main_canister_id;
+        assert principalId == Environment.BACKEND_CANISTER_ID;
         
         let seasonRewardPool = Array.find<(T.SeasonId, T.PrivateLeagueRewardPool)>(
             rewardPools,
@@ -268,7 +262,7 @@ actor class _PrivateLeague() {
             
             let prize = Int64.toNat64(Float.toInt64(payoutsArray[key])) * weeklyRewardAmount;
             
-            let openfpl_backend_canister = actor (main_canister_id) : actor {
+            let openfpl_backend_canister = actor (Environment.BACKEND_CANISTER_ID) : actor {
                 payPrivateLeagueRewards : (winnerPrincipalId: T.PrincipalId, prize: Nat64) -> async ();
             };
             
@@ -353,7 +347,7 @@ actor class _PrivateLeague() {
         for (winner in Iter.fromList(monthlyLeaderboard.entries)) {
             let prize = Int64.toNat64(Float.toInt64(payoutsArray[key])) * monthlyRewardAmount;
             
-            let openfpl_backend_canister = actor (main_canister_id) : actor {
+            let openfpl_backend_canister = actor (Environment.BACKEND_CANISTER_ID) : actor {
                 payPrivateLeagueRewards : (winnerPrincipalId: T.PrincipalId, prize: Nat64) -> async ();
             };
             await openfpl_backend_canister.payPrivateLeagueRewards(winner.principalId, prize);
@@ -436,7 +430,7 @@ actor class _PrivateLeague() {
         for (winner in Iter.fromList(seasonLeaderboard.entries)) {
             let prize = Int64.toNat64(Float.toInt64(payoutsArray[key])) * seasonRewardPool;
             
-            let openfpl_backend_canister = actor (main_canister_id) : actor {
+            let openfpl_backend_canister = actor (Environment.BACKEND_CANISTER_ID) : actor {
                 payPrivateLeagueRewards : (winnerPrincipalId: T.PrincipalId, prize: Nat64) -> async ();
             };
             await openfpl_backend_canister.payPrivateLeagueRewards(winner.principalId, prize);
@@ -456,20 +450,6 @@ actor class _PrivateLeague() {
         };
         seasonRewards := List.append(seasonRewards, List.make<T.SeasonRewards>(newSeasonRewards));
     };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     private func calculateWeeklyLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async () {
@@ -596,7 +576,7 @@ actor class _PrivateLeague() {
     public shared ({ caller }) func getWeeklyLeaderboard(dto: DTOs.GetPrivateLeagueWeeklyLeaderboard) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
-        assert principalId == main_canister_id;
+        assert principalId == Environment.BACKEND_CANISTER_ID;
 
         for(season in Iter.fromArray(weeklyLeaderboards)){
             if(season.0 == dto.seasonId){
@@ -623,7 +603,7 @@ actor class _PrivateLeague() {
     public shared ({ caller }) func getMonthlyLeaderboard(dto: DTOs.GetPrivateLeagueMonthlyLeaderboard) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error> {
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
-        assert principalId == main_canister_id;
+        assert principalId == Environment.BACKEND_CANISTER_ID;
 
         for(seasonLeaderboard in Iter.fromArray(monthlyLeaderboards)){
             if(seasonLeaderboard.0 == dto.seasonId){
@@ -650,7 +630,7 @@ actor class _PrivateLeague() {
     public shared ({ caller }) func getSeasonLeaderboard(dto: DTOs.GetPrivateLeagueSeasonLeaderboard) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error> {
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
-        assert principalId == main_canister_id;
+        assert principalId == Environment.BACKEND_CANISTER_ID;
 
         for(seasonLeaderboard in Iter.fromArray(seasonLeaderboards)){
             if(seasonLeaderboard.0 == dto.seasonId){
@@ -673,7 +653,7 @@ actor class _PrivateLeague() {
     public shared ({ caller }) func getLeagueMembers(filters: DTOs.PaginationFiltersDTO) : async Result.Result<[DTOs.LeagueMemberDTO], T.Error> {
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
-        assert principalId == main_canister_id;
+        assert principalId == Environment.BACKEND_CANISTER_ID;
 
         let filteredEntries = List.fromArray(leagueMembers);
 
@@ -697,7 +677,7 @@ actor class _PrivateLeague() {
     public shared ({ caller }) func leagueHasSpace() : async Bool {
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
-        assert principalId == main_canister_id;
+        assert principalId == Environment.BACKEND_CANISTER_ID;
         if(Array.size(leagueMembers) >= Constants.MAX_PRIVATE_LEAGUE_SIZE){
             return false;
         };
@@ -707,7 +687,7 @@ actor class _PrivateLeague() {
     public shared ({ caller }) func isLeagueMember(callerId: T.PrincipalId) : async Bool {
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
-        assert principalId == main_canister_id;
+        assert principalId == Environment.BACKEND_CANISTER_ID;
 
         for(member in Iter.fromArray(leagueMembers)){
             if(member.principalId == callerId){
@@ -721,7 +701,7 @@ actor class _PrivateLeague() {
     public shared ({ caller }) func isLeagueAdmin(callerId: T.PrincipalId) : async Bool {
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
-        assert principalId == main_canister_id;
+        assert principalId == Environment.BACKEND_CANISTER_ID;
 
         for(admin in Iter.fromArray(leagueAdmins)){
             if(admin == callerId){
@@ -735,7 +715,7 @@ actor class _PrivateLeague() {
     public shared ({ caller }) func inviteUserToLeague(managerId: T.PrincipalId, sentBy: T.PrincipalId) : async Result.Result<(), T.Error> {
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
-        assert principalId == main_canister_id;
+        assert principalId == Environment.BACKEND_CANISTER_ID;
         
         switch(privateLeague){
             case null {};
@@ -763,7 +743,7 @@ actor class _PrivateLeague() {
     public shared ({ caller }) func acceptLeagueInvite(managerId: T.PrincipalId, managerCanisterId: T.CanisterId, username: Text) : async Result.Result<(), T.Error> {
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
-        assert principalId == main_canister_id;
+        assert principalId == Environment.BACKEND_CANISTER_ID;
 
         let leagueInviteBuffer = Buffer.fromArray<T.LeagueInvite>([]);
         for(leagueInvite in Iter.fromArray(leagueInvites)){
@@ -789,7 +769,7 @@ actor class _PrivateLeague() {
     public shared ({ caller }) func rejectLeagueInvite(managerId: T.PrincipalId) : async Result.Result<(), T.Error> {
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
-        assert principalId == main_canister_id;
+        assert principalId == Environment.BACKEND_CANISTER_ID;
 
         let leagueInviteBuffer = Buffer.fromArray<T.LeagueInvite>([]);
         for(leagueInvite in Iter.fromArray(leagueInvites)){
@@ -814,7 +794,7 @@ actor class _PrivateLeague() {
     public shared ({ caller }) func updateLeaguePicture(picture: ?Blob) : async Result.Result<(), T.Error> {
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
-        assert principalId == main_canister_id;
+        assert principalId == Environment.BACKEND_CANISTER_ID;
 
         switch(privateLeague){
             case null {};
@@ -841,7 +821,7 @@ actor class _PrivateLeague() {
     public shared ({ caller }) func updateLeagueBanner(banner: ?Blob) : async Result.Result<(), T.Error> {
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
-        assert principalId == main_canister_id;
+        assert principalId == Environment.BACKEND_CANISTER_ID;
 
         switch(privateLeague){
             case null {};
@@ -868,7 +848,7 @@ actor class _PrivateLeague() {
     public shared ({ caller }) func updateLeagueName(name: Text) : async Result.Result<(), T.Error> {
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
-        assert principalId == main_canister_id;
+        assert principalId == Environment.BACKEND_CANISTER_ID;
 
         switch(privateLeague){
             case null {};
@@ -895,7 +875,7 @@ actor class _PrivateLeague() {
     public shared ({ caller }) func enterLeague(managerId: T.PrincipalId, managerCanisterId: T.CanisterId, username: Text) : async Result.Result<(), T.Error> {
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
-        assert principalId == main_canister_id;
+        assert principalId == Environment.BACKEND_CANISTER_ID;
 
         switch(privateLeague){
             case null {};
@@ -918,7 +898,7 @@ actor class _PrivateLeague() {
     public shared ({ caller }) func inviteExists(managerId: T.PrincipalId) : async Result.Result<Bool, T.Error> {
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
-        assert principalId == main_canister_id;
+        assert principalId == Environment.BACKEND_CANISTER_ID;
         
         for(invite in Iter.fromArray(leagueInvites)){
             if(invite.to == managerId and invite.inviteStatus == #Sent){
@@ -1142,7 +1122,7 @@ actor class _PrivateLeague() {
     public shared ({ caller }) func initPrivateLeague(createdById: T.PrincipalId, newPrivateLeague: DTOs.CreatePrivateLeagueDTO) : async Result.Result<(), T.Error>{
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
-        assert principalId == main_canister_id;
+        assert principalId == Environment.BACKEND_CANISTER_ID;
 
         let adminBuffer = Buffer.fromArray<T.PrincipalId>(leagueAdmins);
         adminBuffer.add(createdById);
@@ -1167,7 +1147,7 @@ actor class _PrivateLeague() {
     public shared ({ caller }) func setCanisterId(canisterId: T.CanisterId) : async Result.Result<(), T.Error>{
         assert not Principal.isAnonymous(caller);
         let principalId = Principal.toText(caller);
-        assert principalId == main_canister_id;
+        assert principalId == Environment.BACKEND_CANISTER_ID;
 
         switch(privateLeague){
             case (?foundPrivateLeague){
@@ -1198,7 +1178,7 @@ actor class _PrivateLeague() {
         let balance = Cycles.balance();
 
         if (balance < 500000000000) {
-        let openfpl_backend_canister = actor (main_canister_id) : actor {
+        let openfpl_backend_canister = actor (Environment.BACKEND_CANISTER_ID) : actor {
             requestCanisterTopup : () -> async ();
         };
         await openfpl_backend_canister.requestCanisterTopup();
