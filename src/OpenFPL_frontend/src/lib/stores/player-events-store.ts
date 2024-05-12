@@ -8,6 +8,8 @@ import type {
   DataCacheDTO,
   FantasyTeamSnapshot,
   FixtureDTO,
+  GameweekFiltersDTO,
+  GetPlayerDetailsDTO,
   PlayerDTO,
   PlayerDetailDTO,
   PlayerPointsDTO,
@@ -57,10 +59,11 @@ function createPlayerEventsStore() {
     const localHash = localStorage.getItem(`${category}_hash`);
 
     if (categoryHash?.hash != localHash) {
-      let result = await actor.getPlayerDetailsForGameweek(
-        systemState.calculationSeasonId,
-        systemState.calculationGameweek
-      );
+      let dto: GameweekFiltersDTO = {
+        seasonId: systemState.calculationSeasonId,
+        gameweek: systemState.calculationGameweek
+      };
+      let result = await actor.getPlayerDetailsForGameweek(dto);
 
       if (isError(result)) {
         console.error("Error fetching player details for gameweek");
@@ -105,7 +108,11 @@ function createPlayerEventsStore() {
     seasonId: number
   ): Promise<PlayerDetailDTO> {
     try {
-      let result = await actor.getPlayerDetails(playerId, seasonId);
+      let dto: GetPlayerDetailsDTO = {
+        playerId: playerId,
+        seasonId: seasonId
+      };
+      let result = await actor.getPlayerDetails(dto);
 
       if (isError(result)) {
         console.error("Error fetching player details");

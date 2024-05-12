@@ -3,6 +3,7 @@ import { systemStore } from "$lib/stores/system-store";
 import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
+  ClubFilterDTO,
   DataCacheDTO,
   FixtureDTO,
   PlayerDTO,
@@ -75,7 +76,10 @@ function createPlayerStore() {
   }
 
   async function getLoanedPlayers(clubId: number): Promise<PlayerDTO[]> {
-    let loanedPlayers = await actor.getLoanedPlayers(clubId);
+    let dto: ClubFilterDTO = {
+      clubId: clubId
+    };
+    let loanedPlayers = await actor.getLoanedPlayers(dto);
 
     if (isError(loanedPlayers)) {
       console.error("Error fetching loaned players");
@@ -86,7 +90,10 @@ function createPlayerStore() {
   }
 
   async function getRetiredPlayers(clubId: number): Promise<PlayerDTO[]> {
-    let retiredPlayers = await actor.getRetiredPlayers(clubId);
+    let dto: ClubFilterDTO = {
+      clubId: clubId
+    };
+    let retiredPlayers = await actor.getRetiredPlayers(dto);
 
     if (isError(retiredPlayers)) {
       console.error("Error fetching retired players");

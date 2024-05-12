@@ -2,6 +2,7 @@ import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
   DataCacheDTO,
+  GetWeeklyLeaderboardDTO,
   LeaderboardEntry,
   WeeklyLeaderboardDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
@@ -101,13 +102,15 @@ function createWeeklyLeaderboardStore() {
       }
     }
 
-    let leaderboardData = await actor.getWeeklyLeaderboard(
-      seasonId,
-      gameweek,
-      limit,
-      offset,
-      searchTerm
-    );
+    let dto: GetWeeklyLeaderboardDTO = {
+      offset: BigInt(offset),
+      seasonId: seasonId,
+      limit: BigInt(limit),
+      searchTerm: searchTerm,
+      gameweek: gameweek
+    };
+
+    let leaderboardData = await actor.getWeeklyLeaderboard(dto);
 
     if (isError(leaderboardData)) {
       let emptyLeaderboard = {

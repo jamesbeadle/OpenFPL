@@ -2,6 +2,7 @@ import { authStore } from "$lib/stores/auth.store";
 import { isError } from "$lib/utils/Helpers";
 import { writable } from "svelte/store";
 import { ActorFactory } from "../../utils/ActorFactory";
+import type { ClubFilterDTO, UpdateProfilePictureDTO, UsernameFilterDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 function createUserStore() {
   const { subscribe, set } = writable<any>(null);
@@ -27,7 +28,12 @@ function createUserStore() {
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      const result = await identityActor.updateUsername(username);
+
+      let dto: UsernameFilterDTO = {
+        username: username
+      };
+
+      const result = await identityActor.updateUsername(dto);
       if (isError(result)) {
         console.error("Error updating username");
         return;
@@ -46,7 +52,10 @@ function createUserStore() {
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      const result = await identityActor.updateFavouriteClub(favouriteTeamId);
+      let dto: ClubFilterDTO = {
+        clubId: favouriteTeamId
+      };
+      const result = await identityActor.updateFavouriteClub(dto);
       if (isError(result)) {
         console.error("Error updating favourite team");
         return;
@@ -77,10 +86,12 @@ function createUserStore() {
             authStore,
             process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
           );
-          const result = await identityActor.updateProfilePicture(
-            uint8Array,
-            extension
-          );
+
+          let dto: UpdateProfilePictureDTO = {
+            profilePicture: uint8Array,
+            extension: extension
+          };
+          const result = await identityActor.updateProfilePicture(dto);
           if (isError(result)) {
             console.error("Error updating profile picture");
             return;
@@ -114,7 +125,10 @@ function createUserStore() {
       authStore,
       process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
     );
-    return await identityActor.isUsernameValid(username);
+    let dto: UsernameFilterDTO = {
+      username: username
+    };
+    return await identityActor.isUsernameValid(dto);
   }
 
   async function cacheProfile() {

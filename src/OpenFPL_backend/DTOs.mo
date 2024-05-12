@@ -431,21 +431,17 @@ module DTOs {
     braceBonusGameweek : T.GameweekNumber;
     hatTrickHeroGameweek : T.GameweekNumber;
     transferWindowGameweek : T.GameweekNumber;
-    principalId : Text;
   };
 
   public type UpdateUsernameDTO = {
-    principalId : Text;
     username : Text;
   };
 
   public type UpdateFavouriteClubDTO = {
-    principalId : Text;
     favouriteClubId : T.ClubId;
   };
 
   public type UpdateProfilePictureDTO = {
-    managerId : Text;
     profilePicture : Blob;
     extension : Text;
   };

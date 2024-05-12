@@ -147,13 +147,13 @@ actor Self {
 
   //Update functions:
 
-  public shared ({ caller }) func updateUsername(dto: DTOs.UsernameFilterDTO) : async Result.Result<(), T.Error> {
+  public shared ({ caller }) func updateUsername(dto: DTOs.UpdateUsernameDTO) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     return await seasonManager.updateUsername(principalId, dto.username);
   };
 
-  public shared ({ caller }) func updateFavouriteClub(dto: DTOs.ClubFilterDTO) : async Result.Result<(), T.Error> {
+  public shared ({ caller }) func updateFavouriteClub(dto: DTOs.UpdateFavouriteClubDTO) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     return await seasonManager.updateFavouriteClub(principalId, dto.clubId);

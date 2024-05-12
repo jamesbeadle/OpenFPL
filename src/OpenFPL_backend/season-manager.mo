@@ -103,15 +103,15 @@ module {
     //Data cache variables
 
     private var dataCacheHashes : List.List<T.DataCache> = List.fromArray([
-      { category = "clubs"; hash = "DEFAULT_VALUE" },
-      { category = "fixtures"; hash = "DEFAULT_VALUE" },
-      { category = "weekly_leaderboard"; hash = "DEFAULT_VALUE" },
-      { category = "monthly_leaderboards"; hash = "DEFAULT_VALUE" },
-      { category = "season_leaderboard"; hash = "DEFAULT_VALUE" },
-      { category = "players"; hash = "DEFAULT_VALUE" },
-      { category = "player_events"; hash = "DEFAULT_VALUE" },
-      { category = "countries"; hash = "DEFAULT_VALUE" },
-      { category = "system_state"; hash = "DEFAULT_VALUE" },
+      { category = "clubs"; hash = "NEW_DEFAULT_VALUE" },
+      { category = "fixtures"; hash = "NEW_DEFAULT_VALUE" },
+      { category = "weekly_leaderboard"; hash = "NEW_DEFAULT_VALUE" },
+      { category = "monthly_leaderboards"; hash = "NEW_DEFAULT_VALUE" },
+      { category = "season_leaderboard"; hash = "NEW_DEFAULT_VALUE" },
+      { category = "players"; hash = "NEW_DEFAULT_VALUE" },
+      { category = "player_events"; hash = "NEW_DEFAULT_VALUE" },
+      { category = "countries"; hash = "NEW_DEFAULT_VALUE" },
+      { category = "system_state"; hash = "NEW_DEFAULT_VALUE" },
     ]);
 
     public func getDataHashes() : [DTOs.DataCacheDTO] {

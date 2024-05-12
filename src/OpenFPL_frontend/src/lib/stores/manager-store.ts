@@ -6,9 +6,11 @@ import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
   DataCacheDTO,
   FantasyTeamSnapshot,
+  GetManagerDTO,
   ManagerDTO,
   PickTeamDTO,
   SystemStateDTO,
+  UpdateTeamSelectionDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 
@@ -60,7 +62,10 @@ function createManagerStore() {
 
   async function getPublicProfile(principalId: string): Promise<ManagerDTO> {
     try {
-      let result = await actor.getManager(principalId);
+      let dto: GetManagerDTO = {
+        managerId: principalId
+      };
+      let result = await actor.getManager(dto);
 
       if (isError(result)) {
         console.error("Error getting public profile");
@@ -187,7 +192,7 @@ function createManagerStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
 
-      let dto: PickTeamDTO = {
+      let dto: UpdateTeamSelectionDTO = {
         playerIds: userFantasyTeam.playerIds,
         captainId: userFantasyTeam.captainId,
         goalGetterGameweek:
@@ -239,12 +244,7 @@ function createManagerStore() {
             : userFantasyTeam.goalGetterGameweek,
         transferWindowGameweek: transferWindowPlayedInSession
           ? activeGameweek
-          : userFantasyTeam.transferWindowGameweek,
-        username: userFantasyTeam.username,
-        transfersAvailable: 0,
-        bankQuarterMillions: 0,
-        principalId: "",
-        monthlyBonusesAvailable: 0,
+          : userFantasyTeam.transferWindowGameweek
       };
 
       let result = await identityActor.saveFantasyTeam(dto);
