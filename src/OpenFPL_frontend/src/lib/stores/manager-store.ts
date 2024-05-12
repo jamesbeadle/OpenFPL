@@ -84,7 +84,7 @@ function createManagerStore() {
       let result = await actor.getTotalManagers();
 
       if (isError(result)) {
-        console.error("Error getting public profile");
+        console.error("Error getting total managers");
       }
 
       const managerCountData = result.ok;
@@ -193,7 +193,6 @@ function createManagerStore() {
       );
 
       let dto: UpdateTeamSelectionDTO = {
-        principalId: userFantasyTeam.principalId,
         playerIds: userFantasyTeam.playerIds,
         captainId: userFantasyTeam.captainId,
         goalGetterGameweek:

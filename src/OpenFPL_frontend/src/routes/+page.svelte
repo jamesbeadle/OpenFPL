@@ -46,6 +46,13 @@
       await systemStore.sync();
       await teamStore.sync();
       await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
+      
+
+      authStore.subscribe((store) => {
+        isLoggedIn = store.identity !== null && store.identity !== undefined;
+      });
+
+      managerCount = await managerStore.getTotalManagers();
 
       if ($teamStore.length == 0) return;
       if ($fixtureStore.length == 0) return;
@@ -54,13 +61,7 @@
         $systemStore?.calculationSeasonId ?? 1,
         $systemStore?.calculationGameweek ?? 1
       );
-
-      authStore.subscribe((store) => {
-        isLoggedIn = store.identity !== null && store.identity !== undefined;
-      });
-
-      managerCount = await managerStore.getTotalManagers();
-
+      
       if ($teamStore.length == 0) {
         return [];
       }
