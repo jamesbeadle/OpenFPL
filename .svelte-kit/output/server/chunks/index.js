@@ -3513,7 +3513,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "22wgsw"
+  version_hash: "1n96har"
 };
 async function get_hooks() {
   return {};
@@ -4334,14 +4334,10 @@ const idlFactory = ({ IDL }) => {
     noEntryGameweek: GameweekNumber,
     prospectsGameweek: GameweekNumber,
     safeHandsGameweek: GameweekNumber,
-    principalId: IDL.Text,
     passMasterPlayerId: PlayerId,
     captainId: PlayerId
   });
-  const UpdateFavouriteClubDTO = IDL.Record({
-    favouriteClubId: ClubId,
-    principalId: IDL.Text
-  });
+  const UpdateFavouriteClubDTO = IDL.Record({ favouriteClubId: ClubId });
   const UpdateLeagueBannerDTO = IDL.Record({
     banner: IDL.Opt(IDL.Vec(IDL.Nat8)),
     canisterId: CanisterId
@@ -4355,14 +4351,10 @@ const idlFactory = ({ IDL }) => {
     canisterId: CanisterId
   });
   const UpdateProfilePictureDTO = IDL.Record({
-    managerId: IDL.Text,
     profilePicture: IDL.Vec(IDL.Nat8),
     extension: IDL.Text
   });
-  const UpdateUsernameDTO = IDL.Record({
-    username: IDL.Text,
-    principalId: IDL.Text
-  });
+  const UpdateUsernameDTO = IDL.Record({ username: IDL.Text });
   const RustResult = IDL.Variant({ Ok: IDL.Null, Err: IDL.Text });
   return IDL.Service({
     acceptInviteAndPayFee: IDL.Func([CanisterId], [Result], []),

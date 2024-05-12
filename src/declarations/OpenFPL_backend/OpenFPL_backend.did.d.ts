@@ -579,7 +579,6 @@ export interface UpdateClubDTO {
 }
 export interface UpdateFavouriteClubDTO {
   favouriteClubId: ClubId;
-  principalId: string;
 }
 export interface UpdateLeagueBannerDTO {
   banner: [] | [Uint8Array | number[]];
@@ -603,7 +602,6 @@ export interface UpdatePlayerDTO {
   firstName: string;
 }
 export interface UpdateProfilePictureDTO {
-  managerId: string;
   profilePicture: Uint8Array | number[];
   extension: string;
 }
@@ -626,13 +624,11 @@ export interface UpdateTeamSelectionDTO {
   noEntryGameweek: GameweekNumber;
   prospectsGameweek: GameweekNumber;
   safeHandsGameweek: GameweekNumber;
-  principalId: string;
   passMasterPlayerId: PlayerId;
   captainId: PlayerId;
 }
 export interface UpdateUsernameDTO {
   username: string;
-  principalId: string;
 }
 export interface UsernameFilterDTO {
   username: string;

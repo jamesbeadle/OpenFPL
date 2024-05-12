@@ -13,11 +13,7 @@ type ValueHistory =
    seasonId: nat16;
  };
 type UsernameFilterDTO = record {username: text;};
-type UpdateUsernameDTO = 
- record {
-   principalId: text;
-   username: text;
- };
+type UpdateUsernameDTO = record {username: text;};
 type UpdateTeamSelectionDTO = 
  record {
    braceBonusGameweek: GameweekNumber;
@@ -34,7 +30,6 @@ type UpdateTeamSelectionDTO =
    passMasterGameweek: GameweekNumber;
    passMasterPlayerId: PlayerId;
    playerIds: vec PlayerId;
-   principalId: text;
    prospectsGameweek: GameweekNumber;
    safeHandsGameweek: GameweekNumber;
    safeHandsPlayerId: PlayerId;
@@ -45,7 +40,6 @@ type UpdateTeamSelectionDTO =
 type UpdateProfilePictureDTO = 
  record {
    extension: text;
-   managerId: text;
    profilePicture: blob;
  };
 type UpdatePlayerDTO = 
@@ -73,11 +67,7 @@ type UpdateLeagueBannerDTO =
    banner: opt blob;
    canisterId: CanisterId;
  };
-type UpdateFavouriteClubDTO = 
- record {
-   favouriteClubId: ClubId;
-   principalId: text;
- };
+type UpdateFavouriteClubDTO = record {favouriteClubId: ClubId;};
 type UpdateClubDTO = 
  record {
    abbreviatedName: text;
