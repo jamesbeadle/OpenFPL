@@ -61,12 +61,9 @@ module {
         return;
       };
 
-      var main_canister_id = Environment.BACKEND_CANISTER_ID;
-      var cycles_minting_canister_id = Environment.CYCLES_MINTING_CANISTER_ID;
-
       Debug.print("Cycle minting canister");
-      Debug.print(cycles_minting_canister_id);
-      let cycles_minting_canister = actor (cycles_minting_canister_id) : actor {
+      Debug.print(Environment.CYCLES_MINTING_CANISTER_ID);
+      let cycles_minting_canister = actor (Environment.CYCLES_MINTING_CANISTER_ID) : actor {
         get_icp_xdr_conversion_rate : () -> async ConversionRateResponse;
       };
       let converstionRate : ConversionRateResponse = await cycles_minting_canister.get_icp_xdr_conversion_rate();
@@ -91,7 +88,7 @@ module {
         return;
       };
 
-      let target_account = Account.accountIdentifier(Principal.fromText(cycles_minting_canister_id), Account.principalToSubaccount(Principal.fromText(main_canister_id)));
+      let target_account = Account.accountIdentifier(Principal.fromText(Environment.CYCLES_MINTING_CANISTER_ID), Account.principalToSubaccount(Principal.fromText(Environment.BACKEND_CANISTER_ID)));
 
       if (not Account.validateAccountIdentifier(target_account)) {
         return;

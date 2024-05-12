@@ -6,9 +6,7 @@ module {
 
   public class CyclesDispenser() {
 
-    var main_canister_id = Environment.BACKEND_CANISTER_ID;
-
-    private var canisterIds : List.List<Text> = List.fromArray<Text>([main_canister_id]);
+    private var canisterIds : List.List<Text> = List.fromArray<Text>([Environment.BACKEND_CANISTER_ID]);
 
     public func getStableCanisterIds() : [Text] {
       return List.toArray(canisterIds);
