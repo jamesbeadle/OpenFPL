@@ -107,7 +107,7 @@ function createWeeklyLeaderboardStore() {
       seasonId: seasonId,
       limit: BigInt(limit),
       searchTerm: searchTerm,
-      gameweek: gameweek
+      gameweek: gameweek,
     };
 
     let leaderboardData = await actor.getWeeklyLeaderboard(dto);

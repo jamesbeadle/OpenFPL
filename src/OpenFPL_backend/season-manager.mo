@@ -66,7 +66,7 @@ module {
       pickTeamSeasonId = 1;
       seasonActive = false;
       transferWindowActive = false;
-      onHold = true;
+      onHold = false;
     };
 
     public func getSystemState() : DTOs.SystemStateDTO {

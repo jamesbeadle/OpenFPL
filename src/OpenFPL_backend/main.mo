@@ -156,14 +156,17 @@ actor Self {
   public shared ({ caller }) func updateFavouriteClub(dto: DTOs.UpdateFavouriteClubDTO) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    return await seasonManager.updateFavouriteClub(principalId, dto.clubId);
+    return await seasonManager.updateFavouriteClub(principalId, dto.favouriteClubId);
   };
 
   public shared ({ caller }) func updateProfilePicture(dto: DTOs.UpdateProfilePictureDTO) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert principalId == dto.managerId;
-    return await seasonManager.updateProfilePicture(dto);
+    return await seasonManager.updateProfilePicture({
+      extension = dto.extension;
+      managerId = principalId;
+      profilePicture = dto.profilePicture;
+    });
   };
 
   public shared ({ caller }) func saveFantasyTeam(fantasyTeam : DTOs.UpdateTeamSelectionDTO) : async Result.Result<(), T.Error> {
@@ -708,7 +711,7 @@ actor Self {
     homepageManagerGameweek = 1;
     seasonActive = false;
     transferWindowActive = false;
-    onHold = true;
+    onHold = false;
   };
   private stable var stable_data_cache_hashes : [T.DataCache] = [];
 

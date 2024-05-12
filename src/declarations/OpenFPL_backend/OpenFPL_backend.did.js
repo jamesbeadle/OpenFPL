@@ -616,6 +616,10 @@ export const idlFactory = ({ IDL }) => {
     passMasterPlayerId: PlayerId,
     captainId: PlayerId,
   });
+  const UpdateFavouriteClubDTO = IDL.Record({
+    favouriteClubId: ClubId,
+    principalId: IDL.Text,
+  });
   const UpdateLeagueBannerDTO = IDL.Record({
     banner: IDL.Opt(IDL.Vec(IDL.Nat8)),
     canisterId: CanisterId,
@@ -632,6 +636,10 @@ export const idlFactory = ({ IDL }) => {
     managerId: IDL.Text,
     profilePicture: IDL.Vec(IDL.Nat8),
     extension: IDL.Text,
+  });
+  const UpdateUsernameDTO = IDL.Record({
+    username: IDL.Text,
+    principalId: IDL.Text,
   });
   const RustResult = IDL.Variant({ Ok: IDL.Null, Err: IDL.Text });
   return IDL.Service({
@@ -727,12 +735,12 @@ export const idlFactory = ({ IDL }) => {
     saveFantasyTeam: IDL.Func([UpdateTeamSelectionDTO], [Result], []),
     searchUsername: IDL.Func([UsernameFilterDTO], [Result_1], []),
     setTimer: IDL.Func([IDL.Int, IDL.Text], [], []),
-    updateFavouriteClub: IDL.Func([ClubFilterDTO], [Result], []),
+    updateFavouriteClub: IDL.Func([UpdateFavouriteClubDTO], [Result], []),
     updateLeagueBanner: IDL.Func([UpdateLeagueBannerDTO], [Result], []),
     updateLeagueName: IDL.Func([UpdateLeagueNameDTO], [Result], []),
     updateLeaguePicture: IDL.Func([UpdateLeaguePictureDTO], [Result], []),
     updateProfilePicture: IDL.Func([UpdateProfilePictureDTO], [Result], []),
-    updateUsername: IDL.Func([UsernameFilterDTO], [Result], []),
+    updateUsername: IDL.Func([UpdateUsernameDTO], [Result], []),
     validateAddInitialFixtures: IDL.Func(
       [AddInitialFixturesDTO],
       [RustResult],

@@ -2,7 +2,11 @@ import { authStore } from "$lib/stores/auth.store";
 import { isError } from "$lib/utils/Helpers";
 import { writable } from "svelte/store";
 import { ActorFactory } from "../../utils/ActorFactory";
-import type { ClubFilterDTO, UpdateProfilePictureDTO, UsernameFilterDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type {
+  ClubFilterDTO,
+  UpdateProfilePictureDTO,
+  UsernameFilterDTO,
+} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 function createUserStore() {
   const { subscribe, set } = writable<any>(null);
@@ -30,7 +34,7 @@ function createUserStore() {
       );
 
       let dto: UsernameFilterDTO = {
-        username: username
+        username: username,
       };
 
       const result = await identityActor.updateUsername(dto);
@@ -53,7 +57,7 @@ function createUserStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       let dto: ClubFilterDTO = {
-        clubId: favouriteTeamId
+        clubId: favouriteTeamId,
       };
       const result = await identityActor.updateFavouriteClub(dto);
       if (isError(result)) {
@@ -88,8 +92,9 @@ function createUserStore() {
           );
 
           let dto: UpdateProfilePictureDTO = {
+            managerId: "",
             profilePicture: uint8Array,
-            extension: extension
+            extension: extension,
           };
           const result = await identityActor.updateProfilePicture(dto);
           if (isError(result)) {
@@ -126,7 +131,7 @@ function createUserStore() {
       process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
     );
     let dto: UsernameFilterDTO = {
-      username: username
+      username: username,
     };
     return await identityActor.isUsernameValid(dto);
   }

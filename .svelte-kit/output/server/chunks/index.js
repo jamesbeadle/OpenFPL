@@ -3513,7 +3513,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1q1wia"
+  version_hash: "22wgsw"
 };
 async function get_hooks() {
   return {};
@@ -4338,6 +4338,10 @@ const idlFactory = ({ IDL }) => {
     passMasterPlayerId: PlayerId,
     captainId: PlayerId
   });
+  const UpdateFavouriteClubDTO = IDL.Record({
+    favouriteClubId: ClubId,
+    principalId: IDL.Text
+  });
   const UpdateLeagueBannerDTO = IDL.Record({
     banner: IDL.Opt(IDL.Vec(IDL.Nat8)),
     canisterId: CanisterId
@@ -4354,6 +4358,10 @@ const idlFactory = ({ IDL }) => {
     managerId: IDL.Text,
     profilePicture: IDL.Vec(IDL.Nat8),
     extension: IDL.Text
+  });
+  const UpdateUsernameDTO = IDL.Record({
+    username: IDL.Text,
+    principalId: IDL.Text
   });
   const RustResult = IDL.Variant({ Ok: IDL.Null, Err: IDL.Text });
   return IDL.Service({
@@ -4449,12 +4457,12 @@ const idlFactory = ({ IDL }) => {
     saveFantasyTeam: IDL.Func([UpdateTeamSelectionDTO], [Result], []),
     searchUsername: IDL.Func([UsernameFilterDTO], [Result_1], []),
     setTimer: IDL.Func([IDL.Int, IDL.Text], [], []),
-    updateFavouriteClub: IDL.Func([ClubFilterDTO], [Result], []),
+    updateFavouriteClub: IDL.Func([UpdateFavouriteClubDTO], [Result], []),
     updateLeagueBanner: IDL.Func([UpdateLeagueBannerDTO], [Result], []),
     updateLeagueName: IDL.Func([UpdateLeagueNameDTO], [Result], []),
     updateLeaguePicture: IDL.Func([UpdateLeaguePictureDTO], [Result], []),
     updateProfilePicture: IDL.Func([UpdateProfilePictureDTO], [Result], []),
-    updateUsername: IDL.Func([UsernameFilterDTO], [Result], []),
+    updateUsername: IDL.Func([UpdateUsernameDTO], [Result], []),
     validateAddInitialFixtures: IDL.Func(
       [AddInitialFixturesDTO],
       [RustResult],
@@ -4914,7 +4922,10 @@ function createFixtureStore() {
     let categoryHash = dataCacheValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(`${category}_hash`);
     if (categoryHash?.hash != localHash) {
-      const result = await actor.getFixtures(seasonId);
+      let dto = {
+        seasonId
+      };
+      const result = await actor.getFixtures(dto);
       if (isError(result)) {
         console.error("error syncing fixture store");
         return;
@@ -5545,7 +5556,10 @@ function createManagerStore() {
   };
   async function getPublicProfile(principalId) {
     try {
-      let result = await actor.getManager(principalId);
+      let dto = {
+        managerId: principalId
+      };
+      let result = await actor.getManager(dto);
       if (isError(result)) {
         console.error("Error getting public profile");
       }
@@ -5644,6 +5658,7 @@ function createManagerStore() {
         define_process_env_default$8.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       let dto = {
+        principalId: userFantasyTeam.principalId,
         playerIds: userFantasyTeam.playerIds,
         captainId: userFantasyTeam.captainId,
         goalGetterGameweek: bonusPlayed == 1 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
@@ -5663,12 +5678,7 @@ function createManagerStore() {
         prospectsGameweek: bonusPlayed == 8 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
         braceBonusGameweek: bonusPlayed == 9 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
         hatTrickHeroGameweek: bonusPlayed == 10 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
-        transferWindowGameweek: transferWindowPlayedInSession ? activeGameweek : userFantasyTeam.transferWindowGameweek,
-        username: userFantasyTeam.username,
-        transfersAvailable: 0,
-        bankQuarterMillions: 0,
-        principalId: "",
-        monthlyBonusesAvailable: 0
+        transferWindowGameweek: transferWindowPlayedInSession ? activeGameweek : userFantasyTeam.transferWindowGameweek
       };
       let result = await identityActor.saveFantasyTeam(dto);
       if (isError(result)) {
@@ -5889,13 +5899,14 @@ function createWeeklyLeaderboardStore() {
         }
       }
     }
-    let leaderboardData = await actor.getWeeklyLeaderboard(
+    let dto = {
+      offset: BigInt(offset),
       seasonId,
-      gameweek,
-      limit,
-      offset,
-      searchTerm
-    );
+      limit: BigInt(limit),
+      searchTerm,
+      gameweek
+    };
+    let leaderboardData = await actor.getWeeklyLeaderboard(dto);
     if (isError(leaderboardData)) {
       let emptyLeaderboard = {
         entries: [],
@@ -5976,7 +5987,10 @@ function createPlayerStore() {
     }
   }
   async function getLoanedPlayers(clubId) {
-    let loanedPlayers = await actor.getLoanedPlayers(clubId);
+    let dto = {
+      clubId
+    };
+    let loanedPlayers = await actor.getLoanedPlayers(dto);
     if (isError(loanedPlayers)) {
       console.error("Error fetching loaned players");
       return [];
@@ -5984,7 +5998,10 @@ function createPlayerStore() {
     return loanedPlayers.ok;
   }
   async function getRetiredPlayers(clubId) {
-    let retiredPlayers = await actor.getRetiredPlayers(clubId);
+    let dto = {
+      clubId
+    };
+    let retiredPlayers = await actor.getRetiredPlayers(dto);
     if (isError(retiredPlayers)) {
       console.error("Error fetching retired players");
       return [];
@@ -6024,10 +6041,11 @@ function createPlayerEventsStore() {
     let categoryHash = dataCacheValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(`${category}_hash`);
     if (categoryHash?.hash != localHash) {
-      let result = await actor.getPlayerDetailsForGameweek(
-        systemState.calculationSeasonId,
-        systemState.calculationGameweek
-      );
+      let dto = {
+        seasonId: systemState.calculationSeasonId,
+        gameweek: systemState.calculationGameweek
+      };
+      let result = await actor.getPlayerDetailsForGameweek(dto);
       if (isError(result)) {
         console.error("Error fetching player details for gameweek");
         return;
@@ -6062,7 +6080,11 @@ function createPlayerEventsStore() {
   }
   async function getPlayerDetails(playerId, seasonId) {
     try {
-      let result = await actor.getPlayerDetails(playerId, seasonId);
+      let dto = {
+        playerId,
+        seasonId
+      };
+      let result = await actor.getPlayerDetails(dto);
       if (isError(result)) {
         console.error("Error fetching player details");
       }
@@ -6379,7 +6401,10 @@ function createUserStore() {
         authStore,
         define_process_env_default$3.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      const result = await identityActor.updateUsername(username);
+      let dto = {
+        username
+      };
+      const result = await identityActor.updateUsername(dto);
       if (isError(result)) {
         console.error("Error updating username");
         return;
@@ -6397,7 +6422,10 @@ function createUserStore() {
         authStore,
         define_process_env_default$3.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      const result = await identityActor.updateFavouriteClub(favouriteTeamId);
+      let dto = {
+        clubId: favouriteTeamId
+      };
+      const result = await identityActor.updateFavouriteClub(dto);
       if (isError(result)) {
         console.error("Error updating favourite team");
         return;
@@ -6426,10 +6454,12 @@ function createUserStore() {
             authStore,
             define_process_env_default$3.OPENFPL_BACKEND_CANISTER_ID ?? ""
           );
-          const result = await identityActor.updateProfilePicture(
-            uint8Array,
+          let dto = {
+            managerId: "",
+            profilePicture: uint8Array,
             extension
-          );
+          };
+          const result = await identityActor.updateProfilePicture(dto);
           if (isError(result)) {
             console.error("Error updating profile picture");
             return;
@@ -6455,7 +6485,10 @@ function createUserStore() {
       authStore,
       define_process_env_default$3.OPENFPL_BACKEND_CANISTER_ID
     );
-    return await identityActor.isUsernameValid(username);
+    let dto = {
+      username
+    };
+    return await identityActor.isUsernameValid(dto);
   }
   async function cacheProfile() {
     const identityActor = await ActorFactory.createIdentityActor(

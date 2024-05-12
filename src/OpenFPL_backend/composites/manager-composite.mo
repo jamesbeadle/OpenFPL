@@ -296,7 +296,7 @@ module {
       return managerCanisterIds;
     };
 
-    public func saveFantasyTeam(updatedFantasyTeamDTO : DTOs.UpdateTeamSelectionDTO, systemState : T.SystemState, players : [DTOs.PlayerDTO]) : async Result.Result<(), T.Error> {
+    public func saveFantasyTeam(principalId: T.PrincipalId, updatedFantasyTeamDTO : DTOs.UpdateTeamSelectionDTO, systemState : T.SystemState, players : [DTOs.PlayerDTO]) : async Result.Result<(), T.Error> {
 
       if (systemState.onHold) {
         return #err(#SystemOnHold);
@@ -310,7 +310,7 @@ module {
         return #err(#InvalidTeamError);
       };
 
-      let managerCanisterId = managerCanisterIds.get(updatedFantasyTeamDTO.principalId);
+      let managerCanisterId = managerCanisterIds.get(principalId);
 
       var result : Result.Result<(), T.Error> = #err(#NotFound);
 
@@ -359,7 +359,7 @@ module {
           };
 
           let newManager : T.Manager = {
-            principalId = updatedFantasyTeamDTO.principalId;
+            principalId = principalId;
             username = "";
             favouriteClubId = 0;
             createDate = Time.now();
@@ -400,7 +400,7 @@ module {
             getManager : (principalId : T.PrincipalId) -> async ?T.Manager;
           };
 
-          let foundManager = await manager_canister.getManager(updatedFantasyTeamDTO.principalId);
+          let foundManager = await manager_canister.getManager(principalId);
 
           if (invalidTransfers(updatedFantasyTeamDTO, foundManager, systemState, players)) {
             return #err(#InvalidTeamError);
@@ -428,10 +428,10 @@ module {
         case (?foundCanisterId) {
           let manager_canister = actor (foundCanisterId) : actor {
             getManager : T.PrincipalId -> async ?T.Manager;
-            updateTeamSelection : (updateManagerDTO : DTOs.UpdateTeamSelectionDTO, transfersAvailable : Nat8, monthlyBonuses : Nat8, newBankBalance : Nat16) -> async Result.Result<(), T.Error>;
+            updateTeamSelection : (updateManagerDTO : DTOs.TeamUpdateDTO, transfersAvailable : Nat8, monthlyBonuses : Nat8, newBankBalance : Nat16) -> async Result.Result<(), T.Error>;
           };
 
-          let manager = await manager_canister.getManager(updatedFantasyTeamDTO.principalId);
+          let manager = await manager_canister.getManager(principalId);
 
           switch (manager) {
             case (null) { return #err(#NotFound) };
@@ -545,7 +545,10 @@ module {
                 return #err(#InvalidTeamError);
               };
 
-              return await manager_canister.updateTeamSelection(updatedFantasyTeamDTO, transfersAvailable, monthlyBonuses, newBankBalance);
+              return await manager_canister.updateTeamSelection({
+                principalId = principalId;
+                updatedTeamSelection = updatedFantasyTeamDTO;
+              }, transfersAvailable, monthlyBonuses, newBankBalance);
             };
           };
         };
@@ -635,11 +638,11 @@ module {
         case (?foundCanisterId) {
 
           let manager_canister = actor (foundCanisterId) : actor {
-            updateUsername : (dto : DTOs.UpdateUsernameDTO) -> async Result.Result<(), T.Error>;
+            updateUsername : (dto : DTOs.UsernameUpdateDTO) -> async Result.Result<(), T.Error>;
           };
-          let updatedUsernameDTO : DTOs.UpdateUsernameDTO = {
+          let updatedUsernameDTO : DTOs.UsernameUpdateDTO = {
             principalId = principalId;
-            username = username;
+            updatedUsername = {username = username};
           };
           result := await manager_canister.updateUsername(updatedUsernameDTO);
           managerUsernames.put(principalId, username);
@@ -768,20 +771,20 @@ module {
       return #err(#NotFound);
     };
 
-    public func updateProfilePicture(dto: DTOs.UpdateProfilePictureDTO) : async Result.Result<(), T.Error> {
+    public func updateProfilePicture(managerId: T.PrincipalId, dto: DTOs.UpdateProfilePictureDTO) : async Result.Result<(), T.Error> {
 
       if (invalidProfilePicture(dto.profilePicture)) {
 
         return #err(#InvalidData);
       };
 
-      let managerCanisterId = managerCanisterIds.get(dto.managerId);
+      let managerCanisterId = managerCanisterIds.get(managerId);
       var result : Result.Result<(), T.Error> = #err(#NotFound);
 
       switch (managerCanisterId) {
         case (null) {
           let newManager : T.Manager = {
-            principalId = dto.managerId;
+            principalId = managerId;
             username = "";
             favouriteClubId = 0;
             createDate = Time.now();
@@ -845,13 +848,12 @@ module {
 
           let manager_canister = actor (foundCanisterId) : actor {
             getManager : T.PrincipalId -> async ?T.Manager;
-            updateProfilePicture : (dto : DTOs.UpdateProfilePictureDTO) -> async Result.Result<(), T.Error>;
+            updateProfilePicture : (dto : DTOs.ProfilePictureUpdateDTO) -> async Result.Result<(), T.Error>;
           };
 
-          let profilePictureDTO : DTOs.UpdateProfilePictureDTO = {
-            managerId = dto.managerId;
-            profilePicture = dto.profilePicture;
-            extension = dto.extension;
+          let profilePictureDTO : DTOs.ProfilePictureUpdateDTO = {
+            principalId = managerId;
+            updatedProfilePicture = dto;
           };
 
           result := await manager_canister.updateProfilePicture(profilePictureDTO);

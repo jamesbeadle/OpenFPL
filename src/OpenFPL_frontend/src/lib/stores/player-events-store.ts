@@ -61,7 +61,7 @@ function createPlayerEventsStore() {
     if (categoryHash?.hash != localHash) {
       let dto: GameweekFiltersDTO = {
         seasonId: systemState.calculationSeasonId,
-        gameweek: systemState.calculationGameweek
+        gameweek: systemState.calculationGameweek,
       };
       let result = await actor.getPlayerDetailsForGameweek(dto);
 
@@ -110,7 +110,7 @@ function createPlayerEventsStore() {
     try {
       let dto: GetPlayerDetailsDTO = {
         playerId: playerId,
-        seasonId: seasonId
+        seasonId: seasonId,
       };
       let result = await actor.getPlayerDetails(dto);
 

@@ -410,69 +410,6 @@ module DTOs {
     totalEntries : Nat;
   };
 
-  public type UpdateTeamSelectionDTO = {
-    playerIds : [T.PlayerId];
-    captainId : T.PlayerId;
-    goalGetterGameweek : T.GameweekNumber;
-    goalGetterPlayerId : T.PlayerId;
-    passMasterGameweek : T.GameweekNumber;
-    passMasterPlayerId : T.PlayerId;
-    noEntryGameweek : T.GameweekNumber;
-    noEntryPlayerId : T.PlayerId;
-    teamBoostGameweek : T.GameweekNumber;
-    teamBoostClubId : T.ClubId;
-    safeHandsGameweek : T.GameweekNumber;
-    safeHandsPlayerId : T.PlayerId;
-    captainFantasticGameweek : T.GameweekNumber;
-    captainFantasticPlayerId : T.PlayerId;
-    countrymenGameweek : T.GameweekNumber;
-    countrymenCountryId : T.CountryId;
-    prospectsGameweek : T.GameweekNumber;
-    braceBonusGameweek : T.GameweekNumber;
-    hatTrickHeroGameweek : T.GameweekNumber;
-    transferWindowGameweek : T.GameweekNumber;
-  };
-
-  public type UpdateUsernameDTO = {
-    username : Text;
-  };
-
-  public type UpdateFavouriteClubDTO = {
-    favouriteClubId : T.ClubId;
-  };
-
-  public type UpdateProfilePictureDTO = {
-    profilePicture : Blob;
-    extension : Text;
-  };
-
-  public type AddNewManagerDTO = {
-    playerIds : [T.PlayerId];
-    captainId : T.PlayerId;
-    goalGetterGameweek : T.GameweekNumber;
-    goalGetterPlayerId : T.PlayerId;
-    passMasterGameweek : T.GameweekNumber;
-    passMasterPlayerId : T.PlayerId;
-    noEntryGameweek : T.GameweekNumber;
-    noEntryPlayerId : T.PlayerId;
-    teamBoostGameweek : T.GameweekNumber;
-    teamBoostClubId : T.ClubId;
-    safeHandsGameweek : T.GameweekNumber;
-    safeHandsPlayerId : T.PlayerId;
-    captainFantasticGameweek : T.GameweekNumber;
-    captainFantasticPlayerId : T.PlayerId;
-    countrymenGameweek : T.GameweekNumber;
-    countrymenCountryId : T.CountryId;
-    prospectsGameweek : T.GameweekNumber;
-    braceBonusGameweek : T.GameweekNumber;
-    hatTrickHeroGameweek : T.GameweekNumber;
-    transferWindowGameweek : T.GameweekNumber;
-    principalId : Text;
-    username : Text;
-    favouriteClubId : T.ClubId;
-    profilePicture : ?Blob;
-  };
-
   public type WeeklyCanisterDTO = {
     canister : T.WeeklyLeaderboardCanister;
     cycles : Nat;
@@ -621,6 +558,70 @@ module DTOs {
     canisterId: T.CanisterId;
     limit : Nat;
     offset : Nat;
+  };
+
+  public type UpdateTeamSelectionDTO = {
+    playerIds : [T.PlayerId];
+    captainId : T.PlayerId;
+    goalGetterGameweek : T.GameweekNumber;
+    goalGetterPlayerId : T.PlayerId;
+    passMasterGameweek : T.GameweekNumber;
+    passMasterPlayerId : T.PlayerId;
+    noEntryGameweek : T.GameweekNumber;
+    noEntryPlayerId : T.PlayerId;
+    teamBoostGameweek : T.GameweekNumber;
+    teamBoostClubId : T.ClubId;
+    safeHandsGameweek : T.GameweekNumber;
+    safeHandsPlayerId : T.PlayerId;
+    captainFantasticGameweek : T.GameweekNumber;
+    captainFantasticPlayerId : T.PlayerId;
+    countrymenGameweek : T.GameweekNumber;
+    countrymenCountryId : T.CountryId;
+    prospectsGameweek : T.GameweekNumber;
+    braceBonusGameweek : T.GameweekNumber;
+    hatTrickHeroGameweek : T.GameweekNumber;
+    transferWindowGameweek : T.GameweekNumber;
+  };
+
+  public type TeamUpdateDTO = {
+    principalId : Text;
+    updatedTeamSelection: UpdateTeamSelectionDTO;
+  };
+
+  public type UpdateUsernameDTO = {
+    username : Text;
+  };
+
+  public type UsernameUpdateDTO = {
+    principalId : Text;
+    updatedUsername: UpdateUsernameDTO;
+  };
+
+  public type UpdateFavouriteClubDTO = {
+    favouriteClubId : T.ClubId;
+  };
+
+  public type FavouriteClubUpdateDTO = {
+    principalId : Text;
+    updatedFavouriteClub: UpdateFavouriteClubDTO;
+  };
+
+  public type UpdateProfilePictureDTO = {
+    profilePicture : Blob;
+    extension : Text;
+  };
+
+  public type ProfilePictureUpdateDTO = {
+    principalId : Text;
+    updatedProfilePicture: UpdateProfilePictureDTO;
+  };
+
+  public type AddNewManagerDTO = {
+    principalId : Text;
+    username : Text;
+    favouriteClubId : T.ClubId;
+    profilePicture : ?Blob;
+    teamSelection: UpdateTeamSelectionDTO;
   };
 
 };

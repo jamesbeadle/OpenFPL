@@ -577,6 +577,10 @@ export interface UpdateClubDTO {
   shirtType: ShirtType;
   primaryColourHex: string;
 }
+export interface UpdateFavouriteClubDTO {
+  favouriteClubId: ClubId;
+  principalId: string;
+}
 export interface UpdateLeagueBannerDTO {
   banner: [] | [Uint8Array | number[]];
   canisterId: CanisterId;
@@ -625,6 +629,10 @@ export interface UpdateTeamSelectionDTO {
   principalId: string;
   passMasterPlayerId: PlayerId;
   captainId: PlayerId;
+}
+export interface UpdateUsernameDTO {
+  username: string;
+  principalId: string;
 }
 export interface UsernameFilterDTO {
   username: string;
@@ -719,12 +727,12 @@ export interface _SERVICE {
   saveFantasyTeam: ActorMethod<[UpdateTeamSelectionDTO], Result>;
   searchUsername: ActorMethod<[UsernameFilterDTO], Result_1>;
   setTimer: ActorMethod<[bigint, string], undefined>;
-  updateFavouriteClub: ActorMethod<[ClubFilterDTO], Result>;
+  updateFavouriteClub: ActorMethod<[UpdateFavouriteClubDTO], Result>;
   updateLeagueBanner: ActorMethod<[UpdateLeagueBannerDTO], Result>;
   updateLeagueName: ActorMethod<[UpdateLeagueNameDTO], Result>;
   updateLeaguePicture: ActorMethod<[UpdateLeaguePictureDTO], Result>;
   updateProfilePicture: ActorMethod<[UpdateProfilePictureDTO], Result>;
-  updateUsername: ActorMethod<[UsernameFilterDTO], Result>;
+  updateUsername: ActorMethod<[UpdateUsernameDTO], Result>;
   validateAddInitialFixtures: ActorMethod<[AddInitialFixturesDTO], RustResult>;
   validateAddNewToken: ActorMethod<[NewTokenDTO], RustResult>;
   validateCreateDAONeuron: ActorMethod<[], RustResult>;

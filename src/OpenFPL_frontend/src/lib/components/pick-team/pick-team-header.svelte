@@ -44,6 +44,12 @@
 
   async function loadData() {
     let nextFixture = await fixtureStore.getNextFixture();
+    
+    if(!nextFixture){
+      isLoading = false;
+      return
+    };
+    
     nextFixtureDate = formatUnixDateToReadable(Number(nextFixture?.kickOff));
     nextFixtureTime = formatUnixTimeToTime(Number(nextFixture?.kickOff));
 

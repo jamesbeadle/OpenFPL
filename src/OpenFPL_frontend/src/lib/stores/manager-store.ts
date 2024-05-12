@@ -63,7 +63,7 @@ function createManagerStore() {
   async function getPublicProfile(principalId: string): Promise<ManagerDTO> {
     try {
       let dto: GetManagerDTO = {
-        managerId: principalId
+        managerId: principalId,
       };
       let result = await actor.getManager(dto);
 
@@ -193,6 +193,7 @@ function createManagerStore() {
       );
 
       let dto: UpdateTeamSelectionDTO = {
+        principalId: userFantasyTeam.principalId,
         playerIds: userFantasyTeam.playerIds,
         captainId: userFantasyTeam.captainId,
         goalGetterGameweek:
@@ -244,7 +245,7 @@ function createManagerStore() {
             : userFantasyTeam.goalGetterGameweek,
         transferWindowGameweek: transferWindowPlayedInSession
           ? activeGameweek
-          : userFantasyTeam.transferWindowGameweek
+          : userFantasyTeam.transferWindowGameweek,
       };
 
       let result = await identityActor.saveFantasyTeam(dto);
