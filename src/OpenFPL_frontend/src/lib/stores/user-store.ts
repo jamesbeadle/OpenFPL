@@ -92,7 +92,6 @@ function createUserStore() {
           );
 
           let dto: UpdateProfilePictureDTO = {
-            managerId: "",
             profilePicture: uint8Array,
             extension: extension,
           };
@@ -133,6 +132,8 @@ function createUserStore() {
     let dto: UsernameFilterDTO = {
       username: username,
     };
+    console.log("check");
+    console.log(username);
     return await identityActor.isUsernameValid(dto);
   }
 

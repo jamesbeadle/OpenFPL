@@ -52,7 +52,7 @@ module {
         case (?foundClub) {};
       };
 
-      return #Ok();
+      return #Ok("Proposal Valid");
     };
 
     public func executePromoteFormerClub(promoteFormerClubDTO : DTOs.PromoteFormerClubDTO) : async () {
@@ -101,7 +101,7 @@ module {
         return #Err("Invalid: Invalid third hex colour.");
       };
 
-      return #Ok();
+      return #Ok("Proposal Valid");
     };
 
     public func executePromoteNewClub(promoteNewClubDTO : DTOs.PromoteNewClubDTO) : async () {
@@ -159,7 +159,7 @@ module {
         };
       };
 
-      return #Ok();
+      return #Ok("Proposal Valid");
     };
 
     public func executeUpdateClub(updateClubDTO : DTOs.UpdateClubDTO) : async () {

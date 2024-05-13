@@ -12,7 +12,7 @@ module _Types {
   public type CountryId = Nat16;
   public type PrincipalId = Text;
   public type CanisterId = Text;
-  public type RustResult = { #Ok; #Err : Text };
+  public type RustResult = { #Ok : Text; #Err : Text };
   public type TokenId = Nat16;
 
   public type Error = {

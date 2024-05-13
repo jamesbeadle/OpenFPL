@@ -3513,7 +3513,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1n96har"
+  version_hash: "b5r8d9"
 };
 async function get_hooks() {
   return {};
@@ -3961,13 +3961,13 @@ const idlFactory = ({ IDL }) => {
     shirtType: ShirtType,
     primaryColourHex: IDL.Text
   });
-  const Result_19 = IDL.Variant({ ok: IDL.Vec(ClubDTO), err: Error2 });
+  const Result_20 = IDL.Variant({ ok: IDL.Vec(ClubDTO), err: Error2 });
   const CountryDTO = IDL.Record({
     id: CountryId,
     code: IDL.Text,
     name: IDL.Text
   });
-  const Result_22 = IDL.Variant({ ok: IDL.Vec(CountryDTO), err: Error2 });
+  const Result_23 = IDL.Variant({ ok: IDL.Vec(CountryDTO), err: Error2 });
   const PickTeamDTO = IDL.Record({
     playerIds: IDL.Vec(PlayerId),
     countrymenCountryId: CountryId,
@@ -3995,9 +3995,9 @@ const idlFactory = ({ IDL }) => {
     captainId: PlayerId,
     monthlyBonusesAvailable: IDL.Nat8
   });
-  const Result_21 = IDL.Variant({ ok: PickTeamDTO, err: Error2 });
+  const Result_22 = IDL.Variant({ ok: PickTeamDTO, err: Error2 });
   const DataCacheDTO = IDL.Record({ hash: IDL.Text, category: IDL.Text });
-  const Result_20 = IDL.Variant({
+  const Result_21 = IDL.Variant({
     ok: IDL.Vec(DataCacheDTO),
     err: Error2
   });
@@ -4092,8 +4092,13 @@ const idlFactory = ({ IDL }) => {
     totalEntries: IDL.Nat,
     entries: IDL.Vec(ManagerPrivateLeagueDTO)
   });
-  const Result_18 = IDL.Variant({
+  const Result_19 = IDL.Variant({
     ok: ManagerPrivateLeaguesDTO,
+    err: Error2
+  });
+  const PrincipalId = IDL.Text;
+  const Result_18 = IDL.Variant({
+    ok: IDL.Vec(IDL.Tuple(PrincipalId, CanisterId)),
     err: Error2
   });
   const GetMonthlyLeaderboardDTO = IDL.Record({
@@ -4212,7 +4217,6 @@ const idlFactory = ({ IDL }) => {
     limit: IDL.Nat,
     canisterId: CanisterId
   });
-  const PrincipalId = IDL.Text;
   const LeagueMemberDTO = IDL.Record({
     added: IDL.Int,
     username: IDL.Text,
@@ -4355,7 +4359,7 @@ const idlFactory = ({ IDL }) => {
     extension: IDL.Text
   });
   const UpdateUsernameDTO = IDL.Record({ username: IDL.Text });
-  const RustResult = IDL.Variant({ Ok: IDL.Null, Err: IDL.Text });
+  const RustResult = IDL.Variant({ Ok: IDL.Text, Err: IDL.Text });
   return IDL.Service({
     acceptInviteAndPayFee: IDL.Func([CanisterId], [Result], []),
     acceptLeagueInvite: IDL.Func([CanisterId], [Result], []),
@@ -4387,15 +4391,16 @@ const idlFactory = ({ IDL }) => {
     executeUpdatePlayer: IDL.Func([UpdatePlayerDTO], [], []),
     getCanisterCyclesBalance: IDL.Func([], [IDL.Nat], []),
     getCanisterTimerId: IDL.Func([], [IDL.Opt(IDL.Int)], []),
-    getClubs: IDL.Func([], [Result_19], ["query"]),
-    getCountries: IDL.Func([], [Result_22], ["query"]),
-    getCurrentTeam: IDL.Func([], [Result_21], []),
-    getDataHashes: IDL.Func([], [Result_20], ["query"]),
+    getClubs: IDL.Func([], [Result_20], ["query"]),
+    getCountries: IDL.Func([], [Result_23], ["query"]),
+    getCurrentTeam: IDL.Func([], [Result_22], []),
+    getDataHashes: IDL.Func([], [Result_21], ["query"]),
     getFixtures: IDL.Func([GetFixturesDTO], [Result_13], ["query"]),
-    getFormerClubs: IDL.Func([], [Result_19], ["query"]),
+    getFormerClubs: IDL.Func([], [Result_20], ["query"]),
     getLoanedPlayers: IDL.Func([ClubFilterDTO], [Result_8], ["query"]),
     getManager: IDL.Func([GetManagerDTO], [Result_1], []),
-    getManagerPrivateLeagues: IDL.Func([], [Result_18], []),
+    getManagerPrivateLeagues: IDL.Func([], [Result_19], []),
+    getManagers: IDL.Func([], [Result_18], ["query"]),
     getMonthlyLeaderboard: IDL.Func(
       [GetMonthlyLeaderboardDTO],
       [Result_10],
@@ -5566,7 +5571,7 @@ function createManagerStore() {
     try {
       let result = await actor.getTotalManagers();
       if (isError(result)) {
-        console.error("Error getting public profile");
+        console.error("Error getting total managers");
       }
       const managerCountData = result.ok;
       return Number(managerCountData);
@@ -5623,6 +5628,7 @@ function createManagerStore() {
         define_process_env_default$8.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.getCurrentTeam();
+      console.log(result);
       if (isError(result)) {
         return newManager;
       }
@@ -5650,7 +5656,6 @@ function createManagerStore() {
         define_process_env_default$8.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       let dto = {
-        principalId: userFantasyTeam.principalId,
         playerIds: userFantasyTeam.playerIds,
         captainId: userFantasyTeam.captainId,
         goalGetterGameweek: bonusPlayed == 1 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
@@ -6447,7 +6452,6 @@ function createUserStore() {
             define_process_env_default$3.OPENFPL_BACKEND_CANISTER_ID ?? ""
           );
           let dto = {
-            managerId: "",
             profilePicture: uint8Array,
             extension
           };
@@ -6480,6 +6484,8 @@ function createUserStore() {
     let dto = {
       username
     };
+    console.log("check");
+    console.log(username);
     return await identityActor.isUsernameValid(dto);
   }
   async function cacheProfile() {

@@ -112,7 +112,7 @@ module {
           return #Err("Token canister already exists.");
         }
       };
-      return #Ok;
+      return #Ok("Proposal valid.");
     };
 
     public func executeAddNewToken(newTokenDTO : DTOs.NewTokenDTO) : async () {

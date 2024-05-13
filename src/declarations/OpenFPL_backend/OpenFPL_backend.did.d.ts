@@ -482,12 +482,15 @@ export type Result_14 =
 export type Result_15 = { ok: Array<PlayerPointsDTO> } | { err: Error };
 export type Result_16 = { ok: PlayerDetailDTO } | { err: Error };
 export type Result_17 = { ok: Array<MonthlyLeaderboardDTO> } | { err: Error };
-export type Result_18 = { ok: ManagerPrivateLeaguesDTO } | { err: Error };
-export type Result_19 = { ok: Array<ClubDTO> } | { err: Error };
+export type Result_18 =
+  | { ok: Array<[PrincipalId, CanisterId]> }
+  | { err: Error };
+export type Result_19 = { ok: ManagerPrivateLeaguesDTO } | { err: Error };
 export type Result_2 = { ok: WeeklyLeaderboardDTO } | { err: Error };
-export type Result_20 = { ok: Array<DataCacheDTO> } | { err: Error };
-export type Result_21 = { ok: PickTeamDTO } | { err: Error };
-export type Result_22 = { ok: Array<CountryDTO> } | { err: Error };
+export type Result_20 = { ok: Array<ClubDTO> } | { err: Error };
+export type Result_21 = { ok: Array<DataCacheDTO> } | { err: Error };
+export type Result_22 = { ok: PickTeamDTO } | { err: Error };
+export type Result_23 = { ok: Array<CountryDTO> } | { err: Error };
 export type Result_3 = { ok: bigint } | { err: Error };
 export type Result_4 = { ok: Array<TokenInfo> } | { err: Error };
 export type Result_5 = { ok: SystemStateDTO } | { err: Error };
@@ -505,7 +508,7 @@ export interface RevaluePlayerDownDTO {
 export interface RevaluePlayerUpDTO {
   playerId: PlayerId;
 }
-export type RustResult = { Ok: null } | { Err: string };
+export type RustResult = { Ok: string } | { Err: string };
 export interface SeasonDTO {
   id: SeasonId;
   name: string;
@@ -676,15 +679,16 @@ export interface _SERVICE {
   executeUpdatePlayer: ActorMethod<[UpdatePlayerDTO], undefined>;
   getCanisterCyclesBalance: ActorMethod<[], bigint>;
   getCanisterTimerId: ActorMethod<[], [] | [bigint]>;
-  getClubs: ActorMethod<[], Result_19>;
-  getCountries: ActorMethod<[], Result_22>;
-  getCurrentTeam: ActorMethod<[], Result_21>;
-  getDataHashes: ActorMethod<[], Result_20>;
+  getClubs: ActorMethod<[], Result_20>;
+  getCountries: ActorMethod<[], Result_23>;
+  getCurrentTeam: ActorMethod<[], Result_22>;
+  getDataHashes: ActorMethod<[], Result_21>;
   getFixtures: ActorMethod<[GetFixturesDTO], Result_13>;
-  getFormerClubs: ActorMethod<[], Result_19>;
+  getFormerClubs: ActorMethod<[], Result_20>;
   getLoanedPlayers: ActorMethod<[ClubFilterDTO], Result_8>;
   getManager: ActorMethod<[GetManagerDTO], Result_1>;
-  getManagerPrivateLeagues: ActorMethod<[], Result_18>;
+  getManagerPrivateLeagues: ActorMethod<[], Result_19>;
+  getManagers: ActorMethod<[], Result_18>;
   getMonthlyLeaderboard: ActorMethod<[GetMonthlyLeaderboardDTO], Result_10>;
   getMonthlyLeaderboards: ActorMethod<[GetMonthlyLeaderboardsDTO], Result_17>;
   getNeuronId: ActorMethod<[], bigint>;

@@ -390,7 +390,7 @@ module {
         case (?foundPlayer) {};
       };
 
-      return #Ok();
+      return #Ok("Proposal Valid");
     };
 
     public func executeRevaluePlayerUp(revaluePlayerUpDTO : DTOs.RevaluePlayerUpDTO, systemState : T.SystemState) : async () {
@@ -452,7 +452,7 @@ module {
         };
         case (?foundPlayer) {};
       };
-      return #Ok();
+      return #Ok("Proposal Valid");
     };
 
     public func executeRevaluePlayerDown(revaluePlayerDownDTO : DTOs.RevaluePlayerDownDTO, systemState : T.SystemState) : async () {
@@ -542,7 +542,7 @@ module {
         };
       };
 
-      return #Ok();
+      return #Ok("Proposal Valid");
     };
 
     public func executeLoanPlayer(loanPlayerDTO : DTOs.LoanPlayerDTO, systemState : T.SystemState) : async () {
@@ -635,7 +635,7 @@ module {
         };
       };
 
-      return #Ok();
+      return #Ok("Proposal Valid");
     };
 
     public func executeTransferPlayer(transferPlayerDTO : DTOs.TransferPlayerDTO, systemState : T.SystemState) : async () {
@@ -711,7 +711,7 @@ module {
         };
       };
 
-      return #Ok();
+      return #Ok("Proposal Valid");
     };
 
     public func executeRecallPlayer(recallPlayerDTO : DTOs.RecallPlayerDTO) : async () {
@@ -848,7 +848,7 @@ module {
         return #Err("Invalid: Player under 16 years of age.");
       };
 
-      return #Ok();
+      return #Ok("Proposal Valid");
     };
 
     public func executeCreatePlayer(createPlayerDTO : DTOs.CreatePlayerDTO) : async () {
@@ -912,7 +912,7 @@ module {
         return #Err("Invalid: Player under 16 years of age.");
       };
 
-      return #Ok();
+      return #Ok("Proposal Valid");
     };
 
     public func executeUpdatePlayer(updatePlayerDTO : DTOs.UpdatePlayerDTO) : async () {
@@ -962,7 +962,7 @@ module {
         case (?foundPlayer) {};
       };
 
-      return #Ok();
+      return #Ok("Proposal Valid");
     };
 
     public func executeSetPlayerInjury(setPlayerInjuryDTO : DTOs.SetPlayerInjuryDTO) : async () {
@@ -1065,7 +1065,7 @@ module {
         case (?foundPlayer) {};
       };
 
-      return #Ok();
+      return #Ok("Proposal Valid");
     };
 
     public func executeRetirePlayer(retirePlayerDTO : DTOs.RetirePlayerDTO) : async () {
@@ -1116,7 +1116,7 @@ module {
         case (?foundPlayer) {};
       };
 
-      return #Ok();
+      return #Ok("Proposal Valid");
     };
 
     public func executeUnretirePlayer(unretirePlayerDTO : DTOs.UnretirePlayerDTO) : async () {

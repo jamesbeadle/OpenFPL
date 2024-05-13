@@ -37,7 +37,6 @@ actor Self {
   private let cyclesCheckWalletInterval : Nat = Utilities.getHour() * 24;
   private var cyclesCheckWalletTimerId : ?Timer.TimerId = null;
 
-
   //Manager calls
 
   public shared ({ caller }) func getProfile() : async Result.Result<DTOs.ProfileDTO, T.Error> {
@@ -138,9 +137,13 @@ actor Self {
   };
 
   public shared query ({ caller }) func isUsernameValid(dto: DTOs.UsernameFilterDTO) : async Bool {
+    Debug.print("is username valid");
     assert not Principal.isAnonymous(caller);
+    Debug.print("is username valid");
     let usernameValid = seasonManager.isUsernameValid(dto);
+    Debug.print("is username taken");
     let usernameTaken = seasonManager.isUsernameTaken(dto, Principal.toText(caller));
+    Debug.print("check");
     return usernameValid and not usernameTaken;
   };
 
@@ -368,7 +371,7 @@ actor Self {
       return #Err("Neuron not created");
     };
 
-    return #Ok();
+    return #Ok("Proposal Valid");
   };
 
   public shared ({ caller }) func executeManageDAONeuron(command : NeuronTypes.Command) : async () {
@@ -1105,7 +1108,7 @@ actor Self {
       return #Err("Neuron already created");
     };
 
-    return #Ok();
+    return #Ok("Proposal Valid");
   };
 
   //can remove after the DAOs neuron is created
@@ -1134,6 +1137,12 @@ actor Self {
     await seasonManager.init();
 
     openFPLInitialised := true;
+  };
+
+  
+
+  public shared query func getManagers() : async Result.Result<[(T.PrincipalId, T.CanisterId)], T.Error> {
+    return #ok(stable_manager_canister_ids);
   };
 
 };

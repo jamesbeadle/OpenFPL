@@ -152,7 +152,7 @@ type SeasonDTO =
 type RustResult = 
  variant {
    Err: text;
-   Ok;
+   Ok: text;
  };
 type RevaluePlayerUpDTO = record {playerId: PlayerId;};
 type RevaluePlayerDownDTO = record {playerId: PlayerId;};
@@ -196,20 +196,25 @@ type Result_3 =
    err: Error;
    ok: nat;
  };
-type Result_22 = 
+type Result_23 = 
  variant {
    err: Error;
    ok: vec CountryDTO;
  };
-type Result_21 = 
+type Result_22 = 
  variant {
    err: Error;
    ok: PickTeamDTO;
  };
-type Result_20 = 
+type Result_21 = 
  variant {
    err: Error;
    ok: vec DataCacheDTO;
+ };
+type Result_20 = 
+ variant {
+   err: Error;
+   ok: vec ClubDTO;
  };
 type Result_2 = 
  variant {
@@ -219,12 +224,15 @@ type Result_2 =
 type Result_19 = 
  variant {
    err: Error;
-   ok: vec ClubDTO;
+   ok: ManagerPrivateLeaguesDTO;
  };
 type Result_18 = 
  variant {
    err: Error;
-   ok: ManagerPrivateLeaguesDTO;
+   ok: vec record {
+             PrincipalId;
+             CanisterId;
+           };
  };
 type Result_17 = 
  variant {
@@ -818,15 +826,16 @@ service : {
   executeUpdatePlayer: (UpdatePlayerDTO) -> ();
   getCanisterCyclesBalance: () -> (nat);
   getCanisterTimerId: () -> (opt int);
-  getClubs: () -> (Result_19) query;
-  getCountries: () -> (Result_22) query;
-  getCurrentTeam: () -> (Result_21);
-  getDataHashes: () -> (Result_20) query;
+  getClubs: () -> (Result_20) query;
+  getCountries: () -> (Result_23) query;
+  getCurrentTeam: () -> (Result_22);
+  getDataHashes: () -> (Result_21) query;
   getFixtures: (GetFixturesDTO) -> (Result_13) query;
-  getFormerClubs: () -> (Result_19) query;
+  getFormerClubs: () -> (Result_20) query;
   getLoanedPlayers: (ClubFilterDTO) -> (Result_8) query;
   getManager: (GetManagerDTO) -> (Result_1);
-  getManagerPrivateLeagues: () -> (Result_18);
+  getManagerPrivateLeagues: () -> (Result_19);
+  getManagers: () -> (Result_18) query;
   getMonthlyLeaderboard: (GetMonthlyLeaderboardDTO) -> (Result_10);
   getMonthlyLeaderboards: (GetMonthlyLeaderboardsDTO) -> (Result_17);
   getNeuronId: () -> (nat64);

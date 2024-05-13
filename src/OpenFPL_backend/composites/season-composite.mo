@@ -346,7 +346,7 @@ module {
         };
       };
 
-      return #Ok();
+      return #Ok("Proposal Valid");
     };
 
     private func validatePlayerEvents(playerEvents : [T.PlayerEventData]) : Bool {
@@ -1035,7 +1035,7 @@ module {
         };
       };
 
-      return #Ok();
+      return #Ok("Proposal Valid");
     };
 
     public func executeAddInitialFixtures(addInitialFixturesDTO : DTOs.AddInitialFixturesDTO) : async () {
@@ -1135,7 +1135,7 @@ module {
         };
       };
 
-      return #Ok();
+      return #Ok("Proposal Valid");
     };
 
     public func executeMoveFixture(moveFixtureDTO : DTOs.MoveFixtureDTO, systemState : T.SystemState) : async () {
@@ -1212,7 +1212,7 @@ module {
         };
       };
 
-      return #Ok();
+      return #Ok("Proposal Valid");
     };
 
     public func executePostponeFixture(postponeFixtureDTO : DTOs.PostponeFixtureDTO, systemState : T.SystemState) : async () {
@@ -1291,7 +1291,7 @@ module {
         };
       };
 
-      return #Ok();
+      return #Ok("Proposal Valid");
     };
 
     public func executeRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO, systemState : T.SystemState) : async () {

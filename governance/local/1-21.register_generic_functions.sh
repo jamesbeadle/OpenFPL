@@ -32,7 +32,7 @@ PROPOSAL="(
     }
 )"
 
-../utils/submit_proposal.sh "$PROPOSAL"
+./submit_proposal.sh "$PROPOSAL"
 
 echo "Register Generic Proposal Function 2 with SNS"
 
@@ -59,7 +59,7 @@ PROPOSAL="(
     }
 )"
 
-../utils/submit_proposal.sh "$PROPOSAL"
+./submit_proposal.sh "$PROPOSAL"
 
 echo "Register Generic Proposal Function 3 with SNS"
 
@@ -86,7 +86,7 @@ PROPOSAL="(
     }
 )"
 
-../utils/submit_proposal.sh "$PROPOSAL"
+./submit_proposal.sh "$PROPOSAL"
 
 echo "Register Generic Proposal Function 4 with SNS"
 
@@ -115,7 +115,7 @@ PROPOSAL="(
     }
 )"
 
-../utils/submit_proposal.sh "$PROPOSAL"
+./submit_proposal.sh "$PROPOSAL"
 
 echo "Register Generic Proposal Function 5 with SNS"
 
@@ -144,7 +144,7 @@ PROPOSAL="(
     }
 )"
 
-../utils/submit_proposal.sh "$PROPOSAL"
+./submit_proposal.sh "$PROPOSAL"
 
 echo "Register Generic Proposal Function 6 with SNS"
 
@@ -173,7 +173,7 @@ PROPOSAL="(
     }
 )"
 
-../utils/submit_proposal.sh "$PROPOSAL"
+./submit_proposal.sh "$PROPOSAL"
 
 echo "Register Generic Proposal Function 7 with SNS"
 
@@ -202,7 +202,7 @@ PROPOSAL="(
     }
 )"
 
-../utils/submit_proposal.sh "$PROPOSAL"
+./submit_proposal.sh "$PROPOSAL"
 
 echo "Register Generic Proposal Function 8 with SNS"
 
@@ -231,7 +231,7 @@ PROPOSAL="(
     }
 )"
 
-../utils/submit_proposal.sh "$PROPOSAL"
+./submit_proposal.sh "$PROPOSAL"
 
 echo "Register Generic Proposal Function 9 with SNS"
 
@@ -260,7 +260,7 @@ PROPOSAL="(
     }
 )"
 
-../utils/submit_proposal.sh "$PROPOSAL"
+./submit_proposal.sh "$PROPOSAL"
 
 echo "Register Generic Proposal Function 10 with SNS"
 
@@ -289,7 +289,7 @@ PROPOSAL="(
     }
 )"
 
-../utils/submit_proposal.sh "$PROPOSAL"
+./submit_proposal.sh "$PROPOSAL"
 
 echo "Register Generic Proposal Function 11 with SNS"
 
@@ -318,7 +318,7 @@ PROPOSAL="(
     }
 )"
 
-../utils/submit_proposal.sh "$PROPOSAL"
+./submit_proposal.sh "$PROPOSAL"
 
 echo "Register Generic Proposal Function 12 with SNS"
 
@@ -347,7 +347,7 @@ PROPOSAL="(
     }
 )"
 
-../utils/submit_proposal.sh "$PROPOSAL"
+./submit_proposal.sh "$PROPOSAL"
 
 echo "Register Generic Proposal Function 13 with SNS"
 
@@ -376,7 +376,7 @@ PROPOSAL="(
     }
 )"
 
-../utils/submit_proposal.sh "$PROPOSAL"
+./submit_proposal.sh "$PROPOSAL"
 
 echo "Register Generic Proposal Function 14 with SNS"
 
@@ -405,7 +405,7 @@ PROPOSAL="(
     }
 )"
 
-../utils/submit_proposal.sh "$PROPOSAL"
+./submit_proposal.sh "$PROPOSAL"
 
 echo "Register Generic Proposal Function 15 with SNS"
 
@@ -434,7 +434,7 @@ PROPOSAL="(
     }
 )"
 
-../utils/submit_proposal.sh "$PROPOSAL"
+./submit_proposal.sh "$PROPOSAL"
 
 echo "Register Generic Proposal Function 16 with SNS"
 
@@ -463,7 +463,7 @@ PROPOSAL="(
     }
 )"
 
-../utils/submit_proposal.sh "$PROPOSAL"
+./submit_proposal.sh "$PROPOSAL"
 
 echo "Register Generic Proposal Function 17 with SNS"
 
@@ -492,7 +492,7 @@ PROPOSAL="(
     }
 )"
 
-../utils/submit_proposal.sh "$PROPOSAL"
+./submit_proposal.sh "$PROPOSAL"
 
 echo "Register Generic Proposal Function 18 with SNS"
 
@@ -521,7 +521,7 @@ PROPOSAL="(
     }
 )"
 
-../utils/submit_proposal.sh "$PROPOSAL"
+./submit_proposal.sh "$PROPOSAL"
 
 echo "Register Generic Proposal Function 19 with SNS"
 
@@ -550,7 +550,7 @@ PROPOSAL="(
     }
 )"
 
-../utils/submit_proposal.sh "$PROPOSAL"
+./submit_proposal.sh "$PROPOSAL"
 
 echo "Register Generic Proposal Function 20 with SNS"
 
@@ -579,4 +579,4 @@ PROPOSAL="(
     }
 )"
 
-../utils/submit_proposal.sh "$PROPOSAL"
+./submit_proposal.sh "$PROPOSAL"

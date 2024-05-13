@@ -155,7 +155,7 @@ function createManagerStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.getCurrentTeam();
-
+      console.log(result);
       if (isError(result)) {
         return newManager;
       }

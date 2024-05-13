@@ -6,6 +6,7 @@ import ECDSA "mo:tecdsa";
 import U "utils";
 import S "state";
 import T "types";
+import Environment "../OpenFPL_backend/utils/Environment";
 
 shared actor class NeuronController() = self {
 
@@ -18,7 +19,6 @@ shared actor class NeuronController() = self {
   let { FEES = { ID = FEE_ID; APP = FEE_AMT } } = Loopback.Client;
 
   let { Address; AccountIdentifier } = Ledger;
-
 
   // stable variable - state
   //
@@ -80,7 +80,7 @@ shared actor class NeuronController() = self {
   //
   public shared ({caller}) func manage_neuron(cmd: T.Command): async T.NeuronResponse {
 
-    assert Principal.isController( caller );
+    assert Principal.toText(caller) == Environment.BACKEND_CANISTER_ID;
 
     let governance_client = U.GovernanceClient(state, transform);
 
@@ -101,7 +101,7 @@ shared actor class NeuronController() = self {
   //
   public shared ({caller}) func stake_nns_neuron(): async T.NeuronResponse {
 
-    assert Principal.isController( caller );
+    assert Principal.toText(caller) == Environment.BACKEND_CANISTER_ID;
 
     if ( state.neuron_id > 0 ) return #ok({ command = ?#ClaimOrRefresh({ refreshed_neuron_id = ?{ id = state.neuron_id }}) });
 
@@ -175,14 +175,14 @@ shared actor class NeuronController() = self {
       path = "/api/v2/canister/";
       nonce = Nonce.State.init();
       self = Principal.fromActor( self );
-      ecdsa_key = SECP256K1.ID.KEY_1;
+      ecdsa_key = SECP256K1.ID.DFX_TEST_KEY;
       ledger_canister = "ryjl3-tyaaa-aaaaa-aaaba-cai";
       governance_canister = "rrkah-fqaaa-aaaaa-aaaaq-cai";
       management_canister = "aaaaa-aa";
       ingress_expiry = 90_000_000_000;
       domain = "https://icp-api.io";
       fees = [
-          (SECP256K1.ID.KEY_1,  SECP256K1.FEE.KEY_1),
+          (SECP256K1.ID.DFX_TEST_KEY,  SECP256K1.FEE.DFX_TEST_KEY), //todo change back to key 1 on live
           (FEE_ID.PER_RESPONSE_BYTE, FEE_AMT.PER_RESPONSE_BYTE),
           (FEE_ID.PER_REQUEST_BYTE,  FEE_AMT.PER_REQUEST_BYTE),
           (FEE_ID.PER_CALL,          FEE_AMT.PER_CALL),
