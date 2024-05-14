@@ -345,13 +345,6 @@
     if ($newUsername == "") {
       return;
     }
-    fantasyTeam.update((currentTeam) => {
-      if (!currentTeam) return null;
-      return {
-        ...currentTeam,
-        username: $newUsername,
-      };
-    });
     showUsernameModal = false;
     saveFantasyTeam();
   }
@@ -395,7 +388,8 @@
         team!,
         activeGameweek,
         bonusUsedInSession,
-        transferWindowPlayedInSession
+        transferWindowPlayedInSession,
+        $newUsername
       );
       busyStore.stopBusy("save-team");
       toastsShow({

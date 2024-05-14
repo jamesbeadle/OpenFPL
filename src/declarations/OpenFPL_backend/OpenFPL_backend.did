@@ -36,6 +36,7 @@ type UpdateTeamSelectionDTO =
    teamBoostClubId: ClubId;
    teamBoostGameweek: GameweekNumber;
    transferWindowGameweek: GameweekNumber;
+   username: text;
  };
 type UpdateProfilePictureDTO = 
  record {

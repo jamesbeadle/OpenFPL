@@ -611,6 +611,7 @@ export interface UpdateProfilePictureDTO {
 export interface UpdateTeamSelectionDTO {
   playerIds: Uint16Array | number[];
   countrymenCountryId: CountryId;
+  username: string;
   goalGetterPlayerId: PlayerId;
   hatTrickHeroGameweek: GameweekNumber;
   teamBoostGameweek: GameweekNumber;

@@ -600,6 +600,7 @@ export const idlFactory = ({ IDL }) => {
   const UpdateTeamSelectionDTO = IDL.Record({
     playerIds: IDL.Vec(PlayerId),
     countrymenCountryId: CountryId,
+    username: IDL.Text,
     goalGetterPlayerId: PlayerId,
     hatTrickHeroGameweek: GameweekNumber,
     teamBoostGameweek: GameweekNumber,

@@ -172,7 +172,8 @@ function createManagerStore() {
     userFantasyTeam: PickTeamDTO,
     activeGameweek: number,
     bonusUsedInSession: boolean,
-    transferWindowPlayedInSession: boolean
+    transferWindowPlayedInSession: boolean,
+    username: string
   ): Promise<any> {
     try {
       let bonusPlayed = 0;
@@ -245,8 +246,10 @@ function createManagerStore() {
         transferWindowGameweek: transferWindowPlayedInSession
           ? activeGameweek
           : userFantasyTeam.transferWindowGameweek,
+          username: username
       };
 
+      console.log(dto)
       let result = await identityActor.saveFantasyTeam(dto);
 
       if (isError(result)) {

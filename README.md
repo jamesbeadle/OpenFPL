@@ -78,8 +78,8 @@ Make note of the frontend, backend and neuron controller canister ids.
 9. Deploy the SNS from the sns-testing repository by running the following commands:
 
 ```bash
-NUM_PARTICIPANTS=100
-ICP_PER_PARTICIPANT=10000
+NUM_PARTICIPANTS=10
+ICP_PER_PARTICIPANT=100000
 ./let_nns_control_dapp.sh
 ./propose_sns.sh
 ./participate_sns_swap.sh $NUM_PARTICIPANTS $ICP_PER_PARTICIPANT
