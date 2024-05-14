@@ -275,7 +275,7 @@ module {
     };
 
     public func updateUsername(principalId : Text, updatedUsername : Text) : async Result.Result<(), T.Error> {
-      return await managerComposite.updateUsername(principalId, updatedUsername);
+      return await managerComposite.updateUsername(principalId, updatedUsername, systemState);
     };
 
     public func updateFavouriteClub(principalId : Text, clubId : T.ClubId) : async Result.Result<(), T.Error> {
@@ -284,7 +284,7 @@ module {
     };
 
     public func updateProfilePicture(principalId: T.PrincipalId, dto: DTOs.UpdateProfilePictureDTO) : async Result.Result<(), T.Error> {
-      return await managerComposite.updateProfilePicture(principalId, dto);
+      return await managerComposite.updateProfilePicture(principalId, dto, systemState);
     };
 
 
