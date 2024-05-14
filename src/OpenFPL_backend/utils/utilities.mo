@@ -3,6 +3,7 @@ import Nat32 "mo:base/Nat32";
 import Nat16 "mo:base/Nat16";
 import Nat8 "mo:base/Nat8";
 import T "../types";
+import DTOs "../DTOs";
 import Iter "mo:base/Iter";
 import Array "mo:base/Array";
 import Time "mo:base/Time";
@@ -15,6 +16,7 @@ import Float "mo:base/Float";
 import Principal "mo:base/Principal";
 import List "mo:base/List";
 import Int "mo:base/Int";
+import Option "mo:base/Option";
 import Management "../modules/Management";
 
 module {
@@ -456,6 +458,38 @@ module {
     let payouts = List.replicate<Float>(numTiedEntries, equalPayout);
 
     return payouts;
+  };
+
+  public func getTeamValue(playerIds: [T.PlayerId], allPlayers: [DTOs.PlayerDTO]) : Nat16 {
+      let updatedPlayers = Array.filter<DTOs.PlayerDTO>(
+        allPlayers,
+        func(player : DTOs.PlayerDTO) : Bool {
+          let playerId = player.id;
+          let isPlayerIdInNewTeam = Array.find(
+            playerIds,
+            func(id : Nat16) : Bool {
+              return id == playerId;
+            },
+          );
+          return Option.isSome(isPlayerIdInNewTeam);
+        },
+      );
+
+      let playersAdded = Array.filter<DTOs.PlayerDTO>(
+        updatedPlayers,
+        func(player : DTOs.PlayerDTO) : Bool {
+          let playerId = player.id;
+          let isPlayerIdInExistingTeam = Array.find(
+            playerIds,
+            func(id : Nat16) : Bool {
+              return id == playerId;
+            },
+          );
+          return Option.isNull(isPlayerIdInExistingTeam);
+        },
+      );
+
+      return Array.foldLeft<DTOs.PlayerDTO, Nat16>(playersAdded, 0, func(sumSoFar, x) = sumSoFar + x.valueQuarterMillions);
   };
 
 };

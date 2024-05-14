@@ -308,31 +308,32 @@ module {
       let managerCanisterId = managerCanisterIds.get(managerPrincipalId);
       switch(managerCanisterId){
         case (null){
-          return await createNewManager(updatedFantasyTeamDTO);
+          return await createNewManager(managerPrincipalId, updatedFantasyTeamDTO, systemState, players);
         };  
         case (?foundManagerCanisterId){
-          return await updateFantasyTeam(foundManagerCanisterId, managerPrincipalId, updatedFantasyTeamDTO, players);
+          return await updateFantasyTeam(foundManagerCanisterId, managerPrincipalId, updatedFantasyTeamDTO, systemState, players);
         }
       };
     };
 
-    private func updateFantasyTeam(managerCanisterId: T.CanisterId, managerPrincipalId: T.PrincipalId, dto : DTOs.UpdateTeamSelectionDTO, allPlayers: [DTOs.PlayerDTO]) : async Result.Result<(), T.Error>{
+    private func updateFantasyTeam(managerCanisterId: T.CanisterId, managerPrincipalId: T.PrincipalId, dto : DTOs.UpdateTeamSelectionDTO, systemState: T.SystemState, allPlayers: [DTOs.PlayerDTO]) : async Result.Result<(), T.Error>{
       let manager_canister = actor (managerCanisterId) : actor {
         getManager : T.PrincipalId -> async ?T.Manager;
         updateTeamSelection : (updateManagerDTO : DTOs.TeamUpdateDTO, transfersAvailable : Nat8, monthlyBonuses : Nat8, newBankBalance : Nat16) -> async Result.Result<(), T.Error>;
       };
 
       let manager = await manager_canister.getManager(managerPrincipalId);
+
+      if (invalidBonuses(manager, dto, systemState, allPlayers)) {
+        return #err(#InvalidTeamError);
+      };
+
       switch(manager){
         case (null){
           return #err(#NotFound);
         };
         case (?foundManager){
           if(overspent(foundManager.bankQuarterMillions, foundManager.playerIds, dto.playerIds, allPlayers)){
-            return #err(#InvalidTeamError);
-          };
-
-          if (invalidBonuses(updatedFantasyTeamDTO, systemState, players)) {
             return #err(#InvalidTeamError);
           };
           
@@ -345,6 +346,87 @@ module {
         }
       };
       return #ok;
+    };
+
+    private func createNewManager(managerPrincipalId: T.PrincipalId, dto : DTOs.UpdateTeamSelectionDTO, systemState: T.SystemState, players: [DTOs.PlayerDTO]) : async Result.Result<(), T.Error>{
+      
+      if (invalidBonuses(null, dto, systemState, players)) {
+        return #err(#InvalidTeamError);
+      };
+      
+      let manager_canister = actor (activeManagerCanisterId) : actor {
+        addNewManager : (manager : T.Manager) -> async Result.Result<(), T.Error>;
+        getTotalManagers : () -> async Nat;
+        getManager : (principalId : T.PrincipalId) -> async ?T.Manager;
+      };
+
+      var bonusPlayed = dto.goalGetterGameweek == systemState.pickTeamGameweek 
+        or dto.passMasterGameweek == systemState.pickTeamGameweek 
+        or dto.noEntryGameweek == systemState.pickTeamGameweek 
+        or dto.teamBoostGameweek == systemState.pickTeamGameweek 
+        or dto.safeHandsGameweek == systemState.pickTeamGameweek 
+        or dto.captainFantasticGameweek == systemState.pickTeamGameweek 
+        or dto.countrymenGameweek == systemState.pickTeamGameweek 
+        or dto.prospectsGameweek == systemState.pickTeamGameweek 
+        or dto.braceBonusGameweek == systemState.pickTeamGameweek 
+        or dto.hatTrickHeroGameweek == systemState.pickTeamGameweek;
+      
+      var monthlyBonuses: Nat8 = 2;
+      if(bonusPlayed){
+        monthlyBonuses := 1;
+      };
+
+      let spent = Utilities.getTeamValue(dto.playerIds, players);
+
+      let newManager : T.Manager = {
+          principalId = managerPrincipalId;
+          username = dto.username;
+          favouriteClubId = 0;
+          createDate = Time.now();
+          termsAccepted = false;
+          profilePicture = null;
+          profilePictureType = "";
+          transfersAvailable = 2;
+          monthlyBonusesAvailable = monthlyBonuses;
+          bankQuarterMillions = 1200 - spent;
+          playerIds = dto.playerIds;
+          captainId = dto.captainId;
+          goalGetterGameweek = dto.goalGetterGameweek;
+          goalGetterPlayerId = dto.goalGetterPlayerId;
+          passMasterGameweek = dto.passMasterGameweek;
+          passMasterPlayerId = dto.passMasterPlayerId;
+          noEntryGameweek = dto.noEntryGameweek;
+          noEntryPlayerId = dto.noEntryPlayerId;
+          teamBoostGameweek = dto.teamBoostGameweek;
+          teamBoostClubId = dto.teamBoostClubId;
+          safeHandsGameweek = dto.safeHandsGameweek;
+          safeHandsPlayerId = dto.safeHandsPlayerId;
+          captainFantasticGameweek = dto.captainFantasticGameweek;
+          captainFantasticPlayerId = dto.captainFantasticPlayerId;
+          countrymenGameweek = dto.countrymenGameweek;
+          countrymenCountryId = dto.countrymenCountryId;
+          prospectsGameweek = dto.prospectsGameweek;
+          braceBonusGameweek = dto.braceBonusGameweek;
+          hatTrickHeroGameweek = dto.hatTrickHeroGameweek;
+          transferWindowGameweek = 0;
+          history = List.nil();
+          ownedPrivateLeagues = List.nil();
+          privateLeagueMemberships = List.nil();
+        };
+
+      let canisterManagerCount = await manager_canister.getTotalManagers();
+      if (canisterManagerCount >= 12000) {
+        activeManagerCanisterId := await createManagerCanister();
+        let new_manager_canister = actor (activeManagerCanisterId) : actor {
+          addNewManager : (manager : T.Manager) -> async Result.Result<(), T.Error>;
+        };
+        managerCanisterIds.put(managerPrincipalId, activeManagerCanisterId);
+        totalManagers := totalManagers + 1;
+        return await new_manager_canister.addNewManager(newManager);
+      };
+
+      totalManagers := totalManagers + 1;
+      return await manager_canister.addNewManager(newManager);
     };
 
     private func overspent(currentBankBalance: Nat16, existingPlayerIds: [T.PlayerId], updatedPlayerIds: [T.PlayerId], allPlayers: [DTOs.PlayerDTO]) : Bool{
@@ -416,13 +498,213 @@ module {
       return false;
     };
 
-    private func createNewManager(updatedFantasyTeamDTO : DTOs.UpdateTeamSelectionDTO) : async Result.Result<(), T.Error>{
+    private func invalidBonuses(manager: ?T.Manager, updatedFantasyTeam : DTOs.UpdateTeamSelectionDTO, systemState : T.SystemState, players : [DTOs.PlayerDTO]) : Bool {
 
+      var bonusesPlayed: Nat8 = 0;
+      if (updatedFantasyTeam.goalGetterGameweek == systemState.pickTeamGameweek) {
+        if(manager.goalGetterGameweek != 0){
+          return true;
+        };
+        bonusesPlayed += 1;
+      };
+      if (updatedFantasyTeam.passMasterGameweek == systemState.pickTeamGameweek) {
+        if(manager.passMasterGameweek != 0){
+          return true;
+        };
+        bonusesPlayed += 1;
+      };
+      if (updatedFantasyTeam.noEntryGameweek == systemState.pickTeamGameweek) {
+        if(manager.noEntryGameweek != 0){
+          return true;
+        };
+        let bonusPlayer = List.find<DTOs.PlayerDTO>(
+          List.fromArray(players),
+          func(player : DTOs.PlayerDTO) : Bool {
+            return player.id == updatedFantasyTeam.noEntryPlayerId;
+          },
+        );
+        switch (bonusPlayer) {
+          case (null) { return true };
+          case (?player) {
+            if (player.position != #Goalkeeper and player.position != #Defender) {
+              return true;
+            };
+          };
+        };
+        bonusesPlayed += 1;
+      };
+      if (updatedFantasyTeam.teamBoostGameweek == systemState.pickTeamGameweek) {
+        if(manager.teamBoostGameweek != 0){
+          return true;
+        };
+        bonusesPlayed += 1;
+      };
+      if (updatedFantasyTeam.safeHandsGameweek == systemState.pickTeamGameweek) {
+        if(manager.safeHandsGameweek != 0){
+          return true;
+        };
+        let bonusPlayer = List.find<DTOs.PlayerDTO>(
+          List.fromArray(players),
+          func(player : DTOs.PlayerDTO) : Bool {
+            return player.id == updatedFantasyTeam.safeHandsPlayerId;
+          },
+        );
+        switch (bonusPlayer) {
+          case (null) { return true };
+          case (?player) {
+            if (player.position != #Goalkeeper) { return true };
+          };
+        };
+        bonusesPlayed += 1;
+      };
+      if (updatedFantasyTeam.captainFantasticGameweek == systemState.pickTeamGameweek) {
+        if(manager.captainFantasticGameweek != 0){
+          return true;
+        };
+        bonusesPlayed += 1;
+      };
+      if (updatedFantasyTeam.countrymenGameweek == systemState.pickTeamGameweek) {
+        if(manager.countrymenGameweek != 0){
+          return true;
+        };
+        bonusesPlayed += 1;
+      };
+      if (updatedFantasyTeam.prospectsGameweek == systemState.pickTeamGameweek) {
+        if(manager.prospectsGameweek != 0){
+          return true;
+        };
+        bonusesPlayed += 1;
+      };
+      if (updatedFantasyTeam.braceBonusGameweek == systemState.pickTeamGameweek) {
+        if(manager.braceBonusGameweek != 0){
+          return true;
+        };
+        bonusesPlayed += 1;
+      };
+      if (updatedFantasyTeam.hatTrickHeroGameweek == systemState.pickTeamGameweek) {
+        if(manager.hatTrickHeroGameweek != 0){
+          return true;
+        };
+        bonusesPlayed += 1;
+      };
 
+      if (bonusesPlayed > 1) {
+        return true;
+      };
 
+      var monthlyBonuses = manager.monthlyBonusesAvailable - bonusesPlayed;
 
-      return #ok;
+      if (monthlyBonuses < 0) {
+        return true;
+      };
+
+      return false;
     };
+
+    private func invalidTeamComposition(updatedFantasyTeam : DTOs.UpdateTeamSelectionDTO, players : [DTOs.PlayerDTO]) : Bool {
+
+      let newTeamPlayers = Array.filter(
+        players,
+        func(player : DTOs.PlayerDTO) : Bool {
+          Array.find(updatedFantasyTeam.playerIds, func(id : T.PlayerId) : Bool { id != player.id }) == null;
+        },
+      );
+
+      let playerPositions = Array.map<DTOs.PlayerDTO, T.PlayerPosition>(newTeamPlayers, func(player : DTOs.PlayerDTO) : T.PlayerPosition { return player.position });
+
+      let playerCount = playerPositions.size();
+      if (playerCount != 11) {
+        return false;
+      };
+
+      var teamPlayerCounts = TrieMap.TrieMap<Text, Nat8>(Text.equal, Text.hash);
+      var playerIdCounts = TrieMap.TrieMap<Text, Nat8>(Text.equal, Text.hash);
+      var goalkeeperCount = 0;
+      var defenderCount = 0;
+      var midfielderCount = 0;
+      var forwardCount = 0;
+      var captainInTeam = false;
+
+      for (i in Iter.range(0, playerCount -1)) {
+        let count = teamPlayerCounts.get(Nat16.toText(players[i].clubId));
+        switch (count) {
+          case (null) {
+            teamPlayerCounts.put(Nat16.toText(players[i].clubId), 1);
+          };
+          case (?count) {
+            teamPlayerCounts.put(Nat16.toText(players[i].clubId), count + 1);
+          };
+        };
+
+        let playerIdCount = playerIdCounts.get(Nat16.toText(players[i].id));
+        switch (playerIdCount) {
+          case (null) { playerIdCounts.put(Nat16.toText(players[i].id), 1) };
+          case (?count) {
+            return true;
+          };
+        };
+
+        if (players[i].position == #Goalkeeper) {
+          goalkeeperCount += 1;
+        };
+
+        if (players[i].position == #Defender) {
+          defenderCount += 1;
+        };
+
+        if (players[i].position == #Midfielder) {
+          midfielderCount += 1;
+        };
+
+        if (players[i].position == #Forward) {
+          forwardCount += 1;
+        };
+
+        if (players[i].id == updatedFantasyTeam.captainId) {
+          captainInTeam := true;
+        }
+
+      };
+
+      for ((key, value) in teamPlayerCounts.entries()) {
+        if (value > 2) {
+          return true;
+        };
+      };
+
+      if (
+        goalkeeperCount != 1 or defenderCount < 3 or defenderCount > 5 or midfielderCount < 3 or midfielderCount > 5 or forwardCount < 1 or forwardCount > 3,
+      ) {
+        return true;
+      };
+
+      if (not captainInTeam) {
+        return true;
+      };
+
+      return false;
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public func updateUsername(principalId : T.PrincipalId, username: Text) : async Result.Result<(), T.Error> {
       if (not isUsernameValid(username)) {
@@ -835,289 +1117,6 @@ module {
           };
         };
       };
-    };
-
-    private func invalidBonuses(manager: T.Manager, updatedFantasyTeam : DTOs.UpdateTeamSelectionDTO, systemState : T.SystemState, players : [DTOs.PlayerDTO]) : Bool {
-
-      var bonusesPlayed: Nat8 = 0;
-      if (updatedFantasyTeam.goalGetterGameweek == systemState.pickTeamGameweek) {
-        if(manager.goalGetterGameweek != 0){
-          return true;
-        };
-        bonusesPlayed += 1;
-      };
-      if (updatedFantasyTeam.passMasterGameweek == systemState.pickTeamGameweek) {
-        if(manager.passMasterGameweek != 0){
-          return true;
-        };
-        bonusesPlayed += 1;
-      };
-      if (updatedFantasyTeam.noEntryGameweek == systemState.pickTeamGameweek) {
-        if(manager.noEntryGameweek != 0){
-          return true;
-        };
-        let bonusPlayer = List.find<DTOs.PlayerDTO>(
-          List.fromArray(players),
-          func(player : DTOs.PlayerDTO) : Bool {
-            return player.id == updatedFantasyTeam.noEntryPlayerId;
-          },
-        );
-        switch (bonusPlayer) {
-          case (null) { return true };
-          case (?player) {
-            if (player.position != #Goalkeeper and player.position != #Defender) {
-              return true;
-            };
-          };
-        };
-        bonusesPlayed += 1;
-      };
-      if (updatedFantasyTeam.teamBoostGameweek == systemState.pickTeamGameweek) {
-        if(manager.teamBoostGameweek != 0){
-          return true;
-        };
-        bonusesPlayed += 1;
-      };
-      if (updatedFantasyTeam.safeHandsGameweek == systemState.pickTeamGameweek) {
-        if(manager.safeHandsGameweek != 0){
-          return true;
-        };
-        let bonusPlayer = List.find<DTOs.PlayerDTO>(
-          List.fromArray(players),
-          func(player : DTOs.PlayerDTO) : Bool {
-            return player.id == updatedFantasyTeam.safeHandsPlayerId;
-          },
-        );
-        switch (bonusPlayer) {
-          case (null) { return true };
-          case (?player) {
-            if (player.position != #Goalkeeper) { return true };
-          };
-        };
-        bonusesPlayed += 1;
-      };
-      if (updatedFantasyTeam.captainFantasticGameweek == systemState.pickTeamGameweek) {
-        if(manager.captainFantasticGameweek != 0){
-          return true;
-        };
-        bonusesPlayed += 1;
-      };
-      if (updatedFantasyTeam.countrymenGameweek == systemState.pickTeamGameweek) {
-        if(manager.countrymenGameweek != 0){
-          return true;
-        };
-        bonusesPlayed += 1;
-      };
-      if (updatedFantasyTeam.prospectsGameweek == systemState.pickTeamGameweek) {
-        if(manager.prospectsGameweek != 0){
-          return true;
-        };
-        bonusesPlayed += 1;
-      };
-      if (updatedFantasyTeam.braceBonusGameweek == systemState.pickTeamGameweek) {
-        if(manager.braceBonusGameweek != 0){
-          return true;
-        };
-        bonusesPlayed += 1;
-      };
-      if (updatedFantasyTeam.hatTrickHeroGameweek == systemState.pickTeamGameweek) {
-        if(manager.hatTrickHeroGameweek != 0){
-          return true;
-        };
-        bonusesPlayed += 1;
-      };
-
-      if (bonusesPlayed > 1) {
-        return true;
-      };
-
-      var monthlyBonuses = manager.monthlyBonusesAvailable - bonusesPlayed;
-
-      if (monthlyBonuses < 0) {
-        return true;
-      };
-
-      return false;
-    };
-
-    private func invalidTransfers(updatedFantasyTeam : DTOs.UpdateTeamSelectionDTO, existingFantasyTeam : ?T.Manager, systemState : T.SystemState, players : [DTOs.PlayerDTO]) : Bool {
-
-      if (updatedFantasyTeam.transferWindowGameweek == systemState.pickTeamGameweek and not systemState.transferWindowActive) {
-        return true;
-      };
-
-      switch (existingFantasyTeam) {
-        case (null) {
-          let spend = Array.foldLeft(
-            updatedFantasyTeam.playerIds,
-            0,
-            func(sum : Nat, playerId : T.PlayerId) : Nat {
-              let player : ?DTOs.PlayerDTO = Array.find<DTOs.PlayerDTO>(players, func(p) { p.id == playerId });
-              switch (player) {
-                case (null) {
-                  sum;
-                };
-                case (?foundPlayer) {
-                  sum + Nat16.toNat(foundPlayer.valueQuarterMillions);
-                };
-              };
-            },
-          );
-
-          if (spend > 1200) {
-            return true;
-          };
-        };
-        case (?foundTeam) {
-          let existingPlayerIds : [T.PlayerId] = foundTeam.playerIds;
-
-          let playersBought = Array.filter(
-            updatedFantasyTeam.playerIds,
-            func(playerId : T.PlayerId) : Bool {
-              Array.find(existingPlayerIds, func(id : T.PlayerId) : Bool { id != playerId }) == null;
-            },
-          );
-
-          var newTransfersAvailable = foundTeam.transfersAvailable;
-          if (not systemState.transferWindowActive) {
-            newTransfersAvailable := newTransfersAvailable - Nat8.fromNat(Array.size(playersBought));
-          };
-
-          if (newTransfersAvailable < 0) {
-            return true;
-          };
-
-          let playersSold = Array.filter(
-            existingPlayerIds,
-            func(playerId : T.PlayerId) : Bool {
-              Array.find(updatedFantasyTeam.playerIds, func(id : T.PlayerId) : Bool { id != playerId }) == null;
-            },
-          );
-
-          let spend = Array.foldLeft(
-            playersBought,
-            0,
-            func(sum : Nat, playerId : T.PlayerId) : Nat {
-              let player : ?DTOs.PlayerDTO = Array.find<DTOs.PlayerDTO>(players, func(p) { p.id == playerId });
-              switch (player) {
-                case (null) {
-                  sum;
-                };
-                case (?foundPlayer) {
-                  sum + Nat16.toNat(foundPlayer.valueQuarterMillions);
-                };
-              };
-            },
-          );
-
-          let sold = Array.foldLeft(
-            playersSold,
-            0,
-            func(sum : Nat, playerId : T.PlayerId) : Nat {
-              let player : ?DTOs.PlayerDTO = Array.find<DTOs.PlayerDTO>(players, func(p) { p.id == playerId });
-              switch (player) {
-                case (null) {
-                  sum;
-                };
-                case (?foundPlayer) {
-                  sum + Nat16.toNat(foundPlayer.valueQuarterMillions);
-                };
-              };
-            },
-          );
-
-          let remainingBank : Nat16 = foundTeam.bankQuarterMillions - Nat16.fromNat(spend) + Nat16.fromNat(sold);
-          if (remainingBank < 0) {
-            return true;
-          };
-        };
-      };
-
-      return false;
-    };
-
-    private func invalidTeamComposition(updatedFantasyTeam : DTOs.UpdateTeamSelectionDTO, players : [DTOs.PlayerDTO]) : Bool {
-
-      let newTeamPlayers = Array.filter(
-        players,
-        func(player : DTOs.PlayerDTO) : Bool {
-          Array.find(updatedFantasyTeam.playerIds, func(id : T.PlayerId) : Bool { id != player.id }) == null;
-        },
-      );
-
-      let playerPositions = Array.map<DTOs.PlayerDTO, T.PlayerPosition>(newTeamPlayers, func(player : DTOs.PlayerDTO) : T.PlayerPosition { return player.position });
-
-      let playerCount = playerPositions.size();
-      if (playerCount != 11) {
-        return false;
-      };
-
-      var teamPlayerCounts = TrieMap.TrieMap<Text, Nat8>(Text.equal, Text.hash);
-      var playerIdCounts = TrieMap.TrieMap<Text, Nat8>(Text.equal, Text.hash);
-      var goalkeeperCount = 0;
-      var defenderCount = 0;
-      var midfielderCount = 0;
-      var forwardCount = 0;
-      var captainInTeam = false;
-
-      for (i in Iter.range(0, playerCount -1)) {
-        let count = teamPlayerCounts.get(Nat16.toText(players[i].clubId));
-        switch (count) {
-          case (null) {
-            teamPlayerCounts.put(Nat16.toText(players[i].clubId), 1);
-          };
-          case (?count) {
-            teamPlayerCounts.put(Nat16.toText(players[i].clubId), count + 1);
-          };
-        };
-
-        let playerIdCount = playerIdCounts.get(Nat16.toText(players[i].id));
-        switch (playerIdCount) {
-          case (null) { playerIdCounts.put(Nat16.toText(players[i].id), 1) };
-          case (?count) {
-            return true;
-          };
-        };
-
-        if (players[i].position == #Goalkeeper) {
-          goalkeeperCount += 1;
-        };
-
-        if (players[i].position == #Defender) {
-          defenderCount += 1;
-        };
-
-        if (players[i].position == #Midfielder) {
-          midfielderCount += 1;
-        };
-
-        if (players[i].position == #Forward) {
-          forwardCount += 1;
-        };
-
-        if (players[i].id == updatedFantasyTeam.captainId) {
-          captainInTeam := true;
-        }
-
-      };
-
-      for ((key, value) in teamPlayerCounts.entries()) {
-        if (value > 2) {
-          return true;
-        };
-      };
-
-      if (
-        goalkeeperCount != 1 or defenderCount < 3 or defenderCount > 5 or midfielderCount < 3 or midfielderCount > 5 or forwardCount < 1 or forwardCount > 3,
-      ) {
-        return true;
-      };
-
-      if (not captainInTeam) {
-        return true;
-      };
-
-      return false;
     };
 
     private func invalidProfilePicture(profilePicture : Blob) : Bool {

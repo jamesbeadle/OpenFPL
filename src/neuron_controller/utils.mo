@@ -76,20 +76,20 @@ module {
 
   };
 
-    public func neuron_address(p: Principal, n: Nat64): T.Address {
-      let index_bytes = Buffer.Buffer<Nat8>(0);
-      encodeNat64(index_bytes, n, #msb);
-      let digest = Sha256.Digest(#sha256);
-      digest.writeArray([0x0C]);
-      digest.writeBlob( encodeUtf8("neuron-stake") );
-      digest.writeBlob( Principal.toBlob(p) );
-      digest.writeIter( index_bytes.vals() );
-      L.Address.from_identifier(
-        Principal.toLedgerAccount(
-          Principal.fromText("rrkah-fqaaa-aaaaa-aaaaq-cai"),
-          ?digest.sum()
-        )
+  public func neuron_address(p: Principal, n: Nat64): T.Address {
+    let index_bytes = Buffer.Buffer<Nat8>(0);
+    encodeNat64(index_bytes, n, #msb);
+    let digest = Sha256.Digest(#sha256);
+    digest.writeArray([0x0C]);
+    digest.writeBlob( encodeUtf8("neuron-stake") );
+    digest.writeBlob( Principal.toBlob(p) );
+    digest.writeIter( index_bytes.vals() );
+    L.Address.from_identifier(
+      Principal.toLedgerAccount(
+        Principal.fromText("rrkah-fqaaa-aaaaa-aaaaq-cai"),
+        ?digest.sum()
       )
-    };
+    )
+  };
 
 };
