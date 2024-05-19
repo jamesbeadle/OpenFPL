@@ -53,13 +53,13 @@ function createGovernanceStore() {
 
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.CANISTER_ID_SNS_GOVERNANCE ?? ""
+        process.env.CANISTER_ID_SNS_GOVERNANCE ?? "",
       );
 
       const governanceAgent: HttpAgent = ActorFactory.getAgent(
         process.env.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
-        null
+        null,
       );
 
       const {
@@ -139,13 +139,13 @@ function createGovernanceStore() {
 
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.CANISTER_ID_SNS_GOVERNANCE ?? ""
+        process.env.CANISTER_ID_SNS_GOVERNANCE ?? "",
       );
 
       const governanceAgent: HttpAgent = ActorFactory.getAgent(
         process.env.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
-        null
+        null,
       );
 
       const {
@@ -213,7 +213,7 @@ function createGovernanceStore() {
     seasonId: number,
     gameweek: number,
     fixtureId: number,
-    playerEventData: PlayerEventData[]
+    playerEventData: PlayerEventData[],
   ): Promise<any> {
     try {
       await teamStore.sync();
@@ -243,13 +243,13 @@ function createGovernanceStore() {
 
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.CANISTER_ID_SNS_GOVERNANCE ?? ""
+        process.env.CANISTER_ID_SNS_GOVERNANCE ?? "",
       );
 
       const governanceAgent: HttpAgent = ActorFactory.getAgent(
         process.env.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
-        null
+        null,
       );
 
       const {
@@ -312,7 +312,7 @@ function createGovernanceStore() {
 
   async function addInitialFixtures(
     seasonId: number,
-    seasonFixtures: FixtureDTO[]
+    seasonFixtures: FixtureDTO[],
   ): Promise<any> {
     try {
       await systemStore.sync();
@@ -332,13 +332,13 @@ function createGovernanceStore() {
 
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.CANISTER_ID_SNS_GOVERNANCE ?? ""
+        process.env.CANISTER_ID_SNS_GOVERNANCE ?? "",
       );
 
       const governanceAgent: HttpAgent = ActorFactory.getAgent(
         process.env.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
-        null
+        null,
       );
 
       const {
@@ -393,7 +393,7 @@ function createGovernanceStore() {
   async function moveFixture(
     fixtureId: number,
     updatedFixtureGameweek: number,
-    updatedFixtureDate: string
+    updatedFixtureDate: string,
   ): Promise<any> {
     try {
       await teamStore.sync();
@@ -435,13 +435,13 @@ function createGovernanceStore() {
 
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.CANISTER_ID_SNS_GOVERNANCE ?? ""
+        process.env.CANISTER_ID_SNS_GOVERNANCE ?? "",
       );
 
       const governanceAgent: HttpAgent = ActorFactory.getAgent(
         process.env.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
-        null
+        null,
       );
 
       const {
@@ -537,13 +537,13 @@ function createGovernanceStore() {
 
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.CANISTER_ID_SNS_GOVERNANCE ?? ""
+        process.env.CANISTER_ID_SNS_GOVERNANCE ?? "",
       );
 
       const governanceAgent: HttpAgent = ActorFactory.getAgent(
         process.env.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
-        null
+        null,
       );
 
       const {
@@ -607,7 +607,7 @@ function createGovernanceStore() {
   async function rescheduleFixture(
     fixtureId: number,
     updatedFixtureGameweek: number,
-    updatedFixtureDate: string
+    updatedFixtureDate: string,
   ): Promise<any> {
     try {
       await teamStore.sync();
@@ -649,13 +649,13 @@ function createGovernanceStore() {
 
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.CANISTER_ID_SNS_GOVERNANCE ?? ""
+        process.env.CANISTER_ID_SNS_GOVERNANCE ?? "",
       );
 
       const governanceAgent: HttpAgent = ActorFactory.getAgent(
         process.env.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
-        null
+        null,
       );
 
       const {
@@ -718,7 +718,7 @@ function createGovernanceStore() {
 
   async function transferPlayer(
     playerId: number,
-    newClubId: number
+    newClubId: number,
   ): Promise<any> {
     try {
       await teamStore.sync();
@@ -747,13 +747,13 @@ function createGovernanceStore() {
 
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.CANISTER_ID_SNS_GOVERNANCE ?? ""
+        process.env.CANISTER_ID_SNS_GOVERNANCE ?? "",
       );
 
       const governanceAgent: HttpAgent = ActorFactory.getAgent(
         process.env.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
-        null
+        null,
       );
 
       const {
@@ -826,7 +826,7 @@ function createGovernanceStore() {
   async function loanPlayer(
     playerId: number,
     loanClubId: number,
-    loanEndDate: string
+    loanEndDate: string,
   ): Promise<any> {
     try {
       await teamStore.sync();
@@ -860,13 +860,13 @@ function createGovernanceStore() {
 
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.CANISTER_ID_SNS_GOVERNANCE ?? ""
+        process.env.CANISTER_ID_SNS_GOVERNANCE ?? "",
       );
 
       const governanceAgent: HttpAgent = ActorFactory.getAgent(
         process.env.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
-        null
+        null,
       );
 
       const {
@@ -953,13 +953,13 @@ function createGovernanceStore() {
 
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.CANISTER_ID_SNS_GOVERNANCE ?? ""
+        process.env.CANISTER_ID_SNS_GOVERNANCE ?? "",
       );
 
       const governanceAgent: HttpAgent = ActorFactory.getAgent(
         process.env.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
-        null
+        null,
       );
 
       const {
@@ -1027,7 +1027,7 @@ function createGovernanceStore() {
     shirtNumber: number,
     valueQuarterMillions: number,
     dateOfBirth: string,
-    nationality: number
+    nationality: number,
   ): Promise<any> {
     try {
       await teamStore.sync();
@@ -1058,13 +1058,13 @@ function createGovernanceStore() {
 
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.CANISTER_ID_SNS_GOVERNANCE ?? ""
+        process.env.CANISTER_ID_SNS_GOVERNANCE ?? "",
       );
 
       const governanceAgent: HttpAgent = ActorFactory.getAgent(
         process.env.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
-        null
+        null,
       );
 
       const {
@@ -1128,7 +1128,7 @@ function createGovernanceStore() {
     lastName: string,
     shirtNumber: number,
     dateOfBirth: bigint,
-    nationality: number
+    nationality: number,
   ): Promise<any> {
     try {
       await teamStore.sync();
@@ -1162,13 +1162,13 @@ function createGovernanceStore() {
 
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.CANISTER_ID_SNS_GOVERNANCE ?? ""
+        process.env.CANISTER_ID_SNS_GOVERNANCE ?? "",
       );
 
       const governanceAgent: HttpAgent = ActorFactory.getAgent(
         process.env.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
-        null
+        null,
       );
 
       const {
@@ -1231,7 +1231,7 @@ function createGovernanceStore() {
   async function setPlayerInjury(
     playerId: number,
     description: string,
-    expectedEndDate: string
+    expectedEndDate: string,
   ): Promise<any> {
     try {
       await teamStore.sync();
@@ -1265,13 +1265,13 @@ function createGovernanceStore() {
 
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.CANISTER_ID_SNS_GOVERNANCE ?? ""
+        process.env.CANISTER_ID_SNS_GOVERNANCE ?? "",
       );
 
       const governanceAgent: HttpAgent = ActorFactory.getAgent(
         process.env.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
-        null
+        null,
       );
 
       const {
@@ -1333,7 +1333,7 @@ function createGovernanceStore() {
 
   async function retirePlayer(
     playerId: number,
-    retirementDate: string
+    retirementDate: string,
   ): Promise<any> {
     try {
       await teamStore.sync();
@@ -1366,13 +1366,13 @@ function createGovernanceStore() {
 
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.CANISTER_ID_SNS_GOVERNANCE ?? ""
+        process.env.CANISTER_ID_SNS_GOVERNANCE ?? "",
       );
 
       const governanceAgent: HttpAgent = ActorFactory.getAgent(
         process.env.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
-        null
+        null,
       );
 
       const {
@@ -1459,13 +1459,13 @@ function createGovernanceStore() {
 
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.CANISTER_ID_SNS_GOVERNANCE ?? ""
+        process.env.CANISTER_ID_SNS_GOVERNANCE ?? "",
       );
 
       const governanceAgent: HttpAgent = ActorFactory.getAgent(
         process.env.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
-        null
+        null,
       );
 
       const {
@@ -1552,13 +1552,13 @@ function createGovernanceStore() {
 
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.CANISTER_ID_SNS_GOVERNANCE ?? ""
+        process.env.CANISTER_ID_SNS_GOVERNANCE ?? "",
       );
 
       const governanceAgent: HttpAgent = ActorFactory.getAgent(
         process.env.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
-        null
+        null,
       );
 
       const {
@@ -1622,7 +1622,7 @@ function createGovernanceStore() {
     secondaryColourHex: string,
     thirdColourHex: string,
     abbreviatedName: string,
-    shirtType: ShirtType
+    shirtType: ShirtType,
   ): Promise<any> {
     try {
       let dto: PromoteNewClubDTO = {
@@ -1637,13 +1637,13 @@ function createGovernanceStore() {
 
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.CANISTER_ID_SNS_GOVERNANCE ?? ""
+        process.env.CANISTER_ID_SNS_GOVERNANCE ?? "",
       );
 
       const governanceAgent: HttpAgent = ActorFactory.getAgent(
         process.env.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
-        null
+        null,
       );
 
       const {
@@ -1703,7 +1703,7 @@ function createGovernanceStore() {
     secondaryColourHex: string,
     thirdColourHex: string,
     abbreviatedName: string,
-    shirtType: ShirtType
+    shirtType: ShirtType,
   ): Promise<any> {
     try {
       await teamStore.sync();
@@ -1746,13 +1746,13 @@ function createGovernanceStore() {
 
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.CANISTER_ID_SNS_GOVERNANCE ?? ""
+        process.env.CANISTER_ID_SNS_GOVERNANCE ?? "",
       );
 
       const governanceAgent: HttpAgent = ActorFactory.getAgent(
         process.env.CANISTER_ID_SNS_GOVERNANCE,
         identityActor,
-        null
+        null,
       );
 
       const {

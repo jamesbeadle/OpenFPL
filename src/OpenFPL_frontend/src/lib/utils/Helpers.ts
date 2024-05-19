@@ -577,7 +577,7 @@ export function getFlagComponent(countryId: number) {
 export function updateTableData(
   fixtures: FixtureWithTeams[],
   teams: ClubDTO[],
-  selectedGameweek: number
+  selectedGameweek: number,
 ): TeamStats[] {
   let tempTable: Record<number, TeamStats> = {};
 
@@ -586,7 +586,7 @@ export function updateTableData(
   const relevantFixtures = fixtures.filter(
     (fixture) =>
       convertFixtureStatus(fixture.fixture.status) === 3 &&
-      fixture.fixture.gameweek <= selectedGameweek
+      fixture.fixture.gameweek <= selectedGameweek,
   );
 
   relevantFixtures.forEach(({ fixture, homeTeam, awayTeam }) => {
@@ -636,7 +636,7 @@ export function updateTableData(
 function initTeamData(
   teamId: number,
   table: Record<number, TeamStats>,
-  teams: ClubDTO[]
+  teams: ClubDTO[],
 ) {
   if (!table[teamId]) {
     const team = teams.find((t) => t.id === teamId);
@@ -671,7 +671,7 @@ export const allFormations: Record<string, FormationDetails> = {
 
 export function getAvailableFormations(
   players: PlayerDTO[],
-  team: PickTeamDTO
+  team: PickTeamDTO,
 ): string[] {
   const positionCounts: Record<number, number> = { 0: 0, 1: 0, 2: 0, 3: 0 };
   team.playerIds.forEach((id: number) => {
@@ -700,7 +700,7 @@ export function getAvailableFormations(
     const additionalPlayersNeeded = minDef + minMid + minFwd + minGK;
     const totalPlayers = Object.values(positionCounts).reduce(
       (a, b) => a + b,
-      0
+      0,
     );
 
     return totalPlayers + additionalPlayersNeeded <= 11;
@@ -708,7 +708,7 @@ export function getAvailableFormations(
 }
 
 export function convertPlayerPosition(
-  playerPosition: PlayerPosition
+  playerPosition: PlayerPosition,
 ): Position {
   if ("Goalkeeper" in playerPosition) return Position.GOALKEEPER;
   if ("Defender" in playerPosition) return Position.DEFENDER;
@@ -752,7 +752,7 @@ export function convertIntToEvent(playerEvent: PlayerEvent): PlayerEventType {
 }
 
 export function convertFixtureStatus(
-  fixtureStatus: FixtureStatusType
+  fixtureStatus: FixtureStatusType,
 ): FixtureStatus {
   if ("Goalkeeper" in fixtureStatus) return FixtureStatus.UNPLAYED;
   if ("Defender" in fixtureStatus) return FixtureStatus.ACTIVE;

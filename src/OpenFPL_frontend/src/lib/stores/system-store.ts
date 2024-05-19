@@ -12,7 +12,7 @@ function createSystemStore() {
   const { subscribe, set } = writable<SystemStateDTO | null>(null);
   let actor: any = ActorFactory.createActor(
     idlFactory,
-    process.env.OPENFPL_BACKEND_CANISTER_ID
+    process.env.OPENFPL_BACKEND_CANISTER_ID,
   );
 
   async function sync() {
@@ -44,7 +44,7 @@ function createSystemStore() {
 
       localStorage.setItem(
         category,
-        JSON.stringify(updatedSystemStateData, replacer)
+        JSON.stringify(updatedSystemStateData, replacer),
       );
       localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
       set(updatedSystemStateData);

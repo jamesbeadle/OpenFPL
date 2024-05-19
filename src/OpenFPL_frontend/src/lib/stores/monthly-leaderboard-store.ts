@@ -21,7 +21,7 @@ function createMonthlyLeaderboardStore() {
 
   let actor: any = ActorFactory.createActor(
     idlFactory,
-    process.env.OPENFPL_BACKEND_CANISTER_ID
+    process.env.OPENFPL_BACKEND_CANISTER_ID,
   );
 
   async function sync() {
@@ -54,7 +54,7 @@ function createMonthlyLeaderboardStore() {
 
       localStorage.setItem(
         category,
-        JSON.stringify(updatedLeaderboardData, replacer)
+        JSON.stringify(updatedLeaderboardData, replacer),
       );
       localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
       set(updatedLeaderboardData);
@@ -63,7 +63,7 @@ function createMonthlyLeaderboardStore() {
       let cachedMonthlyLeaderboards: MonthlyLeaderboardDTO[] = [];
       try {
         cachedMonthlyLeaderboards = JSON.parse(
-          cachedMonthlyLeaderboardsData || "[]"
+          cachedMonthlyLeaderboardsData || "[]",
         );
       } catch (e) {
         cachedMonthlyLeaderboards = [];
@@ -77,7 +77,7 @@ function createMonthlyLeaderboardStore() {
     clubId: number,
     month: number,
     currentPage: number,
-    searchTerm: string
+    searchTerm: string,
   ): Promise<MonthlyLeaderboardDTO> {
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
@@ -89,7 +89,7 @@ function createMonthlyLeaderboardStore() {
         let cachedLeaderboards: MonthlyLeaderboardDTO[] =
           JSON.parse(cachedData);
         let clubLeaderboard = cachedLeaderboards.find(
-          (x) => x.clubId === clubId
+          (x) => x.clubId === clubId,
         );
 
         if (clubLeaderboard) {
@@ -107,7 +107,7 @@ function createMonthlyLeaderboardStore() {
       clubId,
       limit,
       offset,
-      searchTerm
+      searchTerm,
     );
 
     let emptyReturn = {

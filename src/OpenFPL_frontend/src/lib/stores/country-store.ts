@@ -12,7 +12,7 @@ function createCountriesStore() {
 
   let actor: any = ActorFactory.createActor(
     idlFactory,
-    process.env.OPENFPL_BACKEND_CANISTER_ID
+    process.env.OPENFPL_BACKEND_CANISTER_ID,
   );
 
   async function sync() {
@@ -43,7 +43,7 @@ function createCountriesStore() {
 
       localStorage.setItem(
         category,
-        JSON.stringify(updatedCountriesData, replacer)
+        JSON.stringify(updatedCountriesData, replacer),
       );
       localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
       set(updatedCountriesData);

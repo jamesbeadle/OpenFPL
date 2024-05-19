@@ -7,7 +7,7 @@ import { busyStore } from "@dfinity/gix-components";
 import { isNullish } from "@dfinity/utils";
 
 export const signIn = async (
-  params: AuthSignInParams
+  params: AuthSignInParams,
 ): Promise<{ success: "ok" | "cancelled" | "error"; err?: unknown }> => {
   busyStore.startBusy({
     initiator: "sign-in",
@@ -93,7 +93,7 @@ const appendMsgToUrl = (msg: ToastMsg) => {
  */
 export const displayAndCleanLogoutMsg = () => {
   const urlParams: URLSearchParams = new URLSearchParams(
-    window.location.search
+    window.location.search,
   );
 
   const msg: string | null = urlParams.get(PARAM_MSG);

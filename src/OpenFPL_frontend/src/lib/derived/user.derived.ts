@@ -18,7 +18,7 @@ export const userGetProfilePicture: Readable<string> = derived(
           };base64,${uint8ArrayToBase64(byteArray)}`;
         } else if ($user.profilePicture instanceof Uint8Array) {
           return `data:${$user.profilePictureType};base64,${uint8ArrayToBase64(
-            $user.profilePicture
+            $user.profilePicture,
           )}`;
         } else {
           if (typeof $user.profilePicture === "string") {
@@ -35,10 +35,10 @@ export const userGetProfilePicture: Readable<string> = derived(
       console.error(error);
       return "/profile_placeholder.png";
     }
-  }
+  },
 );
 
 export const userGetFavouriteTeam: Readable<number> = derived(
   userStore,
-  (user) => (user !== null && user !== undefined ? user.favouriteTeamId : 0)
+  (user) => (user !== null && user !== undefined ? user.favouriteTeamId : 0),
 );

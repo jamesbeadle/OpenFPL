@@ -25,7 +25,7 @@ function createPlayerStore() {
 
   let actor: any = ActorFactory.createActor(
     idlFactory,
-    process.env.OPENFPL_BACKEND_CANISTER_ID
+    process.env.OPENFPL_BACKEND_CANISTER_ID,
   );
 
   async function sync() {
@@ -59,7 +59,7 @@ function createPlayerStore() {
 
       localStorage.setItem(
         category,
-        JSON.stringify(updatedPlayersData, replacer)
+        JSON.stringify(updatedPlayersData, replacer),
       );
       localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
       set(updatedPlayersData);

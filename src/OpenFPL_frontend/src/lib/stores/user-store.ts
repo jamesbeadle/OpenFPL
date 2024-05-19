@@ -30,7 +30,7 @@ function createUserStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
 
       let dto: UsernameFilterDTO = {
@@ -54,7 +54,7 @@ function createUserStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
       let dto: ClubFilterDTO = {
         clubId: favouriteTeamId,
@@ -88,7 +88,7 @@ function createUserStore() {
         try {
           const identityActor = await ActorFactory.createIdentityActor(
             authStore,
-            process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
+            process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
           );
 
           let dto: UpdateProfilePictureDTO = {
@@ -127,7 +127,7 @@ function createUserStore() {
   async function isUsernameAvailable(username: string): Promise<boolean> {
     const identityActor: any = await ActorFactory.createIdentityActor(
       authStore,
-      process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
     );
     let dto: UsernameFilterDTO = {
       username: username,
@@ -140,7 +140,7 @@ function createUserStore() {
   async function cacheProfile() {
     const identityActor: any = await ActorFactory.createIdentityActor(
       authStore,
-      process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
     );
 
     let getProfileResponse = await identityActor.getProfile();

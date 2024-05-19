@@ -77,7 +77,7 @@ const checkDelegationChain = async (): Promise<{
 }> => {
   const idbStorage: IdbStorage = new IdbStorage();
   const delegationChain: string | null = await idbStorage.get(
-    KEY_STORAGE_DELEGATION
+    KEY_STORAGE_DELEGATION,
   );
 
   const delegation =

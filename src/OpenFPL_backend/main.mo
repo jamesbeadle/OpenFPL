@@ -11,7 +11,6 @@ import Timer "mo:base/Timer";
 import Nat64 "mo:base/Nat64";
 import Nat "mo:base/Nat";
 import Debug "mo:base/Debug";
-import Blob "mo:base/Blob";
 
 import T "types";
 import DTOs "DTOs";
@@ -38,6 +37,8 @@ actor Self {
   private var cyclesCheckWalletTimerId : ?Timer.TimerId = null;
 
   //Manager calls
+
+  private stable var neuronResponse: ?NeuronTypes.NeuronResponse = null;
 
   public shared ({ caller }) func getProfile() : async Result.Result<DTOs.ProfileDTO, T.Error> {
     assert not Principal.isAnonymous(caller);
@@ -365,23 +366,27 @@ actor Self {
     return await seasonManager.executeUpdateClub(updateClubDTO);
   };
 
-  public shared query ({ caller }) func validateManageDAONeuron() : async T.RustResult {
+  public shared query ({ caller }) func validateManageDAONeuron(command : NeuronTypes.ManageNeuron) : async T.RustResult {
     assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     if (not neuronCreated) {
       return #Err("Neuron not created");
     };
 
+    if(command.id == null){
+      return #Err("Neuron Id missing");
+    };
+
     return #Ok("Proposal Valid");
   };
 
-  public shared ({ caller }) func executeManageDAONeuron(command : NeuronTypes.Command) : async () {
+  public shared ({ caller }) func executeManageDAONeuron(command : NeuronTypes.ManageNeuron) : async () {
     assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     if (not neuronCreated) {
       return;
     };
 
     let neuron_controller = actor (Environment.NEURON_CONTROLLER_CANISTER_ID) : actor {
-      manage_neuron : NeuronTypes.Command -> async ?NeuronTypes.Response;
+      manage_neuron : NeuronTypes.ManageNeuron -> async ?NeuronTypes.Response;
     };
 
     let _ = await neuron_controller.manage_neuron(command);
@@ -948,15 +953,15 @@ actor Self {
     await beginOpenFPL();
   };
 
-  public shared ({ caller }) func getCanisterTimerId() : async ?Int {
+  public shared func getCanisterTimerId() : async ?Int {
     return cyclesCheckWalletTimerId;
   };
 
-  public shared ({ caller }) func getCanisterCyclesBalance() : async Nat {
+  public shared func getCanisterCyclesBalance() : async Nat {
     return Cycles.available();
   };
 
-  public shared ({ caller }) func getTreasuryAccountPublic() : async Account.AccountIdentifier {
+  public shared func getTreasuryAccountPublic() : async Account.AccountIdentifier {
     return getTreasuryAccount();
   };
 
@@ -1119,13 +1124,17 @@ actor Self {
     };
 
     let neuron_controller = actor (Environment.NEURON_CONTROLLER_CANISTER_ID) : actor {
-      stake_nns_neuron : () -> async ?NeuronTypes.Response;
+      stake_nns_neuron : () -> async ?NeuronTypes.NeuronResponse;
     };
 
-    let _ = await neuron_controller.stake_nns_neuron();
+    neuronResponse := await neuron_controller.stake_nns_neuron();
 
     neuronCreated := true;
 
+  };
+
+  public shared func getNeuronResponse() : async ?NeuronTypes.NeuronResponse {
+    return neuronResponse;
   };
 
   //TODO: Can be removed when the game has successfully been initialsed

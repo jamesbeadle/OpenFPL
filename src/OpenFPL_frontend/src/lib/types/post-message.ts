@@ -16,7 +16,7 @@ export interface PostMessageDataResponseAuth extends PostMessageDataResponse {
 }
 
 export interface PostMessage<
-  T extends PostMessageDataRequest | PostMessageDataResponse
+  T extends PostMessageDataRequest | PostMessageDataResponse,
 > {
   msg: PostMessageRequest | PostMessageResponse;
   data?: T;

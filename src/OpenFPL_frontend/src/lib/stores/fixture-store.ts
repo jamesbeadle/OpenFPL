@@ -13,7 +13,7 @@ function createFixtureStore() {
 
   let actor: any = ActorFactory.createActor(
     idlFactory,
-    process.env.OPENFPL_BACKEND_CANISTER_ID
+    process.env.OPENFPL_BACKEND_CANISTER_ID,
   );
 
   async function sync(seasonId: number) {
@@ -47,7 +47,7 @@ function createFixtureStore() {
       let updatedFixturesData = result.ok;
       localStorage.setItem(
         category,
-        JSON.stringify(updatedFixturesData, replacer)
+        JSON.stringify(updatedFixturesData, replacer),
       );
       localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
       set(updatedFixturesData);
@@ -74,7 +74,7 @@ function createFixtureStore() {
     }
     const now = new Date();
     return fixtures.find(
-      (fixture) => new Date(Number(fixture.kickOff) / 1000000) > now
+      (fixture) => new Date(Number(fixture.kickOff) / 1000000) > now,
     );
   }
 

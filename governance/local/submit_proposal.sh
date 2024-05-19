@@ -7,9 +7,9 @@ cd $SCRIPT_DIR
 
 # Extract the proposal
 PROPOSAL=$1
-echo $PROPOSAL
+#echo $PROPOSAL
 
 # Make the proposal using quill
 quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-proposal --proposal "$PROPOSAL" $PROPOSER_NEURON_ID > msg.json
-quill send --insecure-local-dev-mode msg.json
+quill send --insecure-local-dev-mode --yes msg.json
 rm -f msg.json

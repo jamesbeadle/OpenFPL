@@ -37,7 +37,7 @@ function createPlayerEventsStore() {
 
   let actor: any = ActorFactory.createActor(
     idlFactory,
-    process.env.OPENFPL_BACKEND_CANISTER_ID
+    process.env.OPENFPL_BACKEND_CANISTER_ID,
   );
 
   async function sync() {
@@ -74,7 +74,7 @@ function createPlayerEventsStore() {
 
       localStorage.setItem(
         category,
-        JSON.stringify(updatedPlayerEventsData, replacer)
+        JSON.stringify(updatedPlayerEventsData, replacer),
       );
       localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
       set(updatedPlayerEventsData);
@@ -105,7 +105,7 @@ function createPlayerEventsStore() {
 
   async function getPlayerDetails(
     playerId: number,
-    seasonId: number
+    seasonId: number,
   ): Promise<PlayerDetailDTO> {
     try {
       let dto: GetPlayerDetailsDTO = {
@@ -127,7 +127,7 @@ function createPlayerEventsStore() {
 
   async function getGameweekPlayers(
     fantasyTeam: FantasyTeamSnapshot,
-    gameweek: number
+    gameweek: number,
   ): Promise<GameweekData[]> {
     await sync();
     let allPlayerEvents: PlayerPointsDTO[] = [];
@@ -138,14 +138,14 @@ function createPlayerEventsStore() {
       allPlayerEvents = await actor.getPlayersDetailsForGameweek(
         fantasyTeam.playerIds,
         systemState?.calculationSeasonId,
-        gameweek
+        gameweek,
       );
     }
 
     let allPlayers: PlayerDTO[] = [];
     const unsubscribe = playerStore.subscribe((players) => {
       allPlayers = players.filter((player) =>
-        fantasyTeam.playerIds.includes(player.id)
+        fantasyTeam.playerIds.includes(player.id),
       );
     });
     unsubscribe();
@@ -155,9 +155,9 @@ function createPlayerEventsStore() {
         async (player) =>
           await extractPlayerData(
             allPlayerEvents.find((x) => x.id == player.id)!,
-            player
-          )
-      )
+            player,
+          ),
+      ),
     );
 
     const playersWithPoints = gameweekData.map((entry) => {
@@ -179,7 +179,7 @@ function createPlayerEventsStore() {
 
   async function extractPlayerData(
     playerPointsDTO: PlayerPointsDTO,
-    player: PlayerDTO
+    player: PlayerDTO,
   ): Promise<GameweekData> {
     let goals = 0,
       assists = 0,
@@ -305,7 +305,7 @@ function createPlayerEventsStore() {
 
   function calculatePlayerScore(
     gameweekData: GameweekData,
-    fixtures: FixtureDTO[]
+    fixtures: FixtureDTO[],
   ): number {
     if (!gameweekData) {
       console.error("No gameweek data found:", gameweekData);
@@ -398,7 +398,7 @@ function createPlayerEventsStore() {
       (fixture) =>
         (fixture.homeClubId === gameweekData.player.clubId ||
           fixture.awayClubId === gameweekData.player.clubId) &&
-        fixture.highestScoringPlayerId === gameweekData.player.id
+        fixture.highestScoringPlayerId === gameweekData.player.id,
     );
 
     if (playerFixtures && playerFixtures.length > 0) {
@@ -414,7 +414,7 @@ function createPlayerEventsStore() {
   function calculateBonusPoints(
     gameweekData: GameweekData,
     fantasyTeam: FantasyTeamSnapshot,
-    points: number
+    points: number,
   ): number {
     if (!gameweekData) {
       console.error("No gameweek data found:", gameweekData);

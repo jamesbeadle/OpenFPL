@@ -24,7 +24,7 @@ function createManagerStore() {
 
   let actor: any = ActorFactory.createActor(
     idlFactory,
-    process.env.OPENFPL_BACKEND_CANISTER_ID
+    process.env.OPENFPL_BACKEND_CANISTER_ID,
   );
 
   let newManager = {
@@ -97,7 +97,7 @@ function createManagerStore() {
 
   async function getFantasyTeamForGameweek(
     managerId: string,
-    gameweek: number
+    gameweek: number,
   ): Promise<FantasyTeamSnapshot | null> {
     try {
       const category = "gameweek_points";
@@ -113,7 +113,7 @@ function createManagerStore() {
 
       let weelklyLeaderboardHash =
         dataCacheValues.find(
-          (x: DataCacheDTO) => x.category === "weekly_leaderboard_hash"
+          (x: DataCacheDTO) => x.category === "weekly_leaderboard_hash",
         ) ?? null;
 
       const localHash = localStorage.getItem(`${category}_hash`);
@@ -122,7 +122,7 @@ function createManagerStore() {
         let result = await actor.getManagerGameweek(
           managerId,
           systemState?.calculationGameweek,
-          gameweek
+          gameweek,
         );
 
         if (isError(result)) {
@@ -133,7 +133,7 @@ function createManagerStore() {
         localStorage.setItem(category, JSON.stringify(snapshot, replacer));
         localStorage.setItem(
           `${category}_hash`,
-          weelklyLeaderboardHash?.hash ?? ""
+          weelklyLeaderboardHash?.hash ?? "",
         );
         const fantasyTeamData = result.ok;
         return fantasyTeamData;
@@ -152,7 +152,7 @@ function createManagerStore() {
     try {
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
       const result = await identityActor.getCurrentTeam();
       console.log(result);
@@ -173,7 +173,7 @@ function createManagerStore() {
     activeGameweek: number,
     bonusUsedInSession: boolean,
     transferWindowPlayedInSession: boolean,
-    username: string
+    username: string,
   ): Promise<any> {
     try {
       let bonusPlayed = 0;
@@ -190,7 +190,7 @@ function createManagerStore() {
 
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
 
       let dto: UpdateTeamSelectionDTO = {
@@ -246,10 +246,10 @@ function createManagerStore() {
         transferWindowGameweek: transferWindowPlayedInSession
           ? activeGameweek
           : userFantasyTeam.transferWindowGameweek,
-          username: username
+        username: username,
       };
 
-      console.log(dto)
+      console.log(dto);
       let result = await identityActor.saveFantasyTeam(dto);
 
       if (isError(result)) {
@@ -267,7 +267,7 @@ function createManagerStore() {
 
   function getBonusPlayed(
     userFantasyTeam: PickTeamDTO,
-    activeGameweek: number
+    activeGameweek: number,
   ): number {
     let bonusPlayed = 0;
 
@@ -316,7 +316,7 @@ function createManagerStore() {
 
   function getBonusPlayerId(
     userFantasyTeam: PickTeamDTO,
-    activeGameweek: number
+    activeGameweek: number,
   ): number {
     let bonusPlayerId = 0;
 
@@ -345,7 +345,7 @@ function createManagerStore() {
 
   function getBonusTeamId(
     userFantasyTeam: PickTeamDTO,
-    activeGameweek: number
+    activeGameweek: number,
   ): number {
     let bonusTeamId = 0;
 
@@ -358,7 +358,7 @@ function createManagerStore() {
 
   function getBonusCountryId(
     userFantasyTeam: PickTeamDTO,
-    activeGameweek: number
+    activeGameweek: number,
   ): number {
     let bonusCountryId = 0;
 
@@ -373,7 +373,7 @@ function createManagerStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
       await identityActor.snapshotFantasyTeams();
     } catch (error) {

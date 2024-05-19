@@ -16,7 +16,7 @@ function createWeeklyLeaderboardStore() {
 
   let actor: any = ActorFactory.createActor(
     idlFactory,
-    process.env.OPENFPL_BACKEND_CANISTER_ID
+    process.env.OPENFPL_BACKEND_CANISTER_ID,
   );
 
   async function sync(seasonId: number, gameweek: number) {
@@ -42,7 +42,7 @@ function createWeeklyLeaderboardStore() {
         gameweek,
         100,
         0,
-        ""
+        "",
       );
 
       if (isError(result)) {
@@ -54,7 +54,7 @@ function createWeeklyLeaderboardStore() {
         };
         localStorage.setItem(
           category,
-          JSON.stringify(emptyLeaderboard, replacer)
+          JSON.stringify(emptyLeaderboard, replacer),
         );
         localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
 
@@ -66,7 +66,7 @@ function createWeeklyLeaderboardStore() {
 
       localStorage.setItem(
         category,
-        JSON.stringify(updatedLeaderboardData.ok, replacer)
+        JSON.stringify(updatedLeaderboardData.ok, replacer),
       );
       localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
       set(updatedLeaderboardData.ok);
@@ -78,7 +78,7 @@ function createWeeklyLeaderboardStore() {
     gameweek: number,
     currentPage: number,
     calculationGameweek: number,
-    searchTerm: string
+    searchTerm: string,
   ): Promise<WeeklyLeaderboardDTO> {
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
@@ -95,7 +95,7 @@ function createWeeklyLeaderboardStore() {
             ...cachedWeeklyLeaderboard,
             entries: cachedWeeklyLeaderboard.entries.slice(
               offset,
-              offset + limit
+              offset + limit,
             ),
           };
         }
@@ -121,7 +121,7 @@ function createWeeklyLeaderboardStore() {
       };
       localStorage.setItem(
         category,
-        JSON.stringify(emptyLeaderboard, replacer)
+        JSON.stringify(emptyLeaderboard, replacer),
       );
       return { entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n };
     }
@@ -133,14 +133,14 @@ function createWeeklyLeaderboardStore() {
 
   async function getLeadingWeeklyTeam(
     seasonId: number,
-    gameweek: number
+    gameweek: number,
   ): Promise<LeaderboardEntry> {
     let weeklyLeaderboard = await getWeeklyLeaderboard(
       seasonId,
       gameweek,
       1,
       0,
-      ""
+      "",
     );
     return weeklyLeaderboard.entries[0];
   }

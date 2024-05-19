@@ -90,6 +90,10 @@ shared actor class NeuronController() = self {
 
   };
 
+  public shared func getBackendCanisterId(): async Text {
+    return Environment.BACKEND_CANISTER_ID;
+  };
+
 
   // update method - stake_nns_neuron()
   //

@@ -33,7 +33,7 @@ const readCanisterIds = ({
     };
 
     const config: Record<string, Details> = JSON.parse(
-      readFileSync(canisterIdsJsonFile, "utf-8")
+      readFileSync(canisterIdsJsonFile, "utf-8"),
     );
 
     return Object.entries(config).reduce((acc, current: [string, Details]) => {
@@ -78,7 +78,7 @@ const config: UserConfig = {
 
           if (
             ["@sveltejs", "svelte", "@dfinity/gix-components", ...lazy].find(
-              (lib) => folder.includes(lib)
+              (lib) => folder.includes(lib),
             ) === undefined &&
             folder.includes("node_modules")
           ) {
@@ -126,7 +126,7 @@ const config: UserConfig = {
           setup(build) {
             build.onResolve(
               { filter: /_virtual-process-polyfill_\.js/ },
-              ({ path }) => ({ path })
+              ({ path }) => ({ path }),
             );
           },
         },
@@ -146,9 +146,9 @@ export default defineConfig((): UserConfig => {
       network === "ic"
         ? "production"
         : network === "staging"
-        ? "staging"
-        : "development",
-      process.cwd()
+          ? "staging"
+          : "development",
+      process.cwd(),
     ),
     ...readCanisterIds({ prefix: "VITE_" }),
   };

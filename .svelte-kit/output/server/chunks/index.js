@@ -3441,7 +3441,7 @@ const options = {
   root: Root,
   service_worker: false,
   templates: {
-    app: ({ head, body: body2, assets: assets2, nonce, env }) => '<!DOCTYPE html>\n<html lang="en">\n  <head>\n    <meta charset="utf-8" />\n    <meta content="width=device-width, initial-scale=1" name="viewport" />\n\n    <title>OpenFPL</title>\n    <link href="https://openfpl.xyz" rel="canonical" />\n    <meta\n      content="OpenFPL is a decentralised fantasy football game on the Internet Computer blockchain."\n      name="description"\n    />\n    <meta content="OpenFPL" property="og:title" />\n    <meta\n      content="OpenFPL is a decentralised fantasy football game on the Internet Computer blockchain."\n      property="og:description"\n    />\n    <meta content="website" property="og:type" />\n    <meta content="https://openfpl.xyz" property="og:url" />\n    <meta content="https://openfpl.xyz/meta-share.jpg" property="og:image" />\n    <meta content="summary_large_image" name="twitter:card" />\n    <meta content="OpenFPL" name="twitter:title" />\n    <meta\n      content="OpenFPL is a decentralised fantasy football game on the Internet Computer blockchain."\n      name="twitter:description"\n    />\n    <meta content="https://openfpl.xyz/meta-share.jpg" name="twitter:image" />\n    <meta content="@beadle1989" name="twitter:creator" />\n\n    <link crossorigin="anonymous" href="/manifest.webmanifest" rel="manifest" />\n\n    <!-- Favicon -->\n    <link\n      rel="icon"\n      type="image/png"\n      sizes="32x32"\n      href="' + assets2 + '/favicons/favicon-32x32.png"\n    />\n    <link\n      rel="icon"\n      type="image/png"\n      sizes="16x16"\n      href="' + assets2 + '/favicons/favicon-16x16.png"\n    />\n    <link rel="shortcut icon" href="' + assets2 + '/favicons/favicon.ico" />\n\n    <!-- iOS meta tags & icons -->\n    <meta name="apple-mobile-web-app-capable" content="yes" />\n    <meta name="apple-mobile-web-app-status-bar-style" content="#2CE3A6" />\n    <meta name="apple-mobile-web-app-title" content="OpenFPL" />\n    <link\n      rel="apple-touch-icon"\n      href="' + assets2 + '/favicons/apple-touch-icon.png"\n    />\n    <link\n      rel="mask-icon"\n      href="' + assets2 + '/favicons/safari-pinned-tab.svg"\n      color="#2CE3A6"\n    />\n\n    <!-- MS -->\n    <meta name="msapplication-TileColor" content="#2CE3A6" />\n    <meta\n      name="msapplication-config"\n      content="' + assets2 + '/favicons/browserconfig.xml"\n    />\n\n    <meta content="#2CE3A6" name="theme-color" />\n    ' + head + '\n\n    <style>\n      html,\n      body {\n        height: 100%;\n        margin: 0;\n      }\n\n      @font-face {\n        font-display: swap;\n        font-family: "Poppins";\n        font-style: normal;\n        font-weight: 400;\n        src: url("' + assets2 + '/poppins-regular-webfont.woff2")\n          format("woff2");\n      }\n\n      @font-face {\n        font-display: swap;\n        font-family: "Manrope";\n        font-style: normal;\n        font-weight: 400;\n        src: url("' + assets2 + '/Manrope-Regular.woff2") format("woff2");\n      }\n      body {\n        font-family: "Poppins", sans-serif !important;\n        color: white !important;\n        background-color: #1a1a1d;\n        height: 100vh;\n        margin: 0;\n        background-image: url("' + assets2 + '/background.jpg");\n        background-size: cover;\n        background-position: center;\n        background-repeat: no-repeat;\n        background-attachment: fixed;\n      }\n\n      #app-spinner {\n        --spinner-size: 30px;\n\n        width: var(--spinner-size);\n        height: var(--spinner-size);\n\n        animation: app-spinner-linear-rotate 2000ms linear infinite;\n\n        position: absolute;\n        top: calc(50% - (var(--spinner-size) / 2));\n        left: calc(50% - (var(--spinner-size) / 2));\n\n        --radius: 45px;\n        --circumference: calc(3.14159265359 * var(--radius) * 2);\n\n        --start: calc((1 - 0.05) * var(--circumference));\n        --end: calc((1 - 0.8) * var(--circumference));\n      }\n\n      #app-spinner circle {\n        stroke-dasharray: var(--circumference);\n        stroke-width: 10%;\n        transform-origin: 50% 50% 0;\n\n        transition-property: stroke;\n\n        animation-name: app-spinner-stroke-rotate-100;\n        animation-duration: 4000ms;\n        animation-timing-function: cubic-bezier(0.35, 0, 0.25, 1);\n        animation-iteration-count: infinite;\n\n        fill: transparent;\n        stroke: currentColor;\n\n        transition: stroke-dashoffset 225ms linear;\n      }\n\n      @keyframes app-spinner-linear-rotate {\n        0% {\n          transform: rotate(0deg);\n        }\n        100% {\n          transform: rotate(360deg);\n        }\n      }\n\n      @keyframes app-spinner-stroke-rotate-100 {\n        0% {\n          stroke-dashoffset: var(--start);\n          transform: rotate(0);\n        }\n        12.5% {\n          stroke-dashoffset: var(--end);\n          transform: rotate(0);\n        }\n        12.5001% {\n          stroke-dashoffset: var(--end);\n          transform: rotateX(180deg) rotate(72.5deg);\n        }\n        25% {\n          stroke-dashoffset: var(--start);\n          transform: rotateX(180deg) rotate(72.5deg);\n        }\n\n        25.0001% {\n          stroke-dashoffset: var(--start);\n          transform: rotate(270deg);\n        }\n        37.5% {\n          stroke-dashoffset: var(--end);\n          transform: rotate(270deg);\n        }\n        37.5001% {\n          stroke-dashoffset: var(--end);\n          transform: rotateX(180deg) rotate(161.5deg);\n        }\n        50% {\n          stroke-dashoffset: var(--start);\n          transform: rotateX(180deg) rotate(161.5deg);\n        }\n\n        50.0001% {\n          stroke-dashoffset: var(--start);\n          transform: rotate(180deg);\n        }\n        62.5% {\n          stroke-dashoffset: var(--end);\n          transform: rotate(180deg);\n        }\n        62.5001% {\n          stroke-dashoffset: var(--end);\n          transform: rotateX(180deg) rotate(251.5deg);\n        }\n        75% {\n          stroke-dashoffset: var(--start);\n          transform: rotateX(180deg) rotate(251.5deg);\n        }\n\n        75.0001% {\n          stroke-dashoffset: var(--start);\n          transform: rotate(90deg);\n        }\n        87.5% {\n          stroke-dashoffset: var(--end);\n          transform: rotate(90deg);\n        }\n        87.5001% {\n          stroke-dashoffset: var(--end);\n          transform: rotateX(180deg) rotate(341.5deg);\n        }\n        100% {\n          stroke-dashoffset: var(--start);\n          transform: rotateX(180deg) rotate(341.5deg);\n        }\n      }\n    </style>\n  </head>\n  <body data-sveltekit-preload-data="hover">\n    <div style="display: contents">' + body2 + '</div>\n\n    <svg\n      id="app-spinner"\n      preserveAspectRatio="xMidYMid meet"\n      focusable="false"\n      aria-hidden="true"\n      data-tid="spinner"\n      viewBox="0 0 100 100"\n    >\n      <circle cx="50%" cy="50%" r="45" />\n    </svg>\n  </body>\n</html>\n',
+    app: ({ head, body: body2, assets: assets2, nonce, env }) => '<!doctype html>\n<html lang="en">\n  <head>\n    <meta charset="utf-8" />\n    <meta content="width=device-width, initial-scale=1" name="viewport" />\n\n    <title>OpenFPL</title>\n    <link href="https://openfpl.xyz" rel="canonical" />\n    <meta\n      content="OpenFPL is a decentralised fantasy football game on the Internet Computer blockchain."\n      name="description"\n    />\n    <meta content="OpenFPL" property="og:title" />\n    <meta\n      content="OpenFPL is a decentralised fantasy football game on the Internet Computer blockchain."\n      property="og:description"\n    />\n    <meta content="website" property="og:type" />\n    <meta content="https://openfpl.xyz" property="og:url" />\n    <meta content="https://openfpl.xyz/meta-share.jpg" property="og:image" />\n    <meta content="summary_large_image" name="twitter:card" />\n    <meta content="OpenFPL" name="twitter:title" />\n    <meta\n      content="OpenFPL is a decentralised fantasy football game on the Internet Computer blockchain."\n      name="twitter:description"\n    />\n    <meta content="https://openfpl.xyz/meta-share.jpg" name="twitter:image" />\n    <meta content="@beadle1989" name="twitter:creator" />\n\n    <link crossorigin="anonymous" href="/manifest.webmanifest" rel="manifest" />\n\n    <!-- Favicon -->\n    <link\n      rel="icon"\n      type="image/png"\n      sizes="32x32"\n      href="' + assets2 + '/favicons/favicon-32x32.png"\n    />\n    <link\n      rel="icon"\n      type="image/png"\n      sizes="16x16"\n      href="' + assets2 + '/favicons/favicon-16x16.png"\n    />\n    <link rel="shortcut icon" href="' + assets2 + '/favicons/favicon.ico" />\n\n    <!-- iOS meta tags & icons -->\n    <meta name="apple-mobile-web-app-capable" content="yes" />\n    <meta name="apple-mobile-web-app-status-bar-style" content="#2CE3A6" />\n    <meta name="apple-mobile-web-app-title" content="OpenFPL" />\n    <link\n      rel="apple-touch-icon"\n      href="' + assets2 + '/favicons/apple-touch-icon.png"\n    />\n    <link\n      rel="mask-icon"\n      href="' + assets2 + '/favicons/safari-pinned-tab.svg"\n      color="#2CE3A6"\n    />\n\n    <!-- MS -->\n    <meta name="msapplication-TileColor" content="#2CE3A6" />\n    <meta\n      name="msapplication-config"\n      content="' + assets2 + '/favicons/browserconfig.xml"\n    />\n\n    <meta content="#2CE3A6" name="theme-color" />\n    ' + head + '\n\n    <style>\n      html,\n      body {\n        height: 100%;\n        margin: 0;\n      }\n\n      @font-face {\n        font-display: swap;\n        font-family: "Poppins";\n        font-style: normal;\n        font-weight: 400;\n        src: url("' + assets2 + '/poppins-regular-webfont.woff2")\n          format("woff2");\n      }\n\n      @font-face {\n        font-display: swap;\n        font-family: "Manrope";\n        font-style: normal;\n        font-weight: 400;\n        src: url("' + assets2 + '/Manrope-Regular.woff2") format("woff2");\n      }\n      body {\n        font-family: "Poppins", sans-serif !important;\n        color: white !important;\n        background-color: #1a1a1d;\n        height: 100vh;\n        margin: 0;\n        background-image: url("' + assets2 + '/background.jpg");\n        background-size: cover;\n        background-position: center;\n        background-repeat: no-repeat;\n        background-attachment: fixed;\n      }\n\n      #app-spinner {\n        --spinner-size: 30px;\n\n        width: var(--spinner-size);\n        height: var(--spinner-size);\n\n        animation: app-spinner-linear-rotate 2000ms linear infinite;\n\n        position: absolute;\n        top: calc(50% - (var(--spinner-size) / 2));\n        left: calc(50% - (var(--spinner-size) / 2));\n\n        --radius: 45px;\n        --circumference: calc(3.14159265359 * var(--radius) * 2);\n\n        --start: calc((1 - 0.05) * var(--circumference));\n        --end: calc((1 - 0.8) * var(--circumference));\n      }\n\n      #app-spinner circle {\n        stroke-dasharray: var(--circumference);\n        stroke-width: 10%;\n        transform-origin: 50% 50% 0;\n\n        transition-property: stroke;\n\n        animation-name: app-spinner-stroke-rotate-100;\n        animation-duration: 4000ms;\n        animation-timing-function: cubic-bezier(0.35, 0, 0.25, 1);\n        animation-iteration-count: infinite;\n\n        fill: transparent;\n        stroke: currentColor;\n\n        transition: stroke-dashoffset 225ms linear;\n      }\n\n      @keyframes app-spinner-linear-rotate {\n        0% {\n          transform: rotate(0deg);\n        }\n        100% {\n          transform: rotate(360deg);\n        }\n      }\n\n      @keyframes app-spinner-stroke-rotate-100 {\n        0% {\n          stroke-dashoffset: var(--start);\n          transform: rotate(0);\n        }\n        12.5% {\n          stroke-dashoffset: var(--end);\n          transform: rotate(0);\n        }\n        12.5001% {\n          stroke-dashoffset: var(--end);\n          transform: rotateX(180deg) rotate(72.5deg);\n        }\n        25% {\n          stroke-dashoffset: var(--start);\n          transform: rotateX(180deg) rotate(72.5deg);\n        }\n\n        25.0001% {\n          stroke-dashoffset: var(--start);\n          transform: rotate(270deg);\n        }\n        37.5% {\n          stroke-dashoffset: var(--end);\n          transform: rotate(270deg);\n        }\n        37.5001% {\n          stroke-dashoffset: var(--end);\n          transform: rotateX(180deg) rotate(161.5deg);\n        }\n        50% {\n          stroke-dashoffset: var(--start);\n          transform: rotateX(180deg) rotate(161.5deg);\n        }\n\n        50.0001% {\n          stroke-dashoffset: var(--start);\n          transform: rotate(180deg);\n        }\n        62.5% {\n          stroke-dashoffset: var(--end);\n          transform: rotate(180deg);\n        }\n        62.5001% {\n          stroke-dashoffset: var(--end);\n          transform: rotateX(180deg) rotate(251.5deg);\n        }\n        75% {\n          stroke-dashoffset: var(--start);\n          transform: rotateX(180deg) rotate(251.5deg);\n        }\n\n        75.0001% {\n          stroke-dashoffset: var(--start);\n          transform: rotate(90deg);\n        }\n        87.5% {\n          stroke-dashoffset: var(--end);\n          transform: rotate(90deg);\n        }\n        87.5001% {\n          stroke-dashoffset: var(--end);\n          transform: rotateX(180deg) rotate(341.5deg);\n        }\n        100% {\n          stroke-dashoffset: var(--start);\n          transform: rotateX(180deg) rotate(341.5deg);\n        }\n      }\n    </style>\n  </head>\n  <body data-sveltekit-preload-data="hover">\n    <div style="display: contents">' + body2 + '</div>\n\n    <svg\n      id="app-spinner"\n      preserveAspectRatio="xMidYMid meet"\n      focusable="false"\n      aria-hidden="true"\n      data-tid="spinner"\n      viewBox="0 0 100 100"\n    >\n      <circle cx="50%" cy="50%" r="45" />\n    </svg>\n  </body>\n</html>\n',
     error: ({ status, message }) => '<!doctype html>\n<html lang="en">\n	<head>\n		<meta charset="utf-8" />\n		<title>' + message + `</title>
 
 		<style>
@@ -3513,7 +3513,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "113cqc0"
+  version_hash: "179m711"
 };
 async function get_hooks() {
   return {};
@@ -3723,812 +3723,880 @@ const authStore = initAuthStore();
 const idlFactory = ({ IDL }) => {
   const CanisterId = IDL.Text;
   const Error2 = IDL.Variant({
-    DecodeError: IDL.Null,
-    NotAllowed: IDL.Null,
-    NotFound: IDL.Null,
-    NotAuthorized: IDL.Null,
-    InvalidData: IDL.Null,
-    SystemOnHold: IDL.Null,
-    AlreadyExists: IDL.Null,
-    CanisterCreateError: IDL.Null,
-    InvalidTeamError: IDL.Null
+    "DecodeError": IDL.Null,
+    "NotAllowed": IDL.Null,
+    "NotFound": IDL.Null,
+    "NotAuthorized": IDL.Null,
+    "InvalidData": IDL.Null,
+    "SystemOnHold": IDL.Null,
+    "AlreadyExists": IDL.Null,
+    "CanisterCreateError": IDL.Null,
+    "InvalidTeamError": IDL.Null
   });
-  const Result = IDL.Variant({ ok: IDL.Null, err: Error2 });
+  const Result = IDL.Variant({ "ok": IDL.Null, "err": Error2 });
   const TokenId = IDL.Nat16;
   const EntryRequirement = IDL.Variant({
-    InviteOnly: IDL.Null,
-    PaidEntry: IDL.Null,
-    PaidInviteEntry: IDL.Null,
-    FreeEntry: IDL.Null
+    "InviteOnly": IDL.Null,
+    "PaidEntry": IDL.Null,
+    "PaidInviteEntry": IDL.Null,
+    "FreeEntry": IDL.Null
   });
-  const PaymentChoice = IDL.Variant({ FPL: IDL.Null, ICP: IDL.Null });
+  const PaymentChoice = IDL.Variant({ "FPL": IDL.Null, "ICP": IDL.Null });
   const CreatePrivateLeagueDTO = IDL.Record({
-    tokenId: TokenId,
-    adminFee: IDL.Nat8,
-    name: IDL.Text,
-    banner: IDL.Opt(IDL.Vec(IDL.Nat8)),
-    entryRequirement: EntryRequirement,
-    entrants: IDL.Nat16,
-    photo: IDL.Opt(IDL.Vec(IDL.Nat8)),
-    entryFee: IDL.Nat,
-    paymentChoice: PaymentChoice,
-    termsAgreed: IDL.Bool
+    "tokenId": TokenId,
+    "adminFee": IDL.Nat8,
+    "name": IDL.Text,
+    "banner": IDL.Opt(IDL.Vec(IDL.Nat8)),
+    "entryRequirement": EntryRequirement,
+    "entrants": IDL.Nat16,
+    "photo": IDL.Opt(IDL.Vec(IDL.Nat8)),
+    "entryFee": IDL.Nat,
+    "paymentChoice": PaymentChoice,
+    "termsAgreed": IDL.Bool
   });
   const SeasonId = IDL.Nat16;
   const FixtureStatusType = IDL.Variant({
-    Unplayed: IDL.Null,
-    Finalised: IDL.Null,
-    Active: IDL.Null,
-    Complete: IDL.Null
+    "Unplayed": IDL.Null,
+    "Finalised": IDL.Null,
+    "Active": IDL.Null,
+    "Complete": IDL.Null
   });
   const ClubId = IDL.Nat16;
   const FixtureId = IDL.Nat32;
   const PlayerEventType = IDL.Variant({
-    PenaltyMissed: IDL.Null,
-    Goal: IDL.Null,
-    GoalConceded: IDL.Null,
-    Appearance: IDL.Null,
-    PenaltySaved: IDL.Null,
-    RedCard: IDL.Null,
-    KeeperSave: IDL.Null,
-    CleanSheet: IDL.Null,
-    YellowCard: IDL.Null,
-    GoalAssisted: IDL.Null,
-    OwnGoal: IDL.Null,
-    HighestScoringPlayer: IDL.Null
+    "PenaltyMissed": IDL.Null,
+    "Goal": IDL.Null,
+    "GoalConceded": IDL.Null,
+    "Appearance": IDL.Null,
+    "PenaltySaved": IDL.Null,
+    "RedCard": IDL.Null,
+    "KeeperSave": IDL.Null,
+    "CleanSheet": IDL.Null,
+    "YellowCard": IDL.Null,
+    "GoalAssisted": IDL.Null,
+    "OwnGoal": IDL.Null,
+    "HighestScoringPlayer": IDL.Null
   });
   const PlayerEventData = IDL.Record({
-    fixtureId: FixtureId,
-    clubId: ClubId,
-    playerId: IDL.Nat16,
-    eventStartMinute: IDL.Nat8,
-    eventEndMinute: IDL.Nat8,
-    eventType: PlayerEventType
+    "fixtureId": FixtureId,
+    "clubId": ClubId,
+    "playerId": IDL.Nat16,
+    "eventStartMinute": IDL.Nat8,
+    "eventEndMinute": IDL.Nat8,
+    "eventType": PlayerEventType
   });
   const GameweekNumber = IDL.Nat8;
   const FixtureDTO = IDL.Record({
-    id: IDL.Nat32,
-    status: FixtureStatusType,
-    highestScoringPlayerId: IDL.Nat16,
-    seasonId: SeasonId,
-    awayClubId: ClubId,
-    events: IDL.Vec(PlayerEventData),
-    homeClubId: ClubId,
-    kickOff: IDL.Int,
-    homeGoals: IDL.Nat8,
-    gameweek: GameweekNumber,
-    awayGoals: IDL.Nat8
+    "id": IDL.Nat32,
+    "status": FixtureStatusType,
+    "highestScoringPlayerId": IDL.Nat16,
+    "seasonId": SeasonId,
+    "awayClubId": ClubId,
+    "events": IDL.Vec(PlayerEventData),
+    "homeClubId": ClubId,
+    "kickOff": IDL.Int,
+    "homeGoals": IDL.Nat8,
+    "gameweek": GameweekNumber,
+    "awayGoals": IDL.Nat8
   });
   const AddInitialFixturesDTO = IDL.Record({
-    seasonId: SeasonId,
-    seasonFixtures: IDL.Vec(FixtureDTO)
+    "seasonId": SeasonId,
+    "seasonFixtures": IDL.Vec(FixtureDTO)
   });
   const NewTokenDTO = IDL.Record({
-    fee: IDL.Nat,
-    ticker: IDL.Text,
-    tokenImageURL: IDL.Text,
-    canisterId: CanisterId
+    "fee": IDL.Nat,
+    "ticker": IDL.Text,
+    "tokenImageURL": IDL.Text,
+    "canisterId": CanisterId
   });
   const CountryId = IDL.Nat16;
   const PlayerPosition = IDL.Variant({
-    Goalkeeper: IDL.Null,
-    Midfielder: IDL.Null,
-    Forward: IDL.Null,
-    Defender: IDL.Null
+    "Goalkeeper": IDL.Null,
+    "Midfielder": IDL.Null,
+    "Forward": IDL.Null,
+    "Defender": IDL.Null
   });
   const CreatePlayerDTO = IDL.Record({
-    clubId: ClubId,
-    valueQuarterMillions: IDL.Nat16,
-    dateOfBirth: IDL.Int,
-    nationality: CountryId,
-    shirtNumber: IDL.Nat8,
-    position: PlayerPosition,
-    lastName: IDL.Text,
-    firstName: IDL.Text
+    "clubId": ClubId,
+    "valueQuarterMillions": IDL.Nat16,
+    "dateOfBirth": IDL.Int,
+    "nationality": CountryId,
+    "shirtNumber": IDL.Nat8,
+    "position": PlayerPosition,
+    "lastName": IDL.Text,
+    "firstName": IDL.Text
   });
   const PlayerId = IDL.Nat16;
   const LoanPlayerDTO = IDL.Record({
-    loanEndDate: IDL.Int,
-    playerId: PlayerId,
-    loanClubId: ClubId
+    "loanEndDate": IDL.Int,
+    "playerId": PlayerId,
+    "loanClubId": ClubId
   });
   const Spawn = IDL.Record({
-    percentage_to_spawn: IDL.Opt(IDL.Nat32),
-    new_controller: IDL.Opt(IDL.Principal),
-    nonce: IDL.Opt(IDL.Nat64)
+    "percentage_to_spawn": IDL.Opt(IDL.Nat32),
+    "new_controller": IDL.Opt(IDL.Principal),
+    "nonce": IDL.Opt(IDL.Nat64)
   });
-  const NeuronId = IDL.Record({ id: IDL.Nat64 });
+  const NeuronId = IDL.Record({ "id": IDL.Nat64 });
   const Follow = IDL.Record({
-    topic: IDL.Int32,
-    followees: IDL.Vec(NeuronId)
+    "topic": IDL.Int32,
+    "followees": IDL.Vec(NeuronId)
   });
   const ClaimOrRefreshNeuronFromAccount = IDL.Record({
-    controller: IDL.Opt(IDL.Principal),
-    memo: IDL.Nat64
+    "controller": IDL.Opt(IDL.Principal),
+    "memo": IDL.Nat64
   });
   const By = IDL.Variant({
-    NeuronIdOrSubaccount: IDL.Null,
-    MemoAndController: ClaimOrRefreshNeuronFromAccount,
-    Memo: IDL.Nat64
+    "NeuronIdOrSubaccount": IDL.Null,
+    "MemoAndController": ClaimOrRefreshNeuronFromAccount,
+    "Memo": IDL.Nat64
   });
-  const ClaimOrRefresh = IDL.Record({ by: IDL.Opt(By) });
+  const ClaimOrRefresh = IDL.Record({ "by": IDL.Opt(By) });
   const ChangeAutoStakeMaturity = IDL.Record({
-    requested_setting_for_auto_stake_maturity: IDL.Bool
+    "requested_setting_for_auto_stake_maturity": IDL.Bool
   });
   const IncreaseDissolveDelay = IDL.Record({
-    additional_dissolve_delay_seconds: IDL.Nat32
+    "additional_dissolve_delay_seconds": IDL.Nat32
   });
   const SetDissolveTimestamp = IDL.Record({
-    dissolve_timestamp_seconds: IDL.Nat64
+    "dissolve_timestamp_seconds": IDL.Nat64
   });
   const Operation = IDL.Variant({
-    ChangeAutoStakeMaturity,
-    StopDissolving: IDL.Null,
-    StartDissolving: IDL.Null,
-    IncreaseDissolveDelay,
-    SetDissolveTimestamp
+    "ChangeAutoStakeMaturity": ChangeAutoStakeMaturity,
+    "StopDissolving": IDL.Null,
+    "StartDissolving": IDL.Null,
+    "IncreaseDissolveDelay": IncreaseDissolveDelay,
+    "SetDissolveTimestamp": SetDissolveTimestamp
   });
-  const Configure = IDL.Record({ operation: IDL.Opt(Operation) });
+  const Configure = IDL.Record({ "operation": IDL.Opt(Operation) });
   const StakeMaturityResponse = IDL.Record({
-    maturity_e8s: IDL.Nat64,
-    stake_maturity_e8s: IDL.Nat64
+    "maturity_e8s": IDL.Nat64,
+    "stake_maturity_e8s": IDL.Nat64
   });
-  const AccountIdentifier__1 = IDL.Record({ hash: IDL.Vec(IDL.Nat8) });
-  const Amount = IDL.Record({ e8s: IDL.Nat64 });
+  const AccountIdentifier__1 = IDL.Record({ "hash": IDL.Vec(IDL.Nat8) });
+  const Amount = IDL.Record({ "e8s": IDL.Nat64 });
   const Disburse = IDL.Record({
-    to_account: IDL.Opt(AccountIdentifier__1),
-    amount: IDL.Opt(Amount)
+    "to_account": IDL.Opt(AccountIdentifier__1),
+    "amount": IDL.Opt(Amount)
   });
   const Command = IDL.Variant({
-    Spawn,
-    Follow,
-    ClaimOrRefresh,
-    Configure,
-    StakeMaturity: StakeMaturityResponse,
-    Disburse
+    "Spawn": Spawn,
+    "Follow": Follow,
+    "ClaimOrRefresh": ClaimOrRefresh,
+    "Configure": Configure,
+    "StakeMaturity": StakeMaturityResponse,
+    "Disburse": Disburse
   });
   const MoveFixtureDTO = IDL.Record({
-    fixtureId: FixtureId,
-    updatedFixtureGameweek: GameweekNumber,
-    updatedFixtureDate: IDL.Int
+    "fixtureId": FixtureId,
+    "updatedFixtureGameweek": GameweekNumber,
+    "updatedFixtureDate": IDL.Int
   });
-  const PostponeFixtureDTO = IDL.Record({ fixtureId: FixtureId });
-  const PromoteFormerClubDTO = IDL.Record({ clubId: ClubId });
-  const ShirtType = IDL.Variant({ Filled: IDL.Null, Striped: IDL.Null });
+  const PostponeFixtureDTO = IDL.Record({ "fixtureId": FixtureId });
+  const PromoteFormerClubDTO = IDL.Record({ "clubId": ClubId });
+  const ShirtType = IDL.Variant({ "Filled": IDL.Null, "Striped": IDL.Null });
   const PromoteNewClubDTO = IDL.Record({
-    secondaryColourHex: IDL.Text,
-    name: IDL.Text,
-    friendlyName: IDL.Text,
-    thirdColourHex: IDL.Text,
-    abbreviatedName: IDL.Text,
-    shirtType: ShirtType,
-    primaryColourHex: IDL.Text
+    "secondaryColourHex": IDL.Text,
+    "name": IDL.Text,
+    "friendlyName": IDL.Text,
+    "thirdColourHex": IDL.Text,
+    "abbreviatedName": IDL.Text,
+    "shirtType": ShirtType,
+    "primaryColourHex": IDL.Text
   });
-  const RecallPlayerDTO = IDL.Record({ playerId: PlayerId });
+  const RecallPlayerDTO = IDL.Record({ "playerId": PlayerId });
   const RescheduleFixtureDTO = IDL.Record({
-    postponedFixtureId: FixtureId,
-    updatedFixtureGameweek: GameweekNumber,
-    updatedFixtureDate: IDL.Int
+    "postponedFixtureId": FixtureId,
+    "updatedFixtureGameweek": GameweekNumber,
+    "updatedFixtureDate": IDL.Int
   });
   const RetirePlayerDTO = IDL.Record({
-    playerId: PlayerId,
-    retirementDate: IDL.Int
+    "playerId": PlayerId,
+    "retirementDate": IDL.Int
   });
-  const RevaluePlayerDownDTO = IDL.Record({ playerId: PlayerId });
-  const RevaluePlayerUpDTO = IDL.Record({ playerId: PlayerId });
+  const RevaluePlayerDownDTO = IDL.Record({ "playerId": PlayerId });
+  const RevaluePlayerUpDTO = IDL.Record({ "playerId": PlayerId });
   const SetPlayerInjuryDTO = IDL.Record({
-    playerId: PlayerId,
-    description: IDL.Text,
-    expectedEndDate: IDL.Int
+    "playerId": PlayerId,
+    "description": IDL.Text,
+    "expectedEndDate": IDL.Int
   });
   const SubmitFixtureDataDTO = IDL.Record({
-    fixtureId: FixtureId,
-    seasonId: SeasonId,
-    gameweek: GameweekNumber,
-    playerEventData: IDL.Vec(PlayerEventData)
+    "fixtureId": FixtureId,
+    "seasonId": SeasonId,
+    "gameweek": GameweekNumber,
+    "playerEventData": IDL.Vec(PlayerEventData)
   });
   const TransferPlayerDTO = IDL.Record({
-    playerId: PlayerId,
-    newClubId: ClubId
+    "playerId": PlayerId,
+    "newClubId": ClubId
   });
-  const UnretirePlayerDTO = IDL.Record({ playerId: PlayerId });
+  const UnretirePlayerDTO = IDL.Record({ "playerId": PlayerId });
   const UpdateClubDTO = IDL.Record({
-    clubId: ClubId,
-    secondaryColourHex: IDL.Text,
-    name: IDL.Text,
-    friendlyName: IDL.Text,
-    thirdColourHex: IDL.Text,
-    abbreviatedName: IDL.Text,
-    shirtType: ShirtType,
-    primaryColourHex: IDL.Text
+    "clubId": ClubId,
+    "secondaryColourHex": IDL.Text,
+    "name": IDL.Text,
+    "friendlyName": IDL.Text,
+    "thirdColourHex": IDL.Text,
+    "abbreviatedName": IDL.Text,
+    "shirtType": ShirtType,
+    "primaryColourHex": IDL.Text
   });
   const UpdatePlayerDTO = IDL.Record({
-    dateOfBirth: IDL.Int,
-    playerId: PlayerId,
-    nationality: CountryId,
-    shirtNumber: IDL.Nat8,
-    position: PlayerPosition,
-    lastName: IDL.Text,
-    firstName: IDL.Text
+    "dateOfBirth": IDL.Int,
+    "playerId": PlayerId,
+    "nationality": CountryId,
+    "shirtNumber": IDL.Nat8,
+    "position": PlayerPosition,
+    "lastName": IDL.Text,
+    "firstName": IDL.Text
   });
   const ClubDTO = IDL.Record({
-    id: ClubId,
-    secondaryColourHex: IDL.Text,
-    name: IDL.Text,
-    friendlyName: IDL.Text,
-    thirdColourHex: IDL.Text,
-    abbreviatedName: IDL.Text,
-    shirtType: ShirtType,
-    primaryColourHex: IDL.Text
+    "id": ClubId,
+    "secondaryColourHex": IDL.Text,
+    "name": IDL.Text,
+    "friendlyName": IDL.Text,
+    "thirdColourHex": IDL.Text,
+    "abbreviatedName": IDL.Text,
+    "shirtType": ShirtType,
+    "primaryColourHex": IDL.Text
   });
-  const Result_20 = IDL.Variant({ ok: IDL.Vec(ClubDTO), err: Error2 });
+  const Result_20 = IDL.Variant({ "ok": IDL.Vec(ClubDTO), "err": Error2 });
   const CountryDTO = IDL.Record({
-    id: CountryId,
-    code: IDL.Text,
-    name: IDL.Text
+    "id": CountryId,
+    "code": IDL.Text,
+    "name": IDL.Text
   });
-  const Result_23 = IDL.Variant({ ok: IDL.Vec(CountryDTO), err: Error2 });
+  const Result_23 = IDL.Variant({ "ok": IDL.Vec(CountryDTO), "err": Error2 });
   const PickTeamDTO = IDL.Record({
-    playerIds: IDL.Vec(PlayerId),
-    countrymenCountryId: CountryId,
-    username: IDL.Text,
-    goalGetterPlayerId: PlayerId,
-    hatTrickHeroGameweek: GameweekNumber,
-    transfersAvailable: IDL.Nat8,
-    teamBoostGameweek: GameweekNumber,
-    captainFantasticGameweek: GameweekNumber,
-    countrymenGameweek: GameweekNumber,
-    bankQuarterMillions: IDL.Nat16,
-    noEntryPlayerId: PlayerId,
-    safeHandsPlayerId: PlayerId,
-    braceBonusGameweek: GameweekNumber,
-    passMasterGameweek: GameweekNumber,
-    teamBoostClubId: ClubId,
-    goalGetterGameweek: GameweekNumber,
-    captainFantasticPlayerId: PlayerId,
-    transferWindowGameweek: GameweekNumber,
-    noEntryGameweek: GameweekNumber,
-    prospectsGameweek: GameweekNumber,
-    safeHandsGameweek: GameweekNumber,
-    principalId: IDL.Text,
-    passMasterPlayerId: PlayerId,
-    captainId: PlayerId,
-    monthlyBonusesAvailable: IDL.Nat8
+    "playerIds": IDL.Vec(PlayerId),
+    "countrymenCountryId": CountryId,
+    "username": IDL.Text,
+    "goalGetterPlayerId": PlayerId,
+    "hatTrickHeroGameweek": GameweekNumber,
+    "transfersAvailable": IDL.Nat8,
+    "teamBoostGameweek": GameweekNumber,
+    "captainFantasticGameweek": GameweekNumber,
+    "countrymenGameweek": GameweekNumber,
+    "bankQuarterMillions": IDL.Nat16,
+    "noEntryPlayerId": PlayerId,
+    "safeHandsPlayerId": PlayerId,
+    "braceBonusGameweek": GameweekNumber,
+    "passMasterGameweek": GameweekNumber,
+    "teamBoostClubId": ClubId,
+    "goalGetterGameweek": GameweekNumber,
+    "captainFantasticPlayerId": PlayerId,
+    "transferWindowGameweek": GameweekNumber,
+    "noEntryGameweek": GameweekNumber,
+    "prospectsGameweek": GameweekNumber,
+    "safeHandsGameweek": GameweekNumber,
+    "principalId": IDL.Text,
+    "passMasterPlayerId": PlayerId,
+    "captainId": PlayerId,
+    "monthlyBonusesAvailable": IDL.Nat8
   });
-  const Result_22 = IDL.Variant({ ok: PickTeamDTO, err: Error2 });
-  const DataCacheDTO = IDL.Record({ hash: IDL.Text, category: IDL.Text });
+  const Result_22 = IDL.Variant({ "ok": PickTeamDTO, "err": Error2 });
+  const DataCacheDTO = IDL.Record({ "hash": IDL.Text, "category": IDL.Text });
   const Result_21 = IDL.Variant({
-    ok: IDL.Vec(DataCacheDTO),
-    err: Error2
+    "ok": IDL.Vec(DataCacheDTO),
+    "err": Error2
   });
-  const GetFixturesDTO = IDL.Record({ seasonId: SeasonId });
-  const Result_13 = IDL.Variant({ ok: IDL.Vec(FixtureDTO), err: Error2 });
-  const ClubFilterDTO = IDL.Record({ clubId: ClubId });
+  const GetFixturesDTO = IDL.Record({ "seasonId": SeasonId });
+  const Result_13 = IDL.Variant({ "ok": IDL.Vec(FixtureDTO), "err": Error2 });
+  const ClubFilterDTO = IDL.Record({ "clubId": ClubId });
   const PlayerStatus = IDL.Variant({
-    OnLoan: IDL.Null,
-    Former: IDL.Null,
-    Active: IDL.Null,
-    Retired: IDL.Null
+    "OnLoan": IDL.Null,
+    "Former": IDL.Null,
+    "Active": IDL.Null,
+    "Retired": IDL.Null
   });
   const PlayerDTO = IDL.Record({
-    id: IDL.Nat16,
-    status: PlayerStatus,
-    clubId: ClubId,
-    valueQuarterMillions: IDL.Nat16,
-    dateOfBirth: IDL.Int,
-    nationality: CountryId,
-    shirtNumber: IDL.Nat8,
-    totalPoints: IDL.Int16,
-    position: PlayerPosition,
-    lastName: IDL.Text,
-    firstName: IDL.Text
+    "id": IDL.Nat16,
+    "status": PlayerStatus,
+    "clubId": ClubId,
+    "valueQuarterMillions": IDL.Nat16,
+    "dateOfBirth": IDL.Int,
+    "nationality": CountryId,
+    "shirtNumber": IDL.Nat8,
+    "totalPoints": IDL.Int16,
+    "position": PlayerPosition,
+    "lastName": IDL.Text,
+    "firstName": IDL.Text
   });
-  const Result_8 = IDL.Variant({ ok: IDL.Vec(PlayerDTO), err: Error2 });
-  const GetManagerDTO = IDL.Record({ managerId: IDL.Text });
+  const Result_8 = IDL.Variant({ "ok": IDL.Vec(PlayerDTO), "err": Error2 });
+  const GetManagerDTO = IDL.Record({ "managerId": IDL.Text });
   const CalendarMonth = IDL.Nat8;
   const FantasyTeamSnapshot = IDL.Record({
-    playerIds: IDL.Vec(PlayerId),
-    month: CalendarMonth,
-    teamValueQuarterMillions: IDL.Nat16,
-    countrymenCountryId: CountryId,
-    username: IDL.Text,
-    goalGetterPlayerId: PlayerId,
-    hatTrickHeroGameweek: GameweekNumber,
-    transfersAvailable: IDL.Nat8,
-    teamBoostGameweek: GameweekNumber,
-    captainFantasticGameweek: GameweekNumber,
-    countrymenGameweek: GameweekNumber,
-    bankQuarterMillions: IDL.Nat16,
-    noEntryPlayerId: PlayerId,
-    monthlyPoints: IDL.Int16,
-    safeHandsPlayerId: PlayerId,
-    seasonId: SeasonId,
-    braceBonusGameweek: GameweekNumber,
-    favouriteClubId: ClubId,
-    passMasterGameweek: GameweekNumber,
-    teamBoostClubId: ClubId,
-    goalGetterGameweek: GameweekNumber,
-    captainFantasticPlayerId: PlayerId,
-    gameweek: GameweekNumber,
-    seasonPoints: IDL.Int16,
-    transferWindowGameweek: GameweekNumber,
-    noEntryGameweek: GameweekNumber,
-    prospectsGameweek: GameweekNumber,
-    safeHandsGameweek: GameweekNumber,
-    principalId: IDL.Text,
-    passMasterPlayerId: PlayerId,
-    captainId: PlayerId,
-    points: IDL.Int16,
-    monthlyBonusesAvailable: IDL.Nat8
+    "playerIds": IDL.Vec(PlayerId),
+    "month": CalendarMonth,
+    "teamValueQuarterMillions": IDL.Nat16,
+    "countrymenCountryId": CountryId,
+    "username": IDL.Text,
+    "goalGetterPlayerId": PlayerId,
+    "hatTrickHeroGameweek": GameweekNumber,
+    "transfersAvailable": IDL.Nat8,
+    "teamBoostGameweek": GameweekNumber,
+    "captainFantasticGameweek": GameweekNumber,
+    "countrymenGameweek": GameweekNumber,
+    "bankQuarterMillions": IDL.Nat16,
+    "noEntryPlayerId": PlayerId,
+    "monthlyPoints": IDL.Int16,
+    "safeHandsPlayerId": PlayerId,
+    "seasonId": SeasonId,
+    "braceBonusGameweek": GameweekNumber,
+    "favouriteClubId": ClubId,
+    "passMasterGameweek": GameweekNumber,
+    "teamBoostClubId": ClubId,
+    "goalGetterGameweek": GameweekNumber,
+    "captainFantasticPlayerId": PlayerId,
+    "gameweek": GameweekNumber,
+    "seasonPoints": IDL.Int16,
+    "transferWindowGameweek": GameweekNumber,
+    "noEntryGameweek": GameweekNumber,
+    "prospectsGameweek": GameweekNumber,
+    "safeHandsGameweek": GameweekNumber,
+    "principalId": IDL.Text,
+    "passMasterPlayerId": PlayerId,
+    "captainId": PlayerId,
+    "points": IDL.Int16,
+    "monthlyBonusesAvailable": IDL.Nat8
   });
   const ManagerDTO = IDL.Record({
-    username: IDL.Text,
-    weeklyPosition: IDL.Int,
-    createDate: IDL.Int,
-    monthlyPoints: IDL.Int16,
-    weeklyPoints: IDL.Int16,
-    weeklyPositionText: IDL.Text,
-    gameweeks: IDL.Vec(FantasyTeamSnapshot),
-    favouriteClubId: ClubId,
-    monthlyPosition: IDL.Int,
-    seasonPosition: IDL.Int,
-    monthlyPositionText: IDL.Text,
-    privateLeagueMemberships: IDL.Vec(CanisterId),
-    profilePicture: IDL.Opt(IDL.Vec(IDL.Nat8)),
-    seasonPoints: IDL.Int16,
-    principalId: IDL.Text,
-    seasonPositionText: IDL.Text
+    "username": IDL.Text,
+    "weeklyPosition": IDL.Int,
+    "createDate": IDL.Int,
+    "monthlyPoints": IDL.Int16,
+    "weeklyPoints": IDL.Int16,
+    "weeklyPositionText": IDL.Text,
+    "gameweeks": IDL.Vec(FantasyTeamSnapshot),
+    "favouriteClubId": ClubId,
+    "monthlyPosition": IDL.Int,
+    "seasonPosition": IDL.Int,
+    "monthlyPositionText": IDL.Text,
+    "privateLeagueMemberships": IDL.Vec(CanisterId),
+    "profilePicture": IDL.Opt(IDL.Vec(IDL.Nat8)),
+    "seasonPoints": IDL.Int16,
+    "principalId": IDL.Text,
+    "seasonPositionText": IDL.Text
   });
-  const Result_1 = IDL.Variant({ ok: ManagerDTO, err: Error2 });
+  const Result_1 = IDL.Variant({ "ok": ManagerDTO, "err": Error2 });
   const ManagerPrivateLeagueDTO = IDL.Record({
-    created: IDL.Int,
-    name: IDL.Text,
-    memberCount: IDL.Int,
-    seasonPosition: IDL.Nat,
-    seasonPositionText: IDL.Text,
-    canisterId: CanisterId
+    "created": IDL.Int,
+    "name": IDL.Text,
+    "memberCount": IDL.Int,
+    "seasonPosition": IDL.Nat,
+    "seasonPositionText": IDL.Text,
+    "canisterId": CanisterId
   });
   const ManagerPrivateLeaguesDTO = IDL.Record({
-    totalEntries: IDL.Nat,
-    entries: IDL.Vec(ManagerPrivateLeagueDTO)
+    "totalEntries": IDL.Nat,
+    "entries": IDL.Vec(ManagerPrivateLeagueDTO)
   });
   const Result_19 = IDL.Variant({
-    ok: ManagerPrivateLeaguesDTO,
-    err: Error2
+    "ok": ManagerPrivateLeaguesDTO,
+    "err": Error2
   });
   const PrincipalId = IDL.Text;
   const Result_18 = IDL.Variant({
-    ok: IDL.Vec(IDL.Tuple(PrincipalId, CanisterId)),
-    err: Error2
+    "ok": IDL.Vec(IDL.Tuple(PrincipalId, CanisterId)),
+    "err": Error2
   });
   const GetMonthlyLeaderboardDTO = IDL.Record({
-    month: CalendarMonth,
-    clubId: ClubId,
-    offset: IDL.Nat,
-    seasonId: SeasonId,
-    limit: IDL.Nat,
-    searchTerm: IDL.Text
+    "month": CalendarMonth,
+    "clubId": ClubId,
+    "offset": IDL.Nat,
+    "seasonId": SeasonId,
+    "limit": IDL.Nat,
+    "searchTerm": IDL.Text
   });
   const LeaderboardEntry = IDL.Record({
-    username: IDL.Text,
-    positionText: IDL.Text,
-    position: IDL.Nat,
-    principalId: IDL.Text,
-    points: IDL.Int16
+    "username": IDL.Text,
+    "positionText": IDL.Text,
+    "position": IDL.Nat,
+    "principalId": IDL.Text,
+    "points": IDL.Int16
   });
   const MonthlyLeaderboardDTO = IDL.Record({
-    month: IDL.Nat8,
-    totalEntries: IDL.Nat,
-    seasonId: SeasonId,
-    entries: IDL.Vec(LeaderboardEntry)
+    "month": IDL.Nat8,
+    "totalEntries": IDL.Nat,
+    "seasonId": SeasonId,
+    "entries": IDL.Vec(LeaderboardEntry)
   });
   const Result_10 = IDL.Variant({
-    ok: MonthlyLeaderboardDTO,
-    err: Error2
+    "ok": MonthlyLeaderboardDTO,
+    "err": Error2
   });
   const GetMonthlyLeaderboardsDTO = IDL.Record({
-    month: CalendarMonth,
-    seasonId: SeasonId
+    "month": CalendarMonth,
+    "seasonId": SeasonId
   });
   const Result_17 = IDL.Variant({
-    ok: IDL.Vec(MonthlyLeaderboardDTO),
-    err: Error2
+    "ok": IDL.Vec(MonthlyLeaderboardDTO),
+    "err": Error2
+  });
+  const GovernanceError = IDL.Record({
+    "error_message": IDL.Text,
+    "error_type": IDL.Int32
+  });
+  const SpawnResponse = IDL.Record({ "created_neuron_id": IDL.Opt(NeuronId) });
+  const ClaimOrRefreshResponse = IDL.Record({
+    "refreshed_neuron_id": IDL.Opt(NeuronId)
+  });
+  const DisburseResponse = IDL.Record({ "transfer_block_height": IDL.Nat64 });
+  const CommandResponse = IDL.Variant({
+    "Error": GovernanceError,
+    "Spawn": SpawnResponse,
+    "Follow": IDL.Null,
+    "ClaimOrRefresh": ClaimOrRefreshResponse,
+    "Configure": IDL.Null,
+    "StakeMaturity": StakeMaturityResponse,
+    "Disburse": DisburseResponse
+  });
+  const ManageNeuronResponse = IDL.Record({
+    "command": IDL.Opt(CommandResponse)
+  });
+  const Error__1 = IDL.Variant({
+    "expired": IDL.Null,
+    "missing": IDL.Text,
+    "other": IDL.Text,
+    "invalid": IDL.Text,
+    "fee_not_defined": IDL.Text,
+    "trapped": IDL.Text,
+    "rejected": IDL.Text,
+    "fatal": IDL.Text
+  });
+  const NeuronResponse = IDL.Variant({
+    "ok": ManageNeuronResponse,
+    "err": Error__1
   });
   const GetPlayerDetailsDTO = IDL.Record({
-    playerId: PlayerId,
-    seasonId: SeasonId
+    "playerId": PlayerId,
+    "seasonId": SeasonId
   });
   const InjuryHistory = IDL.Record({
-    description: IDL.Text,
-    injuryStartDate: IDL.Int,
-    expectedEndDate: IDL.Int
+    "description": IDL.Text,
+    "injuryStartDate": IDL.Int,
+    "expectedEndDate": IDL.Int
   });
   const PlayerGameweekDTO = IDL.Record({
-    fixtureId: FixtureId,
-    events: IDL.Vec(PlayerEventData),
-    number: IDL.Nat8,
-    points: IDL.Int16
+    "fixtureId": FixtureId,
+    "events": IDL.Vec(PlayerEventData),
+    "number": IDL.Nat8,
+    "points": IDL.Int16
   });
   const ValueHistory = IDL.Record({
-    oldValue: IDL.Nat16,
-    newValue: IDL.Nat16,
-    seasonId: IDL.Nat16,
-    gameweek: IDL.Nat8
+    "oldValue": IDL.Nat16,
+    "newValue": IDL.Nat16,
+    "seasonId": IDL.Nat16,
+    "gameweek": IDL.Nat8
   });
   const PlayerDetailDTO = IDL.Record({
-    id: PlayerId,
-    status: PlayerStatus,
-    clubId: ClubId,
-    parentClubId: ClubId,
-    valueQuarterMillions: IDL.Nat16,
-    dateOfBirth: IDL.Int,
-    injuryHistory: IDL.Vec(InjuryHistory),
-    seasonId: SeasonId,
-    gameweeks: IDL.Vec(PlayerGameweekDTO),
-    nationality: CountryId,
-    retirementDate: IDL.Int,
-    valueHistory: IDL.Vec(ValueHistory),
-    latestInjuryEndDate: IDL.Int,
-    shirtNumber: IDL.Nat8,
-    position: PlayerPosition,
-    lastName: IDL.Text,
-    firstName: IDL.Text
+    "id": PlayerId,
+    "status": PlayerStatus,
+    "clubId": ClubId,
+    "parentClubId": ClubId,
+    "valueQuarterMillions": IDL.Nat16,
+    "dateOfBirth": IDL.Int,
+    "injuryHistory": IDL.Vec(InjuryHistory),
+    "seasonId": SeasonId,
+    "gameweeks": IDL.Vec(PlayerGameweekDTO),
+    "nationality": CountryId,
+    "retirementDate": IDL.Int,
+    "valueHistory": IDL.Vec(ValueHistory),
+    "latestInjuryEndDate": IDL.Int,
+    "shirtNumber": IDL.Nat8,
+    "position": PlayerPosition,
+    "lastName": IDL.Text,
+    "firstName": IDL.Text
   });
-  const Result_16 = IDL.Variant({ ok: PlayerDetailDTO, err: Error2 });
+  const Result_16 = IDL.Variant({ "ok": PlayerDetailDTO, "err": Error2 });
   const GameweekFiltersDTO = IDL.Record({
-    seasonId: SeasonId,
-    gameweek: GameweekNumber
+    "seasonId": SeasonId,
+    "gameweek": GameweekNumber
   });
   const PlayerPointsDTO = IDL.Record({
-    id: IDL.Nat16,
-    clubId: ClubId,
-    events: IDL.Vec(PlayerEventData),
-    position: PlayerPosition,
-    gameweek: GameweekNumber,
-    points: IDL.Int16
+    "id": IDL.Nat16,
+    "clubId": ClubId,
+    "events": IDL.Vec(PlayerEventData),
+    "position": PlayerPosition,
+    "gameweek": GameweekNumber,
+    "points": IDL.Int16
   });
   const Result_15 = IDL.Variant({
-    ok: IDL.Vec(PlayerPointsDTO),
-    err: Error2
+    "ok": IDL.Vec(PlayerPointsDTO),
+    "err": Error2
   });
   const PlayerScoreDTO = IDL.Record({
-    id: IDL.Nat16,
-    clubId: ClubId,
-    assists: IDL.Int16,
-    dateOfBirth: IDL.Int,
-    nationality: CountryId,
-    goalsScored: IDL.Int16,
-    saves: IDL.Int16,
-    goalsConceded: IDL.Int16,
-    events: IDL.Vec(PlayerEventData),
-    position: PlayerPosition,
-    points: IDL.Int16
+    "id": IDL.Nat16,
+    "clubId": ClubId,
+    "assists": IDL.Int16,
+    "dateOfBirth": IDL.Int,
+    "nationality": CountryId,
+    "goalsScored": IDL.Int16,
+    "saves": IDL.Int16,
+    "goalsConceded": IDL.Int16,
+    "events": IDL.Vec(PlayerEventData),
+    "position": PlayerPosition,
+    "points": IDL.Int16
   });
   const Result_14 = IDL.Variant({
-    ok: IDL.Vec(IDL.Tuple(IDL.Nat16, PlayerScoreDTO)),
-    err: Error2
+    "ok": IDL.Vec(IDL.Tuple(IDL.Nat16, PlayerScoreDTO)),
+    "err": Error2
   });
   const Result_12 = IDL.Variant({
-    ok: ManagerPrivateLeagueDTO,
-    err: Error2
+    "ok": ManagerPrivateLeagueDTO,
+    "err": Error2
   });
   const GetLeagueMembersDTO = IDL.Record({
-    offset: IDL.Nat,
-    limit: IDL.Nat,
-    canisterId: CanisterId
+    "offset": IDL.Nat,
+    "limit": IDL.Nat,
+    "canisterId": CanisterId
   });
   const LeagueMemberDTO = IDL.Record({
-    added: IDL.Int,
-    username: IDL.Text,
-    principalId: PrincipalId
+    "added": IDL.Int,
+    "username": IDL.Text,
+    "principalId": PrincipalId
   });
   const Result_11 = IDL.Variant({
-    ok: IDL.Vec(LeagueMemberDTO),
-    err: Error2
+    "ok": IDL.Vec(LeagueMemberDTO),
+    "err": Error2
   });
   const GetPrivateLeagueMonthlyLeaderboard = IDL.Record({
-    month: CalendarMonth,
-    offset: IDL.Nat,
-    seasonId: SeasonId,
-    limit: IDL.Nat,
-    canisterId: CanisterId
+    "month": CalendarMonth,
+    "offset": IDL.Nat,
+    "seasonId": SeasonId,
+    "limit": IDL.Nat,
+    "canisterId": CanisterId
   });
   const GetPrivateLeagueSeasonLeaderboard = IDL.Record({
-    offset: IDL.Nat,
-    seasonId: SeasonId,
-    limit: IDL.Nat,
-    canisterId: CanisterId
+    "offset": IDL.Nat,
+    "seasonId": SeasonId,
+    "limit": IDL.Nat,
+    "canisterId": CanisterId
   });
   const SeasonLeaderboardDTO = IDL.Record({
-    totalEntries: IDL.Nat,
-    seasonId: SeasonId,
-    entries: IDL.Vec(LeaderboardEntry)
+    "totalEntries": IDL.Nat,
+    "seasonId": SeasonId,
+    "entries": IDL.Vec(LeaderboardEntry)
   });
-  const Result_7 = IDL.Variant({ ok: SeasonLeaderboardDTO, err: Error2 });
+  const Result_7 = IDL.Variant({ "ok": SeasonLeaderboardDTO, "err": Error2 });
   const GetPrivateLeagueWeeklyLeaderboard = IDL.Record({
-    offset: IDL.Nat,
-    seasonId: SeasonId,
-    limit: IDL.Nat,
-    gameweek: GameweekNumber,
-    canisterId: CanisterId
+    "offset": IDL.Nat,
+    "seasonId": SeasonId,
+    "limit": IDL.Nat,
+    "gameweek": GameweekNumber,
+    "canisterId": CanisterId
   });
   const WeeklyLeaderboardDTO = IDL.Record({
-    totalEntries: IDL.Nat,
-    seasonId: SeasonId,
-    entries: IDL.Vec(LeaderboardEntry),
-    gameweek: GameweekNumber
+    "totalEntries": IDL.Nat,
+    "seasonId": SeasonId,
+    "entries": IDL.Vec(LeaderboardEntry),
+    "gameweek": GameweekNumber
   });
-  const Result_2 = IDL.Variant({ ok: WeeklyLeaderboardDTO, err: Error2 });
+  const Result_2 = IDL.Variant({ "ok": WeeklyLeaderboardDTO, "err": Error2 });
   const ProfileDTO = IDL.Record({
-    username: IDL.Text,
-    termsAccepted: IDL.Bool,
-    createDate: IDL.Int,
-    favouriteClubId: ClubId,
-    profilePicture: IDL.Opt(IDL.Vec(IDL.Nat8)),
-    profilePictureType: IDL.Text,
-    principalId: IDL.Text
+    "username": IDL.Text,
+    "termsAccepted": IDL.Bool,
+    "createDate": IDL.Int,
+    "favouriteClubId": ClubId,
+    "profilePicture": IDL.Opt(IDL.Vec(IDL.Nat8)),
+    "profilePictureType": IDL.Text,
+    "principalId": IDL.Text
   });
-  const Result_9 = IDL.Variant({ ok: ProfileDTO, err: Error2 });
+  const Result_9 = IDL.Variant({ "ok": ProfileDTO, "err": Error2 });
   const GetSeasonLeaderboardDTO = IDL.Record({
-    offset: IDL.Nat,
-    seasonId: SeasonId,
-    limit: IDL.Nat,
-    searchTerm: IDL.Text
+    "offset": IDL.Nat,
+    "seasonId": SeasonId,
+    "limit": IDL.Nat,
+    "searchTerm": IDL.Text
   });
   const SeasonDTO = IDL.Record({
-    id: SeasonId,
-    name: IDL.Text,
-    year: IDL.Nat16
+    "id": SeasonId,
+    "name": IDL.Text,
+    "year": IDL.Nat16
   });
-  const Result_6 = IDL.Variant({ ok: IDL.Vec(SeasonDTO), err: Error2 });
+  const Result_6 = IDL.Variant({ "ok": IDL.Vec(SeasonDTO), "err": Error2 });
   const SystemStateDTO = IDL.Record({
-    pickTeamSeasonId: SeasonId,
-    pickTeamSeasonName: IDL.Text,
-    calculationSeasonName: IDL.Text,
-    calculationGameweek: GameweekNumber,
-    transferWindowActive: IDL.Bool,
-    pickTeamGameweek: GameweekNumber,
-    calculationMonth: CalendarMonth,
-    calculationSeasonId: SeasonId,
-    onHold: IDL.Bool
+    "pickTeamSeasonId": SeasonId,
+    "pickTeamSeasonName": IDL.Text,
+    "calculationSeasonName": IDL.Text,
+    "calculationGameweek": GameweekNumber,
+    "transferWindowActive": IDL.Bool,
+    "pickTeamGameweek": GameweekNumber,
+    "calculationMonth": CalendarMonth,
+    "calculationSeasonId": SeasonId,
+    "onHold": IDL.Bool
   });
-  const Result_5 = IDL.Variant({ ok: SystemStateDTO, err: Error2 });
+  const Result_5 = IDL.Variant({ "ok": SystemStateDTO, "err": Error2 });
   const TokenInfo = IDL.Record({
-    id: TokenId,
-    fee: IDL.Nat,
-    ticker: IDL.Text,
-    tokenImageURL: IDL.Text,
-    canisterId: CanisterId
+    "id": TokenId,
+    "fee": IDL.Nat,
+    "ticker": IDL.Text,
+    "tokenImageURL": IDL.Text,
+    "canisterId": CanisterId
   });
-  const Result_4 = IDL.Variant({ ok: IDL.Vec(TokenInfo), err: Error2 });
-  const Result_3 = IDL.Variant({ ok: IDL.Nat, err: Error2 });
+  const Result_4 = IDL.Variant({ "ok": IDL.Vec(TokenInfo), "err": Error2 });
+  const Result_3 = IDL.Variant({ "ok": IDL.Nat, "err": Error2 });
   const AccountIdentifier = IDL.Vec(IDL.Nat8);
   const GetWeeklyLeaderboardDTO = IDL.Record({
-    offset: IDL.Nat,
-    seasonId: SeasonId,
-    limit: IDL.Nat,
-    searchTerm: IDL.Text,
-    gameweek: GameweekNumber
+    "offset": IDL.Nat,
+    "seasonId": SeasonId,
+    "limit": IDL.Nat,
+    "searchTerm": IDL.Text,
+    "gameweek": GameweekNumber
   });
   const LeagueInviteDTO = IDL.Record({
-    managerId: PrincipalId,
-    canisterId: CanisterId
+    "managerId": PrincipalId,
+    "canisterId": CanisterId
   });
-  const UsernameFilterDTO = IDL.Record({ username: IDL.Text });
+  const UsernameFilterDTO = IDL.Record({ "username": IDL.Text });
   const PrivateLeagueRewardDTO = IDL.Record({
-    managerId: PrincipalId,
-    amount: IDL.Nat64
+    "managerId": PrincipalId,
+    "amount": IDL.Nat64
   });
   const UpdateTeamSelectionDTO = IDL.Record({
-    playerIds: IDL.Vec(PlayerId),
-    countrymenCountryId: CountryId,
-    username: IDL.Text,
-    goalGetterPlayerId: PlayerId,
-    hatTrickHeroGameweek: GameweekNumber,
-    teamBoostGameweek: GameweekNumber,
-    captainFantasticGameweek: GameweekNumber,
-    countrymenGameweek: GameweekNumber,
-    noEntryPlayerId: PlayerId,
-    safeHandsPlayerId: PlayerId,
-    braceBonusGameweek: GameweekNumber,
-    passMasterGameweek: GameweekNumber,
-    teamBoostClubId: ClubId,
-    goalGetterGameweek: GameweekNumber,
-    captainFantasticPlayerId: PlayerId,
-    transferWindowGameweek: GameweekNumber,
-    noEntryGameweek: GameweekNumber,
-    prospectsGameweek: GameweekNumber,
-    safeHandsGameweek: GameweekNumber,
-    passMasterPlayerId: PlayerId,
-    captainId: PlayerId
+    "playerIds": IDL.Vec(PlayerId),
+    "countrymenCountryId": CountryId,
+    "username": IDL.Text,
+    "goalGetterPlayerId": PlayerId,
+    "hatTrickHeroGameweek": GameweekNumber,
+    "teamBoostGameweek": GameweekNumber,
+    "captainFantasticGameweek": GameweekNumber,
+    "countrymenGameweek": GameweekNumber,
+    "noEntryPlayerId": PlayerId,
+    "safeHandsPlayerId": PlayerId,
+    "braceBonusGameweek": GameweekNumber,
+    "passMasterGameweek": GameweekNumber,
+    "teamBoostClubId": ClubId,
+    "goalGetterGameweek": GameweekNumber,
+    "captainFantasticPlayerId": PlayerId,
+    "transferWindowGameweek": GameweekNumber,
+    "noEntryGameweek": GameweekNumber,
+    "prospectsGameweek": GameweekNumber,
+    "safeHandsGameweek": GameweekNumber,
+    "passMasterPlayerId": PlayerId,
+    "captainId": PlayerId
   });
-  const UpdateFavouriteClubDTO = IDL.Record({ favouriteClubId: ClubId });
+  const UpdateFavouriteClubDTO = IDL.Record({ "favouriteClubId": ClubId });
   const UpdateLeagueBannerDTO = IDL.Record({
-    banner: IDL.Opt(IDL.Vec(IDL.Nat8)),
-    canisterId: CanisterId
+    "banner": IDL.Opt(IDL.Vec(IDL.Nat8)),
+    "canisterId": CanisterId
   });
   const UpdateLeagueNameDTO = IDL.Record({
-    name: IDL.Text,
-    canisterId: CanisterId
+    "name": IDL.Text,
+    "canisterId": CanisterId
   });
   const UpdateLeaguePictureDTO = IDL.Record({
-    picture: IDL.Opt(IDL.Vec(IDL.Nat8)),
-    canisterId: CanisterId
+    "picture": IDL.Opt(IDL.Vec(IDL.Nat8)),
+    "canisterId": CanisterId
   });
   const UpdateProfilePictureDTO = IDL.Record({
-    profilePicture: IDL.Vec(IDL.Nat8),
-    extension: IDL.Text
+    "profilePicture": IDL.Vec(IDL.Nat8),
+    "extension": IDL.Text
   });
-  const UpdateUsernameDTO = IDL.Record({ username: IDL.Text });
-  const RustResult = IDL.Variant({ Ok: IDL.Text, Err: IDL.Text });
+  const UpdateUsernameDTO = IDL.Record({ "username": IDL.Text });
+  const RustResult = IDL.Variant({ "Ok": IDL.Text, "Err": IDL.Text });
   return IDL.Service({
-    acceptInviteAndPayFee: IDL.Func([CanisterId], [Result], []),
-    acceptLeagueInvite: IDL.Func([CanisterId], [Result], []),
-    beginOpenFPL: IDL.Func([], [], []),
-    burnICPToCycles: IDL.Func([IDL.Nat64], [], []),
-    createPrivateLeague: IDL.Func([CreatePrivateLeagueDTO], [Result], []),
-    enterLeague: IDL.Func([CanisterId], [Result], []),
-    enterLeagueWithFee: IDL.Func([CanisterId], [Result], []),
-    executeAddInitialFixtures: IDL.Func([AddInitialFixturesDTO], [], []),
-    executeAddNewToken: IDL.Func([NewTokenDTO], [], []),
-    executeCreateDAONeuron: IDL.Func([], [], []),
-    executeCreatePlayer: IDL.Func([CreatePlayerDTO], [], []),
-    executeLoanPlayer: IDL.Func([LoanPlayerDTO], [], []),
-    executeManageDAONeuron: IDL.Func([Command], [], []),
-    executeMoveFixture: IDL.Func([MoveFixtureDTO], [], []),
-    executePostponeFixture: IDL.Func([PostponeFixtureDTO], [], []),
-    executePromoteFormerClub: IDL.Func([PromoteFormerClubDTO], [], []),
-    executePromoteNewClub: IDL.Func([PromoteNewClubDTO], [], []),
-    executeRecallPlayer: IDL.Func([RecallPlayerDTO], [], []),
-    executeRescheduleFixture: IDL.Func([RescheduleFixtureDTO], [], []),
-    executeRetirePlayer: IDL.Func([RetirePlayerDTO], [], []),
-    executeRevaluePlayerDown: IDL.Func([RevaluePlayerDownDTO], [], []),
-    executeRevaluePlayerUp: IDL.Func([RevaluePlayerUpDTO], [], []),
-    executeSetPlayerInjury: IDL.Func([SetPlayerInjuryDTO], [], []),
-    executeSubmitFixtureData: IDL.Func([SubmitFixtureDataDTO], [], []),
-    executeTransferPlayer: IDL.Func([TransferPlayerDTO], [], []),
-    executeUnretirePlayer: IDL.Func([UnretirePlayerDTO], [], []),
-    executeUpdateClub: IDL.Func([UpdateClubDTO], [], []),
-    executeUpdatePlayer: IDL.Func([UpdatePlayerDTO], [], []),
-    getCanisterCyclesBalance: IDL.Func([], [IDL.Nat], []),
-    getCanisterTimerId: IDL.Func([], [IDL.Opt(IDL.Int)], []),
-    getClubs: IDL.Func([], [Result_20], ["query"]),
-    getCountries: IDL.Func([], [Result_23], ["query"]),
-    getCurrentTeam: IDL.Func([], [Result_22], []),
-    getDataHashes: IDL.Func([], [Result_21], ["query"]),
-    getFixtures: IDL.Func([GetFixturesDTO], [Result_13], ["query"]),
-    getFormerClubs: IDL.Func([], [Result_20], ["query"]),
-    getLoanedPlayers: IDL.Func([ClubFilterDTO], [Result_8], ["query"]),
-    getManager: IDL.Func([GetManagerDTO], [Result_1], []),
-    getManagerPrivateLeagues: IDL.Func([], [Result_19], []),
-    getManagers: IDL.Func([], [Result_18], ["query"]),
-    getMonthlyLeaderboard: IDL.Func(
+    "acceptInviteAndPayFee": IDL.Func([CanisterId], [Result], []),
+    "acceptLeagueInvite": IDL.Func([CanisterId], [Result], []),
+    "beginOpenFPL": IDL.Func([], [], []),
+    "burnICPToCycles": IDL.Func([IDL.Nat64], [], []),
+    "createPrivateLeague": IDL.Func([CreatePrivateLeagueDTO], [Result], []),
+    "enterLeague": IDL.Func([CanisterId], [Result], []),
+    "enterLeagueWithFee": IDL.Func([CanisterId], [Result], []),
+    "executeAddInitialFixtures": IDL.Func([AddInitialFixturesDTO], [], []),
+    "executeAddNewToken": IDL.Func([NewTokenDTO], [], []),
+    "executeCreateDAONeuron": IDL.Func([], [], []),
+    "executeCreatePlayer": IDL.Func([CreatePlayerDTO], [], []),
+    "executeLoanPlayer": IDL.Func([LoanPlayerDTO], [], []),
+    "executeManageDAONeuron": IDL.Func([Command], [], []),
+    "executeMoveFixture": IDL.Func([MoveFixtureDTO], [], []),
+    "executePostponeFixture": IDL.Func([PostponeFixtureDTO], [], []),
+    "executePromoteFormerClub": IDL.Func([PromoteFormerClubDTO], [], []),
+    "executePromoteNewClub": IDL.Func([PromoteNewClubDTO], [], []),
+    "executeRecallPlayer": IDL.Func([RecallPlayerDTO], [], []),
+    "executeRescheduleFixture": IDL.Func([RescheduleFixtureDTO], [], []),
+    "executeRetirePlayer": IDL.Func([RetirePlayerDTO], [], []),
+    "executeRevaluePlayerDown": IDL.Func([RevaluePlayerDownDTO], [], []),
+    "executeRevaluePlayerUp": IDL.Func([RevaluePlayerUpDTO], [], []),
+    "executeSetPlayerInjury": IDL.Func([SetPlayerInjuryDTO], [], []),
+    "executeSubmitFixtureData": IDL.Func([SubmitFixtureDataDTO], [], []),
+    "executeTransferPlayer": IDL.Func([TransferPlayerDTO], [], []),
+    "executeUnretirePlayer": IDL.Func([UnretirePlayerDTO], [], []),
+    "executeUpdateClub": IDL.Func([UpdateClubDTO], [], []),
+    "executeUpdatePlayer": IDL.Func([UpdatePlayerDTO], [], []),
+    "getCanisterCyclesBalance": IDL.Func([], [IDL.Nat], []),
+    "getCanisterTimerId": IDL.Func([], [IDL.Opt(IDL.Int)], []),
+    "getClubs": IDL.Func([], [Result_20], ["query"]),
+    "getCountries": IDL.Func([], [Result_23], ["query"]),
+    "getCurrentTeam": IDL.Func([], [Result_22], []),
+    "getDataHashes": IDL.Func([], [Result_21], ["query"]),
+    "getFixtures": IDL.Func([GetFixturesDTO], [Result_13], ["query"]),
+    "getFormerClubs": IDL.Func([], [Result_20], ["query"]),
+    "getLoanedPlayers": IDL.Func([ClubFilterDTO], [Result_8], ["query"]),
+    "getManager": IDL.Func([GetManagerDTO], [Result_1], []),
+    "getManagerPrivateLeagues": IDL.Func([], [Result_19], []),
+    "getManagers": IDL.Func([], [Result_18], ["query"]),
+    "getMonthlyLeaderboard": IDL.Func(
       [GetMonthlyLeaderboardDTO],
       [Result_10],
       []
     ),
-    getMonthlyLeaderboards: IDL.Func(
+    "getMonthlyLeaderboards": IDL.Func(
       [GetMonthlyLeaderboardsDTO],
       [Result_17],
       []
     ),
-    getNeuronId: IDL.Func([], [IDL.Nat64], []),
-    getPlayerDetails: IDL.Func([GetPlayerDetailsDTO], [Result_16], ["query"]),
-    getPlayerDetailsForGameweek: IDL.Func(
+    "getNeuronId": IDL.Func([], [IDL.Nat64], []),
+    "getNeuronResponse": IDL.Func([], [IDL.Opt(NeuronResponse)], []),
+    "getPlayerDetails": IDL.Func(
+      [GetPlayerDetailsDTO],
+      [Result_16],
+      ["query"]
+    ),
+    "getPlayerDetailsForGameweek": IDL.Func(
       [GameweekFiltersDTO],
       [Result_15],
       ["query"]
     ),
-    getPlayers: IDL.Func([], [Result_8], ["query"]),
-    getPlayersMap: IDL.Func([GameweekFiltersDTO], [Result_14], ["query"]),
-    getPostponedFixtures: IDL.Func([], [Result_13], ["query"]),
-    getPrivateLeague: IDL.Func([CanisterId], [Result_12], []),
-    getPrivateLeagueMembers: IDL.Func([GetLeagueMembersDTO], [Result_11], []),
-    getPrivateLeagueMonthlyLeaderboard: IDL.Func(
+    "getPlayers": IDL.Func([], [Result_8], ["query"]),
+    "getPlayersMap": IDL.Func([GameweekFiltersDTO], [Result_14], ["query"]),
+    "getPostponedFixtures": IDL.Func([], [Result_13], ["query"]),
+    "getPrivateLeague": IDL.Func([CanisterId], [Result_12], []),
+    "getPrivateLeagueMembers": IDL.Func(
+      [GetLeagueMembersDTO],
+      [Result_11],
+      []
+    ),
+    "getPrivateLeagueMonthlyLeaderboard": IDL.Func(
       [GetPrivateLeagueMonthlyLeaderboard],
       [Result_10],
       []
     ),
-    getPrivateLeagueSeasonLeaderboard: IDL.Func(
+    "getPrivateLeagueSeasonLeaderboard": IDL.Func(
       [GetPrivateLeagueSeasonLeaderboard],
       [Result_7],
       []
     ),
-    getPrivateLeagueWeeklyLeaderboard: IDL.Func(
+    "getPrivateLeagueWeeklyLeaderboard": IDL.Func(
       [GetPrivateLeagueWeeklyLeaderboard],
       [Result_2],
       []
     ),
-    getProfile: IDL.Func([], [Result_9], []),
-    getRetiredPlayers: IDL.Func([ClubFilterDTO], [Result_8], ["query"]),
-    getSeasonLeaderboard: IDL.Func([GetSeasonLeaderboardDTO], [Result_7], []),
-    getSeasons: IDL.Func([], [Result_6], ["query"]),
-    getSystemState: IDL.Func([], [Result_5], ["query"]),
-    getTokenList: IDL.Func([], [Result_4], []),
-    getTotalManagers: IDL.Func([], [Result_3], ["query"]),
-    getTreasuryAccountPublic: IDL.Func([], [AccountIdentifier], []),
-    getWeeklyLeaderboard: IDL.Func([GetWeeklyLeaderboardDTO], [Result_2], []),
-    inviteUserToLeague: IDL.Func([LeagueInviteDTO], [Result], []),
-    isUsernameValid: IDL.Func([UsernameFilterDTO], [IDL.Bool], ["query"]),
-    payPrivateLeagueRewards: IDL.Func([PrivateLeagueRewardDTO], [], []),
-    requestCanisterTopup: IDL.Func([], [], []),
-    saveFantasyTeam: IDL.Func([UpdateTeamSelectionDTO], [Result], []),
-    searchUsername: IDL.Func([UsernameFilterDTO], [Result_1], []),
-    setTimer: IDL.Func([IDL.Int, IDL.Text], [], []),
-    updateFavouriteClub: IDL.Func([UpdateFavouriteClubDTO], [Result], []),
-    updateLeagueBanner: IDL.Func([UpdateLeagueBannerDTO], [Result], []),
-    updateLeagueName: IDL.Func([UpdateLeagueNameDTO], [Result], []),
-    updateLeaguePicture: IDL.Func([UpdateLeaguePictureDTO], [Result], []),
-    updateProfilePicture: IDL.Func([UpdateProfilePictureDTO], [Result], []),
-    updateUsername: IDL.Func([UpdateUsernameDTO], [Result], []),
-    validateAddInitialFixtures: IDL.Func(
+    "getProfile": IDL.Func([], [Result_9], []),
+    "getRetiredPlayers": IDL.Func([ClubFilterDTO], [Result_8], ["query"]),
+    "getSeasonLeaderboard": IDL.Func(
+      [GetSeasonLeaderboardDTO],
+      [Result_7],
+      []
+    ),
+    "getSeasons": IDL.Func([], [Result_6], ["query"]),
+    "getSystemState": IDL.Func([], [Result_5], ["query"]),
+    "getTokenList": IDL.Func([], [Result_4], []),
+    "getTotalManagers": IDL.Func([], [Result_3], ["query"]),
+    "getTreasuryAccountPublic": IDL.Func([], [AccountIdentifier], []),
+    "getWeeklyLeaderboard": IDL.Func(
+      [GetWeeklyLeaderboardDTO],
+      [Result_2],
+      []
+    ),
+    "inviteUserToLeague": IDL.Func([LeagueInviteDTO], [Result], []),
+    "isUsernameValid": IDL.Func([UsernameFilterDTO], [IDL.Bool], ["query"]),
+    "payPrivateLeagueRewards": IDL.Func([PrivateLeagueRewardDTO], [], []),
+    "requestCanisterTopup": IDL.Func([], [], []),
+    "saveFantasyTeam": IDL.Func([UpdateTeamSelectionDTO], [Result], []),
+    "searchUsername": IDL.Func([UsernameFilterDTO], [Result_1], []),
+    "setTimer": IDL.Func([IDL.Int, IDL.Text], [], []),
+    "updateFavouriteClub": IDL.Func([UpdateFavouriteClubDTO], [Result], []),
+    "updateLeagueBanner": IDL.Func([UpdateLeagueBannerDTO], [Result], []),
+    "updateLeagueName": IDL.Func([UpdateLeagueNameDTO], [Result], []),
+    "updateLeaguePicture": IDL.Func([UpdateLeaguePictureDTO], [Result], []),
+    "updateProfilePicture": IDL.Func([UpdateProfilePictureDTO], [Result], []),
+    "updateUsername": IDL.Func([UpdateUsernameDTO], [Result], []),
+    "validateAddInitialFixtures": IDL.Func(
       [AddInitialFixturesDTO],
       [RustResult],
       ["query"]
     ),
-    validateAddNewToken: IDL.Func([NewTokenDTO], [RustResult], ["query"]),
-    validateCreateDAONeuron: IDL.Func([], [RustResult], ["query"]),
-    validateCreatePlayer: IDL.Func([CreatePlayerDTO], [RustResult], ["query"]),
-    validateLoanPlayer: IDL.Func([LoanPlayerDTO], [RustResult], ["query"]),
-    validateManageDAONeuron: IDL.Func([], [RustResult], ["query"]),
-    validateMoveFixture: IDL.Func([MoveFixtureDTO], [RustResult], ["query"]),
-    validatePostponeFixture: IDL.Func(
+    "validateAddNewToken": IDL.Func([NewTokenDTO], [RustResult], ["query"]),
+    "validateCreateDAONeuron": IDL.Func([], [RustResult], ["query"]),
+    "validateCreatePlayer": IDL.Func(
+      [CreatePlayerDTO],
+      [RustResult],
+      ["query"]
+    ),
+    "validateLoanPlayer": IDL.Func([LoanPlayerDTO], [RustResult], ["query"]),
+    "validateManageDAONeuron": IDL.Func([], [RustResult], ["query"]),
+    "validateMoveFixture": IDL.Func([MoveFixtureDTO], [RustResult], ["query"]),
+    "validatePostponeFixture": IDL.Func(
       [PostponeFixtureDTO],
       [RustResult],
       ["query"]
     ),
-    validatePromoteFormerClub: IDL.Func(
+    "validatePromoteFormerClub": IDL.Func(
       [PromoteFormerClubDTO],
       [RustResult],
       ["query"]
     ),
-    validatePromoteNewClub: IDL.Func(
+    "validatePromoteNewClub": IDL.Func(
       [PromoteNewClubDTO],
       [RustResult],
       ["query"]
     ),
-    validateRecallPlayer: IDL.Func([RecallPlayerDTO], [RustResult], ["query"]),
-    validateRescheduleFixture: IDL.Func(
+    "validateRecallPlayer": IDL.Func(
+      [RecallPlayerDTO],
+      [RustResult],
+      ["query"]
+    ),
+    "validateRescheduleFixture": IDL.Func(
       [RescheduleFixtureDTO],
       [RustResult],
       ["query"]
     ),
-    validateRetirePlayer: IDL.Func([RetirePlayerDTO], [RustResult], ["query"]),
-    validateRevaluePlayerDown: IDL.Func(
+    "validateRetirePlayer": IDL.Func(
+      [RetirePlayerDTO],
+      [RustResult],
+      ["query"]
+    ),
+    "validateRevaluePlayerDown": IDL.Func(
       [RevaluePlayerDownDTO],
       [RustResult],
       ["query"]
     ),
-    validateRevaluePlayerUp: IDL.Func(
+    "validateRevaluePlayerUp": IDL.Func(
       [RevaluePlayerUpDTO],
       [RustResult],
       ["query"]
     ),
-    validateSetPlayerInjury: IDL.Func(
+    "validateSetPlayerInjury": IDL.Func(
       [SetPlayerInjuryDTO],
       [RustResult],
       ["query"]
     ),
-    validateSubmitFixtureData: IDL.Func(
+    "validateSubmitFixtureData": IDL.Func(
       [SubmitFixtureDataDTO],
       [RustResult],
       ["query"]
     ),
-    validateTransferPlayer: IDL.Func(
+    "validateTransferPlayer": IDL.Func(
       [TransferPlayerDTO],
       [RustResult],
       ["query"]
     ),
-    validateUnretirePlayer: IDL.Func(
+    "validateUnretirePlayer": IDL.Func(
       [UnretirePlayerDTO],
       [RustResult],
       ["query"]
     ),
-    validateUpdateClub: IDL.Func([UpdateClubDTO], [RustResult], ["query"]),
-    validateUpdatePlayer: IDL.Func([UpdatePlayerDTO], [RustResult], ["query"])
+    "validateUpdateClub": IDL.Func([UpdateClubDTO], [RustResult], ["query"]),
+    "validateUpdatePlayer": IDL.Func(
+      [UpdatePlayerDTO],
+      [RustResult],
+      ["query"]
+    )
   });
 };
-var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
+var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENFPL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local" };
 const canisterId = define_process_env_default$c.CANISTER_ID_OPENFPL_BACKEND;
 const createActor = (canisterId2, options2 = {}) => {
   const agent = options2.agent || new HttpAgent({ ...options2.agentOptions });
@@ -4831,7 +4899,7 @@ function convertFixtureStatus(fixtureStatus) {
 function isError(response) {
   return response && response.err !== void 0;
 }
-var define_process_env_default$b = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
+var define_process_env_default$b = { OPENFPL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENFPL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local" };
 function createSystemStore() {
   const { subscribe: subscribe2, set } = writable(null);
   let actor = ActorFactory.createActor(
@@ -4901,7 +4969,7 @@ function createSystemStore() {
   };
 }
 const systemStore = createSystemStore();
-var define_process_env_default$a = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
+var define_process_env_default$a = { OPENFPL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENFPL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local" };
 function createFixtureStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let actor = ActorFactory.createActor(
@@ -4980,7 +5048,7 @@ function createFixtureStore() {
   };
 }
 const fixtureStore = createFixtureStore();
-var define_process_env_default$9 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
+var define_process_env_default$9 = { OPENFPL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENFPL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local" };
 function createTeamStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let actor = ActorFactory.createActor(
@@ -5509,7 +5577,7 @@ const toastsError = ({
     level: "error"
   });
 };
-var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
+var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENFPL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local" };
 function createManagerStore() {
   const { subscribe: subscribe2, set } = writable(null);
   let systemState;
@@ -5640,7 +5708,7 @@ function createManagerStore() {
       throw error;
     }
   }
-  async function saveFantasyTeam(userFantasyTeam, activeGameweek, bonusUsedInSession, transferWindowPlayedInSession) {
+  async function saveFantasyTeam(userFantasyTeam, activeGameweek, bonusUsedInSession, transferWindowPlayedInSession, username) {
     try {
       let bonusPlayed = 0;
       let bonusPlayerId = 0;
@@ -5676,8 +5744,10 @@ function createManagerStore() {
         prospectsGameweek: bonusPlayed == 8 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
         braceBonusGameweek: bonusPlayed == 9 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
         hatTrickHeroGameweek: bonusPlayed == 10 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
-        transferWindowGameweek: transferWindowPlayedInSession ? activeGameweek : userFantasyTeam.transferWindowGameweek
+        transferWindowGameweek: transferWindowPlayedInSession ? activeGameweek : userFantasyTeam.transferWindowGameweek,
+        username
       };
+      console.log(dto);
       let result = await identityActor.saveFantasyTeam(dto);
       if (isError(result)) {
         console.error("Error saving fantasy team");
@@ -5780,7 +5850,7 @@ function createManagerStore() {
   };
 }
 createManagerStore();
-var define_process_env_default$7 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
+var define_process_env_default$7 = { OPENFPL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENFPL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local" };
 function createCountriesStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let actor = ActorFactory.createActor(
@@ -5827,7 +5897,7 @@ function createCountriesStore() {
   };
 }
 const countriesStore = createCountriesStore();
-var define_process_env_default$6 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
+var define_process_env_default$6 = { OPENFPL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENFPL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local" };
 function createWeeklyLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage = 25;
@@ -5939,7 +6009,7 @@ function createWeeklyLeaderboardStore() {
   };
 }
 createWeeklyLeaderboardStore();
-var define_process_env_default$5 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
+var define_process_env_default$5 = { OPENFPL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENFPL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local" };
 function createPlayerStore() {
   const { subscribe: subscribe2, set } = writable([]);
   systemStore.subscribe((value) => {
@@ -6014,7 +6084,7 @@ function createPlayerStore() {
   };
 }
 const playerStore = createPlayerStore();
-var define_process_env_default$4 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
+var define_process_env_default$4 = { OPENFPL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENFPL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local" };
 function createPlayerEventsStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let systemState;
@@ -6376,7 +6446,7 @@ function createPlayerEventsStore() {
   };
 }
 createPlayerEventsStore();
-var define_process_env_default$3 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
+var define_process_env_default$3 = { OPENFPL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENFPL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local" };
 function createUserStore() {
   const { subscribe: subscribe2, set } = writable(null);
   async function sync() {
@@ -6659,7 +6729,7 @@ const BadgeIcon = create_ssr_component(($$result, $$props, $$bindings, slots) =>
     $$bindings.thirdColour(thirdColour);
   return `<svg xmlns="http://www.w3.org/2000/svg"${add_attribute("class", className, 0)} fill="currentColor" viewBox="0 0 814 814"><path d="M407 33.9165C295.984 33.9165 135.667 118.708 135.667 118.708V508.75C135.667 508.75 141.044 561.82 152.625 593.541C194.871 709.259 407 780.083 407 780.083C407 780.083 619.129 709.259 661.375 593.541C672.956 561.82 678.333 508.75 678.333 508.75V118.708C678.333 118.708 518.016 33.9165 407 33.9165Z"${add_attribute("fill", primaryColour, 0)}></path><path d="M712.25 101.75V493.013C712.25 649.097 603.581 689.831 407 814C210.419 689.831 101.75 649.063 101.75 493.013V101.75C167.718 45.2448 282.729 0 407 0C531.271 0 646.282 45.2448 712.25 101.75ZM644.417 135.361C585.775 96.052 496.506 67.8333 407.237 67.8333C317.223 67.8333 228.124 96.1198 169.583 135.361V492.979C169.583 595.712 225.817 622.235 407 734.025C587.979 622.337 644.417 595.814 644.417 492.979V135.361Z"${add_attribute("fill", thirdColour, 0)}></path><path d="M407.237 135.667C464.862 135.667 527.811 150.42 576.583 174.467V493.012C576.583 547.347 562.542 558.539 407 654.422L407.237 135.667Z"${add_attribute("fill", secondaryColour, 0)}></path></svg>`;
 });
-var define_process_env_default$2 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
+var define_process_env_default$2 = { OPENFPL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENFPL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local" };
 function createMonthlyLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage = 25;
@@ -6763,7 +6833,7 @@ function createMonthlyLeaderboardStore() {
   };
 }
 createMonthlyLeaderboardStore();
-var define_process_env_default$1 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
+var define_process_env_default$1 = { OPENFPL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENFPL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local" };
 function createSeasonLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage = 25;
@@ -6880,7 +6950,7 @@ const Page$e = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-var define_process_env_default = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
+var define_process_env_default = { OPENFPL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENFPL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local" };
 function createGovernanceStore() {
   async function revaluePlayerUp(playerId) {
     try {

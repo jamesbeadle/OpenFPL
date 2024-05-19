@@ -12,7 +12,7 @@ function createTeamStore() {
 
   let actor: any = ActorFactory.createActor(
     idlFactory,
-    process.env.OPENFPL_BACKEND_CANISTER_ID
+    process.env.OPENFPL_BACKEND_CANISTER_ID,
   );
 
   async function sync() {
@@ -42,7 +42,7 @@ function createTeamStore() {
 
       localStorage.setItem(
         category,
-        JSON.stringify(updatedTeamsData.ok, replacer)
+        JSON.stringify(updatedTeamsData.ok, replacer),
       );
       localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
       set(updatedTeamsData.ok);

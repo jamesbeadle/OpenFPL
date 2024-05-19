@@ -21,7 +21,7 @@ function createSeasonLeaderboardStore() {
 
   let actor: any = ActorFactory.createActor(
     idlFactory,
-    process.env.OPENFPL_BACKEND_CANISTER_ID
+    process.env.OPENFPL_BACKEND_CANISTER_ID,
   );
 
   async function sync() {
@@ -44,7 +44,7 @@ function createSeasonLeaderboardStore() {
 
     if (categoryHash?.hash != localHash) {
       let result = await actor.getSeasonLeaderboard(
-        systemState?.calculationSeasonId
+        systemState?.calculationSeasonId,
       );
 
       if (isError(result)) {
@@ -56,7 +56,7 @@ function createSeasonLeaderboardStore() {
 
       localStorage.setItem(
         category,
-        JSON.stringify(updatedLeaderboardData, replacer)
+        JSON.stringify(updatedLeaderboardData, replacer),
       );
       localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
       set(updatedLeaderboardData);
@@ -70,7 +70,7 @@ function createSeasonLeaderboardStore() {
       try {
         cachedSeasonLeaderboard = JSON.parse(
           cachedLeaderboardData ||
-            "{entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n }"
+            "{entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n }",
         );
       } catch (e) {
         cachedSeasonLeaderboard = {
@@ -86,7 +86,7 @@ function createSeasonLeaderboardStore() {
   async function getSeasonLeaderboard(
     seasonId: number,
     currentPage: number,
-    searchTerm: string
+    searchTerm: string,
   ): Promise<SeasonLeaderboardDTO> {
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
@@ -97,7 +97,7 @@ function createSeasonLeaderboardStore() {
       if (cachedData) {
         let cachedSeasonLeaderboard: SeasonLeaderboardDTO;
         cachedSeasonLeaderboard = JSON.parse(
-          cachedData || "{entries: [], seasonId: 0, totalEntries: 0n }"
+          cachedData || "{entries: [], seasonId: 0, totalEntries: 0n }",
         );
 
         if (cachedSeasonLeaderboard) {
@@ -105,7 +105,7 @@ function createSeasonLeaderboardStore() {
             ...cachedSeasonLeaderboard,
             entries: cachedSeasonLeaderboard.entries.slice(
               offset,
-              offset + limit
+              offset + limit,
             ),
           };
         }
@@ -116,7 +116,7 @@ function createSeasonLeaderboardStore() {
       seasonId,
       limit,
       offset,
-      searchTerm
+      searchTerm,
     );
 
     if (isError(result)) {

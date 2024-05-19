@@ -25,6 +25,17 @@ MAJOR=${VERSION_PARTS[0]}
 MINOR=${VERSION_PARTS[1]}
 BUILD=${VERSION_PARTS[2]}
 
+
+export PROPOSER_NEURON_ID=f5da8b3e3653bf452f4c1f8a3267d15a5bb2b64c3c4a85217df0341eab69a947
+export NETWORK=local
+export IDENTITY=default
+export IC_URL=http://localhost:8080
+
+export WASM_FOLDER="../wasms"
+
+OWNER_IDENTITY=$(dfx identity whoami)
+export PEM_FILE="$(readlink -f "$HOME/.config/dfx/identity/${OWNER_IDENTITY}/identity.pem")"
+
 # Build the canister-upgrade-arg
 UPGRADE_ARG="(record { wasm_version = record { major=$MAJOR:nat32; minor=$MINOR:nat32; patch=$BUILD:nat32 } })"
 echo $WASM_PATH

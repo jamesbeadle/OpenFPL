@@ -18,13 +18,13 @@ const cleanTypes = async ({ dest = `./src/declarations` }) => {
           .replace(/export const \w* = createActor\(canisterId\);/g, "")
           .replace(
             /export const canisterId = process\.env\.\w*_CANISTER_ID;/g,
-            ""
+            "",
           );
 
         await writeFile(indexPath, clean, "utf-8");
 
         resolve();
-      })
+      }),
   );
 
   await Promise.all(promises);

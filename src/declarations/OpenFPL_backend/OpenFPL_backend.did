@@ -119,6 +119,7 @@ type StakeMaturityResponse =
    maturity_e8s: nat64;
    stake_maturity_e8s: nat64;
  };
+type SpawnResponse = record {created_neuron_id: opt NeuronId;};
 type Spawn = 
  record {
    new_controller: opt principal;
@@ -474,6 +475,11 @@ type NewTokenDTO =
    ticker: text;
    tokenImageURL: text;
  };
+type NeuronResponse = 
+ variant {
+   err: Error__1;
+   ok: ManageNeuronResponse;
+ };
 type NeuronId = record {id: nat64;};
 type MoveFixtureDTO = 
  record {
@@ -521,6 +527,7 @@ type ManagerDTO =
    weeklyPosition: int;
    weeklyPositionText: text;
  };
+type ManageNeuronResponse = record {command: opt CommandResponse;};
 type LoanPlayerDTO = 
  record {
    loanClubId: ClubId;
@@ -554,6 +561,11 @@ type InjuryHistory =
  };
 type IncreaseDissolveDelay = record {
                                additional_dissolve_delay_seconds: nat32;};
+type GovernanceError = 
+ record {
+   error_message: text;
+   error_type: int32;
+ };
 type GetWeeklyLeaderboardDTO = 
  record {
    gameweek: GameweekNumber;
@@ -688,6 +700,17 @@ type FantasyTeamSnapshot =
    transfersAvailable: nat8;
    username: text;
  };
+type Error__1 = 
+ variant {
+   expired;
+   fatal: text;
+   fee_not_defined: text;
+   invalid: text;
+   missing: text;
+   other: text;
+   rejected: text;
+   trapped: text;
+ };
 type Error = 
  variant {
    AlreadyExists;
@@ -707,6 +730,7 @@ type EntryRequirement =
    PaidEntry;
    PaidInviteEntry;
  };
+type DisburseResponse = record {transfer_block_height: nat64;};
 type Disburse = 
  record {
    amount: opt Amount;
@@ -749,6 +773,16 @@ type CountryDTO =
    name: text;
  };
 type Configure = record {operation: opt Operation;};
+type CommandResponse = 
+ variant {
+   ClaimOrRefresh: ClaimOrRefreshResponse;
+   Configure;
+   Disburse: DisburseResponse;
+   Error: GovernanceError;
+   Follow;
+   Spawn: SpawnResponse;
+   StakeMaturity: StakeMaturityResponse;
+ };
 type Command = 
  variant {
    ClaimOrRefresh: ClaimOrRefresh;
@@ -771,6 +805,7 @@ type ClubDTO =
    shirtType: ShirtType;
    thirdColourHex: text;
  };
+type ClaimOrRefreshResponse = record {refreshed_neuron_id: opt NeuronId;};
 type ClaimOrRefreshNeuronFromAccount = 
  record {
    controller: opt principal;
@@ -840,6 +875,7 @@ service : {
   getMonthlyLeaderboard: (GetMonthlyLeaderboardDTO) -> (Result_10);
   getMonthlyLeaderboards: (GetMonthlyLeaderboardsDTO) -> (Result_17);
   getNeuronId: () -> (nat64);
+  getNeuronResponse: () -> (opt NeuronResponse);
   getPlayerDetails: (GetPlayerDetailsDTO) -> (Result_16) query;
   getPlayerDetailsForGameweek: (GameweekFiltersDTO) -> (Result_15) query;
   getPlayers: () -> (Result_8) query;
