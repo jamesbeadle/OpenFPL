@@ -379,14 +379,14 @@ actor Self {
     return #Ok("Proposal Valid");
   };
 
-  public shared ({ caller }) func executeManageDAONeuron(command : NeuronTypes.ManageNeuron) : async () {
+  public shared ({ caller }) func executeManageDAONeuron(command : NeuronTypes.Command) : async () {
     assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     if (not neuronCreated) {
       return;
     };
 
     let neuron_controller = actor (Environment.NEURON_CONTROLLER_CANISTER_ID) : actor {
-      manage_neuron : NeuronTypes.ManageNeuron -> async ?NeuronTypes.Response;
+      manage_neuron : NeuronTypes.Command -> async ?NeuronTypes.Response;
     };
 
     let _ = await neuron_controller.manage_neuron(command);
