@@ -39,6 +39,7 @@ actor Self {
   //Manager calls
 
   private stable var neuronResponse: ?NeuronTypes.NeuronResponse = null;
+  private stable var neuronCommand: ?NeuronTypes.Command = null;
 
   public shared ({ caller }) func getProfile() : async Result.Result<DTOs.ProfileDTO, T.Error> {
     assert not Principal.isAnonymous(caller);
@@ -366,15 +367,13 @@ actor Self {
     return await seasonManager.executeUpdateClub(updateClubDTO);
   };
 
-  public shared query ({ caller }) func validateManageDAONeuron(command : NeuronTypes.ManageNeuron) : async T.RustResult {
+  public shared query ({ caller }) func validateManageDAONeuron(command : NeuronTypes.Command) : async T.RustResult {
     assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     if (not neuronCreated) {
       return #Err("Neuron not created");
     };
 
-    if(command.id == null){
-      return #Err("Neuron Id missing");
-    };
+    neuronCommand := ?command;
 
     return #Ok("Proposal Valid");
   };
@@ -1135,6 +1134,10 @@ actor Self {
 
   public shared func getNeuronResponse() : async ?NeuronTypes.NeuronResponse {
     return neuronResponse;
+  };
+
+  public shared func getNeuronCommand() : async ?NeuronTypes.Command {
+    return neuronCommand;
   };
 
   //TODO: Can be removed when the game has successfully been initialsed
