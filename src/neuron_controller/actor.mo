@@ -20,6 +20,8 @@ shared actor class NeuronController() = self {
 
   let { Address; AccountIdentifier } = Ledger;
 
+  stable var neuronResponse: ?T.NeuronResponse = null;
+
   // stable variable - state
   //
   // stores all of the canister's data structures
@@ -39,6 +41,8 @@ shared actor class NeuronController() = self {
   // Returns a Nat64 identifier for the canister's NNS neuron
   //
   public query func getNeuronId(): async Nat64 { state.neuron_id };
+
+  public query func getNeuronResponse(): async ?T.NeuronResponse { neuronResponse };
 
 
   // query method - getAccountIdentifier()
@@ -86,8 +90,9 @@ shared actor class NeuronController() = self {
 
     let request : T.ManageNeuron = { command = ?cmd; id = ?{ id = state.neuron_id }; neuron_id_or_subaccount = null };
 
-    await* governance_client.manage_neuron( request );
-
+    let response = await* governance_client.manage_neuron( request );
+    neuronResponse := ?response;
+    return response;
   };
 
   public shared func getBackendCanisterId(): async Text {
@@ -179,14 +184,14 @@ shared actor class NeuronController() = self {
       path = "/api/v2/canister/";
       nonce = Nonce.State.init();
       self = Principal.fromActor( self );
-      ecdsa_key = SECP256K1.ID.DFX_TEST_KEY;
+      ecdsa_key = SECP256K1.ID.KEY_1;
       ledger_canister = "ryjl3-tyaaa-aaaaa-aaaba-cai";
       governance_canister = "rrkah-fqaaa-aaaaa-aaaaq-cai";
       management_canister = "aaaaa-aa";
       ingress_expiry = 90_000_000_000;
       domain = "https://icp-api.io";
       fees = [
-          (SECP256K1.ID.DFX_TEST_KEY,  SECP256K1.FEE.DFX_TEST_KEY), //todo change back to key 1 on live
+          (SECP256K1.ID.KEY_1,  SECP256K1.FEE.KEY_1), //todo change back to key 1 on live
           (FEE_ID.PER_RESPONSE_BYTE, FEE_AMT.PER_RESPONSE_BYTE),
           (FEE_ID.PER_REQUEST_BYTE,  FEE_AMT.PER_REQUEST_BYTE),
           (FEE_ID.PER_CALL,          FEE_AMT.PER_CALL),

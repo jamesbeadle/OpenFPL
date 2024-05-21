@@ -2,8 +2,8 @@ import type { Principal } from '@dfinity/principal';
 import type { ActorMethod } from '@dfinity/agent';
 import type { IDL } from '@dfinity/candid';
 
-export type AccountIdentifier = Uint8Array | number[];
-export interface AccountIdentifier__1 { 'hash' : Uint8Array | number[] }
+export interface AccountIdentifier { 'hash' : Uint8Array | number[] }
+export type AccountIdentifier__1 = Uint8Array | number[];
 export interface AddInitialFixturesDTO {
   'seasonId' : SeasonId,
   'seasonFixtures' : Array<FixtureDTO>,
@@ -81,7 +81,7 @@ export interface CreatePrivateLeagueDTO {
 }
 export interface DataCacheDTO { 'hash' : string, 'category' : string }
 export interface Disburse {
-  'to_account' : [] | [AccountIdentifier__1],
+  'to_account' : [] | [AccountIdentifier],
   'amount' : [] | [Amount],
 }
 export interface DisburseResponse { 'transfer_block_height' : bigint }
@@ -690,6 +690,7 @@ export interface _SERVICE {
     [GetMonthlyLeaderboardsDTO],
     Result_17
   >,
+  'getNeuronCommand' : ActorMethod<[], [] | [Command]>,
   'getNeuronId' : ActorMethod<[], bigint>,
   'getNeuronResponse' : ActorMethod<[], [] | [NeuronResponse]>,
   'getPlayerDetails' : ActorMethod<[GetPlayerDetailsDTO], Result_16>,
@@ -718,7 +719,7 @@ export interface _SERVICE {
   'getSystemState' : ActorMethod<[], Result_5>,
   'getTokenList' : ActorMethod<[], Result_4>,
   'getTotalManagers' : ActorMethod<[], Result_3>,
-  'getTreasuryAccountPublic' : ActorMethod<[], AccountIdentifier>,
+  'getTreasuryAccountPublic' : ActorMethod<[], AccountIdentifier__1>,
   'getWeeklyLeaderboard' : ActorMethod<[GetWeeklyLeaderboardDTO], Result_2>,
   'inviteUserToLeague' : ActorMethod<[LeagueInviteDTO], Result>,
   'isUsernameValid' : ActorMethod<[UsernameFilterDTO], boolean>,
@@ -741,7 +742,7 @@ export interface _SERVICE {
   'validateCreateDAONeuron' : ActorMethod<[], RustResult>,
   'validateCreatePlayer' : ActorMethod<[CreatePlayerDTO], RustResult>,
   'validateLoanPlayer' : ActorMethod<[LoanPlayerDTO], RustResult>,
-  'validateManageDAONeuron' : ActorMethod<[], RustResult>,
+  'validateManageDAONeuron' : ActorMethod<[Command], RustResult>,
   'validateMoveFixture' : ActorMethod<[MoveFixtureDTO], RustResult>,
   'validatePostponeFixture' : ActorMethod<[PostponeFixtureDTO], RustResult>,
   'validatePromoteFormerClub' : ActorMethod<[PromoteFormerClubDTO], RustResult>,

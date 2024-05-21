@@ -151,10 +151,10 @@ export const idlFactory = ({ IDL }) => {
     'maturity_e8s' : IDL.Nat64,
     'stake_maturity_e8s' : IDL.Nat64,
   });
-  const AccountIdentifier__1 = IDL.Record({ 'hash' : IDL.Vec(IDL.Nat8) });
+  const AccountIdentifier = IDL.Record({ 'hash' : IDL.Vec(IDL.Nat8) });
   const Amount = IDL.Record({ 'e8s' : IDL.Nat64 });
   const Disburse = IDL.Record({
-    'to_account' : IDL.Opt(AccountIdentifier__1),
+    'to_account' : IDL.Opt(AccountIdentifier),
     'amount' : IDL.Opt(Amount),
   });
   const Command = IDL.Variant({
@@ -615,7 +615,7 @@ export const idlFactory = ({ IDL }) => {
   });
   const Result_4 = IDL.Variant({ 'ok' : IDL.Vec(TokenInfo), 'err' : Error });
   const Result_3 = IDL.Variant({ 'ok' : IDL.Nat, 'err' : Error });
-  const AccountIdentifier = IDL.Vec(IDL.Nat8);
+  const AccountIdentifier__1 = IDL.Vec(IDL.Nat8);
   const GetWeeklyLeaderboardDTO = IDL.Record({
     'offset' : IDL.Nat,
     'seasonId' : SeasonId,
@@ -725,6 +725,7 @@ export const idlFactory = ({ IDL }) => {
         [Result_17],
         [],
       ),
+    'getNeuronCommand' : IDL.Func([], [IDL.Opt(Command)], []),
     'getNeuronId' : IDL.Func([], [IDL.Nat64], []),
     'getNeuronResponse' : IDL.Func([], [IDL.Opt(NeuronResponse)], []),
     'getPlayerDetails' : IDL.Func(
@@ -772,7 +773,7 @@ export const idlFactory = ({ IDL }) => {
     'getSystemState' : IDL.Func([], [Result_5], ['query']),
     'getTokenList' : IDL.Func([], [Result_4], []),
     'getTotalManagers' : IDL.Func([], [Result_3], ['query']),
-    'getTreasuryAccountPublic' : IDL.Func([], [AccountIdentifier], []),
+    'getTreasuryAccountPublic' : IDL.Func([], [AccountIdentifier__1], []),
     'getWeeklyLeaderboard' : IDL.Func(
         [GetWeeklyLeaderboardDTO],
         [Result_2],
@@ -804,7 +805,7 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'validateLoanPlayer' : IDL.Func([LoanPlayerDTO], [RustResult], ['query']),
-    'validateManageDAONeuron' : IDL.Func([], [RustResult], ['query']),
+    'validateManageDAONeuron' : IDL.Func([Command], [RustResult], ['query']),
     'validateMoveFixture' : IDL.Func([MoveFixtureDTO], [RustResult], ['query']),
     'validatePostponeFixture' : IDL.Func(
         [PostponeFixtureDTO],

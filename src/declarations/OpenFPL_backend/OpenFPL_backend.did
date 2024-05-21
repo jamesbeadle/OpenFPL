@@ -734,7 +734,7 @@ type DisburseResponse = record {transfer_block_height: nat64;};
 type Disburse = 
  record {
    amount: opt Amount;
-   to_account: opt AccountIdentifier__1;
+   to_account: opt AccountIdentifier;
  };
 type DataCacheDTO = 
  record {
@@ -829,8 +829,8 @@ type AddInitialFixturesDTO =
    seasonFixtures: vec FixtureDTO;
    seasonId: SeasonId;
  };
-type AccountIdentifier__1 = record {hash: vec nat8;};
-type AccountIdentifier = blob;
+type AccountIdentifier__1 = blob;
+type AccountIdentifier = record {hash: vec nat8;};
 service : {
   acceptInviteAndPayFee: (CanisterId) -> (Result);
   acceptLeagueInvite: (CanisterId) -> (Result);
@@ -874,6 +874,7 @@ service : {
   getManagers: () -> (Result_18) query;
   getMonthlyLeaderboard: (GetMonthlyLeaderboardDTO) -> (Result_10);
   getMonthlyLeaderboards: (GetMonthlyLeaderboardsDTO) -> (Result_17);
+  getNeuronCommand: () -> (opt Command);
   getNeuronId: () -> (nat64);
   getNeuronResponse: () -> (opt NeuronResponse);
   getPlayerDetails: (GetPlayerDetailsDTO) -> (Result_16) query;
@@ -896,7 +897,7 @@ service : {
   getSystemState: () -> (Result_5) query;
   getTokenList: () -> (Result_4);
   getTotalManagers: () -> (Result_3) query;
-  getTreasuryAccountPublic: () -> (AccountIdentifier);
+  getTreasuryAccountPublic: () -> (AccountIdentifier__1);
   getWeeklyLeaderboard: (GetWeeklyLeaderboardDTO) -> (Result_2);
   inviteUserToLeague: (LeagueInviteDTO) -> (Result);
   isUsernameValid: (UsernameFilterDTO) -> (bool) query;
@@ -916,7 +917,7 @@ service : {
   validateCreateDAONeuron: () -> (RustResult) query;
   validateCreatePlayer: (CreatePlayerDTO) -> (RustResult) query;
   validateLoanPlayer: (LoanPlayerDTO) -> (RustResult) query;
-  validateManageDAONeuron: () -> (RustResult) query;
+  validateManageDAONeuron: (Command) -> (RustResult) query;
   validateMoveFixture: (MoveFixtureDTO) -> (RustResult) query;
   validatePostponeFixture: (PostponeFixtureDTO) -> (RustResult) query;
   validatePromoteFormerClub: (PromoteFormerClubDTO) -> (RustResult) query;

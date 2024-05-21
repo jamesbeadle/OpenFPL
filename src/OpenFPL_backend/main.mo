@@ -373,6 +373,7 @@ actor Self {
       return #Err("Neuron not created");
     };
 
+    //Just to remove unused warning but ensure signatures match, as this is a query function it does nothing
     neuronCommand := ?command;
 
     return #Ok("Proposal Valid");
@@ -391,7 +392,6 @@ actor Self {
     let _ = await neuron_controller.manage_neuron(command);
 
     neuronCreated := true;
-
   };
 
   public shared query ({ caller }) func validateAddNewToken(newTokenDTO : DTOs.NewTokenDTO) : async T.RustResult {

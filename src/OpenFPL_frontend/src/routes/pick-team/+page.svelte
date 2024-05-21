@@ -20,7 +20,6 @@
     allFormations,
   } from "../../lib/utils/Helpers";
   import type { PickTeamDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import { goto } from "$app/navigation";
 
   let activeSeason: string;
   let activeGameweek: number;
@@ -31,7 +30,33 @@
   let newTeam = true;
   let isSaveButtonActive = false;
 
-  const fantasyTeam = writable<PickTeamDTO | null>(null);
+  const fantasyTeam = writable<PickTeamDTO>({
+    playerIds: [],
+    countrymenCountryId: 0,
+    username : '',
+    goalGetterPlayerId : 0,
+    hatTrickHeroGameweek : 0,
+    transfersAvailable : 0,
+    teamBoostGameweek : 0,
+    captainFantasticGameweek : 0,
+    countrymenGameweek : 0,
+    bankQuarterMillions : 0,
+    noEntryPlayerId : 0,
+    safeHandsPlayerId : 0,
+    braceBonusGameweek : 0,
+    passMasterGameweek : 0,
+    teamBoostClubId : 0,
+    goalGetterGameweek : 0,
+    captainFantasticPlayerId : 0,
+    transferWindowGameweek : 0,
+    noEntryGameweek : 0,
+    prospectsGameweek : 0,
+    safeHandsGameweek : 0,
+    principalId : '',
+    passMasterPlayerId : 0,
+    captainId : 0,
+    monthlyBonusesAvailable : 0
+  });
   const transfersAvailable = writable(newTeam ? Infinity : 0);
   const bankBalance = writable(1200);
   const pitchView = writable(true);
@@ -73,7 +98,6 @@
         await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
         await teamStore.sync();
         await playerStore.sync();
-
         if ($playerStore.length == 0) {
           return;
         }
@@ -307,7 +331,6 @@
     selectedPosition = -1;
     selectedColumn = -1;
     fantasyTeam.update((currentTeam) => {
-      if (!currentTeam) return null;
       return { ...currentTeam, captainId: $newCaptainId };
     });
     showCaptainModal = false;

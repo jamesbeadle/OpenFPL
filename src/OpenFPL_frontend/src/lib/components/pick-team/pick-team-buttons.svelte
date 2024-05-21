@@ -15,7 +15,7 @@
   import SetTeamName from "./set-team-name.svelte";
   import { writable, type Writable } from "svelte/store";
 
-  export let fantasyTeam: Writable<PickTeamDTO | null>;
+  export let fantasyTeam: Writable<PickTeamDTO>;
   export let transfersAvailable: Writable<number>;
   export let bankBalance: Writable<number>;
   export let pitchView: Writable<boolean>;
@@ -345,6 +345,11 @@
     if ($newUsername == "") {
       return;
     }
+    let updatedFantasyTeam: PickTeamDTO = {
+      ...$fantasyTeam,
+      username: $newUsername,
+    };
+    fantasyTeam.set(updatedFantasyTeam);
     showUsernameModal = false;
     saveFantasyTeam();
   }
