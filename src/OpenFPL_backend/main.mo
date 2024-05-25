@@ -1142,16 +1142,16 @@ actor Self {
 
   //TODO: Can be removed when the game has successfully been initialsed
   public shared func beginOpenFPL () : async () {
+    /*
     if(openFPLInitialised){
       return;
     };
+    */
 
     await seasonManager.init();
 
     openFPLInitialised := true;
   };
-
-  
 
   public shared query func getManagers() : async Result.Result<[(T.PrincipalId, T.CanisterId)], T.Error> {
     return #ok(stable_manager_canister_ids);

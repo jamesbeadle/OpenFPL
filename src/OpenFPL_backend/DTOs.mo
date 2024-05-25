@@ -133,19 +133,19 @@ module DTOs {
 
   public type UsernameFilterDTO = {
     username : Text
-  };
+    };  
 
-  public type SystemStateDTO = {
-    calculationGameweek : T.GameweekNumber;
-    calculationMonth : T.CalendarMonth;
-    calculationSeasonId : T.SeasonId;
-    pickTeamGameweek : T.GameweekNumber;
-    pickTeamSeasonId : T.SeasonId;
-    pickTeamSeasonName : Text;
-    calculationSeasonName : Text;
-    transferWindowActive : Bool;
-    onHold : Bool;
-  };
+    public type SystemStateDTO = {
+      calculationGameweek : T.GameweekNumber;
+      calculationMonth : T.CalendarMonth;
+      calculationSeasonId : T.SeasonId;
+      pickTeamGameweek : T.GameweekNumber;
+      pickTeamSeasonId : T.SeasonId;
+      pickTeamSeasonName : Text;
+      calculationSeasonName : Text;
+      transferWindowActive : Bool;
+      onHold : Bool;
+    };
 
   public type RevaluePlayerUpDTO = {
     playerId : T.PlayerId;

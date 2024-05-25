@@ -20,6 +20,7 @@ import ManagerCanister "../canister_definitions/manager-canister";
 import Rewards "./rewards-composite";
 import Utilities "../utils/utilities";
 import TrieMap "mo:base/TrieMap";
+import Debug "mo:base/Debug";
 import Environment "../utils/Environment";
 
 module {
@@ -305,25 +306,36 @@ module {
         return #err(#InvalidTeamError);
       };
 
+      Debug.print("Manager save debug");
+
       let managerCanisterId = managerCanisterIds.get(managerPrincipalId);
+
+      Debug.print(debug_show managerCanisterId);
       switch(managerCanisterId){
         case (null){
+          Debug.print("No Manager Canister ID so create");
           return await createNewManager(managerPrincipalId, "", 0, null, "", ?updatedFantasyTeamDTO, systemState, players);
         };  
         case (?foundManagerCanisterId){
+          Debug.print("Found Manager Canister ID so update");
           return await updateFantasyTeam(foundManagerCanisterId, managerPrincipalId, updatedFantasyTeamDTO, systemState, players);
         }
       };
     };
 
     private func updateFantasyTeam(managerCanisterId: T.CanisterId, managerPrincipalId: T.PrincipalId, dto : DTOs.UpdateTeamSelectionDTO, systemState: T.SystemState, allPlayers: [DTOs.PlayerDTO]) : async Result.Result<(), T.Error>{
+      
       let manager_canister = actor (managerCanisterId) : actor {
         getManager : T.PrincipalId -> async ?T.Manager;
         updateTeamSelection : (updateManagerDTO : DTOs.TeamUpdateDTO, transfersAvailable : Nat8, monthlyBonuses : Nat8, newBankBalance : Nat16) -> async Result.Result<(), T.Error>;
       };
 
       let manager = await manager_canister.getManager(managerPrincipalId);
-
+      
+      Debug.print("Manager found to update");
+      Debug.print(debug_show manager);
+      
+      
       if (invalidBonuses(manager, dto, systemState, allPlayers)) {
         return #err(#InvalidTeamError);
       };
@@ -344,6 +356,8 @@ module {
           var monthlyBonuses = getMonthlyBonuses(foundManager, dto, systemState);
           var newBankBalance = getNewBankBalance(foundManager, dto, allPlayers);
 
+          Debug.print("Updating Manager");
+          Debug.print(debug_show managerCanisterId);
           return await manager_canister.updateTeamSelection({
             principalId = managerPrincipalId;
             updatedTeamSelection = dto;
@@ -355,10 +369,8 @@ module {
 
     private func createNewManager(managerPrincipalId: T.PrincipalId, username: Text, favouriteClubId: T.ClubId, profilePicture: ?Blob, profilePictureType: Text, dto : ?DTOs.UpdateTeamSelectionDTO, systemState: T.SystemState, players: [DTOs.PlayerDTO]) : async Result.Result<(), T.Error>{
       
-      let manager_canister = actor (activeManagerCanisterId) : actor {
-        addNewManager : (manager : T.Manager) -> async Result.Result<(), T.Error>;
-        getTotalManagers : () -> async Nat;
-        getManager : (principalId : T.PrincipalId) -> async ?T.Manager;
+      if(activeManagerCanisterId == ""){
+        activeManagerCanisterId := await createManagerCanister();
       };
 
       var monthlyBonuses: Nat8 = 2;
@@ -384,7 +396,7 @@ module {
       var hatTrickHeroGameweek: T.GameweekNumber = 0;
 
       switch(dto){
-        case (null){};
+        case (null){ };
         case (?foundDTO){
 
         if (invalidBonuses(null, foundDTO, systemState, players)) {
@@ -466,6 +478,12 @@ module {
         privateLeagueMemberships = List.nil();
       };
 
+      let manager_canister = actor (activeManagerCanisterId) : actor {
+        addNewManager : (manager : T.Manager) -> async Result.Result<(), T.Error>;
+        getTotalManagers : () -> async Nat;
+        getManager : (principalId : T.PrincipalId) -> async ?T.Manager;
+      };
+
       let canisterManagerCount = await manager_canister.getTotalManagers();
       if (canisterManagerCount >= 12000) {
         activeManagerCanisterId := await createManagerCanister();
@@ -478,6 +496,8 @@ module {
       };
 
       totalManagers := totalManagers + 1;
+      managerCanisterIds.put(managerPrincipalId, activeManagerCanisterId);
+      Debug.print("Add new manager");
       return await manager_canister.addNewManager(newManager);
     };
 
@@ -1328,6 +1348,14 @@ module {
     public func init() : async () {
       let result = await createManagerCanister();
       activeManagerCanisterId := result;
+
+
+      managerCanisterIds := TrieMap.TrieMap<T.PrincipalId, T.CanisterId>(Text.equal, Text.hash);
+      managerUsernames := TrieMap.TrieMap<T.PrincipalId, Text>(Text.equal, Text.hash);
+      uniqueManagerCanisterIds := List.nil();
+
+      totalManagers:= 0;
+      activeManagerCanisterId := "";
     };
   };
 };

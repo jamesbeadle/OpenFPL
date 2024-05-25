@@ -41,7 +41,6 @@ declare module '$env/static/private' {
 	export const CANISTER_CANDID_PATH: string;
 	export const VITE_AUTH_PROVIDER_URL: string;
 	export const MANPATH: string;
-	export const NETWORK: string;
 	export const TERM_PROGRAM: string;
 	export const NODE: string;
 	export const INIT_CWD: string;
@@ -61,7 +60,6 @@ declare module '$env/static/private' {
 	export const COMMAND_MODE: string;
 	export const npm_config_globalconfig: string;
 	export const SSH_AUTH_SOCK: string;
-	export const PEM_FILE: string;
 	export const __CF_USER_TEXT_ENCODING: string;
 	export const npm_execpath: string;
 	export const PATH: string;
@@ -73,7 +71,6 @@ declare module '$env/static/private' {
 	export const __CFBundleIdentifier: string;
 	export const npm_command: string;
 	export const PWD: string;
-	export const PROPOSER_NEURON_ID: string;
 	export const npm_lifecycle_event: string;
 	export const EDITOR: string;
 	export const npm_package_name: string;
@@ -82,7 +79,6 @@ declare module '$env/static/private' {
 	export const VSCODE_GIT_ASKPASS_EXTRA_ARGS: string;
 	export const XPC_FLAGS: string;
 	export const npm_config_node_gyp: string;
-	export const IC_URL: string;
 	export const npm_package_version: string;
 	export const XPC_SERVICE_NAME: string;
 	export const VSCODE_INJECTION: string;
@@ -94,8 +90,6 @@ declare module '$env/static/private' {
 	export const LOGNAME: string;
 	export const npm_lifecycle_script: string;
 	export const VSCODE_GIT_IPC_HANDLE: string;
-	export const IDENTITY: string;
-	export const WASM_FOLDER: string;
 	export const npm_config_user_agent: string;
 	export const VSCODE_GIT_ASKPASS_NODE: string;
 	export const GIT_ASKPASS: string;
@@ -155,7 +149,6 @@ declare module '$env/dynamic/private' {
 		CANISTER_CANDID_PATH: string;
 		VITE_AUTH_PROVIDER_URL: string;
 		MANPATH: string;
-		NETWORK: string;
 		TERM_PROGRAM: string;
 		NODE: string;
 		INIT_CWD: string;
@@ -175,7 +168,6 @@ declare module '$env/dynamic/private' {
 		COMMAND_MODE: string;
 		npm_config_globalconfig: string;
 		SSH_AUTH_SOCK: string;
-		PEM_FILE: string;
 		__CF_USER_TEXT_ENCODING: string;
 		npm_execpath: string;
 		PATH: string;
@@ -187,7 +179,6 @@ declare module '$env/dynamic/private' {
 		__CFBundleIdentifier: string;
 		npm_command: string;
 		PWD: string;
-		PROPOSER_NEURON_ID: string;
 		npm_lifecycle_event: string;
 		EDITOR: string;
 		npm_package_name: string;
@@ -196,7 +187,6 @@ declare module '$env/dynamic/private' {
 		VSCODE_GIT_ASKPASS_EXTRA_ARGS: string;
 		XPC_FLAGS: string;
 		npm_config_node_gyp: string;
-		IC_URL: string;
 		npm_package_version: string;
 		XPC_SERVICE_NAME: string;
 		VSCODE_INJECTION: string;
@@ -208,8 +198,6 @@ declare module '$env/dynamic/private' {
 		LOGNAME: string;
 		npm_lifecycle_script: string;
 		VSCODE_GIT_IPC_HANDLE: string;
-		IDENTITY: string;
-		WASM_FOLDER: string;
 		npm_config_user_agent: string;
 		VSCODE_GIT_ASKPASS_NODE: string;
 		GIT_ASKPASS: string;

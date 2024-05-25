@@ -251,6 +251,8 @@ function createManagerStore() {
 
       console.log(dto);
       let result = await identityActor.saveFantasyTeam(dto);
+      console.log("result");
+      console.log(result);
 
       if (isError(result)) {
         console.error("Error saving fantasy team");
