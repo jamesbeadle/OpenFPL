@@ -1,12 +1,12 @@
+import Array "mo:base/Array";
+import Blob "mo:base/Blob";
+import Iter "mo:base/Iter";
+import List "mo:base/List";
+import Nat16 "mo:base/Nat16";
+import Result "mo:base/Result";
+import Text "mo:base/Text";
 import DTOs "../DTOs";
 import T "../types";
-import Result "mo:base/Result";
-import Blob "mo:base/Blob";
-import Text "mo:base/Text";
-import List "mo:base/List";
-import Iter "mo:base/Iter";
-import Array "mo:base/Array";
-import Nat16 "mo:base/Nat16";
 import Nat8 "mo:base/Nat8";
 import Nat64 "mo:base/Nat64";
 import Cycles "mo:base/ExperimentalCycles";
@@ -185,6 +185,7 @@ module {
     };
 
     public func getProfile(principalId : Text) : async Result.Result<DTOs.ProfileDTO, T.Error> {
+      Debug.print("Getting profile");
       let emptyDTO : DTOs.ProfileDTO = {
         principalId = principalId;
         username = "";
@@ -195,7 +196,8 @@ module {
         createDate = 0;
       };
       let managerCanisterId = managerCanisterIds.get(principalId);
-
+      Debug.print("Manager canister id");
+      Debug.print(debug_show managerCanisterId);
       switch (managerCanisterId) {
         case (null) {
           return #ok(emptyDTO);
@@ -205,12 +207,16 @@ module {
             getManager : T.PrincipalId -> async ?T.Manager;
           };
 
+          Debug.print("Getting manager");
           let manager = await manager_canister.getManager(principalId);
+          Debug.print(debug_show manager);
           switch (manager) {
             case (null) {
               return #ok(emptyDTO);
             };
             case (?foundManager) {
+              Debug.print("Found a manager");
+              Debug.print(debug_show foundManager);
               let profileDTO : DTOs.ProfileDTO = {
                 principalId = principalId;
                 username = foundManager.username;
@@ -304,6 +310,16 @@ module {
 
       if (invalidTeamComposition(updatedFantasyTeamDTO, players)) {
         return #err(#InvalidTeamError);
+      };
+
+      let usernameUpdated = updatedFantasyTeamDTO.username != "";
+
+      if (usernameUpdated and not isUsernameValid(updatedFantasyTeamDTO.username)) {
+        return #err(#InvalidData);
+      };
+
+      if (usernameUpdated and isUsernameTaken(updatedFantasyTeamDTO.username, managerPrincipalId)) {
+        return #err(#InvalidData);
       };
 
       Debug.print("Manager save debug");
@@ -1173,6 +1189,8 @@ module {
     };
 
     public func getStableManagerCanisterIds() : [(T.PrincipalId, T.CanisterId)] {
+      Debug.print("getting stable manager canister ids");
+      Debug.print(debug_show Iter.toArray(managerCanisterIds.entries()));
       return Iter.toArray(managerCanisterIds.entries());
     };
 

@@ -1041,7 +1041,7 @@ module {
     };
 
     public func setStableManagerUsernames(stable_manager_usernames : [(T.PrincipalId, Text)]) {
-      managerComposite.setStableManagerCanisterIds(stable_manager_usernames);
+      managerComposite.setStableManagerUsernames(stable_manager_usernames);
     };
 
     public func getStableUniqueManagerCanisterIds() : [T.CanisterId] {

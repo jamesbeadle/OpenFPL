@@ -753,7 +753,7 @@ Swap:
   # to the deadline or the maximum target being reached, and if there are less
   # than `minimum_participants` (here, only direct participants are counted),
   # the swap will be committed.
-  minimum_participants: 100
+  minimum_participants: 10
 
   # Minimum amount of ICP from direct participants. This amount is required for
   # the swap to succeed. If this amount is not achieved, the swap will be
