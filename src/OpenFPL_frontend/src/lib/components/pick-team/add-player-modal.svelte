@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { writable } from "svelte/store";
+  import { writable, type Writable } from "svelte/store";
   import type {
     PlayerDTO,
     PickTeamDTO,
@@ -16,7 +16,7 @@
   export let visible: boolean;
   export let closeAddPlayerModal: () => void;
   export let handlePlayerSelection: (player: PlayerDTO) => void;
-  export let fantasyTeam = writable<PickTeamDTO | null>(null);
+  export let fantasyTeam: Writable<PickTeamDTO | null>;
 
   export let filterPosition = -1;
   export let filterColumn = -1;

@@ -3513,7 +3513,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1oqz5h4"
+  version_hash: "79itru"
 };
 async function get_hooks() {
   return {};
@@ -5749,7 +5749,7 @@ function createManagerStore() {
       };
       let result = await identityActor.saveFantasyTeam(dto);
       if (isError(result)) {
-        console.error("Error saving fantasy team");
+        console.error("Error saving fantasy team", result);
         return;
       }
       const fantasyTeam = result.ok;

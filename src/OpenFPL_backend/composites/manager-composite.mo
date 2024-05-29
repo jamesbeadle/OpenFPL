@@ -350,8 +350,13 @@ module {
       };
 
       let manager = await manager_canister.getManager(managerPrincipalId);      
-      
       if (invalidBonuses(manager, dto, systemState, allPlayers)) {
+        Debug.print("checking bonuses");
+        Debug.print(debug_show manager);
+        Debug.print(debug_show dto);
+        Debug.print(debug_show systemState);
+        Debug.print(debug_show allPlayers);
+
         return #err(#InvalidTeamError);
       };
 
@@ -370,8 +375,8 @@ module {
 
           var monthlyBonuses = getMonthlyBonuses(foundManager, dto, systemState);
           var newBankBalance = getNewBankBalance(foundManager, dto, allPlayers);
-          Debug.print("New Bank Balance");
-          Debug.print(debug_show newBankBalance);
+          Debug.print("Updating team");
+          Debug.print(debug_show dto);
           return await manager_canister.updateTeamSelection({
             principalId = managerPrincipalId;
             updatedTeamSelection = dto;
@@ -704,6 +709,7 @@ module {
 
     private func invalidBonuses(manager: ?T.Manager, updatedFantasyTeam : DTOs.UpdateTeamSelectionDTO, systemState : T.SystemState, players : [DTOs.PlayerDTO]) : Bool {
 
+      Debug.print("checking bonuses");
       var bonusesPlayed: Nat8 = 0;
       if (updatedFantasyTeam.goalGetterGameweek == systemState.pickTeamGameweek) {
         bonusesPlayed += 1;
@@ -762,10 +768,13 @@ module {
         bonusesPlayed += 1;
       };
 
+      Debug.print("bonus count");
+      Debug.print(debug_show bonusesPlayed);
+
       if (bonusesPlayed > 1) {
         return true;
       };
-
+      
       switch(manager){
         case (null){ };
         case (?foundManager){
@@ -809,6 +818,7 @@ module {
         };
       };
 
+      Debug.print("here");
       return false;
     };
 

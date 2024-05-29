@@ -203,45 +203,45 @@ function createManagerStore() {
         passMasterGameweek:
           bonusPlayed == 2
             ? activeGameweek
-            : userFantasyTeam.goalGetterGameweek,
+            : userFantasyTeam.passMasterGameweek,
         passMasterPlayerId: bonusPlayerId,
         noEntryGameweek:
           bonusPlayed == 3
             ? activeGameweek
-            : userFantasyTeam.goalGetterGameweek,
+            : userFantasyTeam.noEntryGameweek,
         noEntryPlayerId: bonusPlayerId,
         teamBoostGameweek:
           bonusPlayed == 4
             ? activeGameweek
-            : userFantasyTeam.goalGetterGameweek,
+            : userFantasyTeam.teamBoostGameweek,
         teamBoostClubId: bonusTeamId,
         safeHandsGameweek:
           bonusPlayed == 5
             ? activeGameweek
-            : userFantasyTeam.goalGetterGameweek,
+            : userFantasyTeam.safeHandsGameweek,
         safeHandsPlayerId: bonusPlayerId,
         captainFantasticGameweek:
           bonusPlayed == 6
             ? activeGameweek
-            : userFantasyTeam.goalGetterGameweek,
+            : userFantasyTeam.captainFantasticGameweek,
         captainFantasticPlayerId: bonusPlayerId,
         countrymenGameweek:
           bonusPlayed == 7
             ? activeGameweek
-            : userFantasyTeam.goalGetterGameweek,
+            : userFantasyTeam.countrymenGameweek,
         countrymenCountryId: bonusCountryId,
         prospectsGameweek:
           bonusPlayed == 8
             ? activeGameweek
-            : userFantasyTeam.goalGetterGameweek,
+            : userFantasyTeam.prospectsGameweek,
         braceBonusGameweek:
           bonusPlayed == 9
             ? activeGameweek
-            : userFantasyTeam.goalGetterGameweek,
+            : userFantasyTeam.braceBonusGameweek,
         hatTrickHeroGameweek:
           bonusPlayed == 10
             ? activeGameweek
-            : userFantasyTeam.goalGetterGameweek,
+            : userFantasyTeam.hatTrickHeroGameweek,
         transferWindowGameweek: transferWindowPlayedInSession
           ? activeGameweek
           : userFantasyTeam.transferWindowGameweek,
@@ -251,7 +251,7 @@ function createManagerStore() {
       let result = await identityActor.saveFantasyTeam(dto);
 
       if (isError(result)) {
-        console.error("Error saving fantasy team");
+        console.error("Error saving fantasy team", result);
         return;
       }
 

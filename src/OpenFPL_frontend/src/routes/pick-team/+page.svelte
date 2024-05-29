@@ -28,7 +28,6 @@
   let selectedColumn = -1;
   let showCaptainModal = false;
   let newTeam = true;
-  let isSaveButtonActive = false;
 
   const fantasyTeam = writable<PickTeamDTO>({
     playerIds: [],
@@ -78,7 +77,6 @@
 
   $: if ($fantasyTeam && $playerStore.length > 0) {
     disableInvalidFormations();
-    isSaveButtonActive = checkSaveButtonConditions();
   }
 
   $: {
