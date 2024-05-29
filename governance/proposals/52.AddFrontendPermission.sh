@@ -6,17 +6,6 @@ SCRIPT=$(readlink -f "$0")
 SCRIPT_DIR=$(dirname "$SCRIPT")
 cd $SCRIPT_DIR/..
 
-TITLE="."
-SUMMARY=""
-URL=""
-ARGS="("
-FUNCTION_ID=20000
-
-# Submit the proposal
-
-./utils/make_custom_function_proposal.sh $FUNCTION_ID "$TITLE" "$SUMMARY" "$URL" "$ARGS"
-
-
 PROPOSAL="(
     record {  
         title = \"Add developer frontend prepare permission\";  
