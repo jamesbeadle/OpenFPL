@@ -29,4 +29,4 @@ PROPOSAL="(
     }
 )"
 
-./submit_proposal.sh "$PROPOSAL"
+./governance/local/submit_proposal.sh "$PROPOSAL"

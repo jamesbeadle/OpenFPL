@@ -26,5 +26,4 @@ PROPOSAL="(
         } 
     })"
 
-../utils/submit_proposal.sh "$PROPOSAL"
-  
+./submit_proposal.sh "$PROPOSAL"
