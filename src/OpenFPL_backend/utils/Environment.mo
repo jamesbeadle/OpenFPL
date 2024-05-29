@@ -4,8 +4,6 @@ module Environment {
   public let NNS_GOVERNANCE_CANISTER_ID = "rrkah-fqaaa-aaaaa-aaaaq-cai";
   public let NNS_LEDGER_CANISTER_ID = "ryjl3-tyaaa-aaaaa-aaaba-cai"; 
   public let ICP_COINS_CANISTER_ID = "u45jl-liaaa-aaaam-abppa-cai";
-
-  /* //TODO:Replace with environment variables
   public let DFX_NETWORK = "ic";
   public let BACKEND_CANISTER_ID = "bboqb-jiaaa-aaaal-qb6ea-cai";
   public let FRONTEND_CANISTER_ID = "bgpwv-eqaaa-aaaal-qb6eq-cai";
@@ -15,8 +13,9 @@ module Environment {
   public let SNS_ROOT_CANISTER_ID = "gyito-zyaaa-aaaaq-aacpq-cai";
   public let SNS_INDEX_CANISTER_ID = "dnqcx-eyaaa-aaaaq-aacrq-cai";
   public let SNS_SWAP_CANISTER_ID = "dkred-jaaaa-aaaaq-aacra-cai";
+
+  /* //TODO:Replace with environment variables
   //local
-  */
 
   public let DFX_NETWORK = "local";
   public let BACKEND_CANISTER_ID = "bd3sg-teaaa-aaaaa-qaaba-cai";
@@ -27,6 +26,7 @@ module Environment {
   public let SNS_ROOT_CANISTER_ID = "b77ix-eeaaa-aaaaa-qaada-cai";
   public let SNS_INDEX_CANISTER_ID = "a3shf-5eaaa-aaaaa-qaafa-cai";
   public let SNS_SWAP_CANISTER_ID = "asrmz-lmaaa-aaaaa-qaaeq-cai";
+  */
   
 
 

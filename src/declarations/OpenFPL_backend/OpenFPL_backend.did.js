@@ -677,7 +677,6 @@ export const idlFactory = ({ IDL }) => {
   return IDL.Service({
     'acceptInviteAndPayFee' : IDL.Func([CanisterId], [Result], []),
     'acceptLeagueInvite' : IDL.Func([CanisterId], [Result], []),
-    'beginOpenFPL' : IDL.Func([], [], []),
     'burnICPToCycles' : IDL.Func([IDL.Nat64], [], []),
     'createPrivateLeague' : IDL.Func([CreatePrivateLeagueDTO], [Result], []),
     'enterLeague' : IDL.Func([CanisterId], [Result], []),

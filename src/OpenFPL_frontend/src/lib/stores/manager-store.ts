@@ -206,19 +206,13 @@ function createManagerStore() {
             : userFantasyTeam.passMasterGameweek,
         passMasterPlayerId: bonusPlayerId,
         noEntryGameweek:
-          bonusPlayed == 3
-            ? activeGameweek
-            : userFantasyTeam.noEntryGameweek,
+          bonusPlayed == 3 ? activeGameweek : userFantasyTeam.noEntryGameweek,
         noEntryPlayerId: bonusPlayerId,
         teamBoostGameweek:
-          bonusPlayed == 4
-            ? activeGameweek
-            : userFantasyTeam.teamBoostGameweek,
+          bonusPlayed == 4 ? activeGameweek : userFantasyTeam.teamBoostGameweek,
         teamBoostClubId: bonusTeamId,
         safeHandsGameweek:
-          bonusPlayed == 5
-            ? activeGameweek
-            : userFantasyTeam.safeHandsGameweek,
+          bonusPlayed == 5 ? activeGameweek : userFantasyTeam.safeHandsGameweek,
         safeHandsPlayerId: bonusPlayerId,
         captainFantasticGameweek:
           bonusPlayed == 6
@@ -231,9 +225,7 @@ function createManagerStore() {
             : userFantasyTeam.countrymenGameweek,
         countrymenCountryId: bonusCountryId,
         prospectsGameweek:
-          bonusPlayed == 8
-            ? activeGameweek
-            : userFantasyTeam.prospectsGameweek,
+          bonusPlayed == 8 ? activeGameweek : userFantasyTeam.prospectsGameweek,
         braceBonusGameweek:
           bonusPlayed == 9
             ? activeGameweek

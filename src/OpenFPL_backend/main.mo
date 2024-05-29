@@ -1131,7 +1131,7 @@ actor Self {
   };
 
   //TODO: Can be removed when the game has successfully been initialsed
-  public shared func beginOpenFPL () : async () {
+  private func beginOpenFPL () : async () {
     /*
     if(openFPLInitialised){
       return;

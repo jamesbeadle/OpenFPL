@@ -432,7 +432,8 @@ module {
             abbreviatedName = "SHE";
             shirtType = #Striped;
             primaryColourHex = "#FFFFFF";
-          }]);
+          }
+          ]);
       };
     };
   };

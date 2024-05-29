@@ -647,7 +647,6 @@ export interface WeeklyLeaderboardDTO {
 export interface _SERVICE {
   'acceptInviteAndPayFee' : ActorMethod<[CanisterId], Result>,
   'acceptLeagueInvite' : ActorMethod<[CanisterId], Result>,
-  'beginOpenFPL' : ActorMethod<[], undefined>,
   'burnICPToCycles' : ActorMethod<[bigint], undefined>,
   'createPrivateLeague' : ActorMethod<[CreatePrivateLeagueDTO], Result>,
   'enterLeague' : ActorMethod<[CanisterId], Result>,

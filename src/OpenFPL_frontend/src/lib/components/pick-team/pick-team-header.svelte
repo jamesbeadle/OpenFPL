@@ -10,6 +10,7 @@
     getCountdownTime,
   } from "../../../lib/utils/Helpers";
   import type { PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import { playerStore } from "$lib/stores/player-store";
 
   let activeSeason: string;
   let activeGameweek: number;
@@ -27,6 +28,7 @@
   let isLoading = true;
 
   onMount(() => {
+    playerStore.sync();
     activeSeason = $systemStore?.pickTeamSeasonName ?? "-";
     activeGameweek = $systemStore?.pickTeamGameweek ?? 1;
     try {
@@ -43,6 +45,7 @@
   });
 
   async function loadData() {
+    updateTeamValue();
     let nextFixture = await fixtureStore.getNextFixture();
     
     if(!nextFixture){
@@ -58,6 +61,23 @@
     countdownHours = countdownTime.hours.toString();
     countdownMinutes = countdownTime.minutes.toString();
     isLoading = false;
+  }
+
+
+
+  function updateTeamValue() {
+    const team = $fantasyTeam;
+    console.log(team)
+    if (team) {
+      let totalValue = 0;
+      team.playerIds.forEach((id) => {
+        const player = $playerStore.find((p) => p.id === id);
+        if (player) {
+          totalValue += player.valueQuarterMillions;
+        }
+      });
+      teamValue = totalValue / 4;
+    }
   }
 </script>
 

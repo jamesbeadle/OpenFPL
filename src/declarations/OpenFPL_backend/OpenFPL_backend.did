@@ -834,7 +834,6 @@ type AccountIdentifier = record {hash: vec nat8;};
 service : {
   acceptInviteAndPayFee: (CanisterId) -> (Result);
   acceptLeagueInvite: (CanisterId) -> (Result);
-  beginOpenFPL: () -> ();
   burnICPToCycles: (nat64) -> ();
   createPrivateLeague: (CreatePrivateLeagueDTO) -> (Result);
   enterLeague: (CanisterId) -> (Result);
