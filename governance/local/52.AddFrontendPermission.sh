@@ -19,8 +19,8 @@ PROPOSAL="(
                     prepare = vec { 
                         principal \"4jijx-ekel7-4t2kx-32cyf-wzo3t-i4tas-qsq4k-ujnug-oxke7-o5aci-eae\"; 
                     }; 
-                commit = vec { principal \"detjl-sqaaa-aaaaq-aacqa-cai\"; }; 
-                manage_permissions = vec { principal \"detjl-sqaaa-aaaaq-aacqa-cai\"; 
+                commit = vec { principal \"by6od-j4aaa-aaaaa-qaadq-cai\"; }; 
+                manage_permissions = vec { principal \"by6od-j4aaa-aaaaa-qaadq-cai\"; 
                 };
             } 
         } 
