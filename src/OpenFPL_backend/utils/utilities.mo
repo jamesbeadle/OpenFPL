@@ -17,6 +17,7 @@ import Principal "mo:base/Principal";
 import List "mo:base/List";
 import Int "mo:base/Int";
 import Option "mo:base/Option";
+import Debug "mo:base/Debug";
 import Management "../modules/Management";
 
 module {
@@ -475,21 +476,9 @@ module {
         },
       );
 
-      let playersAdded = Array.filter<DTOs.PlayerDTO>(
-        updatedPlayers,
-        func(player : DTOs.PlayerDTO) : Bool {
-          let playerId = player.id;
-          let isPlayerIdInExistingTeam = Array.find(
-            playerIds,
-            func(id : Nat16) : Bool {
-              return id == playerId;
-            },
-          );
-          return Option.isNull(isPlayerIdInExistingTeam);
-        },
-      );
+      Debug.print(debug_show Array.foldLeft<DTOs.PlayerDTO, Nat16>(updatedPlayers, 0, func(sumSoFar, x) = sumSoFar + x.valueQuarterMillions));
 
-      return Array.foldLeft<DTOs.PlayerDTO, Nat16>(playersAdded, 0, func(sumSoFar, x) = sumSoFar + x.valueQuarterMillions);
+      return Array.foldLeft<DTOs.PlayerDTO, Nat16>(updatedPlayers, 0, func(sumSoFar, x) = sumSoFar + x.valueQuarterMillions);
   };
 
 };

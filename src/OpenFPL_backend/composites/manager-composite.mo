@@ -185,7 +185,6 @@ module {
     };
 
     public func getProfile(principalId : Text) : async Result.Result<DTOs.ProfileDTO, T.Error> {
-      Debug.print("Getting profile");
       let emptyDTO : DTOs.ProfileDTO = {
         principalId = principalId;
         username = "";
@@ -196,8 +195,6 @@ module {
         createDate = 0;
       };
       let managerCanisterId = managerCanisterIds.get(principalId);
-      Debug.print("Manager canister id");
-      Debug.print(debug_show managerCanisterId);
       switch (managerCanisterId) {
         case (null) {
           return #ok(emptyDTO);
@@ -207,16 +204,12 @@ module {
             getManager : T.PrincipalId -> async ?T.Manager;
           };
 
-          Debug.print("Getting manager");
           let manager = await manager_canister.getManager(principalId);
-          Debug.print(debug_show manager);
           switch (manager) {
             case (null) {
               return #ok(emptyDTO);
             };
             case (?foundManager) {
-              Debug.print("Found a manager");
-              Debug.print(debug_show foundManager);
               let profileDTO : DTOs.ProfileDTO = {
                 principalId = principalId;
                 username = foundManager.username;
@@ -322,35 +315,41 @@ module {
         return #err(#InvalidData);
       };
 
-      Debug.print("Manager save debug");
-
       let managerCanisterId = managerCanisterIds.get(managerPrincipalId);
-
-      Debug.print(debug_show managerCanisterId);
+      var result: ?Result.Result<(), T.Error> = null;
       switch(managerCanisterId){
         case (null){
-          Debug.print("No Manager Canister ID so create");
-          return await createNewManager(managerPrincipalId, "", 0, null, "", ?updatedFantasyTeamDTO, systemState, players);
+          result := ?(await createNewManager(managerPrincipalId, updatedFantasyTeamDTO.username, 0, null, "", ?updatedFantasyTeamDTO, systemState, players));
         };  
         case (?foundManagerCanisterId){
-          Debug.print("Found Manager Canister ID so update");
-          return await updateFantasyTeam(foundManagerCanisterId, managerPrincipalId, updatedFantasyTeamDTO, systemState, players);
+          result := ?(await updateFantasyTeam(foundManagerCanisterId, managerPrincipalId, updatedFantasyTeamDTO, systemState, players));
         }
+      };
+
+      switch(result){
+        case null{
+          return #err(#NotFound);
+        };
+        case (?#ok ok_result){
+          if(usernameUpdated){
+            managerUsernames.put(managerPrincipalId, updatedFantasyTeamDTO.username);
+          };
+          return #ok(ok_result);
+        };
+        case (?#err err_result) {
+          return #err(err_result);
+        };
       };
     };
 
     private func updateFantasyTeam(managerCanisterId: T.CanisterId, managerPrincipalId: T.PrincipalId, dto : DTOs.UpdateTeamSelectionDTO, systemState: T.SystemState, allPlayers: [DTOs.PlayerDTO]) : async Result.Result<(), T.Error>{
-      
+      Debug.print("Updating fantasy team");
       let manager_canister = actor (managerCanisterId) : actor {
         getManager : T.PrincipalId -> async ?T.Manager;
         updateTeamSelection : (updateManagerDTO : DTOs.TeamUpdateDTO, transfersAvailable : Nat8, monthlyBonuses : Nat8, newBankBalance : Nat16) -> async Result.Result<(), T.Error>;
       };
 
-      let manager = await manager_canister.getManager(managerPrincipalId);
-      
-      Debug.print("Manager found to update");
-      Debug.print(debug_show manager);
-      
+      let manager = await manager_canister.getManager(managerPrincipalId);      
       
       if (invalidBonuses(manager, dto, systemState, allPlayers)) {
         return #err(#InvalidTeamError);
@@ -371,9 +370,8 @@ module {
 
           var monthlyBonuses = getMonthlyBonuses(foundManager, dto, systemState);
           var newBankBalance = getNewBankBalance(foundManager, dto, allPlayers);
-
-          Debug.print("Updating Manager");
-          Debug.print(debug_show managerCanisterId);
+          Debug.print("New Bank Balance");
+          Debug.print(debug_show newBankBalance);
           return await manager_canister.updateTeamSelection({
             principalId = managerPrincipalId;
             updatedTeamSelection = dto;
@@ -434,8 +432,10 @@ module {
             monthlyBonuses := 1;
           };
 
+          Debug.print("calculating new manager team value");
           bankBalance := bankBalance - Utilities.getTeamValue(foundDTO.playerIds, players);
-              
+          
+
           playerIds := foundDTO.playerIds;
           captainId := foundDTO.captainId;
           goalGetterGameweek := foundDTO.goalGetterGameweek;
@@ -513,7 +513,6 @@ module {
 
       totalManagers := totalManagers + 1;
       managerCanisterIds.put(managerPrincipalId, activeManagerCanisterId);
-      Debug.print("Add new manager");
       return await manager_canister.addNewManager(newManager);
     };
 
@@ -1189,8 +1188,6 @@ module {
     };
 
     public func getStableManagerCanisterIds() : [(T.PrincipalId, T.CanisterId)] {
-      Debug.print("getting stable manager canister ids");
-      Debug.print(debug_show Iter.toArray(managerCanisterIds.entries()));
       return Iter.toArray(managerCanisterIds.entries());
     };
 

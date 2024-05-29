@@ -10,7 +10,6 @@ import Time "mo:base/Time";
 import Timer "mo:base/Timer";
 import Nat64 "mo:base/Nat64";
 import Nat "mo:base/Nat";
-import Debug "mo:base/Debug";
 
 import T "types";
 import DTOs "DTOs";
@@ -139,13 +138,9 @@ actor Self {
   };
 
   public shared query ({ caller }) func isUsernameValid(dto: DTOs.UsernameFilterDTO) : async Bool {
-    Debug.print("is username valid");
     assert not Principal.isAnonymous(caller);
-    Debug.print("is username valid");
     let usernameValid = seasonManager.isUsernameValid(dto);
-    Debug.print("is username taken");
     let usernameTaken = seasonManager.isUsernameTaken(dto, Principal.toText(caller));
-    Debug.print("check");
     return usernameValid and not usernameTaken;
   };
 
@@ -968,11 +963,9 @@ actor Self {
   //Canister wallet topup functions
 
   private func checkCanisterWalletBalance() : async () {
-    Debug.print("Checking canister wallet balance");
     let topupThreshold : Nat = 500_000_000_000_000; //If below 100 trillion cycles then top up the wallet
     let targetBalance : Nat = 1_000_000_000_000_000;
     let available = Cycles.available();
-    Debug.print(Nat.toText(available));
 
     if (available < topupThreshold) {
       await burnICPToCycles(Nat64.fromNat(targetBalance - available));
@@ -980,7 +973,6 @@ actor Self {
   };
 
   public func burnICPToCycles(requestedCycles : Nat64) : async () {
-    Debug.print("burning ICP to cycles");
     let treasuryAccount = getTreasuryAccount();
     await treasuryManager.sendICPForCycles(treasuryAccount, requestedCycles);
   };
@@ -1104,9 +1096,6 @@ actor Self {
   
   //Can remove after the DAOs neuron is created
   public shared query ({ caller }) func validateCreateDAONeuron() : async T.RustResult {
-    Debug.print("Validate create DAO neuron");
-    Debug.print(Principal.toText(caller));
-    Debug.print(Environment.SNS_GOVERNANCE_CANISTER_ID);
     
     assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
     if (neuronCreated) {

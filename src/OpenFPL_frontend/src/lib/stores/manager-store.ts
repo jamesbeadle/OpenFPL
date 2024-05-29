@@ -155,7 +155,7 @@ function createManagerStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
       const result = await identityActor.getCurrentTeam();
-      console.log(result);
+
       if (isError(result)) {
         return newManager;
       }
@@ -173,7 +173,6 @@ function createManagerStore() {
     activeGameweek: number,
     bonusUsedInSession: boolean,
     transferWindowPlayedInSession: boolean,
-    username: string,
   ): Promise<any> {
     try {
       let bonusPlayed = 0;
@@ -246,13 +245,10 @@ function createManagerStore() {
         transferWindowGameweek: transferWindowPlayedInSession
           ? activeGameweek
           : userFantasyTeam.transferWindowGameweek,
-        username: username,
+        username: userFantasyTeam.username,
       };
 
-      console.log(dto);
       let result = await identityActor.saveFantasyTeam(dto);
-      console.log("result");
-      console.log(result);
 
       if (isError(result)) {
         console.error("Error saving fantasy team");

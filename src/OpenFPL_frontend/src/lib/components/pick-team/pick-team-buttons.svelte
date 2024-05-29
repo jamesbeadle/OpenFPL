@@ -349,6 +349,7 @@
       ...$fantasyTeam,
       username: $newUsername,
     };
+    
     fantasyTeam.set(updatedFantasyTeam);
     showUsernameModal = false;
     saveFantasyTeam();
@@ -393,8 +394,7 @@
         team!,
         activeGameweek,
         bonusUsedInSession,
-        transferWindowPlayedInSession,
-        $newUsername
+        transferWindowPlayedInSession
       );
       busyStore.stopBusy("save-team");
       toastsShow({

@@ -16,7 +16,6 @@ import DTOs "DTOs";
 import T "types";
 import Tokens "Tokens";
 import SNSToken "sns-wrappers/ledger";
-import Debug "mo:base/Debug";
 import Nat "mo:base/Nat";
 
 module {
@@ -61,22 +60,14 @@ module {
         return;
       };
 
-      Debug.print("Cycle minting canister");
-      Debug.print(Environment.CYCLES_MINTING_CANISTER_ID);
       let cycles_minting_canister = actor (Environment.CYCLES_MINTING_CANISTER_ID) : actor {
         get_icp_xdr_conversion_rate : () -> async ConversionRateResponse;
       };
       let converstionRate : ConversionRateResponse = await cycles_minting_canister.get_icp_xdr_conversion_rate();
 
-      Debug.print("conversion rate");
-      Debug.print(Nat.toText(converstionRate.data));
       let icp_required : Nat64 = cyclesRequested / Nat64.fromNat(converstionRate.data) / 1_000_000;
-      Debug.print("icp_required");
-      Debug.print(Nat64.toText(icp_required));
 
       let balance = await ledger.account_balance({ account = treasuryAccount });
-      Debug.print("balance");
-      Debug.print(Nat64.toText(balance.e8s));
 
       if (balance.e8s < icp_fee) {
         return;

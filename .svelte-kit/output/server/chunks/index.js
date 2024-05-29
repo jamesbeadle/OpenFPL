@@ -3513,7 +3513,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "5ww236"
+  version_hash: "1oqz5h4"
 };
 async function get_hooks() {
   return {};
@@ -5698,7 +5698,6 @@ function createManagerStore() {
         define_process_env_default$8.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.getCurrentTeam();
-      console.log(result);
       if (isError(result)) {
         return newManager;
       }
@@ -5709,7 +5708,7 @@ function createManagerStore() {
       throw error;
     }
   }
-  async function saveFantasyTeam(userFantasyTeam, activeGameweek, bonusUsedInSession, transferWindowPlayedInSession, username) {
+  async function saveFantasyTeam(userFantasyTeam, activeGameweek, bonusUsedInSession, transferWindowPlayedInSession) {
     try {
       let bonusPlayed = 0;
       let bonusPlayerId = 0;
@@ -5746,12 +5745,9 @@ function createManagerStore() {
         braceBonusGameweek: bonusPlayed == 9 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
         hatTrickHeroGameweek: bonusPlayed == 10 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
         transferWindowGameweek: transferWindowPlayedInSession ? activeGameweek : userFantasyTeam.transferWindowGameweek,
-        username
+        username: userFantasyTeam.username
       };
-      console.log(dto);
       let result = await identityActor.saveFantasyTeam(dto);
-      console.log("result");
-      console.log(result);
       if (isError(result)) {
         console.error("Error saving fantasy team");
         return;
@@ -6558,8 +6554,6 @@ function createUserStore() {
     let dto = {
       username
     };
-    console.log("check");
-    console.log(username);
     return await identityActor.isUsernameValid(dto);
   }
   async function cacheProfile() {
@@ -6567,14 +6561,12 @@ function createUserStore() {
       authStore,
       define_process_env_default$3.OPENFPL_BACKEND_CANISTER_ID
     );
-    console.log("getting profile");
     let getProfileResponse = await identityActor.getProfile();
     let error = isError(getProfileResponse);
     if (error) {
       console.error("Error fetching user profile");
       return;
     }
-    console.log("got profile");
     let profileData = getProfileResponse.ok;
     set(profileData);
   }
@@ -9759,7 +9751,11 @@ const Create_private_league = create_ssr_component(($$result, $$props, $$binding
     entryRequirement: { FreeEntry: null },
     entrants: 0,
     termsAgreed: false,
-    leaguePhoto: []
+    tokenId: 0,
+    banner: [],
+    photo: [],
+    entryFee: 0n,
+    paymentChoice: { "FPL": null }
   }) } = $$props;
   $$unsubscribe_privateLeague = subscribe(privateLeague, (value) => $privateLeague = value);
   let currentStep = {
@@ -9808,11 +9804,6 @@ const Create_private_league = create_ssr_component(($$result, $$props, $$binding
     $$result.head = previous_head;
     backButtonVisible = $currentStepIndex > 0;
     nextButtonVisible = $currentStepIndex === 0 && ($privateLeague && $privateLeague.name && $privateLeague.name.length > 2) && ($privateLeague.entrants > 1 && $privateLeague.entrants <= 1e3);
-    {
-      if ($privateLeague) {
-        console.log($privateLeague.entrants);
-      }
-    }
     $$rendered = `      ${$visible ? `${validate_component(WizardModal, "WizardModal").$$render(
       $$result,
       { steps, currentStep, this: modal },

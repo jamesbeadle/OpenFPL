@@ -33,7 +33,11 @@
       entryRequirement: {FreeEntry : null},
       entrants: 0,
       termsAgreed: false,
-      leaguePhoto: []
+      tokenId : 0,
+        banner : [],
+        photo : [],
+        entryFee : 0n,
+        paymentChoice : {'FPL' : null},
     });
   
     let isLoading = true;
@@ -102,9 +106,6 @@
         ($currentStepIndex === 0 && 
             ($privateLeague && $privateLeague.name && $privateLeague.name.length > 2) && ($privateLeague.entrants > 1 && $privateLeague.entrants <= 1000));
 
-    $: if ($privateLeague) {
-      console.log($privateLeague.entrants)
-    }
   </script>
   
 {#if $visible}

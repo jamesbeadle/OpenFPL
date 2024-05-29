@@ -132,8 +132,7 @@ function createUserStore() {
     let dto: UsernameFilterDTO = {
       username: username,
     };
-    console.log("check");
-    console.log(username);
+
     return await identityActor.isUsernameValid(dto);
   }
 
@@ -142,14 +141,13 @@ function createUserStore() {
       authStore,
       process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
     );
-    console.log("getting profile");
+
     let getProfileResponse = await identityActor.getProfile();
     let error = isError(getProfileResponse);
     if (error) {
       console.error("Error fetching user profile");
       return;
     }
-    console.log("got profile");
 
     let profileData = getProfileResponse.ok;
 
