@@ -28,9 +28,8 @@
   import PlayerGameweekHistory from "$lib/components/player-gameweek-history.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
-  import { Spinner } from "@dfinity/gix-components";
-  import { Position } from "$lib/enums/Position";
   import { countriesStore } from "$lib/stores/country-store";
+    import LocalSpinner from "$lib/components/local-spinner.svelte";
 
   $: id = Number($page.url.searchParams.get("id"));
 
@@ -124,7 +123,7 @@
 
 <Layout>
   {#if isLoading}
-    <Spinner />
+    <LocalSpinner />
   {:else}
     <div class="page-header-wrapper flex">
       <div class="content-panel">

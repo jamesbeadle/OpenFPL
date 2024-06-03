@@ -22,9 +22,8 @@
   import LeaderboardsComponent from "$lib/components/leaderboards.svelte";
   import LeagueTableComponent from "$lib/components/league-table.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import { Spinner } from "@dfinity/gix-components";
   import { weeklyLeaderboardStore } from "$lib/stores/weekly-leaderboard-store";
-  import OpenFplIcon from "$lib/icons/OpenFPLIcon.svelte";
+    import LocalSpinner from "$lib/components/local-spinner.svelte";
 
   let activeTab: string = "fixtures";
   let managerCount = 0;
@@ -114,7 +113,7 @@
 
 <Layout>
   {#if isLoading || !$systemStore}
-    <Spinner />
+    <LocalSpinner />
   {:else}
     <div class="page-header-wrapper flex">
       <div class="content-panel">

@@ -631,4 +631,14 @@ module DTOs {
     cyclesBalance: Nat64;
   };
 
+  public type GetSystemLogDTO = {
+    limit : Nat;
+    offset : Nat;
+    dateStart : Int;
+    dateEnd: Int;
+    eventType: ?T.EventLogEntryType;
+    entries: [T.EventLogEntry];
+    totalEntries: Nat;
+  };
+
 };

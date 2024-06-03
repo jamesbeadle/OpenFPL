@@ -12,8 +12,8 @@ OWNER_IDENTITY=$(dfx identity whoami)
 export PEM_FILE="$(readlink -f "$HOME/.config/dfx/identity/${OWNER_IDENTITY}/identity.pem")"
 
 
-./governance/local/52.AddFrontendPermission.sh
-#./governance/local/UpgradeBackend.sh
+#./governance/local/52.AddFrontendPermission.sh
+./governance/local/UpgradeBackend.sh
 
 
 # ./governance/local/23.update_token_image.sh

@@ -19,7 +19,7 @@
 
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import FantasyPlayerDetailModal from "./fantasy-player-detail-modal.svelte";
-  import { Spinner } from "@dfinity/gix-components";
+    import LocalSpinner from "./local-spinner.svelte";
 
   let isLoading = true;
   let selectedGameweek: number;
@@ -122,7 +122,7 @@
 </script>
 
 {#if isLoading}
-  <Spinner />
+  <LocalSpinner />
 {:else}
   {#if showModal}
     <FantasyPlayerDetailModal

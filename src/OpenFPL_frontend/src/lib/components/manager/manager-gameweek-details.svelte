@@ -19,10 +19,10 @@
   } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import { Spinner } from "@dfinity/gix-components";
   import FantasyPlayerDetailModal from "../fantasy-player-detail-modal.svelte";
   import ActiveCaptainIcon from "$lib/icons/ActiveCaptainIcon.svelte";
   import { countriesStore } from "$lib/stores/country-store";
+    import LocalSpinner from "../local-spinner.svelte";
 
   let gameweekPlayers = writable<GameweekData[] | []>([]);
   let gameweeks = Array.from(
@@ -150,7 +150,7 @@
 </script>
 
 {#if isLoading}
-  <Spinner />
+  <LocalSpinner />
 {:else}
   {#if showModal}
     <FantasyPlayerDetailModal

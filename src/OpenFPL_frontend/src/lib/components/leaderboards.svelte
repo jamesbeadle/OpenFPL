@@ -9,7 +9,7 @@
   import { monthlyLeaderboardStore } from "$lib/stores/monthly-leaderboard-store";
   import { seasonLeaderboardStore } from "$lib/stores/season-leaderboard-store";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
-  import { Spinner } from "@dfinity/gix-components";
+    import LocalSpinner from "./local-spinner.svelte";
 
   let isLoading = true;
   let gameweeks = Array.from(
@@ -188,7 +188,7 @@
 </script>
 
 {#if isLoading}
-  <Spinner />
+  <LocalSpinner />
   <p class="w-full px-4 mb-4">Loading leaderboard.</p>
 {:else}
   <div class="flex flex-col space-y-4">

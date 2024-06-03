@@ -1,18 +1,16 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { writable, type Writable } from "svelte/store";
   import { userStore } from "$lib/stores/user-store";
   import { teamStore } from "$lib/stores/team-store";
   import { systemStore } from "$lib/stores/system-store";
   import { toastsError, toastsShow } from "$lib/stores/toasts-store";
-  import type { ProfileDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import UpdateUsernameModal from "$lib/components/profile/update-username-modal.svelte";
   import UpdateFavouriteTeamModal from "./update-favourite-team-modal.svelte";
   import { busyStore, Spinner } from "@dfinity/gix-components";
   import { getDateFromBigInt } from "$lib/utils/Helpers";
   import CopyIcon from "$lib/icons/CopyIcon.svelte";
-  import { authStore } from "$lib/stores/auth.store";
   import { userGetProfilePicture } from "$lib/derived/user.derived";
+    import LocalSpinner from "../local-spinner.svelte";
 
   let showUsernameModal: boolean = false;
   let showFavouriteTeamModal: boolean = false;
@@ -139,7 +137,7 @@
 </script>
 
 {#if isLoading}
-  <Spinner />
+  <LocalSpinner />
 {:else}
   <UpdateUsernameModal
     newUsername={$userStore ? $userStore.username : ""}

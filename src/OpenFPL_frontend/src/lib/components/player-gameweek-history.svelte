@@ -10,15 +10,12 @@
   import PlayerGameweekModal from "./player-gameweek-modal.svelte";
   import type {
     ClubDTO,
-    ClubId,
     PlayerDetailDTO,
     PlayerGameweekDTO,
-    PlayerPointsDTO,
-    PlayerScoreDTO,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
   import { playerEventsStore } from "$lib/stores/player-events-store";
-  import { Spinner } from "@dfinity/gix-components";
+    import LocalSpinner from "./local-spinner.svelte";
 
   let isLoading = true;
   let selectedGameweek: number;
@@ -111,7 +108,7 @@
 </script>
 
 {#if isLoading}
-  <Spinner />
+  <LocalSpinner />
 {:else}
   {#if playerDetails}
     <PlayerGameweekModal

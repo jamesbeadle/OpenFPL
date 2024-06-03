@@ -15,8 +15,8 @@
   import ManagerGameweekDetails from "$lib/components/manager/manager-gameweek-details.svelte";
   import ManagerGameweeks from "$lib/components/manager/manager-gameweeks.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import { Spinner } from "@dfinity/gix-components";
   import { getDateFromBigInt } from "$lib/utils/Helpers";
+    import LocalSpinner from "$lib/components/local-spinner.svelte";
 
   $: id = $page.url.searchParams.get("id");
 
@@ -90,7 +90,7 @@
 
 <Layout>
   {#if isLoading}
-    <Spinner />
+    <LocalSpinner />
   {:else}
     <div class="page-header-wrapper flex">
       <div class="content-panel lg:w-1/2">

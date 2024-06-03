@@ -11,8 +11,8 @@
   } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import { getFlagComponent } from "$lib/utils/Helpers";
-  import { Spinner } from "@dfinity/gix-components";
   import { countriesStore } from "$lib/stores/country-store";
+    import LocalSpinner from "../local-spinner.svelte";
 
   export let principalId = "";
   export let viewGameweekDetail: (selectedGameweek: number) => void;
@@ -67,7 +67,7 @@
 </script>
 
 {#if isLoading}
-  <Spinner />
+  <LocalSpinner />
 {:else}
   <div class="flex flex-col space-y-4 mt-4">
     <div class="overflow-x-auto flex-1">

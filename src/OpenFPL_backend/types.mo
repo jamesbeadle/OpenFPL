@@ -481,4 +481,21 @@ module _Types {
     cyclesAmount: Nat64;
     xdrRate: Nat64;
   };
+
+  public type EventLogEntry = {
+    eventId: Nat;
+    eventTime: Int;
+    eventType: EventLogEntryType;
+    eventTitle: Text;
+    eventDetail: Text;
+  };
+
+  public type EventLogEntryType = {
+    #SystemCheck; //TODO: Include cycles balance, warning to send cycles to cycles wallet, automatically post the system check at 6am every day
+    #UnexpectedError;
+    #TopupRequest;
+    #TopupSent;
+    #NewManagerCanisterCreated;
+    #CyclesBalanceCheck;
+  }
 };

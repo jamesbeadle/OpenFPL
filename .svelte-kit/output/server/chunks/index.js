@@ -3513,7 +3513,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "uvxit2"
+  version_hash: "kvs7vf"
 };
 async function get_hooks() {
   return {};
@@ -3961,13 +3961,13 @@ const idlFactory = ({ IDL }) => {
     "shirtType": ShirtType,
     "primaryColourHex": IDL.Text
   });
-  const Result_19 = IDL.Variant({ "ok": IDL.Vec(ClubDTO), "err": Error2 });
+  const Result_20 = IDL.Variant({ "ok": IDL.Vec(ClubDTO), "err": Error2 });
   const CountryDTO = IDL.Record({
     "id": CountryId,
     "code": IDL.Text,
     "name": IDL.Text
   });
-  const Result_22 = IDL.Variant({ "ok": IDL.Vec(CountryDTO), "err": Error2 });
+  const Result_23 = IDL.Variant({ "ok": IDL.Vec(CountryDTO), "err": Error2 });
   const PickTeamDTO = IDL.Record({
     "playerIds": IDL.Vec(PlayerId),
     "countrymenCountryId": CountryId,
@@ -3995,14 +3995,14 @@ const idlFactory = ({ IDL }) => {
     "captainId": PlayerId,
     "monthlyBonusesAvailable": IDL.Nat8
   });
-  const Result_21 = IDL.Variant({ "ok": PickTeamDTO, "err": Error2 });
+  const Result_22 = IDL.Variant({ "ok": PickTeamDTO, "err": Error2 });
   const DataCacheDTO = IDL.Record({ "hash": IDL.Text, "category": IDL.Text });
-  const Result_20 = IDL.Variant({
+  const Result_21 = IDL.Variant({
     "ok": IDL.Vec(DataCacheDTO),
     "err": Error2
   });
   const GetFixturesDTO = IDL.Record({ "seasonId": SeasonId });
-  const Result_13 = IDL.Variant({ "ok": IDL.Vec(FixtureDTO), "err": Error2 });
+  const Result_14 = IDL.Variant({ "ok": IDL.Vec(FixtureDTO), "err": Error2 });
   const ClubFilterDTO = IDL.Record({ "clubId": ClubId });
   const PlayerStatus = IDL.Variant({
     "OnLoan": IDL.Null,
@@ -4023,7 +4023,7 @@ const idlFactory = ({ IDL }) => {
     "lastName": IDL.Text,
     "firstName": IDL.Text
   });
-  const Result_8 = IDL.Variant({ "ok": IDL.Vec(PlayerDTO), "err": Error2 });
+  const Result_9 = IDL.Variant({ "ok": IDL.Vec(PlayerDTO), "err": Error2 });
   const GetManagerDTO = IDL.Record({ "managerId": IDL.Text });
   const CalendarMonth = IDL.Nat8;
   const FantasyTeamSnapshot = IDL.Record({
@@ -4092,7 +4092,7 @@ const idlFactory = ({ IDL }) => {
     "totalEntries": IDL.Nat,
     "entries": IDL.Vec(ManagerPrivateLeagueDTO)
   });
-  const Result_18 = IDL.Variant({
+  const Result_19 = IDL.Variant({
     "ok": ManagerPrivateLeaguesDTO,
     "err": Error2
   });
@@ -4117,7 +4117,7 @@ const idlFactory = ({ IDL }) => {
     "seasonId": SeasonId,
     "entries": IDL.Vec(LeaderboardEntry)
   });
-  const Result_10 = IDL.Variant({
+  const Result_11 = IDL.Variant({
     "ok": MonthlyLeaderboardDTO,
     "err": Error2
   });
@@ -4125,7 +4125,7 @@ const idlFactory = ({ IDL }) => {
     "month": CalendarMonth,
     "seasonId": SeasonId
   });
-  const Result_17 = IDL.Variant({
+  const Result_18 = IDL.Variant({
     "ok": IDL.Vec(MonthlyLeaderboardDTO),
     "err": Error2
   });
@@ -4204,7 +4204,7 @@ const idlFactory = ({ IDL }) => {
     "lastName": IDL.Text,
     "firstName": IDL.Text
   });
-  const Result_16 = IDL.Variant({ "ok": PlayerDetailDTO, "err": Error2 });
+  const Result_17 = IDL.Variant({ "ok": PlayerDetailDTO, "err": Error2 });
   const GameweekFiltersDTO = IDL.Record({
     "seasonId": SeasonId,
     "gameweek": GameweekNumber
@@ -4217,7 +4217,7 @@ const idlFactory = ({ IDL }) => {
     "gameweek": GameweekNumber,
     "points": IDL.Int16
   });
-  const Result_15 = IDL.Variant({
+  const Result_16 = IDL.Variant({
     "ok": IDL.Vec(PlayerPointsDTO),
     "err": Error2
   });
@@ -4234,11 +4234,11 @@ const idlFactory = ({ IDL }) => {
     "position": PlayerPosition,
     "points": IDL.Int16
   });
-  const Result_14 = IDL.Variant({
+  const Result_15 = IDL.Variant({
     "ok": IDL.Vec(IDL.Tuple(IDL.Nat16, PlayerScoreDTO)),
     "err": Error2
   });
-  const Result_12 = IDL.Variant({
+  const Result_13 = IDL.Variant({
     "ok": ManagerPrivateLeagueDTO,
     "err": Error2
   });
@@ -4253,7 +4253,7 @@ const idlFactory = ({ IDL }) => {
     "username": IDL.Text,
     "principalId": PrincipalId
   });
-  const Result_11 = IDL.Variant({
+  const Result_12 = IDL.Variant({
     "ok": IDL.Vec(LeagueMemberDTO),
     "err": Error2
   });
@@ -4275,7 +4275,7 @@ const idlFactory = ({ IDL }) => {
     "seasonId": SeasonId,
     "entries": IDL.Vec(LeaderboardEntry)
   });
-  const Result_7 = IDL.Variant({ "ok": SeasonLeaderboardDTO, "err": Error2 });
+  const Result_8 = IDL.Variant({ "ok": SeasonLeaderboardDTO, "err": Error2 });
   const GetPrivateLeagueWeeklyLeaderboard = IDL.Record({
     "offset": IDL.Nat,
     "seasonId": SeasonId,
@@ -4299,7 +4299,7 @@ const idlFactory = ({ IDL }) => {
     "profilePictureType": IDL.Text,
     "principalId": IDL.Text
   });
-  const Result_9 = IDL.Variant({ "ok": ProfileDTO, "err": Error2 });
+  const Result_10 = IDL.Variant({ "ok": ProfileDTO, "err": Error2 });
   const GetSeasonLeaderboardDTO = IDL.Record({
     "offset": IDL.Nat,
     "seasonId": SeasonId,
@@ -4311,7 +4311,32 @@ const idlFactory = ({ IDL }) => {
     "name": IDL.Text,
     "year": IDL.Nat16
   });
-  const Result_6 = IDL.Variant({ "ok": IDL.Vec(SeasonDTO), "err": Error2 });
+  const Result_7 = IDL.Variant({ "ok": IDL.Vec(SeasonDTO), "err": Error2 });
+  const EventLogEntryType = IDL.Variant({
+    "TopupRequest": IDL.Null,
+    "SystemCheck": IDL.Null,
+    "CyclesBalanceCheck": IDL.Null,
+    "UnexpectedError": IDL.Null,
+    "NewManagerCanisterCreated": IDL.Null,
+    "TopupSent": IDL.Null
+  });
+  const EventLogEntry = IDL.Record({
+    "eventId": IDL.Nat,
+    "eventTitle": IDL.Text,
+    "eventDetail": IDL.Text,
+    "eventTime": IDL.Int,
+    "eventType": EventLogEntryType
+  });
+  const GetSystemLogDTO = IDL.Record({
+    "dateEnd": IDL.Int,
+    "totalEntries": IDL.Nat,
+    "offset": IDL.Nat,
+    "dateStart": IDL.Int,
+    "limit": IDL.Nat,
+    "entries": IDL.Vec(EventLogEntry),
+    "eventType": IDL.Opt(EventLogEntryType)
+  });
+  const Result_6 = IDL.Variant({ "ok": GetSystemLogDTO, "err": Error2 });
   const SystemStateDTO = IDL.Record({
     "pickTeamSeasonId": SeasonId,
     "pickTeamSeasonName": IDL.Text,
@@ -4420,25 +4445,26 @@ const idlFactory = ({ IDL }) => {
     "executeUnretirePlayer": IDL.Func([UnretirePlayerDTO], [], []),
     "executeUpdateClub": IDL.Func([UpdateClubDTO], [], []),
     "executeUpdatePlayer": IDL.Func([UpdatePlayerDTO], [], []),
+    "getCanisterCyclesAvailable": IDL.Func([], [IDL.Nat], []),
     "getCanisterCyclesBalance": IDL.Func([], [IDL.Nat], []),
     "getCanisterTimerId": IDL.Func([], [IDL.Opt(IDL.Int)], []),
-    "getClubs": IDL.Func([], [Result_19], ["query"]),
-    "getCountries": IDL.Func([], [Result_22], ["query"]),
-    "getCurrentTeam": IDL.Func([], [Result_21], []),
-    "getDataHashes": IDL.Func([], [Result_20], ["query"]),
-    "getFixtures": IDL.Func([GetFixturesDTO], [Result_13], ["query"]),
-    "getFormerClubs": IDL.Func([], [Result_19], ["query"]),
-    "getLoanedPlayers": IDL.Func([ClubFilterDTO], [Result_8], ["query"]),
+    "getClubs": IDL.Func([], [Result_20], ["query"]),
+    "getCountries": IDL.Func([], [Result_23], ["query"]),
+    "getCurrentTeam": IDL.Func([], [Result_22], []),
+    "getDataHashes": IDL.Func([], [Result_21], ["query"]),
+    "getFixtures": IDL.Func([GetFixturesDTO], [Result_14], ["query"]),
+    "getFormerClubs": IDL.Func([], [Result_20], ["query"]),
+    "getLoanedPlayers": IDL.Func([ClubFilterDTO], [Result_9], ["query"]),
     "getManager": IDL.Func([GetManagerDTO], [Result_1], []),
-    "getManagerPrivateLeagues": IDL.Func([], [Result_18], []),
+    "getManagerPrivateLeagues": IDL.Func([], [Result_19], []),
     "getMonthlyLeaderboard": IDL.Func(
       [GetMonthlyLeaderboardDTO],
-      [Result_10],
+      [Result_11],
       []
     ),
     "getMonthlyLeaderboards": IDL.Func(
       [GetMonthlyLeaderboardsDTO],
-      [Result_17],
+      [Result_18],
       []
     ),
     "getNeuronCommand": IDL.Func([], [IDL.Opt(Command)], []),
@@ -4446,31 +4472,31 @@ const idlFactory = ({ IDL }) => {
     "getNeuronResponse": IDL.Func([], [IDL.Opt(NeuronResponse)], []),
     "getPlayerDetails": IDL.Func(
       [GetPlayerDetailsDTO],
-      [Result_16],
+      [Result_17],
       ["query"]
     ),
     "getPlayerDetailsForGameweek": IDL.Func(
       [GameweekFiltersDTO],
-      [Result_15],
+      [Result_16],
       ["query"]
     ),
-    "getPlayers": IDL.Func([], [Result_8], ["query"]),
-    "getPlayersMap": IDL.Func([GameweekFiltersDTO], [Result_14], ["query"]),
-    "getPostponedFixtures": IDL.Func([], [Result_13], ["query"]),
-    "getPrivateLeague": IDL.Func([CanisterId], [Result_12], []),
+    "getPlayers": IDL.Func([], [Result_9], ["query"]),
+    "getPlayersMap": IDL.Func([GameweekFiltersDTO], [Result_15], ["query"]),
+    "getPostponedFixtures": IDL.Func([], [Result_14], ["query"]),
+    "getPrivateLeague": IDL.Func([CanisterId], [Result_13], []),
     "getPrivateLeagueMembers": IDL.Func(
       [GetLeagueMembersDTO],
-      [Result_11],
+      [Result_12],
       []
     ),
     "getPrivateLeagueMonthlyLeaderboard": IDL.Func(
       [GetPrivateLeagueMonthlyLeaderboard],
-      [Result_10],
+      [Result_11],
       []
     ),
     "getPrivateLeagueSeasonLeaderboard": IDL.Func(
       [GetPrivateLeagueSeasonLeaderboard],
-      [Result_7],
+      [Result_8],
       []
     ),
     "getPrivateLeagueWeeklyLeaderboard": IDL.Func(
@@ -4478,14 +4504,15 @@ const idlFactory = ({ IDL }) => {
       [Result_2],
       []
     ),
-    "getProfile": IDL.Func([], [Result_9], []),
-    "getRetiredPlayers": IDL.Func([ClubFilterDTO], [Result_8], ["query"]),
+    "getProfile": IDL.Func([], [Result_10], []),
+    "getRetiredPlayers": IDL.Func([ClubFilterDTO], [Result_9], ["query"]),
     "getSeasonLeaderboard": IDL.Func(
       [GetSeasonLeaderboardDTO],
-      [Result_7],
+      [Result_8],
       []
     ),
-    "getSeasons": IDL.Func([], [Result_6], ["query"]),
+    "getSeasons": IDL.Func([], [Result_7], ["query"]),
+    "getSystemLog": IDL.Func([GetSystemLogDTO], [Result_6], []),
     "getSystemState": IDL.Func([], [Result_5], ["query"]),
     "getTokenList": IDL.Func([], [Result_4], []),
     "getTotalManagers": IDL.Func([], [Result_3], ["query"]),
@@ -4902,6 +4929,7 @@ function createSystemStore() {
     define_process_env_default$b.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync() {
+    await authStore.sync();
     let category = "system_state";
     const newHashValues = await actor.getDataHashes();
     let error = isError(newHashValues);
@@ -4956,11 +4984,29 @@ function createSystemStore() {
       throw error;
     }
   }
+  async function getLogs(dto) {
+    try {
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        define_process_env_default$b.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
+      let result = await identityActor.getSystemLog(dto);
+      if (isError(result)) {
+        console.error("Error getting system logs:", result);
+        return;
+      }
+      return result.ok;
+    } catch (error) {
+      console.error("Error getting system logs:", error);
+      throw error;
+    }
+  }
   return {
     subscribe: subscribe2,
     sync,
     getSystemState,
-    getSeasons
+    getSeasons,
+    getLogs
   };
 }
 const systemStore = createSystemStore();
@@ -6720,6 +6766,14 @@ const BadgeIcon = create_ssr_component(($$result, $$props, $$bindings, slots) =>
     $$bindings.thirdColour(thirdColour);
   return `<svg xmlns="http://www.w3.org/2000/svg"${add_attribute("class", className, 0)} fill="currentColor" viewBox="0 0 814 814"><path d="M407 33.9165C295.984 33.9165 135.667 118.708 135.667 118.708V508.75C135.667 508.75 141.044 561.82 152.625 593.541C194.871 709.259 407 780.083 407 780.083C407 780.083 619.129 709.259 661.375 593.541C672.956 561.82 678.333 508.75 678.333 508.75V118.708C678.333 118.708 518.016 33.9165 407 33.9165Z"${add_attribute("fill", primaryColour, 0)}></path><path d="M712.25 101.75V493.013C712.25 649.097 603.581 689.831 407 814C210.419 689.831 101.75 649.063 101.75 493.013V101.75C167.718 45.2448 282.729 0 407 0C531.271 0 646.282 45.2448 712.25 101.75ZM644.417 135.361C585.775 96.052 496.506 67.8333 407.237 67.8333C317.223 67.8333 228.124 96.1198 169.583 135.361V492.979C169.583 595.712 225.817 622.235 407 734.025C587.979 622.337 644.417 595.814 644.417 492.979V135.361Z"${add_attribute("fill", thirdColour, 0)}></path><path d="M407.237 135.667C464.862 135.667 527.811 150.42 576.583 174.467V493.012C576.583 547.347 562.542 558.539 407 654.422L407.237 135.667Z"${add_attribute("fill", secondaryColour, 0)}></path></svg>`;
 });
+const css$2 = {
+  code: ".local-spinner.svelte-pvdm52{border:5px solid rgba(255, 255, 255, 0.3);border-top:5px solid white;border-radius:50%;width:50px;height:50px;position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);animation:svelte-pvdm52-spin 1s linear infinite}@keyframes svelte-pvdm52-spin{0%{transform:translate(-50%, -50%) rotate(0deg)}100%{transform:translate(-50%, -50%) rotate(360deg)}}",
+  map: null
+};
+const Local_spinner = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  $$result.css.add(css$2);
+  return `<div class="local-spinner svelte-pvdm52"></div>`;
+});
 var define_process_env_default$2 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
 function createMonthlyLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
@@ -6925,7 +6979,7 @@ function createSeasonLeaderboardStore() {
   };
 }
 createSeasonLeaderboardStore();
-const Page$f = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$g = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_systemStore;
   let $$unsubscribe_teamStore;
   let $$unsubscribe_fixtureStore;
@@ -6937,7 +6991,7 @@ const Page$f = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_fixtureStore();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
-      return `${`${validate_component(Spinner, "Spinner").$$render($$result, {}, {}, {})}`}`;
+      return `${`${validate_component(Local_spinner, "LocalSpinner").$$render($$result, {}, {}, {})}`}`;
     }
   })}`;
 });
@@ -8427,7 +8481,7 @@ const Clear_draft_modal = create_ssr_component(($$result, $$props, $$bindings, s
     }
   })}`;
 });
-const Page$e = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$f = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let fixtureId;
   let $playerEventData, $$unsubscribe_playerEventData = noop, $$subscribe_playerEventData = () => ($$unsubscribe_playerEventData(), $$unsubscribe_playerEventData = subscribe(playerEventData, ($$value) => $playerEventData = $$value), playerEventData);
   let $systemStore, $$unsubscribe_systemStore;
@@ -8514,14 +8568,6 @@ const Page$e = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     {},
     {}
   )}`;
-});
-const css$2 = {
-  code: ".local-spinner.svelte-pvdm52{border:5px solid rgba(255, 255, 255, 0.3);border-top:5px solid white;border-radius:50%;width:50px;height:50px;position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);animation:svelte-pvdm52-spin 1s linear infinite}@keyframes svelte-pvdm52-spin{0%{transform:translate(-50%, -50%) rotate(0deg)}100%{transform:translate(-50%, -50%) rotate(360deg)}}",
-  map: null
-};
-const Local_spinner = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  $$result.css.add(css$2);
-  return `<div class="local-spinner svelte-pvdm52"></div>`;
 });
 const Add_initial_fixtures = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let isSubmitDisabled;
@@ -9271,7 +9317,7 @@ const Add_fixture_data = create_ssr_component(($$result, $$props, $$bindings, sl
     }
   })}`;
 });
-const Page$d = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$e = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let showRevaluePlayerUpModal = false;
   let showRevaluePlayerDownModal = false;
   let showAddInitialFixturesModal = false;
@@ -9494,7 +9540,7 @@ const Page$d = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$c = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$d = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $teamStore, $$unsubscribe_teamStore;
   let $$unsubscribe_playerStore;
   let $$unsubscribe_fixtureStore;
@@ -9524,7 +9570,7 @@ const Page$c = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$c = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $teamStore, $$unsubscribe_teamStore;
   $$unsubscribe_teamStore = subscribe(teamStore, (value) => $teamStore = value);
   $$unsubscribe_teamStore();
@@ -9546,7 +9592,10 @@ const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$a = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Default_canisters = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  return ``;
+});
+const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
       return `<div class="bg-panel rounded-md mt-4"><h1 class="default-header p-4" data-svelte-h="svelte-30ik2c">OpenFPL Cycle Management</h1> <ul class="flex bg-light-gray px-1 md:px-4 pt-2 contained-text border-b border-gray-700 mb-4"><li${add_attribute("class", `mr-1 md:mr-4 ${"active-tab"}`, 0)}><button${add_attribute(
@@ -9561,7 +9610,11 @@ const Page$a = create_ssr_component(($$result, $$props, $$bindings, slots) => {
         "class",
         `p-2 ${"text-gray-400"}`,
         0
-      )}>Automatically Generated Canisters</button></li> <li${add_attribute("class", `mr-1 md:mr-4 ${""}`, 0)}><button${add_attribute("class", `p-2 ${"text-gray-400"}`, 0)}>Topups</button></li></ul> ${`${`${``}`}`}</div>`;
+      )}>Automatically Generated Canisters</button></li> <li${add_attribute("class", `mr-1 md:mr-4 ${""}`, 0)}><button${add_attribute("class", `p-2 ${"text-gray-400"}`, 0)}>Topups</button></li> <li${add_attribute("class", `mr-1 md:mr-4 ${""}`, 0)}><button${add_attribute(
+        "class",
+        `p-2 ${"text-gray-400"}`,
+        0
+      )}>Cycles Minted</button></li></ul> ${`${validate_component(Default_canisters, "DefaultCanisters").$$render($$result, {}, {}, {})}`}</div>`;
     }
   })}`;
 });
@@ -9569,7 +9622,7 @@ const css$1 = {
   code: ".striped.svelte-a09ql9 tr.svelte-a09ql9:nth-child(odd){background-color:rgba(46, 50, 58, 0.6)}",
   map: null
 };
-const Page$9 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$a = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$result.css.add(css$1);
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
@@ -9599,7 +9652,7 @@ const Page$9 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$8 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$9 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let activeProposals = [];
   const proposalStatuses = [
     { id: 1, description: "Open" },
@@ -9622,8 +9675,29 @@ const Page$8 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$7 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$8 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   return `  `;
+});
+function formatEventType(type) {
+  return type.replace(/([a-z])([A-Z])/g, "$1 $2");
+}
+const Page$7 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let startDate = "";
+  let endDate = "";
+  let eventTypes = [
+    { "SystemCheck": null },
+    { "CyclesBalanceCheck": null },
+    { "UnexpectedError": null },
+    { "NewManagerCanisterCreated": null },
+    { "TopupSent": null }
+  ];
+  return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
+    default: () => {
+      return `<div class="bg-panel rounded-md mt-4"><h1 class="default-header p-4" data-svelte-h="svelte-1n1vmrq">OpenFPL System Log</h1> <div class="p-4 flex flex-col sm:flex-row gap-4"><div><label for="start-date" class="block text-sm font-medium text-gray-700" data-svelte-h="svelte-14a5t13">Start Date</label> <input type="date" id="start-date" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"${add_attribute("value", startDate, 0)}></div> <div><label for="end-date" class="block text-sm font-medium text-gray-700" data-svelte-h="svelte-z55mdj">End Date</label> <input type="date" id="end-date" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"${add_attribute("value", endDate, 0)}></div> <div><label for="event-type" class="block text-sm font-medium text-gray-700" data-svelte-h="svelte-129i3zf">Event Type</label> <select id="event-type" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"><option value="" data-svelte-h="svelte-1xp9ti5">Select an event type</option>${each(eventTypes, (type) => {
+        return `<option${add_attribute("value", type, 0)}>${escape(formatEventType(Object.keys(type)[0]))}</option>`;
+      })}</select></div> <div class="flex items-end"><button class="fpl-button default-button" data-svelte-h="svelte-zv974x">Filter</button></div></div> ${`${validate_component(Local_spinner, "LocalSpinner").$$render($$result, {}, {}, {})}`}</div>`;
+    }
+  })}`;
 });
 const Page$6 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_selectedGameweek;
@@ -9647,7 +9721,7 @@ const Page$6 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_fantasyTeam();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
-      return `${`${validate_component(Spinner, "Spinner").$$render($$result, {}, {}, {})}`}`;
+      return `${`${validate_component(Local_spinner, "LocalSpinner").$$render($$result, {}, {}, {})}`}`;
     }
   })}`;
 });
@@ -10047,14 +10121,14 @@ const Page$3 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_countriesStore();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
-      return `${`${validate_component(Spinner, "Spinner").$$render($$result, {}, {}, {})}`}`;
+      return `${`${validate_component(Local_spinner, "LocalSpinner").$$render($$result, {}, {}, {})}`}`;
     }
   })}`;
 });
 const Page$2 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
-      return `${`${validate_component(Spinner, "Spinner").$$render($$result, {}, {}, {})}`}`;
+      return `${`${validate_component(Local_spinner, "LocalSpinner").$$render($$result, {}, {}, {})}`}`;
     }
   })}`;
 });
@@ -10136,7 +10210,7 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
 export {
   Error$1 as E,
   Layout$1 as L,
-  Page$f as P,
+  Page$g as P,
   Server as S,
   set_building as a,
   set_manifest as b,
@@ -10146,21 +10220,22 @@ export {
   set_read_implementation as f,
   get_hooks as g,
   set_safe_public_env as h,
-  Page$e as i,
-  Page$d as j,
-  Page$c as k,
-  Page$b as l,
-  Page$a as m,
-  Page$9 as n,
+  Page$f as i,
+  Page$e as j,
+  Page$d as k,
+  Page$c as l,
+  Page$b as m,
+  Page$a as n,
   options as o,
-  Page$8 as p,
-  Page$7 as q,
-  Page$6 as r,
+  Page$9 as p,
+  Page$8 as q,
+  Page$7 as r,
   set_assets as s,
-  Page$5 as t,
-  Page$4 as u,
-  Page$3 as v,
-  Page$2 as w,
-  Page$1 as x,
-  Page as y
+  Page$6 as t,
+  Page$5 as u,
+  Page$4 as v,
+  Page$3 as w,
+  Page$2 as x,
+  Page$1 as y,
+  Page as z
 };

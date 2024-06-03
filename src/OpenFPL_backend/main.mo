@@ -697,6 +697,54 @@
       await seasonManager.payPrivateLeagueReward(Principal.fromActor(Self), privateLeagueCanisterId, treasuryManager.getTokenList(), dto.managerId, dto.amount);
     };
 
+    public shared ({ caller }) func getSystemLog(dto: DTOs.GetSystemLogDTO) : async Result.Result<DTOs.GetSystemLogDTO, T.Error> {
+      assert not Principal.isAnonymous(caller);
+      if(dto.limit > 0 and (dto.limit < 1 or dto.limit > 100)){
+        return #err(#InvalidData);
+      };
+
+      var eventLogs: [T.EventLogEntry] = [];
+
+      switch(dto.eventType){
+        case (null){};
+        case (?foundEventType)
+        eventLogs := Array.filter<T.EventLogEntry>(
+          stable_event_logs,
+          func(eventLog : T.EventLogEntry) : Bool {
+            eventLog.eventType == foundEventType;
+          },
+        );
+      };
+
+      if(dto.dateStart > 0){
+        eventLogs := Array.filter<T.EventLogEntry>(
+          stable_event_logs,
+          func(eventLog : T.EventLogEntry) : Bool {
+            eventLog.eventTime >= dto.dateStart;
+          },
+        );
+      };
+
+      if(dto.dateEnd > 0){
+        eventLogs := Array.filter<T.EventLogEntry>(
+          stable_event_logs,
+          func(eventLog : T.EventLogEntry) : Bool {
+            eventLog.eventTime >= dto.dateEnd;
+          },
+        );
+      };
+
+      return #ok({
+        dateEnd = dto.dateEnd;
+        dateStart = dto.dateStart;
+        entries = eventLogs;
+        limit = dto.limit;
+        offset = dto.offset; 
+        eventType = dto.eventType;
+        totalEntries = Array.size(stable_event_logs);
+      });
+    };
+
 
     //Stable variables backup:
 
@@ -770,6 +818,8 @@
 
     private var nextCyclesCheckTime : Int = 0;
     private var nextWalletCheckTime : Int = 0;
+
+    private stable var stable_event_logs: [T.EventLogEntry] = [];
 
     system func preupgrade() {
       stable_reward_pools := seasonManager.getStableRewardPools();

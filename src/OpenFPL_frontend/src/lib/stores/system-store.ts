@@ -2,11 +2,13 @@ import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
   DataCacheDTO,
+  GetSystemLogDTO,
   SeasonDTO,
   SystemStateDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { isError, replacer } from "../utils/Helpers";
+import { authStore } from "./auth.store";
 
 function createSystemStore() {
   const { subscribe, set } = writable<SystemStateDTO | null>(null);
@@ -16,6 +18,8 @@ function createSystemStore() {
   );
 
   async function sync() {
+    await authStore.sync();
+
     let category = "system_state";
     const newHashValues = await actor.getDataHashes();
 
@@ -83,11 +87,33 @@ function createSystemStore() {
     }
   }
 
+  async function getLogs(
+    dto: GetSystemLogDTO,
+  ): Promise<GetSystemLogDTO | undefined> {
+    try {
+      const identityActor: any = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
+      );
+      let result = await identityActor.getSystemLog(dto);
+
+      if (isError(result)) {
+        console.error("Error getting system logs:", result);
+        return;
+      }
+      return result.ok;
+    } catch (error) {
+      console.error("Error getting system logs:", error);
+      throw error;
+    }
+  }
+
   return {
     subscribe,
     sync,
     getSystemState,
     getSeasons,
+    getLogs,
   };
 }
 

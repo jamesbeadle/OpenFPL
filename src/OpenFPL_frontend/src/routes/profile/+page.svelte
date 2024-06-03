@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
   import ProfileDetail from "$lib/components/profile/profile-detail.svelte";
   import Layout from "../Layout.svelte";
-  import { Spinner } from "@dfinity/gix-components";
+    import LocalSpinner from "$lib/components/local-spinner.svelte";
   let activeTab: string = "details";
 
   let isLoading = true;
@@ -16,7 +16,7 @@
 
 <Layout>
   {#if isLoading}
-    <Spinner />
+    <LocalSpinner />
   {:else}
     <div class="m-4">
       <div class="bg-panel rounded-md">
