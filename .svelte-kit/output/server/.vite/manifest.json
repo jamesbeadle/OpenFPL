@@ -83,6 +83,14 @@
     "isEntry": true,
     "src": "src/OpenFPL_frontend/src/routes/clubs/+page.svelte"
   },
+  "src/OpenFPL_frontend/src/routes/cycles/+page.svelte": {
+    "file": "entries/pages/cycles/_page.svelte.js",
+    "imports": [
+      "_index.js"
+    ],
+    "isEntry": true,
+    "src": "src/OpenFPL_frontend/src/routes/cycles/+page.svelte"
+  },
   "src/OpenFPL_frontend/src/routes/gameplay-rules/+page.svelte": {
     "file": "entries/pages/gameplay-rules/_page.svelte.js",
     "imports": [

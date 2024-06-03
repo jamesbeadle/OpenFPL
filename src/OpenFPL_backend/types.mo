@@ -473,4 +473,12 @@ module _Types {
     weeklyLeaderboardPool : Nat64;
     mostValuableTeamPool : Nat64;
   };
+
+  public type CanisterTopup = {
+    canisterId: CanisterId;
+    topupTime: Int;
+    icpAmount: Nat64;
+    cyclesAmount: Nat64;
+    xdrRate: Nat64;
+  };
 };

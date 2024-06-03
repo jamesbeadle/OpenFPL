@@ -3513,7 +3513,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "13a6eic"
+  version_hash: "uvxit2"
 };
 async function get_hooks() {
   return {};
@@ -3961,13 +3961,13 @@ const idlFactory = ({ IDL }) => {
     "shirtType": ShirtType,
     "primaryColourHex": IDL.Text
   });
-  const Result_20 = IDL.Variant({ "ok": IDL.Vec(ClubDTO), "err": Error2 });
+  const Result_19 = IDL.Variant({ "ok": IDL.Vec(ClubDTO), "err": Error2 });
   const CountryDTO = IDL.Record({
     "id": CountryId,
     "code": IDL.Text,
     "name": IDL.Text
   });
-  const Result_23 = IDL.Variant({ "ok": IDL.Vec(CountryDTO), "err": Error2 });
+  const Result_22 = IDL.Variant({ "ok": IDL.Vec(CountryDTO), "err": Error2 });
   const PickTeamDTO = IDL.Record({
     "playerIds": IDL.Vec(PlayerId),
     "countrymenCountryId": CountryId,
@@ -3995,9 +3995,9 @@ const idlFactory = ({ IDL }) => {
     "captainId": PlayerId,
     "monthlyBonusesAvailable": IDL.Nat8
   });
-  const Result_22 = IDL.Variant({ "ok": PickTeamDTO, "err": Error2 });
+  const Result_21 = IDL.Variant({ "ok": PickTeamDTO, "err": Error2 });
   const DataCacheDTO = IDL.Record({ "hash": IDL.Text, "category": IDL.Text });
-  const Result_21 = IDL.Variant({
+  const Result_20 = IDL.Variant({
     "ok": IDL.Vec(DataCacheDTO),
     "err": Error2
   });
@@ -4092,13 +4092,8 @@ const idlFactory = ({ IDL }) => {
     "totalEntries": IDL.Nat,
     "entries": IDL.Vec(ManagerPrivateLeagueDTO)
   });
-  const Result_19 = IDL.Variant({
-    "ok": ManagerPrivateLeaguesDTO,
-    "err": Error2
-  });
-  const PrincipalId = IDL.Text;
   const Result_18 = IDL.Variant({
-    "ok": IDL.Vec(IDL.Tuple(PrincipalId, CanisterId)),
+    "ok": ManagerPrivateLeaguesDTO,
     "err": Error2
   });
   const GetMonthlyLeaderboardDTO = IDL.Record({
@@ -4252,6 +4247,7 @@ const idlFactory = ({ IDL }) => {
     "limit": IDL.Nat,
     "canisterId": CanisterId
   });
+  const PrincipalId = IDL.Text;
   const LeagueMemberDTO = IDL.Record({
     "added": IDL.Int,
     "username": IDL.Text,
@@ -4426,16 +4422,15 @@ const idlFactory = ({ IDL }) => {
     "executeUpdatePlayer": IDL.Func([UpdatePlayerDTO], [], []),
     "getCanisterCyclesBalance": IDL.Func([], [IDL.Nat], []),
     "getCanisterTimerId": IDL.Func([], [IDL.Opt(IDL.Int)], []),
-    "getClubs": IDL.Func([], [Result_20], ["query"]),
-    "getCountries": IDL.Func([], [Result_23], ["query"]),
-    "getCurrentTeam": IDL.Func([], [Result_22], []),
-    "getDataHashes": IDL.Func([], [Result_21], ["query"]),
+    "getClubs": IDL.Func([], [Result_19], ["query"]),
+    "getCountries": IDL.Func([], [Result_22], ["query"]),
+    "getCurrentTeam": IDL.Func([], [Result_21], []),
+    "getDataHashes": IDL.Func([], [Result_20], ["query"]),
     "getFixtures": IDL.Func([GetFixturesDTO], [Result_13], ["query"]),
-    "getFormerClubs": IDL.Func([], [Result_20], ["query"]),
+    "getFormerClubs": IDL.Func([], [Result_19], ["query"]),
     "getLoanedPlayers": IDL.Func([ClubFilterDTO], [Result_8], ["query"]),
     "getManager": IDL.Func([GetManagerDTO], [Result_1], []),
-    "getManagerPrivateLeagues": IDL.Func([], [Result_19], []),
-    "getManagers": IDL.Func([], [Result_18], ["query"]),
+    "getManagerPrivateLeagues": IDL.Func([], [Result_18], []),
     "getMonthlyLeaderboard": IDL.Func(
       [GetMonthlyLeaderboardDTO],
       [Result_10],
@@ -4596,7 +4591,7 @@ const idlFactory = ({ IDL }) => {
     )
   });
 };
-var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic" };
+var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
 const canisterId = define_process_env_default$c.CANISTER_ID_OPENFPL_BACKEND;
 const createActor = (canisterId2, options2 = {}) => {
   const agent = options2.agent || new HttpAgent({ ...options2.agentOptions });
@@ -4604,6 +4599,14 @@ const createActor = (canisterId2, options2 = {}) => {
     console.warn(
       "Detected both agent and agentOptions passed to createActor. Ignoring agentOptions and proceeding with the provided agent."
     );
+  }
+  {
+    agent.fetchRootKey().catch((err) => {
+      console.warn(
+        "Unable to fetch root key. Check to ensure that your local replica is running"
+      );
+      console.error(err);
+    });
   }
   return Actor.createActor(idlFactory, {
     agent,
@@ -4615,7 +4618,7 @@ canisterId ? createActor(canisterId) : void 0;
 class ActorFactory {
   static createActor(idlFactory2, canisterId2 = "", identity = null, options2 = null) {
     const hostOptions = {
-      host: `https://${canisterId2}.icp-api.io`,
+      host: `http://localhost:8080/?canisterId=qhbym-qaaaa-aaaaa-aaafq-cai`,
       identity
     };
     if (!options2) {
@@ -4628,6 +4631,14 @@ class ActorFactory {
       options2.agentOptions.host = hostOptions.host;
     }
     const agent = new HttpAgent({ ...options2.agentOptions });
+    {
+      agent.fetchRootKey().catch((err) => {
+        console.warn(
+          "Unable to fetch root key. Ensure your local replica is running"
+        );
+        console.error(err);
+      });
+    }
     return Actor.createActor(idlFactory2, {
       agent,
       canisterId: canisterId2,
@@ -4636,7 +4647,7 @@ class ActorFactory {
   }
   static getAgent(canisterId2 = "", identity = null, options2 = null) {
     const hostOptions = {
-      host: `https://${canisterId2}.icp-api.io`,
+      host: `http://localhost:8080/?canisterId=b77ix-eeaaa-aaaaa-qaada-cai`,
       identity
     };
     if (!options2) {
@@ -4883,7 +4894,7 @@ function convertFixtureStatus(fixtureStatus) {
 function isError(response) {
   return response && response.err !== void 0;
 }
-var define_process_env_default$b = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic" };
+var define_process_env_default$b = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
 function createSystemStore() {
   const { subscribe: subscribe2, set } = writable(null);
   let actor = ActorFactory.createActor(
@@ -4953,7 +4964,7 @@ function createSystemStore() {
   };
 }
 const systemStore = createSystemStore();
-var define_process_env_default$a = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic" };
+var define_process_env_default$a = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
 function createFixtureStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let actor = ActorFactory.createActor(
@@ -5032,7 +5043,7 @@ function createFixtureStore() {
   };
 }
 const fixtureStore = createFixtureStore();
-var define_process_env_default$9 = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic" };
+var define_process_env_default$9 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
 function createTeamStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let actor = ActorFactory.createActor(
@@ -5561,7 +5572,7 @@ const toastsError = ({
     level: "error"
   });
 };
-var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic" };
+var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
 function createManagerStore() {
   const { subscribe: subscribe2, set } = writable(null);
   let systemState;
@@ -5832,7 +5843,7 @@ function createManagerStore() {
   };
 }
 createManagerStore();
-var define_process_env_default$7 = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic" };
+var define_process_env_default$7 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
 function createCountriesStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let actor = ActorFactory.createActor(
@@ -5879,7 +5890,7 @@ function createCountriesStore() {
   };
 }
 const countriesStore = createCountriesStore();
-var define_process_env_default$6 = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic" };
+var define_process_env_default$6 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
 function createWeeklyLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage = 25;
@@ -5991,7 +6002,7 @@ function createWeeklyLeaderboardStore() {
   };
 }
 createWeeklyLeaderboardStore();
-var define_process_env_default$5 = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic" };
+var define_process_env_default$5 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
 function createPlayerStore() {
   const { subscribe: subscribe2, set } = writable([]);
   systemStore.subscribe((value) => {
@@ -6066,7 +6077,7 @@ function createPlayerStore() {
   };
 }
 const playerStore = createPlayerStore();
-var define_process_env_default$4 = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic" };
+var define_process_env_default$4 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
 function createPlayerEventsStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let systemState;
@@ -6428,7 +6439,7 @@ function createPlayerEventsStore() {
   };
 }
 createPlayerEventsStore();
-var define_process_env_default$3 = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic" };
+var define_process_env_default$3 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
 function createUserStore() {
   const { subscribe: subscribe2, set } = writable(null);
   async function sync() {
@@ -6709,7 +6720,7 @@ const BadgeIcon = create_ssr_component(($$result, $$props, $$bindings, slots) =>
     $$bindings.thirdColour(thirdColour);
   return `<svg xmlns="http://www.w3.org/2000/svg"${add_attribute("class", className, 0)} fill="currentColor" viewBox="0 0 814 814"><path d="M407 33.9165C295.984 33.9165 135.667 118.708 135.667 118.708V508.75C135.667 508.75 141.044 561.82 152.625 593.541C194.871 709.259 407 780.083 407 780.083C407 780.083 619.129 709.259 661.375 593.541C672.956 561.82 678.333 508.75 678.333 508.75V118.708C678.333 118.708 518.016 33.9165 407 33.9165Z"${add_attribute("fill", primaryColour, 0)}></path><path d="M712.25 101.75V493.013C712.25 649.097 603.581 689.831 407 814C210.419 689.831 101.75 649.063 101.75 493.013V101.75C167.718 45.2448 282.729 0 407 0C531.271 0 646.282 45.2448 712.25 101.75ZM644.417 135.361C585.775 96.052 496.506 67.8333 407.237 67.8333C317.223 67.8333 228.124 96.1198 169.583 135.361V492.979C169.583 595.712 225.817 622.235 407 734.025C587.979 622.337 644.417 595.814 644.417 492.979V135.361Z"${add_attribute("fill", thirdColour, 0)}></path><path d="M407.237 135.667C464.862 135.667 527.811 150.42 576.583 174.467V493.012C576.583 547.347 562.542 558.539 407 654.422L407.237 135.667Z"${add_attribute("fill", secondaryColour, 0)}></path></svg>`;
 });
-var define_process_env_default$2 = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic" };
+var define_process_env_default$2 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
 function createMonthlyLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage = 25;
@@ -6813,7 +6824,7 @@ function createMonthlyLeaderboardStore() {
   };
 }
 createMonthlyLeaderboardStore();
-var define_process_env_default$1 = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic" };
+var define_process_env_default$1 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
 function createSeasonLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage = 25;
@@ -6914,7 +6925,7 @@ function createSeasonLeaderboardStore() {
   };
 }
 createSeasonLeaderboardStore();
-const Page$e = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$f = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_systemStore;
   let $$unsubscribe_teamStore;
   let $$unsubscribe_fixtureStore;
@@ -6930,7 +6941,7 @@ const Page$e = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-var define_process_env_default = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic" };
+var define_process_env_default = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
 function createGovernanceStore() {
   async function revaluePlayerUp(playerId) {
     try {
@@ -8416,7 +8427,7 @@ const Clear_draft_modal = create_ssr_component(($$result, $$props, $$bindings, s
     }
   })}`;
 });
-const Page$d = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$e = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let fixtureId;
   let $playerEventData, $$unsubscribe_playerEventData = noop, $$subscribe_playerEventData = () => ($$unsubscribe_playerEventData(), $$unsubscribe_playerEventData = subscribe(playerEventData, ($$value) => $playerEventData = $$value), playerEventData);
   let $systemStore, $$unsubscribe_systemStore;
@@ -9260,7 +9271,7 @@ const Add_fixture_data = create_ssr_component(($$result, $$props, $$bindings, sl
     }
   })}`;
 });
-const Page$c = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$d = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let showRevaluePlayerUpModal = false;
   let showRevaluePlayerDownModal = false;
   let showAddInitialFixturesModal = false;
@@ -9483,7 +9494,7 @@ const Page$c = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$c = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $teamStore, $$unsubscribe_teamStore;
   let $$unsubscribe_playerStore;
   let $$unsubscribe_fixtureStore;
@@ -9513,7 +9524,7 @@ const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$a = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $teamStore, $$unsubscribe_teamStore;
   $$unsubscribe_teamStore = subscribe(teamStore, (value) => $teamStore = value);
   $$unsubscribe_teamStore();
@@ -9532,6 +9543,25 @@ const Page$a = create_ssr_component(($$result, $$props, $$bindings, slots) => {
           {}
         )} <p class="flex-grow text-lg md:text-sm">${escape(team.friendlyName)}</p> <a class="mt-auto self-end"${add_attribute("href", `/club?id=${team.id}`, 0)}><button class="fpl-button text-white font-bold py-2 px-4 rounded self-end" data-svelte-h="svelte-1bk95qn">View</button> </a></div> </div>`;
       })}</div></div></div>`;
+    }
+  })}`;
+});
+const Page$a = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
+    default: () => {
+      return `<div class="bg-panel rounded-md mt-4"><h1 class="default-header p-4" data-svelte-h="svelte-30ik2c">OpenFPL Cycle Management</h1> <ul class="flex bg-light-gray px-1 md:px-4 pt-2 contained-text border-b border-gray-700 mb-4"><li${add_attribute("class", `mr-1 md:mr-4 ${"active-tab"}`, 0)}><button${add_attribute(
+        "class",
+        `p-2 ${"text-white"}`,
+        0
+      )}>Default Canisters</button></li> <li${add_attribute(
+        "class",
+        `mr-1 md:mr-4 ${""}`,
+        0
+      )}><button${add_attribute(
+        "class",
+        `p-2 ${"text-gray-400"}`,
+        0
+      )}>Automatically Generated Canisters</button></li> <li${add_attribute("class", `mr-1 md:mr-4 ${""}`, 0)}><button${add_attribute("class", `p-2 ${"text-gray-400"}`, 0)}>Topups</button></li></ul> ${`${`${``}`}`}</div>`;
     }
   })}`;
 });
@@ -10106,7 +10136,7 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
 export {
   Error$1 as E,
   Layout$1 as L,
-  Page$e as P,
+  Page$f as P,
   Server as S,
   set_building as a,
   set_manifest as b,
@@ -10116,20 +10146,21 @@ export {
   set_read_implementation as f,
   get_hooks as g,
   set_safe_public_env as h,
-  Page$d as i,
-  Page$c as j,
-  Page$b as k,
-  Page$a as l,
-  Page$9 as m,
-  Page$8 as n,
+  Page$e as i,
+  Page$d as j,
+  Page$c as k,
+  Page$b as l,
+  Page$a as m,
+  Page$9 as n,
   options as o,
-  Page$7 as p,
-  Page$6 as q,
-  Page$5 as r,
+  Page$8 as p,
+  Page$7 as q,
+  Page$6 as r,
   set_assets as s,
-  Page$4 as t,
-  Page$3 as u,
-  Page$2 as v,
-  Page$1 as w,
-  Page as x
+  Page$5 as t,
+  Page$4 as u,
+  Page$3 as v,
+  Page$2 as w,
+  Page$1 as x,
+  Page as y
 };

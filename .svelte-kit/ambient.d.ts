@@ -29,19 +29,20 @@ declare module '$env/static/private' {
 	export const DFX_VERSION: string;
 	export const DFX_NETWORK: string;
 	export const CANISTER_CANDID_PATH_OPENFPL_BACKEND: string;
+	export const CANISTER_ID_SNS_ROOT: string;
 	export const CANISTER_ID_SNS_GOVERNANCE: string;
-	export const CANISTER_ID_OPENFPL_FRONTEND: string;
 	export const CANISTER_ID_OPENFPL_BACKEND: string;
 	export const CANISTER_ID_SNS_SWAP: string;
+	export const CANISTER_ID_OPENFPL_FRONTEND: string;
+	export const CANISTER_ID_SNS_INDEX: string;
 	export const CANISTER_ID_SNS_LEDGER: string;
 	export const CANISTER_ID_NEURON_CONTROLLER: string;
-	export const CANISTER_ID_SNS_ROOT: string;
-	export const CANISTER_ID_SNS_INDEX: string;
 	export const CANISTER_ID: string;
 	export const CANISTER_CANDID_PATH: string;
 	export const VITE_AUTH_PROVIDER_URL: string;
 	export const VITE_INTERNET_IDENTITY_CANISTER_ID: string;
 	export const MANPATH: string;
+	export const NETWORK: string;
 	export const TERM_PROGRAM: string;
 	export const NODE: string;
 	export const INIT_CWD: string;
@@ -62,6 +63,7 @@ declare module '$env/static/private' {
 	export const npm_config_globalconfig: string;
 	export const SSH_AUTH_SOCK: string;
 	export const __CF_USER_TEXT_ENCODING: string;
+	export const PEM_FILE: string;
 	export const npm_execpath: string;
 	export const PATH: string;
 	export const npm_package_json: string;
@@ -72,6 +74,7 @@ declare module '$env/static/private' {
 	export const USER_ZDOTDIR: string;
 	export const npm_command: string;
 	export const PWD: string;
+	export const PROPOSER_NEURON_ID: string;
 	export const npm_lifecycle_event: string;
 	export const EDITOR: string;
 	export const npm_package_name: string;
@@ -79,8 +82,8 @@ declare module '$env/static/private' {
 	export const npm_config_npm_version: string;
 	export const XPC_FLAGS: string;
 	export const VSCODE_GIT_ASKPASS_EXTRA_ARGS: string;
-	export const NODE_ENV: string;
 	export const npm_config_node_gyp: string;
+	export const IC_URL: string;
 	export const npm_package_version: string;
 	export const XPC_SERVICE_NAME: string;
 	export const VSCODE_INJECTION: string;
@@ -92,6 +95,8 @@ declare module '$env/static/private' {
 	export const LOGNAME: string;
 	export const npm_lifecycle_script: string;
 	export const VSCODE_GIT_IPC_HANDLE: string;
+	export const IDENTITY: string;
+	export const WASM_FOLDER: string;
 	export const npm_config_user_agent: string;
 	export const VSCODE_GIT_ASKPASS_NODE: string;
 	export const INFOPATH: string;
@@ -100,8 +105,10 @@ declare module '$env/static/private' {
 	export const npm_node_execpath: string;
 	export const npm_config_prefix: string;
 	export const COLORTERM: string;
+	export const NODE_ENV: string;
 	export const VITE_OPENFPL_BACKEND_CANISTER_ID: string;
 	export const VITE_OPENFPL_FRONTEND_CANISTER_ID: string;
+	export const VITE___CANDID_UI_CANISTER_ID: string;
 	export const VITE_NEURON_CONTROLLER_CANISTER_ID: string;
 }
 
@@ -137,19 +144,20 @@ declare module '$env/dynamic/private' {
 		DFX_VERSION: string;
 		DFX_NETWORK: string;
 		CANISTER_CANDID_PATH_OPENFPL_BACKEND: string;
+		CANISTER_ID_SNS_ROOT: string;
 		CANISTER_ID_SNS_GOVERNANCE: string;
-		CANISTER_ID_OPENFPL_FRONTEND: string;
 		CANISTER_ID_OPENFPL_BACKEND: string;
 		CANISTER_ID_SNS_SWAP: string;
+		CANISTER_ID_OPENFPL_FRONTEND: string;
+		CANISTER_ID_SNS_INDEX: string;
 		CANISTER_ID_SNS_LEDGER: string;
 		CANISTER_ID_NEURON_CONTROLLER: string;
-		CANISTER_ID_SNS_ROOT: string;
-		CANISTER_ID_SNS_INDEX: string;
 		CANISTER_ID: string;
 		CANISTER_CANDID_PATH: string;
 		VITE_AUTH_PROVIDER_URL: string;
 		VITE_INTERNET_IDENTITY_CANISTER_ID: string;
 		MANPATH: string;
+		NETWORK: string;
 		TERM_PROGRAM: string;
 		NODE: string;
 		INIT_CWD: string;
@@ -170,6 +178,7 @@ declare module '$env/dynamic/private' {
 		npm_config_globalconfig: string;
 		SSH_AUTH_SOCK: string;
 		__CF_USER_TEXT_ENCODING: string;
+		PEM_FILE: string;
 		npm_execpath: string;
 		PATH: string;
 		npm_package_json: string;
@@ -180,6 +189,7 @@ declare module '$env/dynamic/private' {
 		USER_ZDOTDIR: string;
 		npm_command: string;
 		PWD: string;
+		PROPOSER_NEURON_ID: string;
 		npm_lifecycle_event: string;
 		EDITOR: string;
 		npm_package_name: string;
@@ -187,8 +197,8 @@ declare module '$env/dynamic/private' {
 		npm_config_npm_version: string;
 		XPC_FLAGS: string;
 		VSCODE_GIT_ASKPASS_EXTRA_ARGS: string;
-		NODE_ENV: string;
 		npm_config_node_gyp: string;
+		IC_URL: string;
 		npm_package_version: string;
 		XPC_SERVICE_NAME: string;
 		VSCODE_INJECTION: string;
@@ -200,6 +210,8 @@ declare module '$env/dynamic/private' {
 		LOGNAME: string;
 		npm_lifecycle_script: string;
 		VSCODE_GIT_IPC_HANDLE: string;
+		IDENTITY: string;
+		WASM_FOLDER: string;
 		npm_config_user_agent: string;
 		VSCODE_GIT_ASKPASS_NODE: string;
 		INFOPATH: string;
@@ -208,8 +220,10 @@ declare module '$env/dynamic/private' {
 		npm_node_execpath: string;
 		npm_config_prefix: string;
 		COLORTERM: string;
+		NODE_ENV: string;
 		VITE_OPENFPL_BACKEND_CANISTER_ID: string;
 		VITE_OPENFPL_FRONTEND_CANISTER_ID: string;
+		VITE___CANDID_UI_CANISTER_ID: string;
 		VITE_NEURON_CONTROLLER_CANISTER_ID: string;
 		[key: `PUBLIC_${string}`]: undefined;
 		[key: `${string}`]: string | undefined;

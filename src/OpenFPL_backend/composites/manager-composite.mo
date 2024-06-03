@@ -1236,6 +1236,10 @@ module {
       uniqueManagerCanisterIds := List.fromArray(Buffer.toArray(canisterIdBuffer));
     };
 
+    public func resetManagerCount() {
+      totalManagers := 0;
+    };
+
     public func getStableTotalManagers() : Nat {
       return totalManagers;
     };

@@ -118,7 +118,7 @@ module {
       return List.toArray(dataCacheHashes);
     };
 
-    private func updateCacheHash(category : Text) : async () {
+    public func updateCacheHash(category : Text) : async () {
       let hashBuffer = Buffer.fromArray<T.DataCache>([]);
 
       for (hashObj in Iter.fromList(dataCacheHashes)) {
@@ -1303,6 +1303,10 @@ module {
       clubComposite.init();
       playerComposite.init();
       await managerComposite.init();
+    };
+
+    public func resetManagerCount(){
+      managerComposite.resetManagerCount();
     };
 
   };

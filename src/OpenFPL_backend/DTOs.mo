@@ -625,4 +625,10 @@ module DTOs {
     teamSelection: UpdateTeamSelectionDTO;
   };
 
+  public type CanisterInfoDTO = {
+    canisterId: T.CanisterId;
+    lastTopup: Int;
+    cyclesBalance: Nat64;
+  };
+
 };

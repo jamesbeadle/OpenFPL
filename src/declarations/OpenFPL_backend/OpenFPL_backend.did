@@ -198,25 +198,20 @@ type Result_3 =
    err: Error;
    ok: nat;
  };
-type Result_23 = 
+type Result_22 = 
  variant {
    err: Error;
    ok: vec CountryDTO;
  };
-type Result_22 = 
+type Result_21 = 
  variant {
    err: Error;
    ok: PickTeamDTO;
  };
-type Result_21 = 
- variant {
-   err: Error;
-   ok: vec DataCacheDTO;
- };
 type Result_20 = 
  variant {
    err: Error;
-   ok: vec ClubDTO;
+   ok: vec DataCacheDTO;
  };
 type Result_2 = 
  variant {
@@ -226,15 +221,12 @@ type Result_2 =
 type Result_19 = 
  variant {
    err: Error;
-   ok: ManagerPrivateLeaguesDTO;
+   ok: vec ClubDTO;
  };
 type Result_18 = 
  variant {
    err: Error;
-   ok: vec record {
-             PrincipalId;
-             CanisterId;
-           };
+   ok: ManagerPrivateLeaguesDTO;
  };
 type Result_17 = 
  variant {
@@ -861,16 +853,15 @@ service : {
   executeUpdatePlayer: (UpdatePlayerDTO) -> ();
   getCanisterCyclesBalance: () -> (nat);
   getCanisterTimerId: () -> (opt int);
-  getClubs: () -> (Result_20) query;
-  getCountries: () -> (Result_23) query;
-  getCurrentTeam: () -> (Result_22);
-  getDataHashes: () -> (Result_21) query;
+  getClubs: () -> (Result_19) query;
+  getCountries: () -> (Result_22) query;
+  getCurrentTeam: () -> (Result_21);
+  getDataHashes: () -> (Result_20) query;
   getFixtures: (GetFixturesDTO) -> (Result_13) query;
-  getFormerClubs: () -> (Result_20) query;
+  getFormerClubs: () -> (Result_19) query;
   getLoanedPlayers: (ClubFilterDTO) -> (Result_8) query;
   getManager: (GetManagerDTO) -> (Result_1);
-  getManagerPrivateLeagues: () -> (Result_19);
-  getManagers: () -> (Result_18) query;
+  getManagerPrivateLeagues: () -> (Result_18);
   getMonthlyLeaderboard: (GetMonthlyLeaderboardDTO) -> (Result_10);
   getMonthlyLeaderboards: (GetMonthlyLeaderboardsDTO) -> (Result_17);
   getNeuronCommand: () -> (opt Command);

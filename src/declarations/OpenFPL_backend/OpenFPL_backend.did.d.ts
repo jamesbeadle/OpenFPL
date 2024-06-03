@@ -480,19 +480,17 @@ export type Result_16 = { 'ok' : PlayerDetailDTO } |
   { 'err' : Error };
 export type Result_17 = { 'ok' : Array<MonthlyLeaderboardDTO> } |
   { 'err' : Error };
-export type Result_18 = { 'ok' : Array<[PrincipalId, CanisterId]> } |
+export type Result_18 = { 'ok' : ManagerPrivateLeaguesDTO } |
   { 'err' : Error };
-export type Result_19 = { 'ok' : ManagerPrivateLeaguesDTO } |
+export type Result_19 = { 'ok' : Array<ClubDTO> } |
   { 'err' : Error };
 export type Result_2 = { 'ok' : WeeklyLeaderboardDTO } |
   { 'err' : Error };
-export type Result_20 = { 'ok' : Array<ClubDTO> } |
+export type Result_20 = { 'ok' : Array<DataCacheDTO> } |
   { 'err' : Error };
-export type Result_21 = { 'ok' : Array<DataCacheDTO> } |
+export type Result_21 = { 'ok' : PickTeamDTO } |
   { 'err' : Error };
-export type Result_22 = { 'ok' : PickTeamDTO } |
-  { 'err' : Error };
-export type Result_23 = { 'ok' : Array<CountryDTO> } |
+export type Result_22 = { 'ok' : Array<CountryDTO> } |
   { 'err' : Error };
 export type Result_3 = { 'ok' : bigint } |
   { 'err' : Error };
@@ -674,16 +672,15 @@ export interface _SERVICE {
   'executeUpdatePlayer' : ActorMethod<[UpdatePlayerDTO], undefined>,
   'getCanisterCyclesBalance' : ActorMethod<[], bigint>,
   'getCanisterTimerId' : ActorMethod<[], [] | [bigint]>,
-  'getClubs' : ActorMethod<[], Result_20>,
-  'getCountries' : ActorMethod<[], Result_23>,
-  'getCurrentTeam' : ActorMethod<[], Result_22>,
-  'getDataHashes' : ActorMethod<[], Result_21>,
+  'getClubs' : ActorMethod<[], Result_19>,
+  'getCountries' : ActorMethod<[], Result_22>,
+  'getCurrentTeam' : ActorMethod<[], Result_21>,
+  'getDataHashes' : ActorMethod<[], Result_20>,
   'getFixtures' : ActorMethod<[GetFixturesDTO], Result_13>,
-  'getFormerClubs' : ActorMethod<[], Result_20>,
+  'getFormerClubs' : ActorMethod<[], Result_19>,
   'getLoanedPlayers' : ActorMethod<[ClubFilterDTO], Result_8>,
   'getManager' : ActorMethod<[GetManagerDTO], Result_1>,
-  'getManagerPrivateLeagues' : ActorMethod<[], Result_19>,
-  'getManagers' : ActorMethod<[], Result_18>,
+  'getManagerPrivateLeagues' : ActorMethod<[], Result_18>,
   'getMonthlyLeaderboard' : ActorMethod<[GetMonthlyLeaderboardDTO], Result_10>,
   'getMonthlyLeaderboards' : ActorMethod<
     [GetMonthlyLeaderboardsDTO],

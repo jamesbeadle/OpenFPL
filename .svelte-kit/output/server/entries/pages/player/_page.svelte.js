@@ -1,6 +1,6 @@
-import { u } from "../../../chunks/index.js";
+import { v } from "../../../chunks/index.js";
 import "@dfinity/utils";
 import "dompurify";
 export {
-  u as default
+  v as default
 };
