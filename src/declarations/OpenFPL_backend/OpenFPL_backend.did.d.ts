@@ -22,9 +22,6 @@ export interface ClaimOrRefreshNeuronFromAccount {
   'controller' : [] | [Principal],
   'memo' : bigint,
 }
-export interface ClaimOrRefreshResponse {
-  'refreshed_neuron_id' : [] | [NeuronId],
-}
 export interface ClubDTO {
   'id' : ClubId,
   'secondaryColourHex' : string,
@@ -43,13 +40,6 @@ export type Command = { 'Spawn' : Spawn } |
   { 'Configure' : Configure } |
   { 'StakeMaturity' : StakeMaturityResponse } |
   { 'Disburse' : Disburse };
-export type CommandResponse = { 'Error' : GovernanceError } |
-  { 'Spawn' : SpawnResponse } |
-  { 'Follow' : null } |
-  { 'ClaimOrRefresh' : ClaimOrRefreshResponse } |
-  { 'Configure' : null } |
-  { 'StakeMaturity' : StakeMaturityResponse } |
-  { 'Disburse' : DisburseResponse };
 export interface Configure { 'operation' : [] | [Operation] }
 export interface CountryDTO {
   'id' : CountryId,
@@ -84,7 +74,6 @@ export interface Disburse {
   'to_account' : [] | [AccountIdentifier],
   'amount' : [] | [Amount],
 }
-export interface DisburseResponse { 'transfer_block_height' : bigint }
 export type EntryRequirement = { 'InviteOnly' : null } |
   { 'PaidEntry' : null } |
   { 'PaidInviteEntry' : null } |
@@ -98,14 +87,6 @@ export type Error = { 'DecodeError' : null } |
   { 'AlreadyExists' : null } |
   { 'CanisterCreateError' : null } |
   { 'InvalidTeamError' : null };
-export type Error__1 = { 'expired' : null } |
-  { 'missing' : string } |
-  { 'other' : string } |
-  { 'invalid' : string } |
-  { 'fee_not_defined' : string } |
-  { 'trapped' : string } |
-  { 'rejected' : string } |
-  { 'fatal' : string };
 export interface EventLogEntry {
   'eventId' : bigint,
   'eventTitle' : string,
@@ -113,12 +94,10 @@ export interface EventLogEntry {
   'eventTime' : bigint,
   'eventType' : EventLogEntryType,
 }
-export type EventLogEntryType = { 'TopupRequest' : null } |
-  { 'SystemCheck' : null } |
-  { 'CyclesBalanceCheck' : null } |
+export type EventLogEntryType = { 'SystemCheck' : null } |
+  { 'ManagerCanisterCreated' : null } |
   { 'UnexpectedError' : null } |
-  { 'NewManagerCanisterCreated' : null } |
-  { 'TopupSent' : null };
+  { 'CanisterTopup' : null };
 export interface FantasyTeamSnapshot {
   'playerIds' : Uint16Array | number[],
   'month' : CalendarMonth,
@@ -243,10 +222,6 @@ export interface GetWeeklyLeaderboardDTO {
   'searchTerm' : string,
   'gameweek' : GameweekNumber,
 }
-export interface GovernanceError {
-  'error_message' : string,
-  'error_type' : number,
-}
 export interface IncreaseDissolveDelay {
   'additional_dissolve_delay_seconds' : number,
 }
@@ -276,7 +251,6 @@ export interface LoanPlayerDTO {
   'playerId' : PlayerId,
   'loanClubId' : ClubId,
 }
-export interface ManageNeuronResponse { 'command' : [] | [CommandResponse] }
 export interface ManagerDTO {
   'username' : string,
   'weeklyPosition' : bigint,
@@ -319,8 +293,6 @@ export interface MoveFixtureDTO {
   'updatedFixtureDate' : bigint,
 }
 export interface NeuronId { 'id' : bigint }
-export type NeuronResponse = { 'ok' : ManageNeuronResponse } |
-  { 'err' : Error__1 };
 export interface NewTokenDTO {
   'fee' : bigint,
   'ticker' : string,
@@ -558,7 +530,6 @@ export interface Spawn {
   'new_controller' : [] | [Principal],
   'nonce' : [] | [bigint],
 }
-export interface SpawnResponse { 'created_neuron_id' : [] | [NeuronId] }
 export interface StakeMaturityResponse {
   'maturity_e8s' : bigint,
   'stake_maturity_e8s' : bigint,
@@ -669,13 +640,11 @@ export interface WeeklyLeaderboardDTO {
 export interface _SERVICE {
   'acceptInviteAndPayFee' : ActorMethod<[CanisterId], Result>,
   'acceptLeagueInvite' : ActorMethod<[CanisterId], Result>,
-  'burnICPToCycles' : ActorMethod<[bigint], undefined>,
   'createPrivateLeague' : ActorMethod<[CreatePrivateLeagueDTO], Result>,
   'enterLeague' : ActorMethod<[CanisterId], Result>,
   'enterLeagueWithFee' : ActorMethod<[CanisterId], Result>,
   'executeAddInitialFixtures' : ActorMethod<[AddInitialFixturesDTO], undefined>,
   'executeAddNewToken' : ActorMethod<[NewTokenDTO], undefined>,
-  'executeCreateDAONeuron' : ActorMethod<[], undefined>,
   'executeCreatePlayer' : ActorMethod<[CreatePlayerDTO], undefined>,
   'executeLoanPlayer' : ActorMethod<[LoanPlayerDTO], undefined>,
   'executeManageDAONeuron' : ActorMethod<[Command], undefined>,
@@ -696,7 +665,6 @@ export interface _SERVICE {
   'executeUpdatePlayer' : ActorMethod<[UpdatePlayerDTO], undefined>,
   'getCanisterCyclesAvailable' : ActorMethod<[], bigint>,
   'getCanisterCyclesBalance' : ActorMethod<[], bigint>,
-  'getCanisterTimerId' : ActorMethod<[], [] | [bigint]>,
   'getClubs' : ActorMethod<[], Result_20>,
   'getCountries' : ActorMethod<[], Result_23>,
   'getCurrentTeam' : ActorMethod<[], Result_22>,
@@ -711,9 +679,7 @@ export interface _SERVICE {
     [GetMonthlyLeaderboardsDTO],
     Result_18
   >,
-  'getNeuronCommand' : ActorMethod<[], [] | [Command]>,
   'getNeuronId' : ActorMethod<[], bigint>,
-  'getNeuronResponse' : ActorMethod<[], [] | [NeuronResponse]>,
   'getPlayerDetails' : ActorMethod<[GetPlayerDetailsDTO], Result_17>,
   'getPlayerDetailsForGameweek' : ActorMethod<[GameweekFiltersDTO], Result_16>,
   'getPlayers' : ActorMethod<[], Result_9>,
@@ -746,7 +712,7 @@ export interface _SERVICE {
   'inviteUserToLeague' : ActorMethod<[LeagueInviteDTO], Result>,
   'isUsernameValid' : ActorMethod<[UsernameFilterDTO], boolean>,
   'payPrivateLeagueRewards' : ActorMethod<[PrivateLeagueRewardDTO], undefined>,
-  'requestCanisterTopup' : ActorMethod<[], undefined>,
+  'requestCanisterTopup' : ActorMethod<[bigint], undefined>,
   'saveFantasyTeam' : ActorMethod<[UpdateTeamSelectionDTO], Result>,
   'searchUsername' : ActorMethod<[UsernameFilterDTO], Result_1>,
   'setTimer' : ActorMethod<[bigint, string], undefined>,
@@ -761,7 +727,6 @@ export interface _SERVICE {
     RustResult
   >,
   'validateAddNewToken' : ActorMethod<[NewTokenDTO], RustResult>,
-  'validateCreateDAONeuron' : ActorMethod<[], RustResult>,
   'validateCreatePlayer' : ActorMethod<[CreatePlayerDTO], RustResult>,
   'validateLoanPlayer' : ActorMethod<[LoanPlayerDTO], RustResult>,
   'validateManageDAONeuron' : ActorMethod<[Command], RustResult>,

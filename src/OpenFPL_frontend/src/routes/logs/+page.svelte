@@ -17,10 +17,9 @@
 
     let eventTypes: EventLogEntryType[] = [
         { 'SystemCheck' : null },
-        { 'CyclesBalanceCheck' : null },
         { 'UnexpectedError' : null },
-        { 'NewManagerCanisterCreated' : null },
-        { 'TopupSent' : null }
+        { 'ManagerCanisterCreated' : null },
+        { 'CanisterTopup' : null }
     ];
   
     onMount(async () => {
@@ -66,7 +65,6 @@
             };
 
             let result = await systemStore.getLogs(dto);
-            console.log(result)
             if(result){
                 systemLog = result;
                 return;

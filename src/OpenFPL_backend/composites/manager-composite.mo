@@ -345,7 +345,6 @@ module {
     };
 
     private func updateFantasyTeam(managerCanisterId: T.CanisterId, managerPrincipalId: T.PrincipalId, dto : DTOs.UpdateTeamSelectionDTO, systemState: T.SystemState, allPlayers: [DTOs.PlayerDTO]) : async Result.Result<(), T.Error>{
-      Debug.print("Updating fantasy team");
       let manager_canister = actor (managerCanisterId) : actor {
         getManager : T.PrincipalId -> async ?T.Manager;
         updateTeamSelection : (updateManagerDTO : DTOs.TeamUpdateDTO, transfersAvailable : Nat8, monthlyBonuses : Nat8, newBankBalance : Nat16) -> async Result.Result<(), T.Error>;
@@ -353,12 +352,6 @@ module {
 
       let manager = await manager_canister.getManager(managerPrincipalId);      
       if (invalidBonuses(manager, dto, systemState, allPlayers)) {
-        Debug.print("checking bonuses");
-        Debug.print(debug_show manager);
-        Debug.print(debug_show dto);
-        Debug.print(debug_show systemState);
-        Debug.print(debug_show allPlayers);
-
         return #err(#InvalidTeamError);
       };
 
@@ -377,8 +370,6 @@ module {
 
           var monthlyBonuses = getMonthlyBonuses(foundManager, dto, systemState);
           var newBankBalance = getNewBankBalance(foundManager, dto, allPlayers);
-          Debug.print("Updating team");
-          Debug.print(debug_show dto);
           return await manager_canister.updateTeamSelection({
             principalId = managerPrincipalId;
             updatedTeamSelection = dto;
@@ -439,7 +430,6 @@ module {
             monthlyBonuses := 1;
           };
 
-          Debug.print("calculating new manager team value");
           bankBalance := bankBalance - Utilities.getTeamValue(foundDTO.playerIds, players);
           
 
@@ -723,7 +713,6 @@ module {
 
     private func invalidBonuses(manager: ?T.Manager, updatedFantasyTeam : DTOs.UpdateTeamSelectionDTO, systemState : T.SystemState, players : [DTOs.PlayerDTO]) : Bool {
 
-      Debug.print("checking bonuses");
       var bonusesPlayed: Nat8 = 0;
       if (updatedFantasyTeam.goalGetterGameweek == systemState.pickTeamGameweek) {
         bonusesPlayed += 1;
@@ -782,9 +771,6 @@ module {
         bonusesPlayed += 1;
       };
 
-      Debug.print("bonus count");
-      Debug.print(debug_show bonusesPlayed);
-
       if (bonusesPlayed > 1) {
         return true;
       };
@@ -832,7 +818,6 @@ module {
         };
       };
 
-      Debug.print("here");
       return false;
     };
 
@@ -1367,7 +1352,6 @@ module {
     };
 
     private func createManagerCanister() : async Text {
-
       Cycles.add<system>(2_000_000_000_000);
       let canister = await ManagerCanister._ManagerCanister();
       let IC : Management.Management = actor (Environment.Default);
@@ -1396,13 +1380,9 @@ module {
       let result = await createManagerCanister();
       activeManagerCanisterId := result;
 
-
       managerCanisterIds := TrieMap.TrieMap<T.PrincipalId, T.CanisterId>(Text.equal, Text.hash);
       managerUsernames := TrieMap.TrieMap<T.PrincipalId, Text>(Text.equal, Text.hash);
-      uniqueManagerCanisterIds := List.nil();
-
-      totalManagers:= 0;
-      activeManagerCanisterId := "";
+      uniqueManagerCanisterIds := List.fromArray([activeManagerCanisterId]);
     };
   };
 };

@@ -5,6 +5,7 @@ import Buffer "mo:base/Buffer";
 import Nat "mo:base/Nat";
 import Iter "mo:base/Iter";
 import Principal "mo:base/Principal";
+import Debug "mo:base/Debug";
 import Environment "utils/Environment";
 import T "types";
 import Root "sns-wrappers/root";
@@ -51,12 +52,12 @@ module {
 
     public func checkSNSCanisterCycles() : async (){
 
-      let root_canister = actor (Environment.SNS_INDEX_CANISTER_ID) : actor {
+      let root_canister = actor (Environment.SNS_ROOT_CANISTER_ID) : actor {
         get_sns_canisters_summary : (request: Root.GetSnsCanistersSummaryRequest) -> async Root.GetSnsCanistersSummaryResponse;
       };
 
-      let summary = await root_canister.get_sns_canisters_summary({update_canister_list = ?true});
-
+      let summary = await root_canister.get_sns_canisters_summary({update_canister_list = ?false});
+      
       for(canister in Iter.fromArray(summary.dapps)){
         switch(canister.canister_id){
           case (null) {};

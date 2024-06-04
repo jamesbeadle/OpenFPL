@@ -17,7 +17,6 @@ import Principal "mo:base/Principal";
 import List "mo:base/List";
 import Int "mo:base/Int";
 import Option "mo:base/Option";
-import Debug "mo:base/Debug";
 import Management "../modules/Management";
 
 module {
@@ -260,8 +259,24 @@ module {
   };
 
   public func getNext6AM() : Int {
-    return 0;
-  };
+    let secondsInADay : Int = 86400;
+    let secondsInAnHour : Int = 3600;
+    let currentUnixTime : Int = Time.now();
+    let currentSeconds : Int = currentUnixTime / 1000000000;
+    
+    let currentDaySeconds : Int = currentSeconds % secondsInADay;
+
+    var secondsToNext6AM : Int = 0;
+    if (currentDaySeconds < 6 * secondsInAnHour) {
+        secondsToNext6AM := 6 * secondsInAnHour - currentDaySeconds;
+    } else {
+        secondsToNext6AM := (24 * secondsInAnHour - currentDaySeconds) + 6 * secondsInAnHour;
+    };
+
+    let next6AMUnixTime : Int = currentUnixTime + secondsToNext6AM * 1000000000;
+    return next6AMUnixTime;
+};
+
 
   public func validateHexColor(hex : Text) : Bool {
 
@@ -515,8 +530,6 @@ module {
           return Option.isSome(isPlayerIdInNewTeam);
         },
       );
-
-      Debug.print(debug_show Array.foldLeft<DTOs.PlayerDTO, Nat16>(updatedPlayers, 0, func(sumSoFar, x) = sumSoFar + x.valueQuarterMillions));
 
       return Array.foldLeft<DTOs.PlayerDTO, Nat16>(updatedPlayers, 0, func(sumSoFar, x) = sumSoFar + x.valueQuarterMillions);
   };

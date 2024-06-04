@@ -119,7 +119,6 @@ type StakeMaturityResponse =
    maturity_e8s: nat64;
    stake_maturity_e8s: nat64;
  };
-type SpawnResponse = record {created_neuron_id: opt NeuronId;};
 type Spawn = 
  record {
    new_controller: opt principal;
@@ -472,11 +471,6 @@ type NewTokenDTO =
    ticker: text;
    tokenImageURL: text;
  };
-type NeuronResponse = 
- variant {
-   err: Error__1;
-   ok: ManageNeuronResponse;
- };
 type NeuronId = record {id: nat64;};
 type MoveFixtureDTO = 
  record {
@@ -524,7 +518,6 @@ type ManagerDTO =
    weeklyPosition: int;
    weeklyPositionText: text;
  };
-type ManageNeuronResponse = record {command: opt CommandResponse;};
 type LoanPlayerDTO = 
  record {
    loanClubId: ClubId;
@@ -558,11 +551,6 @@ type InjuryHistory =
  };
 type IncreaseDissolveDelay = record {
                                additional_dissolve_delay_seconds: nat32;};
-type GovernanceError = 
- record {
-   error_message: text;
-   error_type: int32;
- };
 type GetWeeklyLeaderboardDTO = 
  record {
    gameweek: GameweekNumber;
@@ -709,11 +697,9 @@ type FantasyTeamSnapshot =
  };
 type EventLogEntryType = 
  variant {
-   CyclesBalanceCheck;
-   NewManagerCanisterCreated;
+   CanisterTopup;
+   ManagerCanisterCreated;
    SystemCheck;
-   TopupRequest;
-   TopupSent;
    UnexpectedError;
  };
 type EventLogEntry = 
@@ -723,17 +709,6 @@ type EventLogEntry =
    eventTime: int;
    eventTitle: text;
    eventType: EventLogEntryType;
- };
-type Error__1 = 
- variant {
-   expired;
-   fatal: text;
-   fee_not_defined: text;
-   invalid: text;
-   missing: text;
-   other: text;
-   rejected: text;
-   trapped: text;
  };
 type Error = 
  variant {
@@ -754,7 +729,6 @@ type EntryRequirement =
    PaidEntry;
    PaidInviteEntry;
  };
-type DisburseResponse = record {transfer_block_height: nat64;};
 type Disburse = 
  record {
    amount: opt Amount;
@@ -797,16 +771,6 @@ type CountryDTO =
    name: text;
  };
 type Configure = record {operation: opt Operation;};
-type CommandResponse = 
- variant {
-   ClaimOrRefresh: ClaimOrRefreshResponse;
-   Configure;
-   Disburse: DisburseResponse;
-   Error: GovernanceError;
-   Follow;
-   Spawn: SpawnResponse;
-   StakeMaturity: StakeMaturityResponse;
- };
 type Command = 
  variant {
    ClaimOrRefresh: ClaimOrRefresh;
@@ -829,7 +793,6 @@ type ClubDTO =
    shirtType: ShirtType;
    thirdColourHex: text;
  };
-type ClaimOrRefreshResponse = record {refreshed_neuron_id: opt NeuronId;};
 type ClaimOrRefreshNeuronFromAccount = 
  record {
    controller: opt principal;
@@ -858,13 +821,11 @@ type AccountIdentifier = record {hash: vec nat8;};
 service : {
   acceptInviteAndPayFee: (CanisterId) -> (Result);
   acceptLeagueInvite: (CanisterId) -> (Result);
-  burnICPToCycles: (nat64) -> ();
   createPrivateLeague: (CreatePrivateLeagueDTO) -> (Result);
   enterLeague: (CanisterId) -> (Result);
   enterLeagueWithFee: (CanisterId) -> (Result);
   executeAddInitialFixtures: (AddInitialFixturesDTO) -> ();
   executeAddNewToken: (NewTokenDTO) -> ();
-  executeCreateDAONeuron: () -> ();
   executeCreatePlayer: (CreatePlayerDTO) -> ();
   executeLoanPlayer: (LoanPlayerDTO) -> ();
   executeManageDAONeuron: (Command) -> ();
@@ -885,7 +846,6 @@ service : {
   executeUpdatePlayer: (UpdatePlayerDTO) -> ();
   getCanisterCyclesAvailable: () -> (nat);
   getCanisterCyclesBalance: () -> (nat);
-  getCanisterTimerId: () -> (opt int);
   getClubs: () -> (Result_20) query;
   getCountries: () -> (Result_23) query;
   getCurrentTeam: () -> (Result_22);
@@ -897,9 +857,7 @@ service : {
   getManagerPrivateLeagues: () -> (Result_19);
   getMonthlyLeaderboard: (GetMonthlyLeaderboardDTO) -> (Result_11);
   getMonthlyLeaderboards: (GetMonthlyLeaderboardsDTO) -> (Result_18);
-  getNeuronCommand: () -> (opt Command);
   getNeuronId: () -> (nat64);
-  getNeuronResponse: () -> (opt NeuronResponse);
   getPlayerDetails: (GetPlayerDetailsDTO) -> (Result_17) query;
   getPlayerDetailsForGameweek: (GameweekFiltersDTO) -> (Result_16) query;
   getPlayers: () -> (Result_9) query;
@@ -926,7 +884,7 @@ service : {
   inviteUserToLeague: (LeagueInviteDTO) -> (Result);
   isUsernameValid: (UsernameFilterDTO) -> (bool) query;
   payPrivateLeagueRewards: (PrivateLeagueRewardDTO) -> ();
-  requestCanisterTopup: () -> ();
+  requestCanisterTopup: (nat) -> ();
   saveFantasyTeam: (UpdateTeamSelectionDTO) -> (Result);
   searchUsername: (UsernameFilterDTO) -> (Result_1);
   setTimer: (int, text) -> ();
@@ -938,7 +896,6 @@ service : {
   updateUsername: (UpdateUsernameDTO) -> (Result);
   validateAddInitialFixtures: (AddInitialFixturesDTO) -> (RustResult) query;
   validateAddNewToken: (NewTokenDTO) -> (RustResult) query;
-  validateCreateDAONeuron: () -> (RustResult) query;
   validateCreatePlayer: (CreatePlayerDTO) -> (RustResult) query;
   validateLoanPlayer: (LoanPlayerDTO) -> (RustResult) query;
   validateManageDAONeuron: (Command) -> (RustResult) query;

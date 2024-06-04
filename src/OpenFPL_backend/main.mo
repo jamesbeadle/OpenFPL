@@ -10,6 +10,7 @@
   import Timer "mo:base/Timer";
   import Nat64 "mo:base/Nat64";
   import Nat "mo:base/Nat";
+import Debug "mo:base/Debug";
 
   import T "types";
   import DTOs "DTOs";
@@ -1012,7 +1013,7 @@
           };
         };
       };
-      ignore Timer.setTimer<system>(#nanoseconds(Int.abs(Time.now() + 1)), postUpgradeCallback);
+      ignore Timer.setTimer<system>(#nanoseconds(Int.abs(1)), postUpgradeCallback);
     };
 
     private func postUpgradeCallback() : async (){
@@ -1027,6 +1028,7 @@
       await seasonManager.updateCacheHash("system_state");
       await systemCheckCallback();
       await cyclesCheckCallback();
+      await beginOpenFPL();
     };
     //Canister cycle topup functions
 
@@ -1037,6 +1039,11 @@
     };
 
     private func checkCanisterCycles() : async () {
+      
+      let balance: Nat = await getCanisterCyclesBalance();
+      let _ = Cycles.accept<system>(balance);
+
+      let bal = await getCanisterCyclesAvailable();
 
       await cyclesDispenser.checkSNSCanisterCycles();
 
@@ -1113,10 +1120,11 @@
     private func defaultCallback() : async () {};
 
     private func checkSystem() : async () {
+      
       let eventTime = Time.now();
       let dateString = Utilities.getReadableDate(eventTime);
 
-      let cyclesAvailable: Nat = await getCanisterCyclesBalance();
+      let cyclesAvailable: Nat = await getCanisterCyclesAvailable();
       let totalCanisterCount = seasonManager.getTotalCanisters();
       let totalManagerCount = seasonManager.getTotalManagers();
       
@@ -1131,6 +1139,69 @@
 
       let remainingDuration = Nat64.toNat(Nat64.fromIntWrap(Utilities.getNext6AM() - Time.now()));
       ignore Timer.setTimer<system>(#nanoseconds remainingDuration, systemCheckCallback);
+    };
+
+    //REMOVE
+    private func beginOpenFPL() : async (){
+      stable_reward_pools := [];
+      stable_system_state := {
+        calculationGameweek = 1;
+        calculationMonth = 8;
+        calculationSeasonId = 1;
+        pickTeamGameweek = 1;
+        pickTeamSeasonId = 1;
+        homepageFixturesGameweek = 1;
+        homepageManagerGameweek = 1;
+        seasonActive = false;
+        transferWindowActive = false;
+        onHold = false;
+      };
+      stable_data_cache_hashes := [];
+      stable_manager_canister_ids := [];
+      stable_manager_usernames := [];
+      stable_unique_manager_canister_ids := [];
+      stable_total_managers := 0;
+      stable_active_manager_canister_id := "";
+
+      stable_team_value_leaderboards := [];
+      stable_season_rewards := [];
+      stable_monthly_rewards := [];
+      stable_weekly_rewards := [];
+      stable_most_valuable_team_rewards := [];
+      stable_highest_scoring_player_rewards := [];
+      stable_weekly_ath_scores := [];
+      stable_monthly_ath_scores := [];
+      stable_season_ath_scores := [];
+      stable_weekly_ath_prize_pool := 0;
+      stable_monthly_ath_prize_pool := 0;
+      stable_season_ath_prize_pool := 0;
+
+      stable_next_player_id := 1;
+      stable_players := [];
+
+      stable_clubs := [];
+      stable_relegated_clubs := [];
+      stable_next_club_id := 1;
+
+      stable_seasons := [];
+      stable_next_season_id := 1;
+      stable_next_fixture_id := 1;
+
+      stable_season_leaderboard_canisters := [];
+      stable_monthly_leaderboard_canisters := [];
+      stable_weekly_leaderboard_canisters := [];
+
+      stable_private_league_canister_ids := [];
+      stable_private_league_name_index := [];
+      stable_private_league_unaccepted_invites := [];
+
+      stable_timers := [];
+      stable_canister_ids := [];
+
+      stable_token_list := [];
+      stable_next_token_id := 0;
+
+      await seasonManager.init();
     };
 
   };

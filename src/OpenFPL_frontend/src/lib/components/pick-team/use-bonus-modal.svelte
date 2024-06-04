@@ -77,8 +77,6 @@
   };
 
   function handleUseBonus() {
-    console.log("handle bonus")
-    console.log($fantasyTeam)
     if (!$fantasyTeam) return;
 
     switch (bonus.id) {
@@ -198,9 +196,6 @@
         });
         break;
     }
-
-    console.log($fantasyTeam)
-
     closeBonusModal();
   }
 

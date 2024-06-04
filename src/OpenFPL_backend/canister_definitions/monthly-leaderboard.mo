@@ -157,6 +157,7 @@ actor class _MonthlyLeaderboardCanister() {
   public shared func topupCanister() : async () {
     let amount = Cycles.available();
     let _ = Cycles.accept<system>(amount);
+    Cycles.add<system>(amount);
   };
 
   public shared ({ caller }) func getCyclesBalance() : async Nat {

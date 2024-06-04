@@ -67,7 +67,6 @@
 
   function updateTeamValue() {
     const team = $fantasyTeam;
-    console.log(team)
     if (team) {
       let totalValue = 0;
       team.playerIds.forEach((id) => {

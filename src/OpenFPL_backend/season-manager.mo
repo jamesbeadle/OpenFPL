@@ -269,7 +269,6 @@ module {
     public func searchByUsername(username : Text) : async ?DTOs.ManagerDTO {
       return await managerComposite.searchByUsername(username);
     };
-    
 
     //Game update functions
 
@@ -1292,7 +1291,7 @@ module {
       return managerComposite.getTotalCanisters();
     };
 
-    //Temp functions
+    //TODO: Temp functions
     
     public func init() : async () {
       rewardPools.put(1, {

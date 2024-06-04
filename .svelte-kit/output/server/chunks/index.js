@@ -3513,7 +3513,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "kvs7vf"
+  version_hash: "1g3neil"
 };
 async function get_hooks() {
   return {};
@@ -4129,41 +4129,6 @@ const idlFactory = ({ IDL }) => {
     "ok": IDL.Vec(MonthlyLeaderboardDTO),
     "err": Error2
   });
-  const GovernanceError = IDL.Record({
-    "error_message": IDL.Text,
-    "error_type": IDL.Int32
-  });
-  const SpawnResponse = IDL.Record({ "created_neuron_id": IDL.Opt(NeuronId) });
-  const ClaimOrRefreshResponse = IDL.Record({
-    "refreshed_neuron_id": IDL.Opt(NeuronId)
-  });
-  const DisburseResponse = IDL.Record({ "transfer_block_height": IDL.Nat64 });
-  const CommandResponse = IDL.Variant({
-    "Error": GovernanceError,
-    "Spawn": SpawnResponse,
-    "Follow": IDL.Null,
-    "ClaimOrRefresh": ClaimOrRefreshResponse,
-    "Configure": IDL.Null,
-    "StakeMaturity": StakeMaturityResponse,
-    "Disburse": DisburseResponse
-  });
-  const ManageNeuronResponse = IDL.Record({
-    "command": IDL.Opt(CommandResponse)
-  });
-  const Error__1 = IDL.Variant({
-    "expired": IDL.Null,
-    "missing": IDL.Text,
-    "other": IDL.Text,
-    "invalid": IDL.Text,
-    "fee_not_defined": IDL.Text,
-    "trapped": IDL.Text,
-    "rejected": IDL.Text,
-    "fatal": IDL.Text
-  });
-  const NeuronResponse = IDL.Variant({
-    "ok": ManageNeuronResponse,
-    "err": Error__1
-  });
   const GetPlayerDetailsDTO = IDL.Record({
     "playerId": PlayerId,
     "seasonId": SeasonId
@@ -4313,12 +4278,10 @@ const idlFactory = ({ IDL }) => {
   });
   const Result_7 = IDL.Variant({ "ok": IDL.Vec(SeasonDTO), "err": Error2 });
   const EventLogEntryType = IDL.Variant({
-    "TopupRequest": IDL.Null,
     "SystemCheck": IDL.Null,
-    "CyclesBalanceCheck": IDL.Null,
+    "ManagerCanisterCreated": IDL.Null,
     "UnexpectedError": IDL.Null,
-    "NewManagerCanisterCreated": IDL.Null,
-    "TopupSent": IDL.Null
+    "CanisterTopup": IDL.Null
   });
   const EventLogEntry = IDL.Record({
     "eventId": IDL.Nat,
@@ -4420,13 +4383,11 @@ const idlFactory = ({ IDL }) => {
   return IDL.Service({
     "acceptInviteAndPayFee": IDL.Func([CanisterId], [Result], []),
     "acceptLeagueInvite": IDL.Func([CanisterId], [Result], []),
-    "burnICPToCycles": IDL.Func([IDL.Nat64], [], []),
     "createPrivateLeague": IDL.Func([CreatePrivateLeagueDTO], [Result], []),
     "enterLeague": IDL.Func([CanisterId], [Result], []),
     "enterLeagueWithFee": IDL.Func([CanisterId], [Result], []),
     "executeAddInitialFixtures": IDL.Func([AddInitialFixturesDTO], [], []),
     "executeAddNewToken": IDL.Func([NewTokenDTO], [], []),
-    "executeCreateDAONeuron": IDL.Func([], [], []),
     "executeCreatePlayer": IDL.Func([CreatePlayerDTO], [], []),
     "executeLoanPlayer": IDL.Func([LoanPlayerDTO], [], []),
     "executeManageDAONeuron": IDL.Func([Command], [], []),
@@ -4447,7 +4408,6 @@ const idlFactory = ({ IDL }) => {
     "executeUpdatePlayer": IDL.Func([UpdatePlayerDTO], [], []),
     "getCanisterCyclesAvailable": IDL.Func([], [IDL.Nat], []),
     "getCanisterCyclesBalance": IDL.Func([], [IDL.Nat], []),
-    "getCanisterTimerId": IDL.Func([], [IDL.Opt(IDL.Int)], []),
     "getClubs": IDL.Func([], [Result_20], ["query"]),
     "getCountries": IDL.Func([], [Result_23], ["query"]),
     "getCurrentTeam": IDL.Func([], [Result_22], []),
@@ -4467,9 +4427,7 @@ const idlFactory = ({ IDL }) => {
       [Result_18],
       []
     ),
-    "getNeuronCommand": IDL.Func([], [IDL.Opt(Command)], []),
     "getNeuronId": IDL.Func([], [IDL.Nat64], []),
-    "getNeuronResponse": IDL.Func([], [IDL.Opt(NeuronResponse)], []),
     "getPlayerDetails": IDL.Func(
       [GetPlayerDetailsDTO],
       [Result_17],
@@ -4525,7 +4483,7 @@ const idlFactory = ({ IDL }) => {
     "inviteUserToLeague": IDL.Func([LeagueInviteDTO], [Result], []),
     "isUsernameValid": IDL.Func([UsernameFilterDTO], [IDL.Bool], ["query"]),
     "payPrivateLeagueRewards": IDL.Func([PrivateLeagueRewardDTO], [], []),
-    "requestCanisterTopup": IDL.Func([], [], []),
+    "requestCanisterTopup": IDL.Func([IDL.Nat], [], []),
     "saveFantasyTeam": IDL.Func([UpdateTeamSelectionDTO], [Result], []),
     "searchUsername": IDL.Func([UsernameFilterDTO], [Result_1], []),
     "setTimer": IDL.Func([IDL.Int, IDL.Text], [], []),
@@ -4541,7 +4499,6 @@ const idlFactory = ({ IDL }) => {
       ["query"]
     ),
     "validateAddNewToken": IDL.Func([NewTokenDTO], [RustResult], ["query"]),
-    "validateCreateDAONeuron": IDL.Func([], [RustResult], ["query"]),
     "validateCreatePlayer": IDL.Func(
       [CreatePlayerDTO],
       [RustResult],
@@ -9693,7 +9650,7 @@ const Page$7 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   ];
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
-      return `<div class="bg-panel rounded-md mt-4"><h1 class="default-header p-4" data-svelte-h="svelte-1n1vmrq">OpenFPL System Log</h1> <div class="p-4 flex flex-col sm:flex-row gap-4"><div><label for="start-date" class="block text-sm font-medium text-gray-700" data-svelte-h="svelte-14a5t13">Start Date</label> <input type="date" id="start-date" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"${add_attribute("value", startDate, 0)}></div> <div><label for="end-date" class="block text-sm font-medium text-gray-700" data-svelte-h="svelte-z55mdj">End Date</label> <input type="date" id="end-date" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"${add_attribute("value", endDate, 0)}></div> <div><label for="event-type" class="block text-sm font-medium text-gray-700" data-svelte-h="svelte-129i3zf">Event Type</label> <select id="event-type" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"><option value="" data-svelte-h="svelte-1xp9ti5">Select an event type</option>${each(eventTypes, (type) => {
+      return `<div class="bg-panel rounded-md mt-4"><h1 class="default-header p-4" data-svelte-h="svelte-1n1vmrq">OpenFPL System Log</h1> <div class="p-4 flex flex-col sm:flex-row gap-4"><div><label for="start-date" class="block text-sm font-medium" data-svelte-h="svelte-1k71rm2">Start Date</label> <input type="date" id="start-date" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"${add_attribute("value", startDate, 0)}></div> <div><label for="end-date" class="block text-sm font-medium" data-svelte-h="svelte-1e3dopu">End Date</label> <input type="date" id="end-date" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"${add_attribute("value", endDate, 0)}></div> <div><label for="event-type" class="block text-sm font-medium" data-svelte-h="svelte-1801z4i">Event Type</label> <select id="event-type" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-light-gray"><option${add_attribute("value", null, 0)} data-svelte-h="svelte-ao4nde">Select an event type</option>${each(eventTypes, (type) => {
         return `<option${add_attribute("value", type, 0)}>${escape(formatEventType(Object.keys(type)[0]))}</option>`;
       })}</select></div> <div class="flex items-end"><button class="fpl-button default-button" data-svelte-h="svelte-zv974x">Filter</button></div></div> ${`${validate_component(Local_spinner, "LocalSpinner").$$render($$result, {}, {}, {})}`}</div>`;
     }

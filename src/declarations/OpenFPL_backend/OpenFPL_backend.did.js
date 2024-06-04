@@ -407,41 +407,6 @@ export const idlFactory = ({ IDL }) => {
     'ok' : IDL.Vec(MonthlyLeaderboardDTO),
     'err' : Error,
   });
-  const GovernanceError = IDL.Record({
-    'error_message' : IDL.Text,
-    'error_type' : IDL.Int32,
-  });
-  const SpawnResponse = IDL.Record({ 'created_neuron_id' : IDL.Opt(NeuronId) });
-  const ClaimOrRefreshResponse = IDL.Record({
-    'refreshed_neuron_id' : IDL.Opt(NeuronId),
-  });
-  const DisburseResponse = IDL.Record({ 'transfer_block_height' : IDL.Nat64 });
-  const CommandResponse = IDL.Variant({
-    'Error' : GovernanceError,
-    'Spawn' : SpawnResponse,
-    'Follow' : IDL.Null,
-    'ClaimOrRefresh' : ClaimOrRefreshResponse,
-    'Configure' : IDL.Null,
-    'StakeMaturity' : StakeMaturityResponse,
-    'Disburse' : DisburseResponse,
-  });
-  const ManageNeuronResponse = IDL.Record({
-    'command' : IDL.Opt(CommandResponse),
-  });
-  const Error__1 = IDL.Variant({
-    'expired' : IDL.Null,
-    'missing' : IDL.Text,
-    'other' : IDL.Text,
-    'invalid' : IDL.Text,
-    'fee_not_defined' : IDL.Text,
-    'trapped' : IDL.Text,
-    'rejected' : IDL.Text,
-    'fatal' : IDL.Text,
-  });
-  const NeuronResponse = IDL.Variant({
-    'ok' : ManageNeuronResponse,
-    'err' : Error__1,
-  });
   const GetPlayerDetailsDTO = IDL.Record({
     'playerId' : PlayerId,
     'seasonId' : SeasonId,
@@ -591,12 +556,10 @@ export const idlFactory = ({ IDL }) => {
   });
   const Result_7 = IDL.Variant({ 'ok' : IDL.Vec(SeasonDTO), 'err' : Error });
   const EventLogEntryType = IDL.Variant({
-    'TopupRequest' : IDL.Null,
     'SystemCheck' : IDL.Null,
-    'CyclesBalanceCheck' : IDL.Null,
+    'ManagerCanisterCreated' : IDL.Null,
     'UnexpectedError' : IDL.Null,
-    'NewManagerCanisterCreated' : IDL.Null,
-    'TopupSent' : IDL.Null,
+    'CanisterTopup' : IDL.Null,
   });
   const EventLogEntry = IDL.Record({
     'eventId' : IDL.Nat,
@@ -698,13 +661,11 @@ export const idlFactory = ({ IDL }) => {
   return IDL.Service({
     'acceptInviteAndPayFee' : IDL.Func([CanisterId], [Result], []),
     'acceptLeagueInvite' : IDL.Func([CanisterId], [Result], []),
-    'burnICPToCycles' : IDL.Func([IDL.Nat64], [], []),
     'createPrivateLeague' : IDL.Func([CreatePrivateLeagueDTO], [Result], []),
     'enterLeague' : IDL.Func([CanisterId], [Result], []),
     'enterLeagueWithFee' : IDL.Func([CanisterId], [Result], []),
     'executeAddInitialFixtures' : IDL.Func([AddInitialFixturesDTO], [], []),
     'executeAddNewToken' : IDL.Func([NewTokenDTO], [], []),
-    'executeCreateDAONeuron' : IDL.Func([], [], []),
     'executeCreatePlayer' : IDL.Func([CreatePlayerDTO], [], []),
     'executeLoanPlayer' : IDL.Func([LoanPlayerDTO], [], []),
     'executeManageDAONeuron' : IDL.Func([Command], [], []),
@@ -725,7 +686,6 @@ export const idlFactory = ({ IDL }) => {
     'executeUpdatePlayer' : IDL.Func([UpdatePlayerDTO], [], []),
     'getCanisterCyclesAvailable' : IDL.Func([], [IDL.Nat], []),
     'getCanisterCyclesBalance' : IDL.Func([], [IDL.Nat], []),
-    'getCanisterTimerId' : IDL.Func([], [IDL.Opt(IDL.Int)], []),
     'getClubs' : IDL.Func([], [Result_20], ['query']),
     'getCountries' : IDL.Func([], [Result_23], ['query']),
     'getCurrentTeam' : IDL.Func([], [Result_22], []),
@@ -745,9 +705,7 @@ export const idlFactory = ({ IDL }) => {
         [Result_18],
         [],
       ),
-    'getNeuronCommand' : IDL.Func([], [IDL.Opt(Command)], []),
     'getNeuronId' : IDL.Func([], [IDL.Nat64], []),
-    'getNeuronResponse' : IDL.Func([], [IDL.Opt(NeuronResponse)], []),
     'getPlayerDetails' : IDL.Func(
         [GetPlayerDetailsDTO],
         [Result_17],
@@ -803,7 +761,7 @@ export const idlFactory = ({ IDL }) => {
     'inviteUserToLeague' : IDL.Func([LeagueInviteDTO], [Result], []),
     'isUsernameValid' : IDL.Func([UsernameFilterDTO], [IDL.Bool], ['query']),
     'payPrivateLeagueRewards' : IDL.Func([PrivateLeagueRewardDTO], [], []),
-    'requestCanisterTopup' : IDL.Func([], [], []),
+    'requestCanisterTopup' : IDL.Func([IDL.Nat], [], []),
     'saveFantasyTeam' : IDL.Func([UpdateTeamSelectionDTO], [Result], []),
     'searchUsername' : IDL.Func([UsernameFilterDTO], [Result_1], []),
     'setTimer' : IDL.Func([IDL.Int, IDL.Text], [], []),
@@ -819,7 +777,6 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'validateAddNewToken' : IDL.Func([NewTokenDTO], [RustResult], ['query']),
-    'validateCreateDAONeuron' : IDL.Func([], [RustResult], ['query']),
     'validateCreatePlayer' : IDL.Func(
         [CreatePlayerDTO],
         [RustResult],
