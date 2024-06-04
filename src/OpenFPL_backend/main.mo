@@ -54,7 +54,7 @@ import Debug "mo:base/Debug";
       return await seasonManager.getWeeklyLeaderboard(dto);
     };
 
-    public shared func getMonthlyLeaderboards(dto: DTOs.GetMonthlyLeaderboardsDTO) : async Result.Result<[DTOs.MonthlyLeaderboardDTO], T.Error> {
+    public shared func getMonthlyLeaderboards(dto: DTOs.GetMonthlyLeaderboardsDTO) : async Result.Result<[DTOs.ClubLeaderboardDTO], T.Error> {
       return await seasonManager.getMonthlyLeaderboards(dto);
     };
 

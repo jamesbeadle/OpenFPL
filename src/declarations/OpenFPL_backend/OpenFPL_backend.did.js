@@ -403,8 +403,15 @@ export const idlFactory = ({ IDL }) => {
     'month' : CalendarMonth,
     'seasonId' : SeasonId,
   });
+  const ClubLeaderboardDTO = IDL.Record({
+    'month' : IDL.Nat8,
+    'clubId' : ClubId,
+    'totalEntries' : IDL.Nat,
+    'seasonId' : SeasonId,
+    'entries' : IDL.Vec(LeaderboardEntry),
+  });
   const Result_18 = IDL.Variant({
-    'ok' : IDL.Vec(MonthlyLeaderboardDTO),
+    'ok' : IDL.Vec(ClubLeaderboardDTO),
     'err' : Error,
   });
   const GetPlayerDetailsDTO = IDL.Record({

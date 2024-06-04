@@ -3,6 +3,7 @@ import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
   DataCacheDTO,
+  GetSeasonLeaderboardDTO,
   SeasonLeaderboardDTO,
   SystemStateDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
@@ -24,7 +25,7 @@ function createSeasonLeaderboardStore() {
     process.env.OPENFPL_BACKEND_CANISTER_ID,
   );
 
-  async function sync() {
+  async function sync(seasonId: number) {
     let category = "season_leaderboard";
     const newHashValues = await actor.getDataHashes();
 
@@ -43,9 +44,16 @@ function createSeasonLeaderboardStore() {
     const localHash = localStorage.getItem(`${category}_hash`);
 
     if (categoryHash?.hash != localHash) {
-      let result = await actor.getSeasonLeaderboard(
-        systemState?.calculationSeasonId,
-      );
+      const limit = itemsPerPage;
+      const offset = 0;
+
+      let dto: GetSeasonLeaderboardDTO = {
+        offset: BigInt(offset),
+        seasonId: seasonId,
+        limit: BigInt(limit),
+        searchTerm: "",
+      };
+      let result = await actor.getSeasonLeaderboard(dto);
 
       if (isError(result)) {
         console.error("Error syncing season leaderboard.");

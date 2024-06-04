@@ -34,6 +34,13 @@ export interface ClubDTO {
 }
 export interface ClubFilterDTO { 'clubId' : ClubId }
 export type ClubId = number;
+export interface ClubLeaderboardDTO {
+  'month' : number,
+  'clubId' : ClubId,
+  'totalEntries' : bigint,
+  'seasonId' : SeasonId,
+  'entries' : Array<LeaderboardEntry>,
+}
 export type Command = { 'Spawn' : Spawn } |
   { 'Follow' : Follow } |
   { 'ClaimOrRefresh' : ClaimOrRefresh } |
@@ -474,7 +481,7 @@ export type Result_16 = { 'ok' : Array<PlayerPointsDTO> } |
   { 'err' : Error };
 export type Result_17 = { 'ok' : PlayerDetailDTO } |
   { 'err' : Error };
-export type Result_18 = { 'ok' : Array<MonthlyLeaderboardDTO> } |
+export type Result_18 = { 'ok' : Array<ClubLeaderboardDTO> } |
   { 'err' : Error };
 export type Result_19 = { 'ok' : ManagerPrivateLeaguesDTO } |
   { 'err' : Error };

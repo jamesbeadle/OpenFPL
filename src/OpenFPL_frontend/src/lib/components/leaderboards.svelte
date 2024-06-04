@@ -45,12 +45,20 @@
       if ($teamStore.length == 0) return;
 
       await systemStore.sync();
+
       await weeklyLeaderboardStore.sync(
         $systemStore?.calculationSeasonId ?? 1,
         $systemStore?.calculationGameweek ?? 1
       );
-      await monthlyLeaderboardStore.sync();
-      await seasonLeaderboardStore.sync();
+      
+      await monthlyLeaderboardStore.sync(
+        $systemStore?.calculationSeasonId ?? 1,
+        $systemStore?.calculationMonth ?? 8
+      );
+      
+      await seasonLeaderboardStore.sync(
+        $systemStore?.calculationSeasonId ?? 1
+      );
 
       selectedSeasonId = $systemStore?.calculationSeasonId ?? 1;
       selectedGameweek = $systemStore?.calculationGameweek ?? 1;

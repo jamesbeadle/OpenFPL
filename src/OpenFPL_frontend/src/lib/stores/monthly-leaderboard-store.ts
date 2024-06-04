@@ -3,6 +3,7 @@ import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
   DataCacheDTO,
+  GetMonthlyLeaderboardDTO,
   MonthlyLeaderboardDTO,
   SystemStateDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
@@ -24,7 +25,7 @@ function createMonthlyLeaderboardStore() {
     process.env.OPENFPL_BACKEND_CANISTER_ID,
   );
 
-  async function sync() {
+  async function sync(seasonId: number, month: number) {
     let category = "monthly_leaderboards";
     const newHashValues = await actor.getDataHashes();
 
@@ -43,7 +44,19 @@ function createMonthlyLeaderboardStore() {
     const localHash = localStorage.getItem(`${category}_hash`);
 
     if (categoryHash?.hash != localHash) {
-      let result = await actor.getMonthlyLeaderboards();
+      const limit = itemsPerPage;
+      const offset = 0;
+
+      let dto: GetMonthlyLeaderboardDTO = {
+        offset: BigInt(offset),
+        seasonId: seasonId,
+        limit: BigInt(limit),
+        searchTerm: "",
+        month: month,
+        clubId: 1,
+      };
+
+      let result = await actor.getMonthlyLeaderboards(dto);
 
       if (isError(result)) {
         console.error("Error syncing monthly leaderboards");

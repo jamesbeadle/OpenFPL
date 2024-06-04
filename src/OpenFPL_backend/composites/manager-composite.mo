@@ -21,6 +21,8 @@ import Rewards "./rewards-composite";
 import Utilities "../utils/utilities";
 import TrieMap "mo:base/TrieMap";
 import Debug "mo:base/Debug";
+import Nat "mo:base/Nat";
+import Int64 "mo:base/Int64";
 import Environment "../utils/Environment";
 
 module {
@@ -373,7 +375,7 @@ module {
           return await manager_canister.updateTeamSelection({
             principalId = managerPrincipalId;
             updatedTeamSelection = dto;
-          }, transfersAvailable, monthlyBonuses, newBankBalance);
+          }, Nat8.fromNat(Nat64.toNat(Nat64.fromIntWrap(transfersAvailable))), monthlyBonuses, newBankBalance);
         }
       };
       return #ok;
@@ -526,6 +528,7 @@ module {
     };
 
     private func overspent(currentBankBalance: Nat16, existingPlayerIds: [T.PlayerId], updatedPlayerIds: [T.PlayerId], allPlayers: [DTOs.PlayerDTO]) : Bool{
+      
       let updatedPlayers = Array.filter<DTOs.PlayerDTO>(
         allPlayers,
         func(player : DTOs.PlayerDTO) : Bool {
@@ -568,7 +571,6 @@ module {
       );
 
       let spent = Array.foldLeft<DTOs.PlayerDTO, Nat16>(playersAdded, 0, func(sumSoFar, x) = sumSoFar + x.valueQuarterMillions);
-      
       var sold : Nat16 = 0;
       for (i in Iter.range(0, Array.size(playersRemoved) -1)) {
         let foundPlayer = List.find<DTOs.PlayerDTO>(
@@ -584,18 +586,21 @@ module {
           };
         };
       };
-
+     
       let netSpendQMs : Nat16 = spent - sold;
       let newBankBalance = currentBankBalance - netSpendQMs;
-      if (newBankBalance < 0) {
+       if (newBankBalance < 0) {
         return true;
       };
 
       return false;
     };
 
-    private func getTransfersAvailable(manager: T.Manager, updatedPlayerIds: [T.PlayerId], allPlayers: [DTOs.PlayerDTO]) : Nat8 {
-      let updatedPlayers = Array.filter<DTOs.PlayerDTO>(
+    private func getTransfersAvailable(manager: T.Manager, updatedPlayerIds: [T.PlayerId], allPlayers: [DTOs.PlayerDTO]) : Int {
+      
+      //get the players in the team
+      
+      let newPlayers = Array.filter<DTOs.PlayerDTO>(
         allPlayers,
         func(player : DTOs.PlayerDTO) : Bool {
           let playerId = player.id;
@@ -609,21 +614,22 @@ module {
         },
       );
 
-      let playersAdded = Array.filter<DTOs.PlayerDTO>(
-        updatedPlayers,
+      //get the players in the old team
+      let oldPlayers = Array.filter<DTOs.PlayerDTO>(
+        allPlayers,
         func(player : DTOs.PlayerDTO) : Bool {
           let playerId = player.id;
-          let isPlayerIdInExistingTeam = Array.find(
+          let isPlayerInOldTeam = Array.find(
             manager.playerIds,
             func(id : Nat16) : Bool {
               return id == playerId;
             },
           );
-          return Option.isNull(isPlayerIdInExistingTeam);
+          return Option.isSome(isPlayerInOldTeam);
         },
       );
 
-      return manager.transfersAvailable - Nat8.fromNat(Array.size(playersAdded));
+      return Int64.toInt(Int64.fromNat64(Nat64.fromNat(Nat8.toNat(manager.transfersAvailable)))) - Int64.toInt(Int64.fromNat64(Nat64.fromNat(Nat8.toNat(Nat8.fromNat(Array.size(newPlayers) - Array.size(oldPlayers))))));
     };
 
     private func getMonthlyBonuses(manager: T.Manager, dto: DTOs.UpdateTeamSelectionDTO, systemState: T.SystemState) : Nat8 {
@@ -691,7 +697,6 @@ module {
       );
 
       let spent = Array.foldLeft<DTOs.PlayerDTO, Nat16>(playersAdded, 0, func(sumSoFar, x) = sumSoFar + x.valueQuarterMillions);
-      
       var sold : Nat16 = 0;
       for (i in Iter.range(0, Array.size(playersRemoved) -1)) {
         let foundPlayer = List.find<DTOs.PlayerDTO>(
@@ -707,7 +712,7 @@ module {
           };
         };
       };
-
+      
       return manager.bankQuarterMillions + sold - spent;
     };
 

@@ -203,7 +203,7 @@ module {
       return await leaderboardComposite.getMonthlyLeaderboard(dto);
     };
 
-    public func getMonthlyLeaderboards(dto: DTOs.GetMonthlyLeaderboardsDTO) : async Result.Result<[DTOs.MonthlyLeaderboardDTO], T.Error> {
+    public func getMonthlyLeaderboards(dto: DTOs.GetMonthlyLeaderboardsDTO) : async Result.Result<[DTOs.ClubLeaderboardDTO], T.Error> {
       let clubs = clubComposite.getClubs();
       return await leaderboardComposite.getMonthlyLeaderboards(dto, clubs);
     };

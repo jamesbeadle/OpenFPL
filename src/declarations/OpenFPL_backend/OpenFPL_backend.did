@@ -230,7 +230,7 @@ type Result_19 =
 type Result_18 = 
  variant {
    err: Error;
-   ok: vec MonthlyLeaderboardDTO;
+   ok: vec ClubLeaderboardDTO;
  };
 type Result_17 = 
  variant {
@@ -779,6 +779,14 @@ type Command =
    Follow: Follow;
    Spawn: Spawn;
    StakeMaturity: StakeMaturityResponse;
+ };
+type ClubLeaderboardDTO = 
+ record {
+   clubId: ClubId;
+   entries: vec LeaderboardEntry;
+   month: nat8;
+   seasonId: SeasonId;
+   totalEntries: nat;
  };
 type ClubId = nat16;
 type ClubFilterDTO = record {clubId: ClubId;};

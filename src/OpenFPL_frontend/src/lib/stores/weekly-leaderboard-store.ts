@@ -35,15 +35,19 @@ function createWeeklyLeaderboardStore() {
       null;
 
     const localHash = localStorage.getItem(`${category}_hash`);
-
     if (categoryHash?.hash != localHash) {
-      let result = await actor.getWeeklyLeaderboard(
-        seasonId,
-        gameweek,
-        100,
-        0,
-        "",
-      );
+      const limit = itemsPerPage;
+      const offset = 0;
+
+      let dto: GetWeeklyLeaderboardDTO = {
+        offset: BigInt(offset),
+        seasonId: seasonId,
+        limit: BigInt(limit),
+        searchTerm: "",
+        gameweek: gameweek,
+      };
+
+      let result = await actor.getWeeklyLeaderboard(dto);
 
       if (isError(result)) {
         let emptyLeaderboard = {
@@ -111,7 +115,6 @@ function createWeeklyLeaderboardStore() {
     };
 
     let leaderboardData = await actor.getWeeklyLeaderboard(dto);
-
     if (isError(leaderboardData)) {
       let emptyLeaderboard = {
         entries: [],
@@ -135,14 +138,30 @@ function createWeeklyLeaderboardStore() {
     seasonId: number,
     gameweek: number,
   ): Promise<LeaderboardEntry> {
-    let weeklyLeaderboard = await getWeeklyLeaderboard(
-      seasonId,
-      gameweek,
-      1,
-      0,
-      "",
-    );
-    return weeklyLeaderboard.entries[0];
+    const limit = itemsPerPage;
+    const offset = 0;
+
+    let dto: GetWeeklyLeaderboardDTO = {
+      offset: BigInt(offset),
+      seasonId: seasonId,
+      limit: BigInt(limit),
+      searchTerm: "",
+      gameweek: gameweek,
+    };
+
+    let leaderboardData = await actor.getWeeklyLeaderboard(dto);
+
+    if (isError(leaderboardData)) {
+      return {
+        username: "-",
+        positionText: "-",
+        position: 0n,
+        principalId: "",
+        points: 0,
+      };
+    }
+
+    return leaderboardData.ok.entries[0];
   }
 
   return {

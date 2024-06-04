@@ -49,7 +49,7 @@ actor class _MonthlyLeaderboardCanister() {
     };
   };
 
-  public shared query ({ caller }) func getEntries(filters: DTOs.PaginationFiltersDTO, searchTerm : Text) : async ?DTOs.MonthlyLeaderboardDTO {
+  public shared query ({ caller }) func getEntries(filters: DTOs.PaginationFiltersDTO, searchTerm : Text) : async ?DTOs.ClubLeaderboardDTO {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == Environment.BACKEND_CANISTER_ID;
@@ -69,7 +69,7 @@ actor class _MonthlyLeaderboardCanister() {
         let droppedEntries = List.drop<T.LeaderboardEntry>(filteredEntries, filters.offset);
         let paginatedEntries = List.take<T.LeaderboardEntry>(droppedEntries, filters.limit);
 
-        let leaderboardDTO : DTOs.MonthlyLeaderboardDTO = {
+        let leaderboardDTO : DTOs.ClubLeaderboardDTO = {
           seasonId = foundLeaderboard.seasonId;
           month = foundLeaderboard.month;
           clubId = foundLeaderboard.clubId;
