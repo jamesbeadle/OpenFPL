@@ -72,7 +72,6 @@
   }
 
   function handleLogin() {
-    return false;
     let params: AuthSignInParams = {
       domain: import.meta.env.VITE_AUTH_PROVIDER_URL,
     };
