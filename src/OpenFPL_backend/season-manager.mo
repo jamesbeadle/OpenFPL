@@ -50,6 +50,10 @@ module {
       storeCanisterId := ?_storeCanisterId;
     };
 
+    public func setRecordSystemEventFunction(_recordSystemEvent : (eventLog: T.EventLogEntry) -> ()) {
+      managerComposite.setRecordSystemEventFunction(_recordSystemEvent);
+    };
+
     public func setBackendCanisterController(controller : Principal) {
       leaderboardComposite.setBackendCanisterController(controller);
       privateLeaguesManager.setBackendCanisterController(controller);

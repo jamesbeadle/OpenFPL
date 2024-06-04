@@ -765,12 +765,17 @@
       });
     };
 
-
-
     private func recordSystemEvent(eventLog: T.EventLogEntry){
       let eventsBuffer = Buffer.fromArray<T.EventLogEntry>(stable_event_logs);
-      eventsBuffer.add(eventLog); 
+      eventsBuffer.add({
+        eventDetail = eventLog.eventDetail;
+        eventId = stable_next_system_event_id;
+        eventTime = eventLog.eventTime;
+        eventTitle = eventLog.eventTitle;
+        eventType = eventLog.eventType;
+      }); 
       stable_event_logs := Buffer.toArray(eventsBuffer);
+      stable_next_system_event_id += 1;
     };
 
 
@@ -782,7 +787,7 @@
 
     //event logs
     private stable var stable_event_logs: [T.EventLogEntry] = [];
-    private stable var stable_next_check_event_id: Nat = 1;
+    private stable var stable_next_system_event_id: Nat = 1;
 
     //Season Manager
     private stable var stable_reward_pools : [(T.SeasonId, T.RewardPool)] = [];
@@ -963,10 +968,12 @@
 
       cyclesDispenser.setStableCanisterIds(stable_canister_ids);
       cyclesDispenser.setStableTopups(stable_topups);
+      cyclesDispenser.setRecordSystemEventFunction(recordSystemEvent);
 
       seasonManager.setBackendCanisterController(Principal.fromActor(Self));
       seasonManager.setTimerBackupFunction(setAndBackupTimer, removeExpiredTimers);
       seasonManager.setStoreCanisterIdFunction(cyclesDispenser.storeCanisterId);
+      seasonManager.setRecordSystemEventFunction(recordSystemEvent);
 
       //Treasury Manager
       treasuryManager.setStableTokenList(stable_token_list);
@@ -1023,10 +1030,10 @@
     };
     //Canister cycle topup functions
 
-    public shared ({ caller }) func requestCanisterTopup() : async () {
+    public shared ({ caller }) func requestCanisterTopup(cycles: Nat) : async () {
       assert not Principal.isAnonymous(caller);
       let principalId = Principal.toText(caller);
-      await cyclesDispenser.requestCanisterTopup(principalId);
+      await cyclesDispenser.requestCanisterTopup(principalId, cycles);
     };
 
     private func checkCanisterCycles() : async () {
@@ -1034,12 +1041,11 @@
       let balance = Cycles.balance();
 
       if (balance < 10_000_000_000_000) {
-        await requestCanisterTopup();
+        await requestCanisterTopup(10_000_000_000_000);
       };
 
-
       let remainingDuration = Utilities.getHour() * 24;
-      ignore Timer.setTimer<system>(#nanoseconds remainingDuration, systemCheckCallback);
+      ignore Timer.setTimer<system>(#nanoseconds remainingDuration, cyclesCheckCallback);
     };
 
     //System timer functions
@@ -1121,13 +1127,11 @@
       recordSystemEvent({
         eventDetail = "Good morning from OpenFPL. I have " # Nat.toText(cyclesAvailable) # " cycles available in my backend canister wallet. 
           I am looking after " # Nat.toText(totalCanisterCount) # " manager canisters, totalling " # Nat.toText(totalManagerCount) # " managers."; 
-        eventId = stable_next_check_event_id;
+        eventId = 0;
         eventTime = Time.now();
-        eventTitle = "System Check " # dateString # ". (ID: " # Int.toText(stable_next_check_event_id) # ")";
+        eventTitle = "System Check " # dateString # ". (ID: " # Int.toText(stable_next_system_event_id) # ")";
         eventType = #SystemCheck;
       });
-
-      stable_next_check_event_id += 1;
 
       let remainingDuration = Nat64.toNat(Nat64.fromIntWrap(Utilities.getNext6AM() - Time.now()));
       ignore Timer.setTimer<system>(#nanoseconds remainingDuration, systemCheckCallback);

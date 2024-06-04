@@ -27,21 +27,23 @@ module {
 
   public class ManagerComposite() {
 
+    private let rewards : Rewards.Rewards = Rewards.Rewards();
     private var managerCanisterIds : TrieMap.TrieMap<T.PrincipalId, T.CanisterId> = TrieMap.TrieMap<T.PrincipalId, T.CanisterId>(Text.equal, Text.hash);
     private var managerUsernames : TrieMap.TrieMap<T.PrincipalId, Text> = TrieMap.TrieMap<T.PrincipalId, Text>(Text.equal, Text.hash);
     private var uniqueManagerCanisterIds : List.List<T.CanisterId> = List.nil();
-
     private var totalManagers : Nat = 0;
     private var activeManagerCanisterId : T.CanisterId = "";
-
     private var storeCanisterId : ?((canisterId : Text) -> async ()) = null;
-
-    private let rewards : Rewards.Rewards = Rewards.Rewards();
-
     public func setStoreCanisterIdFunction(
       _storeCanisterId : (canisterId : Text) -> async (),
     ) {
       storeCanisterId := ?_storeCanisterId;
+    };
+    private var recordSystemEvent : ?((eventLog: T.EventLogEntry) -> ()) = null;
+    public func setRecordSystemEventFunction(
+      _recordSystemEvent : ((eventLog: T.EventLogEntry) -> ()),
+    ) {
+      recordSystemEvent := ?_recordSystemEvent;
     };
 
     public func getManager(principalId : T.PrincipalId, calculationSeasonId : T.SeasonId, weeklyLeaderboardEntry : ?DTOs.LeaderboardEntryDTO, monthlyLeaderboardEntry : ?DTOs.LeaderboardEntryDTO, seasonLeaderboardEntry : ?DTOs.LeaderboardEntryDTO) : async Result.Result<DTOs.ManagerDTO, T.Error> {
@@ -513,6 +515,18 @@ module {
         };
         managerCanisterIds.put(managerPrincipalId, activeManagerCanisterId);
         totalManagers := totalManagers + 1;
+        switch(recordSystemEvent){
+          case null {};
+          case (?function){
+            function({
+              eventDetail = "New manager canister created, ID: " # activeManagerCanisterId;
+              eventId = 0;
+              eventTime = Time.now();
+              eventTitle = "New Manager Canister Created";
+              eventType = #ManagerCanisterCreated;
+            });
+          }
+        };
         return await new_manager_canister.addNewManager(newManager);
       };
 

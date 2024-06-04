@@ -477,9 +477,7 @@ module _Types {
   public type CanisterTopup = {
     canisterId: CanisterId;
     topupTime: Int;
-    icpAmount: Nat64;
-    cyclesAmount: Nat64;
-    xdrRate: Nat64;
+    cyclesAmount: Nat;
   };
 
   public type EventLogEntry = {
@@ -491,11 +489,9 @@ module _Types {
   };
 
   public type EventLogEntryType = {
-    #SystemCheck; //TODO: Include cycles balance, warning to send cycles to cycles wallet, automatically post the system check at 6am every day
+    #SystemCheck;
     #UnexpectedError;
-    #TopupRequest;
-    #TopupSent;
-    #NewManagerCanisterCreated;
-    #CyclesBalanceCheck;
+    #CanisterTopup;
+    #ManagerCanisterCreated;
   }
 };
