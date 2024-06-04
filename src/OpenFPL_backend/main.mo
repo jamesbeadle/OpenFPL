@@ -1017,6 +1017,12 @@ import Debug "mo:base/Debug";
     };
 
     private func postUpgradeCallback() : async (){
+      seasonManager.setInitialClubs();
+      await seasonManager.updateCacheHash("clubs");
+      await systemCheckCallback();
+      await cyclesCheckCallback();
+
+      /*
       await seasonManager.updateCacheHash("clubs");
       await seasonManager.updateCacheHash("fixtures");
       await seasonManager.updateCacheHash("weekly_leaderboard");
@@ -1028,6 +1034,7 @@ import Debug "mo:base/Debug";
       await seasonManager.updateCacheHash("system_state");
       await systemCheckCallback();
       await cyclesCheckCallback();
+      */
     };
     //Canister cycle topup functions
 

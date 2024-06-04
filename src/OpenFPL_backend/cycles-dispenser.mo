@@ -57,6 +57,23 @@ module {
 
       let summary = await root_canister.get_sns_canisters_summary({update_canister_list = ?false});
       
+      for(canister in Iter.fromArray(summary.archives)){
+        switch(canister.canister_id){
+          case (null) {};
+          case (?foundCanisterId){
+            let status = canister.status;
+            switch(status){
+              case (null){};
+              case (?foundStatus){
+                if (foundStatus.cycles < 10_000_000_000_000) {
+                  await requestCanisterTopup(Principal.toText(foundCanisterId), 10_000_000_000_000);
+                };
+              }
+            };
+          };
+        };
+      };
+
       for(canister in Iter.fromArray(summary.dapps)){
         switch(canister.canister_id){
           case (null) {};
@@ -71,6 +88,111 @@ module {
               }
             };
           };
+        };
+      };
+
+      switch(summary.governance){
+        case (null){ };
+        case (?canister){
+           switch(canister.canister_id){
+              case (null) {};
+              case (?foundCanisterId){
+                let status = canister.status;
+                switch(status){
+                  case (null){};
+                  case (?foundStatus){
+                    if (foundStatus.cycles < 10_000_000_000_000) {
+                      await requestCanisterTopup(Principal.toText(foundCanisterId), 10_000_000_000_000);
+                    };
+                  }
+                };
+              };
+            };
+
+        };
+      };
+
+      switch(summary.index){
+        case (null){ };
+        case (?canister){
+           switch(canister.canister_id){
+              case (null) {};
+              case (?foundCanisterId){
+                let status = canister.status;
+                switch(status){
+                  case (null){};
+                  case (?foundStatus){
+                    if (foundStatus.cycles < 10_000_000_000_000) {
+                      await requestCanisterTopup(Principal.toText(foundCanisterId), 10_000_000_000_000);
+                    };
+                  }
+                };
+              };
+            };
+
+        };
+      };
+
+      switch(summary.ledger){
+        case (null){ };
+        case (?canister){
+           switch(canister.canister_id){
+              case (null) {};
+              case (?foundCanisterId){
+                let status = canister.status;
+                switch(status){
+                  case (null){};
+                  case (?foundStatus){
+                    if (foundStatus.cycles < 10_000_000_000_000) {
+                      await requestCanisterTopup(Principal.toText(foundCanisterId), 10_000_000_000_000);
+                    };
+                  }
+                };
+              };
+            };
+
+        };
+      };
+
+      switch(summary.root){
+        case (null){ };
+        case (?canister){
+           switch(canister.canister_id){
+              case (null) {};
+              case (?foundCanisterId){
+                let status = canister.status;
+                switch(status){
+                  case (null){};
+                  case (?foundStatus){
+                    if (foundStatus.cycles < 10_000_000_000_000) {
+                      await requestCanisterTopup(Principal.toText(foundCanisterId), 10_000_000_000_000);
+                    };
+                  }
+                };
+              };
+            };
+
+        };
+      };
+
+      switch(summary.swap){
+        case (null){ };
+        case (?canister){
+           switch(canister.canister_id){
+              case (null) {};
+              case (?foundCanisterId){
+                let status = canister.status;
+                switch(status){
+                  case (null){};
+                  case (?foundStatus){
+                    if (foundStatus.cycles < 10_000_000_000_000) {
+                      await requestCanisterTopup(Principal.toText(foundCanisterId), 10_000_000_000_000);
+                    };
+                  }
+                };
+              };
+            };
+
         };
       };
     };

@@ -1291,5 +1291,9 @@ module {
       return managerComposite.getTotalCanisters();
     };
 
+    public func setInitialClubs(){
+      clubComposite.setInitialClubs();
+    };
+
   };
 };
