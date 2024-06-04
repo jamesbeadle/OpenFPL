@@ -179,7 +179,7 @@
 
       <div class="w-full md:w-1/2 lg:w-2/3 xl:w-3/4 md:px-2 mb-4 md:mb-0">
         <div class="md:ml-4 md:px-4 px-4 mt-2 md:mt-1 rounded-lg">
-          <p class="mb-1">Display Name:</p>
+          <p class="mb-1">Username:</p>
           <h2 class="default-header mb-1 md:mb-2">
             {$userStore?.username == "" ? "Not Set" : $userStore?.username}
           </h2>

@@ -25,14 +25,14 @@
   async function updateUsername() {
     busyStore.startBusy({
       initiator: "update-name",
-      text: "Updating display name...",
+      text: "Updating username...",
     });
     try {
       await userStore.updateUsername(newUsername);
       userStore.sync();
       await closeModal();
       toastsShow({
-        text: "Display name updated.",
+        text: "Username updated.",
         level: "success",
         duration: 2000,
       });
@@ -52,7 +52,7 @@
 <Modal {visible} on:nnsClose={cancelModal}>
   <div class="mx-4 p-4">
     <div class="flex justify-between items-center my-2">
-      <h3 class="default-header">Update Display Name</h3>
+      <h3 class="default-header">Update Username</h3>
       <button class="times-button" on:click={cancelModal}>&times;</button>
     </div>
     <form on:submit|preventDefault={updateUsername}>
