@@ -1038,11 +1038,7 @@
 
     private func checkCanisterCycles() : async () {
 
-      let balance = Cycles.balance();
-
-      if (balance < 10_000_000_000_000) {
-        await requestCanisterTopup(10_000_000_000_000);
-      };
+      await cyclesDispenser.checkSNSCanisterCycles();
 
       let remainingDuration = Utilities.getHour() * 24;
       ignore Timer.setTimer<system>(#nanoseconds remainingDuration, cyclesCheckCallback);

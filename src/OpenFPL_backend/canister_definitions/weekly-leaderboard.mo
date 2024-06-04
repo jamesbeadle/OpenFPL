@@ -152,12 +152,22 @@ actor class _WeeklyLeaderboardCanister() {
     cyclesCheckTimerId := ?Timer.setTimer<system>(#nanoseconds(cyclesCheckInterval), checkCanisterCycles);
   };
 
-  public func topupCanister() : async () {
+  public shared func topupCanister() : async () {
     let amount = Cycles.available();
     let _ = Cycles.accept<system>(amount);
   };
 
-  public func getCyclesBalance() : async Nat {
+  public shared ({ caller }) func getCyclesBalance() : async Nat {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == Environment.BACKEND_CANISTER_ID;
     return Cycles.balance();
+  };
+
+  public shared ({ caller }) func getCyclesAvailable() : async Nat {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == Environment.BACKEND_CANISTER_ID;
+    return Cycles.available();
   };
 };
