@@ -1291,29 +1291,5 @@ module {
       return managerComposite.getTotalCanisters();
     };
 
-    //TODO: Temp functions
-    
-    public func init() : async () {
-      rewardPools.put(1, {
-        allTimeMonthlyHighScorePool = 9_375_000_000_000;
-        allTimeSeasonHighScorePool  = 9_375_000_000_000;
-        allTimeWeeklyHighScorePool = 9_375_000_000_000;
-        mostValuableTeamPool = 18_750_000_000_000;
-        highestScoringMatchPlayerPool = 18_750_000_000_000;
-        weeklyLeaderboardPool = 28_125_000_000_000;
-        monthlyLeaderboardPool = 37_500_000_000_000;
-        seasonLeaderboardPool = 56_250_000_000_000;
-        seasonId = 1;
-      });
-      seasonComposite.init();
-      clubComposite.init();
-      playerComposite.init();
-      await managerComposite.init();
-    };
-
-    public func resetManagerCount(){
-      managerComposite.resetManagerCount();
-    };
-
   };
 };

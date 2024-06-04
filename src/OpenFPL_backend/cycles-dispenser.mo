@@ -5,7 +5,6 @@ import Buffer "mo:base/Buffer";
 import Nat "mo:base/Nat";
 import Iter "mo:base/Iter";
 import Principal "mo:base/Principal";
-import Debug "mo:base/Debug";
 import Environment "utils/Environment";
 import T "types";
 import Root "sns-wrappers/root";

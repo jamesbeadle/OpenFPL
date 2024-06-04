@@ -958,11 +958,11 @@ module {
         case (?foundManagerCanisterId){
           
           let manager_canister = actor (foundManagerCanisterId) : actor {
-            updateFavouriteClub : (dto : DTOs.UpdateFavouriteClubDTO) -> async Result.Result<(), T.Error>;
+            updateFavouriteClub : (dto : DTOs.FavouriteClubUpdateDTO) -> async Result.Result<(), T.Error>;
           };
-          let updatedUsernameDTO : DTOs.UpdateFavouriteClubDTO = {
+          let updatedUsernameDTO : DTOs.FavouriteClubUpdateDTO = {
             principalId = managerPrincipalId;
-            favouriteClubId = favouriteClubId;
+            updatedFavouriteClub = {favouriteClubId};
           };
           return await manager_canister.updateFavouriteClub(updatedUsernameDTO);
         }
@@ -1374,15 +1374,6 @@ module {
 
     public func getTotalCanisters() : Nat{
       return managerCanisterIds.size();
-    };
-
-    public func init() : async () {
-      let result = await createManagerCanister();
-      activeManagerCanisterId := result;
-
-      managerCanisterIds := TrieMap.TrieMap<T.PrincipalId, T.CanisterId>(Text.equal, Text.hash);
-      managerUsernames := TrieMap.TrieMap<T.PrincipalId, Text>(Text.equal, Text.hash);
-      uniqueManagerCanisterIds := List.fromArray([activeManagerCanisterId]);
     };
   };
 };

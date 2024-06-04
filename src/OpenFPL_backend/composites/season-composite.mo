@@ -1418,15 +1418,5 @@ module {
     public func setStableNextFixtureId(stable_next_fixture_id : T.FixtureId) {
       nextFixtureId := stable_next_fixture_id;
     };
-
-    public func init() {
-      seasons := List.fromArray<T.Season>([{
-        id = 1;
-        name = "2024/25";
-        year = 2024;
-        fixtures = List.nil();
-        postponedFixtures = List.nil();
-      }]);
-    };
   };
 };

@@ -3,7 +3,7 @@ import { isError } from "$lib/utils/Helpers";
 import { writable } from "svelte/store";
 import { ActorFactory } from "../../utils/ActorFactory";
 import type {
-  ClubFilterDTO,
+  UpdateFavouriteClubDTO,
   UpdateProfilePictureDTO,
   UsernameFilterDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
@@ -56,8 +56,8 @@ function createUserStore() {
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
-      let dto: ClubFilterDTO = {
-        clubId: favouriteTeamId,
+      let dto: UpdateFavouriteClubDTO = {
+        favouriteClubId: favouriteTeamId,
       };
       const result = await identityActor.updateFavouriteClub(dto);
       if (isError(result)) {

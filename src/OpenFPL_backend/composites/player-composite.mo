@@ -1332,10 +1332,5 @@ module {
     public func setStableNextPlayerId(stable_next_player_id : T.PlayerId) {
       nextPlayerId := stable_next_player_id;
     };
-
-    public func init() {
-      let startingPlayers = Players.Players();
-      players := List.fromArray(startingPlayers.players);
-    };
   };
 };
