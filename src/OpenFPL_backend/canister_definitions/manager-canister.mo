@@ -3449,9 +3449,9 @@ actor class _ManagerCanister() {
 
     if (balance < 2_000_000_000_000) {
       let openfpl_backend_canister = actor (Environment.BACKEND_CANISTER_ID) : actor {
-        requestCanisterTopup : () -> async ();
+        requestCanisterTopup : (cycles: Nat) -> async ();
       };
-      await openfpl_backend_canister.requestCanisterTopup();
+      await openfpl_backend_canister.requestCanisterTopup(2_000_000_000_000);
     };
     await setCheckCyclesTimer();
   };
