@@ -1374,6 +1374,10 @@ module {
       return canisterId;
     };
 
+    public func getTotalCanisters() : Nat{
+      return managerCanisterIds.size();
+    };
+
     public func init() : async () {
       let result = await createManagerCanister();
       activeManagerCanisterId := result;

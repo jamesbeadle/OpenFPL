@@ -223,6 +223,46 @@ module {
     return nextInstanceUnixTime;
   };
 
+  public func getReadableDate(date : Int) : Text {
+      let secondsInADay : Int = 86_400;
+      let days = date / (1_000_000_000 * secondsInADay);
+
+      let year = getYear(days);
+      let dayOfYear = getDayOfYear(days, year);
+
+      let isLeapYear = if (year % 4 == 0 and (year % 100 != 0 or year % 400 == 0)) {
+        true
+      } else {
+        false
+      };
+
+      let monthEnds = if (isLeapYear) {
+        [31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366];
+      } else {
+        [31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365];
+      };
+
+      var month = 0;
+      var day = dayOfYear;
+
+      label monthLoop for (m in Iter.range(0, 11)) {
+        if (day <= monthEnds[m]) {
+          month := m + 1;
+          if (m > 0) {
+            day := day - monthEnds[m-1];
+          };
+          break monthLoop;
+        };
+      };
+
+      let monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      return Text.concat(Text.concat(Text.concat(Int.toText(day), " "), monthNames[month - 1]), Text.concat(" ", Int.toText(year)));
+  };
+
+  public func getNext6AM() : Int {
+    return 0;
+  };
+
   public func validateHexColor(hex : Text) : Bool {
 
     if (Text.size(hex) != 7 or not Text.startsWith(hex, #text "#")) {

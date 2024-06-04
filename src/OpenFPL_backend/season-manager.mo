@@ -1284,6 +1284,9 @@ module {
       privateLeaguesManager.setStableUnacceptedInvites(stable_private_league_unaccepted_invites);
     };
 
+    public func getTotalCanisters() : Nat{
+      return managerComposite.getTotalCanisters();
+    };
 
     //Temp functions
     

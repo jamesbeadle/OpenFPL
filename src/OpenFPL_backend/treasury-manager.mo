@@ -54,49 +54,6 @@ module {
       return balance.e8s;
     };
 
-    public func sendICPForCycles(treasuryAccount : Account.AccountIdentifier, cyclesRequested : Nat64) : async () {
-
-      if (cyclesRequested <= 0) {
-        return;
-      };
-
-      let cycles_minting_canister = actor (Environment.CYCLES_MINTING_CANISTER_ID) : actor {
-        get_icp_xdr_conversion_rate : () -> async ConversionRateResponse;
-      };
-      let converstionRate : ConversionRateResponse = await cycles_minting_canister.get_icp_xdr_conversion_rate();
-
-      let icp_required : Nat64 = cyclesRequested / Nat64.fromNat(converstionRate.data) / 1_000_000;
-
-      let balance = await ledger.account_balance({ account = treasuryAccount });
-
-      if (balance.e8s < icp_fee) {
-        return;
-      };
-
-      let withdrawable = balance.e8s - icp_fee;
-
-      if (icp_required >= withdrawable) {
-        return;
-      };
-
-      let target_account = Account.accountIdentifier(Principal.fromText(Environment.CYCLES_MINTING_CANISTER_ID), Account.principalToSubaccount(Principal.fromText(Environment.BACKEND_CANISTER_ID)));
-
-      if (not Account.validateAccountIdentifier(target_account)) {
-        return;
-      };
-
-      let _ = await ledger.transfer({
-        memo = memo_txt_tpup;
-        from_subaccount = null;
-        to = target_account;
-        amount = { e8s = icp_required };
-        fee = { e8s = icp_fee };
-        created_at_time = ?{
-          timestamp_nanos = Nat64.fromNat(Int.abs(Time.now()));
-        };
-      });
-    };
-
     public func validateAddNewToken(newTokenDTO : DTOs.NewTokenDTO) : T.RustResult {
       for(token in Iter.fromArray(tokenList)){
         if(newTokenDTO.canisterId == token.canisterId){
