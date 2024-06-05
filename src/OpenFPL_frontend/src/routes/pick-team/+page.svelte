@@ -74,9 +74,11 @@
   let transferWindowPlayed = false;
 
   let isLoading = true;
+  let isSaveButtonActive = false;
 
   $: if ($fantasyTeam && $playerStore.length > 0) {
     disableInvalidFormations();
+    isSaveButtonActive = checkSaveButtonConditions();
   }
 
   $: {
@@ -351,6 +353,7 @@
         {pitchView}
         {availableFormations}
         {newCaptain}
+        {isSaveButtonActive}
       />
       <div class="flex flex-col xl:flex-row mt-2 xl:mt-0">
         <PickTeamPlayers

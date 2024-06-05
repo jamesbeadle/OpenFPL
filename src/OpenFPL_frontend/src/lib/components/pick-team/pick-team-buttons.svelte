@@ -23,13 +23,13 @@
   export let newCaptain: Writable<string>;
   export let changeCaptain: () => void;
   export let setCaptain: (captainId: number) => void;
+  export let isSaveButtonActive: boolean;
 
   let activeSeason: string;
   let activeGameweek: number;
   let selectedFormation: string = "4-4-2";
   let newUsername = writable("");
 
-  let isSaveButtonActive = false;
   let showCaptainModal = false;
   let showUsernameModal = false;
 
