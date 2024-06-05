@@ -1017,8 +1017,8 @@ import Debug "mo:base/Debug";
     };
 
     private func postUpgradeCallback() : async (){
-      seasonManager.setInitialClubs();
-      await seasonManager.updateCacheHash("clubs");
+      //seasonManager.setInitialClubs();
+      //await seasonManager.updateCacheHash("clubs");
       await systemCheckCallback();
       await cyclesCheckCallback();
 
