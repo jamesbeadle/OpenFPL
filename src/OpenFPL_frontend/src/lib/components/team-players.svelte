@@ -8,7 +8,7 @@
     getFlagComponent,
     getPositionAbbreviation,
     getPositionText,
-  } from "../utils/Helpers";
+  } from "../utils/helpers";
   export let players: PlayerDTO[] = [];
   let selectedPosition = -1;
   $: filteredPlayers =

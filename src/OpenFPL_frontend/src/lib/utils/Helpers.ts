@@ -123,6 +123,16 @@ export function getPositionText(position: Position): string {
   }
 }
 
+export function convertPlayerPosition(
+  playerPosition: PlayerPosition,
+): Position {
+  if ("Goalkeeper" in playerPosition) return Position.GOALKEEPER;
+  if ("Defender" in playerPosition) return Position.DEFENDER;
+  if ("Midfielder" in playerPosition) return Position.MIDFIELDER;
+  if ("Forward" in playerPosition) return Position.FORWARD;
+  return Position.GOALKEEPER;
+}
+
 export function getPositionAbbreviation(position: Position): string {
   switch (position) {
     case Position.GOALKEEPER:
@@ -653,68 +663,6 @@ function initTeamData(
       };
     }
   }
-}
-
-interface FormationDetails {
-  positions: number[];
-}
-
-export const allFormations: Record<string, FormationDetails> = {
-  "3-4-3": { positions: [0, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3] },
-  "3-5-2": { positions: [0, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3] },
-  "4-3-3": { positions: [0, 1, 1, 1, 1, 2, 2, 2, 3, 3, 3] },
-  "4-4-2": { positions: [0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3] },
-  "4-5-1": { positions: [0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3] },
-  "5-4-1": { positions: [0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3] },
-  "5-3-2": { positions: [0, 1, 1, 1, 1, 1, 2, 2, 2, 3, 3] },
-};
-
-export function getAvailableFormations(
-  players: PlayerDTO[],
-  team: PickTeamDTO,
-): string[] {
-  const positionCounts: Record<number, number> = { 0: 0, 1: 0, 2: 0, 3: 0 };
-  team.playerIds.forEach((id: number) => {
-    const teamPlayer = players.find((p) => p.id === id);
-    if (teamPlayer) {
-      positionCounts[convertPlayerPosition(teamPlayer.position)]++;
-    }
-  });
-
-  const formations = [
-    "3-4-3",
-    "3-5-2",
-    "4-3-3",
-    "4-4-2",
-    "4-5-1",
-    "5-4-1",
-    "5-3-2",
-  ];
-  return formations.filter((formation) => {
-    const [def, mid, fwd] = formation.split("-").map(Number);
-    const minDef = Math.max(0, def - (positionCounts[1] || 0));
-    const minMid = Math.max(0, mid - (positionCounts[2] || 0));
-    const minFwd = Math.max(0, fwd - (positionCounts[3] || 0));
-    const minGK = Math.max(0, 1 - (positionCounts[0] || 0));
-
-    const additionalPlayersNeeded = minDef + minMid + minFwd + minGK;
-    const totalPlayers = Object.values(positionCounts).reduce(
-      (a, b) => a + b,
-      0,
-    );
-
-    return totalPlayers + additionalPlayersNeeded <= 11;
-  });
-}
-
-export function convertPlayerPosition(
-  playerPosition: PlayerPosition,
-): Position {
-  if ("Goalkeeper" in playerPosition) return Position.GOALKEEPER;
-  if ("Defender" in playerPosition) return Position.DEFENDER;
-  if ("Midfielder" in playerPosition) return Position.MIDFIELDER;
-  if ("Forward" in playerPosition) return Position.FORWARD;
-  return Position.GOALKEEPER;
 }
 
 export function convertEvent(playerEvent: PlayerEventType): PlayerEvent {

@@ -7,7 +7,7 @@
   import UpdateUsernameModal from "$lib/components/profile/update-username-modal.svelte";
   import UpdateFavouriteTeamModal from "./update-favourite-team-modal.svelte";
   import { busyStore, Spinner } from "@dfinity/gix-components";
-  import { getDateFromBigInt } from "$lib/utils/Helpers";
+  import { getDateFromBigInt } from "$lib/utils/helpers";
   import CopyIcon from "$lib/icons/CopyIcon.svelte";
   import { userGetProfilePicture } from "$lib/derived/user.derived";
     import LocalSpinner from "../local-spinner.svelte";

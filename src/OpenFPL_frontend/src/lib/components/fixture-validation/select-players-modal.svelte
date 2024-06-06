@@ -5,7 +5,7 @@
     PlayerDTO,
   } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { Modal } from "@dfinity/gix-components";
-  import { convertPlayerPosition, getFlagComponent } from "$lib/utils/Helpers";
+  import { convertPlayerPosition, getFlagComponent } from "$lib/utils/helpers";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
 
   export let teamPlayers = writable<PlayerDTO[]>([]);

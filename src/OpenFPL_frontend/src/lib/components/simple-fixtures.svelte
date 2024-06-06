@@ -6,7 +6,7 @@
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import type { ClubDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
-  import { convertFixtureStatus, formatUnixTimeToTime } from "../utils/Helpers";
+  import { convertFixtureStatus, formatUnixTimeToTime } from "../utils/helpers";
 
   let fixturesWithTeams: FixtureWithTeams[] = [];
   let selectedGameweek: number;

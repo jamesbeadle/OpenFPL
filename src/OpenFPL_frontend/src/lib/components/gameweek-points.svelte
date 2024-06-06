@@ -10,9 +10,9 @@
   import { authStore } from "$lib/stores/auth.store";
 
   import {
-    getPositionAbbreviation,
     convertPlayerPosition,
-  } from "$lib/utils/Helpers";
+    getPositionAbbreviation,
+  } from "$lib/utils/helpers";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import type { ClubDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { Principal } from "@dfinity/principal";

@@ -1,5 +1,5 @@
 import { authStore } from "$lib/stores/auth.store";
-import { isError } from "$lib/utils/Helpers";
+import { isError } from "$lib/utils/helpers";
 import { writable } from "svelte/store";
 import { ActorFactory } from "../../utils/ActorFactory";
 import type {

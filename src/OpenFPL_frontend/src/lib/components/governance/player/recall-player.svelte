@@ -7,7 +7,7 @@
   import { Modal } from "@dfinity/gix-components";
   import LocalSpinner from "$lib/components/local-spinner.svelte";
   import type { PlayerDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import { isError } from "$lib/utils/Helpers";
+  import { isError } from "$lib/utils/helpers";
 
   export let visible: boolean;
   export let closeModal: () => void;

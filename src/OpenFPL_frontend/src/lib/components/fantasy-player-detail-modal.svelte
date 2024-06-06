@@ -3,7 +3,7 @@
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import { Modal } from "@dfinity/gix-components";
   import type { ClubDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import { convertPlayerPosition, getFlagComponent } from "../utils/Helpers";
+  import { convertPlayerPosition, getFlagComponent } from "../utils/helpers";
 
   export let visible: boolean;
   export let closeDetailModal: () => void;

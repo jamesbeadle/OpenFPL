@@ -3513,7 +3513,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "s976m2"
+  version_hash: "1qo7ln9"
 };
 async function get_hooks() {
   return {};
@@ -4582,7 +4582,7 @@ const idlFactory = ({ IDL }) => {
     )
   });
 };
-var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic" };
+var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
 const canisterId = define_process_env_default$c.CANISTER_ID_OPENFPL_BACKEND;
 const createActor = (canisterId2, options2 = {}) => {
   const agent = options2.agent || new HttpAgent({ ...options2.agentOptions });
@@ -4590,6 +4590,14 @@ const createActor = (canisterId2, options2 = {}) => {
     console.warn(
       "Detected both agent and agentOptions passed to createActor. Ignoring agentOptions and proceeding with the provided agent."
     );
+  }
+  {
+    agent.fetchRootKey().catch((err) => {
+      console.warn(
+        "Unable to fetch root key. Check to ensure that your local replica is running"
+      );
+      console.error(err);
+    });
   }
   return Actor.createActor(idlFactory, {
     agent,
@@ -4601,7 +4609,7 @@ canisterId ? createActor(canisterId) : void 0;
 class ActorFactory {
   static createActor(idlFactory2, canisterId2 = "", identity = null, options2 = null) {
     const hostOptions = {
-      host: `https://${canisterId2}.icp-api.io`,
+      host: `http://localhost:8080/?canisterId=qhbym-qaaaa-aaaaa-aaafq-cai`,
       identity
     };
     if (!options2) {
@@ -4614,6 +4622,14 @@ class ActorFactory {
       options2.agentOptions.host = hostOptions.host;
     }
     const agent = new HttpAgent({ ...options2.agentOptions });
+    {
+      agent.fetchRootKey().catch((err) => {
+        console.warn(
+          "Unable to fetch root key. Ensure your local replica is running"
+        );
+        console.error(err);
+      });
+    }
     return Actor.createActor(idlFactory2, {
       agent,
       canisterId: canisterId2,
@@ -4622,7 +4638,7 @@ class ActorFactory {
   }
   static getAgent(canisterId2 = "", identity = null, options2 = null) {
     const hostOptions = {
-      host: `https://${canisterId2}.icp-api.io`,
+      host: `http://localhost:8080/?canisterId=b77ix-eeaaa-aaaaa-qaada-cai`,
       identity
     };
     if (!options2) {
@@ -4703,6 +4719,17 @@ function replacer(key2, value) {
     return value;
   }
 }
+function convertPlayerPosition(playerPosition) {
+  if ("Goalkeeper" in playerPosition)
+    return Position.GOALKEEPER;
+  if ("Defender" in playerPosition)
+    return Position.DEFENDER;
+  if ("Midfielder" in playerPosition)
+    return Position.MIDFIELDER;
+  if ("Forward" in playerPosition)
+    return Position.FORWARD;
+  return Position.GOALKEEPER;
+}
 function calculateAgeFromNanoseconds(nanoseconds) {
   const milliseconds = nanoseconds / 1e6;
   const birthDate = new Date(milliseconds);
@@ -4777,57 +4804,6 @@ function initTeamData(teamId, table, teams) {
     }
   }
 }
-const allFormations = {
-  "3-4-3": { positions: [0, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3] },
-  "3-5-2": { positions: [0, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3] },
-  "4-3-3": { positions: [0, 1, 1, 1, 1, 2, 2, 2, 3, 3, 3] },
-  "4-4-2": { positions: [0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3] },
-  "4-5-1": { positions: [0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3] },
-  "5-4-1": { positions: [0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3] },
-  "5-3-2": { positions: [0, 1, 1, 1, 1, 1, 2, 2, 2, 3, 3] }
-};
-function getAvailableFormations(players, team) {
-  const positionCounts = { 0: 0, 1: 0, 2: 0, 3: 0 };
-  team.playerIds.forEach((id) => {
-    const teamPlayer = players.find((p) => p.id === id);
-    if (teamPlayer) {
-      positionCounts[convertPlayerPosition(teamPlayer.position)]++;
-    }
-  });
-  const formations = [
-    "3-4-3",
-    "3-5-2",
-    "4-3-3",
-    "4-4-2",
-    "4-5-1",
-    "5-4-1",
-    "5-3-2"
-  ];
-  return formations.filter((formation) => {
-    const [def, mid, fwd] = formation.split("-").map(Number);
-    const minDef = Math.max(0, def - (positionCounts[1] || 0));
-    const minMid = Math.max(0, mid - (positionCounts[2] || 0));
-    const minFwd = Math.max(0, fwd - (positionCounts[3] || 0));
-    const minGK = Math.max(0, 1 - (positionCounts[0] || 0));
-    const additionalPlayersNeeded = minDef + minMid + minFwd + minGK;
-    const totalPlayers = Object.values(positionCounts).reduce(
-      (a, b) => a + b,
-      0
-    );
-    return totalPlayers + additionalPlayersNeeded <= 11;
-  });
-}
-function convertPlayerPosition(playerPosition) {
-  if ("Goalkeeper" in playerPosition)
-    return Position.GOALKEEPER;
-  if ("Defender" in playerPosition)
-    return Position.DEFENDER;
-  if ("Midfielder" in playerPosition)
-    return Position.MIDFIELDER;
-  if ("Forward" in playerPosition)
-    return Position.FORWARD;
-  return Position.GOALKEEPER;
-}
 function convertEvent(playerEvent) {
   if ("Appearance" in playerEvent)
     return PlayerEvent.Appearance;
@@ -4869,7 +4845,7 @@ function convertFixtureStatus(fixtureStatus) {
 function isError(response) {
   return response && response.err !== void 0;
 }
-var define_process_env_default$b = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic" };
+var define_process_env_default$b = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
 function createSystemStore() {
   const { subscribe: subscribe2, set } = writable(null);
   let actor = ActorFactory.createActor(
@@ -4958,7 +4934,7 @@ function createSystemStore() {
   };
 }
 const systemStore = createSystemStore();
-var define_process_env_default$a = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic" };
+var define_process_env_default$a = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
 function createFixtureStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let actor = ActorFactory.createActor(
@@ -5037,7 +5013,7 @@ function createFixtureStore() {
   };
 }
 const fixtureStore = createFixtureStore();
-var define_process_env_default$9 = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic" };
+var define_process_env_default$9 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
 function createTeamStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let actor = ActorFactory.createActor(
@@ -5566,7 +5542,7 @@ const toastsError = ({
     level: "error"
   });
 };
-var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic" };
+var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
 function createManagerStore() {
   const { subscribe: subscribe2, set } = writable(null);
   let systemState;
@@ -5837,7 +5813,7 @@ function createManagerStore() {
   };
 }
 createManagerStore();
-var define_process_env_default$7 = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic" };
+var define_process_env_default$7 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
 function createCountriesStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let actor = ActorFactory.createActor(
@@ -5884,7 +5860,7 @@ function createCountriesStore() {
   };
 }
 const countriesStore = createCountriesStore();
-var define_process_env_default$6 = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic" };
+var define_process_env_default$6 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
 function createWeeklyLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage = 25;
@@ -6011,7 +5987,7 @@ function createWeeklyLeaderboardStore() {
   };
 }
 createWeeklyLeaderboardStore();
-var define_process_env_default$5 = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic" };
+var define_process_env_default$5 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
 function createPlayerStore() {
   const { subscribe: subscribe2, set } = writable([]);
   systemStore.subscribe((value) => {
@@ -6086,7 +6062,7 @@ function createPlayerStore() {
   };
 }
 const playerStore = createPlayerStore();
-var define_process_env_default$4 = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic" };
+var define_process_env_default$4 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
 function createPlayerEventsStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let systemState;
@@ -6448,7 +6424,7 @@ function createPlayerEventsStore() {
   };
 }
 createPlayerEventsStore();
-var define_process_env_default$3 = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic" };
+var define_process_env_default$3 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
 function createUserStore() {
   const { subscribe: subscribe2, set } = writable(null);
   async function sync() {
@@ -6737,7 +6713,7 @@ const Local_spinner = create_ssr_component(($$result, $$props, $$bindings, slots
   $$result.css.add(css$2);
   return `<div class="local-spinner svelte-pvdm52"></div>`;
 });
-var define_process_env_default$2 = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic" };
+var define_process_env_default$2 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
 function createMonthlyLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage = 25;
@@ -6851,7 +6827,7 @@ function createMonthlyLeaderboardStore() {
   };
 }
 createMonthlyLeaderboardStore();
-var define_process_env_default$1 = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic" };
+var define_process_env_default$1 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
 function createSeasonLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage = 25;
@@ -6974,7 +6950,7 @@ const Page$g = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-var define_process_env_default = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic" };
+var define_process_env_default = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local" };
 function createGovernanceStore() {
   async function revaluePlayerUp(playerId) {
     try {
@@ -9954,191 +9930,7 @@ const Page$5 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-function getGridSetup(formation) {
-  const formationSplits = formation.split("-").map(Number);
-  const setups = [[1], ...formationSplits.map((s2) => Array(s2).fill(0).map((_, i) => i + 1))];
-  return setups;
-}
-function isBonusConditionMet(team) {
-  if (!team) {
-    return false;
-  }
-  const gameweekCounts = {};
-  const bonusGameweeks = [
-    team.hatTrickHeroGameweek,
-    team.teamBoostGameweek,
-    team.captainFantasticGameweek,
-    team.braceBonusGameweek,
-    team.passMasterGameweek,
-    team.goalGetterGameweek,
-    team.noEntryGameweek,
-    team.safeHandsGameweek,
-    team.countrymenGameweek,
-    team.prospectsGameweek
-  ];
-  for (const gw of bonusGameweeks) {
-    if (gw !== 0) {
-      gameweekCounts[gw] = (gameweekCounts[gw] || 0) + 1;
-      if (gameweekCounts[gw] > 1) {
-        return false;
-      }
-    }
-  }
-  return true;
-}
 const Page$4 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let $$unsubscribe_newCaptainId;
-  let $playerStore, $$unsubscribe_playerStore;
-  let $fantasyTeam, $$unsubscribe_fantasyTeam;
-  let $transfersAvailable, $$unsubscribe_transfersAvailable;
-  let $bankBalance, $$unsubscribe_bankBalance;
-  let $$unsubscribe_systemStore;
-  $$unsubscribe_playerStore = subscribe(playerStore, (value) => $playerStore = value);
-  $$unsubscribe_systemStore = subscribe(systemStore, (value) => value);
-  let selectedFormation = "4-4-2";
-  const fantasyTeam = writable({
-    playerIds: [],
-    countrymenCountryId: 0,
-    username: "",
-    goalGetterPlayerId: 0,
-    hatTrickHeroGameweek: 0,
-    transfersAvailable: 0,
-    teamBoostGameweek: 0,
-    captainFantasticGameweek: 0,
-    countrymenGameweek: 0,
-    bankQuarterMillions: 0,
-    noEntryPlayerId: 0,
-    safeHandsPlayerId: 0,
-    braceBonusGameweek: 0,
-    passMasterGameweek: 0,
-    teamBoostClubId: 0,
-    goalGetterGameweek: 0,
-    captainFantasticPlayerId: 0,
-    transferWindowGameweek: 0,
-    noEntryGameweek: 0,
-    prospectsGameweek: 0,
-    safeHandsGameweek: 0,
-    principalId: "",
-    passMasterPlayerId: 0,
-    captainId: 0,
-    monthlyBonusesAvailable: 0
-  });
-  $$unsubscribe_fantasyTeam = subscribe(fantasyTeam, (value) => $fantasyTeam = value);
-  const transfersAvailable = writable(Infinity);
-  $$unsubscribe_transfersAvailable = subscribe(transfersAvailable, (value) => $transfersAvailable = value);
-  const bankBalance = writable(1200);
-  $$unsubscribe_bankBalance = subscribe(bankBalance, (value) => $bankBalance = value);
-  const availableFormations = writable(["3-4-3", "3-5-2", "4-3-3", "4-4-2", "4-5-1", "5-4-1", "5-3-2"]);
-  const newCaptainId = writable(0);
-  $$unsubscribe_newCaptainId = subscribe(newCaptainId, (value) => value);
-  function getTeamFormation(team) {
-    const positionCounts = { 0: 0, 1: 0, 2: 0, 3: 0 };
-    team.playerIds.forEach((id) => {
-      const teamPlayer = $playerStore.find((p) => p.id === id);
-      if (teamPlayer) {
-        positionCounts[convertPlayerPosition(teamPlayer.position)]++;
-      }
-    });
-    for (const formation of Object.keys(allFormations)) {
-      const formationPositions = allFormations[formation].positions;
-      let isMatch = true;
-      const formationCount = formationPositions.reduce(
-        (acc, pos) => {
-          acc[pos] = (acc[pos] || 0) + 1;
-          return acc;
-        },
-        {}
-      );
-      for (const pos in formationCount) {
-        if (formationCount[pos] !== positionCounts[pos]) {
-          isMatch = false;
-          break;
-        }
-      }
-      if (isMatch) {
-        return formation;
-      }
-    }
-    console.error("No valid formation found for the team");
-    return selectedFormation;
-  }
-  function disableInvalidFormations() {
-    if (!$fantasyTeam || !$fantasyTeam.playerIds) {
-      return;
-    }
-    const formations = getAvailableFormations($playerStore, $fantasyTeam);
-    availableFormations.set(formations);
-  }
-  function checkSaveButtonConditions() {
-    const teamCount = /* @__PURE__ */ new Map();
-    for (const playerId of $fantasyTeam?.playerIds || []) {
-      if (playerId > 0) {
-        const player = $playerStore.find((p) => p.id === playerId);
-        if (player) {
-          teamCount.set(player.clubId, (teamCount.get(player.clubId) || 0) + 1);
-          if (teamCount.get(player.clubId) > 2) {
-            return false;
-          }
-        }
-      }
-    }
-    if (!isBonusConditionMet($fantasyTeam)) {
-      return false;
-    }
-    if ($fantasyTeam?.playerIds.filter((id) => id > 0).length !== 11) {
-      return false;
-    }
-    if ($bankBalance < 0) {
-      return false;
-    }
-    if ($transfersAvailable < 0) {
-      return false;
-    }
-    if (!isValidFormation($fantasyTeam, selectedFormation)) {
-      return false;
-    }
-    return true;
-  }
-  function isValidFormation(team, selectedFormation2) {
-    const positionCounts = { 0: 0, 1: 0, 2: 0, 3: 0 };
-    team.playerIds.forEach((id) => {
-      const teamPlayer = $playerStore.find((p) => p.id === id);
-      if (teamPlayer) {
-        positionCounts[convertPlayerPosition(teamPlayer.position)]++;
-      }
-    });
-    const [def, mid, fwd] = selectedFormation2.split("-").map(Number);
-    const minDef = Math.max(0, def - (positionCounts[1] || 0));
-    const minMid = Math.max(0, mid - (positionCounts[2] || 0));
-    const minFwd = Math.max(0, fwd - (positionCounts[3] || 0));
-    const minGK = Math.max(0, 1 - (positionCounts[0] || 0));
-    const additionalPlayersNeeded = minDef + minMid + minFwd + minGK;
-    const totalPlayers = Object.values(positionCounts).reduce((a, b) => a + b, 0);
-    return totalPlayers + additionalPlayersNeeded <= 11;
-  }
-  {
-    if ($fantasyTeam && $playerStore.length > 0) {
-      disableInvalidFormations();
-      checkSaveButtonConditions();
-    }
-  }
-  {
-    {
-      if ($fantasyTeam) {
-        getGridSetup(selectedFormation);
-        if ($fantasyTeam.playerIds.filter((x) => x > 0).length == 11) {
-          const newFormation = getTeamFormation($fantasyTeam);
-          selectedFormation = newFormation;
-        }
-      }
-    }
-  }
-  $$unsubscribe_newCaptainId();
-  $$unsubscribe_playerStore();
-  $$unsubscribe_fantasyTeam();
-  $$unsubscribe_transfersAvailable();
-  $$unsubscribe_bankBalance();
-  $$unsubscribe_systemStore();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
       return `${`${validate_component(Spinner, "Spinner").$$render($$result, {}, {}, {})}`}`;

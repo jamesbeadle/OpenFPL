@@ -6,7 +6,7 @@ import type {
   GetFixturesDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
-import { isError, replacer } from "../utils/Helpers";
+import { isError, replacer } from "../utils/helpers";
 
 function createFixtureStore() {
   const { subscribe, set } = writable<FixtureDTO[]>([]);

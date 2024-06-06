@@ -4,54 +4,58 @@
   import { toastsError } from "$lib/stores/toasts-store";
   import { systemStore } from "$lib/stores/system-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
-  import {
-    formatUnixDateToReadable,
-    formatUnixTimeToTime,
-    getCountdownTime,
-  } from "../../../lib/utils/Helpers";
+  import { playerStore } from "$lib/stores/player-store";
+  import { formatUnixDateToReadable, formatUnixTimeToTime, getCountdownTime } from "$lib/utils/helpers";
   import type { PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-    import { playerStore } from "$lib/stores/player-store";
-    import LocalSpinner from "../local-spinner.svelte";
+  import LocalSpinner from "../local-spinner.svelte";
+  
+  let isLoading = true;
+  let activeSeason = "-";
+  let activeGameweek = 1;
 
-  let activeSeason: string;
-  let activeGameweek: number;
   let nextFixtureDate = "-";
   let nextFixtureTime = "-";
   let countdownDays = "00";
   let countdownHours = "00";
   let countdownMinutes = "00";
 
-  export let fantasyTeam: Writable<PickTeamDTO | null>;
-  export let transfersAvailable: Writable<number>;
+  export let transfersAvailable: Writable<number>;  
   export let bankBalance: Writable<number>;
-  let teamValue = writable<number>(0);
-
-  let isLoading = true;
+  export let teamValue: Writable<number>;
+  
+  export let fantasyTeam: Writable<PickTeamDTO | null>;
 
   onMount(() => {
-    teamValue.set(0);
+
+    systemStore.sync();
     playerStore.sync();
-    activeSeason = $systemStore?.pickTeamSeasonName ?? "-";
-    activeGameweek = $systemStore?.pickTeamGameweek ?? 1;
+
+    if($systemStore?.pickTeamSeasonName){
+      activeSeason = $systemStore?.pickTeamSeasonName;
+    }
+
+    if($systemStore?.pickTeamGameweek){
+      activeGameweek = $systemStore?.pickTeamGameweek
+    }
+
     try {
-      loadData();
+      updateTeamValue();
+      fetchNextFixture();
     } catch (error) {
       toastsError({
-        msg: { text: "Error fetching header data." },
+        msg: { text: "Error fetching pick team header data." },
         err: error,
       });
-      console.error("Error fetching header data:", error);
+      console.error("Error fetching pick team header data:", error);
     } finally {
       isLoading = false;
     }
   });
 
-  async function loadData() {
-    updateTeamValue();
+  async function fetchNextFixture() {
     let nextFixture = await fixtureStore.getNextFixture();
     
     if(!nextFixture){
-      isLoading = false;
       return
     };
     
@@ -62,16 +66,12 @@
     countdownDays = countdownTime.days.toString();
     countdownHours = countdownTime.hours.toString();
     countdownMinutes = countdownTime.minutes.toString();
-    isLoading = false;
   }
 
-
-
   function updateTeamValue() {
-    const team = $fantasyTeam;
-    if (team) {
+    if ($fantasyTeam) {
       let totalValue = 0;
-      team.playerIds.forEach((id) => {
+      $fantasyTeam.playerIds.forEach((id) => {
         const player = $playerStore.find((p) => p.id === id);
         if (player) {
           totalValue += player.valueQuarterMillions;
@@ -83,6 +83,7 @@
       }
     }
   }
+
 </script>
 
 <div class="flex page-header-wrapper w-full">

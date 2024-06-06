@@ -7,7 +7,7 @@
     PlayerEventData,
     PlayerGameweekDTO,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import { convertEvent, getFlagComponent } from "../utils/Helpers";
+  import { convertEvent, getFlagComponent } from "../utils/helpers";
 
   export let visible: boolean;
   export let closeDetailModal: () => void;

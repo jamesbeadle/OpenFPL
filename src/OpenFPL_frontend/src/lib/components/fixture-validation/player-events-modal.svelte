@@ -5,7 +5,7 @@
     PlayerDTO,
     PlayerEventData,
   } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import { getFlagComponent } from "$lib/utils/Helpers";
+  import { getFlagComponent } from "$lib/utils/helpers";
 
   export let visible = false;
   export let player: PlayerDTO;

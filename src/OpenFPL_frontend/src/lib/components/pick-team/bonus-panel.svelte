@@ -1,14 +1,19 @@
 <script lang="ts">
+  import { onMount } from "svelte";
+  import { systemStore } from "$lib/stores/system-store";
   import { writable, type Writable } from "svelte/store";
   import type { PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { Bonus } from "$lib/types/bonus";
   import { BonusType } from "$lib/enums/BonusType";
   import UseBonusModal from "$lib/components/pick-team/use-bonus-modal.svelte";
-  import Tooltip from "../tooltip.svelte";
+   import Tooltip from "../tooltip.svelte";
 
   export let fantasyTeam: Writable<PickTeamDTO | null>;
-  export let activeGameweek: number;
 
+  onMount(() => {
+    systemStore.sync();
+  });
+  
   let showModal: boolean = false;
   let selectedBonusId = 0;
 
@@ -96,7 +101,7 @@
 
   let leftPanelBonuses = bonuses.slice(0, 5);
   let rightPanelBonuses = bonuses.slice(5, 10);
-  export let bonusUsedInSession = writable<boolean>(false);
+  let bonusUsedInSession = writable<boolean>(false);
 
   function showBonusModal(bonusId: number): void {
     selectedBonusId = bonusId;
@@ -107,58 +112,58 @@
     showModal = false;
   }
 
-  function isBonusUsed(bonusId: number): number | false {
+  function isBonusUsed(bonusId: number): boolean {
     if (!$fantasyTeam) return false;
 
     switch (bonusId) {
       case 1:
         return $fantasyTeam.goalGetterGameweek &&
           $fantasyTeam.goalGetterGameweek > 0
-          ? $fantasyTeam.goalGetterGameweek
+          ? true
           : false;
       case 2:
         return $fantasyTeam.passMasterGameweek &&
           $fantasyTeam.passMasterGameweek > 0
-          ? $fantasyTeam.passMasterGameweek
+          ? true
           : false;
       case 3:
         return $fantasyTeam.noEntryGameweek && $fantasyTeam.noEntryGameweek > 0
-          ? $fantasyTeam.noEntryGameweek
+          ? true
           : false;
       case 4:
         return $fantasyTeam.teamBoostGameweek &&
           $fantasyTeam.teamBoostGameweek > 0
-          ? $fantasyTeam.teamBoostGameweek
+          ? true
           : false;
       case 5:
         return $fantasyTeam.safeHandsGameweek &&
           $fantasyTeam.safeHandsGameweek > 0
-          ? $fantasyTeam.safeHandsGameweek
+          ? true
           : false;
       case 6:
         return $fantasyTeam.captainFantasticGameweek &&
           $fantasyTeam.captainFantasticGameweek > 0
-          ? $fantasyTeam.captainFantasticGameweek
+          ? true
           : false;
       case 7:
         return $fantasyTeam.prospectsGameweek &&
           $fantasyTeam.prospectsGameweek > 0
-          ? $fantasyTeam.prospectsGameweek
+          ? true
           : false;
       case 8:
         $fantasyTeam.countrymenGameweek && $fantasyTeam.countrymenGameweek > 0
-          ? $fantasyTeam.countrymenGameweek
+          ? true
           : false;
         return false;
       case 9:
         return $fantasyTeam.braceBonusGameweek &&
           $fantasyTeam.braceBonusGameweek > 0
-          ? $fantasyTeam.braceBonusGameweek
+          ? true
           : false;
       case 10:
         return $fantasyTeam.hatTrickHeroGameweek &&
           $fantasyTeam.hatTrickHeroGameweek > 0
-          ? $fantasyTeam.hatTrickHeroGameweek
+          ? true
           : false;
       default:
         return false;
@@ -167,6 +172,7 @@
 
   function bonusPlayedThisWeek(): boolean {
     if (!$fantasyTeam) return false;
+    let activeGameweek = $systemStore?.pickTeamGameweek;
     let bonusPlayed: boolean =
       $fantasyTeam?.goalGetterGameweek == activeGameweek ||
       $fantasyTeam?.passMasterGameweek == activeGameweek ||
@@ -187,7 +193,6 @@
       bonus={bonuses[selectedBonusId - 1]}
       {closeBonusModal}
       {fantasyTeam}
-      {activeGameweek}
       {bonusUsedInSession}
     />
   {/if}

@@ -1,18 +1,20 @@
 <script lang="ts">
-  import { writable, type Writable } from "svelte/store";
-  import type { Bonus } from "$lib/types/bonus";
-  import type { PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import { onMount } from "svelte";
+  import { type Writable } from "svelte/store";
+  import { systemStore } from "$lib/stores/system-store";
   import { teamStore } from "$lib/stores/team-store";
   import { playerStore } from "$lib/stores/player-store";
+
+  import type { Bonus } from "$lib/types/bonus";
+  import type { PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { BonusType } from "$lib/enums/BonusType";
   import { Modal } from "@dfinity/gix-components";
   import { countriesStore } from "$lib/stores/country-store";
-  import { convertPlayerPosition } from "$lib/utils/Helpers";
-
+    import { convertPlayerPosition } from "$lib/utils/helpers";
+    
   export let visible: boolean;
   export let fantasyTeam: Writable<PickTeamDTO | null>;
-  export let bonusUsedInSession = writable<boolean>(false);
-  export let activeGameweek: number;
+  export let bonusUsedInSession: Writable<boolean | null>;
   export let closeBonusModal: () => void;
   export let bonus: Bonus = {
     id: 0,
@@ -26,6 +28,12 @@
   let selectedTeamId = 0;
   let selectedPlayerId = 0;
   let selectedCountry = "";
+
+  onMount(() => {
+    systemStore.sync();
+    teamStore.sync();
+    playerStore.sync();
+  });
 
   const getUniqueCountries = () => {
     if (!$countriesStore || !$fantasyTeam || !$fantasyTeam.playerIds) {
@@ -79,6 +87,11 @@
   function handleUseBonus() {
     if (!$fantasyTeam) return;
 
+    let activeGameweek = 1;
+    if($systemStore?.pickTeamGameweek){
+      activeGameweek = $systemStore?.pickTeamGameweek
+    }
+    
     switch (bonus.id) {
       case 1:
         fantasyTeam.update((team) => {

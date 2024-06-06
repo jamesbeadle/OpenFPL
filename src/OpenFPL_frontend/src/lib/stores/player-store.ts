@@ -10,7 +10,7 @@ import type {
   SystemStateDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
-import { isError, replacer } from "../utils/Helpers";
+import { isError, replacer } from "../utils/helpers";
 
 function createPlayerStore() {
   const { subscribe, set } = writable<PlayerDTO[]>([]);

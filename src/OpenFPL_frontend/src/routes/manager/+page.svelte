@@ -15,7 +15,7 @@
   import ManagerGameweekDetails from "$lib/components/manager/manager-gameweek-details.svelte";
   import ManagerGameweeks from "$lib/components/manager/manager-gameweeks.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import { getDateFromBigInt } from "$lib/utils/Helpers";
+  import { getDateFromBigInt } from "$lib/utils/helpers";
     import LocalSpinner from "$lib/components/local-spinner.svelte";
 
   $: id = $page.url.searchParams.get("id");

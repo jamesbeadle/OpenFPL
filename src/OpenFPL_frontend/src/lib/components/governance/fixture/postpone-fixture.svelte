@@ -11,7 +11,7 @@
     ClubDTO,
     FixtureDTO,
   } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import { isError } from "$lib/utils/Helpers";
+  import { isError } from "$lib/utils/helpers";
 
   export let visible: boolean;
   export let closeModal: () => void;

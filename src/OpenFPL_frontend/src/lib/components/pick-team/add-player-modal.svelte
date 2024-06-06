@@ -11,7 +11,8 @@
   import { teamStore } from "$lib/stores/team-store";
   import { playerStore } from "$lib/stores/player-store";
   import { Modal } from "@dfinity/gix-components";
-  import { convertPlayerPosition } from "$lib/utils/Helpers";
+  import { convertPlayerPosition } from "$lib/utils/helpers";
+    import { allFormations } from "$lib/utils/pick-team.helpers";
 
   export let visible: boolean;
   export let closeAddPlayerModal: () => void;
@@ -134,16 +135,7 @@
 
     positionCounts[convertPlayerPosition(player.position)]++;
 
-    const formations = [
-      "3-4-3",
-      "3-5-2",
-      "4-3-3",
-      "4-4-2",
-      "4-5-1",
-      "5-4-1",
-      "5-3-2",
-    ];
-    const isFormationValid = formations.some((formation) => {
+    const isFormationValid = Object.keys(allFormations).some((formation) => {
       const [def, mid, fwd] = formation.split("-").map(Number);
       const minDef = Math.max(0, def - (positionCounts[1] || 0));
       const minMid = Math.max(0, mid - (positionCounts[2] || 0));

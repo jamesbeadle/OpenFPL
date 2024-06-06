@@ -17,7 +17,7 @@
     getFlagComponent,
     getPositionText,
     updateTableData,
-  } from "../../lib/utils/Helpers";
+  } from "../../lib/utils/helpers";
   import type {
     FixtureDTO,
     ClubDTO,

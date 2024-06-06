@@ -10,7 +10,7 @@
     ManagerDTO,
   } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
-  import { getFlagComponent } from "$lib/utils/Helpers";
+  import { getFlagComponent } from "$lib/utils/helpers";
   import { countriesStore } from "$lib/stores/country-store";
     import LocalSpinner from "../local-spinner.svelte";
 

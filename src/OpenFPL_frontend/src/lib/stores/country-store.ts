@@ -5,7 +5,7 @@ import type {
   DataCacheDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
-import { isError, replacer } from "../utils/Helpers";
+import { isError, replacer } from "../utils/helpers";
 
 function createCountriesStore() {
   const { subscribe, set } = writable<CountryDTO[]>([]);

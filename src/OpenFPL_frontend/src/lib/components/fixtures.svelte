@@ -9,7 +9,7 @@
     convertFixtureStatus,
     formatUnixTimeToTime,
     getFixtureStatusText,
-  } from "../utils/Helpers";
+  } from "../utils/helpers";
   import type { ClubDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
 

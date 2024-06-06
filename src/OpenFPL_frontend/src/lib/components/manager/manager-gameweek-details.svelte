@@ -11,7 +11,7 @@
     convertPlayerPosition,
     getFlagComponent,
     getPositionAbbreviation,
-  } from "$lib/utils/Helpers";
+  } from "$lib/utils/helpers";
   import type {
     ClubDTO,
     FantasyTeamSnapshot,

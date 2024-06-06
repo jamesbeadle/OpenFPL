@@ -13,7 +13,7 @@
     replacer,
     convertEvent,
     convertPlayerPosition,
-  } from "$lib/utils/Helpers";
+  } from "$lib/utils/helpers";
   import type {
     FixtureDTO,
     ClubDTO,

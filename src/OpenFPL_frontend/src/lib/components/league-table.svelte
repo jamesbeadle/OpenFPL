@@ -5,7 +5,7 @@
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { systemStore } from "$lib/stores/system-store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import { updateTableData } from "../utils/Helpers";
+  import { updateTableData } from "../utils/helpers";
   import type { ClubDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
 

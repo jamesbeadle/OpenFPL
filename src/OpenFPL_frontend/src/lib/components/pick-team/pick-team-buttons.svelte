@@ -1,36 +1,30 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { toastsError, toastsShow } from "$lib/stores/toasts-store";
+  import { writable, type Writable } from "svelte/store";
   import { systemStore } from "$lib/stores/system-store";
   import { playerStore } from "$lib/stores/player-store";
   import { managerStore } from "$lib/stores/manager-store";
   import { busyStore } from "@dfinity/gix-components";
-  import {
-    getAvailableFormations,
-    convertPlayerPosition,
-    allFormations,
-  } from "../../../lib/utils/Helpers";
+  import { toastsError, toastsShow } from "$lib/stores/toasts-store";
   import type { PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import ConfirmCaptainChange from "./confirm-captain-change.svelte";
+  import { allFormations, getAvailableFormations, getHighestValuedPlayerId, getTeamFormation } from "$lib/utils/pick-team.helpers";
+  import { convertPlayerPosition } from "$lib/utils/helpers";
   import SetTeamName from "./set-team-name.svelte";
-  import { writable, type Writable } from "svelte/store";
+  import LocalSpinner from "../local-spinner.svelte";
 
   export let fantasyTeam: Writable<PickTeamDTO>;
+  export let pitchView: Writable<boolean>;
+  export let selectedFormation: Writable<string>;
+  export let availableFormations: Writable<string[]>;
   export let transfersAvailable: Writable<number>;
   export let bankBalance: Writable<number>;
-  export let pitchView: Writable<boolean>;
-  export let availableFormations: Writable<string[]>;
-  export let newCaptain: Writable<string>;
-  export let changeCaptain: () => void;
-  export let setCaptain: (captainId: number) => void;
-  export let isSaveButtonActive: boolean;
+  
+  let isSaveButtonActive: boolean;
 
   let activeSeason: string;
   let activeGameweek: number;
-  let selectedFormation: string = "4-4-2";
   let newUsername = writable("");
 
-  let showCaptainModal = false;
   let showUsernameModal = false;
 
   let bonusUsedInSession = false;
@@ -46,86 +40,53 @@
   $: {
     if ($fantasyTeam) {
       if ($fantasyTeam.playerIds.filter((x) => x > 0).length == 11) {
-        const newFormation = getTeamFormation($fantasyTeam);
-        selectedFormation = newFormation;
+        const newFormation = getTeamFormation($fantasyTeam, $playerStore);
+        $selectedFormation = newFormation;
       }
     }
   }
 
   onMount(() => {
     try {
-      async function loadData() {
-        activeSeason = $systemStore?.pickTeamSeasonName ?? "-";
-        activeGameweek = $systemStore?.pickTeamGameweek ?? 1;
-
-        const storedViewMode = localStorage.getItem("viewMode");
-        if (storedViewMode) {
-          pitchView.set(storedViewMode === "pitch");
-        }
-
-        let transferWindowGameweek = $fantasyTeam?.transferWindowGameweek ?? 0;
-        transferWindowPlayed = transferWindowGameweek > 0;
-
-        fantasyTeam.update((currentTeam) => {
-          if (
-            currentTeam &&
-            (!currentTeam.playerIds || currentTeam.playerIds.length !== 11)
-          ) {
-            return {
-              ...currentTeam,
-              playerIds: new Uint16Array(11).fill(0),
-            };
-          }
-          return currentTeam;
-        });
-        isLoading = false;
-      }
-
+      systemStore.sync();
+      playerStore.sync();
       loadData();
+      disableInvalidFormations()
     } catch (error) {
       toastsError({
-        msg: { text: "Error fetching team details." },
+        msg: { text: "Error loading pick team buttons." },
         err: error,
       });
-      console.error("Error fetching team details:", error);
+      console.error("Error loading pick team buttons:", error);
+    } finally {
       isLoading = false;
     }
   });
+  
+  async function loadData() {
+    activeSeason = $systemStore?.pickTeamSeasonName ?? "-";
+    activeGameweek = $systemStore?.pickTeamGameweek ?? 1;
 
-  function getTeamFormation(team: PickTeamDTO): string {
-    const positionCounts: Record<number, number> = { 0: 0, 1: 0, 2: 0, 3: 0 };
-
-    team.playerIds.forEach((id) => {
-      const teamPlayer = $playerStore.find((p) => p.id === id);
-
-      if (teamPlayer) {
-        positionCounts[convertPlayerPosition(teamPlayer.position)]++;
-      }
-    });
-
-    for (const formation of Object.keys(allFormations)) {
-      const formationPositions = allFormations[formation].positions;
-      let isMatch = true;
-
-      const formationCount = formationPositions.reduce((acc, pos) => {
-        acc[pos] = (acc[pos] || 0) + 1;
-        return acc;
-      }, {} as Record<number, number>);
-
-      for (const pos in formationCount) {
-        if (formationCount[pos] !== positionCounts[pos]) {
-          isMatch = false;
-          break;
-        }
-      }
-
-      if (isMatch) {
-        return formation;
-      }
+    const storedViewMode = localStorage.getItem("viewMode");
+    if (storedViewMode) {
+      pitchView.set(storedViewMode === "pitch");
     }
 
-    console.error("No valid formation found for the team");
-    return selectedFormation;
+    let transferWindowGameweek = $fantasyTeam?.transferWindowGameweek ?? 0;
+    transferWindowPlayed = transferWindowGameweek > 0;
+
+    fantasyTeam.update((currentTeam) => {
+      if (
+        currentTeam &&
+        (!currentTeam.playerIds || currentTeam.playerIds.length !== 11)
+      ) {
+        return {
+          ...currentTeam,
+          playerIds: new Uint16Array(11).fill(0),
+        };
+      }
+      return currentTeam;
+    });
   }
 
   function showPitchView() {
@@ -136,39 +97,9 @@
     pitchView.set(false);
   }
 
-  function updateCaptainIfNeeded(currentTeam: PickTeamDTO) {
-    if (currentTeam.playerIds.filter((x) => x == 0).length > 0) {
-      return;
-    }
-
-    if (
-      currentTeam.captainId > 0 &&
-      currentTeam.playerIds.filter((x) => x == currentTeam.captainId).length > 0
-    ) {
-      return;
-    }
-
-    const newCaptainId = getHighestValuedPlayerId(currentTeam);
-    setCaptain(newCaptainId);
-  }
-
-  function getHighestValuedPlayerId(team: PickTeamDTO): number {
-    let highestValue = 0;
-    let highestValuedPlayerId = 0;
-
-    team.playerIds.forEach((playerId) => {
-      const player = $playerStore.find((p) => p.id === playerId);
-      if (player && player.valueQuarterMillions > highestValue) {
-        highestValue = player.valueQuarterMillions;
-        highestValuedPlayerId = playerId;
-      }
-    });
-
-    return highestValuedPlayerId;
-  }
-
   function disableInvalidFormations() {
-    if (!$fantasyTeam || !$fantasyTeam.playerIds) {
+    if (!$fantasyTeam || !$fantasyTeam.playerIds || $fantasyTeam.principalId == '') {
+      availableFormations.set(Object.keys(allFormations));
       return;
     }
 
@@ -206,7 +137,7 @@
       return false;
     }
 
-    if (!isValidFormation($fantasyTeam, selectedFormation)) {
+    if (!isValidFormation($fantasyTeam, $selectedFormation)) {
       return false;
     }
 
@@ -294,7 +225,7 @@
       }
     });
 
-    const formationPositions = allFormations[selectedFormation].positions;
+    const formationPositions = allFormations[$selectedFormation].positions;
 
     formationPositions.forEach((position, index) => {
       if (remainingBudget <= 0) return;
@@ -329,10 +260,10 @@
     });
 
     if (remainingBudget >= 0) {
+      updatedFantasyTeam.captainId = getHighestValuedPlayerId(updatedFantasyTeam, $playerStore);
       fantasyTeam.set(updatedFantasyTeam);
       bankBalance.set(remainingBudget);
     }
-    updateCaptainIfNeeded($fantasyTeam!);
   }
 
   function playTransferWindow() {
@@ -372,7 +303,7 @@
 
     let team = $fantasyTeam;
     if (team?.captainId === 0 || !team?.playerIds.includes(team?.captainId)) {
-      team!.captainId = getHighestValuedPlayerId(team!);
+      team!.captainId = getHighestValuedPlayerId(team!, $playerStore);
     }
 
     if (
@@ -414,122 +345,30 @@
     }
   }
 
-  function closeCaptainModal() {
-    showCaptainModal = false;
-  }
-
   function closeUsernameModal() {
     showUsernameModal = false;
   }
 </script>
 
-<ConfirmCaptainChange
-  newCaptain={$newCaptain}
-  visible={showCaptainModal}
-  onClose={closeCaptainModal}
-  onConfirm={changeCaptain}
-/>
+{#if isLoading}
+  <LocalSpinner />
+{:else}
+  <SetTeamName
+    visible={showUsernameModal}
+    setUsername={updateUsername}
+    cancelModal={closeUsernameModal}
+    {newUsername}
+  />
 
-<SetTeamName
-  visible={showUsernameModal}
-  setUsername={updateUsername}
-  cancelModal={closeUsernameModal}
-  {newUsername}
-/>
-
-<div class="hidden xl:flex flex-col md:flex-row">
-  <div
-    class="flex flex-row justify-between items-center text-white bg-panel p-2 rounded-md w-full mb-4"
-  >
-    <div class="flex flex-row justify-between md:justify-start flex-grow ml-4">
-      <button
-        class={`btn ${
-          pitchView ? `fpl-button` : `inactive-btn`
-        } tab-switcher-label rounded-l-md`}
-        on:click={showPitchView}
-      >
-        Pitch View
-      </button>
-      <button
-        class={`btn ${
-          !pitchView ? `fpl-button` : `inactive-btn`
-        } tab-switcher-label rounded-r-md`}
-        on:click={showListView}
-      >
-        List View
-      </button>
-    </div>
-
+  <div class="hidden xl:flex flex-col md:flex-row">
     <div
-      class="text-center md:text-left w-full mt-0 md:ml-8 order-2 mt-4 md:mt-0"
+      class="flex flex-row justify-between items-center text-white bg-panel p-2 rounded-md w-full mb-4"
     >
-      <span class="text-lg">
-        Formation:
-        <select
-          class="px-4 py-2 border-sm fpl-dropdown text-center"
-          bind:value={selectedFormation}
-        >
-          {#each $availableFormations as formation}
-            <option value={formation}>{formation}</option>
-          {/each}
-        </select>
-      </span>
-    </div>
-
-    <div
-      class="flex flex-col md:flex-row w-full md:justify-end gap-4 mr-0 md:mr-4 order-1 md:order-3 mt-2 md:mt-0"
-    >
-      {#if $systemStore && $systemStore.transferWindowActive}
-        <button
-          disabled={transferWindowPlayed}
-          on:click={playTransferWindow}
-          class={`btn w-full md:w-auto px-4 py-2 rounded  
-            ${
-              !transferWindowPlayed ? "fpl-purple-btn" : "bg-gray-500"
-            } text-white min-w-[125px]`}
-        >
-          Use Transfer Window Bonus
-        </button>
-      {/if}
-      <button
-        disabled={$fantasyTeam?.playerIds
-          ? $fantasyTeam?.playerIds.filter((x) => x === 0).length === 0
-          : true}
-        on:click={autofillTeam}
-        class={`btn w-full md:w-auto px-4 py-2 rounded  
-          ${
-            $fantasyTeam?.playerIds &&
-            $fantasyTeam?.playerIds.filter((x) => x === 0).length > 0
-              ? "fpl-purple-btn"
-              : "bg-gray-500"
-          } text-white min-w-[125px]`}
-      >
-        Auto Fill
-      </button>
-      <button
-        disabled={!isSaveButtonActive}
-        on:click={saveFantasyTeam}
-        class={`btn w-full md:w-auto px-4 py-2 rounded ${
-          isSaveButtonActive ? "fpl-purple-btn" : "bg-gray-500"
-        } text-white min-w-[125px]`}
-      >
-        Save Team
-      </button>
-    </div>
-  </div>
-</div>
-
-<div class="flex xl:hidden flex-col">
-  <div class="bg-panel rounded-md xs:flex flex-row">
-    <div class="w-full xs:w-1/2">
-      <div class="flex">
-        <p class="mx-4 mt-4">Gameweek {activeGameweek} {activeSeason}</p>
-      </div>
-      <div class="flex flex-row ml-4" style="margin-top: 2px;">
+      <div class="flex flex-row justify-between md:justify-start flex-grow ml-4">
         <button
           class={`btn ${
             pitchView ? `fpl-button` : `inactive-btn`
-          } rounded-l-md tab-switcher-label`}
+          } tab-switcher-label rounded-l-md`}
           on:click={showPitchView}
         >
           Pitch View
@@ -537,19 +376,20 @@
         <button
           class={`btn ${
             !pitchView ? `fpl-button` : `inactive-btn`
-          } rounded-r-md tab-switcher-label`}
+          } tab-switcher-label rounded-r-md`}
           on:click={showListView}
         >
           List View
         </button>
       </div>
-    </div>
-    <div class="w-full xs:w-1/2">
-      <div class="flex">
-        <span class="mx-4 xs:mt-4">
+
+      <div
+        class="text-center md:text-left w-full mt-0 md:ml-8 order-2 mt-4 md:mt-0"
+      >
+        <span class="text-lg">
           Formation:
           <select
-            class="px-4 xs:mb-1 border-sm fpl-dropdown text-center text-center"
+            class="px-4 py-2 border-sm fpl-dropdown text-center"
             bind:value={selectedFormation}
           >
             {#each $availableFormations as formation}
@@ -558,46 +398,131 @@
           </select>
         </span>
       </div>
-      <div class="flex flex-row mx-4 space-x-1">
-        <button
-          disabled={$fantasyTeam?.playerIds
-            ? $fantasyTeam?.playerIds.filter((x) => x === 0).length === 0
-            : true}
-          on:click={autofillTeam}
-          class={`side-button-base  
-            ${
-              $fantasyTeam?.playerIds &&
-              $fantasyTeam?.playerIds.filter((x) => x === 0).length > 0
-                ? "fpl-purple-btn"
-                : "bg-gray-500"
-            } text-white`}
-        >
-          Auto Fill
-        </button>
-        <button
-          disabled={!isSaveButtonActive}
-          on:click={saveFantasyTeam}
-          class={`side-button-base ${
-            isSaveButtonActive ? "fpl-purple-btn" : "bg-gray-500"
-          } text-white`}
-        >
-          Save
-        </button>
-      </div>
-      {#if $systemStore && $systemStore.transferWindowActive}
-        <div class="flex flex-row mx-4 space-x-1 mb-4">
+
+      <div
+        class="flex flex-col md:flex-row w-full md:justify-end gap-4 mr-0 md:mr-4 order-1 md:order-3 mt-2 md:mt-0"
+      >
+        {#if $systemStore && $systemStore.transferWindowActive}
           <button
             disabled={transferWindowPlayed}
             on:click={playTransferWindow}
-            class={`btn w-full px-4 py-2 rounded  
+            class={`btn w-full md:w-auto px-4 py-2 rounded  
               ${
                 !transferWindowPlayed ? "fpl-purple-btn" : "bg-gray-500"
               } text-white min-w-[125px]`}
           >
             Use Transfer Window Bonus
           </button>
-        </div>
-      {/if}
+        {/if}
+        <button
+          disabled={$fantasyTeam?.playerIds
+            ? $fantasyTeam?.playerIds.filter((x) => x === 0).length === 0
+            : true}
+          on:click={autofillTeam}
+          class={`btn w-full md:w-auto px-4 py-2 rounded  
+            ${
+              $fantasyTeam?.playerIds &&
+              $fantasyTeam?.playerIds.filter((x) => x === 0).length > 0
+                ? "fpl-purple-btn"
+                : "bg-gray-500"
+            } text-white min-w-[125px]`}
+        >
+          Auto Fill
+        </button>
+        <button
+          disabled={!isSaveButtonActive}
+          on:click={saveFantasyTeam}
+          class={`btn w-full md:w-auto px-4 py-2 rounded ${
+            isSaveButtonActive ? "fpl-purple-btn" : "bg-gray-500"
+          } text-white min-w-[125px]`}
+        >
+          Save Team
+        </button>
+      </div>
     </div>
   </div>
-</div>
+
+  <div class="flex xl:hidden flex-col">
+    <div class="bg-panel rounded-md xs:flex flex-row">
+      <div class="w-full xs:w-1/2">
+        <div class="flex">
+          <p class="mx-4 mt-4">Gameweek {activeGameweek} {activeSeason}</p>
+        </div>
+        <div class="flex flex-row ml-4" style="margin-top: 2px;">
+          <button
+            class={`btn ${
+              pitchView ? `fpl-button` : `inactive-btn`
+            } rounded-l-md tab-switcher-label`}
+            on:click={showPitchView}
+          >
+            Pitch View
+          </button>
+          <button
+            class={`btn ${
+              !pitchView ? `fpl-button` : `inactive-btn`
+            } rounded-r-md tab-switcher-label`}
+            on:click={showListView}
+          >
+            List View
+          </button>
+        </div>
+      </div>
+      <div class="w-full xs:w-1/2">
+        <div class="flex">
+          <span class="mx-4 xs:mt-4">
+            Formation:
+            <select
+              class="px-4 xs:mb-1 border-sm fpl-dropdown text-center text-center"
+              bind:value={selectedFormation}
+            >
+              {#each $availableFormations as formation}
+                <option value={formation}>{formation}</option>
+              {/each}
+            </select>
+          </span>
+        </div>
+        <div class="flex flex-row mx-4 space-x-1">
+          <button
+            disabled={$fantasyTeam?.playerIds
+              ? $fantasyTeam?.playerIds.filter((x) => x === 0).length === 0
+              : true}
+            on:click={autofillTeam}
+            class={`side-button-base  
+              ${
+                $fantasyTeam?.playerIds &&
+                $fantasyTeam?.playerIds.filter((x) => x === 0).length > 0
+                  ? "fpl-purple-btn"
+                  : "bg-gray-500"
+              } text-white`}
+          >
+            Auto Fill
+          </button>
+          <button
+            disabled={!isSaveButtonActive}
+            on:click={saveFantasyTeam}
+            class={`side-button-base ${
+              isSaveButtonActive ? "fpl-purple-btn" : "bg-gray-500"
+            } text-white`}
+          >
+            Save
+          </button>
+        </div>
+        {#if $systemStore && $systemStore.transferWindowActive}
+          <div class="flex flex-row mx-4 space-x-1 mb-4">
+            <button
+              disabled={transferWindowPlayed}
+              on:click={playTransferWindow}
+              class={`btn w-full px-4 py-2 rounded  
+                ${
+                  !transferWindowPlayed ? "fpl-purple-btn" : "bg-gray-500"
+                } text-white min-w-[125px]`}
+            >
+              Use Transfer Window Bonus
+            </button>
+          </div>
+        {/if}
+      </div>
+    </div>
+  </div>
+
+{/if}

@@ -11,7 +11,7 @@
     formatUnixDateToSmallReadable,
     formatUnixTimeToTime,
     getCountdownTime,
-  } from "../lib/utils/Helpers";
+  } from "../lib/utils/helpers";
   import type {
     LeaderboardEntry,
     ClubDTO,
@@ -46,7 +46,6 @@
       await teamStore.sync();
       await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
       
-
       authStore.subscribe((store) => {
         isLoggedIn = store.identity !== null && store.identity !== undefined;
       });

@@ -6,134 +6,65 @@
   import { teamStore } from "$lib/stores/team-store";
   import { playerStore } from "$lib/stores/player-store";
 
+  import { getPositionAbbreviation, getFlagComponent, convertPlayerPosition } from "../../utils/helpers";
+  import type { PlayerDTO, PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+
   import AddPlayerModal from "$lib/components/pick-team/add-player-modal.svelte";
-  import OpenChatIcon from "$lib/icons/OpenChatIcon.svelte";
+  import ConfirmCaptainChange from "./confirm-captain-change.svelte";
   import AddPlayerIcon from "$lib/icons/AddPlayerIcon.svelte";
   import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
+  import ActiveCaptainIcon from "$lib/icons/ActiveCaptainIcon.svelte";
   import AddIcon from "$lib/icons/AddIcon.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import RemovePlayerIcon from "$lib/icons/RemovePlayerIcon.svelte";
+  import OpenChatIcon from "$lib/icons/OpenChatIcon.svelte";
   import PlayerCaptainIcon from "$lib/icons/PlayerCaptainIcon.svelte";
-  import ActiveCaptainIcon from "$lib/icons/ActiveCaptainIcon.svelte";
-  import {
-    getPositionAbbreviation,
-    convertPlayerPosition,
-    getFlagComponent,
-  } from "../../../lib/utils/Helpers";
-  import type {
-    PlayerDTO,
-    PickTeamDTO,
-  } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-
-  interface FormationDetails {
-    positions: number[];
-  }
-
-  const formations: Record<string, FormationDetails> = {
-    "3-4-3": { positions: [0, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3] },
-    "3-5-2": { positions: [0, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3] },
-    "4-3-3": { positions: [0, 1, 1, 1, 1, 2, 2, 2, 3, 3, 3] },
-    "4-4-2": { positions: [0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3] },
-    "4-5-1": { positions: [0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3] },
-    "5-4-1": { positions: [0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3] },
-    "5-3-2": { positions: [0, 1, 1, 1, 1, 1, 2, 2, 2, 3, 3] },
-  };
-
-  export let pitchView: Writable<boolean>;
-  let activeSeason: string;
-  let activeGameweek: number;
-  let selectedFormation: string = "4-4-2";
-  let selectedPosition = -1;
-  let selectedColumn = -1;
-  let showAddPlayer = false;
-  let teamValue = 0;
-  let newTeam = true;
-  let isSaveButtonActive = false;
-
-  let sessionAddedPlayers: number[] = [];
+  import { allFormations, getTeamFormation } from "$lib/utils/pick-team.helpers";
 
   export let fantasyTeam: Writable<PickTeamDTO | null>;
-  export let transfersAvailable: Writable<number>;
-  export let bankBalance: Writable<number>;
-  export let newCaptainId: Writable<number>;
-  export let setCaptain: (captainId: number) => void;
-  export let changeCaptain: () => void;
+  export let pitchView: Writable<boolean>;
 
+  export let selectedFormation: Writable<string>;
+  export let transfersAvailable: Writable<number>;  
+  export let bankBalance: Writable<number>;
+  export let teamValue: Writable<number>;
+  
+  let isLoading = true;
   let pitchHeight = 0;
   let pitchElement: HTMLElement;
-
+  let showAddPlayer = false;
+  
+  let newTeam = true;
+  let selectedPosition = -1;
+  let selectedColumn = -1;
   let canSellPlayer = true;
-  let transferWindowPlayed = false;
+  let sessionAddedPlayers: number[] = [];
+  let newCaptainId: Writable<number>;
 
-  let isLoading = true;
+  $: rowHeight = (pitchHeight * 0.9) / 4;
+  $: gridSetupComplete = rowHeight > 0;
 
-  $: gridSetup = getGridSetup(selectedFormation);
+  $: gridSetup = getGridSetup($selectedFormation);
 
   $: if ($fantasyTeam && $playerStore.length > 0) {
     updateTeamValue();
-    isSaveButtonActive = checkSaveButtonConditions();
   }
 
   $: {
     if ($fantasyTeam) {
-      getGridSetup(selectedFormation);
+      getGridSetup($selectedFormation);
       if ($fantasyTeam.playerIds.filter((x) => x > 0).length == 11) {
-        const newFormation = getTeamFormation($fantasyTeam);
-        selectedFormation = newFormation;
+        const newFormation = getTeamFormation($fantasyTeam, $playerStore);
+        $selectedFormation = newFormation;
       }
     }
   }
-
-  $: rowHeight = (pitchHeight * 0.9) / 4;
-  $: gridSetupComplete = rowHeight > 0;
 
   onMount(() => {
     try {
       if (typeof window !== "undefined") {
         window.addEventListener("resize", updatePitchHeight);
         updatePitchHeight();
-      }
-
-      async function loadData() {
-        activeSeason = $systemStore?.pickTeamSeasonName ?? "-";
-        activeGameweek = $systemStore?.pickTeamGameweek ?? 1;
-
-        const storedViewMode = localStorage.getItem("viewMode");
-        if (storedViewMode) {
-          pitchView.set(storedViewMode === "pitch");
-        }
-
-        let transferWindowGameweek = $fantasyTeam?.transferWindowGameweek ?? 0;
-        transferWindowPlayed = transferWindowGameweek > 0;
-
-        if (!$fantasyTeam) {
-          return;
-        }
-
-        if (!newTeam && activeGameweek > 1) {
-          if ($fantasyTeam.transferWindowGameweek == activeGameweek) {
-            transfersAvailable.set(Infinity);
-          } else {
-            transfersAvailable.set($fantasyTeam.transfersAvailable);
-            if ($transfersAvailable <= 0) {
-              canSellPlayer = false;
-            }
-          }
-        }
-
-        fantasyTeam.update((currentTeam) => {
-          if (
-            currentTeam &&
-            (!currentTeam.playerIds || currentTeam.playerIds.length !== 11)
-          ) {
-            return {
-              ...currentTeam,
-              playerIds: new Uint16Array(11).fill(0),
-            };
-          }
-          return currentTeam;
-        });
-        isLoading = false;
       }
 
       loadData();
@@ -143,9 +74,55 @@
         err: error,
       });
       console.error("Error fetching team details:", error);
+    } finally {
       isLoading = false;
     }
   });
+
+  async function loadData() {
+
+    const storedViewMode = localStorage.getItem("viewMode");
+    if (storedViewMode) {
+      pitchView.set(storedViewMode === "pitch");
+    }
+
+    if (!$fantasyTeam) {
+      return;
+    }
+
+
+    let principalId = $fantasyTeam?.principalId ?? "";
+    if (principalId.length > 0) {
+        newTeam = false;
+        bankBalance.set(Number($fantasyTeam.bankQuarterMillions));
+    }
+
+    let activeGameweek = $systemStore?.pickTeamGameweek ?? 1;
+
+    if (!newTeam && activeGameweek > 1) {
+      if ($fantasyTeam.transferWindowGameweek == activeGameweek) {
+        transfersAvailable.set(Infinity);
+      } else {
+        transfersAvailable.set($fantasyTeam.transfersAvailable);
+        if ($transfersAvailable <= 0) {
+          canSellPlayer = false;
+        }
+      }
+    }
+
+    fantasyTeam.update((currentTeam) => {
+      if (
+        currentTeam &&
+        (!currentTeam.playerIds || currentTeam.playerIds.length !== 11)
+      ) {
+        return {
+          ...currentTeam,
+          playerIds: new Uint16Array(11).fill(0),
+        };
+      }
+      return currentTeam;
+    });
+  }
 
   function updatePitchHeight() {
     if (!pitchElement) {
@@ -155,16 +132,15 @@
   }
 
   function updateTeamValue() {
-    const team = $fantasyTeam;
-    if (team) {
+    if ($fantasyTeam) {
       let totalValue = 0;
-      team.playerIds.forEach((id) => {
+      $fantasyTeam.playerIds.forEach((id) => {
         const player = $playerStore.find((p) => p.id === id);
         if (player) {
           totalValue += player.valueQuarterMillions;
         }
       });
-      teamValue = totalValue / 4;
+      $teamValue = totalValue / 4;
     }
   }
 
@@ -181,42 +157,6 @@
     return setups;
   }
 
-  function getTeamFormation(team: PickTeamDTO): string {
-    const positionCounts: Record<number, number> = { 0: 0, 1: 0, 2: 0, 3: 0 };
-
-    team.playerIds.forEach((id) => {
-      const teamPlayer = $playerStore.find((p) => p.id === id);
-
-      if (teamPlayer) {
-        positionCounts[convertPlayerPosition(teamPlayer.position)]++;
-      }
-    });
-
-    for (const formation of Object.keys(formations)) {
-      const formationPositions = formations[formation].positions;
-      let isMatch = true;
-
-      const formationCount = formationPositions.reduce((acc, pos) => {
-        acc[pos] = (acc[pos] || 0) + 1;
-        return acc;
-      }, {} as Record<number, number>);
-
-      for (const pos in formationCount) {
-        if (formationCount[pos] !== positionCounts[pos]) {
-          isMatch = false;
-          break;
-        }
-      }
-
-      if (isMatch) {
-        return formation;
-      }
-    }
-
-    console.error("No valid formation found for the team");
-    return selectedFormation;
-  }
-
   function loadAddPlayer(row: number, col: number) {
     selectedPosition = row;
     selectedColumn = col;
@@ -230,16 +170,16 @@
   function handlePlayerSelection(player: PlayerDTO) {
     if ($fantasyTeam) {
       if (
-        canAddPlayerToCurrentFormation(player, $fantasyTeam, selectedFormation)
+        canAddPlayerToCurrentFormation(player, $fantasyTeam, $selectedFormation)
       ) {
-        addPlayerToTeam(player, $fantasyTeam, selectedFormation);
+        addPlayerToTeam(player, $fantasyTeam, $selectedFormation);
       } else {
         const newFormation = findValidFormationWithPlayer($fantasyTeam, player);
         repositionPlayersForNewFormation($fantasyTeam, newFormation);
-        selectedFormation = newFormation;
+        $selectedFormation = newFormation;
         addPlayerToTeam(player, $fantasyTeam, newFormation);
       }
-      if (!newTeam && activeGameweek > 1) {
+      if (!newTeam && $systemStore?.pickTeamGameweek! > 1) {
         transfersAvailable.update((n) => (n > 0 ? n - 1 : 0));
         if ($transfersAvailable <= 0) {
           canSellPlayer = false;
@@ -338,12 +278,37 @@
     }
   }
 
+  function changeCaptain() {
+    selectedPosition = -1;
+    selectedColumn = -1;
+    fantasyTeam.update((currentTeam) => {
+      if (!currentTeam) return null;
+      return { ...currentTeam, captainId: $newCaptainId };
+    });
+    showCaptainModal = false;
+  }
+
+  function setCaptain(playerId: number) {
+    if ($newCaptainId == 0) {
+      newCaptainId.set(playerId);
+      changeCaptain();
+      return;
+    }
+
+    newCaptainId.set(playerId);
+    let player = $playerStore.find((x) => x.id === playerId);
+    newCaptain.update((x) => `${player?.firstName} ${player?.lastName}`);
+    showCaptainModal = true;
+  }
+
+  
+
   function getAvailablePositionIndex(
     position: number,
     team: PickTeamDTO,
     formation: string
   ): number {
-    const formationArray = formations[formation].positions;
+    const formationArray = allFormations[formation].positions;
     for (let i = 0; i < formationArray.length; i++) {
       if (formationArray[i] === position && team.playerIds[i] === 0) {
         return i;
@@ -370,12 +335,12 @@
     let bestFitFormation: string | null = null;
     let minimumAdditionalPlayersNeeded = Number.MAX_SAFE_INTEGER;
 
-    for (const formation of Object.keys(formations) as string[]) {
-      if (formation === selectedFormation) {
+    for (const formation of Object.keys(allFormations) as string[]) {
+      if (formation === $selectedFormation) {
         continue;
       }
 
-      const formationPositions = formations[formation].positions;
+      const formationPositions = allFormations[formation].positions;
       let formationDetails: Record<number, number> = { 0: 0, 1: 0, 2: 0, 3: 0 };
 
       formationPositions.forEach((pos) => {
@@ -407,15 +372,14 @@
       return bestFitFormation;
     }
 
-    console.error("No valid formation found for the player");
-    return selectedFormation;
+    return $selectedFormation;
   }
 
   function repositionPlayersForNewFormation(
     team: PickTeamDTO,
     newFormation: string
   ) {
-    const newFormationArray = formations[newFormation].positions;
+    const newFormationArray = allFormations[newFormation].positions;
     let newPlayerIds: number[] = new Array(11).fill(0);
 
     team.playerIds.forEach((playerId) => {
@@ -459,7 +423,7 @@
       newPlayerIds[playerIndex] = 0;
 
       if (sessionAddedPlayers.includes(playerId)) {
-        if (!newTeam && activeGameweek > 1) {
+        if (!newTeam && $systemStore?.pickTeamGameweek! > 1) {
           transfersAvailable.update((n) => n + 1);
         }
         sessionAddedPlayers = sessionAddedPlayers.filter(
@@ -490,43 +454,6 @@
     });
 
     return highestValuedPlayerId;
-  }
-
-  function checkSaveButtonConditions(): boolean {
-    const teamCount = new Map();
-    for (const playerId of $fantasyTeam?.playerIds || []) {
-      if (playerId > 0) {
-        const player = $playerStore.find((p) => p.id === playerId);
-        if (player) {
-          teamCount.set(player.clubId, (teamCount.get(player.clubId) || 0) + 1);
-          if (teamCount.get(player.clubId) > 2) {
-            return false;
-          }
-        }
-      }
-    }
-
-    if (!isBonusConditionMet($fantasyTeam)) {
-      return false;
-    }
-
-    if ($fantasyTeam?.playerIds.filter((id) => id > 0).length !== 11) {
-      return false;
-    }
-
-    if ($bankBalance < 0) {
-      return false;
-    }
-
-    if ($transfersAvailable < 0) {
-      return false;
-    }
-
-    if (!isValidFormation($fantasyTeam, selectedFormation)) {
-      return false;
-    }
-
-    return true;
   }
 
   function isBonusConditionMet(team: PickTeamDTO | null): boolean {
@@ -587,7 +514,62 @@
 
     return totalPlayers + additionalPlayersNeeded <= 11;
   }
+
+  let showCaptainModal = false;
+  let newCaptain: Writable<string>;
+  
+  function updateCaptainIfNeeded(currentTeam: PickTeamDTO) {
+    if (currentTeam.playerIds.filter((x) => x == 0).length > 0) {
+      return;
+    }
+
+    if (
+      currentTeam.captainId > 0 &&
+      currentTeam.playerIds.filter((x) => x == currentTeam.captainId).length > 0
+    ) {
+      return;
+    }
+
+    const newCaptainId = getHighestValuedPlayerId(currentTeam);
+    setCaptain(newCaptainId);
+  }
+
+  function closeCaptainModal() {
+    showCaptainModal = false;
+  }
+  
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ConfirmCaptainChange
+  newCaptain={$newCaptain}
+  visible={showCaptainModal}
+  onClose={closeCaptainModal}
+  onConfirm={changeCaptain}
+/>
 
 <AddPlayerModal
   {handlePlayerSelection}

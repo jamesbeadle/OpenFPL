@@ -22,7 +22,7 @@ import {
   convertPlayerPosition,
   isError,
   replacer,
-} from "../utils/Helpers";
+} from "../utils/helpers";
 
 function createPlayerEventsStore() {
   const { subscribe, set } = writable<PlayerPointsDTO[]>([]);
