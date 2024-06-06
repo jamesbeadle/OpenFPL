@@ -6,4 +6,6 @@ export type Bonus = {
   description: string;
   image: string;
   selectionType: BonusType;
+  isUsed: boolean;
+  usedGameweek: number;
 };

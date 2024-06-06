@@ -16,13 +16,7 @@
   export let fantasyTeam: Writable<PickTeamDTO | null>;
   export let bonusUsedInSession: Writable<boolean | null>;
   export let closeBonusModal: () => void;
-  export let bonus: Bonus = {
-    id: 0,
-    name: "",
-    description: "",
-    image: "",
-    selectionType: 0,
-  };
+  export let bonus: Bonus;
 
   let countries: string[];
   let selectedTeamId = 0;
@@ -86,7 +80,7 @@
 
   function handleUseBonus() {
     if (!$fantasyTeam) return;
-
+    
     let activeGameweek = 1;
     if($systemStore?.pickTeamGameweek){
       activeGameweek = $systemStore?.pickTeamGameweek

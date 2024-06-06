@@ -19,6 +19,7 @@
   let transfersAvailable = writable<number>(0);  
   let bankBalance = writable<number>(0);
   let teamValue = writable<number>(0);
+  let loadingPlayers = writable<boolean>(true);  
 
   let isLoading = true;
   
@@ -53,7 +54,7 @@
   });
   
 
-  onMount(() => {
+  onMount(async () => {
     try {
       $availableFormations = Object.keys(allFormations);
       async function loadData() {
@@ -79,7 +80,7 @@
           return currentTeam;
         });
       }
-      loadData();
+      await loadData();
     } catch (error) {
       toastsError({
         msg: { text: "Error fetching team details." },
@@ -88,6 +89,7 @@
       console.error("Error fetching team details:", error);
     } finally {
       isLoading = false;
+      $loadingPlayers = false;
     }
   });
 
@@ -114,6 +116,7 @@
       />
       <div class="flex flex-col xl:flex-row mt-2 xl:mt-0">
         <PickTeamPlayers
+          {loadingPlayers}
           {fantasyTeam}
           {pitchView}
           {selectedFormation}

@@ -154,9 +154,10 @@ export function isBonusConditionMet(team: PickTeamDTO | null): boolean {
   return true;
 }
 
-
-
-export function getHighestValuedPlayerId(team: PickTeamDTO, players: PlayerDTO[]): number {
+export function getHighestValuedPlayerId(
+  team: PickTeamDTO,
+  players: PlayerDTO[],
+): number {
   let highestValue = 0;
   let highestValuedPlayerId = 0;
 

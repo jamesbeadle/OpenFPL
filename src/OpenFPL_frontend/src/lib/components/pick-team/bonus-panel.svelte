@@ -6,18 +6,11 @@
   import type { Bonus } from "$lib/types/bonus";
   import { BonusType } from "$lib/enums/BonusType";
   import UseBonusModal from "$lib/components/pick-team/use-bonus-modal.svelte";
-   import Tooltip from "../tooltip.svelte";
+  import Tooltip from "../tooltip.svelte";
 
   export let fantasyTeam: Writable<PickTeamDTO | null>;
 
-  onMount(() => {
-    systemStore.sync();
-  });
-  
-  let showModal: boolean = false;
-  let selectedBonusId = 0;
-
-  let bonuses: Bonus[] = [
+  let bonuses = writable<Bonus[]>([
     {
       id: 1,
       name: "Goal Getter",
@@ -25,6 +18,8 @@
       description:
         "Select a player you think will score in a game to receive a X3 mulitplier for each goal scored.",
       selectionType: BonusType.PLAYER,
+      isUsed: isBonusUsed(1),
+      usedGameweek: $fantasyTeam?.goalGetterGameweek ?? 0
     },
     {
       id: 2,
@@ -33,6 +28,8 @@
       description:
         "Select a player you think will assist in a game to receive a X3 mulitplier for each assist.",
       selectionType: BonusType.PLAYER,
+      isUsed: isBonusUsed(2),
+      usedGameweek: $fantasyTeam?.passMasterGameweek ?? 0
     },
     {
       id: 3,
@@ -41,6 +38,8 @@
       description:
         "Select a goalkeeper or defender you think will keep a clean sheet to receive a X3 multipler on their total score.",
       selectionType: BonusType.PLAYER,
+      isUsed: isBonusUsed(3),
+      usedGameweek: $fantasyTeam?.noEntryGameweek ?? 0
     },
     {
       id: 4,
@@ -49,6 +48,8 @@
       description:
         "Receive a X2 multiplier from all players from a single club that are in your team.",
       selectionType: BonusType.TEAM,
+      isUsed: isBonusUsed(4),
+      usedGameweek: $fantasyTeam?.teamBoostGameweek ?? 0
     },
     {
       id: 5,
@@ -57,6 +58,8 @@
       description:
         "Receive a X3 multiplier on your goalkeeper if they make 5 saves in a match.",
       selectionType: BonusType.AUTOMATIC,
+      isUsed: isBonusUsed(5),
+      usedGameweek: $fantasyTeam?.safeHandsGameweek ?? 0
     },
     {
       id: 6,
@@ -65,6 +68,8 @@
       description:
         "Receive a X2 multiplier on your team captain's score if they score a goal in a match.",
       selectionType: BonusType.AUTOMATIC,
+      isUsed: isBonusUsed(6),
+      usedGameweek: $fantasyTeam?.captainFantasticGameweek ?? 0
     },
     {
       id: 7,
@@ -72,6 +77,8 @@
       image: "/prospects.png",
       description: "Receive a X2 multiplier for players under the age of 21.",
       selectionType: BonusType.AUTOMATIC,
+      isUsed: isBonusUsed(7),
+      usedGameweek: $fantasyTeam?.prospectsGameweek ?? 0
     },
     {
       id: 8,
@@ -80,6 +87,8 @@
       description:
         "Receive a X2 multiplier for players of a selected nationality.",
       selectionType: BonusType.COUNTRY,
+      isUsed: isBonusUsed(8),
+      usedGameweek: $fantasyTeam?.countrymenGameweek ?? 0
     },
     {
       id: 9,
@@ -88,6 +97,8 @@
       description:
         "Receive a X2 multiplier on a player's score if they score 2 or more goals in a game. Applies to every player who scores a brace.",
       selectionType: BonusType.AUTOMATIC,
+      isUsed: isBonusUsed(9),
+      usedGameweek: $fantasyTeam?.braceBonusGameweek ?? 0
     },
     {
       id: 10,
@@ -96,11 +107,36 @@
       description:
         "Receive a X3 multiplier on a player's score if they score 3 or more goals in a game. Applies to every player who scores a hat-trick.",
       selectionType: BonusType.AUTOMATIC,
+      isUsed: isBonusUsed(10),
+      usedGameweek: $fantasyTeam?.hatTrickHeroGameweek ?? 0
     },
-  ];
+  ]);
+  let weeklyBonusPlayed = writable<Boolean>(false);
 
-  let leftPanelBonuses = bonuses.slice(0, 5);
-  let rightPanelBonuses = bonuses.slice(5, 10);
+  $: if ($fantasyTeam) {
+    updateBonuses();
+    $weeklyBonusPlayed = bonusPlayedThisWeek();
+  }
+
+  function updateBonuses() {
+    bonuses.update(bonusArray => {
+      return bonusArray.map(bonus => ({
+        ...bonus,
+        isUsed: isBonusUsed(bonus.id)
+      }));
+    });
+  }
+
+  onMount(() => {
+    systemStore.sync();
+    updateBonuses();
+    $weeklyBonusPlayed = bonusPlayedThisWeek();
+  });
+  let showModal: boolean = false;
+  let selectedBonusId = 0;
+
+  $: leftPanelBonuses = $bonuses.slice(0, 5);
+  $: rightPanelBonuses = $bonuses.slice(5, 10);
   let bonusUsedInSession = writable<boolean>(false);
 
   function showBonusModal(bonusId: number): void {
@@ -114,7 +150,6 @@
 
   function isBonusUsed(bonusId: number): boolean {
     if (!$fantasyTeam) return false;
-
     switch (bonusId) {
       case 1:
         return $fantasyTeam.goalGetterGameweek &&
@@ -190,7 +225,7 @@
   {#if selectedBonusId > 0}
     <UseBonusModal
       visible={showModal}
-      bonus={bonuses[selectedBonusId - 1]}
+      bonus={$bonuses[selectedBonusId - 1]}
       {closeBonusModal}
       {fantasyTeam}
       {bonusUsedInSession}
@@ -221,13 +256,13 @@
               </p>
             </div>
 
-            {#if isBonusUsed(bonus.id)}
+            {#if bonus.isUsed}
               <div class="w-full px-1 sm:px-4 mb-2 sm:mb-4 xl:min-h-[40px]">
                 <p class="text-center xl:mt-1 smaller-text">
-                  Used GW{isBonusUsed(bonus.id)}
+                  Used GW{bonus.usedGameweek}
                 </p>
               </div>
-            {:else if !bonusPlayedThisWeek()}
+            {:else if !$weeklyBonusPlayed}
               <div class="w-full px-1 sm:px-4 mb-2 sm:mb-4">
                 <button
                   on:click={() => showBonusModal(bonus.id)}
@@ -265,13 +300,13 @@
                 {bonus.name}
               </p>
             </div>
-            {#if isBonusUsed(bonus.id)}
+            {#if bonus.isUsed}
               <div class="w-full px-1 sm:px-4 mb-2 sm:mb-4 xl:min-h-[40px]">
                 <p class="text-center xl:mt-1 smaller-text">
-                  Used GW{isBonusUsed(bonus.id)}
+                  Used GW{bonus.usedGameweek}
                 </p>
               </div>
-            {:else if !bonusPlayedThisWeek()}
+            {:else if !$weeklyBonusPlayed}
               <div class="w-full px-1 sm:px-4 mb-2 sm:mb-4">
                 <button
                   on:click={() => showBonusModal(bonus.id)}
@@ -292,7 +327,7 @@
 
   <div class="flex md:hidden flex-col md:mx-2">
     <div class="flex items-center flex-col mt-1 mx-2 mb-1">
-      {#each bonuses as bonus}
+      {#each $bonuses as bonus}
         <div
           class="flex flex-row items-center bonus-panel-inner m-1 rounded-lg border border-gray-700 w-full min-h-[50px]"
         >
@@ -311,13 +346,13 @@
             </p>
           </div>
           <div class="w-4/12">
-            {#if isBonusUsed(bonus.id)}
+            {#if bonus.isUsed}
               <div class="w-full px-1">
                 <p class="text-center">
-                  Used GW{isBonusUsed(bonus.id)}
+                  Used GW{bonus.usedGameweek}
                 </p>
               </div>
-            {:else if !bonusPlayedThisWeek()}
+            {:else if !$weeklyBonusPlayed}
               <div class="w-full px-1 flex justify-center">
                 <button
                   on:click={() => showBonusModal(bonus.id)}
