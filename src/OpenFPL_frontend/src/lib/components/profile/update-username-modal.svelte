@@ -29,7 +29,7 @@
     });
     try {
       await userStore.updateUsername(newUsername);
-      userStore.sync();
+      await userStore.sync();
       await closeModal();
       toastsShow({
         text: "Username updated.",

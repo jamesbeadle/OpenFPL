@@ -456,52 +456,11 @@
   let showCaptainModal = false;
   let newCaptain: Writable<string>;
   
-    //TODO????
-  function updateCaptainIfNeeded(currentTeam: PickTeamDTO) {
-    if (currentTeam.playerIds.filter((x) => x == 0).length > 0) {
-      return;
-    }
-
-    if (
-      currentTeam.captainId > 0 &&
-      currentTeam.playerIds.filter((x) => x == currentTeam.captainId).length > 0
-    ) {
-      return;
-    }
-
-    const newCaptainId = getHighestValuedPlayerId(currentTeam);
-    setCaptain(newCaptainId);
-  }
-
   function closeCaptainModal() {
     showCaptainModal = false;
   }
   
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <ConfirmCaptainChange
   newCaptain={$newCaptain}

@@ -46,10 +46,10 @@
     }
   }
 
-  onMount(() => {
+  onMount(async () => {
     try {
-      systemStore.sync();
-      playerStore.sync();
+      await systemStore.sync();
+      await playerStore.sync();
       loadData();
       disableInvalidFormations()
     } catch (error) {
@@ -230,6 +230,7 @@
     formationPositions.forEach((position, index) => {
       if (remainingBudget <= 0) return;
       if (updatedFantasyTeam.playerIds[index] > 0) return;
+
 
       const availablePlayers = $playerStore
         .filter(

@@ -1,18 +1,15 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { writable, type Writable } from "svelte/store";
-  import type {
-    PlayerDTO,
-    PickTeamDTO,
-  } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import AddIcon from "$lib/icons/AddIcon.svelte";
-  import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import { toastsError } from "$lib/stores/toasts-store";
   import { teamStore } from "$lib/stores/team-store";
   import { playerStore } from "$lib/stores/player-store";
+  import { toastsError } from "$lib/stores/toasts-store";
+  import type { PlayerDTO, PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import AddIcon from "$lib/icons/AddIcon.svelte";
+  import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import { Modal } from "@dfinity/gix-components";
   import { convertPlayerPosition } from "$lib/utils/helpers";
-    import { allFormations } from "$lib/utils/pick-team.helpers";
+  import { allFormations } from "$lib/utils/pick-team.helpers";
 
   export let visible: boolean;
   export let closeAddPlayerModal: () => void;
@@ -29,14 +26,17 @@
   let maxValue = 0;
   let currentPage = 1;
   const pageSize = 10;
-  $: filteredPlayers = $playerStore.filter((player) => {
+  console.log(`Filters: Filter Team: ${filterTeam}, Filter Position: ${filterPosition}, Min Value: ${minValue}, Max Value: ${maxValue} `)
+
+  function filterPlayers(){
+    filteredPlayers = $playerStore.filter((player) => {
     const normalizedFilterSurname = normalizeString(
       filterSurname.toLowerCase()
     );
     const normalizedPlayerLastName = normalizeString(
       player.lastName.toLowerCase()
     );
-
+    
     return (
       (filterTeam === -1 || player.clubId === filterTeam) &&
       (filterPosition === -1 ||
@@ -48,6 +48,14 @@
         normalizedPlayerLastName.includes(normalizedFilterSurname))
     );
   });
+  };
+
+  let filteredPlayers: PlayerDTO[] = [];
+
+  onMount(async () => {
+    await filterPlayers();
+  });
+   
 
   $: paginatedPlayers = addTeamDataToPlayers(
     filteredPlayers.slice((currentPage - 1) * pageSize, currentPage * pageSize)
@@ -58,15 +66,17 @@
     reasonToDisablePlayer(player)
   );
 
+
   $: {
     if (
-      filterTeam ||
-      filterPosition ||
-      filterColumn ||
-      minValue ||
-      maxValue ||
-      filterSurname
+      filterTeam !== -1 ||
+      filterPosition !== -1 ||
+      filterColumn !== -1 ||
+      minValue !== 0 ||
+      maxValue !== 0 ||
+      filterSurname !== ""
     ) {
+      filterPlayers();
       teamPlayerCounts = countPlayersByTeam($fantasyTeam?.playerIds ?? []);
       currentPage = 1;
     }

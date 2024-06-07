@@ -27,7 +27,7 @@
 
     try {
       await userStore.updateFavouriteTeam(newFavouriteTeam);
-      userStore.sync();
+      await userStore.sync();
       await closeModal();
       toastsShow({
         text: "Favourite team updated.",

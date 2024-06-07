@@ -79,6 +79,13 @@
           }
           return currentTeam;
         });
+
+        if($fantasyTeam.principalId == ""){
+          bankBalance.set(1200);
+          return;
+        }
+
+        bankBalance.set($fantasyTeam.bankQuarterMillions);
       }
       await loadData();
     } catch (error) {

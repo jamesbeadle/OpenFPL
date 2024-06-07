@@ -111,6 +111,7 @@
       usedGameweek: $fantasyTeam?.hatTrickHeroGameweek ?? 0
     },
   ]);
+
   let weeklyBonusPlayed = writable<Boolean>(false);
 
   $: if ($fantasyTeam) {
@@ -127,8 +128,8 @@
     });
   }
 
-  onMount(() => {
-    systemStore.sync();
+  onMount(async () => {
+    await systemStore.sync();
     updateBonuses();
     $weeklyBonusPlayed = bonusPlayedThisWeek();
   });

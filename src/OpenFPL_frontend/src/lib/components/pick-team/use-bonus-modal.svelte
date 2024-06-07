@@ -23,10 +23,10 @@
   let selectedPlayerId = 0;
   let selectedCountry = "";
 
-  onMount(() => {
-    systemStore.sync();
-    teamStore.sync();
-    playerStore.sync();
+  onMount(async () => {
+    await systemStore.sync();
+    await teamStore.sync();
+    await playerStore.sync();
   });
 
   const getUniqueCountries = () => {

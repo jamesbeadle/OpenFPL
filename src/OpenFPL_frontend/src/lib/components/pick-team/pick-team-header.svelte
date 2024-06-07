@@ -25,10 +25,10 @@
   
   export let fantasyTeam: Writable<PickTeamDTO | null>;
 
-  onMount(() => {
+  onMount(async () => {
 
-    systemStore.sync();
-    playerStore.sync();
+    await systemStore.sync();
+    await playerStore.sync();
 
     if($systemStore?.pickTeamSeasonName){
       activeSeason = $systemStore?.pickTeamSeasonName;
