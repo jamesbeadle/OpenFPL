@@ -57,36 +57,7 @@
   onMount(async () => {
     try {
       $availableFormations = Object.keys(allFormations);
-      async function loadData() {
-
-        const storedViewMode = localStorage.getItem("viewMode");
-        if (storedViewMode) {
-          pitchView.set(storedViewMode === "pitch");
-        }
-
-        let userFantasyTeam = await managerStore.getCurrentTeam();
-        fantasyTeam.set(userFantasyTeam);
-
-        fantasyTeam.update((currentTeam) => {
-          if (
-            currentTeam &&
-            (!currentTeam.playerIds || currentTeam.playerIds.length !== 11)
-          ) {
-            return {
-              ...currentTeam,
-              playerIds: new Uint16Array(11).fill(0),
-            };
-          }
-          return currentTeam;
-        });
-
-        if($fantasyTeam.principalId == ""){
-          bankBalance.set(1200);
-          return;
-        }
-
-        bankBalance.set($fantasyTeam.bankQuarterMillions);
-      }
+      
       await loadData();
     } catch (error) {
       toastsError({
@@ -99,6 +70,37 @@
       $loadingPlayers = false;
     }
   });
+
+  async function loadData() {
+
+    const storedViewMode = localStorage.getItem("viewMode");
+    if (storedViewMode) {
+      pitchView.set(storedViewMode === "pitch");
+    }
+
+    let userFantasyTeam = await managerStore.getCurrentTeam();
+    fantasyTeam.set(userFantasyTeam);
+
+    fantasyTeam.update((currentTeam) => {
+      if (
+        currentTeam &&
+        (!currentTeam.playerIds || currentTeam.playerIds.length !== 11)
+      ) {
+        return {
+          ...currentTeam,
+          playerIds: new Uint16Array(11).fill(0),
+        };
+      }
+      return currentTeam;
+    });
+
+    if($fantasyTeam.principalId == ""){
+      bankBalance.set(1200);
+      return;
+    }
+
+    bankBalance.set($fantasyTeam.bankQuarterMillions);
+    }
 
 </script>
 

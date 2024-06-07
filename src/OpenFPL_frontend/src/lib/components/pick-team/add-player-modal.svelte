@@ -26,7 +26,7 @@
   let maxValue = 0;
   let currentPage = 1;
   const pageSize = 10;
-  console.log(`Filters: Filter Team: ${filterTeam}, Filter Position: ${filterPosition}, Min Value: ${minValue}, Max Value: ${maxValue} `)
+  //console.log(`Filters: Filter Team: ${filterTeam}, Filter Position: ${filterPosition}, Min Value: ${minValue}, Max Value: ${maxValue} `)
 
   function filterPlayers(){
     filteredPlayers = $playerStore.filter((player) => {

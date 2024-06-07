@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import type { Writable } from "svelte/store";
+  import { writable, type Writable } from "svelte/store";
   import { toastsError } from "$lib/stores/toasts-store";
   import { systemStore } from "$lib/stores/system-store";
   import { teamStore } from "$lib/stores/team-store";
@@ -39,7 +39,8 @@
   let selectedColumn = -1;
   let canSellPlayer = true;
   let sessionAddedPlayers: number[] = [];
-  let newCaptainId: Writable<number>;
+  let newCaptainId = writable<number>(0);
+  let newCaptain = writable<string>("");
 
   $: rowHeight = (pitchHeight * 0.9) / 4;
   $: gridSetupComplete = rowHeight > 0;
@@ -286,15 +287,18 @@
   }
 
   function setCaptain(playerId: number) {
-    if ($newCaptainId == 0) {
+
+    if (playerId > 0) {
       newCaptainId.set(playerId);
-      changeCaptain();
+      let player = $playerStore.find((x) => x.id === $newCaptainId);
+      $newCaptain = `${player?.firstName} ${player?.lastName}`;
+      showCaptainModal = true;
       return;
     }
 
-    newCaptainId.set(playerId);
-    let player = $playerStore.find((x) => x.id === playerId);
-    newCaptain.update((x) => `${player?.firstName} ${player?.lastName}`);
+    newCaptainId.set(getHighestValuedPlayerId($fantasyTeam!));
+    let player = $playerStore.find((x) => x.id === $newCaptainId);    
+    $newCaptain = `${player?.firstName} ${player?.lastName}`;
     showCaptainModal = true;
   }
 
@@ -454,7 +458,6 @@
   }
 
   let showCaptainModal = false;
-  let newCaptain: Writable<string>;
   
   function closeCaptainModal() {
     showCaptainModal = false;

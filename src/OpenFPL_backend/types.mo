@@ -1,5 +1,4 @@
 import List "mo:base/List";
-import NeuronTypes "../neuron_controller/types";
 
 module _Types {
 
