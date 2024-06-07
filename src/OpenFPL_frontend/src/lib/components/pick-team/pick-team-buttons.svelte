@@ -391,7 +391,7 @@
           Formation:
           <select
             class="px-4 py-2 border-sm fpl-dropdown text-center"
-            bind:value={selectedFormation}
+            bind:value={$selectedFormation}
           >
             {#each $availableFormations as formation}
               <option value={formation}>{formation}</option>
