@@ -1,5 +1,3 @@
-import Cycles "mo:base/ExperimentalCycles";
-import List "mo:base/List";
 import Time "mo:base/Time";
 import Buffer "mo:base/Buffer";
 import Nat "mo:base/Nat";
@@ -8,20 +6,12 @@ import Principal "mo:base/Principal";
 import Environment "utils/Environment";
 import T "types";
 import Root "sns-wrappers/root";
+import Utilities "utils/utilities";
+import Management "modules/Management";
 
 module {
 
   public class CyclesDispenser() {
-
-    private var canisterIds : List.List<Text> = List.fromArray<Text>([
-      Environment.BACKEND_CANISTER_ID,
-      Environment.FRONTEND_CANISTER_ID,
-      Environment.NEURON_CONTROLLER_CANISTER_ID,
-      Environment.SNS_GOVERNANCE_CANISTER_ID,
-      Environment.SNS_LEDGER_CANISTER_ID,
-      Environment.SNS_ROOT_CANISTER_ID,
-      Environment.SNS_INDEX_CANISTER_ID,
-      Environment.SNS_SWAP_CANISTER_ID]);
 
     private var topups : [T.CanisterTopup] = [];
 
@@ -33,14 +23,6 @@ module {
       recordSystemEvent := ?_recordSystemEvent;
     };
 
-    public func getStableCanisterIds() : [Text] {
-      return List.toArray(canisterIds);
-    };
-
-    public func setStableCanisterIds(stable_canister_ids : [Text]) {
-      canisterIds := List.fromArray(stable_canister_ids);
-    };
-
     public func getStableTopups() : [T.CanisterTopup] {
       return topups;
     };
@@ -49,8 +31,23 @@ module {
       topups := stable_topups;
     };
 
-    public func checkSNSCanisterCycles() : async (){
+    public func checkDynamicCanisterCycles(dynamicCanisterIds: [T.CanisterId]) : async (){
+      
+      for(canisterId in Iter.fromArray(dynamicCanisterIds)){
+        
+        let dynamic_canister = actor (canisterId) : actor {
+          getCyclesBalanace : () -> async Nat;
+        };
 
+        let cyclesBalance = await dynamic_canister.getCyclesBalanace();
+
+        if (cyclesBalance < 10_000_000_000_000) {
+          await requestCanisterTopup(canisterId, 10_000_000_000_000);
+        };
+      };
+    };
+
+    public func checkSNSCanisterCycles() : async (){
       let root_canister = actor (Environment.SNS_ROOT_CANISTER_ID) : actor {
         get_sns_canisters_summary : (request: Root.GetSnsCanistersSummaryRequest) -> async Root.GetSnsCanistersSummaryResponse;
       };
@@ -90,7 +87,7 @@ module {
           };
         };
       };
-
+      
       switch(summary.governance){
         case (null){ };
         case (?canister){
@@ -108,10 +105,9 @@ module {
                 };
               };
             };
-
         };
       };
-
+      
       switch(summary.index){
         case (null){ };
         case (?canister){
@@ -132,7 +128,7 @@ module {
 
         };
       };
-
+      
       switch(summary.ledger){
         case (null){ };
         case (?canister){
@@ -153,7 +149,7 @@ module {
 
         };
       };
-
+      
       switch(summary.root){
         case (null){ };
         case (?canister){
@@ -174,7 +170,7 @@ module {
 
         };
       };
-
+      
       switch(summary.swap){
         case (null){ };
         case (?canister){
@@ -198,25 +194,10 @@ module {
     };
 
     public func requestCanisterTopup(canisterPrincipal : Text, cycles: Nat) : async () {
-      
-      let canisterId = List.find<Text>(
-        canisterIds,
-        func(text : Text) : Bool {
-          return text == canisterPrincipal;
-        },
-      );
-
-      switch (canisterId) {
-        case (null) {};
-        case (?foundId) {
-          let canister_actor = actor (foundId) : actor {
-            topupCanister : () -> async ();
-          };
-          Cycles.add<system>(cycles);
-          await canister_actor.topupCanister();
-          recordCanisterTopup(foundId, cycles);
-        };
-      };
+      let canister_actor = actor (canisterPrincipal) : actor { };
+      let IC : Management.Management = actor (Environment.Default);
+      let _ = await Utilities.topup_canister_(canister_actor, ?Principal.fromText(Environment.BACKEND_CANISTER_ID), IC, cycles);
+      recordCanisterTopup(canisterPrincipal, cycles);
     };
 
     private func recordCanisterTopup(canisterId: T.CanisterId, cyclesAmount: Nat){
@@ -246,22 +227,5 @@ module {
       }
       
     };
-
-    public func storeCanisterId(canisterId : Text) : async () {
-      let existingCanisterId = List.find<Text>(
-        canisterIds,
-        func(text : Text) : Bool {
-          return text == canisterId;
-        },
-      );
-
-      switch (existingCanisterId) {
-        case (null) {
-          canisterIds := List.append(canisterIds, List.make(canisterId));
-        };
-        case (?foundId) {};
-      };
-    };
-
   };
 };

@@ -680,6 +680,7 @@ export interface _SERVICE {
   'getFormerClubs' : ActorMethod<[], Result_20>,
   'getLoanedPlayers' : ActorMethod<[ClubFilterDTO], Result_9>,
   'getManager' : ActorMethod<[GetManagerDTO], Result_1>,
+  'getManagerCanisterIds' : ActorMethod<[], Array<CanisterId>>,
   'getManagerPrivateLeagues' : ActorMethod<[], Result_19>,
   'getMonthlyLeaderboard' : ActorMethod<[GetMonthlyLeaderboardDTO], Result_11>,
   'getMonthlyLeaderboards' : ActorMethod<

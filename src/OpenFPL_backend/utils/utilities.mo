@@ -18,6 +18,7 @@ import List "mo:base/List";
 import Int "mo:base/Int";
 import Option "mo:base/Option";
 import Management "../modules/Management";
+import Cycles "mo:base/ExperimentalCycles";
 
 module {
 
@@ -382,7 +383,24 @@ module {
               compute_allocation = null;
               memory_allocation = null;
               freezing_threshold = ?31_540_000;
+              reserved_cycles_limit = null
             };
+            sender_canister_version = null
+          }),
+        );
+      };
+    };
+  };
+
+  public func topup_canister_(a : actor {}, backendCanisterController : ?Principal, IC : Management.Management, cycles: Nat) : async () {
+    let cid = { canister_id = Principal.fromActor(a) };
+    switch (backendCanisterController) {
+      case (null) {};
+      case (?controller) {
+        Cycles.add<system>(cycles);
+        await (
+          IC.deposit_cycles({
+            canister_id = cid.canister_id;
           }),
         );
       };

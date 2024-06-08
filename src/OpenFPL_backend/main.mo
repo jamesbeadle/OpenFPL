@@ -10,7 +10,6 @@
   import Timer "mo:base/Timer";
   import Nat64 "mo:base/Nat64";
   import Nat "mo:base/Nat";
-import Debug "mo:base/Debug";
 
   import T "types";
   import DTOs "DTOs";
@@ -852,7 +851,6 @@ import Debug "mo:base/Debug";
     private stable var stable_private_league_unaccepted_invites: [(T.PrincipalId, T.LeagueInvite)] = [];
 
     private stable var stable_timers : [T.TimerInfo] = [];
-    private stable var stable_canister_ids : [Text] = [];
     private stable var stable_topups : [T.CanisterTopup] = [];
 
     private stable var stable_token_list: [T.TokenInfo] = [];
@@ -909,7 +907,6 @@ import Debug "mo:base/Debug";
       stable_private_league_unaccepted_invites := seasonManager.getStableUnacceptedInvites();
 
       stable_timers := timers;
-      stable_canister_ids := cyclesDispenser.getStableCanisterIds();
       stable_topups := cyclesDispenser.getStableTopups();
 
       stable_token_list := treasuryManager.getStableTokenList();
@@ -967,13 +964,11 @@ import Debug "mo:base/Debug";
       seasonManager.setStablePrivateLeagueNameIndex(stable_private_league_name_index);
       seasonManager.setStablePrivateLeagueUnacceptedInvites(stable_private_league_unaccepted_invites);
 
-      cyclesDispenser.setStableCanisterIds(stable_canister_ids);
       cyclesDispenser.setStableTopups(stable_topups);
       cyclesDispenser.setRecordSystemEventFunction(recordSystemEvent);
 
       seasonManager.setBackendCanisterController(Principal.fromActor(Self));
       seasonManager.setTimerBackupFunction(setAndBackupTimer, removeExpiredTimers);
-      seasonManager.setStoreCanisterIdFunction(cyclesDispenser.storeCanisterId);
       seasonManager.setRecordSystemEventFunction(recordSystemEvent);
 
       //Treasury Manager
@@ -1019,6 +1014,7 @@ import Debug "mo:base/Debug";
     private func postUpgradeCallback() : async (){
       //seasonManager.setInitialClubs();
       //await seasonManager.updateCacheHash("clubs");
+      
       await systemCheckCallback();
       await cyclesCheckCallback();
 
@@ -1048,8 +1044,9 @@ import Debug "mo:base/Debug";
       
       let balance: Nat = await getCanisterCyclesBalance();
       let _ = Cycles.accept<system>(balance);
-
       await cyclesDispenser.checkSNSCanisterCycles();
+      
+      await cyclesDispenser.checkDynamicCanisterCycles(seasonManager.getManagerCanisterIds());
 
       let remainingDuration = Utilities.getHour() * 24;
       ignore Timer.setTimer<system>(#nanoseconds remainingDuration, cyclesCheckCallback);
@@ -1143,6 +1140,10 @@ import Debug "mo:base/Debug";
 
       let remainingDuration = Nat64.toNat(Nat64.fromIntWrap(Utilities.getNext6AM() - Time.now()));
       ignore Timer.setTimer<system>(#nanoseconds remainingDuration, systemCheckCallback);
+    };
+
+    public func getManagerCanisterIds() : async [T.CanisterId] {
+      return seasonManager.getManagerCanisterIds();
     };
 
 

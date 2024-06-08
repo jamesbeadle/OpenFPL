@@ -1295,5 +1295,9 @@ module {
       clubComposite.setInitialClubs();
     };
 
+    public func getManagerCanisterIds() : [T.CanisterId] {
+      return managerComposite.getStableUniqueManagerCanisterIds();
+    };
+
   };
 };

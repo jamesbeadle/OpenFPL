@@ -862,6 +862,7 @@ service : {
   getFormerClubs: () -> (Result_20) query;
   getLoanedPlayers: (ClubFilterDTO) -> (Result_9) query;
   getManager: (GetManagerDTO) -> (Result_1);
+  getManagerCanisterIds: () -> (vec CanisterId);
   getManagerPrivateLeagues: () -> (Result_19);
   getMonthlyLeaderboard: (GetMonthlyLeaderboardDTO) -> (Result_11);
   getMonthlyLeaderboards: (GetMonthlyLeaderboardsDTO) -> (Result_18);
