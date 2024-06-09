@@ -10,6 +10,7 @@
   import Timer "mo:base/Timer";
   import Nat64 "mo:base/Nat64";
   import Nat "mo:base/Nat";
+import Option "mo:base/Option";
 
   import T "types";
   import DTOs "DTOs";
@@ -1032,12 +1033,23 @@
       await cyclesCheckCallback();
       */
     };
+    
     //Canister cycle topup functions
 
     public shared ({ caller }) func requestCanisterTopup(cycles: Nat) : async () {
       assert not Principal.isAnonymous(caller);
       let principalId = Principal.toText(caller);
-      await cyclesDispenser.requestCanisterTopup(principalId, cycles);
+
+      //ensure canister is a management canister
+      let managerCanisterIds = await getManagerCanisterIds();
+      let foundManagerCanisterId = Array.find(managerCanisterIds, func(canisterId: T.CanisterId) : Bool{
+        canisterId == principalId
+      });
+
+      if(Option.isSome(foundManagerCanisterId)){
+        await cyclesDispenser.requestCanisterTopup(principalId, cycles);
+      };
+      
     };
 
     private func checkCanisterCycles() : async () {
