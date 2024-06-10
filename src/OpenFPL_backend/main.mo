@@ -1013,13 +1013,14 @@ import Option "mo:base/Option";
     };
 
     private func postUpgradeCallback() : async (){
-      //seasonManager.setInitialClubs();
-      //await seasonManager.updateCacheHash("clubs");
       
       await systemCheckCallback();
       await cyclesCheckCallback();
+      await seasonManager.fixUsernameDuplication();
 
       /*
+      //seasonManager.setInitialClubs();
+      //await seasonManager.updateCacheHash("clubs");
       await seasonManager.updateCacheHash("clubs");
       await seasonManager.updateCacheHash("fixtures");
       await seasonManager.updateCacheHash("weekly_leaderboard");
@@ -1040,7 +1041,6 @@ import Option "mo:base/Option";
       assert not Principal.isAnonymous(caller);
       let principalId = Principal.toText(caller);
 
-      //ensure canister is a management canister
       let managerCanisterIds = await getManagerCanisterIds();
       let foundManagerCanisterId = Array.find(managerCanisterIds, func(canisterId: T.CanisterId) : Bool{
         canisterId == principalId

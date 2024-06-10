@@ -24,6 +24,7 @@ import Debug "mo:base/Debug";
 import Nat "mo:base/Nat";
 import Int64 "mo:base/Int64";
 import Int "mo:base/Int";
+import Char "mo:base/Char";
 import Environment "../utils/Environment";
 
 module {
@@ -1068,13 +1069,19 @@ module {
 
     public func isUsernameTaken(username : Text, principalId : Text) : Bool {
       for (managerUsername in managerUsernames.entries()) {
-        if (managerUsername.1 == username and managerUsername.0 != principalId) {
+
+        let lowerCaseUsername = Utilities.toLowercase(username);
+        let existingUsername = Utilities.toLowercase(managerUsername.1);
+
+        if (lowerCaseUsername == existingUsername and managerUsername.0 != principalId) {
           return true;
         };
       };
 
       return false;
     };
+
+
 
     public func searchByUsername(username : Text) : async ?DTOs.ManagerDTO {
       
@@ -1425,5 +1432,36 @@ module {
     public func getTotalCanisters() : Nat{
       return managerCanisterIds.size();
     };
+
+
+
+    public func fixUsernameDuplication(systemState: T.SystemState) : async (){
+
+      var seenUsernamesBuffer = Buffer.fromArray<Text>([]);
+      var changeUsernamesBuffer = Buffer.fromArray<T.PrincipalId>([]);
+
+      for(username in managerUsernames.entries()){
+        if(Buffer.contains(seenUsernamesBuffer, Utilities.toLowercase(username.1), Text.equal)){
+          changeUsernamesBuffer.add(username.0);
+        } else {
+          seenUsernamesBuffer.add(Utilities.toLowercase(username.1));
+        };
+      };
+
+      for(principalId in Iter.fromArray(Buffer.toArray(changeUsernamesBuffer))){
+        let _ = await updateUsername(principalId, principalId, systemState);
+      };
+
+
+
+      //for all the managers find the ones that have a duplicate username
+        //for all managers after this one update the username back to their principal id
+    
+    
+    
+    };
+
+
+
   };
 };

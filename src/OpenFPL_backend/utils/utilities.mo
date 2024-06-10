@@ -19,6 +19,7 @@ import Int "mo:base/Int";
 import Option "mo:base/Option";
 import Management "../modules/Management";
 import Cycles "mo:base/ExperimentalCycles";
+import Char "mo:base/Char";
 
 module {
 
@@ -550,6 +551,18 @@ module {
       );
 
       return Array.foldLeft<DTOs.PlayerDTO, Nat16>(updatedPlayers, 0, func(sumSoFar, x) = sumSoFar + x.valueQuarterMillions);
+  };
+
+
+  public func toLowercase(t: Text.Text): Text.Text {
+    func charToLower(c: Char): Char {
+      if (Char.isUppercase(c)) {
+        Char.fromNat32(Char.toNat32(c) + 32)
+      } else {
+        c
+      }
+    };
+    Text.map(t, charToLower)
   };
 
 };

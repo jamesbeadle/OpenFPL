@@ -1299,5 +1299,9 @@ module {
       return managerComposite.getStableUniqueManagerCanisterIds();
     };
 
+    public func fixUsernameDuplication() : async (){
+      return await managerComposite.fixUsernameDuplication(systemState);
+    };
+
   };
 };
