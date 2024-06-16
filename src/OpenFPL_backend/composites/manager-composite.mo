@@ -1433,35 +1433,5 @@ module {
       return managerCanisterIds.size();
     };
 
-
-
-    public func fixUsernameDuplication(systemState: T.SystemState) : async (){
-
-      var seenUsernamesBuffer = Buffer.fromArray<Text>([]);
-      var changeUsernamesBuffer = Buffer.fromArray<T.PrincipalId>([]);
-
-      for(username in managerUsernames.entries()){
-        if(Buffer.contains(seenUsernamesBuffer, Utilities.toLowercase(username.1), Text.equal)){
-          changeUsernamesBuffer.add(username.0);
-        } else {
-          seenUsernamesBuffer.add(Utilities.toLowercase(username.1));
-        };
-      };
-
-      for(principalId in Iter.fromArray(Buffer.toArray(changeUsernamesBuffer))){
-        let _ = await updateUsername(principalId, principalId, systemState);
-      };
-
-
-
-      //for all the managers find the ones that have a duplicate username
-        //for all managers after this one update the username back to their principal id
-    
-    
-    
-    };
-
-
-
   };
 };

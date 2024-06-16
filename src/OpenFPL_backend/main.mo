@@ -10,7 +10,7 @@
   import Timer "mo:base/Timer";
   import Nat64 "mo:base/Nat64";
   import Nat "mo:base/Nat";
-import Option "mo:base/Option";
+  import Option "mo:base/Option";
 
   import T "types";
   import DTOs "DTOs";
@@ -1016,7 +1016,6 @@ import Option "mo:base/Option";
       
       await systemCheckCallback();
       await cyclesCheckCallback();
-      await seasonManager.fixUsernameDuplication();
 
       /*
       //seasonManager.setInitialClubs();
