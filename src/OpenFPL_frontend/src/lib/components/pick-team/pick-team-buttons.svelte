@@ -469,18 +469,16 @@
         </div>
       </div>
       <div class="w-full xs:w-1/2">
-        <div class="flex">
-          <span class="mx-4 xs:mt-4">
-            Formation:
-            <select
-              class="px-4 xs:mb-1 border-sm fpl-dropdown text-center text-center"
-              bind:value={selectedFormation}
-            >
-              {#each $availableFormations as formation}
-                <option value={formation}>{formation}</option>
-              {/each}
-            </select>
-          </span>
+        <div class="flex flex-row items-center py-2">
+          <p class="mr-2">Formation:</p>
+          <select
+            class="px-4 xs:mb-1 border-sm fpl-dropdown text-center text-center w-full"
+            bind:value={selectedFormation}
+          >
+            {#each $availableFormations as formation}
+              <option value={formation}>{formation}</option>
+            {/each}
+          </select>
         </div>
         <div class="flex flex-row mx-4 space-x-1">
           <button
