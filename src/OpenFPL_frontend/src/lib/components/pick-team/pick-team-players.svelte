@@ -560,7 +560,7 @@
                               class="bg-red-600 mb-1 rounded-sm"
                             >
                               <RemovePlayerIcon
-                                className="w-4 h-4 sm:w-6 sm:h-6 p-1"
+                                className="w-3 xs:w-4 h-3 xs:h-4 sm:w-6 sm:h-6 p-1"
                               />
                             </button>
                           {:else}
@@ -577,7 +577,7 @@
                           {#if $fantasyTeam?.captainId === playerId}
                             <span class="mb-1">
                               <ActiveCaptainIcon
-                                className="w-4 h-4 sm:w-7 sm:h-7 md:w-6 md:h-6"
+                                className="w-3 xs:w-4 h-3 xs:h-4 sm:w-7 sm:h-7 md:w-6 md:h-6"
                               />
                             </span>
                           {:else}
@@ -586,14 +586,14 @@
                               class="mb-1"
                             >
                               <PlayerCaptainIcon
-                                className="w-4 h-4 sm:w-7 sm:h-7 md:w-6 md:h-6"
+                                className="w-3 xs:w-4 h-3 xs:h-4 sm:w-7 sm:h-7 md:w-6 md:h-6"
                               />
                             </button>
                           {/if}
                         </div>
                       </div>
                       <div
-                        class="flex flex-col justify-center items-center text-xs sm:text-xs"
+                        class="flex flex-col justify-center items-center text-xxs sm:text-xs"
                       >
                         <div
                           class="flex justify-center items-center bg-gray-700 rounded-t-md md:px-2 sm:py-1
@@ -626,11 +626,11 @@
                           min-w-[60px] xs:min-w-[90px] sm:min-w-[120px]
                           max-w-[60px] xs:max-w-[90px] sm:max-w-[120px]"
                         >
-                          <p class="collapse sm:visible sm:min-w-[20px]">
+                          <p class="hidden sm:visible sm:min-w-[20px]">
                             {team?.abbreviatedName}
                           </p>
                           <BadgeIcon
-                            className="hidden xs:flex h-4 w-4 sm:mx-1 min-w-[15px]"
+                            className="w-2 h-2 xs:h-4 xs:w-4 sm:mx-1 min-w-[15px] pl-2 xs:pl-0"
                             primaryColour={team?.primaryColourHex}
                             secondaryColour={team?.secondaryColourHex}
                             thirdColour={team?.thirdColourHex}

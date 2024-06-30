@@ -2,18 +2,18 @@ import List "mo:base/List";
 
 module _Types {
 
-  public type FixtureId = Nat32;
-  public type SeasonId = Nat16;
-  public type GameweekNumber = Nat8;
-  public type CalendarMonth = Nat8;
-  public type PlayerId = Nat16;
-  public type ClubId = Nat16;
-  public type ProposalId = Nat;
-  public type CountryId = Nat16;
   public type PrincipalId = Text;
   public type CanisterId = Text;
-  public type RustResult = { #Ok : Text; #Err : Text };
+  public type GameweekNumber = Nat8;
+  public type CalendarMonth = Nat8;
+  public type SeasonId = Nat16;
+  public type FixtureId = Nat32;
+  public type ClubId = Nat16;
+  public type PlayerId = Nat16;
+  public type CountryId = Nat16;
+  public type ProposalId = Nat;
   public type TokenId = Nat16;
+  public type RustResult = { #Ok : Text; #Err : Text };
 
   public type Error = {
     #NotFound;
@@ -27,56 +27,8 @@ module _Types {
     #CanisterCreateError;
   };
 
-  public type PlayerPosition = {
-    #Goalkeeper;
-    #Defender;
-    #Midfielder;
-    #Forward;
-  };
 
-  public type ShirtType = {
-    #Filled;
-    #Striped;
-  };
-
-  public type FixtureStatusType = {
-    #Unplayed;
-    #Active;
-    #Complete;
-    #Finalised;
-  };
-
-  public type PlayerEventType = {
-    #Appearance;
-    #Goal;
-    #GoalAssisted;
-    #GoalConceded;
-    #KeeperSave;
-    #CleanSheet;
-    #PenaltySaved;
-    #PenaltyMissed;
-    #YellowCard;
-    #RedCard;
-    #OwnGoal;
-    #HighestScoringPlayer;
-  };
-
-  public type RewardType = {
-    #SeasonLeaderboard;
-    #MonthlyLeaderboard;
-    #WeeklyLeaderboard;
-    #MostValuableTeam;
-    #HighestScoringPlayer;
-    #WeeklyATHScore;
-    #MonthlyATHScore;
-    #SeasonATHScore;
-  };
-
-  public type RecordType = {
-    #WeeklyHighScore;
-    #MonthlyHighScore;
-    #SeasonHighScore;
-  };
+  //Manager types
 
   public type Manager = {
     principalId : Text;
@@ -112,6 +64,78 @@ module _Types {
     profilePictureType : Text;
     ownedPrivateLeagues: List.List<CanisterId>;
     privateLeagueMemberships: List.List<CanisterId>;
+  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  public type FixtureStatusType = {
+    #Unplayed;
+    #Active;
+    #Complete;
+    #Finalised;
+  };
+
+
+
+
+
+
+  public type PlayerPosition = {
+    #Goalkeeper;
+    #Defender;
+    #Midfielder;
+    #Forward;
+  };
+
+  public type ShirtType = {
+    #Filled;
+    #Striped;
+  };
+
+  public type PlayerEventType = {
+    #Appearance;
+    #Goal;
+    #GoalAssisted;
+    #GoalConceded;
+    #KeeperSave;
+    #CleanSheet;
+    #PenaltySaved;
+    #PenaltyMissed;
+    #YellowCard;
+    #RedCard;
+    #OwnGoal;
+    #HighestScoringPlayer;
+  };
+
+  public type RewardType = {
+    #SeasonLeaderboard;
+    #MonthlyLeaderboard;
+    #WeeklyLeaderboard;
+    #MostValuableTeam;
+    #HighestScoringPlayer;
+    #WeeklyATHScore;
+    #MonthlyATHScore;
+    #SeasonATHScore;
+  };
+
+  public type RecordType = {
+    #WeeklyHighScore;
+    #MonthlyHighScore;
+    #SeasonHighScore;
   };
 
   public type FantasyTeamSeason = {

@@ -1,4 +1,3 @@
-import List "mo:base/List";
 import T "types";
 
 module Countries {
