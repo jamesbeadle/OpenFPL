@@ -1,27 +1,27 @@
-
-import T "types";
-import DTOs "DTOs";
-import Result "mo:base/Result";
-import Iter "mo:base/Iter";
-import Text "mo:base/Text";
 import Array "mo:base/Array";
 import Blob "mo:base/Blob";
 import Buffer "mo:base/Buffer";
-import Principal "mo:base/Principal";
-import SNSToken "sns-wrappers/ledger";
-import Account "./lib/Account";
 import Cycles "mo:base/ExperimentalCycles";
 import Float "mo:base/Float";
-import Nat64 "mo:base/Nat64";
 import Int64 "mo:base/Int64";
 import Int "mo:base/Int";
+import Iter "mo:base/Iter";
+import Nat64 "mo:base/Nat64";
+import Option "mo:base/Option";
+import Principal "mo:base/Principal";
+import Result "mo:base/Result";
+import Text "mo:base/Text";
 import Time "mo:base/Time";
 import TrieMap "mo:base/TrieMap";
-import Option "mo:base/Option";
-import PrivateLeague "canister_definitions/private-league";
-import Management "./modules/Management";
-import Utilities "./utils/utilities";
+
+import Account "./lib/Account";
+import DTOs "DTOs";
 import Environment "./utils/Environment";
+import Management "./modules/Management";
+import PrivateLeague "canister_definitions/private-league";
+import SNSToken "sns-wrappers/ledger";
+import T "types";
+import Utilities "./utils/utilities";
 
 module {
 

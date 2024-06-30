@@ -1,5 +1,4 @@
 import T "types";
-import Nat "mo:base/Nat";
 
 module DTOs {
 

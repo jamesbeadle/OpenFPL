@@ -1,13 +1,13 @@
-import Time "mo:base/Time";
 import Buffer "mo:base/Buffer";
-import Nat "mo:base/Nat";
-import Iter "mo:base/Iter";
-import Principal "mo:base/Principal";
 import Environment "utils/Environment";
-import T "types";
-import Root "sns-wrappers/root";
-import Utilities "utils/utilities";
+import Iter "mo:base/Iter";
 import Management "modules/Management";
+import Nat "mo:base/Nat";
+import Principal "mo:base/Principal";
+import Root "sns-wrappers/root";
+import Time "mo:base/Time";
+import T "types";
+import Utilities "utils/utilities";
 
 module {
 

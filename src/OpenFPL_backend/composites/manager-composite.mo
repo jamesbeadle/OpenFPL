@@ -1,31 +1,30 @@
 import Array "mo:base/Array";
 import Blob "mo:base/Blob";
+import Buffer "mo:base/Buffer";
+import Cycles "mo:base/ExperimentalCycles";
+import DTOs "../DTOs";
+import Int "mo:base/Int";
+import Int16 "mo:base/Int16";
+import Int64 "mo:base/Int64";
 import Iter "mo:base/Iter";
 import List "mo:base/List";
+import Nat "mo:base/Nat";
+import Nat8 "mo:base/Nat8";
 import Nat16 "mo:base/Nat16";
+import Nat64 "mo:base/Nat64";
+import Option "mo:base/Option";
+import Principal "mo:base/Principal";
 import Result "mo:base/Result";
 import Text "mo:base/Text";
-import DTOs "../DTOs";
-import T "../types";
-import Nat8 "mo:base/Nat8";
-import Nat64 "mo:base/Nat64";
-import Cycles "mo:base/ExperimentalCycles";
-import Principal "mo:base/Principal";
-import Buffer "mo:base/Buffer";
-import Option "mo:base/Option";
 import Time "mo:base/Time";
-import Int16 "mo:base/Int16";
+import TrieMap "mo:base/TrieMap";
+
+import Environment "../utils/Environment";
 import Management "../modules/Management";
 import ManagerCanister "../canister_definitions/manager-canister";
 import Rewards "./rewards-composite";
+import T "../types";
 import Utilities "../utils/utilities";
-import TrieMap "mo:base/TrieMap";
-import Debug "mo:base/Debug";
-import Nat "mo:base/Nat";
-import Int64 "mo:base/Int64";
-import Int "mo:base/Int";
-import Char "mo:base/Char";
-import Environment "../utils/Environment";
 
 module {
 

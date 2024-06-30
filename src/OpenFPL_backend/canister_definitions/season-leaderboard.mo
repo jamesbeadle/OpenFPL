@@ -1,14 +1,15 @@
-import T "../types";
-import DTOs "../DTOs";
-import List "mo:base/List";
-import Cycles "mo:base/ExperimentalCycles";
-import Timer "mo:base/Timer";
-import Principal "mo:base/Principal";
 import Array "mo:base/Array";
+import Cycles "mo:base/ExperimentalCycles";
+import List "mo:base/List";
+import Principal "mo:base/Principal";
 import Order "mo:base/Order";
 import Text "mo:base/Text";
-import Utilities "../utils/utilities";
+import Timer "mo:base/Timer";
+
+import DTOs "../DTOs";
 import Environment "../utils/Environment";
+import T "../types";
+import Utilities "../utils/utilities";
 
 actor class _SeasonLeaderboardCanister() {
   

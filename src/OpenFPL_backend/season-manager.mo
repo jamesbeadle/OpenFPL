@@ -1,31 +1,33 @@
-import T "types";
-import DTOs "DTOs";
-import List "mo:base/List";
-import Result "mo:base/Result";
-import Text "mo:base/Text";
-import Nat "mo:base/Nat";
-import Principal "mo:base/Principal";
-import Iter "mo:base/Iter";
-import Buffer "mo:base/Buffer";
-import Timer "mo:base/Timer";
 import Array "mo:base/Array";
-import Order "mo:base/Order";
+import Buffer "mo:base/Buffer";
 import Int "mo:base/Int";
-import Time "mo:base/Time";
-import TrieMap "mo:base/TrieMap";
+import Iter "mo:base/Iter";
+import List "mo:base/List";
+import Nat "mo:base/Nat";
 import Nat64 "mo:base/Nat64";
 import Option "mo:base/Option";
-import SeasonComposite "composites/season-composite";
-import PlayerComposite "composites/player-composite";
-import ClubComposite "composites/club-composite";
-import ManagerComposite "composites/manager-composite";
-import LeaderboardComposite "composites/leaderboard-composite";
-import SHA224 "./lib/SHA224";
-import Utilities "utils/utilities";
-import PrivateLeaguesManager "private-leagues-manager";
-import SNSToken "sns-wrappers/ledger";
-import Environment "utils/Environment";
+import Order "mo:base/Order";
+import Principal "mo:base/Principal";
+import Result "mo:base/Result";
+import Text "mo:base/Text";
+import Time "mo:base/Time";
+import Timer "mo:base/Timer";
+import TrieMap "mo:base/TrieMap";
+
 import Account "lib/Account";
+import DTOs "DTOs";
+import Environment "utils/Environment";
+import SHA224 "./lib/SHA224";
+import SNSToken "sns-wrappers/ledger";
+import T "types";
+import Utilities "utils/utilities";
+
+import ClubComposite "composites/club-composite";
+import LeaderboardComposite "composites/leaderboard-composite";
+import ManagerComposite "composites/manager-composite";
+import PlayerComposite "composites/player-composite";
+import PrivateLeaguesManager "private-leagues-manager";
+import SeasonComposite "composites/season-composite";
 
 module {
 

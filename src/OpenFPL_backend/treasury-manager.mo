@@ -1,22 +1,24 @@
-import Account "./lib/Account";
-import ICPLedger "./def/Ledger";
-import Int "mo:base/Int";
-import Nat64 "mo:base/Nat64";
-import Time "mo:base/Time";
-import Principal "mo:base/Principal";
-import Iter "mo:base/Iter";
-import Buffer "mo:base/Buffer";
-import Result "mo:base/Result";
+
 import Blob "mo:base/Blob";
-import Int64 "mo:base/Int64";
+import Buffer "mo:base/Buffer";
 import Float "mo:base/Float";
+import Int "mo:base/Int";
+import Int64 "mo:base/Int64";
+import Iter "mo:base/Iter";
+import Nat "mo:base/Nat";
 import Nat8 "mo:base/Nat8";
-import Environment "utils/Environment";
+import Nat64 "mo:base/Nat64";
+import Principal "mo:base/Principal";
+import Result "mo:base/Result";
+import Time "mo:base/Time";
+
+import Account "./lib/Account";
 import DTOs "DTOs";
+import Environment "utils/Environment";
+import ICPLedger "./def/Ledger";
+import SNSToken "sns-wrappers/ledger";
 import T "types";
 import Tokens "Tokens";
-import SNSToken "sns-wrappers/ledger";
-import Nat "mo:base/Nat";
 
 module {
 
@@ -26,8 +28,6 @@ module {
       data : Nat;
     };
     
-    let icp_fee : Nat64 = 10_000;
-    let memo_txt_tpup : Nat64 = 0x50555054;
     private let ledger : ICPLedger.Interface = actor (ICPLedger.CANISTER_ID);
     private var tokenList: [T.TokenInfo] = Tokens.tokens;
     private var nextTokenId : Nat16 = 35;

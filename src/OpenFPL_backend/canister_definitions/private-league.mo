@@ -1,22 +1,23 @@
-import T "../types";
-import DTOs "../DTOs";
-import Cycles "mo:base/ExperimentalCycles";
-import Timer "mo:base/Timer";
-import Iter "mo:base/Iter";
-import Principal "mo:base/Principal";
-import Buffer "mo:base/Buffer";
-import Result "mo:base/Result";
 import Array "mo:base/Array";
-import Nat16 "mo:base/Nat16";
-import List "mo:base/List";
-import Time "mo:base/Time";
-import Option "mo:base/Option";
-import Int64 "mo:base/Int64";
+import Buffer "mo:base/Buffer";
+import Cycles "mo:base/ExperimentalCycles";
 import Float "mo:base/Float";
+import Int64 "mo:base/Int64";
+import Iter "mo:base/Iter";
+import List "mo:base/List";
+import Nat16 "mo:base/Nat16";
+import Option "mo:base/Option";
+import Principal "mo:base/Principal";
+import Result "mo:base/Result";
 import Text "mo:base/Text";
-import Utilities "../utils/utilities";
-import Environment "../utils/Environment";
+import Timer "mo:base/Timer";
+import Time "mo:base/Time";
+
 import Constants "../utils/Constants";
+import DTOs "../DTOs";
+import Environment "../utils/Environment";
+import T "../types";
+import Utilities "../utils/utilities";
 
 actor class _PrivateLeague() {
     private let cyclesCheckInterval : Nat = Utilities.getHour() * 24; //TODO: move

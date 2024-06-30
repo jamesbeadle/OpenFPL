@@ -1,12 +1,13 @@
-import T "../types";
-import DTOs "../DTOs";
-import List "mo:base/List";
 import Cycles "mo:base/ExperimentalCycles";
-import Timer "mo:base/Timer";
+import List "mo:base/List";
 import Principal "mo:base/Principal";
 import Text "mo:base/Text";
-import Utilities "../utils/utilities";
+import Timer "mo:base/Timer";
+
+import DTOs "../DTOs";
 import Environment "../utils/Environment";
+import T "../types";
+import Utilities "../utils/utilities";
 
 actor class _WeeklyLeaderboardCanister() {
   private let cyclesCheckInterval : Nat = Utilities.getHour() * 24; //TODO: move

@@ -1,23 +1,25 @@
-import T "../types";
-import DTOs "../DTOs";
-import Result "mo:base/Result";
+import Array "mo:base/Array";
+import Buffer "mo:base/Buffer";
+import Cycles "mo:base/ExperimentalCycles";
 import Iter "mo:base/Iter";
 import List "mo:base/List";
-import Array "mo:base/Array";
-import Principal "mo:base/Principal";
-import Utilities "../utils/utilities";
-import Management "../modules/Management";
-import Environment "../utils/Environment";
-import Cycles "mo:base/ExperimentalCycles";
-import Buffer "mo:base/Buffer";
-import TrieMap "mo:base/TrieMap";
 import Nat "mo:base/Nat";
-import Text "mo:base/Text";
 import Order "mo:base/Order";
+import Principal "mo:base/Principal";
+import Result "mo:base/Result";
+import Text "mo:base/Text";
+import TrieMap "mo:base/TrieMap";
+
+import DTOs "../DTOs";
+import Environment "../utils/Environment";
+import Management "../modules/Management";
+import PrivateLeaguesManager "../private-leagues-manager";
+import T "../types";
+import Utilities "../utils/utilities";
+
 import WeeklyLeaderboardCanister "../canister_definitions/weekly-leaderboard";
 import MonthlyLeaderboardCanister "../canister_definitions/monthly-leaderboard";
 import SeasonLeaderboardCanister "../canister_definitions/season-leaderboard";
-import PrivateLeaguesManager "../private-leagues-manager";
 
 module {
 

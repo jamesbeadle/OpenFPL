@@ -1,15 +1,16 @@
 import Array "mo:base/Array";
 import Blob "mo:base/Blob";
-import Nat8 "mo:base/Nat8";
-import Nat32 "mo:base/Nat32";
-import Principal "mo:base/Principal";
-import Text "mo:base/Text";
-import CRC32 "./CRC32";
-import SHA224 "./SHA224";
 import Buffer "mo:base/Buffer";
 import Iter "mo:base/Iter";
-import Result "mo:base/Result";
+import Nat8 "mo:base/Nat8";
+import Nat32 "mo:base/Nat32";
 import Option "mo:base/Option";
+import Principal "mo:base/Principal";
+import Result "mo:base/Result";
+import Text "mo:base/Text";
+
+import CRC32 "./CRC32";
+import SHA224 "./SHA224";
 import Types "../types";
 
 module {

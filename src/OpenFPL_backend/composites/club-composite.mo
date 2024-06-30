@@ -1,9 +1,10 @@
-import T "../types";
-import DTOs "../DTOs";
-import List "mo:base/List";
 import Array "mo:base/Array";
+import List "mo:base/List";
 import Order "mo:base/Order";
 import Text "mo:base/Text";
+
+import DTOs "../DTOs";
+import T "../types";
 import Utilities "../utils/utilities";
 
 module {

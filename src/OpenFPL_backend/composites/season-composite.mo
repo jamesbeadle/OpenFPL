@@ -1,19 +1,20 @@
-import T "../types";
-import DTOs "../DTOs";
-import List "mo:base/List";
-import Buffer "mo:base/Buffer";
-import Iter "mo:base/Iter";
-import Time "mo:base/Time";
 import Array "mo:base/Array";
+import Bool "mo:base/Bool";
+import Buffer "mo:base/Buffer";
+import Char "mo:base/Char";
+import Int16 "mo:base/Int16";
+import Iter "mo:base/Iter";
+import List "mo:base/List";
 import Nat8 "mo:base/Nat8";
 import Nat16 "mo:base/Nat16";
-import Int16 "mo:base/Int16";
+import Time "mo:base/Time";
 import Text "mo:base/Text";
-import Char "mo:base/Char";
 import TrieMap "mo:base/TrieMap";
-import Bool "mo:base/Bool";
 import Order "mo:base/Order";
+
+import DTOs "../DTOs";
 import Utilities "../utils/utilities";
+import T "../types";
 
 module {
 

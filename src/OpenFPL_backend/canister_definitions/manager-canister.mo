@@ -1,20 +1,21 @@
-import T "../types";
-import DTOs "../DTOs";
-import List "mo:base/List";
-import Cycles "mo:base/ExperimentalCycles";
-import Timer "mo:base/Timer";
-import Principal "mo:base/Principal";
-import Iter "mo:base/Iter";
 import Array "mo:base/Array";
-import Order "mo:base/Order";
-import Text "mo:base/Text";
-import TrieMap "mo:base/TrieMap";
 import Buffer "mo:base/Buffer";
+import Cycles "mo:base/ExperimentalCycles";
+import Iter "mo:base/Iter";
+import List "mo:base/List";
 import Nat8 "mo:base/Nat8";
 import Option "mo:base/Option";
+import Order "mo:base/Order";
+import Principal "mo:base/Principal";
 import Result "mo:base/Result";
-import Utilities "../utils/utilities";
+import Text "mo:base/Text";
+import Timer "mo:base/Timer";
+import TrieMap "mo:base/TrieMap";
+
+import DTOs "../DTOs";
 import Environment "../utils/Environment";
+import T "../types";
+import Utilities "../utils/utilities";
 
 actor class _ManagerCanister() {
 

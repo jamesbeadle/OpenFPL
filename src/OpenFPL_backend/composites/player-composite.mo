@@ -1,18 +1,18 @@
-import T "../types";
-import DTOs "../DTOs";
-import List "mo:base/List";
+import Array "mo:base/Array";
 import Buffer "mo:base/Buffer";
 import Iter "mo:base/Iter";
-import Time "mo:base/Time";
+import List "mo:base/List";
 import Text "mo:base/Text";
-import Array "mo:base/Array";
+import Time "mo:base/Time";
 import Int "mo:base/Int";
 import Timer "mo:base/Timer";
 import Nat16 "mo:base/Nat16";
-import Countries "../Countries";
-import Utilities "../utils/utilities";
-import Players "../../../testing/players";
 import TrieMap "mo:base/TrieMap";
+
+import Countries "../Countries";
+import DTOs "../DTOs";
+import T "../types";
+import Utilities "../utils/utilities";
 
 module {
   public class PlayerComposite() {
