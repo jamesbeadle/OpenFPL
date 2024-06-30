@@ -202,7 +202,7 @@ input {
 }
 
 .countdown-text {
-  @apply text-gray-300 text-xs ml-1;
+  @apply text-gray-300 text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-2xl ml-1;
 }
 
 .bigger-text {

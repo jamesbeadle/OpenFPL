@@ -235,7 +235,7 @@
   <div class="flex flex-col md:flex-row bonus-panel-inner">
     <h1 class="m-3 md:m-4">Bonuses</h1>
   </div>
-  <div class="flex flex-col xl:flex-row m-2">
+  <div class="flex flex-col xl:flex-row">
     <div class="hidden md:flex items-center w-full xl:w-1/2">
       {#each leftPanelBonuses as bonus}
         <div

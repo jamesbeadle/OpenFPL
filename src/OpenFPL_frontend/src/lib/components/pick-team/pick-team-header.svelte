@@ -91,7 +91,9 @@
     <LocalSpinner />
   {:else}
     <div class="content-panel lg:w-1/2">
-      <div class="flex-grow mb-4 xl:mb-0">
+
+
+      <div class="flex-grow my-2 xl:mb-0">
         <p class="content-panel-header">Gameweek</p>
         <p class="content-panel-stat">
           {activeGameweek}
@@ -101,10 +103,12 @@
         </p>
       </div>
 
+
       <div class="vertical-divider" />
 
-      <div class="flex-grow mb-4 xl:mb-0">
-        <p class="content-panel-header mt-4 xl:mt-0">Kick Off:</p>
+
+      <div class="flex-grow my-2 xl:mb-0">
+        <p class="content-panel-header">Kick Off:</p>
         <div class="flex">
           <p class="content-panel-stat">
             {countdownDays}<span class="countdown-text">d</span>
@@ -117,19 +121,24 @@
         </p>
       </div>
 
+
       <div class="vertical-divider" />
 
-      <div class="flex-grow mb-0 mt-4 xl:mt-0">
+
+      <div class="flex-grow my-4 xl:mb-0">
         <p class="content-panel-header">Players</p>
         <p class="content-panel-stat">
           {$fantasyTeam?.playerIds.filter((x) => x > 0).length}/11
         </p>
         <p class="content-panel-header">Selected</p>
       </div>
+
+
+
     </div>
 
     <div class="content-panel lg:w-1/2">
-      <div class="flex-grow mb-4 xl:mb-0">
+      <div class="flex-grow my-4 xl:mb-0">
         <p class="content-panel-header">Team Value</p>
         <p class="content-panel-stat">
           £{$teamValue.toFixed(2)}m
@@ -139,7 +148,7 @@
 
       <div class="vertical-divider" />
 
-      <div class="flex-grow mb-4 xl:mb-0 mt-4 xl:mt-0">
+      <div class="flex-grow my-4 xl:mb-0">
         <p class="content-panel-header">Bank Balance</p>
         <p class="content-panel-stat">
           £{($bankBalance / 4).toFixed(2)}m
@@ -149,7 +158,7 @@
 
       <div class="vertical-divider" />
 
-      <div class="flex-grow mb-4 xl:mb-0 mt-4 xl:mt-0">
+      <div class="flex-grow my-4 xl:mb-0">
         <p class="content-panel-header">Transfers</p>
         <p class="content-panel-stat">
           {$transfersAvailable === Infinity ? "Unlimited" : $transfersAvailable}

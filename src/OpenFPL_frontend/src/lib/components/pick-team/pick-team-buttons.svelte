@@ -469,7 +469,7 @@
         </div>
       </div>
       <div class="w-full xs:w-1/2">
-        <div class="flex flex-row items-center py-2">
+        <div class="flex flex-row items-center mx-4 mt-3">
           <p class="mr-2">Formation:</p>
           <select
             class="px-4 xs:mb-1 border-sm fpl-dropdown text-center text-center w-full"
