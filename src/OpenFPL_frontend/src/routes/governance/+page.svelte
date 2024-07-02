@@ -1,15 +1,16 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import Layout from "../Layout.svelte";
-  import { GovernanceCanister } from "@dfinity/nns";
   import { authStore } from "$lib/stores/auth.store";
   import { ActorFactory } from "../../utils/ActorFactory";
-  import type { ListProposalsRequest, ProposalInfo } from "@dfinity/nns";
+  import { SnsGovernanceCanister } from "@dfinity/sns";
+  import { Principal } from "@dfinity/principal";
+    import type { ListProposalsResponse } from "@dfinity/sns/dist/candid/sns_governance";
+  
+  let activeTab: string = "player_proposals";
 
-  let activeTab: string = "proposals";
-
-  let activeProposals: ProposalInfo[] = [];
   let selectedProposalStatus = 1;
+  let proposals: ListProposalsResponse;
 
   const proposalStatuses = [
     { id: 1, description: "Open" },
@@ -28,88 +29,65 @@
   });
 
   async function listProposals() {
-    if (!process.env.CANISTER_ID_SNS_GOVERNANCE) {
-      return;
-    }
-    const identityActor: any = await ActorFactory.createIdentityActor(
-      authStore,
-      process.env.CANISTER_ID_SNS_GOVERNANCE ?? ""
-    );
+      const agent: any = await ActorFactory.getGovernanceAgent();
+      if(process.env.DFX_NETWORK !== "ic"){
+        await agent.fetchRootKey()
+      }
+      
 
-    const { listProposals } = GovernanceCanister.create(identityActor);
-    let request: ListProposalsRequest = {
-      limit: 100,
-      includeRewardStatus: [1],
-      excludeTopic: [0],
-      includeAllManageNeuronProposals: true,
-      includeStatus: [selectedProposalStatus],
-      beforeProposal: 0n,
-    };
-    let proposalResponse = await listProposals({ request, certified: false });
-    activeProposals = proposalResponse.proposals;
+      const principcal: Principal = Principal.fromText(process.env.CANISTER_ID_SNS_GOVERNANCE ?? "");
+      const { listProposals: governanceListProposals } = SnsGovernanceCanister.create({
+        agent,
+        canisterId: principcal,
+      });
+      proposals = await governanceListProposals({ certified: false });
   }
 </script>
 
 <Layout>
   <div class="m-4">
     <div class="bg-panel rounded-md">
-      <ul
-        class="flex rounded-t-lg bg-light-gray border-b border-gray-700 px-4 pt-2"
-      >
-        <li class={`mr-4 ${activeTab === "proposals" ? "active-tab" : ""}`}>
+      <ul class="flex rounded-t-lg bg-light-gray border-b border-gray-700 px-4 pt-2">
+        <li class={`mr-4 ${activeTab === "player_proposals" ? "active-tab" : ""}`}>
           <button
-            class={`p-2 ${
-              activeTab === "proposals" ? "text-white" : "text-gray-400"
-            }`}
-            on:click={() => setActiveTab("details")}>Proposals</button
-          >
+            class={`p-2 ${activeTab === "player_proposals" ? "text-white" : "text-gray-400"}`}
+            on:click={() => setActiveTab("player_proposals")}>Player Proposals</button>
+        </li>
+        <li class={`mr-4 ${activeTab === "club_proposals" ? "active-tab" : ""}`}>
+          <button
+            class={`p-2 ${activeTab === "club_proposals" ? "text-white" : "text-gray-400"}`}
+            on:click={() => setActiveTab("club_proposals")}>Club Proposals</button>
+        </li>
+        <li class={`mr-4 ${activeTab === "system_proposals" ? "active-tab" : ""}`}>
+          <button
+            class={`p-2 ${activeTab === "system_proposals" ? "text-white" : "text-gray-400"}`}
+            on:click={() => setActiveTab("system_proposals")}>System Proposals</button>
         </li>
       </ul>
 
-      {#if activeTab === "proposals"}
+      {#if activeTab === "player_proposals"}
         <div class="flex justify-between items-center mx-4 mt-4">
-          <select
-            class="fpl-dropdown min-w-[100px]"
-            bind:value={selectedProposalStatus}
-          >
+          <select class="fpl-dropdown min-w-[100px]" bind:value={selectedProposalStatus}>
             {#each proposalStatuses as proposalType}
-              <option value={proposalType.id}>{proposalType.description}</option
-              >
+              <option value={proposalType.id}>{proposalType.description}</option>
             {/each}
           </select>
           <a href="/add-proposal">
-            <button class="p-2 fpl-button text-white rounded-md"
-              >Raise Proposal</button
-            >
+            <button class="p-2 fpl-button text-white rounded-md">Raise Proposal</button>
           </a>
         </div>
 
-        <div class="flex flex-col space-y-4 mt-4">
-          <div class="overflow-x-auto flex-1">
-            <div
-              class="flex justify-between p-2 border border-gray-700 py-4 bg-light-gray"
-            >
-              <div class="w-2/12">Id</div>
-              <div class="w-2/12">Proposal Type</div>
-              <div class="w-4/12">Details</div>
-              <div class="w-4/12">Voting</div>
-            </div>
-
-            {#each activeProposals as proposal}
-              <div
-                class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer"
-              >
-                <div class="w-2/12">{proposal.id}</div>
-                <div class="w-2/12">{proposal.topic}</div>
-                <div class="w-4/12">{proposal.proposal?.title}</div>
-                <div class="w-4/12">{proposal.latestTally?.yes}</div>
-                <div class="w-4/12">{proposal.latestTally?.no}</div>
-                <div class="w-4/12">
-                  <button>Vote</button>
-                </div>
+        <div class="grid grid-cols-1 gap-4 mt-4 sm:grid-cols-2 lg:grid-cols-3">
+          {#if proposals}
+            {#each proposals.proposals as proposal}
+              <div class="border border-gray-700 rounded-lg p-4 bg-light-gray flex flex-col space-y-2 min-h-[200px]">
+                <div class="font-bold truncate">Id: {proposal.id[0]?.id}</div>
+                <div class="truncate">Type: {proposal.proposal[0]?.title}</div>
+                <div class="truncate">Title: {proposal.proposal[0]?.summary}</div>
+                <button class="p-2 fpl-button text-white rounded-md">Vote</button>
               </div>
             {/each}
-          </div>
+          {/if}
         </div>
       {/if}
     </div>

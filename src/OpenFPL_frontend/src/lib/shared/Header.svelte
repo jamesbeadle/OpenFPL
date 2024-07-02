@@ -155,7 +155,6 @@
               <span class="flex items-center h-full px-4">Squad Selection</span>
             </a>
           </li>
-          <!--
           <li class="mx-2 flex items-center h-16">
             <a
               href="/governance"
@@ -166,7 +165,6 @@
               <span class="flex items-center h-full px-4">Governance</span>
             </a>
           </li>
-          -->
           <li class="flex flex-1 items-center">
             <div class="relative inline-block">
               <button

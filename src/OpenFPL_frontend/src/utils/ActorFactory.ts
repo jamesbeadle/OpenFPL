@@ -88,17 +88,29 @@ export class ActorFactory {
     });
   }
 
-  static createGovernanceAgent(authStore: AuthStore, canisterId: string) {
-    let unsubscribe: Unsubscriber;
-    return new Promise<OptionIdentity>((resolve, reject) => {
-      unsubscribe = authStore.subscribe((store) => {
-        if (store.identity) {
-          resolve(store.identity);
-        }
-      });
-    }).then((identity) => {
-      unsubscribe();
-      return ActorFactory.createActor(canister, canisterId, identity);
-    });
+  static getGovernanceAgent(
+    identity: OptionIdentity = null,
+    options: any = null,
+  ): HttpAgent {
+    let canisterId = process.env.CANISTER_ID_SNS_GOVERNANCE;
+    const hostOptions = {
+      host:
+        process.env.DFX_NETWORK === "ic"
+          ? `https://${canisterId}.icp-api.io`
+          : `http://localhost:8080/?canisterId=${canisterId}`,
+      identity: identity,
+    };
+
+    if (!options) {
+      options = {
+        agentOptions: hostOptions,
+      };
+    } else if (!options.agentOptions) {
+      options.agentOptions = hostOptions;
+    } else {
+      options.agentOptions.host = hostOptions.host;
+    }
+
+    return new HttpAgent({ ...options.agentOptions });
   }
 }

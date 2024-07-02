@@ -160,6 +160,14 @@ export default defineConfig((): UserConfig => {
       "process.env": {
         ...readCanisterIds({}),
         DFX_NETWORK: network,
+        CANISTER_ID_SNS_GOVERNANCE:
+          network === "ic"
+            ? "detjl-sqaaa-aaaaq-aacqa-cai"
+            : "by6od-j4aaa-aaaaa-qaadq-cai",
+        CANISTER_ID_SNS_ROOT:
+          network === "ic"
+            ? "gyito-zyaaa-aaaaq-aacpq-cai"
+            : "b77ix-eeaaa-aaaaa-qaada-cai",
       },
       VITE_APP_VERSION: JSON.stringify(version),
       VITE_DFX_NETWORK: JSON.stringify(network),
