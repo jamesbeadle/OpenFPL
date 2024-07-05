@@ -1018,9 +1018,6 @@
       seasonManager.setInitialPlayers();
       */
 
-      //Fix incorrect southampton team
-      seasonManager.fixSouthampton();
-
       await seasonManager.updateCacheHash("clubs");
       await seasonManager.updateCacheHash("fixtures");
       await seasonManager.updateCacheHash("weekly_leaderboard");

@@ -5,12 +5,17 @@
   import { ActorFactory } from "../../utils/ActorFactory";
   import { SnsGovernanceCanister } from "@dfinity/sns";
   import { Principal } from "@dfinity/principal";
-    import type { ListProposalsResponse } from "@dfinity/sns/dist/candid/sns_governance";
-  
-  let activeTab: string = "player_proposals";
+  import type { ListProposalsResponse, ProposalData, Action } from "@dfinity/sns/dist/candid/sns_governance";
 
+  let activeTab: string = "player_proposals";
   let selectedProposalStatus = 1;
   let proposals: ListProposalsResponse;
+  let playerProposals: ProposalData[] = [];
+  let clubProposals: ProposalData[] = [];
+  let systemProposals: ProposalData[] = [];
+
+  const PLAYER_FUNCTION_IDS: bigint[] = [1000n, 2000n, 8000n, 9000n, 10000n, 12000n, 13000n, 14000n, 15000n, 22000n];
+  const CLUB_FUNCTION_IDS: bigint[] = [16000n, 17000n, 18000n, 23000n];
 
   const proposalStatuses = [
     { id: 1, description: "Open" },
@@ -29,17 +34,49 @@
   });
 
   async function listProposals() {
-      const agent: any = await ActorFactory.getGovernanceAgent();
-      if(process.env.DFX_NETWORK !== "ic"){
-        await agent.fetchRootKey()
+    const agent: any = await ActorFactory.getGovernanceAgent();
+    if (process.env.DFX_NETWORK !== "ic") {
+      await agent.fetchRootKey();
+    }
+
+    const principal: Principal = Principal.fromText(process.env.CANISTER_ID_SNS_GOVERNANCE ?? "");
+    const { listProposals: governanceListProposals } = SnsGovernanceCanister.create({
+      agent,
+      canisterId: principal,
+    });
+    proposals = await governanceListProposals({ certified: false });
+    categoriseProposals(proposals.proposals);
+  }
+
+  function categoriseProposals(proposalsArray: ProposalData[]) {
+    playerProposals = [];
+    clubProposals = [];
+    systemProposals = [];
+
+    for (const proposal of proposalsArray) {
+      const action = proposal.proposal[0]?.action[0];
+      let functionId: bigint | undefined;
+
+      if (action) {
+        if ("ExecuteGenericNervousSystemFunction" in action) {
+          functionId = action.ExecuteGenericNervousSystemFunction.function_id;
+        } else {
+          functionId = 0n; // Placeholder, adjust according to your data
+        }
       }
-      
-      const principcal: Principal = Principal.fromText(process.env.CANISTER_ID_SNS_GOVERNANCE ?? "");
-      const { listProposals: governanceListProposals } = SnsGovernanceCanister.create({
-        agent,
-        canisterId: principcal,
-      });
-      proposals = await governanceListProposals({ certified: false });
+
+      if (functionId !== undefined) {
+        if (PLAYER_FUNCTION_IDS.includes(functionId)) {
+          playerProposals.push(proposal);
+        } else if (CLUB_FUNCTION_IDS.includes(functionId)) {
+          clubProposals.push(proposal);
+        } else {
+          systemProposals.push(proposal);
+        }
+      } else {
+        systemProposals.push(proposal);
+      }
+    }
   }
 </script>
 
@@ -77,13 +114,43 @@
         </div>
 
         <div class="grid grid-cols-1 gap-4 mt-4 sm:grid-cols-2 lg:grid-cols-3 mx-4 mb-4">
-          {#if proposals}
-            {#each proposals.proposals as proposal}
+          {#if playerProposals.length > 0}
+            {#each playerProposals as proposal}
               <div class="border border-gray-700 rounded-lg p-4 bg-light-gray flex flex-col">
                 <div class="font-bold truncate">Id: {proposal.id[0]?.id}</div>
                 <div class="truncate my-2">{proposal.proposal[0]?.title}</div>
-                <div class="truncate">Title: {proposal.proposal[0]?.summary}</div>
-                <button class="p-2 fpl-button text-white rounded-md mt-4">View / Vote //TODO</button>
+                <div class="truncate">Summary: {proposal.proposal[0]?.summary}</div>
+                <button class="p-2 fpl-button text-white rounded-md mt-4">View / Vote</button>
+              </div>
+            {/each}
+          {/if}
+        </div>
+      {/if}
+
+      {#if activeTab === "club_proposals"}
+        <div class="grid grid-cols-1 gap-4 mt-4 sm:grid-cols-2 lg:grid-cols-3 mx-4 mb-4">
+          {#if clubProposals.length > 0}
+            {#each clubProposals as proposal}
+              <div class="border border-gray-700 rounded-lg p-4 bg-light-gray flex flex-col">
+                <div class="font-bold truncate">Id: {proposal.id[0]?.id}</div>
+                <div class="truncate my-2">{proposal.proposal[0]?.title}</div>
+                <div class="truncate">Summary: {proposal.proposal[0]?.summary}</div>
+                <button class="p-2 fpl-button text-white rounded-md mt-4">View / Vote</button>
+              </div>
+            {/each}
+          {/if}
+        </div>
+      {/if}
+
+      {#if activeTab === "system_proposals"}
+        <div class="grid grid-cols-1 gap-4 mt-4 sm:grid-cols-2 lg:grid-cols-3 mx-4 mb-4">
+          {#if systemProposals.length > 0}
+            {#each systemProposals as proposal}
+              <div class="border border-gray-700 rounded-lg p-4 bg-light-gray flex flex-col">
+                <div class="font-bold truncate">Id: {proposal.id[0]?.id}</div>
+                <div class="truncate my-2">{proposal.proposal[0]?.title}</div>
+                <div class="truncate">Summary: {proposal.proposal[0]?.summary}</div>
+                <button class="p-2 fpl-button text-white rounded-md mt-4">View / Vote</button>
               </div>
             {/each}
           {/if}

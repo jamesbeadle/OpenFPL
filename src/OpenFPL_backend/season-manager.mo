@@ -1305,9 +1305,5 @@ module {
       return managerComposite.getStableUniqueManagerCanisterIds();
     };
 
-    public func fixSouthampton(){
-      clubComposite.fixSouthampton();
-    };
-
   };
 };

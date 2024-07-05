@@ -437,28 +437,5 @@ module {
          }
          ]);
     };
-
-    public func fixSouthampton(){
-      let clubsBuffer = Buffer.fromArray<T.Club>([]);
-      for(club in Iter.fromList(clubs)){
-        if(club.name == "Southampton"){
-          clubsBuffer.add({
-            id = 23;
-            name = club.name;
-            friendlyName = club.friendlyName;
-            primaryColourHex = club.primaryColourHex;
-            secondaryColourHex = club.secondaryColourHex;
-            thirdColourHex = club.thirdColourHex;
-            abbreviatedName = club.abbreviatedName;
-            shirtType = club.shirtType;
-          })
-        }
-        else{
-          clubsBuffer.add(club);
-        }
-      };
-
-      clubs := List.fromArray(Buffer.toArray(clubsBuffer));
-    };
   };
 };

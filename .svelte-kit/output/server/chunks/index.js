@@ -3513,7 +3513,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "lp5bx"
+  version_hash: "7y2mrc"
 };
 async function get_hooks() {
   return {};
@@ -9598,6 +9598,7 @@ const Page$a = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   })}`;
 });
 const Page$9 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let playerProposals = [];
   const proposalStatuses = [
     { id: 1, description: "Open" },
     { id: 2, description: "Rejected" },
@@ -9621,7 +9622,9 @@ const Page$9 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
         0
       )}>System Proposals</button></li></ul> ${`<div class="flex justify-between items-center mx-4 mt-4"><select class="fpl-dropdown min-w-[100px]">${each(proposalStatuses, (proposalType) => {
         return `<option${add_attribute("value", proposalType.id, 0)}>${escape(proposalType.description)}</option>`;
-      })}</select> <a href="/add-proposal" data-svelte-h="svelte-1k28lx1"><button class="p-2 fpl-button text-white rounded-md">Raise Proposal</button></a></div> <div class="grid grid-cols-1 gap-4 mt-4 sm:grid-cols-2 lg:grid-cols-3 mx-4 mb-4">${``}</div>`}</div></div>`;
+      })}</select> <a href="/add-proposal" data-svelte-h="svelte-1k28lx1"><button class="p-2 fpl-button text-white rounded-md">Raise Proposal</button></a></div> <div class="grid grid-cols-1 gap-4 mt-4 sm:grid-cols-2 lg:grid-cols-3 mx-4 mb-4">${playerProposals.length > 0 ? `${each(playerProposals, (proposal) => {
+        return `<div class="border border-gray-700 rounded-lg p-4 bg-light-gray flex flex-col"><div class="font-bold truncate">Id: ${escape(proposal.id[0]?.id)}</div> <div class="truncate my-2">${escape(proposal.proposal[0]?.title)}</div> <div class="truncate">Summary: ${escape(proposal.proposal[0]?.summary)}</div> <button class="p-2 fpl-button text-white rounded-md mt-4" data-svelte-h="svelte-3c431">View / Vote</button> </div>`;
+      })}` : ``}</div>`} ${``} ${``}</div></div>`;
     }
   })}`;
 });
