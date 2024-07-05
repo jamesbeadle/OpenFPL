@@ -34,7 +34,6 @@
         await agent.fetchRootKey()
       }
       
-
       const principcal: Principal = Principal.fromText(process.env.CANISTER_ID_SNS_GOVERNANCE ?? "");
       const { listProposals: governanceListProposals } = SnsGovernanceCanister.create({
         agent,
@@ -77,14 +76,14 @@
           </a>
         </div>
 
-        <div class="grid grid-cols-1 gap-4 mt-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="grid grid-cols-1 gap-4 mt-4 sm:grid-cols-2 lg:grid-cols-3 mx-4 mb-4">
           {#if proposals}
             {#each proposals.proposals as proposal}
-              <div class="border border-gray-700 rounded-lg p-4 bg-light-gray flex flex-col space-y-2 min-h-[200px]">
+              <div class="border border-gray-700 rounded-lg p-4 bg-light-gray flex flex-col">
                 <div class="font-bold truncate">Id: {proposal.id[0]?.id}</div>
-                <div class="truncate">Type: {proposal.proposal[0]?.title}</div>
+                <div class="truncate my-2">{proposal.proposal[0]?.title}</div>
                 <div class="truncate">Title: {proposal.proposal[0]?.summary}</div>
-                <button class="p-2 fpl-button text-white rounded-md">Vote</button>
+                <button class="p-2 fpl-button text-white rounded-md mt-4">View / Vote //TODO</button>
               </div>
             {/each}
           {/if}

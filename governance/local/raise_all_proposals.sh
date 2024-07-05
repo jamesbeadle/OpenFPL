@@ -1,5 +1,5 @@
 
-export PROPOSER_NEURON_ID=df1ddf0aa69007d63411f7dd84e21d622dec1a8cc509067def76a9de7c7b9f7d
+export PROPOSER_NEURON_ID=07cc5979857a5c037e2b980817bbd4dafea28675c0b57cf6f19c07795662e954
 export NETWORK=local
 export IDENTITY=default
 export IC_URL=http://localhost:8080
@@ -12,12 +12,14 @@ OWNER_IDENTITY=$(dfx identity whoami)
 export PEM_FILE="$(readlink -f "$HOME/.config/dfx/identity/${OWNER_IDENTITY}/identity.pem")"
 
 
-#./governance/local/52.AddFrontendPermission.sh
-./governance/local/UpgradeBackend.sh
+#./governance/local/UpgradeBackend.sh
+./governance/local/99.TestPlayerProposal.sh
 
 
 # ./governance/local/23.update_token_image.sh
-# ./governance/local/1-21.register_generic_functions.sh
+#./governance/local/removefns.sh
+#./governance/local/1-21.register_generic_functions.sh
+
 # ./governance/local/31.RegisterNewToken.sh
 
 #dfx identity use default

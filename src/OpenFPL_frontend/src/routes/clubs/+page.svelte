@@ -8,6 +8,7 @@
   onMount(async () => {
     try {
       await teamStore.sync();
+      
     } catch (error) {
       toastsError({
         msg: { text: "Error fetching league table." },

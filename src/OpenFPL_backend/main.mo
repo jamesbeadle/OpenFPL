@@ -1013,13 +1013,14 @@
     };
 
     private func postUpgradeCallback() : async (){
-      
-      await systemCheckCallback();
-      await cyclesCheckCallback();
-
       /*
-      //seasonManager.setInitialClubs();
-      //await seasonManager.updateCacheHash("clubs");
+      seasonManager.setInitialClubs();
+      seasonManager.setInitialPlayers();
+      */
+
+      //Fix incorrect southampton team
+      seasonManager.fixSouthampton();
+
       await seasonManager.updateCacheHash("clubs");
       await seasonManager.updateCacheHash("fixtures");
       await seasonManager.updateCacheHash("weekly_leaderboard");
@@ -1031,7 +1032,6 @@
       await seasonManager.updateCacheHash("system_state");
       await systemCheckCallback();
       await cyclesCheckCallback();
-      */
     };
     
     //Canister cycle topup functions

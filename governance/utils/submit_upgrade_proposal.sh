@@ -1,4 +1,5 @@
 #!/bin/bash
+echo "here2"
 
 # Set current directory to the directory this script is in
 SCRIPT=$(readlink -f "$0")
@@ -12,8 +13,14 @@ TITLE=$3
 URL=$4
 SUMMARY=$5
 
+NETWORK="ic"
+
 # Get the target canister id
 TARGET_CANISTER_ID=$(dfx -qq canister --network $NETWORK id $CANISTER_NAME)
+
+WASM_FOLDER="../wasms"
+echo "here3"
+echo $WASM_FOLDER
 
 # Build the WASM path
 WASM_FILE=$CANISTER_NAME.wasm.gz

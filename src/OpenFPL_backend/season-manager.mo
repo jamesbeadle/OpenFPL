@@ -1297,8 +1297,16 @@ module {
       clubComposite.setInitialClubs();
     };
 
+    public func setInitialPlayers(){
+      playerComposite.setInitialPlayers();
+    };
+
     public func getManagerCanisterIds() : [T.CanisterId] {
       return managerComposite.getStableUniqueManagerCanisterIds();
+    };
+
+    public func fixSouthampton(){
+      clubComposite.fixSouthampton();
     };
 
   };

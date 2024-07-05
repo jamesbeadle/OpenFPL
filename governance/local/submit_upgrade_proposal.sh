@@ -26,7 +26,7 @@ MINOR=${VERSION_PARTS[1]}
 BUILD=${VERSION_PARTS[2]}
 
 
-export PROPOSER_NEURON_ID=df1ddf0aa69007d63411f7dd84e21d622dec1a8cc509067def76a9de7c7b9f7d
+export PROPOSER_NEURON_ID=07cc5979857a5c037e2b980817bbd4dafea28675c0b57cf6f19c07795662e954
 export NETWORK=local
 export IDENTITY=default
 export IC_URL=http://localhost:8080
@@ -39,7 +39,11 @@ export PEM_FILE="$(readlink -f "$HOME/.config/dfx/identity/${OWNER_IDENTITY}/ide
 # Build the canister-upgrade-arg
 UPGRADE_ARG="(record { wasm_version = record { major=$MAJOR:nat32; minor=$MINOR:nat32; patch=$BUILD:nat32 } })"
 echo $WASM_PATH
+
+
+
 # Make the proposal using quill
 quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-upgrade-canister-proposal --canister-upgrade-arg "$UPGRADE_ARG" --title "$TITLE" --url "$URL" --summary "$SUMMARY" --target-canister-id $TARGET_CANISTER_ID --wasm-path $WASM_PATH $PROPOSER_NEURON_ID > msg.json
 quill send --insecure-local-dev-mode msg.json
 rm -f msg.json
+echo $PROPOSER_NEURON_ID

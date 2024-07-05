@@ -7,60 +7,6 @@ cd $SCRIPT_DIR
 
 #Register generic proposal functions
 
-echo "Register Generic Proposal Function 1 with SNS"
-
-PROPOSAL="(
-    record {
-        title = \"Create CreateDAONeuron Callback Function\";          
-        url = \"https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo\";        
-        summary = \"Proposal to create the endpoint for adding the callback function for creating the DAO controlled neuron.\";
-        action = opt variant {
-            AddGenericNervousSystemFunction = record {
-                id = 19000 : nat64;
-                name = \"Add CreateDAONeuron Callback Function.\";
-                description = opt \"Proposal to create the endpoint for adding the callback function for creating the DAO controlled neuron.\";
-                function_type = opt variant { 
-                    GenericNervousSystemFunction = record { 
-                        validator_canister_id = opt principal \"bw4dl-smaaa-aaaaa-qaacq-cai\"; 
-                        target_canister_id = opt principal \"bw4dl-smaaa-aaaaa-qaacq-cai\"; 
-                        validator_method_name = opt \"validateCreateDAONeuron\";                         
-                        target_method_name = opt \"executeCreateDAONeuron\";
-                    } 
-                };
-            }
-        };
-    }
-)"
-
-./submit_proposal.sh "$PROPOSAL"
-
-echo "Register Generic Proposal Function 2 with SNS"
-
-PROPOSAL="(
-    record {
-        title = \"Create ExecuteManageNeuron Callback Function.\";          
-        url = \"https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo\";        
-        summary = \"Proposal to create the endpoint for adding the callback function for managing the DAO controlled neuron.\";
-        action = opt variant {
-            AddGenericNervousSystemFunction = record {
-                id = 20000 : nat64;
-                name = \"Add ManageDAONeuron Callback Function.\";
-                description = opt \"Proposal to create the endpoint for adding the callback function for managing the DAO controlled neuron.\";
-                function_type = opt variant { 
-                    GenericNervousSystemFunction = record { 
-                        validator_canister_id = opt principal \"bw4dl-smaaa-aaaaa-qaacq-cai\"; 
-                        target_canister_id = opt principal \"bw4dl-smaaa-aaaaa-qaacq-cai\"; 
-                        validator_method_name = opt \"validateManageDAONeuron\";                         
-                        target_method_name = opt \"executeManageDAONeuron\";
-                    } 
-                };
-            }
-        };
-    }
-)"
-
-./submit_proposal.sh "$PROPOSAL"
-
 echo "Register Generic Proposal Function 3 with SNS"
 
 PROPOSAL="(
@@ -75,8 +21,8 @@ PROPOSAL="(
                 description = opt \"Proposal to create the endpoint for adding the callback function for increasing a Premier League player's value.\";
                 function_type = opt variant { 
                     GenericNervousSystemFunction = record { 
-                        validator_canister_id = opt principal \"bw4dl-smaaa-aaaaa-qaacq-cai\"; 
-                        target_canister_id = opt principal \"bw4dl-smaaa-aaaaa-qaacq-cai\"; 
+                        validator_canister_id = opt principal \"bd3sg-teaaa-aaaaa-qaaba-cai\"; 
+                        target_canister_id = opt principal \"bd3sg-teaaa-aaaaa-qaaba-cai\"; 
                         validator_method_name = opt \"validateRevaluePlayerUp\";                         
                         target_method_name = opt \"executeRevaluePlayerUp\";
                     } 
@@ -90,8 +36,6 @@ PROPOSAL="(
 
 echo "Register Generic Proposal Function 4 with SNS"
 
-//Revalue Players Down
-
 PROPOSAL="(
     record {
         title = \"Create RevaluePlayerDown Callback Function\";          
@@ -104,8 +48,8 @@ PROPOSAL="(
                 description = opt \"Proposal to create the endpoint for adding the callback function for decreasing a Premier League player's value.\";
                 function_type = opt variant { 
                     GenericNervousSystemFunction = record { 
-                        validator_canister_id = opt principal \"bw4dl-smaaa-aaaaa-qaacq-cai\"; 
-                        target_canister_id = opt principal \"bw4dl-smaaa-aaaaa-qaacq-cai\"; 
+                        validator_canister_id = opt principal \"bd3sg-teaaa-aaaaa-qaaba-cai\"; 
+                        target_canister_id = opt principal \"bd3sg-teaaa-aaaaa-qaaba-cai\"; 
                         validator_method_name = opt \"validateRevaluePlayerDown\";                         
                         target_method_name = opt \"executeRevaluePlayerDown\";
                     } 
@@ -119,8 +63,6 @@ PROPOSAL="(
 
 echo "Register Generic Proposal Function 5 with SNS"
 
-//submit fixture data
-
 PROPOSAL="(
     record {
         title = \"Create SubmitFixtureData Callback Function\";          
@@ -133,8 +75,8 @@ PROPOSAL="(
                 description = opt \"Proposal to create the endpoint for adding the callback function for submitting Premier League match fixture data.\";
                 function_type = opt variant { 
                     GenericNervousSystemFunction = record { 
-                        validator_canister_id = opt principal \"bw4dl-smaaa-aaaaa-qaacq-cai\"; 
-                        target_canister_id = opt principal \"bw4dl-smaaa-aaaaa-qaacq-cai\"; 
+                        validator_canister_id = opt principal \"bd3sg-teaaa-aaaaa-qaaba-cai\"; 
+                        target_canister_id = opt principal \"bd3sg-teaaa-aaaaa-qaaba-cai\"; 
                         validator_method_name = opt \"validateSubmitFixtureData\";                         
                         target_method_name = opt \"executeSubmitFixtureData\";
                     } 
@@ -148,8 +90,6 @@ PROPOSAL="(
 
 echo "Register Generic Proposal Function 6 with SNS"
 
-//add initial fixtures
-
 PROPOSAL="(
     record {
         title = \"Create AddIntitialFixtures Callback Function\";          
@@ -162,8 +102,8 @@ PROPOSAL="(
                 description = opt \"Proposal to create the endpoint for adding the callback function to add the initial fixtures of the season.\";
                 function_type = opt variant { 
                     GenericNervousSystemFunction = record { 
-                        validator_canister_id = opt principal \"bw4dl-smaaa-aaaaa-qaacq-cai\"; 
-                        target_canister_id = opt principal \"bw4dl-smaaa-aaaaa-qaacq-cai\"; 
+                        validator_canister_id = opt principal \"bd3sg-teaaa-aaaaa-qaaba-cai\"; 
+                        target_canister_id = opt principal \"bd3sg-teaaa-aaaaa-qaaba-cai\"; 
                         validator_method_name = opt \"validateAddInitialFixtures\";                         
                         target_method_name = opt \"executeAddInitialFixtures\";
                     } 
@@ -177,8 +117,6 @@ PROPOSAL="(
 
 echo "Register Generic Proposal Function 7 with SNS"
 
-//Move Fixture
-
 PROPOSAL="(
     record {
         title = \"Create MoveFixture Callback Function\";          
@@ -191,8 +129,8 @@ PROPOSAL="(
                 description = opt \"Proposal to create the endpoint for adding the callback function to move a fixture.\";
                 function_type = opt variant { 
                     GenericNervousSystemFunction = record { 
-                        validator_canister_id = opt principal \"bw4dl-smaaa-aaaaa-qaacq-cai\"; 
-                        target_canister_id = opt principal \"bw4dl-smaaa-aaaaa-qaacq-cai\"; 
+                        validator_canister_id = opt principal \"bd3sg-teaaa-aaaaa-qaaba-cai\"; 
+                        target_canister_id = opt principal \"bd3sg-teaaa-aaaaa-qaaba-cai\"; 
                         validator_method_name = opt \"validateMoveFixture\";                         
                         target_method_name = opt \"executeMoveFixture\";
                     } 
@@ -206,8 +144,6 @@ PROPOSAL="(
 
 echo "Register Generic Proposal Function 8 with SNS"
 
-//postpone fixture
-
 PROPOSAL="(
     record {
         title = \"Create PostponeFixture Callback Function\";          
@@ -220,8 +156,8 @@ PROPOSAL="(
                 description = opt \"Proposal to create the endpoint for adding the callback function to postpone a fixture.\";
                 function_type = opt variant { 
                     GenericNervousSystemFunction = record { 
-                        validator_canister_id = opt principal \"bw4dl-smaaa-aaaaa-qaacq-cai\"; 
-                        target_canister_id = opt principal \"bw4dl-smaaa-aaaaa-qaacq-cai\"; 
+                        validator_canister_id = opt principal \"bd3sg-teaaa-aaaaa-qaaba-cai\"; 
+                        target_canister_id = opt principal \"bd3sg-teaaa-aaaaa-qaaba-cai\"; 
                         validator_method_name = opt \"validatePostponeFixture\";                         
                         target_method_name = opt \"executePostponeFixture\";
                     } 
@@ -235,8 +171,6 @@ PROPOSAL="(
 
 echo "Register Generic Proposal Function 9 with SNS"
 
-//Reschedule Fixture
-
 PROPOSAL="(
     record {
         title = \"Create RescheduleFixture Callback Function\";          
@@ -249,8 +183,8 @@ PROPOSAL="(
                 description = opt \"Proposal to create the endpoint for adding the callback function to reschedule a fixture.\";
                 function_type = opt variant { 
                     GenericNervousSystemFunction = record { 
-                        validator_canister_id = opt principal \"bw4dl-smaaa-aaaaa-qaacq-cai\"; 
-                        target_canister_id = opt principal \"bw4dl-smaaa-aaaaa-qaacq-cai\"; 
+                        validator_canister_id = opt principal \"bd3sg-teaaa-aaaaa-qaaba-cai\"; 
+                        target_canister_id = opt principal \"bd3sg-teaaa-aaaaa-qaaba-cai\"; 
                         validator_method_name = opt \"validateRescheduleFixture\";                         
                         target_method_name = opt \"executeRescheduleFixture\";
                     } 
@@ -264,8 +198,6 @@ PROPOSAL="(
 
 echo "Register Generic Proposal Function 10 with SNS"
 
-//Transfer Player
-
 PROPOSAL="(
     record {
         title = \"Create TransferPlayer Callback Function\";          
@@ -278,8 +210,8 @@ PROPOSAL="(
                 description = opt \"Proposal to create the endpoint for adding the callback function to transfer a player.\";
                 function_type = opt variant { 
                     GenericNervousSystemFunction = record { 
-                        validator_canister_id = opt principal \"bw4dl-smaaa-aaaaa-qaacq-cai\"; 
-                        target_canister_id = opt principal \"bw4dl-smaaa-aaaaa-qaacq-cai\"; 
+                        validator_canister_id = opt principal \"bd3sg-teaaa-aaaaa-qaaba-cai\"; 
+                        target_canister_id = opt principal \"bd3sg-teaaa-aaaaa-qaaba-cai\"; 
                         validator_method_name = opt \"validateTransferPlayer\";                         
                         target_method_name = opt \"executeTransferPlayer\";
                     } 
@@ -293,8 +225,6 @@ PROPOSAL="(
 
 echo "Register Generic Proposal Function 11 with SNS"
 
-//Loan Player
-
 PROPOSAL="(
     record {
         title = \"Create LoanPlayer Callback Function\";          
@@ -307,8 +237,8 @@ PROPOSAL="(
                 description = opt \"Proposal to create the endpoint for adding the callback function to loan a player.\";
                 function_type = opt variant { 
                     GenericNervousSystemFunction = record { 
-                        validator_canister_id = opt principal \"bw4dl-smaaa-aaaaa-qaacq-cai\"; 
-                        target_canister_id = opt principal \"bw4dl-smaaa-aaaaa-qaacq-cai\"; 
+                        validator_canister_id = opt principal \"bd3sg-teaaa-aaaaa-qaaba-cai\"; 
+                        target_canister_id = opt principal \"bd3sg-teaaa-aaaaa-qaaba-cai\"; 
                         validator_method_name = opt \"validateLoanPlayer\";                         
                         target_method_name = opt \"executeLoanPlayer\";
                     } 
@@ -322,8 +252,6 @@ PROPOSAL="(
 
 echo "Register Generic Proposal Function 12 with SNS"
 
-//Recall Player
-
 PROPOSAL="(
     record {
         title = \"Create RecallPlayer Callback Function\";          
@@ -336,8 +264,8 @@ PROPOSAL="(
                 description = opt \"Proposal to create the endpoint for adding the callback function to recall a player.\";
                 function_type = opt variant { 
                     GenericNervousSystemFunction = record { 
-                        validator_canister_id = opt principal \"bw4dl-smaaa-aaaaa-qaacq-cai\"; 
-                        target_canister_id = opt principal \"bw4dl-smaaa-aaaaa-qaacq-cai\"; 
+                        validator_canister_id = opt principal \"bd3sg-teaaa-aaaaa-qaaba-cai\"; 
+                        target_canister_id = opt principal \"bd3sg-teaaa-aaaaa-qaaba-cai\"; 
                         validator_method_name = opt \"validateRecallPlayer\";                         
                         target_method_name = opt \"executeRecallPlayer\";
                     } 
@@ -351,8 +279,6 @@ PROPOSAL="(
 
 echo "Register Generic Proposal Function 13 with SNS"
 
-//Create Player
-
 PROPOSAL="(
     record {
         title = \"Create CreatePlayer Callback Function\";          
@@ -365,8 +291,8 @@ PROPOSAL="(
                 description = opt \"Proposal to create the endpoint for adding the callback function to create a new player.\";
                 function_type = opt variant { 
                     GenericNervousSystemFunction = record { 
-                        validator_canister_id = opt principal \"bw4dl-smaaa-aaaaa-qaacq-cai\"; 
-                        target_canister_id = opt principal \"bw4dl-smaaa-aaaaa-qaacq-cai\"; 
+                        validator_canister_id = opt principal \"bd3sg-teaaa-aaaaa-qaaba-cai\"; 
+                        target_canister_id = opt principal \"bd3sg-teaaa-aaaaa-qaaba-cai\"; 
                         validator_method_name = opt \"validateAddNewPlayer\";                         
                         target_method_name = opt \"executeAddNewPlayer\";
                     } 
@@ -380,8 +306,6 @@ PROPOSAL="(
 
 echo "Register Generic Proposal Function 14 with SNS"
 
-//Update Player
-
 PROPOSAL="(
     record {
         title = \"Create UpdatePlayer Callback Function\";          
@@ -394,8 +318,8 @@ PROPOSAL="(
                 description = opt \"Proposal to create the endpoint for adding the callback function to update a new player.\";
                 function_type = opt variant { 
                     GenericNervousSystemFunction = record { 
-                        validator_canister_id = opt principal \"bw4dl-smaaa-aaaaa-qaacq-cai\"; 
-                        target_canister_id = opt principal \"bw4dl-smaaa-aaaaa-qaacq-cai\"; 
+                        validator_canister_id = opt principal \"bd3sg-teaaa-aaaaa-qaaba-cai\"; 
+                        target_canister_id = opt principal \"bd3sg-teaaa-aaaaa-qaaba-cai\"; 
                         validator_method_name = opt \"validateUpdatePlayer\";                         
                         target_method_name = opt \"executeUpdatePlayer\";
                     } 
@@ -409,8 +333,6 @@ PROPOSAL="(
 
 echo "Register Generic Proposal Function 15 with SNS"
 
-//Set Player Injury
-
 PROPOSAL="(
     record {
         title = \"Create SetPlayerInjury Callback Function\";          
@@ -423,8 +345,8 @@ PROPOSAL="(
                 description = opt \"Proposal to create the endpoint for adding the callback function to set a players injury.\";
                 function_type = opt variant { 
                     GenericNervousSystemFunction = record { 
-                        validator_canister_id = opt principal \"bw4dl-smaaa-aaaaa-qaacq-cai\"; 
-                        target_canister_id = opt principal \"bw4dl-smaaa-aaaaa-qaacq-cai\"; 
+                        validator_canister_id = opt principal \"bd3sg-teaaa-aaaaa-qaaba-cai\"; 
+                        target_canister_id = opt principal \"bd3sg-teaaa-aaaaa-qaaba-cai\"; 
                         validator_method_name = opt \"validateSetPlayerInjury\";                         
                         target_method_name = opt \"executeSetPlayerInjury\";
                     } 
@@ -438,8 +360,6 @@ PROPOSAL="(
 
 echo "Register Generic Proposal Function 16 with SNS"
 
-//Player Retirement Proposal
-
 PROPOSAL="(
     record {
         title = \"Create RetirePlayer Callback Function\";          
@@ -452,8 +372,8 @@ PROPOSAL="(
                 description = opt \"Proposal to create the endpoint for adding the callback function to retire a player.\";
                 function_type = opt variant { 
                     GenericNervousSystemFunction = record { 
-                        validator_canister_id = opt principal \"bw4dl-smaaa-aaaaa-qaacq-cai\"; 
-                        target_canister_id = opt principal \"bw4dl-smaaa-aaaaa-qaacq-cai\"; 
+                        validator_canister_id = opt principal \"bd3sg-teaaa-aaaaa-qaaba-cai\"; 
+                        target_canister_id = opt principal \"bd3sg-teaaa-aaaaa-qaaba-cai\"; 
                         validator_method_name = opt \"validateRetirePlayer\";                         
                         target_method_name = opt \"executeRetirePlayer\";
                     } 
@@ -467,8 +387,6 @@ PROPOSAL="(
 
 echo "Register Generic Proposal Function 17 with SNS"
 
-//Unretire Player Proposal
-
 PROPOSAL="(
     record {
         title = \"Create UnretirePlayer Callback Function\";          
@@ -481,8 +399,8 @@ PROPOSAL="(
                 description = opt \"Proposal to create the endpoint for adding the callback function to unretire a player.\";
                 function_type = opt variant { 
                     GenericNervousSystemFunction = record { 
-                        validator_canister_id = opt principal \"bw4dl-smaaa-aaaaa-qaacq-cai\"; 
-                        target_canister_id = opt principal \"bw4dl-smaaa-aaaaa-qaacq-cai\"; 
+                        validator_canister_id = opt principal \"bd3sg-teaaa-aaaaa-qaaba-cai\"; 
+                        target_canister_id = opt principal \"bd3sg-teaaa-aaaaa-qaaba-cai\"; 
                         validator_method_name = opt \"validateUnretirePlayer\";                         
                         target_method_name = opt \"executeUnretirePlayer\";
                     } 
@@ -496,8 +414,6 @@ PROPOSAL="(
 
 echo "Register Generic Proposal Function 18 with SNS"
 
-//Promote Former Team
-
 PROPOSAL="(
     record {
         title = \"Create PromoteFormerTeam Callback Function\";          
@@ -510,8 +426,8 @@ PROPOSAL="(
                 description = opt \"Proposal to create the endpoint for adding the callback function to promote a former club into the Premier League.\";
                 function_type = opt variant { 
                     GenericNervousSystemFunction = record { 
-                        validator_canister_id = opt principal \"bw4dl-smaaa-aaaaa-qaacq-cai\"; 
-                        target_canister_id = opt principal \"bw4dl-smaaa-aaaaa-qaacq-cai\"; 
+                        validator_canister_id = opt principal \"bd3sg-teaaa-aaaaa-qaaba-cai\"; 
+                        target_canister_id = opt principal \"bd3sg-teaaa-aaaaa-qaaba-cai\"; 
                         validator_method_name = opt \"validatePromoteFormerTeam\";                         
                         target_method_name = opt \"executePromoteFormerTeam\";
                     } 
@@ -525,8 +441,6 @@ PROPOSAL="(
 
 echo "Register Generic Proposal Function 19 with SNS"
 
-//Promote New Team
-
 PROPOSAL="(
     record {
         title = \"Create PromoteNewTeam Callback Function\";          
@@ -539,8 +453,8 @@ PROPOSAL="(
                 description = opt \"Proposal to create the endpoint for adding the callback function to promote a new club into the Premier League.\";
                 function_type = opt variant { 
                     GenericNervousSystemFunction = record { 
-                        validator_canister_id = opt principal \"bw4dl-smaaa-aaaaa-qaacq-cai\"; 
-                        target_canister_id = opt principal \"bw4dl-smaaa-aaaaa-qaacq-cai\"; 
+                        validator_canister_id = opt principal \"bd3sg-teaaa-aaaaa-qaaba-cai\"; 
+                        target_canister_id = opt principal \"bd3sg-teaaa-aaaaa-qaaba-cai\"; 
                         validator_method_name = opt \"validatePromoteNewTeam\";                         
                         target_method_name = opt \"executePromoteNewTeam\";
                     } 
@@ -554,8 +468,6 @@ PROPOSAL="(
 
 echo "Register Generic Proposal Function 20 with SNS"
 
-//Update Team
-
 PROPOSAL="(
     record {
         title = \"Create UpdateTeam Callback Function\";          
@@ -568,8 +480,8 @@ PROPOSAL="(
                 description = opt \"Proposal to create the endpoint for adding the callback function to update a Premier League club's details.\";
                 function_type = opt variant { 
                     GenericNervousSystemFunction = record { 
-                        validator_canister_id = opt principal \"bw4dl-smaaa-aaaaa-qaacq-cai\"; 
-                        target_canister_id = opt principal \"bw4dl-smaaa-aaaaa-qaacq-cai\"; 
+                        validator_canister_id = opt principal \"bd3sg-teaaa-aaaaa-qaaba-cai\"; 
+                        target_canister_id = opt principal \"bd3sg-teaaa-aaaaa-qaaba-cai\"; 
                         validator_method_name = opt \"validateUpdateTeam\";                         
                         target_method_name = opt \"executeUpdateTeam\";
                     } 

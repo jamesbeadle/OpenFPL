@@ -2,6 +2,8 @@ import Array "mo:base/Array";
 import List "mo:base/List";
 import Order "mo:base/Order";
 import Text "mo:base/Text";
+import Buffer "mo:base/Buffer";
+import Iter "mo:base/Iter";
 
 import DTOs "../DTOs";
 import T "../types";
@@ -434,6 +436,29 @@ module {
            primaryColourHex = "#FFFFFF";
          }
          ]);
+    };
+
+    public func fixSouthampton(){
+      let clubsBuffer = Buffer.fromArray<T.Club>([]);
+      for(club in Iter.fromList(clubs)){
+        if(club.name == "Southampton"){
+          clubsBuffer.add({
+            id = 23;
+            name = club.name;
+            friendlyName = club.friendlyName;
+            primaryColourHex = club.primaryColourHex;
+            secondaryColourHex = club.secondaryColourHex;
+            thirdColourHex = club.thirdColourHex;
+            abbreviatedName = club.abbreviatedName;
+            shirtType = club.shirtType;
+          })
+        }
+        else{
+          clubsBuffer.add(club);
+        }
+      };
+
+      clubs := List.fromArray(Buffer.toArray(clubsBuffer));
     };
   };
 };
