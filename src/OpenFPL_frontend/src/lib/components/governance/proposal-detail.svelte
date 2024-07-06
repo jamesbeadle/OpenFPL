@@ -5,13 +5,14 @@
   import { ActorFactory } from "../../../utils/ActorFactory";
   import { SnsGovernanceCanister, SnsVote } from "@dfinity/sns";
   import type { ProposalData } from "@dfinity/sns/dist/candid/sns_governance";
+  import VotingBar from './voting-bar.svelte';
 
   export let visible: boolean;
   export let closeModal: () => void;
 
   export let proposal: ProposalData;
 
-  let isLoading = true;
+  let isLoading = false;
   let showConfirm = false;
   let vote = "";
 
@@ -75,22 +76,37 @@
     resetForm();
     closeModal();
   }
+
+  // Convert bigint values to number
+  const yesVotes = Number(proposal.latest_tally[0]?.yes ?? 0n);
+  const noVotes = Number(proposal.latest_tally[0]?.no ?? 0n);
+  const totalVotes = Number(proposal.latest_tally[0]?.total ?? 0n);
 </script>
 
 <Modal {visible} on:nnsClose={cancelModal}>
   <div class="mx-4 p-4">
     <div class="flex justify-between items-center my-2">
-      <h3 class="default-header">Vote on proposal</h3>
+      <h3 class="default-header">Proposal {proposal.id[0]?.id}</h3>
       <button class="times-button" on:click={cancelModal}>&times;</button>
     </div>
 
     <div class="flex justify-start items-center w-full">
       <div class="w-full flex-col space-y-4 mb-2">
         <div class="flex-col space-y-2">
-          <p>{proposal.proposal[0]?.title}</p>
+          <p class="text-xl">{proposal.proposal[0]?.title}</p>
           <p>{proposal.proposal[0]?.summary}</p>
-          <p>{proposal.latest_tally[0]?.yes}</p>
-          <p>{proposal.latest_tally[0]?.no}</p>
+          <div class="flex flex-row">
+            <div class="col-1/2">
+              <p>yes</p>
+              <p>{yesVotes.toLocaleString()}</p>
+            </div>
+            <div class="col-1/2">
+              <p>no</p>
+              <p>{noVotes.toLocaleString()}</p>
+            </div>
+          </div>
+          
+          <VotingBar {yesVotes} {noVotes} {totalVotes} />
 
           <div class="border-b border-gray-200" />
 
@@ -119,7 +135,7 @@
           {#if showConfirm}
             <div class="items-center flex">
               <p class="text-orange-400">
-                Are you sure you want to vote {vote} on proposal {proposal.id}.
+                Are you sure you want to vote {vote} on proposal {proposal.id[0]?.id}.
               </p>
             </div>
             <div class="items-center flex">
@@ -138,5 +154,5 @@
         <LocalSpinner />
       {/if}
     </div>
-  </div></Modal
->
+  </div>
+</Modal>

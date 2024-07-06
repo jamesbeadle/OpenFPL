@@ -3513,7 +3513,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "7y2mrc"
+  version_hash: "xumkwu"
 };
 async function get_hooks() {
   return {};
@@ -5853,7 +5853,7 @@ const countriesStore = createCountriesStore();
 var define_process_env_default$6 = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai" };
 function createWeeklyLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
-  const itemsPerPage = 25;
+  const itemsPerPage2 = 25;
   const category = "weekly_leaderboard";
   let actor = ActorFactory.createActor(
     idlFactory,
@@ -5870,7 +5870,7 @@ function createWeeklyLeaderboardStore() {
     let categoryHash = dataCacheValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(`${category}_hash`);
     if (categoryHash?.hash != localHash) {
-      const limit = itemsPerPage;
+      const limit = itemsPerPage2;
       const offset = 0;
       let dto = {
         offset: BigInt(offset),
@@ -5905,7 +5905,7 @@ function createWeeklyLeaderboardStore() {
     }
   }
   async function getWeeklyLeaderboard(seasonId, gameweek, currentPage, calculationGameweek, searchTerm) {
-    const limit = itemsPerPage;
+    const limit = itemsPerPage2;
     const offset = (currentPage - 1) * limit;
     if (currentPage <= 4 && gameweek == calculationGameweek) {
       const cachedData = localStorage.getItem(category);
@@ -5948,7 +5948,7 @@ function createWeeklyLeaderboardStore() {
     return leaderboardData;
   }
   async function getLeadingWeeklyTeam(seasonId, gameweek) {
-    const limit = itemsPerPage;
+    const limit = itemsPerPage2;
     const offset = 0;
     let dto = {
       offset: BigInt(offset),
@@ -6706,7 +6706,7 @@ const Local_spinner = create_ssr_component(($$result, $$props, $$bindings, slots
 var define_process_env_default$2 = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai" };
 function createMonthlyLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
-  const itemsPerPage = 25;
+  const itemsPerPage2 = 25;
   const category = "monthly_leaderboard_data";
   let systemState;
   systemStore.subscribe((value) => {
@@ -6728,7 +6728,7 @@ function createMonthlyLeaderboardStore() {
     let categoryHash = dataCacheValues.find((x) => x.category === category2) ?? null;
     const localHash = localStorage.getItem(`${category2}_hash`);
     if (categoryHash?.hash != localHash) {
-      const limit = itemsPerPage;
+      const limit = itemsPerPage2;
       const offset = 0;
       let dto = {
         offset: BigInt(offset),
@@ -6764,7 +6764,7 @@ function createMonthlyLeaderboardStore() {
     }
   }
   async function getMonthlyLeaderboard(seasonId, clubId, month, currentPage, searchTerm) {
-    const limit = itemsPerPage;
+    const limit = itemsPerPage2;
     const offset = (currentPage - 1) * limit;
     if (currentPage <= 4 && month == systemState?.calculationMonth) {
       const cachedData = localStorage.getItem(category);
@@ -6820,7 +6820,7 @@ createMonthlyLeaderboardStore();
 var define_process_env_default$1 = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai" };
 function createSeasonLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
-  const itemsPerPage = 25;
+  const itemsPerPage2 = 25;
   const category = "season_leaderboard";
   let systemState;
   systemStore.subscribe((value) => {
@@ -6842,7 +6842,7 @@ function createSeasonLeaderboardStore() {
     let categoryHash = dataCacheValues.find((x) => x.category === category2) ?? null;
     const localHash = localStorage.getItem(`${category2}_hash`);
     if (categoryHash?.hash != localHash) {
-      const limit = itemsPerPage;
+      const limit = itemsPerPage2;
       const offset = 0;
       let dto = {
         offset: BigInt(offset),
@@ -6884,7 +6884,7 @@ function createSeasonLeaderboardStore() {
     }
   }
   async function getSeasonLeaderboard(seasonId, currentPage, searchTerm) {
-    const limit = itemsPerPage;
+    const limit = itemsPerPage2;
     const offset = (currentPage - 1) * limit;
     if (currentPage <= 4 && seasonId == systemState?.calculationSeasonId) {
       const cachedData = localStorage.getItem(category);
@@ -9597,34 +9597,37 @@ const Page$a = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
+let itemsPerPage = 100;
+function paginate(proposals, page2) {
+  const start = (page2 - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  return proposals.slice(start, end);
+}
 const Page$9 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let playerProposals = [];
-  const proposalStatuses = [
-    { id: 1, description: "Open" },
-    { id: 2, description: "Rejected" },
-    { id: 3, description: "Accepted" },
-    { id: 4, description: "Executed" },
-    { id: 5, description: "Failed" }
-  ];
-  return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
+  let proposals = {
+    proposals: [],
+    include_ballots_by_caller: []
+  };
+  let filteredProposals = [];
+  let currentPage = 1;
+  function filterProposals() {
+    if (!proposals || !proposals.proposals)
+      return;
+    {
+      filteredProposals = proposals.proposals;
+    }
+    Math.ceil(filteredProposals.length / itemsPerPage);
+    currentPage = 1;
+    console.log("Filtered Proposals:", filteredProposals);
+  }
+  {
+    filterProposals();
+  }
+  return `${``} ${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
-      return `<div class="m-4"><div class="bg-panel rounded-md"><ul class="flex rounded-t-lg bg-light-gray border-b border-gray-700 px-4 pt-2"><li${add_attribute("class", `mr-4 ${"active-tab"}`, 0)}><button${add_attribute(
-        "class",
-        `p-2 ${"text-white"}`,
-        0
-      )}>Player Proposals</button></li> <li${add_attribute("class", `mr-4 ${""}`, 0)}><button${add_attribute(
-        "class",
-        `p-2 ${"text-gray-400"}`,
-        0
-      )}>Club Proposals</button></li> <li${add_attribute("class", `mr-4 ${""}`, 0)}><button${add_attribute(
-        "class",
-        `p-2 ${"text-gray-400"}`,
-        0
-      )}>System Proposals</button></li></ul> ${`<div class="flex justify-between items-center mx-4 mt-4"><select class="fpl-dropdown min-w-[100px]">${each(proposalStatuses, (proposalType) => {
-        return `<option${add_attribute("value", proposalType.id, 0)}>${escape(proposalType.description)}</option>`;
-      })}</select> <a href="/add-proposal" data-svelte-h="svelte-1k28lx1"><button class="p-2 fpl-button text-white rounded-md">Raise Proposal</button></a></div> <div class="grid grid-cols-1 gap-4 mt-4 sm:grid-cols-2 lg:grid-cols-3 mx-4 mb-4">${playerProposals.length > 0 ? `${each(playerProposals, (proposal) => {
-        return `<div class="border border-gray-700 rounded-lg p-4 bg-light-gray flex flex-col"><div class="font-bold truncate">Id: ${escape(proposal.id[0]?.id)}</div> <div class="truncate my-2">${escape(proposal.proposal[0]?.title)}</div> <div class="truncate">Summary: ${escape(proposal.proposal[0]?.summary)}</div> <button class="p-2 fpl-button text-white rounded-md mt-4" data-svelte-h="svelte-3c431">View / Vote</button> </div>`;
-      })}` : ``}</div>`} ${``} ${``}</div></div>`;
+      return `<div class="m-4"><div class="bg-panel rounded-md"><div class="flex justify-between items-center mx-8 mt-6"><div class="flex items-center space-x-4"><label class="flex items-center"><input type="radio" name="filter" value="all" class="form-radio"${add_attribute("checked", true, 1)}> <span class="ml-2" data-svelte-h="svelte-19ys4g">All</span></label> <label class="flex items-center"><input type="radio" name="filter" value="player" class="form-radio"${""}> <span class="ml-2" data-svelte-h="svelte-1b5y3js">Player</span></label> <label class="flex items-center"><input type="radio" name="filter" value="club" class="form-radio"${""}> <span class="ml-2" data-svelte-h="svelte-1x82ben">Club</span></label> <label class="flex items-center"><input type="radio" name="filter" value="system" class="form-radio"${""}> <span class="ml-2" data-svelte-h="svelte-1yfd4qo">System</span></label></div> </div> <div class="grid grid-cols-1 gap-6 mt-2 sm:grid-cols-2 lg:grid-cols-3 mx-4 mb-4 p-4">${filteredProposals.length > 0 ? `${each(paginate(filteredProposals, currentPage), (proposal) => {
+        return `<div class="border border-gray-700 rounded-lg p-4 bg-light-gray flex flex-col"><div class="font-bold truncate">Proposal ${escape(proposal.id[0]?.id)}</div> <div class="truncate my-2 text-lg">${escape(proposal.proposal[0]?.title)}</div> <div class="truncate text-sm">Summary: ${escape(proposal.proposal[0]?.summary)}</div> <button class="p-2 fpl-button rounded-md mt-4" data-svelte-h="svelte-un11ch">View</button> </div>`;
+      })}` : ``}</div></div></div>`;
     }
   })}`;
 });
