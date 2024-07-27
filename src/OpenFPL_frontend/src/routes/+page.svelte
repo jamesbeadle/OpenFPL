@@ -115,16 +115,6 @@
     <LocalSpinner />
   {:else}
     <div class="page-header-wrapper flex">
-      <div class="content-panel">
-        <div class="flex-grow">
-          <p class="text-2xl my-2">Welcome back to OpenFPL.</p>
-          <p class="my-2">Throughout the summer we will be getting the game ready for the start of the season. Fixtures will be added, players will be transferred, all using the DAO's governance system.</p>
-          <p class="my-2">Feel free to connect with your Internet Identity and setup your manager profile, begin picking your team and voting on governance proposals.</p>
-          <p class="my-2">Detailed gameplay rules can be found <a class="underline" href="gameplay-rules">here</a>.</p>
-        </div>
-      </div>
-    </div>
-    <div class="page-header-wrapper flex">
       <div class="content-panel lg:w-1/2">
         <div class="flex-grow">
           <p class="content-panel-header">Gameweek</p>

@@ -1014,10 +1014,10 @@
 
     private func postUpgradeCallback() : async (){
       /*
+      seasonManager.setInitialSeason();
       seasonManager.setInitialClubs();
       seasonManager.setInitialPlayers();
-      */
-
+     */
       await seasonManager.updateCacheHash("clubs");
       await seasonManager.updateCacheHash("fixtures");
       await seasonManager.updateCacheHash("weekly_leaderboard");
@@ -1027,6 +1027,7 @@
       await seasonManager.updateCacheHash("player_events");
       await seasonManager.updateCacheHash("countries");
       await seasonManager.updateCacheHash("system_state");
+
       await systemCheckCallback();
       await cyclesCheckCallback();
     };

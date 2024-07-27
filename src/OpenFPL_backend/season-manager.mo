@@ -1293,6 +1293,10 @@ module {
       return managerComposite.getTotalCanisters();
     };
 
+    public func setInitialSeason(){
+      seasonComposite.setInitialSeason();
+    };
+
     public func setInitialClubs(){
       clubComposite.setInitialClubs();
     };
