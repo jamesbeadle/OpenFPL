@@ -1429,7 +1429,7 @@ module {
     };
 
     public func getTotalCanisters() : Nat{
-      return managerCanisterIds.size();
+      return List.size(uniqueManagerCanisterIds);
     };
 
   };

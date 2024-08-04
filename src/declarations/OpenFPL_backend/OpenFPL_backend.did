@@ -852,6 +852,7 @@ service : {
   executeUnretirePlayer: (UnretirePlayerDTO) -> ();
   executeUpdateClub: (UpdateClubDTO) -> ();
   executeUpdatePlayer: (UpdatePlayerDTO) -> ();
+  getActiveManagerCanisterId: () -> (CanisterId);
   getCanisterCyclesAvailable: () -> (nat);
   getCanisterCyclesBalance: () -> (nat);
   getClubs: () -> (Result_20) query;

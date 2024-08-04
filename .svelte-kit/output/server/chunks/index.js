@@ -3513,7 +3513,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1s0za1j"
+  version_hash: "ls7bao"
 };
 async function get_hooks() {
   return {};
@@ -4413,6 +4413,7 @@ const idlFactory = ({ IDL }) => {
     "executeUnretirePlayer": IDL.Func([UnretirePlayerDTO], [], []),
     "executeUpdateClub": IDL.Func([UpdateClubDTO], [], []),
     "executeUpdatePlayer": IDL.Func([UpdatePlayerDTO], [], []),
+    "getActiveManagerCanisterId": IDL.Func([], [CanisterId], []),
     "getCanisterCyclesAvailable": IDL.Func([], [IDL.Nat], []),
     "getCanisterCyclesBalance": IDL.Func([], [IDL.Nat], []),
     "getClubs": IDL.Func([], [Result_20], ["query"]),
@@ -6005,6 +6006,12 @@ function createPlayerStore() {
         return;
       }
       let updatedPlayersData = result.ok;
+      updatedPlayersData.sort((a, b) => {
+        if (a.clubId === b.clubId) {
+          return b.valueQuarterMillions - a.valueQuarterMillions;
+        }
+        return a.clubId - b.clubId;
+      });
       localStorage.setItem(
         category,
         JSON.stringify(updatedPlayersData, replacer)

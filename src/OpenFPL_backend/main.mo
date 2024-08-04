@@ -1134,7 +1134,7 @@
       let eventTime = Time.now();
       let dateString = Utilities.getReadableDate(eventTime);
 
-      let cyclesAvailable: Nat = await getCanisterCyclesAvailable();
+      let cyclesAvailable: Nat = await getCanisterCyclesBalance();
       let totalCanisterCount = seasonManager.getTotalCanisters();
       let totalManagerCount = seasonManager.getTotalManagers();
       
@@ -1153,6 +1153,10 @@
 
     public func getManagerCanisterIds() : async [T.CanisterId] {
       return seasonManager.getManagerCanisterIds();
+    };
+
+    public func getActiveManagerCanisterId() : async T.CanisterId {
+      return seasonManager.getActiveManagerCanisterId();
     };
 
 

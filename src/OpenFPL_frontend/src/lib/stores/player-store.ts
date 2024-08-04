@@ -57,6 +57,13 @@ function createPlayerStore() {
 
       let updatedPlayersData = result.ok;
 
+      updatedPlayersData.sort((a: PlayerDTO, b: PlayerDTO) => {
+        if (a.clubId === b.clubId) {
+          return b.valueQuarterMillions - a.valueQuarterMillions;
+        }
+        return a.clubId - b.clubId;
+      });
+
       localStorage.setItem(
         category,
         JSON.stringify(updatedPlayersData, replacer),

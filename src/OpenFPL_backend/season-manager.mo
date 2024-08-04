@@ -1309,5 +1309,9 @@ module {
       return managerComposite.getStableUniqueManagerCanisterIds();
     };
 
+    public func getActiveManagerCanisterId(): T.CanisterId {
+      return managerComposite.getStableActiveManagerCanisterId();
+    };  
+
   };
 };

@@ -670,6 +670,7 @@ export interface _SERVICE {
   'executeUnretirePlayer' : ActorMethod<[UnretirePlayerDTO], undefined>,
   'executeUpdateClub' : ActorMethod<[UpdateClubDTO], undefined>,
   'executeUpdatePlayer' : ActorMethod<[UpdatePlayerDTO], undefined>,
+  'getActiveManagerCanisterId' : ActorMethod<[], CanisterId>,
   'getCanisterCyclesAvailable' : ActorMethod<[], bigint>,
   'getCanisterCyclesBalance' : ActorMethod<[], bigint>,
   'getClubs' : ActorMethod<[], Result_20>,
