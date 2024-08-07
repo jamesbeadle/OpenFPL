@@ -10,13 +10,20 @@
   import { getDateFromBigInt } from "$lib/utils/helpers";
   import CopyIcon from "$lib/icons/CopyIcon.svelte";
   import { userGetProfilePicture } from "$lib/derived/user.derived";
-    import LocalSpinner from "../local-spinner.svelte";
-
+  import LocalSpinner from "../local-spinner.svelte";
+  import WithdrawFplModal from "./withdraw-fpl-modal.svelte";
+  import { writable } from "svelte/store";
+  
   let showUsernameModal: boolean = false;
   let showFavouriteTeamModal: boolean = false;
   let fileInput: HTMLInputElement;
   let gameweek: number = 1;
   let joinedDate = "";
+  let showFPLModal = false;
+  let dots = writable('.');
+  let fplBalance = 0n;
+  let fplBalanceFormatted = "0.0000"; 
+  let dot_interval: ReturnType<typeof setInterval>;
 
   let unsubscribeUserProfile: () => void;
 
@@ -27,9 +34,11 @@
     "";
 
   let isLoading = true;
+  let loadingBalances = true;
 
   onMount(async () => {
     try {
+      startDotAnimation();
       await teamStore.sync();
       await systemStore.sync();
       await userStore.sync();
@@ -48,8 +57,37 @@
       console.error("Error fetching profile detail:", error);
     } finally {
       isLoading = false;
+      await fetchBalances();
     }
   });
+
+  function startDotAnimation(){
+    let count = 1;
+    dot_interval = setInterval(() => {
+      count = (count % 3) + 1;
+      dots.set('.'.repeat(count));
+    }, 500);
+  }
+
+  async function fetchBalances() {
+    try {
+      fplBalance = await userStore.getFPLBalance();
+      fplBalanceFormatted = (Number(fplBalance) / 100_000_000).toFixed(4);
+      if(fplBalance){
+        clearInterval(dot_interval);
+        loadingBalances = false;
+      }
+    } catch (error) {
+      toastsError({
+        msg: { text: "Error fetching profile detail." },
+        err: error,
+      });
+      console.error("Error fetching profile detail:", error);
+      clearInterval(dot_interval);
+      loadingBalances = false;
+    }
+  }
+
 
   function displayUsernameModal(): void {
     showUsernameModal = true;
@@ -134,6 +172,16 @@
       console.error("Failed to copy:", err);
     }
   }
+  
+  function loadWithdrawFPLModal(){
+    showFPLModal = true;
+  };
+
+  async function closeWithdrawFPLModal(){
+    showFPLModal = false;
+    startDotAnimation();
+    await fetchBalances();
+  };
 </script>
 
 {#if isLoading}
@@ -150,6 +198,13 @@
     visible={showFavouriteTeamModal}
     closeModal={closeFavouriteTeamModal}
     cancelModal={cancelFavouriteTeamModal}
+  />
+  <WithdrawFplModal
+    visible={showFPLModal}
+    closeModal={closeWithdrawFPLModal}
+    cancelModal={closeWithdrawFPLModal}
+    fplBalance={fplBalance}
+    fplBalanceFormatted={fplBalanceFormatted}
   />
   <div class="container mx-auto p-4">
     <div class="flex flex-wrap">
@@ -226,19 +281,6 @@
         <div class="mt-4 px-2">
           <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div
-              class="flex items-center p-4 md:p-2 rounded-lg shadow-md border border-gray-700"
-            >
-              <img
-                src="/ICPCoin.png"
-                alt="ICP"
-                class="h-12 w-12 md:h-9 md:w-9"
-              />
-              <div class="ml-4 md:ml-3">
-                <p class="font-bold">ICP</p>
-                <p>0.00 ICP</p>
-              </div>
-            </div>
-            <div
               class="flex items-center p-4 rounded-lg shadow-md border border-gray-700"
             >
               <img
@@ -246,35 +288,20 @@
                 alt="FPL"
                 class="h-12 w-12 md:h-9 md:w-9"
               />
-              <div class="ml-4 md:ml-3">
-                <p class="font-bold">FPL</p>
-                <p>0.00 FPL</p>
-              </div>
-            </div>
-            <div
-              class="flex items-center p-4 rounded-lg shadow-md border border-gray-700"
-            >
-              <img
-                src="/ckBTCCoin.png"
-                alt="ICP"
-                class="h-12 w-12 md:h-9 md:w-9"
-              />
-              <div class="ml-4 md:ml-3">
-                <p class="font-bold">ckBTC</p>
-                <p>0.00 ckBTC</p>
-              </div>
-            </div>
-            <div
-              class="flex items-center p-4 rounded-lg shadow-md border border-gray-700"
-            >
-              <img
-                src="/ckETHCoin.png"
-                alt="ICP"
-                class="h-12 w-12 md:h-9 md:w-9"
-              />
-              <div class="ml-4 md:ml-3">
-                <p class="font-bold">ckETH</p>
-                <p>0.00 ckETH</p>
+              <div class="ml-4 md:ml-3 flex flex-col space-y-2">
+                  {#if loadingBalances}
+                    <div class="dot-animation min-w-[20px]">{$dots}</div>
+                  {:else}
+                    <p>
+                      {fplBalanceFormatted} FPL
+                    </p>
+                    <button class="text-sm md:text-sm p-1 md:p-2 px-2 md:px-4 rounded fpl-button"
+                      on:click={loadWithdrawFPLModal}
+                    >
+                      Withdraw
+                    </button>
+                  {/if}
+                
               </div>
             </div>
           </div>

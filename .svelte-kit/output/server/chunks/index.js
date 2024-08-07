@@ -3,12 +3,14 @@ import * as devalue from "devalue";
 import { Buffer } from "buffer";
 import { parse, serialize } from "cookie";
 import * as set_cookie_parser from "set-cookie-parser";
-import { nonNullish, isNullish } from "@dfinity/utils";
+import { nonNullish, isNullish, createAgent } from "@dfinity/utils";
 import "dompurify";
 import { AuthClient } from "@dfinity/auth-client";
 import { SnsGovernanceCanister } from "@dfinity/sns";
 import { HttpAgent, Actor } from "@dfinity/agent";
-import "@dfinity/principal";
+import { Principal } from "@dfinity/principal";
+import { Text } from "@dfinity/candid/lib/cjs/idl.js";
+import { IcrcLedgerCanister } from "@dfinity/ledger-icrc";
 let base = "";
 let assets = base;
 const initial = { base, assets };
@@ -3513,7 +3515,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "ls7bao"
+  version_hash: "19u8h8e"
 };
 async function get_hooks() {
   return {};
@@ -6546,6 +6548,78 @@ function createUserStore() {
     let profileData = getProfileResponse.ok;
     set(profileData);
   }
+  async function withdrawFPL(withdrawalAddress, withdrawalAmount) {
+    try {
+      let identity;
+      authStore.subscribe(async (auth) => {
+        identity = auth.identity;
+      });
+      if (!identity) {
+        return;
+      }
+      let principalId = identity.getPrincipal();
+      const agent = await createAgent({
+        identity,
+        host: "https://identity.ic0.app",
+        fetchRootKey: define_process_env_default$3.DFX_NETWORK === "local"
+      });
+      const { transfer } = IcrcLedgerCanister.create({
+        agent,
+        canisterId: define_process_env_default$3.DFX_NETWORK === "ic" ? Principal.fromText("ddsp7-7iaaa-aaaaq-aacqq-cai") : Principal.fromText("avqkn-guaaa-aaaaa-qaaea-cai")
+      });
+      if (principalId) {
+        try {
+          let transfer_result = await transfer({
+            to: {
+              owner: Principal.fromText(withdrawalAddress),
+              subaccount: []
+            },
+            fee: 100000n,
+            memo: new Uint8Array(Text.encodeValue("0")),
+            from_subaccount: void 0,
+            created_at_time: BigInt(Date.now()) * BigInt(1e6),
+            amount: withdrawalAmount - 100000n
+          });
+        } catch (err) {
+          console.error(err.errorType);
+        }
+      }
+    } catch (error) {
+      console.error("Error withdrawing FPL.", error);
+      throw error;
+    }
+  }
+  async function getFPLBalance() {
+    let identity;
+    authStore.subscribe(async (auth) => {
+      identity = auth.identity;
+    });
+    if (!identity) {
+      return 0n;
+    }
+    let principalId = identity.getPrincipal();
+    const agent = await createAgent({
+      identity,
+      host: "https://identity.ic0.app",
+      fetchRootKey: define_process_env_default$3.DFX_NETWORK === "local"
+    });
+    const { balance } = IcrcLedgerCanister.create({
+      agent,
+      canisterId: Principal.fromText("ddsp7-7iaaa-aaaaq-aacqq-cai")
+    });
+    if (principalId) {
+      try {
+        let result = await balance({
+          owner: principalId,
+          certified: false
+        });
+        return result;
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    return 0n;
+  }
   return {
     subscribe: subscribe2,
     sync,
@@ -6553,7 +6627,9 @@ function createUserStore() {
     updateFavouriteTeam,
     updateProfilePicture,
     isUsernameAvailable,
-    cacheProfile
+    cacheProfile,
+    withdrawFPL,
+    getFPLBalance
   };
 }
 const userStore = createUserStore();
@@ -9625,7 +9701,6 @@ const Page$9 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
     Math.ceil(filteredProposals.length / itemsPerPage);
     currentPage = 1;
-    console.log("Filtered Proposals:", filteredProposals);
   }
   {
     filterProposals();

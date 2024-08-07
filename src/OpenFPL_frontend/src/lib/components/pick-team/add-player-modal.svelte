@@ -28,27 +28,32 @@
   const pageSize = 10;
   //console.log(`Filters: Filter Team: ${filterTeam}, Filter Position: ${filterPosition}, Min Value: ${minValue}, Max Value: ${maxValue} `)
 
-  function filterPlayers(){
+  function filterPlayers() {
     filteredPlayers = $playerStore.filter((player) => {
-    const normalizedFilterSurname = normalizeString(
-      filterSurname.toLowerCase()
-    );
-    const normalizedPlayerLastName = normalizeString(
-      player.lastName.toLowerCase()
-    );
-    
-    return (
-      (filterTeam === -1 || player.clubId === filterTeam) &&
-      (filterPosition === -1 ||
-        convertPlayerPosition(player.position) === filterPosition) &&
-      filterColumn > -2 &&
-      (minValue === 0 || player.valueQuarterMillions >= minValue) &&
-      (maxValue === 0 || player.valueQuarterMillions <= maxValue) &&
-      (filterSurname === "" ||
-        normalizedPlayerLastName.includes(normalizedFilterSurname))
-    );
-  });
-  };
+      const normalizedFilterSurname = normalizeString(filterSurname.toLowerCase());
+      const normalizedPlayerLastName = normalizeString(player.lastName.toLowerCase());
+      
+      return (
+        (filterTeam === -1 || player.clubId === filterTeam) &&
+        (filterPosition === -1 || convertPlayerPosition(player.position) === filterPosition) &&
+        filterColumn > -2 &&
+        (minValue === 0 || player.valueQuarterMillions >= minValue) &&
+        (maxValue === 0 || player.valueQuarterMillions <= maxValue) &&
+        (filterSurname === "" || normalizedPlayerLastName.includes(normalizedFilterSurname))
+      );
+    });
+
+    filteredPlayers.sort((a, b) => {
+      if (filterTeam === -1) {
+        return b.valueQuarterMillions - a.valueQuarterMillions;
+      } else {
+        if (a.clubId === b.clubId) {
+          return b.valueQuarterMillions - a.valueQuarterMillions;
+        }
+        return a.clubId - b.clubId;
+      }
+    });
+  }
 
   let filteredPlayers: PlayerDTO[] = [];
 

@@ -47,7 +47,6 @@
     };
 
     proposals = await governanceListProposals(params);
-    console.log("Fetched Proposals:", proposals);
     filterProposals();
   }
 
@@ -77,8 +76,7 @@
     }
 
     totalPages = Math.ceil(filteredProposals.length / itemsPerPage);
-    currentPage = 1; // Reset to the first page whenever filter changes
-    console.log("Filtered Proposals:", filteredProposals);
+    currentPage = 1;
   }
 
   function isExecuteGenericNervousSystemFunction(action: any): action is { ExecuteGenericNervousSystemFunction: { function_id: bigint } } {
