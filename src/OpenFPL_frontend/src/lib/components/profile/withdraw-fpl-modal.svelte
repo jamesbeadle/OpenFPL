@@ -48,7 +48,6 @@
     withdrawalInputAmount = maxAmount.toFixed(4);
   }
 
-  // Ensure reactive statements properly update based on validation
   $: isSubmitDisabled = !isPrincipalValid(withdrawalAddress) || !isWithdrawAmountValid(withdrawalInputAmount, fplBalance);
 
   $: errorMessage = (!isAmountValid(withdrawalInputAmount) || !isWithdrawAmountValid(withdrawalInputAmount, fplBalance)) && withdrawalInputAmount

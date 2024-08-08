@@ -595,6 +595,7 @@ export const idlFactory = ({ IDL }) => {
     'calculationMonth' : CalendarMonth,
     'calculationSeasonId' : SeasonId,
     'onHold' : IDL.Bool,
+    'seasonActive' : IDL.Bool,
   });
   const Result_5 = IDL.Variant({ 'ok' : SystemStateDTO, 'err' : Error });
   const TokenInfo = IDL.Record({

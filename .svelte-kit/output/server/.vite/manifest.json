@@ -163,6 +163,14 @@
     "isEntry": true,
     "src": "src/OpenFPL_frontend/src/routes/profile/+page.svelte"
   },
+  "src/OpenFPL_frontend/src/routes/status/+page.svelte": {
+    "file": "entries/pages/status/_page.svelte.js",
+    "imports": [
+      "_index.js"
+    ],
+    "isEntry": true,
+    "src": "src/OpenFPL_frontend/src/routes/status/+page.svelte"
+  },
   "src/OpenFPL_frontend/src/routes/terms/+page.svelte": {
     "file": "entries/pages/terms/_page.svelte.js",
     "imports": [

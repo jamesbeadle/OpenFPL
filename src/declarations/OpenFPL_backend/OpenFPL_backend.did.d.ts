@@ -557,6 +557,7 @@ export interface SystemStateDTO {
   'calculationMonth' : CalendarMonth,
   'calculationSeasonId' : SeasonId,
   'onHold' : boolean,
+  'seasonActive' : boolean,
 }
 export type TokenId = number;
 export interface TokenInfo {

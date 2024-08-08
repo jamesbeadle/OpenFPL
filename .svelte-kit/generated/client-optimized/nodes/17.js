@@ -1,1 +1,1 @@
-export { default as component } from "../../../../src/OpenFPL_frontend/src/routes/terms/+page.svelte";
+export { default as component } from "../../../../src/OpenFPL_frontend/src/routes/status/+page.svelte";

@@ -3515,7 +3515,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "19u8h8e"
+  version_hash: "htiw8k"
 };
 async function get_hooks() {
   return {};
@@ -4318,7 +4318,8 @@ const idlFactory = ({ IDL }) => {
     "pickTeamGameweek": GameweekNumber,
     "calculationMonth": CalendarMonth,
     "calculationSeasonId": SeasonId,
-    "onHold": IDL.Bool
+    "onHold": IDL.Bool,
+    "seasonActive": IDL.Bool
   });
   const Result_5 = IDL.Variant({ "ok": SystemStateDTO, "err": Error2 });
   const TokenInfo = IDL.Record({
@@ -7007,7 +7008,7 @@ function createSeasonLeaderboardStore() {
   };
 }
 createSeasonLeaderboardStore();
-const Page$g = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$h = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_systemStore;
   let $$unsubscribe_teamStore;
   let $$unsubscribe_fixtureStore;
@@ -8509,7 +8510,7 @@ const Clear_draft_modal = create_ssr_component(($$result, $$props, $$bindings, s
     }
   })}`;
 });
-const Page$f = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$g = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let fixtureId;
   let $playerEventData, $$unsubscribe_playerEventData = noop, $$subscribe_playerEventData = () => ($$unsubscribe_playerEventData(), $$unsubscribe_playerEventData = subscribe(playerEventData, ($$value) => $playerEventData = $$value), playerEventData);
   let $systemStore, $$unsubscribe_systemStore;
@@ -9345,7 +9346,7 @@ const Add_fixture_data = create_ssr_component(($$result, $$props, $$bindings, sl
     }
   })}`;
 });
-const Page$e = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$f = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let showRevaluePlayerUpModal = false;
   let showRevaluePlayerDownModal = false;
   let showAddInitialFixturesModal = false;
@@ -9568,7 +9569,7 @@ const Page$e = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$d = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$e = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $teamStore, $$unsubscribe_teamStore;
   let $$unsubscribe_playerStore;
   let $$unsubscribe_fixtureStore;
@@ -9598,7 +9599,7 @@ const Page$d = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$c = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$d = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $teamStore, $$unsubscribe_teamStore;
   $$unsubscribe_teamStore = subscribe(teamStore, (value) => $teamStore = value);
   $$unsubscribe_teamStore();
@@ -9623,7 +9624,7 @@ const Page$c = create_ssr_component(($$result, $$props, $$bindings, slots) => {
 const Default_canisters = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   return ``;
 });
-const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$c = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
       return `<div class="bg-panel rounded-md mt-4"><h1 class="default-header p-4" data-svelte-h="svelte-30ik2c">OpenFPL Cycle Management</h1> <ul class="flex bg-light-gray px-1 md:px-4 pt-2 contained-text border-b border-gray-700 mb-4"><li${add_attribute("class", `mr-1 md:mr-4 ${"active-tab"}`, 0)}><button${add_attribute(
@@ -9650,7 +9651,7 @@ const css$1 = {
   code: ".striped.svelte-a09ql9 tr.svelte-a09ql9:nth-child(odd){background-color:rgba(46, 50, 58, 0.6)}",
   map: null
 };
-const Page$a = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$result.css.add(css$1);
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
@@ -9686,7 +9687,7 @@ function paginate(proposals, page2) {
   const end = start + itemsPerPage;
   return proposals.slice(start, end);
 }
-const Page$9 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$a = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let proposals = {
     proposals: [],
     include_ballots_by_caller: []
@@ -9713,13 +9714,13 @@ const Page$9 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$8 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$9 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   return `  `;
 });
 function formatEventType(type) {
   return type.replace(/([a-z])([A-Z])/g, "$1 $2");
 }
-const Page$7 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$8 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let startDate = "";
   let endDate = "";
   let eventTypes = [
@@ -9736,7 +9737,7 @@ const Page$7 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$6 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$7 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_selectedGameweek;
   let $$unsubscribe_loadingGameweekDetail;
   let $$unsubscribe_teamStore;
@@ -9957,7 +9958,7 @@ const Create_private_league = create_ssr_component(($$result, $$props, $$binding
   return $$rendered;
 });
 const pageSize = 10;
-const Page$5 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$6 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $leagues, $$unsubscribe_leagues;
   const leagues = writable(null);
   $$unsubscribe_leagues = subscribe(leagues, (value) => $leagues = value);
@@ -10013,7 +10014,7 @@ const Page$5 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$4 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$5 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_fantasyTeam;
   let $$unsubscribe_loadingPlayers;
   let $$unsubscribe_availableFormations;
@@ -10058,7 +10059,7 @@ const Page$4 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$3 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$4 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $teamStore, $$unsubscribe_teamStore;
   let $fixtureStore, $$unsubscribe_fixtureStore;
   let $$unsubscribe_playerStore;
@@ -10091,10 +10092,20 @@ const Page$3 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$2 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$3 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
       return `${`${validate_component(Local_spinner, "LocalSpinner").$$render($$result, {}, {}, {})}`}`;
+    }
+  })}`;
+});
+const Page$2 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let $$unsubscribe_systemStore;
+  $$unsubscribe_systemStore = subscribe(systemStore, (value) => value);
+  $$unsubscribe_systemStore();
+  return `           ${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
+    default: () => {
+      return `<div class="bg-panel rounded-md mt-4"><h1 class="default-header p-4" data-svelte-h="svelte-i9zo64">OpenFPL System Status</h1> ${`${validate_component(Local_spinner, "LocalSpinner").$$render($$result, {}, {}, {})}`}</div>`;
     }
   })}`;
 });
@@ -10174,9 +10185,10 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   })}`;
 });
 export {
+  Page as A,
   Error$1 as E,
   Layout$1 as L,
-  Page$g as P,
+  Page$h as P,
   Server as S,
   set_building as a,
   set_manifest as b,
@@ -10186,22 +10198,22 @@ export {
   set_read_implementation as f,
   get_hooks as g,
   set_safe_public_env as h,
-  Page$f as i,
-  Page$e as j,
-  Page$d as k,
-  Page$c as l,
-  Page$b as m,
-  Page$a as n,
+  Page$g as i,
+  Page$f as j,
+  Page$e as k,
+  Page$d as l,
+  Page$c as m,
+  Page$b as n,
   options as o,
-  Page$9 as p,
-  Page$8 as q,
-  Page$7 as r,
+  Page$a as p,
+  Page$9 as q,
+  Page$8 as r,
   set_assets as s,
-  Page$6 as t,
-  Page$5 as u,
-  Page$4 as v,
-  Page$3 as w,
-  Page$2 as x,
-  Page$1 as y,
-  Page as z
+  Page$7 as t,
+  Page$6 as u,
+  Page$5 as v,
+  Page$4 as w,
+  Page$3 as x,
+  Page$2 as y,
+  Page$1 as z
 };

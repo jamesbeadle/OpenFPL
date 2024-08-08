@@ -105,6 +105,7 @@ type SystemStateDTO =
    pickTeamGameweek: GameweekNumber;
    pickTeamSeasonId: SeasonId;
    pickTeamSeasonName: text;
+   seasonActive: bool;
    transferWindowActive: bool;
  };
 type SubmitFixtureDataDTO = 
