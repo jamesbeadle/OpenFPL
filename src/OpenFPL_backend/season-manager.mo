@@ -1315,5 +1315,9 @@ module {
       return managerComposite.getStableActiveManagerCanisterId();
     };  
 
+    public func getRewardPool(seasonId: T.SeasonId) : ?T.RewardPool {
+      return rewardPools.get(seasonId);
+    };
+
   };
 };

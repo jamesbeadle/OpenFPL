@@ -2,7 +2,11 @@ import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
   DataCacheDTO,
+  GetCanistersDTO,
+  GetRewardPoolDTO,
   GetSystemLogDTO,
+  GetTimersDTO,
+  GetTopupsDTO,
   SeasonDTO,
   SystemStateDTO,
   TimerDTO,
@@ -88,7 +92,27 @@ function createSystemStore() {
     }
   }
 
-  async function getTimers(): Promise<TimerDTO[] | undefined> {
+  async function getCanisters(): Promise<GetCanistersDTO | undefined> {
+    try {
+      const identityActor: any = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
+      );
+      let result = await identityActor.getCanisters();
+      console.log(result);
+
+      if (isError(result)) {
+        console.error("Error getting canisters:", result);
+        return;
+      }
+      return result.ok;
+    } catch (error) {
+      console.error("Error getting canisters:", error);
+      throw error;
+    }
+  }
+
+  async function getTimers(): Promise<GetTimersDTO | undefined> {
     try {
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
@@ -129,6 +153,46 @@ function createSystemStore() {
     }
   }
 
+  async function getRewardPools(): Promise<GetRewardPoolDTO | undefined> {
+    try {
+      const identityActor: any = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
+      );
+      let result = await identityActor.getRewardPool();
+      console.log(result);
+
+      if (isError(result)) {
+        console.error("Error getting reward pools:", result);
+        return;
+      }
+      return result.ok;
+    } catch (error) {
+      console.error("Error getting reward pools:", error);
+      throw error;
+    }
+  }
+
+  async function getTopups(): Promise<GetTopupsDTO | undefined> {
+    try {
+      const identityActor: any = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
+      );
+      let result = await identityActor.getTopups();
+      console.log(result);
+
+      if (isError(result)) {
+        console.error("Error getting topups:", result);
+        return;
+      }
+      return result.ok;
+    } catch (error) {
+      console.error("Error getting topups:", error);
+      throw error;
+    }
+  }
+
   return {
     subscribe,
     sync,
@@ -136,6 +200,9 @@ function createSystemStore() {
     getSeasons,
     getLogs,
     getTimers,
+    getCanisters,
+    getRewardPools,
+    getTopups,
   };
 }
 

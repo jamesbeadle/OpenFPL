@@ -437,6 +437,24 @@ module DTOs {
     callbackName : Text;
   };
 
+  public type CanisterDTO = {
+    canisterId: T.CanisterId;
+    cycles: Nat;
+    lastTopup: Int;
+    canister_type: T.CanisterType;
+  };
+
+  public type RewardPoolDTO = {
+    seasonId: T.SeasonId;
+    rewardPool: T.RewardPool;
+  };
+
+  public type TopupDTO = {
+    canisterId: Text;
+    toppedUpOn: Int;
+    topupAmount: Nat;
+  };
+
   public type LeagueMemberDTO = {
     principalId : T.PrincipalId;
     username: Text;
@@ -630,6 +648,34 @@ module DTOs {
     canisterId: T.CanisterId;
     lastTopup: Int;
     cyclesBalance: Nat64;
+  };
+
+  public type GetCanistersDTO = {
+    limit : Nat;
+    offset : Nat;
+    entries: [CanisterDTO];
+    totalEntries: Nat;
+    canisterTypeFilter: T.CanisterType;
+  };
+
+  public type GetTimersDTO = {
+    limit : Nat;
+    offset : Nat;
+    entries: [TimerDTO];
+    totalEntries: Nat;
+    timerTypeFilter: ?T.TimerType;
+  };
+
+  public type GetRewardPoolDTO = {
+    seasonId: T.SeasonId;
+    rewardPool: T.RewardPool;
+  };
+
+  public type GetTopupsDTO = {
+    limit : Nat;
+    offset : Nat;
+    entries: [TopupDTO];
+    totalEntries: Nat;
   };
 
   public type GetSystemLogDTO = {

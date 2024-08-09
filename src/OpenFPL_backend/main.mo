@@ -11,6 +11,8 @@
   import Nat64 "mo:base/Nat64";
   import Nat "mo:base/Nat";
   import Option "mo:base/Option";
+  import List "mo:base/List";
+import Order "mo:base/Order";
 
   import T "types";
   import DTOs "DTOs";
@@ -23,6 +25,9 @@
   import SeasonManager "season-manager";
   import TreasuryManager "treasury-manager";
   import CyclesDispenser "cycles-dispenser";
+  import Root "sns-wrappers/root";
+  import Management "./modules/Management";
+import WeeklyLeaderboard "canister_definitions/weekly-leaderboard";
 
   actor Self {
     
@@ -718,6 +723,538 @@
       await seasonManager.payPrivateLeagueReward(Principal.fromActor(Self), privateLeagueCanisterId, treasuryManager.getTokenList(), dto.managerId, dto.amount);
     };
 
+    public shared ({ caller }) func getCanisters(dto: DTOs.GetCanistersDTO) : async Result.Result<DTOs.GetCanistersDTO, T.Error> {
+      assert not Principal.isAnonymous(caller);
+
+      let root_canister = actor (Environment.SNS_ROOT_CANISTER_ID) : actor {
+        get_sns_canisters_summary : (request: Root.GetSnsCanistersSummaryRequest) -> async Root.GetSnsCanistersSummaryResponse;
+      };
+
+      let summary = await root_canister.get_sns_canisters_summary({update_canister_list = ?false});
+
+      let canisterBuffer = Buffer.fromArray<DTOs.CanisterDTO>([]);
+
+      let topups = cyclesDispenser.getStableTopups();
+      let sortedTopups = Array.sort(
+        topups,
+        func(a : T.CanisterTopup, b : T.CanisterTopup) : Order.Order {
+          if (a.topupTime > b.topupTime) { return #greater };
+          if (a.topupTime == b.topupTime) { return #equal };
+          return #less;
+        },
+      );
+
+      switch(dto.canisterTypeFilter){
+        case (#SNS){
+          switch(summary.governance){
+            case (null){ };
+            case (?canister){
+              switch(canister.canister_id){
+                  case (null) {};
+                  case (?foundCanisterId){
+                    let status = canister.status;
+                    switch(status){
+                      case (null){};
+                      case (?foundStatus){
+                        let lastTopup = Array.find<T.CanisterTopup>(topups, func(topup: T.CanisterTopup){
+                            topup.canisterId == Principal.toText(foundCanisterId);
+                        });
+                        var topupTime: Int = 0;
+                        switch(lastTopup){
+                          case (null){};
+                          case (?foundTopup){
+                          topupTime := foundTopup.topupTime;
+                          };
+                        };
+                        canisterBuffer.add({
+                          canisterId = Principal.toText(foundCanisterId);
+                          canister_type = #SNS;
+                          cycles = foundStatus.cycles;
+                          lastTopup = topupTime;
+                        });
+                      }
+                    };
+                  };
+                };
+            };
+          };          
+          
+          switch(summary.index){
+            case (null){ };
+            case (?canister){
+              switch(canister.canister_id){
+                case (null) {};
+                case (?foundCanisterId){
+                  let status = canister.status;
+                  switch(status){
+                    case (null){};
+                    case (?foundStatus){
+                      let lastTopup = Array.find<T.CanisterTopup>(topups, func(topup: T.CanisterTopup){
+                          topup.canisterId == Principal.toText(foundCanisterId);
+                      });
+                      var topupTime: Int = 0;
+                      switch(lastTopup){
+                        case (null){};
+                        case (?foundTopup){
+                        topupTime := foundTopup.topupTime;
+                        };
+                      };
+                      canisterBuffer.add({
+                        canisterId = Principal.toText(foundCanisterId);
+                        canister_type = #SNS;
+                        cycles = foundStatus.cycles;
+                        lastTopup = topupTime;
+                      });
+                    }
+                  };
+                };
+              };
+            };
+          };
+          
+          switch(summary.ledger){
+            case (null){ };
+            case (?canister){
+              switch(canister.canister_id){
+                case (null) {};
+                case (?foundCanisterId){
+                  let status = canister.status;
+                  switch(status){
+                    case (null){};
+                    case (?foundStatus){
+                      let lastTopup = Array.find<T.CanisterTopup>(topups, func(topup: T.CanisterTopup){
+                          topup.canisterId == Principal.toText(foundCanisterId);
+                      });
+                      var topupTime: Int = 0;
+                      switch(lastTopup){
+                        case (null){};
+                        case (?foundTopup){
+                        topupTime := foundTopup.topupTime;
+                        };
+                      };
+                      canisterBuffer.add({
+                        canisterId = Principal.toText(foundCanisterId);
+                        canister_type = #SNS;
+                        cycles = foundStatus.cycles;
+                        lastTopup = topupTime;
+                      });
+                    }
+                  };
+                };
+              };
+            };
+          };
+          
+          switch(summary.root){
+            case (null){ };
+            case (?canister){
+              switch(canister.canister_id){
+                case (null) {};
+                case (?foundCanisterId){
+                  let status = canister.status;
+                    switch(status){
+                    case (null){};
+                    case (?foundStatus){
+                      let lastTopup = Array.find<T.CanisterTopup>(topups, func(topup: T.CanisterTopup){
+                          topup.canisterId == Principal.toText(foundCanisterId);
+                      });
+                      var topupTime: Int = 0;
+                      switch(lastTopup){
+                        case (null){};
+                        case (?foundTopup){
+                        topupTime := foundTopup.topupTime;
+                        };
+                      };
+                      canisterBuffer.add({
+                        canisterId = Principal.toText(foundCanisterId);
+                        canister_type = #SNS;
+                        cycles = foundStatus.cycles;
+                        lastTopup = topupTime;
+                      });
+                    }
+                  };
+                };
+              };
+            };
+          };
+          
+          switch(summary.swap){
+            case (null){ };
+            case (?canister){
+              switch(canister.canister_id){
+                  case (null) {};
+                  case (?foundCanisterId){
+                    let status = canister.status;
+                      switch(status){
+                      case (null){};
+                      case (?foundStatus){
+                        let lastTopup = Array.find<T.CanisterTopup>(topups, func(topup: T.CanisterTopup){
+                            topup.canisterId == Principal.toText(foundCanisterId);
+                        });
+                        var topupTime: Int = 0;
+                        switch(lastTopup){
+                          case (null){};
+                          case (?foundTopup){
+                          topupTime := foundTopup.topupTime;
+                          };
+                        };
+                        canisterBuffer.add({
+                          canisterId = Principal.toText(foundCanisterId);
+                          canister_type = #SNS;
+                          cycles = foundStatus.cycles;
+                          lastTopup = topupTime;
+                        });
+                      }
+                    };
+                  };
+                };
+
+            };
+          };
+        };
+        case (#Dapp){
+          for(canister in Iter.fromArray(summary.dapps)){
+            switch(canister.canister_id){
+              case (null) {};
+              case (?foundCanisterId){
+                let status = canister.status;
+                switch(status){
+                  case (null){};
+                  case (?foundStatus){
+                    let lastTopup = Array.find<T.CanisterTopup>(topups, func(topup: T.CanisterTopup){
+                        topup.canisterId == Principal.toText(foundCanisterId);
+                    });
+                    var topupTime: Int = 0;
+                    switch(lastTopup){
+                      case (null){};
+                      case (?foundTopup){
+                      topupTime := foundTopup.topupTime;
+                      };
+                    };
+                    canisterBuffer.add({
+                      canisterId = Principal.toText(foundCanisterId);
+                      canister_type = #Dapp;
+                      cycles = foundStatus.cycles;
+                      lastTopup = topupTime;
+                    });
+                  }
+                };
+              };
+            };
+          };
+        };
+        case (#Manager){
+          let uniqueManagerCanisterIds = seasonManager.getStableUniqueManagerCanisterIds();
+          for(canisterId in Iter.fromArray(uniqueManagerCanisterIds)){
+            let IC : Management.Management = actor (Environment.Default);
+            let canisterInfo = await (
+              IC.canister_status(
+                {
+                  canister_id = Principal.fromText(canisterId); 
+                  num_requested_changes = null
+                }),
+            );
+            let cycles: Nat = canisterInfo.cycles;
+
+            let lastTopup = Array.find<T.CanisterTopup>(topups, func(topup: T.CanisterTopup){
+                topup.canisterId == canisterId;
+            });
+            var topupTime: Int = 0;
+            switch(lastTopup){
+              case (null){};
+              case (?foundTopup){
+              topupTime := foundTopup.topupTime;
+              };
+            };
+
+            canisterBuffer.add({
+              canisterId = canisterId;
+              canister_type = #Manager;
+              cycles = cycles;
+              lastTopup = topupTime;
+            });
+          };
+        };
+        case (#Archive){
+          for(canister in Iter.fromArray(summary.archives)){
+            switch(canister.canister_id){
+              case (null) {};
+              case (?foundCanisterId){
+                let status = canister.status;
+                switch(status){
+                  case (null){};
+                  case (?foundStatus){
+                    let lastTopup = Array.find<T.CanisterTopup>(topups, func(topup: T.CanisterTopup){
+                        topup.canisterId == Principal.toText(foundCanisterId);
+                    });
+                    var topupTime: Int = 0;
+                    switch(lastTopup){
+                      case (null){};
+                      case (?foundTopup){
+                      topupTime := foundTopup.topupTime;
+                      };
+                    };
+                    canisterBuffer.add({
+                      canisterId = Principal.toText(foundCanisterId);
+                      canister_type = #SNS;
+                      cycles = foundStatus.cycles;
+                      lastTopup = topupTime;
+                    });
+                  }
+                };
+              };
+            };
+          };
+        };
+        case (#WeeklyLeaderboard){
+          let weeklyLeaderboardCanisters = seasonManager.getStableWeeklyLeaderboardCanisters();
+          for(weeklyLeaderboardCanister in Iter.fromArray(weeklyLeaderboardCanisters)){
+            let IC : Management.Management = actor (Environment.Default);
+            let canisterInfo = await (
+              IC.canister_status(
+                {
+                  canister_id = Principal.fromText(weeklyLeaderboardCanister.canisterId); 
+                  num_requested_changes = null
+                }),
+            );
+            let cycles: Nat = canisterInfo.cycles;
+
+            let lastTopup = Array.find<T.CanisterTopup>(topups, func(topup: T.CanisterTopup){
+                topup.canisterId == weeklyLeaderboardCanister.canisterId;
+            });
+            var topupTime: Int = 0;
+            switch(lastTopup){
+              case (null){};
+              case (?foundTopup){
+              topupTime := foundTopup.topupTime;
+              };
+            };
+
+            canisterBuffer.add({
+              canisterId = weeklyLeaderboardCanister.canisterId;
+              canister_type = #WeeklyLeaderboard;
+              cycles = cycles;
+              lastTopup = topupTime;
+            });
+          };
+        };
+        case (#MonthlyLeaderboard){
+          let monthlyLeaderboardCanisters = seasonManager.getStableMonthlyLeaderboardCanisters();
+          for(monthlyLeaderboardCanister in Iter.fromArray(monthlyLeaderboardCanisters)){
+            let IC : Management.Management = actor (Environment.Default);
+            let canisterInfo = await (
+              IC.canister_status(
+                {
+                  canister_id = Principal.fromText(monthlyLeaderboardCanister.canisterId); 
+                  num_requested_changes = null
+                }),
+            );
+            let cycles: Nat = canisterInfo.cycles;
+
+            let lastTopup = Array.find<T.CanisterTopup>(topups, func(topup: T.CanisterTopup){
+                topup.canisterId == monthlyLeaderboardCanister.canisterId;
+            });
+            var topupTime: Int = 0;
+            switch(lastTopup){
+              case (null){};
+              case (?foundTopup){
+              topupTime := foundTopup.topupTime;
+              };
+            };
+
+            canisterBuffer.add({
+              canisterId = monthlyLeaderboardCanister.canisterId;
+              canister_type = #MonthlyLeaderboard;
+              cycles = cycles;
+              lastTopup = topupTime;
+            });
+          };
+
+        };
+        case (#SeasonLeaderboard){
+          let seasonLeaderboardCanisters = seasonManager.getStableSeasonLeaderboardCanisters();
+          for(seasonLeaderboardCanister in Iter.fromArray(seasonLeaderboardCanisters)){
+            let IC : Management.Management = actor (Environment.Default);
+            let canisterInfo = await (
+              IC.canister_status(
+                {
+                  canister_id = Principal.fromText(seasonLeaderboardCanister.canisterId); 
+                  num_requested_changes = null
+                }),
+            );
+            let cycles: Nat = canisterInfo.cycles;
+
+            let lastTopup = Array.find<T.CanisterTopup>(topups, func(topup: T.CanisterTopup){
+                topup.canisterId == seasonLeaderboardCanister.canisterId;
+            });
+            var topupTime: Int = 0;
+            switch(lastTopup){
+              case (null){};
+              case (?foundTopup){
+              topupTime := foundTopup.topupTime;
+              };
+            };
+
+            canisterBuffer.add({
+              canisterId = seasonLeaderboardCanister.canisterId;
+              canister_type = #SeasonLeaderboard;
+              cycles = cycles;
+              lastTopup = topupTime;
+            });
+          };
+   
+        };
+      };
+
+      let canisterList = List.fromArray(Buffer.toArray(canisterBuffer));
+
+      let droppedEntries = List.drop<DTOs.CanisterDTO>(canisterList, dto.offset);
+      let paginatedEntries = List.take<DTOs.CanisterDTO>(droppedEntries, dto.limit);
+
+      return #ok({
+        canisterTypeFilter = dto.canisterTypeFilter;
+        entries = List.toArray(paginatedEntries);
+        limit = dto.limit;
+        offset = dto.offset;
+        totalEntries = List.size(canisterList);
+      });
+      
+    };
+
+    public shared ({ caller }) func getTimers(dto: DTOs.GetTimersDTO) : async Result.Result<DTOs.GetTimersDTO, T.Error> {
+      assert not Principal.isAnonymous(caller);
+      switch(dto.timerTypeFilter){
+        case (null){
+          
+          let droppedEntries = List.drop<T.TimerInfo>(List.fromArray(timers), dto.offset);
+          let paginatedEntries = List.take<T.TimerInfo>(droppedEntries, dto.limit);
+          return #ok({
+            limit = dto.limit;
+            offset = dto.offset;
+            entries = List.toArray(paginatedEntries);
+            totalEntries = Array.size(timers);
+            timerTypeFilter = dto.timerTypeFilter;
+          });
+        };
+        case (?#LoanComplete){
+          let filteredEntries = Array.filter<T.TimerInfo>(timers, func(timer: T.TimerInfo){
+            timer.callbackName == "loanExpired";
+          });
+          let droppedEntries = List.drop<T.TimerInfo>(List.fromArray(filteredEntries), dto.offset);
+          let paginatedEntries = List.take<T.TimerInfo>(droppedEntries, dto.limit);
+          return #ok({
+            limit = dto.limit;
+            offset = dto.offset;
+            entries = List.toArray(paginatedEntries);
+            totalEntries = Array.size(filteredEntries);
+            timerTypeFilter = dto.timerTypeFilter;
+          });
+        };
+        case (?#GameComplete){
+          let filteredEntries = Array.filter<T.TimerInfo>(timers, func(timer: T.TimerInfo){
+            timer.callbackName == "gameCompletedExpired";
+          });
+          let droppedEntries = List.drop<T.TimerInfo>(List.fromArray(filteredEntries), dto.offset);
+          let paginatedEntries = List.take<T.TimerInfo>(droppedEntries, dto.limit);
+          return #ok({
+            limit = dto.limit;
+            offset = dto.offset;
+            entries = List.toArray(paginatedEntries);
+            totalEntries = Array.size(filteredEntries);
+            timerTypeFilter = dto.timerTypeFilter;
+          });
+        };
+        case (?#GameKickOff){
+          let filteredEntries = Array.filter<T.TimerInfo>(timers, func(timer: T.TimerInfo){
+            timer.callbackName == "gameKickOffExpired";
+          });
+          let droppedEntries = List.drop<T.TimerInfo>(List.fromArray(filteredEntries), dto.offset);
+          let paginatedEntries = List.take<T.TimerInfo>(droppedEntries, dto.limit);
+          return #ok({
+            limit = dto.limit;
+            offset = dto.offset;
+            entries = List.toArray(paginatedEntries);
+            totalEntries = Array.size(filteredEntries);
+            timerTypeFilter = dto.timerTypeFilter;
+          });
+        };
+        case (?#GameweekBegin){
+          let filteredEntries = Array.filter<T.TimerInfo>(timers, func(timer: T.TimerInfo){
+            timer.callbackName == "gameweekBeginExpired";
+          });
+          let droppedEntries = List.drop<T.TimerInfo>(List.fromArray(filteredEntries), dto.offset);
+          let paginatedEntries = List.take<T.TimerInfo>(droppedEntries, dto.limit);
+          return #ok({
+            limit = dto.limit;
+            offset = dto.offset;
+            entries = List.toArray(paginatedEntries);
+            totalEntries = Array.size(filteredEntries);
+            timerTypeFilter = dto.timerTypeFilter;
+          });
+        };
+        case (?#TransferWindow){
+          let filteredEntries = Array.filter<T.TimerInfo>(timers, func(timer: T.TimerInfo){
+            timer.callbackName == "transferWindowStart" or timer.callbackName == "transferWindowEnd";
+          });
+          let droppedEntries = List.drop<T.TimerInfo>(List.fromArray(filteredEntries), dto.offset);
+          let paginatedEntries = List.take<T.TimerInfo>(droppedEntries, dto.limit);
+          return #ok({
+            limit = dto.limit;
+            offset = dto.offset;
+            entries = List.toArray(paginatedEntries);
+            totalEntries = Array.size(filteredEntries);
+            timerTypeFilter = dto.timerTypeFilter;
+          });
+        };
+        case (?#InjuryExpired){
+          let filteredEntries = Array.filter<T.TimerInfo>(timers, func(timer: T.TimerInfo){
+            timer.callbackName == "injuryExpired";
+          });
+          let droppedEntries = List.drop<T.TimerInfo>(List.fromArray(filteredEntries), dto.offset);
+          let paginatedEntries = List.take<T.TimerInfo>(droppedEntries, dto.limit);
+          return #ok({
+            limit = dto.limit;
+            offset = dto.offset;
+            entries = List.toArray(paginatedEntries);
+            totalEntries = Array.size(filteredEntries);
+            timerTypeFilter = dto.timerTypeFilter;
+          });
+        }
+      };
+    };
+
+    public shared ({ caller }) func getRewardPool(dto: DTOs.GetRewardPoolDTO) : async Result.Result<DTOs.GetRewardPoolDTO, T.Error> {
+      assert not Principal.isAnonymous(caller);
+      let rewardPool = seasonManager.getRewardPool(dto.seasonId);
+      switch(rewardPool){
+        case (null){
+          return #err(#NotFound);
+        };
+        case (?foundRewardPool){
+          return #ok({rewardPool = foundRewardPool; seasonId = dto.seasonId});
+        }
+      };
+    };
+
+    public shared ({ caller }) func getTopups(dto: DTOs.GetTopupsDTO) : async Result.Result<DTOs.GetTopupsDTO, T.Error> {
+      assert not Principal.isAnonymous(caller);
+      
+      let topups = cyclesDispenser.getStableTopups();
+      let droppedEntries = List.drop<T.CanisterTopup>(List.fromArray(topups), dto.offset);
+      let paginatedEntries = List.take<T.CanisterTopup>(droppedEntries, dto.limit);
+
+      return #ok({
+        entries = List.toArray<DTOs.TopupDTO>(List.map<T.CanisterTopup, DTOs.TopupDTO>(paginatedEntries, func(entry: T.CanisterTopup) : DTOs.TopupDTO{
+          return {
+            canisterId = entry.canisterId; toppedUpOn = entry.topupTime; topupAmount = entry.cyclesAmount;
+          }
+        }));
+        limit = dto.limit;
+        offset = dto.offset;
+        totalEntries = Array.size(topups);
+      });
+    };
+
     public shared ({ caller }) func getSystemLog(dto: DTOs.GetSystemLogDTO) : async Result.Result<DTOs.GetSystemLogDTO, T.Error> {
       assert not Principal.isAnonymous(caller);
       if(dto.limit > 0 and (dto.limit < 1 or dto.limit > 100)){
@@ -1172,10 +1709,6 @@
 
     public func getActiveManagerCanisterId() : async T.CanisterId {
       return seasonManager.getActiveManagerCanisterId();
-    };
-
-    public func getTimers() : async [DTOs.TimerDTO] {
-      return timers;
     };
 
 

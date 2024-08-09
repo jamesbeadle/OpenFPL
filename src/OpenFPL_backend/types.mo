@@ -516,5 +516,24 @@ module _Types {
     #UnexpectedError;
     #CanisterTopup;
     #ManagerCanisterCreated;
-  }
+  };
+
+  public type CanisterType = {
+    #SNS;
+    #Manager;
+    #WeeklyLeaderboard;
+    #MonthlyLeaderboard;
+    #SeasonLeaderboard;
+    #Archive;
+    #Dapp;
+  };
+
+  public type TimerType = {
+    #LoanComplete;
+    #GameweekBegin;
+    #GameKickOff;
+    #GameComplete;
+    #InjuryExpired;
+    #TransferWindow;
+  };
 };
