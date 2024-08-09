@@ -340,6 +340,7 @@ export interface PickTeamDTO {
   'principalId' : string,
   'passMasterPlayerId' : PlayerId,
   'captainId' : PlayerId,
+  'canisterId' : CanisterId,
   'monthlyBonusesAvailable' : number,
 }
 export interface PlayerDTO {

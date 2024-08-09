@@ -434,6 +434,7 @@ type PickTeamDTO =
  record {
    bankQuarterMillions: nat16;
    braceBonusGameweek: GameweekNumber;
+   canisterId: CanisterId;
    captainFantasticGameweek: GameweekNumber;
    captainFantasticPlayerId: PlayerId;
    captainId: PlayerId;

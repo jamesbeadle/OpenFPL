@@ -3515,7 +3515,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "12rjf3q"
+  version_hash: "l301e8"
 };
 async function get_hooks() {
   return {};
@@ -3995,6 +3995,7 @@ const idlFactory = ({ IDL }) => {
     "principalId": IDL.Text,
     "passMasterPlayerId": PlayerId,
     "captainId": PlayerId,
+    "canisterId": CanisterId,
     "monthlyBonusesAvailable": IDL.Nat8
   });
   const Result_22 = IDL.Variant({ "ok": PickTeamDTO, "err": Error2 });
@@ -5602,7 +5603,8 @@ function createManagerStore() {
     principalId: "",
     passMasterPlayerId: 0,
     captainId: 0,
-    monthlyBonusesAvailable: 0
+    monthlyBonusesAvailable: 0,
+    canisterId: ""
   };
   async function getPublicProfile(principalId) {
     try {
@@ -5681,6 +5683,7 @@ function createManagerStore() {
         define_process_env_default$8.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.getCurrentTeam();
+      console.log(result);
       if (isError(result)) {
         return newManager;
       }
@@ -10125,10 +10128,7 @@ const Page$3 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   })}`;
 });
 const Page$2 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let $$unsubscribe_systemStore;
-  $$unsubscribe_systemStore = subscribe(systemStore, (value) => value);
-  $$unsubscribe_systemStore();
-  return `       ${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
+  return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
       return `<div class="bg-panel rounded-md mt-4"><h1 class="default-header p-4" data-svelte-h="svelte-i9zo64">OpenFPL System Status</h1> ${`${validate_component(Local_spinner, "LocalSpinner").$$render($$result, {}, {}, {})}`}</div>`;
     }

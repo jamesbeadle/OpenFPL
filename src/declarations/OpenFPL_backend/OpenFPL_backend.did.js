@@ -271,6 +271,7 @@ export const idlFactory = ({ IDL }) => {
     'principalId' : IDL.Text,
     'passMasterPlayerId' : PlayerId,
     'captainId' : PlayerId,
+    'canisterId' : CanisterId,
     'monthlyBonusesAvailable' : IDL.Nat8,
   });
   const Result_22 = IDL.Variant({ 'ok' : PickTeamDTO, 'err' : Error });

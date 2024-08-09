@@ -58,6 +58,7 @@ function createManagerStore() {
     passMasterPlayerId: 0,
     captainId: 0,
     monthlyBonusesAvailable: 0,
+    canisterId: "",
   };
 
   async function getPublicProfile(principalId: string): Promise<ManagerDTO> {
