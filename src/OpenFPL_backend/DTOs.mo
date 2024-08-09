@@ -38,6 +38,7 @@ module DTOs {
     braceBonusGameweek : T.GameweekNumber;
     hatTrickHeroGameweek : T.GameweekNumber;
     transferWindowGameweek : T.GameweekNumber;
+    canisterId: T.CanisterId;
   };
 
   public type GetManagerDTO = {

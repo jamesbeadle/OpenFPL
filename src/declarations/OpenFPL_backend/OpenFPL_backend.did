@@ -95,6 +95,12 @@ type TokenInfo =
    tokenImageURL: text;
  };
 type TokenId = nat16;
+type TimerDTO = 
+ record {
+   callbackName: text;
+   id: int;
+   triggerTime: int;
+ };
 type SystemStateDTO = 
  record {
    calculationGameweek: GameweekNumber;
@@ -888,6 +894,7 @@ service : {
   getSeasons: () -> (Result_7) query;
   getSystemLog: (GetSystemLogDTO) -> (Result_6);
   getSystemState: () -> (Result_5) query;
+  getTimers: () -> (vec TimerDTO);
   getTokenList: () -> (Result_4);
   getTotalManagers: () -> (Result_3) query;
   getTreasuryAccountPublic: () -> (AccountIdentifier__1);

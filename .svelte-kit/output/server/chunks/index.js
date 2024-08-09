@@ -3515,7 +3515,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "htiw8k"
+  version_hash: "12rjf3q"
 };
 async function get_hooks() {
   return {};
@@ -4322,6 +4322,11 @@ const idlFactory = ({ IDL }) => {
     "seasonActive": IDL.Bool
   });
   const Result_5 = IDL.Variant({ "ok": SystemStateDTO, "err": Error2 });
+  const TimerDTO = IDL.Record({
+    "id": IDL.Int,
+    "callbackName": IDL.Text,
+    "triggerTime": IDL.Int
+  });
   const TokenInfo = IDL.Record({
     "id": TokenId,
     "fee": IDL.Nat,
@@ -4484,6 +4489,7 @@ const idlFactory = ({ IDL }) => {
     "getSeasons": IDL.Func([], [Result_7], ["query"]),
     "getSystemLog": IDL.Func([GetSystemLogDTO], [Result_6], []),
     "getSystemState": IDL.Func([], [Result_5], ["query"]),
+    "getTimers": IDL.Func([], [IDL.Vec(TimerDTO)], []),
     "getTokenList": IDL.Func([], [Result_4], []),
     "getTotalManagers": IDL.Func([], [Result_3], ["query"]),
     "getTreasuryAccountPublic": IDL.Func([], [AccountIdentifier__1], []),
@@ -4902,6 +4908,24 @@ function createSystemStore() {
       throw error;
     }
   }
+  async function getTimers() {
+    try {
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        define_process_env_default$b.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
+      let result = await identityActor.getTimers();
+      console.log(result);
+      if (isError(result)) {
+        console.error("Error getting timers:", result);
+        return;
+      }
+      return result.ok;
+    } catch (error) {
+      console.error("Error getting timers:", error);
+      throw error;
+    }
+  }
   async function getLogs(dto) {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
@@ -4924,7 +4948,8 @@ function createSystemStore() {
     sync,
     getSystemState,
     getSeasons,
-    getLogs
+    getLogs,
+    getTimers
   };
 }
 const systemStore = createSystemStore();
@@ -10103,7 +10128,7 @@ const Page$2 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_systemStore;
   $$unsubscribe_systemStore = subscribe(systemStore, (value) => value);
   $$unsubscribe_systemStore();
-  return `           ${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
+  return `       ${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
       return `<div class="bg-panel rounded-md mt-4"><h1 class="default-header p-4" data-svelte-h="svelte-i9zo64">OpenFPL System Status</h1> ${`${validate_component(Local_spinner, "LocalSpinner").$$render($$result, {}, {}, {})}`}</div>`;
     }

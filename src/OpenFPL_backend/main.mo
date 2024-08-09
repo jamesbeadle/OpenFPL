@@ -976,6 +976,8 @@
       treasuryManager.setStableTokenList(stable_token_list);
       treasuryManager.setStableNextTokenId(stable_next_token_id);
 
+      timers := stable_timers;
+
       let currentTime = Time.now();
       for (timerInfo in Iter.fromArray(timers)) {
         let remainingDuration = timerInfo.triggerTime - currentTime;
@@ -1013,11 +1015,23 @@
     };
 
     private func postUpgradeCallback() : async (){
-      /*
-      seasonManager.setInitialSeason();
-      seasonManager.setInitialClubs();
-      seasonManager.setInitialPlayers();
-     */
+
+      //cancel all existing timers
+      for (timerInfo in Iter.fromArray(timers)) {
+        let timerId = Nat64.toNat(Nat64.fromIntWrap(timerInfo.id));
+        Timer.cancelTimer(timerId);
+      };
+
+      //reset the timers and stable timers
+      timers := [];
+      stable_timers := timers;
+
+      //set timers for gameweek 1 fixtures
+      await seasonManager.setGameweekTimers(1);
+      
+      ignore Timer.setTimer<system>(#nanoseconds 1, cyclesCheckCallback);
+      
+      //on each update generate new hash values
       await seasonManager.updateCacheHash("clubs");
       await seasonManager.updateCacheHash("fixtures");
       await seasonManager.updateCacheHash("weekly_leaderboard");
@@ -1028,8 +1042,8 @@
       await seasonManager.updateCacheHash("countries");
       await seasonManager.updateCacheHash("system_state");
 
-      await systemCheckCallback();
-      await cyclesCheckCallback();
+      //await systemCheckCallback(); //TODO UPDATE THIS SO IT's more informative and delete the existing
+      //await cyclesCheckCallback(); SHOULD I NEED TO DO THIS AM I NOT BACKING IT UP?>!?!!
     };
     
     //Canister cycle topup functions
@@ -1064,6 +1078,7 @@
     //System timer functions
 
     private var timers : [T.TimerInfo] = [];
+    
     public func setTimer(time : Int, callbackName : Text) : async () {
       let duration : Timer.Duration = #seconds(Int.abs(time - Time.now()));
       await setAndBackupTimer(duration, callbackName);
@@ -1157,6 +1172,10 @@
 
     public func getActiveManagerCanisterId() : async T.CanisterId {
       return seasonManager.getActiveManagerCanisterId();
+    };
+
+    public func getTimers() : async [DTOs.TimerDTO] {
+      return timers;
     };
 
 

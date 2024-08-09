@@ -276,6 +276,7 @@ module {
                 braceBonusGameweek = foundManager.braceBonusGameweek;
                 hatTrickHeroGameweek = foundManager.hatTrickHeroGameweek;
                 transferWindowGameweek = foundManager.transferWindowGameweek;
+                canisterId = foundCanisterId;
               };
 
               return #ok(pickTeamDTO);

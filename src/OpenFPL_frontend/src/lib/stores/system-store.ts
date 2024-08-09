@@ -5,6 +5,7 @@ import type {
   GetSystemLogDTO,
   SeasonDTO,
   SystemStateDTO,
+  TimerDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { isError, replacer } from "../utils/helpers";
@@ -87,6 +88,26 @@ function createSystemStore() {
     }
   }
 
+  async function getTimers(): Promise<TimerDTO[] | undefined> {
+    try {
+      const identityActor: any = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
+      );
+      let result = await identityActor.getTimers();
+      console.log(result);
+
+      if (isError(result)) {
+        console.error("Error getting timers:", result);
+        return;
+      }
+      return result.ok;
+    } catch (error) {
+      console.error("Error getting timers:", error);
+      throw error;
+    }
+  }
+
   async function getLogs(
     dto: GetSystemLogDTO,
   ): Promise<GetSystemLogDTO | undefined> {
@@ -114,6 +135,7 @@ function createSystemStore() {
     getSystemState,
     getSeasons,
     getLogs,
+    getTimers,
   };
 }
 

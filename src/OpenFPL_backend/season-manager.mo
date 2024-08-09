@@ -475,12 +475,12 @@ module {
       };
     };
 
-    private func setGameweekTimers() : async () {
+    public func setGameweekTimers(gameweek: T.GameweekNumber) : async () {
       let fixtures = seasonComposite.getFixtures({seasonId = systemState.calculationSeasonId});
       let filteredFilters = Array.filter<DTOs.FixtureDTO>(
         fixtures,
         func(fixture : DTOs.FixtureDTO) : Bool {
-          return fixture.gameweek == systemState.pickTeamGameweek;
+          return fixture.gameweek == gameweek;
         },
       );
 
@@ -502,7 +502,7 @@ module {
         };
       };
 
-      await setKickOffTimers(fixtures);
+      await setKickOffTimers(filteredFilters);
     };
 
     private func setKickOffTimers(gameweekFixtures : [DTOs.FixtureDTO]) : async () {
@@ -635,7 +635,7 @@ module {
 
       systemState := updatedSystemState;
 
-      await setGameweekTimers();
+      await setGameweekTimers(1);
       await updateCacheHash("fixtures");
     };
 
@@ -679,6 +679,7 @@ module {
             await payWeeklyRewards(defaultAccount, foundRewardPool);
             //await privateLeaguesManager.payWeeklyRewards({ seasonId = systemState.calculationSeasonId; gameweek = systemState.calculationGameweek });
             await incrementCalculationGameweek();
+            await setGameweekTimers(systemState.calculationGameweek);
           };
 
           if(monthComplete){

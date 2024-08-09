@@ -598,6 +598,11 @@ export const idlFactory = ({ IDL }) => {
     'seasonActive' : IDL.Bool,
   });
   const Result_5 = IDL.Variant({ 'ok' : SystemStateDTO, 'err' : Error });
+  const TimerDTO = IDL.Record({
+    'id' : IDL.Int,
+    'callbackName' : IDL.Text,
+    'triggerTime' : IDL.Int,
+  });
   const TokenInfo = IDL.Record({
     'id' : TokenId,
     'fee' : IDL.Nat,
@@ -760,6 +765,7 @@ export const idlFactory = ({ IDL }) => {
     'getSeasons' : IDL.Func([], [Result_7], ['query']),
     'getSystemLog' : IDL.Func([GetSystemLogDTO], [Result_6], []),
     'getSystemState' : IDL.Func([], [Result_5], ['query']),
+    'getTimers' : IDL.Func([], [IDL.Vec(TimerDTO)], []),
     'getTokenList' : IDL.Func([], [Result_4], []),
     'getTotalManagers' : IDL.Func([], [Result_3], ['query']),
     'getTreasuryAccountPublic' : IDL.Func([], [AccountIdentifier__1], []),

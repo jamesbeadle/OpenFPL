@@ -559,6 +559,11 @@ export interface SystemStateDTO {
   'onHold' : boolean,
   'seasonActive' : boolean,
 }
+export interface TimerDTO {
+  'id' : bigint,
+  'callbackName' : string,
+  'triggerTime' : bigint,
+}
 export type TokenId = number;
 export interface TokenInfo {
   'id' : TokenId,
@@ -715,6 +720,7 @@ export interface _SERVICE {
   'getSeasons' : ActorMethod<[], Result_7>,
   'getSystemLog' : ActorMethod<[GetSystemLogDTO], Result_6>,
   'getSystemState' : ActorMethod<[], Result_5>,
+  'getTimers' : ActorMethod<[], Array<TimerDTO>>,
   'getTokenList' : ActorMethod<[], Result_4>,
   'getTotalManagers' : ActorMethod<[], Result_3>,
   'getTreasuryAccountPublic' : ActorMethod<[], AccountIdentifier__1>,
