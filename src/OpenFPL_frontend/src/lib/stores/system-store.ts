@@ -92,13 +92,16 @@ function createSystemStore() {
     }
   }
 
-  async function getCanisters(): Promise<GetCanistersDTO | undefined> {
+  async function getCanisters(
+    dto: GetCanistersDTO,
+  ): Promise<GetCanistersDTO | undefined> {
     try {
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
-      let result = await identityActor.getCanisters();
+
+      let result = await identityActor.getCanisters(dto);
       console.log(result);
 
       if (isError(result)) {
@@ -112,13 +115,15 @@ function createSystemStore() {
     }
   }
 
-  async function getTimers(): Promise<GetTimersDTO | undefined> {
+  async function getTimers(
+    dto: GetTimersDTO,
+  ): Promise<GetTimersDTO | undefined> {
     try {
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
-      let result = await identityActor.getTimers();
+      let result = await identityActor.getTimers(dto);
       console.log(result);
 
       if (isError(result)) {
@@ -153,13 +158,15 @@ function createSystemStore() {
     }
   }
 
-  async function getRewardPools(): Promise<GetRewardPoolDTO | undefined> {
+  async function getRewardPool(
+    dto: GetRewardPoolDTO,
+  ): Promise<GetRewardPoolDTO | undefined> {
     try {
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
-      let result = await identityActor.getRewardPool();
+      let result = await identityActor.getRewardPool(dto);
       console.log(result);
 
       if (isError(result)) {
@@ -173,13 +180,15 @@ function createSystemStore() {
     }
   }
 
-  async function getTopups(): Promise<GetTopupsDTO | undefined> {
+  async function getTopups(
+    dto: GetTopupsDTO,
+  ): Promise<GetTopupsDTO | undefined> {
     try {
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
-      let result = await identityActor.getTopups();
+      let result = await identityActor.getTopups(dto);
       console.log(result);
 
       if (isError(result)) {
@@ -193,6 +202,46 @@ function createSystemStore() {
     }
   }
 
+  async function getBackendCanisterBalance(): Promise<bigint | undefined> {
+    try {
+      const identityActor: any = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
+      );
+      let result = await identityActor.getBackendCanisterBalance();
+
+      if (isError(result)) {
+        console.error("Error getting backend FPL balance:", result);
+        return;
+      }
+      return result.ok;
+    } catch (error) {
+      console.error("Error getting backend FPL balance:", error);
+      throw error;
+    }
+  }
+
+  async function getBackendCanisterCyclesAvailable(): Promise<
+    bigint | undefined
+  > {
+    try {
+      const identityActor: any = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
+      );
+      let result = await identityActor.getCanisterCyclesBalance();
+
+      if (isError(result)) {
+        console.error("Error getting backend cycles:", result);
+        return;
+      }
+      return result.ok;
+    } catch (error) {
+      console.error("Error getting backend cycles:", error);
+      throw error;
+    }
+  }
+
   return {
     subscribe,
     sync,
@@ -201,8 +250,10 @@ function createSystemStore() {
     getLogs,
     getTimers,
     getCanisters,
-    getRewardPools,
+    getRewardPool,
     getTopups,
+    getBackendCanisterBalance,
+    getBackendCanisterCyclesAvailable,
   };
 }
 

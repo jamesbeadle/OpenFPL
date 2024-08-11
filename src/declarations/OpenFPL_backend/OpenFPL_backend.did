@@ -626,7 +626,7 @@ type GetTimersDTO =
    entries: vec TimerDTO;
    limit: nat;
    offset: nat;
-   timerTypeFilter: opt TimerType;
+   timerTypeFilter: TimerType;
    totalEntries: nat;
  };
 type GetSystemLogDTO = 
@@ -634,7 +634,7 @@ type GetSystemLogDTO =
    dateEnd: int;
    dateStart: int;
    entries: vec EventLogEntry;
-   eventType: opt EventLogEntryType;
+   eventType: EventLogEntryType;
    limit: nat;
    offset: nat;
    totalEntries: nat;
@@ -953,8 +953,9 @@ service : {
   executeUpdateClub: (UpdateClubDTO) -> ();
   executeUpdatePlayer: (UpdatePlayerDTO) -> ();
   getActiveManagerCanisterId: () -> (CanisterId);
+  getBackendCanisterBalance: () -> (Result_3);
   getCanisterCyclesAvailable: () -> (nat);
-  getCanisterCyclesBalance: () -> (nat);
+  getCanisterCyclesBalance: () -> (Result_3);
   getCanisters: (GetCanistersDTO) -> (Result_27);
   getClubs: () -> (Result_23) query;
   getCountries: () -> (Result_26) query;

@@ -229,6 +229,7 @@ export const idlFactory = ({ IDL }) => {
     'lastName' : IDL.Text,
     'firstName' : IDL.Text,
   });
+  const Result_3 = IDL.Variant({ 'ok' : IDL.Nat, 'err' : Error });
   const CanisterType = IDL.Variant({
     'SNS' : IDL.Null,
     'MonthlyLeaderboard' : IDL.Null,
@@ -622,7 +623,7 @@ export const idlFactory = ({ IDL }) => {
     'dateStart' : IDL.Int,
     'limit' : IDL.Nat,
     'entries' : IDL.Vec(EventLogEntry),
-    'eventType' : IDL.Opt(EventLogEntryType),
+    'eventType' : EventLogEntryType,
   });
   const Result_8 = IDL.Variant({ 'ok' : GetSystemLogDTO, 'err' : Error });
   const SystemStateDTO = IDL.Record({
@@ -653,7 +654,7 @@ export const idlFactory = ({ IDL }) => {
   });
   const GetTimersDTO = IDL.Record({
     'totalEntries' : IDL.Nat,
-    'timerTypeFilter' : IDL.Opt(TimerType),
+    'timerTypeFilter' : TimerType,
     'offset' : IDL.Nat,
     'limit' : IDL.Nat,
     'entries' : IDL.Vec(TimerDTO),
@@ -679,7 +680,6 @@ export const idlFactory = ({ IDL }) => {
     'entries' : IDL.Vec(TopupDTO),
   });
   const Result_4 = IDL.Variant({ 'ok' : GetTopupsDTO, 'err' : Error });
-  const Result_3 = IDL.Variant({ 'ok' : IDL.Nat, 'err' : Error });
   const AccountIdentifier__1 = IDL.Vec(IDL.Nat8);
   const GetWeeklyLeaderboardDTO = IDL.Record({
     'offset' : IDL.Nat,
@@ -766,8 +766,9 @@ export const idlFactory = ({ IDL }) => {
     'executeUpdateClub' : IDL.Func([UpdateClubDTO], [], []),
     'executeUpdatePlayer' : IDL.Func([UpdatePlayerDTO], [], []),
     'getActiveManagerCanisterId' : IDL.Func([], [CanisterId], []),
+    'getBackendCanisterBalance' : IDL.Func([], [Result_3], []),
     'getCanisterCyclesAvailable' : IDL.Func([], [IDL.Nat], []),
-    'getCanisterCyclesBalance' : IDL.Func([], [IDL.Nat], []),
+    'getCanisterCyclesBalance' : IDL.Func([], [Result_3], []),
     'getCanisters' : IDL.Func([GetCanistersDTO], [Result_27], []),
     'getClubs' : IDL.Func([], [Result_23], ['query']),
     'getCountries' : IDL.Func([], [Result_26], ['query']),

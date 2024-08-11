@@ -663,7 +663,7 @@ module DTOs {
     offset : Nat;
     entries: [TimerDTO];
     totalEntries: Nat;
-    timerTypeFilter: ?T.TimerType;
+    timerTypeFilter: T.TimerType;
   };
 
   public type GetRewardPoolDTO = {
@@ -683,7 +683,7 @@ module DTOs {
     offset : Nat;
     dateStart : Int;
     dateEnd: Int;
-    eventType: ?T.EventLogEntryType;
+    eventType: T.EventLogEntryType;
     entries: [T.EventLogEntry];
     totalEntries: Nat;
   };

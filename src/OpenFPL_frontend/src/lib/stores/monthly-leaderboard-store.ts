@@ -2,6 +2,7 @@ import { systemStore } from "$lib/stores/system-store";
 import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
+  ClubLeaderboardDTO,
   DataCacheDTO,
   GetMonthlyLeaderboardDTO,
   MonthlyLeaderboardDTO,
@@ -99,8 +100,7 @@ function createMonthlyLeaderboardStore() {
       const cachedData = localStorage.getItem(category);
 
       if (cachedData) {
-        let cachedLeaderboards: MonthlyLeaderboardDTO[] =
-          JSON.parse(cachedData);
+        let cachedLeaderboards: ClubLeaderboardDTO[] = JSON.parse(cachedData);
         let clubLeaderboard = cachedLeaderboards.find(
           (x) => x.clubId === clubId,
         );
@@ -136,7 +136,7 @@ function createMonthlyLeaderboardStore() {
       return emptyReturn;
     }
 
-    let leaderboardData = result.ok as MonthlyLeaderboardDTO[];
+    let leaderboardData = result.ok as ClubLeaderboardDTO[];
     let clubLeaderboard = leaderboardData.find((x) => x.clubId === clubId);
     if (!clubLeaderboard) {
       return emptyReturn;

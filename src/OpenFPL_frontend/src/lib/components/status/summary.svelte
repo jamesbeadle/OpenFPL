@@ -5,12 +5,26 @@
     import LocalSpinner from "../local-spinner.svelte";
 
     let isLoading = true;
+    let backendCanisterBalance = 0n;
+    let backendCyclesAvailable = 0n;
 
     onMount(async () => {
       try{
         await systemStore.sync();
+
+        let fplBalance = await systemStore.getBackendCanisterBalance();
+
+        if(fplBalance){
+          backendCanisterBalance = fplBalance;
+        }
+
+        let cyclesBalance = await systemStore.getBackendCanisterCyclesAvailable();
+
+        if(cyclesBalance){
+          backendCyclesAvailable = cyclesBalance; 
+        }
       } catch (error){
-        console.error("Error syncing system store in status summary.")
+        console.error("Error fetching system summary.")
       } finally {
         isLoading = false;
       };
@@ -27,10 +41,8 @@
         <p>Season Active: {$systemStore?.seasonActive}</p>
         <p>Transfer Window Active: {$systemStore?.transferWindowActive}</p>
         <p>On Hold: {$systemStore?.onHold}</p>
-
-<!-- TODO: Total available backend canister cycles -->
-
-<!-- Maybe the code to top it up for anyone -->
-
+        <p>Backend Canister FPL Balance: {backendCanisterBalance}</p>
+        <p>Backend Cycles Available: {backendCyclesAvailable}</p>
+        <p>To topup the OpenFPL backend canister with 100T cycles, run dfx wallet --network=ic send bboqb-jiaaa-aaaal-qb6ea-cai 100_000_000_000_000</p>
     </div>
 {/if}

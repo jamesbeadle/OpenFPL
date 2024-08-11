@@ -3515,7 +3515,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1gg74j"
+  version_hash: "1t2ln8x"
 };
 async function get_hooks() {
   return {};
@@ -3953,6 +3953,7 @@ const idlFactory = ({ IDL }) => {
     "lastName": IDL.Text,
     "firstName": IDL.Text
   });
+  const Result_3 = IDL.Variant({ "ok": IDL.Nat, "err": Error2 });
   const CanisterType = IDL.Variant({
     "SNS": IDL.Null,
     "MonthlyLeaderboard": IDL.Null,
@@ -4346,7 +4347,7 @@ const idlFactory = ({ IDL }) => {
     "dateStart": IDL.Int,
     "limit": IDL.Nat,
     "entries": IDL.Vec(EventLogEntry),
-    "eventType": IDL.Opt(EventLogEntryType)
+    "eventType": EventLogEntryType
   });
   const Result_8 = IDL.Variant({ "ok": GetSystemLogDTO, "err": Error2 });
   const SystemStateDTO = IDL.Record({
@@ -4377,7 +4378,7 @@ const idlFactory = ({ IDL }) => {
   });
   const GetTimersDTO = IDL.Record({
     "totalEntries": IDL.Nat,
-    "timerTypeFilter": IDL.Opt(TimerType),
+    "timerTypeFilter": TimerType,
     "offset": IDL.Nat,
     "limit": IDL.Nat,
     "entries": IDL.Vec(TimerDTO)
@@ -4403,7 +4404,6 @@ const idlFactory = ({ IDL }) => {
     "entries": IDL.Vec(TopupDTO)
   });
   const Result_4 = IDL.Variant({ "ok": GetTopupsDTO, "err": Error2 });
-  const Result_3 = IDL.Variant({ "ok": IDL.Nat, "err": Error2 });
   const AccountIdentifier__1 = IDL.Vec(IDL.Nat8);
   const GetWeeklyLeaderboardDTO = IDL.Record({
     "offset": IDL.Nat,
@@ -4490,8 +4490,9 @@ const idlFactory = ({ IDL }) => {
     "executeUpdateClub": IDL.Func([UpdateClubDTO], [], []),
     "executeUpdatePlayer": IDL.Func([UpdatePlayerDTO], [], []),
     "getActiveManagerCanisterId": IDL.Func([], [CanisterId], []),
+    "getBackendCanisterBalance": IDL.Func([], [Result_3], []),
     "getCanisterCyclesAvailable": IDL.Func([], [IDL.Nat], []),
-    "getCanisterCyclesBalance": IDL.Func([], [IDL.Nat], []),
+    "getCanisterCyclesBalance": IDL.Func([], [Result_3], []),
     "getCanisters": IDL.Func([GetCanistersDTO], [Result_27], []),
     "getClubs": IDL.Func([], [Result_23], ["query"]),
     "getCountries": IDL.Func([], [Result_26], ["query"]),
@@ -4979,13 +4980,13 @@ function createSystemStore() {
       throw error;
     }
   }
-  async function getCanisters() {
+  async function getCanisters(dto) {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
         define_process_env_default$b.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      let result = await identityActor.getCanisters();
+      let result = await identityActor.getCanisters(dto);
       console.log(result);
       if (isError(result)) {
         console.error("Error getting canisters:", result);
@@ -4997,13 +4998,13 @@ function createSystemStore() {
       throw error;
     }
   }
-  async function getTimers() {
+  async function getTimers(dto) {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
         define_process_env_default$b.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      let result = await identityActor.getTimers();
+      let result = await identityActor.getTimers(dto);
       console.log(result);
       if (isError(result)) {
         console.error("Error getting timers:", result);
@@ -5032,13 +5033,13 @@ function createSystemStore() {
       throw error;
     }
   }
-  async function getRewardPools() {
+  async function getRewardPool(dto) {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
         define_process_env_default$b.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      let result = await identityActor.getRewardPool();
+      let result = await identityActor.getRewardPool(dto);
       console.log(result);
       if (isError(result)) {
         console.error("Error getting reward pools:", result);
@@ -5050,13 +5051,13 @@ function createSystemStore() {
       throw error;
     }
   }
-  async function getTopups() {
+  async function getTopups(dto) {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
         define_process_env_default$b.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      let result = await identityActor.getTopups();
+      let result = await identityActor.getTopups(dto);
       console.log(result);
       if (isError(result)) {
         console.error("Error getting topups:", result);
@@ -5068,6 +5069,40 @@ function createSystemStore() {
       throw error;
     }
   }
+  async function getBackendCanisterBalance() {
+    try {
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        define_process_env_default$b.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
+      let result = await identityActor.getBackendCanisterBalance();
+      if (isError(result)) {
+        console.error("Error getting backend FPL balance:", result);
+        return;
+      }
+      return result.ok;
+    } catch (error) {
+      console.error("Error getting backend FPL balance:", error);
+      throw error;
+    }
+  }
+  async function getBackendCanisterCyclesAvailable() {
+    try {
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        define_process_env_default$b.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
+      let result = await identityActor.getCanisterCyclesBalance();
+      if (isError(result)) {
+        console.error("Error getting backend cycles:", result);
+        return;
+      }
+      return result.ok;
+    } catch (error) {
+      console.error("Error getting backend cycles:", error);
+      throw error;
+    }
+  }
   return {
     subscribe: subscribe2,
     sync,
@@ -5076,8 +5111,10 @@ function createSystemStore() {
     getLogs,
     getTimers,
     getCanisters,
-    getRewardPools,
-    getTopups
+    getRewardPool,
+    getTopups,
+    getBackendCanisterBalance,
+    getBackendCanisterCyclesAvailable
   };
 }
 const systemStore = createSystemStore();
