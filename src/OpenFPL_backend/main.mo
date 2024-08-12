@@ -1520,7 +1520,7 @@ import Order "mo:base/Order";
 
     private func postUpgradeCallback() : async (){
 
-      await seasonManager.removeDuplicatePlayer(584);
+      await seasonManager.removeDuplicatePlayer(291);
       
       //on each update generate new hash values
       await seasonManager.updateCacheHash("clubs");
