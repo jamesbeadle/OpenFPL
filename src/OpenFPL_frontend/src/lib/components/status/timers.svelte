@@ -8,28 +8,13 @@
     let timers: GetTimersDTO;
     let filterCategory = 0;
     let currentPage = 1;
-    const pageSize = 10;
+    let itemsPerPage = 25;
 
 
     onMount(async () => {
       try{
         await systemStore.sync();
-        
-        let dto: GetTimersDTO = {
-            totalEntries: 0n,
-            offset: 0n,
-            limit: 0n,
-            entries: [],
-            timerTypeFilter: { "GameweekBegin" : null }
-        };
-
-        let timer_result = await systemStore.getTimers(dto);
-        if(!timer_result){
-            return;
-        };
-
-        timers = timer_result;
-
+        await loadTimers();
       } catch (error){
         console.error("Error fetching timer information.")
       } finally {
@@ -38,46 +23,44 @@
     });
 
     $: { if (filterCategory !== -1) {
-        filterTimers();
+        loadTimers();
             currentPage = 1;
         }
     }
 
-    async function filterTimers() {
-        var timerTypeFilter: TimerType = { "GameweekBegin" : null };
-        switch(currentPage){
-            case 0:
-                timerTypeFilter = { "GameweekBegin" : null }
-                break;
-            case 1:
-                timerTypeFilter = { "LoanComplete" : null }
-                break;
-            case 2:
-                timerTypeFilter = { "TransferWindow" : null }
-                break;
-            case 3:
-                timerTypeFilter = { "InjuryExpired" : null }
-                break;
-            case 4:
-                timerTypeFilter = { "GameKickOff" : null }
-                break;
-            case 5:
-                timerTypeFilter = { "GameComplete" : null }
-                break;
-        }
-            
-        const limit = pageSize;
-        const offset = (currentPage - 1) * limit;
-        let dto: GetTimersDTO = {
-            totalEntries: 0n,
-            offset: BigInt(offset),
-            limit: BigInt(limit),
-            entries: [],
-            timerTypeFilter: timerTypeFilter
-        };
-        let result = await systemStore.getTimers(dto); 
-        if(result){
-            timers = result;
+    async function loadTimers() {
+
+        try{
+            isLoading = true;
+            var timerTypeFilter: TimerType = { "GameweekBegin" : null };
+            switch(currentPage){
+                case 0:
+                    timerTypeFilter = { "GameweekBegin" : null }
+                    break;
+                case 1:
+                    timerTypeFilter = { "LoanComplete" : null }
+                    break;
+                case 2:
+                    timerTypeFilter = { "TransferWindow" : null }
+                    break;
+                case 3:
+                    timerTypeFilter = { "InjuryExpired" : null }
+                    break;
+                case 4:
+                    timerTypeFilter = { "GameKickOff" : null }
+                    break;
+                case 5:
+                    timerTypeFilter = { "GameComplete" : null }
+                    break;
+            }
+            let result = await systemStore.getTimers(currentPage, itemsPerPage, timerTypeFilter); 
+            if(result){
+                timers = result;
+            }
+        } catch (error) {
+            console.error("Error fetching canister information.")
+        } finally {
+            isLoading = true;
         }
     }
 </script>

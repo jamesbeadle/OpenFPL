@@ -1319,5 +1319,12 @@ module {
       return rewardPools.get(seasonId);
     };
 
+    public func removeDuplicatePlayer(playerId: T.PlayerId) : async () {
+      let players = playerComposite.getActivePlayers(systemState.calculationSeasonId);
+      await managerComposite.removePlayerFromTeams(playerId, players);
+      await playerComposite.removeDuplicatePlayer(playerId);
+      await updateCacheHash("players");
+    };
+
   };
 };

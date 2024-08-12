@@ -18,15 +18,8 @@
     onMount(async () => {
       try{
         await systemStore.sync();
-        
-        let dto: GetTopupsDTO = {
-            totalEntries: 0n,
-            offset: 0n,
-            limit: 0n,
-            entries: []
-        };
 
-        let topups_result = await systemStore.getTopups(dto);
+        let topups_result = await systemStore.getTopups(currentPage, itemsPerPage);
         if(!topups_result){
             return;
         };
@@ -47,6 +40,20 @@
 
     async function loadTopups(){
 
+      try{
+            isLoading = true;
+            let topups_result = await systemStore.getTopups(currentPage, itemsPerPage);
+            if(!topups_result){
+                return;
+            };
+
+            topups = topups_result;
+
+        } catch (error) {
+            console.error("Error fetching canister information.")
+        } finally {
+            isLoading = true;
+        }
     };
 
 </script>

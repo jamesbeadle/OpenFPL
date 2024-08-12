@@ -8,28 +8,12 @@
     let canisters: GetCanistersDTO;
     let filterCategory = 0;
     let currentPage = 1;
-    const pageSize = 10;
-
+    let itemsPerPage = 25;
 
     onMount(async () => {
       try{
         await systemStore.sync();
-        
-        let dto: GetCanistersDTO = {
-            totalEntries: 0n,
-            offset: 0n,
-            limit: 0n,
-            entries: [],
-            canisterTypeFilter: { "SNS" : null }
-        };
-
-        let canister_result = await systemStore.getCanisters(dto);
-        if(!canister_result){
-            return;
-        };
-
-        canisters = canister_result;
-
+        await loadCanisters();
       } catch (error){
         console.error("Error fetching canister information.")
       } finally {
@@ -38,49 +22,46 @@
     });
 
     $: { if (filterCategory !== -1) {
-            filterCanisters();
+            loadCanisters();
             currentPage = 1;
         }
     }
 
-    async function filterCanisters() {
-        var canisterTypeFilter: CanisterType = { "SNS" : null };
-        switch(currentPage){
-            case 0:
-                canisterTypeFilter = { "SNS" : null }
-                break;
-            case 1:
-                canisterTypeFilter = { "Dapp" : null }
-                break;
-            case 2:
-                canisterTypeFilter = { "Manager" : null }
-                break;
-            case 3:
-                canisterTypeFilter = { "WeeklyLeaderboard" : null }
-                break;
-            case 4:
-                canisterTypeFilter = { "MonthlyLeaderboard" : null }
-                break;
-            case 5:
-                canisterTypeFilter = { "SeasonLeaderboard" : null }
-                break;
-            case 6:
-                canisterTypeFilter = { "Archive" : null }
-                break;
-        }
-            
-        const limit = pageSize;
-        const offset = (currentPage - 1) * limit;
-        let dto: GetCanistersDTO = {
-            totalEntries: 0n,
-            offset: BigInt(offset),
-            limit: BigInt(limit),
-            entries: [],
-            canisterTypeFilter: canisterTypeFilter
-        };
-        let result = await systemStore.getCanisters(dto); 
-        if(result){
-            canisters = result;
+    async function loadCanisters() {
+        try{
+            isLoading = true;
+            var canisterTypeFilter: CanisterType = { "SNS" : null };
+            switch(filterCategory){
+                case 0:
+                    canisterTypeFilter = { "SNS" : null }
+                    break;
+                case 1:
+                    canisterTypeFilter = { "Dapp" : null }
+                    break;
+                case 2:
+                    canisterTypeFilter = { "Manager" : null }
+                    break;
+                case 3:
+                    canisterTypeFilter = { "WeeklyLeaderboard" : null }
+                    break;
+                case 4:
+                    canisterTypeFilter = { "MonthlyLeaderboard" : null }
+                    break;
+                case 5:
+                    canisterTypeFilter = { "SeasonLeaderboard" : null }
+                    break;
+                case 6:
+                    canisterTypeFilter = { "Archive" : null }
+                    break;
+            }
+            let result = await systemStore.getCanisters(currentPage, itemsPerPage, canisterTypeFilter); 
+            if(result){
+                canisters = result;
+            }
+        } catch (error) {
+            console.error("Error fetching canister information.")
+        } finally {
+            isLoading = true;
         }
     }
 </script>

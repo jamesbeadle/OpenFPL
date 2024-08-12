@@ -3515,7 +3515,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1t2ln8x"
+  version_hash: "13xxhle"
 };
 async function get_hooks() {
   return {};
@@ -4980,12 +4980,21 @@ function createSystemStore() {
       throw error;
     }
   }
-  async function getCanisters(dto) {
+  async function getCanisters(currentPage, itemsPerPage2, filter) {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
         define_process_env_default$b.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
+      const limit = itemsPerPage2;
+      const offset = (currentPage - 1) * limit;
+      let dto = {
+        totalEntries: 0n,
+        offset: BigInt(offset),
+        limit: BigInt(limit),
+        entries: [],
+        canisterTypeFilter: filter
+      };
       let result = await identityActor.getCanisters(dto);
       console.log(result);
       if (isError(result)) {
@@ -4998,12 +5007,21 @@ function createSystemStore() {
       throw error;
     }
   }
-  async function getTimers(dto) {
+  async function getTimers(currentPage, itemsPerPage2, filter) {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
         define_process_env_default$b.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
+      const limit = itemsPerPage2;
+      const offset = (currentPage - 1) * limit;
+      let dto = {
+        totalEntries: 0n,
+        offset: BigInt(offset),
+        limit: BigInt(limit),
+        entries: [],
+        timerTypeFilter: filter
+      };
       let result = await identityActor.getTimers(dto);
       console.log(result);
       if (isError(result)) {
@@ -5016,12 +5034,23 @@ function createSystemStore() {
       throw error;
     }
   }
-  async function getLogs(dto) {
+  async function getLogs(currentPage, itemsPerPage2, filter) {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
         define_process_env_default$b.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
+      const limit = itemsPerPage2;
+      const offset = (currentPage - 1) * limit;
+      let dto = {
+        totalEntries: 0n,
+        offset: BigInt(offset),
+        limit: BigInt(limit),
+        entries: [],
+        eventType: filter,
+        dateEnd: 0n,
+        dateStart: 0n
+      };
       let result = await identityActor.getSystemLog(dto);
       if (isError(result)) {
         console.error("Error getting system logs:", result);
@@ -5033,12 +5062,26 @@ function createSystemStore() {
       throw error;
     }
   }
-  async function getRewardPool(dto) {
+  async function getRewardPool(seasonId) {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
         define_process_env_default$b.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
+      let dto = {
+        seasonId,
+        rewardPool: {
+          monthlyLeaderboardPool: 0n,
+          allTimeSeasonHighScorePool: 0n,
+          mostValuableTeamPool: 0n,
+          highestScoringMatchPlayerPool: 0n,
+          seasonId,
+          seasonLeaderboardPool: 0n,
+          allTimeWeeklyHighScorePool: 0n,
+          allTimeMonthlyHighScorePool: 0n,
+          weeklyLeaderboardPool: 0n
+        }
+      };
       let result = await identityActor.getRewardPool(dto);
       console.log(result);
       if (isError(result)) {
@@ -5051,12 +5094,20 @@ function createSystemStore() {
       throw error;
     }
   }
-  async function getTopups(dto) {
+  async function getTopups(currentPage, itemsPerPage2) {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
         define_process_env_default$b.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
+      const limit = itemsPerPage2;
+      const offset = (currentPage - 1) * limit;
+      let dto = {
+        totalEntries: 0n,
+        entries: [],
+        offset: BigInt(offset),
+        limit: BigInt(limit)
+      };
       let result = await identityActor.getTopups(dto);
       console.log(result);
       if (isError(result)) {
@@ -7200,7 +7251,7 @@ function createSeasonLeaderboardStore() {
   };
 }
 createSeasonLeaderboardStore();
-const Page$h = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$g = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_systemStore;
   let $$unsubscribe_teamStore;
   let $$unsubscribe_fixtureStore;
@@ -8702,7 +8753,7 @@ const Clear_draft_modal = create_ssr_component(($$result, $$props, $$bindings, s
     }
   })}`;
 });
-const Page$g = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$f = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let fixtureId;
   let $playerEventData, $$unsubscribe_playerEventData = noop, $$subscribe_playerEventData = () => ($$unsubscribe_playerEventData(), $$unsubscribe_playerEventData = subscribe(playerEventData, ($$value) => $playerEventData = $$value), playerEventData);
   let $systemStore, $$unsubscribe_systemStore;
@@ -9538,7 +9589,7 @@ const Add_fixture_data = create_ssr_component(($$result, $$props, $$bindings, sl
     }
   })}`;
 });
-const Page$f = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$e = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let showRevaluePlayerUpModal = false;
   let showRevaluePlayerDownModal = false;
   let showAddInitialFixturesModal = false;
@@ -9761,7 +9812,7 @@ const Page$f = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$e = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$d = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $teamStore, $$unsubscribe_teamStore;
   let $$unsubscribe_playerStore;
   let $$unsubscribe_fixtureStore;
@@ -9791,7 +9842,7 @@ const Page$e = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$d = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$c = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $teamStore, $$unsubscribe_teamStore;
   $$unsubscribe_teamStore = subscribe(teamStore, (value) => $teamStore = value);
   $$unsubscribe_teamStore();
@@ -9816,7 +9867,7 @@ const Page$d = create_ssr_component(($$result, $$props, $$bindings, slots) => {
 const Default_canisters = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   return ``;
 });
-const Page$c = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
       return `<div class="bg-panel rounded-md mt-4"><h1 class="default-header p-4" data-svelte-h="svelte-30ik2c">OpenFPL Cycle Management</h1> <ul class="flex bg-light-gray px-1 md:px-4 pt-2 contained-text border-b border-gray-700 mb-4"><li${add_attribute("class", `mr-1 md:mr-4 ${"active-tab"}`, 0)}><button${add_attribute(
@@ -9843,7 +9894,7 @@ const css$1 = {
   code: ".striped.svelte-a09ql9 tr.svelte-a09ql9:nth-child(odd){background-color:rgba(46, 50, 58, 0.6)}",
   map: null
 };
-const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$a = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$result.css.add(css$1);
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
@@ -9879,7 +9930,7 @@ function paginate(proposals, page2) {
   const end = start + itemsPerPage;
   return proposals.slice(start, end);
 }
-const Page$a = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$9 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let proposals = {
     proposals: [],
     include_ballots_by_caller: []
@@ -9906,28 +9957,8 @@ const Page$a = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$9 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  return `  `;
-});
-function formatEventType(type) {
-  return type.replace(/([a-z])([A-Z])/g, "$1 $2");
-}
 const Page$8 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let startDate = "";
-  let endDate = "";
-  let eventTypes = [
-    { "SystemCheck": null },
-    { "UnexpectedError": null },
-    { "ManagerCanisterCreated": null },
-    { "CanisterTopup": null }
-  ];
-  return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
-    default: () => {
-      return `<div class="bg-panel rounded-md mt-4"><h1 class="default-header p-4" data-svelte-h="svelte-1n1vmrq">OpenFPL System Log</h1> <div class="p-4 flex flex-col sm:flex-row gap-4"><div><label for="start-date" class="block text-sm font-medium" data-svelte-h="svelte-1k71rm2">Start Date</label> <input type="date" id="start-date" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"${add_attribute("value", startDate, 0)}></div> <div><label for="end-date" class="block text-sm font-medium" data-svelte-h="svelte-1e3dopu">End Date</label> <input type="date" id="end-date" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"${add_attribute("value", endDate, 0)}></div> <div><label for="event-type" class="block text-sm font-medium" data-svelte-h="svelte-1801z4i">Event Type</label> <select id="event-type" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-light-gray"><option${add_attribute("value", null, 0)} data-svelte-h="svelte-ao4nde">Select an event type</option>${each(eventTypes, (type) => {
-        return `<option${add_attribute("value", type, 0)}>${escape(formatEventType(Object.keys(type)[0]))}</option>`;
-      })}</select></div> <div class="flex items-end"><button class="fpl-button default-button" data-svelte-h="svelte-zv974x">Filter</button></div></div> ${`${validate_component(Local_spinner, "LocalSpinner").$$render($$result, {}, {}, {})}`}</div>`;
-    }
-  })}`;
+  return `  `;
 });
 const Page$7 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_selectedGameweek;
@@ -10374,10 +10405,9 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   })}`;
 });
 export {
-  Page as A,
   Error$1 as E,
   Layout$1 as L,
-  Page$h as P,
+  Page$g as P,
   Server as S,
   set_building as a,
   set_manifest as b,
@@ -10387,22 +10417,22 @@ export {
   set_read_implementation as f,
   get_hooks as g,
   set_safe_public_env as h,
-  Page$g as i,
-  Page$f as j,
-  Page$e as k,
-  Page$d as l,
-  Page$c as m,
-  Page$b as n,
+  Page$f as i,
+  Page$e as j,
+  Page$d as k,
+  Page$c as l,
+  Page$b as m,
+  Page$a as n,
   options as o,
-  Page$a as p,
-  Page$9 as q,
-  Page$8 as r,
+  Page$9 as p,
+  Page$8 as q,
+  Page$7 as r,
   set_assets as s,
-  Page$7 as t,
-  Page$6 as u,
-  Page$5 as v,
-  Page$4 as w,
-  Page$3 as x,
-  Page$2 as y,
-  Page$1 as z
+  Page$6 as t,
+  Page$5 as u,
+  Page$4 as v,
+  Page$3 as w,
+  Page$2 as x,
+  Page$1 as y,
+  Page as z
 };

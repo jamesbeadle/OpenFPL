@@ -19,8 +19,6 @@
     onMount(async () => {
       try{
         await systemStore.sync();
-        let timers = await systemStore.getTimers();
-        console.log(timers);
       } catch (error){
         console.error("Error fetching system logs.")
       } finally {

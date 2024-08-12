@@ -1520,20 +1520,7 @@ import Order "mo:base/Order";
 
     private func postUpgradeCallback() : async (){
 
-      //cancel all existing timers
-      for (timerInfo in Iter.fromArray(timers)) {
-        let timerId = Nat64.toNat(Nat64.fromIntWrap(timerInfo.id));
-        Timer.cancelTimer(timerId);
-      };
-
-      //reset the timers and stable timers
-      timers := [];
-      stable_timers := timers;
-
-      //set timers for gameweek 1 fixtures
-      await seasonManager.setGameweekTimers(1);
-      
-      ignore Timer.setTimer<system>(#nanoseconds 1, cyclesCheckCallback);
+      await seasonManager.removeDuplicatePlayer(584);
       
       //on each update generate new hash values
       await seasonManager.updateCacheHash("clubs");

@@ -3,43 +3,18 @@
     import { onMount } from "svelte";
     import LocalSpinner from "../local-spinner.svelte";
     import type { GetRewardPoolDTO, SeasonDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-    import { isError } from "$lib/utils/helpers";
     
     let isLoading = true;
     let rewardPool: GetRewardPoolDTO;
     let filterSeason = 0;
     let seasons: SeasonDTO[];
 
-
     onMount(async () => {
       try{
         await systemStore.sync();
-
         seasons = await systemStore.getSeasons();
-        
-        let dto: GetRewardPoolDTO = {
-            seasonId: filterSeason,
-            rewardPool: 
-            {
-                monthlyLeaderboardPool : 0n,
-                allTimeSeasonHighScorePool : 0n,
-                mostValuableTeamPool : 0n,
-                highestScoringMatchPlayerPool : 0n,
-                seasonId : filterSeason,
-                seasonLeaderboardPool  : 0n,
-                allTimeWeeklyHighScorePool  : 0n,
-                allTimeMonthlyHighScorePool  : 0n,
-                weeklyLeaderboardPool  : 0n,
-            }
-        };
-
-        let result = await systemStore.getRewardPool(dto);
-        if(!result){
-            return;
-        };
-
-        rewardPool = result;
-
+        filterSeason = seasons[0].id;
+        await loadRewardPool();
       } catch (error){
         console.error("Error fetching canister information.")
       } finally {
@@ -48,33 +23,22 @@
     });
 
     $: { if (filterSeason !== 0) {
-            updateRewardPool();
+            loadRewardPool();
         }
     }
 
-    async function updateRewardPool() {
+    async function loadRewardPool() {
         
-        
-        
-        let dto: GetRewardPoolDTO = {
-            seasonId: filterSeason,
-            rewardPool: 
-            {
-                monthlyLeaderboardPool : 0n,
-                allTimeSeasonHighScorePool : 0n,
-                mostValuableTeamPool : 0n,
-                highestScoringMatchPlayerPool : 0n,
-                seasonId : filterSeason,
-                seasonLeaderboardPool  : 0n,
-                allTimeWeeklyHighScorePool  : 0n,
-                allTimeMonthlyHighScorePool  : 0n,
-                weeklyLeaderboardPool  : 0n,
+        try{
+            isLoading = true;
+            let result = await systemStore.getRewardPool(filterSeason);
+            if(result){
+                rewardPool = result;
             }
-        };
-        
-        let result = await systemStore.getRewardPool(dto);
-        if(result){
-            rewardPool = result;
+        } catch (error) {
+            console.error("Error fetching reward pool information.")
+        } finally {
+            isLoading = true;
         }
     }
 </script>

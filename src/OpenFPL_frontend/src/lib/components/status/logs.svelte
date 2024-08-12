@@ -8,30 +8,12 @@
     let systemLog: GetSystemLogDTO;
     let filterCategory = 0;
     let currentPage = 1;
-    const pageSize = 10;
-
+    let itemsPerPage = 25;
 
     onMount(async () => {
       try{
         await systemStore.sync();
-        
-        let dto: GetSystemLogDTO = {
-            totalEntries: 0n,
-            offset: 0n,
-            limit: 0n,
-            entries: [],
-            eventType: { "CanisterTopup" : null },
-            dateEnd: 0n,
-            dateStart: 0n
-        };
-
-        let logs_result = await systemStore.getLogs(dto);
-        if(!logs_result){
-            return;
-        };
-
-        systemLog = logs_result;
-
+        await loadLogs();
       } catch (error){
         console.error("Error fetching system logs.")
       } finally {
@@ -40,39 +22,36 @@
     });
 
     $: { if (filterCategory !== -1) {
-            filterLogs();
+            loadLogs();
             currentPage = 1;
         }
     }
 
-    async function filterLogs() {
-        var logFilterType: EventLogEntryType = { "CanisterTopup" : null };
-        switch(currentPage){
-            case 0:
-                logFilterType = { "ManagerCanisterCreated" : null }
-                break;
-            case 1:
-                logFilterType = { "UnexpectedError" : null }
-                break;
-            case 2:
-                logFilterType = { "CanisterTopup" : null }
-                break;
-        }
+    async function loadLogs() {
+
+        try{
+            isLoading = true;
+            var logFilterType: EventLogEntryType = { "CanisterTopup" : null };
+            switch(currentPage){
+                case 0:
+                    logFilterType = { "ManagerCanisterCreated" : null }
+                    break;
+                case 1:
+                    logFilterType = { "UnexpectedError" : null }
+                    break;
+                case 2:
+                    logFilterType = { "CanisterTopup" : null }
+                    break;
+            }
             
-        const limit = pageSize;
-        const offset = (currentPage - 1) * limit;
-        let dto: GetSystemLogDTO = {
-            totalEntries: 0n,
-            offset: BigInt(offset),
-            limit: BigInt(limit),
-            entries: [],
-            eventType: logFilterType,
-            dateEnd: 0n,
-            dateStart: 0n
-        };
-        let result = await systemStore.getLogs(dto); 
-        if(result){
-            systemLog = result;
+            let result = await systemStore.getLogs(currentPage, itemsPerPage, logFilterType); 
+            if(result){
+                systemLog = result;
+            }
+        } catch (error) {
+            console.error("Error fetching log information.")
+        } finally {
+            isLoading = true;
         }
     }
 </script>

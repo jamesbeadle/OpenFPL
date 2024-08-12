@@ -1,15 +1,19 @@
 import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
+  CanisterType,
   DataCacheDTO,
+  EventLogEntryType,
   GetCanistersDTO,
   GetRewardPoolDTO,
   GetSystemLogDTO,
   GetTimersDTO,
   GetTopupsDTO,
   SeasonDTO,
+  SeasonId,
   SystemStateDTO,
   TimerDTO,
+  TimerType,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { isError, replacer } from "../utils/helpers";
@@ -93,13 +97,26 @@ function createSystemStore() {
   }
 
   async function getCanisters(
-    dto: GetCanistersDTO,
+    currentPage: number,
+    itemsPerPage: number,
+    filter: CanisterType,
   ): Promise<GetCanistersDTO | undefined> {
     try {
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
+
+      const limit = itemsPerPage;
+      const offset = (currentPage - 1) * limit;
+
+      let dto: GetCanistersDTO = {
+        totalEntries: 0n,
+        offset: BigInt(offset),
+        limit: BigInt(limit),
+        entries: [],
+        canisterTypeFilter: filter,
+      };
 
       let result = await identityActor.getCanisters(dto);
       console.log(result);
@@ -116,13 +133,27 @@ function createSystemStore() {
   }
 
   async function getTimers(
-    dto: GetTimersDTO,
+    currentPage: number,
+    itemsPerPage: number,
+    filter: TimerType,
   ): Promise<GetTimersDTO | undefined> {
     try {
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
+
+      const limit = itemsPerPage;
+      const offset = (currentPage - 1) * limit;
+
+      let dto: GetTimersDTO = {
+        totalEntries: 0n,
+        offset: BigInt(offset),
+        limit: BigInt(limit),
+        entries: [],
+        timerTypeFilter: filter,
+      };
+
       let result = await identityActor.getTimers(dto);
       console.log(result);
 
@@ -138,13 +169,29 @@ function createSystemStore() {
   }
 
   async function getLogs(
-    dto: GetSystemLogDTO,
+    currentPage: number,
+    itemsPerPage: number,
+    filter: EventLogEntryType,
   ): Promise<GetSystemLogDTO | undefined> {
     try {
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
+
+      const limit = itemsPerPage;
+      const offset = (currentPage - 1) * limit;
+
+      let dto: GetSystemLogDTO = {
+        totalEntries: 0n,
+        offset: BigInt(offset),
+        limit: BigInt(limit),
+        entries: [],
+        eventType: filter,
+        dateEnd: 0n,
+        dateStart: 0n,
+      };
+
       let result = await identityActor.getSystemLog(dto);
 
       if (isError(result)) {
@@ -159,13 +206,28 @@ function createSystemStore() {
   }
 
   async function getRewardPool(
-    dto: GetRewardPoolDTO,
+    seasonId: SeasonId,
   ): Promise<GetRewardPoolDTO | undefined> {
     try {
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
+
+      let dto: GetRewardPoolDTO = {
+        seasonId: seasonId,
+        rewardPool: {
+          monthlyLeaderboardPool: 0n,
+          allTimeSeasonHighScorePool: 0n,
+          mostValuableTeamPool: 0n,
+          highestScoringMatchPlayerPool: 0n,
+          seasonId: seasonId,
+          seasonLeaderboardPool: 0n,
+          allTimeWeeklyHighScorePool: 0n,
+          allTimeMonthlyHighScorePool: 0n,
+          weeklyLeaderboardPool: 0n,
+        },
+      };
       let result = await identityActor.getRewardPool(dto);
       console.log(result);
 
@@ -181,13 +243,25 @@ function createSystemStore() {
   }
 
   async function getTopups(
-    dto: GetTopupsDTO,
+    currentPage: number,
+    itemsPerPage: number,
   ): Promise<GetTopupsDTO | undefined> {
     try {
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
+
+      const limit = itemsPerPage;
+      const offset = (currentPage - 1) * limit;
+
+      let dto: GetTopupsDTO = {
+        totalEntries: 0n,
+        entries: [],
+        offset: BigInt(offset),
+        limit: BigInt(limit),
+      };
+
       let result = await identityActor.getTopups(dto);
       console.log(result);
 

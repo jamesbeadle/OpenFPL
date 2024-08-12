@@ -9,7 +9,7 @@
   },
   "_index.js": {
     "css": [
-      "_app/immutable/assets/index.2U5fRpra.css"
+      "_app/immutable/assets/index.qr_rPNh4.css"
     ],
     "file": "chunks/index.js",
     "imports": [
@@ -114,14 +114,6 @@
     ],
     "isEntry": true,
     "src": "src/OpenFPL_frontend/src/routes/league/+page.svelte"
-  },
-  "src/OpenFPL_frontend/src/routes/logs/+page.svelte": {
-    "file": "entries/pages/logs/_page.svelte.js",
-    "imports": [
-      "_index.js"
-    ],
-    "isEntry": true,
-    "src": "src/OpenFPL_frontend/src/routes/logs/+page.svelte"
   },
   "src/OpenFPL_frontend/src/routes/manager/+page.svelte": {
     "file": "entries/pages/manager/_page.svelte.js",
