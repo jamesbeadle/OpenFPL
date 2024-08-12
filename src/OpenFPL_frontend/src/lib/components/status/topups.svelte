@@ -18,14 +18,7 @@
     onMount(async () => {
       try{
         await systemStore.sync();
-
-        let topups_result = await systemStore.getTopups(currentPage, itemsPerPage);
-        if(!topups_result){
-            return;
-        };
-
-        topups = topups_result;
-
+        await loadTopups();
       } catch (error){
         console.error("Error fetching topup information.")
       } finally {
@@ -52,7 +45,7 @@
         } catch (error) {
             console.error("Error fetching canister information.")
         } finally {
-            isLoading = true;
+            isLoading = false;
         }
     };
 

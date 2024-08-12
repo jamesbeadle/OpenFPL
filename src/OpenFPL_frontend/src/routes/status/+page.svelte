@@ -9,7 +9,7 @@
     import Summary from "$lib/components/status/summary.svelte";
     import Canisters from "$lib/components/status/canisters.svelte";
     import Timers from "$lib/components/status/timers.svelte";
-    import Topups from "$lib/components/canisters/topups.svelte";
+    import Topups from "$lib/components/status/topups.svelte";
     import RewardPools from "$lib/components/status/reward-pools.svelte";
     import Logs from "$lib/components/status/logs.svelte";
     
@@ -18,7 +18,9 @@
 
     onMount(async () => {
       try{
+        console.log("loading status page");
         await systemStore.sync();
+        console.log("system store synced");
       } catch (error){
         console.error("Error fetching system logs.")
       } finally {
@@ -38,7 +40,7 @@
     {#if isLoading}
         <LocalSpinner />
     {:else}
-      <div class="flex">
+      <div class="flex p-4 flex-row">
         <button 
           class={`btn ${ activeTab === "summary" ? `fpl-button` : `inactive-btn` } tab-switcher-label rounded-l-md`}
           on:click={() => setActiveTab("summary")}
@@ -46,38 +48,38 @@
           Summary
         </button>
         <button 
-          class={`btn ${ activeTab === "canisters" ? `fpl-button` : `inactive-btn` } tab-switcher-label rounded-l-md`}
+          class={`btn ${ activeTab === "canisters" ? `fpl-button` : `inactive-btn` } tab-switcher-label`}
           on:click={() => setActiveTab("canisters")}
         >
           Canisters
         </button>
         <button 
-          class={`btn ${ activeTab === "timers" ? `fpl-button` : `inactive-btn` } tab-switcher-label rounded-l-md`}
+          class={`btn ${ activeTab === "timers" ? `fpl-button` : `inactive-btn` } tab-switcher-label`}
           on:click={() => setActiveTab("timers")}
         >
           Timers
         </button>
         <button 
-          class={`btn ${ activeTab === "topups" ? `fpl-button` : `inactive-btn` } tab-switcher-label rounded-l-md`}
+          class={`btn ${ activeTab === "topups" ? `fpl-button` : `inactive-btn` } tab-switcher-label`}
           on:click={() => setActiveTab("topups")}
         >
           Topups
         </button>
         <button 
-          class={`btn ${ activeTab === "reward-pools" ? `fpl-button` : `inactive-btn` } tab-switcher-label rounded-l-md`}
+          class={`btn ${ activeTab === "reward-pools" ? `fpl-button` : `inactive-btn` } tab-switcher-label`}
           on:click={() => setActiveTab("reward-pools")}
         >
           Reward Pools
         </button>
         <button 
-          class={`btn ${ activeTab === "logs" ? `fpl-button` : `inactive-btn` } tab-switcher-label rounded-l-md`}
+          class={`btn ${ activeTab === "logs" ? `fpl-button` : `inactive-btn` } tab-switcher-label rounded-r-md`}
           on:click={() => setActiveTab("logs")}
         >
           Logs
         </button>
       </div>
 
-      <div class="w-full">
+      <div class="w-full px-4">
         {#if activeTab === "summary"}
           <Summary />
         {/if}

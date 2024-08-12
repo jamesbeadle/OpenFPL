@@ -7,24 +7,20 @@
     let isLoading = true;
     let timers: GetTimersDTO;
     let filterCategory = 0;
+    let priorCategory = 0;
     let currentPage = 1;
     let itemsPerPage = 25;
 
 
     onMount(async () => {
-      try{
         await systemStore.sync();
         await loadTimers();
-      } catch (error){
-        console.error("Error fetching timer information.")
-      } finally {
-        isLoading = false;
-      };
     });
 
-    $: { if (filterCategory !== -1) {
-        loadTimers();
+    $: { if (filterCategory !== priorCategory) {
+            loadTimers();
             currentPage = 1;
+            priorCategory = filterCategory;
         }
     }
 
@@ -33,7 +29,7 @@
         try{
             isLoading = true;
             var timerTypeFilter: TimerType = { "GameweekBegin" : null };
-            switch(currentPage){
+            switch(filterCategory){
                 case 0:
                     timerTypeFilter = { "GameweekBegin" : null }
                     break;
@@ -60,7 +56,7 @@
         } catch (error) {
             console.error("Error fetching canister information.")
         } finally {
-            isLoading = true;
+            isLoading = false;
         }
     }
 </script>
@@ -74,12 +70,12 @@
         class="mt-1 block w-full py-2 text-white fpl-dropdown"
         bind:value={filterCategory}
         >
-            <option value={0}>GameweekBegin</option>
-            <option value={1}>LoanComplete</option>
-            <option value={2}>TransferWindow</option>
-            <option value={3}>InjuryExpired</option>
-            <option value={4}>GameKickOff</option>
-            <option value={5}>GameComplete</option>
+            <option value={0}>Gameweek Begin</option>
+            <option value={1}>Loan Complete</option>
+            <option value={2}>Transfer Window</option>
+            <option value={3}>Injury Expired</option>
+            <option value={4}>Game KickOff</option>
+            <option value={5}>Game Complete</option>
         </select>
     </div>
     <div class="p-4">

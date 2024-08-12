@@ -6,24 +6,21 @@
     
     let isLoading = true;
     let canisters: GetCanistersDTO;
+    let priorFilterCategory = 0;
     let filterCategory = 0;
     let currentPage = 1;
     let itemsPerPage = 25;
 
     onMount(async () => {
-      try{
         await systemStore.sync();
         await loadCanisters();
-      } catch (error){
-        console.error("Error fetching canister information.")
-      } finally {
-        isLoading = false;
-      };
     });
 
-    $: { if (filterCategory !== -1) {
+    $: { if (priorFilterCategory !== filterCategory) {
+            console.log("filter changed, loading canisters");
             loadCanisters();
             currentPage = 1;
+            priorFilterCategory = filterCategory;
         }
     }
 
@@ -54,14 +51,20 @@
                     canisterTypeFilter = { "Archive" : null }
                     break;
             }
+
+            console.log("getting canisters");
             let result = await systemStore.getCanisters(currentPage, itemsPerPage, canisterTypeFilter); 
+
+            console.log(result);
+            
+            console.log("^^");
             if(result){
                 canisters = result;
             }
         } catch (error) {
             console.error("Error fetching canister information.")
         } finally {
-            isLoading = true;
+            isLoading = false;
         }
     }
 </script>

@@ -11,14 +11,8 @@
     let itemsPerPage = 25;
 
     onMount(async () => {
-      try{
         await systemStore.sync();
         await loadLogs();
-      } catch (error){
-        console.error("Error fetching system logs.")
-      } finally {
-        isLoading = false;
-      };
     });
 
     $: { if (filterCategory !== -1) {
@@ -32,7 +26,7 @@
         try{
             isLoading = true;
             var logFilterType: EventLogEntryType = { "CanisterTopup" : null };
-            switch(currentPage){
+            switch(filterCategory){
                 case 0:
                     logFilterType = { "ManagerCanisterCreated" : null }
                     break;
@@ -51,7 +45,7 @@
         } catch (error) {
             console.error("Error fetching log information.")
         } finally {
-            isLoading = true;
+            isLoading = false;
         }
     }
 </script>

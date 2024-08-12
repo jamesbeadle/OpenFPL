@@ -10,16 +10,10 @@
     let seasons: SeasonDTO[];
 
     onMount(async () => {
-      try{
         await systemStore.sync();
         seasons = await systemStore.getSeasons();
         filterSeason = seasons[0].id;
         await loadRewardPool();
-      } catch (error){
-        console.error("Error fetching canister information.")
-      } finally {
-        isLoading = false;
-      };
     });
 
     $: { if (filterSeason !== 0) {
@@ -38,7 +32,7 @@
         } catch (error) {
             console.error("Error fetching reward pool information.")
         } finally {
-            isLoading = true;
+            isLoading = false;
         }
     }
 </script>
@@ -53,7 +47,7 @@
         bind:value={filterSeason}
         >
             {#each seasons as season}
-                <option value={season.id}>season.name</option>
+                <option value={season.id}>{season.name}</option>
             {/each}
         </select>
     </div>
@@ -62,6 +56,7 @@
         <p>Monthly Leaderboard Pool: ${rewardPool.rewardPool.monthlyLeaderboardPool}</p>
         <p>Season Leaderboard Pool: ${rewardPool.rewardPool.seasonLeaderboardPool}</p>
         <p>Most Valuable Match Player Pool: ${rewardPool.rewardPool.highestScoringMatchPlayerPool}</p>
+        <p>Most Valuable Team Player Pool: ${rewardPool.rewardPool.mostValuableTeamPool}</p>
         <p>All Time Weekly High Score Pool: ${rewardPool.rewardPool.allTimeWeeklyHighScorePool}</p>
         <p>All Time Monthly High Score Pool: ${rewardPool.rewardPool.allTimeMonthlyHighScorePool}</p>
         <p>All Time Season High Score Pool: ${rewardPool.rewardPool.allTimeSeasonHighScorePool}</p>
