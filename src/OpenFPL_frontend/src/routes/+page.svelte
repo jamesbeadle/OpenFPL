@@ -73,17 +73,17 @@
         nextFixture ? nextFixture.awayClubId : 0
       );
       nextFixtureDate = formatUnixDateToReadable(
-        nextFixture ? Number(nextFixture.kickOff) : 0
+        nextFixture ? nextFixture.kickOff : 0n
       );
       nextFixtureDateSmall = formatUnixDateToSmallReadable(
-        nextFixture ? Number(nextFixture.kickOff) : 0
+        nextFixture ? nextFixture.kickOff : 0n
       );
       nextFixtureTime = formatUnixTimeToTime(
-        nextFixture ? Number(nextFixture.kickOff) : 0
+        nextFixture ? nextFixture.kickOff : 0n
       );
 
       let countdownTime = getCountdownTime(
-        nextFixture ? Number(nextFixture.kickOff) : 0
+        nextFixture ? nextFixture.kickOff : 0n
       );
       countdownDays = countdownTime.days.toString();
       countdownHours = countdownTime.hours.toString();

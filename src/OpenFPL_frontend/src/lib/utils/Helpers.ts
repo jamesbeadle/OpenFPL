@@ -18,8 +18,8 @@ export function uint8ArrayToBase64(bytes: Uint8Array): string {
   return btoa(binary);
 }
 
-export function formatUnixDateToReadable(unixNano: number) {
-  const date = new Date(unixNano / 1000000);
+export function formatUnixDateToReadable(unixNano: bigint) {
+  const date = new Date(Number(unixNano) / 1000000);
   const options: Intl.DateTimeFormatOptions = {
     weekday: "long",
     year: "numeric",
@@ -30,8 +30,8 @@ export function formatUnixDateToReadable(unixNano: number) {
   return new Intl.DateTimeFormat("en-UK", options).format(date);
 }
 
-export function formatUnixDateToSmallReadable(unixNano: number) {
-  const date = new Date(unixNano / 1000000);
+export function formatUnixDateToSmallReadable(unixNano: bigint) {
+  const date = new Date(Number(unixNano) / 1000000);
   const options: Intl.DateTimeFormatOptions = {
     year: "numeric",
     month: "short",
@@ -41,8 +41,8 @@ export function formatUnixDateToSmallReadable(unixNano: number) {
   return new Intl.DateTimeFormat("en-UK", options).format(date);
 }
 
-export function getCountdownTime(unixNano: number) {
-  const targetDate = new Date(unixNano / 1000000);
+export function getCountdownTime(unixNano: bigint) {
+  const targetDate = new Date(Number(unixNano) / 1000000);
   const now = new Date();
   const diff = targetDate.getTime() - now.getTime();
 
@@ -65,22 +65,22 @@ export function replacer(key: string, value: bigint) {
   }
 }
 
-export function formatUnixTimeToTime(unixTimeNano: number): string {
-  const unixTimeMillis = unixTimeNano / 1000000;
+export function formatUnixTimeToTime(unixNano: bigint): string {
+  const unixTimeMillis = Number(unixNano) / 1000000;
   const date = new Date(unixTimeMillis);
 
-  let hours = date.getHours();
-  const minutes = date.getMinutes();
-  const ampm = hours >= 12 ? "PM" : "AM";
-  hours = hours % 12;
-  hours = hours ? hours : 12;
-  const minutesStr = minutes < 10 ? "0" + minutes : minutes;
+  const options: Intl.DateTimeFormatOptions = {
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+    timeZone: "Europe/London",
+  };
 
-  return `${hours}:${minutesStr} ${ampm}`;
+  return new Intl.DateTimeFormat("en-GB", options).format(date);
 }
 
-export function formatUnixToDateInputValue(unixNano: number) {
-  const date = new Date(unixNano / 1000000);
+export function formatUnixToDateInputValue(unixNano: bigint) {
+  const date = new Date(Number(unixNano) / 1000000);
   const year = date.getFullYear();
   let month = (date.getMonth() + 1).toString();
   let day = date.getDate().toString();
@@ -773,4 +773,21 @@ export function getMonthFromNumber(month: number): string {
   }
 
   return "";
+}
+export function formatE8s(e8Value: bigint): string {
+  const value = Number(e8Value) / 100_000_000;
+  return value.toLocaleString(undefined, {
+    minimumFractionDigits: 4,
+    maximumFractionDigits: 4,
+  });
+}
+
+export function formatCycles(cycles: bigint): string {
+  const trillionsOfCycles = Number(cycles) / 1_000_000_000_000;
+  return (
+    trillionsOfCycles.toLocaleString(undefined, {
+      minimumFractionDigits: 4,
+      maximumFractionDigits: 4,
+    }) + "T"
+  );
 }

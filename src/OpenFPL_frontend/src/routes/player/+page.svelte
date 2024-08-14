@@ -82,12 +82,10 @@
       nextFixtureHomeTeam = getTeamFromId(nextFixture?.homeClubId ?? 0) ?? null;
       nextFixtureAwayTeam = getTeamFromId(nextFixture?.awayClubId ?? 0) ?? null;
 
-      nextFixtureDate = formatUnixDateToReadable(Number(nextFixture?.kickOff));
-      nextFixtureDateSmall = formatUnixDateToSmallReadable(
-        Number(nextFixture?.kickOff)
-      );
-      nextFixtureTime = formatUnixTimeToTime(Number(nextFixture?.kickOff));
-      let countdownTime = getCountdownTime(Number(nextFixture?.kickOff));
+      nextFixtureDate = formatUnixDateToReadable(nextFixture?.kickOff ?? 0n);
+      nextFixtureDateSmall = formatUnixDateToSmallReadable(nextFixture?.kickOff ?? 0n);
+      nextFixtureTime = formatUnixTimeToTime(nextFixture?.kickOff ?? 0n);
+      let countdownTime = getCountdownTime(nextFixture?.kickOff ?? 0n);
 
       countdownDays = countdownTime.days.toString();
       countdownHours = countdownTime.hours.toString();

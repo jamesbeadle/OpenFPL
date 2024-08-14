@@ -59,10 +59,10 @@
       return
     };
     
-    nextFixtureDate = formatUnixDateToReadable(Number(nextFixture?.kickOff));
-    nextFixtureTime = formatUnixTimeToTime(Number(nextFixture?.kickOff));
+    nextFixtureDate = formatUnixDateToReadable(nextFixture?.kickOff);
+    nextFixtureTime = formatUnixTimeToTime(nextFixture?.kickOff);
 
-    let countdownTime = getCountdownTime(Number(nextFixture?.kickOff));
+    let countdownTime = getCountdownTime(nextFixture?.kickOff);
     countdownDays = countdownTime.days.toString();
     countdownHours = countdownTime.hours.toString();
     countdownMinutes = countdownTime.minutes.toString();

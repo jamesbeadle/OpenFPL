@@ -172,7 +172,7 @@
     dateOfBirth = player.dateOfBirth ?? 0n;
     nationalityId = player.nationality ?? 0;
 
-    displayDOB = formatUnixToDateInputValue(Number(player.dateOfBirth));
+    displayDOB = formatUnixToDateInputValue(player.dateOfBirth);
   }
 
   function cancelModal() {

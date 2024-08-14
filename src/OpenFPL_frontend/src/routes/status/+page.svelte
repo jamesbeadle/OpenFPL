@@ -79,7 +79,7 @@
         </button>
       </div>
 
-      <div class="w-full px-4">
+      <div class="w-full px-4 my-4">
         {#if activeTab === "summary"}
           <Summary />
         {/if}

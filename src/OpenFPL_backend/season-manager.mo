@@ -1326,5 +1326,9 @@ module {
       await updateCacheHash("players");
     };
 
+    public func fixFixtureTimes() {
+      seasonComposite.fixFixtureTimes();
+    };
+
   };
 };

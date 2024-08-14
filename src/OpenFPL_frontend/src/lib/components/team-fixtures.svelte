@@ -127,13 +127,13 @@
           </div>
         </div>
         <div class="hidden md:flex w-1/3">
-          {formatUnixDateToReadable(Number(fixture.kickOff))}
+          {formatUnixDateToReadable(fixture.kickOff)}
         </div>
         <div class="md:hidden w-1/3">
-          {formatUnixDateToSmallReadable(Number(fixture.kickOff))}
+          {formatUnixDateToSmallReadable(fixture.kickOff)}
         </div>
         <div class="hidden md:flex w-1/4 text-center">
-          {formatUnixTimeToTime(Number(fixture.kickOff))}
+          {formatUnixTimeToTime(fixture.kickOff)}
         </div>
         <div class="w-1/3">
           <div class="flex flex-col">

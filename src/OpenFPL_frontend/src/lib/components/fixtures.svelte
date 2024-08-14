@@ -177,7 +177,7 @@
               class="hidden xs:flex xs:w-2/12 md:w-2/12 lg:w-3/12 lg:justify-center"
             >
               <span class="ml-4 xs:ml-0 text-left"
-                >{formatUnixTimeToTime(Number(fixture.kickOff))}</span
+                >{formatUnixTimeToTime(fixture.kickOff)}</span
               >
             </div>
 
