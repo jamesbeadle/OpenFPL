@@ -22,6 +22,13 @@
             />
           </a>
           <a
+            href="https://x.com/OpenFPL_DAO"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img src="/twitter.png" class="h-4 w-auto mr-2 mb-2" alt="X" />
+          </a>
+          <a
             href="https://github.com/jamesbeadle/OpenFPL"
             target="_blank"
             rel="noopener noreferrer"

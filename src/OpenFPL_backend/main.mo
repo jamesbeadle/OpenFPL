@@ -1480,20 +1480,8 @@ import Order "mo:base/Order";
       treasuryManager.setStableTokenList(stable_token_list);
       treasuryManager.setStableNextTokenId(stable_next_token_id);
 
-
-      let timerBuffer = Buffer.fromArray<T.TimerInfo>([]);
-      for (timerInfo in Iter.fromArray(stable_timers)) {
-        timerBuffer.add({
-          callbackName = timerInfo.callbackName;
-          id = timerInfo.id;
-          triggerTime = timerInfo.triggerTime -  3_600_000_000_000
-        });
-      };
-      timers := Buffer.toArray(timerBuffer);
-
-      //timers := stable_timers; //add back after update
+      timers := stable_timers;
       
-
       let currentTime = Time.now();
       for (timerInfo in Iter.fromArray(timers)) {
         let remainingDuration = timerInfo.triggerTime - currentTime;
@@ -1531,11 +1519,6 @@ import Order "mo:base/Order";
     };
 
     private func postUpgradeCallback() : async (){
-
-
-      //fix all fixtures being 1 hours ahead
-      seasonManager.fixFixtureTimes(); //todo remove
-
 
       //await seasonManager.removeDuplicatePlayer(602);
       
