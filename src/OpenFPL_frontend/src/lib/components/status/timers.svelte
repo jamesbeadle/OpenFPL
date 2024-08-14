@@ -84,7 +84,7 @@
             <div class="flex flex-col">
                 <p>{timer.id}</p>
                 <p>Callback Function: {timer.callbackName}</p>
-                <p>{ formatUnixTimeToTime(timer.triggerTime)}</p>
+                <p>{ formatUnixDateToReadable(timer.triggerTime)}</p>
             </div>
         {/each}
     </div>

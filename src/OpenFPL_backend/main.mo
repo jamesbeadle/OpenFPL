@@ -1480,7 +1480,25 @@ import Order "mo:base/Order";
       treasuryManager.setStableTokenList(stable_token_list);
       treasuryManager.setStableNextTokenId(stable_next_token_id);
 
-      timers := stable_timers;
+      let timerBuffer = Buffer.fromArray<T.TimerInfo>([]);
+      for(timer in Iter.fromArray(stable_timers)){
+        switch(timer.callbackName){
+          case "gameCompletedExpired"{
+            timerBuffer.add({
+              callbackName = timer.callbackName;
+              id = timer.id;
+              triggerTime = timer.triggerTime + (Utilities.getHour() * 2);
+            });
+          };
+          case _ {
+            timerBuffer.add(timer);
+          };
+        };
+      };
+
+      timers := Buffer.toArray(timerBuffer);
+
+      //timers := stable_timers; add back
       
       let currentTime = Time.now();
       for (timerInfo in Iter.fromArray(timers)) {

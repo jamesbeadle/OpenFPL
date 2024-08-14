@@ -512,7 +512,9 @@ module {
           case (?actualFunction) {
             let durationToKickOff : Timer.Duration = #nanoseconds(Int.abs(fixture.kickOff - Time.now()));
             await actualFunction(durationToKickOff, "gameKickOffExpired");
-            await actualFunction(durationToKickOff, "gameCompletedExpired");
+
+            let durationToEndOfGame : Timer.Duration = #nanoseconds(Int.abs(fixture.kickOff - Time.now() + (Utilities.getHour() * 2)));
+            await actualFunction(durationToEndOfGame, "gameCompletedExpired");
           };
         };
       };

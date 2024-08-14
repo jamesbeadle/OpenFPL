@@ -29,10 +29,10 @@ declare module '$env/static/private' {
 	export const DFX_VERSION: string;
 	export const DFX_NETWORK: string;
 	export const CANISTER_CANDID_PATH_OPENFPL_BACKEND: string;
-	export const CANISTER_ID_SNS_SWAP: string;
+	export const CANISTER_ID_SNS_INDEX: string;
 	export const CANISTER_ID_SNS_GOVERNANCE: string;
 	export const CANISTER_ID_OPENFPL_FRONTEND: string;
-	export const CANISTER_ID_SNS_INDEX: string;
+	export const CANISTER_ID_SNS_SWAP: string;
 	export const CANISTER_ID_SNS_LEDGER: string;
 	export const CANISTER_ID_SNS_ROOT: string;
 	export const CANISTER_ID_OPENFPL_BACKEND: string;
@@ -137,10 +137,10 @@ declare module '$env/dynamic/private' {
 		DFX_VERSION: string;
 		DFX_NETWORK: string;
 		CANISTER_CANDID_PATH_OPENFPL_BACKEND: string;
-		CANISTER_ID_SNS_SWAP: string;
+		CANISTER_ID_SNS_INDEX: string;
 		CANISTER_ID_SNS_GOVERNANCE: string;
 		CANISTER_ID_OPENFPL_FRONTEND: string;
-		CANISTER_ID_SNS_INDEX: string;
+		CANISTER_ID_SNS_SWAP: string;
 		CANISTER_ID_SNS_LEDGER: string;
 		CANISTER_ID_SNS_ROOT: string;
 		CANISTER_ID_OPENFPL_BACKEND: string;
