@@ -3,6 +3,8 @@ import Cycles "mo:base/ExperimentalCycles";
 import Timer "mo:base/Timer";
 import Principal "mo:base/Principal";
 import Text "mo:base/Text";
+import Array "mo:base/Array";
+import Order "mo:base/Order";
 
 import DTOs "../DTOs";
 import Environment "../utils/Environment";
@@ -79,6 +81,83 @@ actor class _MonthlyLeaderboardCanister() {
         };
 
         return ?leaderboardDTO;
+      };
+    };
+  };
+
+  public shared query ({ caller }) func getRewardLeaderboard() : async ?DTOs.ClubLeaderboardDTO {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == Environment.BACKEND_CANISTER_ID;
+
+    switch (leaderboard) {
+      case (null) { return null };
+      case (?foundLeaderboard) {
+
+        let entriesArray = List.toArray(foundLeaderboard.entries);
+        let sortedArray = Array.sort(
+          entriesArray,
+          func(a : T.LeaderboardEntry, b : T.LeaderboardEntry) : Order.Order {
+            if (a.points < b.points) { return #greater };
+            if (a.points == b.points) { return #equal };
+            return #less;
+          },
+        );
+
+        let cutoffIndex = 99;
+        let lastQualifyingPoints = sortedArray[cutoffIndex].points;
+        var lastIndexForPrizes = cutoffIndex;
+        let totalEntries : Nat = List.size(foundLeaderboard.entries);
+
+        if (totalEntries <= 0) {
+          return null;
+        };
+
+        let totalEntriesIndex : Nat = totalEntries - 1;
+
+        while (
+          lastIndexForPrizes < totalEntriesIndex and List.toArray(foundLeaderboard.entries)[lastIndexForPrizes + 1].points == lastQualifyingPoints,
+        ) {
+          lastIndexForPrizes := lastIndexForPrizes + 1;
+        };
+
+        let indexes : [Nat] = Array.tabulate<Nat>(Array.size(sortedArray), func(i : Nat) : Nat { i });
+
+        let entriesWithIndex : [(T.LeaderboardEntry, Nat)] = Array.map<Nat, (T.LeaderboardEntry, Nat)>(indexes, func(i : Nat) : (T.LeaderboardEntry, Nat) { (sortedArray[i], i) });
+
+        let qualifyingEntriesWithIndex = Array.filter(
+          entriesWithIndex,
+          func(pair : (T.LeaderboardEntry, Nat)) : Bool {
+            let (_, index) = pair;
+            index <= lastIndexForPrizes;
+          },
+        );
+
+        let qualifyingEntries = Array.map(
+          qualifyingEntriesWithIndex,
+          func(pair : (T.LeaderboardEntry, Nat)) : T.LeaderboardEntry {
+            let (entry, _) = pair;
+            entry;
+          },
+        );
+
+        switch (seasonId) {
+          case (null) { return null };
+          case (?foundSeasonId) {
+            switch (leaderboard) {
+              case (null) { return null };
+              case (?foundLeaderboard) {
+                return ?{
+                  seasonId = foundSeasonId;
+                  clubId = foundLeaderboard.clubId;
+                  month = foundLeaderboard.month;
+                  entries = qualifyingEntries;
+                  totalEntries = Array.size(qualifyingEntries);
+                };
+              };
+            };
+          };
+        };
       };
     };
   };

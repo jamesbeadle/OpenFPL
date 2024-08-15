@@ -12,7 +12,7 @@
   import Nat "mo:base/Nat";
   import Option "mo:base/Option";
   import List "mo:base/List";
-import Order "mo:base/Order";
+  import Order "mo:base/Order";
 
   import T "types";
   import DTOs "DTOs";
@@ -27,7 +27,6 @@ import Order "mo:base/Order";
   import CyclesDispenser "cycles-dispenser";
   import Root "sns-wrappers/root";
   import Management "./modules/Management";
-  import WeeklyLeaderboard "canister_definitions/weekly-leaderboard";
   import FPLLedger "FPLLedger";
 
   actor Self {
@@ -208,7 +207,7 @@ import Order "mo:base/Order";
 
     public shared ({ caller }) func executeSubmitFixtureData(submitFixtureData : DTOs.SubmitFixtureDataDTO) : async () {
       assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-      return await seasonManager.executeSubmitFixtureData(Principal.fromActor(Self), submitFixtureData);
+      return await seasonManager.executeSubmitFixtureData(submitFixtureData);
     };
 
     public shared query ({ caller }) func validateAddInitialFixtures(addInitialFixturesDTO : DTOs.AddInitialFixturesDTO) : async T.RustResult {
@@ -1535,11 +1534,11 @@ import Order "mo:base/Order";
       await seasonManager.updateCacheHash("system_state");
 
       //await systemCheckCallback(); //TODO UPDATE THIS SO IT's more informative and delete the existing
-      //await cyclesCheckCallback(); SHOULD I NEED TO DO THIS AM I NOT BACKING IT UP?>!?!!
+      await cyclesCheckCallback();
     };
     
     //Canister cycle topup functions
-
+ 
     public shared ({ caller }) func requestCanisterTopup(cycles: Nat) : async () {
       assert not Principal.isAnonymous(caller);
       let principalId = Principal.toText(caller);
@@ -1556,21 +1555,41 @@ import Order "mo:base/Order";
     };
 
     private func checkCanisterCycles() : async () {
-      
-      let balanceResult = await getCanisterCyclesBalance();
-      switch(balanceResult){
-        case (#ok balance){
-          await cyclesDispenser.checkSNSCanisterCycles();
-      
-          await cyclesDispenser.checkDynamicCanisterCycles(seasonManager.getManagerCanisterIds());
 
-          let remainingDuration = Utilities.getHour() * 24;
-          ignore Timer.setTimer<system>(#nanoseconds remainingDuration, cyclesCheckCallback);
+      let canisterTypes = List.fromArray<T.CanisterType>([
+        #Dapp,
+        #Manager,
+        #WeeklyLeaderboard,
+        #MonthlyLeaderboard,
+        #SeasonLeaderboard,
+        #SNS,
+        #Archive
+      ]);
+
+      for(canisterType in Iter.fromList(canisterTypes)){
+        let canisters = await getCanisters(
+        {
+          canisterTypeFilter = canisterType;
+          entries = [];
+          limit = 999999;
+          offset = 0;
+          totalEntries = 0
+        });
+
+        switch(canisters){
+          case (#ok result){
+            for(canister in Iter.fromArray(result.entries)){
+              if(canister.cycles < 10_000_000_000_000){
+                await cyclesDispenser.requestCanisterTopup(canister.canisterId, 10_000_000_000_000);
+              };
+            }
+          };
+          case _ {}
         };
-        case (_){
-
-        }
       };
+
+      let remainingDuration = Utilities.getHour() * 24;
+      ignore Timer.setTimer<system>(#nanoseconds remainingDuration, cyclesCheckCallback);
       
     };
 

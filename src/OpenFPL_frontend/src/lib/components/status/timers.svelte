@@ -3,7 +3,7 @@
     import { onMount } from "svelte";
     import LocalSpinner from "../local-spinner.svelte";
     import type { TimerType, GetTimersDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-    import { formatUnixDateToReadable, formatUnixTimeToTime } from "$lib/utils/helpers";
+    import { formatUnixDateTimeToReadable } from "$lib/utils/helpers";
     
     let isLoading = true;
     let timers: GetTimersDTO;
@@ -84,7 +84,7 @@
             <div class="flex flex-col">
                 <p>{timer.id}</p>
                 <p>Callback Function: {timer.callbackName}</p>
-                <p>{ formatUnixDateToReadable(timer.triggerTime)}</p>
+                <p>{ formatUnixDateTimeToReadable(timer.triggerTime)}</p>
             </div>
         {/each}
     </div>

@@ -3,6 +3,7 @@
     import { onMount } from "svelte";
     import LocalSpinner from "../local-spinner.svelte";
     import type { GetRewardPoolDTO, SeasonDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import { formatE8s } from "$lib/utils/helpers";
     
     let isLoading = true;
     let rewardPool: GetRewardPoolDTO;
@@ -52,13 +53,25 @@
         </select>
     </div>
     <div>
-        <p>Weekly Leaderboard Pool: ${rewardPool.rewardPool.weeklyLeaderboardPool}</p>
-        <p>Monthly Leaderboard Pool: ${rewardPool.rewardPool.monthlyLeaderboardPool}</p>
-        <p>Season Leaderboard Pool: ${rewardPool.rewardPool.seasonLeaderboardPool}</p>
-        <p>Most Valuable Match Player Pool: ${rewardPool.rewardPool.highestScoringMatchPlayerPool}</p>
-        <p>Most Valuable Team Player Pool: ${rewardPool.rewardPool.mostValuableTeamPool}</p>
-        <p>All Time Weekly High Score Pool: ${rewardPool.rewardPool.allTimeWeeklyHighScorePool}</p>
-        <p>All Time Monthly High Score Pool: ${rewardPool.rewardPool.allTimeMonthlyHighScorePool}</p>
-        <p>All Time Season High Score Pool: ${rewardPool.rewardPool.allTimeSeasonHighScorePool}</p>
+        <p>Weekly Leaderboard Pool: {formatE8s(rewardPool.rewardPool.weeklyLeaderboardPool)} FPL</p>
+        <p>Monthly Leaderboard Pool: {formatE8s(rewardPool.rewardPool.monthlyLeaderboardPool)} FPL</p>
+        <p>Season Leaderboard Pool: {formatE8s(rewardPool.rewardPool.seasonLeaderboardPool)} FPL</p>
+        <p>Most Valuable Match Player Pool: {formatE8s(rewardPool.rewardPool.highestScoringMatchPlayerPool)} FPL</p>
+        <p>Most Valuable Team Player Pool: {formatE8s(rewardPool.rewardPool.mostValuableTeamPool)} FPL</p>
+        <p>All Time Weekly High Score Pool: {formatE8s(rewardPool.rewardPool.allTimeWeeklyHighScorePool)} FPL</p>
+        <p>All Time Monthly High Score Pool: {formatE8s(rewardPool.rewardPool.allTimeMonthlyHighScorePool)} FPL</p>
+        <p>All Time Season High Score Pool: {formatE8s(rewardPool.rewardPool.allTimeSeasonHighScorePool)} FPL</p>
+        <p>Total Reward Pool: {
+            formatE8s((
+                rewardPool.rewardPool.weeklyLeaderboardPool +
+                rewardPool.rewardPool.monthlyLeaderboardPool +
+                rewardPool.rewardPool.seasonLeaderboardPool +
+                rewardPool.rewardPool.highestScoringMatchPlayerPool +
+                rewardPool.rewardPool.mostValuableTeamPool +
+                rewardPool.rewardPool.allTimeWeeklyHighScorePool +
+                rewardPool.rewardPool.allTimeMonthlyHighScorePool +
+                rewardPool.rewardPool.allTimeSeasonHighScorePool
+            ))
+        }</p>
     </div>
 {/if}

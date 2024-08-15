@@ -47,7 +47,7 @@ actor class _SeasonLeaderboardCanister() {
     };
   };
 
-  public shared query ({ caller }) func getRewardLeaderboard() : async ?T.SeasonLeaderboard {
+  public shared query ({ caller }) func getRewardLeaderboard() : async ?DTOs.SeasonLeaderboardDTO {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == Environment.BACKEND_CANISTER_ID;
@@ -95,7 +95,7 @@ actor class _SeasonLeaderboardCanister() {
           },
         );
 
-        let qualifyingEntriesArray = Array.map(
+        let qualifyingEntries = Array.map(
           qualifyingEntriesWithIndex,
           func(pair : (T.LeaderboardEntry, Nat)) : T.LeaderboardEntry {
             let (entry, _) = pair;
@@ -103,15 +103,13 @@ actor class _SeasonLeaderboardCanister() {
           },
         );
 
-        let qualifyingEntries = List.fromArray(qualifyingEntriesArray);
-
         switch (seasonId) {
           case (null) { return null };
           case (?id) {
             return ?{
               seasonId = id;
               entries = qualifyingEntries;
-              totalEntries = List.size(qualifyingEntries);
+              totalEntries = Array.size(qualifyingEntries);
             };
           };
         };

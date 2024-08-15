@@ -2,8 +2,6 @@ import Array "mo:base/Array";
 import List "mo:base/List";
 import Order "mo:base/Order";
 import Text "mo:base/Text";
-import Buffer "mo:base/Buffer";
-import Iter "mo:base/Iter";
 
 import DTOs "../DTOs";
 import T "../types";

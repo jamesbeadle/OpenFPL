@@ -3,7 +3,7 @@
     import { onMount } from "svelte";
     import LocalSpinner from "../local-spinner.svelte";
     import type { CanisterType, GetCanistersDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-    import { formatCycles, formatUnixDateToReadable } from "$lib/utils/helpers";
+    import { formatCycles, formatUnixDateTimeToReadable } from "$lib/utils/helpers";
     
     let isLoading = true;
     let canisters: GetCanistersDTO;
@@ -94,7 +94,7 @@
                 <p>Id: {canister.canisterId}</p>
                 <p>Type: {Object.keys(canister.canister_type)[0]}</p>
                 <p>Cycles: {formatCycles(canister.cycles)}</p>
-                <p>Last Topup: {formatUnixDateToReadable(canister.lastTopup)}</p>
+                <p>Last Topup: {formatUnixDateTimeToReadable(canister.lastTopup)}</p>
             </div>
         {/each}
     </div>

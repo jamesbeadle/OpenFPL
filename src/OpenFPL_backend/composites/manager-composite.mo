@@ -1228,24 +1228,24 @@ module {
       };
     };
 
-    public func payWeeklyRewards(defaultAccount: Principal, rewardPool : T.RewardPool, weeklyLeaderboard : DTOs.WeeklyLeaderboardDTO, filters: DTOs.GameweekFiltersDTO, fixtures : List.List<DTOs.FixtureDTO>) : async () {
-      await rewards.distributeWeeklyRewards(defaultAccount, rewardPool.weeklyLeaderboardPool, weeklyLeaderboard);
-      await rewards.distributeHighestScoringPlayerRewards(defaultAccount, filters.seasonId, filters.gameweek, rewardPool.highestScoringMatchPlayerPool, fixtures, uniqueManagerCanisterIds);
-      await rewards.distributeWeeklyATHScoreRewards(defaultAccount, rewardPool.allTimeWeeklyHighScorePool, weeklyLeaderboard);
+    public func payWeeklyRewards(rewardPool : T.RewardPool, weeklyLeaderboard : DTOs.WeeklyLeaderboardDTO, filters: DTOs.GameweekFiltersDTO, fixtures : List.List<DTOs.FixtureDTO>) : async () {
+      await rewards.distributeWeeklyRewards(rewardPool.weeklyLeaderboardPool, weeklyLeaderboard);
+      await rewards.distributeHighestScoringPlayerRewards(filters.seasonId, filters.gameweek, rewardPool.highestScoringMatchPlayerPool, fixtures, uniqueManagerCanisterIds);
+      await rewards.distributeWeeklyATHScoreRewards(rewardPool.allTimeWeeklyHighScorePool, weeklyLeaderboard);
     };
 
-    public func payMonthlyRewards(defaultAccount: Principal, rewardPool : T.RewardPool, monthlyLeaderboard : DTOs.ClubLeaderboardDTO) : async () {
-      await rewards.distributeMonthlyRewards(defaultAccount, rewardPool, monthlyLeaderboard, uniqueManagerCanisterIds);
+    public func payMonthlyRewards(rewardPool : T.RewardPool, monthlyLeaderboard : DTOs.ClubLeaderboardDTO) : async () {
+      await rewards.distributeMonthlyRewards(rewardPool, monthlyLeaderboard, uniqueManagerCanisterIds);
     };
 
-    public func distributeMonthlyATHScoreRewards(defaultAccount: Principal, rewardPool : T.RewardPool, monthlyLeaderboards : [DTOs.ClubLeaderboardDTO]) : async () {
-      await rewards.distributeMonthlyATHScoreRewards(defaultAccount, rewardPool.allTimeMonthlyHighScorePool, monthlyLeaderboards);
+    public func distributeMonthlyATHScoreRewards(rewardPool : T.RewardPool, monthlyLeaderboards : [DTOs.ClubLeaderboardDTO]) : async () {
+      await rewards.distributeMonthlyATHScoreRewards(rewardPool.allTimeMonthlyHighScorePool, monthlyLeaderboards);
     };
 
-    public func paySeasonRewards(defaultAccount: Principal, rewardPool : T.RewardPool, seasonLeaderboard : DTOs.SeasonLeaderboardDTO, players : [DTOs.PlayerDTO], seasonId : T.SeasonId) : async () {
-      await rewards.distributeSeasonRewards(defaultAccount, rewardPool.seasonLeaderboardPool , seasonLeaderboard);
-      await rewards.distributeSeasonATHScoreRewards(defaultAccount, rewardPool.allTimeSeasonHighScorePool, seasonLeaderboard);
-      await rewards.distributeMostValuableTeamRewards(defaultAccount, rewardPool.mostValuableTeamPool, players, seasonId, uniqueManagerCanisterIds);
+    public func paySeasonRewards(rewardPool : T.RewardPool, seasonLeaderboard : DTOs.SeasonLeaderboardDTO, players : [DTOs.PlayerDTO], seasonId : T.SeasonId) : async () {
+      await rewards.distributeSeasonRewards(rewardPool.seasonLeaderboardPool , seasonLeaderboard);
+      await rewards.distributeSeasonATHScoreRewards(rewardPool.allTimeSeasonHighScorePool, seasonLeaderboard);
+      await rewards.distributeMostValuableTeamRewards(rewardPool.mostValuableTeamPool, players, seasonId, uniqueManagerCanisterIds);
     };
 
     public func getStableManagerCanisterIds() : [(T.PrincipalId, T.CanisterId)] {
