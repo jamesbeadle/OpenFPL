@@ -31,6 +31,8 @@ module {
     private var storeCanisterId : ?((canisterId : Text) -> async ()) = null;
     private var backendCanisterController : ?Principal = null;
 
+    private let MAX_ENTRIES_PER_CHUNK = 10_000;
+
     public func setStoreCanisterIdFunction(
       _storeCanisterId : (canisterId : Text) -> async (),
     ) {
@@ -315,8 +317,8 @@ module {
         fantasyTeamSnapshots := mergeSortedArrays(fantasyTeamSnapshots, orderedSnapshots, compareSnapshots);
       };
       
-      await calculateWeeklyLeaderboards(seasonId, gameweek, fantasyTeamSnapshots);
-      await calculateMonthlyLeaderboards(seasonId, gameweek, month, fantasyTeamSnapshots);
+      await calculateWeeklyLeaderboard(seasonId, gameweek, fantasyTeamSnapshots);
+      await calculateMonthlyLeaderboards(seasonId, month, fantasyTeamSnapshots);
       await calculateSeasonLeaderboard(seasonId, fantasyTeamSnapshots);
     };
 
@@ -362,7 +364,25 @@ module {
       return Array.freeze(mergedArray);
     };
 
-    private func calculateWeeklyLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, snapshots : [T.FantasyTeamSnapshot]) : async () {
+
+
+    private func calculateWeeklyLeaderboard(seasonId : T.SeasonId, gameweek : T.GameweekNumber, snapshots : [T.FantasyTeamSnapshot]) : async () {
+      
+      let existingCanisterInfo = List.find<T.WeeklyLeaderboardCanister>(weeklyLeaderboardCanisters, func (canister: T.WeeklyLeaderboardCanister) : Bool{
+        return canister.seasonId == seasonId and canister.gameweek == gameweek; 
+      });
+
+      var weeklyLeaderboardCanisterId = "";
+
+      switch(existingCanisterInfo){
+        case (null){
+          weeklyLeaderboardCanisterId := await createWeeklyLeaderboardCanister(seasonId, gameweek);
+        };
+        case (?foundCanisterInfo){
+          weeklyLeaderboardCanisterId := foundCanisterInfo.canisterId;
+        };
+      };
+      
       let gameweekEntries = Array.map<T.FantasyTeamSnapshot, T.LeaderboardEntry>(
         snapshots,
         func(snapshot) {
@@ -379,23 +399,76 @@ module {
         totalEntries = List.size(positionedGameweekEntries);
       };
 
-      let gameweekLeaderboardCanisterId = await createWeeklyLeaderboardCanister(seasonId, gameweek, currentGameweekLeaderboard);
+      await sendWeeklyLeaderboardToCanister(seasonId, gameweek, currentGameweekLeaderboard, weeklyLeaderboardCanisterId);      
+    };
+
+    private func createWeeklyLeaderboardCanister(seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async Text {
+      if (backendCanisterController == null) {
+        return "";
+      };
+
+      Cycles.add<system>(2_000_000_000_000);
+      let canister = await WeeklyLeaderboardCanister._WeeklyLeaderboardCanister();
+      let IC : Management.Management = actor (Environment.Default);
+      let _ = await Utilities.updateCanister_(canister, backendCanisterController, IC);
+      let canister_principal = Principal.fromActor(canister);
+      let weeklyLeaderboardCanisterId = Principal.toText(canister_principal);
 
       let gameweekCanisterInfo : T.WeeklyLeaderboardCanister = {
         seasonId = seasonId;
         gameweek = gameweek;
-        canisterId = gameweekLeaderboardCanisterId;
+        canisterId = weeklyLeaderboardCanisterId;
       };
 
       weeklyLeaderboardCanisters := List.append(weeklyLeaderboardCanisters, List.fromArray([gameweekCanisterInfo]));
+
+      return weeklyLeaderboardCanisterId;
     };
 
-    private func calculateMonthlyLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth, snapshots : [T.FantasyTeamSnapshot]) : async () {
+    private func sendWeeklyLeaderboardToCanister(seasonId : T.SeasonId, gameweek : T.GameweekNumber, weeklyLeaderboard: T.WeeklyLeaderboard, canisterId: T.CanisterId) : async () {
+      
+      let totalEntries = List.size(weeklyLeaderboard.entries);
+
+      let leaderboard_canister = actor (canisterId) : actor {
+        addLeaderboardChunk : (entriesChunk : List.List<T.LeaderboardEntry>) -> async ();
+        initialise : (seasonId : T.SeasonId, gameweek : T.GameweekNumber, totalEntries : Nat) -> async ();
+      };
+      await leaderboard_canister.initialise(seasonId, gameweek, totalEntries);
+
+      var numChunks : Nat = 0;
+      if (totalEntries > 0) {
+        numChunks := (totalEntries + MAX_ENTRIES_PER_CHUNK - 1) / MAX_ENTRIES_PER_CHUNK;
+      };
+      for (i in Iter.range(0, numChunks)) {
+        let startIdx = i * MAX_ENTRIES_PER_CHUNK;
+
+        let droppedEntries = List.drop<T.LeaderboardEntry>(weeklyLeaderboard.entries, startIdx);
+        let leaderboardChunk = List.take<T.LeaderboardEntry>(droppedEntries, MAX_ENTRIES_PER_CHUNK);
+
+        await leaderboard_canister.addLeaderboardChunk(leaderboardChunk);
+      };
+    };
+
+    private func calculateMonthlyLeaderboards(seasonId : T.SeasonId, month : T.CalendarMonth, snapshots : [T.FantasyTeamSnapshot]) : async () {
+      
       let clubGroup = groupByTeam(snapshots);
 
-      var updatedLeaderboards = List.nil<T.ClubLeaderboard>();
-
       for ((clubId, userTeams) : (T.ClubId, [T.FantasyTeamSnapshot]) in clubGroup.entries()) {
+
+        let existingCanisterInfo = List.find<T.MonthlyLeaderboardCanister>(monthlyLeaderboardCanisters, func (canister: T.MonthlyLeaderboardCanister) : Bool{
+          return canister.seasonId == seasonId and canister.month == month and canister.clubId == clubId; 
+        });
+
+        var monthlyLeaderboardCanisterId = "";
+
+        switch(existingCanisterInfo){
+          case (null){
+            monthlyLeaderboardCanisterId := await createMonthlyLeaderboardCanister(seasonId, month, clubId);
+          };
+          case (?foundCanisterInfo){
+            monthlyLeaderboardCanisterId := foundCanisterInfo.canisterId;
+          };
+        };
 
         let filteredTeams = List.filter<T.FantasyTeamSnapshot>(
           List.fromArray(userTeams),
@@ -421,20 +494,7 @@ module {
           entries = positionedMonthlyEntries;
           totalEntries = List.size(positionedMonthlyEntries);
         };
-
-        updatedLeaderboards := List.append<T.ClubLeaderboard>(updatedLeaderboards, List.fromArray([clubMonthlyLeaderboard]));
-      };
-
-      for (leaderboard in Iter.fromList(updatedLeaderboards)) {
-        let monthlyLeaderboardCanisterId = await createMonthlyLeaderboardCanister(seasonId, month, leaderboard.clubId, leaderboard);
-
-        let clubCanisterInfo : T.MonthlyLeaderboardCanister = {
-          seasonId = seasonId;
-          month = gameweek;
-          clubId = leaderboard.clubId;
-          canisterId = monthlyLeaderboardCanisterId;
-        };
-        monthlyLeaderboardCanisters := List.append(monthlyLeaderboardCanisters, List.fromArray([clubCanisterInfo]));
+        await sendMonthlyLeaderboardToCanister(seasonId, month, clubId, clubMonthlyLeaderboard, monthlyLeaderboardCanisterId);
       };
     };
 
@@ -458,7 +518,72 @@ module {
       return groupedTeams;
     };
 
+    private func createMonthlyLeaderboardCanister(seasonId : T.SeasonId, month : T.CalendarMonth, clubId : T.ClubId) : async Text {
+
+      if (backendCanisterController == null) {
+        return "";
+      };
+
+      Cycles.add<system>(2_000_000_000_000);
+      let canister = await MonthlyLeaderboardCanister._MonthlyLeaderboardCanister();
+      let IC : Management.Management = actor (Environment.Default);
+      let _ = await Utilities.updateCanister_(canister, backendCanisterController, IC);
+      let canister_principal = Principal.fromActor(canister);
+      let monthlyLeaderboardCanisterId = Principal.toText(canister_principal);
+
+      let monthlyCanisterInfo : T.MonthlyLeaderboardCanister = {
+        seasonId = seasonId;
+        month = month;
+        clubId = clubId;
+        canisterId = monthlyLeaderboardCanisterId;
+      };
+
+      monthlyLeaderboardCanisters := List.append(monthlyLeaderboardCanisters, List.fromArray([monthlyCanisterInfo]));
+
+      return monthlyLeaderboardCanisterId;
+    };
+
+
+    private func sendMonthlyLeaderboardToCanister(seasonId : T.SeasonId, month : T.CalendarMonth, clubId: T.ClubId, monthlyLeaderboard: T.ClubLeaderboard, canisterId: T.CanisterId) : async () {
+      let totalEntries = List.size(monthlyLeaderboard.entries);
+
+      let leaderboard_canister = actor (canisterId) : actor {
+        addLeaderboardChunk : (entriesChunk : List.List<T.LeaderboardEntry>) -> async ();
+        initialise : (seasonId : T.SeasonId, month : T.CalendarMonth, clubId: T.ClubId, totalEntries : Nat) -> async ();
+      };
+      await leaderboard_canister.initialise(seasonId, month, clubId, totalEntries);      
+
+      var numChunks : Nat = 0;
+      if (totalEntries > 0) {
+        numChunks := (totalEntries + MAX_ENTRIES_PER_CHUNK - 1) / MAX_ENTRIES_PER_CHUNK;
+      };
+      for (i in Iter.range(0, numChunks)) {
+        let startIdx = i * MAX_ENTRIES_PER_CHUNK;
+
+        let droppedEntries = List.drop<T.LeaderboardEntry>(monthlyLeaderboard.entries, startIdx);
+        let leaderboardChunk = List.take<T.LeaderboardEntry>(droppedEntries, MAX_ENTRIES_PER_CHUNK);
+        await leaderboard_canister.addLeaderboardChunk(leaderboardChunk);
+      };
+    };
+
     private func calculateSeasonLeaderboard(seasonId : T.SeasonId, snapshots : [T.FantasyTeamSnapshot]) : async () {
+      
+      let existingCanisterInfo = List.find<T.SeasonLeaderboardCanister>(seasonLeaderboardCanisters, func (canister: T.SeasonLeaderboardCanister) : Bool{
+        return canister.seasonId == seasonId; 
+      });
+
+      var seasonLeaderboardCanisterId = "";
+
+      switch(existingCanisterInfo){
+        case (null){
+          seasonLeaderboardCanisterId := await createSeasonLeaderboardCanister(seasonId);
+        };
+        case (?foundCanisterInfo){
+          seasonLeaderboardCanisterId := foundCanisterInfo.canisterId;
+        };
+      };
+      
+      
       let seasonEntries = Array.map<T.FantasyTeamSnapshot, T.LeaderboardEntry>(
         snapshots,
         func(snapshot) {
@@ -474,134 +599,52 @@ module {
         totalEntries = List.size(positionedSeasonEntries);
       };
 
-      let seasonLeaderboardCanisterId = await createSeasonLeaderboardCanister(seasonId, currentSeasonLeaderboard);
-      let sesasonCanisterInfo : T.SeasonLeaderboardCanister = {
-        seasonId = seasonId;
-        canisterId = seasonLeaderboardCanisterId;
-      };
-      seasonLeaderboardCanisters := List.append(seasonLeaderboardCanisters, List.fromArray([sesasonCanisterInfo]));
+      await sendSeasonLeaderboardToCanister(seasonId, currentSeasonLeaderboard, seasonLeaderboardCanisterId);      
     };
 
-    private func createWeeklyLeaderboardCanister(seasonId : T.SeasonId, gameweek : T.GameweekNumber, weeklyLeaderboard : T.WeeklyLeaderboard) : async Text {
+    private func createSeasonLeaderboardCanister(seasonId : T.SeasonId) : async Text {
       if (backendCanisterController == null) {
         return "";
       };
-
-      let maxEntriesPerChunk = 10_000;
-
-      Cycles.add<system>(2_000_000_000_000);
-      let canister = await WeeklyLeaderboardCanister._WeeklyLeaderboardCanister();
-      let IC : Management.Management = actor (Environment.Default);
-      let _ = await Utilities.updateCanister_(canister, backendCanisterController, IC);
-      let canister_principal = Principal.fromActor(canister);
-
-      let totalEntries = List.size(weeklyLeaderboard.entries);
-      await canister.createCanister(seasonId, gameweek, totalEntries);
-
-      var numChunks : Nat = 0;
-      if (totalEntries > 0) {
-        numChunks := (totalEntries + maxEntriesPerChunk - 1) / maxEntriesPerChunk;
-      };
-      for (i in Iter.range(0, numChunks)) {
-        let startIdx = i * maxEntriesPerChunk;
-
-        let droppedEntries = List.drop<T.LeaderboardEntry>(weeklyLeaderboard.entries, startIdx);
-        let leaderboardChunk = List.take<T.LeaderboardEntry>(droppedEntries, maxEntriesPerChunk);
-        await canister.addLeaderboardChunk(leaderboardChunk);
-      };
-
-      let canisterId = Principal.toText(canister_principal);
-
-      switch (storeCanisterId) {
-        case (null) {};
-        case (?actualFunction) {
-          await actualFunction(canisterId);
-        };
-      };
-
-      return canisterId;
-    };
-
-    private func createMonthlyLeaderboardCanister(seasonId : T.SeasonId, month : T.CalendarMonth, clubId : T.ClubId, monthlyLeaderboard : T.ClubLeaderboard) : async Text {
-
-      if (backendCanisterController == null) {
-        return "";
-      };
-
-      let maxEntriesPerChunk = 10_000;
-
-      Cycles.add<system>(2_000_000_000_000);
-      let canister = await MonthlyLeaderboardCanister._MonthlyLeaderboardCanister();
-      let IC : Management.Management = actor (Environment.Default);
-      let _ = await Utilities.updateCanister_(canister, backendCanisterController, IC);
-      let canister_principal = Principal.fromActor(canister);
-
-      let totalEntries = List.size(monthlyLeaderboard.entries);
-      await canister.createCanister(seasonId, month, clubId, totalEntries);
-
-      var numChunks : Nat = 0;
-      if (totalEntries > 0) {
-        numChunks := (totalEntries + maxEntriesPerChunk - 1) / maxEntriesPerChunk;
-      };
-      for (i in Iter.range(0, numChunks)) {
-        let startIdx = i * maxEntriesPerChunk;
-
-        let droppedEntries = List.drop<T.LeaderboardEntry>(monthlyLeaderboard.entries, startIdx);
-        let leaderboardChunk = List.take<T.LeaderboardEntry>(droppedEntries, maxEntriesPerChunk);
-        await canister.addLeaderboardChunk(leaderboardChunk);
-      };
-
-      let canisterId = Principal.toText(canister_principal);
-
-      switch (storeCanisterId) {
-        case (null) {};
-        case (?actualFunction) {
-          await actualFunction(canisterId);
-        };
-      };
-
-      return canisterId;
-    };
-
-    private func createSeasonLeaderboardCanister(seasonId : T.SeasonId, seasonLeaderboard : T.SeasonLeaderboard) : async Text {
-
-      if (backendCanisterController == null) {
-        return "";
-      };
-
-      let maxEntriesPerChunk = 10_000;
 
       Cycles.add<system>(2_000_000_000_000);
       let canister = await SeasonLeaderboardCanister._SeasonLeaderboardCanister();
       let IC : Management.Management = actor (Environment.Default);
       let _ = await Utilities.updateCanister_(canister, backendCanisterController, IC);
       let canister_principal = Principal.fromActor(canister);
+      let seasonLeaderboardCanisterId = Principal.toText(canister_principal);
 
+      let seasonCanisterInfo : T.SeasonLeaderboardCanister = {
+        seasonId = seasonId;
+        canisterId = seasonLeaderboardCanisterId;
+      };
+
+      seasonLeaderboardCanisters := List.append(seasonLeaderboardCanisters, List.fromArray([seasonCanisterInfo]));
+
+      return seasonLeaderboardCanisterId;
+    };
+
+
+    private func sendSeasonLeaderboardToCanister(seasonId : T.SeasonId, seasonLeaderboard: T.SeasonLeaderboard, canisterId: T.CanisterId) : async () {
       let totalEntries = List.size(seasonLeaderboard.entries);
-      await canister.createCanister(seasonId, totalEntries);
+
+      let leaderboard_canister = actor (canisterId) : actor {
+        addLeaderboardChunk : (entriesChunk : List.List<T.LeaderboardEntry>) -> async ();
+        initialise : (seasonId : T.SeasonId, totalEntries : Nat) -> async ();
+      };
+      await leaderboard_canister.initialise(seasonId, totalEntries);      
 
       var numChunks : Nat = 0;
       if (totalEntries > 0) {
-        numChunks := (totalEntries + maxEntriesPerChunk - 1) / maxEntriesPerChunk;
+        numChunks := (totalEntries + MAX_ENTRIES_PER_CHUNK - 1) / MAX_ENTRIES_PER_CHUNK;
       };
       for (i in Iter.range(0, numChunks)) {
-        let startIdx = i * maxEntriesPerChunk;
+        let startIdx = i * MAX_ENTRIES_PER_CHUNK;
 
         let droppedEntries = List.drop<T.LeaderboardEntry>(seasonLeaderboard.entries, startIdx);
-        let leaderboardChunk = List.take<T.LeaderboardEntry>(droppedEntries, maxEntriesPerChunk);
-        await canister.addLeaderboardChunk(leaderboardChunk);
+        let leaderboardChunk = List.take<T.LeaderboardEntry>(droppedEntries, MAX_ENTRIES_PER_CHUNK);
+        await leaderboard_canister.addLeaderboardChunk(leaderboardChunk);
       };
-
-      let canisterId = Principal.toText(canister_principal);
-
-      switch (storeCanisterId) {
-        case (null) {};
-        case (?actualFunction) {
-          await actualFunction(canisterId);
-        };
-      };
-
-      return canisterId;
     };
 
     private func createLeaderboardEntry(principalId : Text, username : Text, points : Int16) : T.LeaderboardEntry {
@@ -611,126 +654,6 @@ module {
         username = username;
         principalId = principalId;
         points = points;
-      };
-    };
-
-    public func sendWeeklyLeaderboardEntries(privateLeaguesManager: PrivateLeaguesManager.PrivateLeaguesManager, filters: DTOs.GameweekFiltersDTO, managerCanisterIdIndex: TrieMap.TrieMap<T.PrincipalId, T.CanisterId>) : async () {
-
-      let weeklyLeaderboardCanister = List.find<T.WeeklyLeaderboardCanister>(
-        weeklyLeaderboardCanisters,
-        func(weeklyLeaderboard : T.WeeklyLeaderboardCanister) : Bool {
-          return weeklyLeaderboard.seasonId == filters.seasonId and weeklyLeaderboard.gameweek == filters.gameweek;
-        },
-      );
-
-      switch(weeklyLeaderboardCanister){
-        case (null) {};
-        case(?foundCanisterInfo){
-          let weekly_leaderboard_canister = actor (foundCanisterInfo.canisterId) : actor {
-            getEntries : (filters: DTOs.PaginationFiltersDTO, searchTerm : Text) -> async ?DTOs.WeeklyLeaderboardDTO;
-            getTotalEntries : () -> async Nat;
-          };
-
-          let totalEntries = await weekly_leaderboard_canister.getTotalEntries();
-          let chunkSize : Nat = 1000;
-          var offset : Nat = 0;
-
-          label here loop {
-            if (offset >= totalEntries) {
-              break here;
-            };
-
-            let entriesDTO = await weekly_leaderboard_canister.getEntries({ limit = chunkSize; offset }, "");
-            switch (entriesDTO) {
-              case (?dto) {
-                await privateLeaguesManager.sendWeeklyLeaderboardEntries(filters, dto.entries, managerCanisterIdIndex);
-              };
-              case (null) { };
-            };
-
-            offset += chunkSize;
-          } while (offset < totalEntries);
-        };
-      };
-    };
-
-    public func sendMonthlyLeaderboardEntries(privateLeaguesManager: PrivateLeaguesManager.PrivateLeaguesManager, seasonId: T.SeasonId, month: T.CalendarMonth, managerCanisterIdIndex: TrieMap.TrieMap<T.PrincipalId, T.CanisterId>) : async () {
-
-      let monthlyLeaderboardCanister = List.find<T.MonthlyLeaderboardCanister>(
-        monthlyLeaderboardCanisters,
-        func(monthlyLeaderboard : T.MonthlyLeaderboardCanister) : Bool {
-          return monthlyLeaderboard.seasonId == seasonId and monthlyLeaderboard.month == month;
-        },
-      );
-
-      switch(monthlyLeaderboardCanister){
-        case (null) {};
-        case(?foundCanisterInfo){
-          let monthly_leaderboard_canister = actor (foundCanisterInfo.canisterId) : actor {
-            getEntries : (filters: DTOs.PaginationFiltersDTO, searchTerm : Text) -> async ?DTOs.MonthlyLeaderboardDTO;
-            getTotalEntries : () -> async Nat;
-          };
-
-          let totalEntries = await monthly_leaderboard_canister.getTotalEntries();
-          let chunkSize : Nat = 1000;
-          var offset : Nat = 0;
-
-          label here loop {
-            if (offset >= totalEntries) {
-              break here;
-            };
-
-            let entriesDTO = await monthly_leaderboard_canister.getEntries({limit = chunkSize; offset }, "");
-            switch (entriesDTO) {
-              case (?dto) {
-                await privateLeaguesManager.sendMonthlyLeaderboardEntries(seasonId, month, dto.entries, managerCanisterIdIndex);
-              };
-              case (null) { };
-            };
-
-            offset += chunkSize;
-          } while (offset < totalEntries);
-        };
-      };
-    };
-
-    public func sendSeasonLeaderboardEntries(privateLeaguesManager: PrivateLeaguesManager.PrivateLeaguesManager, seasonId: T.SeasonId, managerCanisterIdIndex: TrieMap.TrieMap<T.PrincipalId, T.CanisterId>) : async () {
-
-      let seasonLeaderboardCanister = List.find<T.SeasonLeaderboardCanister>(
-        seasonLeaderboardCanisters,
-        func(seasonLeaderboard : T.SeasonLeaderboardCanister) : Bool {
-          return seasonLeaderboard.seasonId == seasonId;
-        },
-      );
-
-      switch(seasonLeaderboardCanister){
-        case (null) {};
-        case(?foundCanisterInfo){
-          let season_leaderboard_canister = actor (foundCanisterInfo.canisterId) : actor {
-            getEntries : (filters: DTOs.PaginationFiltersDTO, searchTerm : Text) -> async ?DTOs.SeasonLeaderboardDTO;
-            getTotalEntries : () -> async Nat;
-          };
-
-          let totalEntries = await season_leaderboard_canister.getTotalEntries();
-          let chunkSize : Nat = 1000;
-          var offset : Nat = 0;
-
-          label here loop {
-            if (offset >= totalEntries) {
-              break here;
-            };
-
-            let entriesDTO = await season_leaderboard_canister.getEntries({ limit = chunkSize; offset }, "");
-            switch (entriesDTO) {
-              case (?dto) {
-                await privateLeaguesManager.sendSeasonLeaderboardEntries(seasonId, dto.entries, managerCanisterIdIndex);
-              };
-              case (null) { };
-            };
-
-            offset += chunkSize;
-          } while (offset < totalEntries);
-        };
       };
     };
 

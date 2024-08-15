@@ -191,7 +191,7 @@ shared actor class NeuronController() = self {
       ingress_expiry = 90_000_000_000;
       domain = "https://icp-api.io";
       fees = [
-          (SECP256K1.ID.KEY_1,  SECP256K1.FEE.KEY_1), //todo change back to key 1 on live
+          (SECP256K1.ID.KEY_1,  SECP256K1.FEE.KEY_1),
           (FEE_ID.PER_RESPONSE_BYTE, FEE_AMT.PER_RESPONSE_BYTE),
           (FEE_ID.PER_REQUEST_BYTE,  FEE_AMT.PER_REQUEST_BYTE),
           (FEE_ID.PER_CALL,          FEE_AMT.PER_CALL),

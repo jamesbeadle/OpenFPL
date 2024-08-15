@@ -17,7 +17,7 @@ actor class _WeeklyLeaderboardCanister() {
   private stable var gameweek : ?T.GameweekNumber = null;
   private var cyclesCheckTimerId : ?Timer.TimerId = null;
 
-  public shared ({ caller }) func createCanister(_seasonId : T.SeasonId, _gameweek : T.GameweekNumber, _totalEntries : Nat) : async () {
+  public shared ({ caller }) func initialise(_seasonId : T.SeasonId, _gameweek : T.GameweekNumber, _totalEntries : Nat) : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == Environment.BACKEND_CANISTER_ID;

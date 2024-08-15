@@ -562,6 +562,7 @@ import Order "mo:base/Order";
     };
     
     public shared ({ caller }) func createPrivateLeague(newPrivateLeague: DTOs.CreatePrivateLeagueDTO) : async Result.Result<(), T.Error>{
+      assert false; //TODO: Remove when ready to launch private leagues
       assert not Principal.isAnonymous(caller);
       assert(newPrivateLeague.termsAgreed);
       assert(seasonManager.privateLeagueIsValid(newPrivateLeague));
@@ -1480,25 +1481,7 @@ import Order "mo:base/Order";
       treasuryManager.setStableTokenList(stable_token_list);
       treasuryManager.setStableNextTokenId(stable_next_token_id);
 
-      let timerBuffer = Buffer.fromArray<T.TimerInfo>([]);
-      for(timer in Iter.fromArray(stable_timers)){
-        switch(timer.callbackName){
-          case "gameCompletedExpired"{
-            timerBuffer.add({
-              callbackName = timer.callbackName;
-              id = timer.id;
-              triggerTime = timer.triggerTime + (Utilities.getHour() * 2);
-            });
-          };
-          case _ {
-            timerBuffer.add(timer);
-          };
-        };
-      };
-
-      timers := Buffer.toArray(timerBuffer);
-
-      //timers := stable_timers; add back
+      timers := stable_timers;
       
       let currentTime = Time.now();
       for (timerInfo in Iter.fromArray(timers)) {

@@ -17,7 +17,7 @@ actor class _MonthlyLeaderboardCanister() {
   
   private let cyclesCheckInterval : Nat = Utilities.getHour() * 24; //TODO: move
 
-  public shared ({ caller }) func createCanister(_seasonId : T.SeasonId, _month : T.CalendarMonth, _clubId : T.ClubId, _totalEntries : Nat) : async () {
+  public shared ({ caller }) func initialise(_seasonId : T.SeasonId, _month : T.CalendarMonth, _clubId : T.ClubId, _totalEntries : Nat) : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == Environment.BACKEND_CANISTER_ID;

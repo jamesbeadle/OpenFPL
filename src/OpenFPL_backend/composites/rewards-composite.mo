@@ -47,7 +47,6 @@ module {
     public func distributeWeeklyRewards(defaultAccount : Principal, weeklyRewardPool : Nat64, weeklyLeaderboard : DTOs.WeeklyLeaderboardDTO) : async () {
 
       let weeklyRewardAmount = weeklyRewardPool / 38;
-      await mintToTreasury(weeklyRewardAmount, defaultAccount);
 
       var payouts = List.nil<Float>();
       var currentEntries = List.fromArray(weeklyLeaderboard.entries);
@@ -126,7 +125,6 @@ module {
 
     public func distributeMonthlyRewards(defaultAccount : Principal, rewardPool : T.RewardPool, monthlyLeaderboard : DTOs.ClubLeaderboardDTO, uniqueManagerCanisterIds : List.List<T.CanisterId>) : async () {
       let monthlyRewardAmount = rewardPool.monthlyLeaderboardPool / 10;
-      await mintToTreasury(monthlyRewardAmount, defaultAccount);
 
       let clubManagersBuffer = Buffer.fromArray<T.PrincipalId>([]);
       var nonClubManagersCount : Nat = 0;
@@ -230,8 +228,6 @@ module {
 
     public func distributeSeasonRewards(defaultAccount : Principal, seasonRewardPool : Nat64, seasonLeaderboard : DTOs.SeasonLeaderboardDTO) : async () {
 
-      await mintToTreasury(seasonRewardPool, defaultAccount);
-
       var payouts = List.nil<Float>();
       var currentEntries = List.fromArray(seasonLeaderboard.entries);
 
@@ -306,8 +302,6 @@ module {
     };
 
     public func distributeMostValuableTeamRewards(defaultAccount : Principal, mostValuableTeamPool : Nat64, players : [DTOs.PlayerDTO], currentSeason : T.SeasonId, uniqueManagerCanisterIds : List.List<T.CanisterId>) : async () {
-
-      await mintToTreasury(mostValuableTeamPool, defaultAccount);
 
       let gameweek38Snapshots = Buffer.fromArray<T.FantasyTeamSnapshot>([]);
       let mostValuableTeamsBuffer = Buffer.fromArray<T.FantasyTeamSnapshot>([]);
@@ -430,8 +424,6 @@ module {
 
     public func distributeHighestScoringPlayerRewards(defaultAccount : Principal, seasonId : T.SeasonId, gameweek : T.GameweekNumber, highestScoringPlayerRewardPool : Nat64, fixtures : List.List<DTOs.FixtureDTO>, uniqueManagerCanisterIds : List.List<T.CanisterId>) : async () {
 
-      await mintToTreasury(highestScoringPlayerRewardPool, defaultAccount);
-
       let highestScoringPlayerIdBuffer = Buffer.fromArray<T.PlayerId>([]);
 
       for (fixture in Iter.fromList(fixtures)) {
@@ -495,7 +487,6 @@ module {
 
     public func distributeWeeklyATHScoreRewards(defaultAccount : Principal, weeklyRewardPool : Nat64, weeklyLeaderboard : DTOs.WeeklyLeaderboardDTO) : async () {
       let weeklyATHReward = weeklyRewardPool / 38;
-      await mintToTreasury(weeklyATHReward, defaultAccount);
 
       let maybeLastHighScore = List.last<T.HighScoreRecord>(weeklyAllTimeHighScores);
       var highestWeeklyScore : Int16 = 0;
@@ -540,7 +531,6 @@ module {
 
     public func distributeMonthlyATHScoreRewards(defaultAccount : Principal, monthlyRewardPool : Nat64, monthlyLeaderboards : [DTOs.MonthlyLeaderboardDTO]) : async () {
       let monthlyATHReward = monthlyRewardPool / 10;
-      await mintToTreasury(monthlyATHReward, defaultAccount);
 
       let maybeLastHighScore = List.last<T.HighScoreRecord>(monthlyAllTimeHighScores);
       var highestMonthlyScore : Int16 = 0;
@@ -591,7 +581,6 @@ module {
     };
 
     public func distributeSeasonATHScoreRewards(defaultAccount : Principal, seasonRewardPool : Nat64, seasonLeaderboard : DTOs.SeasonLeaderboardDTO) : async () {
-      await mintToTreasury(seasonRewardPool, defaultAccount);
       let maybeLastHighScore = List.last<T.HighScoreRecord>(seasonAllTimeHighScores);
       var highestSeasonScore : Int16 = 0;
       switch (maybeLastHighScore) {
@@ -646,6 +635,7 @@ module {
       });
     };
 
+    /* Add back in season 2 if required
     private func mintToTreasury(fpl : Nat64, defaultAccount: Principal) : async () {
       let ledger : SNSToken.Interface = actor (Environment.SNS_LEDGER_CANISTER_ID);
       let _ = await ledger.icrc1_transfer({
@@ -657,6 +647,7 @@ module {
         created_at_time = ?Nat64.fromNat(Int.abs(Time.now()))
       });
     };
+    */
 
     public func getStableTeamValueLeaderboards() : [(T.SeasonId, T.TeamValueLeaderboard)] {
       return Iter.toArray(teamValueLeaderboards.entries());

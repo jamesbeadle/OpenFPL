@@ -19,7 +19,7 @@ actor class _SeasonLeaderboardCanister() {
   private stable var seasonId : ?T.SeasonId = null;
   private stable var cyclesCheckTimerId : ?Timer.TimerId = null;
 
-  public shared ({ caller }) func createCanister(_seasonId : T.SeasonId, _totalEntries : Nat) : async () {
+  public shared ({ caller }) func initialise(_seasonId : T.SeasonId, _totalEntries : Nat) : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == Environment.BACKEND_CANISTER_ID;

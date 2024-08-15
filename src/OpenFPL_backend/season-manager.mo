@@ -658,13 +658,9 @@ module {
 
       let playerPointsMap = playerComposite.getPlayersMap({ seasonId = systemState.calculationSeasonId; gameweek = systemState.calculationGameweek });
 
-      await managerComposite.calculateFantasyTeamScores(playerPointsMap, systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
+      await managerComposite.calculateFantasyTeamScores(playerPointsMap, players, systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
       await leaderboardComposite.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth, managerComposite.getStableUniqueManagerCanisterIds());
       
-      await leaderboardComposite.sendWeeklyLeaderboardEntries(privateLeaguesManager, { seasonId = systemState.calculationSeasonId; gameweek = systemState.calculationGameweek }, managerComposite.getManagerCanisterIds());
-      await leaderboardComposite.sendMonthlyLeaderboardEntries(privateLeaguesManager, systemState.calculationSeasonId, systemState.calculationMonth, managerComposite.getManagerCanisterIds());
-      await leaderboardComposite.sendSeasonLeaderboardEntries(privateLeaguesManager, systemState.calculationSeasonId, managerComposite.getManagerCanisterIds());
-
       //await privateLeaguesManager.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
       
       let rewardPool = rewardPools.get(systemState.calculationSeasonId);
