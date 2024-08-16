@@ -1404,7 +1404,7 @@ module {
     };
 
     private func createManagerCanister() : async Text {
-      Cycles.add<system>(2_000_000_000_000);
+      Cycles.add<system>(10_000_000_000_000);
       let canister = await ManagerCanister._ManagerCanister();
       let IC : Management.Management = actor (Environment.Default);
       let principal = ?Principal.fromText(Environment.BACKEND_CANISTER_ID);

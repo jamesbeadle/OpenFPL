@@ -1521,6 +1521,8 @@
     private func postUpgradeCallback() : async (){
 
       //await seasonManager.removeDuplicatePlayer(602);
+
+      await seasonManager.updateRewardPool();
       
       //on each update generate new hash values
       await seasonManager.updateCacheHash("clubs");
@@ -1580,7 +1582,7 @@
           case (#ok result){
             for(canister in Iter.fromArray(result.entries)){
               if(canister.cycles < 10_000_000_000_000){
-                await cyclesDispenser.requestCanisterTopup(canister.canisterId, 10_000_000_000_000);
+                await cyclesDispenser.requestCanisterTopup(canister.canisterId, 2_000_000_000_000);
               };
             }
           };

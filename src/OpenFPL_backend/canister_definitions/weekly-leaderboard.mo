@@ -213,7 +213,7 @@ actor class _WeeklyLeaderboardCanister() {
 
     let balance = Cycles.balance();
 
-    if (balance < 2_000_000_000_000) {
+    if (balance < 10_000_000_000_000) {
       let openfpl_backend_canister = actor (Environment.BACKEND_CANISTER_ID) : actor {
         requestCanisterTopup : (cycles: Nat) -> async ();
       };

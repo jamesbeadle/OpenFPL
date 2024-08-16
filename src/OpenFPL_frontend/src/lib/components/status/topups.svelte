@@ -3,6 +3,7 @@
     import { onMount } from "svelte";
     import LocalSpinner from "../local-spinner.svelte";
     import type { GetTopupsDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import { formatUnixDateTimeToReadable } from "$lib/utils/helpers";
     
     let isLoading = true;
     let topups: GetTopupsDTO;
@@ -57,7 +58,7 @@
         {#each topups.entries as topup}
             <div class="flex flex-col">
                 <p>{topup.canisterId}</p>
-                <p>{topup.toppedUpOn}</p>
+                <p>{formatUnixDateTimeToReadable(topup.toppedUpOn)}</p>
                 <p>{topup.topupAmount}</p>
             </div>
         {/each}

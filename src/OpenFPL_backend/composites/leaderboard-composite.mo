@@ -9,6 +9,7 @@ import Principal "mo:base/Principal";
 import Result "mo:base/Result";
 import Text "mo:base/Text";
 import TrieMap "mo:base/TrieMap";
+import Time "mo:base/Time";
 
 import DTOs "../DTOs";
 import Environment "../utils/Environment";
@@ -30,6 +31,12 @@ module {
 
     private var storeCanisterId : ?((canisterId : Text) -> async ()) = null;
     private var backendCanisterController : ?Principal = null;
+    private var recordSystemEvent : ?((eventLog: T.EventLogEntry) -> ()) = null;
+    public func setRecordSystemEventFunction(
+      _recordSystemEvent : ((eventLog: T.EventLogEntry) -> ()),
+    ) {
+      recordSystemEvent := ?_recordSystemEvent;
+    };
 
     private let MAX_ENTRIES_PER_CHUNK = 10_000;
 
@@ -316,10 +323,29 @@ module {
 
         fantasyTeamSnapshots := mergeSortedArrays(fantasyTeamSnapshots, orderedSnapshots, compareSnapshots);
       };
-      
+
+      logManagerCount(Array.size(fantasyTeamSnapshots));
+
       await calculateWeeklyLeaderboard(seasonId, gameweek, fantasyTeamSnapshots);
       await calculateMonthlyLeaderboards(seasonId, month, fantasyTeamSnapshots);
       await calculateSeasonLeaderboard(seasonId, fantasyTeamSnapshots);
+    };
+
+    private func logManagerCount(totalSnapshots: Nat){
+        switch(recordSystemEvent){
+          case null{};
+          case (?function){
+            function({
+              eventDetail = 
+                "Calculating leaderboards for : " # Nat.toText(totalSnapshots) # " fantasy team snapshots."; 
+              eventId = 0;
+              eventTime = Time.now();
+              eventTitle = "Record Total Snapshots";
+              eventType = #SystemCheck;
+            });
+          }
+      };
+
     };
 
     private func compareSnapshots(a : T.FantasyTeamSnapshot, b : T.FantasyTeamSnapshot) : Order.Order {
@@ -407,7 +433,7 @@ module {
         return "";
       };
 
-      Cycles.add<system>(2_000_000_000_000);
+      Cycles.add<system>(10_000_000_000_000);
       let canister = await WeeklyLeaderboardCanister._WeeklyLeaderboardCanister();
       let IC : Management.Management = actor (Environment.Default);
       let _ = await Utilities.updateCanister_(canister, backendCanisterController, IC);
@@ -437,7 +463,7 @@ module {
 
       var numChunks : Nat = 0;
       if (totalEntries > 0) {
-        numChunks := (totalEntries + MAX_ENTRIES_PER_CHUNK - 1) / MAX_ENTRIES_PER_CHUNK;
+        numChunks := (totalEntries + MAX_ENTRIES_PER_CHUNK - 1) / MAX_ENTRIES_PER_CHUNK; //TODO: Has to be wrong
       };
       for (i in Iter.range(0, numChunks)) {
         let startIdx = i * MAX_ENTRIES_PER_CHUNK;
@@ -524,7 +550,7 @@ module {
         return "";
       };
 
-      Cycles.add<system>(2_000_000_000_000);
+      Cycles.add<system>(10_000_000_000_000);
       let canister = await MonthlyLeaderboardCanister._MonthlyLeaderboardCanister();
       let IC : Management.Management = actor (Environment.Default);
       let _ = await Utilities.updateCanister_(canister, backendCanisterController, IC);
@@ -607,7 +633,7 @@ module {
         return "";
       };
 
-      Cycles.add<system>(2_000_000_000_000);
+      Cycles.add<system>(10_000_000_000_000);
       let canister = await SeasonLeaderboardCanister._SeasonLeaderboardCanister();
       let IC : Management.Management = actor (Environment.Default);
       let _ = await Utilities.updateCanister_(canister, backendCanisterController, IC);

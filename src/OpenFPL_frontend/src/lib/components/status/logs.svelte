@@ -3,6 +3,7 @@
     import { onMount } from "svelte";
     import LocalSpinner from "../local-spinner.svelte";
     import type { EventLogEntryType, GetSystemLogDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import { formatUnixDateTimeToReadable } from "$lib/utils/helpers";
     
     let isLoading = true;
     let systemLog: GetSystemLogDTO;
@@ -69,7 +70,7 @@
             <div class="flex flex-col">
                 <p>{log.eventId}</p>
                 <p>{log.eventTitle}</p>
-                <p>{log.eventTime}</p>
+                <p>{formatUnixDateTimeToReadable(log.eventTime)}</p>
                 <p>{log.eventDetail}</p>
             </div>
         {/each}

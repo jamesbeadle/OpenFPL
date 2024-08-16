@@ -13,6 +13,9 @@ import Text "mo:base/Text";
 import Time "mo:base/Time";
 import Timer "mo:base/Timer";
 import TrieMap "mo:base/TrieMap";
+import Nat8 "mo:base/Nat8";
+import Nat16 "mo:base/Nat16";
+import Bool "mo:base/Bool";
 
 import Account "lib/Account";
 import DTOs "DTOs";
@@ -37,6 +40,7 @@ module {
 
     private var setAndBackupTimer : ?((duration : Timer.Duration, callbackName : Text) -> async ()) = null;
     private var storeCanisterId : ?((canisterId : Text) -> async ()) = null;
+    private var recordSystemEvent : ?((eventLog: T.EventLogEntry) -> ()) = null;
 
     public func setTimerBackupFunction(
       _setAndBackupTimer : (duration : Timer.Duration, callbackName : Text) -> async (),
@@ -54,6 +58,8 @@ module {
 
     public func setRecordSystemEventFunction(_recordSystemEvent : (eventLog: T.EventLogEntry) -> ()) {
       managerComposite.setRecordSystemEventFunction(_recordSystemEvent);
+      leaderboardComposite.setRecordSystemEventFunction(_recordSystemEvent);
+      recordSystemEvent := ?_recordSystemEvent;
     };
 
     public func setBackendCanisterController(controller : Principal) {
@@ -315,9 +321,34 @@ module {
       };
 
       systemState := updatedSystemState;
-
+      logSystemStatus();
+       
       await managerComposite.snapshotFantasyTeams(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
       await updateCacheHash("system_state");
+    };
+
+    private func logSystemStatus(){
+        switch(recordSystemEvent){
+          case null{};
+          case (?function){
+            function({
+              eventDetail = 
+                "System Status Updated: Calculation Gameweek: " # Nat8.toText(systemState.calculationGameweek) 
+                  # ", Pick Team Gameweek: " # Nat8.toText(systemState.calculationMonth) 
+                  # ", Pick Team Gameweek: " # Nat16.toText(systemState.calculationSeasonId) 
+                  # ", Pick Team Gameweek: " # Nat8.toText(systemState.pickTeamGameweek) 
+                  # ", Pick Team Gameweek: " # Nat16.toText(systemState.pickTeamSeasonId) 
+                  # ", Pick Team Gameweek: " # Bool.toText(systemState.transferWindowActive) 
+                  # ", Pick Team Gameweek: " # Bool.toText(systemState.seasonActive) 
+                  # ", Pick Team Gameweek: " # Bool.toText(systemState.onHold) # "."; 
+              eventId = 0;
+              eventTime = Time.now();
+              eventTitle = "Canister Topup";
+              eventType = #CanisterTopup;
+            });
+          }
+      };
+
     };
 
     public func gameKickOffExpiredCallback() : async () {
@@ -349,6 +380,7 @@ module {
           onHold = systemState.onHold;
         };
       };
+      logSystemStatus();
       
       await updateCacheHash("fixtures");
     };
@@ -376,6 +408,7 @@ module {
       };
 
       systemState := updatedSystemState;
+      logSystemStatus();
       await updateCacheHash("system_state");
     };
 
@@ -392,6 +425,7 @@ module {
       };
 
       systemState := updatedSystemState;
+      logSystemStatus();
       await updateCacheHash("system_state");
     };
 
@@ -412,6 +446,7 @@ module {
       };
 
       systemState := updatedSystemState;
+      logSystemStatus();
     };
 
     private func incrementCalculationMonth() : async () {
@@ -435,6 +470,7 @@ module {
       };
 
       systemState := updatedSystemState;
+      logSystemStatus();
     };
 
     private func incrementCalculationSeason() : async () {
@@ -456,6 +492,7 @@ module {
       };
 
       systemState := updatedSystemState;
+      logSystemStatus();
     };
 
     private func setTransferWindowTimers() : async () {
@@ -658,6 +695,7 @@ module {
       };
 
       systemState := updatedSystemState;
+      logSystemStatus();
 
       await setGameweekTimers(1);
       await updateCacheHash("fixtures");
@@ -1345,6 +1383,23 @@ module {
       await playerComposite.removeDuplicatePlayer(playerId);
       await updateCacheHash("players");
     };
+
+    public func updateRewardPool() : async () {
+
+      let rewardPool : T.RewardPool = {
+        seasonId = 1;
+        seasonLeaderboardPool = 28125000000000;
+        monthlyLeaderboardPool = 65625000000000;
+        weeklyLeaderboardPool = 28125000000000;
+        mostValuableTeamPool = 18750000000000;
+        highestScoringMatchPlayerPool = 18750000000000;
+        allTimeWeeklyHighScorePool = 9375000000000;
+        allTimeMonthlyHighScorePool = 9375000000000;
+        allTimeSeasonHighScorePool = 9375000000000;
+      };
+
+      rewardPools.put(1, rewardPool);
+    }
 
   };
 };
