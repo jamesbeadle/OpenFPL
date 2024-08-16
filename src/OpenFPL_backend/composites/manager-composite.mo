@@ -647,6 +647,9 @@ module {
     private func getMonthlyBonuses(manager: T.Manager, dto: DTOs.UpdateTeamSelectionDTO, systemState: T.SystemState) : Nat8 {
       
       var monthlyBonuses = manager.monthlyBonusesAvailable;
+      if(monthlyBonuses == 0){
+        return 0;
+      };
       
       var bonusPlayed = dto.goalGetterGameweek == systemState.pickTeamGameweek 
         or dto.passMasterGameweek == systemState.pickTeamGameweek 
@@ -795,7 +798,11 @@ module {
 
           if (bonusesPlayed > 1) {
             return true;
-          };          
+          };      
+
+          if(not systemState.seasonActive){
+            return false;
+          };    
           
           if(updatedFantasyTeam.goalGetterGameweek == systemState.pickTeamGameweek and 
             (foundManager.goalGetterGameweek != systemState.pickTeamGameweek and foundManager.goalGetterGameweek != 0)){

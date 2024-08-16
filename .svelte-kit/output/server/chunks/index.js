@@ -3515,7 +3515,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1nu7xmm"
+  version_hash: "i8qoc3"
 };
 async function get_hooks() {
   return {};
@@ -4996,7 +4996,6 @@ function createSystemStore() {
         canisterTypeFilter: filter
       };
       let result = await identityActor.getCanisters(dto);
-      console.log(result);
       if (isError(result)) {
         console.error("Error getting canisters:", result);
         return;
@@ -5023,7 +5022,6 @@ function createSystemStore() {
         timerTypeFilter: filter
       };
       let result = await identityActor.getTimers(dto);
-      console.log(result);
       if (isError(result)) {
         console.error("Error getting timers:", result);
         return;
@@ -5083,7 +5081,6 @@ function createSystemStore() {
         }
       };
       let result = await identityActor.getRewardPool(dto);
-      console.log(result);
       if (isError(result)) {
         console.error("Error getting reward pools:", result);
         return;
@@ -5109,7 +5106,6 @@ function createSystemStore() {
         limit: BigInt(limit)
       };
       let result = await identityActor.getTopups(dto);
-      console.log(result);
       if (isError(result)) {
         console.error("Error getting topups:", result);
         return;
@@ -5898,7 +5894,6 @@ function createManagerStore() {
         define_process_env_default$8.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.getCurrentTeam();
-      console.log(result);
       if (isError(result)) {
         return newManager;
       }

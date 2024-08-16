@@ -64,10 +64,19 @@ module {
 
     };
 
-    public func getActivePlayers(currentSeasonId : T.SeasonId) : [DTOs.PlayerDTO] {
+    public func getActivePlayers(currentSeasonId : T.SeasonId, activeClubs: [T.ClubId]) : [DTOs.PlayerDTO] {
+
+      let activeClubPlayers = List.filter<T.Player>(
+        players,
+        func(player : T.Player) : Bool {
+          return Array.find<T.ClubId>(activeClubs, func(club: T.ClubId){
+            club == player.clubId
+          }) != null;
+        },
+      );
 
       let activePlayers = List.filter<T.Player>(
-        players,
+        activeClubPlayers,
         func(player : T.Player) : Bool {
           return player.status == #Active;
         },

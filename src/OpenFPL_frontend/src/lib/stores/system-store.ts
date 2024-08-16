@@ -119,7 +119,6 @@ function createSystemStore() {
       };
 
       let result = await identityActor.getCanisters(dto);
-      console.log(result);
 
       if (isError(result)) {
         console.error("Error getting canisters:", result);
@@ -155,7 +154,6 @@ function createSystemStore() {
       };
 
       let result = await identityActor.getTimers(dto);
-      console.log(result);
 
       if (isError(result)) {
         console.error("Error getting timers:", result);
@@ -229,7 +227,6 @@ function createSystemStore() {
         },
       };
       let result = await identityActor.getRewardPool(dto);
-      console.log(result);
 
       if (isError(result)) {
         console.error("Error getting reward pools:", result);
@@ -263,7 +260,6 @@ function createSystemStore() {
       };
 
       let result = await identityActor.getTopups(dto);
-      console.log(result);
 
       if (isError(result)) {
         console.error("Error getting topups:", result);

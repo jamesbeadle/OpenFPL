@@ -1399,7 +1399,11 @@ module {
       };
 
       rewardPools.put(1, rewardPool);
-    }
+    };
+
+    public func resetManagerBonusesAvailable() : async () {
+      await managerComposite.resetBonusesAvailable();
+    };
 
   };
 };

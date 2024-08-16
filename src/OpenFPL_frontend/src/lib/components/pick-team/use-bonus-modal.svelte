@@ -17,6 +17,7 @@
   export let bonusUsedInSession: Writable<boolean | null>;
   export let closeBonusModal: () => void;
   export let bonus: Bonus;
+  export let updateBonuses: () => void;
 
   let countries: string[];
   let selectedTeamId = 0;
@@ -79,8 +80,8 @@
   };
 
   function handleUseBonus() {
+    console.log($fantasyTeam)
     if (!$fantasyTeam) return;
-    
     let activeGameweek = 1;
     if($systemStore?.pickTeamGameweek){
       activeGameweek = $systemStore?.pickTeamGameweek
@@ -129,7 +130,7 @@
           bonusUsedInSession.set(true);
           return {
             ...team,
-            teamBoostTeamId: selectedTeamId,
+            teamBoostClubId: selectedTeamId,
             teamBoostGameweek: activeGameweek,
             playerIds: team.playerIds || new Uint16Array(11),
           };
@@ -203,6 +204,7 @@
         });
         break;
     }
+    updateBonuses();
     closeBonusModal();
   }
 

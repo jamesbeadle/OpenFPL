@@ -1522,7 +1522,7 @@
 
       //await seasonManager.removeDuplicatePlayer(602);
 
-      await seasonManager.updateRewardPool();
+      await seasonManager.resetManagerBonusesAvailable();
       
       //on each update generate new hash values
       await seasonManager.updateCacheHash("clubs");
@@ -1592,7 +1592,6 @@
 
       let remainingDuration = Utilities.getHour() * 24;
       ignore Timer.setTimer<system>(#nanoseconds remainingDuration, cyclesCheckCallback);
-      
     };
 
     //System timer functions

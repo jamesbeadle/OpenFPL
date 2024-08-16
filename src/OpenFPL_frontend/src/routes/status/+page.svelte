@@ -18,9 +18,7 @@
 
     onMount(async () => {
       try{
-        console.log("loading status page");
         await systemStore.sync();
-        console.log("system store synced");
       } catch (error){
         console.error("Error fetching system logs.")
       } finally {

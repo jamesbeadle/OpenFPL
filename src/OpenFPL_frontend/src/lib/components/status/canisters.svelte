@@ -18,7 +18,6 @@
     });
 
     $: { if (priorFilterCategory !== filterCategory) {
-            console.log("filter changed, loading canisters");
             loadCanisters();
             currentPage = 1;
             priorFilterCategory = filterCategory;
@@ -53,12 +52,7 @@
                     break;
             }
 
-            console.log("getting canisters");
             let result = await systemStore.getCanisters(currentPage, itemsPerPage, canisterTypeFilter); 
-
-            console.log(result);
-            
-            console.log("^^");
             if(result){
                 canisters = result;
             }

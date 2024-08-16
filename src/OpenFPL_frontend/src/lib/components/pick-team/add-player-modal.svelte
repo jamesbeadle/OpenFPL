@@ -32,13 +32,16 @@
     filteredPlayers = $playerStore.filter((player) => {
       const normalizedFilterSurname = normalizeString(filterSurname.toLowerCase());
       const normalizedPlayerLastName = normalizeString(player.lastName.toLowerCase());
+      const adjustedMinValue = minValue * 4;
+      const adjustedMaxValue = maxValue * 4;
+
       
       return (
         (filterTeam === -1 || player.clubId === filterTeam) &&
         (filterPosition === -1 || convertPlayerPosition(player.position) === filterPosition) &&
         filterColumn > -2 &&
-        (minValue === 0 || player.valueQuarterMillions >= minValue) &&
-        (maxValue === 0 || player.valueQuarterMillions <= maxValue) &&
+        (adjustedMinValue === 0 || player.valueQuarterMillions >= adjustedMinValue) &&
+        (adjustedMaxValue === 0 || player.valueQuarterMillions <= adjustedMaxValue) &&
         (filterSurname === "" || normalizedPlayerLastName.includes(normalizedFilterSurname))
       );
     });

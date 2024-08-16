@@ -230,6 +230,7 @@
       {closeBonusModal}
       {fantasyTeam}
       {bonusUsedInSession}
+      {updateBonuses}
     />
   {/if}
   <div class="flex flex-col md:flex-row bonus-panel-inner">
@@ -260,7 +261,7 @@
             {#if bonus.isUsed}
               <div class="w-full px-1 sm:px-4 mb-2 sm:mb-4 xl:min-h-[40px]">
                 <p class="text-center xl:mt-1 smaller-text">
-                  Used GW{bonus.usedGameweek}
+                  Used GW {bonus.usedGameweek}
                 </p>
               </div>
             {:else if !$weeklyBonusPlayed}
@@ -304,7 +305,7 @@
             {#if bonus.isUsed}
               <div class="w-full px-1 sm:px-4 mb-2 sm:mb-4 xl:min-h-[40px]">
                 <p class="text-center xl:mt-1 smaller-text">
-                  Used GW{bonus.usedGameweek}
+                  Used GW {bonus.usedGameweek}
                 </p>
               </div>
             {:else if !$weeklyBonusPlayed}
@@ -350,7 +351,7 @@
             {#if bonus.isUsed}
               <div class="w-full px-1">
                 <p class="text-center">
-                  Used GW{bonus.usedGameweek}
+                  Used GW {bonus.usedGameweek}
                 </p>
               </div>
             {:else if !$weeklyBonusPlayed}
