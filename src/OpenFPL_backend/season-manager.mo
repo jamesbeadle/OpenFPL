@@ -172,7 +172,10 @@ module {
     };
 
     public func getPlayers() : [DTOs.PlayerDTO] {
-      return playerComposite.getActivePlayers(systemState.calculationSeasonId);
+      let clubs = Array.map<T.Club, T.ClubId>(clubComposite.getClubs(), func(club: T.Club){
+        return club.id;
+      });
+      return playerComposite.getActivePlayers(systemState.calculationSeasonId, clubs);
     };
 
     public func getLoanedPlayers(dto: DTOs.ClubFilterDTO) : [DTOs.PlayerDTO] {
@@ -282,7 +285,10 @@ module {
     //Game update functions
 
     public func saveFantasyTeam(principalId: T.PrincipalId, updatedFantasyTeam : DTOs.UpdateTeamSelectionDTO) : async Result.Result<(), T.Error> {
-      let players = playerComposite.getActivePlayers(systemState.calculationSeasonId);
+      let clubs = Array.map<T.Club, T.ClubId>(clubComposite.getClubs(), func(club: T.Club){
+        return club.id;
+      });
+      let players = playerComposite.getActivePlayers(systemState.calculationSeasonId, clubs);
       return await managerComposite.saveFantasyTeam(principalId, updatedFantasyTeam, systemState, players);
     };
 
@@ -344,7 +350,7 @@ module {
               eventId = 0;
               eventTime = Time.now();
               eventTitle = "Canister Topup";
-              eventType = #CanisterTopup;
+              eventType = #SystemCheck;
             });
           }
       };
@@ -647,7 +653,10 @@ module {
           let season_leaderboard_canister = actor (canisterId) : actor {
             getRewardLeaderboard : () -> async ?DTOs.SeasonLeaderboardDTO;
           };
-          let players = playerComposite.getActivePlayers(systemState.calculationSeasonId);
+          let clubs = Array.map<T.Club, T.ClubId>(clubComposite.getClubs(), func(club: T.Club){
+            return club.id;
+          });
+          let players = playerComposite.getActivePlayers(systemState.calculationSeasonId, clubs);
           let seasonLeaderboard = await season_leaderboard_canister.getRewardLeaderboard();
           switch(seasonLeaderboard){
             case (null){
@@ -706,7 +715,10 @@ module {
     };
 
     public func executeSubmitFixtureData(submitFixtureData : DTOs.SubmitFixtureDataDTO) : async () {
-      let players = playerComposite.getActivePlayers(systemState.calculationSeasonId);
+      let clubs = Array.map<T.Club, T.ClubId>(clubComposite.getClubs(), func(club: T.Club){
+        return club.id;
+      });
+      let players = playerComposite.getActivePlayers(systemState.calculationSeasonId, clubs);
       let populatedPlayerEvents = await seasonComposite.populatePlayerEventData(submitFixtureData, players);
       switch (populatedPlayerEvents) {
         case (null) {};
@@ -830,7 +842,10 @@ module {
     };
 
     public func executeLoanPlayer(loanPlayerDTO : DTOs.LoanPlayerDTO) : async () {
-      let players = playerComposite.getActivePlayers(systemState.calculationSeasonId);
+      let clubs = Array.map<T.Club, T.ClubId>(clubComposite.getClubs(), func(club: T.Club){
+        return club.id;
+      });
+      let players = playerComposite.getActivePlayers(systemState.calculationSeasonId, clubs);
       await managerComposite.removePlayerFromTeams(loanPlayerDTO.playerId, players);
       await playerComposite.executeLoanPlayer(loanPlayerDTO, systemState);
       await updateCacheHash("players");
@@ -842,7 +857,10 @@ module {
     };
 
     public func executeTransferPlayer(transferPlayerDTO : DTOs.TransferPlayerDTO) : async () {
-      let players = playerComposite.getActivePlayers(systemState.calculationSeasonId);
+      let clubs = Array.map<T.Club, T.ClubId>(clubComposite.getClubs(), func(club: T.Club){
+        return club.id;
+      });
+      let players = playerComposite.getActivePlayers(systemState.calculationSeasonId, clubs);
       await managerComposite.removePlayerFromTeams(transferPlayerDTO.playerId, players);
       await playerComposite.executeTransferPlayer(transferPlayerDTO, systemState);
       await updateCacheHash("players");
@@ -853,7 +871,10 @@ module {
     };
 
     public func executeRecallPlayer(recallPlayerDTO : DTOs.RecallPlayerDTO) : async () {
-      let players = playerComposite.getActivePlayers(systemState.calculationSeasonId);
+      let clubs = Array.map<T.Club, T.ClubId>(clubComposite.getClubs(), func(club: T.Club){
+        return club.id;
+      });
+      let players = playerComposite.getActivePlayers(systemState.calculationSeasonId, clubs);
       await managerComposite.removePlayerFromTeams(recallPlayerDTO.playerId, players);
       await playerComposite.executeRecallPlayer(recallPlayerDTO);
       await updateCacheHash("players");
@@ -876,7 +897,10 @@ module {
     public func executeUpdatePlayer(updatePlayerDTO : DTOs.UpdatePlayerDTO) : async () {
       let currentPlayerPosition = playerComposite.getPlayerPosition(updatePlayerDTO.playerId);
       await playerComposite.executeUpdatePlayer(updatePlayerDTO);
-      let players = playerComposite.getActivePlayers(systemState.calculationSeasonId);
+      let clubs = Array.map<T.Club, T.ClubId>(clubComposite.getClubs(), func(club: T.Club){
+        return club.id;
+      });
+      let players = playerComposite.getActivePlayers(systemState.calculationSeasonId, clubs);
 
       switch (currentPlayerPosition) {
         case (null) { return };
@@ -904,7 +928,10 @@ module {
     };
 
     public func executeRetirePlayer(retirePlayerDTO : DTOs.RetirePlayerDTO) : async () {
-      let players = playerComposite.getActivePlayers(systemState.calculationSeasonId);
+      let clubs = Array.map<T.Club, T.ClubId>(clubComposite.getClubs(), func(club: T.Club){
+        return club.id;
+      });
+      let players = playerComposite.getActivePlayers(systemState.calculationSeasonId, clubs);
       await managerComposite.removePlayerFromTeams(retirePlayerDTO.playerId, players);
       await playerComposite.executeRetirePlayer(retirePlayerDTO);
       await updateCacheHash("players");
@@ -1378,7 +1405,10 @@ module {
     };
 
     public func removeDuplicatePlayer(playerId: T.PlayerId) : async () {
-      let players = playerComposite.getActivePlayers(systemState.calculationSeasonId);
+      let clubs = Array.map<T.Club, T.ClubId>(clubComposite.getClubs(), func(club: T.Club){
+        return club.id;
+      });
+      let players = playerComposite.getActivePlayers(systemState.calculationSeasonId, clubs);
       await managerComposite.removePlayerFromTeams(playerId, players);
       await playerComposite.removeDuplicatePlayer(playerId);
       await updateCacheHash("players");

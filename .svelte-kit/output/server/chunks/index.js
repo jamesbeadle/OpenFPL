@@ -3515,7 +3515,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "i8qoc3"
+  version_hash: "1ldcse7"
 };
 async function get_hooks() {
   return {};
@@ -4935,8 +4935,8 @@ function createSystemStore() {
     }
     let dataCacheValues = newHashValues.ok;
     let categoryHash = dataCacheValues.find((x) => x.category === category) ?? null;
-    const localHash = localStorage.getItem(`${category}_hash`);
-    if (categoryHash?.hash != localHash) {
+    localStorage.getItem(`${category}_hash`);
+    {
       let result = await actor.getSystemState();
       if (isError(result)) {
         console.error("Error syncing system store");
@@ -4949,15 +4949,6 @@ function createSystemStore() {
       );
       localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
       set(updatedSystemStateData);
-    } else {
-      const cachedSystemStateData = localStorage.getItem(category);
-      let cachedSystemState = null;
-      try {
-        cachedSystemState = JSON.parse(cachedSystemStateData || "{}");
-      } catch (e) {
-        cachedSystemState = null;
-      }
-      set(cachedSystemState);
     }
   }
   async function getSystemState() {
@@ -10311,6 +10302,9 @@ const Page$4 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   })}`;
 });
 const Page$3 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let $$unsubscribe_userStore;
+  $$unsubscribe_userStore = subscribe(userStore, (value) => value);
+  $$unsubscribe_userStore();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
       return `${`${validate_component(Local_spinner, "LocalSpinner").$$render($$result, {}, {}, {})}`}`;

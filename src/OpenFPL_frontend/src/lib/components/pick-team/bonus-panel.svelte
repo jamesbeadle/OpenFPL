@@ -269,7 +269,7 @@
                 <button
                   on:click={() => showBonusModal(bonus.id)}
                   class="fpl-purple-btn rounded-md w-full py-1 min-h-[40px] smaller-text"
-                  >Use</button
+                  >View</button
                 >
               </div>
             {:else}
@@ -358,7 +358,7 @@
               <div class="w-full px-1 flex justify-center">
                 <button
                   on:click={() => showBonusModal(bonus.id)}
-                  class="fpl-purple-btn rounded-md py-1 px-2">Use</button
+                  class="fpl-purple-btn rounded-md py-1 px-2">View</button
                 >
               </div>
             {:else}

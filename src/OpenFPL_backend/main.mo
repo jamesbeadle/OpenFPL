@@ -48,8 +48,7 @@
       return await seasonManager.getCurrentTeam(Principal.toText(caller));
     };
 
-    public shared ({ caller }) func getManager(dto: DTOs.GetManagerDTO) : async Result.Result<DTOs.ManagerDTO, T.Error> {
-      assert not Principal.isAnonymous(caller);
+    public shared func getManager(dto: DTOs.GetManagerDTO) : async Result.Result<DTOs.ManagerDTO, T.Error> {
       return await seasonManager.getManager(dto);
     };
     
@@ -1521,8 +1520,7 @@
     private func postUpgradeCallback() : async (){
 
       //await seasonManager.removeDuplicatePlayer(602);
-
-      await seasonManager.resetManagerBonusesAvailable();
+      //await seasonManager.resetManagerBonusesAvailable();
       
       //on each update generate new hash values
       await seasonManager.updateCacheHash("clubs");

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { writable, type Writable } from "svelte/store";
+  import { type Writable } from "svelte/store";
   import { toastsError } from "$lib/stores/toasts-store";
   import { systemStore } from "$lib/stores/system-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
@@ -40,7 +40,7 @@
 
     try {
       updateTeamValue();
-      fetchNextFixture();
+      setCountdownTimer();
     } catch (error) {
       toastsError({
         msg: { text: "Error fetching pick team header data." },
@@ -52,17 +52,23 @@
     }
   });
 
-  async function fetchNextFixture() {
-    let nextFixture = await fixtureStore.getNextFixture();
+  async function setCountdownTimer() {
+    let gameweekFixtures = $fixtureStore.filter(x => x.gameweek == $systemStore?.pickTeamGameweek)
+    .sort((a, b) => Number(a.kickOff) - Number(b.kickOff));
+
+    let earliestFixture = gameweekFixtures[0];
     
-    if(!nextFixture){
+    if(!earliestFixture){
       return
     };
-    
-    nextFixtureDate = formatUnixDateToReadable(nextFixture?.kickOff);
-    nextFixtureTime = formatUnixTimeToTime(nextFixture?.kickOff);
 
-    let countdownTime = getCountdownTime(nextFixture?.kickOff);
+    let oneHourBeforeKickOff = earliestFixture.kickOff - BigInt(3600 * 1_000_000_000);
+
+    
+    nextFixtureDate = formatUnixDateToReadable(oneHourBeforeKickOff);
+    nextFixtureTime = formatUnixTimeToTime(oneHourBeforeKickOff);
+
+    let countdownTime = getCountdownTime(oneHourBeforeKickOff);
     countdownDays = countdownTime.days.toString();
     countdownHours = countdownTime.hours.toString();
     countdownMinutes = countdownTime.minutes.toString();

@@ -403,7 +403,7 @@
       <div
         class="flex flex-col md:flex-row w-full md:justify-end gap-4 mr-0 md:mr-4 order-1 md:order-3 mt-2 md:mt-0"
       >
-        {#if $systemStore && $systemStore.transferWindowActive && $systemStore.seasonActive}
+        {#if $systemStore && $systemStore.transferWindowActive && $systemStore.seasonActive && $systemStore.calculationMonth == 1}
           <button
             disabled={transferWindowPlayed}
             on:click={playTransferWindow}
@@ -506,7 +506,7 @@
             Save
           </button>
         </div>
-        {#if $systemStore && $systemStore.transferWindowActive && $systemStore.seasonActive}
+        {#if $systemStore && $systemStore.transferWindowActive && $systemStore.seasonActive && $systemStore.calculationMonth == 1}
           <div class="flex flex-row mx-4 space-x-1 mb-4">
             <button
               disabled={transferWindowPlayed}
