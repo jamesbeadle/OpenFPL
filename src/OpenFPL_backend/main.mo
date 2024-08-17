@@ -1518,10 +1518,12 @@
     };
 
     private func postUpgradeCallback() : async (){
+      
 
       //await seasonManager.removeDuplicatePlayer(602);
       //await seasonManager.resetManagerBonusesAvailable();
-      
+      //await seasonManager.putOnHold();
+      await seasonManager.snapshotFantasyTeams();
       //on each update generate new hash values
       await seasonManager.updateCacheHash("clubs");
       await seasonManager.updateCacheHash("fixtures");

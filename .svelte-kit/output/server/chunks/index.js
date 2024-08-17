@@ -3515,7 +3515,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1ldcse7"
+  version_hash: "r75mig"
 };
 async function get_hooks() {
   return {};
@@ -10227,6 +10227,8 @@ const Page$5 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_fantasyTeam;
   let $$unsubscribe_loadingPlayers;
   let $$unsubscribe_availableFormations;
+  let $$unsubscribe_systemStore;
+  $$unsubscribe_systemStore = subscribe(systemStore, (value) => value);
   let availableFormations = writable([]);
   $$unsubscribe_availableFormations = subscribe(availableFormations, (value) => value);
   let loadingPlayers = writable(true);
@@ -10256,12 +10258,14 @@ const Page$5 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     principalId: "",
     passMasterPlayerId: 0,
     captainId: 0,
+    canisterId: "",
     monthlyBonusesAvailable: 0
   });
   $$unsubscribe_fantasyTeam = subscribe(fantasyTeam, (value) => value);
   $$unsubscribe_fantasyTeam();
   $$unsubscribe_loadingPlayers();
   $$unsubscribe_availableFormations();
+  $$unsubscribe_systemStore();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
       return `${`${validate_component(Spinner, "Spinner").$$render($$result, {}, {}, {})}`}`;

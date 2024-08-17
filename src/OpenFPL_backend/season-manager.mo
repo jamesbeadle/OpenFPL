@@ -328,8 +328,12 @@ module {
 
       systemState := updatedSystemState;
       logSystemStatus();
-       
-      await managerComposite.snapshotFantasyTeams(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
+      
+      let clubs = Array.map<T.Club, T.ClubId>(clubComposite.getClubs(), func(club: T.Club){
+        return club.id;
+      });
+      let players = playerComposite.getActivePlayers(systemState.calculationSeasonId, clubs);
+      await managerComposite.snapshotFantasyTeams(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth, players);
       await updateCacheHash("system_state");
     };
 
@@ -1433,6 +1437,27 @@ module {
 
     public func resetManagerBonusesAvailable() : async () {
       await managerComposite.resetBonusesAvailable();
+    };
+
+    public func putOnHold() : async (){
+      let updatedSystemState : T.SystemState = {
+        calculationGameweek = systemState.calculationGameweek;
+        calculationMonth = systemState.calculationMonth;
+        calculationSeasonId = systemState.calculationSeasonId;
+        pickTeamGameweek = systemState.pickTeamGameweek;
+        pickTeamSeasonId = systemState.pickTeamSeasonId;
+        transferWindowActive = systemState.transferWindowActive;
+        seasonActive = systemState.seasonActive;
+        onHold = true;
+      };
+
+      systemState := updatedSystemState;
+      await updateCacheHash("system_state");
+    };
+
+    public func snapshotFantasyTeams() : async (){
+      let players = getPlayers();
+      await managerComposite.snapshotFantasyTeams(1,1,8,players);
     };
 
   };

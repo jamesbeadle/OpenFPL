@@ -2664,51 +2664,51 @@ actor class _ManagerCanister() {
       switch (index) {
         case 0 {
           managerGroup1 := snapshotManagers(managerGroup1, seasonId, gameweek, month, players);
-          await updatePrivateLeagues(managerGroup1);
+          //await updatePrivateLeagues(managerGroup1);
         };
         case 1 {
           managerGroup2 := snapshotManagers(managerGroup2, seasonId, gameweek, month, players);
-          await updatePrivateLeagues(managerGroup2);
+          //await updatePrivateLeagues(managerGroup2);
         };
         case 2 {
           managerGroup3 := snapshotManagers(managerGroup3, seasonId, gameweek, month, players);
-          await updatePrivateLeagues(managerGroup3);
+          //await updatePrivateLeagues(managerGroup3);
         };
         case 3 {
           managerGroup4 := snapshotManagers(managerGroup4, seasonId, gameweek, month, players);
-          await updatePrivateLeagues(managerGroup4);
+          //await updatePrivateLeagues(managerGroup4);
         };
         case 4 {
           managerGroup5 := snapshotManagers(managerGroup5, seasonId, gameweek, month, players);
-          await updatePrivateLeagues(managerGroup5);
+          //await updatePrivateLeagues(managerGroup5);
         };
         case 5 {
           managerGroup6 := snapshotManagers(managerGroup6, seasonId, gameweek, month, players);
-          await updatePrivateLeagues(managerGroup6);
+          //await updatePrivateLeagues(managerGroup6);
         };
         case 6 {
           managerGroup7 := snapshotManagers(managerGroup7, seasonId, gameweek, month, players);
-          await updatePrivateLeagues(managerGroup7);
+          //await updatePrivateLeagues(managerGroup7);
         };
         case 7 {
           managerGroup8 := snapshotManagers(managerGroup8, seasonId, gameweek, month, players);
-          await updatePrivateLeagues(managerGroup8);
+          //await updatePrivateLeagues(managerGroup8);
         };
         case 8 {
           managerGroup9 := snapshotManagers(managerGroup9, seasonId, gameweek, month, players);
-          await updatePrivateLeagues(managerGroup9);
+          //await updatePrivateLeagues(managerGroup9);
         };
         case 9 {
           managerGroup10 := snapshotManagers(managerGroup10, seasonId, gameweek, month, players);
-          await updatePrivateLeagues(managerGroup10);
+          //await updatePrivateLeagues(managerGroup10);
         };
         case 10 {
           managerGroup11 := snapshotManagers(managerGroup11, seasonId, gameweek, month, players);
-          await updatePrivateLeagues(managerGroup11);
+          //await updatePrivateLeagues(managerGroup11);
         };
         case 11 {
           managerGroup12 := snapshotManagers(managerGroup12, seasonId, gameweek, month, players);
-          await updatePrivateLeagues(managerGroup12);
+          //await updatePrivateLeagues(managerGroup12);
         };
         case _ {
 

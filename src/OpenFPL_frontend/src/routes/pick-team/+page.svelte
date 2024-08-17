@@ -12,6 +12,8 @@
   import { Spinner } from "@dfinity/gix-components";
   import type { PickTeamDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { allFormations } from "$lib/utils/pick-team.helpers";
+    import { systemStore } from "$lib/stores/system-store";
+    import OnHold from "$lib/components/pick-team/on-hold.svelte";
 
   let availableFormations = writable<string[]>([]);
   let selectedFormation = writable<string>('4-4-2');
@@ -50,12 +52,14 @@
     principalId : '',
     passMasterPlayerId : 0,
     captainId : 0,
+    canisterId: '',
     monthlyBonusesAvailable : 0
   });
   
 
   onMount(async () => {
     try {
+      systemStore.sync();
       $availableFormations = Object.keys(allFormations);
       
       await loadData();
@@ -108,44 +112,48 @@
   {#if isLoading}
     <Spinner />
   {:else}
-    <div>
-      <div class="hidden md:flex">
-        <PickTeamHeader {fantasyTeam} 
-        {transfersAvailable}
-        {bankBalance}
-        {teamValue}/>
-      </div>
-      <PickTeamButtons
-        {fantasyTeam}
-        {pitchView}
-        {selectedFormation}
-        {availableFormations}
-        {transfersAvailable}
-        {bankBalance}
-      />
-      <div class="flex flex-col xl:flex-row mt-2 xl:mt-0">
-        <PickTeamPlayers
-          {loadingPlayers}
+    {#if $systemStore?.onHold}
+      <OnHold />
+    {:else}
+      <div>
+        <div class="hidden md:flex">
+          <PickTeamHeader {fantasyTeam} 
+          {transfersAvailable}
+          {bankBalance}
+          {teamValue}/>
+        </div>
+        <PickTeamButtons
           {fantasyTeam}
           {pitchView}
           {selectedFormation}
+          {availableFormations}
           {transfersAvailable}
           {bankBalance}
-          {teamValue}
         />
-        <div class="hidden xl:flex w-full xl:w-1/2 ml-2">
-          <SimpleFixtures />
-        </div>
-        <div class="flex md:hidden w-full mt-4">
-          <PickTeamHeader 
-            {fantasyTeam} 
+        <div class="flex flex-col xl:flex-row mt-2 xl:mt-0">
+          <PickTeamPlayers
+            {loadingPlayers}
+            {fantasyTeam}
+            {pitchView}
+            {selectedFormation}
             {transfersAvailable}
             {bankBalance}
             {teamValue}
           />
+          <div class="hidden xl:flex w-full xl:w-1/2 ml-2">
+            <SimpleFixtures />
+          </div>
+          <div class="flex md:hidden w-full mt-4">
+            <PickTeamHeader 
+              {fantasyTeam} 
+              {transfersAvailable}
+              {bankBalance}
+              {teamValue}
+            />
+          </div>
         </div>
+        <BonusPanel {fantasyTeam}  />
       </div>
-      <BonusPanel {fantasyTeam}  />
-    </div>
+    {/if}
   {/if}
 </Layout>
