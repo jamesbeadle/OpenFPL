@@ -3515,7 +3515,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "5nsm2a"
+  version_hash: "1kztgxi"
 };
 async function get_hooks() {
   return {};
@@ -4910,14 +4910,11 @@ function convertEvent(playerEvent) {
   return PlayerEvent.Appearance;
 }
 function convertFixtureStatus(fixtureStatus) {
-  console.log("converting fixture status");
-  console.log(fixtureStatus);
-  console.log("Completed" in fixtureStatus);
   if ("Unplayed" in fixtureStatus)
     return FixtureStatus.UNPLAYED;
   if ("Active" in fixtureStatus)
     return FixtureStatus.ACTIVE;
-  if ("Completed" in fixtureStatus)
+  if ("Complete" in fixtureStatus)
     return FixtureStatus.COMPLETED;
   if ("Veriified" in fixtureStatus)
     return FixtureStatus.VERIFIED;

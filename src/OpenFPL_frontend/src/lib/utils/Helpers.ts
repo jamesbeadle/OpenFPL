@@ -725,12 +725,9 @@ export function convertIntToEvent(playerEvent: PlayerEvent): PlayerEventType {
 export function convertFixtureStatus(
   fixtureStatus: FixtureStatusType,
 ): FixtureStatus {
-  console.log("converting fixture status");
-  console.log(fixtureStatus);
-  console.log("Completed" in fixtureStatus);
   if ("Unplayed" in fixtureStatus) return FixtureStatus.UNPLAYED;
   if ("Active" in fixtureStatus) return FixtureStatus.ACTIVE;
-  if ("Completed" in fixtureStatus) return FixtureStatus.COMPLETED;
+  if ("Complete" in fixtureStatus) return FixtureStatus.COMPLETED;
   if ("Veriified" in fixtureStatus) return FixtureStatus.VERIFIED;
   return FixtureStatus.UNPLAYED;
 }
