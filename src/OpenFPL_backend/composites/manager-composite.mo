@@ -1170,13 +1170,13 @@ module {
       return (sizeInKB <= 0 or sizeInKB > 500);
     };
 
-    public func calculateFantasyTeamScores(allPlayersList : [(T.PlayerId, DTOs.PlayerScoreDTO)], allPlayers : [DTOs.PlayerDTO], seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) : async () {
+    public func calculateFantasyTeamScores(allPlayersList : [(T.PlayerId, DTOs.PlayerScoreDTO)], seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) : async () {
       for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
         let manager_canister = actor (canisterId) : actor {
-          calculateFantasyTeamScores : (allPlayersList : [(T.PlayerId, DTOs.PlayerScoreDTO)], allPlayers : [DTOs.PlayerDTO], seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) -> async ();
+          calculateFantasyTeamScores : (allPlayersList : [(T.PlayerId, DTOs.PlayerScoreDTO)], seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) -> async ();
         };
 
-        return await manager_canister.calculateFantasyTeamScores(allPlayersList, allPlayers, seasonId, gameweek, month);
+        return await manager_canister.calculateFantasyTeamScores(allPlayersList, seasonId, gameweek, month);
       };
     };
 
@@ -1191,14 +1191,14 @@ module {
       };
     };
 
-    public func snapshotFantasyTeams(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth, players: [DTOs.PlayerDTO]) : async () {
+    public func snapshotFantasyTeams(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) : async () {
       for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
 
         let manager_canister = actor (canisterId) : actor {
-          snapshotFantasyTeams : (seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth, players : [DTOs.PlayerDTO]) -> async ();
+          snapshotFantasyTeams : (seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) -> async ();
         };
 
-        await manager_canister.snapshotFantasyTeams(seasonId, gameweek, month, players);
+        await manager_canister.snapshotFantasyTeams(seasonId, gameweek, month);
       };
     };
 
@@ -1447,6 +1447,10 @@ module {
             sender_canister_version = null;
           }),
       );
+    };
+
+    public func getUniqueManagerCanisterIds() : [T.CanisterId] {
+      return List.toArray(uniqueManagerCanisterIds);
     };
 
   };

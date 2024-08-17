@@ -67,6 +67,8 @@ function createManagerStore() {
         managerId: principalId,
       };
       let result = await actor.getManager(dto);
+      console.log("getting manager");
+      console.log(result);
 
       if (isError(result)) {
         console.error("Error getting public profile");

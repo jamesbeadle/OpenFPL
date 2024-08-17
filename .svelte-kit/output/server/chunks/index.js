@@ -3515,7 +3515,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "r75mig"
+  version_hash: "5nsm2a"
 };
 async function get_hooks() {
   return {};
@@ -3953,6 +3953,25 @@ const idlFactory = ({ IDL }) => {
     "lastName": IDL.Text,
     "firstName": IDL.Text
   });
+  const PlayerStatus = IDL.Variant({
+    "OnLoan": IDL.Null,
+    "Former": IDL.Null,
+    "Active": IDL.Null,
+    "Retired": IDL.Null
+  });
+  const PlayerDTO = IDL.Record({
+    "id": IDL.Nat16,
+    "status": PlayerStatus,
+    "clubId": ClubId,
+    "valueQuarterMillions": IDL.Nat16,
+    "dateOfBirth": IDL.Int,
+    "nationality": CountryId,
+    "shirtNumber": IDL.Nat8,
+    "totalPoints": IDL.Int16,
+    "position": PlayerPosition,
+    "lastName": IDL.Text,
+    "firstName": IDL.Text
+  });
   const Result_3 = IDL.Variant({ "ok": IDL.Nat, "err": Error2 });
   const CanisterType = IDL.Variant({
     "SNS": IDL.Null,
@@ -4031,25 +4050,6 @@ const idlFactory = ({ IDL }) => {
   const GetFixturesDTO = IDL.Record({ "seasonId": SeasonId });
   const Result_17 = IDL.Variant({ "ok": IDL.Vec(FixtureDTO), "err": Error2 });
   const ClubFilterDTO = IDL.Record({ "clubId": ClubId });
-  const PlayerStatus = IDL.Variant({
-    "OnLoan": IDL.Null,
-    "Former": IDL.Null,
-    "Active": IDL.Null,
-    "Retired": IDL.Null
-  });
-  const PlayerDTO = IDL.Record({
-    "id": IDL.Nat16,
-    "status": PlayerStatus,
-    "clubId": ClubId,
-    "valueQuarterMillions": IDL.Nat16,
-    "dateOfBirth": IDL.Int,
-    "nationality": CountryId,
-    "shirtNumber": IDL.Nat8,
-    "totalPoints": IDL.Int16,
-    "position": PlayerPosition,
-    "lastName": IDL.Text,
-    "firstName": IDL.Text
-  });
   const Result_12 = IDL.Variant({ "ok": IDL.Vec(PlayerDTO), "err": Error2 });
   const GetManagerDTO = IDL.Record({ "managerId": IDL.Text });
   const CalendarMonth = IDL.Nat8;
@@ -4490,6 +4490,7 @@ const idlFactory = ({ IDL }) => {
     "executeUpdateClub": IDL.Func([UpdateClubDTO], [], []),
     "executeUpdatePlayer": IDL.Func([UpdatePlayerDTO], [], []),
     "getActiveManagerCanisterId": IDL.Func([], [CanisterId], []),
+    "getActivePlayers": IDL.Func([], [IDL.Vec(PlayerDTO)], []),
     "getBackendCanisterBalance": IDL.Func([], [Result_3], []),
     "getCanisterCyclesAvailable": IDL.Func([], [IDL.Nat], []),
     "getCanisterCyclesBalance": IDL.Func([], [Result_3], []),
@@ -4524,6 +4525,11 @@ const idlFactory = ({ IDL }) => {
       [GameweekFiltersDTO],
       [Result_19],
       ["query"]
+    ),
+    "getPlayerPointsMap": IDL.Func(
+      [SeasonId, GameweekNumber],
+      [IDL.Vec(IDL.Tuple(PlayerId, PlayerScoreDTO))],
+      []
     ),
     "getPlayers": IDL.Func([], [Result_12], ["query"]),
     "getPlayersMap": IDL.Func([GameweekFiltersDTO], [Result_18], ["query"]),
@@ -4904,13 +4910,16 @@ function convertEvent(playerEvent) {
   return PlayerEvent.Appearance;
 }
 function convertFixtureStatus(fixtureStatus) {
-  if ("Goalkeeper" in fixtureStatus)
+  console.log("converting fixture status");
+  console.log(fixtureStatus);
+  console.log("Completed" in fixtureStatus);
+  if ("Unplayed" in fixtureStatus)
     return FixtureStatus.UNPLAYED;
-  if ("Defender" in fixtureStatus)
+  if ("Active" in fixtureStatus)
     return FixtureStatus.ACTIVE;
-  if ("Midfielder" in fixtureStatus)
+  if ("Completed" in fixtureStatus)
     return FixtureStatus.COMPLETED;
-  if ("Forward" in fixtureStatus)
+  if ("Veriified" in fixtureStatus)
     return FixtureStatus.VERIFIED;
   return FixtureStatus.UNPLAYED;
 }
@@ -5814,6 +5823,8 @@ function createManagerStore() {
         managerId: principalId
       };
       let result = await actor.getManager(dto);
+      console.log("getting manager");
+      console.log(result);
       if (isError(result)) {
         console.error("Error getting public profile");
       }

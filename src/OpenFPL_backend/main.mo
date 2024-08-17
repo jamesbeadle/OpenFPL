@@ -1727,4 +1727,26 @@
       Account.accountIdentifier(actorPrincipal, Account.defaultSubaccount());
     };
 
+    public shared ({ caller }) func getActivePlayers() : async [DTOs.PlayerDTO] {
+      let principalId = Principal.toText(caller);
+      let uniqueManagerCanisterIds = seasonManager.getUniqueManagerCanisterIds();
+      assert Option.isSome(
+        Array.find<T.CanisterId>(uniqueManagerCanisterIds, func(canisterId: T.CanisterId){
+          canisterId == principalId
+        })
+      );  
+      return seasonManager.getPlayers();
+    };
+
+    public shared ({ caller }) func getPlayerPointsMap(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async [(T.PlayerId, DTOs.PlayerScoreDTO)] {
+      let principalId = Principal.toText(caller);
+      let uniqueManagerCanisterIds = seasonManager.getUniqueManagerCanisterIds();
+      assert Option.isSome(
+        Array.find<T.CanisterId>(uniqueManagerCanisterIds, func(canisterId: T.CanisterId){
+          canisterId == principalId
+        })
+      );  
+      return await seasonManager.getPlayerPointsMap(seasonId, gameweek);
+    };
+
   };

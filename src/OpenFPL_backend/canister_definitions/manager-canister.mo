@@ -2327,45 +2327,44 @@ actor class _ManagerCanister() {
     };
   };
 
-  public func removePlayerFromTeams(playerId : T.PlayerId, allPlayers : [DTOs.PlayerDTO]) : async () {
-
+  public func removePlayerFromTeams(playerId : T.PlayerId) : async () {
     for (index in Iter.range(0, 11)) {
       switch (index) {
         case 0 {
-          managerGroup1 := removePlayerFromGroup(playerId, managerGroup1, allPlayers);
+          managerGroup1 := await removePlayerFromGroup(playerId, managerGroup1);
         };
         case 1 {
-          managerGroup2 := removePlayerFromGroup(playerId, managerGroup2, allPlayers);
+          managerGroup2 := await removePlayerFromGroup(playerId, managerGroup2);
         };
         case 2 {
-          managerGroup3 := removePlayerFromGroup(playerId, managerGroup3, allPlayers);
+          managerGroup3 := await removePlayerFromGroup(playerId, managerGroup3);
         };
         case 3 {
-          managerGroup4 := removePlayerFromGroup(playerId, managerGroup4, allPlayers);
+          managerGroup4 := await removePlayerFromGroup(playerId, managerGroup4);
         };
         case 4 {
-          managerGroup5 := removePlayerFromGroup(playerId, managerGroup5, allPlayers);
+          managerGroup5 := await removePlayerFromGroup(playerId, managerGroup5);
         };
         case 5 {
-          managerGroup6 := removePlayerFromGroup(playerId, managerGroup6, allPlayers);
+          managerGroup6 := await removePlayerFromGroup(playerId, managerGroup6);
         };
         case 6 {
-          managerGroup7 := removePlayerFromGroup(playerId, managerGroup7, allPlayers);
+          managerGroup7 := await removePlayerFromGroup(playerId, managerGroup7);
         };
         case 7 {
-          managerGroup8 := removePlayerFromGroup(playerId, managerGroup8, allPlayers);
+          managerGroup8 := await removePlayerFromGroup(playerId, managerGroup8);
         };
         case 8 {
-          managerGroup9 := removePlayerFromGroup(playerId, managerGroup9, allPlayers);
+          managerGroup9 := await removePlayerFromGroup(playerId, managerGroup9);
         };
         case 9 {
-          managerGroup10 := removePlayerFromGroup(playerId, managerGroup10, allPlayers);
+          managerGroup10 := await removePlayerFromGroup(playerId, managerGroup10);
         };
         case 10 {
-          managerGroup11 := removePlayerFromGroup(playerId, managerGroup11, allPlayers);
+          managerGroup11 := await removePlayerFromGroup(playerId, managerGroup11);
         };
         case 11 {
-          managerGroup12 := removePlayerFromGroup(playerId, managerGroup12, allPlayers);
+          managerGroup12 := await removePlayerFromGroup(playerId, managerGroup12);
         };
         case _ {};
       };
@@ -2373,8 +2372,13 @@ actor class _ManagerCanister() {
 
   };
 
-  private func removePlayerFromGroup(removePlayerId : T.PlayerId, managers : [T.Manager], allPlayers : [DTOs.PlayerDTO]) : [T.Manager] {
+  private func removePlayerFromGroup(removePlayerId : T.PlayerId, managers : [T.Manager]) : async [T.Manager] {
 
+    let openfpl_backend_canister = actor (Environment.BACKEND_CANISTER_ID) : actor {
+        getActivePlayers : () -> async [DTOs.PlayerDTO];
+      };
+      
+    let allPlayers : [DTOs.PlayerDTO] = await openfpl_backend_canister.getActivePlayers();
     let removedPlayer = Array.find<DTOs.PlayerDTO>(allPlayers, func(p) { p.id == removePlayerId });
 
     switch (removedPlayer) {
@@ -2474,10 +2478,17 @@ actor class _ManagerCanister() {
     return managers;
   };
 
-  public shared ({ caller }) func calculateFantasyTeamScores(allPlayersList : [(T.PlayerId, DTOs.PlayerScoreDTO)], allPlayers : [DTOs.PlayerDTO], seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) : async () {
+  public shared ({ caller }) func calculateFantasyTeamScores(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == Environment.BACKEND_CANISTER_ID;
+
+
+    let openfpl_backend_canister = actor (Environment.BACKEND_CANISTER_ID) : actor {
+        getPlayerPointsMap : (seasonId: T.SeasonId, gameweek: T.GameweekNumber) -> async [(T.PlayerId, DTOs.PlayerScoreDTO)];
+      };
+      
+    let allPlayersList = await openfpl_backend_canister.getPlayerPointsMap(seasonId, gameweek);
 
     let playerIdTrie : TrieMap.TrieMap<T.PlayerId, DTOs.PlayerScoreDTO> = TrieMap.TrieMap<T.PlayerId, DTOs.PlayerScoreDTO>(Utilities.eqNat16, Utilities.hashNat16);
     for (player in Iter.fromArray(allPlayersList)) {
@@ -2616,6 +2627,13 @@ actor class _ManagerCanister() {
                   };
                 };
 
+
+                let openfpl_backend_canister = actor (Environment.BACKEND_CANISTER_ID) : actor {
+                    getActivePlayers : () -> async [DTOs.PlayerDTO];
+                  };
+                  
+                let allPlayers : [DTOs.PlayerDTO] = await openfpl_backend_canister.getActivePlayers();
+
                 let allPlayerValues = Array.map<DTOs.PlayerDTO, Nat16>(allPlayers, func(player : DTOs.PlayerDTO) : Nat16 { return player.valueQuarterMillions });
 
                 let totalTeamValue = Array.foldLeft<Nat16, Nat16>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
@@ -2655,7 +2673,7 @@ actor class _ManagerCanister() {
     return totalManagers;
   };
 
-  public shared ({ caller }) func snapshotFantasyTeams(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth, players : [DTOs.PlayerDTO]) : async () {
+  public shared ({ caller }) func snapshotFantasyTeams(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == Environment.BACKEND_CANISTER_ID;
@@ -2663,51 +2681,51 @@ actor class _ManagerCanister() {
     for (index in Iter.range(0, 11)) {
       switch (index) {
         case 0 {
-          managerGroup1 := snapshotManagers(managerGroup1, seasonId, gameweek, month, players);
+          managerGroup1 := await snapshotManagers(managerGroup1, seasonId, gameweek, month);
           //await updatePrivateLeagues(managerGroup1);
         };
         case 1 {
-          managerGroup2 := snapshotManagers(managerGroup2, seasonId, gameweek, month, players);
+          managerGroup2 := await snapshotManagers(managerGroup2, seasonId, gameweek, month);
           //await updatePrivateLeagues(managerGroup2);
         };
         case 2 {
-          managerGroup3 := snapshotManagers(managerGroup3, seasonId, gameweek, month, players);
+          managerGroup3 := await snapshotManagers(managerGroup3, seasonId, gameweek, month);
           //await updatePrivateLeagues(managerGroup3);
         };
         case 3 {
-          managerGroup4 := snapshotManagers(managerGroup4, seasonId, gameweek, month, players);
+          managerGroup4 := await snapshotManagers(managerGroup4, seasonId, gameweek, month);
           //await updatePrivateLeagues(managerGroup4);
         };
         case 4 {
-          managerGroup5 := snapshotManagers(managerGroup5, seasonId, gameweek, month, players);
+          managerGroup5 := await snapshotManagers(managerGroup5, seasonId, gameweek, month);
           //await updatePrivateLeagues(managerGroup5);
         };
         case 5 {
-          managerGroup6 := snapshotManagers(managerGroup6, seasonId, gameweek, month, players);
+          managerGroup6 := await snapshotManagers(managerGroup6, seasonId, gameweek, month);
           //await updatePrivateLeagues(managerGroup6);
         };
         case 6 {
-          managerGroup7 := snapshotManagers(managerGroup7, seasonId, gameweek, month, players);
+          managerGroup7 := await snapshotManagers(managerGroup7, seasonId, gameweek, month);
           //await updatePrivateLeagues(managerGroup7);
         };
         case 7 {
-          managerGroup8 := snapshotManagers(managerGroup8, seasonId, gameweek, month, players);
+          managerGroup8 := await snapshotManagers(managerGroup8, seasonId, gameweek, month);
           //await updatePrivateLeagues(managerGroup8);
         };
         case 8 {
-          managerGroup9 := snapshotManagers(managerGroup9, seasonId, gameweek, month, players);
+          managerGroup9 := await snapshotManagers(managerGroup9, seasonId, gameweek, month);
           //await updatePrivateLeagues(managerGroup9);
         };
         case 9 {
-          managerGroup10 := snapshotManagers(managerGroup10, seasonId, gameweek, month, players);
+          managerGroup10 := await snapshotManagers(managerGroup10, seasonId, gameweek, month);
           //await updatePrivateLeagues(managerGroup10);
         };
         case 10 {
-          managerGroup11 := snapshotManagers(managerGroup11, seasonId, gameweek, month, players);
+          managerGroup11 := await snapshotManagers(managerGroup11, seasonId, gameweek, month);
           //await updatePrivateLeagues(managerGroup11);
         };
         case 11 {
-          managerGroup12 := snapshotManagers(managerGroup12, seasonId, gameweek, month, players);
+          managerGroup12 := await snapshotManagers(managerGroup12, seasonId, gameweek, month);
           //await updatePrivateLeagues(managerGroup12);
         };
         case _ {
@@ -2717,7 +2735,14 @@ actor class _ManagerCanister() {
     };
   };
 
-  private func snapshotManagers(managers : [T.Manager], seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth, players : [DTOs.PlayerDTO]) : [T.Manager] {
+  private func snapshotManagers(managers : [T.Manager], seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) : async [T.Manager] {
+    
+    let openfpl_backend_canister = actor (Environment.BACKEND_CANISTER_ID) : actor {
+        getActivePlayers : () -> async [DTOs.PlayerDTO];
+      };
+      
+    let players : [DTOs.PlayerDTO] = await openfpl_backend_canister.getActivePlayers();
+    
     let managerBuffer = Buffer.fromArray<T.Manager>([]);
     for (manager in Iter.fromArray(managers)) {
 
@@ -2735,20 +2760,13 @@ actor class _ManagerCanister() {
               },
             );
 
-            let allPlayers = Array.filter<DTOs.PlayerDTO>(
-              players,
-              func(player : DTOs.PlayerDTO) : Bool {
-                let playerId = player.id;
-                let isPlayerIdInNewTeam = Array.find(
-                  manager.playerIds,
-                  func(id : Nat16) : Bool {
-                    return id == playerId;
-                  },
-                );
-                return Option.isSome(isPlayerIdInNewTeam);
-              },
-            );
-            let allPlayerValues = Array.map<DTOs.PlayerDTO, Nat16>(allPlayers, func(player : DTOs.PlayerDTO) : Nat16 { return player.valueQuarterMillions });
+            let managerPlayers = Array.filter<DTOs.PlayerDTO>(players, func(player){
+              Option.isSome(Array.find<T.PlayerId>(manager.playerIds, func(playerId){
+                playerId == player.id
+              }))
+            });
+            
+            let allPlayerValues = Array.map<DTOs.PlayerDTO, Nat16>(managerPlayers, func(player : DTOs.PlayerDTO) : Nat16 { return player.valueQuarterMillions });
             let totalTeamValue = Array.foldLeft<Nat16, Nat16>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
 
             let newSnapshot : T.FantasyTeamSnapshot = {
@@ -3334,10 +3352,17 @@ actor class _ManagerCanister() {
     return Buffer.toArray(managerIdBuffer);
   };
 
-  public shared ({ caller }) func getMostValuableTeams(players : [DTOs.PlayerDTO], seasonId : T.SeasonId) : async [T.FantasyTeamSnapshot] {
+  public shared ({ caller }) func getMostValuableTeams(seasonId : T.SeasonId) : async [T.FantasyTeamSnapshot] {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == Environment.BACKEND_CANISTER_ID;
+
+
+    let openfpl_backend_canister = actor (Environment.BACKEND_CANISTER_ID) : actor {
+        getActivePlayers : () -> async [DTOs.PlayerDTO];
+      };
+      
+    let players : [DTOs.PlayerDTO] = await openfpl_backend_canister.getActivePlayers();
 
     let allFinalGameweekSnapshots = await getGameweek38Snapshots(seasonId);
 

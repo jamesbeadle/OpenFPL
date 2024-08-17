@@ -745,6 +745,7 @@ export interface _SERVICE {
   'executeUpdateClub' : ActorMethod<[UpdateClubDTO], undefined>,
   'executeUpdatePlayer' : ActorMethod<[UpdatePlayerDTO], undefined>,
   'getActiveManagerCanisterId' : ActorMethod<[], CanisterId>,
+  'getActivePlayers' : ActorMethod<[], Array<PlayerDTO>>,
   'getBackendCanisterBalance' : ActorMethod<[], Result_3>,
   'getCanisterCyclesAvailable' : ActorMethod<[], bigint>,
   'getCanisterCyclesBalance' : ActorMethod<[], Result_3>,
@@ -767,6 +768,10 @@ export interface _SERVICE {
   'getNeuronId' : ActorMethod<[], bigint>,
   'getPlayerDetails' : ActorMethod<[GetPlayerDetailsDTO], Result_20>,
   'getPlayerDetailsForGameweek' : ActorMethod<[GameweekFiltersDTO], Result_19>,
+  'getPlayerPointsMap' : ActorMethod<
+    [SeasonId, GameweekNumber],
+    Array<[PlayerId, PlayerScoreDTO]>
+  >,
   'getPlayers' : ActorMethod<[], Result_12>,
   'getPlayersMap' : ActorMethod<[GameweekFiltersDTO], Result_18>,
   'getPostponedFixtures' : ActorMethod<[], Result_17>,

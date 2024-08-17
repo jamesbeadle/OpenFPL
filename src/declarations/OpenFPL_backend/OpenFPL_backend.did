@@ -953,6 +953,7 @@ service : {
   executeUpdateClub: (UpdateClubDTO) -> ();
   executeUpdatePlayer: (UpdatePlayerDTO) -> ();
   getActiveManagerCanisterId: () -> (CanisterId);
+  getActivePlayers: () -> (vec PlayerDTO);
   getBackendCanisterBalance: () -> (Result_3);
   getCanisterCyclesAvailable: () -> (nat);
   getCanisterCyclesBalance: () -> (Result_3);
@@ -972,6 +973,11 @@ service : {
   getNeuronId: () -> (nat64);
   getPlayerDetails: (GetPlayerDetailsDTO) -> (Result_20) query;
   getPlayerDetailsForGameweek: (GameweekFiltersDTO) -> (Result_19) query;
+  getPlayerPointsMap: (SeasonId, GameweekNumber) ->
+   (vec record {
+          PlayerId;
+          PlayerScoreDTO;
+        });
   getPlayers: () -> (Result_12) query;
   getPlayersMap: (GameweekFiltersDTO) -> (Result_18) query;
   getPostponedFixtures: () -> (Result_17) query;

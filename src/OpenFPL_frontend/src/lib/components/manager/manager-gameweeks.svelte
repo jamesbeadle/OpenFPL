@@ -13,6 +13,7 @@
   import { getFlagComponent } from "$lib/utils/helpers";
   import { countriesStore } from "$lib/stores/country-store";
     import LocalSpinner from "../local-spinner.svelte";
+    import { authStore } from "$lib/stores/auth.store";
 
   export let principalId = "";
   export let viewGameweekDetail: (selectedGameweek: number) => void;
@@ -23,11 +24,18 @@
 
   onMount(async () => {
     try {
+      await authStore.sync();
       await systemStore.sync();
       await playerStore.sync();
       await countriesStore.sync();
+      
+      if(!id){
+        principalId = $authStore?.identity?.getPrincipal().toText() ?? "";
+      }
+      console.log("principal")
+      console.log(principalId)
 
-      manager = await managerStore.getPublicProfile(id);
+      manager = await managerStore.getPublicProfile(principalId);
     } catch (error) {
       toastsError({
         msg: { text: "Error fetching manager gameweeks." },

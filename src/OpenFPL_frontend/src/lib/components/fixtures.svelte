@@ -56,6 +56,7 @@
         homeTeam: getTeamFromId(fixture.homeClubId),
         awayTeam: getTeamFromId(fixture.awayClubId),
       }));
+      
     } catch (error) {
       toastsError({
         msg: { text: "Error fetching fixtures data." },

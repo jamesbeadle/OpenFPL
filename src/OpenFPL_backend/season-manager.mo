@@ -329,11 +329,7 @@ module {
       systemState := updatedSystemState;
       logSystemStatus();
       
-      let clubs = Array.map<T.Club, T.ClubId>(clubComposite.getClubs(), func(club: T.Club){
-        return club.id;
-      });
-      let players = playerComposite.getActivePlayers(systemState.calculationSeasonId, clubs);
-      await managerComposite.snapshotFantasyTeams(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth, players);
+      await managerComposite.snapshotFantasyTeams(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
       await updateCacheHash("system_state");
     };
 
@@ -734,7 +730,7 @@ module {
 
       let playerPointsMap = playerComposite.getPlayersMap({ seasonId = systemState.calculationSeasonId; gameweek = systemState.calculationGameweek });
 
-      await managerComposite.calculateFantasyTeamScores(playerPointsMap, players, systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
+      await managerComposite.calculateFantasyTeamScores(playerPointsMap, systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
       await leaderboardComposite.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth, managerComposite.getStableUniqueManagerCanisterIds());
       
       //await privateLeaguesManager.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
@@ -1456,8 +1452,15 @@ module {
     };
 
     public func snapshotFantasyTeams() : async (){
-      let players = getPlayers();
-      await managerComposite.snapshotFantasyTeams(1,1,8,players);
+      await managerComposite.snapshotFantasyTeams(1,1,8);
+    };
+
+    public func getUniqueManagerCanisterIds() : [T.CanisterId] {
+      managerComposite.getUniqueManagerCanisterIds();
+    };
+
+     public func getPlayerPointsMap(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async [(T.PlayerId, DTOs.PlayerScoreDTO)] {
+      return playerComposite.getPlayersMap({ seasonId = seasonId; gameweek = gameweek });
     };
 
   };
