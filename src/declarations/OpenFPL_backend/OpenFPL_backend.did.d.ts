@@ -295,6 +295,7 @@ export interface LoanPlayerDTO {
   'playerId' : PlayerId,
   'loanClubId' : ClubId,
 }
+export interface LogStatusDTO { 'message' : string }
 export interface ManagerDTO {
   'username' : string,
   'weeklyPosition' : bigint,
@@ -804,6 +805,7 @@ export interface _SERVICE {
   'getWeeklyLeaderboard' : ActorMethod<[GetWeeklyLeaderboardDTO], Result_2>,
   'inviteUserToLeague' : ActorMethod<[LeagueInviteDTO], Result>,
   'isUsernameValid' : ActorMethod<[UsernameFilterDTO], boolean>,
+  'logStatus' : ActorMethod<[LogStatusDTO], undefined>,
   'payPrivateLeagueRewards' : ActorMethod<[PrivateLeagueRewardDTO], undefined>,
   'requestCanisterTopup' : ActorMethod<[bigint], undefined>,
   'saveFantasyTeam' : ActorMethod<[UpdateTeamSelectionDTO], Result>,

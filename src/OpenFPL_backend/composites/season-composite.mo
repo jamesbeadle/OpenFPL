@@ -1422,13 +1422,47 @@ module {
 
     
 
-    public func setInitialSeason(){
+    public func setInitialSeason(clubIds: [T.ClubId]){
+        let fixtureBuffer = Buffer.fromArray<T.Fixture>([]);
+        for (i in Iter.range(0, clubIds.size() - 1)) {
+          for (j in Iter.range(0, clubIds.size() - 1)) {
+            if (i != j) {
+              fixtureBuffer.add({
+                awayGoals = 0;
+                events = List.nil();
+                gameweek = 1;
+                highestScoringPlayerId = 0;
+                homeClubId = clubIds[i];
+                awayClubId = clubIds[j];
+
+                homeGoals = 0;
+                id = 1;
+                kickOff = 0;
+                seasonId = 1;
+                status = #Unplayed
+              });
+              fixtureBuffer.add({
+                awayGoals = 0;
+                events = List.nil();
+                gameweek = 1;
+                highestScoringPlayerId = 0;
+                homeClubId = clubIds[j];
+                awayClubId = clubIds[i];
+                homeGoals = 0;
+                id = 1;
+                kickOff = 0;
+                seasonId = 1;
+                status = #Unplayed
+              });
+            }
+          };
+        };
         seasons := List.fromArray<T.Season>([{
           id=1;
           name="2024/25";
           year=2024; 
           postponedFixtures = List.nil();
-          fixtures = List.nil();
+          fixtures = List.fromArray(Buffer.toArray(fixtureBuffer));
         }]);
     };
   };

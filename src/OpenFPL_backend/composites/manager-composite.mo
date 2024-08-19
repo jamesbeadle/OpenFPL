@@ -50,9 +50,8 @@ module {
     };
 
     public func getManager(principalId : T.PrincipalId, calculationSeasonId : T.SeasonId, weeklyLeaderboardEntry : ?DTOs.LeaderboardEntryDTO, monthlyLeaderboardEntry : ?DTOs.LeaderboardEntryDTO, seasonLeaderboardEntry : ?DTOs.LeaderboardEntryDTO) : async Result.Result<DTOs.ManagerDTO, T.Error> {
-
       let managerCanisterId = managerCanisterIds.get(principalId);
-
+      
       switch (managerCanisterId) {
         case (null) {
           return #err(#NotFound);
@@ -1433,20 +1432,6 @@ module {
 
     public func getTotalCanisters() : Nat{
       return List.size(uniqueManagerCanisterIds);
-    };
-
-    public func updateManagerCanisterWasm() : async () {
-      let IC : Management.Management = actor (Environment.Default);
-      let updateResult = await (
-        IC.install_code(
-          {
-            mode = #upgrade(null);
-            canister_id = Principal.fromText("ljxqq-4iaaa-aaaal-qjd4a-cai");
-            wasm_module = "";
-            arg = Blob.fromArray([]);
-            sender_canister_version = null;
-          }),
-      );
     };
 
     public func getUniqueManagerCanisterIds() : [T.CanisterId] {

@@ -688,4 +688,8 @@ module DTOs {
     totalEntries: Nat;
   };
 
+  public type LogStatusDTO = {
+    message: Text;
+  };
+
 };

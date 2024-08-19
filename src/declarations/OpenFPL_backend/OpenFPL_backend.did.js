@@ -693,6 +693,7 @@ export const idlFactory = ({ IDL }) => {
     'canisterId' : CanisterId,
   });
   const UsernameFilterDTO = IDL.Record({ 'username' : IDL.Text });
+  const LogStatusDTO = IDL.Record({ 'message' : IDL.Text });
   const PrivateLeagueRewardDTO = IDL.Record({
     'managerId' : PrincipalId,
     'amount' : IDL.Nat64,
@@ -854,6 +855,7 @@ export const idlFactory = ({ IDL }) => {
       ),
     'inviteUserToLeague' : IDL.Func([LeagueInviteDTO], [Result], []),
     'isUsernameValid' : IDL.Func([UsernameFilterDTO], [IDL.Bool], ['query']),
+    'logStatus' : IDL.Func([LogStatusDTO], [], []),
     'payPrivateLeagueRewards' : IDL.Func([PrivateLeagueRewardDTO], [], []),
     'requestCanisterTopup' : IDL.Func([IDL.Nat], [], []),
     'saveFantasyTeam' : IDL.Func([UpdateTeamSelectionDTO], [Result], []),

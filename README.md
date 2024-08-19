@@ -43,7 +43,7 @@ git clone https://github.com/dfinity/sns-testing.git
 ./cleanup.sh
 ```
 
-3. Load a second linux terminal, navigate to the OpenFPL director and run:
+3. Load a second linux terminal, navigate to the OpenFPL directory and run:
 
 ```bash
 ./run_local_setup.sh

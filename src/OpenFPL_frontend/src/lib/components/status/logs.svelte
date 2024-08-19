@@ -26,15 +26,18 @@
 
         try{
             isLoading = true;
-            var logFilterType: EventLogEntryType = { "CanisterTopup" : null };
+            var logFilterType: EventLogEntryType = { "SystemCheck" : null };
             switch(filterCategory){
                 case 0:
-                    logFilterType = { "ManagerCanisterCreated" : null }
+                    logFilterType = { "SystemCheck" : null }
                     break;
                 case 1:
-                    logFilterType = { "UnexpectedError" : null }
+                    logFilterType = { "ManagerCanisterCreated" : null }
                     break;
                 case 2:
+                    logFilterType = { "UnexpectedError" : null }
+                    break;
+                case 3:
                     logFilterType = { "CanisterTopup" : null }
                     break;
             }

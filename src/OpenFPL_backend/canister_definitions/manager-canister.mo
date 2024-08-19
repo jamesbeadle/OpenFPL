@@ -11,6 +11,7 @@ import Result "mo:base/Result";
 import Text "mo:base/Text";
 import Timer "mo:base/Timer";
 import TrieMap "mo:base/TrieMap";
+import Nat "mo:base/Nat";
 
 import DTOs "../DTOs";
 import Environment "../utils/Environment";
@@ -2678,6 +2679,7 @@ actor class _ManagerCanister() {
     let principalId = Principal.toText(caller);
     assert principalId == Environment.BACKEND_CANISTER_ID;
 
+
     for (index in Iter.range(0, 11)) {
       switch (index) {
         case 0 {
@@ -2816,6 +2818,62 @@ actor class _ManagerCanister() {
           return season;
         },
       );
+
+      if(not seasonFound){
+        let managerPlayers = Array.filter<DTOs.PlayerDTO>(players, func(player){
+          Option.isSome(Array.find<T.PlayerId>(manager.playerIds, func(playerId){
+            playerId == player.id
+          }))
+        });
+
+        let allPlayerValues = Array.map<DTOs.PlayerDTO, Nat16>(managerPlayers, func(player : DTOs.PlayerDTO) : Nat16 { return player.valueQuarterMillions });
+        let totalTeamValue = Array.foldLeft<Nat16, Nat16>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
+
+        let newSnapshot : T.FantasyTeamSnapshot = {
+          principalId = manager.principalId;
+          gameweek = gameweek;
+          transfersAvailable = manager.transfersAvailable;
+          bankQuarterMillions = manager.bankQuarterMillions;
+          playerIds = manager.playerIds;
+          captainId = manager.captainId;
+          goalGetterGameweek = manager.goalGetterGameweek;
+          goalGetterPlayerId = manager.goalGetterPlayerId;
+          passMasterGameweek = manager.passMasterGameweek;
+          passMasterPlayerId = manager.passMasterPlayerId;
+          noEntryGameweek = manager.noEntryGameweek;
+          noEntryPlayerId = manager.noEntryPlayerId;
+          teamBoostGameweek = manager.teamBoostGameweek;
+          teamBoostClubId = manager.teamBoostClubId;
+          safeHandsGameweek = manager.safeHandsGameweek;
+          safeHandsPlayerId = manager.safeHandsPlayerId;
+          captainFantasticGameweek = manager.captainFantasticGameweek;
+          captainFantasticPlayerId = manager.captainFantasticPlayerId;
+          countrymenGameweek = manager.countrymenGameweek;
+          countrymenCountryId = manager.countrymenCountryId;
+          prospectsGameweek = manager.prospectsGameweek;
+          braceBonusGameweek = manager.braceBonusGameweek;
+          hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
+          username = manager.username;
+          favouriteClubId = manager.favouriteClubId;
+          points = 0;
+          transferWindowGameweek = manager.transferWindowGameweek;
+          monthlyBonusesAvailable = manager.monthlyBonusesAvailable;
+          teamValueQuarterMillions = totalTeamValue;
+          month = month;
+          monthlyPoints = 0;
+          seasonPoints = 0;
+          seasonId = seasonId;
+        };
+
+            
+        updatedSeasons := List.fromArray<T.FantasyTeamSeason>([
+          {
+            gameweeks = List.fromArray([newSnapshot]);
+            seasonId = seasonId;
+            totalPoints = 0
+          }
+        ]);
+      };
 
       let updatedManager : T.Manager = {
 
@@ -3511,5 +3569,13 @@ actor class _ManagerCanister() {
     let principalId = Principal.toText(caller);
     assert principalId == Environment.BACKEND_CANISTER_ID;
     return Cycles.available();
+  };
+
+  private func logStatus(statusMessage: Text) : async (){
+    let openfpl_backend_canister = actor (Environment.BACKEND_CANISTER_ID) : actor {
+      logStatus : (DTOs.LogStatusDTO) -> async ();
+    };
+    await openfpl_backend_canister.logStatus({ message = statusMessage; });
+    
   };
 };

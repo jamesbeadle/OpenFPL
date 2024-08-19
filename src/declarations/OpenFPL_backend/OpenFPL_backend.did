@@ -573,6 +573,7 @@ type ManagerDTO =
    weeklyPosition: int;
    weeklyPositionText: text;
  };
+type LogStatusDTO = record {message: text;};
 type LoanPlayerDTO = 
  record {
    loanClubId: ClubId;
@@ -1004,6 +1005,7 @@ service : {
   getWeeklyLeaderboard: (GetWeeklyLeaderboardDTO) -> (Result_2);
   inviteUserToLeague: (LeagueInviteDTO) -> (Result);
   isUsernameValid: (UsernameFilterDTO) -> (bool) query;
+  logStatus: (LogStatusDTO) -> ();
   payPrivateLeagueRewards: (PrivateLeagueRewardDTO) -> ();
   requestCanisterTopup: (nat) -> ();
   saveFantasyTeam: (UpdateTeamSelectionDTO) -> (Result);

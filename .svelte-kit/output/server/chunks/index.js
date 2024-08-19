@@ -3515,7 +3515,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1kztgxi"
+  version_hash: "101l25u"
 };
 async function get_hooks() {
   return {};
@@ -4417,6 +4417,7 @@ const idlFactory = ({ IDL }) => {
     "canisterId": CanisterId
   });
   const UsernameFilterDTO = IDL.Record({ "username": IDL.Text });
+  const LogStatusDTO = IDL.Record({ "message": IDL.Text });
   const PrivateLeagueRewardDTO = IDL.Record({
     "managerId": PrincipalId,
     "amount": IDL.Nat64
@@ -4578,6 +4579,7 @@ const idlFactory = ({ IDL }) => {
     ),
     "inviteUserToLeague": IDL.Func([LeagueInviteDTO], [Result], []),
     "isUsernameValid": IDL.Func([UsernameFilterDTO], [IDL.Bool], ["query"]),
+    "logStatus": IDL.Func([LogStatusDTO], [], []),
     "payPrivateLeagueRewards": IDL.Func([PrivateLeagueRewardDTO], [], []),
     "requestCanisterTopup": IDL.Func([IDL.Nat], [], []),
     "saveFantasyTeam": IDL.Func([UpdateTeamSelectionDTO], [Result], []),
@@ -5820,8 +5822,6 @@ function createManagerStore() {
         managerId: principalId
       };
       let result = await actor.getManager(dto);
-      console.log("getting manager");
-      console.log(result);
       if (isError(result)) {
         console.error("Error getting public profile");
       }

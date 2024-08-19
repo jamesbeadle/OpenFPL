@@ -28,6 +28,7 @@
   import Root "sns-wrappers/root";
   import Management "./modules/Management";
   import FPLLedger "FPLLedger";
+  import ManagerCanister "canister_definitions/manager-canister";
 
   actor Self {
     
@@ -1518,12 +1519,27 @@
     };
 
     private func postUpgradeCallback() : async (){
+      //setupTesting();
+      
+      let managerCanisterIds = seasonManager.getManagerCanisterIds();
+
+      let IC : Management.Management = actor (Environment.Default);
+      for(canisterId in Iter.fromArray(managerCanisterIds)){
+        
+        await IC.stop_canister({ canister_id = Principal.fromText(canisterId); }); 
+        
+        let oldManagement = actor (canisterId) : actor {};
+        let _ = await (system ManagerCanister._ManagerCanister)(#upgrade oldManagement)();
+        
+        await IC.start_canister({ canister_id = Principal.fromText(canisterId); }); 
+      };
+      await seasonManager.snapshotFantasyTeams();
+        
       
 
       //await seasonManager.removeDuplicatePlayer(602);
       //await seasonManager.resetManagerBonusesAvailable();
       //await seasonManager.putOnHold();
-      await seasonManager.snapshotFantasyTeams();
       //on each update generate new hash values
       await seasonManager.updateCacheHash("clubs");
       await seasonManager.updateCacheHash("fixtures");
@@ -1537,6 +1553,26 @@
 
       //await systemCheckCallback(); //TODO UPDATE THIS SO IT's more informative and delete the existing
       await cyclesCheckCallback();
+    };
+
+    public shared ({ caller }) func logStatus (dto: DTOs.LogStatusDTO) : async (){
+      assert not Principal.isAnonymous(caller);
+      let principalId = Principal.toText(caller);
+
+      let managerCanisterIds = await getManagerCanisterIds();
+      let foundManagerCanisterId = Array.find(managerCanisterIds, func(canisterId: T.CanisterId) : Bool{
+        canisterId == principalId
+      });
+
+      if(Option.isSome(foundManagerCanisterId)){
+        recordSystemEvent({
+            eventDetail = dto.message; 
+            eventId = 0;
+            eventTime = Time.now();
+            eventTitle = "Canister Log";
+            eventType = #SystemCheck;
+          });
+      };
     };
     
     //Canister cycle topup functions
@@ -1748,5 +1784,16 @@
       );  
       return await seasonManager.getPlayerPointsMap(seasonId, gameweek);
     };
+
+    private func setupTesting(){
+      seasonManager.setupTesting();
+    };
+
+    //setup test
+      //populate players
+      //populate clubs
+      //create season
+      //add fixtures
+      //set ready to pick team
 
   };

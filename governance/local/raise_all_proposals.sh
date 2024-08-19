@@ -12,10 +12,10 @@ OWNER_IDENTITY=$(dfx identity whoami)
 export PEM_FILE="$(readlink -f "$HOME/.config/dfx/identity/${OWNER_IDENTITY}/identity.pem")"
 
 
-#./governance/local/UpgradeBackend.sh
+./governance/local/UpgradeBackend.sh
 #./governance/local/137.AddPromoteNewTeamFn.sh
 #./governance/local/138.PromoteSouthampton.sh
-./governance/local/142.Add2024Fixtures.sh
+#./governance/local/142.Add2024Fixtures.sh
 #./governance/local/99.TestPlayerProposal.sh
 
 

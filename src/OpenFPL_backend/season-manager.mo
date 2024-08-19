@@ -1380,18 +1380,6 @@ module {
       return managerComposite.getTotalCanisters();
     };
 
-    public func setInitialSeason(){
-      seasonComposite.setInitialSeason();
-    };
-
-    public func setInitialClubs(){
-      clubComposite.setInitialClubs();
-    };
-
-    public func setInitialPlayers(){
-      playerComposite.setInitialPlayers();
-    };
-
     public func getManagerCanisterIds() : [T.CanisterId] {
       return managerComposite.getStableUniqueManagerCanisterIds();
     };
@@ -1461,6 +1449,28 @@ module {
 
      public func getPlayerPointsMap(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async [(T.PlayerId, DTOs.PlayerScoreDTO)] {
       return playerComposite.getPlayersMap({ seasonId = seasonId; gameweek = gameweek });
+    };
+
+    public func setupTesting() {
+
+      //set the system state
+      systemState := {
+        calculationGameweek = 1;
+        calculationMonth = 8;
+        calculationSeasonId = 1;
+        pickTeamGameweek = 1;
+        pickTeamSeasonId = 1;
+        seasonActive = false;
+        transferWindowActive = true;
+        onHold = false;
+      };
+
+      playerComposite.setInitialPlayers();
+      clubComposite.setInitialClubs();
+      seasonComposite.setInitialSeason(Array.map<T.Club, T.ClubId>(clubComposite.getClubs(), func(club: T.Club){
+        return club.id;
+      }));
+    
     };
 
   };

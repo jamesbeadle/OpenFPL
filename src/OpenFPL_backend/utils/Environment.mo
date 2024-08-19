@@ -15,9 +15,9 @@ module Environment {
   public let SNS_INDEX_CANISTER_ID = "dnqcx-eyaaa-aaaaq-aacrq-cai";
   public let SNS_SWAP_CANISTER_ID = "dkred-jaaaa-aaaaq-aacra-cai";
 
+/*
   //local
 
-/*
   public let DFX_NETWORK = "local";
   public let BACKEND_CANISTER_ID = "bd3sg-teaaa-aaaaa-qaaba-cai";
   public let FRONTEND_CANISTER_ID = "be2us-64aaa-aaaaa-qaabq-cai";
