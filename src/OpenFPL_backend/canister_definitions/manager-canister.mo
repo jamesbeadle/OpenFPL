@@ -2740,15 +2740,18 @@ actor class _ManagerCanister() {
 
   private func snapshotManagers(managers : [T.Manager], seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) : async [T.Manager] {
     
+    await logStatus("Snapshotting manager chunk.");
     let openfpl_backend_canister = actor (Environment.BACKEND_CANISTER_ID) : actor {
-        getActivePlayers : () -> async [DTOs.PlayerDTO];
-      };
+      getActivePlayers : () -> async [DTOs.PlayerDTO];
+    };
       
     let players : [DTOs.PlayerDTO] = await openfpl_backend_canister.getActivePlayers();
-    
+   
+    await logStatus("Fetched a total of " # Nat.toText(Array.size(players)) # " players.");
     let managerBuffer = Buffer.fromArray<T.Manager>([]);
     for (manager in Iter.fromArray(managers)) {
 
+      await logStatus("Checking manager " # manager.principalId # ".");
       var seasonFound = false;
       var updatedSeasons = List.map<T.FantasyTeamSeason, T.FantasyTeamSeason>(
         manager.history,
@@ -2819,8 +2822,10 @@ actor class _ManagerCanister() {
           return season;
         },
       );
-
+      
       if(not seasonFound){
+
+        await logStatus("Season not found.");
         let managerPlayers = Array.filter<DTOs.PlayerDTO>(players, func(player){
           Option.isSome(Array.find<T.PlayerId>(manager.playerIds, func(playerId){
             playerId == player.id
@@ -2866,7 +2871,8 @@ actor class _ManagerCanister() {
           seasonId = seasonId;
         };
 
-            
+   
+        await logStatus("Returning single snapshot.");         
         updatedSeasons := List.fromArray<T.FantasyTeamSeason>([
           {
             gameweeks = List.fromArray([newSnapshot]);
@@ -2876,6 +2882,7 @@ actor class _ManagerCanister() {
         ]);
       };
 
+      await logStatus("Updating the manager.");
       let updatedManager : T.Manager = {
 
         principalId = manager.principalId;
@@ -2914,6 +2921,7 @@ actor class _ManagerCanister() {
       };
       managerBuffer.add(updatedManager);
     };
+    await logStatus("Snapshotting complete.");
     return Buffer.toArray(managerBuffer);
   };
 
