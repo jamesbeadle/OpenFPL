@@ -1533,6 +1533,13 @@
         
         await IC.start_canister({ canister_id = Principal.fromText(canisterId); }); 
       };
+      recordSystemEvent({
+          eventDetail = "Beginning snapshot in backend"; 
+          eventId = 0;
+          eventTime = Time.now();
+          eventTitle = "Canister Log";
+          eventType = #SystemCheck;
+        });
       await seasonManager.snapshotFantasyTeams();
         
       
@@ -1730,7 +1737,6 @@
     };
 
     //status functions
-
     public func getManagerCanisterIds() : async [T.CanisterId] {
       return seasonManager.getManagerCanisterIds();
     };

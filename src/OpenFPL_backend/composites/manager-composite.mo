@@ -1285,12 +1285,7 @@ module {
     };
 
     public func setStableUniqueManagerCanisterIds(stable_unique_manager_canister_ids : [T.CanisterId]) : () {
-      let canisterIdBuffer = Buffer.fromArray<T.CanisterId>([]);
-
-      for (canisterId in Iter.fromArray(stable_unique_manager_canister_ids)) {
-        canisterIdBuffer.add(canisterId);
-      };
-      uniqueManagerCanisterIds := List.fromArray(Buffer.toArray(canisterIdBuffer));
+      uniqueManagerCanisterIds := List.fromArray(stable_unique_manager_canister_ids);
     };
 
     public func resetManagerCount() {

@@ -2675,6 +2675,7 @@ actor class _ManagerCanister() {
   };
 
   public shared ({ caller }) func snapshotFantasyTeams(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) : async () {
+    await logStatus("Snapshotting fantasy teams in manager canister.");
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == Environment.BACKEND_CANISTER_ID;
