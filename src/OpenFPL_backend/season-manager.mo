@@ -1455,6 +1455,10 @@ module {
       return playerComposite.getPlayersMap({ seasonId = seasonId; gameweek = gameweek });
     };
 
+    public func cleanFantasyTeams() : async (){
+      await managerComposite.cleanFantasyTeams();
+    };
+
     public func setupTesting() {
 
       //set the system state

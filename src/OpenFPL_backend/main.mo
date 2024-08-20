@@ -13,6 +13,7 @@
   import Option "mo:base/Option";
   import List "mo:base/List";
   import Order "mo:base/Order";
+import Debug "mo:base/Debug";
 
   import T "types";
   import DTOs "DTOs";
@@ -1519,9 +1520,61 @@
     };
 
     private func postUpgradeCallback() : async (){
+
+      //Reset logs
+      stable_event_logs := [];
       
+      //Update manager canister actor class wasms
+      let managerCanisterIds = seasonManager.getManagerCanisterIds();
+
+      let IC : Management.Management = actor (Environment.Default);
+      for(canisterId in Iter.fromArray(managerCanisterIds)){
+        
+        await IC.stop_canister({ canister_id = Principal.fromText(canisterId); }); 
+        
+        let oldManagement = actor (canisterId) : actor {};
+        let _ = await (system ManagerCanister._ManagerCanister)(#upgrade oldManagement)();
+        
+        await IC.start_canister({ canister_id = Principal.fromText(canisterId); }); 
+      };
+
+      recordSystemEvent({
+        eventDetail = "Completed updating manager class wasms."; 
+        eventId = 0;
+        eventTime = Time.now(); 
+        eventTitle = "Canister Log";
+        eventType = #SystemCheck;
+      });
+      
+      await cleanFantasyTeams();
+      
+
+      recordSystemEvent({
+        eventDetail = "Begin update manager actor class wasm."; 
+        eventId = 0;
+        eventTime = Time.now(); 
+        eventTitle = "Canister Log";
+        eventType = #SystemCheck;
+      });
+
+      recordSystemEvent({
+        eventDetail = "Beginning snapshotting of fantasy teams."; 
+        eventId = 0;
+        eventTime = Time.now(); 
+        eventTitle = "Canister Log";
+        eventType = #SystemCheck;
+      });
+
       await seasonManager.snapshotFantasyTeams();
 
+      recordSystemEvent({
+        eventDetail = "Completed snapshotting of fantasy teams."; 
+        eventId = 0;
+        eventTime = Time.now(); 
+        eventTitle = "Canister Log";
+        eventType = #SystemCheck;
+      });
+      
       //on each update generate new hash values
       await seasonManager.updateCacheHash("clubs");
       await seasonManager.updateCacheHash("fixtures");
@@ -1537,27 +1590,11 @@
       await cyclesCheckCallback();
       
       /*
-    
-      //setupTesting();
-      let managerCanisterIds = seasonManager.getManagerCanisterIds();
+    //await seasonManager.snapshotFantasyTeams();
 
-      let IC : Management.Management = actor (Environment.Default);
-      for(canisterId in Iter.fromArray(managerCanisterIds)){
-        
-        await IC.stop_canister({ canister_id = Principal.fromText(canisterId); }); 
-        
-        let oldManagement = actor (canisterId) : actor {};
-        let _ = await (system ManagerCanister._ManagerCanister)(#upgrade oldManagement)();
-        
-        await IC.start_canister({ canister_id = Principal.fromText(canisterId); }); 
-      };
-      recordSystemEvent({
-          eventDetail = "Beginning snapshot in backend"; 
-          eventId = 0;
-          eventTime = Time.now(); 
-          eventTitle = "Canister Log";
-          eventType = #SystemCheck;
-        });
+      //setupTesting();
+      
+      
       */
       
 
@@ -1808,6 +1845,10 @@
 
     private func setupTesting(){
       seasonManager.setupTesting();
+    };
+
+    private func cleanFantasyTeams() : async (){
+      await seasonManager.cleanFantasyTeams();
     };
 
   };

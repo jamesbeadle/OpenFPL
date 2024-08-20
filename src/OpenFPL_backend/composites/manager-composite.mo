@@ -1206,7 +1206,9 @@ module {
           snapshotFantasyTeams : (seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) -> async ();
         };
 
+        logStatus("Call canister " # canisterId # " to snapshot fantasy teams.");
         await manager_canister.snapshotFantasyTeams(seasonId, gameweek, month);
+        logStatus("Snapshotting of fantasy teams in canister ." # canisterId # " is complete.");
       };
     };
 
@@ -1454,6 +1456,16 @@ module {
             });
         };
         case (null){}
+      };
+    };
+
+    public func cleanFantasyTeams() : async (){
+        for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
+        let manager_canister = actor (canisterId) : actor {
+          cleanFantasyTeams : () -> async ();
+        };
+
+        await manager_canister.cleanFantasyTeams();
       };
     };
 

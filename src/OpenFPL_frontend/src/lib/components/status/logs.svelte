@@ -63,6 +63,7 @@
         class="mt-1 block w-full py-2 text-white fpl-dropdown"
         bind:value={filterCategory}
         >
+            <option value={0}>System Check</option>
             <option value={0}>Manager Canister Created</option>
             <option value={1}>Unexpected Error</option>
             <option value={2}>Canister Topped Up</option>

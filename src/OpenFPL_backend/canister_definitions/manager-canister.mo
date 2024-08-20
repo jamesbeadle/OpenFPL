@@ -12,6 +12,7 @@ import Text "mo:base/Text";
 import Timer "mo:base/Timer";
 import TrieMap "mo:base/TrieMap";
 import Nat "mo:base/Nat";
+import Debug "mo:base/Debug";
 
 import DTOs "../DTOs";
 import Environment "../utils/Environment";
@@ -769,7 +770,6 @@ actor class _ManagerCanister() {
           case (0) {
             for (manager in Iter.fromArray<T.Manager>(managerGroup1)) {
               if (manager.principalId == managerPrincipal) {
-                await logStatus("Fetching manager " # managerPrincipal # "."); 
                 return ?manager;
               };
             };
@@ -2676,6 +2676,8 @@ actor class _ManagerCanister() {
   };
 
   public shared ({ caller }) func snapshotFantasyTeams(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) : async () {
+    
+    await logStatus("Snapshot fantasy teams called by " # Principal.toText(caller) # ".");
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == Environment.BACKEND_CANISTER_ID;
@@ -2684,55 +2686,76 @@ actor class _ManagerCanister() {
     for (index in Iter.range(0, 11)) {
       switch (index) {
         case 0 {
-          managerGroup1 := await snapshotManagers(managerGroup1, seasonId, gameweek, month);
+          await logStatus("Snapshotting managers in manager group 1.");
+          let updatedManagers = await snapshotManagers(managerGroup1, seasonId, gameweek, month); 
+
+          for(manager in Iter.fromArray(updatedManagers)){
+            if(manager.principalId == "opyzn-r7zln-jwgvb-tx75c-ncekh-xhvje-epcj7-saonq-z732m-zi4mm-qae"){
+
+              await logStatus("Manager " # manager.principalId # " has " # Nat.toText(List.size(manager.history)) # " seasons in their profile.");
+            }
+          };
+
+          managerGroup1 := updatedManagers;
           //await updatePrivateLeagues(managerGroup1);
         };
         case 1 {
+          await logStatus("Snapshotting managers in manager group 2.");
           managerGroup2 := await snapshotManagers(managerGroup2, seasonId, gameweek, month);
           //await updatePrivateLeagues(managerGroup2);
         };
         case 2 {
+          await logStatus("Snapshotting managers in manager group 3.");
           managerGroup3 := await snapshotManagers(managerGroup3, seasonId, gameweek, month);
           //await updatePrivateLeagues(managerGroup3);
         };
         case 3 {
+          await logStatus("Snapshotting managers in manager group 4.");
           managerGroup4 := await snapshotManagers(managerGroup4, seasonId, gameweek, month);
           //await updatePrivateLeagues(managerGroup4);
         };
         case 4 {
+          await logStatus("Snapshotting managers in manager group 5.");
           managerGroup5 := await snapshotManagers(managerGroup5, seasonId, gameweek, month);
           //await updatePrivateLeagues(managerGroup5);
         };
         case 5 {
+          await logStatus("Snapshotting managers in manager group 6.");
           managerGroup6 := await snapshotManagers(managerGroup6, seasonId, gameweek, month);
           //await updatePrivateLeagues(managerGroup6);
         };
         case 6 {
+          await logStatus("Snapshotting managers in manager group 7.");
           managerGroup7 := await snapshotManagers(managerGroup7, seasonId, gameweek, month);
           //await updatePrivateLeagues(managerGroup7);
         };
         case 7 {
+          await logStatus("Snapshotting managers in manager group 8.");
           managerGroup8 := await snapshotManagers(managerGroup8, seasonId, gameweek, month);
           //await updatePrivateLeagues(managerGroup8);
         };
         case 8 {
+          await logStatus("Snapshotting managers in manager group 9.");
           managerGroup9 := await snapshotManagers(managerGroup9, seasonId, gameweek, month);
           //await updatePrivateLeagues(managerGroup9);
         };
         case 9 {
+          await logStatus("Snapshotting managers in manager group 10.");
           managerGroup10 := await snapshotManagers(managerGroup10, seasonId, gameweek, month);
           //await updatePrivateLeagues(managerGroup10);
         };
         case 10 {
+          await logStatus("Snapshotting managers in manager group 11.");
           managerGroup11 := await snapshotManagers(managerGroup11, seasonId, gameweek, month);
           //await updatePrivateLeagues(managerGroup11);
         };
         case 11 {
+          await logStatus("Snapshotting managers in manager group 12.");
           managerGroup12 := await snapshotManagers(managerGroup12, seasonId, gameweek, month);
           //await updatePrivateLeagues(managerGroup12);
         };
         case _ {
-
+          await logStatus("Hit unreachable code 1.");
         };
       };
     };
@@ -2747,6 +2770,7 @@ actor class _ManagerCanister() {
     let players : [DTOs.PlayerDTO] = await openfpl_backend_canister.getAllPlayers();
    
     let managerBuffer = Buffer.fromArray<T.Manager>([]);
+    await logStatus("Snapshotting a total of " # Nat.toText(Array.size(managers)) # " managers.");
     for (manager in Iter.fromArray(managers)) {
 
       var seasonFound = false;
@@ -3579,5 +3603,186 @@ actor class _ManagerCanister() {
     };
     await openfpl_backend_canister.logStatus({ message = statusMessage; });
     
+  };
+
+  public shared ({ caller }) func cleanFantasyTeams() : async () {
+
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == Environment.BACKEND_CANISTER_ID;
+
+    let openfpl_backend_canister = actor (Environment.BACKEND_CANISTER_ID) : actor {
+      getActivePlayers : () -> async [DTOs.PlayerDTO];
+    };
+    let allPlayers : [DTOs.PlayerDTO] = await openfpl_backend_canister.getActivePlayers();
+
+    if(Array.size(allPlayers) == 0){
+      return;
+    };
+
+    for (index in Iter.range(0, 11)) {
+      switch (index) {
+        case 0 {
+          managerGroup1 := await cleanManagerTeams(managerGroup1, allPlayers);
+        };
+        case 1 {
+          managerGroup2 := await cleanManagerTeams(managerGroup2, allPlayers);
+        };
+        case 2 {
+          managerGroup3 := await cleanManagerTeams(managerGroup3, allPlayers);
+        };
+        case 3 {
+          managerGroup4 := await cleanManagerTeams(managerGroup4, allPlayers);
+        };
+        case 4 {
+          managerGroup5 := await cleanManagerTeams(managerGroup5, allPlayers);
+        };
+        case 5 {
+          managerGroup6 := await cleanManagerTeams(managerGroup6, allPlayers);
+        };
+        case 6 {
+          managerGroup7 := await cleanManagerTeams(managerGroup7, allPlayers);
+        };
+        case 7 {
+          managerGroup8 := await cleanManagerTeams(managerGroup8, allPlayers);
+        };
+        case 8 {
+          managerGroup9 := await cleanManagerTeams(managerGroup9, allPlayers);
+        };
+        case 9 {
+          managerGroup10 := await cleanManagerTeams(managerGroup10, allPlayers);
+        };
+        case 10 {
+          managerGroup11 := await cleanManagerTeams(managerGroup11, allPlayers);
+        };
+        case 11 {
+          managerGroup12 := await cleanManagerTeams(managerGroup12, allPlayers);
+        };
+        case _ {
+
+        };
+      };
+    };
+  };
+
+
+  private func cleanManagerTeams(managers : [T.Manager], allPlayers : [DTOs.PlayerDTO]) : async [T.Manager] {
+    let managerBuffer = Buffer.fromArray<T.Manager>([]);
+
+
+    for (manager in Iter.fromArray(managers)) {
+      
+      var captainRemoved = false;
+      let playerIdBuffer = Buffer.fromArray<T.PlayerId>([]);
+      for (playerId in Iter.fromArray(manager.playerIds)) {
+        
+        let activePlayer = Array.find<DTOs.PlayerDTO>(allPlayers, func(player: DTOs.PlayerDTO){
+          player.id == playerId
+        });
+
+        if(Option.isSome(activePlayer)){
+          playerIdBuffer.add(playerId);
+        };
+
+        if(Option.isNull(activePlayer)){
+          if(playerId == manager.captainId){
+            captainRemoved := true;
+          };
+          playerIdBuffer.add(0);
+        };
+      };
+
+      var captainId = manager.captainId;
+      if(captainRemoved){
+        let highestValuedPlayer = Array.foldLeft<T.PlayerId, ?DTOs.PlayerDTO>(
+          Buffer.toArray(playerIdBuffer),
+          null,
+          func(highest, id) : ?DTOs.PlayerDTO {
+            if (id == 0) { return highest };
+            let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p) { p.id == id });
+            switch (highest, player) {
+              case (null, ?p) {
+                ?p;
+              };
+              case (?h, ?p) {
+                if (p.valueQuarterMillions > h.valueQuarterMillions) {
+                  ?p;
+                } else {
+                  ?h;
+                };
+              };
+              case (_, null) {
+                highest;
+              };
+            };
+          },
+        );
+        switch(highestValuedPlayer){
+          case (?foundPlayer){
+            captainId := foundPlayer.id;
+          };
+          case (null){}
+        };
+      };
+
+      let updatedPlayerIds = Buffer.toArray(playerIdBuffer);
+
+      let allTeamPlayers = Array.filter<DTOs.PlayerDTO>(allPlayers, func(player: DTOs.PlayerDTO){
+        Array.find<T.PlayerId>(updatedPlayerIds, func(playerId){
+          playerId == player.id
+        }) != null;
+      });
+
+      let allPlayerValues = Array.map<DTOs.PlayerDTO, Nat16>(allTeamPlayers, func (player: DTOs.PlayerDTO) : Nat16 { return player.valueQuarterMillions; });
+
+      let currentTeamValue = Array.foldLeft<Nat16, Nat16>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
+      
+      if(currentTeamValue > 300){
+        await logStatus("Team " # manager.principalId # " has a team over 300m.");
+      };
+
+
+      //set the bank balance to the 300m - value of all players
+
+      //log the value of the teams to be sure
+
+      let updatedManager : T.Manager = {
+        principalId = manager.principalId;
+        username = manager.username;
+        termsAccepted = manager.termsAccepted;
+        favouriteClubId = manager.favouriteClubId;
+        createDate = manager.createDate;
+        history = manager.history;
+        profilePicture = manager.profilePicture;
+        profilePictureType = manager.profilePictureType;
+        transfersAvailable = manager.transfersAvailable;
+        monthlyBonusesAvailable = manager.monthlyBonusesAvailable;
+        bankQuarterMillions = 1200 - currentTeamValue;
+        playerIds = updatedPlayerIds;
+        captainId = captainId;
+        goalGetterGameweek = manager.goalGetterGameweek;
+        goalGetterPlayerId = manager.goalGetterPlayerId;
+        passMasterGameweek = manager.passMasterGameweek;
+        passMasterPlayerId = manager.passMasterPlayerId;
+        noEntryGameweek = manager.noEntryGameweek;
+        noEntryPlayerId = manager.noEntryPlayerId;
+        teamBoostGameweek = manager.teamBoostGameweek;
+        teamBoostClubId = manager.teamBoostClubId;
+        safeHandsGameweek = manager.safeHandsGameweek;
+        safeHandsPlayerId = manager.safeHandsPlayerId;
+        captainFantasticGameweek = manager.captainFantasticGameweek;
+        captainFantasticPlayerId = manager.captainFantasticPlayerId;
+        countrymenGameweek = manager.countrymenGameweek;
+        countrymenCountryId = manager.countrymenCountryId;
+        prospectsGameweek = manager.prospectsGameweek;
+        braceBonusGameweek = manager.braceBonusGameweek;
+        hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
+        transferWindowGameweek = manager.transferWindowGameweek;
+        ownedPrivateLeagues = manager.ownedPrivateLeagues;
+        privateLeagueMemberships = manager.privateLeagueMemberships;
+      };
+      managerBuffer.add(updatedManager);
+    };
+    return Buffer.toArray(managerBuffer);
   };
 };
