@@ -3603,8 +3603,7 @@ actor class _ManagerCanister() {
     let openfpl_backend_canister = actor (Environment.BACKEND_CANISTER_ID) : actor {
       logStatus : (DTOs.LogStatusDTO) -> async ();
     };
-    await openfpl_backend_canister.logStatus({ message = statusMessage; });
-    
+    ignore openfpl_backend_canister.logStatus({ message = statusMessage; });
   };
 
   public shared ({ caller }) func cleanFantasyTeams() : async () {
