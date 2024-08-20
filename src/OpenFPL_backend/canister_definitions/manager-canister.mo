@@ -13,6 +13,8 @@ import Timer "mo:base/Timer";
 import TrieMap "mo:base/TrieMap";
 import Nat "mo:base/Nat";
 import Debug "mo:base/Debug";
+import Int16 "mo:base/Int16";
+import Nat16 "mo:base/Nat16";
 
 import DTOs "../DTOs";
 import Environment "../utils/Environment";
@@ -3725,7 +3727,7 @@ actor class _ManagerCanister() {
         };
       };
 
-      let updatedPlayerIds = Buffer.toArray(playerIdBuffer);
+      var updatedPlayerIds = Buffer.toArray(playerIdBuffer);
 
       let allTeamPlayers = Array.filter<DTOs.PlayerDTO>(allPlayers, func(player: DTOs.PlayerDTO){
         Array.find<T.PlayerId>(updatedPlayerIds, func(playerId){
@@ -3737,14 +3739,20 @@ actor class _ManagerCanister() {
 
       let currentTeamValue = Array.foldLeft<Nat16, Nat16>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
       
-      if(currentTeamValue > 300){
+      if(currentTeamValue > 1200){
         await logStatus("Team " # manager.principalId # " has a team over 300m.");
       };
 
+      var bankBalance: Nat16 = 0;
+      var testBalance: Int = 1200 - Int16.toInt(Int16.fromNat16(currentTeamValue));
+      if(testBalance >= 0){
+        bankBalance := Nat16.fromIntWrap(testBalance);
+      };
 
-      //set the bank balance to the 300m - value of all players
-
-      //log the value of the teams to be sure
+      if(testBalance < 0){
+        updatedPlayerIds := [];
+        bankBalance := 1200;
+      };
 
       let updatedManager : T.Manager = {
         principalId = manager.principalId;
@@ -3757,7 +3765,7 @@ actor class _ManagerCanister() {
         profilePictureType = manager.profilePictureType;
         transfersAvailable = manager.transfersAvailable;
         monthlyBonusesAvailable = manager.monthlyBonusesAvailable;
-        bankQuarterMillions = 1200 - currentTeamValue;
+        bankQuarterMillions = bankBalance;
         playerIds = updatedPlayerIds;
         captainId = captainId;
         goalGetterGameweek = manager.goalGetterGameweek;

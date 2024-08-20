@@ -27,8 +27,8 @@ module Environment {
   public let SNS_ROOT_CANISTER_ID = "b77ix-eeaaa-aaaaa-qaada-cai";
   public let SNS_INDEX_CANISTER_ID = "a3shf-5eaaa-aaaaa-qaafa-cai";
   public let SNS_SWAP_CANISTER_ID = "asrmz-lmaaa-aaaaa-qaaeq-cai";
-*/
   
+*/
 
 
 };
