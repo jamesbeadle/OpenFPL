@@ -769,6 +769,7 @@ actor class _ManagerCanister() {
           case (0) {
             for (manager in Iter.fromArray<T.Manager>(managerGroup1)) {
               if (manager.principalId == managerPrincipal) {
+                await logStatus("Fetching manager " # managerPrincipal # "."); 
                 return ?manager;
               };
             };
@@ -2675,7 +2676,6 @@ actor class _ManagerCanister() {
   };
 
   public shared ({ caller }) func snapshotFantasyTeams(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) : async () {
-    await logStatus("Snapshotting fantasy teams in manager canister.");
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == Environment.BACKEND_CANISTER_ID;
@@ -2740,18 +2740,15 @@ actor class _ManagerCanister() {
 
   private func snapshotManagers(managers : [T.Manager], seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) : async [T.Manager] {
     
-    await logStatus("Snapshotting manager chunk.");
     let openfpl_backend_canister = actor (Environment.BACKEND_CANISTER_ID) : actor {
       getAllPlayers : () -> async [DTOs.PlayerDTO];
     };
       
     let players : [DTOs.PlayerDTO] = await openfpl_backend_canister.getAllPlayers();
    
-    await logStatus("Fetched a total of " # Nat.toText(Array.size(players)) # " players.");
     let managerBuffer = Buffer.fromArray<T.Manager>([]);
     for (manager in Iter.fromArray(managers)) {
 
-      await logStatus("Checking manager " # manager.principalId # ".");
       var seasonFound = false;
       var updatedSeasons = List.map<T.FantasyTeamSeason, T.FantasyTeamSeason>(
         manager.history,
@@ -2825,7 +2822,6 @@ actor class _ManagerCanister() {
       
       if(not seasonFound){
 
-        await logStatus("Season not found.");
         let managerPlayers = Array.filter<DTOs.PlayerDTO>(players, func(player){
           Option.isSome(Array.find<T.PlayerId>(manager.playerIds, func(playerId){
             playerId == player.id
@@ -2872,7 +2868,6 @@ actor class _ManagerCanister() {
         };
 
    
-        await logStatus("Returning single snapshot.");         
         updatedSeasons := List.fromArray<T.FantasyTeamSeason>([
           {
             gameweeks = List.fromArray([newSnapshot]);
@@ -2882,7 +2877,6 @@ actor class _ManagerCanister() {
         ]);
       };
 
-      await logStatus("Updating the manager.");
       let updatedManager : T.Manager = {
 
         principalId = manager.principalId;
@@ -2921,7 +2915,6 @@ actor class _ManagerCanister() {
       };
       managerBuffer.add(updatedManager);
     };
-    await logStatus("Snapshotting complete.");
     return Buffer.toArray(managerBuffer);
   };
 

@@ -52,6 +52,18 @@ module {
     public func getManager(principalId : T.PrincipalId, calculationSeasonId : T.SeasonId, weeklyLeaderboardEntry : ?DTOs.LeaderboardEntryDTO, monthlyLeaderboardEntry : ?DTOs.LeaderboardEntryDTO, seasonLeaderboardEntry : ?DTOs.LeaderboardEntryDTO) : async Result.Result<DTOs.ManagerDTO, T.Error> {
       let managerCanisterId = managerCanisterIds.get(principalId);
       
+      switch(recordSystemEvent){
+        case (?foundFunction){
+          foundFunction({
+              eventDetail = "Backend: Getting manager " # principalId; 
+              eventId = 0;
+              eventTime = Time.now();
+              eventTitle = "Canister Log";
+              eventType = #SystemCheck;
+            });
+        };
+        case (null){}
+      };
       switch (managerCanisterId) {
         case (null) {
           return #err(#NotFound);
@@ -61,13 +73,42 @@ module {
             getManager : T.PrincipalId -> async ?T.Manager;
           };
 
+          switch(recordSystemEvent){
+            case (?foundFunction){
+              foundFunction({
+                  eventDetail = "Backend: Getting manager from canister " # foundCanisterId; 
+                  eventId = 0;
+                  eventTime = Time.now();
+                  eventTitle = "Canister Log";
+                  eventType = #SystemCheck;
+                });
+            };
+            case (null){}
+          };
           let manager = await manager_canister.getManager(principalId);
           switch (manager) {
             case (null) {
               return #err(#NotFound);
             };
             case (?foundManager) {
+              
               for (managerSeason in Iter.fromList(foundManager.history)) {
+
+
+
+                switch(recordSystemEvent){
+                  case (?foundFunction){
+                    foundFunction({
+                        eventDetail = "Backend: Found manager " # foundManager.principalId # " from canister " # foundCanisterId # " with " # Nat.toText(List.size(managerSeason.gameweeks)) # " gameweeks."; 
+                        eventId = 0;
+                        eventTime = Time.now();
+                        eventTitle = "Canister Log";
+                        eventType = #SystemCheck;
+                      });
+                  };
+                  case (null){}
+                };
+
                 if (managerSeason.seasonId == calculationSeasonId) {
 
                   var weeklyPosition : Int = 0;

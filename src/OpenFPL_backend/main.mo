@@ -1521,6 +1521,7 @@
     private func postUpgradeCallback() : async (){
       //setupTesting();
       
+      /*
       let managerCanisterIds = seasonManager.getManagerCanisterIds();
 
       let IC : Management.Management = actor (Environment.Default);
@@ -1541,12 +1542,15 @@
           eventType = #SystemCheck;
         });
       await seasonManager.snapshotFantasyTeams();
-        
+      */
       
 
       //await seasonManager.removeDuplicatePlayer(602);
       //await seasonManager.resetManagerBonusesAvailable();
       //await seasonManager.putOnHold();
+
+
+      
       //on each update generate new hash values
       await seasonManager.updateCacheHash("clubs");
       await seasonManager.updateCacheHash("fixtures");
@@ -1805,12 +1809,5 @@
     private func setupTesting(){
       seasonManager.setupTesting();
     };
-
-    //setup test
-      //populate players
-      //populate clubs
-      //create season
-      //add fixtures
-      //set ready to pick team
 
   };
