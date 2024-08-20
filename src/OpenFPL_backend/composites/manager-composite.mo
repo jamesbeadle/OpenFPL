@@ -52,18 +52,8 @@ module {
     public func getManager(principalId : T.PrincipalId, calculationSeasonId : T.SeasonId, weeklyLeaderboardEntry : ?DTOs.LeaderboardEntryDTO, monthlyLeaderboardEntry : ?DTOs.LeaderboardEntryDTO, seasonLeaderboardEntry : ?DTOs.LeaderboardEntryDTO) : async Result.Result<DTOs.ManagerDTO, T.Error> {
       let managerCanisterId = managerCanisterIds.get(principalId);
       
-      switch(recordSystemEvent){
-        case (?foundFunction){
-          foundFunction({
-              eventDetail = "Backend: Getting manager " # principalId; 
-              eventId = 0;
-              eventTime = Time.now();
-              eventTitle = "Canister Log";
-              eventType = #SystemCheck;
-            });
-        };
-        case (null){}
-      };
+      logStatus("Backend: Getting manager " # principalId);
+      
       switch (managerCanisterId) {
         case (null) {
           return #err(#NotFound);
@@ -72,43 +62,21 @@ module {
           let manager_canister = actor (foundCanisterId) : actor {
             getManager : T.PrincipalId -> async ?T.Manager;
           };
-
-          switch(recordSystemEvent){
-            case (?foundFunction){
-              foundFunction({
-                  eventDetail = "Backend: Getting manager from canister " # foundCanisterId; 
-                  eventId = 0;
-                  eventTime = Time.now();
-                  eventTitle = "Canister Log";
-                  eventType = #SystemCheck;
-                });
-            };
-            case (null){}
-          };
+      
+          logStatus("Backend: Getting manager from canister " # foundCanisterId);
+      
           let manager = await manager_canister.getManager(principalId);
           switch (manager) {
             case (null) {
               return #err(#NotFound);
             };
             case (?foundManager) {
-              
+              logStatus("Backend: Found manager " # foundManager.principalId # " from canister " # foundCanisterId # " with " # Nat.toText(List.size(foundManager.history)) # " seasons.");
+
               for (managerSeason in Iter.fromList(foundManager.history)) {
 
-
-
-                switch(recordSystemEvent){
-                  case (?foundFunction){
-                    foundFunction({
-                        eventDetail = "Backend: Found manager " # foundManager.principalId # " from canister " # foundCanisterId # " with " # Nat.toText(List.size(managerSeason.gameweeks)) # " gameweeks."; 
-                        eventId = 0;
-                        eventTime = Time.now();
-                        eventTitle = "Canister Log";
-                        eventType = #SystemCheck;
-                      });
-                  };
-                  case (null){}
-                };
-
+                logStatus("Backend: Found manager " # foundManager.principalId # " from canister " # foundCanisterId # " with " # Nat.toText(List.size(managerSeason.gameweeks)) # " gameweeks.");
+                
                 if (managerSeason.seasonId == calculationSeasonId) {
 
                   var weeklyPosition : Int = 0;
@@ -1472,6 +1440,21 @@ module {
 
     public func getUniqueManagerCanisterIds() : [T.CanisterId] {
       return List.toArray(uniqueManagerCanisterIds);
+    };
+
+    private func logStatus(message: Text){
+      switch(recordSystemEvent){
+        case (?foundFunction){
+          foundFunction({
+              eventDetail = message; 
+              eventId = 0;
+              eventTime = Time.now();
+              eventTitle = "Canister Log";
+              eventType = #SystemCheck;
+            });
+        };
+        case (null){}
+      };
     };
 
   };

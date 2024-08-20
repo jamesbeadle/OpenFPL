@@ -1520,8 +1520,7 @@
 
     private func postUpgradeCallback() : async (){
       //setupTesting();
-      
-      /*
+    
       let managerCanisterIds = seasonManager.getManagerCanisterIds();
 
       let IC : Management.Management = actor (Environment.Default);
@@ -1534,6 +1533,8 @@
         
         await IC.start_canister({ canister_id = Principal.fromText(canisterId); }); 
       };
+      
+      /*
       recordSystemEvent({
           eventDetail = "Beginning snapshot in backend"; 
           eventId = 0;
@@ -1550,7 +1551,7 @@
       //await seasonManager.putOnHold();
 
 
-      
+
       //on each update generate new hash values
       await seasonManager.updateCacheHash("clubs");
       await seasonManager.updateCacheHash("fixtures");

@@ -41,6 +41,11 @@
       if ($teamStore.length == 0) return;
       await systemStore.sync();
       manager = await managerStore.getPublicProfile(id ?? "");
+        console.log("manager");
+        console.log(manager);
+      if(!manager){
+        return;
+      }
       displayName =
         manager.username === manager.principalId ? "Unknown" : manager.username;
 
