@@ -1521,59 +1521,6 @@ import Debug "mo:base/Debug";
 
     private func postUpgradeCallback() : async (){
 
-      //Reset logs
-      stable_event_logs := [];
-      
-      //Update manager canister actor class wasms
-      let managerCanisterIds = seasonManager.getManagerCanisterIds();
-
-      let IC : Management.Management = actor (Environment.Default);
-      for(canisterId in Iter.fromArray(managerCanisterIds)){
-        
-        await IC.stop_canister({ canister_id = Principal.fromText(canisterId); }); 
-        
-        let oldManagement = actor (canisterId) : actor {};
-        let _ = await (system ManagerCanister._ManagerCanister)(#upgrade oldManagement)();
-        
-        await IC.start_canister({ canister_id = Principal.fromText(canisterId); }); 
-      };
-
-      recordSystemEvent({
-        eventDetail = "Completed updating manager class wasms."; 
-        eventId = 0;
-        eventTime = Time.now(); 
-        eventTitle = "Canister Log";
-        eventType = #SystemCheck;
-      });
-      
-      await cleanFantasyTeams();
-      
-      recordSystemEvent({
-        eventDetail = "Completed clean of fantasy teams."; 
-        eventId = 0;
-        eventTime = Time.now(); 
-        eventTitle = "Canister Log";
-        eventType = #SystemCheck;
-      });
-
-      recordSystemEvent({
-        eventDetail = "Beginning snapshotting of fantasy teams."; 
-        eventId = 0;
-        eventTime = Time.now(); 
-        eventTitle = "Canister Log";
-        eventType = #SystemCheck;
-      });
-
-      await seasonManager.snapshotFantasyTeams();
-
-      recordSystemEvent({
-        eventDetail = "Completed snapshotting of fantasy teams."; 
-        eventId = 0;
-        eventTime = Time.now(); 
-        eventTitle = "Canister Log";
-        eventType = #SystemCheck;
-      });
-      
       //on each update generate new hash values
       await seasonManager.updateCacheHash("clubs");
       await seasonManager.updateCacheHash("fixtures");
@@ -1585,21 +1532,14 @@ import Debug "mo:base/Debug";
       await seasonManager.updateCacheHash("countries");
       await seasonManager.updateCacheHash("system_state");
 
-      //await systemCheckCallback(); //TODO UPDATE THIS SO IT's more informative and delete the existing
       await cyclesCheckCallback();
       
-      /*
-    //await seasonManager.snapshotFantasyTeams();
-
-      //setupTesting();
-      
-      
-      */
-      
-
+      //await systemCheckCallback(); //TODO UPDATE THIS SO IT's more informative and delete the existing
+      //await seasonManager.snapshotFantasyTeams();
       //await seasonManager.removeDuplicatePlayer(602);
       //await seasonManager.resetManagerBonusesAvailable();
       //await seasonManager.putOnHold();
+      //setupTesting();
     };
 
     public shared ({ caller }) func logStatus (dto: DTOs.LogStatusDTO) : async (){

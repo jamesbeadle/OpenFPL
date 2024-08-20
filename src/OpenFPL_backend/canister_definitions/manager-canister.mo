@@ -2333,50 +2333,12 @@ actor class _ManagerCanister() {
 
   public func removePlayerFromTeams(playerId : T.PlayerId) : async () {
     for (index in Iter.range(0, 11)) {
-      switch (index) {
-        case 0 {
-          managerGroup1 := await removePlayerFromGroup(playerId, managerGroup1);
-        };
-        case 1 {
-          managerGroup2 := await removePlayerFromGroup(playerId, managerGroup2);
-        };
-        case 2 {
-          managerGroup3 := await removePlayerFromGroup(playerId, managerGroup3);
-        };
-        case 3 {
-          managerGroup4 := await removePlayerFromGroup(playerId, managerGroup4);
-        };
-        case 4 {
-          managerGroup5 := await removePlayerFromGroup(playerId, managerGroup5);
-        };
-        case 5 {
-          managerGroup6 := await removePlayerFromGroup(playerId, managerGroup6);
-        };
-        case 6 {
-          managerGroup7 := await removePlayerFromGroup(playerId, managerGroup7);
-        };
-        case 7 {
-          managerGroup8 := await removePlayerFromGroup(playerId, managerGroup8);
-        };
-        case 8 {
-          managerGroup9 := await removePlayerFromGroup(playerId, managerGroup9);
-        };
-        case 9 {
-          managerGroup10 := await removePlayerFromGroup(playerId, managerGroup10);
-        };
-        case 10 {
-          managerGroup11 := await removePlayerFromGroup(playerId, managerGroup11);
-        };
-        case 11 {
-          managerGroup12 := await removePlayerFromGroup(playerId, managerGroup12);
-        };
-        case _ {};
-      };
+      await removePlayerFromGroup(playerId, index);
     };
 
   };
 
-  private func removePlayerFromGroup(removePlayerId : T.PlayerId, managers : [T.Manager]) : async [T.Manager] {
+  private func removePlayerFromGroup(removePlayerId : T.PlayerId, managerGroup: Int) : async () {
 
     let openfpl_backend_canister = actor (Environment.BACKEND_CANISTER_ID) : actor {
         getAllPlayers : () -> async [DTOs.PlayerDTO];
@@ -2390,6 +2352,52 @@ actor class _ManagerCanister() {
       case (?foundRemovedPlayer) {
         let playerValue = foundRemovedPlayer.valueQuarterMillions;
         let managerBuffer = Buffer.fromArray<T.Manager>([]);
+        
+            
+        var managers: [T.Manager] = [];
+
+        switch (managerGroup) {
+          case 0 {
+            managers := managerGroup1;
+          };
+          case 1 {
+            managers := managerGroup2;
+          };
+          case 2 {
+            managers := managerGroup3;
+          };
+          case 3 {
+            managers := managerGroup4;
+          };
+          case 4 {
+            managers := managerGroup5;
+          };
+          case 5 {
+            managers := managerGroup6;
+          };
+          case 6 {
+            managers := managerGroup7;
+          };
+          case 7 {
+            managers := managerGroup8;
+          };
+          case 8 {
+            managers := managerGroup9;
+          };
+          case 9 {
+            managers := managerGroup10;
+          };
+          case 10 {
+            managers := managerGroup11;
+          };
+          case 11 {
+            managers := managerGroup12;
+          };
+          case _ {
+
+          };
+        };
+        
         for (manager in Iter.fromArray(managers)) {
           let playerIdBuffer = Buffer.fromArray<T.PlayerId>([]);
           var playerRemoved = false;
@@ -2475,11 +2483,51 @@ actor class _ManagerCanister() {
             managerBuffer.add(manager);
           };
         };
-        return Buffer.toArray(managerBuffer);
+            
+
+        switch (managerGroup) {
+          case 0 {
+            managerGroup1 := Buffer.toArray(managerBuffer);
+          };
+          case 1 {
+            managerGroup2 := Buffer.toArray(managerBuffer);
+          };
+          case 2 {
+            managerGroup3 := Buffer.toArray(managerBuffer);
+          };
+          case 3 {
+            managerGroup4 := Buffer.toArray(managerBuffer);
+          };
+          case 4 {
+            managerGroup5 := Buffer.toArray(managerBuffer);
+          };
+          case 5 {
+            managerGroup6 := Buffer.toArray(managerBuffer);
+          };
+          case 6 {
+            managerGroup7 := Buffer.toArray(managerBuffer);
+          };
+          case 7 {
+            managerGroup8 := Buffer.toArray(managerBuffer);
+          };
+          case 8 {
+            managerGroup9 := Buffer.toArray(managerBuffer);
+          };
+          case 9 {
+            managerGroup10 := Buffer.toArray(managerBuffer);
+          };
+          case 10 {
+            managerGroup11 := Buffer.toArray(managerBuffer);
+          };
+          case 11 {
+            managerGroup12 := Buffer.toArray(managerBuffer);
+          };
+          case _ {
+
+          };
+        };
       };
     };
-
-    return managers;
   };
 
   public shared ({ caller }) func calculateFantasyTeamScores(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) : async () {
@@ -2686,84 +2734,11 @@ actor class _ManagerCanister() {
 
 
     for (index in Iter.range(0, 11)) {
-      switch (index) {
-        case 0 {
-          await logStatus("Snapshotting managers in manager group 1.");
-          let updatedManagers = await snapshotManagers(managerGroup1, seasonId, gameweek, month); 
-
-          for(manager in Iter.fromArray(updatedManagers)){
-            if(manager.principalId == "opyzn-r7zln-jwgvb-tx75c-ncekh-xhvje-epcj7-saonq-z732m-zi4mm-qae"){
-
-              await logStatus("Manager " # manager.principalId # " has " # Nat.toText(List.size(manager.history)) # " seasons in their profile.");
-            }
-          };
-
-          managerGroup1 := updatedManagers;
-          //await updatePrivateLeagues(managerGroup1);
-        };
-        case 1 {
-          await logStatus("Snapshotting managers in manager group 2.");
-          managerGroup2 := await snapshotManagers(managerGroup2, seasonId, gameweek, month);
-          //await updatePrivateLeagues(managerGroup2);
-        };
-        case 2 {
-          await logStatus("Snapshotting managers in manager group 3.");
-          managerGroup3 := await snapshotManagers(managerGroup3, seasonId, gameweek, month);
-          //await updatePrivateLeagues(managerGroup3);
-        };
-        case 3 {
-          await logStatus("Snapshotting managers in manager group 4.");
-          managerGroup4 := await snapshotManagers(managerGroup4, seasonId, gameweek, month);
-          //await updatePrivateLeagues(managerGroup4);
-        };
-        case 4 {
-          await logStatus("Snapshotting managers in manager group 5.");
-          managerGroup5 := await snapshotManagers(managerGroup5, seasonId, gameweek, month);
-          //await updatePrivateLeagues(managerGroup5);
-        };
-        case 5 {
-          await logStatus("Snapshotting managers in manager group 6.");
-          managerGroup6 := await snapshotManagers(managerGroup6, seasonId, gameweek, month);
-          //await updatePrivateLeagues(managerGroup6);
-        };
-        case 6 {
-          await logStatus("Snapshotting managers in manager group 7.");
-          managerGroup7 := await snapshotManagers(managerGroup7, seasonId, gameweek, month);
-          //await updatePrivateLeagues(managerGroup7);
-        };
-        case 7 {
-          await logStatus("Snapshotting managers in manager group 8.");
-          managerGroup8 := await snapshotManagers(managerGroup8, seasonId, gameweek, month);
-          //await updatePrivateLeagues(managerGroup8);
-        };
-        case 8 {
-          await logStatus("Snapshotting managers in manager group 9.");
-          managerGroup9 := await snapshotManagers(managerGroup9, seasonId, gameweek, month);
-          //await updatePrivateLeagues(managerGroup9);
-        };
-        case 9 {
-          await logStatus("Snapshotting managers in manager group 10.");
-          managerGroup10 := await snapshotManagers(managerGroup10, seasonId, gameweek, month);
-          //await updatePrivateLeagues(managerGroup10);
-        };
-        case 10 {
-          await logStatus("Snapshotting managers in manager group 11.");
-          managerGroup11 := await snapshotManagers(managerGroup11, seasonId, gameweek, month);
-          //await updatePrivateLeagues(managerGroup11);
-        };
-        case 11 {
-          await logStatus("Snapshotting managers in manager group 12.");
-          managerGroup12 := await snapshotManagers(managerGroup12, seasonId, gameweek, month);
-          //await updatePrivateLeagues(managerGroup12);
-        };
-        case _ {
-          await logStatus("Hit unreachable code 1.");
-        };
-      };
+      await snapshotManagers(index, seasonId, gameweek, month); 
     };
   };
 
-  private func snapshotManagers(managers : [T.Manager], seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) : async [T.Manager] {
+  private func snapshotManagers(managerGroup: Int, seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) : async () {
     
     let openfpl_backend_canister = actor (Environment.BACKEND_CANISTER_ID) : actor {
       getAllPlayers : () -> async [DTOs.PlayerDTO];
@@ -2772,6 +2747,52 @@ actor class _ManagerCanister() {
     let players : [DTOs.PlayerDTO] = await openfpl_backend_canister.getAllPlayers();
    
     let managerBuffer = Buffer.fromArray<T.Manager>([]);
+
+
+    var managers: [T.Manager] = [];
+
+    switch (managerGroup) {
+      case 0 {
+        managers := managerGroup1;
+      };
+      case 1 {
+        managers := managerGroup2;
+      };
+      case 2 {
+        managers := managerGroup3;
+      };
+      case 3 {
+        managers := managerGroup4;
+      };
+      case 4 {
+        managers := managerGroup5;
+      };
+      case 5 {
+        managers := managerGroup6;
+      };
+      case 6 {
+        managers := managerGroup7;
+      };
+      case 7 {
+        managers := managerGroup8;
+      };
+      case 8 {
+        managers := managerGroup9;
+      };
+      case 9 {
+        managers := managerGroup10;
+      };
+      case 10 {
+        managers := managerGroup11;
+      };
+      case 11 {
+        managers := managerGroup12;
+      };
+      case _ {
+
+      };
+    };
+
     await logStatus("Snapshotting a total of " # Nat.toText(Array.size(managers)) # " managers.");
     for (manager in Iter.fromArray(managers)) {
 
@@ -2941,7 +2962,48 @@ actor class _ManagerCanister() {
       };
       managerBuffer.add(updatedManager);
     };
-    return Buffer.toArray(managerBuffer);
+    
+    switch (managerGroup) {
+      case 0 {
+        managerGroup1 := Buffer.toArray(managerBuffer);
+      };
+      case 1 {
+        managerGroup2 := Buffer.toArray(managerBuffer);
+      };
+      case 2 {
+        managerGroup3 := Buffer.toArray(managerBuffer);
+      };
+      case 3 {
+        managerGroup4 := Buffer.toArray(managerBuffer);
+      };
+      case 4 {
+        managerGroup5 := Buffer.toArray(managerBuffer);
+      };
+      case 5 {
+        managerGroup6 := Buffer.toArray(managerBuffer);
+      };
+      case 6 {
+        managerGroup7 := Buffer.toArray(managerBuffer);
+      };
+      case 7 {
+        managerGroup8 := Buffer.toArray(managerBuffer);
+      };
+      case 8 {
+        managerGroup9 := Buffer.toArray(managerBuffer);
+      };
+      case 9 {
+        managerGroup10 := Buffer.toArray(managerBuffer);
+      };
+      case 10 {
+        managerGroup11 := Buffer.toArray(managerBuffer);
+      };
+      case 11 {
+        managerGroup12 := Buffer.toArray(managerBuffer);
+      };
+      case _ {
+
+      };
+    };
   };
 
   private func updatePrivateLeagues(managers: [T.Manager]) : async () {
@@ -3622,53 +3684,57 @@ actor class _ManagerCanister() {
     };
 
     for (index in Iter.range(0, 11)) {
-      switch (index) {
-        case 0 {
-          managerGroup1 := await cleanManagerTeams(managerGroup1, allPlayers);
-        };
-        case 1 {
-          managerGroup2 := await cleanManagerTeams(managerGroup2, allPlayers);
-        };
-        case 2 {
-          managerGroup3 := await cleanManagerTeams(managerGroup3, allPlayers);
-        };
-        case 3 {
-          managerGroup4 := await cleanManagerTeams(managerGroup4, allPlayers);
-        };
-        case 4 {
-          managerGroup5 := await cleanManagerTeams(managerGroup5, allPlayers);
-        };
-        case 5 {
-          managerGroup6 := await cleanManagerTeams(managerGroup6, allPlayers);
-        };
-        case 6 {
-          managerGroup7 := await cleanManagerTeams(managerGroup7, allPlayers);
-        };
-        case 7 {
-          managerGroup8 := await cleanManagerTeams(managerGroup8, allPlayers);
-        };
-        case 8 {
-          managerGroup9 := await cleanManagerTeams(managerGroup9, allPlayers);
-        };
-        case 9 {
-          managerGroup10 := await cleanManagerTeams(managerGroup10, allPlayers);
-        };
-        case 10 {
-          managerGroup11 := await cleanManagerTeams(managerGroup11, allPlayers);
-        };
-        case 11 {
-          managerGroup12 := await cleanManagerTeams(managerGroup12, allPlayers);
-        };
-        case _ {
-
-        };
-      };
+      await cleanManagerTeams(index, allPlayers);
     };
   };
 
 
-  private func cleanManagerTeams(managers : [T.Manager], allPlayers : [DTOs.PlayerDTO]) : async [T.Manager] {
+  private func cleanManagerTeams(managerGroup: Int, allPlayers : [DTOs.PlayerDTO]) : async () {
     let managerBuffer = Buffer.fromArray<T.Manager>([]);
+
+    var managers: [T.Manager] = [];
+
+    switch (managerGroup) {
+      case 0 {
+        managers := managerGroup1;
+      };
+      case 1 {
+        managers := managerGroup2;
+      };
+      case 2 {
+        managers := managerGroup3;
+      };
+      case 3 {
+        managers := managerGroup4;
+      };
+      case 4 {
+        managers := managerGroup5;
+      };
+      case 5 {
+        managers := managerGroup6;
+      };
+      case 6 {
+        managers := managerGroup7;
+      };
+      case 7 {
+        managers := managerGroup8;
+      };
+      case 8 {
+        managers := managerGroup9;
+      };
+      case 9 {
+        managers := managerGroup10;
+      };
+      case 10 {
+        managers := managerGroup11;
+      };
+      case 11 {
+        managers := managerGroup12;
+      };
+      case _ {
+
+      };
+    };
 
     await logStatus("Cleaning " # Nat.toText(Array.size(managers)) # " teams.");
     for (manager in Iter.fromArray(managers)) {
@@ -3742,7 +3808,8 @@ actor class _ManagerCanister() {
         arrstr := arrstr # Nat16.toText(id) # ",";
       };
       
-      await logStatus("Team value for " # manager.principalId # "is " # Nat16.toText(currentTeamValue) # ", " # arrstr);
+
+      //await logStatus("Team value for " # manager.principalId # "is " # Nat16.toText(currentTeamValue) # ", " # arrstr);
       if(currentTeamValue > 1200){
         await logStatus("Team " # manager.principalId # " has a team over 300m.");
       };
@@ -3757,7 +3824,7 @@ actor class _ManagerCanister() {
         updatedPlayerIds := [];
         bankBalance := 1200;
       };
-        await logStatus("Adding updated " # manager.principalId # " to manager array.");
+      //await logStatus("Adding updated " # manager.principalId # " to manager array.");
       
       let updatedManager : T.Manager = {
         principalId = manager.principalId;
@@ -3797,7 +3864,48 @@ actor class _ManagerCanister() {
       managerBuffer.add(updatedManager);
     };
         
-    await logStatus("All snapshots have been taken and the function is returning ." # Nat.toText(Array.size(Buffer.toArray(managerBuffer))));
-    return Buffer.toArray(managerBuffer);
+    await logStatus("All managers have been cleaned, total: " # Nat.toText(Array.size(Buffer.toArray(managerBuffer))));
+    
+    switch (managerGroup) {
+      case 0 {
+        managerGroup1 := Buffer.toArray(managerBuffer);
+      };
+      case 1 {
+        managerGroup2 := Buffer.toArray(managerBuffer);
+      };
+      case 2 {
+        managerGroup3 := Buffer.toArray(managerBuffer);
+      };
+      case 3 {
+        managerGroup4 := Buffer.toArray(managerBuffer);
+      };
+      case 4 {
+        managerGroup5 := Buffer.toArray(managerBuffer);
+      };
+      case 5 {
+        managerGroup6 := Buffer.toArray(managerBuffer);
+      };
+      case 6 {
+        managerGroup7 := Buffer.toArray(managerBuffer);
+      };
+      case 7 {
+        managerGroup8 := Buffer.toArray(managerBuffer);
+      };
+      case 8 {
+        managerGroup9 := Buffer.toArray(managerBuffer);
+      };
+      case 9 {
+        managerGroup10 := Buffer.toArray(managerBuffer);
+      };
+      case 10 {
+        managerGroup11 := Buffer.toArray(managerBuffer);
+      };
+      case 11 {
+        managerGroup12 := Buffer.toArray(managerBuffer);
+      };
+      case _ {
+
+      };
+    };
   };
 };
