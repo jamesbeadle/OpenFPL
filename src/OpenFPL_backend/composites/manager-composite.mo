@@ -1460,12 +1460,14 @@ module {
     };
 
     public func cleanFantasyTeams() : async (){
-        for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
+      for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
         let manager_canister = actor (canisterId) : actor {
           cleanFantasyTeams : () -> async ();
         };
 
         await manager_canister.cleanFantasyTeams();
+
+        logStatus("Clean fantasy teams end from manager composite.");
       };
     };
 

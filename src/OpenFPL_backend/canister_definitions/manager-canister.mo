@@ -3671,9 +3671,8 @@ actor class _ManagerCanister() {
   private func cleanManagerTeams(managers : [T.Manager], allPlayers : [DTOs.PlayerDTO]) : async [T.Manager] {
     let managerBuffer = Buffer.fromArray<T.Manager>([]);
 
-
+    await logStatus("Cleaning " # Nat.toText(Array.size(managers)) # " teams.");
     for (manager in Iter.fromArray(managers)) {
-      
       var captainRemoved = false;
       let playerIdBuffer = Buffer.fromArray<T.PlayerId>([]);
       for (playerId in Iter.fromArray(manager.playerIds)) {
@@ -3738,7 +3737,13 @@ actor class _ManagerCanister() {
       let allPlayerValues = Array.map<DTOs.PlayerDTO, Nat16>(allTeamPlayers, func (player: DTOs.PlayerDTO) : Nat16 { return player.valueQuarterMillions; });
 
       let currentTeamValue = Array.foldLeft<Nat16, Nat16>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
+
+      var arrstr = "";
+      for(id in Iter.fromArray(manager.playerIds)){
+        arrstr := arrstr # Nat16.toText(id) # ",";
+      };
       
+      await logStatus("Team value for " # manager.principalId # "is " # Nat16.toText(currentTeamValue) # ", " # arrstr);
       if(currentTeamValue > 1200){
         await logStatus("Team " # manager.principalId # " has a team over 300m.");
       };
@@ -3753,7 +3758,8 @@ actor class _ManagerCanister() {
         updatedPlayerIds := [];
         bankBalance := 1200;
       };
-
+        await logStatus("Adding updated " # manager.principalId # " to manager array.");
+      
       let updatedManager : T.Manager = {
         principalId = manager.principalId;
         username = manager.username;
@@ -3791,6 +3797,8 @@ actor class _ManagerCanister() {
       };
       managerBuffer.add(updatedManager);
     };
+        
+    await logStatus("All snapshots have been taken and the function is returning ." # Nat.toText(Array.size(Buffer.toArray(managerBuffer))));
     return Buffer.toArray(managerBuffer);
   };
 };

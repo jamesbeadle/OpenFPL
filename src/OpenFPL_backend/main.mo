@@ -1548,9 +1548,8 @@ import Debug "mo:base/Debug";
       
       await cleanFantasyTeams();
       
-
       recordSystemEvent({
-        eventDetail = "Begin update manager actor class wasm."; 
+        eventDetail = "Completed clean of fantasy teams."; 
         eventId = 0;
         eventTime = Time.now(); 
         eventTitle = "Canister Log";
