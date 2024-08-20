@@ -1519,38 +1519,8 @@
     };
 
     private func postUpgradeCallback() : async (){
-      //setupTesting();
-    
-      let managerCanisterIds = seasonManager.getManagerCanisterIds();
-
-      let IC : Management.Management = actor (Environment.Default);
-      for(canisterId in Iter.fromArray(managerCanisterIds)){
-        
-        await IC.stop_canister({ canister_id = Principal.fromText(canisterId); }); 
-        
-        let oldManagement = actor (canisterId) : actor {};
-        let _ = await (system ManagerCanister._ManagerCanister)(#upgrade oldManagement)();
-        
-        await IC.start_canister({ canister_id = Principal.fromText(canisterId); }); 
-      };
       
-      /*
-      recordSystemEvent({
-          eventDetail = "Beginning snapshot in backend"; 
-          eventId = 0;
-          eventTime = Time.now();
-          eventTitle = "Canister Log";
-          eventType = #SystemCheck;
-        });
       await seasonManager.snapshotFantasyTeams();
-      */
-      
-
-      //await seasonManager.removeDuplicatePlayer(602);
-      //await seasonManager.resetManagerBonusesAvailable();
-      //await seasonManager.putOnHold();
-
-
 
       //on each update generate new hash values
       await seasonManager.updateCacheHash("clubs");
@@ -1565,6 +1535,35 @@
 
       //await systemCheckCallback(); //TODO UPDATE THIS SO IT's more informative and delete the existing
       await cyclesCheckCallback();
+      
+      /*
+    
+      //setupTesting();
+      let managerCanisterIds = seasonManager.getManagerCanisterIds();
+
+      let IC : Management.Management = actor (Environment.Default);
+      for(canisterId in Iter.fromArray(managerCanisterIds)){
+        
+        await IC.stop_canister({ canister_id = Principal.fromText(canisterId); }); 
+        
+        let oldManagement = actor (canisterId) : actor {};
+        let _ = await (system ManagerCanister._ManagerCanister)(#upgrade oldManagement)();
+        
+        await IC.start_canister({ canister_id = Principal.fromText(canisterId); }); 
+      };
+      recordSystemEvent({
+          eventDetail = "Beginning snapshot in backend"; 
+          eventId = 0;
+          eventTime = Time.now(); 
+          eventTitle = "Canister Log";
+          eventType = #SystemCheck;
+        });
+      */
+      
+
+      //await seasonManager.removeDuplicatePlayer(602);
+      //await seasonManager.resetManagerBonusesAvailable();
+      //await seasonManager.putOnHold();
     };
 
     public shared ({ caller }) func logStatus (dto: DTOs.LogStatusDTO) : async (){
