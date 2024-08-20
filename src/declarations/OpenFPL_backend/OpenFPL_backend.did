@@ -955,6 +955,7 @@ service : {
   executeUpdatePlayer: (UpdatePlayerDTO) -> ();
   getActiveManagerCanisterId: () -> (CanisterId);
   getActivePlayers: () -> (vec PlayerDTO);
+  getAllPlayers: () -> (vec PlayerDTO);
   getBackendCanisterBalance: () -> (Result_3);
   getCanisterCyclesAvailable: () -> (nat);
   getCanisterCyclesBalance: () -> (Result_3);

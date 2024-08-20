@@ -3515,7 +3515,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "cfff7i"
+  version_hash: "188gofq"
 };
 async function get_hooks() {
   return {};
@@ -4492,6 +4492,7 @@ const idlFactory = ({ IDL }) => {
     "executeUpdatePlayer": IDL.Func([UpdatePlayerDTO], [], []),
     "getActiveManagerCanisterId": IDL.Func([], [CanisterId], []),
     "getActivePlayers": IDL.Func([], [IDL.Vec(PlayerDTO)], []),
+    "getAllPlayers": IDL.Func([], [IDL.Vec(PlayerDTO)], []),
     "getBackendCanisterBalance": IDL.Func([], [Result_3], []),
     "getCanisterCyclesAvailable": IDL.Func([], [IDL.Nat], []),
     "getCanisterCyclesBalance": IDL.Func([], [Result_3], []),

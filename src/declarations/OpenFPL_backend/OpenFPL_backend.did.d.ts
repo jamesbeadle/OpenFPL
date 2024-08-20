@@ -747,6 +747,7 @@ export interface _SERVICE {
   'executeUpdatePlayer' : ActorMethod<[UpdatePlayerDTO], undefined>,
   'getActiveManagerCanisterId' : ActorMethod<[], CanisterId>,
   'getActivePlayers' : ActorMethod<[], Array<PlayerDTO>>,
+  'getAllPlayers' : ActorMethod<[], Array<PlayerDTO>>,
   'getBackendCanisterBalance' : ActorMethod<[], Result_3>,
   'getCanisterCyclesAvailable' : ActorMethod<[], bigint>,
   'getCanisterCyclesBalance' : ActorMethod<[], Result_3>,

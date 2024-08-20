@@ -2376,10 +2376,10 @@ actor class _ManagerCanister() {
   private func removePlayerFromGroup(removePlayerId : T.PlayerId, managers : [T.Manager]) : async [T.Manager] {
 
     let openfpl_backend_canister = actor (Environment.BACKEND_CANISTER_ID) : actor {
-        getActivePlayers : () -> async [DTOs.PlayerDTO];
+        getAllPlayers : () -> async [DTOs.PlayerDTO];
       };
       
-    let allPlayers : [DTOs.PlayerDTO] = await openfpl_backend_canister.getActivePlayers();
+    let allPlayers : [DTOs.PlayerDTO] = await openfpl_backend_canister.getAllPlayers();
     let removedPlayer = Array.find<DTOs.PlayerDTO>(allPlayers, func(p) { p.id == removePlayerId });
 
     switch (removedPlayer) {
@@ -2630,10 +2630,10 @@ actor class _ManagerCanister() {
 
 
                 let openfpl_backend_canister = actor (Environment.BACKEND_CANISTER_ID) : actor {
-                    getActivePlayers : () -> async [DTOs.PlayerDTO];
+                    getAllPlayers : () -> async [DTOs.PlayerDTO];
                   };
                   
-                let allPlayers : [DTOs.PlayerDTO] = await openfpl_backend_canister.getActivePlayers();
+                let allPlayers : [DTOs.PlayerDTO] = await openfpl_backend_canister.getAllPlayers();
 
                 let allPlayerValues = Array.map<DTOs.PlayerDTO, Nat16>(allPlayers, func(player : DTOs.PlayerDTO) : Nat16 { return player.valueQuarterMillions });
 
@@ -2742,10 +2742,10 @@ actor class _ManagerCanister() {
     
     await logStatus("Snapshotting manager chunk.");
     let openfpl_backend_canister = actor (Environment.BACKEND_CANISTER_ID) : actor {
-      getActivePlayers : () -> async [DTOs.PlayerDTO];
+      getAllPlayers : () -> async [DTOs.PlayerDTO];
     };
       
-    let players : [DTOs.PlayerDTO] = await openfpl_backend_canister.getActivePlayers();
+    let players : [DTOs.PlayerDTO] = await openfpl_backend_canister.getAllPlayers();
    
     await logStatus("Fetched a total of " # Nat.toText(Array.size(players)) # " players.");
     let managerBuffer = Buffer.fromArray<T.Manager>([]);
@@ -3426,10 +3426,10 @@ actor class _ManagerCanister() {
 
 
     let openfpl_backend_canister = actor (Environment.BACKEND_CANISTER_ID) : actor {
-        getActivePlayers : () -> async [DTOs.PlayerDTO];
+        getAllPlayers : () -> async [DTOs.PlayerDTO];
       };
       
-    let players : [DTOs.PlayerDTO] = await openfpl_backend_canister.getActivePlayers();
+    let players : [DTOs.PlayerDTO] = await openfpl_backend_canister.getAllPlayers();
 
     let allFinalGameweekSnapshots = await getGameweek38Snapshots(seasonId);
 

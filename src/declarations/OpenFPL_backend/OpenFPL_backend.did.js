@@ -768,6 +768,7 @@ export const idlFactory = ({ IDL }) => {
     'executeUpdatePlayer' : IDL.Func([UpdatePlayerDTO], [], []),
     'getActiveManagerCanisterId' : IDL.Func([], [CanisterId], []),
     'getActivePlayers' : IDL.Func([], [IDL.Vec(PlayerDTO)], []),
+    'getAllPlayers' : IDL.Func([], [IDL.Vec(PlayerDTO)], []),
     'getBackendCanisterBalance' : IDL.Func([], [Result_3], []),
     'getCanisterCyclesAvailable' : IDL.Func([], [IDL.Nat], []),
     'getCanisterCyclesBalance' : IDL.Func([], [Result_3], []),

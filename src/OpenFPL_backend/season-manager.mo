@@ -178,6 +178,10 @@ module {
       return playerComposite.getActivePlayers(systemState.calculationSeasonId, clubs);
     };
 
+    public func getAllPlayers() : [DTOs.PlayerDTO] {
+      return playerComposite.getAllPlayers(systemState.calculationSeasonId);
+    };
+
     public func getLoanedPlayers(dto: DTOs.ClubFilterDTO) : [DTOs.PlayerDTO] {
       return playerComposite.getLoanedPlayers(dto);
     };
