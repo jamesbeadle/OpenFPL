@@ -3682,7 +3682,6 @@ actor class _ManagerCanister() {
     };
   };
 
-
   private func cleanManagerTeams(managerGroup: Int, allPlayers : [DTOs.PlayerDTO]) : async () {
     let managerBuffer = Buffer.fromArray<T.Manager>([]);
 
@@ -3859,6 +3858,171 @@ actor class _ManagerCanister() {
     };
         
     await logStatus("All managers have been cleaned, total: " # Nat.toText(Array.size(Buffer.toArray(managerBuffer))));
+    
+    switch (managerGroup) {
+      case 0 {
+        managerGroup1 := Buffer.toArray(managerBuffer);
+      };
+      case 1 {
+        managerGroup2 := Buffer.toArray(managerBuffer);
+      };
+      case 2 {
+        managerGroup3 := Buffer.toArray(managerBuffer);
+      };
+      case 3 {
+        managerGroup4 := Buffer.toArray(managerBuffer);
+      };
+      case 4 {
+        managerGroup5 := Buffer.toArray(managerBuffer);
+      };
+      case 5 {
+        managerGroup6 := Buffer.toArray(managerBuffer);
+      };
+      case 6 {
+        managerGroup7 := Buffer.toArray(managerBuffer);
+      };
+      case 7 {
+        managerGroup8 := Buffer.toArray(managerBuffer);
+      };
+      case 8 {
+        managerGroup9 := Buffer.toArray(managerBuffer);
+      };
+      case 9 {
+        managerGroup10 := Buffer.toArray(managerBuffer);
+      };
+      case 10 {
+        managerGroup11 := Buffer.toArray(managerBuffer);
+      };
+      case 11 {
+        managerGroup12 := Buffer.toArray(managerBuffer);
+      };
+      case _ {
+
+      };
+    };
+  };
+
+  public shared ({ caller }) func removeDuplicatedGameweeks() : async () {
+
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == Environment.BACKEND_CANISTER_ID;
+
+    for (index in Iter.range(0, 11)) {
+      await removeManagerGameweekDuplicates(index);
+    };
+  };
+
+  private func removeManagerGameweekDuplicates(managerGroup: Int) : async () {
+    let managerBuffer = Buffer.fromArray<T.Manager>([]);
+
+    var managers: [T.Manager] = [];
+
+    switch (managerGroup) {
+      case 0 {
+        managers := managerGroup1;
+      };
+      case 1 {
+        managers := managerGroup2;
+      };
+      case 2 {
+        managers := managerGroup3;
+      };
+      case 3 {
+        managers := managerGroup4;
+      };
+      case 4 {
+        managers := managerGroup5;
+      };
+      case 5 {
+        managers := managerGroup6;
+      };
+      case 6 {
+        managers := managerGroup7;
+      };
+      case 7 {
+        managers := managerGroup8;
+      };
+      case 8 {
+        managers := managerGroup9;
+      };
+      case 9 {
+        managers := managerGroup10;
+      };
+      case 10 {
+        managers := managerGroup11;
+      };
+      case 11 {
+        managers := managerGroup12;
+      };
+      case _ {
+
+      };
+    };
+
+    await logStatus("Removing duplicate gameweeks from " # Nat.toText(Array.size(managers)) # " teams.");
+    
+    for (manager in Iter.fromArray(managers)) {
+      
+      let updatedSeasonBuffer = Buffer.fromArray<T.FantasyTeamSeason>([]);
+      
+      for(season in Iter.fromList(manager.history)){
+        let updatedGameweeksBuffer = Buffer.fromArray<T.FantasyTeamSnapshot>([]);
+        for(gameweek in Iter.fromList(season.gameweeks)){
+          let alreadyAdded = Array.find<T.FantasyTeamSnapshot>(Buffer.toArray(updatedGameweeksBuffer), func(existingGameweek: T.FantasyTeamSnapshot){
+            existingGameweek.gameweek == gameweek.gameweek
+          }) != null;
+
+          if(not alreadyAdded){
+            updatedGameweeksBuffer.add(gameweek);
+          };
+        };
+        updatedSeasonBuffer.add({
+          seasonId = season.seasonId;
+          totalPoints = season.totalPoints;
+          gameweeks = List.fromArray(Buffer.toArray(updatedGameweeksBuffer));
+        });
+      };
+
+      let updatedManager : T.Manager = {
+        principalId = manager.principalId;
+        username = manager.username;
+        termsAccepted = manager.termsAccepted;
+        favouriteClubId = manager.favouriteClubId;
+        createDate = manager.createDate;
+        history = List.fromArray(Buffer.toArray(updatedSeasonBuffer));
+        profilePicture = manager.profilePicture;
+        profilePictureType = manager.profilePictureType;
+        transfersAvailable = manager.transfersAvailable;
+        monthlyBonusesAvailable = manager.monthlyBonusesAvailable;
+        bankQuarterMillions = manager.bankQuarterMillions;
+        playerIds = manager.playerIds;
+        captainId = manager.captainId;
+        goalGetterGameweek = manager.goalGetterGameweek;
+        goalGetterPlayerId = manager.goalGetterPlayerId;
+        passMasterGameweek = manager.passMasterGameweek;
+        passMasterPlayerId = manager.passMasterPlayerId;
+        noEntryGameweek = manager.noEntryGameweek;
+        noEntryPlayerId = manager.noEntryPlayerId;
+        teamBoostGameweek = manager.teamBoostGameweek;
+        teamBoostClubId = manager.teamBoostClubId;
+        safeHandsGameweek = manager.safeHandsGameweek;
+        safeHandsPlayerId = manager.safeHandsPlayerId;
+        captainFantasticGameweek = manager.captainFantasticGameweek;
+        captainFantasticPlayerId = manager.captainFantasticPlayerId;
+        countrymenGameweek = manager.countrymenGameweek;
+        countrymenCountryId = manager.countrymenCountryId;
+        prospectsGameweek = manager.prospectsGameweek;
+        braceBonusGameweek = manager.braceBonusGameweek;
+        hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
+        transferWindowGameweek = manager.transferWindowGameweek;
+        ownedPrivateLeagues = manager.ownedPrivateLeagues;
+        privateLeagueMemberships = manager.privateLeagueMemberships;
+      };
+      managerBuffer.add(updatedManager);
+    };
+        
+    await logStatus("All managers duplicates have been removed, total: " # Nat.toText(Array.size(Buffer.toArray(managerBuffer))));
     
     switch (managerGroup) {
       case 0 {

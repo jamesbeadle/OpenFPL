@@ -1521,6 +1521,8 @@ import Debug "mo:base/Debug";
 
     private func postUpgradeCallback() : async (){
 
+      await seasonManager.removeDuplicatedGameweeks();
+
       //TODO: Remove duplicate gameweek
       //await seasonManager.removeOnHold();
       //on each update generate new hash values

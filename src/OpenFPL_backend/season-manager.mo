@@ -1473,6 +1473,10 @@ module {
       await managerComposite.cleanFantasyTeams();
     };
 
+    public func removeDuplicatedGameweeks() : async (){
+      await managerComposite.removeDuplicatedGameweeks();
+    };
+
     public func setupTesting() {
 
       //set the system state
