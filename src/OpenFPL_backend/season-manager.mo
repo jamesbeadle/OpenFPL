@@ -1443,6 +1443,22 @@ module {
       await updateCacheHash("system_state");
     };
 
+    public func removeOnHold() : async (){
+      let updatedSystemState : T.SystemState = {
+        calculationGameweek = systemState.calculationGameweek;
+        calculationMonth = systemState.calculationMonth;
+        calculationSeasonId = systemState.calculationSeasonId;
+        pickTeamGameweek = systemState.pickTeamGameweek;
+        pickTeamSeasonId = systemState.pickTeamSeasonId;
+        transferWindowActive = systemState.transferWindowActive;
+        seasonActive = systemState.seasonActive;
+        onHold = false;
+      };
+
+      systemState := updatedSystemState;
+      await updateCacheHash("system_state");
+    };
+
     public func snapshotFantasyTeams() : async (){
       await managerComposite.snapshotFantasyTeams(1,1,8);
     };

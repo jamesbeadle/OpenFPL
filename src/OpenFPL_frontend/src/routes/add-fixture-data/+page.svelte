@@ -39,12 +39,12 @@
   let showClearDraftModal = false;
   let showConfirmDataModal = false;
 
-  let teamPlayers = writable<PlayerDTO[] | []>([]);
-  let selectedPlayers = writable<PlayerDTO[] | []>([]);
+  let teamPlayers = writable<PlayerDTO[]>([]);
+  let selectedPlayers = writable<PlayerDTO[]>([]);
 
   let selectedTeam: ClubDTO | null = null;
   let selectedPlayer: PlayerDTO | null = null;
-  let playerEventData = writable<PlayerEventData[] | []>([]);
+  let playerEventData = writable<PlayerEventData[]>([]);
   let activeTab: string = "home";
   let homeGoalsText = "";
   let awayGoalsText = "";
@@ -160,6 +160,7 @@
 
     selectedPlayers.set(allPlayers);
     playerEventData.set(playerEvents);
+    console.log($selectedPlayers);
   }
 
   function saveDraft() {
@@ -185,7 +186,7 @@
   }
 
   function clearDraft() {
-    playerEventData = writable<PlayerEventData[] | []>([]);
+    playerEventData = writable<PlayerEventData[]>([]);
     localStorage.removeItem(`fixtureDraft_${fixtureId}`);
     toastsShow({
       text: "Draft cleared.",
@@ -199,6 +200,7 @@
     await playerStore.sync();
     selectedTeam = tab === "home" ? homeTeam : awayTeam;
     teamPlayers.set(players.filter((x) => x.clubId == selectedTeam?.id));
+    console.log($teamPlayers);
     activeTab = tab;
   }
 
@@ -529,7 +531,6 @@
     visible={showPlayerSelectionModal}
     {teamPlayers}
     {selectedTeam}
-    {selectedPlayers}
     closeModal={closeSelectPlayersModal}
   />
 {/if}

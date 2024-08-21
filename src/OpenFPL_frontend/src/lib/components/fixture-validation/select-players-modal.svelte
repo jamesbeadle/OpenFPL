@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { writable } from "svelte/store";
   import type {
     ClubDTO,
     PlayerDTO,
@@ -7,8 +6,9 @@
   import { Modal } from "@dfinity/gix-components";
   import { convertPlayerPosition, getFlagComponent } from "$lib/utils/helpers";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
+  import { writable, type Writable } from "svelte/store";
 
-  export let teamPlayers = writable<PlayerDTO[]>([]);
+  export let teamPlayers: Writable<PlayerDTO[]>;  
   export let selectedTeam: ClubDTO;
   export let selectedPlayers = writable<PlayerDTO[]>([]);
   export let visible = false;

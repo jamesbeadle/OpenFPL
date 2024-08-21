@@ -24,7 +24,7 @@
   import { countriesStore } from "$lib/stores/country-store";
     import LocalSpinner from "../local-spinner.svelte";
 
-  let gameweekPlayers = writable<GameweekData[] | []>([]);
+  let gameweekPlayers = writable<GameweekData[]>([]);
   let gameweeks = Array.from(
     { length: $systemStore?.pickTeamGameweek ?? 1 },
     (_, i) => i + 1

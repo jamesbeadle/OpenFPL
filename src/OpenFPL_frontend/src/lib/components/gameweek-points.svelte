@@ -48,7 +48,12 @@
         { length: $systemStore?.calculationGameweek ?? 1 },
         (_, i) => i + 1
       );
-      await loadGameweekPoints($authStore?.identity?.getPrincipal());
+      let principal = $authStore?.identity?.getPrincipal().toText() ?? "";
+      if(principal == ""){
+        return;
+      }
+      console.log(principal)
+      await loadGameweekPoints(principal);
     } catch (error) {
       toastsError({
         msg: { text: "Error fetching gameweek points." },
@@ -61,18 +66,26 @@
   });
 
   $: if (selectedGameweek && $authStore?.identity?.getPrincipal()) {
-    loadGameweekPoints($authStore?.identity?.getPrincipal());
+    let principal = $authStore?.identity?.getPrincipal().toText() ?? "";
+    if(principal != ""){
+      loadGameweekPoints(principal);
+    }
   }
 
-  async function loadGameweekPoints(principal: Principal | undefined | null) {
+  async function loadGameweekPoints(principal: string) {
+    console.log("Load points")
+    console.log(principal)
+    console.log(selectedGameweek)
     if (!principal) {
       return;
     }
 
     let fantasyTeam = await managerStore.getFantasyTeamForGameweek(
-      principal?.toText(),
+      principal,
       selectedGameweek
     );
+
+    console.log(fantasyTeam)
 
     if (!fantasyTeam) {
       return;
@@ -214,7 +227,7 @@
             </button>
           {/each}
         {:else}
-          <p class="w-full p-4">No data.</p>
+          <p class="w-full p-4">You have no data for the selected gameweek.</p>
         {/if}
       </div>
     </div>

@@ -1521,6 +1521,7 @@ import Debug "mo:base/Debug";
 
     private func postUpgradeCallback() : async (){
 
+      await seasonManager.removeOnHold();
       //on each update generate new hash values
       await seasonManager.updateCacheHash("clubs");
       await seasonManager.updateCacheHash("fixtures");
@@ -1538,7 +1539,6 @@ import Debug "mo:base/Debug";
       //await seasonManager.snapshotFantasyTeams();
       //await seasonManager.removeDuplicatePlayer(602);
       //await seasonManager.resetManagerBonusesAvailable();
-      //await seasonManager.putOnHold();
       //setupTesting();
     };
 

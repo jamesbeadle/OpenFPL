@@ -18,7 +18,7 @@
   } from "../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import Layout from "./Layout.svelte";
   import FixturesComponent from "$lib/components/fixtures.svelte";
-  import GamweekPointsComponents from "$lib/components/gameweek-points.svelte";
+  import GamweekPointsComponent from "$lib/components/gameweek-points.svelte";
   import LeaderboardsComponent from "$lib/components/leaderboards.svelte";
   import LeagueTableComponent from "$lib/components/league-table.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
@@ -393,7 +393,7 @@
       {#if activeTab === "fixtures"}
         <FixturesComponent />
       {:else if activeTab === "points"}
-        <GamweekPointsComponents />
+        <GamweekPointsComponent />
       {:else if activeTab === "leaderboards"}
         <LeaderboardsComponent />
       {:else if activeTab === "league-table"}

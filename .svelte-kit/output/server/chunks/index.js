@@ -3515,7 +3515,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "16pnxqs"
+  version_hash: "1jdtlqw"
 };
 async function get_hooks() {
   return {};
@@ -5870,6 +5870,8 @@ function createManagerStore() {
           console.error("Error fetching fantasy team for gameweek:");
         }
         let snapshot = result.ok;
+        console.log("Snapshot");
+        console.log(snapshot);
         localStorage.setItem(category, JSON.stringify(snapshot, replacer));
         localStorage.setItem(
           `${category}_hash`,
@@ -5879,7 +5881,7 @@ function createManagerStore() {
         return fantasyTeamData;
       } else {
         const cachedSnapshot = localStorage.getItem(category);
-        let snapshot = JSON.parse(cachedSnapshot || "undefined");
+        let snapshot = cachedSnapshot ? JSON.parse(cachedSnapshot) : null;
         return snapshot;
       }
     } catch (error) {
@@ -8750,16 +8752,19 @@ const Clear_draft_modal = create_ssr_component(($$result, $$props, $$bindings, s
 });
 const Page$f = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let fixtureId;
+  let $$unsubscribe_teamPlayers;
   let $playerEventData, $$unsubscribe_playerEventData = noop, $$subscribe_playerEventData = () => ($$unsubscribe_playerEventData(), $$unsubscribe_playerEventData = subscribe(playerEventData, ($$value) => $playerEventData = $$value), playerEventData);
+  let $selectedPlayers, $$unsubscribe_selectedPlayers;
   let $systemStore, $$unsubscribe_systemStore;
   let $$unsubscribe_teamStore;
-  let $selectedPlayers, $$unsubscribe_selectedPlayers;
   let $page, $$unsubscribe_page;
   $$unsubscribe_systemStore = subscribe(systemStore, (value) => $systemStore = value);
   $$unsubscribe_teamStore = subscribe(teamStore, (value) => value);
   $$unsubscribe_page = subscribe(page, (value) => $page = value);
   let showClearDraftModal = false;
   let showConfirmDataModal = false;
+  let teamPlayers = writable([]);
+  $$unsubscribe_teamPlayers = subscribe(teamPlayers, (value) => value);
   let selectedPlayers = writable([]);
   $$unsubscribe_selectedPlayers = subscribe(selectedPlayers, (value) => $selectedPlayers = value);
   let playerEventData = writable([]);
@@ -8807,10 +8812,11 @@ const Page$f = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   }
   fixtureId = Number($page.url.searchParams.get("id"));
   $playerEventData.length == 0 || $playerEventData.filter((x) => convertEvent(x.eventType) == 0).length != $selectedPlayers.length;
+  $$unsubscribe_teamPlayers();
   $$unsubscribe_playerEventData();
+  $$unsubscribe_selectedPlayers();
   $$unsubscribe_systemStore();
   $$unsubscribe_teamStore();
-  $$unsubscribe_selectedPlayers();
   $$unsubscribe_page();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {

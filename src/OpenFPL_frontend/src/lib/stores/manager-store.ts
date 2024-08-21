@@ -131,6 +131,8 @@ function createManagerStore() {
         }
 
         let snapshot = result.ok;
+        console.log("Snapshot");
+        console.log(snapshot);
         localStorage.setItem(category, JSON.stringify(snapshot, replacer));
         localStorage.setItem(
           `${category}_hash`,
@@ -140,7 +142,7 @@ function createManagerStore() {
         return fantasyTeamData;
       } else {
         const cachedSnapshot = localStorage.getItem(category);
-        let snapshot = JSON.parse(cachedSnapshot || "undefined");
+        let snapshot = cachedSnapshot ? JSON.parse(cachedSnapshot) : null;
         return snapshot;
       }
     } catch (error) {
