@@ -2538,9 +2538,12 @@ actor class _ManagerCanister() {
 
     let openfpl_backend_canister = actor (Environment.BACKEND_CANISTER_ID) : actor {
         getPlayerPointsMap : (seasonId: T.SeasonId, gameweek: T.GameweekNumber) -> async [(T.PlayerId, DTOs.PlayerScoreDTO)];
+        getAllPlayers : () -> async [DTOs.PlayerDTO];
       };
       
     let allPlayersList = await openfpl_backend_canister.getPlayerPointsMap(seasonId, gameweek);
+                  
+    let allPlayers : [DTOs.PlayerDTO] = await openfpl_backend_canister.getAllPlayers();
 
     let playerIdTrie : TrieMap.TrieMap<T.PlayerId, DTOs.PlayerScoreDTO> = TrieMap.TrieMap<T.PlayerId, DTOs.PlayerScoreDTO>(Utilities.eqNat16, Utilities.hashNat16);
     for (player in Iter.fromArray(allPlayersList)) {
@@ -2679,13 +2682,6 @@ actor class _ManagerCanister() {
                   };
                 };
 
-
-                let openfpl_backend_canister = actor (Environment.BACKEND_CANISTER_ID) : actor {
-                    getAllPlayers : () -> async [DTOs.PlayerDTO];
-                  };
-                  
-                let allPlayers : [DTOs.PlayerDTO] = await openfpl_backend_canister.getAllPlayers();
-
                 let allPlayerValues = Array.map<DTOs.PlayerDTO, Nat16>(allPlayers, func(player : DTOs.PlayerDTO) : Nat16 { return player.valueQuarterMillions });
 
                 let totalTeamValue = Array.foldLeft<Nat16, Nat16>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
@@ -2726,8 +2722,6 @@ actor class _ManagerCanister() {
   };
 
   public shared ({ caller }) func snapshotFantasyTeams(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) : async () {
-    
-    await logStatus("Snapshot fantasy teams called by " # Principal.toText(caller) # ".");
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == Environment.BACKEND_CANISTER_ID;

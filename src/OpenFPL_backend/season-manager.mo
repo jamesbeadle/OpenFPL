@@ -732,9 +732,7 @@ module {
         };
       };
 
-      let playerPointsMap = playerComposite.getPlayersMap({ seasonId = systemState.calculationSeasonId; gameweek = systemState.calculationGameweek });
-
-      await managerComposite.calculateFantasyTeamScores(playerPointsMap, systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
+      await managerComposite.calculateFantasyTeamScores(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
       await leaderboardComposite.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth, managerComposite.getStableUniqueManagerCanisterIds());
       
       //await privateLeaguesManager.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);

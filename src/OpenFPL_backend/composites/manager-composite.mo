@@ -1178,13 +1178,13 @@ module {
       return (sizeInKB <= 0 or sizeInKB > 500);
     };
 
-    public func calculateFantasyTeamScores(allPlayersList : [(T.PlayerId, DTOs.PlayerScoreDTO)], seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) : async () {
+    public func calculateFantasyTeamScores(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) : async () {
       for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
         let manager_canister = actor (canisterId) : actor {
-          calculateFantasyTeamScores : (allPlayersList : [(T.PlayerId, DTOs.PlayerScoreDTO)], seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) -> async ();
+          calculateFantasyTeamScores : (seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) -> async ();
         };
 
-        return await manager_canister.calculateFantasyTeamScores(allPlayersList, seasonId, gameweek, month);
+        return await manager_canister.calculateFantasyTeamScores(seasonId, gameweek, month);
       };
     };
 
