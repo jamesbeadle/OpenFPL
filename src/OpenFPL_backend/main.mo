@@ -1521,6 +1521,7 @@ import Debug "mo:base/Debug";
 
     private func postUpgradeCallback() : async (){
 
+      /* V1.5.0 postupgrade:
       recordSystemEvent({
         eventDetail = "Updating manager wasm"; 
         eventId = 0;
@@ -1580,7 +1581,6 @@ import Debug "mo:base/Debug";
 
       await seasonManager.resetManagerSnapshotPoints();
 
-      /*
       
       */
 

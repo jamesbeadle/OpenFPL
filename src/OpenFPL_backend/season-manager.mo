@@ -740,44 +740,47 @@ module {
       //await privateLeaguesManager.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
       
       seasonComposite.setFixtureToFinalised(systemState.calculationSeasonId, submitFixtureData.fixtureId);
-      let rewardPool = rewardPools.get(systemState.calculationSeasonId);
-      switch (rewardPool) {
-        case (null) {};
-        case (?foundRewardPool) {
+      
+      let gameweekComplete = seasonComposite.checkGameweekComplete(systemState);
+      let monthComplete = seasonComposite.checkMonthComplete(systemState);
+      let seasonComplete = seasonComposite.checkSeasonComplete(systemState);
+      
+      if(gameweekComplete){
+        let rewardPool = rewardPools.get(systemState.calculationSeasonId);
+        switch (rewardPool) {
+          case (null) {};
+          case (?foundRewardPool) {
 
-          let gameweekComplete = seasonComposite.checkGameweekComplete(systemState);
-          let monthComplete = seasonComposite.checkMonthComplete(systemState);
-          let seasonComplete = seasonComposite.checkSeasonComplete(systemState);
+            if(gameweekComplete){
+              await managerComposite.resetWeeklyTransfers();
+              await payWeeklyRewards(foundRewardPool);
+              //await privateLeaguesManager.payWeeklyRewards({ seasonId = systemState.calculationSeasonId; gameweek = systemState.calculationGameweek });
+              await incrementCalculationGameweek();
+              await setGameweekTimers(systemState.calculationGameweek);
+            };
 
-          if(gameweekComplete){
-            await managerComposite.resetWeeklyTransfers();
-            await payWeeklyRewards(foundRewardPool);
-            //await privateLeaguesManager.payWeeklyRewards({ seasonId = systemState.calculationSeasonId; gameweek = systemState.calculationGameweek });
-            await incrementCalculationGameweek();
-            await setGameweekTimers(systemState.calculationGameweek);
-          };
+            if(monthComplete){
+              await managerComposite.resetBonusesAvailable();
+              await payMonthlyRewards(foundRewardPool);
+              //await privateLeaguesManager.payMonthlyRewards(systemState.calculationSeasonId, systemState.calculationMonth);
+              await incrementCalculationMonth();
+            };
 
-          if(monthComplete){
-            await managerComposite.resetBonusesAvailable();
-            await payMonthlyRewards(foundRewardPool);
-            //await privateLeaguesManager.payMonthlyRewards(systemState.calculationSeasonId, systemState.calculationMonth);
-            await incrementCalculationMonth();
-          };
-
-          if(seasonComplete){
-            await managerComposite.resetFantasyTeams(seasonComposite.getStableNextSeasonId());
-            await paySeasonRewards(foundRewardPool);
-            //await privateLeaguesManager.paySeasonRewards(systemState.calculationSeasonId);
-            await incrementCalculationSeason();
-            
-            seasonComposite.createNewSeason(systemState);
+            if(seasonComplete){
+              await managerComposite.resetFantasyTeams(seasonComposite.getStableNextSeasonId());
+              await paySeasonRewards(foundRewardPool);
+              //await privateLeaguesManager.paySeasonRewards(systemState.calculationSeasonId);
+              await incrementCalculationSeason();
               
-            let currentSeasonId = seasonComposite.getStableNextSeasonId();
-            await calculateRewardPool(currentSeasonId);
-            
-            await setTransferWindowTimers();
-          };
+              seasonComposite.createNewSeason(systemState);
+                
+              let currentSeasonId = seasonComposite.getStableNextSeasonId();
+              await calculateRewardPool(currentSeasonId);
+              
+              await setTransferWindowTimers();
+            };
 
+          };
         };
       };
       
