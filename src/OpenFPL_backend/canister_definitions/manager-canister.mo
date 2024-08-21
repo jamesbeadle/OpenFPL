@@ -1770,7 +1770,7 @@ actor class _ManagerCanister() {
                 seasonPoints := seasonPoints + teamPoints;
 
                 let newSnapshot = mergeManagerSnapshot(manager, seasonId, gameweek, month, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
-                let updatedHistory = mergeExistingHistory(existingHistory, newSnapshot, seasonId, gameweek, month, manager, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
+                let updatedHistory = mergeExistingHistory(existingHistory, newSnapshot, seasonId, gameweek);
                 
                 let updatedManager = mergeManagerHistory(manager, updatedHistory);
                 managerBuffer.add(updatedManager);
@@ -1858,7 +1858,6 @@ actor class _ManagerCanister() {
       braceBonusGameweek = manager.braceBonusGameweek;
       hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
       transferWindowGameweek = manager.transferWindowGameweek;
-      history = manager.history;
       profilePicture = manager.profilePicture;
       gameweek = gameweek;
       points = weeklyPoints;
@@ -1870,7 +1869,7 @@ actor class _ManagerCanister() {
     };
   };
 
-  private func mergeExistingHistory(existingHistory : List.List<T.FantasyTeamSeason>, fantasyTeamSnapshot : T.FantasyTeamSnapshot, seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth, manager : T.Manager, weeklyPoints : Int16, monthlyPoints : Int16, seasonPoints : Int16, teamValueQuarterMillions : Nat16) : List.List<T.FantasyTeamSeason> {
+  private func mergeExistingHistory(existingHistory : List.List<T.FantasyTeamSeason>, fantasyTeamSnapshot : T.FantasyTeamSnapshot, seasonId : T.SeasonId, gameweek : T.GameweekNumber) : List.List<T.FantasyTeamSeason> {
 
     let teamHistoryBuffer = Buffer.fromArray<T.FantasyTeamSeason>([]);
 
@@ -1879,9 +1878,9 @@ actor class _ManagerCanister() {
         let snapshotBuffer = Buffer.fromArray<T.FantasyTeamSnapshot>([]);
 
         for (snapshot in List.toIter<T.FantasyTeamSnapshot>(season.gameweeks)) {
-          if (snapshot.gameweek == gameweek) {
-            snapshotBuffer.add(mergeManagerSnapshot(manager, seasonId, gameweek, month, weeklyPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions));
-          } else { snapshotBuffer.add(snapshot) };
+          if (snapshot.gameweek != gameweek) {
+            snapshotBuffer.add(snapshot)
+          };
         };
 
         snapshotBuffer.add(fantasyTeamSnapshot);

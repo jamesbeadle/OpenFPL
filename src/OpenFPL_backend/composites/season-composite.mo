@@ -11,6 +11,7 @@ import Time "mo:base/Time";
 import Text "mo:base/Text";
 import TrieMap "mo:base/TrieMap";
 import Order "mo:base/Order";
+import Option "mo:base/Option";
 
 import DTOs "../DTOs";
 import Utilities "../utils/utilities";
@@ -485,9 +486,19 @@ module {
 
               for (event in Iter.fromArray(submitFixtureDataDTO.playerEventData)) {
                 if (event.clubId == foundFixture.homeClubId) {
-                  homeTeamPlayerIdsBuffer.add(event.playerId);
+                  let alreadyAdded = Option.isSome(Array.find<T.PlayerId>(Buffer.toArray(homeTeamPlayerIdsBuffer), func(playerId: T.PlayerId){
+                    playerId == event.playerId
+                  }));
+                  if(not alreadyAdded){
+                    homeTeamPlayerIdsBuffer.add(event.playerId);
+                  }
                 } else if (event.clubId == foundFixture.awayClubId) {
-                  awayTeamPlayerIdsBuffer.add(event.playerId);
+                  let alreadyAdded = Option.isSome(Array.find<T.PlayerId>(Buffer.toArray(awayTeamPlayerIdsBuffer), func(playerId: T.PlayerId){
+                    playerId == event.playerId
+                  }));
+                  if(not alreadyAdded){
+                    awayTeamPlayerIdsBuffer.add(event.playerId);
+                  };
                 };
               };
 
@@ -792,6 +803,46 @@ module {
       );
     };
 
+    public func setFixtureToFinalised(seasonId: T.SeasonId, fixtureId: T.FixtureId) {
+      seasons := List.map<T.Season, T.Season>(
+        seasons,
+        func(season : T.Season) : T.Season {
+          if (season.id == seasonId) {
+            let updatedFixtures = List.map<T.Fixture, T.Fixture>(
+              season.fixtures,
+              func(fixture : T.Fixture) : T.Fixture {
+                if (fixture.id == fixtureId) {
+                  return {
+                    id = fixture.id;
+                    seasonId = fixture.seasonId;
+                    gameweek = fixture.gameweek;
+                    kickOff = fixture.kickOff;
+                    homeClubId = fixture.homeClubId;
+                    awayClubId = fixture.awayClubId;
+                    homeGoals = fixture.homeGoals;
+                    awayGoals = fixture.awayGoals;
+                    status = #Finalised;
+                    events = fixture.events;
+                    highestScoringPlayerId = fixture.highestScoringPlayerId;
+                  };
+                } else { return fixture };
+              },
+            );
+
+            return {
+              id = season.id;
+              name = season.name;
+              year = season.year;
+              fixtures = updatedFixtures;
+              postponedFixtures = season.postponedFixtures;
+            };
+          } else {
+            return season;
+          };
+        },
+      );
+    };
+
     public func checkGameweekComplete(systemState : T.SystemState) : Bool {
       let season = List.find(
         seasons,
@@ -812,7 +863,7 @@ module {
           let completedFixtures = List.filter<T.Fixture>(
             fixtures,
             func(fixture : T.Fixture) : Bool {
-              return fixture.status == #Complete;
+              return fixture.status == #Finalised;
             },
           );
 

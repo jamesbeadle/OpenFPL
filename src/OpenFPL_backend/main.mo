@@ -1530,7 +1530,46 @@ import Debug "mo:base/Debug";
       });
       
       await updateManagerCanisterWasms();
-      
+
+      recordSystemEvent({
+        eventDetail = "Removing gameweek snapshots"; 
+        eventId = 0;
+        eventTime = Time.now();
+        eventTitle = "Canister Log";
+        eventType = #SystemCheck;
+      });
+
+      await seasonManager.removeDuplicateGameweekSnapshots();
+
+      recordSystemEvent({
+        eventDetail = "Remove event data from fixtures"; 
+        eventId = 0;
+        eventTime = Time.now();
+        eventTitle = "Canister Log";
+        eventType = #SystemCheck;
+      });
+
+      await seasonManager.removeEventDataFromFixtures();
+
+      recordSystemEvent({
+        eventDetail = "Remove event data from players"; 
+        eventId = 0;
+        eventTime = Time.now();
+        eventTitle = "Canister Log";
+        eventType = #SystemCheck;
+      });
+
+
+      await seasonManager.removeEventDataFromPlayers();
+
+      recordSystemEvent({
+        eventDetail = "Updating cache values"; 
+        eventId = 0;
+        eventTime = Time.now();
+        eventTitle = "Canister Log";
+        eventType = #SystemCheck;
+      });
+
       recordSystemEvent({
         eventDetail = "Resetting manager snapshot points"; 
         eventId = 0;
@@ -1540,14 +1579,10 @@ import Debug "mo:base/Debug";
       });
 
       await seasonManager.resetManagerSnapshotPoints();
+
+      /*
       
-      recordSystemEvent({
-        eventDetail = "Updating cache values"; 
-        eventId = 0;
-        eventTime = Time.now();
-        eventTitle = "Canister Log";
-        eventType = #SystemCheck;
-      });
+      */
 
       
       //await seasonManager.removeOnHold();
@@ -1572,18 +1607,16 @@ import Debug "mo:base/Debug";
 
     private func updateManagerCanisterWasms() : async (){
       let managerCanisterIds = seasonManager.getManagerCanisterIds();
-
-     let IC : Management.Management = actor (Environment.Default);
-     for(canisterId in Iter.fromArray(managerCanisterIds)){
-      
-       await IC.stop_canister({ canister_id = Principal.fromText(canisterId); });
-      
-       let oldManagement = actor (canisterId) : actor {};
-       let _ = await (system ManagerCanister._ManagerCanister)(#upgrade oldManagement)();
-      
-       await IC.start_canister({ canister_id = Principal.fromText(canisterId); });
-     };
-
+      let IC : Management.Management = actor (Environment.Default);
+      for(canisterId in Iter.fromArray(managerCanisterIds)){
+        
+        await IC.stop_canister({ canister_id = Principal.fromText(canisterId); });
+        
+        let oldManagement = actor (canisterId) : actor {};
+        let _ = await (system ManagerCanister._ManagerCanister)(#upgrade oldManagement)();
+        
+        await IC.start_canister({ canister_id = Principal.fromText(canisterId); });
+      };
     };
 
     public shared ({ caller }) func logStatus (dto: DTOs.LogStatusDTO) : async (){

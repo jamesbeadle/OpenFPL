@@ -362,26 +362,12 @@ function createManagerStore() {
     return bonusCountryId;
   }
 
-  async function snapshotFantasyTeams() {
-    try {
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
-      );
-      await identityActor.snapshotFantasyTeams();
-    } catch (error) {
-      console.error("Error snapshotting fantasy teams:", error);
-      throw error;
-    }
-  }
-
   return {
     subscribe,
     getTotalManagers,
     getFantasyTeamForGameweek,
     getCurrentTeam,
     saveFantasyTeam,
-    snapshotFantasyTeams,
     getPublicProfile,
   };
 }

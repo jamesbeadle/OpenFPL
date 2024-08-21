@@ -728,7 +728,9 @@ module {
         case (null) {};
         case (?events) {
           await playerComposite.addEventsToPlayers(events, submitFixtureData.seasonId, submitFixtureData.gameweek);
-          await seasonComposite.addEventsToFixture(events, submitFixtureData.seasonId, submitFixtureData.fixtureId);
+          await seasonComposite.addEventsToFixture(events, submitFixtureData.seasonId, submitFixtureData.fixtureId); //TODO: Not adding highest scoring player id?
+
+          //WHERE ARE THE APPEARANCE EVENTS BEING ADDED
         };
       };
 
@@ -737,6 +739,7 @@ module {
       
       //await privateLeaguesManager.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
       
+      seasonComposite.setFixtureToFinalised(systemState.calculationSeasonId, submitFixtureData.fixtureId);
       let rewardPool = rewardPools.get(systemState.calculationSeasonId);
       switch (rewardPool) {
         case (null) {};

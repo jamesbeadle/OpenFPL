@@ -3515,7 +3515,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "mf0h3o"
+  version_hash: "6oyh8x"
 };
 async function get_hooks() {
   return {};
@@ -6024,25 +6024,12 @@ function createManagerStore() {
     }
     return bonusCountryId;
   }
-  async function snapshotFantasyTeams() {
-    try {
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        define_process_env_default$8.OPENFPL_BACKEND_CANISTER_ID ?? ""
-      );
-      await identityActor.snapshotFantasyTeams();
-    } catch (error) {
-      console.error("Error snapshotting fantasy teams:", error);
-      throw error;
-    }
-  }
   return {
     subscribe: subscribe2,
     getTotalManagers,
     getFantasyTeamForGameweek,
     getCurrentTeam,
     saveFantasyTeam,
-    snapshotFantasyTeams,
     getPublicProfile
   };
 }
