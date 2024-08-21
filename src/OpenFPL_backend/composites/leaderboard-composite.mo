@@ -320,8 +320,33 @@ module {
         };
 
         let orderedSnapshots = await manager_canister.getOrderedSnapshots(seasonId, gameweek);
+/* 
+  Remove temporarily for further testing
+        var mergedArrayBuffer = Buffer.fromArray<T.FantasyTeamSnapshot>([]);
+        var i : Nat = 0;
+        var j : Nat = 0;
 
-        fantasyTeamSnapshots := mergeSortedArrays(fantasyTeamSnapshots, orderedSnapshots, compareSnapshots);
+        while (i < Array.size(fantasyTeamSnapshots) and j < Array.size(orderedSnapshots)) {
+            if (fantasyTeamSnapshots[i].points <= orderedSnapshots[j].points) {
+                mergedArrayBuffer.add(fantasyTeamSnapshots[i]);
+                i := i + 1;
+            } else {
+                mergedArrayBuffer.add(orderedSnapshots[j]);
+                j := j + 1;
+            }
+        };
+      
+        while (i < Array.size(fantasyTeamSnapshots)) {
+          mergedArrayBuffer.add(fantasyTeamSnapshots[i]);
+          i := i + 1;
+        };
+
+        while (j < Array.size(orderedSnapshots)) {
+          mergedArrayBuffer.add(orderedSnapshots[j]);
+          j := j + 1;
+        };
+*/
+        fantasyTeamSnapshots := orderedSnapshots;
       };
 
       logManagerCount(Array.size(fantasyTeamSnapshots));
@@ -347,50 +372,6 @@ module {
       };
 
     };
-
-    private func compareSnapshots(a : T.FantasyTeamSnapshot, b : T.FantasyTeamSnapshot) : Order.Order {
-      if (a.points < b.points) { return #less };
-      if (a.points == b.points) { return #equal };
-      return #greater;
-    };
-
-    public func mergeSortedArrays(arr1: [T.FantasyTeamSnapshot], arr2: [T.FantasyTeamSnapshot], compare: (T.FantasyTeamSnapshot, T.FantasyTeamSnapshot) -> Order.Order) : [T.FantasyTeamSnapshot] {
-      let mergedArray = Array.init<T.FantasyTeamSnapshot>(arr1.size() + arr2.size(), arr1[0]);
-      var i = 0;
-      var j = 0;
-      var k = 0;
-
-      while (i < arr1.size() and j < arr2.size()) {
-           switch (compare(arr1[i], arr2[j])) {
-            case (#less or #equal) {
-              mergedArray[k] := arr1[i];
-              i += 1;
-            };
-              
-            case (#greater){
-                mergedArray[k] := arr2[j];
-                j += 1;
-            };
-        };
-        k += 1;
-      };
-
-      while (i < arr1.size()) {
-          mergedArray[k] := arr1[i];
-          i += 1;
-          k += 1;
-      };
-
-      while (j < arr2.size()) {
-          mergedArray[k] := arr2[j];
-          j += 1;
-          k += 1;
-      };
-
-      return Array.freeze(mergedArray);
-    };
-
-
 
     private func calculateWeeklyLeaderboard(seasonId : T.SeasonId, gameweek : T.GameweekNumber, snapshots : [T.FantasyTeamSnapshot]) : async () {
       
