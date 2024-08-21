@@ -1688,530 +1688,141 @@ actor class _ManagerCanister() {
 
     let managerBuffer = Buffer.fromArray<T.Manager>([]);
     let managerGroupIndex = managerGroupIndexes.get(principalId);
+
+    var managers: [T.Manager] = [];
+
+
     switch (managerGroupIndex) {
       case (null) {};
       case (?foundGroupIndex) {
+
         switch (foundGroupIndex) {
           case 0 {
-            for (manager in Iter.fromArray(managerGroup1)) {
-              if (manager.principalId == principalId) {
-                let teamHistoryBuffer = Buffer.fromArray<T.FantasyTeamSeason>([]);
+            managers := managerGroup1;
+          };
+          case 1 {
+            managers := managerGroup2;
+          };
+          case 2 {
+            managers := managerGroup3;
+          };
+          case 3 {
+            managers := managerGroup4;
+          };
+          case 4 {
+            managers := managerGroup5;
+          };
+          case 5 {
+            managers := managerGroup6;
+          };
+          case 6 {
+            managers := managerGroup7;
+          };
+          case 7 {
+            managers := managerGroup8;
+          };
+          case 8 {
+            managers := managerGroup9;
+          };
+          case 9 {
+            managers := managerGroup10;
+          };
+          case 10 {
+            managers := managerGroup11;
+          };
+          case 11 {
+            managers := managerGroup12;
+          };
+          case _ {
 
-                switch (manager.history) {
-                  case (null) {
-                    teamHistoryBuffer.add({
-                      seasonId = seasonId;
-                      totalPoints = teamPoints;
-                      gameweeks = List.fromArray([mergeManagerSnapshot(manager, seasonId, gameweek, month, teamPoints, teamPoints, teamPoints, teamValueQuarterMillions)]);
-                    });
-                    managerBuffer.add(mergeManagerHistory(manager, List.fromArray(Buffer.toArray(teamHistoryBuffer))));
-                  };
-                  case (existingHistory) {
+          };
+        };
 
-                    var seasonPoints : Int16 = 0;
-                    var monthlyPoints : Int16 = 0;
-                    for (season in Iter.fromList(existingHistory)) {
-                      if (season.seasonId == seasonId) {
-                        for (seasonGameweek in Iter.fromList(season.gameweeks)) {
-                          seasonPoints := seasonPoints + seasonGameweek.points;
-                          if (seasonGameweek.month == month) {
-                            monthlyPoints := monthlyPoints + seasonGameweek.points;
-                          };
-                        };
+
+        for (manager in Iter.fromArray(managers)) {
+          if (manager.principalId == principalId) {
+            let teamHistoryBuffer = Buffer.fromArray<T.FantasyTeamSeason>([]);
+
+            switch (manager.history) {
+              case (null) {
+                teamHistoryBuffer.add({
+                  seasonId = seasonId;
+                  totalPoints = teamPoints;
+                  gameweeks = List.fromArray([mergeManagerSnapshot(manager, seasonId, gameweek, month, teamPoints, teamPoints, teamPoints, teamValueQuarterMillions)]);
+                });
+                managerBuffer.add(mergeManagerHistory(manager, List.fromArray(Buffer.toArray(teamHistoryBuffer))));
+              };
+              case (existingHistory) {
+
+                var seasonPoints : Int16 = 0;
+                var monthlyPoints : Int16 = 0;
+                for (season in Iter.fromList(existingHistory)) {
+                  if (season.seasonId == seasonId) {
+                    for (seasonGameweek in Iter.fromList(season.gameweeks)) {
+                      seasonPoints := seasonPoints + seasonGameweek.points;
+                      if (seasonGameweek.month == month) {
+                        monthlyPoints := monthlyPoints + seasonGameweek.points;
                       };
                     };
-                    monthlyPoints := monthlyPoints + teamPoints;
-                    seasonPoints := seasonPoints + teamPoints;
-
-                    let newSnapshot = mergeManagerSnapshot(manager, seasonId, gameweek, month, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
-                    let updatedHistory = mergeExistingHistory(existingHistory, newSnapshot, seasonId, gameweek, month, manager, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
-                    
-                    let updatedManager = mergeManagerHistory(manager, updatedHistory);
-                    managerBuffer.add(updatedManager);
                   };
                 };
+                monthlyPoints := monthlyPoints + teamPoints;
+                seasonPoints := seasonPoints + teamPoints;
 
-              } else {
-                managerBuffer.add(manager);
+                let newSnapshot = mergeManagerSnapshot(manager, seasonId, gameweek, month, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
+                let updatedHistory = mergeExistingHistory(existingHistory, newSnapshot, seasonId, gameweek, month, manager, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
+                
+                let updatedManager = mergeManagerHistory(manager, updatedHistory);
+                managerBuffer.add(updatedManager);
               };
             };
+
+          } else {
+            managerBuffer.add(manager);
+          };
+        };
+
+
+        switch (foundGroupIndex) {
+          case 0 {
             managerGroup1 := Buffer.toArray(managerBuffer);
           };
           case 1 {
-            for (manager in Iter.fromArray(managerGroup2)) {
-              if (manager.principalId == principalId) {
-                let teamHistoryBuffer = Buffer.fromArray<T.FantasyTeamSeason>([]);
-
-                switch (manager.history) {
-                  case (null) {
-                    teamHistoryBuffer.add({
-                      seasonId = seasonId;
-                      totalPoints = teamPoints;
-                      gameweeks = List.fromArray([mergeManagerSnapshot(manager, seasonId, gameweek, month, teamPoints, teamPoints, teamPoints, teamValueQuarterMillions)]);
-                    });
-                    managerBuffer.add(mergeManagerHistory(manager, List.fromArray(Buffer.toArray(teamHistoryBuffer))));
-                  };
-                  case (existingHistory) {
-
-                    var seasonPoints : Int16 = 0;
-                    var monthlyPoints : Int16 = 0;
-                    for (season in Iter.fromList(existingHistory)) {
-                      if (season.seasonId == seasonId) {
-                        for (seasonGameweek in Iter.fromList(season.gameweeks)) {
-                          seasonPoints := seasonPoints + seasonGameweek.points;
-                          if (seasonGameweek.month == month) {
-                            monthlyPoints := monthlyPoints + seasonGameweek.points;
-                          };
-                        };
-                      };
-                    };
-                    monthlyPoints := monthlyPoints + teamPoints;
-                    seasonPoints := seasonPoints + teamPoints;
-
-                    let newSnapshot = mergeManagerSnapshot(manager, seasonId, gameweek, month, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
-                    let updatedHistory = mergeExistingHistory(existingHistory, newSnapshot, seasonId, gameweek, month, manager, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
-                    managerBuffer.add(mergeManagerHistory(manager, updatedHistory));
-                  };
-                };
-
-              } else {
-                managerBuffer.add(manager);
-              };
-            };
             managerGroup2 := Buffer.toArray(managerBuffer);
           };
           case 2 {
-            for (manager in Iter.fromArray(managerGroup3)) {
-              if (manager.principalId == principalId) {
-                let teamHistoryBuffer = Buffer.fromArray<T.FantasyTeamSeason>([]);
-
-                switch (manager.history) {
-                  case (null) {
-                    teamHistoryBuffer.add({
-                      seasonId = seasonId;
-                      totalPoints = teamPoints;
-                      gameweeks = List.fromArray([mergeManagerSnapshot(manager, seasonId, gameweek, month, teamPoints, teamPoints, teamPoints, teamValueQuarterMillions)]);
-                    });
-                    managerBuffer.add(mergeManagerHistory(manager, List.fromArray(Buffer.toArray(teamHistoryBuffer))));
-                  };
-                  case (existingHistory) {
-
-                    var seasonPoints : Int16 = 0;
-                    var monthlyPoints : Int16 = 0;
-                    for (season in Iter.fromList(existingHistory)) {
-                      if (season.seasonId == seasonId) {
-                        for (seasonGameweek in Iter.fromList(season.gameweeks)) {
-                          seasonPoints := seasonPoints + seasonGameweek.points;
-                          if (seasonGameweek.month == month) {
-                            monthlyPoints := monthlyPoints + seasonGameweek.points;
-                          };
-                        };
-                      };
-                    };
-                    monthlyPoints := monthlyPoints + teamPoints;
-                    seasonPoints := seasonPoints + teamPoints;
-
-                    let newSnapshot = mergeManagerSnapshot(manager, seasonId, gameweek, month, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
-                    let updatedHistory = mergeExistingHistory(existingHistory, newSnapshot, seasonId, gameweek, month, manager, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
-                    managerBuffer.add(mergeManagerHistory(manager, updatedHistory));
-                  };
-                };
-
-              } else {
-                managerBuffer.add(manager);
-              };
-            };
             managerGroup3 := Buffer.toArray(managerBuffer);
           };
           case 3 {
-            for (manager in Iter.fromArray(managerGroup4)) {
-              if (manager.principalId == principalId) {
-                let teamHistoryBuffer = Buffer.fromArray<T.FantasyTeamSeason>([]);
-
-                switch (manager.history) {
-                  case (null) {
-                    teamHistoryBuffer.add({
-                      seasonId = seasonId;
-                      totalPoints = teamPoints;
-                      gameweeks = List.fromArray([mergeManagerSnapshot(manager, seasonId, gameweek, month, teamPoints, teamPoints, teamPoints, teamValueQuarterMillions)]);
-                    });
-                    managerBuffer.add(mergeManagerHistory(manager, List.fromArray(Buffer.toArray(teamHistoryBuffer))));
-                  };
-                  case (existingHistory) {
-
-                    var seasonPoints : Int16 = 0;
-                    var monthlyPoints : Int16 = 0;
-                    for (season in Iter.fromList(existingHistory)) {
-                      if (season.seasonId == seasonId) {
-                        for (seasonGameweek in Iter.fromList(season.gameweeks)) {
-                          seasonPoints := seasonPoints + seasonGameweek.points;
-                          if (seasonGameweek.month == month) {
-                            monthlyPoints := monthlyPoints + seasonGameweek.points;
-                          };
-                        };
-                      };
-                    };
-                    monthlyPoints := monthlyPoints + teamPoints;
-                    seasonPoints := seasonPoints + teamPoints;
-
-                    let newSnapshot = mergeManagerSnapshot(manager, seasonId, gameweek, month, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
-                    let updatedHistory = mergeExistingHistory(existingHistory, newSnapshot, seasonId, gameweek, month, manager, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
-                    managerBuffer.add(mergeManagerHistory(manager, updatedHistory));
-                  };
-                };
-
-              } else {
-                managerBuffer.add(manager);
-              };
-            };
             managerGroup4 := Buffer.toArray(managerBuffer);
           };
           case 4 {
-            for (manager in Iter.fromArray(managerGroup5)) {
-              if (manager.principalId == principalId) {
-                let teamHistoryBuffer = Buffer.fromArray<T.FantasyTeamSeason>([]);
-
-                switch (manager.history) {
-                  case (null) {
-                    teamHistoryBuffer.add({
-                      seasonId = seasonId;
-                      totalPoints = teamPoints;
-                      gameweeks = List.fromArray([mergeManagerSnapshot(manager, seasonId, gameweek, month, teamPoints, teamPoints, teamPoints, teamValueQuarterMillions)]);
-                    });
-                    managerBuffer.add(mergeManagerHistory(manager, List.fromArray(Buffer.toArray(teamHistoryBuffer))));
-                  };
-                  case (existingHistory) {
-
-                    var seasonPoints : Int16 = 0;
-                    var monthlyPoints : Int16 = 0;
-                    for (season in Iter.fromList(existingHistory)) {
-                      if (season.seasonId == seasonId) {
-                        for (seasonGameweek in Iter.fromList(season.gameweeks)) {
-                          seasonPoints := seasonPoints + seasonGameweek.points;
-                          if (seasonGameweek.month == month) {
-                            monthlyPoints := monthlyPoints + seasonGameweek.points;
-                          };
-                        };
-                      };
-                    };
-                    monthlyPoints := monthlyPoints + teamPoints;
-                    seasonPoints := seasonPoints + teamPoints;
-
-                    let newSnapshot = mergeManagerSnapshot(manager, seasonId, gameweek, month, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
-                    let updatedHistory = mergeExistingHistory(existingHistory, newSnapshot, seasonId, gameweek, month, manager, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
-                    managerBuffer.add(mergeManagerHistory(manager, updatedHistory));
-                  };
-                };
-
-              } else {
-                managerBuffer.add(manager);
-              };
-            };
             managerGroup5 := Buffer.toArray(managerBuffer);
           };
           case 5 {
-            for (manager in Iter.fromArray(managerGroup6)) {
-              if (manager.principalId == principalId) {
-                let teamHistoryBuffer = Buffer.fromArray<T.FantasyTeamSeason>([]);
-
-                switch (manager.history) {
-                  case (null) {
-                    teamHistoryBuffer.add({
-                      seasonId = seasonId;
-                      totalPoints = teamPoints;
-                      gameweeks = List.fromArray([mergeManagerSnapshot(manager, seasonId, gameweek, month, teamPoints, teamPoints, teamPoints, teamValueQuarterMillions)]);
-                    });
-                    managerBuffer.add(mergeManagerHistory(manager, List.fromArray(Buffer.toArray(teamHistoryBuffer))));
-                  };
-                  case (existingHistory) {
-
-                    var seasonPoints : Int16 = 0;
-                    var monthlyPoints : Int16 = 0;
-                    for (season in Iter.fromList(existingHistory)) {
-                      if (season.seasonId == seasonId) {
-                        for (seasonGameweek in Iter.fromList(season.gameweeks)) {
-                          seasonPoints := seasonPoints + seasonGameweek.points;
-                          if (seasonGameweek.month == month) {
-                            monthlyPoints := monthlyPoints + seasonGameweek.points;
-                          };
-                        };
-                      };
-                    };
-                    monthlyPoints := monthlyPoints + teamPoints;
-                    seasonPoints := seasonPoints + teamPoints;
-
-                    let newSnapshot = mergeManagerSnapshot(manager, seasonId, gameweek, month, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
-                    let updatedHistory = mergeExistingHistory(existingHistory, newSnapshot, seasonId, gameweek, month, manager, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
-                    managerBuffer.add(mergeManagerHistory(manager, updatedHistory));
-                  };
-                };
-
-              } else {
-                managerBuffer.add(manager);
-              };
-            };
             managerGroup6 := Buffer.toArray(managerBuffer);
           };
           case 6 {
-            for (manager in Iter.fromArray(managerGroup7)) {
-              if (manager.principalId == principalId) {
-                let teamHistoryBuffer = Buffer.fromArray<T.FantasyTeamSeason>([]);
-
-                switch (manager.history) {
-                  case (null) {
-                    teamHistoryBuffer.add({
-                      seasonId = seasonId;
-                      totalPoints = teamPoints;
-                      gameweeks = List.fromArray([mergeManagerSnapshot(manager, seasonId, gameweek, month, teamPoints, teamPoints, teamPoints, teamValueQuarterMillions)]);
-                    });
-                    managerBuffer.add(mergeManagerHistory(manager, List.fromArray(Buffer.toArray(teamHistoryBuffer))));
-                  };
-                  case (existingHistory) {
-
-                    var seasonPoints : Int16 = 0;
-                    var monthlyPoints : Int16 = 0;
-                    for (season in Iter.fromList(existingHistory)) {
-                      if (season.seasonId == seasonId) {
-                        for (seasonGameweek in Iter.fromList(season.gameweeks)) {
-                          seasonPoints := seasonPoints + seasonGameweek.points;
-                          if (seasonGameweek.month == month) {
-                            monthlyPoints := monthlyPoints + seasonGameweek.points;
-                          };
-                        };
-                      };
-                    };
-                    monthlyPoints := monthlyPoints + teamPoints;
-                    seasonPoints := seasonPoints + teamPoints;
-
-                    let newSnapshot = mergeManagerSnapshot(manager, seasonId, gameweek, month, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
-                    let updatedHistory = mergeExistingHistory(existingHistory, newSnapshot, seasonId, gameweek, month, manager, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
-                    managerBuffer.add(mergeManagerHistory(manager, updatedHistory));
-                  };
-                };
-
-              } else {
-                managerBuffer.add(manager);
-              };
-            };
             managerGroup7 := Buffer.toArray(managerBuffer);
           };
           case 7 {
-            for (manager in Iter.fromArray(managerGroup8)) {
-              if (manager.principalId == principalId) {
-                let teamHistoryBuffer = Buffer.fromArray<T.FantasyTeamSeason>([]);
-
-                switch (manager.history) {
-                  case (null) {
-                    teamHistoryBuffer.add({
-                      seasonId = seasonId;
-                      totalPoints = teamPoints;
-                      gameweeks = List.fromArray([mergeManagerSnapshot(manager, seasonId, gameweek, month, teamPoints, teamPoints, teamPoints, teamValueQuarterMillions)]);
-                    });
-                    managerBuffer.add(mergeManagerHistory(manager, List.fromArray(Buffer.toArray(teamHistoryBuffer))));
-                  };
-                  case (existingHistory) {
-
-                    var seasonPoints : Int16 = 0;
-                    var monthlyPoints : Int16 = 0;
-                    for (season in Iter.fromList(existingHistory)) {
-                      if (season.seasonId == seasonId) {
-                        for (seasonGameweek in Iter.fromList(season.gameweeks)) {
-                          seasonPoints := seasonPoints + seasonGameweek.points;
-                          if (seasonGameweek.month == month) {
-                            monthlyPoints := monthlyPoints + seasonGameweek.points;
-                          };
-                        };
-                      };
-                    };
-                    monthlyPoints := monthlyPoints + teamPoints;
-                    seasonPoints := seasonPoints + teamPoints;
-
-                    let newSnapshot = mergeManagerSnapshot(manager, seasonId, gameweek, month, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
-                    let updatedHistory = mergeExistingHistory(existingHistory, newSnapshot, seasonId, gameweek, month, manager, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
-                    managerBuffer.add(mergeManagerHistory(manager, updatedHistory));
-                  };
-                };
-
-              } else {
-                managerBuffer.add(manager);
-              };
-            };
             managerGroup8 := Buffer.toArray(managerBuffer);
           };
           case 8 {
-            for (manager in Iter.fromArray(managerGroup9)) {
-              if (manager.principalId == principalId) {
-                let teamHistoryBuffer = Buffer.fromArray<T.FantasyTeamSeason>([]);
-
-                switch (manager.history) {
-                  case (null) {
-                    teamHistoryBuffer.add({
-                      seasonId = seasonId;
-                      totalPoints = teamPoints;
-                      gameweeks = List.fromArray([mergeManagerSnapshot(manager, seasonId, gameweek, month, teamPoints, teamPoints, teamPoints, teamValueQuarterMillions)]);
-                    });
-                    managerBuffer.add(mergeManagerHistory(manager, List.fromArray(Buffer.toArray(teamHistoryBuffer))));
-                  };
-                  case (existingHistory) {
-
-                    var seasonPoints : Int16 = 0;
-                    var monthlyPoints : Int16 = 0;
-                    for (season in Iter.fromList(existingHistory)) {
-                      if (season.seasonId == seasonId) {
-                        for (seasonGameweek in Iter.fromList(season.gameweeks)) {
-                          seasonPoints := seasonPoints + seasonGameweek.points;
-                          if (seasonGameweek.month == month) {
-                            monthlyPoints := monthlyPoints + seasonGameweek.points;
-                          };
-                        };
-                      };
-                    };
-                    monthlyPoints := monthlyPoints + teamPoints;
-                    seasonPoints := seasonPoints + teamPoints;
-
-                    let newSnapshot = mergeManagerSnapshot(manager, seasonId, gameweek, month, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
-                    let updatedHistory = mergeExistingHistory(existingHistory, newSnapshot, seasonId, gameweek, month, manager, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
-                    managerBuffer.add(mergeManagerHistory(manager, updatedHistory));
-                  };
-                };
-
-              } else {
-                managerBuffer.add(manager);
-              };
-            };
             managerGroup9 := Buffer.toArray(managerBuffer);
           };
           case 9 {
-            for (manager in Iter.fromArray(managerGroup10)) {
-              if (manager.principalId == principalId) {
-                let teamHistoryBuffer = Buffer.fromArray<T.FantasyTeamSeason>([]);
-
-                switch (manager.history) {
-                  case (null) {
-                    teamHistoryBuffer.add({
-                      seasonId = seasonId;
-                      totalPoints = teamPoints;
-                      gameweeks = List.fromArray([mergeManagerSnapshot(manager, seasonId, gameweek, month, teamPoints, teamPoints, teamPoints, teamValueQuarterMillions)]);
-                    });
-                    managerBuffer.add(mergeManagerHistory(manager, List.fromArray(Buffer.toArray(teamHistoryBuffer))));
-                  };
-                  case (existingHistory) {
-
-                    var seasonPoints : Int16 = 0;
-                    var monthlyPoints : Int16 = 0;
-                    for (season in Iter.fromList(existingHistory)) {
-                      if (season.seasonId == seasonId) {
-                        for (seasonGameweek in Iter.fromList(season.gameweeks)) {
-                          seasonPoints := seasonPoints + seasonGameweek.points;
-                          if (seasonGameweek.month == month) {
-                            monthlyPoints := monthlyPoints + seasonGameweek.points;
-                          };
-                        };
-                      };
-                    };
-                    monthlyPoints := monthlyPoints + teamPoints;
-                    seasonPoints := seasonPoints + teamPoints;
-
-                    let newSnapshot = mergeManagerSnapshot(manager, seasonId, gameweek, month, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
-                    let updatedHistory = mergeExistingHistory(existingHistory, newSnapshot, seasonId, gameweek, month, manager, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
-                    managerBuffer.add(mergeManagerHistory(manager, updatedHistory));
-                  };
-                };
-
-              } else {
-                managerBuffer.add(manager);
-              };
-            };
             managerGroup10 := Buffer.toArray(managerBuffer);
           };
           case 10 {
-            for (manager in Iter.fromArray(managerGroup11)) {
-              if (manager.principalId == principalId) {
-
-                let teamHistoryBuffer = Buffer.fromArray<T.FantasyTeamSeason>([]);
-
-                switch (manager.history) {
-                  case (null) {
-                    teamHistoryBuffer.add({
-                      seasonId = seasonId;
-                      totalPoints = teamPoints;
-                      gameweeks = List.fromArray([mergeManagerSnapshot(manager, seasonId, gameweek, month, teamPoints, teamPoints, teamPoints, teamValueQuarterMillions)]);
-                    });
-                    managerBuffer.add(mergeManagerHistory(manager, List.fromArray(Buffer.toArray(teamHistoryBuffer))));
-                  };
-                  case (existingHistory) {
-
-                    var seasonPoints : Int16 = 0;
-                    var monthlyPoints : Int16 = 0;
-                    for (season in Iter.fromList(existingHistory)) {
-                      if (season.seasonId == seasonId) {
-                        for (seasonGameweek in Iter.fromList(season.gameweeks)) {
-                          seasonPoints := seasonPoints + seasonGameweek.points;
-                          if (seasonGameweek.month == month) {
-                            monthlyPoints := monthlyPoints + seasonGameweek.points;
-                          };
-                        };
-                      };
-                    };
-                    monthlyPoints := monthlyPoints + teamPoints;
-                    seasonPoints := seasonPoints + teamPoints;
-
-                    let newSnapshot = mergeManagerSnapshot(manager, seasonId, gameweek, month, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
-                    let updatedHistory = mergeExistingHistory(existingHistory, newSnapshot, seasonId, gameweek, month, manager, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
-                    managerBuffer.add(mergeManagerHistory(manager, updatedHistory));
-                  };
-                };
-
-              } else {
-                managerBuffer.add(manager);
-              };
-            };
             managerGroup11 := Buffer.toArray(managerBuffer);
           };
           case 11 {
-            for (manager in Iter.fromArray(managerGroup12)) {
-              if (manager.principalId == principalId) {
-                let teamHistoryBuffer = Buffer.fromArray<T.FantasyTeamSeason>([]);
-
-                switch (manager.history) {
-                  case (null) {
-                    teamHistoryBuffer.add({
-                      seasonId = seasonId;
-                      totalPoints = teamPoints;
-                      gameweeks = List.fromArray([mergeManagerSnapshot(manager, seasonId, gameweek, month, teamPoints, teamPoints, teamPoints, teamValueQuarterMillions)]);
-                    });
-                    managerBuffer.add(mergeManagerHistory(manager, List.fromArray(Buffer.toArray(teamHistoryBuffer))));
-                  };
-                  case (existingHistory) {
-
-                    var seasonPoints : Int16 = 0;
-                    var monthlyPoints : Int16 = 0;
-                    for (season in Iter.fromList(existingHistory)) {
-                      if (season.seasonId == seasonId) {
-                        for (seasonGameweek in Iter.fromList(season.gameweeks)) {
-                          seasonPoints := seasonPoints + seasonGameweek.points;
-                          if (seasonGameweek.month == month) {
-                            monthlyPoints := monthlyPoints + seasonGameweek.points;
-                          };
-                        };
-                      };
-                    };
-                    monthlyPoints := monthlyPoints + teamPoints;
-                    seasonPoints := seasonPoints + teamPoints;
-
-                    let newSnapshot = mergeManagerSnapshot(manager, seasonId, gameweek, month, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
-                    let updatedHistory = mergeExistingHistory(existingHistory, newSnapshot, seasonId, gameweek, month, manager, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
-                    managerBuffer.add(mergeManagerHistory(manager, updatedHistory));
-                  };
-                };
-
-              } else {
-                managerBuffer.add(manager);
-              };
-            };
             managerGroup12 := Buffer.toArray(managerBuffer);
           };
-          case _ {};
+          case _ {
+
+          };
         };
       };
     };
@@ -4022,6 +3633,201 @@ actor class _ManagerCanister() {
     };
         
     await logStatus("All managers snapshots have been removed, total: " # Nat.toText(Array.size(Buffer.toArray(managerBuffer))));
+    
+    switch (managerGroup) {
+      case 0 {
+        managerGroup1 := Buffer.toArray(managerBuffer);
+      };
+      case 1 {
+        managerGroup2 := Buffer.toArray(managerBuffer);
+      };
+      case 2 {
+        managerGroup3 := Buffer.toArray(managerBuffer);
+      };
+      case 3 {
+        managerGroup4 := Buffer.toArray(managerBuffer);
+      };
+      case 4 {
+        managerGroup5 := Buffer.toArray(managerBuffer);
+      };
+      case 5 {
+        managerGroup6 := Buffer.toArray(managerBuffer);
+      };
+      case 6 {
+        managerGroup7 := Buffer.toArray(managerBuffer);
+      };
+      case 7 {
+        managerGroup8 := Buffer.toArray(managerBuffer);
+      };
+      case 8 {
+        managerGroup9 := Buffer.toArray(managerBuffer);
+      };
+      case 9 {
+        managerGroup10 := Buffer.toArray(managerBuffer);
+      };
+      case 10 {
+        managerGroup11 := Buffer.toArray(managerBuffer);
+      };
+      case 11 {
+        managerGroup12 := Buffer.toArray(managerBuffer);
+      };
+      case _ {
+
+      };
+    };
+  };
+
+  public shared ({ caller }) func resetManagerSnapshotPoints() : async () {
+
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == Environment.BACKEND_CANISTER_ID;
+
+    for (index in Iter.range(0, 11)) {
+      await resetSnapshotPoints(index);
+    };
+  };
+
+  private func resetSnapshotPoints(managerGroup: Int) : async () {
+    let managerBuffer = Buffer.fromArray<T.Manager>([]);
+
+    var managers: [T.Manager] = [];
+
+    switch (managerGroup) {
+      case 0 {
+        managers := managerGroup1;
+      };
+      case 1 {
+        managers := managerGroup2;
+      };
+      case 2 {
+        managers := managerGroup3;
+      };
+      case 3 {
+        managers := managerGroup4;
+      };
+      case 4 {
+        managers := managerGroup5;
+      };
+      case 5 {
+        managers := managerGroup6;
+      };
+      case 6 {
+        managers := managerGroup7;
+      };
+      case 7 {
+        managers := managerGroup8;
+      };
+      case 8 {
+        managers := managerGroup9;
+      };
+      case 9 {
+        managers := managerGroup10;
+      };
+      case 10 {
+        managers := managerGroup11;
+      };
+      case 11 {
+        managers := managerGroup12;
+      };
+      case _ {
+
+      };
+    };
+
+    await logStatus("Resetting snapshot points from " # Nat.toText(Array.size(managers)) # " teams.");
+    
+    for (manager in Iter.fromArray(managers)) {
+      
+      let updatedSeasonBuffer = Buffer.fromArray<T.FantasyTeamSeason>([]);
+      
+      for(season in Iter.fromList(manager.history)){
+
+        let updatedGameweeks = Buffer.fromArray<T.FantasyTeamSnapshot>([]);
+        for(gameweek in Iter.fromList(season.gameweeks)){
+          updatedGameweeks.add({
+            bankQuarterMillions = gameweek.bankQuarterMillions;
+            braceBonusGameweek = gameweek.braceBonusGameweek;
+            captainFantasticGameweek = gameweek.captainFantasticGameweek;
+            captainFantasticPlayerId = gameweek.captainFantasticPlayerId;
+            captainId = gameweek.captainId;
+            countrymenCountryId = gameweek.countrymenCountryId;
+            countrymenGameweek = gameweek.countrymenGameweek;
+            favouriteClubId = gameweek.favouriteClubId;
+            gameweek = gameweek.gameweek;
+            goalGetterGameweek = gameweek.goalGetterGameweek;
+            goalGetterPlayerId = gameweek.goalGetterPlayerId;
+            hatTrickHeroGameweek = gameweek.hatTrickHeroGameweek;
+            month = gameweek.month;
+            monthlyBonusesAvailable = gameweek.monthlyBonusesAvailable;
+            monthlyPoints = 0;
+            noEntryGameweek = gameweek.noEntryGameweek;
+            noEntryPlayerId = gameweek.noEntryPlayerId;
+            passMasterGameweek = gameweek.passMasterGameweek;
+            passMasterPlayerId = gameweek.passMasterPlayerId;
+            playerIds = gameweek.playerIds;
+            points = 0;
+            principalId = gameweek.principalId;
+            prospectsGameweek = gameweek.prospectsGameweek;
+            safeHandsGameweek = gameweek.safeHandsGameweek;
+            safeHandsPlayerId = gameweek.safeHandsPlayerId;
+            seasonId = gameweek.seasonId;
+            seasonPoints = gameweek.seasonPoints;
+            teamBoostClubId = gameweek.teamBoostClubId;
+            teamBoostGameweek = gameweek.teamBoostGameweek;
+            teamValueQuarterMillions = gameweek.teamValueQuarterMillions;
+            transferWindowGameweek = gameweek.transferWindowGameweek;
+            transfersAvailable = gameweek.transfersAvailable;
+            username = gameweek.username;
+          });
+        };
+
+        updatedSeasonBuffer.add({
+          seasonId = season.seasonId;
+          totalPoints = 0;
+          gameweeks = List.fromArray(Buffer.toArray(updatedGameweeks));
+        });
+      };
+
+      let updatedManager : T.Manager = {
+        principalId = manager.principalId;
+        username = manager.username;
+        termsAccepted = manager.termsAccepted;
+        favouriteClubId = manager.favouriteClubId;
+        createDate = manager.createDate;
+        history = List.fromArray(Buffer.toArray(updatedSeasonBuffer));
+        profilePicture = manager.profilePicture;
+        profilePictureType = manager.profilePictureType;
+        transfersAvailable = manager.transfersAvailable;
+        monthlyBonusesAvailable = manager.monthlyBonusesAvailable;
+        bankQuarterMillions = manager.bankQuarterMillions;
+        playerIds = manager.playerIds;
+        captainId = manager.captainId;
+        goalGetterGameweek = manager.goalGetterGameweek;
+        goalGetterPlayerId = manager.goalGetterPlayerId;
+        passMasterGameweek = manager.passMasterGameweek;
+        passMasterPlayerId = manager.passMasterPlayerId;
+        noEntryGameweek = manager.noEntryGameweek;
+        noEntryPlayerId = manager.noEntryPlayerId;
+        teamBoostGameweek = manager.teamBoostGameweek;
+        teamBoostClubId = manager.teamBoostClubId;
+        safeHandsGameweek = manager.safeHandsGameweek;
+        safeHandsPlayerId = manager.safeHandsPlayerId;
+        captainFantasticGameweek = manager.captainFantasticGameweek;
+        captainFantasticPlayerId = manager.captainFantasticPlayerId;
+        countrymenGameweek = manager.countrymenGameweek;
+        countrymenCountryId = manager.countrymenCountryId;
+        prospectsGameweek = manager.prospectsGameweek;
+        braceBonusGameweek = manager.braceBonusGameweek;
+        hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
+        transferWindowGameweek = manager.transferWindowGameweek;
+        ownedPrivateLeagues = manager.ownedPrivateLeagues;
+        privateLeagueMemberships = manager.privateLeagueMemberships;
+      };
+      managerBuffer.add(updatedManager);
+    };
+        
+    await logStatus("All managers snapshots points have been reset to 0, total: " # Nat.toText(Array.size(Buffer.toArray(managerBuffer))));
     
     switch (managerGroup) {
       case 0 {

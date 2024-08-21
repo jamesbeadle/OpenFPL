@@ -1530,37 +1530,16 @@ import Debug "mo:base/Debug";
       });
       
       await updateManagerCanisterWasms();
-
+      
       recordSystemEvent({
-        eventDetail = "Removing gameweek snapshots"; 
+        eventDetail = "Resetting manager snapshot points"; 
         eventId = 0;
         eventTime = Time.now();
         eventTitle = "Canister Log";
         eventType = #SystemCheck;
       });
 
-      await seasonManager.removeDuplicateGameweekSnapshots();
-
-      recordSystemEvent({
-        eventDetail = "Remove event data from fixtures"; 
-        eventId = 0;
-        eventTime = Time.now();
-        eventTitle = "Canister Log";
-        eventType = #SystemCheck;
-      });
-
-      await seasonManager.removeEventDataFromFixtures();
-
-      recordSystemEvent({
-        eventDetail = "Remove event data from players"; 
-        eventId = 0;
-        eventTime = Time.now();
-        eventTitle = "Canister Log";
-        eventType = #SystemCheck;
-      });
-
-
-      await seasonManager.removeEventDataFromPlayers();
+      await seasonManager.resetManagerSnapshotPoints();
       
       recordSystemEvent({
         eventDetail = "Updating cache values"; 

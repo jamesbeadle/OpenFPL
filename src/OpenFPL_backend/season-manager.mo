@@ -1485,6 +1485,10 @@ module {
       await playerComposite.removeEventDataFromPlayers();
     };
 
+    public func resetManagerSnapshotPoints() : async (){
+      await managerComposite.resetManagerSnapshotPoints();
+    };
+
     public func setupTesting() {
 
       //set the system state

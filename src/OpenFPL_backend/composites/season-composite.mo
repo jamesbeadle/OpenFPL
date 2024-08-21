@@ -648,30 +648,10 @@ module {
 
     private func populateHighestScoringPlayer(playerEvents : [T.PlayerEventData], fixture : T.Fixture, players : [DTOs.PlayerDTO]) : [T.PlayerEventData] {
 
-      var homeGoalsCount : Nat8 = 0;
-      var awayGoalsCount : Nat8 = 0;
-
       let playerEventsMap : TrieMap.TrieMap<T.PlayerId, [T.PlayerEventData]> = TrieMap.TrieMap<T.PlayerId, [T.PlayerEventData]>(Utilities.eqNat16, Utilities.hashNat16);
 
       for (event in Iter.fromArray(playerEvents)) {
-        switch (event.eventType) {
-          case (#Goal) {
-            if (event.clubId == fixture.homeClubId) {
-              homeGoalsCount += 1;
-            } else if (event.clubId == fixture.awayClubId) {
-              awayGoalsCount += 1;
-            };
-          };
-          case (#OwnGoal) {
-            if (event.clubId == fixture.homeClubId) {
-              awayGoalsCount += 1;
-            } else if (event.clubId == fixture.awayClubId) {
-              homeGoalsCount += 1;
-            };
-          };
-          case _ {};
-        };
-
+        
         let playerId : T.PlayerId = event.playerId;
         switch (playerEventsMap.get(playerId)) {
           case (null) {

@@ -1483,5 +1483,17 @@ module {
       };
     };
 
+    public func resetManagerSnapshotPoints() : async (){
+      for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
+        let manager_canister = actor (canisterId) : actor {
+          resetManagerSnapshotPoints : () -> async ();
+        };
+
+        await manager_canister.resetManagerSnapshotPoints();
+
+        logStatus("Remove duplicate gameweeks complete.");
+      };
+    };
+
   };
 };
