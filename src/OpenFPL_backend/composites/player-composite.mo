@@ -1960,5 +1960,32 @@ module {
         };
       };
     };
+
+    public func removeEventDataFromPlayers() : async (){
+      let playerBuffer = Buffer.fromArray<T.Player>([]);
+      for(player in Iter.fromList(players)){
+        playerBuffer.add({
+          clubId = player.clubId;
+          currentLoanEndDate = player.currentLoanEndDate;
+          dateOfBirth = player.dateOfBirth;
+          firstName = player.firstName;
+          id = player.id;
+          injuryHistory = player.injuryHistory;
+          lastName = player.lastName;
+          latestInjuryEndDate = player.latestInjuryEndDate;
+          nationality = player.nationality;
+          parentClubId = player.parentClubId;
+          position = player.position;
+          retirementDate = player.retirementDate;
+          seasons = List.nil();
+          shirtNumber = player.shirtNumber;
+          status = player.status;
+          transferHistory = player.transferHistory;
+          valueHistory = player.valueHistory;
+          valueQuarterMillions  = player.valueQuarterMillions
+        });
+      };
+      players := List.fromArray(Buffer.toArray(playerBuffer));
+    };
   };
 };

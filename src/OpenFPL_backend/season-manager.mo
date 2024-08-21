@@ -719,11 +719,11 @@ module {
     };
 
     public func executeSubmitFixtureData(submitFixtureData : DTOs.SubmitFixtureDataDTO) : async () {
-      let clubs = Array.map<T.Club, T.ClubId>(clubComposite.getClubs(), func(club: T.Club){
-        return club.id;
-      });
-      let players = playerComposite.getActivePlayers(systemState.calculationSeasonId, clubs);
+      
+      let players = playerComposite.getAllPlayers(systemState.calculationSeasonId);
+      
       let populatedPlayerEvents = await seasonComposite.populatePlayerEventData(submitFixtureData, players);
+      
       switch (populatedPlayerEvents) {
         case (null) {};
         case (?events) {
@@ -1473,8 +1473,16 @@ module {
       await managerComposite.cleanFantasyTeams();
     };
 
-    public func removeDuplicatedGameweeks() : async (){
-      await managerComposite.removeDuplicatedGameweeks();
+    public func removeDuplicateGameweekSnapshots() : async (){
+      await managerComposite.removeDuplicateGameweekSnapshots();
+    };
+
+    public func removeEventDataFromFixtures() : async (){
+      await seasonComposite.removeEventDataFromFixtures();
+    };
+
+    public func removeEventDataFromPlayers() : async (){
+      await playerComposite.removeEventDataFromPlayers();
     };
 
     public func setupTesting() {

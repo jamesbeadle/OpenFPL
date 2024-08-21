@@ -1521,9 +1521,56 @@ import Debug "mo:base/Debug";
 
     private func postUpgradeCallback() : async (){
 
-      await seasonManager.removeDuplicatedGameweeks();
+      recordSystemEvent({
+        eventDetail = "Updating manager wasm"; 
+        eventId = 0;
+        eventTime = Time.now();
+        eventTitle = "Canister Log";
+        eventType = #SystemCheck;
+      });
+      
+      await updateManagerCanisterWasms();
 
-      //TODO: Remove duplicate gameweek
+      recordSystemEvent({
+        eventDetail = "Removing gameweek snapshots"; 
+        eventId = 0;
+        eventTime = Time.now();
+        eventTitle = "Canister Log";
+        eventType = #SystemCheck;
+      });
+
+      await seasonManager.removeDuplicateGameweekSnapshots();
+
+      recordSystemEvent({
+        eventDetail = "Remove event data from fixtures"; 
+        eventId = 0;
+        eventTime = Time.now();
+        eventTitle = "Canister Log";
+        eventType = #SystemCheck;
+      });
+
+      await seasonManager.removeEventDataFromFixtures();
+
+      recordSystemEvent({
+        eventDetail = "Remove event data from players"; 
+        eventId = 0;
+        eventTime = Time.now();
+        eventTitle = "Canister Log";
+        eventType = #SystemCheck;
+      });
+
+
+      await seasonManager.removeEventDataFromPlayers();
+      
+      recordSystemEvent({
+        eventDetail = "Updating cache values"; 
+        eventId = 0;
+        eventTime = Time.now();
+        eventTitle = "Canister Log";
+        eventType = #SystemCheck;
+      });
+
+      
       //await seasonManager.removeOnHold();
       //on each update generate new hash values
       await seasonManager.updateCacheHash("clubs");
@@ -1539,10 +1586,25 @@ import Debug "mo:base/Debug";
       await cyclesCheckCallback();
       
       //await systemCheckCallback(); //TODO UPDATE THIS SO IT's more informative and delete the existing
-      //await seasonManager.snapshotFantasyTeams();
       //await seasonManager.removeDuplicatePlayer(602);
       //await seasonManager.resetManagerBonusesAvailable();
       //setupTesting();
+    };
+
+    private func updateManagerCanisterWasms() : async (){
+      let managerCanisterIds = seasonManager.getManagerCanisterIds();
+
+     let IC : Management.Management = actor (Environment.Default);
+     for(canisterId in Iter.fromArray(managerCanisterIds)){
+      
+       await IC.stop_canister({ canister_id = Principal.fromText(canisterId); });
+      
+       let oldManagement = actor (canisterId) : actor {};
+       let _ = await (system ManagerCanister._ManagerCanister)(#upgrade oldManagement)();
+      
+       await IC.start_canister({ canister_id = Principal.fromText(canisterId); });
+     };
+
     };
 
     public shared ({ caller }) func logStatus (dto: DTOs.LogStatusDTO) : async (){

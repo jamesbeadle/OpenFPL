@@ -1471,13 +1471,13 @@ module {
       };
     };
 
-    public func removeDuplicatedGameweeks() : async (){
+    public func removeDuplicateGameweekSnapshots() : async (){
       for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
         let manager_canister = actor (canisterId) : actor {
-          removeDuplicatedGameweeks : () -> async ();
+          removeDuplicateGameweekSnapshots : () -> async ();
         };
 
-        await manager_canister.removeDuplicatedGameweeks();
+        await manager_canister.removeDuplicateGameweekSnapshots();
 
         logStatus("Remove duplicate gameweeks complete.");
       };
