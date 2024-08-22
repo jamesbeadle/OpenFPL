@@ -109,7 +109,7 @@ function createManagerStore() {
         seasonId,
       };
       let result = await actor.getFantasyTeamSnapshot(dto);
-      
+
       if (isError(result)) {
         console.error("Error fetching fantasy team for gameweek:");
       }
