@@ -48,7 +48,6 @@ function createWeeklyLeaderboardStore() {
       };
 
       let result = await actor.getWeeklyLeaderboard(dto);
-
       if (isError(result)) {
         let emptyLeaderboard = {
           entries: [],
@@ -90,7 +89,7 @@ function createWeeklyLeaderboardStore() {
     if (currentPage <= 4 && gameweek == calculationGameweek) {
       const cachedData = localStorage.getItem(category);
 
-      if (cachedData) {
+      if (cachedData && cachedData != "undefined") {
         let cachedWeeklyLeaderboard: WeeklyLeaderboardDTO;
         cachedWeeklyLeaderboard = JSON.parse(cachedData, replacer);
 
@@ -129,7 +128,10 @@ function createWeeklyLeaderboardStore() {
       return { entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n };
     }
 
-    localStorage.setItem(category, JSON.stringify(leaderboardData, replacer));
+    localStorage.setItem(
+      category,
+      JSON.stringify(leaderboardData.ok, replacer),
+    );
 
     return leaderboardData;
   }

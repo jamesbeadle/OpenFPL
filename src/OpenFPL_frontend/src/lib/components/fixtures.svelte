@@ -6,9 +6,7 @@
   import { toastsError } from "$lib/stores/toasts-store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import {
-    convertFixtureStatus,
     formatUnixTimeToTime,
-    getFixtureStatusText,
   } from "../utils/helpers";
   import type { ClubDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
@@ -119,7 +117,7 @@
         {#each fixtures as { fixture, homeTeam, awayTeam }}
           <div
             class={`flex flex-row items-center py-2 border-b border-gray-700  ${
-              convertFixtureStatus(fixture.status) < 3
+              Object.keys(fixture.status)[0] != "Finalised"
                 ? "text-gray-400"
                 : "text-white"
             }`}
@@ -163,12 +161,12 @@
 
             <div class="flex w-2/12 xs:w-2/12 md:w-2/12 lg:w-1/12 flex-col">
               <span
-                >{convertFixtureStatus(fixture.status) < 3
+                >{Object.keys(fixture.status)[0] != "Finalised" 
                   ? "-"
                   : fixture.homeGoals}</span
               >
               <span
-                >{convertFixtureStatus(fixture.status) < 3
+                >{Object.keys(fixture.status)[0] != "Finalised"
                   ? "-"
                   : fixture.awayGoals}</span
               >
@@ -183,21 +181,25 @@
             </div>
 
             <div class="hidden md:flex md:w-2/12 lg:w-2/12">
-              {#if convertFixtureStatus(fixture.status) == 0}<div
+              {#if Object.keys(fixture.status)[0] == "Unplayed"}<div
                   class="w-[4px] bg-gray-400 mr-2 unplayed-divider"
                 />{/if}
-              {#if convertFixtureStatus(fixture.status) == 1}<div
+              {#if Object.keys(fixture.status)[0] == "Active"}<div
                   class="w-[4px] bg-gray-400 mr-2 active-divider"
                 />{/if}
-              {#if convertFixtureStatus(fixture.status) == 2}<div
+              {#if Object.keys(fixture.status)[0] == "Complete"}<div
                   class="w-[4px] bg-gray-400 mr-2 complete-divider"
                 />{/if}
-              {#if convertFixtureStatus(fixture.status) == 3}<div
-                  class="w-[4px] bg-gray-400 mr-2 verified-divider"
+              {#if Object.keys(fixture.status)[0] == "Finalised"}<div
+                  class="w-[4px] bg-gray-400 mr-2 finalised-divider"
                 />{/if}
 
               <span class="ml-4 md:ml-0 text-left">
-                {getFixtureStatusText(convertFixtureStatus(fixture.status))}
+
+                {#if Object.keys(fixture.status)[0] == "Unplayed"}Unplayed{/if}
+                {#if Object.keys(fixture.status)[0] == "Active"}Active{/if}
+                {#if Object.keys(fixture.status)[0] == "Complete"}Complete{/if}
+                {#if Object.keys(fixture.status)[0] == "Finalised"}Finalised{/if}
               </span>
             </div>
           </div>

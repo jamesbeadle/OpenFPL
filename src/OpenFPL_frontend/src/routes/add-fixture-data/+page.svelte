@@ -160,7 +160,6 @@
 
     selectedPlayers.set(allPlayers);
     playerEventData.set(playerEvents);
-    console.log($selectedPlayers);
   }
 
   function saveDraft() {
@@ -200,7 +199,6 @@
     await playerStore.sync();
     selectedTeam = tab === "home" ? homeTeam : awayTeam;
     teamPlayers.set(players.filter((x) => x.clubId == selectedTeam?.id));
-    console.log($teamPlayers);
     activeTab = tab;
   }
 

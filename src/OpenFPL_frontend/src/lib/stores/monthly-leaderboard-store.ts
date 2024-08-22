@@ -58,7 +58,6 @@ function createMonthlyLeaderboardStore() {
       };
 
       let result = await actor.getMonthlyLeaderboards(dto);
-
       if (isError(result)) {
         console.error("Error syncing monthly leaderboards");
         return;
@@ -114,14 +113,16 @@ function createMonthlyLeaderboardStore() {
       }
     }
 
-    let result = await actor.getClubLeaderboards(
+    let dto: GetMonthlyLeaderboardDTO = {
       seasonId,
       month,
       clubId,
-      limit,
-      offset,
+      offset: BigInt(offset),
+      limit: BigInt(limit),
       searchTerm,
-    );
+    };
+
+    let result = await actor.getMonthlyLeaderboard(dto);
 
     let emptyReturn = {
       month: 0,
@@ -132,7 +133,6 @@ function createMonthlyLeaderboardStore() {
     };
 
     if (isError(result)) {
-      console.error("Error fetching monthly leaderboard");
       return emptyReturn;
     }
 

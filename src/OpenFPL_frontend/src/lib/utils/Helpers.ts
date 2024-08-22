@@ -171,21 +171,6 @@ export function getPositionAbbreviation(position: Position): string {
   }
 }
 
-export function getFixtureStatusText(status: FixtureStatus): string {
-  switch (status) {
-    case FixtureStatus.UNPLAYED:
-      return "Unplayed";
-    case FixtureStatus.ACTIVE:
-      return "Active";
-    case FixtureStatus.COMPLETED:
-      return "In Consensus";
-    case FixtureStatus.VERIFIED:
-      return "Verified";
-    default:
-      return "-";
-  }
-}
-
 export function convertDateToReadable(nanoseconds: number): string {
   const milliseconds = nanoseconds / 1e6;
   const date = new Date(milliseconds);
@@ -728,7 +713,7 @@ export function convertFixtureStatus(
   if ("Unplayed" in fixtureStatus) return FixtureStatus.UNPLAYED;
   if ("Active" in fixtureStatus) return FixtureStatus.ACTIVE;
   if ("Complete" in fixtureStatus) return FixtureStatus.COMPLETED;
-  if ("Finalised" in fixtureStatus) return FixtureStatus.VERIFIED;
+  if ("Finalised" in fixtureStatus) return FixtureStatus.FINALISED;
   return FixtureStatus.UNPLAYED;
 }
 

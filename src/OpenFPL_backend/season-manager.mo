@@ -1494,6 +1494,10 @@ module {
       await managerComposite.resetManagerSnapshotPoints();
     };
 
+    public func getOrderedSnapshots() : async [T.FantasyTeamSnapshot]{
+      await managerComposite.getOrderedSnapshots();
+    };
+
     public func setFixtureToComplete(seasonId: T.SeasonId, fixtureId: T.FixtureId){
       seasonComposite.setFixtureToComplete(seasonId, fixtureId);
     };

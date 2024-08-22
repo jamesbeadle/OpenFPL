@@ -131,8 +131,6 @@ function createManagerStore() {
         }
 
         let snapshot = result.ok;
-        console.log("Snapshot");
-        console.log(snapshot);
         localStorage.setItem(category, JSON.stringify(snapshot, replacer));
         localStorage.setItem(
           `${category}_hash`,

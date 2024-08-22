@@ -1495,5 +1495,19 @@ module {
       };
     };
 
+    public func getOrderedSnapshots() : async [T.FantasyTeamSnapshot]{
+      let snapshotsBuffer = Buffer.fromArray<T.FantasyTeamSnapshot>([]);
+      for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
+        let manager_canister = actor (canisterId) : actor {
+          getOrderedSnapshots : (seasonId : T.SeasonId, gameweek : T.GameweekNumber) -> async [T.FantasyTeamSnapshot];
+        };
+
+        let snapshots = await manager_canister.getOrderedSnapshots(1,1);
+        snapshotsBuffer.append(Buffer.fromArray(snapshots));
+        logStatus("Found ." # Nat.toText(Array.size(snapshots)) # " snapshots.");
+      };
+      return Buffer.toArray(snapshotsBuffer);
+    };
+
   };
 };

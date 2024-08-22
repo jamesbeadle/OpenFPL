@@ -341,7 +341,7 @@
           <div class="w-3/12 xs:w-4/12 px-4">&nbsp;</div>
         </div>
 
-        {#if leaderboard && leaderboard.entries.length > 0}
+        {#if leaderboard && leaderboard.entries && leaderboard.entries.length > 0}
           {#each leaderboard.entries as entry}
             <a href={`/manager?id=${entry.principalId}&gw=${selectedGameweek}`}>
               <div

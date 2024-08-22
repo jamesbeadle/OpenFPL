@@ -31,7 +31,7 @@ function createSeasonLeaderboardStore() {
 
     let error = isError(newHashValues);
     if (error) {
-      console.error("Error syncing season leaderboard store");
+      console.error("Error fetching leaderboard store.");
       return;
     }
 
@@ -54,9 +54,7 @@ function createSeasonLeaderboardStore() {
         searchTerm: "",
       };
       let result = await actor.getSeasonLeaderboard(dto);
-
       if (isError(result)) {
-        console.error("Error syncing season leaderboard.");
         return;
       }
 
@@ -102,7 +100,7 @@ function createSeasonLeaderboardStore() {
     if (currentPage <= 4 && seasonId == systemState?.calculationSeasonId) {
       const cachedData = localStorage.getItem(category);
 
-      if (cachedData) {
+      if (cachedData && cachedData != "undefined") {
         let cachedSeasonLeaderboard: SeasonLeaderboardDTO;
         cachedSeasonLeaderboard = JSON.parse(
           cachedData || "{entries: [], seasonId: 0, totalEntries: 0n }",
@@ -120,20 +118,29 @@ function createSeasonLeaderboardStore() {
       }
     }
 
-    let result = await actor.getSeasonLeaderboard(
-      seasonId,
-      limit,
-      offset,
-      searchTerm,
-    );
+    let dto: GetSeasonLeaderboardDTO = {
+      offset: BigInt(offset),
+      seasonId: seasonId,
+      limit: BigInt(limit),
+      searchTerm: "",
+    };
+
+    let result = await actor.getSeasonLeaderboard(dto);
 
     if (isError(result)) {
-      console.error("Error fetching season leaderboard");
+      return {
+        totalEntries: 0n,
+        seasonId: 1,
+        entries: [],
+      };
     }
 
     let leaderboardData = result.ok;
 
-    localStorage.setItem(category, JSON.stringify(leaderboardData, replacer));
+    localStorage.setItem(
+      category,
+      JSON.stringify(leaderboardData.ok, replacer),
+    );
 
     return leaderboardData;
   }

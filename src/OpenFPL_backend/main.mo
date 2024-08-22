@@ -1522,9 +1522,26 @@ import Debug "mo:base/Debug";
     };
 
     private func postUpgradeCallback() : async (){
+      
+      recordSystemEvent({
+        eventDetail = "Updating manager wasm"; 
+        eventId = 0;
+        eventTime = Time.now();
+        eventTitle = "Canister Log";
+        eventType = #SystemCheck;
+      });
+      
+      await updateManagerCanisterWasms();
+      
+      recordSystemEvent({
+        eventDetail = "Getting ordered snapshots in post upgrade"; 
+        eventId = 0;
+        eventTime = Time.now();
+        eventTitle = "Canister Log";
+        eventType = #SystemCheck;
+      });
 
-      seasonManager.setGameScore(1,1);
-
+      let _ = await seasonManager.getOrderedSnapshots();
       /* V1.5.1 postupgrade:
       seasonManager.setFixtureToComplete(1,1);
       //await seasonManager.removeEventDataFromFixtures();

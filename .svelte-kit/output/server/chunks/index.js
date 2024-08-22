@@ -3515,7 +3515,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1x01ra6"
+  version_hash: "zi34b9"
 };
 async function get_hooks() {
   return {};
@@ -4764,7 +4764,7 @@ var FixtureStatus = /* @__PURE__ */ ((FixtureStatus2) => {
   FixtureStatus2[FixtureStatus2["UNPLAYED"] = 0] = "UNPLAYED";
   FixtureStatus2[FixtureStatus2["ACTIVE"] = 1] = "ACTIVE";
   FixtureStatus2[FixtureStatus2["COMPLETED"] = 2] = "COMPLETED";
-  FixtureStatus2[FixtureStatus2["VERIFIED"] = 3] = "VERIFIED";
+  FixtureStatus2[FixtureStatus2["FINALISED"] = 3] = "FINALISED";
   return FixtureStatus2;
 })(FixtureStatus || {});
 var PlayerEvent = /* @__PURE__ */ ((PlayerEvent2) => {
@@ -4919,8 +4919,8 @@ function convertFixtureStatus(fixtureStatus) {
     return FixtureStatus.ACTIVE;
   if ("Complete" in fixtureStatus)
     return FixtureStatus.COMPLETED;
-  if ("Veriified" in fixtureStatus)
-    return FixtureStatus.VERIFIED;
+  if ("Finalised" in fixtureStatus)
+    return FixtureStatus.FINALISED;
   return FixtureStatus.UNPLAYED;
 }
 function isError(response) {
@@ -4944,8 +4944,8 @@ function createSystemStore() {
     }
     let dataCacheValues = newHashValues.ok;
     let categoryHash = dataCacheValues.find((x) => x.category === category) ?? null;
-    localStorage.getItem(`${category}_hash`);
-    {
+    const localHash = localStorage.getItem(`${category}_hash`);
+    if (categoryHash != localHash) {
       let result = await actor.getSystemState();
       if (isError(result)) {
         console.error("Error syncing system store");
@@ -4958,6 +4958,15 @@ function createSystemStore() {
       );
       localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
       set(updatedSystemStateData);
+    } else {
+      const cachedSystemStateData = localStorage.getItem(category);
+      let cachedSystemState = null;
+      try {
+        cachedSystemState = JSON.parse(cachedSystemStateData || "{}");
+      } catch (e) {
+        cachedSystemState = null;
+      }
+      set(cachedSystemState);
     }
   }
   async function getSystemState() {
@@ -5870,8 +5879,6 @@ function createManagerStore() {
           console.error("Error fetching fantasy team for gameweek:");
         }
         let snapshot = result.ok;
-        console.log("Snapshot");
-        console.log(snapshot);
         localStorage.setItem(category, JSON.stringify(snapshot, replacer));
         localStorage.setItem(
           `${category}_hash`,
@@ -6140,7 +6147,7 @@ function createWeeklyLeaderboardStore() {
     const offset = (currentPage - 1) * limit;
     if (currentPage <= 4 && gameweek == calculationGameweek) {
       const cachedData = localStorage.getItem(category);
-      if (cachedData) {
+      if (cachedData && cachedData != "undefined") {
         let cachedWeeklyLeaderboard;
         cachedWeeklyLeaderboard = JSON.parse(cachedData, replacer);
         if (cachedWeeklyLeaderboard) {
@@ -6175,7 +6182,10 @@ function createWeeklyLeaderboardStore() {
       );
       return { entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n };
     }
-    localStorage.setItem(category, JSON.stringify(leaderboardData, replacer));
+    localStorage.setItem(
+      category,
+      JSON.stringify(leaderboardData.ok, replacer)
+    );
     return leaderboardData;
   }
   async function getLeadingWeeklyTeam(seasonId, gameweek) {
@@ -7092,14 +7102,15 @@ function createMonthlyLeaderboardStore() {
         }
       }
     }
-    let result = await actor.getClubLeaderboards(
+    let dto = {
       seasonId,
       month,
       clubId,
-      limit,
-      offset,
+      offset: BigInt(offset),
+      limit: BigInt(limit),
       searchTerm
-    );
+    };
+    let result = await actor.getMonthlyLeaderboard(dto);
     let emptyReturn = {
       month: 0,
       clubId: 0,
@@ -7108,7 +7119,6 @@ function createMonthlyLeaderboardStore() {
       entries: []
     };
     if (isError(result)) {
-      console.error("Error fetching monthly leaderboard");
       return emptyReturn;
     }
     let leaderboardData = result.ok;
@@ -7146,7 +7156,7 @@ function createSeasonLeaderboardStore() {
     const newHashValues = await actor.getDataHashes();
     let error = isError(newHashValues);
     if (error) {
-      console.error("Error syncing season leaderboard store");
+      console.error("Error fetching leaderboard store.");
       return;
     }
     let dataCacheValues = newHashValues.ok;
@@ -7163,7 +7173,6 @@ function createSeasonLeaderboardStore() {
       };
       let result = await actor.getSeasonLeaderboard(dto);
       if (isError(result)) {
-        console.error("Error syncing season leaderboard.");
         return;
       }
       let updatedLeaderboardData = result.ok;
@@ -7199,7 +7208,7 @@ function createSeasonLeaderboardStore() {
     const offset = (currentPage - 1) * limit;
     if (currentPage <= 4 && seasonId == systemState?.calculationSeasonId) {
       const cachedData = localStorage.getItem(category);
-      if (cachedData) {
+      if (cachedData && cachedData != "undefined") {
         let cachedSeasonLeaderboard;
         cachedSeasonLeaderboard = JSON.parse(
           cachedData || "{entries: [], seasonId: 0, totalEntries: 0n }"
@@ -7215,17 +7224,25 @@ function createSeasonLeaderboardStore() {
         }
       }
     }
-    let result = await actor.getSeasonLeaderboard(
+    let dto = {
+      offset: BigInt(offset),
       seasonId,
-      limit,
-      offset,
-      searchTerm
-    );
+      limit: BigInt(limit),
+      searchTerm: ""
+    };
+    let result = await actor.getSeasonLeaderboard(dto);
     if (isError(result)) {
-      console.error("Error fetching season leaderboard");
+      return {
+        totalEntries: 0n,
+        seasonId: 1,
+        entries: []
+      };
     }
     let leaderboardData = result.ok;
-    localStorage.setItem(category, JSON.stringify(leaderboardData, replacer));
+    localStorage.setItem(
+      category,
+      JSON.stringify(leaderboardData.ok, replacer)
+    );
     return leaderboardData;
   }
   return {
@@ -8739,19 +8756,16 @@ const Clear_draft_modal = create_ssr_component(($$result, $$props, $$bindings, s
 });
 const Page$f = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let fixtureId;
-  let $$unsubscribe_teamPlayers;
   let $playerEventData, $$unsubscribe_playerEventData = noop, $$subscribe_playerEventData = () => ($$unsubscribe_playerEventData(), $$unsubscribe_playerEventData = subscribe(playerEventData, ($$value) => $playerEventData = $$value), playerEventData);
-  let $selectedPlayers, $$unsubscribe_selectedPlayers;
   let $systemStore, $$unsubscribe_systemStore;
   let $$unsubscribe_teamStore;
+  let $selectedPlayers, $$unsubscribe_selectedPlayers;
   let $page, $$unsubscribe_page;
   $$unsubscribe_systemStore = subscribe(systemStore, (value) => $systemStore = value);
   $$unsubscribe_teamStore = subscribe(teamStore, (value) => value);
   $$unsubscribe_page = subscribe(page, (value) => $page = value);
   let showClearDraftModal = false;
   let showConfirmDataModal = false;
-  let teamPlayers = writable([]);
-  $$unsubscribe_teamPlayers = subscribe(teamPlayers, (value) => value);
   let selectedPlayers = writable([]);
   $$unsubscribe_selectedPlayers = subscribe(selectedPlayers, (value) => $selectedPlayers = value);
   let playerEventData = writable([]);
@@ -8799,11 +8813,10 @@ const Page$f = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   }
   fixtureId = Number($page.url.searchParams.get("id"));
   $playerEventData.length == 0 || $playerEventData.filter((x) => convertEvent(x.eventType) == 0).length != $selectedPlayers.length;
-  $$unsubscribe_teamPlayers();
   $$unsubscribe_playerEventData();
-  $$unsubscribe_selectedPlayers();
   $$unsubscribe_systemStore();
   $$unsubscribe_teamStore();
+  $$unsubscribe_selectedPlayers();
   $$unsubscribe_page();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
