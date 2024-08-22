@@ -39,4 +39,4 @@ ARGS="( record {
 FUNCTION_ID=3000
 
 # Submit the proposal
-./make_custom_function_proposal.sh $FUNCTION_ID "$TITLE" "$SUMMARY" "$URL" "$ARGS"
+./make_custom_function_proposal.sh $FUNCTION_ID "$TITLE" "$SUMMARY" "$URL" "$ARGS" "executeSubmitFixtureData"
