@@ -3515,7 +3515,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "qjnq3f"
+  version_hash: "139933"
 };
 async function get_hooks() {
   return {};
@@ -5922,7 +5922,10 @@ function createManagerStore() {
           gameweek,
           seasonId
         };
+        console.log("getting fantasy team snapshot");
+        console.log(dto);
         let result = await actor.getFantasyTeamSnapshot(dto);
+        console.log(result);
         if (isError(result)) {
           console.error("Error fetching fantasy team for gameweek:");
         }

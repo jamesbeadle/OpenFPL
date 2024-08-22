@@ -1040,7 +1040,7 @@ actor class _ManagerCanister() {
     let principalId = Principal.toText(caller);
     assert principalId == Environment.BACKEND_CANISTER_ID;
 
- let managerGroupIndex = managerGroupIndexes.get(principalId);
+    let managerGroupIndex = managerGroupIndexes.get(dto.managerPrincipalId);
 
     var managers: [T.Manager] = [];
 
@@ -1118,14 +1118,10 @@ actor class _ManagerCanister() {
 
   public shared ({ caller }) func getOrderedSnapshots(seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async [T.FantasyTeamSnapshot] {
     
-    await logStatus("Get ordered snapshots called with caller " # Principal.toText(caller) # ", seasonId " # Nat16.toText(seasonId) # " and gameweek " # Nat8.toText(gameweek) # ".");
-    
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == Environment.BACKEND_CANISTER_ID;
 
-    await logStatus("Get ordered snapshots called.");
-    
     let allManagersBuffer = Buffer.fromArray<T.FantasyTeamSnapshot>([]);
     for (index in Iter.range(0, 11)) {
 
@@ -1196,8 +1192,6 @@ actor class _ManagerCanister() {
         };
       };
     };
-
-    await logStatus("Total snapshots found: ." # Nat.toText(allManagersBuffer.size()));
 
     let allManagerSnapshots = Buffer.toArray(allManagersBuffer);
     let sortedManagerSnapshots = Array.sort(
@@ -2222,7 +2216,6 @@ actor class _ManagerCanister() {
       };
     };
 
-    await logStatus("Snapshotting a total of " # Nat.toText(Array.size(managers)) # " managers.");
     for (manager in Iter.fromArray(managers)) {
 
       var seasonFound = false;
@@ -3163,7 +3156,6 @@ actor class _ManagerCanister() {
       };
     };
 
-    await logStatus("Cleaning " # Nat.toText(Array.size(managers)) # " teams.");
     for (manager in Iter.fromArray(managers)) {
       var captainRemoved = false;
       let playerIdBuffer = Buffer.fromArray<T.PlayerId>([]);
@@ -3234,12 +3226,6 @@ actor class _ManagerCanister() {
       for(id in Iter.fromArray(manager.playerIds)){
         arrstr := arrstr # Nat16.toText(id) # ",";
       };
-      
-
-      //await logStatus("Team value for " # manager.principalId # "is " # Nat16.toText(currentTeamValue) # ", " # arrstr);
-      if(currentTeamValue > 1200){
-        await logStatus("Team " # manager.principalId # " has a team over 300m.");
-      };
 
       var bankBalance: Nat16 = 0;
       var testBalance: Int = 1200 - Int16.toInt(Int16.fromNat16(currentTeamValue));
@@ -3251,7 +3237,6 @@ actor class _ManagerCanister() {
         updatedPlayerIds := [];
         bankBalance := 1200;
       };
-      //await logStatus("Adding updated " # manager.principalId # " to manager array.");
       
       let updatedManager : T.Manager = {
         principalId = manager.principalId;
@@ -3290,8 +3275,6 @@ actor class _ManagerCanister() {
       };
       managerBuffer.add(updatedManager);
     };
-        
-    await logStatus("All managers have been cleaned, total: " # Nat.toText(Array.size(Buffer.toArray(managerBuffer))));
     
     switch (managerGroup) {
       case 0 {
@@ -3394,8 +3377,6 @@ actor class _ManagerCanister() {
       };
     };
 
-    await logStatus("Removing duplicate manager snapshots from " # Nat.toText(Array.size(managers)) # " teams.");
-    
     for (manager in Iter.fromArray(managers)) {
       
       let updatedSeasonBuffer = Buffer.fromArray<T.FantasyTeamSeason>([]);
@@ -3455,8 +3436,6 @@ actor class _ManagerCanister() {
       };
       managerBuffer.add(updatedManager);
     };
-        
-    await logStatus("All managers snapshots have been removed, total: " # Nat.toText(Array.size(Buffer.toArray(managerBuffer))));
     
     switch (managerGroup) {
       case 0 {
@@ -3559,8 +3538,6 @@ actor class _ManagerCanister() {
       };
     };
 
-    await logStatus("Resetting snapshot points from " # Nat.toText(Array.size(managers)) # " teams.");
-    
     for (manager in Iter.fromArray(managers)) {
       
       let updatedSeasonBuffer = Buffer.fromArray<T.FantasyTeamSeason>([]);
@@ -3650,8 +3627,6 @@ actor class _ManagerCanister() {
       };
       managerBuffer.add(updatedManager);
     };
-        
-    await logStatus("All managers snapshots points have been reset to 0, total: " # Nat.toText(Array.size(Buffer.toArray(managerBuffer))));
     
     switch (managerGroup) {
       case 0 {

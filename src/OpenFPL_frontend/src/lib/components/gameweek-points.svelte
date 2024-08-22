@@ -52,6 +52,7 @@
       if(principal == ""){
         return;
       }
+      console.log("loading gameweek points");
       await loadGameweekPoints(principal);
     } catch (error) {
       toastsError({
@@ -72,6 +73,7 @@
   }
 
   async function loadGameweekPoints(principal: string) {
+    console.log(principal)
     if (!principal) {
       return;
     }
@@ -82,6 +84,7 @@
       selectedGameweek
     );
 
+    console.log(fantasyTeam)
     if (!fantasyTeam) {
       return;
     }
