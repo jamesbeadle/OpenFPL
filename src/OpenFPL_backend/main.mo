@@ -202,11 +202,13 @@ import Debug "mo:base/Debug";
     };
 
     public shared query ({ caller }) func validateSubmitFixtureData(submitFixtureData : DTOs.SubmitFixtureDataDTO) : async T.RustResult {
+      Debug.print(debug_show submitFixtureData);
       assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
       return seasonManager.validateSubmitFixtureData(submitFixtureData);
     };
 
     public shared ({ caller }) func executeSubmitFixtureData(submitFixtureData : DTOs.SubmitFixtureDataDTO) : async () {
+      Debug.print(debug_show submitFixtureData);
       assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
       return await seasonManager.executeSubmitFixtureData(submitFixtureData);
     };

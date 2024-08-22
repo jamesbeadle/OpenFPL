@@ -1,19 +1,19 @@
 
-export PROPOSER_NEURON_ID=07cc5979857a5c037e2b980817bbd4dafea28675c0b57cf6f19c07795662e954
+export PROPOSER_NEURON_ID=ba5cbdc9ce743b27af1f4419c4c4fac43acf55df338976d14745632320f23e16
 export NETWORK=local
 export IDENTITY=default
 export IC_URL=http://localhost:8080
 
 export WASM_FOLDER="../wasms"
 
-dfx canister call neuron_controller init
 dfx identity use ic_admin
 OWNER_IDENTITY=$(dfx identity whoami)
 export PEM_FILE="$(readlink -f "$HOME/.config/dfx/identity/${OWNER_IDENTITY}/identity.pem")"
 
 
-./governance/local/UpgradeBackend.sh
-#./governance/local/137.AddPromoteNewTeamFn.sh
+#./governance/local/register_generic_functions.sh
+#./governance/local/UpgradeBackend.sh
+./governance/local/417.AddFixtureData_1.sh
 #./governance/local/138.PromoteSouthampton.sh
 #./governance/local/142.Add2024Fixtures.sh
 #./governance/local/99.TestPlayerProposal.sh

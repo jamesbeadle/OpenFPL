@@ -1,0 +1,86 @@
+// Version: 1.0.0
+type ClaimOrRefreshResponse = {refreshed_neuron_id : ?NeuronId};
+type CommandResponse =
+  {
+    #ClaimOrRefresh : ClaimOrRefreshResponse;
+    #Configure;
+    #Disburse : DisburseResponse;
+    #Error : GovernanceError;
+    #Follow;
+    #Spawn : SpawnResponse;
+    #StakeMaturity : StakeMaturityResponse
+  };
+type DisburseResponse = {transfer_block_height : Nat64};
+type Error__10 = Error__9;
+type Error__9 =
+  {
+    #expired;
+    #fatal : Text;
+    #fee_not_defined : Text;
+    #invalid : Text;
+    #missing : Text;
+    #other : Text;
+    #rejected : Text;
+    #trapped : Text
+  };
+type GovernanceError = {error_message : Text; error_type : Int32};
+type ManageNeuronResponse = {command : ?CommandResponse};
+type Map<K, V> = [var ?([var ?K], [var ?V], [var Nat], [var Nat32])];
+type NeuronId = {id : Nat64};
+type NeuronResponse = {#err : Error__10; #ok : ManageNeuronResponse};
+type SpawnResponse = {created_neuron_id : ?NeuronId};
+type StakeMaturityResponse =
+  {maturity_e8s : Nat64; stake_maturity_e8s : Nat64};
+type State__10 = State__9;
+type State__11 =
+  {var ingress_expiry : Nat; var nonce : State__10; var read_attempts : Nat};
+type State__13 = {var version : Version__5};
+type State__14 =
+  {
+    var domain : Text;
+    var fees : State__8;
+    var nonce : State__10;
+    var path : Text
+  };
+type State__16 = {var version : Version__7};
+type State__17 = State__16;
+type State__18 = {var canister_id : Text; var fees : State__8};
+type State__20 = {var version : Version__9};
+type State__21 = State__20;
+type State__22 = Blob;
+type State__24 = {var version : Version__11};
+type State__25 = State__24;
+type State__26 = State__13;
+type State__27 = State__26;
+type State__5 = {var fees : Map<Text, Nat64>};
+type State__7 = {var version : Version__3};
+type State__8 = State__7;
+type State__9 = {var nonce : Nat};
+type Version__10 = {#null_; #v0 : State__22};
+type Version__11 = Version__10;
+type Version__2 = {#null_; #v0 : State__5};
+type Version__3 = Version__2;
+type Version__4 = {#null_; #v0 : State__11};
+type Version__5 = Version__4;
+type Version__6 = {#null_; #v0 : State__14};
+type Version__7 = Version__6;
+type Version__8 = {#null_; #v0 : State__18};
+type Version__9 = Version__8;
+actor {
+  stable var neuronResponse : ?NeuronResponse;
+  stable var state :
+    {
+      var ecdsa_client : State__21;
+      var ecdsa_identity : State__25;
+      var fees : State__8;
+      var governance_canister : Text;
+      var initialized : Bool;
+      var ledger_canister : Text;
+      var loopback_agent : State__27;
+      var loopback_client : State__17;
+      var neuron_id : Nat64;
+      var neuron_index : Nat64;
+      var nonce : State__10;
+      var self : Text
+    }
+};
