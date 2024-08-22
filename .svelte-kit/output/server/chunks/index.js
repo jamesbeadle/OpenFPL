@@ -3515,7 +3515,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "zi34b9"
+  version_hash: "qjnq3f"
 };
 async function get_hooks() {
   return {};
@@ -3995,7 +3995,7 @@ const idlFactory = ({ IDL }) => {
     "entries": IDL.Vec(CanisterDTO),
     "canisterTypeFilter": CanisterType
   });
-  const Result_27 = IDL.Variant({ "ok": GetCanistersDTO, "err": Error2 });
+  const Result_28 = IDL.Variant({ "ok": GetCanistersDTO, "err": Error2 });
   const ClubDTO = IDL.Record({
     "id": ClubId,
     "secondaryColourHex": IDL.Text,
@@ -4012,7 +4012,7 @@ const idlFactory = ({ IDL }) => {
     "code": IDL.Text,
     "name": IDL.Text
   });
-  const Result_26 = IDL.Variant({ "ok": IDL.Vec(CountryDTO), "err": Error2 });
+  const Result_27 = IDL.Variant({ "ok": IDL.Vec(CountryDTO), "err": Error2 });
   const PickTeamDTO = IDL.Record({
     "playerIds": IDL.Vec(PlayerId),
     "countrymenCountryId": CountryId,
@@ -4041,10 +4041,56 @@ const idlFactory = ({ IDL }) => {
     "canisterId": CanisterId,
     "monthlyBonusesAvailable": IDL.Nat8
   });
-  const Result_25 = IDL.Variant({ "ok": PickTeamDTO, "err": Error2 });
+  const Result_26 = IDL.Variant({ "ok": PickTeamDTO, "err": Error2 });
   const DataCacheDTO = IDL.Record({ "hash": IDL.Text, "category": IDL.Text });
-  const Result_24 = IDL.Variant({
+  const Result_25 = IDL.Variant({
     "ok": IDL.Vec(DataCacheDTO),
+    "err": Error2
+  });
+  const PrincipalId = IDL.Text;
+  const GetFantasyTeamSnapshotDTO = IDL.Record({
+    "seasonId": SeasonId,
+    "managerPrincipalId": PrincipalId,
+    "gameweek": GameweekNumber
+  });
+  const CalendarMonth = IDL.Nat8;
+  const FantasyTeamSnapshotDTO = IDL.Record({
+    "playerIds": IDL.Vec(PlayerId),
+    "month": CalendarMonth,
+    "teamValueQuarterMillions": IDL.Nat16,
+    "countrymenCountryId": CountryId,
+    "username": IDL.Text,
+    "goalGetterPlayerId": PlayerId,
+    "hatTrickHeroGameweek": GameweekNumber,
+    "transfersAvailable": IDL.Nat8,
+    "teamBoostGameweek": GameweekNumber,
+    "captainFantasticGameweek": GameweekNumber,
+    "countrymenGameweek": GameweekNumber,
+    "bankQuarterMillions": IDL.Nat16,
+    "noEntryPlayerId": PlayerId,
+    "monthlyPoints": IDL.Int16,
+    "safeHandsPlayerId": PlayerId,
+    "seasonId": SeasonId,
+    "braceBonusGameweek": GameweekNumber,
+    "favouriteClubId": ClubId,
+    "passMasterGameweek": GameweekNumber,
+    "teamBoostClubId": ClubId,
+    "goalGetterGameweek": GameweekNumber,
+    "captainFantasticPlayerId": PlayerId,
+    "gameweek": GameweekNumber,
+    "seasonPoints": IDL.Int16,
+    "transferWindowGameweek": GameweekNumber,
+    "noEntryGameweek": GameweekNumber,
+    "prospectsGameweek": GameweekNumber,
+    "safeHandsGameweek": GameweekNumber,
+    "principalId": IDL.Text,
+    "passMasterPlayerId": PlayerId,
+    "captainId": PlayerId,
+    "points": IDL.Int16,
+    "monthlyBonusesAvailable": IDL.Nat8
+  });
+  const Result_24 = IDL.Variant({
+    "ok": FantasyTeamSnapshotDTO,
     "err": Error2
   });
   const GetFixturesDTO = IDL.Record({ "seasonId": SeasonId });
@@ -4052,7 +4098,6 @@ const idlFactory = ({ IDL }) => {
   const ClubFilterDTO = IDL.Record({ "clubId": ClubId });
   const Result_12 = IDL.Variant({ "ok": IDL.Vec(PlayerDTO), "err": Error2 });
   const GetManagerDTO = IDL.Record({ "managerId": IDL.Text });
-  const CalendarMonth = IDL.Nat8;
   const FantasyTeamSnapshot = IDL.Record({
     "playerIds": IDL.Vec(PlayerId),
     "month": CalendarMonth,
@@ -4246,7 +4291,6 @@ const idlFactory = ({ IDL }) => {
     "limit": IDL.Nat,
     "canisterId": CanisterId
   });
-  const PrincipalId = IDL.Text;
   const LeagueMemberDTO = IDL.Record({
     "added": IDL.Int,
     "username": IDL.Text,
@@ -4496,11 +4540,16 @@ const idlFactory = ({ IDL }) => {
     "getBackendCanisterBalance": IDL.Func([], [Result_3], []),
     "getCanisterCyclesAvailable": IDL.Func([], [IDL.Nat], []),
     "getCanisterCyclesBalance": IDL.Func([], [Result_3], []),
-    "getCanisters": IDL.Func([GetCanistersDTO], [Result_27], []),
+    "getCanisters": IDL.Func([GetCanistersDTO], [Result_28], []),
     "getClubs": IDL.Func([], [Result_23], ["query"]),
-    "getCountries": IDL.Func([], [Result_26], ["query"]),
-    "getCurrentTeam": IDL.Func([], [Result_25], []),
-    "getDataHashes": IDL.Func([], [Result_24], ["query"]),
+    "getCountries": IDL.Func([], [Result_27], ["query"]),
+    "getCurrentTeam": IDL.Func([], [Result_26], []),
+    "getDataHashes": IDL.Func([], [Result_25], ["query"]),
+    "getFantasyTeamSnapshot": IDL.Func(
+      [GetFantasyTeamSnapshotDTO],
+      [Result_24],
+      []
+    ),
     "getFixtures": IDL.Func([GetFixturesDTO], [Result_17], ["query"]),
     "getFormerClubs": IDL.Func([], [Result_23], ["query"]),
     "getLoanedPlayers": IDL.Func([ClubFilterDTO], [Result_12], ["query"]),
@@ -5785,9 +5834,7 @@ const toastsError = ({
 var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai" };
 function createManagerStore() {
   const { subscribe: subscribe2, set } = writable(null);
-  let systemState;
   systemStore.subscribe((value) => {
-    systemState = value;
   });
   let actor = ActorFactory.createActor(
     idlFactory,
@@ -5855,7 +5902,7 @@ function createManagerStore() {
       throw error;
     }
   }
-  async function getFantasyTeamForGameweek(managerId, gameweek) {
+  async function getFantasyTeamForGameweek(managerId, seasonId, gameweek) {
     try {
       const category = "gameweek_points";
       const newHashValues = await actor.getDataHashes();
@@ -5870,11 +5917,12 @@ function createManagerStore() {
       ) ?? null;
       const localHash = localStorage.getItem(`${category}_hash`);
       if (weelklyLeaderboardHash != localHash) {
-        let result = await actor.getManagerGameweek(
-          managerId,
-          systemState?.calculationGameweek,
-          gameweek
-        );
+        let dto = {
+          managerPrincipalId: managerId,
+          gameweek,
+          seasonId
+        };
+        let result = await actor.getFantasyTeamSnapshot(dto);
         if (isError(result)) {
           console.error("Error fetching fantasy team for gameweek:");
         }

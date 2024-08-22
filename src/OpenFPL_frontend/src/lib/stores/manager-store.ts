@@ -6,6 +6,7 @@ import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
   DataCacheDTO,
   FantasyTeamSnapshot,
+  GetFantasyTeamSnapshotDTO,
   GetManagerDTO,
   ManagerDTO,
   PickTeamDTO,
@@ -98,6 +99,7 @@ function createManagerStore() {
 
   async function getFantasyTeamForGameweek(
     managerId: string,
+    seasonId: number,
     gameweek: number,
   ): Promise<FantasyTeamSnapshot | null> {
     try {
@@ -120,11 +122,12 @@ function createManagerStore() {
       const localHash = localStorage.getItem(`${category}_hash`);
 
       if (weelklyLeaderboardHash != localHash) {
-        let result = await actor.getManagerGameweek(
-          managerId,
-          systemState?.calculationGameweek,
+        let dto: GetFantasyTeamSnapshotDTO = {
+          managerPrincipalId: managerId,
           gameweek,
-        );
+          seasonId,
+        };
+        let result = await actor.getFantasyTeamSnapshot(dto);
 
         if (isError(result)) {
           console.error("Error fetching fantasy team for gameweek:");

@@ -266,6 +266,10 @@ module {
       return await managerComposite.getManager(dto.managerId, systemState.calculationSeasonId, weeklyLeaderboardEntry, monthlyLeaderboardEntry, seasonLeaderboardEntry);
     };
 
+    public func getFantasyTeamSnapshot(dto: DTOs.GetFantasyTeamSnapshotDTO) : async Result.Result<DTOs.FantasyTeamSnapshotDTO, T.Error>{
+     return await managerComposite.getFantasyTeamSnapshot(dto);   
+    };
+
     public func getManagerByUsername(username: Text) : async Result.Result<DTOs.ManagerDTO, T.Error> {
       return await managerComposite.getManagerByUsername(username);
     };

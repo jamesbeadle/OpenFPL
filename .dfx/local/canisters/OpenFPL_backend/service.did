@@ -231,25 +231,30 @@ type Result_3 =
    err: Error;
    ok: nat;
  };
-type Result_27 = 
+type Result_28 = 
  variant {
    err: Error;
    ok: GetCanistersDTO;
  };
-type Result_26 = 
+type Result_27 = 
  variant {
    err: Error;
    ok: vec CountryDTO;
  };
-type Result_25 = 
+type Result_26 = 
  variant {
    err: Error;
    ok: PickTeamDTO;
  };
-type Result_24 = 
+type Result_25 = 
  variant {
    err: Error;
    ok: vec DataCacheDTO;
+ };
+type Result_24 = 
+ variant {
+   err: Error;
+   ok: FantasyTeamSnapshotDTO;
  };
 type Result_23 = 
  variant {
@@ -702,6 +707,12 @@ type GetLeagueMembersDTO =
    offset: nat;
  };
 type GetFixturesDTO = record {seasonId: SeasonId;};
+type GetFantasyTeamSnapshotDTO = 
+ record {
+   gameweek: GameweekNumber;
+   managerPrincipalId: PrincipalId;
+   seasonId: SeasonId;
+ };
 type GetCanistersDTO = 
  record {
    canisterTypeFilter: CanisterType;
@@ -742,6 +753,42 @@ type FixtureDTO =
    kickOff: int;
    seasonId: SeasonId;
    status: FixtureStatusType;
+ };
+type FantasyTeamSnapshotDTO = 
+ record {
+   bankQuarterMillions: nat16;
+   braceBonusGameweek: GameweekNumber;
+   captainFantasticGameweek: GameweekNumber;
+   captainFantasticPlayerId: PlayerId;
+   captainId: PlayerId;
+   countrymenCountryId: CountryId;
+   countrymenGameweek: GameweekNumber;
+   favouriteClubId: ClubId;
+   gameweek: GameweekNumber;
+   goalGetterGameweek: GameweekNumber;
+   goalGetterPlayerId: PlayerId;
+   hatTrickHeroGameweek: GameweekNumber;
+   month: CalendarMonth;
+   monthlyBonusesAvailable: nat8;
+   monthlyPoints: int16;
+   noEntryGameweek: GameweekNumber;
+   noEntryPlayerId: PlayerId;
+   passMasterGameweek: GameweekNumber;
+   passMasterPlayerId: PlayerId;
+   playerIds: vec PlayerId;
+   points: int16;
+   principalId: text;
+   prospectsGameweek: GameweekNumber;
+   safeHandsGameweek: GameweekNumber;
+   safeHandsPlayerId: PlayerId;
+   seasonId: SeasonId;
+   seasonPoints: int16;
+   teamBoostClubId: ClubId;
+   teamBoostGameweek: GameweekNumber;
+   teamValueQuarterMillions: nat16;
+   transferWindowGameweek: GameweekNumber;
+   transfersAvailable: nat8;
+   username: text;
  };
 type FantasyTeamSnapshot = 
  record {
@@ -959,11 +1006,12 @@ service : {
   getBackendCanisterBalance: () -> (Result_3);
   getCanisterCyclesAvailable: () -> (nat);
   getCanisterCyclesBalance: () -> (Result_3);
-  getCanisters: (GetCanistersDTO) -> (Result_27);
+  getCanisters: (GetCanistersDTO) -> (Result_28);
   getClubs: () -> (Result_23) query;
-  getCountries: () -> (Result_26) query;
-  getCurrentTeam: () -> (Result_25);
-  getDataHashes: () -> (Result_24) query;
+  getCountries: () -> (Result_27) query;
+  getCurrentTeam: () -> (Result_26);
+  getDataHashes: () -> (Result_25) query;
+  getFantasyTeamSnapshot: (GetFantasyTeamSnapshotDTO) -> (Result_24);
   getFixtures: (GetFixturesDTO) -> (Result_17) query;
   getFormerClubs: () -> (Result_23) query;
   getLoanedPlayers: (ClubFilterDTO) -> (Result_12) query;

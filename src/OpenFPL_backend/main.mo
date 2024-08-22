@@ -53,6 +53,11 @@ import Debug "mo:base/Debug";
     public shared func getManager(dto: DTOs.GetManagerDTO) : async Result.Result<DTOs.ManagerDTO, T.Error> {
       return await seasonManager.getManager(dto);
     };
+
+    public shared func getFantasyTeamSnapshot(dto: DTOs.GetFantasyTeamSnapshotDTO) : async Result.Result<DTOs.FantasyTeamSnapshotDTO, T.Error> {
+      return await seasonManager.getFantasyTeamSnapshot(dto);
+    };
+    
     
 
     //Leaderboard calls:
@@ -1522,7 +1527,19 @@ import Debug "mo:base/Debug";
     };
 
     private func postUpgradeCallback() : async (){
+
+      recordSystemEvent({
+        eventDetail = "Updating manager wasm"; 
+        eventId = 0;
+        eventTime = Time.now();
+        eventTitle = "Canister Log";
+        eventType = #SystemCheck;
+      });
       
+      await updateManagerCanisterWasms();
+      
+       /* V1.5.1 postupgrade:
+     
       recordSystemEvent({
         eventDetail = "Updating manager wasm"; 
         eventId = 0;
@@ -1542,7 +1559,6 @@ import Debug "mo:base/Debug";
       });
 
       let _ = await seasonManager.getOrderedSnapshots();
-      /* V1.5.1 postupgrade:
       seasonManager.setFixtureToComplete(1,1);
       //await seasonManager.removeEventDataFromFixtures();
       recordSystemEvent({

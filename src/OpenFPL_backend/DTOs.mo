@@ -692,4 +692,47 @@ module DTOs {
     message: Text;
   };
 
+  public type GetFantasyTeamSnapshotDTO = {
+    managerPrincipalId: T.PrincipalId;
+    seasonId: T.SeasonId;
+    gameweek: T.GameweekNumber;
+  };
+
+
+  public type FantasyTeamSnapshotDTO = {
+    principalId : Text;
+    username : Text;
+    favouriteClubId : T.ClubId;
+    monthlyBonusesAvailable : Nat8;
+    transfersAvailable : Nat8;
+    bankQuarterMillions : Nat16;
+    teamValueQuarterMillions : Nat16;
+    playerIds : [T.PlayerId];
+    captainId : T.PlayerId;
+    gameweek : T.GameweekNumber;
+    goalGetterGameweek : T.GameweekNumber;
+    goalGetterPlayerId : T.PlayerId;
+    passMasterGameweek : T.GameweekNumber;
+    passMasterPlayerId : T.PlayerId;
+    noEntryGameweek : T.GameweekNumber;
+    noEntryPlayerId : T.PlayerId;
+    teamBoostGameweek : T.GameweekNumber;
+    teamBoostClubId : T.ClubId;
+    safeHandsGameweek : T.GameweekNumber;
+    safeHandsPlayerId : T.PlayerId;
+    captainFantasticGameweek : T.GameweekNumber;
+    captainFantasticPlayerId : T.PlayerId;
+    countrymenGameweek : T.GameweekNumber;
+    countrymenCountryId : T.CountryId;
+    prospectsGameweek : T.GameweekNumber;
+    braceBonusGameweek : T.GameweekNumber;
+    hatTrickHeroGameweek : T.GameweekNumber;
+    points : Int16;
+    monthlyPoints : Int16;
+    seasonPoints : Int16;
+    transferWindowGameweek : T.GameweekNumber;
+    month : T.CalendarMonth;
+    seasonId: T.SeasonId;
+  }
+
 };

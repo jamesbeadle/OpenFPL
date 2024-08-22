@@ -1035,6 +1035,87 @@ actor class _ManagerCanister() {
     return Buffer.toArray(allManagersBuffer);
   };
 
+  public shared ({ caller }) func getFantasyTeamSnapshot(dto: DTOs.GetFantasyTeamSnapshotDTO) : async ?T.FantasyTeamSnapshot {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == Environment.BACKEND_CANISTER_ID;
+
+ let managerGroupIndex = managerGroupIndexes.get(principalId);
+
+    var managers: [T.Manager] = [];
+
+
+    switch (managerGroupIndex) {
+      case (null) {};
+      case (?foundGroupIndex) {
+
+        switch (foundGroupIndex) {
+          case 0 {
+            managers := managerGroup1;
+          };
+          case 1 {
+            managers := managerGroup2;
+          };
+          case 2 {
+            managers := managerGroup3;
+          };
+          case 3 {
+            managers := managerGroup4;
+          };
+          case 4 {
+            managers := managerGroup5;
+          };
+          case 5 {
+            managers := managerGroup6;
+          };
+          case 6 {
+            managers := managerGroup7;
+          };
+          case 7 {
+            managers := managerGroup8;
+          };
+          case 8 {
+            managers := managerGroup9;
+          };
+          case 9 {
+            managers := managerGroup10;
+          };
+          case 10 {
+            managers := managerGroup11;
+          };
+          case 11 {
+            managers := managerGroup12;
+          };
+          case _ {
+
+          };
+        };
+
+
+        for (manager in Iter.fromArray(managers)) {
+          if (manager.principalId == principalId) {
+            switch (manager.history) {
+              case (null) {    };
+              case (history) {
+                for(season in Iter.fromList(history)){
+                  if(season.seasonId == dto.seasonId){
+                    for(gameweek in Iter.fromList(season.gameweeks)){
+                      if(gameweek.gameweek == dto.gameweek){
+                        return ?gameweek;
+                      };  
+                    };
+                  };
+                };  
+              };
+            };
+
+          }
+        };
+      };
+    };
+    return null;
+  };
+
   public shared ({ caller }) func getOrderedSnapshots(seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async [T.FantasyTeamSnapshot] {
     
     await logStatus("Get ordered snapshots called with caller " # Principal.toText(caller) # ", seasonId " # Nat16.toText(seasonId) # " and gameweek " # Nat8.toText(gameweek) # ".");

@@ -172,6 +172,41 @@ export interface FantasyTeamSnapshot {
   points: number;
   monthlyBonusesAvailable: number;
 }
+export interface FantasyTeamSnapshotDTO {
+  playerIds: Uint16Array | number[];
+  month: CalendarMonth;
+  teamValueQuarterMillions: number;
+  countrymenCountryId: CountryId;
+  username: string;
+  goalGetterPlayerId: PlayerId;
+  hatTrickHeroGameweek: GameweekNumber;
+  transfersAvailable: number;
+  teamBoostGameweek: GameweekNumber;
+  captainFantasticGameweek: GameweekNumber;
+  countrymenGameweek: GameweekNumber;
+  bankQuarterMillions: number;
+  noEntryPlayerId: PlayerId;
+  monthlyPoints: number;
+  safeHandsPlayerId: PlayerId;
+  seasonId: SeasonId;
+  braceBonusGameweek: GameweekNumber;
+  favouriteClubId: ClubId;
+  passMasterGameweek: GameweekNumber;
+  teamBoostClubId: ClubId;
+  goalGetterGameweek: GameweekNumber;
+  captainFantasticPlayerId: PlayerId;
+  gameweek: GameweekNumber;
+  seasonPoints: number;
+  transferWindowGameweek: GameweekNumber;
+  noEntryGameweek: GameweekNumber;
+  prospectsGameweek: GameweekNumber;
+  safeHandsGameweek: GameweekNumber;
+  principalId: string;
+  passMasterPlayerId: PlayerId;
+  captainId: PlayerId;
+  points: number;
+  monthlyBonusesAvailable: number;
+}
 export interface FixtureDTO {
   id: number;
   status: FixtureStatusType;
@@ -206,6 +241,11 @@ export interface GetCanistersDTO {
   limit: bigint;
   entries: Array<CanisterDTO>;
   canisterTypeFilter: CanisterType;
+}
+export interface GetFantasyTeamSnapshotDTO {
+  seasonId: SeasonId;
+  managerPrincipalId: PrincipalId;
+  gameweek: GameweekNumber;
 }
 export interface GetFixturesDTO {
   seasonId: SeasonId;
@@ -559,10 +599,11 @@ export type Result_20 = { ok: PlayerDetailDTO } | { err: Error };
 export type Result_21 = { ok: Array<ClubLeaderboardDTO> } | { err: Error };
 export type Result_22 = { ok: ManagerPrivateLeaguesDTO } | { err: Error };
 export type Result_23 = { ok: Array<ClubDTO> } | { err: Error };
-export type Result_24 = { ok: Array<DataCacheDTO> } | { err: Error };
-export type Result_25 = { ok: PickTeamDTO } | { err: Error };
-export type Result_26 = { ok: Array<CountryDTO> } | { err: Error };
-export type Result_27 = { ok: GetCanistersDTO } | { err: Error };
+export type Result_24 = { ok: FantasyTeamSnapshotDTO } | { err: Error };
+export type Result_25 = { ok: Array<DataCacheDTO> } | { err: Error };
+export type Result_26 = { ok: PickTeamDTO } | { err: Error };
+export type Result_27 = { ok: Array<CountryDTO> } | { err: Error };
+export type Result_28 = { ok: GetCanistersDTO } | { err: Error };
 export type Result_3 = { ok: bigint } | { err: Error };
 export type Result_4 = { ok: GetTopupsDTO } | { err: Error };
 export type Result_5 = { ok: Array<TokenInfo> } | { err: Error };
@@ -782,11 +823,12 @@ export interface _SERVICE {
   getBackendCanisterBalance: ActorMethod<[], Result_3>;
   getCanisterCyclesAvailable: ActorMethod<[], bigint>;
   getCanisterCyclesBalance: ActorMethod<[], Result_3>;
-  getCanisters: ActorMethod<[GetCanistersDTO], Result_27>;
+  getCanisters: ActorMethod<[GetCanistersDTO], Result_28>;
   getClubs: ActorMethod<[], Result_23>;
-  getCountries: ActorMethod<[], Result_26>;
-  getCurrentTeam: ActorMethod<[], Result_25>;
-  getDataHashes: ActorMethod<[], Result_24>;
+  getCountries: ActorMethod<[], Result_27>;
+  getCurrentTeam: ActorMethod<[], Result_26>;
+  getDataHashes: ActorMethod<[], Result_25>;
+  getFantasyTeamSnapshot: ActorMethod<[GetFantasyTeamSnapshotDTO], Result_24>;
   getFixtures: ActorMethod<[GetFixturesDTO], Result_17>;
   getFormerClubs: ActorMethod<[], Result_23>;
   getLoanedPlayers: ActorMethod<[ClubFilterDTO], Result_12>;

@@ -52,8 +52,6 @@ module {
     public func getManager(principalId : T.PrincipalId, calculationSeasonId : T.SeasonId, weeklyLeaderboardEntry : ?DTOs.LeaderboardEntryDTO, monthlyLeaderboardEntry : ?DTOs.LeaderboardEntryDTO, seasonLeaderboardEntry : ?DTOs.LeaderboardEntryDTO) : async Result.Result<DTOs.ManagerDTO, T.Error> {
       let managerCanisterId = managerCanisterIds.get(principalId);
       
-      logStatus("Backend: Getting manager " # principalId);
-      
       switch (managerCanisterId) {
         case (null) {
           return #err(#NotFound);
@@ -63,16 +61,13 @@ module {
             getManager : T.PrincipalId -> async ?T.Manager;
           };
       
-          logStatus("Backend: Getting manager from canister " # foundCanisterId);
-      
           let manager = await manager_canister.getManager(principalId);
           switch (manager) {
             case (null) {
               return #err(#NotFound);
             };
             case (?foundManager) {
-              logStatus("Backend: Found manager " # foundManager.principalId # " from canister " # foundCanisterId # " with " # Nat.toText(List.size(foundManager.history)) # " seasons.");
-
+             
               for (managerSeason in Iter.fromList(foundManager.history)) {
 
                 logStatus("Backend: Found manager " # foundManager.principalId # " from canister " # foundCanisterId # " with " # Nat.toText(List.size(managerSeason.gameweeks)) # " gameweeks.");
@@ -133,6 +128,31 @@ module {
                 };
               };
               return #err(#NotFound);
+            };
+          };
+        };
+      };
+    };
+
+    public func getFantasyTeamSnapshot(dto: DTOs.GetFantasyTeamSnapshotDTO) : async Result.Result<DTOs.FantasyTeamSnapshotDTO, T.Error>{
+     let managerCanisterId = managerCanisterIds.get(dto.managerPrincipalId);
+      
+      switch (managerCanisterId) {
+        case (null) {
+          return #err(#NotFound);
+        };
+        case (?foundCanisterId) {
+          let manager_canister = actor (foundCanisterId) : actor {
+            getFantasyTeamSnapshot : (dto: DTOs.GetFantasyTeamSnapshotDTO) -> async ?DTOs.FantasyTeamSnapshotDTO;
+          };
+      
+          let snapshot = await manager_canister.getFantasyTeamSnapshot(dto);
+          switch (snapshot) {
+            case (null) {
+              return #err(#NotFound);
+            };
+            case (?foundSnapshot) {
+              #ok(foundSnapshot);
             };
           };
         };

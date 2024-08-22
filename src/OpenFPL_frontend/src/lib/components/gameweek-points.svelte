@@ -78,6 +78,7 @@
 
     let fantasyTeam = await managerStore.getFantasyTeamForGameweek(
       principal,
+      $systemStore?.calculationSeasonId ?? 1,
       selectedGameweek
     );
 
