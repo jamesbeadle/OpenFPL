@@ -1461,7 +1461,7 @@ module {
           fixturesBuffer.add({
             awayClubId = fixture.awayClubId;
             awayGoals = fixture.awayGoals;
-            events = fixture.events;
+            events = List.nil();
             gameweek = fixture.gameweek;
             highestScoringPlayerId = fixture.highestScoringPlayerId;
             homeClubId = fixture.homeClubId;
@@ -1480,6 +1480,48 @@ module {
           year = season.year;
         };
         seasonBuffer.add(updatedSeason);
+      };
+
+      seasons := List.fromArray(Buffer.toArray(seasonBuffer));
+    };
+
+
+    public func setFixtureToComplete(seasonId: T.SeasonId, fixtureId: T.FixtureId){
+      let seasonBuffer = Buffer.fromArray<T.Season>([]);
+
+      for(season in Iter.fromList(seasons)){
+        if(season.id == seasonId){
+          let fixturesBuffer = Buffer.fromArray<T.Fixture>([]);
+          for(fixture in Iter.fromList(season.fixtures)){
+            if(fixture.id == fixtureId){
+              fixturesBuffer.add({
+                awayClubId = fixture.awayClubId;
+                awayGoals = fixture.awayGoals;
+                events = fixture.events;
+                gameweek = fixture.gameweek;
+                highestScoringPlayerId = fixture.highestScoringPlayerId;
+                homeClubId = fixture.homeClubId;
+                homeGoals = fixture.homeGoals;
+                id = fixture.id;
+                kickOff = fixture.kickOff;
+                seasonId = fixture.seasonId;
+                status = #Complete;
+              });
+            } else {
+              fixturesBuffer.add(fixture);
+            }
+          };
+          let updatedSeason: T.Season = {
+            fixtures = List.fromArray(Buffer.toArray(fixturesBuffer));
+            id = season.id;
+            name = season.name;
+            postponedFixtures = season.postponedFixtures;
+            year = season.year;
+          };
+          seasonBuffer.add(updatedSeason);
+        } else {
+          seasonBuffer.add(season);
+        };
       };
 
       seasons := List.fromArray(Buffer.toArray(seasonBuffer));

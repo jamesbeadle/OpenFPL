@@ -1495,6 +1495,10 @@ module {
       await managerComposite.resetManagerSnapshotPoints();
     };
 
+    public func setFixtureToComplete(seasonId: T.SeasonId, fixtureId: T.FixtureId){
+      seasonComposite.setFixtureToComplete(seasonId, fixtureId);
+    };
+
     public func setupTesting() {
 
       //set the system state

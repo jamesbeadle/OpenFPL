@@ -1523,6 +1523,10 @@ import Debug "mo:base/Debug";
 
     private func postUpgradeCallback() : async (){
 
+      await seasonManager.removeEventDataFromFixtures();
+      seasonManager.setFixtureToComplete(1,1);
+
+      /* V1.5.1 postupgrade:
       recordSystemEvent({
         eventDetail = "Updating manager wasm"; 
         eventId = 0;
@@ -1581,8 +1585,8 @@ import Debug "mo:base/Debug";
       });
 
       await seasonManager.resetManagerSnapshotPoints();
+
       
-      /* V1.5.0 postupgrade:
       */
 
       
