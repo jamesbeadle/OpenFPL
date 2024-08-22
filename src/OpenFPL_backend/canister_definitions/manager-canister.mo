@@ -1093,7 +1093,7 @@ actor class _ManagerCanister() {
 
 
         for (manager in Iter.fromArray(managers)) {
-          if (manager.principalId == principalId) {
+          if (manager.principalId == dto.managerPrincipalId) {
             switch (manager.history) {
               case (null) {    };
               case (history) {
@@ -1509,7 +1509,6 @@ actor class _ManagerCanister() {
     let managerGroupIndex = managerGroupIndexes.get(principalId);
 
     var managers: [T.Manager] = [];
-
 
     switch (managerGroupIndex) {
       case (null) {};

@@ -103,51 +103,17 @@ function createManagerStore() {
     gameweek: number,
   ): Promise<FantasyTeamSnapshot | null> {
     try {
-      const category = "gameweek_points";
-      const newHashValues = await actor.getDataHashes();
-
-      let error = isError(newHashValues);
-      if (error) {
-        console.error("Error fetching hash values");
-        return null;
+      let dto: GetFantasyTeamSnapshotDTO = {
+        managerPrincipalId: managerId,
+        gameweek,
+        seasonId,
+      };
+      let result = await actor.getFantasyTeamSnapshot(dto);
+      
+      if (isError(result)) {
+        console.error("Error fetching fantasy team for gameweek:");
       }
-
-      let dataCacheValues: DataCacheDTO[] = newHashValues.ok;
-
-      let weelklyLeaderboardHash =
-        dataCacheValues.find(
-          (x: DataCacheDTO) => x.category === "weekly_leaderboard_hash",
-        ) ?? null;
-
-      const localHash = localStorage.getItem(`${category}_hash`);
-
-      if (weelklyLeaderboardHash != localHash) {
-        let dto: GetFantasyTeamSnapshotDTO = {
-          managerPrincipalId: managerId,
-          gameweek,
-          seasonId,
-        };
-        console.log("getting fantasy team snapshot");
-        console.log(dto);
-        let result = await actor.getFantasyTeamSnapshot(dto);
-        console.log(result);
-        if (isError(result)) {
-          console.error("Error fetching fantasy team for gameweek:");
-        }
-
-        let snapshot = result.ok;
-        localStorage.setItem(category, JSON.stringify(snapshot, replacer));
-        localStorage.setItem(
-          `${category}_hash`,
-          weelklyLeaderboardHash?.hash ?? "",
-        );
-        const fantasyTeamData = result.ok;
-        return fantasyTeamData;
-      } else {
-        const cachedSnapshot = localStorage.getItem(category);
-        let snapshot = cachedSnapshot ? JSON.parse(cachedSnapshot) : null;
-        return snapshot;
-      }
+      return result.ok;
     } catch (error) {
       console.error("Error fetching fantasy team for gameweek:", error);
       throw error;
