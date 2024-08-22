@@ -728,7 +728,7 @@ export function convertFixtureStatus(
   if ("Unplayed" in fixtureStatus) return FixtureStatus.UNPLAYED;
   if ("Active" in fixtureStatus) return FixtureStatus.ACTIVE;
   if ("Complete" in fixtureStatus) return FixtureStatus.COMPLETED;
-  if ("Veriified" in fixtureStatus) return FixtureStatus.VERIFIED;
+  if ("Finalised" in fixtureStatus) return FixtureStatus.VERIFIED;
   return FixtureStatus.UNPLAYED;
 }
 

@@ -1527,6 +1527,71 @@ module {
       seasons := List.fromArray(Buffer.toArray(seasonBuffer));
     };
 
+    public func setGameScore(seasonId: T.SeasonId, fixtureId: T.FixtureId){
+      let seasonBuffer = Buffer.fromArray<T.Season>([]);
+
+      for(season in Iter.fromList(seasons)){
+        if(season.id == seasonId){
+          let fixturesBuffer = Buffer.fromArray<T.Fixture>([]);
+          for(fixture in Iter.fromList(season.fixtures)){
+            if(fixture.id == fixtureId){
+
+              var homeGoals: Nat8 = 0;
+              var awayGoals: Nat8 = 0;
+
+              for(event in Iter.fromList(fixture.events)){
+                switch(event.eventType){
+                  case (#Goal) {
+                    if(event.clubId == fixture.homeClubId){
+                      homeGoals += 1;
+                    } else {
+                      awayGoals += 1;
+                    }
+                  };
+                  case (#OwnGoal){
+                    if(event.clubId == fixture.homeClubId){
+                      awayGoals += 1;
+                    } else {
+                      homeGoals += 1;
+                    }
+                  };
+                  case _ { };
+                };
+              };
+
+              fixturesBuffer.add({
+                awayClubId = fixture.awayClubId;
+                awayGoals = awayGoals;
+                events = fixture.events;
+                gameweek = fixture.gameweek;
+                highestScoringPlayerId = fixture.highestScoringPlayerId;
+                homeClubId = fixture.homeClubId;
+                homeGoals = homeGoals;
+                id = fixture.id;
+                kickOff = fixture.kickOff;
+                seasonId = fixture.seasonId;
+                status = fixture.status;
+              });
+            } else {
+              fixturesBuffer.add(fixture);
+            }
+          };
+          let updatedSeason: T.Season = {
+            fixtures = List.fromArray(Buffer.toArray(fixturesBuffer));
+            id = season.id;
+            name = season.name;
+            postponedFixtures = season.postponedFixtures;
+            year = season.year;
+          };
+          seasonBuffer.add(updatedSeason);
+        } else {
+          seasonBuffer.add(season);
+        };
+      };
+
+      seasons := List.fromArray(Buffer.toArray(seasonBuffer));
+    };
+
     public func setInitialSeason(clubIds: [T.ClubId]){
         let fixtureBuffer = Buffer.fromArray<T.Fixture>([]);
         for (i in Iter.range(0, clubIds.size() - 1)) {

@@ -728,9 +728,8 @@ module {
         case (null) {};
         case (?events) {
           await playerComposite.addEventsToPlayers(events, submitFixtureData.seasonId, submitFixtureData.gameweek);
-          await seasonComposite.addEventsToFixture(events, submitFixtureData.seasonId, submitFixtureData.fixtureId); //TODO: Not adding highest scoring player id?
-
-          //WHERE ARE THE APPEARANCE EVENTS BEING ADDED
+          await seasonComposite.addEventsToFixture(events, submitFixtureData.seasonId, submitFixtureData.fixtureId); 
+          seasonComposite.setGameScore(submitFixtureData.seasonId, submitFixtureData.fixtureId);
         };
       };
 
@@ -1497,6 +1496,10 @@ module {
 
     public func setFixtureToComplete(seasonId: T.SeasonId, fixtureId: T.FixtureId){
       seasonComposite.setFixtureToComplete(seasonId, fixtureId);
+    };
+
+    public func setGameScore(seasonId: T.SeasonId, fixtureId: T.FixtureId){
+      seasonComposite.setGameScore(seasonId, fixtureId);
     };
 
     public func setupTesting() {

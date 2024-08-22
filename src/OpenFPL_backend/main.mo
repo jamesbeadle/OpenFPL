@@ -1523,10 +1523,11 @@ import Debug "mo:base/Debug";
 
     private func postUpgradeCallback() : async (){
 
-      await seasonManager.removeEventDataFromFixtures();
-      seasonManager.setFixtureToComplete(1,1);
+      seasonManager.setGameScore(1,1);
 
       /* V1.5.1 postupgrade:
+      seasonManager.setFixtureToComplete(1,1);
+      //await seasonManager.removeEventDataFromFixtures();
       recordSystemEvent({
         eventDetail = "Updating manager wasm"; 
         eventId = 0;
