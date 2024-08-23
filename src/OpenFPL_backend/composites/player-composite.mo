@@ -1993,39 +1993,8 @@ module {
       let playerBuffer = Buffer.fromArray<T.Player>([]);
       
       for(player in Iter.fromList(players)){
-        if(player.id == 394){
-          //update mainoo
-          let playerSeasonBuffer = Buffer.fromArray<T.PlayerSeason>([]);
-          for(season in Iter.fromList(player.seasons)){
-            if(season.id == 1){
-              let seasonGameweekBuffer = Buffer.fromArray<T.PlayerGameweek>([]);
-              for(gameweek in Iter.fromList(season.gameweeks)){
-                if(gameweek.number == 1){
-                  var updated = false;
-                  let gameweekEventBuffer = Buffer.fromArray<T.PlayerEventData>([]);
-                  for(event in Iter.fromList(gameweek.events)){
-                    if(not updated){
-                      gameweekEventBuffer.add(event);
-                    };
-                    updated := true;
-                  };
-                  seasonGameweekBuffer.add({
-                    events = List.fromArray(Buffer.toArray(gameweekEventBuffer));
-                    number = gameweek.number;
-                    points = 5;
-                  });
-                } else {
-                  seasonGameweekBuffer.add(gameweek);
-                }
-              };
-              playerSeasonBuffer.add({
-                id = season.id;
-                gameweeks = List.fromArray(Buffer.toArray(seasonGameweekBuffer));
-              });
-            } else {
-              playerSeasonBuffer.add(season);
-            }
-          };
+        if(player.id == 395){
+          //update scott mctominay
           playerBuffer.add({
             clubId = player.clubId;
             currentLoanEndDate = player.currentLoanEndDate;
@@ -2039,61 +2008,28 @@ module {
             parentClubId = player.parentClubId;
             position = player.position;
             retirementDate = player.retirementDate;
-            seasons = List.fromArray(Buffer.toArray(playerSeasonBuffer));
-            shirtNumber = player.shirtNumber;
-            status = player.status;
-            transferHistory = player.transferHistory;
-            valueHistory = player.valueHistory;
-            valueQuarterMillions = player.valueQuarterMillions;
-          });
-        } else if (player.id == 395) {
-          //update mctonimay
-          let playerSeasonBuffer = Buffer.fromArray<T.PlayerSeason>([]);
-          for(season in Iter.fromList(player.seasons)){
-            if(season.id == 1){
-              let seasonGameweekBuffer = Buffer.fromArray<T.PlayerGameweek>([]);
-              for(gameweek in Iter.fromList(season.gameweeks)){
-                if(gameweek.number == 1){
-                  let gameweekEventBuffer = Buffer.fromArray<T.PlayerEventData>([]);
-                  gameweekEventBuffer.add({
-                    clubId = 14;
-                    eventEndMinute = 90;
-                    eventStartMinute = 84;
-                    eventType = #Appearance;
-                    fixtureId = 1;
-                    playerId = 395;
-                  });
-                  seasonGameweekBuffer.add({
-                    events = List.fromArray(Buffer.toArray(gameweekEventBuffer));
-                    number = gameweek.number;
+            seasons = List.fromArray<T.PlayerSeason>([
+              {
+                id = 1;
+                gameweeks = List.fromArray<T.PlayerGameweek>([
+                  {
+                    number = 1;
+                    events = List.fromArray<T.PlayerEventData>([
+                      {
+
+                        fixtureId = 1;
+                        playerId = 395;
+                        eventType = #Appearance;
+                        eventStartMinute = 84;
+                        eventEndMinute = 90;
+                        clubId = 14;
+                      }
+                    ]);
                     points = 5;
-                  })
-                } else {
-                  seasonGameweekBuffer.add(gameweek);
-                }
-              };
-              playerSeasonBuffer.add({
-                id = season.id;
-                gameweeks = List.fromArray(Buffer.toArray(seasonGameweekBuffer));
-              });
-            } else {
-              playerSeasonBuffer.add(season);
-            }
-          };
-          playerBuffer.add({
-            clubId = player.clubId;
-            currentLoanEndDate = player.currentLoanEndDate;
-            dateOfBirth = player.dateOfBirth;
-            firstName = player.firstName;
-            id = player.id;
-            injuryHistory = player.injuryHistory;
-            lastName = player.lastName;
-            latestInjuryEndDate = player.latestInjuryEndDate;
-            nationality = player.nationality;
-            parentClubId = player.parentClubId;
-            position = player.position;
-            retirementDate = player.retirementDate;
-            seasons = List.fromArray(Buffer.toArray(playerSeasonBuffer));
+                  }
+                ]);
+              }
+            ]);
             shirtNumber = player.shirtNumber;
             status = player.status;
             transferHistory = player.transferHistory;

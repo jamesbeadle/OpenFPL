@@ -736,13 +736,14 @@ module {
           seasonComposite.setGameScore(submitFixtureData.seasonId, submitFixtureData.fixtureId);
         };
       };
-
+      
+      seasonComposite.setFixtureToFinalised(systemState.calculationSeasonId, submitFixtureData.fixtureId);
+      
       await managerComposite.calculateFantasyTeamScores(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
       await leaderboardComposite.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth, managerComposite.getStableUniqueManagerCanisterIds());
       
       //await privateLeaguesManager.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
       
-      seasonComposite.setFixtureToFinalised(systemState.calculationSeasonId, submitFixtureData.fixtureId);
       
       let gameweekComplete = seasonComposite.checkGameweekComplete(systemState);
       let monthComplete = seasonComposite.checkMonthComplete(systemState);
@@ -1510,11 +1511,14 @@ module {
       seasonComposite.setGameScore(seasonId, fixtureId);
     };
 
-    public func fixIncorrectData() : async (){
-      seasonComposite.fixIncorrectData();      
+    public func fixIncorrectData() : async (){ 
       playerComposite.fixIncorrectData();
       await resetManagerSnapshotPoints();
       await managerComposite.calculateFantasyTeamScores(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
+    };
+
+    public func setFixtureToFinalised(seasonId: T.SeasonId, fixtureId: T.FixtureId){
+      seasonComposite.setFixtureToFinalised(seasonId, fixtureId);
     };
 
     public func setupTesting() {

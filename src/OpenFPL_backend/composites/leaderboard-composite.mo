@@ -444,7 +444,7 @@ module {
 
       var numChunks : Nat = 0;
       if (totalEntries > 0) {
-        numChunks := (totalEntries + MAX_ENTRIES_PER_CHUNK - 1) / MAX_ENTRIES_PER_CHUNK; //TODO: Has to be wrong
+        numChunks := (totalEntries + MAX_ENTRIES_PER_CHUNK - 1) / MAX_ENTRIES_PER_CHUNK;
       };
       for (i in Iter.range(0, numChunks)) {
         let startIdx = i * MAX_ENTRIES_PER_CHUNK;
