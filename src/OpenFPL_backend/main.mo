@@ -1528,14 +1528,10 @@ import Debug "mo:base/Debug";
 
     private func postUpgradeCallback() : async (){
     
-      //complete liverpool fixture
-      seasonManager.setFixtureToFinalised(1,2);
+      /* 
+      //await seasonManager.fixIncorrectData();
+      //seasonManager.setFixtureToFinalised(1,2);
 
-      //Add appearance to Mctominay 395
-      await seasonManager.fixIncorrectData();
-      
-       /* 
-     
       recordSystemEvent({
         eventDetail = "Updating manager wasm"; 
         eventId = 0;

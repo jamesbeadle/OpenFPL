@@ -424,7 +424,7 @@ module {
           let goalsAtSameMinute = List.filter<T.PlayerEventData>(
             events,
             func(event : T.PlayerEventData) : Bool {
-              return event.eventType == #Goal and event.eventStartMinute == assist.eventStartMinute;
+              return (event.eventType == #Goal or event.eventType == #OwnGoal) and event.eventStartMinute == assist.eventStartMinute;
             },
           );
 
