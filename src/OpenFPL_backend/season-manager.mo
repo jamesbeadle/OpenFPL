@@ -1510,6 +1510,13 @@ module {
       seasonComposite.setGameScore(seasonId, fixtureId);
     };
 
+    public func fixIncorrectData() : async (){
+      seasonComposite.fixIncorrectData();      
+      playerComposite.fixIncorrectData();
+      await resetManagerSnapshotPoints();
+      await managerComposite.calculateFantasyTeamScores(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
+    };
+
     public func setupTesting() {
 
       //set the system state

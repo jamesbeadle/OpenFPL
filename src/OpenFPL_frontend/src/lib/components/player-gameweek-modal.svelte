@@ -7,7 +7,7 @@
     PlayerEventData,
     PlayerGameweekDTO,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import { convertEvent, getFlagComponent } from "../utils/helpers";
+  import { getFlagComponent } from "../utils/helpers";
 
   export let visible: boolean;
   export let closeDetailModal: () => void;
@@ -36,8 +36,8 @@
   let pointsForYellowCard = -5;
   let pointsForCleanSheet = 10;
 
-  var pointsForGoal = 0;
-  var pointsForAssist = 0;
+  var pointsForGoal = 20;
+  var pointsForAssist = 15;
 
   $: if (gameweekDetail) {
     appearanceEvents = [];
@@ -46,31 +46,51 @@
     otherEvents = [];
     goalConcededCount = 0;
     keeperSaveCount = 0;
+    
 
     gameweekDetail.events.forEach((evt) => {
-      switch (evt.eventType) {
-        case { Appearance: null }:
-          appearanceEvents.push(evt);
-          break;
-        case { GoalConceded: null }:
+
+      var added = false;
+
+      if(Object.keys(evt.eventType)[0] == "Appearance"){
+        appearanceEvents.push(evt);
+        added = true;
+      }
+
+      if(Object.keys(evt.eventType)[0] == "GoalConceded"){
           concededEvents.push(evt);
           goalConcededCount++;
-          break;
-        case { KeeperSave: null }:
+          added = true;
+      }
+
+      if(Object.keys(evt.eventType)[0] == "KeeperSave"){
           keeperSaveEvents.push(evt);
           keeperSaveCount++;
-          break;
-        default:
-          otherEvents.push(evt);
-          break;
+          added = true;
       }
+      
+      if(!added){
+        otherEvents.push(evt);
+      }
+      
     });
 
+    let position = Object.keys(playerDetail.position)[0]; 
+    if(position == "Forward"){
+      pointsForGoal = 10;
+      pointsForAssist = 10;
+    }
+
+    if(position == "Midfielder"){
+      pointsForGoal = 15;
+      pointsForAssist = 10;
+    }
+
+    console.log(otherEvents)
     concededEvents.sort((a, b) => a.eventEndMinute - b.eventEndMinute);
     keeperSaveEvents.sort((a, b) => a.eventEndMinute - b.eventEndMinute);
     otherEvents.sort(
       (a, b) =>
-        convertEvent(a.eventType) - convertEvent(b.eventType) ||
         a.eventEndMinute - b.eventEndMinute
     );
   }
@@ -179,89 +199,89 @@
       <div class="mt-2">
         <div class="flex justify-between items-center p-2">
           <div class="w-3/6">
-            {#if convertEvent(event.eventType) === 1}<div class="w-3/6">
+            {#if Object.keys(event.eventType)[0] == "Goal"}<div class="w-3/6">
                 Goal Scored
               </div>{/if}
-            {#if convertEvent(event.eventType) === 2}<div class="w-3/6">
+            {#if  Object.keys(event.eventType)[0] == "GoalAssisted"}<div class="w-3/6">
                 Assist
               </div>{/if}
-            {#if convertEvent(event.eventType) === 5}<div class="w-3/6">
+            {#if  Object.keys(event.eventType)[0] == "CleanSheet"}<div class="w-3/6">
                 Clean Sheet
               </div>{/if}
-            {#if convertEvent(event.eventType) === 6}<div class="w-3/6">
+            {#if  Object.keys(event.eventType)[0] == "PenaltySaved"}<div class="w-3/6">
                 Penalty Save
               </div>{/if}
-            {#if convertEvent(event.eventType) === 7}<div class="w-3/6">
+            {#if  Object.keys(event.eventType)[0] == "PenaltyMissed"}<div class="w-3/6">
                 Penalty Missed
               </div>{/if}
-            {#if convertEvent(event.eventType) === 8}<div class="w-3/6">
+            {#if  Object.keys(event.eventType)[0] == "YellowCard"}<div class="w-3/6">
                 Yellow Card
               </div>{/if}
-            {#if convertEvent(event.eventType) === 9}<div class="w-3/6">
+            {#if  Object.keys(event.eventType)[0] == "RedCard"}<div class="w-3/6">
                 Red Card
               </div>{/if}
-            {#if convertEvent(event.eventType) === 10}<div class="w-3/6">
+            {#if Object.keys(event.eventType)[0] == "OwnGoal"}<div class="w-3/6">
                 Own Goal
               </div>{/if}
-            {#if convertEvent(event.eventType) === 11}<div class="w-3/6">
+            {#if  Object.keys(event.eventType)[0] == "HighestScoringPlayer"}<div class="w-3/6">
                 Highest Scoring Player
               </div>{/if}
           </div>
           <div class="w-2/6">
-            {#if convertEvent(event.eventType) === 1}<div class="w-3/6">
+            {#if  Object.keys(event.eventType)[0] == "Goal"}<div class="w-3/6">
                 {event.eventEndMinute}
               </div>{/if}
-            {#if convertEvent(event.eventType) === 2}<div class="w-3/6">
+            {#if Object.keys(event.eventType)[0] == "GoalAssisted"}<div class="w-3/6">
                 {event.eventEndMinute}
               </div>{/if}
-            {#if convertEvent(event.eventType) === 5}<div class="w-3/6">
+            {#if Object.keys(event.eventType)[0] == "CleanSheet"}<div class="w-3/6">
                 -
               </div>{/if}
-            {#if convertEvent(event.eventType) === 6}<div class="w-3/6">
+            {#if Object.keys(event.eventType)[0] == "PenaltySaved"}<div class="w-3/6">
                 -
               </div>{/if}
-            {#if convertEvent(event.eventType) === 7}<div class="w-3/6">
+            {#if Object.keys(event.eventType)[0] == "PenaltyMissed"}<div class="w-3/6">
                 -
               </div>{/if}
-            {#if convertEvent(event.eventType) === 8}<div class="w-3/6">
+            {#if Object.keys(event.eventType)[0] == "YellowCard"}<div class="w-3/6">
                 -
               </div>{/if}
-            {#if convertEvent(event.eventType) === 9}<div class="w-3/6">
+            {#if Object.keys(event.eventType)[0] == "RedCard"}<div class="w-3/6">
                 -
               </div>{/if}
-            {#if convertEvent(event.eventType) === 10}<div class="w-3/6">
+            {#if Object.keys(event.eventType)[0] == "OwnGoal"}<div class="w-3/6">
                 {event.eventEndMinute}
               </div>{/if}
-            {#if convertEvent(event.eventType) === 11}<div class="w-3/6">
+            {#if Object.keys(event.eventType)[0] == "HighestScoringPlayer"}<div class="w-3/6">
                 -
               </div>{/if}
           </div>
           <div class="w-1/6">
-            {#if convertEvent(event.eventType) === 1}<div class="w-3/6">
+            {#if Object.keys(event.eventType)[0] == "Goal"}<div class="w-3/6">
                 {pointsForGoal}
               </div>{/if}
-            {#if convertEvent(event.eventType) === 2}<div class="w-3/6">
+            {#if Object.keys(event.eventType)[0] == "GoalAssisted"}<div class="w-3/6">
                 {pointsForAssist}
               </div>{/if}
-            {#if convertEvent(event.eventType) === 5}<div class="w-3/6">
+            {#if Object.keys(event.eventType)[0] == "CleanSheet"}<div class="w-3/6">
                 {pointsForCleanSheet}
               </div>{/if}
-            {#if convertEvent(event.eventType) === 6}<div class="w-3/6">
+            {#if Object.keys(event.eventType)[0] == "PenaltySaved"}<div class="w-3/6">
                 {pointsForPenaltySave}
               </div>{/if}
-            {#if convertEvent(event.eventType) === 7}<div class="w-3/6">
+            {#if Object.keys(event.eventType)[0] == "PenaltyMissed"}<div class="w-3/6">
                 {pointsForPenaltyMiss}
               </div>{/if}
-            {#if convertEvent(event.eventType) === 8}<div class="w-3/6">
+            {#if Object.keys(event.eventType)[0] == "YellowCard"}<div class="w-3/6">
                 {pointsForYellowCard}
               </div>{/if}
-            {#if convertEvent(event.eventType) === 9}<div class="w-3/6">
+            {#if Object.keys(event.eventType)[0] == "RedCard"}<div class="w-3/6">
                 {pointsForRedCard}
               </div>{/if}
-            {#if convertEvent(event.eventType) === 10}<div class="w-3/6">
+            {#if Object.keys(event.eventType)[0] == "OwnGoal"}<div class="w-3/6">
                 {pointsForOwnGoal}
               </div>{/if}
-            {#if convertEvent(event.eventType) === 11}<div class="w-3/6">
+            {#if Object.keys(event.eventType)[0] == "HighestScoringPlayer"}<div class="w-3/6">
                 {pointsForHighestScore}
               </div>{/if}
           </div>

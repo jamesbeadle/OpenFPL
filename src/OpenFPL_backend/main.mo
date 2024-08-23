@@ -1527,7 +1527,12 @@ import Debug "mo:base/Debug";
     };
 
     private func postUpgradeCallback() : async (){
-
+    
+      //Move Mainoo Appearance 394 to Mctominay 395
+      await seasonManager.fixIncorrectData();
+      
+       /* V1.5.1 postupgrade:
+     
       recordSystemEvent({
         eventDetail = "Updating manager wasm"; 
         eventId = 0;
@@ -1537,9 +1542,7 @@ import Debug "mo:base/Debug";
       });
       
       await updateManagerCanisterWasms();
-      
-       /* V1.5.1 postupgrade:
-     
+
       recordSystemEvent({
         eventDetail = "Updating manager wasm"; 
         eventId = 0;

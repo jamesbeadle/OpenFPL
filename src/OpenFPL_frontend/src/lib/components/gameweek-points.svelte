@@ -88,11 +88,12 @@
     if (!fantasyTeam) {
       return;
     }
-
+    console.log("getting gameweek players")
     let unsortedData = await playerEventsStore.getGameweekPlayers(
       fantasyTeam,
       selectedGameweek
     );
+    console.log(fantasyTeam)
 
     gameweekData = unsortedData.sort((a, b) => b.points - a.points);
   }

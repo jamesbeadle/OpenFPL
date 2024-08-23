@@ -91,7 +91,7 @@ function createPlayerEventsStore() {
   }
 
   async function getPlayerEvents(): Promise<PlayerPointsDTO[]> {
-    const cachedPlayerEventsData = localStorage.getItem("player_events_data");
+    const cachedPlayerEventsData = localStorage.getItem("player_events");
 
     let cachedPlayerEvents: PlayerPointsDTO[];
     try {
@@ -135,12 +135,13 @@ function createPlayerEventsStore() {
     if (systemState?.calculationGameweek === gameweek) {
       allPlayerEvents = await getPlayerEvents();
     } else {
-      allPlayerEvents = await actor.getPlayersDetailsForGameweek(
-        fantasyTeam.playerIds,
-        systemState?.calculationSeasonId,
+      let dto: GameweekFiltersDTO = {
+        seasonId: systemState.calculationSeasonId,
         gameweek,
-      );
+      };
+      allPlayerEvents = await actor.getPlayerDetailsForGameweek(dto);
     }
+    console.log("getting gameweek players");
 
     let allPlayers: PlayerDTO[] = [];
     const unsubscribe = playerStore.subscribe((players) => {
@@ -150,6 +151,11 @@ function createPlayerEventsStore() {
     });
     unsubscribe();
 
+    console.log("all players");
+    console.log(allPlayers);
+
+    console.log("all players");
+    console.log(allPlayerEvents);
     let gameweekData: GameweekData[] = await Promise.all(
       allPlayers.map(
         async (player) =>
@@ -160,12 +166,22 @@ function createPlayerEventsStore() {
       ),
     );
 
+    console.log("Gameweek data");
+    console.log(gameweekData);
+
     const playersWithPoints = gameweekData.map((entry) => {
       const score = calculatePlayerScore(entry, allFixtures);
       const bonusPoints = calculateBonusPoints(entry, fantasyTeam, score);
       const captainPoints =
         entry.player.id === fantasyTeam.captainId ? score + bonusPoints : 0;
 
+      console.log("return data");
+      console.log({
+        ...entry,
+        points: score,
+        bonusPoints: bonusPoints,
+        totalPoints: score + bonusPoints + captainPoints,
+      });
       return {
         ...entry,
         points: score,

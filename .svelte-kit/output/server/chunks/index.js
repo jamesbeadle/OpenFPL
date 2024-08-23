@@ -3515,7 +3515,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "aj0f5c"
+  version_hash: "zabmet"
 };
 async function get_hooks() {
   return {};
@@ -6375,7 +6375,7 @@ function createPlayerEventsStore() {
     }
   }
   async function getPlayerEvents() {
-    const cachedPlayerEventsData = localStorage.getItem("player_events_data");
+    const cachedPlayerEventsData = localStorage.getItem("player_events");
     let cachedPlayerEvents;
     try {
       cachedPlayerEvents = JSON.parse(cachedPlayerEventsData || "[]");
@@ -6406,12 +6406,13 @@ function createPlayerEventsStore() {
     if (systemState?.calculationGameweek === gameweek) {
       allPlayerEvents = await getPlayerEvents();
     } else {
-      allPlayerEvents = await actor.getPlayersDetailsForGameweek(
-        fantasyTeam.playerIds,
-        systemState?.calculationSeasonId,
+      let dto = {
+        seasonId: systemState.calculationSeasonId,
         gameweek
-      );
+      };
+      allPlayerEvents = await actor.getPlayerDetailsForGameweek(dto);
     }
+    console.log("getting gameweek players");
     let allPlayers = [];
     const unsubscribe = playerStore.subscribe((players) => {
       allPlayers = players.filter(
@@ -6419,6 +6420,10 @@ function createPlayerEventsStore() {
       );
     });
     unsubscribe();
+    console.log("all players");
+    console.log(allPlayers);
+    console.log("all players");
+    console.log(allPlayerEvents);
     let gameweekData = await Promise.all(
       allPlayers.map(
         async (player) => await extractPlayerData(
@@ -6427,10 +6432,19 @@ function createPlayerEventsStore() {
         )
       )
     );
+    console.log("Gameweek data");
+    console.log(gameweekData);
     const playersWithPoints = gameweekData.map((entry) => {
       const score = calculatePlayerScore(entry, allFixtures);
       const bonusPoints = calculateBonusPoints(entry, fantasyTeam, score);
       const captainPoints = entry.player.id === fantasyTeam.captainId ? score + bonusPoints : 0;
+      console.log("return data");
+      console.log({
+        ...entry,
+        points: score,
+        bonusPoints,
+        totalPoints: score + bonusPoints + captainPoints
+      });
       return {
         ...entry,
         points: score,
