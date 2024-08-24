@@ -3515,7 +3515,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1cb55x9"
+  version_hash: "jiybaw"
 };
 async function get_hooks() {
   return {};
@@ -6439,13 +6439,6 @@ function createPlayerEventsStore() {
       const score = calculatePlayerScore(entry, allFixtures);
       const bonusPoints = calculateBonusPoints(entry, fantasyTeam, score);
       const captainPoints = entry.player.id === fantasyTeam.captainId ? score + bonusPoints : 0;
-      console.log("return data");
-      console.log({
-        ...entry,
-        points: score,
-        bonusPoints,
-        totalPoints: score + bonusPoints + captainPoints
-      });
       return {
         ...entry,
         points: score,

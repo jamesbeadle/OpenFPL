@@ -175,13 +175,6 @@ function createPlayerEventsStore() {
       const captainPoints =
         entry.player.id === fantasyTeam.captainId ? score + bonusPoints : 0;
 
-      console.log("return data");
-      console.log({
-        ...entry,
-        points: score,
-        bonusPoints: bonusPoints,
-        totalPoints: score + bonusPoints + captainPoints,
-      });
       return {
         ...entry,
         points: score,

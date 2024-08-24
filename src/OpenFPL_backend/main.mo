@@ -1527,7 +1527,7 @@ import Debug "mo:base/Debug";
     };
 
     private func postUpgradeCallback() : async (){
-    
+      await seasonManager.calculateLeaderboards();
       /* 
       //await seasonManager.fixIncorrectData();
       //seasonManager.setFixtureToFinalised(1,2);

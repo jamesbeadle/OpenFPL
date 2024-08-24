@@ -1521,6 +1521,10 @@ module {
       seasonComposite.setFixtureToFinalised(seasonId, fixtureId);
     };
 
+    public func calculateLeaderboards() : async () {
+      await leaderboardComposite.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth, managerComposite.getStableUniqueManagerCanisterIds());
+    };
+
     public func setupTesting() {
 
       //set the system state
