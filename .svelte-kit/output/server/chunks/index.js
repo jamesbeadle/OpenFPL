@@ -3515,7 +3515,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1j13w67"
+  version_hash: "1cb55x9"
 };
 async function get_hooks() {
   return {};
@@ -4195,7 +4195,8 @@ const idlFactory = ({ IDL }) => {
   });
   const GetMonthlyLeaderboardsDTO = IDL.Record({
     "month": CalendarMonth,
-    "seasonId": SeasonId
+    "seasonId": SeasonId,
+    "searchTerm": IDL.Text
   });
   const ClubLeaderboardDTO = IDL.Record({
     "month": IDL.Nat8,
@@ -7086,15 +7087,10 @@ function createMonthlyLeaderboardStore() {
     let categoryHash = dataCacheValues.find((x) => x.category === category2) ?? null;
     const localHash = localStorage.getItem(`${category2}_hash`);
     if (categoryHash?.hash != localHash) {
-      const limit = itemsPerPage2;
-      const offset = 0;
       let dto = {
-        offset: BigInt(offset),
         seasonId,
-        limit: BigInt(limit),
-        searchTerm: "",
         month,
-        clubId: 1
+        searchTerm: ""
       };
       let result = await actor.getMonthlyLeaderboards(dto);
       if (isError(result)) {
@@ -7124,6 +7120,7 @@ function createMonthlyLeaderboardStore() {
   async function getMonthlyLeaderboard(seasonId, clubId, month, currentPage, searchTerm) {
     const limit = itemsPerPage2;
     const offset = (currentPage - 1) * limit;
+    console.log("getMonthlyLeaderboard");
     if (currentPage <= 4 && month == systemState?.calculationMonth) {
       const cachedData = localStorage.getItem(category);
       if (cachedData) {
@@ -7142,12 +7139,11 @@ function createMonthlyLeaderboardStore() {
     let dto = {
       seasonId,
       month,
-      clubId,
-      offset: BigInt(offset),
-      limit: BigInt(limit),
-      searchTerm
+      searchTerm: ""
     };
-    let result = await actor.getMonthlyLeaderboard(dto);
+    console.log("getMonthlyLeaderboards");
+    console.log(dto);
+    let result = await actor.getMonthlyLeaderboards(dto);
     let emptyReturn = {
       month: 0,
       clubId: 0,

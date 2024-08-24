@@ -41,21 +41,25 @@
 
   onMount(async () => {
     try {
+      console.log("loading leaderboards component")
       await teamStore.sync();
       if ($teamStore.length == 0) return;
 
       await systemStore.sync();
 
+      console.log("syncing weekly store")
       await weeklyLeaderboardStore.sync(
         $systemStore?.calculationSeasonId ?? 1,
         $systemStore?.calculationGameweek ?? 1
       );
       
+      console.log("syncing monthly store")
       await monthlyLeaderboardStore.sync(
         $systemStore?.calculationSeasonId ?? 1,
         $systemStore?.calculationMonth ?? 8
       );
       
+      console.log("syncing season store")
       await seasonLeaderboardStore.sync(
         $systemStore?.calculationSeasonId ?? 1
       );
@@ -72,6 +76,7 @@
             a.friendlyName.localeCompare(b.friendlyName)
           )[0].id;
 
+      console.log("getting leaderboard data")
       let leaderboardData = await weeklyLeaderboardStore.getWeeklyLeaderboard(
         selectedSeasonId,
         selectedGameweek,

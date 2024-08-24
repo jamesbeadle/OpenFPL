@@ -688,6 +688,7 @@ type GetPlayerDetailsDTO =
 type GetMonthlyLeaderboardsDTO = 
  record {
    month: CalendarMonth;
+   searchTerm: text;
    seasonId: SeasonId;
  };
 type GetMonthlyLeaderboardDTO = 

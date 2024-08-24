@@ -4,7 +4,7 @@ import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
   ClubLeaderboardDTO,
   DataCacheDTO,
-  GetMonthlyLeaderboardDTO,
+  GetMonthlyLeaderboardsDTO,
   MonthlyLeaderboardDTO,
   SystemStateDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
@@ -48,13 +48,10 @@ function createMonthlyLeaderboardStore() {
       const limit = itemsPerPage;
       const offset = 0;
 
-      let dto: GetMonthlyLeaderboardDTO = {
-        offset: BigInt(offset),
+      let dto: GetMonthlyLeaderboardsDTO = {
         seasonId: seasonId,
-        limit: BigInt(limit),
-        searchTerm: "",
         month: month,
-        clubId: 1,
+        searchTerm: "",
       };
 
       let result = await actor.getMonthlyLeaderboards(dto);
@@ -94,7 +91,7 @@ function createMonthlyLeaderboardStore() {
   ): Promise<MonthlyLeaderboardDTO> {
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
-
+    console.log("getMonthlyLeaderboard");
     if (currentPage <= 4 && month == systemState?.calculationMonth) {
       const cachedData = localStorage.getItem(category);
 
@@ -113,16 +110,15 @@ function createMonthlyLeaderboardStore() {
       }
     }
 
-    let dto: GetMonthlyLeaderboardDTO = {
+    let dto: GetMonthlyLeaderboardsDTO = {
       seasonId,
       month,
-      clubId,
-      offset: BigInt(offset),
-      limit: BigInt(limit),
-      searchTerm,
+      searchTerm: "",
     };
 
-    let result = await actor.getMonthlyLeaderboard(dto);
+    console.log("getMonthlyLeaderboards");
+    console.log(dto);
+    let result = await actor.getMonthlyLeaderboards(dto);
 
     let emptyReturn = {
       month: 0,

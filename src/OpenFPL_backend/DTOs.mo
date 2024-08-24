@@ -82,6 +82,7 @@ module DTOs {
   public type GetMonthlyLeaderboardsDTO = {
     seasonId : T.SeasonId;
     month : T.CalendarMonth;
+    searchTerm: Text;
   };
 
   public type MonthlyLeaderboardDTO = {

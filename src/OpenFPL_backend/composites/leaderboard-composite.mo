@@ -185,10 +185,10 @@ module {
           case (null) {};
           case (?foundCanister) {
             let monthly_leaderboard_canister = actor (foundCanister.canisterId) : actor {
-              getEntries : (filters: DTOs.PaginationFiltersDTO) -> async ?DTOs.ClubLeaderboardDTO;
+              getEntries : (filters: DTOs.PaginationFiltersDTO, searchTerm: Text) -> async ?DTOs.ClubLeaderboardDTO;
             };
 
-            let leaderboardEntries = await monthly_leaderboard_canister.getEntries({ limit = 100; offset = 0 });
+            let leaderboardEntries = await monthly_leaderboard_canister.getEntries({ limit = 100; offset = 0 }, dto.searchTerm);
             switch (leaderboardEntries) {
               case (null) {};
               case (?foundLeaderboard) {

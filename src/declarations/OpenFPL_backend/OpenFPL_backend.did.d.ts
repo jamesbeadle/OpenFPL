@@ -242,6 +242,7 @@ export interface GetMonthlyLeaderboardDTO {
 export interface GetMonthlyLeaderboardsDTO {
   'month' : CalendarMonth,
   'seasonId' : SeasonId,
+  'searchTerm' : string,
 }
 export interface GetPlayerDetailsDTO {
   'playerId' : PlayerId,

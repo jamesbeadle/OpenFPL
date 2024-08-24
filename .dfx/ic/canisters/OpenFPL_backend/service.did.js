@@ -472,6 +472,7 @@ export const idlFactory = ({ IDL }) => {
   const GetMonthlyLeaderboardsDTO = IDL.Record({
     month: CalendarMonth,
     seasonId: SeasonId,
+    searchTerm: IDL.Text,
   });
   const ClubLeaderboardDTO = IDL.Record({
     month: IDL.Nat8,
