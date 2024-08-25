@@ -322,6 +322,7 @@ module {
       if (systemState.pickTeamGameweek < 38) {
         pickTeamGameweek := systemState.pickTeamGameweek + 1;
       };
+      await setGameweekTimers(pickTeamGameweek);
 
       let updatedSystemState : T.SystemState = {
         calculationGameweek = systemState.calculationGameweek;
@@ -760,7 +761,6 @@ module {
               //await payWeeklyRewards(foundRewardPool); Removed until verified
               //await privateLeaguesManager.payWeeklyRewards({ seasonId = systemState.calculationSeasonId; gameweek = systemState.calculationGameweek });
               await incrementCalculationGameweek();
-              //await setGameweekTimers(systemState.calculationGameweek); TODO ADD BACK IN
             };
 
             /* TODO ADD BACK IN

@@ -679,18 +679,21 @@ module {
         return 0;
       };
       
-      var bonusPlayed = dto.goalGetterGameweek == systemState.pickTeamGameweek 
-        or dto.passMasterGameweek == systemState.pickTeamGameweek 
-        or dto.noEntryGameweek == systemState.pickTeamGameweek 
-        or dto.teamBoostGameweek == systemState.pickTeamGameweek 
-        or dto.safeHandsGameweek == systemState.pickTeamGameweek 
-        or dto.captainFantasticGameweek == systemState.pickTeamGameweek 
-        or dto.countrymenGameweek == systemState.pickTeamGameweek 
-        or dto.prospectsGameweek == systemState.pickTeamGameweek 
-        or dto.braceBonusGameweek == systemState.pickTeamGameweek 
-        or dto.hatTrickHeroGameweek == systemState.pickTeamGameweek;
       
-      if(bonusPlayed){
+
+      var newBonusPlayed = 
+        (dto.goalGetterGameweek == systemState.pickTeamGameweek and manager.goalGetterGameweek == 0) 
+        or (dto.passMasterGameweek == systemState.pickTeamGameweek and manager.passMasterGameweek == 0)
+        or (dto.noEntryGameweek == systemState.pickTeamGameweek and manager.noEntryGameweek == 0)
+        or (dto.teamBoostGameweek == systemState.pickTeamGameweek and manager.teamBoostGameweek == 0)
+        or (dto.safeHandsGameweek == systemState.pickTeamGameweek and manager.safeHandsGameweek == 0)
+        or (dto.captainFantasticGameweek == systemState.pickTeamGameweek and manager.captainFantasticGameweek == 0)
+        or (dto.countrymenGameweek == systemState.pickTeamGameweek and manager.countrymenGameweek == 0)
+        or (dto.prospectsGameweek == systemState.pickTeamGameweek and manager.prospectsGameweek == 0)
+        or (dto.braceBonusGameweek == systemState.pickTeamGameweek and manager.braceBonusGameweek == 0)
+        or (dto.hatTrickHeroGameweek == systemState.pickTeamGameweek and manager.hatTrickHeroGameweek == 0);
+      
+      if(newBonusPlayed){
         monthlyBonuses := monthlyBonuses - 1;  
       };
 

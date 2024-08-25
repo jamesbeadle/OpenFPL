@@ -1528,32 +1528,6 @@ import Debug "mo:base/Debug";
 
     private func postUpgradeCallback() : async (){
 
-      setupTesting();
-      /*
-      recordSystemEvent({
-        eventDetail = "Updating manager wasm"; 
-        eventId = 0;
-        eventTime = Time.now();
-        eventTitle = "Canister Log";
-        eventType = #SystemCheck;
-      });
-      
-      await updateManagerCanisterWasms();
-
-      //await seasonManager.calculateLeaderboards();
-      //await seasonManager.fixIncorrectData();
-      //seasonManager.setFixtureToFinalised(1,2);
-
-      recordSystemEvent({
-        eventDetail = "Updating manager wasm"; 
-        eventId = 0;
-        eventTime = Time.now();
-        eventTitle = "Canister Log";
-        eventType = #SystemCheck;
-      });
-      
-      await updateManagerCanisterWasms();
-
       recordSystemEvent({
         eventDetail = "Updating manager wasm"; 
         eventId = 0;
@@ -1564,81 +1538,6 @@ import Debug "mo:base/Debug";
       
       await updateManagerCanisterWasms();
       
-      recordSystemEvent({
-        eventDetail = "Getting ordered snapshots in post upgrade"; 
-        eventId = 0;
-        eventTime = Time.now();
-        eventTitle = "Canister Log";
-        eventType = #SystemCheck;
-      });
-
-      let _ = await seasonManager.getOrderedSnapshots();
-      seasonManager.setFixtureToComplete(1,1);
-      //await seasonManager.removeEventDataFromFixtures();
-      recordSystemEvent({
-        eventDetail = "Updating manager wasm"; 
-        eventId = 0;
-        eventTime = Time.now();
-        eventTitle = "Canister Log";
-        eventType = #SystemCheck;
-      });
-      
-      await updateManagerCanisterWasms();
-
-      recordSystemEvent({
-        eventDetail = "Removing gameweek snapshots"; 
-        eventId = 0;
-        eventTime = Time.now();
-        eventTitle = "Canister Log";
-        eventType = #SystemCheck;
-      });
-
-      await seasonManager.removeDuplicateGameweekSnapshots();
-
-      recordSystemEvent({
-        eventDetail = "Remove event data from fixtures"; 
-        eventId = 0;
-        eventTime = Time.now();
-        eventTitle = "Canister Log";
-        eventType = #SystemCheck;
-      });
-
-      await seasonManager.removeEventDataFromFixtures();
-
-      recordSystemEvent({
-        eventDetail = "Remove event data from players"; 
-        eventId = 0;
-        eventTime = Time.now();
-        eventTitle = "Canister Log";
-        eventType = #SystemCheck;
-      });
-
-
-      await seasonManager.removeEventDataFromPlayers();
-
-      recordSystemEvent({
-        eventDetail = "Updating cache values"; 
-        eventId = 0;
-        eventTime = Time.now();
-        eventTitle = "Canister Log";
-        eventType = #SystemCheck;
-      });
-
-      recordSystemEvent({
-        eventDetail = "Resetting manager snapshot points"; 
-        eventId = 0;
-        eventTime = Time.now();
-        eventTitle = "Canister Log";
-        eventType = #SystemCheck;
-      });
-
-      await seasonManager.resetManagerSnapshotPoints();
-
-      
-      */
-      //await seasonManager.resetManagerBonusesAvailable();
-      await seasonManager.removeOnHold();
-      //
       //on each update generate new hash values
       await seasonManager.updateCacheHash("clubs");
       await seasonManager.updateCacheHash("fixtures");
@@ -1651,11 +1550,6 @@ import Debug "mo:base/Debug";
       await seasonManager.updateCacheHash("system_state");
 
       await cyclesCheckCallback();
-      
-      //await systemCheckCallback(); //TODO UPDATE THIS SO IT's more informative and delete the existing
-      //await seasonManager.removeDuplicatePlayer(602);
-      //await seasonManager.resetManagerBonusesAvailable();
-      //setupTesting();
     };
 
     private func updateManagerCanisterWasms() : async (){
@@ -1828,8 +1722,7 @@ import Debug "mo:base/Debug";
           let totalManagerCount = seasonManager.getTotalManagers();
           
           recordSystemEvent({
-            eventDetail = "Good morning from OpenFPL. I have " # Nat.toText(result) # " cycles available in my backend canister wallet. 
-              I am looking after " # Nat.toText(totalCanisterCount) # " manager canisters, totalling " # Nat.toText(totalManagerCount) # " managers."; 
+            eventDetail = "OpenFPL system check. Backend cycles:  " # Nat.toText(result) # ", total canisters: " # Nat.toText(totalCanisterCount) # ", total managers: " # Nat.toText(totalManagerCount) # "."; 
             eventId = 0;
             eventTime = Time.now();
             eventTitle = "System Check " # dateString # ". (ID: " # Int.toText(stable_next_system_event_id) # ")";
