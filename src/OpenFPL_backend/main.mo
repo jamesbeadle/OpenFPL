@@ -1527,8 +1527,20 @@ import Debug "mo:base/Debug";
     };
 
     private func postUpgradeCallback() : async (){
-      await seasonManager.calculateLeaderboards();
-      /* 
+
+      setupTesting();
+      /*
+      recordSystemEvent({
+        eventDetail = "Updating manager wasm"; 
+        eventId = 0;
+        eventTime = Time.now();
+        eventTitle = "Canister Log";
+        eventType = #SystemCheck;
+      });
+      
+      await updateManagerCanisterWasms();
+
+      //await seasonManager.calculateLeaderboards();
       //await seasonManager.fixIncorrectData();
       //seasonManager.setFixtureToFinalised(1,2);
 
@@ -1624,9 +1636,9 @@ import Debug "mo:base/Debug";
 
       
       */
-
-      
-      //await seasonManager.removeOnHold();
+      //await seasonManager.resetManagerBonusesAvailable();
+      await seasonManager.removeOnHold();
+      //
       //on each update generate new hash values
       await seasonManager.updateCacheHash("clubs");
       await seasonManager.updateCacheHash("fixtures");
@@ -1907,5 +1919,10 @@ import Debug "mo:base/Debug";
     private func cleanFantasyTeams() : async (){
       await seasonManager.cleanFantasyTeams();
     };
+    /*
+    public func giveBackUnassignedBonuses() : async () {
+      //await seasonManager.giveBackUnassignedBonuses();
+    };
+    */
 
   };

@@ -231,6 +231,7 @@
       {fantasyTeam}
       {bonusUsedInSession}
       {updateBonuses}
+      {bonuses}
     />
   {/if}
   <div class="flex flex-col md:flex-row bonus-panel-inner">

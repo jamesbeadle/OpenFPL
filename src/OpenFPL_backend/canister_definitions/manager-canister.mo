@@ -205,9 +205,9 @@ actor class _ManagerCanister() {
       goalGetterPlayerId = dto.goalGetterPlayerId;
       passMasterGameweek = dto.passMasterGameweek;
       passMasterPlayerId = dto.passMasterPlayerId;
-      noEntryGameweek = manager.noEntryGameweek;
-      noEntryPlayerId = manager.noEntryPlayerId;
-      teamBoostGameweek = manager.teamBoostGameweek;
+      noEntryGameweek = dto.noEntryGameweek;
+      noEntryPlayerId = dto.noEntryPlayerId;
+      teamBoostGameweek = dto.teamBoostGameweek;
       teamBoostClubId = dto.teamBoostClubId;
       safeHandsGameweek = dto.safeHandsGameweek;
       safeHandsPlayerId = dto.safeHandsPlayerId;

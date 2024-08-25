@@ -757,22 +757,23 @@ module {
 
             if(gameweekComplete){
               await managerComposite.resetWeeklyTransfers();
-              await payWeeklyRewards(foundRewardPool);
+              //await payWeeklyRewards(foundRewardPool); Removed until verified
               //await privateLeaguesManager.payWeeklyRewards({ seasonId = systemState.calculationSeasonId; gameweek = systemState.calculationGameweek });
               await incrementCalculationGameweek();
-              await setGameweekTimers(systemState.calculationGameweek);
+              //await setGameweekTimers(systemState.calculationGameweek); TODO ADD BACK IN
             };
 
+            /* TODO ADD BACK IN
             if(monthComplete){
               await managerComposite.resetBonusesAvailable();
-              await payMonthlyRewards(foundRewardPool);
+              //await payMonthlyRewards(foundRewardPool); Removed until verified
               //await privateLeaguesManager.payMonthlyRewards(systemState.calculationSeasonId, systemState.calculationMonth);
               await incrementCalculationMonth();
             };
 
             if(seasonComplete){
               await managerComposite.resetFantasyTeams(seasonComposite.getStableNextSeasonId());
-              await paySeasonRewards(foundRewardPool);
+              //await paySeasonRewards(foundRewardPool); Removed until verified
               //await privateLeaguesManager.paySeasonRewards(systemState.calculationSeasonId);
               await incrementCalculationSeason();
               
@@ -783,6 +784,7 @@ module {
               
               await setTransferWindowTimers();
             };
+            */
 
           };
         };
@@ -1527,23 +1529,20 @@ module {
 
     public func setupTesting() {
 
-      //set the system state
       systemState := {
         calculationGameweek = 1;
-        calculationMonth = 8;
+        calculationMonth = Utilities.unixTimeToMonth(Time.now());
         calculationSeasonId = 1;
         pickTeamGameweek = 1;
         pickTeamSeasonId = 1;
-        seasonActive = false;
+        seasonActive = true;
         transferWindowActive = true;
         onHold = false;
       };
 
       playerComposite.setInitialPlayers();
       clubComposite.setInitialClubs();
-      seasonComposite.setInitialSeason(Array.map<T.Club, T.ClubId>(clubComposite.getClubs(), func(club: T.Club){
-        return club.id;
-      }));
+      seasonComposite.setInitialSeason();
     
     };
 

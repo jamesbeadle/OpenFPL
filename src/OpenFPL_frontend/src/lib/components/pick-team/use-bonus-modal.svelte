@@ -18,6 +18,7 @@
   export let closeBonusModal: () => void;
   export let bonus: Bonus;
   export let updateBonuses: () => void;
+  export let bonuses: Writable<Bonus[]>;
 
   let countries: string[];
   let selectedTeamId = 0;
@@ -86,6 +87,8 @@
       activeGameweek = $systemStore?.pickTeamGameweek
     }
     
+    $bonuses[bonus.id - 1].usedGameweek = activeGameweek
+    console.log($bonuses)
     switch (bonus.id) {
       case 1:
         fantasyTeam.update((team) => {
@@ -205,6 +208,8 @@
     }
     updateBonuses();
     closeBonusModal();
+    console.log("bonus used")
+    console.log($fantasyTeam)
   }
 
   $: countries = getUniqueCountries();

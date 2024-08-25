@@ -83,6 +83,7 @@
     }
 
     let userFantasyTeam = await managerStore.getCurrentTeam();
+    console.log(userFantasyTeam)
     fantasyTeam.set(userFantasyTeam);
 
     fantasyTeam.update((currentTeam) => {

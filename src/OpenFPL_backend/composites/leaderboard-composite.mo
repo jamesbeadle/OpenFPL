@@ -352,44 +352,8 @@ module {
       logManagerCount(Array.size(fantasyTeamSnapshots));
 
       await calculateWeeklyLeaderboard(seasonId, gameweek, fantasyTeamSnapshots);
-      switch(recordSystemEvent){
-          case null{};
-          case (?function){
-            function({
-              eventDetail = "Calculate Monthly Leaderboard";
-              eventId = 0;
-              eventTime = Time.now();
-              eventTitle = "Canister Log";
-              eventType = #SystemCheck;
-            });
-          }
-      };
       await calculateMonthlyLeaderboards(seasonId, month, fantasyTeamSnapshots);
-      switch(recordSystemEvent){
-          case null{};
-          case (?function){
-            function({
-              eventDetail = "Calculate Season Leaderboard";
-              eventId = 0;
-              eventTime = Time.now();
-              eventTitle = "Canister Log";
-              eventType = #SystemCheck;
-            });
-          }
-      };
       await calculateSeasonLeaderboard(seasonId, fantasyTeamSnapshots);
-      switch(recordSystemEvent){
-          case null{};
-          case (?function){
-            function({
-              eventDetail = "Leaderboard Calculation Complete";
-              eventId = 0;
-              eventTime = Time.now();
-              eventTitle = "Canister Log";
-              eventType = #SystemCheck;
-            });
-          }
-      };
     };
 
     private func logManagerCount(totalSnapshots: Nat){
@@ -626,6 +590,21 @@ module {
         };
       };
       
+      
+      switch(recordSystemEvent){
+          case null{};
+          case (?function){
+            function({
+              eventDetail = "Season leaderboard canister id: " # seasonLeaderboardCanisterId;
+              eventId = 0;
+              eventTime = Time.now();
+              eventTitle = "Canister Log";
+              eventType = #SystemCheck;
+            });
+          }
+      };
+
+
       
       let seasonEntries = Array.map<T.FantasyTeamSnapshot, T.LeaderboardEntry>(
         snapshots,

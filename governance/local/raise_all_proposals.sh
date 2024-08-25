@@ -12,8 +12,8 @@ export PEM_FILE="$(readlink -f "$HOME/.config/dfx/identity/${OWNER_IDENTITY}/ide
 
 
 #./governance/local/register_generic_functions.sh
-#./governance/local/UpgradeBackend.sh
-./governance/local/417.AddFixtureData_1.sh
+./governance/local/UpgradeBackend.sh
+#./governance/local/417.AddFixtureData_1.sh
 #./governance/local/138.PromoteSouthampton.sh
 #./governance/local/142.Add2024Fixtures.sh
 #./governance/local/99.TestPlayerProposal.sh

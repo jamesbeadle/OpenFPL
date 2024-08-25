@@ -8,6 +8,7 @@
   import { playerStore } from "$lib/stores/player-store";
   import { playerEventsStore } from "$lib/stores/player-events-store";
   import {
+    calculateAgeFromNanoseconds,
     convertPlayerPosition,
     getFlagComponent,
     getPositionAbbreviation,
@@ -83,6 +84,9 @@
         $fantasyTeam!,
         $selectedGameweek!
       );
+
+      calculateBonusPoints(fetchedPlayers, $fantasyTeam);
+      
       gameweekPlayers.set(
         fetchedPlayers.sort((a, b) => {
           if (b.totalPoints === a.totalPoints) {
@@ -147,6 +151,102 @@
   function closeDetailModal() {
     showModal = false;
   }
+
+  function calculateBonusPoints(
+  gameweekData: GameweekData[],
+  fantasyTeam: FantasyTeamSnapshot
+) {
+    gameweekData.forEach((data) => {
+      let bonusPoints = 0;
+      console.log(fantasyTeam)
+      if (
+        fantasyTeam.goalGetterPlayerId === data.player.id &&
+        fantasyTeam.goalGetterGameweek === data.gameweek
+      ) {
+        bonusPoints += data.goals * data.goalPoints * 2;
+      }
+
+      if (
+        fantasyTeam.passMasterPlayerId === data.player.id &&
+        fantasyTeam.passMasterGameweek === data.gameweek
+      ) {
+        bonusPoints += data.assists * data.assistPoints * 2;
+      }
+
+      if (
+        fantasyTeam.noEntryPlayerId === data.player.id &&
+        fantasyTeam.noEntryGameweek === data.gameweek &&
+        data.cleanSheets > 0 
+      ) {
+        bonusPoints += data.points * 2;
+      }
+
+      if (
+        fantasyTeam.teamBoostClubId === data.player.clubId &&
+        fantasyTeam.teamBoostGameweek === data.gameweek
+      ) {
+        bonusPoints += data.points;
+      }
+
+      if (
+        fantasyTeam.safeHandsPlayerId === data.player.id &&
+        fantasyTeam.safeHandsGameweek === data.gameweek &&
+        data.saves >= 5
+      ) {
+        bonusPoints += data.points * 2;
+      }
+
+      if (
+        fantasyTeam.countrymenCountryId === data.nationalityId &&
+        fantasyTeam.countrymenGameweek === data.gameweek
+      ) {
+        bonusPoints += data.points;
+      }
+
+      if (
+        isPlayerUnder21(data.player) &&
+        fantasyTeam.prospectsGameweek === data.gameweek
+      ) {
+        bonusPoints += data.points;
+      }
+
+      if (
+        fantasyTeam.braceBonusGameweek === data.gameweek &&
+        data.goals >= 2
+      ) {
+        bonusPoints += data.points;
+      }
+
+      if (
+        fantasyTeam.hatTrickHeroGameweek === data.gameweek &&
+        data.goals >= 3
+      ) {
+        bonusPoints += data.points * 2;
+      }
+
+      data.bonusPoints = bonusPoints;
+      data.totalPoints = data.points + bonusPoints;
+
+      if (
+        fantasyTeam.captainFantasticPlayerId === data.player.id &&
+        fantasyTeam.captainFantasticGameweek === data.gameweek &&
+        data.goals > 0
+      ) {
+        if (fantasyTeam.captainId === data.player.id) {
+          data.totalPoints *= 2;
+        }
+      } else if (fantasyTeam.captainId === data.player.id) {
+        data.totalPoints *= 2;
+      }
+    });
+  }
+
+
+  function isPlayerUnder21(player: PlayerDTO): boolean {
+    let playerAge = calculateAgeFromNanoseconds(Number(player.dateOfBirth));
+    return playerAge < 21;
+  }
+
 </script>
 
 {#if isLoading}
