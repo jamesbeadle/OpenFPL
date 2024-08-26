@@ -1528,15 +1528,7 @@ import Debug "mo:base/Debug";
 
     private func postUpgradeCallback() : async (){
 
-      recordSystemEvent({
-        eventDetail = "Updating manager wasm"; 
-        eventId = 0;
-        eventTime = Time.now();
-        eventTitle = "Canister Log";
-        eventType = #SystemCheck;
-      });
-      
-      await updateManagerCanisterWasms();
+      seasonManager.setFixtureToComplete(1,1);
       
       //on each update generate new hash values
       await seasonManager.updateCacheHash("clubs");

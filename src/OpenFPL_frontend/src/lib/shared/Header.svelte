@@ -155,6 +155,16 @@
               <span class="flex items-center h-full px-4">Squad Selection</span>
             </a>
           </li>
+          <li class="mx-2 flex items-center h-16">
+            <a
+              href="/governance"
+              class="flex items-center h-full nav-underline hover:text-gray-400 ${currentClass(
+                '/governance'
+              )}"
+            >
+              <span class="flex items-center h-full px-4">Governance</span>
+            </a>
+          </li>
           
           <li class="flex flex-1 items-center">
             <div class="relative inline-block">
@@ -298,45 +308,3 @@
     </div>
   </nav>
 </header>
-
-<style>
-  header {
-    background-color: rgba(36, 37, 41, 0.9);
-  }
-  .nav-underline {
-    position: relative;
-    display: inline-block;
-    color: white;
-  }
-  .nav-underline::after {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 2px;
-    background-color: #2ce3a6;
-    bottom: 0;
-    left: 0;
-    transform: scaleX(0);
-    transition: transform 0.3s ease-in-out;
-    color: #2ce3a6;
-  }
-
-  .nav-underline:hover::after,
-  .nav-underline.active::after {
-    transform: scaleX(1);
-    color: #2ce3a6;
-  }
-
-  .nav-underline:hover::after {
-    transform: scaleX(1);
-    background-color: gray;
-  }
-  .nav-button {
-    background-color: transparent;
-  }
-  .nav-button:hover {
-    background-color: transparent;
-    color: #2ce3a6;
-    border: none;
-  }
-</style>
