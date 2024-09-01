@@ -50,8 +50,13 @@ input {
   border: 1px solid #2e323a !important;
 }
 
-.bg-brand-light-gray{
-  background-color: #2E323A;
+.bg-brand-light-gray {
+  background-color: #2e323a;
+}
+
+.gray-border {
+  border-color: #454b56;
+  border-top-width: 1px;
 }
 
 .active-tab {
@@ -151,6 +156,13 @@ input {
   @apply flex-shrink-0 w-px bg-gray-400 self-stretch;
 }
 
+.vertical-divider-thin {
+  min-width: 1px;
+  min-height: 50px;
+  background-color: #37393c;
+  @apply flex-shrink-0 w-px self-stretch;
+}
+
 .horizontal-divider {
   min-height: 2px;
   @apply flex-shrink-0 h-px bg-gray-400 self-stretch;
@@ -238,7 +250,6 @@ input {
   @apply px-2;
 }
 
-
 header {
   background-color: rgba(36, 37, 41, 0.9);
 }
@@ -277,6 +288,14 @@ header {
   background-color: transparent;
   color: #2ce3a6;
   border: none;
+}
+
+.text-brand-green {
+  color: #2ce3a6;
+}
+
+.text-brand-red {
+  color: #cf5d43;
 }
 
 /* Extra small devices (portrait phones, less than 480px) */

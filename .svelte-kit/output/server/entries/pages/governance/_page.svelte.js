@@ -1,10 +1,9 @@
 import { p } from "../../../chunks/index.js";
-import "@dfinity/agent";
-import "@dfinity/sns";
 import "@dfinity/principal";
+import "@dfinity/sns";
 import "@dfinity/utils";
 import "dompurify";
-import "@dfinity/auth-client";
+import "@dfinity/agent";
 export {
   p as default
 };

@@ -15,5 +15,5 @@ FUNCTION_ID=8000
 
 # Submit the proposal
 
-./make_custom_function_proposal.sh $FUNCTION_ID "$TITLE" "$SUMMARY" "$URL" "$ARGS"
+./make_custom_function_proposal.sh $FUNCTION_ID "$TITLE" "$SUMMARY" "$URL" "$ARGS" validateTransferPlayer
 echo $PROPOSER_NEURON_ID

@@ -91,7 +91,7 @@ function createMonthlyLeaderboardStore() {
   ): Promise<MonthlyLeaderboardDTO> {
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
-    console.log("getMonthlyLeaderboard");
+
     if (currentPage <= 4 && month == systemState?.calculationMonth) {
       const cachedData = localStorage.getItem(category);
 
@@ -116,8 +116,6 @@ function createMonthlyLeaderboardStore() {
       searchTerm: "",
     };
 
-    console.log("getMonthlyLeaderboards");
-    console.log(dto);
     let result = await actor.getMonthlyLeaderboards(dto);
 
     let emptyReturn = {

@@ -18,6 +18,7 @@
   export let availableFormations: Writable<string[]>;
   export let transfersAvailable: Writable<number>;
   export let bankBalance: Writable<number>;
+  export let onHold: Writable<boolean>;
   
   let isSaveButtonActive: boolean;
 
@@ -431,7 +432,7 @@
           Auto Fill
         </button>
         <button
-          disabled={!isSaveButtonActive}
+          disabled={!isSaveButtonActive || $onHold}
           on:click={saveFantasyTeam}
           class={`btn w-full md:w-auto px-4 py-2 rounded ${
             isSaveButtonActive ? "fpl-purple-btn" : "bg-gray-500"

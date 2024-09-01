@@ -141,7 +141,6 @@ function createPlayerEventsStore() {
       };
       allPlayerEvents = await actor.getPlayerDetailsForGameweek(dto);
     }
-    console.log("getting gameweek players");
 
     let allPlayers: PlayerDTO[] = [];
     const unsubscribe = playerStore.subscribe((players) => {
@@ -151,11 +150,6 @@ function createPlayerEventsStore() {
     });
     unsubscribe();
 
-    console.log("all players");
-    console.log(allPlayers);
-
-    console.log("all players");
-    console.log(allPlayerEvents);
     let gameweekData: GameweekData[] = await Promise.all(
       allPlayers.map(
         async (player) =>
@@ -165,9 +159,6 @@ function createPlayerEventsStore() {
           ),
       ),
     );
-
-    console.log("Gameweek data");
-    console.log(gameweekData);
 
     const playersWithPoints = gameweekData.map((entry) => {
       const score = calculatePlayerScore(entry, allFixtures);

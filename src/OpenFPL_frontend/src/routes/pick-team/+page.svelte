@@ -22,6 +22,7 @@
   let bankBalance = writable<number>(0);
   let teamValue = writable<number>(0);
   let loadingPlayers = writable<boolean>(true);  
+  let onHold = writable<boolean>(true);  
 
   let isLoading = true;
   
@@ -60,6 +61,7 @@
   onMount(async () => {
     try {
       systemStore.sync();
+      onHold.set($systemStore?.onHold ?? true);
       $availableFormations = Object.keys(allFormations);
       
       await loadData();
@@ -83,7 +85,6 @@
     }
 
     let userFantasyTeam = await managerStore.getCurrentTeam();
-    console.log(userFantasyTeam)
     fantasyTeam.set(userFantasyTeam);
 
     fantasyTeam.update((currentTeam) => {
@@ -113,48 +114,51 @@
   {#if isLoading}
     <Spinner />
   {:else}
-    {#if $systemStore?.onHold}
-      <OnHold />
-    {:else}
-      <div>
-        <div class="hidden md:flex">
-          <PickTeamHeader {fantasyTeam} 
-          {transfersAvailable}
-          {bankBalance}
-          {teamValue}/>
-        </div>
-        <PickTeamButtons
+    <div>
+      {#if $systemStore?.onHold}
+        <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-2" role="alert">
+          <p class="font-bold">Saving your team is currently disabled</p>
+          <p>but OpenFPL will be back soon.</p>
+        </div>      
+      {/if}
+      <div class="hidden md:flex">
+        <PickTeamHeader {fantasyTeam} 
+        {transfersAvailable}
+        {bankBalance}
+        {teamValue}/>
+      </div>
+      <PickTeamButtons
+        {fantasyTeam}
+        {pitchView}
+        {selectedFormation}
+        {availableFormations}
+        {transfersAvailable}
+        {bankBalance}
+        {onHold}
+      />
+      <div class="flex flex-col xl:flex-row mt-2 xl:mt-0">
+        <PickTeamPlayers
+          {loadingPlayers}
           {fantasyTeam}
           {pitchView}
           {selectedFormation}
-          {availableFormations}
           {transfersAvailable}
           {bankBalance}
+          {teamValue}
         />
-        <div class="flex flex-col xl:flex-row mt-2 xl:mt-0">
-          <PickTeamPlayers
-            {loadingPlayers}
-            {fantasyTeam}
-            {pitchView}
-            {selectedFormation}
+        <div class="hidden xl:flex w-full xl:w-1/2 ml-2">
+          <SimpleFixtures />
+        </div>
+        <div class="flex md:hidden w-full mt-4">
+          <PickTeamHeader 
+            {fantasyTeam} 
             {transfersAvailable}
             {bankBalance}
             {teamValue}
           />
-          <div class="hidden xl:flex w-full xl:w-1/2 ml-2">
-            <SimpleFixtures />
-          </div>
-          <div class="flex md:hidden w-full mt-4">
-            <PickTeamHeader 
-              {fantasyTeam} 
-              {transfersAvailable}
-              {bankBalance}
-              {teamValue}
-            />
-          </div>
         </div>
-        <BonusPanel {fantasyTeam}  />
       </div>
-    {/if}
+      <BonusPanel {fantasyTeam}  />
+    </div>
   {/if}
 </Layout>
