@@ -75,15 +75,8 @@ module {
         },
       );
 
-      let activePlayers = List.filter<T.Player>(
-        activeClubPlayers,
-        func(player : T.Player) : Bool {
-          return player.status == #Active;
-        },
-      );
-
       let playerDTOs = List.map<T.Player, DTOs.PlayerDTO>(
-        activePlayers,
+        activeClubPlayers,
         func(player : T.Player) : DTOs.PlayerDTO {
 
           let season = List.find<T.PlayerSeason>(

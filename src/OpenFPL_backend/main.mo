@@ -1528,7 +1528,7 @@ import Debug "mo:base/Debug";
 
     private func postUpgradeCallback() : async (){
 
-      seasonManager.setFixtureToComplete(1,1);
+      //seasonManager.setFixtureToComplete(1,1);
       
       //on each update generate new hash values
       await seasonManager.updateCacheHash("clubs");
@@ -1796,7 +1796,7 @@ import Debug "mo:base/Debug";
       );  
       return await seasonManager.getPlayerPointsMap(seasonId, gameweek);
     };
-
+    
     private func setupTesting(){
       seasonManager.setupTesting();
     };

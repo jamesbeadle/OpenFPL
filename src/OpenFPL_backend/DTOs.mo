@@ -734,6 +734,10 @@ module DTOs {
     transferWindowGameweek : T.GameweekNumber;
     month : T.CalendarMonth;
     seasonId: T.SeasonId;
-  }
+  };
+
+  public type GetLoanedPlayersDTO = {
+    loanClubId: T.ClubId;
+  };
 
 };

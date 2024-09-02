@@ -23,6 +23,7 @@
     convertPlayerPosition,
   } from "../../lib/utils/helpers";
   import { Spinner } from "@dfinity/gix-components";
+    import LoanedPlayers from "$lib/components/club/loaned-players.svelte";
 
   let isLoading = true;
   let fixturesWithTeams: FixtureWithTeams[] = [];
@@ -272,12 +273,24 @@
             Fixtures
           </button>
         </li>
+        <li class={`mr-4 ${activeTab === "loaned-players" ? "active-tab" : ""}`}>
+          <button
+            class={`p-2 ${
+              activeTab === "loaned-players" ? "text-white" : "text-gray-400"
+            }`}
+            on:click={() => setActiveTab("loaned-players")}
+          >
+            Loaned Players
+          </button>
+        </li>
       </ul>
 
       {#if activeTab === "players"}
         <TeamPlayers players={$playerStore.filter((x) => x.clubId == id)} />
       {:else if activeTab === "fixtures"}
         <TeamFixtures clubId={id} />
+        {:else if activeTab === "loaned-players"}
+          <LoanedPlayers clubId={id} />
       {/if}
     </div>
   {/if}
