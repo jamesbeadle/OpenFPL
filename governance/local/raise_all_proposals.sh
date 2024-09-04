@@ -11,8 +11,8 @@ OWNER_IDENTITY=$(dfx identity whoami)
 export PEM_FILE="$(readlink -f "$HOME/.config/dfx/identity/${OWNER_IDENTITY}/identity.pem")"
 
 
-#./governance/local/register_generic_functions.sh
-./governance/local/UpgradeBackend.sh
+./governance/local/register_add_player.sh
+#./governance/local/UpgradeBackend.sh
 #./governance/local/417.AddFixtureData_1.sh
 #./governance/local/138.PromoteSouthampton.sh
 #./governance/local/142.Add2024Fixtures.sh

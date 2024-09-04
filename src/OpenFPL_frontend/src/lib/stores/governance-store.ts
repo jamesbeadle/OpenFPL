@@ -1,8 +1,6 @@
 import { authStore } from "$lib/stores/auth.store";
 import { playerStore } from "$lib/stores/player-store";
-import type { HttpAgent } from "@dfinity/agent";
 import { Principal } from "@dfinity/principal";
-
 import { SnsGovernanceCanister } from "@dfinity/sns";
 import type {
   Command,
@@ -68,7 +66,7 @@ function createGovernanceStore() {
           .toFixed(2)
           .toLocaleString()}m).`;
           
-          await executeProposal(dto, title, summary, 1000n, [IDL.Record({playerId: IDL.Nat16, newClubId: IDL.Nat16 })]);
+          await executeProposal(dto, title, summary, 1000n, [IDL.Record({playerId: IDL.Nat16 })]);
       }
     } catch (error) {
       console.error("Error revaluing player up:", error);
@@ -104,7 +102,7 @@ function createGovernanceStore() {
           .toFixed(2)
           .toLocaleString()}m).`;
 
-        await executeProposal(dto, title, summary, 2000n, [IDL.Record({playerId: IDL.Nat16, newClubId: IDL.Nat16 })]);
+        await executeProposal(dto, title, summary, 2000n, [IDL.Record({playerId: IDL.Nat16 })]);
       }
     } catch (error) {
       console.error("Error revaluing player down:", error);
@@ -156,7 +154,34 @@ function createGovernanceStore() {
         let title = `Fixture Data for ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`;
         let summary = `Fixture Data for ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`;
         
-        await executeProposal(dto, title, summary, 3000n, [IDL.Record({playerId: IDL.Nat16, newClubId: IDL.Nat16 })]);
+        await executeProposal(
+          dto, title, summary, 3000n, 
+          [IDL.Record(
+            {
+              fixtureId: IDL.Nat32, seasonId: IDL.Nat16, gameweek: IDL.Nat8, 
+              playerEventData: IDL.Vec(IDL.Record({
+                fixtureId: IDL.Nat32,
+                clubId: IDL.Nat16,
+                playerId: IDL.Nat16,
+                eventStartMinute: IDL.Nat8,
+                eventEndMinute: IDL.Nat8,
+                eventType: IDL.Variant(
+                  { 
+                    Goal: IDL.Null, 
+                    GoalConceded: IDL.Null,
+                    Appearance: IDL.Null,
+                    PenaltySaved: IDL.Null,
+                    RedCard: IDL.Null,
+                    KeeperSave: IDL.Null,
+                    CleanSheet: IDL.Null,
+                    YellowCard: IDL.Null,
+                    GoalAssisted: IDL.Null,
+                    OwnGoal: IDL.Null,
+                    HighestScoringPlayer: IDL.Null
+                  })
+              }))
+            })
+          ]);
       }
     } catch (error) {
       console.error("Error submitting fixture data:", error);
@@ -186,8 +211,48 @@ function createGovernanceStore() {
 
       let title = `Add initial fixtures for season ${seasonName}`;
       let summary = `Add initial fixtures for season ${seasonName}`;
-      await executeProposal(dto, title, summary, 4000n, [IDL.Record({playerId: IDL.Nat16, newClubId: IDL.Nat16 })]);
-
+      
+      await executeProposal(dto, title, summary, 4000n, 
+        [
+          IDL.Record({
+            seasonId: IDL.Nat16, 
+            seasonFixtures: IDL.Vec(
+              IDL.Record({
+                id: IDL.Nat32,
+                status: IDL.Variant({Unplayed: IDL.Null, Finalised: IDL.Null, Active: IDL.Null, Complete: IDL.Null}),
+                highestScoringPlayerId: IDL.Nat16,
+                seasonId: IDL.Nat16,
+                awayClubId: IDL.Nat16,
+                events: IDL.Vec(
+                  IDL.Record({
+                    fixtureId : IDL.Nat32,
+                    clubId : IDL.Nat16,
+                    playerId: IDL.Nat16,
+                    eventStartMinute: IDL.Nat8,
+                    eventEndMinute: IDL.Nat8,
+                    eventType: IDL.Variant({
+                      Goal: IDL.Null, 
+                      GoalConceded: IDL.Null,
+                      Appearance: IDL.Null,
+                      PenaltySaved: IDL.Null,
+                      RedCard: IDL.Null,
+                      KeeperSave: IDL.Null,
+                      CleanSheet: IDL.Null,
+                      YellowCard: IDL.Null,
+                      GoalAssisted: IDL.Null,
+                      OwnGoal: IDL.Null,
+                      HighestScoringPlayer: IDL.Null
+                    })
+                  })
+                )
+              })
+            ),
+            homeClubId: IDL.Nat16,
+            kickOff: IDL.Int,
+            homeGoals: IDL.Nat8,
+            gameweek: IDL.Nat8,
+            awayGoals: IDL.Nat8
+          })]);
     } catch (error) {
       console.error("Error adding initial fixtures:", error);
       throw error;
@@ -246,9 +311,8 @@ function createGovernanceStore() {
           }
           
           let title = `Move fixture ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`;
-          let summary = `Fixture Data for ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`;
-          await executeProposal(dto, title, summary, 5000n, [IDL.Record({playerId: IDL.Nat16, newClubId: IDL.Nat16 })]);
-
+          let summary = `Move fixture ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`;
+          await executeProposal(dto, title, summary, 5000n, [IDL.Record({fixtureId: IDL.Nat32, updatedFixtureGameweek: IDL.Nat8, updatedFixtureDate: IDL.Int })]);
         }
 
      
@@ -299,8 +363,8 @@ function createGovernanceStore() {
         }
 
         let title = `Postpone fixture ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`;
-        let summary = `Fixture Data for ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`;
-        await executeProposal(dto, title, summary, 6000n, [IDL.Record({playerId: IDL.Nat16, newClubId: IDL.Nat16 })]);
+        let summary = `Postpone fixture for ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`;
+        await executeProposal(dto, title, summary, 6000n, [IDL.Record({fixtureId: IDL.Nat32 })]);
       }
     } catch (error) {
       console.error("Error postponing fixture:", error);
@@ -360,8 +424,8 @@ function createGovernanceStore() {
           }
 
           let title =  `Move fixture ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`;
-          let summary = `Fixture Data for ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`;
-          await executeProposal(dto, title, summary, 7000n, [IDL.Record({playerId: IDL.Nat16, newClubId: IDL.Nat16 })]);
+          let summary = `Move fixture ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`;
+          await executeProposal(dto, title, summary, 7000n, [IDL.Record({postponedFixtureId: IDL.Nat32, updatedFixtureGameweek: IDL.Nat8, updatedFixtureDate: IDL.Int })]);
         }
     } catch (error) {
       console.error("Error rescheduling fixture:", error);
@@ -471,7 +535,7 @@ function createGovernanceStore() {
         let title = `Loan ${player.firstName} to ${club?.friendlyName}.`;
         let summary = `Loan ${player.firstName} to ${club?.friendlyName}.`;
         
-        await executeProposal(dto, title, summary, 9000n, [IDL.Record({playerId: IDL.Nat16, newClubId: IDL.Nat16 })]);
+        await executeProposal(dto, title, summary, 9000n, [IDL.Record({playerId: IDL.Nat16, loanClubId: IDL.Nat16, loanEndDate: IDL.Int })]);
       }
     } catch (error) {
       console.error("Error loaning player:", error);
@@ -513,7 +577,7 @@ function createGovernanceStore() {
         
         let title = `Recall ${player.firstName} ${player?.lastName} loan.`;
         let summary = `Recall ${player.firstName} ${player?.lastName} loan.`;
-        await executeProposal(dto, title, summary, 10000n, [IDL.Record({playerId: IDL.Nat16, newClubId: IDL.Nat16 })]);
+        await executeProposal(dto, title, summary, 10000n, [IDL.Record({playerId: IDL.Nat16 })]);
       }
     } catch (error) {
       console.error("Error recalling player loan:", error);
@@ -565,7 +629,8 @@ function createGovernanceStore() {
       }
       let title = `Create New Player: ${firstName} ${lastName}.`;
       let summary = `Create New Player: ${firstName} ${lastName}.`;
-      await executeProposal(dto, title, summary, 11000n, [IDL.Record({playerId: IDL.Nat16, newClubId: IDL.Nat16 })]);
+
+      await executeProposal(dto, title, summary, 11000n, [IDL.Record({clubId: IDL.Nat16, valueQuarterMillions: IDL.Nat16, dateOfBirth: IDL.Int, nationality: IDL.Nat16, shirtNumber: IDL.Nat8, position: IDL.Variant({GoalKeeper: IDL.Null, Defender: IDL.Null, Midfielder: IDL.Null, Forward: IDL.Null}), lastName: IDL.Text, firstName: IDL.Text  })]);
    
     } catch (error) {
       console.error("Error creating player:", error);
@@ -619,7 +684,7 @@ function createGovernanceStore() {
         };
         let title = `Update ${player.firstName} ${player.lastName} details.`;
         let summary = `Update ${player.firstName} ${player.lastName} details.`;
-        await executeProposal(dto, title, summary, 12000n, [IDL.Record({playerId: IDL.Nat16, newClubId: IDL.Nat16 })]);
+        await executeProposal(dto, title, summary, 12000n, [IDL.Record({dateOfBirth: IDL.Int, playerId: IDL.Nat16, nationality: IDL.Nat16, shirtNumber: IDL.Nat8, position: IDL.Variant({ Goalkeeper: IDL.Null, Defender: IDL.Null, Midfielder: IDL.Null, Forward: IDL.Null}), lastName: IDL.Text, firstName: IDL.Text })]);
       }
     } catch (error) {
       console.error("Error updating player:", error);
@@ -671,7 +736,7 @@ function createGovernanceStore() {
 
         let title = `Set Player Injury for ${player.firstName} ${player.lastName}.`;
         let summary = `Set Player Injury for ${player.firstName} ${player.lastName}.`;
-        await executeProposal(dto, title, summary, 13000n, [IDL.Record({playerId: IDL.Nat16, newClubId: IDL.Nat16 })]);
+        await executeProposal(dto, title, summary, 13000n, [IDL.Record({playerId: IDL.Nat16, description: IDL.Text, expectedEndDate: IDL.Int })]);
       }
     } catch (error) {
       console.error("Error setting player injury:", error);
@@ -720,7 +785,7 @@ function createGovernanceStore() {
         }  
         let title = `Retire ${player.firstName} ${player.lastName}.`;
         let summary = `Retire ${player.firstName} ${player.lastName}.`;
-        await executeProposal(dto, title, summary, 14000n, [IDL.Record({playerId: IDL.Nat16, newClubId: IDL.Nat16 })]);
+        await executeProposal(dto, title, summary, 14000n, [IDL.Record({playerId: IDL.Nat16, retirementDate: IDL.Int })]);
       }
     } catch (error) {
       console.error("Error retiring player:", error);
@@ -762,7 +827,7 @@ function createGovernanceStore() {
 
         let title = `Unretire ${player.firstName} ${player.lastName}.`;
         let summary = `Unretire ${player.firstName} ${player.lastName}.`;
-        await executeProposal(dto, title, summary, 15000n, [IDL.Record({playerId: IDL.Nat16, newClubId: IDL.Nat16 })]);      
+        await executeProposal(dto, title, summary, 15000n, [IDL.Record({playerId: IDL.Nat16 })]);      
       }
     } catch (error) {
       console.error("Error unretiring player:", error);
@@ -802,7 +867,7 @@ function createGovernanceStore() {
       
       let title = `Promote ${club.friendlyName} back to the Premier League.`;
       let summary = `Promote ${club.name} from the Championship back into the Premier League.`;
-      await executeProposal(dto, title, summary, 16000n, [IDL.Record({playerId: IDL.Nat16, newClubId: IDL.Nat16 })]);
+      await executeProposal(dto, title, summary, 16000n, [IDL.Record({clubId: IDL.Nat16 })]);
     } catch (error) {
       console.error("Error promoting former club:", error);
       throw error;
@@ -831,7 +896,7 @@ function createGovernanceStore() {
       
       let title = `Promote ${friendlyName}. to the Premier League`;
       let summary = `Promote ${name} from the Championship to the Premier League.`;
-      await executeProposal(dto, title, summary, 17000n, [IDL.Record({playerId: IDL.Nat16, newClubId: IDL.Nat16 })]);
+      executeProposal(dto, title, summary, 17000n, [IDL.Record({ secondaryColourHex: IDL.Text, name: IDL.Text, friendlyName: IDL.Text, thirdColourHex: IDL.Text, abbreviatedName: IDL.Text, shirtType: IDL.Variant({ Filled: IDL.Null, Striped: IDL.Null }), primaryColourHex: IDL.Text  })]);
    
     } catch (error) {
       console.error("Error promoting new club:", error);
@@ -894,7 +959,7 @@ function createGovernanceStore() {
       
       let title = `Update ${club.friendlyName} club details.`;
       let summary = `Update ${club.friendlyName} club details.`;
-      await executeProposal(dto, title, summary, 18000n, [IDL.Record({playerId: IDL.Nat16, newClubId: IDL.Nat16 })]);
+      await executeProposal(dto, title, summary, 18000n, [IDL.Record({ clubId: IDL.Nat16, secondaryColourHex: IDL.Text, name: IDL.Text, friendlyName: IDL.Text, thirdColourHex: IDL.Text, abbreviatedName: IDL.Text, shirtType: IDL.Variant({ Filled: IDL.Null, Striped: IDL.Null }), primaryColourHex: IDL.Text })]);
    
     } catch (error) {
       console.error("Error updating club:", error);
