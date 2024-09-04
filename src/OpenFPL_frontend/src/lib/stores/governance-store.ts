@@ -1,6 +1,8 @@
 import { authStore } from "$lib/stores/auth.store";
 import { playerStore } from "$lib/stores/player-store";
 import type { HttpAgent } from "@dfinity/agent";
+import { Principal } from "@dfinity/principal";
+
 import { SnsGovernanceCanister } from "@dfinity/sns";
 import type {
   Command,
@@ -35,6 +37,7 @@ import { ActorFactory } from "../../utils/ActorFactory";
 import { fixtureStore } from "./fixture-store";
 import { systemStore } from "./system-store";
 import { teamStore } from "./team-store";
+import { IDL } from "@dfinity/candid";
 
 function createGovernanceStore() {
   async function revaluePlayerUp(playerId: number): Promise<any> {
@@ -738,85 +741,101 @@ function createGovernanceStore() {
           allPlayers = players;
         }
       });
-      unsubscribeTeamStore();
+      unsubscribePlayerStore();
 
       let dto: TransferPlayerDTO = {
         playerId,
         newClubId,
       };
-
-      const identityActor: any = await ActorFactory.createIdentityActor(
-        authStore,
-        process.env.CANISTER_ID_SNS_GOVERNANCE ?? "",
-      );
-
-      const governanceAgent: HttpAgent = ActorFactory.getAgent(
-        process.env.CANISTER_ID_SNS_GOVERNANCE,
-        identityActor,
-        null,
-      );
-
-      const {
-        manageNeuron: governanceManageNeuron,
-        listNeurons: governanceListNeurons,
-      } = SnsGovernanceCanister.create({
-        agent: governanceAgent,
-        canisterId: identityActor,
-      });
-
-      const userNeurons = await governanceListNeurons({
-        principal: identityActor.principal,
-        limit: 10,
-        beforeNeuronId: { id: [] },
-      });
-      if (userNeurons.length > 0) {
-        const jsonString = JSON.stringify(dto);
-
-        const encoder = new TextEncoder();
-        const payload = encoder.encode(jsonString);
-
-        const fn: ExecuteGenericNervousSystemFunction = {
-          function_id: 8000n,
-          payload: payload,
-        };
-
-        let player = allPlayers.find((x) => x.id == playerId);
-        if (player) {
-          let currentClub = clubs.find((x) => x.id == player?.clubId);
-          let newClub = clubs.find((x) => x.id == newClubId);
-          if (!currentClub) {
+    
+      const unsubscribeAuthStore = authStore.subscribe(async (auth) => {
+        if (auth) {
+          
+          let principal = auth.identity?.getPrincipal().toText() ?? "";
+          if (principal == "") {
             return;
           }
 
-          let title = "";
-          if (newClubId == 0) {
-            title = `Transfer ${player.firstName} ${player.lastName} outside of Premier League.`;
+          const agent: any = await ActorFactory.getGovernanceAgent(auth.identity);
+          if (process.env.DFX_NETWORK !== "ic") {
+            await agent.fetchRootKey();
           }
-
-          if (newClub) {
-            title = `Transfer ${player.firstName} ${player.lastName} to ${newClub.friendlyName}`;
-          }
-
-          const command: Command = {
-            MakeProposal: {
-              title: title,
-              url: "openfpl.xyz/governance",
-              summary: title,
-              action: [{ ExecuteGenericNervousSystemFunction: fn }],
-            },
-          };
-
-          const neuronId = userNeurons[0].id[0];
-          if (!neuronId) {
-            return;
-          }
-
-          await governanceManageNeuron({
-            subaccount: neuronId.id,
-            command: [command],
+          
+          const snsGovernanceCanisterPrincipal: Principal = Principal.fromText(process.env.CANISTER_ID_SNS_GOVERNANCE ?? "");
+          const { listNeurons, manageNeuron } = SnsGovernanceCanister.create({
+            agent,
+            canisterId: snsGovernanceCanisterPrincipal
           });
+
+          let userNeurons = await listNeurons({ certified: false, principal: Principal.fromText(principal) });
+          if(userNeurons.length > 0){ 
+           
+            console.log(dto)
+
+            const payloadArrayBuffer = IDL.encode([IDL.Record({playerId: IDL.Nat16, newClubId: IDL.Nat16 })], [dto]);
+
+            console.log(payloadArrayBuffer)
+
+            const fn: ExecuteGenericNervousSystemFunction = {
+              function_id: 8000n,
+              payload: new Uint8Array(payloadArrayBuffer),
+            };
+    
+            let player = allPlayers.find((x) => x.id == playerId);
+            if (player) {
+              let currentClub = clubs.find((x) => x.id == player?.clubId);
+              let newClub = clubs.find((x) => x.id == newClubId);
+              if (!currentClub) {
+                return;
+              }
+    
+              let title = "";
+              if (newClubId == 0) {
+                title = `Transfer ${player.firstName} ${player.lastName} outside of Premier League.`;
+              }
+    
+              if (newClub) {
+                title = `Transfer ${player.firstName} ${player.lastName} to ${newClub.friendlyName}`;
+              }
+    
+              const command: Command = {
+                MakeProposal: {
+                  title: title,
+                  url: "openfpl.xyz/governance",
+                  summary: title,
+                  action: [{ ExecuteGenericNervousSystemFunction: fn }],
+                },
+              };
+    
+              const neuronId = userNeurons[0].id[0];
+              if (!neuronId) {
+                return;
+              }
+    
+              await manageNeuron({
+                subaccount: neuronId.id,
+                command: [command],
+              });
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+          }
+
+
         }
-      }
+      });
+      unsubscribeAuthStore();
+
     } catch (error) {
       console.error("Error transferring player:", error);
       throw error;
@@ -1098,9 +1117,9 @@ function createGovernanceStore() {
 
         const command: Command = {
           MakeProposal: {
-            title: `Create New Player: ${firstName} v ${lastName}.`,
+            title: `Create New Player: ${firstName} ${lastName}.`,
             url: "openfpl.xyz/governance",
-            summary: `Create New Player: ${firstName} v ${lastName}.`,
+            summary: `Create New Player: ${firstName} ${lastName}.`,
             action: [{ ExecuteGenericNervousSystemFunction: fn }],
           },
         };
