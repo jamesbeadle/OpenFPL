@@ -54,71 +54,21 @@ function createGovernanceStore() {
         playerId: playerId,
       };
 
-      const identityActor: any = await ActorFactory.createIdentityActor(
-        authStore,
-        process.env.CANISTER_ID_SNS_GOVERNANCE ?? "",
-      );
-
-      const governanceAgent: HttpAgent = ActorFactory.getAgent(
-        process.env.CANISTER_ID_SNS_GOVERNANCE,
-        identityActor,
-        null,
-      );
-
-      const {
-        manageNeuron: governanceManageNeuron,
-        listNeurons: governanceListNeurons,
-      } = SnsGovernanceCanister.create({
-        agent: governanceAgent,
-        canisterId: identityActor,
-      });
-
-      const userNeurons = await governanceListNeurons({
-        principal: identityActor.principal,
-        limit: 10,
-        beforeNeuronId: { id: [] },
-      });
-      if (userNeurons.length > 0) {
-        const jsonString = JSON.stringify(dto);
-
-        const encoder = new TextEncoder();
-        const payload = encoder.encode(jsonString);
-
-        const fn: ExecuteGenericNervousSystemFunction = {
-          function_id: 1000n,
-          payload: payload,
-        };
-
-        let player = allPlayers.find((x) => x.id == playerId);
-        if (player) {
-          const command: Command = {
-            MakeProposal: {
-              title: `Revalue ${player.lastName} value up.`,
-              url: "openfpl.xyz/governance",
-              summary: `Revalue ${player.lastName} value up from £${(
-                player.valueQuarterMillions / 4
-              )
-                .toFixed(2)
-                .toLocaleString()}m -> £${(
-                (player.valueQuarterMillions + 1) /
-                4
-              )
-                .toFixed(2)
-                .toLocaleString()}m).`,
-              action: [{ ExecuteGenericNervousSystemFunction: fn }],
-            },
-          };
-
-          const neuronId = userNeurons[0].id[0];
-          if (!neuronId) {
-            return;
-          }
-
-          await governanceManageNeuron({
-            subaccount: neuronId.id,
-            command: [command],
-          });
-        }
+      let player = allPlayers.find((x) => x.id == playerId);
+      if (player) {
+        let title = `Revalue ${player.lastName} value up.`;
+        let summary = `Revalue ${player.lastName} value up from £${(
+          player.valueQuarterMillions / 4
+        )
+          .toFixed(2)
+          .toLocaleString()}m -> £${(
+          (player.valueQuarterMillions + 1) /
+          4
+        )
+          .toFixed(2)
+          .toLocaleString()}m).`;
+          
+          await executeProposal(dto, title, summary, 1000n, [IDL.Record({playerId: IDL.Nat16, newClubId: IDL.Nat16 })]);
       }
     } catch (error) {
       console.error("Error revaluing player up:", error);
@@ -140,71 +90,21 @@ function createGovernanceStore() {
         playerId: playerId,
       };
 
-      const identityActor: any = await ActorFactory.createIdentityActor(
-        authStore,
-        process.env.CANISTER_ID_SNS_GOVERNANCE ?? "",
-      );
+      let player = allPlayers.find((x) => x.id == playerId);
+      if (player) {
+        let title = `Revalue ${player.lastName} value down.`
+        let summary = `Revalue ${player.lastName} value down from £${(
+          player.valueQuarterMillions / 4
+        )
+          .toFixed(2)
+          .toLocaleString()}m -> £${(
+          (player.valueQuarterMillions - 1) /
+          4
+        )
+          .toFixed(2)
+          .toLocaleString()}m).`;
 
-      const governanceAgent: HttpAgent = ActorFactory.getAgent(
-        process.env.CANISTER_ID_SNS_GOVERNANCE,
-        identityActor,
-        null,
-      );
-
-      const {
-        manageNeuron: governanceManageNeuron,
-        listNeurons: governanceListNeurons,
-      } = SnsGovernanceCanister.create({
-        agent: governanceAgent,
-        canisterId: identityActor,
-      });
-
-      const userNeurons = await governanceListNeurons({
-        principal: identityActor.principal,
-        limit: 10,
-        beforeNeuronId: { id: [] },
-      });
-      if (userNeurons.length > 0) {
-        const jsonString = JSON.stringify(dto);
-
-        const encoder = new TextEncoder();
-        const payload = encoder.encode(jsonString);
-
-        const fn: ExecuteGenericNervousSystemFunction = {
-          function_id: 2000n,
-          payload: payload,
-        };
-
-        let player = allPlayers.find((x) => x.id == playerId);
-        if (player) {
-          const command: Command = {
-            MakeProposal: {
-              title: `Revalue ${player.lastName} value down.`,
-              url: "openfpl.xyz/governance",
-              summary: `Revalue ${player.lastName} value down from £${(
-                player.valueQuarterMillions / 4
-              )
-                .toFixed(2)
-                .toLocaleString()}m -> £${(
-                (player.valueQuarterMillions - 1) /
-                4
-              )
-                .toFixed(2)
-                .toLocaleString()}m).`,
-              action: [{ ExecuteGenericNervousSystemFunction: fn }],
-            },
-          };
-
-          const neuronId = userNeurons[0].id[0];
-          if (!neuronId) {
-            return;
-          }
-
-          await governanceManageNeuron({
-            subaccount: neuronId.id,
-            command: [command],
-          });
-        }
+        await executeProposal(dto, title, summary, 2000n, [IDL.Record({playerId: IDL.Nat16, newClubId: IDL.Nat16 })]);
       }
     } catch (error) {
       console.error("Error revaluing player down:", error);
@@ -242,70 +142,21 @@ function createGovernanceStore() {
         gameweek,
         fixtureId,
         playerEventData,
-      };
+      };     
 
-      const identityActor: any = await ActorFactory.createIdentityActor(
-        authStore,
-        process.env.CANISTER_ID_SNS_GOVERNANCE ?? "",
-      );
-
-      const governanceAgent: HttpAgent = ActorFactory.getAgent(
-        process.env.CANISTER_ID_SNS_GOVERNANCE,
-        identityActor,
-        null,
-      );
-
-      const {
-        manageNeuron: governanceManageNeuron,
-        listNeurons: governanceListNeurons,
-      } = SnsGovernanceCanister.create({
-        agent: governanceAgent,
-        canisterId: identityActor,
-      });
-
-      const userNeurons = await governanceListNeurons({
-        principal: identityActor.principal,
-        limit: 10,
-        beforeNeuronId: { id: [] },
-      });
-      if (userNeurons.length > 0) {
-        const jsonString = JSON.stringify(dto);
-
-        const encoder = new TextEncoder();
-        const payload = encoder.encode(jsonString);
-
-        const fn: ExecuteGenericNervousSystemFunction = {
-          function_id: 3000n,
-          payload: payload,
-        };
-
-        let fixture = allFixtures.find((x) => x.id == fixtureId);
-        if (fixture) {
-          let homeClub = clubs.find((x) => x.id == fixture?.homeClubId);
-          let awayClub = clubs.find((x) => x.id == fixture?.awayClubId);
-          if (!homeClub || !awayClub) {
-            return;
-          }
-
-          const command: Command = {
-            MakeProposal: {
-              title: `Fixture Data for ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`,
-              url: "openfpl.xyz/governance",
-              summary: `Fixture Data for ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`,
-              action: [{ ExecuteGenericNervousSystemFunction: fn }],
-            },
-          };
-
-          const neuronId = userNeurons[0].id[0];
-          if (!neuronId) {
-            return;
-          }
-
-          await governanceManageNeuron({
-            subaccount: neuronId.id,
-            command: [command],
-          });
+      let fixture = allFixtures.find((x) => x.id == fixtureId);
+      if (fixture) {
+        
+        let homeClub = clubs.find((x) => x.id == fixture?.homeClubId);
+        let awayClub = clubs.find((x) => x.id == fixture?.awayClubId);
+        if (!homeClub || !awayClub) {
+          return;
         }
+
+        let title = `Fixture Data for ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`;
+        let summary = `Fixture Data for ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`;
+        
+        await executeProposal(dto, title, summary, 3000n, [IDL.Record({playerId: IDL.Nat16, newClubId: IDL.Nat16 })]);
       }
     } catch (error) {
       console.error("Error submitting fixture data:", error);
@@ -333,60 +184,10 @@ function createGovernanceStore() {
         seasonFixtures,
       };
 
-      const identityActor: any = await ActorFactory.createIdentityActor(
-        authStore,
-        process.env.CANISTER_ID_SNS_GOVERNANCE ?? "",
-      );
+      let title = `Add initial fixtures for season ${seasonName}`;
+      let summary = `Add initial fixtures for season ${seasonName}`;
+      await executeProposal(dto, title, summary, 4000n, [IDL.Record({playerId: IDL.Nat16, newClubId: IDL.Nat16 })]);
 
-      const governanceAgent: HttpAgent = ActorFactory.getAgent(
-        process.env.CANISTER_ID_SNS_GOVERNANCE,
-        identityActor,
-        null,
-      );
-
-      const {
-        manageNeuron: governanceManageNeuron,
-        listNeurons: governanceListNeurons,
-      } = SnsGovernanceCanister.create({
-        agent: governanceAgent,
-        canisterId: identityActor,
-      });
-
-      const userNeurons = await governanceListNeurons({
-        principal: identityActor.principal,
-        limit: 10,
-        beforeNeuronId: { id: [] },
-      });
-      if (userNeurons.length > 0) {
-        const jsonString = JSON.stringify(dto);
-
-        const encoder = new TextEncoder();
-        const payload = encoder.encode(jsonString);
-
-        const fn: ExecuteGenericNervousSystemFunction = {
-          function_id: 4000n,
-          payload: payload,
-        };
-
-        const command: Command = {
-          MakeProposal: {
-            title: `Add initial fixtures for season ${seasonName}.`,
-            url: "openfpl.xyz/governance",
-            summary: `Add initial fixtures for season ${seasonName}.`,
-            action: [{ ExecuteGenericNervousSystemFunction: fn }],
-          },
-        };
-
-        const neuronId = userNeurons[0].id[0];
-        if (!neuronId) {
-          return;
-        }
-
-        await governanceManageNeuron({
-          subaccount: neuronId.id,
-          command: [command],
-        });
-      }
     } catch (error) {
       console.error("Error adding initial fixtures:", error);
       throw error;
@@ -436,69 +237,21 @@ function createGovernanceStore() {
         updatedFixtureDate: nanoseconds,
       };
 
-      const identityActor: any = await ActorFactory.createIdentityActor(
-        authStore,
-        process.env.CANISTER_ID_SNS_GOVERNANCE ?? "",
-      );
-
-      const governanceAgent: HttpAgent = ActorFactory.getAgent(
-        process.env.CANISTER_ID_SNS_GOVERNANCE,
-        identityActor,
-        null,
-      );
-
-      const {
-        manageNeuron: governanceManageNeuron,
-        listNeurons: governanceListNeurons,
-      } = SnsGovernanceCanister.create({
-        agent: governanceAgent,
-        canisterId: identityActor,
-      });
-
-      const userNeurons = await governanceListNeurons({
-        principal: identityActor.principal,
-        limit: 10,
-        beforeNeuronId: { id: [] },
-      });
-      if (userNeurons.length > 0) {
-        const jsonString = JSON.stringify(dto);
-
-        const encoder = new TextEncoder();
-        const payload = encoder.encode(jsonString);
-
-        const fn: ExecuteGenericNervousSystemFunction = {
-          function_id: 5000n,
-          payload: payload,
-        };
-
-        let fixture = allFixtures.find((x) => x.id == fixtureId);
+      let fixture = allFixtures.find((x) => x.id == fixtureId);
         if (fixture) {
           let homeClub = clubs.find((x) => x.id == fixture?.homeClubId);
           let awayClub = clubs.find((x) => x.id == fixture?.awayClubId);
           if (!homeClub || !awayClub) {
             return;
           }
+          
+          let title = `Move fixture ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`;
+          let summary = `Fixture Data for ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`;
+          await executeProposal(dto, title, summary, 5000n, [IDL.Record({playerId: IDL.Nat16, newClubId: IDL.Nat16 })]);
 
-          const command: Command = {
-            MakeProposal: {
-              title: `Move fixture ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`,
-              url: "openfpl.xyz/governance",
-              summary: `Fixture Data for ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`,
-              action: [{ ExecuteGenericNervousSystemFunction: fn }],
-            },
-          };
-
-          const neuronId = userNeurons[0].id[0];
-          if (!neuronId) {
-            return;
-          }
-
-          await governanceManageNeuron({
-            subaccount: neuronId.id,
-            command: [command],
-          });
         }
-      }
+
+     
     } catch (error) {
       console.error("Error moving fixture:", error);
       throw error;
@@ -537,69 +290,17 @@ function createGovernanceStore() {
       let dto: PostponeFixtureDTO = {
         fixtureId,
       };
-
-      const identityActor: any = await ActorFactory.createIdentityActor(
-        authStore,
-        process.env.CANISTER_ID_SNS_GOVERNANCE ?? "",
-      );
-
-      const governanceAgent: HttpAgent = ActorFactory.getAgent(
-        process.env.CANISTER_ID_SNS_GOVERNANCE,
-        identityActor,
-        null,
-      );
-
-      const {
-        manageNeuron: governanceManageNeuron,
-        listNeurons: governanceListNeurons,
-      } = SnsGovernanceCanister.create({
-        agent: governanceAgent,
-        canisterId: identityActor,
-      });
-
-      const userNeurons = await governanceListNeurons({
-        principal: identityActor.principal,
-        limit: 10,
-        beforeNeuronId: { id: [] },
-      });
-      if (userNeurons.length > 0) {
-        const jsonString = JSON.stringify(dto);
-
-        const encoder = new TextEncoder();
-        const payload = encoder.encode(jsonString);
-
-        const fn: ExecuteGenericNervousSystemFunction = {
-          function_id: 6000n,
-          payload: payload,
-        };
-
-        let fixture = allFixtures.find((x) => x.id == fixtureId);
-        if (fixture) {
-          let homeClub = clubs.find((x) => x.id == fixture?.homeClubId);
-          let awayClub = clubs.find((x) => x.id == fixture?.awayClubId);
-          if (!homeClub || !awayClub) {
-            return;
-          }
-
-          const command: Command = {
-            MakeProposal: {
-              title: `Postpone fixture ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`,
-              url: "openfpl.xyz/governance",
-              summary: `Fixture Data for ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`,
-              action: [{ ExecuteGenericNervousSystemFunction: fn }],
-            },
-          };
-
-          const neuronId = userNeurons[0].id[0];
-          if (!neuronId) {
-            return;
-          }
-
-          await governanceManageNeuron({
-            subaccount: neuronId.id,
-            command: [command],
-          });
+      let fixture = allFixtures.find((x) => x.id == fixtureId);
+      if (fixture) {
+        let homeClub = clubs.find((x) => x.id == fixture?.homeClubId);
+        let awayClub = clubs.find((x) => x.id == fixture?.awayClubId);
+        if (!homeClub || !awayClub) {
+          return;
         }
+
+        let title = `Postpone fixture ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`;
+        let summary = `Fixture Data for ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`;
+        await executeProposal(dto, title, summary, 6000n, [IDL.Record({playerId: IDL.Nat16, newClubId: IDL.Nat16 })]);
       }
     } catch (error) {
       console.error("Error postponing fixture:", error);
@@ -650,42 +351,7 @@ function createGovernanceStore() {
         updatedFixtureDate: nanoseconds,
       };
 
-      const identityActor: any = await ActorFactory.createIdentityActor(
-        authStore,
-        process.env.CANISTER_ID_SNS_GOVERNANCE ?? "",
-      );
-
-      const governanceAgent: HttpAgent = ActorFactory.getAgent(
-        process.env.CANISTER_ID_SNS_GOVERNANCE,
-        identityActor,
-        null,
-      );
-
-      const {
-        manageNeuron: governanceManageNeuron,
-        listNeurons: governanceListNeurons,
-      } = SnsGovernanceCanister.create({
-        agent: governanceAgent,
-        canisterId: identityActor,
-      });
-
-      const userNeurons = await governanceListNeurons({
-        principal: identityActor.principal,
-        limit: 10,
-        beforeNeuronId: { id: [] },
-      });
-      if (userNeurons.length > 0) {
-        const jsonString = JSON.stringify(dto);
-
-        const encoder = new TextEncoder();
-        const payload = encoder.encode(jsonString);
-
-        const fn: ExecuteGenericNervousSystemFunction = {
-          function_id: 7000n,
-          payload: payload,
-        };
-
-        let fixture = allFixtures.find((x) => x.id == fixtureId);
+      let fixture = allFixtures.find((x) => x.id == fixtureId);
         if (fixture) {
           let homeClub = clubs.find((x) => x.id == fixture?.homeClubId);
           let awayClub = clubs.find((x) => x.id == fixture?.awayClubId);
@@ -693,26 +359,10 @@ function createGovernanceStore() {
             return;
           }
 
-          const command: Command = {
-            MakeProposal: {
-              title: `Move fixture ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`,
-              url: "openfpl.xyz/governance",
-              summary: `Fixture Data for ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`,
-              action: [{ ExecuteGenericNervousSystemFunction: fn }],
-            },
-          };
-
-          const neuronId = userNeurons[0].id[0];
-          if (!neuronId) {
-            return;
-          }
-
-          await governanceManageNeuron({
-            subaccount: neuronId.id,
-            command: [command],
-          });
+          let title =  `Move fixture ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`;
+          let summary = `Fixture Data for ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`;
+          await executeProposal(dto, title, summary, 7000n, [IDL.Record({playerId: IDL.Nat16, newClubId: IDL.Nat16 })]);
         }
-      }
     } catch (error) {
       console.error("Error rescheduling fixture:", error);
       throw error;
@@ -747,94 +397,28 @@ function createGovernanceStore() {
         playerId,
         newClubId,
       };
-    
-      const unsubscribeAuthStore = authStore.subscribe(async (auth) => {
-        if (auth) {
-          
-          let principal = auth.identity?.getPrincipal().toText() ?? "";
-          if (principal == "") {
-            return;
-          }
-
-          const agent: any = await ActorFactory.getGovernanceAgent(auth.identity);
-          if (process.env.DFX_NETWORK !== "ic") {
-            await agent.fetchRootKey();
-          }
-          
-          const snsGovernanceCanisterPrincipal: Principal = Principal.fromText(process.env.CANISTER_ID_SNS_GOVERNANCE ?? "");
-          const { listNeurons, manageNeuron } = SnsGovernanceCanister.create({
-            agent,
-            canisterId: snsGovernanceCanisterPrincipal
-          });
-
-          let userNeurons = await listNeurons({ certified: false, principal: Principal.fromText(principal) });
-          if(userNeurons.length > 0){ 
-           
-            console.log(dto)
-
-            const payloadArrayBuffer = IDL.encode([IDL.Record({playerId: IDL.Nat16, newClubId: IDL.Nat16 })], [dto]);
-
-            console.log(payloadArrayBuffer)
-
-            const fn: ExecuteGenericNervousSystemFunction = {
-              function_id: 8000n,
-              payload: new Uint8Array(payloadArrayBuffer),
-            };
-    
-            let player = allPlayers.find((x) => x.id == playerId);
-            if (player) {
-              let currentClub = clubs.find((x) => x.id == player?.clubId);
-              let newClub = clubs.find((x) => x.id == newClubId);
-              if (!currentClub) {
-                return;
-              }
-    
-              let title = "";
-              if (newClubId == 0) {
-                title = `Transfer ${player.firstName} ${player.lastName} outside of Premier League.`;
-              }
-    
-              if (newClub) {
-                title = `Transfer ${player.firstName} ${player.lastName} to ${newClub.friendlyName}`;
-              }
-    
-              const command: Command = {
-                MakeProposal: {
-                  title: title,
-                  url: "openfpl.xyz/governance",
-                  summary: title,
-                  action: [{ ExecuteGenericNervousSystemFunction: fn }],
-                },
-              };
-    
-              const neuronId = userNeurons[0].id[0];
-              if (!neuronId) {
-                return;
-              }
-    
-              await manageNeuron({
-                subaccount: neuronId.id,
-                command: [command],
-              });
-            }
-
-
-
-
-
-
-
-
-
-
-
-
-          }
-
-
+     
+      let title = "";
+      let player = allPlayers.find((x) => x.id == playerId);
+      if (player) {
+        let currentClub = clubs.find((x) => x.id == player?.clubId);
+        let newClub = clubs.find((x) => x.id == newClubId);
+        if (!currentClub) {
+          return;
         }
-      });
-      unsubscribeAuthStore();
+
+        if (newClubId == 0) {
+          title = `Transfer ${player.firstName} ${player.lastName} outside of Premier League.`;
+        }
+
+        if (newClub) {
+          title = `Transfer ${player.firstName} ${player.lastName} to ${newClub.friendlyName}`;
+        }
+      }
+
+      let summary = title;
+
+      await executeProposal(dto, title, summary, 8000n, [IDL.Record({playerId: IDL.Nat16, newClubId: IDL.Nat16 })]);
 
     } catch (error) {
       console.error("Error transferring player:", error);
@@ -877,67 +461,17 @@ function createGovernanceStore() {
         loanEndDate: nanoseconds,
       };
 
-      const identityActor: any = await ActorFactory.createIdentityActor(
-        authStore,
-        process.env.CANISTER_ID_SNS_GOVERNANCE ?? "",
-      );
-
-      const governanceAgent: HttpAgent = ActorFactory.getAgent(
-        process.env.CANISTER_ID_SNS_GOVERNANCE,
-        identityActor,
-        null,
-      );
-
-      const {
-        manageNeuron: governanceManageNeuron,
-        listNeurons: governanceListNeurons,
-      } = SnsGovernanceCanister.create({
-        agent: governanceAgent,
-        canisterId: identityActor,
-      });
-
-      const userNeurons = await governanceListNeurons({
-        principal: identityActor.principal,
-        limit: 10,
-        beforeNeuronId: { id: [] },
-      });
-      if (userNeurons.length > 0) {
-        const jsonString = JSON.stringify(dto);
-
-        const encoder = new TextEncoder();
-        const payload = encoder.encode(jsonString);
-
-        const fn: ExecuteGenericNervousSystemFunction = {
-          function_id: 9000n,
-          payload: payload,
-        };
-
-        let player = allPlayers.find((x) => x.id == playerId);
-        if (player) {
-          let club = clubs.find((x) => x.id == player?.clubId);
-          if (!club) {
-            return;
-          }
-
-          const command: Command = {
-            MakeProposal: {
-              title: `Loan ${player.firstName} to ${club?.friendlyName}.`,
-              url: "openfpl.xyz/governance",
-              summary: `Loan ${player.firstName} to ${club?.friendlyName}.`,
-              action: [{ ExecuteGenericNervousSystemFunction: fn }],
-            },
-          };
-
-          const neuronId = userNeurons[0].id[0];
-          if (!neuronId) {
-            return;
-          }
-
-          await governanceManageNeuron({
-            subaccount: neuronId.id,
-            command: [command],
-          });
+      let player = allPlayers.find((x) => x.id == playerId);
+      if (player) {
+        let club = clubs.find((x) => x.id == player?.clubId);
+        if (!club) {
+          return;
         }
+
+        let title = `Loan ${player.firstName} to ${club?.friendlyName}.`;
+        let summary = `Loan ${player.firstName} to ${club?.friendlyName}.`;
+        
+        await executeProposal(dto, title, summary, 9000n, [IDL.Record({playerId: IDL.Nat16, newClubId: IDL.Nat16 })]);
       }
     } catch (error) {
       console.error("Error loaning player:", error);
@@ -970,67 +504,16 @@ function createGovernanceStore() {
         playerId,
       };
 
-      const identityActor: any = await ActorFactory.createIdentityActor(
-        authStore,
-        process.env.CANISTER_ID_SNS_GOVERNANCE ?? "",
-      );
-
-      const governanceAgent: HttpAgent = ActorFactory.getAgent(
-        process.env.CANISTER_ID_SNS_GOVERNANCE,
-        identityActor,
-        null,
-      );
-
-      const {
-        manageNeuron: governanceManageNeuron,
-        listNeurons: governanceListNeurons,
-      } = SnsGovernanceCanister.create({
-        agent: governanceAgent,
-        canisterId: identityActor,
-      });
-
-      const userNeurons = await governanceListNeurons({
-        principal: identityActor.principal,
-        limit: 10,
-        beforeNeuronId: { id: [] },
-      });
-      if (userNeurons.length > 0) {
-        const jsonString = JSON.stringify(dto);
-
-        const encoder = new TextEncoder();
-        const payload = encoder.encode(jsonString);
-
-        const fn: ExecuteGenericNervousSystemFunction = {
-          function_id: 10000n,
-          payload: payload,
-        };
-
-        let player = allPlayers.find((x) => x.id == playerId);
-        if (player) {
-          let club = clubs.find((x) => x.id == player?.clubId);
-          if (!club) {
-            return;
-          }
-
-          const command: Command = {
-            MakeProposal: {
-              title: `Recall ${player.firstName} ${player?.lastName} loan.`,
-              url: "openfpl.xyz/governance",
-              summary: `Recall ${player.firstName} ${player?.lastName} loan.`,
-              action: [{ ExecuteGenericNervousSystemFunction: fn }],
-            },
-          };
-
-          const neuronId = userNeurons[0].id[0];
-          if (!neuronId) {
-            return;
-          }
-
-          await governanceManageNeuron({
-            subaccount: neuronId.id,
-            command: [command],
-          });
+      let player = allPlayers.find((x) => x.id == playerId);
+      if (player) {
+        let club = clubs.find((x) => x.id == player?.clubId);
+        if (!club) {
+          return;
         }
+        
+        let title = `Recall ${player.firstName} ${player?.lastName} loan.`;
+        let summary = `Recall ${player.firstName} ${player?.lastName} loan.`;
+        await executeProposal(dto, title, summary, 10000n, [IDL.Record({playerId: IDL.Nat16, newClubId: IDL.Nat16 })]);
       }
     } catch (error) {
       console.error("Error recalling player loan:", error);
@@ -1074,66 +557,16 @@ function createGovernanceStore() {
         dateOfBirth: nanoseconds,
         nationality,
       };
-
-      const identityActor: any = await ActorFactory.createIdentityActor(
-        authStore,
-        process.env.CANISTER_ID_SNS_GOVERNANCE ?? "",
-      );
-
-      const governanceAgent: HttpAgent = ActorFactory.getAgent(
-        process.env.CANISTER_ID_SNS_GOVERNANCE,
-        identityActor,
-        null,
-      );
-
-      const {
-        manageNeuron: governanceManageNeuron,
-        listNeurons: governanceListNeurons,
-      } = SnsGovernanceCanister.create({
-        agent: governanceAgent,
-        canisterId: identityActor,
-      });
-
-      const userNeurons = await governanceListNeurons({
-        principal: identityActor.principal,
-        limit: 10,
-        beforeNeuronId: { id: [] },
-      });
-      if (userNeurons.length > 0) {
-        const jsonString = JSON.stringify(dto);
-
-        const encoder = new TextEncoder();
-        const payload = encoder.encode(jsonString);
-
-        const fn: ExecuteGenericNervousSystemFunction = {
-          function_id: 11000n,
-          payload: payload,
-        };
-
-        let club = clubs.find((x) => x.id == clubId);
-        if (!club) {
-          return;
-        }
-
-        const command: Command = {
-          MakeProposal: {
-            title: `Create New Player: ${firstName} ${lastName}.`,
-            url: "openfpl.xyz/governance",
-            summary: `Create New Player: ${firstName} ${lastName}.`,
-            action: [{ ExecuteGenericNervousSystemFunction: fn }],
-          },
-        };
-
-        const neuronId = userNeurons[0].id[0];
-        if (!neuronId) {
-          return;
-        }
-
-        await governanceManageNeuron({
-          subaccount: neuronId.id,
-          command: [command],
-        });
+      
+     
+      let club = clubs.find((x) => x.id == clubId);
+      if (!club) {
+        return;
       }
+      let title = `Create New Player: ${firstName} ${lastName}.`;
+      let summary = `Create New Player: ${firstName} ${lastName}.`;
+      await executeProposal(dto, title, summary, 11000n, [IDL.Record({playerId: IDL.Nat16, newClubId: IDL.Nat16 })]);
+   
     } catch (error) {
       console.error("Error creating player:", error);
       throw error;
@@ -1168,78 +601,25 @@ function createGovernanceStore() {
         }
       });
       unsubscribePlayerStore();
-
-      let dto: UpdatePlayerDTO = {
-        playerId,
-        position,
-        firstName,
-        lastName,
-        shirtNumber,
-        dateOfBirth: BigInt(dateOfBirth),
-        nationality,
-      };
-
-      const identityActor: any = await ActorFactory.createIdentityActor(
-        authStore,
-        process.env.CANISTER_ID_SNS_GOVERNANCE ?? "",
-      );
-
-      const governanceAgent: HttpAgent = ActorFactory.getAgent(
-        process.env.CANISTER_ID_SNS_GOVERNANCE,
-        identityActor,
-        null,
-      );
-
-      const {
-        manageNeuron: governanceManageNeuron,
-        listNeurons: governanceListNeurons,
-      } = SnsGovernanceCanister.create({
-        agent: governanceAgent,
-        canisterId: identityActor,
-      });
-
-      const userNeurons = await governanceListNeurons({
-        principal: identityActor.principal,
-        limit: 10,
-        beforeNeuronId: { id: [] },
-      });
-      if (userNeurons.length > 0) {
-        const jsonString = JSON.stringify(dto);
-
-        const encoder = new TextEncoder();
-        const payload = encoder.encode(jsonString);
-
-        const fn: ExecuteGenericNervousSystemFunction = {
-          function_id: 12000n,
-          payload: payload,
-        };
-
-        let player = allPlayers.find((x) => x.id == playerId);
-        if (player) {
-          let club = clubs.find((x) => x.id == player?.clubId);
-          if (!club) {
-            return;
-          }
-
-          const command: Command = {
-            MakeProposal: {
-              title: `Update ${player.firstName} ${player.lastName} details.`,
-              url: "openfpl.xyz/governance",
-              summary: `Update ${player.firstName} ${player.lastName} details.`,
-              action: [{ ExecuteGenericNervousSystemFunction: fn }],
-            },
-          };
-
-          const neuronId = userNeurons[0].id[0];
-          if (!neuronId) {
-            return;
-          }
-
-          await governanceManageNeuron({
-            subaccount: neuronId.id,
-            command: [command],
-          });
+      
+      let player = allPlayers.find((x) => x.id == playerId);
+      if (player) {
+        let club = clubs.find((x) => x.id == player?.clubId);
+        if (!club) {
+          return;
         }
+        let dto: UpdatePlayerDTO = {
+          dateOfBirth: dateOfBirth,
+          playerId: playerId,
+          nationality: nationality,
+          shirtNumber: shirtNumber,
+          position: position,
+          lastName: lastName,
+          firstName: firstName
+        };
+        let title = `Update ${player.firstName} ${player.lastName} details.`;
+        let summary = `Update ${player.firstName} ${player.lastName} details.`;
+        await executeProposal(dto, title, summary, 12000n, [IDL.Record({playerId: IDL.Nat16, newClubId: IDL.Nat16 })]);
       }
     } catch (error) {
       console.error("Error updating player:", error);
@@ -1282,67 +662,16 @@ function createGovernanceStore() {
         expectedEndDate: nanoseconds,
       };
 
-      const identityActor: any = await ActorFactory.createIdentityActor(
-        authStore,
-        process.env.CANISTER_ID_SNS_GOVERNANCE ?? "",
-      );
-
-      const governanceAgent: HttpAgent = ActorFactory.getAgent(
-        process.env.CANISTER_ID_SNS_GOVERNANCE,
-        identityActor,
-        null,
-      );
-
-      const {
-        manageNeuron: governanceManageNeuron,
-        listNeurons: governanceListNeurons,
-      } = SnsGovernanceCanister.create({
-        agent: governanceAgent,
-        canisterId: identityActor,
-      });
-
-      const userNeurons = await governanceListNeurons({
-        principal: identityActor.principal,
-        limit: 10,
-        beforeNeuronId: { id: [] },
-      });
-      if (userNeurons.length > 0) {
-        const jsonString = JSON.stringify(dto);
-
-        const encoder = new TextEncoder();
-        const payload = encoder.encode(jsonString);
-
-        const fn: ExecuteGenericNervousSystemFunction = {
-          function_id: 13000n,
-          payload: payload,
-        };
-
-        let player = allPlayers.find((x) => x.id == playerId);
-        if (player) {
-          let club = clubs.find((x) => x.id == player?.clubId);
-          if (!club) {
-            return;
-          }
-
-          const command: Command = {
-            MakeProposal: {
-              title: `Set Player Injury for ${player.firstName} ${player.lastName}.`,
-              url: "openfpl.xyz/governance",
-              summary: `Set Player Injury for ${player.firstName} ${player.lastName}.`,
-              action: [{ ExecuteGenericNervousSystemFunction: fn }],
-            },
-          };
-
-          const neuronId = userNeurons[0].id[0];
-          if (!neuronId) {
-            return;
-          }
-
-          await governanceManageNeuron({
-            subaccount: neuronId.id,
-            command: [command],
-          });
+      let player = allPlayers.find((x) => x.id == playerId);
+      if (player) {
+        let club = clubs.find((x) => x.id == player?.clubId);
+        if (!club) {
+          return;
         }
+
+        let title = `Set Player Injury for ${player.firstName} ${player.lastName}.`;
+        let summary = `Set Player Injury for ${player.firstName} ${player.lastName}.`;
+        await executeProposal(dto, title, summary, 13000n, [IDL.Record({playerId: IDL.Nat16, newClubId: IDL.Nat16 })]);
       }
     } catch (error) {
       console.error("Error setting player injury:", error);
@@ -1382,68 +711,16 @@ function createGovernanceStore() {
         playerId,
         retirementDate: nanoseconds,
       };
-
-      const identityActor: any = await ActorFactory.createIdentityActor(
-        authStore,
-        process.env.CANISTER_ID_SNS_GOVERNANCE ?? "",
-      );
-
-      const governanceAgent: HttpAgent = ActorFactory.getAgent(
-        process.env.CANISTER_ID_SNS_GOVERNANCE,
-        identityActor,
-        null,
-      );
-
-      const {
-        manageNeuron: governanceManageNeuron,
-        listNeurons: governanceListNeurons,
-      } = SnsGovernanceCanister.create({
-        agent: governanceAgent,
-        canisterId: identityActor,
-      });
-
-      const userNeurons = await governanceListNeurons({
-        principal: identityActor.principal,
-        limit: 10,
-        beforeNeuronId: { id: [] },
-      });
-      if (userNeurons.length > 0) {
-        const jsonString = JSON.stringify(dto);
-
-        const encoder = new TextEncoder();
-        const payload = encoder.encode(jsonString);
-
-        const fn: ExecuteGenericNervousSystemFunction = {
-          function_id: 14000n,
-          payload: payload,
-        };
-
-        let player = allPlayers.find((x) => x.id == playerId);
-        if (player) {
-          let club = clubs.find((x) => x.id == player?.clubId);
-          if (!club) {
-            return;
-          }
-
-          const command: Command = {
-            MakeProposal: {
-              title: `Retire ${player.firstName} ${player.lastName}.`,
-              url: "openfpl.xyz/governance",
-              summary: `Retire ${player.firstName} ${player.lastName}.`,
-              action: [{ ExecuteGenericNervousSystemFunction: fn }],
-            },
-          };
-
-          const neuronId = userNeurons[0].id[0];
-          if (!neuronId) {
-            return;
-          }
-
-          await governanceManageNeuron({
-            subaccount: neuronId.id,
-            command: [command],
-          });
-        }
+      
+      let player = allPlayers.find((x) => x.id == playerId);
+      if (player) {
+        let club = clubs.find((x) => x.id == player?.clubId);
+        if (!club) {
+          return;
+        }  
+        let title = `Retire ${player.firstName} ${player.lastName}.`;
+        let summary = `Retire ${player.firstName} ${player.lastName}.`;
+        await executeProposal(dto, title, summary, 14000n, [IDL.Record({playerId: IDL.Nat16, newClubId: IDL.Nat16 })]);
       }
     } catch (error) {
       console.error("Error retiring player:", error);
@@ -1476,67 +753,16 @@ function createGovernanceStore() {
         playerId,
       };
 
-      const identityActor: any = await ActorFactory.createIdentityActor(
-        authStore,
-        process.env.CANISTER_ID_SNS_GOVERNANCE ?? "",
-      );
-
-      const governanceAgent: HttpAgent = ActorFactory.getAgent(
-        process.env.CANISTER_ID_SNS_GOVERNANCE,
-        identityActor,
-        null,
-      );
-
-      const {
-        manageNeuron: governanceManageNeuron,
-        listNeurons: governanceListNeurons,
-      } = SnsGovernanceCanister.create({
-        agent: governanceAgent,
-        canisterId: identityActor,
-      });
-
-      const userNeurons = await governanceListNeurons({
-        principal: identityActor.principal,
-        limit: 10,
-        beforeNeuronId: { id: [] },
-      });
-      if (userNeurons.length > 0) {
-        const jsonString = JSON.stringify(dto);
-
-        const encoder = new TextEncoder();
-        const payload = encoder.encode(jsonString);
-
-        const fn: ExecuteGenericNervousSystemFunction = {
-          function_id: 15000n,
-          payload: payload,
-        };
-
-        let player = allPlayers.find((x) => x.id == playerId);
-        if (player) {
-          let club = clubs.find((x) => x.id == player?.clubId);
-          if (!club) {
-            return;
-          }
-
-          const command: Command = {
-            MakeProposal: {
-              title: `Unretire ${player.firstName} ${player.lastName}.`,
-              url: "openfpl.xyz/governance",
-              summary: `Unretire ${player.firstName} ${player.lastName}.`,
-              action: [{ ExecuteGenericNervousSystemFunction: fn }],
-            },
-          };
-
-          const neuronId = userNeurons[0].id[0];
-          if (!neuronId) {
-            return;
-          }
-
-          await governanceManageNeuron({
-            subaccount: neuronId.id,
-            command: [command],
-          });
+      let player = allPlayers.find((x) => x.id == playerId);
+      if (player) {
+        let club = clubs.find((x) => x.id == player?.clubId);
+        if (!club) {
+          return;
         }
+
+        let title = `Unretire ${player.firstName} ${player.lastName}.`;
+        let summary = `Unretire ${player.firstName} ${player.lastName}.`;
+        await executeProposal(dto, title, summary, 15000n, [IDL.Record({playerId: IDL.Nat16, newClubId: IDL.Nat16 })]);      
       }
     } catch (error) {
       console.error("Error unretiring player:", error);
@@ -1569,65 +795,14 @@ function createGovernanceStore() {
         clubId,
       };
 
-      const identityActor: any = await ActorFactory.createIdentityActor(
-        authStore,
-        process.env.CANISTER_ID_SNS_GOVERNANCE ?? "",
-      );
-
-      const governanceAgent: HttpAgent = ActorFactory.getAgent(
-        process.env.CANISTER_ID_SNS_GOVERNANCE,
-        identityActor,
-        null,
-      );
-
-      const {
-        manageNeuron: governanceManageNeuron,
-        listNeurons: governanceListNeurons,
-      } = SnsGovernanceCanister.create({
-        agent: governanceAgent,
-        canisterId: identityActor,
-      });
-
-      const userNeurons = await governanceListNeurons({
-        principal: identityActor.principal,
-        limit: 10,
-        beforeNeuronId: { id: [] },
-      });
-      if (userNeurons.length > 0) {
-        const jsonString = JSON.stringify(dto);
-
-        const encoder = new TextEncoder();
-        const payload = encoder.encode(jsonString);
-
-        const fn: ExecuteGenericNervousSystemFunction = {
-          function_id: 16000n,
-          payload: payload,
-        };
-
-        let club = clubs.find((x) => x.id == clubId);
-        if (!club) {
-          return;
-        }
-
-        const command: Command = {
-          MakeProposal: {
-            title: `Promote ${club.friendlyName}.`,
-            url: "openfpl.xyz/governance",
-            summary: `Promote ${club.friendlyName}.`,
-            action: [{ ExecuteGenericNervousSystemFunction: fn }],
-          },
-        };
-
-        const neuronId = userNeurons[0].id[0];
-        if (!neuronId) {
-          return;
-        }
-
-        await governanceManageNeuron({
-          subaccount: neuronId.id,
-          command: [command],
-        });
+      let club = clubs.find((x) => x.id == clubId);
+      if (!club) {
+        return;
       }
+      
+      let title = `Promote ${club.friendlyName} back to the Premier League.`;
+      let summary = `Promote ${club.name} from the Championship back into the Premier League.`;
+      await executeProposal(dto, title, summary, 16000n, [IDL.Record({playerId: IDL.Nat16, newClubId: IDL.Nat16 })]);
     } catch (error) {
       console.error("Error promoting former club:", error);
       throw error;
@@ -1653,61 +828,11 @@ function createGovernanceStore() {
         abbreviatedName,
         shirtType,
       };
-
-      const identityActor: any = await ActorFactory.createIdentityActor(
-        authStore,
-        process.env.CANISTER_ID_SNS_GOVERNANCE ?? "",
-      );
-
-      const governanceAgent: HttpAgent = ActorFactory.getAgent(
-        process.env.CANISTER_ID_SNS_GOVERNANCE,
-        identityActor,
-        null,
-      );
-
-      const {
-        manageNeuron: governanceManageNeuron,
-        listNeurons: governanceListNeurons,
-      } = SnsGovernanceCanister.create({
-        agent: governanceAgent,
-        canisterId: identityActor,
-      });
-
-      const userNeurons = await governanceListNeurons({
-        principal: identityActor.principal,
-        limit: 10,
-        beforeNeuronId: { id: [] },
-      });
-      if (userNeurons.length > 0) {
-        const jsonString = JSON.stringify(dto);
-
-        const encoder = new TextEncoder();
-        const payload = encoder.encode(jsonString);
-
-        const fn: ExecuteGenericNervousSystemFunction = {
-          function_id: 17000n,
-          payload: payload,
-        };
-
-        const command: Command = {
-          MakeProposal: {
-            title: `Promote ${friendlyName}.`,
-            url: "openfpl.xyz/governance",
-            summary: `Promote ${friendlyName}.`,
-            action: [{ ExecuteGenericNervousSystemFunction: fn }],
-          },
-        };
-
-        const neuronId = userNeurons[0].id[0];
-        if (!neuronId) {
-          return;
-        }
-
-        await governanceManageNeuron({
-          subaccount: neuronId.id,
-          command: [command],
-        });
-      }
+      
+      let title = `Promote ${friendlyName}. to the Premier League`;
+      let summary = `Promote ${name} from the Championship to the Premier League.`;
+      await executeProposal(dto, title, summary, 17000n, [IDL.Record({playerId: IDL.Nat16, newClubId: IDL.Nat16 })]);
+   
     } catch (error) {
       console.error("Error promoting new club:", error);
       throw error;
@@ -1726,6 +851,16 @@ function createGovernanceStore() {
   ): Promise<any> {
     try {
       await teamStore.sync();
+      let dto: UpdateClubDTO = {
+        clubId: clubId,
+        secondaryColourHex: secondaryColourHex,
+        name: name,
+        friendlyName: friendlyName,
+        thirdColourHex: thirdColourHex,
+        abbreviatedName: abbreviatedName,
+        shirtType: shirtType,
+        primaryColourHex: primaryColourHex
+      };
 
       let clubs: ClubDTO[] = [];
       const unsubscribeTeamStore = teamStore.subscribe((teams) => {
@@ -1752,80 +887,79 @@ function createGovernanceStore() {
       });
       unsubscribeFixtureStore();
 
-      let dto: UpdateClubDTO = {
-        clubId,
-        name,
-        friendlyName,
-        primaryColourHex,
-        secondaryColourHex,
-        thirdColourHex,
-        abbreviatedName,
-        shirtType,
-      };
-
-      const identityActor: any = await ActorFactory.createIdentityActor(
-        authStore,
-        process.env.CANISTER_ID_SNS_GOVERNANCE ?? "",
-      );
-
-      const governanceAgent: HttpAgent = ActorFactory.getAgent(
-        process.env.CANISTER_ID_SNS_GOVERNANCE,
-        identityActor,
-        null,
-      );
-
-      const {
-        manageNeuron: governanceManageNeuron,
-        listNeurons: governanceListNeurons,
-      } = SnsGovernanceCanister.create({
-        agent: governanceAgent,
-        canisterId: identityActor,
-      });
-
-      const userNeurons = await governanceListNeurons({
-        principal: identityActor.principal,
-        limit: 10,
-        beforeNeuronId: { id: [] },
-      });
-      if (userNeurons.length > 0) {
-        const jsonString = JSON.stringify(dto);
-
-        const encoder = new TextEncoder();
-        const payload = encoder.encode(jsonString);
-
-        const fn: ExecuteGenericNervousSystemFunction = {
-          function_id: 18000n,
-          payload: payload,
-        };
-
-        let club = clubs.find((x) => x.id == clubId);
-        if (!club) {
-          return;
-        }
-
-        const command: Command = {
-          MakeProposal: {
-            title: `Update ${club.friendlyName} club details.`,
-            url: "openfpl.xyz/governance",
-            summary: `Update ${club.friendlyName} club details.`,
-            action: [{ ExecuteGenericNervousSystemFunction: fn }],
-          },
-        };
-
-        const neuronId = userNeurons[0].id[0];
-        if (!neuronId) {
-          return;
-        }
-
-        await governanceManageNeuron({
-          subaccount: neuronId.id,
-          command: [command],
-        });
+      let club = clubs.find((x) => x.id == clubId);
+      if (!club) {
+        return;
       }
+      
+      let title = `Update ${club.friendlyName} club details.`;
+      let summary = `Update ${club.friendlyName} club details.`;
+      await executeProposal(dto, title, summary, 18000n, [IDL.Record({playerId: IDL.Nat16, newClubId: IDL.Nat16 })]);
+   
     } catch (error) {
       console.error("Error updating club:", error);
       throw error;
     }
+  }
+
+  async function executeProposal(dto: any, title: string, summary: string, functionId: bigint, argTypes: IDL.Type<any>[]){
+    
+    const unsubscribeAuthStore = authStore.subscribe(async (auth) => {
+      if (auth) {
+        
+        let principal = auth.identity?.getPrincipal().toText() ?? "";
+        if (principal == "") {
+          return;
+        }
+
+        const agent: any = await ActorFactory.getGovernanceAgent(auth.identity);
+        if (process.env.DFX_NETWORK !== "ic") {
+          await agent.fetchRootKey();
+        }
+        
+        const snsGovernanceCanisterPrincipal: Principal = Principal.fromText(process.env.CANISTER_ID_SNS_GOVERNANCE ?? "");
+        const { listNeurons, manageNeuron } = SnsGovernanceCanister.create({
+          agent,
+          canisterId: snsGovernanceCanisterPrincipal
+        });
+
+        let userNeurons = await listNeurons({ certified: false, principal: Principal.fromText(principal) });
+        if(userNeurons.length > 0){ 
+         
+          console.log(dto)
+
+          const payloadArrayBuffer = IDL.encode(argTypes, [dto]);
+
+          console.log(payloadArrayBuffer)
+
+          const fn: ExecuteGenericNervousSystemFunction = {
+            function_id: functionId,
+            payload: new Uint8Array(payloadArrayBuffer),
+          };
+  
+          const command: Command = {
+            MakeProposal: {
+              title: title,
+              url: "openfpl.xyz/governance",
+              summary: summary,
+              action: [{ ExecuteGenericNervousSystemFunction: fn }],
+            },
+          };
+  
+          const neuronId = userNeurons[0].id[0];
+          if (!neuronId) {
+            return;
+          }
+  
+          await manageNeuron({
+            subaccount: neuronId.id,
+            command: [command],
+          });
+        }
+      }
+    });
+    unsubscribeAuthStore();
+
   }
 
   return {
