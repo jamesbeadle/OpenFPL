@@ -1544,5 +1544,17 @@ module {
       };
     };
 
+    public func validateTeams() : async () {
+      for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
+        let manager_canister = actor (canisterId) : actor {
+          validateTeams : () -> async ();
+        };
+
+        await manager_canister.validateTeams();
+
+        logStatus("Validate manager snapshots complete.");
+      };
+    };
+
   };
 };

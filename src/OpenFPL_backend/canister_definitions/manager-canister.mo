@@ -3799,4 +3799,220 @@ actor class _ManagerCanister() {
 
     };
   };
+
+  public func validateTeams() : async () {
+    for (index in Iter.range(0, 11)) {
+      var managers : [T.Manager] = [];
+      switch (index) {
+        case 0 {
+          managers := managerGroup1;
+        };
+        case 1 {
+          managers := managerGroup2;
+        };
+        case 2 {
+          managers := managerGroup3;
+        };
+        case 3 {
+          managers := managerGroup4;
+        };
+        case 4 {
+          managers := managerGroup5;
+        };
+        case 5 {
+          managers := managerGroup6;
+        };
+        case 6 {
+          managers := managerGroup7;
+        };
+        case 7 {
+          managers := managerGroup8;
+        };
+        case 8 {
+          managers := managerGroup9;
+        };
+        case 9 {
+          managers := managerGroup10;
+        };
+        case 10 {
+          managers := managerGroup11;
+        };
+        case 11 {
+          managers := managerGroup12;
+        };
+        case _ {
+
+        };
+      };
+
+      let openfpl_backend_canister = actor (Environment.BACKEND_CANISTER_ID) : actor {
+          getAllPlayers : () -> async [DTOs.PlayerDTO];
+        };
+        
+      let allPlayers : [DTOs.PlayerDTO] = await openfpl_backend_canister.getAllPlayers();
+
+
+      let managerBuffer = Buffer.fromArray<T.Manager>([]);
+      for(manager in Iter.fromArray(managers)){
+        
+        let teamPlayerBuffer = Buffer.fromArray<DTOs.PlayerDTO>([]);
+        for(playerId in Iter.fromArray(manager.playerIds)){
+          let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(player: DTOs.PlayerDTO){
+            player.id == playerId
+          });
+          switch(player){
+            case (?foundPlayer){
+              teamPlayerBuffer.add(foundPlayer);
+            };
+            case _ {};
+          }
+        };
+
+        let allTeamPlayers = Buffer.toArray(teamPlayerBuffer);
+        let allPlayerValues = Array.map<DTOs.PlayerDTO, Nat16>(allTeamPlayers, func (player: DTOs.PlayerDTO) : Nat16 { return player.valueQuarterMillions; });
+        let totalTeamValue = Array.foldLeft<Nat16, Nat16>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
+
+        var playerIds = manager.playerIds;
+        var bankBalance = manager.bankQuarterMillions;
+        var totalValue = totalTeamValue + bankBalance;
+
+        if(totalValue > 1200){
+          playerIds := [];
+          bankBalance := 1200;
+        };
+
+        let updatedManager: T.Manager = {
+          principalId = manager.principalId;
+          username = manager.username;
+          termsAccepted = manager.termsAccepted;
+          favouriteClubId = manager.favouriteClubId;
+          createDate = manager.createDate;
+          transfersAvailable = 3;
+          monthlyBonusesAvailable = 2;
+          bankQuarterMillions = bankBalance;
+          playerIds = playerIds;
+          captainId = manager.captainId;
+          goalGetterGameweek = 0;
+          goalGetterPlayerId = 0;
+          passMasterGameweek = 0;
+          passMasterPlayerId = 0;
+          noEntryGameweek = 0;
+          noEntryPlayerId = 0;
+          teamBoostGameweek = 0;
+          teamBoostClubId = 0;
+          safeHandsGameweek = 0;
+          safeHandsPlayerId = 0;
+          captainFantasticGameweek = 0;
+          captainFantasticPlayerId = 0;
+          countrymenGameweek = 0;
+          countrymenCountryId = 0;
+          prospectsGameweek = 0;
+          braceBonusGameweek = 0;
+          hatTrickHeroGameweek = 0;
+          transferWindowGameweek = 0;
+          history = manager.history;
+          profilePicture = manager.profilePicture;
+          profilePictureType = manager.profilePictureType;
+          ownedPrivateLeagues = List.nil();
+          privateLeagueMemberships = List.nil();
+        };
+
+
+        managerBuffer.add(updatedManager);
+       
+
+
+                
+
+               
+                
+
+
+        
+      };
+
+      managers := Array.map<T.Manager, T.Manager>(managers, func(manager: T.Manager){
+        return {
+          bankQuarterMillions = manager.bankQuarterMillions;
+          braceBonusGameweek = 0;
+          captainFantasticGameweek = 0;
+          captainFantasticPlayerId = 0;
+          captainId = manager.captainId;
+          countrymenCountryId = 0;
+          countrymenGameweek = 0;
+          createDate = manager.createDate;
+          favouriteClubId = manager.favouriteClubId;
+          goalGetterGameweek = 0;
+          goalGetterPlayerId = 0;
+          hatTrickHeroGameweek = 0;
+          history = List.nil();
+          monthlyBonusesAvailable = 2;
+          noEntryGameweek = 0;
+          noEntryPlayerId = 0;
+          ownedPrivateLeagues = manager.ownedPrivateLeagues;
+          passMasterGameweek = 0;
+          passMasterPlayerId = 0;
+          playerIds = manager.playerIds;
+          principalId = manager.principalId;
+          privateLeagueMemberships = manager.privateLeagueMemberships;
+          profilePicture = manager.profilePicture;
+          profilePictureType = manager.profilePictureType;
+          prospectsGameweek = 0;
+          safeHandsGameweek = 0;
+          safeHandsPlayerId = 0;
+          teamBoostClubId = 0;
+          teamBoostGameweek = 0;
+          termsAccepted = true;
+          transferWindowGameweek = 0;
+          transfersAvailable = 3;
+          username = manager.username
+        }
+      });
+
+      switch (index) {
+        case 0 {
+          managerGroup1 := managers;
+        };
+        case 1 {
+          managerGroup2 := managers;
+        };
+        case 2 {
+          managerGroup3 := managers;
+        };
+        case 3 {
+          managerGroup4 := managers;
+        };
+        case 4 {
+          managerGroup5 := managers;
+        };
+        case 5 {
+          managerGroup6 := managers;
+        };
+        case 6 {
+          managerGroup7 := managers;
+        };
+        case 7 {
+          managerGroup8 := managers;
+        };
+        case 8 {
+          managerGroup9 := managers;
+        };
+        case 9 {
+          managerGroup10 := managers;
+        };
+        case 10 {
+          managerGroup11 := managers;
+        };
+        case 11 {
+          managerGroup12 := managers;
+        };
+        case _ {
+
+        };
+      };
+
+
+    };
+
+  }
 };

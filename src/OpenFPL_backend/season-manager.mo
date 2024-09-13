@@ -333,7 +333,7 @@ module {
       systemState := updatedSystemState;
       logSystemStatus();
       
-      await managerComposite.snapshotFantasyTeams(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
+      await managerComposite.snapshotFantasyTeams(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth); //
       await updateCacheHash("system_state");
     };
 
@@ -730,6 +730,7 @@ module {
       
       seasonComposite.setFixtureToFinalised(systemState.calculationSeasonId, submitFixtureData.fixtureId);
       return; //TODO REMOVE
+      
       await managerComposite.calculateFantasyTeamScores(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
       await leaderboardComposite.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth, managerComposite.getStableUniqueManagerCanisterIds());
       
@@ -1543,10 +1544,6 @@ module {
       await setGameweekTimers(gameweek);
       await setTransferWindowTimers();
     };
-    
-    public func validateTeams(){
-      //TODO Implement
-    };
 
     /*
     public func setupTesting() {
@@ -1569,5 +1566,9 @@ module {
     };
     */
 
+    public func validateTeams() : async () {
+      await managerComposite.validateTeams();
+    };
   };
+
 };

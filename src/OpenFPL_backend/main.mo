@@ -1524,14 +1524,20 @@ import Debug "mo:base/Debug";
 
     private func postUpgradeCallback() : async (){
 
+      await logStatus({message = "Post upgrade callback called"});
       //TODO
       await updateManagerCanisterWasms();
-      await seasonManager.removeLeaderboardCanistersAndGetCycles();
+      await logStatus({message = "Manager wasms upgraded "});
       await seasonManager.removeAllManagerSnapshots();
-      //await seasonManager.addGameData();
-      await seasonManager.addGameweekTimers(4);
-      seasonManager.validateTeams();
-      seasonManager.resetGameweek(4);
+      await logStatus({message = "Snapshots cleaned "});
+      await seasonManager.addGameweekTimers(5);
+      await logStatus({message = "Added gameweek timers "});
+      await seasonManager.validateTeams();
+      await logStatus({message = "Teams validated "});
+      seasonManager.resetGameweek(5);
+      await logStatus({message = "Gameweek reset"});
+      await seasonManager.removeLeaderboardCanistersAndGetCycles();
+      await logStatus({message = "Leaderboard canisters removed "});
       
       //on each update generate new hash values
       await seasonManager.updateCacheHash("clubs");

@@ -502,11 +502,9 @@ module {
         let _ = await Utilities.deleteCanister_(canister.canisterId, IC);
       };
 
-      //remove all references
       seasonLeaderboardCanisters := List.nil();
       monthlyLeaderboardsCanisters := List.nil();
-      weeklyLeaderboardCanisters := List.nil();
-      
+      weeklyLeaderboardCanisters := List.nil();      
     };
 
     
