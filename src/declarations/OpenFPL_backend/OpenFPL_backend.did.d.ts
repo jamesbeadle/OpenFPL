@@ -47,13 +47,6 @@ export interface ClubDTO {
 }
 export interface ClubFilterDTO { 'clubId' : ClubId }
 export type ClubId = number;
-export interface ClubLeaderboardDTO {
-  'month' : number,
-  'clubId' : ClubId,
-  'totalEntries' : bigint,
-  'seasonId' : SeasonId,
-  'entries' : Array<LeaderboardEntry>,
-}
 export type Command = { 'Spawn' : Spawn } |
   { 'Follow' : Follow } |
   { 'ClaimOrRefresh' : ClaimOrRefresh } |
@@ -239,17 +232,13 @@ export interface GetMonthlyLeaderboardDTO {
   'limit' : bigint,
   'searchTerm' : string,
 }
-export interface GetMonthlyLeaderboardsDTO {
-  'month' : CalendarMonth,
-  'seasonId' : SeasonId,
-  'searchTerm' : string,
-}
 export interface GetPlayerDetailsDTO {
   'playerId' : PlayerId,
   'seasonId' : SeasonId,
 }
 export interface GetPrivateLeagueMonthlyLeaderboard {
   'month' : CalendarMonth,
+  'clubId' : ClubId,
   'offset' : bigint,
   'seasonId' : SeasonId,
   'limit' : bigint,
@@ -369,6 +358,7 @@ export interface ManagerPrivateLeaguesDTO {
 }
 export interface MonthlyLeaderboardDTO {
   'month' : number,
+  'clubId' : ClubId,
   'totalEntries' : bigint,
   'seasonId' : SeasonId,
   'entries' : Array<LeaderboardEntry>,
@@ -569,21 +559,19 @@ export type Result_2 = { 'ok' : WeeklyLeaderboardDTO } |
   { 'err' : Error };
 export type Result_20 = { 'ok' : PlayerDetailDTO } |
   { 'err' : Error };
-export type Result_21 = { 'ok' : Array<ClubLeaderboardDTO> } |
+export type Result_21 = { 'ok' : ManagerPrivateLeaguesDTO } |
   { 'err' : Error };
-export type Result_22 = { 'ok' : ManagerPrivateLeaguesDTO } |
+export type Result_22 = { 'ok' : Array<ClubDTO> } |
   { 'err' : Error };
-export type Result_23 = { 'ok' : Array<ClubDTO> } |
+export type Result_23 = { 'ok' : FantasyTeamSnapshotDTO } |
   { 'err' : Error };
-export type Result_24 = { 'ok' : FantasyTeamSnapshotDTO } |
+export type Result_24 = { 'ok' : Array<DataCacheDTO> } |
   { 'err' : Error };
-export type Result_25 = { 'ok' : Array<DataCacheDTO> } |
+export type Result_25 = { 'ok' : PickTeamDTO } |
   { 'err' : Error };
-export type Result_26 = { 'ok' : PickTeamDTO } |
+export type Result_26 = { 'ok' : Array<CountryDTO> } |
   { 'err' : Error };
-export type Result_27 = { 'ok' : Array<CountryDTO> } |
-  { 'err' : Error };
-export type Result_28 = { 'ok' : GetCanistersDTO } |
+export type Result_27 = { 'ok' : GetCanistersDTO } |
   { 'err' : Error };
 export type Result_3 = { 'ok' : bigint } |
   { 'err' : Error };
@@ -794,26 +782,22 @@ export interface _SERVICE {
   'getBackendCanisterBalance' : ActorMethod<[], Result_3>,
   'getCanisterCyclesAvailable' : ActorMethod<[], bigint>,
   'getCanisterCyclesBalance' : ActorMethod<[], Result_3>,
-  'getCanisters' : ActorMethod<[GetCanistersDTO], Result_28>,
-  'getClubs' : ActorMethod<[], Result_23>,
-  'getCountries' : ActorMethod<[], Result_27>,
-  'getCurrentTeam' : ActorMethod<[], Result_26>,
-  'getDataHashes' : ActorMethod<[], Result_25>,
+  'getCanisters' : ActorMethod<[GetCanistersDTO], Result_27>,
+  'getClubs' : ActorMethod<[], Result_22>,
+  'getCountries' : ActorMethod<[], Result_26>,
+  'getCurrentTeam' : ActorMethod<[], Result_25>,
+  'getDataHashes' : ActorMethod<[], Result_24>,
   'getFantasyTeamSnapshot' : ActorMethod<
     [GetFantasyTeamSnapshotDTO],
-    Result_24
+    Result_23
   >,
   'getFixtures' : ActorMethod<[GetFixturesDTO], Result_17>,
-  'getFormerClubs' : ActorMethod<[], Result_23>,
+  'getFormerClubs' : ActorMethod<[], Result_22>,
   'getLoanedPlayers' : ActorMethod<[ClubFilterDTO], Result_12>,
   'getManager' : ActorMethod<[GetManagerDTO], Result_1>,
   'getManagerCanisterIds' : ActorMethod<[], Array<CanisterId>>,
-  'getManagerPrivateLeagues' : ActorMethod<[], Result_22>,
+  'getManagerPrivateLeagues' : ActorMethod<[], Result_21>,
   'getMonthlyLeaderboard' : ActorMethod<[GetMonthlyLeaderboardDTO], Result_14>,
-  'getMonthlyLeaderboards' : ActorMethod<
-    [GetMonthlyLeaderboardsDTO],
-    Result_21
-  >,
   'getNeuronId' : ActorMethod<[], bigint>,
   'getPlayerDetails' : ActorMethod<[GetPlayerDetailsDTO], Result_20>,
   'getPlayerDetailsForGameweek' : ActorMethod<[GameweekFiltersDTO], Result_19>,

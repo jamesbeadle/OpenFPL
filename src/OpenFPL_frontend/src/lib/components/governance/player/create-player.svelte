@@ -109,6 +109,10 @@
       <button class="times-button" on:click={cancelModal}>&times;</button>
     </div>
 
+    {#if isLoading}
+      <LocalSpinner />
+    {:else}
+
     <div class="flex justify-start items-center w-full">
       <div class="w-full flex-col space-y-4 mb-2">
         <div class="flex-col space-y-2">
@@ -243,8 +247,6 @@
       </div>
     </div>
 
-    {#if isLoading}
-      <LocalSpinner />
     {/if}
   </div>
 </Modal>

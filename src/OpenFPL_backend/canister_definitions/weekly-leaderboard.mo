@@ -11,13 +11,14 @@ import Environment "../utils/Environment";
 import T "../types";
 import Utilities "../utils/utilities";
 
-actor class _WeeklyLeaderboardCanister() {
-  private let cyclesCheckInterval : Nat = Utilities.getHour() * 24; //TODO: move
+actor class _WeeklyLeaderboardCanister() { //TODO: move
   
   private stable var leaderboard : ?T.WeeklyLeaderboard = null;
   private stable var seasonId : ?T.SeasonId = null;
   private stable var gameweek : ?T.GameweekNumber = null;
   private var cyclesCheckTimerId : ?Timer.TimerId = null;
+
+  private var entryUpdatesAllowed = false;
 
   public shared ({ caller }) func initialise(_seasonId : T.SeasonId, _gameweek : T.GameweekNumber, _totalEntries : Nat) : async () {
     assert not Principal.isAnonymous(caller);
@@ -33,21 +34,63 @@ actor class _WeeklyLeaderboardCanister() {
     };
   };
 
-  public shared ({ caller }) func addLeaderboardChunk(entriesChunk : List.List<T.LeaderboardEntry>) : async () {
+  public shared ({ caller }) func prepareForUpdate() : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == Environment.BACKEND_CANISTER_ID;
+    entryUpdatesAllowed := true;
+    leaderboard := null;
+  };
+
+  public shared ({ caller }) func addLeaderboardChunk(entriesChunk : [T.LeaderboardEntry]) : async () {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == Environment.BACKEND_CANISTER_ID;
+    assert entryUpdatesAllowed;
+
     switch (leaderboard) {
       case (null) {};
       case (?foundLeaderboard) {
         leaderboard := ?{
           seasonId = foundLeaderboard.seasonId;
           gameweek = foundLeaderboard.gameweek;
-          entries = List.append(foundLeaderboard.entries, entriesChunk);
-          totalEntries = foundLeaderboard.totalEntries;
+          entries = List.append(foundLeaderboard.entries, List.fromArray(entriesChunk));
+          totalEntries = 0;
         };
       };
     };
+  };
+
+  public shared ({ caller }) func finaliseUpdate() : async () {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == Environment.BACKEND_CANISTER_ID;
+    entryUpdatesAllowed := false;
+    calculateLeaderboard();
+  };
+
+  private func calculateLeaderboard(){
+
+    switch(leaderboard){
+      case (?foundLeaderboard){
+
+        let sortedGameweekEntries = Array.sort(List.toArray(foundLeaderboard.entries), func(entry1: T.LeaderboardEntry, entry2: T.LeaderboardEntry) : Order.Order{
+          if (entry1.points < entry2.points) { return #greater };
+          if (entry1.points == entry2.points) { return #equal };
+              return #less;
+        });
+
+        let positionedGameweekEntries = Utilities.assignPositionText(List.fromArray<T.LeaderboardEntry>(sortedGameweekEntries)); //TODO update with football god logic
+
+        leaderboard := ?{
+          seasonId = foundLeaderboard.seasonId;
+          gameweek = foundLeaderboard.gameweek;
+          entries = positionedGameweekEntries;
+          totalEntries = List.size(positionedGameweekEntries);
+        };
+      };
+      case (null){}
+    };    
   };
 
   public shared query ({ caller }) func getRewardLeaderboard() : async ?DTOs.WeeklyLeaderboardDTO {
@@ -179,22 +222,7 @@ actor class _WeeklyLeaderboardCanister() {
       };
     };
   };
-
-  public shared query ({ caller }) func getTotalEntries() : async Nat {
-    assert not Principal.isAnonymous(caller);
-    let principalId = Principal.toText(caller);
-    assert principalId == Environment.BACKEND_CANISTER_ID;
-
-    switch (leaderboard) {
-      case (null) {
-        return 0;
-      };
-      case (?foundLeaderboard) {
-        return List.size(foundLeaderboard.entries);
-      };
-    };
-  };
-
+  
   system func preupgrade() {};
 
   system func postupgrade() {
@@ -206,7 +234,7 @@ actor class _WeeklyLeaderboardCanister() {
         cyclesCheckTimerId := null;
       };
     };
-    cyclesCheckTimerId := ?Timer.setTimer<system>(#nanoseconds(cyclesCheckInterval), checkCanisterCycles);
+    cyclesCheckTimerId := ?Timer.setTimer<system>(#nanoseconds(Utilities.getHour() * 24), checkCanisterCycles);
   };
 
   private func checkCanisterCycles() : async () {
@@ -230,7 +258,7 @@ actor class _WeeklyLeaderboardCanister() {
         cyclesCheckTimerId := null;
       };
     };
-    cyclesCheckTimerId := ?Timer.setTimer<system>(#nanoseconds(cyclesCheckInterval), checkCanisterCycles);
+    cyclesCheckTimerId := ?Timer.setTimer<system>(#nanoseconds(Utilities.getHour() * 24), checkCanisterCycles);
   };
 
   public shared func topupCanister() : async () {

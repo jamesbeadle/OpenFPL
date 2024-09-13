@@ -395,6 +395,14 @@ module {
     };
   };
 
+  public func deleteCanister_(canisterId: Text, IC : Management.Management) : async () {
+    await (
+      IC.delete_canister({
+        canister_id = Principal.fromText(canisterId);
+      }),
+    );
+  };
+
   public func topup_canister_(a : actor {}, backendCanisterController : ?Principal, IC : Management.Management, cycles: Nat) : async () {
     let cid = { canister_id = Principal.fromActor(a) };
     switch (backendCanisterController) {
@@ -456,20 +464,6 @@ module {
 
     return List.map(sortedEntries, updatePosition);
   };  
-
-  public func mergeSortLeaderboard(entries : List.List<T.LeaderboardEntry>) : List.List<T.LeaderboardEntry> {
-    let len = List.size(entries);
-    if (len <= 1) {
-      return entries;
-    } else {
-      let (firstHalf, secondHalf) = List.split(len / 2, entries);
-      return List.merge(mergeSortLeaderboard(firstHalf), mergeSortLeaderboard(secondHalf), compareLeaderboardEntry);
-    };
-  };
-
-  private func compareLeaderboardEntry(entry1 : T.LeaderboardEntry, entry2 : T.LeaderboardEntry) : Bool {
-    return entry1.points <= entry2.points;
-  };
 
   public func scalePercentages(percentages : [Float], actualWinners : Nat) : [Float] {
     let length: Int = Array.size(percentages);

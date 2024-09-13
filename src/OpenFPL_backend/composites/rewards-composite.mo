@@ -125,6 +125,7 @@ module {
     };
 
     public func distributeMonthlyRewards(rewardPool : T.RewardPool, monthlyLeaderboard : DTOs.ClubLeaderboardDTO, uniqueManagerCanisterIds : List.List<T.CanisterId>) : async () {
+      
       let monthlyRewardAmount = Nat64.div(rewardPool.monthlyLeaderboardPool, 10);
 
       let clubManagersBuffer = Buffer.fromArray<T.PrincipalId>([]);
@@ -197,7 +198,6 @@ module {
                 };
               };
             };
-
           };
         };
       };

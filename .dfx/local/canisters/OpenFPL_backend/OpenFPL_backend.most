@@ -92,13 +92,8 @@ type LeagueInvite =
     to : PrincipalId
   };
 type List<T> = ?(T, List<T>);
-type MonthlyLeaderboardCanister =
-  {
-    canisterId : Text;
-    clubId : ClubId;
-    month : CalendarMonth;
-    seasonId : SeasonId
-  };
+type MonthlyLeaderboardsCanister =
+  {canisterId : Text; month : CalendarMonth; seasonId : SeasonId};
 type MonthlyRewards =
   {month : CalendarMonth; rewards : List<RewardEntry>; seasonId : SeasonId};
 type NeuronId = {id : Nat64};
@@ -254,8 +249,8 @@ actor {
   stable var stable_manager_usernames : [(PrincipalId, Text)];
   stable var stable_monthly_ath_prize_pool : Nat64;
   stable var stable_monthly_ath_scores : [HighScoreRecord];
-  stable var stable_monthly_leaderboard_canisters :
-    [MonthlyLeaderboardCanister];
+  stable var stable_monthly_leaderboards_canisters :
+    [MonthlyLeaderboardsCanister];
   stable var stable_monthly_rewards : [MonthlyRewards];
   stable var stable_most_valuable_team_rewards : [RewardsList];
   stable var stable_next_club_id : Nat16;

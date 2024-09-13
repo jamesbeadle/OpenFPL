@@ -219,11 +219,6 @@ module {
       return await leaderboardComposite.getMonthlyLeaderboard(dto);
     };
 
-    public func getMonthlyLeaderboards(dto: DTOs.GetMonthlyLeaderboardsDTO) : async Result.Result<[DTOs.ClubLeaderboardDTO], T.Error> {
-      let clubs = clubComposite.getClubs();
-      return await leaderboardComposite.getMonthlyLeaderboards(dto, clubs);
-    };
-
     public func getSeasonLeaderboard(dto: DTOs.GetSeasonLeaderboardDTO) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error> {
       return await leaderboardComposite.getSeasonLeaderboard(dto);
     };
@@ -573,7 +568,7 @@ module {
     };
 
 
-    //Reward function
+    //Reward function TODO ALL
     
     private func calculateRewardPool(seasonId : T.SeasonId) : async () {
 
@@ -632,22 +627,17 @@ module {
       
       let clubs = clubComposite.getClubs();
       for (club in Iter.fromArray(clubs)) {
-        let monthlyLeaderboardCanisterId = await leaderboardComposite.getMonthlyCanisterId(systemState.calculationSeasonId, systemState.calculationMonth, club.id);
+        let monthlyLeaderboardCanisterId = await leaderboardComposite.getMonthlyCanisterId(systemState.calculationSeasonId, systemState.calculationMonth);
         switch (monthlyLeaderboardCanisterId) {
           case (null) {};
           case (?canisterId) {
             let monthly_leaderboard_canister = actor (canisterId) : actor {
-              getRewardLeaderboard : () -> async ?DTOs.ClubLeaderboardDTO;
+              getRewardLeaderboards : () -> async [DTOs.ClubLeaderboardDTO];
             };
 
-            let monthlyLeaderboard = await monthly_leaderboard_canister.getRewardLeaderboard();
-            switch(monthlyLeaderboard){
-              case (null){
-
-              };
-              case (?foundLeaderboard){
-                await managerComposite.payMonthlyRewards(rewardPool, foundLeaderboard);
-              }
+            let monthlyLeaderboards = await monthly_leaderboard_canister.getRewardLeaderboards();
+            for(leaderboard in Iter.fromArray(monthlyLeaderboards)){
+                await managerComposite.payMonthlyRewards(rewardPool, leaderboard);
             };
           };
         };
@@ -739,7 +729,7 @@ module {
       };
       
       seasonComposite.setFixtureToFinalised(systemState.calculationSeasonId, submitFixtureData.fixtureId);
-      
+      return; //TODO REMOVE
       await managerComposite.calculateFantasyTeamScores(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
       await leaderboardComposite.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth, managerComposite.getStableUniqueManagerCanisterIds());
       
@@ -1278,12 +1268,12 @@ module {
       leaderboardComposite.setStableSeasonLeaderboardCanisters(stable_season_leaderboard_canisters);
     };
 
-    public func getStableMonthlyLeaderboardCanisters() : [T.MonthlyLeaderboardCanister] {
-      return leaderboardComposite.getStableMonthlyLeaderboardCanisters();
+    public func getStableMonthlyLeaderboardsCanisters() : [T.MonthlyLeaderboardsCanister] {
+      return leaderboardComposite.getStableMonthlyLeaderboardsCanisters();
     };
 
-    public func setStableMonthlyLeaderboardCanisters(stable_monthly_leaderboard_canisters : [T.MonthlyLeaderboardCanister]) {
-      leaderboardComposite.setStableMonthlyLeaderboardCanisters(stable_monthly_leaderboard_canisters);
+    public func setStableMonthlyLeaderboardsCanisters(stable_monthly_leaderboard_canisters : [T.MonthlyLeaderboardsCanister]) {
+      leaderboardComposite.setStableMonthlyLeaderboardsCanisters(stable_monthly_leaderboard_canisters);
     };
 
     public func getStableWeeklyLeaderboardCanisters() : [T.WeeklyLeaderboardCanister] {
@@ -1527,6 +1517,38 @@ module {
       await leaderboardComposite.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth, managerComposite.getStableUniqueManagerCanisterIds());
     };
 
+    public func removeLeaderboardCanistersAndGetCycles() : async (){
+      await leaderboardComposite.removeLeaderboardCanistersAndGetCycles();
+    };
+
+    public func removeAllManagerSnapshots() : async (){
+      await managerComposite.removeAllManagerSnapshots();
+    };
+    
+    public func resetGameweek(gameweek: T.GameweekNumber){
+
+      systemState := {
+        calculationGameweek = gameweek;
+        calculationMonth = Utilities.unixTimeToMonth(Time.now());
+        calculationSeasonId = 1;
+        pickTeamGameweek = gameweek;
+        pickTeamSeasonId = 1;
+        seasonActive = true;
+        transferWindowActive = false;
+        onHold = false;
+      };
+    };
+
+    public func addGameweekTimers(gameweek: T.GameweekNumber) : async (){
+      await setGameweekTimers(gameweek);
+      await setTransferWindowTimers();
+    };
+    
+    public func validateTeams(){
+      //TODO Implement
+    };
+
+    /*
     public func setupTesting() {
 
       systemState := {
@@ -1545,6 +1567,7 @@ module {
       seasonComposite.setInitialSeason();
     
     };
+    */
 
   };
 };

@@ -6,9 +6,10 @@ import * as set_cookie_parser from "set-cookie-parser";
 import { nonNullish, isNullish, createAgent } from "@dfinity/utils";
 import "dompurify";
 import { AuthClient } from "@dfinity/auth-client";
-import { SnsGovernanceCanister } from "@dfinity/sns";
-import { HttpAgent, Actor } from "@dfinity/agent";
 import { Principal } from "@dfinity/principal";
+import { SnsGovernanceCanister } from "@dfinity/sns";
+import { IDL } from "@dfinity/candid";
+import { HttpAgent, Actor } from "@dfinity/agent";
 import { Text } from "@dfinity/candid/lib/cjs/idl.js";
 import { IcrcLedgerCanister } from "@dfinity/ledger-icrc";
 let base = "";
@@ -3443,7 +3444,7 @@ const options = {
   root: Root,
   service_worker: false,
   templates: {
-    app: ({ head, body: body2, assets: assets2, nonce, env }) => '<!doctype html>\n<html lang="en">\n  <head>\n    <meta charset="utf-8" />\n    <meta content="width=device-width, initial-scale=1" name="viewport" />\n\n    <title>OpenFPL</title>\n    <link href="https://openfpl.xyz" rel="canonical" />\n    <meta\n      content="OpenFPL is a decentralised fantasy football game on the Internet Computer blockchain."\n      name="description"\n    />\n    <meta content="OpenFPL" property="og:title" />\n    <meta\n      content="OpenFPL is a decentralised fantasy football game on the Internet Computer blockchain."\n      property="og:description"\n    />\n    <meta content="website" property="og:type" />\n    <meta content="https://openfpl.xyz" property="og:url" />\n    <meta content="https://openfpl.xyz/meta-share.jpg" property="og:image" />\n    <meta content="summary_large_image" name="twitter:card" />\n    <meta content="OpenFPL" name="twitter:title" />\n    <meta\n      content="OpenFPL is a decentralised fantasy football game on the Internet Computer blockchain."\n      name="twitter:description"\n    />\n    <meta content="https://openfpl.xyz/meta-share.jpg" name="twitter:image" />\n    <meta content="@beadle1989" name="twitter:creator" />\n\n    <link crossorigin="anonymous" href="/manifest.webmanifest" rel="manifest" />\n\n    <!-- Favicon -->\n    <link\n      rel="icon"\n      type="image/png"\n      sizes="32x32"\n      href="' + assets2 + '/favicons/favicon-32x32.png"\n    />\n    <link\n      rel="icon"\n      type="image/png"\n      sizes="16x16"\n      href="' + assets2 + '/favicons/favicon-16x16.png"\n    />\n    <link rel="shortcut icon" href="' + assets2 + '/favicons/favicon.ico" />\n\n    <!-- iOS meta tags & icons -->\n    <meta name="apple-mobile-web-app-capable" content="yes" />\n    <meta name="apple-mobile-web-app-status-bar-style" content="#2CE3A6" />\n    <meta name="apple-mobile-web-app-title" content="OpenFPL" />\n    <link\n      rel="apple-touch-icon"\n      href="' + assets2 + '/favicons/apple-touch-icon.png"\n    />\n    <link\n      rel="mask-icon"\n      href="' + assets2 + '/favicons/safari-pinned-tab.svg"\n      color="#2CE3A6"\n    />\n\n    <!-- MS -->\n    <meta name="msapplication-TileColor" content="#2CE3A6" />\n    <meta\n      name="msapplication-config"\n      content="' + assets2 + '/favicons/browserconfig.xml"\n    />\n\n    <meta content="#2CE3A6" name="theme-color" />\n    ' + head + '\n\n    <style>\n      html,\n      body {\n        height: 100%;\n        margin: 0;\n      }\n\n      @font-face {\n        font-display: swap;\n        font-family: "Poppins";\n        font-style: normal;\n        font-weight: 400;\n        src: url("' + assets2 + '/poppins-regular-webfont.woff2")\n          format("woff2");\n      }\n\n      @font-face {\n        font-display: swap;\n        font-family: "Manrope";\n        font-style: normal;\n        font-weight: 400;\n        src: url("' + assets2 + '/Manrope-Regular.woff2") format("woff2");\n      }\n      body {\n        font-family: "Poppins", sans-serif !important;\n        color: white !important;\n        background-color: #1a1a1d;\n        height: 100vh;\n        margin: 0;\n        background-image: url("' + assets2 + '/background.jpg");\n        background-size: cover;\n        background-position: center;\n        background-repeat: no-repeat;\n        background-attachment: fixed;\n      }\n\n      #app-spinner {\n        --spinner-size: 30px;\n\n        width: var(--spinner-size);\n        height: var(--spinner-size);\n\n        animation: app-spinner-linear-rotate 2000ms linear infinite;\n\n        position: absolute;\n        top: calc(50% - (var(--spinner-size) / 2));\n        left: calc(50% - (var(--spinner-size) / 2));\n\n        --radius: 45px;\n        --circumference: calc(3.14159265359 * var(--radius) * 2);\n\n        --start: calc((1 - 0.05) * var(--circumference));\n        --end: calc((1 - 0.8) * var(--circumference));\n      }\n\n      #app-spinner circle {\n        stroke-dasharray: var(--circumference);\n        stroke-width: 10%;\n        transform-origin: 50% 50% 0;\n\n        transition-property: stroke;\n\n        animation-name: app-spinner-stroke-rotate-100;\n        animation-duration: 4000ms;\n        animation-timing-function: cubic-bezier(0.35, 0, 0.25, 1);\n        animation-iteration-count: infinite;\n\n        fill: transparent;\n        stroke: currentColor;\n\n        transition: stroke-dashoffset 225ms linear;\n      }\n\n      @keyframes app-spinner-linear-rotate {\n        0% {\n          transform: rotate(0deg);\n        }\n        100% {\n          transform: rotate(360deg);\n        }\n      }\n\n      @keyframes app-spinner-stroke-rotate-100 {\n        0% {\n          stroke-dashoffset: var(--start);\n          transform: rotate(0);\n        }\n        12.5% {\n          stroke-dashoffset: var(--end);\n          transform: rotate(0);\n        }\n        12.5001% {\n          stroke-dashoffset: var(--end);\n          transform: rotateX(180deg) rotate(72.5deg);\n        }\n        25% {\n          stroke-dashoffset: var(--start);\n          transform: rotateX(180deg) rotate(72.5deg);\n        }\n\n        25.0001% {\n          stroke-dashoffset: var(--start);\n          transform: rotate(270deg);\n        }\n        37.5% {\n          stroke-dashoffset: var(--end);\n          transform: rotate(270deg);\n        }\n        37.5001% {\n          stroke-dashoffset: var(--end);\n          transform: rotateX(180deg) rotate(161.5deg);\n        }\n        50% {\n          stroke-dashoffset: var(--start);\n          transform: rotateX(180deg) rotate(161.5deg);\n        }\n\n        50.0001% {\n          stroke-dashoffset: var(--start);\n          transform: rotate(180deg);\n        }\n        62.5% {\n          stroke-dashoffset: var(--end);\n          transform: rotate(180deg);\n        }\n        62.5001% {\n          stroke-dashoffset: var(--end);\n          transform: rotateX(180deg) rotate(251.5deg);\n        }\n        75% {\n          stroke-dashoffset: var(--start);\n          transform: rotateX(180deg) rotate(251.5deg);\n        }\n\n        75.0001% {\n          stroke-dashoffset: var(--start);\n          transform: rotate(90deg);\n        }\n        87.5% {\n          stroke-dashoffset: var(--end);\n          transform: rotate(90deg);\n        }\n        87.5001% {\n          stroke-dashoffset: var(--end);\n          transform: rotateX(180deg) rotate(341.5deg);\n        }\n        100% {\n          stroke-dashoffset: var(--start);\n          transform: rotateX(180deg) rotate(341.5deg);\n        }\n      }\n    </style>\n  </head>\n  <body data-sveltekit-preload-data="hover">\n    <div style="display: contents">' + body2 + '</div>\n\n    <svg\n      id="app-spinner"\n      preserveAspectRatio="xMidYMid meet"\n      focusable="false"\n      aria-hidden="true"\n      data-tid="spinner"\n      viewBox="0 0 100 100"\n    >\n      <circle cx="50%" cy="50%" r="45" />\n    </svg>\n  </body>\n</html>\n',
+    app: ({ head, body: body2, assets: assets2, nonce, env }) => '<!doctype html>\n<html lang="en">\n  <head>\n    <meta charset="utf-8" />\n    <meta content="width=device-width, initial-scale=1" name="viewport" />\n\n    <title>OpenFPL</title>\n    <link href="https://openfpl.xyz" rel="canonical" />\n    <meta\n      content="OpenFPL is a decentralised fantasy football game on the Internet Computer blockchain."\n      name="description"\n    />\n    <meta content="OpenFPL" property="og:title" />\n    <meta\n      content="OpenFPL is a decentralised fantasy football game on the Internet Computer blockchain."\n      property="og:description"\n    />\n    <meta content="website" property="og:type" />\n    <meta content="https://openfpl.xyz" property="og:url" />\n    <meta content="https://openfpl.xyz/meta-share.jpg" property="og:image" />\n    <meta content="summary_large_image" name="twitter:card" />\n    <meta content="OpenFPL" name="twitter:title" />\n    <meta\n      content="OpenFPL is a decentralised fantasy football platform on the Internet Computer blockchain."\n      name="twitter:description"\n    />\n    <meta content="https://openfpl.xyz/meta-share.jpg" name="twitter:image" />\n    <meta content="@beadle1989" name="twitter:creator" />\n\n    <link crossorigin="anonymous" href="/manifest.webmanifest" rel="manifest" />\n\n    <!-- Favicon -->\n    <link\n      rel="icon"\n      type="image/png"\n      sizes="32x32"\n      href="' + assets2 + '/favicons/favicon-32x32.png"\n    />\n    <link\n      rel="icon"\n      type="image/png"\n      sizes="16x16"\n      href="' + assets2 + '/favicons/favicon-16x16.png"\n    />\n    <link rel="shortcut icon" href="' + assets2 + '/favicons/favicon.ico" />\n\n    <!-- iOS meta tags & icons -->\n    <meta name="apple-mobile-web-app-capable" content="yes" />\n    <meta name="apple-mobile-web-app-status-bar-style" content="#2CE3A6" />\n    <meta name="apple-mobile-web-app-title" content="OpenFPL" />\n    <link\n      rel="apple-touch-icon"\n      href="' + assets2 + '/favicons/apple-touch-icon.png"\n    />\n    <link\n      rel="mask-icon"\n      href="' + assets2 + '/favicons/safari-pinned-tab.svg"\n      color="#2CE3A6"\n    />\n\n    <!-- MS -->\n    <meta name="msapplication-TileColor" content="#2CE3A6" />\n    <meta\n      name="msapplication-config"\n      content="' + assets2 + '/favicons/browserconfig.xml"\n    />\n\n    <meta content="#2CE3A6" name="theme-color" />\n    ' + head + '\n\n    <style>\n      html,\n      body {\n        height: 100%;\n        margin: 0;\n      }\n\n      @font-face {\n        font-display: swap;\n        font-family: "Poppins";\n        font-style: normal;\n        font-weight: 400;\n        src: url("' + assets2 + '/poppins-regular-webfont.woff2")\n          format("woff2");\n      }\n\n      @font-face {\n        font-display: swap;\n        font-family: "Manrope";\n        font-style: normal;\n        font-weight: 400;\n        src: url("' + assets2 + '/Manrope-Regular.woff2") format("woff2");\n      }\n      body {\n        font-family: "Poppins", sans-serif !important;\n        color: white !important;\n        background-color: #1a1a1d;\n        height: 100vh;\n        margin: 0;\n        background-image: url("' + assets2 + '/background.jpg");\n        background-size: cover;\n        background-position: center;\n        background-repeat: no-repeat;\n        background-attachment: fixed;\n      }\n\n      #app-spinner {\n        --spinner-size: 30px;\n\n        width: var(--spinner-size);\n        height: var(--spinner-size);\n\n        animation: app-spinner-linear-rotate 2000ms linear infinite;\n\n        position: absolute;\n        top: calc(50% - (var(--spinner-size) / 2));\n        left: calc(50% - (var(--spinner-size) / 2));\n\n        --radius: 45px;\n        --circumference: calc(3.14159265359 * var(--radius) * 2);\n\n        --start: calc((1 - 0.05) * var(--circumference));\n        --end: calc((1 - 0.8) * var(--circumference));\n      }\n\n      #app-spinner circle {\n        stroke-dasharray: var(--circumference);\n        stroke-width: 10%;\n        transform-origin: 50% 50% 0;\n\n        transition-property: stroke;\n\n        animation-name: app-spinner-stroke-rotate-100;\n        animation-duration: 4000ms;\n        animation-timing-function: cubic-bezier(0.35, 0, 0.25, 1);\n        animation-iteration-count: infinite;\n\n        fill: transparent;\n        stroke: currentColor;\n\n        transition: stroke-dashoffset 225ms linear;\n      }\n\n      @keyframes app-spinner-linear-rotate {\n        0% {\n          transform: rotate(0deg);\n        }\n        100% {\n          transform: rotate(360deg);\n        }\n      }\n\n      @keyframes app-spinner-stroke-rotate-100 {\n        0% {\n          stroke-dashoffset: var(--start);\n          transform: rotate(0);\n        }\n        12.5% {\n          stroke-dashoffset: var(--end);\n          transform: rotate(0);\n        }\n        12.5001% {\n          stroke-dashoffset: var(--end);\n          transform: rotateX(180deg) rotate(72.5deg);\n        }\n        25% {\n          stroke-dashoffset: var(--start);\n          transform: rotateX(180deg) rotate(72.5deg);\n        }\n\n        25.0001% {\n          stroke-dashoffset: var(--start);\n          transform: rotate(270deg);\n        }\n        37.5% {\n          stroke-dashoffset: var(--end);\n          transform: rotate(270deg);\n        }\n        37.5001% {\n          stroke-dashoffset: var(--end);\n          transform: rotateX(180deg) rotate(161.5deg);\n        }\n        50% {\n          stroke-dashoffset: var(--start);\n          transform: rotateX(180deg) rotate(161.5deg);\n        }\n\n        50.0001% {\n          stroke-dashoffset: var(--start);\n          transform: rotate(180deg);\n        }\n        62.5% {\n          stroke-dashoffset: var(--end);\n          transform: rotate(180deg);\n        }\n        62.5001% {\n          stroke-dashoffset: var(--end);\n          transform: rotateX(180deg) rotate(251.5deg);\n        }\n        75% {\n          stroke-dashoffset: var(--start);\n          transform: rotateX(180deg) rotate(251.5deg);\n        }\n\n        75.0001% {\n          stroke-dashoffset: var(--start);\n          transform: rotate(90deg);\n        }\n        87.5% {\n          stroke-dashoffset: var(--end);\n          transform: rotate(90deg);\n        }\n        87.5001% {\n          stroke-dashoffset: var(--end);\n          transform: rotateX(180deg) rotate(341.5deg);\n        }\n        100% {\n          stroke-dashoffset: var(--start);\n          transform: rotateX(180deg) rotate(341.5deg);\n        }\n      }\n    </style>\n  </head>\n  <body data-sveltekit-preload-data="hover">\n    <div style="display: contents">' + body2 + '</div>\n\n    <svg\n      id="app-spinner"\n      preserveAspectRatio="xMidYMid meet"\n      focusable="false"\n      aria-hidden="true"\n      data-tid="spinner"\n      viewBox="0 0 100 100"\n    >\n      <circle cx="50%" cy="50%" r="45" />\n    </svg>\n  </body>\n</html>\n',
     error: ({ status, message }) => '<!doctype html>\n<html lang="en">\n	<head>\n		<meta charset="utf-8" />\n		<title>' + message + `</title>
 
 		<style>
@@ -3515,7 +3516,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "aye45"
+  version_hash: "19vojxz"
 };
 async function get_hooks() {
   return {};
@@ -3722,166 +3723,166 @@ const initAuthStore = () => {
   };
 };
 const authStore = initAuthStore();
-const idlFactory = ({ IDL }) => {
-  const CanisterId = IDL.Text;
-  const Error2 = IDL.Variant({
-    "DecodeError": IDL.Null,
-    "NotAllowed": IDL.Null,
-    "NotFound": IDL.Null,
-    "NotAuthorized": IDL.Null,
-    "InvalidData": IDL.Null,
-    "SystemOnHold": IDL.Null,
-    "AlreadyExists": IDL.Null,
-    "CanisterCreateError": IDL.Null,
-    "InvalidTeamError": IDL.Null
+const idlFactory = ({ IDL: IDL2 }) => {
+  const CanisterId = IDL2.Text;
+  const Error2 = IDL2.Variant({
+    "DecodeError": IDL2.Null,
+    "NotAllowed": IDL2.Null,
+    "NotFound": IDL2.Null,
+    "NotAuthorized": IDL2.Null,
+    "InvalidData": IDL2.Null,
+    "SystemOnHold": IDL2.Null,
+    "AlreadyExists": IDL2.Null,
+    "CanisterCreateError": IDL2.Null,
+    "InvalidTeamError": IDL2.Null
   });
-  const Result = IDL.Variant({ "ok": IDL.Null, "err": Error2 });
-  const TokenId = IDL.Nat16;
-  const EntryRequirement = IDL.Variant({
-    "InviteOnly": IDL.Null,
-    "PaidEntry": IDL.Null,
-    "PaidInviteEntry": IDL.Null,
-    "FreeEntry": IDL.Null
+  const Result = IDL2.Variant({ "ok": IDL2.Null, "err": Error2 });
+  const TokenId = IDL2.Nat16;
+  const EntryRequirement = IDL2.Variant({
+    "InviteOnly": IDL2.Null,
+    "PaidEntry": IDL2.Null,
+    "PaidInviteEntry": IDL2.Null,
+    "FreeEntry": IDL2.Null
   });
-  const PaymentChoice = IDL.Variant({ "FPL": IDL.Null, "ICP": IDL.Null });
-  const CreatePrivateLeagueDTO = IDL.Record({
+  const PaymentChoice = IDL2.Variant({ "FPL": IDL2.Null, "ICP": IDL2.Null });
+  const CreatePrivateLeagueDTO = IDL2.Record({
     "tokenId": TokenId,
-    "adminFee": IDL.Nat8,
-    "name": IDL.Text,
-    "banner": IDL.Opt(IDL.Vec(IDL.Nat8)),
+    "adminFee": IDL2.Nat8,
+    "name": IDL2.Text,
+    "banner": IDL2.Opt(IDL2.Vec(IDL2.Nat8)),
     "entryRequirement": EntryRequirement,
-    "entrants": IDL.Nat16,
-    "photo": IDL.Opt(IDL.Vec(IDL.Nat8)),
-    "entryFee": IDL.Nat,
+    "entrants": IDL2.Nat16,
+    "photo": IDL2.Opt(IDL2.Vec(IDL2.Nat8)),
+    "entryFee": IDL2.Nat,
     "paymentChoice": PaymentChoice,
-    "termsAgreed": IDL.Bool
+    "termsAgreed": IDL2.Bool
   });
-  const SeasonId = IDL.Nat16;
-  const FixtureStatusType = IDL.Variant({
-    "Unplayed": IDL.Null,
-    "Finalised": IDL.Null,
-    "Active": IDL.Null,
-    "Complete": IDL.Null
+  const SeasonId = IDL2.Nat16;
+  const FixtureStatusType = IDL2.Variant({
+    "Unplayed": IDL2.Null,
+    "Finalised": IDL2.Null,
+    "Active": IDL2.Null,
+    "Complete": IDL2.Null
   });
-  const ClubId = IDL.Nat16;
-  const FixtureId = IDL.Nat32;
-  const PlayerEventType = IDL.Variant({
-    "PenaltyMissed": IDL.Null,
-    "Goal": IDL.Null,
-    "GoalConceded": IDL.Null,
-    "Appearance": IDL.Null,
-    "PenaltySaved": IDL.Null,
-    "RedCard": IDL.Null,
-    "KeeperSave": IDL.Null,
-    "CleanSheet": IDL.Null,
-    "YellowCard": IDL.Null,
-    "GoalAssisted": IDL.Null,
-    "OwnGoal": IDL.Null,
-    "HighestScoringPlayer": IDL.Null
+  const ClubId = IDL2.Nat16;
+  const FixtureId = IDL2.Nat32;
+  const PlayerEventType = IDL2.Variant({
+    "PenaltyMissed": IDL2.Null,
+    "Goal": IDL2.Null,
+    "GoalConceded": IDL2.Null,
+    "Appearance": IDL2.Null,
+    "PenaltySaved": IDL2.Null,
+    "RedCard": IDL2.Null,
+    "KeeperSave": IDL2.Null,
+    "CleanSheet": IDL2.Null,
+    "YellowCard": IDL2.Null,
+    "GoalAssisted": IDL2.Null,
+    "OwnGoal": IDL2.Null,
+    "HighestScoringPlayer": IDL2.Null
   });
-  const PlayerEventData = IDL.Record({
+  const PlayerEventData = IDL2.Record({
     "fixtureId": FixtureId,
     "clubId": ClubId,
-    "playerId": IDL.Nat16,
-    "eventStartMinute": IDL.Nat8,
-    "eventEndMinute": IDL.Nat8,
+    "playerId": IDL2.Nat16,
+    "eventStartMinute": IDL2.Nat8,
+    "eventEndMinute": IDL2.Nat8,
     "eventType": PlayerEventType
   });
-  const GameweekNumber = IDL.Nat8;
-  const FixtureDTO = IDL.Record({
-    "id": IDL.Nat32,
+  const GameweekNumber = IDL2.Nat8;
+  const FixtureDTO = IDL2.Record({
+    "id": IDL2.Nat32,
     "status": FixtureStatusType,
-    "highestScoringPlayerId": IDL.Nat16,
+    "highestScoringPlayerId": IDL2.Nat16,
     "seasonId": SeasonId,
     "awayClubId": ClubId,
-    "events": IDL.Vec(PlayerEventData),
+    "events": IDL2.Vec(PlayerEventData),
     "homeClubId": ClubId,
-    "kickOff": IDL.Int,
-    "homeGoals": IDL.Nat8,
+    "kickOff": IDL2.Int,
+    "homeGoals": IDL2.Nat8,
     "gameweek": GameweekNumber,
-    "awayGoals": IDL.Nat8
+    "awayGoals": IDL2.Nat8
   });
-  const AddInitialFixturesDTO = IDL.Record({
+  const AddInitialFixturesDTO = IDL2.Record({
     "seasonId": SeasonId,
-    "seasonFixtures": IDL.Vec(FixtureDTO)
+    "seasonFixtures": IDL2.Vec(FixtureDTO)
   });
-  const NewTokenDTO = IDL.Record({
-    "fee": IDL.Nat,
-    "ticker": IDL.Text,
-    "tokenImageURL": IDL.Text,
+  const NewTokenDTO = IDL2.Record({
+    "fee": IDL2.Nat,
+    "ticker": IDL2.Text,
+    "tokenImageURL": IDL2.Text,
     "canisterId": CanisterId
   });
-  const CountryId = IDL.Nat16;
-  const PlayerPosition = IDL.Variant({
-    "Goalkeeper": IDL.Null,
-    "Midfielder": IDL.Null,
-    "Forward": IDL.Null,
-    "Defender": IDL.Null
+  const CountryId = IDL2.Nat16;
+  const PlayerPosition = IDL2.Variant({
+    "Goalkeeper": IDL2.Null,
+    "Midfielder": IDL2.Null,
+    "Forward": IDL2.Null,
+    "Defender": IDL2.Null
   });
-  const CreatePlayerDTO = IDL.Record({
+  const CreatePlayerDTO = IDL2.Record({
     "clubId": ClubId,
-    "valueQuarterMillions": IDL.Nat16,
-    "dateOfBirth": IDL.Int,
+    "valueQuarterMillions": IDL2.Nat16,
+    "dateOfBirth": IDL2.Int,
     "nationality": CountryId,
-    "shirtNumber": IDL.Nat8,
+    "shirtNumber": IDL2.Nat8,
     "position": PlayerPosition,
-    "lastName": IDL.Text,
-    "firstName": IDL.Text
+    "lastName": IDL2.Text,
+    "firstName": IDL2.Text
   });
-  const PlayerId = IDL.Nat16;
-  const LoanPlayerDTO = IDL.Record({
-    "loanEndDate": IDL.Int,
+  const PlayerId = IDL2.Nat16;
+  const LoanPlayerDTO = IDL2.Record({
+    "loanEndDate": IDL2.Int,
     "playerId": PlayerId,
     "loanClubId": ClubId
   });
-  const Spawn = IDL.Record({
-    "percentage_to_spawn": IDL.Opt(IDL.Nat32),
-    "new_controller": IDL.Opt(IDL.Principal),
-    "nonce": IDL.Opt(IDL.Nat64)
+  const Spawn = IDL2.Record({
+    "percentage_to_spawn": IDL2.Opt(IDL2.Nat32),
+    "new_controller": IDL2.Opt(IDL2.Principal),
+    "nonce": IDL2.Opt(IDL2.Nat64)
   });
-  const NeuronId = IDL.Record({ "id": IDL.Nat64 });
-  const Follow = IDL.Record({
-    "topic": IDL.Int32,
-    "followees": IDL.Vec(NeuronId)
+  const NeuronId = IDL2.Record({ "id": IDL2.Nat64 });
+  const Follow = IDL2.Record({
+    "topic": IDL2.Int32,
+    "followees": IDL2.Vec(NeuronId)
   });
-  const ClaimOrRefreshNeuronFromAccount = IDL.Record({
-    "controller": IDL.Opt(IDL.Principal),
-    "memo": IDL.Nat64
+  const ClaimOrRefreshNeuronFromAccount = IDL2.Record({
+    "controller": IDL2.Opt(IDL2.Principal),
+    "memo": IDL2.Nat64
   });
-  const By = IDL.Variant({
-    "NeuronIdOrSubaccount": IDL.Null,
+  const By = IDL2.Variant({
+    "NeuronIdOrSubaccount": IDL2.Null,
     "MemoAndController": ClaimOrRefreshNeuronFromAccount,
-    "Memo": IDL.Nat64
+    "Memo": IDL2.Nat64
   });
-  const ClaimOrRefresh = IDL.Record({ "by": IDL.Opt(By) });
-  const ChangeAutoStakeMaturity = IDL.Record({
-    "requested_setting_for_auto_stake_maturity": IDL.Bool
+  const ClaimOrRefresh = IDL2.Record({ "by": IDL2.Opt(By) });
+  const ChangeAutoStakeMaturity = IDL2.Record({
+    "requested_setting_for_auto_stake_maturity": IDL2.Bool
   });
-  const IncreaseDissolveDelay = IDL.Record({
-    "additional_dissolve_delay_seconds": IDL.Nat32
+  const IncreaseDissolveDelay = IDL2.Record({
+    "additional_dissolve_delay_seconds": IDL2.Nat32
   });
-  const SetDissolveTimestamp = IDL.Record({
-    "dissolve_timestamp_seconds": IDL.Nat64
+  const SetDissolveTimestamp = IDL2.Record({
+    "dissolve_timestamp_seconds": IDL2.Nat64
   });
-  const Operation = IDL.Variant({
+  const Operation = IDL2.Variant({
     "ChangeAutoStakeMaturity": ChangeAutoStakeMaturity,
-    "StopDissolving": IDL.Null,
-    "StartDissolving": IDL.Null,
+    "StopDissolving": IDL2.Null,
+    "StartDissolving": IDL2.Null,
     "IncreaseDissolveDelay": IncreaseDissolveDelay,
     "SetDissolveTimestamp": SetDissolveTimestamp
   });
-  const Configure = IDL.Record({ "operation": IDL.Opt(Operation) });
-  const StakeMaturityResponse = IDL.Record({
-    "maturity_e8s": IDL.Nat64,
-    "stake_maturity_e8s": IDL.Nat64
+  const Configure = IDL2.Record({ "operation": IDL2.Opt(Operation) });
+  const StakeMaturityResponse = IDL2.Record({
+    "maturity_e8s": IDL2.Nat64,
+    "stake_maturity_e8s": IDL2.Nat64
   });
-  const AccountIdentifier = IDL.Record({ "hash": IDL.Vec(IDL.Nat8) });
-  const Amount = IDL.Record({ "e8s": IDL.Nat64 });
-  const Disburse = IDL.Record({
-    "to_account": IDL.Opt(AccountIdentifier),
-    "amount": IDL.Opt(Amount)
+  const AccountIdentifier = IDL2.Record({ "hash": IDL2.Vec(IDL2.Nat8) });
+  const Amount = IDL2.Record({ "e8s": IDL2.Nat64 });
+  const Disburse = IDL2.Record({
+    "to_account": IDL2.Opt(AccountIdentifier),
+    "amount": IDL2.Opt(Amount)
   });
-  const Command = IDL.Variant({
+  const Command = IDL2.Variant({
     "Spawn": Spawn,
     "Follow": Follow,
     "ClaimOrRefresh": ClaimOrRefresh,
@@ -3889,141 +3890,141 @@ const idlFactory = ({ IDL }) => {
     "StakeMaturity": StakeMaturityResponse,
     "Disburse": Disburse
   });
-  const MoveFixtureDTO = IDL.Record({
+  const MoveFixtureDTO = IDL2.Record({
     "fixtureId": FixtureId,
     "updatedFixtureGameweek": GameweekNumber,
-    "updatedFixtureDate": IDL.Int
+    "updatedFixtureDate": IDL2.Int
   });
-  const PostponeFixtureDTO = IDL.Record({ "fixtureId": FixtureId });
-  const PromoteFormerClubDTO = IDL.Record({ "clubId": ClubId });
-  const ShirtType = IDL.Variant({ "Filled": IDL.Null, "Striped": IDL.Null });
-  const PromoteNewClubDTO = IDL.Record({
-    "secondaryColourHex": IDL.Text,
-    "name": IDL.Text,
-    "friendlyName": IDL.Text,
-    "thirdColourHex": IDL.Text,
-    "abbreviatedName": IDL.Text,
+  const PostponeFixtureDTO = IDL2.Record({ "fixtureId": FixtureId });
+  const PromoteFormerClubDTO = IDL2.Record({ "clubId": ClubId });
+  const ShirtType = IDL2.Variant({ "Filled": IDL2.Null, "Striped": IDL2.Null });
+  const PromoteNewClubDTO = IDL2.Record({
+    "secondaryColourHex": IDL2.Text,
+    "name": IDL2.Text,
+    "friendlyName": IDL2.Text,
+    "thirdColourHex": IDL2.Text,
+    "abbreviatedName": IDL2.Text,
     "shirtType": ShirtType,
-    "primaryColourHex": IDL.Text
+    "primaryColourHex": IDL2.Text
   });
-  const RecallPlayerDTO = IDL.Record({ "playerId": PlayerId });
-  const RescheduleFixtureDTO = IDL.Record({
+  const RecallPlayerDTO = IDL2.Record({ "playerId": PlayerId });
+  const RescheduleFixtureDTO = IDL2.Record({
     "postponedFixtureId": FixtureId,
     "updatedFixtureGameweek": GameweekNumber,
-    "updatedFixtureDate": IDL.Int
+    "updatedFixtureDate": IDL2.Int
   });
-  const RetirePlayerDTO = IDL.Record({
+  const RetirePlayerDTO = IDL2.Record({
     "playerId": PlayerId,
-    "retirementDate": IDL.Int
+    "retirementDate": IDL2.Int
   });
-  const RevaluePlayerDownDTO = IDL.Record({ "playerId": PlayerId });
-  const RevaluePlayerUpDTO = IDL.Record({ "playerId": PlayerId });
-  const SetPlayerInjuryDTO = IDL.Record({
+  const RevaluePlayerDownDTO = IDL2.Record({ "playerId": PlayerId });
+  const RevaluePlayerUpDTO = IDL2.Record({ "playerId": PlayerId });
+  const SetPlayerInjuryDTO = IDL2.Record({
     "playerId": PlayerId,
-    "description": IDL.Text,
-    "expectedEndDate": IDL.Int
+    "description": IDL2.Text,
+    "expectedEndDate": IDL2.Int
   });
-  const SubmitFixtureDataDTO = IDL.Record({
+  const SubmitFixtureDataDTO = IDL2.Record({
     "fixtureId": FixtureId,
     "seasonId": SeasonId,
     "gameweek": GameweekNumber,
-    "playerEventData": IDL.Vec(PlayerEventData)
+    "playerEventData": IDL2.Vec(PlayerEventData)
   });
-  const TransferPlayerDTO = IDL.Record({
+  const TransferPlayerDTO = IDL2.Record({
     "playerId": PlayerId,
     "newClubId": ClubId
   });
-  const UnretirePlayerDTO = IDL.Record({ "playerId": PlayerId });
-  const UpdateClubDTO = IDL.Record({
+  const UnretirePlayerDTO = IDL2.Record({ "playerId": PlayerId });
+  const UpdateClubDTO = IDL2.Record({
     "clubId": ClubId,
-    "secondaryColourHex": IDL.Text,
-    "name": IDL.Text,
-    "friendlyName": IDL.Text,
-    "thirdColourHex": IDL.Text,
-    "abbreviatedName": IDL.Text,
+    "secondaryColourHex": IDL2.Text,
+    "name": IDL2.Text,
+    "friendlyName": IDL2.Text,
+    "thirdColourHex": IDL2.Text,
+    "abbreviatedName": IDL2.Text,
     "shirtType": ShirtType,
-    "primaryColourHex": IDL.Text
+    "primaryColourHex": IDL2.Text
   });
-  const UpdatePlayerDTO = IDL.Record({
-    "dateOfBirth": IDL.Int,
+  const UpdatePlayerDTO = IDL2.Record({
+    "dateOfBirth": IDL2.Int,
     "playerId": PlayerId,
     "nationality": CountryId,
-    "shirtNumber": IDL.Nat8,
+    "shirtNumber": IDL2.Nat8,
     "position": PlayerPosition,
-    "lastName": IDL.Text,
-    "firstName": IDL.Text
+    "lastName": IDL2.Text,
+    "firstName": IDL2.Text
   });
-  const PlayerStatus = IDL.Variant({
-    "OnLoan": IDL.Null,
-    "Former": IDL.Null,
-    "Active": IDL.Null,
-    "Retired": IDL.Null
+  const PlayerStatus = IDL2.Variant({
+    "OnLoan": IDL2.Null,
+    "Former": IDL2.Null,
+    "Active": IDL2.Null,
+    "Retired": IDL2.Null
   });
-  const PlayerDTO = IDL.Record({
-    "id": IDL.Nat16,
+  const PlayerDTO = IDL2.Record({
+    "id": IDL2.Nat16,
     "status": PlayerStatus,
     "clubId": ClubId,
-    "valueQuarterMillions": IDL.Nat16,
-    "dateOfBirth": IDL.Int,
+    "valueQuarterMillions": IDL2.Nat16,
+    "dateOfBirth": IDL2.Int,
     "nationality": CountryId,
-    "shirtNumber": IDL.Nat8,
-    "totalPoints": IDL.Int16,
+    "shirtNumber": IDL2.Nat8,
+    "totalPoints": IDL2.Int16,
     "position": PlayerPosition,
-    "lastName": IDL.Text,
-    "firstName": IDL.Text
+    "lastName": IDL2.Text,
+    "firstName": IDL2.Text
   });
-  const Result_3 = IDL.Variant({ "ok": IDL.Nat, "err": Error2 });
-  const CanisterType = IDL.Variant({
-    "SNS": IDL.Null,
-    "MonthlyLeaderboard": IDL.Null,
-    "Dapp": IDL.Null,
-    "Archive": IDL.Null,
-    "SeasonLeaderboard": IDL.Null,
-    "WeeklyLeaderboard": IDL.Null,
-    "Manager": IDL.Null
+  const Result_3 = IDL2.Variant({ "ok": IDL2.Nat, "err": Error2 });
+  const CanisterType = IDL2.Variant({
+    "SNS": IDL2.Null,
+    "MonthlyLeaderboard": IDL2.Null,
+    "Dapp": IDL2.Null,
+    "Archive": IDL2.Null,
+    "SeasonLeaderboard": IDL2.Null,
+    "WeeklyLeaderboard": IDL2.Null,
+    "Manager": IDL2.Null
   });
-  const CanisterDTO = IDL.Record({
-    "lastTopup": IDL.Int,
-    "cycles": IDL.Nat,
+  const CanisterDTO = IDL2.Record({
+    "lastTopup": IDL2.Int,
+    "cycles": IDL2.Nat,
     "canister_type": CanisterType,
     "canisterId": CanisterId
   });
-  const GetCanistersDTO = IDL.Record({
-    "totalEntries": IDL.Nat,
-    "offset": IDL.Nat,
-    "limit": IDL.Nat,
-    "entries": IDL.Vec(CanisterDTO),
+  const GetCanistersDTO = IDL2.Record({
+    "totalEntries": IDL2.Nat,
+    "offset": IDL2.Nat,
+    "limit": IDL2.Nat,
+    "entries": IDL2.Vec(CanisterDTO),
     "canisterTypeFilter": CanisterType
   });
-  const Result_28 = IDL.Variant({ "ok": GetCanistersDTO, "err": Error2 });
-  const ClubDTO = IDL.Record({
+  const Result_27 = IDL2.Variant({ "ok": GetCanistersDTO, "err": Error2 });
+  const ClubDTO = IDL2.Record({
     "id": ClubId,
-    "secondaryColourHex": IDL.Text,
-    "name": IDL.Text,
-    "friendlyName": IDL.Text,
-    "thirdColourHex": IDL.Text,
-    "abbreviatedName": IDL.Text,
+    "secondaryColourHex": IDL2.Text,
+    "name": IDL2.Text,
+    "friendlyName": IDL2.Text,
+    "thirdColourHex": IDL2.Text,
+    "abbreviatedName": IDL2.Text,
     "shirtType": ShirtType,
-    "primaryColourHex": IDL.Text
+    "primaryColourHex": IDL2.Text
   });
-  const Result_23 = IDL.Variant({ "ok": IDL.Vec(ClubDTO), "err": Error2 });
-  const CountryDTO = IDL.Record({
+  const Result_22 = IDL2.Variant({ "ok": IDL2.Vec(ClubDTO), "err": Error2 });
+  const CountryDTO = IDL2.Record({
     "id": CountryId,
-    "code": IDL.Text,
-    "name": IDL.Text
+    "code": IDL2.Text,
+    "name": IDL2.Text
   });
-  const Result_27 = IDL.Variant({ "ok": IDL.Vec(CountryDTO), "err": Error2 });
-  const PickTeamDTO = IDL.Record({
-    "playerIds": IDL.Vec(PlayerId),
+  const Result_26 = IDL2.Variant({ "ok": IDL2.Vec(CountryDTO), "err": Error2 });
+  const PickTeamDTO = IDL2.Record({
+    "playerIds": IDL2.Vec(PlayerId),
     "countrymenCountryId": CountryId,
-    "username": IDL.Text,
+    "username": IDL2.Text,
     "goalGetterPlayerId": PlayerId,
     "hatTrickHeroGameweek": GameweekNumber,
-    "transfersAvailable": IDL.Nat8,
+    "transfersAvailable": IDL2.Nat8,
     "teamBoostGameweek": GameweekNumber,
     "captainFantasticGameweek": GameweekNumber,
     "countrymenGameweek": GameweekNumber,
-    "bankQuarterMillions": IDL.Nat16,
+    "bankQuarterMillions": IDL2.Nat16,
     "noEntryPlayerId": PlayerId,
     "safeHandsPlayerId": PlayerId,
     "braceBonusGameweek": GameweekNumber,
@@ -4035,40 +4036,40 @@ const idlFactory = ({ IDL }) => {
     "noEntryGameweek": GameweekNumber,
     "prospectsGameweek": GameweekNumber,
     "safeHandsGameweek": GameweekNumber,
-    "principalId": IDL.Text,
+    "principalId": IDL2.Text,
     "passMasterPlayerId": PlayerId,
     "captainId": PlayerId,
     "canisterId": CanisterId,
-    "monthlyBonusesAvailable": IDL.Nat8
+    "monthlyBonusesAvailable": IDL2.Nat8
   });
-  const Result_26 = IDL.Variant({ "ok": PickTeamDTO, "err": Error2 });
-  const DataCacheDTO = IDL.Record({ "hash": IDL.Text, "category": IDL.Text });
-  const Result_25 = IDL.Variant({
-    "ok": IDL.Vec(DataCacheDTO),
+  const Result_25 = IDL2.Variant({ "ok": PickTeamDTO, "err": Error2 });
+  const DataCacheDTO = IDL2.Record({ "hash": IDL2.Text, "category": IDL2.Text });
+  const Result_24 = IDL2.Variant({
+    "ok": IDL2.Vec(DataCacheDTO),
     "err": Error2
   });
-  const PrincipalId = IDL.Text;
-  const GetFantasyTeamSnapshotDTO = IDL.Record({
+  const PrincipalId = IDL2.Text;
+  const GetFantasyTeamSnapshotDTO = IDL2.Record({
     "seasonId": SeasonId,
     "managerPrincipalId": PrincipalId,
     "gameweek": GameweekNumber
   });
-  const CalendarMonth = IDL.Nat8;
-  const FantasyTeamSnapshotDTO = IDL.Record({
-    "playerIds": IDL.Vec(PlayerId),
+  const CalendarMonth = IDL2.Nat8;
+  const FantasyTeamSnapshotDTO = IDL2.Record({
+    "playerIds": IDL2.Vec(PlayerId),
     "month": CalendarMonth,
-    "teamValueQuarterMillions": IDL.Nat16,
+    "teamValueQuarterMillions": IDL2.Nat16,
     "countrymenCountryId": CountryId,
-    "username": IDL.Text,
+    "username": IDL2.Text,
     "goalGetterPlayerId": PlayerId,
     "hatTrickHeroGameweek": GameweekNumber,
-    "transfersAvailable": IDL.Nat8,
+    "transfersAvailable": IDL2.Nat8,
     "teamBoostGameweek": GameweekNumber,
     "captainFantasticGameweek": GameweekNumber,
     "countrymenGameweek": GameweekNumber,
-    "bankQuarterMillions": IDL.Nat16,
+    "bankQuarterMillions": IDL2.Nat16,
     "noEntryPlayerId": PlayerId,
-    "monthlyPoints": IDL.Int16,
+    "monthlyPoints": IDL2.Int16,
     "safeHandsPlayerId": PlayerId,
     "seasonId": SeasonId,
     "braceBonusGameweek": GameweekNumber,
@@ -4078,41 +4079,41 @@ const idlFactory = ({ IDL }) => {
     "goalGetterGameweek": GameweekNumber,
     "captainFantasticPlayerId": PlayerId,
     "gameweek": GameweekNumber,
-    "seasonPoints": IDL.Int16,
+    "seasonPoints": IDL2.Int16,
     "transferWindowGameweek": GameweekNumber,
     "noEntryGameweek": GameweekNumber,
     "prospectsGameweek": GameweekNumber,
     "safeHandsGameweek": GameweekNumber,
-    "principalId": IDL.Text,
+    "principalId": IDL2.Text,
     "passMasterPlayerId": PlayerId,
     "captainId": PlayerId,
-    "points": IDL.Int16,
-    "monthlyBonusesAvailable": IDL.Nat8
+    "points": IDL2.Int16,
+    "monthlyBonusesAvailable": IDL2.Nat8
   });
-  const Result_24 = IDL.Variant({
+  const Result_23 = IDL2.Variant({
     "ok": FantasyTeamSnapshotDTO,
     "err": Error2
   });
-  const GetFixturesDTO = IDL.Record({ "seasonId": SeasonId });
-  const Result_17 = IDL.Variant({ "ok": IDL.Vec(FixtureDTO), "err": Error2 });
-  const ClubFilterDTO = IDL.Record({ "clubId": ClubId });
-  const Result_12 = IDL.Variant({ "ok": IDL.Vec(PlayerDTO), "err": Error2 });
-  const GetManagerDTO = IDL.Record({ "managerId": IDL.Text });
-  const FantasyTeamSnapshot = IDL.Record({
-    "playerIds": IDL.Vec(PlayerId),
+  const GetFixturesDTO = IDL2.Record({ "seasonId": SeasonId });
+  const Result_17 = IDL2.Variant({ "ok": IDL2.Vec(FixtureDTO), "err": Error2 });
+  const ClubFilterDTO = IDL2.Record({ "clubId": ClubId });
+  const Result_12 = IDL2.Variant({ "ok": IDL2.Vec(PlayerDTO), "err": Error2 });
+  const GetManagerDTO = IDL2.Record({ "managerId": IDL2.Text });
+  const FantasyTeamSnapshot = IDL2.Record({
+    "playerIds": IDL2.Vec(PlayerId),
     "month": CalendarMonth,
-    "teamValueQuarterMillions": IDL.Nat16,
+    "teamValueQuarterMillions": IDL2.Nat16,
     "countrymenCountryId": CountryId,
-    "username": IDL.Text,
+    "username": IDL2.Text,
     "goalGetterPlayerId": PlayerId,
     "hatTrickHeroGameweek": GameweekNumber,
-    "transfersAvailable": IDL.Nat8,
+    "transfersAvailable": IDL2.Nat8,
     "teamBoostGameweek": GameweekNumber,
     "captainFantasticGameweek": GameweekNumber,
     "countrymenGameweek": GameweekNumber,
-    "bankQuarterMillions": IDL.Nat16,
+    "bankQuarterMillions": IDL2.Nat16,
     "noEntryPlayerId": PlayerId,
-    "monthlyPoints": IDL.Int16,
+    "monthlyPoints": IDL2.Int16,
     "safeHandsPlayerId": PlayerId,
     "seasonId": SeasonId,
     "braceBonusGameweek": GameweekNumber,
@@ -4122,355 +4123,341 @@ const idlFactory = ({ IDL }) => {
     "goalGetterGameweek": GameweekNumber,
     "captainFantasticPlayerId": PlayerId,
     "gameweek": GameweekNumber,
-    "seasonPoints": IDL.Int16,
+    "seasonPoints": IDL2.Int16,
     "transferWindowGameweek": GameweekNumber,
     "noEntryGameweek": GameweekNumber,
     "prospectsGameweek": GameweekNumber,
     "safeHandsGameweek": GameweekNumber,
-    "principalId": IDL.Text,
+    "principalId": IDL2.Text,
     "passMasterPlayerId": PlayerId,
     "captainId": PlayerId,
-    "points": IDL.Int16,
-    "monthlyBonusesAvailable": IDL.Nat8
+    "points": IDL2.Int16,
+    "monthlyBonusesAvailable": IDL2.Nat8
   });
-  const ManagerDTO = IDL.Record({
-    "username": IDL.Text,
-    "weeklyPosition": IDL.Int,
-    "createDate": IDL.Int,
-    "monthlyPoints": IDL.Int16,
-    "weeklyPoints": IDL.Int16,
-    "weeklyPositionText": IDL.Text,
-    "gameweeks": IDL.Vec(FantasyTeamSnapshot),
+  const ManagerDTO = IDL2.Record({
+    "username": IDL2.Text,
+    "weeklyPosition": IDL2.Int,
+    "createDate": IDL2.Int,
+    "monthlyPoints": IDL2.Int16,
+    "weeklyPoints": IDL2.Int16,
+    "weeklyPositionText": IDL2.Text,
+    "gameweeks": IDL2.Vec(FantasyTeamSnapshot),
     "favouriteClubId": ClubId,
-    "monthlyPosition": IDL.Int,
-    "seasonPosition": IDL.Int,
-    "monthlyPositionText": IDL.Text,
-    "privateLeagueMemberships": IDL.Vec(CanisterId),
-    "profilePicture": IDL.Opt(IDL.Vec(IDL.Nat8)),
-    "seasonPoints": IDL.Int16,
-    "principalId": IDL.Text,
-    "seasonPositionText": IDL.Text
+    "monthlyPosition": IDL2.Int,
+    "seasonPosition": IDL2.Int,
+    "monthlyPositionText": IDL2.Text,
+    "privateLeagueMemberships": IDL2.Vec(CanisterId),
+    "profilePicture": IDL2.Opt(IDL2.Vec(IDL2.Nat8)),
+    "seasonPoints": IDL2.Int16,
+    "principalId": IDL2.Text,
+    "seasonPositionText": IDL2.Text
   });
-  const Result_1 = IDL.Variant({ "ok": ManagerDTO, "err": Error2 });
-  const ManagerPrivateLeagueDTO = IDL.Record({
-    "created": IDL.Int,
-    "name": IDL.Text,
-    "memberCount": IDL.Int,
-    "seasonPosition": IDL.Nat,
-    "seasonPositionText": IDL.Text,
+  const Result_1 = IDL2.Variant({ "ok": ManagerDTO, "err": Error2 });
+  const ManagerPrivateLeagueDTO = IDL2.Record({
+    "created": IDL2.Int,
+    "name": IDL2.Text,
+    "memberCount": IDL2.Int,
+    "seasonPosition": IDL2.Nat,
+    "seasonPositionText": IDL2.Text,
     "canisterId": CanisterId
   });
-  const ManagerPrivateLeaguesDTO = IDL.Record({
-    "totalEntries": IDL.Nat,
-    "entries": IDL.Vec(ManagerPrivateLeagueDTO)
+  const ManagerPrivateLeaguesDTO = IDL2.Record({
+    "totalEntries": IDL2.Nat,
+    "entries": IDL2.Vec(ManagerPrivateLeagueDTO)
   });
-  const Result_22 = IDL.Variant({
+  const Result_21 = IDL2.Variant({
     "ok": ManagerPrivateLeaguesDTO,
     "err": Error2
   });
-  const GetMonthlyLeaderboardDTO = IDL.Record({
+  const GetMonthlyLeaderboardDTO = IDL2.Record({
     "month": CalendarMonth,
     "clubId": ClubId,
-    "offset": IDL.Nat,
+    "offset": IDL2.Nat,
     "seasonId": SeasonId,
-    "limit": IDL.Nat,
-    "searchTerm": IDL.Text
+    "limit": IDL2.Nat,
+    "searchTerm": IDL2.Text
   });
-  const LeaderboardEntry = IDL.Record({
-    "username": IDL.Text,
-    "positionText": IDL.Text,
-    "position": IDL.Nat,
-    "principalId": IDL.Text,
-    "points": IDL.Int16
+  const LeaderboardEntry = IDL2.Record({
+    "username": IDL2.Text,
+    "positionText": IDL2.Text,
+    "position": IDL2.Nat,
+    "principalId": IDL2.Text,
+    "points": IDL2.Int16
   });
-  const MonthlyLeaderboardDTO = IDL.Record({
-    "month": IDL.Nat8,
-    "totalEntries": IDL.Nat,
+  const MonthlyLeaderboardDTO = IDL2.Record({
+    "month": IDL2.Nat8,
+    "clubId": ClubId,
+    "totalEntries": IDL2.Nat,
     "seasonId": SeasonId,
-    "entries": IDL.Vec(LeaderboardEntry)
+    "entries": IDL2.Vec(LeaderboardEntry)
   });
-  const Result_14 = IDL.Variant({
+  const Result_14 = IDL2.Variant({
     "ok": MonthlyLeaderboardDTO,
     "err": Error2
   });
-  const GetMonthlyLeaderboardsDTO = IDL.Record({
-    "month": CalendarMonth,
-    "seasonId": SeasonId,
-    "searchTerm": IDL.Text
-  });
-  const ClubLeaderboardDTO = IDL.Record({
-    "month": IDL.Nat8,
-    "clubId": ClubId,
-    "totalEntries": IDL.Nat,
-    "seasonId": SeasonId,
-    "entries": IDL.Vec(LeaderboardEntry)
-  });
-  const Result_21 = IDL.Variant({
-    "ok": IDL.Vec(ClubLeaderboardDTO),
-    "err": Error2
-  });
-  const GetPlayerDetailsDTO = IDL.Record({
+  const GetPlayerDetailsDTO = IDL2.Record({
     "playerId": PlayerId,
     "seasonId": SeasonId
   });
-  const InjuryHistory = IDL.Record({
-    "description": IDL.Text,
-    "injuryStartDate": IDL.Int,
-    "expectedEndDate": IDL.Int
+  const InjuryHistory = IDL2.Record({
+    "description": IDL2.Text,
+    "injuryStartDate": IDL2.Int,
+    "expectedEndDate": IDL2.Int
   });
-  const PlayerGameweekDTO = IDL.Record({
+  const PlayerGameweekDTO = IDL2.Record({
     "fixtureId": FixtureId,
-    "events": IDL.Vec(PlayerEventData),
-    "number": IDL.Nat8,
-    "points": IDL.Int16
+    "events": IDL2.Vec(PlayerEventData),
+    "number": IDL2.Nat8,
+    "points": IDL2.Int16
   });
-  const ValueHistory = IDL.Record({
-    "oldValue": IDL.Nat16,
-    "newValue": IDL.Nat16,
-    "seasonId": IDL.Nat16,
-    "gameweek": IDL.Nat8
+  const ValueHistory = IDL2.Record({
+    "oldValue": IDL2.Nat16,
+    "newValue": IDL2.Nat16,
+    "seasonId": IDL2.Nat16,
+    "gameweek": IDL2.Nat8
   });
-  const PlayerDetailDTO = IDL.Record({
+  const PlayerDetailDTO = IDL2.Record({
     "id": PlayerId,
     "status": PlayerStatus,
     "clubId": ClubId,
     "parentClubId": ClubId,
-    "valueQuarterMillions": IDL.Nat16,
-    "dateOfBirth": IDL.Int,
-    "injuryHistory": IDL.Vec(InjuryHistory),
+    "valueQuarterMillions": IDL2.Nat16,
+    "dateOfBirth": IDL2.Int,
+    "injuryHistory": IDL2.Vec(InjuryHistory),
     "seasonId": SeasonId,
-    "gameweeks": IDL.Vec(PlayerGameweekDTO),
+    "gameweeks": IDL2.Vec(PlayerGameweekDTO),
     "nationality": CountryId,
-    "retirementDate": IDL.Int,
-    "valueHistory": IDL.Vec(ValueHistory),
-    "latestInjuryEndDate": IDL.Int,
-    "shirtNumber": IDL.Nat8,
+    "retirementDate": IDL2.Int,
+    "valueHistory": IDL2.Vec(ValueHistory),
+    "latestInjuryEndDate": IDL2.Int,
+    "shirtNumber": IDL2.Nat8,
     "position": PlayerPosition,
-    "lastName": IDL.Text,
-    "firstName": IDL.Text
+    "lastName": IDL2.Text,
+    "firstName": IDL2.Text
   });
-  const Result_20 = IDL.Variant({ "ok": PlayerDetailDTO, "err": Error2 });
-  const GameweekFiltersDTO = IDL.Record({
+  const Result_20 = IDL2.Variant({ "ok": PlayerDetailDTO, "err": Error2 });
+  const GameweekFiltersDTO = IDL2.Record({
     "seasonId": SeasonId,
     "gameweek": GameweekNumber
   });
-  const PlayerPointsDTO = IDL.Record({
-    "id": IDL.Nat16,
+  const PlayerPointsDTO = IDL2.Record({
+    "id": IDL2.Nat16,
     "clubId": ClubId,
-    "events": IDL.Vec(PlayerEventData),
+    "events": IDL2.Vec(PlayerEventData),
     "position": PlayerPosition,
     "gameweek": GameweekNumber,
-    "points": IDL.Int16
+    "points": IDL2.Int16
   });
-  const Result_19 = IDL.Variant({
-    "ok": IDL.Vec(PlayerPointsDTO),
+  const Result_19 = IDL2.Variant({
+    "ok": IDL2.Vec(PlayerPointsDTO),
     "err": Error2
   });
-  const PlayerScoreDTO = IDL.Record({
-    "id": IDL.Nat16,
+  const PlayerScoreDTO = IDL2.Record({
+    "id": IDL2.Nat16,
     "clubId": ClubId,
-    "assists": IDL.Int16,
-    "dateOfBirth": IDL.Int,
+    "assists": IDL2.Int16,
+    "dateOfBirth": IDL2.Int,
     "nationality": CountryId,
-    "goalsScored": IDL.Int16,
-    "saves": IDL.Int16,
-    "goalsConceded": IDL.Int16,
-    "events": IDL.Vec(PlayerEventData),
+    "goalsScored": IDL2.Int16,
+    "saves": IDL2.Int16,
+    "goalsConceded": IDL2.Int16,
+    "events": IDL2.Vec(PlayerEventData),
     "position": PlayerPosition,
-    "points": IDL.Int16
+    "points": IDL2.Int16
   });
-  const Result_18 = IDL.Variant({
-    "ok": IDL.Vec(IDL.Tuple(IDL.Nat16, PlayerScoreDTO)),
+  const Result_18 = IDL2.Variant({
+    "ok": IDL2.Vec(IDL2.Tuple(IDL2.Nat16, PlayerScoreDTO)),
     "err": Error2
   });
-  const Result_16 = IDL.Variant({
+  const Result_16 = IDL2.Variant({
     "ok": ManagerPrivateLeagueDTO,
     "err": Error2
   });
-  const GetLeagueMembersDTO = IDL.Record({
-    "offset": IDL.Nat,
-    "limit": IDL.Nat,
+  const GetLeagueMembersDTO = IDL2.Record({
+    "offset": IDL2.Nat,
+    "limit": IDL2.Nat,
     "canisterId": CanisterId
   });
-  const LeagueMemberDTO = IDL.Record({
-    "added": IDL.Int,
-    "username": IDL.Text,
+  const LeagueMemberDTO = IDL2.Record({
+    "added": IDL2.Int,
+    "username": IDL2.Text,
     "principalId": PrincipalId
   });
-  const Result_15 = IDL.Variant({
-    "ok": IDL.Vec(LeagueMemberDTO),
+  const Result_15 = IDL2.Variant({
+    "ok": IDL2.Vec(LeagueMemberDTO),
     "err": Error2
   });
-  const GetPrivateLeagueMonthlyLeaderboard = IDL.Record({
+  const GetPrivateLeagueMonthlyLeaderboard = IDL2.Record({
     "month": CalendarMonth,
-    "offset": IDL.Nat,
+    "clubId": ClubId,
+    "offset": IDL2.Nat,
     "seasonId": SeasonId,
-    "limit": IDL.Nat,
+    "limit": IDL2.Nat,
     "canisterId": CanisterId
   });
-  const GetPrivateLeagueSeasonLeaderboard = IDL.Record({
-    "offset": IDL.Nat,
+  const GetPrivateLeagueSeasonLeaderboard = IDL2.Record({
+    "offset": IDL2.Nat,
     "seasonId": SeasonId,
-    "limit": IDL.Nat,
+    "limit": IDL2.Nat,
     "canisterId": CanisterId
   });
-  const SeasonLeaderboardDTO = IDL.Record({
-    "totalEntries": IDL.Nat,
+  const SeasonLeaderboardDTO = IDL2.Record({
+    "totalEntries": IDL2.Nat,
     "seasonId": SeasonId,
-    "entries": IDL.Vec(LeaderboardEntry)
+    "entries": IDL2.Vec(LeaderboardEntry)
   });
-  const Result_10 = IDL.Variant({ "ok": SeasonLeaderboardDTO, "err": Error2 });
-  const GetPrivateLeagueWeeklyLeaderboard = IDL.Record({
-    "offset": IDL.Nat,
+  const Result_10 = IDL2.Variant({ "ok": SeasonLeaderboardDTO, "err": Error2 });
+  const GetPrivateLeagueWeeklyLeaderboard = IDL2.Record({
+    "offset": IDL2.Nat,
     "seasonId": SeasonId,
-    "limit": IDL.Nat,
+    "limit": IDL2.Nat,
     "gameweek": GameweekNumber,
     "canisterId": CanisterId
   });
-  const WeeklyLeaderboardDTO = IDL.Record({
-    "totalEntries": IDL.Nat,
+  const WeeklyLeaderboardDTO = IDL2.Record({
+    "totalEntries": IDL2.Nat,
     "seasonId": SeasonId,
-    "entries": IDL.Vec(LeaderboardEntry),
+    "entries": IDL2.Vec(LeaderboardEntry),
     "gameweek": GameweekNumber
   });
-  const Result_2 = IDL.Variant({ "ok": WeeklyLeaderboardDTO, "err": Error2 });
-  const ProfileDTO = IDL.Record({
-    "username": IDL.Text,
-    "termsAccepted": IDL.Bool,
-    "createDate": IDL.Int,
+  const Result_2 = IDL2.Variant({ "ok": WeeklyLeaderboardDTO, "err": Error2 });
+  const ProfileDTO = IDL2.Record({
+    "username": IDL2.Text,
+    "termsAccepted": IDL2.Bool,
+    "createDate": IDL2.Int,
     "favouriteClubId": ClubId,
-    "profilePicture": IDL.Opt(IDL.Vec(IDL.Nat8)),
-    "profilePictureType": IDL.Text,
-    "principalId": IDL.Text
+    "profilePicture": IDL2.Opt(IDL2.Vec(IDL2.Nat8)),
+    "profilePictureType": IDL2.Text,
+    "principalId": IDL2.Text
   });
-  const Result_13 = IDL.Variant({ "ok": ProfileDTO, "err": Error2 });
-  const RewardPool = IDL.Record({
-    "monthlyLeaderboardPool": IDL.Nat64,
-    "allTimeSeasonHighScorePool": IDL.Nat64,
-    "mostValuableTeamPool": IDL.Nat64,
-    "highestScoringMatchPlayerPool": IDL.Nat64,
+  const Result_13 = IDL2.Variant({ "ok": ProfileDTO, "err": Error2 });
+  const RewardPool = IDL2.Record({
+    "monthlyLeaderboardPool": IDL2.Nat64,
+    "allTimeSeasonHighScorePool": IDL2.Nat64,
+    "mostValuableTeamPool": IDL2.Nat64,
+    "highestScoringMatchPlayerPool": IDL2.Nat64,
     "seasonId": SeasonId,
-    "seasonLeaderboardPool": IDL.Nat64,
-    "allTimeWeeklyHighScorePool": IDL.Nat64,
-    "allTimeMonthlyHighScorePool": IDL.Nat64,
-    "weeklyLeaderboardPool": IDL.Nat64
+    "seasonLeaderboardPool": IDL2.Nat64,
+    "allTimeWeeklyHighScorePool": IDL2.Nat64,
+    "allTimeMonthlyHighScorePool": IDL2.Nat64,
+    "weeklyLeaderboardPool": IDL2.Nat64
   });
-  const GetRewardPoolDTO = IDL.Record({
+  const GetRewardPoolDTO = IDL2.Record({
     "seasonId": SeasonId,
     "rewardPool": RewardPool
   });
-  const Result_11 = IDL.Variant({ "ok": GetRewardPoolDTO, "err": Error2 });
-  const GetSeasonLeaderboardDTO = IDL.Record({
-    "offset": IDL.Nat,
+  const Result_11 = IDL2.Variant({ "ok": GetRewardPoolDTO, "err": Error2 });
+  const GetSeasonLeaderboardDTO = IDL2.Record({
+    "offset": IDL2.Nat,
     "seasonId": SeasonId,
-    "limit": IDL.Nat,
-    "searchTerm": IDL.Text
+    "limit": IDL2.Nat,
+    "searchTerm": IDL2.Text
   });
-  const SeasonDTO = IDL.Record({
+  const SeasonDTO = IDL2.Record({
     "id": SeasonId,
-    "name": IDL.Text,
-    "year": IDL.Nat16
+    "name": IDL2.Text,
+    "year": IDL2.Nat16
   });
-  const Result_9 = IDL.Variant({ "ok": IDL.Vec(SeasonDTO), "err": Error2 });
-  const EventLogEntryType = IDL.Variant({
-    "SystemCheck": IDL.Null,
-    "ManagerCanisterCreated": IDL.Null,
-    "UnexpectedError": IDL.Null,
-    "CanisterTopup": IDL.Null
+  const Result_9 = IDL2.Variant({ "ok": IDL2.Vec(SeasonDTO), "err": Error2 });
+  const EventLogEntryType = IDL2.Variant({
+    "SystemCheck": IDL2.Null,
+    "ManagerCanisterCreated": IDL2.Null,
+    "UnexpectedError": IDL2.Null,
+    "CanisterTopup": IDL2.Null
   });
-  const EventLogEntry = IDL.Record({
-    "eventId": IDL.Nat,
-    "eventTitle": IDL.Text,
-    "eventDetail": IDL.Text,
-    "eventTime": IDL.Int,
+  const EventLogEntry = IDL2.Record({
+    "eventId": IDL2.Nat,
+    "eventTitle": IDL2.Text,
+    "eventDetail": IDL2.Text,
+    "eventTime": IDL2.Int,
     "eventType": EventLogEntryType
   });
-  const GetSystemLogDTO = IDL.Record({
-    "dateEnd": IDL.Int,
-    "totalEntries": IDL.Nat,
-    "offset": IDL.Nat,
-    "dateStart": IDL.Int,
-    "limit": IDL.Nat,
-    "entries": IDL.Vec(EventLogEntry),
+  const GetSystemLogDTO = IDL2.Record({
+    "dateEnd": IDL2.Int,
+    "totalEntries": IDL2.Nat,
+    "offset": IDL2.Nat,
+    "dateStart": IDL2.Int,
+    "limit": IDL2.Nat,
+    "entries": IDL2.Vec(EventLogEntry),
     "eventType": EventLogEntryType
   });
-  const Result_8 = IDL.Variant({ "ok": GetSystemLogDTO, "err": Error2 });
-  const SystemStateDTO = IDL.Record({
+  const Result_8 = IDL2.Variant({ "ok": GetSystemLogDTO, "err": Error2 });
+  const SystemStateDTO = IDL2.Record({
     "pickTeamSeasonId": SeasonId,
-    "pickTeamSeasonName": IDL.Text,
-    "calculationSeasonName": IDL.Text,
+    "pickTeamSeasonName": IDL2.Text,
+    "calculationSeasonName": IDL2.Text,
     "calculationGameweek": GameweekNumber,
-    "transferWindowActive": IDL.Bool,
+    "transferWindowActive": IDL2.Bool,
     "pickTeamGameweek": GameweekNumber,
     "calculationMonth": CalendarMonth,
     "calculationSeasonId": SeasonId,
-    "onHold": IDL.Bool,
-    "seasonActive": IDL.Bool
+    "onHold": IDL2.Bool,
+    "seasonActive": IDL2.Bool
   });
-  const Result_7 = IDL.Variant({ "ok": SystemStateDTO, "err": Error2 });
-  const TimerType = IDL.Variant({
-    "GameweekBegin": IDL.Null,
-    "LoanComplete": IDL.Null,
-    "TransferWindow": IDL.Null,
-    "InjuryExpired": IDL.Null,
-    "GameKickOff": IDL.Null,
-    "GameComplete": IDL.Null
+  const Result_7 = IDL2.Variant({ "ok": SystemStateDTO, "err": Error2 });
+  const TimerType = IDL2.Variant({
+    "GameweekBegin": IDL2.Null,
+    "LoanComplete": IDL2.Null,
+    "TransferWindow": IDL2.Null,
+    "InjuryExpired": IDL2.Null,
+    "GameKickOff": IDL2.Null,
+    "GameComplete": IDL2.Null
   });
-  const TimerDTO = IDL.Record({
-    "id": IDL.Int,
-    "callbackName": IDL.Text,
-    "triggerTime": IDL.Int
+  const TimerDTO = IDL2.Record({
+    "id": IDL2.Int,
+    "callbackName": IDL2.Text,
+    "triggerTime": IDL2.Int
   });
-  const GetTimersDTO = IDL.Record({
-    "totalEntries": IDL.Nat,
+  const GetTimersDTO = IDL2.Record({
+    "totalEntries": IDL2.Nat,
     "timerTypeFilter": TimerType,
-    "offset": IDL.Nat,
-    "limit": IDL.Nat,
-    "entries": IDL.Vec(TimerDTO)
+    "offset": IDL2.Nat,
+    "limit": IDL2.Nat,
+    "entries": IDL2.Vec(TimerDTO)
   });
-  const Result_6 = IDL.Variant({ "ok": GetTimersDTO, "err": Error2 });
-  const TokenInfo = IDL.Record({
+  const Result_6 = IDL2.Variant({ "ok": GetTimersDTO, "err": Error2 });
+  const TokenInfo = IDL2.Record({
     "id": TokenId,
-    "fee": IDL.Nat,
-    "ticker": IDL.Text,
-    "tokenImageURL": IDL.Text,
+    "fee": IDL2.Nat,
+    "ticker": IDL2.Text,
+    "tokenImageURL": IDL2.Text,
     "canisterId": CanisterId
   });
-  const Result_5 = IDL.Variant({ "ok": IDL.Vec(TokenInfo), "err": Error2 });
-  const TopupDTO = IDL.Record({
-    "topupAmount": IDL.Nat,
-    "canisterId": IDL.Text,
-    "toppedUpOn": IDL.Int
+  const Result_5 = IDL2.Variant({ "ok": IDL2.Vec(TokenInfo), "err": Error2 });
+  const TopupDTO = IDL2.Record({
+    "topupAmount": IDL2.Nat,
+    "canisterId": IDL2.Text,
+    "toppedUpOn": IDL2.Int
   });
-  const GetTopupsDTO = IDL.Record({
-    "totalEntries": IDL.Nat,
-    "offset": IDL.Nat,
-    "limit": IDL.Nat,
-    "entries": IDL.Vec(TopupDTO)
+  const GetTopupsDTO = IDL2.Record({
+    "totalEntries": IDL2.Nat,
+    "offset": IDL2.Nat,
+    "limit": IDL2.Nat,
+    "entries": IDL2.Vec(TopupDTO)
   });
-  const Result_4 = IDL.Variant({ "ok": GetTopupsDTO, "err": Error2 });
-  const AccountIdentifier__1 = IDL.Vec(IDL.Nat8);
-  const GetWeeklyLeaderboardDTO = IDL.Record({
-    "offset": IDL.Nat,
+  const Result_4 = IDL2.Variant({ "ok": GetTopupsDTO, "err": Error2 });
+  const AccountIdentifier__1 = IDL2.Vec(IDL2.Nat8);
+  const GetWeeklyLeaderboardDTO = IDL2.Record({
+    "offset": IDL2.Nat,
     "seasonId": SeasonId,
-    "limit": IDL.Nat,
-    "searchTerm": IDL.Text,
+    "limit": IDL2.Nat,
+    "searchTerm": IDL2.Text,
     "gameweek": GameweekNumber
   });
-  const LeagueInviteDTO = IDL.Record({
+  const LeagueInviteDTO = IDL2.Record({
     "managerId": PrincipalId,
     "canisterId": CanisterId
   });
-  const UsernameFilterDTO = IDL.Record({ "username": IDL.Text });
-  const LogStatusDTO = IDL.Record({ "message": IDL.Text });
-  const PrivateLeagueRewardDTO = IDL.Record({
+  const UsernameFilterDTO = IDL2.Record({ "username": IDL2.Text });
+  const LogStatusDTO = IDL2.Record({ "message": IDL2.Text });
+  const PrivateLeagueRewardDTO = IDL2.Record({
     "managerId": PrincipalId,
-    "amount": IDL.Nat64
+    "amount": IDL2.Nat64
   });
-  const UpdateTeamSelectionDTO = IDL.Record({
-    "playerIds": IDL.Vec(PlayerId),
+  const UpdateTeamSelectionDTO = IDL2.Record({
+    "playerIds": IDL2.Vec(PlayerId),
     "countrymenCountryId": CountryId,
-    "username": IDL.Text,
+    "username": IDL2.Text,
     "goalGetterPlayerId": PlayerId,
     "hatTrickHeroGameweek": GameweekNumber,
     "teamBoostGameweek": GameweekNumber,
@@ -4490,241 +4477,236 @@ const idlFactory = ({ IDL }) => {
     "passMasterPlayerId": PlayerId,
     "captainId": PlayerId
   });
-  const UpdateFavouriteClubDTO = IDL.Record({ "favouriteClubId": ClubId });
-  const UpdateLeagueBannerDTO = IDL.Record({
-    "banner": IDL.Opt(IDL.Vec(IDL.Nat8)),
+  const UpdateFavouriteClubDTO = IDL2.Record({ "favouriteClubId": ClubId });
+  const UpdateLeagueBannerDTO = IDL2.Record({
+    "banner": IDL2.Opt(IDL2.Vec(IDL2.Nat8)),
     "canisterId": CanisterId
   });
-  const UpdateLeagueNameDTO = IDL.Record({
-    "name": IDL.Text,
+  const UpdateLeagueNameDTO = IDL2.Record({
+    "name": IDL2.Text,
     "canisterId": CanisterId
   });
-  const UpdateLeaguePictureDTO = IDL.Record({
-    "picture": IDL.Opt(IDL.Vec(IDL.Nat8)),
+  const UpdateLeaguePictureDTO = IDL2.Record({
+    "picture": IDL2.Opt(IDL2.Vec(IDL2.Nat8)),
     "canisterId": CanisterId
   });
-  const UpdateProfilePictureDTO = IDL.Record({
-    "profilePicture": IDL.Vec(IDL.Nat8),
-    "extension": IDL.Text
+  const UpdateProfilePictureDTO = IDL2.Record({
+    "profilePicture": IDL2.Vec(IDL2.Nat8),
+    "extension": IDL2.Text
   });
-  const UpdateUsernameDTO = IDL.Record({ "username": IDL.Text });
-  const RustResult = IDL.Variant({ "Ok": IDL.Text, "Err": IDL.Text });
-  return IDL.Service({
-    "acceptInviteAndPayFee": IDL.Func([CanisterId], [Result], []),
-    "acceptLeagueInvite": IDL.Func([CanisterId], [Result], []),
-    "createPrivateLeague": IDL.Func([CreatePrivateLeagueDTO], [Result], []),
-    "enterLeague": IDL.Func([CanisterId], [Result], []),
-    "enterLeagueWithFee": IDL.Func([CanisterId], [Result], []),
-    "executeAddInitialFixtures": IDL.Func([AddInitialFixturesDTO], [], []),
-    "executeAddNewToken": IDL.Func([NewTokenDTO], [], []),
-    "executeCreatePlayer": IDL.Func([CreatePlayerDTO], [], []),
-    "executeLoanPlayer": IDL.Func([LoanPlayerDTO], [], []),
-    "executeManageDAONeuron": IDL.Func([Command], [], []),
-    "executeMoveFixture": IDL.Func([MoveFixtureDTO], [], []),
-    "executePostponeFixture": IDL.Func([PostponeFixtureDTO], [], []),
-    "executePromoteFormerClub": IDL.Func([PromoteFormerClubDTO], [], []),
-    "executePromoteNewClub": IDL.Func([PromoteNewClubDTO], [], []),
-    "executeRecallPlayer": IDL.Func([RecallPlayerDTO], [], []),
-    "executeRescheduleFixture": IDL.Func([RescheduleFixtureDTO], [], []),
-    "executeRetirePlayer": IDL.Func([RetirePlayerDTO], [], []),
-    "executeRevaluePlayerDown": IDL.Func([RevaluePlayerDownDTO], [], []),
-    "executeRevaluePlayerUp": IDL.Func([RevaluePlayerUpDTO], [], []),
-    "executeSetPlayerInjury": IDL.Func([SetPlayerInjuryDTO], [], []),
-    "executeSubmitFixtureData": IDL.Func([SubmitFixtureDataDTO], [], []),
-    "executeTransferPlayer": IDL.Func([TransferPlayerDTO], [], []),
-    "executeUnretirePlayer": IDL.Func([UnretirePlayerDTO], [], []),
-    "executeUpdateClub": IDL.Func([UpdateClubDTO], [], []),
-    "executeUpdatePlayer": IDL.Func([UpdatePlayerDTO], [], []),
-    "getActiveManagerCanisterId": IDL.Func([], [CanisterId], []),
-    "getActivePlayers": IDL.Func([], [IDL.Vec(PlayerDTO)], []),
-    "getAllPlayers": IDL.Func([], [IDL.Vec(PlayerDTO)], []),
-    "getBackendCanisterBalance": IDL.Func([], [Result_3], []),
-    "getCanisterCyclesAvailable": IDL.Func([], [IDL.Nat], []),
-    "getCanisterCyclesBalance": IDL.Func([], [Result_3], []),
-    "getCanisters": IDL.Func([GetCanistersDTO], [Result_28], []),
-    "getClubs": IDL.Func([], [Result_23], ["query"]),
-    "getCountries": IDL.Func([], [Result_27], ["query"]),
-    "getCurrentTeam": IDL.Func([], [Result_26], []),
-    "getDataHashes": IDL.Func([], [Result_25], ["query"]),
-    "getFantasyTeamSnapshot": IDL.Func(
+  const UpdateUsernameDTO = IDL2.Record({ "username": IDL2.Text });
+  const RustResult = IDL2.Variant({ "Ok": IDL2.Text, "Err": IDL2.Text });
+  return IDL2.Service({
+    "acceptInviteAndPayFee": IDL2.Func([CanisterId], [Result], []),
+    "acceptLeagueInvite": IDL2.Func([CanisterId], [Result], []),
+    "createPrivateLeague": IDL2.Func([CreatePrivateLeagueDTO], [Result], []),
+    "enterLeague": IDL2.Func([CanisterId], [Result], []),
+    "enterLeagueWithFee": IDL2.Func([CanisterId], [Result], []),
+    "executeAddInitialFixtures": IDL2.Func([AddInitialFixturesDTO], [], []),
+    "executeAddNewToken": IDL2.Func([NewTokenDTO], [], []),
+    "executeCreatePlayer": IDL2.Func([CreatePlayerDTO], [], []),
+    "executeLoanPlayer": IDL2.Func([LoanPlayerDTO], [], []),
+    "executeManageDAONeuron": IDL2.Func([Command], [], []),
+    "executeMoveFixture": IDL2.Func([MoveFixtureDTO], [], []),
+    "executePostponeFixture": IDL2.Func([PostponeFixtureDTO], [], []),
+    "executePromoteFormerClub": IDL2.Func([PromoteFormerClubDTO], [], []),
+    "executePromoteNewClub": IDL2.Func([PromoteNewClubDTO], [], []),
+    "executeRecallPlayer": IDL2.Func([RecallPlayerDTO], [], []),
+    "executeRescheduleFixture": IDL2.Func([RescheduleFixtureDTO], [], []),
+    "executeRetirePlayer": IDL2.Func([RetirePlayerDTO], [], []),
+    "executeRevaluePlayerDown": IDL2.Func([RevaluePlayerDownDTO], [], []),
+    "executeRevaluePlayerUp": IDL2.Func([RevaluePlayerUpDTO], [], []),
+    "executeSetPlayerInjury": IDL2.Func([SetPlayerInjuryDTO], [], []),
+    "executeSubmitFixtureData": IDL2.Func([SubmitFixtureDataDTO], [], []),
+    "executeTransferPlayer": IDL2.Func([TransferPlayerDTO], [], []),
+    "executeUnretirePlayer": IDL2.Func([UnretirePlayerDTO], [], []),
+    "executeUpdateClub": IDL2.Func([UpdateClubDTO], [], []),
+    "executeUpdatePlayer": IDL2.Func([UpdatePlayerDTO], [], []),
+    "getActiveManagerCanisterId": IDL2.Func([], [CanisterId], []),
+    "getActivePlayers": IDL2.Func([], [IDL2.Vec(PlayerDTO)], []),
+    "getAllPlayers": IDL2.Func([], [IDL2.Vec(PlayerDTO)], []),
+    "getBackendCanisterBalance": IDL2.Func([], [Result_3], []),
+    "getCanisterCyclesAvailable": IDL2.Func([], [IDL2.Nat], []),
+    "getCanisterCyclesBalance": IDL2.Func([], [Result_3], []),
+    "getCanisters": IDL2.Func([GetCanistersDTO], [Result_27], []),
+    "getClubs": IDL2.Func([], [Result_22], ["query"]),
+    "getCountries": IDL2.Func([], [Result_26], ["query"]),
+    "getCurrentTeam": IDL2.Func([], [Result_25], []),
+    "getDataHashes": IDL2.Func([], [Result_24], ["query"]),
+    "getFantasyTeamSnapshot": IDL2.Func(
       [GetFantasyTeamSnapshotDTO],
-      [Result_24],
+      [Result_23],
       []
     ),
-    "getFixtures": IDL.Func([GetFixturesDTO], [Result_17], ["query"]),
-    "getFormerClubs": IDL.Func([], [Result_23], ["query"]),
-    "getLoanedPlayers": IDL.Func([ClubFilterDTO], [Result_12], ["query"]),
-    "getManager": IDL.Func([GetManagerDTO], [Result_1], []),
-    "getManagerCanisterIds": IDL.Func([], [IDL.Vec(CanisterId)], []),
-    "getManagerPrivateLeagues": IDL.Func([], [Result_22], []),
-    "getMonthlyLeaderboard": IDL.Func(
+    "getFixtures": IDL2.Func([GetFixturesDTO], [Result_17], ["query"]),
+    "getFormerClubs": IDL2.Func([], [Result_22], ["query"]),
+    "getLoanedPlayers": IDL2.Func([ClubFilterDTO], [Result_12], ["query"]),
+    "getManager": IDL2.Func([GetManagerDTO], [Result_1], []),
+    "getManagerCanisterIds": IDL2.Func([], [IDL2.Vec(CanisterId)], []),
+    "getManagerPrivateLeagues": IDL2.Func([], [Result_21], []),
+    "getMonthlyLeaderboard": IDL2.Func(
       [GetMonthlyLeaderboardDTO],
       [Result_14],
       []
     ),
-    "getMonthlyLeaderboards": IDL.Func(
-      [GetMonthlyLeaderboardsDTO],
-      [Result_21],
-      []
-    ),
-    "getNeuronId": IDL.Func([], [IDL.Nat64], []),
-    "getPlayerDetails": IDL.Func(
+    "getNeuronId": IDL2.Func([], [IDL2.Nat64], []),
+    "getPlayerDetails": IDL2.Func(
       [GetPlayerDetailsDTO],
       [Result_20],
       ["query"]
     ),
-    "getPlayerDetailsForGameweek": IDL.Func(
+    "getPlayerDetailsForGameweek": IDL2.Func(
       [GameweekFiltersDTO],
       [Result_19],
       ["query"]
     ),
-    "getPlayerPointsMap": IDL.Func(
+    "getPlayerPointsMap": IDL2.Func(
       [SeasonId, GameweekNumber],
-      [IDL.Vec(IDL.Tuple(PlayerId, PlayerScoreDTO))],
+      [IDL2.Vec(IDL2.Tuple(PlayerId, PlayerScoreDTO))],
       []
     ),
-    "getPlayers": IDL.Func([], [Result_12], ["query"]),
-    "getPlayersMap": IDL.Func([GameweekFiltersDTO], [Result_18], ["query"]),
-    "getPostponedFixtures": IDL.Func([], [Result_17], ["query"]),
-    "getPrivateLeague": IDL.Func([CanisterId], [Result_16], []),
-    "getPrivateLeagueMembers": IDL.Func(
+    "getPlayers": IDL2.Func([], [Result_12], ["query"]),
+    "getPlayersMap": IDL2.Func([GameweekFiltersDTO], [Result_18], ["query"]),
+    "getPostponedFixtures": IDL2.Func([], [Result_17], ["query"]),
+    "getPrivateLeague": IDL2.Func([CanisterId], [Result_16], []),
+    "getPrivateLeagueMembers": IDL2.Func(
       [GetLeagueMembersDTO],
       [Result_15],
       []
     ),
-    "getPrivateLeagueMonthlyLeaderboard": IDL.Func(
+    "getPrivateLeagueMonthlyLeaderboard": IDL2.Func(
       [GetPrivateLeagueMonthlyLeaderboard],
       [Result_14],
       []
     ),
-    "getPrivateLeagueSeasonLeaderboard": IDL.Func(
+    "getPrivateLeagueSeasonLeaderboard": IDL2.Func(
       [GetPrivateLeagueSeasonLeaderboard],
       [Result_10],
       []
     ),
-    "getPrivateLeagueWeeklyLeaderboard": IDL.Func(
+    "getPrivateLeagueWeeklyLeaderboard": IDL2.Func(
       [GetPrivateLeagueWeeklyLeaderboard],
       [Result_2],
       []
     ),
-    "getProfile": IDL.Func([], [Result_13], []),
-    "getRetiredPlayers": IDL.Func([ClubFilterDTO], [Result_12], ["query"]),
-    "getRewardPool": IDL.Func([GetRewardPoolDTO], [Result_11], []),
-    "getSeasonLeaderboard": IDL.Func(
+    "getProfile": IDL2.Func([], [Result_13], []),
+    "getRetiredPlayers": IDL2.Func([ClubFilterDTO], [Result_12], ["query"]),
+    "getRewardPool": IDL2.Func([GetRewardPoolDTO], [Result_11], []),
+    "getSeasonLeaderboard": IDL2.Func(
       [GetSeasonLeaderboardDTO],
       [Result_10],
       []
     ),
-    "getSeasons": IDL.Func([], [Result_9], ["query"]),
-    "getSystemLog": IDL.Func([GetSystemLogDTO], [Result_8], []),
-    "getSystemState": IDL.Func([], [Result_7], ["query"]),
-    "getTimers": IDL.Func([GetTimersDTO], [Result_6], []),
-    "getTokenList": IDL.Func([], [Result_5], []),
-    "getTopups": IDL.Func([GetTopupsDTO], [Result_4], []),
-    "getTotalManagers": IDL.Func([], [Result_3], ["query"]),
-    "getTreasuryAccountPublic": IDL.Func([], [AccountIdentifier__1], []),
-    "getWeeklyLeaderboard": IDL.Func(
+    "getSeasons": IDL2.Func([], [Result_9], ["query"]),
+    "getSystemLog": IDL2.Func([GetSystemLogDTO], [Result_8], []),
+    "getSystemState": IDL2.Func([], [Result_7], ["query"]),
+    "getTimers": IDL2.Func([GetTimersDTO], [Result_6], []),
+    "getTokenList": IDL2.Func([], [Result_5], []),
+    "getTopups": IDL2.Func([GetTopupsDTO], [Result_4], []),
+    "getTotalManagers": IDL2.Func([], [Result_3], ["query"]),
+    "getTreasuryAccountPublic": IDL2.Func([], [AccountIdentifier__1], []),
+    "getWeeklyLeaderboard": IDL2.Func(
       [GetWeeklyLeaderboardDTO],
       [Result_2],
       []
     ),
-    "inviteUserToLeague": IDL.Func([LeagueInviteDTO], [Result], []),
-    "isUsernameValid": IDL.Func([UsernameFilterDTO], [IDL.Bool], ["query"]),
-    "logStatus": IDL.Func([LogStatusDTO], [], []),
-    "payPrivateLeagueRewards": IDL.Func([PrivateLeagueRewardDTO], [], []),
-    "requestCanisterTopup": IDL.Func([IDL.Nat], [], []),
-    "saveFantasyTeam": IDL.Func([UpdateTeamSelectionDTO], [Result], []),
-    "searchUsername": IDL.Func([UsernameFilterDTO], [Result_1], []),
-    "setTimer": IDL.Func([IDL.Int, IDL.Text], [], []),
-    "updateFavouriteClub": IDL.Func([UpdateFavouriteClubDTO], [Result], []),
-    "updateLeagueBanner": IDL.Func([UpdateLeagueBannerDTO], [Result], []),
-    "updateLeagueName": IDL.Func([UpdateLeagueNameDTO], [Result], []),
-    "updateLeaguePicture": IDL.Func([UpdateLeaguePictureDTO], [Result], []),
-    "updateProfilePicture": IDL.Func([UpdateProfilePictureDTO], [Result], []),
-    "updateUsername": IDL.Func([UpdateUsernameDTO], [Result], []),
-    "validateAddInitialFixtures": IDL.Func(
+    "inviteUserToLeague": IDL2.Func([LeagueInviteDTO], [Result], []),
+    "isUsernameValid": IDL2.Func([UsernameFilterDTO], [IDL2.Bool], ["query"]),
+    "logStatus": IDL2.Func([LogStatusDTO], [], []),
+    "payPrivateLeagueRewards": IDL2.Func([PrivateLeagueRewardDTO], [], []),
+    "requestCanisterTopup": IDL2.Func([IDL2.Nat], [], []),
+    "saveFantasyTeam": IDL2.Func([UpdateTeamSelectionDTO], [Result], []),
+    "searchUsername": IDL2.Func([UsernameFilterDTO], [Result_1], []),
+    "setTimer": IDL2.Func([IDL2.Int, IDL2.Text], [], []),
+    "updateFavouriteClub": IDL2.Func([UpdateFavouriteClubDTO], [Result], []),
+    "updateLeagueBanner": IDL2.Func([UpdateLeagueBannerDTO], [Result], []),
+    "updateLeagueName": IDL2.Func([UpdateLeagueNameDTO], [Result], []),
+    "updateLeaguePicture": IDL2.Func([UpdateLeaguePictureDTO], [Result], []),
+    "updateProfilePicture": IDL2.Func([UpdateProfilePictureDTO], [Result], []),
+    "updateUsername": IDL2.Func([UpdateUsernameDTO], [Result], []),
+    "validateAddInitialFixtures": IDL2.Func(
       [AddInitialFixturesDTO],
       [RustResult],
       ["query"]
     ),
-    "validateAddNewToken": IDL.Func([NewTokenDTO], [RustResult], ["query"]),
-    "validateCreatePlayer": IDL.Func(
+    "validateAddNewToken": IDL2.Func([NewTokenDTO], [RustResult], ["query"]),
+    "validateCreatePlayer": IDL2.Func(
       [CreatePlayerDTO],
       [RustResult],
       ["query"]
     ),
-    "validateLoanPlayer": IDL.Func([LoanPlayerDTO], [RustResult], ["query"]),
-    "validateManageDAONeuron": IDL.Func([Command], [RustResult], ["query"]),
-    "validateMoveFixture": IDL.Func([MoveFixtureDTO], [RustResult], ["query"]),
-    "validatePostponeFixture": IDL.Func(
+    "validateLoanPlayer": IDL2.Func([LoanPlayerDTO], [RustResult], ["query"]),
+    "validateManageDAONeuron": IDL2.Func([Command], [RustResult], ["query"]),
+    "validateMoveFixture": IDL2.Func([MoveFixtureDTO], [RustResult], ["query"]),
+    "validatePostponeFixture": IDL2.Func(
       [PostponeFixtureDTO],
       [RustResult],
       ["query"]
     ),
-    "validatePromoteFormerClub": IDL.Func(
+    "validatePromoteFormerClub": IDL2.Func(
       [PromoteFormerClubDTO],
       [RustResult],
       ["query"]
     ),
-    "validatePromoteNewClub": IDL.Func(
+    "validatePromoteNewClub": IDL2.Func(
       [PromoteNewClubDTO],
       [RustResult],
       ["query"]
     ),
-    "validateRecallPlayer": IDL.Func(
+    "validateRecallPlayer": IDL2.Func(
       [RecallPlayerDTO],
       [RustResult],
       ["query"]
     ),
-    "validateRescheduleFixture": IDL.Func(
+    "validateRescheduleFixture": IDL2.Func(
       [RescheduleFixtureDTO],
       [RustResult],
       ["query"]
     ),
-    "validateRetirePlayer": IDL.Func(
+    "validateRetirePlayer": IDL2.Func(
       [RetirePlayerDTO],
       [RustResult],
       ["query"]
     ),
-    "validateRevaluePlayerDown": IDL.Func(
+    "validateRevaluePlayerDown": IDL2.Func(
       [RevaluePlayerDownDTO],
       [RustResult],
       ["query"]
     ),
-    "validateRevaluePlayerUp": IDL.Func(
+    "validateRevaluePlayerUp": IDL2.Func(
       [RevaluePlayerUpDTO],
       [RustResult],
       ["query"]
     ),
-    "validateSetPlayerInjury": IDL.Func(
+    "validateSetPlayerInjury": IDL2.Func(
       [SetPlayerInjuryDTO],
       [RustResult],
       ["query"]
     ),
-    "validateSubmitFixtureData": IDL.Func(
+    "validateSubmitFixtureData": IDL2.Func(
       [SubmitFixtureDataDTO],
       [RustResult],
       ["query"]
     ),
-    "validateTransferPlayer": IDL.Func(
+    "validateTransferPlayer": IDL2.Func(
       [TransferPlayerDTO],
       [RustResult],
       ["query"]
     ),
-    "validateUnretirePlayer": IDL.Func(
+    "validateUnretirePlayer": IDL2.Func(
       [UnretirePlayerDTO],
       [RustResult],
       ["query"]
     ),
-    "validateUpdateClub": IDL.Func([UpdateClubDTO], [RustResult], ["query"]),
-    "validateUpdatePlayer": IDL.Func(
+    "validateUpdateClub": IDL2.Func([UpdateClubDTO], [RustResult], ["query"]),
+    "validateUpdatePlayer": IDL2.Func(
       [UpdatePlayerDTO],
       [RustResult],
       ["query"]
     )
   });
 };
-var define_process_env_default$d = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai" };
+var define_process_env_default$d = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai" };
 const canisterId = define_process_env_default$d.CANISTER_ID_OPENFPL_BACKEND;
 const createActor = (canisterId2, options2 = {}) => {
   const agent = options2.agent || new HttpAgent({ ...options2.agentOptions });
@@ -4733,14 +4715,6 @@ const createActor = (canisterId2, options2 = {}) => {
       "Detected both agent and agentOptions passed to createActor. Ignoring agentOptions and proceeding with the provided agent."
     );
   }
-  {
-    agent.fetchRootKey().catch((err) => {
-      console.warn(
-        "Unable to fetch root key. Check to ensure that your local replica is running"
-      );
-      console.error(err);
-    });
-  }
   return Actor.createActor(idlFactory, {
     agent,
     canisterId: canisterId2,
@@ -4748,11 +4722,11 @@ const createActor = (canisterId2, options2 = {}) => {
   });
 };
 canisterId ? createActor(canisterId) : void 0;
-var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai" };
+var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai" };
 class ActorFactory {
   static createActor(idlFactory2, canisterId2 = "", identity = null, options2 = null) {
     const hostOptions = {
-      host: `http://localhost:8080/?canisterId=qhbym-qaaaa-aaaaa-aaafq-cai`,
+      host: `https://${canisterId2}.icp-api.io`,
       identity
     };
     if (!options2) {
@@ -4765,14 +4739,6 @@ class ActorFactory {
       options2.agentOptions.host = hostOptions.host;
     }
     const agent = new HttpAgent({ ...options2.agentOptions });
-    {
-      agent.fetchRootKey().catch((err) => {
-        console.warn(
-          "Unable to fetch root key. Ensure your local replica is running"
-        );
-        console.error(err);
-      });
-    }
     return Actor.createActor(idlFactory2, {
       agent,
       canisterId: canisterId2,
@@ -4781,7 +4747,7 @@ class ActorFactory {
   }
   static getAgent(canisterId2 = "", identity = null, options2 = null) {
     const hostOptions = {
-      host: `http://localhost:8080/?canisterId=b77ix-eeaaa-aaaaa-qaada-cai`,
+      host: `https://${canisterId2}.icp-api.io`,
       identity
     };
     if (!options2) {
@@ -4811,7 +4777,7 @@ class ActorFactory {
   static getGovernanceAgent(identity = null, options2 = null) {
     let canisterId2 = define_process_env_default$c.CANISTER_ID_SNS_GOVERNANCE;
     const hostOptions = {
-      host: `http://localhost:8080/?canisterId=${canisterId2}`,
+      host: `https://${canisterId2}.icp-api.io`,
       identity
     };
     if (!options2) {
@@ -4992,7 +4958,7 @@ function convertFixtureStatus(fixtureStatus) {
 function isError(response) {
   return response && response.err !== void 0;
 }
-var define_process_env_default$b = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai" };
+var define_process_env_default$b = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai" };
 function createSystemStore() {
   const { subscribe: subscribe2, set } = writable(null);
   let actor = ActorFactory.createActor(
@@ -5240,7 +5206,7 @@ function createSystemStore() {
   };
 }
 const systemStore = createSystemStore();
-var define_process_env_default$a = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai" };
+var define_process_env_default$a = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai" };
 function createFixtureStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let actor = ActorFactory.createActor(
@@ -5319,7 +5285,7 @@ function createFixtureStore() {
   };
 }
 const fixtureStore = createFixtureStore();
-var define_process_env_default$9 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai" };
+var define_process_env_default$9 = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai" };
 function createTeamStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let actor = ActorFactory.createActor(
@@ -5848,7 +5814,7 @@ const toastsError = ({
     level: "error"
   });
 };
-var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai" };
+var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai" };
 function createManagerStore() {
   const { subscribe: subscribe2, set } = writable(null);
   systemStore.subscribe((value) => {
@@ -6081,7 +6047,7 @@ function createManagerStore() {
   };
 }
 createManagerStore();
-var define_process_env_default$7 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai" };
+var define_process_env_default$7 = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai" };
 function createCountriesStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let actor = ActorFactory.createActor(
@@ -6128,7 +6094,7 @@ function createCountriesStore() {
   };
 }
 const countriesStore = createCountriesStore();
-var define_process_env_default$6 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai" };
+var define_process_env_default$6 = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai" };
 function createWeeklyLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage = 25;
@@ -6258,7 +6224,7 @@ function createWeeklyLeaderboardStore() {
   };
 }
 createWeeklyLeaderboardStore();
-var define_process_env_default$5 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai" };
+var define_process_env_default$5 = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai" };
 function createPlayerStore() {
   const { subscribe: subscribe2, set } = writable([]);
   systemStore.subscribe((value) => {
@@ -6339,7 +6305,7 @@ function createPlayerStore() {
   };
 }
 const playerStore = createPlayerStore();
-var define_process_env_default$4 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai" };
+var define_process_env_default$4 = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai" };
 function createPlayerEventsStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let systemState;
@@ -6701,7 +6667,7 @@ function createPlayerEventsStore() {
   };
 }
 createPlayerEventsStore();
-var define_process_env_default$3 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai" };
+var define_process_env_default$3 = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai" };
 function createUserStore() {
   const { subscribe: subscribe2, set } = writable(null);
   async function sync() {
@@ -6838,7 +6804,7 @@ function createUserStore() {
       let principalId = identity.getPrincipal();
       const agent = await createAgent({
         identity,
-        host: "http://localhost:8080/?canisterId=qhbym-qaaaa-aaaaa-aaafq-cai",
+        host: "https://identity.ic0.app",
         fetchRootKey: define_process_env_default$3.DFX_NETWORK === "local"
       });
       const { transfer } = IcrcLedgerCanister.create({
@@ -6878,12 +6844,12 @@ function createUserStore() {
     let principalId = identity.getPrincipal();
     const agent = await createAgent({
       identity,
-      host: "http://localhost:8080/?canisterId=qhbym-qaaaa-aaaaa-aaafq-cai",
+      host: "https://identity.ic0.app",
       fetchRootKey: define_process_env_default$3.DFX_NETWORK === "local"
     });
     const { balance } = IcrcLedgerCanister.create({
       agent,
-      canisterId: Principal.fromText("avqkn-guaaa-aaaaa-qaaea-cai")
+      canisterId: Principal.fromText("ddsp7-7iaaa-aaaaq-aacqq-cai")
     });
     if (principalId) {
       try {
@@ -7059,7 +7025,7 @@ const Local_spinner = create_ssr_component(($$result, $$props, $$bindings, slots
   $$result.css.add(css$2);
   return `<div class="local-spinner svelte-pvdm52"></div>`;
 });
-var define_process_env_default$2 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai" };
+var define_process_env_default$2 = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai" };
 function createMonthlyLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage = 25;
@@ -7072,7 +7038,7 @@ function createMonthlyLeaderboardStore() {
     idlFactory,
     define_process_env_default$2.OPENFPL_BACKEND_CANISTER_ID
   );
-  async function sync(seasonId, month) {
+  async function sync(seasonId, month, clubId) {
     let category2 = "monthly_leaderboards";
     const newHashValues = await actor.getDataHashes();
     let error = isError(newHashValues);
@@ -7084,34 +7050,39 @@ function createMonthlyLeaderboardStore() {
     let categoryHash = dataCacheValues.find((x) => x.category === category2) ?? null;
     const localHash = localStorage.getItem(`${category2}_hash`);
     if (categoryHash?.hash != localHash) {
+      const limit = itemsPerPage;
+      const offset = 0;
       let dto = {
         seasonId,
         month,
-        searchTerm: ""
+        searchTerm: "",
+        clubId,
+        offset: BigInt(offset),
+        limit: BigInt(limit)
       };
-      let result = await actor.getMonthlyLeaderboards(dto);
+      let result = await actor.getMonthlyLeaderboard(dto);
       if (isError(result)) {
-        console.error("Error syncing monthly leaderboards");
+        let emptyLeaderboard = {
+          entries: [],
+          month: 0,
+          seasonId: 0,
+          totalEntries: 0n
+        };
+        localStorage.setItem(
+          category2,
+          JSON.stringify(emptyLeaderboard, replacer)
+        );
+        localStorage.setItem(`${category2}_hash`, categoryHash?.hash ?? "");
+        console.error("error fetching leaderboard store");
         return;
       }
       let updatedLeaderboardData = result.ok;
       localStorage.setItem(
         category2,
-        JSON.stringify(updatedLeaderboardData, replacer)
+        JSON.stringify(updatedLeaderboardData.ok, replacer)
       );
       localStorage.setItem(`${category2}_hash`, categoryHash?.hash ?? "");
-      set(updatedLeaderboardData);
-    } else {
-      const cachedMonthlyLeaderboardsData = localStorage.getItem(category2);
-      let cachedMonthlyLeaderboards = [];
-      try {
-        cachedMonthlyLeaderboards = JSON.parse(
-          cachedMonthlyLeaderboardsData || "[]"
-        );
-      } catch (e) {
-        cachedMonthlyLeaderboards = [];
-      }
-      set(cachedMonthlyLeaderboards);
+      set(updatedLeaderboardData.ok);
     }
   }
   async function getMonthlyLeaderboard(seasonId, clubId, month, currentPage, searchTerm) {
@@ -7119,44 +7090,51 @@ function createMonthlyLeaderboardStore() {
     const offset = (currentPage - 1) * limit;
     if (currentPage <= 4 && month == systemState?.calculationMonth) {
       const cachedData = localStorage.getItem(category);
-      if (cachedData) {
-        let cachedLeaderboards = JSON.parse(cachedData);
-        let clubLeaderboard2 = cachedLeaderboards.find(
-          (x) => x.clubId === clubId
-        );
-        if (clubLeaderboard2) {
+      if (cachedData && cachedData != "undefined") {
+        let cachedMonthlyLeaderboard;
+        cachedMonthlyLeaderboard = JSON.parse(cachedData, replacer);
+        if (cachedMonthlyLeaderboard) {
           return {
-            ...clubLeaderboard2,
-            entries: clubLeaderboard2.entries.slice(offset, offset + limit)
+            ...cachedMonthlyLeaderboard,
+            entries: cachedMonthlyLeaderboard.entries.slice(
+              offset,
+              offset + limit
+            )
           };
         }
       }
     }
     let dto = {
+      offset: BigInt(offset),
       seasonId,
+      limit: BigInt(limit),
+      searchTerm,
       month,
-      searchTerm: ""
+      clubId
     };
     let result = await actor.getMonthlyLeaderboards(dto);
-    let emptyReturn = {
-      month: 0,
-      clubId: 0,
-      totalEntries: 0n,
-      seasonId: 0,
-      entries: []
-    };
     if (isError(result)) {
-      return emptyReturn;
+      let emptyLeaderboard = {
+        month: 0,
+        clubId: 0,
+        totalEntries: 0n,
+        seasonId: 0,
+        entries: []
+      };
+      localStorage.setItem(
+        category,
+        JSON.stringify(emptyLeaderboard, replacer)
+      );
+      return {
+        entries: [],
+        clubId: 0,
+        month: 0,
+        seasonId: 0,
+        totalEntries: 0n
+      };
     }
-    let leaderboardData = result.ok;
-    let clubLeaderboard = leaderboardData.find((x) => x.clubId === clubId);
-    if (!clubLeaderboard) {
-      return emptyReturn;
-    }
-    return {
-      ...clubLeaderboard,
-      entries: clubLeaderboard.entries.slice(offset, offset + limit)
-    };
+    localStorage.setItem(category, JSON.stringify(result.ok, replacer));
+    return result;
   }
   return {
     subscribe: subscribe2,
@@ -7165,7 +7143,7 @@ function createMonthlyLeaderboardStore() {
   };
 }
 createMonthlyLeaderboardStore();
-var define_process_env_default$1 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai" };
+var define_process_env_default$1 = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai" };
 function createSeasonLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage = 25;
@@ -7295,7 +7273,7 @@ const Page$g = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-var define_process_env_default = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", __CANDID_UI_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", NEURON_CONTROLLER_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai" };
+var define_process_env_default = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai" };
 function createGovernanceStore() {
   async function revaluePlayerUp(playerId) {
     try {
@@ -7308,54 +7286,13 @@ function createGovernanceStore() {
       var dto = {
         playerId
       };
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE ?? ""
-      );
-      const governanceAgent = ActorFactory.getAgent(
-        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE,
-        identityActor,
-        null
-      );
-      const {
-        manageNeuron: governanceManageNeuron,
-        listNeurons: governanceListNeurons
-      } = SnsGovernanceCanister.create({
-        agent: governanceAgent,
-        canisterId: identityActor
-      });
-      const userNeurons = await governanceListNeurons({
-        principal: identityActor.principal,
-        limit: 10,
-        beforeNeuronId: { id: [] }
-      });
-      if (userNeurons.length > 0) {
-        const jsonString = JSON.stringify(dto);
-        const encoder2 = new TextEncoder();
-        const payload = encoder2.encode(jsonString);
-        const fn = {
-          function_id: 1000n,
-          payload
-        };
-        let player = allPlayers.find((x) => x.id == playerId);
-        if (player) {
-          const command = {
-            MakeProposal: {
-              title: `Revalue ${player.lastName} value up.`,
-              url: "openfpl.xyz/governance",
-              summary: `Revalue ${player.lastName} value up from £${(player.valueQuarterMillions / 4).toFixed(2).toLocaleString()}m -> £${((player.valueQuarterMillions + 1) / 4).toFixed(2).toLocaleString()}m).`,
-              action: [{ ExecuteGenericNervousSystemFunction: fn }]
-            }
-          };
-          const neuronId = userNeurons[0].id[0];
-          if (!neuronId) {
-            return;
-          }
-          await governanceManageNeuron({
-            subaccount: neuronId.id,
-            command: [command]
-          });
-        }
+      let player = allPlayers.find((x) => x.id == playerId);
+      if (player) {
+        let title = `Revalue ${player.lastName} value up.`;
+        let summary = `Revalue ${player.lastName} value up from £${(player.valueQuarterMillions / 4).toFixed(2).toLocaleString()}m -> £${((player.valueQuarterMillions + 1) / 4).toFixed(2).toLocaleString()}m).`;
+        await executeProposal(dto, title, summary, 1000n, [
+          IDL.Record({ playerId: IDL.Nat16 })
+        ]);
       }
     } catch (error) {
       console.error("Error revaluing player up:", error);
@@ -7373,54 +7310,13 @@ function createGovernanceStore() {
       var dto = {
         playerId
       };
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE ?? ""
-      );
-      const governanceAgent = ActorFactory.getAgent(
-        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE,
-        identityActor,
-        null
-      );
-      const {
-        manageNeuron: governanceManageNeuron,
-        listNeurons: governanceListNeurons
-      } = SnsGovernanceCanister.create({
-        agent: governanceAgent,
-        canisterId: identityActor
-      });
-      const userNeurons = await governanceListNeurons({
-        principal: identityActor.principal,
-        limit: 10,
-        beforeNeuronId: { id: [] }
-      });
-      if (userNeurons.length > 0) {
-        const jsonString = JSON.stringify(dto);
-        const encoder2 = new TextEncoder();
-        const payload = encoder2.encode(jsonString);
-        const fn = {
-          function_id: 2000n,
-          payload
-        };
-        let player = allPlayers.find((x) => x.id == playerId);
-        if (player) {
-          const command = {
-            MakeProposal: {
-              title: `Revalue ${player.lastName} value down.`,
-              url: "openfpl.xyz/governance",
-              summary: `Revalue ${player.lastName} value down from £${(player.valueQuarterMillions / 4).toFixed(2).toLocaleString()}m -> £${((player.valueQuarterMillions - 1) / 4).toFixed(2).toLocaleString()}m).`,
-              action: [{ ExecuteGenericNervousSystemFunction: fn }]
-            }
-          };
-          const neuronId = userNeurons[0].id[0];
-          if (!neuronId) {
-            return;
-          }
-          await governanceManageNeuron({
-            subaccount: neuronId.id,
-            command: [command]
-          });
-        }
+      let player = allPlayers.find((x) => x.id == playerId);
+      if (player) {
+        let title = `Revalue ${player.lastName} value down.`;
+        let summary = `Revalue ${player.lastName} value down from £${(player.valueQuarterMillions / 4).toFixed(2).toLocaleString()}m -> £${((player.valueQuarterMillions - 1) / 4).toFixed(2).toLocaleString()}m).`;
+        await executeProposal(dto, title, summary, 2000n, [
+          IDL.Record({ playerId: IDL.Nat16 })
+        ]);
       }
     } catch (error) {
       console.error("Error revaluing player down:", error);
@@ -7449,59 +7345,44 @@ function createGovernanceStore() {
         fixtureId,
         playerEventData
       };
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE ?? ""
-      );
-      const governanceAgent = ActorFactory.getAgent(
-        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE,
-        identityActor,
-        null
-      );
-      const {
-        manageNeuron: governanceManageNeuron,
-        listNeurons: governanceListNeurons
-      } = SnsGovernanceCanister.create({
-        agent: governanceAgent,
-        canisterId: identityActor
-      });
-      const userNeurons = await governanceListNeurons({
-        principal: identityActor.principal,
-        limit: 10,
-        beforeNeuronId: { id: [] }
-      });
-      if (userNeurons.length > 0) {
-        const jsonString = JSON.stringify(dto);
-        const encoder2 = new TextEncoder();
-        const payload = encoder2.encode(jsonString);
-        const fn = {
-          function_id: 3000n,
-          payload
-        };
-        let fixture = allFixtures.find((x) => x.id == fixtureId);
-        if (fixture) {
-          let homeClub = clubs.find((x) => x.id == fixture?.homeClubId);
-          let awayClub = clubs.find((x) => x.id == fixture?.awayClubId);
-          if (!homeClub || !awayClub) {
-            return;
-          }
-          const command = {
-            MakeProposal: {
-              title: `Fixture Data for ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`,
-              url: "openfpl.xyz/governance",
-              summary: `Fixture Data for ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`,
-              action: [{ ExecuteGenericNervousSystemFunction: fn }]
-            }
-          };
-          const neuronId = userNeurons[0].id[0];
-          if (!neuronId) {
-            return;
-          }
-          await governanceManageNeuron({
-            subaccount: neuronId.id,
-            command: [command]
-          });
+      let fixture = allFixtures.find((x) => x.id == fixtureId);
+      if (fixture) {
+        let homeClub = clubs.find((x) => x.id == fixture?.homeClubId);
+        let awayClub = clubs.find((x) => x.id == fixture?.awayClubId);
+        if (!homeClub || !awayClub) {
+          return;
         }
+        let title = `Fixture Data for ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`;
+        let summary = `Fixture Data for ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`;
+        await executeProposal(dto, title, summary, 3000n, [
+          IDL.Record({
+            fixtureId: IDL.Nat32,
+            seasonId: IDL.Nat16,
+            gameweek: IDL.Nat8,
+            playerEventData: IDL.Vec(
+              IDL.Record({
+                fixtureId: IDL.Nat32,
+                clubId: IDL.Nat16,
+                playerId: IDL.Nat16,
+                eventStartMinute: IDL.Nat8,
+                eventEndMinute: IDL.Nat8,
+                eventType: IDL.Variant({
+                  Goal: IDL.Null,
+                  GoalConceded: IDL.Null,
+                  Appearance: IDL.Null,
+                  PenaltySaved: IDL.Null,
+                  RedCard: IDL.Null,
+                  KeeperSave: IDL.Null,
+                  CleanSheet: IDL.Null,
+                  YellowCard: IDL.Null,
+                  GoalAssisted: IDL.Null,
+                  OwnGoal: IDL.Null,
+                  HighestScoringPlayer: IDL.Null
+                })
+              })
+            )
+          })
+        ]);
       }
     } catch (error) {
       console.error("Error submitting fixture data:", error);
@@ -7522,52 +7403,54 @@ function createGovernanceStore() {
         seasonId,
         seasonFixtures
       };
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE ?? ""
-      );
-      const governanceAgent = ActorFactory.getAgent(
-        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE,
-        identityActor,
-        null
-      );
-      const {
-        manageNeuron: governanceManageNeuron,
-        listNeurons: governanceListNeurons
-      } = SnsGovernanceCanister.create({
-        agent: governanceAgent,
-        canisterId: identityActor
-      });
-      const userNeurons = await governanceListNeurons({
-        principal: identityActor.principal,
-        limit: 10,
-        beforeNeuronId: { id: [] }
-      });
-      if (userNeurons.length > 0) {
-        const jsonString = JSON.stringify(dto);
-        const encoder2 = new TextEncoder();
-        const payload = encoder2.encode(jsonString);
-        const fn = {
-          function_id: 4000n,
-          payload
-        };
-        const command = {
-          MakeProposal: {
-            title: `Add initial fixtures for season ${seasonName}.`,
-            url: "openfpl.xyz/governance",
-            summary: `Add initial fixtures for season ${seasonName}.`,
-            action: [{ ExecuteGenericNervousSystemFunction: fn }]
-          }
-        };
-        const neuronId = userNeurons[0].id[0];
-        if (!neuronId) {
-          return;
-        }
-        await governanceManageNeuron({
-          subaccount: neuronId.id,
-          command: [command]
-        });
-      }
+      let title = `Add initial fixtures for season ${seasonName}`;
+      let summary = `Add initial fixtures for season ${seasonName}`;
+      await executeProposal(dto, title, summary, 4000n, [
+        IDL.Record({
+          seasonId: IDL.Nat16,
+          seasonFixtures: IDL.Vec(
+            IDL.Record({
+              id: IDL.Nat32,
+              status: IDL.Variant({
+                Unplayed: IDL.Null,
+                Finalised: IDL.Null,
+                Active: IDL.Null,
+                Complete: IDL.Null
+              }),
+              highestScoringPlayerId: IDL.Nat16,
+              seasonId: IDL.Nat16,
+              awayClubId: IDL.Nat16,
+              events: IDL.Vec(
+                IDL.Record({
+                  fixtureId: IDL.Nat32,
+                  clubId: IDL.Nat16,
+                  playerId: IDL.Nat16,
+                  eventStartMinute: IDL.Nat8,
+                  eventEndMinute: IDL.Nat8,
+                  eventType: IDL.Variant({
+                    Goal: IDL.Null,
+                    GoalConceded: IDL.Null,
+                    Appearance: IDL.Null,
+                    PenaltySaved: IDL.Null,
+                    RedCard: IDL.Null,
+                    KeeperSave: IDL.Null,
+                    CleanSheet: IDL.Null,
+                    YellowCard: IDL.Null,
+                    GoalAssisted: IDL.Null,
+                    OwnGoal: IDL.Null,
+                    HighestScoringPlayer: IDL.Null
+                  })
+                })
+              )
+            })
+          ),
+          homeClubId: IDL.Nat16,
+          kickOff: IDL.Int,
+          homeGoals: IDL.Nat8,
+          gameweek: IDL.Nat8,
+          awayGoals: IDL.Nat8
+        })
+      ]);
     } catch (error) {
       console.error("Error adding initial fixtures:", error);
       throw error;
@@ -7604,59 +7487,22 @@ function createGovernanceStore() {
         updatedFixtureGameweek,
         updatedFixtureDate: nanoseconds
       };
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE ?? ""
-      );
-      const governanceAgent = ActorFactory.getAgent(
-        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE,
-        identityActor,
-        null
-      );
-      const {
-        manageNeuron: governanceManageNeuron,
-        listNeurons: governanceListNeurons
-      } = SnsGovernanceCanister.create({
-        agent: governanceAgent,
-        canisterId: identityActor
-      });
-      const userNeurons = await governanceListNeurons({
-        principal: identityActor.principal,
-        limit: 10,
-        beforeNeuronId: { id: [] }
-      });
-      if (userNeurons.length > 0) {
-        const jsonString = JSON.stringify(dto);
-        const encoder2 = new TextEncoder();
-        const payload = encoder2.encode(jsonString);
-        const fn = {
-          function_id: 5000n,
-          payload
-        };
-        let fixture = allFixtures.find((x) => x.id == fixtureId);
-        if (fixture) {
-          let homeClub = clubs.find((x) => x.id == fixture?.homeClubId);
-          let awayClub = clubs.find((x) => x.id == fixture?.awayClubId);
-          if (!homeClub || !awayClub) {
-            return;
-          }
-          const command = {
-            MakeProposal: {
-              title: `Move fixture ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`,
-              url: "openfpl.xyz/governance",
-              summary: `Fixture Data for ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`,
-              action: [{ ExecuteGenericNervousSystemFunction: fn }]
-            }
-          };
-          const neuronId = userNeurons[0].id[0];
-          if (!neuronId) {
-            return;
-          }
-          await governanceManageNeuron({
-            subaccount: neuronId.id,
-            command: [command]
-          });
+      let fixture = allFixtures.find((x) => x.id == fixtureId);
+      if (fixture) {
+        let homeClub = clubs.find((x) => x.id == fixture?.homeClubId);
+        let awayClub = clubs.find((x) => x.id == fixture?.awayClubId);
+        if (!homeClub || !awayClub) {
+          return;
         }
+        let title = `Move fixture ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`;
+        let summary = `Move fixture ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`;
+        await executeProposal(dto, title, summary, 5000n, [
+          IDL.Record({
+            fixtureId: IDL.Nat32,
+            updatedFixtureGameweek: IDL.Nat8,
+            updatedFixtureDate: IDL.Int
+          })
+        ]);
       }
     } catch (error) {
       console.error("Error moving fixture:", error);
@@ -7689,59 +7535,18 @@ function createGovernanceStore() {
       let dto = {
         fixtureId
       };
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE ?? ""
-      );
-      const governanceAgent = ActorFactory.getAgent(
-        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE,
-        identityActor,
-        null
-      );
-      const {
-        manageNeuron: governanceManageNeuron,
-        listNeurons: governanceListNeurons
-      } = SnsGovernanceCanister.create({
-        agent: governanceAgent,
-        canisterId: identityActor
-      });
-      const userNeurons = await governanceListNeurons({
-        principal: identityActor.principal,
-        limit: 10,
-        beforeNeuronId: { id: [] }
-      });
-      if (userNeurons.length > 0) {
-        const jsonString = JSON.stringify(dto);
-        const encoder2 = new TextEncoder();
-        const payload = encoder2.encode(jsonString);
-        const fn = {
-          function_id: 6000n,
-          payload
-        };
-        let fixture = allFixtures.find((x) => x.id == fixtureId);
-        if (fixture) {
-          let homeClub = clubs.find((x) => x.id == fixture?.homeClubId);
-          let awayClub = clubs.find((x) => x.id == fixture?.awayClubId);
-          if (!homeClub || !awayClub) {
-            return;
-          }
-          const command = {
-            MakeProposal: {
-              title: `Postpone fixture ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`,
-              url: "openfpl.xyz/governance",
-              summary: `Fixture Data for ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`,
-              action: [{ ExecuteGenericNervousSystemFunction: fn }]
-            }
-          };
-          const neuronId = userNeurons[0].id[0];
-          if (!neuronId) {
-            return;
-          }
-          await governanceManageNeuron({
-            subaccount: neuronId.id,
-            command: [command]
-          });
+      let fixture = allFixtures.find((x) => x.id == fixtureId);
+      if (fixture) {
+        let homeClub = clubs.find((x) => x.id == fixture?.homeClubId);
+        let awayClub = clubs.find((x) => x.id == fixture?.awayClubId);
+        if (!homeClub || !awayClub) {
+          return;
         }
+        let title = `Postpone fixture ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`;
+        let summary = `Postpone fixture for ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`;
+        await executeProposal(dto, title, summary, 6000n, [
+          IDL.Record({ fixtureId: IDL.Nat32 })
+        ]);
       }
     } catch (error) {
       console.error("Error postponing fixture:", error);
@@ -7779,59 +7584,22 @@ function createGovernanceStore() {
         updatedFixtureGameweek,
         updatedFixtureDate: nanoseconds
       };
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE ?? ""
-      );
-      const governanceAgent = ActorFactory.getAgent(
-        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE,
-        identityActor,
-        null
-      );
-      const {
-        manageNeuron: governanceManageNeuron,
-        listNeurons: governanceListNeurons
-      } = SnsGovernanceCanister.create({
-        agent: governanceAgent,
-        canisterId: identityActor
-      });
-      const userNeurons = await governanceListNeurons({
-        principal: identityActor.principal,
-        limit: 10,
-        beforeNeuronId: { id: [] }
-      });
-      if (userNeurons.length > 0) {
-        const jsonString = JSON.stringify(dto);
-        const encoder2 = new TextEncoder();
-        const payload = encoder2.encode(jsonString);
-        const fn = {
-          function_id: 7000n,
-          payload
-        };
-        let fixture = allFixtures.find((x) => x.id == fixtureId);
-        if (fixture) {
-          let homeClub = clubs.find((x) => x.id == fixture?.homeClubId);
-          let awayClub = clubs.find((x) => x.id == fixture?.awayClubId);
-          if (!homeClub || !awayClub) {
-            return;
-          }
-          const command = {
-            MakeProposal: {
-              title: `Move fixture ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`,
-              url: "openfpl.xyz/governance",
-              summary: `Fixture Data for ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`,
-              action: [{ ExecuteGenericNervousSystemFunction: fn }]
-            }
-          };
-          const neuronId = userNeurons[0].id[0];
-          if (!neuronId) {
-            return;
-          }
-          await governanceManageNeuron({
-            subaccount: neuronId.id,
-            command: [command]
-          });
+      let fixture = allFixtures.find((x) => x.id == fixtureId);
+      if (fixture) {
+        let homeClub = clubs.find((x) => x.id == fixture?.homeClubId);
+        let awayClub = clubs.find((x) => x.id == fixture?.awayClubId);
+        if (!homeClub || !awayClub) {
+          return;
         }
+        let title = `Move fixture ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`;
+        let summary = `Move fixture ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`;
+        await executeProposal(dto, title, summary, 7000n, [
+          IDL.Record({
+            postponedFixtureId: IDL.Nat32,
+            updatedFixtureGameweek: IDL.Nat8,
+            updatedFixtureDate: IDL.Int
+          })
+        ]);
       }
     } catch (error) {
       console.error("Error rescheduling fixture:", error);
@@ -7855,72 +7623,30 @@ function createGovernanceStore() {
           allPlayers = players;
         }
       });
-      unsubscribeTeamStore();
+      unsubscribePlayerStore();
       let dto = {
         playerId,
         newClubId
       };
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE ?? ""
-      );
-      const governanceAgent = ActorFactory.getAgent(
-        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE,
-        identityActor,
-        null
-      );
-      const {
-        manageNeuron: governanceManageNeuron,
-        listNeurons: governanceListNeurons
-      } = SnsGovernanceCanister.create({
-        agent: governanceAgent,
-        canisterId: identityActor
-      });
-      const userNeurons = await governanceListNeurons({
-        principal: identityActor.principal,
-        limit: 10,
-        beforeNeuronId: { id: [] }
-      });
-      if (userNeurons.length > 0) {
-        const jsonString = JSON.stringify(dto);
-        const encoder2 = new TextEncoder();
-        const payload = encoder2.encode(jsonString);
-        const fn = {
-          function_id: 8000n,
-          payload
-        };
-        let player = allPlayers.find((x) => x.id == playerId);
-        if (player) {
-          let currentClub = clubs.find((x) => x.id == player?.clubId);
-          let newClub = clubs.find((x) => x.id == newClubId);
-          if (!currentClub) {
-            return;
-          }
-          let title = "";
-          if (newClubId == 0) {
-            title = `Transfer ${player.firstName} ${player.lastName} outside of Premier League.`;
-          }
-          if (newClub) {
-            title = `Transfer ${player.firstName} ${player.lastName} to ${newClub.friendlyName}`;
-          }
-          const command = {
-            MakeProposal: {
-              title,
-              url: "openfpl.xyz/governance",
-              summary: title,
-              action: [{ ExecuteGenericNervousSystemFunction: fn }]
-            }
-          };
-          const neuronId = userNeurons[0].id[0];
-          if (!neuronId) {
-            return;
-          }
-          await governanceManageNeuron({
-            subaccount: neuronId.id,
-            command: [command]
-          });
+      let title = "";
+      let player = allPlayers.find((x) => x.id == playerId);
+      if (player) {
+        let currentClub = clubs.find((x) => x.id == player?.clubId);
+        let newClub = clubs.find((x) => x.id == newClubId);
+        if (!currentClub) {
+          return;
+        }
+        if (newClubId == 0) {
+          title = `Transfer ${player.firstName} ${player.lastName} outside of Premier League.`;
+        }
+        if (newClub) {
+          title = `Transfer ${player.firstName} ${player.lastName} to ${newClub.friendlyName}`;
         }
       }
+      let summary = title;
+      await executeProposal(dto, title, summary, 8000n, [
+        IDL.Record({ playerId: IDL.Nat16, newClubId: IDL.Nat16 })
+      ]);
     } catch (error) {
       console.error("Error transferring player:", error);
       throw error;
@@ -7952,58 +7678,21 @@ function createGovernanceStore() {
         loanClubId,
         loanEndDate: nanoseconds
       };
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE ?? ""
-      );
-      const governanceAgent = ActorFactory.getAgent(
-        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE,
-        identityActor,
-        null
-      );
-      const {
-        manageNeuron: governanceManageNeuron,
-        listNeurons: governanceListNeurons
-      } = SnsGovernanceCanister.create({
-        agent: governanceAgent,
-        canisterId: identityActor
-      });
-      const userNeurons = await governanceListNeurons({
-        principal: identityActor.principal,
-        limit: 10,
-        beforeNeuronId: { id: [] }
-      });
-      if (userNeurons.length > 0) {
-        const jsonString = JSON.stringify(dto);
-        const encoder2 = new TextEncoder();
-        const payload = encoder2.encode(jsonString);
-        const fn = {
-          function_id: 9000n,
-          payload
-        };
-        let player = allPlayers.find((x) => x.id == playerId);
-        if (player) {
-          let club = clubs.find((x) => x.id == player?.clubId);
-          if (!club) {
-            return;
-          }
-          const command = {
-            MakeProposal: {
-              title: `Loan ${player.firstName} to ${club?.friendlyName}.`,
-              url: "openfpl.xyz/governance",
-              summary: `Loan ${player.firstName} to ${club?.friendlyName}.`,
-              action: [{ ExecuteGenericNervousSystemFunction: fn }]
-            }
-          };
-          const neuronId = userNeurons[0].id[0];
-          if (!neuronId) {
-            return;
-          }
-          await governanceManageNeuron({
-            subaccount: neuronId.id,
-            command: [command]
-          });
+      let player = allPlayers.find((x) => x.id == playerId);
+      if (player) {
+        let club = clubs.find((x) => x.id == player?.clubId);
+        if (!club) {
+          return;
         }
+        let title = `Loan ${player.firstName} to ${club?.friendlyName}.`;
+        let summary = `Loan ${player.firstName} to ${club?.friendlyName}.`;
+        await executeProposal(dto, title, summary, 9000n, [
+          IDL.Record({
+            playerId: IDL.Nat16,
+            loanClubId: IDL.Nat16,
+            loanEndDate: IDL.Int
+          })
+        ]);
       }
     } catch (error) {
       console.error("Error loaning player:", error);
@@ -8031,58 +7720,17 @@ function createGovernanceStore() {
       let dto = {
         playerId
       };
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE ?? ""
-      );
-      const governanceAgent = ActorFactory.getAgent(
-        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE,
-        identityActor,
-        null
-      );
-      const {
-        manageNeuron: governanceManageNeuron,
-        listNeurons: governanceListNeurons
-      } = SnsGovernanceCanister.create({
-        agent: governanceAgent,
-        canisterId: identityActor
-      });
-      const userNeurons = await governanceListNeurons({
-        principal: identityActor.principal,
-        limit: 10,
-        beforeNeuronId: { id: [] }
-      });
-      if (userNeurons.length > 0) {
-        const jsonString = JSON.stringify(dto);
-        const encoder2 = new TextEncoder();
-        const payload = encoder2.encode(jsonString);
-        const fn = {
-          function_id: 10000n,
-          payload
-        };
-        let player = allPlayers.find((x) => x.id == playerId);
-        if (player) {
-          let club = clubs.find((x) => x.id == player?.clubId);
-          if (!club) {
-            return;
-          }
-          const command = {
-            MakeProposal: {
-              title: `Recall ${player.firstName} ${player?.lastName} loan.`,
-              url: "openfpl.xyz/governance",
-              summary: `Recall ${player.firstName} ${player?.lastName} loan.`,
-              action: [{ ExecuteGenericNervousSystemFunction: fn }]
-            }
-          };
-          const neuronId = userNeurons[0].id[0];
-          if (!neuronId) {
-            return;
-          }
-          await governanceManageNeuron({
-            subaccount: neuronId.id,
-            command: [command]
-          });
+      let player = allPlayers.find((x) => x.id == playerId);
+      if (player) {
+        let club = clubs.find((x) => x.id == player?.clubId);
+        if (!club) {
+          return;
         }
+        let title = `Recall ${player.firstName} ${player?.lastName} loan.`;
+        let summary = `Recall ${player.firstName} ${player?.lastName} loan.`;
+        await executeProposal(dto, title, summary, 10000n, [
+          IDL.Record({ playerId: IDL.Nat16 })
+        ]);
       }
     } catch (error) {
       console.error("Error recalling player loan:", error);
@@ -8113,56 +7761,29 @@ function createGovernanceStore() {
         dateOfBirth: nanoseconds,
         nationality
       };
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE ?? ""
-      );
-      const governanceAgent = ActorFactory.getAgent(
-        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE,
-        identityActor,
-        null
-      );
-      const {
-        manageNeuron: governanceManageNeuron,
-        listNeurons: governanceListNeurons
-      } = SnsGovernanceCanister.create({
-        agent: governanceAgent,
-        canisterId: identityActor
-      });
-      const userNeurons = await governanceListNeurons({
-        principal: identityActor.principal,
-        limit: 10,
-        beforeNeuronId: { id: [] }
-      });
-      if (userNeurons.length > 0) {
-        const jsonString = JSON.stringify(dto);
-        const encoder2 = new TextEncoder();
-        const payload = encoder2.encode(jsonString);
-        const fn = {
-          function_id: 11000n,
-          payload
-        };
-        let club = clubs.find((x) => x.id == clubId);
-        if (!club) {
-          return;
-        }
-        const command = {
-          MakeProposal: {
-            title: `Create New Player: ${firstName} v ${lastName}.`,
-            url: "openfpl.xyz/governance",
-            summary: `Create New Player: ${firstName} v ${lastName}.`,
-            action: [{ ExecuteGenericNervousSystemFunction: fn }]
-          }
-        };
-        const neuronId = userNeurons[0].id[0];
-        if (!neuronId) {
-          return;
-        }
-        await governanceManageNeuron({
-          subaccount: neuronId.id,
-          command: [command]
-        });
+      let club = clubs.find((x) => x.id == clubId);
+      if (!club) {
+        return;
       }
+      let title = `Create New Player: ${firstName} ${lastName}.`;
+      let summary = `Create New Player: ${firstName} ${lastName}.`;
+      await executeProposal(dto, title, summary, 11000n, [
+        IDL.Record({
+          clubId: IDL.Nat16,
+          valueQuarterMillions: IDL.Nat16,
+          dateOfBirth: IDL.Int,
+          nationality: IDL.Nat16,
+          shirtNumber: IDL.Nat8,
+          position: IDL.Variant({
+            Goalkeeper: IDL.Null,
+            Defender: IDL.Null,
+            Midfielder: IDL.Null,
+            Forward: IDL.Null
+          }),
+          lastName: IDL.Text,
+          firstName: IDL.Text
+        })
+      ]);
     } catch (error) {
       console.error("Error creating player:", error);
       throw error;
@@ -8186,67 +7807,39 @@ function createGovernanceStore() {
         }
       });
       unsubscribePlayerStore();
-      let dto = {
-        playerId,
-        position,
-        firstName,
-        lastName,
-        shirtNumber,
-        dateOfBirth: BigInt(dateOfBirth),
-        nationality
-      };
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE ?? ""
-      );
-      const governanceAgent = ActorFactory.getAgent(
-        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE,
-        identityActor,
-        null
-      );
-      const {
-        manageNeuron: governanceManageNeuron,
-        listNeurons: governanceListNeurons
-      } = SnsGovernanceCanister.create({
-        agent: governanceAgent,
-        canisterId: identityActor
-      });
-      const userNeurons = await governanceListNeurons({
-        principal: identityActor.principal,
-        limit: 10,
-        beforeNeuronId: { id: [] }
-      });
-      if (userNeurons.length > 0) {
-        const jsonString = JSON.stringify(dto);
-        const encoder2 = new TextEncoder();
-        const payload = encoder2.encode(jsonString);
-        const fn = {
-          function_id: 12000n,
-          payload
-        };
-        let player = allPlayers.find((x) => x.id == playerId);
-        if (player) {
-          let club = clubs.find((x) => x.id == player?.clubId);
-          if (!club) {
-            return;
-          }
-          const command = {
-            MakeProposal: {
-              title: `Update ${player.firstName} ${player.lastName} details.`,
-              url: "openfpl.xyz/governance",
-              summary: `Update ${player.firstName} ${player.lastName} details.`,
-              action: [{ ExecuteGenericNervousSystemFunction: fn }]
-            }
-          };
-          const neuronId = userNeurons[0].id[0];
-          if (!neuronId) {
-            return;
-          }
-          await governanceManageNeuron({
-            subaccount: neuronId.id,
-            command: [command]
-          });
+      let player = allPlayers.find((x) => x.id == playerId);
+      if (player) {
+        let club = clubs.find((x) => x.id == player?.clubId);
+        if (!club) {
+          return;
         }
+        let dto = {
+          dateOfBirth,
+          playerId,
+          nationality,
+          shirtNumber,
+          position,
+          lastName,
+          firstName
+        };
+        let title = `Update ${player.firstName} ${player.lastName} details.`;
+        let summary = `Update ${player.firstName} ${player.lastName} details.`;
+        await executeProposal(dto, title, summary, 12000n, [
+          IDL.Record({
+            dateOfBirth: IDL.Int,
+            playerId: IDL.Nat16,
+            nationality: IDL.Nat16,
+            shirtNumber: IDL.Nat8,
+            position: IDL.Variant({
+              Goalkeeper: IDL.Null,
+              Defender: IDL.Null,
+              Midfielder: IDL.Null,
+              Forward: IDL.Null
+            }),
+            lastName: IDL.Text,
+            firstName: IDL.Text
+          })
+        ]);
       }
     } catch (error) {
       console.error("Error updating player:", error);
@@ -8279,58 +7872,21 @@ function createGovernanceStore() {
         description,
         expectedEndDate: nanoseconds
       };
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE ?? ""
-      );
-      const governanceAgent = ActorFactory.getAgent(
-        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE,
-        identityActor,
-        null
-      );
-      const {
-        manageNeuron: governanceManageNeuron,
-        listNeurons: governanceListNeurons
-      } = SnsGovernanceCanister.create({
-        agent: governanceAgent,
-        canisterId: identityActor
-      });
-      const userNeurons = await governanceListNeurons({
-        principal: identityActor.principal,
-        limit: 10,
-        beforeNeuronId: { id: [] }
-      });
-      if (userNeurons.length > 0) {
-        const jsonString = JSON.stringify(dto);
-        const encoder2 = new TextEncoder();
-        const payload = encoder2.encode(jsonString);
-        const fn = {
-          function_id: 13000n,
-          payload
-        };
-        let player = allPlayers.find((x) => x.id == playerId);
-        if (player) {
-          let club = clubs.find((x) => x.id == player?.clubId);
-          if (!club) {
-            return;
-          }
-          const command = {
-            MakeProposal: {
-              title: `Set Player Injury for ${player.firstName} ${player.lastName}.`,
-              url: "openfpl.xyz/governance",
-              summary: `Set Player Injury for ${player.firstName} ${player.lastName}.`,
-              action: [{ ExecuteGenericNervousSystemFunction: fn }]
-            }
-          };
-          const neuronId = userNeurons[0].id[0];
-          if (!neuronId) {
-            return;
-          }
-          await governanceManageNeuron({
-            subaccount: neuronId.id,
-            command: [command]
-          });
+      let player = allPlayers.find((x) => x.id == playerId);
+      if (player) {
+        let club = clubs.find((x) => x.id == player?.clubId);
+        if (!club) {
+          return;
         }
+        let title = `Set Player Injury for ${player.firstName} ${player.lastName}.`;
+        let summary = `Set Player Injury for ${player.firstName} ${player.lastName}.`;
+        await executeProposal(dto, title, summary, 13000n, [
+          IDL.Record({
+            playerId: IDL.Nat16,
+            description: IDL.Text,
+            expectedEndDate: IDL.Int
+          })
+        ]);
       }
     } catch (error) {
       console.error("Error setting player injury:", error);
@@ -8362,58 +7918,17 @@ function createGovernanceStore() {
         playerId,
         retirementDate: nanoseconds
       };
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE ?? ""
-      );
-      const governanceAgent = ActorFactory.getAgent(
-        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE,
-        identityActor,
-        null
-      );
-      const {
-        manageNeuron: governanceManageNeuron,
-        listNeurons: governanceListNeurons
-      } = SnsGovernanceCanister.create({
-        agent: governanceAgent,
-        canisterId: identityActor
-      });
-      const userNeurons = await governanceListNeurons({
-        principal: identityActor.principal,
-        limit: 10,
-        beforeNeuronId: { id: [] }
-      });
-      if (userNeurons.length > 0) {
-        const jsonString = JSON.stringify(dto);
-        const encoder2 = new TextEncoder();
-        const payload = encoder2.encode(jsonString);
-        const fn = {
-          function_id: 14000n,
-          payload
-        };
-        let player = allPlayers.find((x) => x.id == playerId);
-        if (player) {
-          let club = clubs.find((x) => x.id == player?.clubId);
-          if (!club) {
-            return;
-          }
-          const command = {
-            MakeProposal: {
-              title: `Retire ${player.firstName} ${player.lastName}.`,
-              url: "openfpl.xyz/governance",
-              summary: `Retire ${player.firstName} ${player.lastName}.`,
-              action: [{ ExecuteGenericNervousSystemFunction: fn }]
-            }
-          };
-          const neuronId = userNeurons[0].id[0];
-          if (!neuronId) {
-            return;
-          }
-          await governanceManageNeuron({
-            subaccount: neuronId.id,
-            command: [command]
-          });
+      let player = allPlayers.find((x) => x.id == playerId);
+      if (player) {
+        let club = clubs.find((x) => x.id == player?.clubId);
+        if (!club) {
+          return;
         }
+        let title = `Retire ${player.firstName} ${player.lastName}.`;
+        let summary = `Retire ${player.firstName} ${player.lastName}.`;
+        await executeProposal(dto, title, summary, 14000n, [
+          IDL.Record({ playerId: IDL.Nat16, retirementDate: IDL.Int })
+        ]);
       }
     } catch (error) {
       console.error("Error retiring player:", error);
@@ -8441,58 +7956,17 @@ function createGovernanceStore() {
       let dto = {
         playerId
       };
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE ?? ""
-      );
-      const governanceAgent = ActorFactory.getAgent(
-        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE,
-        identityActor,
-        null
-      );
-      const {
-        manageNeuron: governanceManageNeuron,
-        listNeurons: governanceListNeurons
-      } = SnsGovernanceCanister.create({
-        agent: governanceAgent,
-        canisterId: identityActor
-      });
-      const userNeurons = await governanceListNeurons({
-        principal: identityActor.principal,
-        limit: 10,
-        beforeNeuronId: { id: [] }
-      });
-      if (userNeurons.length > 0) {
-        const jsonString = JSON.stringify(dto);
-        const encoder2 = new TextEncoder();
-        const payload = encoder2.encode(jsonString);
-        const fn = {
-          function_id: 15000n,
-          payload
-        };
-        let player = allPlayers.find((x) => x.id == playerId);
-        if (player) {
-          let club = clubs.find((x) => x.id == player?.clubId);
-          if (!club) {
-            return;
-          }
-          const command = {
-            MakeProposal: {
-              title: `Unretire ${player.firstName} ${player.lastName}.`,
-              url: "openfpl.xyz/governance",
-              summary: `Unretire ${player.firstName} ${player.lastName}.`,
-              action: [{ ExecuteGenericNervousSystemFunction: fn }]
-            }
-          };
-          const neuronId = userNeurons[0].id[0];
-          if (!neuronId) {
-            return;
-          }
-          await governanceManageNeuron({
-            subaccount: neuronId.id,
-            command: [command]
-          });
+      let player = allPlayers.find((x) => x.id == playerId);
+      if (player) {
+        let club = clubs.find((x) => x.id == player?.clubId);
+        if (!club) {
+          return;
         }
+        let title = `Unretire ${player.firstName} ${player.lastName}.`;
+        let summary = `Unretire ${player.firstName} ${player.lastName}.`;
+        await executeProposal(dto, title, summary, 15000n, [
+          IDL.Record({ playerId: IDL.Nat16 })
+        ]);
       }
     } catch (error) {
       console.error("Error unretiring player:", error);
@@ -8519,56 +7993,15 @@ function createGovernanceStore() {
       let dto = {
         clubId
       };
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE ?? ""
-      );
-      const governanceAgent = ActorFactory.getAgent(
-        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE,
-        identityActor,
-        null
-      );
-      const {
-        manageNeuron: governanceManageNeuron,
-        listNeurons: governanceListNeurons
-      } = SnsGovernanceCanister.create({
-        agent: governanceAgent,
-        canisterId: identityActor
-      });
-      const userNeurons = await governanceListNeurons({
-        principal: identityActor.principal,
-        limit: 10,
-        beforeNeuronId: { id: [] }
-      });
-      if (userNeurons.length > 0) {
-        const jsonString = JSON.stringify(dto);
-        const encoder2 = new TextEncoder();
-        const payload = encoder2.encode(jsonString);
-        const fn = {
-          function_id: 16000n,
-          payload
-        };
-        let club = clubs.find((x) => x.id == clubId);
-        if (!club) {
-          return;
-        }
-        const command = {
-          MakeProposal: {
-            title: `Promote ${club.friendlyName}.`,
-            url: "openfpl.xyz/governance",
-            summary: `Promote ${club.friendlyName}.`,
-            action: [{ ExecuteGenericNervousSystemFunction: fn }]
-          }
-        };
-        const neuronId = userNeurons[0].id[0];
-        if (!neuronId) {
-          return;
-        }
-        await governanceManageNeuron({
-          subaccount: neuronId.id,
-          command: [command]
-        });
+      let club = clubs.find((x) => x.id == clubId);
+      if (!club) {
+        return;
       }
+      let title = `Promote ${club.friendlyName} back to the Premier League.`;
+      let summary = `Promote ${club.name} from the Championship back into the Premier League.`;
+      await executeProposal(dto, title, summary, 16000n, [
+        IDL.Record({ clubId: IDL.Nat16 })
+      ]);
     } catch (error) {
       console.error("Error promoting former club:", error);
       throw error;
@@ -8585,52 +8018,19 @@ function createGovernanceStore() {
         abbreviatedName,
         shirtType
       };
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE ?? ""
-      );
-      const governanceAgent = ActorFactory.getAgent(
-        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE,
-        identityActor,
-        null
-      );
-      const {
-        manageNeuron: governanceManageNeuron,
-        listNeurons: governanceListNeurons
-      } = SnsGovernanceCanister.create({
-        agent: governanceAgent,
-        canisterId: identityActor
-      });
-      const userNeurons = await governanceListNeurons({
-        principal: identityActor.principal,
-        limit: 10,
-        beforeNeuronId: { id: [] }
-      });
-      if (userNeurons.length > 0) {
-        const jsonString = JSON.stringify(dto);
-        const encoder2 = new TextEncoder();
-        const payload = encoder2.encode(jsonString);
-        const fn = {
-          function_id: 17000n,
-          payload
-        };
-        const command = {
-          MakeProposal: {
-            title: `Promote ${friendlyName}.`,
-            url: "openfpl.xyz/governance",
-            summary: `Promote ${friendlyName}.`,
-            action: [{ ExecuteGenericNervousSystemFunction: fn }]
-          }
-        };
-        const neuronId = userNeurons[0].id[0];
-        if (!neuronId) {
-          return;
-        }
-        await governanceManageNeuron({
-          subaccount: neuronId.id,
-          command: [command]
-        });
-      }
+      let title = `Promote ${friendlyName}. to the Premier League`;
+      let summary = `Promote ${name} from the Championship to the Premier League.`;
+      executeProposal(dto, title, summary, 17000n, [
+        IDL.Record({
+          secondaryColourHex: IDL.Text,
+          name: IDL.Text,
+          friendlyName: IDL.Text,
+          thirdColourHex: IDL.Text,
+          abbreviatedName: IDL.Text,
+          shirtType: IDL.Variant({ Filled: IDL.Null, Striped: IDL.Null }),
+          primaryColourHex: IDL.Text
+        })
+      ]);
     } catch (error) {
       console.error("Error promoting new club:", error);
       throw error;
@@ -8639,6 +8039,16 @@ function createGovernanceStore() {
   async function updateClub(clubId, name, friendlyName, primaryColourHex, secondaryColourHex, thirdColourHex, abbreviatedName, shirtType) {
     try {
       await teamStore.sync();
+      let dto = {
+        clubId,
+        secondaryColourHex,
+        name,
+        friendlyName,
+        thirdColourHex,
+        abbreviatedName,
+        shirtType,
+        primaryColourHex
+      };
       let clubs = [];
       const unsubscribeTeamStore = teamStore.subscribe((teams) => {
         if (teams) {
@@ -8659,70 +8069,76 @@ function createGovernanceStore() {
         allFixtures = fixtures;
       });
       unsubscribeFixtureStore();
-      let dto = {
-        clubId,
-        name,
-        friendlyName,
-        primaryColourHex,
-        secondaryColourHex,
-        thirdColourHex,
-        abbreviatedName,
-        shirtType
-      };
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE ?? ""
-      );
-      const governanceAgent = ActorFactory.getAgent(
-        define_process_env_default.CANISTER_ID_SNS_GOVERNANCE,
-        identityActor,
-        null
-      );
-      const {
-        manageNeuron: governanceManageNeuron,
-        listNeurons: governanceListNeurons
-      } = SnsGovernanceCanister.create({
-        agent: governanceAgent,
-        canisterId: identityActor
-      });
-      const userNeurons = await governanceListNeurons({
-        principal: identityActor.principal,
-        limit: 10,
-        beforeNeuronId: { id: [] }
-      });
-      if (userNeurons.length > 0) {
-        const jsonString = JSON.stringify(dto);
-        const encoder2 = new TextEncoder();
-        const payload = encoder2.encode(jsonString);
-        const fn = {
-          function_id: 18000n,
-          payload
-        };
-        let club = clubs.find((x) => x.id == clubId);
-        if (!club) {
-          return;
-        }
-        const command = {
-          MakeProposal: {
-            title: `Update ${club.friendlyName} club details.`,
-            url: "openfpl.xyz/governance",
-            summary: `Update ${club.friendlyName} club details.`,
-            action: [{ ExecuteGenericNervousSystemFunction: fn }]
-          }
-        };
-        const neuronId = userNeurons[0].id[0];
-        if (!neuronId) {
-          return;
-        }
-        await governanceManageNeuron({
-          subaccount: neuronId.id,
-          command: [command]
-        });
+      let club = clubs.find((x) => x.id == clubId);
+      if (!club) {
+        return;
       }
+      let title = `Update ${club.friendlyName} club details.`;
+      let summary = `Update ${club.friendlyName} club details.`;
+      await executeProposal(dto, title, summary, 18000n, [
+        IDL.Record({
+          clubId: IDL.Nat16,
+          secondaryColourHex: IDL.Text,
+          name: IDL.Text,
+          friendlyName: IDL.Text,
+          thirdColourHex: IDL.Text,
+          abbreviatedName: IDL.Text,
+          shirtType: IDL.Variant({ Filled: IDL.Null, Striped: IDL.Null }),
+          primaryColourHex: IDL.Text
+        })
+      ]);
     } catch (error) {
       console.error("Error updating club:", error);
       throw error;
     }
+  }
+  async function executeProposal(dto, title, summary, functionId, argTypes) {
+    const unsubscribeAuthStore = authStore.subscribe(async (auth) => {
+      if (auth) {
+        let principal = auth.identity?.getPrincipal().toText() ?? "";
+        if (principal == "") {
+          return;
+        }
+        const agent = await ActorFactory.getGovernanceAgent(auth.identity);
+        const snsGovernanceCanisterPrincipal = Principal.fromText(
+          define_process_env_default.CANISTER_ID_SNS_GOVERNANCE
+        );
+        const { listNeurons, manageNeuron } = SnsGovernanceCanister.create({
+          agent,
+          canisterId: snsGovernanceCanisterPrincipal
+        });
+        let userNeurons = await listNeurons({
+          certified: false,
+          principal: Principal.fromText(principal)
+        });
+        if (userNeurons.length > 0) {
+          console.log(dto);
+          const payloadArrayBuffer = IDL.encode(argTypes, [dto]);
+          console.log(payloadArrayBuffer);
+          const fn = {
+            function_id: functionId,
+            payload: new Uint8Array(payloadArrayBuffer)
+          };
+          const command = {
+            MakeProposal: {
+              title,
+              url: "openfpl.xyz/governance",
+              summary,
+              action: [{ ExecuteGenericNervousSystemFunction: fn }]
+            }
+          };
+          const neuronId = userNeurons[0].id[0];
+          if (!neuronId) {
+            return;
+          }
+          await manageNeuron({
+            subaccount: neuronId.id,
+            command: [command]
+          });
+        }
+      }
+    });
+    unsubscribeAuthStore();
   }
   return {
     revaluePlayerUp,
@@ -9255,49 +8671,21 @@ const Recall_player = create_ssr_component(($$result, $$props, $$bindings, slots
   })}`;
 });
 const Create_player = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let isSubmitDisabled;
-  let $teamStore, $$unsubscribe_teamStore;
-  let $countriesStore, $$unsubscribe_countriesStore;
-  $$unsubscribe_teamStore = subscribe(teamStore, (value2) => $teamStore = value2);
-  $$unsubscribe_countriesStore = subscribe(countriesStore, (value2) => $countriesStore = value2);
+  let $$unsubscribe_teamStore;
+  let $$unsubscribe_countriesStore;
+  $$unsubscribe_teamStore = subscribe(teamStore, (value) => value);
+  $$unsubscribe_countriesStore = subscribe(countriesStore, (value) => value);
   let { visible } = $$props;
   let { closeModal } = $$props;
-  let selectedClubId = 0;
-  let firstName = "";
-  let lastName = "";
-  let dateOfBirth = "";
-  let shirtNumber = 0;
-  let value = 0;
-  let showConfirm = false;
   if ($$props.visible === void 0 && $$bindings.visible && visible !== void 0)
     $$bindings.visible(visible);
   if ($$props.closeModal === void 0 && $$bindings.closeModal && closeModal !== void 0)
     $$bindings.closeModal(closeModal);
-  isSubmitDisabled = selectedClubId <= 0;
-  {
-    if (isSubmitDisabled && showConfirm) {
-      showConfirm = false;
-    }
-  }
   $$unsubscribe_teamStore();
   $$unsubscribe_countriesStore();
   return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
     default: () => {
-      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-9uabtx">Create Player</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><div class="flex-col space-y-2"><p data-svelte-h="svelte-zed03u">Select Club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($teamStore, (club) => {
-        return `<option${add_attribute("value", club.id, 0)}>${escape(club.friendlyName)}</option>`;
-      })}</select></div> <div class="flex-col space-y-2"><p data-svelte-h="svelte-12rrly1">Select Position:</p> <select class="p-2 fpl-dropdown my-4 min-w-[100px]"><option${add_attribute("value", { Goalkeeper: null }, 0)} data-svelte-h="svelte-1p5crkn">Goalkeeper</option><option${add_attribute("value", { Defender: null }, 0)} data-svelte-h="svelte-9nrckf">Defender</option><option${add_attribute("value", { Midfielder: null }, 0)} data-svelte-h="svelte-egyywf">Midfielder</option><option${add_attribute("value", { Forward: null }, 0)} data-svelte-h="svelte-dhqeof">Forward</option></select></div> <div class="flex-col space-y-2"><p class="py-2" data-svelte-h="svelte-tfgbay">First Name:</p> <input type="text" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black" placeholder="First Name"${add_attribute("value", firstName, 0)}></div> <div class="flex-col space-y-2"><p class="py-2" data-svelte-h="svelte-1odo0oq">Last Name:</p> <input type="text" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black" placeholder="First Name"${add_attribute("value", lastName, 0)}></div> <div class="flex-col space-y-2"><p class="py-2" data-svelte-h="svelte-17jft0i">Shirt Number:</p> <input type="number" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black" placeholder="Shirt Number" min="1" max="99" step="1"${add_attribute("value", shirtNumber, 0)}></div> <div class="flex-col space-y-2"><p class="py-2" data-svelte-h="svelte-p1i34b">Value (£m):</p> <input type="number" step="0.25" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black" placeholder="Value"${add_attribute("value", value, 0)}></div> <div class="flex-col space-y-2"><p class="py-2" data-svelte-h="svelte-x5j7yv">Date of Birth:</p> <input type="date" class="input input-bordered"${add_attribute("value", dateOfBirth, 0)}></div> <div class="flex-col space-y-2"><p class="py-2" data-svelte-h="svelte-jmi6x5">Nationality:</p> <select class="p-2 fpl-dropdown min-w-[100px] mb-2"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-e3ccus">Select Nationality</option>${each($countriesStore, (country) => {
-        return `<option${add_attribute("value", country.id, 0)}>${escape(country.name)}</option>`;
-      })}</select></div> <div class="border-b border-gray-200"></div> <div class="items-center flex space-x-4"><button class="px-4 py-2 default-button fpl-cancel-btn min-w-[150px]" type="button" data-svelte-h="svelte-19jfrwv">Cancel</button> <button${add_attribute(
-        "class",
-        `${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-                        px-4 py-2 default-button min-w-[150px]`,
-        0
-      )} ${isSubmitDisabled ? "disabled" : ""}>Raise Proposal</button></div> ${showConfirm ? `<div class="items-center flex" data-svelte-h="svelte-6fi0oe"><p class="text-orange-400">Failed proposals will cost the proposer 10 $FPL tokens.</p></div> <div class="items-center flex"><button${add_attribute(
-        "class",
-        `${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-                            px-4 py-2 default-button w-full`,
-        0
-      )} ${isSubmitDisabled ? "disabled" : ""}>Confirm Submit Proposal</button></div>` : ``}</div></div> ${`${validate_component(Local_spinner, "LocalSpinner").$$render($$result, {}, {}, {})}`}</div>`;
+      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-9uabtx">Create Player</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> ${`${validate_component(Local_spinner, "LocalSpinner").$$render($$result, {}, {}, {})}`}</div>`;
     }
   })}`;
 });

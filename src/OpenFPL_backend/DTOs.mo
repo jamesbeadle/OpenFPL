@@ -79,15 +79,10 @@ module DTOs {
     totalEntries : Nat;
   };
 
-  public type GetMonthlyLeaderboardsDTO = {
-    seasonId : T.SeasonId;
-    month : T.CalendarMonth;
-    searchTerm: Text;
-  };
-
   public type MonthlyLeaderboardDTO = {
     seasonId : T.SeasonId;
     month : Nat8;
+    clubId: T.ClubId;
     entries : [T.LeaderboardEntry];
     totalEntries : Nat;
   };
@@ -418,7 +413,7 @@ module DTOs {
   };
 
   public type MonthlyCanisterDTO = {
-    canister : T.MonthlyLeaderboardCanister;
+    canister : T.MonthlyLeaderboardsCanister;
     cycles : Nat;
   };
 
@@ -540,6 +535,7 @@ module DTOs {
     month : T.CalendarMonth;
     limit : Nat;
     offset : Nat;
+    clubId: T.ClubId;
   };
 
   public type GetPrivateLeagueSeasonLeaderboard = {

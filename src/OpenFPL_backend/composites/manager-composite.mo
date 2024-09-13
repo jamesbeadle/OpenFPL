@@ -118,7 +118,7 @@ module {
                     weeklyPositionText = weeklyPositionText;
                     monthlyPositionText = monthlyPositionText;
                     seasonPositionText = seasonPositionText;
-                    weeklyPoints = weeklyPoints;
+                    weeklyPoints =  weeklyPoints;
                     monthlyPoints = monthlyPoints;
                     seasonPoints = seasonPoints;
                     privateLeagueMemberships = List.toArray(foundManager.privateLeagueMemberships);
@@ -1530,6 +1530,18 @@ module {
         logStatus("Found ." # Nat.toText(Array.size(snapshots)) # " snapshots.");
       };
       return Buffer.toArray(snapshotsBuffer);
+    };
+
+    public func removeAllManagerSnapshots() : async () {
+      for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
+        let manager_canister = actor (canisterId) : actor {
+          removeAllManagerSnapshots : () -> async ();
+        };
+
+        await manager_canister.removeAllManagerSnapshots();
+
+        logStatus("Remove all manager snapshots complete.");
+      };
     };
 
   };

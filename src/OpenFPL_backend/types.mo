@@ -423,10 +423,9 @@ module _Types {
     canisterId : Text;
   };
 
-  public type MonthlyLeaderboardCanister = {
+  public type MonthlyLeaderboardsCanister = {
     seasonId : SeasonId;
     month : CalendarMonth;
-    clubId : ClubId;
     canisterId : Text;
   };
 

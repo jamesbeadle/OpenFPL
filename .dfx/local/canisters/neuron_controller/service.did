@@ -1,5 +1,5 @@
-type AccountId = vec nat8;
-type AccountIdentifier = record { hash : vec nat8 };
+type AccountId = blob;
+type AccountIdentifier = record { hash : blob };
 type Address = text;
 type Amount = record { e8s : nat64 };
 type AsyncError = variant {
@@ -60,7 +60,7 @@ type GovernanceError = record { error_message : text; error_type : int32 };
 type HttpHeader = record { value : text; name : text };
 type HttpResponsePayload = record {
   status : nat;
-  body : vec nat8;
+  body : blob;
   headers : vec HttpHeader;
 };
 type IncreaseDissolveDelay = record {
@@ -99,8 +99,5 @@ type StakeMaturityResponse = record {
   maturity_e8s : nat64;
   stake_maturity_e8s : nat64;
 };
-type TransformArgs = record {
-  context : vec nat8;
-  response : HttpResponsePayload;
-};
+type TransformArgs = record { context : blob; response : HttpResponsePayload };
 service : NeuronController

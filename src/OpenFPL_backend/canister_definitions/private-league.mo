@@ -20,7 +20,6 @@ import T "../types";
 import Utilities "../utils/utilities";
 
 actor class _PrivateLeague() {
-    private let cyclesCheckInterval : Nat = Utilities.getHour() * 24; //TODO: move
     
     private stable var cyclesCheckTimerId : ?Timer.TimerId = null;
     private stable var privateLeague: ?T.PrivateLeague = null;
@@ -454,7 +453,7 @@ actor class _PrivateLeague() {
 
 
     private func calculateWeeklyLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async () {
-        
+        /*
         let entryBuffer = Buffer.fromArray<T.LeaderboardEntry>([]);
         label seasonLoop for(season in Iter.fromArray(weeklyLeaderboards)){
             if(season.0 == seasonId){
@@ -495,10 +494,11 @@ actor class _PrivateLeague() {
         };
 
         weeklyLeaderboards := Buffer.toArray(weeklyLeaderboardsBuffer);
+        */
     };
 
     private func calculateMonthlyLeaderboards(seasonId : T.SeasonId, month : T.CalendarMonth) : async () {
-        
+        /*
         let entryBuffer = Buffer.fromArray<T.LeaderboardEntry>([]);
         label seasonLoop for(season in Iter.fromArray(monthlyLeaderboards)){
             if(season.0 == seasonId){
@@ -539,10 +539,11 @@ actor class _PrivateLeague() {
         };
 
         monthlyLeaderboards := Buffer.toArray(monthlyLeaderboardsBuffer);
+        */
     };
 
     private func calculateSeasonLeaderboard(seasonId : T.SeasonId) : async () {
-        
+        /*
         let entryBuffer = Buffer.fromArray<T.LeaderboardEntry>([]);
         label seasonLoop for(season in Iter.fromArray(seasonLeaderboards)){
             if(season.0 == seasonId){
@@ -572,6 +573,7 @@ actor class _PrivateLeague() {
         };
 
         seasonLeaderboards := Buffer.toArray(seasonLeaderboardsBuffer);
+        */
     };
 
     public shared ({ caller }) func getWeeklyLeaderboard(dto: DTOs.GetPrivateLeagueWeeklyLeaderboard) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
@@ -618,6 +620,7 @@ actor class _PrivateLeague() {
                             entries = List.toArray(paginatedEntries);
                             month = leaderboard.0;
                             seasonId = seasonLeaderboard.0;
+                            clubId = dto.clubId;
                             totalEntries = List.size(leaderboard.1.entries);
                         });
                     }
@@ -1117,7 +1120,7 @@ actor class _PrivateLeague() {
             cyclesCheckTimerId := null;
         };
         };
-        cyclesCheckTimerId := ?Timer.setTimer<system>(#nanoseconds(cyclesCheckInterval), checkCanisterCycles);
+        cyclesCheckTimerId := ?Timer.setTimer<system>(#nanoseconds(Utilities.getHour() * 24), checkCanisterCycles);
     };
 
     public shared ({ caller }) func initPrivateLeague(createdById: T.PrincipalId, newPrivateLeague: DTOs.CreatePrivateLeagueDTO) : async Result.Result<(), T.Error>{
@@ -1195,7 +1198,7 @@ actor class _PrivateLeague() {
             cyclesCheckTimerId := null;
         };
         };
-        cyclesCheckTimerId := ?Timer.setTimer<system>(#nanoseconds(cyclesCheckInterval), checkCanisterCycles);
+        cyclesCheckTimerId := ?Timer.setTimer<system>(#nanoseconds(Utilities.getHour() * 24), checkCanisterCycles);
     };
 
     public shared func topupCanister() : async () {

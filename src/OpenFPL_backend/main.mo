@@ -66,10 +66,6 @@ import Debug "mo:base/Debug";
       return await seasonManager.getWeeklyLeaderboard(dto);
     };
 
-    public shared func getMonthlyLeaderboards(dto: DTOs.GetMonthlyLeaderboardsDTO) : async Result.Result<[DTOs.ClubLeaderboardDTO], T.Error> {
-      return await seasonManager.getMonthlyLeaderboards(dto);
-    };
-
     public shared func getMonthlyLeaderboard(dto: DTOs.GetMonthlyLeaderboardDTO) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error> {
       return await seasonManager.getMonthlyLeaderboard(dto);
     };
@@ -1030,7 +1026,7 @@ import Debug "mo:base/Debug";
           };
         };
         case (#MonthlyLeaderboard){
-          let monthlyLeaderboardCanisters = seasonManager.getStableMonthlyLeaderboardCanisters();
+          let monthlyLeaderboardCanisters = seasonManager.getStableMonthlyLeaderboardsCanisters();
           for(monthlyLeaderboardCanister in Iter.fromArray(monthlyLeaderboardCanisters)){
             let IC : Management.Management = actor (Environment.Default);
             let canisterInfo = await (
@@ -1355,7 +1351,7 @@ import Debug "mo:base/Debug";
 
     //Leaderboard Composite
     private stable var stable_season_leaderboard_canisters : [T.SeasonLeaderboardCanister] = [];
-    private stable var stable_monthly_leaderboard_canisters : [T.MonthlyLeaderboardCanister] = [];
+    private stable var stable_monthly_leaderboards_canisters : [T.MonthlyLeaderboardsCanister] = [];
     private stable var stable_weekly_leaderboard_canisters : [T.WeeklyLeaderboardCanister] = [];
 
     //Private Leagues
@@ -1411,7 +1407,7 @@ import Debug "mo:base/Debug";
 
       //Leaderboard Composite
       stable_season_leaderboard_canisters := seasonManager.getStableSeasonLeaderboardCanisters();
-      stable_monthly_leaderboard_canisters := seasonManager.getStableMonthlyLeaderboardCanisters();
+      stable_monthly_leaderboards_canisters := seasonManager.getStableMonthlyLeaderboardsCanisters();
       stable_weekly_leaderboard_canisters := seasonManager.getStableWeeklyLeaderboardCanisters();
 
       //Private Leagues
@@ -1469,7 +1465,7 @@ import Debug "mo:base/Debug";
 
       //Leaderboard Composite
       seasonManager.setStableSeasonLeaderboardCanisters(stable_season_leaderboard_canisters);
-      seasonManager.setStableMonthlyLeaderboardCanisters(stable_monthly_leaderboard_canisters);
+      seasonManager.setStableMonthlyLeaderboardsCanisters(stable_monthly_leaderboards_canisters);
       seasonManager.setStableWeeklyLeaderboardCanisters(stable_weekly_leaderboard_canisters);
 
       //Private Leagues
@@ -1528,7 +1524,14 @@ import Debug "mo:base/Debug";
 
     private func postUpgradeCallback() : async (){
 
-      //seasonManager.setFixtureToComplete(1,1);
+      //TODO
+      await updateManagerCanisterWasms();
+      await seasonManager.removeLeaderboardCanistersAndGetCycles();
+      await seasonManager.removeAllManagerSnapshots();
+      //await seasonManager.addGameData();
+      await seasonManager.addGameweekTimers(4);
+      seasonManager.validateTeams();
+      seasonManager.resetGameweek(4);
       
       //on each update generate new hash values
       await seasonManager.updateCacheHash("clubs");
@@ -1541,7 +1544,7 @@ import Debug "mo:base/Debug";
       await seasonManager.updateCacheHash("countries");
       await seasonManager.updateCacheHash("system_state");
 
-      await cyclesCheckCallback();
+      //await cyclesCheckCallback(); TODO: Add back in after canister references cleared and updated
     };
 
     private func updateManagerCanisterWasms() : async (){
@@ -1796,6 +1799,7 @@ import Debug "mo:base/Debug";
       );  
       return await seasonManager.getPlayerPointsMap(seasonId, gameweek);
     };
+    /*
     
     private func setupTesting(){
       seasonManager.setupTesting();
@@ -1804,7 +1808,6 @@ import Debug "mo:base/Debug";
     private func cleanFantasyTeams() : async (){
       await seasonManager.cleanFantasyTeams();
     };
-    /*
     public func giveBackUnassignedBonuses() : async () {
       //await seasonManager.giveBackUnassignedBonuses();
     };

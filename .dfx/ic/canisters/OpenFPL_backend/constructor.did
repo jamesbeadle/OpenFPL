@@ -231,45 +231,40 @@ type Result_3 =
    err: Error;
    ok: nat;
  };
-type Result_28 = 
+type Result_27 = 
  variant {
    err: Error;
    ok: GetCanistersDTO;
  };
-type Result_27 = 
+type Result_26 = 
  variant {
    err: Error;
    ok: vec CountryDTO;
  };
-type Result_26 = 
+type Result_25 = 
  variant {
    err: Error;
    ok: PickTeamDTO;
  };
-type Result_25 = 
+type Result_24 = 
  variant {
    err: Error;
    ok: vec DataCacheDTO;
  };
-type Result_24 = 
+type Result_23 = 
  variant {
    err: Error;
    ok: FantasyTeamSnapshotDTO;
  };
-type Result_23 = 
+type Result_22 = 
  variant {
    err: Error;
    ok: vec ClubDTO;
  };
-type Result_22 = 
- variant {
-   err: Error;
-   ok: ManagerPrivateLeaguesDTO;
- };
 type Result_21 = 
  variant {
    err: Error;
-   ok: vec ClubLeaderboardDTO;
+   ok: ManagerPrivateLeaguesDTO;
  };
 type Result_20 = 
  variant {
@@ -540,6 +535,7 @@ type MoveFixtureDTO =
  };
 type MonthlyLeaderboardDTO = 
  record {
+   clubId: ClubId;
    entries: vec LeaderboardEntry;
    month: nat8;
    seasonId: SeasonId;
@@ -675,6 +671,7 @@ type GetPrivateLeagueSeasonLeaderboard =
 type GetPrivateLeagueMonthlyLeaderboard = 
  record {
    canisterId: CanisterId;
+   clubId: ClubId;
    limit: nat;
    month: CalendarMonth;
    offset: nat;
@@ -683,12 +680,6 @@ type GetPrivateLeagueMonthlyLeaderboard =
 type GetPlayerDetailsDTO = 
  record {
    playerId: PlayerId;
-   seasonId: SeasonId;
- };
-type GetMonthlyLeaderboardsDTO = 
- record {
-   month: CalendarMonth;
-   searchTerm: text;
    seasonId: SeasonId;
  };
 type GetMonthlyLeaderboardDTO = 
@@ -912,14 +903,6 @@ type Command =
    Spawn: Spawn;
    StakeMaturity: StakeMaturityResponse;
  };
-type ClubLeaderboardDTO = 
- record {
-   clubId: ClubId;
-   entries: vec LeaderboardEntry;
-   month: nat8;
-   seasonId: SeasonId;
-   totalEntries: nat;
- };
 type ClubId = nat16;
 type ClubFilterDTO = record {clubId: ClubId;};
 type ClubDTO = 
@@ -1007,20 +990,19 @@ service : {
   getBackendCanisterBalance: () -> (Result_3);
   getCanisterCyclesAvailable: () -> (nat);
   getCanisterCyclesBalance: () -> (Result_3);
-  getCanisters: (GetCanistersDTO) -> (Result_28);
-  getClubs: () -> (Result_23) query;
-  getCountries: () -> (Result_27) query;
-  getCurrentTeam: () -> (Result_26);
-  getDataHashes: () -> (Result_25) query;
-  getFantasyTeamSnapshot: (GetFantasyTeamSnapshotDTO) -> (Result_24);
+  getCanisters: (GetCanistersDTO) -> (Result_27);
+  getClubs: () -> (Result_22) query;
+  getCountries: () -> (Result_26) query;
+  getCurrentTeam: () -> (Result_25);
+  getDataHashes: () -> (Result_24) query;
+  getFantasyTeamSnapshot: (GetFantasyTeamSnapshotDTO) -> (Result_23);
   getFixtures: (GetFixturesDTO) -> (Result_17) query;
-  getFormerClubs: () -> (Result_23) query;
+  getFormerClubs: () -> (Result_22) query;
   getLoanedPlayers: (ClubFilterDTO) -> (Result_12) query;
   getManager: (GetManagerDTO) -> (Result_1);
   getManagerCanisterIds: () -> (vec CanisterId);
-  getManagerPrivateLeagues: () -> (Result_22);
+  getManagerPrivateLeagues: () -> (Result_21);
   getMonthlyLeaderboard: (GetMonthlyLeaderboardDTO) -> (Result_14);
-  getMonthlyLeaderboards: (GetMonthlyLeaderboardsDTO) -> (Result_21);
   getNeuronId: () -> (nat64);
   getPlayerDetails: (GetPlayerDetailsDTO) -> (Result_20) query;
   getPlayerDetailsForGameweek: (GameweekFiltersDTO) -> (Result_19) query;

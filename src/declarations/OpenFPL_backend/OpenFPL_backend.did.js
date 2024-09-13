@@ -271,7 +271,7 @@ export const idlFactory = ({ IDL }) => {
     'entries' : IDL.Vec(CanisterDTO),
     'canisterTypeFilter' : CanisterType,
   });
-  const Result_28 = IDL.Variant({ 'ok' : GetCanistersDTO, 'err' : Error });
+  const Result_27 = IDL.Variant({ 'ok' : GetCanistersDTO, 'err' : Error });
   const ClubDTO = IDL.Record({
     'id' : ClubId,
     'secondaryColourHex' : IDL.Text,
@@ -282,13 +282,13 @@ export const idlFactory = ({ IDL }) => {
     'shirtType' : ShirtType,
     'primaryColourHex' : IDL.Text,
   });
-  const Result_23 = IDL.Variant({ 'ok' : IDL.Vec(ClubDTO), 'err' : Error });
+  const Result_22 = IDL.Variant({ 'ok' : IDL.Vec(ClubDTO), 'err' : Error });
   const CountryDTO = IDL.Record({
     'id' : CountryId,
     'code' : IDL.Text,
     'name' : IDL.Text,
   });
-  const Result_27 = IDL.Variant({ 'ok' : IDL.Vec(CountryDTO), 'err' : Error });
+  const Result_26 = IDL.Variant({ 'ok' : IDL.Vec(CountryDTO), 'err' : Error });
   const PickTeamDTO = IDL.Record({
     'playerIds' : IDL.Vec(PlayerId),
     'countrymenCountryId' : CountryId,
@@ -317,9 +317,9 @@ export const idlFactory = ({ IDL }) => {
     'canisterId' : CanisterId,
     'monthlyBonusesAvailable' : IDL.Nat8,
   });
-  const Result_26 = IDL.Variant({ 'ok' : PickTeamDTO, 'err' : Error });
+  const Result_25 = IDL.Variant({ 'ok' : PickTeamDTO, 'err' : Error });
   const DataCacheDTO = IDL.Record({ 'hash' : IDL.Text, 'category' : IDL.Text });
-  const Result_25 = IDL.Variant({
+  const Result_24 = IDL.Variant({
     'ok' : IDL.Vec(DataCacheDTO),
     'err' : Error,
   });
@@ -365,7 +365,7 @@ export const idlFactory = ({ IDL }) => {
     'points' : IDL.Int16,
     'monthlyBonusesAvailable' : IDL.Nat8,
   });
-  const Result_24 = IDL.Variant({
+  const Result_23 = IDL.Variant({
     'ok' : FantasyTeamSnapshotDTO,
     'err' : Error,
   });
@@ -440,7 +440,7 @@ export const idlFactory = ({ IDL }) => {
     'totalEntries' : IDL.Nat,
     'entries' : IDL.Vec(ManagerPrivateLeagueDTO),
   });
-  const Result_22 = IDL.Variant({
+  const Result_21 = IDL.Variant({
     'ok' : ManagerPrivateLeaguesDTO,
     'err' : Error,
   });
@@ -461,28 +461,13 @@ export const idlFactory = ({ IDL }) => {
   });
   const MonthlyLeaderboardDTO = IDL.Record({
     'month' : IDL.Nat8,
+    'clubId' : ClubId,
     'totalEntries' : IDL.Nat,
     'seasonId' : SeasonId,
     'entries' : IDL.Vec(LeaderboardEntry),
   });
   const Result_14 = IDL.Variant({
     'ok' : MonthlyLeaderboardDTO,
-    'err' : Error,
-  });
-  const GetMonthlyLeaderboardsDTO = IDL.Record({
-    'month' : CalendarMonth,
-    'seasonId' : SeasonId,
-    'searchTerm' : IDL.Text,
-  });
-  const ClubLeaderboardDTO = IDL.Record({
-    'month' : IDL.Nat8,
-    'clubId' : ClubId,
-    'totalEntries' : IDL.Nat,
-    'seasonId' : SeasonId,
-    'entries' : IDL.Vec(LeaderboardEntry),
-  });
-  const Result_21 = IDL.Variant({
-    'ok' : IDL.Vec(ClubLeaderboardDTO),
     'err' : Error,
   });
   const GetPlayerDetailsDTO = IDL.Record({
@@ -579,6 +564,7 @@ export const idlFactory = ({ IDL }) => {
   });
   const GetPrivateLeagueMonthlyLeaderboard = IDL.Record({
     'month' : CalendarMonth,
+    'clubId' : ClubId,
     'offset' : IDL.Nat,
     'seasonId' : SeasonId,
     'limit' : IDL.Nat,
@@ -817,30 +803,25 @@ export const idlFactory = ({ IDL }) => {
     'getBackendCanisterBalance' : IDL.Func([], [Result_3], []),
     'getCanisterCyclesAvailable' : IDL.Func([], [IDL.Nat], []),
     'getCanisterCyclesBalance' : IDL.Func([], [Result_3], []),
-    'getCanisters' : IDL.Func([GetCanistersDTO], [Result_28], []),
-    'getClubs' : IDL.Func([], [Result_23], ['query']),
-    'getCountries' : IDL.Func([], [Result_27], ['query']),
-    'getCurrentTeam' : IDL.Func([], [Result_26], []),
-    'getDataHashes' : IDL.Func([], [Result_25], ['query']),
+    'getCanisters' : IDL.Func([GetCanistersDTO], [Result_27], []),
+    'getClubs' : IDL.Func([], [Result_22], ['query']),
+    'getCountries' : IDL.Func([], [Result_26], ['query']),
+    'getCurrentTeam' : IDL.Func([], [Result_25], []),
+    'getDataHashes' : IDL.Func([], [Result_24], ['query']),
     'getFantasyTeamSnapshot' : IDL.Func(
         [GetFantasyTeamSnapshotDTO],
-        [Result_24],
+        [Result_23],
         [],
       ),
     'getFixtures' : IDL.Func([GetFixturesDTO], [Result_17], ['query']),
-    'getFormerClubs' : IDL.Func([], [Result_23], ['query']),
+    'getFormerClubs' : IDL.Func([], [Result_22], ['query']),
     'getLoanedPlayers' : IDL.Func([ClubFilterDTO], [Result_12], ['query']),
     'getManager' : IDL.Func([GetManagerDTO], [Result_1], []),
     'getManagerCanisterIds' : IDL.Func([], [IDL.Vec(CanisterId)], []),
-    'getManagerPrivateLeagues' : IDL.Func([], [Result_22], []),
+    'getManagerPrivateLeagues' : IDL.Func([], [Result_21], []),
     'getMonthlyLeaderboard' : IDL.Func(
         [GetMonthlyLeaderboardDTO],
         [Result_14],
-        [],
-      ),
-    'getMonthlyLeaderboards' : IDL.Func(
-        [GetMonthlyLeaderboardsDTO],
-        [Result_21],
         [],
       ),
     'getNeuronId' : IDL.Func([], [IDL.Nat64], []),

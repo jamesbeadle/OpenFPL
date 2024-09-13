@@ -14,7 +14,7 @@ ARGS=$5
 METHOD=$6
 
 # Candid encode the payload as binary
-PAYLOAD=$(didc encode "$ARGS" --format blob -d ../../.dfx/ic/canisters/OpenFPL_backend/OpenFPL_Backend.did -m $METHOD)
+PAYLOAD=$(didc encode "$ARGS" --format blob -d ../../.dfx/ic/canisters/OpenFPL_backend/OpenFPL_backend.did -m $METHOD)
 
 # Build the proposal candid
 PROPOSAL="(record { title=\"$TITLE\"; url=\"$URL\"; summary=\"$SUMMARY\"; action=opt variant {ExecuteGenericNervousSystemFunction = record {function_id=($FUNCTION_ID:nat64); payload=$PAYLOAD}}})"
