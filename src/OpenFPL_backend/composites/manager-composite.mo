@@ -334,8 +334,13 @@ module {
       if (systemState.onHold) {
         return #err(#SystemOnHold);
       };
-      if (invalidTeamComposition(updatedFantasyTeamDTO, players)) {
-        return #err(#InvalidTeamError);
+
+      let teamValidResult = teamValid(updatedFantasyTeamDTO, players);
+      switch(teamValidResult){
+        case (#ok _){ };
+        case (#err errorResult){
+          return #err(errorResult);
+        }
       };
 
       let usernameUpdated = updatedFantasyTeamDTO.username != "";
@@ -902,7 +907,7 @@ module {
       return false;
     };
 
-    private func invalidTeamComposition(updatedFantasyTeam : DTOs.UpdateTeamSelectionDTO, players : [DTOs.PlayerDTO]) : Bool {
+    private func teamValid(updatedFantasyTeam : DTOs.UpdateTeamSelectionDTO, players : [DTOs.PlayerDTO]) : Result.Result<(), T.Error> {
 
       let newTeamPlayers = Array.filter<DTOs.PlayerDTO>(
         players,
@@ -921,7 +926,7 @@ module {
       let playerPositions = Array.map<DTOs.PlayerDTO, T.PlayerPosition>(newTeamPlayers, func(player : DTOs.PlayerDTO) : T.PlayerPosition { return player.position });
       let playerCount = playerPositions.size();
       if (playerCount != 11) {
-        return false;
+        return #err(#Not11Players);
       };
 
       var teamPlayerCounts = TrieMap.TrieMap<Text, Nat8>(Text.equal, Text.hash);
@@ -949,7 +954,8 @@ module {
         switch (playerIdCount) {
           case (null) { playerIdCounts.put(Nat16.toText(newTeamPlayers[i].id), 1) };
           case (?count) {
-            return true;
+
+            return #err(#DuplicatePlayerInTeam);
           };
         };
 
@@ -977,21 +983,23 @@ module {
 
       for ((key, value) in teamPlayerCounts.entries()) {
         if (value > 2) {
-          return true;
+
+            return #err(#MoreThan2PlayersFromClub);
         };
       };
 
       if (
         goalkeeperCount != 1 or defenderCount < 3 or defenderCount > 5 or midfielderCount < 3 or midfielderCount > 5 or forwardCount < 1 or forwardCount > 3,
       ) {
-        return true;
+
+            return #err(#NumberPerPositionError);
       };
 
       if (not captainInTeam) {
-        return true;
+            return #err(#SelectedCaptainNotInTeam);
       };
 
-      return false;
+      return #ok();
     };
 
     public func updateUsername(managerPrincipalId : T.PrincipalId, username: Text, systemState: T.SystemState) : async Result.Result<(), T.Error> {

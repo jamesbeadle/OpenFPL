@@ -32,7 +32,7 @@ module {
     public func requestCanisterTopup(canisterPrincipal : Text, cycles: Nat) : async () {
       let canister_actor = actor (canisterPrincipal) : actor { };
       let IC : Management.Management = actor (Environment.Default);
-      let _ = await Utilities.topup_canister_(canister_actor, ?Principal.fromText(Environment.BACKEND_CANISTER_ID), IC, cycles);
+      let _ = await Utilities.topup_canister_(canister_actor, IC, cycles);
       recordCanisterTopup(canisterPrincipal, cycles);
     };
 

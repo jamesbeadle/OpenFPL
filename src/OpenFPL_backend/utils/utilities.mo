@@ -403,19 +403,14 @@ module {
     );
   };
 
-  public func topup_canister_(a : actor {}, backendCanisterController : ?Principal, IC : Management.Management, cycles: Nat) : async () {
+  public func topup_canister_(a : actor {}, IC : Management.Management, cycles: Nat) : async () {
     let cid = { canister_id = Principal.fromActor(a) };
-    switch (backendCanisterController) {
-      case (null) {};
-      case (?controller) {
-        Cycles.add<system>(cycles);
-        await (
-          IC.deposit_cycles({
-            canister_id = cid.canister_id;
-          }),
-        );
-      };
-    };
+    Cycles.add<system>(cycles);
+    await (
+      IC.deposit_cycles({
+        canister_id = cid.canister_id;
+      }),
+    );
   };
 
   public func getLatestFixtureTime(fixtures : [T.Fixture]) : Int {

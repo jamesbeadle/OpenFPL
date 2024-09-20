@@ -25,6 +25,11 @@ module _Types {
     #InvalidData;
     #SystemOnHold;
     #CanisterCreateError;
+    #Not11Players;
+    #DuplicatePlayerInTeam;
+    #MoreThan2PlayersFromClub;
+    #NumberPerPositionError;
+    #SelectedCaptainNotInTeam;
   };
 
 
@@ -66,33 +71,12 @@ module _Types {
     privateLeagueMemberships: List.List<CanisterId>;
   };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   public type FixtureStatusType = {
     #Unplayed;
     #Active;
     #Complete;
     #Finalised;
   };
-
-
-
-
-
 
   public type PlayerPosition = {
     #Goalkeeper;

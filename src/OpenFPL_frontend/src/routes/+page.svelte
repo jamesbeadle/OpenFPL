@@ -41,16 +41,29 @@
 
   onMount(async () => {
     try {
+      console.log("syncing auth store")
       await authStore.sync();
+      console.log("syncing system store")
       await systemStore.sync();
+      console.log("syncing team store")
       await teamStore.sync();
+      console.log("syncing fixture store")
       await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
       
+
+      console.log("subscribing to login")
       authStore.subscribe((store) => {
         isLoggedIn = store.identity !== null && store.identity !== undefined;
       });
 
-      managerCount = await managerStore.getTotalManagers();
+
+      console.log("getting total managers")
+      
+      let managerPromise = managerStore.getTotalManagers();
+      managerPromise.then(total => {
+        managerCount = total;
+      });
+
 
       if ($teamStore.length == 0) return;
       if ($fixtureStore.length == 0) return;

@@ -502,6 +502,14 @@ module {
         let _ = await Utilities.deleteCanister_(canister.canisterId, IC);
       };
 
+      for (canister in Iter.fromList(monthlyLeaderboardsCanisters)){
+        let _ = await Utilities.deleteCanister_(canister.canisterId, IC);
+      };
+
+      for (canister in Iter.fromList(seasonLeaderboardCanisters)){
+        let _ = await Utilities.deleteCanister_(canister.canisterId, IC);
+      };
+
       seasonLeaderboardCanisters := List.nil();
       monthlyLeaderboardsCanisters := List.nil();
       weeklyLeaderboardCanisters := List.nil();      

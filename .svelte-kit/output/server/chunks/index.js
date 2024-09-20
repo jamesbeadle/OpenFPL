@@ -3516,7 +3516,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1rt8hdl"
+  version_hash: "1sjsj6n"
 };
 async function get_hooks() {
   return {};
@@ -3726,14 +3726,19 @@ const authStore = initAuthStore();
 const idlFactory = ({ IDL: IDL2 }) => {
   const CanisterId = IDL2.Text;
   const Error2 = IDL2.Variant({
+    "MoreThan2PlayersFromClub": IDL2.Null,
     "DecodeError": IDL2.Null,
     "NotAllowed": IDL2.Null,
+    "DuplicatePlayerInTeam": IDL2.Null,
     "NotFound": IDL2.Null,
+    "NumberPerPositionError": IDL2.Null,
     "NotAuthorized": IDL2.Null,
+    "SelectedCaptainNotInTeam": IDL2.Null,
     "InvalidData": IDL2.Null,
     "SystemOnHold": IDL2.Null,
     "AlreadyExists": IDL2.Null,
     "CanisterCreateError": IDL2.Null,
+    "Not11Players": IDL2.Null,
     "InvalidTeamError": IDL2.Null
   });
   const Result = IDL2.Variant({ "ok": IDL2.Null, "err": Error2 });

@@ -1423,7 +1423,7 @@ import Debug "mo:base/Debug";
     };
 
     system func postupgrade() {
-
+      
       seasonManager.setStableRewardPools(stable_reward_pools);
       seasonManager.setStableDataHashes(stable_data_cache_hashes);
       seasonManager.setStableSystemState(stable_system_state);
@@ -1524,20 +1524,10 @@ import Debug "mo:base/Debug";
 
     private func postUpgradeCallback() : async (){
 
-      await logStatus({message = "Post upgrade callback called"});
-      //TODO
       await updateManagerCanisterWasms();
-      await logStatus({message = "Manager wasms upgraded "});
-      await seasonManager.removeAllManagerSnapshots();
-      await logStatus({message = "Snapshots cleaned "});
-      await seasonManager.addGameweekTimers(5);
-      await logStatus({message = "Added gameweek timers "});
-      await seasonManager.validateTeams();
-      await logStatus({message = "Teams validated "});
-      seasonManager.resetGameweek(5);
-      await logStatus({message = "Gameweek reset"});
-      await seasonManager.removeLeaderboardCanistersAndGetCycles();
-      await logStatus({message = "Leaderboard canisters removed "});
+      
+      //await seasonManager.removeLeaderboardCanistersAndGetCycles();
+      //await logStatus({message = "Leaderboard canisters removed "});
       
       //on each update generate new hash values
       await seasonManager.updateCacheHash("clubs");
@@ -1550,7 +1540,7 @@ import Debug "mo:base/Debug";
       await seasonManager.updateCacheHash("countries");
       await seasonManager.updateCacheHash("system_state");
 
-      //await cyclesCheckCallback(); TODO: Add back in after canister references cleared and updated
+      await cyclesCheckCallback(); 
     };
 
     private func updateManagerCanisterWasms() : async (){
@@ -1569,22 +1559,14 @@ import Debug "mo:base/Debug";
 
     public shared ({ caller }) func logStatus (dto: DTOs.LogStatusDTO) : async (){
       assert not Principal.isAnonymous(caller);
-      let principalId = Principal.toText(caller);
 
-      let managerCanisterIds = await getManagerCanisterIds();
-      let foundManagerCanisterId = Array.find(managerCanisterIds, func(canisterId: T.CanisterId) : Bool{
-        canisterId == principalId
+      recordSystemEvent({
+        eventDetail = dto.message; 
+        eventId = 0;
+        eventTime = Time.now();
+        eventTitle = "Canister Log";
+        eventType = #SystemCheck;
       });
-
-      if(Option.isSome(foundManagerCanisterId)){
-        recordSystemEvent({
-            eventDetail = dto.message; 
-            eventId = 0;
-            eventTime = Time.now();
-            eventTitle = "Canister Log";
-            eventType = #SystemCheck;
-          });
-      };
     };
     
     //Canister cycle topup functions
@@ -1609,9 +1591,9 @@ import Debug "mo:base/Debug";
       let canisterTypes = List.fromArray<T.CanisterType>([
         #Dapp,
         #Manager,
-        #WeeklyLeaderboard,
-        #MonthlyLeaderboard,
-        #SeasonLeaderboard,
+        //#WeeklyLeaderboard, TODO: Add back in later when obtained cycles.
+        //#MonthlyLeaderboard,
+        //#SeasonLeaderboard,
         #SNS,
         #Archive
       ]);
