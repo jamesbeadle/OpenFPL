@@ -838,11 +838,16 @@ type Error =
    AlreadyExists;
    CanisterCreateError;
    DecodeError;
+   DuplicatePlayerInTeam;
    InvalidData;
    InvalidTeamError;
+   MoreThan2PlayersFromClub;
+   Not11Players;
    NotAllowed;
    NotAuthorized;
    NotFound;
+   NumberPerPositionError;
+   SelectedCaptainNotInTeam;
    SystemOnHold;
  };
 type EntryRequirement = 

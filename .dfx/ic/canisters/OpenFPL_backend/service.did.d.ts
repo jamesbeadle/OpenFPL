@@ -109,14 +109,19 @@ export type EntryRequirement =
   | { PaidInviteEntry: null }
   | { FreeEntry: null };
 export type Error =
+  | { MoreThan2PlayersFromClub: null }
   | { DecodeError: null }
   | { NotAllowed: null }
+  | { DuplicatePlayerInTeam: null }
   | { NotFound: null }
+  | { NumberPerPositionError: null }
   | { NotAuthorized: null }
+  | { SelectedCaptainNotInTeam: null }
   | { InvalidData: null }
   | { SystemOnHold: null }
   | { AlreadyExists: null }
   | { CanisterCreateError: null }
+  | { Not11Players: null }
   | { InvalidTeamError: null };
 export interface EventLogEntry {
   eventId: bigint;

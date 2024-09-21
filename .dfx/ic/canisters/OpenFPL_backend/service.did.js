@@ -1,14 +1,19 @@
 export const idlFactory = ({ IDL }) => {
   const CanisterId = IDL.Text;
   const Error = IDL.Variant({
+    MoreThan2PlayersFromClub: IDL.Null,
     DecodeError: IDL.Null,
     NotAllowed: IDL.Null,
+    DuplicatePlayerInTeam: IDL.Null,
     NotFound: IDL.Null,
+    NumberPerPositionError: IDL.Null,
     NotAuthorized: IDL.Null,
+    SelectedCaptainNotInTeam: IDL.Null,
     InvalidData: IDL.Null,
     SystemOnHold: IDL.Null,
     AlreadyExists: IDL.Null,
     CanisterCreateError: IDL.Null,
+    Not11Players: IDL.Null,
     InvalidTeamError: IDL.Null,
   });
   const Result = IDL.Variant({ ok: IDL.Null, err: Error });
