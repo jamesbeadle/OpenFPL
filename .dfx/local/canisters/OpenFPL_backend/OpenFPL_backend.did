@@ -839,8 +839,8 @@ type Error =
    CanisterCreateError;
    DecodeError;
    DuplicatePlayerInTeam;
+   InvalidBonuses;
    InvalidData;
-   InvalidTeamError;
    MoreThan2PlayersFromClub;
    Not11Players;
    NotAllowed;
@@ -849,6 +849,8 @@ type Error =
    NumberPerPositionError;
    SelectedCaptainNotInTeam;
    SystemOnHold;
+   TeamOverspend;
+   TooManyTransfers;
  };
 type EntryRequirement = 
  variant {

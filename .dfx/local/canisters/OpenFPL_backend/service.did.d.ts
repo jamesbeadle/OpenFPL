@@ -113,16 +113,18 @@ export type Error =
   | { DecodeError: null }
   | { NotAllowed: null }
   | { DuplicatePlayerInTeam: null }
+  | { InvalidBonuses: null }
+  | { TooManyTransfers: null }
   | { NotFound: null }
   | { NumberPerPositionError: null }
+  | { TeamOverspend: null }
   | { NotAuthorized: null }
   | { SelectedCaptainNotInTeam: null }
   | { InvalidData: null }
   | { SystemOnHold: null }
   | { AlreadyExists: null }
   | { CanisterCreateError: null }
-  | { Not11Players: null }
-  | { InvalidTeamError: null };
+  | { Not11Players: null };
 export interface EventLogEntry {
   eventId: bigint;
   eventTitle: string;

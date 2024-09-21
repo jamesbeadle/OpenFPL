@@ -3516,7 +3516,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "15mo3xx"
+  version_hash: "1313nip"
 };
 async function get_hooks() {
   return {};
@@ -3730,16 +3730,18 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "DecodeError": IDL2.Null,
     "NotAllowed": IDL2.Null,
     "DuplicatePlayerInTeam": IDL2.Null,
+    "InvalidBonuses": IDL2.Null,
+    "TooManyTransfers": IDL2.Null,
     "NotFound": IDL2.Null,
     "NumberPerPositionError": IDL2.Null,
+    "TeamOverspend": IDL2.Null,
     "NotAuthorized": IDL2.Null,
     "SelectedCaptainNotInTeam": IDL2.Null,
     "InvalidData": IDL2.Null,
     "SystemOnHold": IDL2.Null,
     "AlreadyExists": IDL2.Null,
     "CanisterCreateError": IDL2.Null,
-    "Not11Players": IDL2.Null,
-    "InvalidTeamError": IDL2.Null
+    "Not11Players": IDL2.Null
   });
   const Result = IDL2.Variant({ "ok": IDL2.Null, "err": Error2 });
   const TokenId = IDL2.Nat16;

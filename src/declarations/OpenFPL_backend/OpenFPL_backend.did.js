@@ -5,8 +5,11 @@ export const idlFactory = ({ IDL }) => {
     'DecodeError' : IDL.Null,
     'NotAllowed' : IDL.Null,
     'DuplicatePlayerInTeam' : IDL.Null,
+    'InvalidBonuses' : IDL.Null,
+    'TooManyTransfers' : IDL.Null,
     'NotFound' : IDL.Null,
     'NumberPerPositionError' : IDL.Null,
+    'TeamOverspend' : IDL.Null,
     'NotAuthorized' : IDL.Null,
     'SelectedCaptainNotInTeam' : IDL.Null,
     'InvalidData' : IDL.Null,
@@ -14,7 +17,6 @@ export const idlFactory = ({ IDL }) => {
     'AlreadyExists' : IDL.Null,
     'CanisterCreateError' : IDL.Null,
     'Not11Players' : IDL.Null,
-    'InvalidTeamError' : IDL.Null,
   });
   const Result = IDL.Variant({ 'ok' : IDL.Null, 'err' : Error });
   const TokenId = IDL.Nat16;
