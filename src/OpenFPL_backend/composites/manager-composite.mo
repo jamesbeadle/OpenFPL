@@ -388,7 +388,7 @@ module {
 
       let manager = await manager_canister.getManager(managerPrincipalId);      
       if (invalidBonuses(manager, dto, systemState, allPlayers)) {
-        return #err(#InvalidTeamError);
+        return #err(#InvalidBonuses);
       };
 
       switch(manager){
@@ -398,13 +398,13 @@ module {
         case (?foundManager){
 
           if(overspent(foundManager.bankQuarterMillions, foundManager.playerIds, dto.playerIds, allPlayers)){
-            return #err(#InvalidTeamError);
+            return #err(#TeamOverspend);
           };
           var transfersAvailable = 2;
           if(systemState.pickTeamGameweek > 1){
             let transfersAvailable = getTransfersAvailable(foundManager, dto.playerIds, allPlayers);
             if (transfersAvailable < 0) {
-              return #err(#InvalidTeamError);
+              return #err(#TooManyTransfers);
             };
           };
           
@@ -452,7 +452,7 @@ module {
         case (?foundDTO){
 
         if (invalidBonuses(null, foundDTO, systemState, players)) {
-          return #err(#InvalidTeamError);
+          return #err(#InvalidBonuses);
         };
 
         var bonusPlayed = foundDTO.goalGetterGameweek == systemState.pickTeamGameweek 

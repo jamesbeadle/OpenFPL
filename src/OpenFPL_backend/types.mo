@@ -21,7 +21,6 @@ module _Types {
     #NotAuthorized;
     #NotAllowed;
     #DecodeError;
-    #InvalidTeamError;
     #InvalidData;
     #SystemOnHold;
     #CanisterCreateError;
@@ -30,6 +29,9 @@ module _Types {
     #MoreThan2PlayersFromClub;
     #NumberPerPositionError;
     #SelectedCaptainNotInTeam;
+    #InvalidBonuses;
+    #TeamOverspend;
+    #TooManyTransfers;
   };
 
 
