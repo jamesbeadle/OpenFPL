@@ -637,44 +637,45 @@ module {
 
     private func getTransfersAvailable(manager: T.Manager, updatedPlayerIds: [T.PlayerId], allPlayers: [DTOs.PlayerDTO]) : Int {
       
-      //get the players in the team
-      
+
       let newPlayers = Array.filter<DTOs.PlayerDTO>(
         allPlayers,
         func(player : DTOs.PlayerDTO) : Bool {
-          let playerId = player.id;
-          let isPlayerIdInNewTeam = Array.find(
+          return Option.isSome(Array.find(
             updatedPlayerIds,
             func(id : Nat16) : Bool {
-              return id == playerId;
+              return id == player.id;
             },
-          );
-          return Option.isSome(isPlayerIdInNewTeam);
+          ));
         },
       );
 
-      //get the players in the old team
       let oldPlayers = Array.filter<DTOs.PlayerDTO>(
         allPlayers,
         func(player : DTOs.PlayerDTO) : Bool {
-          let playerId = player.id;
-          let isPlayerInOldTeam = Array.find(
+          return Option.isSome(Array.find(
             manager.playerIds,
             func(id : Nat16) : Bool {
-              return id == playerId;
+              return id == player.id;
             },
-          );
-          return Option.isSome(isPlayerInOldTeam);
+          ));
         },
       );
 
-      let transfersAvailable: Int = Int64.toInt(Int64.fromNat64(Nat64.fromNat(Nat8.toNat(manager.transfersAvailable))));
-      let totalNewPlayers: Int = Array.size(newPlayers);
-      let totalOldPlayers: Int = Array.size(oldPlayers);
-      if(totalNewPlayers != totalOldPlayers){
-        return 0;
-      };
-      return transfersAvailable - totalNewPlayers;
+      let additions = Array.filter<DTOs.PlayerDTO>(
+        newPlayers,
+        func(newPlayer : DTOs.PlayerDTO) : Bool {
+          return Option.isNull(Array.find(
+            oldPlayers,
+            func(oldPlayer: DTOs.PlayerDTO) : Bool {
+              return oldPlayer.id == newPlayer.id;
+            },
+          ));
+        },
+      );
+
+      let transfersAvailable: Int = Int64.toInt(Int64.fromNat64(Nat64.fromNat(Nat8.toNat(manager.transfersAvailable)))) -  Array.size(additions);
+      return transfersAvailable;
     };
 
     private func getMonthlyBonuses(manager: T.Manager, dto: DTOs.UpdateTeamSelectionDTO, systemState: T.SystemState) : Nat8 {

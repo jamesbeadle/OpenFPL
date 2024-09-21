@@ -1524,7 +1524,7 @@ import Debug "mo:base/Debug";
 
     private func postUpgradeCallback() : async (){
 
-      await updateManagerCanisterWasms();
+      //await updateManagerCanisterWasms();
       
       //await seasonManager.removeLeaderboardCanistersAndGetCycles();
       //await logStatus({message = "Leaderboard canisters removed "});
