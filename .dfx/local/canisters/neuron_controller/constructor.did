@@ -1,0 +1,103 @@
+type AccountId = blob;
+type AccountIdentifier = record { hash : blob };
+type Address = text;
+type Amount = record { e8s : nat64 };
+type AsyncError = variant {
+  other : text;
+  fee_not_defined : text;
+  trapped : text;
+};
+type AsyncReturn = variant { ok; err : AsyncError };
+type By = variant {
+  NeuronIdOrSubaccount;
+  MemoAndController : ClaimOrRefreshNeuronFromAccount;
+  Memo : nat64;
+};
+type ChangeAutoStakeMaturity = record {
+  requested_setting_for_auto_stake_maturity : bool;
+};
+type ClaimOrRefresh = record { by : opt By };
+type ClaimOrRefreshNeuronFromAccount = record {
+  controller : opt principal;
+  memo : nat64;
+};
+type ClaimOrRefreshResponse = record { refreshed_neuron_id : opt NeuronId };
+type Command = variant {
+  Spawn : Spawn;
+  Follow : Follow;
+  ClaimOrRefresh : ClaimOrRefresh;
+  Configure : Configure;
+  StakeMaturity : StakeMaturityResponse;
+  Disburse : Disburse;
+};
+type CommandResponse = variant {
+  Error : GovernanceError;
+  Spawn : SpawnResponse;
+  Follow;
+  ClaimOrRefresh : ClaimOrRefreshResponse;
+  Configure;
+  StakeMaturity : StakeMaturityResponse;
+  Disburse : DisburseResponse;
+};
+type Configure = record { operation : opt Operation };
+type Disburse = record {
+  to_account : opt AccountIdentifier;
+  amount : opt Amount;
+};
+type DisburseResponse = record { transfer_block_height : nat64 };
+type Error = variant {
+  expired;
+  missing : text;
+  other : text;
+  invalid : text;
+  fee_not_defined : text;
+  trapped : text;
+  rejected : text;
+  fatal : text;
+};
+type Follow = record { topic : int32; followees : vec NeuronId };
+type GovernanceError = record { error_message : text; error_type : int32 };
+type HttpHeader = record { value : text; name : text };
+type HttpResponsePayload = record {
+  status : nat;
+  body : blob;
+  headers : vec HttpHeader;
+};
+type IncreaseDissolveDelay = record {
+  additional_dissolve_delay_seconds : nat32;
+};
+type ManageNeuronResponse = record { command : opt CommandResponse };
+type NeuronController = service {
+  getAccountIdentifier : () -> (AccountId) query;
+  getBackendCanisterId : () -> (text);
+  getLedgerAddress : () -> (Address) query;
+  getNeuronAddress : () -> (Address) query;
+  getNeuronId : () -> (nat64) query;
+  getNeuronResponse : () -> (opt NeuronResponse) query;
+  init : () -> (AsyncReturn);
+  manage_neuron : (Command) -> (NeuronResponse);
+  stake_nns_neuron : () -> (NeuronResponse);
+  transform : (TransformArgs) -> (HttpResponsePayload) query;
+};
+type NeuronId = record { id : nat64 };
+type NeuronResponse = variant { ok : ManageNeuronResponse; err : Error };
+type Operation = variant {
+  ChangeAutoStakeMaturity : ChangeAutoStakeMaturity;
+  StopDissolving;
+  StartDissolving;
+  IncreaseDissolveDelay : IncreaseDissolveDelay;
+  SetDissolveTimestamp : SetDissolveTimestamp;
+};
+type SetDissolveTimestamp = record { dissolve_timestamp_seconds : nat64 };
+type Spawn = record {
+  percentage_to_spawn : opt nat32;
+  new_controller : opt principal;
+  nonce : opt nat64;
+};
+type SpawnResponse = record { created_neuron_id : opt NeuronId };
+type StakeMaturityResponse = record {
+  maturity_e8s : nat64;
+  stake_maturity_e8s : nat64;
+};
+type TransformArgs = record { context : blob; response : HttpResponsePayload };
+service : () -> NeuronController
