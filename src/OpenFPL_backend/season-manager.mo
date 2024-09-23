@@ -1545,27 +1545,6 @@ module {
       await setTransferWindowTimers();
     };
 
-    /*
-    public func setupTesting() {
-
-      systemState := {
-        calculationGameweek = 1;
-        calculationMonth = Utilities.unixTimeToMonth(Time.now());
-        calculationSeasonId = 1;
-        pickTeamGameweek = 1;
-        pickTeamSeasonId = 1;
-        seasonActive = true;
-        transferWindowActive = true;
-        onHold = false;
-      };
-
-      playerComposite.setInitialPlayers();
-      clubComposite.setInitialClubs();
-      seasonComposite.setInitialSeason();
-    
-    };
-    */
-
     public func validateTeams() : async () {
       await managerComposite.validateTeams();
     };
