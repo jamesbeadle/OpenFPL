@@ -456,10 +456,6 @@ import Debug "mo:base/Debug";
       await checkCanisterCycles();
     };
 
-    private func systemCheckCallback() : async () {
-      await checkSystem();
-    };
-
     //Private league functions
     
     public shared ({ caller }) func getManagerPrivateLeagues() : async Result.Result<DTOs.ManagerPrivateLeaguesDTO, T.Error> {
@@ -1692,35 +1688,6 @@ import Debug "mo:base/Debug";
     };
 
     private func defaultCallback() : async () {};
-
-    private func checkSystem() : async () {
-      
-      let eventTime = Time.now();
-      let dateString = Utilities.getReadableDate(eventTime);
-
-      let cyclesAvailableResult = await getCanisterCyclesBalance();
-      switch(cyclesAvailableResult){
-        case (#ok result){
-          let totalCanisterCount = seasonManager.getTotalCanisters();
-          let totalManagerCount = seasonManager.getTotalManagers();
-          
-          recordSystemEvent({
-            eventDetail = "OpenFPL system check. Backend cycles:  " # Nat.toText(result) # ", total canisters: " # Nat.toText(totalCanisterCount) # ", total managers: " # Nat.toText(totalManagerCount) # "."; 
-            eventId = 0;
-            eventTime = Time.now();
-            eventTitle = "System Check " # dateString # ". (ID: " # Int.toText(stable_next_system_event_id) # ")";
-            eventType = #SystemCheck;
-          });
-
-          let remainingDuration = Nat64.toNat(Nat64.fromIntWrap(Utilities.getNext6AM() - Time.now()));
-          ignore Timer.setTimer<system>(#nanoseconds remainingDuration, systemCheckCallback);
-
-        };
-        case (_){
-
-        }
-      };
-    };
 
     //status functions
     public func getManagerCanisterIds() : async [T.CanisterId] {

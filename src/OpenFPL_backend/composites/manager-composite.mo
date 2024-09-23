@@ -69,9 +69,6 @@ module {
             case (?foundManager) {
              
               for (managerSeason in Iter.fromList(foundManager.history)) {
-
-                logStatus("Backend: Found manager " # foundManager.principalId # " from canister " # foundCanisterId # " with " # Nat.toText(List.size(managerSeason.gameweeks)) # " gameweeks.");
-                
                 if (managerSeason.seasonId == calculationSeasonId) {
 
                   var weeklyPosition : Int = 0;
@@ -545,18 +542,7 @@ module {
         };
         managerCanisterIds.put(managerPrincipalId, activeManagerCanisterId);
         totalManagers := totalManagers + 1;
-        switch(recordSystemEvent){
-          case null {};
-          case (?function){
-            function({
-              eventDetail = "New manager canister created, ID: " # activeManagerCanisterId;
-              eventId = 0;
-              eventTime = Time.now();
-              eventTitle = "New Manager Canister Created";
-              eventType = #ManagerCanisterCreated;
-            });
-          }
-        };
+        
         return await new_manager_canister.addNewManager(newManager);
       };
 
@@ -1238,9 +1224,7 @@ module {
           snapshotFantasyTeams : (seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) -> async ();
         };
 
-        logStatus("Call canister " # canisterId # " to snapshot fantasy teams.");
         await manager_canister.snapshotFantasyTeams(seasonId, gameweek, month);
-        logStatus("Snapshotting of fantasy teams in canister ." # canisterId # " is complete.");
       };
     };
 
@@ -1476,21 +1460,6 @@ module {
       return List.toArray(uniqueManagerCanisterIds);
     };
 
-    private func logStatus(message: Text){
-      switch(recordSystemEvent){
-        case (?foundFunction){
-          foundFunction({
-              eventDetail = message; 
-              eventId = 0;
-              eventTime = Time.now();
-              eventTitle = "Canister Log";
-              eventType = #SystemCheck;
-            });
-        };
-        case (null){}
-      };
-    };
-
     public func cleanFantasyTeams() : async (){
       for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
         let manager_canister = actor (canisterId) : actor {
@@ -1498,8 +1467,6 @@ module {
         };
 
         await manager_canister.cleanFantasyTeams();
-
-        logStatus("Clean fantasy teams end from manager composite.");
       };
     };
 
@@ -1510,8 +1477,6 @@ module {
         };
 
         await manager_canister.removeDuplicateGameweekSnapshots();
-
-        logStatus("Remove duplicate gameweeks complete.");
       };
     };
 
@@ -1522,8 +1487,6 @@ module {
         };
 
         await manager_canister.resetManagerSnapshotPoints();
-
-        logStatus("Remove duplicate gameweeks complete.");
       };
     };
 
@@ -1536,7 +1499,6 @@ module {
 
         let snapshots = await manager_canister.getOrderedSnapshots(1,1);
         snapshotsBuffer.append(Buffer.fromArray(snapshots));
-        logStatus("Found ." # Nat.toText(Array.size(snapshots)) # " snapshots.");
       };
       return Buffer.toArray(snapshotsBuffer);
     };
@@ -1548,8 +1510,6 @@ module {
         };
 
         await manager_canister.removeAllManagerSnapshots();
-
-        logStatus("Remove all manager snapshots complete.");
       };
     };
 
@@ -1560,8 +1520,6 @@ module {
         };
 
         await manager_canister.validateTeams();
-
-        logStatus("Validate manager snapshots complete.");
       };
     };
 

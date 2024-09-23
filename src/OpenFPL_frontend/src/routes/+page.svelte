@@ -61,13 +61,16 @@
       
       let managerPromise = managerStore.getTotalManagers();
       managerPromise.then(total => {
+        console.log("promise returned")
         managerCount = total;
       });
 
+      console.log("should be before promise returns")
 
       if ($teamStore.length == 0) return;
       if ($fixtureStore.length == 0) return;
 
+      console.log("expect this to show")
       await weeklyLeaderboardStore.sync(
         $systemStore?.calculationSeasonId ?? 1,
         $systemStore?.calculationGameweek ?? 1
@@ -79,6 +82,7 @@
 
       let nextFixture = await fixtureStore.getNextFixture();
 
+      console.log(`next fixture ${nextFixture}`)
       nextFixtureHomeTeam = await teamStore.getTeamById(
         nextFixture ? nextFixture.homeClubId : 0
       );
@@ -94,7 +98,7 @@
       nextFixtureTime = formatUnixTimeToTime(
         nextFixture ? nextFixture.kickOff : 0n
       );
-
+      console.log("next fixture time")
       let countdownTime = getCountdownTime(
         nextFixture ? nextFixture.kickOff : 0n
       );

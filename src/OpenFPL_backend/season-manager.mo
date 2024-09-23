@@ -344,13 +344,13 @@ module {
             function({
               eventDetail = 
                 "System Status Updated: Calculation Gameweek: " # Nat8.toText(systemState.calculationGameweek) 
-                  # ", Pick Team Gameweek: " # Nat8.toText(systemState.calculationMonth) 
-                  # ", Pick Team Gameweek: " # Nat16.toText(systemState.calculationSeasonId) 
+                  # ", Calculation Month: " # Nat8.toText(systemState.calculationMonth) 
+                  # ", Calculation Season Id: " # Nat16.toText(systemState.calculationSeasonId) 
                   # ", Pick Team Gameweek: " # Nat8.toText(systemState.pickTeamGameweek) 
-                  # ", Pick Team Gameweek: " # Nat16.toText(systemState.pickTeamSeasonId) 
-                  # ", Pick Team Gameweek: " # Bool.toText(systemState.transferWindowActive) 
-                  # ", Pick Team Gameweek: " # Bool.toText(systemState.seasonActive) 
-                  # ", Pick Team Gameweek: " # Bool.toText(systemState.onHold) # "."; 
+                  # ", Pick Team Season Id: " # Nat16.toText(systemState.pickTeamSeasonId) 
+                  # ", Transfer Window Active: " # Bool.toText(systemState.transferWindowActive) 
+                  # ", Season Active: " # Bool.toText(systemState.seasonActive) 
+                  # ", On Hold: " # Bool.toText(systemState.onHold) # "."; 
               eventId = 0;
               eventTime = Time.now();
               eventTitle = "Canister Topup";
