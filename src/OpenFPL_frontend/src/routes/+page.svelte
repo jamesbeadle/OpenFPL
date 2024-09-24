@@ -80,13 +80,12 @@
     } finally {
       section1Loading = false;
     }
+    console.log("Load Section 1 Completed")
   }
 
   async function loadSection2(): Promise<void> {
     try {
-      console.log("Getting next fixture")
       let nextFixture = await fixtureStore.getNextFixture();
-
       nextFixtureHomeTeam = await teamStore.getTeamById(
         nextFixture ? nextFixture.homeClubId : 0
       );
@@ -102,7 +101,6 @@
       nextFixtureTime = formatUnixTimeToTime(
         nextFixture ? nextFixture.kickOff : 0n
       );
-
       let countdownTime = getCountdownTime(
         nextFixture ? nextFixture.kickOff : 0n
       );
@@ -110,15 +108,14 @@
       countdownHours = countdownTime.hours.toString();
       countdownMinutes = countdownTime.minutes.toString();
 
+      if ($teamStore.length == 0) return;
+      if ($fixtureStore.length == 0) return;
+
       console.log("Get leading weekly team")
       weeklyLeader = await weeklyLeaderboardStore.getLeadingWeeklyTeam(
         $systemStore?.calculationSeasonId ?? 1,
         $systemStore?.calculationGameweek ?? 1
       );
-      console.log("Get leading weekly team complete")
-
-      if ($teamStore.length == 0) return;
-      if ($fixtureStore.length == 0) return;
 
       console.log("Sync weekly leaderboard store")
       await weeklyLeaderboardStore.sync(
@@ -126,6 +123,7 @@
         $systemStore?.calculationGameweek ?? 1
       );
       console.log("Sync weekly leaderboard store complete")
+      console.log("Load Section 2 Completed")
       
     } catch (error) {
       console.error("Error loading section 2:", error);
@@ -144,7 +142,7 @@
 </script>
 
 <Layout>
-  <div class="page-header-wrapper flex">
+  <div class="flex page-header-wrapper">
     {#if !section1Loading}
       <div class="content-panel lg:w-1/2">
         <div class="flex-grow">
@@ -173,7 +171,7 @@
         </div>
       </div>
     {:else}
-      <div class="content-panel lg:w-1/2 flex items-center justify-center">
+      <div class="flex items-center justify-center content-panel lg:w-1/2">
         <RelativeSpinner />
       </div>
     {/if}
@@ -181,10 +179,10 @@
     {#if !section2Loading}
       <div class="flex lg:hidden">
         <div class="content-panel">
-          <div class="flex flex flex-col mt-2 xs:mr-2">
+          <div class="flex flex-col mt-2 xs:mr-2">
             <p class="content-panel-header">Next Game</p>
 
-            <div class="flex justify-start ml-1 items-center mb-2">
+            <div class="flex items-center justify-start mb-2 ml-1">
               <div class="flex">
                 <a
                   class="flex flex-col items-center justify-center"
@@ -211,7 +209,7 @@
                   >
                 </a>
               </div>
-              <div class="w-v ml-1 mr-1 flex justify-center">
+              <div class="flex justify-center ml-1 mr-1 w-v">
                 <p class="mt-2 mb-2">v</p>
               </div>
               <div class="flex">
@@ -262,14 +260,14 @@
         </div>
       </div>
       
-      <div class="hidden lg:flex w-1/2">
+      <div class="hidden w-1/2 lg:flex">
         <div class="content-panel">
           <div class="flex-grow">
             <p class="content-panel-header">Next Game</p>
             <div class="flex flex-row">
               <div class="flex justify-center">
                 <a
-                  class="flex flex-col items-center justify-left mt-5"
+                  class="flex flex-col items-center mt-5 justify-left"
                   href={`/club?id=${
                     nextFixtureHomeTeam ? nextFixtureHomeTeam.id : -1
                   }`}
@@ -294,7 +292,7 @@
                 </a>
               </div>
               <div
-                class="w-v ml-1 mr-1 flex justify-center mt-6 lg:mt-2 xl:mt-6"
+                class="flex justify-center mt-6 ml-1 mr-1 w-v lg:mt-2 xl:mt-6"
               >
                 <p class="mt-2 mb-2">v</p>
               </div>
@@ -367,21 +365,21 @@
       </div>
     {:else}
       <div class="flex lg:hidden">
-        <div class="content-panel flex items-center justify-center">
+        <div class="flex items-center justify-center content-panel">
           <RelativeSpinner />
         </div>
       </div>
-      <div class="hidden lg:flex w-1/2">
-        <div class="content-panel flex items-center justify-center">
+      <div class="hidden w-1/2 lg:flex">
+        <div class="flex items-center justify-center content-panel">
           <RelativeSpinner />
         </div>
       </div>
     {/if}
   </div>
 
-  <div class="bg-panel rounded-md">
+  <div class="rounded-md bg-panel">
     <ul
-      class="flex bg-light-gray px-1 md:px-4 pt-2 contained-text border-b border-gray-700 mb-4"
+      class="flex px-1 pt-2 mb-4 border-b border-gray-700 bg-light-gray md:px-4 contained-text"
     >
       <li
       class={`mr-1 md:mr-4 ${activeTab === "fixtures" ? "active-tab" : ""}`}
@@ -450,7 +448,7 @@
         <LeagueTableComponent />
       {/if}
     {:else}
-      <div class="p-4 flex items-center justify-center">
+      <div class="flex items-center justify-center p-4">
         <RelativeSpinner />
       </div>
     {/if}

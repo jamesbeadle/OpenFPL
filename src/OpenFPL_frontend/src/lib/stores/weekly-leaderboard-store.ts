@@ -85,10 +85,9 @@ function createWeeklyLeaderboardStore() {
   ): Promise<WeeklyLeaderboardDTO> {
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
-
+ 
     if (currentPage <= 4 && gameweek == calculationGameweek) {
       const cachedData = localStorage.getItem(category);
-
       if (cachedData && cachedData != "undefined") {
         let cachedWeeklyLeaderboard: WeeklyLeaderboardDTO;
         cachedWeeklyLeaderboard = JSON.parse(cachedData, replacer);
@@ -102,9 +101,8 @@ function createWeeklyLeaderboardStore() {
             ),
           };
         }
-      }
+      } 
     }
-
     let dto: GetWeeklyLeaderboardDTO = {
       offset: BigInt(offset),
       seasonId: seasonId,
@@ -112,9 +110,8 @@ function createWeeklyLeaderboardStore() {
       searchTerm: searchTerm,
       gameweek: gameweek,
     };
-
     let leaderboardData = await actor.getWeeklyLeaderboard(dto);
-    if (isError(leaderboardData)) {
+    if (isError(leaderboardData)) { 
       let emptyLeaderboard = {
         entries: [],
         gameweek: 0,
@@ -125,14 +122,12 @@ function createWeeklyLeaderboardStore() {
         category,
         JSON.stringify(emptyLeaderboard, replacer),
       );
-      return { entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n };
+      return { entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n }; 
     }
-
     localStorage.setItem(
       category,
       JSON.stringify(leaderboardData.ok, replacer),
     );
-
     return leaderboardData;
   }
 
