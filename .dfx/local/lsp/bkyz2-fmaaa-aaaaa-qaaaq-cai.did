@@ -1050,7 +1050,6 @@ service : {
   saveFantasyTeam: (UpdateTeamSelectionDTO) -> (Result);
   searchUsername: (UsernameFilterDTO) -> (Result_1);
   setTimer: (int, text) -> ();
-  setupTesting: () -> ();
   updateFavouriteClub: (UpdateFavouriteClubDTO) -> (Result);
   updateLeagueBanner: (UpdateLeagueBannerDTO) -> (Result);
   updateLeagueName: (UpdateLeagueNameDTO) -> (Result);

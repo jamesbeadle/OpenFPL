@@ -3516,7 +3516,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "bfuy2f"
+  version_hash: "hd19w8"
 };
 async function get_hooks() {
   return {};
@@ -4625,7 +4625,6 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "saveFantasyTeam": IDL2.Func([UpdateTeamSelectionDTO], [Result], []),
     "searchUsername": IDL2.Func([UsernameFilterDTO], [Result_1], []),
     "setTimer": IDL2.Func([IDL2.Int, IDL2.Text], [], []),
-    "setupTesting": IDL2.Func([], [], []),
     "updateFavouriteClub": IDL2.Func([UpdateFavouriteClubDTO], [Result], []),
     "updateLeagueBanner": IDL2.Func([UpdateLeagueBannerDTO], [Result], []),
     "updateLeagueName": IDL2.Func([UpdateLeagueNameDTO], [Result], []),
@@ -7288,7 +7287,7 @@ const Page$g = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_teamStore();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
-      return `<div class="page-header-wrapper flex">${`<div class="content-panel lg:w-1/2 flex items-center justify-center">${validate_component(Relative_spinner, "RelativeSpinner").$$render($$result, {}, {}, {})}</div>`} ${`<div class="flex lg:hidden"><div class="content-panel flex items-center justify-center">${validate_component(Relative_spinner, "RelativeSpinner").$$render($$result, {}, {}, {})}</div></div> <div class="hidden lg:flex w-1/2"><div class="content-panel flex items-center justify-center">${validate_component(Relative_spinner, "RelativeSpinner").$$render($$result, {}, {}, {})}</div></div>`}</div> <div class="bg-panel rounded-md"><ul class="flex bg-light-gray px-1 md:px-4 pt-2 contained-text border-b border-gray-700 mb-4"><li${add_attribute("class", `mr-1 md:mr-4 ${"active-tab"}`, 0)}><button${add_attribute(
+      return `<div class="flex page-header-wrapper">${`<div class="flex items-center justify-center content-panel lg:w-1/2">${validate_component(Relative_spinner, "RelativeSpinner").$$render($$result, {}, {}, {})}</div>`} ${`<div class="flex lg:hidden"><div class="flex items-center justify-center content-panel">${validate_component(Relative_spinner, "RelativeSpinner").$$render($$result, {}, {}, {})}</div></div> <div class="hidden w-1/2 lg:flex"><div class="flex items-center justify-center content-panel">${validate_component(Relative_spinner, "RelativeSpinner").$$render($$result, {}, {}, {})}</div></div>`}</div> <div class="rounded-md bg-panel"><ul class="flex px-1 pt-2 mb-4 border-b border-gray-700 bg-light-gray md:px-4 contained-text"><li${add_attribute("class", `mr-1 md:mr-4 ${"active-tab"}`, 0)}><button${add_attribute(
         "class",
         `p-2 ${"text-white"}`,
         0
@@ -7300,7 +7299,7 @@ const Page$g = create_ssr_component(($$result, $$props, $$bindings, slots) => {
         "class",
         `p-2 ${"text-gray-400"}`,
         0
-      )}>Table</button></li></ul> ${`<div class="p-4 flex items-center justify-center">${validate_component(Relative_spinner, "RelativeSpinner").$$render($$result, {}, {}, {})}</div>`}</div>`;
+      )}>Table</button></li></ul> ${`<div class="flex items-center justify-center p-4">${validate_component(Relative_spinner, "RelativeSpinner").$$render($$result, {}, {}, {})}</div>`}</div>`;
     }
   })}`;
 });

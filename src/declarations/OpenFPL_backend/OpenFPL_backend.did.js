@@ -900,7 +900,6 @@ export const idlFactory = ({ IDL }) => {
     'saveFantasyTeam' : IDL.Func([UpdateTeamSelectionDTO], [Result], []),
     'searchUsername' : IDL.Func([UsernameFilterDTO], [Result_1], []),
     'setTimer' : IDL.Func([IDL.Int, IDL.Text], [], []),
-    'setupTesting' : IDL.Func([], [], []),
     'updateFavouriteClub' : IDL.Func([UpdateFavouriteClubDTO], [Result], []),
     'updateLeagueBanner' : IDL.Func([UpdateLeagueBannerDTO], [Result], []),
     'updateLeagueName' : IDL.Func([UpdateLeagueNameDTO], [Result], []),
