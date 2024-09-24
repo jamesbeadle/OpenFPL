@@ -1548,12 +1548,6 @@ module {
     public func validateTeams() : async () {
       await managerComposite.validateTeams();
     };
-
-    public func setupTesting(){
-      seasonComposite.setInitialSeason();
-      playerComposite.setInitialPlayers();
-      clubComposite.setInitialClubs();
-    };
   };
 
 };

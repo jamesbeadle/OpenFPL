@@ -1538,11 +1538,6 @@ import Debug "mo:base/Debug";
 
       await cyclesCheckCallback(); 
     };
-    
-    public shared ({ caller }) func setupTesting () : async (){
-      Debug.print("SETTING UP TESTING");
-      seasonManager.setupTesting();
-    };
 
     private func updateManagerCanisterWasms() : async (){
       let managerCanisterIds = seasonManager.getManagerCanisterIds();
