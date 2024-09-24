@@ -44,20 +44,14 @@
 
   onMount(async () => {
     try {
-
-      console.log("Checking users login status.")
+      
       authStore.subscribe((store) => {
         isLoggedIn = store.identity !== null && store.identity !== undefined;
-        console.log(`User login: ${isLoggedIn}`)
       });
 
-      console.log("load section 1")
       loadSection1();
-      console.log("load section 2")
       loadSection2();
-      console.log("load section 3")
       loadSection3();
-      console.log("load complete")
       
     } catch (error) {
       toastsError({
@@ -72,15 +66,12 @@
 
   async function loadSection1(): Promise<void> {
     try {
-      console.log("getting manager count")
       managerCount = await managerStore.getTotalManagers();
-      console.log("load manager count complete")
     } catch (error) {
       console.error("Error loading section 1:", error);
     } finally {
       section1Loading = false;
     }
-    console.log("Load Section 1 Completed")
   }
 
   async function loadSection2(): Promise<void> {
