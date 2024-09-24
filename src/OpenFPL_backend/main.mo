@@ -1520,6 +1520,8 @@ import Debug "mo:base/Debug";
 
     private func postUpgradeCallback() : async (){
 
+      setupTesting();
+
       //await updateManagerCanisterWasms();
       
       //await seasonManager.removeLeaderboardCanistersAndGetCycles();
@@ -1537,6 +1539,10 @@ import Debug "mo:base/Debug";
       await seasonManager.updateCacheHash("system_state");
 
       await cyclesCheckCallback(); 
+    };
+
+    private func setupTesting() {
+      seasonManager.setupTesting();
     };
 
     private func updateManagerCanisterWasms() : async (){
@@ -1754,18 +1760,6 @@ import Debug "mo:base/Debug";
       );  
       return await seasonManager.getPlayerPointsMap(seasonId, gameweek);
     };
-    /*
     
-    private func setupTesting(){
-      seasonManager.setupTesting();
-    };
-
-    private func cleanFantasyTeams() : async (){
-      await seasonManager.cleanFantasyTeams();
-    };
-    public func giveBackUnassignedBonuses() : async () {
-      //await seasonManager.giveBackUnassignedBonuses();
-    };
-    */
 
   };

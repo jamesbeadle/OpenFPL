@@ -71,12 +71,12 @@ module {
     //System state variables
 
     private var systemState : T.SystemState = {
-      calculationGameweek = 1;
-      calculationMonth = 8;
+      calculationGameweek = 6;
+      calculationMonth = 9;
       calculationSeasonId = 1;
-      pickTeamGameweek = 1;
+      pickTeamGameweek = 6;
       pickTeamSeasonId = 1;
-      seasonActive = false;
+      seasonActive = true;
       transferWindowActive = false;
       onHold = false;
     };
@@ -1547,6 +1547,12 @@ module {
 
     public func validateTeams() : async () {
       await managerComposite.validateTeams();
+    };
+
+    public func setupTesting(){
+      seasonComposite.setInitialSeason();
+      playerComposite.setInitialPlayers();
+      clubComposite.setInitialClubs();
     };
   };
 
