@@ -3516,7 +3516,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1ilvb3k"
+  version_hash: "bfuy2f"
 };
 async function get_hooks() {
   return {};
@@ -4625,6 +4625,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "saveFantasyTeam": IDL2.Func([UpdateTeamSelectionDTO], [Result], []),
     "searchUsername": IDL2.Func([UsernameFilterDTO], [Result_1], []),
     "setTimer": IDL2.Func([IDL2.Int, IDL2.Text], [], []),
+    "setupTesting": IDL2.Func([], [], []),
     "updateFavouriteClub": IDL2.Func([UpdateFavouriteClubDTO], [Result], []),
     "updateLeagueBanner": IDL2.Func([UpdateLeagueBannerDTO], [Result], []),
     "updateLeagueName": IDL2.Func([UpdateLeagueNameDTO], [Result], []),
@@ -5380,7 +5381,7 @@ const i18n = readable({
   lang: "en",
   ...en
 });
-const css$b = {
+const css$c = {
   code: ".backdrop.svelte-whxjdd{position:absolute;top:0;right:0;bottom:0;left:0;background:var(--backdrop);color:var(--backdrop-contrast);-webkit-backdrop-filter:var(--backdrop-filter);backdrop-filter:var(--backdrop-filter);z-index:var(--backdrop-z-index);touch-action:manipulation;cursor:pointer}.backdrop.disablePointerEvents.svelte-whxjdd{cursor:inherit;pointer-events:none}",
   map: null
 };
@@ -5391,7 +5392,7 @@ const Backdrop = create_ssr_component(($$result, $$props, $$bindings, slots) => 
   createEventDispatcher();
   if ($$props.disablePointerEvents === void 0 && $$bindings.disablePointerEvents && disablePointerEvents !== void 0)
     $$bindings.disablePointerEvents(disablePointerEvents);
-  $$result.css.add(css$b);
+  $$result.css.add(css$c);
   $$unsubscribe_i18n();
   return `<div role="button" tabindex="-1"${add_attribute("aria-label", $i18n.core.close, 0)} class="${["backdrop svelte-whxjdd", disablePointerEvents ? "disablePointerEvents" : ""].join(" ").trim()}" data-tid="backdrop"></div>`;
 });
@@ -5424,7 +5425,7 @@ const initBusyStore = () => {
 const busyStore = initBusyStore();
 const busy = derived(busyStore, ($busyStore) => $busyStore.length > 0);
 const busyMessage = derived(busyStore, ($busyStore) => $busyStore.reverse().find(({ text: text2 }) => nonNullish(text2))?.text);
-const css$a = {
+const css$b = {
   code: ".medium.svelte-85668t{--spinner-size:30px}.small.svelte-85668t{--spinner-size:calc(var(--line-height-standard) * 1rem)}.tiny.svelte-85668t{--spinner-size:calc(var(--line-height-standard) * 0.5rem)}svg.svelte-85668t{width:var(--spinner-size);height:var(--spinner-size);animation:spinner-linear-rotate 2000ms linear infinite;position:absolute;top:calc(50% - var(--spinner-size) / 2);left:calc(50% - var(--spinner-size) / 2);--radius:45px;--circumference:calc(3.1415926536 * var(--radius) * 2);--start:calc((1 - 0.05) * var(--circumference));--end:calc((1 - 0.8) * var(--circumference))}svg.inline.svelte-85668t{display:inline-block;position:relative}circle.svelte-85668t{stroke-dasharray:var(--circumference);stroke-width:10%;transform-origin:50% 50% 0;transition-property:stroke;animation-name:spinner-stroke-rotate-100;animation-duration:4000ms;animation-timing-function:cubic-bezier(0.35, 0, 0.25, 1);animation-iteration-count:infinite;fill:transparent;stroke:currentColor;transition:stroke-dashoffset 225ms linear}@keyframes spinner-linear-rotate{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}@keyframes spinner-stroke-rotate-100{0%{stroke-dashoffset:var(--start);transform:rotate(0)}12.5%{stroke-dashoffset:var(--end);transform:rotate(0)}12.5001%{stroke-dashoffset:var(--end);transform:rotateX(180deg) rotate(72.5deg)}25%{stroke-dashoffset:var(--start);transform:rotateX(180deg) rotate(72.5deg)}25.0001%{stroke-dashoffset:var(--start);transform:rotate(270deg)}37.5%{stroke-dashoffset:var(--end);transform:rotate(270deg)}37.5001%{stroke-dashoffset:var(--end);transform:rotateX(180deg) rotate(161.5deg)}50%{stroke-dashoffset:var(--start);transform:rotateX(180deg) rotate(161.5deg)}50.0001%{stroke-dashoffset:var(--start);transform:rotate(180deg)}62.5%{stroke-dashoffset:var(--end);transform:rotate(180deg)}62.5001%{stroke-dashoffset:var(--end);transform:rotateX(180deg) rotate(251.5deg)}75%{stroke-dashoffset:var(--start);transform:rotateX(180deg) rotate(251.5deg)}75.0001%{stroke-dashoffset:var(--start);transform:rotate(90deg)}87.5%{stroke-dashoffset:var(--end);transform:rotate(90deg)}87.5001%{stroke-dashoffset:var(--end);transform:rotateX(180deg) rotate(341.5deg)}100%{stroke-dashoffset:var(--start);transform:rotateX(180deg) rotate(341.5deg)}}",
   map: null
 };
@@ -5435,10 +5436,10 @@ const Spinner = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     $$bindings.inline(inline);
   if ($$props.size === void 0 && $$bindings.size && size !== void 0)
     $$bindings.size(size);
-  $$result.css.add(css$a);
+  $$result.css.add(css$b);
   return `  <svg class="${[escape(null_to_empty(size), true) + " svelte-85668t", inline ? "inline" : ""].join(" ").trim()}" preserveAspectRatio="xMidYMid meet" focusable="false" aria-hidden="true" data-tid="spinner" viewBox="0 0 100 100"><circle cx="50%" cy="50%" r="45" class="svelte-85668t"></circle></svg>`;
 });
-const css$9 = {
+const css$a = {
   code: "div.svelte-14plyno{z-index:calc(var(--z-index) + 1000);position:fixed;top:0;right:0;bottom:0;left:0;background:var(--backdrop);color:var(--backdrop-contrast)}.content.svelte-14plyno{display:flex;flex-direction:column;justify-content:center;align-items:center}p.svelte-14plyno{padding-bottom:var(--padding);max-width:calc(var(--section-max-width) / 2)}",
   map: null
 };
@@ -5447,7 +5448,7 @@ const BusyScreen = create_ssr_component(($$result, $$props, $$bindings, slots) =
   let $busyMessage, $$unsubscribe_busyMessage;
   $$unsubscribe_busy = subscribe(busy, (value) => $busy = value);
   $$unsubscribe_busyMessage = subscribe(busyMessage, (value) => $busyMessage = value);
-  $$result.css.add(css$9);
+  $$result.css.add(css$a);
   $$unsubscribe_busy();
   $$unsubscribe_busyMessage();
   return ` ${$busy ? `<div data-tid="busy" class="svelte-14plyno"><div class="content svelte-14plyno">${nonNullish($busyMessage) ? `<p class="svelte-14plyno">${escape($busyMessage)}</p>` : ``} <span>${validate_component(Spinner, "Spinner").$$render($$result, { inline: true }, {}, {})}</span></div></div>` : ``}`;
@@ -5470,7 +5471,7 @@ const IconError = create_ssr_component(($$result, $$props, $$bindings, slots) =>
     $$bindings.size(size);
   return `  <svg xmlns="http://www.w3.org/2000/svg"${add_attribute("height", size, 0)} viewBox="0 0 24 24"${add_attribute("width", size, 0)} fill="currentColor"><path d="M0 0h24v24H0z" fill="none"></path><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"></path></svg>`;
 });
-const css$8 = {
+const css$9 = {
   code: "svg.svelte-1lui9gh{vertical-align:middle}",
   map: null
 };
@@ -5478,7 +5479,7 @@ const IconInfo = create_ssr_component(($$result, $$props, $$bindings, slots) => 
   let { size = `${DEFAULT_ICON_SIZE}px` } = $$props;
   if ($$props.size === void 0 && $$bindings.size && size !== void 0)
     $$bindings.size(size);
-  $$result.css.add(css$8);
+  $$result.css.add(css$9);
   return `  <svg${add_attribute("width", size, 0)}${add_attribute("height", size, 0)} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" data-tid="icon-info" class="svelte-1lui9gh"><path d="M10.2222 17.5C14.3643 17.5 17.7222 14.1421 17.7222 10C17.7222 5.85786 14.3643 2.5 10.2222 2.5C6.08003 2.5 2.72217 5.85786 2.72217 10C2.72217 14.1421 6.08003 17.5 10.2222 17.5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10.2222 13.3333V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10.2222 6.66699H10.2305" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>`;
 });
 const IconWarning = create_ssr_component(($$result, $$props, $$bindings, slots) => {
@@ -5574,7 +5575,7 @@ const initMenuStore = () => {
 };
 const menuStore = initMenuStore();
 derived(menuStore, ($menuStore) => $menuStore === Menu.COLLAPSED);
-const css$7 = {
+const css$8 = {
   code: ".modal.svelte-1bbimtl.svelte-1bbimtl{position:fixed;top:0;right:0;bottom:0;left:0;z-index:var(--modal-z-index);touch-action:initial;cursor:initial}.wrapper.svelte-1bbimtl.svelte-1bbimtl{position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);display:flex;flex-direction:column;background:var(--overlay-background);color:var(--overlay-background-contrast);--button-secondary-background:var(--focus-background);overflow:hidden;box-sizing:border-box;box-shadow:var(--overlay-box-shadow)}.wrapper.svelte-1bbimtl .container-wrapper.svelte-1bbimtl{margin:var(--padding-1_5x) var(--padding-2x) auto;display:flex;flex-direction:column;gap:var(--padding-1_5x);flex:1;overflow:hidden}.wrapper.alert.svelte-1bbimtl.svelte-1bbimtl{width:var(--alert-width);max-width:var(--alert-max-width);max-height:var(--alert-max-height);border-radius:var(--alert-border-radius)}.wrapper.alert.svelte-1bbimtl .header.svelte-1bbimtl{padding:var(--alert-padding-y) var(--alert-padding-x) var(--padding)}.wrapper.alert.svelte-1bbimtl .container-wrapper.svelte-1bbimtl{margin-bottom:calc(var(--alert-padding-y) * 2 / 3)}.wrapper.alert.svelte-1bbimtl .content.svelte-1bbimtl{margin:0 0 calc(var(--alert-padding-y) / 2);padding:calc(var(--alert-padding-y) / 2) calc(var(--alert-padding-x) / 2) 0}.wrapper.alert.svelte-1bbimtl .footer.svelte-1bbimtl{padding:0 var(--alert-padding-x) calc(var(--alert-padding-y) * 2 / 3)}@media(min-width: 576px){.wrapper.alert.svelte-1bbimtl .footer.svelte-1bbimtl{justify-content:flex-end}}.wrapper.dialog.svelte-1bbimtl.svelte-1bbimtl{width:var(--dialog-width);max-width:var(--dialog-max-width);min-height:var(--dialog-min-height);height:var(--dialog-height);max-height:var(--dialog-max-height, 100%);border-radius:var(--dialog-border-radius)}@supports (-webkit-touch-callout: none){.wrapper.dialog.svelte-1bbimtl.svelte-1bbimtl{max-height:-webkit-fill-available}@media(min-width: 768px){.wrapper.dialog.svelte-1bbimtl.svelte-1bbimtl{max-height:var(--dialog-max-height, 100%)}}}.wrapper.dialog.svelte-1bbimtl .header.svelte-1bbimtl{padding:var(--dialog-padding-y) var(--padding-3x) var(--padding)}.wrapper.dialog.svelte-1bbimtl .container-wrapper.svelte-1bbimtl{margin-bottom:var(--dialog-padding-y)}.wrapper.dialog.svelte-1bbimtl .content.svelte-1bbimtl{margin:0;padding:var(--dialog-padding-y) var(--dialog-padding-x)}.header.svelte-1bbimtl.svelte-1bbimtl{display:grid;grid-template-columns:1fr auto 1fr;gap:var(--padding);z-index:var(--z-index);position:relative}.header.svelte-1bbimtl h2.svelte-1bbimtl{white-space:var(--text-white-space, nowrap);overflow:hidden;text-overflow:ellipsis;grid-column-start:2;text-align:center}.header.svelte-1bbimtl button.svelte-1bbimtl{display:flex;justify-content:center;align-items:center;padding:0;justify-self:flex-end}.header.svelte-1bbimtl button.svelte-1bbimtl:active,.header.svelte-1bbimtl button.svelte-1bbimtl:focus,.header.svelte-1bbimtl button.svelte-1bbimtl:hover{background:var(--background-shade);border-radius:var(--border-radius)}.content.svelte-1bbimtl.svelte-1bbimtl{overflow-y:var(--modal-content-overflow-y, auto);overflow-x:hidden}.container.svelte-1bbimtl.svelte-1bbimtl{position:relative;display:flex;flex-direction:column;flex:1;overflow:hidden;border-radius:16px;background:var(--overlay-content-background);color:var(--overlay-content-background-contrast)}",
   map: null
 };
@@ -5599,7 +5600,7 @@ const Modal = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     $$bindings.testId(testId);
   if ($$props.disablePointerEvents === void 0 && $$bindings.disablePointerEvents && disablePointerEvents !== void 0)
     $$bindings.disablePointerEvents(disablePointerEvents);
-  $$result.css.add(css$7);
+  $$result.css.add(css$8);
   showHeader = nonNullish($$slots.title);
   showFooterAlert = nonNullish($$slots.footer) && role === "alert";
   $$unsubscribe_i18n();
@@ -5643,7 +5644,7 @@ const initToastsStore = () => {
   };
 };
 const toastsStore = initToastsStore();
-const css$6 = {
+const css$7 = {
   code: ".toast.svelte-w1j1kj.svelte-w1j1kj{display:flex;justify-content:space-between;align-items:center;gap:var(--padding-1_5x);background:var(--overlay-background);color:var(--overlay-background-contrast);--button-secondary-background:var(--focus-background);border-radius:var(--border-radius);box-shadow:var(--strong-shadow, 8px 8px 16px 0 rgba(0, 0, 0, 0.25));padding:var(--padding-1_5x);box-sizing:border-box}.toast.inverted.svelte-w1j1kj.svelte-w1j1kj{background:var(--toast-inverted-background);color:var(--toast-inverted-background-contrast)}.toast.svelte-w1j1kj .icon.svelte-w1j1kj{line-height:0}.toast.svelte-w1j1kj .icon.success.svelte-w1j1kj{color:var(--positive-emphasis)}.toast.svelte-w1j1kj .icon.info.svelte-w1j1kj{color:var(--primary)}.toast.svelte-w1j1kj .icon.warn.svelte-w1j1kj{color:var(--warning-emphasis-shade)}.toast.svelte-w1j1kj .icon.error.svelte-w1j1kj{color:var(--negative-emphasis)}.toast.svelte-w1j1kj .msg.svelte-w1j1kj{flex-grow:1;margin:0;word-break:break-word}.toast.svelte-w1j1kj .msg.scroll.svelte-w1j1kj{overflow-y:auto;max-height:calc(var(--font-size-standard) * 3 * 1.3);line-height:normal}.toast.svelte-w1j1kj .msg.truncate.svelte-w1j1kj{white-space:var(--text-white-space, nowrap);overflow:hidden;text-overflow:ellipsis}.toast.svelte-w1j1kj .msg.truncate .title.svelte-w1j1kj{white-space:var(--text-white-space, nowrap);overflow:hidden;text-overflow:ellipsis}.toast.svelte-w1j1kj .msg.clamp.svelte-w1j1kj{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}.toast.svelte-w1j1kj .msg.clamp .title.svelte-w1j1kj{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}.toast.svelte-w1j1kj .title.svelte-w1j1kj{display:block;font-size:var(--font-size-standard);line-height:var(--line-height-standard);font-weight:var(--font-weight-bold);line-height:normal}.toast.svelte-w1j1kj button.close.svelte-w1j1kj{padding:0;line-height:0;color:inherit}",
   map: null
 };
@@ -5681,7 +5682,7 @@ const Toast = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   onDestroy(cleanUpAutoHide);
   if ($$props.msg === void 0 && $$bindings.msg && msg !== void 0)
     $$bindings.msg(msg);
-  $$result.css.add(css$6);
+  $$result.css.add(css$7);
   ({ text: text2, level, spinner, title, overflow, position, icon, theme: theme2, renderAsHtml } = msg);
   scroll = overflow === void 0 || overflow === "scroll";
   truncate = overflow === "truncate";
@@ -5692,7 +5693,7 @@ const Toast = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     (truncate ? "truncate" : "") + " " + (clamp ? "clamp" : "") + " " + (scroll ? "scroll" : "")
   ].join(" ").trim()}"${add_attribute("style", minHeightMessage, 0)}>${nonNullish(title) ? `<span class="title svelte-w1j1kj">${escape(title)}</span>` : ``} ${renderAsHtml ? `${validate_component(Html, "Html").$$render($$result, { text: text2 }, {}, {})}` : `${escape(text2)}`}</p> <button class="close svelte-w1j1kj"${add_attribute("aria-label", $i18n.core.close, 0)}>${validate_component(IconClose, "IconClose").$$render($$result, {}, {}, {})}</button> </div>`;
 });
-const css$5 = {
+const css$6 = {
   code: ".wrapper.svelte-24m335{position:fixed;left:50%;transform:translate(-50%, 0);bottom:calc(var(--layout-bottom-offset, 0) + var(--padding-2x));width:calc(100% - var(--padding-8x) - var(--padding-0_5x));display:flex;flex-direction:column;gap:var(--padding);z-index:var(--toast-info-z-index)}.wrapper.error.svelte-24m335{z-index:var(--toast-error-z-index)}@media(min-width: 1024px){.wrapper.svelte-24m335{max-width:calc(var(--section-max-width) - var(--padding-2x))}}.top.svelte-24m335{top:calc(var(--header-height) + var(--padding-3x));bottom:unset;width:calc(100% - var(--padding-6x))}@media(min-width: 1024px){.top.svelte-24m335{right:var(--padding-2x);left:unset;transform:none;max-width:calc(var(--section-max-width) / 1.5 - var(--padding-2x))}}",
   map: null
 };
@@ -5706,7 +5707,7 @@ const Toasts = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let hasErrors;
   if ($$props.position === void 0 && $$bindings.position && position !== void 0)
     $$bindings.position(position);
-  $$result.css.add(css$5);
+  $$result.css.add(css$6);
   toasts = $toastsStore.filter(({ position: pos }) => (pos ?? "bottom") === position);
   hasErrors = toasts.find(({ level }) => ["error", "warn"].includes(level)) !== void 0;
   $$unsubscribe_toastsStore();
@@ -5718,7 +5719,7 @@ const Toasts = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     return `${validate_component(Toast, "Toast").$$render($$result, { msg }, {}, {})}`;
   })}</div>` : ``}`;
 });
-const css$4 = {
+const css$5 = {
   code: "div.svelte-j8eaq1{width:100%}",
   map: null
 };
@@ -5728,7 +5729,7 @@ const WizardTransition = create_ssr_component(($$result, $$props, $$bindings, sl
   let absolutOffset = DEFAULT_OFFSET;
   if ($$props.transition === void 0 && $$bindings.transition && transition !== void 0)
     $$bindings.transition(transition);
-  $$result.css.add(css$4);
+  $$result.css.add(css$5);
   transition.diff === 0 ? 0 : transition.diff > 0 ? absolutOffset : -absolutOffset;
   return `<div class="svelte-j8eaq1">${slots.default ? slots.default({}) : ``}</div>`;
 });
@@ -6984,21 +6985,24 @@ const Footer = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   return `<footer class="bg-gray-900 text-white py-3"><div class="container mx-1 xs:mx-2 md:mx-auto flex flex-col md:flex-row items-start md:items-center justify-between text-xs"><div class="flex-1" data-svelte-h="svelte-1fjfhgh"><div class="flex justify-start"><div class="flex flex-row pl-4"><a href="https://oc.app/community/uf3iv-naaaa-aaaar-ar3ta-cai/?ref=zv6hh-xaaaa-aaaar-ac35q-cai" target="_blank" rel="noopener noreferrer"><img src="/openchat.png" class="h-4 w-auto mb-2 mr-2" alt="OpenChat"></a> <a href="https://x.com/OpenFPL_DAO" target="_blank" rel="noopener noreferrer"><img src="/twitter.png" class="h-4 w-auto mr-2 mb-2" alt="X"></a> <a href="https://github.com/jamesbeadle/OpenFPL" target="_blank" rel="noopener noreferrer"><img src="/github.png" class="h-4 w-auto mb-2" alt="GitHub"></a></div></div> <div class="flex justify-start"><div class="flex flex-col md:flex-row md:space-x-2 pl-4"><a href="/whitepaper" class="hover:text-gray-300">Whitepaper</a> <span class="hidden md:flex">|</span> <a href="/gameplay-rules" class="hover:text-gray-300 md:hidden lg:block">Gameplay Rules</a> <a href="/gameplay-rules" class="hover:text-gray-300 hidden md:block lg:hidden">Rules</a> <span class="hidden md:flex">|</span> <a href="/terms" class="hover:text-gray-300">Terms &amp; Conditions</a></div></div></div> <div class="flex-0"><a href="/"><b class="px-4 mt-2 md:mt-0 md:px-10 flex items-center">${validate_component(OpenFPLIcon, "OpenFplIcon").$$render($$result, { className: "h-6 w-auto mr-2" }, {}, {})}OpenFPL</b></a></div> <div class="flex-1"><div class="flex justify-end"><div class="text-right px-4 md:px-0 mt-1 md:mt-0 md:mr-4"><a href="https://juno.build" target="_blank" class="hover:text-gray-300 flex items-center">Sponsored By juno.build
             ${validate_component(JunoIcon, "JunoIcon").$$render($$result, { className: "h-8 w-auto ml-2" }, {}, {})}</a></div></div></div></div></footer>`;
 });
-const css$3 = {
+const css$4 = {
   code: "main.svelte-cbh2q9{flex:1;display:flex;flex-direction:column}",
   map: null
 };
 const Layout = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_authStore;
+  let $$unsubscribe_systemStore;
   $$unsubscribe_authStore = subscribe(authStore, (value) => value);
+  $$unsubscribe_systemStore = subscribe(systemStore, (value) => value);
   const init2 = async () => await Promise.all([syncAuthStore()]);
   const syncAuthStore = async () => {
     {
       return;
     }
   };
-  $$result.css.add(css$3);
+  $$result.css.add(css$4);
   $$unsubscribe_authStore();
+  $$unsubscribe_systemStore();
   return ` ${function(__value) {
     if (is_promise(__value)) {
       __value.then(null, noop);
@@ -7024,12 +7028,12 @@ const BadgeIcon = create_ssr_component(($$result, $$props, $$bindings, slots) =>
     $$bindings.thirdColour(thirdColour);
   return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"${add_attribute("class", className, 0)} fill="currentColor" viewBox="0 0 814 814"><path d="M407 33.9165C295.984 33.9165 135.667 118.708 135.667 118.708V508.75C135.667 508.75 141.044 561.82 152.625 593.541C194.871 709.259 407 780.083 407 780.083C407 780.083 619.129 709.259 661.375 593.541C672.956 561.82 678.333 508.75 678.333 508.75V118.708C678.333 118.708 518.016 33.9165 407 33.9165Z"${add_attribute("fill", primaryColour, 0)}></path><path d="M712.25 101.75V493.013C712.25 649.097 603.581 689.831 407 814C210.419 689.831 101.75 649.063 101.75 493.013V101.75C167.718 45.2448 282.729 0 407 0C531.271 0 646.282 45.2448 712.25 101.75ZM644.417 135.361C585.775 96.052 496.506 67.8333 407.237 67.8333C317.223 67.8333 228.124 96.1198 169.583 135.361V492.979C169.583 595.712 225.817 622.235 407 734.025C587.979 622.337 644.417 595.814 644.417 492.979V135.361Z"${add_attribute("fill", thirdColour, 0)}></path><path d="M407.237 135.667C464.862 135.667 527.811 150.42 576.583 174.467V493.012C576.583 547.347 562.542 558.539 407 654.422L407.237 135.667Z"${add_attribute("fill", secondaryColour, 0)}></path></svg>`;
 });
-const css$2 = {
+const css$3 = {
   code: ".local-spinner.svelte-pvdm52{border:5px solid rgba(255, 255, 255, 0.3);border-top:5px solid white;border-radius:50%;width:50px;height:50px;position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);animation:svelte-pvdm52-spin 1s linear infinite}@keyframes svelte-pvdm52-spin{0%{transform:translate(-50%, -50%) rotate(0deg)}100%{transform:translate(-50%, -50%) rotate(360deg)}}",
   map: null
 };
 const Local_spinner = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  $$result.css.add(css$2);
+  $$result.css.add(css$3);
   return `<div class="local-spinner svelte-pvdm52"></div>`;
 });
 var define_process_env_default$2 = { OPENFPL_BACKEND_CANISTER_ID: "bboqb-jiaaa-aaaal-qb6ea-cai", OPENFPL_FRONTEND_CANISTER_ID: "bgpwv-eqaaa-aaaal-qb6eq-cai", NEURON_CONTROLLER_CANISTER_ID: "hqfmc-cqaaa-aaaal-qitcq-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai" };
@@ -7264,19 +7268,39 @@ function createSeasonLeaderboardStore() {
   };
 }
 createSeasonLeaderboardStore();
+const css$2 = {
+  code: ".local-spinner.svelte-1mszak5{border:5px solid rgba(255, 255, 255, 0.3);border-top:5px solid white;border-radius:50%;width:50px;height:50px;position:relative;margin:0 auto;animation:svelte-1mszak5-spin 1s linear infinite}@keyframes svelte-1mszak5-spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}",
+  map: null
+};
+const Relative_spinner = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  $$result.css.add(css$2);
+  return `<div class="local-spinner svelte-1mszak5"></div>`;
+});
 const Page$g = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_systemStore;
-  let $$unsubscribe_teamStore;
   let $$unsubscribe_fixtureStore;
+  let $$unsubscribe_teamStore;
   $$unsubscribe_systemStore = subscribe(systemStore, (value) => value);
-  $$unsubscribe_teamStore = subscribe(teamStore, (value) => value);
   $$unsubscribe_fixtureStore = subscribe(fixtureStore, (value) => value);
+  $$unsubscribe_teamStore = subscribe(teamStore, (value) => value);
   $$unsubscribe_systemStore();
-  $$unsubscribe_teamStore();
   $$unsubscribe_fixtureStore();
+  $$unsubscribe_teamStore();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
-      return `${`${validate_component(Local_spinner, "LocalSpinner").$$render($$result, {}, {}, {})}`}`;
+      return `<div class="page-header-wrapper flex">${`<div class="content-panel lg:w-1/2 flex items-center justify-center">${validate_component(Relative_spinner, "RelativeSpinner").$$render($$result, {}, {}, {})}</div>`} ${`<div class="flex lg:hidden"><div class="content-panel flex items-center justify-center">${validate_component(Relative_spinner, "RelativeSpinner").$$render($$result, {}, {}, {})}</div></div> <div class="hidden lg:flex w-1/2"><div class="content-panel flex items-center justify-center">${validate_component(Relative_spinner, "RelativeSpinner").$$render($$result, {}, {}, {})}</div></div>`}</div> <div class="bg-panel rounded-md"><ul class="flex bg-light-gray px-1 md:px-4 pt-2 contained-text border-b border-gray-700 mb-4"><li${add_attribute("class", `mr-1 md:mr-4 ${"active-tab"}`, 0)}><button${add_attribute(
+        "class",
+        `p-2 ${"text-white"}`,
+        0
+      )}>Fixtures</button></li> ${``} <li${add_attribute("class", `mr-1 md:mr-4 ${""}`, 0)}><button${add_attribute(
+        "class",
+        `p-2 ${"text-gray-400"}`,
+        0
+      )}>Leaderboards</button></li> <li${add_attribute("class", `mr-1 md:mr-4 ${""}`, 0)}><button${add_attribute(
+        "class",
+        `p-2 ${"text-gray-400"}`,
+        0
+      )}>Table</button></li></ul> ${`<div class="p-4 flex items-center justify-center">${validate_component(Relative_spinner, "RelativeSpinner").$$render($$result, {}, {}, {})}</div>`}</div>`;
     }
   })}`;
 });

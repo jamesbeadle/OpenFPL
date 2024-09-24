@@ -1520,8 +1520,6 @@ import Debug "mo:base/Debug";
 
     private func postUpgradeCallback() : async (){
 
-      setupTesting();
-
       //await updateManagerCanisterWasms();
       
       //await seasonManager.removeLeaderboardCanistersAndGetCycles();
@@ -1540,8 +1538,9 @@ import Debug "mo:base/Debug";
 
       await cyclesCheckCallback(); 
     };
-
-    private func setupTesting() {
+    
+    public shared ({ caller }) func setupTesting () : async (){
+      Debug.print("SETTING UP TESTING");
       seasonManager.setupTesting();
     };
 

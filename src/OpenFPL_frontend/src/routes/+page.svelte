@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, onDestroy } from "svelte";
+  import { onMount } from "svelte";
   import { authStore } from "$lib/stores/auth.store";
   import { systemStore } from "$lib/stores/system-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
@@ -23,7 +23,7 @@
   import LeagueTableComponent from "$lib/components/league-table.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import { weeklyLeaderboardStore } from "$lib/stores/weekly-leaderboard-store";
-    import LocalSpinner from "$lib/components/local-spinner.svelte";
+  import RelativeSpinner from "$lib/components/relative-spinner.svelte";
 
   let activeTab: string = "fixtures";
   let managerCount = 0;
@@ -38,51 +38,55 @@
   let nextFixtureAwayTeam: ClubDTO | undefined = undefined;
   let isLoggedIn = false;
   let isLoading = true;
+  let section1Loading = true;
+  let section2Loading = true;
+  let section3Loading = true;
 
   onMount(async () => {
     try {
-      console.log("syncing auth store")
-      await authStore.sync();
-      console.log("syncing system store")
-      await systemStore.sync();
-      console.log("syncing team store")
-      await teamStore.sync();
-      console.log("syncing fixture store")
-      await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
-      
 
-      console.log("subscribing to login")
+      console.log("Checking users login status.")
       authStore.subscribe((store) => {
         isLoggedIn = store.identity !== null && store.identity !== undefined;
+        console.log(`User login: ${isLoggedIn}`)
       });
 
-
-      console.log("getting total managers")
+      console.log("load section 1")
+      loadSection1();
+      console.log("load section 2")
+      loadSection2();
+      console.log("load section 3")
+      loadSection3();
+      console.log("load complete")
       
-      let managerPromise = managerStore.getTotalManagers();
-      managerPromise.then(total => {
-        console.log("promise returned")
-        managerCount = total;
+    } catch (error) {
+      toastsError({
+        msg: { text: "Error fetching homepage data." },
+        err: error,
       });
+      console.error("Error fetching homepage data:", error);
+    } finally {
+      isLoading = false;
+    }
+  });
 
-      console.log("should be before promise returns")
+  async function loadSection1(): Promise<void> {
+    try {
+      console.log("getting manager count")
+      managerCount = await managerStore.getTotalManagers();
+      console.log("load manager count complete")
+    } catch (error) {
+      console.error("Error loading section 1:", error);
+    } finally {
+      section1Loading = false;
+    }
+  }
 
-      if ($teamStore.length == 0) return;
-      if ($fixtureStore.length == 0) return;
-
-      console.log("expect this to show")
-      await weeklyLeaderboardStore.sync(
-        $systemStore?.calculationSeasonId ?? 1,
-        $systemStore?.calculationGameweek ?? 1
-      );
-      
-      if ($teamStore.length == 0) {
-        return [];
-      }
-
+  async function loadSection2(): Promise<void> {
+    try {
+      console.log("Getting next fixture")
       let nextFixture = await fixtureStore.getNextFixture();
 
-      console.log(`next fixture ${nextFixture}`)
       nextFixtureHomeTeam = await teamStore.getTeamById(
         nextFixture ? nextFixture.homeClubId : 0
       );
@@ -98,7 +102,7 @@
       nextFixtureTime = formatUnixTimeToTime(
         nextFixture ? nextFixture.kickOff : 0n
       );
-      console.log("next fixture time")
+
       let countdownTime = getCountdownTime(
         nextFixture ? nextFixture.kickOff : 0n
       );
@@ -106,32 +110,42 @@
       countdownHours = countdownTime.hours.toString();
       countdownMinutes = countdownTime.minutes.toString();
 
+      console.log("Get leading weekly team")
       weeklyLeader = await weeklyLeaderboardStore.getLeadingWeeklyTeam(
         $systemStore?.calculationSeasonId ?? 1,
         $systemStore?.calculationGameweek ?? 1
       );
+      console.log("Get leading weekly team complete")
+
+      if ($teamStore.length == 0) return;
+      if ($fixtureStore.length == 0) return;
+
+      console.log("Sync weekly leaderboard store")
+      await weeklyLeaderboardStore.sync(
+        $systemStore?.calculationSeasonId ?? 1,
+        $systemStore?.calculationGameweek ?? 1
+      );
+      console.log("Sync weekly leaderboard store complete")
+      
     } catch (error) {
-      toastsError({
-        msg: { text: "Error fetching homepage data." },
-        err: error,
-      });
-      console.error("Error fetching homepage data:", error);
+      console.error("Error loading section 2:", error);
     } finally {
-      isLoading = false;
+      section2Loading = false;
     }
-  });
+  }
+
+  async function loadSection3(): Promise<void> {
+    section3Loading = false;
+  }
 
   function setActiveTab(tab: string): void {
     activeTab = tab;
   }
-  
 </script>
 
 <Layout>
-  {#if isLoading || !$systemStore}
-    <LocalSpinner />
-  {:else}
-    <div class="page-header-wrapper flex">
+  <div class="page-header-wrapper flex">
+    {#if !section1Loading}
       <div class="content-panel lg:w-1/2">
         <div class="flex-grow">
           <p class="content-panel-header">Gameweek</p>
@@ -158,7 +172,13 @@
           <p class="content-panel-header">$FPL</p>
         </div>
       </div>
+    {:else}
+      <div class="content-panel lg:w-1/2 flex items-center justify-center">
+        <RelativeSpinner />
+      </div>
+    {/if}
 
+    {#if !section2Loading}
       <div class="flex lg:hidden">
         <div class="content-panel">
           <div class="flex flex flex-col mt-2 xs:mr-2">
@@ -241,7 +261,7 @@
           </div>
         </div>
       </div>
-
+      
       <div class="hidden lg:flex w-1/2">
         <div class="content-panel">
           <div class="flex-grow">
@@ -345,68 +365,81 @@
           </div>
         </div>
       </div>
-    </div>
+    {:else}
+      <div class="flex lg:hidden">
+        <div class="content-panel flex items-center justify-center">
+          <RelativeSpinner />
+        </div>
+      </div>
+      <div class="hidden lg:flex w-1/2">
+        <div class="content-panel flex items-center justify-center">
+          <RelativeSpinner />
+        </div>
+      </div>
+    {/if}
+  </div>
 
-    <div class="bg-panel rounded-md">
-      <ul
-        class="flex bg-light-gray px-1 md:px-4 pt-2 contained-text border-b border-gray-700 mb-4"
+  <div class="bg-panel rounded-md">
+    <ul
+      class="flex bg-light-gray px-1 md:px-4 pt-2 contained-text border-b border-gray-700 mb-4"
+    >
+      <li
+      class={`mr-1 md:mr-4 ${activeTab === "fixtures" ? "active-tab" : ""}`}
+    >
+      <button
+        class={`p-2 ${
+          activeTab === "fixtures" ? "text-white" : "text-gray-400"
+        }`}
+        on:click={() => setActiveTab("fixtures")}
       >
-        <li
-          class={`mr-1 md:mr-4 ${activeTab === "fixtures" ? "active-tab" : ""}`}
-        >
-          <button
-            class={`p-2 ${
-              activeTab === "fixtures" ? "text-white" : "text-gray-400"
-            }`}
-            on:click={() => setActiveTab("fixtures")}
-          >
-            Fixtures
-          </button>
-        </li>
-        {#if isLoggedIn}
-          <li
-            class={`mr-1 md:mr-4 ${activeTab === "points" ? "active-tab" : ""}`}
-          >
-            <button
-              class={`p-2 ${
-                activeTab === "points" ? "text-white" : "text-gray-400"
-              }`}
-              on:click={() => setActiveTab("points")}
-            >
-              Points
-            </button>
-          </li>
-        {/if}
-        <li
-          class={`mr-1 md:mr-4 ${
-            activeTab === "leaderboards" ? "active-tab" : ""
+        Fixtures
+      </button>
+    </li>
+    {#if isLoggedIn}
+      <li
+        class={`mr-1 md:mr-4 ${activeTab === "points" ? "active-tab" : ""}`}
+      >
+        <button
+          class={`p-2 ${
+            activeTab === "points" ? "text-white" : "text-gray-400"
           }`}
+          on:click={() => setActiveTab("points")}
         >
-          <button
-            class={`p-2 ${
-              activeTab === "leaderboards" ? "text-white" : "text-gray-400"
-            }`}
-            on:click={() => setActiveTab("leaderboards")}
-          >
-            Leaderboards
-          </button>
-        </li>
-        <li
-          class={`mr-1 md:mr-4 ${
-            activeTab === "league-table" ? "active-tab" : ""
-          }`}
-        >
-          <button
-            class={`p-2 ${
-              activeTab === "league-table" ? "text-white" : "text-gray-400"
-            }`}
-            on:click={() => setActiveTab("league-table")}
-          >
-            Table
-          </button>
-        </li>
-      </ul>
+          Points
+        </button>
+      </li>
+    {/if}
+    <li
+      class={`mr-1 md:mr-4 ${
+        activeTab === "leaderboards" ? "active-tab" : ""
+      }`}
+    >
+      <button
+        class={`p-2 ${
+          activeTab === "leaderboards" ? "text-white" : "text-gray-400"
+        }`}
+        on:click={() => setActiveTab("leaderboards")}
+      >
+        Leaderboards
+      </button>
+    </li>
+    <li
+      class={`mr-1 md:mr-4 ${
+        activeTab === "league-table" ? "active-tab" : ""
+      }`}
+    >
+      <button
+        class={`p-2 ${
+          activeTab === "league-table" ? "text-white" : "text-gray-400"
+        }`}
+        on:click={() => setActiveTab("league-table")}
+      >
+        Table
+      </button>
+    </li>
+    </ul>
 
+    {#if !section3Loading}
       {#if activeTab === "fixtures"}
         <FixturesComponent />
       {:else if activeTab === "points"}
@@ -416,6 +449,10 @@
       {:else if activeTab === "league-table"}
         <LeagueTableComponent />
       {/if}
-    </div>
-  {/if}
+    {:else}
+      <div class="p-4 flex items-center justify-center">
+        <RelativeSpinner />
+      </div>
+    {/if}
+  </div>
 </Layout>
