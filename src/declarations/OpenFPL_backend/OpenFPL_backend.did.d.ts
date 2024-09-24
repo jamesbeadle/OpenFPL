@@ -850,6 +850,7 @@ export interface _SERVICE {
   'saveFantasyTeam' : ActorMethod<[UpdateTeamSelectionDTO], Result>,
   'searchUsername' : ActorMethod<[UsernameFilterDTO], Result_1>,
   'setTimer' : ActorMethod<[bigint, string], undefined>,
+  'setupTesting' : ActorMethod<[], undefined>,
   'updateFavouriteClub' : ActorMethod<[UpdateFavouriteClubDTO], Result>,
   'updateLeagueBanner' : ActorMethod<[UpdateLeagueBannerDTO], Result>,
   'updateLeagueName' : ActorMethod<[UpdateLeagueNameDTO], Result>,

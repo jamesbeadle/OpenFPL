@@ -10,6 +10,9 @@
 
   import { BusyScreen, Spinner, Toasts } from "@dfinity/gix-components";
   import { initAuthWorker } from "$lib/services/worker.auth.services";
+  import { systemStore } from "$lib/stores/system-store";
+  import { teamStore } from "$lib/stores/team-store";
+  import { fixtureStore } from "$lib/stores/fixture-store";
 
   const init = async () => await Promise.all([syncAuthStore()]);
 
@@ -33,6 +36,25 @@
   let worker: { syncAuthIdle: (auth: AuthStoreData) => void } | undefined;
 
   onMount(async () => (worker = await initAuthWorker()));
+
+
+  onMount(async () => {
+    try {
+      console.log("Mounting data stores.")
+      await authStore.sync();
+      await systemStore.sync();
+      await teamStore.sync();
+      await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
+      console.log("Data stores mounted.")
+    } catch (error) {
+      toastsError({
+        msg: { text: "Error mounting application data." },
+        err: error,
+      });
+      console.error("Error mounting application data:", error);
+    } finally {
+    }
+  });
 
   $: worker, $authStore, (() => worker?.syncAuthIdle($authStore))();
 

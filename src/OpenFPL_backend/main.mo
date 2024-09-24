@@ -1538,6 +1538,11 @@ import Debug "mo:base/Debug";
 
       await cyclesCheckCallback(); 
     };
+    
+    public shared ({ caller }) func setupTesting () : async (){
+      Debug.print("SETTING UP TESTING");
+      seasonManager.setupTesting();
+    };
 
     private func updateManagerCanisterWasms() : async (){
       let managerCanisterIds = seasonManager.getManagerCanisterIds();
@@ -1754,18 +1759,6 @@ import Debug "mo:base/Debug";
       );  
       return await seasonManager.getPlayerPointsMap(seasonId, gameweek);
     };
-    /*
     
-    private func setupTesting(){
-      seasonManager.setupTesting();
-    };
-
-    private func cleanFantasyTeams() : async (){
-      await seasonManager.cleanFantasyTeams();
-    };
-    public func giveBackUnassignedBonuses() : async () {
-      //await seasonManager.giveBackUnassignedBonuses();
-    };
-    */
 
   };
