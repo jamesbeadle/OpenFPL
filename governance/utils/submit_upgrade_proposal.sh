@@ -35,7 +35,7 @@ BUILD=${VERSION_PARTS[2]}
 # Build the canister-upgrade-arg
 UPGRADE_ARG="(record { wasm_version = record { major=$MAJOR:nat32; minor=$MINOR:nat32; patch=$BUILD:nat32 } })"
 
-dfx identity use ic_admin
+dfx identity use default
 OWNER_IDENTITY=$(dfx identity whoami)
 PEM_FILE="$(readlink -f "$HOME/.config/dfx/identity/${OWNER_IDENTITY}/identity.pem")"
 PROPOSER_NEURON_ID=d2ccf59abe1741c21c35da7e3863d5d14c97d9b82b36045f4a8d4c336864f6dc

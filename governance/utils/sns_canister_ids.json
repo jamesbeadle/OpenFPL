@@ -1,8 +1,7 @@
 {
-  "dapp_canister_id_list": [],
-  "governance_canister_id": "detjl-sqaaa-aaaaq-aacqa-cai",
-  "index_canister_id": "dnqcx-eyaaa-aaaaq-aacrq-cai",
-  "ledger_canister_id": "ddsp7-7iaaa-aaaaq-aacqq-cai",
-  "root_canister_id": "gyito-zyaaa-aaaaq-aacpq-cai",
-  "swap_canister_id": "dkred-jaaaa-aaaaq-aacra-cai"
+  "governance_canister_id": "by6od-j4aaa-aaaaa-qaadq-cai",
+  "index_canister_id": "a3shf-5eaaa-aaaaa-qaafa-cai",
+  "ledger_canister_id": "avqkn-guaaa-aaaaa-qaaea-cai",
+  "root_canister_id": "b77ix-eeaaa-aaaaa-qaada-cai",
+  "swap_canister_id": "asrmz-lmaaa-aaaaa-qaaeq-cai"
 }

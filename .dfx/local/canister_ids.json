@@ -1,14 +1,14 @@
 {
   "OpenFPL_backend": {
-    "local": "bkyz2-fmaaa-aaaaa-qaaaq-cai"
-  },
-  "OpenFPL_frontend": {
     "local": "bd3sg-teaaa-aaaaa-qaaba-cai"
   },
+  "OpenFPL_frontend": {
+    "local": "be2us-64aaa-aaaaa-qaabq-cai"
+  },
   "__Candid_UI": {
-    "local": "br5f7-7uaaa-aaaaa-qaaca-cai"
+    "local": "bw4dl-smaaa-aaaaa-qaacq-cai"
   },
   "neuron_controller": {
-    "local": "be2us-64aaa-aaaaa-qaabq-cai"
+    "local": "br5f7-7uaaa-aaaaa-qaaca-cai"
   }
 }

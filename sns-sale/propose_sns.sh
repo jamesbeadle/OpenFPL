@@ -8,7 +8,7 @@ export SNS_CONFIGURATION_FILE_PATH="${1:-sns_init.yaml}"
 
 export CURRENT_DX_IDENT="$(dfx identity whoami)"
 
-dfx identity use ic_admin
+dfx identity use default
 
 sns propose \
     --network "${NETWORK}" \
