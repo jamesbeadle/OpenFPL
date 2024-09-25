@@ -650,6 +650,7 @@ export interface SystemStateDTO {
   'calculationGameweek' : GameweekNumber,
   'transferWindowActive' : boolean,
   'pickTeamGameweek' : GameweekNumber,
+  'version' : string,
   'calculationMonth' : CalendarMonth,
   'calculationSeasonId' : SeasonId,
   'onHold' : boolean,

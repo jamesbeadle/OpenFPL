@@ -1297,16 +1297,17 @@ import Debug "mo:base/Debug";
     //Season Manager
     private stable var stable_reward_pools : [(T.SeasonId, T.RewardPool)] = [];
     private stable var stable_system_state : T.SystemState = {
-      calculationGameweek = 1;
-      calculationMonth = 8;
+      calculationGameweek = 6;
+      calculationMonth = 9;
       calculationSeasonId = 1;
-      pickTeamGameweek = 1;
+      pickTeamGameweek = 6;
       pickTeamSeasonId = 1;
-      homepageFixturesGameweek = 1;
-      homepageManagerGameweek = 1;
-      seasonActive = false;
+      homepageFixturesGameweek = 6;
+      homepageManagerGameweek = 6;
+      seasonActive = true;
       transferWindowActive = false;
       onHold = false;
+      version = "V1.8.0";
     };
     private stable var stable_data_cache_hashes : [T.DataCache] = [];
 
@@ -1422,7 +1423,7 @@ import Debug "mo:base/Debug";
       
       seasonManager.setStableRewardPools(stable_reward_pools);
       seasonManager.setStableDataHashes(stable_data_cache_hashes);
-      seasonManager.setStableSystemState(stable_system_state);
+      //seasonManager.setStableSystemState(stable_system_state);
 
       //Manager Composite
       seasonManager.setStableManagerCanisterIds(stable_manager_canister_ids);

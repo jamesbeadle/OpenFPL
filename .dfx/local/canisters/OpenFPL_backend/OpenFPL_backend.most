@@ -281,7 +281,8 @@ actor {
       pickTeamGameweek : GameweekNumber;
       pickTeamSeasonId : SeasonId;
       seasonActive : Bool;
-      transferWindowActive : Bool
+      transferWindowActive : Bool;
+      version : Text
     };
   stable var stable_team_value_leaderboards :
     [(SeasonId, TeamValueLeaderboard)];

@@ -383,6 +383,7 @@ module _Types {
     seasonActive : Bool;
     transferWindowActive : Bool;
     onHold : Bool;
+    version: Text;
   };
 
   public type Country = {

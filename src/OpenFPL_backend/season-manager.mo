@@ -79,6 +79,7 @@ module {
       seasonActive = true;
       transferWindowActive = false;
       onHold = false;
+      version = "V1.0.0";
     };
 
     public func getSystemState() : DTOs.SystemStateDTO {
@@ -109,6 +110,7 @@ module {
         transferWindowActive = systemState.transferWindowActive;
         onHold = systemState.onHold;
         seasonActive = systemState.seasonActive;
+        version = systemState.version;
       };
     };
 
@@ -328,6 +330,7 @@ module {
         transferWindowActive = systemState.transferWindowActive;
         seasonActive = true;
         onHold = systemState.onHold;
+        version = systemState.version;
       };
 
       systemState := updatedSystemState;
@@ -388,6 +391,7 @@ module {
           seasonActive = false;
           transferWindowActive = systemState.seasonActive;
           onHold = systemState.onHold;
+        version = systemState.version;
         };
       };
       logSystemStatus();
@@ -415,6 +419,7 @@ module {
         seasonActive = systemState.seasonActive;
         transferWindowActive = true;
         onHold = systemState.onHold;
+        version = systemState.version;
       };
 
       systemState := updatedSystemState;
@@ -432,6 +437,7 @@ module {
         seasonActive = systemState.seasonActive;
         transferWindowActive = false;
         onHold = systemState.onHold;
+        version = systemState.version;
       };
 
       systemState := updatedSystemState;
@@ -453,6 +459,7 @@ module {
         seasonActive = systemState.seasonActive;
         transferWindowActive = systemState.transferWindowActive;
         onHold = systemState.onHold;
+        version = systemState.version;
       };
 
       systemState := updatedSystemState;
@@ -477,6 +484,7 @@ module {
         seasonActive = systemState.seasonActive;
         transferWindowActive = systemState.transferWindowActive;
         onHold = systemState.onHold;
+        version = systemState.version;
       };
 
       systemState := updatedSystemState;
@@ -499,6 +507,7 @@ module {
         seasonActive = systemState.seasonActive;
         transferWindowActive = systemState.transferWindowActive;
         onHold = systemState.onHold;
+        version = systemState.version;
       };
 
       systemState := updatedSystemState;
@@ -700,6 +709,7 @@ module {
         seasonActive = false;
         transferWindowActive = true;
         onHold = systemState.onHold;
+        version = systemState.version;
       };
 
       systemState := updatedSystemState;
@@ -1438,6 +1448,24 @@ module {
         transferWindowActive = systemState.transferWindowActive;
         seasonActive = systemState.seasonActive;
         onHold = true;
+        version = systemState.version;
+      };
+
+      systemState := updatedSystemState;
+      await updateCacheHash("system_state");
+    };
+
+    public func updateVersion(newVersion: Text) : async (){
+      let updatedSystemState : T.SystemState = {
+        calculationGameweek = systemState.calculationGameweek;
+        calculationMonth = systemState.calculationMonth;
+        calculationSeasonId = systemState.calculationSeasonId;
+        pickTeamGameweek = systemState.pickTeamGameweek;
+        pickTeamSeasonId = systemState.pickTeamSeasonId;
+        transferWindowActive = systemState.transferWindowActive;
+        seasonActive = systemState.seasonActive;
+        onHold = systemState.onHold;
+        version = newVersion;
       };
 
       systemState := updatedSystemState;
@@ -1454,6 +1482,7 @@ module {
         transferWindowActive = systemState.transferWindowActive;
         seasonActive = systemState.seasonActive;
         onHold = false;
+        version = systemState.version;
       };
 
       systemState := updatedSystemState;
@@ -1524,20 +1553,6 @@ module {
 
     public func removeAllManagerSnapshots() : async (){
       await managerComposite.removeAllManagerSnapshots();
-    };
-    
-    public func resetGameweek(gameweek: T.GameweekNumber){
-
-      systemState := {
-        calculationGameweek = gameweek;
-        calculationMonth = Utilities.unixTimeToMonth(Time.now());
-        calculationSeasonId = 1;
-        pickTeamGameweek = gameweek;
-        pickTeamSeasonId = 1;
-        seasonActive = true;
-        transferWindowActive = false;
-        onHold = false;
-      };
     };
 
     public func addGameweekTimers(gameweek: T.GameweekNumber) : async (){

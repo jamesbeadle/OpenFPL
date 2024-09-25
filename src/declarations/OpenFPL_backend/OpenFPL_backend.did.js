@@ -671,6 +671,7 @@ export const idlFactory = ({ IDL }) => {
     'calculationGameweek' : GameweekNumber,
     'transferWindowActive' : IDL.Bool,
     'pickTeamGameweek' : GameweekNumber,
+    'version' : IDL.Text,
     'calculationMonth' : CalendarMonth,
     'calculationSeasonId' : SeasonId,
     'onHold' : IDL.Bool,

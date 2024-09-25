@@ -142,6 +142,7 @@ module DTOs {
       transferWindowActive : Bool;
       onHold : Bool;
       seasonActive: Bool;
+      version: Text;
     };
 
   public type RevaluePlayerUpDTO = {

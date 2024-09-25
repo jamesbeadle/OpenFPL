@@ -998,7 +998,7 @@ function getContext(key2) {
 function ensure_array_like(array_like_or_iterator) {
   return array_like_or_iterator?.length !== void 0 ? array_like_or_iterator : Array.from(array_like_or_iterator);
 }
-const ATTR_REGEX = /[&"]/g;
+const ATTR_REGEX = /[&"<]/g;
 const CONTENT_REGEX = /[&<]/g;
 function escape(value, is_attr = false) {
   const str = String(value);
@@ -1073,9 +1073,9 @@ function create_ssr_component(fn) {
   };
 }
 function add_attribute(name, value, boolean) {
-  if (value == null || boolean && !value)
+  if (value == null || boolean)
     return "";
-  const assignment = boolean && value === true ? "" : `="${escape(value, true)}"`;
+  const assignment = `="${escape(value, true)}"`;
   return ` ${name}${assignment}`;
 }
 const subscriber_queue = [];
@@ -3516,7 +3516,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1usyoou"
+  version_hash: "1rz7s3h"
 };
 async function get_hooks() {
   return {};
@@ -4396,6 +4396,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "calculationGameweek": GameweekNumber,
     "transferWindowActive": IDL2.Bool,
     "pickTeamGameweek": GameweekNumber,
+    "version": IDL2.Text,
     "calculationMonth": CalendarMonth,
     "calculationSeasonId": SeasonId,
     "onHold": IDL2.Bool,
@@ -5381,19 +5382,25 @@ const i18n = readable({
   ...en
 });
 const css$c = {
-  code: ".backdrop.svelte-whxjdd{position:absolute;top:0;right:0;bottom:0;left:0;background:var(--backdrop);color:var(--backdrop-contrast);-webkit-backdrop-filter:var(--backdrop-filter);backdrop-filter:var(--backdrop-filter);z-index:var(--backdrop-z-index);touch-action:manipulation;cursor:pointer}.backdrop.disablePointerEvents.svelte-whxjdd{cursor:inherit;pointer-events:none}",
+  code: ".backdrop.svelte-1mpql1{position:absolute;top:0;right:0;bottom:0;left:0;color:var(--backdrop-contrast);z-index:var(--backdrop-z-index);touch-action:manipulation;cursor:pointer}.backdrop.visible.svelte-1mpql1{background:var(--backdrop);-webkit-backdrop-filter:var(--backdrop-filter);backdrop-filter:var(--backdrop-filter)}.backdrop.disablePointerEvents.svelte-1mpql1{cursor:inherit;pointer-events:none}",
   map: null
 };
 const Backdrop = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $i18n, $$unsubscribe_i18n;
   $$unsubscribe_i18n = subscribe(i18n, (value) => $i18n = value);
   let { disablePointerEvents = false } = $$props;
+  let { invisible = false } = $$props;
   createEventDispatcher();
   if ($$props.disablePointerEvents === void 0 && $$bindings.disablePointerEvents && disablePointerEvents !== void 0)
     $$bindings.disablePointerEvents(disablePointerEvents);
+  if ($$props.invisible === void 0 && $$bindings.invisible && invisible !== void 0)
+    $$bindings.invisible(invisible);
   $$result.css.add(css$c);
   $$unsubscribe_i18n();
-  return `<div role="button" tabindex="-1"${add_attribute("aria-label", $i18n.core.close, 0)} class="${["backdrop svelte-whxjdd", disablePointerEvents ? "disablePointerEvents" : ""].join(" ").trim()}" data-tid="backdrop"></div>`;
+  return `<div role="button" tabindex="-1"${add_attribute("aria-label", $i18n.core.close, 0)} class="${[
+    "backdrop svelte-1mpql1",
+    (!invisible ? "visible" : "") + " " + (disablePointerEvents ? "disablePointerEvents" : "")
+  ].join(" ").trim()}" data-tid="backdrop"></div>`;
 });
 const layoutBottomOffset = writable(0);
 const initBusyStore = () => {
@@ -5485,7 +5492,7 @@ const IconWarning = create_ssr_component(($$result, $$props, $$bindings, slots) 
   let { size = `${DEFAULT_ICON_SIZE}px` } = $$props;
   if ($$props.size === void 0 && $$bindings.size && size !== void 0)
     $$bindings.size(size);
-  return `  <svg xmlns="http://www.w3.org/2000/svg"${add_attribute("height", size, 0)} viewBox="0 0 24 24"${add_attribute("width", size, 0)} fill="currentColor"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"></path></svg>`;
+  return `  <svg xmlns="http://www.w3.org/2000/svg"${add_attribute("height", size, 0)} viewBox="0 0 20 20"${add_attribute("width", size, 0)} fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M16.5324 12.6666L12.491 5.66659C11.7331 4.35394 11.354 3.69773 10.8593 3.47746C10.4278 3.28534 9.93473 3.28534 9.50322 3.47746C9.00871 3.69763 8.62985 4.35385 7.87262 5.66541L3.83048 12.6666C3.07262 13.9792 2.6938 14.6358 2.75041 15.1744C2.79978 15.6441 3.04633 16.0709 3.42847 16.3486C3.86643 16.6668 4.62382 16.6668 6.13851 16.6668H14.2243C15.739 16.6668 16.4962 16.6668 16.9342 16.3486C17.3163 16.0709 17.563 15.6441 17.6124 15.1744C17.669 14.6358 17.2903 13.9792 16.5324 12.6666ZM9.4314 13.5666C9.4314 13.1524 9.76718 12.8166 10.1814 12.8166H10.1914C10.6056 12.8166 10.9414 13.1524 10.9414 13.5666C10.9414 13.9809 10.6056 14.3166 10.1914 14.3166H10.1814C9.76718 14.3166 9.4314 13.9809 9.4314 13.5666ZM10.9314 7.73331C10.9314 7.3191 10.5956 6.98331 10.1814 6.98331C9.76718 6.98331 9.4314 7.3191 9.4314 7.73331V11.0666C9.4314 11.4809 9.76718 11.8166 10.1814 11.8166C10.5956 11.8166 10.9314 11.4809 10.9314 11.0666V7.73331Z"></path></svg>`;
 });
 let elementsCounters = {};
 const nextElementId = (prefix) => {
@@ -5603,7 +5610,7 @@ const Modal = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   showHeader = nonNullish($$slots.title);
   showFooterAlert = nonNullish($$slots.footer) && role === "alert";
   $$unsubscribe_i18n();
-  return `${visible ? `<div class="modal svelte-1bbimtl"${add_attribute("role", role, 0)}${add_attribute("data-tid", testId, 0)}${add_attribute("aria-labelledby", showHeader ? modalTitleId : void 0, 0)}${add_attribute("aria-describedby", modalContentId, 0)}>${validate_component(Backdrop, "Backdrop").$$render($$result, { disablePointerEvents }, {}, {})} <div class="${escape(null_to_empty(`wrapper ${role}`), true) + " svelte-1bbimtl"}">${showHeader ? `<div class="header svelte-1bbimtl"><h2${add_attribute("id", modalTitleId, 0)} data-tid="modal-title" class="svelte-1bbimtl">${slots.title ? slots.title({}) : ``}</h2> ${!disablePointerEvents ? `<button data-tid="close-modal"${add_attribute("aria-label", $i18n.core.close, 0)} class="svelte-1bbimtl">${validate_component(IconClose, "IconClose").$$render($$result, { size: "24px" }, {}, {})}</button>` : ``}</div>` : ``} <div class="container-wrapper svelte-1bbimtl">${slots["sub-title"] ? slots["sub-title"]({}) : ``} <div class="container svelte-1bbimtl"><div class="${["content svelte-1bbimtl", role === "alert" ? "alert" : ""].join(" ").trim()}"${add_attribute("id", modalContentId, 0)}>${slots.default ? slots.default({}) : ``}</div></div></div> ${showFooterAlert ? `<div class="footer toolbar svelte-1bbimtl">${slots.footer ? slots.footer({}) : ``}</div>` : ``}</div></div>` : ``}`;
+  return ` ${visible ? `<div class="modal svelte-1bbimtl"${add_attribute("role", role, 0)}${add_attribute("data-tid", testId, 0)}${add_attribute("aria-labelledby", showHeader ? modalTitleId : void 0, 0)}${add_attribute("aria-describedby", modalContentId, 0)}>${validate_component(Backdrop, "Backdrop").$$render($$result, { disablePointerEvents }, {}, {})} <div class="${escape(null_to_empty(`wrapper ${role}`), true) + " svelte-1bbimtl"}">${showHeader ? `<div class="header svelte-1bbimtl"><h2${add_attribute("id", modalTitleId, 0)} data-tid="modal-title" class="svelte-1bbimtl">${slots.title ? slots.title({}) : ``}</h2> ${!disablePointerEvents ? `<button data-tid="close-modal"${add_attribute("aria-label", $i18n.core.close, 0)} class="svelte-1bbimtl">${validate_component(IconClose, "IconClose").$$render($$result, { size: "24px" }, {}, {})}</button>` : ``}</div>` : ``} <div class="container-wrapper svelte-1bbimtl">${slots["sub-title"] ? slots["sub-title"]({}) : ``} <div class="container svelte-1bbimtl"><div class="${["content svelte-1bbimtl", role === "alert" ? "alert" : ""].join(" ").trim()}"${add_attribute("id", modalContentId, 0)}>${slots.default ? slots.default({}) : ``}</div></div></div> ${showFooterAlert ? `<div class="footer toolbar svelte-1bbimtl">${slots.footer ? slots.footer({}) : ``}</div>` : ``}</div></div>` : ``}`;
 });
 const initToastsStore = () => {
   const { subscribe: subscribe2, update, set } = writable([]);
@@ -5693,7 +5700,7 @@ const Toast = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   ].join(" ").trim()}"${add_attribute("style", minHeightMessage, 0)}>${nonNullish(title) ? `<span class="title svelte-w1j1kj">${escape(title)}</span>` : ``} ${renderAsHtml ? `${validate_component(Html, "Html").$$render($$result, { text: text2 }, {}, {})}` : `${escape(text2)}`}</p> <button class="close svelte-w1j1kj"${add_attribute("aria-label", $i18n.core.close, 0)}>${validate_component(IconClose, "IconClose").$$render($$result, {}, {}, {})}</button> </div>`;
 });
 const css$6 = {
-  code: ".wrapper.svelte-24m335{position:fixed;left:50%;transform:translate(-50%, 0);bottom:calc(var(--layout-bottom-offset, 0) + var(--padding-2x));width:calc(100% - var(--padding-8x) - var(--padding-0_5x));display:flex;flex-direction:column;gap:var(--padding);z-index:var(--toast-info-z-index)}.wrapper.error.svelte-24m335{z-index:var(--toast-error-z-index)}@media(min-width: 1024px){.wrapper.svelte-24m335{max-width:calc(var(--section-max-width) - var(--padding-2x))}}.top.svelte-24m335{top:calc(var(--header-height) + var(--padding-3x));bottom:unset;width:calc(100% - var(--padding-6x))}@media(min-width: 1024px){.top.svelte-24m335{right:var(--padding-2x);left:unset;transform:none;max-width:calc(var(--section-max-width) / 1.5 - var(--padding-2x))}}",
+  code: ".wrapper.svelte-1iulzbj{position:fixed;left:50%;transform:translate(-50%, 0);bottom:calc(var(--layout-bottom-offset, 0) + var(--padding-2x));width:calc(100% - var(--padding-8x) - var(--padding-0_5x));display:flex;flex-direction:column;gap:var(--padding);z-index:var(--toast-info-z-index)}.wrapper.error.svelte-1iulzbj{z-index:var(--toast-error-z-index)}@media(min-width: 768px){.wrapper.svelte-1iulzbj{max-width:calc(var(--section-max-width) - var(--padding-2x))}}.top.svelte-1iulzbj{top:calc(var(--header-height) + var(--padding-3x));bottom:unset;width:calc(100% - var(--padding-6x))}@media(min-width: 768px){.top.svelte-1iulzbj{right:var(--padding-2x);left:unset;transform:none;max-width:calc(var(--section-max-width) / 1.5 - var(--padding-2x))}}",
   map: null
 };
 const Toasts = create_ssr_component(($$result, $$props, $$bindings, slots) => {
@@ -5702,17 +5709,20 @@ const Toasts = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_toastsStore = subscribe(toastsStore, (value) => $toastsStore = value);
   $$unsubscribe_layoutBottomOffset = subscribe(layoutBottomOffset, (value) => $layoutBottomOffset = value);
   let { position = "bottom" } = $$props;
+  let { maxVisible = void 0 } = $$props;
   let toasts = [];
   let hasErrors;
   if ($$props.position === void 0 && $$bindings.position && position !== void 0)
     $$bindings.position(position);
+  if ($$props.maxVisible === void 0 && $$bindings.maxVisible && maxVisible !== void 0)
+    $$bindings.maxVisible(maxVisible);
   $$result.css.add(css$6);
-  toasts = $toastsStore.filter(({ position: pos }) => (pos ?? "bottom") === position);
+  toasts = $toastsStore.filter(({ position: pos }) => (pos ?? "bottom") === position).slice(0, maxVisible);
   hasErrors = toasts.find(({ level }) => ["error", "warn"].includes(level)) !== void 0;
   $$unsubscribe_toastsStore();
   $$unsubscribe_layoutBottomOffset();
   return `${toasts.length > 0 ? `<div class="${[
-    escape(null_to_empty(`wrapper ${position}`), true) + " svelte-24m335",
+    escape(null_to_empty(`wrapper ${position}`), true) + " svelte-1iulzbj",
     hasErrors ? "error" : ""
   ].join(" ").trim()}"${add_attribute("style", `--layout-bottom-offset: ${$layoutBottomOffset}px`, 0)}>${each(toasts, (msg) => {
     return `${validate_component(Toast, "Toast").$$render($$result, { msg }, {}, {})}`;
@@ -5730,7 +5740,7 @@ const WizardTransition = create_ssr_component(($$result, $$props, $$bindings, sl
     $$bindings.transition(transition);
   $$result.css.add(css$5);
   transition.diff === 0 ? 0 : transition.diff > 0 ? absolutOffset : -absolutOffset;
-  return `<div class="svelte-j8eaq1">${slots.default ? slots.default({}) : ``}</div>`;
+  return `<div class="transition svelte-j8eaq1">${slots.default ? slots.default({}) : ``}</div>`;
 });
 class WizardStepsState {
   currentStep;
