@@ -60,10 +60,12 @@
 
   onMount(async () => {
     try {
+      console.log("syncing system store");
       systemStore.sync();
       onHold.set($systemStore?.onHold ?? true);
       $availableFormations = Object.keys(allFormations);
       
+      console.log("loading pick team data");
       await loadData();
     } catch (error) {
       toastsError({
