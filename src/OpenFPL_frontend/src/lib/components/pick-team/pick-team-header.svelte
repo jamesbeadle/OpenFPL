@@ -56,15 +56,20 @@
     let gameweekFixtures = $fixtureStore.filter(x => x.gameweek == $systemStore?.pickTeamGameweek)
     .sort((a, b) => Number(a.kickOff) - Number(b.kickOff));
 
+    console.log("set countdown fixtures")
+    console.log(gameweekFixtures);
+
     let earliestFixture = gameweekFixtures[0];
     
     if(!earliestFixture){
       return
     };
 
-    let oneHourBeforeKickOff = earliestFixture.kickOff - BigInt(3600 * 1_000_000_000);
-
     
+    console.log("setting next fixture")
+    console.log(earliestFixture)
+    let oneHourBeforeKickOff = earliestFixture.kickOff - BigInt(3_600 * 1_000_000_000);
+
     nextFixtureDate = formatUnixDateToReadable(oneHourBeforeKickOff);
     nextFixtureTime = formatUnixTimeToTime(oneHourBeforeKickOff);
 

@@ -1423,7 +1423,7 @@ import Debug "mo:base/Debug";
       
       seasonManager.setStableRewardPools(stable_reward_pools);
       seasonManager.setStableDataHashes(stable_data_cache_hashes);
-      //seasonManager.setStableSystemState(stable_system_state);
+      seasonManager.setStableSystemState(stable_system_state);
 
       //Manager Composite
       seasonManager.setStableManagerCanisterIds(stable_manager_canister_ids);
@@ -1525,6 +1525,9 @@ import Debug "mo:base/Debug";
       
       //await seasonManager.removeLeaderboardCanistersAndGetCycles();
       //await logStatus({message = "Leaderboard canisters removed "});
+
+      //set version
+      await seasonManager.setVersion("V1.8.0");
       
       //on each update generate new hash values
       await seasonManager.updateCacheHash("clubs");

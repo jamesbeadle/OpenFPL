@@ -146,6 +146,23 @@ module {
       dataCacheHashes := List.fromArray(Buffer.toArray<T.DataCache>(hashBuffer));
     };
 
+    public func setVersion(version : Text) : async () {
+      let updatedSystemState : T.SystemState = {
+        calculationGameweek = systemState.calculationGameweek;
+        calculationMonth = systemState.calculationMonth;
+        calculationSeasonId = systemState.calculationSeasonId;
+        pickTeamGameweek = systemState.pickTeamGameweek;
+        pickTeamSeasonId = systemState.pickTeamSeasonId;
+        seasonActive = systemState.seasonActive;
+        transferWindowActive = systemState.transferWindowActive;
+        onHold = systemState.onHold;
+        version = version;
+      };
+
+      systemState := updatedSystemState;
+      await updateCacheHash("system_state");
+    };
+
 
     //Game composites & structures
 
