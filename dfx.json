@@ -14,10 +14,19 @@
       "source": ["build/"],
       "type": "assets"
     },
-    "neuron_controller": {
+    "OpenWSL_frontend": {
+      "dependencies": ["OpenFPL_backend"],
+      "frontend": {
+        "entrypoint": "build/index.html"
+      },
+      "source": ["build/"],
+      "type": "assets"
+    },
+    "football_data_canister": {
       "dependencies": [],
-      "main": "src/neuron_controller/actor.mo",
-      "type": "motoko"
+      "main": "src/football_data_canister/main.mo",
+      "type": "motoko",
+      "optimize": "cycles"
     },
     "sns_governance": {
       "build": "",

@@ -16,6 +16,7 @@ import TrieMap "mo:base/TrieMap";
 import Nat8 "mo:base/Nat8";
 import Nat16 "mo:base/Nat16";
 import Bool "mo:base/Bool";
+import Debug "mo:base/Debug";
 
 import Account "lib/Account";
 import DTOs "DTOs";
@@ -38,15 +39,27 @@ module {
 
     //Setup functions and references
 
+    //TODO: Check we need and check all has stable variable backup in OpenFPL main backend
     private var setAndBackupTimer : ?((duration : Timer.Duration, callbackName : Text) -> async ()) = null;
     private var storeCanisterId : ?((canisterId : Text) -> async ()) = null;
     private var recordSystemEvent : ?((eventLog: T.EventLogEntry) -> ()) = null;
+
+    private var dataCacheHashes : List.List<T.DataCache> = List.fromArray([
+      { category = "clubs"; hash = "OPENFPL_1" },
+      { category = "fixtures"; hash = "OPENFPL_1" },
+      { category = "weekly_leaderboard"; hash = "OPENFPL_1" },
+      { category = "monthly_leaderboards"; hash = "OPENFPL_1" },
+      { category = "season_leaderboard"; hash = "OPENFPL_1" },
+      { category = "players"; hash = "OPENFPL_1" },
+      { category = "player_events"; hash = "OPENFPL_1" },
+      { category = "countries"; hash = "OPENFPL_1" },
+      { category = "system_state"; hash = "OPENFPL_1" },
+    ]);
 
     public func setTimerBackupFunction(
       _setAndBackupTimer : (duration : Timer.Duration, callbackName : Text) -> async (),
       _removeExpiredTimers : () -> (),
     ) {
-      playerComposite.setTimerBackupFunction(_setAndBackupTimer, _removeExpiredTimers);
       setAndBackupTimer := ?_setAndBackupTimer;
     };
 
@@ -82,52 +95,45 @@ module {
       version = "V1.0.0";
     };
 
-    public func getSystemState() : DTOs.SystemStateDTO {
-      let pickTeamSeason = seasonComposite.getSeason(systemState.pickTeamSeasonId);
-      let calculationSeason = seasonComposite.getSeason(systemState.calculationSeasonId);
-      var pickTeamSeasonName = "";
-      var calculationSeasonName = "";
-      switch (pickTeamSeason) {
-        case (null) {};
-        case (?foundSeason) {
-          pickTeamSeasonName := foundSeason.name;
-        };
-      };
-      switch (calculationSeason) {
-        case (null) {};
-        case (?foundSeason) {
-          calculationSeasonName := foundSeason.name;
-        };
-      };
-      return {
-        calculationGameweek = systemState.calculationGameweek;
-        calculationMonth = systemState.calculationMonth;
-        calculationSeasonId = systemState.calculationSeasonId;
-        pickTeamGameweek = systemState.pickTeamGameweek;
-        pickTeamSeasonId = systemState.pickTeamSeasonId;
-        pickTeamSeasonName = pickTeamSeasonName;
-        calculationSeasonName = calculationSeasonName;
-        transferWindowActive = systemState.transferWindowActive;
-        onHold = systemState.onHold;
-        seasonActive = systemState.seasonActive;
-        version = systemState.version;
-      };
+    public func getSystemState() : T.SystemState {
+      return systemState;
     };
 
-
-    //Data cache variables
-
-    private var dataCacheHashes : List.List<T.DataCache> = List.fromArray([
-      { category = "clubs"; hash = "OPENFPL_1" },
-      { category = "fixtures"; hash = "OPENFPL_1" },
-      { category = "weekly_leaderboard"; hash = "OPENFPL_1" },
-      { category = "monthly_leaderboards"; hash = "OPENFPL_1" },
-      { category = "season_leaderboard"; hash = "OPENFPL_1" },
-      { category = "players"; hash = "OPENFPL_1" },
-      { category = "player_events"; hash = "OPENFPL_1" },
-      { category = "countries"; hash = "OPENFPL_1" },
-      { category = "system_state"; hash = "OPENFPL_1" },
-    ]);
+    public func getSystemStateDTO() : async Result.Result<DTOs.SystemStateDTO, T.Error> {
+      let pickTeamSeasonResponse = await seasonComposite.getSeason(systemState.pickTeamSeasonId);
+      let calculationSeasonResult = await seasonComposite.getSeason(systemState.calculationSeasonId);
+      var pickTeamSeasonName = "";
+      var calculationSeasonName = "";
+      switch (pickTeamSeasonResponse) {
+        case (#ok foundSeason) {
+          pickTeamSeasonName := foundSeason.name;
+          switch (calculationSeasonResult) {
+            case (#ok foundSeason) {
+              calculationSeasonName := foundSeason.name;
+              return #ok({
+                calculationGameweek = systemState.calculationGameweek;
+                calculationMonth = systemState.calculationMonth;
+                calculationSeasonId = systemState.calculationSeasonId;
+                pickTeamGameweek = systemState.pickTeamGameweek;
+                pickTeamSeasonId = systemState.pickTeamSeasonId;
+                pickTeamSeasonName = pickTeamSeasonName;
+                calculationSeasonName = calculationSeasonName;
+                transferWindowActive = systemState.transferWindowActive;
+                onHold = systemState.onHold;
+                seasonActive = systemState.seasonActive;
+                version = systemState.version;
+              });
+            };
+            case (_) {
+              return #err(#NotFound);
+            };
+          };
+        };
+        case (_){
+          return #err(#NotFound);
+        };
+      };
+    };
 
     public func getDataHashes() : [DTOs.DataCacheDTO] {
       return List.toArray(dataCacheHashes);
@@ -178,55 +184,64 @@ module {
 
     //Game getters
 
-    public func getFixtures(dto: DTOs.GetFixturesDTO) : [DTOs.FixtureDTO] {
-      return seasonComposite.getFixtures(dto);
+    public func getFixtures(dto: DTOs.GetFixturesDTO) : async Result.Result<[DTOs.FixtureDTO], T.Error> {
+      return await seasonComposite.getFixtures(dto);
     };
 
-    public func getSeasons() : [DTOs.SeasonDTO] {
-      return seasonComposite.getSeasons();
+    public func getSeasons() : async Result.Result<[DTOs.SeasonDTO], T.Error> {
+      return await seasonComposite.getSeasons();
     };
 
-    public func getPostponedFixtures() : [DTOs.FixtureDTO] {
-      return seasonComposite.getPostponedFixtures(systemState.calculationSeasonId);
+    public func getPostponedFixtures() : async Result.Result<[DTOs.FixtureDTO], T.Error> {
+      return await seasonComposite.getPostponedFixtures(systemState.calculationSeasonId);
     };
 
-    public func getPlayers() : [DTOs.PlayerDTO] {
-      let clubs = Array.map<T.Club, T.ClubId>(clubComposite.getClubs(), func(club: T.Club){
-        return club.id;
-      });
-      return playerComposite.getActivePlayers(systemState.calculationSeasonId, clubs);
+    public func getPlayers() : async Result.Result<[DTOs.PlayerDTO], T.Error> {
+      let activeClubs = await clubComposite.getClubs();
+      switch(activeClubs){
+        case (#ok clubs){
+          let players = await playerComposite.getActivePlayers(systemState.pickTeamSeasonId, Array.map<T.Club, T.ClubId>(clubs, func(club: T.Club){ return club.id }));
+          switch(players){
+            case (#ok foundPlayers){
+              return #ok(foundPlayers);
+            };
+            case _ {
+              return #err(#NotFound);
+            }
+          };
+        };
+        case (_){
+          return #err(#NotFound);
+        }
+      };     
     };
 
-    public func getAllPlayers() : [DTOs.PlayerDTO] {
-      return playerComposite.getAllPlayers(systemState.calculationSeasonId);
+    public func getAllPlayers() : async Result.Result<[DTOs.PlayerDTO], T.Error> {
+      return await playerComposite.getAllPlayers(systemState.calculationSeasonId);
     };
 
-    public func getLoanedPlayers(dto: DTOs.ClubFilterDTO) : [DTOs.PlayerDTO] {
-      return playerComposite.getLoanedPlayers(dto);
+    public func getLoanedPlayers(dto: DTOs.ClubFilterDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
+      return await playerComposite.getLoanedPlayers(dto);
     };
 
-    public func getRetiredPlayers(dto: DTOs.ClubFilterDTO) : [DTOs.PlayerDTO] {
-      return playerComposite.getRetiredPlayers(dto);
+    public func getRetiredPlayers(dto: DTOs.ClubFilterDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
+      return await playerComposite.getRetiredPlayers(dto);
     };
 
-    public func getClubs() : [DTOs.ClubDTO] {
-      return clubComposite.getClubs();
+    public func getClubs() : async Result.Result<[DTOs.ClubDTO], T.Error> {
+      return await clubComposite.getClubs();
     };
 
-    public func getFormerClubs() : [DTOs.ClubDTO] {
-      return clubComposite.getFormerClubs();
+    public func getPlayerDetailsForGameweek(dto: DTOs.GameweekFiltersDTO) : async Result.Result<[DTOs.PlayerPointsDTO], T.Error> {
+      return await playerComposite.getPlayerDetailsForGameweek(dto);
     };
 
-    public func getPlayerDetailsForGameweek(dto: DTOs.GameweekFiltersDTO) : [DTOs.PlayerPointsDTO] {
-      return playerComposite.getPlayerDetailsForGameweek(dto);
+    public func getPlayerDetails(dto: DTOs.GetPlayerDetailsDTO) : async Result.Result<DTOs.PlayerDetailDTO, T.Error> {
+      return await playerComposite.getPlayerDetails(dto);
     };
 
-    public func getPlayerDetails(dto: DTOs.GetPlayerDetailsDTO) : DTOs.PlayerDetailDTO {
-      return playerComposite.getPlayerDetails(dto);
-    };
-
-    public func getPlayersMap(dto: DTOs.GameweekFiltersDTO) : [(Nat16, DTOs.PlayerScoreDTO)] {
-      let result = playerComposite.getPlayersMap(dto);
+    public func getPlayersMap(dto: DTOs.GameweekFiltersDTO) : async Result.Result<[(Nat16, DTOs.PlayerScoreDTO)], T.Error> {
+      let result = await playerComposite.getPlayersMap(dto);
       return result;
     };
 
@@ -307,11 +322,28 @@ module {
     //Game update functions
 
     public func saveFantasyTeam(principalId: T.PrincipalId, updatedFantasyTeam : DTOs.UpdateTeamSelectionDTO) : async Result.Result<(), T.Error> {
-      let clubs = Array.map<T.Club, T.ClubId>(clubComposite.getClubs(), func(club: T.Club){
-        return club.id;
-      });
-      let players = playerComposite.getActivePlayers(systemState.calculationSeasonId, clubs);
-      return await managerComposite.saveFantasyTeam(principalId, updatedFantasyTeam, systemState, players);
+       Debug.print("Saving fantasy team");
+
+       let clubsResponse = await clubComposite.getClubs();
+       switch(clubsResponse){
+        case (#ok foundClubs){
+          let clubs = Array.map<T.Club, T.ClubId>(foundClubs, func(club: T.Club){
+            return club.id;
+          });
+          let playersResponse = await playerComposite.getActivePlayers(systemState.calculationSeasonId, clubs);
+          switch(playersResponse){
+            case  (#ok players){
+              return await managerComposite.saveFantasyTeam(principalId, updatedFantasyTeam, systemState, players);  
+            };
+            case _ {
+              return #err(#NotFound);
+            }
+          };
+        };
+        case _ {
+          return #err(#NotFound);
+        }
+       };
     };
 
     public func updateUsername(principalId : Text, updatedUsername : Text) : async Result.Result<(), T.Error> {
@@ -319,8 +351,16 @@ module {
     };
 
     public func updateFavouriteClub(principalId : Text, clubId : T.ClubId) : async Result.Result<(), T.Error> {
-      let allClubs = clubComposite.getClubs();
-      return await managerComposite.updateFavouriteClub(principalId, clubId, systemState, allClubs);
+      
+      let clubsResponse = await clubComposite.getClubs();
+       switch(clubsResponse){
+        case (#ok clubs){
+          return await managerComposite.updateFavouriteClub(principalId, clubId, systemState, clubs);
+        };
+        case _ {
+          return #err(#NotFound);
+        }
+       };
     };
 
     public func updateProfilePicture(principalId: T.PrincipalId, dto: DTOs.UpdateProfilePictureDTO) : async Result.Result<(), T.Error> {
@@ -382,48 +422,44 @@ module {
     };
 
     public func gameKickOffExpiredCallback() : async () {
-      seasonComposite.setFixturesToActive(systemState.calculationSeasonId);
+      let _ = await seasonComposite.setFixturesToActive(systemState.calculationSeasonId);
       await updateCacheHash("fixtures");
     };
 
     public func gameCompletedExpiredCallback() : async () {
-      seasonComposite.setFixturesToCompleted(systemState.calculationSeasonId);
+      let _ = await seasonComposite.setFixturesToCompleted(systemState.calculationSeasonId);
 
-      let seasonFixtures = seasonComposite.getFixtures({seasonId = systemState.pickTeamSeasonId});
-      
-      let incompleteFixtures = Array.find<DTOs.FixtureDTO>(
-        seasonFixtures,
-        func(fixture : DTOs.FixtureDTO) : Bool {
-              return fixture.status != #Complete;
-        },
-      );
+      let seasonFixturesResponse = await seasonComposite.getFixtures({seasonId = systemState.pickTeamSeasonId});
+      switch(seasonFixturesResponse){
+        case (#ok seasonFixtures){
 
-      if(Option.isNull(incompleteFixtures)){
-        systemState := {
-          calculationGameweek = systemState.calculationGameweek;
-          calculationMonth = systemState.calculationMonth;
-          calculationSeasonId = systemState.calculationSeasonId;
-          pickTeamGameweek = systemState.pickTeamGameweek;
-          pickTeamSeasonId = systemState.pickTeamSeasonId;
-          seasonActive = false;
-          transferWindowActive = systemState.seasonActive;
-          onHold = systemState.onHold;
-        version = systemState.version;
+          let incompleteFixtures = Array.find<DTOs.FixtureDTO>(
+            seasonFixtures,
+            func(fixture : DTOs.FixtureDTO) : Bool {
+                  return fixture.status != #Complete;
+            },
+          );
+
+          if(Option.isNull(incompleteFixtures)){
+            systemState := {
+              calculationGameweek = systemState.calculationGameweek;
+              calculationMonth = systemState.calculationMonth;
+              calculationSeasonId = systemState.calculationSeasonId;
+              pickTeamGameweek = systemState.pickTeamGameweek;
+              pickTeamSeasonId = systemState.pickTeamSeasonId;
+              seasonActive = false;
+              transferWindowActive = systemState.seasonActive;
+              onHold = systemState.onHold;
+            version = systemState.version;
+            };
+          };
+          logSystemStatus();
+          
+          await updateCacheHash("fixtures");
+
         };
+        case (_){}
       };
-      logSystemStatus();
-      
-      await updateCacheHash("fixtures");
-    };
-
-    public func loanExpiredCallback() : async () {
-      await playerComposite.loanExpired();
-      await updateCacheHash("players");
-    };
-
-    public func injuryExpiredCallback() : async () {
-      await playerComposite.injuryExpired();
-      await updateCacheHash("players");
     };
 
     public func transferWindowStartCallback() : async () {
@@ -513,7 +549,7 @@ module {
       var seasonId = systemState.calculationSeasonId;
       
       var nextSeasonId = seasonId + 1;
-      seasonComposite.setStableNextSeasonId(nextSeasonId);
+      let _ = await seasonComposite.setNextSeasonId(nextSeasonId);
 
       let updatedSystemState : T.SystemState = {
         calculationGameweek = systemState.calculationGameweek;
@@ -549,33 +585,41 @@ module {
     };
 
     public func setGameweekTimers(gameweek: T.GameweekNumber) : async () {
-      let fixtures = seasonComposite.getFixtures({seasonId = systemState.calculationSeasonId});
-      let filteredFilters = Array.filter<DTOs.FixtureDTO>(
-        fixtures,
-        func(fixture : DTOs.FixtureDTO) : Bool {
-          return fixture.gameweek == gameweek;
-        },
-      );
+      let fixturesResult = await seasonComposite.getFixtures({seasonId = systemState.calculationSeasonId});
+      switch(fixturesResult){
+        case (#ok fixtures){
+          let filteredFilters = Array.filter<DTOs.FixtureDTO>(
+            fixtures,
+            func(fixture : DTOs.FixtureDTO) : Bool {
+              return fixture.gameweek == gameweek;
+            },
+          );
 
-      let sortedArray = Array.sort(
-        filteredFilters,
-        func(a : DTOs.FixtureDTO, b : DTOs.FixtureDTO) : Order.Order {
-          if (a.kickOff < b.kickOff) { return #less };
-          if (a.kickOff == b.kickOff) { return #equal };
-          return #greater;
-        },
-      );
+          let sortedArray = Array.sort(
+            filteredFilters,
+            func(a : DTOs.FixtureDTO, b : DTOs.FixtureDTO) : Order.Order {
+              if (a.kickOff < b.kickOff) { return #less };
+              if (a.kickOff == b.kickOff) { return #equal };
+              return #greater;
+            },
+          );
 
-      let firstFixture = sortedArray[0];
-      let durationToHourBeforeFirstFixture : Timer.Duration = #nanoseconds(Int.abs(firstFixture.kickOff - Utilities.getHour() - Time.now()));
-      switch (setAndBackupTimer) {
-        case (null) {};
-        case (?actualFunction) {
-          await actualFunction(durationToHourBeforeFirstFixture, "gameweekBeginExpired");
+          let firstFixture = sortedArray[0];
+          let durationToHourBeforeFirstFixture : Timer.Duration = #nanoseconds(Int.abs(firstFixture.kickOff - Utilities.getHour() - Time.now()));
+          switch (setAndBackupTimer) {
+            case (null) {};
+            case (?actualFunction) {
+              await actualFunction(durationToHourBeforeFirstFixture, "gameweekBeginExpired");
+            };
+          };
+
+          await setKickOffTimers(filteredFilters);
+          
         };
-      };
+        case (_){
 
-      await setKickOffTimers(filteredFilters);
+        }
+      };
     };
 
     private func setKickOffTimers(gameweekFixtures : [DTOs.FixtureDTO]) : async () {
@@ -592,120 +636,20 @@ module {
         };
       };
     };
-
-
-    //Reward function TODO ALL
-    
-    private func calculateRewardPool(seasonId : T.SeasonId) : async () {
-
-      let ledger : SNSToken.Interface = actor (Environment.SNS_LEDGER_CANISTER_ID);
-      
-      let totalSupply : Nat64 = Nat64.fromNat(await ledger.icrc1_total_supply());
-
-      let seasonTokensMinted = Utilities.nat64Percentage(totalSupply, 0.01875);
-
-      let rewardPool : T.RewardPool = {
-        seasonId = seasonId;
-        seasonLeaderboardPool = Utilities.nat64Percentage(seasonTokensMinted, 0.3);
-        monthlyLeaderboardPool = Utilities.nat64Percentage(seasonTokensMinted, 0.2);
-        weeklyLeaderboardPool = Utilities.nat64Percentage(seasonTokensMinted, 0.15);
-        mostValuableTeamPool = Utilities.nat64Percentage(seasonTokensMinted, 0.1);
-        highestScoringMatchPlayerPool = Utilities.nat64Percentage(seasonTokensMinted, 0.1);
-        allTimeWeeklyHighScorePool = Utilities.nat64Percentage(seasonTokensMinted, 0.05);
-        allTimeMonthlyHighScorePool = Utilities.nat64Percentage(seasonTokensMinted, 0.05);
-        allTimeSeasonHighScorePool = Utilities.nat64Percentage(seasonTokensMinted, 0.05);
-      };
-
-      rewardPools.put(seasonId, rewardPool);
-    };
-
-    private func payWeeklyRewards(rewardPool : T.RewardPool) : async () {
-      let weeklyLeaderboardCanisterId = await leaderboardComposite.getWeeklyCanisterId(systemState.calculationSeasonId, systemState.calculationGameweek);
-      switch (weeklyLeaderboardCanisterId) {
-        case (null) {};
-        case (?canisterId) {
-          let weekly_leaderboard_canister = actor (canisterId) : actor {
-            getRewardLeaderboard : () -> async ?DTOs.WeeklyLeaderboardDTO;
-          };
-
-          let weeklyLeaderboard = await weekly_leaderboard_canister.getRewardLeaderboard();
-          switch(weeklyLeaderboard){
-            case (null){
-
-            };
-            case (?foundLeaderboard){
-              let fixtures = seasonComposite.getFixtures({seasonId = systemState.calculationSeasonId});
-              let gameweekFixtures = Array.filter<DTOs.FixtureDTO>(
-                fixtures,
-                func(fixture : DTOs.FixtureDTO) : Bool {
-                  return fixture.gameweek == foundLeaderboard.gameweek;
-                },
-              );
-              await managerComposite.payWeeklyRewards(rewardPool, foundLeaderboard, { seasonId = systemState.calculationSeasonId; gameweek = systemState.calculationGameweek }, List.fromArray(gameweekFixtures));
-              
-            }
-          };
-        };
-      };
-    };
-
-    private func payMonthlyRewards(rewardPool : T.RewardPool) : async () {
-      
-      let clubs = clubComposite.getClubs();
-      for (club in Iter.fromArray(clubs)) {
-        let monthlyLeaderboardCanisterId = await leaderboardComposite.getMonthlyCanisterId(systemState.calculationSeasonId, systemState.calculationMonth);
-        switch (monthlyLeaderboardCanisterId) {
-          case (null) {};
-          case (?canisterId) {
-            let monthly_leaderboard_canister = actor (canisterId) : actor {
-              getRewardLeaderboards : () -> async [DTOs.ClubLeaderboardDTO];
-            };
-
-            let monthlyLeaderboards = await monthly_leaderboard_canister.getRewardLeaderboards();
-            for(leaderboard in Iter.fromArray(monthlyLeaderboards)){
-                await managerComposite.payMonthlyRewards(rewardPool, leaderboard);
-            };
-          };
-        };
-      };
-    };
-
-    private func paySeasonRewards(rewardPool : T.RewardPool) : async () {
-      let seasonLeaderboardCanisterId = await leaderboardComposite.getSeasonCanisterId(systemState.calculationSeasonId);
-      switch (seasonLeaderboardCanisterId) {
-        case (null) {};
-        case (?canisterId) {
-          let season_leaderboard_canister = actor (canisterId) : actor {
-            getRewardLeaderboard : () -> async ?DTOs.SeasonLeaderboardDTO;
-          };
-          let clubs = Array.map<T.Club, T.ClubId>(clubComposite.getClubs(), func(club: T.Club){
-            return club.id;
-          });
-          let players = playerComposite.getActivePlayers(systemState.calculationSeasonId, clubs);
-          let seasonLeaderboard = await season_leaderboard_canister.getRewardLeaderboard();
-          switch(seasonLeaderboard){
-            case (null){
-
-            };
-            case (?foundLeaderboard){
-              await managerComposite.paySeasonRewards(rewardPool, foundLeaderboard, players, systemState.calculationSeasonId);
-            }
-          };
-        };
-      };
-    };
-
     
     //Governance validation and execution functions
 
-    public func validateAddInitialFixtures(addInitialFixturesDTO : DTOs.AddInitialFixturesDTO) : T.RustResult {
-      let clubs = clubComposite.getClubs();
-      return seasonComposite.validateAddInitialFixtures(addInitialFixturesDTO, clubs);
+    public func validateAddInitialFixtures(addInitialFixturesDTO : DTOs.AddInitialFixturesDTO) : async Result.Result<(), T.Error> {
+      if(systemState.onHold){
+        return #err(#NotAllowed);
+      };
+      
+      return await seasonComposite.validateAddInitialFixtures(addInitialFixturesDTO);
     };
 
-    public func executeAddInitialFixtures(addInitialFixturesDTO : DTOs.AddInitialFixturesDTO) : async () {
+    public func executeAddInitialFixtures(addInitialFixturesDTO : DTOs.AddInitialFixturesDTO) : async Result.Result<(), T.Error> {
 
-      await seasonComposite.executeAddInitialFixtures(addInitialFixturesDTO);
+      let _ = await seasonComposite.executeAddInitialFixtures(addInitialFixturesDTO);
 
       let sortedArray = Array.sort(
         addInitialFixturesDTO.seasonFixtures,
@@ -734,400 +678,254 @@ module {
 
       await setGameweekTimers(1);
       await updateCacheHash("fixtures");
+      return #ok();
     };
 
-    public func validateSubmitFixtureData(submitFixtureDataDTO : DTOs.SubmitFixtureDataDTO) : T.RustResult {
-      return seasonComposite.validateSubmitFixtureData(submitFixtureDataDTO);
-    };
-
-    public func executeSubmitFixtureData(submitFixtureData : DTOs.SubmitFixtureDataDTO) : async () {
-      
-      let players = playerComposite.getAllPlayers(systemState.calculationSeasonId);
-      
-      let populatedPlayerEvents = await seasonComposite.populatePlayerEventData(submitFixtureData, players);
-      
-      switch (populatedPlayerEvents) {
-        case (null) {};
-        case (?events) {
-          await playerComposite.addEventsToPlayers(events, submitFixtureData.seasonId, submitFixtureData.gameweek);
-          await seasonComposite.addEventsToFixture(events, submitFixtureData.seasonId, submitFixtureData.fixtureId); 
-          seasonComposite.setGameScore(submitFixtureData.seasonId, submitFixtureData.fixtureId);
-        };
+    public func validateSubmitFixtureData(submitFixtureDataDTO : DTOs.SubmitFixtureDataDTO) : async Result.Result<(), T.Error> {
+      if(systemState.onHold){
+        return #err(#NotAllowed);
       };
-      
-      seasonComposite.setFixtureToFinalised(systemState.calculationSeasonId, submitFixtureData.fixtureId);
-      return; //TODO REMOVE
-      
-      await managerComposite.calculateFantasyTeamScores(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
-      await leaderboardComposite.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth, managerComposite.getStableUniqueManagerCanisterIds());
-      
-      //await privateLeaguesManager.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
-      
-      
-      let gameweekComplete = seasonComposite.checkGameweekComplete(systemState);
-      let monthComplete = seasonComposite.checkMonthComplete(systemState);
-      let seasonComplete = seasonComposite.checkSeasonComplete(systemState);
-      
-      if(gameweekComplete){
-        let rewardPool = rewardPools.get(systemState.calculationSeasonId);
-        switch (rewardPool) {
-          case (null) {};
-          case (?foundRewardPool) {
+      return await seasonComposite.validateSubmitFixtureData(submitFixtureDataDTO);
+    };
 
-            if(gameweekComplete){
-              await managerComposite.resetWeeklyTransfers();
-              //await payWeeklyRewards(foundRewardPool); Removed until verified
-              //await privateLeaguesManager.payWeeklyRewards({ seasonId = systemState.calculationSeasonId; gameweek = systemState.calculationGameweek });
-              await incrementCalculationGameweek();
+    public func executeSubmitFixtureData(submitFixtureData : DTOs.SubmitFixtureDataDTO) : async Result.Result<(), T.Error> {
+      
+      let playersResult = await playerComposite.getAllPlayers(systemState.calculationSeasonId);
+
+      switch(playersResult){
+        case (#ok players){
+          let populatedPlayerEvents = await seasonComposite.populatePlayerEventData(submitFixtureData, players);
+          switch (populatedPlayerEvents) {
+            case (null) {
+              return #err(#NotFound);
             };
-
-            /* TODO ADD BACK IN
-            if(monthComplete){
-              await managerComposite.resetBonusesAvailable();
-              //await payMonthlyRewards(foundRewardPool); Removed until verified
-              //await privateLeaguesManager.payMonthlyRewards(systemState.calculationSeasonId, systemState.calculationMonth);
-              await incrementCalculationMonth();
+            case (?events) {
+              let _ = await playerComposite.addEventsToPlayers(events, submitFixtureData.seasonId, submitFixtureData.gameweek);
+              let _ = await seasonComposite.addEventsToFixture(events, submitFixtureData.seasonId, submitFixtureData.fixtureId); 
+              let _ = await seasonComposite.setGameScore(submitFixtureData.seasonId, submitFixtureData.fixtureId);
+              let _ = await seasonComposite.setFixtureToFinalised(systemState.calculationSeasonId, submitFixtureData.fixtureId);
+              return #ok();
             };
-
-            if(seasonComplete){
-              await managerComposite.resetFantasyTeams(seasonComposite.getStableNextSeasonId());
-              //await paySeasonRewards(foundRewardPool); Removed until verified
-              //await privateLeaguesManager.paySeasonRewards(systemState.calculationSeasonId);
-              await incrementCalculationSeason();
-              
-              seasonComposite.createNewSeason(systemState);
-                
-              let currentSeasonId = seasonComposite.getStableNextSeasonId();
-              await calculateRewardPool(currentSeasonId);
-              
-              await setTransferWindowTimers();
-            };
-            */
-
           };
         };
+        case _ {
+            return #err(#NotFound);
+        }
       };
-      
-      await updateCacheHash("players");
-      await updateCacheHash("player_events");
-      await updateCacheHash("fixtures");
-      await updateCacheHash("weekly_leaderboard");
-      await updateCacheHash("monthly_leaderboards");
-      await updateCacheHash("season_leaderboard");
-      await updateCacheHash("system_state");
     };
 
-    public func validateMoveFixture(moveFixtureDTO : DTOs.MoveFixtureDTO) : T.RustResult {
-      return seasonComposite.validateMoveFixture(moveFixtureDTO, systemState);
-    };
-
-    public func executeMoveFixture(moveFixtureDTO : DTOs.MoveFixtureDTO) : async () {
-      await seasonComposite.executeMoveFixture(moveFixtureDTO, systemState);
-      await updateCacheHash("fixtures");
-    };
-
-    public func validatePostponeFixture(postponeFixtureDTO : DTOs.PostponeFixtureDTO) : T.RustResult {
-      return seasonComposite.validatePostponeFixture(postponeFixtureDTO, systemState);
-    };
-
-    public func executePostponeFixture(postponeFixtureDTO : DTOs.PostponeFixtureDTO) : async () {
-      await seasonComposite.executePostponeFixture(postponeFixtureDTO, systemState);
-      await updateCacheHash("fixtures");
-    };
-
-    public func validateRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO) : T.RustResult {
-      return seasonComposite.validateRescheduleFixture(rescheduleFixtureDTO, systemState);
-    };
-
-    public func executeRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO) : async () {
-      await seasonComposite.executeRescheduleFixture(rescheduleFixtureDTO, systemState);
-      await updateCacheHash("fixtures");
-    };
-
-    public func validateRevaluePlayerUp(revaluePlayerUpDTO : DTOs.RevaluePlayerUpDTO) : T.RustResult {
-      if(not systemState.seasonActive){
-        return #Err("Season not active.");
+    public func validateMoveFixture(moveFixtureDTO : DTOs.MoveFixtureDTO) : async Result.Result<(), T.Error> {
+      if(systemState.onHold){
+        return #err(#NotAllowed);
       };
-      return playerComposite.validateRevaluePlayerUp(revaluePlayerUpDTO);
+      return await seasonComposite.validateMoveFixture(moveFixtureDTO, systemState);
     };
 
-    public func executeRevaluePlayerUp(revaluePlayerUpDTO : DTOs.RevaluePlayerUpDTO) : async () {
-      await playerComposite.executeRevaluePlayerUp(revaluePlayerUpDTO, systemState);
-      await updateCacheHash("players");
+    public func executeMoveFixture(moveFixtureDTO : DTOs.MoveFixtureDTO) : async Result.Result<(), T.Error> {
+      let _ = await seasonComposite.executeMoveFixture(moveFixtureDTO, systemState);
+      await updateCacheHash("fixtures");
+      return #ok();
     };
 
-    public func validateRevaluePlayerDown(revaluePlayerDownDTO : DTOs.RevaluePlayerDownDTO) : T.RustResult {
-      if(not systemState.seasonActive){
-        return #Err("Season not active.");
+    public func validatePostponeFixture(postponeFixtureDTO : DTOs.PostponeFixtureDTO) : async Result.Result<(), T.Error> {
+      if(systemState.onHold){
+        return #err(#NotAllowed);
       };
-      return playerComposite.validateRevaluePlayerDown(revaluePlayerDownDTO);
+      return await seasonComposite.validatePostponeFixture(postponeFixtureDTO, systemState);
     };
 
-    public func executeRevaluePlayerDown(revaluePlayerDownDTO : DTOs.RevaluePlayerDownDTO) : async () {
-      await playerComposite.executeRevaluePlayerDown(revaluePlayerDownDTO, systemState);
+    public func executePostponeFixture(postponeFixtureDTO : DTOs.PostponeFixtureDTO) : async Result.Result<(), T.Error> {
+      let _ = await seasonComposite.executePostponeFixture(postponeFixtureDTO, systemState);
+      await updateCacheHash("fixtures");
+      return #ok();
+    };
+
+    public func validateRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO) : async Result.Result<(), T.Error> {
+      if(systemState.onHold){
+        return #err(#NotAllowed);
+      };
+      return await seasonComposite.validateRescheduleFixture(rescheduleFixtureDTO, systemState);
+    };
+
+    public func executeRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO) : async Result.Result<(), T.Error> {
+      let _ = await seasonComposite.executeRescheduleFixture(rescheduleFixtureDTO, systemState);
+      await updateCacheHash("fixtures");
+      return #ok();
+    };
+
+    public func validateRevaluePlayerUp(revaluePlayerUpDTO : DTOs.RevaluePlayerUpDTO) : async Result.Result<(), T.Error> {
+      if(systemState.onHold){
+        return #err(#NotAllowed);
+      };
+      return await playerComposite.validateRevaluePlayerUp(revaluePlayerUpDTO);
+    };
+
+    public func executeRevaluePlayerUp(revaluePlayerUpDTO : DTOs.RevaluePlayerUpDTO) : async Result.Result<(), T.Error> {
+      let _ = await playerComposite.revaluePlayerUp(revaluePlayerUpDTO);
+      await updateCacheHash("fixtures");
+      return #ok();
+    };
+
+    public func validateRevaluePlayerDown(revaluePlayerDownDTO : DTOs.RevaluePlayerDownDTO) : async Result.Result<(), T.Error> {
+      if(systemState.onHold){
+        return #err(#NotAllowed);
+      };
+      let _ = await playerComposite.validateRevaluePlayerDown(revaluePlayerDownDTO);
+      await updateCacheHash("fixtures");
+      return #ok();
+    };
+
+    public func executeRevaluePlayerDown(revaluePlayerDownDTO : DTOs.RevaluePlayerDownDTO) : async Result.Result<(), T.Error> {
+      let _ = await playerComposite.revaluePlayerDown(revaluePlayerDownDTO);
       await updateCacheHash("players");
+      return #ok();
     };
 
-    public func validateLoanPlayer(loanPlayerDTO : DTOs.LoanPlayerDTO) : T.RustResult {
+    public func validateLoanPlayer(loanPlayerDTO : DTOs.LoanPlayerDTO) : async Result.Result<(), T.Error> {
+      if(systemState.onHold){
+        return #err(#NotAllowed);
+      };
+      let _ = await playerComposite.validateLoanPlayer(loanPlayerDTO);
+      await updateCacheHash("fixtures");
+      return #ok();
+    };
+
+    public func executeLoanPlayer(loanPlayerDTO : DTOs.LoanPlayerDTO) : async Result.Result<(), T.Error> {
+      let _ = await playerComposite.loanPlayer(loanPlayerDTO);
+      await updateCacheHash("players");
+      return #ok();
+    };
+
+    public func validateTransferPlayer(transferPlayerDTO : DTOs.TransferPlayerDTO) : async Result.Result<(), T.Error> {
+      if(systemState.onHold){
+        return #err(#NotAllowed);
+      };
       let clubs = clubComposite.getClubs();
-      return playerComposite.validateLoanPlayer(loanPlayerDTO, List.fromArray(clubs));
+      return await playerComposite.validateTransferPlayer(transferPlayerDTO);
     };
 
-    public func executeLoanPlayer(loanPlayerDTO : DTOs.LoanPlayerDTO) : async () {
-      let clubs = Array.map<T.Club, T.ClubId>(clubComposite.getClubs(), func(club: T.Club){
-        return club.id;
-      });
-      let players = playerComposite.getActivePlayers(systemState.calculationSeasonId, clubs);
-      await managerComposite.removePlayerFromTeams(loanPlayerDTO.playerId, players);
-      await playerComposite.executeLoanPlayer(loanPlayerDTO, systemState);
+    public func executeTransferPlayer(transferPlayerDTO : DTOs.TransferPlayerDTO) : async Result.Result<(), T.Error> {
+      let _ = await playerComposite.transferPlayer(transferPlayerDTO);
       await updateCacheHash("players");
+      return #ok();
+     };
+
+    public func validateRecallPlayer(recallPlayerDTO : DTOs.RecallPlayerDTO) : async Result.Result<(), T.Error> {
+      if(systemState.onHold){
+        return #err(#NotAllowed);
+      };
+      return await playerComposite.validateRecallPlayer(recallPlayerDTO);
     };
 
-    public func validateTransferPlayer(transferPlayerDTO : DTOs.TransferPlayerDTO) : T.RustResult {
+    public func executeRecallPlayer(recallPlayerDTO : DTOs.RecallPlayerDTO) : async Result.Result<(), T.Error> {
+      let _ = await playerComposite.recallPlayer(recallPlayerDTO);
+      await updateCacheHash("players");
+      return #ok();
+     };
+
+    public func validateCreatePlayer(createPlayerDTO : DTOs.CreatePlayerDTO) : async Result.Result<(), T.Error> {
+      if(systemState.onHold){
+        return #err(#NotAllowed);
+      };
       let clubs = clubComposite.getClubs();
-      return playerComposite.validateTransferPlayer(transferPlayerDTO, List.fromArray(clubs));
+      return await playerComposite.validateCreatePlayer(createPlayerDTO);
     };
 
-    public func executeTransferPlayer(transferPlayerDTO : DTOs.TransferPlayerDTO) : async () {
-      let clubs = Array.map<T.Club, T.ClubId>(clubComposite.getClubs(), func(club: T.Club){
-        return club.id;
-      });
-      let players = playerComposite.getActivePlayers(systemState.calculationSeasonId, clubs);
-      await managerComposite.removePlayerFromTeams(transferPlayerDTO.playerId, players);
-      await playerComposite.executeTransferPlayer(transferPlayerDTO, systemState);
+    public func executeCreatePlayer(createPlayerDTO : DTOs.CreatePlayerDTO) : async Result.Result<(), T.Error> {
+      let _ = await playerComposite.createPlayer(createPlayerDTO);
       await updateCacheHash("players");
-    };
+      return #ok();
+   };
 
-    public func validateRecallPlayer(recallPlayerDTO : DTOs.RecallPlayerDTO) : T.RustResult {
-      return playerComposite.validateRecallPlayer(recallPlayerDTO);
-    };
-
-    public func executeRecallPlayer(recallPlayerDTO : DTOs.RecallPlayerDTO) : async () {
-      let clubs = Array.map<T.Club, T.ClubId>(clubComposite.getClubs(), func(club: T.Club){
-        return club.id;
-      });
-      let players = playerComposite.getActivePlayers(systemState.calculationSeasonId, clubs);
-      await managerComposite.removePlayerFromTeams(recallPlayerDTO.playerId, players);
-      await playerComposite.executeRecallPlayer(recallPlayerDTO);
-      await updateCacheHash("players");
-    };
-
-    public func validateCreatePlayer(createPlayerDTO : DTOs.CreatePlayerDTO) : T.RustResult {
-      let clubs = clubComposite.getClubs();
-      return playerComposite.validateCreatePlayer(createPlayerDTO, List.fromArray(clubs));
-    };
-
-    public func executeCreatePlayer(createPlayerDTO : DTOs.CreatePlayerDTO) : async () {
-      await playerComposite.executeCreatePlayer(createPlayerDTO);
-      await updateCacheHash("players");
-    };
-
-    public func validateUpdatePlayer(updatePlayerDTO : DTOs.UpdatePlayerDTO) : T.RustResult {
-      return playerComposite.validateUpdatePlayer(updatePlayerDTO);
-    };
-
-    public func executeUpdatePlayer(updatePlayerDTO : DTOs.UpdatePlayerDTO) : async () {
-      let currentPlayerPosition = playerComposite.getPlayerPosition(updatePlayerDTO.playerId);
-      await playerComposite.executeUpdatePlayer(updatePlayerDTO);
-      let clubs = Array.map<T.Club, T.ClubId>(clubComposite.getClubs(), func(club: T.Club){
-        return club.id;
-      });
-      let players = playerComposite.getActivePlayers(systemState.calculationSeasonId, clubs);
-
-      switch (currentPlayerPosition) {
-        case (null) { return };
-        case (?foundPosition) {
-          if (foundPosition != updatePlayerDTO.position) {
-            await managerComposite.removePlayerFromTeams(updatePlayerDTO.playerId, players);
-          };
-
-          await updateCacheHash("players");
-        };
+    public func validateUpdatePlayer(updatePlayerDTO : DTOs.UpdatePlayerDTO) : async Result.Result<(), T.Error> {
+      if(systemState.onHold){
+        return #err(#NotAllowed);
       };
+      return await playerComposite.validateUpdatePlayer(updatePlayerDTO);
     };
 
-    public func validateSetPlayerInjury(setPlayerInjuryDTO : DTOs.SetPlayerInjuryDTO) : T.RustResult {
-      return playerComposite.validateSetPlayerInjury(setPlayerInjuryDTO);
-    };
-
-    public func executeSetPlayerInjury(setPlayerInjuryDTO : DTOs.SetPlayerInjuryDTO) : async () {
-      await playerComposite.executeSetPlayerInjury(setPlayerInjuryDTO);
+    public func executeUpdatePlayer(updatePlayerDTO : DTOs.UpdatePlayerDTO) : async Result.Result<(), T.Error> {
+     let _ = await playerComposite.updatePlayer(updatePlayerDTO);
       await updateCacheHash("players");
-    };
+      return #ok();
+     };
 
-    public func validateRetirePlayer(retirePlayerDTO : DTOs.RetirePlayerDTO) : T.RustResult {
-      return playerComposite.validateRetirePlayer(retirePlayerDTO);
-    };
-
-    public func executeRetirePlayer(retirePlayerDTO : DTOs.RetirePlayerDTO) : async () {
-      let clubs = Array.map<T.Club, T.ClubId>(clubComposite.getClubs(), func(club: T.Club){
-        return club.id;
-      });
-      let players = playerComposite.getActivePlayers(systemState.calculationSeasonId, clubs);
-      await managerComposite.removePlayerFromTeams(retirePlayerDTO.playerId, players);
-      await playerComposite.executeRetirePlayer(retirePlayerDTO);
-      await updateCacheHash("players");
-    };
-
-    public func validateUnretirePlayer(unretirePlayerDTO : DTOs.UnretirePlayerDTO) : T.RustResult {
-      return playerComposite.validateUnretirePlayer(unretirePlayerDTO);
-    };
-
-    public func executeUnretirePlayer(unretirePlayerDTO : DTOs.UnretirePlayerDTO) : async () {
-      await playerComposite.executeUnretirePlayer(unretirePlayerDTO);
-      await updateCacheHash("players");
-    };
-
-    public func validatePromoteFormerClub(promoteFormerClubDTO : DTOs.PromoteFormerClubDTO) : T.RustResult {
-      return clubComposite.validatePromoteFormerClub(promoteFormerClubDTO);
-    };
-
-    public func executePromoteFormerClub(promoteFormerClubDTO : DTOs.PromoteFormerClubDTO) : async () {
-      await clubComposite.executePromoteFormerClub(promoteFormerClubDTO);
-      await updateCacheHash("clubs");
-    };
-
-    public func validatePromoteNewClub(promoteNewClubDTO : DTOs.PromoteNewClubDTO) : T.RustResult {
-      return clubComposite.validatePromoteNewClub(promoteNewClubDTO);
-    };
-
-    public func executePromoteNewClub(promoteNewClubDTO : DTOs.PromoteNewClubDTO) : async () {
-      await clubComposite.executePromoteNewClub(promoteNewClubDTO);
-      await updateCacheHash("clubs");
-    };
-
-    public func validateUpdateClub(updateClubDTO : DTOs.UpdateClubDTO) : T.RustResult {
-      return clubComposite.validateUpdateClub(updateClubDTO);
-    };
-
-    public func executeUpdateClub(updateClubDTO : DTOs.UpdateClubDTO) : async () {
-      await clubComposite.executeUpdateClub(updateClubDTO);
-      await updateCacheHash("clubs");
-    };
-
-    //Private league functions
-
-    public func isPrivateLeagueMember(canisterId: T.CanisterId, callerId: T.PrincipalId) : async Bool {
-      return await privateLeaguesManager.isLeagueMember(canisterId, callerId);
-    };
-    
-    public func getPrivateLeagueWeeklyLeaderboard(dto: DTOs.GetPrivateLeagueWeeklyLeaderboard) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
-      await privateLeaguesManager.getWeeklyLeaderboard(dto);
-    };  
-
-    public func getPrivateLeagueMonthlyLeaderboard(dto: DTOs.GetPrivateLeagueMonthlyLeaderboard) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error> {
-      await privateLeaguesManager.getMonthlyLeaderboard(dto);
-    };
-
-    public func getPrivateLeagueSeasonLeaderboard(dto: DTOs.GetPrivateLeagueSeasonLeaderboard) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error> {
-      await privateLeaguesManager.getSeasonLeaderboard(dto)
-    };
-    
-    public func getPrivateLeagueMembers(dto: DTOs.GetLeagueMembersDTO) : async Result.Result<[DTOs.LeagueMemberDTO], T.Error> {
-      await privateLeaguesManager.getLeagueMembers(dto);
-    };
-
-    public func privateLeagueIsValid(privateLeague: DTOs.CreatePrivateLeagueDTO) : Bool{
-      return privateLeaguesManager.privateLeagueIsValid(privateLeague);
-    };
-
-    public func createPrivateLeague(defaultAccount: Principal, managerId: Principal, newPrivateLeague: DTOs.CreatePrivateLeagueDTO) : async Result.Result<(), T.Error> {
-      return await privateLeaguesManager.createPrivateLeague(defaultAccount, managerId, newPrivateLeague);
-    };
-
-    public func nameAvailable(privateLeagueName: Text) : Bool{
-      return privateLeaguesManager.nameAvailable(privateLeagueName);
-    };
-
-    public func leagueHasSpace(canisterId: T.CanisterId) : async Bool {
-      return await privateLeaguesManager.leagueHasSpace(canisterId);
-    };
-
-    public func isLeagueMember(canisterId: T.CanisterId, managerId: T.PrincipalId) : async Bool {
-      return await privateLeaguesManager.isLeagueMember(canisterId, managerId);
-    };
-
-    public func isLeagueAdmin(canisterId: T.CanisterId, principalId: T.PrincipalId) : async Bool {
-      return await privateLeaguesManager.isLeagueAdmin(canisterId, principalId);
-    };
-
-    public func inviteUserToLeague(dto: DTOs.LeagueInviteDTO, callerId: T.PrincipalId) : async Result.Result<(), T.Error> {
-      return await privateLeaguesManager.inviteUserToLeague(dto, callerId);
-    };
-
-    public func acceptLeagueInvite(canisterId: T.CanisterId, managerId: T.PrincipalId) : async Result.Result<(), T.Error> {
-      let manager = await getManager({managerId = managerId});
-      switch(manager){
-        case (#ok foundManager){
-          return await privateLeaguesManager.acceptLeagueInvite(canisterId, managerId, foundManager.username);
-        };
-        case _ {};
+    public func validateSetPlayerInjury(setPlayerInjuryDTO : DTOs.SetPlayerInjuryDTO) : async Result.Result<(), T.Error> {
+      if(systemState.onHold){
+        return #err(#NotAllowed);
       };
-      return #err(#NotFound);
+      return await playerComposite.validateSetPlayerInjury(setPlayerInjuryDTO);
     };
 
-    public func updateLeaguePicture(dto: DTOs.UpdateLeaguePictureDTO) : async Result.Result<(), T.Error> {
-      return await privateLeaguesManager.updateLeaguePicture(dto);
+    public func executeSetPlayerInjury(setPlayerInjuryDTO : DTOs.SetPlayerInjuryDTO) : async Result.Result<(), T.Error> {
+      let _ = await playerComposite.setPlayerInjury(setPlayerInjuryDTO);
+      await updateCacheHash("players");
+      return #ok();
     };
 
-    public func updateLeagueBanner(dto: DTOs.UpdateLeagueBannerDTO) : async Result.Result<(), T.Error> {
-      return await privateLeaguesManager.updateLeagueBanner(dto);
-    };
-
-    public func updateLeagueName(dto: DTOs.UpdateLeagueNameDTO) : async Result.Result<(), T.Error> {
-      return await privateLeaguesManager.updateLeagueName(dto);
-    };
-
-    public func getPrivateLeague(canisterId: T.CanisterId) : async Result.Result<DTOs.PrivateLeagueDTO, T.Error> {
-      return await privateLeaguesManager.getPrivateLeague(canisterId);
-    };
-
-    public func enterLeague(canisterId: T.CanisterId, managerId: T.PrincipalId, managerCanisterId: T.CanisterId, username: Text) : async Result.Result<(), T.Error> {
-      return await privateLeaguesManager.enterLeague(canisterId, managerId, managerCanisterId, username);
-    };
-
-    public func inviteExists(canisterId: T.CanisterId, managerId: T.PrincipalId) :  async Bool {
-      return await privateLeaguesManager.inviteExists(canisterId, managerId);
-    };
-
-    public func leagueExists(privateLeagueCanisterId: T.CanisterId) : Bool {
-      return privateLeaguesManager.leagueExists(privateLeagueCanisterId);
-    };
-
-    public func payPrivateLeagueReward(defaultAccount: Principal, privateLeagueCanisterId: T.CanisterId, tokens: [T.TokenInfo], winnerPrincipal: T.PrincipalId, amount: Nat64) : async () {
-      
-      let privateLeague = await getPrivateLeague(privateLeagueCanisterId);
-
-      switch(privateLeague){
-        case (#ok foundPrivateLeague){
-
-          var tokenCanisterId = "";
-          var tokenTransactionFee: Nat = 0;
-          for(token in Iter.fromArray(tokens)){
-            if(token.id == foundPrivateLeague.tokenId){
-              tokenCanisterId := token.canisterId;
-              tokenTransactionFee := token.fee;
-            }
-          };
-
-          if(tokenCanisterId == ""){
-            return;
-          };
-      
-          let ledger : SNSToken.Interface = actor (tokenCanisterId);
-            
-          let _ = await ledger.icrc1_transfer ({
-            memo = ?Text.encodeUtf8("0");
-              from_subaccount = ?Account.principalToSubaccount(Principal.fromText(tokenCanisterId));
-              to = { owner = defaultAccount; subaccount = ?Account.principalToSubaccount(Principal.fromText(winnerPrincipal)) };
-              amount = Nat64.toNat(amount);
-              fee = ?tokenTransactionFee;
-              created_at_time = ?Nat64.fromNat(Int.abs(Time.now()))
-          });
-          
-        };
-        case (_){ };
+    public func validateRetirePlayer(retirePlayerDTO : DTOs.RetirePlayerDTO) : async Result.Result<(), T.Error> {
+      if(systemState.onHold){
+        return #err(#NotAllowed);
       };
+      return await playerComposite.validateRetirePlayer(retirePlayerDTO);
+    };
+
+    public func executeRetirePlayer(retirePlayerDTO : DTOs.RetirePlayerDTO) : async Result.Result<(), T.Error> {
+      let _ = await playerComposite.retirePlayer(retirePlayerDTO);
+      await updateCacheHash("players");
+      return #ok();
+    };
+
+    public func validateUnretirePlayer(unretirePlayerDTO : DTOs.UnretirePlayerDTO) : async Result.Result<(), T.Error> {
+      if(systemState.onHold){
+        return #err(#NotAllowed);
+      };
+      return await playerComposite.validateUnretirePlayer(unretirePlayerDTO);
+    };
+
+    public func executeUnretirePlayer(unretirePlayerDTO : DTOs.UnretirePlayerDTO) : async Result.Result<(), T.Error> {
+      let _ = await playerComposite.unretirePlayer(unretirePlayerDTO);
+      await updateCacheHash("players");
+      return #ok();
+    };
+
+    public func validatePromoteFormerClub(promoteFormerClubDTO : DTOs.PromoteFormerClubDTO) : async Result.Result<(), T.Error> {
+      if(systemState.onHold){
+        return #err(#NotAllowed);
+      };
+      return await clubComposite.validatePromoteFormerClub(promoteFormerClubDTO);
+    };
+
+    public func executePromoteFormerClub(promoteFormerClubDTO : DTOs.PromoteFormerClubDTO) : async Result.Result<(), T.Error> {
+      let _ = await clubComposite.promoteFormerClub(promoteFormerClubDTO);
+      await updateCacheHash("clubs");
+      return #ok();
+    };
+
+    public func validatePromoteNewClub(promoteNewClubDTO : DTOs.PromoteNewClubDTO) : async Result.Result<(), T.Error> {
+      if(systemState.onHold){
+        return #err(#NotAllowed);
+      };
+      return await clubComposite.validatePromoteNewClub(promoteNewClubDTO);
+    };
+
+    public func executePromoteNewClub(promoteNewClubDTO : DTOs.PromoteNewClubDTO) : async Result.Result<(), T.Error> {
+      let _ = await clubComposite.promoteNewClub(promoteNewClubDTO);
+      await updateCacheHash("clubs");
+      return #ok();
+    };
+
+    public func validateUpdateClub(updateClubDTO : DTOs.UpdateClubDTO) : async Result.Result<(), T.Error> {
+      if(systemState.onHold){
+        return #err(#NotAllowed);
+      };
+      return await clubComposite.validateUpdateClub(updateClubDTO);
+    };
+
+    public func executeUpdateClub(updateClubDTO : DTOs.UpdateClubDTO) : async Result.Result<(), T.Error> {
+      let _ = await clubComposite.updateClub(updateClubDTO);
+      await updateCacheHash("clubs");
+      return #ok();
     };
 
     //Stable data getters and setters:
@@ -1312,92 +1110,12 @@ module {
       leaderboardComposite.setStableWeeklyLeaderboardCanisters(stable_weekly_leaderboard_canisters);
     };
 
-    public func getStableClubs() : [T.Club] {
-      return clubComposite.getStableClubs();
-    };
-
-    public func setStableClubs(stable_clubs : [T.Club]) {
-      clubComposite.setStableClubs(stable_clubs);
-    };
-
-    public func getStableRelegatedClubs() : [T.Club] {
-      return clubComposite.getStableRelegatedClubs();
-    };
-
-    public func setStableRelegatedClubs(stable_relegated_clubs : [T.Club]) {
-      clubComposite.setStableRelegatedClubs(stable_relegated_clubs);
-    };
-
-    public func getStableNextClubId() : T.ClubId {
-      return clubComposite.getStableNextClubId();
-    };
-
-    public func setStableNextClubId(stable_next_club_id : T.ClubId) {
-      clubComposite.setStableNextClubId(stable_next_club_id);
-    };
-
-    public func getStablePlayers() : [T.Player] {
-      return playerComposite.getStablePlayers();
-    };
-
-    public func setStablePlayers(stable_players : [T.Player]) {
-      playerComposite.setStablePlayers(stable_players);
-    };
-
-    public func getStableNextPlayerId() : T.PlayerId {
-      return playerComposite.getStableNextPlayerId();
-    };
-
-    public func setStableNextPlayerId(stable_next_player_id : T.PlayerId) {
-      playerComposite.setStableNextPlayerId(stable_next_player_id);
-    };
-
-    public func getStableSeasons() : [T.Season] {
-      return seasonComposite.getStableSeasons();
-    };
-
-    public func setStableSeasons(stable_seasons : [T.Season]) {
-      seasonComposite.setStableSeasons(stable_seasons);
-    };
-
-    public func getStableNextSeasonId() : T.SeasonId {
-      return seasonComposite.getStableNextSeasonId();
-    };
-
-    public func setStableNextSeasonId(stable_next_season_id : T.SeasonId) {
-      seasonComposite.setStableNextSeasonId(stable_next_season_id);
-    };
-
-    public func getStableNextFixtureId() : T.FixtureId {
-      return seasonComposite.getStableNextFixtureId();
-    };
-
-    public func setStableNextFixtureId(stable_next_fixture_id : T.FixtureId) {
-      seasonComposite.setStableNextFixtureId(stable_next_fixture_id);
-    };
-
     public func getStableDataHashes() : [T.DataCache] {
       return List.toArray(dataCacheHashes);
     };
 
     public func setStableDataHashes(stable_data_cache_hashes : [T.DataCache]) {
       dataCacheHashes := List.fromArray(stable_data_cache_hashes);
-    };
-
-    public func getStablePrivateLeagueCanisterIds() : [T.CanisterId] {
-      return privateLeaguesManager.getStablePrivateLeagueCanisterIds();
-    };
-
-    public func setStablePrivateLeagueCanisterIds(stable_private_league_canister_ids: [T.CanisterId]) {
-      privateLeaguesManager.setStablePrivateLeagueCanisterIds(stable_private_league_canister_ids);
-    };
-
-    public func getStablePrivateLeagueNameIndex() : [(T.CanisterId, Text)] {
-      return privateLeaguesManager.getStablePrivateLeagueNameIndex();
-    };
-
-    public func setStablePrivateLeagueNameIndex(stable_private_league_name_index: [(T.CanisterId, Text)]) {
-      privateLeaguesManager.setStablePrivateLeagueNameIndex(stable_private_league_name_index);
     };
 
     public func getStableUnacceptedInvites() : [(T.CanisterId, T.LeagueInvite)] {
@@ -1422,16 +1140,6 @@ module {
 
     public func getRewardPool(seasonId: T.SeasonId) : ?T.RewardPool {
       return rewardPools.get(seasonId);
-    };
-
-    public func removeDuplicatePlayer(playerId: T.PlayerId) : async () {
-      let clubs = Array.map<T.Club, T.ClubId>(clubComposite.getClubs(), func(club: T.Club){
-        return club.id;
-      });
-      let players = playerComposite.getActivePlayers(systemState.calculationSeasonId, clubs);
-      await managerComposite.removePlayerFromTeams(playerId, players);
-      await playerComposite.removeDuplicatePlayer(playerId);
-      await updateCacheHash("players");
     };
 
     public func updateRewardPool() : async () {
@@ -1514,71 +1222,28 @@ module {
       managerComposite.getUniqueManagerCanisterIds();
     };
 
-     public func getPlayerPointsMap(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async [(T.PlayerId, DTOs.PlayerScoreDTO)] {
-      return playerComposite.getPlayersMap({ seasonId = seasonId; gameweek = gameweek });
-    };
-
-    public func cleanFantasyTeams() : async (){
-      await managerComposite.cleanFantasyTeams();
-    };
-
-    public func removeDuplicateGameweekSnapshots() : async (){
-      await managerComposite.removeDuplicateGameweekSnapshots();
-    };
-
-    public func removeEventDataFromFixtures() : async (){
-      await seasonComposite.removeEventDataFromFixtures();
-    };
-
-    public func removeEventDataFromPlayers() : async (){
-      await playerComposite.removeEventDataFromPlayers();
-    };
-
-    public func resetManagerSnapshotPoints() : async (){
-      await managerComposite.resetManagerSnapshotPoints();
+     public func getPlayerPointsMap(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async Result.Result<[(T.PlayerId, DTOs.PlayerScoreDTO)], T.Error> {
+      return await playerComposite.getPlayersMap({ seasonId = seasonId; gameweek = gameweek });
     };
 
     public func getOrderedSnapshots() : async [T.FantasyTeamSnapshot]{
       await managerComposite.getOrderedSnapshots();
     };
 
-    public func setFixtureToComplete(seasonId: T.SeasonId, fixtureId: T.FixtureId){
-      seasonComposite.setFixtureToComplete(seasonId, fixtureId);
+    public func setFixtureToComplete(seasonId: T.SeasonId, fixtureId: T.FixtureId) : async Result.Result<(), T.Error>{
+      await seasonComposite.setFixtureToComplete(seasonId, fixtureId);
     };
 
-    public func setGameScore(seasonId: T.SeasonId, fixtureId: T.FixtureId){
-      seasonComposite.setGameScore(seasonId, fixtureId);
-    };
-
-    public func fixIncorrectData() : async (){ 
-      playerComposite.fixIncorrectData();
-      await resetManagerSnapshotPoints();
-      await managerComposite.calculateFantasyTeamScores(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
-    };
-
-    public func setFixtureToFinalised(seasonId: T.SeasonId, fixtureId: T.FixtureId){
-      seasonComposite.setFixtureToFinalised(seasonId, fixtureId);
+    public func setGameScore(seasonId: T.SeasonId, fixtureId: T.FixtureId) : async Result.Result<(), T.Error>{
+      await seasonComposite.setGameScore(seasonId, fixtureId);
     };
 
     public func calculateLeaderboards() : async () {
       await leaderboardComposite.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth, managerComposite.getStableUniqueManagerCanisterIds());
     };
 
-    public func removeLeaderboardCanistersAndGetCycles() : async (){
-      await leaderboardComposite.removeLeaderboardCanistersAndGetCycles();
-    };
-
-    public func removeAllManagerSnapshots() : async (){
-      await managerComposite.removeAllManagerSnapshots();
-    };
-
-    public func addGameweekTimers(gameweek: T.GameweekNumber) : async (){
-      await setGameweekTimers(gameweek);
-      await setTransferWindowTimers();
-    };
-
-    public func validateTeams() : async () {
-      await managerComposite.validateTeams();
+    public func initialiseData() : async Result.Result<(), T.Error>{
+      seasonComposite.initialiseData();
     };
   };
 

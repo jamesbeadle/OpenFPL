@@ -13,6 +13,7 @@ module _Types {
   public type CountryId = Nat16;
   public type ProposalId = Nat;
   public type TokenId = Nat16;
+  public type FootballLeagueId = Nat16;
   public type RustResult = { #Ok : Text; #Err : Text };
 
   public type Error = {
@@ -41,8 +42,16 @@ module _Types {
     principalId : Text;
     username : Text;
     termsAccepted : Bool;
-    favouriteClubId : ClubId;
+    leagues: [ManagerLeague];
+    profilePicture : ?Blob;
+    profilePictureType : Text;
     createDate : Int;
+  };
+
+  public type ManagerLeague = {
+    leagueId: FootballLeagueId;
+    joinedDate : Int;
+    favouriteClubId : ClubId;
     transfersAvailable : Nat8;
     monthlyBonusesAvailable : Nat8;
     bankQuarterMillions : Nat16;
@@ -65,12 +74,8 @@ module _Types {
     prospectsGameweek : GameweekNumber;
     braceBonusGameweek : GameweekNumber;
     hatTrickHeroGameweek : GameweekNumber;
-    transferWindowGameweek : GameweekNumber;
+    transferWindowGameweek : GameweekNumber;    
     history : List.List<FantasyTeamSeason>;
-    profilePicture : ?Blob;
-    profilePictureType : Text;
-    ownedPrivateLeagues: List.List<CanisterId>;
-    privateLeagueMemberships: List.List<CanisterId>;
   };
 
   public type FixtureStatusType = {
@@ -164,6 +169,7 @@ module _Types {
     transferWindowGameweek : GameweekNumber;
     month : CalendarMonth;
     seasonId: SeasonId;
+    leagueId: FootballLeagueId;
   };
 
   public type Season = {
@@ -224,6 +230,7 @@ module _Types {
     thirdColourHex : Text;
     abbreviatedName : Text;
     shirtType : ShirtType;
+    currentLeagueId: FootballLeagueId;
   };
 
   public type Fixture = {
@@ -259,6 +266,40 @@ module _Types {
     injuryHistory : List.List<InjuryHistory>;
     transferHistory : List.List<TransferHistory>;
     retirementDate : Int;
+  };
+
+  public type FootballLeague = {
+    name: Text;
+    numOfTeams: Nat8;
+    relatedGender: Gender;
+    governingBody: Text;
+  };
+
+  public type FootballPlayer = {
+    id : PlayerId;
+    clubId : ClubId;
+    position : PlayerPosition;
+    firstName : Text;
+    lastName : Text;
+    shirtNumber : Nat8;
+    valueQuarterMillions : Nat16;
+    dateOfBirth : Int;
+    nationality : CountryId;
+    seasons : List.List<PlayerSeason>;
+    valueHistory : List.List<ValueHistory>;
+    status : PlayerStatus;
+    currentLoanEndDate : Int;
+    parentClubId : Nat16;
+    latestInjuryEndDate : Int;
+    injuryHistory : List.List<InjuryHistory>;
+    transferHistory : List.List<TransferHistory>;
+    retirementDate : Int;
+    gender: Gender;
+  };
+
+  public type Gender = {
+    #Male;
+    #Female;
   };
 
   public type PlayerStatus = {

@@ -18,6 +18,7 @@ import Result "mo:base/Result";
 import Text "mo:base/Text";
 import Time "mo:base/Time";
 import TrieMap "mo:base/TrieMap";
+import Debug "mo:base/Debug";
 
 import Environment "../utils/Environment";
 import Management "../modules/Management";
@@ -332,7 +333,8 @@ module {
         return #err(#SystemOnHold);
       };
 
-      let teamValidResult = teamValid(updatedFantasyTeamDTO, players);
+      Debug.print("checking team valid");
+      let teamValidResult = await teamValid(updatedFantasyTeamDTO, players);
       switch(teamValidResult){
         case (#ok _){ };
         case (#err errorResult){
@@ -340,6 +342,7 @@ module {
         }
       };
 
+      Debug.print("updatomg username");
       let usernameUpdated = updatedFantasyTeamDTO.username != "";
 
       if (usernameUpdated and not isUsernameValid(updatedFantasyTeamDTO.username)) {
@@ -349,11 +352,15 @@ module {
       if (usernameUpdated and isUsernameTaken(updatedFantasyTeamDTO.username, managerPrincipalId)) {
         return #err(#InvalidData);
       };
-
+      
+      Debug.print("giving manager canister if from principal");
       let managerCanisterId = managerCanisterIds.get(managerPrincipalId);
       var result: ?Result.Result<(), T.Error> = null;
+
+      Debug.print("enter switch for create new manager or update team");
       switch(managerCanisterId){
         case (null){
+          Debug.print("Creating New/Updating manager");
           result := ?(await createNewManager(managerPrincipalId, updatedFantasyTeamDTO.username, 0, null, "", ?updatedFantasyTeamDTO, systemState, players));
         };  
         case (?foundManagerCanisterId){
@@ -361,6 +368,7 @@ module {
         }
       };
 
+      Debug.print("entering switch for game");
       switch(result){
         case null{
           return #err(#NotFound);
@@ -418,6 +426,7 @@ module {
 
     private func createNewManager(managerPrincipalId: T.PrincipalId, username: Text, favouriteClubId: T.ClubId, profilePicture: ?Blob, profilePictureType: Text, dto : ?DTOs.UpdateTeamSelectionDTO, systemState: T.SystemState, players: [DTOs.PlayerDTO]) : async Result.Result<(), T.Error>{
       
+      Debug.print("Creating new manager");
       if(activeManagerCanisterId == ""){
         activeManagerCanisterId := await createManagerCanister();
       };
@@ -444,6 +453,8 @@ module {
       var braceBonusGameweek: T.GameweekNumber = 0;
       var hatTrickHeroGameweek: T.GameweekNumber = 0;
 
+       Debug.print("finish initalizing vars");
+
       switch(dto){
         case (null){ };
         case (?foundDTO){
@@ -451,7 +462,7 @@ module {
         if (invalidBonuses(null, foundDTO, systemState, players)) {
           return #err(#InvalidBonuses);
         };
-
+         Debug.print("Check for bonus");
         var bonusPlayed = foundDTO.goalGetterGameweek == systemState.pickTeamGameweek 
           or foundDTO.passMasterGameweek == systemState.pickTeamGameweek 
           or foundDTO.noEntryGameweek == systemState.pickTeamGameweek 
@@ -491,7 +502,7 @@ module {
           hatTrickHeroGameweek := foundDTO.hatTrickHeroGameweek;
         };
       };
-      
+       Debug.print("Creating new manager more vars");
       let newManager : T.Manager = {
         principalId = managerPrincipalId;
         username = username;
@@ -527,14 +538,17 @@ module {
         ownedPrivateLeagues = List.nil();
         privateLeagueMemberships = List.nil();
       };
-
+       Debug.print("manager canister = active manager");
+       Debug.print(debug_show activeManagerCanisterId);
       let manager_canister = actor (activeManagerCanisterId) : actor {
         addNewManager : (manager : T.Manager) -> async Result.Result<(), T.Error>;
         getTotalManagers : () -> async Nat;
         getManager : (principalId : T.PrincipalId) -> async ?T.Manager;
       };
-
+       Debug.print("getting total managers");
       let canisterManagerCount = await manager_canister.getTotalManagers();
+       Debug.print("showing total managers");
+       Debug.print(debug_show canisterManagerCount);
       if (canisterManagerCount >= 12000) {
         activeManagerCanisterId := await createManagerCanister();
         let new_manager_canister = actor (activeManagerCanisterId) : actor {
@@ -542,10 +556,10 @@ module {
         };
         managerCanisterIds.put(managerPrincipalId, activeManagerCanisterId);
         totalManagers := totalManagers + 1;
-        
+         Debug.print("Finish checking total managers and add 1");
         return await new_manager_canister.addNewManager(newManager);
       };
-
+       Debug.print("putting manager principalid and active manager canister id");
       totalManagers := totalManagers + 1;
       managerCanisterIds.put(managerPrincipalId, activeManagerCanisterId);
       return await manager_canister.addNewManager(newManager);
@@ -894,8 +908,8 @@ module {
       return false;
     };
 
-    private func teamValid(updatedFantasyTeam : DTOs.UpdateTeamSelectionDTO, players : [DTOs.PlayerDTO]) : Result.Result<(), T.Error> {
-
+    private func teamValid(updatedFantasyTeam : DTOs.UpdateTeamSelectionDTO, players : [DTOs.PlayerDTO]) : async Result.Result<(), T.Error> {
+      Debug.print("Checking to see if team is valid"); //TODO
       let newTeamPlayers = Array.filter<DTOs.PlayerDTO>(
         players,
         func(player : DTOs.PlayerDTO) : Bool {
@@ -903,6 +917,7 @@ module {
           let isPlayerIdInNewTeam = Array.find(
             updatedFantasyTeam.playerIds,
             func(id : Nat16) : Bool {
+              Debug.print(debug_show (playerId));
               return id == playerId;
             },
           );
@@ -912,10 +927,10 @@ module {
 
       let playerPositions = Array.map<DTOs.PlayerDTO, T.PlayerPosition>(newTeamPlayers, func(player : DTOs.PlayerDTO) : T.PlayerPosition { return player.position });
       let playerCount = playerPositions.size();
+      Debug.print(debug_show playerPositions);
       if (playerCount != 11) {
         return #err(#Not11Players);
       };
-
       var teamPlayerCounts = TrieMap.TrieMap<Text, Nat8>(Text.equal, Text.hash);
       var playerIdCounts = TrieMap.TrieMap<Text, Nat8>(Text.equal, Text.hash);
       var goalkeeperCount = 0;

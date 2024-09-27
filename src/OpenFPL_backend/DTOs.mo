@@ -39,6 +39,7 @@ module DTOs {
     hatTrickHeroGameweek : T.GameweekNumber;
     transferWindowGameweek : T.GameweekNumber;
     canisterId: T.CanisterId;
+    leagueId: T.FootballLeagueId;
   };
 
   public type GetManagerDTO = {
@@ -49,7 +50,7 @@ module DTOs {
     principalId : Text;
     username : Text;
     profilePicture : ?Blob;
-    favouriteClubId : T.ClubId;
+    favouriteClubId : [(T.FootballLeagueId, T.ClubId)];
     createDate : Int;
     gameweeks : [T.FantasyTeamSnapshot];
     weeklyPosition : Int;
@@ -70,6 +71,7 @@ module DTOs {
     limit : Nat;
     offset : Nat;
     searchTerm : Text;
+    leagueId: T.FootballLeagueId;
   };
 
   public type WeeklyLeaderboardDTO = {
@@ -77,6 +79,7 @@ module DTOs {
     gameweek : T.GameweekNumber;
     entries : [T.LeaderboardEntry];
     totalEntries : Nat;
+    leagueId: T.FootballLeagueId;
   };
 
   public type MonthlyLeaderboardDTO = {
@@ -85,6 +88,7 @@ module DTOs {
     clubId: T.ClubId;
     entries : [T.LeaderboardEntry];
     totalEntries : Nat;
+    leagueId: T.FootballLeagueId;
   };
 
   public type GetMonthlyLeaderboardDTO = {
@@ -94,6 +98,7 @@ module DTOs {
     limit : Nat;
     offset : Nat;
     searchTerm : Text;
+    leagueId: T.FootballLeagueId;
   };
 
   public type GetSeasonLeaderboardDTO = {
@@ -101,28 +106,34 @@ module DTOs {
     limit : Nat;
     offset : Nat;
     searchTerm : Text;
+    leagueId: T.FootballLeagueId;
   };
 
   public type SeasonLeaderboardDTO = {
     seasonId : T.SeasonId;
     entries : [T.LeaderboardEntry];
     totalEntries : Nat;
+    leagueId: T.FootballLeagueId;
   };
 
   public type GetFixturesDTO = {
+    leagueId: T.FootballLeagueId;
     seasonId: T.SeasonId;
   };
 
   public type ClubFilterDTO = {
     clubId: T.ClubId;
+    leagueId: T.FootballLeagueId;
   };
 
   public type GameweekFiltersDTO = {
+    leagueId: T.FootballLeagueId;
     seasonId : T.SeasonId;
     gameweek : T.GameweekNumber;
   };
 
   public type GetPlayerDetailsDTO = {
+    leagueId: T.FootballLeagueId;
     playerId : T.PlayerId;
     seasonId : T.SeasonId;
   };
@@ -604,6 +615,7 @@ module DTOs {
   public type TeamUpdateDTO = {
     principalId : Text;
     updatedTeamSelection: UpdateTeamSelectionDTO;
+    leagueId: T.FootballLeagueId;
   };
 
   public type UpdateUsernameDTO = {
@@ -616,6 +628,7 @@ module DTOs {
   };
 
   public type UpdateFavouriteClubDTO = {
+    leagueId: T.FootballLeagueId;
     favouriteClubId : T.ClubId;
   };
 

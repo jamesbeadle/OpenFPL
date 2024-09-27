@@ -1,5 +1,5 @@
 
-export PROPOSER_NEURON_ID=ba5cbdc9ce743b27af1f4419c4c4fac43acf55df338976d14745632320f23e16
+export PROPOSER_NEURON_ID=9e0d0508dddf109a6cdb6f8d52246c43ebb558b3ae5b83f4ac207196d1773165
 export NETWORK=local
 export IDENTITY=default
 export IC_URL=http://localhost:8080
@@ -11,8 +11,8 @@ OWNER_IDENTITY=$(dfx identity whoami)
 export PEM_FILE="$(readlink -f "$HOME/.config/dfx/identity/${OWNER_IDENTITY}/identity.pem")"
 
 
-./governance/local/register_add_player.sh
-#./governance/local/UpgradeBackend.sh
+./governance/local/UpgradeBackend.sh
+#./governance/local/register_add_player.sh
 #./governance/local/417.AddFixtureData_1.sh
 #./governance/local/138.PromoteSouthampton.sh
 #./governance/local/142.Add2024Fixtures.sh

@@ -13,14 +13,13 @@
   import Option "mo:base/Option";
   import List "mo:base/List";
   import Order "mo:base/Order";
-import Debug "mo:base/Debug";
+  import Debug "mo:base/Debug";
 
   import T "types";
   import DTOs "DTOs";
   import Countries "Countries";
   import Environment "utils/Environment";
   import Utilities "utils/utilities";
-  import NeuronTypes "../neuron_controller/types";
   import Account "lib/Account";
 
   import SeasonManager "season-manager";
@@ -37,6 +36,15 @@ import Debug "mo:base/Debug";
     private let treasuryManager = TreasuryManager.TreasuryManager();
     private let cyclesDispenser = CyclesDispenser.CyclesDispenser();
     private let ledger : FPLLedger.Interface = actor (FPLLedger.CANISTER_ID);
+
+    private stable var dataAdmins : [T.PrincipalId] = [];
+    private stable var alreadyInitialisedData = false;
+    
+    private func isDataAdmin(principalId: Text) : Bool {
+      return Option.isSome(Array.find<T.PrincipalId>(dataAdmins, func(dataAdmin: T.PrincipalId){
+        dataAdmin == principalId;
+      }));
+    };
 
     //Manager calls
 
@@ -57,8 +65,6 @@ import Debug "mo:base/Debug";
     public shared func getFantasyTeamSnapshot(dto: DTOs.GetFantasyTeamSnapshotDTO) : async Result.Result<DTOs.FantasyTeamSnapshotDTO, T.Error> {
       return await seasonManager.getFantasyTeamSnapshot(dto);
     };
-    
-    
 
     //Leaderboard calls:
 
@@ -77,60 +83,56 @@ import Debug "mo:base/Debug";
 
     //Query functions:
 
-    public shared query func getClubs() : async Result.Result<[DTOs.ClubDTO], T.Error> {
-      return #ok(seasonManager.getClubs());
-    };
-
-    public shared query func getFormerClubs() : async Result.Result<[DTOs.ClubDTO], T.Error> {
-      return #ok(seasonManager.getFormerClubs());
+    public shared func getClubs() : async Result.Result<[DTOs.ClubDTO], T.Error> {
+      return await seasonManager.getClubs();
     };
 
     public shared query func getDataHashes() : async Result.Result<[DTOs.DataCacheDTO], T.Error> {
       return #ok(seasonManager.getDataHashes());
     };
 
-    public shared query func getFixtures(dto: DTOs.GetFixturesDTO) : async Result.Result<[DTOs.FixtureDTO], T.Error> {
-      return #ok(seasonManager.getFixtures(dto));
+    public shared func getFixtures(dto: DTOs.GetFixturesDTO) : async Result.Result<[DTOs.FixtureDTO], T.Error> {
+      return await seasonManager.getFixtures(dto);
     };
 
-    public shared query func getSeasons() : async Result.Result<[DTOs.SeasonDTO], T.Error> {
-      return #ok(seasonManager.getSeasons());
+    public shared func getSeasons() : async Result.Result<[DTOs.SeasonDTO], T.Error> {
+      return await seasonManager.getSeasons();
     };
 
-    public shared query func getPostponedFixtures() : async Result.Result<[DTOs.FixtureDTO], T.Error> {
-      return #ok(seasonManager.getPostponedFixtures());
+    public shared func getPostponedFixtures() : async Result.Result<[DTOs.FixtureDTO], T.Error> {
+      return await seasonManager.getPostponedFixtures();
     };
 
     public shared query func getTotalManagers() : async Result.Result<Nat, T.Error> {
       return #ok(seasonManager.getTotalManagers());
     };
 
-    public shared query func getSystemState() : async Result.Result<DTOs.SystemStateDTO, T.Error> {
-      return #ok(seasonManager.getSystemState());
+    public shared func getSystemState() : async Result.Result<DTOs.SystemStateDTO, T.Error> {
+      return await seasonManager.getSystemStateDTO();
     };
 
-    public shared query func getPlayers() : async Result.Result<[DTOs.PlayerDTO], T.Error> {
-      return #ok(seasonManager.getPlayers());
+    public shared func getPlayers() : async Result.Result<[DTOs.PlayerDTO], T.Error> {
+      return await seasonManager.getPlayers();
     };
 
-    public shared query func getLoanedPlayers(dto: DTOs.ClubFilterDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
-      return #ok(seasonManager.getLoanedPlayers(dto));
+    public shared func getLoanedPlayers(dto: DTOs.ClubFilterDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
+      return await seasonManager.getLoanedPlayers(dto);
     };
 
-    public shared query func getRetiredPlayers(dto: DTOs.ClubFilterDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
-      return #ok(seasonManager.getRetiredPlayers(dto));
+    public shared func getRetiredPlayers(dto: DTOs.ClubFilterDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
+      return await seasonManager.getRetiredPlayers(dto);
     };
 
-    public shared query func getPlayerDetailsForGameweek(dto: DTOs.GameweekFiltersDTO) : async Result.Result<[DTOs.PlayerPointsDTO], T.Error> {
-      return #ok(seasonManager.getPlayerDetailsForGameweek(dto));
+    public shared func getPlayerDetailsForGameweek(dto: DTOs.GameweekFiltersDTO) : async Result.Result<[DTOs.PlayerPointsDTO], T.Error> {
+      return await seasonManager.getPlayerDetailsForGameweek(dto);
     };
 
-    public shared query func getPlayersMap(dto: DTOs.GameweekFiltersDTO) : async Result.Result<[(Nat16, DTOs.PlayerScoreDTO)], T.Error> {
-      return #ok(seasonManager.getPlayersMap(dto));
+    public shared func getPlayersMap(dto: DTOs.GameweekFiltersDTO) : async Result.Result<[(Nat16, DTOs.PlayerScoreDTO)], T.Error> {
+      return await seasonManager.getPlayersMap(dto);
     };
 
-    public shared query func getPlayerDetails(dto: DTOs.GetPlayerDetailsDTO) : async Result.Result<DTOs.PlayerDetailDTO, T.Error> {
-      return #ok(seasonManager.getPlayerDetails(dto));
+    public shared func getPlayerDetails(dto: DTOs.GetPlayerDetailsDTO) : async Result.Result<DTOs.PlayerDetailDTO, T.Error> {
+      return await seasonManager.getPlayerDetails(dto);
     };
 
     public shared query func getCountries() : async Result.Result<[DTOs.CountryDTO], T.Error> {
@@ -181,235 +183,312 @@ import Debug "mo:base/Debug";
 
     public shared query ({ caller }) func validateRevaluePlayerUp(revaluePlayerUpDTO : DTOs.RevaluePlayerUpDTO) : async T.RustResult {
       assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
+      return #Err("Governance on hold due to network issues");
       
       //Todo when functionality available: Make cross subnet call to governance canister to see if proposal exists
 
-      return seasonManager.validateRevaluePlayerUp(revaluePlayerUpDTO);
+      //return seasonManager.validateRevaluePlayerUp(revaluePlayerUpDTO);
     };
 
     public shared ({ caller }) func executeRevaluePlayerUp(revaluePlayerUpDTO : DTOs.RevaluePlayerUpDTO) : async () {
       assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-      return await seasonManager.executeRevaluePlayerUp(revaluePlayerUpDTO);
+      assert isDataAdmin(Principal.toText(caller));
+      switch(await seasonManager.validateRevaluePlayerUp(revaluePlayerUpDTO)){
+        case (#ok success){
+          let _ = await seasonManager.executeRevaluePlayerUp(revaluePlayerUpDTO);
+        };
+        case _ {}
+      };
     };
 
     public shared query ({ caller }) func validateRevaluePlayerDown(revaluePlayerDownDTO : DTOs.RevaluePlayerDownDTO) : async T.RustResult {
       assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-      return seasonManager.validateRevaluePlayerDown(revaluePlayerDownDTO);
+      return #Err("Governance on hold due to network issues");
+      //return seasonManager.validateRevaluePlayerDown(revaluePlayerDownDTO);
     };
 
     public shared ({ caller }) func executeRevaluePlayerDown(revaluePlayerDownDTO : DTOs.RevaluePlayerDownDTO) : async () {
       assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-      return await seasonManager.executeRevaluePlayerDown(revaluePlayerDownDTO);
+      assert isDataAdmin(Principal.toText(caller));
+      switch(await seasonManager.validateRevaluePlayerDown(revaluePlayerDownDTO)){
+        case (#ok success){
+          let _ = await seasonManager.executeRevaluePlayerDown(revaluePlayerDownDTO);
+        };
+        case _ {}
+      };
     };
 
     public shared query ({ caller }) func validateSubmitFixtureData(submitFixtureData : DTOs.SubmitFixtureDataDTO) : async T.RustResult {
       Debug.print(debug_show submitFixtureData);
       assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-      return seasonManager.validateSubmitFixtureData(submitFixtureData);
+      return #Err("Governance on hold due to network issues");
+      //return seasonManager.validateSubmitFixtureData(submitFixtureData);
     };
 
     public shared ({ caller }) func executeSubmitFixtureData(submitFixtureData : DTOs.SubmitFixtureDataDTO) : async () {
-      Debug.print(debug_show submitFixtureData);
       assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-      return await seasonManager.executeSubmitFixtureData(submitFixtureData);
+      assert isDataAdmin(Principal.toText(caller));
+      switch(await seasonManager.validateSubmitFixtureData(submitFixtureData)){
+        case (#ok success){
+          let _ = await seasonManager.executeSubmitFixtureData(submitFixtureData);
+        };
+        case _ {}
+      };
     };
 
     public shared query ({ caller }) func validateAddInitialFixtures(addInitialFixturesDTO : DTOs.AddInitialFixturesDTO) : async T.RustResult {
-      assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;    
-      return seasonManager.validateAddInitialFixtures(addInitialFixturesDTO);
+      assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID; 
+      return #Err("Governance on hold due to network issues");   
+      //return seasonManager.validateAddInitialFixtures(addInitialFixturesDTO);
     };
 
     public shared ({ caller }) func executeAddInitialFixtures(addInitialFixturesDTO : DTOs.AddInitialFixturesDTO) : async () {
       assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-      return await seasonManager.executeAddInitialFixtures(addInitialFixturesDTO);
+      assert isDataAdmin(Principal.toText(caller));
+      switch(await seasonManager.validateAddInitialFixtures(addInitialFixturesDTO)){
+        case (#ok success){
+          let _ = await seasonManager.executeAddInitialFixtures(addInitialFixturesDTO);
+        };
+        case _ {}
+      };
     };
 
     public shared query ({ caller }) func validateMoveFixture(moveFixtureDTO : DTOs.MoveFixtureDTO) : async T.RustResult {
       assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-      return seasonManager.validateMoveFixture(moveFixtureDTO);
+      return #Err("Governance on hold due to network issues");
+      //return seasonManager.validateMoveFixture(moveFixtureDTO);
     };
 
     public shared ({ caller }) func executeMoveFixture(moveFixtureDTO : DTOs.MoveFixtureDTO) : async () {
       assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-      return await seasonManager.executeMoveFixture(moveFixtureDTO);
+      assert isDataAdmin(Principal.toText(caller));
+      switch(await seasonManager.validateMoveFixture(moveFixtureDTO)){
+        case (#ok success){
+          let _ = await seasonManager.executeMoveFixture(moveFixtureDTO);
+        };
+        case _ {}
+      };
     };
 
     public shared query ({ caller }) func validatePostponeFixture(postponeFixtureDTO : DTOs.PostponeFixtureDTO) : async T.RustResult {
       assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-      return seasonManager.validatePostponeFixture(postponeFixtureDTO);
+      return #Err("Governance on hold due to network issues");
+      //return seasonManager.validatePostponeFixture(postponeFixtureDTO);
     };
 
     public shared ({ caller }) func executePostponeFixture(postponeFixtureDTO : DTOs.PostponeFixtureDTO) : async () {
       assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-      return await seasonManager.executePostponeFixture(postponeFixtureDTO);
+      assert isDataAdmin(Principal.toText(caller));
+      switch(await seasonManager.validatePostponeFixture(postponeFixtureDTO)){
+        case (#ok success){
+          let _ =  await seasonManager.executePostponeFixture(postponeFixtureDTO);
+        };
+        case _ {}
+      };
     };
 
     public shared query ({ caller }) func validateRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO) : async T.RustResult {
       assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-      return seasonManager.validateRescheduleFixture(rescheduleFixtureDTO);
+      return #Err("Governance on hold due to network issues");
+      //return await seasonManager.validateRescheduleFixture(rescheduleFixtureDTO);
     };
 
     public shared ({ caller }) func executeRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO) : async () {
       assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-      return await seasonManager.executeRescheduleFixture(rescheduleFixtureDTO);
+      assert isDataAdmin(Principal.toText(caller));
+      switch(await seasonManager.validateRescheduleFixture(rescheduleFixtureDTO)){
+        case (#ok success){
+          let _ = await seasonManager.executeRescheduleFixture(rescheduleFixtureDTO);
+        };
+        case _ {}
+      };
     };
 
     public shared query ({ caller }) func validateLoanPlayer(loanPlayerDTO : DTOs.LoanPlayerDTO) : async T.RustResult {
       assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-      return seasonManager.validateLoanPlayer(loanPlayerDTO);
+      return #Err("Governance on hold due to network issues");
+      //return seasonManager.validateLoanPlayer(loanPlayerDTO);
     };
 
     public shared ({ caller }) func executeLoanPlayer(loanPlayerDTO : DTOs.LoanPlayerDTO) : async () {
       assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-      return await seasonManager.executeLoanPlayer(loanPlayerDTO);
+      assert isDataAdmin(Principal.toText(caller));
+      switch(await seasonManager.validateLoanPlayer(loanPlayerDTO)){
+        case (#ok success){
+          let _ = await seasonManager.executeLoanPlayer(loanPlayerDTO);
+        };
+        case _ {}
+      };
     };
 
     public shared query ({ caller }) func validateTransferPlayer(transferPlayerDTO : DTOs.TransferPlayerDTO) : async T.RustResult {
       assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-      return seasonManager.validateTransferPlayer(transferPlayerDTO);
+      return #Err("Governance on hold due to network issues");
+      //return seasonManager.validateTransferPlayer(transferPlayerDTO);
     };
 
     public shared ({ caller }) func executeTransferPlayer(transferPlayerDTO : DTOs.TransferPlayerDTO) : async () {
       assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-      return await seasonManager.executeTransferPlayer(transferPlayerDTO);
+      assert isDataAdmin(Principal.toText(caller));
+      switch(await seasonManager.validateTransferPlayer(transferPlayerDTO)){
+        case (#ok success){
+          let _ = await seasonManager.executeTransferPlayer(transferPlayerDTO);
+        };
+        case _ {}
+      };
     };
 
     public shared query ({ caller }) func validateRecallPlayer(recallPlayerDTO : DTOs.RecallPlayerDTO) : async T.RustResult {
       assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-      return seasonManager.validateRecallPlayer(recallPlayerDTO);
+      return #Err("Governance on hold due to network issues");
+      //return seasonManager.validateRecallPlayer(recallPlayerDTO);
     };
 
     public shared ({ caller }) func executeRecallPlayer(recallPlayerDTO : DTOs.RecallPlayerDTO) : async () {
       assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-      return await seasonManager.executeRecallPlayer(recallPlayerDTO);
+      assert isDataAdmin(Principal.toText(caller));
+      switch(await seasonManager.validateRecallPlayer(recallPlayerDTO)){
+        case (#ok success){
+          let _ = await seasonManager.executeRecallPlayer(recallPlayerDTO);
+        };
+        case _ {}
+      };
     };
 
     public shared query ({ caller }) func validateCreatePlayer(createPlayerDTO : DTOs.CreatePlayerDTO) : async T.RustResult {
       assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-      return seasonManager.validateCreatePlayer(createPlayerDTO);
+      return #Err("Governance on hold due to network issues");
+      //return seasonManager.validateCreatePlayer(createPlayerDTO);
     };
 
     public shared ({ caller }) func executeCreatePlayer(createPlayerDTO : DTOs.CreatePlayerDTO) : async () {
       assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-      return await seasonManager.executeCreatePlayer(createPlayerDTO);
+      assert isDataAdmin(Principal.toText(caller));
+      switch(await seasonManager.validateCreatePlayer(createPlayerDTO)){
+        case (#ok success){
+          let _ = await seasonManager.executeCreatePlayer(createPlayerDTO);
+        };
+        case _ {}
+      };
     };
 
     public shared query ({ caller }) func validateUpdatePlayer(updatePlayerDTO : DTOs.UpdatePlayerDTO) : async T.RustResult {
       assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-      return seasonManager.validateUpdatePlayer(updatePlayerDTO);
+      return #Err("Governance on hold due to network issues");
+      //return seasonManager.validateUpdatePlayer(updatePlayerDTO);
     };
 
     public shared ({ caller }) func executeUpdatePlayer(updatePlayerDTO : DTOs.UpdatePlayerDTO) : async () {
       assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-      return await seasonManager.executeUpdatePlayer(updatePlayerDTO);
+      assert isDataAdmin(Principal.toText(caller));
+      switch(await seasonManager.validateUpdatePlayer(updatePlayerDTO)){
+        case (#ok success){
+          let _ = await seasonManager.executeUpdatePlayer(updatePlayerDTO);
+        };
+        case _ {}
+      };
     };
 
     public shared query ({ caller }) func validateSetPlayerInjury(setPlayerInjuryDTO : DTOs.SetPlayerInjuryDTO) : async T.RustResult {
       assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-      return seasonManager.validateSetPlayerInjury(setPlayerInjuryDTO);
+      return #Err("Governance on hold due to network issues");
+      //return seasonManager.validateSetPlayerInjury(setPlayerInjuryDTO);
     };
 
     public shared ({ caller }) func executeSetPlayerInjury(setPlayerInjuryDTO : DTOs.SetPlayerInjuryDTO) : async () {
       assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-      return await seasonManager.executeSetPlayerInjury(setPlayerInjuryDTO);
+      assert isDataAdmin(Principal.toText(caller));
+      switch(await seasonManager.validateSetPlayerInjury(setPlayerInjuryDTO)){
+        case (#ok success){
+          let _ = await seasonManager.executeSetPlayerInjury(setPlayerInjuryDTO);
+        };
+        case _ {}
+      };
     };
 
     public shared query ({ caller }) func validateRetirePlayer(retirePlayerDTO : DTOs.RetirePlayerDTO) : async T.RustResult {
       assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-      return seasonManager.validateRetirePlayer(retirePlayerDTO);
+      return #Err("Governance on hold due to network issues");
+      //return seasonManager.validateRetirePlayer(retirePlayerDTO);
     };
 
     public shared ({ caller }) func executeRetirePlayer(retirePlayerDTO : DTOs.RetirePlayerDTO) : async () {
       assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-      return await seasonManager.executeRetirePlayer(retirePlayerDTO);
+      assert isDataAdmin(Principal.toText(caller));
+      switch(await seasonManager.validateRetirePlayer(retirePlayerDTO)){
+        case (#ok success){
+          let _ = await seasonManager.executeRetirePlayer(retirePlayerDTO);
+        };
+        case _ {}
+      };
     };
 
     public shared query ({ caller }) func validateUnretirePlayer(unretirePlayerDTO : DTOs.UnretirePlayerDTO) : async T.RustResult {
       assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-      return seasonManager.validateUnretirePlayer(unretirePlayerDTO);
+      return #Err("Governance on hold due to network issues");
+      //return seasonManager.validateUnretirePlayer(unretirePlayerDTO);
     };
 
     public shared ({ caller }) func executeUnretirePlayer(unretirePlayerDTO : DTOs.UnretirePlayerDTO) : async () {
       assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-      return await seasonManager.executeUnretirePlayer(unretirePlayerDTO);
+      assert isDataAdmin(Principal.toText(caller));
+      switch(await seasonManager.validateUnretirePlayer(unretirePlayerDTO)){
+        case (#ok success){
+          let _ = await seasonManager.executeUnretirePlayer(unretirePlayerDTO);
+        };
+        case _ {}
+      };
     };
 
     public shared query ({ caller }) func validatePromoteFormerClub(promoteFormerClubDTO : DTOs.PromoteFormerClubDTO) : async T.RustResult {
       assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-      return seasonManager.validatePromoteFormerClub(promoteFormerClubDTO);
+      return #Err("Governance on hold due to network issues");
+      //return seasonManager.validatePromoteFormerClub(promoteFormerClubDTO);
     };
 
     public shared ({ caller }) func executePromoteFormerClub(promoteFormerClubDTO : DTOs.PromoteFormerClubDTO) : async () {
       assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-      return await seasonManager.executePromoteFormerClub(promoteFormerClubDTO);
+      assert isDataAdmin(Principal.toText(caller));
+      switch(await seasonManager.validatePromoteFormerClub(promoteFormerClubDTO)){
+        case (#ok success){
+          let _ = await seasonManager.executePromoteFormerClub(promoteFormerClubDTO);
+        };
+        case _ {}
+      };
     };
 
     public shared query ({ caller }) func validatePromoteNewClub(promoteNewClubDTO : DTOs.PromoteNewClubDTO) : async T.RustResult {
       assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-      return seasonManager.validatePromoteNewClub(promoteNewClubDTO);
+      return #Err("Governance on hold due to network issues");
+      //return seasonManager.validatePromoteNewClub(promoteNewClubDTO);
     };
 
     public shared ({ caller }) func executePromoteNewClub(promoteNewClubDTO : DTOs.PromoteNewClubDTO) : async () {
       assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-      return await seasonManager.executePromoteNewClub(promoteNewClubDTO);
+      assert isDataAdmin(Principal.toText(caller));
+      switch(await seasonManager.validatePromoteNewClub(promoteNewClubDTO)){
+        case (#ok success){
+          let _ = await seasonManager.executePromoteNewClub(promoteNewClubDTO);
+        };
+        case _ {}
+      };
     };
 
     public shared query ({ caller }) func validateUpdateClub(updateClubDTO : DTOs.UpdateClubDTO) : async T.RustResult {
       assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-      return seasonManager.validateUpdateClub(updateClubDTO);
+      return #Err("Governance on hold due to network issues");
+      //return seasonManager.validateUpdateClub(updateClubDTO);
     };
 
     public shared ({ caller }) func executeUpdateClub(updateClubDTO : DTOs.UpdateClubDTO) : async () {
       assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-      return await seasonManager.executeUpdateClub(updateClubDTO);
-    };
-
-    public shared query ({ caller }) func validateManageDAONeuron(command : NeuronTypes.Command) : async T.RustResult {
-      assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-      if (not neuronCreated) {
-        return #Err("Neuron not created");
+      assert isDataAdmin(Principal.toText(caller));
+      switch(await seasonManager.validateUpdateClub(updateClubDTO)){
+        case (#ok success){
+          let _ = await seasonManager.executeUpdateClub(updateClubDTO);
+        };
+        case _ {}
       };
-
-      //Just to remove unused warning but ensure signatures match, as this is a query function it does nothing
-      neuronCommand := ?command;
-
-      return #Ok("Proposal Valid");
-    };
-
-    public shared ({ caller }) func executeManageDAONeuron(command : NeuronTypes.Command) : async () {
-      assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-      if (not neuronCreated) {
-        return;
-      };
-
-      let neuron_controller = actor (Environment.NEURON_CONTROLLER_CANISTER_ID) : actor {
-        manage_neuron : NeuronTypes.Command -> async ?NeuronTypes.Response;
-      };
-
-      let _ = await neuron_controller.manage_neuron(command);
-
-      neuronCreated := true;
-    };
-
-    public shared query ({ caller }) func validateAddNewToken(newTokenDTO : DTOs.NewTokenDTO) : async T.RustResult {
-      assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-      return treasuryManager.validateAddNewToken(newTokenDTO);
-    };
-
-    public shared ({ caller }) func executeAddNewToken(newTokenDTO : DTOs.NewTokenDTO) : async () {
-      assert Principal.toText(caller) == Environment.SNS_GOVERNANCE_CANISTER_ID;
-      return await treasuryManager.executeAddNewToken(newTokenDTO);
-    };
-
-    
-    //Function to get the neuron controller neuron id
-    
-    public shared func getNeuronId() : async Nat64 {
-      let neuron_controller = actor (Environment.NEURON_CONTROLLER_CANISTER_ID) : actor {
-        getNeuronId : () -> async Nat64;
-      };
-
-      return await neuron_controller.getNeuronId();
     };
 
     //Game logic callback functions
@@ -429,16 +508,6 @@ import Debug "mo:base/Debug";
       removeExpiredTimers();
     };
 
-    private func loanExpiredCallback() : async () {
-      await seasonManager.loanExpiredCallback();
-      removeExpiredTimers();
-    };
-
-    private func injuryExpiredCallback() : async () {
-      await seasonManager.injuryExpiredCallback();
-      removeExpiredTimers();
-    };
-
     private func transferWindowStartCallback() : async () {
       await seasonManager.transferWindowStartCallback();
       removeExpiredTimers();
@@ -449,261 +518,15 @@ import Debug "mo:base/Debug";
       removeExpiredTimers();
     };
 
-
     //system callback functions
 
     private func cyclesCheckCallback() : async () {
       await checkCanisterCycles();
     };
 
-    //Private league functions
-    
-    public shared ({ caller }) func getManagerPrivateLeagues() : async Result.Result<DTOs.ManagerPrivateLeaguesDTO, T.Error> {
-      assert not Principal.isAnonymous(caller);
-      let managerId = Principal.toText(caller);
-      let user = await seasonManager.getManager({managerId});
-
-      let systemState = await getSystemState();
-      switch(systemState){
-        case (#ok foundState){
-
-          switch(user){
-            case (#ok managerDTO){
-              let privateLeaguesBuffer = Buffer.fromArray<DTOs.ManagerPrivateLeagueDTO>([]);
-              for(privateLeagueCanisterId in Iter.fromArray(managerDTO.privateLeagueMemberships)){
-                let private_league_canister = actor (privateLeagueCanisterId) : actor {
-                  getManagerPrivateLeague : (managerId: T.PrincipalId, filters: DTOs.GameweekFiltersDTO) -> async DTOs.ManagerPrivateLeagueDTO;
-                };
-                let privateLeague = await private_league_canister.getManagerPrivateLeague(managerId, {seasonId = foundState.calculationSeasonId; gameweek = foundState.calculationGameweek});
-                privateLeaguesBuffer.add({
-                  canisterId = privateLeagueCanisterId;
-                  created = privateLeague.created;
-                  memberCount = privateLeague.memberCount;
-                  name = managerDTO.username;
-                  seasonPosition = privateLeague.seasonPosition;
-                  seasonPositionText = privateLeague.seasonPositionText;
-                });
-              };
-                
-              let privateLeagues: DTOs.ManagerPrivateLeaguesDTO = {
-                entries = Buffer.toArray(privateLeaguesBuffer);
-                totalEntries = privateLeaguesBuffer.size();
-              };
-              return #ok(privateLeagues);
-            };
-            case _ { return #err(#NotFound)};
-          };
-
-        };
-        case _ {
-          return #err(#NotFound)
-        };
-      };
-    };
-
-    public shared ({ caller }) func getPrivateLeague(privateLeagueCanisterId: T.CanisterId) : async Result.Result<DTOs.ManagerPrivateLeagueDTO, T.Error> {
-      assert not Principal.isAnonymous(caller);
-      let managerId = Principal.toText(caller);
-      let isLeagueMember = await seasonManager.isLeagueMember(privateLeagueCanisterId, managerId);
-      assert isLeagueMember;
-
-      let user = await seasonManager.getManager({managerId});
-      let systemState = await getSystemState();
-      switch(systemState){
-        case (#ok foundState){
-          switch(user){
-            case (#ok managerDTO){
-              let private_league_canister = actor (privateLeagueCanisterId) : actor {
-                getManagerPrivateLeague : (managerId: T.PrincipalId, filters: DTOs.GameweekFiltersDTO) -> async DTOs.ManagerPrivateLeagueDTO;
-              };
-              let privateLeague = await private_league_canister.getManagerPrivateLeague(managerId, {seasonId = foundState.calculationSeasonId; gameweek = foundState.calculationGameweek});
-              return #ok({
-                canisterId = privateLeagueCanisterId;
-                created = privateLeague.created;
-                memberCount = privateLeague.memberCount;
-                name = managerDTO.username;
-                seasonPosition = privateLeague.seasonPosition;
-                seasonPositionText = privateLeague.seasonPositionText;
-              });
-            };
-            case _ { return #err(#NotFound)};
-          };
-
-        };
-        case _ {
-          return #err(#NotFound)
-        };
-      };
-    };
-    
-    public shared ({ caller }) func getPrivateLeagueWeeklyLeaderboard(dto: DTOs.GetPrivateLeagueWeeklyLeaderboard) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error>{
-      assert not Principal.isAnonymous(caller);
-      assert(await seasonManager.isPrivateLeagueMember(dto.canisterId, Principal.toText(caller)));
-      return await seasonManager.getPrivateLeagueWeeklyLeaderboard(dto);
-    };
-
-    public shared ({ caller }) func getPrivateLeagueMonthlyLeaderboard(dto: DTOs.GetPrivateLeagueMonthlyLeaderboard) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error>{
-      assert not Principal.isAnonymous(caller);
-      assert(await seasonManager.isPrivateLeagueMember(dto.canisterId, Principal.toText(caller)));
-      return await seasonManager.getPrivateLeagueMonthlyLeaderboard(dto);
-    };
-
-    public shared ({ caller }) func getPrivateLeagueSeasonLeaderboard(dto: DTOs.GetPrivateLeagueSeasonLeaderboard) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error>{
-      assert not Principal.isAnonymous(caller);
-      assert(await seasonManager.isPrivateLeagueMember(dto.canisterId, Principal.toText(caller)));
-      return await seasonManager.getPrivateLeagueSeasonLeaderboard(dto);
-    };
-
-    public shared ({ caller }) func getPrivateLeagueMembers(dto: DTOs.GetLeagueMembersDTO) : async Result.Result<[DTOs.LeagueMemberDTO], T.Error>{
-      assert not Principal.isAnonymous(caller);
-      assert(await seasonManager.isPrivateLeagueMember(dto.canisterId, Principal.toText(caller)));
-      return await seasonManager.getPrivateLeagueMembers(dto);
-    };
-    
-    public shared ({ caller }) func createPrivateLeague(newPrivateLeague: DTOs.CreatePrivateLeagueDTO) : async Result.Result<(), T.Error>{
-      assert false; //TODO: Remove when ready to launch private leagues
-      assert not Principal.isAnonymous(caller);
-      assert(newPrivateLeague.termsAgreed);
-      assert(seasonManager.privateLeagueIsValid(newPrivateLeague));
-      assert(seasonManager.nameAvailable(newPrivateLeague.name));
-      assert(await treasuryManager.canAffordPrivateLeague(Principal.fromActor(Self), Principal.toText(caller), newPrivateLeague.paymentChoice));
-      return await seasonManager.createPrivateLeague(Principal.fromActor(Self), caller, newPrivateLeague);
-    };
-
     public shared ({ caller }) func searchUsername(dto: DTOs.UsernameFilterDTO) : async Result.Result<DTOs.ManagerDTO, T.Error> {
       assert not Principal.isAnonymous(caller);
       return await seasonManager.getManagerByUsername(dto.username);
-    };
-
-    public shared ({ caller }) func inviteUserToLeague(dto: DTOs.LeagueInviteDTO) : async Result.Result<(), T.Error> {
-      assert not Principal.isAnonymous(caller);
-      assert await seasonManager.isLeagueAdmin(dto.canisterId, Principal.toText(caller));
-
-      assert(await seasonManager.leagueHasSpace(dto.canisterId));
-      
-      let isLeagueMember = await seasonManager.isLeagueMember(dto.canisterId, Principal.toText(caller));
-      assert not isLeagueMember;
-
-      return await seasonManager.inviteUserToLeague(dto, Principal.toText(caller));
-    };
-
-    public shared ({ caller }) func updateLeaguePicture(dto: DTOs.UpdateLeaguePictureDTO) : async Result.Result<(), T.Error> {
-      assert not Principal.isAnonymous(caller);
-      assert await seasonManager.isLeagueAdmin(dto.canisterId, Principal.toText(caller));
-      await seasonManager.updateLeaguePicture(dto);
-    };
-
-    public shared ({ caller }) func updateLeagueBanner(dto: DTOs.UpdateLeagueBannerDTO) : async Result.Result<(), T.Error> {
-      assert not Principal.isAnonymous(caller);
-      assert await seasonManager.isLeagueAdmin(dto.canisterId, Principal.toText(caller));
-      await seasonManager.updateLeagueBanner(dto);
-    };
-
-    public shared ({ caller }) func updateLeagueName(dto: DTOs.UpdateLeagueNameDTO) : async Result.Result<(), T.Error> {
-      assert not Principal.isAnonymous(caller);
-      assert await seasonManager.isLeagueAdmin(dto.canisterId, Principal.toText(caller));
-      await seasonManager.updateLeagueName(dto);
-    };
-
-    //todo: get league invites list for in profile
-
-    public shared ({ caller }) func acceptLeagueInvite(canisterId: T.CanisterId) : async Result.Result<(), T.Error>{
-      assert not Principal.isAnonymous(caller);
-      assert(await seasonManager.leagueHasSpace(canisterId));
-
-      let isLeagueMember = await seasonManager.isLeagueMember(canisterId, Principal.toText(caller));
-      assert not isLeagueMember;
-
-      return await seasonManager.acceptLeagueInvite(canisterId, Principal.toText(caller));
-    };
-
-    public shared ({ caller }) func enterLeague(privateLeagueCanisterId: T.CanisterId) : async Result.Result<(), T.Error> {
-      assert not Principal.isAnonymous(caller);
-      assert(await seasonManager.leagueHasSpace(privateLeagueCanisterId));
-
-      let isLeagueMember = await seasonManager.isLeagueMember(privateLeagueCanisterId, Principal.toText(caller));
-      assert not isLeagueMember;
-
-      let privateLeague = await seasonManager.getPrivateLeague(privateLeagueCanisterId);
-      switch(privateLeague){
-        case (#ok foundPrivateLeague){
-          switch(foundPrivateLeague.entryType){
-            case (#FreeEntry){
-              let managerCanisterId = seasonManager.getManagerCanisterId(Principal.toText(caller));
-              let managerUsername = seasonManager.getManagerUsername(Principal.toText(caller));
-              switch(managerCanisterId){
-                case null { return #err(#NotFound)};
-                case (?foundCanisterId){
-                  switch(managerUsername){
-                    case null { return #err(#NotFound)};
-                    case (?foundUsername){
-                      await seasonManager.enterLeague(privateLeagueCanisterId, Principal.toText(caller), foundCanisterId, foundUsername);    
-                    }
-                  }
-                }
-              };
-            };
-            case _ {
-              return (#err(#NotFound));
-            };
-          };
-        };
-        case _ { #err(#NotFound) };
-      };    
-    };
-
-    public shared ({ caller }) func enterLeagueWithFee(canisterId: T.CanisterId) : async Result.Result<(), T.Error> {
-      assert not Principal.isAnonymous(caller);
-      assert(await seasonManager.leagueHasSpace(canisterId));
-      let userPrincipal = Principal.toText(caller);
-
-      let isLeagueMember = await seasonManager.isLeagueMember(canisterId, userPrincipal);
-      assert not isLeagueMember;
-
-      assert(await treasuryManager.canAffordEntryFee(Principal.fromActor(Self), canisterId, userPrincipal));
-      await treasuryManager.payEntryFee(Principal.fromActor(Self), canisterId, userPrincipal);
-      
-      let managerCanisterId = seasonManager.getManagerCanisterId(Principal.toText(caller));
-      let managerUsername = seasonManager.getManagerUsername(Principal.toText(caller));
-      switch(managerCanisterId){
-        case null { return #err(#NotFound)};
-        case (?foundCanisterId){
-          switch(managerUsername){
-            case null { return #err(#NotFound)};
-            case (?foundUsername){
-              await seasonManager.enterLeague(canisterId, userPrincipal, foundCanisterId, foundUsername);
-            }
-          }
-        }
-      };
-      
-    };
-
-    public shared ({ caller }) func acceptInviteAndPayFee(canisterId: T.CanisterId) : async Result.Result<(), T.Error> {
-      assert not Principal.isAnonymous(caller);
-      assert(await seasonManager.leagueHasSpace(canisterId));
-      let userPrincipal = Principal.toText(caller);
-
-      let isLeagueMember = await seasonManager.isLeagueMember(canisterId, userPrincipal);
-      assert not isLeagueMember;
-      assert(await seasonManager.inviteExists(canisterId, Principal.toText(caller)));
-      
-      assert(await treasuryManager.canAffordEntryFee(Principal.fromActor(Self), canisterId, userPrincipal));
-      await treasuryManager.payEntryFee(Principal.fromActor(Self), canisterId, userPrincipal);
-      await seasonManager.acceptLeagueInvite(canisterId, userPrincipal);
-    };
-
-    public shared ({ caller }) func getTokenList() : async Result.Result<[T.TokenInfo], T.Error> {
-      assert not Principal.isAnonymous(caller);
-      return #ok(treasuryManager.getTokenList());
-    };
-
-    public shared ({ caller }) func payPrivateLeagueRewards(dto: DTOs.PrivateLeagueRewardDTO) : async () {
-      assert not Principal.isAnonymous(caller);
-      let privateLeagueCanisterId = Principal.toText(caller);
-      assert seasonManager.leagueExists(privateLeagueCanisterId);
-      assert await seasonManager.isPrivateLeagueMember(dto.managerId, privateLeagueCanisterId);
-      await seasonManager.payPrivateLeagueReward(Principal.fromActor(Self), privateLeagueCanisterId, treasuryManager.getTokenList(), dto.managerId, dto.amount);
     };
 
     public shared ({ caller }) func getCanisters(dto: DTOs.GetCanistersDTO) : async Result.Result<DTOs.GetCanistersDTO, T.Error> {
@@ -1286,10 +1109,6 @@ import Debug "mo:base/Debug";
 
     //Stable variables backup:
 
-    //neuron
-    private stable var neuronCommand: ?NeuronTypes.Command = null;
-    private stable var neuronCreated = false;
-
     //event logs
     private stable var stable_event_logs: [T.EventLogEntry] = [];
     private stable var stable_next_system_event_id: Nat = 1;
@@ -1351,11 +1170,6 @@ import Debug "mo:base/Debug";
     private stable var stable_monthly_leaderboards_canisters : [T.MonthlyLeaderboardsCanister] = [];
     private stable var stable_weekly_leaderboard_canisters : [T.WeeklyLeaderboardCanister] = [];
 
-    //Private Leagues
-    private stable var stable_private_league_canister_ids: [T.CanisterId] = [];
-    private stable var stable_private_league_name_index: [(T.CanisterId, Text)] = [];
-    private stable var stable_private_league_unaccepted_invites: [(T.PrincipalId, T.LeagueInvite)] = [];
-
     private stable var stable_timers : [T.TimerInfo] = [];
     private stable var stable_topups : [T.CanisterTopup] = [];
 
@@ -1388,29 +1202,10 @@ import Debug "mo:base/Debug";
       stable_monthly_ath_prize_pool := seasonManager.getStableMonthlyATHPrizePool();
       stable_season_ath_prize_pool := seasonManager.getStableSeasonATHPrizePool();
 
-      //Player Composite
-      stable_next_player_id := seasonManager.getStableNextPlayerId();
-      stable_players := seasonManager.getStablePlayers();
-
-      //Club Composite
-      stable_clubs := seasonManager.getStableClubs();
-      stable_relegated_clubs := seasonManager.getStableRelegatedClubs();
-      stable_next_club_id := seasonManager.getStableNextClubId();
-
-      //Season Composite
-      stable_seasons := seasonManager.getStableSeasons();
-      stable_next_season_id := seasonManager.getStableNextSeasonId();
-      stable_next_fixture_id := seasonManager.getStableNextFixtureId();
-
       //Leaderboard Composite
       stable_season_leaderboard_canisters := seasonManager.getStableSeasonLeaderboardCanisters();
       stable_monthly_leaderboards_canisters := seasonManager.getStableMonthlyLeaderboardsCanisters();
       stable_weekly_leaderboard_canisters := seasonManager.getStableWeeklyLeaderboardCanisters();
-
-      //Private Leagues
-      stable_private_league_canister_ids := seasonManager.getStablePrivateLeagueCanisterIds();
-      stable_private_league_name_index := seasonManager.getStablePrivateLeagueNameIndex();
-      stable_private_league_unaccepted_invites := seasonManager.getStableUnacceptedInvites();
 
       stable_timers := timers;
       stable_topups := cyclesDispenser.getStableTopups();
@@ -1446,29 +1241,10 @@ import Debug "mo:base/Debug";
       seasonManager.setStableMonthlyATHPrizePool(stable_monthly_ath_prize_pool);
       seasonManager.setStableSeasonATHPrizePool(stable_season_ath_prize_pool);
 
-      //Player Composite
-      seasonManager.setStablePlayers(stable_players);
-      seasonManager.setStableNextPlayerId(stable_next_player_id);
-
-      //Club Composite
-      seasonManager.setStableClubs(stable_clubs);
-      seasonManager.setStableRelegatedClubs(stable_relegated_clubs);
-      seasonManager.setStableNextClubId(stable_next_club_id);
-
-      //Season Composite
-      seasonManager.setStableSeasons(stable_seasons);
-      seasonManager.setStableNextSeasonId(stable_next_season_id);
-      seasonManager.setStableNextFixtureId(stable_next_fixture_id);
-
       //Leaderboard Composite
       seasonManager.setStableSeasonLeaderboardCanisters(stable_season_leaderboard_canisters);
       seasonManager.setStableMonthlyLeaderboardsCanisters(stable_monthly_leaderboards_canisters);
       seasonManager.setStableWeeklyLeaderboardCanisters(stable_weekly_leaderboard_canisters);
-
-      //Private Leagues
-      seasonManager.setStablePrivateLeagueCanisterIds(stable_private_league_canister_ids);
-      seasonManager.setStablePrivateLeagueNameIndex(stable_private_league_name_index);
-      seasonManager.setStablePrivateLeagueUnacceptedInvites(stable_private_league_unaccepted_invites);
 
       cyclesDispenser.setStableTopups(stable_topups);
       cyclesDispenser.setRecordSystemEventFunction(recordSystemEvent);
@@ -1500,12 +1276,6 @@ import Debug "mo:base/Debug";
             case "gameCompletedExpired" {
               ignore Timer.setTimer<system>(duration, gameCompletedExpiredCallback);
             };
-            case "loanExpired" {
-              ignore Timer.setTimer<system>(duration, loanExpiredCallback);
-            };
-            case "injuryExpired" {
-              ignore Timer.setTimer<system>(duration, injuryExpiredCallback);
-            };
             case "transferWindowStart" {
               ignore Timer.setTimer<system>(duration, transferWindowStartCallback);
             };
@@ -1518,10 +1288,20 @@ import Debug "mo:base/Debug";
       };
       ignore Timer.setTimer<system>(#nanoseconds(Int.abs(1)), postUpgradeCallback);
     };
+    
+    public shared ({ caller }) func setupTesting () : async (){
+      Debug.print("SETTING UP TESTING");
+    };
+
 
     private func postUpgradeCallback() : async (){
 
       //await updateManagerCanisterWasms();
+      
+      if(not alreadyInitialisedData){
+        seasonManager.initialiseData();
+        alreadyInitialisedData := true;
+      };
       
       //await seasonManager.removeLeaderboardCanistersAndGetCycles();
       //await logStatus({message = "Leaderboard canisters removed "});
@@ -1545,14 +1325,18 @@ import Debug "mo:base/Debug";
 
     private func updateManagerCanisterWasms() : async (){
       let managerCanisterIds = seasonManager.getManagerCanisterIds();
+      Debug.print("manager canister ids");
+      Debug.print(debug_show managerCanisterIds);
       let IC : Management.Management = actor (Environment.Default);
       for(canisterId in Iter.fromArray(managerCanisterIds)){
-        
+        Debug.print(debug_show canisterId);
         await IC.stop_canister({ canister_id = Principal.fromText(canisterId); });
+        Debug.print("could stop it");
         
         let oldManagement = actor (canisterId) : actor {};
         let _ = await (system ManagerCanister._ManagerCanister)(#upgrade oldManagement)();
-        
+        Debug.print("couldn't upgrade it");
+        Debug.print("debug_show");
         await IC.start_canister({ canister_id = Principal.fromText(canisterId); });
       };
     };
@@ -1591,9 +1375,9 @@ import Debug "mo:base/Debug";
       let canisterTypes = List.fromArray<T.CanisterType>([
         #Dapp,
         #Manager,
-        //#WeeklyLeaderboard, TODO: Add back in later when obtained cycles.
-        //#MonthlyLeaderboard,
-        //#SeasonLeaderboard,
+        #WeeklyLeaderboard,
+        #MonthlyLeaderboard,
+        #SeasonLeaderboard,
         #SNS,
         #Archive
       ]);
@@ -1653,12 +1437,6 @@ import Debug "mo:base/Debug";
         };
         case "gameCompletedExpired" {
           Timer.setTimer<system>(duration, gameCompletedExpiredCallback);
-        };
-        case "loanExpired" {
-          Timer.setTimer<system>(duration, loanExpiredCallback);
-        };
-        case "injuryExpired" {
-          Timer.setTimer<system>(duration, injuryExpiredCallback);
         };
         case "transferWindowStart" {
           Timer.setTimer<system>(duration, transferWindowStartCallback);
@@ -1724,40 +1502,6 @@ import Debug "mo:base/Debug";
     private func getTreasuryAccount() : Account.AccountIdentifier {
       let actorPrincipal : Principal = Principal.fromActor(Self);
       Account.accountIdentifier(actorPrincipal, Account.defaultSubaccount());
-    };
-
-    public shared ({ caller }) func getActivePlayers() : async [DTOs.PlayerDTO] {
-      let principalId = Principal.toText(caller);
-      let uniqueManagerCanisterIds = seasonManager.getUniqueManagerCanisterIds();
-      assert Option.isSome(
-        Array.find<T.CanisterId>(uniqueManagerCanisterIds, func(canisterId: T.CanisterId){
-          canisterId == principalId
-        })
-      );  
-      return seasonManager.getPlayers();
-    };
-
-    public shared ({ caller }) func getAllPlayers() : async [DTOs.PlayerDTO] {
-      let principalId = Principal.toText(caller);
-      let uniqueManagerCanisterIds = seasonManager.getUniqueManagerCanisterIds();
-      assert Option.isSome(
-        Array.find<T.CanisterId>(uniqueManagerCanisterIds, func(canisterId: T.CanisterId){
-          canisterId == principalId
-        })
-      );  
-      return seasonManager.getAllPlayers();
-    };
-
-    public shared ({ caller }) func getPlayerPointsMap(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async [(T.PlayerId, DTOs.PlayerScoreDTO)] {
-      let principalId = Principal.toText(caller);
-      let uniqueManagerCanisterIds = seasonManager.getUniqueManagerCanisterIds();
-      assert Option.isSome(
-        Array.find<T.CanisterId>(uniqueManagerCanisterIds, func(canisterId: T.CanisterId){
-          canisterId == principalId
-        })
-      );  
-      return await seasonManager.getPlayerPointsMap(seasonId, gameweek);
-    };
-    
+    };    
 
   };

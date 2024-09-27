@@ -1,0 +1,333 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.modal-backdrop {
+  z-index: 1000;
+}
+
+.fpl-button {
+  background-color: #2ce3a6;
+  color: black;
+}
+
+.fpl-dropdown {
+  background-color: transparent !important;
+  border: none;
+  @apply rounded-sm;
+}
+
+.fpl-dropdown option {
+  background-color: black;
+  border: none;
+}
+
+input {
+  background-color: #2e323a !important;
+  color: white !important;
+}
+
+.bg-light-gray {
+  background-color: rgba(46, 50, 58, 0.6);
+}
+
+.fpl-purple-btn {
+  background-color: #7f56f1;
+}
+
+.fpl-cancel-btn {
+  background-color: #f27557;
+}
+
+.oc-logo {
+  font-family: "Manrope";
+  font-weight: bold;
+}
+
+.bg-panel-color {
+  background-color: rgba(36, 37, 41, 0.9);
+  border-radius: 8px;
+  border: 1px solid #2e323a !important;
+}
+
+.bg-brand-light-gray {
+  background-color: #2e323a;
+}
+
+.gray-border {
+  border-color: #454b56;
+  border-top-width: 1px;
+}
+
+.active-tab {
+  border-bottom: 4px #2ce3a6 solid;
+}
+
+.captain-row {
+  background-color: rgba(44, 227, 166, 0.1) !important;
+}
+
+.inactive-btn {
+  background-color: black;
+  color: white;
+}
+
+.modal {
+  position: fixed !important;
+  z-index: 9999 !important;
+  background-color: rgba(36, 37, 41, 0.7) !important;
+}
+
+.modal .content {
+  left: 0 !important;
+  right: 0 !important;
+  background-color: #161819 !important;
+  border-radius: 8px;
+  border: 1px solid #2e323a !important;
+}
+
+.modal .container {
+  border-radius: 0px !important;
+}
+
+.toast {
+  background-color: #2ce3a6 !important;
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+  border-radius: 4px !important;
+}
+.error > .toast {
+  background-color: #f27557 !important;
+}
+
+.unplayed-divider {
+  background-color: #949494;
+}
+
+.active-divider {
+  background-color: #2c8be3;
+}
+
+.complete-divider {
+  background-color: #2ce3a6;
+}
+
+.finalised-divider {
+  background-color: #7f56f1;
+}
+
+.active-border {
+  border-color: #2ce3a6;
+}
+
+[data-tid="busy"] {
+  background-color: rgba(36, 37, 41, 0.7) !important;
+  z-index: 99999 !important;
+}
+
+.page-wrapper {
+  @apply mx-4 my-4 xs:mx-6 sm:mx-8 lg:mx-10;
+}
+
+.page-header-wrapper {
+  @apply flex-col lg:flex-row lg:space-x-4;
+}
+
+.content-panel {
+  @apply flex justify-start items-center text-white rounded-md bg-panel
+  space-x-2 sm:space-x-3 md:space-x-4 flex-grow
+  p-2 xs:p-3 sm:p-4
+  mb-4;
+}
+
+.content-panel-header {
+  @apply text-gray-300 text-xxs xs:text-sm sm:text-base lg:text-sm;
+}
+
+.content-panel-stat {
+  @apply text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-2xl mt-2 mb-2 font-bold;
+}
+
+.vertical-divider {
+  min-width: 2px;
+  min-height: 50px;
+  @apply flex-shrink-0 w-px bg-gray-400 self-stretch;
+}
+
+.vertical-divider-thin {
+  min-width: 1px;
+  min-height: 50px;
+  background-color: #37393c;
+  @apply flex-shrink-0 w-px self-stretch;
+}
+
+.horizontal-divider {
+  min-height: 2px;
+  @apply flex-shrink-0 h-px bg-gray-400 self-stretch;
+}
+
+.panel-header {
+  @apply text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-2xl font-bold;
+}
+
+.side-panel-header {
+  @apply text-xs xs:text-sm sm:text-2xl md:text-3xl xl:text-base 2xl:text-lg;
+}
+
+.tab-switcher-label {
+  @apply font-bold text-xs xl:text-base 
+    px-4 py-2 my-4 min-w-[100px] lg:min-w-[125px];
+}
+
+.button-base {
+  @apply w-full md:w-auto text-xs md:text-xs xl:text-base px-4 py-2 rounded;
+}
+
+.side-button-base {
+  @apply w-full text-xs xl:text-base 
+  px-4 py-2 my-4 rounded-md;
+}
+
+.default-text {
+  @apply text-xxs xs:text-xs sm:text-base;
+}
+
+.default-header {
+  @apply text-xl font-semibold text-white;
+}
+
+.default-sub-header {
+  @apply text-lg font-bold;
+}
+
+.times-button {
+  @apply text-white text-3xl;
+}
+
+.tiny-text {
+  @apply text-xxs lg:text-sm;
+}
+
+.contained-text {
+  @apply text-xxs sm:text-base md:text-lg;
+}
+
+.countdown-text {
+  @apply text-gray-300 text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-2xl ml-1;
+}
+
+.bigger-text {
+  @apply text-xs xs:text-base sm:text-lg;
+}
+
+.smaller-text {
+  @apply text-xxs xs:text-xs sm:text-sm;
+}
+
+/* global.css */
+:root {
+  --dialog-width: 90% !important;
+  --dialog-max-width: 600px !important;
+  --dialog-min-height: 100px !important;
+  --dialog-height: auto !important;
+  --dialog-max-height: 80vh !important;
+  --dialog-border-radius: 1px !important;
+}
+
+.default-button {
+  @apply rounded px-3 md:px-4 py-1;
+}
+
+.bg-panel {
+  @apply bg-panel-color w-full;
+}
+
+.event-tag {
+  background-color: #2ce3a6;
+  color: #161819;
+  @apply px-2;
+}
+
+header {
+  background-color: rgba(36, 37, 41, 0.9);
+}
+.nav-underline {
+  position: relative;
+  display: inline-block;
+  color: white;
+}
+.nav-underline::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 4px;
+  background-color: #2ce3a6;
+  bottom: 0;
+  left: 0;
+  transform: scaleX(0);
+  transition: transform 0.3s ease-in-out;
+  color: #2ce3a6;
+}
+
+.nav-underline:hover::after,
+.nav-underline.active::after {
+  transform: scaleX(1);
+  color: #2ce3a6;
+}
+
+.nav-underline:hover::after {
+  transform: scaleX(1);
+  background-color: gray;
+}
+.nav-button {
+  background-color: transparent;
+}
+.nav-button:hover {
+  background-color: transparent;
+  color: #2ce3a6;
+  border: none;
+}
+
+.text-brand-green {
+  color: #2ce3a6;
+}
+
+.text-brand-red {
+  color: #cf5d43;
+}
+
+/* Extra small devices (portrait phones, less than 480px) */
+@media (min-width: 480px) {
+}
+
+/* Small devices (landscape phones, 640px and up) */
+@media (min-width: 640px) {
+  /* Your CSS here */
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+  /* Your CSS here */
+}
+
+/* Large devices (desktops, 1024px and up) */
+@media (min-width: 1024px) {
+  /* Your CSS here */
+}
+
+/* Extra large devices (large desktops, 1280px and up) */
+@media (min-width: 1280px) {
+  /* Your CSS here */
+}
+
+/* 2XL devices (larger desktops, 1536px and up) */
+@media (min-width: 1536px) {
+  /* Your CSS here */
+}
+
+/* 3XL devices (extra large desktops, 1920px and up) */
+@media (min-width: 1920px) {
+  /* Your CSS here */
+}
