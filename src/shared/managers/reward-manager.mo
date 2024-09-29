@@ -29,6 +29,7 @@ module {
 
   public class RewardManager() {
 
+    private var rewardPools : TrieMap.TrieMap<T.SeasonId, T.RewardPool> = TrieMap.TrieMap<T.SeasonId, T.RewardPool>(Utilities.eqNat16, Utilities.hashNat16);
     private var teamValueLeaderboards : TrieMap.TrieMap<T.SeasonId, T.TeamValueLeaderboard> = TrieMap.TrieMap<T.SeasonId, T.TeamValueLeaderboard>(Utilities.eqNat16, Utilities.hashNat16);
 
     private var seasonRewards : List.List<T.SeasonRewards> = List.nil();
@@ -44,6 +45,24 @@ module {
     private var weeklyATHPrizePool : Nat64 = 0;
     private var monthlyATHPrizePool : Nat64 = 0;
     private var seasonATHPrizePool : Nat64 = 0;
+
+    public func getRewardPool(seasonId: T.SeasonId) : ?T.RewardPool {
+        return rewardPools.get(seasonId);
+    };
+
+    public func payWeeklyRewards(systemState : T.SystemState) : async (){
+      
+         
+
+      let rewardPool = rewardPools.get(systemState.calculationSeasonId);
+      switch (rewardPool) {
+        case (null) {};
+        case (?foundRewardPool) {
+
+           
+        };
+      };
+    };
 
     public func distributeWeeklyRewards(weeklyRewardPool : Nat64, weeklyLeaderboard : DTOs.WeeklyLeaderboardDTO) : async () {
 
@@ -737,5 +756,17 @@ module {
     public func setStableSeasonATHPrizePool(stable_season_ath_prize_pool : Nat64) {
       seasonATHPrizePool := stable_season_ath_prize_pool;
     };
+    
+    public func getStableRewardPools() : [(T.SeasonId, T.RewardPool)] {
+      Iter.toArray(rewardPools.entries());
+    };
+
+    public func setStableRewardPools(stable_reward_pools : [(T.SeasonId, T.RewardPool)]) {
+      rewardPools := TrieMap.fromEntries<T.SeasonId, T.RewardPool>(
+        Iter.fromArray(stable_reward_pools),
+        Utilities.eqNat16,
+        Utilities.hashNat16,
+      );
+    }; 
   };
 };

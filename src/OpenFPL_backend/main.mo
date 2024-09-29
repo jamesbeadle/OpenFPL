@@ -32,7 +32,7 @@
   import SeasonManager "../shared/managers/season-manager";
   import RequestDtOs "../shared/RequestDTOs";
 import CyclesDispenser "../shared/cycles-dispenser";
-import Environment "../OpenFPL_backend/Environment";
+import Environment "../OpenFPL_backend/environment";
 import NetworkEnvironmentVariables "../shared/network_environment_variables";
 
   actor Self {
@@ -296,6 +296,44 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
       switch(await dataManager.validateSubmitFixtureData(submitFixtureData)){
         case (#ok success){
           let _ = await dataManager.executeSubmitFixtureData(submitFixtureData);
+
+          await userManager.calculateFantasyTeamScores(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
+          await leaderboardManager.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth, managerComposite.getStableUniqueManagerCanisterIds());
+          
+          if(await dataManager.checkGameweekComplete(systemState)){
+            await userManager.resetWeeklyTransfers();
+            await leaderboardManager.payWeeklyRewards(foundRewardPool);
+            await seasonManager.incrementCalculationGameweek();
+          };
+
+          if(await dataManager.checkMonthComplete(systemState)){
+            await userManager.resetBonusesAvailable();
+            await leaderboardManager.payMonthlyRewards(foundRewardPool);
+            await seasonManager.incrementCalculationMonth();
+          };
+
+          if(await dataManager.checkSeasonComplete(systemState)){
+            await managerComposite.resetFantasyTeams(seasonComposite.getStableNextSeasonId());
+            await leaderboardManager.paySeasonRewards(foundRewardPool);
+            await seasonManager.incrementCalculationSeason();
+            
+            seasonManager.createNewSeason(systemState);
+              
+            let currentSeasonId = seasonComposite.getStableNextSeasonId();
+            await calculateRewardPool(currentSeasonId); //TODO SPLIT NEW VALUES
+            
+            await setTransferWindowTimers();
+          };
+
+          
+          await updateCacheHash("players");
+          await updateCacheHash("player_events");
+          await updateCacheHash("fixtures");
+          await updateCacheHash("weekly_leaderboard");
+          await updateCacheHash("monthly_leaderboards");
+          await updateCacheHash("season_leaderboard");
+          await updateCacheHash("system_state");
+          
         };
         case _ {}
       };
@@ -313,6 +351,9 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
       switch(await dataManager.validateAddInitialFixtures(addInitialFixturesDTO)){
         case (#ok success){
           let _ = await dataManager.executeAddInitialFixtures(addInitialFixturesDTO);
+          let seasonFixtures = await dataManager.getFixtures(addInitialFixturesDTO.seasonId);
+          seasonManager.updateInitialSystemState();
+          return #ok();
         };
         case _ {}
       };

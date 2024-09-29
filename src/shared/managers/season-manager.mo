@@ -5,6 +5,7 @@ import TrieMap "mo:base/TrieMap";
 import List "mo:base/List";
 import Array "mo:base/Array";
 import Order "mo:base/Order";
+import Timer "mo:base/Timer";
 import DTOs "../../shared/DTOs";
 import T "../../shared/types";
 import SHA224 "../../shared/lib/SHA224";
@@ -27,8 +28,7 @@ module {
       transferWindowActive = false;
       version = "2.0.0";
     };
-    var rewardPools : TrieMap.TrieMap<T.SeasonId, T.RewardPool> = TrieMap.TrieMap<T.SeasonId, T.RewardPool>(Utilities.eqNat16, Utilities.hashNat16);
-    
+     
     private var dataHashes : [T.DataHash] = [
       { category = "clubs"; hash = "OPENFPL_1" },
       { category = "fixtures"; hash = "OPENFPL_1" },
@@ -53,11 +53,6 @@ module {
 
       dataHashes := Buffer.toArray<T.DataHash>(hashBuffer);
     };
-
-    public func getRewardPool(seasonId: T.SeasonId) : ?T.RewardPool {
-        return rewardPools.get(seasonId);
-    };
-
     public func getDataHashes() : Result.Result<[DTOs.DataHashDTO], T.Error> {
       return #ok(dataHashes)
     };
@@ -116,129 +111,137 @@ module {
       return await data_canister.setFixturesToCompleted(systemState.pickTeamSeasonId);
     };
 
-    public func checkGameweekComplete() : async Bool {
-      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
-        getSeason : (seasonId : T.SeasonId) -> async ?T.Season;
-      };
-      let season = await data_canister.getSeason(systemState.pickTeamSeasonId);
-      switch (season) {
-        case (null) { return false };
-        case (?foundSeason) {
-          let fixtures = List.filter<T.Fixture>(
-            foundSeason.fixtures,
-            func(fixture : T.Fixture) : Bool {
-              return fixture.gameweek == systemState.calculationGameweek;
-            },
-          );
-
-          let completedFixtures = List.filter<T.Fixture>(
-            fixtures,
-            func(fixture : T.Fixture) : Bool {
-              return fixture.status == #Finalised;
-            },
-          );
-
-          return List.size(completedFixtures) == List.size(fixtures);
-
-        };
-      };
-      return false;
-    };
-
-    public func checkMonthComplete() : async Bool {
-
-      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
-        getSeason : (seasonId : T.SeasonId) -> async ?T.Season;
-      };
-      let season = await data_canister.getSeason(systemState.pickTeamSeasonId);
-
-      switch (season) {
-        case (null) {
-          return false;
-        };
-        case (?foundSeason) {
-
-          let gameweekFixtures = List.toArray(
-            List.filter<T.Fixture>(
-              foundSeason.fixtures,
-              func(fixture : T.Fixture) : Bool {
-                return fixture.gameweek == systemState.calculationGameweek;
-              },
-            ),
-          );
-
-          let completedGameweekFixtures = Array.filter<T.Fixture>(
-            gameweekFixtures,
-            func(fixture : T.Fixture) : Bool {
-              return fixture.status == #Finalised;
-            },
-          );
-
-          if (Array.size(gameweekFixtures) != Array.size(completedGameweekFixtures)) {
-            return false;
-          };
-
-          if (systemState.calculationGameweek >= 38) {
-            return true;
-          };
-
-          let nextGameweekFixtures = List.toArray(
-            List.filter<T.Fixture>(
-              foundSeason.fixtures,
-              func(fixture : T.Fixture) : Bool {
-                return fixture.gameweek == systemState.calculationGameweek + 1;
-              },
-            ),
-          );
-
-          let sortedNextFixtures = Array.sort(
-            nextGameweekFixtures,
-            func(a : T.Fixture, b : T.Fixture) : Order.Order {
-              if (a.kickOff < b.kickOff) { return #greater };
+    public func updateInitialSystemState(seasonId: T.SeasonId, seasonFixtures: [DTOs.FixtureDTO]) : async () {
+        let sortedArray = Array.sort(
+            seasonFixtures,
+            func(a : DTOs.FixtureDTO, b : DTOs.FixtureDTO) : Order.Order {
+              if (a.kickOff < b.kickOff) { return #less };
               if (a.kickOff == b.kickOff) { return #equal };
-              return #less;
+              return #greater;
             },
           );
+          let firstFixture = sortedArray[0];
+          let firstFixtureMonth = Utilities.unixTimeToMonth(firstFixture.kickOff);
 
-          let latestNextFixture = sortedNextFixtures[0];
-          let fixtureMonth = Utilities.unixTimeToMonth(latestNextFixture.kickOff);
 
-          return fixtureMonth > systemState.calculationMonth;
-        };
-      };
-
-      return false;
-    };
-
-    public func checkSeasonComplete() : async Bool {
-
-      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
-        getSeason : (seasonId : T.SeasonId) -> async ?T.Season;
-      };
-      let season = await data_canister.getSeason(systemState.pickTeamSeasonId);
-
-      switch (season) {
-        case (null) {
-          return false;
-        };
-        case (?foundSeason) {
-
-          if (List.size(foundSeason.fixtures) == 0) {
-            return false;
+          let updatedSystemState : T.SystemState = {
+            calculationGameweek = 1;
+            calculationMonth = firstFixtureMonth;
+            calculationSeasonId = seasonId;
+            pickTeamSeasonId = seasonId;
+            pickTeamMonth = firstFixtureMonth;
+            pickTeamGameweek = 1;
+            seasonActive = false;
+            transferWindowActive = true;
+            onHold = systemState.onHold;
+            version = systemState.version;
           };
 
-          let completedFixtures = List.filter<T.Fixture>(
-            foundSeason.fixtures,
-            func(fixture : T.Fixture) : Bool {
-              return fixture.status == #Finalised;
-            },
-          );
+          systemState := updatedSystemState;
 
-          return List.size(completedFixtures) == List.size(foundSeason.fixtures);
+          await setGameweekTimers(1);
+          await updateDataHash("fixtures");
+    };
+
+    public func setGameweekTimers(gameweek: T.GameweekNumber) : async () {
+      let fixtures = seasonComposite.getFixtures({seasonId = systemState.calculationSeasonId});
+      let filteredFilters = Array.filter<DTOs.FixtureDTO>(
+        fixtures,
+        func(fixture : DTOs.FixtureDTO) : Bool {
+          return fixture.gameweek == gameweek;
+        },
+      );
+
+      let sortedArray = Array.sort(
+        filteredFilters,
+        func(a : DTOs.FixtureDTO, b : DTOs.FixtureDTO) : Order.Order {
+          if (a.kickOff < b.kickOff) { return #less };
+          if (a.kickOff == b.kickOff) { return #equal };
+          return #greater;
+        },
+      );
+
+      let firstFixture = sortedArray[0];
+      let durationToHourBeforeFirstFixture : Timer.Duration = #nanoseconds(Int.abs(firstFixture.kickOff - Utilities.getHour() - Time.now()));
+      switch (setAndBackupTimer) {
+        case (null) {};
+        case (?actualFunction) {
+          await actualFunction(durationToHourBeforeFirstFixture, "gameweekBeginExpired");
         };
       };
 
-      return false;
+      await setKickOffTimers(filteredFilters);
+    };
+
+
+
+    private func incrementCalculationGameweek(leagueId: T.FootballLeagueId) : async () {
+      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
+        incrementCalculationGameweek : (leagueId: T.FootballLeagueId) -> async Result.Result<T.SystemState, T.Error>;
+      };
+      let updatedSystemState : T.SystemState = {
+        calculationGameweek = systemState.calculationGameweek + 1;
+        calculationMonth = systemState.calculationMonth;
+        calculationSeasonId = systemState.calculationSeasonId;
+        pickTeamSeasonId = systemState.pickTeamSeasonId;
+        pickTeamGameweek = systemState.pickTeamGameweek;
+        seasonActive = systemState.seasonActive;
+        transferWindowActive = systemState.transferWindowActive;
+        onHold = systemState.onHold;
+        version = systemState.version;
+      };
+
+      systemState := updatedSystemState;
+    };
+
+    private func incrementCalculationMonth() : async () {
+      let data_canister = actor (Environment.DATA_CANISTER_ID) : actor {
+        incrementCalculationMonth : (leagueId: T.FootballLeagueId) -> async Result.Result<(), T.Error>;
+      };
+      await data_canister.incrementCalculationMonth(leagueId);
+      
+      var month = systemState.calculationMonth;
+      if (month == 12) {
+        month := 1;
+      } else {
+        month := month + 1;
+      };
+
+      let updatedSystemState : T.SystemState = {
+        calculationGameweek = systemState.calculationGameweek;
+        calculationMonth = month;
+        calculationSeasonId = systemState.calculationSeasonId;
+        pickTeamSeasonId = systemState.pickTeamSeasonId;
+        pickTeamGameweek = systemState.pickTeamGameweek;
+        seasonActive = systemState.seasonActive;
+        transferWindowActive = systemState.transferWindowActive;
+        onHold = systemState.onHold;
+        version = systemState.version;
+      };
+
+      systemState := updatedSystemState;
+    };
+
+    private func incrementCalculationSeason() : async () {
+      
+      var seasonId = systemState.calculationSeasonId;
+      
+      var nextSeasonId = seasonId + 1;
+      let _ = await seasonComposite.setNextSeasonId(nextSeasonId);
+
+      let updatedSystemState : T.SystemState = {
+        calculationGameweek = systemState.calculationGameweek;
+        calculationMonth = systemState.calculationMonth;
+        calculationSeasonId = nextSeasonId;
+        pickTeamSeasonId = systemState.pickTeamSeasonId;
+        pickTeamGameweek = systemState.pickTeamGameweek;
+        seasonActive = systemState.seasonActive;
+        transferWindowActive = systemState.transferWindowActive;
+        onHold = systemState.onHold;
+        version = systemState.version;
+      };
+
+      systemState := updatedSystemState;
     };
 
     public func transferWindowStart() : async (){
@@ -254,23 +257,21 @@ module {
       
     //Stable variable functions
 
-    public func getStableRewardPools() : [(T.SeasonId, T.RewardPool)] {
-      Iter.toArray(rewardPools.entries());
+
+    public func getStableSystemState() : T.SystemState {
+      return systemState;
     };
 
-    public func setStableRewardPools(stable_reward_pools : [(T.SeasonId, T.RewardPool)]) {
-      rewardPools := TrieMap.fromEntries<T.SeasonId, T.RewardPool>(
-        Iter.fromArray(stable_reward_pools),
-        Utilities.eqNat16,
-        Utilities.hashNat16,
-      );
-    }; //TODO: Ensure called
+    public func setStableSystemState(stable_system_state : T.SystemState) {
+      systemState := stable_system_state;
+    };
+    //TODO: Ensure called
 
 
-    //Stable backup
-      //stable data hashes
 
     //TODO: Stable Backup
+      //stable data hashes
+
     
   };
 

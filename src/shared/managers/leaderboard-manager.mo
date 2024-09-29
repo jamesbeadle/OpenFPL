@@ -20,7 +20,7 @@ import RewardManager "reward-manager";
 module {
 
   public class LeaderboardManager(controllerPrincipalId: Text) {
-    
+   
     private var weeklyLeaderboardCanisters : List.List<T.WeeklyLeaderboardCanister> = List.nil();
     private var monthlyLeaderboardsCanisters : List.List<T.MonthlyLeaderboardsCanister> = List.nil();
     private var seasonLeaderboardCanisters : List.List<T.SeasonLeaderboardCanister> = List.nil();
@@ -485,7 +485,15 @@ module {
         return []; //TODO
     };
 
+    public func getRewardPool(seasonId: T.SeasonId) : ?T.RewardPool {
+        return rewardManager.getRewardPool(seasonId);
+    };
+
+
     //TODO: Ensure used
+
+    //Statble Storage 
+
     public func getStableSeasonLeaderboardCanisters() : [T.SeasonLeaderboardCanister] {
       return List.toArray(seasonLeaderboardCanisters);
     };
@@ -509,7 +517,6 @@ module {
     public func setStableWeeklyLeaderboardCanisters(stable_weekly_leaderboard_canisters : [T.WeeklyLeaderboardCanister]) {
       weeklyLeaderboardCanisters := List.fromArray(stable_weekly_leaderboard_canisters);
     };
-
 
     public func getStableTeamValueLeaderboards() : [(T.SeasonId, T.TeamValueLeaderboard)] {
       return rewardManager.getStableTeamValueLeaderboards();
@@ -606,6 +613,8 @@ module {
     public func setStableSeasonATHPrizePool(stable_season_ath_prize_pool : Nat64) {
       return rewardManager.setStableSeasonATHPrizePool(stable_season_ath_prize_pool);
     };
+
+    //TODO: Add statble storage for reward pools
 
     
   };
