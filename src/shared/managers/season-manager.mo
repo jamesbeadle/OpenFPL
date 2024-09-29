@@ -111,80 +111,15 @@ module {
       return await data_canister.setFixturesToCompleted(systemState.pickTeamSeasonId);
     };
 
-    public func updateInitialSystemState(seasonId: T.SeasonId, seasonFixtures: [DTOs.FixtureDTO]) : async () {
-        let sortedArray = Array.sort(
-            seasonFixtures,
-            func(a : DTOs.FixtureDTO, b : DTOs.FixtureDTO) : Order.Order {
-              if (a.kickOff < b.kickOff) { return #less };
-              if (a.kickOff == b.kickOff) { return #equal };
-              return #greater;
-            },
-          );
-          let firstFixture = sortedArray[0];
-          let firstFixtureMonth = Utilities.unixTimeToMonth(firstFixture.kickOff);
-
-
-          let updatedSystemState : T.SystemState = {
-            calculationGameweek = 1;
-            calculationMonth = firstFixtureMonth;
-            calculationSeasonId = seasonId;
-            pickTeamSeasonId = seasonId;
-            pickTeamMonth = firstFixtureMonth;
-            pickTeamGameweek = 1;
-            seasonActive = false;
-            transferWindowActive = true;
-            onHold = systemState.onHold;
-            version = systemState.version;
-          };
-
-          systemState := updatedSystemState;
-
-          await setGameweekTimers(1);
-          await updateDataHash("fixtures");
-    };
-
-    public func setGameweekTimers(gameweek: T.GameweekNumber) : async () {
-      let fixtures = seasonComposite.getFixtures({seasonId = systemState.calculationSeasonId});
-      let filteredFilters = Array.filter<DTOs.FixtureDTO>(
-        fixtures,
-        func(fixture : DTOs.FixtureDTO) : Bool {
-          return fixture.gameweek == gameweek;
-        },
-      );
-
-      let sortedArray = Array.sort(
-        filteredFilters,
-        func(a : DTOs.FixtureDTO, b : DTOs.FixtureDTO) : Order.Order {
-          if (a.kickOff < b.kickOff) { return #less };
-          if (a.kickOff == b.kickOff) { return #equal };
-          return #greater;
-        },
-      );
-
-      let firstFixture = sortedArray[0];
-      let durationToHourBeforeFirstFixture : Timer.Duration = #nanoseconds(Int.abs(firstFixture.kickOff - Utilities.getHour() - Time.now()));
-      switch (setAndBackupTimer) {
-        case (null) {};
-        case (?actualFunction) {
-          await actualFunction(durationToHourBeforeFirstFixture, "gameweekBeginExpired");
-        };
-      };
-
-      await setKickOffTimers(filteredFilters);
-    };
-
-
-
-    private func incrementCalculationGameweek(leagueId: T.FootballLeagueId) : async () {
-      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
-        incrementCalculationGameweek : (leagueId: T.FootballLeagueId) -> async Result.Result<T.SystemState, T.Error>;
-      };
+    public func incrementCalculationGameweek() : async () {
+      
       let updatedSystemState : T.SystemState = {
         calculationGameweek = systemState.calculationGameweek + 1;
         calculationMonth = systemState.calculationMonth;
         calculationSeasonId = systemState.calculationSeasonId;
         pickTeamSeasonId = systemState.pickTeamSeasonId;
         pickTeamGameweek = systemState.pickTeamGameweek;
+        pickTeamMonth = systemState.pickTeamMonth;
         seasonActive = systemState.seasonActive;
         transferWindowActive = systemState.transferWindowActive;
         onHold = systemState.onHold;
@@ -194,11 +129,7 @@ module {
       systemState := updatedSystemState;
     };
 
-    private func incrementCalculationMonth() : async () {
-      let data_canister = actor (Environment.DATA_CANISTER_ID) : actor {
-        incrementCalculationMonth : (leagueId: T.FootballLeagueId) -> async Result.Result<(), T.Error>;
-      };
-      await data_canister.incrementCalculationMonth(leagueId);
+    public func incrementCalculationMonth() : async () {
       
       var month = systemState.calculationMonth;
       if (month == 12) {
@@ -213,6 +144,7 @@ module {
         calculationSeasonId = systemState.calculationSeasonId;
         pickTeamSeasonId = systemState.pickTeamSeasonId;
         pickTeamGameweek = systemState.pickTeamGameweek;
+        pickTeamMonth = systemState.pickTeamMonth;
         seasonActive = systemState.seasonActive;
         transferWindowActive = systemState.transferWindowActive;
         onHold = systemState.onHold;
@@ -222,12 +154,11 @@ module {
       systemState := updatedSystemState;
     };
 
-    private func incrementCalculationSeason() : async () {
+    public func incrementCalculationSeason() : async () {
       
       var seasonId = systemState.calculationSeasonId;
       
       var nextSeasonId = seasonId + 1;
-      let _ = await seasonComposite.setNextSeasonId(nextSeasonId);
 
       let updatedSystemState : T.SystemState = {
         calculationGameweek = systemState.calculationGameweek;
@@ -235,6 +166,7 @@ module {
         calculationSeasonId = nextSeasonId;
         pickTeamSeasonId = systemState.pickTeamSeasonId;
         pickTeamGameweek = systemState.pickTeamGameweek;
+        pickTeamMonth = systemState.pickTeamMonth;
         seasonActive = systemState.seasonActive;
         transferWindowActive = systemState.transferWindowActive;
         onHold = systemState.onHold;

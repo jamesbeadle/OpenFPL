@@ -32,7 +32,7 @@
   import SeasonManager "../shared/managers/season-manager";
   import RequestDtOs "../shared/RequestDTOs";
 import CyclesDispenser "../shared/cycles-dispenser";
-import Environment "../OpenFPL_backend/environment";
+import Environment "./environment";
 import NetworkEnvironmentVariables "../shared/network_environment_variables";
 
   actor Self {
@@ -103,19 +103,19 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
     };
 
     public shared func getClubs() : async Result.Result<[DTOs.ClubDTO], T.Error> {
-      return await dataManager.getClubs();
+      return await dataManager.getClubs(Environment.LEAGUE_ID);
     };
 
     public shared func getFixtures(dto: RequestDtOs.RequestFixturesDTO) : async Result.Result<[DTOs.FixtureDTO], T.Error> {
-      return await dataManager.getFixtures(dto);
+      return await dataManager.getFixtures(Environment.LEAGUE_ID, dto);
     };
 
     public shared func getSeasons() : async Result.Result<[DTOs.SeasonDTO], T.Error> {
-      return await dataManager.getSeasons();
+      return await dataManager.getSeasons(Environment.LEAGUE_ID);
     };
 
     public shared func getPostponedFixtures() : async Result.Result<[DTOs.FixtureDTO], T.Error> {
-      return await dataManager.getPostponedFixtures();
+      return await dataManager.getPostponedFixtures(Environment.LEAGUE_ID);
     };
 
     public shared func getTotalManagers() : async Result.Result<Nat, T.Error> {
@@ -123,27 +123,27 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
     };
 
     public shared func getPlayers() : async Result.Result<[DTOs.PlayerDTO], T.Error> {
-      return await dataManager.getPlayers();
+      return await dataManager.getPlayers(Environment.LEAGUE_ID);
     };
 
     public shared func getLoanedPlayers(dto: DTOs.ClubFilterDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
-      return await dataManager.getLoanedPlayers(dto);
+      return await dataManager.getLoanedPlayers(Environment.LEAGUE_ID, dto);
     };
 
     public shared func getRetiredPlayers(dto: DTOs.ClubFilterDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
-      return await dataManager.getRetiredPlayers(dto);
+      return await dataManager.getRetiredPlayers(Environment.LEAGUE_ID, dto);
     };
 
     public shared func getPlayerDetailsForGameweek(dto: DTOs.GameweekFiltersDTO) : async Result.Result<[DTOs.PlayerPointsDTO], T.Error> {
-      return await dataManager.getPlayerDetailsForGameweek(dto);
+      return await dataManager.getPlayerDetailsForGameweek(Environment.LEAGUE_ID, dto);
     };
 
     public shared func getPlayersMap(dto: DTOs.GameweekFiltersDTO) : async Result.Result<[(Nat16, DTOs.PlayerScoreDTO)], T.Error> {
-      return await dataManager.getPlayersMap(dto);
+      return await dataManager.getPlayersMap(Environment.LEAGUE_ID, dto);
     };
 
     public shared func getPlayerDetails(dto: DTOs.GetPlayerDetailsDTO) : async Result.Result<DTOs.PlayerDetailDTO, T.Error> {
-      return await dataManager.getPlayerDetails(dto);
+      return await dataManager.getPlayerDetails(Environment.LEAGUE_ID, dto);
     };
 
     public shared query func getCountries() : async Result.Result<[DTOs.CountryDTO], T.Error> {
@@ -182,7 +182,7 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
       switch(systemStateResult){
         case (#ok systemState){       
 
-          let clubsResult = await dataManager.getClubs();
+          let clubsResult = await dataManager.getClubs(Environment.LEAGUE_ID);
           switch(clubsResult){
             case (#ok clubs){
               return await userManager.updateFavouriteClub(principalId, dto.favouriteClubId, systemState, clubs);
@@ -227,7 +227,7 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
         case (#ok systemState){       
           assert not systemState.onHold;
       
-          let playersResult = await dataManager.getPlayers();
+          let playersResult = await dataManager.getPlayers(Environment.LEAGUE_ID);
           switch(playersResult){
             case (#ok players){
               return await userManager.saveFantasyTeam(principalId, fantasyTeam, systemState, players);
@@ -258,9 +258,9 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
     public shared ({ caller }) func executeRevaluePlayerUp(revaluePlayerUpDTO : DTOs.RevaluePlayerUpDTO) : async () {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       assert isDataAdmin(Principal.toText(caller));
-      switch(await dataManager.validateRevaluePlayerUp(revaluePlayerUpDTO)){
+      switch(await dataManager.validateRevaluePlayerUp(Environment.LEAGUE_ID, revaluePlayerUpDTO)){
         case (#ok success){
-          let _ = await dataManager.executeRevaluePlayerUp(revaluePlayerUpDTO);
+          let _ = await dataManager.executeRevaluePlayerUp(Environment.LEAGUE_ID, revaluePlayerUpDTO);
         };
         case _ {}
       };
@@ -275,9 +275,9 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
     public shared ({ caller }) func executeRevaluePlayerDown(revaluePlayerDownDTO : DTOs.RevaluePlayerDownDTO) : async () {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       assert isDataAdmin(Principal.toText(caller));
-      switch(await dataManager.validateRevaluePlayerDown(revaluePlayerDownDTO)){
+      switch(await dataManager.validateRevaluePlayerDown(Environment.LEAGUE_ID, revaluePlayerDownDTO)){
         case (#ok success){
-          let _ = await dataManager.executeRevaluePlayerDown(revaluePlayerDownDTO);
+          let _ = await dataManager.executeRevaluePlayerDown(Environment.LEAGUE_ID, revaluePlayerDownDTO);
         };
         case _ {}
       };
@@ -293,9 +293,9 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
     public shared ({ caller }) func executeSubmitFixtureData(submitFixtureData : DTOs.SubmitFixtureDataDTO) : async () {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       assert isDataAdmin(Principal.toText(caller));
-      switch(await dataManager.validateSubmitFixtureData(submitFixtureData)){
+      switch(await dataManager.validateSubmitFixtureData(Environment.LEAGUE_ID, submitFixtureData)){
         case (#ok success){
-          let _ = await dataManager.executeSubmitFixtureData(submitFixtureData);
+          let _ = await dataManager.executeSubmitFixtureData(Environment.LEAGUE_ID, submitFixtureData);
 
           await userManager.calculateFantasyTeamScores(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
           await leaderboardManager.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth, managerComposite.getStableUniqueManagerCanisterIds());
@@ -326,13 +326,13 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
           };
 
           
-          await updateCacheHash("players");
-          await updateCacheHash("player_events");
-          await updateCacheHash("fixtures");
-          await updateCacheHash("weekly_leaderboard");
-          await updateCacheHash("monthly_leaderboards");
-          await updateCacheHash("season_leaderboard");
-          await updateCacheHash("system_state");
+          await seasonManager.updateDataHash("players");
+          await seasonManager.updateDataHash("player_events");
+          await seasonManager.updateDataHash("fixtures");
+          await seasonManager.updateDataHash("weekly_leaderboard");
+          await seasonManager.updateDataHash("monthly_leaderboards");
+          await seasonManager.updateDataHash("season_leaderboard");
+          await seasonManager.updateDataHash("system_state");
           
         };
         case _ {}
@@ -348,9 +348,12 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
     public shared ({ caller }) func executeAddInitialFixtures(addInitialFixturesDTO : DTOs.AddInitialFixturesDTO) : async () {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       assert isDataAdmin(Principal.toText(caller));
-      switch(await dataManager.validateAddInitialFixtures(addInitialFixturesDTO)){
+      switch(await dataManager.validateAddInitialFixtures(Environment.LEAGUE_ID, addInitialFixturesDTO)){
         case (#ok success){
-          let _ = await dataManager.executeAddInitialFixtures(addInitialFixturesDTO);
+          let _ = await dataManager.executeAddInitialFixtures(Environment.LEAGUE_ID, addInitialFixturesDTO);
+          let seasonFixtures = await dataManager.getFixtures(Environment.LEAGUE_ID, { seasonId = addInitialFixturesDTO.seasonId });
+          seasonManager.updateInitialSystemState();
+          return #ok();
         };
         case _ {}
       };
@@ -365,9 +368,9 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
     public shared ({ caller }) func executeMoveFixture(moveFixtureDTO : DTOs.MoveFixtureDTO) : async () {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       assert isDataAdmin(Principal.toText(caller));
-      switch(await dataManager.validateMoveFixture(moveFixtureDTO)){
+      switch(await dataManager.validateMoveFixture(Environment.LEAGUE_ID, moveFixtureDTO)){
         case (#ok success){
-          let _ = await dataManager.executeMoveFixture(moveFixtureDTO);
+          let _ = await dataManager.executeMoveFixture(Environment.LEAGUE_ID, moveFixtureDTO);
         };
         case _ {}
       };
@@ -382,9 +385,9 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
     public shared ({ caller }) func executePostponeFixture(postponeFixtureDTO : DTOs.PostponeFixtureDTO) : async () {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       assert isDataAdmin(Principal.toText(caller));
-      switch(await dataManager.validatePostponeFixture(postponeFixtureDTO)){
+      switch(await dataManager.validatePostponeFixture(Environment.LEAGUE_ID, postponeFixtureDTO)){
         case (#ok success){
-          let _ =  await dataManager.executePostponeFixture(postponeFixtureDTO);
+          let _ =  await dataManager.executePostponeFixture(Environment.LEAGUE_ID, postponeFixtureDTO);
         };
         case _ {}
       };
@@ -399,9 +402,9 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
     public shared ({ caller }) func executeRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO) : async () {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       assert isDataAdmin(Principal.toText(caller));
-      switch(await dataManager.validateRescheduleFixture(rescheduleFixtureDTO)){
+      switch(await dataManager.validateRescheduleFixture(Environment.LEAGUE_ID, rescheduleFixtureDTO)){
         case (#ok success){
-          let _ = await dataManager.executeRescheduleFixture(rescheduleFixtureDTO);
+          let _ = await dataManager.executeRescheduleFixture(Environment.LEAGUE_ID, rescheduleFixtureDTO);
         };
         case _ {}
       };
@@ -416,9 +419,9 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
     public shared ({ caller }) func executeLoanPlayer(loanPlayerDTO : DTOs.LoanPlayerDTO) : async () {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       assert isDataAdmin(Principal.toText(caller));
-      switch(await dataManager.validateLoanPlayer(loanPlayerDTO)){
+      switch(await dataManager.validateLoanPlayer(Environment.LEAGUE_ID, loanPlayerDTO)){
         case (#ok success){
-          let _ = await dataManager.executeLoanPlayer(loanPlayerDTO);
+          let _ = await dataManager.executeLoanPlayer(Environment.LEAGUE_ID, loanPlayerDTO);
         };
         case _ {}
       };
@@ -433,9 +436,9 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
     public shared ({ caller }) func executeTransferPlayer(transferPlayerDTO : DTOs.TransferPlayerDTO) : async () {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       assert isDataAdmin(Principal.toText(caller));
-      switch(await dataManager.validateTransferPlayer(transferPlayerDTO)){
+      switch(await dataManager.validateTransferPlayer(Environment.LEAGUE_ID, transferPlayerDTO)){
         case (#ok success){
-          let _ = await dataManager.executeTransferPlayer(transferPlayerDTO);
+          let _ = await dataManager.executeTransferPlayer(Environment.LEAGUE_ID, transferPlayerDTO);
         };
         case _ {}
       };
@@ -450,9 +453,9 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
     public shared ({ caller }) func executeRecallPlayer(recallPlayerDTO : DTOs.RecallPlayerDTO) : async () {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       assert isDataAdmin(Principal.toText(caller));
-      switch(await dataManager.validateRecallPlayer(recallPlayerDTO)){
+      switch(await dataManager.validateRecallPlayer(Environment.LEAGUE_ID, recallPlayerDTO)){
         case (#ok success){
-          let _ = await dataManager.executeRecallPlayer(recallPlayerDTO);
+          let _ = await dataManager.executeRecallPlayer(Environment.LEAGUE_ID, recallPlayerDTO);
         };
         case _ {}
       };
@@ -467,9 +470,9 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
     public shared ({ caller }) func executeCreatePlayer(createPlayerDTO : DTOs.CreatePlayerDTO) : async () {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       assert isDataAdmin(Principal.toText(caller));
-      switch(await dataManager.validateCreatePlayer(createPlayerDTO)){
+      switch(await dataManager.validateCreatePlayer(Environment.LEAGUE_ID, createPlayerDTO)){
         case (#ok success){
-          let _ = await dataManager.executeCreatePlayer(createPlayerDTO);
+          let _ = await dataManager.executeCreatePlayer(Environment.LEAGUE_ID, createPlayerDTO);
         };
         case _ {}
       };
@@ -484,9 +487,9 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
     public shared ({ caller }) func executeUpdatePlayer(updatePlayerDTO : DTOs.UpdatePlayerDTO) : async () {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       assert isDataAdmin(Principal.toText(caller));
-      switch(await dataManager.validateUpdatePlayer(updatePlayerDTO)){
+      switch(await dataManager.validateUpdatePlayer(Environment.LEAGUE_ID, updatePlayerDTO)){
         case (#ok success){
-          let _ = await dataManager.executeUpdatePlayer(updatePlayerDTO);
+          let _ = await dataManager.executeUpdatePlayer(Environment.LEAGUE_ID, updatePlayerDTO);
         };
         case _ {}
       };
@@ -501,9 +504,9 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
     public shared ({ caller }) func executeSetPlayerInjury(setPlayerInjuryDTO : DTOs.SetPlayerInjuryDTO) : async () {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       assert isDataAdmin(Principal.toText(caller));
-      switch(await dataManager.validateSetPlayerInjury(setPlayerInjuryDTO)){
+      switch(await dataManager.validateSetPlayerInjury(Environment.LEAGUE_ID, setPlayerInjuryDTO)){
         case (#ok success){
-          let _ = await dataManager.executeSetPlayerInjury(setPlayerInjuryDTO);
+          let _ = await dataManager.executeSetPlayerInjury(Environment.LEAGUE_ID, setPlayerInjuryDTO);
         };
         case _ {}
       };
@@ -518,9 +521,9 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
     public shared ({ caller }) func executeRetirePlayer(retirePlayerDTO : DTOs.RetirePlayerDTO) : async () {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       assert isDataAdmin(Principal.toText(caller));
-      switch(await dataManager.validateRetirePlayer(retirePlayerDTO)){
+      switch(await dataManager.validateRetirePlayer(Environment.LEAGUE_ID, retirePlayerDTO)){
         case (#ok success){
-          let _ = await dataManager.executeRetirePlayer(retirePlayerDTO);
+          let _ = await dataManager.executeRetirePlayer(Environment.LEAGUE_ID, retirePlayerDTO);
         };
         case _ {}
       };
@@ -535,9 +538,9 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
     public shared ({ caller }) func executeUnretirePlayer(unretirePlayerDTO : DTOs.UnretirePlayerDTO) : async () {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       assert isDataAdmin(Principal.toText(caller));
-      switch(await dataManager.validateUnretirePlayer(unretirePlayerDTO)){
+      switch(await dataManager.validateUnretirePlayer(Environment.LEAGUE_ID, unretirePlayerDTO)){
         case (#ok success){
-          let _ = await dataManager.executeUnretirePlayer(unretirePlayerDTO);
+          let _ = await dataManager.executeUnretirePlayer(Environment.LEAGUE_ID, unretirePlayerDTO);
         };
         case _ {}
       };
@@ -552,9 +555,9 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
     public shared ({ caller }) func executePromoteFormerClub(promoteFormerClubDTO : DTOs.PromoteFormerClubDTO) : async () {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       assert isDataAdmin(Principal.toText(caller));
-      switch(await dataManager.validatePromoteFormerClub(promoteFormerClubDTO)){
+      switch(await dataManager.validatePromoteFormerClub(Environment.LEAGUE_ID, promoteFormerClubDTO)){
         case (#ok success){
-          let _ = await dataManager.executePromoteFormerClub(promoteFormerClubDTO);
+          let _ = await dataManager.executePromoteFormerClub(Environment.LEAGUE_ID, promoteFormerClubDTO);
         };
         case _ {}
       };
@@ -569,9 +572,9 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
     public shared ({ caller }) func executePromoteNewClub(promoteNewClubDTO : DTOs.PromoteNewClubDTO) : async () {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       assert isDataAdmin(Principal.toText(caller));
-      switch(await dataManager.validatePromoteNewClub(promoteNewClubDTO)){
+      switch(await dataManager.validatePromoteNewClub(Environment.LEAGUE_ID, promoteNewClubDTO)){
         case (#ok success){
-          let _ = await dataManager.executePromoteNewClub(promoteNewClubDTO);
+          let _ = await dataManager.executePromoteNewClub(Environment.LEAGUE_ID, promoteNewClubDTO);
         };
         case _ {}
       };
@@ -586,9 +589,9 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
     public shared ({ caller }) func executeUpdateClub(updateClubDTO : DTOs.UpdateClubDTO) : async () {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       assert isDataAdmin(Principal.toText(caller));
-      switch(await dataManager.validateUpdateClub(updateClubDTO)){
+      switch(await dataManager.validateUpdateClub(Environment.LEAGUE_ID, updateClubDTO)){
         case (#ok success){
-          let _ = await dataManager.executeUpdateClub(updateClubDTO);
+          let _ = await dataManager.executeUpdateClub(Environment.LEAGUE_ID, updateClubDTO);
         };
         case _ {}
       };
@@ -1163,7 +1166,7 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
 
 
     public func setGameweekTimers(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async () {
-      let fixturesResult = await dataManager.getFixtures({seasonId = seasonId});
+      let fixturesResult = await dataManager.getFixtures(Environment.LEAGUE_ID, {seasonId = seasonId});
       switch(fixturesResult){
         case (#ok fixtures){
           let filteredFilters = Array.filter<DTOs.FixtureDTO>(

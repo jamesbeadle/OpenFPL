@@ -12,13 +12,13 @@
   import Iter "mo:base/Iter";
   import TrieMap "mo:base/TrieMap";
   import List "mo:base/List";
-import Option "mo:base/Option";
+  import Option "mo:base/Option";
 
   import T "../shared/types";
   import DTOs "../shared/DTOs";
   import Utilities "../shared/utils/utilities";
   import RequestDTOs "../shared/RequestDTOs";
-import Environment "environment";
+  import Environment "environment";
 
   actor Self {
       
@@ -87,18 +87,22 @@ import Environment "environment";
         }
       };
     };
+
     public shared ( {caller} ) func getFixtures(dto: RequestDTOs.RequestFixturesDTO) : async Result.Result<[DTOs.FixtureDTO], T.Error>{
       assert callerAllowed(caller);
       return #err(#NotFound);
     };
+
     public shared ( {caller} ) func getSeasons() : async Result.Result<[DTOs.SeasonDTO], T.Error>{
       assert callerAllowed(caller);
       return #err(#NotFound);
     };
+
     public shared ( {caller} ) func getPostponedFixtures() : async Result.Result<[DTOs.FixtureDTO], T.Error>{
       assert callerAllowed(caller);
       return #err(#NotFound);
     };
+
     public shared ( {caller} ) func getPlayers() : async Result.Result<[DTOs.PlayerDTO], T.Error>{
       assert callerAllowed(caller);
       return #err(#NotFound);
@@ -380,6 +384,7 @@ import Environment "environment";
 
       return #Ok("Proposal Valid");
     };
+
     public shared ( {caller} ) func validateTransferPlayer(transferPlayerDTO : DTOs.TransferPlayerDTO) : async Result.Result<(), T.Error>{
       assert callerAllowed(caller);
       let player = List.find<T.Player>(
@@ -415,6 +420,7 @@ import Environment "environment";
 
       return #Ok("Proposal Valid");
     };
+
     public shared ( {caller} ) func recallPlayerDTO(recallPlayerDTO : DTOs.RecallPlayerDTO) : async Result.Result<(), T.Error>{
       assert callerAllowed(caller);
       return #err(#NotFound);
@@ -645,111 +651,6 @@ import Environment "environment";
 
 
 
-    private func validatePlayerEvents(playerEvents : [T.PlayerEventData]) : Bool {
-
-      let eventsBelow0 = Array.filter<T.PlayerEventData>(
-        playerEvents,
-        func(event : T.PlayerEventData) : Bool {
-          return event.eventStartMinute < 0;
-        },
-      );
-
-      if (Array.size(eventsBelow0) > 0) {
-        return false;
-      };
-
-      let eventsAbove90 = Array.filter<T.PlayerEventData>(
-        playerEvents,
-        func(event : T.PlayerEventData) : Bool {
-          return event.eventStartMinute > 90;
-        },
-      );
-
-      if (Array.size(eventsAbove90) > 0) {
-        return false;
-      };
-
-      let playerEventsMap : TrieMap.TrieMap<T.PlayerId, List.List<T.PlayerEventData>> = TrieMap.TrieMap<T.PlayerId, List.List<T.PlayerEventData>>(Utilities.eqNat16, Utilities.hashNat16);
-
-      for (playerEvent in Iter.fromArray(playerEvents)) {
-        switch (playerEventsMap.get(playerEvent.playerId)) {
-          case (null) {};
-          case (?existingEvents) {
-            playerEventsMap.put(playerEvent.playerId, List.push<T.PlayerEventData>(playerEvent, existingEvents));
-          };
-        };
-      };
-
-      for ((playerId, events) in playerEventsMap.entries()) {
-        let redCards = List.filter<T.PlayerEventData>(
-          events,
-          func(event : T.PlayerEventData) : Bool {
-            return event.eventType == #RedCard;
-          },
-        );
-
-        if (List.size<T.PlayerEventData>(redCards) > 1) {
-          return false;
-        };
-
-        let yellowCards = List.filter<T.PlayerEventData>(
-          events,
-          func(event : T.PlayerEventData) : Bool {
-            return event.eventType == #YellowCard;
-          },
-        );
-
-        if (List.size<T.PlayerEventData>(yellowCards) > 2) {
-          return false;
-        };
-
-        if (List.size<T.PlayerEventData>(yellowCards) == 2 and List.size<T.PlayerEventData>(redCards) != 1) {
-          return false;
-        };
-
-        let assists = List.filter<T.PlayerEventData>(
-          events,
-          func(event : T.PlayerEventData) : Bool {
-            return event.eventType == #GoalAssisted;
-          },
-        );
-
-        for (assist in Iter.fromList(assists)) {
-          let goalsAtSameMinute = List.filter<T.PlayerEventData>(
-            events,
-            func(event : T.PlayerEventData) : Bool {
-              return (event.eventType == #Goal or event.eventType == #OwnGoal) and event.eventStartMinute == assist.eventStartMinute;
-            },
-          );
-
-          if (List.size<T.PlayerEventData>(goalsAtSameMinute) == 0) {
-            return false;
-          };
-        };
-
-        let penaltySaves = List.filter<T.PlayerEventData>(
-          events,
-          func(event : T.PlayerEventData) : Bool {
-            return event.eventType == #PenaltySaved;
-          },
-        );
-
-        for (penaltySave in Iter.fromList(penaltySaves)) {
-          let penaltyMissesAtSameMinute = List.filter<T.PlayerEventData>(
-            events,
-            func(event : T.PlayerEventData) : Bool {
-              return event.eventType == #PenaltyMissed and event.eventStartMinute == penaltySave.eventStartMinute;
-            },
-          );
-
-          if (List.size<T.PlayerEventData>(penaltyMissesAtSameMinute) == 0) {
-            return false;
-          };
-        };
-      };
-
-      return true;
-    };
 
     public shared ({ caller }) func getFormerClubs() : async [T.Club] {
       assert callerAllowed(caller);
@@ -970,7 +871,7 @@ import Environment "environment";
       return playerDTOs;
     };
 
-    public func getPlayerDetails(dto: DTOs.GetPlayerDetailsDTO) : async Result.Result<DTOs.PlayerDetailDTO, T.Error> {
+    public shared ( {caller} ) func getPlayerDetails(dto: DTOs.GetPlayerDetailsDTO) : async Result.Result<DTOs.PlayerDetailDTO, T.Error> {
 
       assert callerAllowed(caller);
       var clubId : T.ClubId = 0;
@@ -1063,7 +964,7 @@ import Environment "environment";
       };
     };
 
-    public func getPlayerPosition(playerId : T.PlayerId) : async Result.Result<?T.PlayerPosition, T.Error> {
+    public shared ( {caller} ) func getPlayerPosition(playerId : T.PlayerId) : async Result.Result<?T.PlayerPosition, T.Error> {
 
       assert callerAllowed(caller);
       let foundPlayer = List.find<T.Player>(
@@ -1082,7 +983,7 @@ import Environment "environment";
       };
     };
     
-    public func executeRevaluePlayerUp(revaluePlayerUpDTO : DTOs.RevaluePlayerUpDTO, systemState : T.SystemState) : async () {
+    public shared ( {caller} ) func executeRevaluePlayerUp(revaluePlayerUpDTO : DTOs.RevaluePlayerUpDTO, systemState : T.SystemState) : async () {
       var updatedPlayers = List.map<T.Player, T.Player>(
         players,
         func(p : T.Player) : T.Player {
@@ -1127,7 +1028,7 @@ import Environment "environment";
       players := updatedPlayers;
     };
 
-    public func executeRevaluePlayerDown(revaluePlayerDownDTO : DTOs.RevaluePlayerDownDTO, systemState : T.SystemState) : async Result.Result<(), T.Error> {
+    public shared ( {caller} ) func executeRevaluePlayerDown(revaluePlayerDownDTO : DTOs.RevaluePlayerDownDTO, systemState : T.SystemState) : async Result.Result<(), T.Error> {
       
       assert callerAllowed(caller);
       var updatedPlayers = List.map<T.Player, T.Player>(
@@ -1176,7 +1077,7 @@ import Environment "environment";
       players := updatedPlayers;
     };
 
-    public func executeLoanPlayer(loanPlayerDTO : DTOs.LoanPlayerDTO, systemState : T.SystemState) : async Result.Result<(), T.Error> {
+    public shared ( {caller} ) func executeLoanPlayer(loanPlayerDTO : DTOs.LoanPlayerDTO, systemState : T.SystemState) : async Result.Result<(), T.Error> {
       
       assert callerAllowed(caller);
       let playerToLoan = List.find<T.Player>(players, func(p : T.Player) { p.id == loanPlayerDTO.playerId });
@@ -1236,7 +1137,7 @@ import Environment "environment";
       };
     };
 
-    public func executeTransferPlayer(transferPlayerDTO : DTOs.TransferPlayerDTO, systemState : T.SystemState) : async Result.Result<(), T.Error> {
+    public shared ( {caller} ) func executeTransferPlayer(transferPlayerDTO : DTOs.TransferPlayerDTO, systemState : T.SystemState) : async Result.Result<(), T.Error> {
       let player = List.find<T.Player>(players, func(p : T.Player) { p.id == transferPlayerDTO.playerId });
       switch (player) {
         case (null) {};
@@ -1290,7 +1191,7 @@ import Environment "environment";
       };
     };
 
-    public func validateRecallPlayer(recallPlayerDTO : DTOs.RecallPlayerDTO) : async Result.Result<(), T.Error> {
+    public shared ( {caller} ) func validateRecallPlayer(recallPlayerDTO : DTOs.RecallPlayerDTO) : async Result.Result<(), T.Error> {
       let player = List.find<T.Player>(
         players,
         func(p : T.Player) : Bool {
@@ -1312,7 +1213,7 @@ import Environment "environment";
       return #Ok("Proposal Valid");
     };
 
-    public func executeRecallPlayer(recallPlayerDTO : DTOs.RecallPlayerDTO) : async Result.Result<(), T.Error> {
+    public shared ( {caller} ) func executeRecallPlayer(recallPlayerDTO : DTOs.RecallPlayerDTO) : async Result.Result<(), T.Error> {
       let playerToRecall = List.find<T.Player>(players, func(p : T.Player) { p.id == recallPlayerDTO.playerId });
       switch (playerToRecall) {
         case (null) {};
@@ -1361,7 +1262,7 @@ import Environment "environment";
       };
     };
 
-    public func executeResetPlayerInjury(playerId : T.PlayerId) : async Result.Result<(), T.Error> {
+    public shared ( {caller} ) func executeResetPlayerInjury(playerId : T.PlayerId) : async Result.Result<(), T.Error> {
       let playersToReset = List.find<T.Player>(players, func(p : T.Player) { p.id == playerId });
       switch (playersToReset) {
         case (null) {};
@@ -1410,7 +1311,7 @@ import Environment "environment";
       };
     };
 
-    public func executeCreatePlayer(createPlayerDTO : DTOs.CreatePlayerDTO) : async () {
+    public shared ( {caller} ) func executeCreatePlayer(createPlayerDTO : DTOs.CreatePlayerDTO) : async () {
       let newPlayer : T.Player = {
         id = nextPlayerId + 1;
         clubId = createPlayerDTO.clubId;
@@ -1435,7 +1336,7 @@ import Environment "environment";
       nextPlayerId += 1;
     };
 
-    public func executeUpdatePlayer(updatePlayerDTO : DTOs.UpdatePlayerDTO) : async Result.Result<(), T.Error> {
+    public shared ( {caller} ) func executeUpdatePlayer(updatePlayerDTO : DTOs.UpdatePlayerDTO) : async Result.Result<(), T.Error> {
       players := List.map<T.Player, T.Player>(
         players,
         func(currentPlayer : T.Player) : T.Player {
@@ -1467,7 +1368,7 @@ import Environment "environment";
       );
     };
 
-    public func executeSetPlayerInjury(setPlayerInjuryDTO : DTOs.SetPlayerInjuryDTO) : async () {
+    public shared ( {caller} ) func executeSetPlayerInjury(setPlayerInjuryDTO : DTOs.SetPlayerInjuryDTO) : async () {
       players := List.map<T.Player, T.Player>(
         players,
         func(currentPlayer : T.Player) : T.Player {
@@ -1552,7 +1453,7 @@ import Environment "environment";
       };
     };
 
-    public func executeRetirePlayer(retirePlayerDTO : DTOs.RetirePlayerDTO) : async () {
+    public shared ( {caller} ) func executeRetirePlayer(retirePlayerDTO : DTOs.RetirePlayerDTO) : async () {
       let playerToRetire = List.find<T.Player>(players, func(p : T.Player) { p.id == retirePlayerDTO.playerId });
       switch (playerToRetire) {
         case (null) {};
@@ -1590,7 +1491,7 @@ import Environment "environment";
       };
     };
 
-    public func executeUnretirePlayer(unretirePlayerDTO : DTOs.UnretirePlayerDTO) : async () {
+    public shared ( {caller} ) func executeUnretirePlayer(unretirePlayerDTO : DTOs.UnretirePlayerDTO) : async () {
       let playerToUnretire = List.find<T.Player>(players, func(p : T.Player) { p.id == unretirePlayerDTO.playerId });
       switch (playerToUnretire) {
         case (null) {};
@@ -1631,30 +1532,113 @@ import Environment "environment";
 
 
 
+    private func validatePlayerEvents(playerEvents : [T.PlayerEventData]) : Bool {
+
+      let eventsBelow0 = Array.filter<T.PlayerEventData>(
+        playerEvents,
+        func(event : T.PlayerEventData) : Bool {
+          return event.eventStartMinute < 0;
+        },
+      );
+
+      if (Array.size(eventsBelow0) > 0) {
+        return false;
+      };
+
+      let eventsAbove90 = Array.filter<T.PlayerEventData>(
+        playerEvents,
+        func(event : T.PlayerEventData) : Bool {
+          return event.eventStartMinute > 90;
+        },
+      );
+
+      if (Array.size(eventsAbove90) > 0) {
+        return false;
+      };
+
+      let playerEventsMap : TrieMap.TrieMap<T.PlayerId, List.List<T.PlayerEventData>> = TrieMap.TrieMap<T.PlayerId, List.List<T.PlayerEventData>>(Utilities.eqNat16, Utilities.hashNat16);
+
+      for (playerEvent in Iter.fromArray(playerEvents)) {
+        switch (playerEventsMap.get(playerEvent.playerId)) {
+          case (null) {};
+          case (?existingEvents) {
+            playerEventsMap.put(playerEvent.playerId, List.push<T.PlayerEventData>(playerEvent, existingEvents));
+          };
+        };
+      };
+
+      for ((playerId, events) in playerEventsMap.entries()) {
+        let redCards = List.filter<T.PlayerEventData>(
+          events,
+          func(event : T.PlayerEventData) : Bool {
+            return event.eventType == #RedCard;
+          },
+        );
+
+        if (List.size<T.PlayerEventData>(redCards) > 1) {
+          return false;
+        };
+
+        let yellowCards = List.filter<T.PlayerEventData>(
+          events,
+          func(event : T.PlayerEventData) : Bool {
+            return event.eventType == #YellowCard;
+          },
+        );
+
+        if (List.size<T.PlayerEventData>(yellowCards) > 2) {
+          return false;
+        };
+
+        if (List.size<T.PlayerEventData>(yellowCards) == 2 and List.size<T.PlayerEventData>(redCards) != 1) {
+          return false;
+        };
+
+        let assists = List.filter<T.PlayerEventData>(
+          events,
+          func(event : T.PlayerEventData) : Bool {
+            return event.eventType == #GoalAssisted;
+          },
+        );
+
+        for (assist in Iter.fromList(assists)) {
+          let goalsAtSameMinute = List.filter<T.PlayerEventData>(
+            events,
+            func(event : T.PlayerEventData) : Bool {
+              return (event.eventType == #Goal or event.eventType == #OwnGoal) and event.eventStartMinute == assist.eventStartMinute;
+            },
+          );
+
+          if (List.size<T.PlayerEventData>(goalsAtSameMinute) == 0) {
+            return false;
+          };
+        };
+
+        let penaltySaves = List.filter<T.PlayerEventData>(
+          events,
+          func(event : T.PlayerEventData) : Bool {
+            return event.eventType == #PenaltySaved;
+          },
+        );
+
+        for (penaltySave in Iter.fromList(penaltySaves)) {
+          let penaltyMissesAtSameMinute = List.filter<T.PlayerEventData>(
+            events,
+            func(event : T.PlayerEventData) : Bool {
+              return event.eventType == #PenaltyMissed and event.eventStartMinute == penaltySave.eventStartMinute;
+            },
+          );
+
+          if (List.size<T.PlayerEventData>(penaltyMissesAtSameMinute) == 0) {
+            return false;
+          };
+        };
+      };
+
+      return true;
+    };
 
 
-
-
-
-        //check for admin
-    //revalue player up
-    //revalue player down
-    //submit fixture data
-    //add initial season fixtures
-    //move fixture
-    //postpone fixture
-    //reschedule fixture
-    //loan fixture
-    //transfer player
-    //recall player
-    //create player
-    //update player
-    //set player injury
-    //validate retire player
-    //validate unretire player
-    //vlidatre promote former club
-    //promote new club
-    //validate update club
 
 
 
@@ -1988,8 +1972,6 @@ import Environment "environment";
       };
     };
 
-
-
     public func setFixtureToComplete(seasonId: T.SeasonId, fixtureId: T.FixtureId){
       let seasonBuffer = Buffer.fromArray<T.Season>([]);
 
@@ -2062,7 +2044,7 @@ import Environment "environment";
       return false;
     };
 
-    public func checkMonthComplete(systemState : T.SystemState) : Bool {
+    public shared func checkMonthComplete(systemState : T.SystemState) : async Bool {
 
       let currentSeason = List.find(
         seasons,
@@ -2129,7 +2111,7 @@ import Environment "environment";
       return false;
     };
 
-    public func checkSeasonComplete(systemState : T.SystemState) : Bool {
+    public func checkSeasonComplete(systemState : T.SystemState) : async Bool {
 
       if (systemState.calculationGameweek != 38) {
         return false;
@@ -2205,7 +2187,6 @@ import Environment "environment";
       );
       return List.toArray(playerDTOs);
     };
-
     
     private func calculatePlayerScore(playerPosition : T.PlayerPosition, events : [T.PlayerEventData]) : Int16 {
       let totalScore = Array.foldLeft<T.PlayerEventData, Int16>(
@@ -2218,9 +2199,7 @@ import Environment "environment";
 
       let aggregateScore = Utilities.calculateAggregatePlayerEvents(events, playerPosition);
       return totalScore + aggregateScore;
-    };
-
-    
+    };   
 
     system func preupgrade() {
 
@@ -2229,8 +2208,5 @@ import Environment "environment";
     system func postupgrade() {
     
     };
-
-
-    
 
   };
