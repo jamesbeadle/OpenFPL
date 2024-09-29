@@ -15,6 +15,7 @@ import Cycles "mo:base/ExperimentalCycles";
 import Iter "mo:base/Iter";
 import Buffer "mo:base/Buffer";
 import Array "mo:base/Array";
+import RewardManager "reward-manager";
 
 module {
 
@@ -25,7 +26,10 @@ module {
     private var seasonLeaderboardCanisters : List.List<T.SeasonLeaderboardCanister> = List.nil();
     private var backendCanisterController : ?Principal = null;
     private var storeCanisterId : ?((canisterId : Text) -> async ()) = null;
+    
 
+    private let rewardManager = RewardManager.RewardManager();
+    
     public func setStoreCanisterIdFunction(
       _storeCanisterId : (canisterId : Text) -> async (),
     ) {
@@ -504,6 +508,103 @@ module {
 
     public func setStableWeeklyLeaderboardCanisters(stable_weekly_leaderboard_canisters : [T.WeeklyLeaderboardCanister]) {
       weeklyLeaderboardCanisters := List.fromArray(stable_weekly_leaderboard_canisters);
+    };
+
+
+    public func getStableTeamValueLeaderboards() : [(T.SeasonId, T.TeamValueLeaderboard)] {
+      return rewardManager.getStableTeamValueLeaderboards();
+    };
+
+    public func setStableTeamValueLeaderboards(stable_team_value_leaderboards : [(T.SeasonId, T.TeamValueLeaderboard)]) {
+      return rewardManager.setStableTeamValueLeaderboards(stable_team_value_leaderboards);
+    };
+
+    public func getStableSeasonRewards() : [T.SeasonRewards] {
+      return rewardManager.getStableSeasonRewards();
+    };
+
+    public func setStableSeasonRewards(stable_season_rewards : [T.SeasonRewards]) {
+      return rewardManager.setStableSeasonRewards(stable_season_rewards);
+    };
+
+    public func getStableMonthlyRewards() : [T.MonthlyRewards] {
+      return rewardManager.getStableMonthlyRewards();
+    };
+
+    public func setStableMonthlyRewards(stable_monthly_rewards : [T.MonthlyRewards]) {
+      return rewardManager.setStableMonthlyRewards(stable_monthly_rewards);
+    };
+
+    public func getStableWeeklyRewards() : [T.WeeklyRewards] {
+      return rewardManager.getStableWeeklyRewards();
+    };
+
+    public func setStableWeeklyRewards(stable_weekly_rewards : [T.WeeklyRewards]) {
+      return rewardManager.setStableWeeklyRewards(stable_weekly_rewards);
+    };
+
+    public func getStableMostValuableTeamRewards() : [T.RewardsList] {
+      return rewardManager.getStableMostValuableTeamRewards();
+    };
+
+    public func setStableMostValuableTeamRewards(stable_most_valuable_team_rewards : [T.RewardsList]) {
+      return rewardManager.setStableMostValuableTeamRewards(stable_most_valuable_team_rewards);
+    };
+
+    public func getStableHighestScoringPlayerRewards() : [T.RewardsList] {
+      return rewardManager.getStableHighestScoringPlayerRewards();
+    };
+
+    public func setStableHighestScoringPlayerRewards(stable_highest_scoring_player_rewards : [T.RewardsList]) {
+      return rewardManager.setStableHighestScoringPlayerRewards(stable_highest_scoring_player_rewards);
+    };
+
+    public func getStableWeeklyATHScores() : [T.HighScoreRecord] {
+      return rewardManager.getStableWeeklyATHScores();
+    };
+
+    public func setStableWeeklyATHScores(stable_weekly_ath_scores : [T.HighScoreRecord]) {
+      return rewardManager.setStableWeeklyATHScores(stable_weekly_ath_scores);
+    };
+
+    public func getStableMonthlyATHScores() : [T.HighScoreRecord] {
+      return rewardManager.getStableMonthlyATHScores();
+    };
+
+    public func setStableMonthlyATHScores(stable_monthly_ath_scores : [T.HighScoreRecord]) {
+      return rewardManager.setStableMonthlyATHScores(stable_monthly_ath_scores);
+    };
+
+    public func getStableSeasonATHScores() : [T.HighScoreRecord] {
+      return rewardManager.getStableSeasonATHScores();
+    };
+
+    public func setStableSeasonATHScores(stable_season_ath_scores : [T.HighScoreRecord]) {
+      return rewardManager.setStableSeasonATHScores(stable_season_ath_scores);
+    };
+
+    public func getStableWeeklyATHPrizePool() : Nat64 {
+      return rewardManager.getStableWeeklyATHPrizePool();
+    };
+
+    public func setStableWeeklyATHPrizePool(stable_weekly_ath_prize_pool : Nat64) {
+      return rewardManager.setStableWeeklyATHPrizePool(stable_weekly_ath_prize_pool);
+    };
+
+    public func getStableMonthlyATHPrizePool() : Nat64 {
+      return rewardManager.getStableMonthlyATHPrizePool();
+    };
+
+    public func setStableMonthlyATHPrizePool(stable_monthly_ath_prize_pool : Nat64) {
+      return rewardManager.setStableMonthlyATHPrizePool(stable_monthly_ath_prize_pool);
+    };
+
+    public func getStableSeasonATHPrizePool() : Nat64 {
+      return rewardManager.getStableSeasonATHPrizePool();
+    };
+
+    public func setStableSeasonATHPrizePool(stable_season_ath_prize_pool : Nat64) {
+      return rewardManager.setStableSeasonATHPrizePool(stable_season_ath_prize_pool);
     };
 
     

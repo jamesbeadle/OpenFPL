@@ -1000,11 +1000,56 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
     //stable variables
     private stable var timers : [T.TimerInfo] = [];
 
-    system func preupgrade() {
+    private stable var teamValueLeaderboards : [(T.SeasonId, T.TeamValueLeaderboard)] = [];
 
+    private stable var seasonRewards : [T.SeasonRewards] = [];
+    private stable var monthlyRewards : [T.MonthlyRewards] = [];
+    private stable var weeklyRewards : [T.WeeklyRewards] = [];
+    private stable var mostValuableTeamRewards : [T.RewardsList] = [];
+    private stable var highScoringPlayerRewards : [T.RewardsList] = [];
+
+    private stable var weeklyAllTimeHighScores : [T.HighScoreRecord] = [];
+    private stable var monthlyAllTimeHighScores : [T.HighScoreRecord] = [];
+    private stable var seasonAllTimeHighScores : [T.HighScoreRecord] = [];
+
+    private stable var weeklyATHPrizePool : Nat64 = 0;
+    private stable var monthlyATHPrizePool : Nat64 = 0;
+    private stable var seasonATHPrizePool : Nat64 = 0;
+
+
+
+    system func preupgrade() {
+      teamValueLeaderboards := leaderboardManager.getStableTeamValueLeaderboards();
+      seasonRewards := leaderboardManager.getStableSeasonRewards();
+      monthlyRewards := leaderboardManager.getStableMonthlyRewards();
+      weeklyRewards := leaderboardManager.getStableWeeklyRewards();
+      mostValuableTeamRewards := leaderboardManager.getStableMostValuableTeamRewards();
+      highScoringPlayerRewards := leaderboardManager.getStableHighestScoringPlayerRewards();
+
+      weeklyAllTimeHighScores := leaderboardManager.getStableWeeklyATHScores();
+      monthlyAllTimeHighScores := leaderboardManager.getStableMonthlyATHScores();
+      seasonAllTimeHighScores := leaderboardManager.getStableSeasonATHScores();
+
+      weeklyATHPrizePool := leaderboardManager.getStableWeeklyATHPrizePool();
+      monthlyATHPrizePool := leaderboardManager.getStableMonthlyATHPrizePool();
+      seasonATHPrizePool := leaderboardManager.getStableSeasonATHPrizePool();
     };
 
     system func postupgrade() {
+       leaderboardManager.setStableTeamValueLeaderboards(teamValueLeaderboards);
+       leaderboardManager.setStableSeasonRewards(seasonRewards);
+       leaderboardManager.setStableMonthlyRewards(monthlyRewards);
+       leaderboardManager.setStableWeeklyRewards(weeklyRewards);
+       leaderboardManager.setStableMostValuableTeamRewards(mostValuableTeamRewards);
+       leaderboardManager.setStableHighestScoringPlayerRewards(highScoringPlayerRewards);
+
+       leaderboardManager.setStableWeeklyATHScores(weeklyAllTimeHighScores);
+       leaderboardManager.setStableMonthlyATHScores(monthlyAllTimeHighScores);
+       leaderboardManager.setStableSeasonATHScores(seasonAllTimeHighScores);
+
+       leaderboardManager.setStableWeeklyATHPrizePool(weeklyATHPrizePool);
+       leaderboardManager.setStableMonthlyATHPrizePool(monthlyATHPrizePool);
+       leaderboardManager.setStableSeasonATHPrizePool(seasonATHPrizePool);
 
     };
 

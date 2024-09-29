@@ -27,7 +27,7 @@ import NetworkEnvironmentVariables "../network_environment_variables";
 
 module {
 
-  public class Rewards() {
+  public class RewardManager() {
 
     private var teamValueLeaderboards : TrieMap.TrieMap<T.SeasonId, T.TeamValueLeaderboard> = TrieMap.TrieMap<T.SeasonId, T.TeamValueLeaderboard>(Utilities.eqNat16, Utilities.hashNat16);
 
@@ -730,11 +730,11 @@ module {
       monthlyATHPrizePool := stable_monthly_ath_prize_pool;
     };
 
-    public func getSeasonATHPrizePool() : Nat64 {
+    public func getStableSeasonATHPrizePool() : Nat64 {
       return seasonATHPrizePool;
     };
 
-    public func setSeasonATHPrizePool(stable_season_ath_prize_pool : Nat64) {
+    public func setStableSeasonATHPrizePool(stable_season_ath_prize_pool : Nat64) {
       seasonATHPrizePool := stable_season_ath_prize_pool;
     };
   };
