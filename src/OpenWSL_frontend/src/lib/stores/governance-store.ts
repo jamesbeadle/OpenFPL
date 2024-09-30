@@ -17,7 +17,6 @@ import type {
   PlayerEventData,
   PlayerPosition,
   PostponeFixtureDTO,
-  PromoteFormerClubDTO,
   PromoteNewClubDTO,
   RecallPlayerDTO,
   RetirePlayerDTO,
@@ -898,47 +897,6 @@ function createGovernanceStore() {
     }
   }
 
-  async function promoteFormerClub(clubId: number): Promise<any> {
-    try {
-      await teamStore.sync();
-
-      let clubs: ClubDTO[] = [];
-      const unsubscribeTeamStore = teamStore.subscribe((teams) => {
-        if (teams) {
-          clubs = teams;
-        }
-      });
-      unsubscribeTeamStore();
-
-      let seasonId = 0;
-
-      const unsubscribeSystemStore = systemStore.subscribe((systemState) => {
-        if (systemState) {
-          seasonId = systemState?.calculationSeasonId;
-        }
-      });
-      unsubscribeSystemStore();
-
-      let dto: PromoteFormerClubDTO = {
-        clubId,
-      };
-
-      let club = clubs.find((x) => x.id == clubId);
-      if (!club) {
-        return;
-      }
-
-      let title = `Promote ${club.friendlyName} back to the Premier League.`;
-      let summary = `Promote ${club.name} from the Championship back into the Premier League.`;
-      await executeProposal(dto, title, summary, 16000n, [
-        IDL.Record({ clubId: IDL.Nat16 }),
-      ]);
-    } catch (error) {
-      console.error("Error promoting former club:", error);
-      throw error;
-    }
-  }
-
   async function promoteNewClub(
     name: string,
     friendlyName: string,
@@ -1134,7 +1092,6 @@ function createGovernanceStore() {
     setPlayerInjury,
     retirePlayer,
     unretirePlayer,
-    promoteFormerClub,
     promoteNewClub,
     updateClub,
   };

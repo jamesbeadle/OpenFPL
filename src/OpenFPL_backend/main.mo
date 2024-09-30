@@ -53,6 +53,13 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
       }));
     };
 
+    private func isManagerCanister(principalId: Text) : Bool {
+      let managerCanisterIds = userManager.getUniqueManagerCanisterIds();
+      return Option.isSome(Array.find<T.PrincipalId>(managerCanisterIds, func(dataAdmin: T.PrincipalId){
+        dataAdmin == principalId;
+      }));
+    }; 
+
     //Manager calls
 
     public shared ({ caller }) func getProfile() : async Result.Result<DTOs.ProfileDTO, T.Error> {
@@ -107,7 +114,7 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
     };
 
     public shared func getFixtures(dto: RequestDtOs.RequestFixturesDTO) : async Result.Result<[DTOs.FixtureDTO], T.Error> {
-      return await dataManager.getFixtures(Environment.LEAGUE_ID, dto);
+      return await dataManager.getFixtures(dto);
     };
 
     public shared func getSeasons() : async Result.Result<[DTOs.SeasonDTO], T.Error> {
@@ -124,6 +131,11 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
 
     public shared func getPlayers() : async Result.Result<[DTOs.PlayerDTO], T.Error> {
       return await dataManager.getPlayers(Environment.LEAGUE_ID);
+    };
+
+    public shared ( {caller} ) func getAllSeasonPlayers(seasonId: T.SeasonId) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
+      assert isManagerCanister(Principal.toText(caller));
+      return await dataManager.getAllSeasonPlayers({seasonId = seasonId; leagueId = Environment.LEAGUE_ID});
     };
 
     public shared func getLoanedPlayers(dto: DTOs.ClubFilterDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
@@ -297,6 +309,7 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
         case (#ok success){
           let _ = await dataManager.executeSubmitFixtureData(Environment.LEAGUE_ID, submitFixtureData);
 
+          //TODO: When calculating score get players built friom all players who appeared in the gameweek
           await userManager.calculateFantasyTeamScores(submitFixtureData.seasonId, submitFixtureData.gameweek, submitFixtureData.month);
           await leaderboardManager.calculateLeaderboards(submitFixtureData.seasonId, submitFixtureData.gameweek, submitFixtureData.month, userManager.getUniqueManagerCanisterIds());
           
@@ -367,7 +380,7 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
       switch(await dataManager.validateAddInitialFixtures(Environment.LEAGUE_ID, addInitialFixturesDTO)){
         case (#ok _){
           let _ = await dataManager.executeAddInitialFixtures(Environment.LEAGUE_ID, addInitialFixturesDTO);
-          let seasonFixtures = await dataManager.getFixtures(Environment.LEAGUE_ID, { seasonId = addInitialFixturesDTO.seasonId });
+          let seasonFixtures = await dataManager.getFixtures({ leagueId = Environment.LEAGUE_ID; seasonId = addInitialFixturesDTO.seasonId });
           switch(seasonFixtures){
             case (#ok fixtures){
 
@@ -576,23 +589,6 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
       switch(await dataManager.validateUnretirePlayer(Environment.LEAGUE_ID, unretirePlayerDTO)){
         case (#ok success){
           let _ = await dataManager.executeUnretirePlayer(Environment.LEAGUE_ID, unretirePlayerDTO);
-        };
-        case _ {}
-      };
-    };
-
-    public shared query ({ caller }) func validatePromoteFormerClub(promoteFormerClubDTO : DTOs.PromoteFormerClubDTO) : async T.RustResult {
-      assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
-      return #Err("Governance on hold due to network issues");
-      //return seasonManager.validatePromoteFormerClub(promoteFormerClubDTO);
-    };
-
-    public shared ({ caller }) func executePromoteFormerClub(promoteFormerClubDTO : DTOs.PromoteFormerClubDTO) : async () {
-      assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
-      assert isDataAdmin(Principal.toText(caller));
-      switch(await dataManager.validatePromoteFormerClub(Environment.LEAGUE_ID, promoteFormerClubDTO)){
-        case (#ok success){
-          let _ = await dataManager.executePromoteFormerClub(Environment.LEAGUE_ID, promoteFormerClubDTO);
         };
         case _ {}
       };
@@ -1194,14 +1190,11 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
           await seasonManager.updateDataHash("system_state");
         };
         case (#err _){}
-      };
-      
+      };      
     };
 
-
-
     public func setGameweekTimers(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async () {
-      let fixturesResult = await dataManager.getFixtures(Environment.LEAGUE_ID, {seasonId = seasonId});
+      let fixturesResult = await dataManager.getFixtures({leagueId = Environment.LEAGUE_ID; seasonId = seasonId});
       switch(fixturesResult){
         case (#ok fixtures){
           let filteredFilters = Array.filter<DTOs.FixtureDTO>(

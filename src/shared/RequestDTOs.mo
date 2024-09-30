@@ -3,6 +3,7 @@ module RequestDTOs {
 
 
   public type RequestFixturesDTO = {
+    leagueId: T.FootballLeagueId;
     seasonId: T.SeasonId;
   };
 
@@ -16,6 +17,11 @@ module RequestDTOs {
 
   public type RequestProfileDTO = {
     principalId : Text;
+  };
+
+  public type RequestPlayersDTO = {
+    seasonId: T.SeasonId;
+    leagueId: T.FootballLeagueId;
   };
 
 

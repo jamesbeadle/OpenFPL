@@ -42,6 +42,8 @@ actor class _ManagerCanister(controllerPrincipalId: T.PrincipalId, fixturesPerCl
   private stable var activeGroupIndex : Nat8 = 0;
   private stable var totalManagers = 0;
 
+  private stable var playersSnapshots: [(T.SeasonId, [(T.GameweekNumber, [T.Player])])] = [];
+
   public shared ({ caller }) func updateTeamSelection(teamUpdateDTO : DTOs.TeamUpdateDTO, transfersAvailable : Nat8, monthlyBonuses : Nat8, newBankBalance : Nat16) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
@@ -1844,15 +1846,7 @@ actor class _ManagerCanister(controllerPrincipalId: T.PrincipalId, fixturesPerCl
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == controllerPrincipalId;
 
-
-    let openfpl_backend_canister = actor (controllerPrincipalId) : actor {
-        getPlayerPointsMap : (seasonId: T.SeasonId, gameweek: T.GameweekNumber) -> async [(T.PlayerId, DTOs.PlayerScoreDTO)];
-        getAllPlayers : () -> async [DTOs.PlayerDTO];
-      };
-      
-    let allPlayersList = await openfpl_backend_canister.getPlayerPointsMap(seasonId, gameweek);
-                  
-    let allPlayers : [DTOs.PlayerDTO] = await openfpl_backend_canister.getAllPlayers();
+    let allPlayersList = getPlayers(seasonId, gameweek);
 
     let playerIdTrie : TrieMap.TrieMap<T.PlayerId, DTOs.PlayerScoreDTO> = TrieMap.TrieMap<T.PlayerId, DTOs.PlayerScoreDTO>(Utilities.eqNat16, Utilities.hashNat16);
     for (player in Iter.fromArray(allPlayersList)) {
@@ -2038,18 +2032,15 @@ actor class _ManagerCanister(controllerPrincipalId: T.PrincipalId, fixturesPerCl
 
 
     for (index in Iter.range(0, 11)) {
+      await snapshotPlayers();
       await snapshotManagers(index, seasonId, gameweek, month); 
     };
   };
 
   private func snapshotManagers(managerGroup: Int, seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) : async () {
     
-    let openfpl_backend_canister = actor (controllerPrincipalId) : actor {
-      getAllPlayers : () -> async [DTOs.PlayerDTO];
-    };
-      
-    let players : [DTOs.PlayerDTO] = await openfpl_backend_canister.getAllPlayers();
-   
+    
+
     let managerBuffer = Buffer.fromArray<T.Manager>([]);
 
 
@@ -2357,6 +2348,59 @@ actor class _ManagerCanister(controllerPrincipalId: T.PrincipalId, fixturesPerCl
     };
   };
 
+  private func snapshotPlayers() : async (){
+
+    let openfpl_backend_canister = actor (controllerPrincipalId) : actor {
+      getPlayers : () -> async [DTOs.PlayerDTO];
+    };
+      
+    let players : [DTOs.PlayerDTO] = await openfpl_backend_canister.getPlayers();
+
+    let updatedSeasonsBuffer = Buffer.fromArray<(T.Season, [(T.GameweekNumber, [T.Player])])>([]);
+   
+    let playersSeason = Array.find<(T.SeasonId, [(T.GameweekNumber, [T.Player])])>(playersSnapshots, func(playersSeasonSnapshot: (T.SeasonId, [(T.GameweekNumber, [T.Player])])){
+      playersSeasonSnapshot.0 == seasonId;
+    });
+
+    switch(playersSeason){
+      case (?foundSeason){
+        
+        let foundGameweek = Array.find<(T.GameweekNumber, [T.Player])>(foundSeason.1, func(currentGameweek: (T.GameweekNumber, [T.Player])){
+          currentGameweek.0 == gameweek;
+        });
+
+        switch(foundGameweek){
+          case (?existingGameweek){
+
+          };
+          case (null){
+            //add 
+          };
+        };
+        
+      };
+      case (null){
+        //create new one because one doesn't exist
+      };
+    };
+
+
+      //TODO
+        //Ensure we only snapshot the first time 
+//TODO need to link to openfpl backend then data canister
+    let openfpl_backend_canister = actor (controllerPrincipalId) : actor {
+        getPlayerPointsMap : (seasonId: T.SeasonId, gameweek: T.GameweekNumber) -> async [(T.PlayerId, DTOs.PlayerScoreDTO)];
+        getAllSeasonPlayers : () -> async [DTOs.PlayerDTO];
+      };
+      
+    //TODO: USE 
+    //let allPlayersList = await openfpl_backend_canister.getPlayerPointsMap(seasonId, gameweek);
+                  
+    let allPlayers : [DTOs.PlayerDTO] = await openfpl_backend_canister.getAllSeasonPlayers();
+
+    
+  };
+
   private func resetManagerBonuses(managers : [T.Manager]) : [T.Manager] {
     let managerBuffer = Buffer.fromArray<T.Manager>([]);
     for (manager in Iter.fromArray(managers)) {
@@ -2621,10 +2665,10 @@ actor class _ManagerCanister(controllerPrincipalId: T.PrincipalId, fixturesPerCl
 
 
     let openfpl_backend_canister = actor (controllerPrincipalId) : actor {
-        getAllPlayers : () -> async [DTOs.PlayerDTO];
+        getAllSeasonPlayers : () -> async [DTOs.PlayerDTO];
       };
       
-    let players : [DTOs.PlayerDTO] = await openfpl_backend_canister.getAllPlayers();
+    let players : [DTOs.PlayerDTO] = await openfpl_backend_canister.getAllSeasonPlayers();
 
     let allFinalGameweekSnapshots = await getFinalGameweekSnapshots(seasonId);
 

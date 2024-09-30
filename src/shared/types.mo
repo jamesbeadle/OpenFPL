@@ -309,13 +309,14 @@ module _Types {
   public type PlayerStatus = {
     #Active;
     #Retired;
-    #Former;
     #OnLoan;
+    #FreeAgent;
   };
 
   public type PlayerSeason = {
     id : SeasonId;
     gameweeks : List.List<PlayerGameweek>;
+    totalPoints : Int16;
   };
 
   public type PlayerGameweek = {

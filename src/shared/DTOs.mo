@@ -105,15 +105,18 @@ module DTOs {
   };
 
   public type ClubFilterDTO = {
+    leagueId: T.FootballLeagueId;
     clubId: T.ClubId;
   };
 
   public type GameweekFiltersDTO = {
+    leagueId: T.FootballLeagueId;
     seasonId : T.SeasonId;
     gameweek : T.GameweekNumber;
   };
 
   public type GetPlayerDetailsDTO = {
+    leagueId: T.FootballLeagueId;
     playerId : T.PlayerId;
     seasonId : T.SeasonId;
   };
@@ -135,10 +138,12 @@ module DTOs {
     };
 
   public type RevaluePlayerUpDTO = {
+    leagueId: T.FootballLeagueId;
     playerId : T.PlayerId;
   };
 
   public type RevaluePlayerDownDTO = {
+    leagueId: T.FootballLeagueId;
     playerId : T.PlayerId;
   };
 
@@ -148,6 +153,7 @@ module DTOs {
     month: T.CalendarMonth;
     fixtureId : T.FixtureId;
     playerEventData : [T.PlayerEventData];
+    leagueId: T.FootballLeagueId;
   };
 
   public type AddInitialFixturesDTO = {
@@ -172,17 +178,20 @@ module DTOs {
   };
 
   public type LoanPlayerDTO = {
+    leagueId: T.FootballLeagueId;
     playerId : T.PlayerId;
     loanClubId : T.ClubId;
     loanEndDate : Int;
   };
 
   public type TransferPlayerDTO = {
+    leagueId: T.FootballLeagueId;
     playerId : T.PlayerId;
     newClubId : T.ClubId;
   };
 
   public type RecallPlayerDTO = {
+    leagueId: T.FootballLeagueId;
     playerId : T.PlayerId;
   };
 
@@ -198,6 +207,7 @@ module DTOs {
   };
 
   public type UpdatePlayerDTO = {
+    leagueId: T.FootballLeagueId;
     playerId : T.PlayerId;
     position : T.PlayerPosition;
     firstName : Text;
@@ -208,17 +218,20 @@ module DTOs {
   };
 
   public type SetPlayerInjuryDTO = {
+    leagueId: T.FootballLeagueId;
     playerId : T.PlayerId;
     description : Text;
     expectedEndDate : Int;
   };
 
   public type RetirePlayerDTO = {
+    leagueId: T.FootballLeagueId;
     playerId : T.PlayerId;
     retirementDate : Int;
   };
 
   public type UnretirePlayerDTO = {
+    leagueId: T.FootballLeagueId;
     playerId : T.PlayerId;
   };
 
@@ -231,10 +244,6 @@ module DTOs {
     thirdColourHex : Text;
     abbreviatedName : Text;
     shirtType : T.ShirtType;
-  };
-
-  public type PromoteFormerClubDTO = {
-    clubId : T.ClubId;
   };
 
   public type PromoteNewClubDTO = {

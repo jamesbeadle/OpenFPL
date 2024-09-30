@@ -15,7 +15,6 @@
   import SetPlayerInjury from "$lib/components/governance/player/set-player-injury.svelte";
   import RetirePlayer from "$lib/components/governance/player/retire-player.svelte";
   import UnretirePlayer from "$lib/components/governance/player/unretire-player.svelte";
-  import PromoteFormerClub from "$lib/components/governance/club/promote-former-club.svelte";
   import PromoteNewClub from "$lib/components/governance/club/promote-new-club.svelte";
   import UpdateClub from "$lib/components/governance/club/update-club.svelte";
   import AddFixtureData from "$lib/components/governance/fixture/add-fixture-data.svelte";
@@ -39,7 +38,6 @@
   let showSetPlayerInjuryModal: boolean = false;
   let showRetirePlayerModal: boolean = false;
   let showUnretirePlayerModal: boolean = false;
-  let showPromoteFormerClubModal: boolean = false;
   let showPromoteNewClubModal: boolean = false;
   let showUpdateClubModal: boolean = false;
   let showAddFixtureDataModal: boolean = false;
@@ -156,14 +154,6 @@
     showUnretirePlayerModal = false;
   }
 
-  function displayPromoteFormerClubModal(): void {
-    showPromoteFormerClubModal = true;
-  }
-
-  function hidePromoteFormerClubModal(): void {
-    showPromoteFormerClubModal = false;
-  }
-
   function displayPromoteNewClubModal(): void {
     showPromoteNewClubModal = true;
   }
@@ -242,10 +232,6 @@
   <UnretirePlayer
     visible={showUnretirePlayerModal}
     closeModal={hideUnretirePlayerModal}
-  />
-  <PromoteFormerClub
-    visible={showPromoteFormerClubModal}
-    closeModal={hidePromoteFormerClubModal}
   />
   <PromoteNewClub
     visible={showPromoteNewClubModal}
@@ -429,17 +415,6 @@
 
       <p class="m-4">Club proposals</p>
       <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4 mx-4 mb-4">
-        <div
-          class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"
-        >
-          <div class="flex items-center space-x-4 w-full">
-            <button
-              class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1 w-full"
-              on:click={displayPromoteFormerClubModal}
-              >Promote Former Club</button
-            >
-          </div>
-        </div>
         <div
           class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"
         >
