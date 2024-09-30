@@ -37,10 +37,10 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
 
   actor Self {
     
-    private let userManager = UserManager.UserManager(Environment.BACKEND_CANISTER_ID);
+    private let userManager = UserManager.UserManager(Environment.BACKEND_CANISTER_ID, Environment.NUM_OF_TEAMS);
     private let dataManager = DataManager.DataManager();
     private let seasonManager = SeasonManager.SeasonManager();
-    private let leaderboardManager = LeaderboardManager.LeaderboardManager(Environment.BACKEND_CANISTER_ID);
+    private let leaderboardManager = LeaderboardManager.LeaderboardManager(Environment.BACKEND_CANISTER_ID, Environment.NUM_OF_GAMEWEEKS, Environment.NUM_OF_MONTHS);
     private let cyclesDispenser = CyclesDispenser.CyclesDispenser();
     private let ledger : FPLLedger.Interface = actor (FPLLedger.CANISTER_ID);
 
@@ -297,31 +297,34 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
         case (#ok success){
           let _ = await dataManager.executeSubmitFixtureData(Environment.LEAGUE_ID, submitFixtureData);
 
-          await userManager.calculateFantasyTeamScores(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
-          await leaderboardManager.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth, managerComposite.getStableUniqueManagerCanisterIds());
+          await userManager.calculateFantasyTeamScores(submitFixtureData.seasonId, submitFixtureData.gameweek, submitFixtureData.month);
+          await leaderboardManager.calculateLeaderboards(submitFixtureData.seasonId, submitFixtureData.gameweek, submitFixtureData.month, userManager.getUniqueManagerCanisterIds());
           
-          if(await dataManager.checkGameweekComplete(systemState)){
+          if(await dataManager.checkGameweekComplete(submitFixtureData.seasonId, submitFixtureData.gameweek)){
             await userManager.resetWeeklyTransfers();
-            await leaderboardManager.payWeeklyRewards(foundRewardPool);
+            await leaderboardManager.payWeeklyRewards();
             await seasonManager.incrementCalculationGameweek();
           };
 
-          if(await dataManager.checkMonthComplete(systemState)){
+          if(await dataManager.checkMonthComplete(submitFixtureData.seasonId, submitFixtureData.month, submitFixtureData.gameweek)){
             await userManager.resetBonusesAvailable();
-            await leaderboardManager.payMonthlyRewards(foundRewardPool);
+            await leaderboardManager.payMonthlyRewards();
             await seasonManager.incrementCalculationMonth();
           };
 
-          if(await dataManager.checkSeasonComplete(systemState)){
-            await managerComposite.resetFantasyTeams(seasonComposite.getStableNextSeasonId());
-            await leaderboardManager.paySeasonRewards(foundRewardPool);
+          if(await dataManager.checkSeasonComplete(submitFixtureData.seasonId)){
+            await userManager.resetFantasyTeams();
+            await leaderboardManager.paySeasonRewards();
             await seasonManager.incrementCalculationSeason();
             
+            /* Todo
             seasonManager.createNewSeason(systemState);
               
             let currentSeasonId = seasonComposite.getStableNextSeasonId();
             await calculateRewardPool(currentSeasonId); //TODO SPLIT NEW VALUES
-            
+            */
+
+
             await setTransferWindowTimers();
           };
 
@@ -339,6 +342,19 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
       };
     };
 
+
+
+    private func setTransferWindowTimers() : async () {
+      let jan1Date = Utilities.nextUnixTimeForDayOfYear(1);
+      let jan31Date = Utilities.nextUnixTimeForDayOfYear(31);
+
+      let transferWindowStartDate : Timer.Duration = #nanoseconds(Int.abs(jan1Date - Time.now()));
+      let transferWindowEndDate : Timer.Duration = #nanoseconds(Int.abs(jan31Date - Time.now()));
+
+      await setAndBackupTimer(transferWindowStartDate, "transferWindowStart");
+      await setAndBackupTimer(transferWindowEndDate, "transferWindowEnd");
+    };
+
     public shared query ({ caller }) func validateAddInitialFixtures(addInitialFixturesDTO : DTOs.AddInitialFixturesDTO) : async T.RustResult {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID; 
       return #Err("Governance on hold due to network issues");   
@@ -349,11 +365,30 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
       assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       assert isDataAdmin(Principal.toText(caller));
       switch(await dataManager.validateAddInitialFixtures(Environment.LEAGUE_ID, addInitialFixturesDTO)){
-        case (#ok success){
+        case (#ok _){
           let _ = await dataManager.executeAddInitialFixtures(Environment.LEAGUE_ID, addInitialFixturesDTO);
           let seasonFixtures = await dataManager.getFixtures(Environment.LEAGUE_ID, { seasonId = addInitialFixturesDTO.seasonId });
-          seasonManager.updateInitialSystemState();
-          return #ok();
+          switch(seasonFixtures){
+            case (#ok fixtures){
+
+              let sortedFixtures = Array.sort<DTOs.FixtureDTO>(
+                fixtures,
+                func(a : DTOs.FixtureDTO, b : DTOs.FixtureDTO) : Order.Order {
+                  if (a.kickOff < b.kickOff) { return #less };
+                  if (a.kickOff == b.kickOff) { return #equal };
+                  return #greater;
+                },
+              );
+              if(Array.size(sortedFixtures) <= 0){
+                return;
+              };
+              await seasonManager.updateInitialSystemState(sortedFixtures[0]);
+            };
+            case (#err _){
+
+            }
+          };
+
         };
         case _ {}
       };
@@ -1008,7 +1043,7 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
 
     public shared ({ caller }) func getRewardPool(dto: DTOs.GetRewardPoolDTO) : async Result.Result<DTOs.GetRewardPoolDTO, T.Error> {
       assert not Principal.isAnonymous(caller);
-      let rewardPool = seasonManager.getRewardPool(dto.seasonId);
+      let rewardPool = leaderboardManager.getRewardPool(dto.seasonId);
       switch(rewardPool){
         case (null){
           return #err(#NotFound);
@@ -1308,7 +1343,7 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
       for(canisterId in Iter.fromArray(managerCanisterIds)){
         await IC.stop_canister({ canister_id = Principal.fromText(canisterId); });
         let oldManagement = actor (canisterId) : actor {};
-        let _ = await (system ManagerCanister._ManagerCanister)(#upgrade oldManagement)(Environment.BACKEND_CANISTER_ID);
+        let _ = await (system ManagerCanister._ManagerCanister)(#upgrade oldManagement)(Environment.BACKEND_CANISTER_ID, Environment.NUM_OF_GAMEWEEKS);
         await IC.start_canister({ canister_id = Principal.fromText(canisterId); });
       };
     };

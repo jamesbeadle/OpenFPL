@@ -19,7 +19,7 @@ import RewardManager "reward-manager";
 
 module {
 
-  public class LeaderboardManager(controllerPrincipalId: Text) {
+  public class LeaderboardManager(controllerPrincipalId: Text, seasonGameweekCount: Nat8, seasonMonthCount: Nat8) {
    
     private var weeklyLeaderboardCanisters : List.List<T.WeeklyLeaderboardCanister> = List.nil();
     private var monthlyLeaderboardsCanisters : List.List<T.MonthlyLeaderboardsCanister> = List.nil();
@@ -28,7 +28,7 @@ module {
     private var storeCanisterId : ?((canisterId : Text) -> async ()) = null;
     
 
-    private let rewardManager = RewardManager.RewardManager();
+    private let rewardManager = RewardManager.RewardManager(seasonGameweekCount, seasonMonthCount);
     
     public func setStoreCanisterIdFunction(
       _storeCanisterId : (canisterId : Text) -> async (),
@@ -489,6 +489,37 @@ module {
         return rewardManager.getRewardPool(seasonId);
     };
 
+    public func payWeeklyRewards() : async () {
+      /* Removed inputs but what should be passed
+      weeklyLeaderboard : DTOs.WeeklyLeaderboardDTO, filters: DTOs.GameweekFiltersDTO, fixtures : List.List<DTOs.FixtureDTO>, uniqueManagerCanisterIds: List.List<T.CanisterId>
+      */
+      /* //TODO
+      await rewardManager.distributeWeeklyRewards(weeklyLeaderboard);
+      await rewardManager.distributeHighestScoringPlayerRewards(filters.seasonId, filters.gameweek, fixtures, uniqueManagerCanisterIds);
+      await rewardManager.distributeWeeklyATHScoreRewards(weeklyLeaderboard);
+      */
+    };
+
+    public func payMonthlyRewards() : async () {
+      /* Removed inputs but what should be passed
+        seasonId: T.SeasonId, monthlyLeaderboards : [DTOs.MonthlyLeaderboardDTO], uniqueManagerCanisterIds: List.List<T.CanisterId>
+      */
+      /*
+        await rewardManager.distributeMonthlyRewards(seasonId, monthlyLeaderboards, uniqueManagerCanisterIds);
+        await rewardManager.distributeMonthlyATHScoreRewards(seasonId, monthlyLeaderboards);
+      */
+    };
+
+    public func paySeasonRewards() : async () {
+      /* Removed inputs but what should be passed
+      seasonLeaderboard : DTOs.SeasonLeaderboardDTO, players : [DTOs.PlayerDTO], seasonId : T.SeasonId, uniqueManagerCanisterIds: List.List<T.CanisterId>
+      */
+      /*
+      await rewardManager.distributeSeasonRewards(seasonLeaderboard);
+      await rewardManager.distributeSeasonATHScoreRewards(seasonLeaderboard);
+      await rewardManager.distributeMostValuableTeamRewards(players, seasonId, uniqueManagerCanisterIds);
+      */
+    };
 
     //TODO: Ensure used
 

@@ -13,7 +13,7 @@ import T "../../shared/types";
 import Utilities "../../shared/utils/utilities";
 
 actor class _MonthlyLeaderboardsCanister(controllerPrincipalId: T.PrincipalId) {
-  private stable var leaderboards : [T.ClubLeaderboard] = [];
+  private stable var leaderboards : [T.MonthlyLeaderboard] = [];
   private stable var seasonId : ?T.SeasonId = null;
   private stable var leagueId: ?T.FootballLeagueId = null;
   private stable var month : ?T.CalendarMonth = null;
@@ -44,7 +44,7 @@ actor class _MonthlyLeaderboardsCanister(controllerPrincipalId: T.PrincipalId) {
     assert principalId == controllerPrincipalId;
 
 
-    let leaderboardsBuffer = Buffer.fromArray<T.ClubLeaderboard>([]);
+    let leaderboardsBuffer = Buffer.fromArray<T.MonthlyLeaderboard>([]);
     var found = false;
 
     for(leaderboard in Iter.fromArray(leaderboards)){
@@ -108,7 +108,7 @@ actor class _MonthlyLeaderboardsCanister(controllerPrincipalId: T.PrincipalId) {
           case (null){};
           case (?foundMonth){
 
-            let leaderboardBuffer = Buffer.fromArray<T.ClubLeaderboard>([]);
+            let leaderboardBuffer = Buffer.fromArray<T.MonthlyLeaderboard>([]);
             for(leaderboard in Iter.fromArray(leaderboards)){
               let sortedGameweekEntries = Array.sort(List.toArray(leaderboard.entries), 
                 func(entry1: T.LeaderboardEntry, entry2: T.LeaderboardEntry) : Order.Order{
@@ -134,7 +134,7 @@ actor class _MonthlyLeaderboardsCanister(controllerPrincipalId: T.PrincipalId) {
     };
   };
 
-  public shared query ({ caller }) func getEntries(filters: DTOs.PaginationFiltersDTO, clubId: T.ClubId, searchTerm : Text) : async ?DTOs.ClubLeaderboardDTO {
+  public shared query ({ caller }) func getEntries(filters: DTOs.PaginationFiltersDTO, clubId: T.ClubId, searchTerm : Text) : async ?DTOs.MonthlyLeaderboardDTO {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == controllerPrincipalId;
@@ -152,7 +152,7 @@ actor class _MonthlyLeaderboardsCanister(controllerPrincipalId: T.PrincipalId) {
         let droppedEntries = List.drop<T.LeaderboardEntry>(filteredEntries, filters.offset);
         let paginatedEntries = List.take<T.LeaderboardEntry>(droppedEntries, filters.limit);
 
-        let leaderboardDTO : DTOs.ClubLeaderboardDTO = {
+        let leaderboardDTO : DTOs.MonthlyLeaderboardDTO = {
           seasonId = leaderboard.seasonId;
           month = leaderboard.month;
           clubId = leaderboard.clubId;
@@ -167,7 +167,7 @@ actor class _MonthlyLeaderboardsCanister(controllerPrincipalId: T.PrincipalId) {
     return null;
   };
 
-  public shared query ({ caller }) func getRewardLeaderboards() : async [DTOs.ClubLeaderboardDTO] {
+  public shared query ({ caller }) func getRewardLeaderboards() : async [DTOs.MonthlyLeaderboardDTO] {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == controllerPrincipalId;
@@ -176,7 +176,7 @@ actor class _MonthlyLeaderboardsCanister(controllerPrincipalId: T.PrincipalId) {
       case (null) { return [] };
       case (?foundSeasonId) {
 
-        let rewardLeaderboardsBuffer = Buffer.fromArray<DTOs.ClubLeaderboardDTO>([]);
+        let rewardLeaderboardsBuffer = Buffer.fromArray<DTOs.MonthlyLeaderboardDTO>([]);
         
         for(leaderboard in Iter.fromArray(leaderboards)){
 

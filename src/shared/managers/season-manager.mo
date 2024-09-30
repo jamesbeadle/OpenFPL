@@ -41,6 +41,26 @@ module {
       { category = "system_state"; hash = "OPENFPL_1" },
     ];
 
+    public func updateInitialSystemState(firstSeasonFixture: DTOs.FixtureDTO) : async () {
+      
+      let firstKickOffMonth = Utilities.unixTimeToMonth(firstSeasonFixture.kickOff);
+
+      let updatedSystemState : T.SystemState = {
+        calculationGameweek = 1;
+        calculationMonth = firstKickOffMonth;
+        calculationSeasonId = systemState.pickTeamSeasonId;
+        pickTeamSeasonId = systemState.pickTeamSeasonId;
+        pickTeamGameweek = 1;
+        pickTeamMonth = firstKickOffMonth;
+        seasonActive = false;
+        transferWindowActive = true;
+        onHold = false;
+        version = systemState.version;
+      };
+
+      systemState := updatedSystemState;
+    };
+
     public func updateDataHash(category : Text) : async () {
       let hashBuffer = Buffer.fromArray<T.DataHash>([]);
 

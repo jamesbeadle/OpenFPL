@@ -145,6 +145,7 @@ module DTOs {
   public type SubmitFixtureDataDTO = {
     seasonId : T.SeasonId;
     gameweek : T.GameweekNumber;
+    month: T.CalendarMonth;
     fixtureId : T.FixtureId;
     playerEventData : [T.PlayerEventData];
   };
@@ -381,14 +382,6 @@ module DTOs {
   public type DataHashDTO = {
     category : Text;
     hash : Text;
-  };
-
-  public type ClubLeaderboardDTO = {
-    seasonId : T.SeasonId;
-    month : Nat8;
-    clubId : T.ClubId;
-    entries : [T.LeaderboardEntry];
-    totalEntries : Nat;
   };
 
   public type TeamValueLeaderboard = {

@@ -670,30 +670,29 @@ module {
       return Buffer.toArray(allEventsBuffer);
     };
 
-    public func checkGameweekComplete(systemState : T.SystemState) : async Bool {
+    public func checkGameweekComplete(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async Bool {
       let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
-        checkGameweekComplete : (systemState : T.SystemState) -> async Bool;
+        checkGameweekComplete : (seasonId: T.SeasonId, gameweek: T.GameweekNumber) -> async Bool;
       };
       
-      let gameweekComplete = await data_canister.checkGameweekComplete(systemState);
+      return await data_canister.checkGameweekComplete(seasonId,gameweek);
     };
 
-    public func checkMonthComplete(systemState : T.SystemState) : async Bool {
+    public func checkMonthComplete(seasonId: T.SeasonId, month: T.CalendarMonth, gameweek: T.GameweekNumber) : async Bool {
       let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
-        checkMonthComplete : (systemState : T.SystemState) -> async Bool;
+        checkMonthComplete : (seasonId: T.SeasonId, month: T.CalendarMonth, gameweek: T.GameweekNumber) -> async Bool;
       };
       
-      let monthComplete = await data_canister.checkMonthComplete(systemState);
+      return await data_canister.checkMonthComplete(seasonId, month, gameweek);
 
     };
 
-    public func checkSeasonComplete(systemState : T.SystemState) : async Bool {
+    public func checkSeasonComplete(seasonId: T.SeasonId) : async Bool {
       let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
-        checkSeasonComplete : (systemState : T.SystemState) -> async Bool;
+        checkSeasonComplete : (seasonId: T.SeasonId) -> async Bool;
       };
       
-      let seasonComplete = await data_canister.checkSeasonComplete(systemState);
-
+      return await data_canister.checkSeasonComplete(seasonId);
     };
 
     

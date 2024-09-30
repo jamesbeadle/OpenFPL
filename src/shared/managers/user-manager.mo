@@ -25,7 +25,7 @@ import NetworkEnvironmentVariables "../network_environment_variables";
 
 module {
 
-  public class UserManager(controllerPrincipalId: T.PrincipalId) {
+  public class UserManager(controllerPrincipalId: T.PrincipalId, fixturesPerClub: Nat8) {
     
     //need to store for each league the manager canister id dictionary
 
@@ -155,61 +155,61 @@ module {
 
     public func getManagerByUsername(username : Text) : async Result.Result<DTOs.ManagerDTO, T.Error> {
 
-        for (managerUsername in usernames.entries()){
-          if(managerUsername.1 == username){
-            let managerPrincipalId = managerUsername.0;
-            let managerCanisterId = managerCanisterIds.get(managerPrincipalId);
-            switch(managerCanisterId){
-              case null { return #err(#NotFound) };
-              case (?foundCanisterId) {
-                let manager_canister = actor (foundCanisterId) : actor {
-                  getManager : T.PrincipalId -> async ?T.Manager;
-                };
+      for (managerUsername in usernames.entries()){
+        if(managerUsername.1 == username){
+          let managerPrincipalId = managerUsername.0;
+          let managerCanisterId = managerCanisterIds.get(managerPrincipalId);
+          switch(managerCanisterId){
+            case null { return #err(#NotFound) };
+            case (?foundCanisterId) {
+              let manager_canister = actor (foundCanisterId) : actor {
+                getManager : T.PrincipalId -> async ?T.Manager;
+              };
 
-                let manager = await manager_canister.getManager(managerPrincipalId);
-                switch (manager) {
-                  case (null) {
-                    return #err(#NotFound);
-                  };
-                  case (?foundManager) {
-                    
-                    var weeklyPosition : Int = 0;
-                    var weeklyPoints : Int16 = 0;
-                    var monthlyPosition : Int = 0;
-                    var monthlyPoints : Int16 = 0;
-                    var seasonPosition : Int = 0;
-                    var seasonPoints : Int16 = 0;
-                    var weeklyPositionText = "N/A";
-                    var monthlyPositionText = "N/A";
-                    var seasonPositionText = "N/A";
-                    
-                    let managerDTO : DTOs.ManagerDTO = {
-                      principalId = managerPrincipalId;
-                      username = foundManager.username;
-                      profilePicture = foundManager.profilePicture;
-                      favouriteClubId = foundManager.favouriteClubId;
-                      createDate = foundManager.createDate;
-                      gameweeks = [];
-                      weeklyPosition = weeklyPosition;
-                      monthlyPosition = monthlyPosition;
-                      seasonPosition = seasonPosition;
-                      weeklyPositionText = weeklyPositionText;
-                      monthlyPositionText = monthlyPositionText;
-                      seasonPositionText = seasonPositionText;
-                      weeklyPoints = weeklyPoints;
-                      monthlyPoints = monthlyPoints;
-                      seasonPoints = seasonPoints;
-                    };
-                    return #ok(managerDTO);
-                  };
+              let manager = await manager_canister.getManager(managerPrincipalId);
+              switch (manager) {
+                case (null) {
+                  return #err(#NotFound);
                 };
-              }
-            };
+                case (?foundManager) {
+                  
+                  var weeklyPosition : Int = 0;
+                  var weeklyPoints : Int16 = 0;
+                  var monthlyPosition : Int = 0;
+                  var monthlyPoints : Int16 = 0;
+                  var seasonPosition : Int = 0;
+                  var seasonPoints : Int16 = 0;
+                  var weeklyPositionText = "N/A";
+                  var monthlyPositionText = "N/A";
+                  var seasonPositionText = "N/A";
+                  
+                  let managerDTO : DTOs.ManagerDTO = {
+                    principalId = managerPrincipalId;
+                    username = foundManager.username;
+                    profilePicture = foundManager.profilePicture;
+                    favouriteClubId = foundManager.favouriteClubId;
+                    createDate = foundManager.createDate;
+                    gameweeks = [];
+                    weeklyPosition = weeklyPosition;
+                    monthlyPosition = monthlyPosition;
+                    seasonPosition = seasonPosition;
+                    weeklyPositionText = weeklyPositionText;
+                    monthlyPositionText = monthlyPositionText;
+                    seasonPositionText = seasonPositionText;
+                    weeklyPoints = weeklyPoints;
+                    monthlyPoints = monthlyPoints;
+                    seasonPoints = seasonPoints;
+                  };
+                  return #ok(managerDTO);
+                };
+              };
+            }
           };
         };
-        return #err(#NotFound);
       };
-
+      return #err(#NotFound);
+    };
+    
     public func getUniqueManagerCanisterIds() : [T.CanisterId] {
       return []; //TODO
     };
@@ -269,8 +269,6 @@ module {
       };
     };
 
-
-
     public func snapshotFantasyTeams(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) : async () {
       for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
 
@@ -282,6 +280,49 @@ module {
       };
     };
 
+    public func calculateFantasyTeamScores(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) : async () {
+      for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
+
+        let manager_canister = actor (canisterId) : actor {
+          calculateFantasyTeamScores : (seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) -> async ();
+        };
+
+        await manager_canister.calculateFantasyTeamScores(seasonId, gameweek, month);
+      };
+    };
+
+    public func resetWeeklyTransfers() : async () {
+      for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
+
+        let manager_canister = actor (canisterId) : actor {
+          resetWeeklyTransfers : () -> async ();
+        };
+
+        await manager_canister.resetWeeklyTransfers();
+      };
+    };
+
+    public func resetBonusesAvailable() : async () {
+      for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
+
+        let manager_canister = actor (canisterId) : actor {
+          resetBonusesAvailable : () -> async ();
+        };
+
+        await manager_canister.resetBonusesAvailable();
+      };
+    };
+
+    public func resetFantasyTeams() : async () {
+      for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
+
+        let manager_canister = actor (canisterId) : actor {
+          resetFantasyTeams : () -> async ();
+        };
+
+        await manager_canister.resetFantasyTeams();
+      };
+    };
 
     public func getFantasyTeamSnapshot(dto: DTOs.GetFantasyTeamSnapshotDTO) : async Result.Result<DTOs.FantasyTeamSnapshotDTO, T.Error>{
      let managerCanisterId = managerCanisterIds.get(dto.managerPrincipalId);
@@ -548,7 +589,7 @@ module {
 
     private func createManagerCanister() : async Text {
       Cycles.add<system>(10_000_000_000_000);
-      let canister = await ManagerCanister._ManagerCanister(controllerPrincipalId);
+      let canister = await ManagerCanister._ManagerCanister(controllerPrincipalId, fixturesPerClub);
       let IC : Management.Management = actor (NetworkEnvironmentVariables.Default);
       let principal = ?Principal.fromText(controllerPrincipalId);
       let _ = await Utilities.updateCanister_(canister, principal, IC);
