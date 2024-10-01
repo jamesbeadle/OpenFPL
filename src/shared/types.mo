@@ -351,6 +351,8 @@ module _Types {
     transferDate : Int;
     transferGameweek : GameweekNumber;
     transferSeason : SeasonId;
+    fromLeagueId: FootballLeagueId;
+    toLeagueId: FootballLeagueId;
     fromClub : ClubId;
     toClub : ClubId;
     loanEndDate : Int;

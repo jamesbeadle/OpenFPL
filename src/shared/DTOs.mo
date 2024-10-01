@@ -140,11 +140,15 @@ module DTOs {
   public type RevaluePlayerUpDTO = {
     leagueId: T.FootballLeagueId;
     playerId : T.PlayerId;
+    seasonId: T.SeasonId;
+    gameweek: T.GameweekNumber;
   };
 
   public type RevaluePlayerDownDTO = {
     leagueId: T.FootballLeagueId;
     playerId : T.PlayerId;
+    seasonId: T.SeasonId;
+    gameweek: T.GameweekNumber;
   };
 
   public type SubmitFixtureDataDTO = {
@@ -179,15 +183,23 @@ module DTOs {
 
   public type LoanPlayerDTO = {
     leagueId: T.FootballLeagueId;
+    seasonId: T.SeasonId;
+    gameweek: T.GameweekNumber;
     playerId : T.PlayerId;
+    loanLeagueId: T.FootballLeagueId;
     loanClubId : T.ClubId;
     loanEndDate : Int;
   };
 
   public type TransferPlayerDTO = {
     leagueId: T.FootballLeagueId;
+    clubId: T.ClubId;
     playerId : T.PlayerId;
+    newLeagueId: T.FootballLeagueId;
     newClubId : T.ClubId;
+    seasonId: T.SeasonId;
+    gameweek: T.GameweekNumber;
+    newShirtNumber: Nat8;
   };
 
   public type RecallPlayerDTO = {
@@ -196,6 +208,7 @@ module DTOs {
   };
 
   public type CreatePlayerDTO = {
+    leagueId: T.FootballLeagueId;
     clubId : T.ClubId;
     position : T.PlayerPosition;
     firstName : Text;
