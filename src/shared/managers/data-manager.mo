@@ -358,6 +358,12 @@ module {
       return await data_canister.injuryExpired();
     };
 
+    public func getSnapshotPlayers(dto: RequestDTOs.GetSnapshotPlayers) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
+      let data_canister = actor (NetworkEnvVars.DATA_CANISTER_ID) : actor {
+        getSnapshotPlayers : (dto: RequestDTOs.GetSnapshotPlayers) -> async Result.Result<[DTOs.PlayerDTO], T.Error>;
+      };
+      return await data_canister.getSnapshotPlayers(dto);
+    };
 
     public func populatePlayerEventData(submitFixtureDataDTO : DTOs.SubmitFixtureDataDTO, allPlayers : [DTOs.PlayerDTO]) : async ?[T.PlayerEventData] {
 

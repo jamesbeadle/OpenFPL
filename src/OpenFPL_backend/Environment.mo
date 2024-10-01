@@ -3,8 +3,8 @@ import T "../shared/types";
 module Environment {
 
 /*
-  public let BACKEND_CANISTER_ID = "bboqb-jiaaa-aaaal-qb6ea-cai";
-  public let FRONTEND_CANISTER_ID = "bgpwv-eqaaa-aaaal-qb6eq-cai";
+  public let BACKEND_CANISTER_ID = "y22zx-giaaa-aaaal-qmzpq-cai";
+  public let FRONTEND_CANISTER_ID = "5gbds-naaaa-aaaal-qmzqa-cai";
 
 */
 

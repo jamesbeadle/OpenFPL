@@ -1,0 +1,65 @@
+// Version: 1.0.0
+type CalendarMonth = Nat8;
+type GameweekNumber = Nat8;
+type HighScoreRecord =
+  {createDate : Int; points : Int16; recordType : RecordType};
+type LeaderboardEntry =
+  {
+    points : Int16;
+    position : Nat;
+    positionText : Text;
+    principalId : Text;
+    username : Text
+  };
+type List<T> = ?(T, List<T>);
+type MonthlyRewards =
+  {month : CalendarMonth; rewards : List<RewardEntry>; seasonId : SeasonId};
+type PrincipalId = Text;
+type RecordType = {#MonthlyHighScore; #SeasonHighScore; #WeeklyHighScore};
+type RewardEntry =
+  {
+    amount : Nat64;
+    position : Nat;
+    principalId : Text;
+    rewardType : RewardType
+  };
+type RewardType =
+  {
+    #HighestScoringPlayer;
+    #MonthlyATHScore;
+    #MonthlyLeaderboard;
+    #MostValuableTeam;
+    #SeasonATHScore;
+    #SeasonLeaderboard;
+    #WeeklyATHScore;
+    #WeeklyLeaderboard
+  };
+type RewardsList = {rewards : List<RewardEntry>};
+type SeasonId = Nat16;
+type SeasonRewards = {rewards : List<RewardEntry>; seasonId : SeasonId};
+type TeamValueLeaderboard =
+  {entries : List<LeaderboardEntry>; seasonId : SeasonId; totalEntries : Nat};
+type TimerInfo = {callbackName : Text; id : Int; triggerTime : Int};
+type WeeklyRewards =
+  {
+    gameweek : GameweekNumber;
+    rewards : List<RewardEntry>;
+    seasonId : SeasonId
+  };
+actor {
+  stable var alreadyInitialisedData : Bool;
+  stable var dataAdmins : [PrincipalId];
+  stable var highScoringPlayerRewards : [RewardsList];
+  stable var monthlyATHPrizePool : Nat64;
+  stable var monthlyAllTimeHighScores : [HighScoreRecord];
+  stable var monthlyRewards : [MonthlyRewards];
+  stable var mostValuableTeamRewards : [RewardsList];
+  stable var seasonATHPrizePool : Nat64;
+  stable var seasonAllTimeHighScores : [HighScoreRecord];
+  stable var seasonRewards : [SeasonRewards];
+  stable var teamValueLeaderboards : [(SeasonId, TeamValueLeaderboard)];
+  stable var timers : [TimerInfo];
+  stable var weeklyATHPrizePool : Nat64;
+  stable var weeklyAllTimeHighScores : [HighScoreRecord];
+  stable var weeklyRewards : [WeeklyRewards]
+};

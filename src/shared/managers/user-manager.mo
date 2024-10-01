@@ -349,7 +349,7 @@ module {
       };
     };
 
-    public query func getTotalManagers() : async Result.Result<Nat, T.Error> {
+    public func getTotalManagers() : async Result.Result<Nat, T.Error> {
       return #ok(totalManagers);
     };
 

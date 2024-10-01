@@ -24,5 +24,11 @@ module RequestDTOs {
     leagueId: T.FootballLeagueId;
   };
 
+  public type GetSnapshotPlayers = {
+    seasonId: T.SeasonId;
+    leagueId: T.FootballLeagueId;
+    gameweek: T.GameweekNumber;
+  }
+
 
 };

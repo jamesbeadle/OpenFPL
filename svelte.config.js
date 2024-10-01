@@ -9,7 +9,7 @@ const file = fileURLToPath(new URL("package.json", import.meta.url));
 const json = readFileSync(file, "utf8");
 const { version } = JSON.parse(json);
 
-const filesPath = (path) => `src/OpenFPL_frontend/${path}`;
+const filesPath = (path) => `src/OpenWSL_frontend/${path}`;
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {

@@ -217,6 +217,7 @@ module DTOs {
     valueQuarterMillions : Nat16;
     dateOfBirth : Int;
     nationality : T.CountryId;
+    gender: T.Gender;
   };
 
   public type UpdatePlayerDTO = {

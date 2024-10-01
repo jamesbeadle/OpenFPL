@@ -19,7 +19,7 @@
   import Utilities "../shared/utils/utilities";
   import RequestDTOs "../shared/RequestDTOs";
   import Environment "environment";
-import Countries "../shared/Countries";
+  import Countries "../shared/Countries";
 
   actor Self {
       
@@ -56,6 +56,8 @@ import Countries "../shared/Countries";
 
     private stable var untrackedClubs: [T.Club] = [];
     private stable var clubsInAdministration: [T.Club] = [];
+
+    private stable var nextPlayerId: T.PlayerId = 1;
 
     private func callerAllowed(caller: Principal) : Bool {
       let foundCaller = Array.find<T.PrincipalId>(Environment.APPROVED_FRONTEND_CANISTERS, func(canisterId: T.CanisterId){
@@ -213,53 +215,6 @@ import Countries "../shared/Countries";
     public shared ( {caller} ) func getPlayers(dto: RequestDTOs.RequestPlayersDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error>{
       assert callerAllowed(caller);
 
-      let filteredLeaguePlayers = Array.find<(T.FootballLeagueId, [T.Player])>(leaguePlayers, 
-        func(currentLeaguePlayers: (T.FootballLeagueId, [T.Player])){
-            currentLeaguePlayers.0 == dto.leagueId;
-      });
-
-      switch(filteredLeaguePlayers){
-        case (?foundLeaguePlayers){             
-          return #ok(Array.map<T.Player, DTOs.PlayerDTO>(foundLeaguePlayers.1, func(player: T.Player){
-            
-            var totalPoints: Int16 = 0;
-            let season = List.find<T.PlayerSeason>(player.seasons, func(season: T.PlayerSeason){
-              season.id == dto.seasonId
-            });
-
-            switch(season){
-              case (?foundSeason){
-                totalPoints := foundSeason.totalPoints;
-              };
-              case null {}
-            };
-            return {
-              clubId = player.clubId;
-              dateOfBirth = player.dateOfBirth;
-              firstName = player.firstName;
-              id = player.id;
-              lastName = player.lastName;
-              nationality = player.nationality;
-              position = player.position;
-              shirtNumber = player.shirtNumber;
-              status = player.status;
-              totalPoints = totalPoints;
-              valueQuarterMillions = player.valueQuarterMillions;
-            };
-
-          }));
-        };
-        case (null){
-          return #err(#NotFound);
-        }
-      };
-    };
-
-    public shared ( {caller} ) func getAllSeasonPlayers(dto: RequestDTOs.RequestPlayersDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
-      assert callerAllowed(caller);
-
-//TODO
-  //could get from ids of people who appeared in any fixture 
       let filteredLeaguePlayers = Array.find<(T.FootballLeagueId, [T.Player])>(leaguePlayers, 
         func(currentLeaguePlayers: (T.FootballLeagueId, [T.Player])){
             currentLeaguePlayers.0 == dto.leagueId;
@@ -568,26 +523,31 @@ import Countries "../shared/Countries";
 
     public shared ( {caller} ) func validateAddInitialFixtures(dto : DTOs.AddInitialFixturesDTO) : async Result.Result<(), T.Error>{
       assert callerAllowed(caller);
+      //TODO
       return #err(#NotFound);
     };
 
     public shared ( {caller} ) func validateMoveFixture(dto : DTOs.MoveFixtureDTO) : async Result.Result<(), T.Error>{
       assert callerAllowed(caller);
+      //TODO
       return #err(#NotFound);
     };
 
     public shared ( {caller} ) func validatePostponeFixture(dto : DTOs.PostponeFixtureDTO) : async Result.Result<(), T.Error>{
       assert callerAllowed(caller);
+      //TODO
       return #err(#NotFound);
     };
 
     public shared ( {caller} ) func validateRescehduleFixture(dto : DTOs.RescheduleFixtureDTO) : async Result.Result<(), T.Error>{
       assert callerAllowed(caller);
+      //TODO
       return #err(#NotFound);
     };
 
     public shared ( {caller} ) func validateUpdateClub(dto : DTOs.UpdateClubDTO) : async Result.Result<(), T.Error>{
       assert callerAllowed(caller);
+      //TODO
       return #err(#NotFound);
     };
 
@@ -1243,6 +1203,8 @@ import Countries "../shared/Countries";
                         fromClub = p.clubId;
                         toClub = dto.loanClubId;
                         loanEndDate = dto.loanEndDate;
+                        fromLeagueId = league.0;
+                        toLeagueId = dto.loanLeagueId;
                       };
 
                       let loanedPlayer : T.Player = {
@@ -1398,6 +1360,8 @@ import Countries "../shared/Countries";
                 fromClub = player.clubId;
                 toClub = newClubId;
                 loanEndDate = 0;
+                fromLeagueId = currentLeagueId;
+                toLeagueId = currentLeagueId;
               };
 
               return {
@@ -1504,19 +1468,17 @@ import Countries "../shared/Countries";
 
     public shared ( {caller} ) func createPlayer(dto : DTOs.CreatePlayerDTO) : async Result.Result<(), T.Error>{
       assert callerAllowed(caller);
-
-      //get next player id
       
       let newPlayer : T.Player = {
         id = nextPlayerId + 1;
-        clubId = createPlayerDTO.clubId;
-        position = createPlayerDTO.position;
-        firstName = createPlayerDTO.firstName;
-        lastName = createPlayerDTO.lastName;
-        shirtNumber = createPlayerDTO.shirtNumber;
-        valueQuarterMillions = createPlayerDTO.valueQuarterMillions;
-        dateOfBirth = createPlayerDTO.dateOfBirth;
-        nationality = createPlayerDTO.nationality;
+        clubId = dto.clubId;
+        position = dto.position;
+        firstName = dto.firstName;
+        lastName = dto.lastName;
+        shirtNumber = dto.shirtNumber;
+        valueQuarterMillions = dto.valueQuarterMillions;
+        dateOfBirth = dto.dateOfBirth;
+        nationality = dto.nationality;
         seasons = List.nil<T.PlayerSeason>();
         valueHistory = List.nil<T.ValueHistory>();
         status = #Active;
@@ -1526,134 +1488,151 @@ import Countries "../shared/Countries";
         injuryHistory = List.nil<T.InjuryHistory>();
         retirementDate = 0;
         transferHistory = List.nil<T.TransferHistory>();
+        gender = dto.gender;
       };
-      players := List.push(newPlayer, players);
+
+      leaguePlayers := Array.map<(T.FootballLeagueId, [T.Player]), (T.FootballLeagueId, [T.Player])>(leaguePlayers, 
+        func(leaguePlayersEntry: (T.FootballLeagueId, [T.Player])){
+          if(leaguePlayersEntry.0 == dto.leagueId){
+            let updatedPlayersBuffer = Buffer.fromArray<T.Player>(leaguePlayersEntry.1);
+            updatedPlayersBuffer.add(newPlayer);
+            return (leaguePlayersEntry.0, Buffer.toArray(updatedPlayersBuffer));
+          } else {
+            return leaguePlayersEntry;
+          }
+      });
+
       nextPlayerId += 1;
-      return #err(#NotFound);
+      return #ok();
     };
 
     public shared ( {caller} ) func updatePlayer(dto : DTOs.UpdatePlayerDTO) : async Result.Result<(), T.Error>{
       assert callerAllowed(caller);
-      players := List.map<T.Player, T.Player>(
-        players,
-        func(currentPlayer : T.Player) : T.Player {
-          if (currentPlayer.id == updatePlayerDTO.playerId) {
-            return {
-              id = currentPlayer.id;
-              clubId = currentPlayer.clubId;
-              position = updatePlayerDTO.position;
-              firstName = updatePlayerDTO.firstName;
-              lastName = updatePlayerDTO.lastName;
-              shirtNumber = updatePlayerDTO.shirtNumber;
-              valueQuarterMillions = currentPlayer.valueQuarterMillions;
-              dateOfBirth = updatePlayerDTO.dateOfBirth;
-              nationality = updatePlayerDTO.nationality;
-              seasons = currentPlayer.seasons;
-              valueHistory = currentPlayer.valueHistory;
-              status = currentPlayer.status;
-              parentClubId = currentPlayer.parentClubId;
-              currentLoanEndDate = currentPlayer.currentLoanEndDate;
-              latestInjuryEndDate = currentPlayer.latestInjuryEndDate;
-              injuryHistory = currentPlayer.injuryHistory;
-              retirementDate = currentPlayer.retirementDate;
-              transferHistory = currentPlayer.transferHistory;
+
+      leaguePlayers := Array.map<(T.FootballLeagueId, [T.Player]), (T.FootballLeagueId, [T.Player])>(leaguePlayers, 
+        func(leaguePlayersEntry: (T.FootballLeagueId, [T.Player])){
+          if(leaguePlayersEntry.0 == dto.leagueId){
+
+            let existingPlayer = Array.find<T.Player>(leaguePlayersEntry.1, func(player: T.Player){
+              player.id == dto.playerId
+            });
+
+            let updatedPlayersBuffer = Buffer.fromArray<T.Player>(Array.filter<T.Player>(leaguePlayersEntry.1, func(player: T.Player){
+              player.id != dto.playerId
+            }));
+
+            switch(existingPlayer){
+              case (?currentPlayer){
+
+                let updatedPlayer: T.Player = {
+                  id = currentPlayer.id;
+                  clubId = currentPlayer.clubId;
+                  position = dto.position;
+                  firstName = dto.firstName;
+                  lastName = dto.lastName;
+                  shirtNumber = dto.shirtNumber;
+                  valueQuarterMillions = currentPlayer.valueQuarterMillions;
+                  dateOfBirth = dto.dateOfBirth;
+                  nationality = dto.nationality;
+                  seasons = currentPlayer.seasons;
+                  valueHistory = currentPlayer.valueHistory;
+                  status = currentPlayer.status;
+                  parentClubId = currentPlayer.parentClubId;
+                  currentLoanEndDate = currentPlayer.currentLoanEndDate;
+                  latestInjuryEndDate = currentPlayer.latestInjuryEndDate;
+                  injuryHistory = currentPlayer.injuryHistory;
+                  retirementDate = currentPlayer.retirementDate;
+                  transferHistory = currentPlayer.transferHistory;
+                  gender = currentPlayer.gender;
+                };
+                updatedPlayersBuffer.add(updatedPlayer);
+
+              };
+              case (null){
+
+              }
             };
+
+            return (leaguePlayersEntry.0, Buffer.toArray(updatedPlayersBuffer));
           } else {
-            return currentPlayer;
-          };
-        },
-      );
-      return #err(#NotFound);
+            return leaguePlayersEntry;
+          }
+      });
+      return #ok();
     };
 
     public shared ( {caller} ) func setPlayerInjury(dto : DTOs.SetPlayerInjuryDTO) : async Result.Result<(), T.Error>{
       assert callerAllowed(caller);
-      players := List.map<T.Player, T.Player>(
-        players,
-        func(currentPlayer : T.Player) : T.Player {
-          if (currentPlayer.id == setPlayerInjuryDTO.playerId) {
 
-            if (setPlayerInjuryDTO.expectedEndDate <= Time.now()) {
-              let updatedInjuryHistory = List.map<T.InjuryHistory, T.InjuryHistory>(
-                currentPlayer.injuryHistory,
-                func(injury : T.InjuryHistory) : T.InjuryHistory {
-                  if (injury.expectedEndDate > Time.now()) {
-                    return {
-                      description = injury.description;
-                      injuryStartDate = injury.injuryStartDate;
-                      expectedEndDate = Time.now();
-                    };
-                  } else {
-                    return injury;
-                  };
-                },
-              );
 
-              return {
-                id = currentPlayer.id;
-                clubId = currentPlayer.clubId;
-                position = currentPlayer.position;
-                firstName = currentPlayer.firstName;
-                lastName = currentPlayer.lastName;
-                shirtNumber = currentPlayer.shirtNumber;
-                valueQuarterMillions = currentPlayer.valueQuarterMillions;
-                dateOfBirth = currentPlayer.dateOfBirth;
-                nationality = currentPlayer.nationality;
-                seasons = currentPlayer.seasons;
-                valueHistory = currentPlayer.valueHistory;
-                status = currentPlayer.status;
-                parentClubId = currentPlayer.parentClubId;
-                currentLoanEndDate = currentPlayer.currentLoanEndDate;
-                latestInjuryEndDate = 0;
-                injuryHistory = updatedInjuryHistory;
-                retirementDate = currentPlayer.retirementDate;
-                transferHistory = currentPlayer.transferHistory;
-              };
-            } else {
-              let newInjury : T.InjuryHistory = {
-                description = setPlayerInjuryDTO.description;
-                expectedEndDate = setPlayerInjuryDTO.expectedEndDate;
-                injuryStartDate = Time.now();
-              };
+      leaguePlayers := Array.map<(T.FootballLeagueId, [T.Player]), (T.FootballLeagueId, [T.Player])>(leaguePlayers, 
+        func(leaguePlayersEntry: (T.FootballLeagueId, [T.Player]))
+        {
+          if(leaguePlayersEntry.0 == dto.leagueId){
+            
+             let existingPlayer = Array.find<T.Player>(leaguePlayersEntry.1, func(player: T.Player){
+              player.id == dto.playerId
+            });
 
-              return {
-                id = currentPlayer.id;
-                clubId = currentPlayer.clubId;
-                position = currentPlayer.position;
-                firstName = currentPlayer.firstName;
-                lastName = currentPlayer.lastName;
-                shirtNumber = currentPlayer.shirtNumber;
-                valueQuarterMillions = currentPlayer.valueQuarterMillions;
-                dateOfBirth = currentPlayer.dateOfBirth;
-                nationality = currentPlayer.nationality;
-                seasons = currentPlayer.seasons;
-                valueHistory = currentPlayer.valueHistory;
-                status = currentPlayer.status;
-                parentClubId = currentPlayer.parentClubId;
-                currentLoanEndDate = currentPlayer.currentLoanEndDate;
-                latestInjuryEndDate = setPlayerInjuryDTO.expectedEndDate;
-                injuryHistory = List.push(newInjury, currentPlayer.injuryHistory);
-                retirementDate = currentPlayer.retirementDate;
-                transferHistory = currentPlayer.transferHistory;
+            let updatedPlayersBuffer = Buffer.fromArray<T.Player>(Array.filter<T.Player>(leaguePlayersEntry.1, func(player: T.Player){
+              player.id != dto.playerId
+            }));
+
+            switch(existingPlayer){
+              case (?currentPlayer){
+                
+                let injuryHistoryEntry : T.InjuryHistory = {
+                  description = dto.description;
+                  injuryStartDate = Time.now();
+                  expectedEndDate = dto.expectedEndDate;
+                };
+
+                let updatedPlayer: T.Player = {
+                  id = currentPlayer.id;
+                  clubId = currentPlayer.clubId;
+                  position = currentPlayer.position;
+                  firstName = currentPlayer.firstName;
+                  lastName = currentPlayer.lastName;
+                  shirtNumber = currentPlayer.shirtNumber;
+                  valueQuarterMillions = currentPlayer.valueQuarterMillions;
+                  dateOfBirth = currentPlayer.dateOfBirth;
+                  nationality = currentPlayer.nationality;
+                  seasons = currentPlayer.seasons;
+                  valueHistory = currentPlayer.valueHistory;
+                  status = currentPlayer.status;
+                  parentClubId = currentPlayer.parentClubId;
+                  currentLoanEndDate = currentPlayer.currentLoanEndDate;
+                  latestInjuryEndDate = currentPlayer.latestInjuryEndDate;
+                  injuryHistory = List.append<T.InjuryHistory>(currentPlayer.injuryHistory, List.fromArray([injuryHistoryEntry]));
+                  retirementDate = currentPlayer.retirementDate;
+                  transferHistory = currentPlayer.transferHistory;
+                  gender = currentPlayer.gender;
+                };
+                updatedPlayersBuffer.add(updatedPlayer);
+
               };
+              case (null){
+
+              }
             };
+
+            return (leaguePlayersEntry.0, Buffer.toArray(updatedPlayersBuffer));
+
+
           } else {
-            return currentPlayer;
-          };
-        },
+            return leaguePlayersEntry;
+          }
+        }
       );
 
-      let playerInjuryDuration = #nanoseconds(Int.abs((setPlayerInjuryDTO.expectedEndDate - Time.now())));
-      switch (setAndBackupTimer) {
-        case (null) {};
-        case (?actualFunction) {
-          await actualFunction(playerInjuryDuration, "injuryExpired");
-        };
-      };
-      return #err(#NotFound);
+      let playerInjuryDuration = #nanoseconds(Int.abs((dto.expectedEndDate - Time.now())));
+      await setAndBackupTimer(playerInjuryDuration, "injuryExpired");
+      return #ok();
     };
 
     public shared ( {caller} ) func retirePlayer(dto : DTOs.RetirePlayerDTO) : async Result.Result<(), T.Error>{
+      //TODO
+      /*
       assert callerAllowed(caller);
       let playerToRetire = List.find<T.Player>(players, func(p : T.Player) { p.id == retirePlayerDTO.playerId });
       switch (playerToRetire) {
@@ -1690,10 +1669,14 @@ import Countries "../shared/Countries";
           );
         };
       };
+      */
       return #err(#NotFound);
     };
 
     public shared ( {caller} ) func unretirePlayer(dto : DTOs.UnretirePlayerDTO) : async Result.Result<(), T.Error>{
+      //TODO
+      //TODO
+      /* 
       assert callerAllowed(caller);
       let playerToUnretire = List.find<T.Player>(players, func(p : T.Player) { p.id == unretirePlayerDTO.playerId });
       switch (playerToUnretire) {
@@ -1730,10 +1713,13 @@ import Countries "../shared/Countries";
           );
         };
       };
+      */
       return #err(#NotFound);
     };
 
     public shared ({ caller }) func promoteNewClub(promoteNewClubDTO : DTOs.PromoteNewClubDTO) : async Result.Result<(), T.Error> {
+      //TODO
+      /*
       assert callerAllowed(caller);
 
 
@@ -1780,9 +1766,14 @@ import Countries "../shared/Countries";
         clubsBuffer.add(newClub);
         clubs := Buffer.toArray(clubsBuffer);
         return #ok();
+        */
+
+      return #err(#NotFound);
     };
 
     public shared ({ caller }) func updateClub(updateClubDTO : DTOs.UpdateClubDTO) : async Result.Result<(), T.Error> {
+      //TODO
+      /*
       assert callerAllowed(caller);
         let club = Array.find(
             clubs,
@@ -1843,47 +1834,15 @@ import Countries "../shared/Countries";
             },
         );
         return #ok();
-    };
-
-    //Either timer callback
-
-    public shared ( {caller} ) func loanExpired() : async (){
-      assert callerAllowed(caller);
-      let playersToRecall = List.filter<T.Player>(
-        players,
-        func(currentPlayer : T.Player) : Bool {
-          return currentPlayer.status == #OnLoan and currentPlayer.currentLoanEndDate <= Time.now();
-        },
-      );
-
-      for (player in Iter.fromList(playersToRecall)) {
-        let recallPlayerDTO : DTOs.RecallPlayerDTO = {
-          playerId = player.id;
-        };
-
-        await executeRecallPlayer(recallPlayerDTO);
-      };
-    };
-
-    public shared ( {caller} ) func injuryExpired() : async (){
-      assert callerAllowed(caller);
-
-      let playersNoLongerInjured = Array.filter<T.Player>(
-        players,
-        func(currentPlayer : T.Player) : Bool {
-          return currentPlayer.latestInjuryEndDate > 0 and currentPlayer.latestInjuryEndDate <= Time.now();
-        },
-      );
-
-      for (player in Iter.fromArray(playersNoLongerInjured)) {
-        let _ = await executeResetPlayerInjury(player.id);
-      };
-      return #ok();
+        */
+      return #err(#NotFound);
     };
 
     //Game Update Functions
 
     public shared ( {caller} ) func createNewSeason(systemState : T.SystemState) {
+      //TODO
+      /*
       assert callerAllowed(caller);
       let existingSeason = List.find(
         seasons,
@@ -1913,10 +1872,12 @@ import Countries "../shared/Countries";
           nextSeasonId := nextSeasonId;
         };
       };
+      */
     };
 
     public shared ( {caller} ) func addEventsToFixture(playerEventData : [T.PlayerEventData], seasonId : T.SeasonId, fixtureId : T.FixtureId) : async () {
-      
+      //TODO
+      /*
       assert callerAllowed(caller);
       seasons := List.map<T.Season, T.Season>(
         seasons,
@@ -1953,9 +1914,12 @@ import Countries "../shared/Countries";
           };
         },
       );
+      */
     };
 
     public shared ( {caller} ) func setGameScore(seasonId: T.SeasonId, fixtureId: T.FixtureId){
+      //TODO
+      /*
       assert callerAllowed(caller);
       let seasonBuffer = Buffer.fromArray<T.Season>([]);
 
@@ -2019,9 +1983,12 @@ import Countries "../shared/Countries";
       };
 
       seasons := List.fromArray(Buffer.toArray(seasonBuffer));
+      */
     };
 
     public shared ( {caller} ) func setFixtureToComplete(seasonId: T.SeasonId, fixtureId: T.FixtureId){
+      //TODO
+      /*
       assert callerAllowed(caller);
       let seasonBuffer = Buffer.fromArray<T.Season>([]);
 
@@ -2061,9 +2028,12 @@ import Countries "../shared/Countries";
       };
 
       seasons := List.fromArray(Buffer.toArray(seasonBuffer));
+      */
     };
 
     public shared ( {caller} ) func setFixtureToFinalised(seasonId: T.SeasonId, fixtureId: T.FixtureId) {
+      //TODO
+      /*
       assert callerAllowed(caller);
       seasons := List.map<T.Season, T.Season>(
         seasons,
@@ -2102,10 +2072,12 @@ import Countries "../shared/Countries";
           };
         },
       );
+      */
     };
 
     public shared ( {caller} ) func addEventsToPlayers(playerEventData : [T.PlayerEventData], seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async () {
-
+      //TODO
+      /*
       assert callerAllowed(caller);
       var updatedSeasons : List.List<T.PlayerSeason> = List.nil<T.PlayerSeason>();
       let playerEventsMap : TrieMap.TrieMap<Nat16, [T.PlayerEventData]> = TrieMap.TrieMap<Nat16, [T.PlayerEventData]>(Utilities.eqNat16, Utilities.hashNat16);
@@ -2250,9 +2222,11 @@ import Countries "../shared/Countries";
         }
 
       };
+      */
     };
 
     private func calculatePlayerScore(playerPosition : T.PlayerPosition, events : [T.PlayerEventData]) : Int16 {
+      //TODO
       let totalScore = Array.foldLeft<T.PlayerEventData, Int16>(
         events,
         0,
@@ -2268,6 +2242,8 @@ import Countries "../shared/Countries";
     //Game State Check Functions
 
     public shared ( {caller} ) func checkGameweekComplete(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async Bool {
+      //TODO
+      /*
       assert callerAllowed(caller);
       let season = List.find(
         seasons,
@@ -2296,10 +2272,13 @@ import Countries "../shared/Countries";
 
         };
       };
+      */
       return false;
     };
 
     public shared ( {caller} ) func checkMonthComplete(seasonId: T.SeasonId, month: T.CalendarMonth, gameweek: T.GameweekNumber) : async Bool {
+      //TODO
+      /*
 
       assert callerAllowed(caller);
       let currentSeason = List.find(
@@ -2363,11 +2342,14 @@ import Countries "../shared/Countries";
           return fixtureMonth > month;
         };
       };
+      */
 
       return false;
     };
 
     public shared ( {caller} ) func checkSeasonComplete(seasonId: T.SeasonId) : async Bool {
+      //TODO
+      /*
 
       assert callerAllowed(caller);
       if (systemState.calculationGameweek != 38) {
@@ -2401,9 +2383,71 @@ import Countries "../shared/Countries";
           return List.size(completedFixtures) == List.size(foundSeason.fixtures);
         };
       };
-
+*/
       return false;
     };
+
+
+
+    private func setAndBackupTimer(duration : Timer.Duration, callbackName : Text) : async () {
+      let jobId : Timer.TimerId = switch (callbackName) {
+        case "loanExpired" {
+          Timer.setTimer<system>(duration, loanExpiredCallback);
+        };
+        case "injuryExpired" {
+          Timer.setTimer<system>(duration, injuryExpiredCallback);
+        };
+        case _ {
+          Timer.setTimer<system>(duration, defaultCallback);
+        }
+      };
+    };
+
+    private func loanExpiredCallback() : async (){
+      //TODO
+      /*
+      assert callerAllowed(caller);
+      let playersToRecall = List.filter<T.Player>(
+        players,
+        func(currentPlayer : T.Player) : Bool {
+          return currentPlayer.status == #OnLoan and currentPlayer.currentLoanEndDate <= Time.now();
+        },
+      );
+
+      for (player in Iter.fromList(playersToRecall)) {
+        let recallPlayerDTO : DTOs.RecallPlayerDTO = {
+          playerId = player.id;
+        };
+
+        await executeRecallPlayer(recallPlayerDTO);
+      };
+      */
+    };
+
+    private func injuryExpiredCallback() : async (){
+      //TODO
+      /*
+      assert callerAllowed(caller);
+
+      let playersNoLongerInjured = Array.filter<T.Player>(
+        players,
+        func(currentPlayer : T.Player) : Bool {
+          return currentPlayer.latestInjuryEndDate > 0 and currentPlayer.latestInjuryEndDate <= Time.now();
+        },
+      );
+
+      for (player in Iter.fromArray(playersNoLongerInjured)) {
+        let _ = await executeResetPlayerInjury(player.id);
+      };
+      return #ok();
+      */
+    };
+
+    private func defaultCallback() : async () {};
+
+
+    private stable var timers : [T.TimerInfo] = [];
+
 
     system func preupgrade() {
 
@@ -2412,6 +2456,34 @@ import Countries "../shared/Countries";
     system func postupgrade() {
       //timer backup stuff
 
+
+      ignore Timer.setTimer<system>(#nanoseconds(Int.abs(1)), postUpgradeCallback); 
+    };
+
+    private func postUpgradeCallback() : async (){
+      await setSystemTimers();
+    };
+
+    private func setSystemTimers() : async (){
+      
+      let currentTime = Time.now();
+      for (timerInfo in Iter.fromArray(timers)) {
+        let remainingDuration = timerInfo.triggerTime - currentTime;
+
+        if (remainingDuration > 0) {
+          let duration : Timer.Duration = #nanoseconds(Int.abs(remainingDuration));
+
+          switch (timerInfo.callbackName) {
+            case "loanExpired" {
+              ignore Timer.setTimer<system>(duration, loanExpiredCallback);
+            };
+            case "injuryExpired" {
+              ignore Timer.setTimer<system>(duration, injuryExpiredCallback);
+            };
+            case _ {};
+          };
+        };
+      };
     };
 
   };

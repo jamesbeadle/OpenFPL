@@ -14,17 +14,23 @@
       "source": ["build/"],
       "type": "assets"
     },
+    "OpenWSL_backend": {
+      "dependencies": [],
+      "main": "src/OpenWSL_backend/main.mo",
+      "type": "motoko",
+      "optimize": "cycles"
+    },
     "OpenWSL_frontend": {
-      "dependencies": ["OpenFPL_backend"],
+      "dependencies": ["OpenWSL_backend"],
       "frontend": {
         "entrypoint": "build/index.html"
       },
       "source": ["build/"],
       "type": "assets"
     },
-    "football_data_canister": {
+    "data_canister": {
       "dependencies": [],
-      "main": "src/football_data_canister/main.mo",
+      "main": "src/data_canister/main.mo",
       "type": "motoko",
       "optimize": "cycles"
     },

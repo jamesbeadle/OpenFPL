@@ -30,7 +30,6 @@
   import LeaderboardManager "../shared/managers/leaderboard-manager";
   import UserManager "../shared/managers/user-manager";
   import SeasonManager "../shared/managers/season-manager";
-  import RequestDtOs "../shared/RequestDTOs";
 import CyclesDispenser "../shared/cycles-dispenser";
 import Environment "./environment";
 import NetworkEnvironmentVariables "../shared/network_environment_variables";
@@ -113,7 +112,7 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
       return await dataManager.getClubs(Environment.LEAGUE_ID);
     };
 
-    public shared func getFixtures(dto: RequestDtOs.RequestFixturesDTO) : async Result.Result<[DTOs.FixtureDTO], T.Error> {
+    public shared func getFixtures(dto: Requests.RequestFixturesDTO) : async Result.Result<[DTOs.FixtureDTO], T.Error> {
       return await dataManager.getFixtures(dto);
     };
 
@@ -122,7 +121,8 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
     };
 
     public shared func getPostponedFixtures() : async Result.Result<[DTOs.FixtureDTO], T.Error> {
-      return await dataManager.getPostponedFixtures(Environment.LEAGUE_ID);
+      return #err(#NotFound);
+      //return await dataManager.getPostponedFixtures(Environment.LEAGUE_ID);
     };
 
     public shared func getTotalManagers() : async Result.Result<Nat, T.Error> {
@@ -133,9 +133,9 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
       return await dataManager.getPlayers(Environment.LEAGUE_ID);
     };
 
-    public shared ( {caller} ) func getAllSeasonPlayers(seasonId: T.SeasonId) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
+    public shared ( {caller} ) func getSnapshotPlayers(dto: Requests.GetSnapshotPlayers) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
       assert isManagerCanister(Principal.toText(caller));
-      return await dataManager.getAllSeasonPlayers({seasonId = seasonId; leagueId = Environment.LEAGUE_ID});
+      return await dataManager.getSnapshotPlayers(dto);
     };
 
     public shared func getLoanedPlayers(dto: DTOs.ClubFilterDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
@@ -307,7 +307,7 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
       assert isDataAdmin(Principal.toText(caller));
       switch(await dataManager.validateSubmitFixtureData(Environment.LEAGUE_ID, submitFixtureData)){
         case (#ok success){
-          let _ = await dataManager.executeSubmitFixtureData(Environment.LEAGUE_ID, submitFixtureData);
+          let _ = await dataManager.executeSubmitFixtureData(submitFixtureData);
 
           //TODO: When calculating score get players built friom all players who appeared in the gameweek
           await userManager.calculateFantasyTeamScores(submitFixtureData.seasonId, submitFixtureData.gameweek, submitFixtureData.month);
@@ -1123,6 +1123,7 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
        leaderboardManager.setStableMonthlyATHPrizePool(monthlyATHPrizePool);
        leaderboardManager.setStableSeasonATHPrizePool(seasonATHPrizePool);
 
+      ignore Timer.setTimer<system>(#nanoseconds(Int.abs(1)), postUpgradeCallback); 
     };
 
     private func postUpgradeCallback() : async (){
@@ -1160,12 +1161,6 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
             case "gameCompletedExpired" {
               ignore Timer.setTimer<system>(duration, gameCompletedExpiredCallback);
             };
-            case "loanExpired" {
-              ignore Timer.setTimer<system>(duration, loanExpiredCallback);
-            };
-            case "injuryExpired" {
-              ignore Timer.setTimer<system>(duration, injuryExpiredCallback);
-            };
             case "transferWindowStart" {
               ignore Timer.setTimer<system>(duration, transferWindowStartCallback);
             };
@@ -1176,7 +1171,6 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
           };
         };
       };
-      ignore Timer.setTimer<system>(#nanoseconds(Int.abs(1)), postUpgradeCallback);
     };
 
     private func gameweekBeginExpiredCallback() : async () {
@@ -1290,12 +1284,6 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
         };
         case "gameCompletedExpired" {
           Timer.setTimer<system>(duration, gameCompletedExpiredCallback);
-        };
-        case "loanExpired" {
-          Timer.setTimer<system>(duration, loanExpiredCallback);
-        };
-        case "injuryExpired" {
-          Timer.setTimer<system>(duration, injuryExpiredCallback);
         };
         case "transferWindowStart" {
           Timer.setTimer<system>(duration, transferWindowStartCallback);
