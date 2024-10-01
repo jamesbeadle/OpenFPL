@@ -4,12 +4,9 @@
   import Layout from "../Layout.svelte";
   import LocalSpinner from "$lib/components/local-spinner.svelte";
   import ManagerGameweeks from "$lib/components/manager/manager-gameweeks.svelte";
-  import { writable, type Writable } from "svelte/store";
-    import { userStore } from "$lib/stores/user-store";
+  import { userStore } from "$lib/stores/user-store";
 
   let activeTab: string = "details";
-  let loadingGameweekDetail: Writable<boolean> = writable(false);
-
   let isLoading = true;
   onMount(async () => {
     try{
@@ -21,8 +18,6 @@
     finally{
       isLoading = false;
     };
-
-    isLoading = false;
   });
   function setActiveTab(tab: string): void {
     activeTab = tab;
@@ -62,7 +57,7 @@
         {#if activeTab === "details"}
           <ProfileDetail />
         {/if}
-        {#if activeTab === "gameweeks"}
+        {#if activeTab === "gameweeks" && $userStore}
           <ManagerGameweeks
             {viewGameweekDetail}
             principalId={$userStore.principalId}

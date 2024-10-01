@@ -4,10 +4,10 @@ import { isError, replacer } from "$lib/utils/helpers";
 import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
-  DataCacheDTO,
+  DataHashDTO,
   FantasyTeamSnapshot,
   GetFantasyTeamSnapshotDTO,
-  GetManagerDTO,
+  RequestManagerDTO,
   ManagerDTO,
   PickTeamDTO,
   SystemStateDTO,
@@ -64,8 +64,12 @@ function createManagerStore() {
 
   async function getPublicProfile(principalId: string): Promise<ManagerDTO> {
     try {
-      let dto: GetManagerDTO = {
+      let dto: RequestManagerDTO = {
         managerId: principalId,
+        month: 0,
+        seasonId: 0,
+        gameweek: 0,
+        clubId: 0,
       };
       let result = await actor.getManager(dto);
 

@@ -24,6 +24,7 @@
   import ActiveCaptainIcon from "$lib/icons/ActiveCaptainIcon.svelte";
   import { countriesStore } from "$lib/stores/country-store";
     import LocalSpinner from "../local-spinner.svelte";
+    import { seasonStore } from "$lib/stores/season-store";
 
   let gameweekPlayers = writable<GameweekData[]>([]);
   let gameweeks = Array.from(
@@ -57,7 +58,9 @@
       await playerStore.sync();
       await playerEventsStore.sync();
       await systemStore.sync();
-      activeSeasonName = $systemStore?.pickTeamSeasonName ?? "-";
+      await seasonStore.sync();
+      let season = $seasonStore.find(x => x.id == $systemStore?.pickTeamSeasonId);
+      activeSeasonName = season ? season.name : "-";
       if (!$fantasyTeam) {
         $gameweekPlayers = [];
         return;

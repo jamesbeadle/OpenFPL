@@ -2,7 +2,7 @@ import { systemStore } from "$lib/stores/system-store";
 import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
-  DataCacheDTO,
+  DataHashDTO,
   GetSeasonLeaderboardDTO,
   SeasonLeaderboardDTO,
   SystemStateDTO,
@@ -35,11 +35,10 @@ function createSeasonLeaderboardStore() {
       return;
     }
 
-    let dataCacheValues: DataCacheDTO[] = newHashValues.ok;
+    let dataCacheValues: DataHashDTO[] = newHashValues.ok;
 
     let categoryHash =
-      dataCacheValues.find((x: DataCacheDTO) => x.category === category) ??
-      null;
+      dataCacheValues.find((x: DataHashDTO) => x.category === category) ?? null;
 
     const localHash = localStorage.getItem(`${category}_hash`);
 

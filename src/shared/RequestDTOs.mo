@@ -30,5 +30,4 @@ module RequestDTOs {
     gameweek: T.GameweekNumber;
   }
 
-
 };

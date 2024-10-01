@@ -1,9 +1,9 @@
 import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
-  DataCacheDTO,
+  DataHashDTO,
   FixtureDTO,
-  GetFixturesDTO,
+  RequestFixturesDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { isError, replacer } from "../utils/helpers";
@@ -26,15 +26,15 @@ function createFixtureStore() {
       return;
     }
 
-    let dataCacheValues: DataCacheDTO[] = newHashValues.ok;
+    let dataCacheValues: DataHashDTO[] = newHashValues.ok;
 
     let categoryHash =
-      dataCacheValues.find((x: DataCacheDTO) => x.category === category) ??
-      null;
+      dataCacheValues.find((x: DataHashDTO) => x.category === category) ?? null;
 
     const localHash = localStorage.getItem(`${category}_hash`);
     if (categoryHash?.hash != localHash) {
-      let dto: GetFixturesDTO = {
+      let dto: RequestFixturesDTO = {
+        leagueId: 2,
         seasonId: seasonId,
       };
       const result = await actor.getFixtures(dto);

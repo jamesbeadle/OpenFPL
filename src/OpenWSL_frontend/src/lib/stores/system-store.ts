@@ -2,18 +2,13 @@ import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
   CanisterType,
-  DataCacheDTO,
-  EventLogEntryType,
+  DataHashDTO,
   GetCanistersDTO,
   GetRewardPoolDTO,
-  GetSystemLogDTO,
-  GetTimersDTO,
   GetTopupsDTO,
   SeasonDTO,
   SeasonId,
   SystemStateDTO,
-  TimerDTO,
-  TimerType,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { isError, replacer } from "../utils/helpers";
@@ -38,11 +33,10 @@ function createSystemStore() {
       return;
     }
 
-    let dataCacheValues: DataCacheDTO[] = newHashValues.ok;
+    let dataCacheValues: DataHashDTO[] = newHashValues.ok;
 
     let categoryHash =
-      dataCacheValues.find((x: DataCacheDTO) => x.category === category) ??
-      null;
+      dataCacheValues.find((x: DataHashDTO) => x.category === category) ?? null;
 
     const localHash = localStorage.getItem(`${category}_hash`);
 
@@ -127,78 +121,6 @@ function createSystemStore() {
       return result.ok;
     } catch (error) {
       console.error("Error getting canisters:", error);
-      throw error;
-    }
-  }
-
-  async function getTimers(
-    currentPage: number,
-    itemsPerPage: number,
-    filter: TimerType,
-  ): Promise<GetTimersDTO | undefined> {
-    try {
-      const identityActor: any = await ActorFactory.createIdentityActor(
-        authStore,
-        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
-      );
-
-      const limit = itemsPerPage;
-      const offset = (currentPage - 1) * limit;
-
-      let dto: GetTimersDTO = {
-        totalEntries: 0n,
-        offset: BigInt(offset),
-        limit: BigInt(limit),
-        entries: [],
-        timerTypeFilter: filter,
-      };
-
-      let result = await identityActor.getTimers(dto);
-
-      if (isError(result)) {
-        console.error("Error getting timers:", result);
-        return;
-      }
-      return result.ok;
-    } catch (error) {
-      console.error("Error getting timers:", error);
-      throw error;
-    }
-  }
-
-  async function getLogs(
-    currentPage: number,
-    itemsPerPage: number,
-    filter: EventLogEntryType,
-  ): Promise<GetSystemLogDTO | undefined> {
-    try {
-      const identityActor: any = await ActorFactory.createIdentityActor(
-        authStore,
-        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
-      );
-
-      const limit = itemsPerPage;
-      const offset = (currentPage - 1) * limit;
-
-      let dto: GetSystemLogDTO = {
-        totalEntries: 0n,
-        offset: BigInt(offset),
-        limit: BigInt(limit),
-        entries: [],
-        eventType: filter,
-        dateEnd: 0n,
-        dateStart: 0n,
-      };
-
-      let result = await identityActor.getSystemLog(dto);
-
-      if (isError(result)) {
-        console.error("Error getting system logs:", result);
-        return;
-      }
-      return result.ok;
-    } catch (error) {
-      console.error("Error getting system logs:", error);
       throw error;
     }
   }
@@ -317,8 +239,6 @@ function createSystemStore() {
     sync,
     getSystemState,
     getSeasons,
-    getLogs,
-    getTimers,
     getCanisters,
     getRewardPool,
     getTopups,

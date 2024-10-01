@@ -42,6 +42,8 @@
       await teamStore.sync();
       await systemStore.sync();
       await userStore.sync();
+      console.log("store")
+      console.log($userStore)
 
       unsubscribeUserProfile = userStore.subscribe((value) => {
         if (!value) {
@@ -236,7 +238,11 @@
         <div class="md:ml-4 md:px-4 px-4 mt-2 md:mt-1 rounded-lg">
           <p class="mb-1">Username:</p>
           <h2 class="default-header mb-1 md:mb-2">
-            {$userStore?.username == "" ? "Not Set" : $userStore?.username}
+            {#if $userStore == null}
+              {$userStore?.username == "" ? "Not Set" : $userStore?.username}
+            {:else}
+              Unset
+            {/if}
           </h2>
           <button
             class="text-sm md:text-sm p-1 md:p-2 px-2 md:px-4 rounded fpl-button"

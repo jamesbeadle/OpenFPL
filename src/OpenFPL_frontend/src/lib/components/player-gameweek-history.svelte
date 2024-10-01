@@ -3,6 +3,7 @@
   import { page } from "$app/stores";
   import { systemStore } from "$lib/stores/system-store";
   import { toastsError } from "$lib/stores/toasts-store";
+  import { seasonStore } from "$lib/stores/season-store";
   import { teamStore } from "$lib/stores/team-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
@@ -25,6 +26,7 @@
   let opponentCache = new Map<number, ClubDTO>();
   let selectedPlayerGameweek: PlayerGameweekDTO | null = null;
   let showModal: boolean = false;
+  let seasonName = "";
 
   $: id = Number($page.url.searchParams.get("id"));
 
@@ -35,6 +37,8 @@
       await systemStore.sync();
       await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
       await playerEventsStore.sync;
+      await seasonStore.sync();
+      seasonName = await seasonStore.getSeasonName($systemStore?.calculationSeasonId ?? 0)
       selectedGameweek = $systemStore?.calculationGameweek ?? 1;
 
       fixturesWithTeams = $fixtureStore.map((fixture) => ({
@@ -121,7 +125,7 @@
       visible={showModal}
       playerDetail={playerDetails}
       gameweek={selectedGameweek}
-      seasonName={$systemStore?.calculationSeasonName}
+      seasonName={seasonName};
     />
   {/if}
   <div class="flex flex-col space-y-4 mt-4">

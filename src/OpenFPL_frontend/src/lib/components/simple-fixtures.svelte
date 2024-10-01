@@ -155,7 +155,7 @@
                 </div>
                 <div class="flex flex-col w-2/6">
                   <span class="md:ml-0"
-                    >{formatUnixTimeToTime(Number(fixture.kickOff))}</span
+                    >{formatUnixTimeToTime(fixture.kickOff)}</span
                   >
                 </div>
               </div>

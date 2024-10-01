@@ -1,23 +1,20 @@
 {
   "OpenFPL_backend": {
-    "local": "by6od-j4aaa-aaaaa-qaadq-cai"
+    "local": "bd3sg-teaaa-aaaaa-qaaba-cai"
   },
   "OpenFPL_frontend": {
-    "local": "avqkn-guaaa-aaaaa-qaaea-cai"
+    "local": "be2us-64aaa-aaaaa-qaabq-cai"
   },
   "OpenWSL_backend": {
-    "local": "aovwi-4maaa-aaaaa-qaagq-cai"
+    "local": "br5f7-7uaaa-aaaaa-qaaca-cai"
   },
   "OpenWSL_frontend": {
-    "local": "asrmz-lmaaa-aaaaa-qaaeq-cai"
+    "local": "bw4dl-smaaa-aaaaa-qaacq-cai"
   },
   "__Candid_UI": {
-    "local": "ajuq4-ruaaa-aaaaa-qaaga-cai"
+    "local": "by6od-j4aaa-aaaaa-qaadq-cai"
   },
   "data_canister": {
-    "local": "a4tbr-q4aaa-aaaaa-qaafq-cai"
-  },
-  "football_data_canister": {
-    "local": "a3shf-5eaaa-aaaaa-qaafa-cai"
+    "local": "b77ix-eeaaa-aaaaa-qaada-cai"
   }
 }

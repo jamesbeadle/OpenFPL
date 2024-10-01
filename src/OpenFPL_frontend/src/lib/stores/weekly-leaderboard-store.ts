@@ -1,7 +1,7 @@
 import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
-  DataCacheDTO,
+  DataHashDTO,
   GetWeeklyLeaderboardDTO,
   LeaderboardEntry,
   WeeklyLeaderboardDTO,
@@ -28,11 +28,10 @@ function createWeeklyLeaderboardStore() {
       return;
     }
 
-    let dataCacheValues: DataCacheDTO[] = newHashValues.ok;
+    let dataCacheValues: DataHashDTO[] = newHashValues.ok;
 
     let categoryHash =
-      dataCacheValues.find((x: DataCacheDTO) => x.category === category) ??
-      null;
+      dataCacheValues.find((x: DataHashDTO) => x.category === category) ?? null;
 
     const localHash = localStorage.getItem(`${category}_hash`);
     if (categoryHash?.hash != localHash) {

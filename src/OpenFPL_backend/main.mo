@@ -30,9 +30,9 @@
   import LeaderboardManager "../shared/managers/leaderboard-manager";
   import UserManager "../shared/managers/user-manager";
   import SeasonManager "../shared/managers/season-manager";
-import CyclesDispenser "../shared/cycles-dispenser";
-import Environment "./environment";
-import NetworkEnvironmentVariables "../shared/network_environment_variables";
+  import CyclesDispenser "../shared/cycles-dispenser";
+  import Environment "./environment";
+  import NetworkEnvironmentVariables "../shared/network_environment_variables";
 
   actor Self {
     

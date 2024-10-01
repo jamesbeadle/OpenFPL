@@ -268,6 +268,7 @@ module _Types {
   };
 
   public type FootballLeague = {
+    id: FootballLeagueId;
     name: Text;
     abbreviation: Text;
     numOfTeams: Nat8;
@@ -531,5 +532,51 @@ module _Types {
     #GameComplete;
     #InjuryExpired;
     #TransferWindow;
+  };
+
+      
+    public type OldPlayerDTO = {
+      id : Nat16;
+      clubId :ClubId;
+      position :PlayerPosition;
+      firstName : Text;
+      lastName : Text;
+      shirtNumber : Nat8;
+      valueQuarterMillions : Nat16;
+      dateOfBirth : Int;
+      nationality :CountryId;
+      totalPoints : Int16;
+      status :PlayerStatus;
+    };
+
+  public type OldClubDTO = {
+    id :ClubId;
+    name : Text;
+    friendlyName : Text;
+    primaryColourHex : Text;
+    secondaryColourHex : Text;
+    thirdColourHex : Text;
+    abbreviatedName : Text;
+    shirtType :ShirtType;
+  };
+
+  public type OldSeasonDTO = {
+    id :SeasonId;
+    name : Text;
+    year : Nat16;
+  };
+
+  public type OldFixtureDTO = {
+    id : Nat32;
+    seasonId :SeasonId;
+    gameweek :GameweekNumber;
+    kickOff : Int;
+    homeClubId :ClubId;
+    awayClubId :ClubId;
+    homeGoals : Nat8;
+    awayGoals : Nat8;
+    status :FixtureStatusType;
+    highestScoringPlayerId : Nat16;
+    events : [PlayerEventData];
   };
 };

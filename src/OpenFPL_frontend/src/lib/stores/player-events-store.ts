@@ -5,7 +5,7 @@ import { systemStore } from "$lib/stores/system-store";
 import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
-  DataCacheDTO,
+  DataHashDTO,
   FantasyTeamSnapshot,
   FixtureDTO,
   GameweekFiltersDTO,
@@ -50,16 +50,16 @@ function createPlayerEventsStore() {
       return;
     }
 
-    let dataCacheValues: DataCacheDTO[] = newHashValues.ok;
+    let dataCacheValues: DataHashDTO[] = newHashValues.ok;
 
     let categoryHash =
-      dataCacheValues.find((x: DataCacheDTO) => x.category === category) ??
-      null;
+      dataCacheValues.find((x: DataHashDTO) => x.category === category) ?? null;
 
     const localHash = localStorage.getItem(`${category}_hash`);
 
     if (categoryHash?.hash != localHash) {
       let dto: GameweekFiltersDTO = {
+        leagueId: 2,
         seasonId: systemState.calculationSeasonId,
         gameweek: systemState.calculationGameweek,
       };
@@ -109,6 +109,7 @@ function createPlayerEventsStore() {
   ): Promise<PlayerDetailDTO> {
     try {
       let dto: GetPlayerDetailsDTO = {
+        leagueId: 2,
         playerId: playerId,
         seasonId: seasonId,
       };
@@ -136,6 +137,7 @@ function createPlayerEventsStore() {
       allPlayerEvents = await getPlayerEvents();
     } else {
       let dto: GameweekFiltersDTO = {
+        leagueId: 2,
         seasonId: systemState.calculationSeasonId,
         gameweek,
       };

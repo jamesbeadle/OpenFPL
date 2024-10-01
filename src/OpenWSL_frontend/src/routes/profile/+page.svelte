@@ -6,6 +6,7 @@
   import ManagerGameweeks from "$lib/components/manager/manager-gameweeks.svelte";
   import { writable, type Writable } from "svelte/store";
     import { userStore } from "$lib/stores/user-store";
+    import { authStore } from "$lib/stores/auth.store";
 
   let activeTab: string = "details";
   let loadingGameweekDetail: Writable<boolean> = writable(false);
@@ -58,7 +59,6 @@
             >
           </li>
         </ul>
-
         {#if activeTab === "details"}
           <ProfileDetail />
         {/if}

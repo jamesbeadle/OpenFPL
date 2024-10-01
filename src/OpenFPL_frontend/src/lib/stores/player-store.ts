@@ -4,7 +4,7 @@ import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
   ClubFilterDTO,
-  DataCacheDTO,
+  DataHashDTO,
   FixtureDTO,
   PlayerDTO,
   SystemStateDTO,
@@ -39,11 +39,10 @@ function createPlayerStore() {
       return;
     }
 
-    let dataCacheValues: DataCacheDTO[] = newHashValues.ok;
+    let dataCacheValues: DataHashDTO[] = newHashValues.ok;
 
     let categoryHash =
-      dataCacheValues.find((x: DataCacheDTO) => x.category === category) ??
-      null;
+      dataCacheValues.find((x: DataHashDTO) => x.category === category) ?? null;
 
     const localHash = localStorage.getItem(`${category}_hash`);
 
@@ -84,6 +83,7 @@ function createPlayerStore() {
 
   async function getLoanedPlayers(clubId: number): Promise<PlayerDTO[]> {
     let dto: ClubFilterDTO = {
+      leagueId: 2,
       clubId: clubId,
     };
     let loanedPlayers = await actor.getLoanedPlayers(dto);
@@ -98,6 +98,7 @@ function createPlayerStore() {
 
   async function getRetiredPlayers(clubId: number): Promise<PlayerDTO[]> {
     let dto: ClubFilterDTO = {
+      leagueId: 2,
       clubId: clubId,
     };
     let retiredPlayers = await actor.getRetiredPlayers(dto);

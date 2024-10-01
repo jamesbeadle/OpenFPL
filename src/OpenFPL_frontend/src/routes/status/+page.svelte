@@ -8,10 +8,8 @@
     import LocalSpinner from "$lib/components/local-spinner.svelte";
     import Summary from "$lib/components/status/summary.svelte";
     import Canisters from "$lib/components/status/canisters.svelte";
-    import Timers from "$lib/components/status/timers.svelte";
     import Topups from "$lib/components/status/topups.svelte";
     import RewardPools from "$lib/components/status/reward-pools.svelte";
-    import Logs from "$lib/components/status/logs.svelte";
     
     let isLoading = true;
     let activeTab: string = "summary";
@@ -20,7 +18,7 @@
       try{
         await systemStore.sync();
       } catch (error){
-        console.error("Error fetching system logs.")
+        console.error("Error fetching system summary.")
       } finally {
         isLoading = false;
       };
@@ -52,12 +50,6 @@
           Canisters
         </button>
         <button 
-          class={`btn ${ activeTab === "timers" ? `fpl-button` : `inactive-btn` } tab-switcher-label`}
-          on:click={() => setActiveTab("timers")}
-        >
-          Timers
-        </button>
-        <button 
           class={`btn ${ activeTab === "topups" ? `fpl-button` : `inactive-btn` } tab-switcher-label`}
           on:click={() => setActiveTab("topups")}
         >
@@ -68,12 +60,6 @@
           on:click={() => setActiveTab("reward-pools")}
         >
           Reward Pools
-        </button>
-        <button 
-          class={`btn ${ activeTab === "logs" ? `fpl-button` : `inactive-btn` } tab-switcher-label rounded-r-md`}
-          on:click={() => setActiveTab("logs")}
-        >
-          Logs
         </button>
       </div>
 
@@ -86,20 +72,12 @@
           <Canisters />
         {/if}
 
-        {#if activeTab === "timers"}
-          <Timers />
-        {/if}
-
         {#if activeTab === "topups"}
           <Topups />
         {/if}
 
         {#if activeTab === "reward-pools"}
           <RewardPools />
-        {/if}
-
-        {#if activeTab === "logs"}
-          <Logs />
         {/if}
       </div>
     {/if}

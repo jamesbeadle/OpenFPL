@@ -4,14 +4,24 @@
     import { onMount } from "svelte";
     import LocalSpinner from "../local-spinner.svelte";
     import { formatCycles, formatE8s } from "$lib/utils/helpers";
+    import { seasonStore } from "$lib/stores/season-store";
 
     let isLoading = true;
     let backendCanisterBalance = 0n;
     let backendCyclesAvailable = 0n;
 
+    let pickTeamSeasonName = "";
+    let calculationSeasonName = "";
+
     onMount(async () => {
       try{
         await systemStore.sync();
+        await seasonStore.sync();
+
+        let pickTeamSeason = $seasonStore.find(x => x.id == $systemStore?.pickTeamSeasonId);
+        let calculationSeason = $seasonStore.find(x => x.id == $systemStore?.calculationSeasonId);
+        pickTeamSeasonName = pickTeamSeason ? pickTeamSeason.name : pickTeamSeasonName;
+        calculationSeasonName = calculationSeason ? calculationSeason.name : calculationSeasonName;
 
         let fplBalance = await systemStore.getBackendCanisterBalance();
 
@@ -35,8 +45,8 @@
     <LocalSpinner />
 {:else}
     <div class="flex flex-col space-y-2 px-4">
-        <p>Pick Team Season: {$systemStore?.pickTeamSeasonName} (Id: {$systemStore?.pickTeamSeasonId})</p>
-        <p>Calculation Season: {$systemStore?.calculationSeasonName} (Id: {$systemStore?.pickTeamSeasonId})</p>
+        <p>Pick Team Season: {pickTeamSeasonName} (Id: {$systemStore?.pickTeamSeasonId})</p>
+        <p>Calculation Season: {calculationSeasonName} (Id: {$systemStore?.calculationSeasonId})</p>
         <p>Pick Team Gameweek: {$systemStore?.pickTeamGameweek}</p>
         <p>Calculation Gameweek: {$systemStore?.calculationGameweek}</p>
         <p>Season Active: {$systemStore?.seasonActive}</p>

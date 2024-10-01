@@ -433,9 +433,7 @@
       }
       bankBalance.update(
         (n) =>
-          n +
-            $playerStore.find((x) => x.id === playerId)!.valueQuarterMillions ??
-          0
+          n + $playerStore.find((x) => x.id === playerId)!.valueQuarterMillions 
       );
 
       return { ...currentTeam, playerIds: newPlayerIds };
