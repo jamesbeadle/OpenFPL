@@ -38,6 +38,9 @@ export default {
     extend: {
       colors: {
         BRAND: "#2ce3a6",
+        WSLGRAY: "#736370",
+        WSLPINK: "#F156D2",
+        WSLOFFPINK: "#B36DA5",
       },
     },
   },

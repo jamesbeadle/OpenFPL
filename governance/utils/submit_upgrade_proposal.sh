@@ -38,7 +38,7 @@ UPGRADE_ARG="(record { wasm_version = record { major=$MAJOR:nat32; minor=$MINOR:
 dfx identity use ic_admin
 OWNER_IDENTITY=$(dfx identity whoami)
 PEM_FILE="$(readlink -f "$HOME/.config/dfx/identity/${OWNER_IDENTITY}/identity.pem")"
-PROPOSER_NEURON_ID=d2ccf59abe1741c21c35da7e3863d5d14c97d9b82b36045f4a8d4c336864f6dc
+PROPOSER_NEURON_ID=61d4d2cddcabf9b2c9a5c3b44e6a338365aefdff8a78739fc6b316c8d03a0ad1
 
 # Make the proposal using quill
 quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-upgrade-canister-proposal --canister-upgrade-arg "$UPGRADE_ARG" --title "$TITLE" --url "$URL" --summary "$SUMMARY" --target-canister-id $TARGET_CANISTER_ID --wasm-path $WASM_PATH $PROPOSER_NEURON_ID > msg.json

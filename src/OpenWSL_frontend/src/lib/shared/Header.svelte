@@ -114,7 +114,7 @@
   <nav class="text-white">
     <div class="px-4 h-16 flex justify-between items-center w-full">
       <a href="/" class="hover:text-gray-400 flex items-center">
-        <OpenFPLIcon className="h-8 w-auto" /><b class="ml-2">OpenFPL</b>
+        <OpenFPLIcon className="h-8 w-auto" /><b class="ml-2">OpenWSL</b>
       </a>
       <button
         class="menu-toggle md:hidden focus:outline-none"

@@ -383,7 +383,7 @@ module {
             canister_id = cid.canister_id;
             settings = {
               controllers = ?[controller];
-              compute_allocation = null;
+              compute_allocation = ?1;
               memory_allocation = null;
               freezing_threshold = ?31_540_000;
               reserved_cycles_limit = null

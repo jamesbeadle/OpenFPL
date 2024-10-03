@@ -37,7 +37,6 @@
 
   onMount(async () => (worker = await initAuthWorker()));
 
-
   onMount(async () => {
     try {
       console.log("Mounting data stores.")

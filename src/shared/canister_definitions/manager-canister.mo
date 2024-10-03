@@ -2786,11 +2786,11 @@ actor class _ManagerCanister(controllerPrincipalId: T.PrincipalId, fixturesPerCl
 
     let balance = Cycles.balance();
 
-    if (balance < 2_000_000_000_000) {
+    if (balance < 50_000_000_000_000) {
       let openfpl_backend_canister = actor (controllerPrincipalId) : actor {
         requestCanisterTopup : (cycles: Nat) -> async ();
       };
-      await openfpl_backend_canister.requestCanisterTopup(2_000_000_000_000);
+      await openfpl_backend_canister.requestCanisterTopup(25_000_000_000_000);
     };
     await setCheckCyclesTimer();
   };

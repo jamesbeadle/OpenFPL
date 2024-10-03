@@ -9,7 +9,7 @@
   },
   "_index.js": {
     "css": [
-      "_app/immutable/assets/index.gfW9IbEE.css"
+      "_app/immutable/assets/index.DmXMtCUP.css"
     ],
     "file": "chunks/index.js",
     "imports": [
@@ -43,132 +43,132 @@
     "isEntry": true,
     "src": "node_modules/@sveltejs/kit/src/runtime/server/index.js"
   },
-  "src/OpenFPL_frontend/src/routes/+page.svelte": {
+  "src/OpenWSL_frontend/src/routes/+page.svelte": {
     "file": "entries/pages/_page.svelte.js",
     "imports": [
       "_index.js"
     ],
     "isEntry": true,
-    "src": "src/OpenFPL_frontend/src/routes/+page.svelte"
+    "src": "src/OpenWSL_frontend/src/routes/+page.svelte"
   },
-  "src/OpenFPL_frontend/src/routes/add-fixture-data/+page.svelte": {
+  "src/OpenWSL_frontend/src/routes/add-fixture-data/+page.svelte": {
     "file": "entries/pages/add-fixture-data/_page.svelte.js",
     "imports": [
       "_index.js"
     ],
     "isEntry": true,
-    "src": "src/OpenFPL_frontend/src/routes/add-fixture-data/+page.svelte"
+    "src": "src/OpenWSL_frontend/src/routes/add-fixture-data/+page.svelte"
   },
-  "src/OpenFPL_frontend/src/routes/add-proposal/+page.svelte": {
+  "src/OpenWSL_frontend/src/routes/add-proposal/+page.svelte": {
     "file": "entries/pages/add-proposal/_page.svelte.js",
     "imports": [
       "_index.js"
     ],
     "isEntry": true,
-    "src": "src/OpenFPL_frontend/src/routes/add-proposal/+page.svelte"
+    "src": "src/OpenWSL_frontend/src/routes/add-proposal/+page.svelte"
   },
-  "src/OpenFPL_frontend/src/routes/club/+page.svelte": {
+  "src/OpenWSL_frontend/src/routes/club/+page.svelte": {
     "file": "entries/pages/club/_page.svelte.js",
     "imports": [
       "_index.js"
     ],
     "isEntry": true,
-    "src": "src/OpenFPL_frontend/src/routes/club/+page.svelte"
+    "src": "src/OpenWSL_frontend/src/routes/club/+page.svelte"
   },
-  "src/OpenFPL_frontend/src/routes/clubs/+page.svelte": {
+  "src/OpenWSL_frontend/src/routes/clubs/+page.svelte": {
     "file": "entries/pages/clubs/_page.svelte.js",
     "imports": [
       "_index.js"
     ],
     "isEntry": true,
-    "src": "src/OpenFPL_frontend/src/routes/clubs/+page.svelte"
+    "src": "src/OpenWSL_frontend/src/routes/clubs/+page.svelte"
   },
-  "src/OpenFPL_frontend/src/routes/cycles/+page.svelte": {
+  "src/OpenWSL_frontend/src/routes/cycles/+page.svelte": {
     "file": "entries/pages/cycles/_page.svelte.js",
     "imports": [
       "_index.js"
     ],
     "isEntry": true,
-    "src": "src/OpenFPL_frontend/src/routes/cycles/+page.svelte"
+    "src": "src/OpenWSL_frontend/src/routes/cycles/+page.svelte"
   },
-  "src/OpenFPL_frontend/src/routes/gameplay-rules/+page.svelte": {
+  "src/OpenWSL_frontend/src/routes/gameplay-rules/+page.svelte": {
     "file": "entries/pages/gameplay-rules/_page.svelte.js",
     "imports": [
       "_index.js"
     ],
     "isEntry": true,
-    "src": "src/OpenFPL_frontend/src/routes/gameplay-rules/+page.svelte"
+    "src": "src/OpenWSL_frontend/src/routes/gameplay-rules/+page.svelte"
   },
-  "src/OpenFPL_frontend/src/routes/governance/+page.svelte": {
+  "src/OpenWSL_frontend/src/routes/governance/+page.svelte": {
     "file": "entries/pages/governance/_page.svelte.js",
     "imports": [
       "_index.js"
     ],
     "isEntry": true,
-    "src": "src/OpenFPL_frontend/src/routes/governance/+page.svelte"
+    "src": "src/OpenWSL_frontend/src/routes/governance/+page.svelte"
   },
-  "src/OpenFPL_frontend/src/routes/league/+page.svelte": {
+  "src/OpenWSL_frontend/src/routes/league/+page.svelte": {
     "file": "entries/pages/league/_page.svelte.js",
     "imports": [
       "_index.js"
     ],
     "isEntry": true,
-    "src": "src/OpenFPL_frontend/src/routes/league/+page.svelte"
+    "src": "src/OpenWSL_frontend/src/routes/league/+page.svelte"
   },
-  "src/OpenFPL_frontend/src/routes/manager/+page.svelte": {
+  "src/OpenWSL_frontend/src/routes/manager/+page.svelte": {
     "file": "entries/pages/manager/_page.svelte.js",
     "imports": [
       "_index.js"
     ],
     "isEntry": true,
-    "src": "src/OpenFPL_frontend/src/routes/manager/+page.svelte"
+    "src": "src/OpenWSL_frontend/src/routes/manager/+page.svelte"
   },
-  "src/OpenFPL_frontend/src/routes/pick-team/+page.svelte": {
+  "src/OpenWSL_frontend/src/routes/pick-team/+page.svelte": {
     "file": "entries/pages/pick-team/_page.svelte.js",
     "imports": [
       "_index.js"
     ],
     "isEntry": true,
-    "src": "src/OpenFPL_frontend/src/routes/pick-team/+page.svelte"
+    "src": "src/OpenWSL_frontend/src/routes/pick-team/+page.svelte"
   },
-  "src/OpenFPL_frontend/src/routes/player/+page.svelte": {
+  "src/OpenWSL_frontend/src/routes/player/+page.svelte": {
     "file": "entries/pages/player/_page.svelte.js",
     "imports": [
       "_index.js"
     ],
     "isEntry": true,
-    "src": "src/OpenFPL_frontend/src/routes/player/+page.svelte"
+    "src": "src/OpenWSL_frontend/src/routes/player/+page.svelte"
   },
-  "src/OpenFPL_frontend/src/routes/profile/+page.svelte": {
+  "src/OpenWSL_frontend/src/routes/profile/+page.svelte": {
     "file": "entries/pages/profile/_page.svelte.js",
     "imports": [
       "_index.js"
     ],
     "isEntry": true,
-    "src": "src/OpenFPL_frontend/src/routes/profile/+page.svelte"
+    "src": "src/OpenWSL_frontend/src/routes/profile/+page.svelte"
   },
-  "src/OpenFPL_frontend/src/routes/status/+page.svelte": {
+  "src/OpenWSL_frontend/src/routes/status/+page.svelte": {
     "file": "entries/pages/status/_page.svelte.js",
     "imports": [
       "_index.js"
     ],
     "isEntry": true,
-    "src": "src/OpenFPL_frontend/src/routes/status/+page.svelte"
+    "src": "src/OpenWSL_frontend/src/routes/status/+page.svelte"
   },
-  "src/OpenFPL_frontend/src/routes/terms/+page.svelte": {
+  "src/OpenWSL_frontend/src/routes/terms/+page.svelte": {
     "file": "entries/pages/terms/_page.svelte.js",
     "imports": [
       "_index.js"
     ],
     "isEntry": true,
-    "src": "src/OpenFPL_frontend/src/routes/terms/+page.svelte"
+    "src": "src/OpenWSL_frontend/src/routes/terms/+page.svelte"
   },
-  "src/OpenFPL_frontend/src/routes/whitepaper/+page.svelte": {
+  "src/OpenWSL_frontend/src/routes/whitepaper/+page.svelte": {
     "file": "entries/pages/whitepaper/_page.svelte.js",
     "imports": [
       "_index.js"
     ],
     "isEntry": true,
-    "src": "src/OpenFPL_frontend/src/routes/whitepaper/+page.svelte"
+    "src": "src/OpenWSL_frontend/src/routes/whitepaper/+page.svelte"
   }
 }

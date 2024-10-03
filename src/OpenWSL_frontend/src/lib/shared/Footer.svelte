@@ -3,7 +3,7 @@
   import OpenFplIcon from "$lib/icons/OpenFPLIcon.svelte";
 </script>
 
-<footer class="bg-gray-900 text-white py-3">
+<footer class="bg-WSLOFFPINK text-white py-3">
   <div
     class="container mx-1 xs:mx-2 md:mx-auto flex flex-col md:flex-row items-start md:items-center justify-between text-xs"
   >
@@ -39,8 +39,7 @@
       </div>
       <div class="flex justify-start">
         <div class="flex flex-col md:flex-row md:space-x-2 pl-4">
-          <a href="/whitepaper" class="hover:text-gray-300">Whitepaper</a>
-          <span class="hidden md:flex">|</span>
+          
           <a
             href="/gameplay-rules"
             class="hover:text-gray-300 md:hidden lg:block">Gameplay Rules</a
@@ -57,7 +56,7 @@
     <div class="flex-0">
       <a href="/">
         <b class="px-4 mt-2 md:mt-0 md:px-10 flex items-center"
-          ><OpenFplIcon className="h-6 w-auto mr-2" />OpenFPL</b
+          ><OpenFplIcon className="h-6 w-auto mr-2" />OpenWSL</b
         >
       </a>
     </div>

@@ -2,10 +2,10 @@
 	"compilerOptions": {
 		"paths": {
 			"$lib": [
-				"../src/OpenFPL_frontend/src/lib"
+				"../src/OpenWSL_frontend/src/lib"
 			],
 			"$lib/*": [
-				"../src/OpenFPL_frontend/src/lib/*"
+				"../src/OpenWSL_frontend/src/lib/*"
 			]
 		},
 		"rootDirs": [
