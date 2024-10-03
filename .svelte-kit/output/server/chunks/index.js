@@ -3516,7 +3516,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1rk9f4i"
+  version_hash: "1013fsh"
 };
 async function get_hooks() {
   return {};
@@ -4971,7 +4971,7 @@ function createFixtureStore() {
     const localHash = localStorage.getItem(`${category}_hash`);
     if (categoryHash?.hash != localHash) {
       let dto = {
-        leagueId: 2,
+        leagueId: 1,
         seasonId
       };
       const result = await actor.getFixtures(dto);
@@ -5898,7 +5898,7 @@ function createPlayerStore() {
     idlFactory,
     define_process_env_default$6.OPENFPL_BACKEND_CANISTER_ID
   );
-  async function sync() {
+  async function sync(seasonId) {
     let category = "players";
     const newHashValues = await actor.getDataHashes();
     let error = isError(newHashValues);
@@ -5910,7 +5910,7 @@ function createPlayerStore() {
     let categoryHash = dataCacheValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(`${category}_hash`);
     if (categoryHash?.hash != localHash) {
-      let result = await actor.getPlayers();
+      let result = await actor.getPlayers(seasonId);
       if (isError(result)) {
         console.error("Error fetching players data");
         return;
@@ -5941,7 +5941,7 @@ function createPlayerStore() {
   }
   async function getLoanedPlayers(clubId) {
     let dto = {
-      leagueId: 2,
+      leagueId: 1,
       clubId
     };
     let loanedPlayers = await actor.getLoanedPlayers(dto);
@@ -5953,7 +5953,7 @@ function createPlayerStore() {
   }
   async function getRetiredPlayers(clubId) {
     let dto = {
-      leagueId: 2,
+      leagueId: 1,
       clubId
     };
     let retiredPlayers = await actor.getRetiredPlayers(dto);
@@ -5997,7 +5997,7 @@ function createPlayerEventsStore() {
     const localHash = localStorage.getItem(`${category}_hash`);
     if (categoryHash?.hash != localHash) {
       let dto = {
-        leagueId: 2,
+        leagueId: 1,
         seasonId: systemState.calculationSeasonId,
         gameweek: systemState.calculationGameweek
       };
@@ -6037,7 +6037,7 @@ function createPlayerEventsStore() {
   async function getPlayerDetails(playerId, seasonId) {
     try {
       let dto = {
-        leagueId: 2,
+        leagueId: 1,
         playerId,
         seasonId
       };
@@ -6058,7 +6058,7 @@ function createPlayerEventsStore() {
       allPlayerEvents = await getPlayerEvents();
     } else {
       let dto = {
-        leagueId: 2,
+        leagueId: 1,
         seasonId: systemState.calculationSeasonId,
         gameweek
       };

@@ -84,7 +84,7 @@ function createPlayerStore() {
 
   async function getLoanedPlayers(clubId: number): Promise<PlayerDTO[]> {
     let dto: ClubFilterDTO = {
-      leagueId: 2,
+      leagueId: 1,
       clubId: clubId,
     };
     let loanedPlayers = await actor.getLoanedPlayers(dto);
@@ -99,7 +99,7 @@ function createPlayerStore() {
 
   async function getRetiredPlayers(clubId: number): Promise<PlayerDTO[]> {
     let dto: ClubFilterDTO = {
-      leagueId: 2,
+      leagueId: 1,
       clubId: clubId,
     };
     let retiredPlayers = await actor.getRetiredPlayers(dto);

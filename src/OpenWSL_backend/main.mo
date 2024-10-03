@@ -151,7 +151,7 @@
     };
 
     public shared ({ caller }) func getPlayerDetailsForGameweek(dto: DTOs.GameweekFiltersDTO) : async Result.Result<[DTOs.PlayerPointsDTO], T.Error> {
-      return await dataManager.getPlayerDetailsForGameweek(Environment.LEAGUE_ID, dto);
+      return await dataManager.getPlayerDetailsForGameweek(dto);
     };
 
     public shared ({ caller }) func getPlayersMap(dto: DTOs.GameweekFiltersDTO) : async Result.Result<[(Nat16, DTOs.PlayerScoreDTO)], T.Error> {
@@ -159,7 +159,7 @@
     };
 
     public shared ({ caller }) func getPlayerDetails(dto: DTOs.GetPlayerDetailsDTO) : async Result.Result<DTOs.PlayerDetailDTO, T.Error> {
-      return await dataManager.getPlayerDetails(Environment.LEAGUE_ID, dto);
+      return await dataManager.getPlayerDetails(dto);
     };
 
     public shared query func getCountries() : async Result.Result<[DTOs.CountryDTO], T.Error> {

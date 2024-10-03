@@ -34,7 +34,7 @@ function createFixtureStore() {
     const localHash = localStorage.getItem(`${category}_hash`);
     if (categoryHash?.hash != localHash) {
       let dto: RequestFixturesDTO = {
-        leagueId: 2,
+        leagueId: 1,
         seasonId: seasonId,
       };
       const result = await actor.getFixtures(dto);
