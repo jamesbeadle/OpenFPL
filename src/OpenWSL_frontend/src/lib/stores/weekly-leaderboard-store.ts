@@ -16,7 +16,7 @@ function createWeeklyLeaderboardStore() {
 
   let actor: any = ActorFactory.createActor(
     idlFactory,
-    process.env.OPENFPL_BACKEND_CANISTER_ID,
+    process.env.OPENWSL_BACKEND_CANISTER_ID,
   );
 
   async function sync(seasonId: number, gameweek: number) {

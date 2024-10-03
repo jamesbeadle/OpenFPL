@@ -806,7 +806,7 @@ service : {
   getMonthlyLeaderboard: (GetMonthlyLeaderboardDTO) -> (Result_15);
   getPlayerDetails: (GetPlayerDetailsDTO) -> (Result_14);
   getPlayerDetailsForGameweek: (GameweekFiltersDTO) -> (Result_13);
-  getPlayers: () -> (Result_6);
+  getPlayers: (SeasonId) -> (Result_6);
   getPlayersMap: (GameweekFiltersDTO) -> (Result_12);
   getPostponedFixtures: () -> (Result_11);
   getProfile: () -> (Result_10);

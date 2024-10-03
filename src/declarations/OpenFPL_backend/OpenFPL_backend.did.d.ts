@@ -653,7 +653,7 @@ export interface _SERVICE {
   'getMonthlyLeaderboard' : ActorMethod<[GetMonthlyLeaderboardDTO], Result_15>,
   'getPlayerDetails' : ActorMethod<[GetPlayerDetailsDTO], Result_14>,
   'getPlayerDetailsForGameweek' : ActorMethod<[GameweekFiltersDTO], Result_13>,
-  'getPlayers' : ActorMethod<[], Result_6>,
+  'getPlayers' : ActorMethod<[SeasonId], Result_6>,
   'getPlayersMap' : ActorMethod<[GameweekFiltersDTO], Result_12>,
   'getPostponedFixtures' : ActorMethod<[], Result_11>,
   'getProfile' : ActorMethod<[], Result_10>,

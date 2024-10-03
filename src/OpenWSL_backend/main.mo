@@ -30,9 +30,9 @@
   import LeaderboardManager "../shared/managers/leaderboard-manager";
   import UserManager "../shared/managers/user-manager";
   import SeasonManager "../shared/managers/season-manager";
-import CyclesDispenser "../shared/cycles-dispenser";
-import Environment "./environment";
-import NetworkEnvironmentVariables "../shared/network_environment_variables";
+  import CyclesDispenser "../shared/cycles-dispenser";
+  import Environment "./environment";
+  import NetworkEnvironmentVariables "../shared/network_environment_variables";
 
   actor Self {
     
@@ -71,7 +71,7 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
       return await userManager.getCurrentTeam(Principal.toText(caller));
     };
 
-    public shared func getManager(dto: Requests.RequestManagerDTO) : async Result.Result<DTOs.ManagerDTO, T.Error> {
+    public shared ({ caller }) func getManager(dto: Requests.RequestManagerDTO) : async Result.Result<DTOs.ManagerDTO, T.Error> {
       let weeklyLeaderboardEntry = await leaderboardManager.getWeeklyLeaderboardEntry(dto.managerId, dto.seasonId, dto.gameweek);
       let monthlyLeaderboardEntry = await leaderboardManager.getMonthlyLeaderboardEntry(dto.managerId, dto.seasonId, dto.month, dto.clubId);
       let seasonLeaderboardEntry = await leaderboardManager.getSeasonLeaderboardEntry(dto.managerId, dto.seasonId);
@@ -79,21 +79,21 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
       return await userManager.getManager(dto, weeklyLeaderboardEntry, monthlyLeaderboardEntry, seasonLeaderboardEntry);
     };
 
-    public shared func getFantasyTeamSnapshot(dto: DTOs.GetFantasyTeamSnapshotDTO) : async Result.Result<DTOs.FantasyTeamSnapshotDTO, T.Error> {
+    public shared ({ caller }) func getFantasyTeamSnapshot(dto: DTOs.GetFantasyTeamSnapshotDTO) : async Result.Result<DTOs.FantasyTeamSnapshotDTO, T.Error> {
       return await userManager.getFantasyTeamSnapshot(dto);
     };
 
     //Leaderboard calls:
 
-    public shared func getWeeklyLeaderboard(dto: DTOs.GetWeeklyLeaderboardDTO) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
+    public shared ({ caller }) func getWeeklyLeaderboard(dto: DTOs.GetWeeklyLeaderboardDTO) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
       return await leaderboardManager.getWeeklyLeaderboard(dto);
     };
 
-    public shared func getMonthlyLeaderboard(dto: DTOs.GetMonthlyLeaderboardDTO) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error> {
+    public shared ({ caller }) func getMonthlyLeaderboard(dto: DTOs.GetMonthlyLeaderboardDTO) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error> {
       return await leaderboardManager.getMonthlyLeaderboard(dto);
     };
 
-    public shared func getSeasonLeaderboard(dto: DTOs.GetSeasonLeaderboardDTO) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error> {
+    public shared ({ caller }) func getSeasonLeaderboard(dto: DTOs.GetSeasonLeaderboardDTO) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error> {
       return await leaderboardManager.getSeasonLeaderboard(dto);
     };
 
@@ -104,33 +104,37 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
       return seasonManager.getDataHashes();
     };
 
-    public shared func getSystemState() : async Result.Result<DTOs.SystemStateDTO, T.Error> {
+    public shared ({ caller }) func getSystemState() : async Result.Result<DTOs.SystemStateDTO, T.Error> {
       return await seasonManager.getSystemState();
     };
 
-    public shared func getClubs() : async Result.Result<[DTOs.ClubDTO], T.Error> {
+    public shared ({ caller }) func getClubs() : async Result.Result<[DTOs.ClubDTO], T.Error> {
       return await dataManager.getClubs(Environment.LEAGUE_ID);
     };
 
-    public shared func getFixtures(dto: Requests.RequestFixturesDTO) : async Result.Result<[DTOs.FixtureDTO], T.Error> {
+    public shared ({ caller }) func getFixtures(dto: Requests.RequestFixturesDTO) : async Result.Result<[DTOs.FixtureDTO], T.Error> {
       return await dataManager.getFixtures(dto);
     };
 
-    public shared func getSeasons() : async Result.Result<[DTOs.SeasonDTO], T.Error> {
+    public shared ({ caller }) func getSeasons() : async Result.Result<[DTOs.SeasonDTO], T.Error> {
       return await dataManager.getSeasons(Environment.LEAGUE_ID);
     };
 
-    public shared func getPostponedFixtures() : async Result.Result<[DTOs.FixtureDTO], T.Error> {
+    public shared ({ caller }) func getPostponedFixtures() : async Result.Result<[DTOs.FixtureDTO], T.Error> {
       return #err(#NotFound);
       //return await dataManager.getPostponedFixtures(Environment.LEAGUE_ID);
     };
 
-    public shared func getTotalManagers() : async Result.Result<Nat, T.Error> {
+    public shared ({ caller }) func getTotalManagers() : async Result.Result<Nat, T.Error> {
       return await userManager.getTotalManagers();
     };
 
-    public shared func getPlayers() : async Result.Result<[DTOs.PlayerDTO], T.Error> {
-      return await dataManager.getPlayers(Environment.LEAGUE_ID);
+    public shared ({ caller }) func getPlayers(seasonId: T.SeasonId) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
+      Debug.print("getting players");
+      Debug.print(debug_show seasonId);
+      Debug.print(debug_show Environment.LEAGUE_ID);
+
+      return await dataManager.getPlayers({ leagueId = Environment.LEAGUE_ID; seasonId = seasonId });
     };
 
     public shared ( {caller} ) func getSnapshotPlayers(dto: Requests.GetSnapshotPlayers) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
@@ -138,23 +142,23 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
       return await dataManager.getSnapshotPlayers(dto);
     };
 
-    public shared func getLoanedPlayers(dto: DTOs.ClubFilterDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
+    public shared ({ caller }) func getLoanedPlayers(dto: DTOs.ClubFilterDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
       return await dataManager.getLoanedPlayers(Environment.LEAGUE_ID, dto);
     };
 
-    public shared func getRetiredPlayers(dto: DTOs.ClubFilterDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
+    public shared ({ caller }) func getRetiredPlayers(dto: DTOs.ClubFilterDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
       return await dataManager.getRetiredPlayers(Environment.LEAGUE_ID, dto);
     };
 
-    public shared func getPlayerDetailsForGameweek(dto: DTOs.GameweekFiltersDTO) : async Result.Result<[DTOs.PlayerPointsDTO], T.Error> {
+    public shared ({ caller }) func getPlayerDetailsForGameweek(dto: DTOs.GameweekFiltersDTO) : async Result.Result<[DTOs.PlayerPointsDTO], T.Error> {
       return await dataManager.getPlayerDetailsForGameweek(Environment.LEAGUE_ID, dto);
     };
 
-    public shared func getPlayersMap(dto: DTOs.GameweekFiltersDTO) : async Result.Result<[(Nat16, DTOs.PlayerScoreDTO)], T.Error> {
+    public shared ({ caller }) func getPlayersMap(dto: DTOs.GameweekFiltersDTO) : async Result.Result<[(Nat16, DTOs.PlayerScoreDTO)], T.Error> {
       return await dataManager.getPlayersMap(Environment.LEAGUE_ID, dto);
     };
 
-    public shared func getPlayerDetails(dto: DTOs.GetPlayerDetailsDTO) : async Result.Result<DTOs.PlayerDetailDTO, T.Error> {
+    public shared ({ caller }) func getPlayerDetails(dto: DTOs.GetPlayerDetailsDTO) : async Result.Result<DTOs.PlayerDetailDTO, T.Error> {
       return await dataManager.getPlayerDetails(Environment.LEAGUE_ID, dto);
     };
 
@@ -239,7 +243,7 @@ import NetworkEnvironmentVariables "../shared/network_environment_variables";
         case (#ok systemState){       
           assert not systemState.onHold;
       
-          let playersResult = await dataManager.getPlayers(Environment.LEAGUE_ID);
+          let playersResult = await dataManager.getPlayers({ leagueId = Environment.LEAGUE_ID; seasonId = systemState.pickTeamSeasonId });
           switch(playersResult){
             case (#ok players){
               return await userManager.saveFantasyTeam(principalId, fantasyTeam, systemState, players);

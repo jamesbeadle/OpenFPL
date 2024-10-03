@@ -13,6 +13,7 @@
   import { systemStore } from "$lib/stores/system-store";
   import { teamStore } from "$lib/stores/team-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
+    import { playerStore } from "$lib/stores/player-store";
 
   const init = async () => await Promise.all([syncAuthStore()]);
 
@@ -40,11 +41,14 @@
 
   onMount(async () => {
     try {
+
+      console.log(process.env)
       console.log("Mounting data stores.")
       await authStore.sync();
       await systemStore.sync();
       await teamStore.sync();
       await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
+      await playerStore.sync(); 
       console.log("Data stores mounted.")
     } catch (error) {
       toastsError({

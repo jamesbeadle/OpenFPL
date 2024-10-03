@@ -18,7 +18,7 @@ function createSystemStore() {
   const { subscribe, set } = writable<SystemStateDTO | null>(null);
   let actor: any = ActorFactory.createActor(
     idlFactory,
-    process.env.OPENFPL_BACKEND_CANISTER_ID,
+    process.env.OPENWSL_BACKEND_CANISTER_ID,
   );
 
   async function sync() {
@@ -98,7 +98,7 @@ function createSystemStore() {
     try {
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
+        process.env.OPENWSL_BACKEND_CANISTER_ID ?? "",
       );
 
       const limit = itemsPerPage;
@@ -131,7 +131,7 @@ function createSystemStore() {
     try {
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
+        process.env.OPENWSL_BACKEND_CANISTER_ID ?? "",
       );
 
       let dto: GetRewardPoolDTO = {
@@ -168,7 +168,7 @@ function createSystemStore() {
     try {
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
+        process.env.OPENWSL_BACKEND_CANISTER_ID ?? "",
       );
 
       const limit = itemsPerPage;
@@ -198,7 +198,7 @@ function createSystemStore() {
     try {
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
+        process.env.OPENWSL_BACKEND_CANISTER_ID ?? "",
       );
       let result = await identityActor.getBackendCanisterBalance();
 
@@ -219,7 +219,7 @@ function createSystemStore() {
     try {
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
+        process.env.OPENWSL_BACKEND_CANISTER_ID ?? "",
       );
       let result = await identityActor.getCanisterCyclesBalance();
 

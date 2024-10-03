@@ -7,6 +7,7 @@ import type {
   DataHashDTO,
   FixtureDTO,
   PlayerDTO,
+  SeasonId,
   SystemStateDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
@@ -28,7 +29,7 @@ function createPlayerStore() {
     process.env.OPENFPL_BACKEND_CANISTER_ID,
   );
 
-  async function sync() {
+  async function sync(seasonId: SeasonId) {
     let category = "players";
 
     const newHashValues = await actor.getDataHashes();
@@ -47,7 +48,7 @@ function createPlayerStore() {
     const localHash = localStorage.getItem(`${category}_hash`);
 
     if (categoryHash?.hash != localHash) {
-      let result = await actor.getPlayers();
+      let result = await actor.getPlayers(seasonId);
 
       if (isError(result)) {
         console.error("Error fetching players data");

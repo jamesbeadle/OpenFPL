@@ -47,11 +47,11 @@ module {
       return await data_canister.getPostponedFixtures(dto);
     };
 
-    public func getPlayers(leagueId: T.FootballLeagueId) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
+    public func getPlayers(dto: RequestDTOs.RequestPlayersDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
       let data_canister = actor (NetworkEnvVars.DATA_CANISTER_ID) : actor {
-        getPlayers : (leagueId: T.FootballLeagueId) -> async Result.Result<[DTOs.PlayerDTO], T.Error>;
+        getPlayers : (dto: RequestDTOs.RequestPlayersDTO) -> async Result.Result<[DTOs.PlayerDTO], T.Error>;
       };
-      return await data_canister.getPlayers(leagueId);
+      return await data_canister.getPlayers(dto);
     };
 
     public func getAllSeasonPlayers(dto: RequestDTOs.RequestPlayersDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
@@ -231,7 +231,7 @@ module {
     
     public func executeSubmitFixtureData(submitFixtureData : DTOs.SubmitFixtureDataDTO) : async Result.Result<(), T.Error> {
       
-      let playersResult = await getPlayers(submitFixtureData.seasonId);
+      let playersResult = await getPlayers({ leagueId = submitFixtureData.leagueId; seasonId = submitFixtureData.seasonId });
 
       switch(playersResult){
         case (#ok players){

@@ -662,7 +662,7 @@ export const idlFactory = ({ IDL }) => {
         [Result_13],
         [],
       ),
-    'getPlayers' : IDL.Func([], [Result_6], []),
+    'getPlayers' : IDL.Func([SeasonId], [Result_6], []),
     'getPlayersMap' : IDL.Func([GameweekFiltersDTO], [Result_12], []),
     'getPostponedFixtures' : IDL.Func([], [Result_11], []),
     'getProfile' : IDL.Func([], [Result_10], []),

@@ -25,7 +25,7 @@ function createManagerStore() {
 
   let actor: any = ActorFactory.createActor(
     idlFactory,
-    process.env.OPENFPL_BACKEND_CANISTER_ID,
+    process.env.OPENWSL_BACKEND_CANISTER_ID ?? "",
   );
 
   let newManager = {
@@ -128,7 +128,7 @@ function createManagerStore() {
     try {
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
+        process.env.OPENWSL_BACKEND_CANISTER_ID ?? "",
       );
       const result = await identityActor.getCurrentTeam();
 
@@ -165,7 +165,7 @@ function createManagerStore() {
 
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
+        process.env.OPENWSL_BACKEND_CANISTER_ID ?? "",
       );
 
       let dto: UpdateTeamSelectionDTO = {

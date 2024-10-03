@@ -73,6 +73,10 @@
     public shared ( {caller} ) func getClubs(leagueId: T.FootballLeagueId) : async Result.Result<[T.Club], T.Error>{
       //assert callerAllowed(caller);
 
+      Debug.print("getting clubs");
+      Debug.print(debug_show leagueId);
+      Debug.print(debug_show leagueClubs);
+
       let filteredLeagueClubs = Array.find<(T.FootballLeagueId, [T.Club])>(leagueClubs, 
         func(leagueClubs: (T.FootballLeagueId, [T.Club])) : Bool {
             leagueClubs.0 == leagueId;
