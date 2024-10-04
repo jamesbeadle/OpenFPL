@@ -48,7 +48,7 @@
       await systemStore.sync();
       await teamStore.sync();
       await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
-      await playerStore.sync(); 
+      await playerStore.sync($systemStore?.calculationSeasonId ?? 1); 
       console.log("Data stores mounted.")
     } catch (error) {
       toastsError({

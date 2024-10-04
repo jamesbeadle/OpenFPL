@@ -49,7 +49,7 @@ function createPlayerStore() {
 
     if (categoryHash?.hash != localHash) {
       console.log("fetching players");
-      let result = await actor.getPlayers();
+      let result = await actor.getPlayers(seasonId);
       console.log(result);
       if (isError(result)) {
         console.error("Error fetching players data");

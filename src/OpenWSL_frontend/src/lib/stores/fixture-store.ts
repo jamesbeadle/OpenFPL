@@ -37,7 +37,10 @@ function createFixtureStore() {
         leagueId: 2,
         seasonId: seasonId,
       };
+      console.log("here");
+      console.log(dto);
       const result = await actor.getFixtures(dto);
+      console.log(result);
 
       if (isError(result)) {
         console.error("error syncing fixture store");

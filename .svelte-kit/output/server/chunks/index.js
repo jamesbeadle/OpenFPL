@@ -3516,7 +3516,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1uwazlf"
+  version_hash: "bpaa4y"
 };
 async function get_hooks() {
   return {};
@@ -4974,7 +4974,10 @@ function createFixtureStore() {
         leagueId: 2,
         seasonId
       };
+      console.log("here");
+      console.log(dto);
       const result = await actor.getFixtures(dto);
+      console.log(result);
       if (isError(result)) {
         console.error("error syncing fixture store");
         return;
@@ -5900,7 +5903,7 @@ function createPlayerStore() {
   );
   async function sync(seasonId) {
     let category = "players";
-    const newHashValues = await actor.getDataHashes(seasonId);
+    const newHashValues = await actor.getDataHashes();
     let error = isError(newHashValues);
     if (error) {
       console.error("Error syncing player store");
