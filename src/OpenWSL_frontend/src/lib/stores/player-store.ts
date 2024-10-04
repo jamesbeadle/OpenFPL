@@ -32,7 +32,7 @@ function createPlayerStore() {
   async function sync(seasonId: SeasonId) {
     let category = "players";
 
-    const newHashValues = await actor.getDataHashes(seasonId);
+    const newHashValues = await actor.getDataHashes();
 
     let error = isError(newHashValues);
     if (error) {

@@ -55,6 +55,8 @@ function createSystemStore() {
       );
       localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
       set(updatedSystemStateData);
+      checkForVersionRefresh();
+
     } else {
       const cachedSystemStateData = localStorage.getItem(category);
       let cachedSystemState: SystemStateDTO | null = null;
