@@ -13,7 +13,6 @@ module Environment {
   public let NUM_OF_GAMEWEEKS: Nat8 = 22;
   public let NUM_OF_MONTHS: Nat8 = 10;
 
-
 //Local
   public let BACKEND_CANISTER_ID = "br5f7-7uaaa-aaaaa-qaaca-cai";
   public let FRONTEND_CANISTER_ID = "be2us-64aaa-aaaaa-qaabq-cai";
