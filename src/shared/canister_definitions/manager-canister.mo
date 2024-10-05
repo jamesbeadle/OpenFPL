@@ -15,12 +15,13 @@ import Nat "mo:base/Nat";
 import Debug "mo:base/Debug";
 import Int16 "mo:base/Int16";
 import Nat16 "mo:base/Nat16";
+import Environment "../network_environment_variables";
 
 import DTOs "../../shared/DTOs";
 import T "../../shared/types";
 import Utilities "../../shared/utils/utilities";
 
-actor class _ManagerCanister(controllerPrincipalId: T.PrincipalId, fixturesPerClub: Nat8) {
+actor class _ManagerCanister() {
 
   private var managerGroupIndexes : TrieMap.TrieMap<T.PrincipalId, Nat8> = TrieMap.TrieMap<T.PrincipalId, Nat8>(Text.equal, Text.hash);
 
@@ -43,6 +44,26 @@ actor class _ManagerCanister(controllerPrincipalId: T.PrincipalId, fixturesPerCl
   private stable var totalManagers = 0;
 
   private stable var playersSnapshots: [(T.SeasonId, [(T.GameweekNumber, [T.Player])])] = [];
+
+  private stable var initialised = false;
+  private stable var controllerPrincipalId = "";
+  private stable var fixturesPerClub: Nat8 = 0;
+
+  public shared ({caller}) func initialise(_controllerPrincipalId: Text, _fixturesPerClub: Nat8) : async (){
+    if(initialised){
+      return;
+    };
+
+    let callerInArray = Array.find<T.CanisterId>([Environment.OPENFPL_BACKEND_CANISTER_ID, Environment.OPENWSL_BACKEND_CANISTER_ID], func(canisterId: T.CanisterId) : Bool{
+      canisterId == Principal.toText(caller);
+    });
+
+    if(Option.isSome(callerInArray)){
+      controllerPrincipalId := _controllerPrincipalId;
+      fixturesPerClub := _fixturesPerClub;
+    };
+
+  };
 
   public shared ({ caller }) func updateTeamSelection(teamUpdateDTO : DTOs.TeamUpdateDTO, transfersAvailable : Nat8, monthlyBonuses : Nat8, newBankBalance : Nat16) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);

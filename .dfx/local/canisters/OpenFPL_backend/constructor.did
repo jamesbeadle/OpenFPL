@@ -48,7 +48,6 @@ type UpdatePlayerDTO =
    dateOfBirth: int;
    firstName: text;
    lastName: text;
-   leagueId: FootballLeagueId;
    nationality: CountryId;
    playerId: PlayerId;
    position: PlayerPosition;
@@ -66,21 +65,15 @@ type UpdateClubDTO =
    shirtType: ShirtType;
    thirdColourHex: text;
  };
-type UnretirePlayerDTO = 
- record {
-   leagueId: FootballLeagueId;
-   playerId: PlayerId;
- };
+type UnretirePlayerDTO = record {playerId: PlayerId;};
 type TransferPlayerDTO = 
  record {
    clubId: ClubId;
    gameweek: GameweekNumber;
-   leagueId: FootballLeagueId;
    newClubId: ClubId;
    newLeagueId: FootballLeagueId;
    newShirtNumber: nat8;
    playerId: PlayerId;
-   seasonId: SeasonId;
  };
 type TopupDTO = 
  record {
@@ -104,10 +97,8 @@ type SubmitFixtureDataDTO =
  record {
    fixtureId: FixtureId;
    gameweek: GameweekNumber;
-   leagueId: FootballLeagueId;
    month: CalendarMonth;
    playerEventData: vec PlayerEventData;
-   seasonId: SeasonId;
  };
 type ShirtType = 
  variant {
@@ -118,7 +109,6 @@ type SetPlayerInjuryDTO =
  record {
    description: text;
    expectedEndDate: int;
-   leagueId: FootballLeagueId;
    playerId: PlayerId;
  };
 type SeasonLeaderboardDTO = 
@@ -154,20 +144,15 @@ type RewardPool =
 type RevaluePlayerUpDTO = 
  record {
    gameweek: GameweekNumber;
-   leagueId: FootballLeagueId;
    playerId: PlayerId;
-   seasonId: SeasonId;
  };
 type RevaluePlayerDownDTO = 
  record {
    gameweek: GameweekNumber;
-   leagueId: FootballLeagueId;
    playerId: PlayerId;
-   seasonId: SeasonId;
  };
 type RetirePlayerDTO = 
  record {
-   leagueId: FootballLeagueId;
    playerId: PlayerId;
    retirementDate: int;
  };
@@ -303,11 +288,7 @@ type RequestFixturesDTO =
    leagueId: FootballLeagueId;
    seasonId: SeasonId;
  };
-type RecallPlayerDTO = 
- record {
-   leagueId: FootballLeagueId;
-   playerId: PlayerId;
- };
+type RecallPlayerDTO = record {playerId: PlayerId;};
 type PromoteNewClubDTO = 
  record {
    abbreviatedName: text;
@@ -497,12 +478,10 @@ type ManagerDTO =
 type LoanPlayerDTO = 
  record {
    gameweek: GameweekNumber;
-   leagueId: FootballLeagueId;
    loanClubId: ClubId;
    loanEndDate: int;
    loanLeagueId: FootballLeagueId;
    playerId: PlayerId;
-   seasonId: SeasonId;
  };
 type LeaderboardEntry = 
  record {
@@ -553,7 +532,6 @@ type GetRewardPoolDTO =
  };
 type GetPlayerDetailsDTO = 
  record {
-   leagueId: FootballLeagueId;
    playerId: PlayerId;
    seasonId: SeasonId;
  };
@@ -589,7 +567,6 @@ type GameweekNumber = nat8;
 type GameweekFiltersDTO = 
  record {
    gameweek: GameweekNumber;
-   leagueId: FootballLeagueId;
    seasonId: SeasonId;
  };
 type FootballLeagueId = nat16;
@@ -718,7 +695,6 @@ type CreatePlayerDTO =
    firstName: text;
    gender: Gender;
    lastName: text;
-   leagueId: FootballLeagueId;
    nationality: CountryId;
    position: PlayerPosition;
    shirtNumber: nat8;
@@ -767,11 +743,7 @@ type CanisterDTO =
    lastTopup: int;
  };
 type CalendarMonth = nat8;
-type AddInitialFixturesDTO = 
- record {
-   seasonFixtures: vec FixtureDTO;
-   seasonId: SeasonId;
- };
+type AddInitialFixturesDTO = record {seasonFixtures: vec FixtureDTO;};
 type AccountIdentifier = blob;
 service : {
   executeAddInitialFixtures: (AddInitialFixturesDTO) -> ();
@@ -806,7 +778,7 @@ service : {
   getMonthlyLeaderboard: (GetMonthlyLeaderboardDTO) -> (Result_15);
   getPlayerDetails: (GetPlayerDetailsDTO) -> (Result_14);
   getPlayerDetailsForGameweek: (GameweekFiltersDTO) -> (Result_13);
-  getPlayers: (SeasonId) -> (Result_6);
+  getPlayers: () -> (Result_6);
   getPlayersMap: (GameweekFiltersDTO) -> (Result_12);
   getPostponedFixtures: () -> (Result_11);
   getProfile: () -> (Result_10);

@@ -65,7 +65,11 @@
   });
   
   async function loadData() {
-    activeSeason = $systemStore?.pickTeamSeasonName ?? "-";
+    let seasons = await systemStore.getSeasons();
+    let foundSeason = seasons.find(x => x.id == $systemStore?.pickTeamSeasonId);
+    if(foundSeason){
+      activeSeason = foundSeason.name;
+    }
     activeGameweek = $systemStore?.pickTeamGameweek ?? 1;
 
     const storedViewMode = localStorage.getItem("viewMode");

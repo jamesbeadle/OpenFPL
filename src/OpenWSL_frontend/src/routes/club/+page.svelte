@@ -36,6 +36,8 @@
 
   let activeTab: string = "players";
 
+let seasonName = "";
+
   $: id = Number($page.url.searchParams.get("id"));
 
   onMount(async () => {
@@ -45,6 +47,12 @@
       await systemStore.sync();
       await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
       await playerStore.sync();
+      let seasons = await systemStore.getSeasons();
+      let foundSeason = seasons.find(x => x.id == $systemStore?.pickTeamSeasonId);
+      if(foundSeason){
+        seasonName = foundSeason.name;
+      }
+
       selectedGameweek = $systemStore?.pickTeamGameweek ?? 1;
 
       let teamFixtures = $fixtureStore.filter(
@@ -157,7 +165,7 @@
             {getTeamPosition(id)}
           </p>
           <p class="content-panel-header">
-            {$systemStore?.pickTeamSeasonName}
+            {seasonName}
           </p>
         </div>
       </div>

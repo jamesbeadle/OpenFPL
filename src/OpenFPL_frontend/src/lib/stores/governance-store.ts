@@ -25,6 +25,7 @@ import type {
   SetPlayerInjuryDTO,
   ShirtType,
   SubmitFixtureDataDTO,
+  SystemStateDTO,
   TransferPlayerDTO,
   UnretirePlayerDTO,
   UpdateClubDTO,
@@ -39,6 +40,7 @@ import { IDL } from "@dfinity/candid";
 function createGovernanceStore() {
   async function revaluePlayerUp(playerId: number): Promise<any> {
     try {
+      await systemStore.sync();
       await playerStore.sync();
 
       let allPlayers: PlayerDTO[] = [];
@@ -47,8 +49,14 @@ function createGovernanceStore() {
       });
       unsubscribe();
 
+      const unsubscribeSystemState = systemStore.subscribe((state) => {
+        systemState = state;
+      });
+      unsubscribeSystemState();
+
       var dto: RevaluePlayerUpDTO = {
         playerId: playerId,
+        seasonId: systemState == null ? 1 : systemState.calculationSeasonId,
       };
 
       let player = allPlayers.find((x) => x.id == playerId);

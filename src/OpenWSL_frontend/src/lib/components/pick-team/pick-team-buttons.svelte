@@ -65,7 +65,7 @@
   });
   
   async function loadData() {
-    activeSeason = $systemStore?.pickTeamSeasonName ?? "-";
+    activeSeason = "//TODO-";
     activeGameweek = $systemStore?.pickTeamGameweek ?? 1;
 
     const storedViewMode = localStorage.getItem("viewMode");

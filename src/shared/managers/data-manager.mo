@@ -17,7 +17,6 @@ module {
 
   public class DataManager() {
 
-
     public func getClubs(leagueId: T.FootballLeagueId) : async Result.Result<[DTOs.ClubDTO], T.Error> {
       let data_canister = actor (NetworkEnvVars.DATA_CANISTER_ID) : actor {
         getClubs : (leagueId: T.FootballLeagueId) -> async Result.Result<[T.Club], T.Error>;
@@ -25,11 +24,11 @@ module {
       return await data_canister.getClubs(leagueId);
     };
 
-    public func getFixtures(dto: RequestDTOs.RequestFixturesDTO) : async Result.Result<[DTOs.FixtureDTO], T.Error> {
+    public func getFixtures(leagueId: T.FootballLeagueId, dto: RequestDTOs.RequestFixturesDTO) : async Result.Result<[DTOs.FixtureDTO], T.Error> {
       let data_canister = actor (NetworkEnvVars.DATA_CANISTER_ID) : actor {
-        getFixtures : (dto: RequestDTOs.RequestFixturesDTO) -> async Result.Result<[DTOs.FixtureDTO], T.Error>;
+        getFixtures : (leagueId: T.FootballLeagueId, dto: RequestDTOs.RequestFixturesDTO) -> async Result.Result<[DTOs.FixtureDTO], T.Error>;
       };
-      return await data_canister.getFixtures(dto);
+      return await data_canister.getFixtures(leagueId, dto);
     };
 
     public func getSeasons(leagueId: T.FootballLeagueId) : async Result.Result<[DTOs.SeasonDTO], T.Error> {
@@ -39,12 +38,12 @@ module {
       return await data_canister.getSeasons(leagueId);
     };
 
-    public func getPostponedFixtures(dto: RequestDTOs.RequestFixturesDTO) : async Result.Result<[DTOs.FixtureDTO], T.Error> {
+    public func getPostponedFixtures(leagueId: T.FootballLeagueId, seasonId: T.SeasonId, dto: RequestDTOs.RequestFixturesDTO) : async Result.Result<[DTOs.FixtureDTO], T.Error> {
       let data_canister = actor (NetworkEnvVars.DATA_CANISTER_ID) : actor {
-        getPostponedFixtures : (dto: RequestDTOs.RequestFixturesDTO
+        getPostponedFixtures : (leagueId: T.FootballLeagueId, seasonId: T.SeasonId, dto: RequestDTOs.RequestFixturesDTO
         ) -> async Result.Result<[DTOs.FixtureDTO], T.Error>;
       };
-      return await data_canister.getPostponedFixtures(dto);
+      return await data_canister.getPostponedFixtures(leagueId, seasonId, dto);
     };
 
     public func getPlayers(dto: RequestDTOs.RequestPlayersDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
@@ -215,7 +214,7 @@ module {
       return await data_canister.validateUnretirePlayer(leagueId, unretirePlayerDTO);
     };
 
-    public func executeRevaluePlayerUp(leagueId: T.FootballLeagueId, dto : DTOs.RevaluePlayerUpDTO) : async Result.Result<(), T.Error> {
+    public func executeRevaluePlayerUp(leagueId: T.FootballLeagueId, seasonId: T.SeasonId, dto : DTOs.RevaluePlayerUpDTO) : async Result.Result<(), T.Error> {
       let data_canister = actor (NetworkEnvVars.DATA_CANISTER_ID) : actor {
         revaluePlayerUp : (leagueId: T.FootballLeagueId, dto : DTOs.RevaluePlayerUpDTO) -> async Result.Result<(), T.Error>;
       };
@@ -229,13 +228,13 @@ module {
       return await data_canister.revaluePlayerDown(leagueId, dto);
     };
     
-    public func executeSubmitFixtureData(submitFixtureData : DTOs.SubmitFixtureDataDTO) : async Result.Result<(), T.Error> {
+    public func executeSubmitFixtureData( leagueId: T.FootballLeagueId, seasonId: T.SeasonId, submitFixtureData : DTOs.SubmitFixtureDataDTO) : async Result.Result<(), T.Error> {
       
-      let playersResult = await getPlayers({ leagueId = submitFixtureData.leagueId; seasonId = submitFixtureData.seasonId });
+      let playersResult = await getPlayers({ leagueId = leagueId; seasonId = seasonId });
 
       switch(playersResult){
         case (#ok players){
-          let populatedPlayerEvents = await populatePlayerEventData(submitFixtureData, players);
+          let populatedPlayerEvents = await populatePlayerEventData(seasonId, submitFixtureData, players);
           switch (populatedPlayerEvents) {
             case (null) {
               return #err(#NotFound);
@@ -248,10 +247,10 @@ module {
                 setFixtureToFinalised : (seasonId: T.SeasonId, fixtureId: T.FixtureId) -> async ();
               };
               
-              let _ = await data_canister.addEventsToPlayers(events, submitFixtureData.seasonId, submitFixtureData.gameweek);
-              let _ = await data_canister.addEventsToFixture(events, submitFixtureData.seasonId, submitFixtureData.fixtureId); 
-              let _ = await data_canister.setGameScore(submitFixtureData.seasonId, submitFixtureData.fixtureId);
-              let _ = await data_canister.setFixtureToFinalised(submitFixtureData.seasonId, submitFixtureData.fixtureId);
+              let _ = await data_canister.addEventsToPlayers(events, seasonId, submitFixtureData.gameweek);
+              let _ = await data_canister.addEventsToFixture(events, seasonId, submitFixtureData.fixtureId); 
+              let _ = await data_canister.setGameScore(seasonId, submitFixtureData.fixtureId);
+              let _ = await data_canister.setFixtureToFinalised(seasonId, submitFixtureData.fixtureId);
               
 
               return #ok();
@@ -365,7 +364,32 @@ module {
       return await data_canister.getSnapshotPlayers(dto);
     };
 
-    public func populatePlayerEventData(submitFixtureDataDTO : DTOs.SubmitFixtureDataDTO, allPlayers : [DTOs.PlayerDTO]) : async ?[T.PlayerEventData] {
+    public func checkGameweekComplete(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async Bool {
+      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
+        checkGameweekComplete : (seasonId: T.SeasonId, gameweek: T.GameweekNumber) -> async Bool;
+      };
+      
+      return await data_canister.checkGameweekComplete(seasonId,gameweek);
+    };
+
+    public func checkMonthComplete(seasonId: T.SeasonId, month: T.CalendarMonth, gameweek: T.GameweekNumber) : async Bool {
+      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
+        checkMonthComplete : (seasonId: T.SeasonId, month: T.CalendarMonth, gameweek: T.GameweekNumber) -> async Bool;
+      };
+      
+      return await data_canister.checkMonthComplete(seasonId, month, gameweek);
+
+    };
+
+    public func checkSeasonComplete(seasonId: T.SeasonId) : async Bool {
+      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
+        checkSeasonComplete : (seasonId: T.SeasonId) -> async Bool;
+      };
+      
+      return await data_canister.checkSeasonComplete(seasonId);
+    };
+
+    private func populatePlayerEventData(seasonId: T.SeasonId, submitFixtureDataDTO : DTOs.SubmitFixtureDataDTO, allPlayers : [DTOs.PlayerDTO]) : async ?[T.PlayerEventData] {
 
       let allPlayerEventsBuffer = Buffer.fromArray<T.PlayerEventData>(submitFixtureDataDTO.playerEventData);
 
@@ -376,7 +400,7 @@ module {
         getSeason : (seasonId: T.SeasonId) -> async ?T.Season;
       };
       
-      let currentSeason = await data_canister.getSeason(submitFixtureDataDTO.seasonId);
+      let currentSeason = await data_canister.getSeason(seasonId);
 
       switch (currentSeason) {
         case (null) { return null };
@@ -670,31 +694,6 @@ module {
       };
 
       return Buffer.toArray(allEventsBuffer);
-    };
-
-    public func checkGameweekComplete(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async Bool {
-      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
-        checkGameweekComplete : (seasonId: T.SeasonId, gameweek: T.GameweekNumber) -> async Bool;
-      };
-      
-      return await data_canister.checkGameweekComplete(seasonId,gameweek);
-    };
-
-    public func checkMonthComplete(seasonId: T.SeasonId, month: T.CalendarMonth, gameweek: T.GameweekNumber) : async Bool {
-      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
-        checkMonthComplete : (seasonId: T.SeasonId, month: T.CalendarMonth, gameweek: T.GameweekNumber) -> async Bool;
-      };
-      
-      return await data_canister.checkMonthComplete(seasonId, month, gameweek);
-
-    };
-
-    public func checkSeasonComplete(seasonId: T.SeasonId) : async Bool {
-      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
-        checkSeasonComplete : (seasonId: T.SeasonId) -> async Bool;
-      };
-      
-      return await data_canister.checkSeasonComplete(seasonId);
     };
 
     

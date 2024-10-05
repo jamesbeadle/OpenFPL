@@ -10,6 +10,7 @@
   import { Modal } from "@dfinity/gix-components";
   import { convertPlayerPosition } from "$lib/utils/helpers";
   import { allFormations } from "$lib/utils/pick-team.helpers";
+    import { systemStore } from "$lib/stores/system-store";
 
   export let visible: boolean;
   export let closeAddPlayerModal: () => void;
@@ -95,6 +96,7 @@
   onMount(async () => {
     try {
       await teamStore.sync();
+      await systemStore.sync();
       if ($teamStore.length == 0) return;
       await playerStore.sync();
 

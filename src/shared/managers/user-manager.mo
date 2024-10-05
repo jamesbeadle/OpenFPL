@@ -21,6 +21,7 @@ import Array "mo:base/Array";
 import Option "mo:base/Option";
 import Blob "mo:base/Blob";
 import Nat16 "mo:base/Nat16";
+import Debug "mo:base/Debug";
 import NetworkEnvironmentVariables "../network_environment_variables";
 
 module {
@@ -419,6 +420,9 @@ module {
 
     private func createNewManager(managerPrincipalId: T.PrincipalId, username: Text, favouriteClubId: T.ClubId, profilePicture: ?Blob, profilePictureType: Text, dto : ?DTOs.UpdateTeamSelectionDTO, systemState: DTOs.SystemStateDTO, players: [DTOs.PlayerDTO]) : async Result.Result<(), T.Error>{
       
+      Debug.print("create new canister");
+
+      Debug.print(debug_show activeManagerCanisterId);
       if(activeManagerCanisterId == ""){
         activeManagerCanisterId := await createManagerCanister();
       };
@@ -588,18 +592,30 @@ module {
     };
 
     private func createManagerCanister() : async Text {
+      Debug.print("creating manager canister");
       Cycles.add<system>(50_000_000_000_000);
-      let canister = await ManagerCanister._ManagerCanister(controllerPrincipalId, fixturesPerClub);
+      Debug.print("step 1");
+      Debug.print(debug_show controllerPrincipalId);
+      Debug.print(debug_show fixturesPerClub);
+      let canister = await ManagerCanister._ManagerCanister();
+      Debug.print("step almost 2");
+      await canister.initialise(controllerPrincipalId, fixturesPerClub);
+      Debug.print("step 2");
       let IC : Management.Management = actor (NetworkEnvironmentVariables.Default);
+      Debug.print("step 3");
       let principal = ?Principal.fromText(controllerPrincipalId);
+      Debug.print("step 4");
       let _ = await Utilities.updateCanister_(canister, principal, IC);
 
+      Debug.print("step 5");
       let canister_principal = Principal.fromActor(canister);
+      Debug.print("step 6");
       let canisterId = Principal.toText(canister_principal);
 
       if (canisterId == "") {
         return canisterId;
       };
+      Debug.print("step 7");
 
       let uniqueCanisterIdBuffer = Buffer.fromArray<T.CanisterId>(List.toArray(uniqueManagerCanisterIds));
       uniqueCanisterIdBuffer.add(canisterId);
@@ -815,11 +831,14 @@ module {
     };
 
     public func saveFantasyTeam(managerPrincipalId: T.PrincipalId, updatedFantasyTeamDTO : DTOs.UpdateTeamSelectionDTO, systemState : DTOs.SystemStateDTO, players : [DTOs.PlayerDTO]) : async Result.Result<(), T.Error> {
+      Debug.print("Saving fantasy team in usermanager");
+      
       if (systemState.onHold) {
         return #err(#SystemOnHold);
       };
 
       let teamValidResult = teamValid(updatedFantasyTeamDTO, players);
+      Debug.print("Z");
       switch(teamValidResult){
         case (#ok _){ };
         case (#err errorResult){
@@ -828,22 +847,28 @@ module {
       };
 
       let usernameUpdated = updatedFantasyTeamDTO.username != "";
-
+      Debug.print("Y");
+      
       if (usernameUpdated and not isUsernameValid(updatedFantasyTeamDTO.username)) {
         return #err(#InvalidData);
       };
 
       if (usernameUpdated and isUsernameTaken(updatedFantasyTeamDTO.username, managerPrincipalId)) {
         return #err(#InvalidData);
-      };
-
+      };  
+      Debug.print("X");
+      
       let managerCanisterId = managerCanisterIds.get(managerPrincipalId);
       var result: ?Result.Result<(), T.Error> = null;
       switch(managerCanisterId){
         case (null){
+          Debug.print("V");
+      
           result := ?(await createNewManager(managerPrincipalId, updatedFantasyTeamDTO.username, 0, null, "", ?updatedFantasyTeamDTO, systemState, players));
         };  
         case (?foundManagerCanisterId){
+          Debug.print("U");
+      
           result := ?(await updateFantasyTeam(foundManagerCanisterId, managerPrincipalId, updatedFantasyTeamDTO, systemState, players));
         }
       };
@@ -865,6 +890,9 @@ module {
     };
 
     private func teamValid(updatedFantasyTeam : DTOs.UpdateTeamSelectionDTO, players : [DTOs.PlayerDTO]) : Result.Result<(), T.Error> {
+      Debug.print("checking team valid");
+      Debug.print(debug_show updatedFantasyTeam);
+      Debug.print(debug_show players);
 
       let newTeamPlayers = Array.filter<DTOs.PlayerDTO>(
         players,
@@ -880,8 +908,12 @@ module {
         },
       );
 
+      Debug.print(debug_show newTeamPlayers);
+
       let playerPositions = Array.map<DTOs.PlayerDTO, T.PlayerPosition>(newTeamPlayers, func(player : DTOs.PlayerDTO) : T.PlayerPosition { return player.position });
       let playerCount = playerPositions.size();
+
+      Debug.print(debug_show playerCount);
       if (playerCount != 11) {
         return #err(#Not11Players);
       };
@@ -895,6 +927,7 @@ module {
       var captainInTeam = false;
       
 
+      Debug.print(debug_show "A");
       for (i in Iter.range(0, playerCount -1)) {
 
         let count = teamPlayerCounts.get(Nat16.toText(newTeamPlayers[i].clubId));
@@ -938,6 +971,7 @@ module {
 
       };
 
+      Debug.print(debug_show "B");
       for ((key, value) in teamPlayerCounts.entries()) {
         if (value > 2) {
 
@@ -945,6 +979,7 @@ module {
         };
       };
 
+      Debug.print(debug_show "C");
       if (
         goalkeeperCount != 1 or defenderCount < 3 or defenderCount > 5 or midfielderCount < 3 or midfielderCount > 5 or forwardCount < 1 or forwardCount > 3,
       ) {
@@ -952,6 +987,7 @@ module {
             return #err(#NumberPerPositionError);
       };
 
+      Debug.print(debug_show "D");
       if (not captainInTeam) {
             return #err(#SelectedCaptainNotInTeam);
       };

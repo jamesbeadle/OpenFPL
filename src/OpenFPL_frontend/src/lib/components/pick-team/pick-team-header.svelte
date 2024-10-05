@@ -30,8 +30,10 @@
     await systemStore.sync();
     await playerStore.sync();
 
-    if($systemStore?.pickTeamSeasonName){
-      activeSeason = $systemStore?.pickTeamSeasonName;
+    let seasons = await systemStore.getSeasons();
+    let foundSeason = seasons.find(x => x.id == $systemStore?.pickTeamSeasonId);
+    if(foundSeason){
+      activeSeason = foundSeason.name;
     }
 
     if($systemStore?.pickTeamGameweek){

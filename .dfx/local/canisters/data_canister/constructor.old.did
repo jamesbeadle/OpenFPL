@@ -421,6 +421,7 @@ service : {
   setFixtureToFinalised: (SeasonId, FixtureId) -> () oneway;
   setGameScore: (SeasonId, FixtureId) -> () oneway;
   setPlayerInjury: (SetPlayerInjuryDTO) -> (Result);
+  setupData: () -> (Result);
   transferPlayer: (TransferPlayerDTO) -> (Result);
   unretirePlayer: (UnretirePlayerDTO) -> (Result);
   updateClub: (UpdateClubDTO) -> (Result);

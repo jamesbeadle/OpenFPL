@@ -136,7 +136,6 @@
         {availableFormations}
         {transfersAvailable}
         {bankBalance}
-        {onHold}
       />
       <div class="flex flex-col xl:flex-row mt-2 xl:mt-0">
         <PickTeamPlayers

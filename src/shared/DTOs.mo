@@ -110,13 +110,11 @@ module DTOs {
   };
 
   public type GameweekFiltersDTO = {
-    leagueId: T.FootballLeagueId;
     seasonId : T.SeasonId;
     gameweek : T.GameweekNumber;
   };
 
   public type GetPlayerDetailsDTO = {
-    leagueId: T.FootballLeagueId;
     playerId : T.PlayerId;
     seasonId : T.SeasonId;
   };
@@ -138,30 +136,23 @@ module DTOs {
     };
 
   public type RevaluePlayerUpDTO = {
-    leagueId: T.FootballLeagueId;
     playerId : T.PlayerId;
-    seasonId: T.SeasonId;
     gameweek: T.GameweekNumber;
   };
 
   public type RevaluePlayerDownDTO = {
-    leagueId: T.FootballLeagueId;
     playerId : T.PlayerId;
-    seasonId: T.SeasonId;
     gameweek: T.GameweekNumber;
   };
 
   public type SubmitFixtureDataDTO = {
-    seasonId : T.SeasonId;
     gameweek : T.GameweekNumber;
     month: T.CalendarMonth;
     fixtureId : T.FixtureId;
     playerEventData : [T.PlayerEventData];
-    leagueId: T.FootballLeagueId;
   };
 
   public type AddInitialFixturesDTO = {
-    seasonId : T.SeasonId;
     seasonFixtures : [DTOs.FixtureDTO];
   };
 
@@ -182,8 +173,6 @@ module DTOs {
   };
 
   public type LoanPlayerDTO = {
-    leagueId: T.FootballLeagueId;
-    seasonId: T.SeasonId;
     gameweek: T.GameweekNumber;
     playerId : T.PlayerId;
     loanLeagueId: T.FootballLeagueId;
@@ -192,23 +181,19 @@ module DTOs {
   };
 
   public type TransferPlayerDTO = {
-    leagueId: T.FootballLeagueId;
     clubId: T.ClubId;
     playerId : T.PlayerId;
     newLeagueId: T.FootballLeagueId;
     newClubId : T.ClubId;
-    seasonId: T.SeasonId;
     gameweek: T.GameweekNumber;
     newShirtNumber: Nat8;
   };
 
   public type RecallPlayerDTO = {
-    leagueId: T.FootballLeagueId;
     playerId : T.PlayerId;
   };
 
   public type CreatePlayerDTO = {
-    leagueId: T.FootballLeagueId;
     clubId : T.ClubId;
     position : T.PlayerPosition;
     firstName : Text;
@@ -221,7 +206,6 @@ module DTOs {
   };
 
   public type UpdatePlayerDTO = {
-    leagueId: T.FootballLeagueId;
     playerId : T.PlayerId;
     position : T.PlayerPosition;
     firstName : Text;
@@ -232,20 +216,17 @@ module DTOs {
   };
 
   public type SetPlayerInjuryDTO = {
-    leagueId: T.FootballLeagueId;
     playerId : T.PlayerId;
     description : Text;
     expectedEndDate : Int;
   };
 
   public type RetirePlayerDTO = {
-    leagueId: T.FootballLeagueId;
     playerId : T.PlayerId;
     retirementDate : Int;
   };
 
   public type UnretirePlayerDTO = {
-    leagueId: T.FootballLeagueId;
     playerId : T.PlayerId;
   };
 
@@ -662,6 +643,11 @@ module DTOs {
 
   public type GetLoanedPlayersDTO = {
     loanClubId: T.ClubId;
+  };
+
+  public type SystemEnvironmentDTO = {
+    leagueId: T.FootballLeagueId;
+    seasonId: T.SeasonId;
   };
 
 };

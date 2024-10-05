@@ -3,7 +3,6 @@ module RequestDTOs {
 
 
   public type RequestFixturesDTO = {
-    leagueId: T.FootballLeagueId;
     seasonId: T.SeasonId;
   };
 
@@ -21,9 +20,9 @@ module RequestDTOs {
 
   public type RequestPlayersDTO = {
     seasonId: T.SeasonId;
-    leagueId: T.FootballLeagueId;
   };
 
+  //TODO Remove maybe:
   public type GetSnapshotPlayers = {
     seasonId: T.SeasonId;
     leagueId: T.FootballLeagueId;

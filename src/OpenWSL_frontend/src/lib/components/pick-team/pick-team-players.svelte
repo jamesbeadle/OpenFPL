@@ -432,9 +432,7 @@
         );
       }
       bankBalance.update(
-        (n) =>
-          n +
-            $playerStore.find((x) => x.id === playerId)!.valueQuarterMillions ??
+        (n) => $playerStore.find((x) => x.id === playerId)!.valueQuarterMillions ??
           0
       );
 
