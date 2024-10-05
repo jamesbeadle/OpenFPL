@@ -16,6 +16,7 @@ PROPOSAL="(
         summary = \"
 
             This funding request reflects the additional expenditure incurred by Waterway Labs in relation to work building the OpenFPL ecosystem.
+
             We have begun the process to obtain a gambling license to implement fixed odds betting using the FPL token, 
             this has involved acquiring the services of a financial consultancy company with expertise in this field. 
             The company has a 100% success rate with getting licenses for clients and aim to have our license by March 2025. 
@@ -29,30 +30,29 @@ PROPOSAL="(
             These costs will continue as promotion begins.
             
             Whilst we have been waiting on DFINITY we have been working on refactoring the OpenFPL backend into a dedicated data canister, 
-            with the ability to handle a multi-league system in preparation for 
-            
-             dataset into a multi-league
+            with the ability to handle a multi-league system in preparation for handling world wide fixed odds betting. This work is now complete and can be found here:
 
-            Data Manager 
-            
-            Sponsorhip
-            
-             we are about to launch   Thilly and another developer
+            https://github.com/jamesbeadle/OpenFPL
 
-
-            we have always been setup to promote at anytime but refrained from beginning promotion whilst there have been technical problems.
-            To overcome 
-
-            to overcome these problems our cycles costs have increased
-
-            carrying cosst for promotion, we have been setup and ready to go for months 
+            We have hired a new developer, Thilly, who has already built the OpenWSL frontend. 
+            We will be incurring additional designer costs as we need to have FootballGod redesigned to fit the new gambling features. 
+            We then plan to release gambling site linked to our data, whilst restricting every IP address until our licenses in each jurisdication become available.
+            We also need to hire another developer to assist with the backend, to obtain the licenses we have certain requirements along with assisting with IC related technical issues.
             
-            Waterway Labs is the UK limited company (Reg: 15281491) setup by OpenFPL founder, James Beadle. 
-            
-             
-            
-            Please read the following nuance article for details about the request:
-            https://nuance.xyz/jamesbeadle/11014-434go-diaaa-aaaaf-qakwq-cai/openfpl-update
+            We would also like to hire a data manager to help manage our data entry and validation pipelines as this grows for the data used by the FootballGod gambling site.   
+
+            We have a lot of content being prepared from podcast videos to challenge reels but no outlet to produce the professional quality we require. 
+            We have therefore begun hiring freelancers to help produce this but as more products come online we feel we can justify hiring a full time person for this work.
+
+            We have also signed a 3 year sponsorhip agreement for a women's team, this will be an ongoing cost, 
+            something we'd ideally make proportional to the expected increasing amount raised to be our official sponsor. 
+            This sponsorship campaign compliments our movement into women's football nicely, more information can be found here:
+
+            https://nuance.xyz/openfpl/11316-434go-diaaa-aaaaf-qakwq-cai/openfpl-womens-ambassador-fund-
+
+            We aim to release OpenFPL and OpenWSL together from Monday 7th October, barring any additional problems with the IC. 
+            We continue to develop additional products that will result in tokens for OpenFPL neuron holders, 
+            significant progress has been made with OpenBook, GolfPad & OpenBeats. 
 
             James
 
@@ -68,4 +68,4 @@ PROPOSAL="(
         };  
     })"
 
-../utils/submit_proposal.sh "$PROPOSAL"
+../../utils/submit_proposal.sh "$PROPOSAL"

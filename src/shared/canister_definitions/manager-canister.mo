@@ -2689,11 +2689,7 @@ actor class _ManagerCanister() {
     assert backendPrincipalId == controllerPrincipalId;
 
 
-    let openfpl_backend_canister = actor (controllerPrincipalId) : actor {
-        getAllSeasonPlayers : () -> async [DTOs.PlayerDTO];
-      };
-      
-    let players : [DTOs.PlayerDTO] = await openfpl_backend_canister.getAllSeasonPlayers();
+    let players : [DTOs.PlayerDTO] = []; //TODO need to get from snapshot of players stored in this manager canister for the gameweek //await openfpl_backend_canister.getAllSeasonPlayers();
 
     let allFinalGameweekSnapshots = await getFinalGameweekSnapshots(seasonId);
 

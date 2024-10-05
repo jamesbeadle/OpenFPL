@@ -220,7 +220,7 @@
       };
     };
 
-    public shared ( {caller} ) func getPlayers(leagueId: T.FootballLeagueId, seasonId: T.SeasonId, dto: RequestDTOs.RequestPlayersDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error>{
+    public shared ( {caller} ) func getPlayers(leagueId: T.FootballLeagueId, dto: RequestDTOs.RequestPlayersDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error>{
       //assert callerAllowed(caller);
 
       let filteredLeaguePlayers = Array.find<(T.FootballLeagueId, [T.Player])>(leaguePlayers, 
@@ -234,7 +234,7 @@
             
             var totalPoints: Int16 = 0;
             let season = List.find<T.PlayerSeason>(player.seasons, func(season: T.PlayerSeason){
-              season.id == seasonId
+              season.id == dto.seasonId
             });
 
             switch(season){
@@ -264,6 +264,16 @@
         }
       };
     };
+
+    public shared ( {caller} ) func getLoanedPlayers(leagueId: T.FootballLeagueId, dto: DTOs.ClubFilterDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error>{
+      return #err(#NotFound); //TODO Implement
+    };
+
+    public shared ( {caller} ) func getRetiredPlayers(leagueId: T.FootballLeagueId, dto: DTOs.ClubFilterDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error>{
+      return #err(#NotFound); //TODO Implement
+    };
+    
+    
 
     public shared ( {caller} ) func getPlayerDetails(leagueId: T.FootballLeagueId, seasonId: T.SeasonId, dto: DTOs.GetPlayerDetailsDTO) : async Result.Result<DTOs.PlayerDetailDTO, T.Error> {
 
@@ -1639,7 +1649,7 @@
       return #ok();
     };
 
-    public shared ( {caller} ) func retirePlayer(dto : DTOs.RetirePlayerDTO) : async Result.Result<(), T.Error>{
+    public shared ( {caller} ) func retirePlayer(leagueId: T.FootballLeagueId, dto : DTOs.RetirePlayerDTO) : async Result.Result<(), T.Error>{
       //TODO
       /*
       assert callerAllowed(caller);
