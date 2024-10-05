@@ -151,8 +151,8 @@ module {
 
           for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
             let manager_canister = actor (canisterId) : actor {
-              getClubManagers : (clubId : T.ClubId) -> async [T.PrincipalId];
-              getNonClubManagers : (clubId : T.ClubId) -> async Nat;
+              getClubManagers : (leagueId: T.FootballLeagueId, clubId : T.ClubId) -> async [T.PrincipalId];
+              getNonClubManagers : (leagueId: T.FootballLeagueId, clubId : T.ClubId) -> async Nat;
             };
 
             let managers = await manager_canister.getClubManagers(monthlyLeaderboard.clubId);
@@ -342,11 +342,11 @@ module {
           let mostValuableTeamsBuffer = Buffer.fromArray<T.FantasyTeamSnapshot>([]);
           for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
             let manager_canister = actor (canisterId) : actor {
-              getFinalGameweekSnapshots : () -> async [T.FantasyTeamSnapshot];
-              getMostValuableTeams : T.SeasonId -> async [T.FantasyTeamSnapshot];
+              getFinalGameweekSnapshots : (seasonId : T.SeasonId) -> async [T.FantasyTeamSnapshot];
+              getMostValuableTeams : (seasonId : T.SeasonId) -> async [T.FantasyTeamSnapshot];
             };
 
-            let snapshots = await manager_canister.getFinalGameweekSnapshots();
+            let snapshots = await manager_canister.getFinalGameweekSnapshots(currentSeason);
             finalGameweekSnapshotBuffers.append(Buffer.fromArray(snapshots));
 
             let mostValuableTeams = await manager_canister.getMostValuableTeams(currentSeason);

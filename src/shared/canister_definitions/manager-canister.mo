@@ -1862,7 +1862,7 @@ actor class _ManagerCanister() {
     return List.fromArray(Buffer.toArray(teamHistoryBuffer));
   };
 
-  public shared ({ caller }) func calculateFantasyTeamScores(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) : async () {
+  public shared ({ caller }) func calculateFantasyTeamScores(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) : async Nat {
     /*
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
@@ -2019,7 +2019,7 @@ actor class _ManagerCanister() {
       };
     };
     */
-
+    return 0;
   };
 
   private func calculateGoalPoints(position : T.PlayerPosition, goalsScored : Int16) : Int16 {
@@ -2321,8 +2321,11 @@ actor class _ManagerCanister() {
     };
     */
   };
+  public shared ({ caller }) func resetFantasyTeams() : async () {
+    //todo: implement
+  };
 
-  public shared ({ caller }) func resetBonusesAvailable(leagueId: T.FootballLeagueId) : async () {
+  public shared ({ caller }) func resetBonusesAvailable() : async () {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == controllerPrincipalId;
@@ -2469,7 +2472,7 @@ actor class _ManagerCanister() {
     return Buffer.toArray(managerBuffer);
   };
 
-  public shared ({ caller }) func resetWeeklyTransfers(leagueId: T.FootballLeagueId) : async () {
+  public shared ({ caller }) func resetWeeklyTransfers() : async () {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == controllerPrincipalId;
@@ -2561,7 +2564,7 @@ actor class _ManagerCanister() {
     return Buffer.toArray(managerBuffer);
   };
 
-  public shared ({ caller }) func getClubManagers(leagueId: T.FootballLeagueId, clubId : T.ClubId) : async [T.PrincipalId] {
+  public shared ({ caller }) func getClubManagers(clubId : T.ClubId) : async [T.PrincipalId] {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == controllerPrincipalId;
@@ -2683,7 +2686,7 @@ actor class _ManagerCanister() {
     return Buffer.toArray(managerIdBuffer);
   };
 
-  public shared ({ caller }) func getMostValuableTeams(leagueId: T.FootballLeagueId, seasonId : T.SeasonId) : async [T.FantasyTeamSnapshot] {
+  public shared ({ caller }) func getMostValuableTeams(seasonId : T.SeasonId) : async [T.FantasyTeamSnapshot] {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == controllerPrincipalId;
@@ -2748,7 +2751,6 @@ actor class _ManagerCanister() {
         monthlyPoints = snapshot.monthlyPoints;
         seasonPoints = snapshot.seasonPoints;
         seasonId = seasonId;
-        leagueId = leagueId;
       };
 
       teamValues.put(snapshot.principalId, updatedSnapshot);

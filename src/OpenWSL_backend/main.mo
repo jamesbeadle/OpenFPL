@@ -341,7 +341,9 @@
               let _ = await dataManager.executeSubmitFixtureData(Environment.LEAGUE_ID, systemState.calculationSeasonId, submitFixtureData);
 
               //TODO: When calculating score get players built friom all players who appeared in the gameweek
-              await userManager.calculateFantasyTeamScores(systemState.calculationSeasonId, submitFixtureData.gameweek, submitFixtureData.month);
+              await userManager.calculateFantasyTeamScores(
+                Environment.LEAGUE_ID,
+                systemState.calculationSeasonId, submitFixtureData.gameweek, submitFixtureData.month);
               await leaderboardManager.calculateLeaderboards(systemState.calculationSeasonId, submitFixtureData.gameweek, submitFixtureData.month, userManager.getUniqueManagerCanisterIds());
               
               if(await dataManager.checkGameweekComplete(systemState.calculationSeasonId, submitFixtureData.gameweek)){
