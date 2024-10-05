@@ -48,7 +48,7 @@ function createPlayerStore() {
     const localHash = localStorage.getItem(`${category}_hash`);
 
     if (categoryHash?.hash != localHash) {
-      console.log("fetching players");  
+      console.log("fetching players");
       let result = await actor.getPlayers();
       console.log(result);
       if (isError(result)) {

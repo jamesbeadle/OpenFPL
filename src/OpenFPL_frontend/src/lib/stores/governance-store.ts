@@ -49,6 +49,8 @@ function createGovernanceStore() {
       });
       unsubscribe();
 
+      var systemState: SystemStateDTO | null = null;
+
       const unsubscribeSystemState = systemStore.subscribe((state) => {
         systemState = state;
       });
@@ -56,7 +58,14 @@ function createGovernanceStore() {
 
       var dto: RevaluePlayerUpDTO = {
         playerId: playerId,
-        seasonId: systemState == null ? 1 : systemState.calculationSeasonId,
+        seasonId:
+          systemState == null
+            ? 0
+            : (systemState as SystemStateDTO).pickTeamSeasonId,
+        gameweek:
+          systemState == null
+            ? 0
+            : (systemState as SystemStateDTO).pickTeamGameweek,
       };
 
       let player = allPlayers.find((x) => x.id == playerId);
@@ -90,8 +99,23 @@ function createGovernanceStore() {
       });
       unsubscribe();
 
+      var systemState: SystemStateDTO | null = null;
+
+      const unsubscribeSystemState = systemStore.subscribe((state) => {
+        systemState = state;
+      });
+      unsubscribeSystemState();
+
       var dto: RevaluePlayerDownDTO = {
         playerId: playerId,
+        seasonId:
+          systemState == null
+            ? 0
+            : (systemState as SystemStateDTO).pickTeamSeasonId,
+        gameweek:
+          systemState == null
+            ? 0
+            : (systemState as SystemStateDTO).pickTeamGameweek,
       };
 
       let player = allPlayers.find((x) => x.id == playerId);
@@ -119,6 +143,7 @@ function createGovernanceStore() {
     seasonId: number,
     gameweek: number,
     fixtureId: number,
+    month: number,
     playerEventData: PlayerEventData[],
   ): Promise<any> {
     try {
@@ -141,7 +166,7 @@ function createGovernanceStore() {
       unsubscribeFixtureStore();
 
       let dto: SubmitFixtureDataDTO = {
-        seasonId,
+        month,
         gameweek,
         fixtureId,
         playerEventData,

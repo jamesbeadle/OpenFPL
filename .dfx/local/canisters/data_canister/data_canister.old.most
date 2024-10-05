@@ -137,6 +137,7 @@ type ValueHistory =
   {gameweek : Nat8; newValue : Nat16; oldValue : Nat16; seasonId : Nat16};
 actor {
   stable var clubsInAdministration : [Club];
+  stable var dataInitialised : Bool;
   stable var freeAgents : [Player];
   stable var leagueClubs : [(FootballLeagueId, [Club])];
   stable var leaguePlayers : [(FootballLeagueId, [Player])];

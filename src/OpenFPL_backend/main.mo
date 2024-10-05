@@ -143,7 +143,7 @@
       let systemStateResult = await getSystemState();
       switch(systemStateResult){
         case (#ok systemState){
-          return await dataManager.getPlayers({ leagueId = Environment.LEAGUE_ID; seasonId = systemState.pickTeamSeasonId });
+          return await dataManager.getPlayers(Environment.LEAGUE_ID, { seasonId = systemState.pickTeamSeasonId });
         };  
         case (#err error){
           return #err(error);
@@ -165,7 +165,7 @@
     };
 
     public shared ({ caller }) func getPlayerDetailsForGameweek(dto: DTOs.GameweekFiltersDTO) : async Result.Result<[DTOs.PlayerPointsDTO], T.Error> {
-      return await dataManager.getPlayerDetailsForGameweek(dto);
+      return await dataManager.getPlayerDetailsForGameweek(Environment.LEAGUE_ID, dto);
     };
 
     public shared ({ caller }) func getPlayersMap(dto: DTOs.GameweekFiltersDTO) : async Result.Result<[(Nat16, DTOs.PlayerScoreDTO)], T.Error> {
@@ -173,7 +173,7 @@
     };
 
     public shared ({ caller }) func getPlayerDetails(dto: DTOs.GetPlayerDetailsDTO) : async Result.Result<DTOs.PlayerDetailDTO, T.Error> {
-      return await dataManager.getPlayerDetails(dto);
+      return await dataManager.getPlayerDetails(Environment.LEAGUE_ID, dto);
     };
 
     public shared query func getCountries() : async Result.Result<[DTOs.CountryDTO], T.Error> {
@@ -257,7 +257,7 @@
         case (#ok systemState){       
           assert not systemState.onHold;
       
-          let playersResult = await dataManager.getPlayers({ leagueId = Environment.LEAGUE_ID; seasonId = systemState.pickTeamSeasonId });
+          let playersResult = await dataManager.getPlayers(Environment.LEAGUE_ID, { seasonId = systemState.pickTeamSeasonId });
           switch(playersResult){
             case (#ok players){
               return await userManager.saveFantasyTeam(principalId, fantasyTeam, systemState, players);
@@ -294,7 +294,7 @@
         case (#ok systemState){
           switch(await dataManager.validateRevaluePlayerUp(Environment.LEAGUE_ID, revaluePlayerUpDTO)){
             case (#ok success){
-              let _ = await dataManager.executeRevaluePlayerUp(Environment.LEAGUE_ID, systemState.calculationSeasonId, revaluePlayerUpDTO);
+              let _ = await dataManager.executeRevaluePlayerUp(Environment.LEAGUE_ID, revaluePlayerUpDTO);
             };
             case _ {}
           };

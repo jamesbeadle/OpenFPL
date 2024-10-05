@@ -3,10 +3,7 @@ import type { ActorMethod } from '@dfinity/agent';
 import type { IDL } from '@dfinity/candid';
 
 export type AccountIdentifier = Uint8Array | number[];
-export interface AddInitialFixturesDTO {
-  'seasonId' : SeasonId,
-  'seasonFixtures' : Array<FixtureDTO>,
-}
+export interface AddInitialFixturesDTO { 'seasonFixtures' : Array<FixtureDTO> }
 export type CalendarMonth = number;
 export interface CanisterDTO {
   'lastTopup' : bigint,
@@ -52,7 +49,6 @@ export interface CreatePlayerDTO {
   'shirtNumber' : number,
   'position' : PlayerPosition,
   'lastName' : string,
-  'leagueId' : FootballLeagueId,
   'firstName' : string,
 }
 export interface DataHashDTO { 'hash' : string, 'category' : string }
@@ -164,7 +160,6 @@ export type FootballLeagueId = number;
 export interface GameweekFiltersDTO {
   'seasonId' : SeasonId,
   'gameweek' : GameweekNumber,
-  'leagueId' : FootballLeagueId,
 }
 export type GameweekNumber = number;
 export type Gender = { 'Male' : null } |
@@ -192,7 +187,6 @@ export interface GetMonthlyLeaderboardDTO {
 export interface GetPlayerDetailsDTO {
   'playerId' : PlayerId,
   'seasonId' : SeasonId,
-  'leagueId' : FootballLeagueId,
 }
 export interface GetRewardPoolDTO {
   'seasonId' : SeasonId,
@@ -241,7 +235,6 @@ export interface LoanPlayerDTO {
   'loanClubId' : ClubId,
   'gameweek' : GameweekNumber,
   'loanLeagueId' : FootballLeagueId,
-  'leagueId' : FootballLeagueId,
 }
 export interface ManagerDTO {
   'username' : string,
@@ -408,14 +401,8 @@ export interface PromoteNewClubDTO {
   'shirtType' : ShirtType,
   'primaryColourHex' : string,
 }
-export interface RecallPlayerDTO {
-  'playerId' : PlayerId,
-  'leagueId' : FootballLeagueId,
-}
-export interface RequestFixturesDTO {
-  'seasonId' : SeasonId,
-  'leagueId' : FootballLeagueId,
-}
+export interface RecallPlayerDTO { 'playerId' : PlayerId }
+export interface RequestFixturesDTO { 'seasonId' : SeasonId }
 export interface RequestManagerDTO {
   'month' : CalendarMonth,
   'clubId' : ClubId,
@@ -475,19 +462,16 @@ export type Result_9 = { 'ok' : GetRewardPoolDTO } |
 export interface RetirePlayerDTO {
   'playerId' : PlayerId,
   'retirementDate' : bigint,
-  'leagueId' : FootballLeagueId,
 }
 export interface RevaluePlayerDownDTO {
   'playerId' : PlayerId,
   'seasonId' : SeasonId,
   'gameweek' : GameweekNumber,
-  'leagueId' : FootballLeagueId,
 }
 export interface RevaluePlayerUpDTO {
   'playerId' : PlayerId,
   'seasonId' : SeasonId,
   'gameweek' : GameweekNumber,
-  'leagueId' : FootballLeagueId,
 }
 export interface RewardPool {
   'monthlyLeaderboardPool' : bigint,
@@ -512,7 +496,6 @@ export interface SeasonLeaderboardDTO {
 export interface SetPlayerInjuryDTO {
   'playerId' : PlayerId,
   'description' : string,
-  'leagueId' : FootballLeagueId,
   'expectedEndDate' : bigint,
 }
 export type ShirtType = { 'Filled' : null } |
@@ -520,10 +503,8 @@ export type ShirtType = { 'Filled' : null } |
 export interface SubmitFixtureDataDTO {
   'fixtureId' : FixtureId,
   'month' : CalendarMonth,
-  'seasonId' : SeasonId,
   'gameweek' : GameweekNumber,
   'playerEventData' : Array<PlayerEventData>,
-  'leagueId' : FootballLeagueId,
 }
 export interface SystemStateDTO {
   'pickTeamSeasonId' : SeasonId,
@@ -549,12 +530,8 @@ export interface TransferPlayerDTO {
   'seasonId' : SeasonId,
   'newClubId' : ClubId,
   'gameweek' : GameweekNumber,
-  'leagueId' : FootballLeagueId,
 }
-export interface UnretirePlayerDTO {
-  'playerId' : PlayerId,
-  'leagueId' : FootballLeagueId,
-}
+export interface UnretirePlayerDTO { 'playerId' : PlayerId }
 export interface UpdateClubDTO {
   'clubId' : ClubId,
   'secondaryColourHex' : string,
@@ -573,7 +550,6 @@ export interface UpdatePlayerDTO {
   'shirtNumber' : number,
   'position' : PlayerPosition,
   'lastName' : string,
-  'leagueId' : FootballLeagueId,
   'firstName' : string,
 }
 export interface UpdateProfilePictureDTO {
@@ -653,7 +629,7 @@ export interface _SERVICE {
   'getMonthlyLeaderboard' : ActorMethod<[GetMonthlyLeaderboardDTO], Result_15>,
   'getPlayerDetails' : ActorMethod<[GetPlayerDetailsDTO], Result_14>,
   'getPlayerDetailsForGameweek' : ActorMethod<[GameweekFiltersDTO], Result_13>,
-  'getPlayers' : ActorMethod<[SeasonId], Result_6>,
+  'getPlayers' : ActorMethod<[], Result_6>,
   'getPlayersMap' : ActorMethod<[GameweekFiltersDTO], Result_12>,
   'getPostponedFixtures' : ActorMethod<[], Result_11>,
   'getProfile' : ActorMethod<[], Result_10>,

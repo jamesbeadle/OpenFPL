@@ -74,6 +74,7 @@ type TransferPlayerDTO =
    newLeagueId: FootballLeagueId;
    newShirtNumber: nat8;
    playerId: PlayerId;
+   seasonId: SeasonId;
  };
 type TopupDTO = 
  record {
@@ -145,11 +146,13 @@ type RevaluePlayerUpDTO =
  record {
    gameweek: GameweekNumber;
    playerId: PlayerId;
+   seasonId: SeasonId;
  };
 type RevaluePlayerDownDTO = 
  record {
    gameweek: GameweekNumber;
    playerId: PlayerId;
+   seasonId: SeasonId;
  };
 type RetirePlayerDTO = 
  record {
@@ -283,11 +286,7 @@ type RequestManagerDTO =
    month: CalendarMonth;
    seasonId: SeasonId;
  };
-type RequestFixturesDTO = 
- record {
-   leagueId: FootballLeagueId;
-   seasonId: SeasonId;
- };
+type RequestFixturesDTO = record {seasonId: SeasonId;};
 type RecallPlayerDTO = record {playerId: PlayerId;};
 type PromoteNewClubDTO = 
  record {
@@ -482,6 +481,7 @@ type LoanPlayerDTO =
    loanEndDate: int;
    loanLeagueId: FootballLeagueId;
    playerId: PlayerId;
+   seasonId: SeasonId;
  };
 type LeaderboardEntry = 
  record {

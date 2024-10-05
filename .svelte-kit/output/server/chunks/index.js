@@ -3516,7 +3516,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "bpaa4y"
+  version_hash: "z47lqx"
 };
 async function get_hooks() {
   return {};
@@ -3724,13 +3724,13 @@ const initAuthStore = () => {
 };
 const authStore = initAuthStore();
 const idlFactory = ({ IDL: IDL2 }) => {
-  const SeasonId = IDL2.Nat16;
   const FixtureStatusType = IDL2.Variant({
     "Unplayed": IDL2.Null,
     "Finalised": IDL2.Null,
     "Active": IDL2.Null,
     "Complete": IDL2.Null
   });
+  const SeasonId = IDL2.Nat16;
   const ClubId = IDL2.Nat16;
   const FixtureId = IDL2.Nat32;
   const PlayerEventType = IDL2.Variant({
@@ -3770,7 +3770,6 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "awayGoals": IDL2.Nat8
   });
   const AddInitialFixturesDTO = IDL2.Record({
-    "seasonId": SeasonId,
     "seasonFixtures": IDL2.Vec(FixtureDTO)
   });
   const CountryId = IDL2.Nat16;
@@ -3781,7 +3780,6 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "Forward": IDL2.Null,
     "Defender": IDL2.Null
   });
-  const FootballLeagueId = IDL2.Nat16;
   const CreatePlayerDTO = IDL2.Record({
     "clubId": ClubId,
     "valueQuarterMillions": IDL2.Nat16,
@@ -3791,18 +3789,17 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "shirtNumber": IDL2.Nat8,
     "position": PlayerPosition,
     "lastName": IDL2.Text,
-    "leagueId": FootballLeagueId,
     "firstName": IDL2.Text
   });
   const PlayerId = IDL2.Nat16;
+  const FootballLeagueId = IDL2.Nat16;
   const LoanPlayerDTO = IDL2.Record({
     "loanEndDate": IDL2.Int,
     "playerId": PlayerId,
     "seasonId": SeasonId,
     "loanClubId": ClubId,
     "gameweek": GameweekNumber,
-    "loanLeagueId": FootballLeagueId,
-    "leagueId": FootballLeagueId
+    "loanLeagueId": FootballLeagueId
   });
   const MoveFixtureDTO = IDL2.Record({
     "fixtureId": FixtureId,
@@ -3820,10 +3817,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "shirtType": ShirtType,
     "primaryColourHex": IDL2.Text
   });
-  const RecallPlayerDTO = IDL2.Record({
-    "playerId": PlayerId,
-    "leagueId": FootballLeagueId
-  });
+  const RecallPlayerDTO = IDL2.Record({ "playerId": PlayerId });
   const RescheduleFixtureDTO = IDL2.Record({
     "postponedFixtureId": FixtureId,
     "updatedFixtureGameweek": GameweekNumber,
@@ -3831,35 +3825,29 @@ const idlFactory = ({ IDL: IDL2 }) => {
   });
   const RetirePlayerDTO = IDL2.Record({
     "playerId": PlayerId,
-    "retirementDate": IDL2.Int,
-    "leagueId": FootballLeagueId
+    "retirementDate": IDL2.Int
   });
   const RevaluePlayerDownDTO = IDL2.Record({
     "playerId": PlayerId,
     "seasonId": SeasonId,
-    "gameweek": GameweekNumber,
-    "leagueId": FootballLeagueId
+    "gameweek": GameweekNumber
   });
   const RevaluePlayerUpDTO = IDL2.Record({
     "playerId": PlayerId,
     "seasonId": SeasonId,
-    "gameweek": GameweekNumber,
-    "leagueId": FootballLeagueId
+    "gameweek": GameweekNumber
   });
   const SetPlayerInjuryDTO = IDL2.Record({
     "playerId": PlayerId,
     "description": IDL2.Text,
-    "leagueId": FootballLeagueId,
     "expectedEndDate": IDL2.Int
   });
   const CalendarMonth = IDL2.Nat8;
   const SubmitFixtureDataDTO = IDL2.Record({
     "fixtureId": FixtureId,
     "month": CalendarMonth,
-    "seasonId": SeasonId,
     "gameweek": GameweekNumber,
-    "playerEventData": IDL2.Vec(PlayerEventData),
-    "leagueId": FootballLeagueId
+    "playerEventData": IDL2.Vec(PlayerEventData)
   });
   const TransferPlayerDTO = IDL2.Record({
     "clubId": ClubId,
@@ -3868,13 +3856,9 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "newShirtNumber": IDL2.Nat8,
     "seasonId": SeasonId,
     "newClubId": ClubId,
-    "gameweek": GameweekNumber,
-    "leagueId": FootballLeagueId
+    "gameweek": GameweekNumber
   });
-  const UnretirePlayerDTO = IDL2.Record({
-    "playerId": PlayerId,
-    "leagueId": FootballLeagueId
-  });
+  const UnretirePlayerDTO = IDL2.Record({ "playerId": PlayerId });
   const UpdateClubDTO = IDL2.Record({
     "clubId": ClubId,
     "secondaryColourHex": IDL2.Text,
@@ -3892,7 +3876,6 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "shirtNumber": IDL2.Nat8,
     "position": PlayerPosition,
     "lastName": IDL2.Text,
-    "leagueId": FootballLeagueId,
     "firstName": IDL2.Text
   });
   const Error2 = IDL2.Variant({
@@ -4031,10 +4014,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "ok": FantasyTeamSnapshotDTO,
     "err": Error2
   });
-  const RequestFixturesDTO = IDL2.Record({
-    "seasonId": SeasonId,
-    "leagueId": FootballLeagueId
-  });
+  const RequestFixturesDTO = IDL2.Record({ "seasonId": SeasonId });
   const Result_11 = IDL2.Variant({ "ok": IDL2.Vec(FixtureDTO), "err": Error2 });
   const ClubFilterDTO = IDL2.Record({
     "clubId": ClubId,
@@ -4148,8 +4128,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
   });
   const GetPlayerDetailsDTO = IDL2.Record({
     "playerId": PlayerId,
-    "seasonId": SeasonId,
-    "leagueId": FootballLeagueId
+    "seasonId": SeasonId
   });
   const InjuryHistory = IDL2.Record({
     "description": IDL2.Text,
@@ -4190,8 +4169,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
   const Result_14 = IDL2.Variant({ "ok": PlayerDetailDTO, "err": Error2 });
   const GameweekFiltersDTO = IDL2.Record({
     "seasonId": SeasonId,
-    "gameweek": GameweekNumber,
-    "leagueId": FootballLeagueId
+    "gameweek": GameweekNumber
   });
   const PlayerPointsDTO = IDL2.Record({
     "id": IDL2.Nat16,
@@ -4387,7 +4365,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
       [Result_13],
       []
     ),
-    "getPlayers": IDL2.Func([SeasonId], [Result_6], []),
+    "getPlayers": IDL2.Func([], [Result_6], []),
     "getPlayersMap": IDL2.Func([GameweekFiltersDTO], [Result_12], []),
     "getPostponedFixtures": IDL2.Func([], [Result_11], []),
     "getProfile": IDL2.Func([], [Result_10], []),
@@ -5901,7 +5879,7 @@ function createPlayerStore() {
     idlFactory,
     define_process_env_default$5.OPENWSL_BACKEND_CANISTER_ID
   );
-  async function sync(seasonId) {
+  async function sync() {
     let category = "players";
     const newHashValues = await actor.getDataHashes();
     let error = isError(newHashValues);
