@@ -33,6 +33,7 @@
   import CyclesDispenser "../shared/cycles-dispenser";
   import Environment "./environment";
   import NetworkEnvironmentVariables "../shared/network_environment_variables";
+  import Responses "../shared/ResponseDTOs";
 
   actor Self {
     
@@ -1496,5 +1497,49 @@
       let actorPrincipal : Principal = Principal.fromActor(Self);
       Account.accountIdentifier(actorPrincipal, Account.defaultSubaccount());
     };    
+
+    //Admin dashboard functions
+
+    public shared ({ caller }) func getStaticCanisters() : async Result.Result<Responses.StaticCanistersDTO, T.Error> {
+      //TODO: Add isadmin check
+      return #err(#NotFound);
+    };
+
+    public shared ({ caller }) func getManagerCanisters() : async Result.Result<Responses.ManagerCanistersDTO, T.Error> {
+      //TODO: Add isadmin check
+      return #err(#NotFound);
+    };
+
+    public shared ({ caller }) func getLeaderboardCanisters() : async Result.Result<Responses.LeaderboardCanistersDTO, T.Error> {
+      //TODO: Add isadmin check
+      return #err(#NotFound);
+    };
+
+    public shared ({ caller }) func snapshotManagers(gameweekNumber: T.GameweekNumber) : async Result.Result<(), T.Error> {
+      //TODO: Add isadmin check
+      return #err(#NotFound);
+    };
+
+    public shared ({ caller }) func recalculatePoints(gameweekNumber: T.GameweekNumber) : async Result.Result<(), T.Error> {
+      //TODO: Add isadmin check
+      return #err(#NotFound);
+    };
+
+    public shared ({ caller }) func viewPayouts(gameweekNumber: T.GameweekNumber) : async Result.Result<(), T.Error> {
+      //TODO: Add isadmin check
+      return #err(#NotFound);
+    };
+
+    public shared ({ caller }) func updateRewardPools(dto: Requests.UpdateRewardPoolsDTO) : async Result.Result<(), T.Error> {
+      //TODO: Add isadmin check
+      return #err(#NotFound);
+    };
+
+    public shared ({ caller }) func updateSystemStatus(dto: Requests.UpdateSystemStatusDTO) : async Result.Result<(), T.Error> {
+      //TODO: Add isadmin check
+      return #err(#NotFound);
+    };
+
+
 
   };
