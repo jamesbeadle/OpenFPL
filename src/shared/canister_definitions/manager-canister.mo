@@ -1863,7 +1863,7 @@ actor class _ManagerCanister() {
   };
 
   public shared ({ caller }) func calculateFantasyTeamScores(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) : async Nat {
-    /*
+    /* //TODO LATER
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == controllerPrincipalId;
@@ -2322,7 +2322,7 @@ actor class _ManagerCanister() {
     */
   };
   public shared ({ caller }) func resetFantasyTeams() : async () {
-    //todo: implement
+    //TODO LATER
   };
 
   public shared ({ caller }) func resetBonusesAvailable() : async () {
@@ -2376,6 +2376,7 @@ actor class _ManagerCanister() {
   };
 
   private func snapshotPlayers() : async (){
+    //TODO LATER
     /*
     let openfpl_backend_canister = actor (controllerPrincipalId) : actor {
       getPlayers : () -> async [DTOs.PlayerDTO];
@@ -2413,15 +2414,15 @@ actor class _ManagerCanister() {
 
 //get from this file
    getSnapshotPlayers : () -> async [DTOs.PlayerDTO];
-      //TODO
+      //TODO LATER
         //Ensure we only snapshot the first time 
-//TODO need to link to openfpl backend then data canister
+//TODO LATER need to link to openfpl backend then data canister
     let openfpl_backend_canister = actor (controllerPrincipalId) : actor {
         getPlayerPointsMap : (seasonId: T.SeasonId, gameweek: T.GameweekNumber) -> async [(T.PlayerId, DTOs.PlayerScoreDTO)];
      
       };
       
-    //TODO: USE 
+    //TODO LATER 
     //let allPlayersList = await openfpl_backend_canister.getPlayerPointsMap(seasonId, gameweek);
                   
     let allPlayers : [DTOs.PlayerDTO] = await openfpl_backend_canister.getSnapshotPlayers();
@@ -2692,7 +2693,7 @@ actor class _ManagerCanister() {
     assert backendPrincipalId == controllerPrincipalId;
 
 
-    let players : [DTOs.PlayerDTO] = []; //TODO need to get from snapshot of players stored in this manager canister for the gameweek //await openfpl_backend_canister.getAllSeasonPlayers();
+    let players : [DTOs.PlayerDTO] = []; //TODO LATER need to get from snapshot of players stored in this manager canister for the gameweek //await openfpl_backend_canister.getAllSeasonPlayers();
 
     let allFinalGameweekSnapshots = await getFinalGameweekSnapshots(seasonId);
 
@@ -2800,7 +2801,7 @@ actor class _ManagerCanister() {
   };
 
 
-  //TODO: Do i need if main topping everuthing up
+  //TODO LATER: Do i need if main topping everuthing up
   private func checkCanisterCycles() : async () {
 
     let balance = Cycles.balance();

@@ -117,7 +117,7 @@ actor class _MonthlyLeaderboardsCanister(controllerPrincipalId: T.PrincipalId) {
                     return #less;
               });
 
-              let positionedGameweekEntries = Utilities.assignPositionText(List.fromArray<T.LeaderboardEntry>(sortedGameweekEntries)); //TODO update with football god logic
+              let positionedGameweekEntries = Utilities.assignPositionText(List.fromArray<T.LeaderboardEntry>(sortedGameweekEntries)); //TODO LATER update with football god logic
 
               leaderboardBuffer.add({
                 seasonId = foundSeasonId;

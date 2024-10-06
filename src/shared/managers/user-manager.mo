@@ -212,7 +212,7 @@ module {
     };
     
     public func getUniqueManagerCanisterIds() : [T.CanisterId] {
-      return []; //TODO
+      return List.toArray(uniqueManagerCanisterIds);
     };
 
     public func getCurrentTeam(principalId : Text) : async Result.Result<DTOs.PickTeamDTO, T.Error> {
@@ -1256,11 +1256,11 @@ module {
       managerCanisterIds := canisterIds;
     };
 
-    public func getStableManagerUsernames() : [(T.PrincipalId, Text)] {
+    public func getStableUsernames() : [(T.PrincipalId, Text)] {
       return Iter.toArray(usernames.entries());
     };
 
-    public func setStableManagerUsernames(stable_manager_usernames : [(T.PrincipalId, Text)]) : () {
+    public func setStableUsernames(stable_manager_usernames : [(T.PrincipalId, Text)]) : () {
       let usernameMap : TrieMap.TrieMap<T.PrincipalId, T.CanisterId> = TrieMap.TrieMap<T.PrincipalId, T.CanisterId>(Text.equal, Text.hash);
 
       for (username in Iter.fromArray(stable_manager_usernames)) {

@@ -24,9 +24,8 @@ module {
     private var weeklyLeaderboardCanisters : List.List<T.WeeklyLeaderboardCanister> = List.nil();
     private var monthlyLeaderboardsCanisters : List.List<T.MonthlyLeaderboardsCanister> = List.nil();
     private var seasonLeaderboardCanisters : List.List<T.SeasonLeaderboardCanister> = List.nil();
-    private var backendCanisterController : ?Principal = null;
-    private var storeCanisterId : ?((canisterId : Text) -> async ()) = null;
-    
+    private var backendCanisterController : ?Principal = null;//TODO NOW Set on load
+    private var storeCanisterId : ?((canisterId : Text) -> async ()) = null;//TODO NOW Set on load
 
     private let rewardManager = RewardManager.RewardManager(seasonGameweekCount, seasonMonthCount);
     
@@ -34,12 +33,12 @@ module {
       _storeCanisterId : (canisterId : Text) -> async (),
     ) {
       storeCanisterId := ?_storeCanisterId;
-    }; //TODO: Ensure called
+    }; //TODO LATER: Ensure called
 
 
     public func setBackendCanisterController(controller : Principal) {
       backendCanisterController := ?controller;
-    }; //TODO: Ensure called  
+    }; //TODO LATER: Ensure called  
 
     public func getWeeklyCanisterId(seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async ?Text {
       let leaderboardCanisterId = List.find<T.WeeklyLeaderboardCanister>(
@@ -474,15 +473,15 @@ module {
     }; 
 
     public func getWeeklyLeaderboardCanisters() : [T.WeeklyLeaderboardCanister] {
-        return []; //TODO
+        return List.toArray(weeklyLeaderboardCanisters);
     };
 
     public func getMonthlyLeaderboardsCanisters() : [T.MonthlyLeaderboardsCanister] {
-        return []; //TODO
+        return List.toArray(monthlyLeaderboardsCanisters);
     };
 
     public func getSeasonLeaderboardCanisters() : [T.SeasonLeaderboardCanister] {
-        return []; //TODO
+        return List.toArray(seasonLeaderboardCanisters);
     };
 
     public func getRewardPool(seasonId: T.SeasonId) : ?T.RewardPool {
@@ -490,6 +489,7 @@ module {
     };
 
     public func payWeeklyRewards() : async () {
+      //TODO LATER
       /* Removed inputs but what should be passed
       weeklyLeaderboard : DTOs.WeeklyLeaderboardDTO, filters: DTOs.GameweekFiltersDTO, fixtures : List.List<DTOs.FixtureDTO>, uniqueManagerCanisterIds: List.List<T.CanisterId>
       */
@@ -521,9 +521,17 @@ module {
       */
     };
 
-    //TODO: Ensure used
+    //TODO NOW: Ensure used
 
     //Statble Storage 
+
+    public func getStableRewardPools() : [(T.SeasonId, T.RewardPool)]{
+      return rewardManager.getStableRewardPools();
+    };
+
+    public func getStableMonthlyLeaderboardsCanisters() : [T.MonthlyLeaderboardsCanister] {
+      return List.toArray(monthlyLeaderboardsCanisters);
+    };
 
     public func getStableSeasonLeaderboardCanisters() : [T.SeasonLeaderboardCanister] {
       return List.toArray(seasonLeaderboardCanisters);
@@ -533,16 +541,28 @@ module {
       seasonLeaderboardCanisters := List.fromArray(stable_season_leaderboard_canisters);
     };
 
-    public func getStableMonthlyLeaderboardsCanisters() : [T.MonthlyLeaderboardsCanister] {
-      return List.toArray(monthlyLeaderboardsCanisters);
-    };
-
     public func setStableMonthlyLeaderboardsCanisters(stable_monthly_leaderboards_canisters : [T.MonthlyLeaderboardsCanister]) {
       monthlyLeaderboardsCanisters := List.fromArray(stable_monthly_leaderboards_canisters);
     };
 
     public func getStableWeeklyLeaderboardCanisters() : [T.WeeklyLeaderboardCanister] {
       return List.toArray(weeklyLeaderboardCanisters);
+    };
+
+    public func getStableWeeklyAllTimeHighScores() : [T.HighScoreRecord] {
+      return rewardManager.getStableWeeklyAllTimeHighScores();
+    };
+
+    public func getStableMonthlyAllTimeHighScores() : [T.HighScoreRecord] {
+      return rewardManager.getStableMonthlyAllTimeHighScores();
+    };
+
+    public func getStableSeasonAllTimeHighScores() : [T.HighScoreRecord] {
+      return rewardManager.getStableSeasonAllTimeHighScores();
+    };
+
+    public func setStableRewardPools(stable_reward_pools: [(T.SeasonId, T.RewardPool)]){
+      rewardManager.setStableRewardPools(stable_reward_pools);
     };
 
     public func setStableWeeklyLeaderboardCanisters(stable_weekly_leaderboard_canisters : [T.WeeklyLeaderboardCanister]) {
@@ -597,28 +617,16 @@ module {
       return rewardManager.setStableHighestScoringPlayerRewards(stable_highest_scoring_player_rewards);
     };
 
-    public func getStableWeeklyATHScores() : [T.HighScoreRecord] {
-      return rewardManager.getStableWeeklyATHScores();
+    public func setStableWeeklyAllTimeHighScores(stable_weekly_all_time_high_scores: [T.HighScoreRecord]) {
+      return rewardManager.setStableWeeklyAllTimeHighScores(stable_weekly_all_time_high_scores);
     };
 
-    public func setStableWeeklyATHScores(stable_weekly_ath_scores : [T.HighScoreRecord]) {
-      return rewardManager.setStableWeeklyATHScores(stable_weekly_ath_scores);
+    public func setStableMonthlyAllTimeHighScores(stable_monthly_all_time_high_scores: [T.HighScoreRecord]) {
+      return rewardManager.setStableMonthlyAllTimeHighScores(stable_monthly_all_time_high_scores);
     };
 
-    public func getStableMonthlyATHScores() : [T.HighScoreRecord] {
-      return rewardManager.getStableMonthlyATHScores();
-    };
-
-    public func setStableMonthlyATHScores(stable_monthly_ath_scores : [T.HighScoreRecord]) {
-      return rewardManager.setStableMonthlyATHScores(stable_monthly_ath_scores);
-    };
-
-    public func getStableSeasonATHScores() : [T.HighScoreRecord] {
-      return rewardManager.getStableSeasonATHScores();
-    };
-
-    public func setStableSeasonATHScores(stable_season_ath_scores : [T.HighScoreRecord]) {
-      return rewardManager.setStableSeasonATHScores(stable_season_ath_scores);
+    public func setStableSeasonAllTimeHighScores(stable_season_all_time_high_scores: [T.HighScoreRecord]) {
+      return rewardManager.setStableSeasonAllTimeHighScores(stable_season_all_time_high_scores);
     };
 
     public func getStableWeeklyATHPrizePool() : Nat64 {
@@ -645,7 +653,7 @@ module {
       return rewardManager.setStableSeasonATHPrizePool(stable_season_ath_prize_pool);
     };
 
-    //TODO: Add statble storage for reward pools
+    //TODO NOW: Add statble storage for reward pools
 
     
   };

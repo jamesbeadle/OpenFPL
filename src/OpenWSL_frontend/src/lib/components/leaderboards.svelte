@@ -57,7 +57,7 @@
       await monthlyLeaderboardStore.sync(
         $systemStore?.calculationSeasonId ?? 1,
         $systemStore?.calculationMonth ?? 8,
-        1 //TODO
+        1 //TODO LATER
       );
       
       console.log("syncing season store")
