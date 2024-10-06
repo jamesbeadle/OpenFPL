@@ -63,12 +63,19 @@ module {
 
     public func updateDataHash(category : Text) : async () {
       let hashBuffer = Buffer.fromArray<T.DataHash>([]);
+      var updated = false;
 
       for (hashObj in Iter.fromArray(dataHashes)) {
         if (hashObj.category == category) {
           let randomHash = await SHA224.getRandomHash();
           hashBuffer.add({ category = hashObj.category; hash = randomHash });
+          updated := true;
         } else { hashBuffer.add(hashObj) };
+      };
+
+      if(not updated){
+          let randomHash = await SHA224.getRandomHash();
+          hashBuffer.add({ category = category; hash = randomHash });
       };
 
       dataHashes := Buffer.toArray<T.DataHash>(hashBuffer);

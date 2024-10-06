@@ -17,8 +17,10 @@ function createFixtureStore() {
   );
 
   async function sync(seasonId: number) {
+    console.log("syncing fixtures");
     const category = "fixtures";
     const newHashValues = await actor.getDataHashes();
+    console.log(newHashValues);
 
     let error = isError(newHashValues);
     if (error) {

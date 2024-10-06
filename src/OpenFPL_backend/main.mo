@@ -1232,8 +1232,12 @@
     };
 
     private func postUpgradeCallback() : async (){
-      await checkCanisterCycles(); 
-      await setSystemTimers();
+
+      //TODO now
+      //set system state
+
+      //await checkCanisterCycles(); 
+      //await setSystemTimers();
       await seasonManager.updateDataHash("clubs");
       await seasonManager.updateDataHash("fixtures");
       await seasonManager.updateDataHash("weekly_leaderboard");

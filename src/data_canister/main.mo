@@ -75,13 +75,13 @@
     //Getters
 
     public shared ( {caller} ) func getLeagues() : async Result.Result<[T.FootballLeague], T.Error>{
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
       return #ok(leagues);
     };  
 
 
     public shared ( {caller} ) func getClubs(leagueId: T.FootballLeagueId) : async Result.Result<[T.Club], T.Error>{
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
 
       let filteredLeagueClubs = Array.find<(T.FootballLeagueId, [T.Club])>(leagueClubs, 
         func(leagueClubs: (T.FootballLeagueId, [T.Club])) : Bool {
@@ -108,11 +108,11 @@
     };  
 
     public shared ( {caller} ) func getSeasons(leagueId: T.FootballLeagueId) : async Result.Result<[DTOs.SeasonDTO], T.Error>{
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
 
       let filteredLeagueSeasons = Array.find<(T.FootballLeagueId, [T.Season])>(leagueSeasons, 
-        func(leagueSeasons: (T.FootballLeagueId, [T.Season])) : Bool{
-            leagueSeasons.0 == leagueId;
+        func(leagueSeason: (T.FootballLeagueId, [T.Season])) : Bool{
+            leagueSeason.0 == leagueId;
       });
 
       switch(filteredLeagueSeasons){
@@ -135,23 +135,33 @@
     };
 
     public shared ( {caller} ) func getFixtures(leagueId: T.FootballLeagueId, dto: RequestDTOs.RequestFixturesDTO) : async Result.Result<[DTOs.FixtureDTO], T.Error>{
-      assert callerAllowed(caller);
-
+      //assert callerAllowed(caller);
+      Debug.print("get fixtures");
+      Debug.print(debug_show leagueId);
+      Debug.print(debug_show dto);
       let filteredLeagueSeasons = Array.find<(T.FootballLeagueId, [T.Season])>(leagueSeasons, 
-        func(leagueSeasons: (T.FootballLeagueId, [T.Season])) : Bool{
-            leagueSeasons.0 == leagueId;
+        func(leagueSeason: (T.FootballLeagueId, [T.Season])) : Bool{
+            leagueSeason.0 == leagueId;
       });
 
+      Debug.print("filtered league seasons");
+      Debug.print(debug_show filteredLeagueSeasons);
       switch(filteredLeagueSeasons){
         case (?foundLeagueSeasons){          
           
+          Debug.print("found league seasons");
+          Debug.print(debug_show foundLeagueSeasons);
           let filteredSeason = Array.find<T.Season>(foundLeagueSeasons.1, 
             func(leagueSeason: T.Season) : Bool{
               leagueSeason.id == dto.seasonId;
           });
+          Debug.print("filtered season");
+          Debug.print(debug_show filteredSeason);
 
           switch(filteredSeason){
             case (?foundSeason){
+              Debug.print("found season");
+              Debug.print(debug_show foundSeason);
               return #ok(List.toArray(List.map<T.Fixture, DTOs.FixtureDTO>(foundSeason.fixtures, func(fixture: T.Fixture){
                 return {
                   awayClubId = fixture.awayClubId;
@@ -180,7 +190,7 @@
     };
 
     public shared ( {caller} ) func getPostponedFixtures(leagueId: T.FootballLeagueId, dto: RequestDTOs.RequestFixturesDTO) : async Result.Result<[DTOs.FixtureDTO], T.Error>{
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
 
       let filteredLeagueSeasons = Array.find<(T.FootballLeagueId, [T.Season])>(leagueSeasons, 
         func(currentLeagueSeason: (T.FootballLeagueId, [T.Season])) : Bool{
@@ -225,7 +235,7 @@
     };
 
     public shared ( {caller} ) func getPlayers(leagueId: T.FootballLeagueId, dto: RequestDTOs.RequestPlayersDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error>{
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
 
       let filteredLeaguePlayers = Array.find<(T.FootballLeagueId, [T.Player])>(leaguePlayers, 
         func(currentLeaguePlayers: (T.FootballLeagueId, [T.Player])) : Bool{
@@ -270,7 +280,7 @@
     };
 
     public shared ( {caller} ) func getLoanedPlayers(leagueId: T.FootballLeagueId, dto: DTOs.ClubFilterDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error>{
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
 
       let filteredLeaguePlayers = Array.find<(T.FootballLeagueId, [T.Player])>(leaguePlayers, 
         func(currentLeaguePlayers: (T.FootballLeagueId, [T.Player])) : Bool{
@@ -309,7 +319,7 @@
     };
 
     public shared ( {caller} ) func getRetiredPlayers(leagueId: T.FootballLeagueId, dto: DTOs.ClubFilterDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error>{
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
       
       let filteredLeaguePlayers = Array.find<(T.FootballLeagueId, [T.Player])>(retiredLeaguePlayers, 
         func(currentLeaguePlayers: (T.FootballLeagueId, [T.Player])) : Bool{
@@ -348,7 +358,7 @@
     };
 
     public shared ( {caller} ) func getPlayerDetails(leagueId: T.FootballLeagueId, dto: DTOs.GetPlayerDetailsDTO) : async Result.Result<DTOs.PlayerDetailDTO, T.Error> {
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
 
       var clubId : T.ClubId = 0;
       var position : T.PlayerPosition = #Goalkeeper;
@@ -452,7 +462,7 @@
     };
     
     public shared ( {caller} ) func getPlayerDetailsForGameweek(leagueId: T.FootballLeagueId, dto: DTOs.GameweekFiltersDTO) : async Result.Result<[DTOs.PlayerPointsDTO], T.Error>{
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
 
       var playerDetailsBuffer = Buffer.fromArray<DTOs.PlayerPointsDTO>([]);
 
@@ -502,7 +512,7 @@
     };
 
     public shared ( {caller} ) func getPlayersMap(leagueId: T.FootballLeagueId, dto: DTOs.GameweekFiltersDTO) : async Result.Result<[(Nat16, DTOs.PlayerScoreDTO)], T.Error>{
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
       
       var playersMap : TrieMap.TrieMap<Nat16, DTOs.PlayerScoreDTO> = TrieMap.TrieMap<Nat16, DTOs.PlayerScoreDTO>(Utilities.eqNat16, Utilities.hashNat16);
       
@@ -573,28 +583,28 @@
     //Validation Functions for Update
 
     public shared ( {caller} ) func validateRevaluePlayerUp(leagueId: T.FootballLeagueId, dto : DTOs.RevaluePlayerUpDTO) : async Result.Result<(), T.Error>{
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
       assert leagueExists(leagueId);
       assert checkPlayerExists(leagueId, dto.playerId);
       return #ok();
     };
 
     public shared ( {caller} ) func validateRevaluePlayerDown(leagueId: T.FootballLeagueId, dto : DTOs.RevaluePlayerDownDTO) : async Result.Result<(), T.Error>{
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
       assert leagueExists(leagueId);
       assert checkPlayerExists(leagueId, dto.playerId);
       return #ok();
     };
 
     public shared ( {caller} ) func validateSubmitFixtureData(leagueId: T.FootballLeagueId, dto : DTOs.SubmitFixtureDataDTO) : async Result.Result<(), T.Error>{
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
       assert leagueExists(leagueId);
       assert validatePlayerEvents(dto.playerEventData);
       return #err(#NotFound);
     };
 
     public shared ( {caller} ) func validateAddInitialFixtures(leagueId: T.FootballLeagueId, dto : DTOs.AddInitialFixturesDTO) : async Result.Result<(), T.Error>{
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
       assert leagueExists(leagueId);
       //TODO: Add fixtures check
         //should equal the number of teams in the related environment file
@@ -602,7 +612,7 @@
     };
 
     public shared ( {caller} ) func validateMoveFixture(leagueId: T.FootballLeagueId, dto : DTOs.MoveFixtureDTO) : async Result.Result<(), T.Error>{
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
       assert leagueExists(leagueId);
       //TODO: Add fixture movement check
         //valid gameweek but that can go in a data check module in the backend
@@ -610,28 +620,28 @@
     };
 
     public shared ( {caller} ) func validatePostponeFixture(leagueId: T.FootballLeagueId, dto : DTOs.PostponeFixtureDTO) : async Result.Result<(), T.Error>{
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
       assert leagueExists(leagueId);
       //TODO
       return #err(#NotFound);
     };
 
     public shared ( {caller} ) func validateRescehduleFixture(leagueId: T.FootballLeagueId, dto : DTOs.RescheduleFixtureDTO) : async Result.Result<(), T.Error>{
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
       assert leagueExists(leagueId);
       //TODO
       return #err(#NotFound);
     };
 
     public shared ( {caller} ) func validateUpdateClub(leagueId: T.FootballLeagueId, dto : DTOs.UpdateClubDTO) : async Result.Result<(), T.Error>{
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
       assert leagueExists(leagueId);
       //TODO
       return #err(#NotFound);
     };
 
     public shared ( {caller} ) func validateLoanPlayer(leagueId: T.FootballLeagueId, dto : DTOs.LoanPlayerDTO) : async Result.Result<(), T.Error>{
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
       assert leagueExists(leagueId);
       assert checkPlayerExists(leagueId, dto.playerId);
 
@@ -705,7 +715,7 @@
     };
 
     public shared ( {caller} ) func validateTransferPlayer(leagueId: T.FootballLeagueId, dto : DTOs.TransferPlayerDTO) : async Result.Result<(), T.Error>{
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
       assert leagueExists(leagueId);
       assert checkPlayerExists(leagueId, dto.playerId);
 
@@ -771,7 +781,7 @@
 
     public shared ( {caller} ) func validateRecallPlayer(leagueId: T.FootballLeagueId, dto : DTOs.RecallPlayerDTO) : async Result.Result<(), T.Error> {
       
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
       assert leagueExists(leagueId);
       assert checkPlayerExists(leagueId, dto.playerId);
 
@@ -808,7 +818,7 @@
     };
 
     public shared ( {caller} ) func validateCreatePlayer(leagueId: T.FootballLeagueId, dto : DTOs.CreatePlayerDTO) : async Result.Result<(), T.Error>{
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
       assert leagueExists(leagueId);
 
       if (Text.size(dto.firstName) > 50) {
@@ -861,7 +871,7 @@
     };
 
     public shared ( {caller} ) func validateUpdatePlayer(leagueId: T.FootballLeagueId, dto : DTOs.UpdatePlayerDTO) : async Result.Result<(), T.Error>{
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
       assert leagueExists(leagueId);
       assert checkPlayerExists(leagueId, dto.playerId);
 
@@ -914,7 +924,7 @@
     };
 
     public shared ( {caller} ) func validateSetPlayerInjury(leagueId: T.FootballLeagueId, dto : DTOs.SetPlayerInjuryDTO) : async Result.Result<(), T.Error>{
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
       assert leagueExists(leagueId);
       assert checkPlayerExists(leagueId, dto.playerId);
 
@@ -947,7 +957,7 @@
     };
 
     public shared ( {caller} ) func validateRetirePlayer(leagueId: T.FootballLeagueId, dto : DTOs.RetirePlayerDTO) : async Result.Result<(), T.Error>{
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
       assert leagueExists(leagueId);
       assert checkPlayerExists(leagueId, dto.playerId);
 
@@ -980,7 +990,7 @@
     };
 
     public shared ( {caller} ) func validateUnretirePlayer(leagueId: T.FootballLeagueId, dto : DTOs.UnretirePlayerDTO) : async Result.Result<(), T.Error>{
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
       assert leagueExists(leagueId);
       assert checkPlayerExists(leagueId, dto.playerId);
 
@@ -1009,7 +1019,7 @@
     //Governance execution functions
     
     public shared ( {caller} ) func revaluePlayerUp(leagueId: T.FootballLeagueId, dto : DTOs.RevaluePlayerUpDTO) : async Result.Result<(), T.Error>{
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
 
       let updatedLeaguePlayersBuffer = Buffer.fromArray<(T.FootballLeagueId, [T.Player])>([]);
 
@@ -1082,7 +1092,7 @@
     };
 
     public shared ( {caller} ) func revaluePlayerDown(leagueId: T.FootballLeagueId, dto : DTOs.RevaluePlayerDownDTO) : async Result.Result<(), T.Error>{
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
 
       let updatedLeaguePlayersBuffer = Buffer.fromArray<(T.FootballLeagueId, [T.Player])>([]);
 
@@ -1157,7 +1167,7 @@
     };
 
     public shared ( {caller} ) func loanPlayer(leagueId: T.FootballLeagueId, dto : DTOs.LoanPlayerDTO) : async Result.Result<(), T.Error>{
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
       assert leagueExists(leagueId);
       assert leagueExists(dto.loanLeagueId);
       assert clubExists(dto.loanLeagueId, dto.loanClubId);
@@ -1243,7 +1253,7 @@
     };
 
     public shared ( {caller} ) func transferPlayer(leagueId: T.FootballLeagueId, dto : DTOs.TransferPlayerDTO) : async Result.Result<(), T.Error>{
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
 
       if(dto.newClubId == 0 and dto.newLeagueId == 0){
         movePlayerToFreeAgents(leagueId, dto.clubId, dto.playerId, dto.seasonId, dto.gameweek);
@@ -1261,7 +1271,7 @@
     };
 
     public shared ( {caller} ) func createPlayer(leagueId: T.FootballLeagueId, dto : DTOs.CreatePlayerDTO) : async Result.Result<(), T.Error>{
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
       
       let newPlayer : T.Player = {
         id = nextPlayerId + 1;
@@ -1301,7 +1311,7 @@
     };
 
     public shared ( {caller} ) func updatePlayer(leagueId: T.FootballLeagueId, dto : DTOs.UpdatePlayerDTO) : async Result.Result<(), T.Error>{
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
 
       leaguePlayers := Array.map<(T.FootballLeagueId, [T.Player]), (T.FootballLeagueId, [T.Player])>(leaguePlayers, 
         func(leaguePlayersEntry: (T.FootballLeagueId, [T.Player])){
@@ -1356,7 +1366,7 @@
     };
 
     public shared ( {caller} ) func setPlayerInjury(leagueId: T.FootballLeagueId, dto : DTOs.SetPlayerInjuryDTO) : async Result.Result<(), T.Error>{
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
 
 
       leaguePlayers := Array.map<(T.FootballLeagueId, [T.Player]), (T.FootballLeagueId, [T.Player])>(leaguePlayers, 
@@ -1427,7 +1437,7 @@
     public shared ( {caller} ) func retirePlayer(leagueId: T.FootballLeagueId, dto : DTOs.RetirePlayerDTO) : async Result.Result<(), T.Error>{
       //TODO
       /*
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
       let playerToRetire = List.find<T.Player>(players, func(p : T.Player) : Bool { p.id == retirePlayerDTO.playerId });
       switch (playerToRetire) {
         case (null) {};
@@ -1470,7 +1480,7 @@
     public shared ( {caller} ) func unretirePlayer(dto : DTOs.UnretirePlayerDTO) : async Result.Result<(), T.Error>{
       //TODO
       /* 
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
       let playerToUnretire = List.find<T.Player>(players, func(p : T.Player) : Bool { p.id == unretirePlayerDTO.playerId });
       switch (playerToUnretire) {
         case (null) {};
@@ -1513,7 +1523,7 @@
     public shared ({ caller }) func promoteNewClub(leagueId: T.FootballLeagueId, promoteNewClubDTO : DTOs.PromoteNewClubDTO) : async Result.Result<(), T.Error> {
       //TODO
       /*
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
 
 
         if (Array.size(clubs) >= 20) {
@@ -1567,7 +1577,7 @@
     public shared ({ caller }) func updateClub(updateClubDTO : DTOs.UpdateClubDTO) : async Result.Result<(), T.Error> {
       //TODO
       /*
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
         let club = Array.find(
             clubs,
             func(c : T.Club) : Bool {
@@ -1636,7 +1646,7 @@
     public shared ( {caller} ) func createNewSeason(systemState : T.SystemState) {
       //TODO
       /*
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
       let existingSeason = List.find(
         seasons,
         func(season : T.Season) : Bool {
@@ -1671,7 +1681,7 @@
     public shared ( {caller} ) func addEventsToFixture(playerEventData : [T.PlayerEventData], seasonId : T.SeasonId, fixtureId : T.FixtureId) : async () {
       //TODO LATER
       /*
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
       seasons := List.map<T.Season, T.Season>(
         seasons,
         func(season : T.Season) : T.Season {
@@ -1713,7 +1723,7 @@
     public shared ( {caller} ) func setGameScore(seasonId: T.SeasonId, fixtureId: T.FixtureId){
       //TODO LATER
       /*
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
       let seasonBuffer = Buffer.fromArray<T.Season>([]);
 
       for(season in Iter.fromList(seasons)){
@@ -1782,7 +1792,7 @@
     public shared ( {caller} ) func setFixtureToComplete(seasonId: T.SeasonId, fixtureId: T.FixtureId){
       //TODO LATER
       /*
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
       let seasonBuffer = Buffer.fromArray<T.Season>([]);
 
       for(season in Iter.fromList(seasons)){
@@ -1827,7 +1837,7 @@
     public shared ( {caller} ) func setFixtureToFinalised(seasonId: T.SeasonId, fixtureId: T.FixtureId) {
       //TODO LATER
       /*
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
       seasons := List.map<T.Season, T.Season>(
         seasons,
         func(season : T.Season) : T.Season {
@@ -1871,7 +1881,7 @@
     public shared ( {caller} ) func addEventsToPlayers(playerEventData : [T.PlayerEventData], seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async () {
       //TODO LATER
       /*
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
       var updatedSeasons : List.List<T.PlayerSeason> = List.nil<T.PlayerSeason>();
       let playerEventsMap : TrieMap.TrieMap<Nat16, [T.PlayerEventData]> = TrieMap.TrieMap<Nat16, [T.PlayerEventData]>(Utilities.eqNat16, Utilities.hashNat16);
 
@@ -2023,7 +2033,7 @@
     public shared ( {caller} ) func checkGameweekComplete(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async Bool {
       //TODO LATER
       /*
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
       let season = List.find(
         seasons,
         func(season : T.Season) : Bool {
@@ -2059,7 +2069,7 @@
       //TODO LATER
       /*
 
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
       let currentSeason = List.find(
         seasons,
         func(season : T.Season) : Bool {
@@ -2130,7 +2140,7 @@
       //TODO LATER
       /*
 
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
       if (systemState.calculationGameweek != 38) {
         return false;
       };
@@ -2550,7 +2560,7 @@
     private func loanExpiredCallback() : async (){
       //TODO LATER
       /*
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
       let playersToRecall = List.filter<T.Player>(
         players,
         func(currentPlayer : T.Player) : Bool {
@@ -2571,7 +2581,7 @@
     private func injuryExpiredCallback() : async (){
       //TODO LATER
       /*
-      assert callerAllowed(caller);
+      //assert callerAllowed(caller);
 
       let playersNoLongerInjured = Array.filter<T.Player>(
         players,
@@ -3023,7 +3033,7 @@
         (2, 
           [
             {
-              id = 2;
+              id = 1;
               name = "2024/25";
               postponedFixtures = List.fromArray([]);
               rewardPool = {

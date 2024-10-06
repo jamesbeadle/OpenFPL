@@ -3,6 +3,6 @@
 export const index = 10;
 let component_cache;
 export const component = async () => component_cache ??= (await import('../entries/pages/league/_page.svelte.js')).default;
-export const imports = ["_app/immutable/nodes/10.B8318qiV.js","_app/immutable/chunks/index.Ctk6tIDP.js","_app/immutable/chunks/vendor.BSx235g1.js"];
-export const stylesheets = ["_app/immutable/assets/index.TTx05D_Z.css"];
+export const imports = ["_app/immutable/nodes/10.BIpxhBCX.js","_app/immutable/chunks/index.CAttDscB.js","_app/immutable/chunks/vendor.BNOizviP.js"];
+export const stylesheets = ["_app/immutable/assets/index.DmXMtCUP.css"];
 export const fonts = [];
