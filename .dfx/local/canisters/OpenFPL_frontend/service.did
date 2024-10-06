@@ -124,6 +124,9 @@ service : {
   create_chunk : (record { content : blob; batch_id : BatchId }) -> (
       record { chunk_id : ChunkId },
     );
+  create_chunks : (record { content : vec blob; batch_id : BatchId }) -> (
+      record { chunk_ids : vec ChunkId },
+    );
   deauthorize : (principal) -> ();
   delete_asset : (DeleteAssetArguments) -> ();
   delete_batch : (DeleteBatchArguments) -> ();

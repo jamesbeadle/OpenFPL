@@ -38,6 +38,12 @@
 		"../tests/**/*.svelte"
 	],
 	"exclude": [
-		"../node_modules/**"
+		"../node_modules/**",
+		"../src/OpenWSL_frontend/src/service-worker.js",
+		"../src/OpenWSL_frontend/src/service-worker/**/*.js",
+		"../src/OpenWSL_frontend/src/service-worker.ts",
+		"../src/OpenWSL_frontend/src/service-worker/**/*.ts",
+		"../src/OpenWSL_frontend/src/service-worker.d.ts",
+		"../src/OpenWSL_frontend/src/service-worker/**/*.d.ts"
 	]
 }

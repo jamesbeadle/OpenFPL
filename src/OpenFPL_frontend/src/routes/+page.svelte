@@ -140,7 +140,7 @@
             {$systemStore?.pickTeamGameweek}
           </p>
           <p class="content-panel-header">
-            {$systemStore?.pickTeamSeasonName}
+            {$systemStore?.pickTeamSeasonId}
           </p>
         </div>
         <div class="vertical-divider" />
