@@ -3516,7 +3516,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "z47lqx"
+  version_hash: "a119y3"
 };
 async function get_hooks() {
   return {};
@@ -4469,8 +4469,8 @@ const idlFactory = ({ IDL: IDL2 }) => {
     )
   });
 };
-var define_process_env_default$d = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai" };
-const canisterId = define_process_env_default$d.CANISTER_ID_OPENFPL_BACKEND;
+var define_process_env_default$e = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai" };
+const canisterId = define_process_env_default$e.CANISTER_ID_OPENFPL_BACKEND;
 const createActor = (canisterId2, options2 = {}) => {
   const agent = options2.agent || new HttpAgent({ ...options2.agentOptions });
   if (options2.agent && options2.agentOptions) {
@@ -4493,7 +4493,7 @@ const createActor = (canisterId2, options2 = {}) => {
   });
 };
 canisterId ? createActor(canisterId) : void 0;
-var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai" };
+var define_process_env_default$d = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai" };
 class ActorFactory {
   static createActor(idlFactory2, canisterId2 = "", identity = null, options2 = null) {
     const hostOptions = {
@@ -4554,7 +4554,7 @@ class ActorFactory {
     });
   }
   static getGovernanceAgent(identity = null, options2 = null) {
-    let canisterId2 = define_process_env_default$c.CANISTER_ID_SNS_GOVERNANCE;
+    let canisterId2 = define_process_env_default$d.CANISTER_ID_SNS_GOVERNANCE;
     const hostOptions = {
       host: `http://localhost:8080/?canisterId=${canisterId2}`,
       identity
@@ -4737,12 +4737,12 @@ function convertFixtureStatus(fixtureStatus) {
 function isError(response) {
   return response && response.err !== void 0;
 }
-var define_process_env_default$b = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai" };
+var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai" };
 function createSystemStore() {
   const { subscribe: subscribe2, set } = writable(null);
   let actor = ActorFactory.createActor(
     idlFactory,
-    define_process_env_default$b.OPENWSL_BACKEND_CANISTER_ID
+    define_process_env_default$c.OPENWSL_BACKEND_CANISTER_ID
   );
   async function sync() {
     await authStore.sync();
@@ -4804,7 +4804,7 @@ function createSystemStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default$b.OPENWSL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$c.OPENWSL_BACKEND_CANISTER_ID ?? ""
       );
       const limit = itemsPerPage;
       const offset = (currentPage - 1) * limit;
@@ -4830,7 +4830,7 @@ function createSystemStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default$b.OPENWSL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$c.OPENWSL_BACKEND_CANISTER_ID ?? ""
       );
       let dto = {
         seasonId,
@@ -4861,7 +4861,7 @@ function createSystemStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default$b.OPENWSL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$c.OPENWSL_BACKEND_CANISTER_ID ?? ""
       );
       const limit = itemsPerPage;
       const offset = (currentPage - 1) * limit;
@@ -4886,7 +4886,7 @@ function createSystemStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default$b.OPENWSL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$c.OPENWSL_BACKEND_CANISTER_ID ?? ""
       );
       let result = await identityActor.getBackendCanisterBalance();
       if (isError(result)) {
@@ -4903,7 +4903,7 @@ function createSystemStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default$b.OPENWSL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$c.OPENWSL_BACKEND_CANISTER_ID ?? ""
       );
       let result = await identityActor.getCanisterCyclesBalance();
       if (isError(result)) {
@@ -4929,12 +4929,12 @@ function createSystemStore() {
   };
 }
 const systemStore = createSystemStore();
-var define_process_env_default$a = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai" };
+var define_process_env_default$b = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai" };
 function createFixtureStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let actor = ActorFactory.createActor(
     idlFactory,
-    define_process_env_default$a.OPENWSL_BACKEND_CANISTER_ID
+    define_process_env_default$b.OPENWSL_BACKEND_CANISTER_ID
   );
   async function sync(seasonId) {
     const category = "fixtures";
@@ -4949,7 +4949,6 @@ function createFixtureStore() {
     const localHash = localStorage.getItem(`${category}_hash`);
     if (categoryHash?.hash != localHash) {
       let dto = {
-        leagueId: 2,
         seasonId
       };
       console.log("here");
@@ -5012,12 +5011,12 @@ function createFixtureStore() {
   };
 }
 const fixtureStore = createFixtureStore();
-var define_process_env_default$9 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai" };
+var define_process_env_default$a = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai" };
 function createTeamStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let actor = ActorFactory.createActor(
     idlFactory,
-    define_process_env_default$9.OPENWSL_BACKEND_CANISTER_ID
+    define_process_env_default$a.OPENWSL_BACKEND_CANISTER_ID
   );
   async function sync() {
     const category = "clubs";
@@ -5453,14 +5452,14 @@ const toastsError = ({
     level: "error"
   });
 };
-var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai" };
+var define_process_env_default$9 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai" };
 function createManagerStore() {
   const { subscribe: subscribe2, set } = writable(null);
   systemStore.subscribe((value) => {
   });
   let actor = ActorFactory.createActor(
     idlFactory,
-    define_process_env_default$8.OPENWSL_BACKEND_CANISTER_ID
+    define_process_env_default$9.OPENWSL_BACKEND_CANISTER_ID
   );
   let newManager = {
     playerIds: [],
@@ -5549,7 +5548,7 @@ function createManagerStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default$8.OPENWSL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$9.OPENWSL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.getCurrentTeam();
       if (isError(result)) {
@@ -5576,7 +5575,7 @@ function createManagerStore() {
       }
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default$8.OPENWSL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$9.OPENWSL_BACKEND_CANISTER_ID ?? ""
       );
       let dto = {
         playerIds: userFantasyTeam.playerIds,
@@ -5692,12 +5691,12 @@ function createManagerStore() {
   };
 }
 createManagerStore();
-var define_process_env_default$7 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai" };
+var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai" };
 function createCountriesStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let actor = ActorFactory.createActor(
     idlFactory,
-    define_process_env_default$7.OPENWSL_BACKEND_CANISTER_ID
+    define_process_env_default$8.OPENWSL_BACKEND_CANISTER_ID
   );
   async function sync() {
     let category = "countries";
@@ -5739,14 +5738,14 @@ function createCountriesStore() {
   };
 }
 const countriesStore = createCountriesStore();
-var define_process_env_default$6 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai" };
+var define_process_env_default$7 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai" };
 function createWeeklyLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage = 25;
   const category = "weekly_leaderboard";
   let actor = ActorFactory.createActor(
     idlFactory,
-    define_process_env_default$6.OPENWSL_BACKEND_CANISTER_ID
+    define_process_env_default$7.OPENWSL_BACKEND_CANISTER_ID
   );
   async function sync(seasonId, gameweek) {
     const newHashValues = await actor.getDataHashes();
@@ -5869,7 +5868,7 @@ function createWeeklyLeaderboardStore() {
   };
 }
 createWeeklyLeaderboardStore();
-var define_process_env_default$5 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai" };
+var define_process_env_default$6 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai" };
 function createPlayerStore() {
   const { subscribe: subscribe2, set } = writable([]);
   systemStore.subscribe((value) => {
@@ -5877,7 +5876,7 @@ function createPlayerStore() {
   fixtureStore.subscribe((value) => value);
   let actor = ActorFactory.createActor(
     idlFactory,
-    define_process_env_default$5.OPENWSL_BACKEND_CANISTER_ID
+    define_process_env_default$6.OPENWSL_BACKEND_CANISTER_ID
   );
   async function sync() {
     let category = "players";
@@ -5954,7 +5953,7 @@ function createPlayerStore() {
   };
 }
 const playerStore = createPlayerStore();
-var define_process_env_default$4 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai" };
+var define_process_env_default$5 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai" };
 function createPlayerEventsStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let systemState;
@@ -5965,7 +5964,7 @@ function createPlayerEventsStore() {
   fixtureStore.subscribe((value) => allFixtures = value);
   let actor = ActorFactory.createActor(
     idlFactory,
-    define_process_env_default$4.OPENWSL_BACKEND_CANISTER_ID
+    define_process_env_default$5.OPENWSL_BACKEND_CANISTER_ID
   );
   async function sync() {
     let category = "player_events";
@@ -5980,7 +5979,6 @@ function createPlayerEventsStore() {
     const localHash = localStorage.getItem(`${category}_hash`);
     if (categoryHash?.hash != localHash) {
       let dto = {
-        leagueId: 2,
         seasonId: systemState.calculationSeasonId,
         gameweek: systemState.calculationGameweek
       };
@@ -6020,7 +6018,6 @@ function createPlayerEventsStore() {
   async function getPlayerDetails(playerId, seasonId) {
     try {
       let dto = {
-        leagueId: 2,
         playerId,
         seasonId
       };
@@ -6041,7 +6038,6 @@ function createPlayerEventsStore() {
       allPlayerEvents = await getPlayerEvents();
     } else {
       let dto = {
-        leagueId: 2,
         seasonId: systemState.calculationSeasonId,
         gameweek
       };
@@ -6319,7 +6315,7 @@ function createPlayerEventsStore() {
   };
 }
 createPlayerEventsStore();
-var define_process_env_default$3 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai" };
+var define_process_env_default$4 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai" };
 function createUserStore() {
   const { subscribe: subscribe2, set } = writable(null);
   async function sync() {
@@ -6340,7 +6336,7 @@ function createUserStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default$3.OPENWSL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$4.OPENWSL_BACKEND_CANISTER_ID ?? ""
       );
       let dto = {
         username
@@ -6361,7 +6357,7 @@ function createUserStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default$3.OPENWSL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$4.OPENWSL_BACKEND_CANISTER_ID ?? ""
       );
       let dto = {
         favouriteClubId: favouriteTeamId
@@ -6393,7 +6389,7 @@ function createUserStore() {
         try {
           const identityActor = await ActorFactory.createIdentityActor(
             authStore,
-            define_process_env_default$3.OPENWSL_BACKEND_CANISTER_ID ?? ""
+            define_process_env_default$4.OPENWSL_BACKEND_CANISTER_ID ?? ""
           );
           let dto = {
             profilePicture: uint8Array,
@@ -6423,7 +6419,7 @@ function createUserStore() {
   async function isUsernameAvailable(username) {
     const identityActor = await ActorFactory.createIdentityActor(
       authStore,
-      define_process_env_default$3.OPENWSL_BACKEND_CANISTER_ID
+      define_process_env_default$4.OPENWSL_BACKEND_CANISTER_ID
     );
     let dto = {
       username
@@ -6433,7 +6429,7 @@ function createUserStore() {
   async function cacheProfile() {
     const identityActor = await ActorFactory.createIdentityActor(
       authStore,
-      define_process_env_default$3.OPENWSL_BACKEND_CANISTER_ID
+      define_process_env_default$4.OPENWSL_BACKEND_CANISTER_ID
     );
     let getProfileResponse = await identityActor.getProfile();
     let error = isError(getProfileResponse);
@@ -6457,11 +6453,11 @@ function createUserStore() {
       const agent = await createAgent({
         identity,
         host: "http://localhost:8080/?canisterId=qhbym-qaaaa-aaaaa-aaafq-cai",
-        fetchRootKey: define_process_env_default$3.DFX_NETWORK === "local"
+        fetchRootKey: define_process_env_default$4.DFX_NETWORK === "local"
       });
       const { transfer } = IcrcLedgerCanister.create({
         agent,
-        canisterId: define_process_env_default$3.DFX_NETWORK === "ic" ? Principal.fromText("ddsp7-7iaaa-aaaaq-aacqq-cai") : Principal.fromText("avqkn-guaaa-aaaaa-qaaea-cai")
+        canisterId: define_process_env_default$4.DFX_NETWORK === "ic" ? Principal.fromText("ddsp7-7iaaa-aaaaq-aacqq-cai") : Principal.fromText("avqkn-guaaa-aaaaa-qaaea-cai")
       });
       if (principalId) {
         try {
@@ -6497,7 +6493,7 @@ function createUserStore() {
     const agent = await createAgent({
       identity,
       host: "http://localhost:8080/?canisterId=qhbym-qaaaa-aaaaa-aaafq-cai",
-      fetchRootKey: define_process_env_default$3.DFX_NETWORK === "local"
+      fetchRootKey: define_process_env_default$4.DFX_NETWORK === "local"
     });
     const { balance } = IcrcLedgerCanister.create({
       agent,
@@ -6680,6 +6676,63 @@ const Local_spinner = create_ssr_component(($$result, $$props, $$bindings, slots
   $$result.css.add(css$2);
   return `<div class="local-spinner svelte-pvdm52"></div>`;
 });
+var define_process_env_default$3 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai" };
+function createSeasonStore() {
+  const { subscribe: subscribe2, set } = writable([]);
+  let actor = ActorFactory.createActor(
+    idlFactory,
+    define_process_env_default$3.OPENFPL_BACKEND_CANISTER_ID
+  );
+  async function sync() {
+    const category = "seasons";
+    const newHashValues = await actor.getDataHashes();
+    let error = isError(newHashValues);
+    if (error) {
+      console.error("Error syncing season store");
+      return;
+    }
+    let dataCacheValues = newHashValues.ok;
+    let categoryHash = dataCacheValues.find((x) => x.category === category) ?? null;
+    const localHash = localStorage.getItem(`${category}_hash`);
+    if (categoryHash?.hash != localHash) {
+      const result = await actor.getSeasons(1);
+      if (isError(result)) {
+        console.error("error syncing seasons store");
+        return;
+      }
+      let updatedFSeasonsData = result.ok;
+      localStorage.setItem(
+        category,
+        JSON.stringify(updatedFSeasonsData, replacer)
+      );
+      localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
+      set(updatedFSeasonsData);
+    } else {
+      const cachedSeasonsData = localStorage.getItem(category);
+      let cachedSeasons = [];
+      try {
+        cachedSeasons = JSON.parse(cachedSeasonsData || "[]");
+      } catch (e) {
+        cachedSeasons = [];
+      }
+      set(cachedSeasons);
+    }
+  }
+  async function getSeasonName(seasonId) {
+    let seasonName = "";
+    subscribe2((seasons) => {
+      let season = seasons.find((x) => x.id == seasonId);
+      seasonName = season ? season.name : "";
+    });
+    return seasonName;
+  }
+  return {
+    subscribe: subscribe2,
+    sync,
+    getSeasonName
+  };
+}
+const seasonStore = createSeasonStore();
 var define_process_env_default$2 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai" };
 function createMonthlyLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
@@ -6952,14 +7005,22 @@ var define_process_env_default = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaa
 function createGovernanceStore() {
   async function revaluePlayerUp(playerId) {
     try {
+      await systemStore.sync();
       await playerStore.sync();
       let allPlayers = [];
       const unsubscribe = playerStore.subscribe((players) => {
         allPlayers = players;
       });
       unsubscribe();
+      var systemState = null;
+      const unsubscribeSystemState = systemStore.subscribe((state) => {
+        systemState = state;
+      });
+      unsubscribeSystemState();
       var dto = {
-        playerId
+        playerId,
+        seasonId: systemState == null ? 0 : systemState.pickTeamSeasonId,
+        gameweek: systemState == null ? 0 : systemState.pickTeamGameweek
       };
       let player = allPlayers.find((x) => x.id == playerId);
       if (player) {
@@ -6982,8 +7043,15 @@ function createGovernanceStore() {
         allPlayers = players;
       });
       unsubscribe();
+      var systemState = null;
+      const unsubscribeSystemState = systemStore.subscribe((state) => {
+        systemState = state;
+      });
+      unsubscribeSystemState();
       var dto = {
-        playerId
+        playerId,
+        seasonId: systemState == null ? 0 : systemState.pickTeamSeasonId,
+        gameweek: systemState == null ? 0 : systemState.pickTeamGameweek
       };
       let player = allPlayers.find((x) => x.id == playerId);
       if (player) {
@@ -6998,7 +7066,7 @@ function createGovernanceStore() {
       throw error;
     }
   }
-  async function submitFixtureData(seasonId, gameweek, fixtureId, playerEventData) {
+  async function submitFixtureData(seasonId, gameweek, fixtureId, month, playerEventData) {
     try {
       await teamStore.sync();
       let clubs = [];
@@ -7015,7 +7083,7 @@ function createGovernanceStore() {
       });
       unsubscribeFixtureStore();
       let dto = {
-        seasonId,
+        month,
         gameweek,
         fixtureId,
         playerEventData
@@ -7064,18 +7132,12 @@ function createGovernanceStore() {
       throw error;
     }
   }
-  async function addInitialFixtures(seasonId, seasonFixtures) {
+  async function addInitialFixtures(seasonFixtures, pickTeamSeasonId) {
     try {
       await systemStore.sync();
-      let seasonName = "";
-      const unsubscribeSystemStore = systemStore.subscribe((systemState) => {
-        if (systemState) {
-          seasonName = systemState?.calculationSeasonName;
-        }
-      });
-      unsubscribeSystemStore();
+      await seasonStore.sync();
+      let seasonName = await seasonStore.getSeasonName(pickTeamSeasonId);
       let dto = {
-        seasonId,
         seasonFixtures
       };
       let title = `Add initial fixtures for season ${seasonName}`;
@@ -7281,7 +7343,7 @@ function createGovernanceStore() {
       throw error;
     }
   }
-  async function transferPlayer(playerId, newClubId) {
+  async function transferPlayer(playerId, newLeagueId, newClubId, newShirtNumber, seasonId, gameweek) {
     try {
       await teamStore.sync();
       await playerStore.sync();
@@ -7299,10 +7361,6 @@ function createGovernanceStore() {
         }
       });
       unsubscribePlayerStore();
-      let dto = {
-        playerId,
-        newClubId
-      };
       let title = "";
       let player = allPlayers.find((x) => x.id == playerId);
       if (player) {
@@ -7319,6 +7377,15 @@ function createGovernanceStore() {
         }
       }
       let summary = title;
+      let dto = {
+        playerId,
+        newClubId,
+        newShirtNumber,
+        newLeagueId,
+        clubId: player?.clubId ?? 0,
+        seasonId,
+        gameweek
+      };
       await executeProposal(dto, title, summary, 8000n, [
         IDL.Record({ playerId: IDL.Nat16, newClubId: IDL.Nat16 })
       ]);
@@ -7327,7 +7394,7 @@ function createGovernanceStore() {
       throw error;
     }
   }
-  async function loanPlayer(playerId, loanClubId, loanEndDate) {
+  async function loanPlayer(playerId, loanLeagueId, loanClubId, loanEndDate, seasonId, gameweek) {
     try {
       await teamStore.sync();
       await playerStore.sync();
@@ -7350,8 +7417,11 @@ function createGovernanceStore() {
       let nanoseconds = BigInt(timestampMilliseconds) * BigInt(1e6);
       let dto = {
         playerId,
+        loanLeagueId,
         loanClubId,
-        loanEndDate: nanoseconds
+        loanEndDate: nanoseconds,
+        seasonId,
+        gameweek
       };
       let player = allPlayers.find((x) => x.id == playerId);
       if (player) {
@@ -7412,7 +7482,7 @@ function createGovernanceStore() {
       throw error;
     }
   }
-  async function createPlayer(clubId, position, firstName, lastName, shirtNumber, valueQuarterMillions, dateOfBirth, nationality) {
+  async function createPlayer(clubId, position, firstName, lastName, shirtNumber, valueQuarterMillions, dateOfBirth, nationality, gender) {
     try {
       await teamStore.sync();
       await playerStore.sync();
@@ -7427,6 +7497,7 @@ function createGovernanceStore() {
       const timestampMilliseconds = dateObject.getTime();
       let nanoseconds = BigInt(timestampMilliseconds) * BigInt(1e6);
       let dto = {
+        gender,
         clubId,
         position,
         firstName,

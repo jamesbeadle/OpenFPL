@@ -92,10 +92,15 @@ type RetirePlayerDTO =
    playerId: PlayerId;
    retirementDate: int;
  };
-type Result_7 = 
+type Result_8 = 
  variant {
    err: Error;
    ok: vec Club;
+ };
+type Result_7 = 
+ variant {
+   err: Error;
+   ok: vec FootballLeague;
  };
 type Result_6 = 
  variant {
@@ -296,6 +301,17 @@ type GameweekFiltersDTO =
    seasonId: SeasonId;
  };
 type FootballLeagueId = nat16;
+type FootballLeague = 
+ record {
+   abbreviation: text;
+   countryId: CountryId;
+   formed: int;
+   governingBody: text;
+   id: FootballLeagueId;
+   name: text;
+   numOfTeams: nat8;
+   relatedGender: Gender;
+ };
 type FixtureStatusType = 
  variant {
    Active;
@@ -377,8 +393,9 @@ service : {
   checkSeasonComplete: (SeasonId) -> (bool);
   createNewSeason: (SystemState) -> () oneway;
   createPlayer: (FootballLeagueId, CreatePlayerDTO) -> (Result);
-  getClubs: (FootballLeagueId) -> (Result_7);
+  getClubs: (FootballLeagueId) -> (Result_8);
   getFixtures: (FootballLeagueId, RequestFixturesDTO) -> (Result_3);
+  getLeagues: () -> (Result_7);
   getLoanedPlayers: (FootballLeagueId, ClubFilterDTO) -> (Result_2);
   getPlayerDetails: (FootballLeagueId, GetPlayerDetailsDTO) -> (Result_6);
   getPlayerDetailsForGameweek: (FootballLeagueId, GameweekFiltersDTO) ->

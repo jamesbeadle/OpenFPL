@@ -12,8 +12,8 @@
   import LocalSpinner from "../local-spinner.svelte";
   import WithdrawFplModal from "./withdraw-fpl-modal.svelte";
   import { writable } from "svelte/store";
-    import { authStore } from "$lib/stores/auth.store";
-    import { getDateFromBigInt } from "$lib/utils/helpers";
+  import { authStore } from "$lib/stores/auth.store";
+  import { getDateFromBigInt } from "$lib/utils/helpers";
   
   let showUsernameModal: boolean = false;
   let showFavouriteTeamModal: boolean = false;
@@ -25,6 +25,7 @@
   let fplBalance = 0n;
   let fplBalanceFormatted = "0.0000"; 
   let dot_interval: ReturnType<typeof setInterval>;
+  let username = "Not Set";
 
   let unsubscribeUserProfile: () => void;
 
@@ -48,6 +49,7 @@
         if (!value) {
           return;
         }
+        username = value.username;
         joinedDate = getDateFromBigInt(Number(value.createDate));
       });
     } catch (error) {
@@ -237,11 +239,7 @@
         <div class="md:ml-4 md:px-4 px-4 mt-2 md:mt-1 rounded-lg">
           <p class="mb-1">Username:</p>
           <h2 class="default-header mb-1 md:mb-2">
-            {#if $userStore}
-              {$userStore?.username == "" ? "Not Set" : $userStore?.username}
-            {:else}
-              Unset
-            {/if}
+            {username}
             </h2>
           <button
             class="text-sm md:text-sm p-1 md:p-2 px-2 md:px-4 rounded fpl-button"

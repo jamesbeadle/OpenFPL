@@ -223,7 +223,7 @@ function createGovernanceStore() {
 
   async function addInitialFixtures(
     seasonFixtures: FixtureDTO[],
-    pickTeamSeasonId: number
+    pickTeamSeasonId: number,
   ): Promise<any> {
     try {
       await systemStore.sync();
@@ -481,7 +481,7 @@ function createGovernanceStore() {
     newClubId: number,
     newShirtNumber: number,
     seasonId: number,
-    gameweek: number
+    gameweek: number,
   ): Promise<any> {
     try {
       await teamStore.sync();
@@ -530,7 +530,7 @@ function createGovernanceStore() {
         newLeagueId,
         clubId: player?.clubId ?? 0,
         seasonId,
-        gameweek
+        gameweek,
       };
 
       await executeProposal(dto, title, summary, 8000n, [
@@ -548,7 +548,7 @@ function createGovernanceStore() {
     loanClubId: number,
     loanEndDate: string,
     seasonId: number,
-    gameweek: number
+    gameweek: number,
   ): Promise<any> {
     try {
       await teamStore.sync();
@@ -580,7 +580,7 @@ function createGovernanceStore() {
         loanClubId,
         loanEndDate: nanoseconds,
         seasonId,
-        gameweek
+        gameweek,
       };
 
       let player = allPlayers.find((x) => x.id == playerId);
@@ -660,7 +660,7 @@ function createGovernanceStore() {
     valueQuarterMillions: number,
     dateOfBirth: string,
     nationality: number,
-    gender: Gender
+    gender: Gender,
   ): Promise<any> {
     try {
       await teamStore.sync();

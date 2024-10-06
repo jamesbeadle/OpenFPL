@@ -69,6 +69,16 @@ export type FixtureStatusType =
   | { Finalised: null }
   | { Active: null }
   | { Complete: null };
+export interface FootballLeague {
+  id: FootballLeagueId;
+  name: string;
+  relatedGender: Gender;
+  countryId: CountryId;
+  numOfTeams: number;
+  abbreviation: string;
+  governingBody: string;
+  formed: bigint;
+}
 export type FootballLeagueId = number;
 export interface GameweekFiltersDTO {
   seasonId: SeasonId;
@@ -222,7 +232,8 @@ export type Result_3 = { ok: Array<FixtureDTO> } | { err: Error };
 export type Result_4 = { ok: Array<[number, PlayerScoreDTO]> } | { err: Error };
 export type Result_5 = { ok: Array<PlayerPointsDTO> } | { err: Error };
 export type Result_6 = { ok: PlayerDetailDTO } | { err: Error };
-export type Result_7 = { ok: Array<Club> } | { err: Error };
+export type Result_7 = { ok: Array<FootballLeague> } | { err: Error };
+export type Result_8 = { ok: Array<Club> } | { err: Error };
 export interface RetirePlayerDTO {
   playerId: PlayerId;
   retirementDate: bigint;
@@ -321,8 +332,9 @@ export interface _SERVICE {
   checkSeasonComplete: ActorMethod<[SeasonId], boolean>;
   createNewSeason: ActorMethod<[SystemState], undefined>;
   createPlayer: ActorMethod<[FootballLeagueId, CreatePlayerDTO], Result>;
-  getClubs: ActorMethod<[FootballLeagueId], Result_7>;
+  getClubs: ActorMethod<[FootballLeagueId], Result_8>;
   getFixtures: ActorMethod<[FootballLeagueId, RequestFixturesDTO], Result_3>;
+  getLeagues: ActorMethod<[], Result_7>;
   getLoanedPlayers: ActorMethod<[FootballLeagueId, ClubFilterDTO], Result_2>;
   getPlayerDetails: ActorMethod<
     [FootballLeagueId, GetPlayerDetailsDTO],

@@ -88,7 +88,7 @@ export const idlFactory = ({ IDL }) => {
     shirtType: ShirtType,
     primaryColourHex: IDL.Text,
   });
-  const Result_7 = IDL.Variant({ ok: IDL.Vec(Club), err: Error });
+  const Result_8 = IDL.Variant({ ok: IDL.Vec(Club), err: Error });
   const RequestFixturesDTO = IDL.Record({ seasonId: SeasonId });
   const FixtureStatusType = IDL.Variant({
     Unplayed: IDL.Null,
@@ -110,6 +110,20 @@ export const idlFactory = ({ IDL }) => {
     awayGoals: IDL.Nat8,
   });
   const Result_3 = IDL.Variant({ ok: IDL.Vec(FixtureDTO), err: Error });
+  const FootballLeague = IDL.Record({
+    id: FootballLeagueId,
+    name: IDL.Text,
+    relatedGender: Gender,
+    countryId: CountryId,
+    numOfTeams: IDL.Nat8,
+    abbreviation: IDL.Text,
+    governingBody: IDL.Text,
+    formed: IDL.Int,
+  });
+  const Result_7 = IDL.Variant({
+    ok: IDL.Vec(FootballLeague),
+    err: Error,
+  });
   const ClubFilterDTO = IDL.Record({
     clubId: ClubId,
     leagueId: FootballLeagueId,
@@ -322,12 +336,13 @@ export const idlFactory = ({ IDL }) => {
     checkSeasonComplete: IDL.Func([SeasonId], [IDL.Bool], []),
     createNewSeason: IDL.Func([SystemState], [], ["oneway"]),
     createPlayer: IDL.Func([FootballLeagueId, CreatePlayerDTO], [Result], []),
-    getClubs: IDL.Func([FootballLeagueId], [Result_7], []),
+    getClubs: IDL.Func([FootballLeagueId], [Result_8], []),
     getFixtures: IDL.Func(
       [FootballLeagueId, RequestFixturesDTO],
       [Result_3],
       [],
     ),
+    getLeagues: IDL.Func([], [Result_7], []),
     getLoanedPlayers: IDL.Func(
       [FootballLeagueId, ClubFilterDTO],
       [Result_2],
