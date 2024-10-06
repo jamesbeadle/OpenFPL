@@ -33,6 +33,7 @@
   import CyclesDispenser "../shared/cycles-dispenser";
   import Environment "./Environment";
   import NetworkEnvironmentVariables "../shared/network_environment_variables";
+  import Responses "../shared/ResponseDTOs";
 
   actor Self {
     
@@ -42,19 +43,16 @@
     private let leaderboardManager = LeaderboardManager.LeaderboardManager(Environment.BACKEND_CANISTER_ID, Environment.NUM_OF_GAMEWEEKS, Environment.NUM_OF_MONTHS);
     private let cyclesDispenser = CyclesDispenser.CyclesDispenser();
     private let ledger : FPLLedger.Interface = actor (FPLLedger.CANISTER_ID);
-
-    private stable var dataAdmins : [T.PrincipalId] = [];
-    private stable var alreadyInitialisedData = false;
     
     private func isDataAdmin(principalId: Text) : Bool {
-      return Option.isSome(Array.find<T.PrincipalId>(dataAdmins, func(dataAdmin: T.PrincipalId){
+      return Option.isSome(Array.find<T.PrincipalId>(dataAdmins, func(dataAdmin: T.PrincipalId) : Bool{
         dataAdmin == principalId;
       }));
     };
 
     private func isManagerCanister(principalId: Text) : Bool {
       let managerCanisterIds = userManager.getUniqueManagerCanisterIds();
-      return Option.isSome(Array.find<T.PrincipalId>(managerCanisterIds, func(dataAdmin: T.PrincipalId){
+      return Option.isSome(Array.find<T.PrincipalId>(managerCanisterIds, func(dataAdmin: T.PrincipalId) : Bool{
         dataAdmin == principalId;
       }));
     }; 
@@ -71,7 +69,7 @@
       return await userManager.getCurrentTeam(Principal.toText(caller));
     };
 
-    public shared ({ caller }) func getManager(dto: Requests.RequestManagerDTO) : async Result.Result<DTOs.ManagerDTO, T.Error> {
+    public shared func getManager(dto: Requests.RequestManagerDTO) : async Result.Result<DTOs.ManagerDTO, T.Error> {
       let weeklyLeaderboardEntry = await leaderboardManager.getWeeklyLeaderboardEntry(dto.managerId, dto.seasonId, dto.gameweek);
       let monthlyLeaderboardEntry = await leaderboardManager.getMonthlyLeaderboardEntry(dto.managerId, dto.seasonId, dto.month, dto.clubId);
       let seasonLeaderboardEntry = await leaderboardManager.getSeasonLeaderboardEntry(dto.managerId, dto.seasonId);
@@ -79,21 +77,21 @@
       return await userManager.getManager(dto, weeklyLeaderboardEntry, monthlyLeaderboardEntry, seasonLeaderboardEntry);
     };
 
-    public shared ({ caller }) func getFantasyTeamSnapshot(dto: DTOs.GetFantasyTeamSnapshotDTO) : async Result.Result<DTOs.FantasyTeamSnapshotDTO, T.Error> {
+    public shared func getFantasyTeamSnapshot(dto: DTOs.GetFantasyTeamSnapshotDTO) : async Result.Result<DTOs.FantasyTeamSnapshotDTO, T.Error> {
       return await userManager.getFantasyTeamSnapshot(dto);
     };
 
     //Leaderboard calls:
 
-    public shared ({ caller }) func getWeeklyLeaderboard(dto: DTOs.GetWeeklyLeaderboardDTO) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
+    public shared func getWeeklyLeaderboard(dto: DTOs.GetWeeklyLeaderboardDTO) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
       return await leaderboardManager.getWeeklyLeaderboard(dto);
     };
 
-    public shared ({ caller }) func getMonthlyLeaderboard(dto: DTOs.GetMonthlyLeaderboardDTO) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error> {
+    public shared func getMonthlyLeaderboard(dto: DTOs.GetMonthlyLeaderboardDTO) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error> {
       return await leaderboardManager.getMonthlyLeaderboard(dto);
     };
 
-    public shared ({ caller }) func getSeasonLeaderboard(dto: DTOs.GetSeasonLeaderboardDTO) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error> {
+    public shared func getSeasonLeaderboard(dto: DTOs.GetSeasonLeaderboardDTO) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error> {
       return await leaderboardManager.getSeasonLeaderboard(dto);
     };
 
@@ -104,40 +102,32 @@
       return seasonManager.getDataHashes();
     };
 
-    public shared ({ caller }) func getSystemState() : async Result.Result<DTOs.SystemStateDTO, T.Error> {
+    public shared func getSystemState() : async Result.Result<DTOs.SystemStateDTO, T.Error> {
       return await seasonManager.getSystemState();
     };
 
-    public shared ({ caller }) func getClubs() : async Result.Result<[DTOs.ClubDTO], T.Error> {
+    public shared func getClubs() : async Result.Result<[DTOs.ClubDTO], T.Error> {
       return await dataManager.getClubs(Environment.LEAGUE_ID);
     };
 
-    public shared ({ caller }) func getFixtures(dto: Requests.RequestFixturesDTO) : async Result.Result<[DTOs.FixtureDTO], T.Error> {
-      let systemStateResult = await getSystemState();
-      switch(systemStateResult){
-        case (#ok systemState){
-          return await dataManager.getFixtures(Environment.LEAGUE_ID, dto);
-        };
-        case (#err error){
-          return #err(error);
-        }
-      };
+    public shared func getFixtures(dto: Requests.RequestFixturesDTO) : async Result.Result<[DTOs.FixtureDTO], T.Error> {
+      return await dataManager.getFixtures(Environment.LEAGUE_ID, dto);
     };
 
-    public shared ({ caller }) func getSeasons() : async Result.Result<[DTOs.SeasonDTO], T.Error> {
+    public shared func getSeasons() : async Result.Result<[DTOs.SeasonDTO], T.Error> {
       return await dataManager.getSeasons(Environment.LEAGUE_ID);
     };
 
-    public shared ({ caller }) func getPostponedFixtures() : async Result.Result<[DTOs.FixtureDTO], T.Error> {
+    public shared func getPostponedFixtures() : async Result.Result<[DTOs.FixtureDTO], T.Error> {
       return #err(#NotFound);
       //return await dataManager.getPostponedFixtures(Environment.LEAGUE_ID);
     };
 
-    public shared ({ caller }) func getTotalManagers() : async Result.Result<Nat, T.Error> {
+    public shared func getTotalManagers() : async Result.Result<Nat, T.Error> {
       return await userManager.getTotalManagers();
     };
 
-    public shared ({ caller }) func getPlayers() : async Result.Result<[DTOs.PlayerDTO], T.Error> {
+    public shared func getPlayers() : async Result.Result<[DTOs.PlayerDTO], T.Error> {
       Debug.print("getting players");
 
       let systemStateResult = await getSystemState();
@@ -156,23 +146,23 @@
       return await dataManager.getSnapshotPlayers(dto);
     };
 
-    public shared ({ caller }) func getLoanedPlayers(dto: DTOs.ClubFilterDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
+    public shared func getLoanedPlayers(dto: DTOs.ClubFilterDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
       return await dataManager.getLoanedPlayers(Environment.LEAGUE_ID, dto);
     };
 
-    public shared ({ caller }) func getRetiredPlayers(dto: DTOs.ClubFilterDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
+    public shared func getRetiredPlayers(dto: DTOs.ClubFilterDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
       return await dataManager.getRetiredPlayers(Environment.LEAGUE_ID, dto);
     };
 
-    public shared ({ caller }) func getPlayerDetailsForGameweek(dto: DTOs.GameweekFiltersDTO) : async Result.Result<[DTOs.PlayerPointsDTO], T.Error> {
+    public shared func getPlayerDetailsForGameweek(dto: DTOs.GameweekFiltersDTO) : async Result.Result<[DTOs.PlayerPointsDTO], T.Error> {
       return await dataManager.getPlayerDetailsForGameweek(Environment.LEAGUE_ID, dto);
     };
 
-    public shared ({ caller }) func getPlayersMap(dto: DTOs.GameweekFiltersDTO) : async Result.Result<[(Nat16, DTOs.PlayerScoreDTO)], T.Error> {
+    public shared func getPlayersMap(dto: DTOs.GameweekFiltersDTO) : async Result.Result<[(Nat16, DTOs.PlayerScoreDTO)], T.Error> {
       return await dataManager.getPlayersMap(Environment.LEAGUE_ID, dto);
     };
 
-    public shared ({ caller }) func getPlayerDetails(dto: DTOs.GetPlayerDetailsDTO) : async Result.Result<DTOs.PlayerDetailDTO, T.Error> {
+    public shared func getPlayerDetails(dto: DTOs.GetPlayerDetailsDTO) : async Result.Result<DTOs.PlayerDetailDTO, T.Error> {
       return await dataManager.getPlayerDetails(Environment.LEAGUE_ID, dto);
     };
 
@@ -273,7 +263,6 @@
       };
     };
 
-
     //Governance canister validation and execution functions:
 
     public shared query ({ caller }) func validateRevaluePlayerUp(revaluePlayerUpDTO : DTOs.RevaluePlayerUpDTO) : async T.RustResult {
@@ -295,6 +284,7 @@
           switch(await dataManager.validateRevaluePlayerUp(Environment.LEAGUE_ID, revaluePlayerUpDTO)){
             case (#ok success){
               let _ = await dataManager.executeRevaluePlayerUp(Environment.LEAGUE_ID, revaluePlayerUpDTO);
+              await seasonManager.updateDataHash("players");
             };
             case _ {}
           };
@@ -317,6 +307,7 @@
       switch(await dataManager.validateRevaluePlayerDown(Environment.LEAGUE_ID, revaluePlayerDownDTO)){
         case (#ok success){
           let _ = await dataManager.executeRevaluePlayerDown(Environment.LEAGUE_ID, revaluePlayerDownDTO);
+          await seasonManager.updateDataHash("players");
         };
         case _ {}
       };
@@ -340,8 +331,10 @@
             case (#ok success){
               let _ = await dataManager.executeSubmitFixtureData(Environment.LEAGUE_ID, systemState.calculationSeasonId, submitFixtureData);
 
-              //TODO: When calculating score get players built friom all players who appeared in the gameweek
-              await userManager.calculateFantasyTeamScores(systemState.calculationSeasonId, submitFixtureData.gameweek, submitFixtureData.month);
+              //TODO LATER: When calculating score get players built friom all players who appeared in the gameweek
+              await userManager.calculateFantasyTeamScores(
+                Environment.LEAGUE_ID,
+                systemState.calculationSeasonId, submitFixtureData.gameweek, submitFixtureData.month);
               await leaderboardManager.calculateLeaderboards(systemState.calculationSeasonId, submitFixtureData.gameweek, submitFixtureData.month, userManager.getUniqueManagerCanisterIds());
               
               if(await dataManager.checkGameweekComplete(systemState.calculationSeasonId, submitFixtureData.gameweek)){
@@ -365,14 +358,13 @@
                 seasonManager.createNewSeason(systemState);
                   
                 let currentSeasonId = seasonComposite.getStableNextSeasonId();
-                await calculateRewardPool(currentSeasonId); //TODO SPLIT NEW VALUES
+                await calculateRewardPool(currentSeasonId); //TODO LATER SPLIT NEW VALUES
                 */
-
 
                 await setTransferWindowTimers();
               };
-
               
+              await seasonManager.updateDataHash("seasons");
               await seasonManager.updateDataHash("players");
               await seasonManager.updateDataHash("player_events");
               await seasonManager.updateDataHash("fixtures");
@@ -442,6 +434,7 @@
                 }
               };
 
+              await seasonManager.updateDataHash("fixtures");
             };
             case _ {}
           };
@@ -462,6 +455,7 @@
       switch(await dataManager.validateMoveFixture(Environment.LEAGUE_ID, moveFixtureDTO)){
         case (#ok success){
           let _ = await dataManager.executeMoveFixture(Environment.LEAGUE_ID, moveFixtureDTO);
+          await seasonManager.updateDataHash("fixtures");
         };
         case _ {}
       };
@@ -479,6 +473,7 @@
       switch(await dataManager.validatePostponeFixture(Environment.LEAGUE_ID, postponeFixtureDTO)){
         case (#ok success){
           let _ =  await dataManager.executePostponeFixture(Environment.LEAGUE_ID, postponeFixtureDTO);
+          await seasonManager.updateDataHash("fixtures");
         };
         case _ {}
       };
@@ -496,6 +491,7 @@
       switch(await dataManager.validateRescheduleFixture(Environment.LEAGUE_ID, rescheduleFixtureDTO)){
         case (#ok success){
           let _ = await dataManager.executeRescheduleFixture(Environment.LEAGUE_ID, rescheduleFixtureDTO);
+          await seasonManager.updateDataHash("fixtures");
         };
         case _ {}
       };
@@ -513,6 +509,7 @@
       switch(await dataManager.validateLoanPlayer(Environment.LEAGUE_ID, loanPlayerDTO)){
         case (#ok success){
           let _ = await dataManager.executeLoanPlayer(Environment.LEAGUE_ID, loanPlayerDTO);
+          await seasonManager.updateDataHash("players");
         };
         case _ {}
       };
@@ -530,6 +527,7 @@
       switch(await dataManager.validateTransferPlayer(Environment.LEAGUE_ID, transferPlayerDTO)){
         case (#ok success){
           let _ = await dataManager.executeTransferPlayer(Environment.LEAGUE_ID, transferPlayerDTO);
+          await seasonManager.updateDataHash("players");
         };
         case _ {}
       };
@@ -547,6 +545,7 @@
       switch(await dataManager.validateRecallPlayer(Environment.LEAGUE_ID, recallPlayerDTO)){
         case (#ok success){
           let _ = await dataManager.executeRecallPlayer(Environment.LEAGUE_ID, recallPlayerDTO);
+          await seasonManager.updateDataHash("players");
         };
         case _ {}
       };
@@ -564,6 +563,7 @@
       switch(await dataManager.validateCreatePlayer(Environment.LEAGUE_ID, createPlayerDTO)){
         case (#ok success){
           let _ = await dataManager.executeCreatePlayer(Environment.LEAGUE_ID, createPlayerDTO);
+          await seasonManager.updateDataHash("players");
         };
         case _ {}
       };
@@ -581,6 +581,7 @@
       switch(await dataManager.validateUpdatePlayer(Environment.LEAGUE_ID, updatePlayerDTO)){
         case (#ok success){
           let _ = await dataManager.executeUpdatePlayer(Environment.LEAGUE_ID, updatePlayerDTO);
+          await seasonManager.updateDataHash("players");
         };
         case _ {}
       };
@@ -598,6 +599,7 @@
       switch(await dataManager.validateSetPlayerInjury(Environment.LEAGUE_ID, setPlayerInjuryDTO)){
         case (#ok success){
           let _ = await dataManager.executeSetPlayerInjury(Environment.LEAGUE_ID, setPlayerInjuryDTO);
+          await seasonManager.updateDataHash("players");
         };
         case _ {}
       };
@@ -615,6 +617,7 @@
       switch(await dataManager.validateRetirePlayer(Environment.LEAGUE_ID, retirePlayerDTO)){
         case (#ok success){
           let _ = await dataManager.executeRetirePlayer(Environment.LEAGUE_ID, retirePlayerDTO);
+          await seasonManager.updateDataHash("players");
         };
         case _ {}
       };
@@ -632,6 +635,7 @@
       switch(await dataManager.validateUnretirePlayer(Environment.LEAGUE_ID, unretirePlayerDTO)){
         case (#ok success){
           let _ = await dataManager.executeUnretirePlayer(Environment.LEAGUE_ID, unretirePlayerDTO);
+          await seasonManager.updateDataHash("players");
         };
         case _ {}
       };
@@ -649,6 +653,7 @@
       switch(await dataManager.validatePromoteNewClub(Environment.LEAGUE_ID, promoteNewClubDTO)){
         case (#ok success){
           let _ = await dataManager.executePromoteNewClub(Environment.LEAGUE_ID, promoteNewClubDTO);
+          await seasonManager.updateDataHash("clubs");
         };
         case _ {}
       };
@@ -666,6 +671,7 @@
       switch(await dataManager.validateUpdateClub(Environment.LEAGUE_ID, updateClubDTO)){
         case (#ok success){
           let _ = await dataManager.executeUpdateClub(Environment.LEAGUE_ID, updateClubDTO);
+          await seasonManager.updateDataHash("clubs");
         };
         case _ {}
       };
@@ -715,7 +721,7 @@
                     switch(status){
                       case (null){};
                       case (?foundStatus){
-                        let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup){
+                        let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup) : Bool{
                             topup.canisterId == Principal.toText(foundCanisterId);
                         });
                         var topupTime: Int = 0;
@@ -748,7 +754,7 @@
                   switch(status){
                     case (null){};
                     case (?foundStatus){
-                      let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup){
+                      let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup) : Bool{
                           topup.canisterId == Principal.toText(foundCanisterId);
                       });
                       var topupTime: Int = 0;
@@ -781,7 +787,7 @@
                   switch(status){
                     case (null){};
                     case (?foundStatus){
-                      let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup){
+                      let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup) : Bool{
                           topup.canisterId == Principal.toText(foundCanisterId);
                       });
                       var topupTime: Int = 0;
@@ -814,7 +820,7 @@
                     switch(status){
                     case (null){};
                     case (?foundStatus){
-                      let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup){
+                      let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup) : Bool{
                           topup.canisterId == Principal.toText(foundCanisterId);
                       });
                       var topupTime: Int = 0;
@@ -847,7 +853,7 @@
                       switch(status){
                       case (null){};
                       case (?foundStatus){
-                        let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup){
+                        let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup) : Bool{
                             topup.canisterId == Principal.toText(foundCanisterId);
                         });
                         var topupTime: Int = 0;
@@ -880,7 +886,7 @@
                 switch(status){
                   case (null){};
                   case (?foundStatus){
-                    let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup){
+                    let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup) : Bool{
                         topup.canisterId == Principal.toText(foundCanisterId);
                     });
                     var topupTime: Int = 0;
@@ -915,7 +921,7 @@
             );
             let cycles: Nat = canisterInfo.cycles;
 
-            let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup){
+            let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup) : Bool{
                 topup.canisterId == canisterId;
             });
             var topupTime: Int = 0;
@@ -943,7 +949,7 @@
                 switch(status){
                   case (null){};
                   case (?foundStatus){
-                    let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup){
+                    let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup) : Bool{
                         topup.canisterId == Principal.toText(foundCanisterId);
                     });
                     var topupTime: Int = 0;
@@ -978,7 +984,7 @@
             );
             let cycles: Nat = canisterInfo.cycles;
 
-            let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup){
+            let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup) : Bool{
                 topup.canisterId == weeklyLeaderboardCanister.canisterId;
             });
             var topupTime: Int = 0;
@@ -1010,7 +1016,7 @@
             );
             let cycles: Nat = canisterInfo.cycles;
 
-            let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup){
+            let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup) : Bool{
                 topup.canisterId == monthlyLeaderboardCanister.canisterId;
             });
             var topupTime: Int = 0;
@@ -1043,7 +1049,7 @@
             );
             let cycles: Nat = canisterInfo.cycles;
 
-            let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup){
+            let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup) : Bool{
                 topup.canisterId == seasonLeaderboardCanister.canisterId;
             });
             var topupTime: Int = 0;
@@ -1113,58 +1119,114 @@
     };
 
     //stable variables
+    private stable var dataAdmins : [T.PrincipalId] = [];
+    private stable var alreadyInitialisedData = false;
     private stable var timers : [T.TimerInfo] = [];
 
-    private stable var teamValueLeaderboards : [(T.SeasonId, T.TeamValueLeaderboard)] = [];
+    //stable variables from managers
 
-    private stable var seasonRewards : [T.SeasonRewards] = [];
-    private stable var monthlyRewards : [T.MonthlyRewards] = [];
-    private stable var weeklyRewards : [T.WeeklyRewards] = [];
-    private stable var mostValuableTeamRewards : [T.RewardsList] = [];
-    private stable var highScoringPlayerRewards : [T.RewardsList] = [];
+    //Leaderboard Manager stable variables
+    private stable var stable_weekly_leaderboard_canisters: [T.WeeklyLeaderboardCanister] = [];
+    private stable var stable_monthly_leaderboard_canisters: [T.MonthlyLeaderboardsCanister] = [];
+    private stable var stable_season_leaderboard_canisters: [T.SeasonLeaderboardCanister] = [];
 
-    private stable var weeklyAllTimeHighScores : [T.HighScoreRecord] = [];
-    private stable var monthlyAllTimeHighScores : [T.HighScoreRecord] = [];
-    private stable var seasonAllTimeHighScores : [T.HighScoreRecord] = [];
+    //Reward Manager stable variables
+    private stable var stable_reward_pools : [(T.SeasonId, T.RewardPool)] = [];
+    private stable var stable_team_value_leaderboards : [(T.SeasonId, T.TeamValueLeaderboard)] = [];
+    private stable var stable_weekly_rewards : [T.WeeklyRewards] = [];
+    private stable var stable_monthly_rewards : [T.MonthlyRewards] = [];
+    private stable var stable_season_rewards : [T.SeasonRewards] = [];
+    private stable var stable_most_valuable_team_rewards : [T.RewardsList] = [];
+    private stable var stable_high_scoring_player_rewards : [T.RewardsList] = [];
+    private stable var stable_weekly_all_time_high_scores : [T.HighScoreRecord] = [];
+    private stable var stable_monthly_all_time_high_scores : [T.HighScoreRecord] = [];
+    private stable var stable_season_all_time_high_scores : [T.HighScoreRecord] = [];
+    private stable var stable_weekly_ath_prize_pool : Nat64 = 0;
+    private stable var stable_monthly_ath_prize_pool : Nat64 = 0;
+    private stable var stable_season_ath_prize_pool : Nat64 = 0;
 
-    private stable var weeklyATHPrizePool : Nat64 = 0;
-    private stable var monthlyATHPrizePool : Nat64 = 0;
-    private stable var seasonATHPrizePool : Nat64 = 0;
+    //Season Manager stable variables
+    private stable var stable_system_state : T.SystemState = {
+      calculationGameweek = 7;
+      calculationMonth = 10;
+      calculationSeasonId = 1;
+      onHold = false;
+      pickTeamGameweek = 7;
+      pickTeamMonth = 10;
+      pickTeamSeasonId = 1;
+      seasonActive = true;
+      transferWindowActive = false;
+      version = "2.0.0";
+    };
+    private stable var stable_data_hashes : [T.DataHash] = [];
 
-
+    //User Manager stable variables
+    private stable var stable_manager_canister_ids : [(T.PrincipalId, T.CanisterId)] = [];
+    private stable var stable_usernames: [(T.PrincipalId, Text)] = [];
+    private stable var stable_unique_manager_canister_ids : [T.CanisterId] = [];
+    private stable var stable_total_managers : Nat = 0;
+    private stable var stable_active_manager_canister_id : T.CanisterId = "";   
 
     system func preupgrade() {
-      teamValueLeaderboards := leaderboardManager.getStableTeamValueLeaderboards();
-      seasonRewards := leaderboardManager.getStableSeasonRewards();
-      monthlyRewards := leaderboardManager.getStableMonthlyRewards();
-      weeklyRewards := leaderboardManager.getStableWeeklyRewards();
-      mostValuableTeamRewards := leaderboardManager.getStableMostValuableTeamRewards();
-      highScoringPlayerRewards := leaderboardManager.getStableHighestScoringPlayerRewards();
 
-      weeklyAllTimeHighScores := leaderboardManager.getStableWeeklyATHScores();
-      monthlyAllTimeHighScores := leaderboardManager.getStableMonthlyATHScores();
-      seasonAllTimeHighScores := leaderboardManager.getStableSeasonATHScores();
+      stable_weekly_leaderboard_canisters := leaderboardManager.getStableWeeklyLeaderboardCanisters();
+      stable_monthly_leaderboard_canisters := leaderboardManager.getStableMonthlyLeaderboardsCanisters();
+      stable_season_leaderboard_canisters :=  leaderboardManager.getStableSeasonLeaderboardCanisters();
+      
+      stable_reward_pools := leaderboardManager.getStableRewardPools();
+      stable_team_value_leaderboards := leaderboardManager.getStableTeamValueLeaderboards();
+      stable_weekly_rewards := leaderboardManager.getStableWeeklyRewards();
+      stable_monthly_rewards := leaderboardManager.getStableMonthlyRewards();
+      stable_season_rewards := leaderboardManager.getStableSeasonRewards();
+      stable_most_valuable_team_rewards := leaderboardManager.getStableMostValuableTeamRewards();
+      stable_high_scoring_player_rewards := leaderboardManager.getStableHighestScoringPlayerRewards();
+      
+      stable_weekly_all_time_high_scores := leaderboardManager.getStableWeeklyAllTimeHighScores();
+      stable_monthly_all_time_high_scores := leaderboardManager.getStableMonthlyAllTimeHighScores();
+      stable_season_all_time_high_scores := leaderboardManager.getStableSeasonAllTimeHighScores();
+      stable_weekly_ath_prize_pool := leaderboardManager.getStableWeeklyATHPrizePool();
+      stable_monthly_ath_prize_pool := leaderboardManager.getStableMonthlyATHPrizePool();
+      stable_season_ath_prize_pool := leaderboardManager.getStableSeasonATHPrizePool();
 
-      weeklyATHPrizePool := leaderboardManager.getStableWeeklyATHPrizePool();
-      monthlyATHPrizePool := leaderboardManager.getStableMonthlyATHPrizePool();
-      seasonATHPrizePool := leaderboardManager.getStableSeasonATHPrizePool();
+      stable_system_state := seasonManager.getStableSystemState();
+      stable_data_hashes := seasonManager.getStableDataHashes();
+
+      stable_manager_canister_ids := userManager.getStableManagerCanisterIds();
+      stable_usernames := userManager.getStableUsernames();
+      stable_unique_manager_canister_ids := userManager.getStableUniqueManagerCanisterIds();
+      stable_total_managers := userManager.getStableTotalManagers();
+      stable_active_manager_canister_id := userManager.getStableActiveManagerCanisterId();   
+
     };
 
     system func postupgrade() {
-       leaderboardManager.setStableTeamValueLeaderboards(teamValueLeaderboards);
-       leaderboardManager.setStableSeasonRewards(seasonRewards);
-       leaderboardManager.setStableMonthlyRewards(monthlyRewards);
-       leaderboardManager.setStableWeeklyRewards(weeklyRewards);
-       leaderboardManager.setStableMostValuableTeamRewards(mostValuableTeamRewards);
-       leaderboardManager.setStableHighestScoringPlayerRewards(highScoringPlayerRewards);
+      leaderboardManager.setStableWeeklyLeaderboardCanisters(stable_weekly_leaderboard_canisters);
+      leaderboardManager.setStableMonthlyLeaderboardsCanisters(stable_monthly_leaderboard_canisters);
+      leaderboardManager.setStableSeasonLeaderboardCanisters(stable_season_leaderboard_canisters);
+      
+      leaderboardManager.setStableRewardPools(stable_reward_pools);
+      leaderboardManager.setStableTeamValueLeaderboards(stable_team_value_leaderboards);
+      leaderboardManager.setStableWeeklyRewards(stable_weekly_rewards);
+      leaderboardManager.setStableMonthlyRewards(stable_monthly_rewards);
+      leaderboardManager.setStableSeasonRewards(stable_season_rewards);
+      leaderboardManager.setStableMostValuableTeamRewards(stable_most_valuable_team_rewards);
+      leaderboardManager.setStableHighestScoringPlayerRewards(stable_high_scoring_player_rewards);
+      
+      leaderboardManager.setStableWeeklyAllTimeHighScores(stable_weekly_all_time_high_scores);
+      leaderboardManager.setStableMonthlyAllTimeHighScores(stable_monthly_all_time_high_scores);
+      leaderboardManager.setStableSeasonAllTimeHighScores(stable_season_all_time_high_scores);
+      leaderboardManager.setStableWeeklyATHPrizePool(stable_weekly_ath_prize_pool);
+      leaderboardManager.setStableMonthlyATHPrizePool(stable_monthly_ath_prize_pool);
+      leaderboardManager.setStableSeasonATHPrizePool(stable_season_ath_prize_pool);
 
-       leaderboardManager.setStableWeeklyATHScores(weeklyAllTimeHighScores);
-       leaderboardManager.setStableMonthlyATHScores(monthlyAllTimeHighScores);
-       leaderboardManager.setStableSeasonATHScores(seasonAllTimeHighScores);
+      seasonManager.setStableSystemState(stable_system_state);
+      seasonManager.setStableDataHashes(stable_data_hashes);
 
-       leaderboardManager.setStableWeeklyATHPrizePool(weeklyATHPrizePool);
-       leaderboardManager.setStableMonthlyATHPrizePool(monthlyATHPrizePool);
-       leaderboardManager.setStableSeasonATHPrizePool(seasonATHPrizePool);
+      userManager.setStableManagerCanisterIds(stable_manager_canister_ids);
+      userManager.setStableUsernames(stable_usernames);
+      userManager.setStableUniqueManagerCanisterIds(stable_unique_manager_canister_ids);
+      userManager.setStableTotalManagers(stable_total_managers);
+      userManager.setStableActiveManagerCanisterId(stable_active_manager_canister_id);   
 
       ignore Timer.setTimer<system>(#nanoseconds(Int.abs(1)), postUpgradeCallback); 
     };
@@ -1435,5 +1497,49 @@
       let actorPrincipal : Principal = Principal.fromActor(Self);
       Account.accountIdentifier(actorPrincipal, Account.defaultSubaccount());
     };    
+
+    //Admin dashboard functions
+
+    public shared ({ caller }) func getStaticCanisters() : async Result.Result<Responses.StaticCanistersDTO, T.Error> {
+      //TODO: Add isadmin check
+      return #err(#NotFound);
+    };
+
+    public shared ({ caller }) func getManagerCanisters() : async Result.Result<Responses.ManagerCanistersDTO, T.Error> {
+      //TODO: Add isadmin check
+      return #err(#NotFound);
+    };
+
+    public shared ({ caller }) func getLeaderboardCanisters() : async Result.Result<Responses.LeaderboardCanistersDTO, T.Error> {
+      //TODO: Add isadmin check
+      return #err(#NotFound);
+    };
+
+    public shared ({ caller }) func snapshotManagers(gameweekNumber: T.GameweekNumber) : async Result.Result<(), T.Error> {
+      //TODO: Add isadmin check
+      return #err(#NotFound);
+    };
+
+    public shared ({ caller }) func recalculatePoints(gameweekNumber: T.GameweekNumber) : async Result.Result<(), T.Error> {
+      //TODO: Add isadmin check
+      return #err(#NotFound);
+    };
+
+    public shared ({ caller }) func viewPayouts(gameweekNumber: T.GameweekNumber) : async Result.Result<(), T.Error> {
+      //TODO: Add isadmin check
+      return #err(#NotFound);
+    };
+
+    public shared ({ caller }) func updateRewardPools(dto: Requests.UpdateRewardPoolsDTO) : async Result.Result<(), T.Error> {
+      //TODO: Add isadmin check
+      return #err(#NotFound);
+    };
+
+    public shared ({ caller }) func updateSystemStatus(dto: Requests.UpdateSystemStatusDTO) : async Result.Result<(), T.Error> {
+      //TODO: Add isadmin check
+      return #err(#NotFound);
+    };
+
+
 
   };

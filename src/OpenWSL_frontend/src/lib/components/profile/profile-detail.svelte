@@ -7,12 +7,13 @@
   import UpdateUsernameModal from "$lib/components/profile/update-username-modal.svelte";
   import UpdateFavouriteTeamModal from "./update-favourite-team-modal.svelte";
   import { busyStore, Spinner } from "@dfinity/gix-components";
-  import { getDateFromBigInt } from "$lib/utils/helpers";
   import CopyIcon from "$lib/icons/CopyIcon.svelte";
   import { userGetProfilePicture } from "$lib/derived/user.derived";
   import LocalSpinner from "../local-spinner.svelte";
   import WithdrawFplModal from "./withdraw-fpl-modal.svelte";
   import { writable } from "svelte/store";
+  import { authStore } from "$lib/stores/auth.store";
+  import { getDateFromBigInt } from "$lib/utils/helpers";
   
   let showUsernameModal: boolean = false;
   let showFavouriteTeamModal: boolean = false;
@@ -24,6 +25,7 @@
   let fplBalance = 0n;
   let fplBalanceFormatted = "0.0000"; 
   let dot_interval: ReturnType<typeof setInterval>;
+  let username = "Not Set";
 
   let unsubscribeUserProfile: () => void;
 
@@ -42,13 +44,12 @@
       await teamStore.sync();
       await systemStore.sync();
       await userStore.sync();
-      console.log("store")
-      console.log($userStore)
 
       unsubscribeUserProfile = userStore.subscribe((value) => {
         if (!value) {
           return;
         }
+        username = value.username;
         joinedDate = getDateFromBigInt(Number(value.createDate));
       });
     } catch (error) {
@@ -238,12 +239,8 @@
         <div class="md:ml-4 md:px-4 px-4 mt-2 md:mt-1 rounded-lg">
           <p class="mb-1">Username:</p>
           <h2 class="default-header mb-1 md:mb-2">
-            {#if $userStore == null}
-              {$userStore?.username == "" ? "Not Set" : $userStore?.username}
-            {:else}
-              Unset
-            {/if}
-          </h2>
+            {username}
+            </h2>
           <button
             class="text-sm md:text-sm p-1 md:p-2 px-2 md:px-4 rounded fpl-button"
             on:click={displayUsernameModal}
@@ -275,7 +272,7 @@
               class="flex items-center text-left"
               on:click={copyTextAndShowToast}
             >
-              <span>{$userStore.principalId}</span>
+              <span>{$authStore.identity?.getPrincipal().toText()}</span>
               <CopyIcon className="w-7 xs:w-6 text-left" fill="#FFFFFF" />
             </button>
           </div>

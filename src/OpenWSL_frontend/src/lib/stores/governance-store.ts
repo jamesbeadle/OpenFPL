@@ -11,6 +11,7 @@ import type {
   ClubDTO,
   CreatePlayerDTO,
   FixtureDTO,
+  Gender,
   LoanPlayerDTO,
   MoveFixtureDTO,
   PlayerDTO,
@@ -25,20 +26,23 @@ import type {
   SetPlayerInjuryDTO,
   ShirtType,
   SubmitFixtureDataDTO,
+  SystemStateDTO,
   TransferPlayerDTO,
   UnretirePlayerDTO,
   UpdateClubDTO,
   UpdatePlayerDTO,
-} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+} from "../../../../declarations/OpenWSL_backend/OpenWSL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { fixtureStore } from "./fixture-store";
 import { systemStore } from "./system-store";
 import { teamStore } from "./team-store";
 import { IDL } from "@dfinity/candid";
+import { seasonStore } from "./season-store";
 
 function createGovernanceStore() {
   async function revaluePlayerUp(playerId: number): Promise<any> {
     try {
+      await systemStore.sync();
       await playerStore.sync();
 
       let allPlayers: PlayerDTO[] = [];
@@ -47,8 +51,23 @@ function createGovernanceStore() {
       });
       unsubscribe();
 
+      var systemState: SystemStateDTO | null = null;
+
+      const unsubscribeSystemState = systemStore.subscribe((state) => {
+        systemState = state;
+      });
+      unsubscribeSystemState();
+
       var dto: RevaluePlayerUpDTO = {
         playerId: playerId,
+        seasonId:
+          systemState == null
+            ? 0
+            : (systemState as SystemStateDTO).pickTeamSeasonId,
+        gameweek:
+          systemState == null
+            ? 0
+            : (systemState as SystemStateDTO).pickTeamGameweek,
       };
 
       let player = allPlayers.find((x) => x.id == playerId);
@@ -82,8 +101,23 @@ function createGovernanceStore() {
       });
       unsubscribe();
 
+      var systemState: SystemStateDTO | null = null;
+
+      const unsubscribeSystemState = systemStore.subscribe((state) => {
+        systemState = state;
+      });
+      unsubscribeSystemState();
+
       var dto: RevaluePlayerDownDTO = {
         playerId: playerId,
+        seasonId:
+          systemState == null
+            ? 0
+            : (systemState as SystemStateDTO).pickTeamSeasonId,
+        gameweek:
+          systemState == null
+            ? 0
+            : (systemState as SystemStateDTO).pickTeamGameweek,
       };
 
       let player = allPlayers.find((x) => x.id == playerId);
@@ -111,6 +145,7 @@ function createGovernanceStore() {
     seasonId: number,
     gameweek: number,
     fixtureId: number,
+    month: number,
     playerEventData: PlayerEventData[],
   ): Promise<any> {
     try {
@@ -133,7 +168,7 @@ function createGovernanceStore() {
       unsubscribeFixtureStore();
 
       let dto: SubmitFixtureDataDTO = {
-        seasonId,
+        month,
         gameweek,
         fixtureId,
         playerEventData,
@@ -187,22 +222,15 @@ function createGovernanceStore() {
   }
 
   async function addInitialFixtures(
-    seasonId: number,
     seasonFixtures: FixtureDTO[],
+    pickTeamSeasonId: number,
   ): Promise<any> {
     try {
       await systemStore.sync();
-      let seasonName = "";
-
-      const unsubscribeSystemStore = systemStore.subscribe((systemState) => {
-        if (systemState) {
-          seasonName = systemState?.calculationSeasonName;
-        }
-      });
-      unsubscribeSystemStore();
+      await seasonStore.sync();
+      let seasonName = await seasonStore.getSeasonName(pickTeamSeasonId);
 
       let dto: AddInitialFixturesDTO = {
-        seasonId,
         seasonFixtures,
       };
 
@@ -449,7 +477,11 @@ function createGovernanceStore() {
 
   async function transferPlayer(
     playerId: number,
+    newLeagueId: number,
     newClubId: number,
+    newShirtNumber: number,
+    seasonId: number,
+    gameweek: number,
   ): Promise<any> {
     try {
       await teamStore.sync();
@@ -471,11 +503,6 @@ function createGovernanceStore() {
       });
       unsubscribePlayerStore();
 
-      let dto: TransferPlayerDTO = {
-        playerId,
-        newClubId,
-      };
-
       let title = "";
       let player = allPlayers.find((x) => x.id == playerId);
       if (player) {
@@ -496,6 +523,16 @@ function createGovernanceStore() {
 
       let summary = title;
 
+      let dto: TransferPlayerDTO = {
+        playerId,
+        newClubId,
+        newShirtNumber,
+        newLeagueId,
+        clubId: player?.clubId ?? 0,
+        seasonId,
+        gameweek,
+      };
+
       await executeProposal(dto, title, summary, 8000n, [
         IDL.Record({ playerId: IDL.Nat16, newClubId: IDL.Nat16 }),
       ]);
@@ -507,8 +544,11 @@ function createGovernanceStore() {
 
   async function loanPlayer(
     playerId: number,
+    loanLeagueId: number,
     loanClubId: number,
     loanEndDate: string,
+    seasonId: number,
+    gameweek: number,
   ): Promise<any> {
     try {
       await teamStore.sync();
@@ -536,8 +576,11 @@ function createGovernanceStore() {
 
       let dto: LoanPlayerDTO = {
         playerId,
+        loanLeagueId,
         loanClubId,
         loanEndDate: nanoseconds,
+        seasonId,
+        gameweek,
       };
 
       let player = allPlayers.find((x) => x.id == playerId);
@@ -617,6 +660,7 @@ function createGovernanceStore() {
     valueQuarterMillions: number,
     dateOfBirth: string,
     nationality: number,
+    gender: Gender,
   ): Promise<any> {
     try {
       await teamStore.sync();
@@ -635,6 +679,7 @@ function createGovernanceStore() {
       let nanoseconds = BigInt(timestampMilliseconds) * BigInt(1000000);
 
       let dto: CreatePlayerDTO = {
+        gender,
         clubId,
         position,
         firstName,

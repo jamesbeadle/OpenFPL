@@ -17,13 +17,14 @@
     ClubDTO,
     FantasyTeamSnapshot,
     PlayerDTO,
-  } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  } from "../../../../../declarations/OpenWSL_backend/OpenWSL_backend.did";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import FantasyPlayerDetailModal from "../fantasy-player-detail-modal.svelte";
   import ActiveCaptainIcon from "$lib/icons/ActiveCaptainIcon.svelte";
   import { countriesStore } from "$lib/stores/country-store";
     import LocalSpinner from "../local-spinner.svelte";
+    import { seasonStore } from "$lib/stores/season-store";
 
   let gameweekPlayers = writable<GameweekData[]>([]);
   let gameweeks = Array.from(
@@ -57,7 +58,8 @@
       await playerStore.sync();
       await playerEventsStore.sync();
       await systemStore.sync();
-      activeSeasonName = $systemStore?.pickTeamSeasonName ?? "-";
+      await seasonStore.sync();
+      activeSeasonName = await seasonStore.getSeasonName($systemStore?.pickTeamSeasonId ?? 0);
       if (!$fantasyTeam) {
         $gameweekPlayers = [];
         return;

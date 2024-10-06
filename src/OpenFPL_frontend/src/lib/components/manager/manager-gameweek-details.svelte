@@ -59,8 +59,7 @@
       await playerEventsStore.sync();
       await systemStore.sync();
       await seasonStore.sync();
-      let season = $seasonStore.find(x => x.id == $systemStore?.pickTeamSeasonId);
-      activeSeasonName = season ? season.name : "-";
+      activeSeasonName = await seasonStore.getSeasonName($systemStore?.pickTeamSeasonId ?? 0);
       if (!$fantasyTeam) {
         $gameweekPlayers = [];
         return;

@@ -209,7 +209,6 @@ module {
       
     //Stable variable functions
 
-
     public func getStableSystemState() : T.SystemState {
       return systemState;
     };
@@ -217,14 +216,14 @@ module {
     public func setStableSystemState(stable_system_state : T.SystemState) {
       systemState := stable_system_state;
     };
-    //TODO: Ensure called
 
+    public func getStableDataHashes() : [T.DataHash] {
+      return dataHashes;
+    };
 
-
-    //TODO: Stable Backup
-      //stable data hashes
-
-    
+    public func setStableDataHashes(stable_data_hashes : [T.DataHash]) {
+      dataHashes := stable_data_hashes;
+    };
   };
 
 };

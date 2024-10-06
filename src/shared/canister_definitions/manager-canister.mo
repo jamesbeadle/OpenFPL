@@ -1244,7 +1244,7 @@ actor class _ManagerCanister() {
             switch (currentSeason) {
               case (null) {};
               case (?foundSeason) {
-                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot){
+                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot) : Bool{
                   snapshot.gameweek == fixturesPerClub
                 });
                 switch(currentGameweek){
@@ -1268,7 +1268,7 @@ actor class _ManagerCanister() {
             switch (currentSeason) {
               case (null) {};
               case (?foundSeason) {
-                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot){
+                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot) : Bool{
                   snapshot.gameweek == fixturesPerClub
                 });
                 switch(currentGameweek){
@@ -1292,7 +1292,7 @@ actor class _ManagerCanister() {
             switch (currentSeason) {
               case (null) {};
               case (?foundSeason) {
-                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot){
+                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot) : Bool{
                   snapshot.gameweek == fixturesPerClub
                 });
                 switch(currentGameweek){
@@ -1316,7 +1316,7 @@ actor class _ManagerCanister() {
             switch (currentSeason) {
               case (null) {};
               case (?foundSeason) {
-                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot){
+                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot) : Bool{
                   snapshot.gameweek == fixturesPerClub
                 });
                 switch(currentGameweek){
@@ -1340,7 +1340,7 @@ actor class _ManagerCanister() {
             switch (currentSeason) {
               case (null) {};
               case (?foundSeason) {
-                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot){
+                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot) : Bool{
                   snapshot.gameweek == fixturesPerClub
                 });
                 switch(currentGameweek){
@@ -1364,7 +1364,7 @@ actor class _ManagerCanister() {
             switch (currentSeason) {
               case (null) {};
               case (?foundSeason) {
-                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot){
+                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot) : Bool{
                   snapshot.gameweek == fixturesPerClub
                 });
                 switch(currentGameweek){
@@ -1388,7 +1388,7 @@ actor class _ManagerCanister() {
             switch (currentSeason) {
               case (null) {};
               case (?foundSeason) {
-                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot){
+                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot) : Bool {
                   snapshot.gameweek == fixturesPerClub
                 });
                 switch(currentGameweek){
@@ -1412,7 +1412,7 @@ actor class _ManagerCanister() {
             switch (currentSeason) {
               case (null) {};
               case (?foundSeason) {
-                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot){
+                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot) : Bool {
                   snapshot.gameweek == fixturesPerClub
                 });
                 switch(currentGameweek){
@@ -1436,7 +1436,7 @@ actor class _ManagerCanister() {
             switch (currentSeason) {
               case (null) {};
               case (?foundSeason) {
-                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot){
+                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot) : Bool {
                   snapshot.gameweek == fixturesPerClub
                 });
                 switch(currentGameweek){
@@ -1460,7 +1460,7 @@ actor class _ManagerCanister() {
             switch (currentSeason) {
               case (null) {};
               case (?foundSeason) {
-                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot){
+                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot) : Bool {
                   snapshot.gameweek == fixturesPerClub
                 });
                 switch(currentGameweek){
@@ -1484,7 +1484,7 @@ actor class _ManagerCanister() {
             switch (currentSeason) {
               case (null) {};
               case (?foundSeason) {
-                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot){
+                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot) : Bool {
                   snapshot.gameweek == fixturesPerClub
                 });
                 switch(currentGameweek){
@@ -1508,7 +1508,7 @@ actor class _ManagerCanister() {
             switch (currentSeason) {
               case (null) {};
               case (?foundSeason) {
-                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot){
+                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot) : Bool {
                   snapshot.gameweek == fixturesPerClub
                 });
                 switch(currentGameweek){
@@ -1862,8 +1862,8 @@ actor class _ManagerCanister() {
     return List.fromArray(Buffer.toArray(teamHistoryBuffer));
   };
 
-  public shared ({ caller }) func calculateFantasyTeamScores(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) : async () {
-    /*
+  public shared ({ caller }) func calculateFantasyTeamScores(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) : async Nat {
+    /* //TODO LATER
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == controllerPrincipalId;
@@ -2019,7 +2019,7 @@ actor class _ManagerCanister() {
       };
     };
     */
-
+    return 0;
   };
 
   private func calculateGoalPoints(position : T.PlayerPosition, goalsScored : Int16) : Int16 {
@@ -2128,7 +2128,7 @@ actor class _ManagerCanister() {
             );
 
             let managerPlayers = Array.filter<DTOs.PlayerDTO>(players, func(player){
-              Option.isSome(Array.find<T.PlayerId>(manager.playerIds, func(playerId){
+              Option.isSome(Array.find<T.PlayerId>(manager.playerIds, func(playerId) : Bool{
                 playerId == player.id
               }))
             });
@@ -2189,7 +2189,7 @@ actor class _ManagerCanister() {
       if(not seasonFound){
 
         let managerPlayers = Array.filter<DTOs.PlayerDTO>(players, func(player){
-          Option.isSome(Array.find<T.PlayerId>(manager.playerIds, func(playerId){
+          Option.isSome(Array.find<T.PlayerId>(manager.playerIds, func(playerId) : Bool{
             playerId == player.id
           }))
         });
@@ -2321,8 +2321,11 @@ actor class _ManagerCanister() {
     };
     */
   };
+  public shared ({ caller }) func resetFantasyTeams() : async () {
+    //TODO LATER
+  };
 
-  public shared ({ caller }) func resetBonusesAvailable(leagueId: T.FootballLeagueId) : async () {
+  public shared ({ caller }) func resetBonusesAvailable() : async () {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == controllerPrincipalId;
@@ -2373,6 +2376,7 @@ actor class _ManagerCanister() {
   };
 
   private func snapshotPlayers() : async (){
+    //TODO LATER
     /*
     let openfpl_backend_canister = actor (controllerPrincipalId) : actor {
       getPlayers : () -> async [DTOs.PlayerDTO];
@@ -2382,14 +2386,14 @@ actor class _ManagerCanister() {
 
     let updatedSeasonsBuffer = Buffer.fromArray<(T.Season, [(T.GameweekNumber, [T.Player])])>([]);
    
-    let playersSeason = Array.find<(T.SeasonId, [(T.GameweekNumber, [T.Player])])>(playersSnapshots, func(playersSeasonSnapshot: (T.SeasonId, [(T.GameweekNumber, [T.Player])])){
+    let playersSeason = Array.find<(T.SeasonId, [(T.GameweekNumber, [T.Player])])>(playersSnapshots, func(playersSeasonSnapshot: (T.SeasonId, [(T.GameweekNumber, [T.Player])])) : Bool{
       playersSeasonSnapshot.0 == seasonId;
     });
 
     switch(playersSeason){
       case (?foundSeason){
         
-        let foundGameweek = Array.find<(T.GameweekNumber, [T.Player])>(foundSeason.1, func(currentGameweek: (T.GameweekNumber, [T.Player])){
+        let foundGameweek = Array.find<(T.GameweekNumber, [T.Player])>(foundSeason.1, func(currentGameweek: (T.GameweekNumber, [T.Player])) : Bool{
           currentGameweek.0 == gameweek;
         });
 
@@ -2410,15 +2414,15 @@ actor class _ManagerCanister() {
 
 //get from this file
    getSnapshotPlayers : () -> async [DTOs.PlayerDTO];
-      //TODO
+      //TODO LATER
         //Ensure we only snapshot the first time 
-//TODO need to link to openfpl backend then data canister
+//TODO LATER need to link to openfpl backend then data canister
     let openfpl_backend_canister = actor (controllerPrincipalId) : actor {
         getPlayerPointsMap : (seasonId: T.SeasonId, gameweek: T.GameweekNumber) -> async [(T.PlayerId, DTOs.PlayerScoreDTO)];
      
       };
       
-    //TODO: USE 
+    //TODO LATER 
     //let allPlayersList = await openfpl_backend_canister.getPlayerPointsMap(seasonId, gameweek);
                   
     let allPlayers : [DTOs.PlayerDTO] = await openfpl_backend_canister.getSnapshotPlayers();
@@ -2469,7 +2473,7 @@ actor class _ManagerCanister() {
     return Buffer.toArray(managerBuffer);
   };
 
-  public shared ({ caller }) func resetWeeklyTransfers(leagueId: T.FootballLeagueId) : async () {
+  public shared ({ caller }) func resetWeeklyTransfers() : async () {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == controllerPrincipalId;
@@ -2561,7 +2565,7 @@ actor class _ManagerCanister() {
     return Buffer.toArray(managerBuffer);
   };
 
-  public shared ({ caller }) func getClubManagers(leagueId: T.FootballLeagueId, clubId : T.ClubId) : async [T.PrincipalId] {
+  public shared ({ caller }) func getClubManagers(clubId : T.ClubId) : async [T.PrincipalId] {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == controllerPrincipalId;
@@ -2683,13 +2687,13 @@ actor class _ManagerCanister() {
     return Buffer.toArray(managerIdBuffer);
   };
 
-  public shared ({ caller }) func getMostValuableTeams(leagueId: T.FootballLeagueId, seasonId : T.SeasonId) : async [T.FantasyTeamSnapshot] {
+  public shared ({ caller }) func getMostValuableTeams(seasonId : T.SeasonId) : async [T.FantasyTeamSnapshot] {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == controllerPrincipalId;
 
 
-    let players : [DTOs.PlayerDTO] = []; //TODO need to get from snapshot of players stored in this manager canister for the gameweek //await openfpl_backend_canister.getAllSeasonPlayers();
+    let players : [DTOs.PlayerDTO] = []; //TODO LATER need to get from snapshot of players stored in this manager canister for the gameweek //await openfpl_backend_canister.getAllSeasonPlayers();
 
     let allFinalGameweekSnapshots = await getFinalGameweekSnapshots(seasonId);
 
@@ -2748,7 +2752,6 @@ actor class _ManagerCanister() {
         monthlyPoints = snapshot.monthlyPoints;
         seasonPoints = snapshot.seasonPoints;
         seasonId = seasonId;
-        leagueId = leagueId;
       };
 
       teamValues.put(snapshot.principalId, updatedSnapshot);
@@ -2798,7 +2801,7 @@ actor class _ManagerCanister() {
   };
 
 
-  //TODO: Do i need if main topping everuthing up
+  //TODO LATER: Do i need if main topping everuthing up
   private func checkCanisterCycles() : async () {
 
     let balance = Cycles.balance();

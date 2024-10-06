@@ -74,8 +74,6 @@ module _Types {
     transferWindowGameweek : GameweekNumber;    
     history : List.List<FantasyTeamSeason>;
   };
-  
-  //TODO: Put old managers back in and map
 
   public type FixtureStatusType = {
     #Unplayed;

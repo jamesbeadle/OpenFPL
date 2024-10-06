@@ -139,7 +139,7 @@ module {
 
     public func distributeMonthlyRewards(seasonId: T.SeasonId, monthlyLeaderboards : [DTOs.MonthlyLeaderboardDTO], uniqueManagerCanisterIds : List.List<T.CanisterId>) : async () {
       
-      //TODO
+      //TODO LATER
       /*
       let rewardPool = rewardPools.get(seasonId);
       switch(rewardPool){
@@ -151,8 +151,8 @@ module {
 
           for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
             let manager_canister = actor (canisterId) : actor {
-              getClubManagers : (clubId : T.ClubId) -> async [T.PrincipalId];
-              getNonClubManagers : (clubId : T.ClubId) -> async Nat;
+              getClubManagers : (leagueId: T.FootballLeagueId, clubId : T.ClubId) -> async [T.PrincipalId];
+              getNonClubManagers : (leagueId: T.FootballLeagueId, clubId : T.ClubId) -> async Nat;
             };
 
             let managers = await manager_canister.getClubManagers(monthlyLeaderboard.clubId);
@@ -342,11 +342,11 @@ module {
           let mostValuableTeamsBuffer = Buffer.fromArray<T.FantasyTeamSnapshot>([]);
           for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
             let manager_canister = actor (canisterId) : actor {
-              getFinalGameweekSnapshots : () -> async [T.FantasyTeamSnapshot];
-              getMostValuableTeams : T.SeasonId -> async [T.FantasyTeamSnapshot];
+              getFinalGameweekSnapshots : (seasonId : T.SeasonId) -> async [T.FantasyTeamSnapshot];
+              getMostValuableTeams : (seasonId : T.SeasonId) -> async [T.FantasyTeamSnapshot];
             };
 
-            let snapshots = await manager_canister.getFinalGameweekSnapshots();
+            let snapshots = await manager_canister.getFinalGameweekSnapshots(currentSeason);
             finalGameweekSnapshotBuffers.append(Buffer.fromArray(snapshots));
 
             let mostValuableTeams = await manager_canister.getMostValuableTeams(currentSeason);
@@ -712,6 +712,18 @@ module {
       });
     };
     */
+    
+    public func getStableRewardPools() : [(T.SeasonId, T.RewardPool)] {
+      Iter.toArray(rewardPools.entries());
+    };
+
+    public func setStableRewardPools(stable_reward_pools : [(T.SeasonId, T.RewardPool)]) {
+      rewardPools := TrieMap.fromEntries<T.SeasonId, T.RewardPool>(
+        Iter.fromArray(stable_reward_pools),
+        Utilities.eqNat16,
+        Utilities.hashNat16,
+      );
+    }; 
 
     public func getStableTeamValueLeaderboards() : [(T.SeasonId, T.TeamValueLeaderboard)] {
       return Iter.toArray(teamValueLeaderboards.entries());
@@ -725,12 +737,12 @@ module {
       );
     };
 
-    public func getStableSeasonRewards() : [T.SeasonRewards] {
-      return List.toArray(seasonRewards);
+    public func getStableWeeklyRewards() : [T.WeeklyRewards] {
+      return List.toArray(weeklyRewards);
     };
 
-    public func setStableSeasonRewards(stable_season_rewards : [T.SeasonRewards]) {
-      seasonRewards := List.fromArray(stable_season_rewards);
+    public func setStableWeeklyRewards(stable_weekly_rewards : [T.WeeklyRewards]) {
+      seasonRewards := List.fromArray(stable_weekly_rewards);
     };
 
     public func getStableMonthlyRewards() : [T.MonthlyRewards] {
@@ -741,12 +753,12 @@ module {
       seasonRewards := List.fromArray(stable_monthly_rewards);
     };
 
-    public func getStableWeeklyRewards() : [T.WeeklyRewards] {
-      return List.toArray(weeklyRewards);
+    public func getStableSeasonRewards() : [T.SeasonRewards] {
+      return List.toArray(seasonRewards);
     };
 
-    public func setStableWeeklyRewards(stable_weekly_rewards : [T.WeeklyRewards]) {
-      seasonRewards := List.fromArray(stable_weekly_rewards);
+    public func setStableSeasonRewards(stable_season_rewards : [T.SeasonRewards]) {
+      seasonRewards := List.fromArray(stable_season_rewards);
     };
 
     public func getStableMostValuableTeamRewards() : [T.RewardsList] {
@@ -765,27 +777,27 @@ module {
       highScoringPlayerRewards := List.fromArray(stable_highest_scoring_player_rewards);
     };
 
-    public func getStableWeeklyATHScores() : [T.HighScoreRecord] {
+    public func getStableWeeklyAllTimeHighScores() : [T.HighScoreRecord] {
       return List.toArray(weeklyAllTimeHighScores);
     };
 
-    public func setStableWeeklyATHScores(stable_weekly_ath_scores : [T.HighScoreRecord]) {
+    public func setStableWeeklyAllTimeHighScores(stable_weekly_ath_scores : [T.HighScoreRecord]) {
       weeklyAllTimeHighScores := List.fromArray(stable_weekly_ath_scores);
     };
 
-    public func getStableMonthlyATHScores() : [T.HighScoreRecord] {
+    public func getStableMonthlyAllTimeHighScores() : [T.HighScoreRecord] {
       return List.toArray(monthlyAllTimeHighScores);
     };
 
-    public func setStableMonthlyATHScores(stable_monthly_ath_scores : [T.HighScoreRecord]) {
+    public func setStableMonthlyAllTimeHighScores(stable_monthly_ath_scores : [T.HighScoreRecord]) {
       monthlyAllTimeHighScores := List.fromArray(stable_monthly_ath_scores);
     };
 
-    public func getStableSeasonATHScores() : [T.HighScoreRecord] {
+    public func getStableSeasonAllTimeHighScores() : [T.HighScoreRecord] {
       return List.toArray(seasonAllTimeHighScores);
     };
 
-    public func setStableSeasonATHScores(stable_season_ath_scores : [T.HighScoreRecord]) {
+    public func setStableSeasonAllTimeHighScores(stable_season_ath_scores : [T.HighScoreRecord]) {
       seasonAllTimeHighScores := List.fromArray(stable_season_ath_scores);
     };
 
@@ -812,17 +824,5 @@ module {
     public func setStableSeasonATHPrizePool(stable_season_ath_prize_pool : Nat64) {
       seasonATHPrizePool := stable_season_ath_prize_pool;
     };
-    
-    public func getStableRewardPools() : [(T.SeasonId, T.RewardPool)] {
-      Iter.toArray(rewardPools.entries());
-    };
-
-    public func setStableRewardPools(stable_reward_pools : [(T.SeasonId, T.RewardPool)]) {
-      rewardPools := TrieMap.fromEntries<T.SeasonId, T.RewardPool>(
-        Iter.fromArray(stable_reward_pools),
-        Utilities.eqNat16,
-        Utilities.hashNat16,
-      );
-    }; 
   };
 };

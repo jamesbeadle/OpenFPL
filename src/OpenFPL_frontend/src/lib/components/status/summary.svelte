@@ -18,10 +18,8 @@
         await systemStore.sync();
         await seasonStore.sync();
 
-        let pickTeamSeason = $seasonStore.find(x => x.id == $systemStore?.pickTeamSeasonId);
-        let calculationSeason = $seasonStore.find(x => x.id == $systemStore?.calculationSeasonId);
-        pickTeamSeasonName = pickTeamSeason ? pickTeamSeason.name : pickTeamSeasonName;
-        calculationSeasonName = calculationSeason ? calculationSeason.name : calculationSeasonName;
+        pickTeamSeasonName = await seasonStore.getSeasonName($systemStore?.pickTeamSeasonId ?? 0);
+        calculationSeasonName = await seasonStore.getSeasonName($systemStore?.calculationSeasonId ?? 0);
 
         let fplBalance = await systemStore.getBackendCanisterBalance();
 

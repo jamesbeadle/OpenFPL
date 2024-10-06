@@ -1,5 +1,7 @@
 // Version: 1.0.0
 type CalendarMonth = Nat8;
+type CanisterId = Text;
+type DataHash = {category : Text; hash : Text};
 type GameweekNumber = Nat8;
 type HighScoreRecord =
   {createDate : Int; points : Int16; recordType : RecordType};
@@ -12,6 +14,8 @@ type LeaderboardEntry =
     username : Text
   };
 type List<T> = ?(T, List<T>);
+type MonthlyLeaderboardsCanister =
+  {canisterId : Text; month : CalendarMonth; seasonId : SeasonId};
 type MonthlyRewards =
   {month : CalendarMonth; rewards : List<RewardEntry>; seasonId : SeasonId};
 type PrincipalId = Text;
@@ -22,6 +26,18 @@ type RewardEntry =
     position : Nat;
     principalId : Text;
     rewardType : RewardType
+  };
+type RewardPool =
+  {
+    allTimeMonthlyHighScorePool : Nat64;
+    allTimeSeasonHighScorePool : Nat64;
+    allTimeWeeklyHighScorePool : Nat64;
+    highestScoringMatchPlayerPool : Nat64;
+    monthlyLeaderboardPool : Nat64;
+    mostValuableTeamPool : Nat64;
+    seasonId : SeasonId;
+    seasonLeaderboardPool : Nat64;
+    weeklyLeaderboardPool : Nat64
   };
 type RewardType =
   {
@@ -36,10 +52,13 @@ type RewardType =
   };
 type RewardsList = {rewards : List<RewardEntry>};
 type SeasonId = Nat16;
+type SeasonLeaderboardCanister = {canisterId : Text; seasonId : SeasonId};
 type SeasonRewards = {rewards : List<RewardEntry>; seasonId : SeasonId};
 type TeamValueLeaderboard =
   {entries : List<LeaderboardEntry>; seasonId : SeasonId; totalEntries : Nat};
 type TimerInfo = {callbackName : Text; id : Int; triggerTime : Int};
+type WeeklyLeaderboardCanister =
+  {canisterId : Text; gameweek : GameweekNumber; seasonId : SeasonId};
 type WeeklyRewards =
   {
     gameweek : GameweekNumber;
@@ -49,17 +68,44 @@ type WeeklyRewards =
 actor {
   stable var alreadyInitialisedData : Bool;
   stable var dataAdmins : [PrincipalId];
-  stable var highScoringPlayerRewards : [RewardsList];
-  stable var monthlyATHPrizePool : Nat64;
-  stable var monthlyAllTimeHighScores : [HighScoreRecord];
-  stable var monthlyRewards : [MonthlyRewards];
-  stable var mostValuableTeamRewards : [RewardsList];
-  stable var seasonATHPrizePool : Nat64;
-  stable var seasonAllTimeHighScores : [HighScoreRecord];
-  stable var seasonRewards : [SeasonRewards];
-  stable var teamValueLeaderboards : [(SeasonId, TeamValueLeaderboard)];
-  stable var timers : [TimerInfo];
-  stable var weeklyATHPrizePool : Nat64;
-  stable var weeklyAllTimeHighScores : [HighScoreRecord];
-  stable var weeklyRewards : [WeeklyRewards]
+  stable var stable_active_manager_canister_id : Text;
+  stable var stable_data_hashes : [DataHash];
+  stable var stable_high_scoring_player_rewards : [RewardsList];
+  stable var stable_manager_canister_ids : [(PrincipalId, CanisterId)];
+  stable var stable_monthly_all_time_high_scores : [HighScoreRecord];
+  stable var stable_monthly_ath_prize_pool : Nat64;
+  stable var stable_monthly_leaderboard_canisters :
+    [MonthlyLeaderboardsCanister];
+  stable var stable_monthly_rewards : [MonthlyRewards];
+  stable var stable_most_valuable_team_rewards : [RewardsList];
+  stable var stable_reward_pools : [(SeasonId, RewardPool)];
+  stable var stable_season_all_time_high_scores : [HighScoreRecord];
+  stable var stable_season_ath_prize_pool : Nat64;
+  stable var stable_season_leaderboard_canisters :
+    [SeasonLeaderboardCanister];
+  stable var stable_season_rewards : [SeasonRewards];
+  stable var stable_system_state :
+    {
+      calculationGameweek : GameweekNumber;
+      calculationMonth : CalendarMonth;
+      calculationSeasonId : SeasonId;
+      onHold : Bool;
+      pickTeamGameweek : GameweekNumber;
+      pickTeamMonth : CalendarMonth;
+      pickTeamSeasonId : SeasonId;
+      seasonActive : Bool;
+      transferWindowActive : Bool;
+      version : Text
+    };
+  stable var stable_team_value_leaderboards :
+    [(SeasonId, TeamValueLeaderboard)];
+  stable var stable_total_managers : Nat;
+  stable var stable_unique_manager_canister_ids : [CanisterId];
+  stable var stable_usernames : [(PrincipalId, Text)];
+  stable var stable_weekly_all_time_high_scores : [HighScoreRecord];
+  stable var stable_weekly_ath_prize_pool : Nat64;
+  stable var stable_weekly_leaderboard_canisters :
+    [WeeklyLeaderboardCanister];
+  stable var stable_weekly_rewards : [WeeklyRewards];
+  stable var timers : [TimerInfo]
 };

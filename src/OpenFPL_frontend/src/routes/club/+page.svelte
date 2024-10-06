@@ -24,6 +24,7 @@
   } from "../../lib/utils/helpers";
   import { Spinner } from "@dfinity/gix-components";
     import LoanedPlayers from "$lib/components/club/loaned-players.svelte";
+    import { seasonStore } from "$lib/stores/season-store";
 
   let isLoading = true;
   let fixturesWithTeams: FixtureWithTeams[] = [];
@@ -47,12 +48,9 @@
       await systemStore.sync();
       await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
       await playerStore.sync();
-      let seasons = await systemStore.getSeasons();
-      let foundSeason = seasons.find(x => x.id == $systemStore?.pickTeamSeasonId);
-      if(foundSeason){
-        seasonName = foundSeason.name;
-      }
+      await seasonStore.sync();
 
+      seasonName = await seasonStore.getSeasonName($systemStore?.pickTeamSeasonId ?? 0);
       selectedGameweek = $systemStore?.pickTeamGameweek ?? 1;
 
       let teamFixtures = $fixtureStore.filter(

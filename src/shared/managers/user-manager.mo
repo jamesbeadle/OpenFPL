@@ -212,7 +212,7 @@ module {
     };
     
     public func getUniqueManagerCanisterIds() : [T.CanisterId] {
-      return []; //TODO
+      return List.toArray(uniqueManagerCanisterIds);
     };
 
     public func getCurrentTeam(principalId : Text) : async Result.Result<DTOs.PickTeamDTO, T.Error> {
@@ -281,14 +281,14 @@ module {
       };
     };
 
-    public func calculateFantasyTeamScores(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) : async () {
+    public func calculateFantasyTeamScores(leagueId: T.FootballLeagueId, seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) : async () {
       for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
 
         let manager_canister = actor (canisterId) : actor {
-          calculateFantasyTeamScores : (seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) -> async ();
+          calculateFantasyTeamScores : (leagueId: T.FootballLeagueId, seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) -> async ();
         };
 
-        await manager_canister.calculateFantasyTeamScores(seasonId, gameweek, month);
+        await manager_canister.calculateFantasyTeamScores(leagueId, seasonId, gameweek, month);
       };
     };
 
@@ -1256,11 +1256,11 @@ module {
       managerCanisterIds := canisterIds;
     };
 
-    public func getStableManagerUsernames() : [(T.PrincipalId, Text)] {
+    public func getStableUsernames() : [(T.PrincipalId, Text)] {
       return Iter.toArray(usernames.entries());
     };
 
-    public func setStableManagerUsernames(stable_manager_usernames : [(T.PrincipalId, Text)]) : () {
+    public func setStableUsernames(stable_manager_usernames : [(T.PrincipalId, Text)]) : () {
       let usernameMap : TrieMap.TrieMap<T.PrincipalId, T.CanisterId> = TrieMap.TrieMap<T.PrincipalId, T.CanisterId>(Text.equal, Text.hash);
 
       for (username in Iter.fromArray(stable_manager_usernames)) {

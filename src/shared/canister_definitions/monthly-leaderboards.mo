@@ -117,7 +117,7 @@ actor class _MonthlyLeaderboardsCanister(controllerPrincipalId: T.PrincipalId) {
                     return #less;
               });
 
-              let positionedGameweekEntries = Utilities.assignPositionText(List.fromArray<T.LeaderboardEntry>(sortedGameweekEntries)); //TODO update with football god logic
+              let positionedGameweekEntries = Utilities.assignPositionText(List.fromArray<T.LeaderboardEntry>(sortedGameweekEntries)); //TODO LATER update with football god logic
 
               leaderboardBuffer.add({
                 seasonId = foundSeasonId;
@@ -247,7 +247,7 @@ actor class _MonthlyLeaderboardsCanister(controllerPrincipalId: T.PrincipalId) {
 
     for(leaderboard in Iter.fromArray(leaderboards)){
       if(leaderboard.clubId == clubId){
-        let entry = List.find<T.LeaderboardEntry>(leaderboard.entries, func(entry: T.LeaderboardEntry){
+        let entry = List.find<T.LeaderboardEntry>(leaderboard.entries, func(entry: T.LeaderboardEntry) : Bool {
           entry.principalId == principalId
         });
         return entry;
