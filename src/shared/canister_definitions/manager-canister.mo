@@ -1244,7 +1244,7 @@ actor class _ManagerCanister() {
             switch (currentSeason) {
               case (null) {};
               case (?foundSeason) {
-                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot){
+                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot) : Bool{
                   snapshot.gameweek == fixturesPerClub
                 });
                 switch(currentGameweek){
@@ -1268,7 +1268,7 @@ actor class _ManagerCanister() {
             switch (currentSeason) {
               case (null) {};
               case (?foundSeason) {
-                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot){
+                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot) : Bool{
                   snapshot.gameweek == fixturesPerClub
                 });
                 switch(currentGameweek){
@@ -1292,7 +1292,7 @@ actor class _ManagerCanister() {
             switch (currentSeason) {
               case (null) {};
               case (?foundSeason) {
-                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot){
+                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot) : Bool{
                   snapshot.gameweek == fixturesPerClub
                 });
                 switch(currentGameweek){
@@ -1316,7 +1316,7 @@ actor class _ManagerCanister() {
             switch (currentSeason) {
               case (null) {};
               case (?foundSeason) {
-                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot){
+                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot) : Bool{
                   snapshot.gameweek == fixturesPerClub
                 });
                 switch(currentGameweek){
@@ -1340,7 +1340,7 @@ actor class _ManagerCanister() {
             switch (currentSeason) {
               case (null) {};
               case (?foundSeason) {
-                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot){
+                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot) : Bool{
                   snapshot.gameweek == fixturesPerClub
                 });
                 switch(currentGameweek){
@@ -1364,7 +1364,7 @@ actor class _ManagerCanister() {
             switch (currentSeason) {
               case (null) {};
               case (?foundSeason) {
-                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot){
+                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot) : Bool{
                   snapshot.gameweek == fixturesPerClub
                 });
                 switch(currentGameweek){
@@ -1388,7 +1388,7 @@ actor class _ManagerCanister() {
             switch (currentSeason) {
               case (null) {};
               case (?foundSeason) {
-                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot){
+                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot) : Bool {
                   snapshot.gameweek == fixturesPerClub
                 });
                 switch(currentGameweek){
@@ -1412,7 +1412,7 @@ actor class _ManagerCanister() {
             switch (currentSeason) {
               case (null) {};
               case (?foundSeason) {
-                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot){
+                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot) : Bool {
                   snapshot.gameweek == fixturesPerClub
                 });
                 switch(currentGameweek){
@@ -1436,7 +1436,7 @@ actor class _ManagerCanister() {
             switch (currentSeason) {
               case (null) {};
               case (?foundSeason) {
-                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot){
+                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot) : Bool {
                   snapshot.gameweek == fixturesPerClub
                 });
                 switch(currentGameweek){
@@ -1460,7 +1460,7 @@ actor class _ManagerCanister() {
             switch (currentSeason) {
               case (null) {};
               case (?foundSeason) {
-                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot){
+                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot) : Bool {
                   snapshot.gameweek == fixturesPerClub
                 });
                 switch(currentGameweek){
@@ -1484,7 +1484,7 @@ actor class _ManagerCanister() {
             switch (currentSeason) {
               case (null) {};
               case (?foundSeason) {
-                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot){
+                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot) : Bool {
                   snapshot.gameweek == fixturesPerClub
                 });
                 switch(currentGameweek){
@@ -1508,7 +1508,7 @@ actor class _ManagerCanister() {
             switch (currentSeason) {
               case (null) {};
               case (?foundSeason) {
-                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot){
+                let currentGameweek = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot) : Bool {
                   snapshot.gameweek == fixturesPerClub
                 });
                 switch(currentGameweek){
@@ -2128,7 +2128,7 @@ actor class _ManagerCanister() {
             );
 
             let managerPlayers = Array.filter<DTOs.PlayerDTO>(players, func(player){
-              Option.isSome(Array.find<T.PlayerId>(manager.playerIds, func(playerId){
+              Option.isSome(Array.find<T.PlayerId>(manager.playerIds, func(playerId) : Bool{
                 playerId == player.id
               }))
             });
@@ -2189,7 +2189,7 @@ actor class _ManagerCanister() {
       if(not seasonFound){
 
         let managerPlayers = Array.filter<DTOs.PlayerDTO>(players, func(player){
-          Option.isSome(Array.find<T.PlayerId>(manager.playerIds, func(playerId){
+          Option.isSome(Array.find<T.PlayerId>(manager.playerIds, func(playerId) : Bool{
             playerId == player.id
           }))
         });
@@ -2385,14 +2385,14 @@ actor class _ManagerCanister() {
 
     let updatedSeasonsBuffer = Buffer.fromArray<(T.Season, [(T.GameweekNumber, [T.Player])])>([]);
    
-    let playersSeason = Array.find<(T.SeasonId, [(T.GameweekNumber, [T.Player])])>(playersSnapshots, func(playersSeasonSnapshot: (T.SeasonId, [(T.GameweekNumber, [T.Player])])){
+    let playersSeason = Array.find<(T.SeasonId, [(T.GameweekNumber, [T.Player])])>(playersSnapshots, func(playersSeasonSnapshot: (T.SeasonId, [(T.GameweekNumber, [T.Player])])) : Bool{
       playersSeasonSnapshot.0 == seasonId;
     });
 
     switch(playersSeason){
       case (?foundSeason){
         
-        let foundGameweek = Array.find<(T.GameweekNumber, [T.Player])>(foundSeason.1, func(currentGameweek: (T.GameweekNumber, [T.Player])){
+        let foundGameweek = Array.find<(T.GameweekNumber, [T.Player])>(foundSeason.1, func(currentGameweek: (T.GameweekNumber, [T.Player])) : Bool{
           currentGameweek.0 == gameweek;
         });
 

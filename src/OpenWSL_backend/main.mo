@@ -47,14 +47,14 @@
     private stable var alreadyInitialisedData = false;
     
     private func isDataAdmin(principalId: Text) : Bool {
-      return Option.isSome(Array.find<T.PrincipalId>(dataAdmins, func(dataAdmin: T.PrincipalId){
+      return Option.isSome(Array.find<T.PrincipalId>(dataAdmins, func(dataAdmin: T.PrincipalId) : Bool{
         dataAdmin == principalId;
       }));
     };
 
     private func isManagerCanister(principalId: Text) : Bool {
       let managerCanisterIds = userManager.getUniqueManagerCanisterIds();
-      return Option.isSome(Array.find<T.PrincipalId>(managerCanisterIds, func(dataAdmin: T.PrincipalId){
+      return Option.isSome(Array.find<T.PrincipalId>(managerCanisterIds, func(dataAdmin: T.PrincipalId) : Bool{
         dataAdmin == principalId;
       }));
     }; 
@@ -732,7 +732,7 @@
                     switch(status){
                       case (null){};
                       case (?foundStatus){
-                        let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup){
+                        let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup) : Bool{
                             topup.canisterId == Principal.toText(foundCanisterId);
                         });
                         var topupTime: Int = 0;
@@ -765,7 +765,7 @@
                   switch(status){
                     case (null){};
                     case (?foundStatus){
-                      let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup){
+                      let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup) : Bool{
                           topup.canisterId == Principal.toText(foundCanisterId);
                       });
                       var topupTime: Int = 0;
@@ -798,7 +798,7 @@
                   switch(status){
                     case (null){};
                     case (?foundStatus){
-                      let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup){
+                      let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup) : Bool{
                           topup.canisterId == Principal.toText(foundCanisterId);
                       });
                       var topupTime: Int = 0;
@@ -831,7 +831,7 @@
                     switch(status){
                     case (null){};
                     case (?foundStatus){
-                      let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup){
+                      let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup) : Bool{
                           topup.canisterId == Principal.toText(foundCanisterId);
                       });
                       var topupTime: Int = 0;
@@ -864,7 +864,7 @@
                       switch(status){
                       case (null){};
                       case (?foundStatus){
-                        let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup){
+                        let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup) : Bool{
                             topup.canisterId == Principal.toText(foundCanisterId);
                         });
                         var topupTime: Int = 0;
@@ -897,7 +897,7 @@
                 switch(status){
                   case (null){};
                   case (?foundStatus){
-                    let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup){
+                    let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup) : Bool{
                         topup.canisterId == Principal.toText(foundCanisterId);
                     });
                     var topupTime: Int = 0;
@@ -932,7 +932,7 @@
             );
             let cycles: Nat = canisterInfo.cycles;
 
-            let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup){
+            let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup) : Bool{
                 topup.canisterId == canisterId;
             });
             var topupTime: Int = 0;
@@ -960,7 +960,7 @@
                 switch(status){
                   case (null){};
                   case (?foundStatus){
-                    let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup){
+                    let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup) : Bool{
                         topup.canisterId == Principal.toText(foundCanisterId);
                     });
                     var topupTime: Int = 0;
@@ -995,7 +995,7 @@
             );
             let cycles: Nat = canisterInfo.cycles;
 
-            let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup){
+            let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup) : Bool{
                 topup.canisterId == weeklyLeaderboardCanister.canisterId;
             });
             var topupTime: Int = 0;
@@ -1027,7 +1027,7 @@
             );
             let cycles: Nat = canisterInfo.cycles;
 
-            let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup){
+            let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup) : Bool{
                 topup.canisterId == monthlyLeaderboardCanister.canisterId;
             });
             var topupTime: Int = 0;
@@ -1060,7 +1060,7 @@
             );
             let cycles: Nat = canisterInfo.cycles;
 
-            let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup){
+            let lastTopup = Array.find<T.CanisterTopup>(sortedTopups, func(topup: T.CanisterTopup) : Bool{
                 topup.canisterId == seasonLeaderboardCanister.canisterId;
             });
             var topupTime: Int = 0;

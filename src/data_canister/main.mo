@@ -233,7 +233,7 @@
           return #ok(Array.map<T.Player, DTOs.PlayerDTO>(foundLeaguePlayers.1, func(player: T.Player){
             
             var totalPoints: Int16 = 0;
-            let season = List.find<T.PlayerSeason>(player.seasons, func(season: T.PlayerSeason){
+            let season = List.find<T.PlayerSeason>(player.seasons, func(season: T.PlayerSeason) : Bool{
               season.id == dto.seasonId
             });
 
@@ -1317,7 +1317,7 @@
             {
               if(leagueWithPlayers.0 == leagueId){
                 return (leagueWithPlayers.0, 
-                  Array.filter<T.Player>(leagueWithPlayers.1, func(player: T.Player){
+                  Array.filter<T.Player>(leagueWithPlayers.1, func(player: T.Player) : Bool{
                     player.id != playerId
                   })
                 );
@@ -1427,7 +1427,7 @@
             {
               if(leagueWithPlayers.0 == currentLeagueId){
                 return (leagueWithPlayers.0, 
-                  Array.filter<T.Player>(leagueWithPlayers.1, func(player: T.Player){
+                  Array.filter<T.Player>(leagueWithPlayers.1, func(player: T.Player) : Bool{
                     player.id != playerId
                   })
                 );
@@ -1538,7 +1538,7 @@
               player.id == dto.playerId
             });
 
-            let updatedPlayersBuffer = Buffer.fromArray<T.Player>(Array.filter<T.Player>(leaguePlayersEntry.1, func(player: T.Player){
+            let updatedPlayersBuffer = Buffer.fromArray<T.Player>(Array.filter<T.Player>(leaguePlayersEntry.1, func(player: T.Player) : Bool{
               player.id != dto.playerId
             }));
 
@@ -1595,7 +1595,7 @@
               player.id == dto.playerId
             });
 
-            let updatedPlayersBuffer = Buffer.fromArray<T.Player>(Array.filter<T.Player>(leaguePlayersEntry.1, func(player: T.Player){
+            let updatedPlayersBuffer = Buffer.fromArray<T.Player>(Array.filter<T.Player>(leaguePlayersEntry.1, func(player: T.Player) : Bool{
               player.id != dto.playerId
             }));
 
@@ -1655,7 +1655,7 @@
       //TODO
       /*
       assert callerAllowed(caller);
-      let playerToRetire = List.find<T.Player>(players, func(p : T.Player) { p.id == retirePlayerDTO.playerId });
+      let playerToRetire = List.find<T.Player>(players, func(p : T.Player) : Bool { p.id == retirePlayerDTO.playerId });
       switch (playerToRetire) {
         case (null) {};
         case (?p) {
@@ -1699,7 +1699,7 @@
       //TODO
       /* 
       assert callerAllowed(caller);
-      let playerToUnretire = List.find<T.Player>(players, func(p : T.Player) { p.id == unretirePlayerDTO.playerId });
+      let playerToUnretire = List.find<T.Player>(players, func(p : T.Player) : Bool { p.id == unretirePlayerDTO.playerId });
       switch (playerToUnretire) {
         case (null) {};
         case (?p) {

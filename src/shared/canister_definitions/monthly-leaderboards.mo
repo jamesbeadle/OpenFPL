@@ -247,7 +247,7 @@ actor class _MonthlyLeaderboardsCanister(controllerPrincipalId: T.PrincipalId) {
 
     for(leaderboard in Iter.fromArray(leaderboards)){
       if(leaderboard.clubId == clubId){
-        let entry = List.find<T.LeaderboardEntry>(leaderboard.entries, func(entry: T.LeaderboardEntry){
+        let entry = List.find<T.LeaderboardEntry>(leaderboard.entries, func(entry: T.LeaderboardEntry) : Bool {
           entry.principalId == principalId
         });
         return entry;

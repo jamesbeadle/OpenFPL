@@ -410,14 +410,14 @@ module {
 
               for (event in Iter.fromArray(submitFixtureDataDTO.playerEventData)) {
                 if (event.clubId == foundFixture.homeClubId) {
-                  let alreadyAdded = Option.isSome(Array.find<T.PlayerId>(Buffer.toArray(homeTeamPlayerIdsBuffer), func(playerId: T.PlayerId){
+                  let alreadyAdded = Option.isSome(Array.find<T.PlayerId>(Buffer.toArray(homeTeamPlayerIdsBuffer), func(playerId: T.PlayerId) : Bool{
                     playerId == event.playerId
                   }));
                   if(not alreadyAdded){
                     homeTeamPlayerIdsBuffer.add(event.playerId);
                   }
                 } else if (event.clubId == foundFixture.awayClubId) {
-                  let alreadyAdded = Option.isSome(Array.find<T.PlayerId>(Buffer.toArray(awayTeamPlayerIdsBuffer), func(playerId: T.PlayerId){
+                  let alreadyAdded = Option.isSome(Array.find<T.PlayerId>(Buffer.toArray(awayTeamPlayerIdsBuffer), func(playerId: T.PlayerId) : Bool{
                     playerId == event.playerId
                   }));
                   if(not alreadyAdded){
