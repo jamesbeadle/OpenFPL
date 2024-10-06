@@ -187,7 +187,7 @@
         case (?foundLeagueSeasons){          
           
           let filteredSeason = Array.find<T.Season>(foundLeagueSeasons.1, 
-            func(leagueSeason: T.Season){
+            func(leagueSeason: T.Season) : Bool{
               leagueSeason.id == dto.seasonId;
           });
 
@@ -433,7 +433,7 @@
       
       var playersMap : TrieMap.TrieMap<Nat16, DTOs.PlayerScoreDTO> = TrieMap.TrieMap<Nat16, DTOs.PlayerScoreDTO>(Utilities.eqNat16, Utilities.hashNat16);
       
-      let filteredLeaguePlayers = Array.find<(T.FootballLeagueId, [T.Player])>(leaguePlayers, func(leagueWithPlayers: (T.FootballLeagueId, [T.Player])){
+      let filteredLeaguePlayers = Array.find<(T.FootballLeagueId, [T.Player])>(leaguePlayers, func(leagueWithPlayers: (T.FootballLeagueId, [T.Player])) : Bool {
         leagueWithPlayers.0 == leagueId
       });
 
@@ -507,14 +507,14 @@
 
     private func checkPlayerExists(leagueId: T.FootballLeagueId, playerId: T.PlayerId) : Bool {
       let playersInLeague = Array.find<(T.FootballLeagueId, [T.Player])>(leaguePlayers, 
-        func(foundLeaguePlayers: (T.FootballLeagueId, [T.Player])){
+        func(foundLeaguePlayers: (T.FootballLeagueId, [T.Player])) : Bool{
           foundLeaguePlayers.0 == leagueId;
         }
       );
 
       switch(playersInLeague){
         case (?foundPlayersInLeague){
-          let foundPlayer = Array.find<T.Player>(foundPlayersInLeague.1, func(player: T.Player){
+          let foundPlayer = Array.find<T.Player>(foundPlayersInLeague.1, func(player: T.Player) : Bool{
             player.id == playerId;
           });
           if(Option.isNull(foundPlayer)){
@@ -575,7 +575,8 @@
       assert callerAllowed(caller);
       assert checkPlayerExists(leagueId, dto.playerId);
 
-      let filteredLeaguePlayers = Array.find<(T.FootballLeagueId, [T.Player])>(leaguePlayers, func(leagueWithPlayers: (T.FootballLeagueId, [T.Player])){
+      let filteredLeaguePlayers = Array.find<(T.FootballLeagueId, [T.Player])>(leaguePlayers, 
+        func(leagueWithPlayers: (T.FootballLeagueId, [T.Player])) : Bool{
         leagueWithPlayers.0 == leagueId
       });
 
@@ -585,7 +586,7 @@
             return #err(#InvalidData);
           };
 
-          let player = Array.find<T.Player>(players.1, func(currentPlayer: T.Player){
+          let player = Array.find<T.Player>(players.1, func(currentPlayer: T.Player) : Bool{
             currentPlayer.id == dto.playerId;
           });
 
@@ -604,7 +605,7 @@
           if (dto.loanClubId > 0) {
 
             let filteredLeagueClubs = Array.find<(T.FootballLeagueId, [T.Club])>(leagueClubs, 
-              func(leagueClubs: (T.FootballLeagueId, [T.Club])){
+              func(leagueClubs: (T.FootballLeagueId, [T.Club])) : Bool{
                   leagueClubs.0 == leagueId;
             });
 
@@ -647,7 +648,7 @@
       assert callerAllowed(caller);
       assert checkPlayerExists(leagueId, dto.playerId);
 
-      let filteredLeaguePlayers = Array.find<(T.FootballLeagueId, [T.Player])>(leaguePlayers, func(leagueWithPlayers: (T.FootballLeagueId, [T.Player])){
+      let filteredLeaguePlayers = Array.find<(T.FootballLeagueId, [T.Player])>(leaguePlayers, func(leagueWithPlayers: (T.FootballLeagueId, [T.Player])) : Bool{
         leagueWithPlayers.0 == leagueId
       });
 
@@ -670,7 +671,7 @@
           if (dto.newClubId > 0) {
 
             let filteredLeagueClubs = Array.find<(T.FootballLeagueId, [T.Club])>(leagueClubs, 
-              func(leagueClubs: (T.FootballLeagueId, [T.Club])){
+              func(leagueClubs: (T.FootballLeagueId, [T.Club])) : Bool{
                   leagueClubs.0 == leagueId;
             });
 
@@ -712,7 +713,7 @@
       assert callerAllowed(caller);
       assert checkPlayerExists(leagueId, dto.playerId);
 
-      let filteredLeaguePlayers = Array.find<(T.FootballLeagueId, [T.Player])>(leaguePlayers, func(leagueWithPlayers: (T.FootballLeagueId, [T.Player])){
+      let filteredLeaguePlayers = Array.find<(T.FootballLeagueId, [T.Player])>(leaguePlayers, func(leagueWithPlayers: (T.FootballLeagueId, [T.Player])) : Bool{
         leagueWithPlayers.0 == leagueId
       });
 
@@ -768,7 +769,7 @@
       };
 
       let filteredLeagueClubs = Array.find<(T.FootballLeagueId, [T.Club])>(leagueClubs, 
-        func(leagueClubs: (T.FootballLeagueId, [T.Club])){
+        func(leagueClubs: (T.FootballLeagueId, [T.Club])) : Bool{
             leagueClubs.0 == leagueId;
       });
 
@@ -800,7 +801,7 @@
       assert callerAllowed(caller);
       assert checkPlayerExists(leagueId, dto.playerId);
 
-      let filteredLeaguePlayers = Array.find<(T.FootballLeagueId, [T.Player])>(leaguePlayers, func(leagueWithPlayers: (T.FootballLeagueId, [T.Player])){
+      let filteredLeaguePlayers = Array.find<(T.FootballLeagueId, [T.Player])>(leaguePlayers, func(leagueWithPlayers: (T.FootballLeagueId, [T.Player])) : Bool{
         leagueWithPlayers.0 == leagueId
       });
 
@@ -852,7 +853,7 @@
       assert callerAllowed(caller);
       assert checkPlayerExists(leagueId, dto.playerId);
 
-      let filteredLeaguePlayers = Array.find<(T.FootballLeagueId, [T.Player])>(leaguePlayers, func(leagueWithPlayers: (T.FootballLeagueId, [T.Player])){
+      let filteredLeaguePlayers = Array.find<(T.FootballLeagueId, [T.Player])>(leaguePlayers, func(leagueWithPlayers: (T.FootballLeagueId, [T.Player])) : Bool{
         leagueWithPlayers.0 == leagueId
       });
 
@@ -884,7 +885,7 @@
       assert callerAllowed(caller);
       assert checkPlayerExists(leagueId, dto.playerId);
 
-      let filteredLeaguePlayers = Array.find<(T.FootballLeagueId, [T.Player])>(leaguePlayers, func(leagueWithPlayers: (T.FootballLeagueId, [T.Player])){
+      let filteredLeaguePlayers = Array.find<(T.FootballLeagueId, [T.Player])>(leaguePlayers, func(leagueWithPlayers: (T.FootballLeagueId, [T.Player])) : Bool {
         leagueWithPlayers.0 == leagueId
       });
 
@@ -923,7 +924,7 @@
       switch(filteredLeaguePlayers){
         case (?foundLeaguePlayers){
           let playerToUnretire = Array.find<T.Player>(foundLeaguePlayers.1, 
-            func(p : T.Player) { p.id == dto.playerId and p.status == #Retired });
+            func(p : T.Player) : Bool { p.id == dto.playerId and p.status == #Retired });
             switch (playerToUnretire) {
               case (null) {
                 return #err(#NotFound);
@@ -1054,7 +1055,7 @@
       for(league in Iter.fromArray(leaguePlayers)){
         if(league.0 == leagueId){
 
-          let filteredLeaguePlayers = Array.find<(T.FootballLeagueId, [T.Player])>(leaguePlayers, func(leagueWithPlayers: (T.FootballLeagueId, [T.Player])){
+          let filteredLeaguePlayers = Array.find<(T.FootballLeagueId, [T.Player])>(leaguePlayers, func(leagueWithPlayers: (T.FootballLeagueId, [T.Player])) : Bool{
             leagueWithPlayers.0 == leagueId
           });
 
@@ -1127,7 +1128,7 @@
       for(league in Iter.fromArray(leaguePlayers)){
         if(league.0 == leagueId){
 
-          let filteredLeaguePlayers = Array.find<(T.FootballLeagueId, [T.Player])>(leaguePlayers, func(leagueWithPlayers: (T.FootballLeagueId, [T.Player])){
+          let filteredLeaguePlayers = Array.find<(T.FootballLeagueId, [T.Player])>(leaguePlayers, func(leagueWithPlayers: (T.FootballLeagueId, [T.Player])) : Bool{
             leagueWithPlayers.0 == leagueId
           });
 
@@ -1204,7 +1205,7 @@
       for(league in Iter.fromArray(leaguePlayers)){
         if(league.0 == leagueId){
 
-          let filteredLeaguePlayers = Array.find<(T.FootballLeagueId, [T.Player])>(leaguePlayers, func(leagueWithPlayers: (T.FootballLeagueId, [T.Player])){
+          let filteredLeaguePlayers = Array.find<(T.FootballLeagueId, [T.Player])>(leaguePlayers, func(leagueWithPlayers: (T.FootballLeagueId, [T.Player])) : Bool{
             leagueWithPlayers.0 == leagueId
           });
 
@@ -1272,7 +1273,7 @@
     };
 
     private func getPlayer(leagueId: T.FootballLeagueId, playerId: T.PlayerId) : ?T.Player{
-      let playersLeague = Array.find<(T.FootballLeagueId, [T.Player])>(leaguePlayers, func(playerLeagueEntry: (T.FootballLeagueId, [T.Player])){
+      let playersLeague = Array.find<(T.FootballLeagueId, [T.Player])>(leaguePlayers, func(playerLeagueEntry: (T.FootballLeagueId, [T.Player])) : Bool{
         playerLeagueEntry.0 == leagueId;
       });
       switch(playersLeague){
@@ -1280,7 +1281,7 @@
           return null;
         };
         case (?foundPlayersLeague){
-          return Array.find<T.Player>(foundPlayersLeague.1, func(player: T.Player){
+          return Array.find<T.Player>(foundPlayersLeague.1, func(player: T.Player) : Bool{
             player.id == playerId
           });
         }
@@ -1533,7 +1534,7 @@
         func(leaguePlayersEntry: (T.FootballLeagueId, [T.Player])){
           if(leaguePlayersEntry.0 == leagueId){
 
-            let existingPlayer = Array.find<T.Player>(leaguePlayersEntry.1, func(player: T.Player){
+            let existingPlayer = Array.find<T.Player>(leaguePlayersEntry.1, func(player: T.Player) : Bool{
               player.id == dto.playerId
             });
 
@@ -1590,7 +1591,7 @@
         {
           if(leaguePlayersEntry.0 == leagueId){
             
-             let existingPlayer = Array.find<T.Player>(leaguePlayersEntry.1, func(player: T.Player){
+             let existingPlayer = Array.find<T.Player>(leaguePlayersEntry.1, func(player: T.Player) : Bool{
               player.id == dto.playerId
             });
 

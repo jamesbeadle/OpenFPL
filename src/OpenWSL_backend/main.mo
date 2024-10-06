@@ -370,11 +370,10 @@
                 await calculateRewardPool(currentSeasonId); //TODO SPLIT NEW VALUES
                 */
 
-
                 await setTransferWindowTimers();
               };
-
               
+              await seasonManager.updateDataHash("seasons");
               await seasonManager.updateDataHash("players");
               await seasonManager.updateDataHash("player_events");
               await seasonManager.updateDataHash("fixtures");
