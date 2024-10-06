@@ -20,6 +20,7 @@
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import FantasyPlayerDetailModal from "./fantasy-player-detail-modal.svelte";
     import LocalSpinner from "./local-spinner.svelte";
+    import { seasonStore } from "../stores/season-store";
 
   let isLoading = true;
   let selectedGameweek: number;
@@ -38,12 +39,13 @@
       if ($teamStore.length == 0) return;
 
       await systemStore.sync();
+      await seasonStore.sync();
       await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
       await authStore.sync();
       await playerEventsStore.sync();
 
       selectedGameweek = $systemStore?.calculationGameweek ?? 1;
-      activeSeasonName = $systemStore?.calculationSeasonName ?? "-";
+      activeSeasonName = await seasonStore.getSeasonName($systemStore?.calculationSeasonId ?? 0);
       gameweeks = Array.from(
         { length: $systemStore?.calculationGameweek ?? 1 },
         (_, i) => i + 1

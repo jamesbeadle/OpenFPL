@@ -223,24 +223,12 @@ function createGovernanceStore() {
 
   async function addInitialFixtures(
     seasonFixtures: FixtureDTO[],
+    pickTeamSeasonId: number
   ): Promise<any> {
     try {
       await systemStore.sync();
       await seasonStore.sync();
-      let seasonName = "";
-
-      const unsubscribeSystemStore = systemStore.subscribe((systemState) => {
-        if (systemState) {
-          const unsubscribeSeasonStore = seasonStore.subscribe((seasons) => {
-            let currentSeason = seasons.find(x => x.id == systemState.pickTeamSeasonId);
-            if(currentSeason){
-              seasonName = currentSeason.name;
-            }
-            unsubscribeSeasonStore();
-          });
-        }
-      });
-      unsubscribeSystemStore();
+      let seasonName = await seasonStore.getSeasonName(pickTeamSeasonId);
 
       let dto: AddInitialFixturesDTO = {
         seasonFixtures,

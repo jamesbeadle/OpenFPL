@@ -24,6 +24,7 @@
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import { weeklyLeaderboardStore } from "$lib/stores/weekly-leaderboard-store";
   import RelativeSpinner from "$lib/components/relative-spinner.svelte";
+    import { seasonStore } from "$lib/stores/season-store";
 
   let activeTab: string = "fixtures";
   let managerCount = 0;
@@ -41,6 +42,7 @@
   let section1Loading = true;
   let section2Loading = true;
   let section3Loading = true;
+  let seasonName = "";
 
   onMount(async () => {
     try {
@@ -48,6 +50,9 @@
       authStore.subscribe((store) => {
         isLoggedIn = store.identity !== null && store.identity !== undefined;
       });
+      await systemStore.sync();
+      await seasonStore.sync();
+      seasonName = await seasonStore.getSeasonName($systemStore?.pickTeamSeasonId ?? 0);
       
       loadSection1();
       loadSection2();
@@ -140,7 +145,7 @@
             {$systemStore?.pickTeamGameweek}
           </p>
           <p class="content-panel-header">
-            {$systemStore?.pickTeamSeasonName}
+            {seasonName}
           </p>
         </div>
         <div class="vertical-divider" />

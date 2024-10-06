@@ -15,7 +15,7 @@
   import type {
     LeaderboardEntry,
     ClubDTO,
-  } from "../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  } from "../../../declarations/OpenWSL_backend/OpenWSL_backend.did";
   import Layout from "./Layout.svelte";
   import FixturesComponent from "$lib/components/fixtures.svelte";
   import GamweekPointsComponent from "$lib/components/gameweek-points.svelte";
@@ -24,6 +24,7 @@
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import { weeklyLeaderboardStore } from "$lib/stores/weekly-leaderboard-store";
   import RelativeSpinner from "$lib/components/relative-spinner.svelte";
+    import { seasonStore } from "$lib/stores/season-store";
 
   let activeTab: string = "fixtures";
   let managerCount = 0;
@@ -41,6 +42,7 @@
   let section1Loading = true;
   let section2Loading = true;
   let section3Loading = true;
+  let seasonName = "";
 
   onMount(async () => {
     try {
@@ -48,6 +50,9 @@
       authStore.subscribe((store) => {
         isLoggedIn = store.identity !== null && store.identity !== undefined;
       });
+      await systemStore.sync();
+      await seasonStore.sync();
+      seasonName = await seasonStore.getSeasonName($systemStore?.pickTeamSeasonId ?? 0);
       
       loadSection1();
       loadSection2();
@@ -140,7 +145,7 @@
             {$systemStore?.pickTeamGameweek}
           </p>
           <p class="content-panel-header">
-            -
+            {seasonName}
           </p>
         </div>
         <div class="vertical-divider" />
