@@ -56,7 +56,8 @@
       console.log("syncing monthly store")
       await monthlyLeaderboardStore.sync(
         $systemStore?.calculationSeasonId ?? 1,
-        $systemStore?.calculationMonth ?? 8
+        $systemStore?.calculationMonth ?? 8,
+        1 //TODO
       );
       
       console.log("syncing season store")
@@ -159,7 +160,7 @@
   }
 
   const changeGameweek = (delta: number) => {
-    selectedGameweek = Math.max(1, Math.min(38, selectedGameweek + delta));
+    selectedGameweek = Math.max(1, Math.min(Number(process.env.TOTAL_GAMEWEEKS), selectedGameweek + delta));
   };
 
   function changeMonth(delta: number) {

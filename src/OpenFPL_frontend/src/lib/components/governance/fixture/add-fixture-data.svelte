@@ -15,7 +15,7 @@
   export let visible: boolean;
   export let closeModal: () => void;
 
-  let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
+  let gameweeks = Array.from({ length: Number(process.env.TOTAL_GAMEWEEKS) }, (_, i) => i + 1);
   let selectedGameweek: number = 1;
   let selectedFixtureId: number;
   let gameweekFixtures: FixtureDTO[] = [];

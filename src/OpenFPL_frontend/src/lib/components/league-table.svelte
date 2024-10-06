@@ -49,7 +49,7 @@
   }
 
   const changeGameweek = (delta: number) => {
-    selectedGameweek = Math.max(1, Math.min(38, selectedGameweek + delta));
+    selectedGameweek = Math.max(1, Math.min(Number(process.env.TOTAL_GAMEWEEKS), selectedGameweek + delta));
   };
 
   function getTeamFromId(teamId: number): ClubDTO | undefined {

@@ -14,7 +14,7 @@ import NetworkEnvironmentVariables "../network_environment_variables";
 
 module {
 
-  public class SeasonManager() {
+  public class SeasonManager(totalGameweeks: Nat8) {
 
     var systemState : T.SystemState = {
       calculationGameweek = 7;
@@ -104,7 +104,7 @@ module {
     public func setNextPickTeamGameweek() : async () {
       
       var pickTeamGameweek : T.GameweekNumber = 1;
-      if (systemState.pickTeamGameweek < 38) {
+      if (systemState.pickTeamGameweek < totalGameweeks) {
         pickTeamGameweek := systemState.pickTeamGameweek + 1;
       };
 

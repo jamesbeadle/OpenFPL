@@ -112,7 +112,7 @@
 
   const changeGameweek = (delta: number) => {
     isLoading = true;
-    $selectedGameweek = Math.max(1, Math.min(38, $selectedGameweek! + delta));
+    $selectedGameweek = Math.max(1, Math.min(Number(process.env.TOTAL_GAMEWEEKS), $selectedGameweek! + delta));
   };
 
   function getPlayerDTO(playerId: number): PlayerDTO | null {

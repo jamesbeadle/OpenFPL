@@ -10,7 +10,7 @@
 
   let fixturesWithTeams: FixtureWithTeams[] = [];
   let selectedGameweek: number;
-  let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
+  let gameweeks = Array.from({ length: Number(process.env.TOTAL_GAMEWEEKS) }, (_, i) => i + 1);
 
   $: filteredFixtures = fixturesWithTeams.filter(
     ({ fixture }) => fixture.gameweek === selectedGameweek
@@ -50,7 +50,7 @@
   });
 
   const changeGameweek = (delta: number) => {
-    selectedGameweek = Math.max(1, Math.min(38, selectedGameweek + delta));
+    selectedGameweek = Math.max(1, Math.min(Number(process.env.TOTAL_GAMEWEEKS), selectedGameweek + delta));
   };
 
   function getTeamFromId(teamId: number): ClubDTO | undefined {
@@ -85,10 +85,10 @@
 
       <button
         class={`${
-          selectedGameweek === 38 ? "bg-gray-500" : "fpl-button"
+          selectedGameweek === Number(process.env.TOTAL_GAMEWEEKS) ? "bg-gray-500" : "fpl-button"
         } default-button ml-1`}
         on:click={() => changeGameweek(1)}
-        disabled={selectedGameweek === 38}
+        disabled={selectedGameweek === Number(process.env.TOTAL_GAMEWEEKS)}
       >
         &gt;
       </button>

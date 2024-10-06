@@ -39,7 +39,7 @@
     
     private let userManager = UserManager.UserManager(Environment.BACKEND_CANISTER_ID, Environment.NUM_OF_GAMEWEEKS);
     private let dataManager = DataManager.DataManager();
-    private let seasonManager = SeasonManager.SeasonManager();
+    private let seasonManager = SeasonManager.SeasonManager(Environment.NUM_OF_GAMEWEEKS);
     private let leaderboardManager = LeaderboardManager.LeaderboardManager(Environment.BACKEND_CANISTER_ID, Environment.NUM_OF_GAMEWEEKS, Environment.NUM_OF_MONTHS);
     private let cyclesDispenser = CyclesDispenser.CyclesDispenser();
     private let ledger : FPLLedger.Interface = actor (FPLLedger.CANISTER_ID);
@@ -1232,6 +1232,10 @@
     };
 
     private func postUpgradeCallback() : async (){
+
+      //TODO now
+      //set system state
+
       //await checkCanisterCycles(); 
       //await setSystemTimers();
       await seasonManager.updateDataHash("clubs");
