@@ -34,7 +34,6 @@ function createFixtureStore() {
     const localHash = localStorage.getItem(`${category}_hash`);
     if (categoryHash?.hash != localHash) {
       let dto: RequestFixturesDTO = {
-        leagueId: 2,
         seasonId: seasonId,
       };
       console.log("here");

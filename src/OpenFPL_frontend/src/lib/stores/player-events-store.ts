@@ -59,7 +59,6 @@ function createPlayerEventsStore() {
 
     if (categoryHash?.hash != localHash) {
       let dto: GameweekFiltersDTO = {
-        leagueId: 1,
         seasonId: systemState.calculationSeasonId,
         gameweek: systemState.calculationGameweek,
       };
@@ -109,7 +108,6 @@ function createPlayerEventsStore() {
   ): Promise<PlayerDetailDTO> {
     try {
       let dto: GetPlayerDetailsDTO = {
-        leagueId: 1,
         playerId: playerId,
         seasonId: seasonId,
       };
@@ -137,7 +135,6 @@ function createPlayerEventsStore() {
       allPlayerEvents = await getPlayerEvents();
     } else {
       let dto: GameweekFiltersDTO = {
-        leagueId: 1,
         seasonId: systemState.calculationSeasonId,
         gameweek,
       };
