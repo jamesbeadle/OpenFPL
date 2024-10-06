@@ -295,6 +295,7 @@
           switch(await dataManager.validateRevaluePlayerUp(Environment.LEAGUE_ID, revaluePlayerUpDTO)){
             case (#ok success){
               let _ = await dataManager.executeRevaluePlayerUp(Environment.LEAGUE_ID, revaluePlayerUpDTO);
+              await seasonManager.updateDataHash("players");
             };
             case _ {}
           };
@@ -317,6 +318,7 @@
       switch(await dataManager.validateRevaluePlayerDown(Environment.LEAGUE_ID, revaluePlayerDownDTO)){
         case (#ok success){
           let _ = await dataManager.executeRevaluePlayerDown(Environment.LEAGUE_ID, revaluePlayerDownDTO);
+          await seasonManager.updateDataHash("players");
         };
         case _ {}
       };
@@ -443,6 +445,7 @@
                 }
               };
 
+              await seasonManager.updateDataHash("fixtures");
             };
             case _ {}
           };
@@ -463,6 +466,7 @@
       switch(await dataManager.validateMoveFixture(Environment.LEAGUE_ID, moveFixtureDTO)){
         case (#ok success){
           let _ = await dataManager.executeMoveFixture(Environment.LEAGUE_ID, moveFixtureDTO);
+          await seasonManager.updateDataHash("fixtures");
         };
         case _ {}
       };
@@ -480,6 +484,7 @@
       switch(await dataManager.validatePostponeFixture(Environment.LEAGUE_ID, postponeFixtureDTO)){
         case (#ok success){
           let _ =  await dataManager.executePostponeFixture(Environment.LEAGUE_ID, postponeFixtureDTO);
+          await seasonManager.updateDataHash("fixtures");
         };
         case _ {}
       };
@@ -497,6 +502,7 @@
       switch(await dataManager.validateRescheduleFixture(Environment.LEAGUE_ID, rescheduleFixtureDTO)){
         case (#ok success){
           let _ = await dataManager.executeRescheduleFixture(Environment.LEAGUE_ID, rescheduleFixtureDTO);
+          await seasonManager.updateDataHash("fixtures");
         };
         case _ {}
       };
@@ -514,6 +520,7 @@
       switch(await dataManager.validateLoanPlayer(Environment.LEAGUE_ID, loanPlayerDTO)){
         case (#ok success){
           let _ = await dataManager.executeLoanPlayer(Environment.LEAGUE_ID, loanPlayerDTO);
+          await seasonManager.updateDataHash("players");
         };
         case _ {}
       };
@@ -531,6 +538,7 @@
       switch(await dataManager.validateTransferPlayer(Environment.LEAGUE_ID, transferPlayerDTO)){
         case (#ok success){
           let _ = await dataManager.executeTransferPlayer(Environment.LEAGUE_ID, transferPlayerDTO);
+          await seasonManager.updateDataHash("players");
         };
         case _ {}
       };
@@ -548,6 +556,7 @@
       switch(await dataManager.validateRecallPlayer(Environment.LEAGUE_ID, recallPlayerDTO)){
         case (#ok success){
           let _ = await dataManager.executeRecallPlayer(Environment.LEAGUE_ID, recallPlayerDTO);
+          await seasonManager.updateDataHash("players");
         };
         case _ {}
       };
@@ -565,6 +574,7 @@
       switch(await dataManager.validateCreatePlayer(Environment.LEAGUE_ID, createPlayerDTO)){
         case (#ok success){
           let _ = await dataManager.executeCreatePlayer(Environment.LEAGUE_ID, createPlayerDTO);
+          await seasonManager.updateDataHash("players");
         };
         case _ {}
       };
@@ -582,6 +592,7 @@
       switch(await dataManager.validateUpdatePlayer(Environment.LEAGUE_ID, updatePlayerDTO)){
         case (#ok success){
           let _ = await dataManager.executeUpdatePlayer(Environment.LEAGUE_ID, updatePlayerDTO);
+          await seasonManager.updateDataHash("players");
         };
         case _ {}
       };
@@ -599,6 +610,7 @@
       switch(await dataManager.validateSetPlayerInjury(Environment.LEAGUE_ID, setPlayerInjuryDTO)){
         case (#ok success){
           let _ = await dataManager.executeSetPlayerInjury(Environment.LEAGUE_ID, setPlayerInjuryDTO);
+          await seasonManager.updateDataHash("players");
         };
         case _ {}
       };
@@ -616,6 +628,7 @@
       switch(await dataManager.validateRetirePlayer(Environment.LEAGUE_ID, retirePlayerDTO)){
         case (#ok success){
           let _ = await dataManager.executeRetirePlayer(Environment.LEAGUE_ID, retirePlayerDTO);
+          await seasonManager.updateDataHash("players");
         };
         case _ {}
       };
@@ -633,6 +646,7 @@
       switch(await dataManager.validateUnretirePlayer(Environment.LEAGUE_ID, unretirePlayerDTO)){
         case (#ok success){
           let _ = await dataManager.executeUnretirePlayer(Environment.LEAGUE_ID, unretirePlayerDTO);
+          await seasonManager.updateDataHash("players");
         };
         case _ {}
       };
@@ -650,6 +664,7 @@
       switch(await dataManager.validatePromoteNewClub(Environment.LEAGUE_ID, promoteNewClubDTO)){
         case (#ok success){
           let _ = await dataManager.executePromoteNewClub(Environment.LEAGUE_ID, promoteNewClubDTO);
+          await seasonManager.updateDataHash("clubs");
         };
         case _ {}
       };
@@ -667,6 +682,7 @@
       switch(await dataManager.validateUpdateClub(Environment.LEAGUE_ID, updateClubDTO)){
         case (#ok success){
           let _ = await dataManager.executeUpdateClub(Environment.LEAGUE_ID, updateClubDTO);
+          await seasonManager.updateDataHash("clubs");
         };
         case _ {}
       };
