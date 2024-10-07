@@ -1,1 +1,2 @@
-import{x as m}from"../chunks/index.Ctk6tIDP.js";export{m as component};
+import { x as m } from "../chunks/index.Ctk6tIDP.js";
+export { m as component };

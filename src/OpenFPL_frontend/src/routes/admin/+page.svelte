@@ -1,6 +1,5 @@
 <script lang="ts">
     import ViewPayoutModal from '../../lib/components/admin/view-payout-modal.svelte';
-	import { OpenFPL_frontend } from './../../../../../.dfx/ic/canisters/OpenFPL_frontend/index.js';
     
     let activeTab: string = 'cycles';
 
@@ -49,6 +48,13 @@
             </div>
         </section>
     {/if}
+    
+    {#if activeTab === 'snapshot'}
+    <section class="snapshot-managers">
+        <h2>Snapshot Managers</h2>
+        <button>Snapshot Manager</button>
+    </section>
+    {/if}
 
     {#if activeTab === 'points'}
         <section class="recalculate-points">
@@ -62,6 +68,13 @@
             <h2>View Payouts</h2>
             <button>View Payout</button>
         </section>
+    {/if}
+
+    {#if activeTab === 'reward'}
+    <section class="update-rewardpool">
+        <h2>Update Reward Pools</h2>
+        <button>Change Reward Pools</button>
+    </section>
     {/if}
 
     {#if activeTab === 'state'}
