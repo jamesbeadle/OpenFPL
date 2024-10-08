@@ -10,7 +10,7 @@ import { isError, replacer } from "../utils/helpers";
 
 function createSeasonStore() {
   const { subscribe, set } = writable<SeasonDTO[]>([]);
-
+  console.log('Creating actor in season store line 14');
   let actor: any = ActorFactory.createActor(
     idlFactory,
     process.env.OPENFPL_BACKEND_CANISTER_ID,
@@ -18,6 +18,7 @@ function createSeasonStore() {
 
   async function sync() {
     const category = "seasons";
+    console.log('Actor getting data hashes in season store sync line 21');
     const newHashValues = await actor.getDataHashes();
 
     let error = isError(newHashValues);
@@ -33,6 +34,7 @@ function createSeasonStore() {
 
     const localHash = localStorage.getItem(`${category}_hash`);
     if (categoryHash?.hash != localHash) {
+      console.log('Actor getting season line 38');
       const result = await actor.getSeasons(1);
 
       if (isError(result)) {

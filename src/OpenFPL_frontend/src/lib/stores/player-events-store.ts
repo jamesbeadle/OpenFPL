@@ -34,7 +34,7 @@ function createPlayerEventsStore() {
 
   let allFixtures: FixtureDTO[];
   fixtureStore.subscribe((value) => (allFixtures = value));
-
+  console.log('Creating actor in player events store line 38');
   let actor: any = ActorFactory.createActor(
     idlFactory,
     process.env.OPENFPL_BACKEND_CANISTER_ID,
@@ -42,6 +42,7 @@ function createPlayerEventsStore() {
 
   async function sync() {
     let category = "player_events";
+    console.log('actor getting data hashes in player events store sync line 45');
     const newHashValues = await actor.getDataHashes();
 
     let error = isError(newHashValues);
@@ -62,6 +63,7 @@ function createPlayerEventsStore() {
         seasonId: systemState.calculationSeasonId,
         gameweek: systemState.calculationGameweek,
       };
+      console.log('actor getting player details for gameweek in player events store sync line 66');
       let result = await actor.getPlayerDetailsForGameweek(dto);
 
       if (isError(result)) {
@@ -111,6 +113,7 @@ function createPlayerEventsStore() {
         playerId: playerId,
         seasonId: seasonId,
       };
+      console.log('actor getting player details line 116');
       let result = await actor.getPlayerDetails(dto);
 
       if (isError(result)) {
@@ -138,6 +141,7 @@ function createPlayerEventsStore() {
         seasonId: systemState.calculationSeasonId,
         gameweek,
       };
+      console.log('Actor getting player details in getgameweekPlayers line 145');
       allPlayerEvents = await actor.getPlayerDetailsForGameweek(dto);
     }
 

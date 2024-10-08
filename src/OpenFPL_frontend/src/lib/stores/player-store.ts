@@ -23,7 +23,7 @@ function createPlayerStore() {
 
   let allFixtures: FixtureDTO[];
   fixtureStore.subscribe((value) => (allFixtures = value));
-
+  console.log('Creating actor in player store line 26');
   let actor: any = ActorFactory.createActor(
     idlFactory,
     process.env.OPENFPL_BACKEND_CANISTER_ID,
@@ -31,7 +31,7 @@ function createPlayerStore() {
 
   async function sync() {
     let category = "players";
-
+    console.log('actor getting data hashes in player store sync line 35');
     const newHashValues = await actor.getDataHashes();
 
     let error = isError(newHashValues);
@@ -48,6 +48,7 @@ function createPlayerStore() {
     const localHash = localStorage.getItem(`${category}_hash`);
 
     if (categoryHash?.hash != localHash) {
+      console.log('Actor getting players in players store sync');
       let result = await actor.getPlayers();
 
       if (isError(result)) {
@@ -87,6 +88,7 @@ function createPlayerStore() {
       leagueId: 1,
       clubId: clubId,
     };
+    console.log('Actor getting loaned players line 92');
     let loanedPlayers = await actor.getLoanedPlayers(dto);
 
     if (isError(loanedPlayers)) {
@@ -102,6 +104,7 @@ function createPlayerStore() {
       leagueId: 1,
       clubId: clubId,
     };
+    console.log('Actor getting retired players line 108');
     let retiredPlayers = await actor.getRetiredPlayers(dto);
 
     if (isError(retiredPlayers)) {
