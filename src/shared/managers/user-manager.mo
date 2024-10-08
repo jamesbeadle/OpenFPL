@@ -592,31 +592,20 @@ module {
     };
 
     private func createManagerCanister() : async Text {
-      Debug.print("creating manager canister");
       Cycles.add<system>(50_000_000_000_000);
-      Debug.print("step 1");
-      Debug.print(debug_show controllerPrincipalId);
-      Debug.print(debug_show fixturesPerClub);
       let canister = await ManagerCanister._ManagerCanister();
-      Debug.print("step almost 2");
       await canister.initialise(controllerPrincipalId, fixturesPerClub);
-      Debug.print("step 2");
       let IC : Management.Management = actor (NetworkEnvironmentVariables.Default);
-      Debug.print("step 3");
       let principal = ?Principal.fromText(controllerPrincipalId);
-      Debug.print("step 4");
       let _ = await Utilities.updateCanister_(canister, principal, IC);
 
-      Debug.print("step 5");
       let canister_principal = Principal.fromActor(canister);
-      Debug.print("step 6");
       let canisterId = Principal.toText(canister_principal);
 
       if (canisterId == "") {
         return canisterId;
       };
-      Debug.print("step 7");
-
+      
       let uniqueCanisterIdBuffer = Buffer.fromArray<T.CanisterId>(List.toArray(uniqueManagerCanisterIds));
       uniqueCanisterIdBuffer.add(canisterId);
       uniqueManagerCanisterIds := List.fromArray(Buffer.toArray(uniqueCanisterIdBuffer));

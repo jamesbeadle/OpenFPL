@@ -26,7 +26,7 @@ function createPlayerStore() {
 
   let actor: any = ActorFactory.createActor(
     idlFactory,
-    process.env.OPENWSL_BACKEND_CANISTER_ID,
+    process.env.OPENFPL_BACKEND_CANISTER_ID,
   );
 
   async function sync() {
@@ -48,9 +48,8 @@ function createPlayerStore() {
     const localHash = localStorage.getItem(`${category}_hash`);
 
     if (categoryHash?.hash != localHash) {
-      console.log("fetching players");
       let result = await actor.getPlayers();
-      console.log(result);
+
       if (isError(result)) {
         console.error("Error fetching players data");
         return;
@@ -85,7 +84,7 @@ function createPlayerStore() {
 
   async function getLoanedPlayers(clubId: number): Promise<PlayerDTO[]> {
     let dto: ClubFilterDTO = {
-      leagueId: 2,
+      leagueId: 1,
       clubId: clubId,
     };
     let loanedPlayers = await actor.getLoanedPlayers(dto);
@@ -100,7 +99,7 @@ function createPlayerStore() {
 
   async function getRetiredPlayers(clubId: number): Promise<PlayerDTO[]> {
     let dto: ClubFilterDTO = {
-      leagueId: 2,
+      leagueId: 1,
       clubId: clubId,
     };
     let retiredPlayers = await actor.getRetiredPlayers(dto);

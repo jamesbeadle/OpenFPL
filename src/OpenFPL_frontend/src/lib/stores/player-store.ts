@@ -29,7 +29,7 @@ function createPlayerStore() {
     process.env.OPENFPL_BACKEND_CANISTER_ID,
   );
 
-  async function sync(seasonId: SeasonId) {
+  async function sync() {
     let category = "players";
 
     const newHashValues = await actor.getDataHashes();
@@ -48,7 +48,7 @@ function createPlayerStore() {
     const localHash = localStorage.getItem(`${category}_hash`);
 
     if (categoryHash?.hash != localHash) {
-      let result = await actor.getPlayers(seasonId);
+      let result = await actor.getPlayers();
 
       if (isError(result)) {
         console.error("Error fetching players data");

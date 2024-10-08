@@ -1504,6 +1504,10 @@
 
     //Admin dashboard functions
 
+    public shared ({ caller }) func getUniqueManagerCanisterIds() : async Result.Result<[T.CanisterId], T.Error> {
+      return #ok(userManager.getUniqueManagerCanisterIds());
+    };
+
     public shared ({ caller }) func getStaticCanisters() : async Result.Result<Responses.StaticCanistersDTO, T.Error> {
       //TODO: Add isadmin check
       return #err(#NotFound);

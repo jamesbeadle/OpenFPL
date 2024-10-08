@@ -16,6 +16,7 @@ function createCountriesStore() {
   );
 
   async function sync() {
+    console.log("syncing country store")
     let category = "countries";
     const newHashValues = await actor.getDataHashes();
 
@@ -32,6 +33,7 @@ function createCountriesStore() {
     const localHash = localStorage.getItem(`${category}_hash`);
 
     if (categoryHash?.hash != localHash) {
+      console.log("calling get countries in country store line 35")
       let result = await actor.getCountries();
 
       if (isError(result)) {

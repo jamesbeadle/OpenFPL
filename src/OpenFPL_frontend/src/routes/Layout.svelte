@@ -40,11 +40,12 @@
 
   onMount(async () => {
     try {
-      console.log("Mounting data stores.")
+      console.log("Mounting data stores.");
       await authStore.sync();
       await systemStore.sync();
       await teamStore.sync();
       await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
+      console.log("syncing player store")
       await playerStore.sync();
       console.log("Data stores mounted.")
     } catch (error) {
