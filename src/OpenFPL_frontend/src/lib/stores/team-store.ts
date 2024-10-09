@@ -9,7 +9,7 @@ import { isError, replacer } from "../utils/helpers";
 
 function createTeamStore() {
   const { subscribe, set } = writable<ClubDTO[]>([]);
-
+  console.log('Creating actor in createTeamstore line 13');
   let actor: any = ActorFactory.createActor(
     idlFactory,
     process.env.OPENFPL_BACKEND_CANISTER_ID,
@@ -17,6 +17,7 @@ function createTeamStore() {
 
   async function sync() {
     const category = "clubs";
+    console.log('Actor getting data hashes in team store sync line 21');
     const newHashValues = await actor.getDataHashes();
 
     let error = isError(newHashValues);
@@ -33,6 +34,7 @@ function createTeamStore() {
     const localHash = localStorage.getItem(`${category}_hash`);
 
     if (categoryHash?.hash != localHash) {
+      console.log('Actor getting clubs line 38');
       const updatedTeamsData = await actor.getClubs();
 
       if (isError(updatedTeamsData)) {

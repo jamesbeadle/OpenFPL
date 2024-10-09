@@ -9,14 +9,14 @@ import { isError, replacer } from "../utils/helpers";
 
 function createCountriesStore() {
   const { subscribe, set } = writable<CountryDTO[]>([]);
-
+  console.log("creating country store line 13")
   let actor: any = ActorFactory.createActor(
     idlFactory,
     process.env.OPENFPL_BACKEND_CANISTER_ID,
   );
 
   async function sync() {
-    console.log("syncing country store")
+    console.log("syncing country store line 21");
     let category = "countries";
     const newHashValues = await actor.getDataHashes();
 

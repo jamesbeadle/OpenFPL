@@ -11,6 +11,7 @@ import { isError, replacer } from "../utils/helpers";
 function createFixtureStore() {
   const { subscribe, set } = writable<FixtureDTO[]>([]);
 
+  console.log('Creating actor in fixture store line 15');
   let actor: any = ActorFactory.createActor(
     idlFactory,
     process.env.OPENFPL_BACKEND_CANISTER_ID,
@@ -18,6 +19,7 @@ function createFixtureStore() {
 
   async function sync(seasonId: number) {
     const category = "fixtures";
+    console.log('Actor getting Data hashes in sync on line 23');
     const newHashValues = await actor.getDataHashes();
 
     let error = isError(newHashValues);
@@ -36,6 +38,8 @@ function createFixtureStore() {
       let dto: RequestFixturesDTO = {
         seasonId: seasonId,
       };
+
+      console.log('Actor getting fixtures line 43');
       const result = await actor.getFixtures(dto);
 
       if (isError(result)) {
@@ -79,6 +83,7 @@ function createFixtureStore() {
 
   async function getPostponedFixtures(): Promise<FixtureDTO[]> {
     try {
+      console.log('Actor getting postponed fixtures');
       let result = await actor.getPostponedFixtures();
 
       if (isError(result)) {

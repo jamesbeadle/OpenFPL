@@ -16,15 +16,18 @@ import { authStore } from "./auth.store";
 
 function createSystemStore() {
   const { subscribe, set } = writable<SystemStateDTO | null>(null);
+  console.log('Create actor in createSystemStore line 19');
   let actor: any = ActorFactory.createActor(
     idlFactory,
     process.env.OPENFPL_BACKEND_CANISTER_ID,
   );
 
   async function sync() {
+    console.log('Syncing system and auth store');
     await authStore.sync();
 
     let category = "system_state";
+    console.log('Actor getting data hashes in system store sync line 30');
     const newHashValues = await actor.getDataHashes();
 
     let error = isError(newHashValues);
@@ -41,6 +44,7 @@ function createSystemStore() {
     const localHash = localStorage.getItem(`${category}_hash`);
 
     if (categoryHash != localHash) {
+      console.log('Actor getting system state line 47');
       let result = await actor.getSystemState();
       if (isError(result)) {
         console.error("Error syncing system store");
@@ -77,6 +81,7 @@ function createSystemStore() {
 
   async function getSeasons(): Promise<SeasonDTO[]> {
     try {
+      console.log('Actor getting seasons line 84');
       let result = await actor.getSeasons();
 
       if (isError(result)) {
@@ -96,6 +101,7 @@ function createSystemStore() {
     filter: CanisterType,
   ): Promise<GetCanistersDTO | undefined> {
     try {
+      console.log('Creating actor in getCanisters line 104');
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
@@ -111,7 +117,7 @@ function createSystemStore() {
         entries: [],
         canisterTypeFilter: filter,
       };
-
+      console.log('Actor getting canisters line 120');
       let result = await identityActor.getCanisters(dto);
 
       if (isError(result)) {
@@ -129,6 +135,7 @@ function createSystemStore() {
     seasonId: SeasonId,
   ): Promise<GetRewardPoolDTO | undefined> {
     try {
+      console.log('Creating actor in getRewardPool line 138');
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
@@ -148,6 +155,7 @@ function createSystemStore() {
           weeklyLeaderboardPool: 0n,
         },
       };
+      console.log('Actor getting reward pool line 159');
       let result = await identityActor.getRewardPool(dto);
 
       if (isError(result)) {
@@ -166,6 +174,7 @@ function createSystemStore() {
     itemsPerPage: number,
   ): Promise<GetTopupsDTO | undefined> {
     try {
+      console.log('Creating actor in getTopups line 15');
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
@@ -180,7 +189,7 @@ function createSystemStore() {
         offset: BigInt(offset),
         limit: BigInt(limit),
       };
-
+      console.log('Actor getting topups line 193');
       let result = await identityActor.getTopups(dto);
 
       if (isError(result)) {
@@ -196,10 +205,12 @@ function createSystemStore() {
 
   async function getBackendCanisterBalance(): Promise<bigint | undefined> {
     try {
+      console.log('Creating actor in getBackendCanisterBalance line 209');
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
+      console.log('Actor getting backend canister balance line 214');
       let result = await identityActor.getBackendCanisterBalance();
 
       if (isError(result)) {
@@ -221,6 +232,7 @@ function createSystemStore() {
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
+      console.log('Actor getting canister cycles balance line 236');
       let result = await identityActor.getCanisterCyclesBalance();
 
       if (isError(result)) {

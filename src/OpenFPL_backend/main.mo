@@ -31,7 +31,7 @@
   import UserManager "../shared/managers/user-manager";
   import SeasonManager "../shared/managers/season-manager";
   import CyclesDispenser "../shared/cycles-dispenser";
-  import Environment "./environment";
+  import Environment "./Environment";
   import NetworkEnvironmentVariables "../shared/network_environment_variables";
   import Responses "../shared/ResponseDTOs";
 

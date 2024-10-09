@@ -14,12 +14,14 @@ function createWeeklyLeaderboardStore() {
   const itemsPerPage = 25;
   const category = "weekly_leaderboard";
 
+  console.log('Creating actor in weekly leaderboard store line 18');
   let actor: any = ActorFactory.createActor(
     idlFactory,
     process.env.OPENFPL_BACKEND_CANISTER_ID,
   );
 
   async function sync(seasonId: number, gameweek: number) {
+    console.log('Actor getting data hashes in weekly leaderboard store sync line 25');
     const newHashValues = await actor.getDataHashes();
 
     let error = isError(newHashValues);
@@ -45,7 +47,7 @@ function createWeeklyLeaderboardStore() {
         searchTerm: "",
         gameweek: gameweek,
       };
-
+      console.log('Actor getting weekly leaderboard line 51');
       let result = await actor.getWeeklyLeaderboard(dto);
       if (isError(result)) {
         let emptyLeaderboard = {
@@ -111,7 +113,7 @@ function createWeeklyLeaderboardStore() {
       searchTerm: searchTerm,
       gameweek: gameweek,
     };
-
+    console.log('Actor getting weekly leaderboard line 117');
     let leaderboardData = await actor.getWeeklyLeaderboard(dto);
     if (isError(leaderboardData)) {
       let emptyLeaderboard = {
@@ -149,7 +151,7 @@ function createWeeklyLeaderboardStore() {
       searchTerm: "",
       gameweek: gameweek,
     };
-
+    console.log('Actor getting weekly leaderboard line 155');
     let leaderboardData = await actor.getWeeklyLeaderboard(dto);
 
     if (isError(leaderboardData)) {
