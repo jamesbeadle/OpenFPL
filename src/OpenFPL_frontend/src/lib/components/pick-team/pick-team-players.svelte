@@ -3,7 +3,7 @@
   import { writable, type Writable } from "svelte/store";
   import { toastsError } from "$lib/stores/toasts-store";
   import { systemStore } from "$lib/stores/system-store";
-  import { teamStore } from "$lib/stores/team-store";
+  import { clubStore } from "$lib/stores/club-store";
   import { playerStore } from "$lib/stores/player-store";
 
   import { getPositionAbbreviation, getFlagComponent, convertPlayerPosition } from "../../utils/helpers";
@@ -548,7 +548,7 @@
                   class="flex flex-col justify-center items-center flex-1 player-card"
                 >
                   {#if playerId > 0 && player}
-                    {@const team = $teamStore.find((x) => x.id === player.clubId)}
+                    {@const team = $clubStore.find((x) => x.id === player.clubId)}
                     <div class="flex flex-col items-center text-center">
                       <div class="flex justify-center items-center">
                         <div class="flex justify-between items-end w-full">
@@ -708,7 +708,7 @@
           {@const playerIds = $fantasyTeam?.playerIds ?? []}
           {@const playerId = playerIds[actualIndex]}
           {@const player = $playerStore.find((p) => p.id === playerId)}
-          {@const team = $teamStore.find((x) => x.id === player?.clubId)}
+          {@const team = $clubStore.find((x) => x.id === player?.clubId)}
 
           <div class="flex items-center justify-between py-2 px-4">
             {#if playerId > 0 && player}

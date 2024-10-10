@@ -4,7 +4,7 @@
   import { playerStore } from "$lib/stores/player-store";
   import { Modal } from "@dfinity/gix-components";
   import type { PlayerDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import { teamStore } from "$lib/stores/team-store";
+  import { teamStore } from "$lib/stores/club-store";
   import LocalSpinner from "$lib/components/local-spinner.svelte";
   import { isError } from "$lib/utils/helpers";
   import { toastsError } from "$lib/stores/toasts-store";

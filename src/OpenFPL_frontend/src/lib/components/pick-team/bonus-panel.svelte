@@ -7,6 +7,7 @@
   import { BonusType } from "$lib/enums/BonusType";
   import UseBonusModal from "$lib/components/pick-team/use-bonus-modal.svelte";
   import Tooltip from "../tooltip.svelte";
+    import { storeManager } from "$lib/managers/store-manager";
 
   export let fantasyTeam: Writable<PickTeamDTO | null>;
 
@@ -129,7 +130,7 @@
   }
 
   onMount(async () => {
-    await systemStore.sync();
+    await storeManager.syncStores();
     updateBonuses();
     $weeklyBonusPlayed = bonusPlayedThisWeek();
   });

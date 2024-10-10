@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { teamStore } from "$lib/stores/team-store";
+    import { clubStore } from "$lib/stores/club-store";
     import { systemStore } from "$lib/stores/system-store";
     import { toastsError } from "$lib/stores/toasts-store";
     import { fixtureStore } from "$lib/stores/fixture-store";
@@ -17,6 +17,7 @@
     import type { PlayerDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     import { playerStore } from "$lib/stores/player-store";
     import { Position } from "$lib/enums/Position";
+    import { storeManager } from "$lib/managers/store-manager";
   
     export let clubId: number | null = null;
   
@@ -33,10 +34,7 @@
 
     onMount(async () => {
       try {
-        await teamStore.sync();
-        if ($teamStore.length == 0) return;
-        await systemStore.sync();
-        await playerStore.sync();
+        await storeManager.syncStores();
 
         if(clubId){
             loanedPlayers = await playerStore.getLoanedPlayers(clubId);

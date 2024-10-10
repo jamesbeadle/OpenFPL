@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { writable, type Writable } from "svelte/store";
-  import { teamStore } from "$lib/stores/team-store";
+  import { clubStore } from "$lib/stores/club-store";
   import { playerStore } from "$lib/stores/player-store";
   import { toastsError } from "$lib/stores/toasts-store";
   import type { PlayerDTO, PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
@@ -10,6 +10,7 @@
   import { Modal } from "@dfinity/gix-components";
   import { convertPlayerPosition } from "$lib/utils/helpers";
   import { allFormations } from "$lib/utils/pick-team.helpers";
+    import { storeManager } from "$lib/managers/store-manager";
 
   export let visible: boolean;
   export let closeAddPlayerModal: () => void;
@@ -94,10 +95,8 @@
 
   onMount(async () => {
     try {
-      await teamStore.sync();
-      if ($teamStore.length == 0) return;
-      await playerStore.sync();
-
+      await storeManager.syncStores();
+      
       let team = $fantasyTeam;
       teamPlayerCounts = countPlayersByTeam(team?.playerIds ?? []);
     } catch (error) {
@@ -176,7 +175,7 @@
 
   function addTeamDataToPlayers(players: PlayerDTO[]): any[] {
     return players.map((player) => {
-      const team = $teamStore.find((t) => t.id === player.clubId);
+      const team = $clubStore.find((t) => t.id === player.clubId);
       return { ...player, team };
     });
   }
@@ -214,7 +213,7 @@
             bind:value={filterTeam}
           >
             <option value={-1}>All</option>
-            {#each $teamStore as team}
+            {#each $clubStore as team}
               <option value={team.id}>{team.friendlyName}</option>
             {/each}
           </select>

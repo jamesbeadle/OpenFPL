@@ -4,7 +4,7 @@
   import { systemStore } from "$lib/stores/system-store";
   import { toastsError } from "$lib/stores/toasts-store";
   import { seasonStore } from "$lib/stores/season-store";
-  import { teamStore } from "$lib/stores/team-store";
+  import { clubStore } from "$lib/stores/club-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
@@ -17,6 +17,7 @@
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
   import { playerEventsStore } from "$lib/stores/player-events-store";
     import LocalSpinner from "./local-spinner.svelte";
+    import { storeManager } from "$lib/managers/store-manager";
 
   let isLoading = true;
   let selectedGameweek: number;
@@ -32,13 +33,8 @@
 
   onMount(async () => {
     try {
-      await teamStore.sync();
-      if ($teamStore.length == 0) return;
-      await systemStore.sync();
-      await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
-      await playerEventsStore.sync;
-      await seasonStore.sync();
-      seasonName = await seasonStore.getSeasonName($systemStore?.calculationSeasonId ?? 0)
+      await storeManager.syncStores();
+      seasonName = await seasonStore.getSeasonName($systemStore?.calculationSeasonId ?? 0) ?? "";
       selectedGameweek = $systemStore?.calculationGameweek ?? 1;
 
       fixturesWithTeams = $fixtureStore.map((fixture) => ({
@@ -63,7 +59,7 @@
   });
 
   function getTeamFromId(teamId: number): ClubDTO | undefined {
-    return $teamStore.find((team) => team.id === teamId);
+    return $clubStore.find((team) => team.id === teamId);
   }
 
   function getOpponentFromFixtureId(fixtureId: number): ClubDTO {
@@ -77,7 +73,7 @@
         ? fixture?.awayTeam?.id
         : fixture?.homeTeam?.id;
 
-    let opponent = $teamStore.find((team) => team.id === opponentId);
+    let opponent = $clubStore.find((team) => team.id === opponentId);
 
     if (!opponent) {
       return {

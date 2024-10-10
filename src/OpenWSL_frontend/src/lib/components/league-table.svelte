@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { toastsError } from "$lib/stores/toasts-store";
-  import { teamStore } from "$lib/stores/team-store";
+  import { teamStore } from "$lib/stores/club-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { systemStore } from "$lib/stores/system-store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";

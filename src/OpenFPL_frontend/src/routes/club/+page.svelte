@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { teamStore } from "$lib/stores/team-store";
+  import { clubStore } from "$lib/stores/club-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { playerStore } from "$lib/stores/player-store";
   import { systemStore } from "$lib/stores/system-store";
@@ -25,6 +25,7 @@
   import { Spinner } from "@dfinity/gix-components";
     import LoanedPlayers from "$lib/components/club/loaned-players.svelte";
     import { seasonStore } from "$lib/stores/season-store";
+    import { storeManager } from "$lib/managers/store-manager";
 
   let isLoading = true;
   let fixturesWithTeams: FixtureWithTeams[] = [];
@@ -43,14 +44,9 @@
 
   onMount(async () => {
     try {
-      await teamStore.sync();
-      if ($teamStore.length == 0) return;
-      await systemStore.sync();
-      await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
-      await playerStore.sync();
-      await seasonStore.sync();
+      await storeManager.syncStores();
 
-      seasonName = await seasonStore.getSeasonName($systemStore?.pickTeamSeasonId ?? 0);
+      seasonName = $seasonStore.find(x => x.id == $systemStore?.pickTeamSeasonId)?.name ?? "";
       selectedGameweek = $systemStore?.pickTeamGameweek ?? 1;
 
       let teamFixtures = $fixtureStore.filter(
@@ -65,7 +61,7 @@
           awayTeam: getTeamFromId(fixture.awayClubId),
         }));
 
-      team = $teamStore.find((x) => x.id == id) ?? null;
+      team = $clubStore.find((x) => x.id == id) ?? null;
 
       highestScoringPlayer = $playerStore
         .sort((a, b) => a.totalPoints - b.totalPoints)
@@ -90,16 +86,16 @@
   });
 
   let tableData: any[] = [];
-  $: if (fixturesWithTeams.length > 0 && $teamStore.length > 0) {
+  $: if (fixturesWithTeams.length > 0 && $clubStore.length > 0) {
     tableData = updateTableData(
       fixturesWithTeams,
-      $teamStore,
+      $clubStore,
       selectedGameweek
     );
   }
 
   function getTeamFromId(teamId: number): ClubDTO | undefined {
-    return $teamStore.find((team) => team.id === teamId);
+    return $clubStore.find((team) => team.id === teamId);
   }
 
   function setActiveTab(tab: string): void {

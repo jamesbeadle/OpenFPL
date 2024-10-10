@@ -2,15 +2,16 @@
   import { onMount } from "svelte";
   import { type Writable } from "svelte/store";
   import { systemStore } from "$lib/stores/system-store";
-  import { teamStore } from "$lib/stores/team-store";
+  import { clubStore } from "$lib/stores/club-store";
   import { playerStore } from "$lib/stores/player-store";
 
   import type { Bonus } from "$lib/types/bonus";
   import type { PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { BonusType } from "$lib/enums/BonusType";
   import { Modal } from "@dfinity/gix-components";
-  import { countriesStore } from "$lib/stores/country-store";
+  import { countryStore } from "$lib/stores/country-store";
     import { convertPlayerPosition } from "$lib/utils/helpers";
+    import { storeManager } from "$lib/managers/store-manager";
     
   export let visible: boolean;
   export let fantasyTeam: Writable<PickTeamDTO | null>;
@@ -26,18 +27,16 @@
   let selectedCountry = "";
 
   onMount(async () => {
-    await systemStore.sync();
-    await teamStore.sync();
-    await playerStore.sync();
+    await storeManager.syncStores();
   });
 
   const getUniqueCountries = () => {
-    if (!$countriesStore || !$fantasyTeam || !$fantasyTeam.playerIds) {
+    if (!$countryStore || !$fantasyTeam || !$fantasyTeam.playerIds) {
       return [];
     }
 
     const fantasyTeamPlayerIds = new Set($fantasyTeam.playerIds);
-    const countriesOfFantasyTeamPlayers = $countriesStore
+    const countriesOfFantasyTeamPlayers = $countryStore
       .filter((country) => fantasyTeamPlayerIds.has(country.id))
       .map((country) => country.name);
 
@@ -62,7 +61,7 @@
         .filter((p) => isPlayerInFantasyTeam(p.id))
         .map((p) => p.clubId)
     );
-    return $teamStore
+    return $clubStore
       .filter((t) => teamIds.has(t.id))
       .map((t) => ({ id: t.id, name: t.friendlyName }));
   };

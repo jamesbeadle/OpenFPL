@@ -3,7 +3,7 @@
   import { writable, type Writable } from "svelte/store";
   import { systemStore } from "$lib/stores/system-store";
   import { toastsError } from "$lib/stores/toasts-store";
-  import { teamStore } from "$lib/stores/team-store";
+  import { teamStore } from "$lib/stores/club-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { playerStore } from "$lib/stores/player-store";
   import { playerEventsStore } from "$lib/stores/player-events-store";

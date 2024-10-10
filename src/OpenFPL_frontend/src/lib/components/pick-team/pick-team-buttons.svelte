@@ -11,6 +11,8 @@
   import { convertPlayerPosition } from "$lib/utils/helpers";
   import SetTeamName from "./set-team-name.svelte";
   import LocalSpinner from "../local-spinner.svelte";
+    import { storeManager } from "$lib/managers/store-manager";
+    import { seasonStore } from "$lib/stores/season-store";
 
   export let fantasyTeam: Writable<PickTeamDTO>;
   export let pitchView: Writable<boolean>;
@@ -48,8 +50,7 @@
 
   onMount(async () => {
     try {
-      await systemStore.sync();
-      await playerStore.sync();
+      await storeManager.syncStores();
       loadData();
       disableInvalidFormations()
       console.log($systemStore)
@@ -65,8 +66,7 @@
   });
   
   async function loadData() {
-    let seasons = await systemStore.getSeasons();
-    let foundSeason = seasons.find(x => x.id == $systemStore?.pickTeamSeasonId);
+    let foundSeason = $seasonStore.find(x => x.id == $systemStore?.pickTeamSeasonId);
     if(foundSeason){
       activeSeason = foundSeason.name;
     }

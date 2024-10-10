@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { writable, type Writable } from "svelte/store";
-  import { teamStore } from "$lib/stores/team-store";
+  import { teamStore } from "$lib/stores/club-store";
   import { playerStore } from "$lib/stores/player-store";
   import { toastsError } from "$lib/stores/toasts-store";
   import type { PlayerDTO, PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";

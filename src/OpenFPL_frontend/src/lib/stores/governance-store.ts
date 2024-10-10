@@ -35,16 +35,16 @@ import type {
 import { ActorFactory } from "../../utils/ActorFactory";
 import { fixtureStore } from "./fixture-store";
 import { systemStore } from "./system-store";
-import { teamStore } from "./team-store";
+import { clubStore } from "./club-store";
 import { IDL } from "@dfinity/candid";
 import { seasonStore } from "./season-store";
+import { storeManager } from "$lib/managers/store-manager";
 
 function createGovernanceStore() {
   async function revaluePlayerUp(playerId: number): Promise<any> {
     try {
-      console.log('Syncing system and player store in revalueplayerup line 45');
-      await systemStore.sync();
-      await playerStore.sync();
+      console.log("Syncing system and player store in revalueplayerup line 45");
+      await storeManager.syncStores();
 
       let allPlayers: PlayerDTO[] = [];
       const unsubscribe = playerStore.subscribe((players) => {
@@ -94,8 +94,7 @@ function createGovernanceStore() {
 
   async function revaluePlayerDown(playerId: number): Promise<any> {
     try {
-      console.log('playerstore sync line 98');
-      await playerStore.sync();
+      await storeManager.syncStores();
 
       let allPlayers: PlayerDTO[] = [];
       const unsubscribe = playerStore.subscribe((players) => {
@@ -151,18 +150,15 @@ function createGovernanceStore() {
     playerEventData: PlayerEventData[],
   ): Promise<any> {
     try {
-      console.log('await team store sync line 155');
-      await teamStore.sync();
+      console.log("await team store sync line 155");clubStore
 
       let clubs: ClubDTO[] = [];
-      const unsubscribeTeamStore = teamStore.subscribe((teams) => {
+      const unsubscribeTeamStore = clubStore.subscribe((teams) => {
         if (teams) {
           clubs = teams;
         }
       });
       unsubscribeTeamStore();
-      console.log('await fixture store sync line 165');
-      await fixtureStore.sync(seasonId);
 
       let allFixtures: FixtureDTO[] = [];
       const unsubscribeFixtureStore = fixtureStore.subscribe((fixtures) => {
@@ -229,9 +225,8 @@ function createGovernanceStore() {
     pickTeamSeasonId: number,
   ): Promise<any> {
     try {
-      console.log('await system and season store sync line 233');
-      await systemStore.sync();
-      await seasonStore.sync();
+      console.log("await system and season store sync line 233");
+      await storeManager.syncStores();
       let seasonName = await seasonStore.getSeasonName(pickTeamSeasonId);
 
       let dto: AddInitialFixturesDTO = {
@@ -299,11 +294,11 @@ function createGovernanceStore() {
     updatedFixtureDate: string,
   ): Promise<any> {
     try {
-      console.log('await team store sync line 303');
-      await teamStore.sync();
+      console.log("await team store sync line 303");
+      await storeManager.syncStores();
 
       let clubs: ClubDTO[] = [];
-      const unsubscribeTeamStore = teamStore.subscribe((teams) => {
+      const unsubscribeTeamStore = clubStore.subscribe((teams) => {
         if (teams) {
           clubs = teams;
         }
@@ -318,8 +313,6 @@ function createGovernanceStore() {
         }
       });
       unsubscribeSystemStore();
-      console.log('await fixture store sync line 322');
-      await fixtureStore.sync(seasonId);
 
       let allFixtures: FixtureDTO[] = [];
       const unsubscribeFixtureStore = fixtureStore.subscribe((fixtures) => {
@@ -363,11 +356,10 @@ function createGovernanceStore() {
 
   async function postponeFixture(fixtureId: number): Promise<any> {
     try {
-      console.log('await team store sync line 367');
-      await teamStore.sync();
+      await storeManager.syncStores();
 
       let clubs: ClubDTO[] = [];
-      const unsubscribeTeamStore = teamStore.subscribe((teams) => {
+      const unsubscribeTeamStore = clubStore.subscribe((teams) => {
         if (teams) {
           clubs = teams;
         }
@@ -382,8 +374,6 @@ function createGovernanceStore() {
         }
       });
       unsubscribeSystemStore();
-      console.log('await fixture store sync line 155');
-      await fixtureStore.sync(seasonId);
 
       let allFixtures: FixtureDTO[] = [];
       const unsubscribeFixtureStore = fixtureStore.subscribe((fixtures) => {
@@ -420,10 +410,10 @@ function createGovernanceStore() {
     updatedFixtureDate: string,
   ): Promise<any> {
     try {
-      await teamStore.sync();
+      await storeManager.syncStores();
 
       let clubs: ClubDTO[] = [];
-      const unsubscribeTeamStore = teamStore.subscribe((teams) => {
+      const unsubscribeTeamStore = clubStore.subscribe((teams) => {
         if (teams) {
           clubs = teams;
         }
@@ -438,8 +428,6 @@ function createGovernanceStore() {
         }
       });
       unsubscribeSystemStore();
-      console.log('await fixture store sync line 442');
-      await fixtureStore.sync(seasonId);
 
       let allFixtures: FixtureDTO[] = [];
       const unsubscribeFixtureStore = fixtureStore.subscribe((fixtures) => {
@@ -490,12 +478,11 @@ function createGovernanceStore() {
     gameweek: number,
   ): Promise<any> {
     try {
-      console.log('await team and player store sync line 494');
-      await teamStore.sync();
-      await playerStore.sync();
+      console.log("await team and player store sync line 494");
+      await storeManager.syncStores();
 
       let clubs: ClubDTO[] = [];
-      const unsubscribeTeamStore = teamStore.subscribe((teams) => {
+      const unsubscribeTeamStore = clubStore.subscribe((teams) => {
         if (teams) {
           clubs = teams;
         }
@@ -558,12 +545,11 @@ function createGovernanceStore() {
     gameweek: number,
   ): Promise<any> {
     try {
-      console.log('await team and player store sync line 562');
-      await teamStore.sync();
-      await playerStore.sync();
+      console.log("await team and player store sync line 562");
+      await storeManager.syncStores();
 
       let clubs: ClubDTO[] = [];
-      const unsubscribeTeamStore = teamStore.subscribe((teams) => {
+      const unsubscribeTeamStore = clubStore.subscribe((teams) => {
         if (teams) {
           clubs = teams;
         }
@@ -617,12 +603,11 @@ function createGovernanceStore() {
 
   async function recallPlayer(playerId: number): Promise<any> {
     try {
-      console.log('await team and player store sync line 622');
-      await teamStore.sync();
-      await playerStore.sync();
+      console.log("await team and player store sync line 622");
+      await storeManager.syncStores();
 
       let clubs: ClubDTO[] = [];
-      const unsubscribeTeamStore = teamStore.subscribe((teams) => {
+      const unsubscribeTeamStore = clubStore.subscribe((teams) => {
         if (teams) {
           clubs = teams;
         }
@@ -672,12 +657,11 @@ function createGovernanceStore() {
     gender: Gender,
   ): Promise<any> {
     try {
-      console.log('await team and player store sync line 676');
-      await teamStore.sync();
-      await playerStore.sync();
+      console.log("await team and player store sync line 676");
+      await storeManager.syncStores();
 
       let clubs: ClubDTO[] = [];
-      const unsubscribeTeamStore = teamStore.subscribe((teams) => {
+      const unsubscribeTeamStore = clubStore.subscribe((teams) => {
         if (teams) {
           clubs = teams;
         }
@@ -740,12 +724,11 @@ function createGovernanceStore() {
     nationality: number,
   ): Promise<any> {
     try {
-      console.log('await team and player store sync line 744');
-      await teamStore.sync();
-      await playerStore.sync();
+      console.log("await team and player store sync line 744");
+      await storeManager.syncStores();
 
       let clubs: ClubDTO[] = [];
-      const unsubscribeTeamStore = teamStore.subscribe((teams) => {
+      const unsubscribeTeamStore = clubStore.subscribe((teams) => {
         if (teams) {
           clubs = teams;
         }
@@ -806,12 +789,11 @@ function createGovernanceStore() {
     expectedEndDate: string,
   ): Promise<any> {
     try {
-      console.log('await team and player store sync line 810');
-      await teamStore.sync();
-      await playerStore.sync();
+      console.log("await team and player store sync line 810");
+      await storeManager.syncStores();
 
       let clubs: ClubDTO[] = [];
-      const unsubscribeTeamStore = teamStore.subscribe((teams) => {
+      const unsubscribeTeamStore = clubStore.subscribe((teams) => {
         if (teams) {
           clubs = teams;
         }
@@ -864,12 +846,11 @@ function createGovernanceStore() {
     retirementDate: string,
   ): Promise<any> {
     try {
-      console.log('await team and player store sync line 868');
-      await teamStore.sync();
-      await playerStore.sync();
+      console.log("await team and player store sync line 868");
+      await storeManager.syncStores();
 
       let clubs: ClubDTO[] = [];
-      const unsubscribeTeamStore = teamStore.subscribe((teams) => {
+      const unsubscribeTeamStore = clubStore.subscribe((teams) => {
         if (teams) {
           clubs = teams;
         }
@@ -913,12 +894,11 @@ function createGovernanceStore() {
 
   async function unretirePlayer(playerId: number): Promise<any> {
     try {
-      console.log('await team and player store sync line 917');
-      await teamStore.sync();
-      await playerStore.sync();
+      console.log("await team and player store sync line 917");
+      await storeManager.syncStores();
 
       let clubs: ClubDTO[] = [];
-      const unsubscribeTeamStore = teamStore.subscribe((teams) => {
+      const unsubscribeTeamStore = clubStore.subscribe((teams) => {
         if (teams) {
           clubs = teams;
         }
@@ -1006,8 +986,7 @@ function createGovernanceStore() {
     shirtType: ShirtType,
   ): Promise<any> {
     try {
-      console.log('await team store sync line 1010');
-      await teamStore.sync();
+      await storeManager.syncStores();
       let dto: UpdateClubDTO = {
         clubId: clubId,
         secondaryColourHex: secondaryColourHex,
@@ -1020,7 +999,7 @@ function createGovernanceStore() {
       };
 
       let clubs: ClubDTO[] = [];
-      const unsubscribeTeamStore = teamStore.subscribe((teams) => {
+      const unsubscribeTeamStore = clubStore.subscribe((teams) => {
         if (teams) {
           clubs = teams;
         }
@@ -1035,9 +1014,7 @@ function createGovernanceStore() {
         }
       });
       unsubscribeSystemStore();
-      console.log('await fixture store sync line 1038');
-      await fixtureStore.sync(seasonId);
-
+      
       let allFixtures: FixtureDTO[] = [];
       const unsubscribeFixtureStore = fixtureStore.subscribe((fixtures) => {
         allFixtures = fixtures;
@@ -1082,7 +1059,9 @@ function createGovernanceStore() {
         if (principal == "") {
           return;
         }
-        console.log('actor getting governance agent in execute proposal line 1071');
+        console.log(
+          "actor getting governance agent in execute proposal line 1071",
+        );
         const agent: any = await ActorFactory.getGovernanceAgent(auth.identity);
         if (process.env.DFX_NETWORK !== "ic") {
           await agent.fetchRootKey();

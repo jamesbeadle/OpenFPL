@@ -4,7 +4,7 @@
   import { systemStore } from "$lib/stores/system-store";
   import { countriesStore } from "$lib/stores/country-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
-  import { teamStore } from "$lib/stores/team-store";
+  import { teamStore } from "$lib/stores/club-store";
   import { weeklyLeaderboardStore } from "$lib/stores/weekly-leaderboard-store";
   import { playerStore } from "$lib/stores/player-store";
   import { playerEventsStore } from "$lib/stores/player-events-store";

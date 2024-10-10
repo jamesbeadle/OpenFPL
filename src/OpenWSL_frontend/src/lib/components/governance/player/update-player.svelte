@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { Modal } from "@dfinity/gix-components";
-  import { teamStore } from "$lib/stores/team-store";
+  import { teamStore } from "$lib/stores/club-store";
   import { playerStore } from "$lib/stores/player-store";
   import { countriesStore } from "$lib/stores/country-store";
   import { governanceStore } from "$lib/stores/governance-store";

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { teamStore } from "$lib/stores/team-store";
+  import { teamStore } from "$lib/stores/club-store";
   import { playerStore } from "$lib/stores/player-store";
   import { governanceStore } from "$lib/stores/governance-store";
   import { toastsError } from "$lib/stores/toasts-store";

@@ -3444,7 +3444,7 @@ const options = {
   root: Root,
   service_worker: false,
   templates: {
-    app: ({ head, body: body2, assets: assets2, nonce, env }) => '<!doctype html>\n<html lang="en">\n  <head>\n    <meta charset="utf-8" />\n    <meta content="width=device-width, initial-scale=1" name="viewport" />\n\n    <title>OpenWSL</title>\n    <link href="https://openwsl.xyz" rel="canonical" />\n    <meta\n      content="OpenWSL is a decentralised fantasy football game on the Internet Computer blockchain."\n      name="description"\n    />\n    <meta content="OpenWSL" property="og:title" />\n    <meta\n      content="OpenWSL is a decentralised fantasy football game on the Internet Computer blockchain."\n      property="og:description"\n    />\n    <meta content="website" property="og:type" />\n    <meta content="https://openwsl.xyz" property="og:url" />\n    <meta content="https://openwsl.xyz/meta-share.jpg" property="og:image" />\n    <meta content="summary_large_image" name="twitter:card" />\n    <meta content="OpenWSL" name="twitter:title" />\n    <meta\n      content="OpenWSL is a decentralised fantasy football platform on the Internet Computer blockchain."\n      name="twitter:description"\n    />\n    <meta content="https://openwsl.xyz/meta-share.jpg" name="twitter:image" />\n    <meta content="@beadle1989" name="twitter:creator" />\n\n    <link crossorigin="anonymous" href="/manifest.webmanifest" rel="manifest" />\n\n    <link rel="preload" href="/adopt_filled.png" as="image" />\n    <link rel="preload" href="/adopt.png" as="image" />\n    <link rel="preload" href="/background.jpg" as="image" />\n    <link rel="preload" href="/board.png" as="image" />\n    <link rel="preload" href="/brace-bonus.png" as="image" />\n    <link rel="preload" href="/ckBTCCoin.png" as="image" />\n    <link rel="preload" href="/ckETHCoin.png" as="image" />\n    <link rel="preload" href="/countrymen.png" as="image" />\n    <link rel="preload" href="/discord.png" as="image" />\n    <link rel="preload" href="/FPLCoin.png" as="image" />\n    <link rel="preload" href="/github.png" as="image" />\n    <link rel="preload" href="/hat-trick-hero.png" as="image" />\n    <link rel="preload" href="/ICPCoin.png" as="image" />\n    <link rel="preload" href="/no-entry.png" as="image" />\n    <link rel="preload" href="/openchat.png" as="image" />\n    <link rel="preload" href="/pass-master.png" as="image" />\n    <link rel="preload" href="/pitch.png" as="image" />\n    <link rel="preload" href="/profile_placeholder.png" as="image" />\n    <link rel="preload" href="/prospects.png" as="image" />\n    <link rel="preload" href="/reject.png" as="image" />\n    <link rel="preload" href="/reject_filled.png" as="image" />\n    <link rel="preload" href="/safe-hands.png" as="image" />\n    <link rel="preload" href="/team-boost.png" as="image" />\n    <link rel="preload" href="/twitter.png" as="image" />\n\n    <!-- Favicon -->\n    <link\n      rel="icon"\n      type="image/png"\n      sizes="32x32"\n      href="' + assets2 + '/favicons/favicon-32x32.png"\n    />\n    <link\n      rel="icon"\n      type="image/png"\n      sizes="16x16"\n      href="' + assets2 + '/favicons/favicon-16x16.png"\n    />\n    <link rel="shortcut icon" href="' + assets2 + '/favicons/favicon.ico" />\n\n    <!-- iOS meta tags & icons -->\n    <meta name="apple-mobile-web-app-capable" content="yes" />\n    <meta name="apple-mobile-web-app-status-bar-style" content="#2CE3A6" />\n    <meta name="apple-mobile-web-app-title" content="OpenWSL" />\n    <link\n      rel="apple-touch-icon"\n      href="' + assets2 + '/favicons/apple-touch-icon.png"\n    />\n    <link\n      rel="mask-icon"\n      href="' + assets2 + '/favicons/safari-pinned-tab.svg"\n      color="#2CE3A6"\n    />\n\n    <!-- MS -->\n    <meta name="msapplication-TileColor" content="#2CE3A6" />\n    <meta\n      name="msapplication-config"\n      content="' + assets2 + '/favicons/browserconfig.xml"\n    />\n\n    <meta content="#2CE3A6" name="theme-color" />\n    ' + head + '\n\n    <style>\n      html,\n      body {\n        height: 100%;\n        margin: 0;\n      }\n\n      @font-face {\n        font-display: swap;\n        font-family: "Poppins";\n        font-style: normal;\n        font-weight: 400;\n        src: url("' + assets2 + '/poppins-regular-webfont.woff2")\n          format("woff2");\n      }\n\n      @font-face {\n        font-display: swap;\n        font-family: "Manrope";\n        font-style: normal;\n        font-weight: 400;\n        src: url("' + assets2 + '/Manrope-Regular.woff2") format("woff2");\n      }\n      body {\n        font-family: "Poppins", sans-serif !important;\n        color: white !important;\n        background-color: #1a1a1d;\n        height: 100vh;\n        margin: 0;\n        background-image: url("' + assets2 + '/background.jpg");\n        background-size: cover;\n        background-position: center;\n        background-repeat: no-repeat;\n        background-attachment: fixed;\n      }\n\n      #app-spinner {\n        --spinner-size: 30px;\n\n        width: var(--spinner-size);\n        height: var(--spinner-size);\n\n        animation: app-spinner-linear-rotate 2000ms linear infinite;\n\n        position: absolute;\n        top: calc(50% - (var(--spinner-size) / 2));\n        left: calc(50% - (var(--spinner-size) / 2));\n\n        --radius: 45px;\n        --circumference: calc(3.14159265359 * var(--radius) * 2);\n\n        --start: calc((1 - 0.05) * var(--circumference));\n        --end: calc((1 - 0.8) * var(--circumference));\n      }\n\n      #app-spinner circle {\n        stroke-dasharray: var(--circumference);\n        stroke-width: 10%;\n        transform-origin: 50% 50% 0;\n\n        transition-property: stroke;\n\n        animation-name: app-spinner-stroke-rotate-100;\n        animation-duration: 4000ms;\n        animation-timing-function: cubic-bezier(0.35, 0, 0.25, 1);\n        animation-iteration-count: infinite;\n\n        fill: transparent;\n        stroke: currentColor;\n\n        transition: stroke-dashoffset 225ms linear;\n      }\n\n      @keyframes app-spinner-linear-rotate {\n        0% {\n          transform: rotate(0deg);\n        }\n        100% {\n          transform: rotate(360deg);\n        }\n      }\n\n      @keyframes app-spinner-stroke-rotate-100 {\n        0% {\n          stroke-dashoffset: var(--start);\n          transform: rotate(0);\n        }\n        12.5% {\n          stroke-dashoffset: var(--end);\n          transform: rotate(0);\n        }\n        12.5001% {\n          stroke-dashoffset: var(--end);\n          transform: rotateX(180deg) rotate(72.5deg);\n        }\n        25% {\n          stroke-dashoffset: var(--start);\n          transform: rotateX(180deg) rotate(72.5deg);\n        }\n\n        25.0001% {\n          stroke-dashoffset: var(--start);\n          transform: rotate(270deg);\n        }\n        37.5% {\n          stroke-dashoffset: var(--end);\n          transform: rotate(270deg);\n        }\n        37.5001% {\n          stroke-dashoffset: var(--end);\n          transform: rotateX(180deg) rotate(161.5deg);\n        }\n        50% {\n          stroke-dashoffset: var(--start);\n          transform: rotateX(180deg) rotate(161.5deg);\n        }\n\n        50.0001% {\n          stroke-dashoffset: var(--start);\n          transform: rotate(180deg);\n        }\n        62.5% {\n          stroke-dashoffset: var(--end);\n          transform: rotate(180deg);\n        }\n        62.5001% {\n          stroke-dashoffset: var(--end);\n          transform: rotateX(180deg) rotate(251.5deg);\n        }\n        75% {\n          stroke-dashoffset: var(--start);\n          transform: rotateX(180deg) rotate(251.5deg);\n        }\n\n        75.0001% {\n          stroke-dashoffset: var(--start);\n          transform: rotate(90deg);\n        }\n        87.5% {\n          stroke-dashoffset: var(--end);\n          transform: rotate(90deg);\n        }\n        87.5001% {\n          stroke-dashoffset: var(--end);\n          transform: rotateX(180deg) rotate(341.5deg);\n        }\n        100% {\n          stroke-dashoffset: var(--start);\n          transform: rotateX(180deg) rotate(341.5deg);\n        }\n      }\n    </style>\n  </head>\n  <body data-sveltekit-preload-data="hover">\n    <div style="display: contents">' + body2 + '</div>\n\n    <svg\n      id="app-spinner"\n      preserveAspectRatio="xMidYMid meet"\n      focusable="false"\n      aria-hidden="true"\n      data-tid="spinner"\n      viewBox="0 0 100 100"\n    >\n      <circle cx="50%" cy="50%" r="45" />\n    </svg>\n  </body>\n</html>\n',
+    app: ({ head, body: body2, assets: assets2, nonce, env }) => '<!doctype html>\n<html lang="en">\n  <head>\n    <meta charset="utf-8" />\n    <meta content="width=device-width, initial-scale=1" name="viewport" />\n\n    <title>OpenFPL</title>\n    <link href="https://openfpl.xyz" rel="canonical" />\n    <meta\n      content="OpenFPL is a decentralised fantasy football game on the Internet Computer blockchain."\n      name="description"\n    />\n    <meta content="OpenFPL" property="og:title" />\n    <meta\n      content="OpenFPL is a decentralised fantasy football game on the Internet Computer blockchain."\n      property="og:description"\n    />\n    <meta content="website" property="og:type" />\n    <meta content="https://openfpl.xyz" property="og:url" />\n    <meta content="https://openfpl.xyz/meta-share.jpg" property="og:image" />\n    <meta content="summary_large_image" name="twitter:card" />\n    <meta content="OpenFPL" name="twitter:title" />\n    <meta\n      content="OpenFPL is a decentralised fantasy football platform on the Internet Computer blockchain."\n      name="twitter:description"\n    />\n    <meta content="https://openfpl.xyz/meta-share.jpg" name="twitter:image" />\n    <meta content="@beadle1989" name="twitter:creator" />\n\n    <link crossorigin="anonymous" href="/manifest.webmanifest" rel="manifest" />\n\n    <link rel="preload" href="/adopt_filled.png" as="image" />\n    <link rel="preload" href="/adopt.png" as="image" />\n    <link rel="preload" href="/background.jpg" as="image" />\n    <link rel="preload" href="/board.png" as="image" />\n    <link rel="preload" href="/brace-bonus.png" as="image" />\n    <link rel="preload" href="/ckBTCCoin.png" as="image" />\n    <link rel="preload" href="/ckETHCoin.png" as="image" />\n    <link rel="preload" href="/countrymen.png" as="image" />\n    <link rel="preload" href="/discord.png" as="image" />\n    <link rel="preload" href="/FPLCoin.png" as="image" />\n    <link rel="preload" href="/github.png" as="image" />\n    <link rel="preload" href="/hat-trick-hero.png" as="image" />\n    <link rel="preload" href="/ICPCoin.png" as="image" />\n    <link rel="preload" href="/no-entry.png" as="image" />\n    <link rel="preload" href="/openchat.png" as="image" />\n    <link rel="preload" href="/pass-master.png" as="image" />\n    <link rel="preload" href="/pitch.png" as="image" />\n    <link rel="preload" href="/profile_placeholder.png" as="image" />\n    <link rel="preload" href="/prospects.png" as="image" />\n    <link rel="preload" href="/reject.png" as="image" />\n    <link rel="preload" href="/reject_filled.png" as="image" />\n    <link rel="preload" href="/safe-hands.png" as="image" />\n    <link rel="preload" href="/team-boost.png" as="image" />\n    <link rel="preload" href="/twitter.png" as="image" />\n\n    <!-- Favicon -->\n    <link\n      rel="icon"\n      type="image/png"\n      sizes="32x32"\n      href="' + assets2 + '/favicons/favicon-32x32.png"\n    />\n    <link\n      rel="icon"\n      type="image/png"\n      sizes="16x16"\n      href="' + assets2 + '/favicons/favicon-16x16.png"\n    />\n    <link rel="shortcut icon" href="' + assets2 + '/favicons/favicon.ico" />\n\n    <!-- iOS meta tags & icons -->\n    <meta name="apple-mobile-web-app-capable" content="yes" />\n    <meta name="apple-mobile-web-app-status-bar-style" content="#2CE3A6" />\n    <meta name="apple-mobile-web-app-title" content="OpenFPL" />\n    <link\n      rel="apple-touch-icon"\n      href="' + assets2 + '/favicons/apple-touch-icon.png"\n    />\n    <link\n      rel="mask-icon"\n      href="' + assets2 + '/favicons/safari-pinned-tab.svg"\n      color="#2CE3A6"\n    />\n\n    <!-- MS -->\n    <meta name="msapplication-TileColor" content="#2CE3A6" />\n    <meta\n      name="msapplication-config"\n      content="' + assets2 + '/favicons/browserconfig.xml"\n    />\n\n    <meta content="#2CE3A6" name="theme-color" />\n    ' + head + '\n\n    <style>\n      html,\n      body {\n        height: 100%;\n        margin: 0;\n      }\n\n      @font-face {\n        font-display: swap;\n        font-family: "Poppins";\n        font-style: normal;\n        font-weight: 400;\n        src: url("' + assets2 + '/poppins-regular-webfont.woff2")\n          format("woff2");\n      }\n\n      @font-face {\n        font-display: swap;\n        font-family: "Manrope";\n        font-style: normal;\n        font-weight: 400;\n        src: url("' + assets2 + '/Manrope-Regular.woff2") format("woff2");\n      }\n      body {\n        font-family: "Poppins", sans-serif !important;\n        color: white !important;\n        background-color: #1a1a1d;\n        height: 100vh;\n        margin: 0;\n        background-image: url("' + assets2 + '/background.jpg");\n        background-size: cover;\n        background-position: center;\n        background-repeat: no-repeat;\n        background-attachment: fixed;\n      }\n\n      #app-spinner {\n        --spinner-size: 30px;\n\n        width: var(--spinner-size);\n        height: var(--spinner-size);\n\n        animation: app-spinner-linear-rotate 2000ms linear infinite;\n\n        position: absolute;\n        top: calc(50% - (var(--spinner-size) / 2));\n        left: calc(50% - (var(--spinner-size) / 2));\n\n        --radius: 45px;\n        --circumference: calc(3.14159265359 * var(--radius) * 2);\n\n        --start: calc((1 - 0.05) * var(--circumference));\n        --end: calc((1 - 0.8) * var(--circumference));\n      }\n\n      #app-spinner circle {\n        stroke-dasharray: var(--circumference);\n        stroke-width: 10%;\n        transform-origin: 50% 50% 0;\n\n        transition-property: stroke;\n\n        animation-name: app-spinner-stroke-rotate-100;\n        animation-duration: 4000ms;\n        animation-timing-function: cubic-bezier(0.35, 0, 0.25, 1);\n        animation-iteration-count: infinite;\n\n        fill: transparent;\n        stroke: currentColor;\n\n        transition: stroke-dashoffset 225ms linear;\n      }\n\n      @keyframes app-spinner-linear-rotate {\n        0% {\n          transform: rotate(0deg);\n        }\n        100% {\n          transform: rotate(360deg);\n        }\n      }\n\n      @keyframes app-spinner-stroke-rotate-100 {\n        0% {\n          stroke-dashoffset: var(--start);\n          transform: rotate(0);\n        }\n        12.5% {\n          stroke-dashoffset: var(--end);\n          transform: rotate(0);\n        }\n        12.5001% {\n          stroke-dashoffset: var(--end);\n          transform: rotateX(180deg) rotate(72.5deg);\n        }\n        25% {\n          stroke-dashoffset: var(--start);\n          transform: rotateX(180deg) rotate(72.5deg);\n        }\n\n        25.0001% {\n          stroke-dashoffset: var(--start);\n          transform: rotate(270deg);\n        }\n        37.5% {\n          stroke-dashoffset: var(--end);\n          transform: rotate(270deg);\n        }\n        37.5001% {\n          stroke-dashoffset: var(--end);\n          transform: rotateX(180deg) rotate(161.5deg);\n        }\n        50% {\n          stroke-dashoffset: var(--start);\n          transform: rotateX(180deg) rotate(161.5deg);\n        }\n\n        50.0001% {\n          stroke-dashoffset: var(--start);\n          transform: rotate(180deg);\n        }\n        62.5% {\n          stroke-dashoffset: var(--end);\n          transform: rotate(180deg);\n        }\n        62.5001% {\n          stroke-dashoffset: var(--end);\n          transform: rotateX(180deg) rotate(251.5deg);\n        }\n        75% {\n          stroke-dashoffset: var(--start);\n          transform: rotateX(180deg) rotate(251.5deg);\n        }\n\n        75.0001% {\n          stroke-dashoffset: var(--start);\n          transform: rotate(90deg);\n        }\n        87.5% {\n          stroke-dashoffset: var(--end);\n          transform: rotate(90deg);\n        }\n        87.5001% {\n          stroke-dashoffset: var(--end);\n          transform: rotateX(180deg) rotate(341.5deg);\n        }\n        100% {\n          stroke-dashoffset: var(--start);\n          transform: rotateX(180deg) rotate(341.5deg);\n        }\n      }\n    </style>\n  </head>\n  <body data-sveltekit-preload-data="hover">\n    <div style="display: contents">' + body2 + '</div>\n\n    <svg\n      id="app-spinner"\n      preserveAspectRatio="xMidYMid meet"\n      focusable="false"\n      aria-hidden="true"\n      data-tid="spinner"\n      viewBox="0 0 100 100"\n    >\n      <circle cx="50%" cy="50%" r="45" />\n    </svg>\n  </body>\n</html>\n',
     error: ({ status, message }) => '<!doctype html>\n<html lang="en">\n	<head>\n		<meta charset="utf-8" />\n		<title>' + message + `</title>
 
 		<style>
@@ -3516,7 +3516,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "w8e444"
+  version_hash: "18phxhs"
 };
 async function get_hooks() {
   return {};
@@ -3667,7 +3667,7 @@ const popupCenter = ({
 };
 let authClient;
 const NNS_IC_ORG_ALTERNATIVE_ORIGIN = "https://openfpl.xyz";
-const NNS_IC_APP_DERIVATION_ORIGIN = "https://5ido2-wqaaa-aaaal-qmzra-cai.icp0.io";
+const NNS_IC_APP_DERIVATION_ORIGIN = "https://5gbds-naaaa-aaaal-qmzqa-cai.icp0.io";
 const isNnsAlternativeOrigin = () => {
   return window.location.origin === NNS_IC_ORG_ALTERNATIVE_ORIGIN;
 };
@@ -3896,7 +3896,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "CanisterCreateError": IDL2.Null,
     "Not11Players": IDL2.Null
   });
-  const Result_3 = IDL2.Variant({ "ok": IDL2.Nat, "err": Error2 });
+  const Result_4 = IDL2.Variant({ "ok": IDL2.Nat, "err": Error2 });
   const CanisterType = IDL2.Variant({
     "SNS": IDL2.Null,
     "MonthlyLeaderboard": IDL2.Null,
@@ -3920,7 +3920,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "entries": IDL2.Vec(CanisterDTO),
     "canisterTypeFilter": CanisterType
   });
-  const Result_24 = IDL2.Variant({ "ok": GetCanistersDTO, "err": Error2 });
+  const Result_25 = IDL2.Variant({ "ok": GetCanistersDTO, "err": Error2 });
   const ClubDTO = IDL2.Record({
     "id": ClubId,
     "secondaryColourHex": IDL2.Text,
@@ -3931,13 +3931,13 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "shirtType": ShirtType,
     "primaryColourHex": IDL2.Text
   });
-  const Result_23 = IDL2.Variant({ "ok": IDL2.Vec(ClubDTO), "err": Error2 });
+  const Result_24 = IDL2.Variant({ "ok": IDL2.Vec(ClubDTO), "err": Error2 });
   const CountryDTO = IDL2.Record({
     "id": CountryId,
     "code": IDL2.Text,
     "name": IDL2.Text
   });
-  const Result_22 = IDL2.Variant({ "ok": IDL2.Vec(CountryDTO), "err": Error2 });
+  const Result_23 = IDL2.Variant({ "ok": IDL2.Vec(CountryDTO), "err": Error2 });
   const PickTeamDTO = IDL2.Record({
     "playerIds": IDL2.Vec(PlayerId),
     "countrymenCountryId": CountryId,
@@ -3966,9 +3966,9 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "canisterId": CanisterId,
     "monthlyBonusesAvailable": IDL2.Nat8
   });
-  const Result_21 = IDL2.Variant({ "ok": PickTeamDTO, "err": Error2 });
+  const Result_22 = IDL2.Variant({ "ok": PickTeamDTO, "err": Error2 });
   const DataHashDTO = IDL2.Record({ "hash": IDL2.Text, "category": IDL2.Text });
-  const Result_20 = IDL2.Variant({ "ok": IDL2.Vec(DataHashDTO), "err": Error2 });
+  const Result_21 = IDL2.Variant({ "ok": IDL2.Vec(DataHashDTO), "err": Error2 });
   const PrincipalId = IDL2.Text;
   const GetFantasyTeamSnapshotDTO = IDL2.Record({
     "seasonId": SeasonId,
@@ -4010,12 +4010,12 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "points": IDL2.Int16,
     "monthlyBonusesAvailable": IDL2.Nat8
   });
-  const Result_19 = IDL2.Variant({
+  const Result_20 = IDL2.Variant({
     "ok": FantasyTeamSnapshotDTO,
     "err": Error2
   });
   const RequestFixturesDTO = IDL2.Record({ "seasonId": SeasonId });
-  const Result_12 = IDL2.Variant({ "ok": IDL2.Vec(FixtureDTO), "err": Error2 });
+  const Result_13 = IDL2.Variant({ "ok": IDL2.Vec(FixtureDTO), "err": Error2 });
   const CanisterInfoDTO = IDL2.Record({
     "cycles": IDL2.Nat,
     "canisterId": CanisterId
@@ -4023,7 +4023,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
   const LeaderboardCanistersDTO = IDL2.Record({
     "canisters": IDL2.Vec(CanisterInfoDTO)
   });
-  const Result_18 = IDL2.Variant({
+  const Result_19 = IDL2.Variant({
     "ok": LeaderboardCanistersDTO,
     "err": Error2
   });
@@ -4050,7 +4050,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "lastName": IDL2.Text,
     "firstName": IDL2.Text
   });
-  const Result_7 = IDL2.Variant({ "ok": IDL2.Vec(PlayerDTO), "err": Error2 });
+  const Result_8 = IDL2.Variant({ "ok": IDL2.Vec(PlayerDTO), "err": Error2 });
   const RequestManagerDTO = IDL2.Record({
     "month": CalendarMonth,
     "clubId": ClubId,
@@ -4114,7 +4114,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
   const ManagerCanistersDTO = IDL2.Record({
     "canisters": IDL2.Vec(CanisterInfoDTO)
   });
-  const Result_17 = IDL2.Variant({ "ok": ManagerCanistersDTO, "err": Error2 });
+  const Result_18 = IDL2.Variant({ "ok": ManagerCanistersDTO, "err": Error2 });
   const GetMonthlyLeaderboardDTO = IDL2.Record({
     "month": CalendarMonth,
     "clubId": ClubId,
@@ -4137,7 +4137,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "seasonId": SeasonId,
     "entries": IDL2.Vec(LeaderboardEntry)
   });
-  const Result_16 = IDL2.Variant({
+  const Result_17 = IDL2.Variant({
     "ok": MonthlyLeaderboardDTO,
     "err": Error2
   });
@@ -4181,7 +4181,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "lastName": IDL2.Text,
     "firstName": IDL2.Text
   });
-  const Result_15 = IDL2.Variant({ "ok": PlayerDetailDTO, "err": Error2 });
+  const Result_16 = IDL2.Variant({ "ok": PlayerDetailDTO, "err": Error2 });
   const GameweekFiltersDTO = IDL2.Record({
     "seasonId": SeasonId,
     "gameweek": GameweekNumber
@@ -4194,7 +4194,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "gameweek": GameweekNumber,
     "points": IDL2.Int16
   });
-  const Result_14 = IDL2.Variant({
+  const Result_15 = IDL2.Variant({
     "ok": IDL2.Vec(PlayerPointsDTO),
     "err": Error2
   });
@@ -4211,7 +4211,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "position": PlayerPosition,
     "points": IDL2.Int16
   });
-  const Result_13 = IDL2.Variant({
+  const Result_14 = IDL2.Variant({
     "ok": IDL2.Vec(IDL2.Tuple(IDL2.Nat16, PlayerScoreDTO)),
     "err": Error2
   });
@@ -4224,7 +4224,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "profilePictureType": IDL2.Text,
     "principalId": IDL2.Text
   });
-  const Result_11 = IDL2.Variant({ "ok": ProfileDTO, "err": Error2 });
+  const Result_12 = IDL2.Variant({ "ok": ProfileDTO, "err": Error2 });
   const RewardPool = IDL2.Record({
     "monthlyLeaderboardPool": IDL2.Nat64,
     "allTimeSeasonHighScorePool": IDL2.Nat64,
@@ -4240,7 +4240,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "seasonId": SeasonId,
     "rewardPool": RewardPool
   });
-  const Result_10 = IDL2.Variant({ "ok": GetRewardPoolDTO, "err": Error2 });
+  const Result_11 = IDL2.Variant({ "ok": GetRewardPoolDTO, "err": Error2 });
   const GetSeasonLeaderboardDTO = IDL2.Record({
     "offset": IDL2.Nat,
     "seasonId": SeasonId,
@@ -4252,13 +4252,13 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "seasonId": SeasonId,
     "entries": IDL2.Vec(LeaderboardEntry)
   });
-  const Result_9 = IDL2.Variant({ "ok": SeasonLeaderboardDTO, "err": Error2 });
+  const Result_10 = IDL2.Variant({ "ok": SeasonLeaderboardDTO, "err": Error2 });
   const SeasonDTO = IDL2.Record({
     "id": SeasonId,
     "name": IDL2.Text,
     "year": IDL2.Nat16
   });
-  const Result_8 = IDL2.Variant({ "ok": IDL2.Vec(SeasonDTO), "err": Error2 });
+  const Result_9 = IDL2.Variant({ "ok": IDL2.Vec(SeasonDTO), "err": Error2 });
   const GetSnapshotPlayers = IDL2.Record({
     "seasonId": SeasonId,
     "gameweek": GameweekNumber,
@@ -4267,7 +4267,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
   const StaticCanistersDTO = IDL2.Record({
     "canisters": IDL2.Vec(CanisterInfoDTO)
   });
-  const Result_6 = IDL2.Variant({ "ok": StaticCanistersDTO, "err": Error2 });
+  const Result_7 = IDL2.Variant({ "ok": StaticCanistersDTO, "err": Error2 });
   const SystemStateDTO = IDL2.Record({
     "pickTeamSeasonId": SeasonId,
     "calculationGameweek": GameweekNumber,
@@ -4279,7 +4279,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "onHold": IDL2.Bool,
     "seasonActive": IDL2.Bool
   });
-  const Result_5 = IDL2.Variant({ "ok": SystemStateDTO, "err": Error2 });
+  const Result_6 = IDL2.Variant({ "ok": SystemStateDTO, "err": Error2 });
   const TopupDTO = IDL2.Record({
     "topupAmount": IDL2.Nat,
     "canisterId": IDL2.Text,
@@ -4291,8 +4291,9 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "limit": IDL2.Nat,
     "entries": IDL2.Vec(TopupDTO)
   });
-  const Result_4 = IDL2.Variant({ "ok": GetTopupsDTO, "err": Error2 });
+  const Result_5 = IDL2.Variant({ "ok": GetTopupsDTO, "err": Error2 });
   const AccountIdentifier = IDL2.Vec(IDL2.Nat8);
+  const Result_3 = IDL2.Variant({ "ok": IDL2.Vec(CanisterId), "err": Error2 });
   const GetWeeklyLeaderboardDTO = IDL2.Record({
     "offset": IDL2.Nat,
     "seasonId": SeasonId,
@@ -4380,53 +4381,54 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "executeUnretirePlayer": IDL2.Func([UnretirePlayerDTO], [], []),
     "executeUpdateClub": IDL2.Func([UpdateClubDTO], [], []),
     "executeUpdatePlayer": IDL2.Func([UpdatePlayerDTO], [], []),
-    "getBackendCanisterBalance": IDL2.Func([], [Result_3], []),
+    "getBackendCanisterBalance": IDL2.Func([], [Result_4], []),
     "getCanisterCyclesAvailable": IDL2.Func([], [IDL2.Nat], []),
-    "getCanisterCyclesBalance": IDL2.Func([], [Result_3], []),
-    "getCanisters": IDL2.Func([GetCanistersDTO], [Result_24], []),
-    "getClubs": IDL2.Func([], [Result_23], []),
-    "getCountries": IDL2.Func([], [Result_22], ["query"]),
-    "getCurrentTeam": IDL2.Func([], [Result_21], []),
-    "getDataHashes": IDL2.Func([], [Result_20], ["query"]),
+    "getCanisterCyclesBalance": IDL2.Func([], [Result_4], []),
+    "getCanisters": IDL2.Func([GetCanistersDTO], [Result_25], []),
+    "getClubs": IDL2.Func([], [Result_24], []),
+    "getCountries": IDL2.Func([], [Result_23], ["query"]),
+    "getCurrentTeam": IDL2.Func([], [Result_22], []),
+    "getDataHashes": IDL2.Func([], [Result_21], ["query"]),
     "getFantasyTeamSnapshot": IDL2.Func(
       [GetFantasyTeamSnapshotDTO],
-      [Result_19],
+      [Result_20],
       []
     ),
-    "getFixtures": IDL2.Func([RequestFixturesDTO], [Result_12], []),
-    "getLeaderboardCanisters": IDL2.Func([], [Result_18], []),
-    "getLoanedPlayers": IDL2.Func([ClubFilterDTO], [Result_7], []),
+    "getFixtures": IDL2.Func([RequestFixturesDTO], [Result_13], []),
+    "getLeaderboardCanisters": IDL2.Func([], [Result_19], []),
+    "getLoanedPlayers": IDL2.Func([ClubFilterDTO], [Result_8], []),
     "getManager": IDL2.Func([RequestManagerDTO], [Result_1], []),
-    "getManagerCanisters": IDL2.Func([], [Result_17], []),
+    "getManagerCanisters": IDL2.Func([], [Result_18], []),
     "getMonthlyLeaderboard": IDL2.Func(
       [GetMonthlyLeaderboardDTO],
-      [Result_16],
+      [Result_17],
       []
     ),
-    "getPlayerDetails": IDL2.Func([GetPlayerDetailsDTO], [Result_15], []),
+    "getPlayerDetails": IDL2.Func([GetPlayerDetailsDTO], [Result_16], []),
     "getPlayerDetailsForGameweek": IDL2.Func(
       [GameweekFiltersDTO],
-      [Result_14],
+      [Result_15],
       []
     ),
-    "getPlayers": IDL2.Func([], [Result_7], []),
-    "getPlayersMap": IDL2.Func([GameweekFiltersDTO], [Result_13], []),
-    "getPostponedFixtures": IDL2.Func([], [Result_12], []),
-    "getProfile": IDL2.Func([], [Result_11], []),
-    "getRetiredPlayers": IDL2.Func([ClubFilterDTO], [Result_7], []),
-    "getRewardPool": IDL2.Func([GetRewardPoolDTO], [Result_10], []),
+    "getPlayers": IDL2.Func([], [Result_8], []),
+    "getPlayersMap": IDL2.Func([GameweekFiltersDTO], [Result_14], []),
+    "getPostponedFixtures": IDL2.Func([], [Result_13], []),
+    "getProfile": IDL2.Func([], [Result_12], []),
+    "getRetiredPlayers": IDL2.Func([ClubFilterDTO], [Result_8], []),
+    "getRewardPool": IDL2.Func([GetRewardPoolDTO], [Result_11], []),
     "getSeasonLeaderboard": IDL2.Func(
       [GetSeasonLeaderboardDTO],
-      [Result_9],
+      [Result_10],
       []
     ),
-    "getSeasons": IDL2.Func([], [Result_8], []),
-    "getSnapshotPlayers": IDL2.Func([GetSnapshotPlayers], [Result_7], []),
-    "getStaticCanisters": IDL2.Func([], [Result_6], []),
-    "getSystemState": IDL2.Func([], [Result_5], []),
-    "getTopups": IDL2.Func([GetTopupsDTO], [Result_4], []),
-    "getTotalManagers": IDL2.Func([], [Result_3], []),
+    "getSeasons": IDL2.Func([], [Result_9], []),
+    "getSnapshotPlayers": IDL2.Func([GetSnapshotPlayers], [Result_8], []),
+    "getStaticCanisters": IDL2.Func([], [Result_7], []),
+    "getSystemState": IDL2.Func([], [Result_6], []),
+    "getTopups": IDL2.Func([GetTopupsDTO], [Result_5], []),
+    "getTotalManagers": IDL2.Func([], [Result_4], []),
     "getTreasuryAccountPublic": IDL2.Func([], [AccountIdentifier], []),
+    "getUniqueManagerCanisterIds": IDL2.Func([], [Result_3], []),
     "getWeeklyLeaderboard": IDL2.Func(
       [GetWeeklyLeaderboardDTO],
       [Result_2],
@@ -4519,7 +4521,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "viewPayouts": IDL2.Func([GameweekNumber], [Result], [])
   });
 };
-var define_process_env_default$i = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+var define_process_env_default$i = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
 const canisterId = define_process_env_default$i.CANISTER_ID_OPENFPL_BACKEND;
 const createActor = (canisterId2, options2 = {}) => {
   const agent = options2.agent || new HttpAgent({ ...options2.agentOptions });
@@ -4528,6 +4530,14 @@ const createActor = (canisterId2, options2 = {}) => {
       "Detected both agent and agentOptions passed to createActor. Ignoring agentOptions and proceeding with the provided agent."
     );
   }
+  {
+    agent.fetchRootKey().catch((err) => {
+      console.warn(
+        "Unable to fetch root key. Check to ensure that your local replica is running"
+      );
+      console.error(err);
+    });
+  }
   return Actor.createActor(idlFactory, {
     agent,
     canisterId: canisterId2,
@@ -4535,11 +4545,11 @@ const createActor = (canisterId2, options2 = {}) => {
   });
 };
 canisterId ? createActor(canisterId) : void 0;
-var define_process_env_default$h = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+var define_process_env_default$h = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
 class ActorFactory {
   static createActor(idlFactory2, canisterId2 = "", identity = null, options2 = null) {
     const hostOptions = {
-      host: `https://${canisterId2}.icp-api.io`,
+      host: `http://localhost:8080/?canisterId=qhbym-qaaaa-aaaaa-aaafq-cai`,
       identity
     };
     if (!options2) {
@@ -4552,6 +4562,14 @@ class ActorFactory {
       options2.agentOptions.host = hostOptions.host;
     }
     const agent = new HttpAgent({ ...options2.agentOptions });
+    {
+      agent.fetchRootKey().catch((err) => {
+        console.warn(
+          "Unable to fetch root key. Ensure your local replica is running"
+        );
+        console.error(err);
+      });
+    }
     return Actor.createActor(idlFactory2, {
       agent,
       canisterId: canisterId2,
@@ -4560,7 +4578,7 @@ class ActorFactory {
   }
   static getAgent(canisterId2 = "", identity = null, options2 = null) {
     const hostOptions = {
-      host: `https://${canisterId2}.icp-api.io`,
+      host: `http://localhost:8080/?canisterId=b77ix-eeaaa-aaaaa-qaada-cai`,
       identity
     };
     if (!options2) {
@@ -4590,7 +4608,7 @@ class ActorFactory {
   static getGovernanceAgent(identity = null, options2 = null) {
     let canisterId2 = define_process_env_default$h.CANISTER_ID_SNS_GOVERNANCE;
     const hostOptions = {
-      host: `https://${canisterId2}.icp-api.io`,
+      host: `http://localhost:8080/?canisterId=${canisterId2}`,
       identity
     };
     if (!options2) {
@@ -4771,16 +4789,19 @@ function convertFixtureStatus(fixtureStatus) {
 function isError(response) {
   return response && response.err !== void 0;
 }
-var define_process_env_default$g = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+var define_process_env_default$g = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
 function createSystemStore() {
   const { subscribe: subscribe2, set } = writable(null);
+  console.log("Create actor in createSystemStore line 19");
   let actor = ActorFactory.createActor(
     idlFactory,
-    define_process_env_default$g.OPENWSL_BACKEND_CANISTER_ID
+    define_process_env_default$g.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync() {
+    console.log("Syncing system and auth store");
     await authStore.sync();
     let category = "system_state";
+    console.log("Actor getting data hashes in system store sync line 30");
     const newHashValues = await actor.getDataHashes();
     let error = isError(newHashValues);
     if (error) {
@@ -4791,6 +4812,7 @@ function createSystemStore() {
     let categoryHash = dataCacheValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(`${category}_hash`);
     if (categoryHash != localHash) {
+      console.log("Actor getting system state line 47");
       let result = await actor.getSystemState();
       if (isError(result)) {
         console.error("Error syncing system store");
@@ -4823,6 +4845,7 @@ function createSystemStore() {
   }
   async function getSeasons() {
     try {
+      console.log("Actor getting seasons line 84");
       let result = await actor.getSeasons();
       if (isError(result)) {
         console.error("Error fetching seasons:");
@@ -4836,9 +4859,10 @@ function createSystemStore() {
   }
   async function getCanisters(currentPage, itemsPerPage, filter) {
     try {
+      console.log("Creating actor in getCanisters line 104");
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default$g.OPENWSL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$g.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const limit = itemsPerPage;
       const offset = (currentPage - 1) * limit;
@@ -4849,6 +4873,7 @@ function createSystemStore() {
         entries: [],
         canisterTypeFilter: filter
       };
+      console.log("Actor getting canisters line 120");
       let result = await identityActor.getCanisters(dto);
       if (isError(result)) {
         console.error("Error getting canisters:", result);
@@ -4862,9 +4887,10 @@ function createSystemStore() {
   }
   async function getRewardPool(seasonId) {
     try {
+      console.log("Creating actor in getRewardPool line 138");
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default$g.OPENWSL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$g.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       let dto = {
         seasonId,
@@ -4880,6 +4906,7 @@ function createSystemStore() {
           weeklyLeaderboardPool: 0n
         }
       };
+      console.log("Actor getting reward pool line 159");
       let result = await identityActor.getRewardPool(dto);
       if (isError(result)) {
         console.error("Error getting reward pools:", result);
@@ -4893,9 +4920,10 @@ function createSystemStore() {
   }
   async function getTopups(currentPage, itemsPerPage) {
     try {
+      console.log("Creating actor in getTopups line 15");
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default$g.OPENWSL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$g.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const limit = itemsPerPage;
       const offset = (currentPage - 1) * limit;
@@ -4905,6 +4933,7 @@ function createSystemStore() {
         offset: BigInt(offset),
         limit: BigInt(limit)
       };
+      console.log("Actor getting topups line 193");
       let result = await identityActor.getTopups(dto);
       if (isError(result)) {
         console.error("Error getting topups:", result);
@@ -4918,10 +4947,12 @@ function createSystemStore() {
   }
   async function getBackendCanisterBalance() {
     try {
+      console.log("Creating actor in getBackendCanisterBalance line 209");
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default$g.OPENWSL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$g.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
+      console.log("Actor getting backend canister balance line 214");
       let result = await identityActor.getBackendCanisterBalance();
       if (isError(result)) {
         console.error("Error getting backend FPL balance:", result);
@@ -4937,8 +4968,9 @@ function createSystemStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default$g.OPENWSL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$g.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
+      console.log("Actor getting canister cycles balance line 236");
       let result = await identityActor.getCanisterCyclesBalance();
       if (isError(result)) {
         console.error("Error getting backend cycles:", result);
@@ -4963,18 +4995,18 @@ function createSystemStore() {
   };
 }
 const systemStore = createSystemStore();
-var define_process_env_default$f = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+var define_process_env_default$f = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
 function createFixtureStore() {
   const { subscribe: subscribe2, set } = writable([]);
+  console.log("Creating actor in fixture store line 15");
   let actor = ActorFactory.createActor(
     idlFactory,
-    define_process_env_default$f.OPENWSL_BACKEND_CANISTER_ID
+    define_process_env_default$f.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync(seasonId) {
-    console.log("syncing fixtures");
     const category = "fixtures";
+    console.log("Actor getting Data hashes in sync on line 23");
     const newHashValues = await actor.getDataHashes();
-    console.log(newHashValues);
     let error = isError(newHashValues);
     if (error) {
       console.error("Error syncing fixture store");
@@ -4987,10 +5019,8 @@ function createFixtureStore() {
       let dto = {
         seasonId
       };
-      console.log("here");
-      console.log(dto);
+      console.log("Actor getting fixtures line 43");
       const result = await actor.getFixtures(dto);
-      console.log(result);
       if (isError(result)) {
         console.error("error syncing fixture store");
         return;
@@ -5028,6 +5058,7 @@ function createFixtureStore() {
   }
   async function getPostponedFixtures() {
     try {
+      console.log("Actor getting postponed fixtures");
       let result = await actor.getPostponedFixtures();
       if (isError(result)) {
         console.error("Error getting postponed fixtures");
@@ -5047,15 +5078,17 @@ function createFixtureStore() {
   };
 }
 const fixtureStore = createFixtureStore();
-var define_process_env_default$e = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+var define_process_env_default$e = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
 function createTeamStore() {
   const { subscribe: subscribe2, set } = writable([]);
+  console.log("Creating actor in createTeamstore line 13");
   let actor = ActorFactory.createActor(
     idlFactory,
-    define_process_env_default$e.OPENWSL_BACKEND_CANISTER_ID
+    define_process_env_default$e.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync() {
     const category = "clubs";
+    console.log("Actor getting data hashes in team store sync line 21");
     const newHashValues = await actor.getDataHashes();
     let error = isError(newHashValues);
     if (error) {
@@ -5066,6 +5099,7 @@ function createTeamStore() {
     let categoryHash = dataCacheValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(`${category}_hash`);
     if (categoryHash?.hash != localHash) {
+      console.log("Actor getting clubs line 38");
       const updatedTeamsData = await actor.getClubs();
       if (isError(updatedTeamsData)) {
         return [];
@@ -5488,14 +5522,15 @@ const toastsError = ({
     level: "error"
   });
 };
-var define_process_env_default$d = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+var define_process_env_default$d = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
 function createManagerStore() {
   const { subscribe: subscribe2, set } = writable(null);
   systemStore.subscribe((value) => {
   });
+  console.log("Creating actor in manager store line 26");
   let actor = ActorFactory.createActor(
     idlFactory,
-    define_process_env_default$d.OPENWSL_BACKEND_CANISTER_ID
+    define_process_env_default$d.OPENFPL_BACKEND_CANISTER_ID
   );
   let newManager = {
     playerIds: [],
@@ -5539,6 +5574,7 @@ function createManagerStore() {
         gameweek: 0,
         clubId: 0
       };
+      console.log("actor getting manager in get public profile line 75");
       let result = await actor.getManager(dto);
       if (isError(result)) {
         console.error("Error getting public profile");
@@ -5552,6 +5588,7 @@ function createManagerStore() {
   }
   async function getTotalManagers() {
     try {
+      console.log("actor getting total managers line 92");
       let result = await actor.getTotalManagers();
       if (isError(result)) {
         console.error("Error getting total managers");
@@ -5570,6 +5607,7 @@ function createManagerStore() {
         gameweek,
         seasonId
       };
+      console.log("actor getting fantasy team snapshot line 118");
       let result = await actor.getFantasyTeamSnapshot(dto);
       if (isError(result)) {
         console.error("Error fetching fantasy team for gameweek:");
@@ -5582,10 +5620,12 @@ function createManagerStore() {
   }
   async function getCurrentTeam() {
     try {
+      console.log("Creating actor in get current team line 133");
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default$d.OPENWSL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$d.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
+      console.log("actor getting current team line 138");
       const result = await identityActor.getCurrentTeam();
       if (isError(result)) {
         return newManager;
@@ -5609,9 +5649,10 @@ function createManagerStore() {
         bonusPlayed = getBonusPlayed(userFantasyTeam, activeGameweek);
         bonusCountryId = getBonusCountryId(userFantasyTeam, activeGameweek);
       }
+      console.log("Creating actor in save fantasy team line 171");
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default$d.OPENWSL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$d.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       let dto = {
         playerIds: userFantasyTeam.playerIds,
@@ -5638,6 +5679,7 @@ function createManagerStore() {
       };
       console.log("dto");
       console.log(dto);
+      console.log("actor saving fantasy team");
       let result = await identityActor.saveFantasyTeam(dto);
       if (isError(result)) {
         console.error("Error saving fantasy team", result);
@@ -5727,14 +5769,16 @@ function createManagerStore() {
   };
 }
 createManagerStore();
-var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
 function createCountriesStore() {
   const { subscribe: subscribe2, set } = writable([]);
+  console.log("creating country store line 13");
   let actor = ActorFactory.createActor(
     idlFactory,
-    define_process_env_default$c.OPENWSL_BACKEND_CANISTER_ID
+    define_process_env_default$c.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync() {
+    console.log("syncing country store line 21");
     let category = "countries";
     const newHashValues = await actor.getDataHashes();
     let error = isError(newHashValues);
@@ -5746,6 +5790,7 @@ function createCountriesStore() {
     let categoryHash = dataCacheValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(`${category}_hash`);
     if (categoryHash?.hash != localHash) {
+      console.log("calling get countries in country store line 35");
       let result = await actor.getCountries();
       if (isError(result)) {
         console.error("Error fetching countries");
@@ -5774,16 +5819,20 @@ function createCountriesStore() {
   };
 }
 const countriesStore = createCountriesStore();
-var define_process_env_default$b = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+var define_process_env_default$b = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
 function createWeeklyLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage = 25;
   const category = "weekly_leaderboard";
+  console.log("Creating actor in weekly leaderboard store line 18");
   let actor = ActorFactory.createActor(
     idlFactory,
-    define_process_env_default$b.OPENWSL_BACKEND_CANISTER_ID
+    define_process_env_default$b.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync(seasonId, gameweek) {
+    console.log(
+      "Actor getting data hashes in weekly leaderboard store sync line 25"
+    );
     const newHashValues = await actor.getDataHashes();
     let error = isError(newHashValues);
     if (error) {
@@ -5803,6 +5852,7 @@ function createWeeklyLeaderboardStore() {
         searchTerm: "",
         gameweek
       };
+      console.log("Actor getting weekly leaderboard line 51");
       let result = await actor.getWeeklyLeaderboard(dto);
       if (isError(result)) {
         let emptyLeaderboard = {
@@ -5854,6 +5904,7 @@ function createWeeklyLeaderboardStore() {
       searchTerm,
       gameweek
     };
+    console.log("Actor getting weekly leaderboard line 117");
     let leaderboardData = await actor.getWeeklyLeaderboard(dto);
     if (isError(leaderboardData)) {
       let emptyLeaderboard = {
@@ -5884,6 +5935,7 @@ function createWeeklyLeaderboardStore() {
       searchTerm: "",
       gameweek
     };
+    console.log("Actor getting weekly leaderboard line 155");
     let leaderboardData = await actor.getWeeklyLeaderboard(dto);
     if (isError(leaderboardData)) {
       return {
@@ -5904,18 +5956,20 @@ function createWeeklyLeaderboardStore() {
   };
 }
 createWeeklyLeaderboardStore();
-var define_process_env_default$a = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+var define_process_env_default$a = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
 function createPlayerStore() {
   const { subscribe: subscribe2, set } = writable([]);
   systemStore.subscribe((value) => {
   });
   fixtureStore.subscribe((value) => value);
+  console.log("Creating actor in player store line 26");
   let actor = ActorFactory.createActor(
     idlFactory,
     define_process_env_default$a.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync() {
     let category = "players";
+    console.log("actor getting data hashes in player store sync line 35");
     const newHashValues = await actor.getDataHashes();
     let error = isError(newHashValues);
     if (error) {
@@ -5926,6 +5980,7 @@ function createPlayerStore() {
     let categoryHash = dataCacheValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(`${category}_hash`);
     if (categoryHash?.hash != localHash) {
+      console.log("Actor getting players in players store sync");
       let result = await actor.getPlayers();
       if (isError(result)) {
         console.error("Error fetching players data");
@@ -5960,6 +6015,7 @@ function createPlayerStore() {
       leagueId: 1,
       clubId
     };
+    console.log("Actor getting loaned players line 92");
     let loanedPlayers = await actor.getLoanedPlayers(dto);
     if (isError(loanedPlayers)) {
       console.error("Error fetching loaned players");
@@ -5972,6 +6028,7 @@ function createPlayerStore() {
       leagueId: 1,
       clubId
     };
+    console.log("Actor getting retired players line 108");
     let retiredPlayers = await actor.getRetiredPlayers(dto);
     if (isError(retiredPlayers)) {
       console.error("Error fetching retired players");
@@ -5987,7 +6044,7 @@ function createPlayerStore() {
   };
 }
 const playerStore = createPlayerStore();
-var define_process_env_default$9 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+var define_process_env_default$9 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
 function createPlayerEventsStore() {
   const { subscribe: subscribe2, set } = writable([]);
   let systemState;
@@ -5996,12 +6053,16 @@ function createPlayerEventsStore() {
   });
   let allFixtures;
   fixtureStore.subscribe((value) => allFixtures = value);
+  console.log("Creating actor in player events store line 38");
   let actor = ActorFactory.createActor(
     idlFactory,
-    define_process_env_default$9.OPENWSL_BACKEND_CANISTER_ID
+    define_process_env_default$9.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync() {
     let category = "player_events";
+    console.log(
+      "actor getting data hashes in player events store sync line 45"
+    );
     const newHashValues = await actor.getDataHashes();
     let error = isError(newHashValues);
     if (error) {
@@ -6016,6 +6077,9 @@ function createPlayerEventsStore() {
         seasonId: systemState.calculationSeasonId,
         gameweek: systemState.calculationGameweek
       };
+      console.log(
+        "actor getting player details for gameweek in player events store sync line 66"
+      );
       let result = await actor.getPlayerDetailsForGameweek(dto);
       if (isError(result)) {
         console.error("Error fetching player details for gameweek");
@@ -6055,6 +6119,7 @@ function createPlayerEventsStore() {
         playerId,
         seasonId
       };
+      console.log("actor getting player details line 116");
       let result = await actor.getPlayerDetails(dto);
       if (isError(result)) {
         console.error("Error fetching player details");
@@ -6075,6 +6140,9 @@ function createPlayerEventsStore() {
         seasonId: systemState.calculationSeasonId,
         gameweek
       };
+      console.log(
+        "Actor getting player details in getgameweekPlayers line 145"
+      );
       allPlayerEvents = await actor.getPlayerDetailsForGameweek(dto);
     }
     let allPlayers = [];
@@ -6349,7 +6417,7 @@ function createPlayerEventsStore() {
   };
 }
 createPlayerEventsStore();
-var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
 function createUserStore() {
   const { subscribe: subscribe2, set } = writable(null);
   async function sync() {
@@ -6368,13 +6436,15 @@ function createUserStore() {
   }
   async function updateUsername(username) {
     try {
+      console.log("Creating actor in update username line 37");
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default$8.OPENWSL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$8.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       let dto = {
         username
       };
+      console.log("Actor updating username line 45");
       const result = await identityActor.updateUsername(dto);
       if (isError(result)) {
         console.error("Error updating username");
@@ -6389,13 +6459,15 @@ function createUserStore() {
   }
   async function updateFavouriteTeam(favouriteTeamId) {
     try {
+      console.log("Creating actor in updateFavouriteteam line 62");
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default$8.OPENWSL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$8.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       let dto = {
         favouriteClubId: favouriteTeamId
       };
+      console.log("Actor updating favourite club line 70");
       const result = await identityActor.updateFavouriteClub(dto);
       if (isError(result)) {
         console.error("Error updating favourite team");
@@ -6421,14 +6493,16 @@ function createUserStore() {
         const arrayBuffer = reader.result;
         const uint8Array = new Uint8Array(arrayBuffer);
         try {
+          console.log("Creating actor in updateProfilePicture line 98");
           const identityActor = await ActorFactory.createIdentityActor(
             authStore,
-            define_process_env_default$8.OPENWSL_BACKEND_CANISTER_ID ?? ""
+            define_process_env_default$8.OPENFPL_BACKEND_CANISTER_ID ?? ""
           );
           let dto = {
             profilePicture: uint8Array,
             extension
           };
+          console.log("Actor updating profile picture line 108");
           const result = await identityActor.updateProfilePicture(dto);
           if (isError(result)) {
             console.error("Error updating profile picture");
@@ -6451,20 +6525,24 @@ function createUserStore() {
     return lastIndex !== -1 ? filename.substring(lastIndex + 1) : "";
   }
   async function isUsernameAvailable(username) {
+    console.log("Creating actor in isUsernameAvailable line 139");
     const identityActor = await ActorFactory.createIdentityActor(
       authStore,
-      define_process_env_default$8.OPENWSL_BACKEND_CANISTER_ID
+      define_process_env_default$8.OPENFPL_BACKEND_CANISTER_ID
     );
     let dto = {
       username
     };
+    console.log("actor checking isUsernameValid line 146");
     return await identityActor.isUsernameValid(dto);
   }
   async function cacheProfile() {
+    console.log("Creating actor in cache profile line 152");
     const identityActor = await ActorFactory.createIdentityActor(
       authStore,
-      define_process_env_default$8.OPENWSL_BACKEND_CANISTER_ID
+      define_process_env_default$8.OPENFPL_BACKEND_CANISTER_ID
     );
+    console.log("Actor getting profile line 157");
     let getProfileResponse = await identityActor.getProfile();
     let error = isError(getProfileResponse);
     if (error) {
@@ -6486,7 +6564,7 @@ function createUserStore() {
       let principalId = identity.getPrincipal();
       const agent = await createAgent({
         identity,
-        host: "https://identity.ic0.app",
+        host: "http://localhost:8080/?canisterId=qhbym-qaaaa-aaaaa-aaafq-cai",
         fetchRootKey: define_process_env_default$8.DFX_NETWORK === "local"
       });
       const { transfer } = IcrcLedgerCanister.create({
@@ -6526,12 +6604,12 @@ function createUserStore() {
     let principalId = identity.getPrincipal();
     const agent = await createAgent({
       identity,
-      host: "https://identity.ic0.app",
+      host: "http://localhost:8080/?canisterId=qhbym-qaaaa-aaaaa-aaafq-cai",
       fetchRootKey: define_process_env_default$8.DFX_NETWORK === "local"
     });
     const { balance } = IcrcLedgerCanister.create({
       agent,
-      canisterId: Principal.fromText("ddsp7-7iaaa-aaaaq-aacqq-cai")
+      canisterId: Principal.fromText("avqkn-guaaa-aaaaa-qaaea-cai")
     });
     if (principalId) {
       try {
@@ -6563,7 +6641,7 @@ const OpenFPLIcon = create_ssr_component(($$result, $$props, $$bindings, slots) 
   let { className = "" } = $$props;
   if ($$props.className === void 0 && $$bindings.className && className !== void 0)
     $$bindings.className(className);
-  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"${add_attribute("class", className, 0)} fill="currentColor" viewBox="0 0 219 297"><path d="M111.841 0.35467C110.455 0.112752 109.035 0.112564 107.648 0.351435C69.2925 6.95892 34.5675 22.8118 4.9608 45.2186C1.80522 47.6068 0.0151367 51.3653 0.0151367 55.3227V201.488C0.0151367 205.3 1.68822 208.92 4.59169 211.389L101.167 293.546C106.043 297.694 113.215 297.674 118.068 293.499L213.516 211.386C216.386 208.916 218.037 205.319 218.038 201.532L218.059 55.3581C218.06 51.3421 216.216 47.5364 212.989 45.1469C183.821 23.553 149.285 6.88999 111.841 0.35467ZM131.413 232.023C131.413 232.804 130.921 233.586 130.121 233.782L109.637 240.526C109.238 240.624 108.838 240.624 108.438 240.526L87.9544 233.782C87.1548 233.489 86.655 232.804 86.655 232.023V225.18C86.655 224.496 87.0548 223.812 87.6545 223.519L108.138 212.962C108.738 212.669 109.338 212.669 109.937 212.962L130.421 223.519C131.021 223.812 131.413 224.496 131.413 225.18V232.023ZM169.935 156.662C169.935 157.346 169.535 158.03 168.835 158.323L154.249 165.654C153.25 166.143 152.95 167.316 153.449 168.195L167.636 193.902C168.036 194.684 167.936 195.564 167.336 196.15L143.154 219.414C142.454 220.098 141.455 220.098 140.655 219.609L113.082 200.158C112.183 199.474 111.983 198.203 112.782 197.323L134.665 173.474C135.965 172.007 134.465 169.857 132.666 170.444L109.584 177.774C109.184 177.872 108.784 177.872 108.384 177.774L85.4093 170.444C83.5102 169.857 82.1108 172.105 83.4102 173.474L105.285 197.323C106.085 198.203 105.885 199.474 104.986 200.158L77.4128 219.609C76.6131 220.098 75.6135 220.098 74.9138 219.414L50.7396 196.053C50.1398 195.466 50.0399 194.586 50.4397 193.805L64.6259 168.098C65.1257 167.12 64.7259 166.045 63.8263 165.556L49.2402 158.226C48.6405 157.932 48.1407 157.248 48.1407 156.564V105.346C48.1407 103.88 49.84 102.902 51.1394 103.782L63.1266 111.699C63.6264 112.09 63.9262 112.579 63.9262 113.263L64.0262 126.459C64.0262 127.045 64.3261 127.632 64.8259 128.023L82.4106 140.045C83.7101 140.925 85.5093 139.947 85.4093 138.383L84.3098 115.12C84.3098 114.534 84.0099 113.947 83.5102 113.654L48.9403 90.4887C48.4406 90.0977 48.1407 89.5113 48.1407 88.9248V77.4887C48.1407 77.0977 48.2406 76.609 48.5405 76.3158L61.0275 60.8722C61.5273 60.188 62.4269 59.9925 63.2265 60.2857L108.284 76.609C108.684 76.8045 109.184 76.8045 109.584 76.609L154.649 60.2857C155.449 59.9925 156.341 60.2857 156.84 60.8722L169.335 76.3158C169.635 76.609 169.735 77.0977 169.735 77.4887V88.9248C169.735 89.5113 169.435 90.0977 168.935 90.4887L135.78 112.706C134.843 113.334 133.766 114.09 133.766 115.218L132.666 138.481C132.566 140.045 134.365 141.023 135.665 140.143L153.25 128.12C153.749 127.729 154.049 127.241 154.049 126.556L154.149 113.361C154.149 112.774 154.449 112.188 154.949 111.797L166.936 103.88C168.235 103 169.935 103.88 169.935 105.444V156.662Z" fill="#FFFFFF"></path></svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"${add_attribute("class", className, 0)} fill="currentColor" viewBox="0 0 137 188"><path d="M68.8457 0C43.0009 4.21054 19.8233 14.9859 0.331561 30.5217L0.264282 30.6627V129.685L68.7784 187.97L136.528 129.685L136.543 30.6204C117.335 15.7049 94.1282 4.14474 68.8457 0ZM82.388 145.014C82.388 145.503 82.0804 145.992 81.5806 146.114L68.7784 150.329C68.5285 150.39 68.2786 150.39 68.0287 150.329L55.2265 146.114C54.7267 145.931 54.4143 145.503 54.4143 145.014V140.738C54.4143 140.31 54.6642 139.883 55.039 139.7L67.8413 133.102C68.2161 132.919 68.591 132.919 68.9658 133.102L81.768 139.7C82.1429 139.883 82.388 140.31 82.388 140.738V145.014ZM106.464 97.9137C106.464 98.3414 106.214 98.769 105.777 98.9523L96.6607 103.534C96.036 103.84 95.8486 104.573 96.1609 105.122L105.027 121.189C105.277 121.678 105.215 122.228 104.84 122.594L89.7262 137.134C89.2889 137.561 88.6641 137.561 88.1644 137.256L70.9313 125.099C70.369 124.671 70.2441 123.877 70.7439 123.327L84.4208 108.421C85.2329 107.505 84.2958 106.161 83.1713 106.527L68.7447 111.109C68.4948 111.17 68.2449 111.17 67.9951 111.109L53.6358 106.527C52.4488 106.161 51.5742 107.566 52.3863 108.421L66.0584 123.327C66.5582 123.877 66.4332 124.671 65.871 125.099L48.6379 137.256C48.1381 137.561 47.5134 137.561 47.0761 137.134L31.9671 122.533C31.5923 122.167 31.5298 121.617 31.7797 121.128L40.6461 105.061C40.9585 104.45 40.7086 103.778 40.1463 103.473L31.03 98.8912C30.6552 98.7079 30.3428 98.2803 30.3428 97.8526V65.8413C30.3428 64.9249 31.4049 64.314 32.217 64.8639L39.709 69.8122C40.0214 70.0565 40.2088 70.362 40.2088 70.7896L40.2713 79.0368C40.2713 79.4034 40.4587 79.7699 40.7711 80.0143L51.7616 87.5284C52.5737 88.0782 53.6983 87.4673 53.6358 86.4898L52.9486 71.9503C52.9486 71.5838 52.7612 71.2173 52.4488 71.034L30.8426 56.5556C30.5302 56.3112 30.3428 55.9447 30.3428 55.5781V48.4305C30.3428 48.1862 30.4053 47.8807 30.5927 47.6975L38.3971 38.0452C38.7094 37.6176 39.2717 37.4954 39.7715 37.6786L67.9326 47.8807C68.1825 48.0029 68.4948 48.0029 68.7447 47.8807L96.9106 37.6786C97.4104 37.4954 97.9679 37.6786 98.2802 38.0452L106.089 47.6975C106.277 47.8807 106.339 48.1862 106.339 48.4305V55.5781C106.339 55.9447 106.152 56.3112 105.84 56.5556L84.2333 71.034C84.0459 71.2783 83.8585 71.6449 83.8585 72.0114L83.1713 86.5509C83.1088 87.5284 84.2333 88.1393 85.0455 87.5895L96.036 80.0753C96.3484 79.831 96.5358 79.5255 96.5358 79.0979L96.5983 70.8507C96.5983 70.4842 96.7857 70.1176 97.098 69.8733L104.59 64.9249C105.402 64.3751 106.464 64.9249 106.464 65.9024V97.9137Z" fill="#fffff"></path></svg>`;
 });
 const WalletIcon = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let { className = "" } = $$props;
@@ -6643,7 +6721,7 @@ const Header = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_fixtureStore();
   $$unsubscribe_authSignedInStore();
   $$unsubscribe_userGetProfilePicture();
-  return `<header><nav class="text-white"><div class="px-4 h-16 flex justify-between items-center w-full"><a href="/" class="hover:text-gray-400 flex items-center">${validate_component(OpenFPLIcon, "OpenFPLIcon").$$render($$result, { className: "h-8 w-auto" }, {}, {})}<b class="ml-2" data-svelte-h="svelte-q9wiy1">OpenWSL</b></a> <button class="menu-toggle md:hidden focus:outline-none" data-svelte-h="svelte-ctwvk"><svg width="24" height="18" viewBox="0 0 24 18" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><rect width="24" height="2" rx="1" fill="currentColor"></rect><rect y="8" width="24" height="2" rx="1" fill="currentColor"></rect><rect y="16" width="24" height="2" rx="1" fill="currentColor"></rect></svg></button> ${$authSignedInStore ? `<ul class="hidden md:flex h-16"><li class="mx-2 flex items-center h-16"><a href="/" class="${"flex items-center h-full nav-underline hover:text-gray-400 $" + escape(currentClass("/"), true)}"><span class="flex items-center h-full px-4" data-svelte-h="svelte-fx32ra">Home</span></a></li> <li class="mx-2 flex items-center h-16"><a href="/pick-team" class="${"flex items-center h-full nav-underline hover:text-gray-400 $" + escape(currentClass("/pick-team"), true)}"><span class="flex items-center h-full px-4" data-svelte-h="svelte-1k6m4hl">Squad Selection</span></a></li> <li class="mx-2 flex items-center h-16"><a href="/governance" class="${"flex items-center h-full nav-underline hover:text-gray-400 $" + escape(currentClass("/governance"), true)}"><span class="flex items-center h-full px-4" data-svelte-h="svelte-qfd2bh">Governance</span></a></li> <li class="flex flex-1 items-center"><div class="relative inline-block"><button${add_attribute("class", `h-full flex items-center rounded-sm ${currentBorder("/profile")}`, 0)}><img${add_attribute("src", $userGetProfilePicture, 0)} alt="Profile" class="h-12 rounded-sm profile-pic" aria-label="Toggle Profile"></button> <div${add_attribute("class", `absolute right-0 top-full w-48 bg-black rounded-b-md rounded-l-md shadow-lg z-50 profile-dropdown ${showProfileDropdown ? "block" : "hidden"}`, 0)}><ul class="text-gray-700"><li><a href="/profile" class="flex items-center h-full w-full nav-underline hover:text-gray-400"><span class="flex items-center h-full w-full"><img${add_attribute("src", $userGetProfilePicture, 0)} alt="logo" class="h-8 my-2 ml-4 mr-2"> <p class="w-full min-w-[125px] max-w-[125px] truncate" data-svelte-h="svelte-1mjctb">Profile</p></span></a></li> <li><button class="flex items-center justify-center px-4 pb-2 pt-1 text-white rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button">Disconnect
+  return `<header><nav class="text-white"><div class="px-4 h-16 flex justify-between items-center w-full"><a href="/" class="hover:text-gray-400 flex items-center">${validate_component(OpenFPLIcon, "OpenFPLIcon").$$render($$result, { className: "h-8 w-auto" }, {}, {})}<b class="ml-2" data-svelte-h="svelte-6ko9z9">OpenFPL</b></a> <button class="menu-toggle md:hidden focus:outline-none" data-svelte-h="svelte-ctwvk"><svg width="24" height="18" viewBox="0 0 24 18" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><rect width="24" height="2" rx="1" fill="currentColor"></rect><rect y="8" width="24" height="2" rx="1" fill="currentColor"></rect><rect y="16" width="24" height="2" rx="1" fill="currentColor"></rect></svg></button> ${$authSignedInStore ? `<ul class="hidden md:flex h-16"><li class="mx-2 flex items-center h-16"><a href="/" class="${"flex items-center h-full nav-underline hover:text-gray-400 $" + escape(currentClass("/"), true)}"><span class="flex items-center h-full px-4" data-svelte-h="svelte-fx32ra">Home</span></a></li> <li class="mx-2 flex items-center h-16"><a href="/pick-team" class="${"flex items-center h-full nav-underline hover:text-gray-400 $" + escape(currentClass("/pick-team"), true)}"><span class="flex items-center h-full px-4" data-svelte-h="svelte-1k6m4hl">Squad Selection</span></a></li> <li class="mx-2 flex items-center h-16"><a href="/governance" class="${"flex items-center h-full nav-underline hover:text-gray-400 $" + escape(currentClass("/governance"), true)}"><span class="flex items-center h-full px-4" data-svelte-h="svelte-qfd2bh">Governance</span></a></li> <li class="flex flex-1 items-center"><div class="relative inline-block"><button${add_attribute("class", `h-full flex items-center rounded-sm ${currentBorder("/profile")}`, 0)}><img${add_attribute("src", $userGetProfilePicture, 0)} alt="Profile" class="h-12 rounded-sm profile-pic" aria-label="Toggle Profile"></button> <div${add_attribute("class", `absolute right-0 top-full w-48 bg-black rounded-b-md rounded-l-md shadow-lg z-50 profile-dropdown ${showProfileDropdown ? "block" : "hidden"}`, 0)}><ul class="text-gray-700"><li><a href="/profile" class="flex items-center h-full w-full nav-underline hover:text-gray-400"><span class="flex items-center h-full w-full"><img${add_attribute("src", $userGetProfilePicture, 0)} alt="logo" class="h-8 my-2 ml-4 mr-2"> <p class="w-full min-w-[125px] max-w-[125px] truncate" data-svelte-h="svelte-1mjctb">Profile</p></span></a></li> <li><button class="flex items-center justify-center px-4 pb-2 pt-1 text-white rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button">Disconnect
                       ${validate_component(WalletIcon, "WalletIcon").$$render($$result, { className: "ml-2 h-6 w-6 mt-1" }, {}, {})}</button></li></ul></div></div></li></ul> <div${add_attribute("class", `mobile-menu-panel absolute top-12 right-2.5 bg-black rounded-lg shadow-md z-10 p-2 ${"hidden"} md:hidden`, 0)}><ul class="flex flex-col"><li class="p-2"><a href="/"${add_attribute("class", `nav-underline hover:text-gray-400 ${currentClass("/")}`, 0)}>Home</a></li> <li class="p-2"><a href="/pick-team"${add_attribute("class", currentClass("/pick-team"), 0)}>Squad Selection</a></li> <li class="p-2"><a href="/governance"${add_attribute("class", currentClass("/governance"), 0)}>Governance</a></li> <li class="p-2"><a href="/profile" class="${"flex h-full w-full nav-underline hover:text-gray-400 w-full $" + escape(currentClass("/profile"), true)}"><span class="flex items-center h-full w-full"><img${add_attribute("src", $userGetProfilePicture, 0)} alt="logo" class="w-8 h-8 rounded-sm"> <p class="w-full min-w-[100px] max-w-[100px] truncate p-2" data-svelte-h="svelte-f2gegq">Profile</p></span></a></li> <li class="px-2"><button class="flex h-full w-full hover:text-gray-400 w-full items-center">Disconnect
                 ${validate_component(WalletIcon, "WalletIcon").$$render($$result, { className: "ml-2 h-6 w-6 mt-1" }, {}, {})}</button></li></ul></div>` : `<ul class="hidden md:flex"><li class="mx-2 flex items-center h-16"><button class="flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button">Connect
               ${validate_component(WalletIcon, "WalletIcon").$$render($$result, { className: "ml-2 h-6 w-6 mt-1" }, {}, {})}</button></li></ul> <div${add_attribute("class", `mobile-menu-panel absolute top-12 right-2.5 bg-black rounded-lg shadow-md z-10 p-2 ${"hidden"} md:hidden`, 0)}><ul class="flex flex-col"><li class="p-2"><button class="flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button">Connect
@@ -6656,7 +6734,7 @@ const JunoIcon = create_ssr_component(($$result, $$props, $$bindings, slots) => 
   return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"${add_attribute("class", className, 0)} fill="currentColor" viewBox="0 0 130 130"><g id="Layer_1-2"><g><path d="M91.99,64.798c0,-20.748 -16.845,-37.593 -37.593,-37.593l-0.003,-0c-20.749,-0 -37.594,16.845 -37.594,37.593l0,0.004c0,20.748 16.845,37.593 37.594,37.593l0.003,0c20.748,0 37.593,-16.845 37.593,-37.593l0,-0.004Z"></path><circle cx="87.153" cy="50.452" r="23.247" style="fill:#7888ff;"></circle></g></g></svg>`;
 });
 const Footer = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  return `<footer class="bg-WSLOFFPINK text-white py-3"><div class="container mx-1 xs:mx-2 md:mx-auto flex flex-col md:flex-row items-start md:items-center justify-between text-xs"><div class="flex-1" data-svelte-h="svelte-1784upv"><div class="flex justify-start"><div class="flex flex-row pl-4"><a href="https://oc.app/community/uf3iv-naaaa-aaaar-ar3ta-cai/?ref=zv6hh-xaaaa-aaaar-ac35q-cai" target="_blank" rel="noopener noreferrer"><img src="/openchat.png" class="h-4 w-auto mb-2 mr-2" alt="OpenChat"></a> <a href="https://x.com/OpenFPL_DAO" target="_blank" rel="noopener noreferrer"><img src="/twitter.png" class="h-4 w-auto mr-2 mb-2" alt="X"></a> <a href="https://github.com/jamesbeadle/OpenFPL" target="_blank" rel="noopener noreferrer"><img src="/github.png" class="h-4 w-auto mb-2" alt="GitHub"></a></div></div> <div class="flex justify-start"><div class="flex flex-col md:flex-row md:space-x-2 pl-4"><a href="/gameplay-rules" class="hover:text-gray-300 md:hidden lg:block">Gameplay Rules</a> <a href="/gameplay-rules" class="hover:text-gray-300 hidden md:block lg:hidden">Rules</a> <span class="hidden md:flex">|</span> <a href="/terms" class="hover:text-gray-300">Terms &amp; Conditions</a></div></div></div> <div class="flex-0"><a href="/"><b class="px-4 mt-2 md:mt-0 md:px-10 flex items-center">${validate_component(OpenFPLIcon, "OpenFplIcon").$$render($$result, { className: "h-6 w-auto mr-2" }, {}, {})}OpenWSL</b></a></div> <div class="flex-1"><div class="flex justify-end"><div class="text-right px-4 md:px-0 mt-1 md:mt-0 md:mr-4"><a href="https://juno.build" target="_blank" class="hover:text-gray-300 flex items-center">Sponsored By juno.build
+  return `<footer class="bg-gray-900 text-white py-3"><div class="container mx-1 xs:mx-2 md:mx-auto flex flex-col md:flex-row items-start md:items-center justify-between text-xs"><div class="flex-1" data-svelte-h="svelte-1fjfhgh"><div class="flex justify-start"><div class="flex flex-row pl-4"><a href="https://oc.app/community/uf3iv-naaaa-aaaar-ar3ta-cai/?ref=zv6hh-xaaaa-aaaar-ac35q-cai" target="_blank" rel="noopener noreferrer"><img src="/openchat.png" class="h-4 w-auto mb-2 mr-2" alt="OpenChat"></a> <a href="https://x.com/OpenFPL_DAO" target="_blank" rel="noopener noreferrer"><img src="/twitter.png" class="h-4 w-auto mr-2 mb-2" alt="X"></a> <a href="https://github.com/jamesbeadle/OpenFPL" target="_blank" rel="noopener noreferrer"><img src="/github.png" class="h-4 w-auto mb-2" alt="GitHub"></a></div></div> <div class="flex justify-start"><div class="flex flex-col md:flex-row md:space-x-2 pl-4"><a href="/whitepaper" class="hover:text-gray-300">Whitepaper</a> <span class="hidden md:flex">|</span> <a href="/gameplay-rules" class="hover:text-gray-300 md:hidden lg:block">Gameplay Rules</a> <a href="/gameplay-rules" class="hover:text-gray-300 hidden md:block lg:hidden">Rules</a> <span class="hidden md:flex">|</span> <a href="/terms" class="hover:text-gray-300">Terms &amp; Conditions</a></div></div></div> <div class="flex-0"><a href="/"><b class="px-4 mt-2 md:mt-0 md:px-10 flex items-center">${validate_component(OpenFPLIcon, "OpenFplIcon").$$render($$result, { className: "h-6 w-auto mr-2" }, {}, {})}OpenFPL</b></a></div> <div class="flex-1"><div class="flex justify-end"><div class="text-right px-4 md:px-0 mt-1 md:mt-0 md:mr-4"><a href="https://juno.build" target="_blank" class="hover:text-gray-300 flex items-center">Sponsored By juno.build
             ${validate_component(JunoIcon, "JunoIcon").$$render($$result, { className: "h-8 w-auto ml-2" }, {}, {})}</a></div></div></div></div></footer>`;
 });
 const css$3 = {
@@ -6710,15 +6788,17 @@ const Local_spinner = create_ssr_component(($$result, $$props, $$bindings, slots
   $$result.css.add(css$2);
   return `<div class="local-spinner svelte-pvdm52"></div>`;
 });
-var define_process_env_default$7 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+var define_process_env_default$7 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
 function createSeasonStore() {
   const { subscribe: subscribe2, set } = writable([]);
+  console.log("Creating actor in season store line 14");
   let actor = ActorFactory.createActor(
     idlFactory,
     define_process_env_default$7.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync() {
     const category = "seasons";
+    console.log("Actor getting data hashes in season store sync line 21");
     const newHashValues = await actor.getDataHashes();
     let error = isError(newHashValues);
     if (error) {
@@ -6729,6 +6809,7 @@ function createSeasonStore() {
     let categoryHash = dataCacheValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(`${category}_hash`);
     if (categoryHash?.hash != localHash) {
+      console.log("Actor getting season line 38");
       const result = await actor.getSeasons(1);
       if (isError(result)) {
         console.error("error syncing seasons store");
@@ -6767,7 +6848,7 @@ function createSeasonStore() {
   };
 }
 const seasonStore = createSeasonStore();
-var define_process_env_default$6 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+var define_process_env_default$6 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
 function createMonthlyLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage = 25;
@@ -6776,12 +6857,14 @@ function createMonthlyLeaderboardStore() {
   systemStore.subscribe((value) => {
     systemState = value;
   });
+  console.log("Creating actor in monthly leaderboard store line 22");
   let actor = ActorFactory.createActor(
     idlFactory,
-    define_process_env_default$6.OPENWSL_BACKEND_CANISTER_ID
+    define_process_env_default$6.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync(seasonId, month, clubId) {
     let category2 = "monthly_leaderboards";
+    console.log("Actor getting datahashes in monthly leaderboard sync line 30");
     const newHashValues = await actor.getDataHashes();
     let error = isError(newHashValues);
     if (error) {
@@ -6802,6 +6885,7 @@ function createMonthlyLeaderboardStore() {
         offset: BigInt(offset),
         limit: BigInt(limit)
       };
+      console.log("Actor getting monthly leaderboard in sync line 58");
       let result = await actor.getMonthlyLeaderboard(dto);
       if (isError(result)) {
         let emptyLeaderboard = {
@@ -6854,6 +6938,7 @@ function createMonthlyLeaderboardStore() {
       month,
       clubId
     };
+    console.log("Actor getting monthly leaderboards line 125");
     let result = await actor.getMonthlyLeaderboards(dto);
     if (isError(result)) {
       let emptyLeaderboard = {
@@ -6885,7 +6970,7 @@ function createMonthlyLeaderboardStore() {
   };
 }
 createMonthlyLeaderboardStore();
-var define_process_env_default$5 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+var define_process_env_default$5 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
 function createSeasonLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage = 25;
@@ -6894,12 +6979,14 @@ function createSeasonLeaderboardStore() {
   systemStore.subscribe((value) => {
     systemState = value;
   });
+  console.log("Creating actor in season leaderboard store line 22");
   let actor = ActorFactory.createActor(
     idlFactory,
-    define_process_env_default$5.OPENWSL_BACKEND_CANISTER_ID
+    define_process_env_default$5.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync(seasonId) {
     let category2 = "season_leaderboard";
+    console.log("Actor getting data hashes in season leaderboard store sync");
     const newHashValues = await actor.getDataHashes();
     let error = isError(newHashValues);
     if (error) {
@@ -6918,6 +7005,7 @@ function createSeasonLeaderboardStore() {
         limit: BigInt(limit),
         searchTerm: ""
       };
+      console.log("Actor getting season leaderboard in sync line 56");
       let result = await actor.getSeasonLeaderboard(dto);
       if (isError(result)) {
         return;
@@ -6977,6 +7065,7 @@ function createSeasonLeaderboardStore() {
       limit: BigInt(limit),
       searchTerm: ""
     };
+    console.log("Actor getting season leaderboard in getSeasonLeaderboard");
     let result = await actor.getSeasonLeaderboard(dto);
     if (isError(result)) {
       return {
@@ -7035,10 +7124,11 @@ const Page$f = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-var define_process_env_default$4 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+var define_process_env_default$4 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
 function createGovernanceStore() {
   async function revaluePlayerUp(playerId) {
     try {
+      console.log("Syncing system and player store in revalueplayerup line 45");
       await systemStore.sync();
       await playerStore.sync();
       let allPlayers = [];
@@ -7071,6 +7161,7 @@ function createGovernanceStore() {
   }
   async function revaluePlayerDown(playerId) {
     try {
+      console.log("playerstore sync line 98");
       await playerStore.sync();
       let allPlayers = [];
       const unsubscribe = playerStore.subscribe((players) => {
@@ -7102,6 +7193,7 @@ function createGovernanceStore() {
   }
   async function submitFixtureData(seasonId, gameweek, fixtureId, month, playerEventData) {
     try {
+      console.log("await team store sync line 155");
       await teamStore.sync();
       let clubs = [];
       const unsubscribeTeamStore = teamStore.subscribe((teams) => {
@@ -7110,6 +7202,7 @@ function createGovernanceStore() {
         }
       });
       unsubscribeTeamStore();
+      console.log("await fixture store sync line 165");
       await fixtureStore.sync(seasonId);
       let allFixtures = [];
       const unsubscribeFixtureStore = fixtureStore.subscribe((fixtures) => {
@@ -7168,6 +7261,7 @@ function createGovernanceStore() {
   }
   async function addInitialFixtures(seasonFixtures, pickTeamSeasonId) {
     try {
+      console.log("await system and season store sync line 233");
       await systemStore.sync();
       await seasonStore.sync();
       let seasonName = await seasonStore.getSeasonName(pickTeamSeasonId);
@@ -7229,6 +7323,7 @@ function createGovernanceStore() {
   }
   async function moveFixture(fixtureId, updatedFixtureGameweek, updatedFixtureDate) {
     try {
+      console.log("await team store sync line 303");
       await teamStore.sync();
       let clubs = [];
       const unsubscribeTeamStore = teamStore.subscribe((teams) => {
@@ -7244,6 +7339,7 @@ function createGovernanceStore() {
         }
       });
       unsubscribeSystemStore();
+      console.log("await fixture store sync line 322");
       await fixtureStore.sync(seasonId);
       let allFixtures = [];
       const unsubscribeFixtureStore = fixtureStore.subscribe((fixtures) => {
@@ -7282,6 +7378,7 @@ function createGovernanceStore() {
   }
   async function postponeFixture(fixtureId) {
     try {
+      console.log("await team store sync line 367");
       await teamStore.sync();
       let clubs = [];
       const unsubscribeTeamStore = teamStore.subscribe((teams) => {
@@ -7297,6 +7394,7 @@ function createGovernanceStore() {
         }
       });
       unsubscribeSystemStore();
+      console.log("await fixture store sync line 155");
       await fixtureStore.sync(seasonId);
       let allFixtures = [];
       const unsubscribeFixtureStore = fixtureStore.subscribe((fixtures) => {
@@ -7341,6 +7439,7 @@ function createGovernanceStore() {
         }
       });
       unsubscribeSystemStore();
+      console.log("await fixture store sync line 442");
       await fixtureStore.sync(seasonId);
       let allFixtures = [];
       const unsubscribeFixtureStore = fixtureStore.subscribe((fixtures) => {
@@ -7379,6 +7478,7 @@ function createGovernanceStore() {
   }
   async function transferPlayer(playerId, newLeagueId, newClubId, newShirtNumber, seasonId, gameweek) {
     try {
+      console.log("await team and player store sync line 494");
       await teamStore.sync();
       await playerStore.sync();
       let clubs = [];
@@ -7430,6 +7530,7 @@ function createGovernanceStore() {
   }
   async function loanPlayer(playerId, loanLeagueId, loanClubId, loanEndDate, seasonId, gameweek) {
     try {
+      console.log("await team and player store sync line 562");
       await teamStore.sync();
       await playerStore.sync();
       let clubs = [];
@@ -7480,6 +7581,7 @@ function createGovernanceStore() {
   }
   async function recallPlayer(playerId) {
     try {
+      console.log("await team and player store sync line 622");
       await teamStore.sync();
       await playerStore.sync();
       let clubs = [];
@@ -7518,6 +7620,7 @@ function createGovernanceStore() {
   }
   async function createPlayer(clubId, position, firstName, lastName, shirtNumber, valueQuarterMillions, dateOfBirth, nationality, gender) {
     try {
+      console.log("await team and player store sync line 676");
       await teamStore.sync();
       await playerStore.sync();
       let clubs = [];
@@ -7571,6 +7674,7 @@ function createGovernanceStore() {
   }
   async function updatePlayer(playerId, position, firstName, lastName, shirtNumber, dateOfBirth, nationality) {
     try {
+      console.log("await team and player store sync line 744");
       await teamStore.sync();
       await playerStore.sync();
       let clubs = [];
@@ -7628,6 +7732,7 @@ function createGovernanceStore() {
   }
   async function setPlayerInjury(playerId, description, expectedEndDate) {
     try {
+      console.log("await team and player store sync line 810");
       await teamStore.sync();
       await playerStore.sync();
       let clubs = [];
@@ -7675,6 +7780,7 @@ function createGovernanceStore() {
   }
   async function retirePlayer(playerId, retirementDate) {
     try {
+      console.log("await team and player store sync line 868");
       await teamStore.sync();
       await playerStore.sync();
       let clubs = [];
@@ -7717,6 +7823,7 @@ function createGovernanceStore() {
   }
   async function unretirePlayer(playerId) {
     try {
+      console.log("await team and player store sync line 917");
       await teamStore.sync();
       await playerStore.sync();
       let clubs = [];
@@ -7784,6 +7891,7 @@ function createGovernanceStore() {
   }
   async function updateClub(clubId, name, friendlyName, primaryColourHex, secondaryColourHex, thirdColourHex, abbreviatedName, shirtType) {
     try {
+      console.log("await team store sync line 1010");
       await teamStore.sync();
       let dto = {
         clubId,
@@ -7809,6 +7917,7 @@ function createGovernanceStore() {
         }
       });
       unsubscribeSystemStore();
+      console.log("await fixture store sync line 1038");
       await fixtureStore.sync(seasonId);
       let allFixtures = [];
       const unsubscribeFixtureStore = fixtureStore.subscribe((fixtures) => {
@@ -7845,7 +7954,13 @@ function createGovernanceStore() {
         if (principal == "") {
           return;
         }
+        console.log(
+          "actor getting governance agent in execute proposal line 1071"
+        );
         const agent = await ActorFactory.getGovernanceAgent(auth.identity);
+        {
+          await agent.fetchRootKey();
+        }
         const snsGovernanceCanisterPrincipal = Principal.fromText(
           define_process_env_default$4.CANISTER_ID_SNS_GOVERNANCE
         );
@@ -8145,7 +8260,7 @@ const Revalue_player_down = create_ssr_component(($$result, $$props, $$bindings,
     }
   })}`;
 });
-var define_process_env_default$3 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+var define_process_env_default$3 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
 const Move_fixture = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let isSubmitDisabled;
   let $teamStore, $$unsubscribe_teamStore;
@@ -8206,7 +8321,7 @@ const Move_fixture = create_ssr_component(($$result, $$props, $$bindings, slots)
     }
   })}`;
 });
-var define_process_env_default$2 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+var define_process_env_default$2 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
 const Postpone_fixture = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let isSubmitDisabled;
   let $teamStore, $$unsubscribe_teamStore;
@@ -8263,7 +8378,7 @@ const Postpone_fixture = create_ssr_component(($$result, $$props, $$bindings, sl
     }
   })}`;
 });
-var define_process_env_default$1 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+var define_process_env_default$1 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
 const Reschedule_fixture = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let isSubmitDisabled;
   let $teamStore, $$unsubscribe_teamStore;
@@ -8693,7 +8808,7 @@ const Update_club = create_ssr_component(($$result, $$props, $$bindings, slots) 
     }
   })}`;
 });
-var define_process_env_default = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+var define_process_env_default = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
 const Add_fixture_data = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let isSubmitDisabled;
   let $teamStore, $$unsubscribe_teamStore;

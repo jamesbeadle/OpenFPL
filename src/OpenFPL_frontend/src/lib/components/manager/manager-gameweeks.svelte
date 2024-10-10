@@ -11,9 +11,10 @@
   } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import { getFlagComponent } from "$lib/utils/helpers";
-  import { countriesStore } from "$lib/stores/country-store";
+  import { countryStore } from "$lib/stores/country-store";
     import LocalSpinner from "../local-spinner.svelte";
     import { authStore } from "$lib/stores/auth.store";
+    import { storeManager } from "$lib/managers/store-manager";
 
   export let principalId = "";
   export let viewGameweekDetail: (selectedGameweek: number) => void;
@@ -24,10 +25,7 @@
 
   onMount(async () => {
     try {
-      await authStore.sync();
-      await systemStore.sync();
-      await playerStore.sync();
-      await countriesStore.sync();
+      await storeManager.syncStores();
       
       if(!id){
         principalId = $authStore?.identity?.getPrincipal().toText() ?? "";
@@ -90,8 +88,8 @@
       {#if manager && manager.gameweeks}
         {#each manager.gameweeks as gameweek}
           {@const captain = $playerStore.find((x) => x.id === gameweek.captainId)}
-          {@const playerCountry = $countriesStore
-            ? $countriesStore.find((x) => x.id === captain?.nationality)
+          {@const playerCountry = $countryStore
+            ? $countryStore.find((x) => x.id === captain?.nationality)
             : null}
           <button
             class="w-full"

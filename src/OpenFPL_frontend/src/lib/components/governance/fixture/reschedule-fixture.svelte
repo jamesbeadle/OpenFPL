@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { Modal } from "@dfinity/gix-components";
-  import { teamStore } from "$lib/stores/team-store";
+  import { clubStore } from "$lib/stores/club-store";
   import { systemStore } from "$lib/stores/system-store";
   import { toastsError } from "$lib/stores/toasts-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
@@ -56,7 +56,7 @@
   }
 
   function getTeamById(teamId: number): ClubDTO {
-    return $teamStore.find((x) => x.id === teamId)!;
+    return $clubStore.find((x) => x.id === teamId)!;
   }
 
   function raiseProposal() {

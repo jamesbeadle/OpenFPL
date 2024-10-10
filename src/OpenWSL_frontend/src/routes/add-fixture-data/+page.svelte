@@ -4,7 +4,7 @@
   import { goto } from "$app/navigation";
   import { writable } from "svelte/store";
   import { systemStore } from "$lib/stores/system-store";
-  import { teamStore } from "$lib/stores/team-store";
+  import { teamStore } from "$lib/stores/club-store";
   import { playerStore } from "$lib/stores/player-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { governanceStore } from "$lib/stores/governance-store";

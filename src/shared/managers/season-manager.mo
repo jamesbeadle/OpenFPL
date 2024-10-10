@@ -39,6 +39,7 @@ module {
       { category = "player_events"; hash = "OPENFPL_1" },
       { category = "countries"; hash = "OPENFPL_1" },
       { category = "system_state"; hash = "OPENFPL_1" },
+      { category = "seasons"; hash = "OPENFPL_1" }
     ];
 
     public func updateInitialSystemState(firstSeasonFixture: DTOs.FixtureDTO) : async () {

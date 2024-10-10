@@ -1,12 +1,13 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { teamStore } from "$lib/stores/team-store";
+  import { clubStore } from "$lib/stores/club-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { systemStore } from "$lib/stores/system-store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import type { ClubDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
   import { convertFixtureStatus, formatUnixTimeToTime } from "../utils/helpers";
+    import { storeManager } from "$lib/managers/store-manager";
 
   let fixturesWithTeams: FixtureWithTeams[] = [];
   let selectedGameweek: number;
@@ -37,10 +38,7 @@
   );
 
   onMount(async () => {
-    await teamStore.sync();
-    if ($teamStore.length == 0) return;
-    await systemStore.sync();
-    await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
+    await storeManager.syncStores();
     selectedGameweek = $systemStore?.calculationGameweek ?? 1;
     fixturesWithTeams = $fixtureStore.map((fixture) => ({
       fixture,
@@ -54,7 +52,7 @@
   };
 
   function getTeamFromId(teamId: number): ClubDTO | undefined {
-    return $teamStore.find((team) => team.id === teamId);
+    return $clubStore.find((team) => team.id === teamId);
   }
 </script>
 

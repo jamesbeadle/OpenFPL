@@ -82,8 +82,8 @@
   async function confirmProposal() {
     isLoading = true;
     let result = await governanceStore.addInitialFixtures(
-      $systemStore?.calculationSeasonId ?? 0,
-      fixtureData
+      fixtureData,
+      $systemStore?.calculationSeasonId ?? 0
     );
     if (isError(result)) {
       isLoading = false;

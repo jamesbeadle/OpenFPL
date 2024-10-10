@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { teamStore } from "$lib/stores/team-store";
+  import { clubStore } from "$lib/stores/club-store";
   import { systemStore } from "$lib/stores/system-store";
   import { toastsError } from "$lib/stores/toasts-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
@@ -13,6 +13,7 @@
   } from "../utils/helpers";
   import type { ClubDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
+    import { storeManager } from "$lib/managers/store-manager";
 
   export let clubId: number | null = null;
 
@@ -43,10 +44,7 @@
 
   onMount(async () => {
     try {
-      await teamStore.sync();
-      if ($teamStore.length == 0) return;
-      await systemStore.sync();
-      await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
+      await storeManager.syncStores();
 
       fixturesWithTeams = $fixtureStore.map((fixture) => ({
         fixture,
@@ -64,7 +62,7 @@
   });
 
   function getTeamFromId(teamId: number): ClubDTO | undefined {
-    return $teamStore.find((team) => team.id === teamId);
+    return $clubStore.find((team) => team.id === teamId);
   }
 </script>
 

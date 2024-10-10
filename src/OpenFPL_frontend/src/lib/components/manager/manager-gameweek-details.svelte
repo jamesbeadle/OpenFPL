@@ -3,7 +3,7 @@
   import { writable, type Writable } from "svelte/store";
   import { systemStore } from "$lib/stores/system-store";
   import { toastsError } from "$lib/stores/toasts-store";
-  import { teamStore } from "$lib/stores/team-store";
+  import { clubStore } from "$lib/stores/club-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { playerStore } from "$lib/stores/player-store";
   import { playerEventsStore } from "$lib/stores/player-events-store";
@@ -22,9 +22,10 @@
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import FantasyPlayerDetailModal from "../fantasy-player-detail-modal.svelte";
   import ActiveCaptainIcon from "$lib/icons/ActiveCaptainIcon.svelte";
-  import { countriesStore } from "$lib/stores/country-store";
+  import { countryStore } from "$lib/stores/country-store";
     import LocalSpinner from "../local-spinner.svelte";
     import { seasonStore } from "$lib/stores/season-store";
+    import { storeManager } from "$lib/managers/store-manager";
 
   let gameweekPlayers = writable<GameweekData[]>([]);
   let gameweeks = Array.from(
@@ -53,13 +54,8 @@
 
   onMount(async () => {
     try {
-      await teamStore.sync();
-      if ($teamStore.length == 0) return;
-      await playerStore.sync();
-      await playerEventsStore.sync();
-      await systemStore.sync();
-      await seasonStore.sync();
-      activeSeasonName = await seasonStore.getSeasonName($systemStore?.pickTeamSeasonId ?? 0);
+      await storeManager.syncStores();
+      activeSeasonName = await seasonStore.getSeasonName($systemStore?.pickTeamSeasonId ?? 0) ?? "";
       if (!$fantasyTeam) {
         $gameweekPlayers = [];
         return;
@@ -84,6 +80,7 @@
       }
       let fetchedPlayers = await playerEventsStore.getGameweekPlayers(
         $fantasyTeam!,
+        1, //TODO Set from dropdown
         $selectedGameweek!
       );
 
@@ -120,7 +117,7 @@
   }
 
   function getPlayerTeam(teamId: number): ClubDTO | null {
-    return $teamStore.find((x) => x.id === teamId) ?? null;
+    return $clubStore.find((x) => x.id === teamId) ?? null;
   }
 
   async function showDetailModal(gameweekData: GameweekData) {
@@ -128,7 +125,7 @@
       selectedGameweekData = gameweekData;
 
       let playerTeamId = gameweekData.player.clubId;
-      selectedTeam = $teamStore.find((x) => x.id === playerTeamId)!;
+      selectedTeam = $clubStore.find((x) => x.id === playerTeamId)!;
 
       let playerFixture = $fixtureStore.find(
         (x) =>
@@ -139,7 +136,7 @@
         playerFixture?.homeClubId === playerTeamId
           ? playerFixture?.awayClubId
           : playerFixture?.homeClubId;
-      selectedOpponentTeam = $teamStore.find((x) => x.id === opponentId)!;
+      selectedOpponentTeam = $clubStore.find((x) => x.id === opponentId)!;
       showModal = true;
     } catch (error) {
       toastsError({
@@ -332,8 +329,8 @@
           {#each $gameweekPlayers as data}
             {@const playerDTO = getPlayerDTO(data.player.id)}
             {@const playerTeam = getPlayerTeam(data.player.clubId)}
-            {@const playerCountry = $countriesStore
-              ? $countriesStore.find((x) => x.id === playerDTO?.nationality)
+            {@const playerCountry = $countryStore
+              ? $countryStore.find((x) => x.id === playerDTO?.nationality)
               : null}
             <button
               class="w-full"

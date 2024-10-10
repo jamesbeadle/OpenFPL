@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
   import { type Writable } from "svelte/store";
   import { systemStore } from "$lib/stores/system-store";
-  import { teamStore } from "$lib/stores/team-store";
+  import { teamStore } from "$lib/stores/club-store";
   import { playerStore } from "$lib/stores/player-store";
 
   import type { Bonus } from "$lib/types/bonus";

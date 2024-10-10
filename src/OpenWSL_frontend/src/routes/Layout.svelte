@@ -11,7 +11,7 @@
   import { BusyScreen, Spinner, Toasts } from "@dfinity/gix-components";
   import { initAuthWorker } from "$lib/services/worker.auth.services";
   import { systemStore } from "$lib/stores/system-store";
-  import { teamStore } from "$lib/stores/team-store";
+  import { teamStore } from "$lib/stores/club-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
     import { playerStore } from "$lib/stores/player-store";
 

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { userStore } from "$lib/stores/user-store";
-  import { teamStore } from "$lib/stores/team-store";
+  import { teamStore } from "$lib/stores/club-store";
   import { toastsError, toastsShow } from "$lib/stores/toasts-store";
   import { Modal, busyStore } from "@dfinity/gix-components";
 

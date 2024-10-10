@@ -3,7 +3,7 @@
   import { authStore } from "$lib/stores/auth.store";
   import { systemStore } from "$lib/stores/system-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
-  import { teamStore } from "$lib/stores/team-store";
+  import { teamStore } from "$lib/stores/club-store";
   import { toastsError } from "$lib/stores/toasts-store";
   import { managerStore } from "$lib/stores/manager-store";
   import {

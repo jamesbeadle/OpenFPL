@@ -5,6 +5,7 @@ module Environment {
   public let NNS_LEDGER_CANISTER_ID = "ryjl3-tyaaa-aaaaa-aaaba-cai"; 
   public let ICP_COINS_CANISTER_ID = "u45jl-liaaa-aaaam-abppa-cai";
 
+/*
   public let DFX_NETWORK = "ic";
   public let NEURON_CONTROLLER_CANISTER_ID = "hqfmc-cqaaa-aaaal-qitcq-cai";
   public let SNS_GOVERNANCE_CANISTER_ID = "detjl-sqaaa-aaaaq-aacqa-cai";
@@ -15,9 +16,7 @@ module Environment {
   public let DATA_CANISTER_ID = "52fzd-2aaaa-aaaal-qmzsa-cai";
   public let OPENFPL_BACKEND_CANISTER_ID = "y22zx-giaaa-aaaal-qmzpq-cai";
   public let OPENWSL_BACKEND_CANISTER_ID = "5bafg-ayaaa-aaaal-qmzqq-cai";
-
-
-/*
+*/
   public let DFX_NETWORK = "local";
   public let NEURON_CONTROLLER_CANISTER_ID = "by6od-j4aaa-aaaaa-qaadq-cai";
   public let SNS_GOVERNANCE_CANISTER_ID = "by6od-j4aaa-aaaaa-qaadq-cai";
@@ -28,7 +27,6 @@ module Environment {
   public let DATA_CANISTER_ID = "b77ix-eeaaa-aaaaa-qaada-cai";
   public let OPENFPL_BACKEND_CANISTER_ID = "bd3sg-teaaa-aaaaa-qaaba-cai";
   public let OPENWSL_BACKEND_CANISTER_ID = "br5f7-7uaaa-aaaaa-qaaca-cai";
-*/
   
 
 

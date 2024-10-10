@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { userStore } from "$lib/stores/user-store";
-  import { teamStore } from "$lib/stores/team-store";
+  import { clubStore } from "$lib/stores/club-store";
   import { systemStore } from "$lib/stores/system-store";
   import { toastsError, toastsShow } from "$lib/stores/toasts-store";
   import UpdateUsernameModal from "$lib/components/profile/update-username-modal.svelte";
@@ -14,6 +14,7 @@
   import { writable } from "svelte/store";
   import { authStore } from "$lib/stores/auth.store";
   import { getDateFromBigInt } from "$lib/utils/helpers";
+    import { storeManager } from "$lib/managers/store-manager";
   
   let showUsernameModal: boolean = false;
   let showFavouriteTeamModal: boolean = false;
@@ -32,7 +33,7 @@
   $: gameweek = $systemStore?.calculationGameweek ?? 1;
 
   $: teamName =
-    $teamStore.find((x) => x.id == $userStore?.favouriteClubId)?.friendlyName ??
+    $clubStore.find((x) => x.id == $userStore?.favouriteClubId)?.friendlyName ??
     "";
 
   let isLoading = true;
@@ -41,9 +42,7 @@
   onMount(async () => {
     try {
       startDotAnimation();
-      await teamStore.sync();
-      await systemStore.sync();
-      await userStore.sync();
+      await storeManager.syncStores();
 
       unsubscribeUserProfile = userStore.subscribe((value) => {
         if (!value) {
