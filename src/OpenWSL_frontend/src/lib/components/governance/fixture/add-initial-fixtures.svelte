@@ -3,7 +3,7 @@
   import { systemStore } from "$lib/stores/system-store";
   import { Modal } from "@dfinity/gix-components";
   import LocalSpinner from "$lib/components/local-spinner.svelte";
-  import type { FixtureDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { FixtureDTO } from "../../../../../../declarations/OpenWSL_backend/OpenWSL_backend.did";
   import { isError } from "$lib/utils/helpers";
   import { toastsError } from "$lib/stores/toasts-store";
 
@@ -82,8 +82,8 @@
   async function confirmProposal() {
     isLoading = true;
     let result = await governanceStore.addInitialFixtures(
-      $systemStore?.calculationSeasonId ?? 0,
-      fixtureData
+      fixtureData,
+      $systemStore?.calculationSeasonId ?? 0
     );
     if (isError(result)) {
       isLoading = false;

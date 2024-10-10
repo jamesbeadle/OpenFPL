@@ -6,11 +6,12 @@
   import { managerStore } from "$lib/stores/manager-store";
   import { busyStore } from "@dfinity/gix-components";
   import { toastsError, toastsShow } from "$lib/stores/toasts-store";
-  import type { PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { PickTeamDTO } from "../../../../../declarations/OpenWSL_backend/OpenWSL_backend.did";
   import { allFormations, getAvailableFormations, getHighestValuedPlayerId, getTeamFormation } from "$lib/utils/pick-team.helpers";
   import { convertPlayerPosition } from "$lib/utils/helpers";
   import SetTeamName from "./set-team-name.svelte";
   import LocalSpinner from "../local-spinner.svelte";
+    import { storeManager } from "$lib/managers/store-manager";
     import { seasonStore } from "$lib/stores/season-store";
 
   export let fantasyTeam: Writable<PickTeamDTO>;
@@ -49,10 +50,7 @@
 
   onMount(async () => {
     try {
-      await systemStore.sync();
-      await playerStore.sync();
-      await seasonStore.sync();
-
+      await storeManager.syncStores();
       loadData();
       disableInvalidFormations()
       console.log($systemStore)
@@ -68,7 +66,10 @@
   });
   
   async function loadData() {
-    activeSeason = await seasonStore.getSeasonName($systemStore?.pickTeamSeasonId ?? 0);
+    let foundSeason = $seasonStore.find(x => x.id == $systemStore?.pickTeamSeasonId);
+    if(foundSeason){
+      activeSeason = foundSeason.name;
+    }
     activeGameweek = $systemStore?.pickTeamGameweek ?? 1;
 
     const storedViewMode = localStorage.getItem("viewMode");

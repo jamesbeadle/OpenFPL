@@ -6,8 +6,10 @@
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { playerStore } from "$lib/stores/player-store";
   import { formatUnixDateToReadable, formatUnixTimeToTime, getCountdownTime } from "$lib/utils/helpers";
-  import type { PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { PickTeamDTO } from "../../../../../declarations/OpenWSL_backend/OpenWSL_backend.did";
   import LocalSpinner from "../local-spinner.svelte";
+  import { storeManager } from "$lib/managers/store-manager";
+  import { seasonStore } from "$lib/stores/season-store";
   
   let isLoading = true;
   let activeSeason = "-";
@@ -27,11 +29,8 @@
 
   onMount(async () => {
 
-    await systemStore.sync();
-    await playerStore.sync();
-
-    let seasons = await systemStore.getSeasons();
-    let foundSeason = seasons.find(x => x.id == $systemStore?.pickTeamSeasonId);
+    await storeManager.syncStores();
+    let foundSeason = $seasonStore.find(x => x.id == $systemStore?.pickTeamSeasonId);
     if(foundSeason){
       activeSeason = foundSeason.name;
     }

@@ -19,7 +19,7 @@
   import UpdateClub from "$lib/components/governance/club/update-club.svelte";
   import AddFixtureData from "$lib/components/governance/fixture/add-fixture-data.svelte";
   import { ActorFactory } from "../../utils/ActorFactory";
-  import { idlFactory } from "../../../../declarations/OpenFPL_backend";
+  import { idlFactory } from "../../../../declarations/OpenWSL_backend";
   import { isError } from "$lib/utils/helpers";
   import { toastsError, toastsShow } from "$lib/stores/toasts-store";
   import PlayerCaptainIcon from "$lib/icons/PlayerCaptainIcon.svelte";

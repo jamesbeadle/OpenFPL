@@ -10,10 +10,11 @@
   import BonusPanel from "$lib/components/pick-team/bonus-panel.svelte";
   import SimpleFixtures from "$lib/components/simple-fixtures.svelte";
   import { Spinner } from "@dfinity/gix-components";
-  import type { PickTeamDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { PickTeamDTO } from "../../../../declarations/OpenWSL_backend/OpenWSL_backend.did";
   import { allFormations } from "$lib/utils/pick-team.helpers";
     import { systemStore } from "$lib/stores/system-store";
     import OnHold from "$lib/components/pick-team/on-hold.svelte";
+    import { storeManager } from "$lib/managers/store-manager";
 
   let availableFormations = writable<string[]>([]);
   let selectedFormation = writable<string>('4-4-2');
@@ -60,8 +61,9 @@
 
   onMount(async () => {
     try {
-      console.log("syncing system store");
-      systemStore.sync();
+      
+      await storeManager.syncStores();
+
       onHold.set($systemStore?.onHold ?? true);
       $availableFormations = Object.keys(allFormations);
       

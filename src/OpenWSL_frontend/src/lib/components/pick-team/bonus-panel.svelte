@@ -2,11 +2,12 @@
   import { onMount } from "svelte";
   import { systemStore } from "$lib/stores/system-store";
   import { writable, type Writable } from "svelte/store";
-  import type { PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { PickTeamDTO } from "../../../../../declarations/OpenWSL_backend/OpenWSL_backend.did";
   import type { Bonus } from "$lib/types/bonus";
   import { BonusType } from "$lib/enums/BonusType";
   import UseBonusModal from "$lib/components/pick-team/use-bonus-modal.svelte";
   import Tooltip from "../tooltip.svelte";
+    import { storeManager } from "$lib/managers/store-manager";
 
   export let fantasyTeam: Writable<PickTeamDTO | null>;
 
@@ -129,7 +130,7 @@
   }
 
   onMount(async () => {
-    await systemStore.sync();
+    await storeManager.syncStores();
     updateBonuses();
     $weeklyBonusPlayed = bonusPlayedThisWeek();
   });

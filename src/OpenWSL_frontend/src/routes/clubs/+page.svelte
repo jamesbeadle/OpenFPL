@@ -1,13 +1,14 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { toastsError } from "$lib/stores/toasts-store";
-  import { teamStore } from "$lib/stores/club-store";
+  import { clubStore } from "$lib/stores/club-store";
   import Layout from "../Layout.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
+    import { storeManager } from "$lib/managers/store-manager";
 
   onMount(async () => {
     try {
-      await teamStore.sync();
+      await storeManager.syncStores();
       
     } catch (error) {
       toastsError({
@@ -27,7 +28,7 @@
         <p class="col-span-1 md:col-span-4 text-center w-full mb-4">
           Premier League Clubs
         </p>
-        {#each $teamStore.sort((a, b) => a.id - b.id) as team}
+        {#each $clubStore.sort((a, b) => a.id - b.id) as team}
           <div
             class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"
           >

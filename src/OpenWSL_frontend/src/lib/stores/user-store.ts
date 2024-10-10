@@ -11,7 +11,7 @@ import type {
   UpdateFavouriteClubDTO,
   UpdateProfilePictureDTO,
   UsernameFilterDTO,
-} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+} from "../../../../declarations/OpenWSL_backend/OpenWSL_backend.did";
 
 function createUserStore() {
   const { subscribe, set } = writable<any>(null);
@@ -33,15 +33,16 @@ function createUserStore() {
 
   async function updateUsername(username: string): Promise<any> {
     try {
+      console.log("Creating actor in update username line 37");
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.OPENWSL_BACKEND_CANISTER_ID ?? "",
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
 
       let dto: UsernameFilterDTO = {
         username: username,
       };
-
+      console.log("Actor updating username line 45");
       const result = await identityActor.updateUsername(dto);
       if (isError(result)) {
         console.error("Error updating username");
@@ -57,13 +58,15 @@ function createUserStore() {
 
   async function updateFavouriteTeam(favouriteTeamId: number): Promise<any> {
     try {
+      console.log("Creating actor in updateFavouriteteam line 62");
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.OPENWSL_BACKEND_CANISTER_ID ?? "",
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
       let dto: UpdateFavouriteClubDTO = {
         favouriteClubId: favouriteTeamId,
       };
+      console.log("Actor updating favourite club line 70");
       const result = await identityActor.updateFavouriteClub(dto);
       if (isError(result)) {
         console.error("Error updating favourite team");
@@ -91,15 +94,17 @@ function createUserStore() {
         const arrayBuffer = reader.result as ArrayBuffer;
         const uint8Array = new Uint8Array(arrayBuffer);
         try {
+          console.log("Creating actor in updateProfilePicture line 98");
           const identityActor = await ActorFactory.createIdentityActor(
             authStore,
-            process.env.OPENWSL_BACKEND_CANISTER_ID ?? "",
+            process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
           );
 
           let dto: UpdateProfilePictureDTO = {
             profilePicture: uint8Array,
             extension: extension,
           };
+          console.log("Actor updating profile picture line 108");
           const result = await identityActor.updateProfilePicture(dto);
           if (isError(result)) {
             console.error("Error updating profile picture");
@@ -130,23 +135,25 @@ function createUserStore() {
   }
 
   async function isUsernameAvailable(username: string): Promise<boolean> {
+    console.log("Creating actor in isUsernameAvailable line 139");
     const identityActor: any = await ActorFactory.createIdentityActor(
       authStore,
-      process.env.OPENWSL_BACKEND_CANISTER_ID ?? "",
+      process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
     );
     let dto: UsernameFilterDTO = {
       username: username,
     };
-
+    console.log("actor checking isUsernameValid line 146");
     return await identityActor.isUsernameValid(dto);
   }
 
   async function cacheProfile() {
+    console.log("Creating actor in cache profile line 152");
     const identityActor: any = await ActorFactory.createIdentityActor(
       authStore,
-      process.env.OPENWSL_BACKEND_CANISTER_ID ?? "",
+      process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
     );
-
+    console.log("Actor getting profile line 157");
     let getProfileResponse = await identityActor.getProfile();
     let error = isError(getProfileResponse);
     if (error) {

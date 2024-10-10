@@ -1,9 +1,10 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { userStore } from "$lib/stores/user-store";
-  import { teamStore } from "$lib/stores/club-store";
+  import { clubStore } from "$lib/stores/club-store";
   import { toastsError, toastsShow } from "$lib/stores/toasts-store";
   import { Modal, busyStore } from "@dfinity/gix-components";
+  import { storeManager } from "$lib/managers/store-manager";
 
   export let visible: boolean;
   export let closeModal: () => void;
@@ -14,8 +15,7 @@
   $: isSubmitDisabled = newFavouriteTeam <= 0;
 
   onMount(async () => {
-    await teamStore.sync();
-    if ($teamStore.length == 0) return;
+    await storeManager.syncStores();
     await userStore.sync();
   });
 
@@ -59,7 +59,7 @@
         class="w-full p-2 rounded-md fpl-dropdown"
       >
         <option value={0}>Select Team</option>
-        {#each $teamStore as team}
+        {#each $clubStore as team}
           <option value={team.id}>{team.friendlyName}</option>
         {/each}
       </select>

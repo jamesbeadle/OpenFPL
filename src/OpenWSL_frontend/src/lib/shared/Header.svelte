@@ -1,14 +1,6 @@
 <script lang="ts">
   import { page } from "$app/stores";
-  import { authStore, type AuthSignInParams } from "$lib/stores/auth.store";
-  import { systemStore } from "$lib/stores/system-store";
-  import { countriesStore } from "$lib/stores/country-store";
-  import { fixtureStore } from "$lib/stores/fixture-store";
-  import { teamStore } from "$lib/stores/club-store";
-  import { weeklyLeaderboardStore } from "$lib/stores/weekly-leaderboard-store";
-  import { playerStore } from "$lib/stores/player-store";
-  import { playerEventsStore } from "$lib/stores/player-events-store";
-  import { userStore } from "$lib/stores/user-store";
+  import { authStore, type AuthSignInParams } from "$lib/stores/auth.store"
   import { toastsError } from "$lib/stores/toasts-store";
   import OpenFPLIcon from "$lib/icons/OpenFPLIcon.svelte";
   import WalletIcon from "$lib/icons/WalletIcon.svelte";
@@ -16,6 +8,7 @@
   import { goto } from "$app/navigation";
   import { authSignedInStore } from "$lib/derived/auth.derived";
   import { userGetProfilePicture } from "$lib/derived/user.derived";
+    import { storeManager } from "$lib/managers/store-manager";
 
   let menuOpen = false;
   let showProfileDropdown = false;
@@ -26,23 +19,7 @@
       document.addEventListener("click", closeDropdownOnClickOutside);
     }
     try {
-      await userStore.sync();
-      await authStore.sync();
-      await systemStore.sync();
-      await countriesStore.sync();
-      await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
-
-      if ($fixtureStore.length == 0) {
-        return;
-      }
-
-      await teamStore.sync();
-      await playerStore.sync();
-      await playerEventsStore.sync();
-      await weeklyLeaderboardStore.sync(
-        $systemStore?.calculationSeasonId ?? 0,
-        $systemStore?.calculationGameweek ?? 0
-      );
+      await storeManager.syncStores();
     } catch (error) {
       toastsError({
         msg: { text: "Error syncing authentication." },
@@ -114,7 +91,7 @@
   <nav class="text-white">
     <div class="px-4 h-16 flex justify-between items-center w-full">
       <a href="/" class="hover:text-gray-400 flex items-center">
-        <OpenFPLIcon className="h-8 w-auto" /><b class="ml-2">OpenWSL</b>
+        <OpenFPLIcon className="h-8 w-auto" /><b class="ml-2">OpenFPL</b>
       </a>
       <button
         class="menu-toggle md:hidden focus:outline-none"

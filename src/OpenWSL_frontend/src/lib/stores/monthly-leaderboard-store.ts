@@ -1,12 +1,12 @@
 import { systemStore } from "$lib/stores/system-store";
 import { writable } from "svelte/store";
-import { idlFactory } from "../../../../declarations/OpenFPL_backend";
+import { idlFactory } from "../../../../declarations/OpenWSL_backend";
 import type {
   DataHashDTO,
   GetMonthlyLeaderboardDTO,
   MonthlyLeaderboardDTO,
   SystemStateDTO,
-} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+} from "../../../../declarations/OpenWSL_backend/OpenWSL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { isError, replacer } from "../utils/helpers";
 
@@ -19,14 +19,15 @@ function createMonthlyLeaderboardStore() {
   systemStore.subscribe((value) => {
     systemState = value as SystemStateDTO;
   });
-
+  console.log("Creating actor in monthly leaderboard store line 22");
   let actor: any = ActorFactory.createActor(
     idlFactory,
-    process.env.OPENWSL_BACKEND_CANISTER_ID,
+    process.env.OPENFPL_BACKEND_CANISTER_ID,
   );
 
   async function sync(seasonId: number, month: number, clubId: number) {
     let category = "monthly_leaderboards";
+    console.log("Actor getting datahashes in monthly leaderboard sync line 30");
     const newHashValues = await actor.getDataHashes();
 
     let error = isError(newHashValues);
@@ -54,7 +55,7 @@ function createMonthlyLeaderboardStore() {
         offset: BigInt(offset),
         limit: BigInt(limit),
       };
-
+      console.log("Actor getting monthly leaderboard in sync line 58");
       let result = await actor.getMonthlyLeaderboard(dto);
       if (isError(result)) {
         let emptyLeaderboard = {
@@ -121,7 +122,7 @@ function createMonthlyLeaderboardStore() {
       month: month,
       clubId: clubId,
     };
-
+    console.log("Actor getting monthly leaderboards line 125");
     let result = await actor.getMonthlyLeaderboards(dto);
 
     if (isError(result)) {

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Position } from "$lib/enums/Position";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
-  import type { PlayerDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { PlayerDTO } from "../../../../declarations/OpenWSL_backend/OpenWSL_backend.did";
   import {
     calculateAgeFromNanoseconds,
     convertPlayerPosition,

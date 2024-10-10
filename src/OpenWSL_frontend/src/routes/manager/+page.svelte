@@ -3,20 +3,21 @@
   import { writable, type Writable } from "svelte/store";
   import { page } from "$app/stores";
   import { systemStore } from "$lib/stores/system-store";
-  import { teamStore } from "$lib/stores/club-store";
+  import { clubStore } from "$lib/stores/club-store";
   import { managerStore } from "$lib/stores/manager-store";
   import { toastsError } from "$lib/stores/toasts-store";
   import type {
     FantasyTeamSnapshot,
     ClubDTO,
     ManagerDTO,
-  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  } from "../../../../declarations/OpenWSL_backend/OpenWSL_backend.did";
   import Layout from "../Layout.svelte";
   import ManagerGameweekDetails from "$lib/components/manager/manager-gameweek-details.svelte";
   import ManagerGameweeks from "$lib/components/manager/manager-gameweeks.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import { getDateFromBigInt } from "$lib/utils/helpers";
     import LocalSpinner from "$lib/components/local-spinner.svelte";
+    import { storeManager } from "$lib/managers/store-manager";
 
   $: id = $page.url.searchParams.get("id");
 
@@ -37,9 +38,7 @@
 
   onMount(async () => {
     try {
-      await teamStore.sync();
-      if ($teamStore.length == 0) return;
-      await systemStore.sync();
+      await storeManager.syncStores();
       manager = await managerStore.getPublicProfile(id ?? "");
       if(!manager){
         return;
@@ -56,11 +55,14 @@
       profilePicture = profileSrc;
 
       joinedDate = getDateFromBigInt(Number(manager.createDate));
+
+      /* //TODO
       favouriteTeam =
         manager.favouriteClubId > 0
-          ? $teamStore.find((x) => x.id == manager.favouriteClubId) ?? null
+          ? $clubStore.find((x) => x.id == manager.favouriteClubId) ?? null
           : null;
       viewGameweekDetail($selectedGameweek!);
+      */
     } catch (error) {
       toastsError({
         msg: { text: "Error fetching manager details." },
@@ -116,6 +118,7 @@
         <div class="vertical-divider" />
 
         <div class="flex-grow">
+          <!-- //TODO
           <p class="content-panel-header">Favourite Team</p>
           <p class="content-panel-stat flex items-center">
             <BadgeIcon
@@ -129,6 +132,7 @@
           <p class="content-panel-header">
             {favouriteTeam?.name ?? "Not Set"}
           </p>
+          -->
         </div>
       </div>
       <div class="content-panel lg:w-1/2">
@@ -146,7 +150,9 @@
         <div class="vertical-divider" />
         <div class="flex-grow">
           <p class="content-panel-header">
+            <!-- //TODO
             {favouriteTeam?.friendlyName ?? "Not Entered"}
+            -->
           </p>
           <p class="content-panel-stat">
             {manager.monthlyPosition}

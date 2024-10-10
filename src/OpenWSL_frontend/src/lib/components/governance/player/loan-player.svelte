@@ -1,12 +1,13 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { teamStore } from "$lib/stores/club-store";
+  import { clubStore } from "$lib/stores/club-store";
   import { playerStore } from "$lib/stores/player-store";
   import { governanceStore } from "$lib/stores/governance-store";
   import { Modal } from "@dfinity/gix-components";
   import LocalSpinner from "$lib/components/local-spinner.svelte";
-  import type { PlayerDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { PlayerDTO } from "../../../../../../declarations/OpenWSL_backend/OpenWSL_backend.did";
   import { toastsError } from "$lib/stores/toasts-store";
+  import { storeManager } from "$lib/managers/store-manager";
 
   export let visible: boolean;
   export let closeModal: () => void;
@@ -38,14 +39,13 @@
 
   onMount(async () => {
     try {
-      await playerStore.sync();
-      await teamStore.sync();
+      await storeManager.syncStores();
     } catch (error) {
       toastsError({
-        msg: { text: "Error syncing proposal data." },
+        msg: { text: "Error mounting load player modal." },
         err: error,
       });
-      console.error("Error syncing proposal data.", error);
+      console.error("Error mounting load player modal.", error);
     } finally {
       isLoading = false;
     }
@@ -61,7 +61,9 @@
 
   async function confirmProposal() {
     isLoading = true;
-    await governanceStore.loanPlayer(selectedPlayerId, selectedClubId, date);
+    
+    //TODO: UPDATE TO INCLUDE LOAN LEAGUE INFORMATION
+    //await governanceStore.loanPlayer(selectedPlayerId, selectedClubId, date);
     closeModal();
   }
 
@@ -94,7 +96,7 @@
             bind:value={selectedClubId}
           >
             <option value={0}>Select Club</option>
-            {#each $teamStore as club}
+            {#each $clubStore as club}
               <option value={club.id}>{club.friendlyName}</option>
             {/each}
           </select>
@@ -131,7 +133,7 @@
                 bind:value={loadnClubId}
               >
                 <option value={0}>Select Club</option>
-                {#each $teamStore as club}
+                {#each $clubStore as club}
                   <option value={club.id}>{club.friendlyName}</option>
                 {/each}
               </select>

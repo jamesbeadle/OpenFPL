@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  import { teamStore } from "$lib/stores/club-store";
+  import { clubStore } from "$lib/stores/club-store";
   import { systemStore } from "$lib/stores/system-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { toastsError } from "$lib/stores/toasts-store";
@@ -15,11 +15,13 @@
   } from "$lib/utils/helpers";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import type { ClubDTO } from "../../../../declarations/OpenWSL_backend/OpenWSL_backend.did";
+  import type { Principal } from "@dfinity/principal";
 
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import FantasyPlayerDetailModal from "./fantasy-player-detail-modal.svelte";
     import LocalSpinner from "./local-spinner.svelte";
     import { seasonStore } from "../stores/season-store";
+    import { storeManager } from "$lib/managers/store-manager";
 
   let isLoading = true;
   let selectedGameweek: number;
@@ -34,17 +36,8 @@
 
   onMount(async () => {
     try {
-      await teamStore.sync();
-      if ($teamStore.length == 0) return;
-
-      await systemStore.sync();
-      await seasonStore.sync();
-      await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
-      await authStore.sync();
-      await playerEventsStore.sync();
-
-      selectedGameweek = $systemStore?.calculationGameweek ?? 1;
-      activeSeasonName = await seasonStore.getSeasonName($systemStore?.calculationSeasonId ?? 0);
+      await storeManager.syncStores();
+      activeSeasonName = await seasonStore.getSeasonName($systemStore?.calculationSeasonId ?? 0) ?? "";
       gameweeks = Array.from(
         { length: $systemStore?.calculationGameweek ?? 1 },
         (_, i) => i + 1
@@ -92,6 +85,7 @@
     console.log("getting gameweek players")
     let unsortedData = await playerEventsStore.getGameweekPlayers(
       fantasyTeam,
+      1, //TODO SET FROM DROPDOWN
       selectedGameweek
     );
     console.log(fantasyTeam)
@@ -107,7 +101,7 @@
     try {
       selectedGameweekData = gameweekData;
       let playerTeamId = gameweekData.player.clubId;
-      selectedTeam = $teamStore.find((x) => x.id === playerTeamId)!;
+      selectedTeam = $clubStore.find((x) => x.id === playerTeamId)!;
 
       let playerFixture = $fixtureStore.find(
         (x) =>
@@ -118,7 +112,7 @@
         playerFixture?.homeClubId === playerTeamId
           ? playerFixture?.awayClubId
           : playerFixture?.homeClubId;
-      selectedOpponentTeam = $teamStore.find((x) => x.id === opponentId)!;
+      selectedOpponentTeam = $clubStore.find((x) => x.id === opponentId)!;
       showModal = true;
     } catch (error) {
       toastsError({

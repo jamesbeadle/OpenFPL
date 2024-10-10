@@ -4,7 +4,7 @@
   import { goto } from "$app/navigation";
   import { writable } from "svelte/store";
   import { systemStore } from "$lib/stores/system-store";
-  import { teamStore } from "$lib/stores/club-store";
+  import { clubStore } from "$lib/stores/club-store";
   import { playerStore } from "$lib/stores/player-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { governanceStore } from "$lib/stores/governance-store";
@@ -28,6 +28,7 @@
   import ClearDraftModal from "$lib/components/fixture-validation/clear-draft-modal.svelte";
   import { Spinner, busyStore } from "@dfinity/gix-components";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
+    import { storeManager } from "$lib/managers/store-manager";
 
   let players: PlayerDTO[] = [];
   let fixture: FixtureDTO | null;
@@ -62,14 +63,10 @@
 
   onMount(async () => {
     try {
-      await systemStore.sync();
-      await teamStore.sync();
-      if ($teamStore.length == 0) return;
-      await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
-      await playerStore.sync();
+      
+      await storeManager.syncStores();
 
-      let teams = $teamStore;
-      if (teams.length == 0) {
+      if ($clubStore.length == 0) {
         return;
       }
 
@@ -79,12 +76,13 @@
 
       fixtureStore.subscribe((value) => {
         fixture = value.find((x) => x.id == fixtureId)!;
-        homeTeam = teams.find((x) => x.id == fixture?.homeClubId)!;
-        awayTeam = teams.find((x) => x.id == fixture?.awayClubId)!;
+        homeTeam = $clubStore.find((x) => x.id == fixture?.homeClubId)!;
+        awayTeam = $clubStore.find((x) => x.id == fixture?.awayClubId)!;
         selectedTeam = homeTeam;
         teamPlayers.set(players.filter((x) => x.clubId == selectedTeam?.id));
       });
       loadDraft(fixtureId);
+      
     } catch (error) {
       toastsError({
         msg: { text: "Error fetching fixture information." },
@@ -124,6 +122,7 @@
       await governanceStore.submitFixtureData(
         $systemStore?.calculationSeasonId ?? 0,
         $systemStore?.calculationGameweek ?? 0,
+        $systemStore?.calculationMonth ?? 0,
         fixtureId,
         $playerEventData
       );
@@ -196,7 +195,6 @@
   }
 
   async function setActiveTab(tab: string) {
-    await playerStore.sync();
     selectedTeam = tab === "home" ? homeTeam : awayTeam;
     teamPlayers.set(players.filter((x) => x.clubId == selectedTeam?.id));
     activeTab = tab;

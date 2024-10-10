@@ -2,7 +2,7 @@ import { authStore } from "$lib/stores/auth.store";
 import { systemStore } from "$lib/stores/system-store";
 import { isError, replacer } from "$lib/utils/helpers";
 import { writable } from "svelte/store";
-import { idlFactory } from "../../../../declarations/OpenFPL_backend";
+import { idlFactory } from "../../../../declarations/OpenWSL_backend";
 import type {
   DataHashDTO,
   FantasyTeamSnapshot,
@@ -12,7 +12,7 @@ import type {
   PickTeamDTO,
   SystemStateDTO,
   UpdateTeamSelectionDTO,
-} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+} from "../../../../declarations/OpenWSL_backend/OpenWSL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 
 function createManagerStore() {
@@ -23,9 +23,10 @@ function createManagerStore() {
     systemState = value as SystemStateDTO;
   });
 
+  console.log("Creating actor in manager store line 26");
   let actor: any = ActorFactory.createActor(
     idlFactory,
-    process.env.OPENWSL_BACKEND_CANISTER_ID ?? "",
+    process.env.OPENFPL_BACKEND_CANISTER_ID,
   );
 
   let newManager = {
@@ -71,6 +72,7 @@ function createManagerStore() {
         gameweek: 0,
         clubId: 0,
       };
+      console.log("actor getting manager in get public profile line 75");
       let result = await actor.getManager(dto);
 
       if (isError(result)) {
@@ -87,6 +89,7 @@ function createManagerStore() {
 
   async function getTotalManagers(): Promise<number> {
     try {
+      console.log("actor getting total managers line 92");
       let result = await actor.getTotalManagers();
 
       if (isError(result)) {
@@ -112,6 +115,7 @@ function createManagerStore() {
         gameweek,
         seasonId,
       };
+      console.log("actor getting fantasy team snapshot line 118");
       let result = await actor.getFantasyTeamSnapshot(dto);
 
       if (isError(result)) {
@@ -126,10 +130,12 @@ function createManagerStore() {
 
   async function getCurrentTeam(): Promise<PickTeamDTO> {
     try {
+      console.log("Creating actor in get current team line 133");
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.OPENWSL_BACKEND_CANISTER_ID ?? "",
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
+      console.log("actor getting current team line 138");
       const result = await identityActor.getCurrentTeam();
 
       if (isError(result)) {
@@ -162,10 +168,10 @@ function createManagerStore() {
         bonusPlayed = getBonusPlayed(userFantasyTeam, activeGameweek);
         bonusCountryId = getBonusCountryId(userFantasyTeam, activeGameweek);
       }
-
+      console.log("Creating actor in save fantasy team line 171");
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.OPENWSL_BACKEND_CANISTER_ID ?? "",
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
 
       let dto: UpdateTeamSelectionDTO = {
@@ -218,6 +224,7 @@ function createManagerStore() {
 
       console.log("dto");
       console.log(dto);
+      console.log("actor saving fantasy team");
       let result = await identityActor.saveFantasyTeam(dto);
 
       if (isError(result)) {

@@ -1,14 +1,6 @@
 <script lang="ts">
   import { page } from "$app/stores";
-  import { authStore, type AuthSignInParams } from "$lib/stores/auth.store";
-  import { systemStore } from "$lib/stores/system-store";
-  import { countryStore } from "$lib/stores/country-store";
-  import { fixtureStore } from "$lib/stores/fixture-store";
-  import { clubStore } from "$lib/stores/club-store";
-  import { weeklyLeaderboardStore } from "$lib/stores/weekly-leaderboard-store";
-  import { playerStore } from "$lib/stores/player-store";
-  import { playerEventsStore } from "$lib/stores/player-events-store";
-  import { userStore } from "$lib/stores/user-store";
+  import { authStore, type AuthSignInParams } from "$lib/stores/auth.store"
   import { toastsError } from "$lib/stores/toasts-store";
   import OpenFPLIcon from "$lib/icons/OpenFPLIcon.svelte";
   import WalletIcon from "$lib/icons/WalletIcon.svelte";

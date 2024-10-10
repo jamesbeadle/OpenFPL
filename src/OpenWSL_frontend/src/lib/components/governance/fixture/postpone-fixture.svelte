@@ -1,8 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { Modal } from "@dfinity/gix-components";
-  import { teamStore } from "$lib/stores/club-store";
-  import { systemStore } from "$lib/stores/system-store";
+  import { clubStore } from "$lib/stores/club-store";
   import { toastsError } from "$lib/stores/toasts-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { governanceStore } from "$lib/stores/governance-store";
@@ -10,8 +9,9 @@
   import type {
     ClubDTO,
     FixtureDTO,
-  } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  } from "../../../../../../declarations/OpenWSL_backend/OpenWSL_backend.did";
   import { isError } from "$lib/utils/helpers";
+    import { storeManager } from "$lib/managers/store-manager";
 
   export let visible: boolean;
   export let closeModal: () => void;
@@ -42,9 +42,7 @@
 
   onMount(async () => {
     try {
-      await systemStore.sync();
-      await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
-      await teamStore.sync();
+      await storeManager.syncStores();
       loadGameweekFixtures();
     } catch (error) {
       toastsError({
@@ -58,7 +56,7 @@
   });
 
   function getTeamById(teamId: number): ClubDTO {
-    return $teamStore.find((x) => x.id === teamId)!;
+    return $clubStore.find((x) => x.id === teamId)!;
   }
 
   function raiseProposal() {

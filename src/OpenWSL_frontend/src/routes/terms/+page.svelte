@@ -4,7 +4,7 @@
 
 <Layout>
   <div class="bg-panel rounded-md p-4 mt-4">
-    <h1 class="default-header">OpenFPL DAO Terms & Conditions</h1>
+    <h1 class="default-header">OpenWSL DAO Terms & Conditions</h1>
     <div>
       <p class="my-2 text-xs">Last Updated: 13th October 2023</p>
 

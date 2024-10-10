@@ -1,13 +1,14 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { teamStore } from "$lib/stores/club-store";
+  import { clubStore } from "$lib/stores/club-store";
   import { toastsError } from "$lib/stores/toasts-store";
   import { governanceStore } from "$lib/stores/governance-store";
-  import { countriesStore } from "$lib/stores/country-store";
+  import { countryStore } from "$lib/stores/country-store";
   import { Modal } from "@dfinity/gix-components";
   import LocalSpinner from "$lib/components/local-spinner.svelte";
-  import type { PlayerPosition } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { PlayerPosition } from "../../../../../../declarations/OpenWSL_backend/OpenWSL_backend.did";
   import { isError } from "$lib/utils/helpers";
+  import { storeManager } from "$lib/managers/store-manager";
 
   export let visible: boolean;
   export let closeModal: () => void;
@@ -42,8 +43,7 @@
 
   onMount(async () => {
     try {
-      await teamStore.sync();
-      await countriesStore.sync();
+      await storeManager.syncStores();
     } catch (error) {
       toastsError({
         msg: { text: "Error syncing proposal data." },
@@ -70,7 +70,8 @@
       shirtNumber,
       valueInQuarterMillions,
       dateOfBirth,
-      nationalityId
+      nationalityId,
+      { Male: null}
     );
     if (isError(result)) {
       isLoading = false;
@@ -123,7 +124,7 @@
             bind:value={selectedClubId}
           >
             <option value={0}>Select Club</option>
-            {#each $teamStore as club}
+            {#each $clubStore as club}
               <option value={club.id}>{club.friendlyName}</option>
             {/each}
           </select>
@@ -201,7 +202,7 @@
             bind:value={nationalityId}
           >
             <option value={0}>Select Nationality</option>
-            {#each $countriesStore as country}
+            {#each $countryStore as country}
               <option value={country.id}>{country.name}</option>
             {/each}
           </select>

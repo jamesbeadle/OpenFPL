@@ -10,10 +10,7 @@
 
   import { BusyScreen, Spinner, Toasts } from "@dfinity/gix-components";
   import { initAuthWorker } from "$lib/services/worker.auth.services";
-  import { systemStore } from "$lib/stores/system-store";
-  import { teamStore } from "$lib/stores/club-store";
-  import { fixtureStore } from "$lib/stores/fixture-store";
-    import { playerStore } from "$lib/stores/player-store";
+  import { storeManager } from "$lib/managers/store-manager";
 
   const init = async () => await Promise.all([syncAuthStore()]);
 
@@ -40,14 +37,7 @@
 
   onMount(async () => {
     try {
-      console.log(process.env)
-      console.log("Mounting data stores.")
-      await authStore.sync();
-      await systemStore.sync();
-      await teamStore.sync();
-      await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
-      await playerStore.sync(); 
-      console.log("Data stores mounted.")
+      await storeManager.syncStores();
     } catch (error) {
       toastsError({
         msg: { text: "Error mounting application data." },

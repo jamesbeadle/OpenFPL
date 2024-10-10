@@ -1,13 +1,14 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { toastsError } from "$lib/stores/toasts-store";
-  import { teamStore } from "$lib/stores/club-store";
+  import { clubStore } from "$lib/stores/club-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { systemStore } from "$lib/stores/system-store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import { updateTableData } from "../utils/helpers";
-  import type { ClubDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { ClubDTO } from "../../../../declarations/OpenWSL_backend/OpenWSL_backend.did";
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
+    import { storeManager } from "$lib/managers/store-manager";
 
   let fixturesWithTeams: FixtureWithTeams[] = [];
   let selectedGameweek: number;
@@ -19,10 +20,8 @@
 
   onMount(async () => {
     try {
-      await teamStore.sync();
-      if ($teamStore.length == 0) return;
-      await systemStore.sync();
-      await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
+      
+      await storeManager.syncStores();
       selectedGameweek = $systemStore?.calculationGameweek ?? 1;
 
       fixturesWithTeams = $fixtureStore.map((fixture) => ({
@@ -40,10 +39,10 @@
     }
   });
 
-  $: if ($fixtureStore.length > 0 && $teamStore.length > 0) {
+  $: if ($fixtureStore.length > 0 && $clubStore.length > 0) {
     tableData = updateTableData(
       fixturesWithTeams,
-      $teamStore,
+      $clubStore,
       selectedGameweek
     );
   }
@@ -53,7 +52,7 @@
   };
 
   function getTeamFromId(teamId: number): ClubDTO | undefined {
-    return $teamStore.find((team) => team.id === teamId);
+    return $clubStore.find((team) => team.id === teamId);
   }
 </script>
 

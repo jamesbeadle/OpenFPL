@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { teamStore } from "$lib/stores/club-store";
+  import { clubStore } from "$lib/stores/club-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { systemStore } from "$lib/stores/system-store";
   import { toastsError } from "$lib/stores/toasts-store";
@@ -8,8 +8,9 @@
   import {
     formatUnixTimeToTime,
   } from "../utils/helpers";
-  import type { ClubDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { ClubDTO } from "../../../../declarations/OpenWSL_backend/OpenWSL_backend.did";
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
+    import { storeManager } from "$lib/managers/store-manager";
 
   let gameweeks = Array.from({ length: Number(process.env.TOTAL_GAMEWEEKS) }, (_, i) => i + 1);
   let selectedGameweek: number;
@@ -42,11 +43,7 @@
 
   onMount(async () => {
     try {
-      await teamStore.sync();
-      if ($teamStore.length == 0) return;
-
-      await systemStore.sync();
-      await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
+      await storeManager.syncStores();
 
       selectedGameweek = $systemStore?.calculationGameweek ?? 1;
       fixturesWithTeams = $fixtureStore.map((fixture) => ({
@@ -69,7 +66,7 @@
   };
 
   function getTeamFromId(teamId: number): ClubDTO | undefined {
-    return $teamStore.find((team) => team.id === teamId);
+    return $clubStore.find((team) => team.id === teamId);
   }
 </script>
 

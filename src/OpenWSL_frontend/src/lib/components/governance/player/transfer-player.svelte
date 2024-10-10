@@ -3,11 +3,12 @@
   import { governanceStore } from "$lib/stores/governance-store";
   import { playerStore } from "$lib/stores/player-store";
   import { Modal } from "@dfinity/gix-components";
-  import type { PlayerDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import { teamStore } from "$lib/stores/club-store";
+  import type { PlayerDTO } from "../../../../../../declarations/OpenWSL_backend/OpenWSL_backend.did";
+  import { clubStore } from "$lib/stores/club-store";
   import LocalSpinner from "$lib/components/local-spinner.svelte";
   import { isError } from "$lib/utils/helpers";
   import { toastsError } from "$lib/stores/toasts-store";
+    import { storeManager } from "$lib/managers/store-manager";
 
   export let visible: boolean;
   export let closeModal: () => void;
@@ -34,8 +35,7 @@
 
   onMount(async () => {
     try {
-      await teamStore.sync();
-      await playerStore.sync();
+      await storeManager.syncStores();
       isLoading = false;
     } catch (error) {
       toastsError({
@@ -58,6 +58,8 @@
 
   async function confirmProposal() {
     isLoading = true;
+
+    /* //TODO
     let result = await governanceStore.transferPlayer(
       selectedPlayerId,
       transferClubId
@@ -71,6 +73,7 @@
       console.error("Error submitting proposal");
       return;
     }
+    */
     isLoading = false;
     resetForm();
     closeModal();
@@ -106,7 +109,7 @@
           bind:value={selectedClubId}
         >
           <option value={0}>Select Club</option>
-          {#each $teamStore as club}
+          {#each $clubStore as club}
             <option value={club.id}>{club.friendlyName}</option>
           {/each}
         </select>
@@ -141,7 +144,7 @@
               bind:value={transferClubId}
             >
               <option value={0}>Select Club</option>
-              {#each $teamStore as club}
+              {#each $clubStore as club}
                 <option value={club.id}>{club.friendlyName}</option>
               {/each}
             </select>

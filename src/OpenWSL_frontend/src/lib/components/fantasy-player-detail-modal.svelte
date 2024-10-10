@@ -2,7 +2,7 @@
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import { Modal } from "@dfinity/gix-components";
-  import type { ClubDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { ClubDTO } from "../../../../declarations/OpenWSL_backend/OpenWSL_backend.did";
   import { convertPlayerPosition, getFlagComponent } from "../utils/helpers";
 
   export let visible: boolean;

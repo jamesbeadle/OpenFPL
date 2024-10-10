@@ -4,10 +4,10 @@
 
 <Layout>
   <div class="bg-panel rounded-md p-4 mt-4">
-    <h1 class="default-header">OpenFPL Gameplay Rules</h1>
+    <h1 class="default-header">OpenWSL Gameplay Rules</h1>
     <div>
       <p class="my-2">
-        Please see the below OpenFPL fantasy football gameplay rules.
+        Please see the below OpenWSL fantasy football gameplay rules.
       </p>
 
       <p class="my-2">
@@ -27,7 +27,7 @@
 
       <p class="my-2">
         Users will setup their team before the gameweek deadline each week. When
-        playing OpenFPL, users have the chance to win FPL tokens depending on
+        playing OpenWSL, users have the chance to win FPL tokens depending on
         how well the players in their team perform.
       </p>
 

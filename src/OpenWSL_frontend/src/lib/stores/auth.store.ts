@@ -16,7 +16,7 @@ export interface AuthStoreData {
 let authClient: AuthClient | undefined | null;
 55;
 
-const NNS_IC_ORG_ALTERNATIVE_ORIGIN = "https://openfpl.xyz";
+const NNS_IC_ORG_ALTERNATIVE_ORIGIN = "https://openwsl.xyz";
 const NNS_IC_APP_DERIVATION_ORIGIN =
   "https://5ido2-wqaaa-aaaal-qmzra-cai.icp0.io";
 

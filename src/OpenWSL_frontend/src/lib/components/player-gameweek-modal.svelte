@@ -6,7 +6,7 @@
     PlayerDetailDTO,
     PlayerEventData,
     PlayerGameweekDTO,
-  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  } from "../../../../declarations/OpenWSL_backend/OpenWSL_backend.did";
   import { getFlagComponent } from "../utils/helpers";
 
   export let visible: boolean;

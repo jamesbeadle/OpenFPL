@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { toastsError } from "$lib/stores/toasts-store";
-  import { teamStore } from "$lib/stores/club-store";
+  import { clubStore } from "$lib/stores/club-store";
   import { systemStore } from "$lib/stores/system-store";
   import { authSignedInStore } from "$lib/derived/auth.derived";
   import { userGetFavouriteTeam } from "$lib/derived/user.derived";
@@ -10,6 +10,7 @@
   import { seasonLeaderboardStore } from "$lib/stores/season-leaderboard-store";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
     import LocalSpinner from "./local-spinner.svelte";
+    import { storeManager } from "$lib/managers/store-manager";
 
   let isLoading = true;
   let gameweeks = Array.from(
@@ -31,7 +32,7 @@
   let searchTerm = "";
   let searchInput = "";
 
-  $: selectedTeamIndex = $teamStore.findIndex(
+  $: selectedTeamIndex = $clubStore.findIndex(
     (team) => team.id === selectedTeamId
   );
 
@@ -41,23 +42,13 @@
 
   onMount(async () => {
     try {
-      console.log("loading leaderboards component")
-      await teamStore.sync();
-      if ($teamStore.length == 0) return;
-
-      await systemStore.sync();
-
-      console.log("syncing weekly store")
-      await weeklyLeaderboardStore.sync(
-        $systemStore?.calculationSeasonId ?? 1,
-        $systemStore?.calculationGameweek ?? 1
-      );
+      await storeManager.syncStores();
       
       console.log("syncing monthly store")
       await monthlyLeaderboardStore.sync(
         $systemStore?.calculationSeasonId ?? 1,
         $systemStore?.calculationMonth ?? 8,
-        1 //TODO LATER
+        1 //TODO
       );
       
       console.log("syncing season store")
@@ -70,14 +61,17 @@
       selectedMonth = $systemStore?.calculationMonth ?? 8;
       selectedTeamId = $authSignedInStore
         ? $userGetFavouriteTeam ??
-          $teamStore.sort((a, b) =>
+          $clubStore.sort((a, b) =>
             a.friendlyName.localeCompare(b.friendlyName)
           )[0].id
-        : $teamStore.sort((a, b) =>
+        : $clubStore.sort((a, b) =>
             a.friendlyName.localeCompare(b.friendlyName)
           )[0].id;
 
-      console.log("getting leaderboard data")
+      console.log("getting leaderboard data");
+
+      /*
+      //TODO
       let leaderboardData = await weeklyLeaderboardStore.getWeeklyLeaderboard(
         selectedSeasonId,
         selectedGameweek,
@@ -86,6 +80,7 @@
         searchTerm
       );
       leaderboard = leaderboardData;
+      */
     } catch (error) {
       toastsError({
         msg: { text: "Error fetching leaderboard data." },
@@ -121,6 +116,8 @@
 
     isLoading = true;
     try {
+      /*
+      //TODO
       switch (selectedLeaderboardType) {
         case 1:
           leaderboard = await weeklyLeaderboardStore.getWeeklyLeaderboard(
@@ -148,6 +145,7 @@
           );
           break;
       }
+      */
     } catch (error) {
       toastsError({
         msg: { text: "Error fetching leaderboard data." },
@@ -190,13 +188,13 @@
 
   function changeTeam(delta: number) {
     selectedTeamIndex =
-      (selectedTeamIndex + delta + $teamStore.length) % $teamStore.length;
+      (selectedTeamIndex + delta + $clubStore.length) % $clubStore.length;
 
-    if (selectedTeamIndex > $teamStore.length - 1) {
+    if (selectedTeamIndex > $clubStore.length - 1) {
       selectedTeamIndex = 0;
     }
 
-    selectedTeamId = $teamStore[selectedTeamIndex].id;
+    selectedTeamId = $clubStore[selectedTeamIndex].id;
     loadLeaderboardData();
   }
 </script>
@@ -270,7 +268,7 @@
               class="p-2 fpl-dropdown my-4 min-w-[100px]"
               bind:value={selectedTeamId}
             >
-              {#each $teamStore.sort( (a, b) => a.friendlyName.localeCompare(b.friendlyName) ) as team}
+              {#each $clubStore.sort( (a, b) => a.friendlyName.localeCompare(b.friendlyName) ) as team}
                 <option value={team.id}>{team.friendlyName}</option>
               {/each}
             </select>

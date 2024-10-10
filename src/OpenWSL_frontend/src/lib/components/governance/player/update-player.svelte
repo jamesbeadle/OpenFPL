@@ -1,21 +1,22 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { Modal } from "@dfinity/gix-components";
-  import { teamStore } from "$lib/stores/club-store";
+  import { clubStore } from "$lib/stores/club-store";
   import { playerStore } from "$lib/stores/player-store";
-  import { countriesStore } from "$lib/stores/country-store";
+  import { countryStore } from "$lib/stores/country-store";
   import { governanceStore } from "$lib/stores/governance-store";
   import LocalSpinner from "$lib/components/local-spinner.svelte";
   import { toastsError } from "$lib/stores/toasts-store";
   import type {
     PlayerDTO,
     PlayerPosition,
-  } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  } from "../../../../../../declarations/OpenWSL_backend/OpenWSL_backend.did";
   import {
     convertDateInputToUnixNano,
     formatUnixToDateInputValue,
     isError,
   } from "$lib/utils/helpers";
+    import { storeManager } from "$lib/managers/store-manager";
 
   export let visible: boolean;
   export let closeModal: () => void;
@@ -60,8 +61,7 @@
 
   onMount(async () => {
     try {
-      await playerStore.sync();
-      await teamStore.sync();
+      await storeManager.syncStores();
     } catch (error) {
       toastsError({
         msg: { text: "Error syncing player store." },
@@ -197,7 +197,7 @@
             bind:value={selectedClubId}
           >
             <option value={0}>Select Club</option>
-            {#each $teamStore as club}
+            {#each $clubStore as club}
               <option value={club.id}>{club.friendlyName}</option>
             {/each}
           </select>
@@ -278,7 +278,7 @@
                 class="p-2 fpl-dropdown my-4 min-w-[100px]"
                 bind:value={nationalityId}
               >
-                {#each $countriesStore as country}
+                {#each $clubStore as country}
                   <option value={country.id}>{country.name}</option>
                 {/each}
               </select>
