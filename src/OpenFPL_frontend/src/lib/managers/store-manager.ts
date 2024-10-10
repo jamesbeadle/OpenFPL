@@ -14,7 +14,7 @@ import { SeasonService } from "$lib/services/season-service";
 import { ClubService } from "$lib/services/club-service";
 import { PlayerService } from "$lib/services/player-service";
 import { PlayerEventsService } from "$lib/services/player-events-service";
-import { FixtureService } from "$lib/services/fixture-service"; 
+import { FixtureService } from "$lib/services/fixture-service";
 import { WeeklyLeaderboardService } from "$lib/services/weekly-leaderboard-service";
 
 import { isError } from "$lib/utils/helpers";
@@ -30,7 +30,16 @@ class StoreManager {
   private fixtureService: FixtureService;
   private weeklyLeaderboardService: WeeklyLeaderboardService;
 
-  private categories: string[] = ['countries', 'system_state', 'seasons', 'clubs', 'players', 'player_events', 'fixtures', 'weekly_leaderboard' ];
+  private categories: string[] = [
+    "countries",
+    "system_state",
+    "seasons",
+    "clubs",
+    "players",
+    "player_events",
+    "fixtures",
+    "weekly_leaderboard",
+  ];
 
   constructor() {
     this.dataHashService = new DataHashService();
@@ -54,11 +63,11 @@ class StoreManager {
     }
 
     for (const category of this.categories) {
-      const categoryHash = newHashes.find(hash => hash.category === category);
+      const categoryHash = newHashes.find((hash) => hash.category === category);
 
       if (categoryHash?.hash !== localStorage.getItem(`${category}_hash`)) {
         await this.syncCategory(category);
-        localStorage.setItem(`${category}_hash`, categoryHash?.hash || '');
+        localStorage.setItem(`${category}_hash`, categoryHash?.hash || "");
       } else {
         this.loadFromCache(category);
       }
@@ -67,45 +76,56 @@ class StoreManager {
 
   private async syncCategory(category: string): Promise<void> {
     switch (category) {
-      case 'countries':
+      case "countries":
         const updatedCountries = await this.countryService.getCountries();
         countryStore.setCountries(updatedCountries);
-        localStorage.setItem('countries', JSON.stringify(updatedCountries));
+        localStorage.setItem("countries", JSON.stringify(updatedCountries));
         break;
-      case 'system_state':
+      case "system_state":
         const updatedSystemState = await this.systemService.getSystemState();
         systemStore.setSystemState(updatedSystemState);
-        localStorage.setItem('system_state', JSON.stringify(updatedSystemState));
+        localStorage.setItem(
+          "system_state",
+          JSON.stringify(updatedSystemState),
+        );
         break;
       case "seasons":
         const updatedSeasons = await this.seasonService.getSeasons();
         seasonStore.setSeasons(updatedSeasons);
-        localStorage.setItem('seasons', JSON.stringify(updatedSeasons));
+        localStorage.setItem("seasons", JSON.stringify(updatedSeasons));
         break;
       case "clubs":
         const updatedClubs = await this.clubService.getClubs();
         clubStore.setClubs(updatedClubs);
-        localStorage.setItem('clubs', JSON.stringify(updatedClubs));
+        localStorage.setItem("clubs", JSON.stringify(updatedClubs));
         break;
-      case 'players':
+      case "players":
         const updatedPlayers = await this.playerService.getPlayers();
         playerStore.setPlayers(updatedPlayers);
-        localStorage.setItem('players', JSON.stringify(updatedPlayers));
+        localStorage.setItem("players", JSON.stringify(updatedPlayers));
         break;
-      case 'player_events':
-        const updatedPlayerEvents = await this.playerEventsService.getPlayerDetailsForGameweek();
+      case "player_events":
+        const updatedPlayerEvents =
+          await this.playerEventsService.getPlayerDetailsForGameweek();
         playerEventsStore.setPlayerEvents(updatedPlayerEvents);
-        localStorage.setItem('player_events', JSON.stringify(updatedPlayerEvents));
+        localStorage.setItem(
+          "player_events",
+          JSON.stringify(updatedPlayerEvents),
+        );
         break;
-      case 'fixtures':
+      case "fixtures":
         const updatedFixtures = await this.fixtureService.getFixtures();
         fixtureStore.setFixtures(updatedFixtures);
-        localStorage.setItem('fixtures', JSON.stringify(updatedFixtures));
+        localStorage.setItem("fixtures", JSON.stringify(updatedFixtures));
         break;
       case "weekly_leaderboard":
-        const updatedWeeklyLeaderboard = await this.weeklyLeaderboardService.getWeeklyLeaderboard();
+        const updatedWeeklyLeaderboard =
+          await this.weeklyLeaderboardService.getWeeklyLeaderboard();
         weeklyLeaderboardStore.setWeeklyLeaderboard(updatedWeeklyLeaderboard);
-        localStorage.setItem('weekly_leaderboard', JSON.stringify(updatedWeeklyLeaderboard));
+        localStorage.setItem(
+          "weekly_leaderboard",
+          JSON.stringify(updatedWeeklyLeaderboard),
+        );
         break;
     }
   }
@@ -114,32 +134,32 @@ class StoreManager {
     const cachedData = localStorage.getItem(category);
 
     switch (category) {
-      case 'countries':
-        const cachedCountries = JSON.parse(cachedData || '[]');
+      case "countries":
+        const cachedCountries = JSON.parse(cachedData || "[]");
         countryStore.setCountries(cachedCountries);
         break;
-      case 'system_state':
-        const cachedSystemState = JSON.parse(cachedData || '');
+      case "system_state":
+        const cachedSystemState = JSON.parse(cachedData || "");
         systemStore.setSystemState(cachedSystemState);
         break;
       case "seasons":
-        const cachedSeasons = JSON.parse(cachedData || '');
+        const cachedSeasons = JSON.parse(cachedData || "");
         seasonStore.setSeasons(cachedSeasons);
         break;
       case "clubs":
-        const cachedClubs = JSON.parse(cachedData || '[]');
+        const cachedClubs = JSON.parse(cachedData || "[]");
         clubStore.setClubs(cachedClubs);
         break;
-     case 'players':
-        const cachedPlayers = JSON.parse(cachedData || '[]');
+      case "players":
+        const cachedPlayers = JSON.parse(cachedData || "[]");
         playerStore.setPlayers(cachedPlayers);
         break;
-      case 'fixtures':
-        const cachedFixtures = JSON.parse(cachedData || '[]');
+      case "fixtures":
+        const cachedFixtures = JSON.parse(cachedData || "[]");
         fixtureStore.setFixtures(cachedFixtures);
         break;
       case "weekly_leaderboard":
-        const cachedWeeklyLeaderboard = JSON.parse(cachedData || '');
+        const cachedWeeklyLeaderboard = JSON.parse(cachedData || "");
         weeklyLeaderboardStore.setWeeklyLeaderboard(cachedWeeklyLeaderboard);
         break;
     }

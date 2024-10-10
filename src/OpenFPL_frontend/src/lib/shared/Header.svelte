@@ -2,9 +2,9 @@
   import { page } from "$app/stores";
   import { authStore, type AuthSignInParams } from "$lib/stores/auth.store";
   import { systemStore } from "$lib/stores/system-store";
-  import { countriesStore } from "$lib/stores/country-store";
+  import { countryStore } from "$lib/stores/country-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
-  import { teamStore } from "$lib/stores/club-store";
+  import { clubStore } from "$lib/stores/club-store";
   import { weeklyLeaderboardStore } from "$lib/stores/weekly-leaderboard-store";
   import { playerStore } from "$lib/stores/player-store";
   import { playerEventsStore } from "$lib/stores/player-events-store";
@@ -16,6 +16,7 @@
   import { goto } from "$app/navigation";
   import { authSignedInStore } from "$lib/derived/auth.derived";
   import { userGetProfilePicture } from "$lib/derived/user.derived";
+    import { storeManager } from "$lib/managers/store-manager";
 
   let menuOpen = false;
   let showProfileDropdown = false;
@@ -26,23 +27,7 @@
       document.addEventListener("click", closeDropdownOnClickOutside);
     }
     try {
-      await userStore.sync();
-      await authStore.sync();
-      await systemStore.sync();
-      await countriesStore.sync();
-      await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
-
-      if ($fixtureStore.length == 0) {
-        return;
-      }
-
-      await teamStore.sync();
-      await playerStore.sync();
-      await playerEventsStore.sync();
-      await weeklyLeaderboardStore.sync(
-        $systemStore?.calculationSeasonId ?? 0,
-        $systemStore?.calculationGameweek ?? 0
-      );
+      await storeManager.syncStores();
     } catch (error) {
       toastsError({
         msg: { text: "Error syncing authentication." },

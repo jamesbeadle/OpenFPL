@@ -1,9 +1,7 @@
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { isError } from "../utils/helpers";
-import type {
-    WeeklyLeaderboardDTO,
-} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type { WeeklyLeaderboardDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 export class WeeklyLeaderboardService {
   private actor: any;
@@ -11,7 +9,7 @@ export class WeeklyLeaderboardService {
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory,
-      process.env.OPENFPL_BACKEND_CANISTER_ID
+      process.env.OPENFPL_BACKEND_CANISTER_ID,
     );
   }
 

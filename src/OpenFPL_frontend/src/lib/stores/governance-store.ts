@@ -150,7 +150,8 @@ function createGovernanceStore() {
     playerEventData: PlayerEventData[],
   ): Promise<any> {
     try {
-      console.log("await team store sync line 155");clubStore
+      console.log("await team store sync line 155");
+      clubStore;
 
       let clubs: ClubDTO[] = [];
       const unsubscribeTeamStore = clubStore.subscribe((teams) => {
@@ -1014,7 +1015,7 @@ function createGovernanceStore() {
         }
       });
       unsubscribeSystemStore();
-      
+
       let allFixtures: FixtureDTO[] = [];
       const unsubscribeFixtureStore = fixtureStore.subscribe((fixtures) => {
         allFixtures = fixtures;

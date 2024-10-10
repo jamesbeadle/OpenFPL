@@ -1,13 +1,10 @@
-import { writable } from 'svelte/store';
+import { writable } from "svelte/store";
 import type { SeasonDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 function createSeasonStore() {
   const { subscribe, set } = writable<SeasonDTO[]>([]);
 
-
-  
   async function getSeasonName(seasonId: number): Promise<string | undefined> {
-    
     let seasons: SeasonDTO[] = [];
     await subscribe((value) => {
       seasons = value;
@@ -17,10 +14,10 @@ function createSeasonStore() {
       return;
     }
 
-    let season = seasons.find(x => x.id == seasonId);
-    if(season == null){
-      return
-    };
+    let season = seasons.find((x) => x.id == seasonId);
+    if (season == null) {
+      return;
+    }
 
     return season.name;
   }
@@ -28,7 +25,7 @@ function createSeasonStore() {
   return {
     subscribe,
     setSeasons: (seasons: SeasonDTO[]) => set(seasons),
-    getSeasonName
+    getSeasonName,
   };
 }
 

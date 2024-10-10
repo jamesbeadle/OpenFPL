@@ -1,4 +1,4 @@
-import { writable } from 'svelte/store';
+import { writable } from "svelte/store";
 import type { WeeklyLeaderboardDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 function createWeeklyLeaderboardStore() {
@@ -6,7 +6,8 @@ function createWeeklyLeaderboardStore() {
 
   return {
     subscribe,
-    setWeeklyLeaderboard: (leaderboard: WeeklyLeaderboardDTO) => set(leaderboard)
+    setWeeklyLeaderboard: (leaderboard: WeeklyLeaderboardDTO) =>
+      set(leaderboard),
   };
 }
 

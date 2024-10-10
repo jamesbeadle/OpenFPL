@@ -1,4 +1,4 @@
-import { writable } from 'svelte/store';
+import { writable } from "svelte/store";
 import type { ClubDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 function createClubStore() {
@@ -6,7 +6,7 @@ function createClubStore() {
 
   return {
     subscribe,
-    setClubs: (clubs: ClubDTO[]) => set(clubs)
+    setClubs: (clubs: ClubDTO[]) => set(clubs),
   };
 }
 

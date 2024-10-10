@@ -1,13 +1,27 @@
-import { writable } from 'svelte/store';
-import { PlayerService } from '$lib/services/player-service';
-import type { FantasyTeamSnapshot, PlayerPointsDTO, SystemStateDTO } from '../../../../declarations/OpenFPL_backend/OpenFPL_backend.did';
-import type { FixtureDTO, GameweekFiltersDTO, GetPlayerDetailsDTO, PlayerDetailDTO, PlayerDTO } from '../../../../declarations/data_canister/data_canister.did';
-import { PlayerEventsService } from '$lib/services/player-events-service';
-import type { GameweekData } from '$lib/interfaces/GameweekData';
-import { systemStore } from './system-store';
-import { playerStore } from './player-store';
-import { calculateBonusPoints, calculatePlayerScore, extractPlayerData } from '$lib/utils/helpers';
-import { fixtureStore } from './fixture-store';
+import { writable } from "svelte/store";
+import { PlayerService } from "$lib/services/player-service";
+import type {
+  FantasyTeamSnapshot,
+  PlayerPointsDTO,
+  SystemStateDTO,
+} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type {
+  FixtureDTO,
+  GameweekFiltersDTO,
+  GetPlayerDetailsDTO,
+  PlayerDetailDTO,
+  PlayerDTO,
+} from "../../../../declarations/data_canister/data_canister.did";
+import { PlayerEventsService } from "$lib/services/player-events-service";
+import type { GameweekData } from "$lib/interfaces/GameweekData";
+import { systemStore } from "./system-store";
+import { playerStore } from "./player-store";
+import {
+  calculateBonusPoints,
+  calculatePlayerScore,
+  extractPlayerData,
+} from "$lib/utils/helpers";
+import { fixtureStore } from "./fixture-store";
 
 function createPlayerEventsStore() {
   const { subscribe, set } = writable<PlayerPointsDTO[]>([]);
@@ -24,30 +38,32 @@ function createPlayerEventsStore() {
     seasonId: number,
     gameweek: number,
   ): Promise<GameweekData[]> {
-    
     let allPlayerEvents: PlayerPointsDTO[] = [];
     let systemState: SystemStateDTO | null = null;
-    systemStore.subscribe(result => {
-      if(result == null){
-        throw new Error("Failed to subscribe to system store")
+    systemStore.subscribe((result) => {
+      if (result == null) {
+        throw new Error("Failed to subscribe to system store");
       }
       systemState = {
         pickTeamSeasonId: result.pickTeamSeasonId,
-        calculationGameweek : result.calculationGameweek,
-        transferWindowActive : result.transferWindowActive,
-        pickTeamGameweek : result.pickTeamGameweek,
-        version : result.version,
-        calculationMonth : result.calculationMonth,
-        calculationSeasonId : result.calculationSeasonId,
-        onHold : result.onHold,
-        seasonActive : result.seasonActive
+        calculationGameweek: result.calculationGameweek,
+        transferWindowActive: result.transferWindowActive,
+        pickTeamGameweek: result.pickTeamGameweek,
+        version: result.version,
+        calculationMonth: result.calculationMonth,
+        calculationSeasonId: result.calculationSeasonId,
+        onHold: result.onHold,
+        seasonActive: result.seasonActive,
       };
     });
-    if(systemState == null){
-      throw new Error("Failed to subscribe to system store")
+    if (systemState == null) {
+      throw new Error("Failed to subscribe to system store");
     }
 
-    if ((systemState as SystemStateDTO).calculationSeasonId === seasonId && (systemState as SystemStateDTO).calculationGameweek === gameweek) {
+    if (
+      (systemState as SystemStateDTO).calculationSeasonId === seasonId &&
+      (systemState as SystemStateDTO).calculationGameweek === gameweek
+    ) {
       allPlayerEvents = await getPlayerEventsFromLocalStorage();
     } else {
       allPlayerEvents = await getPlayerEventsFromBackend(seasonId, gameweek);
@@ -91,11 +107,14 @@ function createPlayerEventsStore() {
     return await Promise.all(playersWithPoints);
   }
 
-  async function getPlayerEventsFromLocalStorage() : Promise<PlayerPointsDTO[]>{
+  async function getPlayerEventsFromLocalStorage(): Promise<PlayerPointsDTO[]> {
     return [];
   }
 
-  async function getPlayerEventsFromBackend(seasonId: number, gameweek: number) : Promise<PlayerPointsDTO[]>{
+  async function getPlayerEventsFromBackend(
+    seasonId: number,
+    gameweek: number,
+  ): Promise<PlayerPointsDTO[]> {
     return new PlayerEventsService().getPlayerEvents(seasonId, gameweek);
   }
 
@@ -104,7 +123,7 @@ function createPlayerEventsStore() {
     setPlayerEvents: (players: PlayerPointsDTO[]) => set(players),
     getPlayerDetails,
     getGameweekPlayers,
-    getPlayerEventsFromBackend
+    getPlayerEventsFromBackend,
   };
 }
 

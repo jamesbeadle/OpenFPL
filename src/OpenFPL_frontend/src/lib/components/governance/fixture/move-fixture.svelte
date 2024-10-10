@@ -2,7 +2,6 @@
   import { onMount } from "svelte";
   import { Modal } from "@dfinity/gix-components";
   import { clubStore } from "$lib/stores/club-store";
-  import { systemStore } from "$lib/stores/system-store";
   import { toastsError } from "$lib/stores/toasts-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { governanceStore } from "$lib/stores/governance-store";

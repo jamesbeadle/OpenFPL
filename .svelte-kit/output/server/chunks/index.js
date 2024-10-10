@@ -6,10 +6,10 @@ import * as set_cookie_parser from "set-cookie-parser";
 import { nonNullish, isNullish, createAgent } from "@dfinity/utils";
 import "dompurify";
 import { AuthClient } from "@dfinity/auth-client";
+import { HttpAgent, Actor } from "@dfinity/agent";
 import { Principal } from "@dfinity/principal";
 import { SnsGovernanceCanister } from "@dfinity/sns";
 import { IDL } from "@dfinity/candid";
-import { HttpAgent, Actor } from "@dfinity/agent";
 import { Text } from "@dfinity/candid/lib/cjs/idl.js";
 import { IcrcLedgerCanister } from "@dfinity/ledger-icrc";
 let base = "";
@@ -3516,7 +3516,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "18phxhs"
+  version_hash: "1gdxdox"
 };
 async function get_hooks() {
   return {};
@@ -3723,6 +3723,14 @@ const initAuthStore = () => {
   };
 };
 const authStore = initAuthStore();
+function createSystemStore() {
+  const { subscribe: subscribe2, set } = writable(null);
+  return {
+    subscribe: subscribe2,
+    setSystemState: (systemState) => set(systemState)
+  };
+}
+const systemStore = createSystemStore();
 const idlFactory = ({ IDL: IDL2 }) => {
   const FixtureStatusType = IDL2.Variant({
     "Unplayed": IDL2.Null,
@@ -4521,8 +4529,8 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "viewPayouts": IDL2.Func([GameweekNumber], [Result], [])
   });
 };
-var define_process_env_default$i = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
-const canisterId = define_process_env_default$i.CANISTER_ID_OPENFPL_BACKEND;
+var define_process_env_default$j = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+const canisterId = define_process_env_default$j.CANISTER_ID_OPENFPL_BACKEND;
 const createActor = (canisterId2, options2 = {}) => {
   const agent = options2.agent || new HttpAgent({ ...options2.agentOptions });
   if (options2.agent && options2.agentOptions) {
@@ -4545,7 +4553,7 @@ const createActor = (canisterId2, options2 = {}) => {
   });
 };
 canisterId ? createActor(canisterId) : void 0;
-var define_process_env_default$h = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$i = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
 class ActorFactory {
   static createActor(idlFactory2, canisterId2 = "", identity = null, options2 = null) {
     const hostOptions = {
@@ -4606,7 +4614,7 @@ class ActorFactory {
     });
   }
   static getGovernanceAgent(identity = null, options2 = null) {
-    let canisterId2 = define_process_env_default$h.CANISTER_ID_SNS_GOVERNANCE;
+    let canisterId2 = define_process_env_default$i.CANISTER_ID_SNS_GOVERNANCE;
     const hostOptions = {
       host: `http://localhost:8080/?canisterId=${canisterId2}`,
       identity
@@ -4789,259 +4797,268 @@ function convertFixtureStatus(fixtureStatus) {
 function isError(response) {
   return response && response.err !== void 0;
 }
-var define_process_env_default$g = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
-function createSystemStore() {
-  const { subscribe: subscribe2, set } = writable(null);
-  console.log("Create actor in createSystemStore line 19");
-  let actor = ActorFactory.createActor(
-    idlFactory,
-    define_process_env_default$g.OPENFPL_BACKEND_CANISTER_ID
-  );
-  async function sync() {
-    console.log("Syncing system and auth store");
-    await authStore.sync();
-    let category = "system_state";
-    console.log("Actor getting data hashes in system store sync line 30");
-    const newHashValues = await actor.getDataHashes();
-    let error = isError(newHashValues);
-    if (error) {
-      console.error("Error syncing system store");
-      return;
-    }
-    let dataCacheValues = newHashValues.ok;
-    let categoryHash = dataCacheValues.find((x) => x.category === category) ?? null;
-    const localHash = localStorage.getItem(`${category}_hash`);
-    if (categoryHash != localHash) {
-      console.log("Actor getting system state line 47");
-      let result = await actor.getSystemState();
-      if (isError(result)) {
-        console.error("Error syncing system store");
-        return;
-      }
-      let updatedSystemStateData = result.ok;
-      localStorage.setItem(
-        category,
-        JSON.stringify(updatedSystemStateData, replacer)
-      );
-      localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
-      set(updatedSystemStateData);
-    } else {
-      const cachedSystemStateData = localStorage.getItem(category);
-      let cachedSystemState = null;
-      try {
-        cachedSystemState = JSON.parse(cachedSystemStateData || "{}");
-      } catch (e) {
-        cachedSystemState = null;
-      }
-      set(cachedSystemState);
-    }
-  }
-  async function getSystemState() {
-    let systemState;
-    subscribe2((value) => {
-      systemState = value;
-    })();
-    return systemState;
-  }
-  async function getSeasons() {
-    try {
-      console.log("Actor getting seasons line 84");
-      let result = await actor.getSeasons();
-      if (isError(result)) {
-        console.error("Error fetching seasons:");
-        return [];
-      }
-      return result.ok;
-    } catch (error) {
-      console.error("Error fetching seasons:", error);
-      throw error;
-    }
-  }
-  async function getCanisters(currentPage, itemsPerPage, filter) {
-    try {
-      console.log("Creating actor in getCanisters line 104");
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        define_process_env_default$g.OPENFPL_BACKEND_CANISTER_ID ?? ""
-      );
-      const limit = itemsPerPage;
-      const offset = (currentPage - 1) * limit;
-      let dto = {
-        totalEntries: 0n,
-        offset: BigInt(offset),
-        limit: BigInt(limit),
-        entries: [],
-        canisterTypeFilter: filter
-      };
-      console.log("Actor getting canisters line 120");
-      let result = await identityActor.getCanisters(dto);
-      if (isError(result)) {
-        console.error("Error getting canisters:", result);
-        return;
-      }
-      return result.ok;
-    } catch (error) {
-      console.error("Error getting canisters:", error);
-      throw error;
-    }
-  }
-  async function getRewardPool(seasonId) {
-    try {
-      console.log("Creating actor in getRewardPool line 138");
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        define_process_env_default$g.OPENFPL_BACKEND_CANISTER_ID ?? ""
-      );
-      let dto = {
-        seasonId,
-        rewardPool: {
-          monthlyLeaderboardPool: 0n,
-          allTimeSeasonHighScorePool: 0n,
-          mostValuableTeamPool: 0n,
-          highestScoringMatchPlayerPool: 0n,
-          seasonId,
-          seasonLeaderboardPool: 0n,
-          allTimeWeeklyHighScorePool: 0n,
-          allTimeMonthlyHighScorePool: 0n,
-          weeklyLeaderboardPool: 0n
+function extractPlayerData(playerPointsDTO, player) {
+  let goals = 0, assists = 0, redCards = 0, yellowCards = 0, missedPenalties = 0, ownGoals = 0, saves = 0, cleanSheets = 0, penaltySaves = 0, goalsConceded = 0, appearance = 0, highestScoringPlayerId = 0;
+  let goalPoints = 0, assistPoints = 0, goalsConcededPoints = 0, cleanSheetPoints = 0;
+  playerPointsDTO.events.forEach((event) => {
+    switch (convertEvent(event.eventType)) {
+      case 0:
+        appearance += 1;
+        break;
+      case 1:
+        goals += 1;
+        switch (convertPlayerPosition(playerPointsDTO.position)) {
+          case 0:
+          case 1:
+            goalPoints += 20;
+            break;
+          case 2:
+            goalPoints += 15;
+            break;
+          case 3:
+            goalPoints += 10;
+            break;
         }
-      };
-      console.log("Actor getting reward pool line 159");
-      let result = await identityActor.getRewardPool(dto);
-      if (isError(result)) {
-        console.error("Error getting reward pools:", result);
-        return;
-      }
-      return result.ok;
-    } catch (error) {
-      console.error("Error getting reward pools:", error);
-      throw error;
+        break;
+      case 2:
+        assists += 1;
+        switch (convertPlayerPosition(playerPointsDTO.position)) {
+          case 0:
+          case 1:
+            assistPoints += 15;
+            break;
+          case 2:
+          case 3:
+            assistPoints += 10;
+            break;
+        }
+        break;
+      case 3:
+        goalsConceded += 1;
+        if (convertPlayerPosition(playerPointsDTO.position) < 2 && goalsConceded % 2 === 0) {
+          goalsConcededPoints += -15;
+        }
+        break;
+      case 4:
+        saves += 1;
+        break;
+      case 5:
+        cleanSheets += 1;
+        if (convertPlayerPosition(playerPointsDTO.position) < 2 && goalsConceded === 0) {
+          cleanSheetPoints += 10;
+        }
+        break;
+      case 6:
+        penaltySaves += 1;
+        break;
+      case 7:
+        missedPenalties += 1;
+        break;
+      case 8:
+        yellowCards += 1;
+        break;
+      case 9:
+        redCards += 1;
+        break;
+      case 10:
+        ownGoals += 1;
+        break;
+      case 11:
+        highestScoringPlayerId += 1;
+        break;
     }
-  }
-  async function getTopups(currentPage, itemsPerPage) {
-    try {
-      console.log("Creating actor in getTopups line 15");
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        define_process_env_default$g.OPENFPL_BACKEND_CANISTER_ID ?? ""
-      );
-      const limit = itemsPerPage;
-      const offset = (currentPage - 1) * limit;
-      let dto = {
-        totalEntries: 0n,
-        entries: [],
-        offset: BigInt(offset),
-        limit: BigInt(limit)
-      };
-      console.log("Actor getting topups line 193");
-      let result = await identityActor.getTopups(dto);
-      if (isError(result)) {
-        console.error("Error getting topups:", result);
-        return;
-      }
-      return result.ok;
-    } catch (error) {
-      console.error("Error getting topups:", error);
-      throw error;
-    }
-  }
-  async function getBackendCanisterBalance() {
-    try {
-      console.log("Creating actor in getBackendCanisterBalance line 209");
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        define_process_env_default$g.OPENFPL_BACKEND_CANISTER_ID ?? ""
-      );
-      console.log("Actor getting backend canister balance line 214");
-      let result = await identityActor.getBackendCanisterBalance();
-      if (isError(result)) {
-        console.error("Error getting backend FPL balance:", result);
-        return;
-      }
-      return result.ok;
-    } catch (error) {
-      console.error("Error getting backend FPL balance:", error);
-      throw error;
-    }
-  }
-  async function getBackendCanisterCyclesAvailable() {
-    try {
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        define_process_env_default$g.OPENFPL_BACKEND_CANISTER_ID ?? ""
-      );
-      console.log("Actor getting canister cycles balance line 236");
-      let result = await identityActor.getCanisterCyclesBalance();
-      if (isError(result)) {
-        console.error("Error getting backend cycles:", result);
-        return;
-      }
-      return result.ok;
-    } catch (error) {
-      console.error("Error getting backend cycles:", error);
-      throw error;
-    }
-  }
-  return {
-    subscribe: subscribe2,
-    sync,
-    getSystemState,
-    getSeasons,
-    getCanisters,
-    getRewardPool,
-    getTopups,
-    getBackendCanisterBalance,
-    getBackendCanisterCyclesAvailable
+  });
+  let playerGameweekDetails = {
+    player,
+    points: playerPointsDTO.points,
+    appearance,
+    goals,
+    assists,
+    goalsConceded,
+    saves,
+    cleanSheets,
+    penaltySaves,
+    missedPenalties,
+    yellowCards,
+    redCards,
+    ownGoals,
+    highestScoringPlayerId,
+    goalPoints,
+    assistPoints,
+    goalsConcededPoints,
+    cleanSheetPoints,
+    gameweek: playerPointsDTO.gameweek,
+    bonusPoints: 0,
+    totalPoints: 0,
+    isCaptain: false,
+    nationalityId: player.nationality
   };
+  return playerGameweekDetails;
 }
-const systemStore = createSystemStore();
-var define_process_env_default$f = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+function calculatePlayerScore(gameweekData, fixtures) {
+  if (!gameweekData) {
+    console.error("No gameweek data found:", gameweekData);
+    return 0;
+  }
+  let score = 0;
+  let pointsForAppearance = 5;
+  let pointsFor3Saves = 5;
+  let pointsForPenaltySave = 20;
+  let pointsForHighestScore = 25;
+  let pointsForRedCard = -20;
+  let pointsForPenaltyMiss = -10;
+  let pointsForEach2Conceded = -15;
+  let pointsForOwnGoal = -10;
+  let pointsForYellowCard = -5;
+  let pointsForCleanSheet = 10;
+  var pointsForGoal = 0;
+  var pointsForAssist = 0;
+  if (gameweekData.appearance > 0) {
+    score += pointsForAppearance * gameweekData.appearance;
+  }
+  if (gameweekData.redCards > 0) {
+    score += pointsForRedCard;
+  }
+  if (gameweekData.missedPenalties > 0) {
+    score += pointsForPenaltyMiss * gameweekData.missedPenalties;
+  }
+  if (gameweekData.ownGoals > 0) {
+    score += pointsForOwnGoal * gameweekData.ownGoals;
+  }
+  if (gameweekData.yellowCards > 0) {
+    score += pointsForYellowCard * gameweekData.yellowCards;
+  }
+  switch (convertPlayerPosition(gameweekData.player.position)) {
+    case 0:
+      pointsForGoal = 20;
+      pointsForAssist = 15;
+      if (gameweekData.saves >= 3) {
+        score += Math.floor(gameweekData.saves / 3) * pointsFor3Saves;
+      }
+      if (gameweekData.penaltySaves) {
+        score += pointsForPenaltySave * gameweekData.penaltySaves;
+      }
+      if (gameweekData.cleanSheets > 0) {
+        score += pointsForCleanSheet;
+      }
+      if (gameweekData.goalsConceded >= 2) {
+        score += Math.floor(gameweekData.goalsConceded / 2) * pointsForEach2Conceded;
+      }
+      break;
+    case 1:
+      pointsForGoal = 20;
+      pointsForAssist = 15;
+      if (gameweekData.cleanSheets > 0) {
+        score += pointsForCleanSheet;
+      }
+      if (gameweekData.goalsConceded >= 2) {
+        score += Math.floor(gameweekData.goalsConceded / 2) * pointsForEach2Conceded;
+      }
+      break;
+    case 2:
+      pointsForGoal = 15;
+      pointsForAssist = 10;
+      break;
+    case 3:
+      pointsForGoal = 10;
+      pointsForAssist = 10;
+      break;
+  }
+  const gameweekFixtures = fixtures ? fixtures.filter((fixture) => fixture.gameweek === gameweekData.gameweek) : [];
+  const playerFixtures = gameweekFixtures.filter(
+    (fixture) => (fixture.homeClubId === gameweekData.player.clubId || fixture.awayClubId === gameweekData.player.clubId) && fixture.highestScoringPlayerId === gameweekData.player.id
+  );
+  if (playerFixtures && playerFixtures.length > 0) {
+    score += pointsForHighestScore * playerFixtures.length;
+  }
+  score += gameweekData.goals * pointsForGoal;
+  score += gameweekData.assists * pointsForAssist;
+  return score;
+}
+function calculateBonusPoints(gameweekData, fantasyTeam, points) {
+  if (!gameweekData) {
+    console.error("No gameweek data found:", gameweekData);
+    return 0;
+  }
+  let bonusPoints = 0;
+  var pointsForGoal = 0;
+  var pointsForAssist = 0;
+  switch (convertPlayerPosition(gameweekData.player.position)) {
+    case 0:
+      pointsForGoal = 20;
+      pointsForAssist = 15;
+      break;
+    case 1:
+      pointsForGoal = 20;
+      pointsForAssist = 15;
+      break;
+    case 2:
+      pointsForGoal = 15;
+      pointsForAssist = 10;
+      break;
+    case 3:
+      pointsForGoal = 10;
+      pointsForAssist = 10;
+      break;
+  }
+  if (fantasyTeam.goalGetterGameweek === gameweekData.gameweek && fantasyTeam.goalGetterPlayerId === gameweekData.player.id) {
+    bonusPoints = gameweekData.goals * pointsForGoal * 2;
+  }
+  if (fantasyTeam.passMasterGameweek === gameweekData.gameweek && fantasyTeam.passMasterPlayerId === gameweekData.player.id) {
+    bonusPoints = gameweekData.assists * pointsForAssist * 2;
+  }
+  if (fantasyTeam.noEntryGameweek === gameweekData.gameweek && fantasyTeam.noEntryPlayerId === gameweekData.player.id && (convertPlayerPosition(gameweekData.player.position) === 0 || convertPlayerPosition(gameweekData.player.position) === 1) && gameweekData.cleanSheets) {
+    bonusPoints = points * 2;
+  }
+  if (fantasyTeam.safeHandsGameweek === gameweekData.gameweek && convertPlayerPosition(gameweekData.player.position) === 0 && gameweekData.saves >= 5) {
+    bonusPoints = points * 2;
+  }
+  if (fantasyTeam.captainFantasticGameweek === gameweekData.gameweek && fantasyTeam.captainId === gameweekData.player.id && gameweekData.goals > 0) {
+    bonusPoints = points;
+  }
+  if (fantasyTeam.countrymenGameweek === gameweekData.gameweek && fantasyTeam.countrymenCountryId === gameweekData.player.nationality) {
+    bonusPoints = points * 2;
+  }
+  if (fantasyTeam.prospectsGameweek === gameweekData.gameweek && calculateAgeFromNanoseconds(Number(gameweekData.player.dateOfBirth)) < 21) {
+    bonusPoints = points * 2;
+  }
+  if (fantasyTeam.braceBonusGameweek === gameweekData.gameweek && gameweekData.goals >= 2) {
+    bonusPoints = points;
+  }
+  if (fantasyTeam.hatTrickHeroGameweek === gameweekData.gameweek && gameweekData.goals >= 3) {
+    bonusPoints = points * 2;
+  }
+  if (fantasyTeam.teamBoostGameweek === gameweekData.gameweek && gameweekData.player.clubId === fantasyTeam.teamBoostClubId) {
+    bonusPoints = points;
+  }
+  return bonusPoints;
+}
+var define_process_env_default$h = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+class FixtureService {
+  actor;
+  constructor() {
+    this.actor = ActorFactory.createActor(
+      idlFactory,
+      define_process_env_default$h.OPENFPL_BACKEND_CANISTER_ID
+    );
+  }
+  async getPostponedFixtures() {
+    const result = await this.actor.getPostponedFixtures();
+    if (isError(result))
+      throw new Error("Failed to fetch postponed fixtures");
+    return result.ok;
+  }
+  async getFixtures() {
+    const result = await this.actor.getFixtures();
+    if (isError(result))
+      throw new Error("Failed to fetch fixtures");
+    return result.ok;
+  }
+}
 function createFixtureStore() {
   const { subscribe: subscribe2, set } = writable([]);
-  console.log("Creating actor in fixture store line 15");
-  let actor = ActorFactory.createActor(
-    idlFactory,
-    define_process_env_default$f.OPENFPL_BACKEND_CANISTER_ID
-  );
-  async function sync(seasonId) {
-    const category = "fixtures";
-    console.log("Actor getting Data hashes in sync on line 23");
-    const newHashValues = await actor.getDataHashes();
-    let error = isError(newHashValues);
-    if (error) {
-      console.error("Error syncing fixture store");
-      return;
-    }
-    let dataCacheValues = newHashValues.ok;
-    let categoryHash = dataCacheValues.find((x) => x.category === category) ?? null;
-    const localHash = localStorage.getItem(`${category}_hash`);
-    if (categoryHash?.hash != localHash) {
-      let dto = {
-        seasonId
-      };
-      console.log("Actor getting fixtures line 43");
-      const result = await actor.getFixtures(dto);
-      if (isError(result)) {
-        console.error("error syncing fixture store");
-        return;
-      }
-      let updatedFixturesData = result.ok;
-      localStorage.setItem(
-        category,
-        JSON.stringify(updatedFixturesData, replacer)
-      );
-      localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
-      set(updatedFixturesData);
-    } else {
-      const cachedFixturesData = localStorage.getItem(category);
-      let cachedFixtures = [];
-      try {
-        cachedFixtures = JSON.parse(cachedFixturesData || "[]");
-      } catch (e) {
-        cachedFixtures = [];
-      }
-      set(cachedFixtures);
-    }
+  async function getPostponedFixtures() {
+    return new FixtureService().getPostponedFixtures();
   }
   async function getNextFixture() {
     let fixtures = [];
@@ -5056,85 +5073,22 @@ function createFixtureStore() {
       (fixture) => new Date(Number(fixture.kickOff) / 1e6) > now
     );
   }
-  async function getPostponedFixtures() {
-    try {
-      console.log("Actor getting postponed fixtures");
-      let result = await actor.getPostponedFixtures();
-      if (isError(result)) {
-        console.error("Error getting postponed fixtures");
-      }
-      let fixtures = result.ok;
-      return fixtures;
-    } catch (error) {
-      console.error("Error getting postponed fixtures:", error);
-      throw error;
-    }
-  }
   return {
     subscribe: subscribe2,
-    sync,
+    setFixtures: (fixtures) => set(fixtures),
     getNextFixture,
     getPostponedFixtures
   };
 }
 const fixtureStore = createFixtureStore();
-var define_process_env_default$e = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
-function createTeamStore() {
+function createClubStore() {
   const { subscribe: subscribe2, set } = writable([]);
-  console.log("Creating actor in createTeamstore line 13");
-  let actor = ActorFactory.createActor(
-    idlFactory,
-    define_process_env_default$e.OPENFPL_BACKEND_CANISTER_ID
-  );
-  async function sync() {
-    const category = "clubs";
-    console.log("Actor getting data hashes in team store sync line 21");
-    const newHashValues = await actor.getDataHashes();
-    let error = isError(newHashValues);
-    if (error) {
-      console.error("Error syncing team store");
-      return;
-    }
-    let dataCacheValues = newHashValues.ok;
-    let categoryHash = dataCacheValues.find((x) => x.category === category) ?? null;
-    const localHash = localStorage.getItem(`${category}_hash`);
-    if (categoryHash?.hash != localHash) {
-      console.log("Actor getting clubs line 38");
-      const updatedTeamsData = await actor.getClubs();
-      if (isError(updatedTeamsData)) {
-        return [];
-      }
-      localStorage.setItem(
-        category,
-        JSON.stringify(updatedTeamsData.ok, replacer)
-      );
-      localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
-      set(updatedTeamsData.ok);
-    } else {
-      const cachedTeamsData = localStorage.getItem(category);
-      let cachedTeams = [];
-      try {
-        cachedTeams = JSON.parse(cachedTeamsData || "[]");
-      } catch (e) {
-        cachedTeams = [];
-      }
-      set(cachedTeams);
-    }
-  }
-  async function getTeamById(id) {
-    let teams = [];
-    subscribe2((value) => {
-      teams = value;
-    })();
-    return teams.find((team) => team.id === id);
-  }
   return {
     subscribe: subscribe2,
-    sync,
-    getTeamById
+    setClubs: (clubs) => set(clubs)
   };
 }
-const teamStore = createTeamStore();
+const clubStore = createClubStore();
 const errorDetailToString = (err) => typeof err === "string" ? err : err instanceof Error ? err.message : "message" in err ? err.message : void 0;
 const DEFAULT_ICON_SIZE = 20;
 const core = {
@@ -5522,7 +5476,7 @@ const toastsError = ({
     level: "error"
   });
 };
-var define_process_env_default$d = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$g = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
 function createManagerStore() {
   const { subscribe: subscribe2, set } = writable(null);
   systemStore.subscribe((value) => {
@@ -5530,7 +5484,7 @@ function createManagerStore() {
   console.log("Creating actor in manager store line 26");
   let actor = ActorFactory.createActor(
     idlFactory,
-    define_process_env_default$d.OPENFPL_BACKEND_CANISTER_ID
+    define_process_env_default$g.OPENFPL_BACKEND_CANISTER_ID
   );
   let newManager = {
     playerIds: [],
@@ -5623,7 +5577,7 @@ function createManagerStore() {
       console.log("Creating actor in get current team line 133");
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default$d.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$g.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       console.log("actor getting current team line 138");
       const result = await identityActor.getCurrentTeam();
@@ -5652,7 +5606,7 @@ function createManagerStore() {
       console.log("Creating actor in save fantasy team line 171");
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default$d.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$g.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       let dto = {
         playerIds: userFantasyTeam.playerIds,
@@ -5769,358 +5723,104 @@ function createManagerStore() {
   };
 }
 createManagerStore();
-var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
-function createCountriesStore() {
+function createCountryStore() {
   const { subscribe: subscribe2, set } = writable([]);
-  console.log("creating country store line 13");
-  let actor = ActorFactory.createActor(
-    idlFactory,
-    define_process_env_default$c.OPENFPL_BACKEND_CANISTER_ID
-  );
-  async function sync() {
-    console.log("syncing country store line 21");
-    let category = "countries";
-    const newHashValues = await actor.getDataHashes();
-    let error = isError(newHashValues);
-    if (error) {
-      console.error("Error syncing countries store");
-      return;
-    }
-    let dataCacheValues = newHashValues.ok;
-    let categoryHash = dataCacheValues.find((x) => x.category === category) ?? null;
-    const localHash = localStorage.getItem(`${category}_hash`);
-    if (categoryHash?.hash != localHash) {
-      console.log("calling get countries in country store line 35");
-      let result = await actor.getCountries();
-      if (isError(result)) {
-        console.error("Error fetching countries");
-      }
-      let updatedCountriesData = result.ok;
-      localStorage.setItem(
-        category,
-        JSON.stringify(updatedCountriesData, replacer)
-      );
-      localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
-      set(updatedCountriesData);
-    } else {
-      const cachedCountriesData = localStorage.getItem(category);
-      let cachedCountries = [];
-      try {
-        cachedCountries = JSON.parse(cachedCountriesData || "[]");
-      } catch (e) {
-        cachedCountries = [];
-      }
-      set(cachedCountries);
-    }
-  }
   return {
     subscribe: subscribe2,
-    sync
+    setCountries: (countries) => set(countries)
   };
 }
-const countriesStore = createCountriesStore();
-var define_process_env_default$b = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+const countryStore = createCountryStore();
 function createWeeklyLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
-  const itemsPerPage = 25;
-  const category = "weekly_leaderboard";
-  console.log("Creating actor in weekly leaderboard store line 18");
-  let actor = ActorFactory.createActor(
-    idlFactory,
-    define_process_env_default$b.OPENFPL_BACKEND_CANISTER_ID
-  );
-  async function sync(seasonId, gameweek) {
-    console.log(
-      "Actor getting data hashes in weekly leaderboard store sync line 25"
-    );
-    const newHashValues = await actor.getDataHashes();
-    let error = isError(newHashValues);
-    if (error) {
-      console.error("Error syncing leaderboard store");
-      return;
-    }
-    let dataCacheValues = newHashValues.ok;
-    let categoryHash = dataCacheValues.find((x) => x.category === category) ?? null;
-    const localHash = localStorage.getItem(`${category}_hash`);
-    if (categoryHash?.hash != localHash) {
-      const limit = itemsPerPage;
-      const offset = 0;
-      let dto = {
-        offset: BigInt(offset),
-        seasonId,
-        limit: BigInt(limit),
-        searchTerm: "",
-        gameweek
-      };
-      console.log("Actor getting weekly leaderboard line 51");
-      let result = await actor.getWeeklyLeaderboard(dto);
-      if (isError(result)) {
-        let emptyLeaderboard = {
-          entries: [],
-          gameweek: 0,
-          seasonId: 0,
-          totalEntries: 0n
-        };
-        localStorage.setItem(
-          category,
-          JSON.stringify(emptyLeaderboard, replacer)
-        );
-        localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
-        console.error("error fetching leaderboard store");
-        return;
-      }
-      let updatedLeaderboardData = result.ok;
-      localStorage.setItem(
-        category,
-        JSON.stringify(updatedLeaderboardData.ok, replacer)
-      );
-      localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
-      set(updatedLeaderboardData.ok);
-    }
-  }
-  async function getWeeklyLeaderboard(seasonId, gameweek, currentPage, calculationGameweek, searchTerm) {
-    const limit = itemsPerPage;
-    const offset = (currentPage - 1) * limit;
-    if (currentPage <= 4 && gameweek == calculationGameweek) {
-      const cachedData = localStorage.getItem(category);
-      if (cachedData && cachedData != "undefined") {
-        let cachedWeeklyLeaderboard;
-        cachedWeeklyLeaderboard = JSON.parse(cachedData, replacer);
-        if (cachedWeeklyLeaderboard) {
-          return {
-            ...cachedWeeklyLeaderboard,
-            entries: cachedWeeklyLeaderboard.entries.slice(
-              offset,
-              offset + limit
-            )
-          };
-        }
-      }
-    }
-    let dto = {
-      offset: BigInt(offset),
-      seasonId,
-      limit: BigInt(limit),
-      searchTerm,
-      gameweek
-    };
-    console.log("Actor getting weekly leaderboard line 117");
-    let leaderboardData = await actor.getWeeklyLeaderboard(dto);
-    if (isError(leaderboardData)) {
-      let emptyLeaderboard = {
-        entries: [],
-        gameweek: 0,
-        seasonId: 0,
-        totalEntries: 0n
-      };
-      localStorage.setItem(
-        category,
-        JSON.stringify(emptyLeaderboard, replacer)
-      );
-      return { entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n };
-    }
-    localStorage.setItem(
-      category,
-      JSON.stringify(leaderboardData.ok, replacer)
-    );
-    return leaderboardData;
-  }
-  async function getLeadingWeeklyTeam(seasonId, gameweek) {
-    const limit = itemsPerPage;
-    const offset = 0;
-    let dto = {
-      offset: BigInt(offset),
-      seasonId,
-      limit: BigInt(limit),
-      searchTerm: "",
-      gameweek
-    };
-    console.log("Actor getting weekly leaderboard line 155");
-    let leaderboardData = await actor.getWeeklyLeaderboard(dto);
-    if (isError(leaderboardData)) {
-      return {
-        username: "-",
-        positionText: "-",
-        position: 0n,
-        principalId: "",
-        points: 0
-      };
-    }
-    return leaderboardData.ok.entries[0];
-  }
   return {
     subscribe: subscribe2,
-    sync,
-    getWeeklyLeaderboard,
-    getLeadingWeeklyTeam
+    setWeeklyLeaderboard: (leaderboard) => set(leaderboard)
   };
 }
-createWeeklyLeaderboardStore();
-var define_process_env_default$a = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+const weeklyLeaderboardStore = createWeeklyLeaderboardStore();
+var define_process_env_default$f = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+class PlayerService {
+  actor;
+  constructor() {
+    this.actor = ActorFactory.createActor(
+      idlFactory,
+      define_process_env_default$f.OPENFPL_BACKEND_CANISTER_ID
+    );
+  }
+  async getPlayers() {
+    const result = await this.actor.getPlayers();
+    if (isError(result))
+      throw new Error("Failed to fetch players");
+    return result.ok;
+  }
+  async getLoanedPlayers(clubId) {
+    const dto = { leagueId: 1, clubId };
+    const result = await this.actor.getLoanedPlayers(dto);
+    if (isError(result))
+      throw new Error("Failed to fetch loaned players");
+    return result.ok;
+  }
+  async getRetiredPlayers(clubId) {
+    const dto = { leagueId: 1, clubId };
+    const result = await this.actor.getRetiredPlayers(dto);
+    if (isError(result))
+      throw new Error("Failed to fetch retired players");
+    return result.ok;
+  }
+}
 function createPlayerStore() {
   const { subscribe: subscribe2, set } = writable([]);
-  systemStore.subscribe((value) => {
-  });
-  fixtureStore.subscribe((value) => value);
-  console.log("Creating actor in player store line 26");
-  let actor = ActorFactory.createActor(
-    idlFactory,
-    define_process_env_default$a.OPENFPL_BACKEND_CANISTER_ID
-  );
-  async function sync() {
-    let category = "players";
-    console.log("actor getting data hashes in player store sync line 35");
-    const newHashValues = await actor.getDataHashes();
-    let error = isError(newHashValues);
-    if (error) {
-      console.error("Error syncing player store");
-      return;
-    }
-    let dataCacheValues = newHashValues.ok;
-    let categoryHash = dataCacheValues.find((x) => x.category === category) ?? null;
-    const localHash = localStorage.getItem(`${category}_hash`);
-    if (categoryHash?.hash != localHash) {
-      console.log("Actor getting players in players store sync");
-      let result = await actor.getPlayers();
-      if (isError(result)) {
-        console.error("Error fetching players data");
-        return;
-      }
-      let updatedPlayersData = result.ok;
-      updatedPlayersData.sort((a, b) => {
-        if (a.clubId === b.clubId) {
-          return b.valueQuarterMillions - a.valueQuarterMillions;
-        }
-        return a.clubId - b.clubId;
-      });
-      localStorage.setItem(
-        category,
-        JSON.stringify(updatedPlayersData, replacer)
-      );
-      localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
-      set(updatedPlayersData);
-    } else {
-      const cachedPlayersData = localStorage.getItem(category);
-      let cachedPlayers = [];
-      try {
-        cachedPlayers = JSON.parse(cachedPlayersData || "[]");
-      } catch (e) {
-        cachedPlayers = [];
-      }
-      set(cachedPlayers);
-    }
-  }
   async function getLoanedPlayers(clubId) {
-    let dto = {
-      leagueId: 1,
-      clubId
-    };
-    console.log("Actor getting loaned players line 92");
-    let loanedPlayers = await actor.getLoanedPlayers(dto);
-    if (isError(loanedPlayers)) {
-      console.error("Error fetching loaned players");
-      return [];
-    }
-    return loanedPlayers.ok;
+    return new PlayerService().getLoanedPlayers(clubId);
   }
   async function getRetiredPlayers(clubId) {
-    let dto = {
-      leagueId: 1,
-      clubId
-    };
-    console.log("Actor getting retired players line 108");
-    let retiredPlayers = await actor.getRetiredPlayers(dto);
-    if (isError(retiredPlayers)) {
-      console.error("Error fetching retired players");
-      return [];
-    }
-    return retiredPlayers.ok;
+    return new PlayerService().getRetiredPlayers(clubId);
   }
   return {
     subscribe: subscribe2,
-    sync,
+    setPlayers: (players) => set(players),
     getLoanedPlayers,
     getRetiredPlayers
   };
 }
 const playerStore = createPlayerStore();
-var define_process_env_default$9 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
-function createPlayerEventsStore() {
-  const { subscribe: subscribe2, set } = writable([]);
-  let systemState;
-  systemStore.subscribe((value) => {
-    systemState = value;
-  });
-  let allFixtures;
-  fixtureStore.subscribe((value) => allFixtures = value);
-  console.log("Creating actor in player events store line 38");
-  let actor = ActorFactory.createActor(
-    idlFactory,
-    define_process_env_default$9.OPENFPL_BACKEND_CANISTER_ID
-  );
-  async function sync() {
-    let category = "player_events";
-    console.log(
-      "actor getting data hashes in player events store sync line 45"
+var define_process_env_default$e = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+class PlayerEventsService {
+  actor;
+  constructor() {
+    this.actor = ActorFactory.createActor(
+      idlFactory,
+      define_process_env_default$e.OPENFPL_BACKEND_CANISTER_ID
     );
-    const newHashValues = await actor.getDataHashes();
-    let error = isError(newHashValues);
-    if (error) {
-      console.error("Error syncing player events store");
-      return;
-    }
-    let dataCacheValues = newHashValues.ok;
-    let categoryHash = dataCacheValues.find((x) => x.category === category) ?? null;
-    const localHash = localStorage.getItem(`${category}_hash`);
-    if (categoryHash?.hash != localHash) {
-      let dto = {
-        seasonId: systemState.calculationSeasonId,
-        gameweek: systemState.calculationGameweek
-      };
-      console.log(
-        "actor getting player details for gameweek in player events store sync line 66"
-      );
-      let result = await actor.getPlayerDetailsForGameweek(dto);
-      if (isError(result)) {
-        console.error("Error fetching player details for gameweek");
-        return;
-      }
-      let updatedPlayerEventsData = result.ok;
-      localStorage.setItem(
-        category,
-        JSON.stringify(updatedPlayerEventsData, replacer)
-      );
-      localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
-      set(updatedPlayerEventsData);
-    } else {
-      const cachedPlayersData = localStorage.getItem(category);
-      let cachedPlayerEvents = [];
-      try {
-        cachedPlayerEvents = JSON.parse(cachedPlayersData || "[]");
-      } catch (e) {
-        cachedPlayerEvents = [];
-      }
-      set(cachedPlayerEvents);
-    }
   }
-  async function getPlayerEvents() {
-    const cachedPlayerEventsData = localStorage.getItem("player_events");
-    let cachedPlayerEvents;
-    try {
-      cachedPlayerEvents = JSON.parse(cachedPlayerEventsData || "[]");
-    } catch (e) {
-      cachedPlayerEvents = [];
+  async getPlayerDetailsForGameweek() {
+    let systemState = null;
+    systemStore.subscribe((value) => {
+      systemState = value;
+    });
+    if (systemState == null) {
+      throw new Error("Failed to fetch system state in player events service");
     }
-    return cachedPlayerEvents;
+    let dto = {
+      seasonId: systemState.pickTeamSeasonId,
+      gameweek: systemState.pickTeamGameweek
+    };
+    const result = await this.actor.getPlayerDetailsForGameweek(dto);
+    if (isError(result))
+      throw new Error(
+        "Failed to fetch player details for gameweek in player events service"
+      );
+    return result.ok;
   }
-  async function getPlayerDetails(playerId, seasonId) {
+  async getPlayerDetails(playerId, seasonId) {
     try {
       let dto = {
         playerId,
         seasonId
       };
       console.log("actor getting player details line 116");
-      let result = await actor.getPlayerDetails(dto);
+      let result = await this.actor.getPlayerDetails(dto);
       if (isError(result)) {
         console.error("Error fetching player details");
       }
@@ -6130,20 +5830,54 @@ function createPlayerEventsStore() {
       throw error;
     }
   }
-  async function getGameweekPlayers(fantasyTeam, gameweek) {
-    await sync();
-    let allPlayerEvents = [];
-    if (systemState?.calculationGameweek === gameweek) {
-      allPlayerEvents = await getPlayerEvents();
-    } else {
+  async getPlayerEvents(seasonId, gameweek) {
+    try {
       let dto = {
-        seasonId: systemState.calculationSeasonId,
+        seasonId,
         gameweek
       };
-      console.log(
-        "Actor getting player details in getgameweekPlayers line 145"
-      );
-      allPlayerEvents = await actor.getPlayerDetailsForGameweek(dto);
+      let result = await this.actor.getPlayerDetailsForGameweek(dto);
+      if (isError(result)) {
+        console.error("Error fetching player details for gameweek");
+      }
+      return result.ok;
+    } catch (error) {
+      console.error("Error fetching player details for gameweek:", error);
+      throw error;
+    }
+  }
+}
+function createPlayerEventsStore() {
+  const { subscribe: subscribe2, set } = writable([]);
+  async function getPlayerDetails(playerId, seasonId) {
+    return new PlayerEventsService().getPlayerDetails(playerId, seasonId);
+  }
+  async function getGameweekPlayers(fantasyTeam, seasonId, gameweek) {
+    let allPlayerEvents = [];
+    let systemState = null;
+    systemStore.subscribe((result) => {
+      if (result == null) {
+        throw new Error("Failed to subscribe to system store");
+      }
+      systemState = {
+        pickTeamSeasonId: result.pickTeamSeasonId,
+        calculationGameweek: result.calculationGameweek,
+        transferWindowActive: result.transferWindowActive,
+        pickTeamGameweek: result.pickTeamGameweek,
+        version: result.version,
+        calculationMonth: result.calculationMonth,
+        calculationSeasonId: result.calculationSeasonId,
+        onHold: result.onHold,
+        seasonActive: result.seasonActive
+      };
+    });
+    if (systemState == null) {
+      throw new Error("Failed to subscribe to system store");
+    }
+    if (systemState.calculationSeasonId === seasonId && systemState.calculationGameweek === gameweek) {
+      allPlayerEvents = await getPlayerEventsFromLocalStorage();
+    } else {
+      allPlayerEvents = await getPlayerEventsFromBackend(seasonId, gameweek);
     }
     let allPlayers = [];
     const unsubscribe = playerStore.subscribe((players) => {
@@ -6160,6 +5894,8 @@ function createPlayerEventsStore() {
         )
       )
     );
+    let allFixtures;
+    fixtureStore.subscribe((value) => allFixtures = value);
     const playersWithPoints = gameweekData.map((entry) => {
       const score = calculatePlayerScore(entry, allFixtures);
       const bonusPoints = calculateBonusPoints(entry, fantasyTeam, score);
@@ -6173,251 +5909,22 @@ function createPlayerEventsStore() {
     });
     return await Promise.all(playersWithPoints);
   }
-  async function extractPlayerData(playerPointsDTO, player) {
-    let goals = 0, assists = 0, redCards = 0, yellowCards = 0, missedPenalties = 0, ownGoals = 0, saves = 0, cleanSheets = 0, penaltySaves = 0, goalsConceded = 0, appearance = 0, highestScoringPlayerId = 0;
-    let goalPoints = 0, assistPoints = 0, goalsConcededPoints = 0, cleanSheetPoints = 0;
-    playerPointsDTO.events.forEach((event) => {
-      switch (convertEvent(event.eventType)) {
-        case 0:
-          appearance += 1;
-          break;
-        case 1:
-          goals += 1;
-          switch (convertPlayerPosition(playerPointsDTO.position)) {
-            case 0:
-            case 1:
-              goalPoints += 20;
-              break;
-            case 2:
-              goalPoints += 15;
-              break;
-            case 3:
-              goalPoints += 10;
-              break;
-          }
-          break;
-        case 2:
-          assists += 1;
-          switch (convertPlayerPosition(playerPointsDTO.position)) {
-            case 0:
-            case 1:
-              assistPoints += 15;
-              break;
-            case 2:
-            case 3:
-              assistPoints += 10;
-              break;
-          }
-          break;
-        case 3:
-          goalsConceded += 1;
-          if (convertPlayerPosition(playerPointsDTO.position) < 2 && goalsConceded % 2 === 0) {
-            goalsConcededPoints += -15;
-          }
-          break;
-        case 4:
-          saves += 1;
-          break;
-        case 5:
-          cleanSheets += 1;
-          if (convertPlayerPosition(playerPointsDTO.position) < 2 && goalsConceded === 0) {
-            cleanSheetPoints += 10;
-          }
-          break;
-        case 6:
-          penaltySaves += 1;
-          break;
-        case 7:
-          missedPenalties += 1;
-          break;
-        case 8:
-          yellowCards += 1;
-          break;
-        case 9:
-          redCards += 1;
-          break;
-        case 10:
-          ownGoals += 1;
-          break;
-        case 11:
-          highestScoringPlayerId += 1;
-          break;
-      }
-    });
-    let playerGameweekDetails = {
-      player,
-      points: playerPointsDTO.points,
-      appearance,
-      goals,
-      assists,
-      goalsConceded,
-      saves,
-      cleanSheets,
-      penaltySaves,
-      missedPenalties,
-      yellowCards,
-      redCards,
-      ownGoals,
-      highestScoringPlayerId,
-      goalPoints,
-      assistPoints,
-      goalsConcededPoints,
-      cleanSheetPoints,
-      gameweek: playerPointsDTO.gameweek,
-      bonusPoints: 0,
-      totalPoints: 0,
-      isCaptain: false,
-      nationalityId: player.nationality
-    };
-    return playerGameweekDetails;
+  async function getPlayerEventsFromLocalStorage() {
+    return [];
   }
-  function calculatePlayerScore(gameweekData, fixtures) {
-    if (!gameweekData) {
-      console.error("No gameweek data found:", gameweekData);
-      return 0;
-    }
-    let score = 0;
-    let pointsForAppearance = 5;
-    let pointsFor3Saves = 5;
-    let pointsForPenaltySave = 20;
-    let pointsForHighestScore = 25;
-    let pointsForRedCard = -20;
-    let pointsForPenaltyMiss = -10;
-    let pointsForEach2Conceded = -15;
-    let pointsForOwnGoal = -10;
-    let pointsForYellowCard = -5;
-    let pointsForCleanSheet = 10;
-    var pointsForGoal = 0;
-    var pointsForAssist = 0;
-    if (gameweekData.appearance > 0) {
-      score += pointsForAppearance * gameweekData.appearance;
-    }
-    if (gameweekData.redCards > 0) {
-      score += pointsForRedCard;
-    }
-    if (gameweekData.missedPenalties > 0) {
-      score += pointsForPenaltyMiss * gameweekData.missedPenalties;
-    }
-    if (gameweekData.ownGoals > 0) {
-      score += pointsForOwnGoal * gameweekData.ownGoals;
-    }
-    if (gameweekData.yellowCards > 0) {
-      score += pointsForYellowCard * gameweekData.yellowCards;
-    }
-    switch (convertPlayerPosition(gameweekData.player.position)) {
-      case 0:
-        pointsForGoal = 20;
-        pointsForAssist = 15;
-        if (gameweekData.saves >= 3) {
-          score += Math.floor(gameweekData.saves / 3) * pointsFor3Saves;
-        }
-        if (gameweekData.penaltySaves) {
-          score += pointsForPenaltySave * gameweekData.penaltySaves;
-        }
-        if (gameweekData.cleanSheets > 0) {
-          score += pointsForCleanSheet;
-        }
-        if (gameweekData.goalsConceded >= 2) {
-          score += Math.floor(gameweekData.goalsConceded / 2) * pointsForEach2Conceded;
-        }
-        break;
-      case 1:
-        pointsForGoal = 20;
-        pointsForAssist = 15;
-        if (gameweekData.cleanSheets > 0) {
-          score += pointsForCleanSheet;
-        }
-        if (gameweekData.goalsConceded >= 2) {
-          score += Math.floor(gameweekData.goalsConceded / 2) * pointsForEach2Conceded;
-        }
-        break;
-      case 2:
-        pointsForGoal = 15;
-        pointsForAssist = 10;
-        break;
-      case 3:
-        pointsForGoal = 10;
-        pointsForAssist = 10;
-        break;
-    }
-    const gameweekFixtures = fixtures ? fixtures.filter((fixture) => fixture.gameweek === gameweekData.gameweek) : [];
-    const playerFixtures = gameweekFixtures.filter(
-      (fixture) => (fixture.homeClubId === gameweekData.player.clubId || fixture.awayClubId === gameweekData.player.clubId) && fixture.highestScoringPlayerId === gameweekData.player.id
-    );
-    if (playerFixtures && playerFixtures.length > 0) {
-      score += pointsForHighestScore * playerFixtures.length;
-    }
-    score += gameweekData.goals * pointsForGoal;
-    score += gameweekData.assists * pointsForAssist;
-    return score;
-  }
-  function calculateBonusPoints(gameweekData, fantasyTeam, points) {
-    if (!gameweekData) {
-      console.error("No gameweek data found:", gameweekData);
-      return 0;
-    }
-    let bonusPoints = 0;
-    var pointsForGoal = 0;
-    var pointsForAssist = 0;
-    switch (convertPlayerPosition(gameweekData.player.position)) {
-      case 0:
-        pointsForGoal = 20;
-        pointsForAssist = 15;
-        break;
-      case 1:
-        pointsForGoal = 20;
-        pointsForAssist = 15;
-        break;
-      case 2:
-        pointsForGoal = 15;
-        pointsForAssist = 10;
-        break;
-      case 3:
-        pointsForGoal = 10;
-        pointsForAssist = 10;
-        break;
-    }
-    if (fantasyTeam.goalGetterGameweek === gameweekData.gameweek && fantasyTeam.goalGetterPlayerId === gameweekData.player.id) {
-      bonusPoints = gameweekData.goals * pointsForGoal * 2;
-    }
-    if (fantasyTeam.passMasterGameweek === gameweekData.gameweek && fantasyTeam.passMasterPlayerId === gameweekData.player.id) {
-      bonusPoints = gameweekData.assists * pointsForAssist * 2;
-    }
-    if (fantasyTeam.noEntryGameweek === gameweekData.gameweek && fantasyTeam.noEntryPlayerId === gameweekData.player.id && (convertPlayerPosition(gameweekData.player.position) === 0 || convertPlayerPosition(gameweekData.player.position) === 1) && gameweekData.cleanSheets) {
-      bonusPoints = points * 2;
-    }
-    if (fantasyTeam.safeHandsGameweek === gameweekData.gameweek && convertPlayerPosition(gameweekData.player.position) === 0 && gameweekData.saves >= 5) {
-      bonusPoints = points * 2;
-    }
-    if (fantasyTeam.captainFantasticGameweek === gameweekData.gameweek && fantasyTeam.captainId === gameweekData.player.id && gameweekData.goals > 0) {
-      bonusPoints = points;
-    }
-    if (fantasyTeam.countrymenGameweek === gameweekData.gameweek && fantasyTeam.countrymenCountryId === gameweekData.player.nationality) {
-      bonusPoints = points * 2;
-    }
-    if (fantasyTeam.prospectsGameweek === gameweekData.gameweek && calculateAgeFromNanoseconds(Number(gameweekData.player.dateOfBirth)) < 21) {
-      bonusPoints = points * 2;
-    }
-    if (fantasyTeam.braceBonusGameweek === gameweekData.gameweek && gameweekData.goals >= 2) {
-      bonusPoints = points;
-    }
-    if (fantasyTeam.hatTrickHeroGameweek === gameweekData.gameweek && gameweekData.goals >= 3) {
-      bonusPoints = points * 2;
-    }
-    if (fantasyTeam.teamBoostGameweek === gameweekData.gameweek && gameweekData.player.clubId === fantasyTeam.teamBoostClubId) {
-      bonusPoints = points;
-    }
-    return bonusPoints;
+  async function getPlayerEventsFromBackend(seasonId, gameweek) {
+    return new PlayerEventsService().getPlayerEvents(seasonId, gameweek);
   }
   return {
     subscribe: subscribe2,
-    sync,
+    setPlayerEvents: (players) => set(players),
     getPlayerDetails,
-    getGameweekPlayers
+    getGameweekPlayers,
+    getPlayerEventsFromBackend
   };
 }
-createPlayerEventsStore();
-var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+const playerEventsStore = createPlayerEventsStore();
+var define_process_env_default$d = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
 function createUserStore() {
   const { subscribe: subscribe2, set } = writable(null);
   async function sync() {
@@ -6439,7 +5946,7 @@ function createUserStore() {
       console.log("Creating actor in update username line 37");
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default$8.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$d.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       let dto = {
         username
@@ -6462,7 +5969,7 @@ function createUserStore() {
       console.log("Creating actor in updateFavouriteteam line 62");
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default$8.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$d.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       let dto = {
         favouriteClubId: favouriteTeamId
@@ -6496,7 +6003,7 @@ function createUserStore() {
           console.log("Creating actor in updateProfilePicture line 98");
           const identityActor = await ActorFactory.createIdentityActor(
             authStore,
-            define_process_env_default$8.OPENFPL_BACKEND_CANISTER_ID ?? ""
+            define_process_env_default$d.OPENFPL_BACKEND_CANISTER_ID ?? ""
           );
           let dto = {
             profilePicture: uint8Array,
@@ -6528,7 +6035,7 @@ function createUserStore() {
     console.log("Creating actor in isUsernameAvailable line 139");
     const identityActor = await ActorFactory.createIdentityActor(
       authStore,
-      define_process_env_default$8.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default$d.OPENFPL_BACKEND_CANISTER_ID
     );
     let dto = {
       username
@@ -6540,7 +6047,7 @@ function createUserStore() {
     console.log("Creating actor in cache profile line 152");
     const identityActor = await ActorFactory.createIdentityActor(
       authStore,
-      define_process_env_default$8.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default$d.OPENFPL_BACKEND_CANISTER_ID
     );
     console.log("Actor getting profile line 157");
     let getProfileResponse = await identityActor.getProfile();
@@ -6565,11 +6072,11 @@ function createUserStore() {
       const agent = await createAgent({
         identity,
         host: "http://localhost:8080/?canisterId=qhbym-qaaaa-aaaaa-aaafq-cai",
-        fetchRootKey: define_process_env_default$8.DFX_NETWORK === "local"
+        fetchRootKey: define_process_env_default$d.DFX_NETWORK === "local"
       });
       const { transfer } = IcrcLedgerCanister.create({
         agent,
-        canisterId: define_process_env_default$8.DFX_NETWORK === "ic" ? Principal.fromText("ddsp7-7iaaa-aaaaq-aacqq-cai") : Principal.fromText("avqkn-guaaa-aaaaa-qaaea-cai")
+        canisterId: define_process_env_default$d.DFX_NETWORK === "ic" ? Principal.fromText("ddsp7-7iaaa-aaaaq-aacqq-cai") : Principal.fromText("avqkn-guaaa-aaaaa-qaaea-cai")
       });
       if (principalId) {
         try {
@@ -6605,7 +6112,7 @@ function createUserStore() {
     const agent = await createAgent({
       identity,
       host: "http://localhost:8080/?canisterId=qhbym-qaaaa-aaaaa-aaafq-cai",
-      fetchRootKey: define_process_env_default$8.DFX_NETWORK === "local"
+      fetchRootKey: define_process_env_default$d.DFX_NETWORK === "local"
     });
     const { balance } = IcrcLedgerCanister.create({
       agent,
@@ -6687,17 +6194,259 @@ derived(
   userStore,
   (user) => user !== null && user !== void 0 ? user.favouriteTeamId : 0
 );
+function createSeasonStore() {
+  const { subscribe: subscribe2, set } = writable([]);
+  async function getSeasonName(seasonId) {
+    let seasons = [];
+    await subscribe2((value) => {
+      seasons = value;
+    })();
+    if (seasons.length == 0) {
+      return;
+    }
+    let season = seasons.find((x) => x.id == seasonId);
+    if (season == null) {
+      return;
+    }
+    return season.name;
+  }
+  return {
+    subscribe: subscribe2,
+    setSeasons: (seasons) => set(seasons),
+    getSeasonName
+  };
+}
+const seasonStore = createSeasonStore();
+var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+class DataHashService {
+  actor;
+  constructor() {
+    this.actor = ActorFactory.createActor(
+      idlFactory,
+      define_process_env_default$c.OPENFPL_BACKEND_CANISTER_ID
+    );
+  }
+  async getDataHashes() {
+    const result = await this.actor.getDataHashes();
+    if (isError(result))
+      throw new Error("Failed to fetch data hashes");
+    return result.ok;
+  }
+}
+var define_process_env_default$b = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+class CountryService {
+  actor;
+  constructor() {
+    this.actor = ActorFactory.createActor(
+      idlFactory,
+      define_process_env_default$b.OPENFPL_BACKEND_CANISTER_ID
+    );
+  }
+  async getCountries() {
+    const result = await this.actor.getCountries();
+    if (isError(result))
+      throw new Error("Failed to fetch countries");
+    return result.ok;
+  }
+}
+var define_process_env_default$a = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+class SystemService {
+  actor;
+  constructor() {
+    this.actor = ActorFactory.createActor(
+      idlFactory,
+      define_process_env_default$a.OPENFPL_BACKEND_CANISTER_ID
+    );
+  }
+  async getSystemState() {
+    const result = await this.actor.getSystemState();
+    if (isError(result))
+      throw new Error("Failed to fetch system state");
+    return result.ok;
+  }
+}
+var define_process_env_default$9 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+class SeasonService {
+  actor;
+  constructor() {
+    this.actor = ActorFactory.createActor(
+      idlFactory,
+      define_process_env_default$9.OPENFPL_BACKEND_CANISTER_ID
+    );
+  }
+  async getSeasons() {
+    const result = await this.actor.getSeasons();
+    if (isError(result))
+      throw new Error("Failed to fetch seasons");
+    return result.ok;
+  }
+}
+var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+class ClubService {
+  actor;
+  constructor() {
+    this.actor = ActorFactory.createActor(
+      idlFactory,
+      define_process_env_default$8.OPENFPL_BACKEND_CANISTER_ID
+    );
+  }
+  async getClubs() {
+    const result = await this.actor.getClubs();
+    if (isError(result))
+      throw new Error("Failed to fetch clubs");
+    return result.ok;
+  }
+}
+var define_process_env_default$7 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+class WeeklyLeaderboardService {
+  actor;
+  constructor() {
+    this.actor = ActorFactory.createActor(
+      idlFactory,
+      define_process_env_default$7.OPENFPL_BACKEND_CANISTER_ID
+    );
+  }
+  async getWeeklyLeaderboard() {
+    const result = await this.actor.getWeeklyLeaderboard();
+    if (isError(result))
+      throw new Error("Failed to fetch countries");
+    return result.ok;
+  }
+}
+class StoreManager {
+  constructor() {
+    this.categories = [
+      "countries",
+      "system_state",
+      "seasons",
+      "clubs",
+      "players",
+      "player_events",
+      "fixtures",
+      "weekly_leaderboard"
+    ];
+    this.dataHashService = new DataHashService();
+    this.countryService = new CountryService();
+    this.systemService = new SystemService();
+    this.seasonService = new SeasonService();
+    this.clubService = new ClubService();
+    this.playerService = new PlayerService();
+    this.playerEventsService = new PlayerEventsService();
+    this.fixtureService = new FixtureService();
+    this.weeklyLeaderboardService = new WeeklyLeaderboardService();
+  }
+  async syncStores() {
+    const newHashes = await this.dataHashService.getDataHashes();
+    let error = isError(newHashes);
+    if (error) {
+      console.error("Error fetching data hashes.");
+      return;
+    }
+    for (const category of this.categories) {
+      const categoryHash = newHashes.find((hash2) => hash2.category === category);
+      if (categoryHash?.hash !== localStorage.getItem(`${category}_hash`)) {
+        await this.syncCategory(category);
+        localStorage.setItem(`${category}_hash`, categoryHash?.hash || "");
+      } else {
+        this.loadFromCache(category);
+      }
+    }
+  }
+  async syncCategory(category) {
+    switch (category) {
+      case "countries":
+        const updatedCountries = await this.countryService.getCountries();
+        countryStore.setCountries(updatedCountries);
+        localStorage.setItem("countries", JSON.stringify(updatedCountries));
+        break;
+      case "system_state":
+        const updatedSystemState = await this.systemService.getSystemState();
+        systemStore.setSystemState(updatedSystemState);
+        localStorage.setItem(
+          "system_state",
+          JSON.stringify(updatedSystemState)
+        );
+        break;
+      case "seasons":
+        const updatedSeasons = await this.seasonService.getSeasons();
+        seasonStore.setSeasons(updatedSeasons);
+        localStorage.setItem("seasons", JSON.stringify(updatedSeasons));
+        break;
+      case "clubs":
+        const updatedClubs = await this.clubService.getClubs();
+        clubStore.setClubs(updatedClubs);
+        localStorage.setItem("clubs", JSON.stringify(updatedClubs));
+        break;
+      case "players":
+        const updatedPlayers = await this.playerService.getPlayers();
+        playerStore.setPlayers(updatedPlayers);
+        localStorage.setItem("players", JSON.stringify(updatedPlayers));
+        break;
+      case "player_events":
+        const updatedPlayerEvents = await this.playerEventsService.getPlayerDetailsForGameweek();
+        playerEventsStore.setPlayerEvents(updatedPlayerEvents);
+        localStorage.setItem(
+          "player_events",
+          JSON.stringify(updatedPlayerEvents)
+        );
+        break;
+      case "fixtures":
+        const updatedFixtures = await this.fixtureService.getFixtures();
+        fixtureStore.setFixtures(updatedFixtures);
+        localStorage.setItem("fixtures", JSON.stringify(updatedFixtures));
+        break;
+      case "weekly_leaderboard":
+        const updatedWeeklyLeaderboard = await this.weeklyLeaderboardService.getWeeklyLeaderboard();
+        weeklyLeaderboardStore.setWeeklyLeaderboard(updatedWeeklyLeaderboard);
+        localStorage.setItem(
+          "weekly_leaderboard",
+          JSON.stringify(updatedWeeklyLeaderboard)
+        );
+        break;
+    }
+  }
+  loadFromCache(category) {
+    const cachedData = localStorage.getItem(category);
+    switch (category) {
+      case "countries":
+        const cachedCountries = JSON.parse(cachedData || "[]");
+        countryStore.setCountries(cachedCountries);
+        break;
+      case "system_state":
+        const cachedSystemState = JSON.parse(cachedData || "");
+        systemStore.setSystemState(cachedSystemState);
+        break;
+      case "seasons":
+        const cachedSeasons = JSON.parse(cachedData || "");
+        seasonStore.setSeasons(cachedSeasons);
+        break;
+      case "clubs":
+        const cachedClubs = JSON.parse(cachedData || "[]");
+        clubStore.setClubs(cachedClubs);
+        break;
+      case "players":
+        const cachedPlayers = JSON.parse(cachedData || "[]");
+        playerStore.setPlayers(cachedPlayers);
+        break;
+      case "fixtures":
+        const cachedFixtures = JSON.parse(cachedData || "[]");
+        fixtureStore.setFixtures(cachedFixtures);
+        break;
+      case "weekly_leaderboard":
+        const cachedWeeklyLeaderboard = JSON.parse(cachedData || "");
+        weeklyLeaderboardStore.setWeeklyLeaderboard(cachedWeeklyLeaderboard);
+        break;
+    }
+  }
+}
+const storeManager = new StoreManager();
 const Header = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let currentClass;
   let currentBorder;
   let $page, $$unsubscribe_page;
-  let $$unsubscribe_systemStore;
-  let $$unsubscribe_fixtureStore;
   let $authSignedInStore, $$unsubscribe_authSignedInStore;
   let $userGetProfilePicture, $$unsubscribe_userGetProfilePicture;
   $$unsubscribe_page = subscribe(page, (value) => $page = value);
-  $$unsubscribe_systemStore = subscribe(systemStore, (value) => value);
-  $$unsubscribe_fixtureStore = subscribe(fixtureStore, (value) => value);
   $$unsubscribe_authSignedInStore = subscribe(authSignedInStore, (value) => $authSignedInStore = value);
   $$unsubscribe_userGetProfilePicture = subscribe(userGetProfilePicture, (value) => $userGetProfilePicture = value);
   let showProfileDropdown = false;
@@ -6717,8 +6466,6 @@ const Header = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   currentClass = (route) => $page.url.pathname === route ? "text-blue-500 nav-underline active" : "nav-underline";
   currentBorder = (route) => $page.url.pathname === route ? "active-border" : "";
   $$unsubscribe_page();
-  $$unsubscribe_systemStore();
-  $$unsubscribe_fixtureStore();
   $$unsubscribe_authSignedInStore();
   $$unsubscribe_userGetProfilePicture();
   return `<header><nav class="text-white"><div class="px-4 h-16 flex justify-between items-center w-full"><a href="/" class="hover:text-gray-400 flex items-center">${validate_component(OpenFPLIcon, "OpenFPLIcon").$$render($$result, { className: "h-8 w-auto" }, {}, {})}<b class="ml-2" data-svelte-h="svelte-6ko9z9">OpenFPL</b></a> <button class="menu-toggle md:hidden focus:outline-none" data-svelte-h="svelte-ctwvk"><svg width="24" height="18" viewBox="0 0 24 18" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><rect width="24" height="2" rx="1" fill="currentColor"></rect><rect y="8" width="24" height="2" rx="1" fill="currentColor"></rect><rect y="16" width="24" height="2" rx="1" fill="currentColor"></rect></svg></button> ${$authSignedInStore ? `<ul class="hidden md:flex h-16"><li class="mx-2 flex items-center h-16"><a href="/" class="${"flex items-center h-full nav-underline hover:text-gray-400 $" + escape(currentClass("/"), true)}"><span class="flex items-center h-full px-4" data-svelte-h="svelte-fx32ra">Home</span></a></li> <li class="mx-2 flex items-center h-16"><a href="/pick-team" class="${"flex items-center h-full nav-underline hover:text-gray-400 $" + escape(currentClass("/pick-team"), true)}"><span class="flex items-center h-full px-4" data-svelte-h="svelte-1k6m4hl">Squad Selection</span></a></li> <li class="mx-2 flex items-center h-16"><a href="/governance" class="${"flex items-center h-full nav-underline hover:text-gray-400 $" + escape(currentClass("/governance"), true)}"><span class="flex items-center h-full px-4" data-svelte-h="svelte-qfd2bh">Governance</span></a></li> <li class="flex flex-1 items-center"><div class="relative inline-block"><button${add_attribute("class", `h-full flex items-center rounded-sm ${currentBorder("/profile")}`, 0)}><img${add_attribute("src", $userGetProfilePicture, 0)} alt="Profile" class="h-12 rounded-sm profile-pic" aria-label="Toggle Profile"></button> <div${add_attribute("class", `absolute right-0 top-full w-48 bg-black rounded-b-md rounded-l-md shadow-lg z-50 profile-dropdown ${showProfileDropdown ? "block" : "hidden"}`, 0)}><ul class="text-gray-700"><li><a href="/profile" class="flex items-center h-full w-full nav-underline hover:text-gray-400"><span class="flex items-center h-full w-full"><img${add_attribute("src", $userGetProfilePicture, 0)} alt="logo" class="h-8 my-2 ml-4 mr-2"> <p class="w-full min-w-[125px] max-w-[125px] truncate" data-svelte-h="svelte-1mjctb">Profile</p></span></a></li> <li><button class="flex items-center justify-center px-4 pb-2 pt-1 text-white rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button">Disconnect
@@ -6743,9 +6490,7 @@ const css$3 = {
 };
 const Layout = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_authStore;
-  let $$unsubscribe_systemStore;
   $$unsubscribe_authStore = subscribe(authStore, (value) => value);
-  $$unsubscribe_systemStore = subscribe(systemStore, (value) => value);
   const init2 = async () => await Promise.all([syncAuthStore()]);
   const syncAuthStore = async () => {
     {
@@ -6754,7 +6499,6 @@ const Layout = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   };
   $$result.css.add(css$3);
   $$unsubscribe_authStore();
-  $$unsubscribe_systemStore();
   return ` ${function(__value) {
     if (is_promise(__value)) {
       __value.then(null, noop);
@@ -6788,66 +6532,6 @@ const Local_spinner = create_ssr_component(($$result, $$props, $$bindings, slots
   $$result.css.add(css$2);
   return `<div class="local-spinner svelte-pvdm52"></div>`;
 });
-var define_process_env_default$7 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
-function createSeasonStore() {
-  const { subscribe: subscribe2, set } = writable([]);
-  console.log("Creating actor in season store line 14");
-  let actor = ActorFactory.createActor(
-    idlFactory,
-    define_process_env_default$7.OPENFPL_BACKEND_CANISTER_ID
-  );
-  async function sync() {
-    const category = "seasons";
-    console.log("Actor getting data hashes in season store sync line 21");
-    const newHashValues = await actor.getDataHashes();
-    let error = isError(newHashValues);
-    if (error) {
-      console.error("Error syncing season store");
-      return;
-    }
-    let dataCacheValues = newHashValues.ok;
-    let categoryHash = dataCacheValues.find((x) => x.category === category) ?? null;
-    const localHash = localStorage.getItem(`${category}_hash`);
-    if (categoryHash?.hash != localHash) {
-      console.log("Actor getting season line 38");
-      const result = await actor.getSeasons(1);
-      if (isError(result)) {
-        console.error("error syncing seasons store");
-        return;
-      }
-      let updatedFSeasonsData = result.ok;
-      localStorage.setItem(
-        category,
-        JSON.stringify(updatedFSeasonsData, replacer)
-      );
-      localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
-      set(updatedFSeasonsData);
-    } else {
-      const cachedSeasonsData = localStorage.getItem(category);
-      let cachedSeasons = [];
-      try {
-        cachedSeasons = JSON.parse(cachedSeasonsData || "[]");
-      } catch (e) {
-        cachedSeasons = [];
-      }
-      set(cachedSeasons);
-    }
-  }
-  async function getSeasonName(seasonId) {
-    let seasonName = "";
-    subscribe2((seasons) => {
-      let season = seasons.find((x) => x.id == seasonId);
-      seasonName = season ? season.name : "";
-    });
-    return seasonName;
-  }
-  return {
-    subscribe: subscribe2,
-    sync,
-    getSeasonName
-  };
-}
-const seasonStore = createSeasonStore();
 var define_process_env_default$6 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
 function createMonthlyLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
@@ -7096,16 +6780,13 @@ const Relative_spinner = create_ssr_component(($$result, $$props, $$bindings, sl
   $$result.css.add(css$1);
   return `<div class="local-spinner svelte-1mszak5"></div>`;
 });
-const Page$f = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$d = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let $$unsubscribe_clubStore;
   let $$unsubscribe_systemStore;
-  let $$unsubscribe_fixtureStore;
-  let $$unsubscribe_teamStore;
+  $$unsubscribe_clubStore = subscribe(clubStore, (value) => value);
   $$unsubscribe_systemStore = subscribe(systemStore, (value) => value);
-  $$unsubscribe_fixtureStore = subscribe(fixtureStore, (value) => value);
-  $$unsubscribe_teamStore = subscribe(teamStore, (value) => value);
+  $$unsubscribe_clubStore();
   $$unsubscribe_systemStore();
-  $$unsubscribe_fixtureStore();
-  $$unsubscribe_teamStore();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
       return `<div class="flex page-header-wrapper">${`<div class="flex items-center justify-center content-panel lg:w-1/2">${validate_component(Relative_spinner, "RelativeSpinner").$$render($$result, {}, {}, {})}</div>`} ${`<div class="flex lg:hidden"><div class="flex items-center justify-center content-panel">${validate_component(Relative_spinner, "RelativeSpinner").$$render($$result, {}, {}, {})}</div></div> <div class="hidden w-1/2 lg:flex"><div class="flex items-center justify-center content-panel">${validate_component(Relative_spinner, "RelativeSpinner").$$render($$result, {}, {}, {})}</div></div>`}</div> <div class="rounded-md bg-panel"><ul class="flex px-1 pt-2 mb-4 border-b border-gray-700 bg-light-gray md:px-4 contained-text"><li${add_attribute("class", `mr-1 md:mr-4 ${"active-tab"}`, 0)}><button${add_attribute(
@@ -7129,8 +6810,7 @@ function createGovernanceStore() {
   async function revaluePlayerUp(playerId) {
     try {
       console.log("Syncing system and player store in revalueplayerup line 45");
-      await systemStore.sync();
-      await playerStore.sync();
+      await storeManager.syncStores();
       let allPlayers = [];
       const unsubscribe = playerStore.subscribe((players) => {
         allPlayers = players;
@@ -7161,8 +6841,7 @@ function createGovernanceStore() {
   }
   async function revaluePlayerDown(playerId) {
     try {
-      console.log("playerstore sync line 98");
-      await playerStore.sync();
+      await storeManager.syncStores();
       let allPlayers = [];
       const unsubscribe = playerStore.subscribe((players) => {
         allPlayers = players;
@@ -7194,16 +6873,14 @@ function createGovernanceStore() {
   async function submitFixtureData(seasonId, gameweek, fixtureId, month, playerEventData) {
     try {
       console.log("await team store sync line 155");
-      await teamStore.sync();
+      clubStore;
       let clubs = [];
-      const unsubscribeTeamStore = teamStore.subscribe((teams) => {
+      const unsubscribeTeamStore = clubStore.subscribe((teams) => {
         if (teams) {
           clubs = teams;
         }
       });
       unsubscribeTeamStore();
-      console.log("await fixture store sync line 165");
-      await fixtureStore.sync(seasonId);
       let allFixtures = [];
       const unsubscribeFixtureStore = fixtureStore.subscribe((fixtures) => {
         allFixtures = fixtures;
@@ -7262,8 +6939,7 @@ function createGovernanceStore() {
   async function addInitialFixtures(seasonFixtures, pickTeamSeasonId) {
     try {
       console.log("await system and season store sync line 233");
-      await systemStore.sync();
-      await seasonStore.sync();
+      await storeManager.syncStores();
       let seasonName = await seasonStore.getSeasonName(pickTeamSeasonId);
       let dto = {
         seasonFixtures
@@ -7324,9 +7000,9 @@ function createGovernanceStore() {
   async function moveFixture(fixtureId, updatedFixtureGameweek, updatedFixtureDate) {
     try {
       console.log("await team store sync line 303");
-      await teamStore.sync();
+      await storeManager.syncStores();
       let clubs = [];
-      const unsubscribeTeamStore = teamStore.subscribe((teams) => {
+      const unsubscribeTeamStore = clubStore.subscribe((teams) => {
         if (teams) {
           clubs = teams;
         }
@@ -7339,8 +7015,6 @@ function createGovernanceStore() {
         }
       });
       unsubscribeSystemStore();
-      console.log("await fixture store sync line 322");
-      await fixtureStore.sync(seasonId);
       let allFixtures = [];
       const unsubscribeFixtureStore = fixtureStore.subscribe((fixtures) => {
         allFixtures = fixtures;
@@ -7378,10 +7052,9 @@ function createGovernanceStore() {
   }
   async function postponeFixture(fixtureId) {
     try {
-      console.log("await team store sync line 367");
-      await teamStore.sync();
+      await storeManager.syncStores();
       let clubs = [];
-      const unsubscribeTeamStore = teamStore.subscribe((teams) => {
+      const unsubscribeTeamStore = clubStore.subscribe((teams) => {
         if (teams) {
           clubs = teams;
         }
@@ -7394,8 +7067,6 @@ function createGovernanceStore() {
         }
       });
       unsubscribeSystemStore();
-      console.log("await fixture store sync line 155");
-      await fixtureStore.sync(seasonId);
       let allFixtures = [];
       const unsubscribeFixtureStore = fixtureStore.subscribe((fixtures) => {
         allFixtures = fixtures;
@@ -7424,9 +7095,9 @@ function createGovernanceStore() {
   }
   async function rescheduleFixture(fixtureId, updatedFixtureGameweek, updatedFixtureDate) {
     try {
-      await teamStore.sync();
+      await storeManager.syncStores();
       let clubs = [];
-      const unsubscribeTeamStore = teamStore.subscribe((teams) => {
+      const unsubscribeTeamStore = clubStore.subscribe((teams) => {
         if (teams) {
           clubs = teams;
         }
@@ -7439,8 +7110,6 @@ function createGovernanceStore() {
         }
       });
       unsubscribeSystemStore();
-      console.log("await fixture store sync line 442");
-      await fixtureStore.sync(seasonId);
       let allFixtures = [];
       const unsubscribeFixtureStore = fixtureStore.subscribe((fixtures) => {
         allFixtures = fixtures;
@@ -7479,10 +7148,9 @@ function createGovernanceStore() {
   async function transferPlayer(playerId, newLeagueId, newClubId, newShirtNumber, seasonId, gameweek) {
     try {
       console.log("await team and player store sync line 494");
-      await teamStore.sync();
-      await playerStore.sync();
+      await storeManager.syncStores();
       let clubs = [];
-      const unsubscribeTeamStore = teamStore.subscribe((teams) => {
+      const unsubscribeTeamStore = clubStore.subscribe((teams) => {
         if (teams) {
           clubs = teams;
         }
@@ -7531,10 +7199,9 @@ function createGovernanceStore() {
   async function loanPlayer(playerId, loanLeagueId, loanClubId, loanEndDate, seasonId, gameweek) {
     try {
       console.log("await team and player store sync line 562");
-      await teamStore.sync();
-      await playerStore.sync();
+      await storeManager.syncStores();
       let clubs = [];
-      const unsubscribeTeamStore = teamStore.subscribe((teams) => {
+      const unsubscribeTeamStore = clubStore.subscribe((teams) => {
         if (teams) {
           clubs = teams;
         }
@@ -7582,10 +7249,9 @@ function createGovernanceStore() {
   async function recallPlayer(playerId) {
     try {
       console.log("await team and player store sync line 622");
-      await teamStore.sync();
-      await playerStore.sync();
+      await storeManager.syncStores();
       let clubs = [];
-      const unsubscribeTeamStore = teamStore.subscribe((teams) => {
+      const unsubscribeTeamStore = clubStore.subscribe((teams) => {
         if (teams) {
           clubs = teams;
         }
@@ -7621,10 +7287,9 @@ function createGovernanceStore() {
   async function createPlayer(clubId, position, firstName, lastName, shirtNumber, valueQuarterMillions, dateOfBirth, nationality, gender) {
     try {
       console.log("await team and player store sync line 676");
-      await teamStore.sync();
-      await playerStore.sync();
+      await storeManager.syncStores();
       let clubs = [];
-      const unsubscribeTeamStore = teamStore.subscribe((teams) => {
+      const unsubscribeTeamStore = clubStore.subscribe((teams) => {
         if (teams) {
           clubs = teams;
         }
@@ -7675,10 +7340,9 @@ function createGovernanceStore() {
   async function updatePlayer(playerId, position, firstName, lastName, shirtNumber, dateOfBirth, nationality) {
     try {
       console.log("await team and player store sync line 744");
-      await teamStore.sync();
-      await playerStore.sync();
+      await storeManager.syncStores();
       let clubs = [];
-      const unsubscribeTeamStore = teamStore.subscribe((teams) => {
+      const unsubscribeTeamStore = clubStore.subscribe((teams) => {
         if (teams) {
           clubs = teams;
         }
@@ -7733,10 +7397,9 @@ function createGovernanceStore() {
   async function setPlayerInjury(playerId, description, expectedEndDate) {
     try {
       console.log("await team and player store sync line 810");
-      await teamStore.sync();
-      await playerStore.sync();
+      await storeManager.syncStores();
       let clubs = [];
-      const unsubscribeTeamStore = teamStore.subscribe((teams) => {
+      const unsubscribeTeamStore = clubStore.subscribe((teams) => {
         if (teams) {
           clubs = teams;
         }
@@ -7781,10 +7444,9 @@ function createGovernanceStore() {
   async function retirePlayer(playerId, retirementDate) {
     try {
       console.log("await team and player store sync line 868");
-      await teamStore.sync();
-      await playerStore.sync();
+      await storeManager.syncStores();
       let clubs = [];
-      const unsubscribeTeamStore = teamStore.subscribe((teams) => {
+      const unsubscribeTeamStore = clubStore.subscribe((teams) => {
         if (teams) {
           clubs = teams;
         }
@@ -7824,10 +7486,9 @@ function createGovernanceStore() {
   async function unretirePlayer(playerId) {
     try {
       console.log("await team and player store sync line 917");
-      await teamStore.sync();
-      await playerStore.sync();
+      await storeManager.syncStores();
       let clubs = [];
-      const unsubscribeTeamStore = teamStore.subscribe((teams) => {
+      const unsubscribeTeamStore = clubStore.subscribe((teams) => {
         if (teams) {
           clubs = teams;
         }
@@ -7891,8 +7552,7 @@ function createGovernanceStore() {
   }
   async function updateClub(clubId, name, friendlyName, primaryColourHex, secondaryColourHex, thirdColourHex, abbreviatedName, shirtType) {
     try {
-      console.log("await team store sync line 1010");
-      await teamStore.sync();
+      await storeManager.syncStores();
       let dto = {
         clubId,
         secondaryColourHex,
@@ -7904,7 +7564,7 @@ function createGovernanceStore() {
         primaryColourHex
       };
       let clubs = [];
-      const unsubscribeTeamStore = teamStore.subscribe((teams) => {
+      const unsubscribeTeamStore = clubStore.subscribe((teams) => {
         if (teams) {
           clubs = teams;
         }
@@ -7917,8 +7577,6 @@ function createGovernanceStore() {
         }
       });
       unsubscribeSystemStore();
-      console.log("await fixture store sync line 1038");
-      await fixtureStore.sync(seasonId);
       let allFixtures = [];
       const unsubscribeFixtureStore = fixtureStore.subscribe((fixtures) => {
         allFixtures = fixtures;
@@ -8057,15 +7715,15 @@ const Clear_draft_modal = create_ssr_component(($$result, $$props, $$bindings, s
     }
   })}`;
 });
-const Page$e = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$c = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let fixtureId;
   let $playerEventData, $$unsubscribe_playerEventData = noop, $$subscribe_playerEventData = () => ($$unsubscribe_playerEventData(), $$unsubscribe_playerEventData = subscribe(playerEventData, ($$value) => $playerEventData = $$value), playerEventData);
   let $systemStore, $$unsubscribe_systemStore;
-  let $$unsubscribe_teamStore;
+  let $$unsubscribe_clubStore;
   let $selectedPlayers, $$unsubscribe_selectedPlayers;
   let $page, $$unsubscribe_page;
   $$unsubscribe_systemStore = subscribe(systemStore, (value) => $systemStore = value);
-  $$unsubscribe_teamStore = subscribe(teamStore, (value) => value);
+  $$unsubscribe_clubStore = subscribe(clubStore, (value) => value);
   $$unsubscribe_page = subscribe(page, (value) => $page = value);
   let showClearDraftModal = false;
   let showConfirmDataModal = false;
@@ -8079,7 +7737,7 @@ const Page$e = create_ssr_component(($$result, $$props, $$bindings, slots) => {
       text: "Saving fixture data..."
     });
     try {
-      await governanceStore.submitFixtureData($systemStore?.calculationSeasonId ?? 0, $systemStore?.calculationGameweek ?? 0, fixtureId, $playerEventData);
+      await governanceStore.submitFixtureData($systemStore?.calculationSeasonId ?? 0, $systemStore?.calculationGameweek ?? 0, $systemStore?.calculationMonth ?? 0, fixtureId, $playerEventData);
       localStorage.removeItem(`fixtureDraft_${fixtureId}`);
       toastsShow({
         text: "Fixture data saved.",
@@ -8118,7 +7776,7 @@ const Page$e = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $playerEventData.length == 0 || $playerEventData.filter((x) => convertEvent(x.eventType) == 0).length != $selectedPlayers.length;
   $$unsubscribe_playerEventData();
   $$unsubscribe_systemStore();
-  $$unsubscribe_teamStore();
+  $$unsubscribe_clubStore();
   $$unsubscribe_selectedPlayers();
   $$unsubscribe_page();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
@@ -8183,9 +7841,9 @@ const Add_initial_fixtures = create_ssr_component(($$result, $$props, $$bindings
 const Revalue_player_up = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let isSubmitDisabled;
   let $$unsubscribe_playerStore;
-  let $teamStore, $$unsubscribe_teamStore;
+  let $clubStore, $$unsubscribe_clubStore;
   $$unsubscribe_playerStore = subscribe(playerStore, (value) => value);
-  $$unsubscribe_teamStore = subscribe(teamStore, (value) => $teamStore = value);
+  $$unsubscribe_clubStore = subscribe(clubStore, (value) => $clubStore = value);
   let { visible } = $$props;
   let { closeModal } = $$props;
   let selectedPlayerId = 0;
@@ -8201,10 +7859,10 @@ const Revalue_player_up = create_ssr_component(($$result, $$props, $$bindings, s
     }
   }
   $$unsubscribe_playerStore();
-  $$unsubscribe_teamStore();
+  $$unsubscribe_clubStore();
   return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
     default: () => {
-      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-15yd750">Revalue Player Up</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><div class="flex-col space-y-2"><p data-svelte-h="svelte-1tp620s">Select the player&#39;s club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($teamStore, (club) => {
+      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-15yd750">Revalue Player Up</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><div class="flex-col space-y-2"><p data-svelte-h="svelte-1tp620s">Select the player&#39;s club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($clubStore, (club) => {
         return `<option${add_attribute("value", club.id, 0)}>${escape(club.friendlyName)}</option>`;
       })}</select></div> ${``} ${``} <div class="border-b border-gray-200"></div> <div class="items-center flex space-x-4"><button class="px-4 py-2 default-button fpl-cancel-btn min-w-[150px]" type="button" data-svelte-h="svelte-19jfrwv">Cancel</button> <button${add_attribute(
         "class",
@@ -8223,9 +7881,9 @@ const Revalue_player_up = create_ssr_component(($$result, $$props, $$bindings, s
 const Revalue_player_down = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let isSubmitDisabled;
   let $$unsubscribe_playerStore;
-  let $teamStore, $$unsubscribe_teamStore;
+  let $clubStore, $$unsubscribe_clubStore;
   $$unsubscribe_playerStore = subscribe(playerStore, (value) => value);
-  $$unsubscribe_teamStore = subscribe(teamStore, (value) => $teamStore = value);
+  $$unsubscribe_clubStore = subscribe(clubStore, (value) => $clubStore = value);
   let { visible } = $$props;
   let { closeModal } = $$props;
   let selectedPlayerId = 0;
@@ -8241,10 +7899,10 @@ const Revalue_player_down = create_ssr_component(($$result, $$props, $$bindings,
     }
   }
   $$unsubscribe_playerStore();
-  $$unsubscribe_teamStore();
+  $$unsubscribe_clubStore();
   return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
     default: () => {
-      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-itffcx">Revalue Player Down</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><div class="flex-col space-y-2"><p data-svelte-h="svelte-1tp620s">Select the player&#39;s club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($teamStore, (club) => {
+      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-itffcx">Revalue Player Down</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><div class="flex-col space-y-2"><p data-svelte-h="svelte-1tp620s">Select the player&#39;s club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($clubStore, (club) => {
         return `<option${add_attribute("value", club.id, 0)}>${escape(club.friendlyName)}</option>`;
       })}</select></div> ${``} ${``} <div class="border-b border-gray-200"></div> <div class="items-center flex space-x-4"><button class="px-4 py-2 default-button fpl-cancel-btn min-w-[150px]" type="button" data-svelte-h="svelte-19jfrwv">Cancel</button> <button${add_attribute(
         "class",
@@ -8263,11 +7921,9 @@ const Revalue_player_down = create_ssr_component(($$result, $$props, $$bindings,
 var define_process_env_default$3 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
 const Move_fixture = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let isSubmitDisabled;
-  let $teamStore, $$unsubscribe_teamStore;
-  let $$unsubscribe_systemStore;
+  let $clubStore, $$unsubscribe_clubStore;
   let $$unsubscribe_fixtureStore;
-  $$unsubscribe_teamStore = subscribe(teamStore, (value) => $teamStore = value);
-  $$unsubscribe_systemStore = subscribe(systemStore, (value) => value);
+  $$unsubscribe_clubStore = subscribe(clubStore, (value) => $clubStore = value);
   $$unsubscribe_fixtureStore = subscribe(fixtureStore, (value) => value);
   let { visible } = $$props;
   let { closeModal } = $$props;
@@ -8283,7 +7939,7 @@ const Move_fixture = create_ssr_component(($$result, $$props, $$bindings, slots)
   let time = "";
   let showConfirm = false;
   function getTeamById(teamId) {
-    return $teamStore.find((x) => x.id === teamId);
+    return $clubStore.find((x) => x.id === teamId);
   }
   if ($$props.visible === void 0 && $$bindings.visible && visible !== void 0)
     $$bindings.visible(visible);
@@ -8295,8 +7951,7 @@ const Move_fixture = create_ssr_component(($$result, $$props, $$bindings, slots)
       showConfirm = false;
     }
   }
-  $$unsubscribe_teamStore();
-  $$unsubscribe_systemStore();
+  $$unsubscribe_clubStore();
   $$unsubscribe_fixtureStore();
   return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
     default: () => {
@@ -8324,11 +7979,9 @@ const Move_fixture = create_ssr_component(($$result, $$props, $$bindings, slots)
 var define_process_env_default$2 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
 const Postpone_fixture = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let isSubmitDisabled;
-  let $teamStore, $$unsubscribe_teamStore;
-  let $$unsubscribe_systemStore;
+  let $clubStore, $$unsubscribe_clubStore;
   let $$unsubscribe_fixtureStore;
-  $$unsubscribe_teamStore = subscribe(teamStore, (value) => $teamStore = value);
-  $$unsubscribe_systemStore = subscribe(systemStore, (value) => value);
+  $$unsubscribe_clubStore = subscribe(clubStore, (value) => $clubStore = value);
   $$unsubscribe_fixtureStore = subscribe(fixtureStore, (value) => value);
   let { visible } = $$props;
   let { closeModal } = $$props;
@@ -8342,7 +7995,7 @@ const Postpone_fixture = create_ssr_component(($$result, $$props, $$bindings, sl
   let gameweekFixtures = [];
   let showConfirm = false;
   function getTeamById(teamId) {
-    return $teamStore.find((x) => x.id === teamId);
+    return $clubStore.find((x) => x.id === teamId);
   }
   if ($$props.visible === void 0 && $$bindings.visible && visible !== void 0)
     $$bindings.visible(visible);
@@ -8354,8 +8007,7 @@ const Postpone_fixture = create_ssr_component(($$result, $$props, $$bindings, sl
       showConfirm = false;
     }
   }
-  $$unsubscribe_teamStore();
-  $$unsubscribe_systemStore();
+  $$unsubscribe_clubStore();
   $$unsubscribe_fixtureStore();
   return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
     default: () => {
@@ -8381,8 +8033,8 @@ const Postpone_fixture = create_ssr_component(($$result, $$props, $$bindings, sl
 var define_process_env_default$1 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
 const Reschedule_fixture = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let isSubmitDisabled;
-  let $teamStore, $$unsubscribe_teamStore;
-  $$unsubscribe_teamStore = subscribe(teamStore, (value) => $teamStore = value);
+  let $clubStore, $$unsubscribe_clubStore;
+  $$unsubscribe_clubStore = subscribe(clubStore, (value) => $clubStore = value);
   let { visible } = $$props;
   let { closeModal } = $$props;
   let gameweeks = Array.from(
@@ -8397,7 +8049,7 @@ const Reschedule_fixture = create_ssr_component(($$result, $$props, $$bindings, 
   let time = "";
   let showConfirm = false;
   function getTeamById(teamId) {
-    return $teamStore.find((x) => x.id === teamId);
+    return $clubStore.find((x) => x.id === teamId);
   }
   if ($$props.visible === void 0 && $$bindings.visible && visible !== void 0)
     $$bindings.visible(visible);
@@ -8409,7 +8061,7 @@ const Reschedule_fixture = create_ssr_component(($$result, $$props, $$bindings, 
       showConfirm = false;
     }
   }
-  $$unsubscribe_teamStore();
+  $$unsubscribe_clubStore();
   return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
     default: () => {
       return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-q68hh1">Reschedule Fixture</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><div class="flex-col space-y-2"><p data-svelte-h="svelte-ywwbfb">Select Postponed Fixture:</p> <select class="p-2 fpl-dropdown my-4 min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-1xsaz9j">Select Fixture</option>${each(postponedFixtures, (fixture) => {
@@ -8434,9 +8086,9 @@ const Reschedule_fixture = create_ssr_component(($$result, $$props, $$bindings, 
 const Loan_player = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let isSubmitDisabled;
   let $$unsubscribe_playerStore;
-  let $teamStore, $$unsubscribe_teamStore;
+  let $clubStore, $$unsubscribe_clubStore;
   $$unsubscribe_playerStore = subscribe(playerStore, (value) => value);
-  $$unsubscribe_teamStore = subscribe(teamStore, (value) => $teamStore = value);
+  $$unsubscribe_clubStore = subscribe(clubStore, (value) => $clubStore = value);
   let { visible } = $$props;
   let { closeModal } = $$props;
   let selectedPlayerId = 0;
@@ -8452,10 +8104,10 @@ const Loan_player = create_ssr_component(($$result, $$props, $$bindings, slots) 
     }
   }
   $$unsubscribe_playerStore();
-  $$unsubscribe_teamStore();
+  $$unsubscribe_clubStore();
   return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
     default: () => {
-      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-yv1guj">Loan Player</h3> <button class="times-button" data-svelte-h="svelte-2aq7vi">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><div class="flex-col space-y-2"><p data-svelte-h="svelte-1tp620s">Select the player&#39;s club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($teamStore, (club) => {
+      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-yv1guj">Loan Player</h3> <button class="times-button" data-svelte-h="svelte-2aq7vi">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><div class="flex-col space-y-2"><p data-svelte-h="svelte-1tp620s">Select the player&#39;s club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($clubStore, (club) => {
         return `<option${add_attribute("value", club.id, 0)}>${escape(club.friendlyName)}</option>`;
       })}</select></div> ${``} <div class="border-b border-gray-200"></div> <div class="items-center flex space-x-4"><button class="px-4 py-2 default-button fpl-cancel-btn min-w-[150px]" type="button" data-svelte-h="svelte-19jfrwv">Cancel</button> <button${add_attribute(
         "class",
@@ -8474,9 +8126,9 @@ const Loan_player = create_ssr_component(($$result, $$props, $$bindings, slots) 
 const Transfer_player = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let isSubmitDisabled;
   let $$unsubscribe_playerStore;
-  let $teamStore, $$unsubscribe_teamStore;
+  let $clubStore, $$unsubscribe_clubStore;
   $$unsubscribe_playerStore = subscribe(playerStore, (value) => value);
-  $$unsubscribe_teamStore = subscribe(teamStore, (value) => $teamStore = value);
+  $$unsubscribe_clubStore = subscribe(clubStore, (value) => $clubStore = value);
   let { visible } = $$props;
   let { closeModal } = $$props;
   let selectedPlayerId = 0;
@@ -8492,10 +8144,10 @@ const Transfer_player = create_ssr_component(($$result, $$props, $$bindings, slo
     }
   }
   $$unsubscribe_playerStore();
-  $$unsubscribe_teamStore();
+  $$unsubscribe_clubStore();
   return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
     default: () => {
-      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-eogsmc">Transfer Player</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><p data-svelte-h="svelte-1tp620s">Select the player&#39;s club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($teamStore, (club) => {
+      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-eogsmc">Transfer Player</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><p data-svelte-h="svelte-1tp620s">Select the player&#39;s club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($clubStore, (club) => {
         return `<option${add_attribute("value", club.id, 0)}>${escape(club.friendlyName)}</option>`;
       })}</select> ${``} <div class="border-b border-gray-200"></div> <div class="items-center flex space-x-4"><button class="px-4 py-2 default-button fpl-cancel-btn min-w-[150px]" type="button" data-svelte-h="svelte-19jfrwv">Cancel</button> <button${add_attribute(
         "class",
@@ -8513,8 +8165,8 @@ const Transfer_player = create_ssr_component(($$result, $$props, $$bindings, slo
 });
 const Recall_player = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let isSubmitDisabled;
-  let $teamStore, $$unsubscribe_teamStore;
-  $$unsubscribe_teamStore = subscribe(teamStore, (value) => $teamStore = value);
+  let $clubStore, $$unsubscribe_clubStore;
+  $$unsubscribe_clubStore = subscribe(clubStore, (value) => $clubStore = value);
   let { visible } = $$props;
   let { closeModal } = $$props;
   let selectedPlayerId = 0;
@@ -8529,10 +8181,10 @@ const Recall_player = create_ssr_component(($$result, $$props, $$bindings, slots
       showConfirm = false;
     }
   }
-  $$unsubscribe_teamStore();
+  $$unsubscribe_clubStore();
   return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
     default: () => {
-      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-awztf2">Recall Player</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><div class="flex-col space-y-2"><p data-svelte-h="svelte-1tp620s">Select the player&#39;s club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($teamStore, (club) => {
+      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-awztf2">Recall Player</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><div class="flex-col space-y-2"><p data-svelte-h="svelte-1tp620s">Select the player&#39;s club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($clubStore, (club) => {
         return `<option${add_attribute("value", club.id, 0)}>${escape(club.friendlyName)}</option>`;
       })}</select></div> ${``} <div class="border-b border-gray-200"></div> <div class="items-center flex space-x-4"><button class="px-4 py-2 default-button fpl-cancel-btn min-w-[150px]" type="button" data-svelte-h="svelte-19jfrwv">Cancel</button> <button${add_attribute(
         "class",
@@ -8549,18 +8201,18 @@ const Recall_player = create_ssr_component(($$result, $$props, $$bindings, slots
   })}`;
 });
 const Create_player = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let $$unsubscribe_teamStore;
-  let $$unsubscribe_countriesStore;
-  $$unsubscribe_teamStore = subscribe(teamStore, (value) => value);
-  $$unsubscribe_countriesStore = subscribe(countriesStore, (value) => value);
+  let $$unsubscribe_clubStore;
+  let $$unsubscribe_countryStore;
+  $$unsubscribe_clubStore = subscribe(clubStore, (value) => value);
+  $$unsubscribe_countryStore = subscribe(countryStore, (value) => value);
   let { visible } = $$props;
   let { closeModal } = $$props;
   if ($$props.visible === void 0 && $$bindings.visible && visible !== void 0)
     $$bindings.visible(visible);
   if ($$props.closeModal === void 0 && $$bindings.closeModal && closeModal !== void 0)
     $$bindings.closeModal(closeModal);
-  $$unsubscribe_teamStore();
-  $$unsubscribe_countriesStore();
+  $$unsubscribe_clubStore();
+  $$unsubscribe_countryStore();
   return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
     default: () => {
       return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-9uabtx">Create Player</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> ${`${validate_component(Local_spinner, "LocalSpinner").$$render($$result, {}, {}, {})}`}</div>`;
@@ -8570,11 +8222,9 @@ const Create_player = create_ssr_component(($$result, $$props, $$bindings, slots
 const Update_player = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let isSubmitDisabled;
   let $$unsubscribe_playerStore;
-  let $teamStore, $$unsubscribe_teamStore;
-  let $$unsubscribe_countriesStore;
+  let $clubStore, $$unsubscribe_clubStore;
   $$unsubscribe_playerStore = subscribe(playerStore, (value) => value);
-  $$unsubscribe_teamStore = subscribe(teamStore, (value) => $teamStore = value);
-  $$unsubscribe_countriesStore = subscribe(countriesStore, (value) => value);
+  $$unsubscribe_clubStore = subscribe(clubStore, (value) => $clubStore = value);
   let { visible } = $$props;
   let { closeModal } = $$props;
   let firstName = "";
@@ -8594,11 +8244,10 @@ const Update_player = create_ssr_component(($$result, $$props, $$bindings, slots
     }
   }
   $$unsubscribe_playerStore();
-  $$unsubscribe_teamStore();
-  $$unsubscribe_countriesStore();
+  $$unsubscribe_clubStore();
   return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
     default: () => {
-      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-111jmmy">Update Player</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><div class="flex-col space-y-2"><p data-svelte-h="svelte-1tp620s">Select the player&#39;s club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($teamStore, (club) => {
+      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-111jmmy">Update Player</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><div class="flex-col space-y-2"><p data-svelte-h="svelte-1tp620s">Select the player&#39;s club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($clubStore, (club) => {
         return `<option${add_attribute("value", club.id, 0)}>${escape(club.friendlyName)}</option>`;
       })}</select></div> ${``} <div class="border-b border-gray-200"></div> <div class="items-center flex space-x-4"><button class="px-4 py-2 default-button fpl-cancel-btn min-w-[150px]" type="button" data-svelte-h="svelte-19jfrwv">Cancel</button> <button${add_attribute(
         "class",
@@ -8617,9 +8266,9 @@ const Update_player = create_ssr_component(($$result, $$props, $$bindings, slots
 const Set_player_injury = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let isSubmitDisabled;
   let $$unsubscribe_playerStore;
-  let $teamStore, $$unsubscribe_teamStore;
+  let $clubStore, $$unsubscribe_clubStore;
   $$unsubscribe_playerStore = subscribe(playerStore, (value) => value);
-  $$unsubscribe_teamStore = subscribe(teamStore, (value) => $teamStore = value);
+  $$unsubscribe_clubStore = subscribe(clubStore, (value) => $clubStore = value);
   let { visible } = $$props;
   let { closeModal } = $$props;
   let selectedPlayerId = 0;
@@ -8635,10 +8284,10 @@ const Set_player_injury = create_ssr_component(($$result, $$props, $$bindings, s
     }
   }
   $$unsubscribe_playerStore();
-  $$unsubscribe_teamStore();
+  $$unsubscribe_clubStore();
   return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
     default: () => {
-      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-1epdx5w">Set Player Injury</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><p data-svelte-h="svelte-1tp620s">Select the player&#39;s club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($teamStore, (club) => {
+      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-1epdx5w">Set Player Injury</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><p data-svelte-h="svelte-1tp620s">Select the player&#39;s club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($clubStore, (club) => {
         return `<option${add_attribute("value", club.id, 0)}>${escape(club.friendlyName)}</option>`;
       })}</select> ${``} <div class="border-b border-gray-200"></div> <div class="items-center flex space-x-4"><button class="px-4 py-2 default-button fpl-cancel-btn min-w-[150px]" type="button" data-svelte-h="svelte-19jfrwv">Cancel</button> <button${add_attribute(
         "class",
@@ -8657,9 +8306,9 @@ const Set_player_injury = create_ssr_component(($$result, $$props, $$bindings, s
 const Retire_player = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let isSubmitDisabled;
   let $$unsubscribe_playerStore;
-  let $teamStore, $$unsubscribe_teamStore;
+  let $clubStore, $$unsubscribe_clubStore;
   $$unsubscribe_playerStore = subscribe(playerStore, (value) => value);
-  $$unsubscribe_teamStore = subscribe(teamStore, (value) => $teamStore = value);
+  $$unsubscribe_clubStore = subscribe(clubStore, (value) => $clubStore = value);
   let { visible } = $$props;
   let { closeModal } = $$props;
   let selectedPlayerId = 0;
@@ -8675,10 +8324,10 @@ const Retire_player = create_ssr_component(($$result, $$props, $$bindings, slots
     }
   }
   $$unsubscribe_playerStore();
-  $$unsubscribe_teamStore();
+  $$unsubscribe_clubStore();
   return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
     default: () => {
-      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-181rwt8">Retire Player</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><p data-svelte-h="svelte-1tp620s">Select the player&#39;s club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($teamStore, (club) => {
+      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-181rwt8">Retire Player</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><p data-svelte-h="svelte-1tp620s">Select the player&#39;s club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($clubStore, (club) => {
         return `<option${add_attribute("value", club.id, 0)}>${escape(club.friendlyName)}</option>`;
       })}</select> ${``} <div class="border-b border-gray-200"></div> <div class="items-center flex space-x-4"><button class="px-4 py-2 default-button fpl-cancel-btn min-w-[150px]" type="button" data-svelte-h="svelte-19jfrwv">Cancel</button> <button${add_attribute(
         "class",
@@ -8696,8 +8345,8 @@ const Retire_player = create_ssr_component(($$result, $$props, $$bindings, slots
 });
 const Unretire_player = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let isSubmitDisabled;
-  let $teamStore, $$unsubscribe_teamStore;
-  $$unsubscribe_teamStore = subscribe(teamStore, (value) => $teamStore = value);
+  let $clubStore, $$unsubscribe_clubStore;
+  $$unsubscribe_clubStore = subscribe(clubStore, (value) => $clubStore = value);
   let { visible } = $$props;
   let { closeModal } = $$props;
   let selectedPlayerId = 0;
@@ -8712,10 +8361,10 @@ const Unretire_player = create_ssr_component(($$result, $$props, $$bindings, slo
       showConfirm = false;
     }
   }
-  $$unsubscribe_teamStore();
+  $$unsubscribe_clubStore();
   return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
     default: () => {
-      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-1s9cm8h">Unretire Player</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><div class="flex-col space-y-2"><p data-svelte-h="svelte-1tp620s">Select the player&#39;s club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($teamStore, (club) => {
+      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-1s9cm8h">Unretire Player</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><div class="flex-col space-y-2"><p data-svelte-h="svelte-1tp620s">Select the player&#39;s club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($clubStore, (club) => {
         return `<option${add_attribute("value", club.id, 0)}>${escape(club.friendlyName)}</option>`;
       })}</select></div> ${``} <div class="border-b border-gray-200"></div> <div class="items-center flex space-x-4"><button class="px-4 py-2 default-button fpl-cancel-btn min-w-[150px]" type="button" data-svelte-h="svelte-19jfrwv">Cancel</button> <button${add_attribute(
         "class",
@@ -8773,8 +8422,8 @@ const Promote_new_club = create_ssr_component(($$result, $$props, $$bindings, sl
 });
 const Update_club = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let isSubmitDisabled;
-  let $teamStore, $$unsubscribe_teamStore;
-  $$unsubscribe_teamStore = subscribe(teamStore, (value) => $teamStore = value);
+  let $clubStore, $$unsubscribe_clubStore;
+  $$unsubscribe_clubStore = subscribe(clubStore, (value) => $clubStore = value);
   let { visible } = $$props;
   let { closeModal } = $$props;
   let selectedClubId = 0;
@@ -8789,10 +8438,10 @@ const Update_club = create_ssr_component(($$result, $$props, $$bindings, slots) 
       showConfirm = false;
     }
   }
-  $$unsubscribe_teamStore();
+  $$unsubscribe_clubStore();
   return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
     default: () => {
-      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-1p20ean">Update Club</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($teamStore, (club) => {
+      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-1p20ean">Update Club</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($clubStore, (club) => {
         return `<option${add_attribute("value", club.id, 0)}>${escape(club.friendlyName)}</option>`;
       })}</select> ${``} <div class="border-b border-gray-200"></div> <div class="items-center flex space-x-4"><button class="px-4 py-2 default-button fpl-cancel-btn min-w-[150px]" type="button" data-svelte-h="svelte-19jfrwv">Cancel</button> <button${add_attribute(
         "class",
@@ -8811,11 +8460,9 @@ const Update_club = create_ssr_component(($$result, $$props, $$bindings, slots) 
 var define_process_env_default = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
 const Add_fixture_data = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let isSubmitDisabled;
-  let $teamStore, $$unsubscribe_teamStore;
-  let $$unsubscribe_systemStore;
+  let $clubStore, $$unsubscribe_clubStore;
   let $$unsubscribe_fixtureStore;
-  $$unsubscribe_teamStore = subscribe(teamStore, (value) => $teamStore = value);
-  $$unsubscribe_systemStore = subscribe(systemStore, (value) => value);
+  $$unsubscribe_clubStore = subscribe(clubStore, (value) => $clubStore = value);
   $$unsubscribe_fixtureStore = subscribe(fixtureStore, (value) => value);
   let { visible } = $$props;
   let { closeModal } = $$props;
@@ -8828,15 +8475,14 @@ const Add_fixture_data = create_ssr_component(($$result, $$props, $$bindings, sl
   let selectedFixtureId;
   let gameweekFixtures = [];
   function getTeamById(teamId) {
-    return $teamStore.find((x) => x.id === teamId);
+    return $clubStore.find((x) => x.id === teamId);
   }
   if ($$props.visible === void 0 && $$bindings.visible && visible !== void 0)
     $$bindings.visible(visible);
   if ($$props.closeModal === void 0 && $$bindings.closeModal && closeModal !== void 0)
     $$bindings.closeModal(closeModal);
   isSubmitDisabled = !selectedFixtureId;
-  $$unsubscribe_teamStore();
-  $$unsubscribe_systemStore();
+  $$unsubscribe_clubStore();
   $$unsubscribe_fixtureStore();
   return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
     default: () => {
@@ -8854,7 +8500,7 @@ const Add_fixture_data = create_ssr_component(($$result, $$props, $$bindings, sl
     }
   })}`;
 });
-const Page$d = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let showRevaluePlayerUpModal = false;
   let showRevaluePlayerDownModal = false;
   let showAddInitialFixturesModal = false;
@@ -9065,29 +8711,32 @@ const Page$d = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$c = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let $teamStore, $$unsubscribe_teamStore;
+const Page$a = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let $clubStore, $$unsubscribe_clubStore;
   let $$unsubscribe_playerStore;
   let $$unsubscribe_fixtureStore;
   let $$unsubscribe_systemStore;
+  let $$unsubscribe_seasonStore;
   let $page, $$unsubscribe_page;
-  $$unsubscribe_teamStore = subscribe(teamStore, (value) => $teamStore = value);
+  $$unsubscribe_clubStore = subscribe(clubStore, (value) => $clubStore = value);
   $$unsubscribe_playerStore = subscribe(playerStore, (value) => value);
   $$unsubscribe_fixtureStore = subscribe(fixtureStore, (value) => value);
   $$unsubscribe_systemStore = subscribe(systemStore, (value) => value);
+  $$unsubscribe_seasonStore = subscribe(seasonStore, (value) => value);
   $$unsubscribe_page = subscribe(page, (value) => $page = value);
   let fixturesWithTeams = [];
   let selectedGameweek;
   Number($page.url.searchParams.get("id"));
   {
-    if (fixturesWithTeams.length > 0 && $teamStore.length > 0) {
-      updateTableData(fixturesWithTeams, $teamStore, selectedGameweek);
+    if (fixturesWithTeams.length > 0 && $clubStore.length > 0) {
+      updateTableData(fixturesWithTeams, $clubStore, selectedGameweek);
     }
   }
-  $$unsubscribe_teamStore();
+  $$unsubscribe_clubStore();
   $$unsubscribe_playerStore();
   $$unsubscribe_fixtureStore();
   $$unsubscribe_systemStore();
+  $$unsubscribe_seasonStore();
   $$unsubscribe_page();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
@@ -9095,13 +8744,13 @@ const Page$c = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let $teamStore, $$unsubscribe_teamStore;
-  $$unsubscribe_teamStore = subscribe(teamStore, (value) => $teamStore = value);
-  $$unsubscribe_teamStore();
+const Page$9 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let $clubStore, $$unsubscribe_clubStore;
+  $$unsubscribe_clubStore = subscribe(clubStore, (value) => $clubStore = value);
+  $$unsubscribe_clubStore();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
-      return `<div class="page-header-wrapper flex w-full"><div class="content-panel w-full"><div class="w-full grid grid-cols-1 md:grid-cols-4 gap-4 mt-4"><p class="col-span-1 md:col-span-4 text-center w-full mb-4" data-svelte-h="svelte-gufabx">Premier League Clubs</p> ${each($teamStore.sort((a, b) => a.id - b.id), (team) => {
+      return `<div class="page-header-wrapper flex w-full"><div class="content-panel w-full"><div class="w-full grid grid-cols-1 md:grid-cols-4 gap-4 mt-4"><p class="col-span-1 md:col-span-4 text-center w-full mb-4" data-svelte-h="svelte-gufabx">Premier League Clubs</p> ${each($clubStore.sort((a, b) => a.id - b.id), (team) => {
         return `<div class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"><div class="flex items-center space-x-4 w-full">${validate_component(BadgeIcon, "BadgeIcon").$$render(
           $$result,
           {
@@ -9117,37 +8766,11 @@ const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Default_canisters = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  return ``;
-});
-const Page$a = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
-    default: () => {
-      return `<div class="bg-panel rounded-md mt-4"><h1 class="default-header p-4" data-svelte-h="svelte-30ik2c">OpenFPL Cycle Management</h1> <ul class="flex bg-light-gray px-1 md:px-4 pt-2 contained-text border-b border-gray-700 mb-4"><li${add_attribute("class", `mr-1 md:mr-4 ${"active-tab"}`, 0)}><button${add_attribute(
-        "class",
-        `p-2 ${"text-white"}`,
-        0
-      )}>Default Canisters</button></li> <li${add_attribute(
-        "class",
-        `mr-1 md:mr-4 ${""}`,
-        0
-      )}><button${add_attribute(
-        "class",
-        `p-2 ${"text-gray-400"}`,
-        0
-      )}>Automatically Generated Canisters</button></li> <li${add_attribute("class", `mr-1 md:mr-4 ${""}`, 0)}><button${add_attribute("class", `p-2 ${"text-gray-400"}`, 0)}>Topups</button></li> <li${add_attribute("class", `mr-1 md:mr-4 ${""}`, 0)}><button${add_attribute(
-        "class",
-        `p-2 ${"text-gray-400"}`,
-        0
-      )}>Cycles Minted</button></li></ul> ${`${validate_component(Default_canisters, "DefaultCanisters").$$render($$result, {}, {}, {})}`}</div>`;
-    }
-  })}`;
-});
 const css = {
   code: ".striped.svelte-a09ql9 tr.svelte-a09ql9:nth-child(odd){background-color:rgba(46, 50, 58, 0.6)}",
   map: null
 };
-const Page$9 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$8 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$result.css.add(css);
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
@@ -9177,7 +8800,7 @@ const Page$9 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$8 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$7 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_authStore;
   $$unsubscribe_authStore = subscribe(authStore, (value) => value);
   $$unsubscribe_authStore();
@@ -9187,16 +8810,14 @@ const Page$8 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$7 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$6 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   return `  `;
 });
-const Page$6 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$5 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_selectedGameweek;
   let $$unsubscribe_loadingGameweekDetail;
-  let $$unsubscribe_teamStore;
   let $page, $$unsubscribe_page;
   let $$unsubscribe_fantasyTeam;
-  $$unsubscribe_teamStore = subscribe(teamStore, (value) => value);
   $$unsubscribe_page = subscribe(page, (value) => $page = value);
   let fantasyTeam = writable(null);
   $$unsubscribe_fantasyTeam = subscribe(fantasyTeam, (value) => value);
@@ -9207,7 +8828,6 @@ const Page$6 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $page.url.searchParams.get("id");
   $$unsubscribe_selectedGameweek();
   $$unsubscribe_loadingGameweekDetail();
-  $$unsubscribe_teamStore();
   $$unsubscribe_page();
   $$unsubscribe_fantasyTeam();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
@@ -9216,7 +8836,7 @@ const Page$6 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$5 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$4 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_fantasyTeam;
   let $$unsubscribe_loadingPlayers;
   let $$unsubscribe_availableFormations;
@@ -9265,43 +8885,33 @@ const Page$5 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$4 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let $teamStore, $$unsubscribe_teamStore;
+const Page$3 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let $clubStore, $$unsubscribe_clubStore;
   let $fixtureStore, $$unsubscribe_fixtureStore;
   let $$unsubscribe_playerStore;
   let $systemStore, $$unsubscribe_systemStore;
   let $page, $$unsubscribe_page;
-  let $$unsubscribe_countriesStore;
-  $$unsubscribe_teamStore = subscribe(teamStore, (value) => $teamStore = value);
+  let $$unsubscribe_countryStore;
+  $$unsubscribe_clubStore = subscribe(clubStore, (value) => $clubStore = value);
   $$unsubscribe_fixtureStore = subscribe(fixtureStore, (value) => $fixtureStore = value);
   $$unsubscribe_playerStore = subscribe(playerStore, (value) => value);
   $$unsubscribe_systemStore = subscribe(systemStore, (value) => $systemStore = value);
   $$unsubscribe_page = subscribe(page, (value) => $page = value);
-  $$unsubscribe_countriesStore = subscribe(countriesStore, (value) => value);
+  $$unsubscribe_countryStore = subscribe(countryStore, (value) => value);
   let selectedGameweek = $systemStore?.pickTeamGameweek ?? 1;
   let fixturesWithTeams = [];
   Number($page.url.searchParams.get("id"));
   {
-    if ($fixtureStore.length > 0 && $teamStore.length > 0) {
-      updateTableData(fixturesWithTeams, $teamStore, selectedGameweek);
+    if ($fixtureStore.length > 0 && $clubStore.length > 0) {
+      updateTableData(fixturesWithTeams, $clubStore, selectedGameweek);
     }
   }
-  $$unsubscribe_teamStore();
+  $$unsubscribe_clubStore();
   $$unsubscribe_fixtureStore();
   $$unsubscribe_playerStore();
   $$unsubscribe_systemStore();
   $$unsubscribe_page();
-  $$unsubscribe_countriesStore();
-  return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
-    default: () => {
-      return `${`${validate_component(Local_spinner, "LocalSpinner").$$render($$result, {}, {}, {})}`}`;
-    }
-  })}`;
-});
-const Page$3 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let $$unsubscribe_userStore;
-  $$unsubscribe_userStore = subscribe(userStore, (value) => value);
-  $$unsubscribe_userStore();
+  $$unsubscribe_countryStore();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
       return `${`${validate_component(Local_spinner, "LocalSpinner").$$render($$result, {}, {}, {})}`}`;
@@ -9309,9 +8919,12 @@ const Page$3 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   })}`;
 });
 const Page$2 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let $$unsubscribe_userStore;
+  $$unsubscribe_userStore = subscribe(userStore, (value) => value);
+  $$unsubscribe_userStore();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
-      return `<div class="bg-panel rounded-md mt-4"><h1 class="default-header p-4" data-svelte-h="svelte-i9zo64">OpenFPL System Status</h1> ${`${validate_component(Local_spinner, "LocalSpinner").$$render($$result, {}, {}, {})}`}</div>`;
+      return `${`${validate_component(Local_spinner, "LocalSpinner").$$render($$result, {}, {}, {})}`}`;
     }
   })}`;
 });
@@ -9393,7 +9006,7 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
 export {
   Error$1 as E,
   Layout$1 as L,
-  Page$f as P,
+  Page$d as P,
   Server as S,
   set_building as a,
   set_manifest as b,
@@ -9403,21 +9016,19 @@ export {
   set_read_implementation as f,
   get_hooks as g,
   set_safe_public_env as h,
-  Page$e as i,
-  Page$d as j,
-  Page$c as k,
-  Page$b as l,
-  Page$a as m,
-  Page$9 as n,
+  Page$c as i,
+  Page$b as j,
+  Page$a as k,
+  Page$9 as l,
+  Page$8 as m,
+  Page$7 as n,
   options as o,
-  Page$8 as p,
-  Page$7 as q,
-  Page$6 as r,
+  Page$6 as p,
+  Page$5 as q,
+  Page$4 as r,
   set_assets as s,
-  Page$5 as t,
-  Page$4 as u,
-  Page$3 as v,
-  Page$2 as w,
-  Page$1 as x,
-  Page as y
+  Page$3 as t,
+  Page$2 as u,
+  Page$1 as v,
+  Page as w
 };

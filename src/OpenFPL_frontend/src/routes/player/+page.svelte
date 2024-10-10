@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
   import { page } from "$app/stores";
   import { playerStore } from "$lib/stores/player-store";
-  import { teamStore } from "$lib/stores/club-store";
+  import { clubStore } from "$lib/stores/club-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { systemStore } from "$lib/stores/system-store";
   import { toastsError } from "$lib/stores/toasts-store";
@@ -28,8 +28,9 @@
   import PlayerGameweekHistory from "$lib/components/player-gameweek-history.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
-  import { countriesStore } from "$lib/stores/country-store";
+  import { countryStore } from "$lib/stores/country-store";
     import LocalSpinner from "$lib/components/local-spinner.svelte";
+    import { storeManager } from "$lib/managers/store-manager";
 
   $: id = Number($page.url.searchParams.get("id"));
 
@@ -53,17 +54,11 @@
 
   onMount(async () => {
     try {
-      await teamStore.sync();
-      await systemStore.sync();
-      await countriesStore.sync();
-      await fixtureStore.sync($systemStore?.calculationSeasonId ?? 1);
-
-      if ($teamStore.length == 0) return;
-
-      await playerStore.sync();
+      
+      await storeManager.syncStores();
 
       selectedPlayer = $playerStore.find((x) => x.id === id) ?? null;
-      team = $teamStore.find((x) => x.id === selectedPlayer?.clubId) ?? null;
+      team = $clubStore.find((x) => x.id === selectedPlayer?.clubId) ?? null;
 
       if ($fixtureStore.length == 0) return;
 
@@ -102,16 +97,16 @@
   });
 
   let tableData: any[] = [];
-  $: if ($fixtureStore.length > 0 && $teamStore.length > 0) {
+  $: if ($fixtureStore.length > 0 && $clubStore.length > 0) {
     tableData = updateTableData(
       fixturesWithTeams,
-      $teamStore,
+      $clubStore,
       selectedGameweek
     );
   }
 
   function getTeamFromId(teamId: number): ClubDTO | undefined {
-    return $teamStore.find((team) => team.id === teamId);
+    return $clubStore.find((team) => team.id === teamId);
   }
 
   function setActiveTab(tab: string): void {
@@ -165,7 +160,7 @@
                 this={getFlagComponent(selectedPlayer?.nationality ?? 0)}
                 class="w-4 h-4 mr-1"
                 size="100"
-              />{$countriesStore.find(
+              />{$countryStore.find(
                 (x) => x.id == selectedPlayer?.nationality
               )?.name}
             </span>

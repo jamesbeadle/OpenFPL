@@ -12,7 +12,10 @@ import type {
   PlayerEventType,
   PlayerPosition,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-import type { PlayerDTO, PlayerPointsDTO } from "../../../../declarations/data_canister/data_canister.did";
+import type {
+  PlayerDTO,
+  PlayerPointsDTO,
+} from "../../../../declarations/data_canister/data_canister.did";
 import type { GameweekData } from "$lib/interfaces/GameweekData";
 
 export function uint8ArrayToBase64(bytes: Uint8Array): string {
@@ -931,7 +934,6 @@ export function extractPlayerData(
 
   return playerGameweekDetails;
 }
-
 
 export function calculatePlayerScore(
   gameweekData: GameweekData,

@@ -13,7 +13,7 @@ export class PlayerService {
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory,
-      process.env.OPENFPL_BACKEND_CANISTER_ID
+      process.env.OPENFPL_BACKEND_CANISTER_ID,
     );
   }
 

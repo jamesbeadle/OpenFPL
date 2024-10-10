@@ -3,7 +3,7 @@
   import { authStore } from "$lib/stores/auth.store";
   import { systemStore } from "$lib/stores/system-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
-  import { teamStore } from "$lib/stores/club-store";
+  import { clubStore } from "$lib/stores/club-store";
   import { toastsError } from "$lib/stores/toasts-store";
   import { managerStore } from "$lib/stores/manager-store";
   import {
@@ -25,6 +25,7 @@
   import { weeklyLeaderboardStore } from "$lib/stores/weekly-leaderboard-store";
   import RelativeSpinner from "$lib/components/relative-spinner.svelte";
     import { seasonStore } from "$lib/stores/season-store";
+    import { storeManager } from "$lib/managers/store-manager";
 
   let activeTab: string = "fixtures";
   let managerCount = 0;
@@ -47,12 +48,14 @@
   onMount(async () => {
     try {
 
+
+      await storeManager.syncStores();
+
       authStore.subscribe((store) => {
         isLoggedIn = store.identity !== null && store.identity !== undefined;
       });
-      await systemStore.sync();
-      await seasonStore.sync();
-      seasonName = await seasonStore.getSeasonName($systemStore?.pickTeamSeasonId ?? 0);
+      
+      seasonName = await seasonStore.getSeasonName($systemStore?.pickTeamSeasonId ?? 0) ?? "";
       
       loadSection1();
       loadSection2();
@@ -82,33 +85,33 @@
   async function loadSection2(): Promise<void> {
     try {
       let nextFixture = await fixtureStore.getNextFixture();
+      let nextFixtureId = nextFixture ? nextFixture.awayClubId : 0;
 
-      nextFixtureHomeTeam = await teamStore.getTeamById(
-        nextFixture ? nextFixture.homeClubId : 0
-      );
-      nextFixtureAwayTeam = await teamStore.getTeamById(
-        nextFixture ? nextFixture.awayClubId : 0
-      );
-      nextFixtureDate = formatUnixDateToReadable(
-        nextFixture ? nextFixture.kickOff : 0n
-      );
-      nextFixtureDateSmall = formatUnixDateToSmallReadable(
-        nextFixture ? nextFixture.kickOff : 0n
-      );
-      nextFixtureTime = formatUnixTimeToTime(
-        nextFixture ? nextFixture.kickOff : 0n
-      );
+      if(nextFixtureId > 0){
 
-      let countdownTime = getCountdownTime(
-        nextFixture ? nextFixture.kickOff : 0n
-      );
-      countdownDays = countdownTime.days.toString();
-      countdownHours = countdownTime.hours.toString();
-      countdownMinutes = countdownTime.minutes.toString();
+        nextFixtureHomeTeam = $clubStore.find(x => x.id == nextFixture?.homeClubId);
+        nextFixtureAwayTeam = $clubStore.find(x => x.id == nextFixture?.awayClubId);
+        
+        nextFixtureDate = formatUnixDateToReadable(
+          nextFixture ? nextFixture.kickOff : 0n
+        );
+        nextFixtureDateSmall = formatUnixDateToSmallReadable(
+          nextFixture ? nextFixture.kickOff : 0n
+        );
+        nextFixtureTime = formatUnixTimeToTime(
+          nextFixture ? nextFixture.kickOff : 0n
+        );
 
-      if ($teamStore.length == 0) return;
-      if ($fixtureStore.length == 0) return;
+        let countdownTime = getCountdownTime(
+          nextFixture ? nextFixture.kickOff : 0n
+        );
+        countdownDays = countdownTime.days.toString();
+        countdownHours = countdownTime.hours.toString();
+        countdownMinutes = countdownTime.minutes.toString();
 
+      }
+
+      /* //TODO
       weeklyLeader = await weeklyLeaderboardStore.getLeadingWeeklyTeam(
         $systemStore?.calculationSeasonId ?? 1,
         $systemStore?.calculationGameweek ?? 1
@@ -118,6 +121,7 @@
         $systemStore?.calculationSeasonId ?? 1,
         $systemStore?.calculationGameweek ?? 1
       );
+      */
       
     } catch (error) {
       console.error("Error loading section 2:", error);

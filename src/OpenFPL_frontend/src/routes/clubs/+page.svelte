@@ -28,7 +28,7 @@
         <p class="col-span-1 md:col-span-4 text-center w-full mb-4">
           Premier League Clubs
         </p>
-        {#each $teamStore.sort((a, b) => a.id - b.id) as team}
+        {#each $clubStore.sort((a, b) => a.id - b.id) as team}
           <div
             class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"
           >

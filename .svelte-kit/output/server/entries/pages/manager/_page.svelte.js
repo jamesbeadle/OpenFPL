@@ -1,7 +1,8 @@
-import { r } from "../../../chunks/index.js";
+import { q } from "../../../chunks/index.js";
 import "@dfinity/utils";
 import "dompurify";
+import "@dfinity/agent";
 import "@dfinity/auth-client";
 export {
-  r as default
+  q as default
 };

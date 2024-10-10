@@ -5,7 +5,11 @@ import type {
   PlayerPointsDTO,
   SystemStateDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-import type { GameweekFiltersDTO, GetPlayerDetailsDTO, PlayerDetailDTO } from "../../../../declarations/data_canister/data_canister.did";
+import type {
+  GameweekFiltersDTO,
+  GetPlayerDetailsDTO,
+  PlayerDetailDTO,
+} from "../../../../declarations/data_canister/data_canister.did";
 import { systemStore } from "$lib/stores/system-store";
 
 export class PlayerEventsService {
@@ -14,27 +18,29 @@ export class PlayerEventsService {
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory,
-      process.env.OPENFPL_BACKEND_CANISTER_ID
+      process.env.OPENFPL_BACKEND_CANISTER_ID,
     );
   }
 
   async getPlayerDetailsForGameweek(): Promise<PlayerPointsDTO[]> {
-
     let systemState: SystemStateDTO | null = null;
     systemStore.subscribe((value) => {
       systemState = value as SystemStateDTO;
     });
 
-    if(systemState == null){
-      throw new Error("Failed to fetch system state in player events service")
+    if (systemState == null) {
+      throw new Error("Failed to fetch system state in player events service");
     }
 
     let dto: GameweekFiltersDTO = {
       seasonId: (systemState as SystemStateDTO).pickTeamSeasonId,
-      gameweek: (systemState as SystemStateDTO).pickTeamGameweek
+      gameweek: (systemState as SystemStateDTO).pickTeamGameweek,
     };
     const result = await this.actor.getPlayerDetailsForGameweek(dto);
-    if (isError(result)) throw new Error("Failed to fetch player details for gameweek in player events service");
+    if (isError(result))
+      throw new Error(
+        "Failed to fetch player details for gameweek in player events service",
+      );
     return result.ok;
   }
 
@@ -61,11 +67,14 @@ export class PlayerEventsService {
     }
   }
 
-  async getPlayerEvents(seasonId: number, gameweek: number): Promise<PlayerPointsDTO[]> {
+  async getPlayerEvents(
+    seasonId: number,
+    gameweek: number,
+  ): Promise<PlayerPointsDTO[]> {
     try {
       let dto: GameweekFiltersDTO = {
         seasonId,
-        gameweek
+        gameweek,
       };
       let result = await this.actor.getPlayerDetailsForGameweek(dto);
 

@@ -1,4 +1,4 @@
-import { writable } from 'svelte/store';
+import { writable } from "svelte/store";
 import type { SystemStateDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 function createSystemStore() {
