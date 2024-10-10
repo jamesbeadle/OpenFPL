@@ -36,7 +36,7 @@ function createUserStore() {
       console.log("Creating actor in update username line 37");
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
+        process.env.OPENWSL_BACKEND_CANISTER_ID ?? "",
       );
 
       let dto: UsernameFilterDTO = {
@@ -61,7 +61,7 @@ function createUserStore() {
       console.log("Creating actor in updateFavouriteteam line 62");
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
+        process.env.OPENWSL_BACKEND_CANISTER_ID ?? "",
       );
       let dto: UpdateFavouriteClubDTO = {
         favouriteClubId: favouriteTeamId,
@@ -97,7 +97,7 @@ function createUserStore() {
           console.log("Creating actor in updateProfilePicture line 98");
           const identityActor = await ActorFactory.createIdentityActor(
             authStore,
-            process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
+            process.env.OPENWSL_BACKEND_CANISTER_ID ?? "",
           );
 
           let dto: UpdateProfilePictureDTO = {
@@ -138,7 +138,7 @@ function createUserStore() {
     console.log("Creating actor in isUsernameAvailable line 139");
     const identityActor: any = await ActorFactory.createIdentityActor(
       authStore,
-      process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
+      process.env.OPENWSL_BACKEND_CANISTER_ID ?? "",
     );
     let dto: UsernameFilterDTO = {
       username: username,
@@ -151,7 +151,7 @@ function createUserStore() {
     console.log("Creating actor in cache profile line 152");
     const identityActor: any = await ActorFactory.createIdentityActor(
       authStore,
-      process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
+      process.env.OPENWSL_BACKEND_CANISTER_ID ?? "",
     );
     console.log("Actor getting profile line 157");
     let getProfileResponse = await identityActor.getProfile();

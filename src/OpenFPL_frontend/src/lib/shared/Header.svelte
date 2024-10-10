@@ -8,7 +8,7 @@
   import { goto } from "$app/navigation";
   import { authSignedInStore } from "$lib/derived/auth.derived";
   import { userGetProfilePicture } from "$lib/derived/user.derived";
-    import { storeManager } from "$lib/managers/store-manager";
+  import { storeManager } from "$lib/managers/store-manager";
 
   let menuOpen = false;
   let showProfileDropdown = false;

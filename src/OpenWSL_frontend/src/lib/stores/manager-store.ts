@@ -26,7 +26,7 @@ function createManagerStore() {
   console.log("Creating actor in manager store line 26");
   let actor: any = ActorFactory.createActor(
     idlFactory,
-    process.env.OPENFPL_BACKEND_CANISTER_ID,
+    process.env.OPENWSL_BACKEND_CANISTER_ID,
   );
 
   let newManager = {
@@ -133,7 +133,7 @@ function createManagerStore() {
       console.log("Creating actor in get current team line 133");
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
+        process.env.OPENWSL_BACKEND_CANISTER_ID ?? "",
       );
       console.log("actor getting current team line 138");
       const result = await identityActor.getCurrentTeam();
@@ -171,7 +171,7 @@ function createManagerStore() {
       console.log("Creating actor in save fantasy team line 171");
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
+        process.env.OPENFPL_BACKEND_OPENWSL_BACKEND_CANISTER_IDCANISTER_ID ?? "",
       );
 
       let dto: UpdateTeamSelectionDTO = {

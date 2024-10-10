@@ -3444,7 +3444,7 @@ const options = {
   root: Root,
   service_worker: false,
   templates: {
-    app: ({ head, body: body2, assets: assets2, nonce, env }) => '<!doctype html>\n<html lang="en">\n  <head>\n    <meta charset="utf-8" />\n    <meta content="width=device-width, initial-scale=1" name="viewport" />\n\n    <title>OpenFPL</title>\n    <link href="https://openfpl.xyz" rel="canonical" />\n    <meta\n      content="OpenFPL is a decentralised fantasy football game on the Internet Computer blockchain."\n      name="description"\n    />\n    <meta content="OpenFPL" property="og:title" />\n    <meta\n      content="OpenFPL is a decentralised fantasy football game on the Internet Computer blockchain."\n      property="og:description"\n    />\n    <meta content="website" property="og:type" />\n    <meta content="https://openfpl.xyz" property="og:url" />\n    <meta content="https://openfpl.xyz/meta-share.jpg" property="og:image" />\n    <meta content="summary_large_image" name="twitter:card" />\n    <meta content="OpenFPL" name="twitter:title" />\n    <meta\n      content="OpenFPL is a decentralised fantasy football platform on the Internet Computer blockchain."\n      name="twitter:description"\n    />\n    <meta content="https://openfpl.xyz/meta-share.jpg" name="twitter:image" />\n    <meta content="@beadle1989" name="twitter:creator" />\n\n    <link crossorigin="anonymous" href="/manifest.webmanifest" rel="manifest" />\n\n    <link rel="preload" href="/adopt_filled.png" as="image" />\n    <link rel="preload" href="/adopt.png" as="image" />\n    <link rel="preload" href="/background.jpg" as="image" />\n    <link rel="preload" href="/board.png" as="image" />\n    <link rel="preload" href="/brace-bonus.png" as="image" />\n    <link rel="preload" href="/ckBTCCoin.png" as="image" />\n    <link rel="preload" href="/ckETHCoin.png" as="image" />\n    <link rel="preload" href="/countrymen.png" as="image" />\n    <link rel="preload" href="/discord.png" as="image" />\n    <link rel="preload" href="/FPLCoin.png" as="image" />\n    <link rel="preload" href="/github.png" as="image" />\n    <link rel="preload" href="/hat-trick-hero.png" as="image" />\n    <link rel="preload" href="/ICPCoin.png" as="image" />\n    <link rel="preload" href="/no-entry.png" as="image" />\n    <link rel="preload" href="/openchat.png" as="image" />\n    <link rel="preload" href="/pass-master.png" as="image" />\n    <link rel="preload" href="/pitch.png" as="image" />\n    <link rel="preload" href="/profile_placeholder.png" as="image" />\n    <link rel="preload" href="/prospects.png" as="image" />\n    <link rel="preload" href="/reject.png" as="image" />\n    <link rel="preload" href="/reject_filled.png" as="image" />\n    <link rel="preload" href="/safe-hands.png" as="image" />\n    <link rel="preload" href="/team-boost.png" as="image" />\n    <link rel="preload" href="/twitter.png" as="image" />\n\n    <!-- Favicon -->\n    <link\n      rel="icon"\n      type="image/png"\n      sizes="32x32"\n      href="' + assets2 + '/favicons/favicon-32x32.png"\n    />\n    <link\n      rel="icon"\n      type="image/png"\n      sizes="16x16"\n      href="' + assets2 + '/favicons/favicon-16x16.png"\n    />\n    <link rel="shortcut icon" href="' + assets2 + '/favicons/favicon.ico" />\n\n    <!-- iOS meta tags & icons -->\n    <meta name="apple-mobile-web-app-capable" content="yes" />\n    <meta name="apple-mobile-web-app-status-bar-style" content="#2CE3A6" />\n    <meta name="apple-mobile-web-app-title" content="OpenFPL" />\n    <link\n      rel="apple-touch-icon"\n      href="' + assets2 + '/favicons/apple-touch-icon.png"\n    />\n    <link\n      rel="mask-icon"\n      href="' + assets2 + '/favicons/safari-pinned-tab.svg"\n      color="#2CE3A6"\n    />\n\n    <!-- MS -->\n    <meta name="msapplication-TileColor" content="#2CE3A6" />\n    <meta\n      name="msapplication-config"\n      content="' + assets2 + '/favicons/browserconfig.xml"\n    />\n\n    <meta content="#2CE3A6" name="theme-color" />\n    ' + head + '\n\n    <style>\n      html,\n      body {\n        height: 100%;\n        margin: 0;\n      }\n\n      @font-face {\n        font-display: swap;\n        font-family: "Poppins";\n        font-style: normal;\n        font-weight: 400;\n        src: url("' + assets2 + '/poppins-regular-webfont.woff2")\n          format("woff2");\n      }\n\n      @font-face {\n        font-display: swap;\n        font-family: "Manrope";\n        font-style: normal;\n        font-weight: 400;\n        src: url("' + assets2 + '/Manrope-Regular.woff2") format("woff2");\n      }\n      body {\n        font-family: "Poppins", sans-serif !important;\n        color: white !important;\n        background-color: #1a1a1d;\n        height: 100vh;\n        margin: 0;\n        background-image: url("' + assets2 + '/background.jpg");\n        background-size: cover;\n        background-position: center;\n        background-repeat: no-repeat;\n        background-attachment: fixed;\n      }\n\n      #app-spinner {\n        --spinner-size: 30px;\n\n        width: var(--spinner-size);\n        height: var(--spinner-size);\n\n        animation: app-spinner-linear-rotate 2000ms linear infinite;\n\n        position: absolute;\n        top: calc(50% - (var(--spinner-size) / 2));\n        left: calc(50% - (var(--spinner-size) / 2));\n\n        --radius: 45px;\n        --circumference: calc(3.14159265359 * var(--radius) * 2);\n\n        --start: calc((1 - 0.05) * var(--circumference));\n        --end: calc((1 - 0.8) * var(--circumference));\n      }\n\n      #app-spinner circle {\n        stroke-dasharray: var(--circumference);\n        stroke-width: 10%;\n        transform-origin: 50% 50% 0;\n\n        transition-property: stroke;\n\n        animation-name: app-spinner-stroke-rotate-100;\n        animation-duration: 4000ms;\n        animation-timing-function: cubic-bezier(0.35, 0, 0.25, 1);\n        animation-iteration-count: infinite;\n\n        fill: transparent;\n        stroke: currentColor;\n\n        transition: stroke-dashoffset 225ms linear;\n      }\n\n      @keyframes app-spinner-linear-rotate {\n        0% {\n          transform: rotate(0deg);\n        }\n        100% {\n          transform: rotate(360deg);\n        }\n      }\n\n      @keyframes app-spinner-stroke-rotate-100 {\n        0% {\n          stroke-dashoffset: var(--start);\n          transform: rotate(0);\n        }\n        12.5% {\n          stroke-dashoffset: var(--end);\n          transform: rotate(0);\n        }\n        12.5001% {\n          stroke-dashoffset: var(--end);\n          transform: rotateX(180deg) rotate(72.5deg);\n        }\n        25% {\n          stroke-dashoffset: var(--start);\n          transform: rotateX(180deg) rotate(72.5deg);\n        }\n\n        25.0001% {\n          stroke-dashoffset: var(--start);\n          transform: rotate(270deg);\n        }\n        37.5% {\n          stroke-dashoffset: var(--end);\n          transform: rotate(270deg);\n        }\n        37.5001% {\n          stroke-dashoffset: var(--end);\n          transform: rotateX(180deg) rotate(161.5deg);\n        }\n        50% {\n          stroke-dashoffset: var(--start);\n          transform: rotateX(180deg) rotate(161.5deg);\n        }\n\n        50.0001% {\n          stroke-dashoffset: var(--start);\n          transform: rotate(180deg);\n        }\n        62.5% {\n          stroke-dashoffset: var(--end);\n          transform: rotate(180deg);\n        }\n        62.5001% {\n          stroke-dashoffset: var(--end);\n          transform: rotateX(180deg) rotate(251.5deg);\n        }\n        75% {\n          stroke-dashoffset: var(--start);\n          transform: rotateX(180deg) rotate(251.5deg);\n        }\n\n        75.0001% {\n          stroke-dashoffset: var(--start);\n          transform: rotate(90deg);\n        }\n        87.5% {\n          stroke-dashoffset: var(--end);\n          transform: rotate(90deg);\n        }\n        87.5001% {\n          stroke-dashoffset: var(--end);\n          transform: rotateX(180deg) rotate(341.5deg);\n        }\n        100% {\n          stroke-dashoffset: var(--start);\n          transform: rotateX(180deg) rotate(341.5deg);\n        }\n      }\n    </style>\n  </head>\n  <body data-sveltekit-preload-data="hover">\n    <div style="display: contents">' + body2 + '</div>\n\n    <svg\n      id="app-spinner"\n      preserveAspectRatio="xMidYMid meet"\n      focusable="false"\n      aria-hidden="true"\n      data-tid="spinner"\n      viewBox="0 0 100 100"\n    >\n      <circle cx="50%" cy="50%" r="45" />\n    </svg>\n  </body>\n</html>\n',
+    app: ({ head, body: body2, assets: assets2, nonce, env }) => '<!doctype html>\n<html lang="en">\n  <head>\n    <meta charset="utf-8" />\n    <meta content="width=device-width, initial-scale=1" name="viewport" />\n\n    <title>OpenWSL</title>\n    <link href="https://openwsl.xyz" rel="canonical" />\n    <meta\n      content="OpenWSL is a decentralised fantasy football game on the Internet Computer blockchain."\n      name="description"\n    />\n    <meta content="OpenWSL" property="og:title" />\n    <meta\n      content="OpenWSL is a decentralised fantasy football game on the Internet Computer blockchain."\n      property="og:description"\n    />\n    <meta content="website" property="og:type" />\n    <meta content="https://openwsl.xyz" property="og:url" />\n    <meta content="https://openwsl.xyz/meta-share.jpg" property="og:image" />\n    <meta content="summary_large_image" name="twitter:card" />\n    <meta content="OpenWSL" name="twitter:title" />\n    <meta\n      content="OpenWSL is a decentralised fantasy football platform on the Internet Computer blockchain."\n      name="twitter:description"\n    />\n    <meta content="https://openwsl.xyz/meta-share.jpg" name="twitter:image" />\n    <meta content="@beadle1989" name="twitter:creator" />\n\n    <link crossorigin="anonymous" href="/manifest.webmanifest" rel="manifest" />\n\n    <link rel="preload" href="/adopt_filled.png" as="image" />\n    <link rel="preload" href="/adopt.png" as="image" />\n    <link rel="preload" href="/background.jpg" as="image" />\n    <link rel="preload" href="/board.png" as="image" />\n    <link rel="preload" href="/brace-bonus.png" as="image" />\n    <link rel="preload" href="/ckBTCCoin.png" as="image" />\n    <link rel="preload" href="/ckETHCoin.png" as="image" />\n    <link rel="preload" href="/countrymen.png" as="image" />\n    <link rel="preload" href="/discord.png" as="image" />\n    <link rel="preload" href="/FPLCoin.png" as="image" />\n    <link rel="preload" href="/github.png" as="image" />\n    <link rel="preload" href="/hat-trick-hero.png" as="image" />\n    <link rel="preload" href="/ICPCoin.png" as="image" />\n    <link rel="preload" href="/no-entry.png" as="image" />\n    <link rel="preload" href="/openchat.png" as="image" />\n    <link rel="preload" href="/pass-master.png" as="image" />\n    <link rel="preload" href="/pitch.png" as="image" />\n    <link rel="preload" href="/profile_placeholder.png" as="image" />\n    <link rel="preload" href="/prospects.png" as="image" />\n    <link rel="preload" href="/reject.png" as="image" />\n    <link rel="preload" href="/reject_filled.png" as="image" />\n    <link rel="preload" href="/safe-hands.png" as="image" />\n    <link rel="preload" href="/team-boost.png" as="image" />\n    <link rel="preload" href="/twitter.png" as="image" />\n\n    <!-- Favicon -->\n    <link\n      rel="icon"\n      type="image/png"\n      sizes="32x32"\n      href="' + assets2 + '/favicons/favicon-32x32.png"\n    />\n    <link\n      rel="icon"\n      type="image/png"\n      sizes="16x16"\n      href="' + assets2 + '/favicons/favicon-16x16.png"\n    />\n    <link rel="shortcut icon" href="' + assets2 + '/favicons/favicon.ico" />\n\n    <!-- iOS meta tags & icons -->\n    <meta name="apple-mobile-web-app-capable" content="yes" />\n    <meta name="apple-mobile-web-app-status-bar-style" content="#2CE3A6" />\n    <meta name="apple-mobile-web-app-title" content="OpenWSL" />\n    <link\n      rel="apple-touch-icon"\n      href="' + assets2 + '/favicons/apple-touch-icon.png"\n    />\n    <link\n      rel="mask-icon"\n      href="' + assets2 + '/favicons/safari-pinned-tab.svg"\n      color="#2CE3A6"\n    />\n\n    <!-- MS -->\n    <meta name="msapplication-TileColor" content="#2CE3A6" />\n    <meta\n      name="msapplication-config"\n      content="' + assets2 + '/favicons/browserconfig.xml"\n    />\n\n    <meta content="#2CE3A6" name="theme-color" />\n    ' + head + '\n\n    <style>\n      html,\n      body {\n        height: 100%;\n        margin: 0;\n      }\n\n      @font-face {\n        font-display: swap;\n        font-family: "Poppins";\n        font-style: normal;\n        font-weight: 400;\n        src: url("' + assets2 + '/poppins-regular-webfont.woff2")\n          format("woff2");\n      }\n\n      @font-face {\n        font-display: swap;\n        font-family: "Manrope";\n        font-style: normal;\n        font-weight: 400;\n        src: url("' + assets2 + '/Manrope-Regular.woff2") format("woff2");\n      }\n      body {\n        font-family: "Poppins", sans-serif !important;\n        color: white !important;\n        background-color: #1a1a1d;\n        height: 100vh;\n        margin: 0;\n        background-image: url("' + assets2 + '/background.jpg");\n        background-size: cover;\n        background-position: center;\n        background-repeat: no-repeat;\n        background-attachment: fixed;\n      }\n\n      #app-spinner {\n        --spinner-size: 30px;\n\n        width: var(--spinner-size);\n        height: var(--spinner-size);\n\n        animation: app-spinner-linear-rotate 2000ms linear infinite;\n\n        position: absolute;\n        top: calc(50% - (var(--spinner-size) / 2));\n        left: calc(50% - (var(--spinner-size) / 2));\n\n        --radius: 45px;\n        --circumference: calc(3.14159265359 * var(--radius) * 2);\n\n        --start: calc((1 - 0.05) * var(--circumference));\n        --end: calc((1 - 0.8) * var(--circumference));\n      }\n\n      #app-spinner circle {\n        stroke-dasharray: var(--circumference);\n        stroke-width: 10%;\n        transform-origin: 50% 50% 0;\n\n        transition-property: stroke;\n\n        animation-name: app-spinner-stroke-rotate-100;\n        animation-duration: 4000ms;\n        animation-timing-function: cubic-bezier(0.35, 0, 0.25, 1);\n        animation-iteration-count: infinite;\n\n        fill: transparent;\n        stroke: currentColor;\n\n        transition: stroke-dashoffset 225ms linear;\n      }\n\n      @keyframes app-spinner-linear-rotate {\n        0% {\n          transform: rotate(0deg);\n        }\n        100% {\n          transform: rotate(360deg);\n        }\n      }\n\n      @keyframes app-spinner-stroke-rotate-100 {\n        0% {\n          stroke-dashoffset: var(--start);\n          transform: rotate(0);\n        }\n        12.5% {\n          stroke-dashoffset: var(--end);\n          transform: rotate(0);\n        }\n        12.5001% {\n          stroke-dashoffset: var(--end);\n          transform: rotateX(180deg) rotate(72.5deg);\n        }\n        25% {\n          stroke-dashoffset: var(--start);\n          transform: rotateX(180deg) rotate(72.5deg);\n        }\n\n        25.0001% {\n          stroke-dashoffset: var(--start);\n          transform: rotate(270deg);\n        }\n        37.5% {\n          stroke-dashoffset: var(--end);\n          transform: rotate(270deg);\n        }\n        37.5001% {\n          stroke-dashoffset: var(--end);\n          transform: rotateX(180deg) rotate(161.5deg);\n        }\n        50% {\n          stroke-dashoffset: var(--start);\n          transform: rotateX(180deg) rotate(161.5deg);\n        }\n\n        50.0001% {\n          stroke-dashoffset: var(--start);\n          transform: rotate(180deg);\n        }\n        62.5% {\n          stroke-dashoffset: var(--end);\n          transform: rotate(180deg);\n        }\n        62.5001% {\n          stroke-dashoffset: var(--end);\n          transform: rotateX(180deg) rotate(251.5deg);\n        }\n        75% {\n          stroke-dashoffset: var(--start);\n          transform: rotateX(180deg) rotate(251.5deg);\n        }\n\n        75.0001% {\n          stroke-dashoffset: var(--start);\n          transform: rotate(90deg);\n        }\n        87.5% {\n          stroke-dashoffset: var(--end);\n          transform: rotate(90deg);\n        }\n        87.5001% {\n          stroke-dashoffset: var(--end);\n          transform: rotateX(180deg) rotate(341.5deg);\n        }\n        100% {\n          stroke-dashoffset: var(--start);\n          transform: rotateX(180deg) rotate(341.5deg);\n        }\n      }\n    </style>\n  </head>\n  <body data-sveltekit-preload-data="hover">\n    <div style="display: contents">' + body2 + '</div>\n\n    <svg\n      id="app-spinner"\n      preserveAspectRatio="xMidYMid meet"\n      focusable="false"\n      aria-hidden="true"\n      data-tid="spinner"\n      viewBox="0 0 100 100"\n    >\n      <circle cx="50%" cy="50%" r="45" />\n    </svg>\n  </body>\n</html>\n',
     error: ({ status, message }) => '<!doctype html>\n<html lang="en">\n	<head>\n		<meta charset="utf-8" />\n		<title>' + message + `</title>
 
 		<style>
@@ -3516,7 +3516,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1gdxdox"
+  version_hash: "2233ei"
 };
 async function get_hooks() {
   return {};
@@ -3666,8 +3666,8 @@ const popupCenter = ({
   }
 };
 let authClient;
-const NNS_IC_ORG_ALTERNATIVE_ORIGIN = "https://openfpl.xyz";
-const NNS_IC_APP_DERIVATION_ORIGIN = "https://5gbds-naaaa-aaaal-qmzqa-cai.icp0.io";
+const NNS_IC_ORG_ALTERNATIVE_ORIGIN = "https://openwsl.xyz";
+const NNS_IC_APP_DERIVATION_ORIGIN = "https://5ido2-wqaaa-aaaal-qmzra-cai.icp0.io";
 const isNnsAlternativeOrigin = () => {
   return window.location.origin === NNS_IC_ORG_ALTERNATIVE_ORIGIN;
 };
@@ -3731,6 +3731,828 @@ function createSystemStore() {
   };
 }
 const systemStore = createSystemStore();
+const idlFactory$1 = ({ IDL: IDL2 }) => {
+  const FixtureStatusType = IDL2.Variant({
+    "Unplayed": IDL2.Null,
+    "Finalised": IDL2.Null,
+    "Active": IDL2.Null,
+    "Complete": IDL2.Null
+  });
+  const SeasonId = IDL2.Nat16;
+  const ClubId = IDL2.Nat16;
+  const FixtureId = IDL2.Nat32;
+  const PlayerEventType = IDL2.Variant({
+    "PenaltyMissed": IDL2.Null,
+    "Goal": IDL2.Null,
+    "GoalConceded": IDL2.Null,
+    "Appearance": IDL2.Null,
+    "PenaltySaved": IDL2.Null,
+    "RedCard": IDL2.Null,
+    "KeeperSave": IDL2.Null,
+    "CleanSheet": IDL2.Null,
+    "YellowCard": IDL2.Null,
+    "GoalAssisted": IDL2.Null,
+    "OwnGoal": IDL2.Null,
+    "HighestScoringPlayer": IDL2.Null
+  });
+  const PlayerEventData = IDL2.Record({
+    "fixtureId": FixtureId,
+    "clubId": ClubId,
+    "playerId": IDL2.Nat16,
+    "eventStartMinute": IDL2.Nat8,
+    "eventEndMinute": IDL2.Nat8,
+    "eventType": PlayerEventType
+  });
+  const GameweekNumber = IDL2.Nat8;
+  const FixtureDTO = IDL2.Record({
+    "id": IDL2.Nat32,
+    "status": FixtureStatusType,
+    "highestScoringPlayerId": IDL2.Nat16,
+    "seasonId": SeasonId,
+    "awayClubId": ClubId,
+    "events": IDL2.Vec(PlayerEventData),
+    "homeClubId": ClubId,
+    "kickOff": IDL2.Int,
+    "homeGoals": IDL2.Nat8,
+    "gameweek": GameweekNumber,
+    "awayGoals": IDL2.Nat8
+  });
+  const AddInitialFixturesDTO = IDL2.Record({
+    "seasonFixtures": IDL2.Vec(FixtureDTO)
+  });
+  const CountryId = IDL2.Nat16;
+  const Gender = IDL2.Variant({ "Male": IDL2.Null, "Female": IDL2.Null });
+  const PlayerPosition = IDL2.Variant({
+    "Goalkeeper": IDL2.Null,
+    "Midfielder": IDL2.Null,
+    "Forward": IDL2.Null,
+    "Defender": IDL2.Null
+  });
+  const CreatePlayerDTO = IDL2.Record({
+    "clubId": ClubId,
+    "valueQuarterMillions": IDL2.Nat16,
+    "dateOfBirth": IDL2.Int,
+    "nationality": CountryId,
+    "gender": Gender,
+    "shirtNumber": IDL2.Nat8,
+    "position": PlayerPosition,
+    "lastName": IDL2.Text,
+    "firstName": IDL2.Text
+  });
+  const PlayerId = IDL2.Nat16;
+  const FootballLeagueId = IDL2.Nat16;
+  const LoanPlayerDTO = IDL2.Record({
+    "loanEndDate": IDL2.Int,
+    "playerId": PlayerId,
+    "seasonId": SeasonId,
+    "loanClubId": ClubId,
+    "gameweek": GameweekNumber,
+    "loanLeagueId": FootballLeagueId
+  });
+  const MoveFixtureDTO = IDL2.Record({
+    "fixtureId": FixtureId,
+    "updatedFixtureGameweek": GameweekNumber,
+    "updatedFixtureDate": IDL2.Int
+  });
+  const PostponeFixtureDTO = IDL2.Record({ "fixtureId": FixtureId });
+  const ShirtType = IDL2.Variant({ "Filled": IDL2.Null, "Striped": IDL2.Null });
+  const PromoteNewClubDTO = IDL2.Record({
+    "secondaryColourHex": IDL2.Text,
+    "name": IDL2.Text,
+    "friendlyName": IDL2.Text,
+    "thirdColourHex": IDL2.Text,
+    "abbreviatedName": IDL2.Text,
+    "shirtType": ShirtType,
+    "primaryColourHex": IDL2.Text
+  });
+  const RecallPlayerDTO = IDL2.Record({ "playerId": PlayerId });
+  const RescheduleFixtureDTO = IDL2.Record({
+    "postponedFixtureId": FixtureId,
+    "updatedFixtureGameweek": GameweekNumber,
+    "updatedFixtureDate": IDL2.Int
+  });
+  const RetirePlayerDTO = IDL2.Record({
+    "playerId": PlayerId,
+    "retirementDate": IDL2.Int
+  });
+  const RevaluePlayerDownDTO = IDL2.Record({
+    "playerId": PlayerId,
+    "seasonId": SeasonId,
+    "gameweek": GameweekNumber
+  });
+  const RevaluePlayerUpDTO = IDL2.Record({
+    "playerId": PlayerId,
+    "seasonId": SeasonId,
+    "gameweek": GameweekNumber
+  });
+  const SetPlayerInjuryDTO = IDL2.Record({
+    "playerId": PlayerId,
+    "description": IDL2.Text,
+    "expectedEndDate": IDL2.Int
+  });
+  const CalendarMonth = IDL2.Nat8;
+  const SubmitFixtureDataDTO = IDL2.Record({
+    "fixtureId": FixtureId,
+    "month": CalendarMonth,
+    "gameweek": GameweekNumber,
+    "playerEventData": IDL2.Vec(PlayerEventData)
+  });
+  const TransferPlayerDTO = IDL2.Record({
+    "clubId": ClubId,
+    "newLeagueId": FootballLeagueId,
+    "playerId": PlayerId,
+    "newShirtNumber": IDL2.Nat8,
+    "seasonId": SeasonId,
+    "newClubId": ClubId,
+    "gameweek": GameweekNumber
+  });
+  const UnretirePlayerDTO = IDL2.Record({ "playerId": PlayerId });
+  const UpdateClubDTO = IDL2.Record({
+    "clubId": ClubId,
+    "secondaryColourHex": IDL2.Text,
+    "name": IDL2.Text,
+    "friendlyName": IDL2.Text,
+    "thirdColourHex": IDL2.Text,
+    "abbreviatedName": IDL2.Text,
+    "shirtType": ShirtType,
+    "primaryColourHex": IDL2.Text
+  });
+  const UpdatePlayerDTO = IDL2.Record({
+    "dateOfBirth": IDL2.Int,
+    "playerId": PlayerId,
+    "nationality": CountryId,
+    "shirtNumber": IDL2.Nat8,
+    "position": PlayerPosition,
+    "lastName": IDL2.Text,
+    "firstName": IDL2.Text
+  });
+  const Error2 = IDL2.Variant({
+    "MoreThan2PlayersFromClub": IDL2.Null,
+    "DecodeError": IDL2.Null,
+    "NotAllowed": IDL2.Null,
+    "DuplicatePlayerInTeam": IDL2.Null,
+    "InvalidBonuses": IDL2.Null,
+    "TooManyTransfers": IDL2.Null,
+    "NotFound": IDL2.Null,
+    "NumberPerPositionError": IDL2.Null,
+    "TeamOverspend": IDL2.Null,
+    "NotAuthorized": IDL2.Null,
+    "SelectedCaptainNotInTeam": IDL2.Null,
+    "InvalidData": IDL2.Null,
+    "SystemOnHold": IDL2.Null,
+    "AlreadyExists": IDL2.Null,
+    "CanisterCreateError": IDL2.Null,
+    "Not11Players": IDL2.Null
+  });
+  const Result_4 = IDL2.Variant({ "ok": IDL2.Nat, "err": Error2 });
+  const CanisterType = IDL2.Variant({
+    "SNS": IDL2.Null,
+    "MonthlyLeaderboard": IDL2.Null,
+    "Dapp": IDL2.Null,
+    "Archive": IDL2.Null,
+    "SeasonLeaderboard": IDL2.Null,
+    "WeeklyLeaderboard": IDL2.Null,
+    "Manager": IDL2.Null
+  });
+  const CanisterId = IDL2.Text;
+  const CanisterDTO = IDL2.Record({
+    "lastTopup": IDL2.Int,
+    "cycles": IDL2.Nat,
+    "canister_type": CanisterType,
+    "canisterId": CanisterId
+  });
+  const GetCanistersDTO = IDL2.Record({
+    "totalEntries": IDL2.Nat,
+    "offset": IDL2.Nat,
+    "limit": IDL2.Nat,
+    "entries": IDL2.Vec(CanisterDTO),
+    "canisterTypeFilter": CanisterType
+  });
+  const Result_25 = IDL2.Variant({ "ok": GetCanistersDTO, "err": Error2 });
+  const ClubDTO = IDL2.Record({
+    "id": ClubId,
+    "secondaryColourHex": IDL2.Text,
+    "name": IDL2.Text,
+    "friendlyName": IDL2.Text,
+    "thirdColourHex": IDL2.Text,
+    "abbreviatedName": IDL2.Text,
+    "shirtType": ShirtType,
+    "primaryColourHex": IDL2.Text
+  });
+  const Result_24 = IDL2.Variant({ "ok": IDL2.Vec(ClubDTO), "err": Error2 });
+  const CountryDTO = IDL2.Record({
+    "id": CountryId,
+    "code": IDL2.Text,
+    "name": IDL2.Text
+  });
+  const Result_23 = IDL2.Variant({ "ok": IDL2.Vec(CountryDTO), "err": Error2 });
+  const PickTeamDTO = IDL2.Record({
+    "playerIds": IDL2.Vec(PlayerId),
+    "countrymenCountryId": CountryId,
+    "username": IDL2.Text,
+    "goalGetterPlayerId": PlayerId,
+    "hatTrickHeroGameweek": GameweekNumber,
+    "transfersAvailable": IDL2.Nat8,
+    "teamBoostGameweek": GameweekNumber,
+    "captainFantasticGameweek": GameweekNumber,
+    "countrymenGameweek": GameweekNumber,
+    "bankQuarterMillions": IDL2.Nat16,
+    "noEntryPlayerId": PlayerId,
+    "safeHandsPlayerId": PlayerId,
+    "braceBonusGameweek": GameweekNumber,
+    "passMasterGameweek": GameweekNumber,
+    "teamBoostClubId": ClubId,
+    "goalGetterGameweek": GameweekNumber,
+    "captainFantasticPlayerId": PlayerId,
+    "transferWindowGameweek": GameweekNumber,
+    "noEntryGameweek": GameweekNumber,
+    "prospectsGameweek": GameweekNumber,
+    "safeHandsGameweek": GameweekNumber,
+    "principalId": IDL2.Text,
+    "passMasterPlayerId": PlayerId,
+    "captainId": PlayerId,
+    "canisterId": CanisterId,
+    "monthlyBonusesAvailable": IDL2.Nat8
+  });
+  const Result_22 = IDL2.Variant({ "ok": PickTeamDTO, "err": Error2 });
+  const DataHashDTO = IDL2.Record({ "hash": IDL2.Text, "category": IDL2.Text });
+  const Result_21 = IDL2.Variant({ "ok": IDL2.Vec(DataHashDTO), "err": Error2 });
+  const PrincipalId = IDL2.Text;
+  const GetFantasyTeamSnapshotDTO = IDL2.Record({
+    "seasonId": SeasonId,
+    "managerPrincipalId": PrincipalId,
+    "gameweek": GameweekNumber
+  });
+  const FantasyTeamSnapshotDTO = IDL2.Record({
+    "playerIds": IDL2.Vec(PlayerId),
+    "month": CalendarMonth,
+    "teamValueQuarterMillions": IDL2.Nat16,
+    "countrymenCountryId": CountryId,
+    "username": IDL2.Text,
+    "goalGetterPlayerId": PlayerId,
+    "hatTrickHeroGameweek": GameweekNumber,
+    "transfersAvailable": IDL2.Nat8,
+    "teamBoostGameweek": GameweekNumber,
+    "captainFantasticGameweek": GameweekNumber,
+    "countrymenGameweek": GameweekNumber,
+    "bankQuarterMillions": IDL2.Nat16,
+    "noEntryPlayerId": PlayerId,
+    "monthlyPoints": IDL2.Int16,
+    "safeHandsPlayerId": PlayerId,
+    "seasonId": SeasonId,
+    "braceBonusGameweek": GameweekNumber,
+    "favouriteClubId": ClubId,
+    "passMasterGameweek": GameweekNumber,
+    "teamBoostClubId": ClubId,
+    "goalGetterGameweek": GameweekNumber,
+    "captainFantasticPlayerId": PlayerId,
+    "gameweek": GameweekNumber,
+    "seasonPoints": IDL2.Int16,
+    "transferWindowGameweek": GameweekNumber,
+    "noEntryGameweek": GameweekNumber,
+    "prospectsGameweek": GameweekNumber,
+    "safeHandsGameweek": GameweekNumber,
+    "principalId": IDL2.Text,
+    "passMasterPlayerId": PlayerId,
+    "captainId": PlayerId,
+    "points": IDL2.Int16,
+    "monthlyBonusesAvailable": IDL2.Nat8
+  });
+  const Result_20 = IDL2.Variant({
+    "ok": FantasyTeamSnapshotDTO,
+    "err": Error2
+  });
+  const RequestFixturesDTO = IDL2.Record({ "seasonId": SeasonId });
+  const Result_13 = IDL2.Variant({ "ok": IDL2.Vec(FixtureDTO), "err": Error2 });
+  const CanisterInfoDTO = IDL2.Record({
+    "cycles": IDL2.Nat,
+    "canisterId": CanisterId
+  });
+  const LeaderboardCanistersDTO = IDL2.Record({
+    "canisters": IDL2.Vec(CanisterInfoDTO)
+  });
+  const Result_19 = IDL2.Variant({
+    "ok": LeaderboardCanistersDTO,
+    "err": Error2
+  });
+  const ClubFilterDTO = IDL2.Record({
+    "clubId": ClubId,
+    "leagueId": FootballLeagueId
+  });
+  const PlayerStatus = IDL2.Variant({
+    "OnLoan": IDL2.Null,
+    "Active": IDL2.Null,
+    "FreeAgent": IDL2.Null,
+    "Retired": IDL2.Null
+  });
+  const PlayerDTO = IDL2.Record({
+    "id": IDL2.Nat16,
+    "status": PlayerStatus,
+    "clubId": ClubId,
+    "valueQuarterMillions": IDL2.Nat16,
+    "dateOfBirth": IDL2.Int,
+    "nationality": CountryId,
+    "shirtNumber": IDL2.Nat8,
+    "totalPoints": IDL2.Int16,
+    "position": PlayerPosition,
+    "lastName": IDL2.Text,
+    "firstName": IDL2.Text
+  });
+  const Result_8 = IDL2.Variant({ "ok": IDL2.Vec(PlayerDTO), "err": Error2 });
+  const RequestManagerDTO = IDL2.Record({
+    "month": CalendarMonth,
+    "clubId": ClubId,
+    "seasonId": SeasonId,
+    "managerId": IDL2.Text,
+    "gameweek": GameweekNumber
+  });
+  const FantasyTeamSnapshot = IDL2.Record({
+    "playerIds": IDL2.Vec(PlayerId),
+    "month": CalendarMonth,
+    "teamValueQuarterMillions": IDL2.Nat16,
+    "countrymenCountryId": CountryId,
+    "username": IDL2.Text,
+    "goalGetterPlayerId": PlayerId,
+    "hatTrickHeroGameweek": GameweekNumber,
+    "transfersAvailable": IDL2.Nat8,
+    "teamBoostGameweek": GameweekNumber,
+    "captainFantasticGameweek": GameweekNumber,
+    "countrymenGameweek": GameweekNumber,
+    "bankQuarterMillions": IDL2.Nat16,
+    "noEntryPlayerId": PlayerId,
+    "monthlyPoints": IDL2.Int16,
+    "safeHandsPlayerId": PlayerId,
+    "seasonId": SeasonId,
+    "braceBonusGameweek": GameweekNumber,
+    "favouriteClubId": IDL2.Opt(ClubId),
+    "passMasterGameweek": GameweekNumber,
+    "teamBoostClubId": ClubId,
+    "goalGetterGameweek": GameweekNumber,
+    "captainFantasticPlayerId": PlayerId,
+    "gameweek": GameweekNumber,
+    "seasonPoints": IDL2.Int16,
+    "transferWindowGameweek": GameweekNumber,
+    "noEntryGameweek": GameweekNumber,
+    "prospectsGameweek": GameweekNumber,
+    "safeHandsGameweek": GameweekNumber,
+    "principalId": IDL2.Text,
+    "passMasterPlayerId": PlayerId,
+    "captainId": PlayerId,
+    "points": IDL2.Int16,
+    "monthlyBonusesAvailable": IDL2.Nat8
+  });
+  const ManagerDTO = IDL2.Record({
+    "username": IDL2.Text,
+    "weeklyPosition": IDL2.Int,
+    "createDate": IDL2.Int,
+    "monthlyPoints": IDL2.Int16,
+    "weeklyPoints": IDL2.Int16,
+    "weeklyPositionText": IDL2.Text,
+    "gameweeks": IDL2.Vec(FantasyTeamSnapshot),
+    "favouriteClubId": IDL2.Opt(ClubId),
+    "monthlyPosition": IDL2.Int,
+    "seasonPosition": IDL2.Int,
+    "monthlyPositionText": IDL2.Text,
+    "profilePicture": IDL2.Opt(IDL2.Vec(IDL2.Nat8)),
+    "seasonPoints": IDL2.Int16,
+    "principalId": IDL2.Text,
+    "seasonPositionText": IDL2.Text
+  });
+  const Result_1 = IDL2.Variant({ "ok": ManagerDTO, "err": Error2 });
+  const ManagerCanistersDTO = IDL2.Record({
+    "canisters": IDL2.Vec(CanisterInfoDTO)
+  });
+  const Result_18 = IDL2.Variant({ "ok": ManagerCanistersDTO, "err": Error2 });
+  const GetMonthlyLeaderboardDTO = IDL2.Record({
+    "month": CalendarMonth,
+    "clubId": ClubId,
+    "offset": IDL2.Nat,
+    "seasonId": SeasonId,
+    "limit": IDL2.Nat,
+    "searchTerm": IDL2.Text
+  });
+  const LeaderboardEntry = IDL2.Record({
+    "username": IDL2.Text,
+    "positionText": IDL2.Text,
+    "position": IDL2.Nat,
+    "principalId": IDL2.Text,
+    "points": IDL2.Int16
+  });
+  const MonthlyLeaderboardDTO = IDL2.Record({
+    "month": IDL2.Nat8,
+    "clubId": ClubId,
+    "totalEntries": IDL2.Nat,
+    "seasonId": SeasonId,
+    "entries": IDL2.Vec(LeaderboardEntry)
+  });
+  const Result_17 = IDL2.Variant({
+    "ok": MonthlyLeaderboardDTO,
+    "err": Error2
+  });
+  const GetPlayerDetailsDTO = IDL2.Record({
+    "playerId": PlayerId,
+    "seasonId": SeasonId
+  });
+  const InjuryHistory = IDL2.Record({
+    "description": IDL2.Text,
+    "injuryStartDate": IDL2.Int,
+    "expectedEndDate": IDL2.Int
+  });
+  const PlayerGameweekDTO = IDL2.Record({
+    "fixtureId": FixtureId,
+    "events": IDL2.Vec(PlayerEventData),
+    "number": IDL2.Nat8,
+    "points": IDL2.Int16
+  });
+  const ValueHistory = IDL2.Record({
+    "oldValue": IDL2.Nat16,
+    "newValue": IDL2.Nat16,
+    "seasonId": IDL2.Nat16,
+    "gameweek": IDL2.Nat8
+  });
+  const PlayerDetailDTO = IDL2.Record({
+    "id": PlayerId,
+    "status": PlayerStatus,
+    "clubId": ClubId,
+    "parentClubId": ClubId,
+    "valueQuarterMillions": IDL2.Nat16,
+    "dateOfBirth": IDL2.Int,
+    "injuryHistory": IDL2.Vec(InjuryHistory),
+    "seasonId": SeasonId,
+    "gameweeks": IDL2.Vec(PlayerGameweekDTO),
+    "nationality": CountryId,
+    "retirementDate": IDL2.Int,
+    "valueHistory": IDL2.Vec(ValueHistory),
+    "latestInjuryEndDate": IDL2.Int,
+    "shirtNumber": IDL2.Nat8,
+    "position": PlayerPosition,
+    "lastName": IDL2.Text,
+    "firstName": IDL2.Text
+  });
+  const Result_16 = IDL2.Variant({ "ok": PlayerDetailDTO, "err": Error2 });
+  const GameweekFiltersDTO = IDL2.Record({
+    "seasonId": SeasonId,
+    "gameweek": GameweekNumber
+  });
+  const PlayerPointsDTO = IDL2.Record({
+    "id": IDL2.Nat16,
+    "clubId": ClubId,
+    "events": IDL2.Vec(PlayerEventData),
+    "position": PlayerPosition,
+    "gameweek": GameweekNumber,
+    "points": IDL2.Int16
+  });
+  const Result_15 = IDL2.Variant({
+    "ok": IDL2.Vec(PlayerPointsDTO),
+    "err": Error2
+  });
+  const PlayerScoreDTO = IDL2.Record({
+    "id": IDL2.Nat16,
+    "clubId": ClubId,
+    "assists": IDL2.Int16,
+    "dateOfBirth": IDL2.Int,
+    "nationality": CountryId,
+    "goalsScored": IDL2.Int16,
+    "saves": IDL2.Int16,
+    "goalsConceded": IDL2.Int16,
+    "events": IDL2.Vec(PlayerEventData),
+    "position": PlayerPosition,
+    "points": IDL2.Int16
+  });
+  const Result_14 = IDL2.Variant({
+    "ok": IDL2.Vec(IDL2.Tuple(IDL2.Nat16, PlayerScoreDTO)),
+    "err": Error2
+  });
+  const ProfileDTO = IDL2.Record({
+    "username": IDL2.Text,
+    "termsAccepted": IDL2.Bool,
+    "createDate": IDL2.Int,
+    "favouriteClubId": IDL2.Opt(ClubId),
+    "profilePicture": IDL2.Opt(IDL2.Vec(IDL2.Nat8)),
+    "profilePictureType": IDL2.Text,
+    "principalId": IDL2.Text
+  });
+  const Result_12 = IDL2.Variant({ "ok": ProfileDTO, "err": Error2 });
+  const RewardPool = IDL2.Record({
+    "monthlyLeaderboardPool": IDL2.Nat64,
+    "allTimeSeasonHighScorePool": IDL2.Nat64,
+    "mostValuableTeamPool": IDL2.Nat64,
+    "highestScoringMatchPlayerPool": IDL2.Nat64,
+    "seasonId": SeasonId,
+    "seasonLeaderboardPool": IDL2.Nat64,
+    "allTimeWeeklyHighScorePool": IDL2.Nat64,
+    "allTimeMonthlyHighScorePool": IDL2.Nat64,
+    "weeklyLeaderboardPool": IDL2.Nat64
+  });
+  const GetRewardPoolDTO = IDL2.Record({
+    "seasonId": SeasonId,
+    "rewardPool": RewardPool
+  });
+  const Result_11 = IDL2.Variant({ "ok": GetRewardPoolDTO, "err": Error2 });
+  const GetSeasonLeaderboardDTO = IDL2.Record({
+    "offset": IDL2.Nat,
+    "seasonId": SeasonId,
+    "limit": IDL2.Nat,
+    "searchTerm": IDL2.Text
+  });
+  const SeasonLeaderboardDTO = IDL2.Record({
+    "totalEntries": IDL2.Nat,
+    "seasonId": SeasonId,
+    "entries": IDL2.Vec(LeaderboardEntry)
+  });
+  const Result_10 = IDL2.Variant({ "ok": SeasonLeaderboardDTO, "err": Error2 });
+  const SeasonDTO = IDL2.Record({
+    "id": SeasonId,
+    "name": IDL2.Text,
+    "year": IDL2.Nat16
+  });
+  const Result_9 = IDL2.Variant({ "ok": IDL2.Vec(SeasonDTO), "err": Error2 });
+  const GetSnapshotPlayers = IDL2.Record({
+    "seasonId": SeasonId,
+    "gameweek": GameweekNumber,
+    "leagueId": FootballLeagueId
+  });
+  const StaticCanistersDTO = IDL2.Record({
+    "canisters": IDL2.Vec(CanisterInfoDTO)
+  });
+  const Result_7 = IDL2.Variant({ "ok": StaticCanistersDTO, "err": Error2 });
+  const SystemStateDTO = IDL2.Record({
+    "pickTeamSeasonId": SeasonId,
+    "calculationGameweek": GameweekNumber,
+    "transferWindowActive": IDL2.Bool,
+    "pickTeamGameweek": GameweekNumber,
+    "version": IDL2.Text,
+    "calculationMonth": CalendarMonth,
+    "calculationSeasonId": SeasonId,
+    "onHold": IDL2.Bool,
+    "seasonActive": IDL2.Bool
+  });
+  const Result_6 = IDL2.Variant({ "ok": SystemStateDTO, "err": Error2 });
+  const TopupDTO = IDL2.Record({
+    "topupAmount": IDL2.Nat,
+    "canisterId": IDL2.Text,
+    "toppedUpOn": IDL2.Int
+  });
+  const GetTopupsDTO = IDL2.Record({
+    "totalEntries": IDL2.Nat,
+    "offset": IDL2.Nat,
+    "limit": IDL2.Nat,
+    "entries": IDL2.Vec(TopupDTO)
+  });
+  const Result_5 = IDL2.Variant({ "ok": GetTopupsDTO, "err": Error2 });
+  const AccountIdentifier = IDL2.Vec(IDL2.Nat8);
+  const Result_3 = IDL2.Variant({ "ok": IDL2.Vec(CanisterId), "err": Error2 });
+  const GetWeeklyLeaderboardDTO = IDL2.Record({
+    "offset": IDL2.Nat,
+    "seasonId": SeasonId,
+    "limit": IDL2.Nat,
+    "searchTerm": IDL2.Text,
+    "gameweek": GameweekNumber
+  });
+  const WeeklyLeaderboardDTO = IDL2.Record({
+    "totalEntries": IDL2.Nat,
+    "seasonId": SeasonId,
+    "entries": IDL2.Vec(LeaderboardEntry),
+    "gameweek": GameweekNumber
+  });
+  const Result_2 = IDL2.Variant({ "ok": WeeklyLeaderboardDTO, "err": Error2 });
+  const UsernameFilterDTO = IDL2.Record({ "username": IDL2.Text });
+  const Result = IDL2.Variant({ "ok": IDL2.Null, "err": Error2 });
+  const UpdateTeamSelectionDTO = IDL2.Record({
+    "playerIds": IDL2.Vec(PlayerId),
+    "countrymenCountryId": CountryId,
+    "username": IDL2.Text,
+    "goalGetterPlayerId": PlayerId,
+    "hatTrickHeroGameweek": GameweekNumber,
+    "teamBoostGameweek": GameweekNumber,
+    "captainFantasticGameweek": GameweekNumber,
+    "countrymenGameweek": GameweekNumber,
+    "noEntryPlayerId": PlayerId,
+    "safeHandsPlayerId": PlayerId,
+    "braceBonusGameweek": GameweekNumber,
+    "passMasterGameweek": GameweekNumber,
+    "teamBoostClubId": ClubId,
+    "goalGetterGameweek": GameweekNumber,
+    "captainFantasticPlayerId": PlayerId,
+    "transferWindowGameweek": GameweekNumber,
+    "noEntryGameweek": GameweekNumber,
+    "prospectsGameweek": GameweekNumber,
+    "safeHandsGameweek": GameweekNumber,
+    "passMasterPlayerId": PlayerId,
+    "captainId": PlayerId
+  });
+  const UpdateFavouriteClubDTO = IDL2.Record({ "favouriteClubId": ClubId });
+  const UpdateProfilePictureDTO = IDL2.Record({
+    "profilePicture": IDL2.Vec(IDL2.Nat8),
+    "extension": IDL2.Text
+  });
+  const UpdateRewardPoolsDTO = IDL2.Record({
+    "monthlyLeaderboardPool": IDL2.Nat64,
+    "allTimeSeasonHighScorePool": IDL2.Nat64,
+    "mostValuableTeamPool": IDL2.Nat64,
+    "highestScoringMatchPlayerPool": IDL2.Nat64,
+    "seasonId": SeasonId,
+    "seasonLeaderboardPool": IDL2.Nat64,
+    "allTimeWeeklyHighScorePool": IDL2.Nat64,
+    "allTimeMonthlyHighScorePool": IDL2.Nat64,
+    "weeklyLeaderboardPool": IDL2.Nat64
+  });
+  const UpdateSystemStatusDTO = IDL2.Record({
+    "pickTeamSeasonId": SeasonId,
+    "calculationGameweek": GameweekNumber,
+    "transferWindowActive": IDL2.Bool,
+    "pickTeamMonth": CalendarMonth,
+    "pickTeamGameweek": GameweekNumber,
+    "version": IDL2.Text,
+    "calculationMonth": CalendarMonth,
+    "calculationSeasonId": SeasonId,
+    "onHold": IDL2.Bool,
+    "seasonActive": IDL2.Bool
+  });
+  const UpdateUsernameDTO = IDL2.Record({ "username": IDL2.Text });
+  const RustResult = IDL2.Variant({ "Ok": IDL2.Text, "Err": IDL2.Text });
+  return IDL2.Service({
+    "executeAddInitialFixtures": IDL2.Func([AddInitialFixturesDTO], [], []),
+    "executeCreatePlayer": IDL2.Func([CreatePlayerDTO], [], []),
+    "executeLoanPlayer": IDL2.Func([LoanPlayerDTO], [], []),
+    "executeMoveFixture": IDL2.Func([MoveFixtureDTO], [], []),
+    "executePostponeFixture": IDL2.Func([PostponeFixtureDTO], [], []),
+    "executePromoteNewClub": IDL2.Func([PromoteNewClubDTO], [], []),
+    "executeRecallPlayer": IDL2.Func([RecallPlayerDTO], [], []),
+    "executeRescheduleFixture": IDL2.Func([RescheduleFixtureDTO], [], []),
+    "executeRetirePlayer": IDL2.Func([RetirePlayerDTO], [], []),
+    "executeRevaluePlayerDown": IDL2.Func([RevaluePlayerDownDTO], [], []),
+    "executeRevaluePlayerUp": IDL2.Func([RevaluePlayerUpDTO], [], []),
+    "executeSetPlayerInjury": IDL2.Func([SetPlayerInjuryDTO], [], []),
+    "executeSubmitFixtureData": IDL2.Func([SubmitFixtureDataDTO], [], []),
+    "executeTransferPlayer": IDL2.Func([TransferPlayerDTO], [], []),
+    "executeUnretirePlayer": IDL2.Func([UnretirePlayerDTO], [], []),
+    "executeUpdateClub": IDL2.Func([UpdateClubDTO], [], []),
+    "executeUpdatePlayer": IDL2.Func([UpdatePlayerDTO], [], []),
+    "getBackendCanisterBalance": IDL2.Func([], [Result_4], []),
+    "getCanisterCyclesAvailable": IDL2.Func([], [IDL2.Nat], []),
+    "getCanisterCyclesBalance": IDL2.Func([], [Result_4], []),
+    "getCanisters": IDL2.Func([GetCanistersDTO], [Result_25], []),
+    "getClubs": IDL2.Func([], [Result_24], []),
+    "getCountries": IDL2.Func([], [Result_23], ["query"]),
+    "getCurrentTeam": IDL2.Func([], [Result_22], []),
+    "getDataHashes": IDL2.Func([], [Result_21], ["query"]),
+    "getFantasyTeamSnapshot": IDL2.Func(
+      [GetFantasyTeamSnapshotDTO],
+      [Result_20],
+      []
+    ),
+    "getFixtures": IDL2.Func([RequestFixturesDTO], [Result_13], []),
+    "getLeaderboardCanisters": IDL2.Func([], [Result_19], []),
+    "getLoanedPlayers": IDL2.Func([ClubFilterDTO], [Result_8], []),
+    "getManager": IDL2.Func([RequestManagerDTO], [Result_1], []),
+    "getManagerCanisters": IDL2.Func([], [Result_18], []),
+    "getMonthlyLeaderboard": IDL2.Func(
+      [GetMonthlyLeaderboardDTO],
+      [Result_17],
+      []
+    ),
+    "getPlayerDetails": IDL2.Func([GetPlayerDetailsDTO], [Result_16], []),
+    "getPlayerDetailsForGameweek": IDL2.Func(
+      [GameweekFiltersDTO],
+      [Result_15],
+      []
+    ),
+    "getPlayers": IDL2.Func([], [Result_8], []),
+    "getPlayersMap": IDL2.Func([GameweekFiltersDTO], [Result_14], []),
+    "getPostponedFixtures": IDL2.Func([], [Result_13], []),
+    "getProfile": IDL2.Func([], [Result_12], []),
+    "getRetiredPlayers": IDL2.Func([ClubFilterDTO], [Result_8], []),
+    "getRewardPool": IDL2.Func([GetRewardPoolDTO], [Result_11], []),
+    "getSeasonLeaderboard": IDL2.Func(
+      [GetSeasonLeaderboardDTO],
+      [Result_10],
+      []
+    ),
+    "getSeasons": IDL2.Func([], [Result_9], []),
+    "getSnapshotPlayers": IDL2.Func([GetSnapshotPlayers], [Result_8], []),
+    "getStaticCanisters": IDL2.Func([], [Result_7], []),
+    "getSystemState": IDL2.Func([], [Result_6], []),
+    "getTopups": IDL2.Func([GetTopupsDTO], [Result_5], []),
+    "getTotalManagers": IDL2.Func([], [Result_4], []),
+    "getTreasuryAccountPublic": IDL2.Func([], [AccountIdentifier], []),
+    "getUniqueManagerCanisterIds": IDL2.Func([], [Result_3], []),
+    "getWeeklyLeaderboard": IDL2.Func(
+      [GetWeeklyLeaderboardDTO],
+      [Result_2],
+      []
+    ),
+    "isUsernameValid": IDL2.Func([UsernameFilterDTO], [IDL2.Bool], ["query"]),
+    "recalculatePoints": IDL2.Func([GameweekNumber], [Result], []),
+    "saveFantasyTeam": IDL2.Func([UpdateTeamSelectionDTO], [Result], []),
+    "searchUsername": IDL2.Func([UsernameFilterDTO], [Result_1], []),
+    "setGameweekTimers": IDL2.Func([SeasonId, GameweekNumber], [], []),
+    "snapshotManagers": IDL2.Func([GameweekNumber], [Result], []),
+    "updateFavouriteClub": IDL2.Func([UpdateFavouriteClubDTO], [Result], []),
+    "updateProfilePicture": IDL2.Func([UpdateProfilePictureDTO], [Result], []),
+    "updateRewardPools": IDL2.Func([UpdateRewardPoolsDTO], [Result], []),
+    "updateSystemStatus": IDL2.Func([UpdateSystemStatusDTO], [Result], []),
+    "updateUsername": IDL2.Func([UpdateUsernameDTO], [Result], []),
+    "validateAddInitialFixtures": IDL2.Func(
+      [AddInitialFixturesDTO],
+      [RustResult],
+      ["query"]
+    ),
+    "validateCreatePlayer": IDL2.Func(
+      [CreatePlayerDTO],
+      [RustResult],
+      ["query"]
+    ),
+    "validateLoanPlayer": IDL2.Func([LoanPlayerDTO], [RustResult], ["query"]),
+    "validateMoveFixture": IDL2.Func([MoveFixtureDTO], [RustResult], ["query"]),
+    "validatePostponeFixture": IDL2.Func(
+      [PostponeFixtureDTO],
+      [RustResult],
+      ["query"]
+    ),
+    "validatePromoteNewClub": IDL2.Func(
+      [PromoteNewClubDTO],
+      [RustResult],
+      ["query"]
+    ),
+    "validateRecallPlayer": IDL2.Func(
+      [RecallPlayerDTO],
+      [RustResult],
+      ["query"]
+    ),
+    "validateRescheduleFixture": IDL2.Func(
+      [RescheduleFixtureDTO],
+      [RustResult],
+      ["query"]
+    ),
+    "validateRetirePlayer": IDL2.Func(
+      [RetirePlayerDTO],
+      [RustResult],
+      ["query"]
+    ),
+    "validateRevaluePlayerDown": IDL2.Func(
+      [RevaluePlayerDownDTO],
+      [RustResult],
+      ["query"]
+    ),
+    "validateRevaluePlayerUp": IDL2.Func(
+      [RevaluePlayerUpDTO],
+      [RustResult],
+      ["query"]
+    ),
+    "validateSetPlayerInjury": IDL2.Func(
+      [SetPlayerInjuryDTO],
+      [RustResult],
+      ["query"]
+    ),
+    "validateSubmitFixtureData": IDL2.Func(
+      [SubmitFixtureDataDTO],
+      [RustResult],
+      ["query"]
+    ),
+    "validateTransferPlayer": IDL2.Func(
+      [TransferPlayerDTO],
+      [RustResult],
+      ["query"]
+    ),
+    "validateUnretirePlayer": IDL2.Func(
+      [UnretirePlayerDTO],
+      [RustResult],
+      ["query"]
+    ),
+    "validateUpdateClub": IDL2.Func([UpdateClubDTO], [RustResult], ["query"]),
+    "validateUpdatePlayer": IDL2.Func(
+      [UpdatePlayerDTO],
+      [RustResult],
+      ["query"]
+    ),
+    "viewPayouts": IDL2.Func([GameweekNumber], [Result], [])
+  });
+};
+var define_process_env_default$k = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 22 };
+const canisterId$1 = define_process_env_default$k.CANISTER_ID_OPENWSL_BACKEND;
+const createActor$1 = (canisterId2, options2 = {}) => {
+  const agent = options2.agent || new HttpAgent({ ...options2.agentOptions });
+  if (options2.agent && options2.agentOptions) {
+    console.warn(
+      "Detected both agent and agentOptions passed to createActor. Ignoring agentOptions and proceeding with the provided agent."
+    );
+  }
+  {
+    agent.fetchRootKey().catch((err) => {
+      console.warn(
+        "Unable to fetch root key. Check to ensure that your local replica is running"
+      );
+      console.error(err);
+    });
+  }
+  return Actor.createActor(idlFactory$1, {
+    agent,
+    canisterId: canisterId2,
+    ...options2.actorOptions
+  });
+};
+canisterId$1 ? createActor$1(canisterId$1) : void 0;
 const idlFactory = ({ IDL: IDL2 }) => {
   const FixtureStatusType = IDL2.Variant({
     "Unplayed": IDL2.Null,
@@ -4529,7 +5351,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "viewPayouts": IDL2.Func([GameweekNumber], [Result], [])
   });
 };
-var define_process_env_default$j = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$j = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 22 };
 const canisterId = define_process_env_default$j.CANISTER_ID_OPENFPL_BACKEND;
 const createActor = (canisterId2, options2 = {}) => {
   const agent = options2.agent || new HttpAgent({ ...options2.agentOptions });
@@ -4553,7 +5375,7 @@ const createActor = (canisterId2, options2 = {}) => {
   });
 };
 canisterId ? createActor(canisterId) : void 0;
-var define_process_env_default$i = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$i = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 22 };
 class ActorFactory {
   static createActor(idlFactory2, canisterId2 = "", identity = null, options2 = null) {
     const hostOptions = {
@@ -5033,13 +5855,13 @@ function calculateBonusPoints(gameweekData, fantasyTeam, points) {
   }
   return bonusPoints;
 }
-var define_process_env_default$h = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$h = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 22 };
 class FixtureService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
-      idlFactory,
-      define_process_env_default$h.OPENFPL_BACKEND_CANISTER_ID
+      idlFactory$1,
+      define_process_env_default$h.OPENWSL_BACKEND_CANISTER_ID
     );
   }
   async getPostponedFixtures() {
@@ -5476,14 +6298,14 @@ const toastsError = ({
     level: "error"
   });
 };
-var define_process_env_default$g = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$g = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 22 };
 function createManagerStore() {
   const { subscribe: subscribe2, set } = writable(null);
   systemStore.subscribe((value) => {
   });
   console.log("Creating actor in manager store line 26");
   let actor = ActorFactory.createActor(
-    idlFactory,
+    idlFactory$1,
     define_process_env_default$g.OPENFPL_BACKEND_CANISTER_ID
   );
   let newManager = {
@@ -5723,6 +6545,276 @@ function createManagerStore() {
   };
 }
 createManagerStore();
+const OpenFPLIcon = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let { className = "" } = $$props;
+  if ($$props.className === void 0 && $$bindings.className && className !== void 0)
+    $$bindings.className(className);
+  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"${add_attribute("class", className, 0)} fill="currentColor" viewBox="0 0 219 297"><path d="M111.841 0.35467C110.455 0.112752 109.035 0.112564 107.648 0.351435C69.2925 6.95892 34.5675 22.8118 4.9608 45.2186C1.80522 47.6068 0.0151367 51.3653 0.0151367 55.3227V201.488C0.0151367 205.3 1.68822 208.92 4.59169 211.389L101.167 293.546C106.043 297.694 113.215 297.674 118.068 293.499L213.516 211.386C216.386 208.916 218.037 205.319 218.038 201.532L218.059 55.3581C218.06 51.3421 216.216 47.5364 212.989 45.1469C183.821 23.553 149.285 6.88999 111.841 0.35467ZM131.413 232.023C131.413 232.804 130.921 233.586 130.121 233.782L109.637 240.526C109.238 240.624 108.838 240.624 108.438 240.526L87.9544 233.782C87.1548 233.489 86.655 232.804 86.655 232.023V225.18C86.655 224.496 87.0548 223.812 87.6545 223.519L108.138 212.962C108.738 212.669 109.338 212.669 109.937 212.962L130.421 223.519C131.021 223.812 131.413 224.496 131.413 225.18V232.023ZM169.935 156.662C169.935 157.346 169.535 158.03 168.835 158.323L154.249 165.654C153.25 166.143 152.95 167.316 153.449 168.195L167.636 193.902C168.036 194.684 167.936 195.564 167.336 196.15L143.154 219.414C142.454 220.098 141.455 220.098 140.655 219.609L113.082 200.158C112.183 199.474 111.983 198.203 112.782 197.323L134.665 173.474C135.965 172.007 134.465 169.857 132.666 170.444L109.584 177.774C109.184 177.872 108.784 177.872 108.384 177.774L85.4093 170.444C83.5102 169.857 82.1108 172.105 83.4102 173.474L105.285 197.323C106.085 198.203 105.885 199.474 104.986 200.158L77.4128 219.609C76.6131 220.098 75.6135 220.098 74.9138 219.414L50.7396 196.053C50.1398 195.466 50.0399 194.586 50.4397 193.805L64.6259 168.098C65.1257 167.12 64.7259 166.045 63.8263 165.556L49.2402 158.226C48.6405 157.932 48.1407 157.248 48.1407 156.564V105.346C48.1407 103.88 49.84 102.902 51.1394 103.782L63.1266 111.699C63.6264 112.09 63.9262 112.579 63.9262 113.263L64.0262 126.459C64.0262 127.045 64.3261 127.632 64.8259 128.023L82.4106 140.045C83.7101 140.925 85.5093 139.947 85.4093 138.383L84.3098 115.12C84.3098 114.534 84.0099 113.947 83.5102 113.654L48.9403 90.4887C48.4406 90.0977 48.1407 89.5113 48.1407 88.9248V77.4887C48.1407 77.0977 48.2406 76.609 48.5405 76.3158L61.0275 60.8722C61.5273 60.188 62.4269 59.9925 63.2265 60.2857L108.284 76.609C108.684 76.8045 109.184 76.8045 109.584 76.609L154.649 60.2857C155.449 59.9925 156.341 60.2857 156.84 60.8722L169.335 76.3158C169.635 76.609 169.735 77.0977 169.735 77.4887V88.9248C169.735 89.5113 169.435 90.0977 168.935 90.4887L135.78 112.706C134.843 113.334 133.766 114.09 133.766 115.218L132.666 138.481C132.566 140.045 134.365 141.023 135.665 140.143L153.25 128.12C153.749 127.729 154.049 127.241 154.049 126.556L154.149 113.361C154.149 112.774 154.449 112.188 154.949 111.797L166.936 103.88C168.235 103 169.935 103.88 169.935 105.444V156.662Z" fill="#FFFFFF"></path></svg>`;
+});
+const WalletIcon = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let { className = "" } = $$props;
+  if ($$props.className === void 0 && $$bindings.className && className !== void 0)
+    $$bindings.className(className);
+  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true"${add_attribute("class", className, 0)} fill="currentColor" viewBox="0 0 24 24"><path d="M12.136.326A1.5 1.5 0 0 1 14 1.78V3h.5A1.5 1.5 0 0 1 16 4.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 13.5v-9a1.5 1.5 0 0 1 1.432-1.499L12.136.326zM5.562 3H13V1.78a.5.5 0 0 0-.621-.484L5.562 3zM1.5 4a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-13z"></path><path d="M15.5,6.5v3a1,1,0,0,1-1,1h-3.5v-5H14.5A1,1,0,0,1,15.5,6.5Z"></path><path d="M12,8a.5,.5 0,1,1,.001,0Z"></path></svg>`;
+});
+const authSignedInStore = derived(
+  authStore,
+  ({ identity }) => identity !== null && identity !== void 0
+);
+var define_process_env_default$f = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 22 };
+function createUserStore() {
+  const { subscribe: subscribe2, set } = writable(null);
+  async function sync() {
+    let localStorageString = localStorage.getItem("user_profile_data");
+    if (localStorageString) {
+      const localProfile = JSON.parse(localStorageString);
+      set(localProfile);
+      return;
+    }
+    try {
+      await cacheProfile();
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+      throw error;
+    }
+  }
+  async function updateUsername(username) {
+    try {
+      console.log("Creating actor in update username line 37");
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        define_process_env_default$f.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
+      let dto = {
+        username
+      };
+      console.log("Actor updating username line 45");
+      const result = await identityActor.updateUsername(dto);
+      if (isError(result)) {
+        console.error("Error updating username");
+        return;
+      }
+      await cacheProfile();
+      return result;
+    } catch (error) {
+      console.error("Error updating username:", error);
+      throw error;
+    }
+  }
+  async function updateFavouriteTeam(favouriteTeamId) {
+    try {
+      console.log("Creating actor in updateFavouriteteam line 62");
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        define_process_env_default$f.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
+      let dto = {
+        favouriteClubId: favouriteTeamId
+      };
+      console.log("Actor updating favourite club line 70");
+      const result = await identityActor.updateFavouriteClub(dto);
+      if (isError(result)) {
+        console.error("Error updating favourite team");
+        return;
+      }
+      await cacheProfile();
+      return result;
+    } catch (error) {
+      console.error("Error updating favourite team:", error);
+      throw error;
+    }
+  }
+  async function updateProfilePicture(picture) {
+    try {
+      const maxPictureSize = 1e3;
+      const extension = getFileExtensionFromFile(picture);
+      if (picture.size > maxPictureSize * 1024) {
+        return null;
+      }
+      const reader = new FileReader();
+      reader.readAsArrayBuffer(picture);
+      reader.onloadend = async () => {
+        const arrayBuffer = reader.result;
+        const uint8Array = new Uint8Array(arrayBuffer);
+        try {
+          console.log("Creating actor in updateProfilePicture line 98");
+          const identityActor = await ActorFactory.createIdentityActor(
+            authStore,
+            define_process_env_default$f.OPENFPL_BACKEND_CANISTER_ID ?? ""
+          );
+          let dto = {
+            profilePicture: uint8Array,
+            extension
+          };
+          console.log("Actor updating profile picture line 108");
+          const result = await identityActor.updateProfilePicture(dto);
+          if (isError(result)) {
+            console.error("Error updating profile picture");
+            return;
+          }
+          await cacheProfile();
+          return result;
+        } catch (error) {
+          console.error(error);
+        }
+      };
+    } catch (error) {
+      console.error("Error updating username:", error);
+      throw error;
+    }
+  }
+  function getFileExtensionFromFile(file) {
+    const filename = file.name;
+    const lastIndex = filename.lastIndexOf(".");
+    return lastIndex !== -1 ? filename.substring(lastIndex + 1) : "";
+  }
+  async function isUsernameAvailable(username) {
+    console.log("Creating actor in isUsernameAvailable line 139");
+    const identityActor = await ActorFactory.createIdentityActor(
+      authStore,
+      define_process_env_default$f.OPENFPL_BACKEND_CANISTER_ID
+    );
+    let dto = {
+      username
+    };
+    console.log("actor checking isUsernameValid line 146");
+    return await identityActor.isUsernameValid(dto);
+  }
+  async function cacheProfile() {
+    console.log("Creating actor in cache profile line 152");
+    const identityActor = await ActorFactory.createIdentityActor(
+      authStore,
+      define_process_env_default$f.OPENFPL_BACKEND_CANISTER_ID
+    );
+    console.log("Actor getting profile line 157");
+    let getProfileResponse = await identityActor.getProfile();
+    let error = isError(getProfileResponse);
+    if (error) {
+      console.error("Error fetching user profile");
+      return;
+    }
+    let profileData = getProfileResponse.ok;
+    set(profileData);
+  }
+  async function withdrawFPL(withdrawalAddress, withdrawalAmount) {
+    try {
+      let identity;
+      authStore.subscribe(async (auth) => {
+        identity = auth.identity;
+      });
+      if (!identity) {
+        return;
+      }
+      let principalId = identity.getPrincipal();
+      const agent = await createAgent({
+        identity,
+        host: "http://localhost:8080/?canisterId=qhbym-qaaaa-aaaaa-aaafq-cai",
+        fetchRootKey: define_process_env_default$f.DFX_NETWORK === "local"
+      });
+      const { transfer } = IcrcLedgerCanister.create({
+        agent,
+        canisterId: define_process_env_default$f.DFX_NETWORK === "ic" ? Principal.fromText("ddsp7-7iaaa-aaaaq-aacqq-cai") : Principal.fromText("avqkn-guaaa-aaaaa-qaaea-cai")
+      });
+      if (principalId) {
+        try {
+          let transfer_result = await transfer({
+            to: {
+              owner: Principal.fromText(withdrawalAddress),
+              subaccount: []
+            },
+            fee: 100000n,
+            memo: new Uint8Array(Text.encodeValue("0")),
+            from_subaccount: void 0,
+            created_at_time: BigInt(Date.now()) * BigInt(1e6),
+            amount: withdrawalAmount - 100000n
+          });
+        } catch (err) {
+          console.error(err.errorType);
+        }
+      }
+    } catch (error) {
+      console.error("Error withdrawing FPL.", error);
+      throw error;
+    }
+  }
+  async function getFPLBalance() {
+    let identity;
+    authStore.subscribe(async (auth) => {
+      identity = auth.identity;
+    });
+    if (!identity) {
+      return 0n;
+    }
+    let principalId = identity.getPrincipal();
+    const agent = await createAgent({
+      identity,
+      host: "http://localhost:8080/?canisterId=qhbym-qaaaa-aaaaa-aaafq-cai",
+      fetchRootKey: define_process_env_default$f.DFX_NETWORK === "local"
+    });
+    const { balance } = IcrcLedgerCanister.create({
+      agent,
+      canisterId: Principal.fromText("avqkn-guaaa-aaaaa-qaaea-cai")
+    });
+    if (principalId) {
+      try {
+        let result = await balance({
+          owner: principalId,
+          certified: false
+        });
+        return result;
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    return 0n;
+  }
+  return {
+    subscribe: subscribe2,
+    sync,
+    updateUsername,
+    updateFavouriteTeam,
+    updateProfilePicture,
+    isUsernameAvailable,
+    cacheProfile,
+    withdrawFPL,
+    getFPLBalance
+  };
+}
+const userStore = createUserStore();
+const userGetProfilePicture = derived(
+  userStore,
+  ($user) => {
+    try {
+      let byteArray;
+      if ($user && $user.profilePicture) {
+        if (Array.isArray($user.profilePicture) && $user.profilePicture[0] instanceof Uint8Array) {
+          byteArray = $user.profilePicture[0];
+          return `data:image/${$user.profilePictureType};base64,${uint8ArrayToBase64(byteArray)}`;
+        } else if ($user.profilePicture instanceof Uint8Array) {
+          return `data:${$user.profilePictureType};base64,${uint8ArrayToBase64(
+            $user.profilePicture
+          )}`;
+        } else {
+          if (typeof $user.profilePicture === "string") {
+            if ($user.profilePicture.startsWith("data:image")) {
+              return $user.profilePicture;
+            } else {
+              return `data:${$user.profilePictureType};base64,${$user.profilePicture}`;
+            }
+          }
+        }
+      }
+      return "/profile_placeholder.png";
+    } catch (error) {
+      console.error(error);
+      return "/profile_placeholder.png";
+    }
+  }
+);
+derived(
+  userStore,
+  (user) => user !== null && user !== void 0 ? user.favouriteTeamId : 0
+);
 function createCountryStore() {
   const { subscribe: subscribe2, set } = writable([]);
   return {
@@ -5731,21 +6823,36 @@ function createCountryStore() {
   };
 }
 const countryStore = createCountryStore();
-function createWeeklyLeaderboardStore() {
-  const { subscribe: subscribe2, set } = writable(null);
+function createSeasonStore() {
+  const { subscribe: subscribe2, set } = writable([]);
+  async function getSeasonName(seasonId) {
+    let seasons = [];
+    await subscribe2((value) => {
+      seasons = value;
+    })();
+    if (seasons.length == 0) {
+      return;
+    }
+    let season = seasons.find((x) => x.id == seasonId);
+    if (season == null) {
+      return;
+    }
+    return season.name;
+  }
   return {
     subscribe: subscribe2,
-    setWeeklyLeaderboard: (leaderboard) => set(leaderboard)
+    setSeasons: (seasons) => set(seasons),
+    getSeasonName
   };
 }
-const weeklyLeaderboardStore = createWeeklyLeaderboardStore();
-var define_process_env_default$f = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+const seasonStore = createSeasonStore();
+var define_process_env_default$e = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 22 };
 class PlayerService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
-      idlFactory,
-      define_process_env_default$f.OPENFPL_BACKEND_CANISTER_ID
+      idlFactory$1,
+      define_process_env_default$e.OPENWSL_BACKEND_CANISTER_ID
     );
   }
   async getPlayers() {
@@ -5785,13 +6892,13 @@ function createPlayerStore() {
   };
 }
 const playerStore = createPlayerStore();
-var define_process_env_default$e = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$d = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 22 };
 class PlayerEventsService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
-      idlFactory,
-      define_process_env_default$e.OPENFPL_BACKEND_CANISTER_ID
+      idlFactory$1,
+      define_process_env_default$d.OPENWSL_BACKEND_CANISTER_ID
     );
   }
   async getPlayerDetailsForGameweek() {
@@ -5924,306 +7031,21 @@ function createPlayerEventsStore() {
   };
 }
 const playerEventsStore = createPlayerEventsStore();
-var define_process_env_default$d = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
-function createUserStore() {
+function createWeeklyLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
-  async function sync() {
-    let localStorageString = localStorage.getItem("user_profile_data");
-    if (localStorageString) {
-      const localProfile = JSON.parse(localStorageString);
-      set(localProfile);
-      return;
-    }
-    try {
-      await cacheProfile();
-    } catch (error) {
-      console.error("Error fetching user profile:", error);
-      throw error;
-    }
-  }
-  async function updateUsername(username) {
-    try {
-      console.log("Creating actor in update username line 37");
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        define_process_env_default$d.OPENFPL_BACKEND_CANISTER_ID ?? ""
-      );
-      let dto = {
-        username
-      };
-      console.log("Actor updating username line 45");
-      const result = await identityActor.updateUsername(dto);
-      if (isError(result)) {
-        console.error("Error updating username");
-        return;
-      }
-      await cacheProfile();
-      return result;
-    } catch (error) {
-      console.error("Error updating username:", error);
-      throw error;
-    }
-  }
-  async function updateFavouriteTeam(favouriteTeamId) {
-    try {
-      console.log("Creating actor in updateFavouriteteam line 62");
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        define_process_env_default$d.OPENFPL_BACKEND_CANISTER_ID ?? ""
-      );
-      let dto = {
-        favouriteClubId: favouriteTeamId
-      };
-      console.log("Actor updating favourite club line 70");
-      const result = await identityActor.updateFavouriteClub(dto);
-      if (isError(result)) {
-        console.error("Error updating favourite team");
-        return;
-      }
-      await cacheProfile();
-      return result;
-    } catch (error) {
-      console.error("Error updating favourite team:", error);
-      throw error;
-    }
-  }
-  async function updateProfilePicture(picture) {
-    try {
-      const maxPictureSize = 1e3;
-      const extension = getFileExtensionFromFile(picture);
-      if (picture.size > maxPictureSize * 1024) {
-        return null;
-      }
-      const reader = new FileReader();
-      reader.readAsArrayBuffer(picture);
-      reader.onloadend = async () => {
-        const arrayBuffer = reader.result;
-        const uint8Array = new Uint8Array(arrayBuffer);
-        try {
-          console.log("Creating actor in updateProfilePicture line 98");
-          const identityActor = await ActorFactory.createIdentityActor(
-            authStore,
-            define_process_env_default$d.OPENFPL_BACKEND_CANISTER_ID ?? ""
-          );
-          let dto = {
-            profilePicture: uint8Array,
-            extension
-          };
-          console.log("Actor updating profile picture line 108");
-          const result = await identityActor.updateProfilePicture(dto);
-          if (isError(result)) {
-            console.error("Error updating profile picture");
-            return;
-          }
-          await cacheProfile();
-          return result;
-        } catch (error) {
-          console.error(error);
-        }
-      };
-    } catch (error) {
-      console.error("Error updating username:", error);
-      throw error;
-    }
-  }
-  function getFileExtensionFromFile(file) {
-    const filename = file.name;
-    const lastIndex = filename.lastIndexOf(".");
-    return lastIndex !== -1 ? filename.substring(lastIndex + 1) : "";
-  }
-  async function isUsernameAvailable(username) {
-    console.log("Creating actor in isUsernameAvailable line 139");
-    const identityActor = await ActorFactory.createIdentityActor(
-      authStore,
-      define_process_env_default$d.OPENFPL_BACKEND_CANISTER_ID
-    );
-    let dto = {
-      username
-    };
-    console.log("actor checking isUsernameValid line 146");
-    return await identityActor.isUsernameValid(dto);
-  }
-  async function cacheProfile() {
-    console.log("Creating actor in cache profile line 152");
-    const identityActor = await ActorFactory.createIdentityActor(
-      authStore,
-      define_process_env_default$d.OPENFPL_BACKEND_CANISTER_ID
-    );
-    console.log("Actor getting profile line 157");
-    let getProfileResponse = await identityActor.getProfile();
-    let error = isError(getProfileResponse);
-    if (error) {
-      console.error("Error fetching user profile");
-      return;
-    }
-    let profileData = getProfileResponse.ok;
-    set(profileData);
-  }
-  async function withdrawFPL(withdrawalAddress, withdrawalAmount) {
-    try {
-      let identity;
-      authStore.subscribe(async (auth) => {
-        identity = auth.identity;
-      });
-      if (!identity) {
-        return;
-      }
-      let principalId = identity.getPrincipal();
-      const agent = await createAgent({
-        identity,
-        host: "http://localhost:8080/?canisterId=qhbym-qaaaa-aaaaa-aaafq-cai",
-        fetchRootKey: define_process_env_default$d.DFX_NETWORK === "local"
-      });
-      const { transfer } = IcrcLedgerCanister.create({
-        agent,
-        canisterId: define_process_env_default$d.DFX_NETWORK === "ic" ? Principal.fromText("ddsp7-7iaaa-aaaaq-aacqq-cai") : Principal.fromText("avqkn-guaaa-aaaaa-qaaea-cai")
-      });
-      if (principalId) {
-        try {
-          let transfer_result = await transfer({
-            to: {
-              owner: Principal.fromText(withdrawalAddress),
-              subaccount: []
-            },
-            fee: 100000n,
-            memo: new Uint8Array(Text.encodeValue("0")),
-            from_subaccount: void 0,
-            created_at_time: BigInt(Date.now()) * BigInt(1e6),
-            amount: withdrawalAmount - 100000n
-          });
-        } catch (err) {
-          console.error(err.errorType);
-        }
-      }
-    } catch (error) {
-      console.error("Error withdrawing FPL.", error);
-      throw error;
-    }
-  }
-  async function getFPLBalance() {
-    let identity;
-    authStore.subscribe(async (auth) => {
-      identity = auth.identity;
-    });
-    if (!identity) {
-      return 0n;
-    }
-    let principalId = identity.getPrincipal();
-    const agent = await createAgent({
-      identity,
-      host: "http://localhost:8080/?canisterId=qhbym-qaaaa-aaaaa-aaafq-cai",
-      fetchRootKey: define_process_env_default$d.DFX_NETWORK === "local"
-    });
-    const { balance } = IcrcLedgerCanister.create({
-      agent,
-      canisterId: Principal.fromText("avqkn-guaaa-aaaaa-qaaea-cai")
-    });
-    if (principalId) {
-      try {
-        let result = await balance({
-          owner: principalId,
-          certified: false
-        });
-        return result;
-      } catch (err) {
-        console.error(err);
-      }
-    }
-    return 0n;
-  }
   return {
     subscribe: subscribe2,
-    sync,
-    updateUsername,
-    updateFavouriteTeam,
-    updateProfilePicture,
-    isUsernameAvailable,
-    cacheProfile,
-    withdrawFPL,
-    getFPLBalance
+    setWeeklyLeaderboard: (leaderboard) => set(leaderboard)
   };
 }
-const userStore = createUserStore();
-const OpenFPLIcon = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let { className = "" } = $$props;
-  if ($$props.className === void 0 && $$bindings.className && className !== void 0)
-    $$bindings.className(className);
-  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"${add_attribute("class", className, 0)} fill="currentColor" viewBox="0 0 137 188"><path d="M68.8457 0C43.0009 4.21054 19.8233 14.9859 0.331561 30.5217L0.264282 30.6627V129.685L68.7784 187.97L136.528 129.685L136.543 30.6204C117.335 15.7049 94.1282 4.14474 68.8457 0ZM82.388 145.014C82.388 145.503 82.0804 145.992 81.5806 146.114L68.7784 150.329C68.5285 150.39 68.2786 150.39 68.0287 150.329L55.2265 146.114C54.7267 145.931 54.4143 145.503 54.4143 145.014V140.738C54.4143 140.31 54.6642 139.883 55.039 139.7L67.8413 133.102C68.2161 132.919 68.591 132.919 68.9658 133.102L81.768 139.7C82.1429 139.883 82.388 140.31 82.388 140.738V145.014ZM106.464 97.9137C106.464 98.3414 106.214 98.769 105.777 98.9523L96.6607 103.534C96.036 103.84 95.8486 104.573 96.1609 105.122L105.027 121.189C105.277 121.678 105.215 122.228 104.84 122.594L89.7262 137.134C89.2889 137.561 88.6641 137.561 88.1644 137.256L70.9313 125.099C70.369 124.671 70.2441 123.877 70.7439 123.327L84.4208 108.421C85.2329 107.505 84.2958 106.161 83.1713 106.527L68.7447 111.109C68.4948 111.17 68.2449 111.17 67.9951 111.109L53.6358 106.527C52.4488 106.161 51.5742 107.566 52.3863 108.421L66.0584 123.327C66.5582 123.877 66.4332 124.671 65.871 125.099L48.6379 137.256C48.1381 137.561 47.5134 137.561 47.0761 137.134L31.9671 122.533C31.5923 122.167 31.5298 121.617 31.7797 121.128L40.6461 105.061C40.9585 104.45 40.7086 103.778 40.1463 103.473L31.03 98.8912C30.6552 98.7079 30.3428 98.2803 30.3428 97.8526V65.8413C30.3428 64.9249 31.4049 64.314 32.217 64.8639L39.709 69.8122C40.0214 70.0565 40.2088 70.362 40.2088 70.7896L40.2713 79.0368C40.2713 79.4034 40.4587 79.7699 40.7711 80.0143L51.7616 87.5284C52.5737 88.0782 53.6983 87.4673 53.6358 86.4898L52.9486 71.9503C52.9486 71.5838 52.7612 71.2173 52.4488 71.034L30.8426 56.5556C30.5302 56.3112 30.3428 55.9447 30.3428 55.5781V48.4305C30.3428 48.1862 30.4053 47.8807 30.5927 47.6975L38.3971 38.0452C38.7094 37.6176 39.2717 37.4954 39.7715 37.6786L67.9326 47.8807C68.1825 48.0029 68.4948 48.0029 68.7447 47.8807L96.9106 37.6786C97.4104 37.4954 97.9679 37.6786 98.2802 38.0452L106.089 47.6975C106.277 47.8807 106.339 48.1862 106.339 48.4305V55.5781C106.339 55.9447 106.152 56.3112 105.84 56.5556L84.2333 71.034C84.0459 71.2783 83.8585 71.6449 83.8585 72.0114L83.1713 86.5509C83.1088 87.5284 84.2333 88.1393 85.0455 87.5895L96.036 80.0753C96.3484 79.831 96.5358 79.5255 96.5358 79.0979L96.5983 70.8507C96.5983 70.4842 96.7857 70.1176 97.098 69.8733L104.59 64.9249C105.402 64.3751 106.464 64.9249 106.464 65.9024V97.9137Z" fill="#fffff"></path></svg>`;
-});
-const WalletIcon = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let { className = "" } = $$props;
-  if ($$props.className === void 0 && $$bindings.className && className !== void 0)
-    $$bindings.className(className);
-  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true"${add_attribute("class", className, 0)} fill="currentColor" viewBox="0 0 24 24"><path d="M12.136.326A1.5 1.5 0 0 1 14 1.78V3h.5A1.5 1.5 0 0 1 16 4.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 13.5v-9a1.5 1.5 0 0 1 1.432-1.499L12.136.326zM5.562 3H13V1.78a.5.5 0 0 0-.621-.484L5.562 3zM1.5 4a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-13z"></path><path d="M15.5,6.5v3a1,1,0,0,1-1,1h-3.5v-5H14.5A1,1,0,0,1,15.5,6.5Z"></path><path d="M12,8a.5,.5 0,1,1,.001,0Z"></path></svg>`;
-});
-const authSignedInStore = derived(
-  authStore,
-  ({ identity }) => identity !== null && identity !== void 0
-);
-const userGetProfilePicture = derived(
-  userStore,
-  ($user) => {
-    try {
-      let byteArray;
-      if ($user && $user.profilePicture) {
-        if (Array.isArray($user.profilePicture) && $user.profilePicture[0] instanceof Uint8Array) {
-          byteArray = $user.profilePicture[0];
-          return `data:image/${$user.profilePictureType};base64,${uint8ArrayToBase64(byteArray)}`;
-        } else if ($user.profilePicture instanceof Uint8Array) {
-          return `data:${$user.profilePictureType};base64,${uint8ArrayToBase64(
-            $user.profilePicture
-          )}`;
-        } else {
-          if (typeof $user.profilePicture === "string") {
-            if ($user.profilePicture.startsWith("data:image")) {
-              return $user.profilePicture;
-            } else {
-              return `data:${$user.profilePictureType};base64,${$user.profilePicture}`;
-            }
-          }
-        }
-      }
-      return "/profile_placeholder.png";
-    } catch (error) {
-      console.error(error);
-      return "/profile_placeholder.png";
-    }
-  }
-);
-derived(
-  userStore,
-  (user) => user !== null && user !== void 0 ? user.favouriteTeamId : 0
-);
-function createSeasonStore() {
-  const { subscribe: subscribe2, set } = writable([]);
-  async function getSeasonName(seasonId) {
-    let seasons = [];
-    await subscribe2((value) => {
-      seasons = value;
-    })();
-    if (seasons.length == 0) {
-      return;
-    }
-    let season = seasons.find((x) => x.id == seasonId);
-    if (season == null) {
-      return;
-    }
-    return season.name;
-  }
-  return {
-    subscribe: subscribe2,
-    setSeasons: (seasons) => set(seasons),
-    getSeasonName
-  };
-}
-const seasonStore = createSeasonStore();
-var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+const weeklyLeaderboardStore = createWeeklyLeaderboardStore();
+var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 22 };
 class DataHashService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
-      idlFactory,
-      define_process_env_default$c.OPENFPL_BACKEND_CANISTER_ID
+      idlFactory$1,
+      define_process_env_default$c.OPENWSL_BACKEND_CANISTER_ID
     );
   }
   async getDataHashes() {
@@ -6233,13 +7055,13 @@ class DataHashService {
     return result.ok;
   }
 }
-var define_process_env_default$b = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$b = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 22 };
 class CountryService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
-      idlFactory,
-      define_process_env_default$b.OPENFPL_BACKEND_CANISTER_ID
+      idlFactory$1,
+      define_process_env_default$b.OPENWSL_BACKEND_CANISTER_ID
     );
   }
   async getCountries() {
@@ -6249,13 +7071,13 @@ class CountryService {
     return result.ok;
   }
 }
-var define_process_env_default$a = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$a = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 22 };
 class SystemService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
-      idlFactory,
-      define_process_env_default$a.OPENFPL_BACKEND_CANISTER_ID
+      idlFactory$1,
+      define_process_env_default$a.OPENWSL_BACKEND_CANISTER_ID
     );
   }
   async getSystemState() {
@@ -6265,13 +7087,13 @@ class SystemService {
     return result.ok;
   }
 }
-var define_process_env_default$9 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$9 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 22 };
 class SeasonService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
-      idlFactory,
-      define_process_env_default$9.OPENFPL_BACKEND_CANISTER_ID
+      idlFactory$1,
+      define_process_env_default$9.OPENWSL_BACKEND_CANISTER_ID
     );
   }
   async getSeasons() {
@@ -6281,13 +7103,13 @@ class SeasonService {
     return result.ok;
   }
 }
-var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 22 };
 class ClubService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
-      idlFactory,
-      define_process_env_default$8.OPENFPL_BACKEND_CANISTER_ID
+      idlFactory$1,
+      define_process_env_default$8.OPENWSL_BACKEND_CANISTER_ID
     );
   }
   async getClubs() {
@@ -6297,13 +7119,13 @@ class ClubService {
     return result.ok;
   }
 }
-var define_process_env_default$7 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$7 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 22 };
 class WeeklyLeaderboardService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
-      idlFactory,
-      define_process_env_default$7.OPENFPL_BACKEND_CANISTER_ID
+      idlFactory$1,
+      define_process_env_default$7.OPENWSL_BACKEND_CANISTER_ID
     );
   }
   async getWeeklyLeaderboard() {
@@ -6532,7 +7354,7 @@ const Local_spinner = create_ssr_component(($$result, $$props, $$bindings, slots
   $$result.css.add(css$2);
   return `<div class="local-spinner svelte-pvdm52"></div>`;
 });
-var define_process_env_default$6 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$6 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 22 };
 function createMonthlyLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage = 25;
@@ -6543,7 +7365,7 @@ function createMonthlyLeaderboardStore() {
   });
   console.log("Creating actor in monthly leaderboard store line 22");
   let actor = ActorFactory.createActor(
-    idlFactory,
+    idlFactory$1,
     define_process_env_default$6.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync(seasonId, month, clubId) {
@@ -6654,7 +7476,7 @@ function createMonthlyLeaderboardStore() {
   };
 }
 createMonthlyLeaderboardStore();
-var define_process_env_default$5 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$5 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 22 };
 function createSeasonLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage = 25;
@@ -6665,7 +7487,7 @@ function createSeasonLeaderboardStore() {
   });
   console.log("Creating actor in season leaderboard store line 22");
   let actor = ActorFactory.createActor(
-    idlFactory,
+    idlFactory$1,
     define_process_env_default$5.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync(seasonId) {
@@ -6773,12 +7595,12 @@ function createSeasonLeaderboardStore() {
 }
 createSeasonLeaderboardStore();
 const css$1 = {
-  code: ".local-spinner.svelte-1mszak5{border:5px solid rgba(255, 255, 255, 0.3);border-top:5px solid white;border-radius:50%;width:50px;height:50px;position:relative;margin:0 auto;animation:svelte-1mszak5-spin 1s linear infinite}@keyframes svelte-1mszak5-spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}",
+  code: ".local-spinner.svelte-1qjdn91{border:5px solid rgba(255, 255, 255, 0.3);border-top:5px solid white;border-radius:50%;width:50px;height:50px;position:relative;margin:0 auto;animation:svelte-1qjdn91-spin 1s linear infinite}@keyframes svelte-1qjdn91-spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}",
   map: null
 };
 const Relative_spinner = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$result.css.add(css$1);
-  return `<div class="local-spinner svelte-1mszak5"></div>`;
+  return `<div class="local-spinner svelte-1qjdn91"></div>`;
 });
 const Page$d = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_clubStore;
@@ -6805,7 +7627,7 @@ const Page$d = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-var define_process_env_default$4 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$4 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 22 };
 function createGovernanceStore() {
   async function revaluePlayerUp(playerId) {
     try {
@@ -7918,7 +8740,7 @@ const Revalue_player_down = create_ssr_component(($$result, $$props, $$bindings,
     }
   })}`;
 });
-var define_process_env_default$3 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$3 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 22 };
 const Move_fixture = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let isSubmitDisabled;
   let $clubStore, $$unsubscribe_clubStore;
@@ -7976,7 +8798,7 @@ const Move_fixture = create_ssr_component(($$result, $$props, $$bindings, slots)
     }
   })}`;
 });
-var define_process_env_default$2 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$2 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 22 };
 const Postpone_fixture = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let isSubmitDisabled;
   let $clubStore, $$unsubscribe_clubStore;
@@ -8030,7 +8852,7 @@ const Postpone_fixture = create_ssr_component(($$result, $$props, $$bindings, sl
     }
   })}`;
 });
-var define_process_env_default$1 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$1 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 22 };
 const Reschedule_fixture = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let isSubmitDisabled;
   let $clubStore, $$unsubscribe_clubStore;
@@ -8457,7 +9279,7 @@ const Update_club = create_ssr_component(($$result, $$props, $$bindings, slots) 
     }
   })}`;
 });
-var define_process_env_default = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 22 };
 const Add_fixture_data = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let isSubmitDisabled;
   let $clubStore, $$unsubscribe_clubStore;
@@ -8774,7 +9596,7 @@ const Page$8 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$result.css.add(css);
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
-      return `<div class="bg-panel rounded-md p-4 mt-4" data-svelte-h="svelte-1akb89f"><h1 class="default-header">OpenFPL Gameplay Rules</h1> <div><p class="my-2">Please see the below OpenFPL fantasy football gameplay rules.</p> <p class="my-2">Each user begins with £300m to purchase players for their team. The
+      return `<div class="bg-panel rounded-md p-4 mt-4" data-svelte-h="svelte-16p6x67"><h1 class="default-header">OpenWSL Gameplay Rules</h1> <div><p class="my-2">Please see the below OpenWSL fantasy football gameplay rules.</p> <p class="my-2">Each user begins with £300m to purchase players for their team. The
         value of a player can go up or down depending on how the player is rated
         in the DAO. Provided a certain voting threshold is reached for either a
         £0.25m increase or decrease, the player&#39;s value will change in that
@@ -8782,7 +9604,7 @@ const Page$8 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
         (the first game has kicked off and the final game has not finished).</p> <p class="my-2">Each team has 11 players, with no more than 2 selected from any single
         team. The team must be in a valid formation, with 1 goalkeeper, 3-5
         defenders, 3-5 midfielders and 1-3 strikers.</p> <p class="my-2">Users will setup their team before the gameweek deadline each week. When
-        playing OpenFPL, users have the chance to win FPL tokens depending on
+        playing OpenWSL, users have the chance to win FPL tokens depending on
         how well the players in their team perform.</p> <p class="my-2">In January, a user can change their entire team once.</p> <p class="my-2">A user is allowed to make 3 transfers per week which are never carried
         over.</p> <p class="my-2">Each week a user can select a star player. This player will receive
         double points for the gameweek. If one is not set by the start of the
@@ -8931,7 +9753,7 @@ const Page$2 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
 const Page$1 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
-      return `<div class="bg-panel rounded-md p-4 mt-4" data-svelte-h="svelte-p7ybpc"><h1 class="default-header">OpenFPL DAO Terms &amp; Conditions</h1> <div><p class="my-2 text-xs">Last Updated: 13th October 2023</p> <p class="my-4">By accessing the OpenFPL website (&quot;Site&quot;) and participating in the
+      return `<div class="bg-panel rounded-md p-4 mt-4" data-svelte-h="svelte-1r29bmc"><h1 class="default-header">OpenWSL DAO Terms &amp; Conditions</h1> <div><p class="my-2 text-xs">Last Updated: 13th October 2023</p> <p class="my-4">By accessing the OpenFPL website (&quot;Site&quot;) and participating in the
         OpenFPL Fantasy Football DAO (&quot;Service&quot;), you agree to comply with and
         be bound by the following Terms and Conditions.</p> <h2 class="default-sub-header">Acceptance of Terms</h2> <p class="my-4">You acknowledge that you have read, understood, and agree to be bound by
         these Terms. These Terms are subject to change by a DAO proposal and

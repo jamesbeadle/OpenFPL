@@ -17,7 +17,7 @@ import { PlayerEventsService } from "$lib/services/player-events-service";
 import { FixtureService } from "$lib/services/fixture-service";
 import { WeeklyLeaderboardService } from "$lib/services/weekly-leaderboard-service";
 
-import { isError } from "$lib/utils/helpers";
+import { isError, replacer } from "$lib/utils/helpers";
 
 class StoreManager {
   private dataHashService: DataHashService;
@@ -63,6 +63,7 @@ class StoreManager {
     }
 
     for (const category of this.categories) {
+      console.log(category)
       const categoryHash = newHashes.find((hash) => hash.category === category);
 
       if (categoryHash?.hash !== localStorage.getItem(`${category}_hash`)) {
@@ -79,30 +80,33 @@ class StoreManager {
       case "countries":
         const updatedCountries = await this.countryService.getCountries();
         countryStore.setCountries(updatedCountries);
-        localStorage.setItem("countries", JSON.stringify(updatedCountries));
+        localStorage.setItem("countries", JSON.stringify(updatedCountries, replacer));
         break;
       case "system_state":
         const updatedSystemState = await this.systemService.getSystemState();
         systemStore.setSystemState(updatedSystemState);
         localStorage.setItem(
           "system_state",
-          JSON.stringify(updatedSystemState),
+          JSON.stringify(updatedSystemState, replacer),
         );
         break;
       case "seasons":
         const updatedSeasons = await this.seasonService.getSeasons();
         seasonStore.setSeasons(updatedSeasons);
-        localStorage.setItem("seasons", JSON.stringify(updatedSeasons));
+        localStorage.setItem("seasons", JSON.stringify(updatedSeasons, replacer));
         break;
       case "clubs":
         const updatedClubs = await this.clubService.getClubs();
         clubStore.setClubs(updatedClubs);
-        localStorage.setItem("clubs", JSON.stringify(updatedClubs));
+        localStorage.setItem("clubs", JSON.stringify(updatedClubs, replacer));
         break;
       case "players":
         const updatedPlayers = await this.playerService.getPlayers();
         playerStore.setPlayers(updatedPlayers);
-        localStorage.setItem("players", JSON.stringify(updatedPlayers));
+
+        //TODO: Run any objects with dates through a stringify function that should work better
+
+        localStorage.setItem("players", JSON.stringify(updatedPlayers, replacer));
         break;
       case "player_events":
         const updatedPlayerEvents =
@@ -110,22 +114,31 @@ class StoreManager {
         playerEventsStore.setPlayerEvents(updatedPlayerEvents);
         localStorage.setItem(
           "player_events",
-          JSON.stringify(updatedPlayerEvents),
+          JSON.stringify(updatedPlayerEvents, replacer),
         );
         break;
       case "fixtures":
-        const updatedFixtures = await this.fixtureService.getFixtures();
-        fixtureStore.setFixtures(updatedFixtures);
-        localStorage.setItem("fixtures", JSON.stringify(updatedFixtures));
+        systemStore.subscribe(async systemState => {
+          const updatedFixtures = await this.fixtureService.getFixtures(systemState?.pickTeamGameweek ?? 0);
+          fixtureStore.setFixtures(updatedFixtures);
+          localStorage.setItem("fixtures", JSON.stringify(updatedFixtures, replacer));
+        });
         break;
       case "weekly_leaderboard":
-        const updatedWeeklyLeaderboard =
-          await this.weeklyLeaderboardService.getWeeklyLeaderboard();
-        weeklyLeaderboardStore.setWeeklyLeaderboard(updatedWeeklyLeaderboard);
-        localStorage.setItem(
-          "weekly_leaderboard",
-          JSON.stringify(updatedWeeklyLeaderboard),
-        );
+        systemStore.subscribe(async systemState => {
+          
+          const updatedWeeklyLeaderboard =
+          await this.weeklyLeaderboardService.getWeeklyLeaderboard(0,systemState?.calculationSeasonId ?? 0, 25, systemState?.calculationGameweek ?? 0);
+          weeklyLeaderboardStore.setWeeklyLeaderboard(updatedWeeklyLeaderboard);
+          localStorage.setItem(
+            "weekly_leaderboard",
+            JSON.stringify(updatedWeeklyLeaderboard, replacer),
+          );
+          
+          const updatedFixtures = await this.fixtureService.getFixtures(systemState?.pickTeamGameweek ?? 0);
+          fixtureStore.setFixtures(updatedFixtures);
+          localStorage.setItem("fixtures", JSON.stringify(updatedFixtures, replacer));
+        });
         break;
     }
   }
@@ -139,7 +152,7 @@ class StoreManager {
         countryStore.setCountries(cachedCountries);
         break;
       case "system_state":
-        const cachedSystemState = JSON.parse(cachedData || "");
+        const cachedSystemState = JSON.parse(cachedData || "null");
         systemStore.setSystemState(cachedSystemState);
         break;
       case "seasons":
@@ -159,7 +172,7 @@ class StoreManager {
         fixtureStore.setFixtures(cachedFixtures);
         break;
       case "weekly_leaderboard":
-        const cachedWeeklyLeaderboard = JSON.parse(cachedData || "");
+        const cachedWeeklyLeaderboard = JSON.parse(cachedData || "null");
         weeklyLeaderboardStore.setWeeklyLeaderboard(cachedWeeklyLeaderboard);
         break;
     }

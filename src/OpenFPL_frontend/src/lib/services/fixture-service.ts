@@ -2,6 +2,7 @@ import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { isError } from "../utils/helpers";
 import type { FixtureDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type { RequestFixturesDTO } from "../../../../declarations/data_canister/data_canister.did";
 
 export class FixtureService {
   private actor: any;
@@ -19,8 +20,11 @@ export class FixtureService {
     return result.ok;
   }
 
-  async getFixtures(): Promise<FixtureDTO[]> {
-    const result = await this.actor.getFixtures();
+  async getFixtures(seasonId: number): Promise<FixtureDTO[]> {
+    let dto: RequestFixturesDTO = {
+      seasonId: seasonId,
+    };
+    const result = await this.actor.getFixtures(dto);
     if (isError(result)) throw new Error("Failed to fetch fixtures");
     return result.ok;
   }
