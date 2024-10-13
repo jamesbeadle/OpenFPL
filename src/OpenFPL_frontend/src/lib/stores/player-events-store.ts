@@ -1,5 +1,4 @@
 import { writable } from "svelte/store";
-import { PlayerService } from "$lib/services/player-service";
 import type {
   FantasyTeamSnapshot,
   PlayerPointsDTO,
@@ -7,8 +6,6 @@ import type {
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import type {
   FixtureDTO,
-  GameweekFiltersDTO,
-  GetPlayerDetailsDTO,
   PlayerDetailDTO,
   PlayerDTO,
 } from "../../../../declarations/data_canister/data_canister.did";

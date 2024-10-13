@@ -31,7 +31,7 @@ function createManagerStore() {
 
   let newManager = {
     playerIds: [],
-    countrymenCountryId: 0,
+    oneNationCountryId: 0,
     username: "",
     goalGetterPlayerId: 0,
     hatTrickHeroGameweek: 0,
@@ -40,7 +40,7 @@ function createManagerStore() {
     teamBoostGameweek: 0,
     captainFantasticGameweek: 0,
     createDate: 0n,
-    countrymenGameweek: 0,
+    oneNationGameweek: 0,
     bankQuarterMillions: 0,
     noEntryPlayerId: 0,
     safeHandsPlayerId: 0,
@@ -136,7 +136,10 @@ function createManagerStore() {
         process.env.OPENWSL_BACKEND_CANISTER_ID ?? "",
       );
       console.log("actor getting current team line 138");
+      console.log("resulty");
       const result = await identityActor.getCurrentTeam();
+      console.log("resultx");
+      console.log(result);
 
       if (isError(result)) {
         return newManager;
@@ -171,7 +174,7 @@ function createManagerStore() {
       console.log("Creating actor in save fantasy team line 171");
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.OPENFPL_BACKEND_OPENWSL_BACKEND_CANISTER_IDCANISTER_ID ?? "",
+        process.env.OPENWSL_BACKEND_CANISTER_ID ?? "",
       );
 
       let dto: UpdateTeamSelectionDTO = {
@@ -201,11 +204,9 @@ function createManagerStore() {
             ? activeGameweek
             : userFantasyTeam.captainFantasticGameweek,
         captainFantasticPlayerId: bonusPlayerId,
-        countrymenGameweek:
-          bonusPlayed == 7
-            ? activeGameweek
-            : userFantasyTeam.countrymenGameweek,
-        countrymenCountryId: bonusCountryId,
+        oneNationGameweek:
+          bonusPlayed == 7 ? activeGameweek : userFantasyTeam.oneNationGameweek,
+        oneNationCountryId: bonusCountryId,
         prospectsGameweek:
           bonusPlayed == 8 ? activeGameweek : userFantasyTeam.prospectsGameweek,
         braceBonusGameweek:
@@ -274,7 +275,7 @@ function createManagerStore() {
       bonusPlayed = 7;
     }
 
-    if (userFantasyTeam.countrymenGameweek === activeGameweek) {
+    if (userFantasyTeam.oneNationGameweek === activeGameweek) {
       bonusPlayed = 8;
     }
 
@@ -337,8 +338,8 @@ function createManagerStore() {
   ): number {
     let bonusCountryId = 0;
 
-    if (userFantasyTeam.countrymenGameweek === activeGameweek) {
-      bonusCountryId = userFantasyTeam.countrymenCountryId;
+    if (userFantasyTeam.oneNationGameweek === activeGameweek) {
+      bonusCountryId = userFantasyTeam.oneNationCountryId;
     }
 
     return bonusCountryId;

@@ -220,6 +220,11 @@ type Result_3 =
    err: Error;
    ok: vec CanisterId;
  };
+type Result_26 = 
+ variant {
+   err: Error;
+   ok: AdminDashboardDTO;
+ };
 type Result_25 = 
  variant {
    err: Error;
@@ -796,6 +801,19 @@ type CanisterDTO =
    lastTopup: int;
  };
 type CalendarMonth = nat8;
+type AdminDashboardDTO = 
+ record {
+   dataCanisterCycles: nat;
+   dataCanisterId: CanisterId;
+   managerCanisters: vec record {
+                           CanisterId;
+                           nat;
+                         };
+   openFPLBackendCycles: nat;
+   openFPLCanisterId: CanisterId;
+   openWSLBackendCycles: nat;
+   openWSLCanisterId: CanisterId;
+ };
 type AddInitialFixturesDTO = record {seasonFixtures: vec FixtureDTO;};
 type AccountIdentifier = blob;
 service : {
@@ -816,6 +834,7 @@ service : {
   executeUnretirePlayer: (UnretirePlayerDTO) -> ();
   executeUpdateClub: (UpdateClubDTO) -> ();
   executeUpdatePlayer: (UpdatePlayerDTO) -> ();
+  getAdminDashboard: () -> (Result_26);
   getBackendCanisterBalance: () -> (Result_4);
   getCanisterCyclesAvailable: () -> (nat);
   getCanisterCyclesBalance: () -> (Result_4);

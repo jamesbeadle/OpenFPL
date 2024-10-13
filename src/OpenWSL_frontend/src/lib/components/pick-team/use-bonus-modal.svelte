@@ -176,8 +176,8 @@
           if (!team) return team;
           return {
             ...team,
-            countrymenCountry: selectedCountry,
-            countrymenGameweek: activeGameweek,
+            oneNationCountry: selectedCountry,
+            oneNationGameweek: activeGameweek,
             playerIds: team.playerIds || new Uint16Array(11),
           };
         });

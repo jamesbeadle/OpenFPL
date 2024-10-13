@@ -2,7 +2,7 @@ import { authStore } from "$lib/stores/auth.store";
 import { systemStore } from "$lib/stores/system-store";
 import { isError, replacer } from "$lib/utils/helpers";
 import { writable } from "svelte/store";
-import { idlFactory } from "../../../../declarations/OpenFPL_backend";
+import { idlFactory } from "../../../../declarations/OpenWSL_backend";
 import type {
   DataHashDTO,
   FantasyTeamSnapshot,
@@ -12,7 +12,7 @@ import type {
   PickTeamDTO,
   SystemStateDTO,
   UpdateTeamSelectionDTO,
-} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+} from "../../../../declarations/OpenWSL_backend/OpenWSL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 
 function createManagerStore() {
@@ -31,7 +31,7 @@ function createManagerStore() {
 
   let newManager = {
     playerIds: [],
-    countrymenCountryId: 0,
+    oneNationCountryId: 0,
     username: "",
     goalGetterPlayerId: 0,
     hatTrickHeroGameweek: 0,
@@ -40,7 +40,7 @@ function createManagerStore() {
     teamBoostGameweek: 0,
     captainFantasticGameweek: 0,
     createDate: 0n,
-    countrymenGameweek: 0,
+    oneNationGameweek: 0,
     bankQuarterMillions: 0,
     noEntryPlayerId: 0,
     safeHandsPlayerId: 0,
@@ -136,7 +136,10 @@ function createManagerStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
       console.log("actor getting current team line 138");
+      console.log("resulty");
       const result = await identityActor.getCurrentTeam();
+      console.log("resultx");
+      console.log(result);
 
       if (isError(result)) {
         return newManager;
@@ -201,11 +204,9 @@ function createManagerStore() {
             ? activeGameweek
             : userFantasyTeam.captainFantasticGameweek,
         captainFantasticPlayerId: bonusPlayerId,
-        countrymenGameweek:
-          bonusPlayed == 7
-            ? activeGameweek
-            : userFantasyTeam.countrymenGameweek,
-        countrymenCountryId: bonusCountryId,
+        oneNationGameweek:
+          bonusPlayed == 7 ? activeGameweek : userFantasyTeam.oneNationGameweek,
+        oneNationCountryId: bonusCountryId,
         prospectsGameweek:
           bonusPlayed == 8 ? activeGameweek : userFantasyTeam.prospectsGameweek,
         braceBonusGameweek:
@@ -274,7 +275,7 @@ function createManagerStore() {
       bonusPlayed = 7;
     }
 
-    if (userFantasyTeam.countrymenGameweek === activeGameweek) {
+    if (userFantasyTeam.oneNationGameweek === activeGameweek) {
       bonusPlayed = 8;
     }
 
@@ -337,8 +338,8 @@ function createManagerStore() {
   ): number {
     let bonusCountryId = 0;
 
-    if (userFantasyTeam.countrymenGameweek === activeGameweek) {
-      bonusCountryId = userFantasyTeam.countrymenCountryId;
+    if (userFantasyTeam.oneNationGameweek === activeGameweek) {
+      bonusCountryId = userFantasyTeam.oneNationCountryId;
     }
 
     return bonusCountryId;

@@ -83,13 +83,13 @@
     },
     {
       id: 8,
-      name: "Countrymen",
-      image: "/countrymen.png",
+      name: "oneNation",
+      image: "/one-nation.png",
       description:
         "Receive a X2 multiplier for players of a selected nationality.",
       selectionType: BonusType.COUNTRY,
       isUsed: isBonusUsed(8),
-      usedGameweek: $fantasyTeam?.countrymenGameweek ?? 0
+      usedGameweek: $fantasyTeam?.oneNationGameweek ?? 0
     },
     {
       id: 9,
@@ -188,7 +188,7 @@
           ? true
           : false;
       case 8:
-        $fantasyTeam.countrymenGameweek && $fantasyTeam.countrymenGameweek > 0
+        $fantasyTeam.oneNationGameweek && $fantasyTeam.oneNationGameweek > 0
           ? true
           : false;
         return false;

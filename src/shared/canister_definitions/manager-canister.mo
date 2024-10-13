@@ -235,8 +235,8 @@ actor class _ManagerCanister() {
       safeHandsPlayerId = dto.safeHandsPlayerId;
       captainFantasticGameweek = dto.captainFantasticGameweek;
       captainFantasticPlayerId = dto.captainFantasticPlayerId;
-      countrymenGameweek = dto.countrymenGameweek;
-      countrymenCountryId = dto.countrymenCountryId;
+      oneNationGameweek = dto.oneNationGameweek;
+      oneNationCountryId = dto.oneNationCountryId;
       prospectsGameweek = dto.prospectsGameweek;
       braceBonusGameweek = dto.braceBonusGameweek;
       hatTrickHeroGameweek = dto.hatTrickHeroGameweek;
@@ -411,8 +411,8 @@ actor class _ManagerCanister() {
       safeHandsPlayerId = manager.safeHandsPlayerId;
       captainFantasticGameweek = manager.captainFantasticGameweek;
       captainFantasticPlayerId = manager.captainFantasticPlayerId;
-      countrymenGameweek = manager.countrymenGameweek;
-      countrymenCountryId = manager.countrymenCountryId;
+      oneNationGameweek = manager.oneNationGameweek;
+      oneNationCountryId = manager.oneNationCountryId;
       prospectsGameweek = manager.prospectsGameweek;
       braceBonusGameweek = manager.braceBonusGameweek;
       hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
@@ -587,8 +587,8 @@ actor class _ManagerCanister() {
       safeHandsPlayerId = manager.safeHandsPlayerId;
       captainFantasticGameweek = manager.captainFantasticGameweek;
       captainFantasticPlayerId = manager.captainFantasticPlayerId;
-      countrymenGameweek = manager.countrymenGameweek;
-      countrymenCountryId = manager.countrymenCountryId;
+      oneNationGameweek = manager.oneNationGameweek;
+      oneNationCountryId = manager.oneNationCountryId;
       prospectsGameweek = manager.prospectsGameweek;
       braceBonusGameweek = manager.braceBonusGameweek;
       hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
@@ -763,8 +763,8 @@ actor class _ManagerCanister() {
       safeHandsPlayerId = manager.safeHandsPlayerId;
       captainFantasticGameweek = manager.captainFantasticGameweek;
       captainFantasticPlayerId = manager.captainFantasticPlayerId;
-      countrymenGameweek = manager.countrymenGameweek;
-      countrymenCountryId = manager.countrymenCountryId;
+      oneNationGameweek = manager.oneNationGameweek;
+      oneNationCountryId = manager.oneNationCountryId;
       prospectsGameweek = manager.prospectsGameweek;
       braceBonusGameweek = manager.braceBonusGameweek;
       hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
@@ -1774,8 +1774,8 @@ actor class _ManagerCanister() {
       safeHandsPlayerId = manager.safeHandsPlayerId;
       captainFantasticGameweek = manager.captainFantasticGameweek;
       captainFantasticPlayerId = manager.captainFantasticPlayerId;
-      countrymenGameweek = manager.countrymenGameweek;
-      countrymenCountryId = manager.countrymenCountryId;
+      oneNationGameweek = manager.oneNationGameweek;
+      oneNationCountryId = manager.oneNationCountryId;
       prospectsGameweek = manager.prospectsGameweek;
       braceBonusGameweek = manager.braceBonusGameweek;
       hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
@@ -1815,8 +1815,8 @@ actor class _ManagerCanister() {
       safeHandsPlayerId = manager.safeHandsPlayerId;
       captainFantasticGameweek = manager.captainFantasticGameweek;
       captainFantasticPlayerId = manager.captainFantasticPlayerId;
-      countrymenGameweek = manager.countrymenGameweek;
-      countrymenCountryId = manager.countrymenCountryId;
+      oneNationGameweek = manager.oneNationGameweek;
+      oneNationCountryId = manager.oneNationCountryId;
       prospectsGameweek = manager.prospectsGameweek;
       braceBonusGameweek = manager.braceBonusGameweek;
       hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
@@ -1977,8 +1977,8 @@ actor class _ManagerCanister() {
                         totalScore := totalScore * 2;
                       };
 
-                      // Countrymen
-                      if (foundSnapshot.countrymenGameweek == gameweek and foundSnapshot.countrymenCountryId == player.nationality) {
+                      // oneNation
+                      if (foundSnapshot.oneNationGameweek == gameweek and foundSnapshot.oneNationCountryId == player.nationality) {
                         totalScore := totalScore * 2;
                       };
 
@@ -2155,8 +2155,8 @@ actor class _ManagerCanister() {
               safeHandsPlayerId = manager.safeHandsPlayerId;
               captainFantasticGameweek = manager.captainFantasticGameweek;
               captainFantasticPlayerId = manager.captainFantasticPlayerId;
-              countrymenGameweek = manager.countrymenGameweek;
-              countrymenCountryId = manager.countrymenCountryId;
+              oneNationGameweek = manager.oneNationGameweek;
+              oneNationCountryId = manager.oneNationCountryId;
               prospectsGameweek = manager.prospectsGameweek;
               braceBonusGameweek = manager.braceBonusGameweek;
               hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
@@ -2216,8 +2216,8 @@ actor class _ManagerCanister() {
           safeHandsPlayerId = manager.safeHandsPlayerId;
           captainFantasticGameweek = manager.captainFantasticGameweek;
           captainFantasticPlayerId = manager.captainFantasticPlayerId;
-          countrymenGameweek = manager.countrymenGameweek;
-          countrymenCountryId = manager.countrymenCountryId;
+          oneNationGameweek = manager.oneNationGameweek;
+          oneNationCountryId = manager.oneNationCountryId;
           prospectsGameweek = manager.prospectsGameweek;
           braceBonusGameweek = manager.braceBonusGameweek;
           hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
@@ -2264,8 +2264,8 @@ actor class _ManagerCanister() {
         safeHandsPlayerId = manager.safeHandsPlayerId;
         captainFantasticGameweek = manager.captainFantasticGameweek;
         captainFantasticPlayerId = manager.captainFantasticPlayerId;
-        countrymenGameweek = manager.countrymenGameweek;
-        countrymenCountryId = manager.countrymenCountryId;
+        oneNationGameweek = manager.oneNationGameweek;
+        oneNationCountryId = manager.oneNationCountryId;
         prospectsGameweek = manager.prospectsGameweek;
         braceBonusGameweek = manager.braceBonusGameweek;
         hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
@@ -2460,8 +2460,8 @@ actor class _ManagerCanister() {
         safeHandsPlayerId = manager.safeHandsPlayerId;
         captainFantasticGameweek = manager.captainFantasticGameweek;
         captainFantasticPlayerId = manager.captainFantasticPlayerId;
-        countrymenGameweek = manager.countrymenGameweek;
-        countrymenCountryId = manager.countrymenCountryId;
+        oneNationGameweek = manager.oneNationGameweek;
+        oneNationCountryId = manager.oneNationCountryId;
         prospectsGameweek = manager.prospectsGameweek;
         braceBonusGameweek = manager.braceBonusGameweek;
         hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
@@ -2552,8 +2552,8 @@ actor class _ManagerCanister() {
         safeHandsPlayerId = manager.safeHandsPlayerId;
         captainFantasticGameweek = manager.captainFantasticGameweek;
         captainFantasticPlayerId = manager.captainFantasticPlayerId;
-        countrymenGameweek = manager.countrymenGameweek;
-        countrymenCountryId = manager.countrymenCountryId;
+        oneNationGameweek = manager.oneNationGameweek;
+        oneNationCountryId = manager.oneNationCountryId;
         prospectsGameweek = manager.prospectsGameweek;
         braceBonusGameweek = manager.braceBonusGameweek;
         hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
@@ -2724,8 +2724,8 @@ actor class _ManagerCanister() {
         captainFantasticGameweek = snapshot.captainFantasticGameweek;
         captainFantasticPlayerId = snapshot.captainFantasticPlayerId;
         captainId = snapshot.captainId;
-        countrymenCountryId = snapshot.countrymenCountryId;
-        countrymenGameweek = snapshot.countrymenGameweek;
+        oneNationCountryId = snapshot.oneNationCountryId;
+        oneNationGameweek = snapshot.oneNationGameweek;
         favouriteClubId = snapshot.favouriteClubId;
         gameweek = snapshot.gameweek;
         goalGetterGameweek = snapshot.goalGetterGameweek;

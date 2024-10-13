@@ -8,7 +8,6 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
   class={className}
   viewBox="0 0 20 20"
-  fill="none"
 >
   <path
     fill-rule="evenodd"

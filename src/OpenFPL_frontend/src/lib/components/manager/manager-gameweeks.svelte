@@ -57,8 +57,8 @@
       return `<img src="/captain-fantastic.png" alt="Bonus" class="w-6 md:w-9" />`;
     } else if (snapshot.prospectsGameweek === snapshot.gameweek) {
       return `<img src="/prospects.png" alt="Bonus" class="w-6 md:w-9" />`;
-    } else if (snapshot.countrymenGameweek === snapshot.gameweek) {
-      return `<img src="/countryment.png" alt="Bonus" class="w-6 md:w-9" />`;
+    } else if (snapshot.oneNationGameweek === snapshot.gameweek) {
+      return `<img src="/one-nation.png" alt="Bonus" class="w-6 md:w-9" />`;
     } else if (snapshot.braceBonusGameweek === snapshot.gameweek) {
       return `<img src="/brace-bonus.png" alt="Bonus" class="w-6 md:w-9" />`;
     } else if (snapshot.hatTrickHeroGameweek === snapshot.gameweek) {

@@ -18,4 +18,14 @@ module ResponseDTOs {
     canisters: [CanisterInfoDTO];
   };
 
+  public type AdminDashboardDTO = {
+    openFPLCanisterId: T.CanisterId;
+    openWSLCanisterId: T.CanisterId;
+    dataCanisterId: T.CanisterId;
+    openFPLBackendCycles: Nat;
+    openWSLBackendCycles: Nat;
+    dataCanisterCycles: Nat;
+    managerCanisters: [(T.CanisterId, Nat)];
+  };
+
 };

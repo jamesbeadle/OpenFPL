@@ -254,8 +254,8 @@ module {
                 safeHandsPlayerId = foundManager.safeHandsPlayerId;
                 captainFantasticGameweek = foundManager.captainFantasticGameweek;
                 captainFantasticPlayerId = foundManager.captainFantasticPlayerId;
-                countrymenGameweek = foundManager.countrymenGameweek;
-                countrymenCountryId = foundManager.countrymenCountryId;
+                oneNationGameweek = foundManager.oneNationGameweek;
+                oneNationCountryId = foundManager.oneNationCountryId;
                 prospectsGameweek = foundManager.prospectsGameweek;
                 braceBonusGameweek = foundManager.braceBonusGameweek;
                 hatTrickHeroGameweek = foundManager.hatTrickHeroGameweek;
@@ -421,6 +421,13 @@ module {
     private func createNewManager(managerPrincipalId: T.PrincipalId, username: Text, favouriteClubId: T.ClubId, profilePicture: ?Blob, profilePictureType: Text, dto : ?DTOs.UpdateTeamSelectionDTO, systemState: DTOs.SystemStateDTO, players: [DTOs.PlayerDTO]) : async Result.Result<(), T.Error>{
       
       Debug.print("create new canister");
+      Debug.print(debug_show managerPrincipalId);
+      Debug.print(debug_show username);
+      Debug.print(debug_show favouriteClubId);
+      Debug.print(debug_show profilePicture);
+      Debug.print(debug_show profilePictureType);
+      Debug.print(debug_show dto);
+      Debug.print(debug_show systemState);
 
       Debug.print(debug_show activeManagerCanisterId);
       if(activeManagerCanisterId == ""){
@@ -443,8 +450,8 @@ module {
       var safeHandsPlayerId: T.PlayerId = 0;
       var captainFantasticGameweek: T.GameweekNumber = 0;
       var captainFantasticPlayerId: T.PlayerId = 0;
-      var countrymenGameweek: T.GameweekNumber = 0;
-      var countrymenCountryId: T.CountryId = 0;
+      var oneNationGameweek: T.GameweekNumber = 0;
+      var oneNationCountryId: T.CountryId = 0;
       var prospectsGameweek: T.GameweekNumber = 0;
       var braceBonusGameweek: T.GameweekNumber = 0;
       var hatTrickHeroGameweek: T.GameweekNumber = 0;
@@ -463,7 +470,7 @@ module {
           or foundDTO.teamBoostGameweek == systemState.pickTeamGameweek 
           or foundDTO.safeHandsGameweek == systemState.pickTeamGameweek 
           or foundDTO.captainFantasticGameweek == systemState.pickTeamGameweek 
-          or foundDTO.countrymenGameweek == systemState.pickTeamGameweek 
+          or foundDTO.oneNationGameweek == systemState.pickTeamGameweek 
           or foundDTO.prospectsGameweek == systemState.pickTeamGameweek 
           or foundDTO.braceBonusGameweek == systemState.pickTeamGameweek 
           or foundDTO.hatTrickHeroGameweek == systemState.pickTeamGameweek;
@@ -489,8 +496,8 @@ module {
           safeHandsPlayerId := foundDTO.safeHandsPlayerId;
           captainFantasticGameweek := foundDTO.captainFantasticGameweek;
           captainFantasticPlayerId := foundDTO.captainFantasticPlayerId;
-          countrymenGameweek := foundDTO.countrymenGameweek;
-          countrymenCountryId := foundDTO.countrymenCountryId;
+          oneNationGameweek := foundDTO.oneNationGameweek;
+          oneNationCountryId := foundDTO.oneNationCountryId;
           prospectsGameweek := foundDTO.prospectsGameweek;
           braceBonusGameweek := foundDTO.braceBonusGameweek;
           hatTrickHeroGameweek := foundDTO.hatTrickHeroGameweek;
@@ -520,7 +527,7 @@ module {
           termsAccepted = false;
           profilePicture = profilePicture;
           profilePictureType = profilePictureType;
-          transfersAvailable = 2;
+          transfersAvailable = 3;
           monthlyBonusesAvailable = monthlyBonuses;
           bankQuarterMillions = bankBalance;
           playerIds = playerIds;
@@ -537,8 +544,8 @@ module {
           safeHandsPlayerId = safeHandsPlayerId;
           captainFantasticGameweek = captainFantasticGameweek;
           captainFantasticPlayerId = captainFantasticPlayerId;
-          countrymenGameweek = countrymenGameweek;
-          countrymenCountryId = countrymenCountryId;
+          oneNationGameweek = oneNationGameweek;
+          oneNationCountryId = oneNationCountryId;
           prospectsGameweek = prospectsGameweek;
           braceBonusGameweek = braceBonusGameweek;
           hatTrickHeroGameweek = hatTrickHeroGameweek;
@@ -578,8 +585,8 @@ module {
         safeHandsPlayerId = safeHandsPlayerId;
         captainFantasticGameweek = captainFantasticGameweek;
         captainFantasticPlayerId = captainFantasticPlayerId;
-        countrymenGameweek = countrymenGameweek;
-        countrymenCountryId = countrymenCountryId;
+        oneNationGameweek = oneNationGameweek;
+        oneNationCountryId = oneNationCountryId;
         prospectsGameweek = prospectsGameweek;
         braceBonusGameweek = braceBonusGameweek;
         hatTrickHeroGameweek = hatTrickHeroGameweek;
@@ -665,7 +672,7 @@ module {
           if (updatedFantasyTeam.captainFantasticGameweek == systemState.pickTeamGameweek and foundManager.captainFantasticGameweek != systemState.pickTeamGameweek) {
             bonusesPlayed += 1;
           };
-          if (updatedFantasyTeam.countrymenGameweek == systemState.pickTeamGameweek and foundManager.countrymenGameweek != systemState.pickTeamGameweek) {
+          if (updatedFantasyTeam.oneNationGameweek == systemState.pickTeamGameweek and foundManager.oneNationGameweek != systemState.pickTeamGameweek) {
             bonusesPlayed += 1;
           };
           if (updatedFantasyTeam.prospectsGameweek == systemState.pickTeamGameweek and foundManager.prospectsGameweek != systemState.pickTeamGameweek) {
@@ -721,8 +728,8 @@ module {
             return true;
           };
           
-          if(updatedFantasyTeam.countrymenGameweek == systemState.pickTeamGameweek and 
-            (foundManager.countrymenGameweek != systemState.pickTeamGameweek and foundManager.countrymenGameweek != 0)){
+          if(updatedFantasyTeam.oneNationGameweek == systemState.pickTeamGameweek and 
+            (foundManager.oneNationGameweek != systemState.pickTeamGameweek and foundManager.oneNationGameweek != 0)){
             return true;
           };
           
@@ -848,15 +855,18 @@ module {
       Debug.print("X");
       
       let managerCanisterId = managerCanisterIds.get(managerPrincipalId);
+      Debug.print("managerCanisterId");
+      Debug.print(debug_show managerCanisterId);
+     
       var result: ?Result.Result<(), T.Error> = null;
       switch(managerCanisterId){
         case (null){
-          Debug.print("V");
+          Debug.print("Creating new manager");
       
           result := ?(await createNewManager(managerPrincipalId, updatedFantasyTeamDTO.username, 0, null, "", ?updatedFantasyTeamDTO, systemState, players));
         };  
         case (?foundManagerCanisterId){
-          Debug.print("U");
+          Debug.print("Updating existing manager");
       
           result := ?(await updateFantasyTeam(foundManagerCanisterId, managerPrincipalId, updatedFantasyTeamDTO, systemState, players));
         }
@@ -985,12 +995,16 @@ module {
     };
 
      private func updateFantasyTeam(managerCanisterId: T.CanisterId, managerPrincipalId: T.PrincipalId, dto : DTOs.UpdateTeamSelectionDTO, systemState: DTOs.SystemStateDTO, allPlayers: [DTOs.PlayerDTO]) : async Result.Result<(), T.Error>{
+       Debug.print(debug_show "Update Manager");
       let manager_canister = actor (managerCanisterId) : actor {
         getManager : T.PrincipalId -> async ?T.Manager;
         updateTeamSelection : (updateManagerDTO : DTOs.TeamUpdateDTO, transfersAvailable : Nat8, monthlyBonuses : Nat8, newBankBalance : Nat16) -> async Result.Result<(), T.Error>;
       };
 
-      let manager = await manager_canister.getManager(managerPrincipalId);      
+      let manager = await manager_canister.getManager(managerPrincipalId);  
+      Debug.print(debug_show "manager");
+      Debug.print(debug_show manager);
+          
       if (invalidBonuses(manager, dto, systemState, allPlayers)) {
         return #err(#InvalidBonuses);
       };
@@ -1152,7 +1166,7 @@ module {
         or (dto.teamBoostGameweek == systemState.pickTeamGameweek and manager.teamBoostGameweek == 0)
         or (dto.safeHandsGameweek == systemState.pickTeamGameweek and manager.safeHandsGameweek == 0)
         or (dto.captainFantasticGameweek == systemState.pickTeamGameweek and manager.captainFantasticGameweek == 0)
-        or (dto.countrymenGameweek == systemState.pickTeamGameweek and manager.countrymenGameweek == 0)
+        or (dto.oneNationGameweek == systemState.pickTeamGameweek and manager.oneNationGameweek == 0)
         or (dto.prospectsGameweek == systemState.pickTeamGameweek and manager.prospectsGameweek == 0)
         or (dto.braceBonusGameweek == systemState.pickTeamGameweek and manager.braceBonusGameweek == 0)
         or (dto.hatTrickHeroGameweek == systemState.pickTeamGameweek and manager.hatTrickHeroGameweek == 0);

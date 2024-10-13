@@ -4,25 +4,21 @@ import type { IDL } from '@dfinity/candid';
 
 export type AccountIdentifier = Uint8Array | number[];
 export interface AddInitialFixturesDTO { 'seasonFixtures' : Array<FixtureDTO> }
-export type CalendarMonth = number;
-export interface CanisterDTO {
-  'lastTopup' : bigint,
-  'cycles' : bigint,
-  'canister_type' : CanisterType,
-  'canisterId' : CanisterId,
+export interface AdminDashboardDTO {
+  'dataCanisterId' : CanisterId,
+  'openFPLCanisterId' : CanisterId,
+  'managerCanisters' : Array<[CanisterId, bigint]>,
+  'openWSLCanisterId' : CanisterId,
+  'dataCanisterCycles' : bigint,
+  'openWSLBackendCycles' : bigint,
+  'openFPLBackendCycles' : bigint,
 }
+export type CalendarMonth = number;
 export type CanisterId = string;
 export interface CanisterInfoDTO {
   'cycles' : bigint,
   'canisterId' : CanisterId,
 }
-export type CanisterType = { 'SNS' : null } |
-  { 'MonthlyLeaderboard' : null } |
-  { 'Dapp' : null } |
-  { 'Archive' : null } |
-  { 'SeasonLeaderboard' : null } |
-  { 'WeeklyLeaderboard' : null } |
-  { 'Manager' : null };
 export interface ClubDTO {
   'id' : ClubId,
   'secondaryColourHex' : string,
@@ -76,14 +72,14 @@ export interface FantasyTeamSnapshot {
   'playerIds' : Uint16Array | number[],
   'month' : CalendarMonth,
   'teamValueQuarterMillions' : number,
-  'countrymenCountryId' : CountryId,
   'username' : string,
   'goalGetterPlayerId' : PlayerId,
+  'oneNationCountryId' : CountryId,
   'hatTrickHeroGameweek' : GameweekNumber,
   'transfersAvailable' : number,
+  'oneNationGameweek' : GameweekNumber,
   'teamBoostGameweek' : GameweekNumber,
   'captainFantasticGameweek' : GameweekNumber,
-  'countrymenGameweek' : GameweekNumber,
   'bankQuarterMillions' : number,
   'noEntryPlayerId' : PlayerId,
   'monthlyPoints' : number,
@@ -111,14 +107,14 @@ export interface FantasyTeamSnapshotDTO {
   'playerIds' : Uint16Array | number[],
   'month' : CalendarMonth,
   'teamValueQuarterMillions' : number,
-  'countrymenCountryId' : CountryId,
   'username' : string,
   'goalGetterPlayerId' : PlayerId,
+  'oneNationCountryId' : CountryId,
   'hatTrickHeroGameweek' : GameweekNumber,
   'transfersAvailable' : number,
+  'oneNationGameweek' : GameweekNumber,
   'teamBoostGameweek' : GameweekNumber,
   'captainFantasticGameweek' : GameweekNumber,
-  'countrymenGameweek' : GameweekNumber,
   'bankQuarterMillions' : number,
   'noEntryPlayerId' : PlayerId,
   'monthlyPoints' : number,
@@ -168,13 +164,6 @@ export interface GameweekFiltersDTO {
 export type GameweekNumber = number;
 export type Gender = { 'Male' : null } |
   { 'Female' : null };
-export interface GetCanistersDTO {
-  'totalEntries' : bigint,
-  'offset' : bigint,
-  'limit' : bigint,
-  'entries' : Array<CanisterDTO>,
-  'canisterTypeFilter' : CanisterType,
-}
 export interface GetFantasyTeamSnapshotDTO {
   'seasonId' : SeasonId,
   'managerPrincipalId' : PrincipalId,
@@ -275,14 +264,14 @@ export interface MoveFixtureDTO {
 }
 export interface PickTeamDTO {
   'playerIds' : Uint16Array | number[],
-  'countrymenCountryId' : CountryId,
   'username' : string,
   'goalGetterPlayerId' : PlayerId,
+  'oneNationCountryId' : CountryId,
   'hatTrickHeroGameweek' : GameweekNumber,
   'transfersAvailable' : number,
+  'oneNationGameweek' : GameweekNumber,
   'teamBoostGameweek' : GameweekNumber,
   'captainFantasticGameweek' : GameweekNumber,
-  'countrymenGameweek' : GameweekNumber,
   'bankQuarterMillions' : number,
   'noEntryPlayerId' : PlayerId,
   'safeHandsPlayerId' : PlayerId,
@@ -459,7 +448,7 @@ export type Result_23 = { 'ok' : Array<CountryDTO> } |
   { 'err' : Error };
 export type Result_24 = { 'ok' : Array<ClubDTO> } |
   { 'err' : Error };
-export type Result_25 = { 'ok' : GetCanistersDTO } |
+export type Result_25 = { 'ok' : AdminDashboardDTO } |
   { 'err' : Error };
 export type Result_3 = { 'ok' : Array<CanisterId> } |
   { 'err' : Error };
@@ -598,13 +587,13 @@ export interface UpdateSystemStatusDTO {
 }
 export interface UpdateTeamSelectionDTO {
   'playerIds' : Uint16Array | number[],
-  'countrymenCountryId' : CountryId,
   'username' : string,
   'goalGetterPlayerId' : PlayerId,
+  'oneNationCountryId' : CountryId,
   'hatTrickHeroGameweek' : GameweekNumber,
+  'oneNationGameweek' : GameweekNumber,
   'teamBoostGameweek' : GameweekNumber,
   'captainFantasticGameweek' : GameweekNumber,
-  'countrymenGameweek' : GameweekNumber,
   'noEntryPlayerId' : PlayerId,
   'safeHandsPlayerId' : PlayerId,
   'braceBonusGameweek' : GameweekNumber,
@@ -651,10 +640,10 @@ export interface _SERVICE {
   'executeUnretirePlayer' : ActorMethod<[UnretirePlayerDTO], undefined>,
   'executeUpdateClub' : ActorMethod<[UpdateClubDTO], undefined>,
   'executeUpdatePlayer' : ActorMethod<[UpdatePlayerDTO], undefined>,
+  'getAdminDashboard' : ActorMethod<[], Result_25>,
   'getBackendCanisterBalance' : ActorMethod<[], Result_4>,
   'getCanisterCyclesAvailable' : ActorMethod<[], bigint>,
   'getCanisterCyclesBalance' : ActorMethod<[], Result_4>,
-  'getCanisters' : ActorMethod<[GetCanistersDTO], Result_25>,
   'getClubs' : ActorMethod<[], Result_24>,
   'getCountries' : ActorMethod<[], Result_23>,
   'getCurrentTeam' : ActorMethod<[], Result_22>,

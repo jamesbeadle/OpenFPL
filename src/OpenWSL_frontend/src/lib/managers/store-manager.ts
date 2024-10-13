@@ -79,7 +79,10 @@ class StoreManager {
       case "countries":
         const updatedCountries = await this.countryService.getCountries();
         countryStore.setCountries(updatedCountries);
-        localStorage.setItem("countries", JSON.stringify(updatedCountries, replacer));
+        localStorage.setItem(
+          "countries",
+          JSON.stringify(updatedCountries, replacer),
+        );
         break;
       case "system_state":
         const updatedSystemState = await this.systemService.getSystemState();
@@ -92,7 +95,10 @@ class StoreManager {
       case "seasons":
         const updatedSeasons = await this.seasonService.getSeasons();
         seasonStore.setSeasons(updatedSeasons);
-        localStorage.setItem("seasons", JSON.stringify(updatedSeasons, replacer));
+        localStorage.setItem(
+          "seasons",
+          JSON.stringify(updatedSeasons, replacer),
+        );
         break;
       case "clubs":
         const updatedClubs = await this.clubService.getClubs();
@@ -105,7 +111,10 @@ class StoreManager {
 
         //TODO: Run any objects with dates through a stringify function that should work better
 
-        localStorage.setItem("players", JSON.stringify(updatedPlayers, replacer));
+        localStorage.setItem(
+          "players",
+          JSON.stringify(updatedPlayers, replacer),
+        );
         break;
       case "player_events":
         const updatedPlayerEvents =
@@ -117,26 +126,40 @@ class StoreManager {
         );
         break;
       case "fixtures":
-        systemStore.subscribe(async systemState => {
-          const updatedFixtures = await this.fixtureService.getFixtures(systemState?.pickTeamGameweek ?? 0);
+        systemStore.subscribe(async (systemState) => {
+          const updatedFixtures = await this.fixtureService.getFixtures(
+            systemState?.calculationSeasonId ?? 0,
+          );
           fixtureStore.setFixtures(updatedFixtures);
-          localStorage.setItem("fixtures", JSON.stringify(updatedFixtures, replacer));
+          localStorage.setItem(
+            "fixtures",
+            JSON.stringify(updatedFixtures, replacer),
+          );
         });
         break;
       case "weekly_leaderboard":
-        systemStore.subscribe(async systemState => {
-          
+        systemStore.subscribe(async (systemState) => {
           const updatedWeeklyLeaderboard =
-          await this.weeklyLeaderboardService.getWeeklyLeaderboard(0,systemState?.calculationSeasonId ?? 0, 25, systemState?.calculationGameweek ?? 0);
+            await this.weeklyLeaderboardService.getWeeklyLeaderboard(
+              0,
+              systemState?.calculationSeasonId ?? 0,
+              25,
+              systemState?.calculationGameweek ?? 0,
+            );
           weeklyLeaderboardStore.setWeeklyLeaderboard(updatedWeeklyLeaderboard);
           localStorage.setItem(
             "weekly_leaderboard",
             JSON.stringify(updatedWeeklyLeaderboard, replacer),
           );
-          
-          const updatedFixtures = await this.fixtureService.getFixtures(systemState?.pickTeamGameweek ?? 0);
+
+          const updatedFixtures = await this.fixtureService.getFixtures(
+            systemState?.calculationSeasonId ?? 0,
+          );
           fixtureStore.setFixtures(updatedFixtures);
-          localStorage.setItem("fixtures", JSON.stringify(updatedFixtures, replacer));
+          localStorage.setItem(
+            "fixtures",
+            JSON.stringify(updatedFixtures, replacer),
+          );
         });
         break;
     }

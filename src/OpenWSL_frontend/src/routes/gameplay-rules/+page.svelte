@@ -182,7 +182,7 @@
           >
         </tr>
         <tr>
-          <td class="text-left px-4 py-2">Countrymen</td>
+          <td class="text-left px-4 py-2">One Nation</td>
           <td>Receive a X2 multiplier for players of a selected nationality.</td
           >
         </tr>

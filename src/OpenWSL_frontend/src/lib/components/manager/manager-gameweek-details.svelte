@@ -196,8 +196,8 @@
       }
 
       if (
-        fantasyTeam.countrymenCountryId === data.nationalityId &&
-        fantasyTeam.countrymenGameweek === data.gameweek
+        fantasyTeam.oneNationCountryId === data.nationalityId &&
+        fantasyTeam.oneNationGameweek === data.gameweek
       ) {
         bonusPoints += data.points;
       }

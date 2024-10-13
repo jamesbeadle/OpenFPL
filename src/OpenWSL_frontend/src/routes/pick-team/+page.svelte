@@ -31,14 +31,14 @@
 
   const fantasyTeam = writable<PickTeamDTO>({
     playerIds: [],
-    countrymenCountryId: 0,
+    oneNationCountryId: 0,
     username : '',
     goalGetterPlayerId : 0,
     hatTrickHeroGameweek : 0,
     transfersAvailable : 0,
     teamBoostGameweek : 0,
     captainFantasticGameweek : 0,
-    countrymenGameweek : 0,
+    oneNationGameweek : 0,
     bankQuarterMillions : 0,
     noEntryPlayerId : 0,
     safeHandsPlayerId : 0,

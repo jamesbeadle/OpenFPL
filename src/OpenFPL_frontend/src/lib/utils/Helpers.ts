@@ -1116,8 +1116,8 @@ export function calculateBonusPoints(
   }
 
   if (
-    fantasyTeam.countrymenGameweek === gameweekData.gameweek &&
-    fantasyTeam.countrymenCountryId === gameweekData.player.nationality
+    fantasyTeam.oneNationGameweek === gameweekData.gameweek &&
+    fantasyTeam.oneNationCountryId === gameweekData.player.nationality
   ) {
     bonusPoints = points * 2;
   }

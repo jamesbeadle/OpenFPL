@@ -171,7 +171,7 @@
       team.goalGetterGameweek,
       team.noEntryGameweek,
       team.safeHandsGameweek,
-      team.countrymenGameweek,
+      team.oneNationGameweek,
       team.prospectsGameweek,
     ];
 

@@ -236,7 +236,7 @@
 
   <div class="flex flex-row">
     <div class="flex mr-4 min-w-[100px] xs:min-w-[110px] sm:min-w-[150px]">
-      Countrymen:
+      One Nation:
     </div>
     <div class="flex-1">
       Double points for players of a selected nationality.

@@ -32,8 +32,8 @@ module DTOs {
     safeHandsPlayerId : T.PlayerId;
     captainFantasticGameweek : T.GameweekNumber;
     captainFantasticPlayerId : T.PlayerId;
-    countrymenGameweek : T.GameweekNumber;
-    countrymenCountryId : T.CountryId;
+    oneNationGameweek : T.GameweekNumber;
+    oneNationCountryId : T.CountryId;
     prospectsGameweek : T.GameweekNumber;
     braceBonusGameweek : T.GameweekNumber;
     hatTrickHeroGameweek : T.GameweekNumber;
@@ -398,19 +398,8 @@ module DTOs {
     totalEntries : Nat;
   };
 
-  public type WeeklyCanisterDTO = {
-    canister : T.WeeklyLeaderboardCanister;
-    cycles : Nat;
-  };
-
-  public type MonthlyCanisterDTO = {
-    canister : T.MonthlyLeaderboardsCanister;
-    cycles : Nat;
-  };
-
-  public type SeasonCanisterDTO = {
-    canister : T.SeasonLeaderboardCanister;
-    cycles : Nat;
+  public type CanisterDTO = {
+    canister : T.LeaderboardCanister;
   };
 
   public type ManagerCanisterDTO = {
@@ -422,13 +411,6 @@ module DTOs {
     id : Int;
     triggerTime : Int;
     callbackName : Text;
-  };
-
-  public type CanisterDTO = {
-    canisterId: T.CanisterId;
-    cycles: Nat;
-    lastTopup: Int;
-    canister_type: T.CanisterType;
   };
 
   public type RewardPoolDTO = {
@@ -504,8 +486,8 @@ module DTOs {
     safeHandsPlayerId : T.PlayerId;
     captainFantasticGameweek : T.GameweekNumber;
     captainFantasticPlayerId : T.PlayerId;
-    countrymenGameweek : T.GameweekNumber;
-    countrymenCountryId : T.CountryId;
+    oneNationGameweek : T.GameweekNumber;
+    oneNationCountryId : T.CountryId;
     prospectsGameweek : T.GameweekNumber;
     braceBonusGameweek : T.GameweekNumber;
     hatTrickHeroGameweek : T.GameweekNumber;
@@ -632,8 +614,8 @@ module DTOs {
     safeHandsPlayerId : T.PlayerId;
     captainFantasticGameweek : T.GameweekNumber;
     captainFantasticPlayerId : T.PlayerId;
-    countrymenGameweek : T.GameweekNumber;
-    countrymenCountryId : T.CountryId;
+    oneNationGameweek : T.GameweekNumber;
+    oneNationCountryId : T.CountryId;
     prospectsGameweek : T.GameweekNumber;
     braceBonusGameweek : T.GameweekNumber;
     hatTrickHeroGameweek : T.GameweekNumber;

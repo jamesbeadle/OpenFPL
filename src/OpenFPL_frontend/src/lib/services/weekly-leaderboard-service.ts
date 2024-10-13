@@ -1,7 +1,10 @@
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { isError } from "../utils/helpers";
-import type { GetWeeklyLeaderboardDTO, WeeklyLeaderboardDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type {
+  GetWeeklyLeaderboardDTO,
+  WeeklyLeaderboardDTO,
+} from "../../../../declarations/OpenWSL_backend/OpenWSL_backend.did";
 
 export class WeeklyLeaderboardService {
   private actor: any;
@@ -13,7 +16,12 @@ export class WeeklyLeaderboardService {
     );
   }
 
-  async getWeeklyLeaderboard(offset: number, seasonId: number, limit: number, gameweek: number): Promise<WeeklyLeaderboardDTO> {
+  async getWeeklyLeaderboard(
+    offset: number,
+    seasonId: number,
+    limit: number,
+    gameweek: number,
+  ): Promise<WeeklyLeaderboardDTO> {
     let dto: GetWeeklyLeaderboardDTO = {
       offset: BigInt(offset),
       seasonId: seasonId,

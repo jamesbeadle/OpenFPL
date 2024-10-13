@@ -93,6 +93,7 @@
       if(totalValue > 0){
         teamValue.set(totalValue / 4);
       }
+      return;
     }
   }
 

@@ -24,6 +24,7 @@ export class FixtureService {
     let dto: RequestFixturesDTO = {
       seasonId: seasonId,
     };
+    console.log(dto);
     const result = await this.actor.getFixtures(dto);
     if (isError(result)) throw new Error("Failed to fetch fixtures");
     return result.ok;

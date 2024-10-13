@@ -19,7 +19,7 @@
   let availableFormations = writable<string[]>([]);
   let selectedFormation = writable<string>('4-4-2');
   
-  let transfersAvailable = writable<number>(0);  
+  let transfersAvailable = writable<number>(3);  
   let bankBalance = writable<number>(0);
   let teamValue = writable<number>(0);
   let loadingPlayers = writable<boolean>(true);  
@@ -31,14 +31,14 @@
 
   const fantasyTeam = writable<PickTeamDTO>({
     playerIds: [],
-    countrymenCountryId: 0,
+    oneNationCountryId: 0,
     username : '',
     goalGetterPlayerId : 0,
     hatTrickHeroGameweek : 0,
     transfersAvailable : 0,
     teamBoostGameweek : 0,
     captainFantasticGameweek : 0,
-    countrymenGameweek : 0,
+    oneNationGameweek : 0,
     bankQuarterMillions : 0,
     noEntryPlayerId : 0,
     safeHandsPlayerId : 0,
@@ -89,6 +89,8 @@
     }
 
     let userFantasyTeam = await managerStore.getCurrentTeam();
+    console.log("userFantasyTeam")
+    console.log(userFantasyTeam)
     fantasyTeam.set(userFantasyTeam);
 
     fantasyTeam.update((currentTeam) => {
@@ -106,6 +108,7 @@
 
     if($fantasyTeam.principalId == ""){
       bankBalance.set(1200);
+      transfersAvailable.set(Infinity);
       return;
     }
 

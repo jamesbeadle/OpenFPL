@@ -66,8 +66,8 @@ module _Types {
     safeHandsPlayerId : PlayerId;
     captainFantasticGameweek : GameweekNumber;
     captainFantasticPlayerId : PlayerId;
-    countrymenGameweek : GameweekNumber;
-    countrymenCountryId : CountryId;
+    oneNationGameweek : GameweekNumber;
+    oneNationCountryId : CountryId;
     prospectsGameweek : GameweekNumber;
     braceBonusGameweek : GameweekNumber;
     hatTrickHeroGameweek : GameweekNumber;
@@ -155,8 +155,8 @@ module _Types {
     safeHandsPlayerId : PlayerId;
     captainFantasticGameweek : GameweekNumber;
     captainFantasticPlayerId : PlayerId;
-    countrymenGameweek : GameweekNumber;
-    countrymenCountryId : CountryId;
+    oneNationGameweek : GameweekNumber;
+    oneNationCountryId : CountryId;
     prospectsGameweek : GameweekNumber;
     braceBonusGameweek : GameweekNumber;
     hatTrickHeroGameweek : GameweekNumber;
@@ -449,19 +449,37 @@ module _Types {
     allTimeSeasonHighScorePool : Nat64;
   };
 
-  public type WeeklyLeaderboardCanister = {
+  public type LeaderboardCanister = {
+    leaderboardType: LeaderboardType;
+    leaderboardInfo: LeaderboardInfo;
+  };
+
+  public type LeaderboardType = {
+    #Weekly;
+    #Monthly;
+    #Season;
+  };
+
+  public type LeaderboardInfo = {
+    #Weekly : WeeklyLeaderboardInfo;
+    #Monthly : MonthlyLeaderboardInfo;
+    #Season : SeasonLeaderboardInfo;
+  };  
+
+  public type WeeklyLeaderboardInfo = {
     seasonId : SeasonId;
     gameweek : GameweekNumber;
     canisterId : Text;
   };
 
-  public type MonthlyLeaderboardsCanister = {
+  public type MonthlyLeaderboardInfo = {
     seasonId : SeasonId;
     month : CalendarMonth;
     canisterId : Text;
+    clubId: ClubId;
   };
 
-  public type SeasonLeaderboardCanister = {
+  public type SeasonLeaderboardInfo = {
     seasonId : SeasonId;
     canisterId : Text;
   };

@@ -138,7 +138,7 @@ export function isBonusConditionMet(team: PickTeamDTO | null): boolean {
     team.goalGetterGameweek,
     team.noEntryGameweek,
     team.safeHandsGameweek,
-    team.countrymenGameweek,
+    team.oneNationGameweek,
     team.prospectsGameweek,
   ];
 

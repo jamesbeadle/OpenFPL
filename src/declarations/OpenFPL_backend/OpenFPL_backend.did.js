@@ -153,6 +153,16 @@ export const idlFactory = ({ IDL }) => {
     'lastName' : IDL.Text,
     'firstName' : IDL.Text,
   });
+  const CanisterId = IDL.Text;
+  const AdminDashboardDTO = IDL.Record({
+    'dataCanisterId' : CanisterId,
+    'openFPLCanisterId' : CanisterId,
+    'managerCanisters' : IDL.Vec(IDL.Tuple(CanisterId, IDL.Nat)),
+    'openWSLCanisterId' : CanisterId,
+    'dataCanisterCycles' : IDL.Nat,
+    'openWSLBackendCycles' : IDL.Nat,
+    'openFPLBackendCycles' : IDL.Nat,
+  });
   const Error = IDL.Variant({
     'MoreThan2PlayersFromClub' : IDL.Null,
     'DecodeError' : IDL.Null,
@@ -171,31 +181,8 @@ export const idlFactory = ({ IDL }) => {
     'CanisterCreateError' : IDL.Null,
     'Not11Players' : IDL.Null,
   });
+  const Result_25 = IDL.Variant({ 'ok' : AdminDashboardDTO, 'err' : Error });
   const Result_4 = IDL.Variant({ 'ok' : IDL.Nat, 'err' : Error });
-  const CanisterType = IDL.Variant({
-    'SNS' : IDL.Null,
-    'MonthlyLeaderboard' : IDL.Null,
-    'Dapp' : IDL.Null,
-    'Archive' : IDL.Null,
-    'SeasonLeaderboard' : IDL.Null,
-    'WeeklyLeaderboard' : IDL.Null,
-    'Manager' : IDL.Null,
-  });
-  const CanisterId = IDL.Text;
-  const CanisterDTO = IDL.Record({
-    'lastTopup' : IDL.Int,
-    'cycles' : IDL.Nat,
-    'canister_type' : CanisterType,
-    'canisterId' : CanisterId,
-  });
-  const GetCanistersDTO = IDL.Record({
-    'totalEntries' : IDL.Nat,
-    'offset' : IDL.Nat,
-    'limit' : IDL.Nat,
-    'entries' : IDL.Vec(CanisterDTO),
-    'canisterTypeFilter' : CanisterType,
-  });
-  const Result_25 = IDL.Variant({ 'ok' : GetCanistersDTO, 'err' : Error });
   const ClubDTO = IDL.Record({
     'id' : ClubId,
     'secondaryColourHex' : IDL.Text,
@@ -215,14 +202,14 @@ export const idlFactory = ({ IDL }) => {
   const Result_23 = IDL.Variant({ 'ok' : IDL.Vec(CountryDTO), 'err' : Error });
   const PickTeamDTO = IDL.Record({
     'playerIds' : IDL.Vec(PlayerId),
-    'countrymenCountryId' : CountryId,
     'username' : IDL.Text,
     'goalGetterPlayerId' : PlayerId,
+    'oneNationCountryId' : CountryId,
     'hatTrickHeroGameweek' : GameweekNumber,
     'transfersAvailable' : IDL.Nat8,
+    'oneNationGameweek' : GameweekNumber,
     'teamBoostGameweek' : GameweekNumber,
     'captainFantasticGameweek' : GameweekNumber,
-    'countrymenGameweek' : GameweekNumber,
     'bankQuarterMillions' : IDL.Nat16,
     'noEntryPlayerId' : PlayerId,
     'safeHandsPlayerId' : PlayerId,
@@ -254,14 +241,14 @@ export const idlFactory = ({ IDL }) => {
     'playerIds' : IDL.Vec(PlayerId),
     'month' : CalendarMonth,
     'teamValueQuarterMillions' : IDL.Nat16,
-    'countrymenCountryId' : CountryId,
     'username' : IDL.Text,
     'goalGetterPlayerId' : PlayerId,
+    'oneNationCountryId' : CountryId,
     'hatTrickHeroGameweek' : GameweekNumber,
     'transfersAvailable' : IDL.Nat8,
+    'oneNationGameweek' : GameweekNumber,
     'teamBoostGameweek' : GameweekNumber,
     'captainFantasticGameweek' : GameweekNumber,
-    'countrymenGameweek' : GameweekNumber,
     'bankQuarterMillions' : IDL.Nat16,
     'noEntryPlayerId' : PlayerId,
     'monthlyPoints' : IDL.Int16,
@@ -337,14 +324,14 @@ export const idlFactory = ({ IDL }) => {
     'playerIds' : IDL.Vec(PlayerId),
     'month' : CalendarMonth,
     'teamValueQuarterMillions' : IDL.Nat16,
-    'countrymenCountryId' : CountryId,
     'username' : IDL.Text,
     'goalGetterPlayerId' : PlayerId,
+    'oneNationCountryId' : CountryId,
     'hatTrickHeroGameweek' : GameweekNumber,
     'transfersAvailable' : IDL.Nat8,
+    'oneNationGameweek' : GameweekNumber,
     'teamBoostGameweek' : GameweekNumber,
     'captainFantasticGameweek' : GameweekNumber,
-    'countrymenGameweek' : GameweekNumber,
     'bankQuarterMillions' : IDL.Nat16,
     'noEntryPlayerId' : PlayerId,
     'monthlyPoints' : IDL.Int16,
@@ -587,13 +574,13 @@ export const idlFactory = ({ IDL }) => {
   const Result = IDL.Variant({ 'ok' : IDL.Null, 'err' : Error });
   const UpdateTeamSelectionDTO = IDL.Record({
     'playerIds' : IDL.Vec(PlayerId),
-    'countrymenCountryId' : CountryId,
     'username' : IDL.Text,
     'goalGetterPlayerId' : PlayerId,
+    'oneNationCountryId' : CountryId,
     'hatTrickHeroGameweek' : GameweekNumber,
+    'oneNationGameweek' : GameweekNumber,
     'teamBoostGameweek' : GameweekNumber,
     'captainFantasticGameweek' : GameweekNumber,
-    'countrymenGameweek' : GameweekNumber,
     'noEntryPlayerId' : PlayerId,
     'safeHandsPlayerId' : PlayerId,
     'braceBonusGameweek' : GameweekNumber,
@@ -656,10 +643,10 @@ export const idlFactory = ({ IDL }) => {
     'executeUnretirePlayer' : IDL.Func([UnretirePlayerDTO], [], []),
     'executeUpdateClub' : IDL.Func([UpdateClubDTO], [], []),
     'executeUpdatePlayer' : IDL.Func([UpdatePlayerDTO], [], []),
+    'getAdminDashboard' : IDL.Func([], [Result_25], []),
     'getBackendCanisterBalance' : IDL.Func([], [Result_4], []),
     'getCanisterCyclesAvailable' : IDL.Func([], [IDL.Nat], []),
     'getCanisterCyclesBalance' : IDL.Func([], [Result_4], []),
-    'getCanisters' : IDL.Func([GetCanistersDTO], [Result_25], []),
     'getClubs' : IDL.Func([], [Result_24], []),
     'getCountries' : IDL.Func([], [Result_23], ['query']),
     'getCurrentTeam' : IDL.Func([], [Result_22], []),
