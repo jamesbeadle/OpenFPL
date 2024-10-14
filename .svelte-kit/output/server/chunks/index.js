@@ -3516,7 +3516,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "usjg3e"
+  version_hash: "vnapbx"
 };
 async function get_hooks() {
   return {};
@@ -3732,6 +3732,37 @@ function createSystemStore() {
 }
 const systemStore = createSystemStore();
 const idlFactory$1 = ({ IDL: IDL2 }) => {
+  const Gender = IDL2.Variant({ "Male": IDL2.Null, "Female": IDL2.Null });
+  const CountryId = IDL2.Nat16;
+  const CreateLeagueDTO = IDL2.Record({
+    "logo": IDL2.Vec(IDL2.Nat8),
+    "name": IDL2.Text,
+    "teamCount": IDL2.Nat8,
+    "relatedGender": Gender,
+    "countryId": CountryId,
+    "abbreviation": IDL2.Text,
+    "governingBody": IDL2.Text,
+    "formed": IDL2.Int
+  });
+  const Error2 = IDL2.Variant({
+    "MoreThan2PlayersFromClub": IDL2.Null,
+    "DecodeError": IDL2.Null,
+    "NotAllowed": IDL2.Null,
+    "DuplicatePlayerInTeam": IDL2.Null,
+    "InvalidBonuses": IDL2.Null,
+    "TooManyTransfers": IDL2.Null,
+    "NotFound": IDL2.Null,
+    "NumberPerPositionError": IDL2.Null,
+    "TeamOverspend": IDL2.Null,
+    "NotAuthorized": IDL2.Null,
+    "SelectedCaptainNotInTeam": IDL2.Null,
+    "InvalidData": IDL2.Null,
+    "SystemOnHold": IDL2.Null,
+    "AlreadyExists": IDL2.Null,
+    "CanisterCreateError": IDL2.Null,
+    "Not11Players": IDL2.Null
+  });
+  const Result = IDL2.Variant({ "ok": IDL2.Null, "err": Error2 });
   const FixtureStatusType = IDL2.Variant({
     "Unplayed": IDL2.Null,
     "Finalised": IDL2.Null,
@@ -3780,8 +3811,6 @@ const idlFactory$1 = ({ IDL: IDL2 }) => {
   const AddInitialFixturesDTO = IDL2.Record({
     "seasonFixtures": IDL2.Vec(FixtureDTO)
   });
-  const CountryId = IDL2.Nat16;
-  const Gender = IDL2.Variant({ "Male": IDL2.Null, "Female": IDL2.Null });
   const PlayerPosition = IDL2.Variant({
     "Goalkeeper": IDL2.Null,
     "Midfielder": IDL2.Null,
@@ -3896,26 +3925,8 @@ const idlFactory$1 = ({ IDL: IDL2 }) => {
     "openWSLBackendCycles": IDL2.Nat,
     "openFPLBackendCycles": IDL2.Nat
   });
-  const Error2 = IDL2.Variant({
-    "MoreThan2PlayersFromClub": IDL2.Null,
-    "DecodeError": IDL2.Null,
-    "NotAllowed": IDL2.Null,
-    "DuplicatePlayerInTeam": IDL2.Null,
-    "InvalidBonuses": IDL2.Null,
-    "TooManyTransfers": IDL2.Null,
-    "NotFound": IDL2.Null,
-    "NumberPerPositionError": IDL2.Null,
-    "TeamOverspend": IDL2.Null,
-    "NotAuthorized": IDL2.Null,
-    "SelectedCaptainNotInTeam": IDL2.Null,
-    "InvalidData": IDL2.Null,
-    "SystemOnHold": IDL2.Null,
-    "AlreadyExists": IDL2.Null,
-    "CanisterCreateError": IDL2.Null,
-    "Not11Players": IDL2.Null
-  });
-  const Result_25 = IDL2.Variant({ "ok": AdminDashboardDTO, "err": Error2 });
-  const Result_4 = IDL2.Variant({ "ok": IDL2.Nat, "err": Error2 });
+  const Result_27 = IDL2.Variant({ "ok": AdminDashboardDTO, "err": Error2 });
+  const Result_5 = IDL2.Variant({ "ok": IDL2.Nat, "err": Error2 });
   const ClubDTO = IDL2.Record({
     "id": ClubId,
     "secondaryColourHex": IDL2.Text,
@@ -3926,13 +3937,13 @@ const idlFactory$1 = ({ IDL: IDL2 }) => {
     "shirtType": ShirtType,
     "primaryColourHex": IDL2.Text
   });
-  const Result_24 = IDL2.Variant({ "ok": IDL2.Vec(ClubDTO), "err": Error2 });
+  const Result_26 = IDL2.Variant({ "ok": IDL2.Vec(ClubDTO), "err": Error2 });
   const CountryDTO = IDL2.Record({
     "id": CountryId,
     "code": IDL2.Text,
     "name": IDL2.Text
   });
-  const Result_23 = IDL2.Variant({ "ok": IDL2.Vec(CountryDTO), "err": Error2 });
+  const Result_25 = IDL2.Variant({ "ok": IDL2.Vec(CountryDTO), "err": Error2 });
   const PickTeamDTO = IDL2.Record({
     "playerIds": IDL2.Vec(PlayerId),
     "username": IDL2.Text,
@@ -3961,9 +3972,9 @@ const idlFactory$1 = ({ IDL: IDL2 }) => {
     "canisterId": CanisterId,
     "monthlyBonusesAvailable": IDL2.Nat8
   });
-  const Result_22 = IDL2.Variant({ "ok": PickTeamDTO, "err": Error2 });
+  const Result_24 = IDL2.Variant({ "ok": PickTeamDTO, "err": Error2 });
   const DataHashDTO = IDL2.Record({ "hash": IDL2.Text, "category": IDL2.Text });
-  const Result_21 = IDL2.Variant({ "ok": IDL2.Vec(DataHashDTO), "err": Error2 });
+  const Result_23 = IDL2.Variant({ "ok": IDL2.Vec(DataHashDTO), "err": Error2 });
   const PrincipalId = IDL2.Text;
   const GetFantasyTeamSnapshotDTO = IDL2.Record({
     "seasonId": SeasonId,
@@ -4005,12 +4016,12 @@ const idlFactory$1 = ({ IDL: IDL2 }) => {
     "points": IDL2.Int16,
     "monthlyBonusesAvailable": IDL2.Nat8
   });
-  const Result_20 = IDL2.Variant({
+  const Result_22 = IDL2.Variant({
     "ok": FantasyTeamSnapshotDTO,
     "err": Error2
   });
   const RequestFixturesDTO = IDL2.Record({ "seasonId": SeasonId });
-  const Result_13 = IDL2.Variant({ "ok": IDL2.Vec(FixtureDTO), "err": Error2 });
+  const Result_14 = IDL2.Variant({ "ok": IDL2.Vec(FixtureDTO), "err": Error2 });
   const CanisterInfoDTO = IDL2.Record({
     "cycles": IDL2.Nat,
     "canisterId": CanisterId
@@ -4018,8 +4029,23 @@ const idlFactory$1 = ({ IDL: IDL2 }) => {
   const LeaderboardCanistersDTO = IDL2.Record({
     "canisters": IDL2.Vec(CanisterInfoDTO)
   });
-  const Result_19 = IDL2.Variant({
+  const Result_21 = IDL2.Variant({
     "ok": LeaderboardCanistersDTO,
+    "err": Error2
+  });
+  const FootballLeagueDTO = IDL2.Record({
+    "id": FootballLeagueId,
+    "logo": IDL2.Vec(IDL2.Nat8),
+    "name": IDL2.Text,
+    "teamCount": IDL2.Nat8,
+    "relatedGender": Gender,
+    "countryId": CountryId,
+    "abbreviation": IDL2.Text,
+    "governingBody": IDL2.Text,
+    "formed": IDL2.Int
+  });
+  const Result_20 = IDL2.Variant({
+    "ok": IDL2.Vec(FootballLeagueDTO),
     "err": Error2
   });
   const ClubFilterDTO = IDL2.Record({
@@ -4045,7 +4071,7 @@ const idlFactory$1 = ({ IDL: IDL2 }) => {
     "lastName": IDL2.Text,
     "firstName": IDL2.Text
   });
-  const Result_8 = IDL2.Variant({ "ok": IDL2.Vec(PlayerDTO), "err": Error2 });
+  const Result_9 = IDL2.Variant({ "ok": IDL2.Vec(PlayerDTO), "err": Error2 });
   const RequestManagerDTO = IDL2.Record({
     "month": CalendarMonth,
     "clubId": ClubId,
@@ -4109,7 +4135,7 @@ const idlFactory$1 = ({ IDL: IDL2 }) => {
   const ManagerCanistersDTO = IDL2.Record({
     "canisters": IDL2.Vec(CanisterInfoDTO)
   });
-  const Result_18 = IDL2.Variant({ "ok": ManagerCanistersDTO, "err": Error2 });
+  const Result_19 = IDL2.Variant({ "ok": ManagerCanistersDTO, "err": Error2 });
   const GetMonthlyLeaderboardDTO = IDL2.Record({
     "month": CalendarMonth,
     "clubId": ClubId,
@@ -4132,7 +4158,7 @@ const idlFactory$1 = ({ IDL: IDL2 }) => {
     "seasonId": SeasonId,
     "entries": IDL2.Vec(LeaderboardEntry)
   });
-  const Result_17 = IDL2.Variant({
+  const Result_18 = IDL2.Variant({
     "ok": MonthlyLeaderboardDTO,
     "err": Error2
   });
@@ -4176,7 +4202,7 @@ const idlFactory$1 = ({ IDL: IDL2 }) => {
     "lastName": IDL2.Text,
     "firstName": IDL2.Text
   });
-  const Result_16 = IDL2.Variant({ "ok": PlayerDetailDTO, "err": Error2 });
+  const Result_17 = IDL2.Variant({ "ok": PlayerDetailDTO, "err": Error2 });
   const GameweekFiltersDTO = IDL2.Record({
     "seasonId": SeasonId,
     "gameweek": GameweekNumber
@@ -4189,7 +4215,7 @@ const idlFactory$1 = ({ IDL: IDL2 }) => {
     "gameweek": GameweekNumber,
     "points": IDL2.Int16
   });
-  const Result_15 = IDL2.Variant({
+  const Result_16 = IDL2.Variant({
     "ok": IDL2.Vec(PlayerPointsDTO),
     "err": Error2
   });
@@ -4206,7 +4232,7 @@ const idlFactory$1 = ({ IDL: IDL2 }) => {
     "position": PlayerPosition,
     "points": IDL2.Int16
   });
-  const Result_14 = IDL2.Variant({
+  const Result_15 = IDL2.Variant({
     "ok": IDL2.Vec(IDL2.Tuple(IDL2.Nat16, PlayerScoreDTO)),
     "err": Error2
   });
@@ -4219,7 +4245,7 @@ const idlFactory$1 = ({ IDL: IDL2 }) => {
     "profilePictureType": IDL2.Text,
     "principalId": IDL2.Text
   });
-  const Result_12 = IDL2.Variant({ "ok": ProfileDTO, "err": Error2 });
+  const Result_13 = IDL2.Variant({ "ok": ProfileDTO, "err": Error2 });
   const RewardPool = IDL2.Record({
     "monthlyLeaderboardPool": IDL2.Nat64,
     "allTimeSeasonHighScorePool": IDL2.Nat64,
@@ -4235,7 +4261,7 @@ const idlFactory$1 = ({ IDL: IDL2 }) => {
     "seasonId": SeasonId,
     "rewardPool": RewardPool
   });
-  const Result_11 = IDL2.Variant({ "ok": GetRewardPoolDTO, "err": Error2 });
+  const Result_12 = IDL2.Variant({ "ok": GetRewardPoolDTO, "err": Error2 });
   const GetSeasonLeaderboardDTO = IDL2.Record({
     "offset": IDL2.Nat,
     "seasonId": SeasonId,
@@ -4247,13 +4273,13 @@ const idlFactory$1 = ({ IDL: IDL2 }) => {
     "seasonId": SeasonId,
     "entries": IDL2.Vec(LeaderboardEntry)
   });
-  const Result_10 = IDL2.Variant({ "ok": SeasonLeaderboardDTO, "err": Error2 });
+  const Result_11 = IDL2.Variant({ "ok": SeasonLeaderboardDTO, "err": Error2 });
   const SeasonDTO = IDL2.Record({
     "id": SeasonId,
     "name": IDL2.Text,
     "year": IDL2.Nat16
   });
-  const Result_9 = IDL2.Variant({ "ok": IDL2.Vec(SeasonDTO), "err": Error2 });
+  const Result_10 = IDL2.Variant({ "ok": IDL2.Vec(SeasonDTO), "err": Error2 });
   const GetSnapshotPlayers = IDL2.Record({
     "seasonId": SeasonId,
     "gameweek": GameweekNumber,
@@ -4262,7 +4288,7 @@ const idlFactory$1 = ({ IDL: IDL2 }) => {
   const StaticCanistersDTO = IDL2.Record({
     "canisters": IDL2.Vec(CanisterInfoDTO)
   });
-  const Result_7 = IDL2.Variant({ "ok": StaticCanistersDTO, "err": Error2 });
+  const Result_8 = IDL2.Variant({ "ok": StaticCanistersDTO, "err": Error2 });
   const SystemStateDTO = IDL2.Record({
     "pickTeamSeasonId": SeasonId,
     "calculationGameweek": GameweekNumber,
@@ -4274,7 +4300,7 @@ const idlFactory$1 = ({ IDL: IDL2 }) => {
     "onHold": IDL2.Bool,
     "seasonActive": IDL2.Bool
   });
-  const Result_6 = IDL2.Variant({ "ok": SystemStateDTO, "err": Error2 });
+  const Result_7 = IDL2.Variant({ "ok": SystemStateDTO, "err": Error2 });
   const TopupDTO = IDL2.Record({
     "topupAmount": IDL2.Nat,
     "canisterId": IDL2.Text,
@@ -4286,9 +4312,9 @@ const idlFactory$1 = ({ IDL: IDL2 }) => {
     "limit": IDL2.Nat,
     "entries": IDL2.Vec(TopupDTO)
   });
-  const Result_5 = IDL2.Variant({ "ok": GetTopupsDTO, "err": Error2 });
+  const Result_6 = IDL2.Variant({ "ok": GetTopupsDTO, "err": Error2 });
   const AccountIdentifier = IDL2.Vec(IDL2.Nat8);
-  const Result_3 = IDL2.Variant({ "ok": IDL2.Vec(CanisterId), "err": Error2 });
+  const Result_4 = IDL2.Variant({ "ok": IDL2.Vec(CanisterId), "err": Error2 });
   const GetWeeklyLeaderboardDTO = IDL2.Record({
     "offset": IDL2.Nat,
     "seasonId": SeasonId,
@@ -4302,9 +4328,9 @@ const idlFactory$1 = ({ IDL: IDL2 }) => {
     "entries": IDL2.Vec(LeaderboardEntry),
     "gameweek": GameweekNumber
   });
-  const Result_2 = IDL2.Variant({ "ok": WeeklyLeaderboardDTO, "err": Error2 });
+  const Result_3 = IDL2.Variant({ "ok": WeeklyLeaderboardDTO, "err": Error2 });
+  const Result_2 = IDL2.Variant({ "ok": IDL2.Bool, "err": Error2 });
   const UsernameFilterDTO = IDL2.Record({ "username": IDL2.Text });
-  const Result = IDL2.Variant({ "ok": IDL2.Null, "err": Error2 });
   const UpdateTeamSelectionDTO = IDL2.Record({
     "playerIds": IDL2.Vec(PlayerId),
     "username": IDL2.Text,
@@ -4359,6 +4385,7 @@ const idlFactory$1 = ({ IDL: IDL2 }) => {
   const UpdateUsernameDTO = IDL2.Record({ "username": IDL2.Text });
   const RustResult = IDL2.Variant({ "Ok": IDL2.Text, "Err": IDL2.Text });
   return IDL2.Service({
+    "createLeague": IDL2.Func([CreateLeagueDTO], [Result], []),
     "executeAddInitialFixtures": IDL2.Func([AddInitialFixturesDTO], [], []),
     "executeCreatePlayer": IDL2.Func([CreatePlayerDTO], [], []),
     "executeLoanPlayer": IDL2.Func([LoanPlayerDTO], [], []),
@@ -4376,64 +4403,90 @@ const idlFactory$1 = ({ IDL: IDL2 }) => {
     "executeUnretirePlayer": IDL2.Func([UnretirePlayerDTO], [], []),
     "executeUpdateClub": IDL2.Func([UpdateClubDTO], [], []),
     "executeUpdatePlayer": IDL2.Func([UpdatePlayerDTO], [], []),
-    "getAdminDashboard": IDL2.Func([], [Result_25], []),
-    "getBackendCanisterBalance": IDL2.Func([], [Result_4], []),
+    "getAdminDashboard": IDL2.Func([], [Result_27], []),
+    "getBackendCanisterBalance": IDL2.Func([], [Result_5], []),
     "getCanisterCyclesAvailable": IDL2.Func([], [IDL2.Nat], []),
-    "getCanisterCyclesBalance": IDL2.Func([], [Result_4], []),
-    "getClubs": IDL2.Func([], [Result_24], []),
-    "getCountries": IDL2.Func([], [Result_23], ["query"]),
-    "getCurrentTeam": IDL2.Func([], [Result_22], []),
-    "getDataHashes": IDL2.Func([], [Result_21], ["query"]),
+    "getCanisterCyclesBalance": IDL2.Func([], [Result_5], []),
+    "getClubs": IDL2.Func([], [Result_26], []),
+    "getCountries": IDL2.Func([], [Result_25], ["query"]),
+    "getCurrentTeam": IDL2.Func([], [Result_24], []),
+    "getDataHashes": IDL2.Func([], [Result_23], ["query"]),
     "getFantasyTeamSnapshot": IDL2.Func(
       [GetFantasyTeamSnapshotDTO],
-      [Result_20],
+      [Result_22],
       []
     ),
-    "getFixtures": IDL2.Func([RequestFixturesDTO], [Result_13], []),
-    "getLeaderboardCanisters": IDL2.Func([], [Result_19], []),
-    "getLoanedPlayers": IDL2.Func([ClubFilterDTO], [Result_8], []),
+    "getFixtures": IDL2.Func([RequestFixturesDTO], [Result_14], []),
+    "getLeaderboardCanisters": IDL2.Func([], [Result_21], []),
+    "getLeagues": IDL2.Func([], [Result_20], []),
+    "getLoanedPlayers": IDL2.Func([ClubFilterDTO], [Result_9], []),
     "getManager": IDL2.Func([RequestManagerDTO], [Result_1], []),
-    "getManagerCanisters": IDL2.Func([], [Result_18], []),
+    "getManagerCanisters": IDL2.Func([], [Result_19], []),
     "getMonthlyLeaderboard": IDL2.Func(
       [GetMonthlyLeaderboardDTO],
-      [Result_17],
+      [Result_18],
       []
     ),
-    "getPlayerDetails": IDL2.Func([GetPlayerDetailsDTO], [Result_16], []),
+    "getPlayerDetails": IDL2.Func([GetPlayerDetailsDTO], [Result_17], []),
     "getPlayerDetailsForGameweek": IDL2.Func(
       [GameweekFiltersDTO],
-      [Result_15],
+      [Result_16],
       []
     ),
-    "getPlayers": IDL2.Func([], [Result_8], []),
-    "getPlayersMap": IDL2.Func([GameweekFiltersDTO], [Result_14], []),
-    "getPostponedFixtures": IDL2.Func([], [Result_13], []),
-    "getProfile": IDL2.Func([], [Result_12], []),
-    "getRetiredPlayers": IDL2.Func([ClubFilterDTO], [Result_8], []),
-    "getRewardPool": IDL2.Func([GetRewardPoolDTO], [Result_11], []),
+    "getPlayers": IDL2.Func([], [Result_9], []),
+    "getPlayersMap": IDL2.Func([GameweekFiltersDTO], [Result_15], []),
+    "getPostponedFixtures": IDL2.Func([], [Result_14], []),
+    "getProfile": IDL2.Func([], [Result_13], []),
+    "getRetiredPlayers": IDL2.Func([ClubFilterDTO], [Result_9], []),
+    "getRewardPool": IDL2.Func([GetRewardPoolDTO], [Result_12], []),
     "getSeasonLeaderboard": IDL2.Func(
       [GetSeasonLeaderboardDTO],
-      [Result_10],
+      [Result_11],
       []
     ),
-    "getSeasons": IDL2.Func([], [Result_9], []),
-    "getSnapshotPlayers": IDL2.Func([GetSnapshotPlayers], [Result_8], []),
-    "getStaticCanisters": IDL2.Func([], [Result_7], []),
-    "getSystemState": IDL2.Func([], [Result_6], []),
-    "getTopups": IDL2.Func([GetTopupsDTO], [Result_5], []),
-    "getTotalManagers": IDL2.Func([], [Result_4], []),
+    "getSeasons": IDL2.Func([], [Result_10], []),
+    "getSnapshotPlayers": IDL2.Func([GetSnapshotPlayers], [Result_9], []),
+    "getStaticCanisters": IDL2.Func([], [Result_8], []),
+    "getSystemState": IDL2.Func([], [Result_7], []),
+    "getTopups": IDL2.Func([GetTopupsDTO], [Result_6], []),
+    "getTotalManagers": IDL2.Func([], [Result_5], []),
     "getTreasuryAccountPublic": IDL2.Func([], [AccountIdentifier], []),
-    "getUniqueManagerCanisterIds": IDL2.Func([], [Result_3], []),
+    "getUniqueManagerCanisterIds": IDL2.Func([], [Result_4], []),
     "getWeeklyLeaderboard": IDL2.Func(
       [GetWeeklyLeaderboardDTO],
-      [Result_2],
+      [Result_3],
       []
     ),
+    "isAdmin": IDL2.Func([], [Result_2], []),
     "isUsernameValid": IDL2.Func([UsernameFilterDTO], [IDL2.Bool], ["query"]),
     "recalculatePoints": IDL2.Func([GameweekNumber], [Result], []),
     "saveFantasyTeam": IDL2.Func([UpdateTeamSelectionDTO], [Result], []),
     "searchUsername": IDL2.Func([UsernameFilterDTO], [Result_1], []),
+    "setAbbreviatedLeagueName": IDL2.Func(
+      [FootballLeagueId, IDL2.Text],
+      [Result],
+      []
+    ),
     "setGameweekTimers": IDL2.Func([SeasonId, GameweekNumber], [], []),
+    "setLeagueCountryId": IDL2.Func(
+      [FootballLeagueId, CountryId],
+      [Result],
+      []
+    ),
+    "setLeagueDateFormed": IDL2.Func([FootballLeagueId, IDL2.Int], [Result], []),
+    "setLeagueGender": IDL2.Func([FootballLeagueId, Gender], [Result], []),
+    "setLeagueGoverningBody": IDL2.Func(
+      [FootballLeagueId, IDL2.Text],
+      [Result],
+      []
+    ),
+    "setLeagueLogo": IDL2.Func(
+      [FootballLeagueId, IDL2.Vec(IDL2.Nat8)],
+      [Result],
+      []
+    ),
+    "setLeagueName": IDL2.Func([FootballLeagueId, IDL2.Text], [Result], []),
+    "setTeamCount": IDL2.Func([FootballLeagueId, IDL2.Nat8], [Result], []),
     "snapshotManagers": IDL2.Func([GameweekNumber], [Result], []),
     "updateFavouriteClub": IDL2.Func([UpdateFavouriteClubDTO], [Result], []),
     "updateProfilePicture": IDL2.Func([UpdateProfilePictureDTO], [Result], []),
@@ -4516,8 +4569,8 @@ const idlFactory$1 = ({ IDL: IDL2 }) => {
     "viewPayouts": IDL2.Func([GameweekNumber], [Result], [])
   });
 };
-var define_process_env_default$k = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
-const canisterId$1 = define_process_env_default$k.CANISTER_ID_OPENFPL_BACKEND;
+var define_process_env_default$m = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+const canisterId$1 = define_process_env_default$m.CANISTER_ID_OPENFPL_BACKEND;
 const createActor$1 = (canisterId2, options2 = {}) => {
   const agent = options2.agent || new HttpAgent({ ...options2.agentOptions });
   if (options2.agent && options2.agentOptions) {
@@ -4540,7 +4593,7 @@ const createActor$1 = (canisterId2, options2 = {}) => {
   });
 };
 canisterId$1 ? createActor$1(canisterId$1) : void 0;
-var define_process_env_default$j = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$l = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
 class ActorFactory {
   static createActor(idlFactory2, canisterId2 = "", identity = null, options2 = null) {
     const hostOptions = {
@@ -4601,7 +4654,7 @@ class ActorFactory {
     });
   }
   static getGovernanceAgent(identity = null, options2 = null) {
-    let canisterId2 = define_process_env_default$j.CANISTER_ID_SNS_GOVERNANCE;
+    let canisterId2 = define_process_env_default$l.CANISTER_ID_SNS_GOVERNANCE;
     const hostOptions = {
       host: `http://localhost:8080/?canisterId=${canisterId2}`,
       identity
@@ -5020,13 +5073,41 @@ function calculateBonusPoints(gameweekData, fantasyTeam, points) {
   }
   return bonusPoints;
 }
-var define_process_env_default$i = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+function getImageURL(blob) {
+  let byteArray;
+  if (blob && typeof blob === "object" && !Array.isArray(blob)) {
+    console.log("a");
+    const values = Object.values(blob);
+    if (values.length === 0) {
+      return "/profile_placeholder.png";
+    }
+    byteArray = Uint8Array.from(Object.values(blob));
+  } else if (Array.isArray(blob) && blob[0] instanceof Uint8Array) {
+    console.log("b");
+    byteArray = blob[0];
+  } else if (blob instanceof Uint8Array) {
+    console.log("c");
+    byteArray = blob;
+  } else if (typeof blob === "string") {
+    if (blob.startsWith("data:image")) {
+      return blob;
+    } else if (!blob.startsWith("/profile_placeholder.png")) {
+      return `data:png;base64,${blob}`;
+    }
+  }
+  if (byteArray) {
+    console.log("e");
+    return `data:image/png;base64,${uint8ArrayToBase64(byteArray)}`;
+  }
+  return "/profile_placeholder.png";
+}
+var define_process_env_default$k = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
 class FixtureService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory$1,
-      define_process_env_default$i.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default$k.OPENFPL_BACKEND_CANISTER_ID
     );
   }
   async getPostponedFixtures() {
@@ -5622,16 +5703,6 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "lastName": IDL2.Text,
     "firstName": IDL2.Text
   });
-  const CanisterId = IDL2.Text;
-  const AdminDashboardDTO = IDL2.Record({
-    "dataCanisterId": CanisterId,
-    "openFPLCanisterId": CanisterId,
-    "managerCanisters": IDL2.Vec(IDL2.Tuple(CanisterId, IDL2.Nat)),
-    "openWSLCanisterId": CanisterId,
-    "dataCanisterCycles": IDL2.Nat,
-    "openWSLBackendCycles": IDL2.Nat,
-    "openFPLBackendCycles": IDL2.Nat
-  });
   const Error2 = IDL2.Variant({
     "MoreThan2PlayersFromClub": IDL2.Null,
     "DecodeError": IDL2.Null,
@@ -5650,8 +5721,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "CanisterCreateError": IDL2.Null,
     "Not11Players": IDL2.Null
   });
-  const Result_25 = IDL2.Variant({ "ok": AdminDashboardDTO, "err": Error2 });
-  const Result_4 = IDL2.Variant({ "ok": IDL2.Nat, "err": Error2 });
+  const Result_3 = IDL2.Variant({ "ok": IDL2.Nat, "err": Error2 });
   const ClubDTO = IDL2.Record({
     "id": ClubId,
     "secondaryColourHex": IDL2.Text,
@@ -5662,13 +5732,14 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "shirtType": ShirtType,
     "primaryColourHex": IDL2.Text
   });
-  const Result_24 = IDL2.Variant({ "ok": IDL2.Vec(ClubDTO), "err": Error2 });
+  const Result_21 = IDL2.Variant({ "ok": IDL2.Vec(ClubDTO), "err": Error2 });
   const CountryDTO = IDL2.Record({
     "id": CountryId,
     "code": IDL2.Text,
     "name": IDL2.Text
   });
-  const Result_23 = IDL2.Variant({ "ok": IDL2.Vec(CountryDTO), "err": Error2 });
+  const Result_20 = IDL2.Variant({ "ok": IDL2.Vec(CountryDTO), "err": Error2 });
+  const CanisterId = IDL2.Text;
   const PickTeamDTO = IDL2.Record({
     "playerIds": IDL2.Vec(PlayerId),
     "username": IDL2.Text,
@@ -5697,9 +5768,9 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "canisterId": CanisterId,
     "monthlyBonusesAvailable": IDL2.Nat8
   });
-  const Result_22 = IDL2.Variant({ "ok": PickTeamDTO, "err": Error2 });
+  const Result_19 = IDL2.Variant({ "ok": PickTeamDTO, "err": Error2 });
   const DataHashDTO = IDL2.Record({ "hash": IDL2.Text, "category": IDL2.Text });
-  const Result_21 = IDL2.Variant({ "ok": IDL2.Vec(DataHashDTO), "err": Error2 });
+  const Result_18 = IDL2.Variant({ "ok": IDL2.Vec(DataHashDTO), "err": Error2 });
   const PrincipalId = IDL2.Text;
   const GetFantasyTeamSnapshotDTO = IDL2.Record({
     "seasonId": SeasonId,
@@ -5741,21 +5812,25 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "points": IDL2.Int16,
     "monthlyBonusesAvailable": IDL2.Nat8
   });
-  const Result_20 = IDL2.Variant({
+  const Result_17 = IDL2.Variant({
     "ok": FantasyTeamSnapshotDTO,
     "err": Error2
   });
   const RequestFixturesDTO = IDL2.Record({ "seasonId": SeasonId });
-  const Result_13 = IDL2.Variant({ "ok": IDL2.Vec(FixtureDTO), "err": Error2 });
-  const CanisterInfoDTO = IDL2.Record({
-    "cycles": IDL2.Nat,
-    "canisterId": CanisterId
+  const Result_11 = IDL2.Variant({ "ok": IDL2.Vec(FixtureDTO), "err": Error2 });
+  const FootballLeagueDTO = IDL2.Record({
+    "id": FootballLeagueId,
+    "logo": IDL2.Vec(IDL2.Nat8),
+    "name": IDL2.Text,
+    "teamCount": IDL2.Nat8,
+    "relatedGender": Gender,
+    "countryId": CountryId,
+    "abbreviation": IDL2.Text,
+    "governingBody": IDL2.Text,
+    "formed": IDL2.Int
   });
-  const LeaderboardCanistersDTO = IDL2.Record({
-    "canisters": IDL2.Vec(CanisterInfoDTO)
-  });
-  const Result_19 = IDL2.Variant({
-    "ok": LeaderboardCanistersDTO,
+  const Result_16 = IDL2.Variant({
+    "ok": IDL2.Vec(FootballLeagueDTO),
     "err": Error2
   });
   const ClubFilterDTO = IDL2.Record({
@@ -5781,7 +5856,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "lastName": IDL2.Text,
     "firstName": IDL2.Text
   });
-  const Result_8 = IDL2.Variant({ "ok": IDL2.Vec(PlayerDTO), "err": Error2 });
+  const Result_6 = IDL2.Variant({ "ok": IDL2.Vec(PlayerDTO), "err": Error2 });
   const RequestManagerDTO = IDL2.Record({
     "month": CalendarMonth,
     "clubId": ClubId,
@@ -5842,10 +5917,6 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "seasonPositionText": IDL2.Text
   });
   const Result_1 = IDL2.Variant({ "ok": ManagerDTO, "err": Error2 });
-  const ManagerCanistersDTO = IDL2.Record({
-    "canisters": IDL2.Vec(CanisterInfoDTO)
-  });
-  const Result_18 = IDL2.Variant({ "ok": ManagerCanistersDTO, "err": Error2 });
   const GetMonthlyLeaderboardDTO = IDL2.Record({
     "month": CalendarMonth,
     "clubId": ClubId,
@@ -5868,7 +5939,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "seasonId": SeasonId,
     "entries": IDL2.Vec(LeaderboardEntry)
   });
-  const Result_17 = IDL2.Variant({
+  const Result_15 = IDL2.Variant({
     "ok": MonthlyLeaderboardDTO,
     "err": Error2
   });
@@ -5912,7 +5983,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "lastName": IDL2.Text,
     "firstName": IDL2.Text
   });
-  const Result_16 = IDL2.Variant({ "ok": PlayerDetailDTO, "err": Error2 });
+  const Result_14 = IDL2.Variant({ "ok": PlayerDetailDTO, "err": Error2 });
   const GameweekFiltersDTO = IDL2.Record({
     "seasonId": SeasonId,
     "gameweek": GameweekNumber
@@ -5925,7 +5996,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "gameweek": GameweekNumber,
     "points": IDL2.Int16
   });
-  const Result_15 = IDL2.Variant({
+  const Result_13 = IDL2.Variant({
     "ok": IDL2.Vec(PlayerPointsDTO),
     "err": Error2
   });
@@ -5942,7 +6013,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "position": PlayerPosition,
     "points": IDL2.Int16
   });
-  const Result_14 = IDL2.Variant({
+  const Result_12 = IDL2.Variant({
     "ok": IDL2.Vec(IDL2.Tuple(IDL2.Nat16, PlayerScoreDTO)),
     "err": Error2
   });
@@ -5955,7 +6026,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "profilePictureType": IDL2.Text,
     "principalId": IDL2.Text
   });
-  const Result_12 = IDL2.Variant({ "ok": ProfileDTO, "err": Error2 });
+  const Result_10 = IDL2.Variant({ "ok": ProfileDTO, "err": Error2 });
   const RewardPool = IDL2.Record({
     "monthlyLeaderboardPool": IDL2.Nat64,
     "allTimeSeasonHighScorePool": IDL2.Nat64,
@@ -5971,7 +6042,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "seasonId": SeasonId,
     "rewardPool": RewardPool
   });
-  const Result_11 = IDL2.Variant({ "ok": GetRewardPoolDTO, "err": Error2 });
+  const Result_9 = IDL2.Variant({ "ok": GetRewardPoolDTO, "err": Error2 });
   const GetSeasonLeaderboardDTO = IDL2.Record({
     "offset": IDL2.Nat,
     "seasonId": SeasonId,
@@ -5983,22 +6054,18 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "seasonId": SeasonId,
     "entries": IDL2.Vec(LeaderboardEntry)
   });
-  const Result_10 = IDL2.Variant({ "ok": SeasonLeaderboardDTO, "err": Error2 });
+  const Result_8 = IDL2.Variant({ "ok": SeasonLeaderboardDTO, "err": Error2 });
   const SeasonDTO = IDL2.Record({
     "id": SeasonId,
     "name": IDL2.Text,
     "year": IDL2.Nat16
   });
-  const Result_9 = IDL2.Variant({ "ok": IDL2.Vec(SeasonDTO), "err": Error2 });
+  const Result_7 = IDL2.Variant({ "ok": IDL2.Vec(SeasonDTO), "err": Error2 });
   const GetSnapshotPlayers = IDL2.Record({
     "seasonId": SeasonId,
     "gameweek": GameweekNumber,
     "leagueId": FootballLeagueId
   });
-  const StaticCanistersDTO = IDL2.Record({
-    "canisters": IDL2.Vec(CanisterInfoDTO)
-  });
-  const Result_7 = IDL2.Variant({ "ok": StaticCanistersDTO, "err": Error2 });
   const SystemStateDTO = IDL2.Record({
     "pickTeamSeasonId": SeasonId,
     "calculationGameweek": GameweekNumber,
@@ -6010,7 +6077,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "onHold": IDL2.Bool,
     "seasonActive": IDL2.Bool
   });
-  const Result_6 = IDL2.Variant({ "ok": SystemStateDTO, "err": Error2 });
+  const Result_5 = IDL2.Variant({ "ok": SystemStateDTO, "err": Error2 });
   const TopupDTO = IDL2.Record({
     "topupAmount": IDL2.Nat,
     "canisterId": IDL2.Text,
@@ -6022,9 +6089,8 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "limit": IDL2.Nat,
     "entries": IDL2.Vec(TopupDTO)
   });
-  const Result_5 = IDL2.Variant({ "ok": GetTopupsDTO, "err": Error2 });
+  const Result_4 = IDL2.Variant({ "ok": GetTopupsDTO, "err": Error2 });
   const AccountIdentifier = IDL2.Vec(IDL2.Nat8);
-  const Result_3 = IDL2.Variant({ "ok": IDL2.Vec(CanisterId), "err": Error2 });
   const GetWeeklyLeaderboardDTO = IDL2.Record({
     "offset": IDL2.Nat,
     "seasonId": SeasonId,
@@ -6040,7 +6106,6 @@ const idlFactory = ({ IDL: IDL2 }) => {
   });
   const Result_2 = IDL2.Variant({ "ok": WeeklyLeaderboardDTO, "err": Error2 });
   const UsernameFilterDTO = IDL2.Record({ "username": IDL2.Text });
-  const Result = IDL2.Variant({ "ok": IDL2.Null, "err": Error2 });
   const UpdateTeamSelectionDTO = IDL2.Record({
     "playerIds": IDL2.Vec(PlayerId),
     "username": IDL2.Text,
@@ -6064,33 +6129,11 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "passMasterPlayerId": PlayerId,
     "captainId": PlayerId
   });
+  const Result = IDL2.Variant({ "ok": IDL2.Null, "err": Error2 });
   const UpdateFavouriteClubDTO = IDL2.Record({ "favouriteClubId": ClubId });
   const UpdateProfilePictureDTO = IDL2.Record({
     "profilePicture": IDL2.Vec(IDL2.Nat8),
     "extension": IDL2.Text
-  });
-  const UpdateRewardPoolsDTO = IDL2.Record({
-    "monthlyLeaderboardPool": IDL2.Nat64,
-    "allTimeSeasonHighScorePool": IDL2.Nat64,
-    "mostValuableTeamPool": IDL2.Nat64,
-    "highestScoringMatchPlayerPool": IDL2.Nat64,
-    "seasonId": SeasonId,
-    "seasonLeaderboardPool": IDL2.Nat64,
-    "allTimeWeeklyHighScorePool": IDL2.Nat64,
-    "allTimeMonthlyHighScorePool": IDL2.Nat64,
-    "weeklyLeaderboardPool": IDL2.Nat64
-  });
-  const UpdateSystemStatusDTO = IDL2.Record({
-    "pickTeamSeasonId": SeasonId,
-    "calculationGameweek": GameweekNumber,
-    "transferWindowActive": IDL2.Bool,
-    "pickTeamMonth": CalendarMonth,
-    "pickTeamGameweek": GameweekNumber,
-    "version": IDL2.Text,
-    "calculationMonth": CalendarMonth,
-    "calculationSeasonId": SeasonId,
-    "onHold": IDL2.Bool,
-    "seasonActive": IDL2.Bool
   });
   const UpdateUsernameDTO = IDL2.Record({ "username": IDL2.Text });
   const RustResult = IDL2.Variant({ "Ok": IDL2.Text, "Err": IDL2.Text });
@@ -6112,69 +6155,61 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "executeUnretirePlayer": IDL2.Func([UnretirePlayerDTO], [], []),
     "executeUpdateClub": IDL2.Func([UpdateClubDTO], [], []),
     "executeUpdatePlayer": IDL2.Func([UpdatePlayerDTO], [], []),
-    "getAdminDashboard": IDL2.Func([], [Result_25], []),
-    "getBackendCanisterBalance": IDL2.Func([], [Result_4], []),
+    "getBackendCanisterBalance": IDL2.Func([], [Result_3], []),
     "getCanisterCyclesAvailable": IDL2.Func([], [IDL2.Nat], []),
-    "getCanisterCyclesBalance": IDL2.Func([], [Result_4], []),
-    "getClubs": IDL2.Func([], [Result_24], []),
-    "getCountries": IDL2.Func([], [Result_23], ["query"]),
-    "getCurrentTeam": IDL2.Func([], [Result_22], []),
-    "getDataHashes": IDL2.Func([], [Result_21], ["query"]),
+    "getCanisterCyclesBalance": IDL2.Func([], [Result_3], []),
+    "getClubs": IDL2.Func([], [Result_21], []),
+    "getCountries": IDL2.Func([], [Result_20], ["query"]),
+    "getCurrentTeam": IDL2.Func([], [Result_19], []),
+    "getDataHashes": IDL2.Func([], [Result_18], ["query"]),
     "getFantasyTeamSnapshot": IDL2.Func(
       [GetFantasyTeamSnapshotDTO],
-      [Result_20],
-      []
-    ),
-    "getFixtures": IDL2.Func([RequestFixturesDTO], [Result_13], []),
-    "getLeaderboardCanisters": IDL2.Func([], [Result_19], []),
-    "getLoanedPlayers": IDL2.Func([ClubFilterDTO], [Result_8], []),
-    "getManager": IDL2.Func([RequestManagerDTO], [Result_1], []),
-    "getManagerCanisters": IDL2.Func([], [Result_18], []),
-    "getMonthlyLeaderboard": IDL2.Func(
-      [GetMonthlyLeaderboardDTO],
       [Result_17],
       []
     ),
-    "getPlayerDetails": IDL2.Func([GetPlayerDetailsDTO], [Result_16], []),
-    "getPlayerDetailsForGameweek": IDL2.Func(
-      [GameweekFiltersDTO],
+    "getFixtures": IDL2.Func([RequestFixturesDTO], [Result_11], []),
+    "getLeagues": IDL2.Func([], [Result_16], []),
+    "getLoanedPlayers": IDL2.Func([ClubFilterDTO], [Result_6], []),
+    "getManager": IDL2.Func([RequestManagerDTO], [Result_1], []),
+    "getMonthlyLeaderboard": IDL2.Func(
+      [GetMonthlyLeaderboardDTO],
       [Result_15],
       []
     ),
-    "getPlayers": IDL2.Func([], [Result_8], []),
-    "getPlayersMap": IDL2.Func([GameweekFiltersDTO], [Result_14], []),
-    "getPostponedFixtures": IDL2.Func([], [Result_13], []),
-    "getProfile": IDL2.Func([], [Result_12], []),
-    "getRetiredPlayers": IDL2.Func([ClubFilterDTO], [Result_8], []),
-    "getRewardPool": IDL2.Func([GetRewardPoolDTO], [Result_11], []),
-    "getSeasonLeaderboard": IDL2.Func(
-      [GetSeasonLeaderboardDTO],
-      [Result_10],
+    "getPlayerDetails": IDL2.Func([GetPlayerDetailsDTO], [Result_14], []),
+    "getPlayerDetailsForGameweek": IDL2.Func(
+      [GameweekFiltersDTO],
+      [Result_13],
       []
     ),
-    "getSeasons": IDL2.Func([], [Result_9], []),
-    "getSnapshotPlayers": IDL2.Func([GetSnapshotPlayers], [Result_8], []),
-    "getStaticCanisters": IDL2.Func([], [Result_7], []),
-    "getSystemState": IDL2.Func([], [Result_6], []),
-    "getTopups": IDL2.Func([GetTopupsDTO], [Result_5], []),
-    "getTotalManagers": IDL2.Func([], [Result_4], []),
+    "getPlayers": IDL2.Func([], [Result_6], []),
+    "getPlayersMap": IDL2.Func([GameweekFiltersDTO], [Result_12], []),
+    "getPostponedFixtures": IDL2.Func([], [Result_11], []),
+    "getProfile": IDL2.Func([], [Result_10], []),
+    "getRetiredPlayers": IDL2.Func([ClubFilterDTO], [Result_6], []),
+    "getRewardPool": IDL2.Func([GetRewardPoolDTO], [Result_9], []),
+    "getSeasonLeaderboard": IDL2.Func(
+      [GetSeasonLeaderboardDTO],
+      [Result_8],
+      []
+    ),
+    "getSeasons": IDL2.Func([], [Result_7], []),
+    "getSnapshotPlayers": IDL2.Func([GetSnapshotPlayers], [Result_6], []),
+    "getSystemState": IDL2.Func([], [Result_5], []),
+    "getTopups": IDL2.Func([GetTopupsDTO], [Result_4], []),
+    "getTotalManagers": IDL2.Func([], [Result_3], []),
     "getTreasuryAccountPublic": IDL2.Func([], [AccountIdentifier], []),
-    "getUniqueManagerCanisterIds": IDL2.Func([], [Result_3], []),
     "getWeeklyLeaderboard": IDL2.Func(
       [GetWeeklyLeaderboardDTO],
       [Result_2],
       []
     ),
     "isUsernameValid": IDL2.Func([UsernameFilterDTO], [IDL2.Bool], ["query"]),
-    "recalculatePoints": IDL2.Func([GameweekNumber], [Result], []),
     "saveFantasyTeam": IDL2.Func([UpdateTeamSelectionDTO], [Result], []),
     "searchUsername": IDL2.Func([UsernameFilterDTO], [Result_1], []),
     "setGameweekTimers": IDL2.Func([SeasonId, GameweekNumber], [], []),
-    "snapshotManagers": IDL2.Func([GameweekNumber], [Result], []),
     "updateFavouriteClub": IDL2.Func([UpdateFavouriteClubDTO], [Result], []),
     "updateProfilePicture": IDL2.Func([UpdateProfilePictureDTO], [Result], []),
-    "updateRewardPools": IDL2.Func([UpdateRewardPoolsDTO], [Result], []),
-    "updateSystemStatus": IDL2.Func([UpdateSystemStatusDTO], [Result], []),
     "updateUsername": IDL2.Func([UpdateUsernameDTO], [Result], []),
     "validateAddInitialFixtures": IDL2.Func(
       [AddInitialFixturesDTO],
@@ -6248,12 +6283,11 @@ const idlFactory = ({ IDL: IDL2 }) => {
       [UpdatePlayerDTO],
       [RustResult],
       ["query"]
-    ),
-    "viewPayouts": IDL2.Func([GameweekNumber], [Result], [])
+    )
   });
 };
-var define_process_env_default$h = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
-const canisterId = define_process_env_default$h.CANISTER_ID_OPENWSL_BACKEND;
+var define_process_env_default$j = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+const canisterId = define_process_env_default$j.CANISTER_ID_OPENWSL_BACKEND;
 const createActor = (canisterId2, options2 = {}) => {
   const agent = options2.agent || new HttpAgent({ ...options2.agentOptions });
   if (options2.agent && options2.agentOptions) {
@@ -6276,7 +6310,7 @@ const createActor = (canisterId2, options2 = {}) => {
   });
 };
 canisterId ? createActor(canisterId) : void 0;
-var define_process_env_default$g = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$i = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
 function createManagerStore() {
   const { subscribe: subscribe2, set } = writable(null);
   systemStore.subscribe((value) => {
@@ -6284,7 +6318,7 @@ function createManagerStore() {
   console.log("Creating actor in manager store line 26");
   let actor = ActorFactory.createActor(
     idlFactory,
-    define_process_env_default$g.OPENFPL_BACKEND_CANISTER_ID
+    define_process_env_default$i.OPENFPL_BACKEND_CANISTER_ID
   );
   let newManager = {
     playerIds: [],
@@ -6377,7 +6411,7 @@ function createManagerStore() {
       console.log("Creating actor in get current team line 133");
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default$g.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$i.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       console.log("actor getting current team line 138");
       console.log("resulty");
@@ -6409,7 +6443,7 @@ function createManagerStore() {
       console.log("Creating actor in save fantasy team line 171");
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default$g.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$i.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       let dto = {
         playerIds: userFantasyTeam.playerIds,
@@ -6542,260 +6576,6 @@ const authSignedInStore = derived(
   authStore,
   ({ identity }) => identity !== null && identity !== void 0
 );
-var define_process_env_default$f = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
-function createUserStore() {
-  const { subscribe: subscribe2, set } = writable(null);
-  async function sync() {
-    let localStorageString = localStorage.getItem("user_profile_data");
-    if (localStorageString) {
-      const localProfile = JSON.parse(localStorageString);
-      set(localProfile);
-      return;
-    }
-    try {
-      await cacheProfile();
-    } catch (error) {
-      console.error("Error fetching user profile:", error);
-      throw error;
-    }
-  }
-  async function updateUsername(username) {
-    try {
-      console.log("Creating actor in update username line 37");
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        define_process_env_default$f.OPENFPL_BACKEND_CANISTER_ID ?? ""
-      );
-      let dto = {
-        username
-      };
-      console.log("Actor updating username line 45");
-      const result = await identityActor.updateUsername(dto);
-      if (isError(result)) {
-        console.error("Error updating username");
-        return;
-      }
-      await cacheProfile();
-      return result;
-    } catch (error) {
-      console.error("Error updating username:", error);
-      throw error;
-    }
-  }
-  async function updateFavouriteTeam(favouriteTeamId) {
-    try {
-      console.log("Creating actor in updateFavouriteteam line 62");
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        define_process_env_default$f.OPENFPL_BACKEND_CANISTER_ID ?? ""
-      );
-      let dto = {
-        favouriteClubId: favouriteTeamId
-      };
-      console.log("Actor updating favourite club line 70");
-      const result = await identityActor.updateFavouriteClub(dto);
-      if (isError(result)) {
-        console.error("Error updating favourite team");
-        return;
-      }
-      await cacheProfile();
-      return result;
-    } catch (error) {
-      console.error("Error updating favourite team:", error);
-      throw error;
-    }
-  }
-  async function updateProfilePicture(picture) {
-    try {
-      const maxPictureSize = 1e3;
-      const extension = getFileExtensionFromFile(picture);
-      if (picture.size > maxPictureSize * 1024) {
-        return null;
-      }
-      const reader = new FileReader();
-      reader.readAsArrayBuffer(picture);
-      reader.onloadend = async () => {
-        const arrayBuffer = reader.result;
-        const uint8Array = new Uint8Array(arrayBuffer);
-        try {
-          console.log("Creating actor in updateProfilePicture line 98");
-          const identityActor = await ActorFactory.createIdentityActor(
-            authStore,
-            define_process_env_default$f.OPENFPL_BACKEND_CANISTER_ID ?? ""
-          );
-          let dto = {
-            profilePicture: uint8Array,
-            extension
-          };
-          console.log("Actor updating profile picture line 108");
-          const result = await identityActor.updateProfilePicture(dto);
-          if (isError(result)) {
-            console.error("Error updating profile picture");
-            return;
-          }
-          await cacheProfile();
-          return result;
-        } catch (error) {
-          console.error(error);
-        }
-      };
-    } catch (error) {
-      console.error("Error updating username:", error);
-      throw error;
-    }
-  }
-  function getFileExtensionFromFile(file) {
-    const filename = file.name;
-    const lastIndex = filename.lastIndexOf(".");
-    return lastIndex !== -1 ? filename.substring(lastIndex + 1) : "";
-  }
-  async function isUsernameAvailable(username) {
-    console.log("Creating actor in isUsernameAvailable line 139");
-    const identityActor = await ActorFactory.createIdentityActor(
-      authStore,
-      define_process_env_default$f.OPENFPL_BACKEND_CANISTER_ID
-    );
-    let dto = {
-      username
-    };
-    console.log("actor checking isUsernameValid line 146");
-    return await identityActor.isUsernameValid(dto);
-  }
-  async function cacheProfile() {
-    console.log("Creating actor in cache profile line 152");
-    const identityActor = await ActorFactory.createIdentityActor(
-      authStore,
-      define_process_env_default$f.OPENFPL_BACKEND_CANISTER_ID
-    );
-    console.log("Actor getting profile line 157");
-    let getProfileResponse = await identityActor.getProfile();
-    let error = isError(getProfileResponse);
-    if (error) {
-      console.error("Error fetching user profile");
-      return;
-    }
-    let profileData = getProfileResponse.ok;
-    set(profileData);
-  }
-  async function withdrawFPL(withdrawalAddress, withdrawalAmount) {
-    try {
-      let identity;
-      authStore.subscribe(async (auth) => {
-        identity = auth.identity;
-      });
-      if (!identity) {
-        return;
-      }
-      let principalId = identity.getPrincipal();
-      const agent = await createAgent({
-        identity,
-        host: "http://localhost:8080/?canisterId=qhbym-qaaaa-aaaaa-aaafq-cai",
-        fetchRootKey: define_process_env_default$f.DFX_NETWORK === "local"
-      });
-      const { transfer } = IcrcLedgerCanister.create({
-        agent,
-        canisterId: define_process_env_default$f.DFX_NETWORK === "ic" ? Principal.fromText("ddsp7-7iaaa-aaaaq-aacqq-cai") : Principal.fromText("avqkn-guaaa-aaaaa-qaaea-cai")
-      });
-      if (principalId) {
-        try {
-          let transfer_result = await transfer({
-            to: {
-              owner: Principal.fromText(withdrawalAddress),
-              subaccount: []
-            },
-            fee: 100000n,
-            memo: new Uint8Array(Text.encodeValue("0")),
-            from_subaccount: void 0,
-            created_at_time: BigInt(Date.now()) * BigInt(1e6),
-            amount: withdrawalAmount - 100000n
-          });
-        } catch (err) {
-          console.error(err.errorType);
-        }
-      }
-    } catch (error) {
-      console.error("Error withdrawing FPL.", error);
-      throw error;
-    }
-  }
-  async function getFPLBalance() {
-    let identity;
-    authStore.subscribe(async (auth) => {
-      identity = auth.identity;
-    });
-    if (!identity) {
-      return 0n;
-    }
-    let principalId = identity.getPrincipal();
-    const agent = await createAgent({
-      identity,
-      host: "http://localhost:8080/?canisterId=qhbym-qaaaa-aaaaa-aaafq-cai",
-      fetchRootKey: define_process_env_default$f.DFX_NETWORK === "local"
-    });
-    const { balance } = IcrcLedgerCanister.create({
-      agent,
-      canisterId: Principal.fromText("avqkn-guaaa-aaaaa-qaaea-cai")
-    });
-    if (principalId) {
-      try {
-        let result = await balance({
-          owner: principalId,
-          certified: false
-        });
-        return result;
-      } catch (err) {
-        console.error(err);
-      }
-    }
-    return 0n;
-  }
-  return {
-    subscribe: subscribe2,
-    sync,
-    updateUsername,
-    updateFavouriteTeam,
-    updateProfilePicture,
-    isUsernameAvailable,
-    cacheProfile,
-    withdrawFPL,
-    getFPLBalance
-  };
-}
-const userStore = createUserStore();
-const userGetProfilePicture = derived(
-  userStore,
-  ($user) => {
-    try {
-      let byteArray;
-      if ($user && $user.profilePicture) {
-        if (Array.isArray($user.profilePicture) && $user.profilePicture[0] instanceof Uint8Array) {
-          byteArray = $user.profilePicture[0];
-          return `data:image/${$user.profilePictureType};base64,${uint8ArrayToBase64(byteArray)}`;
-        } else if ($user.profilePicture instanceof Uint8Array) {
-          return `data:${$user.profilePictureType};base64,${uint8ArrayToBase64(
-            $user.profilePicture
-          )}`;
-        } else {
-          if (typeof $user.profilePicture === "string") {
-            if ($user.profilePicture.startsWith("data:image")) {
-              return $user.profilePicture;
-            } else {
-              return `data:${$user.profilePictureType};base64,${$user.profilePicture}`;
-            }
-          }
-        }
-      }
-      return "/profile_placeholder.png";
-    } catch (error) {
-      console.error(error);
-      return "/profile_placeholder.png";
-    }
-  }
-);
-derived(
-  userStore,
-  (user) => user !== null && user !== void 0 ? user.favouriteTeamId : 0
-);
 function createCountryStore() {
   const { subscribe: subscribe2, set } = writable([]);
   return {
@@ -6827,13 +6607,155 @@ function createSeasonStore() {
   };
 }
 const seasonStore = createSeasonStore();
-var define_process_env_default$e = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$h = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+class LeagueService {
+  constructor() {
+  }
+  async getLeagues() {
+    const identityActor = await ActorFactory.createIdentityActor(
+      authStore,
+      define_process_env_default$h.OPENFPL_BACKEND_CANISTER_ID
+    );
+    const result = await identityActor.getLeagues();
+    if (isError(result))
+      throw new Error("Failed to fetch leagues");
+    return result.ok;
+  }
+  async setLeagueName(leagueId, leagueName) {
+    const identityActor = await ActorFactory.createIdentityActor(
+      authStore,
+      define_process_env_default$h.OPENFPL_BACKEND_CANISTER_ID
+    );
+    const result = await identityActor.setLeagueName(leagueId, leagueName);
+    if (isError(result))
+      throw new Error("Failed to set league name");
+  }
+  async setAbbreviatedName(leagueId, abbreviatedName) {
+    const identityActor = await ActorFactory.createIdentityActor(
+      authStore,
+      define_process_env_default$h.OPENFPL_BACKEND_CANISTER_ID
+    );
+    const result = await identityActor.setAbbreviatedLeagueName(
+      leagueId,
+      abbreviatedName
+    );
+    if (isError(result))
+      throw new Error("Failed to set abbreviated league name");
+  }
+  async setGoverningBody(leagueId, governingBody) {
+    const identityActor = await ActorFactory.createIdentityActor(
+      authStore,
+      define_process_env_default$h.OPENFPL_BACKEND_CANISTER_ID
+    );
+    const result = await identityActor.setLeagueGoverningBody(
+      leagueId,
+      governingBody
+    );
+    if (isError(result))
+      throw new Error("Failed to set governing body");
+  }
+  async setGender(leagueId, gender) {
+    const identityActor = await ActorFactory.createIdentityActor(
+      authStore,
+      define_process_env_default$h.OPENFPL_BACKEND_CANISTER_ID
+    );
+    const result = await identityActor.setLeagueGender(leagueId, gender);
+    if (isError(result))
+      throw new Error("Failed to set league gender");
+  }
+  async setDateFormed(leagueId, date) {
+    const identityActor = await ActorFactory.createIdentityActor(
+      authStore,
+      define_process_env_default$h.OPENFPL_BACKEND_CANISTER_ID
+    );
+    const result = await identityActor.setLeagueDateFormed(leagueId, date);
+    if (isError(result))
+      throw new Error("Failed to set league formed date");
+  }
+  async setCountryId(leagueId, countryId) {
+    const identityActor = await ActorFactory.createIdentityActor(
+      authStore,
+      define_process_env_default$h.OPENFPL_BACKEND_CANISTER_ID
+    );
+    const result = await identityActor.setLeagueCountryId(leagueId, countryId);
+    if (isError(result))
+      throw new Error("Failed to set league country");
+  }
+  async setLogo(leagueId, logo) {
+    const identityActor = await ActorFactory.createIdentityActor(
+      authStore,
+      define_process_env_default$h.OPENFPL_BACKEND_CANISTER_ID
+    );
+    const result = await identityActor.setLeagueLogo(leagueId, logo);
+    if (isError(result))
+      throw new Error("Failed to set league logo");
+  }
+  async setTeamCount(leagueId, teamCount) {
+    const identityActor = await ActorFactory.createIdentityActor(
+      authStore,
+      define_process_env_default$h.OPENFPL_BACKEND_CANISTER_ID
+    );
+    const result = await identityActor.setTeamCount(leagueId, teamCount);
+    if (isError(result))
+      throw new Error("Failed to set league team count");
+  }
+  async createLeague(dto) {
+    const identityActor = await ActorFactory.createIdentityActor(
+      authStore,
+      define_process_env_default$h.OPENFPL_BACKEND_CANISTER_ID
+    );
+    const result = await identityActor.createLeague(dto);
+    if (isError(result))
+      throw new Error("Failed to create league");
+  }
+}
+function createLeagueStore() {
+  const { subscribe: subscribe2, set } = writable([]);
+  async function updateName(leagueId, leagueName) {
+    return new LeagueService().setLeagueName(leagueId, leagueName);
+  }
+  async function updateAbbreviatedName(leagueId, abbreviatedName) {
+    return new LeagueService().setAbbreviatedName(leagueId, abbreviatedName);
+  }
+  async function updateGoverningBody(leagueId, governingBody) {
+    return new LeagueService().setGoverningBody(leagueId, governingBody);
+  }
+  async function updateGender(leagueId, gender) {
+    return new LeagueService().setGender(leagueId, gender);
+  }
+  async function updateDateFormed(leagueId, dateFormed) {
+    return new LeagueService().setDateFormed(leagueId, dateFormed);
+  }
+  async function updateCountryId(leagueId, countryId) {
+    return new LeagueService().setCountryId(leagueId, countryId);
+  }
+  async function updateLogo(leagueId, logo) {
+    return new LeagueService().setLogo(leagueId, logo);
+  }
+  async function updateTeamCount(leagueId, teamCount) {
+    return new LeagueService().setTeamCount(leagueId, teamCount);
+  }
+  return {
+    subscribe: subscribe2,
+    setLeagues: (leagues) => set(leagues),
+    updateName,
+    updateAbbreviatedName,
+    updateGoverningBody,
+    updateGender,
+    updateDateFormed,
+    updateCountryId,
+    updateLogo,
+    updateTeamCount
+  };
+}
+const leagueStore = createLeagueStore();
+var define_process_env_default$g = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
 class PlayerService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory$1,
-      define_process_env_default$e.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default$g.OPENFPL_BACKEND_CANISTER_ID
     );
   }
   async getPlayers() {
@@ -6873,13 +6795,13 @@ function createPlayerStore() {
   };
 }
 const playerStore = createPlayerStore();
-var define_process_env_default$d = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$f = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
 class PlayerEventsService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory$1,
-      define_process_env_default$d.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default$f.OPENFPL_BACKEND_CANISTER_ID
     );
   }
   async getPlayerDetailsForGameweek() {
@@ -7012,13 +6934,13 @@ function createPlayerEventsStore() {
   };
 }
 const playerEventsStore = createPlayerEventsStore();
-var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$e = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
 class WeeklyLeaderboardService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory$1,
-      define_process_env_default$c.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default$e.OPENFPL_BACKEND_CANISTER_ID
     );
   }
   async getWeeklyLeaderboard(offset, seasonId, limit, gameweek) {
@@ -7052,29 +6974,30 @@ function createWeeklyLeaderboardStore() {
   };
 }
 const weeklyLeaderboardStore = createWeeklyLeaderboardStore();
-var define_process_env_default$b = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$d = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
 class DataHashService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory$1,
-      define_process_env_default$b.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default$d.OPENFPL_BACKEND_CANISTER_ID
     );
   }
   async getDataHashes() {
     const result = await this.actor.getDataHashes();
+    console.log(result);
     if (isError(result))
       throw new Error("Failed to fetch data hashes");
     return result.ok;
   }
 }
-var define_process_env_default$a = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
 class CountryService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory$1,
-      define_process_env_default$a.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default$c.OPENFPL_BACKEND_CANISTER_ID
     );
   }
   async getCountries() {
@@ -7084,13 +7007,13 @@ class CountryService {
     return result.ok;
   }
 }
-var define_process_env_default$9 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$b = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
 class SystemService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory$1,
-      define_process_env_default$9.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default$b.OPENFPL_BACKEND_CANISTER_ID
     );
   }
   async getSystemState() {
@@ -7100,13 +7023,13 @@ class SystemService {
     return result.ok;
   }
 }
-var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$a = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
 class SeasonService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory$1,
-      define_process_env_default$8.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default$a.OPENFPL_BACKEND_CANISTER_ID
     );
   }
   async getSeasons() {
@@ -7116,13 +7039,13 @@ class SeasonService {
     return result.ok;
   }
 }
-var define_process_env_default$7 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$9 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
 class ClubService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory$1,
-      define_process_env_default$7.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default$9.OPENFPL_BACKEND_CANISTER_ID
     );
   }
   async getClubs() {
@@ -7137,6 +7060,7 @@ class StoreManager {
     this.categories = [
       "countries",
       "system_state",
+      "leagues",
       "seasons",
       "clubs",
       "players",
@@ -7148,6 +7072,7 @@ class StoreManager {
     this.countryService = new CountryService();
     this.systemService = new SystemService();
     this.seasonService = new SeasonService();
+    this.leagueService = new LeagueService();
     this.clubService = new ClubService();
     this.playerService = new PlayerService();
     this.playerEventsService = new PlayerEventsService();
@@ -7195,6 +7120,14 @@ class StoreManager {
         localStorage.setItem(
           "seasons",
           JSON.stringify(updatedSeasons, replacer)
+        );
+        break;
+      case "leagues":
+        const updatedLeagues = await this.leagueService.getLeagues();
+        leagueStore.setLeagues(updatedLeagues);
+        localStorage.setItem(
+          "leagues",
+          JSON.stringify(updatedLeagues, replacer)
         );
         break;
       case "clubs":
@@ -7270,6 +7203,10 @@ class StoreManager {
         const cachedSeasons = JSON.parse(cachedData || "");
         seasonStore.setSeasons(cachedSeasons);
         break;
+      case "leagues":
+        const cachedLeagues = JSON.parse(cachedData || "[]");
+        leagueStore.setLeagues(cachedLeagues);
+        break;
       case "clubs":
         const cachedClubs = JSON.parse(cachedData || "[]");
         clubStore.setClubs(cachedClubs);
@@ -7290,6 +7227,281 @@ class StoreManager {
   }
 }
 const storeManager = new StoreManager();
+var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+class UserService {
+  constructor() {
+    authStore.sync();
+  }
+  async isAdmin() {
+    const identityActor = await ActorFactory.createIdentityActor(
+      authStore,
+      define_process_env_default$8.OPENFPL_BACKEND_CANISTER_ID
+    );
+    const result = await identityActor.isAdmin();
+    if (isError(result)) {
+      throw new Error("Failed to check is admin");
+    }
+    return result.ok;
+  }
+}
+var define_process_env_default$7 = { OPENFPL_BACKEND_CANISTER_ID: "bd3sg-teaaa-aaaaa-qaaba-cai", OPENFPL_FRONTEND_CANISTER_ID: "be2us-64aaa-aaaaa-qaabq-cai", OPENWSL_BACKEND_CANISTER_ID: "br5f7-7uaaa-aaaaa-qaaca-cai", OPENWSL_FRONTEND_CANISTER_ID: "bw4dl-smaaa-aaaaa-qaacq-cai", __CANDID_UI_CANISTER_ID: "by6od-j4aaa-aaaaa-qaadq-cai", DATA_CANISTER_CANISTER_ID: "b77ix-eeaaa-aaaaa-qaada-cai", DFX_NETWORK: "local", CANISTER_ID_SNS_GOVERNANCE: "by6od-j4aaa-aaaaa-qaadq-cai", CANISTER_ID_SNS_ROOT: "b77ix-eeaaa-aaaaa-qaada-cai", TOTAL_GAMEWEEKS: 38 };
+function createUserStore() {
+  const { subscribe: subscribe2, set } = writable(null);
+  async function sync() {
+    let localStorageString = localStorage.getItem("user_profile_data");
+    if (localStorageString) {
+      const localProfile = JSON.parse(localStorageString);
+      set(localProfile);
+      return;
+    }
+    try {
+      await cacheProfile();
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+      throw error;
+    }
+  }
+  async function isAdmin() {
+    return new UserService().isAdmin();
+  }
+  async function updateUsername(username) {
+    try {
+      console.log("Creating actor in update username line 37");
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        define_process_env_default$7.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
+      let dto = {
+        username
+      };
+      console.log("Actor updating username line 45");
+      const result = await identityActor.updateUsername(dto);
+      if (isError(result)) {
+        console.error("Error updating username");
+        return;
+      }
+      await cacheProfile();
+      return result;
+    } catch (error) {
+      console.error("Error updating username:", error);
+      throw error;
+    }
+  }
+  async function updateFavouriteTeam(favouriteTeamId) {
+    try {
+      console.log("Creating actor in updateFavouriteteam line 62");
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        define_process_env_default$7.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
+      let dto = {
+        favouriteClubId: favouriteTeamId
+      };
+      console.log("Actor updating favourite club line 70");
+      const result = await identityActor.updateFavouriteClub(dto);
+      if (isError(result)) {
+        console.error("Error updating favourite team");
+        return;
+      }
+      await cacheProfile();
+      return result;
+    } catch (error) {
+      console.error("Error updating favourite team:", error);
+      throw error;
+    }
+  }
+  async function updateProfilePicture(picture) {
+    try {
+      const maxPictureSize = 1e3;
+      const extension = getFileExtensionFromFile(picture);
+      if (picture.size > maxPictureSize * 1024) {
+        return null;
+      }
+      const reader = new FileReader();
+      reader.readAsArrayBuffer(picture);
+      reader.onloadend = async () => {
+        const arrayBuffer = reader.result;
+        const uint8Array = new Uint8Array(arrayBuffer);
+        try {
+          console.log("Creating actor in updateProfilePicture line 98");
+          const identityActor = await ActorFactory.createIdentityActor(
+            authStore,
+            define_process_env_default$7.OPENFPL_BACKEND_CANISTER_ID ?? ""
+          );
+          let dto = {
+            profilePicture: uint8Array,
+            extension
+          };
+          console.log("Actor updating profile picture line 108");
+          const result = await identityActor.updateProfilePicture(dto);
+          if (isError(result)) {
+            console.error("Error updating profile picture");
+            return;
+          }
+          await cacheProfile();
+          return result;
+        } catch (error) {
+          console.error(error);
+        }
+      };
+    } catch (error) {
+      console.error("Error updating username:", error);
+      throw error;
+    }
+  }
+  function getFileExtensionFromFile(file) {
+    const filename = file.name;
+    const lastIndex = filename.lastIndexOf(".");
+    return lastIndex !== -1 ? filename.substring(lastIndex + 1) : "";
+  }
+  async function isUsernameAvailable(username) {
+    console.log("Creating actor in isUsernameAvailable line 139");
+    const identityActor = await ActorFactory.createIdentityActor(
+      authStore,
+      define_process_env_default$7.OPENFPL_BACKEND_CANISTER_ID
+    );
+    let dto = {
+      username
+    };
+    console.log("actor checking isUsernameValid line 146");
+    return await identityActor.isUsernameValid(dto);
+  }
+  async function cacheProfile() {
+    console.log("Creating actor in cache profile line 152");
+    const identityActor = await ActorFactory.createIdentityActor(
+      authStore,
+      define_process_env_default$7.OPENFPL_BACKEND_CANISTER_ID
+    );
+    console.log("Actor getting profile line 157");
+    let getProfileResponse = await identityActor.getProfile();
+    let error = isError(getProfileResponse);
+    if (error) {
+      console.error("Error fetching user profile");
+      return;
+    }
+    let profileData = getProfileResponse.ok;
+    set(profileData);
+  }
+  async function withdrawFPL(withdrawalAddress, withdrawalAmount) {
+    try {
+      let identity;
+      authStore.subscribe(async (auth) => {
+        identity = auth.identity;
+      });
+      if (!identity) {
+        return;
+      }
+      let principalId = identity.getPrincipal();
+      const agent = await createAgent({
+        identity,
+        host: "http://localhost:8080/?canisterId=qhbym-qaaaa-aaaaa-aaafq-cai",
+        fetchRootKey: define_process_env_default$7.DFX_NETWORK === "local"
+      });
+      const { transfer } = IcrcLedgerCanister.create({
+        agent,
+        canisterId: define_process_env_default$7.DFX_NETWORK === "ic" ? Principal.fromText("ddsp7-7iaaa-aaaaq-aacqq-cai") : Principal.fromText("avqkn-guaaa-aaaaa-qaaea-cai")
+      });
+      if (principalId) {
+        try {
+          let transfer_result = await transfer({
+            to: {
+              owner: Principal.fromText(withdrawalAddress),
+              subaccount: []
+            },
+            fee: 100000n,
+            memo: new Uint8Array(Text.encodeValue("0")),
+            from_subaccount: void 0,
+            created_at_time: BigInt(Date.now()) * BigInt(1e6),
+            amount: withdrawalAmount - 100000n
+          });
+        } catch (err) {
+          console.error(err.errorType);
+        }
+      }
+    } catch (error) {
+      console.error("Error withdrawing FPL.", error);
+      throw error;
+    }
+  }
+  async function getFPLBalance() {
+    let identity;
+    authStore.subscribe(async (auth) => {
+      identity = auth.identity;
+    });
+    if (!identity) {
+      return 0n;
+    }
+    let principalId = identity.getPrincipal();
+    const agent = await createAgent({
+      identity,
+      host: "http://localhost:8080/?canisterId=qhbym-qaaaa-aaaaa-aaafq-cai",
+      fetchRootKey: define_process_env_default$7.DFX_NETWORK === "local"
+    });
+    const { balance } = IcrcLedgerCanister.create({
+      agent,
+      canisterId: Principal.fromText("avqkn-guaaa-aaaaa-qaaea-cai")
+    });
+    if (principalId) {
+      try {
+        let result = await balance({
+          owner: principalId,
+          certified: false
+        });
+        return result;
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    return 0n;
+  }
+  return {
+    subscribe: subscribe2,
+    sync,
+    updateUsername,
+    updateFavouriteTeam,
+    updateProfilePicture,
+    isUsernameAvailable,
+    cacheProfile,
+    withdrawFPL,
+    getFPLBalance,
+    isAdmin
+  };
+}
+const userStore = createUserStore();
+const userGetProfilePicture = derived(
+  userStore,
+  ($user) => {
+    try {
+      let byteArray;
+      if ($user && $user.profilePicture) {
+        if (Array.isArray($user.profilePicture) && $user.profilePicture[0] instanceof Uint8Array) {
+          byteArray = $user.profilePicture[0];
+          return `data:image/${$user.profilePictureType};base64,${uint8ArrayToBase64(byteArray)}`;
+        } else if ($user.profilePicture instanceof Uint8Array) {
+          return `data:${$user.profilePictureType};base64,${uint8ArrayToBase64(
+            $user.profilePicture
+          )}`;
+        } else {
+          if (typeof $user.profilePicture === "string") {
+            if ($user.profilePicture.startsWith("data:image")) {
+              return $user.profilePicture;
+            } else {
+              return `data:${$user.profilePictureType};base64,${$user.profilePicture}`;
+            }
+          }
+        }
+      }
+      return "/profile_placeholder.png";
+    } catch (error) {
+      console.error(error);
+      return "/profile_placeholder.png";
+    }
+  }
+);
+derived(
+  userStore,
+  (user) => user !== null && user !== void 0 ? user.favouriteTeamId : 0
+);
 const Header = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let currentClass;
   let currentBorder;
@@ -7630,7 +7842,7 @@ const Relative_spinner = create_ssr_component(($$result, $$props, $$bindings, sl
   $$result.css.add(css$1);
   return `<div class="local-spinner svelte-1mszak5"></div>`;
 });
-const Page$e = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$f = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_clubStore;
   let $$unsubscribe_systemStore;
   $$unsubscribe_clubStore = subscribe(clubStore, (value) => value);
@@ -8565,7 +8777,7 @@ const Clear_draft_modal = create_ssr_component(($$result, $$props, $$bindings, s
     }
   })}`;
 });
-const Page$d = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$e = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let fixtureId;
   let $playerEventData, $$unsubscribe_playerEventData = noop, $$subscribe_playerEventData = () => ($$unsubscribe_playerEventData(), $$unsubscribe_playerEventData = subscribe(playerEventData, ($$value) => $playerEventData = $$value), playerEventData);
   let $systemStore, $$unsubscribe_systemStore;
@@ -9350,7 +9562,7 @@ const Add_fixture_data = create_ssr_component(($$result, $$props, $$bindings, sl
     }
   })}`;
 });
-const Page$c = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$d = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let showRevaluePlayerUpModal = false;
   let showRevaluePlayerDownModal = false;
   let showAddInitialFixturesModal = false;
@@ -9561,14 +9773,14 @@ const Page$c = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$c = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
       return `${`${validate_component(Local_spinner, "LocalSpinner").$$render($$result, {}, {}, {})}`}`;
     }
   })}`;
 });
-const Page$a = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $clubStore, $$unsubscribe_clubStore;
   let $$unsubscribe_playerStore;
   let $$unsubscribe_fixtureStore;
@@ -9601,7 +9813,7 @@ const Page$a = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$9 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$a = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $clubStore, $$unsubscribe_clubStore;
   $$unsubscribe_clubStore = subscribe(clubStore, (value) => $clubStore = value);
   $$unsubscribe_clubStore();
@@ -9627,7 +9839,7 @@ const css = {
   code: ".striped.svelte-a09ql9 tr.svelte-a09ql9:nth-child(odd){background-color:rgba(46, 50, 58, 0.6)}",
   map: null
 };
-const Page$8 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$9 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$result.css.add(css);
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
@@ -9657,7 +9869,7 @@ const Page$8 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$7 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$8 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_authStore;
   $$unsubscribe_authStore = subscribe(authStore, (value) => value);
   $$unsubscribe_authStore();
@@ -9667,8 +9879,34 @@ const Page$7 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
+const Page$7 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let $$unsubscribe_leagueStore;
+  let $$unsubscribe_countryStore;
+  let $page, $$unsubscribe_page;
+  $$unsubscribe_leagueStore = subscribe(leagueStore, (value) => value);
+  $$unsubscribe_countryStore = subscribe(countryStore, (value) => value);
+  $$unsubscribe_page = subscribe(page, (value) => $page = value);
+  Number($page.url.searchParams.get("id"));
+  $$unsubscribe_leagueStore();
+  $$unsubscribe_countryStore();
+  $$unsubscribe_page();
+  return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
+    default: () => {
+      return `${`${validate_component(Spinner, "Spinner").$$render($$result, {}, {}, {})}`} ${``} ${``} ${``} ${``} ${``} ${``} ${``}`;
+    }
+  })}`;
+});
 const Page$6 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  return `  `;
+  let $leagueStore, $$unsubscribe_leagueStore;
+  $$unsubscribe_leagueStore = subscribe(leagueStore, (value) => $leagueStore = value);
+  $$unsubscribe_leagueStore();
+  return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
+    default: () => {
+      return `<div class="page-header-wrapper flex w-full"><div class="content-panel w-full flex flex-col"><div class="flex justify-between items-center w-full mb-4"><p class="text-lg font-bold" data-svelte-h="svelte-thks37">Leagues</p> ${``}</div> ${each($leagueStore.sort((a, b) => a.id - b.id), (league) => {
+        return `<div class="flex flex-row items-center bg-gray-700 rounded shadow p-4 w-full my-2"><div class="flex items-center space-x-4 w-full"><img${add_attribute("src", getImageURL(league.logo), 0)} class="w-8" alt="logo"> <p class="flex-grow text-lg md:text-sm">${escape(league.name)}</p> <a class="mt-auto self-end"${add_attribute("href", `/league?id=${league.id}`, 0)}><button class="fpl-button text-white font-bold py-2 px-4 rounded self-end" data-svelte-h="svelte-1atebf3">View</button> </a></div> </div>`;
+      })}</div></div>`;
+    }
+  })} ${``}`;
 });
 const Page$5 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_selectedGameweek;
@@ -9863,7 +10101,7 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
 export {
   Error$1 as E,
   Layout$1 as L,
-  Page$e as P,
+  Page$f as P,
   Server as S,
   set_building as a,
   set_manifest as b,
@@ -9873,20 +10111,21 @@ export {
   set_read_implementation as f,
   get_hooks as g,
   set_safe_public_env as h,
-  Page$d as i,
-  Page$c as j,
-  Page$b as k,
-  Page$a as l,
-  Page$9 as m,
-  Page$8 as n,
+  Page$e as i,
+  Page$d as j,
+  Page$c as k,
+  Page$b as l,
+  Page$a as m,
+  Page$9 as n,
   options as o,
-  Page$7 as p,
-  Page$6 as q,
-  Page$5 as r,
+  Page$8 as p,
+  Page$7 as q,
+  Page$6 as r,
   set_assets as s,
-  Page$4 as t,
-  Page$3 as u,
-  Page$2 as v,
-  Page$1 as w,
-  Page as x
+  Page$5 as t,
+  Page$4 as u,
+  Page$3 as v,
+  Page$2 as w,
+  Page$1 as x,
+  Page as y
 };

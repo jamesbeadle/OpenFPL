@@ -1,0 +1,450 @@
+type ValueHistory = 
+ record {
+   gameweek: nat8;
+   newValue: nat16;
+   oldValue: nat16;
+   seasonId: nat16;
+ };
+type UpdatePlayerDTO = 
+ record {
+   dateOfBirth: int;
+   firstName: text;
+   lastName: text;
+   nationality: CountryId;
+   playerId: PlayerId;
+   position: PlayerPosition;
+   shirtNumber: nat8;
+ };
+type UpdateClubDTO = 
+ record {
+   abbreviatedName: text;
+   clubId: ClubId;
+   friendlyName: text;
+   name: text;
+   primaryColourHex: text;
+   secondaryColourHex: text;
+   shirtType: ShirtType;
+   thirdColourHex: text;
+ };
+type UnretirePlayerDTO = record {playerId: PlayerId;};
+type TransferPlayerDTO = 
+ record {
+   clubId: ClubId;
+   gameweek: GameweekNumber;
+   newClubId: ClubId;
+   newLeagueId: FootballLeagueId;
+   newShirtNumber: nat8;
+   playerId: PlayerId;
+   seasonId: SeasonId;
+ };
+type SystemState = 
+ record {
+   calculationGameweek: GameweekNumber;
+   calculationMonth: CalendarMonth;
+   calculationSeasonId: SeasonId;
+   onHold: bool;
+   pickTeamGameweek: GameweekNumber;
+   pickTeamMonth: CalendarMonth;
+   pickTeamSeasonId: SeasonId;
+   seasonActive: bool;
+   transferWindowActive: bool;
+   version: text;
+ };
+type SubmitFixtureDataDTO = 
+ record {
+   fixtureId: FixtureId;
+   gameweek: GameweekNumber;
+   month: CalendarMonth;
+   playerEventData: vec PlayerEventData;
+ };
+type ShirtType = 
+ variant {
+   Filled;
+   Striped;
+ };
+type SetPlayerInjuryDTO = 
+ record {
+   description: text;
+   expectedEndDate: int;
+   playerId: PlayerId;
+ };
+type SeasonId = nat16;
+type SeasonDTO = 
+ record {
+   id: SeasonId;
+   name: text;
+   year: nat16;
+ };
+type RevaluePlayerUpDTO = 
+ record {
+   gameweek: GameweekNumber;
+   playerId: PlayerId;
+   seasonId: SeasonId;
+ };
+type RevaluePlayerDownDTO = 
+ record {
+   gameweek: GameweekNumber;
+   playerId: PlayerId;
+   seasonId: SeasonId;
+ };
+type RetirePlayerDTO = 
+ record {
+   playerId: PlayerId;
+   retirementDate: int;
+ };
+type Result_8 = 
+ variant {
+   err: Error;
+   ok: vec Club;
+ };
+type Result_7 = 
+ variant {
+   err: Error;
+   ok: vec FootballLeague;
+ };
+type Result_6 = 
+ variant {
+   err: Error;
+   ok: PlayerDetailDTO;
+ };
+type Result_5 = 
+ variant {
+   err: Error;
+   ok: vec PlayerPointsDTO;
+ };
+type Result_4 = 
+ variant {
+   err: Error;
+   ok: vec record {
+             nat16;
+             PlayerScoreDTO;
+           };
+ };
+type Result_3 = 
+ variant {
+   err: Error;
+   ok: vec FixtureDTO;
+ };
+type Result_2 = 
+ variant {
+   err: Error;
+   ok: vec PlayerDTO;
+ };
+type Result_1 = 
+ variant {
+   err: Error;
+   ok: vec SeasonDTO;
+ };
+type Result = 
+ variant {
+   err: Error;
+   ok;
+ };
+type RescheduleFixtureDTO = 
+ record {
+   postponedFixtureId: FixtureId;
+   updatedFixtureDate: int;
+   updatedFixtureGameweek: GameweekNumber;
+ };
+type RequestPlayersDTO = record {seasonId: SeasonId;};
+type RequestFixturesDTO = record {seasonId: SeasonId;};
+type RecallPlayerDTO = record {playerId: PlayerId;};
+type PromoteNewClubDTO = 
+ record {
+   abbreviatedName: text;
+   friendlyName: text;
+   name: text;
+   primaryColourHex: text;
+   secondaryColourHex: text;
+   shirtType: ShirtType;
+   thirdColourHex: text;
+ };
+type PostponeFixtureDTO = record {fixtureId: FixtureId;};
+type PlayerStatus = 
+ variant {
+   Active;
+   FreeAgent;
+   OnLoan;
+   Retired;
+ };
+type PlayerScoreDTO = 
+ record {
+   assists: int16;
+   clubId: ClubId;
+   dateOfBirth: int;
+   events: vec PlayerEventData;
+   goalsConceded: int16;
+   goalsScored: int16;
+   id: nat16;
+   nationality: CountryId;
+   points: int16;
+   position: PlayerPosition;
+   saves: int16;
+ };
+type PlayerPosition = 
+ variant {
+   Defender;
+   Forward;
+   Goalkeeper;
+   Midfielder;
+ };
+type PlayerPointsDTO = 
+ record {
+   clubId: ClubId;
+   events: vec PlayerEventData;
+   gameweek: GameweekNumber;
+   id: nat16;
+   points: int16;
+   position: PlayerPosition;
+ };
+type PlayerId = nat16;
+type PlayerGameweekDTO = 
+ record {
+   events: vec PlayerEventData;
+   fixtureId: FixtureId;
+   number: nat8;
+   points: int16;
+ };
+type PlayerEventType = 
+ variant {
+   Appearance;
+   CleanSheet;
+   Goal;
+   GoalAssisted;
+   GoalConceded;
+   HighestScoringPlayer;
+   KeeperSave;
+   OwnGoal;
+   PenaltyMissed;
+   PenaltySaved;
+   RedCard;
+   YellowCard;
+ };
+type PlayerEventData = 
+ record {
+   clubId: ClubId;
+   eventEndMinute: nat8;
+   eventStartMinute: nat8;
+   eventType: PlayerEventType;
+   fixtureId: FixtureId;
+   playerId: nat16;
+ };
+type PlayerDetailDTO = 
+ record {
+   clubId: ClubId;
+   dateOfBirth: int;
+   firstName: text;
+   gameweeks: vec PlayerGameweekDTO;
+   id: PlayerId;
+   injuryHistory: vec InjuryHistory;
+   lastName: text;
+   latestInjuryEndDate: int;
+   nationality: CountryId;
+   parentClubId: ClubId;
+   position: PlayerPosition;
+   retirementDate: int;
+   seasonId: SeasonId;
+   shirtNumber: nat8;
+   status: PlayerStatus;
+   valueHistory: vec ValueHistory;
+   valueQuarterMillions: nat16;
+ };
+type PlayerDTO = 
+ record {
+   clubId: ClubId;
+   dateOfBirth: int;
+   firstName: text;
+   id: nat16;
+   lastName: text;
+   nationality: CountryId;
+   position: PlayerPosition;
+   shirtNumber: nat8;
+   status: PlayerStatus;
+   totalPoints: int16;
+   valueQuarterMillions: nat16;
+ };
+type MoveFixtureDTO = 
+ record {
+   fixtureId: FixtureId;
+   updatedFixtureDate: int;
+   updatedFixtureGameweek: GameweekNumber;
+ };
+type LoanPlayerDTO = 
+ record {
+   gameweek: GameweekNumber;
+   loanClubId: ClubId;
+   loanEndDate: int;
+   loanLeagueId: FootballLeagueId;
+   playerId: PlayerId;
+   seasonId: SeasonId;
+ };
+type InjuryHistory = 
+ record {
+   description: text;
+   expectedEndDate: int;
+   injuryStartDate: int;
+ };
+type GetPlayerDetailsDTO = 
+ record {
+   playerId: PlayerId;
+   seasonId: SeasonId;
+ };
+type Gender = 
+ variant {
+   Female;
+   Male;
+ };
+type GameweekNumber = nat8;
+type GameweekFiltersDTO = 
+ record {
+   gameweek: GameweekNumber;
+   seasonId: SeasonId;
+ };
+type FootballLeagueId = nat16;
+type FootballLeague = 
+ record {
+   abbreviation: text;
+   countryId: CountryId;
+   formed: int;
+   governingBody: text;
+   id: FootballLeagueId;
+   logo: blob;
+   name: text;
+   numOfTeams: nat8;
+   relatedGender: Gender;
+ };
+type FixtureStatusType = 
+ variant {
+   Active;
+   Complete;
+   Finalised;
+   Unplayed;
+ };
+type FixtureId = nat32;
+type FixtureDTO = 
+ record {
+   awayClubId: ClubId;
+   awayGoals: nat8;
+   events: vec PlayerEventData;
+   gameweek: GameweekNumber;
+   highestScoringPlayerId: nat16;
+   homeClubId: ClubId;
+   homeGoals: nat8;
+   id: nat32;
+   kickOff: int;
+   seasonId: SeasonId;
+   status: FixtureStatusType;
+ };
+type Error = 
+ variant {
+   AlreadyExists;
+   CanisterCreateError;
+   DecodeError;
+   DuplicatePlayerInTeam;
+   InvalidBonuses;
+   InvalidData;
+   MoreThan2PlayersFromClub;
+   Not11Players;
+   NotAllowed;
+   NotAuthorized;
+   NotFound;
+   NumberPerPositionError;
+   SelectedCaptainNotInTeam;
+   SystemOnHold;
+   TeamOverspend;
+   TooManyTransfers;
+ };
+type CreatePlayerDTO = 
+ record {
+   clubId: ClubId;
+   dateOfBirth: int;
+   firstName: text;
+   gender: Gender;
+   lastName: text;
+   nationality: CountryId;
+   position: PlayerPosition;
+   shirtNumber: nat8;
+   valueQuarterMillions: nat16;
+ };
+type CountryId = nat16;
+type ClubId = nat16;
+type ClubFilterDTO = 
+ record {
+   clubId: ClubId;
+   leagueId: FootballLeagueId;
+ };
+type Club = 
+ record {
+   abbreviatedName: text;
+   friendlyName: text;
+   id: ClubId;
+   name: text;
+   primaryColourHex: text;
+   secondaryColourHex: text;
+   shirtType: ShirtType;
+   thirdColourHex: text;
+ };
+type CalendarMonth = nat8;
+type AddInitialFixturesDTO = record {seasonFixtures: vec FixtureDTO;};
+service : {
+  addEventsToFixture: (vec PlayerEventData, SeasonId, FixtureId) -> ();
+  addEventsToPlayers: (vec PlayerEventData, SeasonId, GameweekNumber) -> ();
+  checkGameweekComplete: (SeasonId, GameweekNumber) -> (bool);
+  checkMonthComplete: (SeasonId, CalendarMonth, GameweekNumber) -> (bool);
+  checkSeasonComplete: (SeasonId) -> (bool);
+  createNewSeason: (SystemState) -> () oneway;
+  createPlayer: (FootballLeagueId, CreatePlayerDTO) -> (Result);
+  getClubs: (FootballLeagueId) -> (Result_8);
+  getFixtures: (FootballLeagueId, RequestFixturesDTO) -> (Result_3);
+  getLeagues: () -> (Result_7);
+  getLoanedPlayers: (FootballLeagueId, ClubFilterDTO) -> (Result_2);
+  getPlayerDetails: (FootballLeagueId, GetPlayerDetailsDTO) -> (Result_6);
+  getPlayerDetailsForGameweek: (FootballLeagueId, GameweekFiltersDTO) ->
+   (Result_5);
+  getPlayers: (FootballLeagueId, RequestPlayersDTO) -> (Result_2);
+  getPlayersMap: (FootballLeagueId, GameweekFiltersDTO) -> (Result_4);
+  getPostponedFixtures: (FootballLeagueId, RequestFixturesDTO) -> (Result_3);
+  getRetiredPlayers: (FootballLeagueId, ClubFilterDTO) -> (Result_2);
+  getSeasons: (FootballLeagueId) -> (Result_1);
+  loanPlayer: (FootballLeagueId, LoanPlayerDTO) -> (Result);
+  promoteNewClub: (FootballLeagueId, PromoteNewClubDTO) -> (Result);
+  retirePlayer: (FootballLeagueId, RetirePlayerDTO) -> (Result);
+  revaluePlayerDown: (FootballLeagueId, RevaluePlayerDownDTO) -> (Result);
+  revaluePlayerUp: (FootballLeagueId, RevaluePlayerUpDTO) -> (Result);
+  setAbbreviatedLeagueName: (FootballLeagueId, text) -> (Result);
+  setFixtureToComplete: (SeasonId, FixtureId) -> () oneway;
+  setFixtureToFinalised: (SeasonId, FixtureId) -> () oneway;
+  setGameScore: (SeasonId, FixtureId) -> () oneway;
+  setLeagueCountryId: (FootballLeagueId, CountryId) -> (Result);
+  setLeagueDateFormed: (FootballLeagueId, int) -> (Result);
+  setLeagueGender: (FootballLeagueId, Gender) -> (Result);
+  setLeagueGoverningBody: (FootballLeagueId, text) -> (Result);
+  setLeagueLogo: (FootballLeagueId, blob) -> (Result);
+  setLeagueName: (FootballLeagueId, text) -> (Result);
+  setPlayerInjury: (FootballLeagueId, SetPlayerInjuryDTO) -> (Result);
+  setupData: () -> (Result);
+  transferPlayer: (FootballLeagueId, TransferPlayerDTO) -> (Result);
+  unretirePlayer: (UnretirePlayerDTO) -> (Result);
+  updateClub: (UpdateClubDTO) -> (Result);
+  updatePlayer: (FootballLeagueId, UpdatePlayerDTO) -> (Result);
+  validateAddInitialFixtures: (FootballLeagueId, AddInitialFixturesDTO) ->
+   (Result);
+  validateCreatePlayer: (FootballLeagueId, CreatePlayerDTO) -> (Result);
+  validateLoanPlayer: (FootballLeagueId, LoanPlayerDTO) -> (Result);
+  validateMoveFixture: (FootballLeagueId, MoveFixtureDTO) -> (Result);
+  validatePostponeFixture: (FootballLeagueId, PostponeFixtureDTO) -> (Result);
+  validateRecallPlayer: (FootballLeagueId, RecallPlayerDTO) -> (Result);
+  validateRescehduleFixture: (FootballLeagueId, RescheduleFixtureDTO) ->
+   (Result);
+  validateRetirePlayer: (FootballLeagueId, RetirePlayerDTO) -> (Result);
+  validateRevaluePlayerDown: (FootballLeagueId, RevaluePlayerDownDTO) ->
+   (Result);
+  validateRevaluePlayerUp: (FootballLeagueId, RevaluePlayerUpDTO) -> (Result);
+  validateSetPlayerInjury: (FootballLeagueId, SetPlayerInjuryDTO) -> (Result);
+  validateSubmitFixtureData: (FootballLeagueId, SubmitFixtureDataDTO) ->
+   (Result);
+  validateTransferPlayer: (FootballLeagueId, TransferPlayerDTO) -> (Result);
+  validateUnretirePlayer: (FootballLeagueId, UnretirePlayerDTO) -> (Result);
+  validateUpdateClub: (FootballLeagueId, UpdateClubDTO) -> (Result);
+  validateUpdatePlayer: (FootballLeagueId, UpdatePlayerDTO) -> (Result);
+}

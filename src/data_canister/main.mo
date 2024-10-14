@@ -13,6 +13,7 @@
   import TrieMap "mo:base/TrieMap";
   import List "mo:base/List";
   import Option "mo:base/Option";
+import Blob "mo:base/Blob";
 
   import T "../shared/types";
   import DTOs "../shared/DTOs";
@@ -30,21 +31,23 @@
         id = 1;
         name = "Premier League";
         abbreviation = "EPL";
-        numOfTeams = 20;
+        teamCount = 20;
         relatedGender = #Male;
         governingBody = "FA";
         countryId = 186;
         formed = 698544000000000000;
+        logo = Blob.fromArray([]);
       },
       {
         id = 2;
         name = "Women's Super League";
         abbreviation = "WSL";
-        numOfTeams = 12;
+        teamCount = 12;
         relatedGender = #Female;
         governingBody = "FA";
         countryId = 186;
         formed = 1269388800000000000;
+        logo = Blob.fromArray([]);
       }
     ];
 
@@ -66,7 +69,7 @@
     private stable var timers : [T.TimerInfo] = [];
 
     private func callerAllowed(caller: Principal) : Bool {
-      let foundCaller = Array.find<T.PrincipalId>(Environment.APPROVED_FRONTEND_CANISTERS, func(canisterId: T.CanisterId) : Bool {
+      let foundCaller = Array.find<T.PrincipalId>(Environment.APPROVED_CANISTERS, func(canisterId: T.CanisterId) : Bool {
         Principal.toText(caller) == canisterId
       });
       return Option.isSome(foundCaller);
@@ -75,13 +78,13 @@
     //Getters
 
     public shared ( {caller} ) func getLeagues() : async Result.Result<[T.FootballLeague], T.Error>{
-      //assert callerAllowed(caller);
+      assert callerAllowed(caller);
       return #ok(leagues);
     };  
 
 
     public shared ( {caller} ) func getClubs(leagueId: T.FootballLeagueId) : async Result.Result<[T.Club], T.Error>{
-      //assert callerAllowed(caller);
+      assert callerAllowed(caller);
 
       let filteredLeagueClubs = Array.find<(T.FootballLeagueId, [T.Club])>(leagueClubs, 
         func(leagueClubs: (T.FootballLeagueId, [T.Club])) : Bool {
@@ -108,7 +111,7 @@
     };  
 
     public shared ( {caller} ) func getSeasons(leagueId: T.FootballLeagueId) : async Result.Result<[DTOs.SeasonDTO], T.Error>{
-      //assert callerAllowed(caller);
+      assert callerAllowed(caller);
 
       let filteredLeagueSeasons = Array.find<(T.FootballLeagueId, [T.Season])>(leagueSeasons, 
         func(leagueSeason: (T.FootballLeagueId, [T.Season])) : Bool{
@@ -135,7 +138,7 @@
     };
 
     public shared ( {caller} ) func getFixtures(leagueId: T.FootballLeagueId, dto: RequestDTOs.RequestFixturesDTO) : async Result.Result<[DTOs.FixtureDTO], T.Error>{
-      //assert callerAllowed(caller);
+      assert callerAllowed(caller);
       Debug.print("get fixtures");
       Debug.print(debug_show leagueId);
       Debug.print(debug_show dto);
@@ -190,7 +193,7 @@
     };
 
     public shared ( {caller} ) func getPostponedFixtures(leagueId: T.FootballLeagueId, dto: RequestDTOs.RequestFixturesDTO) : async Result.Result<[DTOs.FixtureDTO], T.Error>{
-      //assert callerAllowed(caller);
+      assert callerAllowed(caller);
 
       let filteredLeagueSeasons = Array.find<(T.FootballLeagueId, [T.Season])>(leagueSeasons, 
         func(currentLeagueSeason: (T.FootballLeagueId, [T.Season])) : Bool{
@@ -235,7 +238,7 @@
     };
 
     public shared ( {caller} ) func getPlayers(leagueId: T.FootballLeagueId, dto: RequestDTOs.RequestPlayersDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error>{
-      //assert callerAllowed(caller);
+      assert callerAllowed(caller);
 
       let filteredLeaguePlayers = Array.find<(T.FootballLeagueId, [T.Player])>(leaguePlayers, 
         func(currentLeaguePlayers: (T.FootballLeagueId, [T.Player])) : Bool{
@@ -280,7 +283,7 @@
     };
 
     public shared ( {caller} ) func getLoanedPlayers(leagueId: T.FootballLeagueId, dto: DTOs.ClubFilterDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error>{
-      //assert callerAllowed(caller);
+      assert callerAllowed(caller);
 
       let filteredLeaguePlayers = Array.find<(T.FootballLeagueId, [T.Player])>(leaguePlayers, 
         func(currentLeaguePlayers: (T.FootballLeagueId, [T.Player])) : Bool{
@@ -319,7 +322,7 @@
     };
 
     public shared ( {caller} ) func getRetiredPlayers(leagueId: T.FootballLeagueId, dto: DTOs.ClubFilterDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error>{
-      //assert callerAllowed(caller);
+      assert callerAllowed(caller);
       
       let filteredLeaguePlayers = Array.find<(T.FootballLeagueId, [T.Player])>(retiredLeaguePlayers, 
         func(currentLeaguePlayers: (T.FootballLeagueId, [T.Player])) : Bool{
@@ -358,7 +361,7 @@
     };
 
     public shared ( {caller} ) func getPlayerDetails(leagueId: T.FootballLeagueId, dto: DTOs.GetPlayerDetailsDTO) : async Result.Result<DTOs.PlayerDetailDTO, T.Error> {
-      //assert callerAllowed(caller);
+      assert callerAllowed(caller);
 
       var clubId : T.ClubId = 0;
       var position : T.PlayerPosition = #Goalkeeper;
@@ -462,7 +465,7 @@
     };
     
     public shared ( {caller} ) func getPlayerDetailsForGameweek(leagueId: T.FootballLeagueId, dto: DTOs.GameweekFiltersDTO) : async Result.Result<[DTOs.PlayerPointsDTO], T.Error>{
-      //assert callerAllowed(caller);
+      assert callerAllowed(caller);
 
       var playerDetailsBuffer = Buffer.fromArray<DTOs.PlayerPointsDTO>([]);
 
@@ -512,7 +515,7 @@
     };
 
     public shared ( {caller} ) func getPlayersMap(leagueId: T.FootballLeagueId, dto: DTOs.GameweekFiltersDTO) : async Result.Result<[(Nat16, DTOs.PlayerScoreDTO)], T.Error>{
-      //assert callerAllowed(caller);
+      assert callerAllowed(caller);
       
       var playersMap : TrieMap.TrieMap<Nat16, DTOs.PlayerScoreDTO> = TrieMap.TrieMap<Nat16, DTOs.PlayerScoreDTO>(Utilities.eqNat16, Utilities.hashNat16);
       
@@ -583,65 +586,65 @@
     //Validation Functions for Update
 
     public shared ( {caller} ) func validateRevaluePlayerUp(leagueId: T.FootballLeagueId, dto : DTOs.RevaluePlayerUpDTO) : async Result.Result<(), T.Error>{
-      //assert callerAllowed(caller);
+      assert callerAllowed(caller);
       assert leagueExists(leagueId);
       assert checkPlayerExists(leagueId, dto.playerId);
       return #ok();
     };
 
     public shared ( {caller} ) func validateRevaluePlayerDown(leagueId: T.FootballLeagueId, dto : DTOs.RevaluePlayerDownDTO) : async Result.Result<(), T.Error>{
-      //assert callerAllowed(caller);
+      assert callerAllowed(caller);
       assert leagueExists(leagueId);
       assert checkPlayerExists(leagueId, dto.playerId);
       return #ok();
     };
 
     public shared ( {caller} ) func validateSubmitFixtureData(leagueId: T.FootballLeagueId, dto : DTOs.SubmitFixtureDataDTO) : async Result.Result<(), T.Error>{
-      //assert callerAllowed(caller);
+      assert callerAllowed(caller);
       assert leagueExists(leagueId);
       assert validatePlayerEvents(dto.playerEventData);
       return #err(#NotFound);
     };
 
     public shared ( {caller} ) func validateAddInitialFixtures(leagueId: T.FootballLeagueId, dto : DTOs.AddInitialFixturesDTO) : async Result.Result<(), T.Error>{
-      //assert callerAllowed(caller);
+      assert callerAllowed(caller);
       assert leagueExists(leagueId);
-      //TODO: Add fixtures check
+      //TODO (KELLY): Add fixtures check
         //should equal the number of teams in the related environment file
       return #err(#NotFound);
     };
 
     public shared ( {caller} ) func validateMoveFixture(leagueId: T.FootballLeagueId, dto : DTOs.MoveFixtureDTO) : async Result.Result<(), T.Error>{
-      //assert callerAllowed(caller);
+      assert callerAllowed(caller);
       assert leagueExists(leagueId);
-      //TODO: Add fixture movement check
+      //TODO (KELLY): Add fixture movement check
         //valid gameweek but that can go in a data check module in the backend
       return #err(#NotFound);
     };
 
     public shared ( {caller} ) func validatePostponeFixture(leagueId: T.FootballLeagueId, dto : DTOs.PostponeFixtureDTO) : async Result.Result<(), T.Error>{
-      //assert callerAllowed(caller);
+      assert callerAllowed(caller);
       assert leagueExists(leagueId);
-      //TODO
+      //TODO (KELLY)
       return #err(#NotFound);
     };
 
     public shared ( {caller} ) func validateRescehduleFixture(leagueId: T.FootballLeagueId, dto : DTOs.RescheduleFixtureDTO) : async Result.Result<(), T.Error>{
-      //assert callerAllowed(caller);
+      assert callerAllowed(caller);
       assert leagueExists(leagueId);
-      //TODO
+      //TODO (KELLY)
       return #err(#NotFound);
     };
 
     public shared ( {caller} ) func validateUpdateClub(leagueId: T.FootballLeagueId, dto : DTOs.UpdateClubDTO) : async Result.Result<(), T.Error>{
-      //assert callerAllowed(caller);
+      assert callerAllowed(caller);
       assert leagueExists(leagueId);
-      //TODO
+      //TODO (KELLY)
       return #err(#NotFound);
     };
 
     public shared ( {caller} ) func validateLoanPlayer(leagueId: T.FootballLeagueId, dto : DTOs.LoanPlayerDTO) : async Result.Result<(), T.Error>{
-      //assert callerAllowed(caller);
+      assert callerAllowed(caller);
       assert leagueExists(leagueId);
       assert checkPlayerExists(leagueId, dto.playerId);
 
@@ -693,11 +696,10 @@
                   case (null) {
                     return #err(#InvalidData);
                   };
-                  case (?foundTeam) {};
+                  case (?_) {
+                    return #ok();
+                  };
                 };
-                
-                return #ok();
-
               };
               case (null){
                 return #err(#NotFound);
@@ -715,7 +717,7 @@
     };
 
     public shared ( {caller} ) func validateTransferPlayer(leagueId: T.FootballLeagueId, dto : DTOs.TransferPlayerDTO) : async Result.Result<(), T.Error>{
-      //assert callerAllowed(caller);
+      assert callerAllowed(caller);
       assert leagueExists(leagueId);
       assert checkPlayerExists(leagueId, dto.playerId);
 
@@ -781,7 +783,7 @@
 
     public shared ( {caller} ) func validateRecallPlayer(leagueId: T.FootballLeagueId, dto : DTOs.RecallPlayerDTO) : async Result.Result<(), T.Error> {
       
-      //assert callerAllowed(caller);
+      assert callerAllowed(caller);
       assert leagueExists(leagueId);
       assert checkPlayerExists(leagueId, dto.playerId);
 
@@ -818,7 +820,7 @@
     };
 
     public shared ( {caller} ) func validateCreatePlayer(leagueId: T.FootballLeagueId, dto : DTOs.CreatePlayerDTO) : async Result.Result<(), T.Error>{
-      //assert callerAllowed(caller);
+      assert callerAllowed(caller);
       assert leagueExists(leagueId);
 
       if (Text.size(dto.firstName) > 50) {
@@ -871,7 +873,7 @@
     };
 
     public shared ( {caller} ) func validateUpdatePlayer(leagueId: T.FootballLeagueId, dto : DTOs.UpdatePlayerDTO) : async Result.Result<(), T.Error>{
-      //assert callerAllowed(caller);
+      assert callerAllowed(caller);
       assert leagueExists(leagueId);
       assert checkPlayerExists(leagueId, dto.playerId);
 
@@ -924,7 +926,7 @@
     };
 
     public shared ( {caller} ) func validateSetPlayerInjury(leagueId: T.FootballLeagueId, dto : DTOs.SetPlayerInjuryDTO) : async Result.Result<(), T.Error>{
-      //assert callerAllowed(caller);
+      assert callerAllowed(caller);
       assert leagueExists(leagueId);
       assert checkPlayerExists(leagueId, dto.playerId);
 
@@ -957,7 +959,7 @@
     };
 
     public shared ( {caller} ) func validateRetirePlayer(leagueId: T.FootballLeagueId, dto : DTOs.RetirePlayerDTO) : async Result.Result<(), T.Error>{
-      //assert callerAllowed(caller);
+      assert callerAllowed(caller);
       assert leagueExists(leagueId);
       assert checkPlayerExists(leagueId, dto.playerId);
 
@@ -990,7 +992,7 @@
     };
 
     public shared ( {caller} ) func validateUnretirePlayer(leagueId: T.FootballLeagueId, dto : DTOs.UnretirePlayerDTO) : async Result.Result<(), T.Error>{
-      //assert callerAllowed(caller);
+      assert callerAllowed(caller);
       assert leagueExists(leagueId);
       assert checkPlayerExists(leagueId, dto.playerId);
 
@@ -1016,10 +1018,226 @@
       }; 
     };
 
+    //League admin functions
+
+    public shared ({ caller }) func createLeague(dto: RequestDTOs.CreateLeagueDTO) : async Result.Result<(), T.Error> {
+      assert callerAllowed(caller);
+      Debug.print("creating league in data canister");
+      Debug.print(debug_show dto);
+
+      var nextId: T.FootballLeagueId = 1;
+
+      if(Array.size(leagues) > 0){
+
+        let sortedLeagues = Array.sort(
+          leagues,
+          func(a : T.FootballLeague, b : T.FootballLeague) : Order.Order {
+            if (a.id > b.id) { return #greater };
+            if (a.id == b.id) { return #equal };
+            return #less;
+          },
+        );
+
+        let latestLeague = sortedLeagues[0];
+        nextId := latestLeague.id + 1;
+      };
+
+      let leaguesBuffer = Buffer.fromArray<T.FootballLeague>(leagues);
+      leaguesBuffer.add({
+        abbreviation = dto.abbreviation;
+        countryId = dto.countryId;
+        formed = dto.formed;
+        governingBody = dto.governingBody;
+        id = nextId;
+        logo = dto.logo;
+        name = dto.name;
+        teamCount = dto.teamCount;
+        relatedGender = dto.relatedGender;
+      });
+
+      leagues := Buffer.toArray(leaguesBuffer);
+      return #ok();
+    };
+
+    public shared ({ caller }) func setLeagueName(leagueId: T.FootballLeagueId, leagueName: Text) : async Result.Result<(), T.Error> {
+      assert callerAllowed(caller);
+      Debug.print("Setting league name in data canister");
+      leagues := Array.map<T.FootballLeague, T.FootballLeague>(leagues, func(league: T.FootballLeague){
+        if(league.id == leagueId){
+          return {
+            id = league.id;
+            abbreviation = league.abbreviation;
+            countryId = league.countryId;
+            formed = league.formed;
+            governingBody = league.governingBody;
+            logo = league.logo;
+            name = leagueName;
+            teamCount = league.teamCount;
+            relatedGender = league.relatedGender
+
+          }
+        } else { return league }
+      });
+      return #ok();
+    };
+
+
+    public shared ({ caller }) func setAbbreviatedLeagueName(leagueId: T.FootballLeagueId, abbreviatedName: Text) : async Result.Result<(), T.Error> {
+      assert callerAllowed(caller);
+      leagues := Array.map<T.FootballLeague, T.FootballLeague>(leagues, func(league: T.FootballLeague){
+        if(league.id == leagueId){
+          return {
+            id = league.id;
+            abbreviation = abbreviatedName;
+            countryId = league.countryId;
+            formed = league.formed;
+            governingBody = league.governingBody;
+            logo = league.logo;
+            name = league.name;
+            teamCount = league.teamCount;
+            relatedGender = league.relatedGender
+
+          }
+        } else { return league }
+      });
+      return #ok();
+    };
+
+
+    public shared ({ caller }) func setLeagueGoverningBody(leagueId: T.FootballLeagueId, governingBody: Text) : async Result.Result<(), T.Error> {
+      assert callerAllowed(caller);
+      leagues := Array.map<T.FootballLeague, T.FootballLeague>(leagues, func(league: T.FootballLeague){
+        if(league.id == leagueId){
+          return {
+            id = league.id;
+            abbreviation = league.abbreviation;
+            countryId = league.countryId;
+            formed = league.formed;
+            governingBody = governingBody;
+            logo = league.logo;
+            name = league.name;
+            teamCount = league.teamCount;
+            relatedGender = league.relatedGender
+
+          }
+        } else { return league }
+      });
+      return #ok();
+    };
+
+
+    public shared ({ caller }) func setLeagueGender(leagueId: T.FootballLeagueId, gender: T.Gender) : async Result.Result<(), T.Error> {
+      assert callerAllowed(caller);
+      leagues := Array.map<T.FootballLeague, T.FootballLeague>(leagues, func(league: T.FootballLeague){
+        if(league.id == leagueId){
+          return {
+            id = league.id;
+            abbreviation = league.abbreviation;
+            countryId = league.countryId;
+            formed = league.formed;
+            governingBody = league.governingBody;
+            logo = league.logo;
+            name = league.name;
+            teamCount = league.teamCount;
+            relatedGender = gender
+
+          }
+        } else { return league }
+      });
+      return #ok();
+    };
+
+
+    public shared ({ caller }) func setLeagueDateFormed(leagueId: T.FootballLeagueId, dateFormed: Int) : async Result.Result<(), T.Error> {
+      assert callerAllowed(caller);
+      leagues := Array.map<T.FootballLeague, T.FootballLeague>(leagues, func(league: T.FootballLeague){
+        if(league.id == leagueId){
+          return {
+            id = league.id;
+            abbreviation = league.abbreviation;
+            countryId = league.countryId;
+            formed = dateFormed;
+            governingBody = league.governingBody;
+            logo = league.logo;
+            name = league.name;
+            teamCount = league.teamCount;
+            relatedGender = league.relatedGender
+
+          }
+        } else { return league }
+      });
+      return #ok();
+    };
+
+
+    public shared ({ caller }) func setLeagueCountryId(leagueId: T.FootballLeagueId, countryId: T.CountryId) : async Result.Result<(), T.Error> {
+      assert callerAllowed(caller);
+      leagues := Array.map<T.FootballLeague, T.FootballLeague>(leagues, func(league: T.FootballLeague){
+        if(league.id == leagueId){
+          return {
+            id = league.id;
+            abbreviation = league.abbreviation;
+            countryId = countryId;
+            formed = league.formed;
+            governingBody = league.governingBody;
+            logo = league.logo;
+            name = league.name;
+            teamCount = league.teamCount;
+            relatedGender = league.relatedGender
+
+          }
+        } else { return league }
+      });
+      return #ok();
+    };
+
+
+    public shared ({ caller }) func setLeagueLogo(leagueId: T.FootballLeagueId, logo: Blob) : async Result.Result<(), T.Error> {
+      assert callerAllowed(caller);
+      leagues := Array.map<T.FootballLeague, T.FootballLeague>(leagues, func(league: T.FootballLeague){
+        if(league.id == leagueId){
+          return {
+            id = league.id;
+            abbreviation = league.abbreviation;
+            countryId = league.countryId;
+            formed = league.formed;
+            governingBody = league.governingBody;
+            logo = logo;
+            name = league.name;
+            teamCount = league.teamCount;
+            relatedGender = league.relatedGender
+
+          }
+        } else { return league }
+      });
+      return #ok();
+    };
+
+    public shared ({ caller }) func setTeamCount(leagueId: T.FootballLeagueId, teamCount: Nat8) : async Result.Result<(), T.Error> {
+      assert callerAllowed(caller);
+      leagues := Array.map<T.FootballLeague, T.FootballLeague>(leagues, func(league: T.FootballLeague){
+        if(league.id == leagueId){
+          return {
+            id = league.id;
+            abbreviation = league.abbreviation;
+            countryId = league.countryId;
+            formed = league.formed;
+            governingBody = league.governingBody;
+            logo = league.logo;
+            name = league.name;
+            teamCount = teamCount;
+            relatedGender = league.relatedGender
+
+          }
+        } else { return league }
+      });
+      return #ok();
+    };
+
     //Governance execution functions
     
     public shared ( {caller} ) func revaluePlayerUp(leagueId: T.FootballLeagueId, dto : DTOs.RevaluePlayerUpDTO) : async Result.Result<(), T.Error>{
-      //assert callerAllowed(caller);
+      assert callerAllowed(caller);
 
       let updatedLeaguePlayersBuffer = Buffer.fromArray<(T.FootballLeagueId, [T.Player])>([]);
 
@@ -1092,7 +1310,7 @@
     };
 
     public shared ( {caller} ) func revaluePlayerDown(leagueId: T.FootballLeagueId, dto : DTOs.RevaluePlayerDownDTO) : async Result.Result<(), T.Error>{
-      //assert callerAllowed(caller);
+      assert callerAllowed(caller);
 
       let updatedLeaguePlayersBuffer = Buffer.fromArray<(T.FootballLeagueId, [T.Player])>([]);
 
@@ -1167,7 +1385,7 @@
     };
 
     public shared ( {caller} ) func loanPlayer(leagueId: T.FootballLeagueId, dto : DTOs.LoanPlayerDTO) : async Result.Result<(), T.Error>{
-      //assert callerAllowed(caller);
+      assert callerAllowed(caller);
       assert leagueExists(leagueId);
       assert leagueExists(dto.loanLeagueId);
       assert clubExists(dto.loanLeagueId, dto.loanClubId);
@@ -1178,7 +1396,7 @@
 
 
 
-      //TODO LATER: Extend to allow loans to other leagues
+      //TODO  (KELLY)LATER: Extend to allow loans to other leagues
 
 
 
@@ -1253,7 +1471,7 @@
     };
 
     public shared ( {caller} ) func transferPlayer(leagueId: T.FootballLeagueId, dto : DTOs.TransferPlayerDTO) : async Result.Result<(), T.Error>{
-      //assert callerAllowed(caller);
+      assert callerAllowed(caller);
 
       if(dto.newClubId == 0 and dto.newLeagueId == 0){
         movePlayerToFreeAgents(leagueId, dto.clubId, dto.playerId, dto.seasonId, dto.gameweek);
@@ -1271,7 +1489,7 @@
     };
 
     public shared ( {caller} ) func createPlayer(leagueId: T.FootballLeagueId, dto : DTOs.CreatePlayerDTO) : async Result.Result<(), T.Error>{
-      //assert callerAllowed(caller);
+      assert callerAllowed(caller);
       
       let newPlayer : T.Player = {
         id = nextPlayerId + 1;
@@ -1311,7 +1529,7 @@
     };
 
     public shared ( {caller} ) func updatePlayer(leagueId: T.FootballLeagueId, dto : DTOs.UpdatePlayerDTO) : async Result.Result<(), T.Error>{
-      //assert callerAllowed(caller);
+      assert callerAllowed(caller);
 
       leaguePlayers := Array.map<(T.FootballLeagueId, [T.Player]), (T.FootballLeagueId, [T.Player])>(leaguePlayers, 
         func(leaguePlayersEntry: (T.FootballLeagueId, [T.Player])){
@@ -1366,7 +1584,7 @@
     };
 
     public shared ( {caller} ) func setPlayerInjury(leagueId: T.FootballLeagueId, dto : DTOs.SetPlayerInjuryDTO) : async Result.Result<(), T.Error>{
-      //assert callerAllowed(caller);
+      assert callerAllowed(caller);
 
 
       leaguePlayers := Array.map<(T.FootballLeagueId, [T.Player]), (T.FootballLeagueId, [T.Player])>(leaguePlayers, 
@@ -1435,9 +1653,9 @@
     };
 
     public shared ( {caller} ) func retirePlayer(leagueId: T.FootballLeagueId, dto : DTOs.RetirePlayerDTO) : async Result.Result<(), T.Error>{
-      //TODO
+      //TODO (KELLY)
       /*
-      //assert callerAllowed(caller);
+      assert callerAllowed(caller);
       let playerToRetire = List.find<T.Player>(players, func(p : T.Player) : Bool { p.id == retirePlayerDTO.playerId });
       switch (playerToRetire) {
         case (null) {};
@@ -1478,9 +1696,9 @@
     };
 
     public shared ( {caller} ) func unretirePlayer(dto : DTOs.UnretirePlayerDTO) : async Result.Result<(), T.Error>{
-      //TODO
+      //TODO (KELLY)
       /* 
-      //assert callerAllowed(caller);
+      assert callerAllowed(caller);
       let playerToUnretire = List.find<T.Player>(players, func(p : T.Player) : Bool { p.id == unretirePlayerDTO.playerId });
       switch (playerToUnretire) {
         case (null) {};
@@ -1521,9 +1739,9 @@
     };
 
     public shared ({ caller }) func promoteNewClub(leagueId: T.FootballLeagueId, promoteNewClubDTO : DTOs.PromoteNewClubDTO) : async Result.Result<(), T.Error> {
-      //TODO
+      //TODO (KELLY)
       /*
-      //assert callerAllowed(caller);
+      assert callerAllowed(caller);
 
 
         if (Array.size(clubs) >= 20) {
@@ -1575,9 +1793,9 @@
     };
 
     public shared ({ caller }) func updateClub(updateClubDTO : DTOs.UpdateClubDTO) : async Result.Result<(), T.Error> {
-      //TODO
+      //TODO (KELLY)
       /*
-      //assert callerAllowed(caller);
+      assert callerAllowed(caller);
         let club = Array.find(
             clubs,
             func(c : T.Club) : Bool {
@@ -1644,9 +1862,9 @@
     //Game Update Functions
 
     public shared ( {caller} ) func createNewSeason(systemState : T.SystemState) {
-      //TODO
+      //TODO (KELLY)
       /*
-      //assert callerAllowed(caller);
+      assert callerAllowed(caller);
       let existingSeason = List.find(
         seasons,
         func(season : T.Season) : Bool {
@@ -1678,210 +1896,212 @@
       */
     };
 
-    public shared ( {caller} ) func addEventsToFixture(playerEventData : [T.PlayerEventData], seasonId : T.SeasonId, fixtureId : T.FixtureId) : async () {
-      //TODO LATER
-      /*
-      //assert callerAllowed(caller);
-      seasons := List.map<T.Season, T.Season>(
-        seasons,
-        func(season : T.Season) : T.Season {
-          if (season.id == seasonId) {
-            return {
-              id = season.id;
-              name = season.name;
-              year = season.year;
-              fixtures = List.map<T.Fixture, T.Fixture>(
-                season.fixtures,
-                func(fixture : T.Fixture) : T.Fixture {
-                  if (fixture.id == fixtureId) {
-                    return {
-                      id = fixture.id;
-                      seasonId = fixture.seasonId;
-                      gameweek = fixture.gameweek;
-                      kickOff = fixture.kickOff;
-                      homeClubId = fixture.homeClubId;
-                      awayClubId = fixture.awayClubId;
-                      homeGoals = fixture.homeGoals;
-                      awayGoals = fixture.awayGoals;
-                      status = fixture.status;
-                      events = List.fromArray(playerEventData);
-                      highestScoringPlayerId = fixture.highestScoringPlayerId;
-                    };
-                  } else { return fixture };
-                },
-              );
-              postponedFixtures = season.postponedFixtures;
-            };
-          } else {
-            return season;
-          };
-        },
-      );
-      */
-    };
-
-    public shared ( {caller} ) func setGameScore(seasonId: T.SeasonId, fixtureId: T.FixtureId){
-      //TODO LATER
-      /*
-      //assert callerAllowed(caller);
-      let seasonBuffer = Buffer.fromArray<T.Season>([]);
-
-      for(season in Iter.fromList(seasons)){
-        if(season.id == seasonId){
-          let fixturesBuffer = Buffer.fromArray<T.Fixture>([]);
-          for(fixture in Iter.fromList(season.fixtures)){
-            if(fixture.id == fixtureId){
-
-              var homeGoals: Nat8 = 0;
-              var awayGoals: Nat8 = 0;
-
-              for(event in Iter.fromList(fixture.events)){
-                switch(event.eventType){
-                  case (#Goal) {
-                    if(event.clubId == fixture.homeClubId){
-                      homeGoals += 1;
-                    } else {
-                      awayGoals += 1;
-                    }
-                  };
-                  case (#OwnGoal){
-                    if(event.clubId == fixture.homeClubId){
-                      awayGoals += 1;
-                    } else {
-                      homeGoals += 1;
-                    }
-                  };
-                  case _ { };
+    public shared ( {caller} ) func addEventsToFixture(leagueId: T.FootballLeagueId, playerEventData : [T.PlayerEventData], seasonId : T.SeasonId, fixtureId : T.FixtureId) : async () {
+      assert callerAllowed(caller);
+      
+      leagueSeasons := Array.map<(T.FootballLeagueId, [T.Season]), (T.FootballLeagueId, [T.Season])>(leagueSeasons, 
+        func (leagueSeasonsEntry: (T.FootballLeagueId, [T.Season])){
+          if(leagueSeasonsEntry.0 == leagueId){
+            return (leagueSeasonsEntry.0, Array.map<T.Season, T.Season>(leagueSeasonsEntry.1, func(season: T.Season){
+              if(season.id == seasonId){
+                return {
+                  id = season.id;
+                  name = season.name;
+                  year = season.year;
+                  fixtures = List.map<T.Fixture, T.Fixture>(
+                    season.fixtures,
+                    func(fixture : T.Fixture) : T.Fixture {
+                      if (fixture.id == fixtureId) {
+                        return {
+                          id = fixture.id;
+                          seasonId = fixture.seasonId;
+                          gameweek = fixture.gameweek;
+                          kickOff = fixture.kickOff;
+                          homeClubId = fixture.homeClubId;
+                          awayClubId = fixture.awayClubId;
+                          homeGoals = fixture.homeGoals;
+                          awayGoals = fixture.awayGoals;
+                          status = fixture.status;
+                          events = List.fromArray(playerEventData);
+                          highestScoringPlayerId = fixture.highestScoringPlayerId;
+                        };
+                      } else { return fixture };
+                    },
+                  );
+                  postponedFixtures = season.postponedFixtures;
+                  rewardPool = season.rewardPool;
                 };
-              };
-
-              fixturesBuffer.add({
-                awayClubId = fixture.awayClubId;
-                awayGoals = awayGoals;
-                events = fixture.events;
-                gameweek = fixture.gameweek;
-                highestScoringPlayerId = fixture.highestScoringPlayerId;
-                homeClubId = fixture.homeClubId;
-                homeGoals = homeGoals;
-                id = fixture.id;
-                kickOff = fixture.kickOff;
-                seasonId = fixture.seasonId;
-                status = fixture.status;
-              });
-            } else {
-              fixturesBuffer.add(fixture);
-            }
-          };
-          let updatedSeason: T.Season = {
-            fixtures = List.fromArray(Buffer.toArray(fixturesBuffer));
-            id = season.id;
-            name = season.name;
-            postponedFixtures = season.postponedFixtures;
-            year = season.year;
-          };
-          seasonBuffer.add(updatedSeason);
-        } else {
-          seasonBuffer.add(season);
-        };
-      };
-
-      seasons := List.fromArray(Buffer.toArray(seasonBuffer));
-      */
+              } else {
+                return season;
+              }
+            }));
+          } else { return leagueSeasonsEntry }
+      });
     };
 
-    public shared ( {caller} ) func setFixtureToComplete(seasonId: T.SeasonId, fixtureId: T.FixtureId){
-      //TODO LATER
-      /*
-      //assert callerAllowed(caller);
-      let seasonBuffer = Buffer.fromArray<T.Season>([]);
+    public shared ( {caller} ) func setGameScore(leagueId: T.FootballLeagueId, seasonId: T.SeasonId, fixtureId: T.FixtureId){
+      assert callerAllowed(caller);
+      
+      leagueSeasons := Array.map<(T.FootballLeagueId, [T.Season]), (T.FootballLeagueId, [T.Season])>(leagueSeasons, 
+        func (leagueSeasonsEntry: (T.FootballLeagueId, [T.Season])){
+          if(leagueSeasonsEntry.0 == leagueId){
+            return (leagueSeasonsEntry.0, Array.map<T.Season, T.Season>(leagueSeasonsEntry.1, func(season: T.Season){
+              if(season.id == seasonId){
+                
+                let fixturesBuffer = Buffer.fromArray<T.Fixture>([]);
+                for(fixture in Iter.fromList(season.fixtures)){
+                  if(fixture.id == fixtureId){
 
-      for(season in Iter.fromList(seasons)){
-        if(season.id == seasonId){
-          let fixturesBuffer = Buffer.fromArray<T.Fixture>([]);
-          for(fixture in Iter.fromList(season.fixtures)){
-            if(fixture.id == fixtureId){
-              fixturesBuffer.add({
-                awayClubId = fixture.awayClubId;
-                awayGoals = fixture.awayGoals;
-                events = fixture.events;
-                gameweek = fixture.gameweek;
-                highestScoringPlayerId = fixture.highestScoringPlayerId;
-                homeClubId = fixture.homeClubId;
-                homeGoals = fixture.homeGoals;
-                id = fixture.id;
-                kickOff = fixture.kickOff;
-                seasonId = fixture.seasonId;
-                status = #Complete;
-              });
-            } else {
-              fixturesBuffer.add(fixture);
-            }
-          };
-          let updatedSeason: T.Season = {
-            fixtures = List.fromArray(Buffer.toArray(fixturesBuffer));
-            id = season.id;
-            name = season.name;
-            postponedFixtures = season.postponedFixtures;
-            year = season.year;
-          };
-          seasonBuffer.add(updatedSeason);
-        } else {
-          seasonBuffer.add(season);
-        };
-      };
+                    var homeGoals: Nat8 = 0;
+                    var awayGoals: Nat8 = 0;
 
-      seasons := List.fromArray(Buffer.toArray(seasonBuffer));
-      */
+                    for(event in Iter.fromList(fixture.events)){
+                      switch(event.eventType){
+                        case (#Goal) {
+                          if(event.clubId == fixture.homeClubId){
+                            homeGoals += 1;
+                          } else {
+                            awayGoals += 1;
+                          }
+                        };
+                        case (#OwnGoal){
+                          if(event.clubId == fixture.homeClubId){
+                            awayGoals += 1;
+                          } else {
+                            homeGoals += 1;
+                          }
+                        };
+                        case _ { };
+                      };
+                    };
+
+                    fixturesBuffer.add({
+                      awayClubId = fixture.awayClubId;
+                      awayGoals = awayGoals;
+                      events = fixture.events;
+                      gameweek = fixture.gameweek;
+                      highestScoringPlayerId = fixture.highestScoringPlayerId;
+                      homeClubId = fixture.homeClubId;
+                      homeGoals = homeGoals;
+                      id = fixture.id;
+                      kickOff = fixture.kickOff;
+                      seasonId = fixture.seasonId;
+                      status = fixture.status;
+                    });
+                  } else {
+                    fixturesBuffer.add(fixture);
+                  }
+                };
+                return {
+                  fixtures = List.fromArray(Buffer.toArray(fixturesBuffer));
+                  id = season.id;
+                  name = season.name;
+                  postponedFixtures = season.postponedFixtures;
+                  year = season.year;
+                  rewardPool = season.rewardPool;
+                };
+
+              } else {
+                return season;
+              }
+            }));
+          } else { return leagueSeasonsEntry }
+      });
     };
 
-    public shared ( {caller} ) func setFixtureToFinalised(seasonId: T.SeasonId, fixtureId: T.FixtureId) {
-      //TODO LATER
-      /*
-      //assert callerAllowed(caller);
-      seasons := List.map<T.Season, T.Season>(
-        seasons,
-        func(season : T.Season) : T.Season {
-          if (season.id == seasonId) {
-            let updatedFixtures = List.map<T.Fixture, T.Fixture>(
-              season.fixtures,
-              func(fixture : T.Fixture) : T.Fixture {
-                if (fixture.id == fixtureId) {
-                  return {
-                    id = fixture.id;
-                    seasonId = fixture.seasonId;
-                    gameweek = fixture.gameweek;
-                    kickOff = fixture.kickOff;
-                    homeClubId = fixture.homeClubId;
-                    awayClubId = fixture.awayClubId;
-                    homeGoals = fixture.homeGoals;
-                    awayGoals = fixture.awayGoals;
-                    status = #Finalised;
-                    events = fixture.events;
-                    highestScoringPlayerId = fixture.highestScoringPlayerId;
-                  };
-                } else { return fixture };
-              },
-            );
-
-            return {
-              id = season.id;
-              name = season.name;
-              year = season.year;
-              fixtures = updatedFixtures;
-              postponedFixtures = season.postponedFixtures;
-            };
-          } else {
-            return season;
-          };
-        },
-      );
-      */
+    public shared ( {caller} ) func setFixtureToComplete(leagueId: T.FootballLeagueId, seasonId: T.SeasonId, fixtureId: T.FixtureId){
+      assert callerAllowed(caller);
+      
+      leagueSeasons := Array.map<(T.FootballLeagueId, [T.Season]), (T.FootballLeagueId, [T.Season])>(leagueSeasons, 
+        func (leagueSeasonsEntry: (T.FootballLeagueId, [T.Season])){
+          if(leagueSeasonsEntry.0 == leagueId){
+            return (leagueSeasonsEntry.0, Array.map<T.Season, T.Season>(leagueSeasonsEntry.1, func(season: T.Season){
+              if(season.id == seasonId){
+                
+                let fixturesBuffer = Buffer.fromArray<T.Fixture>([]);
+                for(fixture in Iter.fromList(season.fixtures)){
+                  if(fixture.id == fixtureId){
+                    fixturesBuffer.add({
+                      awayClubId = fixture.awayClubId;
+                      awayGoals = fixture.awayGoals;
+                      events = fixture.events;
+                      gameweek = fixture.gameweek;
+                      highestScoringPlayerId = fixture.highestScoringPlayerId;
+                      homeClubId = fixture.homeClubId;
+                      homeGoals = fixture.homeGoals;
+                      id = fixture.id;
+                      kickOff = fixture.kickOff;
+                      seasonId = fixture.seasonId;
+                      status = #Complete;
+                    });
+                  } else {
+                    fixturesBuffer.add(fixture);
+                  }
+                };
+                return {
+                  fixtures = List.fromArray(Buffer.toArray(fixturesBuffer));
+                  id = season.id;
+                  name = season.name;
+                  postponedFixtures = season.postponedFixtures;
+                  year = season.year;
+                  rewardPool = season.rewardPool;
+                };  
+              } else {
+                return season;
+              }
+            }));
+          } else { return leagueSeasonsEntry }
+      });
     };
 
-    public shared ( {caller} ) func addEventsToPlayers(playerEventData : [T.PlayerEventData], seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async () {
-      //TODO LATER
-      /*
-      //assert callerAllowed(caller);
+    public shared ( {caller} ) func setFixtureToFinalised(leagueId: T.FootballLeagueId, seasonId: T.SeasonId, fixtureId: T.FixtureId) {
+      assert callerAllowed(caller);
+      
+      leagueSeasons := Array.map<(T.FootballLeagueId, [T.Season]), (T.FootballLeagueId, [T.Season])>(leagueSeasons, 
+        func (leagueSeasonsEntry: (T.FootballLeagueId, [T.Season])){
+          if(leagueSeasonsEntry.0 == leagueId){
+            return (leagueSeasonsEntry.0, Array.map<T.Season, T.Season>(leagueSeasonsEntry.1, func(season: T.Season){
+              if(season.id == seasonId){
+                
+                let updatedFixtures = List.map<T.Fixture, T.Fixture>(
+                  season.fixtures,
+                  func(fixture : T.Fixture) : T.Fixture {
+                    if (fixture.id == fixtureId) {
+                      return {
+                        id = fixture.id;
+                        seasonId = fixture.seasonId;
+                        gameweek = fixture.gameweek;
+                        kickOff = fixture.kickOff;
+                        homeClubId = fixture.homeClubId;
+                        awayClubId = fixture.awayClubId;
+                        homeGoals = fixture.homeGoals;
+                        awayGoals = fixture.awayGoals;
+                        status = #Finalised;
+                        events = fixture.events;
+                        highestScoringPlayerId = fixture.highestScoringPlayerId;
+                      };
+                    } else { return fixture };
+                  },
+                );
+
+                return {
+                  id = season.id;
+                  name = season.name;
+                  year = season.year;
+                  fixtures = updatedFixtures;
+                  postponedFixtures = season.postponedFixtures;
+                  rewardPool = season.rewardPool;
+                };
+              } else {
+                return season;
+              }
+            }));
+          } else { return leagueSeasonsEntry }
+      });
+    };
+
+    public shared ( {caller} ) func addEventsToPlayers(leagueId: T.FootballLeagueId, playerEventData : [T.PlayerEventData], seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async () {
+  
       var updatedSeasons : List.List<T.PlayerSeason> = List.nil<T.PlayerSeason>();
       let playerEventsMap : TrieMap.TrieMap<Nat16, [T.PlayerEventData]> = TrieMap.TrieMap<Nat16, [T.PlayerEventData]>(Utilities.eqNat16, Utilities.hashNat16);
 
@@ -1899,280 +2119,311 @@
         };
       };
 
-      for (playerEventMap in playerEventsMap.entries()) {
-        let player = List.find<T.Player>(
-          players,
-          func(p : T.Player) : Bool {
-            return p.id == playerEventMap.0;
-          },
-        );
-        switch (player) {
-          case (null) {};
-          case (?foundPlayer) {
+      let leaguePlayerArray = Array.find<(T.FootballLeagueId, [T.Player])>(leaguePlayers, 
+        func(leaguePlayersArray: (T.FootballLeagueId, [T.Player])) :  Bool {
+          return leaguePlayersArray.0 == leagueId;
+      });
 
-            let score : Int16 = calculatePlayerScore(foundPlayer.position, playerEventMap.1);
+      switch(leaguePlayerArray){
+        case (?foundArray){
 
-            if (foundPlayer.seasons == null) {
-              let newGameweek : T.PlayerGameweek = {
-                number = gameweek;
-                events = List.fromArray<T.PlayerEventData>(playerEventMap.1);
-                points = score;
-              };
-              let newSeason : T.PlayerSeason = {
-                id = seasonId;
-                gameweeks = List.fromArray<T.PlayerGameweek>([newGameweek]);
-              };
-              updatedSeasons := List.fromArray<T.PlayerSeason>([newSeason]);
-            } else {
-              let currentSeason = List.find<T.PlayerSeason>(
-                foundPlayer.seasons,
-                func(s : T.PlayerSeason) : Bool {
-                  s.id == seasonId;
-                },
-              );
+          let players = List.fromArray(foundArray.1);
 
-              if (currentSeason == null) {
-                let newGameweek : T.PlayerGameweek = {
-                  number = gameweek;
-                  events = List.fromArray<T.PlayerEventData>(playerEventMap.1);
-                  points = score;
-                };
-                let newSeason : T.PlayerSeason = {
-                  id = seasonId;
-                  gameweeks = List.fromArray<T.PlayerGameweek>([newGameweek]);
-                };
-                updatedSeasons := List.append<T.PlayerSeason>(foundPlayer.seasons, List.fromArray<T.PlayerSeason>([newSeason]));
-
-              } else {
-                updatedSeasons := List.map<T.PlayerSeason, T.PlayerSeason>(
-                  foundPlayer.seasons,
-                  func(season : T.PlayerSeason) : T.PlayerSeason {
-
-                    if (season.id != seasonId) {
-                      return season;
-                    };
-
-                    let currentGameweek = List.find<T.PlayerGameweek>(
-                      season.gameweeks,
-                      func(gw : T.PlayerGameweek) : Bool {
-                        gw.number == gameweek;
-                      },
-                    );
-
-                    if (currentGameweek == null) {
-                      let newGameweek : T.PlayerGameweek = {
-                        number = gameweek;
-                        events = List.fromArray<T.PlayerEventData>(playerEventMap.1);
-                        points = score;
-                      };
-                      let updatedSeason : T.PlayerSeason = {
-                        id = season.id;
-                        gameweeks = List.append<T.PlayerGameweek>(season.gameweeks, List.fromArray<T.PlayerGameweek>([newGameweek]));
-                      };
-                      return updatedSeason;
-                    } else {
-                      let updatedGameweeks = List.map<T.PlayerGameweek, T.PlayerGameweek>(
-                        season.gameweeks,
-                        func(gw : T.PlayerGameweek) : T.PlayerGameweek {
-                          if (gw.number != gameweek) {
-                            return gw;
-                          };
-                          return {
-                            number = gw.number;
-                            events = List.append<T.PlayerEventData>(gw.events, List.fromArray(playerEventMap.1));
-                            points = score;
-                          };
-                        },
-                      );
-                      return {
-                        id = season.id;
-                        gameweeks = updatedGameweeks;
-                      };
-                    };
-                  },
-                );
-              };
-            };
-
-            let updatedPlayer = {
-              id = foundPlayer.id;
-              clubId = foundPlayer.clubId;
-              position = foundPlayer.position;
-              firstName = foundPlayer.firstName;
-              lastName = foundPlayer.lastName;
-              shirtNumber = foundPlayer.shirtNumber;
-              valueQuarterMillions = foundPlayer.valueQuarterMillions;
-              dateOfBirth = foundPlayer.dateOfBirth;
-              nationality = foundPlayer.nationality;
-              seasons = updatedSeasons;
-              valueHistory = foundPlayer.valueHistory;
-              status = foundPlayer.status;
-              parentClubId = foundPlayer.parentClubId;
-              currentLoanEndDate = foundPlayer.currentLoanEndDate;
-              latestInjuryEndDate = foundPlayer.latestInjuryEndDate;
-              injuryHistory = foundPlayer.injuryHistory;
-              retirementDate = foundPlayer.retirementDate;
-              transferHistory = foundPlayer.transferHistory;
-            };
-
-            players := List.map<T.Player, T.Player>(
+          for (playerEventMap in playerEventsMap.entries()) {
+            let player = List.find<T.Player>(
               players,
-              func(p : T.Player) : T.Player {
-                if (p.id == updatedPlayer.id) { updatedPlayer } else { p };
+              func(p : T.Player) : Bool {
+                return p.id == playerEventMap.0;
               },
             );
-          };
-        }
+            switch (player) {
+              case (null) {};
+              case (?foundPlayer) {
 
-      };
-      */
+                let score : Int16 = calculatePlayerScore(foundPlayer.position, playerEventMap.1);
+
+                if (foundPlayer.seasons == null) {
+                  let newGameweek : T.PlayerGameweek = {
+                    number = gameweek;
+                    events = List.fromArray<T.PlayerEventData>(playerEventMap.1);
+                    points = score;
+                  };
+                  let newSeason : T.PlayerSeason = {
+                    id = seasonId;
+                    gameweeks = List.fromArray<T.PlayerGameweek>([newGameweek]);
+                    totalPoints = 0;
+                  };
+                  updatedSeasons := List.fromArray<T.PlayerSeason>([newSeason]);
+                } else {
+                  let currentSeason = List.find<T.PlayerSeason>(
+                    foundPlayer.seasons,
+                    func(s : T.PlayerSeason) : Bool {
+                      s.id == seasonId;
+                    },
+                  );
+
+                  if (currentSeason == null) {
+                    let newGameweek : T.PlayerGameweek = {
+                      number = gameweek;
+                      events = List.fromArray<T.PlayerEventData>(playerEventMap.1);
+                      points = score;
+                    };
+                    let newSeason : T.PlayerSeason = {
+                      id = seasonId;
+                      gameweeks = List.fromArray<T.PlayerGameweek>([newGameweek]);
+                      totalPoints = 0;
+                    };
+                    updatedSeasons := List.append<T.PlayerSeason>(foundPlayer.seasons, List.fromArray<T.PlayerSeason>([newSeason]));
+
+                  } else {
+                    updatedSeasons := List.map<T.PlayerSeason, T.PlayerSeason>(
+                      foundPlayer.seasons,
+                      func(season : T.PlayerSeason) : T.PlayerSeason {
+
+                        if (season.id != seasonId) {
+                          return season;
+                        };
+
+                        let currentGameweek = List.find<T.PlayerGameweek>(
+                          season.gameweeks,
+                          func(gw : T.PlayerGameweek) : Bool {
+                            gw.number == gameweek;
+                          },
+                        );
+
+                        if (currentGameweek == null) {
+                          let newGameweek : T.PlayerGameweek = {
+                            number = gameweek;
+                            events = List.fromArray<T.PlayerEventData>(playerEventMap.1);
+                            points = score;
+                          };
+                          let updatedSeason : T.PlayerSeason = {
+                            id = season.id;
+                            gameweeks = List.append<T.PlayerGameweek>(season.gameweeks, List.fromArray<T.PlayerGameweek>([newGameweek]));
+                            totalPoints = 0;
+                          };
+                          return updatedSeason;
+                        } else {
+                          let updatedGameweeks = List.map<T.PlayerGameweek, T.PlayerGameweek>(
+                            season.gameweeks,
+                            func(gw : T.PlayerGameweek) : T.PlayerGameweek {
+                              if (gw.number != gameweek) {
+                                return gw;
+                              };
+                              return {
+                                number = gw.number;
+                                events = List.append<T.PlayerEventData>(gw.events, List.fromArray(playerEventMap.1));
+                                points = score;
+                              };
+                            },
+                          );
+                          return {
+                            id = season.id;
+                            gameweeks = updatedGameweeks;
+                            totalPoints = 0;
+                          };
+                        };
+                      },
+                    );
+                  };
+                };
+
+                let updatedPlayer: T.Player = {
+                  id = foundPlayer.id;
+                  clubId = foundPlayer.clubId;
+                  position = foundPlayer.position;
+                  firstName = foundPlayer.firstName;
+                  lastName = foundPlayer.lastName;
+                  shirtNumber = foundPlayer.shirtNumber;
+                  valueQuarterMillions = foundPlayer.valueQuarterMillions;
+                  dateOfBirth = foundPlayer.dateOfBirth;
+                  nationality = foundPlayer.nationality;
+                  seasons = updatedSeasons;
+                  valueHistory = foundPlayer.valueHistory;
+                  status = foundPlayer.status;
+                  parentClubId = foundPlayer.parentClubId;
+                  currentLoanEndDate = foundPlayer.currentLoanEndDate;
+                  latestInjuryEndDate = foundPlayer.latestInjuryEndDate;
+                  injuryHistory = foundPlayer.injuryHistory;
+                  retirementDate = foundPlayer.retirementDate;
+                  transferHistory = foundPlayer.transferHistory;
+                  gender = foundPlayer.gender
+                };
+
+                updateLeaguePlayer(leagueId, updatedPlayer);
+              };
+            }
+
+          };
+
+        };
+        case (null){
+          
+        }
+      };  
+    };
+
+    private func updateLeaguePlayer(leagueId: T.FootballLeagueId, updatedPlayer: T.Player){
+
+      leaguePlayers := Array.map<(T.FootballLeagueId, [T.Player]), (T.FootballLeagueId, [T.Player])>(leaguePlayers, func(leaguePlayersSet: (T.FootballLeagueId, [T.Player])){
+        if(leaguePlayersSet.0 == leagueId){
+          return (leaguePlayersSet.0, Array.map<T.Player, T.Player>(leaguePlayersSet.1, func(player: T.Player){
+            if(player.id == updatedPlayer.id){
+              updatedPlayer;
+            } else {
+              return player;
+            }
+          }));
+        } else {
+          return leaguePlayersSet;
+        }
+      });
     };
 
     //Game State Check Functions
 
-    public shared ( {caller} ) func checkGameweekComplete(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async Bool {
-      //TODO LATER
-      /*
-      //assert callerAllowed(caller);
-      let season = List.find(
-        seasons,
-        func(season : T.Season) : Bool {
-          return season.id == seasonId;
-        },
-      );
-      switch (season) {
-        case (null) { return false };
-        case (?foundSeason) {
-          let fixtures = List.filter<T.Fixture>(
-            foundSeason.fixtures,
-            func(fixture : T.Fixture) : Bool {
-              return fixture.gameweek == gameweek;
-            },
-          );
+    public shared ( {caller} ) func checkGameweekComplete(leagueId: T.FootballLeagueId, seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async Bool {
+      assert callerAllowed(caller);
 
-          let completedFixtures = List.filter<T.Fixture>(
-            fixtures,
-            func(fixture : T.Fixture) : Bool {
-              return fixture.status == #Finalised;
-            },
-          );
+      let currentLeagueSeasons = Array.find<(T.FootballLeagueId, [T.Season])>(leagueSeasons, func(leagueSeason: (T.FootballLeagueId, [T.Season])) : Bool{
+        leagueSeason.0 == leagueId;
+      });
 
-          return List.size(completedFixtures) == List.size(fixtures);
+      switch(currentLeagueSeasons){
+        case (?foundLeagueSeason){
+          let currentSeason = Array.find<T.Season>(foundLeagueSeason.1, func(season: T.Season) : Bool{
+            season.id == seasonId;
+          });
 
+          switch(currentSeason){
+            case (?foundCurrentSeason){
+              let completedFixtures = List.filter<T.Fixture>(foundCurrentSeason.fixtures, func(fixture: T.Fixture){
+                fixture.status == #Finalised and fixture.gameweek == gameweek;
+              });
+
+              let allGameweekFixtures = List.filter<T.Fixture>(foundCurrentSeason.fixtures, func(fixture: T.Fixture){
+                fixture.gameweek == gameweek;
+              });
+
+              return List.size(completedFixtures) == List.size(allGameweekFixtures);
+            };
+            case (null){
+              return false;
+            }
+          };
         };
-      };
-      */
-      return false;
-    };
-
-    public shared ( {caller} ) func checkMonthComplete(seasonId: T.SeasonId, month: T.CalendarMonth, gameweek: T.GameweekNumber) : async Bool {
-      //TODO LATER
-      /*
-
-      //assert callerAllowed(caller);
-      let currentSeason = List.find(
-        seasons,
-        func(season : T.Season) : Bool {
-          return season.id == seasonId;
-        },
-      );
-
-      switch (currentSeason) {
-        case (null) {
+        case (null){
           return false;
-        };
-        case (?foundSeason) {
-
-          let gameweekFixtures = List.toArray(
-            List.filter<T.Fixture>(
-              foundSeason.fixtures,
-              func(fixture : T.Fixture) : Bool {
-                return fixture.gameweek == gameweek;
-              },
-            ),
-          );
-
-          let completedGameweekFixtures = Array.filter<T.Fixture>(
-            gameweekFixtures,
-            func(fixture : T.Fixture) : Bool {
-              return fixture.status == #Finalised;
-            },
-          );
-
-          if (Array.size(gameweekFixtures) != Array.size(completedGameweekFixtures)) {
-            return false;
-          };
-
-          if (systemState.calculationGameweek >= 38) {
-            return true;
-          };
-
-          let nextGameweekFixtures = List.toArray(
-            List.filter<T.Fixture>(
-              foundSeason.fixtures,
-              func(fixture : T.Fixture) : Bool {
-                return fixture.gameweek == gameweek + 1;
-              },
-            ),
-          );
-
-          let sortedNextFixtures = Array.sort(
-            nextGameweekFixtures,
-            func(a : T.Fixture, b : T.Fixture) : Order.Order {
-              if (a.kickOff < b.kickOff) { return #greater };
-              if (a.kickOff == b.kickOff) { return #equal };
-              return #less;
-            },
-          );
-
-          let latestNextFixture = sortedNextFixtures[0];
-          let fixtureMonth = Utilities.unixTimeToMonth(latestNextFixture.kickOff);
-
-          return fixtureMonth > month;
-        };
+        }
       };
-      */
 
       return false;
     };
 
-    public shared ( {caller} ) func checkSeasonComplete(seasonId: T.SeasonId) : async Bool {
-      //TODO LATER
-      /*
+    public shared ( {caller} ) func checkMonthComplete(leagueId: T.FootballLeagueId, seasonId: T.SeasonId, month: T.CalendarMonth, gameweek: T.GameweekNumber) : async Bool {
+      assert callerAllowed(caller);
 
-      //assert callerAllowed(caller);
-      if (systemState.calculationGameweek != 38) {
-        return false;
-      };
+      let currentLeagueSeasons = Array.find<(T.FootballLeagueId, [T.Season])>(leagueSeasons, func(leagueSeason: (T.FootballLeagueId, [T.Season])) : Bool{
+        leagueSeason.0 == leagueId;
+      });
 
-      let currentSeason = List.find(
-        seasons,
-        func(season : T.Season) : Bool {
-          return season.id == seasonId;
-        },
-      );
+      switch(currentLeagueSeasons){
+        case (?foundLeagueSeason){
+          let currentSeason = Array.find<T.Season>(foundLeagueSeason.1, func(season: T.Season) : Bool{
+            season.id == seasonId;
+          });
 
-      switch (currentSeason) {
-        case (null) {
-          return false;
-        };
-        case (?foundSeason) {
+          switch(currentSeason){
+            case (?foundSeason){
+              let gameweekFixtures = List.toArray(
+                List.filter<T.Fixture>(
+                      foundSeason.fixtures,
+                      func(fixture : T.Fixture) : Bool {
+                        return fixture.gameweek == gameweek;
+                      },
+                    ),
+                  );
 
-          if (List.size(foundSeason.fixtures) == 0) {
-            return false;
+                  let completedGameweekFixtures = Array.filter<T.Fixture>(
+                    gameweekFixtures,
+                    func(fixture : T.Fixture) : Bool {
+                      return fixture.status == #Finalised;
+                    },
+                  );
+
+                  if (Array.size(gameweekFixtures) != Array.size(completedGameweekFixtures)) {
+                    return false;
+                  };
+
+                  if (gameweek >= 38) {
+                    return true;
+                  };
+
+                  let nextGameweekFixtures = List.toArray(
+                    List.filter<T.Fixture>(
+                      foundSeason.fixtures,
+                      func(fixture : T.Fixture) : Bool {
+                        return fixture.gameweek == gameweek + 1;
+                      },
+                    ),
+                  );
+
+                  let sortedNextFixtures = Array.sort(
+                    nextGameweekFixtures,
+                    func(a : T.Fixture, b : T.Fixture) : Order.Order {
+                      if (a.kickOff < b.kickOff) { return #greater };
+                      if (a.kickOff == b.kickOff) { return #equal };
+                      return #less;
+                    },
+                  );
+
+                  let latestNextFixture = sortedNextFixtures[0];
+                  let fixtureMonth = Utilities.unixTimeToMonth(latestNextFixture.kickOff);
+
+                  return fixtureMonth > month; 
+            };
+            case (null){
+              return false;
+            }
           };
-
-          let completedFixtures = List.filter<T.Fixture>(
-            foundSeason.fixtures,
-            func(fixture : T.Fixture) : Bool {
-              return fixture.status == #Finalised;
-            },
-          );
-
-          return List.size(completedFixtures) == List.size(foundSeason.fixtures);
         };
+        case (null){
+          return false;
+        }
       };
-      */
+      return false;
+    };
+
+    public shared ( {caller} ) func checkSeasonComplete(leagueId: T.FootballLeagueId, seasonId: T.SeasonId) : async Bool {
+      assert callerAllowed(caller);
+
+      let currentLeagueSeasons = Array.find<(T.FootballLeagueId, [T.Season])>(leagueSeasons, func(leagueSeason: (T.FootballLeagueId, [T.Season])) : Bool{
+        leagueSeason.0 == leagueId;
+      });
+
+      switch(currentLeagueSeasons){
+        case (?foundLeagueSeason){
+          let currentSeason = Array.find<T.Season>(foundLeagueSeason.1, func(season: T.Season) : Bool{
+            season.id == seasonId;
+          });
+
+          switch(currentSeason){
+            case (?foundCurrentSeason){
+              let completedFixtures = List.filter<T.Fixture>(foundCurrentSeason.fixtures, func(fixture: T.Fixture){
+                fixture.status == #Finalised;
+              });
+              return List.size(completedFixtures) == List.size(foundCurrentSeason.fixtures);
+            };
+            case (null){
+              return false;
+            }
+          };
+        };
+        case (null){
+          return false;
+        }
+      };
+
       return false;
     };
 
@@ -2373,8 +2624,8 @@
       };
     };
 
+    //TODO Move not relevant to player canister
     private func calculatePlayerScore(playerPosition : T.PlayerPosition, events : [T.PlayerEventData]) : Int16 {
-      //TODO LATER
       let totalScore = Array.foldLeft<T.PlayerEventData, Int16>(
         events,
         0,
@@ -2558,9 +2809,9 @@
     };
 
     private func loanExpiredCallback() : async (){
-      //TODO LATER
+      //TODO (KELLY)
       /*
-      //assert callerAllowed(caller);
+      assert callerAllowed(caller);
       let playersToRecall = List.filter<T.Player>(
         players,
         func(currentPlayer : T.Player) : Bool {
@@ -2579,9 +2830,9 @@
     };
 
     private func injuryExpiredCallback() : async (){
-      //TODO LATER
+      //TODO (KELLY)
       /*
-      //assert callerAllowed(caller);
+      assert callerAllowed(caller);
 
       let playersNoLongerInjured = Array.filter<T.Player>(
         players,

@@ -528,11 +528,11 @@ module {
     };
 
     public func payWeeklyRewards() : async () {
-      //TODO LATER
+      //TODO (Calculation)
       /* Removed inputs but what should be passed
       weeklyLeaderboard : DTOs.WeeklyLeaderboardDTO, filters: DTOs.GameweekFiltersDTO, fixtures : List.List<DTOs.FixtureDTO>, uniqueManagerCanisterIds: List.List<T.CanisterId>
       */
-      /* //TODO
+      /* //TODO (Calculation)
       await rewardManager.distributeWeeklyRewards(weeklyLeaderboard);
       await rewardManager.distributeHighestScoringPlayerRewards(filters.seasonId, filters.gameweek, fixtures, uniqueManagerCanisterIds);
       await rewardManager.distributeWeeklyATHScoreRewards(weeklyLeaderboard);
@@ -540,6 +540,7 @@ module {
     };
 
     public func payMonthlyRewards() : async () {
+      //TODO (Calculation)
       /* Removed inputs but what should be passed
         seasonId: T.SeasonId, monthlyLeaderboards : [DTOs.MonthlyLeaderboardDTO], uniqueManagerCanisterIds: List.List<T.CanisterId>
       */
@@ -550,6 +551,7 @@ module {
     };
 
     public func paySeasonRewards() : async () {
+      //TODO (Calculation)
       /* Removed inputs but what should be passed
       seasonLeaderboard : DTOs.SeasonLeaderboardDTO, players : [DTOs.PlayerDTO], seasonId : T.SeasonId, uniqueManagerCanisterIds: List.List<T.CanisterId>
       */

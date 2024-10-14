@@ -1152,3 +1152,34 @@ export function calculateBonusPoints(
 
   return bonusPoints;
 }
+
+export function getImageURL(blob: any): string {
+  let byteArray;
+  if (blob && typeof blob === "object" && !Array.isArray(blob)) {
+    console.log("a");
+    const values = Object.values(blob);
+    if (values.length === 0) {
+      return "/profile_placeholder.png";
+    }
+    byteArray = Uint8Array.from(Object.values(blob));
+  } else if (Array.isArray(blob) && blob[0] instanceof Uint8Array) {
+    console.log("b");
+    byteArray = blob[0];
+  } else if (blob instanceof Uint8Array) {
+    console.log("c");
+    byteArray = blob;
+  } else if (typeof blob === "string") {
+    if (blob.startsWith("data:image")) {
+      return blob;
+    } else if (!blob.startsWith("/profile_placeholder.png")) {
+      return `data:png;base64,${blob}`;
+    }
+  }
+
+  if (byteArray) {
+    console.log("e");
+    return `data:image/png;base64,${uint8ArrayToBase64(byteArray)}`;
+  }
+
+  return "/profile_placeholder.png";
+}

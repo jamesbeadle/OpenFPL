@@ -54,4 +54,15 @@ module RequestDTOs {
     version: Text;
   };
 
+  public type CreateLeagueDTO = {
+    name: Text;
+    abbreviation: Text;
+    teamCount: Nat8;
+    relatedGender: T.Gender;
+    governingBody: Text;
+    formed: Int;
+    countryId: T.CountryId;
+    logo: Blob;
+  };
+
 };

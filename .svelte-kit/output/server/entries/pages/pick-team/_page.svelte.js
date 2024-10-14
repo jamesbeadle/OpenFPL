@@ -1,4 +1,4 @@
-import { t } from "../../../chunks/index.js";
+import { u } from "../../../chunks/index.js";
 import "@dfinity/utils";
 import "dompurify";
 import "@dfinity/agent";
@@ -7,5 +7,5 @@ import "@dfinity/candid/lib/cjs/idl.js";
 import "@dfinity/ledger-icrc";
 import "@dfinity/principal";
 export {
-  t as default
+  u as default
 };

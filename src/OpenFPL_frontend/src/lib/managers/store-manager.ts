@@ -1,6 +1,7 @@
 import { countryStore } from "$lib/stores/country-store";
 import { systemStore } from "$lib/stores/system-store";
 import { seasonStore } from "$lib/stores/season-store";
+import { leagueStore } from "$lib/stores/league-store";
 import { clubStore } from "$lib/stores/club-store";
 import { playerStore } from "$lib/stores/player-store";
 import { playerEventsStore } from "$lib/stores/player-events-store";
@@ -11,6 +12,7 @@ import { DataHashService } from "$lib/services/data-hash-service";
 import { CountryService } from "$lib/services/country-service";
 import { SystemService } from "$lib/services/system-service";
 import { SeasonService } from "$lib/services/season-service";
+import { LeagueService } from "$lib/services/league-service";
 import { ClubService } from "$lib/services/club-service";
 import { PlayerService } from "$lib/services/player-service";
 import { PlayerEventsService } from "$lib/services/player-events-service";
@@ -24,6 +26,7 @@ class StoreManager {
   private countryService: CountryService;
   private systemService: SystemService;
   private seasonService: SeasonService;
+  private leagueService: LeagueService;
   private clubService: ClubService;
   private playerService: PlayerService;
   private playerEventsService: PlayerEventsService;
@@ -33,6 +36,7 @@ class StoreManager {
   private categories: string[] = [
     "countries",
     "system_state",
+    "leagues",
     "seasons",
     "clubs",
     "players",
@@ -46,6 +50,7 @@ class StoreManager {
     this.countryService = new CountryService();
     this.systemService = new SystemService();
     this.seasonService = new SeasonService();
+    this.leagueService = new LeagueService();
     this.clubService = new ClubService();
     this.playerService = new PlayerService();
     this.playerEventsService = new PlayerEventsService();
@@ -98,6 +103,14 @@ class StoreManager {
         localStorage.setItem(
           "seasons",
           JSON.stringify(updatedSeasons, replacer),
+        );
+        break;
+      case "leagues":
+        const updatedLeagues = await this.leagueService.getLeagues();
+        leagueStore.setLeagues(updatedLeagues);
+        localStorage.setItem(
+          "leagues",
+          JSON.stringify(updatedLeagues, replacer),
         );
         break;
       case "clubs":
@@ -180,6 +193,10 @@ class StoreManager {
       case "seasons":
         const cachedSeasons = JSON.parse(cachedData || "");
         seasonStore.setSeasons(cachedSeasons);
+        break;
+      case "leagues":
+        const cachedLeagues = JSON.parse(cachedData || "[]");
+        leagueStore.setLeagues(cachedLeagues);
         break;
       case "clubs":
         const cachedClubs = JSON.parse(cachedData || "[]");

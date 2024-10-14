@@ -308,9 +308,10 @@ type FootballLeague =
    formed: int;
    governingBody: text;
    id: FootballLeagueId;
+   logo: blob;
    name: text;
-   numOfTeams: nat8;
    relatedGender: Gender;
+   teamCount: nat8;
  };
 type FixtureStatusType = 
  variant {
@@ -365,6 +366,17 @@ type CreatePlayerDTO =
    shirtNumber: nat8;
    valueQuarterMillions: nat16;
  };
+type CreateLeagueDTO = 
+ record {
+   abbreviation: text;
+   countryId: CountryId;
+   formed: int;
+   governingBody: text;
+   logo: blob;
+   name: text;
+   relatedGender: Gender;
+   teamCount: nat8;
+ };
 type CountryId = nat16;
 type ClubId = nat16;
 type ClubFilterDTO = 
@@ -391,6 +403,7 @@ service : {
   checkGameweekComplete: (SeasonId, GameweekNumber) -> (bool);
   checkMonthComplete: (SeasonId, CalendarMonth, GameweekNumber) -> (bool);
   checkSeasonComplete: (SeasonId) -> (bool);
+  createLeague: (CreateLeagueDTO) -> (Result);
   createNewSeason: (SystemState) -> () oneway;
   createPlayer: (FootballLeagueId, CreatePlayerDTO) -> (Result);
   getClubs: (FootballLeagueId) -> (Result_8);
@@ -410,10 +423,18 @@ service : {
   retirePlayer: (FootballLeagueId, RetirePlayerDTO) -> (Result);
   revaluePlayerDown: (FootballLeagueId, RevaluePlayerDownDTO) -> (Result);
   revaluePlayerUp: (FootballLeagueId, RevaluePlayerUpDTO) -> (Result);
+  setAbbreviatedLeagueName: (FootballLeagueId, text) -> (Result);
   setFixtureToComplete: (SeasonId, FixtureId) -> () oneway;
   setFixtureToFinalised: (SeasonId, FixtureId) -> () oneway;
   setGameScore: (SeasonId, FixtureId) -> () oneway;
+  setLeagueCountryId: (FootballLeagueId, CountryId) -> (Result);
+  setLeagueDateFormed: (FootballLeagueId, int) -> (Result);
+  setLeagueGender: (FootballLeagueId, Gender) -> (Result);
+  setLeagueGoverningBody: (FootballLeagueId, text) -> (Result);
+  setLeagueLogo: (FootballLeagueId, blob) -> (Result);
+  setLeagueName: (FootballLeagueId, text) -> (Result);
   setPlayerInjury: (FootballLeagueId, SetPlayerInjuryDTO) -> (Result);
+  setTeamCount: (FootballLeagueId, nat8) -> (Result);
   setupData: () -> (Result);
   transferPlayer: (FootballLeagueId, TransferPlayerDTO) -> (Result);
   unretirePlayer: (UnretirePlayerDTO) -> (Result);

@@ -6,6 +6,7 @@ import Buffer "mo:base/Buffer";
 import Iter "mo:base/Iter";
 import Option "mo:base/Option";
 import TrieMap "mo:base/TrieMap";
+import Debug "mo:base/Debug";
 import DTOs "../../shared/DTOs";
 import T "../../shared/types";
 import NetworkEnvVars "../network_environment_variables";
@@ -16,6 +17,13 @@ import Utilities "../utils/utilities";
 module {
 
   public class DataManager() {
+
+    public func getLeagues() : async Result.Result<[DTOs.FootballLeagueDTO], T.Error> {
+      let data_canister = actor (NetworkEnvVars.DATA_CANISTER_ID) : actor {
+        getLeagues : () -> async Result.Result<[T.FootballLeague], T.Error>;
+      };
+      return await data_canister.getLeagues();
+    };
 
     public func getClubs(leagueId: T.FootballLeagueId) : async Result.Result<[DTOs.ClubDTO], T.Error> {
       let data_canister = actor (NetworkEnvVars.DATA_CANISTER_ID) : actor {
@@ -350,9 +358,9 @@ module {
       return await data_canister.injuryExpired();
     };
 
-    public func getSnapshotPlayers(dto: RequestDTOs.GetSnapshotPlayers) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
+    public func getSnapshotPlayers(dto: RequestDTOs.GetSnapshotPlayers) : async [DTOs.PlayerDTO] {
       let data_canister = actor (NetworkEnvVars.DATA_CANISTER_ID) : actor {
-        getSnapshotPlayers : (dto: RequestDTOs.GetSnapshotPlayers) -> async Result.Result<[DTOs.PlayerDTO], T.Error>;
+        getSnapshotPlayers : (dto: RequestDTOs.GetSnapshotPlayers) -> async [DTOs.PlayerDTO];
       };
       return await data_canister.getSnapshotPlayers(dto);
     };
@@ -689,7 +697,89 @@ module {
       return Buffer.toArray(allEventsBuffer);
     };
 
+    //Admin functions
+
+    public func createLeague(dto: RequestDTOs.CreateLeagueDTO) : async Result.Result<(), T.Error> {
+      Debug.print("creating league in data manager");
+      Debug.print(debug_show dto);
+      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
+        createLeague : (dto: RequestDTOs.CreateLeagueDTO) -> async Result.Result<(), T.Error>;
+      };
+      
+      return await data_canister.createLeague(dto);
+    };
     
+    public func setLeagueName(leagueId: T.FootballLeagueId, leagueName: Text) : async Result.Result<(), T.Error> {
+      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
+        setLeagueName : (leagueId: T.FootballLeagueId, leagueName: Text) -> async Result.Result<(), T.Error>;
+      };
+      
+      Debug.print("calling data canister to set league name");
+      return await data_canister.setLeagueName(leagueId, leagueName);
+    };
+
+
+    public func setAbbreviatedLeagueName(leagueId: T.FootballLeagueId, abbreviatedName: Text) : async Result.Result<(), T.Error> {
+      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
+        setAbbreviatedLeagueName : (leagueId: T.FootballLeagueId, abbreviatedName: Text) -> async Result.Result<(), T.Error>;
+      };
+      
+      return await data_canister.setAbbreviatedLeagueName(leagueId, abbreviatedName);
+    };
+
+
+    public func setLeagueGoverningBody(leagueId: T.FootballLeagueId, governingBody: Text) : async Result.Result<(), T.Error> {
+      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
+        setLeagueGoverningBody : (leagueId: T.FootballLeagueId, governingBody: Text) -> async Result.Result<(), T.Error>;
+      };
+      
+      return await data_canister.setLeagueGoverningBody(leagueId, governingBody);
+    };
+
+
+    public func setLeagueGender(leagueId: T.FootballLeagueId, gender: T.Gender) : async Result.Result<(), T.Error> {
+      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
+        setLeagueGender : (leagueId: T.FootballLeagueId, gender: T.Gender) -> async Result.Result<(), T.Error>;
+      };
+      
+      return await data_canister.setLeagueGender(leagueId, gender);
+    };
+
+
+    public func setLeagueDateFormed(leagueId: T.FootballLeagueId, dateFormed: Int) : async Result.Result<(), T.Error> {
+      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
+        setLeagueDateFormed : (leagueId: T.FootballLeagueId, dateFormed: Int) -> async Result.Result<(), T.Error>;
+      };
+      
+      return await data_canister.setLeagueDateFormed(leagueId, dateFormed);
+    };
+
+
+    public func setLeagueCountryId(leagueId: T.FootballLeagueId, countryId: T.CountryId) : async Result.Result<(), T.Error> {
+      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
+        setLeagueCountryId : (leagueId: T.FootballLeagueId, countryId: T.CountryId) -> async Result.Result<(), T.Error>;
+      };
+      
+      return await data_canister.setLeagueCountryId(leagueId, countryId);
+    };
+
+
+    public func setLeagueLogo(leagueId: T.FootballLeagueId, logo: Blob) : async Result.Result<(), T.Error> {
+     let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
+        setLeagueLogo : (leagueId: T.FootballLeagueId, logo: Blob) -> async Result.Result<(), T.Error>;
+      };
+      
+      return await data_canister.setLeagueLogo(leagueId, logo);
+    };
+    
+    public func setLeagueTeamCount(leagueId: T.FootballLeagueId, teamCount: Nat8) : async Result.Result<(), T.Error> {
+      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
+        setLeagueTeamCount : (leagueId: T.FootballLeagueId, teamCount: Nat8) -> async Result.Result<(), T.Error>;
+      };
+      
+      Debug.print("calling data canister to set league name");
+      return await data_canister.setLeagueTeamCount(leagueId, teamCount);
+    };
 
 
   };

@@ -11,7 +11,7 @@ module Environment {
   public let LEAGUE_ID: T.FootballLeagueId = 2;
   public let NUM_OF_TEAMS: Nat8 = 12;
   public let NUM_OF_GAMEWEEKS: Nat8 = 22;
-  public let NUM_OF_MONTHS: Nat8 = 10;
+  public let NUM_OF_MONTHS: Nat8 = 7;
 
 //Local
   public let BACKEND_CANISTER_ID = "br5f7-7uaaa-aaaaa-qaaca-cai";

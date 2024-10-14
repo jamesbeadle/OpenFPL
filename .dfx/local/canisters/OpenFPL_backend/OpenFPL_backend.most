@@ -82,7 +82,6 @@ type WeeklyRewards =
   };
 actor {
   stable var alreadyInitialisedData : Bool;
-  stable var dataAdmins : [PrincipalId];
   stable var stable_active_leaderbord_canister_id : Text;
   stable var stable_active_manager_canister_id : Text;
   stable var stable_data_hashes : [DataHash];

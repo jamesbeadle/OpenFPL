@@ -385,7 +385,7 @@ module {
               controllers = ?[controller];
               compute_allocation = ?1;
               memory_allocation = null;
-              freezing_threshold = ?31_540_000;
+              freezing_threshold = ?2_592_000;
               reserved_cycles_limit = null
             };
             sender_canister_version = null
@@ -428,7 +428,7 @@ module {
   };
 
   public func assignPositionText(sortedEntries : List.List<T.LeaderboardEntry>) : List.List<T.LeaderboardEntry> {
-    //TODO LATER: Copy from football god euro game
+    //TODO (Calculation): Copy from football god euro game
     var position = 1;
     var previousScore : ?Int16 = null;
     var currentPosition = 1;

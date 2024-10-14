@@ -219,7 +219,7 @@ actor class _LeaderboardCanister(controllerPrincipalId: T.PrincipalId) {
               return #less;
         });
 
-        let positionedGameweekEntries = Utilities.assignPositionText(List.fromArray<T.LeaderboardEntry>(sortedGameweekEntries)); //TODO LATER update with football god logic
+        let positionedGameweekEntries = Utilities.assignPositionText(List.fromArray<T.LeaderboardEntry>(sortedGameweekEntries)); //TODO (Calculation) update with football god logic
 
         var updatedLeaderboard: T.SeasonLeaderboard = {
           seasonId = foundLeaderboard.seasonId;
@@ -250,7 +250,7 @@ actor class _LeaderboardCanister(controllerPrincipalId: T.PrincipalId) {
             return #less;
       });
 
-      let positionedGameweekEntries = Utilities.assignPositionText(List.fromArray<T.LeaderboardEntry>(sortedGameweekEntries)); //TODO LATER update with football god logic
+      let positionedGameweekEntries = Utilities.assignPositionText(List.fromArray<T.LeaderboardEntry>(sortedGameweekEntries)); //TODO (Calculation) update with football god logic
 
       var updatedLeaderboard: T.MonthlyLeaderboard = {
         seasonId = monthlyLeaderboard.seasonId;
@@ -285,7 +285,7 @@ actor class _LeaderboardCanister(controllerPrincipalId: T.PrincipalId) {
               return #less;
         });
 
-        let positionedGameweekEntries = Utilities.assignPositionText(List.fromArray<T.LeaderboardEntry>(sortedGameweekEntries)); //TODO LATER update with football god logic
+        let positionedGameweekEntries = Utilities.assignPositionText(List.fromArray<T.LeaderboardEntry>(sortedGameweekEntries)); //TODO (Calculation) update with football god logic
 
         var updatedLeaderboard: T.WeeklyLeaderboard = {
           seasonId = foundLeaderboard.seasonId;

@@ -12,6 +12,7 @@ import type {
   UpdateProfilePictureDTO,
   UsernameFilterDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import { UserService } from "$lib/services/user-service";
 
 function createUserStore() {
   const { subscribe, set } = writable<any>(null);
@@ -29,6 +30,10 @@ function createUserStore() {
       console.error("Error fetching user profile:", error);
       throw error;
     }
+  }
+
+  async function isAdmin(): Promise<boolean> {
+    return new UserService().isAdmin();
   }
 
   async function updateUsername(username: string): Promise<any> {
@@ -272,6 +277,7 @@ function createUserStore() {
     cacheProfile,
     withdrawFPL,
     getFPLBalance,
+    isAdmin,
   };
 }
 

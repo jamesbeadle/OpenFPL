@@ -22,6 +22,16 @@ export interface ClubFilterDTO {
 }
 export type ClubId = number;
 export type CountryId = number;
+export interface CreateLeagueDTO {
+  logo: Uint8Array | number[];
+  name: string;
+  teamCount: number;
+  relatedGender: Gender;
+  countryId: CountryId;
+  abbreviation: string;
+  governingBody: string;
+  formed: bigint;
+}
 export interface CreatePlayerDTO {
   clubId: ClubId;
   valueQuarterMillions: number;
@@ -71,10 +81,11 @@ export type FixtureStatusType =
   | { Complete: null };
 export interface FootballLeague {
   id: FootballLeagueId;
+  logo: Uint8Array | number[];
   name: string;
+  teamCount: number;
   relatedGender: Gender;
   countryId: CountryId;
-  numOfTeams: number;
   abbreviation: string;
   governingBody: string;
   formed: bigint;
@@ -330,6 +341,7 @@ export interface _SERVICE {
     boolean
   >;
   checkSeasonComplete: ActorMethod<[SeasonId], boolean>;
+  createLeague: ActorMethod<[CreateLeagueDTO], Result>;
   createNewSeason: ActorMethod<[SystemState], undefined>;
   createPlayer: ActorMethod<[FootballLeagueId, CreatePlayerDTO], Result>;
   getClubs: ActorMethod<[FootballLeagueId], Result_8>;
@@ -360,10 +372,18 @@ export interface _SERVICE {
     Result
   >;
   revaluePlayerUp: ActorMethod<[FootballLeagueId, RevaluePlayerUpDTO], Result>;
+  setAbbreviatedLeagueName: ActorMethod<[FootballLeagueId, string], Result>;
   setFixtureToComplete: ActorMethod<[SeasonId, FixtureId], undefined>;
   setFixtureToFinalised: ActorMethod<[SeasonId, FixtureId], undefined>;
   setGameScore: ActorMethod<[SeasonId, FixtureId], undefined>;
+  setLeagueCountryId: ActorMethod<[FootballLeagueId, CountryId], Result>;
+  setLeagueDateFormed: ActorMethod<[FootballLeagueId, bigint], Result>;
+  setLeagueGender: ActorMethod<[FootballLeagueId, Gender], Result>;
+  setLeagueGoverningBody: ActorMethod<[FootballLeagueId, string], Result>;
+  setLeagueLogo: ActorMethod<[FootballLeagueId, Uint8Array | number[]], Result>;
+  setLeagueName: ActorMethod<[FootballLeagueId, string], Result>;
   setPlayerInjury: ActorMethod<[FootballLeagueId, SetPlayerInjuryDTO], Result>;
+  setTeamCount: ActorMethod<[FootballLeagueId, number], Result>;
   setupData: ActorMethod<[], Result>;
   transferPlayer: ActorMethod<[FootballLeagueId, TransferPlayerDTO], Result>;
   unretirePlayer: ActorMethod<[UnretirePlayerDTO], Result>;

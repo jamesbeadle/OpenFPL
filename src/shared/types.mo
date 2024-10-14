@@ -269,11 +269,12 @@ module _Types {
     id: FootballLeagueId;
     name: Text;
     abbreviation: Text;
-    numOfTeams: Nat8;
+    teamCount: Nat8;
     relatedGender: Gender;
     governingBody: Text;
     formed: Int;
     countryId: CountryId;
+    logo: Blob;
   };
 
   

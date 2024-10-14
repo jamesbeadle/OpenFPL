@@ -44,7 +44,7 @@
     private let ledger : FPLLedger.Interface = actor (FPLLedger.CANISTER_ID);
     
     private func isDataAdmin(principalId: Text) : Bool {
-      return Option.isSome(Array.find<T.PrincipalId>(dataAdmins, func(dataAdmin: T.PrincipalId) : Bool{
+      return Option.isSome(Array.find<T.PrincipalId>(Environment.ADMIN_PRINCIPALS, func(dataAdmin: T.PrincipalId) : Bool{
         dataAdmin == principalId;
       }));
     };
@@ -105,6 +105,10 @@
       return await seasonManager.getSystemState();
     };
 
+    public shared func getLeagues() : async Result.Result<[DTOs.FootballLeagueDTO], T.Error> {
+      return await dataManager.getLeagues();
+    };
+
     public shared func getClubs() : async Result.Result<[DTOs.ClubDTO], T.Error> {
       return await dataManager.getClubs(Environment.LEAGUE_ID);
     };
@@ -140,7 +144,7 @@
       };
     };
 
-    public shared ( {caller} ) func getSnapshotPlayers(dto: Requests.GetSnapshotPlayers) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
+    public shared ( {caller} ) func getSnapshotPlayers(dto: Requests.GetSnapshotPlayers) : async [DTOs.PlayerDTO] {
       assert isManagerCanister(Principal.toText(caller));
       return await dataManager.getSnapshotPlayers(dto);
     };
@@ -265,16 +269,16 @@
     //Governance canister validation and execution functions:
 
     public shared query ({ caller }) func validateRevaluePlayerUp(revaluePlayerUpDTO : DTOs.RevaluePlayerUpDTO) : async T.RustResult {
-      assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
+      //assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       return #Err("Governance on hold due to network issues");
       
-      //Todo when functionality available: Make cross subnet call to governance canister to see if proposal exists
+      //Todo (DFINITY) when functionality available: Make cross subnet call to governance canister to see if proposal exists
 
       //return seasonManager.validateRevaluePlayerUp(revaluePlayerUpDTO);
     };
 
     public shared ({ caller }) func executeRevaluePlayerUp(revaluePlayerUpDTO : DTOs.RevaluePlayerUpDTO) : async () {
-      assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
+      //assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       assert isDataAdmin(Principal.toText(caller));
 
       let systemStateResult = await getSystemState();
@@ -295,13 +299,13 @@
     };
 
     public shared query ({ caller }) func validateRevaluePlayerDown(revaluePlayerDownDTO : DTOs.RevaluePlayerDownDTO) : async T.RustResult {
-      assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
+      //assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       return #Err("Governance on hold due to network issues");
       //return seasonManager.validateRevaluePlayerDown(revaluePlayerDownDTO);
     };
 
     public shared ({ caller }) func executeRevaluePlayerDown(revaluePlayerDownDTO : DTOs.RevaluePlayerDownDTO) : async () {
-      assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
+      //assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       assert isDataAdmin(Principal.toText(caller));
       switch(await dataManager.validateRevaluePlayerDown(Environment.LEAGUE_ID, revaluePlayerDownDTO)){
         case (#ok success){
@@ -314,13 +318,13 @@
 
     public shared query ({ caller }) func validateSubmitFixtureData(submitFixtureData : DTOs.SubmitFixtureDataDTO) : async T.RustResult {
       Debug.print(debug_show submitFixtureData);
-      assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
+      //assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       return #Err("Governance on hold due to network issues");
       //return seasonManager.validateSubmitFixtureData(submitFixtureData);
     };
 
     public shared ({ caller }) func executeSubmitFixtureData(submitFixtureData : DTOs.SubmitFixtureDataDTO) : async () {
-      assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
+      //assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       assert isDataAdmin(Principal.toText(caller));
       let systemStateResult = await getSystemState();
       switch(systemStateResult){
@@ -330,7 +334,7 @@
             case (#ok _){
               let _ = await dataManager.executeSubmitFixtureData(Environment.LEAGUE_ID, systemState.calculationSeasonId, submitFixtureData);
 
-              //TODO LATER: When calculating score get players built friom all players who appeared in the gameweek
+              //TODO (JAMES): When calculating score get players built friom all players who appeared in the gameweek
               await userManager.calculateFantasyTeamScores(
                 Environment.LEAGUE_ID,
                 systemState.calculationSeasonId, submitFixtureData.gameweek, submitFixtureData.month);
@@ -339,7 +343,7 @@
                   case (#ok clubs){
                     let clubIds = Array.map<DTOs.ClubDTO, T.ClubId>(clubs, func(club: DTOs.ClubDTO){
                       return club.id;
-                    });
+                });
                     await leaderboardManager.calculateLeaderboards(systemState.calculationSeasonId, submitFixtureData.gameweek, submitFixtureData.month, userManager.getUniqueManagerCanisterIds(), clubIds);
                   };
                   case (#err _){}
@@ -362,16 +366,17 @@
                 await leaderboardManager.paySeasonRewards();
                 await seasonManager.incrementCalculationSeason();
                 
-                /* Todo
+                /*  //TODO (JAMES)
                 seasonManager.createNewSeason(systemState);
                   
                 let currentSeasonId = seasonComposite.getStableNextSeasonId();
-                await calculateRewardPool(currentSeasonId); //TODO LATER SPLIT NEW VALUES
+                await calculateRewardPool(currentSeasonId);
                 */
 
                 await setTransferWindowTimers();
               };
               
+              await seasonManager.updateDataHash("leagues");
               await seasonManager.updateDataHash("seasons");
               await seasonManager.updateDataHash("players");
               await seasonManager.updateDataHash("player_events");
@@ -404,13 +409,13 @@
     };
 
     public shared query ({ caller }) func validateAddInitialFixtures(addInitialFixturesDTO : DTOs.AddInitialFixturesDTO) : async T.RustResult {
-      assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID; 
+      //assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID; 
       return #Err("Governance on hold due to network issues");   
       //return seasonManager.validateAddInitialFixtures(addInitialFixturesDTO);
     };
 
     public shared ({ caller }) func executeAddInitialFixtures(addInitialFixturesDTO : DTOs.AddInitialFixturesDTO) : async () {
-      assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
+      //assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       assert isDataAdmin(Principal.toText(caller));
 
       let systemStateResult = await getSystemState();
@@ -452,13 +457,13 @@
     };
 
     public shared query ({ caller }) func validateMoveFixture(moveFixtureDTO : DTOs.MoveFixtureDTO) : async T.RustResult {
-      assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
+      //assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       return #Err("Governance on hold due to network issues");
       //return seasonManager.validateMoveFixture(moveFixtureDTO);
     };
 
     public shared ({ caller }) func executeMoveFixture(moveFixtureDTO : DTOs.MoveFixtureDTO) : async () {
-      assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
+      //assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       assert isDataAdmin(Principal.toText(caller));
       switch(await dataManager.validateMoveFixture(Environment.LEAGUE_ID, moveFixtureDTO)){
         case (#ok success){
@@ -470,13 +475,13 @@
     };
 
     public shared query ({ caller }) func validatePostponeFixture(postponeFixtureDTO : DTOs.PostponeFixtureDTO) : async T.RustResult {
-      assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
+      //assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       return #Err("Governance on hold due to network issues");
       //return seasonManager.validatePostponeFixture(postponeFixtureDTO);
     };
 
     public shared ({ caller }) func executePostponeFixture(postponeFixtureDTO : DTOs.PostponeFixtureDTO) : async () {
-      assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
+      //assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       assert isDataAdmin(Principal.toText(caller));
       switch(await dataManager.validatePostponeFixture(Environment.LEAGUE_ID, postponeFixtureDTO)){
         case (#ok success){
@@ -488,13 +493,13 @@
     };
 
     public shared query ({ caller }) func validateRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO) : async T.RustResult {
-      assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
+      //assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       return #Err("Governance on hold due to network issues");
       //return await seasonManager.validateRescheduleFixture(rescheduleFixtureDTO);
     };
 
     public shared ({ caller }) func executeRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO) : async () {
-      assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
+      //assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       assert isDataAdmin(Principal.toText(caller));
       switch(await dataManager.validateRescheduleFixture(Environment.LEAGUE_ID, rescheduleFixtureDTO)){
         case (#ok success){
@@ -506,13 +511,13 @@
     };
 
     public shared query ({ caller }) func validateLoanPlayer(loanPlayerDTO : DTOs.LoanPlayerDTO) : async T.RustResult {
-      assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
+      //assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       return #Err("Governance on hold due to network issues");
       //return seasonManager.validateLoanPlayer(loanPlayerDTO);
     };
 
     public shared ({ caller }) func executeLoanPlayer(loanPlayerDTO : DTOs.LoanPlayerDTO) : async () {
-      assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
+      //assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       assert isDataAdmin(Principal.toText(caller));
       switch(await dataManager.validateLoanPlayer(Environment.LEAGUE_ID, loanPlayerDTO)){
         case (#ok success){
@@ -524,13 +529,13 @@
     };
 
     public shared query ({ caller }) func validateTransferPlayer(transferPlayerDTO : DTOs.TransferPlayerDTO) : async T.RustResult {
-      assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
+      //assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       return #Err("Governance on hold due to network issues");
       //return seasonManager.validateTransferPlayer(transferPlayerDTO);
     };
 
     public shared ({ caller }) func executeTransferPlayer(transferPlayerDTO : DTOs.TransferPlayerDTO) : async () {
-      assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
+      //assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       assert isDataAdmin(Principal.toText(caller));
       switch(await dataManager.validateTransferPlayer(Environment.LEAGUE_ID, transferPlayerDTO)){
         case (#ok success){
@@ -542,13 +547,13 @@
     };
 
     public shared query ({ caller }) func validateRecallPlayer(recallPlayerDTO : DTOs.RecallPlayerDTO) : async T.RustResult {
-      assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
+      //assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       return #Err("Governance on hold due to network issues");
       //return seasonManager.validateRecallPlayer(recallPlayerDTO);
     };
 
     public shared ({ caller }) func executeRecallPlayer(recallPlayerDTO : DTOs.RecallPlayerDTO) : async () {
-      assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
+      //assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       assert isDataAdmin(Principal.toText(caller));
       switch(await dataManager.validateRecallPlayer(Environment.LEAGUE_ID, recallPlayerDTO)){
         case (#ok success){
@@ -560,13 +565,13 @@
     };
 
     public shared query ({ caller }) func validateCreatePlayer(createPlayerDTO : DTOs.CreatePlayerDTO) : async T.RustResult {
-      assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
+      //assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       return #Err("Governance on hold due to network issues");
       //return seasonManager.validateCreatePlayer(createPlayerDTO);
     };
 
     public shared ({ caller }) func executeCreatePlayer(createPlayerDTO : DTOs.CreatePlayerDTO) : async () {
-      assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
+      //assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       assert isDataAdmin(Principal.toText(caller));
       switch(await dataManager.validateCreatePlayer(Environment.LEAGUE_ID, createPlayerDTO)){
         case (#ok success){
@@ -578,13 +583,13 @@
     };
 
     public shared query ({ caller }) func validateUpdatePlayer(updatePlayerDTO : DTOs.UpdatePlayerDTO) : async T.RustResult {
-      assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
+      //assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       return #Err("Governance on hold due to network issues");
       //return seasonManager.validateUpdatePlayer(updatePlayerDTO);
     };
 
     public shared ({ caller }) func executeUpdatePlayer(updatePlayerDTO : DTOs.UpdatePlayerDTO) : async () {
-      assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
+      //assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       assert isDataAdmin(Principal.toText(caller));
       switch(await dataManager.validateUpdatePlayer(Environment.LEAGUE_ID, updatePlayerDTO)){
         case (#ok success){
@@ -596,13 +601,13 @@
     };
 
     public shared query ({ caller }) func validateSetPlayerInjury(setPlayerInjuryDTO : DTOs.SetPlayerInjuryDTO) : async T.RustResult {
-      assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
+      //assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       return #Err("Governance on hold due to network issues");
       //return seasonManager.validateSetPlayerInjury(setPlayerInjuryDTO);
     };
 
     public shared ({ caller }) func executeSetPlayerInjury(setPlayerInjuryDTO : DTOs.SetPlayerInjuryDTO) : async () {
-      assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
+      //assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       assert isDataAdmin(Principal.toText(caller));
       switch(await dataManager.validateSetPlayerInjury(Environment.LEAGUE_ID, setPlayerInjuryDTO)){
         case (#ok success){
@@ -614,13 +619,13 @@
     };
 
     public shared query ({ caller }) func validateRetirePlayer(retirePlayerDTO : DTOs.RetirePlayerDTO) : async T.RustResult {
-      assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
+      //assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       return #Err("Governance on hold due to network issues");
       //return seasonManager.validateRetirePlayer(retirePlayerDTO);
     };
 
     public shared ({ caller }) func executeRetirePlayer(retirePlayerDTO : DTOs.RetirePlayerDTO) : async () {
-      assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
+      //assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       assert isDataAdmin(Principal.toText(caller));
       switch(await dataManager.validateRetirePlayer(Environment.LEAGUE_ID, retirePlayerDTO)){
         case (#ok success){
@@ -632,13 +637,13 @@
     };
 
     public shared query ({ caller }) func validateUnretirePlayer(unretirePlayerDTO : DTOs.UnretirePlayerDTO) : async T.RustResult {
-      assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
+      //assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       return #Err("Governance on hold due to network issues");
       //return seasonManager.validateUnretirePlayer(unretirePlayerDTO);
     };
 
     public shared ({ caller }) func executeUnretirePlayer(unretirePlayerDTO : DTOs.UnretirePlayerDTO) : async () {
-      assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
+      //assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       assert isDataAdmin(Principal.toText(caller));
       switch(await dataManager.validateUnretirePlayer(Environment.LEAGUE_ID, unretirePlayerDTO)){
         case (#ok success){
@@ -650,13 +655,13 @@
     };
 
     public shared query ({ caller }) func validatePromoteNewClub(promoteNewClubDTO : DTOs.PromoteNewClubDTO) : async T.RustResult {
-      assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
+      //assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       return #Err("Governance on hold due to network issues");
       //return seasonManager.validatePromoteNewClub(promoteNewClubDTO);
     };
 
     public shared ({ caller }) func executePromoteNewClub(promoteNewClubDTO : DTOs.PromoteNewClubDTO) : async () {
-      assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
+      //assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       assert isDataAdmin(Principal.toText(caller));
       switch(await dataManager.validatePromoteNewClub(Environment.LEAGUE_ID, promoteNewClubDTO)){
         case (#ok success){
@@ -668,13 +673,13 @@
     };
 
     public shared query ({ caller }) func validateUpdateClub(updateClubDTO : DTOs.UpdateClubDTO) : async T.RustResult {
-      assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
+      //assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       return #Err("Governance on hold due to network issues");
       //return seasonManager.validateUpdateClub(updateClubDTO);
     };
 
     public shared ({ caller }) func executeUpdateClub(updateClubDTO : DTOs.UpdateClubDTO) : async () {
-      assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
+      //assert Principal.toText(caller) == NetworkEnvironmentVariables.SNS_GOVERNANCE_CANISTER_ID;
       assert isDataAdmin(Principal.toText(caller));
       switch(await dataManager.validateUpdateClub(Environment.LEAGUE_ID, updateClubDTO)){
         case (#ok success){
@@ -729,7 +734,6 @@
     };
 
     //stable variables
-    private stable var dataAdmins : [T.PrincipalId] = [];
     private stable var alreadyInitialisedData = false;
     private stable var timers : [T.TimerInfo] = [];
 
@@ -844,10 +848,12 @@
       //TODO now
       //set system state
 
-      //TODO: Set each canister to have the openfpl backend as a controller
+      //TODO (JAMES): Set each canister to have the openfpl backend as a controller
 
       //await checkCanisterCycles(); 
       //await setSystemTimers();
+
+      await seasonManager.updateDataHash("leagues");
       await seasonManager.updateDataHash("clubs");
       await seasonManager.updateDataHash("fixtures");
       await seasonManager.updateDataHash("weekly_leaderboard");
@@ -1074,53 +1080,119 @@
       Account.accountIdentifier(actorPrincipal, Account.defaultSubaccount());
     };    
 
+    
+
     //Admin dashboard functions
 
-    public shared ({ caller }) func getUniqueManagerCanisterIds() : async Result.Result<[T.CanisterId], T.Error> {
-      return #ok(userManager.getUniqueManagerCanisterIds());
+    public shared ({ caller }) func isAdmin() : async Result.Result<Bool, T.Error> {
+      return #ok(isDataAdmin(Principal.toText(caller)));
     };
 
-    public shared ({ caller }) func getStaticCanisters() : async Result.Result<Responses.StaticCanistersDTO, T.Error> {
-      //TODO: Add isadmin check
-      return #err(#NotFound);
+    //TODO (DFINITY): Put under SNS control at later date
+
+    public shared ({ caller }) func setLeagueName(leagueId: T.FootballLeagueId, leagueName: Text) : async Result.Result<(), T.Error> {
+      assert isDataAdmin(Principal.toText(caller));
+      
+      let result = await dataManager.setLeagueName(leagueId, leagueName);
+      await seasonManager.updateDataHash("leagues");
+      return result;
     };
 
-    public shared ({ caller }) func getManagerCanisters() : async Result.Result<Responses.ManagerCanistersDTO, T.Error> {
-      //TODO: Add isadmin check
-      return #err(#NotFound);
+
+    public shared ({ caller }) func setAbbreviatedLeagueName(leagueId: T.FootballLeagueId, abbreviatedName: Text) : async Result.Result<(), T.Error> {
+      assert isDataAdmin(Principal.toText(caller));
+      let result = await dataManager.setAbbreviatedLeagueName(leagueId, abbreviatedName);
+      await seasonManager.updateDataHash("leagues");
+      return result;
     };
 
-    public shared ({ caller }) func getLeaderboardCanisters() : async Result.Result<Responses.LeaderboardCanistersDTO, T.Error> {
-      //TODO: Add isadmin check
-      return #err(#NotFound);
+
+    public shared ({ caller }) func setLeagueGoverningBody(leagueId: T.FootballLeagueId, governingBody: Text) : async Result.Result<(), T.Error> {
+      assert isDataAdmin(Principal.toText(caller));
+      let result = await dataManager.setLeagueGoverningBody(leagueId, governingBody);
+      await seasonManager.updateDataHash("leagues");
+      return result;
+    };
+
+
+    public shared ({ caller }) func setLeagueGender(leagueId: T.FootballLeagueId, gender: T.Gender) : async Result.Result<(), T.Error> {
+      assert isDataAdmin(Principal.toText(caller));
+      let result = await dataManager.setLeagueGender(leagueId, gender);
+      await seasonManager.updateDataHash("leagues");
+      return result;
+    };
+
+
+    public shared ({ caller }) func setLeagueDateFormed(leagueId: T.FootballLeagueId, dateFormed: Int) : async Result.Result<(), T.Error> {
+      assert isDataAdmin(Principal.toText(caller));
+      let result = await dataManager.setLeagueDateFormed(leagueId, dateFormed);
+      await seasonManager.updateDataHash("leagues");
+      return result;
+    };
+
+
+    public shared ({ caller }) func setLeagueCountryId(leagueId: T.FootballLeagueId, countryId: T.CountryId) : async Result.Result<(), T.Error> {
+      assert isDataAdmin(Principal.toText(caller));
+      let result = await dataManager.setLeagueCountryId(leagueId, countryId);
+      await seasonManager.updateDataHash("leagues");
+      return result;
+    };
+
+
+    public shared ({ caller }) func setLeagueLogo(leagueId: T.FootballLeagueId, logo: Blob) : async Result.Result<(), T.Error> {
+      assert isDataAdmin(Principal.toText(caller));
+      let result = await dataManager.setLeagueLogo(leagueId, logo);
+      await seasonManager.updateDataHash("leagues");
+      return result;
+    };
+
+    public shared ({ caller }) func setTeamCount(leagueId: T.FootballLeagueId, teamCount: Nat8) : async Result.Result<(), T.Error> {
+      assert isDataAdmin(Principal.toText(caller));
+      
+      let result = await dataManager.setLeagueTeamCount(leagueId, teamCount);
+      await seasonManager.updateDataHash("leagues");
+      return result;
+    };
+
+    public shared ({ caller }) func createLeague(dto: Requests.CreateLeagueDTO) : async Result.Result<(), T.Error> {
+      assert isDataAdmin(Principal.toText(caller));
+      let result = await dataManager.createLeague(dto);
+      await seasonManager.updateDataHash("leagues");
+      return result;
     };
 
     public shared ({ caller }) func snapshotManagers(gameweekNumber: T.GameweekNumber) : async Result.Result<(), T.Error> {
+      assert isDataAdmin(Principal.toText(caller));
       //TODO: Add isadmin check
       return #err(#NotFound);
     };
 
     public shared ({ caller }) func recalculatePoints(gameweekNumber: T.GameweekNumber) : async Result.Result<(), T.Error> {
+      assert isDataAdmin(Principal.toText(caller));
       //TODO: Add isadmin check
       return #err(#NotFound);
     };
 
     public shared ({ caller }) func viewPayouts(gameweekNumber: T.GameweekNumber) : async Result.Result<(), T.Error> {
+      assert isDataAdmin(Principal.toText(caller));
       //TODO: Add isadmin check
       return #err(#NotFound);
     };
 
     public shared ({ caller }) func updateRewardPools(dto: Requests.UpdateRewardPoolsDTO) : async Result.Result<(), T.Error> {
+      assert isDataAdmin(Principal.toText(caller));
       //TODO: Add isadmin check
       return #err(#NotFound);
     };
 
     public shared ({ caller }) func updateSystemStatus(dto: Requests.UpdateSystemStatusDTO) : async Result.Result<(), T.Error> {
+      assert isDataAdmin(Principal.toText(caller));
       //TODO: Add isadmin check
       return #err(#NotFound);
     };
 
     public shared ({ caller }) func getAdminDashboard() : async Result.Result<Responses.AdminDashboardDTO, T.Error> {
+      assert isDataAdmin(Principal.toText(caller));
       
       
       let IC : Management.Management = actor (NetworkEnvironmentVariables.Default);

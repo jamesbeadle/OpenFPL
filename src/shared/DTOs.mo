@@ -370,6 +370,18 @@ module DTOs {
     status : T.FixtureStatusType;
   };
 
+  public type FootballLeagueDTO = {
+    id: T.FootballLeagueId;
+    name: Text;
+    abbreviation: Text;
+    teamCount: Nat8;
+    relatedGender: T.Gender;
+    governingBody: Text;
+    formed: Int;
+    countryId: T.CountryId;
+    logo: Blob;
+  };
+
   public type ClubDTO = {
     id : T.ClubId;
     name : Text;

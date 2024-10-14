@@ -23,6 +23,7 @@ import Blob "mo:base/Blob";
 import Nat16 "mo:base/Nat16";
 import Debug "mo:base/Debug";
 import NetworkEnvironmentVariables "../network_environment_variables";
+import Environment "../../OpenFPL_backend/Environment";
 
 module {
 

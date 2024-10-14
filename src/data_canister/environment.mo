@@ -1,8 +1,8 @@
 module Environment {
 
     //IC
-        public let OPENFPL_BACKEND_CANISTER_ID = "y22zx-giaaa-aaaal-qmzpq-cai";
-        public let OPENWSL_BACKEND_CANISTER_ID = "5bafg-ayaaa-aaaal-qmzqq-cai";
+    public let OPENFPL_BACKEND_CANISTER_ID = "y22zx-giaaa-aaaal-qmzpq-cai";
+    public let OPENWSL_BACKEND_CANISTER_ID = "5bafg-ayaaa-aaaal-qmzqq-cai";
 
     //Local
     /*
@@ -10,7 +10,7 @@ module Environment {
     public let OPENWSL_BACKEND_CANISTER_ID = "br5f7-7uaaa-aaaaa-qaaca-cai";
     */
       
-    public let APPROVED_FRONTEND_CANISTERS = [
+    public let APPROVED_CANISTERS = [
         OPENFPL_BACKEND_CANISTER_ID,
         OPENWSL_BACKEND_CANISTER_ID
     ];
