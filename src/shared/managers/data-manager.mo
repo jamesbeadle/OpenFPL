@@ -18,6 +18,8 @@ module {
 
   public class DataManager() {
 
+    //TODO: Implement query when figure out syntax
+    /*
     public composite query func getLeagues() : async Result.Result<[DTOs.FootballLeagueDTO], T.Error> {
       let data_canister = actor (NetworkEnvVars.DATA_CANISTER_ID) : actor {
         getLeagues : shared query () -> async Result.Result<[T.FootballLeague], T.Error>;
@@ -102,6 +104,7 @@ module {
       };
       return await data_canister.getPlayerDetailsForGameweek(leagueId, dto);
     };
+    */
 
     public func validateRevaluePlayerUp(leagueId: T.FootballLeagueId, dto : DTOs.RevaluePlayerUpDTO) :  async Result.Result<(), T.Error> {
       let data_canister = actor (NetworkEnvVars.DATA_CANISTER_ID) : actor {

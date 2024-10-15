@@ -61,14 +61,14 @@ export const idlFactory = ({ IDL }) => {
     shirtType: ShirtType,
     primaryColourHex: IDL.Text,
   });
-  const Result_21 = IDL.Variant({ ok: IDL.Vec(ClubDTO), err: Error });
+  const Result_20 = IDL.Variant({ ok: IDL.Vec(ClubDTO), err: Error });
   const CountryId = IDL.Nat16;
   const CountryDTO = IDL.Record({
     id: CountryId,
     code: IDL.Text,
     name: IDL.Text,
   });
-  const Result_20 = IDL.Variant({ ok: IDL.Vec(CountryDTO), err: Error });
+  const Result_19 = IDL.Variant({ ok: IDL.Vec(CountryDTO), err: Error });
   const PlayerId = IDL.Nat16;
   const CanisterId = IDL.Text;
   const PickTeamDTO = IDL.Record({
@@ -99,9 +99,9 @@ export const idlFactory = ({ IDL }) => {
     canisterId: CanisterId,
     monthlyBonusesAvailable: IDL.Nat8,
   });
-  const Result_19 = IDL.Variant({ ok: PickTeamDTO, err: Error });
+  const Result_18 = IDL.Variant({ ok: PickTeamDTO, err: Error });
   const DataHashDTO = IDL.Record({ hash: IDL.Text, category: IDL.Text });
-  const Result_18 = IDL.Variant({ ok: IDL.Vec(DataHashDTO), err: Error });
+  const Result_17 = IDL.Variant({ ok: IDL.Vec(DataHashDTO), err: Error });
   const SeasonId = IDL.Nat16;
   const PrincipalId = IDL.Text;
   const GetFantasyTeamSnapshotDTO = IDL.Record({
@@ -144,7 +144,7 @@ export const idlFactory = ({ IDL }) => {
     points: IDL.Int16,
     monthlyBonusesAvailable: IDL.Nat8,
   });
-  const Result_17 = IDL.Variant({
+  const Result_16 = IDL.Variant({
     ok: FantasyTeamSnapshotDTO,
     err: Error,
   });
@@ -170,22 +170,6 @@ export const idlFactory = ({ IDL }) => {
   });
   const Result_11 = IDL.Variant({ ok: IDL.Vec(FixtureDTO), err: Error });
   const FootballLeagueId = IDL.Nat16;
-  const Gender = IDL.Variant({ Male: IDL.Null, Female: IDL.Null });
-  const FootballLeagueDTO = IDL.Record({
-    id: FootballLeagueId,
-    logo: IDL.Vec(IDL.Nat8),
-    name: IDL.Text,
-    teamCount: IDL.Nat8,
-    relatedGender: Gender,
-    countryId: CountryId,
-    abbreviation: IDL.Text,
-    governingBody: IDL.Text,
-    formed: IDL.Int,
-  });
-  const Result_16 = IDL.Variant({
-    ok: IDL.Vec(FootballLeagueDTO),
-    err: Error,
-  });
   const ClubFilterDTO = IDL.Record({
     clubId: ClubId,
     leagueId: FootballLeagueId,
@@ -376,6 +360,11 @@ export const idlFactory = ({ IDL }) => {
     ok: IDL.Vec(IDL.Tuple(IDL.Nat16, PlayerScoreDTO)),
     err: Error,
   });
+  const GetSnapshotPlayers = IDL.Record({
+    seasonId: SeasonId,
+    gameweek: GameweekNumber,
+    leagueId: FootballLeagueId,
+  });
   const ProfileDTO = IDL.Record({
     username: IDL.Text,
     termsAccepted: IDL.Bool,
@@ -420,11 +409,6 @@ export const idlFactory = ({ IDL }) => {
     year: IDL.Nat16,
   });
   const Result_6 = IDL.Variant({ ok: IDL.Vec(SeasonDTO), err: Error });
-  const GetSnapshotPlayers = IDL.Record({
-    seasonId: SeasonId,
-    gameweek: GameweekNumber,
-    leagueId: FootballLeagueId,
-  });
   const SystemStateDTO = IDL.Record({
     pickTeamSeasonId: SeasonId,
     calculationGameweek: GameweekNumber,
@@ -523,18 +507,25 @@ export const idlFactory = ({ IDL }) => {
     getBackendCanisterBalance: IDL.Func([], [Result_3], []),
     getCanisterCyclesAvailable: IDL.Func([], [IDL.Nat], []),
     getCanisterCyclesBalance: IDL.Func([], [Result_3], []),
-    getClubs: IDL.Func([], [Result_21], []),
-    getCountries: IDL.Func([], [Result_20], ["query"]),
-    getCurrentTeam: IDL.Func([], [Result_19], []),
-    getDataHashes: IDL.Func([], [Result_18], ["query"]),
+    getClubs: IDL.Func([], [Result_20], ["composite_query"]),
+    getCountries: IDL.Func([], [Result_19], ["query"]),
+    getCurrentTeam: IDL.Func([], [Result_18], []),
+    getDataHashes: IDL.Func([], [Result_17], ["composite_query"]),
     getFantasyTeamSnapshot: IDL.Func(
       [GetFantasyTeamSnapshotDTO],
-      [Result_17],
+      [Result_16],
       [],
     ),
-    getFixtures: IDL.Func([RequestFixturesDTO], [Result_11], []),
-    getLeagues: IDL.Func([], [Result_16], []),
-    getLoanedPlayers: IDL.Func([ClubFilterDTO], [Result_9], []),
+    getFixtures: IDL.Func(
+      [RequestFixturesDTO],
+      [Result_11],
+      ["composite_query"],
+    ),
+    getLoanedPlayers: IDL.Func(
+      [ClubFilterDTO],
+      [Result_9],
+      ["composite_query"],
+    ),
     getManager: IDL.Func([RequestManagerDTO], [Result_1], []),
     getManagerCanisterIds: IDL.Func([], [IDL.Vec(CanisterId)], []),
     getMonthlyLeaderboard: IDL.Func(
@@ -542,28 +533,40 @@ export const idlFactory = ({ IDL }) => {
       [Result_15],
       [],
     ),
-    getPlayerDetails: IDL.Func([GetPlayerDetailsDTO], [Result_14], []),
+    getPlayerDetails: IDL.Func(
+      [GetPlayerDetailsDTO],
+      [Result_14],
+      ["composite_query"],
+    ),
     getPlayerDetailsForGameweek: IDL.Func(
       [GameweekFiltersDTO],
       [Result_13],
-      [],
+      ["composite_query"],
     ),
-    getPlayers: IDL.Func([], [Result_9], []),
-    getPlayersMap: IDL.Func([GameweekFiltersDTO], [Result_12], []),
-    getPostponedFixtures: IDL.Func([], [Result_11], []),
-    getProfile: IDL.Func([], [Result_10], []),
-    getRetiredPlayers: IDL.Func([ClubFilterDTO], [Result_9], []),
-    getRewardPool: IDL.Func([GetRewardPoolDTO], [Result_8], []),
-    getSeasonLeaderboard: IDL.Func([GetSeasonLeaderboardDTO], [Result_7], []),
-    getSeasons: IDL.Func([], [Result_6], []),
-    getSnapshotPlayers: IDL.Func(
+    getPlayers: IDL.Func([], [Result_9], ["composite_query"]),
+    getPlayersMap: IDL.Func(
+      [GameweekFiltersDTO],
+      [Result_12],
+      ["composite_query"],
+    ),
+    getPlayersSnapshot: IDL.Func(
       [GetSnapshotPlayers],
       [IDL.Vec(PlayerDTO)],
-      [],
+      ["composite_query"],
     ),
-    getSystemState: IDL.Func([], [Result_5], []),
+    getPostponedFixtures: IDL.Func([], [Result_11], ["composite_query"]),
+    getProfile: IDL.Func([], [Result_10], []),
+    getRetiredPlayers: IDL.Func(
+      [ClubFilterDTO],
+      [Result_9],
+      ["composite_query"],
+    ),
+    getRewardPool: IDL.Func([GetRewardPoolDTO], [Result_8], []),
+    getSeasonLeaderboard: IDL.Func([GetSeasonLeaderboardDTO], [Result_7], []),
+    getSeasons: IDL.Func([], [Result_6], ["composite_query"]),
+    getSystemState: IDL.Func([], [Result_5], ["query"]),
     getTopups: IDL.Func([GetTopupsDTO], [Result_4], []),
-    getTotalManagers: IDL.Func([], [Result_3], []),
+    getTotalManagers: IDL.Func([], [Result_3], ["query"]),
     getTreasuryAccountPublic: IDL.Func([], [AccountIdentifier], []),
     getWeeklyLeaderboard: IDL.Func([GetWeeklyLeaderboardDTO], [Result_2], []),
     isUsernameValid: IDL.Func([UsernameFilterDTO], [IDL.Bool], ["query"]),

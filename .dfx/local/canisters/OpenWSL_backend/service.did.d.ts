@@ -136,24 +136,12 @@ export type FixtureStatusType =
   | { Finalised: null }
   | { Active: null }
   | { Complete: null };
-export interface FootballLeagueDTO {
-  id: FootballLeagueId;
-  logo: Uint8Array | number[];
-  name: string;
-  teamCount: number;
-  relatedGender: Gender;
-  countryId: CountryId;
-  abbreviation: string;
-  governingBody: string;
-  formed: bigint;
-}
 export type FootballLeagueId = number;
 export interface GameweekFiltersDTO {
   seasonId: SeasonId;
   gameweek: GameweekNumber;
 }
 export type GameweekNumber = number;
-export type Gender = { Male: null } | { Female: null };
 export interface GetFantasyTeamSnapshotDTO {
   seasonId: SeasonId;
   managerPrincipalId: PrincipalId;
@@ -384,13 +372,12 @@ export type Result_12 =
 export type Result_13 = { ok: Array<PlayerPointsDTO> } | { err: Error };
 export type Result_14 = { ok: PlayerDetailDTO } | { err: Error };
 export type Result_15 = { ok: MonthlyLeaderboardDTO } | { err: Error };
-export type Result_16 = { ok: Array<FootballLeagueDTO> } | { err: Error };
-export type Result_17 = { ok: FantasyTeamSnapshotDTO } | { err: Error };
-export type Result_18 = { ok: Array<DataHashDTO> } | { err: Error };
-export type Result_19 = { ok: PickTeamDTO } | { err: Error };
+export type Result_16 = { ok: FantasyTeamSnapshotDTO } | { err: Error };
+export type Result_17 = { ok: Array<DataHashDTO> } | { err: Error };
+export type Result_18 = { ok: PickTeamDTO } | { err: Error };
+export type Result_19 = { ok: Array<CountryDTO> } | { err: Error };
 export type Result_2 = { ok: WeeklyLeaderboardDTO } | { err: Error };
-export type Result_20 = { ok: Array<CountryDTO> } | { err: Error };
-export type Result_21 = { ok: Array<ClubDTO> } | { err: Error };
+export type Result_20 = { ok: Array<ClubDTO> } | { err: Error };
 export type Result_3 = { ok: bigint } | { err: Error };
 export type Result_4 = { ok: GetTopupsDTO } | { err: Error };
 export type Result_5 = { ok: SystemStateDTO } | { err: Error };
@@ -519,13 +506,12 @@ export interface _SERVICE {
   getBackendCanisterBalance: ActorMethod<[], Result_3>;
   getCanisterCyclesAvailable: ActorMethod<[], bigint>;
   getCanisterCyclesBalance: ActorMethod<[], Result_3>;
-  getClubs: ActorMethod<[], Result_21>;
-  getCountries: ActorMethod<[], Result_20>;
-  getCurrentTeam: ActorMethod<[], Result_19>;
-  getDataHashes: ActorMethod<[], Result_18>;
-  getFantasyTeamSnapshot: ActorMethod<[GetFantasyTeamSnapshotDTO], Result_17>;
+  getClubs: ActorMethod<[], Result_20>;
+  getCountries: ActorMethod<[], Result_19>;
+  getCurrentTeam: ActorMethod<[], Result_18>;
+  getDataHashes: ActorMethod<[], Result_17>;
+  getFantasyTeamSnapshot: ActorMethod<[GetFantasyTeamSnapshotDTO], Result_16>;
   getFixtures: ActorMethod<[RequestFixturesDTO], Result_11>;
-  getLeagues: ActorMethod<[], Result_16>;
   getLoanedPlayers: ActorMethod<[ClubFilterDTO], Result_9>;
   getManager: ActorMethod<[RequestManagerDTO], Result_1>;
   getManagerCanisterIds: ActorMethod<[], Array<CanisterId>>;
@@ -534,13 +520,13 @@ export interface _SERVICE {
   getPlayerDetailsForGameweek: ActorMethod<[GameweekFiltersDTO], Result_13>;
   getPlayers: ActorMethod<[], Result_9>;
   getPlayersMap: ActorMethod<[GameweekFiltersDTO], Result_12>;
+  getPlayersSnapshot: ActorMethod<[GetSnapshotPlayers], Array<PlayerDTO>>;
   getPostponedFixtures: ActorMethod<[], Result_11>;
   getProfile: ActorMethod<[], Result_10>;
   getRetiredPlayers: ActorMethod<[ClubFilterDTO], Result_9>;
   getRewardPool: ActorMethod<[GetRewardPoolDTO], Result_8>;
   getSeasonLeaderboard: ActorMethod<[GetSeasonLeaderboardDTO], Result_7>;
   getSeasons: ActorMethod<[], Result_6>;
-  getSnapshotPlayers: ActorMethod<[GetSnapshotPlayers], Array<PlayerDTO>>;
   getSystemState: ActorMethod<[], Result_5>;
   getTopups: ActorMethod<[GetTopupsDTO], Result_4>;
   getTotalManagers: ActorMethod<[], Result_3>;

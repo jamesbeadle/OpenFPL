@@ -159,15 +159,10 @@ type Result_3 =
    err: Error;
    ok: nat;
  };
-type Result_21 = 
- variant {
-   err: Error;
-   ok: vec ClubDTO;
- };
 type Result_20 = 
  variant {
    err: Error;
-   ok: vec CountryDTO;
+   ok: vec ClubDTO;
  };
 type Result_2 = 
  variant {
@@ -177,22 +172,22 @@ type Result_2 =
 type Result_19 = 
  variant {
    err: Error;
-   ok: PickTeamDTO;
+   ok: vec CountryDTO;
  };
 type Result_18 = 
  variant {
    err: Error;
-   ok: vec DataHashDTO;
+   ok: PickTeamDTO;
  };
 type Result_17 = 
  variant {
    err: Error;
-   ok: FantasyTeamSnapshotDTO;
+   ok: vec DataHashDTO;
  };
 type Result_16 = 
  variant {
    err: Error;
-   ok: vec FootballLeagueDTO;
+   ok: FantasyTeamSnapshotDTO;
  };
 type Result_15 = 
  variant {
@@ -482,11 +477,6 @@ type GetFantasyTeamSnapshotDTO =
    managerPrincipalId: PrincipalId;
    seasonId: SeasonId;
  };
-type Gender = 
- variant {
-   Female;
-   Male;
- };
 type GameweekNumber = nat8;
 type GameweekFiltersDTO = 
  record {
@@ -494,18 +484,6 @@ type GameweekFiltersDTO =
    seasonId: SeasonId;
  };
 type FootballLeagueId = nat16;
-type FootballLeagueDTO = 
- record {
-   abbreviation: text;
-   countryId: CountryId;
-   formed: int;
-   governingBody: text;
-   id: FootballLeagueId;
-   logo: blob;
-   name: text;
-   relatedGender: Gender;
-   teamCount: nat8;
- };
 type FixtureStatusType = 
  variant {
    Active;
@@ -656,31 +634,31 @@ service : {
   getBackendCanisterBalance: () -> (Result_3);
   getCanisterCyclesAvailable: () -> (nat);
   getCanisterCyclesBalance: () -> (Result_3);
-  getClubs: () -> (Result_21);
-  getCountries: () -> (Result_20) query;
-  getCurrentTeam: () -> (Result_19);
-  getDataHashes: () -> (Result_18) query;
-  getFantasyTeamSnapshot: (GetFantasyTeamSnapshotDTO) -> (Result_17);
-  getFixtures: (RequestFixturesDTO) -> (Result_11);
-  getLeagues: () -> (Result_16);
-  getLoanedPlayers: (ClubFilterDTO) -> (Result_9);
+  getClubs: () -> (Result_20) composite_query;
+  getCountries: () -> (Result_19) query;
+  getCurrentTeam: () -> (Result_18);
+  getDataHashes: () -> (Result_17) composite_query;
+  getFantasyTeamSnapshot: (GetFantasyTeamSnapshotDTO) -> (Result_16);
+  getFixtures: (RequestFixturesDTO) -> (Result_11) composite_query;
+  getLoanedPlayers: (ClubFilterDTO) -> (Result_9) composite_query;
   getManager: (RequestManagerDTO) -> (Result_1);
   getManagerCanisterIds: () -> (vec CanisterId);
   getMonthlyLeaderboard: (GetMonthlyLeaderboardDTO) -> (Result_15);
-  getPlayerDetails: (GetPlayerDetailsDTO) -> (Result_14);
-  getPlayerDetailsForGameweek: (GameweekFiltersDTO) -> (Result_13);
-  getPlayers: () -> (Result_9);
-  getPlayersMap: (GameweekFiltersDTO) -> (Result_12);
-  getPostponedFixtures: () -> (Result_11);
+  getPlayerDetails: (GetPlayerDetailsDTO) -> (Result_14) composite_query;
+  getPlayerDetailsForGameweek: (GameweekFiltersDTO) ->
+   (Result_13) composite_query;
+  getPlayers: () -> (Result_9) composite_query;
+  getPlayersMap: (GameweekFiltersDTO) -> (Result_12) composite_query;
+  getPlayersSnapshot: (GetSnapshotPlayers) -> (vec PlayerDTO) composite_query;
+  getPostponedFixtures: () -> (Result_11) composite_query;
   getProfile: () -> (Result_10);
-  getRetiredPlayers: (ClubFilterDTO) -> (Result_9);
+  getRetiredPlayers: (ClubFilterDTO) -> (Result_9) composite_query;
   getRewardPool: (GetRewardPoolDTO) -> (Result_8);
   getSeasonLeaderboard: (GetSeasonLeaderboardDTO) -> (Result_7);
-  getSeasons: () -> (Result_6);
-  getSnapshotPlayers: (GetSnapshotPlayers) -> (vec PlayerDTO);
-  getSystemState: () -> (Result_5);
+  getSeasons: () -> (Result_6) composite_query;
+  getSystemState: () -> (Result_5) query;
   getTopups: (GetTopupsDTO) -> (Result_4);
-  getTotalManagers: () -> (Result_3);
+  getTotalManagers: () -> (Result_3) query;
   getTreasuryAccountPublic: () -> (AccountIdentifier);
   getWeeklyLeaderboard: (GetWeeklyLeaderboardDTO) -> (Result_2);
   isUsernameValid: (UsernameFilterDTO) -> (bool) query;

@@ -106,19 +106,35 @@
     };
 
     public shared composite query func getLeagues() : async Result.Result<[DTOs.FootballLeagueDTO], T.Error> {
-      return await dataManager.getLeagues();
+      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
+        getLeagues : shared query () -> async Result.Result<[T.FootballLeague], T.Error>;
+      };
+      return await data_canister.getLeagues();
+      //return await dataManager.getLeagues(); //Todo implement when figure out query function
     };
 
     public shared composite query func getClubs() : async Result.Result<[DTOs.ClubDTO], T.Error> {
-      return await dataManager.getClubs(Environment.LEAGUE_ID);
+      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
+        getClubs : shared query (leagueId: T.FootballLeagueId) -> async Result.Result<[T.Club], T.Error>;
+      };
+      return await data_canister.getClubs(Environment.LEAGUE_ID);
+      //return await dataManager.getClubs(Environment.LEAGUE_ID); //Todo implement when figure out query function
     };
 
     public shared composite query func getFixtures(dto: Requests.RequestFixturesDTO) : async Result.Result<[DTOs.FixtureDTO], T.Error> {
-      return await dataManager.getFixtures(Environment.LEAGUE_ID, dto);
+      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
+        getFixtures : shared query (leagueId: T.FootballLeagueId, dto: Requests.RequestFixturesDTO) -> async Result.Result<[DTOs.FixtureDTO], T.Error>;
+      };
+      return await data_canister.getFixtures(Environment.LEAGUE_ID, dto);
+      //return await dataManager.getFixtures(Environment.LEAGUE_ID, dto); //Todo implement when figure out query function
     };
 
     public shared composite query func getSeasons() : async Result.Result<[DTOs.SeasonDTO], T.Error> {
-      return await dataManager.getSeasons(Environment.LEAGUE_ID);
+       let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
+        getSeasons : shared query (leagueId: T.FootballLeagueId) -> async Result.Result<[DTOs.SeasonDTO], T.Error>;
+      };
+      return await data_canister.getSeasons(Environment.LEAGUE_ID);
+      //return await dataManager.getSeasons(Environment.LEAGUE_ID); //Todo implement when figure out query function
     };
 
     public shared composite query func getPostponedFixtures() : async Result.Result<[DTOs.FixtureDTO], T.Error> {
@@ -136,7 +152,11 @@
       let systemStateResult = await getSystemState();
       switch(systemStateResult){
         case (#ok systemState){
-          return await dataManager.getPlayers(Environment.LEAGUE_ID, { seasonId = systemState.pickTeamSeasonId });
+          let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
+            getPlayers : shared query (leagueId: T.FootballLeagueId, dto: Requests.RequestPlayersDTO) -> async Result.Result<[DTOs.PlayerDTO], T.Error>;
+          };
+          return await data_canister.getPlayers(Environment.LEAGUE_ID, { seasonId = systemState.pickTeamSeasonId });
+          //return await getLeaguePlayers(Environment.LEAGUE_ID, { seasonId = systemState.pickTeamSeasonId }); //Todo implement when figure out query function
         };  
         case (#err error){
           return #err(error);
@@ -150,23 +170,42 @@
     };
 
     public shared composite query func getLoanedPlayers(dto: DTOs.ClubFilterDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
-      return await dataManager.getLoanedPlayers(Environment.LEAGUE_ID, dto);
+      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
+        getLoanedPlayers : shared query (leagueId: T.FootballLeagueId, dto: DTOs.ClubFilterDTO) -> async Result.Result<[DTOs.PlayerDTO], T.Error>;
+      };
+      return await data_canister.getLoanedPlayers(Environment.LEAGUE_ID, dto);
     };
 
     public shared composite query func getRetiredPlayers(dto: DTOs.ClubFilterDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
-      return await dataManager.getRetiredPlayers(Environment.LEAGUE_ID, dto);
+      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
+        getRetiredPlayers : shared query (leagueId: T.FootballLeagueId, dto: DTOs.ClubFilterDTO) -> async Result.Result<[DTOs.PlayerDTO], T.Error>;
+      };
+      return await data_canister.getRetiredPlayers(Environment.LEAGUE_ID, dto);
+      //return await dataManager.getRetiredPlayers(Environment.LEAGUE_ID, dto); //Todo implement when figure out query function
     };
 
     public shared composite query func getPlayerDetailsForGameweek(dto: DTOs.GameweekFiltersDTO) : async Result.Result<[DTOs.PlayerPointsDTO], T.Error> {
-      return await dataManager.getPlayerDetailsForGameweek(Environment.LEAGUE_ID, dto);
+      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
+        getPlayerDetailsForGameweek : shared query (leagueId: T.FootballLeagueId, dto: DTOs.GameweekFiltersDTO) -> async Result.Result<[DTOs.PlayerPointsDTO], T.Error>;
+      };
+      return await data_canister.getPlayerDetailsForGameweek(Environment.LEAGUE_ID, dto);
+      //return await dataManager.getPlayerDetailsForGameweek(Environment.LEAGUE_ID, dto); //Todo implement when figure out query function
     };
 
     public shared composite query func getPlayersMap(dto: DTOs.GameweekFiltersDTO) : async Result.Result<[(Nat16, DTOs.PlayerScoreDTO)], T.Error> {
-      return await dataManager.getPlayersMap(Environment.LEAGUE_ID, dto);
+      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
+        getPlayersMap : shared query (leagueId: T.FootballLeagueId, dto: DTOs.GameweekFiltersDTO) -> async Result.Result<[(Nat16, DTOs.PlayerScoreDTO)], T.Error>;
+      };
+      return await data_canister.getPlayersMap(Environment.LEAGUE_ID, dto);
+      //return await dataManager.getPlayersMap(Environment.LEAGUE_ID, dto); //Todo implement when figure out query function
     };
 
     public shared composite query func getPlayerDetails(dto: DTOs.GetPlayerDetailsDTO) : async Result.Result<DTOs.PlayerDetailDTO, T.Error> {
-      return await dataManager.getPlayerDetails(Environment.LEAGUE_ID, dto);
+      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
+        getPlayerDetailsForGameweek : shared query (leagueId: T.FootballLeagueId, dto: DTOs.GetPlayerDetailsDTO) -> async Result.Result<DTOs.PlayerDetailDTO, T.Error>;
+      };
+      return await data_canister.getPlayerDetailsForGameweek(Environment.LEAGUE_ID, dto);
+      //return await dataManager.getPlayerDetails(Environment.LEAGUE_ID, dto); //Todo implement when figure out query function
     };
 
     public shared query func getCountries() : async Result.Result<[DTOs.CountryDTO], T.Error> {

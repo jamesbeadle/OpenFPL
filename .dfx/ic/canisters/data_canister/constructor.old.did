@@ -100,7 +100,7 @@ type Result_8 =
 type Result_7 = 
  variant {
    err: Error;
-   ok: vec FootballLeague;
+   ok: vec FootballLeagueDTO;
  };
 type Result_6 = 
  variant {
@@ -301,7 +301,7 @@ type GameweekFiltersDTO =
    seasonId: SeasonId;
  };
 type FootballLeagueId = nat16;
-type FootballLeague = 
+type FootballLeagueDTO = 
  record {
    abbreviation: text;
    countryId: CountryId;
