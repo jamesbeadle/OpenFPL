@@ -665,6 +665,7 @@ service : {
   getLeagues: () -> (Result_16);
   getLoanedPlayers: (ClubFilterDTO) -> (Result_9);
   getManager: (RequestManagerDTO) -> (Result_1);
+  getManagerCanisterIds: () -> (vec CanisterId);
   getMonthlyLeaderboard: (GetMonthlyLeaderboardDTO) -> (Result_15);
   getPlayerDetails: (GetPlayerDetailsDTO) -> (Result_14);
   getPlayerDetailsForGameweek: (GameweekFiltersDTO) -> (Result_13);

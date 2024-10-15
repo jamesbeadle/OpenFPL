@@ -19,7 +19,6 @@ function createMonthlyLeaderboardStore() {
   systemStore.subscribe((value) => {
     systemState = value as SystemStateDTO;
   });
-  console.log("Creating actor in monthly leaderboard store line 22");
   let actor: any = ActorFactory.createActor(
     idlFactory,
     process.env.OPENWSL_BACKEND_CANISTER_ID,
@@ -27,7 +26,6 @@ function createMonthlyLeaderboardStore() {
 
   async function sync(seasonId: number, month: number, clubId: number) {
     let category = "monthly_leaderboards";
-    console.log("Actor getting datahashes in monthly leaderboard sync line 30");
     const newHashValues = await actor.getDataHashes();
 
     let error = isError(newHashValues);
@@ -55,7 +53,6 @@ function createMonthlyLeaderboardStore() {
         offset: BigInt(offset),
         limit: BigInt(limit),
       };
-      console.log("Actor getting monthly leaderboard in sync line 58");
       let result = await actor.getMonthlyLeaderboard(dto);
       if (isError(result)) {
         let emptyLeaderboard = {
@@ -122,7 +119,6 @@ function createMonthlyLeaderboardStore() {
       month: month,
       clubId: clubId,
     };
-    console.log("Actor getting monthly leaderboards line 125");
     let result = await actor.getMonthlyLeaderboards(dto);
 
     if (isError(result)) {

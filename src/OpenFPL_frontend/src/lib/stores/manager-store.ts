@@ -23,7 +23,6 @@ function createManagerStore() {
     systemState = value as SystemStateDTO;
   });
 
-  console.log("Creating actor in manager store line 26");
   let actor: any = ActorFactory.createActor(
     idlFactory,
     process.env.OPENFPL_BACKEND_CANISTER_ID,
@@ -72,7 +71,6 @@ function createManagerStore() {
         gameweek: 0,
         clubId: 0,
       };
-      console.log("actor getting manager in get public profile line 75");
       let result = await actor.getManager(dto);
 
       if (isError(result)) {
@@ -89,7 +87,6 @@ function createManagerStore() {
 
   async function getTotalManagers(): Promise<number> {
     try {
-      console.log("actor getting total managers line 92");
       let result = await actor.getTotalManagers();
 
       if (isError(result)) {
@@ -115,7 +112,6 @@ function createManagerStore() {
         gameweek,
         seasonId,
       };
-      console.log("actor getting fantasy team snapshot line 118");
       let result = await actor.getFantasyTeamSnapshot(dto);
 
       if (isError(result)) {
@@ -130,16 +126,11 @@ function createManagerStore() {
 
   async function getCurrentTeam(): Promise<PickTeamDTO> {
     try {
-      console.log("Creating actor in get current team line 133");
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
-      console.log("actor getting current team line 138");
-      console.log("resulty");
       const result = await identityActor.getCurrentTeam();
-      console.log("resultx");
-      console.log(result);
 
       if (isError(result)) {
         return newManager;
@@ -171,7 +162,6 @@ function createManagerStore() {
         bonusPlayed = getBonusPlayed(userFantasyTeam, activeGameweek);
         bonusCountryId = getBonusCountryId(userFantasyTeam, activeGameweek);
       }
-      console.log("Creating actor in save fantasy team line 171");
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
@@ -223,9 +213,6 @@ function createManagerStore() {
         username: userFantasyTeam.username,
       };
 
-      console.log("dto");
-      console.log(dto);
-      console.log("actor saving fantasy team");
       let result = await identityActor.saveFantasyTeam(dto);
 
       if (isError(result)) {

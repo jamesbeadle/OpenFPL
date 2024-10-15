@@ -53,7 +53,6 @@
       await storeManager.syncStores();
       loadData();
       disableInvalidFormations()
-      console.log($systemStore)
     } catch (error) {
       toastsError({
         msg: { text: "Error loading pick team buttons." },
@@ -149,8 +148,6 @@
     if (!isValidFormation($fantasyTeam, $selectedFormation)) {
       return false;
     }
-
-    console.log("checked conditions")
 
     return true;
   }
@@ -299,7 +296,6 @@
   }
 
   async function saveFantasyTeam() {
-    console.log("save")
     if (!$fantasyTeam) {
       return;
     }
@@ -334,7 +330,6 @@
     }
 
     try {
-      console.log(team)
       await managerStore.saveFantasyTeam(
         team!,
         activeGameweek,

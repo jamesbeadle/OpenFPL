@@ -157,7 +157,6 @@
 ) {
     gameweekData.forEach((data) => {
       let bonusPoints = 0;
-      console.log(fantasyTeam)
       if (
         fantasyTeam.goalGetterPlayerId === data.player.id &&
         fantasyTeam.goalGetterGameweek === data.gameweek

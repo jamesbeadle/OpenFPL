@@ -26,7 +26,7 @@
     <div class="content-panel w-full">
       <div class="w-full grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
         <p class="col-span-1 md:col-span-4 text-center w-full mb-4">
-          Premier League Clubs
+          Super League Clubs
         </p>
         {#each $clubStore.sort((a, b) => a.id - b.id) as team}
           <div

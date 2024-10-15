@@ -10,15 +10,17 @@ import { ActorFactory } from "../../utils/ActorFactory";
 import { isError } from "../utils/helpers";
 
 export class LeagueService {
-  constructor() {}
+  private actor: any;
+
+  constructor() {
+    this.actor = ActorFactory.createActor(
+      idlFactory,
+      process.env.OPENFPL_BACKEND_CANISTER_ID,
+    );
+  }
 
   async getLeagues(): Promise<FootballLeagueDTO[]> {
-    const identityActor: any = await ActorFactory.createIdentityActor(
-      authStore,
-      process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
-    );
-
-    const result = await identityActor.getLeagues();
+    const result = await this.actor.getLeagues();
     if (isError(result)) throw new Error("Failed to fetch leagues");
     return result.ok;
   }

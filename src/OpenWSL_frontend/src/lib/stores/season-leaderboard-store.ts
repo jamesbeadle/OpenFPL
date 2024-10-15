@@ -19,7 +19,6 @@ function createSeasonLeaderboardStore() {
   systemStore.subscribe((value) => {
     systemState = value as SystemStateDTO;
   });
-  console.log("Creating actor in season leaderboard store line 22");
   let actor: any = ActorFactory.createActor(
     idlFactory,
     process.env.OPENWSL_BACKEND_CANISTER_ID,
@@ -27,7 +26,6 @@ function createSeasonLeaderboardStore() {
 
   async function sync(seasonId: number) {
     let category = "season_leaderboard";
-    console.log("Actor getting data hashes in season leaderboard store sync");
     const newHashValues = await actor.getDataHashes();
 
     let error = isError(newHashValues);
@@ -53,7 +51,6 @@ function createSeasonLeaderboardStore() {
         limit: BigInt(limit),
         searchTerm: "",
       };
-      console.log("Actor getting season leaderboard in sync line 56");
       let result = await actor.getSeasonLeaderboard(dto);
       if (isError(result)) {
         return;
@@ -125,7 +122,6 @@ function createSeasonLeaderboardStore() {
       limit: BigInt(limit),
       searchTerm: "",
     };
-    console.log("Actor getting season leaderboard in getSeasonLeaderboard");
     let result = await actor.getSeasonLeaderboard(dto);
 
     if (isError(result)) {

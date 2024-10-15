@@ -45,7 +45,7 @@
       <h3 class="default-header">Set Fantasy Team Name</h3>
       <button class="times-button" on:click={cancelModal}>&times;</button>
     </div>
-    <p>Please enter a team name for the OpenFPL leaderboards:</p>
+    <p>Please enter a team name for the OpenWSL leaderboards:</p>
     <form on:submit|preventDefault={setUsername}>
       <div class="mt-4">
         <input

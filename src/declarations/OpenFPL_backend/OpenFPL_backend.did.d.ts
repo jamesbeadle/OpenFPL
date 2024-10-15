@@ -665,6 +665,7 @@ export interface _SERVICE {
   'getLeagues' : ActorMethod<[], Result_17>,
   'getLoanedPlayers' : ActorMethod<[ClubFilterDTO], Result_10>,
   'getManager' : ActorMethod<[RequestManagerDTO], Result_1>,
+  'getManagerCanisterIds' : ActorMethod<[], Array<CanisterId>>,
   'getMonthlyLeaderboard' : ActorMethod<[GetMonthlyLeaderboardDTO], Result_16>,
   'getPlayerDetails' : ActorMethod<[GetPlayerDetailsDTO], Result_15>,
   'getPlayerDetailsForGameweek' : ActorMethod<[GameweekFiltersDTO], Result_14>,

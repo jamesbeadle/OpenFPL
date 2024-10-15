@@ -18,80 +18,87 @@ module {
 
   public class DataManager() {
 
-    public func getLeagues() : async Result.Result<[DTOs.FootballLeagueDTO], T.Error> {
+    public composite query func getLeagues() : async Result.Result<[DTOs.FootballLeagueDTO], T.Error> {
       let data_canister = actor (NetworkEnvVars.DATA_CANISTER_ID) : actor {
-        getLeagues : () -> async Result.Result<[T.FootballLeague], T.Error>;
+        getLeagues : shared query () -> async Result.Result<[T.FootballLeague], T.Error>;
       };
       return await data_canister.getLeagues();
     };
 
-    public func getClubs(leagueId: T.FootballLeagueId) : async Result.Result<[DTOs.ClubDTO], T.Error> {
+    public composite query func getClubs(leagueId: T.FootballLeagueId) : async Result.Result<[DTOs.ClubDTO], T.Error> {
       let data_canister = actor (NetworkEnvVars.DATA_CANISTER_ID) : actor {
-        getClubs : (leagueId: T.FootballLeagueId) -> async Result.Result<[T.Club], T.Error>;
+        getClubs : shared query (leagueId: T.FootballLeagueId) -> async Result.Result<[T.Club], T.Error>;
       };
       return await data_canister.getClubs(leagueId);
     };
 
-    public func getFixtures(leagueId: T.FootballLeagueId, dto: RequestDTOs.RequestFixturesDTO) : async Result.Result<[DTOs.FixtureDTO], T.Error> {
+    public composite query func getFixtures(leagueId: T.FootballLeagueId, dto: RequestDTOs.RequestFixturesDTO) : async Result.Result<[DTOs.FixtureDTO], T.Error> {
       let data_canister = actor (NetworkEnvVars.DATA_CANISTER_ID) : actor {
-        getFixtures : (leagueId: T.FootballLeagueId, dto: RequestDTOs.RequestFixturesDTO) -> async Result.Result<[DTOs.FixtureDTO], T.Error>;
+        getFixtures : shared query (leagueId: T.FootballLeagueId, dto: RequestDTOs.RequestFixturesDTO) -> async Result.Result<[DTOs.FixtureDTO], T.Error>;
       };
       return await data_canister.getFixtures(leagueId, dto);
     };
 
-    public func getSeasons(leagueId: T.FootballLeagueId) : async Result.Result<[DTOs.SeasonDTO], T.Error> {
+    public composite query func getSeasons(leagueId: T.FootballLeagueId) : async Result.Result<[DTOs.SeasonDTO], T.Error> {
       let data_canister = actor (NetworkEnvVars.DATA_CANISTER_ID) : actor {
-        getSeasons : (leagueId: T.FootballLeagueId) -> async Result.Result<[DTOs.SeasonDTO], T.Error>;
+        getSeasons : shared query (leagueId: T.FootballLeagueId) -> async Result.Result<[DTOs.SeasonDTO], T.Error>;
       };
       return await data_canister.getSeasons(leagueId);
     };
 
-    public func getPostponedFixtures(leagueId: T.FootballLeagueId, dto: RequestDTOs.RequestFixturesDTO) : async Result.Result<[DTOs.FixtureDTO], T.Error> {
+    public composite query func getPostponedFixtures(leagueId: T.FootballLeagueId, dto: RequestDTOs.RequestFixturesDTO) : async Result.Result<[DTOs.FixtureDTO], T.Error> {
       let data_canister = actor (NetworkEnvVars.DATA_CANISTER_ID) : actor {
-        getPostponedFixtures : (leagueId: T.FootballLeagueId, dto: RequestDTOs.RequestFixturesDTO
+        getPostponedFixtures : shared query (leagueId: T.FootballLeagueId, dto: RequestDTOs.RequestFixturesDTO
         ) -> async Result.Result<[DTOs.FixtureDTO], T.Error>;
       };
       return await data_canister.getPostponedFixtures(leagueId, dto);
     };
 
-    public func getPlayers(leagueId: T.FootballLeagueId, dto: RequestDTOs.RequestPlayersDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
+    public composite query func getPlayers(leagueId: T.FootballLeagueId, dto: RequestDTOs.RequestPlayersDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
       let data_canister = actor (NetworkEnvVars.DATA_CANISTER_ID) : actor {
-        getPlayers : (leagueId: T.FootballLeagueId, dto: RequestDTOs.RequestPlayersDTO) -> async Result.Result<[DTOs.PlayerDTO], T.Error>;
+        getPlayers : shared query (leagueId: T.FootballLeagueId, dto: RequestDTOs.RequestPlayersDTO) -> async Result.Result<[DTOs.PlayerDTO], T.Error>;
       };
       return await data_canister.getPlayers(leagueId, dto);
     };
 
-    public func getLoanedPlayers(leagueId: T.FootballLeagueId, dto: DTOs.ClubFilterDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
+    public composite query func getSnapshotPlayers(dto: RequestDTOs.GetSnapshotPlayers) : async [DTOs.PlayerDTO] {
       let data_canister = actor (NetworkEnvVars.DATA_CANISTER_ID) : actor {
-        getLoanedPlayers : (leagueId: T.FootballLeagueId, dto: DTOs.ClubFilterDTO) -> async Result.Result<[DTOs.PlayerDTO], T.Error>;
+        getSnapshotPlayers : shared query (dto: RequestDTOs.GetSnapshotPlayers) -> async [DTOs.PlayerDTO];
+      };
+      return await data_canister.getSnapshotPlayers(dto);
+    };
+
+    public composite query func getLoanedPlayers(leagueId: T.FootballLeagueId, dto: DTOs.ClubFilterDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
+      let data_canister = actor (NetworkEnvVars.DATA_CANISTER_ID) : actor {
+        getLoanedPlayers : shared query (leagueId: T.FootballLeagueId, dto: DTOs.ClubFilterDTO) -> async Result.Result<[DTOs.PlayerDTO], T.Error>;
       };
       return await data_canister.getLoanedPlayers(leagueId, dto);
     };
 
-    public func getRetiredPlayers(leagueId: T.FootballLeagueId, dto: DTOs.ClubFilterDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
+    public composite query func getRetiredPlayers(leagueId: T.FootballLeagueId, dto: DTOs.ClubFilterDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
       let data_canister = actor (NetworkEnvVars.DATA_CANISTER_ID) : actor {
-        getRetiredPlayers : (leagueId: T.FootballLeagueId, dto: DTOs.ClubFilterDTO) -> async Result.Result<[DTOs.PlayerDTO], T.Error>;
+        getRetiredPlayers : shared query (leagueId: T.FootballLeagueId, dto: DTOs.ClubFilterDTO) -> async Result.Result<[DTOs.PlayerDTO], T.Error>;
       };
       return await data_canister.getRetiredPlayers(leagueId, dto);
     };
 
-    public func getPlayerDetailsForGameweek(leagueId: T.FootballLeagueId, dto: DTOs.GameweekFiltersDTO) : async Result.Result<[DTOs.PlayerPointsDTO], T.Error> {
+    public composite query func getPlayerDetailsForGameweek(leagueId: T.FootballLeagueId, dto: DTOs.GameweekFiltersDTO) : async Result.Result<[DTOs.PlayerPointsDTO], T.Error> {
       let data_canister = actor (NetworkEnvVars.DATA_CANISTER_ID) : actor {
-        getPlayerDetailsForGameweek : (leagueId: T.FootballLeagueId, dto: DTOs.GameweekFiltersDTO) -> async Result.Result<[DTOs.PlayerPointsDTO], T.Error>;
+        getPlayerDetailsForGameweek : shared query (leagueId: T.FootballLeagueId, dto: DTOs.GameweekFiltersDTO) -> async Result.Result<[DTOs.PlayerPointsDTO], T.Error>;
       };
       return await data_canister.getPlayerDetailsForGameweek(leagueId, dto);
     };
 
-    public func getPlayersMap(leagueId: T.FootballLeagueId, dto: DTOs.GameweekFiltersDTO) : async Result.Result<[(Nat16, DTOs.PlayerScoreDTO)], T.Error> {
+    public composite query func getPlayersMap(leagueId: T.FootballLeagueId, dto: DTOs.GameweekFiltersDTO) : async Result.Result<[(Nat16, DTOs.PlayerScoreDTO)], T.Error> {
       let data_canister = actor (NetworkEnvVars.DATA_CANISTER_ID) : actor {
-        getPlayersMap : (leagueId: T.FootballLeagueId, dto: DTOs.GameweekFiltersDTO) -> async Result.Result<[(Nat16, DTOs.PlayerScoreDTO)], T.Error>;
+        getPlayersMap : shared query (leagueId: T.FootballLeagueId, dto: DTOs.GameweekFiltersDTO) -> async Result.Result<[(Nat16, DTOs.PlayerScoreDTO)], T.Error>;
       };
       return await data_canister.getPlayersMap(leagueId, dto);
     };
 
-    public func getPlayerDetails(leagueId: T.FootballLeagueId, dto: DTOs.GetPlayerDetailsDTO) : async Result.Result<DTOs.PlayerDetailDTO, T.Error> {
+    public composite query func getPlayerDetails(leagueId: T.FootballLeagueId, dto: DTOs.GetPlayerDetailsDTO) : async Result.Result<DTOs.PlayerDetailDTO, T.Error> {
       let data_canister = actor (NetworkEnvVars.DATA_CANISTER_ID) : actor {
-        getPlayerDetailsForGameweek : (leagueId: T.FootballLeagueId, dto: DTOs.GetPlayerDetailsDTO) -> async Result.Result<DTOs.PlayerDetailDTO, T.Error>;
+        getPlayerDetailsForGameweek : shared query (leagueId: T.FootballLeagueId, dto: DTOs.GetPlayerDetailsDTO) -> async Result.Result<DTOs.PlayerDetailDTO, T.Error>;
       };
       return await data_canister.getPlayerDetailsForGameweek(leagueId, dto);
     };
@@ -231,7 +238,7 @@ module {
     
     public func executeSubmitFixtureData( leagueId: T.FootballLeagueId, seasonId: T.SeasonId, submitFixtureData : DTOs.SubmitFixtureDataDTO) : async Result.Result<(), T.Error> {
       
-      let playersResult = await getPlayers(leagueId, { seasonId = seasonId});
+      let playersResult = await getVerifiedPlayers(leagueId, { seasonId = seasonId});
 
       switch(playersResult){
         case (#ok players){
@@ -262,6 +269,29 @@ module {
             return #err(#NotFound);
         }
       };
+    };
+
+    //verified getters
+
+    public func getVerifiedPlayers(leagueId: T.FootballLeagueId, dto: RequestDTOs.RequestPlayersDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
+      let data_canister = actor (NetworkEnvVars.DATA_CANISTER_ID) : actor {
+        getVerifiedPlayers : (leagueId: T.FootballLeagueId, dto: RequestDTOs.RequestPlayersDTO) -> async Result.Result<[DTOs.PlayerDTO], T.Error>;
+      };
+      return await data_canister.getVerifiedPlayers(leagueId, dto);
+    };
+
+    public func getVerifiedClubs(leagueId: T.FootballLeagueId) : async Result.Result<[DTOs.ClubDTO], T.Error>{
+      let data_canister = actor (NetworkEnvVars.DATA_CANISTER_ID) : actor {
+        getVerifiedClubs : (leagueId: T.FootballLeagueId) -> async Result.Result<[DTOs.ClubDTO], T.Error>;
+      };
+      return await data_canister.getVerifiedClubs(leagueId);
+    };
+
+    public func getVerifiedFixtures(leagueId: T.FootballLeagueId, dto: RequestDTOs.RequestFixturesDTO) : async Result.Result<[DTOs.FixtureDTO], T.Error> {
+      let data_canister = actor (NetworkEnvVars.DATA_CANISTER_ID) : actor {
+        getVerifiedFixtures : (leagueId: T.FootballLeagueId, dto: RequestDTOs.RequestFixturesDTO) -> async Result.Result<[DTOs.FixtureDTO], T.Error>;
+      };
+      return await data_canister.getVerifiedFixtures(leagueId, dto);
     };
 
     public func executeAddInitialFixtures(leagueId: T.FootballLeagueId, addInitialFixturesDTO : DTOs.AddInitialFixturesDTO) : async Result.Result<(), T.Error> {
@@ -358,13 +388,6 @@ module {
       return await data_canister.injuryExpired();
     };
 
-    public func getSnapshotPlayers(dto: RequestDTOs.GetSnapshotPlayers) : async [DTOs.PlayerDTO] {
-      let data_canister = actor (NetworkEnvVars.DATA_CANISTER_ID) : actor {
-        getSnapshotPlayers : (dto: RequestDTOs.GetSnapshotPlayers) -> async [DTOs.PlayerDTO];
-      };
-      return await data_canister.getSnapshotPlayers(dto);
-    };
-
     public func checkGameweekComplete(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async Bool {
       let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
         checkGameweekComplete : (seasonId: T.SeasonId, gameweek: T.GameweekNumber) -> async Bool;
@@ -398,7 +421,7 @@ module {
       let awayTeamPlayerIdsBuffer = Buffer.fromArray<Nat16>([]);
 
       let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
-        getSeason : (seasonId: T.SeasonId) -> async ?T.Season;
+        getSeason : shared query (seasonId: T.SeasonId) -> async ?T.Season;
       };
       
       let currentSeason = await data_canister.getSeason(seasonId);

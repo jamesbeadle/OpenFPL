@@ -55,8 +55,6 @@
       
       league = $leagueStore.find((x) => x.id == id) ?? null;
       if (league) {
-        console.log("loading league")
-        console.log(league)
         name = league.name;
         abbreviatedName = league.abbreviation;
         governingBody = league.governingBody;

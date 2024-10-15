@@ -1,7 +1,6 @@
 import { countryStore } from "$lib/stores/country-store";
 import { systemStore } from "$lib/stores/system-store";
 import { seasonStore } from "$lib/stores/season-store";
-import { leagueStore } from "$lib/stores/league-store";
 import { clubStore } from "$lib/stores/club-store";
 import { playerStore } from "$lib/stores/player-store";
 import { playerEventsStore } from "$lib/stores/player-events-store";
@@ -12,7 +11,6 @@ import { DataHashService } from "$lib/services/data-hash-service";
 import { CountryService } from "$lib/services/country-service";
 import { SystemService } from "$lib/services/system-service";
 import { SeasonService } from "$lib/services/season-service";
-import { LeagueService } from "$lib/services/league-service";
 import { ClubService } from "$lib/services/club-service";
 import { PlayerService } from "$lib/services/player-service";
 import { PlayerEventsService } from "$lib/services/player-events-service";
@@ -26,7 +24,6 @@ class StoreManager {
   private countryService: CountryService;
   private systemService: SystemService;
   private seasonService: SeasonService;
-  private leagueService: LeagueService;
   private clubService: ClubService;
   private playerService: PlayerService;
   private playerEventsService: PlayerEventsService;
@@ -36,13 +33,11 @@ class StoreManager {
   private categories: string[] = [
     "countries",
     "system_state",
-    "leagues",
     "seasons",
     "clubs",
     "players",
     "player_events",
     "fixtures",
-    "weekly_leaderboard",
   ];
 
   constructor() {
@@ -50,7 +45,6 @@ class StoreManager {
     this.countryService = new CountryService();
     this.systemService = new SystemService();
     this.seasonService = new SeasonService();
-    this.leagueService = new LeagueService();
     this.clubService = new ClubService();
     this.playerService = new PlayerService();
     this.playerEventsService = new PlayerEventsService();
@@ -68,6 +62,7 @@ class StoreManager {
     }
 
     for (const category of this.categories) {
+      console.log(`syncing ${category}`);
       const categoryHash = newHashes.find((hash) => hash.category === category);
 
       if (categoryHash?.hash !== localStorage.getItem(`${category}_hash`)) {
@@ -105,14 +100,6 @@ class StoreManager {
           JSON.stringify(updatedSeasons, replacer),
         );
         break;
-      case "leagues":
-        const updatedLeagues = await this.leagueService.getLeagues();
-        leagueStore.setLeagues(updatedLeagues);
-        localStorage.setItem(
-          "leagues",
-          JSON.stringify(updatedLeagues, replacer),
-        );
-        break;
       case "clubs":
         const updatedClubs = await this.clubService.getClubs();
         clubStore.setClubs(updatedClubs);
@@ -121,9 +108,6 @@ class StoreManager {
       case "players":
         const updatedPlayers = await this.playerService.getPlayers();
         playerStore.setPlayers(updatedPlayers);
-
-        //TODO: Run any objects with dates through a stringify function that should work better
-
         localStorage.setItem(
           "players",
           JSON.stringify(updatedPlayers, replacer),
@@ -164,15 +148,6 @@ class StoreManager {
             "weekly_leaderboard",
             JSON.stringify(updatedWeeklyLeaderboard, replacer),
           );
-
-          const updatedFixtures = await this.fixtureService.getFixtures(
-            systemState?.calculationSeasonId ?? 0,
-          );
-          fixtureStore.setFixtures(updatedFixtures);
-          localStorage.setItem(
-            "fixtures",
-            JSON.stringify(updatedFixtures, replacer),
-          );
         });
         break;
     }
@@ -193,10 +168,6 @@ class StoreManager {
       case "seasons":
         const cachedSeasons = JSON.parse(cachedData || "");
         seasonStore.setSeasons(cachedSeasons);
-        break;
-      case "leagues":
-        const cachedLeagues = JSON.parse(cachedData || "[]");
-        leagueStore.setLeagues(cachedLeagues);
         break;
       case "clubs":
         const cachedClubs = JSON.parse(cachedData || "[]");

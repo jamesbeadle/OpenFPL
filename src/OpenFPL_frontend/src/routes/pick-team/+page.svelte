@@ -67,7 +67,6 @@
       onHold.set($systemStore?.onHold ?? true);
       $availableFormations = Object.keys(allFormations);
       
-      console.log("loading pick team data");
       await loadData();
     } catch (error) {
       toastsError({
@@ -89,8 +88,7 @@
     }
 
     let userFantasyTeam = await managerStore.getCurrentTeam();
-    console.log("userFantasyTeam")
-    console.log(userFantasyTeam)
+    
     fantasyTeam.set(userFantasyTeam);
 
     fantasyTeam.update((currentTeam) => {

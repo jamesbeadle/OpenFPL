@@ -667,6 +667,7 @@ export const idlFactory = ({ IDL }) => {
     'getLeagues' : IDL.Func([], [Result_17], []),
     'getLoanedPlayers' : IDL.Func([ClubFilterDTO], [Result_10], []),
     'getManager' : IDL.Func([RequestManagerDTO], [Result_1], []),
+    'getManagerCanisterIds' : IDL.Func([], [IDL.Vec(CanisterId)], []),
     'getMonthlyLeaderboard' : IDL.Func(
         [GetMonthlyLeaderboardDTO],
         [Result_16],

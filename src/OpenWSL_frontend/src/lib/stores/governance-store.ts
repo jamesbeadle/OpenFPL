@@ -43,7 +43,6 @@ import { storeManager } from "$lib/managers/store-manager";
 function createGovernanceStore() {
   async function revaluePlayerUp(playerId: number): Promise<any> {
     try {
-      console.log("Syncing system and player store in revalueplayerup line 45");
       await storeManager.syncStores();
 
       let allPlayers: PlayerDTO[] = [];
@@ -150,7 +149,6 @@ function createGovernanceStore() {
     playerEventData: PlayerEventData[],
   ): Promise<any> {
     try {
-      console.log("await team store sync line 155");
       clubStore;
 
       let clubs: ClubDTO[] = [];
@@ -226,7 +224,6 @@ function createGovernanceStore() {
     pickTeamSeasonId: number,
   ): Promise<any> {
     try {
-      console.log("await system and season store sync line 233");
       await storeManager.syncStores();
       let seasonName = await seasonStore.getSeasonName(pickTeamSeasonId);
 
@@ -295,7 +292,6 @@ function createGovernanceStore() {
     updatedFixtureDate: string,
   ): Promise<any> {
     try {
-      console.log("await team store sync line 303");
       await storeManager.syncStores();
 
       let clubs: ClubDTO[] = [];
@@ -479,7 +475,6 @@ function createGovernanceStore() {
     gameweek: number,
   ): Promise<any> {
     try {
-      console.log("await team and player store sync line 494");
       await storeManager.syncStores();
 
       let clubs: ClubDTO[] = [];
@@ -546,7 +541,6 @@ function createGovernanceStore() {
     gameweek: number,
   ): Promise<any> {
     try {
-      console.log("await team and player store sync line 562");
       await storeManager.syncStores();
 
       let clubs: ClubDTO[] = [];
@@ -604,7 +598,6 @@ function createGovernanceStore() {
 
   async function recallPlayer(playerId: number): Promise<any> {
     try {
-      console.log("await team and player store sync line 622");
       await storeManager.syncStores();
 
       let clubs: ClubDTO[] = [];
@@ -658,7 +651,6 @@ function createGovernanceStore() {
     gender: Gender,
   ): Promise<any> {
     try {
-      console.log("await team and player store sync line 676");
       await storeManager.syncStores();
 
       let clubs: ClubDTO[] = [];
@@ -725,7 +717,6 @@ function createGovernanceStore() {
     nationality: number,
   ): Promise<any> {
     try {
-      console.log("await team and player store sync line 744");
       await storeManager.syncStores();
 
       let clubs: ClubDTO[] = [];
@@ -790,7 +781,6 @@ function createGovernanceStore() {
     expectedEndDate: string,
   ): Promise<any> {
     try {
-      console.log("await team and player store sync line 810");
       await storeManager.syncStores();
 
       let clubs: ClubDTO[] = [];
@@ -847,7 +837,6 @@ function createGovernanceStore() {
     retirementDate: string,
   ): Promise<any> {
     try {
-      console.log("await team and player store sync line 868");
       await storeManager.syncStores();
 
       let clubs: ClubDTO[] = [];
@@ -895,7 +884,6 @@ function createGovernanceStore() {
 
   async function unretirePlayer(playerId: number): Promise<any> {
     try {
-      console.log("await team and player store sync line 917");
       await storeManager.syncStores();
 
       let clubs: ClubDTO[] = [];
@@ -1060,9 +1048,6 @@ function createGovernanceStore() {
         if (principal == "") {
           return;
         }
-        console.log(
-          "actor getting governance agent in execute proposal line 1071",
-        );
         const agent: any = await ActorFactory.getGovernanceAgent(auth.identity);
         if (process.env.DFX_NETWORK !== "ic") {
           await agent.fetchRootKey();
@@ -1081,11 +1066,7 @@ function createGovernanceStore() {
           principal: Principal.fromText(principal),
         });
         if (userNeurons.length > 0) {
-          console.log(dto);
-
           const payloadArrayBuffer = IDL.encode(argTypes, [dto]);
-
-          console.log(payloadArrayBuffer);
 
           const fn: ExecuteGenericNervousSystemFunction = {
             function_id: functionId,

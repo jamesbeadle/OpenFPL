@@ -87,7 +87,6 @@
     }
     
     $bonuses[bonus.id - 1].usedGameweek = activeGameweek
-    console.log($bonuses)
     switch (bonus.id) {
       case 1:
         fantasyTeam.update((team) => {
@@ -207,8 +206,6 @@
     }
     updateBonuses();
     closeBonusModal();
-    console.log("bonus used")
-    console.log($fantasyTeam)
   }
 
   $: countries = getUniqueCountries();

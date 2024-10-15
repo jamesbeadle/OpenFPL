@@ -86,7 +86,6 @@
       pointsForAssist = 10;
     }
 
-    console.log(otherEvents)
     concededEvents.sort((a, b) => a.eventEndMinute - b.eventEndMinute);
     keeperSaveEvents.sort((a, b) => a.eventEndMinute - b.eventEndMinute);
     otherEvents.sort(

@@ -823,6 +823,7 @@ service : {
   getLeagues: () -> (Result_17);
   getLoanedPlayers: (ClubFilterDTO) -> (Result_10);
   getManager: (RequestManagerDTO) -> (Result_1);
+  getManagerCanisterIds: () -> (vec CanisterId);
   getMonthlyLeaderboard: (GetMonthlyLeaderboardDTO) -> (Result_16);
   getPlayerDetails: (GetPlayerDetailsDTO) -> (Result_15);
   getPlayerDetailsForGameweek: (GameweekFiltersDTO) -> (Result_14);

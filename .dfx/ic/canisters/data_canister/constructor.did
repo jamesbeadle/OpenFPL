@@ -95,24 +95,19 @@ type RetirePlayerDTO =
 type Result_8 = 
  variant {
    err: Error;
-   ok: vec Club;
+   ok: vec FootballLeagueDTO;
  };
 type Result_7 = 
  variant {
    err: Error;
-   ok: vec FootballLeague;
+   ok: PlayerDetailDTO;
  };
 type Result_6 = 
  variant {
    err: Error;
-   ok: PlayerDetailDTO;
- };
-type Result_5 = 
- variant {
-   err: Error;
    ok: vec PlayerPointsDTO;
  };
-type Result_4 = 
+type Result_5 = 
  variant {
    err: Error;
    ok: vec record {
@@ -120,20 +115,25 @@ type Result_4 =
              PlayerScoreDTO;
            };
  };
+type Result_4 = 
+ variant {
+   err: Error;
+   ok: vec SeasonDTO;
+ };
 type Result_3 = 
  variant {
    err: Error;
-   ok: vec FixtureDTO;
+   ok: vec ClubDTO;
  };
 type Result_2 = 
  variant {
    err: Error;
-   ok: vec PlayerDTO;
+   ok: vec FixtureDTO;
  };
 type Result_1 = 
  variant {
    err: Error;
-   ok: vec SeasonDTO;
+   ok: vec PlayerDTO;
  };
 type Result = 
  variant {
@@ -301,7 +301,7 @@ type GameweekFiltersDTO =
    seasonId: SeasonId;
  };
 type FootballLeagueId = nat16;
-type FootballLeague = 
+type FootballLeagueDTO = 
  record {
    abbreviation: text;
    countryId: CountryId;
@@ -384,7 +384,7 @@ type ClubFilterDTO =
    clubId: ClubId;
    leagueId: FootballLeagueId;
  };
-type Club = 
+type ClubDTO = 
  record {
    abbreviatedName: text;
    friendlyName: text;
@@ -410,18 +410,23 @@ service : {
   createLeague: (CreateLeagueDTO) -> (Result);
   createNewSeason: (SystemState) -> () oneway;
   createPlayer: (FootballLeagueId, CreatePlayerDTO) -> (Result);
-  getClubs: (FootballLeagueId) -> (Result_8);
-  getFixtures: (FootballLeagueId, RequestFixturesDTO) -> (Result_3);
-  getLeagues: () -> (Result_7);
-  getLoanedPlayers: (FootballLeagueId, ClubFilterDTO) -> (Result_2);
-  getPlayerDetails: (FootballLeagueId, GetPlayerDetailsDTO) -> (Result_6);
+  getClubs: (FootballLeagueId) -> (Result_3) query;
+  getFixtures: (FootballLeagueId, RequestFixturesDTO) -> (Result_2) query;
+  getLeagues: () -> (Result_8) query;
+  getLoanedPlayers: (FootballLeagueId, ClubFilterDTO) -> (Result_1) query;
+  getPlayerDetails: (FootballLeagueId, GetPlayerDetailsDTO) ->
+   (Result_7) query;
   getPlayerDetailsForGameweek: (FootballLeagueId, GameweekFiltersDTO) ->
-   (Result_5);
-  getPlayers: (FootballLeagueId, RequestPlayersDTO) -> (Result_2);
-  getPlayersMap: (FootballLeagueId, GameweekFiltersDTO) -> (Result_4);
-  getPostponedFixtures: (FootballLeagueId, RequestFixturesDTO) -> (Result_3);
-  getRetiredPlayers: (FootballLeagueId, ClubFilterDTO) -> (Result_2);
-  getSeasons: (FootballLeagueId) -> (Result_1);
+   (Result_6) query;
+  getPlayers: (FootballLeagueId, RequestPlayersDTO) -> (Result_1) query;
+  getPlayersMap: (FootballLeagueId, GameweekFiltersDTO) -> (Result_5) query;
+  getPostponedFixtures: (FootballLeagueId, RequestFixturesDTO) ->
+   (Result_2) query;
+  getRetiredPlayers: (FootballLeagueId, ClubFilterDTO) -> (Result_1) query;
+  getSeasons: (FootballLeagueId) -> (Result_4) query;
+  getVerifiedClubs: (FootballLeagueId) -> (Result_3);
+  getVerifiedFixtures: (FootballLeagueId, RequestFixturesDTO) -> (Result_2);
+  getVerifiedPlayers: (FootballLeagueId, RequestPlayersDTO) -> (Result_1);
   loanPlayer: (FootballLeagueId, LoanPlayerDTO) -> (Result);
   promoteNewClub: (FootballLeagueId, PromoteNewClubDTO) -> (Result);
   retirePlayer: (FootballLeagueId, RetirePlayerDTO) -> (Result);

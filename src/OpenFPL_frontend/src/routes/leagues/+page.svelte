@@ -15,7 +15,6 @@
       try {
         await storeManager.syncStores();
         isAdmin = await userStore.isAdmin();
-        console.log($leagueStore)
       } catch (error) {
         toastsError({
           msg: { text: "Error fetching leagues." },

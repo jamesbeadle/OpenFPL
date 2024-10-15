@@ -118,8 +118,7 @@
           playerIds: new Uint16Array(11).fill(0),
         };
       }
-      console.log("curent")
-      console.log(currentTeam)
+      
       return currentTeam;
     });
   }
@@ -145,7 +144,6 @@
   }
 
   function getGridSetup(formation: string): number[][] {
-    console.log(formation)
     const formationSplits = formation.split("-").map(Number);
     const setups = [
       [1],

@@ -20,7 +20,6 @@
       text: "Updating league logo...",
     });
     try {
-      console.log(selectedLogo)
       if (selectedLogo != null) {
 
         const reader = new FileReader();

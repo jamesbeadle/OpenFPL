@@ -42,7 +42,6 @@ class StoreManager {
     "players",
     "player_events",
     "fixtures",
-    "weekly_leaderboard",
   ];
 
   constructor() {
@@ -68,6 +67,7 @@ class StoreManager {
     }
 
     for (const category of this.categories) {
+      console.log(`syncing ${category}`);
       const categoryHash = newHashes.find((hash) => hash.category === category);
 
       if (categoryHash?.hash !== localStorage.getItem(`${category}_hash`)) {
@@ -121,9 +121,6 @@ class StoreManager {
       case "players":
         const updatedPlayers = await this.playerService.getPlayers();
         playerStore.setPlayers(updatedPlayers);
-
-        //TODO: Run any objects with dates through a stringify function that should work better
-
         localStorage.setItem(
           "players",
           JSON.stringify(updatedPlayers, replacer),
@@ -163,15 +160,6 @@ class StoreManager {
           localStorage.setItem(
             "weekly_leaderboard",
             JSON.stringify(updatedWeeklyLeaderboard, replacer),
-          );
-
-          const updatedFixtures = await this.fixtureService.getFixtures(
-            systemState?.calculationSeasonId ?? 0,
-          );
-          fixtureStore.setFixtures(updatedFixtures);
-          localStorage.setItem(
-            "fixtures",
-            JSON.stringify(updatedFixtures, replacer),
           );
         });
         break;

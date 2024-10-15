@@ -35,7 +35,8 @@ module {
       { category = "player_events"; hash = "OPENFPL_1" },
       { category = "countries"; hash = "OPENFPL_1" },
       { category = "system_state"; hash = "OPENFPL_1" },
-      { category = "seasons"; hash = "OPENFPL_1" }
+      { category = "seasons"; hash = "OPENFPL_1" },
+      { category = "leagues"; hash = "OPENFPL_1" }
     ];
 
     public func updateInitialSystemState(firstSeasonFixture: DTOs.FixtureDTO) : async () {
@@ -81,7 +82,7 @@ module {
       return #ok(dataHashes)
     };
     
-    public func getSystemState() : async Result.Result<DTOs.SystemStateDTO, T.Error> {
+    public func getSystemState() : Result.Result<DTOs.SystemStateDTO, T.Error> {
       return #ok({
         calculationGameweek = systemState.calculationGameweek;
         calculationMonth = systemState.calculationMonth;

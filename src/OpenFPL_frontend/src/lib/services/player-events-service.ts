@@ -53,7 +53,6 @@ export class PlayerEventsService {
         playerId: playerId,
         seasonId: seasonId,
       };
-      console.log("actor getting player details line 116");
       let result = await this.actor.getPlayerDetails(dto);
 
       if (isError(result)) {

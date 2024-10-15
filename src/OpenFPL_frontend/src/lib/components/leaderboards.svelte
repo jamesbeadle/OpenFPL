@@ -44,14 +44,12 @@
     try {
       await storeManager.syncStores();
       
-      console.log("syncing monthly store")
       await monthlyLeaderboardStore.sync(
         $systemStore?.calculationSeasonId ?? 1,
         $systemStore?.calculationMonth ?? 8,
         1 //TODO
       );
       
-      console.log("syncing season store")
       await seasonLeaderboardStore.sync(
         $systemStore?.calculationSeasonId ?? 1
       );
@@ -68,7 +66,6 @@
             a.friendlyName.localeCompare(b.friendlyName)
           )[0].id;
 
-      console.log("getting leaderboard data");
 
       /*
       //TODO
