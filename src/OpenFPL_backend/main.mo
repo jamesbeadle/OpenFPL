@@ -144,9 +144,9 @@
       };
     };
 
-    public shared composite query ( {caller} ) func getSnapshotPlayers(dto: Requests.GetSnapshotPlayers) : async [DTOs.PlayerDTO] {
+    public shared composite query ( {caller} ) func getPlayersSnapshot(dto: Requests.GetSnapshotPlayers) : async [DTOs.PlayerDTO] {
       assert isManagerCanister(Principal.toText(caller));
-      return await dataManager.getSnapshotPlayers(dto);
+      return seasonManager.getPlayersSnapshot(dto);
     };
 
     public shared composite query func getLoanedPlayers(dto: DTOs.ClubFilterDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
@@ -772,6 +772,7 @@
       version = "2.0.0";
     };
     private stable var stable_data_hashes : [T.DataHash] = [];
+    private stable var stable_player_snapshots : [(T.SeasonId, [(T.GameweekNumber, [T.Player])])] = [];
 
     //User Manager stable variables
     private stable var stable_manager_canister_ids : [(T.PrincipalId, T.CanisterId)] = [];
@@ -803,6 +804,7 @@
 
       stable_system_state := seasonManager.getStableSystemState();
       stable_data_hashes := seasonManager.getStableDataHashes();
+      stable_player_snapshots := seasonManager.getStablePlayersSnapshots();
 
       stable_manager_canister_ids := userManager.getStableManagerCanisterIds();
       stable_usernames := userManager.getStableUsernames();
@@ -833,6 +835,7 @@
 
       seasonManager.setStableSystemState(stable_system_state);
       seasonManager.setStableDataHashes(stable_data_hashes);
+      seasonManager.setStablePlayersSnapshots(stable_player_snapshots);
 
       userManager.setStableManagerCanisterIds(stable_manager_canister_ids);
       userManager.setStableUsernames(stable_usernames);
@@ -902,7 +905,7 @@
       switch(systemStateResult){
         case (#ok systemState){
           await setGameweekTimers(systemState.pickTeamSeasonId, systemState.pickTeamGameweek);     
-          await userManager.snapshotFantasyTeams(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
+          await userManager.snapshotFantasyTeams(Environment.LEAGUE_ID, systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
           await seasonManager.updateDataHash("system_state");
         };
         case (#err _){}
@@ -1160,7 +1163,7 @@
 
     public shared ({ caller }) func snapshotManagers(seasonId: T.SeasonId, gameweekNumber: T.GameweekNumber, month: T.CalendarMonth) : async Result.Result<(), T.Error> {
       assert isDataAdmin(Principal.toText(caller));
-      return #ok(await userManager.snapshotFantasyTeams(seasonId, month, gameweekNumber));
+      return #ok(await userManager.snapshotFantasyTeams(Environment.LEAGUE_ID, seasonId, month, gameweekNumber));
     };
 
     public shared ({ caller }) func recalculatePoints(leagueId: T.FootballLeagueId, seasonId: T.SeasonId, gameweekNumber: T.GameweekNumber, month: T.CalendarMonth) : async Result.Result<(), T.Error> {

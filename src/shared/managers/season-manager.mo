@@ -1,6 +1,7 @@
 import Result "mo:base/Result";
 import Buffer "mo:base/Buffer";
 import Iter "mo:base/Iter";
+import Array "mo:base/Array";
 import DTOs "../../shared/DTOs";
 import Requests "../../shared/RequestDTOs";
 import T "../../shared/types";
@@ -38,6 +39,8 @@ module {
       { category = "seasons"; hash = "OPENFPL_1" },
       { category = "leagues"; hash = "OPENFPL_1" }
     ];
+
+    private var playersSnapshots: [(T.SeasonId, [(T.GameweekNumber, [T.Player])])] = [];
 
     public func updateInitialSystemState(firstSeasonFixture: DTOs.FixtureDTO) : async () {
       
@@ -95,6 +98,43 @@ module {
         version = systemState.version
 
       });
+    };
+    
+    public func getPlayersSnapshot(dto: Requests.GetSnapshotPlayers) : [DTOs.PlayerDTO] {
+      let seasonPlayers = Array.find<(T.SeasonId, [(T.GameweekNumber, [T.Player])])>(playersSnapshots, func(seasonsPlayerSnapshots: (T.SeasonId, [(T.GameweekNumber, [T.Player])])) : Bool {
+        seasonsPlayerSnapshots.0 == dto.seasonId;
+      });
+
+      switch(seasonPlayers){
+        case (?foundSeasonPlayers){
+          let gameweekPlayers = Array.find<(T.GameweekNumber, [T.Player])>(foundSeasonPlayers.1, func(gameweekPlayers: (T.GameweekNumber, [T.Player])) : Bool {
+           gameweekPlayers.0 == dto.gameweek;
+          });
+          switch(gameweekPlayers){
+            case (?foundGameweekPlayers){
+              return Array.map<T.Player, DTOs.PlayerDTO>(foundGameweekPlayers.1, func(player: T.Player){
+                return {
+                  clubId = player.clubId;
+                  dateOfBirth = player.dateOfBirth;
+                  firstName = player.firstName;
+                  id = player.id;
+                  lastName = player.lastName;
+                  nationality = player.nationality;
+                  position = player.position;
+                  shirtNumber = player.shirtNumber;
+                  status = player.status;
+                  totalPoints = 0; //TODO
+                  valueQuarterMillions = player.valueQuarterMillions;
+                }
+              });
+            };
+            case (null){}
+          }
+        };
+        case (null){}
+      };
+
+      return [];
     };
 
 
@@ -241,6 +281,14 @@ module {
 
     public func setStableDataHashes(stable_data_hashes : [T.DataHash]) {
       dataHashes := stable_data_hashes;
+    };
+
+    public func getStablePlayersSnapshots() : [(T.SeasonId, [(T.GameweekNumber, [T.Player])])] {
+      return playersSnapshots;
+    };
+
+    public func setStablePlayersSnapshots(stable_players_snapshots : [(T.SeasonId, [(T.GameweekNumber, [T.Player])])]) {
+      playersSnapshots := stable_players_snapshots;
     };
   };
 

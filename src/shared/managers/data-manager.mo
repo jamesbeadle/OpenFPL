@@ -61,11 +61,11 @@ module {
       return await data_canister.getPlayers(leagueId, dto);
     };
 
-    public composite query func getSnapshotPlayers(dto: RequestDTOs.GetSnapshotPlayers) : async [DTOs.PlayerDTO] {
+    public composite query func getPlayersSnapshot(dto: RequestDTOs.GetSnapshotPlayers) : async [DTOs.PlayerDTO] {
       let data_canister = actor (NetworkEnvVars.DATA_CANISTER_ID) : actor {
-        getSnapshotPlayers : shared query (dto: RequestDTOs.GetSnapshotPlayers) -> async [DTOs.PlayerDTO];
+        getPlayersSnapshot : shared query (dto: RequestDTOs.GetSnapshotPlayers) -> async [DTOs.PlayerDTO];
       };
-      return await data_canister.getSnapshotPlayers(dto);
+      return await data_canister.getPlayersSnapshot(dto);
     };
 
     public composite query func getLoanedPlayers(leagueId: T.FootballLeagueId, dto: DTOs.ClubFilterDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
