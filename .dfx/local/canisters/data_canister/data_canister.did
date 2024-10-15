@@ -398,11 +398,15 @@ type Club =
 type CalendarMonth = nat8;
 type AddInitialFixturesDTO = record {seasonFixtures: vec FixtureDTO;};
 service : {
-  addEventsToFixture: (vec PlayerEventData, SeasonId, FixtureId) -> ();
-  addEventsToPlayers: (vec PlayerEventData, SeasonId, GameweekNumber) -> ();
-  checkGameweekComplete: (SeasonId, GameweekNumber) -> (bool);
-  checkMonthComplete: (SeasonId, CalendarMonth, GameweekNumber) -> (bool);
-  checkSeasonComplete: (SeasonId) -> (bool);
+  addEventsToFixture: (FootballLeagueId, vec PlayerEventData, SeasonId,
+   FixtureId) -> ();
+  addEventsToPlayers: (FootballLeagueId, vec PlayerEventData, SeasonId,
+   GameweekNumber) -> ();
+  checkGameweekComplete: (FootballLeagueId, SeasonId, GameweekNumber) ->
+   (bool);
+  checkMonthComplete: (FootballLeagueId, SeasonId, CalendarMonth,
+   GameweekNumber) -> (bool);
+  checkSeasonComplete: (FootballLeagueId, SeasonId) -> (bool);
   createLeague: (CreateLeagueDTO) -> (Result);
   createNewSeason: (SystemState) -> () oneway;
   createPlayer: (FootballLeagueId, CreatePlayerDTO) -> (Result);
@@ -424,9 +428,9 @@ service : {
   revaluePlayerDown: (FootballLeagueId, RevaluePlayerDownDTO) -> (Result);
   revaluePlayerUp: (FootballLeagueId, RevaluePlayerUpDTO) -> (Result);
   setAbbreviatedLeagueName: (FootballLeagueId, text) -> (Result);
-  setFixtureToComplete: (SeasonId, FixtureId) -> () oneway;
-  setFixtureToFinalised: (SeasonId, FixtureId) -> () oneway;
-  setGameScore: (SeasonId, FixtureId) -> () oneway;
+  setFixtureToComplete: (FootballLeagueId, SeasonId, FixtureId) -> () oneway;
+  setFixtureToFinalised: (FootballLeagueId, SeasonId, FixtureId) -> () oneway;
+  setGameScore: (FootballLeagueId, SeasonId, FixtureId) -> () oneway;
   setLeagueCountryId: (FootballLeagueId, CountryId) -> (Result);
   setLeagueDateFormed: (FootballLeagueId, int) -> (Result);
   setLeagueGender: (FootballLeagueId, Gender) -> (Result);

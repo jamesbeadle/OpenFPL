@@ -528,11 +528,11 @@ module {
     };
 
     public func payWeeklyRewards() : async () {
-      //TODO (Calculation)
+      //TODO (PAYOUT)
       /* Removed inputs but what should be passed
       weeklyLeaderboard : DTOs.WeeklyLeaderboardDTO, filters: DTOs.GameweekFiltersDTO, fixtures : List.List<DTOs.FixtureDTO>, uniqueManagerCanisterIds: List.List<T.CanisterId>
       */
-      /* //TODO (Calculation)
+      /*
       await rewardManager.distributeWeeklyRewards(weeklyLeaderboard);
       await rewardManager.distributeHighestScoringPlayerRewards(filters.seasonId, filters.gameweek, fixtures, uniqueManagerCanisterIds);
       await rewardManager.distributeWeeklyATHScoreRewards(weeklyLeaderboard);
@@ -540,7 +540,7 @@ module {
     };
 
     public func payMonthlyRewards() : async () {
-      //TODO (Calculation)
+      //TODO (PAYOUT)
       /* Removed inputs but what should be passed
         seasonId: T.SeasonId, monthlyLeaderboards : [DTOs.MonthlyLeaderboardDTO], uniqueManagerCanisterIds: List.List<T.CanisterId>
       */
@@ -551,7 +551,7 @@ module {
     };
 
     public func paySeasonRewards() : async () {
-      //TODO (Calculation)
+      //TODO (PAYOUT)
       /* Removed inputs but what should be passed
       seasonLeaderboard : DTOs.SeasonLeaderboardDTO, players : [DTOs.PlayerDTO], seasonId : T.SeasonId, uniqueManagerCanisterIds: List.List<T.CanisterId>
       */
@@ -562,7 +562,7 @@ module {
       */
     };
 
-    //TODO NOW: Ensure used
+    //TODO (NOW): Ensure used
 
     //Statble Storage 
 
@@ -693,10 +693,5 @@ module {
     public func setStableActiveCanisterId(stable_active_canister_id: T.CanisterId){
       activeCanisterId := stable_active_canister_id;
     };
-
-    //TODO NOW: Add statble storage for reward pools
-    
-    
   };
-
 };

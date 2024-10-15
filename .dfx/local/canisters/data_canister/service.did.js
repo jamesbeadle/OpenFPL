@@ -1,4 +1,5 @@
 export const idlFactory = ({ IDL }) => {
+  const FootballLeagueId = IDL.Nat16;
   const FixtureId = IDL.Nat32;
   const ClubId = IDL.Nat16;
   const PlayerEventType = IDL.Variant({
@@ -69,7 +70,6 @@ export const idlFactory = ({ IDL }) => {
     onHold: IDL.Bool,
     seasonActive: IDL.Bool,
   });
-  const FootballLeagueId = IDL.Nat16;
   const PlayerPosition = IDL.Variant({
     Goalkeeper: IDL.Null,
     Midfielder: IDL.Null,
@@ -329,22 +329,26 @@ export const idlFactory = ({ IDL }) => {
   });
   return IDL.Service({
     addEventsToFixture: IDL.Func(
-      [IDL.Vec(PlayerEventData), SeasonId, FixtureId],
+      [FootballLeagueId, IDL.Vec(PlayerEventData), SeasonId, FixtureId],
       [],
       [],
     ),
     addEventsToPlayers: IDL.Func(
-      [IDL.Vec(PlayerEventData), SeasonId, GameweekNumber],
+      [FootballLeagueId, IDL.Vec(PlayerEventData), SeasonId, GameweekNumber],
       [],
       [],
     ),
-    checkGameweekComplete: IDL.Func([SeasonId, GameweekNumber], [IDL.Bool], []),
-    checkMonthComplete: IDL.Func(
-      [SeasonId, CalendarMonth, GameweekNumber],
+    checkGameweekComplete: IDL.Func(
+      [FootballLeagueId, SeasonId, GameweekNumber],
       [IDL.Bool],
       [],
     ),
-    checkSeasonComplete: IDL.Func([SeasonId], [IDL.Bool], []),
+    checkMonthComplete: IDL.Func(
+      [FootballLeagueId, SeasonId, CalendarMonth, GameweekNumber],
+      [IDL.Bool],
+      [],
+    ),
+    checkSeasonComplete: IDL.Func([FootballLeagueId, SeasonId], [IDL.Bool], []),
     createLeague: IDL.Func([CreateLeagueDTO], [Result], []),
     createNewSeason: IDL.Func([SystemState], [], ["oneway"]),
     createPlayer: IDL.Func([FootballLeagueId, CreatePlayerDTO], [Result], []),
@@ -409,9 +413,21 @@ export const idlFactory = ({ IDL }) => {
       [Result],
       [],
     ),
-    setFixtureToComplete: IDL.Func([SeasonId, FixtureId], [], ["oneway"]),
-    setFixtureToFinalised: IDL.Func([SeasonId, FixtureId], [], ["oneway"]),
-    setGameScore: IDL.Func([SeasonId, FixtureId], [], ["oneway"]),
+    setFixtureToComplete: IDL.Func(
+      [FootballLeagueId, SeasonId, FixtureId],
+      [],
+      ["oneway"],
+    ),
+    setFixtureToFinalised: IDL.Func(
+      [FootballLeagueId, SeasonId, FixtureId],
+      [],
+      ["oneway"],
+    ),
+    setGameScore: IDL.Func(
+      [FootballLeagueId, SeasonId, FixtureId],
+      [],
+      ["oneway"],
+    ),
     setLeagueCountryId: IDL.Func([FootballLeagueId, CountryId], [Result], []),
     setLeagueDateFormed: IDL.Func([FootballLeagueId, IDL.Int], [Result], []),
     setLeagueGender: IDL.Func([FootballLeagueId, Gender], [Result], []),

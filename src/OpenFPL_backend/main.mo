@@ -334,7 +334,7 @@
             case (#ok _){
               let _ = await dataManager.executeSubmitFixtureData(Environment.LEAGUE_ID, systemState.calculationSeasonId, submitFixtureData);
 
-              //TODO (JAMES): When calculating score get players built friom all players who appeared in the gameweek
+              //TODO (PLAYERS): When calculating score get players built friom all players who appeared in the gameweek
               await userManager.calculateFantasyTeamScores(
                 Environment.LEAGUE_ID,
                 systemState.calculationSeasonId, submitFixtureData.gameweek, submitFixtureData.month);
@@ -366,7 +366,7 @@
                 await leaderboardManager.paySeasonRewards();
                 await seasonManager.incrementCalculationSeason();
                 
-                /*  //TODO (JAMES)
+                /*  //TODO (PAYOUT)
                 seasonManager.createNewSeason(systemState);
                   
                 let currentSeasonId = seasonComposite.getStableNextSeasonId();
@@ -845,11 +845,8 @@
 
     private func postUpgradeCallback() : async (){
 
-      //TODO now
+      //TODO (GO LIVE)
       //set system state
-
-      //TODO (JAMES): Set each canister to have the openfpl backend as a controller
-
       //await checkCanisterCycles(); 
       //await setSystemTimers();
 
@@ -1161,34 +1158,31 @@
       return result;
     };
 
-    public shared ({ caller }) func snapshotManagers(gameweekNumber: T.GameweekNumber) : async Result.Result<(), T.Error> {
+    public shared ({ caller }) func snapshotManagers(seasonId: T.SeasonId, gameweekNumber: T.GameweekNumber, month: T.CalendarMonth) : async Result.Result<(), T.Error> {
       assert isDataAdmin(Principal.toText(caller));
-      //TODO: Add isadmin check
-      return #err(#NotFound);
+      return #ok(await userManager.snapshotFantasyTeams(seasonId, month, gameweekNumber));
     };
 
-    public shared ({ caller }) func recalculatePoints(gameweekNumber: T.GameweekNumber) : async Result.Result<(), T.Error> {
+    public shared ({ caller }) func recalculatePoints(leagueId: T.FootballLeagueId, seasonId: T.SeasonId, gameweekNumber: T.GameweekNumber, month: T.CalendarMonth) : async Result.Result<(), T.Error> {
       assert isDataAdmin(Principal.toText(caller));
-      //TODO: Add isadmin check
-      return #err(#NotFound);
+      return #ok(await userManager.calculateFantasyTeamScores(leagueId, seasonId, gameweekNumber, month));
     };
 
     public shared ({ caller }) func viewPayouts(gameweekNumber: T.GameweekNumber) : async Result.Result<(), T.Error> {
       assert isDataAdmin(Principal.toText(caller));
-      //TODO: Add isadmin check
       return #err(#NotFound);
+      //return await userManager.viewPayouts(gameweekNumber); //TODO (PAYOUT)
     };
 
     public shared ({ caller }) func updateRewardPools(dto: Requests.UpdateRewardPoolsDTO) : async Result.Result<(), T.Error> {
       assert isDataAdmin(Principal.toText(caller));
-      //TODO: Add isadmin check
       return #err(#NotFound);
+      //return await userManager.updateRewardPools(dto); //TODO (PAYOUT)
     };
 
     public shared ({ caller }) func updateSystemStatus(dto: Requests.UpdateSystemStatusDTO) : async Result.Result<(), T.Error> {
       assert isDataAdmin(Principal.toText(caller));
-      //TODO: Add isadmin check
-      return #err(#NotFound);
+      return await seasonManager.updateSystemStatus(dto);
     };
 
     public shared ({ caller }) func getAdminDashboard() : async Result.Result<Responses.AdminDashboardDTO, T.Error> {

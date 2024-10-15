@@ -428,7 +428,7 @@ module {
   };
 
   public func assignPositionText(sortedEntries : List.List<T.LeaderboardEntry>) : List.List<T.LeaderboardEntry> {
-    //TODO (Calculation): Copy from football god euro game
+    //TODO (LEADERBOARD): Copy from football god euro game
     var position = 1;
     var previousScore : ?Int16 = null;
     var currentPosition = 1;

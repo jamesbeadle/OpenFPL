@@ -13,7 +13,7 @@
   import TrieMap "mo:base/TrieMap";
   import List "mo:base/List";
   import Option "mo:base/Option";
-import Blob "mo:base/Blob";
+  import Blob "mo:base/Blob";
 
   import T "../shared/types";
   import DTOs "../shared/DTOs";
@@ -1396,7 +1396,7 @@ import Blob "mo:base/Blob";
 
 
 
-      //TODO  (KELLY)LATER: Extend to allow loans to other leagues
+      //TODO  (KELLY): Extend to allow loans to other leagues
 
 
 
@@ -2624,7 +2624,7 @@ import Blob "mo:base/Blob";
       };
     };
 
-    //TODO Move not relevant to player canister
+    //TODO (KELLY) Move not relevant to player canister
     private func calculatePlayerScore(playerPosition : T.PlayerPosition, events : [T.PlayerEventData]) : Int16 {
       let totalScore = Array.foldLeft<T.PlayerEventData, Int16>(
         events,

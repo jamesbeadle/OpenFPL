@@ -328,19 +328,22 @@ export interface ValueHistory {
 }
 export interface _SERVICE {
   addEventsToFixture: ActorMethod<
-    [Array<PlayerEventData>, SeasonId, FixtureId],
+    [FootballLeagueId, Array<PlayerEventData>, SeasonId, FixtureId],
     undefined
   >;
   addEventsToPlayers: ActorMethod<
-    [Array<PlayerEventData>, SeasonId, GameweekNumber],
+    [FootballLeagueId, Array<PlayerEventData>, SeasonId, GameweekNumber],
     undefined
   >;
-  checkGameweekComplete: ActorMethod<[SeasonId, GameweekNumber], boolean>;
-  checkMonthComplete: ActorMethod<
-    [SeasonId, CalendarMonth, GameweekNumber],
+  checkGameweekComplete: ActorMethod<
+    [FootballLeagueId, SeasonId, GameweekNumber],
     boolean
   >;
-  checkSeasonComplete: ActorMethod<[SeasonId], boolean>;
+  checkMonthComplete: ActorMethod<
+    [FootballLeagueId, SeasonId, CalendarMonth, GameweekNumber],
+    boolean
+  >;
+  checkSeasonComplete: ActorMethod<[FootballLeagueId, SeasonId], boolean>;
   createLeague: ActorMethod<[CreateLeagueDTO], Result>;
   createNewSeason: ActorMethod<[SystemState], undefined>;
   createPlayer: ActorMethod<[FootballLeagueId, CreatePlayerDTO], Result>;
@@ -373,9 +376,15 @@ export interface _SERVICE {
   >;
   revaluePlayerUp: ActorMethod<[FootballLeagueId, RevaluePlayerUpDTO], Result>;
   setAbbreviatedLeagueName: ActorMethod<[FootballLeagueId, string], Result>;
-  setFixtureToComplete: ActorMethod<[SeasonId, FixtureId], undefined>;
-  setFixtureToFinalised: ActorMethod<[SeasonId, FixtureId], undefined>;
-  setGameScore: ActorMethod<[SeasonId, FixtureId], undefined>;
+  setFixtureToComplete: ActorMethod<
+    [FootballLeagueId, SeasonId, FixtureId],
+    undefined
+  >;
+  setFixtureToFinalised: ActorMethod<
+    [FootballLeagueId, SeasonId, FixtureId],
+    undefined
+  >;
+  setGameScore: ActorMethod<[FootballLeagueId, SeasonId, FixtureId], undefined>;
   setLeagueCountryId: ActorMethod<[FootballLeagueId, CountryId], Result>;
   setLeagueDateFormed: ActorMethod<[FootballLeagueId, bigint], Result>;
   setLeagueGender: ActorMethod<[FootballLeagueId, Gender], Result>;

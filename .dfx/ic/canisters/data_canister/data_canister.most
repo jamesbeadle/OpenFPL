@@ -35,9 +35,10 @@ type FootballLeague =
     formed : Int;
     governingBody : Text;
     id : FootballLeagueId;
+    logo : Blob;
     name : Text;
-    numOfTeams : Nat8;
-    relatedGender : Gender
+    relatedGender : Gender;
+    teamCount : Nat8
   };
 type FootballLeagueId = Nat16;
 type GameweekNumber = Nat8;

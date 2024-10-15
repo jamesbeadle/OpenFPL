@@ -1,4 +1,4 @@
-import { y } from "../../../chunks/index.js";
+import { w } from "../../../chunks/index.js";
 export {
-  y as default
+  w as default
 };

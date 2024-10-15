@@ -22,7 +22,6 @@ module RequestDTOs {
     seasonId: T.SeasonId;
   };
 
-  //TODO LATER Remove maybe:
   public type GetSnapshotPlayers = {
     seasonId: T.SeasonId;
     leagueId: T.FootballLeagueId;

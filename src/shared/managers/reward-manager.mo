@@ -139,7 +139,7 @@ module {
 
     public func distributeMonthlyRewards(seasonId: T.SeasonId, monthlyLeaderboards : [DTOs.MonthlyLeaderboardDTO], uniqueManagerCanisterIds : List.List<T.CanisterId>) : async () {
       
-      //TODO (Calculation)
+      //TODO (PAYOUT)
       /*
       let rewardPool = rewardPools.get(seasonId);
       switch(rewardPool){

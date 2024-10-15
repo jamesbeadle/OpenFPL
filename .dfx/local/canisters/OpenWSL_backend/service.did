@@ -38,44 +38,37 @@ type UpdateTeamSelectionDTO =
    transferWindowGameweek: GameweekNumber;
    username: text;
  };
+type UpdateSystemStatusDTO = 
+ record {
+   calculationGameweek: GameweekNumber;
+   calculationMonth: CalendarMonth;
+   calculationSeasonId: SeasonId;
+   onHold: bool;
+   pickTeamGameweek: GameweekNumber;
+   pickTeamMonth: CalendarMonth;
+   pickTeamSeasonId: SeasonId;
+   seasonActive: bool;
+   transferWindowActive: bool;
+   version: text;
+ };
+type UpdateRewardPoolsDTO = 
+ record {
+   allTimeMonthlyHighScorePool: nat64;
+   allTimeSeasonHighScorePool: nat64;
+   allTimeWeeklyHighScorePool: nat64;
+   highestScoringMatchPlayerPool: nat64;
+   monthlyLeaderboardPool: nat64;
+   mostValuableTeamPool: nat64;
+   seasonId: SeasonId;
+   seasonLeaderboardPool: nat64;
+   weeklyLeaderboardPool: nat64;
+ };
 type UpdateProfilePictureDTO = 
  record {
    extension: text;
    profilePicture: blob;
  };
-type UpdatePlayerDTO = 
- record {
-   dateOfBirth: int;
-   firstName: text;
-   lastName: text;
-   nationality: CountryId;
-   playerId: PlayerId;
-   position: PlayerPosition;
-   shirtNumber: nat8;
- };
 type UpdateFavouriteClubDTO = record {favouriteClubId: ClubId;};
-type UpdateClubDTO = 
- record {
-   abbreviatedName: text;
-   clubId: ClubId;
-   friendlyName: text;
-   name: text;
-   primaryColourHex: text;
-   secondaryColourHex: text;
-   shirtType: ShirtType;
-   thirdColourHex: text;
- };
-type UnretirePlayerDTO = record {playerId: PlayerId;};
-type TransferPlayerDTO = 
- record {
-   clubId: ClubId;
-   gameweek: GameweekNumber;
-   newClubId: ClubId;
-   newLeagueId: FootballLeagueId;
-   newShirtNumber: nat8;
-   playerId: PlayerId;
-   seasonId: SeasonId;
- };
 type TopupDTO = 
  record {
    canisterId: text;
@@ -106,12 +99,6 @@ type ShirtType =
    Filled;
    Striped;
  };
-type SetPlayerInjuryDTO = 
- record {
-   description: text;
-   expectedEndDate: int;
-   playerId: PlayerId;
- };
 type SeasonLeaderboardDTO = 
  record {
    entries: vec LeaderboardEntry;
@@ -125,11 +112,6 @@ type SeasonDTO =
    name: text;
    year: nat16;
  };
-type RustResult = 
- variant {
-   Err: text;
-   Ok: text;
- };
 type RewardPool = 
  record {
    allTimeMonthlyHighScorePool: nat64;
@@ -142,42 +124,25 @@ type RewardPool =
    seasonLeaderboardPool: nat64;
    weeklyLeaderboardPool: nat64;
  };
-type RevaluePlayerUpDTO = 
- record {
-   gameweek: GameweekNumber;
-   playerId: PlayerId;
-   seasonId: SeasonId;
- };
-type RevaluePlayerDownDTO = 
- record {
-   gameweek: GameweekNumber;
-   playerId: PlayerId;
-   seasonId: SeasonId;
- };
-type RetirePlayerDTO = 
- record {
-   playerId: PlayerId;
-   retirementDate: int;
- };
 type Result_9 = 
  variant {
    err: Error;
-   ok: GetRewardPoolDTO;
+   ok: vec PlayerDTO;
  };
 type Result_8 = 
  variant {
    err: Error;
-   ok: SeasonLeaderboardDTO;
+   ok: GetRewardPoolDTO;
  };
 type Result_7 = 
  variant {
    err: Error;
-   ok: vec SeasonDTO;
+   ok: SeasonLeaderboardDTO;
  };
 type Result_6 = 
  variant {
    err: Error;
-   ok: vec PlayerDTO;
+   ok: vec SeasonDTO;
  };
 type Result_5 = 
  variant {
@@ -272,12 +237,6 @@ type Result =
    err: Error;
    ok;
  };
-type RescheduleFixtureDTO = 
- record {
-   postponedFixtureId: FixtureId;
-   updatedFixtureDate: int;
-   updatedFixtureGameweek: GameweekNumber;
- };
 type RequestManagerDTO = 
  record {
    clubId: ClubId;
@@ -287,17 +246,6 @@ type RequestManagerDTO =
    seasonId: SeasonId;
  };
 type RequestFixturesDTO = record {seasonId: SeasonId;};
-type RecallPlayerDTO = record {playerId: PlayerId;};
-type PromoteNewClubDTO = 
- record {
-   abbreviatedName: text;
-   friendlyName: text;
-   name: text;
-   primaryColourHex: text;
-   secondaryColourHex: text;
-   shirtType: ShirtType;
-   thirdColourHex: text;
- };
 type ProfileDTO = 
  record {
    createDate: int;
@@ -309,7 +257,6 @@ type ProfileDTO =
    username: text;
  };
 type PrincipalId = text;
-type PostponeFixtureDTO = record {fixtureId: FixtureId;};
 type PlayerStatus = 
  variant {
    Active;
@@ -442,12 +389,6 @@ type PickTeamDTO =
    transfersAvailable: nat8;
    username: text;
  };
-type MoveFixtureDTO = 
- record {
-   fixtureId: FixtureId;
-   updatedFixtureDate: int;
-   updatedFixtureGameweek: GameweekNumber;
- };
 type MonthlyLeaderboardDTO = 
  record {
    clubId: ClubId;
@@ -473,15 +414,6 @@ type ManagerDTO =
    weeklyPoints: int16;
    weeklyPosition: int;
    weeklyPositionText: text;
- };
-type LoanPlayerDTO = 
- record {
-   gameweek: GameweekNumber;
-   loanClubId: ClubId;
-   loanEndDate: int;
-   loanLeagueId: FootballLeagueId;
-   playerId: PlayerId;
-   seasonId: SeasonId;
  };
 type LeaderboardEntry = 
  record {
@@ -692,18 +624,6 @@ type DataHashDTO =
    category: text;
    hash: text;
  };
-type CreatePlayerDTO = 
- record {
-   clubId: ClubId;
-   dateOfBirth: int;
-   firstName: text;
-   gender: Gender;
-   lastName: text;
-   nationality: CountryId;
-   position: PlayerPosition;
-   shirtNumber: nat8;
-   valueQuarterMillions: nat16;
- };
 type CountryId = nat16;
 type CountryDTO = 
  record {
@@ -730,26 +650,9 @@ type ClubDTO =
  };
 type CanisterId = text;
 type CalendarMonth = nat8;
-type AddInitialFixturesDTO = record {seasonFixtures: vec FixtureDTO;};
 type AccountIdentifier = blob;
 service : {
-  executeAddInitialFixtures: (AddInitialFixturesDTO) -> ();
-  executeCreatePlayer: (CreatePlayerDTO) -> ();
-  executeLoanPlayer: (LoanPlayerDTO) -> ();
-  executeMoveFixture: (MoveFixtureDTO) -> ();
-  executePostponeFixture: (PostponeFixtureDTO) -> ();
-  executePromoteNewClub: (PromoteNewClubDTO) -> ();
-  executeRecallPlayer: (RecallPlayerDTO) -> ();
-  executeRescheduleFixture: (RescheduleFixtureDTO) -> ();
-  executeRetirePlayer: (RetirePlayerDTO) -> ();
-  executeRevaluePlayerDown: (RevaluePlayerDownDTO) -> ();
-  executeRevaluePlayerUp: (RevaluePlayerUpDTO) -> ();
-  executeSetPlayerInjury: (SetPlayerInjuryDTO) -> ();
   executeSubmitFixtureData: (SubmitFixtureDataDTO) -> ();
-  executeTransferPlayer: (TransferPlayerDTO) -> ();
-  executeUnretirePlayer: (UnretirePlayerDTO) -> ();
-  executeUpdateClub: (UpdateClubDTO) -> ();
-  executeUpdatePlayer: (UpdatePlayerDTO) -> ();
   getBackendCanisterBalance: () -> (Result_3);
   getCanisterCyclesAvailable: () -> (nat);
   getCanisterCyclesBalance: () -> (Result_3);
@@ -760,47 +663,36 @@ service : {
   getFantasyTeamSnapshot: (GetFantasyTeamSnapshotDTO) -> (Result_17);
   getFixtures: (RequestFixturesDTO) -> (Result_11);
   getLeagues: () -> (Result_16);
-  getLoanedPlayers: (ClubFilterDTO) -> (Result_6);
+  getLoanedPlayers: (ClubFilterDTO) -> (Result_9);
   getManager: (RequestManagerDTO) -> (Result_1);
   getMonthlyLeaderboard: (GetMonthlyLeaderboardDTO) -> (Result_15);
   getPlayerDetails: (GetPlayerDetailsDTO) -> (Result_14);
   getPlayerDetailsForGameweek: (GameweekFiltersDTO) -> (Result_13);
-  getPlayers: () -> (Result_6);
+  getPlayers: () -> (Result_9);
   getPlayersMap: (GameweekFiltersDTO) -> (Result_12);
   getPostponedFixtures: () -> (Result_11);
   getProfile: () -> (Result_10);
-  getRetiredPlayers: (ClubFilterDTO) -> (Result_6);
-  getRewardPool: (GetRewardPoolDTO) -> (Result_9);
-  getSeasonLeaderboard: (GetSeasonLeaderboardDTO) -> (Result_8);
-  getSeasons: () -> (Result_7);
-  getSnapshotPlayers: (GetSnapshotPlayers) -> (Result_6);
+  getRetiredPlayers: (ClubFilterDTO) -> (Result_9);
+  getRewardPool: (GetRewardPoolDTO) -> (Result_8);
+  getSeasonLeaderboard: (GetSeasonLeaderboardDTO) -> (Result_7);
+  getSeasons: () -> (Result_6);
+  getSnapshotPlayers: (GetSnapshotPlayers) -> (vec PlayerDTO);
   getSystemState: () -> (Result_5);
   getTopups: (GetTopupsDTO) -> (Result_4);
   getTotalManagers: () -> (Result_3);
   getTreasuryAccountPublic: () -> (AccountIdentifier);
   getWeeklyLeaderboard: (GetWeeklyLeaderboardDTO) -> (Result_2);
   isUsernameValid: (UsernameFilterDTO) -> (bool) query;
+  recalculatePoints: (FootballLeagueId, SeasonId, GameweekNumber,
+   CalendarMonth) -> (Result);
   saveFantasyTeam: (UpdateTeamSelectionDTO) -> (Result);
   searchUsername: (UsernameFilterDTO) -> (Result_1);
   setGameweekTimers: (SeasonId, GameweekNumber) -> ();
+  snapshotManagers: (SeasonId, GameweekNumber, CalendarMonth) -> (Result);
   updateFavouriteClub: (UpdateFavouriteClubDTO) -> (Result);
   updateProfilePicture: (UpdateProfilePictureDTO) -> (Result);
+  updateRewardPools: (UpdateRewardPoolsDTO) -> (Result);
+  updateSystemStatus: (UpdateSystemStatusDTO) -> (Result);
   updateUsername: (UpdateUsernameDTO) -> (Result);
-  validateAddInitialFixtures: (AddInitialFixturesDTO) -> (RustResult) query;
-  validateCreatePlayer: (CreatePlayerDTO) -> (RustResult) query;
-  validateLoanPlayer: (LoanPlayerDTO) -> (RustResult) query;
-  validateMoveFixture: (MoveFixtureDTO) -> (RustResult) query;
-  validatePostponeFixture: (PostponeFixtureDTO) -> (RustResult) query;
-  validatePromoteNewClub: (PromoteNewClubDTO) -> (RustResult) query;
-  validateRecallPlayer: (RecallPlayerDTO) -> (RustResult) query;
-  validateRescheduleFixture: (RescheduleFixtureDTO) -> (RustResult) query;
-  validateRetirePlayer: (RetirePlayerDTO) -> (RustResult) query;
-  validateRevaluePlayerDown: (RevaluePlayerDownDTO) -> (RustResult) query;
-  validateRevaluePlayerUp: (RevaluePlayerUpDTO) -> (RustResult) query;
-  validateSetPlayerInjury: (SetPlayerInjuryDTO) -> (RustResult) query;
-  validateSubmitFixtureData: (SubmitFixtureDataDTO) -> (RustResult) query;
-  validateTransferPlayer: (TransferPlayerDTO) -> (RustResult) query;
-  validateUnretirePlayer: (UnretirePlayerDTO) -> (RustResult) query;
-  validateUpdateClub: (UpdateClubDTO) -> (RustResult) query;
-  validateUpdatePlayer: (UpdatePlayerDTO) -> (RustResult) query;
+  viewPayouts: (GameweekNumber) -> (Result);
 }

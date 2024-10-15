@@ -15,10 +15,6 @@ export interface AdminDashboardDTO {
 }
 export type CalendarMonth = number;
 export type CanisterId = string;
-export interface CanisterInfoDTO {
-  'cycles' : bigint,
-  'canisterId' : CanisterId,
-}
 export interface ClubDTO {
   'id' : ClubId,
   'secondaryColourHex' : string,
@@ -235,9 +231,6 @@ export interface InjuryHistory {
   'injuryStartDate' : bigint,
   'expectedEndDate' : bigint,
 }
-export interface LeaderboardCanistersDTO {
-  'canisters' : Array<CanisterInfoDTO>,
-}
 export interface LeaderboardEntry {
   'username' : string,
   'positionText' : string,
@@ -253,7 +246,6 @@ export interface LoanPlayerDTO {
   'gameweek' : GameweekNumber,
   'loanLeagueId' : FootballLeagueId,
 }
-export interface ManagerCanistersDTO { 'canisters' : Array<CanisterInfoDTO> }
 export interface ManagerDTO {
   'username' : string,
   'weeklyPosition' : bigint,
@@ -437,57 +429,49 @@ export type Result = { 'ok' : null } |
   { 'err' : Error };
 export type Result_1 = { 'ok' : ManagerDTO } |
   { 'err' : Error };
-export type Result_10 = { 'ok' : Array<SeasonDTO> } |
+export type Result_10 = { 'ok' : Array<PlayerDTO> } |
   { 'err' : Error };
-export type Result_11 = { 'ok' : SeasonLeaderboardDTO } |
+export type Result_11 = { 'ok' : ProfileDTO } |
   { 'err' : Error };
-export type Result_12 = { 'ok' : GetRewardPoolDTO } |
+export type Result_12 = { 'ok' : Array<FixtureDTO> } |
   { 'err' : Error };
-export type Result_13 = { 'ok' : ProfileDTO } |
+export type Result_13 = { 'ok' : Array<[number, PlayerScoreDTO]> } |
   { 'err' : Error };
-export type Result_14 = { 'ok' : Array<FixtureDTO> } |
+export type Result_14 = { 'ok' : Array<PlayerPointsDTO> } |
   { 'err' : Error };
-export type Result_15 = { 'ok' : Array<[number, PlayerScoreDTO]> } |
+export type Result_15 = { 'ok' : PlayerDetailDTO } |
   { 'err' : Error };
-export type Result_16 = { 'ok' : Array<PlayerPointsDTO> } |
+export type Result_16 = { 'ok' : MonthlyLeaderboardDTO } |
   { 'err' : Error };
-export type Result_17 = { 'ok' : PlayerDetailDTO } |
+export type Result_17 = { 'ok' : Array<FootballLeagueDTO> } |
   { 'err' : Error };
-export type Result_18 = { 'ok' : MonthlyLeaderboardDTO } |
+export type Result_18 = { 'ok' : FantasyTeamSnapshotDTO } |
   { 'err' : Error };
-export type Result_19 = { 'ok' : ManagerCanistersDTO } |
+export type Result_19 = { 'ok' : Array<DataHashDTO> } |
   { 'err' : Error };
 export type Result_2 = { 'ok' : boolean } |
   { 'err' : Error };
-export type Result_20 = { 'ok' : Array<FootballLeagueDTO> } |
+export type Result_20 = { 'ok' : PickTeamDTO } |
   { 'err' : Error };
-export type Result_21 = { 'ok' : LeaderboardCanistersDTO } |
+export type Result_21 = { 'ok' : Array<CountryDTO> } |
   { 'err' : Error };
-export type Result_22 = { 'ok' : FantasyTeamSnapshotDTO } |
+export type Result_22 = { 'ok' : Array<ClubDTO> } |
   { 'err' : Error };
-export type Result_23 = { 'ok' : Array<DataHashDTO> } |
-  { 'err' : Error };
-export type Result_24 = { 'ok' : PickTeamDTO } |
-  { 'err' : Error };
-export type Result_25 = { 'ok' : Array<CountryDTO> } |
-  { 'err' : Error };
-export type Result_26 = { 'ok' : Array<ClubDTO> } |
-  { 'err' : Error };
-export type Result_27 = { 'ok' : AdminDashboardDTO } |
+export type Result_23 = { 'ok' : AdminDashboardDTO } |
   { 'err' : Error };
 export type Result_3 = { 'ok' : WeeklyLeaderboardDTO } |
   { 'err' : Error };
-export type Result_4 = { 'ok' : Array<CanisterId> } |
+export type Result_4 = { 'ok' : bigint } |
   { 'err' : Error };
-export type Result_5 = { 'ok' : bigint } |
+export type Result_5 = { 'ok' : GetTopupsDTO } |
   { 'err' : Error };
-export type Result_6 = { 'ok' : GetTopupsDTO } |
+export type Result_6 = { 'ok' : SystemStateDTO } |
   { 'err' : Error };
-export type Result_7 = { 'ok' : SystemStateDTO } |
+export type Result_7 = { 'ok' : Array<SeasonDTO> } |
   { 'err' : Error };
-export type Result_8 = { 'ok' : StaticCanistersDTO } |
+export type Result_8 = { 'ok' : SeasonLeaderboardDTO } |
   { 'err' : Error };
-export type Result_9 = { 'ok' : Array<PlayerDTO> } |
+export type Result_9 = { 'ok' : GetRewardPoolDTO } |
   { 'err' : Error };
 export interface RetirePlayerDTO {
   'playerId' : PlayerId,
@@ -530,7 +514,6 @@ export interface SetPlayerInjuryDTO {
 }
 export type ShirtType = { 'Filled' : null } |
   { 'Striped' : null };
-export interface StaticCanistersDTO { 'canisters' : Array<CanisterInfoDTO> }
 export interface SubmitFixtureDataDTO {
   'fixtureId' : FixtureId,
   'month' : CalendarMonth,
@@ -666,46 +649,45 @@ export interface _SERVICE {
   'executeUnretirePlayer' : ActorMethod<[UnretirePlayerDTO], undefined>,
   'executeUpdateClub' : ActorMethod<[UpdateClubDTO], undefined>,
   'executeUpdatePlayer' : ActorMethod<[UpdatePlayerDTO], undefined>,
-  'getAdminDashboard' : ActorMethod<[], Result_27>,
-  'getBackendCanisterBalance' : ActorMethod<[], Result_5>,
+  'getAdminDashboard' : ActorMethod<[], Result_23>,
+  'getBackendCanisterBalance' : ActorMethod<[], Result_4>,
   'getCanisterCyclesAvailable' : ActorMethod<[], bigint>,
-  'getCanisterCyclesBalance' : ActorMethod<[], Result_5>,
-  'getClubs' : ActorMethod<[], Result_26>,
-  'getCountries' : ActorMethod<[], Result_25>,
-  'getCurrentTeam' : ActorMethod<[], Result_24>,
-  'getDataHashes' : ActorMethod<[], Result_23>,
+  'getCanisterCyclesBalance' : ActorMethod<[], Result_4>,
+  'getClubs' : ActorMethod<[], Result_22>,
+  'getCountries' : ActorMethod<[], Result_21>,
+  'getCurrentTeam' : ActorMethod<[], Result_20>,
+  'getDataHashes' : ActorMethod<[], Result_19>,
   'getFantasyTeamSnapshot' : ActorMethod<
     [GetFantasyTeamSnapshotDTO],
-    Result_22
+    Result_18
   >,
-  'getFixtures' : ActorMethod<[RequestFixturesDTO], Result_14>,
-  'getLeaderboardCanisters' : ActorMethod<[], Result_21>,
-  'getLeagues' : ActorMethod<[], Result_20>,
-  'getLoanedPlayers' : ActorMethod<[ClubFilterDTO], Result_9>,
+  'getFixtures' : ActorMethod<[RequestFixturesDTO], Result_12>,
+  'getLeagues' : ActorMethod<[], Result_17>,
+  'getLoanedPlayers' : ActorMethod<[ClubFilterDTO], Result_10>,
   'getManager' : ActorMethod<[RequestManagerDTO], Result_1>,
-  'getManagerCanisters' : ActorMethod<[], Result_19>,
-  'getMonthlyLeaderboard' : ActorMethod<[GetMonthlyLeaderboardDTO], Result_18>,
-  'getPlayerDetails' : ActorMethod<[GetPlayerDetailsDTO], Result_17>,
-  'getPlayerDetailsForGameweek' : ActorMethod<[GameweekFiltersDTO], Result_16>,
-  'getPlayers' : ActorMethod<[], Result_9>,
-  'getPlayersMap' : ActorMethod<[GameweekFiltersDTO], Result_15>,
-  'getPostponedFixtures' : ActorMethod<[], Result_14>,
-  'getProfile' : ActorMethod<[], Result_13>,
-  'getRetiredPlayers' : ActorMethod<[ClubFilterDTO], Result_9>,
-  'getRewardPool' : ActorMethod<[GetRewardPoolDTO], Result_12>,
-  'getSeasonLeaderboard' : ActorMethod<[GetSeasonLeaderboardDTO], Result_11>,
-  'getSeasons' : ActorMethod<[], Result_10>,
-  'getSnapshotPlayers' : ActorMethod<[GetSnapshotPlayers], Result_9>,
-  'getStaticCanisters' : ActorMethod<[], Result_8>,
-  'getSystemState' : ActorMethod<[], Result_7>,
-  'getTopups' : ActorMethod<[GetTopupsDTO], Result_6>,
-  'getTotalManagers' : ActorMethod<[], Result_5>,
+  'getMonthlyLeaderboard' : ActorMethod<[GetMonthlyLeaderboardDTO], Result_16>,
+  'getPlayerDetails' : ActorMethod<[GetPlayerDetailsDTO], Result_15>,
+  'getPlayerDetailsForGameweek' : ActorMethod<[GameweekFiltersDTO], Result_14>,
+  'getPlayers' : ActorMethod<[], Result_10>,
+  'getPlayersMap' : ActorMethod<[GameweekFiltersDTO], Result_13>,
+  'getPostponedFixtures' : ActorMethod<[], Result_12>,
+  'getProfile' : ActorMethod<[], Result_11>,
+  'getRetiredPlayers' : ActorMethod<[ClubFilterDTO], Result_10>,
+  'getRewardPool' : ActorMethod<[GetRewardPoolDTO], Result_9>,
+  'getSeasonLeaderboard' : ActorMethod<[GetSeasonLeaderboardDTO], Result_8>,
+  'getSeasons' : ActorMethod<[], Result_7>,
+  'getSnapshotPlayers' : ActorMethod<[GetSnapshotPlayers], Array<PlayerDTO>>,
+  'getSystemState' : ActorMethod<[], Result_6>,
+  'getTopups' : ActorMethod<[GetTopupsDTO], Result_5>,
+  'getTotalManagers' : ActorMethod<[], Result_4>,
   'getTreasuryAccountPublic' : ActorMethod<[], AccountIdentifier>,
-  'getUniqueManagerCanisterIds' : ActorMethod<[], Result_4>,
   'getWeeklyLeaderboard' : ActorMethod<[GetWeeklyLeaderboardDTO], Result_3>,
   'isAdmin' : ActorMethod<[], Result_2>,
   'isUsernameValid' : ActorMethod<[UsernameFilterDTO], boolean>,
-  'recalculatePoints' : ActorMethod<[GameweekNumber], Result>,
+  'recalculatePoints' : ActorMethod<
+    [FootballLeagueId, SeasonId, GameweekNumber, CalendarMonth],
+    Result
+  >,
   'saveFantasyTeam' : ActorMethod<[UpdateTeamSelectionDTO], Result>,
   'searchUsername' : ActorMethod<[UsernameFilterDTO], Result_1>,
   'setAbbreviatedLeagueName' : ActorMethod<[FootballLeagueId, string], Result>,
@@ -720,7 +702,10 @@ export interface _SERVICE {
   >,
   'setLeagueName' : ActorMethod<[FootballLeagueId, string], Result>,
   'setTeamCount' : ActorMethod<[FootballLeagueId, number], Result>,
-  'snapshotManagers' : ActorMethod<[GameweekNumber], Result>,
+  'snapshotManagers' : ActorMethod<
+    [SeasonId, GameweekNumber, CalendarMonth],
+    Result
+  >,
   'updateFavouriteClub' : ActorMethod<[UpdateFavouriteClubDTO], Result>,
   'updateProfilePicture' : ActorMethod<[UpdateProfilePictureDTO], Result>,
   'updateRewardPools' : ActorMethod<[UpdateRewardPoolsDTO], Result>,

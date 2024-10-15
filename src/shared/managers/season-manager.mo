@@ -1,12 +1,8 @@
 import Result "mo:base/Result";
 import Buffer "mo:base/Buffer";
 import Iter "mo:base/Iter";
-import TrieMap "mo:base/TrieMap";
-import List "mo:base/List";
-import Array "mo:base/Array";
-import Order "mo:base/Order";
-import Timer "mo:base/Timer";
 import DTOs "../../shared/DTOs";
+import Requests "../../shared/RequestDTOs";
 import T "../../shared/types";
 import SHA224 "../../shared/lib/SHA224";
 import Utilities "../../shared/utils/utilities";
@@ -205,15 +201,28 @@ module {
     };
 
     public func transferWindowStart() : async (){
-
+      //TODO (ENDOFSEASON)
     };
 
     public func transferWindowEnd() : async (){
-
+      //TODO (ENDOFSEASON)
     };
 
-
-
+    public func updateSystemStatus(dto: Requests.UpdateSystemStatusDTO) : async Result.Result<(), T.Error> {
+     systemState := {
+      calculationGameweek = dto.calculationGameweek;
+      calculationMonth = dto.calculationMonth;
+      calculationSeasonId  = dto.calculationSeasonId;
+      onHold  = dto.onHold;
+      pickTeamGameweek = dto.pickTeamGameweek;
+      pickTeamMonth = dto.pickTeamMonth;
+      pickTeamSeasonId = dto.pickTeamSeasonId;
+      seasonActive = dto.seasonActive;
+      transferWindowActive = dto.transferWindowActive;
+      version = dto.version;
+     };
+     return #ok();
+    };
       
     //Stable variable functions
 
