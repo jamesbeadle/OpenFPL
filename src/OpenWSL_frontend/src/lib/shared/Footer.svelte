@@ -39,8 +39,7 @@
       </div>
       <div class="flex justify-start">
         <div class="flex flex-col md:flex-row md:space-x-2 pl-4">
-          <a href="/whitepaper" class="hover:text-gray-300">Whitepaper</a>
-          <span class="hidden md:flex">|</span>
+          
           <a
             href="/gameplay-rules"
             class="hover:text-gray-300 md:hidden lg:block">Gameplay Rules</a

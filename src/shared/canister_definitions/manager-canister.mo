@@ -17,16 +17,18 @@ import Int16 "mo:base/Int16";
 import Nat16 "mo:base/Nat16";
 import Environment "../network_environment_variables";
 
-import DTOs "../../shared/DTOs";
-import T "../../shared/types";
+import DTOs "../../shared/dtos/DTOs";
+import Base "../../shared/types/base_types";
+import FootballTypes "../../shared/types/football_types";
+import T "../../shared/types/app_types";
 import Utilities "../../shared/utils/utilities";
 import Requests "../../shared/RequestDTOs";
 
 actor class _ManagerCanister() {
 
-  private var managerGroupIndexes : TrieMap.TrieMap<T.PrincipalId, Nat8> = TrieMap.TrieMap<T.PrincipalId, Nat8>(Text.equal, Text.hash);
+  private var managerGroupIndexes : TrieMap.TrieMap<Base.PrincipalId, Nat8> = TrieMap.TrieMap<Base.PrincipalId, Nat8>(Text.equal, Text.hash);
 
-  private stable var stable_manager_group_indexes : [(T.PrincipalId, Nat8)] = [];
+  private stable var stable_manager_group_indexes : [(Base.PrincipalId, Nat8)] = [];
   private stable var managerGroup1 : [T.Manager] = [];
   private stable var managerGroup2 : [T.Manager] = [];
   private stable var managerGroup3 : [T.Manager] = [];
@@ -52,7 +54,7 @@ actor class _ManagerCanister() {
       return;
     };
 
-    let callerInArray = Array.find<T.CanisterId>([Environment.OPENFPL_BACKEND_CANISTER_ID, Environment.OPENWSL_BACKEND_CANISTER_ID], func(canisterId: T.CanisterId) : Bool{
+    let callerInArray = Array.find<Base.CanisterId>([Environment.OPENFPL_BACKEND_CANISTER_ID, Environment.OPENWSL_BACKEND_CANISTER_ID], func(canisterId: Base.CanisterId) : Bool{
       canisterId == Principal.toText(caller);
     });
 
@@ -736,7 +738,7 @@ actor class _ManagerCanister() {
     return #ok();
   };
 
-  private func mergeManagerFavouriteClub(manager : T.Manager, favouriteClubId : T.ClubId) : T.Manager {
+  private func mergeManagerFavouriteClub(manager : T.Manager, favouriteClubId : FootballTypes.ClubId) : T.Manager {
     return {
       principalId = manager.principalId;
       username = manager.username;
@@ -878,19 +880,19 @@ actor class _ManagerCanister() {
     };
   };
 
-  public shared ({ caller }) func getManagersWithPlayer(playerId : T.PlayerId) : async [T.PrincipalId] {
+  public shared ({ caller }) func getManagersWithPlayer(playerId : FootballTypes.PlayerId) : async [Base.PrincipalId] {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == controllerPrincipalId;
 
-    let allManagersBuffer = Buffer.fromArray<T.PrincipalId>([]);
+    let allManagersBuffer = Buffer.fromArray<Base.PrincipalId>([]);
     for (index in Iter.range(0, 11)) {
       switch (index) {
         case 0 {
           for (manager in Iter.fromArray(managerGroup1)) {
             let isPlayerInTeam = Array.find(
               manager.playerIds,
-              func(pId : T.PlayerId) : Bool {
+              func(pId : FootballTypes.PlayerId) : Bool {
                 return pId == playerId;
               },
             );
@@ -903,7 +905,7 @@ actor class _ManagerCanister() {
           for (manager in Iter.fromArray(managerGroup2)) {
             let isPlayerInTeam = Array.find(
               manager.playerIds,
-              func(pId : T.PlayerId) : Bool {
+              func(pId : FootballTypes.PlayerId) : Bool {
                 return pId == playerId;
               },
             );
@@ -916,7 +918,7 @@ actor class _ManagerCanister() {
           for (manager in Iter.fromArray(managerGroup3)) {
             let isPlayerInTeam = Array.find(
               manager.playerIds,
-              func(pId : T.PlayerId) : Bool {
+              func(pId : FootballTypes.PlayerId) : Bool {
                 return pId == playerId;
               },
             );
@@ -929,7 +931,7 @@ actor class _ManagerCanister() {
           for (manager in Iter.fromArray(managerGroup4)) {
             let isPlayerInTeam = Array.find(
               manager.playerIds,
-              func(pId : T.PlayerId) : Bool {
+              func(pId : FootballTypes.PlayerId) : Bool {
                 return pId == playerId;
               },
             );
@@ -942,7 +944,7 @@ actor class _ManagerCanister() {
           for (manager in Iter.fromArray(managerGroup5)) {
             let isPlayerInTeam = Array.find(
               manager.playerIds,
-              func(pId : T.PlayerId) : Bool {
+              func(pId : FootballTypes.PlayerId) : Bool {
                 return pId == playerId;
               },
             );
@@ -955,7 +957,7 @@ actor class _ManagerCanister() {
           for (manager in Iter.fromArray(managerGroup6)) {
             let isPlayerInTeam = Array.find(
               manager.playerIds,
-              func(pId : T.PlayerId) : Bool {
+              func(pId : FootballTypes.PlayerId) : Bool {
                 return pId == playerId;
               },
             );
@@ -968,7 +970,7 @@ actor class _ManagerCanister() {
           for (manager in Iter.fromArray(managerGroup7)) {
             let isPlayerInTeam = Array.find(
               manager.playerIds,
-              func(pId : T.PlayerId) : Bool {
+              func(pId : FootballTypes.PlayerId) : Bool {
                 return pId == playerId;
               },
             );
@@ -981,7 +983,7 @@ actor class _ManagerCanister() {
           for (manager in Iter.fromArray(managerGroup8)) {
             let isPlayerInTeam = Array.find(
               manager.playerIds,
-              func(pId : T.PlayerId) : Bool {
+              func(pId : FootballTypes.PlayerId) : Bool {
                 return pId == playerId;
               },
             );
@@ -994,7 +996,7 @@ actor class _ManagerCanister() {
           for (manager in Iter.fromArray(managerGroup9)) {
             let isPlayerInTeam = Array.find(
               manager.playerIds,
-              func(pId : T.PlayerId) : Bool {
+              func(pId : FootballTypes.PlayerId) : Bool {
                 return pId == playerId;
               },
             );
@@ -1007,7 +1009,7 @@ actor class _ManagerCanister() {
           for (manager in Iter.fromArray(managerGroup10)) {
             let isPlayerInTeam = Array.find(
               manager.playerIds,
-              func(pId : T.PlayerId) : Bool {
+              func(pId : FootballTypes.PlayerId) : Bool {
                 return pId == playerId;
               },
             );
@@ -1020,7 +1022,7 @@ actor class _ManagerCanister() {
           for (manager in Iter.fromArray(managerGroup11)) {
             let isPlayerInTeam = Array.find(
               manager.playerIds,
-              func(pId : T.PlayerId) : Bool {
+              func(pId : FootballTypes.PlayerId) : Bool {
                 return pId == playerId;
               },
             );
@@ -1033,7 +1035,7 @@ actor class _ManagerCanister() {
           for (manager in Iter.fromArray(managerGroup12)) {
             let isPlayerInTeam = Array.find(
               manager.playerIds,
-              func(pId : T.PlayerId) : Bool {
+              func(pId : FootballTypes.PlayerId) : Bool {
                 return pId == playerId;
               },
             );
@@ -1132,7 +1134,7 @@ actor class _ManagerCanister() {
     return null;
   };
 
-  public shared ({ caller }) func getOrderedSnapshots(seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async [T.FantasyTeamSnapshot] {
+  public shared ({ caller }) func getOrderedSnapshots(seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber) : async [T.FantasyTeamSnapshot] {
     
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
@@ -1222,7 +1224,7 @@ actor class _ManagerCanister() {
     return sortedManagerSnapshots;
   };
 
-  public shared ({ caller }) func getFinalGameweekSnapshots(seasonId : T.SeasonId) : async [T.FantasyTeamSnapshot] {
+  public shared ({ caller }) func getFinalGameweekSnapshots(seasonId : FootballTypes.SeasonId) : async [T.FantasyTeamSnapshot] {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == controllerPrincipalId;
@@ -1603,7 +1605,7 @@ actor class _ManagerCanister() {
     return #ok();
   };
 
-   private func updateSnapshotPoints(principalId : Text, seasonId : Nat16, gameweek : T.GameweekNumber, month : T.CalendarMonth, teamPoints : Int16, teamValueQuarterMillions : Nat16) : () {
+   private func updateSnapshotPoints(principalId : Text, seasonId : Nat16, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth, teamPoints : Int16, teamValueQuarterMillions : Nat16) : () {
 
     let managerBuffer = Buffer.fromArray<T.Manager>([]);
     let managerGroupIndex = managerGroupIndexes.get(principalId);
@@ -1746,7 +1748,7 @@ actor class _ManagerCanister() {
     };
   };
 
-  private func mergeManagerSnapshot(manager : T.Manager, seasonId: T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth, weeklyPoints : Int16, monthlyPoints : Int16, seasonPoints : Int16, teamValueQuarterMillions : Nat16) : T.FantasyTeamSnapshot {
+  private func mergeManagerSnapshot(manager : T.Manager, seasonId: FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth, weeklyPoints : Int16, monthlyPoints : Int16, seasonPoints : Int16, teamValueQuarterMillions : Nat16) : T.FantasyTeamSnapshot {
     return {
       principalId = manager.principalId;
       username = manager.username;
@@ -1824,7 +1826,7 @@ actor class _ManagerCanister() {
     };
   };
 
-   private func mergeExistingHistory(existingHistory : List.List<T.FantasyTeamSeason>, fantasyTeamSnapshot : T.FantasyTeamSnapshot, seasonId : T.SeasonId, gameweek : T.GameweekNumber) : List.List<T.FantasyTeamSeason> {
+   private func mergeExistingHistory(existingHistory : List.List<T.FantasyTeamSeason>, fantasyTeamSnapshot : T.FantasyTeamSnapshot, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber) : List.List<T.FantasyTeamSeason> {
 
     let teamHistoryBuffer = Buffer.fromArray<T.FantasyTeamSeason>([]);
 
@@ -1858,13 +1860,13 @@ actor class _ManagerCanister() {
     return List.fromArray(Buffer.toArray(teamHistoryBuffer));
   };
 
-  public shared ({ caller }) func calculateFantasyTeamScores(leagueId: T.FootballLeagueId, seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) : async Nat {
+  public shared ({ caller }) func calculateFantasyTeamScores(leagueId: FootballTypes.LeagueId, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth) : async Nat {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == controllerPrincipalId;
 
     let backend_canister = actor (controllerPrincipalId) : actor {
-      getPlayerPointsMap : (seasonId: T.SeasonId, gameweek: T.GameweekNumber) -> async [(T.PlayerId, DTOs.PlayerScoreDTO)];
+      getPlayerPointsMap : (seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber) -> async [(FootballTypes.PlayerId, DTOs.PlayerScoreDTO)];
       getPlayersSnapshot : shared query (dto: Requests.GetSnapshotPlayers) -> async [DTOs.PlayerDTO];
     };
 
@@ -1872,7 +1874,7 @@ actor class _ManagerCanister() {
 
     let allPlayers : [DTOs.PlayerDTO] = await backend_canister.getPlayersSnapshot({gameweek; leagueId; seasonId});
     
-    let playerIdTrie : TrieMap.TrieMap<T.PlayerId, DTOs.PlayerScoreDTO> = TrieMap.TrieMap<T.PlayerId, DTOs.PlayerScoreDTO>(Utilities.eqNat16, Utilities.hashNat16);
+    let playerIdTrie : TrieMap.TrieMap<FootballTypes.PlayerId, DTOs.PlayerScoreDTO> = TrieMap.TrieMap<FootballTypes.PlayerId, DTOs.PlayerScoreDTO>(Utilities.eqNat16, Utilities.hashNat16);
     for (player in Iter.fromArray(allPlayersList)) {
       playerIdTrie.put(player.0, player.1);
     };
@@ -2023,7 +2025,7 @@ actor class _ManagerCanister() {
     return 0;
   };
 
-  private func calculateGoalPoints(position : T.PlayerPosition, goalsScored : Int16) : Int16 {
+  private func calculateGoalPoints(position : FootballTypes.PlayerPosition, goalsScored : Int16) : Int16 {
     switch (position) {
       case (#Goalkeeper) { return 40 * goalsScored };
       case (#Defender) { return 40 * goalsScored };
@@ -2032,7 +2034,7 @@ actor class _ManagerCanister() {
     };
   };
 
-  private func calculateAssistPoints(position : T.PlayerPosition, assists : Int16) : Int16 {
+  private func calculateAssistPoints(position : FootballTypes.PlayerPosition, assists : Int16) : Int16 {
     switch (position) {
       case (#Goalkeeper) { return 30 * assists };
       case (#Defender) { return 30 * assists };
@@ -2048,7 +2050,7 @@ actor class _ManagerCanister() {
     return totalManagers;
   };
 
-  public shared ({ caller }) func snapshotFantasyTeams(leagueId: T.FootballLeagueId, seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) : async () {
+  public shared ({ caller }) func snapshotFantasyTeams(leagueId: FootballTypes.LeagueId, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth) : async () {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == controllerPrincipalId;
@@ -2059,7 +2061,7 @@ actor class _ManagerCanister() {
     };
   };
 
-  private func snapshotManagers(leagueId: T.FootballLeagueId, managerGroup: Int, seasonId : T.SeasonId, gameweek : T.GameweekNumber, month : T.CalendarMonth) : async () {
+  private func snapshotManagers(leagueId: FootballTypes.LeagueId, managerGroup: Int, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth) : async () {
     
     //get the snapshot of the players from the controller canister canister
     let controller_backend_canister = actor (controllerPrincipalId) : actor {
@@ -2134,7 +2136,7 @@ actor class _ManagerCanister() {
             );
 
             let managerPlayers = Array.filter<DTOs.PlayerDTO>(players, func(player){
-              Option.isSome(Array.find<T.PlayerId>(manager.playerIds, func(playerId) : Bool{
+              Option.isSome(Array.find<FootballTypes.PlayerId>(manager.playerIds, func(playerId) : Bool{
                 playerId == player.id
               }))
             });
@@ -2195,7 +2197,7 @@ actor class _ManagerCanister() {
       if(not seasonFound){
 
         let managerPlayers = Array.filter<DTOs.PlayerDTO>(players, func(player){
-          Option.isSome(Array.find<T.PlayerId>(manager.playerIds, func(playerId) : Bool{
+          Option.isSome(Array.find<FootballTypes.PlayerId>(manager.playerIds, func(playerId) : Bool{
             playerId == player.id
           }))
         });
@@ -2844,16 +2846,16 @@ actor class _ManagerCanister() {
       
     let players : [DTOs.PlayerDTO] = await openfpl_backend_canister.getPlayers();
 
-    let updatedSeasonsBuffer = Buffer.fromArray<(T.Season, [(T.GameweekNumber, [T.Player])])>([]);
+    let updatedSeasonsBuffer = Buffer.fromArray<(T.Season, [(FootballTypes.GameweekNumber, [T.Player])])>([]);
    
-    let playersSeason = Array.find<(T.SeasonId, [(T.GameweekNumber, [T.Player])])>(playersSnapshots, func(playersSeasonSnapshot: (T.SeasonId, [(T.GameweekNumber, [T.Player])])) : Bool{
+    let playersSeason = Array.find<(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [T.Player])])>(playersSnapshots, func(playersSeasonSnapshot: (FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [T.Player])])) : Bool{
       playersSeasonSnapshot.0 == seasonId;
     });
 
     switch(playersSeason){
       case (?foundSeason){
         
-        let foundGameweek = Array.find<(T.GameweekNumber, [T.Player])>(foundSeason.1, func(currentGameweek: (T.GameweekNumber, [T.Player])) : Bool{
+        let foundGameweek = Array.find<(FootballTypes.GameweekNumber, [T.Player])>(foundSeason.1, func(currentGameweek: (FootballTypes.GameweekNumber, [T.Player])) : Bool{
           currentGameweek.0 == gameweek;
         });
 
@@ -2877,7 +2879,7 @@ actor class _ManagerCanister() {
         //Ensure we only snapshot the first time 
  need to link to openfpl backend then data canister
     let openfpl_backend_canister = actor (controllerPrincipalId) : actor {
-        getPlayerPointsMap : (seasonId: T.SeasonId, gameweek: T.GameweekNumber) -> async [(T.PlayerId, DTOs.PlayerScoreDTO)];
+        getPlayerPointsMap : (seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber) -> async [(FootballTypes.PlayerId, DTOs.PlayerScoreDTO)];
      
       };
       
@@ -3023,12 +3025,12 @@ actor class _ManagerCanister() {
     return Buffer.toArray(managerBuffer);
   };
 
-  public shared ({ caller }) func getClubManagers(clubId : T.ClubId) : async [T.PrincipalId] {
+  public shared ({ caller }) func getClubManagers(clubId : FootballTypes.ClubId) : async [Base.PrincipalId] {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == controllerPrincipalId;
 
-    let clubManagerIdBuffer = Buffer.fromArray<T.PrincipalId>([]);
+    let clubManagerIdBuffer = Buffer.fromArray<Base.PrincipalId>([]);
 
     for (index in Iter.range(0, 11)) {
       switch (index) {
@@ -3113,8 +3115,8 @@ actor class _ManagerCanister() {
     return Buffer.toArray(clubManagerIdBuffer);
   };
 
-  private func getGroupClubManagerIds(managers : [T.Manager], clubId : T.ClubId) : [T.PrincipalId] {
-    let managerIdBuffer = Buffer.fromArray<T.PrincipalId>([]);
+  private func getGroupClubManagerIds(managers : [T.Manager], clubId : FootballTypes.ClubId) : [Base.PrincipalId] {
+    let managerIdBuffer = Buffer.fromArray<Base.PrincipalId>([]);
     for (manager in Iter.fromArray(managers)) {
       switch(manager.favouriteClubId){
         case (?foundClubId){ 
@@ -3129,8 +3131,8 @@ actor class _ManagerCanister() {
   };
 
   //TODO (PAYOUT) use in reward pool calculation
-  private func getGroupNonClubManagerIds(managers : [T.Manager], clubId : T.ClubId) : [T.PrincipalId] {
-    let managerIdBuffer = Buffer.fromArray<T.PrincipalId>([]);
+  private func getGroupNonClubManagerIds(managers : [T.Manager], clubId : FootballTypes.ClubId) : [Base.PrincipalId] {
+    let managerIdBuffer = Buffer.fromArray<Base.PrincipalId>([]);
     for (manager in Iter.fromArray(managers)) {
       switch(manager.favouriteClubId){
         case (?foundClubId){ 
@@ -3146,7 +3148,7 @@ actor class _ManagerCanister() {
     return Buffer.toArray(managerIdBuffer);
   };
 
-  public shared ({ caller }) func getMostValuableTeams(seasonId : T.SeasonId) : async [T.FantasyTeamSnapshot] {
+  public shared ({ caller }) func getMostValuableTeams(seasonId : FootballTypes.SeasonId) : async [T.FantasyTeamSnapshot] {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == controllerPrincipalId;
@@ -3156,7 +3158,7 @@ actor class _ManagerCanister() {
 
     let allFinalGameweekSnapshots = await getFinalGameweekSnapshots(seasonId);
 
-    var teamValues : TrieMap.TrieMap<T.PrincipalId, T.FantasyTeamSnapshot> = TrieMap.TrieMap<T.PrincipalId, T.FantasyTeamSnapshot>(Text.equal, Text.hash);
+    var teamValues : TrieMap.TrieMap<Base.PrincipalId, T.FantasyTeamSnapshot> = TrieMap.TrieMap<Base.PrincipalId, T.FantasyTeamSnapshot>(Text.equal, Text.hash);
 
     for (snapshot in Iter.fromArray(allFinalGameweekSnapshots)) {
       let allPlayers = Array.filter<DTOs.PlayerDTO>(
@@ -3216,9 +3218,9 @@ actor class _ManagerCanister() {
       teamValues.put(snapshot.principalId, updatedSnapshot);
     };
 
-    let teamValuesArray : [(T.PrincipalId, T.FantasyTeamSnapshot)] = Iter.toArray(teamValues.entries());
+    let teamValuesArray : [(Base.PrincipalId, T.FantasyTeamSnapshot)] = Iter.toArray(teamValues.entries());
 
-    let compare = func(a : (T.PrincipalId, T.FantasyTeamSnapshot), b : (T.PrincipalId, T.FantasyTeamSnapshot)) : Order.Order {
+    let compare = func(a : (Base.PrincipalId, T.FantasyTeamSnapshot), b : (Base.PrincipalId, T.FantasyTeamSnapshot)) : Order.Order {
       if (a.1.points > b.1.points) { return #greater };
       if (a.1.points < b.1.points) { return #less };
       return #equal;

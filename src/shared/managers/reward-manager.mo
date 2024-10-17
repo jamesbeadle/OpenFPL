@@ -19,10 +19,12 @@ import Nat8 "mo:base/Nat8";
 
 import Account "../../shared/lib/Account";
 import Constants "../../shared/utils/Constants";
-import DTOs "../../shared/DTOs";
+import DTOs "../../shared/dtos/DTOs";
 import RewardPercentages "../../shared/utils/RewardPercentages";
 import SNSToken "../../shared/sns-wrappers/ledger";
-import T "../../shared/types";
+import Base "../../shared/types/base_types";
+import FootballTypes "../../shared/types/football_types";
+import T "../../shared/types/app_types";
 import Utilities "../../shared/utils/utilities";
 import NetworkEnvironmentVariables "../network_environment_variables";
 
@@ -30,8 +32,8 @@ module {
 
   public class RewardManager(seasonGameweekCount: Nat8, seasonMonthCount: Nat8) {
 
-    private var rewardPools : TrieMap.TrieMap<T.SeasonId, T.RewardPool> = TrieMap.TrieMap<T.SeasonId, T.RewardPool>(Utilities.eqNat16, Utilities.hashNat16);
-    private var teamValueLeaderboards : TrieMap.TrieMap<T.SeasonId, T.TeamValueLeaderboard> = TrieMap.TrieMap<T.SeasonId, T.TeamValueLeaderboard>(Utilities.eqNat16, Utilities.hashNat16);
+    private var rewardPools : TrieMap.TrieMap<FootballTypes.SeasonId, T.RewardPool> = TrieMap.TrieMap<FootballTypes.SeasonId, T.RewardPool>(Utilities.eqNat16, Utilities.hashNat16);
+    private var teamValueLeaderboards : TrieMap.TrieMap<FootballTypes.SeasonId, T.TeamValueLeaderboard> = TrieMap.TrieMap<FootballTypes.SeasonId, T.TeamValueLeaderboard>(Utilities.eqNat16, Utilities.hashNat16);
 
     private var seasonRewards : List.List<T.SeasonRewards> = List.nil();
     private var monthlyRewards : List.List<T.MonthlyRewards> = List.nil();
@@ -47,7 +49,7 @@ module {
     private var monthlyATHPrizePool : Nat64 = 0;
     private var seasonATHPrizePool : Nat64 = 0;
 
-    public func getRewardPool(seasonId: T.SeasonId) : ?T.RewardPool {
+    public func getRewardPool(seasonId: FootballTypes.SeasonId) : ?T.RewardPool {
         return rewardPools.get(seasonId);
     };
 
@@ -137,7 +139,7 @@ module {
       };
     };
 
-    public func distributeMonthlyRewards(seasonId: T.SeasonId, monthlyLeaderboards : [DTOs.MonthlyLeaderboardDTO], uniqueManagerCanisterIds : List.List<T.CanisterId>) : async () {
+    public func distributeMonthlyRewards(seasonId: FootballTypes.SeasonId, monthlyLeaderboards : [DTOs.MonthlyLeaderboardDTO], uniqueManagerCanisterIds : List.List<Base.CanisterId>) : async () {
       
       //TODO (PAYOUT)
       /*
@@ -146,12 +148,12 @@ module {
         case (?foundRewardPool){
           let monthlyRewardAmount = Nat64.div(foundRewardPool.monthlyLeaderboardPool, seasonMonthCount);
 
-          let clubManagersBuffer = Buffer.fromArray<T.PrincipalId>([]);
+          let clubManagersBuffer = Buffer.fromArray<Base.PrincipalId>([]);
           var nonClubManagersCount : Nat = 0;
 
           for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
             let manager_canister = actor (canisterId) : actor {
-              getClubManagers : (leagueId: T.FootballLeagueId, clubId : T.ClubId) -> async [T.PrincipalId];
+              getClubManagers : (leagueId: T.FootballLeagueId, clubId : T.ClubId) -> async [Base.PrincipalId];
               getNonClubManagers : (leagueId: T.FootballLeagueId, clubId : T.ClubId) -> async Nat;
             };
 
@@ -332,7 +334,7 @@ module {
       };
     };
 
-    public func distributeMostValuableTeamRewards(players : [DTOs.PlayerDTO], currentSeason : T.SeasonId, uniqueManagerCanisterIds : List.List<T.CanisterId>) : async () {
+    public func distributeMostValuableTeamRewards(players : [DTOs.PlayerDTO], currentSeason : FootballTypes.SeasonId, uniqueManagerCanisterIds : List.List<Base.CanisterId>) : async () {
 
       let rewardPool = rewardPools.get(currentSeason);
       switch(rewardPool){
@@ -342,8 +344,8 @@ module {
           let mostValuableTeamsBuffer = Buffer.fromArray<T.FantasyTeamSnapshot>([]);
           for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
             let manager_canister = actor (canisterId) : actor {
-              getFinalGameweekSnapshots : (seasonId : T.SeasonId) -> async [T.FantasyTeamSnapshot];
-              getMostValuableTeams : (seasonId : T.SeasonId) -> async [T.FantasyTeamSnapshot];
+              getFinalGameweekSnapshots : (seasonId : FootballTypes.SeasonId) -> async [T.FantasyTeamSnapshot];
+              getMostValuableTeams : (seasonId : FootballTypes.SeasonId) -> async [T.FantasyTeamSnapshot];
             };
 
             let snapshots = await manager_canister.getFinalGameweekSnapshots(currentSeason);
@@ -355,7 +357,7 @@ module {
 
           let allFinalGameweekSnapshots = Buffer.toArray(finalGameweekSnapshotBuffers);
 
-          var teamValues : TrieMap.TrieMap<T.PrincipalId, Nat16> = TrieMap.TrieMap<T.PrincipalId, Nat16>(Text.equal, Text.hash);
+          var teamValues : TrieMap.TrieMap<Base.PrincipalId, Nat16> = TrieMap.TrieMap<Base.PrincipalId, Nat16>(Text.equal, Text.hash);
 
           for (snapshot in Iter.fromArray(allFinalGameweekSnapshots)) {
             let allPlayers = Array.filter<DTOs.PlayerDTO>(
@@ -377,9 +379,9 @@ module {
             teamValues.put(snapshot.principalId, totalTeamValue);
           };
 
-          let teamValuesArray : [(T.PrincipalId, Nat16)] = Iter.toArray(teamValues.entries());
+          let teamValuesArray : [(Base.PrincipalId, Nat16)] = Iter.toArray(teamValues.entries());
 
-          let compare = func(a : (T.PrincipalId, Nat16), b : (T.PrincipalId, Nat16)) : Order.Order {
+          let compare = func(a : (Base.PrincipalId, Nat16), b : (Base.PrincipalId, Nat16)) : Order.Order {
             if (a.1 > b.1) { return #greater };
             if (a.1 < b.1) { return #less };
             return #equal;
@@ -387,7 +389,7 @@ module {
 
           let sortedTeamValuesArray = Array.sort(teamValuesArray, compare);
 
-          var leaderboardEntries = Array.mapEntries<(T.PrincipalId, Nat16), T.LeaderboardEntry>(
+          var leaderboardEntries = Array.mapEntries<(Base.PrincipalId, Nat16), T.LeaderboardEntry>(
             sortedTeamValuesArray,
             func(team, index) : T.LeaderboardEntry {
               return {
@@ -462,12 +464,12 @@ module {
       };
     };
 
-    public func distributeHighestScoringPlayerRewards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, fixtures : List.List<DTOs.FixtureDTO>, uniqueManagerCanisterIds : List.List<T.CanisterId>) : async () {
+    public func distributeHighestScoringPlayerRewards(seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, fixtures : List.List<DTOs.FixtureDTO>, uniqueManagerCanisterIds : List.List<Base.CanisterId>) : async () {
       let rewardPool = rewardPools.get(seasonId);
       switch(rewardPool){
         case (?foundRewardPool){
           let highestScoringPlayerRewardPool = foundRewardPool.highestScoringMatchPlayerPool;
-          let highestScoringPlayerIdBuffer = Buffer.fromArray<T.PlayerId>([]);
+          let highestScoringPlayerIdBuffer = Buffer.fromArray<FootballTypes.PlayerId>([]);
 
           for (fixture in Iter.fromList(fixtures)) {
             if (fixture.highestScoringPlayerId > 0) {
@@ -482,10 +484,10 @@ module {
 
           for (highestScoringPlayerId in Iter.fromArray(highestScoringPlayerIds)) {
 
-            let managersWithPlayerBuffer = Buffer.fromArray<T.PrincipalId>([]);
+            let managersWithPlayerBuffer = Buffer.fromArray<Base.PrincipalId>([]);
             for (canisterIds in Iter.fromList(uniqueManagerCanisterIds)) {
               let manager_canister = actor (canisterIds) : actor {
-                getManagersWithPlayer : (playerId : T.PlayerId) -> async [T.PrincipalId];
+                getManagersWithPlayer : (playerId : FootballTypes.PlayerId) -> async [Base.PrincipalId];
               };
 
               let managerIds = await manager_canister.getManagersWithPlayer(highestScoringPlayerId);
@@ -574,7 +576,7 @@ module {
       };
     };
 
-    public func distributeMonthlyATHScoreRewards(seasonId: T.SeasonId , monthlyLeaderboards : [DTOs.MonthlyLeaderboardDTO]) : async () {
+    public func distributeMonthlyATHScoreRewards(seasonId: FootballTypes.SeasonId , monthlyLeaderboards : [DTOs.MonthlyLeaderboardDTO]) : async () {
       
       let rewardPool = rewardPools.get(seasonId);
       
@@ -686,7 +688,7 @@ module {
       
     };
 
-    private func payReward(principalId : T.PrincipalId, fpl : Nat64) : async () {
+    private func payReward(principalId : Base.PrincipalId, fpl : Nat64) : async () {
       let ledger : SNSToken.Interface = actor (NetworkEnvironmentVariables.SNS_LEDGER_CANISTER_ID);
       
       let _ = await ledger.icrc1_transfer ({
@@ -713,24 +715,24 @@ module {
     };
     */
     
-    public func getStableRewardPools() : [(T.SeasonId, T.RewardPool)] {
+    public func getStableRewardPools() : [(FootballTypes.SeasonId, T.RewardPool)] {
       Iter.toArray(rewardPools.entries());
     };
 
-    public func setStableRewardPools(stable_reward_pools : [(T.SeasonId, T.RewardPool)]) {
-      rewardPools := TrieMap.fromEntries<T.SeasonId, T.RewardPool>(
+    public func setStableRewardPools(stable_reward_pools : [(FootballTypes.SeasonId, T.RewardPool)]) {
+      rewardPools := TrieMap.fromEntries<FootballTypes.SeasonId, T.RewardPool>(
         Iter.fromArray(stable_reward_pools),
         Utilities.eqNat16,
         Utilities.hashNat16,
       );
     }; 
 
-    public func getStableTeamValueLeaderboards() : [(T.SeasonId, T.TeamValueLeaderboard)] {
+    public func getStableTeamValueLeaderboards() : [(FootballTypes.SeasonId, T.TeamValueLeaderboard)] {
       return Iter.toArray(teamValueLeaderboards.entries());
     };
 
-    public func setStableTeamValueLeaderboards(stable_team_value_leaderboards : [(T.SeasonId, T.TeamValueLeaderboard)]) {
-      teamValueLeaderboards := TrieMap.fromEntries<T.SeasonId, T.TeamValueLeaderboard>(
+    public func setStableTeamValueLeaderboards(stable_team_value_leaderboards : [(FootballTypes.SeasonId, T.TeamValueLeaderboard)]) {
+      teamValueLeaderboards := TrieMap.fromEntries<FootballTypes.SeasonId, T.TeamValueLeaderboard>(
         Iter.fromArray(stable_team_value_leaderboards),
         Utilities.eqNat16,
         Utilities.hashNat16,

@@ -7,11 +7,9 @@ import { nonNullish, isNullish, createAgent } from "@dfinity/utils";
 import "dompurify";
 import { AuthClient } from "@dfinity/auth-client";
 import { HttpAgent, Actor } from "@dfinity/agent";
-import { Principal } from "@dfinity/principal";
-import { SnsGovernanceCanister } from "@dfinity/sns";
-import { IDL } from "@dfinity/candid";
 import { Text } from "@dfinity/candid/lib/cjs/idl.js";
 import { IcrcLedgerCanister } from "@dfinity/ledger-icrc";
+import { Principal } from "@dfinity/principal";
 let base = "";
 let assets = base;
 const initial = { base, assets };
@@ -944,18 +942,8 @@ function subscribe(store, ...callbacks) {
   const unsub = store.subscribe(...callbacks);
   return unsub.unsubscribe ? () => unsub.unsubscribe() : unsub;
 }
-function compute_slots(slots) {
-  const result = {};
-  for (const key2 in slots) {
-    result[key2] = true;
-  }
-  return result;
-}
 function null_to_empty(value) {
   return value == null ? "" : value;
-}
-function custom_event(type, detail, { bubbles = false, cancelable = false } = {}) {
-  return new CustomEvent(type, { detail, bubbles, cancelable });
 }
 let current_component;
 function set_current_component(component) {
@@ -968,25 +956,6 @@ function get_current_component() {
 }
 function onDestroy(fn) {
   get_current_component().$$.on_destroy.push(fn);
-}
-function createEventDispatcher() {
-  const component = get_current_component();
-  return (type, detail, { cancelable = false } = {}) => {
-    const callbacks = component.$$.callbacks[type];
-    if (callbacks) {
-      const event = custom_event(
-        /** @type {string} */
-        type,
-        detail,
-        { cancelable }
-      );
-      callbacks.slice().forEach((fn) => {
-        fn.call(component, event);
-      });
-      return !event.defaultPrevented;
-    }
-    return true;
-  };
 }
 function setContext(key2, context) {
   get_current_component().$$.context.set(key2, context);
@@ -3516,7 +3485,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "d8lmgl"
+  version_hash: "1wptqc4"
 };
 async function get_hooks() {
   return {};
@@ -3614,11 +3583,6 @@ const SNAPSHOT_KEY = "sveltekit:snapshot";
 const SCROLL_KEY = "sveltekit:scroll";
 get(SCROLL_KEY) ?? {};
 get(SNAPSHOT_KEY) ?? {};
-function goto(url, opts = {}) {
-  {
-    throw new Error("Cannot call goto(...) on the server");
-  }
-}
 const getStores = () => {
   const stores = getContext("__svelte__");
   return {
@@ -3731,855 +3695,561 @@ function createSystemStore() {
   };
 }
 const systemStore = createSystemStore();
-const idlFactory$1 = ({ IDL: IDL2 }) => {
-  const Gender = IDL2.Variant({ "Male": IDL2.Null, "Female": IDL2.Null });
-  const CountryId = IDL2.Nat16;
-  const CreateLeagueDTO = IDL2.Record({
-    "logo": IDL2.Vec(IDL2.Nat8),
-    "name": IDL2.Text,
-    "teamCount": IDL2.Nat8,
-    "relatedGender": Gender,
-    "countryId": CountryId,
-    "abbreviation": IDL2.Text,
-    "governingBody": IDL2.Text,
-    "formed": IDL2.Int
-  });
-  const Error2 = IDL2.Variant({
-    "MoreThan2PlayersFromClub": IDL2.Null,
-    "DecodeError": IDL2.Null,
-    "NotAllowed": IDL2.Null,
-    "DuplicatePlayerInTeam": IDL2.Null,
-    "InvalidBonuses": IDL2.Null,
-    "TooManyTransfers": IDL2.Null,
-    "NotFound": IDL2.Null,
-    "NumberPerPositionError": IDL2.Null,
-    "TeamOverspend": IDL2.Null,
-    "NotAuthorized": IDL2.Null,
-    "SelectedCaptainNotInTeam": IDL2.Null,
-    "InvalidData": IDL2.Null,
-    "SystemOnHold": IDL2.Null,
-    "AlreadyExists": IDL2.Null,
-    "CanisterCreateError": IDL2.Null,
-    "Not11Players": IDL2.Null
-  });
-  const Result = IDL2.Variant({ "ok": IDL2.Null, "err": Error2 });
-  const FixtureStatusType = IDL2.Variant({
-    "Unplayed": IDL2.Null,
-    "Finalised": IDL2.Null,
-    "Active": IDL2.Null,
-    "Complete": IDL2.Null
-  });
-  const SeasonId = IDL2.Nat16;
-  const ClubId = IDL2.Nat16;
-  const FixtureId = IDL2.Nat32;
-  const PlayerEventType = IDL2.Variant({
-    "PenaltyMissed": IDL2.Null,
-    "Goal": IDL2.Null,
-    "GoalConceded": IDL2.Null,
-    "Appearance": IDL2.Null,
-    "PenaltySaved": IDL2.Null,
-    "RedCard": IDL2.Null,
-    "KeeperSave": IDL2.Null,
-    "CleanSheet": IDL2.Null,
-    "YellowCard": IDL2.Null,
-    "GoalAssisted": IDL2.Null,
-    "OwnGoal": IDL2.Null,
-    "HighestScoringPlayer": IDL2.Null
-  });
-  const PlayerEventData = IDL2.Record({
-    "fixtureId": FixtureId,
-    "clubId": ClubId,
-    "playerId": IDL2.Nat16,
-    "eventStartMinute": IDL2.Nat8,
-    "eventEndMinute": IDL2.Nat8,
-    "eventType": PlayerEventType
-  });
-  const GameweekNumber = IDL2.Nat8;
-  const FixtureDTO = IDL2.Record({
-    "id": IDL2.Nat32,
-    "status": FixtureStatusType,
-    "highestScoringPlayerId": IDL2.Nat16,
-    "seasonId": SeasonId,
-    "awayClubId": ClubId,
-    "events": IDL2.Vec(PlayerEventData),
-    "homeClubId": ClubId,
-    "kickOff": IDL2.Int,
-    "homeGoals": IDL2.Nat8,
-    "gameweek": GameweekNumber,
-    "awayGoals": IDL2.Nat8
-  });
-  const AddInitialFixturesDTO = IDL2.Record({
-    "seasonFixtures": IDL2.Vec(FixtureDTO)
-  });
-  const PlayerPosition = IDL2.Variant({
-    "Goalkeeper": IDL2.Null,
-    "Midfielder": IDL2.Null,
-    "Forward": IDL2.Null,
-    "Defender": IDL2.Null
-  });
-  const CreatePlayerDTO = IDL2.Record({
-    "clubId": ClubId,
-    "valueQuarterMillions": IDL2.Nat16,
-    "dateOfBirth": IDL2.Int,
-    "nationality": CountryId,
-    "gender": Gender,
-    "shirtNumber": IDL2.Nat8,
-    "position": PlayerPosition,
-    "lastName": IDL2.Text,
-    "firstName": IDL2.Text
-  });
-  const PlayerId = IDL2.Nat16;
-  const FootballLeagueId = IDL2.Nat16;
-  const LoanPlayerDTO = IDL2.Record({
-    "loanEndDate": IDL2.Int,
-    "playerId": PlayerId,
-    "seasonId": SeasonId,
-    "loanClubId": ClubId,
-    "gameweek": GameweekNumber,
-    "loanLeagueId": FootballLeagueId
-  });
-  const MoveFixtureDTO = IDL2.Record({
-    "fixtureId": FixtureId,
-    "updatedFixtureGameweek": GameweekNumber,
-    "updatedFixtureDate": IDL2.Int
-  });
-  const PostponeFixtureDTO = IDL2.Record({ "fixtureId": FixtureId });
-  const ShirtType = IDL2.Variant({ "Filled": IDL2.Null, "Striped": IDL2.Null });
-  const PromoteNewClubDTO = IDL2.Record({
-    "secondaryColourHex": IDL2.Text,
-    "name": IDL2.Text,
-    "friendlyName": IDL2.Text,
-    "thirdColourHex": IDL2.Text,
-    "abbreviatedName": IDL2.Text,
-    "shirtType": ShirtType,
-    "primaryColourHex": IDL2.Text
-  });
-  const RecallPlayerDTO = IDL2.Record({ "playerId": PlayerId });
-  const RescheduleFixtureDTO = IDL2.Record({
-    "postponedFixtureId": FixtureId,
-    "updatedFixtureGameweek": GameweekNumber,
-    "updatedFixtureDate": IDL2.Int
-  });
-  const RetirePlayerDTO = IDL2.Record({
-    "playerId": PlayerId,
-    "retirementDate": IDL2.Int
-  });
-  const RevaluePlayerDownDTO = IDL2.Record({
-    "playerId": PlayerId,
-    "seasonId": SeasonId,
-    "gameweek": GameweekNumber
-  });
-  const RevaluePlayerUpDTO = IDL2.Record({
-    "playerId": PlayerId,
-    "seasonId": SeasonId,
-    "gameweek": GameweekNumber
-  });
-  const SetPlayerInjuryDTO = IDL2.Record({
-    "playerId": PlayerId,
-    "description": IDL2.Text,
-    "expectedEndDate": IDL2.Int
-  });
-  const CalendarMonth = IDL2.Nat8;
-  const SubmitFixtureDataDTO = IDL2.Record({
-    "fixtureId": FixtureId,
-    "month": CalendarMonth,
-    "gameweek": GameweekNumber,
-    "playerEventData": IDL2.Vec(PlayerEventData)
-  });
-  const TransferPlayerDTO = IDL2.Record({
-    "clubId": ClubId,
-    "newLeagueId": FootballLeagueId,
-    "playerId": PlayerId,
-    "newShirtNumber": IDL2.Nat8,
-    "seasonId": SeasonId,
-    "newClubId": ClubId,
-    "gameweek": GameweekNumber
-  });
-  const UnretirePlayerDTO = IDL2.Record({ "playerId": PlayerId });
-  const UpdateClubDTO = IDL2.Record({
-    "clubId": ClubId,
-    "secondaryColourHex": IDL2.Text,
-    "name": IDL2.Text,
-    "friendlyName": IDL2.Text,
-    "thirdColourHex": IDL2.Text,
-    "abbreviatedName": IDL2.Text,
-    "shirtType": ShirtType,
-    "primaryColourHex": IDL2.Text
-  });
-  const UpdatePlayerDTO = IDL2.Record({
-    "dateOfBirth": IDL2.Int,
-    "playerId": PlayerId,
-    "nationality": CountryId,
-    "shirtNumber": IDL2.Nat8,
-    "position": PlayerPosition,
-    "lastName": IDL2.Text,
-    "firstName": IDL2.Text
-  });
-  const CanisterId = IDL2.Text;
-  const AdminDashboardDTO = IDL2.Record({
-    "dataCanisterId": CanisterId,
-    "openFPLCanisterId": CanisterId,
-    "managerCanisters": IDL2.Vec(IDL2.Tuple(CanisterId, IDL2.Nat)),
-    "openWSLCanisterId": CanisterId,
-    "dataCanisterCycles": IDL2.Nat,
-    "openWSLBackendCycles": IDL2.Nat,
-    "openFPLBackendCycles": IDL2.Nat
-  });
-  const Result_23 = IDL2.Variant({ "ok": AdminDashboardDTO, "err": Error2 });
-  const Result_4 = IDL2.Variant({ "ok": IDL2.Nat, "err": Error2 });
-  const ClubDTO = IDL2.Record({
+const idlFactory$1 = ({ IDL }) => {
+  const ClubId = IDL.Nat16;
+  const ShirtType = IDL.Variant({ "Filled": IDL.Null, "Striped": IDL.Null });
+  const ClubDTO = IDL.Record({
     "id": ClubId,
-    "secondaryColourHex": IDL2.Text,
-    "name": IDL2.Text,
-    "friendlyName": IDL2.Text,
-    "thirdColourHex": IDL2.Text,
-    "abbreviatedName": IDL2.Text,
+    "secondaryColourHex": IDL.Text,
+    "name": IDL.Text,
+    "friendlyName": IDL.Text,
+    "thirdColourHex": IDL.Text,
+    "abbreviatedName": IDL.Text,
     "shirtType": ShirtType,
-    "primaryColourHex": IDL2.Text
+    "primaryColourHex": IDL.Text
   });
-  const Result_22 = IDL2.Variant({ "ok": IDL2.Vec(ClubDTO), "err": Error2 });
-  const CountryDTO = IDL2.Record({
+  const Error2 = IDL.Variant({
+    "MoreThan2PlayersFromClub": IDL.Null,
+    "DecodeError": IDL.Null,
+    "NotAllowed": IDL.Null,
+    "DuplicatePlayerInTeam": IDL.Null,
+    "InvalidBonuses": IDL.Null,
+    "TooManyTransfers": IDL.Null,
+    "NotFound": IDL.Null,
+    "NumberPerPositionError": IDL.Null,
+    "TeamOverspend": IDL.Null,
+    "NotAuthorized": IDL.Null,
+    "SelectedCaptainNotInTeam": IDL.Null,
+    "InvalidData": IDL.Null,
+    "SystemOnHold": IDL.Null,
+    "AlreadyExists": IDL.Null,
+    "CanisterCreateError": IDL.Null,
+    "Not11Players": IDL.Null
+  });
+  const Result_21 = IDL.Variant({ "ok": IDL.Vec(ClubDTO), "err": Error2 });
+  const CountryId = IDL.Nat16;
+  const CountryDTO = IDL.Record({
     "id": CountryId,
-    "code": IDL2.Text,
-    "name": IDL2.Text
+    "code": IDL.Text,
+    "name": IDL.Text
   });
-  const Result_21 = IDL2.Variant({ "ok": IDL2.Vec(CountryDTO), "err": Error2 });
-  const PickTeamDTO = IDL2.Record({
-    "playerIds": IDL2.Vec(PlayerId),
-    "username": IDL2.Text,
-    "goalGetterPlayerId": PlayerId,
+  const Result_20 = IDL.Variant({ "ok": IDL.Vec(CountryDTO), "err": Error2 });
+  const GameweekNumber = IDL.Nat8;
+  const CanisterId = IDL.Text;
+  const PickTeamDTO = IDL.Record({
+    "playerIds": IDL.Vec(ClubId),
+    "username": IDL.Text,
+    "goalGetterPlayerId": ClubId,
     "oneNationCountryId": CountryId,
     "hatTrickHeroGameweek": GameweekNumber,
-    "transfersAvailable": IDL2.Nat8,
+    "transfersAvailable": IDL.Nat8,
     "oneNationGameweek": GameweekNumber,
     "teamBoostGameweek": GameweekNumber,
     "captainFantasticGameweek": GameweekNumber,
-    "bankQuarterMillions": IDL2.Nat16,
-    "noEntryPlayerId": PlayerId,
-    "safeHandsPlayerId": PlayerId,
+    "bankQuarterMillions": IDL.Nat16,
+    "noEntryPlayerId": ClubId,
+    "safeHandsPlayerId": ClubId,
     "braceBonusGameweek": GameweekNumber,
     "passMasterGameweek": GameweekNumber,
     "teamBoostClubId": ClubId,
     "goalGetterGameweek": GameweekNumber,
-    "captainFantasticPlayerId": PlayerId,
+    "captainFantasticPlayerId": ClubId,
     "transferWindowGameweek": GameweekNumber,
     "noEntryGameweek": GameweekNumber,
     "prospectsGameweek": GameweekNumber,
     "safeHandsGameweek": GameweekNumber,
-    "principalId": IDL2.Text,
-    "passMasterPlayerId": PlayerId,
-    "captainId": PlayerId,
+    "principalId": IDL.Text,
+    "passMasterPlayerId": ClubId,
+    "captainId": ClubId,
     "canisterId": CanisterId,
-    "monthlyBonusesAvailable": IDL2.Nat8
+    "monthlyBonusesAvailable": IDL.Nat8
   });
-  const Result_20 = IDL2.Variant({ "ok": PickTeamDTO, "err": Error2 });
-  const DataHashDTO = IDL2.Record({ "hash": IDL2.Text, "category": IDL2.Text });
-  const Result_19 = IDL2.Variant({ "ok": IDL2.Vec(DataHashDTO), "err": Error2 });
-  const PrincipalId = IDL2.Text;
-  const GetFantasyTeamSnapshotDTO = IDL2.Record({
+  const Result_19 = IDL.Variant({ "ok": PickTeamDTO, "err": Error2 });
+  const DataHashDTO = IDL.Record({ "hash": IDL.Text, "category": IDL.Text });
+  const Result_18 = IDL.Variant({ "ok": IDL.Vec(DataHashDTO), "err": Error2 });
+  const SeasonId = IDL.Nat16;
+  const PrincipalId = IDL.Text;
+  const GetFantasyTeamSnapshotDTO = IDL.Record({
     "seasonId": SeasonId,
     "managerPrincipalId": PrincipalId,
     "gameweek": GameweekNumber
   });
-  const FantasyTeamSnapshotDTO = IDL2.Record({
-    "playerIds": IDL2.Vec(PlayerId),
+  const CalendarMonth = IDL.Nat8;
+  const FantasyTeamSnapshotDTO = IDL.Record({
+    "playerIds": IDL.Vec(ClubId),
     "month": CalendarMonth,
-    "teamValueQuarterMillions": IDL2.Nat16,
-    "username": IDL2.Text,
-    "goalGetterPlayerId": PlayerId,
+    "teamValueQuarterMillions": IDL.Nat16,
+    "username": IDL.Text,
+    "goalGetterPlayerId": ClubId,
     "oneNationCountryId": CountryId,
     "hatTrickHeroGameweek": GameweekNumber,
-    "transfersAvailable": IDL2.Nat8,
+    "transfersAvailable": IDL.Nat8,
     "oneNationGameweek": GameweekNumber,
     "teamBoostGameweek": GameweekNumber,
     "captainFantasticGameweek": GameweekNumber,
-    "bankQuarterMillions": IDL2.Nat16,
-    "noEntryPlayerId": PlayerId,
-    "monthlyPoints": IDL2.Int16,
-    "safeHandsPlayerId": PlayerId,
+    "bankQuarterMillions": IDL.Nat16,
+    "noEntryPlayerId": ClubId,
+    "monthlyPoints": IDL.Int16,
+    "safeHandsPlayerId": ClubId,
     "seasonId": SeasonId,
     "braceBonusGameweek": GameweekNumber,
     "favouriteClubId": ClubId,
     "passMasterGameweek": GameweekNumber,
     "teamBoostClubId": ClubId,
     "goalGetterGameweek": GameweekNumber,
-    "captainFantasticPlayerId": PlayerId,
+    "captainFantasticPlayerId": ClubId,
     "gameweek": GameweekNumber,
-    "seasonPoints": IDL2.Int16,
+    "seasonPoints": IDL.Int16,
     "transferWindowGameweek": GameweekNumber,
     "noEntryGameweek": GameweekNumber,
     "prospectsGameweek": GameweekNumber,
     "safeHandsGameweek": GameweekNumber,
-    "principalId": IDL2.Text,
-    "passMasterPlayerId": PlayerId,
-    "captainId": PlayerId,
-    "points": IDL2.Int16,
-    "monthlyBonusesAvailable": IDL2.Nat8
+    "principalId": IDL.Text,
+    "passMasterPlayerId": ClubId,
+    "captainId": ClubId,
+    "points": IDL.Int16,
+    "monthlyBonusesAvailable": IDL.Nat8
   });
-  const Result_18 = IDL2.Variant({
+  const Result_17 = IDL.Variant({
     "ok": FantasyTeamSnapshotDTO,
     "err": Error2
   });
-  const RequestFixturesDTO = IDL2.Record({ "seasonId": SeasonId });
-  const Result_12 = IDL2.Variant({ "ok": IDL2.Vec(FixtureDTO), "err": Error2 });
-  const FootballLeagueDTO = IDL2.Record({
-    "id": FootballLeagueId,
-    "logo": IDL2.Vec(IDL2.Nat8),
-    "name": IDL2.Text,
-    "teamCount": IDL2.Nat8,
-    "relatedGender": Gender,
-    "countryId": CountryId,
-    "abbreviation": IDL2.Text,
-    "governingBody": IDL2.Text,
-    "formed": IDL2.Int
+  const RequestFixturesDTO = IDL.Record({ "seasonId": SeasonId });
+  const FixtureStatusType = IDL.Variant({
+    "Unplayed": IDL.Null,
+    "Finalised": IDL.Null,
+    "Active": IDL.Null,
+    "Complete": IDL.Null
   });
-  const Result_17 = IDL2.Variant({
-    "ok": IDL2.Vec(FootballLeagueDTO),
-    "err": Error2
+  const FixtureId = IDL.Nat32;
+  const PlayerEventType = IDL.Variant({
+    "PenaltyMissed": IDL.Null,
+    "Goal": IDL.Null,
+    "GoalConceded": IDL.Null,
+    "Appearance": IDL.Null,
+    "PenaltySaved": IDL.Null,
+    "RedCard": IDL.Null,
+    "KeeperSave": IDL.Null,
+    "CleanSheet": IDL.Null,
+    "YellowCard": IDL.Null,
+    "GoalAssisted": IDL.Null,
+    "OwnGoal": IDL.Null,
+    "HighestScoringPlayer": IDL.Null
   });
-  const ClubFilterDTO = IDL2.Record({
+  const PlayerEventData = IDL.Record({
+    "fixtureId": FixtureId,
     "clubId": ClubId,
-    "leagueId": FootballLeagueId
+    "playerId": IDL.Nat16,
+    "eventStartMinute": IDL.Nat8,
+    "eventEndMinute": IDL.Nat8,
+    "eventType": PlayerEventType
   });
-  const PlayerStatus = IDL2.Variant({
-    "OnLoan": IDL2.Null,
-    "Active": IDL2.Null,
-    "FreeAgent": IDL2.Null,
-    "Retired": IDL2.Null
+  const FixtureDTO = IDL.Record({
+    "id": IDL.Nat32,
+    "status": FixtureStatusType,
+    "highestScoringPlayerId": IDL.Nat16,
+    "seasonId": SeasonId,
+    "awayClubId": ClubId,
+    "events": IDL.Vec(PlayerEventData),
+    "homeClubId": ClubId,
+    "kickOff": IDL.Int,
+    "homeGoals": IDL.Nat8,
+    "gameweek": GameweekNumber,
+    "awayGoals": IDL.Nat8
   });
-  const PlayerDTO = IDL2.Record({
-    "id": IDL2.Nat16,
+  const Result_11 = IDL.Variant({ "ok": IDL.Vec(FixtureDTO), "err": Error2 });
+  const LeagueId = IDL.Nat16;
+  const ClubFilterDTO = IDL.Record({
+    "clubId": ClubId,
+    "leagueId": LeagueId
+  });
+  const PlayerStatus = IDL.Variant({
+    "OnLoan": IDL.Null,
+    "Active": IDL.Null,
+    "FreeAgent": IDL.Null,
+    "Retired": IDL.Null
+  });
+  const PlayerPosition = IDL.Variant({
+    "Goalkeeper": IDL.Null,
+    "Midfielder": IDL.Null,
+    "Forward": IDL.Null,
+    "Defender": IDL.Null
+  });
+  const PlayerDTO = IDL.Record({
+    "id": IDL.Nat16,
     "status": PlayerStatus,
     "clubId": ClubId,
-    "valueQuarterMillions": IDL2.Nat16,
-    "dateOfBirth": IDL2.Int,
+    "valueQuarterMillions": IDL.Nat16,
+    "dateOfBirth": IDL.Int,
     "nationality": CountryId,
-    "shirtNumber": IDL2.Nat8,
-    "totalPoints": IDL2.Int16,
+    "shirtNumber": IDL.Nat8,
     "position": PlayerPosition,
-    "lastName": IDL2.Text,
-    "firstName": IDL2.Text
+    "lastName": IDL.Text,
+    "firstName": IDL.Text
   });
-  const Result_10 = IDL2.Variant({ "ok": IDL2.Vec(PlayerDTO), "err": Error2 });
-  const RequestManagerDTO = IDL2.Record({
+  const Result_9 = IDL.Variant({ "ok": IDL.Vec(PlayerDTO), "err": Error2 });
+  const RequestManagerDTO = IDL.Record({
     "month": CalendarMonth,
     "clubId": ClubId,
     "seasonId": SeasonId,
-    "managerId": IDL2.Text,
+    "managerId": IDL.Text,
     "gameweek": GameweekNumber
   });
-  const FantasyTeamSnapshot = IDL2.Record({
-    "playerIds": IDL2.Vec(PlayerId),
+  const PlayerId = IDL.Nat16;
+  const FantasyTeamSnapshot = IDL.Record({
+    "playerIds": IDL.Vec(PlayerId),
     "month": CalendarMonth,
-    "teamValueQuarterMillions": IDL2.Nat16,
-    "username": IDL2.Text,
+    "teamValueQuarterMillions": IDL.Nat16,
+    "username": IDL.Text,
     "goalGetterPlayerId": PlayerId,
     "oneNationCountryId": CountryId,
     "hatTrickHeroGameweek": GameweekNumber,
-    "transfersAvailable": IDL2.Nat8,
+    "transfersAvailable": IDL.Nat8,
     "oneNationGameweek": GameweekNumber,
     "teamBoostGameweek": GameweekNumber,
     "captainFantasticGameweek": GameweekNumber,
-    "bankQuarterMillions": IDL2.Nat16,
+    "bankQuarterMillions": IDL.Nat16,
     "noEntryPlayerId": PlayerId,
-    "monthlyPoints": IDL2.Int16,
+    "monthlyPoints": IDL.Int16,
     "safeHandsPlayerId": PlayerId,
     "seasonId": SeasonId,
     "braceBonusGameweek": GameweekNumber,
-    "favouriteClubId": IDL2.Opt(ClubId),
+    "favouriteClubId": IDL.Opt(ClubId),
     "passMasterGameweek": GameweekNumber,
     "teamBoostClubId": ClubId,
     "goalGetterGameweek": GameweekNumber,
     "captainFantasticPlayerId": PlayerId,
     "gameweek": GameweekNumber,
-    "seasonPoints": IDL2.Int16,
+    "seasonPoints": IDL.Int16,
     "transferWindowGameweek": GameweekNumber,
     "noEntryGameweek": GameweekNumber,
     "prospectsGameweek": GameweekNumber,
     "safeHandsGameweek": GameweekNumber,
-    "principalId": IDL2.Text,
+    "principalId": IDL.Text,
     "passMasterPlayerId": PlayerId,
     "captainId": PlayerId,
-    "points": IDL2.Int16,
-    "monthlyBonusesAvailable": IDL2.Nat8
+    "points": IDL.Int16,
+    "monthlyBonusesAvailable": IDL.Nat8
   });
-  const ManagerDTO = IDL2.Record({
-    "username": IDL2.Text,
-    "weeklyPosition": IDL2.Int,
-    "createDate": IDL2.Int,
-    "monthlyPoints": IDL2.Int16,
-    "weeklyPoints": IDL2.Int16,
-    "weeklyPositionText": IDL2.Text,
-    "gameweeks": IDL2.Vec(FantasyTeamSnapshot),
-    "favouriteClubId": IDL2.Opt(ClubId),
-    "monthlyPosition": IDL2.Int,
-    "seasonPosition": IDL2.Int,
-    "monthlyPositionText": IDL2.Text,
-    "profilePicture": IDL2.Opt(IDL2.Vec(IDL2.Nat8)),
-    "seasonPoints": IDL2.Int16,
-    "principalId": IDL2.Text,
-    "seasonPositionText": IDL2.Text
+  const ManagerDTO = IDL.Record({
+    "username": IDL.Text,
+    "weeklyPosition": IDL.Int,
+    "createDate": IDL.Int,
+    "monthlyPoints": IDL.Int16,
+    "weeklyPoints": IDL.Int16,
+    "weeklyPositionText": IDL.Text,
+    "gameweeks": IDL.Vec(FantasyTeamSnapshot),
+    "favouriteClubId": IDL.Opt(ClubId),
+    "monthlyPosition": IDL.Int,
+    "seasonPosition": IDL.Int,
+    "monthlyPositionText": IDL.Text,
+    "profilePicture": IDL.Opt(IDL.Vec(IDL.Nat8)),
+    "seasonPoints": IDL.Int16,
+    "principalId": IDL.Text,
+    "seasonPositionText": IDL.Text
   });
-  const Result_1 = IDL2.Variant({ "ok": ManagerDTO, "err": Error2 });
-  const GetMonthlyLeaderboardDTO = IDL2.Record({
+  const Result_1 = IDL.Variant({ "ok": ManagerDTO, "err": Error2 });
+  const Result_16 = IDL.Variant({ "ok": IDL.Vec(CanisterId), "err": Error2 });
+  const GetMonthlyLeaderboardDTO = IDL.Record({
     "month": CalendarMonth,
     "clubId": ClubId,
-    "offset": IDL2.Nat,
+    "offset": IDL.Nat,
     "seasonId": SeasonId,
-    "limit": IDL2.Nat,
-    "searchTerm": IDL2.Text
+    "limit": IDL.Nat,
+    "searchTerm": IDL.Text
   });
-  const LeaderboardEntry = IDL2.Record({
-    "username": IDL2.Text,
-    "positionText": IDL2.Text,
-    "position": IDL2.Nat,
-    "principalId": IDL2.Text,
-    "points": IDL2.Int16
+  const LeaderboardEntry = IDL.Record({
+    "username": IDL.Text,
+    "positionText": IDL.Text,
+    "position": IDL.Nat,
+    "principalId": IDL.Text,
+    "points": IDL.Int16
   });
-  const MonthlyLeaderboardDTO = IDL2.Record({
-    "month": IDL2.Nat8,
+  const MonthlyLeaderboardDTO = IDL.Record({
+    "month": IDL.Nat8,
     "clubId": ClubId,
-    "totalEntries": IDL2.Nat,
+    "totalEntries": IDL.Nat,
     "seasonId": SeasonId,
-    "entries": IDL2.Vec(LeaderboardEntry)
+    "entries": IDL.Vec(LeaderboardEntry)
   });
-  const Result_16 = IDL2.Variant({
+  const Result_15 = IDL.Variant({
     "ok": MonthlyLeaderboardDTO,
     "err": Error2
   });
-  const GetPlayerDetailsDTO = IDL2.Record({
-    "playerId": PlayerId,
+  const GetPlayerDetailsDTO = IDL.Record({
+    "playerId": ClubId,
     "seasonId": SeasonId
   });
-  const InjuryHistory = IDL2.Record({
-    "description": IDL2.Text,
-    "injuryStartDate": IDL2.Int,
-    "expectedEndDate": IDL2.Int
+  const InjuryHistory = IDL.Record({
+    "description": IDL.Text,
+    "injuryStartDate": IDL.Int,
+    "expectedEndDate": IDL.Int
   });
-  const PlayerGameweekDTO = IDL2.Record({
+  const PlayerGameweekDTO = IDL.Record({
     "fixtureId": FixtureId,
-    "events": IDL2.Vec(PlayerEventData),
-    "number": IDL2.Nat8,
-    "points": IDL2.Int16
+    "events": IDL.Vec(PlayerEventData),
+    "number": IDL.Nat8,
+    "points": IDL.Int16
   });
-  const ValueHistory = IDL2.Record({
-    "oldValue": IDL2.Nat16,
-    "newValue": IDL2.Nat16,
-    "seasonId": IDL2.Nat16,
-    "gameweek": IDL2.Nat8
+  const ValueHistory = IDL.Record({
+    "oldValue": IDL.Nat16,
+    "changedOn": IDL.Int,
+    "newValue": IDL.Nat16
   });
-  const PlayerDetailDTO = IDL2.Record({
-    "id": PlayerId,
+  const PlayerDetailDTO = IDL.Record({
+    "id": ClubId,
     "status": PlayerStatus,
     "clubId": ClubId,
     "parentClubId": ClubId,
-    "valueQuarterMillions": IDL2.Nat16,
-    "dateOfBirth": IDL2.Int,
-    "injuryHistory": IDL2.Vec(InjuryHistory),
+    "valueQuarterMillions": IDL.Nat16,
+    "dateOfBirth": IDL.Int,
+    "injuryHistory": IDL.Vec(InjuryHistory),
     "seasonId": SeasonId,
-    "gameweeks": IDL2.Vec(PlayerGameweekDTO),
+    "gameweeks": IDL.Vec(PlayerGameweekDTO),
     "nationality": CountryId,
-    "retirementDate": IDL2.Int,
-    "valueHistory": IDL2.Vec(ValueHistory),
-    "latestInjuryEndDate": IDL2.Int,
-    "shirtNumber": IDL2.Nat8,
+    "retirementDate": IDL.Int,
+    "valueHistory": IDL.Vec(ValueHistory),
+    "latestInjuryEndDate": IDL.Int,
+    "shirtNumber": IDL.Nat8,
     "position": PlayerPosition,
-    "lastName": IDL2.Text,
-    "firstName": IDL2.Text
+    "lastName": IDL.Text,
+    "firstName": IDL.Text
   });
-  const Result_15 = IDL2.Variant({ "ok": PlayerDetailDTO, "err": Error2 });
-  const GameweekFiltersDTO = IDL2.Record({
+  const Result_14 = IDL.Variant({ "ok": PlayerDetailDTO, "err": Error2 });
+  const GameweekFiltersDTO = IDL.Record({
     "seasonId": SeasonId,
     "gameweek": GameweekNumber
   });
-  const PlayerPointsDTO = IDL2.Record({
-    "id": IDL2.Nat16,
+  const PlayerPointsDTO = IDL.Record({
+    "id": IDL.Nat16,
     "clubId": ClubId,
-    "events": IDL2.Vec(PlayerEventData),
+    "events": IDL.Vec(PlayerEventData),
     "position": PlayerPosition,
     "gameweek": GameweekNumber,
-    "points": IDL2.Int16
+    "points": IDL.Int16
   });
-  const Result_14 = IDL2.Variant({
-    "ok": IDL2.Vec(PlayerPointsDTO),
+  const Result_13 = IDL.Variant({
+    "ok": IDL.Vec(PlayerPointsDTO),
     "err": Error2
   });
-  const PlayerScoreDTO = IDL2.Record({
-    "id": IDL2.Nat16,
+  const PlayerScoreDTO = IDL.Record({
+    "id": IDL.Nat16,
     "clubId": ClubId,
-    "assists": IDL2.Int16,
-    "dateOfBirth": IDL2.Int,
+    "assists": IDL.Int16,
+    "dateOfBirth": IDL.Int,
     "nationality": CountryId,
-    "goalsScored": IDL2.Int16,
-    "saves": IDL2.Int16,
-    "goalsConceded": IDL2.Int16,
-    "events": IDL2.Vec(PlayerEventData),
+    "goalsScored": IDL.Int16,
+    "saves": IDL.Int16,
+    "goalsConceded": IDL.Int16,
+    "events": IDL.Vec(PlayerEventData),
     "position": PlayerPosition,
-    "points": IDL2.Int16
+    "points": IDL.Int16
   });
-  const Result_13 = IDL2.Variant({
-    "ok": IDL2.Vec(IDL2.Tuple(IDL2.Nat16, PlayerScoreDTO)),
+  const Result_12 = IDL.Variant({
+    "ok": IDL.Vec(IDL.Tuple(IDL.Nat16, PlayerScoreDTO)),
     "err": Error2
   });
-  const GetSnapshotPlayers = IDL2.Record({
+  const GetSnapshotPlayers = IDL.Record({
     "seasonId": SeasonId,
     "gameweek": GameweekNumber,
-    "leagueId": FootballLeagueId
+    "leagueId": LeagueId
   });
-  const ProfileDTO = IDL2.Record({
-    "username": IDL2.Text,
-    "termsAccepted": IDL2.Bool,
-    "createDate": IDL2.Int,
-    "favouriteClubId": IDL2.Opt(ClubId),
-    "profilePicture": IDL2.Opt(IDL2.Vec(IDL2.Nat8)),
-    "profilePictureType": IDL2.Text,
-    "principalId": IDL2.Text
+  const ProfileDTO = IDL.Record({
+    "username": IDL.Text,
+    "termsAccepted": IDL.Bool,
+    "createDate": IDL.Int,
+    "favouriteClubId": IDL.Opt(ClubId),
+    "profilePicture": IDL.Opt(IDL.Vec(IDL.Nat8)),
+    "profilePictureType": IDL.Text,
+    "principalId": IDL.Text
   });
-  const Result_11 = IDL2.Variant({ "ok": ProfileDTO, "err": Error2 });
-  const RewardPool = IDL2.Record({
-    "monthlyLeaderboardPool": IDL2.Nat64,
-    "allTimeSeasonHighScorePool": IDL2.Nat64,
-    "mostValuableTeamPool": IDL2.Nat64,
-    "highestScoringMatchPlayerPool": IDL2.Nat64,
+  const Result_10 = IDL.Variant({ "ok": ProfileDTO, "err": Error2 });
+  const RewardPool = IDL.Record({
+    "monthlyLeaderboardPool": IDL.Nat64,
+    "allTimeSeasonHighScorePool": IDL.Nat64,
+    "mostValuableTeamPool": IDL.Nat64,
+    "highestScoringMatchPlayerPool": IDL.Nat64,
     "seasonId": SeasonId,
-    "seasonLeaderboardPool": IDL2.Nat64,
-    "allTimeWeeklyHighScorePool": IDL2.Nat64,
-    "allTimeMonthlyHighScorePool": IDL2.Nat64,
-    "weeklyLeaderboardPool": IDL2.Nat64
+    "seasonLeaderboardPool": IDL.Nat64,
+    "allTimeWeeklyHighScorePool": IDL.Nat64,
+    "allTimeMonthlyHighScorePool": IDL.Nat64,
+    "weeklyLeaderboardPool": IDL.Nat64
   });
-  const GetRewardPoolDTO = IDL2.Record({
+  const GetRewardPoolDTO = IDL.Record({
     "seasonId": SeasonId,
     "rewardPool": RewardPool
   });
-  const Result_9 = IDL2.Variant({ "ok": GetRewardPoolDTO, "err": Error2 });
-  const GetSeasonLeaderboardDTO = IDL2.Record({
-    "offset": IDL2.Nat,
+  const Result_8 = IDL.Variant({ "ok": GetRewardPoolDTO, "err": Error2 });
+  const GetSeasonLeaderboardDTO = IDL.Record({
+    "offset": IDL.Nat,
     "seasonId": SeasonId,
-    "limit": IDL2.Nat,
-    "searchTerm": IDL2.Text
+    "limit": IDL.Nat,
+    "searchTerm": IDL.Text
   });
-  const SeasonLeaderboardDTO = IDL2.Record({
-    "totalEntries": IDL2.Nat,
+  const SeasonLeaderboardDTO = IDL.Record({
+    "totalEntries": IDL.Nat,
     "seasonId": SeasonId,
-    "entries": IDL2.Vec(LeaderboardEntry)
+    "entries": IDL.Vec(LeaderboardEntry)
   });
-  const Result_8 = IDL2.Variant({ "ok": SeasonLeaderboardDTO, "err": Error2 });
-  const SeasonDTO = IDL2.Record({
+  const Result_7 = IDL.Variant({ "ok": SeasonLeaderboardDTO, "err": Error2 });
+  const SeasonDTO = IDL.Record({
     "id": SeasonId,
-    "name": IDL2.Text,
-    "year": IDL2.Nat16
+    "name": IDL.Text,
+    "year": IDL.Nat16
   });
-  const Result_7 = IDL2.Variant({ "ok": IDL2.Vec(SeasonDTO), "err": Error2 });
-  const SystemStateDTO = IDL2.Record({
+  const Result_6 = IDL.Variant({ "ok": IDL.Vec(SeasonDTO), "err": Error2 });
+  const SystemStateDTO = IDL.Record({
     "pickTeamSeasonId": SeasonId,
     "calculationGameweek": GameweekNumber,
-    "transferWindowActive": IDL2.Bool,
+    "transferWindowActive": IDL.Bool,
     "pickTeamGameweek": GameweekNumber,
-    "version": IDL2.Text,
+    "version": IDL.Text,
     "calculationMonth": CalendarMonth,
     "calculationSeasonId": SeasonId,
-    "onHold": IDL2.Bool,
-    "seasonActive": IDL2.Bool
+    "onHold": IDL.Bool,
+    "seasonActive": IDL.Bool
   });
-  const Result_6 = IDL2.Variant({ "ok": SystemStateDTO, "err": Error2 });
-  const TopupDTO = IDL2.Record({
-    "topupAmount": IDL2.Nat,
-    "canisterId": IDL2.Text,
-    "toppedUpOn": IDL2.Int
+  const Result_5 = IDL.Variant({ "ok": SystemStateDTO, "err": Error2 });
+  const TopupDTO = IDL.Record({
+    "topupAmount": IDL.Nat,
+    "canisterId": IDL.Text,
+    "toppedUpOn": IDL.Int
   });
-  const GetTopupsDTO = IDL2.Record({
-    "totalEntries": IDL2.Nat,
-    "offset": IDL2.Nat,
-    "limit": IDL2.Nat,
-    "entries": IDL2.Vec(TopupDTO)
+  const GetTopupsDTO = IDL.Record({
+    "totalEntries": IDL.Nat,
+    "offset": IDL.Nat,
+    "limit": IDL.Nat,
+    "entries": IDL.Vec(TopupDTO)
   });
-  const Result_5 = IDL2.Variant({ "ok": GetTopupsDTO, "err": Error2 });
-  const AccountIdentifier = IDL2.Vec(IDL2.Nat8);
-  const GetWeeklyLeaderboardDTO = IDL2.Record({
-    "offset": IDL2.Nat,
+  const Result_4 = IDL.Variant({ "ok": GetTopupsDTO, "err": Error2 });
+  const Result_3 = IDL.Variant({ "ok": IDL.Nat, "err": Error2 });
+  const GetWeeklyLeaderboardDTO = IDL.Record({
+    "offset": IDL.Nat,
     "seasonId": SeasonId,
-    "limit": IDL2.Nat,
-    "searchTerm": IDL2.Text,
+    "limit": IDL.Nat,
+    "searchTerm": IDL.Text,
     "gameweek": GameweekNumber
   });
-  const WeeklyLeaderboardDTO = IDL2.Record({
-    "totalEntries": IDL2.Nat,
+  const WeeklyLeaderboardDTO = IDL.Record({
+    "totalEntries": IDL.Nat,
     "seasonId": SeasonId,
-    "entries": IDL2.Vec(LeaderboardEntry),
+    "entries": IDL.Vec(LeaderboardEntry),
     "gameweek": GameweekNumber
   });
-  const Result_3 = IDL2.Variant({ "ok": WeeklyLeaderboardDTO, "err": Error2 });
-  const Result_2 = IDL2.Variant({ "ok": IDL2.Bool, "err": Error2 });
-  const UsernameFilterDTO = IDL2.Record({ "username": IDL2.Text });
-  const UpdateTeamSelectionDTO = IDL2.Record({
-    "playerIds": IDL2.Vec(PlayerId),
-    "username": IDL2.Text,
-    "goalGetterPlayerId": PlayerId,
+  const Result_2 = IDL.Variant({ "ok": WeeklyLeaderboardDTO, "err": Error2 });
+  const UsernameFilterDTO = IDL.Record({ "username": IDL.Text });
+  const UpdateTeamSelectionDTO = IDL.Record({
+    "playerIds": IDL.Vec(ClubId),
+    "username": IDL.Text,
+    "goalGetterPlayerId": ClubId,
     "oneNationCountryId": CountryId,
     "hatTrickHeroGameweek": GameweekNumber,
     "oneNationGameweek": GameweekNumber,
     "teamBoostGameweek": GameweekNumber,
     "captainFantasticGameweek": GameweekNumber,
-    "noEntryPlayerId": PlayerId,
-    "safeHandsPlayerId": PlayerId,
+    "noEntryPlayerId": ClubId,
+    "safeHandsPlayerId": ClubId,
     "braceBonusGameweek": GameweekNumber,
     "passMasterGameweek": GameweekNumber,
     "teamBoostClubId": ClubId,
     "goalGetterGameweek": GameweekNumber,
-    "captainFantasticPlayerId": PlayerId,
+    "captainFantasticPlayerId": ClubId,
     "transferWindowGameweek": GameweekNumber,
     "noEntryGameweek": GameweekNumber,
     "prospectsGameweek": GameweekNumber,
     "safeHandsGameweek": GameweekNumber,
-    "passMasterPlayerId": PlayerId,
-    "captainId": PlayerId
+    "passMasterPlayerId": ClubId,
+    "captainId": ClubId
   });
-  const UpdateFavouriteClubDTO = IDL2.Record({ "favouriteClubId": ClubId });
-  const UpdateProfilePictureDTO = IDL2.Record({
-    "profilePicture": IDL2.Vec(IDL2.Nat8),
-    "extension": IDL2.Text
+  const Result = IDL.Variant({ "ok": IDL.Null, "err": Error2 });
+  const UpdateFavouriteClubDTO = IDL.Record({ "favouriteClubId": ClubId });
+  const UpdateProfilePictureDTO = IDL.Record({
+    "profilePicture": IDL.Vec(IDL.Nat8),
+    "extension": IDL.Text
   });
-  const UpdateRewardPoolsDTO = IDL2.Record({
-    "monthlyLeaderboardPool": IDL2.Nat64,
-    "allTimeSeasonHighScorePool": IDL2.Nat64,
-    "mostValuableTeamPool": IDL2.Nat64,
-    "highestScoringMatchPlayerPool": IDL2.Nat64,
-    "seasonId": SeasonId,
-    "seasonLeaderboardPool": IDL2.Nat64,
-    "allTimeWeeklyHighScorePool": IDL2.Nat64,
-    "allTimeMonthlyHighScorePool": IDL2.Nat64,
-    "weeklyLeaderboardPool": IDL2.Nat64
-  });
-  const UpdateSystemStatusDTO = IDL2.Record({
-    "pickTeamSeasonId": SeasonId,
-    "calculationGameweek": GameweekNumber,
-    "transferWindowActive": IDL2.Bool,
-    "pickTeamMonth": CalendarMonth,
-    "pickTeamGameweek": GameweekNumber,
-    "version": IDL2.Text,
-    "calculationMonth": CalendarMonth,
-    "calculationSeasonId": SeasonId,
-    "onHold": IDL2.Bool,
-    "seasonActive": IDL2.Bool
-  });
-  const UpdateUsernameDTO = IDL2.Record({ "username": IDL2.Text });
-  const RustResult = IDL2.Variant({ "Ok": IDL2.Text, "Err": IDL2.Text });
-  return IDL2.Service({
-    "createLeague": IDL2.Func([CreateLeagueDTO], [Result], []),
-    "executeAddInitialFixtures": IDL2.Func([AddInitialFixturesDTO], [], []),
-    "executeCreatePlayer": IDL2.Func([CreatePlayerDTO], [], []),
-    "executeLoanPlayer": IDL2.Func([LoanPlayerDTO], [], []),
-    "executeMoveFixture": IDL2.Func([MoveFixtureDTO], [], []),
-    "executePostponeFixture": IDL2.Func([PostponeFixtureDTO], [], []),
-    "executePromoteNewClub": IDL2.Func([PromoteNewClubDTO], [], []),
-    "executeRecallPlayer": IDL2.Func([RecallPlayerDTO], [], []),
-    "executeRescheduleFixture": IDL2.Func([RescheduleFixtureDTO], [], []),
-    "executeRetirePlayer": IDL2.Func([RetirePlayerDTO], [], []),
-    "executeRevaluePlayerDown": IDL2.Func([RevaluePlayerDownDTO], [], []),
-    "executeRevaluePlayerUp": IDL2.Func([RevaluePlayerUpDTO], [], []),
-    "executeSetPlayerInjury": IDL2.Func([SetPlayerInjuryDTO], [], []),
-    "executeSubmitFixtureData": IDL2.Func([SubmitFixtureDataDTO], [], []),
-    "executeTransferPlayer": IDL2.Func([TransferPlayerDTO], [], []),
-    "executeUnretirePlayer": IDL2.Func([UnretirePlayerDTO], [], []),
-    "executeUpdateClub": IDL2.Func([UpdateClubDTO], [], []),
-    "executeUpdatePlayer": IDL2.Func([UpdatePlayerDTO], [], []),
-    "getAdminDashboard": IDL2.Func([], [Result_23], []),
-    "getBackendCanisterBalance": IDL2.Func([], [Result_4], []),
-    "getCanisterCyclesAvailable": IDL2.Func([], [IDL2.Nat], []),
-    "getCanisterCyclesBalance": IDL2.Func([], [Result_4], []),
-    "getClubs": IDL2.Func([], [Result_22], ["composite_query"]),
-    "getCountries": IDL2.Func([], [Result_21], ["query"]),
-    "getCurrentTeam": IDL2.Func([], [Result_20], []),
-    "getDataHashes": IDL2.Func([], [Result_19], ["composite_query"]),
-    "getFantasyTeamSnapshot": IDL2.Func(
+  const UpdateUsernameDTO = IDL.Record({ "username": IDL.Text });
+  return IDL.Service({
+    "getClubs": IDL.Func([], [Result_21], ["composite_query"]),
+    "getCountries": IDL.Func([], [Result_20], ["query"]),
+    "getCurrentTeam": IDL.Func([], [Result_19], []),
+    "getDataHashes": IDL.Func([], [Result_18], ["composite_query"]),
+    "getFantasyTeamSnapshot": IDL.Func(
       [GetFantasyTeamSnapshotDTO],
-      [Result_18],
+      [Result_17],
       []
     ),
-    "getFixtures": IDL2.Func(
+    "getFixtures": IDL.Func(
       [RequestFixturesDTO],
-      [Result_12],
+      [Result_11],
       ["composite_query"]
     ),
-    "getLeagues": IDL2.Func([], [Result_17], ["composite_query"]),
-    "getLoanedPlayers": IDL2.Func(
+    "getLoanedPlayers": IDL.Func(
       [ClubFilterDTO],
-      [Result_10],
+      [Result_9],
       ["composite_query"]
     ),
-    "getManager": IDL2.Func([RequestManagerDTO], [Result_1], []),
-    "getManagerCanisterIds": IDL2.Func([], [IDL2.Vec(CanisterId)], []),
-    "getMonthlyLeaderboard": IDL2.Func(
+    "getManager": IDL.Func([RequestManagerDTO], [Result_1], []),
+    "getManagerCanisterIds": IDL.Func([], [Result_16], []),
+    "getMonthlyLeaderboard": IDL.Func(
       [GetMonthlyLeaderboardDTO],
-      [Result_16],
+      [Result_15],
       []
     ),
-    "getPlayerDetails": IDL2.Func(
+    "getPlayerDetails": IDL.Func(
       [GetPlayerDetailsDTO],
-      [Result_15],
-      ["composite_query"]
-    ),
-    "getPlayerDetailsForGameweek": IDL2.Func(
-      [GameweekFiltersDTO],
       [Result_14],
       ["composite_query"]
     ),
-    "getPlayers": IDL2.Func([], [Result_10], ["composite_query"]),
-    "getPlayersMap": IDL2.Func(
+    "getPlayerDetailsForGameweek": IDL.Func(
       [GameweekFiltersDTO],
       [Result_13],
       ["composite_query"]
     ),
-    "getPlayersSnapshot": IDL2.Func(
+    "getPlayers": IDL.Func([], [Result_9], ["composite_query"]),
+    "getPlayersMap": IDL.Func(
+      [GameweekFiltersDTO],
+      [Result_12],
+      ["composite_query"]
+    ),
+    "getPlayersSnapshot": IDL.Func(
       [GetSnapshotPlayers],
-      [IDL2.Vec(PlayerDTO)],
+      [IDL.Vec(PlayerDTO)],
       ["composite_query"]
     ),
-    "getPostponedFixtures": IDL2.Func([], [Result_12], ["composite_query"]),
-    "getProfile": IDL2.Func([], [Result_11], []),
-    "getRetiredPlayers": IDL2.Func(
+    "getPostponedFixtures": IDL.Func([], [Result_11], ["composite_query"]),
+    "getProfile": IDL.Func([], [Result_10], []),
+    "getRetiredPlayers": IDL.Func(
       [ClubFilterDTO],
-      [Result_10],
+      [Result_9],
       ["composite_query"]
     ),
-    "getRewardPool": IDL2.Func([GetRewardPoolDTO], [Result_9], []),
-    "getSeasonLeaderboard": IDL2.Func(
+    "getRewardPool": IDL.Func([GetRewardPoolDTO], [Result_8], []),
+    "getSeasonLeaderboard": IDL.Func(
       [GetSeasonLeaderboardDTO],
-      [Result_8],
+      [Result_7],
       []
     ),
-    "getSeasons": IDL2.Func([], [Result_7], ["composite_query"]),
-    "getSystemState": IDL2.Func([], [Result_6], ["query"]),
-    "getTopups": IDL2.Func([GetTopupsDTO], [Result_5], []),
-    "getTotalManagers": IDL2.Func([], [Result_4], ["query"]),
-    "getTreasuryAccountPublic": IDL2.Func([], [AccountIdentifier], []),
-    "getWeeklyLeaderboard": IDL2.Func(
+    "getSeasons": IDL.Func([], [Result_6], ["composite_query"]),
+    "getSystemState": IDL.Func([], [Result_5], ["query"]),
+    "getTopups": IDL.Func([GetTopupsDTO], [Result_4], []),
+    "getTotalManagers": IDL.Func([], [Result_3], ["query"]),
+    "getWeeklyLeaderboard": IDL.Func(
       [GetWeeklyLeaderboardDTO],
-      [Result_3],
+      [Result_2],
       []
     ),
-    "isAdmin": IDL2.Func([], [Result_2], []),
-    "isUsernameValid": IDL2.Func([UsernameFilterDTO], [IDL2.Bool], ["query"]),
-    "recalculatePoints": IDL2.Func(
-      [FootballLeagueId, SeasonId, GameweekNumber, CalendarMonth],
-      [Result],
-      []
-    ),
-    "saveFantasyTeam": IDL2.Func([UpdateTeamSelectionDTO], [Result], []),
-    "searchUsername": IDL2.Func([UsernameFilterDTO], [Result_1], []),
-    "setAbbreviatedLeagueName": IDL2.Func(
-      [FootballLeagueId, IDL2.Text],
-      [Result],
-      []
-    ),
-    "setGameweekTimers": IDL2.Func([SeasonId, GameweekNumber], [], []),
-    "setLeagueCountryId": IDL2.Func(
-      [FootballLeagueId, CountryId],
-      [Result],
-      []
-    ),
-    "setLeagueDateFormed": IDL2.Func([FootballLeagueId, IDL2.Int], [Result], []),
-    "setLeagueGender": IDL2.Func([FootballLeagueId, Gender], [Result], []),
-    "setLeagueGoverningBody": IDL2.Func(
-      [FootballLeagueId, IDL2.Text],
-      [Result],
-      []
-    ),
-    "setLeagueLogo": IDL2.Func(
-      [FootballLeagueId, IDL2.Vec(IDL2.Nat8)],
-      [Result],
-      []
-    ),
-    "setLeagueName": IDL2.Func([FootballLeagueId, IDL2.Text], [Result], []),
-    "setTeamCount": IDL2.Func([FootballLeagueId, IDL2.Nat8], [Result], []),
-    "snapshotManagers": IDL2.Func(
-      [SeasonId, GameweekNumber, CalendarMonth],
-      [Result],
-      []
-    ),
-    "updateFavouriteClub": IDL2.Func([UpdateFavouriteClubDTO], [Result], []),
-    "updateProfilePicture": IDL2.Func([UpdateProfilePictureDTO], [Result], []),
-    "updateRewardPools": IDL2.Func([UpdateRewardPoolsDTO], [Result], []),
-    "updateSystemStatus": IDL2.Func([UpdateSystemStatusDTO], [Result], []),
-    "updateUsername": IDL2.Func([UpdateUsernameDTO], [Result], []),
-    "validateAddInitialFixtures": IDL2.Func(
-      [AddInitialFixturesDTO],
-      [RustResult],
-      ["query"]
-    ),
-    "validateCreatePlayer": IDL2.Func(
-      [CreatePlayerDTO],
-      [RustResult],
-      ["query"]
-    ),
-    "validateLoanPlayer": IDL2.Func([LoanPlayerDTO], [RustResult], ["query"]),
-    "validateMoveFixture": IDL2.Func([MoveFixtureDTO], [RustResult], ["query"]),
-    "validatePostponeFixture": IDL2.Func(
-      [PostponeFixtureDTO],
-      [RustResult],
-      ["query"]
-    ),
-    "validatePromoteNewClub": IDL2.Func(
-      [PromoteNewClubDTO],
-      [RustResult],
-      ["query"]
-    ),
-    "validateRecallPlayer": IDL2.Func(
-      [RecallPlayerDTO],
-      [RustResult],
-      ["query"]
-    ),
-    "validateRescheduleFixture": IDL2.Func(
-      [RescheduleFixtureDTO],
-      [RustResult],
-      ["query"]
-    ),
-    "validateRetirePlayer": IDL2.Func(
-      [RetirePlayerDTO],
-      [RustResult],
-      ["query"]
-    ),
-    "validateRevaluePlayerDown": IDL2.Func(
-      [RevaluePlayerDownDTO],
-      [RustResult],
-      ["query"]
-    ),
-    "validateRevaluePlayerUp": IDL2.Func(
-      [RevaluePlayerUpDTO],
-      [RustResult],
-      ["query"]
-    ),
-    "validateSetPlayerInjury": IDL2.Func(
-      [SetPlayerInjuryDTO],
-      [RustResult],
-      ["query"]
-    ),
-    "validateSubmitFixtureData": IDL2.Func(
-      [SubmitFixtureDataDTO],
-      [RustResult],
-      ["query"]
-    ),
-    "validateTransferPlayer": IDL2.Func(
-      [TransferPlayerDTO],
-      [RustResult],
-      ["query"]
-    ),
-    "validateUnretirePlayer": IDL2.Func(
-      [UnretirePlayerDTO],
-      [RustResult],
-      ["query"]
-    ),
-    "validateUpdateClub": IDL2.Func([UpdateClubDTO], [RustResult], ["query"]),
-    "validateUpdatePlayer": IDL2.Func(
-      [UpdatePlayerDTO],
-      [RustResult],
-      ["query"]
-    ),
-    "viewPayouts": IDL2.Func([GameweekNumber], [Result], [])
+    "isUsernameValid": IDL.Func([UsernameFilterDTO], [IDL.Bool], ["query"]),
+    "saveFantasyTeam": IDL.Func([UpdateTeamSelectionDTO], [Result], []),
+    "searchUsername": IDL.Func([UsernameFilterDTO], [Result_1], []),
+    "setGameweekTimers": IDL.Func([SeasonId, GameweekNumber], [], []),
+    "updateDataHashes": IDL.Func([IDL.Text], [Result], []),
+    "updateFavouriteClub": IDL.Func([UpdateFavouriteClubDTO], [Result], []),
+    "updateProfilePicture": IDL.Func([UpdateProfilePictureDTO], [Result], []),
+    "updateUsername": IDL.Func([UpdateUsernameDTO], [Result], [])
   });
 };
-var define_process_env_default$k = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
-const canisterId$1 = define_process_env_default$k.CANISTER_ID_OPENFPL_BACKEND;
+var define_process_env_default$f = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+const canisterId$1 = define_process_env_default$f.CANISTER_ID_OPENFPL_BACKEND;
 const createActor$1 = (canisterId2, options2 = {}) => {
   const agent = options2.agent || new HttpAgent({ ...options2.agentOptions });
   if (options2.agent && options2.agentOptions) {
@@ -4594,7 +4264,7 @@ const createActor$1 = (canisterId2, options2 = {}) => {
   });
 };
 canisterId$1 ? createActor$1(canisterId$1) : void 0;
-var define_process_env_default$j = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+var define_process_env_default$e = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
 class ActorFactory {
   static createActor(idlFactory2, canisterId2 = "", identity = null, options2 = null) {
     const hostOptions = {
@@ -4647,7 +4317,7 @@ class ActorFactory {
     });
   }
   static getGovernanceAgent(identity = null, options2 = null) {
-    let canisterId2 = define_process_env_default$j.CANISTER_ID_SNS_GOVERNANCE;
+    let canisterId2 = define_process_env_default$e.CANISTER_ID_SNS_GOVERNANCE;
     const hostOptions = {
       host: `https://${canisterId2}.icp-api.io`,
       identity
@@ -5066,13 +4736,13 @@ function calculateBonusPoints(gameweekData, fantasyTeam, points) {
   }
   return bonusPoints;
 }
-var define_process_env_default$i = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+var define_process_env_default$d = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
 class FixtureService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory$1,
-      define_process_env_default$i.OPENWSL_BACKEND_CANISTER_ID
+      define_process_env_default$d.OPENWSL_BACKEND_CANISTER_ID
     );
   }
   async getPostponedFixtures() {
@@ -5125,7 +4795,6 @@ function createClubStore() {
   };
 }
 const clubStore = createClubStore();
-const errorDetailToString = (err) => typeof err === "string" ? err : err instanceof Error ? err.message : "message" in err ? err.message : void 0;
 const DEFAULT_ICON_SIZE = 20;
 const core = {
   close: "Close",
@@ -5150,27 +4819,6 @@ const en = {
 const i18n = readable({
   lang: "en",
   ...en
-});
-const css$a = {
-  code: ".backdrop.svelte-1mpql1{position:absolute;top:0;right:0;bottom:0;left:0;color:var(--backdrop-contrast);z-index:var(--backdrop-z-index);touch-action:manipulation;cursor:pointer}.backdrop.visible.svelte-1mpql1{background:var(--backdrop);-webkit-backdrop-filter:var(--backdrop-filter);backdrop-filter:var(--backdrop-filter)}.backdrop.disablePointerEvents.svelte-1mpql1{cursor:inherit;pointer-events:none}",
-  map: null
-};
-const Backdrop = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let $i18n, $$unsubscribe_i18n;
-  $$unsubscribe_i18n = subscribe(i18n, (value) => $i18n = value);
-  let { disablePointerEvents = false } = $$props;
-  let { invisible = false } = $$props;
-  createEventDispatcher();
-  if ($$props.disablePointerEvents === void 0 && $$bindings.disablePointerEvents && disablePointerEvents !== void 0)
-    $$bindings.disablePointerEvents(disablePointerEvents);
-  if ($$props.invisible === void 0 && $$bindings.invisible && invisible !== void 0)
-    $$bindings.invisible(invisible);
-  $$result.css.add(css$a);
-  $$unsubscribe_i18n();
-  return `<div role="button" tabindex="-1"${add_attribute("aria-label", $i18n.core.close, 0)} class="${[
-    "backdrop svelte-1mpql1",
-    (!invisible ? "visible" : "") + " " + (disablePointerEvents ? "disablePointerEvents" : "")
-  ].join(" ").trim()}" data-tid="backdrop"></div>`;
 });
 const layoutBottomOffset = writable(0);
 const initBusyStore = () => {
@@ -5201,7 +4849,7 @@ const initBusyStore = () => {
 const busyStore = initBusyStore();
 const busy = derived(busyStore, ($busyStore) => $busyStore.length > 0);
 const busyMessage = derived(busyStore, ($busyStore) => $busyStore.reverse().find(({ text: text2 }) => nonNullish(text2))?.text);
-const css$9 = {
+const css$8 = {
   code: ".medium.svelte-85668t{--spinner-size:30px}.small.svelte-85668t{--spinner-size:calc(var(--line-height-standard) * 1rem)}.tiny.svelte-85668t{--spinner-size:calc(var(--line-height-standard) * 0.5rem)}svg.svelte-85668t{width:var(--spinner-size);height:var(--spinner-size);animation:spinner-linear-rotate 2000ms linear infinite;position:absolute;top:calc(50% - var(--spinner-size) / 2);left:calc(50% - var(--spinner-size) / 2);--radius:45px;--circumference:calc(3.1415926536 * var(--radius) * 2);--start:calc((1 - 0.05) * var(--circumference));--end:calc((1 - 0.8) * var(--circumference))}svg.inline.svelte-85668t{display:inline-block;position:relative}circle.svelte-85668t{stroke-dasharray:var(--circumference);stroke-width:10%;transform-origin:50% 50% 0;transition-property:stroke;animation-name:spinner-stroke-rotate-100;animation-duration:4000ms;animation-timing-function:cubic-bezier(0.35, 0, 0.25, 1);animation-iteration-count:infinite;fill:transparent;stroke:currentColor;transition:stroke-dashoffset 225ms linear}@keyframes spinner-linear-rotate{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}@keyframes spinner-stroke-rotate-100{0%{stroke-dashoffset:var(--start);transform:rotate(0)}12.5%{stroke-dashoffset:var(--end);transform:rotate(0)}12.5001%{stroke-dashoffset:var(--end);transform:rotateX(180deg) rotate(72.5deg)}25%{stroke-dashoffset:var(--start);transform:rotateX(180deg) rotate(72.5deg)}25.0001%{stroke-dashoffset:var(--start);transform:rotate(270deg)}37.5%{stroke-dashoffset:var(--end);transform:rotate(270deg)}37.5001%{stroke-dashoffset:var(--end);transform:rotateX(180deg) rotate(161.5deg)}50%{stroke-dashoffset:var(--start);transform:rotateX(180deg) rotate(161.5deg)}50.0001%{stroke-dashoffset:var(--start);transform:rotate(180deg)}62.5%{stroke-dashoffset:var(--end);transform:rotate(180deg)}62.5001%{stroke-dashoffset:var(--end);transform:rotateX(180deg) rotate(251.5deg)}75%{stroke-dashoffset:var(--start);transform:rotateX(180deg) rotate(251.5deg)}75.0001%{stroke-dashoffset:var(--start);transform:rotate(90deg)}87.5%{stroke-dashoffset:var(--end);transform:rotate(90deg)}87.5001%{stroke-dashoffset:var(--end);transform:rotateX(180deg) rotate(341.5deg)}100%{stroke-dashoffset:var(--start);transform:rotateX(180deg) rotate(341.5deg)}}",
   map: null
 };
@@ -5212,10 +4860,10 @@ const Spinner = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     $$bindings.inline(inline);
   if ($$props.size === void 0 && $$bindings.size && size !== void 0)
     $$bindings.size(size);
-  $$result.css.add(css$9);
+  $$result.css.add(css$8);
   return `  <svg class="${[escape(null_to_empty(size), true) + " svelte-85668t", inline ? "inline" : ""].join(" ").trim()}" preserveAspectRatio="xMidYMid meet" focusable="false" aria-hidden="true" data-tid="spinner" viewBox="0 0 100 100"><circle cx="50%" cy="50%" r="45" class="svelte-85668t"></circle></svg>`;
 });
-const css$8 = {
+const css$7 = {
   code: "div.svelte-14plyno{z-index:calc(var(--z-index) + 1000);position:fixed;top:0;right:0;bottom:0;left:0;background:var(--backdrop);color:var(--backdrop-contrast)}.content.svelte-14plyno{display:flex;flex-direction:column;justify-content:center;align-items:center}p.svelte-14plyno{padding-bottom:var(--padding);max-width:calc(var(--section-max-width) / 2)}",
   map: null
 };
@@ -5224,7 +4872,7 @@ const BusyScreen = create_ssr_component(($$result, $$props, $$bindings, slots) =
   let $busyMessage, $$unsubscribe_busyMessage;
   $$unsubscribe_busy = subscribe(busy, (value) => $busy = value);
   $$unsubscribe_busyMessage = subscribe(busyMessage, (value) => $busyMessage = value);
-  $$result.css.add(css$8);
+  $$result.css.add(css$7);
   $$unsubscribe_busy();
   $$unsubscribe_busyMessage();
   return ` ${$busy ? `<div data-tid="busy" class="svelte-14plyno"><div class="content svelte-14plyno">${nonNullish($busyMessage) ? `<p class="svelte-14plyno">${escape($busyMessage)}</p>` : ``} <span>${validate_component(Spinner, "Spinner").$$render($$result, { inline: true }, {}, {})}</span></div></div>` : ``}`;
@@ -5247,7 +4895,7 @@ const IconError = create_ssr_component(($$result, $$props, $$bindings, slots) =>
     $$bindings.size(size);
   return `  <svg xmlns="http://www.w3.org/2000/svg"${add_attribute("height", size, 0)} viewBox="0 0 24 24"${add_attribute("width", size, 0)} fill="currentColor"><path d="M0 0h24v24H0z" fill="none"></path><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"></path></svg>`;
 });
-const css$7 = {
+const css$6 = {
   code: "svg.svelte-1lui9gh{vertical-align:middle}",
   map: null
 };
@@ -5255,7 +4903,7 @@ const IconInfo = create_ssr_component(($$result, $$props, $$bindings, slots) => 
   let { size = `${DEFAULT_ICON_SIZE}px` } = $$props;
   if ($$props.size === void 0 && $$bindings.size && size !== void 0)
     $$bindings.size(size);
-  $$result.css.add(css$7);
+  $$result.css.add(css$6);
   return `  <svg${add_attribute("width", size, 0)}${add_attribute("height", size, 0)} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" data-tid="icon-info" class="svelte-1lui9gh"><path d="M10.2222 17.5C14.3643 17.5 17.7222 14.1421 17.7222 10C17.7222 5.85786 14.3643 2.5 10.2222 2.5C6.08003 2.5 2.72217 5.85786 2.72217 10C2.72217 14.1421 6.08003 17.5 10.2222 17.5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10.2222 13.3333V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10.2222 6.66699H10.2305" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>`;
 });
 const IconWarning = create_ssr_component(($$result, $$props, $$bindings, slots) => {
@@ -5264,14 +4912,6 @@ const IconWarning = create_ssr_component(($$result, $$props, $$bindings, slots) 
     $$bindings.size(size);
   return `  <svg xmlns="http://www.w3.org/2000/svg"${add_attribute("height", size, 0)} viewBox="0 0 20 20"${add_attribute("width", size, 0)} fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M16.5324 12.6666L12.491 5.66659C11.7331 4.35394 11.354 3.69773 10.8593 3.47746C10.4278 3.28534 9.93473 3.28534 9.50322 3.47746C9.00871 3.69763 8.62985 4.35385 7.87262 5.66541L3.83048 12.6666C3.07262 13.9792 2.6938 14.6358 2.75041 15.1744C2.79978 15.6441 3.04633 16.0709 3.42847 16.3486C3.86643 16.6668 4.62382 16.6668 6.13851 16.6668H14.2243C15.739 16.6668 16.4962 16.6668 16.9342 16.3486C17.3163 16.0709 17.563 15.6441 17.6124 15.1744C17.669 14.6358 17.2903 13.9792 16.5324 12.6666ZM9.4314 13.5666C9.4314 13.1524 9.76718 12.8166 10.1814 12.8166H10.1914C10.6056 12.8166 10.9414 13.1524 10.9414 13.5666C10.9414 13.9809 10.6056 14.3166 10.1914 14.3166H10.1814C9.76718 14.3166 9.4314 13.9809 9.4314 13.5666ZM10.9314 7.73331C10.9314 7.3191 10.5956 6.98331 10.1814 6.98331C9.76718 6.98331 9.4314 7.3191 9.4314 7.73331V11.0666C9.4314 11.4809 9.76718 11.8166 10.1814 11.8166C10.5956 11.8166 10.9314 11.4809 10.9314 11.0666V7.73331Z"></path></svg>`;
 });
-let elementsCounters = {};
-const nextElementId = (prefix) => {
-  elementsCounters = {
-    ...elementsCounters,
-    [prefix]: (elementsCounters[prefix] ?? 0) + 1
-  };
-  return `${prefix}${elementsCounters[prefix]}`;
-};
 const Html = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let { text: text2 = void 0 } = $$props;
   if ($$props.text === void 0 && $$bindings.text && text2 !== void 0)
@@ -5351,37 +4991,6 @@ const initMenuStore = () => {
 };
 const menuStore = initMenuStore();
 derived(menuStore, ($menuStore) => $menuStore === Menu.COLLAPSED);
-const css$6 = {
-  code: ".modal.svelte-1bbimtl.svelte-1bbimtl{position:fixed;top:0;right:0;bottom:0;left:0;z-index:var(--modal-z-index);touch-action:initial;cursor:initial}.wrapper.svelte-1bbimtl.svelte-1bbimtl{position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);display:flex;flex-direction:column;background:var(--overlay-background);color:var(--overlay-background-contrast);--button-secondary-background:var(--focus-background);overflow:hidden;box-sizing:border-box;box-shadow:var(--overlay-box-shadow)}.wrapper.svelte-1bbimtl .container-wrapper.svelte-1bbimtl{margin:var(--padding-1_5x) var(--padding-2x) auto;display:flex;flex-direction:column;gap:var(--padding-1_5x);flex:1;overflow:hidden}.wrapper.alert.svelte-1bbimtl.svelte-1bbimtl{width:var(--alert-width);max-width:var(--alert-max-width);max-height:var(--alert-max-height);border-radius:var(--alert-border-radius)}.wrapper.alert.svelte-1bbimtl .header.svelte-1bbimtl{padding:var(--alert-padding-y) var(--alert-padding-x) var(--padding)}.wrapper.alert.svelte-1bbimtl .container-wrapper.svelte-1bbimtl{margin-bottom:calc(var(--alert-padding-y) * 2 / 3)}.wrapper.alert.svelte-1bbimtl .content.svelte-1bbimtl{margin:0 0 calc(var(--alert-padding-y) / 2);padding:calc(var(--alert-padding-y) / 2) calc(var(--alert-padding-x) / 2) 0}.wrapper.alert.svelte-1bbimtl .footer.svelte-1bbimtl{padding:0 var(--alert-padding-x) calc(var(--alert-padding-y) * 2 / 3)}@media(min-width: 576px){.wrapper.alert.svelte-1bbimtl .footer.svelte-1bbimtl{justify-content:flex-end}}.wrapper.dialog.svelte-1bbimtl.svelte-1bbimtl{width:var(--dialog-width);max-width:var(--dialog-max-width);min-height:var(--dialog-min-height);height:var(--dialog-height);max-height:var(--dialog-max-height, 100%);border-radius:var(--dialog-border-radius)}@supports (-webkit-touch-callout: none){.wrapper.dialog.svelte-1bbimtl.svelte-1bbimtl{max-height:-webkit-fill-available}@media(min-width: 768px){.wrapper.dialog.svelte-1bbimtl.svelte-1bbimtl{max-height:var(--dialog-max-height, 100%)}}}.wrapper.dialog.svelte-1bbimtl .header.svelte-1bbimtl{padding:var(--dialog-padding-y) var(--padding-3x) var(--padding)}.wrapper.dialog.svelte-1bbimtl .container-wrapper.svelte-1bbimtl{margin-bottom:var(--dialog-padding-y)}.wrapper.dialog.svelte-1bbimtl .content.svelte-1bbimtl{margin:0;padding:var(--dialog-padding-y) var(--dialog-padding-x)}.header.svelte-1bbimtl.svelte-1bbimtl{display:grid;grid-template-columns:1fr auto 1fr;gap:var(--padding);z-index:var(--z-index);position:relative}.header.svelte-1bbimtl h2.svelte-1bbimtl{white-space:var(--text-white-space, nowrap);overflow:hidden;text-overflow:ellipsis;grid-column-start:2;text-align:center}.header.svelte-1bbimtl button.svelte-1bbimtl{display:flex;justify-content:center;align-items:center;padding:0;justify-self:flex-end}.header.svelte-1bbimtl button.svelte-1bbimtl:active,.header.svelte-1bbimtl button.svelte-1bbimtl:focus,.header.svelte-1bbimtl button.svelte-1bbimtl:hover{background:var(--background-shade);border-radius:var(--border-radius)}.content.svelte-1bbimtl.svelte-1bbimtl{overflow-y:var(--modal-content-overflow-y, auto);overflow-x:hidden}.container.svelte-1bbimtl.svelte-1bbimtl{position:relative;display:flex;flex-direction:column;flex:1;overflow:hidden;border-radius:16px;background:var(--overlay-content-background);color:var(--overlay-content-background-contrast)}",
-  map: null
-};
-const Modal = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let $$slots = compute_slots(slots);
-  let $i18n, $$unsubscribe_i18n;
-  $$unsubscribe_i18n = subscribe(i18n, (value) => $i18n = value);
-  let { visible = true } = $$props;
-  let { role = "dialog" } = $$props;
-  let { testId = void 0 } = $$props;
-  let { disablePointerEvents = false } = $$props;
-  let showHeader;
-  let showFooterAlert;
-  createEventDispatcher();
-  const modalTitleId = nextElementId("modal-title-");
-  const modalContentId = nextElementId("modal-content-");
-  if ($$props.visible === void 0 && $$bindings.visible && visible !== void 0)
-    $$bindings.visible(visible);
-  if ($$props.role === void 0 && $$bindings.role && role !== void 0)
-    $$bindings.role(role);
-  if ($$props.testId === void 0 && $$bindings.testId && testId !== void 0)
-    $$bindings.testId(testId);
-  if ($$props.disablePointerEvents === void 0 && $$bindings.disablePointerEvents && disablePointerEvents !== void 0)
-    $$bindings.disablePointerEvents(disablePointerEvents);
-  $$result.css.add(css$6);
-  showHeader = nonNullish($$slots.title);
-  showFooterAlert = nonNullish($$slots.footer) && role === "alert";
-  $$unsubscribe_i18n();
-  return ` ${visible ? `<div class="modal svelte-1bbimtl"${add_attribute("role", role, 0)}${add_attribute("data-tid", testId, 0)}${add_attribute("aria-labelledby", showHeader ? modalTitleId : void 0, 0)}${add_attribute("aria-describedby", modalContentId, 0)}>${validate_component(Backdrop, "Backdrop").$$render($$result, { disablePointerEvents }, {}, {})} <div class="${escape(null_to_empty(`wrapper ${role}`), true) + " svelte-1bbimtl"}">${showHeader ? `<div class="header svelte-1bbimtl"><h2${add_attribute("id", modalTitleId, 0)} data-tid="modal-title" class="svelte-1bbimtl">${slots.title ? slots.title({}) : ``}</h2> ${!disablePointerEvents ? `<button data-tid="close-modal"${add_attribute("aria-label", $i18n.core.close, 0)} class="svelte-1bbimtl">${validate_component(IconClose, "IconClose").$$render($$result, { size: "24px" }, {}, {})}</button>` : ``}</div>` : ``} <div class="container-wrapper svelte-1bbimtl">${slots["sub-title"] ? slots["sub-title"]({}) : ``} <div class="container svelte-1bbimtl"><div class="${["content svelte-1bbimtl", role === "alert" ? "alert" : ""].join(" ").trim()}"${add_attribute("id", modalContentId, 0)}>${slots.default ? slots.default({}) : ``}</div></div></div> ${showFooterAlert ? `<div class="footer toolbar svelte-1bbimtl">${slots.footer ? slots.footer({}) : ``}</div>` : ``}</div></div>` : ``}`;
-});
 const initToastsStore = () => {
   const { subscribe: subscribe2, update, set } = writable([]);
   return {
@@ -5498,623 +5107,561 @@ const Toasts = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     return `${validate_component(Toast, "Toast").$$render($$result, { msg }, {}, {})}`;
   })}</div>` : ``}`;
 });
-const toastsShow = (msg) => toastsStore.show(msg);
-const toastsError = ({
-  msg: { text: text2, ...rest },
-  err
-}) => {
-  if (nonNullish(err)) {
-    console.error(err);
-  }
-  return toastsStore.show({
-    text: `${text2}${nonNullish(err) ? ` / ${errorDetailToString(err)}` : ""}`,
-    ...rest,
-    level: "error"
-  });
-};
-const idlFactory = ({ IDL: IDL2 }) => {
-  const FixtureId = IDL2.Nat32;
-  const CalendarMonth = IDL2.Nat8;
-  const GameweekNumber = IDL2.Nat8;
-  const ClubId = IDL2.Nat16;
-  const PlayerEventType = IDL2.Variant({
-    "PenaltyMissed": IDL2.Null,
-    "Goal": IDL2.Null,
-    "GoalConceded": IDL2.Null,
-    "Appearance": IDL2.Null,
-    "PenaltySaved": IDL2.Null,
-    "RedCard": IDL2.Null,
-    "KeeperSave": IDL2.Null,
-    "CleanSheet": IDL2.Null,
-    "YellowCard": IDL2.Null,
-    "GoalAssisted": IDL2.Null,
-    "OwnGoal": IDL2.Null,
-    "HighestScoringPlayer": IDL2.Null
-  });
-  const PlayerEventData = IDL2.Record({
-    "fixtureId": FixtureId,
-    "clubId": ClubId,
-    "playerId": IDL2.Nat16,
-    "eventStartMinute": IDL2.Nat8,
-    "eventEndMinute": IDL2.Nat8,
-    "eventType": PlayerEventType
-  });
-  const SubmitFixtureDataDTO = IDL2.Record({
-    "fixtureId": FixtureId,
-    "month": CalendarMonth,
-    "gameweek": GameweekNumber,
-    "playerEventData": IDL2.Vec(PlayerEventData)
-  });
-  const Error2 = IDL2.Variant({
-    "MoreThan2PlayersFromClub": IDL2.Null,
-    "DecodeError": IDL2.Null,
-    "NotAllowed": IDL2.Null,
-    "DuplicatePlayerInTeam": IDL2.Null,
-    "InvalidBonuses": IDL2.Null,
-    "TooManyTransfers": IDL2.Null,
-    "NotFound": IDL2.Null,
-    "NumberPerPositionError": IDL2.Null,
-    "TeamOverspend": IDL2.Null,
-    "NotAuthorized": IDL2.Null,
-    "SelectedCaptainNotInTeam": IDL2.Null,
-    "InvalidData": IDL2.Null,
-    "SystemOnHold": IDL2.Null,
-    "AlreadyExists": IDL2.Null,
-    "CanisterCreateError": IDL2.Null,
-    "Not11Players": IDL2.Null
-  });
-  const Result_3 = IDL2.Variant({ "ok": IDL2.Nat, "err": Error2 });
-  const ShirtType = IDL2.Variant({ "Filled": IDL2.Null, "Striped": IDL2.Null });
-  const ClubDTO = IDL2.Record({
+const idlFactory = ({ IDL }) => {
+  const ClubId = IDL.Nat16;
+  const ShirtType = IDL.Variant({ "Filled": IDL.Null, "Striped": IDL.Null });
+  const ClubDTO = IDL.Record({
     "id": ClubId,
-    "secondaryColourHex": IDL2.Text,
-    "name": IDL2.Text,
-    "friendlyName": IDL2.Text,
-    "thirdColourHex": IDL2.Text,
-    "abbreviatedName": IDL2.Text,
+    "secondaryColourHex": IDL.Text,
+    "name": IDL.Text,
+    "friendlyName": IDL.Text,
+    "thirdColourHex": IDL.Text,
+    "abbreviatedName": IDL.Text,
     "shirtType": ShirtType,
-    "primaryColourHex": IDL2.Text
+    "primaryColourHex": IDL.Text
   });
-  const Result_20 = IDL2.Variant({ "ok": IDL2.Vec(ClubDTO), "err": Error2 });
-  const CountryId = IDL2.Nat16;
-  const CountryDTO = IDL2.Record({
+  const Error2 = IDL.Variant({
+    "MoreThan2PlayersFromClub": IDL.Null,
+    "DecodeError": IDL.Null,
+    "NotAllowed": IDL.Null,
+    "DuplicatePlayerInTeam": IDL.Null,
+    "InvalidBonuses": IDL.Null,
+    "TooManyTransfers": IDL.Null,
+    "NotFound": IDL.Null,
+    "NumberPerPositionError": IDL.Null,
+    "TeamOverspend": IDL.Null,
+    "NotAuthorized": IDL.Null,
+    "SelectedCaptainNotInTeam": IDL.Null,
+    "InvalidData": IDL.Null,
+    "SystemOnHold": IDL.Null,
+    "AlreadyExists": IDL.Null,
+    "CanisterCreateError": IDL.Null,
+    "Not11Players": IDL.Null
+  });
+  const Result_21 = IDL.Variant({ "ok": IDL.Vec(ClubDTO), "err": Error2 });
+  const CountryId = IDL.Nat16;
+  const CountryDTO = IDL.Record({
     "id": CountryId,
-    "code": IDL2.Text,
-    "name": IDL2.Text
+    "code": IDL.Text,
+    "name": IDL.Text
   });
-  const Result_19 = IDL2.Variant({ "ok": IDL2.Vec(CountryDTO), "err": Error2 });
-  const PlayerId = IDL2.Nat16;
-  const CanisterId = IDL2.Text;
-  const PickTeamDTO = IDL2.Record({
-    "playerIds": IDL2.Vec(PlayerId),
-    "username": IDL2.Text,
-    "goalGetterPlayerId": PlayerId,
+  const Result_20 = IDL.Variant({ "ok": IDL.Vec(CountryDTO), "err": Error2 });
+  const GameweekNumber = IDL.Nat8;
+  const CanisterId = IDL.Text;
+  const PickTeamDTO = IDL.Record({
+    "playerIds": IDL.Vec(ClubId),
+    "username": IDL.Text,
+    "goalGetterPlayerId": ClubId,
     "oneNationCountryId": CountryId,
     "hatTrickHeroGameweek": GameweekNumber,
-    "transfersAvailable": IDL2.Nat8,
+    "transfersAvailable": IDL.Nat8,
     "oneNationGameweek": GameweekNumber,
     "teamBoostGameweek": GameweekNumber,
     "captainFantasticGameweek": GameweekNumber,
-    "bankQuarterMillions": IDL2.Nat16,
-    "noEntryPlayerId": PlayerId,
-    "safeHandsPlayerId": PlayerId,
+    "bankQuarterMillions": IDL.Nat16,
+    "noEntryPlayerId": ClubId,
+    "safeHandsPlayerId": ClubId,
     "braceBonusGameweek": GameweekNumber,
     "passMasterGameweek": GameweekNumber,
     "teamBoostClubId": ClubId,
     "goalGetterGameweek": GameweekNumber,
-    "captainFantasticPlayerId": PlayerId,
+    "captainFantasticPlayerId": ClubId,
     "transferWindowGameweek": GameweekNumber,
     "noEntryGameweek": GameweekNumber,
     "prospectsGameweek": GameweekNumber,
     "safeHandsGameweek": GameweekNumber,
-    "principalId": IDL2.Text,
-    "passMasterPlayerId": PlayerId,
-    "captainId": PlayerId,
+    "principalId": IDL.Text,
+    "passMasterPlayerId": ClubId,
+    "captainId": ClubId,
     "canisterId": CanisterId,
-    "monthlyBonusesAvailable": IDL2.Nat8
+    "monthlyBonusesAvailable": IDL.Nat8
   });
-  const Result_18 = IDL2.Variant({ "ok": PickTeamDTO, "err": Error2 });
-  const DataHashDTO = IDL2.Record({ "hash": IDL2.Text, "category": IDL2.Text });
-  const Result_17 = IDL2.Variant({ "ok": IDL2.Vec(DataHashDTO), "err": Error2 });
-  const SeasonId = IDL2.Nat16;
-  const PrincipalId = IDL2.Text;
-  const GetFantasyTeamSnapshotDTO = IDL2.Record({
+  const Result_19 = IDL.Variant({ "ok": PickTeamDTO, "err": Error2 });
+  const DataHashDTO = IDL.Record({ "hash": IDL.Text, "category": IDL.Text });
+  const Result_18 = IDL.Variant({ "ok": IDL.Vec(DataHashDTO), "err": Error2 });
+  const SeasonId = IDL.Nat16;
+  const PrincipalId = IDL.Text;
+  const GetFantasyTeamSnapshotDTO = IDL.Record({
     "seasonId": SeasonId,
     "managerPrincipalId": PrincipalId,
     "gameweek": GameweekNumber
   });
-  const FantasyTeamSnapshotDTO = IDL2.Record({
-    "playerIds": IDL2.Vec(PlayerId),
+  const CalendarMonth = IDL.Nat8;
+  const FantasyTeamSnapshotDTO = IDL.Record({
+    "playerIds": IDL.Vec(ClubId),
     "month": CalendarMonth,
-    "teamValueQuarterMillions": IDL2.Nat16,
-    "username": IDL2.Text,
-    "goalGetterPlayerId": PlayerId,
+    "teamValueQuarterMillions": IDL.Nat16,
+    "username": IDL.Text,
+    "goalGetterPlayerId": ClubId,
     "oneNationCountryId": CountryId,
     "hatTrickHeroGameweek": GameweekNumber,
-    "transfersAvailable": IDL2.Nat8,
+    "transfersAvailable": IDL.Nat8,
     "oneNationGameweek": GameweekNumber,
     "teamBoostGameweek": GameweekNumber,
     "captainFantasticGameweek": GameweekNumber,
-    "bankQuarterMillions": IDL2.Nat16,
-    "noEntryPlayerId": PlayerId,
-    "monthlyPoints": IDL2.Int16,
-    "safeHandsPlayerId": PlayerId,
+    "bankQuarterMillions": IDL.Nat16,
+    "noEntryPlayerId": ClubId,
+    "monthlyPoints": IDL.Int16,
+    "safeHandsPlayerId": ClubId,
     "seasonId": SeasonId,
     "braceBonusGameweek": GameweekNumber,
     "favouriteClubId": ClubId,
     "passMasterGameweek": GameweekNumber,
     "teamBoostClubId": ClubId,
     "goalGetterGameweek": GameweekNumber,
-    "captainFantasticPlayerId": PlayerId,
+    "captainFantasticPlayerId": ClubId,
     "gameweek": GameweekNumber,
-    "seasonPoints": IDL2.Int16,
+    "seasonPoints": IDL.Int16,
     "transferWindowGameweek": GameweekNumber,
     "noEntryGameweek": GameweekNumber,
     "prospectsGameweek": GameweekNumber,
     "safeHandsGameweek": GameweekNumber,
-    "principalId": IDL2.Text,
-    "passMasterPlayerId": PlayerId,
-    "captainId": PlayerId,
-    "points": IDL2.Int16,
-    "monthlyBonusesAvailable": IDL2.Nat8
+    "principalId": IDL.Text,
+    "passMasterPlayerId": ClubId,
+    "captainId": ClubId,
+    "points": IDL.Int16,
+    "monthlyBonusesAvailable": IDL.Nat8
   });
-  const Result_16 = IDL2.Variant({
+  const Result_17 = IDL.Variant({
     "ok": FantasyTeamSnapshotDTO,
     "err": Error2
   });
-  const RequestFixturesDTO = IDL2.Record({ "seasonId": SeasonId });
-  const FixtureStatusType = IDL2.Variant({
-    "Unplayed": IDL2.Null,
-    "Finalised": IDL2.Null,
-    "Active": IDL2.Null,
-    "Complete": IDL2.Null
+  const RequestFixturesDTO = IDL.Record({ "seasonId": SeasonId });
+  const FixtureStatusType = IDL.Variant({
+    "Unplayed": IDL.Null,
+    "Finalised": IDL.Null,
+    "Active": IDL.Null,
+    "Complete": IDL.Null
   });
-  const FixtureDTO = IDL2.Record({
-    "id": IDL2.Nat32,
+  const FixtureId = IDL.Nat32;
+  const PlayerEventType = IDL.Variant({
+    "PenaltyMissed": IDL.Null,
+    "Goal": IDL.Null,
+    "GoalConceded": IDL.Null,
+    "Appearance": IDL.Null,
+    "PenaltySaved": IDL.Null,
+    "RedCard": IDL.Null,
+    "KeeperSave": IDL.Null,
+    "CleanSheet": IDL.Null,
+    "YellowCard": IDL.Null,
+    "GoalAssisted": IDL.Null,
+    "OwnGoal": IDL.Null,
+    "HighestScoringPlayer": IDL.Null
+  });
+  const PlayerEventData = IDL.Record({
+    "fixtureId": FixtureId,
+    "clubId": ClubId,
+    "playerId": IDL.Nat16,
+    "eventStartMinute": IDL.Nat8,
+    "eventEndMinute": IDL.Nat8,
+    "eventType": PlayerEventType
+  });
+  const FixtureDTO = IDL.Record({
+    "id": IDL.Nat32,
     "status": FixtureStatusType,
-    "highestScoringPlayerId": IDL2.Nat16,
+    "highestScoringPlayerId": IDL.Nat16,
     "seasonId": SeasonId,
     "awayClubId": ClubId,
-    "events": IDL2.Vec(PlayerEventData),
+    "events": IDL.Vec(PlayerEventData),
     "homeClubId": ClubId,
-    "kickOff": IDL2.Int,
-    "homeGoals": IDL2.Nat8,
+    "kickOff": IDL.Int,
+    "homeGoals": IDL.Nat8,
     "gameweek": GameweekNumber,
-    "awayGoals": IDL2.Nat8
+    "awayGoals": IDL.Nat8
   });
-  const Result_11 = IDL2.Variant({ "ok": IDL2.Vec(FixtureDTO), "err": Error2 });
-  const FootballLeagueId = IDL2.Nat16;
-  const ClubFilterDTO = IDL2.Record({
+  const Result_11 = IDL.Variant({ "ok": IDL.Vec(FixtureDTO), "err": Error2 });
+  const LeagueId = IDL.Nat16;
+  const ClubFilterDTO = IDL.Record({
     "clubId": ClubId,
-    "leagueId": FootballLeagueId
+    "leagueId": LeagueId
   });
-  const PlayerStatus = IDL2.Variant({
-    "OnLoan": IDL2.Null,
-    "Active": IDL2.Null,
-    "FreeAgent": IDL2.Null,
-    "Retired": IDL2.Null
+  const PlayerStatus = IDL.Variant({
+    "OnLoan": IDL.Null,
+    "Active": IDL.Null,
+    "FreeAgent": IDL.Null,
+    "Retired": IDL.Null
   });
-  const PlayerPosition = IDL2.Variant({
-    "Goalkeeper": IDL2.Null,
-    "Midfielder": IDL2.Null,
-    "Forward": IDL2.Null,
-    "Defender": IDL2.Null
+  const PlayerPosition = IDL.Variant({
+    "Goalkeeper": IDL.Null,
+    "Midfielder": IDL.Null,
+    "Forward": IDL.Null,
+    "Defender": IDL.Null
   });
-  const PlayerDTO = IDL2.Record({
-    "id": IDL2.Nat16,
+  const PlayerDTO = IDL.Record({
+    "id": IDL.Nat16,
     "status": PlayerStatus,
     "clubId": ClubId,
-    "valueQuarterMillions": IDL2.Nat16,
-    "dateOfBirth": IDL2.Int,
+    "valueQuarterMillions": IDL.Nat16,
+    "dateOfBirth": IDL.Int,
     "nationality": CountryId,
-    "shirtNumber": IDL2.Nat8,
-    "totalPoints": IDL2.Int16,
+    "shirtNumber": IDL.Nat8,
     "position": PlayerPosition,
-    "lastName": IDL2.Text,
-    "firstName": IDL2.Text
+    "lastName": IDL.Text,
+    "firstName": IDL.Text
   });
-  const Result_9 = IDL2.Variant({ "ok": IDL2.Vec(PlayerDTO), "err": Error2 });
-  const RequestManagerDTO = IDL2.Record({
+  const Result_9 = IDL.Variant({ "ok": IDL.Vec(PlayerDTO), "err": Error2 });
+  const RequestManagerDTO = IDL.Record({
     "month": CalendarMonth,
     "clubId": ClubId,
     "seasonId": SeasonId,
-    "managerId": IDL2.Text,
+    "managerId": IDL.Text,
     "gameweek": GameweekNumber
   });
-  const FantasyTeamSnapshot = IDL2.Record({
-    "playerIds": IDL2.Vec(PlayerId),
+  const PlayerId = IDL.Nat16;
+  const FantasyTeamSnapshot = IDL.Record({
+    "playerIds": IDL.Vec(PlayerId),
     "month": CalendarMonth,
-    "teamValueQuarterMillions": IDL2.Nat16,
-    "username": IDL2.Text,
+    "teamValueQuarterMillions": IDL.Nat16,
+    "username": IDL.Text,
     "goalGetterPlayerId": PlayerId,
     "oneNationCountryId": CountryId,
     "hatTrickHeroGameweek": GameweekNumber,
-    "transfersAvailable": IDL2.Nat8,
+    "transfersAvailable": IDL.Nat8,
     "oneNationGameweek": GameweekNumber,
     "teamBoostGameweek": GameweekNumber,
     "captainFantasticGameweek": GameweekNumber,
-    "bankQuarterMillions": IDL2.Nat16,
+    "bankQuarterMillions": IDL.Nat16,
     "noEntryPlayerId": PlayerId,
-    "monthlyPoints": IDL2.Int16,
+    "monthlyPoints": IDL.Int16,
     "safeHandsPlayerId": PlayerId,
     "seasonId": SeasonId,
     "braceBonusGameweek": GameweekNumber,
-    "favouriteClubId": IDL2.Opt(ClubId),
+    "favouriteClubId": IDL.Opt(ClubId),
     "passMasterGameweek": GameweekNumber,
     "teamBoostClubId": ClubId,
     "goalGetterGameweek": GameweekNumber,
     "captainFantasticPlayerId": PlayerId,
     "gameweek": GameweekNumber,
-    "seasonPoints": IDL2.Int16,
+    "seasonPoints": IDL.Int16,
     "transferWindowGameweek": GameweekNumber,
     "noEntryGameweek": GameweekNumber,
     "prospectsGameweek": GameweekNumber,
     "safeHandsGameweek": GameweekNumber,
-    "principalId": IDL2.Text,
+    "principalId": IDL.Text,
     "passMasterPlayerId": PlayerId,
     "captainId": PlayerId,
-    "points": IDL2.Int16,
-    "monthlyBonusesAvailable": IDL2.Nat8
+    "points": IDL.Int16,
+    "monthlyBonusesAvailable": IDL.Nat8
   });
-  const ManagerDTO = IDL2.Record({
-    "username": IDL2.Text,
-    "weeklyPosition": IDL2.Int,
-    "createDate": IDL2.Int,
-    "monthlyPoints": IDL2.Int16,
-    "weeklyPoints": IDL2.Int16,
-    "weeklyPositionText": IDL2.Text,
-    "gameweeks": IDL2.Vec(FantasyTeamSnapshot),
-    "favouriteClubId": IDL2.Opt(ClubId),
-    "monthlyPosition": IDL2.Int,
-    "seasonPosition": IDL2.Int,
-    "monthlyPositionText": IDL2.Text,
-    "profilePicture": IDL2.Opt(IDL2.Vec(IDL2.Nat8)),
-    "seasonPoints": IDL2.Int16,
-    "principalId": IDL2.Text,
-    "seasonPositionText": IDL2.Text
+  const ManagerDTO = IDL.Record({
+    "username": IDL.Text,
+    "weeklyPosition": IDL.Int,
+    "createDate": IDL.Int,
+    "monthlyPoints": IDL.Int16,
+    "weeklyPoints": IDL.Int16,
+    "weeklyPositionText": IDL.Text,
+    "gameweeks": IDL.Vec(FantasyTeamSnapshot),
+    "favouriteClubId": IDL.Opt(ClubId),
+    "monthlyPosition": IDL.Int,
+    "seasonPosition": IDL.Int,
+    "monthlyPositionText": IDL.Text,
+    "profilePicture": IDL.Opt(IDL.Vec(IDL.Nat8)),
+    "seasonPoints": IDL.Int16,
+    "principalId": IDL.Text,
+    "seasonPositionText": IDL.Text
   });
-  const Result_1 = IDL2.Variant({ "ok": ManagerDTO, "err": Error2 });
-  const GetMonthlyLeaderboardDTO = IDL2.Record({
+  const Result_1 = IDL.Variant({ "ok": ManagerDTO, "err": Error2 });
+  const Result_16 = IDL.Variant({ "ok": IDL.Vec(CanisterId), "err": Error2 });
+  const GetMonthlyLeaderboardDTO = IDL.Record({
     "month": CalendarMonth,
     "clubId": ClubId,
-    "offset": IDL2.Nat,
+    "offset": IDL.Nat,
     "seasonId": SeasonId,
-    "limit": IDL2.Nat,
-    "searchTerm": IDL2.Text
+    "limit": IDL.Nat,
+    "searchTerm": IDL.Text
   });
-  const LeaderboardEntry = IDL2.Record({
-    "username": IDL2.Text,
-    "positionText": IDL2.Text,
-    "position": IDL2.Nat,
-    "principalId": IDL2.Text,
-    "points": IDL2.Int16
+  const LeaderboardEntry = IDL.Record({
+    "username": IDL.Text,
+    "positionText": IDL.Text,
+    "position": IDL.Nat,
+    "principalId": IDL.Text,
+    "points": IDL.Int16
   });
-  const MonthlyLeaderboardDTO = IDL2.Record({
-    "month": IDL2.Nat8,
+  const MonthlyLeaderboardDTO = IDL.Record({
+    "month": IDL.Nat8,
     "clubId": ClubId,
-    "totalEntries": IDL2.Nat,
+    "totalEntries": IDL.Nat,
     "seasonId": SeasonId,
-    "entries": IDL2.Vec(LeaderboardEntry)
+    "entries": IDL.Vec(LeaderboardEntry)
   });
-  const Result_15 = IDL2.Variant({
+  const Result_15 = IDL.Variant({
     "ok": MonthlyLeaderboardDTO,
     "err": Error2
   });
-  const GetPlayerDetailsDTO = IDL2.Record({
-    "playerId": PlayerId,
+  const GetPlayerDetailsDTO = IDL.Record({
+    "playerId": ClubId,
     "seasonId": SeasonId
   });
-  const InjuryHistory = IDL2.Record({
-    "description": IDL2.Text,
-    "injuryStartDate": IDL2.Int,
-    "expectedEndDate": IDL2.Int
+  const InjuryHistory = IDL.Record({
+    "description": IDL.Text,
+    "injuryStartDate": IDL.Int,
+    "expectedEndDate": IDL.Int
   });
-  const PlayerGameweekDTO = IDL2.Record({
+  const PlayerGameweekDTO = IDL.Record({
     "fixtureId": FixtureId,
-    "events": IDL2.Vec(PlayerEventData),
-    "number": IDL2.Nat8,
-    "points": IDL2.Int16
+    "events": IDL.Vec(PlayerEventData),
+    "number": IDL.Nat8,
+    "points": IDL.Int16
   });
-  const ValueHistory = IDL2.Record({
-    "oldValue": IDL2.Nat16,
-    "newValue": IDL2.Nat16,
-    "seasonId": IDL2.Nat16,
-    "gameweek": IDL2.Nat8
+  const ValueHistory = IDL.Record({
+    "oldValue": IDL.Nat16,
+    "changedOn": IDL.Int,
+    "newValue": IDL.Nat16
   });
-  const PlayerDetailDTO = IDL2.Record({
-    "id": PlayerId,
+  const PlayerDetailDTO = IDL.Record({
+    "id": ClubId,
     "status": PlayerStatus,
     "clubId": ClubId,
     "parentClubId": ClubId,
-    "valueQuarterMillions": IDL2.Nat16,
-    "dateOfBirth": IDL2.Int,
-    "injuryHistory": IDL2.Vec(InjuryHistory),
+    "valueQuarterMillions": IDL.Nat16,
+    "dateOfBirth": IDL.Int,
+    "injuryHistory": IDL.Vec(InjuryHistory),
     "seasonId": SeasonId,
-    "gameweeks": IDL2.Vec(PlayerGameweekDTO),
+    "gameweeks": IDL.Vec(PlayerGameweekDTO),
     "nationality": CountryId,
-    "retirementDate": IDL2.Int,
-    "valueHistory": IDL2.Vec(ValueHistory),
-    "latestInjuryEndDate": IDL2.Int,
-    "shirtNumber": IDL2.Nat8,
+    "retirementDate": IDL.Int,
+    "valueHistory": IDL.Vec(ValueHistory),
+    "latestInjuryEndDate": IDL.Int,
+    "shirtNumber": IDL.Nat8,
     "position": PlayerPosition,
-    "lastName": IDL2.Text,
-    "firstName": IDL2.Text
+    "lastName": IDL.Text,
+    "firstName": IDL.Text
   });
-  const Result_14 = IDL2.Variant({ "ok": PlayerDetailDTO, "err": Error2 });
-  const GameweekFiltersDTO = IDL2.Record({
+  const Result_14 = IDL.Variant({ "ok": PlayerDetailDTO, "err": Error2 });
+  const GameweekFiltersDTO = IDL.Record({
     "seasonId": SeasonId,
     "gameweek": GameweekNumber
   });
-  const PlayerPointsDTO = IDL2.Record({
-    "id": IDL2.Nat16,
+  const PlayerPointsDTO = IDL.Record({
+    "id": IDL.Nat16,
     "clubId": ClubId,
-    "events": IDL2.Vec(PlayerEventData),
+    "events": IDL.Vec(PlayerEventData),
     "position": PlayerPosition,
     "gameweek": GameweekNumber,
-    "points": IDL2.Int16
+    "points": IDL.Int16
   });
-  const Result_13 = IDL2.Variant({
-    "ok": IDL2.Vec(PlayerPointsDTO),
+  const Result_13 = IDL.Variant({
+    "ok": IDL.Vec(PlayerPointsDTO),
     "err": Error2
   });
-  const PlayerScoreDTO = IDL2.Record({
-    "id": IDL2.Nat16,
+  const PlayerScoreDTO = IDL.Record({
+    "id": IDL.Nat16,
     "clubId": ClubId,
-    "assists": IDL2.Int16,
-    "dateOfBirth": IDL2.Int,
+    "assists": IDL.Int16,
+    "dateOfBirth": IDL.Int,
     "nationality": CountryId,
-    "goalsScored": IDL2.Int16,
-    "saves": IDL2.Int16,
-    "goalsConceded": IDL2.Int16,
-    "events": IDL2.Vec(PlayerEventData),
+    "goalsScored": IDL.Int16,
+    "saves": IDL.Int16,
+    "goalsConceded": IDL.Int16,
+    "events": IDL.Vec(PlayerEventData),
     "position": PlayerPosition,
-    "points": IDL2.Int16
+    "points": IDL.Int16
   });
-  const Result_12 = IDL2.Variant({
-    "ok": IDL2.Vec(IDL2.Tuple(IDL2.Nat16, PlayerScoreDTO)),
+  const Result_12 = IDL.Variant({
+    "ok": IDL.Vec(IDL.Tuple(IDL.Nat16, PlayerScoreDTO)),
     "err": Error2
   });
-  const GetSnapshotPlayers = IDL2.Record({
+  const GetSnapshotPlayers = IDL.Record({
     "seasonId": SeasonId,
     "gameweek": GameweekNumber,
-    "leagueId": FootballLeagueId
+    "leagueId": LeagueId
   });
-  const ProfileDTO = IDL2.Record({
-    "username": IDL2.Text,
-    "termsAccepted": IDL2.Bool,
-    "createDate": IDL2.Int,
-    "favouriteClubId": IDL2.Opt(ClubId),
-    "profilePicture": IDL2.Opt(IDL2.Vec(IDL2.Nat8)),
-    "profilePictureType": IDL2.Text,
-    "principalId": IDL2.Text
+  const ProfileDTO = IDL.Record({
+    "username": IDL.Text,
+    "termsAccepted": IDL.Bool,
+    "createDate": IDL.Int,
+    "favouriteClubId": IDL.Opt(ClubId),
+    "profilePicture": IDL.Opt(IDL.Vec(IDL.Nat8)),
+    "profilePictureType": IDL.Text,
+    "principalId": IDL.Text
   });
-  const Result_10 = IDL2.Variant({ "ok": ProfileDTO, "err": Error2 });
-  const RewardPool = IDL2.Record({
-    "monthlyLeaderboardPool": IDL2.Nat64,
-    "allTimeSeasonHighScorePool": IDL2.Nat64,
-    "mostValuableTeamPool": IDL2.Nat64,
-    "highestScoringMatchPlayerPool": IDL2.Nat64,
+  const Result_10 = IDL.Variant({ "ok": ProfileDTO, "err": Error2 });
+  const RewardPool = IDL.Record({
+    "monthlyLeaderboardPool": IDL.Nat64,
+    "allTimeSeasonHighScorePool": IDL.Nat64,
+    "mostValuableTeamPool": IDL.Nat64,
+    "highestScoringMatchPlayerPool": IDL.Nat64,
     "seasonId": SeasonId,
-    "seasonLeaderboardPool": IDL2.Nat64,
-    "allTimeWeeklyHighScorePool": IDL2.Nat64,
-    "allTimeMonthlyHighScorePool": IDL2.Nat64,
-    "weeklyLeaderboardPool": IDL2.Nat64
+    "seasonLeaderboardPool": IDL.Nat64,
+    "allTimeWeeklyHighScorePool": IDL.Nat64,
+    "allTimeMonthlyHighScorePool": IDL.Nat64,
+    "weeklyLeaderboardPool": IDL.Nat64
   });
-  const GetRewardPoolDTO = IDL2.Record({
+  const GetRewardPoolDTO = IDL.Record({
     "seasonId": SeasonId,
     "rewardPool": RewardPool
   });
-  const Result_8 = IDL2.Variant({ "ok": GetRewardPoolDTO, "err": Error2 });
-  const GetSeasonLeaderboardDTO = IDL2.Record({
-    "offset": IDL2.Nat,
+  const Result_8 = IDL.Variant({ "ok": GetRewardPoolDTO, "err": Error2 });
+  const GetSeasonLeaderboardDTO = IDL.Record({
+    "offset": IDL.Nat,
     "seasonId": SeasonId,
-    "limit": IDL2.Nat,
-    "searchTerm": IDL2.Text
+    "limit": IDL.Nat,
+    "searchTerm": IDL.Text
   });
-  const SeasonLeaderboardDTO = IDL2.Record({
-    "totalEntries": IDL2.Nat,
+  const SeasonLeaderboardDTO = IDL.Record({
+    "totalEntries": IDL.Nat,
     "seasonId": SeasonId,
-    "entries": IDL2.Vec(LeaderboardEntry)
+    "entries": IDL.Vec(LeaderboardEntry)
   });
-  const Result_7 = IDL2.Variant({ "ok": SeasonLeaderboardDTO, "err": Error2 });
-  const SeasonDTO = IDL2.Record({
+  const Result_7 = IDL.Variant({ "ok": SeasonLeaderboardDTO, "err": Error2 });
+  const SeasonDTO = IDL.Record({
     "id": SeasonId,
-    "name": IDL2.Text,
-    "year": IDL2.Nat16
+    "name": IDL.Text,
+    "year": IDL.Nat16
   });
-  const Result_6 = IDL2.Variant({ "ok": IDL2.Vec(SeasonDTO), "err": Error2 });
-  const SystemStateDTO = IDL2.Record({
+  const Result_6 = IDL.Variant({ "ok": IDL.Vec(SeasonDTO), "err": Error2 });
+  const SystemStateDTO = IDL.Record({
     "pickTeamSeasonId": SeasonId,
     "calculationGameweek": GameweekNumber,
-    "transferWindowActive": IDL2.Bool,
+    "transferWindowActive": IDL.Bool,
     "pickTeamGameweek": GameweekNumber,
-    "version": IDL2.Text,
+    "version": IDL.Text,
     "calculationMonth": CalendarMonth,
     "calculationSeasonId": SeasonId,
-    "onHold": IDL2.Bool,
-    "seasonActive": IDL2.Bool
+    "onHold": IDL.Bool,
+    "seasonActive": IDL.Bool
   });
-  const Result_5 = IDL2.Variant({ "ok": SystemStateDTO, "err": Error2 });
-  const TopupDTO = IDL2.Record({
-    "topupAmount": IDL2.Nat,
-    "canisterId": IDL2.Text,
-    "toppedUpOn": IDL2.Int
+  const Result_5 = IDL.Variant({ "ok": SystemStateDTO, "err": Error2 });
+  const TopupDTO = IDL.Record({
+    "topupAmount": IDL.Nat,
+    "canisterId": IDL.Text,
+    "toppedUpOn": IDL.Int
   });
-  const GetTopupsDTO = IDL2.Record({
-    "totalEntries": IDL2.Nat,
-    "offset": IDL2.Nat,
-    "limit": IDL2.Nat,
-    "entries": IDL2.Vec(TopupDTO)
+  const GetTopupsDTO = IDL.Record({
+    "totalEntries": IDL.Nat,
+    "offset": IDL.Nat,
+    "limit": IDL.Nat,
+    "entries": IDL.Vec(TopupDTO)
   });
-  const Result_4 = IDL2.Variant({ "ok": GetTopupsDTO, "err": Error2 });
-  const AccountIdentifier = IDL2.Vec(IDL2.Nat8);
-  const GetWeeklyLeaderboardDTO = IDL2.Record({
-    "offset": IDL2.Nat,
+  const Result_4 = IDL.Variant({ "ok": GetTopupsDTO, "err": Error2 });
+  const Result_3 = IDL.Variant({ "ok": IDL.Nat, "err": Error2 });
+  const GetWeeklyLeaderboardDTO = IDL.Record({
+    "offset": IDL.Nat,
     "seasonId": SeasonId,
-    "limit": IDL2.Nat,
-    "searchTerm": IDL2.Text,
+    "limit": IDL.Nat,
+    "searchTerm": IDL.Text,
     "gameweek": GameweekNumber
   });
-  const WeeklyLeaderboardDTO = IDL2.Record({
-    "totalEntries": IDL2.Nat,
+  const WeeklyLeaderboardDTO = IDL.Record({
+    "totalEntries": IDL.Nat,
     "seasonId": SeasonId,
-    "entries": IDL2.Vec(LeaderboardEntry),
+    "entries": IDL.Vec(LeaderboardEntry),
     "gameweek": GameweekNumber
   });
-  const Result_2 = IDL2.Variant({ "ok": WeeklyLeaderboardDTO, "err": Error2 });
-  const UsernameFilterDTO = IDL2.Record({ "username": IDL2.Text });
-  const Result = IDL2.Variant({ "ok": IDL2.Null, "err": Error2 });
-  const UpdateTeamSelectionDTO = IDL2.Record({
-    "playerIds": IDL2.Vec(PlayerId),
-    "username": IDL2.Text,
-    "goalGetterPlayerId": PlayerId,
+  const Result_2 = IDL.Variant({ "ok": WeeklyLeaderboardDTO, "err": Error2 });
+  const UsernameFilterDTO = IDL.Record({ "username": IDL.Text });
+  const UpdateTeamSelectionDTO = IDL.Record({
+    "playerIds": IDL.Vec(ClubId),
+    "username": IDL.Text,
+    "goalGetterPlayerId": ClubId,
     "oneNationCountryId": CountryId,
     "hatTrickHeroGameweek": GameweekNumber,
     "oneNationGameweek": GameweekNumber,
     "teamBoostGameweek": GameweekNumber,
     "captainFantasticGameweek": GameweekNumber,
-    "noEntryPlayerId": PlayerId,
-    "safeHandsPlayerId": PlayerId,
+    "noEntryPlayerId": ClubId,
+    "safeHandsPlayerId": ClubId,
     "braceBonusGameweek": GameweekNumber,
     "passMasterGameweek": GameweekNumber,
     "teamBoostClubId": ClubId,
     "goalGetterGameweek": GameweekNumber,
-    "captainFantasticPlayerId": PlayerId,
+    "captainFantasticPlayerId": ClubId,
     "transferWindowGameweek": GameweekNumber,
     "noEntryGameweek": GameweekNumber,
     "prospectsGameweek": GameweekNumber,
     "safeHandsGameweek": GameweekNumber,
-    "passMasterPlayerId": PlayerId,
-    "captainId": PlayerId
+    "passMasterPlayerId": ClubId,
+    "captainId": ClubId
   });
-  const UpdateFavouriteClubDTO = IDL2.Record({ "favouriteClubId": ClubId });
-  const UpdateProfilePictureDTO = IDL2.Record({
-    "profilePicture": IDL2.Vec(IDL2.Nat8),
-    "extension": IDL2.Text
+  const Result = IDL.Variant({ "ok": IDL.Null, "err": Error2 });
+  const UpdateFavouriteClubDTO = IDL.Record({ "favouriteClubId": ClubId });
+  const UpdateProfilePictureDTO = IDL.Record({
+    "profilePicture": IDL.Vec(IDL.Nat8),
+    "extension": IDL.Text
   });
-  const UpdateRewardPoolsDTO = IDL2.Record({
-    "monthlyLeaderboardPool": IDL2.Nat64,
-    "allTimeSeasonHighScorePool": IDL2.Nat64,
-    "mostValuableTeamPool": IDL2.Nat64,
-    "highestScoringMatchPlayerPool": IDL2.Nat64,
-    "seasonId": SeasonId,
-    "seasonLeaderboardPool": IDL2.Nat64,
-    "allTimeWeeklyHighScorePool": IDL2.Nat64,
-    "allTimeMonthlyHighScorePool": IDL2.Nat64,
-    "weeklyLeaderboardPool": IDL2.Nat64
-  });
-  const UpdateSystemStatusDTO = IDL2.Record({
-    "pickTeamSeasonId": SeasonId,
-    "calculationGameweek": GameweekNumber,
-    "transferWindowActive": IDL2.Bool,
-    "pickTeamMonth": CalendarMonth,
-    "pickTeamGameweek": GameweekNumber,
-    "version": IDL2.Text,
-    "calculationMonth": CalendarMonth,
-    "calculationSeasonId": SeasonId,
-    "onHold": IDL2.Bool,
-    "seasonActive": IDL2.Bool
-  });
-  const UpdateUsernameDTO = IDL2.Record({ "username": IDL2.Text });
-  return IDL2.Service({
-    "executeSubmitFixtureData": IDL2.Func([SubmitFixtureDataDTO], [], []),
-    "getBackendCanisterBalance": IDL2.Func([], [Result_3], []),
-    "getCanisterCyclesAvailable": IDL2.Func([], [IDL2.Nat], []),
-    "getCanisterCyclesBalance": IDL2.Func([], [Result_3], []),
-    "getClubs": IDL2.Func([], [Result_20], ["composite_query"]),
-    "getCountries": IDL2.Func([], [Result_19], ["query"]),
-    "getCurrentTeam": IDL2.Func([], [Result_18], []),
-    "getDataHashes": IDL2.Func([], [Result_17], ["composite_query"]),
-    "getFantasyTeamSnapshot": IDL2.Func(
+  const UpdateUsernameDTO = IDL.Record({ "username": IDL.Text });
+  return IDL.Service({
+    "getClubs": IDL.Func([], [Result_21], ["composite_query"]),
+    "getCountries": IDL.Func([], [Result_20], ["query"]),
+    "getCurrentTeam": IDL.Func([], [Result_19], []),
+    "getDataHashes": IDL.Func([], [Result_18], ["composite_query"]),
+    "getFantasyTeamSnapshot": IDL.Func(
       [GetFantasyTeamSnapshotDTO],
-      [Result_16],
+      [Result_17],
       []
     ),
-    "getFixtures": IDL2.Func(
+    "getFixtures": IDL.Func(
       [RequestFixturesDTO],
       [Result_11],
       ["composite_query"]
     ),
-    "getLoanedPlayers": IDL2.Func(
+    "getLoanedPlayers": IDL.Func(
       [ClubFilterDTO],
       [Result_9],
       ["composite_query"]
     ),
-    "getManager": IDL2.Func([RequestManagerDTO], [Result_1], []),
-    "getManagerCanisterIds": IDL2.Func([], [IDL2.Vec(CanisterId)], []),
-    "getMonthlyLeaderboard": IDL2.Func(
+    "getManager": IDL.Func([RequestManagerDTO], [Result_1], []),
+    "getManagerCanisterIds": IDL.Func([], [Result_16], []),
+    "getMonthlyLeaderboard": IDL.Func(
       [GetMonthlyLeaderboardDTO],
       [Result_15],
       []
     ),
-    "getPlayerDetails": IDL2.Func(
+    "getPlayerDetails": IDL.Func(
       [GetPlayerDetailsDTO],
       [Result_14],
       ["composite_query"]
     ),
-    "getPlayerDetailsForGameweek": IDL2.Func(
+    "getPlayerDetailsForGameweek": IDL.Func(
       [GameweekFiltersDTO],
       [Result_13],
       ["composite_query"]
     ),
-    "getPlayers": IDL2.Func([], [Result_9], ["composite_query"]),
-    "getPlayersMap": IDL2.Func(
+    "getPlayers": IDL.Func([], [Result_9], ["composite_query"]),
+    "getPlayersMap": IDL.Func(
       [GameweekFiltersDTO],
       [Result_12],
       ["composite_query"]
     ),
-    "getPlayersSnapshot": IDL2.Func(
+    "getPlayersSnapshot": IDL.Func(
       [GetSnapshotPlayers],
-      [IDL2.Vec(PlayerDTO)],
+      [IDL.Vec(PlayerDTO)],
       ["composite_query"]
     ),
-    "getPostponedFixtures": IDL2.Func([], [Result_11], ["composite_query"]),
-    "getProfile": IDL2.Func([], [Result_10], []),
-    "getRetiredPlayers": IDL2.Func(
+    "getPostponedFixtures": IDL.Func([], [Result_11], ["composite_query"]),
+    "getProfile": IDL.Func([], [Result_10], []),
+    "getRetiredPlayers": IDL.Func(
       [ClubFilterDTO],
       [Result_9],
       ["composite_query"]
     ),
-    "getRewardPool": IDL2.Func([GetRewardPoolDTO], [Result_8], []),
-    "getSeasonLeaderboard": IDL2.Func(
+    "getRewardPool": IDL.Func([GetRewardPoolDTO], [Result_8], []),
+    "getSeasonLeaderboard": IDL.Func(
       [GetSeasonLeaderboardDTO],
       [Result_7],
       []
     ),
-    "getSeasons": IDL2.Func([], [Result_6], ["composite_query"]),
-    "getSystemState": IDL2.Func([], [Result_5], ["query"]),
-    "getTopups": IDL2.Func([GetTopupsDTO], [Result_4], []),
-    "getTotalManagers": IDL2.Func([], [Result_3], ["query"]),
-    "getTreasuryAccountPublic": IDL2.Func([], [AccountIdentifier], []),
-    "getWeeklyLeaderboard": IDL2.Func(
+    "getSeasons": IDL.Func([], [Result_6], ["composite_query"]),
+    "getSystemState": IDL.Func([], [Result_5], ["query"]),
+    "getTopups": IDL.Func([GetTopupsDTO], [Result_4], []),
+    "getTotalManagers": IDL.Func([], [Result_3], ["query"]),
+    "getWeeklyLeaderboard": IDL.Func(
       [GetWeeklyLeaderboardDTO],
       [Result_2],
       []
     ),
-    "isUsernameValid": IDL2.Func([UsernameFilterDTO], [IDL2.Bool], ["query"]),
-    "recalculatePoints": IDL2.Func(
-      [FootballLeagueId, SeasonId, GameweekNumber, CalendarMonth],
-      [Result],
-      []
-    ),
-    "saveFantasyTeam": IDL2.Func([UpdateTeamSelectionDTO], [Result], []),
-    "searchUsername": IDL2.Func([UsernameFilterDTO], [Result_1], []),
-    "setGameweekTimers": IDL2.Func([SeasonId, GameweekNumber], [], []),
-    "snapshotManagers": IDL2.Func(
-      [SeasonId, GameweekNumber, CalendarMonth],
-      [Result],
-      []
-    ),
-    "updateFavouriteClub": IDL2.Func([UpdateFavouriteClubDTO], [Result], []),
-    "updateProfilePicture": IDL2.Func([UpdateProfilePictureDTO], [Result], []),
-    "updateRewardPools": IDL2.Func([UpdateRewardPoolsDTO], [Result], []),
-    "updateSystemStatus": IDL2.Func([UpdateSystemStatusDTO], [Result], []),
-    "updateUsername": IDL2.Func([UpdateUsernameDTO], [Result], []),
-    "viewPayouts": IDL2.Func([GameweekNumber], [Result], [])
+    "isUsernameValid": IDL.Func([UsernameFilterDTO], [IDL.Bool], ["query"]),
+    "saveFantasyTeam": IDL.Func([UpdateTeamSelectionDTO], [Result], []),
+    "searchUsername": IDL.Func([UsernameFilterDTO], [Result_1], []),
+    "setGameweekTimers": IDL.Func([SeasonId, GameweekNumber], [], []),
+    "updateDataHashes": IDL.Func([IDL.Text], [Result], []),
+    "updateFavouriteClub": IDL.Func([UpdateFavouriteClubDTO], [Result], []),
+    "updateProfilePicture": IDL.Func([UpdateProfilePictureDTO], [Result], []),
+    "updateUsername": IDL.Func([UpdateUsernameDTO], [Result], [])
   });
 };
-var define_process_env_default$h = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
-const canisterId = define_process_env_default$h.CANISTER_ID_OPENWSL_BACKEND;
+var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+const canisterId = define_process_env_default$c.CANISTER_ID_OPENWSL_BACKEND;
 const createActor = (canisterId2, options2 = {}) => {
   const agent = options2.agent || new HttpAgent({ ...options2.agentOptions });
   if (options2.agent && options2.agentOptions) {
@@ -6129,14 +5676,14 @@ const createActor = (canisterId2, options2 = {}) => {
   });
 };
 canisterId ? createActor(canisterId) : void 0;
-var define_process_env_default$g = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+var define_process_env_default$b = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
 function createManagerStore() {
   const { subscribe: subscribe2, set } = writable(null);
   systemStore.subscribe((value) => {
   });
   let actor = ActorFactory.createActor(
     idlFactory,
-    define_process_env_default$g.OPENWSL_BACKEND_CANISTER_ID
+    define_process_env_default$b.OPENWSL_BACKEND_CANISTER_ID
   );
   let newManager = {
     playerIds: [],
@@ -6225,7 +5772,7 @@ function createManagerStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default$g.OPENWSL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$b.OPENWSL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.getCurrentTeam();
       if (isError(result)) {
@@ -6252,7 +5799,7 @@ function createManagerStore() {
       }
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default$g.OPENWSL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$b.OPENWSL_BACKEND_CANISTER_ID ?? ""
       );
       let dto = {
         playerIds: userFantasyTeam.playerIds,
@@ -6382,7 +5929,7 @@ const authSignedInStore = derived(
   authStore,
   ({ identity }) => identity !== null && identity !== void 0
 );
-var define_process_env_default$f = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+var define_process_env_default$a = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
 function createUserStore() {
   const { subscribe: subscribe2, set } = writable(null);
   async function sync() {
@@ -6403,7 +5950,7 @@ function createUserStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default$f.OPENWSL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$a.OPENWSL_BACKEND_CANISTER_ID ?? ""
       );
       let dto = {
         username
@@ -6424,7 +5971,7 @@ function createUserStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default$f.OPENWSL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$a.OPENWSL_BACKEND_CANISTER_ID ?? ""
       );
       let dto = {
         favouriteClubId: favouriteTeamId
@@ -6456,7 +6003,7 @@ function createUserStore() {
         try {
           const identityActor = await ActorFactory.createIdentityActor(
             authStore,
-            define_process_env_default$f.OPENWSL_BACKEND_CANISTER_ID ?? ""
+            define_process_env_default$a.OPENWSL_BACKEND_CANISTER_ID ?? ""
           );
           let dto = {
             profilePicture: uint8Array,
@@ -6486,7 +6033,7 @@ function createUserStore() {
   async function isUsernameAvailable(username) {
     const identityActor = await ActorFactory.createIdentityActor(
       authStore,
-      define_process_env_default$f.OPENWSL_BACKEND_CANISTER_ID
+      define_process_env_default$a.OPENWSL_BACKEND_CANISTER_ID
     );
     let dto = {
       username
@@ -6496,7 +6043,7 @@ function createUserStore() {
   async function cacheProfile() {
     const identityActor = await ActorFactory.createIdentityActor(
       authStore,
-      define_process_env_default$f.OPENWSL_BACKEND_CANISTER_ID
+      define_process_env_default$a.OPENWSL_BACKEND_CANISTER_ID
     );
     let getProfileResponse = await identityActor.getProfile();
     let error = isError(getProfileResponse);
@@ -6520,11 +6067,11 @@ function createUserStore() {
       const agent = await createAgent({
         identity,
         host: "https://identity.ic0.app",
-        fetchRootKey: define_process_env_default$f.DFX_NETWORK === "local"
+        fetchRootKey: define_process_env_default$a.DFX_NETWORK === "local"
       });
       const { transfer } = IcrcLedgerCanister.create({
         agent,
-        canisterId: define_process_env_default$f.DFX_NETWORK === "ic" ? Principal.fromText("ddsp7-7iaaa-aaaaq-aacqq-cai") : Principal.fromText("avqkn-guaaa-aaaaa-qaaea-cai")
+        canisterId: define_process_env_default$a.DFX_NETWORK === "ic" ? Principal.fromText("ddsp7-7iaaa-aaaaq-aacqq-cai") : Principal.fromText("avqkn-guaaa-aaaaa-qaaea-cai")
       });
       if (principalId) {
         try {
@@ -6560,7 +6107,7 @@ function createUserStore() {
     const agent = await createAgent({
       identity,
       host: "https://identity.ic0.app",
-      fetchRootKey: define_process_env_default$f.DFX_NETWORK === "local"
+      fetchRootKey: define_process_env_default$a.DFX_NETWORK === "local"
     });
     const { balance } = IcrcLedgerCanister.create({
       agent,
@@ -6657,13 +6204,13 @@ function createSeasonStore() {
   };
 }
 const seasonStore = createSeasonStore();
-var define_process_env_default$e = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+var define_process_env_default$9 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
 class PlayerService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory,
-      define_process_env_default$e.OPENWSL_BACKEND_CANISTER_ID
+      define_process_env_default$9.OPENWSL_BACKEND_CANISTER_ID
     );
   }
   async getPlayers() {
@@ -6703,13 +6250,13 @@ function createPlayerStore() {
   };
 }
 const playerStore = createPlayerStore();
-var define_process_env_default$d = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
 class PlayerEventsService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory,
-      define_process_env_default$d.OPENWSL_BACKEND_CANISTER_ID
+      define_process_env_default$8.OPENWSL_BACKEND_CANISTER_ID
     );
   }
   async getPlayerDetailsForGameweek() {
@@ -6849,13 +6396,13 @@ function createWeeklyLeaderboardStore() {
   };
 }
 const weeklyLeaderboardStore = createWeeklyLeaderboardStore();
-var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+var define_process_env_default$7 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
 class DataHashService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory,
-      define_process_env_default$c.OPENWSL_BACKEND_CANISTER_ID
+      define_process_env_default$7.OPENWSL_BACKEND_CANISTER_ID
     );
   }
   async getDataHashes() {
@@ -6865,13 +6412,13 @@ class DataHashService {
     return result.ok;
   }
 }
-var define_process_env_default$b = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+var define_process_env_default$6 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
 class CountryService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory,
-      define_process_env_default$b.OPENWSL_BACKEND_CANISTER_ID
+      define_process_env_default$6.OPENWSL_BACKEND_CANISTER_ID
     );
   }
   async getCountries() {
@@ -6881,13 +6428,13 @@ class CountryService {
     return result.ok;
   }
 }
-var define_process_env_default$a = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+var define_process_env_default$5 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
 class SystemService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory,
-      define_process_env_default$a.OPENWSL_BACKEND_CANISTER_ID
+      define_process_env_default$5.OPENWSL_BACKEND_CANISTER_ID
     );
   }
   async getSystemState() {
@@ -6897,13 +6444,13 @@ class SystemService {
     return result.ok;
   }
 }
-var define_process_env_default$9 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+var define_process_env_default$4 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
 class SeasonService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory,
-      define_process_env_default$9.OPENWSL_BACKEND_CANISTER_ID
+      define_process_env_default$4.OPENWSL_BACKEND_CANISTER_ID
     );
   }
   async getSeasons() {
@@ -6913,13 +6460,13 @@ class SeasonService {
     return result.ok;
   }
 }
-var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+var define_process_env_default$3 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
 class ClubService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory,
-      define_process_env_default$8.OPENWSL_BACKEND_CANISTER_ID
+      define_process_env_default$3.OPENWSL_BACKEND_CANISTER_ID
     );
   }
   async getClubs() {
@@ -6929,13 +6476,13 @@ class ClubService {
     return result.ok;
   }
 }
-var define_process_env_default$7 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+var define_process_env_default$2 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
 class WeeklyLeaderboardService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory$1,
-      define_process_env_default$7.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default$2.OPENFPL_BACKEND_CANISTER_ID
     );
   }
   async getWeeklyLeaderboard(offset, seasonId, limit, gameweek) {
@@ -7101,7 +6648,7 @@ class StoreManager {
     }
   }
 }
-const storeManager = new StoreManager();
+new StoreManager();
 const Header = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let currentClass;
   let currentBorder;
@@ -7130,8 +6677,8 @@ const Header = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_page();
   $$unsubscribe_authSignedInStore();
   $$unsubscribe_userGetProfilePicture();
-  return `<header><nav class="text-white"><div class="px-4 h-16 flex justify-between items-center w-full"><a href="/" class="hover:text-gray-400 flex items-center">${validate_component(OpenFPLIcon, "OpenFPLIcon").$$render($$result, { className: "h-8 w-auto" }, {}, {})}<b class="ml-2" data-svelte-h="svelte-6ko9z9">OpenFPL</b></a> <button class="menu-toggle md:hidden focus:outline-none" data-svelte-h="svelte-ctwvk"><svg width="24" height="18" viewBox="0 0 24 18" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><rect width="24" height="2" rx="1" fill="currentColor"></rect><rect y="8" width="24" height="2" rx="1" fill="currentColor"></rect><rect y="16" width="24" height="2" rx="1" fill="currentColor"></rect></svg></button> ${$authSignedInStore ? `<ul class="hidden md:flex h-16"><li class="mx-2 flex items-center h-16"><a href="/" class="${"flex items-center h-full nav-underline hover:text-gray-400 $" + escape(currentClass("/"), true)}"><span class="flex items-center h-full px-4" data-svelte-h="svelte-fx32ra">Home</span></a></li> <li class="mx-2 flex items-center h-16"><a href="/pick-team" class="${"flex items-center h-full nav-underline hover:text-gray-400 $" + escape(currentClass("/pick-team"), true)}"><span class="flex items-center h-full px-4" data-svelte-h="svelte-1k6m4hl">Squad Selection</span></a></li> <li class="mx-2 flex items-center h-16"><a href="/governance" class="${"flex items-center h-full nav-underline hover:text-gray-400 $" + escape(currentClass("/governance"), true)}"><span class="flex items-center h-full px-4" data-svelte-h="svelte-qfd2bh">Governance</span></a></li> <li class="flex flex-1 items-center"><div class="relative inline-block"><button${add_attribute("class", `h-full flex items-center rounded-sm ${currentBorder("/profile")}`, 0)}><img${add_attribute("src", $userGetProfilePicture, 0)} alt="Profile" class="h-12 rounded-sm profile-pic" aria-label="Toggle Profile"></button> <div${add_attribute("class", `absolute right-0 top-full w-48 bg-black rounded-b-md rounded-l-md shadow-lg z-50 profile-dropdown ${showProfileDropdown ? "block" : "hidden"}`, 0)}><ul class="text-gray-700"><li><a href="/profile" class="flex items-center h-full w-full nav-underline hover:text-gray-400"><span class="flex items-center h-full w-full"><img${add_attribute("src", $userGetProfilePicture, 0)} alt="logo" class="h-8 my-2 ml-4 mr-2"> <p class="w-full min-w-[125px] max-w-[125px] truncate" data-svelte-h="svelte-1mjctb">Profile</p></span></a></li> <li><button class="flex items-center justify-center px-4 pb-2 pt-1 text-white rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button">Disconnect
-                      ${validate_component(WalletIcon, "WalletIcon").$$render($$result, { className: "ml-2 h-6 w-6 mt-1" }, {}, {})}</button></li></ul></div></div></li></ul> <div${add_attribute("class", `mobile-menu-panel absolute top-12 right-2.5 bg-black rounded-lg shadow-md z-10 p-2 ${"hidden"} md:hidden`, 0)}><ul class="flex flex-col"><li class="p-2"><a href="/"${add_attribute("class", `nav-underline hover:text-gray-400 ${currentClass("/")}`, 0)}>Home</a></li> <li class="p-2"><a href="/pick-team"${add_attribute("class", currentClass("/pick-team"), 0)}>Squad Selection</a></li> <li class="p-2"><a href="/governance"${add_attribute("class", currentClass("/governance"), 0)}>Governance</a></li> <li class="p-2"><a href="/profile" class="${"flex h-full w-full nav-underline hover:text-gray-400 w-full $" + escape(currentClass("/profile"), true)}"><span class="flex items-center h-full w-full"><img${add_attribute("src", $userGetProfilePicture, 0)} alt="logo" class="w-8 h-8 rounded-sm"> <p class="w-full min-w-[100px] max-w-[100px] truncate p-2" data-svelte-h="svelte-f2gegq">Profile</p></span></a></li> <li class="px-2"><button class="flex h-full w-full hover:text-gray-400 w-full items-center">Disconnect
+  return `<header><nav class="text-white"><div class="px-4 h-16 flex justify-between items-center w-full"><a href="/" class="hover:text-gray-400 flex items-center">${validate_component(OpenFPLIcon, "OpenFPLIcon").$$render($$result, { className: "h-8 w-auto" }, {}, {})}<b class="ml-2" data-svelte-h="svelte-6ko9z9">OpenFPL</b></a> <button class="menu-toggle md:hidden focus:outline-none" data-svelte-h="svelte-ctwvk"><svg width="24" height="18" viewBox="0 0 24 18" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><rect width="24" height="2" rx="1" fill="currentColor"></rect><rect y="8" width="24" height="2" rx="1" fill="currentColor"></rect><rect y="16" width="24" height="2" rx="1" fill="currentColor"></rect></svg></button> ${$authSignedInStore ? `<ul class="hidden md:flex h-16"><li class="mx-2 flex items-center h-16"><a href="/" class="${"flex items-center h-full nav-underline hover:text-gray-400 $" + escape(currentClass("/"), true)}"><span class="flex items-center h-full px-4" data-svelte-h="svelte-fx32ra">Home</span></a></li> <li class="mx-2 flex items-center h-16"><a href="/pick-team" class="${"flex items-center h-full nav-underline hover:text-gray-400 $" + escape(currentClass("/pick-team"), true)}"><span class="flex items-center h-full px-4" data-svelte-h="svelte-1k6m4hl">Squad Selection</span></a></li> <li class="flex flex-1 items-center"><div class="relative inline-block"><button${add_attribute("class", `h-full flex items-center rounded-sm ${currentBorder("/profile")}`, 0)}><img${add_attribute("src", $userGetProfilePicture, 0)} alt="Profile" class="h-12 rounded-sm profile-pic" aria-label="Toggle Profile"></button> <div${add_attribute("class", `absolute right-0 top-full w-48 bg-black rounded-b-md rounded-l-md shadow-lg z-50 profile-dropdown ${showProfileDropdown ? "block" : "hidden"}`, 0)}><ul class="text-gray-700"><li><a href="/profile" class="flex items-center h-full w-full nav-underline hover:text-gray-400"><span class="flex items-center h-full w-full"><img${add_attribute("src", $userGetProfilePicture, 0)} alt="logo" class="h-8 my-2 ml-4 mr-2"> <p class="w-full min-w-[125px] max-w-[125px] truncate" data-svelte-h="svelte-1mjctb">Profile</p></span></a></li> <li><button class="flex items-center justify-center px-4 pb-2 pt-1 text-white rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button">Disconnect
+                      ${validate_component(WalletIcon, "WalletIcon").$$render($$result, { className: "ml-2 h-6 w-6 mt-1" }, {}, {})}</button></li></ul></div></div></li></ul> <div${add_attribute("class", `mobile-menu-panel absolute top-12 right-2.5 bg-black rounded-lg shadow-md z-10 p-2 ${"hidden"} md:hidden`, 0)}><ul class="flex flex-col"><li class="p-2"><a href="/"${add_attribute("class", `nav-underline hover:text-gray-400 ${currentClass("/")}`, 0)}>Home</a></li> <li class="p-2"><a href="/pick-team"${add_attribute("class", currentClass("/pick-team"), 0)}>Squad Selection</a></li> <li class="p-2"><a href="/profile" class="${"flex h-full w-full nav-underline hover:text-gray-400 w-full $" + escape(currentClass("/profile"), true)}"><span class="flex items-center h-full w-full"><img${add_attribute("src", $userGetProfilePicture, 0)} alt="logo" class="w-8 h-8 rounded-sm"> <p class="w-full min-w-[100px] max-w-[100px] truncate p-2" data-svelte-h="svelte-f2gegq">Profile</p></span></a></li> <li class="px-2"><button class="flex h-full w-full hover:text-gray-400 w-full items-center">Disconnect
                 ${validate_component(WalletIcon, "WalletIcon").$$render($$result, { className: "ml-2 h-6 w-6 mt-1" }, {}, {})}</button></li></ul></div>` : `<ul class="hidden md:flex"><li class="mx-2 flex items-center h-16"><button class="flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button">Connect
               ${validate_component(WalletIcon, "WalletIcon").$$render($$result, { className: "ml-2 h-6 w-6 mt-1" }, {}, {})}</button></li></ul> <div${add_attribute("class", `mobile-menu-panel absolute top-12 right-2.5 bg-black rounded-lg shadow-md z-10 p-2 ${"hidden"} md:hidden`, 0)}><ul class="flex flex-col"><li class="p-2"><button class="flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button">Connect
                 ${validate_component(WalletIcon, "WalletIcon").$$render($$result, { className: "ml-2 h-6 w-6 mt-1" }, {}, {})}</button></li></ul></div>`}</div></nav></header>`;
@@ -7143,7 +6690,7 @@ const JunoIcon = create_ssr_component(($$result, $$props, $$bindings, slots) => 
   return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"${add_attribute("class", className, 0)} fill="currentColor" viewBox="0 0 130 130"><g id="Layer_1-2"><g><path d="M91.99,64.798c0,-20.748 -16.845,-37.593 -37.593,-37.593l-0.003,-0c-20.749,-0 -37.594,16.845 -37.594,37.593l0,0.004c0,20.748 16.845,37.593 37.594,37.593l0.003,0c20.748,0 37.593,-16.845 37.593,-37.593l0,-0.004Z"></path><circle cx="87.153" cy="50.452" r="23.247" style="fill:#7888ff;"></circle></g></g></svg>`;
 });
 const Footer = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  return `<footer class="bg-gray-900 text-white py-3"><div class="container mx-1 xs:mx-2 md:mx-auto flex flex-col md:flex-row items-start md:items-center justify-between text-xs"><div class="flex-1" data-svelte-h="svelte-1fjfhgh"><div class="flex justify-start"><div class="flex flex-row pl-4"><a href="https://oc.app/community/uf3iv-naaaa-aaaar-ar3ta-cai/?ref=zv6hh-xaaaa-aaaar-ac35q-cai" target="_blank" rel="noopener noreferrer"><img src="/openchat.png" class="h-4 w-auto mb-2 mr-2" alt="OpenChat"></a> <a href="https://x.com/OpenFPL_DAO" target="_blank" rel="noopener noreferrer"><img src="/twitter.png" class="h-4 w-auto mr-2 mb-2" alt="X"></a> <a href="https://github.com/jamesbeadle/OpenFPL" target="_blank" rel="noopener noreferrer"><img src="/github.png" class="h-4 w-auto mb-2" alt="GitHub"></a></div></div> <div class="flex justify-start"><div class="flex flex-col md:flex-row md:space-x-2 pl-4"><a href="/whitepaper" class="hover:text-gray-300">Whitepaper</a> <span class="hidden md:flex">|</span> <a href="/gameplay-rules" class="hover:text-gray-300 md:hidden lg:block">Gameplay Rules</a> <a href="/gameplay-rules" class="hover:text-gray-300 hidden md:block lg:hidden">Rules</a> <span class="hidden md:flex">|</span> <a href="/terms" class="hover:text-gray-300">Terms &amp; Conditions</a></div></div></div> <div class="flex-0"><a href="/"><b class="px-4 mt-2 md:mt-0 md:px-10 flex items-center">${validate_component(OpenFPLIcon, "OpenFplIcon").$$render($$result, { className: "h-6 w-auto mr-2" }, {}, {})}OpenFPL</b></a></div> <div class="flex-1"><div class="flex justify-end"><div class="text-right px-4 md:px-0 mt-1 md:mt-0 md:mr-4"><a href="https://juno.build" target="_blank" class="hover:text-gray-300 flex items-center">Sponsored By juno.build
+  return `<footer class="bg-gray-900 text-white py-3"><div class="container mx-1 xs:mx-2 md:mx-auto flex flex-col md:flex-row items-start md:items-center justify-between text-xs"><div class="flex-1" data-svelte-h="svelte-1784upv"><div class="flex justify-start"><div class="flex flex-row pl-4"><a href="https://oc.app/community/uf3iv-naaaa-aaaar-ar3ta-cai/?ref=zv6hh-xaaaa-aaaar-ac35q-cai" target="_blank" rel="noopener noreferrer"><img src="/openchat.png" class="h-4 w-auto mb-2 mr-2" alt="OpenChat"></a> <a href="https://x.com/OpenFPL_DAO" target="_blank" rel="noopener noreferrer"><img src="/twitter.png" class="h-4 w-auto mr-2 mb-2" alt="X"></a> <a href="https://github.com/jamesbeadle/OpenFPL" target="_blank" rel="noopener noreferrer"><img src="/github.png" class="h-4 w-auto mb-2" alt="GitHub"></a></div></div> <div class="flex justify-start"><div class="flex flex-col md:flex-row md:space-x-2 pl-4"><a href="/gameplay-rules" class="hover:text-gray-300 md:hidden lg:block">Gameplay Rules</a> <a href="/gameplay-rules" class="hover:text-gray-300 hidden md:block lg:hidden">Rules</a> <span class="hidden md:flex">|</span> <a href="/terms" class="hover:text-gray-300">Terms &amp; Conditions</a></div></div></div> <div class="flex-0"><a href="/"><b class="px-4 mt-2 md:mt-0 md:px-10 flex items-center">${validate_component(OpenFPLIcon, "OpenFplIcon").$$render($$result, { className: "h-6 w-auto mr-2" }, {}, {})}OpenFPL</b></a></div> <div class="flex-1"><div class="flex justify-end"><div class="text-right px-4 md:px-0 mt-1 md:mt-0 md:mr-4"><a href="https://juno.build" target="_blank" class="hover:text-gray-300 flex items-center">Sponsored By juno.build
             ${validate_component(JunoIcon, "JunoIcon").$$render($$result, { className: "h-8 w-auto ml-2" }, {}, {})}</a></div></div></div></div></footer>`;
 });
 const css$3 = {
@@ -7194,7 +6741,7 @@ const Local_spinner = create_ssr_component(($$result, $$props, $$bindings, slots
   $$result.css.add(css$2);
   return `<div class="local-spinner svelte-pvdm52"></div>`;
 });
-var define_process_env_default$6 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+var define_process_env_default$1 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
 function createMonthlyLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage = 25;
@@ -7205,7 +6752,7 @@ function createMonthlyLeaderboardStore() {
   });
   let actor = ActorFactory.createActor(
     idlFactory,
-    define_process_env_default$6.OPENWSL_BACKEND_CANISTER_ID
+    define_process_env_default$1.OPENWSL_BACKEND_CANISTER_ID
   );
   async function sync(seasonId, month, clubId) {
     let category2 = "monthly_leaderboards";
@@ -7312,7 +6859,7 @@ function createMonthlyLeaderboardStore() {
   };
 }
 createMonthlyLeaderboardStore();
-var define_process_env_default$5 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+var define_process_env_default = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
 function createSeasonLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage = 25;
@@ -7323,7 +6870,7 @@ function createSeasonLeaderboardStore() {
   });
   let actor = ActorFactory.createActor(
     idlFactory,
-    define_process_env_default$5.OPENWSL_BACKEND_CANISTER_ID
+    define_process_env_default.OPENWSL_BACKEND_CANISTER_ID
   );
   async function sync(seasonId) {
     let category2 = "season_leaderboard";
@@ -7434,7 +6981,7 @@ const Relative_spinner = create_ssr_component(($$result, $$props, $$bindings, sl
   $$result.css.add(css$1);
   return `<div class="local-spinner svelte-1qjdn91"></div>`;
 });
-const Page$d = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$8 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_clubStore;
   let $$unsubscribe_systemStore;
   $$unsubscribe_clubStore = subscribe(clubStore, (value) => value);
@@ -7459,1893 +7006,7 @@ const Page$d = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-var define_process_env_default$4 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
-function createGovernanceStore() {
-  async function revaluePlayerUp(playerId) {
-    try {
-      await storeManager.syncStores();
-      let allPlayers = [];
-      const unsubscribe = playerStore.subscribe((players) => {
-        allPlayers = players;
-      });
-      unsubscribe();
-      var systemState = null;
-      const unsubscribeSystemState = systemStore.subscribe((state) => {
-        systemState = state;
-      });
-      unsubscribeSystemState();
-      var dto = {
-        playerId,
-        seasonId: systemState == null ? 0 : systemState.pickTeamSeasonId,
-        gameweek: systemState == null ? 0 : systemState.pickTeamGameweek
-      };
-      let player = allPlayers.find((x) => x.id == playerId);
-      if (player) {
-        let title = `Revalue ${player.lastName} value up.`;
-        let summary = `Revalue ${player.lastName} value up from £${(player.valueQuarterMillions / 4).toFixed(2).toLocaleString()}m -> £${((player.valueQuarterMillions + 1) / 4).toFixed(2).toLocaleString()}m).`;
-        await executeProposal(dto, title, summary, 1000n, [
-          IDL.Record({ playerId: IDL.Nat16 })
-        ]);
-      }
-    } catch (error) {
-      console.error("Error revaluing player up:", error);
-      throw error;
-    }
-  }
-  async function revaluePlayerDown(playerId) {
-    try {
-      await storeManager.syncStores();
-      let allPlayers = [];
-      const unsubscribe = playerStore.subscribe((players) => {
-        allPlayers = players;
-      });
-      unsubscribe();
-      var systemState = null;
-      const unsubscribeSystemState = systemStore.subscribe((state) => {
-        systemState = state;
-      });
-      unsubscribeSystemState();
-      var dto = {
-        playerId,
-        seasonId: systemState == null ? 0 : systemState.pickTeamSeasonId,
-        gameweek: systemState == null ? 0 : systemState.pickTeamGameweek
-      };
-      let player = allPlayers.find((x) => x.id == playerId);
-      if (player) {
-        let title = `Revalue ${player.lastName} value down.`;
-        let summary = `Revalue ${player.lastName} value down from £${(player.valueQuarterMillions / 4).toFixed(2).toLocaleString()}m -> £${((player.valueQuarterMillions - 1) / 4).toFixed(2).toLocaleString()}m).`;
-        await executeProposal(dto, title, summary, 2000n, [
-          IDL.Record({ playerId: IDL.Nat16 })
-        ]);
-      }
-    } catch (error) {
-      console.error("Error revaluing player down:", error);
-      throw error;
-    }
-  }
-  async function submitFixtureData(seasonId, gameweek, fixtureId, month, playerEventData) {
-    try {
-      clubStore;
-      let clubs = [];
-      const unsubscribeTeamStore = clubStore.subscribe((teams) => {
-        if (teams) {
-          clubs = teams;
-        }
-      });
-      unsubscribeTeamStore();
-      let allFixtures = [];
-      const unsubscribeFixtureStore = fixtureStore.subscribe((fixtures) => {
-        allFixtures = fixtures;
-      });
-      unsubscribeFixtureStore();
-      let dto = {
-        month,
-        gameweek,
-        fixtureId,
-        playerEventData
-      };
-      let fixture = allFixtures.find((x) => x.id == fixtureId);
-      if (fixture) {
-        let homeClub = clubs.find((x) => x.id == fixture?.homeClubId);
-        let awayClub = clubs.find((x) => x.id == fixture?.awayClubId);
-        if (!homeClub || !awayClub) {
-          return;
-        }
-        let title = `Fixture Data for ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`;
-        let summary = `Fixture Data for ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`;
-        await executeProposal(dto, title, summary, 3000n, [
-          IDL.Record({
-            fixtureId: IDL.Nat32,
-            seasonId: IDL.Nat16,
-            gameweek: IDL.Nat8,
-            playerEventData: IDL.Vec(
-              IDL.Record({
-                fixtureId: IDL.Nat32,
-                clubId: IDL.Nat16,
-                playerId: IDL.Nat16,
-                eventStartMinute: IDL.Nat8,
-                eventEndMinute: IDL.Nat8,
-                eventType: IDL.Variant({
-                  Goal: IDL.Null,
-                  GoalConceded: IDL.Null,
-                  Appearance: IDL.Null,
-                  PenaltySaved: IDL.Null,
-                  RedCard: IDL.Null,
-                  KeeperSave: IDL.Null,
-                  CleanSheet: IDL.Null,
-                  YellowCard: IDL.Null,
-                  GoalAssisted: IDL.Null,
-                  OwnGoal: IDL.Null,
-                  HighestScoringPlayer: IDL.Null
-                })
-              })
-            )
-          })
-        ]);
-      }
-    } catch (error) {
-      console.error("Error submitting fixture data:", error);
-      throw error;
-    }
-  }
-  async function addInitialFixtures(seasonFixtures, pickTeamSeasonId) {
-    try {
-      await storeManager.syncStores();
-      let seasonName = await seasonStore.getSeasonName(pickTeamSeasonId);
-      let dto = {
-        seasonFixtures
-      };
-      let title = `Add initial fixtures for season ${seasonName}`;
-      let summary = `Add initial fixtures for season ${seasonName}`;
-      await executeProposal(dto, title, summary, 4000n, [
-        IDL.Record({
-          seasonId: IDL.Nat16,
-          seasonFixtures: IDL.Vec(
-            IDL.Record({
-              id: IDL.Nat32,
-              status: IDL.Variant({
-                Unplayed: IDL.Null,
-                Finalised: IDL.Null,
-                Active: IDL.Null,
-                Complete: IDL.Null
-              }),
-              highestScoringPlayerId: IDL.Nat16,
-              seasonId: IDL.Nat16,
-              awayClubId: IDL.Nat16,
-              events: IDL.Vec(
-                IDL.Record({
-                  fixtureId: IDL.Nat32,
-                  clubId: IDL.Nat16,
-                  playerId: IDL.Nat16,
-                  eventStartMinute: IDL.Nat8,
-                  eventEndMinute: IDL.Nat8,
-                  eventType: IDL.Variant({
-                    Goal: IDL.Null,
-                    GoalConceded: IDL.Null,
-                    Appearance: IDL.Null,
-                    PenaltySaved: IDL.Null,
-                    RedCard: IDL.Null,
-                    KeeperSave: IDL.Null,
-                    CleanSheet: IDL.Null,
-                    YellowCard: IDL.Null,
-                    GoalAssisted: IDL.Null,
-                    OwnGoal: IDL.Null,
-                    HighestScoringPlayer: IDL.Null
-                  })
-                })
-              )
-            })
-          ),
-          homeClubId: IDL.Nat16,
-          kickOff: IDL.Int,
-          homeGoals: IDL.Nat8,
-          gameweek: IDL.Nat8,
-          awayGoals: IDL.Nat8
-        })
-      ]);
-    } catch (error) {
-      console.error("Error adding initial fixtures:", error);
-      throw error;
-    }
-  }
-  async function moveFixture(fixtureId, updatedFixtureGameweek, updatedFixtureDate) {
-    try {
-      await storeManager.syncStores();
-      let clubs = [];
-      const unsubscribeTeamStore = clubStore.subscribe((teams) => {
-        if (teams) {
-          clubs = teams;
-        }
-      });
-      unsubscribeTeamStore();
-      let seasonId = 0;
-      const unsubscribeSystemStore = systemStore.subscribe((systemState) => {
-        if (systemState) {
-          seasonId = systemState?.calculationSeasonId;
-        }
-      });
-      unsubscribeSystemStore();
-      let allFixtures = [];
-      const unsubscribeFixtureStore = fixtureStore.subscribe((fixtures) => {
-        allFixtures = fixtures;
-      });
-      unsubscribeFixtureStore();
-      const dateObject = new Date(updatedFixtureDate);
-      const timestampMilliseconds = dateObject.getTime();
-      let nanoseconds = BigInt(timestampMilliseconds) * BigInt(1e6);
-      let dto = {
-        fixtureId,
-        updatedFixtureGameweek,
-        updatedFixtureDate: nanoseconds
-      };
-      let fixture = allFixtures.find((x) => x.id == fixtureId);
-      if (fixture) {
-        let homeClub = clubs.find((x) => x.id == fixture?.homeClubId);
-        let awayClub = clubs.find((x) => x.id == fixture?.awayClubId);
-        if (!homeClub || !awayClub) {
-          return;
-        }
-        let title = `Move fixture ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`;
-        let summary = `Move fixture ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`;
-        await executeProposal(dto, title, summary, 5000n, [
-          IDL.Record({
-            fixtureId: IDL.Nat32,
-            updatedFixtureGameweek: IDL.Nat8,
-            updatedFixtureDate: IDL.Int
-          })
-        ]);
-      }
-    } catch (error) {
-      console.error("Error moving fixture:", error);
-      throw error;
-    }
-  }
-  async function postponeFixture(fixtureId) {
-    try {
-      await storeManager.syncStores();
-      let clubs = [];
-      const unsubscribeTeamStore = clubStore.subscribe((teams) => {
-        if (teams) {
-          clubs = teams;
-        }
-      });
-      unsubscribeTeamStore();
-      let seasonId = 0;
-      const unsubscribeSystemStore = systemStore.subscribe((systemState) => {
-        if (systemState) {
-          seasonId = systemState?.calculationSeasonId;
-        }
-      });
-      unsubscribeSystemStore();
-      let allFixtures = [];
-      const unsubscribeFixtureStore = fixtureStore.subscribe((fixtures) => {
-        allFixtures = fixtures;
-      });
-      unsubscribeFixtureStore();
-      let dto = {
-        fixtureId
-      };
-      let fixture = allFixtures.find((x) => x.id == fixtureId);
-      if (fixture) {
-        let homeClub = clubs.find((x) => x.id == fixture?.homeClubId);
-        let awayClub = clubs.find((x) => x.id == fixture?.awayClubId);
-        if (!homeClub || !awayClub) {
-          return;
-        }
-        let title = `Postpone fixture ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`;
-        let summary = `Postpone fixture for ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`;
-        await executeProposal(dto, title, summary, 6000n, [
-          IDL.Record({ fixtureId: IDL.Nat32 })
-        ]);
-      }
-    } catch (error) {
-      console.error("Error postponing fixture:", error);
-      throw error;
-    }
-  }
-  async function rescheduleFixture(fixtureId, updatedFixtureGameweek, updatedFixtureDate) {
-    try {
-      await storeManager.syncStores();
-      let clubs = [];
-      const unsubscribeTeamStore = clubStore.subscribe((teams) => {
-        if (teams) {
-          clubs = teams;
-        }
-      });
-      unsubscribeTeamStore();
-      let seasonId = 0;
-      const unsubscribeSystemStore = systemStore.subscribe((systemState) => {
-        if (systemState) {
-          seasonId = systemState?.calculationSeasonId;
-        }
-      });
-      unsubscribeSystemStore();
-      let allFixtures = [];
-      const unsubscribeFixtureStore = fixtureStore.subscribe((fixtures) => {
-        allFixtures = fixtures;
-      });
-      unsubscribeFixtureStore();
-      const dateObject = new Date(updatedFixtureDate);
-      const timestampMilliseconds = dateObject.getTime();
-      let nanoseconds = BigInt(timestampMilliseconds) * BigInt(1e6);
-      let dto = {
-        fixtureId,
-        updatedFixtureGameweek,
-        updatedFixtureDate: nanoseconds
-      };
-      let fixture = allFixtures.find((x) => x.id == fixtureId);
-      if (fixture) {
-        let homeClub = clubs.find((x) => x.id == fixture?.homeClubId);
-        let awayClub = clubs.find((x) => x.id == fixture?.awayClubId);
-        if (!homeClub || !awayClub) {
-          return;
-        }
-        let title = `Move fixture ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`;
-        let summary = `Move fixture ${homeClub.friendlyName} v ${awayClub?.friendlyName}.`;
-        await executeProposal(dto, title, summary, 7000n, [
-          IDL.Record({
-            postponedFixtureId: IDL.Nat32,
-            updatedFixtureGameweek: IDL.Nat8,
-            updatedFixtureDate: IDL.Int
-          })
-        ]);
-      }
-    } catch (error) {
-      console.error("Error rescheduling fixture:", error);
-      throw error;
-    }
-  }
-  async function transferPlayer(playerId, newLeagueId, newClubId, newShirtNumber, seasonId, gameweek) {
-    try {
-      await storeManager.syncStores();
-      let clubs = [];
-      const unsubscribeTeamStore = clubStore.subscribe((teams) => {
-        if (teams) {
-          clubs = teams;
-        }
-      });
-      unsubscribeTeamStore();
-      let allPlayers = [];
-      const unsubscribePlayerStore = playerStore.subscribe((players) => {
-        if (players) {
-          allPlayers = players;
-        }
-      });
-      unsubscribePlayerStore();
-      let title = "";
-      let player = allPlayers.find((x) => x.id == playerId);
-      if (player) {
-        let currentClub = clubs.find((x) => x.id == player?.clubId);
-        let newClub = clubs.find((x) => x.id == newClubId);
-        if (!currentClub) {
-          return;
-        }
-        if (newClubId == 0) {
-          title = `Transfer ${player.firstName} ${player.lastName} outside of Premier League.`;
-        }
-        if (newClub) {
-          title = `Transfer ${player.firstName} ${player.lastName} to ${newClub.friendlyName}`;
-        }
-      }
-      let summary = title;
-      let dto = {
-        playerId,
-        newClubId,
-        newShirtNumber,
-        newLeagueId,
-        clubId: player?.clubId ?? 0,
-        seasonId,
-        gameweek
-      };
-      await executeProposal(dto, title, summary, 8000n, [
-        IDL.Record({ playerId: IDL.Nat16, newClubId: IDL.Nat16 })
-      ]);
-    } catch (error) {
-      console.error("Error transferring player:", error);
-      throw error;
-    }
-  }
-  async function loanPlayer(playerId, loanLeagueId, loanClubId, loanEndDate, seasonId, gameweek) {
-    try {
-      await storeManager.syncStores();
-      let clubs = [];
-      const unsubscribeTeamStore = clubStore.subscribe((teams) => {
-        if (teams) {
-          clubs = teams;
-        }
-      });
-      unsubscribeTeamStore();
-      let allPlayers = [];
-      const unsubscribePlayerStore = playerStore.subscribe((players) => {
-        if (players) {
-          allPlayers = players;
-        }
-      });
-      unsubscribePlayerStore();
-      const dateObject = new Date(loanEndDate);
-      const timestampMilliseconds = dateObject.getTime();
-      let nanoseconds = BigInt(timestampMilliseconds) * BigInt(1e6);
-      let dto = {
-        playerId,
-        loanLeagueId,
-        loanClubId,
-        loanEndDate: nanoseconds,
-        seasonId,
-        gameweek
-      };
-      let player = allPlayers.find((x) => x.id == playerId);
-      if (player) {
-        let club = clubs.find((x) => x.id == player?.clubId);
-        if (!club) {
-          return;
-        }
-        let title = `Loan ${player.firstName} to ${club?.friendlyName}.`;
-        let summary = `Loan ${player.firstName} to ${club?.friendlyName}.`;
-        await executeProposal(dto, title, summary, 9000n, [
-          IDL.Record({
-            playerId: IDL.Nat16,
-            loanClubId: IDL.Nat16,
-            loanEndDate: IDL.Int
-          })
-        ]);
-      }
-    } catch (error) {
-      console.error("Error loaning player:", error);
-      throw error;
-    }
-  }
-  async function recallPlayer(playerId) {
-    try {
-      await storeManager.syncStores();
-      let clubs = [];
-      const unsubscribeTeamStore = clubStore.subscribe((teams) => {
-        if (teams) {
-          clubs = teams;
-        }
-      });
-      unsubscribeTeamStore();
-      let allPlayers = [];
-      const unsubscribePlayerStore = playerStore.subscribe((players) => {
-        if (players) {
-          allPlayers = players;
-        }
-      });
-      unsubscribePlayerStore();
-      let dto = {
-        playerId
-      };
-      let player = allPlayers.find((x) => x.id == playerId);
-      if (player) {
-        let club = clubs.find((x) => x.id == player?.clubId);
-        if (!club) {
-          return;
-        }
-        let title = `Recall ${player.firstName} ${player?.lastName} loan.`;
-        let summary = `Recall ${player.firstName} ${player?.lastName} loan.`;
-        await executeProposal(dto, title, summary, 10000n, [
-          IDL.Record({ playerId: IDL.Nat16 })
-        ]);
-      }
-    } catch (error) {
-      console.error("Error recalling player loan:", error);
-      throw error;
-    }
-  }
-  async function createPlayer(clubId, position, firstName, lastName, shirtNumber, valueQuarterMillions, dateOfBirth, nationality, gender) {
-    try {
-      await storeManager.syncStores();
-      let clubs = [];
-      const unsubscribeTeamStore = clubStore.subscribe((teams) => {
-        if (teams) {
-          clubs = teams;
-        }
-      });
-      unsubscribeTeamStore();
-      const dateObject = new Date(dateOfBirth);
-      const timestampMilliseconds = dateObject.getTime();
-      let nanoseconds = BigInt(timestampMilliseconds) * BigInt(1e6);
-      let dto = {
-        gender,
-        clubId,
-        position,
-        firstName,
-        lastName,
-        shirtNumber,
-        valueQuarterMillions,
-        dateOfBirth: nanoseconds,
-        nationality
-      };
-      let club = clubs.find((x) => x.id == clubId);
-      if (!club) {
-        return;
-      }
-      let title = `Create New Player: ${firstName} ${lastName}.`;
-      let summary = `Create New Player: ${firstName} ${lastName}.`;
-      await executeProposal(dto, title, summary, 11000n, [
-        IDL.Record({
-          clubId: IDL.Nat16,
-          valueQuarterMillions: IDL.Nat16,
-          dateOfBirth: IDL.Int,
-          nationality: IDL.Nat16,
-          shirtNumber: IDL.Nat8,
-          position: IDL.Variant({
-            Goalkeeper: IDL.Null,
-            Defender: IDL.Null,
-            Midfielder: IDL.Null,
-            Forward: IDL.Null
-          }),
-          lastName: IDL.Text,
-          firstName: IDL.Text
-        })
-      ]);
-    } catch (error) {
-      console.error("Error creating player:", error);
-      throw error;
-    }
-  }
-  async function updatePlayer(playerId, position, firstName, lastName, shirtNumber, dateOfBirth, nationality) {
-    try {
-      await storeManager.syncStores();
-      let clubs = [];
-      const unsubscribeTeamStore = clubStore.subscribe((teams) => {
-        if (teams) {
-          clubs = teams;
-        }
-      });
-      unsubscribeTeamStore();
-      let allPlayers = [];
-      const unsubscribePlayerStore = playerStore.subscribe((players) => {
-        if (players) {
-          allPlayers = players;
-        }
-      });
-      unsubscribePlayerStore();
-      let player = allPlayers.find((x) => x.id == playerId);
-      if (player) {
-        let club = clubs.find((x) => x.id == player?.clubId);
-        if (!club) {
-          return;
-        }
-        let dto = {
-          dateOfBirth,
-          playerId,
-          nationality,
-          shirtNumber,
-          position,
-          lastName,
-          firstName
-        };
-        let title = `Update ${player.firstName} ${player.lastName} details.`;
-        let summary = `Update ${player.firstName} ${player.lastName} details.`;
-        await executeProposal(dto, title, summary, 12000n, [
-          IDL.Record({
-            dateOfBirth: IDL.Int,
-            playerId: IDL.Nat16,
-            nationality: IDL.Nat16,
-            shirtNumber: IDL.Nat8,
-            position: IDL.Variant({
-              Goalkeeper: IDL.Null,
-              Defender: IDL.Null,
-              Midfielder: IDL.Null,
-              Forward: IDL.Null
-            }),
-            lastName: IDL.Text,
-            firstName: IDL.Text
-          })
-        ]);
-      }
-    } catch (error) {
-      console.error("Error updating player:", error);
-      throw error;
-    }
-  }
-  async function setPlayerInjury(playerId, description, expectedEndDate) {
-    try {
-      await storeManager.syncStores();
-      let clubs = [];
-      const unsubscribeTeamStore = clubStore.subscribe((teams) => {
-        if (teams) {
-          clubs = teams;
-        }
-      });
-      unsubscribeTeamStore();
-      let allPlayers = [];
-      const unsubscribePlayerStore = playerStore.subscribe((players) => {
-        if (players) {
-          allPlayers = players;
-        }
-      });
-      unsubscribePlayerStore();
-      const dateObject = new Date(expectedEndDate);
-      const timestampMilliseconds = dateObject.getTime();
-      let nanoseconds = BigInt(timestampMilliseconds) * BigInt(1e6);
-      let dto = {
-        playerId,
-        description,
-        expectedEndDate: nanoseconds
-      };
-      let player = allPlayers.find((x) => x.id == playerId);
-      if (player) {
-        let club = clubs.find((x) => x.id == player?.clubId);
-        if (!club) {
-          return;
-        }
-        let title = `Set Player Injury for ${player.firstName} ${player.lastName}.`;
-        let summary = `Set Player Injury for ${player.firstName} ${player.lastName}.`;
-        await executeProposal(dto, title, summary, 13000n, [
-          IDL.Record({
-            playerId: IDL.Nat16,
-            description: IDL.Text,
-            expectedEndDate: IDL.Int
-          })
-        ]);
-      }
-    } catch (error) {
-      console.error("Error setting player injury:", error);
-      throw error;
-    }
-  }
-  async function retirePlayer(playerId, retirementDate) {
-    try {
-      await storeManager.syncStores();
-      let clubs = [];
-      const unsubscribeTeamStore = clubStore.subscribe((teams) => {
-        if (teams) {
-          clubs = teams;
-        }
-      });
-      unsubscribeTeamStore();
-      let allPlayers = [];
-      const unsubscribePlayerStore = playerStore.subscribe((players) => {
-        if (players) {
-          allPlayers = players;
-        }
-      });
-      unsubscribePlayerStore();
-      const dateObject = new Date(retirementDate);
-      const timestampMilliseconds = dateObject.getTime();
-      let nanoseconds = BigInt(timestampMilliseconds) * BigInt(1e6);
-      let dto = {
-        playerId,
-        retirementDate: nanoseconds
-      };
-      let player = allPlayers.find((x) => x.id == playerId);
-      if (player) {
-        let club = clubs.find((x) => x.id == player?.clubId);
-        if (!club) {
-          return;
-        }
-        let title = `Retire ${player.firstName} ${player.lastName}.`;
-        let summary = `Retire ${player.firstName} ${player.lastName}.`;
-        await executeProposal(dto, title, summary, 14000n, [
-          IDL.Record({ playerId: IDL.Nat16, retirementDate: IDL.Int })
-        ]);
-      }
-    } catch (error) {
-      console.error("Error retiring player:", error);
-      throw error;
-    }
-  }
-  async function unretirePlayer(playerId) {
-    try {
-      await storeManager.syncStores();
-      let clubs = [];
-      const unsubscribeTeamStore = clubStore.subscribe((teams) => {
-        if (teams) {
-          clubs = teams;
-        }
-      });
-      unsubscribeTeamStore();
-      let allPlayers = [];
-      const unsubscribePlayerStore = playerStore.subscribe((players) => {
-        if (players) {
-          allPlayers = players;
-        }
-      });
-      unsubscribePlayerStore();
-      let dto = {
-        playerId
-      };
-      let player = allPlayers.find((x) => x.id == playerId);
-      if (player) {
-        let club = clubs.find((x) => x.id == player?.clubId);
-        if (!club) {
-          return;
-        }
-        let title = `Unretire ${player.firstName} ${player.lastName}.`;
-        let summary = `Unretire ${player.firstName} ${player.lastName}.`;
-        await executeProposal(dto, title, summary, 15000n, [
-          IDL.Record({ playerId: IDL.Nat16 })
-        ]);
-      }
-    } catch (error) {
-      console.error("Error unretiring player:", error);
-      throw error;
-    }
-  }
-  async function promoteNewClub(name, friendlyName, primaryColourHex, secondaryColourHex, thirdColourHex, abbreviatedName, shirtType) {
-    try {
-      let dto = {
-        name,
-        friendlyName,
-        primaryColourHex,
-        secondaryColourHex,
-        thirdColourHex,
-        abbreviatedName,
-        shirtType
-      };
-      let title = `Promote ${friendlyName}. to the Premier League`;
-      let summary = `Promote ${name} from the Championship to the Premier League.`;
-      executeProposal(dto, title, summary, 17000n, [
-        IDL.Record({
-          secondaryColourHex: IDL.Text,
-          name: IDL.Text,
-          friendlyName: IDL.Text,
-          thirdColourHex: IDL.Text,
-          abbreviatedName: IDL.Text,
-          shirtType: IDL.Variant({ Filled: IDL.Null, Striped: IDL.Null }),
-          primaryColourHex: IDL.Text
-        })
-      ]);
-    } catch (error) {
-      console.error("Error promoting new club:", error);
-      throw error;
-    }
-  }
-  async function updateClub(clubId, name, friendlyName, primaryColourHex, secondaryColourHex, thirdColourHex, abbreviatedName, shirtType) {
-    try {
-      await storeManager.syncStores();
-      let dto = {
-        clubId,
-        secondaryColourHex,
-        name,
-        friendlyName,
-        thirdColourHex,
-        abbreviatedName,
-        shirtType,
-        primaryColourHex
-      };
-      let clubs = [];
-      const unsubscribeTeamStore = clubStore.subscribe((teams) => {
-        if (teams) {
-          clubs = teams;
-        }
-      });
-      unsubscribeTeamStore();
-      let seasonId = 0;
-      const unsubscribeSystemStore = systemStore.subscribe((systemState) => {
-        if (systemState) {
-          seasonId = systemState?.calculationSeasonId;
-        }
-      });
-      unsubscribeSystemStore();
-      let allFixtures = [];
-      const unsubscribeFixtureStore = fixtureStore.subscribe((fixtures) => {
-        allFixtures = fixtures;
-      });
-      unsubscribeFixtureStore();
-      let club = clubs.find((x) => x.id == clubId);
-      if (!club) {
-        return;
-      }
-      let title = `Update ${club.friendlyName} club details.`;
-      let summary = `Update ${club.friendlyName} club details.`;
-      await executeProposal(dto, title, summary, 18000n, [
-        IDL.Record({
-          clubId: IDL.Nat16,
-          secondaryColourHex: IDL.Text,
-          name: IDL.Text,
-          friendlyName: IDL.Text,
-          thirdColourHex: IDL.Text,
-          abbreviatedName: IDL.Text,
-          shirtType: IDL.Variant({ Filled: IDL.Null, Striped: IDL.Null }),
-          primaryColourHex: IDL.Text
-        })
-      ]);
-    } catch (error) {
-      console.error("Error updating club:", error);
-      throw error;
-    }
-  }
-  async function executeProposal(dto, title, summary, functionId, argTypes) {
-    const unsubscribeAuthStore = authStore.subscribe(async (auth) => {
-      if (auth) {
-        let principal = auth.identity?.getPrincipal().toText() ?? "";
-        if (principal == "") {
-          return;
-        }
-        const agent = await ActorFactory.getGovernanceAgent(auth.identity);
-        const snsGovernanceCanisterPrincipal = Principal.fromText(
-          define_process_env_default$4.CANISTER_ID_SNS_GOVERNANCE
-        );
-        const { listNeurons, manageNeuron } = SnsGovernanceCanister.create({
-          agent,
-          canisterId: snsGovernanceCanisterPrincipal
-        });
-        let userNeurons = await listNeurons({
-          certified: false,
-          principal: Principal.fromText(principal)
-        });
-        if (userNeurons.length > 0) {
-          const payloadArrayBuffer = IDL.encode(argTypes, [dto]);
-          const fn = {
-            function_id: functionId,
-            payload: new Uint8Array(payloadArrayBuffer)
-          };
-          const command = {
-            MakeProposal: {
-              title,
-              url: "openfpl.xyz/governance",
-              summary,
-              action: [{ ExecuteGenericNervousSystemFunction: fn }]
-            }
-          };
-          const neuronId = userNeurons[0].id[0];
-          if (!neuronId) {
-            return;
-          }
-          await manageNeuron({
-            subaccount: neuronId.id,
-            command: [command]
-          });
-        }
-      }
-    });
-    unsubscribeAuthStore();
-  }
-  return {
-    revaluePlayerUp,
-    revaluePlayerDown,
-    submitFixtureData,
-    addInitialFixtures,
-    moveFixture,
-    postponeFixture,
-    rescheduleFixture,
-    loanPlayer,
-    transferPlayer,
-    recallPlayer,
-    createPlayer,
-    updatePlayer,
-    setPlayerInjury,
-    retirePlayer,
-    unretirePlayer,
-    promoteNewClub,
-    updateClub
-  };
-}
-const governanceStore = createGovernanceStore();
-const Confirm_fixture_data_modal = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let { visible = false } = $$props;
-  let { onConfirm } = $$props;
-  let { closeModal } = $$props;
-  if ($$props.visible === void 0 && $$bindings.visible && visible !== void 0)
-    $$bindings.visible(visible);
-  if ($$props.onConfirm === void 0 && $$bindings.onConfirm && onConfirm !== void 0)
-    $$bindings.onConfirm(onConfirm);
-  if ($$props.closeModal === void 0 && $$bindings.closeModal && closeModal !== void 0)
-    $$bindings.closeModal(closeModal);
-  return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
-    default: () => {
-      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h4 data-svelte-h="svelte-1yevh2p">Confirm Fixture Data</h4> <button class="text-black" data-svelte-h="svelte-naxdfo">✕</button></div> <div class="my-5" data-svelte-h="svelte-1kpybyt"><h1>Please confirm your fixture data.</h1> <p class="text-gray-600">You will not be able to edit your submission and entries that differ
-        from the accepted consensus data will not receive $FPL rewards. If
-        consensus has already been reached for the fixture your submission will
-        also not be counted.</p></div> <div class="flex justify-end gap-3"><button class="default-button fpl-cancel-btn" type="button" data-svelte-h="svelte-1n52tb1">Cancel</button> <button class="default-button fpl-button" data-svelte-h="svelte-1pog147">Confirm</button></div></div>`;
-    }
-  })}`;
-});
-const Clear_draft_modal = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let { visible = false } = $$props;
-  let { onConfirm } = $$props;
-  let { closeModal } = $$props;
-  if ($$props.visible === void 0 && $$bindings.visible && visible !== void 0)
-    $$bindings.visible(visible);
-  if ($$props.onConfirm === void 0 && $$bindings.onConfirm && onConfirm !== void 0)
-    $$bindings.onConfirm(onConfirm);
-  if ($$props.closeModal === void 0 && $$bindings.closeModal && closeModal !== void 0)
-    $$bindings.closeModal(closeModal);
-  return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
-    default: () => {
-      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-rcqdii">Clear Draft</h3> <button class="times-button" data-svelte-h="svelte-2aq7vi">×</button></div> <p data-svelte-h="svelte-idipww">Please confirm you want to clear the draft from your cache.</p> <div class="items-center py-3 flex space-x-4"><button class="default-button fpl-cancel-btn" type="button" data-svelte-h="svelte-1husm0b">Cancel</button> <button class="default-button fpl-button" data-svelte-h="svelte-zv2dtu">Clear</button></div></div>`;
-    }
-  })}`;
-});
-const Page$c = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let fixtureId;
-  let $playerEventData, $$unsubscribe_playerEventData = noop, $$subscribe_playerEventData = () => ($$unsubscribe_playerEventData(), $$unsubscribe_playerEventData = subscribe(playerEventData, ($$value) => $playerEventData = $$value), playerEventData);
-  let $systemStore, $$unsubscribe_systemStore;
-  let $$unsubscribe_clubStore;
-  let $selectedPlayers, $$unsubscribe_selectedPlayers;
-  let $page, $$unsubscribe_page;
-  $$unsubscribe_systemStore = subscribe(systemStore, (value) => $systemStore = value);
-  $$unsubscribe_clubStore = subscribe(clubStore, (value) => value);
-  $$unsubscribe_page = subscribe(page, (value) => $page = value);
-  let showClearDraftModal = false;
-  let showConfirmDataModal = false;
-  let selectedPlayers = writable([]);
-  $$unsubscribe_selectedPlayers = subscribe(selectedPlayers, (value) => $selectedPlayers = value);
-  let playerEventData = writable([]);
-  $$subscribe_playerEventData();
-  async function confirmFixtureData() {
-    busyStore.startBusy({
-      initiator: "confirm-data",
-      text: "Saving fixture data..."
-    });
-    try {
-      await governanceStore.submitFixtureData($systemStore?.calculationSeasonId ?? 0, $systemStore?.calculationGameweek ?? 0, $systemStore?.calculationMonth ?? 0, fixtureId, $playerEventData);
-      localStorage.removeItem(`fixtureDraft_${fixtureId}`);
-      toastsShow({
-        text: "Fixture data saved.",
-        level: "success",
-        duration: 2e3
-      });
-      goto("/fixture-validation");
-    } catch (error) {
-      toastsError({
-        msg: { text: "Error saving fixture data." },
-        err: error
-      });
-      console.error("Error saving fixture data: ", error);
-    } finally {
-      showConfirmDataModal = false;
-      busyStore.stopBusy("confirm-data");
-    }
-  }
-  function clearDraft() {
-    $$subscribe_playerEventData(playerEventData = writable([]));
-    localStorage.removeItem(`fixtureDraft_${fixtureId}`);
-    toastsShow({
-      text: "Draft cleared.",
-      level: "success",
-      duration: 2e3
-    });
-    closeConfirmClearDraftModal();
-  }
-  function closeConfirmClearDraftModal() {
-    showClearDraftModal = false;
-  }
-  function closeConfirmDataModal() {
-    showConfirmDataModal = false;
-  }
-  fixtureId = Number($page.url.searchParams.get("id"));
-  $playerEventData.length == 0 || $playerEventData.filter((x) => convertEvent(x.eventType) == 0).length != $selectedPlayers.length;
-  $$unsubscribe_playerEventData();
-  $$unsubscribe_systemStore();
-  $$unsubscribe_clubStore();
-  $$unsubscribe_selectedPlayers();
-  $$unsubscribe_page();
-  return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
-    default: () => {
-      return `${`${validate_component(Spinner, "Spinner").$$render($$result, {}, {}, {})}`}`;
-    }
-  })} ${``} ${``} ${validate_component(Confirm_fixture_data_modal, "ConfirmFixtureDataModal").$$render(
-    $$result,
-    {
-      visible: showConfirmDataModal,
-      onConfirm: confirmFixtureData,
-      closeModal: closeConfirmDataModal
-    },
-    {},
-    {}
-  )} ${validate_component(Clear_draft_modal, "ClearDraftModal").$$render(
-    $$result,
-    {
-      closeModal: closeConfirmClearDraftModal,
-      visible: showClearDraftModal,
-      onConfirm: clearDraft
-    },
-    {},
-    {}
-  )}`;
-});
-const Add_initial_fixtures = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let isSubmitDisabled;
-  let $$unsubscribe_systemStore;
-  $$unsubscribe_systemStore = subscribe(systemStore, (value) => value);
-  let { visible } = $$props;
-  let { closeModal } = $$props;
-  let fixtureData = [];
-  let showConfirm = false;
-  if ($$props.visible === void 0 && $$bindings.visible && visible !== void 0)
-    $$bindings.visible(visible);
-  if ($$props.closeModal === void 0 && $$bindings.closeModal && closeModal !== void 0)
-    $$bindings.closeModal(closeModal);
-  isSubmitDisabled = fixtureData.length == 0;
-  {
-    if (isSubmitDisabled && showConfirm) {
-      showConfirm = false;
-    }
-  }
-  $$unsubscribe_systemStore();
-  return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
-    default: () => {
-      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-cmilh7">Add Initial Fixtures</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><div class="flex-col space-y-2"><p data-svelte-h="svelte-1kjbtbb">Please select a file to upload:</p> <input class="my-4" type="file" accept=".csv"></div> <div class="border-b border-gray-200"></div> <div class="items-center flex space-x-4"><button class="px-4 py-2 default-button fpl-cancel-btn min-w-[150px]" type="button" data-svelte-h="svelte-19jfrwv">Cancel</button> <button${add_attribute(
-        "class",
-        `${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-                        px-4 py-2 default-button min-w-[150px]`,
-        0
-      )} ${isSubmitDisabled ? "disabled" : ""}>Raise Proposal</button></div> ${showConfirm ? `<div class="items-center flex" data-svelte-h="svelte-6fi0oe"><p class="text-orange-400">Failed proposals will cost the proposer 10 $FPL tokens.</p></div> <div class="items-center flex"><button${add_attribute(
-        "class",
-        `${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-                            px-4 py-2 default-button w-full`,
-        0
-      )} ${isSubmitDisabled ? "disabled" : ""}>Confirm Submit Proposal</button></div>` : ``}</div></div> ${``}</div>`;
-    }
-  })}`;
-});
-const Revalue_player_up = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let isSubmitDisabled;
-  let $$unsubscribe_playerStore;
-  let $clubStore, $$unsubscribe_clubStore;
-  $$unsubscribe_playerStore = subscribe(playerStore, (value) => value);
-  $$unsubscribe_clubStore = subscribe(clubStore, (value) => $clubStore = value);
-  let { visible } = $$props;
-  let { closeModal } = $$props;
-  let selectedPlayerId = 0;
-  let showConfirm = false;
-  if ($$props.visible === void 0 && $$bindings.visible && visible !== void 0)
-    $$bindings.visible(visible);
-  if ($$props.closeModal === void 0 && $$bindings.closeModal && closeModal !== void 0)
-    $$bindings.closeModal(closeModal);
-  isSubmitDisabled = selectedPlayerId <= 0;
-  {
-    if (isSubmitDisabled && showConfirm) {
-      showConfirm = false;
-    }
-  }
-  $$unsubscribe_playerStore();
-  $$unsubscribe_clubStore();
-  return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
-    default: () => {
-      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-15yd750">Revalue Player Up</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><div class="flex-col space-y-2"><p data-svelte-h="svelte-1tp620s">Select the player&#39;s club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($clubStore, (club) => {
-        return `<option${add_attribute("value", club.id, 0)}>${escape(club.friendlyName)}</option>`;
-      })}</select></div> ${``} ${``} <div class="border-b border-gray-200"></div> <div class="items-center flex space-x-4"><button class="px-4 py-2 default-button fpl-cancel-btn min-w-[150px]" type="button" data-svelte-h="svelte-19jfrwv">Cancel</button> <button${add_attribute(
-        "class",
-        `${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-                        px-4 py-2 default-button min-w-[150px]`,
-        0
-      )} ${isSubmitDisabled ? "disabled" : ""}>Raise Proposal</button></div> ${showConfirm ? `<div class="items-center flex" data-svelte-h="svelte-6fi0oe"><p class="text-orange-400">Failed proposals will cost the proposer 10 $FPL tokens.</p></div> <div class="items-center flex"><button${add_attribute(
-        "class",
-        `${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-                            px-4 py-2 default-button w-full`,
-        0
-      )} ${isSubmitDisabled ? "disabled" : ""}>Confirm Submit Proposal</button></div>` : ``}</div></div> ${``}</div>`;
-    }
-  })}`;
-});
-const Revalue_player_down = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let isSubmitDisabled;
-  let $$unsubscribe_playerStore;
-  let $clubStore, $$unsubscribe_clubStore;
-  $$unsubscribe_playerStore = subscribe(playerStore, (value) => value);
-  $$unsubscribe_clubStore = subscribe(clubStore, (value) => $clubStore = value);
-  let { visible } = $$props;
-  let { closeModal } = $$props;
-  let selectedPlayerId = 0;
-  let showConfirm = false;
-  if ($$props.visible === void 0 && $$bindings.visible && visible !== void 0)
-    $$bindings.visible(visible);
-  if ($$props.closeModal === void 0 && $$bindings.closeModal && closeModal !== void 0)
-    $$bindings.closeModal(closeModal);
-  isSubmitDisabled = selectedPlayerId <= 0;
-  {
-    if (isSubmitDisabled && showConfirm) {
-      showConfirm = false;
-    }
-  }
-  $$unsubscribe_playerStore();
-  $$unsubscribe_clubStore();
-  return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
-    default: () => {
-      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-itffcx">Revalue Player Down</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><div class="flex-col space-y-2"><p data-svelte-h="svelte-1tp620s">Select the player&#39;s club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($clubStore, (club) => {
-        return `<option${add_attribute("value", club.id, 0)}>${escape(club.friendlyName)}</option>`;
-      })}</select></div> ${``} ${``} <div class="border-b border-gray-200"></div> <div class="items-center flex space-x-4"><button class="px-4 py-2 default-button fpl-cancel-btn min-w-[150px]" type="button" data-svelte-h="svelte-19jfrwv">Cancel</button> <button${add_attribute(
-        "class",
-        `${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-              px-4 py-2 default-button min-w-[150px]`,
-        0
-      )} ${isSubmitDisabled ? "disabled" : ""}>Raise Proposal</button></div> ${showConfirm ? `<div class="items-center flex" data-svelte-h="svelte-6fi0oe"><p class="text-orange-400">Failed proposals will cost the proposer 10 $FPL tokens.</p></div> <div class="items-center flex"><button${add_attribute(
-        "class",
-        `${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-                            px-4 py-2 default-button w-full`,
-        0
-      )} ${isSubmitDisabled ? "disabled" : ""}>Confirm Submit Proposal</button></div>` : ``}</div></div> ${``}</div>`;
-    }
-  })}`;
-});
-var define_process_env_default$3 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
-const Move_fixture = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let isSubmitDisabled;
-  let $clubStore, $$unsubscribe_clubStore;
-  let $$unsubscribe_fixtureStore;
-  $$unsubscribe_clubStore = subscribe(clubStore, (value) => $clubStore = value);
-  $$unsubscribe_fixtureStore = subscribe(fixtureStore, (value) => value);
-  let { visible } = $$props;
-  let { closeModal } = $$props;
-  let gameweeks = Array.from(
-    {
-      length: Number(define_process_env_default$3.TOTAL_GAMEWEEKS)
-    },
-    (_, i) => i + 1
-  );
-  let selectedFixtureId = 0;
-  let gameweekFixtures = [];
-  let date = "";
-  let time = "";
-  let showConfirm = false;
-  function getTeamById(teamId) {
-    return $clubStore.find((x) => x.id === teamId);
-  }
-  if ($$props.visible === void 0 && $$bindings.visible && visible !== void 0)
-    $$bindings.visible(visible);
-  if ($$props.closeModal === void 0 && $$bindings.closeModal && closeModal !== void 0)
-    $$bindings.closeModal(closeModal);
-  isSubmitDisabled = !selectedFixtureId;
-  {
-    if (isSubmitDisabled && showConfirm) {
-      showConfirm = false;
-    }
-  }
-  $$unsubscribe_clubStore();
-  $$unsubscribe_fixtureStore();
-  return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
-    default: () => {
-      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-kmrp2y">Move Fixture</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><div class="flex-col space-y-2"><p data-svelte-h="svelte-1hdxidk">Select Gameweek:</p> <select class="p-2 fpl-dropdown my-4 min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-1qi0ln6">Select Gameweek</option>${each(gameweeks, (gameweek) => {
-        return `<option${add_attribute("value", gameweek, 0)}>Gameweek ${escape(gameweek)}</option>`;
-      })}</select></div> <div class="flex-col space-y-2"><p data-svelte-h="svelte-1mcsvml">Select Fixture:</p> <select class="p-2 fpl-dropdown my-4 min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-1xsaz9j">Select Fixture</option>${each(gameweekFixtures, (fixture) => {
-        let homeTeam = getTeamById(fixture.homeClubId), awayTeam = getTeamById(fixture.awayClubId);
-        return `  <option${add_attribute("value", fixture.id, 0)}>${escape(homeTeam.friendlyName)} v ${escape(awayTeam.friendlyName)}</option>`;
-      })}</select></div> <div class="border-b border-gray-200 my-4"></div> <p class="mr-2 my-2" data-svelte-h="svelte-1ct6cbi">Set new date:</p> <div class="flex flex-row my-2"><p class="mr-2" data-svelte-h="svelte-1gu3l1z">Select Date:</p> <input type="date" class="input input-bordered"${add_attribute("value", date, 0)}></div> <div class="flex flex-row my-2"><p class="mr-2" data-svelte-h="svelte-y26t78">Select Time:</p> <input type="time" class="input input-bordered"${add_attribute("value", time, 0)}></div> <div class="flex flex-row my-2 items-center"><p class="mr-2" data-svelte-h="svelte-1ullkw5">Select Gameweek:</p> <select class="p-2 fpl-dropdown my-4 min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-1kvgm78">Select New Gameweek</option>${each(gameweeks, (gameweek) => {
-        return `<option${add_attribute("value", gameweek, 0)}>Gameweek ${escape(gameweek)}</option>`;
-      })}</select></div> <div class="border-b border-gray-200"></div> <div class="items-center flex space-x-4"><button class="px-4 py-2 default-button fpl-cancel-btn min-w-[150px]" type="button" data-svelte-h="svelte-19jfrwv">Cancel</button> <button${add_attribute(
-        "class",
-        `${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-                        px-4 py-2 default-button min-w-[150px]`,
-        0
-      )} ${isSubmitDisabled ? "disabled" : ""}>Raise Proposal</button></div> ${showConfirm ? `<div class="items-center flex" data-svelte-h="svelte-6fi0oe"><p class="text-orange-400">Failed proposals will cost the proposer 10 $FPL tokens.</p></div> <div class="items-center flex"><button${add_attribute(
-        "class",
-        `${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-                            px-4 py-2 default-button w-full`,
-        0
-      )} ${isSubmitDisabled ? "disabled" : ""}>Confirm Submit Proposal</button></div>` : ``}</div></div> ${`${validate_component(Local_spinner, "LocalSpinner").$$render($$result, {}, {}, {})}`}</div>`;
-    }
-  })}`;
-});
-var define_process_env_default$2 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
-const Postpone_fixture = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let isSubmitDisabled;
-  let $clubStore, $$unsubscribe_clubStore;
-  let $$unsubscribe_fixtureStore;
-  $$unsubscribe_clubStore = subscribe(clubStore, (value) => $clubStore = value);
-  $$unsubscribe_fixtureStore = subscribe(fixtureStore, (value) => value);
-  let { visible } = $$props;
-  let { closeModal } = $$props;
-  let gameweeks = Array.from(
-    {
-      length: Number(define_process_env_default$2.TOTAL_GAMEWEEKS)
-    },
-    (_, i) => i + 1
-  );
-  let selectedFixtureId = 0;
-  let gameweekFixtures = [];
-  let showConfirm = false;
-  function getTeamById(teamId) {
-    return $clubStore.find((x) => x.id === teamId);
-  }
-  if ($$props.visible === void 0 && $$bindings.visible && visible !== void 0)
-    $$bindings.visible(visible);
-  if ($$props.closeModal === void 0 && $$bindings.closeModal && closeModal !== void 0)
-    $$bindings.closeModal(closeModal);
-  isSubmitDisabled = !selectedFixtureId;
-  {
-    if (isSubmitDisabled && showConfirm) {
-      showConfirm = false;
-    }
-  }
-  $$unsubscribe_clubStore();
-  $$unsubscribe_fixtureStore();
-  return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
-    default: () => {
-      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-p6nm2f">Postpone Fixture</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><div class="flex-col space-y-2"><p data-svelte-h="svelte-1hdxidk">Select Gameweek:</p> <select class="p-2 fpl-dropdown my-4 min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-1qi0ln6">Select Gameweek</option>${each(gameweeks, (gameweek) => {
-        return `<option${add_attribute("value", gameweek, 0)}>Gameweek ${escape(gameweek)}</option>`;
-      })}</select></div> <div class="flex-col space-y-2"><p data-svelte-h="svelte-1mcsvml">Select Fixture:</p> <select class="p-2 fpl-dropdown my-4 min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-1xsaz9j">Select Fixture</option>${each(gameweekFixtures, (fixture) => {
-        let homeTeam = getTeamById(fixture.homeClubId), awayTeam = getTeamById(fixture.awayClubId);
-        return `  <option${add_attribute("value", fixture.id, 0)}>${escape(homeTeam.friendlyName)} v ${escape(awayTeam.friendlyName)}</option>`;
-      })}</select></div> <div class="border-b border-gray-200"></div> <div class="items-center flex space-x-4"><button class="px-4 py-2 default-button fpl-cancel-btn min-w-[150px]" type="button" data-svelte-h="svelte-19jfrwv">Cancel</button> <button${add_attribute(
-        "class",
-        `${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-                        px-4 py-2 default-button min-w-[150px]`,
-        0
-      )} ${isSubmitDisabled ? "disabled" : ""}>Raise Proposal</button></div> ${showConfirm ? `<div class="items-center flex" data-svelte-h="svelte-6fi0oe"><p class="text-orange-400">Failed proposals will cost the proposer 10 $FPL tokens.</p></div> <div class="items-center flex"><button${add_attribute(
-        "class",
-        `${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-                            px-4 py-2 default-button w-full`,
-        0
-      )} ${isSubmitDisabled ? "disabled" : ""}>Confirm Submit Proposal</button></div>` : ``}</div></div> ${`${validate_component(Local_spinner, "LocalSpinner").$$render($$result, {}, {}, {})}`}</div>`;
-    }
-  })}`;
-});
-var define_process_env_default$1 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
-const Reschedule_fixture = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let isSubmitDisabled;
-  let $clubStore, $$unsubscribe_clubStore;
-  $$unsubscribe_clubStore = subscribe(clubStore, (value) => $clubStore = value);
-  let { visible } = $$props;
-  let { closeModal } = $$props;
-  let gameweeks = Array.from(
-    {
-      length: Number(define_process_env_default$1.TOTAL_GAMEWEEKS)
-    },
-    (_, i) => i + 1
-  );
-  let selectedFixtureId = 0;
-  let postponedFixtures = [];
-  let date = "";
-  let time = "";
-  let showConfirm = false;
-  function getTeamById(teamId) {
-    return $clubStore.find((x) => x.id === teamId);
-  }
-  if ($$props.visible === void 0 && $$bindings.visible && visible !== void 0)
-    $$bindings.visible(visible);
-  if ($$props.closeModal === void 0 && $$bindings.closeModal && closeModal !== void 0)
-    $$bindings.closeModal(closeModal);
-  isSubmitDisabled = !selectedFixtureId;
-  {
-    if (isSubmitDisabled && showConfirm) {
-      showConfirm = false;
-    }
-  }
-  $$unsubscribe_clubStore();
-  return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
-    default: () => {
-      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-q68hh1">Reschedule Fixture</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><div class="flex-col space-y-2"><p data-svelte-h="svelte-ywwbfb">Select Postponed Fixture:</p> <select class="p-2 fpl-dropdown my-4 min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-1xsaz9j">Select Fixture</option>${each(postponedFixtures, (fixture) => {
-        let homeTeam = getTeamById(fixture.homeClubId), awayTeam = getTeamById(fixture.awayClubId);
-        return `  <option${add_attribute("value", fixture.id, 0)}>${escape(homeTeam.friendlyName)} v ${escape(awayTeam.friendlyName)}</option>`;
-      })}</select></div> <div class="border-b border-gray-200"></div> <p class="mr-2 my-2" data-svelte-h="svelte-1ct6cbi">Set new date:</p> <div class="flex flex-row my-2"><p class="mr-2" data-svelte-h="svelte-1gu3l1z">Select Date:</p> <input type="date" class="input input-bordered"${add_attribute("value", date, 0)}></div> <div class="flex flex-row my-2"><p class="mr-2" data-svelte-h="svelte-y26t78">Select Time:</p> <input type="time" class="input input-bordered"${add_attribute("value", time, 0)}></div> <div class="flex flex-row my-2 items-center"><p class="mr-2" data-svelte-h="svelte-1ullkw5">Select Gameweek:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-1kvgm78">Select New Gameweek</option>${each(gameweeks, (gameweek) => {
-        return `<option${add_attribute("value", gameweek, 0)}>Gameweek ${escape(gameweek)}</option>`;
-      })}</select></div> <div class="border-b border-gray-200"></div> <div class="items-center flex space-x-4"><button class="px-4 py-2 default-button fpl-cancel-btn min-w-[150px]" type="button" data-svelte-h="svelte-19jfrwv">Cancel</button> <button${add_attribute(
-        "class",
-        `${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-                        px-4 py-2 default-button min-w-[150px]`,
-        0
-      )} ${isSubmitDisabled ? "disabled" : ""}>Raise Proposal</button></div> ${showConfirm ? `<div class="items-center flex" data-svelte-h="svelte-6fi0oe"><p class="text-orange-400">Failed proposals will cost the proposer 10 $FPL tokens.</p></div> <div class="items-center flex"><button${add_attribute(
-        "class",
-        `${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-                            px-4 py-2 default-button w-full`,
-        0
-      )} ${isSubmitDisabled ? "disabled" : ""}>Confirm Submit Proposal</button></div>` : ``}</div></div> ${`${validate_component(Local_spinner, "LocalSpinner").$$render($$result, {}, {}, {})}`}</div>`;
-    }
-  })}`;
-});
-const Loan_player = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let isSubmitDisabled;
-  let $$unsubscribe_playerStore;
-  let $clubStore, $$unsubscribe_clubStore;
-  $$unsubscribe_playerStore = subscribe(playerStore, (value) => value);
-  $$unsubscribe_clubStore = subscribe(clubStore, (value) => $clubStore = value);
-  let { visible } = $$props;
-  let { closeModal } = $$props;
-  let selectedPlayerId = 0;
-  let showConfirm = false;
-  if ($$props.visible === void 0 && $$bindings.visible && visible !== void 0)
-    $$bindings.visible(visible);
-  if ($$props.closeModal === void 0 && $$bindings.closeModal && closeModal !== void 0)
-    $$bindings.closeModal(closeModal);
-  isSubmitDisabled = selectedPlayerId <= 0;
-  {
-    if (isSubmitDisabled && showConfirm) {
-      showConfirm = false;
-    }
-  }
-  $$unsubscribe_playerStore();
-  $$unsubscribe_clubStore();
-  return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
-    default: () => {
-      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-yv1guj">Loan Player</h3> <button class="times-button" data-svelte-h="svelte-2aq7vi">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><div class="flex-col space-y-2"><p data-svelte-h="svelte-1tp620s">Select the player&#39;s club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($clubStore, (club) => {
-        return `<option${add_attribute("value", club.id, 0)}>${escape(club.friendlyName)}</option>`;
-      })}</select></div> ${``} <div class="border-b border-gray-200"></div> <div class="items-center flex space-x-4"><button class="px-4 py-2 default-button fpl-cancel-btn min-w-[150px]" type="button" data-svelte-h="svelte-19jfrwv">Cancel</button> <button${add_attribute(
-        "class",
-        `${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-                        px-4 py-2 default-button min-w-[150px]`,
-        0
-      )} ${isSubmitDisabled ? "disabled" : ""}>Raise Proposal</button></div> ${showConfirm ? `<div class="items-center flex" data-svelte-h="svelte-6fi0oe"><p class="text-orange-400">Failed proposals will cost the proposer 10 $FPL tokens.</p></div> <div class="items-center flex"><button${add_attribute(
-        "class",
-        `${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-                            px-4 py-2 default-button w-full`,
-        0
-      )} ${isSubmitDisabled ? "disabled" : ""}>Confirm Submit Proposal</button></div>` : ``}</div></div> ${``}</div>`;
-    }
-  })}`;
-});
-const Transfer_player = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let isSubmitDisabled;
-  let $$unsubscribe_playerStore;
-  let $clubStore, $$unsubscribe_clubStore;
-  $$unsubscribe_playerStore = subscribe(playerStore, (value) => value);
-  $$unsubscribe_clubStore = subscribe(clubStore, (value) => $clubStore = value);
-  let { visible } = $$props;
-  let { closeModal } = $$props;
-  let selectedPlayerId = 0;
-  let showConfirm = false;
-  if ($$props.visible === void 0 && $$bindings.visible && visible !== void 0)
-    $$bindings.visible(visible);
-  if ($$props.closeModal === void 0 && $$bindings.closeModal && closeModal !== void 0)
-    $$bindings.closeModal(closeModal);
-  isSubmitDisabled = selectedPlayerId <= 0;
-  {
-    if (isSubmitDisabled && showConfirm) {
-      showConfirm = false;
-    }
-  }
-  $$unsubscribe_playerStore();
-  $$unsubscribe_clubStore();
-  return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
-    default: () => {
-      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-eogsmc">Transfer Player</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><p data-svelte-h="svelte-1tp620s">Select the player&#39;s club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($clubStore, (club) => {
-        return `<option${add_attribute("value", club.id, 0)}>${escape(club.friendlyName)}</option>`;
-      })}</select> ${``} <div class="border-b border-gray-200"></div> <div class="items-center flex space-x-4"><button class="px-4 py-2 default-button fpl-cancel-btn min-w-[150px]" type="button" data-svelte-h="svelte-19jfrwv">Cancel</button> <button${add_attribute(
-        "class",
-        `${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-                        px-4 py-2 default-button min-w-[150px]`,
-        0
-      )} ${isSubmitDisabled ? "disabled" : ""}>Raise Proposal</button></div> ${showConfirm ? `<div class="items-center flex" data-svelte-h="svelte-6fi0oe"><p class="text-orange-400">Failed proposals will cost the proposer 10 $FPL tokens.</p></div> <div class="items-center flex"><button${add_attribute(
-        "class",
-        `${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-                            px-4 py-2 default-button w-full`,
-        0
-      )} ${isSubmitDisabled ? "disabled" : ""}>Confirm Submit Proposal</button></div>` : ``}</div></div> ${``}</div>`;
-    }
-  })}`;
-});
-const Recall_player = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let isSubmitDisabled;
-  let $clubStore, $$unsubscribe_clubStore;
-  $$unsubscribe_clubStore = subscribe(clubStore, (value) => $clubStore = value);
-  let { visible } = $$props;
-  let { closeModal } = $$props;
-  let selectedPlayerId = 0;
-  let showConfirm = false;
-  if ($$props.visible === void 0 && $$bindings.visible && visible !== void 0)
-    $$bindings.visible(visible);
-  if ($$props.closeModal === void 0 && $$bindings.closeModal && closeModal !== void 0)
-    $$bindings.closeModal(closeModal);
-  isSubmitDisabled = selectedPlayerId <= 0;
-  {
-    if (isSubmitDisabled && showConfirm) {
-      showConfirm = false;
-    }
-  }
-  $$unsubscribe_clubStore();
-  return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
-    default: () => {
-      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-awztf2">Recall Player</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><div class="flex-col space-y-2"><p data-svelte-h="svelte-1tp620s">Select the player&#39;s club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($clubStore, (club) => {
-        return `<option${add_attribute("value", club.id, 0)}>${escape(club.friendlyName)}</option>`;
-      })}</select></div> ${``} <div class="border-b border-gray-200"></div> <div class="items-center flex space-x-4"><button class="px-4 py-2 default-button fpl-cancel-btn min-w-[150px]" type="button" data-svelte-h="svelte-19jfrwv">Cancel</button> <button${add_attribute(
-        "class",
-        `${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-                        px-4 py-2 default-button min-w-[150px]`,
-        0
-      )} ${isSubmitDisabled ? "disabled" : ""}>Raise Proposal</button></div> ${showConfirm ? `<div class="items-center flex" data-svelte-h="svelte-6fi0oe"><p class="text-orange-400">Failed proposals will cost the proposer 10 $FPL tokens.</p></div> <div class="items-center flex"><button${add_attribute(
-        "class",
-        `${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-                            px-4 py-2 default-button w-full`,
-        0
-      )} ${isSubmitDisabled ? "disabled" : ""}>Confirm Submit Proposal</button></div>` : ``}</div></div> ${`${validate_component(Local_spinner, "LocalSpinner").$$render($$result, {}, {}, {})}`}</div>`;
-    }
-  })}`;
-});
-const Create_player = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let $$unsubscribe_clubStore;
-  let $$unsubscribe_countryStore;
-  $$unsubscribe_clubStore = subscribe(clubStore, (value) => value);
-  $$unsubscribe_countryStore = subscribe(countryStore, (value) => value);
-  let { visible } = $$props;
-  let { closeModal } = $$props;
-  if ($$props.visible === void 0 && $$bindings.visible && visible !== void 0)
-    $$bindings.visible(visible);
-  if ($$props.closeModal === void 0 && $$bindings.closeModal && closeModal !== void 0)
-    $$bindings.closeModal(closeModal);
-  $$unsubscribe_clubStore();
-  $$unsubscribe_countryStore();
-  return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
-    default: () => {
-      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-9uabtx">Create Player</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> ${`${validate_component(Local_spinner, "LocalSpinner").$$render($$result, {}, {}, {})}`}</div>`;
-    }
-  })}`;
-});
-const Update_player = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let isSubmitDisabled;
-  let $$unsubscribe_playerStore;
-  let $clubStore, $$unsubscribe_clubStore;
-  $$unsubscribe_playerStore = subscribe(playerStore, (value) => value);
-  $$unsubscribe_clubStore = subscribe(clubStore, (value) => $clubStore = value);
-  let { visible } = $$props;
-  let { closeModal } = $$props;
-  let firstName = "";
-  let lastName = "";
-  let shirtNumber;
-  let nationalityId;
-  let displayDOB = "";
-  let showConfirm = false;
-  if ($$props.visible === void 0 && $$bindings.visible && visible !== void 0)
-    $$bindings.visible(visible);
-  if ($$props.closeModal === void 0 && $$bindings.closeModal && closeModal !== void 0)
-    $$bindings.closeModal(closeModal);
-  isSubmitDisabled = firstName.length > 50 || lastName.length == 0 || lastName.length > 50 || shirtNumber <= 0 || shirtNumber > 99 || displayDOB == "" || nationalityId <= 0;
-  {
-    if (isSubmitDisabled && showConfirm) {
-      showConfirm = false;
-    }
-  }
-  $$unsubscribe_playerStore();
-  $$unsubscribe_clubStore();
-  return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
-    default: () => {
-      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-111jmmy">Update Player</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><div class="flex-col space-y-2"><p data-svelte-h="svelte-1tp620s">Select the player&#39;s club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($clubStore, (club) => {
-        return `<option${add_attribute("value", club.id, 0)}>${escape(club.friendlyName)}</option>`;
-      })}</select></div> ${``} <div class="border-b border-gray-200"></div> <div class="items-center flex space-x-4"><button class="px-4 py-2 default-button fpl-cancel-btn min-w-[150px]" type="button" data-svelte-h="svelte-19jfrwv">Cancel</button> <button${add_attribute(
-        "class",
-        `${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-                        px-4 py-2 default-button min-w-[150px]`,
-        0
-      )} ${isSubmitDisabled ? "disabled" : ""}>Raise Proposal</button></div> ${showConfirm ? `<div class="items-center flex" data-svelte-h="svelte-6fi0oe"><p class="text-orange-400">Failed proposals will cost the proposer 10 $FPL tokens.</p></div> <div class="items-center flex"><button${add_attribute(
-        "class",
-        `${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-                            px-4 py-2 default-button w-full`,
-        0
-      )} ${isSubmitDisabled ? "disabled" : ""}>Confirm Submit Proposal</button></div>` : ``}</div></div> ${`${validate_component(Local_spinner, "LocalSpinner").$$render($$result, {}, {}, {})}`}</div>`;
-    }
-  })}`;
-});
-const Set_player_injury = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let isSubmitDisabled;
-  let $$unsubscribe_playerStore;
-  let $clubStore, $$unsubscribe_clubStore;
-  $$unsubscribe_playerStore = subscribe(playerStore, (value) => value);
-  $$unsubscribe_clubStore = subscribe(clubStore, (value) => $clubStore = value);
-  let { visible } = $$props;
-  let { closeModal } = $$props;
-  let selectedPlayerId = 0;
-  let showConfirm = false;
-  if ($$props.visible === void 0 && $$bindings.visible && visible !== void 0)
-    $$bindings.visible(visible);
-  if ($$props.closeModal === void 0 && $$bindings.closeModal && closeModal !== void 0)
-    $$bindings.closeModal(closeModal);
-  isSubmitDisabled = selectedPlayerId <= 0;
-  {
-    if (isSubmitDisabled && showConfirm) {
-      showConfirm = false;
-    }
-  }
-  $$unsubscribe_playerStore();
-  $$unsubscribe_clubStore();
-  return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
-    default: () => {
-      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-1epdx5w">Set Player Injury</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><p data-svelte-h="svelte-1tp620s">Select the player&#39;s club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($clubStore, (club) => {
-        return `<option${add_attribute("value", club.id, 0)}>${escape(club.friendlyName)}</option>`;
-      })}</select> ${``} <div class="border-b border-gray-200"></div> <div class="items-center flex space-x-4"><button class="px-4 py-2 default-button fpl-cancel-btn min-w-[150px]" type="button" data-svelte-h="svelte-19jfrwv">Cancel</button> <button${add_attribute(
-        "class",
-        `${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-                        px-4 py-2 default-button min-w-[150px]`,
-        0
-      )} ${isSubmitDisabled ? "disabled" : ""}>Raise Proposal</button></div> ${showConfirm ? `<div class="items-center flex" data-svelte-h="svelte-6fi0oe"><p class="text-orange-400">Failed proposals will cost the proposer 10 $FPL tokens.</p></div> <div class="items-center flex"><button${add_attribute(
-        "class",
-        `${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-                            px-4 py-2 default-button w-full`,
-        0
-      )} ${isSubmitDisabled ? "disabled" : ""}>Confirm Submit Proposal</button></div>` : ``}</div></div> ${`${validate_component(Local_spinner, "LocalSpinner").$$render($$result, {}, {}, {})}`}</div>`;
-    }
-  })}`;
-});
-const Retire_player = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let isSubmitDisabled;
-  let $$unsubscribe_playerStore;
-  let $clubStore, $$unsubscribe_clubStore;
-  $$unsubscribe_playerStore = subscribe(playerStore, (value) => value);
-  $$unsubscribe_clubStore = subscribe(clubStore, (value) => $clubStore = value);
-  let { visible } = $$props;
-  let { closeModal } = $$props;
-  let selectedPlayerId = 0;
-  let showConfirm = false;
-  if ($$props.visible === void 0 && $$bindings.visible && visible !== void 0)
-    $$bindings.visible(visible);
-  if ($$props.closeModal === void 0 && $$bindings.closeModal && closeModal !== void 0)
-    $$bindings.closeModal(closeModal);
-  isSubmitDisabled = selectedPlayerId <= 0;
-  {
-    if (isSubmitDisabled && showConfirm) {
-      showConfirm = false;
-    }
-  }
-  $$unsubscribe_playerStore();
-  $$unsubscribe_clubStore();
-  return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
-    default: () => {
-      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-181rwt8">Retire Player</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><p data-svelte-h="svelte-1tp620s">Select the player&#39;s club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($clubStore, (club) => {
-        return `<option${add_attribute("value", club.id, 0)}>${escape(club.friendlyName)}</option>`;
-      })}</select> ${``} <div class="border-b border-gray-200"></div> <div class="items-center flex space-x-4"><button class="px-4 py-2 default-button fpl-cancel-btn min-w-[150px]" type="button" data-svelte-h="svelte-19jfrwv">Cancel</button> <button${add_attribute(
-        "class",
-        `${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-                        px-4 py-2 default-button min-w-[150px]`,
-        0
-      )} ${isSubmitDisabled ? "disabled" : ""}>Raise Proposal</button></div> ${showConfirm ? `<div class="items-center flex" data-svelte-h="svelte-6fi0oe"><p class="text-orange-400">Failed proposals will cost the proposer 10 $FPL tokens.</p></div> <div class="items-center flex"><button${add_attribute(
-        "class",
-        `${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-                            px-4 py-2 default-button w-full`,
-        0
-      )} ${isSubmitDisabled ? "disabled" : ""}>Confirm Submit Proposal</button></div>` : ``}</div></div> ${``}</div>`;
-    }
-  })}`;
-});
-const Unretire_player = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let isSubmitDisabled;
-  let $clubStore, $$unsubscribe_clubStore;
-  $$unsubscribe_clubStore = subscribe(clubStore, (value) => $clubStore = value);
-  let { visible } = $$props;
-  let { closeModal } = $$props;
-  let selectedPlayerId = 0;
-  let showConfirm = false;
-  if ($$props.visible === void 0 && $$bindings.visible && visible !== void 0)
-    $$bindings.visible(visible);
-  if ($$props.closeModal === void 0 && $$bindings.closeModal && closeModal !== void 0)
-    $$bindings.closeModal(closeModal);
-  isSubmitDisabled = selectedPlayerId <= 0;
-  {
-    if (isSubmitDisabled && showConfirm) {
-      showConfirm = false;
-    }
-  }
-  $$unsubscribe_clubStore();
-  return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
-    default: () => {
-      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-1s9cm8h">Unretire Player</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><div class="flex-col space-y-2"><p data-svelte-h="svelte-1tp620s">Select the player&#39;s club:</p> <select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($clubStore, (club) => {
-        return `<option${add_attribute("value", club.id, 0)}>${escape(club.friendlyName)}</option>`;
-      })}</select></div> ${``} <div class="border-b border-gray-200"></div> <div class="items-center flex space-x-4"><button class="px-4 py-2 default-button fpl-cancel-btn min-w-[150px]" type="button" data-svelte-h="svelte-19jfrwv">Cancel</button> <button${add_attribute(
-        "class",
-        `${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-                        px-4 py-2 default-button min-w-[150px]`,
-        0
-      )} ${isSubmitDisabled ? "disabled" : ""}>Raise Proposal</button></div> ${showConfirm ? `<div class="items-center flex" data-svelte-h="svelte-6fi0oe"><p class="text-orange-400">Failed proposals will cost the proposer 10 $FPL tokens.</p></div> <div class="items-center flex"><button${add_attribute(
-        "class",
-        `${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-                            px-4 py-2 default-button w-full`,
-        0
-      )} ${isSubmitDisabled ? "disabled" : ""}>Confirm Submit Proposal</button></div>` : ``}</div></div> ${`${validate_component(Local_spinner, "LocalSpinner").$$render($$result, {}, {}, {})}`}</div>`;
-    }
-  })}`;
-});
-const Promote_new_club = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let isSubmitDisabled;
-  let { visible } = $$props;
-  let { closeModal } = $$props;
-  let name = "";
-  let friendlyName = "";
-  let abbreviatedName = "";
-  let primaryColourHex = "";
-  let secondaryColourHex = "";
-  let thirdColourHex = "";
-  let showConfirm = false;
-  let shirtTypes = [{ Filled: null }, { Striped: null }];
-  if ($$props.visible === void 0 && $$bindings.visible && visible !== void 0)
-    $$bindings.visible(visible);
-  if ($$props.closeModal === void 0 && $$bindings.closeModal && closeModal !== void 0)
-    $$bindings.closeModal(closeModal);
-  isSubmitDisabled = name.length <= 0 || name.length > 100 || friendlyName.length <= 0 || friendlyName.length > 50 || abbreviatedName.length != 3;
-  {
-    if (isSubmitDisabled && showConfirm) {
-      showConfirm = false;
-    }
-  }
-  return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
-    default: () => {
-      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-6c6oto">Promote New Club</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><input type="text" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black" placeholder="Club Full Name"${add_attribute("value", name, 0)}> <input type="text" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black" placeholder="Club Friendly Name"${add_attribute("value", name, 0)}> <input type="text" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black" placeholder="Abbreviated Name"${add_attribute("value", abbreviatedName, 0)}> <input type="color" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"${add_attribute("value", primaryColourHex, 0)}> <input type="color" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"${add_attribute("value", secondaryColourHex, 0)}> <input type="color" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"${add_attribute("value", thirdColourHex, 0)}> <select class="p-2 fpl-dropdown my-4 min-w-[100px]">${each(shirtTypes, (shirt) => {
-        return `<option${add_attribute("value", shirt, 0)}>${escape(shirt)}</option>`;
-      })}</select> <div class="border-b border-gray-200"></div> <div class="items-center flex space-x-4"><button class="px-4 py-2 default-button fpl-cancel-btn min-w-[150px]" type="button" data-svelte-h="svelte-19jfrwv">Cancel</button> <button${add_attribute(
-        "class",
-        `${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-                        px-4 py-2 default-button min-w-[150px]`,
-        0
-      )} ${isSubmitDisabled ? "disabled" : ""}>Raise Proposal</button></div> ${showConfirm ? `<div class="items-center flex" data-svelte-h="svelte-6fi0oe"><p class="text-orange-400">Failed proposals will cost the proposer 10 $FPL tokens.</p></div> <div class="items-center flex"><button${add_attribute(
-        "class",
-        `${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-                            px-4 py-2 default-button w-full`,
-        0
-      )} ${isSubmitDisabled ? "disabled" : ""}>Confirm Submit Proposal</button></div>` : ``}</div></div> ${``}</div>`;
-    }
-  })}`;
-});
-const Update_club = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let isSubmitDisabled;
-  let $clubStore, $$unsubscribe_clubStore;
-  $$unsubscribe_clubStore = subscribe(clubStore, (value) => $clubStore = value);
-  let { visible } = $$props;
-  let { closeModal } = $$props;
-  let selectedClubId = 0;
-  let showConfirm = false;
-  if ($$props.visible === void 0 && $$bindings.visible && visible !== void 0)
-    $$bindings.visible(visible);
-  if ($$props.closeModal === void 0 && $$bindings.closeModal && closeModal !== void 0)
-    $$bindings.closeModal(closeModal);
-  isSubmitDisabled = selectedClubId <= 0;
-  {
-    if (isSubmitDisabled && showConfirm) {
-      showConfirm = false;
-    }
-  }
-  $$unsubscribe_clubStore();
-  return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
-    default: () => {
-      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-1p20ean">Update Club</h3> <button class="times-button" data-svelte-h="svelte-jkt426">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><select class="p-2 fpl-dropdown min-w-[100px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-gooey4">Select Club</option>${each($clubStore, (club) => {
-        return `<option${add_attribute("value", club.id, 0)}>${escape(club.friendlyName)}</option>`;
-      })}</select> ${``} <div class="border-b border-gray-200"></div> <div class="items-center flex space-x-4"><button class="px-4 py-2 default-button fpl-cancel-btn min-w-[150px]" type="button" data-svelte-h="svelte-19jfrwv">Cancel</button> <button${add_attribute(
-        "class",
-        `${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-                        px-4 py-2 default-button min-w-[150px]`,
-        0
-      )} ${isSubmitDisabled ? "disabled" : ""}>Raise Proposal</button></div> ${showConfirm ? `<div class="items-center flex" data-svelte-h="svelte-6fi0oe"><p class="text-orange-400">Failed proposals will cost the proposer 10 $FPL tokens.</p></div> <div class="items-center flex"><button${add_attribute(
-        "class",
-        `${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-                            px-4 py-2 default-button w-full`,
-        0
-      )} ${isSubmitDisabled ? "disabled" : ""}>Confirm Submit Proposal</button></div>` : ``}</div></div> ${`${validate_component(Local_spinner, "LocalSpinner").$$render($$result, {}, {}, {})}`}</div>`;
-    }
-  })}`;
-});
-var define_process_env_default = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
-const Add_fixture_data = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let isSubmitDisabled;
-  let $clubStore, $$unsubscribe_clubStore;
-  let $$unsubscribe_fixtureStore;
-  $$unsubscribe_clubStore = subscribe(clubStore, (value) => $clubStore = value);
-  $$unsubscribe_fixtureStore = subscribe(fixtureStore, (value) => value);
-  let { visible } = $$props;
-  let { closeModal } = $$props;
-  let gameweeks = Array.from(
-    {
-      length: Number(define_process_env_default.TOTAL_GAMEWEEKS)
-    },
-    (_, i) => i + 1
-  );
-  let selectedFixtureId;
-  let gameweekFixtures = [];
-  function getTeamById(teamId) {
-    return $clubStore.find((x) => x.id === teamId);
-  }
-  if ($$props.visible === void 0 && $$bindings.visible && visible !== void 0)
-    $$bindings.visible(visible);
-  if ($$props.closeModal === void 0 && $$bindings.closeModal && closeModal !== void 0)
-    $$bindings.closeModal(closeModal);
-  isSubmitDisabled = !selectedFixtureId;
-  $$unsubscribe_clubStore();
-  $$unsubscribe_fixtureStore();
-  return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
-    default: () => {
-      return `<div class="mx-4 p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-5slgzo">Add Fixture Data</h3> <button class="times-button" data-svelte-h="svelte-2aq7vi">×</button></div> <div class="flex justify-start items-center w-full"><div class="w-full flex-col space-y-4 mb-2"><div class="flex-col space-y-2"><p data-svelte-h="svelte-1hdxidk">Select Gameweek:</p> <select class="p-2 fpl-dropdown my-4 min-w-[100px]">${each(gameweeks, (gameweek) => {
-        return `<option${add_attribute("value", gameweek, 0)}>Gameweek ${escape(gameweek)}</option>`;
-      })}</select></div> <div class="flex-col space-y-2"><p data-svelte-h="svelte-1mcsvml">Select Fixture:</p> <select class="p-2 fpl-dropdown my-4 min-w-[100px]">${each(gameweekFixtures, (fixture) => {
-        let homeTeam = getTeamById(fixture.homeClubId), awayTeam = getTeamById(fixture.awayClubId);
-        return `  <option${add_attribute("value", fixture.id, 0)}>${escape(homeTeam.friendlyName)} v ${escape(awayTeam.friendlyName)}</option>`;
-      })}</select></div> <div class="border-b border-gray-200"></div> <div class="items-center flex space-x-4"><button class="px-4 py-2 default-button fpl-cancel-btn min-w-[150px]" type="button" data-svelte-h="svelte-1cdq9j1">Cancel</button> <button${add_attribute(
-        "class",
-        `${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-                        px-4 py-2 default-button min-w-[150px]`,
-        0
-      )} ${isSubmitDisabled ? "disabled" : ""}>Add Fixture Data</button></div></div></div> ${`${validate_component(Local_spinner, "LocalSpinner").$$render($$result, {}, {}, {})}`}</div>`;
-    }
-  })}`;
-});
-const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let showRevaluePlayerUpModal = false;
-  let showRevaluePlayerDownModal = false;
-  let showAddInitialFixturesModal = false;
-  let showMoveFixtureModal = false;
-  let showPostponeFixtureModal = false;
-  let showRescheduleFixtureModal = false;
-  let showLoanPlayerModal = false;
-  let showTransferPlayerModal = false;
-  let showRecallPlayerModal = false;
-  let showCreatePlayerModal = false;
-  let showUpdatePlayerModal = false;
-  let showSetPlayerInjuryModal = false;
-  let showRetirePlayerModal = false;
-  let showUnretirePlayerModal = false;
-  let showPromoteNewClubModal = false;
-  let showUpdateClubModal = false;
-  let showAddFixtureDataModal = false;
-  function hideRevaluePlayerUpModal() {
-    showRevaluePlayerUpModal = false;
-  }
-  function hideRevaluePlayerDownModal() {
-    showRevaluePlayerDownModal = false;
-  }
-  function hideAddInitialFixturesModal() {
-    showAddInitialFixturesModal = false;
-  }
-  function hideMoveFixturesModal() {
-    showMoveFixtureModal = false;
-  }
-  function hidePostponeFixturesModal() {
-    showPostponeFixtureModal = false;
-  }
-  function hideRescehduleFixturesModal() {
-    showRescheduleFixtureModal = false;
-  }
-  function hideLoanPlayerModal() {
-    showLoanPlayerModal = false;
-  }
-  function hideTransferPlayerModal() {
-    showTransferPlayerModal = false;
-  }
-  function hideRecallPlayerModal() {
-    showRecallPlayerModal = false;
-  }
-  function hideCreatePlayerModal() {
-    showCreatePlayerModal = false;
-  }
-  function hideUpdatePlayerModal() {
-    showUpdatePlayerModal = false;
-  }
-  function hideSetPlayerInjuryModal() {
-    showSetPlayerInjuryModal = false;
-  }
-  function hideRetirePlayerModal() {
-    showRetirePlayerModal = false;
-  }
-  function hideUnretirePlayerModal() {
-    showUnretirePlayerModal = false;
-  }
-  function hidePromoteNewClubModal() {
-    showPromoteNewClubModal = false;
-  }
-  function hideUpdateClubModal() {
-    showUpdateClubModal = false;
-  }
-  function hideAddFixtureDataModal() {
-    showAddFixtureDataModal = false;
-  }
-  return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
-    default: () => {
-      return `${validate_component(Revalue_player_up, "RevaluePlayerUp").$$render(
-        $$result,
-        {
-          visible: showRevaluePlayerUpModal,
-          closeModal: hideRevaluePlayerUpModal
-        },
-        {},
-        {}
-      )} ${validate_component(Revalue_player_down, "RevaluePlayerDown").$$render(
-        $$result,
-        {
-          visible: showRevaluePlayerDownModal,
-          closeModal: hideRevaluePlayerDownModal
-        },
-        {},
-        {}
-      )} ${validate_component(Add_initial_fixtures, "AddInitialFixtures").$$render(
-        $$result,
-        {
-          visible: showAddInitialFixturesModal,
-          closeModal: hideAddInitialFixturesModal
-        },
-        {},
-        {}
-      )} ${validate_component(Move_fixture, "MoveFixture").$$render(
-        $$result,
-        {
-          visible: showMoveFixtureModal,
-          closeModal: hideMoveFixturesModal
-        },
-        {},
-        {}
-      )} ${validate_component(Postpone_fixture, "PostponeFixture").$$render(
-        $$result,
-        {
-          visible: showPostponeFixtureModal,
-          closeModal: hidePostponeFixturesModal
-        },
-        {},
-        {}
-      )} ${validate_component(Reschedule_fixture, "RescheduleFixture").$$render(
-        $$result,
-        {
-          visible: showRescheduleFixtureModal,
-          closeModal: hideRescehduleFixturesModal
-        },
-        {},
-        {}
-      )} ${validate_component(Loan_player, "LoanPlayer").$$render(
-        $$result,
-        {
-          visible: showLoanPlayerModal,
-          closeModal: hideLoanPlayerModal
-        },
-        {},
-        {}
-      )} ${validate_component(Transfer_player, "TransferPlayer").$$render(
-        $$result,
-        {
-          visible: showTransferPlayerModal,
-          closeModal: hideTransferPlayerModal
-        },
-        {},
-        {}
-      )} ${validate_component(Recall_player, "RecallPlayer").$$render(
-        $$result,
-        {
-          visible: showRecallPlayerModal,
-          closeModal: hideRecallPlayerModal
-        },
-        {},
-        {}
-      )} ${validate_component(Create_player, "CreatePlayer").$$render(
-        $$result,
-        {
-          visible: showCreatePlayerModal,
-          closeModal: hideCreatePlayerModal
-        },
-        {},
-        {}
-      )} ${validate_component(Update_player, "UpdatePlayer").$$render(
-        $$result,
-        {
-          visible: showUpdatePlayerModal,
-          closeModal: hideUpdatePlayerModal
-        },
-        {},
-        {}
-      )} ${validate_component(Set_player_injury, "SetPlayerInjury").$$render(
-        $$result,
-        {
-          visible: showSetPlayerInjuryModal,
-          closeModal: hideSetPlayerInjuryModal
-        },
-        {},
-        {}
-      )} ${validate_component(Retire_player, "RetirePlayer").$$render(
-        $$result,
-        {
-          visible: showRetirePlayerModal,
-          closeModal: hideRetirePlayerModal
-        },
-        {},
-        {}
-      )} ${validate_component(Unretire_player, "UnretirePlayer").$$render(
-        $$result,
-        {
-          visible: showUnretirePlayerModal,
-          closeModal: hideUnretirePlayerModal
-        },
-        {},
-        {}
-      )} ${validate_component(Promote_new_club, "PromoteNewClub").$$render(
-        $$result,
-        {
-          visible: showPromoteNewClubModal,
-          closeModal: hidePromoteNewClubModal
-        },
-        {},
-        {}
-      )} ${validate_component(Update_club, "UpdateClub").$$render(
-        $$result,
-        {
-          visible: showUpdateClubModal,
-          closeModal: hideUpdateClubModal
-        },
-        {},
-        {}
-      )} ${validate_component(Add_fixture_data, "AddFixtureData").$$render(
-        $$result,
-        {
-          visible: showAddFixtureDataModal,
-          closeModal: hideAddFixtureDataModal
-        },
-        {},
-        {}
-      )} <div class="m-4"><div class="bg-panel rounded-md"><ul class="flex rounded-t-lg bg-light-gray border-b border-gray-700 px-4 pt-2" data-svelte-h="svelte-18bk998"><li class="mr-4 active-tab"><button class="text-white">Raise Proposal</button></li></ul> <p class="m-4" data-svelte-h="svelte-fij59x">Player proposals</p> <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4 mx-4"><div class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"><div class="flex items-center w-full"><button class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1 w-full" data-svelte-h="svelte-72lk56">Revalue Player Up</button></div></div> <div class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"><div class="flex items-center space-x-4 w-full"><button class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1 w-full" data-svelte-h="svelte-1rxmlhe">Revalue Player Down</button></div></div> <div class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"><div class="flex items-center space-x-4 w-full"><button class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1 w-full" data-svelte-h="svelte-zwn9vo">Loan Player</button></div></div> <div class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"><div class="flex items-center space-x-4 w-full"><button class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1 w-full" data-svelte-h="svelte-17ctatm">Transfer Player</button></div></div> <div class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"><div class="flex items-center space-x-4 w-full"><button class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1 w-full" data-svelte-h="svelte-muicqu">Recall Player</button></div></div> <div class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"><div class="flex items-center space-x-4 w-full"><button class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1 w-full" data-svelte-h="svelte-1k130gg">Create Player</button></div></div> <div class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"><div class="flex items-center space-x-4 w-full"><button class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1 w-full" data-svelte-h="svelte-104xva">Update Player</button></div></div> <div class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"><div class="flex items-center space-x-4 w-full"><button class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1 w-full" data-svelte-h="svelte-1k3k226">Set Player Injury</button></div></div> <div class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"><div class="flex items-center space-x-4 w-full"><button class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1 w-full" data-svelte-h="svelte-5hhgma">Retire Player</button></div></div> <div class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"><div class="flex items-center space-x-4 w-full"><button class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1 w-full" data-svelte-h="svelte-1gkx6yc">Unretire Player</button></div></div></div> <p class="m-4" data-svelte-h="svelte-11opyhx">Fixture proposals</p> <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4 mx-4"><div class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"><div class="flex items-center space-x-4 w-full"><button class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1 w-full" data-svelte-h="svelte-15xq52m">Add Fixture Data</button></div></div> <div class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"><div class="flex items-center space-x-4 w-full"><button class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1 w-full" data-svelte-h="svelte-1v20vcq">Add Initial Fixtures</button></div></div> <div class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"><div class="flex items-center space-x-4 w-full"><button class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1 w-full" data-svelte-h="svelte-1tbcn66">Move Fixture</button></div></div> <div class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"><div class="flex items-center space-x-4 w-full"><button class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1 w-full" data-svelte-h="svelte-1ln289y">Postpone Fixture</button></div></div> <div class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"><div class="flex items-center space-x-4 w-full"><button class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1 w-full" data-svelte-h="svelte-ybpkhm">Reschedule Fixture</button></div></div></div> <p class="m-4" data-svelte-h="svelte-ujx3lm">Club proposals</p> <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4 mx-4 mb-4"><div class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"><div class="flex items-center space-x-4 w-full"><button class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1 w-full" data-svelte-h="svelte-5oqelw">Promote New Club</button></div></div> <div class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"><div class="flex items-center space-x-4 w-full"><button class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1 w-full" data-svelte-h="svelte-1bkfns6">Update Club</button></div></div></div></div></div>`;
-    }
-  })}`;
-});
-const Page$a = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$7 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $clubStore, $$unsubscribe_clubStore;
   let $$unsubscribe_playerStore;
   let $$unsubscribe_fixtureStore;
@@ -9378,7 +7039,7 @@ const Page$a = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$9 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$6 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $clubStore, $$unsubscribe_clubStore;
   $$unsubscribe_clubStore = subscribe(clubStore, (value) => $clubStore = value);
   $$unsubscribe_clubStore();
@@ -9404,7 +7065,7 @@ const css = {
   code: ".striped.svelte-a09ql9 tr.svelte-a09ql9:nth-child(odd){background-color:rgba(46, 50, 58, 0.6)}",
   map: null
 };
-const Page$8 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$5 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$result.css.add(css);
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
@@ -9434,20 +7095,7 @@ const Page$8 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$7 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let $$unsubscribe_authStore;
-  $$unsubscribe_authStore = subscribe(authStore, (value) => value);
-  $$unsubscribe_authStore();
-  return `${``} ${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
-    default: () => {
-      return `<div class="bg-panel rounded-md">${`${validate_component(Local_spinner, "LocalSpinner").$$render($$result, {}, {}, {})}`}</div>`;
-    }
-  })}`;
-});
-const Page$6 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  return `  `;
-});
-const Page$5 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$4 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_selectedGameweek;
   let $$unsubscribe_loadingGameweekDetail;
   let $page, $$unsubscribe_page;
@@ -9470,7 +7118,7 @@ const Page$5 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$4 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$3 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_fantasyTeam;
   let $$unsubscribe_loadingPlayers;
   let $$unsubscribe_availableFormations;
@@ -9519,7 +7167,7 @@ const Page$4 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$3 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$2 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $clubStore, $$unsubscribe_clubStore;
   let $fixtureStore, $$unsubscribe_fixtureStore;
   let $$unsubscribe_playerStore;
@@ -9552,7 +7200,7 @@ const Page$3 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$2 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$1 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_userStore;
   $$unsubscribe_userStore = subscribe(userStore, (value) => value);
   $$unsubscribe_userStore();
@@ -9562,7 +7210,7 @@ const Page$2 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$1 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
       return `<div class="bg-panel rounded-md p-4 mt-4" data-svelte-h="svelte-1r29bmc"><h1 class="default-header">OpenWSL DAO Terms &amp; Conditions</h1> <div><p class="my-2 text-xs">Last Updated: 13th October 2023</p> <p class="my-4">By accessing the OpenFPL website (&quot;Site&quot;) and participating in the
@@ -9579,68 +7227,10 @@ const Page$1 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Vision = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  return `<div class="m-4" data-svelte-h="svelte-nvmvhm"><h1 class="default-header">Our Vision</h1> <p class="my-4">OpenFPL was created as our answer to the question:</p> <p class="my-2"><i>&quot;How do you introduce the most new users to the Internet Computer
-      Blockchain?&quot;</i>.</p> <p class="my-4">Football is the most popular sport in the world, with billions of fans, the
-    leading fantasy football game engages over 10 million players a season.
-    OpenFPL is a better, more equitable, decentralised fantasy football platform
-    for football fans worldwide. We have used our football knowledge to create a
-    more engaging game, coupled with token distribution to ensure users are more
-    equitably rewarded for their successful pariticipation.</p> <p class="my-4 default-header">Why The Internet Computer?</p> <p>The Internet Computer (IC) is the only computer system in the world that
-    allows users of an online service to truly own that service. The IC&#39;s unique
-    architecture allows the interface the user engages with to be stored on the
-    network, bypassing the big tech companies who do not have an interest in
-    providing decentralised services. The IC not only has the capabilities to
-    shift power structures in the tech world, it is built with its own
-    decentralised service creation infrastructure that allow services like
-    OpenFPL to become Decentralised Autonomous Organisations (DAOs). OpenFPL
-    will transform fantasy Premier League football using this DAO architecture
-    into a decentralised service that is more engaging for its users, rewarding
-    football fans for their insight and participation in football.</p> <p class="my-4">OpenFPL is more than a decentralised service, it is a brand that has
-    multiple viable revenue streams. The ICPFA will distribute this value to
-    token holders through inflation resistant tokenomics. Through a
-    mechanisation of purchasing &amp; burning exchange $FPL, we aim to keep the
-    total supply at 100 million, while building up a healthy treasury for the
-    DAO to utilise as it wishes.</p> <p class="my-4">OpenFPL will create a platform Premier League fans feel at home using, with
-    their input shaping the service. Our features are designed to enhance user
-    engagement on the platform. These include more detailed and varied gameplay,
-    community-based player valuations, customisable private leagues, and
-    collaborations with football content creators. As we attract more users,
-    engagement within the OpenFPL ecosystem will grow, which should contribute
-    to the growth and value of the $FPL governance token.</p> <p class="my-4">Our vision for OpenFPL encompasses a commitment to societal impact,
-    specifically through our organisation, the ICPFA. The ICPFA will be focused
-    on supporting grassroots football initiatives, demonstrating our belief in
-    OpenFPL&#39;s ability to bring about positive change in the football community
-    using the IC.</p> <p class="my-4 mb-4">In essence OpenFPL will be the world&#39;s game on the world&#39;s computer. A truly
-    decentralised service, the fans home for Premier League football.</p></div>`;
-});
-const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
-    default: () => {
-      return `<div class="bg-panel mt-4"><h1 class="p-4 mx-1 default-header" data-svelte-h="svelte-pit84d">OpenFPL Whitepaper</h1> <ul class="flex flex-nowrap overflow-x-auto bg-light-gray border-b border-gray-700 px-4 pt-2"><li${add_attribute("class", `mr-4 ${"active-tab"}`, 0)}><button${add_attribute("class", `p-2 ${"text-white"}`, 0)}>Vision</button></li> <li${add_attribute("class", `mr-4 ${""}`, 0)}><button${add_attribute(
-        "class",
-        `p-2 ${"text-gray-400"}`,
-        0
-      )}>Gameplay</button></li> <li${add_attribute("class", `mr-4 ${""}`, 0)}><button${add_attribute("class", `p-2 ${"text-gray-400"}`, 0)}>DAO</button></li> <li${add_attribute("class", `mr-4 ${""}`, 0)}><button${add_attribute(
-        "class",
-        `p-2 ${"text-gray-400"}`,
-        0
-      )}>Tokenomics</button></li> <li${add_attribute("class", `mr-4 ${""}`, 0)}><button${add_attribute("class", `p-2 ${"text-gray-400"}`, 0)}>Revenue</button></li> <li${add_attribute("class", `mr-4 ${""}`, 0)}><button${add_attribute(
-        "class",
-        `p-2 ${"text-gray-400"}`,
-        0
-      )}>Marketing</button></li> <li${add_attribute("class", `mr-4 ${""}`, 0)}><button${add_attribute(
-        "class",
-        `p-2 ${"text-gray-400"}`,
-        0
-      )}>Architecture</button></li> <li${add_attribute("class", `mr-4 ${""}`, 0)}><button${add_attribute("class", `p-2 ${"text-gray-400"}`, 0)}>Roadmap</button></li></ul> ${`${validate_component(Vision, "Vision").$$render($$result, {}, {}, {})}`}</div>`;
-    }
-  })}`;
-});
 export {
   Error$1 as E,
   Layout$1 as L,
-  Page$d as P,
+  Page$8 as P,
   Server as S,
   set_building as a,
   set_manifest as b,
@@ -9650,19 +7240,14 @@ export {
   set_read_implementation as f,
   get_hooks as g,
   set_safe_public_env as h,
-  Page$c as i,
-  Page$b as j,
-  Page$a as k,
-  Page$9 as l,
-  Page$8 as m,
-  Page$7 as n,
+  Page$7 as i,
+  Page$6 as j,
+  Page$5 as k,
+  Page$4 as l,
+  Page$3 as m,
+  Page$2 as n,
   options as o,
-  Page$6 as p,
-  Page$5 as q,
-  Page$4 as r,
-  set_assets as s,
-  Page$3 as t,
-  Page$2 as u,
-  Page$1 as v,
-  Page as w
+  Page$1 as p,
+  Page as q,
+  set_assets as s
 };

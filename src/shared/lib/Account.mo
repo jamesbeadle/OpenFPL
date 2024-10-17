@@ -11,7 +11,7 @@ import Text "mo:base/Text";
 
 import CRC32 "./CRC32";
 import SHA224 "./SHA224";
-import Types "../types";
+import Types "../types/app_types";
 
 module {
 

@@ -1,17 +1,20 @@
-import T "types";
+import Base "types/base_types";
+import T "types/app_types";
+import FootballTypes "types/football_types";
+
 module RequestDTOs {
 
 
   public type RequestFixturesDTO = {
-    seasonId: T.SeasonId;
+    seasonId: FootballTypes.SeasonId;
   };
 
   public type RequestManagerDTO = {
     managerId : Text;
-    seasonId: T.SeasonId;
-    gameweek: T.GameweekNumber;
-    month: T.CalendarMonth;
-    clubId: T.ClubId;
+    seasonId: FootballTypes.SeasonId;
+    gameweek: FootballTypes.GameweekNumber;
+    month: Base.CalendarMonth;
+    clubId: FootballTypes.ClubId;
   };
 
   public type RequestProfileDTO = {
@@ -19,17 +22,17 @@ module RequestDTOs {
   };
 
   public type RequestPlayersDTO = {
-    seasonId: T.SeasonId;
+    seasonId: FootballTypes.SeasonId;
   };
 
   public type GetSnapshotPlayers = {
-    seasonId: T.SeasonId;
-    leagueId: T.FootballLeagueId;
-    gameweek: T.GameweekNumber;
+    seasonId: FootballTypes.SeasonId;
+    leagueId: FootballTypes.LeagueId;
+    gameweek: FootballTypes.GameweekNumber;
   };
 
   public type UpdateRewardPoolsDTO = {
-    seasonId : T.SeasonId;
+    seasonId : FootballTypes.SeasonId;
     seasonLeaderboardPool : Nat64;
     monthlyLeaderboardPool : Nat64;
     weeklyLeaderboardPool : Nat64;
@@ -41,12 +44,12 @@ module RequestDTOs {
   };
 
   public type UpdateSystemStatusDTO = {
-    pickTeamSeasonId : T.SeasonId;
-    pickTeamGameweek : T.GameweekNumber;
-    pickTeamMonth: T.CalendarMonth;
-    calculationGameweek : T.GameweekNumber;
-    calculationMonth : T.CalendarMonth;
-    calculationSeasonId : T.SeasonId;
+    pickTeamSeasonId : FootballTypes.SeasonId;
+    pickTeamGameweek : FootballTypes.GameweekNumber;
+    pickTeamMonth: Base.CalendarMonth;
+    calculationGameweek : FootballTypes.GameweekNumber;
+    calculationMonth : Base.CalendarMonth;
+    calculationSeasonId : FootballTypes.SeasonId;
     seasonActive : Bool;
     transferWindowActive : Bool;
     onHold : Bool;
@@ -57,11 +60,12 @@ module RequestDTOs {
     name: Text;
     abbreviation: Text;
     teamCount: Nat8;
-    relatedGender: T.Gender;
+    relatedGender: Base.Gender;
     governingBody: Text;
     formed: Int;
-    countryId: T.CountryId;
+    countryId: Base.CountryId;
     logo: Blob;
   };
+
 
 };

@@ -15,6 +15,8 @@ module Environment {
   public let DATA_CANISTER_ID = "52fzd-2aaaa-aaaal-qmzsa-cai";
   public let OPENFPL_BACKEND_CANISTER_ID = "y22zx-giaaa-aaaal-qmzpq-cai";
   public let OPENWSL_BACKEND_CANISTER_ID = "5bafg-ayaaa-aaaal-qmzqq-cai";
+
+  
 /*
   public let DFX_NETWORK = "local";
   public let NEURON_CONTROLLER_CANISTER_ID = "by6od-j4aaa-aaaaa-qaadq-cai";
@@ -23,9 +25,9 @@ module Environment {
   public let SNS_ROOT_CANISTER_ID = "b77ix-eeaaa-aaaaa-qaada-cai";
   public let SNS_INDEX_CANISTER_ID = "a3shf-5eaaa-aaaaa-qaafa-cai";
   public let SNS_SWAP_CANISTER_ID = "asrmz-lmaaa-aaaaa-qaaeq-cai";
-  public let DATA_CANISTER_ID = "b77ix-eeaaa-aaaaa-qaada-cai";
-  public let OPENFPL_BACKEND_CANISTER_ID = "bd3sg-teaaa-aaaaa-qaaba-cai";
-  public let OPENWSL_BACKEND_CANISTER_ID = "br5f7-7uaaa-aaaaa-qaaca-cai";
+  public let DATA_CANISTER_ID = "asrmz-lmaaa-aaaaa-qaaeq-cai";
+  public let OPENFPL_BACKEND_CANISTER_ID = "bw4dl-smaaa-aaaaa-qaacq-cai";
+  public let OPENWSL_BACKEND_CANISTER_ID = "by6od-j4aaa-aaaaa-qaadq-cai";
 */
   
 

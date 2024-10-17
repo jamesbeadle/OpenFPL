@@ -1,3 +1,0 @@
-<!-- Details -->
-<!-- Leaderboard -->
-<!-- Members -->

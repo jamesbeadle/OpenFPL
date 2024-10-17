@@ -18,9 +18,10 @@ import Principal "mo:base/Principal";
 import Text "mo:base/Text";
 import Time "mo:base/Time";
 
-import DTOs "../DTOs";
+import DTOs "../dtos/DTOs";
 import Management "Management";
-import T "../types";
+import T "../types/app_types";
+import FootballTypes "../types/football_types";
 
 
 module {
@@ -51,11 +52,11 @@ module {
     Nat32.fromNat(Nat32.toNat(key) % (2 ** 32 -1));
   };
 
-  public func eqPlayerEventData(event1 : T.PlayerEventData, event2 : T.PlayerEventData) : Bool {
+  public func eqPlayerEventData(event1 : FootballTypes.PlayerEventData, event2 : FootballTypes.PlayerEventData) : Bool {
     event1.fixtureId == event2.fixtureId and event1.playerId == event2.playerId and event1.eventType == event2.eventType and event1.eventStartMinute == event2.eventStartMinute and event1.eventEndMinute == event2.eventEndMinute
   };
 
-  public func eqPlayerEventDataArray(array1 : [T.PlayerEventData], array2 : [T.PlayerEventData]) : Bool {
+  public func eqPlayerEventDataArray(array1 : [FootballTypes.PlayerEventData], array2 : [FootballTypes.PlayerEventData]) : Bool {
     if (Array.size(array1) != Array.size(array2)) {
       return false;
     };
@@ -303,13 +304,13 @@ module {
     return true;
   };
 
-  public func calculateAggregatePlayerEvents(events : [T.PlayerEventData], playerPosition : T.PlayerPosition) : Int16 {
+  public func calculateAggregatePlayerEvents(events : [FootballTypes.PlayerEventData], playerPosition : FootballTypes.PlayerPosition) : Int16 {
     var totalScore : Int16 = 0;
 
     if (playerPosition == #Goalkeeper or playerPosition == #Defender) {
-      let goalsConcededCount = Array.filter<T.PlayerEventData>(
+      let goalsConcededCount = Array.filter<FootballTypes.PlayerEventData>(
         events,
-        func(event : T.PlayerEventData) : Bool {
+        func(event : FootballTypes.PlayerEventData) : Bool {
           event.eventType == #GoalConceded;
         },
       ).size();
@@ -321,9 +322,9 @@ module {
     };
 
     if (playerPosition == #Goalkeeper) {
-      let savesCount = Array.filter<T.PlayerEventData>(
+      let savesCount = Array.filter<FootballTypes.PlayerEventData>(
         events,
-        func(event : T.PlayerEventData) : Bool {
+        func(event : FootballTypes.PlayerEventData) : Bool {
           event.eventType == #KeeperSave;
         },
       ).size();
@@ -334,7 +335,7 @@ module {
     return totalScore;
   };
 
-  public func calculateIndividualScoreForEvent(event : T.PlayerEventData, playerPosition : T.PlayerPosition) : Int16 {
+  public func calculateIndividualScoreForEvent(event : FootballTypes.PlayerEventData, playerPosition : FootballTypes.PlayerPosition) : Int16 {
     switch (event.eventType) {
       case (#Appearance) { return 5 };
       case (#Goal) {
@@ -413,11 +414,11 @@ module {
     );
   };
 
-  public func getLatestFixtureTime(fixtures : [T.Fixture]) : Int {
+  public func getLatestFixtureTime(fixtures : [FootballTypes.Fixture]) : Int {
     return Array.foldLeft(
       fixtures,
       fixtures[0].kickOff,
-      func(acc : Int, fixture : T.Fixture) : Int {
+      func(acc : Int, fixture : FootballTypes.Fixture) : Int {
         if (fixture.kickOff > acc) {
           return fixture.kickOff;
         } else {
@@ -527,7 +528,7 @@ module {
     return payouts;
   };
 
-  public func getTeamValue(playerIds: [T.PlayerId], allPlayers: [DTOs.PlayerDTO]) : Nat16 {
+  public func getTeamValue(playerIds: [FootballTypes.PlayerId], allPlayers: [DTOs.PlayerDTO]) : Nat16 {
       let updatedPlayers = Array.filter<DTOs.PlayerDTO>(
         allPlayers,
         func(player : DTOs.PlayerDTO) : Bool {

@@ -9,7 +9,7 @@
   },
   "_index.js": {
     "css": [
-      "_app/immutable/assets/index.De-yblpN.css"
+      "_app/immutable/assets/index.BBtGfIc5.css"
     ],
     "file": "chunks/index.js",
     "imports": [
@@ -51,22 +51,6 @@
     "isEntry": true,
     "src": "src/OpenWSL_frontend/src/routes/+page.svelte"
   },
-  "src/OpenWSL_frontend/src/routes/add-fixture-data/+page.svelte": {
-    "file": "entries/pages/add-fixture-data/_page.svelte.js",
-    "imports": [
-      "_index.js"
-    ],
-    "isEntry": true,
-    "src": "src/OpenWSL_frontend/src/routes/add-fixture-data/+page.svelte"
-  },
-  "src/OpenWSL_frontend/src/routes/add-proposal/+page.svelte": {
-    "file": "entries/pages/add-proposal/_page.svelte.js",
-    "imports": [
-      "_index.js"
-    ],
-    "isEntry": true,
-    "src": "src/OpenWSL_frontend/src/routes/add-proposal/+page.svelte"
-  },
   "src/OpenWSL_frontend/src/routes/club/+page.svelte": {
     "file": "entries/pages/club/_page.svelte.js",
     "imports": [
@@ -90,22 +74,6 @@
     ],
     "isEntry": true,
     "src": "src/OpenWSL_frontend/src/routes/gameplay-rules/+page.svelte"
-  },
-  "src/OpenWSL_frontend/src/routes/governance/+page.svelte": {
-    "file": "entries/pages/governance/_page.svelte.js",
-    "imports": [
-      "_index.js"
-    ],
-    "isEntry": true,
-    "src": "src/OpenWSL_frontend/src/routes/governance/+page.svelte"
-  },
-  "src/OpenWSL_frontend/src/routes/league/+page.svelte": {
-    "file": "entries/pages/league/_page.svelte.js",
-    "imports": [
-      "_index.js"
-    ],
-    "isEntry": true,
-    "src": "src/OpenWSL_frontend/src/routes/league/+page.svelte"
   },
   "src/OpenWSL_frontend/src/routes/manager/+page.svelte": {
     "file": "entries/pages/manager/_page.svelte.js",
@@ -146,13 +114,5 @@
     ],
     "isEntry": true,
     "src": "src/OpenWSL_frontend/src/routes/terms/+page.svelte"
-  },
-  "src/OpenWSL_frontend/src/routes/whitepaper/+page.svelte": {
-    "file": "entries/pages/whitepaper/_page.svelte.js",
-    "imports": [
-      "_index.js"
-    ],
-    "isEntry": true,
-    "src": "src/OpenWSL_frontend/src/routes/whitepaper/+page.svelte"
   }
 }

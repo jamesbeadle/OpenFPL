@@ -132,16 +132,6 @@
               <span class="flex items-center h-full px-4">Squad Selection</span>
             </a>
           </li>
-          <li class="mx-2 flex items-center h-16">
-            <a
-              href="/governance"
-              class="flex items-center h-full nav-underline hover:text-gray-400 ${currentClass(
-                '/governance'
-              )}"
-            >
-              <span class="flex items-center h-full px-4">Governance</span>
-            </a>
-          </li>
           
           <li class="flex flex-1 items-center">
             <div class="relative inline-block">
@@ -213,13 +203,6 @@
                 href="/pick-team"
                 class={currentClass("/pick-team")}
                 on:click={toggleMenu}>Squad Selection</a
-              >
-            </li>
-            <li class="p-2">
-              <a
-                href="/governance"
-                class={currentClass("/governance")}
-                on:click={toggleMenu}>Governance</a
               >
             </li>
             <li class="p-2">

@@ -1,8 +1,8 @@
-import T "types";
+import Base "../shared/types/base_types";
 
 module Countries {
 
-  public let countries : [T.Country] = [
+  public let countries : [Base.Country] = [
     { id = 1; name = "Afghanistan"; code = "AF" },
     { id = 2; name = "Albania"; code = "AL" },
     { id = 3; name = "Algeria"; code = "DZ" },

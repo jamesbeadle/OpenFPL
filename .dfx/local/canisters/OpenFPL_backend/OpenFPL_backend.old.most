@@ -2,10 +2,15 @@
 type CalendarMonth = Nat8;
 type CanisterId = Text;
 type ClubId = Nat16;
+type CountryId = Nat16;
 type DataHash = {category : Text; hash : Text};
+type FixtureId = Nat32;
 type GameweekNumber = Nat8;
+type Gender = {#Female; #Male};
 type HighScoreRecord =
   {createDate : Int; points : Int16; recordType : RecordType};
+type InjuryHistory =
+  {description : Text; expectedEndDate : Int; injuryStartDate : Int};
 type LeaderboardCanister =
   {leaderboardInfo : LeaderboardInfo; leaderboardType : LeaderboardType};
 type LeaderboardEntry =
@@ -23,6 +28,7 @@ type LeaderboardInfo =
     #Weekly : WeeklyLeaderboardInfo
   };
 type LeaderboardType = {#Monthly; #Season; #Weekly};
+type LeagueId = Nat16;
 type List<T> = ?(T, List<T>);
 type MonthlyLeaderboardInfo =
   {
@@ -33,6 +39,59 @@ type MonthlyLeaderboardInfo =
   };
 type MonthlyRewards =
   {month : CalendarMonth; rewards : List<RewardEntry>; seasonId : SeasonId};
+type Player =
+  {
+    clubId : ClubId;
+    currentLoanEndDate : Int;
+    dateOfBirth : Int;
+    firstName : Text;
+    gender : Gender;
+    id : PlayerId;
+    injuryHistory : List<InjuryHistory>;
+    lastName : Text;
+    latestInjuryEndDate : Int;
+    nationality : CountryId;
+    parentClubId : Nat16;
+    position : PlayerPosition;
+    retirementDate : Int;
+    seasons : List<PlayerSeason>;
+    shirtNumber : Nat8;
+    status : PlayerStatus;
+    transferHistory : List<TransferHistory>;
+    valueHistory : List<ValueHistory>;
+    valueQuarterMillions : Nat16
+  };
+type PlayerEventData =
+  {
+    clubId : ClubId;
+    eventEndMinute : Nat8;
+    eventStartMinute : Nat8;
+    eventType : PlayerEventType;
+    fixtureId : FixtureId;
+    playerId : Nat16
+  };
+type PlayerEventType =
+  {
+    #Appearance;
+    #CleanSheet;
+    #Goal;
+    #GoalAssisted;
+    #GoalConceded;
+    #HighestScoringPlayer;
+    #KeeperSave;
+    #OwnGoal;
+    #PenaltyMissed;
+    #PenaltySaved;
+    #RedCard;
+    #YellowCard
+  };
+type PlayerGameweek =
+  {events : List<PlayerEventData>; number : GameweekNumber; points : Int16};
+type PlayerId = Nat16;
+type PlayerPosition = {#Defender; #Forward; #Goalkeeper; #Midfielder};
+type PlayerSeason =
+  {gameweeks : List<PlayerGameweek>; id : SeasonId; totalPoints : Int16};
+type PlayerStatus = {#Active; #FreeAgent; #OnLoan; #Retired};
 type PrincipalId = Text;
 type RecordType = {#MonthlyHighScore; #SeasonHighScore; #WeeklyHighScore};
 type RewardEntry =
@@ -72,6 +131,16 @@ type SeasonRewards = {rewards : List<RewardEntry>; seasonId : SeasonId};
 type TeamValueLeaderboard =
   {entries : List<LeaderboardEntry>; seasonId : SeasonId; totalEntries : Nat};
 type TimerInfo = {callbackName : Text; id : Int; triggerTime : Int};
+type TransferHistory =
+  {
+    fromClub : ClubId;
+    fromLeagueId : LeagueId;
+    loanEndDate : Int;
+    toClub : ClubId;
+    toLeagueId : LeagueId;
+    transferDate : Int
+  };
+type ValueHistory = {changedOn : Int; newValue : Nat16; oldValue : Nat16};
 type WeeklyLeaderboardInfo =
   {canisterId : Text; gameweek : GameweekNumber; seasonId : SeasonId};
 type WeeklyRewards =
@@ -81,7 +150,6 @@ type WeeklyRewards =
     seasonId : SeasonId
   };
 actor {
-  stable var alreadyInitialisedData : Bool;
   stable var stable_active_leaderbord_canister_id : Text;
   stable var stable_active_manager_canister_id : Text;
   stable var stable_data_hashes : [DataHash];
@@ -92,6 +160,8 @@ actor {
   stable var stable_monthly_ath_prize_pool : Nat64;
   stable var stable_monthly_rewards : [MonthlyRewards];
   stable var stable_most_valuable_team_rewards : [RewardsList];
+  stable var stable_player_snapshots :
+    [(SeasonId, [(GameweekNumber, [Player])])];
   stable var stable_reward_pools : [(SeasonId, RewardPool)];
   stable var stable_season_all_time_high_scores : [HighScoreRecord];
   stable var stable_season_ath_prize_pool : Nat64;

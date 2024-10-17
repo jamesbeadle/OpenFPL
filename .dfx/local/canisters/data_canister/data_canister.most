@@ -28,23 +28,23 @@ type Fixture =
   };
 type FixtureId = Nat32;
 type FixtureStatusType = {#Active; #Complete; #Finalised; #Unplayed};
-type FootballLeague =
+type GameweekNumber = Nat8;
+type Gender = {#Female; #Male};
+type InjuryHistory =
+  {description : Text; expectedEndDate : Int; injuryStartDate : Int};
+type League =
   {
     abbreviation : Text;
     countryId : CountryId;
     formed : Int;
     governingBody : Text;
-    id : FootballLeagueId;
+    id : LeagueId;
     logo : Blob;
     name : Text;
     relatedGender : Gender;
     teamCount : Nat8
   };
-type FootballLeagueId = Nat16;
-type GameweekNumber = Nat8;
-type Gender = {#Female; #Male};
-type InjuryHistory =
-  {description : Text; expectedEndDate : Int; injuryStartDate : Int};
+type LeagueId = Nat16;
 type List<T> = ?(T, List<T>);
 type Player =
   {
@@ -99,25 +99,12 @@ type PlayerPosition = {#Defender; #Forward; #Goalkeeper; #Midfielder};
 type PlayerSeason =
   {gameweeks : List<PlayerGameweek>; id : SeasonId; totalPoints : Int16};
 type PlayerStatus = {#Active; #FreeAgent; #OnLoan; #Retired};
-type RewardPool =
-  {
-    allTimeMonthlyHighScorePool : Nat64;
-    allTimeSeasonHighScorePool : Nat64;
-    allTimeWeeklyHighScorePool : Nat64;
-    highestScoringMatchPlayerPool : Nat64;
-    monthlyLeaderboardPool : Nat64;
-    mostValuableTeamPool : Nat64;
-    seasonId : SeasonId;
-    seasonLeaderboardPool : Nat64;
-    weeklyLeaderboardPool : Nat64
-  };
 type Season =
   {
     fixtures : List<Fixture>;
     id : Nat16;
     name : Text;
     postponedFixtures : List<Fixture>;
-    rewardPool : RewardPool;
     year : Nat16
   };
 type SeasonId = Nat16;
@@ -126,27 +113,24 @@ type TimerInfo = {callbackName : Text; id : Int; triggerTime : Int};
 type TransferHistory =
   {
     fromClub : ClubId;
-    fromLeagueId : FootballLeagueId;
+    fromLeagueId : LeagueId;
     loanEndDate : Int;
     toClub : ClubId;
-    toLeagueId : FootballLeagueId;
-    transferDate : Int;
-    transferGameweek : GameweekNumber;
-    transferSeason : SeasonId
+    toLeagueId : LeagueId;
+    transferDate : Int
   };
-type ValueHistory =
-  {gameweek : Nat8; newValue : Nat16; oldValue : Nat16; seasonId : Nat16};
+type ValueHistory = {changedOn : Int; newValue : Nat16; oldValue : Nat16};
 actor {
   stable var clubsInAdministration : [Club];
   stable var dataInitialised : Bool;
   stable var freeAgents : [Player];
-  stable var leagueClubs : [(FootballLeagueId, [Club])];
-  stable var leaguePlayers : [(FootballLeagueId, [Player])];
-  stable var leagueSeasons : [(FootballLeagueId, [Season])];
-  stable var leagues : [FootballLeague];
+  stable var leagueClubs : [(LeagueId, [Club])];
+  stable var leaguePlayers : [(LeagueId, [Player])];
+  stable var leagueSeasons : [(LeagueId, [Season])];
+  stable var leagues : [League];
   stable var nextPlayerId : Nat16;
   stable var retiredFreeAgents : [Player];
-  stable var retiredLeaguePlayers : [(FootballLeagueId, [Player])];
+  stable var retiredLeaguePlayers : [(LeagueId, [Player])];
   stable var timers : [TimerInfo];
   stable var unknownPlayers : [Player];
   stable var untrackedClubs : [Club]

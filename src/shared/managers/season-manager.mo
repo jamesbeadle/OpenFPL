@@ -2,9 +2,11 @@ import Result "mo:base/Result";
 import Buffer "mo:base/Buffer";
 import Iter "mo:base/Iter";
 import Array "mo:base/Array";
-import DTOs "../../shared/DTOs";
+import DTOs "../../shared/dtos/DTOs";
 import Requests "../../shared/RequestDTOs";
-import T "../../shared/types";
+import FootballTypes "../../shared/types/football_types";
+import T "../../shared/types/app_types";
+import Base "../../shared/types/base_types";
 import SHA224 "../../shared/lib/SHA224";
 import Utilities "../../shared/utils/utilities";
 import NetworkEnvironmentVariables "../network_environment_variables";
@@ -26,7 +28,7 @@ module {
       version = "2.0.0";
     };
      
-    private var dataHashes : [T.DataHash] = [
+    private var dataHashes : [Base.DataHash] = [
       { category = "clubs"; hash = "OPENFPL_1" },
       { category = "fixtures"; hash = "OPENFPL_1" },
       { category = "weekly_leaderboard"; hash = "OPENFPL_1" },
@@ -36,11 +38,10 @@ module {
       { category = "player_events"; hash = "OPENFPL_1" },
       { category = "countries"; hash = "OPENFPL_1" },
       { category = "system_state"; hash = "OPENFPL_1" },
-      { category = "seasons"; hash = "OPENFPL_1" },
-      { category = "leagues"; hash = "OPENFPL_1" }
+      { category = "seasons"; hash = "OPENFPL_1" }
     ];
 
-    private var playersSnapshots: [(T.SeasonId, [(T.GameweekNumber, [T.Player])])] = [];
+    private var playersSnapshots: [(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [FootballTypes.Player])])] = [];
 
     public func updateInitialSystemState(firstSeasonFixture: DTOs.FixtureDTO) : async () {
       
@@ -63,7 +64,7 @@ module {
     };
 
     public func updateDataHash(category : Text) : async () {
-      let hashBuffer = Buffer.fromArray<T.DataHash>([]);
+      let hashBuffer = Buffer.fromArray<Base.DataHash>([]);
       var updated = false;
 
       for (hashObj in Iter.fromArray(dataHashes)) {
@@ -79,7 +80,7 @@ module {
           hashBuffer.add({ category = category; hash = randomHash });
       };
 
-      dataHashes := Buffer.toArray<T.DataHash>(hashBuffer);
+      dataHashes := Buffer.toArray<Base.DataHash>(hashBuffer);
     };
     public func getDataHashes() : Result.Result<[DTOs.DataHashDTO], T.Error> {
       return #ok(dataHashes)
@@ -101,18 +102,18 @@ module {
     };
     
     public func getPlayersSnapshot(dto: Requests.GetSnapshotPlayers) : [DTOs.PlayerDTO] {
-      let seasonPlayers = Array.find<(T.SeasonId, [(T.GameweekNumber, [T.Player])])>(playersSnapshots, func(seasonsPlayerSnapshots: (T.SeasonId, [(T.GameweekNumber, [T.Player])])) : Bool {
+      let seasonPlayers = Array.find<(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [FootballTypes.Player])])>(playersSnapshots, func(seasonsPlayerSnapshots: (FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [FootballTypes.Player])])) : Bool {
         seasonsPlayerSnapshots.0 == dto.seasonId;
       });
 
       switch(seasonPlayers){
         case (?foundSeasonPlayers){
-          let gameweekPlayers = Array.find<(T.GameweekNumber, [T.Player])>(foundSeasonPlayers.1, func(gameweekPlayers: (T.GameweekNumber, [T.Player])) : Bool {
+          let gameweekPlayers = Array.find<(FootballTypes.GameweekNumber, [FootballTypes.Player])>(foundSeasonPlayers.1, func(gameweekPlayers: (FootballTypes.GameweekNumber, [FootballTypes.Player])) : Bool {
            gameweekPlayers.0 == dto.gameweek;
           });
           switch(gameweekPlayers){
             case (?foundGameweekPlayers){
-              return Array.map<T.Player, DTOs.PlayerDTO>(foundGameweekPlayers.1, func(player: T.Player){
+              return Array.map<FootballTypes.Player, DTOs.PlayerDTO>(foundGameweekPlayers.1, func(player: FootballTypes.Player){
                 return {
                   clubId = player.clubId;
                   dateOfBirth = player.dateOfBirth;
@@ -141,7 +142,7 @@ module {
 
     public func setNextPickTeamGameweek() : async () {
       
-      var pickTeamGameweek : T.GameweekNumber = 1;
+      var pickTeamGameweek : FootballTypes.GameweekNumber = 1;
       if (systemState.pickTeamGameweek < totalGameweeks) {
         pickTeamGameweek := systemState.pickTeamGameweek + 1;
       };
@@ -164,14 +165,14 @@ module {
 
     public func setFixturesToActive() : async () {
       let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
-        setFixturesToActive : (seasonId : T.SeasonId) -> async ();
+        setFixturesToActive : (seasonId : FootballTypes.SeasonId) -> async ();
       };
       return await data_canister.setFixturesToActive(systemState.pickTeamSeasonId);
     };
 
     public func setFixturesToCompleted() : async () {
       let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
-        setFixturesToCompleted : (seasonId : T.SeasonId) -> async ();
+        setFixturesToCompleted : (seasonId : FootballTypes.SeasonId) -> async ();
       };
       return await data_canister.setFixturesToCompleted(systemState.pickTeamSeasonId);
     };
@@ -275,19 +276,19 @@ module {
       systemState := stable_system_state;
     };
 
-    public func getStableDataHashes() : [T.DataHash] {
+    public func getStableDataHashes() : [Base.DataHash] {
       return dataHashes;
     };
 
-    public func setStableDataHashes(stable_data_hashes : [T.DataHash]) {
+    public func setStableDataHashes(stable_data_hashes : [Base.DataHash]) {
       dataHashes := stable_data_hashes;
     };
 
-    public func getStablePlayersSnapshots() : [(T.SeasonId, [(T.GameweekNumber, [T.Player])])] {
+    public func getStablePlayersSnapshots() : [(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [FootballTypes.Player])])] {
       return playersSnapshots;
     };
 
-    public func setStablePlayersSnapshots(stable_players_snapshots : [(T.SeasonId, [(T.GameweekNumber, [T.Player])])]) {
+    public func setStablePlayersSnapshots(stable_players_snapshots : [(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [FootballTypes.Player])])]) {
       playersSnapshots := stable_players_snapshots;
     };
   };

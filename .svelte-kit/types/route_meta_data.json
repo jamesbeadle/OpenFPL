@@ -1,16 +1,11 @@
 {
 	"/": [],
-	"/add-fixture-data": [],
-	"/add-proposal": [],
 	"/clubs": [],
 	"/club": [],
 	"/gameplay-rules": [],
-	"/governance": [],
-	"/league": [],
 	"/manager": [],
 	"/pick-team": [],
 	"/player": [],
 	"/profile": [],
-	"/terms": [],
-	"/whitepaper": []
+	"/terms": []
 }
