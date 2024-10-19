@@ -109,9 +109,7 @@ export type LeagueId = number;
 export interface LoanPlayerDTO {
   loanEndDate: bigint;
   playerId: ClubId;
-  seasonId: SeasonId;
   loanClubId: ClubId;
-  gameweek: GameweekNumber;
   loanLeagueId: LeagueId;
 }
 export interface MoveFixtureDTO {
@@ -272,8 +270,10 @@ export type ShirtType = { Filled: null } | { Striped: null };
 export interface SubmitFixtureDataDTO {
   fixtureId: FixtureId;
   month: CalendarMonth;
+  seasonId: SeasonId;
   gameweek: GameweekNumber;
   playerEventData: Array<PlayerEventData>;
+  leagueId: LeagueId;
 }
 export interface SystemState {
   pickTeamSeasonId: SeasonId;
@@ -344,14 +344,6 @@ export interface ValueHistory {
   newValue: number;
 }
 export interface _SERVICE {
-  addEventsToFixture: ActorMethod<
-    [LeagueId, Array<PlayerEventData>, SeasonId, FixtureId],
-    undefined
-  >;
-  addEventsToPlayers: ActorMethod<
-    [LeagueId, Array<PlayerEventData>, SeasonId, GameweekNumber],
-    undefined
-  >;
   checkGameweekComplete: ActorMethod<
     [LeagueId, SeasonId, GameweekNumber],
     boolean
@@ -364,6 +356,7 @@ export interface _SERVICE {
   createLeague: ActorMethod<[CreateLeagueDTO], Result>;
   createNewSeason: ActorMethod<[SystemState], undefined>;
   createPlayer: ActorMethod<[LeagueId, CreatePlayerDTO], Result>;
+  executeSubmitFixtureData: ActorMethod<[SubmitFixtureDataDTO], undefined>;
   getClubs: ActorMethod<[LeagueId], Result_3>;
   getFixtures: ActorMethod<[LeagueId, RequestFixturesDTO], Result_2>;
   getLeagues: ActorMethod<[], Result_8>;

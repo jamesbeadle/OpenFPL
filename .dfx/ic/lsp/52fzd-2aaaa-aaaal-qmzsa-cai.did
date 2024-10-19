@@ -75,8 +75,10 @@ type SubmitFixtureDataDTO =
  record {
    fixtureId: FixtureId;
    gameweek: GameweekNumber;
+   leagueId: LeagueId;
    month: CalendarMonth;
    playerEventData: vec PlayerEventData;
+   seasonId: SeasonId;
  };
 type ShirtType = 
  variant {
@@ -290,12 +292,10 @@ type MoveFixtureDTO =
  };
 type LoanPlayerDTO = 
  record {
-   gameweek: GameweekNumber;
    loanClubId: ClubId;
    loanEndDate: int;
    loanLeagueId: LeagueId;
    playerId: ClubId;
-   seasonId: SeasonId;
  };
 type LeagueId = nat16;
 type InjuryHistory = 
@@ -417,10 +417,6 @@ type ClubDTO =
 type CalendarMonth = nat8;
 type AddInitialFixturesDTO = record {seasonFixtures: vec FixtureDTO;};
 service : {
-  addEventsToFixture: (LeagueId, vec PlayerEventData, SeasonId, FixtureId) ->
-   ();
-  addEventsToPlayers: (LeagueId, vec PlayerEventData, SeasonId,
-   GameweekNumber) -> ();
   checkGameweekComplete: (LeagueId, SeasonId, GameweekNumber) -> (bool);
   checkMonthComplete: (LeagueId, SeasonId, CalendarMonth, GameweekNumber) ->
    (bool);
@@ -428,6 +424,7 @@ service : {
   createLeague: (CreateLeagueDTO) -> (Result);
   createNewSeason: (SystemState) -> () oneway;
   createPlayer: (LeagueId, CreatePlayerDTO) -> (Result);
+  executeSubmitFixtureData: (SubmitFixtureDataDTO) -> ();
   getClubs: (LeagueId) -> (Result_3) query;
   getFixtures: (LeagueId, RequestFixturesDTO) -> (Result_2) query;
   getLeagues: () -> (Result_8) query;

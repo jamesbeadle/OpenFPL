@@ -1213,6 +1213,17 @@ module {
 
 
 
+    public func removePlayerFromTeams(leagueId: FootballTypes.LeagueId, playerId : FootballTypes.PlayerId) : async () {
+      for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
+ 
+        let manager_canister = actor (canisterId) : actor {
+          removePlayerFromTeams : (leagueId: FootballTypes.LeagueId, playerId : FootballTypes.PlayerId) -> async ();
+        };
+
+        await manager_canister.removePlayerFromTeams(leagueId, playerId);
+      };
+    };
+
     //stable getters and setters
 
     

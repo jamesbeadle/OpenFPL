@@ -15,6 +15,7 @@ module Environment {
   public let DATA_CANISTER_ID = "52fzd-2aaaa-aaaal-qmzsa-cai";
   public let OPENFPL_BACKEND_CANISTER_ID = "y22zx-giaaa-aaaal-qmzpq-cai";
   public let OPENWSL_BACKEND_CANISTER_ID = "5bafg-ayaaa-aaaal-qmzqq-cai";
+  public let FOOTBALL_GOD_BACKEND_CANISTER_ID = "44kin-waaaa-aaaal-qbxra-cai";
 
   
 /*
@@ -28,6 +29,7 @@ module Environment {
   public let DATA_CANISTER_ID = "asrmz-lmaaa-aaaaa-qaaeq-cai";
   public let OPENFPL_BACKEND_CANISTER_ID = "bw4dl-smaaa-aaaaa-qaacq-cai";
   public let OPENWSL_BACKEND_CANISTER_ID = "by6od-j4aaa-aaaaa-qaadq-cai";
+  public let FOOTBALL_GOD_BACKEND_CANISTER_ID = "44kin-waaaa-aaaal-qbxra-cai";
 */
   
 

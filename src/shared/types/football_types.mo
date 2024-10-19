@@ -66,6 +66,7 @@ module FootballTypes {
 
   public type Player = {
     id : PlayerId;
+    leagueId: LeagueId;
     clubId : ClubId;
     position : PlayerPosition;
     firstName : Text;
@@ -78,7 +79,8 @@ module FootballTypes {
     valueHistory : List.List<ValueHistory>;
     status : PlayerStatus;
     currentLoanEndDate : Int;
-    parentClubId : Nat16;
+    parentLeagueId: LeagueId;
+    parentClubId : ClubId;
     latestInjuryEndDate : Int;
     injuryHistory : List.List<InjuryHistory>;
     transferHistory : List.List<TransferHistory>;

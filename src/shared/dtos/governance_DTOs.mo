@@ -17,6 +17,8 @@ module GovernanceDTOs {
   };
 
   public type SubmitFixtureDataDTO = {
+    seasonId: FootballTypes.SeasonId;
+    leagueId: FootballTypes.LeagueId;
     gameweek : FootballTypes.GameweekNumber;
     month: Base.CalendarMonth;
     fixtureId : FootballTypes.FixtureId;
@@ -44,8 +46,6 @@ module GovernanceDTOs {
   };
 
   public type LoanPlayerDTO = {
-    seasonId : FootballTypes.SeasonId;
-    gameweek: FootballTypes.GameweekNumber;
     playerId : FootballTypes.ClubId;
     loanLeagueId: FootballTypes.LeagueId;
     loanClubId : FootballTypes.ClubId;

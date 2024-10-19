@@ -96,8 +96,8 @@ module {
         pickTeamSeasonId = systemState.pickTeamSeasonId;
         seasonActive = systemState.seasonActive;
         transferWindowActive = systemState.transferWindowActive;
-        version = systemState.version
-
+        version = systemState.version;
+        pickTeamMonth = systemState.pickTeamMonth;
       });
     };
     
@@ -290,6 +290,26 @@ module {
 
     public func setStablePlayersSnapshots(stable_players_snapshots : [(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [FootballTypes.Player])])]) {
       playersSnapshots := stable_players_snapshots;
+    };
+
+    //Functions to be removed when handed back to SNS
+
+    public func updateSystemState(dto: DTOs.SystemStateDTO) : async Result.Result<(), T.Error> {
+      let updatedSystemState : T.SystemState = {
+        calculationGameweek = dto.calculationGameweek;
+        calculationMonth = dto.calculationMonth;
+        calculationSeasonId = dto.calculationSeasonId;
+        pickTeamSeasonId = dto.pickTeamSeasonId;
+        pickTeamGameweek = dto.pickTeamGameweek;
+        pickTeamMonth = dto.pickTeamMonth;
+        seasonActive = dto.seasonActive;
+        transferWindowActive = dto.transferWindowActive;
+        onHold = dto.onHold;
+        version = dto.version;
+      };
+
+      systemState := updatedSystemState;
+      return #ok();
     };
   };
 

@@ -3485,7 +3485,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "314egh"
+  version_hash: "5jsh8z"
 };
 async function get_hooks() {
   return {};
@@ -3696,18 +3696,6 @@ function createSystemStore() {
 }
 const systemStore = createSystemStore();
 const idlFactory$1 = ({ IDL }) => {
-  const ClubId = IDL.Nat16;
-  const ShirtType = IDL.Variant({ "Filled": IDL.Null, "Striped": IDL.Null });
-  const ClubDTO = IDL.Record({
-    "id": ClubId,
-    "secondaryColourHex": IDL.Text,
-    "name": IDL.Text,
-    "friendlyName": IDL.Text,
-    "thirdColourHex": IDL.Text,
-    "abbreviatedName": IDL.Text,
-    "shirtType": ShirtType,
-    "primaryColourHex": IDL.Text
-  });
   const Error2 = IDL.Variant({
     "MoreThan2PlayersFromClub": IDL.Null,
     "DecodeError": IDL.Null,
@@ -3725,6 +3713,19 @@ const idlFactory$1 = ({ IDL }) => {
     "AlreadyExists": IDL.Null,
     "CanisterCreateError": IDL.Null,
     "Not11Players": IDL.Null
+  });
+  const Result = IDL.Variant({ "ok": IDL.Null, "err": Error2 });
+  const ClubId = IDL.Nat16;
+  const ShirtType = IDL.Variant({ "Filled": IDL.Null, "Striped": IDL.Null });
+  const ClubDTO = IDL.Record({
+    "id": ClubId,
+    "secondaryColourHex": IDL.Text,
+    "name": IDL.Text,
+    "friendlyName": IDL.Text,
+    "thirdColourHex": IDL.Text,
+    "abbreviatedName": IDL.Text,
+    "shirtType": ShirtType,
+    "primaryColourHex": IDL.Text
   });
   const Result_21 = IDL.Variant({ "ok": IDL.Vec(ClubDTO), "err": Error2 });
   const CountryId = IDL.Nat16;
@@ -4102,6 +4103,7 @@ const idlFactory$1 = ({ IDL }) => {
     "pickTeamSeasonId": SeasonId,
     "calculationGameweek": GameweekNumber,
     "transferWindowActive": IDL.Bool,
+    "pickTeamMonth": CalendarMonth,
     "pickTeamGameweek": GameweekNumber,
     "version": IDL.Text,
     "calculationMonth": CalendarMonth,
@@ -4161,7 +4163,6 @@ const idlFactory$1 = ({ IDL }) => {
     "passMasterPlayerId": ClubId,
     "captainId": ClubId
   });
-  const Result = IDL.Variant({ "ok": IDL.Null, "err": Error2 });
   const UpdateFavouriteClubDTO = IDL.Record({ "favouriteClubId": ClubId });
   const UpdateProfilePictureDTO = IDL.Record({
     "profilePicture": IDL.Vec(IDL.Nat8),
@@ -4169,6 +4170,8 @@ const idlFactory$1 = ({ IDL }) => {
   });
   const UpdateUsernameDTO = IDL.Record({ "username": IDL.Text });
   return IDL.Service({
+    "calculateGameweekScores": IDL.Func([], [Result], []),
+    "calculateLeaderboards": IDL.Func([], [Result], []),
     "getClubs": IDL.Func([], [Result_21], ["composite_query"]),
     "getCountries": IDL.Func([], [Result_20], ["query"]),
     "getCurrentTeam": IDL.Func([], [Result_19], []),
@@ -4239,12 +4242,14 @@ const idlFactory$1 = ({ IDL }) => {
       []
     ),
     "isUsernameValid": IDL.Func([UsernameFilterDTO], [IDL.Bool], ["query"]),
+    "notifyAppsOfLoan": IDL.Func([LeagueId, PlayerId], [Result], []),
     "saveFantasyTeam": IDL.Func([UpdateTeamSelectionDTO], [Result], []),
     "searchUsername": IDL.Func([UsernameFilterDTO], [Result_1], []),
-    "setGameweekTimers": IDL.Func([SeasonId, GameweekNumber], [], []),
+    "snapshotManagers": IDL.Func([], [Result], []),
     "updateDataHashes": IDL.Func([IDL.Text], [Result], []),
     "updateFavouriteClub": IDL.Func([UpdateFavouriteClubDTO], [Result], []),
     "updateProfilePicture": IDL.Func([UpdateProfilePictureDTO], [Result], []),
+    "updateSystemState": IDL.Func([SystemStateDTO], [Result], []),
     "updateUsername": IDL.Func([UpdateUsernameDTO], [Result], [])
   });
 };
@@ -5108,18 +5113,6 @@ const Toasts = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   })}</div>` : ``}`;
 });
 const idlFactory = ({ IDL }) => {
-  const ClubId = IDL.Nat16;
-  const ShirtType = IDL.Variant({ "Filled": IDL.Null, "Striped": IDL.Null });
-  const ClubDTO = IDL.Record({
-    "id": ClubId,
-    "secondaryColourHex": IDL.Text,
-    "name": IDL.Text,
-    "friendlyName": IDL.Text,
-    "thirdColourHex": IDL.Text,
-    "abbreviatedName": IDL.Text,
-    "shirtType": ShirtType,
-    "primaryColourHex": IDL.Text
-  });
   const Error2 = IDL.Variant({
     "MoreThan2PlayersFromClub": IDL.Null,
     "DecodeError": IDL.Null,
@@ -5137,6 +5130,19 @@ const idlFactory = ({ IDL }) => {
     "AlreadyExists": IDL.Null,
     "CanisterCreateError": IDL.Null,
     "Not11Players": IDL.Null
+  });
+  const Result = IDL.Variant({ "ok": IDL.Null, "err": Error2 });
+  const ClubId = IDL.Nat16;
+  const ShirtType = IDL.Variant({ "Filled": IDL.Null, "Striped": IDL.Null });
+  const ClubDTO = IDL.Record({
+    "id": ClubId,
+    "secondaryColourHex": IDL.Text,
+    "name": IDL.Text,
+    "friendlyName": IDL.Text,
+    "thirdColourHex": IDL.Text,
+    "abbreviatedName": IDL.Text,
+    "shirtType": ShirtType,
+    "primaryColourHex": IDL.Text
   });
   const Result_21 = IDL.Variant({ "ok": IDL.Vec(ClubDTO), "err": Error2 });
   const CountryId = IDL.Nat16;
@@ -5514,6 +5520,7 @@ const idlFactory = ({ IDL }) => {
     "pickTeamSeasonId": SeasonId,
     "calculationGameweek": GameweekNumber,
     "transferWindowActive": IDL.Bool,
+    "pickTeamMonth": CalendarMonth,
     "pickTeamGameweek": GameweekNumber,
     "version": IDL.Text,
     "calculationMonth": CalendarMonth,
@@ -5573,7 +5580,6 @@ const idlFactory = ({ IDL }) => {
     "passMasterPlayerId": ClubId,
     "captainId": ClubId
   });
-  const Result = IDL.Variant({ "ok": IDL.Null, "err": Error2 });
   const UpdateFavouriteClubDTO = IDL.Record({ "favouriteClubId": ClubId });
   const UpdateProfilePictureDTO = IDL.Record({
     "profilePicture": IDL.Vec(IDL.Nat8),
@@ -5581,6 +5587,8 @@ const idlFactory = ({ IDL }) => {
   });
   const UpdateUsernameDTO = IDL.Record({ "username": IDL.Text });
   return IDL.Service({
+    "calculateGameweekScores": IDL.Func([], [Result], []),
+    "calculateLeaderboards": IDL.Func([], [Result], []),
     "getClubs": IDL.Func([], [Result_21], ["composite_query"]),
     "getCountries": IDL.Func([], [Result_20], ["query"]),
     "getCurrentTeam": IDL.Func([], [Result_19], []),
@@ -5651,12 +5659,14 @@ const idlFactory = ({ IDL }) => {
       []
     ),
     "isUsernameValid": IDL.Func([UsernameFilterDTO], [IDL.Bool], ["query"]),
+    "notifyAppsOfLoan": IDL.Func([LeagueId, PlayerId], [Result], []),
     "saveFantasyTeam": IDL.Func([UpdateTeamSelectionDTO], [Result], []),
     "searchUsername": IDL.Func([UsernameFilterDTO], [Result_1], []),
-    "setGameweekTimers": IDL.Func([SeasonId, GameweekNumber], [], []),
+    "snapshotManagers": IDL.Func([], [Result], []),
     "updateDataHashes": IDL.Func([IDL.Text], [Result], []),
     "updateFavouriteClub": IDL.Func([UpdateFavouriteClubDTO], [Result], []),
     "updateProfilePicture": IDL.Func([UpdateProfilePictureDTO], [Result], []),
+    "updateSystemState": IDL.Func([SystemStateDTO], [Result], []),
     "updateUsername": IDL.Func([UpdateUsernameDTO], [Result], [])
   });
 };

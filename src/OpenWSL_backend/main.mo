@@ -135,9 +135,9 @@
       switch(systemStateResult){
         case (#ok systemState){
           let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
-            getPlayers : shared query (leagueId: FootballTypes.LeagueId, dto: Requests.RequestPlayersDTO) -> async Result.Result<[DTOs.PlayerDTO], T.Error>;
+            getPlayers : shared query (leagueId: FootballTypes.LeagueId) -> async Result.Result<[DTOs.PlayerDTO], T.Error>;
           };
-          return await data_canister.getPlayers(Environment.LEAGUE_ID, { seasonId = systemState.pickTeamSeasonId });
+          return await data_canister.getPlayers(Environment.LEAGUE_ID);
           //return await getLeaguePlayers(Environment.LEAGUE_ID, { seasonId = systemState.pickTeamSeasonId }); //Todo implement when figure out query function
         };  
         case (#err error){
@@ -285,23 +285,6 @@
       };
     };
 
-    private func setTransferWindowTimers() : async () {
-      let jan1Date = Utilities.nextUnixTimeForDayOfYear(1);
-      let jan31Date = Utilities.nextUnixTimeForDayOfYear(31);
-
-      let transferWindowStartDate : Timer.Duration = #nanoseconds(Int.abs(jan1Date - Time.now()));
-      let transferWindowEndDate : Timer.Duration = #nanoseconds(Int.abs(jan31Date - Time.now()));
-
-      await setAndBackupTimer(transferWindowStartDate, "transferWindowStart");
-      await setAndBackupTimer(transferWindowEndDate, "transferWindowEnd");
-    };
-
-    //system callback functions
-
-    private func cyclesCheckCallback() : async () {
-      //await checkCanisterCycles(); TODO
-    };
-
     public shared ({ caller }) func searchUsername(dto: DTOs.UsernameFilterDTO) : async Result.Result<DTOs.ManagerDTO, T.Error> {
       assert not Principal.isAnonymous(caller);
       return await userManager.getManagerByUsername(dto.username);
@@ -346,14 +329,13 @@
       return #ok();
     };
 
-
-
-    public shared ({ caller }) func getManagerCanisterIds() : async Result.Result<[Base.CanisterId], T.Error> {
+    public shared func getManagerCanisterIds() : async Result.Result<[Base.CanisterId], T.Error> {
       return #ok(userManager.getUniqueManagerCanisterIds());
     };
 
     //stable variables
-    private stable var timers : [Base.TimerInfo] = [];
+    //TODO: Add back timers
+    //private stable var timers : [Base.TimerInfo] = [];
 
     //stable variables from managers
 
@@ -484,7 +466,7 @@
       //set system state
       //await checkCanisterCycles(); 
       //await setSystemTimers();
-      //await updateManagerCanisterWasms();
+      await updateManagerCanisterWasms();
 
       await seasonManager.updateDataHash("clubs");
       await seasonManager.updateDataHash("fixtures");
@@ -497,171 +479,6 @@
       await seasonManager.updateDataHash("system_state");
     };
 
-    //Timer Functions
-
-    private func setSystemTimers() : async (){
-      
-      let currentTime = Time.now();
-      for (timerInfo in Iter.fromArray(timers)) {
-        let remainingDuration = timerInfo.triggerTime - currentTime;
-
-        if (remainingDuration > 0) {
-          let duration : Timer.Duration = #nanoseconds(Int.abs(remainingDuration));
-
-          switch (timerInfo.callbackName) {
-            case "gameweekBeginExpired" {
-              ignore Timer.setTimer<system>(duration, gameweekBeginExpiredCallback);
-            };
-            case "gameKickOffExpired" {
-              ignore Timer.setTimer<system>(duration, gameKickOffExpiredCallback);
-            };
-            case "gameCompletedExpired" {
-              ignore Timer.setTimer<system>(duration, gameCompletedExpiredCallback);
-            };
-            case "transferWindowStart" {
-              ignore Timer.setTimer<system>(duration, transferWindowStartCallback);
-            };
-            case "transferWindowEnd" {
-              ignore Timer.setTimer<system>(duration, transferWindowEndCallback);
-            };
-            case _ {};
-          };
-        };
-      };
-    };
-
-    private func gameweekBeginExpiredCallback() : async () {
-      await seasonManager.setNextPickTeamGameweek();
-      removeExpiredTimers();
-      let systemStateResult = seasonManager.getSystemState();
-      switch(systemStateResult){
-        case (#ok systemState){
-          await setGameweekTimers(systemState.pickTeamSeasonId, systemState.pickTeamGameweek);     
-          await userManager.snapshotFantasyTeams(Environment.LEAGUE_ID, systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
-          await seasonManager.updateDataHash("system_state");
-        };
-        case (#err _){}
-      };      
-    };
-
-    public func setGameweekTimers(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber) : async () {
-      let fixturesResult = await dataManager.getVerifiedFixtures(Environment.LEAGUE_ID, {seasonId = seasonId});
-      switch(fixturesResult){
-        case (#ok fixtures){
-          let filteredFilters = Array.filter<DTOs.FixtureDTO>(
-            fixtures,
-            func(fixture : DTOs.FixtureDTO) : Bool {
-              return fixture.gameweek == gameweek;
-            },
-          );
-
-          let sortedArray = Array.sort(
-            filteredFilters,
-            func(a : DTOs.FixtureDTO, b : DTOs.FixtureDTO) : Order.Order {
-              if (a.kickOff < b.kickOff) { return #less };
-              if (a.kickOff == b.kickOff) { return #equal };
-              return #greater;
-            },
-          );
-
-          let firstFixture = sortedArray[0];
-          let durationToHourBeforeFirstFixture : Timer.Duration = #nanoseconds(Int.abs(firstFixture.kickOff - Utilities.getHour() - Time.now()));
-          await setAndBackupTimer(durationToHourBeforeFirstFixture, "gameweekBeginExpired");
-          
-          await setKickOffTimers(filteredFilters);  
-        };
-        case (#err _){ }
-      }
-    };
-
-
-    private func setKickOffTimers(gameweekFixtures : [DTOs.FixtureDTO]) : async () {
-      for (fixture in Iter.fromArray(gameweekFixtures)) {
-        let durationToKickOff : Timer.Duration = #nanoseconds(Int.abs(fixture.kickOff - Time.now()));
-        await setAndBackupTimer(durationToKickOff, "gameKickOffExpired");
-
-        let durationToEndOfGame : Timer.Duration = #nanoseconds(Int.abs(fixture.kickOff - Time.now() + (Utilities.getHour() * 2)));
-        await setAndBackupTimer(durationToEndOfGame, "gameCompletedExpired");
-      };
-    };
-
-    private func gameKickOffExpiredCallback() : async () {
-      await seasonManager.setFixturesToActive();
-      removeExpiredTimers();
-      await seasonManager.updateDataHash("fixtures");
-    };
-
-    private func gameCompletedExpiredCallback() : async () {
-      await seasonManager.setFixturesToCompleted();
-      removeExpiredTimers();
-      await seasonManager.updateDataHash("fixtures");
-    };
-
-    private func transferWindowStartCallback() : async () {
-      await seasonManager.transferWindowStart();
-      removeExpiredTimers();
-      await seasonManager.updateDataHash("system_state");
-    };
-
-    private func transferWindowEndCallback() : async () {
-      await seasonManager.transferWindowEnd();
-      removeExpiredTimers();
-      await seasonManager.updateDataHash("system_state");
-    };
-
-    private func removeExpiredTimers() : () {
-      let currentTime = Time.now();
-      timers := Array.filter<Base.TimerInfo>(
-        timers,
-        func(timer : Base.TimerInfo) : Bool {
-          return timer.triggerTime > currentTime;
-        },
-      );
-    };
-
-    private func setAndBackupTimer(duration : Timer.Duration, callbackName : Text) : async () {
-      let jobId : Timer.TimerId = switch (callbackName) {
-        case "gameweekBeginExpired" {
-          Timer.setTimer<system>(duration, gameweekBeginExpiredCallback);
-        };
-        case "gameKickOffExpired" {
-          Timer.setTimer<system>(duration, gameKickOffExpiredCallback);
-        };
-        case "gameCompletedExpired" {
-          Timer.setTimer<system>(duration, gameCompletedExpiredCallback);
-        };
-        case "transferWindowStart" {
-          Timer.setTimer<system>(duration, transferWindowStartCallback);
-        };
-        case "transferWindowEnd" {
-          Timer.setTimer<system>(duration, transferWindowEndCallback);
-        };
-        case _ {
-          Timer.setTimer<system>(duration, defaultCallback);
-        };
-      };
-
-      let triggerTime = switch (duration) {
-        case (#seconds s) {
-          Time.now() + s * 1_000_000_000;
-        };
-        case (#nanoseconds ns) {
-          Time.now() + ns;
-        };
-      };
-
-      let newTimerInfo : Base.TimerInfo = {
-        id = jobId;
-        triggerTime = triggerTime;
-        callbackName = callbackName;
-      };
-
-      var timerBuffer = Buffer.fromArray<Base.TimerInfo>(timers);
-      timerBuffer.add(newTimerInfo);
-      timers := Buffer.toArray(timerBuffer);
-    };
-
-    private func defaultCallback() : async () {};
 
     private func updateManagerCanisterWasms() : async (){
       let managerCanisterIds = userManager.getUniqueManagerCanisterIds();
@@ -673,5 +490,78 @@
         await IC.start_canister({ canister_id = Principal.fromText(canisterId); });
       };
     };
+
+    //Functions to be removed when handed back to SNS
+
+    public shared ({ caller }) func updateSystemState(dto: DTOs.SystemStateDTO) : async Result.Result<(), T.Error> {
+      assert Principal.toText(caller) == NetworkEnvironmentVariables.FOOTBALL_GOD_BACKEND_CANISTER_ID;
+      return await seasonManager.updateSystemState(dto);
+    };
+
+    public shared ({ caller }) func snapshotManagers() : async Result.Result<(), T.Error> {
+      assert Principal.toText(caller) == NetworkEnvironmentVariables.FOOTBALL_GOD_BACKEND_CANISTER_ID;
+      let systemStateResult = await getSystemState();
+      switch(systemStateResult){
+        case (#ok systemState){
+          let _ = await userManager.snapshotFantasyTeams(Environment.LEAGUE_ID, systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
+          return #ok();
+        };  
+        case (#err error){
+          return #err(error);
+        }
+      };
+    };
+
+    public shared ({ caller }) func calculateGameweekScores() : async Result.Result<(), T.Error> {
+      assert Principal.toText(caller) == NetworkEnvironmentVariables.FOOTBALL_GOD_BACKEND_CANISTER_ID;
+      let systemStateResult = await getSystemState();
+      switch(systemStateResult){
+        case (#ok systemState){
+          let _ = await userManager.calculateFantasyTeamScores(Environment.LEAGUE_ID, systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
+          return #ok();
+        };  
+        case (#err error){
+          return #err(error);
+        }
+      };
+    };
+
+    public shared ({ caller }) func calculateLeaderboards() : async Result.Result<(), T.Error> {
+      assert Principal.toText(caller) == NetworkEnvironmentVariables.FOOTBALL_GOD_BACKEND_CANISTER_ID;
+      let systemStateResult = await getSystemState();
+      switch(systemStateResult){
+        case (#ok systemState){
+          let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
+            getClubs : shared query (leagueId: FootballTypes.LeagueId) -> async Result.Result<[FootballTypes.Club], T.Error>;
+          };
+          let clubsResult = await data_canister.getClubs(Environment.LEAGUE_ID);
+
+          switch(clubsResult){
+            case (#ok clubs){
+              let clubIds = Array.map<DTOs.ClubDTO, FootballTypes.ClubId>(clubs, func(club: DTOs.ClubDTO){
+                return club.id
+              });
+              let managerCanisterIds = userManager.getUniqueManagerCanisterIds();
+              let _ = leaderboardManager.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth, managerCanisterIds, clubIds);
+              return #ok();
+            };
+            case (#err error){
+              return #err(error)
+            }
+          };
+        };  
+        case (#err error){
+          return #err(error);
+        }
+      };
+    };
+
+    public shared ({ caller }) func notifyAppsOfLoan(leagueId: FootballTypes.LeagueId, playerId: FootballTypes.PlayerId) : async Result.Result<(), T.Error> {
+      assert Principal.toText(caller) == NetworkEnvironmentVariables.FOOTBALL_GOD_BACKEND_CANISTER_ID;
+      await userManager.removePlayerFromTeams(leagueId, playerId);
+      return #ok();
+    };
+
+    
 
   };

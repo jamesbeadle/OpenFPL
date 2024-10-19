@@ -57,8 +57,10 @@ type Player =
     injuryHistory : List<InjuryHistory>;
     lastName : Text;
     latestInjuryEndDate : Int;
+    leagueId : LeagueId;
     nationality : CountryId;
-    parentClubId : Nat16;
+    parentClubId : ClubId;
+    parentLeagueId : LeagueId;
     position : PlayerPosition;
     retirementDate : Int;
     seasons : List<PlayerSeason>;

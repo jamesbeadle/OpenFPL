@@ -415,6 +415,7 @@ export interface SystemStateDTO {
   'pickTeamSeasonId' : SeasonId,
   'calculationGameweek' : GameweekNumber,
   'transferWindowActive' : boolean,
+  'pickTeamMonth' : CalendarMonth,
   'pickTeamGameweek' : GameweekNumber,
   'version' : string,
   'calculationMonth' : CalendarMonth,
@@ -469,6 +470,8 @@ export interface WeeklyLeaderboardDTO {
   'gameweek' : GameweekNumber,
 }
 export interface _SERVICE {
+  'calculateGameweekScores' : ActorMethod<[], Result>,
+  'calculateLeaderboards' : ActorMethod<[], Result>,
   'getClubs' : ActorMethod<[], Result_21>,
   'getCountries' : ActorMethod<[], Result_20>,
   'getCurrentTeam' : ActorMethod<[], Result_19>,
@@ -498,12 +501,14 @@ export interface _SERVICE {
   'getTotalManagers' : ActorMethod<[], Result_3>,
   'getWeeklyLeaderboard' : ActorMethod<[GetWeeklyLeaderboardDTO], Result_2>,
   'isUsernameValid' : ActorMethod<[UsernameFilterDTO], boolean>,
+  'notifyAppsOfLoan' : ActorMethod<[LeagueId, PlayerId], Result>,
   'saveFantasyTeam' : ActorMethod<[UpdateTeamSelectionDTO], Result>,
   'searchUsername' : ActorMethod<[UsernameFilterDTO], Result_1>,
-  'setGameweekTimers' : ActorMethod<[SeasonId, GameweekNumber], undefined>,
+  'snapshotManagers' : ActorMethod<[], Result>,
   'updateDataHashes' : ActorMethod<[string], Result>,
   'updateFavouriteClub' : ActorMethod<[UpdateFavouriteClubDTO], Result>,
   'updateProfilePicture' : ActorMethod<[UpdateProfilePictureDTO], Result>,
+  'updateSystemState' : ActorMethod<[SystemStateDTO], Result>,
   'updateUsername' : ActorMethod<[UpdateUsernameDTO], Result>,
 }
 export declare const idlFactory: IDL.InterfaceFactory;

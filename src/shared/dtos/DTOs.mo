@@ -131,6 +131,7 @@ module DTOs {
     calculationSeasonId : FootballTypes.SeasonId;
     pickTeamGameweek : FootballTypes.GameweekNumber;
     pickTeamSeasonId : FootballTypes.SeasonId;
+    pickTeamMonth : Base.CalendarMonth;
     transferWindowActive : Bool;
     onHold : Bool;
     seasonActive: Bool;
