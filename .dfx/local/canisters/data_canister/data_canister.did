@@ -14,6 +14,18 @@ type UpdatePlayerDTO =
    position: PlayerPosition;
    shirtNumber: nat8;
  };
+type UpdateLeagueDTO = 
+ record {
+   abbreviation: text;
+   countryId: CountryId;
+   formed: int;
+   governingBody: text;
+   leagueId: LeagueId;
+   logo: blob;
+   name: text;
+   relatedGender: Gender;
+   teamCount: nat8;
+ };
 type UpdateClubDTO__1 = 
  record {
    abbreviatedName: text;
@@ -436,22 +448,15 @@ service : {
   retirePlayer: (LeagueId, RetirePlayerDTO) -> (Result);
   revaluePlayerDown: (LeagueId, RevaluePlayerDownDTO) -> (Result);
   revaluePlayerUp: (LeagueId, RevaluePlayerUpDTO) -> (Result);
-  setAbbreviatedLeagueName: (LeagueId, text) -> (Result);
   setFixtureToComplete: (LeagueId, SeasonId, FixtureId) -> () oneway;
   setFixtureToFinalised: (LeagueId, SeasonId, FixtureId) -> () oneway;
   setGameScore: (LeagueId, SeasonId, FixtureId) -> () oneway;
-  setLeagueCountryId: (LeagueId, CountryId) -> (Result);
-  setLeagueDateFormed: (LeagueId, int) -> (Result);
-  setLeagueGender: (LeagueId, Gender) -> (Result);
-  setLeagueGoverningBody: (LeagueId, text) -> (Result);
-  setLeagueLogo: (LeagueId, blob) -> (Result);
-  setLeagueName: (LeagueId, text) -> (Result);
   setPlayerInjury: (LeagueId, SetPlayerInjuryDTO) -> (Result);
-  setTeamCount: (LeagueId, nat8) -> (Result);
   setupData: () -> (Result);
   transferPlayer: (LeagueId, TransferPlayerDTO) -> (Result);
   unretirePlayer: (UnretirePlayerDTO) -> (Result);
   updateClub: (UpdateClubDTO__1) -> (Result);
+  updateLeague: (UpdateLeagueDTO) -> (Result);
   updatePlayer: (LeagueId, UpdatePlayerDTO) -> (Result);
   validateAddInitialFixtures: (LeagueId, AddInitialFixturesDTO) -> (Result);
   validateCreatePlayer: (LeagueId, CreatePlayerDTO) -> (Result);

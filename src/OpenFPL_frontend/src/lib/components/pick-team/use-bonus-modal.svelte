@@ -6,7 +6,7 @@
   import { playerStore } from "$lib/stores/player-store";
 
   import type { Bonus } from "$lib/types/bonus";
-  import type { PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { PickTeamDTO } from "../../../../../declarations/OpenWSL_backend/OpenWSL_backend.did";
   import { BonusType } from "$lib/enums/BonusType";
   import { Modal } from "@dfinity/gix-components";
   import { countryStore } from "$lib/stores/country-store";
@@ -28,20 +28,31 @@
 
   onMount(async () => {
     await storeManager.syncStores();
+    getUniqueCountries();
   });
 
   const getUniqueCountries = () => {
+    console.log("getting unique countries");
+    console.log($countryStore);
+    console.log($fantasyTeam);
+
     if (!$countryStore || !$fantasyTeam || !$fantasyTeam.playerIds) {
       return [];
     }
 
     const fantasyTeamPlayerIds = new Set($fantasyTeam.playerIds);
     const countriesOfFantasyTeamPlayers = $countryStore
-      .filter((country) => fantasyTeamPlayerIds.has(country.id))
+      .filter((country) =>
+        $playerStore.some(
+          (player) =>
+            fantasyTeamPlayerIds.has(player.id) && player.nationality === country.id
+        )
+      )
       .map((country) => country.name);
 
     return [...new Set(countriesOfFantasyTeamPlayers)].sort();
   };
+
 
   const getPlayerNames = () => {
     return $playerStore

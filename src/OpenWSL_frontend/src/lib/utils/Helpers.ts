@@ -17,6 +17,10 @@ import type {
   PlayerPointsDTO,
 } from "../../../../declarations/data_canister/data_canister.did";
 import type { GameweekData } from "$lib/interfaces/GameweekData";
+import EnglandFlag from "../flags/england.svelte"; // Custom Svelte component for England
+import ScotlandFlag from "../flags/scotland.svelte"; // Custom Svelte component for Scotland
+import WalesFlag from "../flags/wales.svelte"; // Custom Svelte component for Wales
+import NorthernIrelandFlag from "../flags/northern_ireland.svelte";
 
 export function uint8ArrayToBase64(bytes: Uint8Array): string {
   const binary = Array.from(bytes)
@@ -573,7 +577,7 @@ export function getFlagComponent(countryId: number) {
     case 185:
       return FlagIcons.Ae;
     case 186:
-      return FlagIcons.Gb;
+      return EnglandFlag;
     case 187:
       return FlagIcons.Us;
     case 188:
@@ -594,6 +598,12 @@ export function getFlagComponent(countryId: number) {
       return FlagIcons.Zm;
     case 196:
       return FlagIcons.Zw;
+    case 197:
+      return ScotlandFlag;
+    case 198:
+      return WalesFlag;
+    case 199:
+      return NorthernIrelandFlag;
     default:
       return null;
   }

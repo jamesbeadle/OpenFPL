@@ -11,12 +11,16 @@ import type {
   FixtureStatusType,
   PlayerEventType,
   PlayerPosition,
-} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+} from "../../../../declarations/OpenWSL_backend/OpenWSL_backend.did";
 import type {
   PlayerDTO,
   PlayerPointsDTO,
 } from "../../../../declarations/data_canister/data_canister.did";
 import type { GameweekData } from "$lib/interfaces/GameweekData";
+import EnglandFlag from "../flags/england.svelte"; // Custom Svelte component for England
+import ScotlandFlag from "../flags/scotland.svelte"; // Custom Svelte component for Scotland
+import WalesFlag from "../flags/wales.svelte"; // Custom Svelte component for Wales
+import NorthernIrelandFlag from "../flags/northern_ireland.svelte";
 
 export function uint8ArrayToBase64(bytes: Uint8Array): string {
   const binary = Array.from(bytes)
@@ -573,7 +577,7 @@ export function getFlagComponent(countryId: number) {
     case 185:
       return FlagIcons.Ae;
     case 186:
-      return FlagIcons.Gb;
+      return EnglandFlag;
     case 187:
       return FlagIcons.Us;
     case 188:
@@ -594,6 +598,12 @@ export function getFlagComponent(countryId: number) {
       return FlagIcons.Zm;
     case 196:
       return FlagIcons.Zw;
+    case 197:
+      return ScotlandFlag;
+    case 198:
+      return WalesFlag;
+    case 199:
+      return NorthernIrelandFlag;
     default:
       return null;
   }
@@ -1151,31 +1161,4 @@ export function calculateBonusPoints(
   }
 
   return bonusPoints;
-}
-
-export function getImageURL(blob: any): string {
-  let byteArray;
-  if (blob && typeof blob === "object" && !Array.isArray(blob)) {
-    const values = Object.values(blob);
-    if (values.length === 0) {
-      return "/profile_placeholder.png";
-    }
-    byteArray = Uint8Array.from(Object.values(blob));
-  } else if (Array.isArray(blob) && blob[0] instanceof Uint8Array) {
-    byteArray = blob[0];
-  } else if (blob instanceof Uint8Array) {
-    byteArray = blob;
-  } else if (typeof blob === "string") {
-    if (blob.startsWith("data:image")) {
-      return blob;
-    } else if (!blob.startsWith("/profile_placeholder.png")) {
-      return `data:png;base64,${blob}`;
-    }
-  }
-
-  if (byteArray) {
-    return `data:image/png;base64,${uint8ArrayToBase64(byteArray)}`;
-  }
-
-  return "/profile_placeholder.png";
 }

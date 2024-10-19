@@ -293,6 +293,17 @@ export const idlFactory = ({ IDL }) => {
     shirtType: ShirtType,
     primaryColourHex: IDL.Text,
   });
+  const UpdateLeagueDTO = IDL.Record({
+    logo: IDL.Vec(IDL.Nat8),
+    name: IDL.Text,
+    teamCount: IDL.Nat8,
+    relatedGender: Gender,
+    countryId: CountryId,
+    abbreviation: IDL.Text,
+    governingBody: IDL.Text,
+    leagueId: LeagueId,
+    formed: IDL.Int,
+  });
   const UpdatePlayerDTO = IDL.Record({
     dateOfBirth: IDL.Int,
     playerId: ClubId,
@@ -409,7 +420,6 @@ export const idlFactory = ({ IDL }) => {
     retirePlayer: IDL.Func([LeagueId, RetirePlayerDTO], [Result], []),
     revaluePlayerDown: IDL.Func([LeagueId, RevaluePlayerDownDTO], [Result], []),
     revaluePlayerUp: IDL.Func([LeagueId, RevaluePlayerUpDTO], [Result], []),
-    setAbbreviatedLeagueName: IDL.Func([LeagueId, IDL.Text], [Result], []),
     setFixtureToComplete: IDL.Func(
       [LeagueId, SeasonId, FixtureId],
       [],
@@ -421,18 +431,12 @@ export const idlFactory = ({ IDL }) => {
       ["oneway"],
     ),
     setGameScore: IDL.Func([LeagueId, SeasonId, FixtureId], [], ["oneway"]),
-    setLeagueCountryId: IDL.Func([LeagueId, CountryId], [Result], []),
-    setLeagueDateFormed: IDL.Func([LeagueId, IDL.Int], [Result], []),
-    setLeagueGender: IDL.Func([LeagueId, Gender], [Result], []),
-    setLeagueGoverningBody: IDL.Func([LeagueId, IDL.Text], [Result], []),
-    setLeagueLogo: IDL.Func([LeagueId, IDL.Vec(IDL.Nat8)], [Result], []),
-    setLeagueName: IDL.Func([LeagueId, IDL.Text], [Result], []),
     setPlayerInjury: IDL.Func([LeagueId, SetPlayerInjuryDTO], [Result], []),
-    setTeamCount: IDL.Func([LeagueId, IDL.Nat8], [Result], []),
     setupData: IDL.Func([], [Result], []),
     transferPlayer: IDL.Func([LeagueId, TransferPlayerDTO], [Result], []),
     unretirePlayer: IDL.Func([UnretirePlayerDTO], [Result], []),
     updateClub: IDL.Func([UpdateClubDTO__1], [Result], []),
+    updateLeague: IDL.Func([UpdateLeagueDTO], [Result], []),
     updatePlayer: IDL.Func([LeagueId, UpdatePlayerDTO], [Result], []),
     validateAddInitialFixtures: IDL.Func(
       [LeagueId, AddInitialFixturesDTO],

@@ -318,6 +318,17 @@ export interface UpdateClubDTO__1 {
   shirtType: ShirtType;
   primaryColourHex: string;
 }
+export interface UpdateLeagueDTO {
+  logo: Uint8Array | number[];
+  name: string;
+  teamCount: number;
+  relatedGender: Gender;
+  countryId: CountryId;
+  abbreviation: string;
+  governingBody: string;
+  leagueId: LeagueId;
+  formed: bigint;
+}
 export interface UpdatePlayerDTO {
   dateOfBirth: bigint;
   playerId: ClubId;
@@ -375,25 +386,18 @@ export interface _SERVICE {
   retirePlayer: ActorMethod<[LeagueId, RetirePlayerDTO], Result>;
   revaluePlayerDown: ActorMethod<[LeagueId, RevaluePlayerDownDTO], Result>;
   revaluePlayerUp: ActorMethod<[LeagueId, RevaluePlayerUpDTO], Result>;
-  setAbbreviatedLeagueName: ActorMethod<[LeagueId, string], Result>;
   setFixtureToComplete: ActorMethod<[LeagueId, SeasonId, FixtureId], undefined>;
   setFixtureToFinalised: ActorMethod<
     [LeagueId, SeasonId, FixtureId],
     undefined
   >;
   setGameScore: ActorMethod<[LeagueId, SeasonId, FixtureId], undefined>;
-  setLeagueCountryId: ActorMethod<[LeagueId, CountryId], Result>;
-  setLeagueDateFormed: ActorMethod<[LeagueId, bigint], Result>;
-  setLeagueGender: ActorMethod<[LeagueId, Gender], Result>;
-  setLeagueGoverningBody: ActorMethod<[LeagueId, string], Result>;
-  setLeagueLogo: ActorMethod<[LeagueId, Uint8Array | number[]], Result>;
-  setLeagueName: ActorMethod<[LeagueId, string], Result>;
   setPlayerInjury: ActorMethod<[LeagueId, SetPlayerInjuryDTO], Result>;
-  setTeamCount: ActorMethod<[LeagueId, number], Result>;
   setupData: ActorMethod<[], Result>;
   transferPlayer: ActorMethod<[LeagueId, TransferPlayerDTO], Result>;
   unretirePlayer: ActorMethod<[UnretirePlayerDTO], Result>;
   updateClub: ActorMethod<[UpdateClubDTO__1], Result>;
+  updateLeague: ActorMethod<[UpdateLeagueDTO], Result>;
   updatePlayer: ActorMethod<[LeagueId, UpdatePlayerDTO], Result>;
   validateAddInitialFixtures: ActorMethod<
     [LeagueId, AddInitialFixturesDTO],

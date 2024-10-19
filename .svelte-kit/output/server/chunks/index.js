@@ -3413,7 +3413,7 @@ const options = {
   root: Root,
   service_worker: false,
   templates: {
-    app: ({ head, body: body2, assets: assets2, nonce, env }) => '<!doctype html>\n<html lang="en">\n  <head>\n    <meta charset="utf-8" />\n    <meta content="width=device-width, initial-scale=1" name="viewport" />\n\n    <title>OpenWSL</title>\n    <link href="https://openwsl.xyz" rel="canonical" />\n    <meta\n      content="OpenWSL is a decentralised fantasy football game on the Internet Computer blockchain."\n      name="description"\n    />\n    <meta content="OpenWSL" property="og:title" />\n    <meta\n      content="OpenWSL is a decentralised fantasy football game on the Internet Computer blockchain."\n      property="og:description"\n    />\n    <meta content="website" property="og:type" />\n    <meta content="https://openwsl.xyz" property="og:url" />\n    <meta content="https://openwsl.xyz/meta-share.jpg" property="og:image" />\n    <meta content="summary_large_image" name="twitter:card" />\n    <meta content="OpenWSL" name="twitter:title" />\n    <meta\n      content="OpenWSL is a decentralised fantasy football platform on the Internet Computer blockchain."\n      name="twitter:description"\n    />\n    <meta content="https://openwsl.xyz/meta-share.jpg" name="twitter:image" />\n    <meta content="@beadle1989" name="twitter:creator" />\n\n    <link crossorigin="anonymous" href="/manifest.webmanifest" rel="manifest" />\n\n    <link rel="preload" href="/adopt_filled.png" as="image" />\n    <link rel="preload" href="/adopt.png" as="image" />\n    <link rel="preload" href="/background.jpg" as="image" />\n    <link rel="preload" href="/board.png" as="image" />\n    <link rel="preload" href="/brace-bonus.png" as="image" />\n    <link rel="preload" href="/ckBTCCoin.png" as="image" />\n    <link rel="preload" href="/ckETHCoin.png" as="image" />\n    <link rel="preload" href="/one-nation.png" as="image" />\n    <link rel="preload" href="/discord.png" as="image" />\n    <link rel="preload" href="/FPLCoin.png" as="image" />\n    <link rel="preload" href="/github.png" as="image" />\n    <link rel="preload" href="/hat-trick-hero.png" as="image" />\n    <link rel="preload" href="/ICPCoin.png" as="image" />\n    <link rel="preload" href="/no-entry.png" as="image" />\n    <link rel="preload" href="/openchat.png" as="image" />\n    <link rel="preload" href="/pass-master.png" as="image" />\n    <link rel="preload" href="/pitch.png" as="image" />\n    <link rel="preload" href="/profile_placeholder.png" as="image" />\n    <link rel="preload" href="/prospects.png" as="image" />\n    <link rel="preload" href="/reject.png" as="image" />\n    <link rel="preload" href="/reject_filled.png" as="image" />\n    <link rel="preload" href="/safe-hands.png" as="image" />\n    <link rel="preload" href="/team-boost.png" as="image" />\n    <link rel="preload" href="/twitter.png" as="image" />\n\n    <!-- Favicon -->\n    <link\n      rel="icon"\n      type="image/png"\n      sizes="32x32"\n      href="' + assets2 + '/favicons/favicon-32x32.png"\n    />\n    <link\n      rel="icon"\n      type="image/png"\n      sizes="16x16"\n      href="' + assets2 + '/favicons/favicon-16x16.png"\n    />\n    <link rel="shortcut icon" href="' + assets2 + '/favicons/favicon.ico" />\n\n    <!-- iOS meta tags & icons -->\n    <meta name="apple-mobile-web-app-capable" content="yes" />\n    <meta name="apple-mobile-web-app-status-bar-style" content="#2CE3A6" />\n    <meta name="apple-mobile-web-app-title" content="OpenWSL" />\n    <link\n      rel="apple-touch-icon"\n      href="' + assets2 + '/favicons/apple-touch-icon.png"\n    />\n    <link\n      rel="mask-icon"\n      href="' + assets2 + '/favicons/safari-pinned-tab.svg"\n      color="#2CE3A6"\n    />\n\n    <!-- MS -->\n    <meta name="msapplication-TileColor" content="#2CE3A6" />\n    <meta\n      name="msapplication-config"\n      content="' + assets2 + '/favicons/browserconfig.xml"\n    />\n\n    <meta content="#2CE3A6" name="theme-color" />\n    ' + head + '\n\n    <style>\n      html,\n      body {\n        height: 100%;\n        margin: 0;\n      }\n\n      @font-face {\n        font-display: swap;\n        font-family: "Poppins";\n        font-style: normal;\n        font-weight: 400;\n        src: url("' + assets2 + '/poppins-regular-webfont.woff2")\n          format("woff2");\n      }\n\n      @font-face {\n        font-display: swap;\n        font-family: "Manrope";\n        font-style: normal;\n        font-weight: 400;\n        src: url("' + assets2 + '/Manrope-Regular.woff2") format("woff2");\n      }\n      body {\n        font-family: "Poppins", sans-serif !important;\n        color: white !important;\n        background-color: #1a1a1d;\n        height: 100vh;\n        margin: 0;\n        background-image: url("' + assets2 + '/background.jpg");\n        background-size: cover;\n        background-position: center;\n        background-repeat: no-repeat;\n        background-attachment: fixed;\n      }\n\n      #app-spinner {\n        --spinner-size: 30px;\n\n        width: var(--spinner-size);\n        height: var(--spinner-size);\n\n        animation: app-spinner-linear-rotate 2000ms linear infinite;\n\n        position: absolute;\n        top: calc(50% - (var(--spinner-size) / 2));\n        left: calc(50% - (var(--spinner-size) / 2));\n\n        --radius: 45px;\n        --circumference: calc(3.14159265359 * var(--radius) * 2);\n\n        --start: calc((1 - 0.05) * var(--circumference));\n        --end: calc((1 - 0.8) * var(--circumference));\n      }\n\n      #app-spinner circle {\n        stroke-dasharray: var(--circumference);\n        stroke-width: 10%;\n        transform-origin: 50% 50% 0;\n\n        transition-property: stroke;\n\n        animation-name: app-spinner-stroke-rotate-100;\n        animation-duration: 4000ms;\n        animation-timing-function: cubic-bezier(0.35, 0, 0.25, 1);\n        animation-iteration-count: infinite;\n\n        fill: transparent;\n        stroke: currentColor;\n\n        transition: stroke-dashoffset 225ms linear;\n      }\n\n      @keyframes app-spinner-linear-rotate {\n        0% {\n          transform: rotate(0deg);\n        }\n        100% {\n          transform: rotate(360deg);\n        }\n      }\n\n      @keyframes app-spinner-stroke-rotate-100 {\n        0% {\n          stroke-dashoffset: var(--start);\n          transform: rotate(0);\n        }\n        12.5% {\n          stroke-dashoffset: var(--end);\n          transform: rotate(0);\n        }\n        12.5001% {\n          stroke-dashoffset: var(--end);\n          transform: rotateX(180deg) rotate(72.5deg);\n        }\n        25% {\n          stroke-dashoffset: var(--start);\n          transform: rotateX(180deg) rotate(72.5deg);\n        }\n\n        25.0001% {\n          stroke-dashoffset: var(--start);\n          transform: rotate(270deg);\n        }\n        37.5% {\n          stroke-dashoffset: var(--end);\n          transform: rotate(270deg);\n        }\n        37.5001% {\n          stroke-dashoffset: var(--end);\n          transform: rotateX(180deg) rotate(161.5deg);\n        }\n        50% {\n          stroke-dashoffset: var(--start);\n          transform: rotateX(180deg) rotate(161.5deg);\n        }\n\n        50.0001% {\n          stroke-dashoffset: var(--start);\n          transform: rotate(180deg);\n        }\n        62.5% {\n          stroke-dashoffset: var(--end);\n          transform: rotate(180deg);\n        }\n        62.5001% {\n          stroke-dashoffset: var(--end);\n          transform: rotateX(180deg) rotate(251.5deg);\n        }\n        75% {\n          stroke-dashoffset: var(--start);\n          transform: rotateX(180deg) rotate(251.5deg);\n        }\n\n        75.0001% {\n          stroke-dashoffset: var(--start);\n          transform: rotate(90deg);\n        }\n        87.5% {\n          stroke-dashoffset: var(--end);\n          transform: rotate(90deg);\n        }\n        87.5001% {\n          stroke-dashoffset: var(--end);\n          transform: rotateX(180deg) rotate(341.5deg);\n        }\n        100% {\n          stroke-dashoffset: var(--start);\n          transform: rotateX(180deg) rotate(341.5deg);\n        }\n      }\n    </style>\n  </head>\n  <body data-sveltekit-preload-data="hover">\n    <div style="display: contents">' + body2 + '</div>\n\n    <svg\n      id="app-spinner"\n      preserveAspectRatio="xMidYMid meet"\n      focusable="false"\n      aria-hidden="true"\n      data-tid="spinner"\n      viewBox="0 0 100 100"\n    >\n      <circle cx="50%" cy="50%" r="45" />\n    </svg>\n  </body>\n</html>\n',
+    app: ({ head, body: body2, assets: assets2, nonce, env }) => '<!doctype html>\n<html lang="en">\n  <head>\n    <meta charset="utf-8" />\n    <meta content="width=device-width, initial-scale=1" name="viewport" />\n\n    <title>OpenFPL</title>\n    <link href="https://openfpl.xyz" rel="canonical" />\n    <meta\n      content="OpenFPL is a decentralised fantasy football game on the Internet Computer blockchain."\n      name="description"\n    />\n    <meta content="OpenFPL" property="og:title" />\n    <meta\n      content="OpenFPL is a decentralised fantasy football game on the Internet Computer blockchain."\n      property="og:description"\n    />\n    <meta content="website" property="og:type" />\n    <meta content="https://openfpl.xyz" property="og:url" />\n    <meta content="https://openfpl.xyz/meta-share.jpg" property="og:image" />\n    <meta content="summary_large_image" name="twitter:card" />\n    <meta content="OpenFPL" name="twitter:title" />\n    <meta\n      content="OpenFPL is a decentralised fantasy football platform on the Internet Computer blockchain."\n      name="twitter:description"\n    />\n    <meta content="https://openfpl.xyz/meta-share.jpg" name="twitter:image" />\n    <meta content="@beadle1989" name="twitter:creator" />\n\n    <link crossorigin="anonymous" href="/manifest.webmanifest" rel="manifest" />\n\n    <link rel="preload" href="/adopt_filled.png" as="image" />\n    <link rel="preload" href="/adopt.png" as="image" />\n    <link rel="preload" href="/background.jpg" as="image" />\n    <link rel="preload" href="/board.png" as="image" />\n    <link rel="preload" href="/brace-bonus.png" as="image" />\n    <link rel="preload" href="/ckBTCCoin.png" as="image" />\n    <link rel="preload" href="/ckETHCoin.png" as="image" />\n    <link rel="preload" href="/one-nation.png" as="image" />\n    <link rel="preload" href="/discord.png" as="image" />\n    <link rel="preload" href="/FPLCoin.png" as="image" />\n    <link rel="preload" href="/github.png" as="image" />\n    <link rel="preload" href="/hat-trick-hero.png" as="image" />\n    <link rel="preload" href="/ICPCoin.png" as="image" />\n    <link rel="preload" href="/no-entry.png" as="image" />\n    <link rel="preload" href="/openchat.png" as="image" />\n    <link rel="preload" href="/pass-master.png" as="image" />\n    <link rel="preload" href="/pitch.png" as="image" />\n    <link rel="preload" href="/profile_placeholder.png" as="image" />\n    <link rel="preload" href="/prospects.png" as="image" />\n    <link rel="preload" href="/reject.png" as="image" />\n    <link rel="preload" href="/reject_filled.png" as="image" />\n    <link rel="preload" href="/safe-hands.png" as="image" />\n    <link rel="preload" href="/team-boost.png" as="image" />\n    <link rel="preload" href="/twitter.png" as="image" />\n\n    <!-- Favicon -->\n    <link\n      rel="icon"\n      type="image/png"\n      sizes="32x32"\n      href="' + assets2 + '/favicons/favicon-32x32.png"\n    />\n    <link\n      rel="icon"\n      type="image/png"\n      sizes="16x16"\n      href="' + assets2 + '/favicons/favicon-16x16.png"\n    />\n    <link rel="shortcut icon" href="' + assets2 + '/favicons/favicon.ico" />\n\n    <!-- iOS meta tags & icons -->\n    <meta name="apple-mobile-web-app-capable" content="yes" />\n    <meta name="apple-mobile-web-app-status-bar-style" content="#2CE3A6" />\n    <meta name="apple-mobile-web-app-title" content="OpenFPL" />\n    <link\n      rel="apple-touch-icon"\n      href="' + assets2 + '/favicons/apple-touch-icon.png"\n    />\n    <link\n      rel="mask-icon"\n      href="' + assets2 + '/favicons/safari-pinned-tab.svg"\n      color="#2CE3A6"\n    />\n\n    <!-- MS -->\n    <meta name="msapplication-TileColor" content="#2CE3A6" />\n    <meta\n      name="msapplication-config"\n      content="' + assets2 + '/favicons/browserconfig.xml"\n    />\n\n    <meta content="#2CE3A6" name="theme-color" />\n    ' + head + '\n\n    <style>\n      html,\n      body {\n        height: 100%;\n        margin: 0;\n      }\n\n      @font-face {\n        font-display: swap;\n        font-family: "Poppins";\n        font-style: normal;\n        font-weight: 400;\n        src: url("' + assets2 + '/poppins-regular-webfont.woff2")\n          format("woff2");\n      }\n\n      @font-face {\n        font-display: swap;\n        font-family: "Manrope";\n        font-style: normal;\n        font-weight: 400;\n        src: url("' + assets2 + '/Manrope-Regular.woff2") format("woff2");\n      }\n      body {\n        font-family: "Poppins", sans-serif !important;\n        color: white !important;\n        background-color: #1a1a1d;\n        height: 100vh;\n        margin: 0;\n        background-image: url("' + assets2 + '/background.jpg");\n        background-size: cover;\n        background-position: center;\n        background-repeat: no-repeat;\n        background-attachment: fixed;\n      }\n\n      #app-spinner {\n        --spinner-size: 30px;\n\n        width: var(--spinner-size);\n        height: var(--spinner-size);\n\n        animation: app-spinner-linear-rotate 2000ms linear infinite;\n\n        position: absolute;\n        top: calc(50% - (var(--spinner-size) / 2));\n        left: calc(50% - (var(--spinner-size) / 2));\n\n        --radius: 45px;\n        --circumference: calc(3.14159265359 * var(--radius) * 2);\n\n        --start: calc((1 - 0.05) * var(--circumference));\n        --end: calc((1 - 0.8) * var(--circumference));\n      }\n\n      #app-spinner circle {\n        stroke-dasharray: var(--circumference);\n        stroke-width: 10%;\n        transform-origin: 50% 50% 0;\n\n        transition-property: stroke;\n\n        animation-name: app-spinner-stroke-rotate-100;\n        animation-duration: 4000ms;\n        animation-timing-function: cubic-bezier(0.35, 0, 0.25, 1);\n        animation-iteration-count: infinite;\n\n        fill: transparent;\n        stroke: currentColor;\n\n        transition: stroke-dashoffset 225ms linear;\n      }\n\n      @keyframes app-spinner-linear-rotate {\n        0% {\n          transform: rotate(0deg);\n        }\n        100% {\n          transform: rotate(360deg);\n        }\n      }\n\n      @keyframes app-spinner-stroke-rotate-100 {\n        0% {\n          stroke-dashoffset: var(--start);\n          transform: rotate(0);\n        }\n        12.5% {\n          stroke-dashoffset: var(--end);\n          transform: rotate(0);\n        }\n        12.5001% {\n          stroke-dashoffset: var(--end);\n          transform: rotateX(180deg) rotate(72.5deg);\n        }\n        25% {\n          stroke-dashoffset: var(--start);\n          transform: rotateX(180deg) rotate(72.5deg);\n        }\n\n        25.0001% {\n          stroke-dashoffset: var(--start);\n          transform: rotate(270deg);\n        }\n        37.5% {\n          stroke-dashoffset: var(--end);\n          transform: rotate(270deg);\n        }\n        37.5001% {\n          stroke-dashoffset: var(--end);\n          transform: rotateX(180deg) rotate(161.5deg);\n        }\n        50% {\n          stroke-dashoffset: var(--start);\n          transform: rotateX(180deg) rotate(161.5deg);\n        }\n\n        50.0001% {\n          stroke-dashoffset: var(--start);\n          transform: rotate(180deg);\n        }\n        62.5% {\n          stroke-dashoffset: var(--end);\n          transform: rotate(180deg);\n        }\n        62.5001% {\n          stroke-dashoffset: var(--end);\n          transform: rotateX(180deg) rotate(251.5deg);\n        }\n        75% {\n          stroke-dashoffset: var(--start);\n          transform: rotateX(180deg) rotate(251.5deg);\n        }\n\n        75.0001% {\n          stroke-dashoffset: var(--start);\n          transform: rotate(90deg);\n        }\n        87.5% {\n          stroke-dashoffset: var(--end);\n          transform: rotate(90deg);\n        }\n        87.5001% {\n          stroke-dashoffset: var(--end);\n          transform: rotateX(180deg) rotate(341.5deg);\n        }\n        100% {\n          stroke-dashoffset: var(--start);\n          transform: rotateX(180deg) rotate(341.5deg);\n        }\n      }\n    </style>\n  </head>\n  <body data-sveltekit-preload-data="hover">\n    <div style="display: contents">' + body2 + '</div>\n\n    <svg\n      id="app-spinner"\n      preserveAspectRatio="xMidYMid meet"\n      focusable="false"\n      aria-hidden="true"\n      data-tid="spinner"\n      viewBox="0 0 100 100"\n    >\n      <circle cx="50%" cy="50%" r="45" />\n    </svg>\n  </body>\n</html>\n',
     error: ({ status, message }) => '<!doctype html>\n<html lang="en">\n	<head>\n		<meta charset="utf-8" />\n		<title>' + message + `</title>
 
 		<style>
@@ -3485,7 +3485,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1wptqc4"
+  version_hash: "122tatw"
 };
 async function get_hooks() {
   return {};
@@ -3630,8 +3630,8 @@ const popupCenter = ({
   }
 };
 let authClient;
-const NNS_IC_ORG_ALTERNATIVE_ORIGIN = "https://openwsl.xyz";
-const NNS_IC_APP_DERIVATION_ORIGIN = "https://5ido2-wqaaa-aaaal-qmzra-cai.icp0.io";
+const NNS_IC_ORG_ALTERNATIVE_ORIGIN = "https://openfpl.xyz";
+const NNS_IC_APP_DERIVATION_ORIGIN = "https://5gbds-naaaa-aaaal-qmzqa-cai.icp0.io";
 const isNnsAlternativeOrigin = () => {
   return window.location.origin === NNS_IC_ORG_ALTERNATIVE_ORIGIN;
 };
@@ -4248,8 +4248,8 @@ const idlFactory$1 = ({ IDL }) => {
     "updateUsername": IDL.Func([UpdateUsernameDTO], [Result], [])
   });
 };
-var define_process_env_default$f = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
-const canisterId$1 = define_process_env_default$f.CANISTER_ID_OPENFPL_BACKEND;
+var define_process_env_default$g = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+const canisterId$1 = define_process_env_default$g.CANISTER_ID_OPENFPL_BACKEND;
 const createActor$1 = (canisterId2, options2 = {}) => {
   const agent = options2.agent || new HttpAgent({ ...options2.agentOptions });
   if (options2.agent && options2.agentOptions) {
@@ -4264,7 +4264,7 @@ const createActor$1 = (canisterId2, options2 = {}) => {
   });
 };
 canisterId$1 ? createActor$1(canisterId$1) : void 0;
-var define_process_env_default$e = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+var define_process_env_default$f = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class ActorFactory {
   static createActor(idlFactory2, canisterId2 = "", identity = null, options2 = null) {
     const hostOptions = {
@@ -4317,7 +4317,7 @@ class ActorFactory {
     });
   }
   static getGovernanceAgent(identity = null, options2 = null) {
-    let canisterId2 = define_process_env_default$e.CANISTER_ID_SNS_GOVERNANCE;
+    let canisterId2 = define_process_env_default$f.CANISTER_ID_SNS_GOVERNANCE;
     const hostOptions = {
       host: `https://${canisterId2}.icp-api.io`,
       identity
@@ -4736,13 +4736,13 @@ function calculateBonusPoints(gameweekData, fantasyTeam, points) {
   }
   return bonusPoints;
 }
-var define_process_env_default$d = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+var define_process_env_default$e = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class FixtureService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory$1,
-      define_process_env_default$d.OPENWSL_BACKEND_CANISTER_ID
+      define_process_env_default$e.OPENFPL_BACKEND_CANISTER_ID
     );
   }
   async getPostponedFixtures() {
@@ -5660,8 +5660,8 @@ const idlFactory = ({ IDL }) => {
     "updateUsername": IDL.Func([UpdateUsernameDTO], [Result], [])
   });
 };
-var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
-const canisterId = define_process_env_default$c.CANISTER_ID_OPENWSL_BACKEND;
+var define_process_env_default$d = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+const canisterId = define_process_env_default$d.CANISTER_ID_OPENWSL_BACKEND;
 const createActor = (canisterId2, options2 = {}) => {
   const agent = options2.agent || new HttpAgent({ ...options2.agentOptions });
   if (options2.agent && options2.agentOptions) {
@@ -5676,14 +5676,14 @@ const createActor = (canisterId2, options2 = {}) => {
   });
 };
 canisterId ? createActor(canisterId) : void 0;
-var define_process_env_default$b = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 function createManagerStore() {
   const { subscribe: subscribe2, set } = writable(null);
   systemStore.subscribe((value) => {
   });
   let actor = ActorFactory.createActor(
     idlFactory,
-    define_process_env_default$b.OPENWSL_BACKEND_CANISTER_ID
+    define_process_env_default$c.OPENFPL_BACKEND_CANISTER_ID
   );
   let newManager = {
     playerIds: [],
@@ -5772,7 +5772,7 @@ function createManagerStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default$b.OPENWSL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$c.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.getCurrentTeam();
       if (isError(result)) {
@@ -5799,7 +5799,7 @@ function createManagerStore() {
       }
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default$b.OPENWSL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$c.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       let dto = {
         playerIds: userFantasyTeam.playerIds,
@@ -5917,7 +5917,7 @@ const OpenFPLIcon = create_ssr_component(($$result, $$props, $$bindings, slots) 
   let { className = "" } = $$props;
   if ($$props.className === void 0 && $$bindings.className && className !== void 0)
     $$bindings.className(className);
-  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"${add_attribute("class", className, 0)} fill="currentColor" viewBox="0 0 219 297"><path d="M111.841 0.35467C110.455 0.112752 109.035 0.112564 107.648 0.351435C69.2925 6.95892 34.5675 22.8118 4.9608 45.2186C1.80522 47.6068 0.0151367 51.3653 0.0151367 55.3227V201.488C0.0151367 205.3 1.68822 208.92 4.59169 211.389L101.167 293.546C106.043 297.694 113.215 297.674 118.068 293.499L213.516 211.386C216.386 208.916 218.037 205.319 218.038 201.532L218.059 55.3581C218.06 51.3421 216.216 47.5364 212.989 45.1469C183.821 23.553 149.285 6.88999 111.841 0.35467ZM131.413 232.023C131.413 232.804 130.921 233.586 130.121 233.782L109.637 240.526C109.238 240.624 108.838 240.624 108.438 240.526L87.9544 233.782C87.1548 233.489 86.655 232.804 86.655 232.023V225.18C86.655 224.496 87.0548 223.812 87.6545 223.519L108.138 212.962C108.738 212.669 109.338 212.669 109.937 212.962L130.421 223.519C131.021 223.812 131.413 224.496 131.413 225.18V232.023ZM169.935 156.662C169.935 157.346 169.535 158.03 168.835 158.323L154.249 165.654C153.25 166.143 152.95 167.316 153.449 168.195L167.636 193.902C168.036 194.684 167.936 195.564 167.336 196.15L143.154 219.414C142.454 220.098 141.455 220.098 140.655 219.609L113.082 200.158C112.183 199.474 111.983 198.203 112.782 197.323L134.665 173.474C135.965 172.007 134.465 169.857 132.666 170.444L109.584 177.774C109.184 177.872 108.784 177.872 108.384 177.774L85.4093 170.444C83.5102 169.857 82.1108 172.105 83.4102 173.474L105.285 197.323C106.085 198.203 105.885 199.474 104.986 200.158L77.4128 219.609C76.6131 220.098 75.6135 220.098 74.9138 219.414L50.7396 196.053C50.1398 195.466 50.0399 194.586 50.4397 193.805L64.6259 168.098C65.1257 167.12 64.7259 166.045 63.8263 165.556L49.2402 158.226C48.6405 157.932 48.1407 157.248 48.1407 156.564V105.346C48.1407 103.88 49.84 102.902 51.1394 103.782L63.1266 111.699C63.6264 112.09 63.9262 112.579 63.9262 113.263L64.0262 126.459C64.0262 127.045 64.3261 127.632 64.8259 128.023L82.4106 140.045C83.7101 140.925 85.5093 139.947 85.4093 138.383L84.3098 115.12C84.3098 114.534 84.0099 113.947 83.5102 113.654L48.9403 90.4887C48.4406 90.0977 48.1407 89.5113 48.1407 88.9248V77.4887C48.1407 77.0977 48.2406 76.609 48.5405 76.3158L61.0275 60.8722C61.5273 60.188 62.4269 59.9925 63.2265 60.2857L108.284 76.609C108.684 76.8045 109.184 76.8045 109.584 76.609L154.649 60.2857C155.449 59.9925 156.341 60.2857 156.84 60.8722L169.335 76.3158C169.635 76.609 169.735 77.0977 169.735 77.4887V88.9248C169.735 89.5113 169.435 90.0977 168.935 90.4887L135.78 112.706C134.843 113.334 133.766 114.09 133.766 115.218L132.666 138.481C132.566 140.045 134.365 141.023 135.665 140.143L153.25 128.12C153.749 127.729 154.049 127.241 154.049 126.556L154.149 113.361C154.149 112.774 154.449 112.188 154.949 111.797L166.936 103.88C168.235 103 169.935 103.88 169.935 105.444V156.662Z" fill="#FFFFFF"></path></svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"${add_attribute("class", className, 0)} fill="currentColor" viewBox="0 0 137 188"><path d="M68.8457 0C43.0009 4.21054 19.8233 14.9859 0.331561 30.5217L0.264282 30.6627V129.685L68.7784 187.97L136.528 129.685L136.543 30.6204C117.335 15.7049 94.1282 4.14474 68.8457 0ZM82.388 145.014C82.388 145.503 82.0804 145.992 81.5806 146.114L68.7784 150.329C68.5285 150.39 68.2786 150.39 68.0287 150.329L55.2265 146.114C54.7267 145.931 54.4143 145.503 54.4143 145.014V140.738C54.4143 140.31 54.6642 139.883 55.039 139.7L67.8413 133.102C68.2161 132.919 68.591 132.919 68.9658 133.102L81.768 139.7C82.1429 139.883 82.388 140.31 82.388 140.738V145.014ZM106.464 97.9137C106.464 98.3414 106.214 98.769 105.777 98.9523L96.6607 103.534C96.036 103.84 95.8486 104.573 96.1609 105.122L105.027 121.189C105.277 121.678 105.215 122.228 104.84 122.594L89.7262 137.134C89.2889 137.561 88.6641 137.561 88.1644 137.256L70.9313 125.099C70.369 124.671 70.2441 123.877 70.7439 123.327L84.4208 108.421C85.2329 107.505 84.2958 106.161 83.1713 106.527L68.7447 111.109C68.4948 111.17 68.2449 111.17 67.9951 111.109L53.6358 106.527C52.4488 106.161 51.5742 107.566 52.3863 108.421L66.0584 123.327C66.5582 123.877 66.4332 124.671 65.871 125.099L48.6379 137.256C48.1381 137.561 47.5134 137.561 47.0761 137.134L31.9671 122.533C31.5923 122.167 31.5298 121.617 31.7797 121.128L40.6461 105.061C40.9585 104.45 40.7086 103.778 40.1463 103.473L31.03 98.8912C30.6552 98.7079 30.3428 98.2803 30.3428 97.8526V65.8413C30.3428 64.9249 31.4049 64.314 32.217 64.8639L39.709 69.8122C40.0214 70.0565 40.2088 70.362 40.2088 70.7896L40.2713 79.0368C40.2713 79.4034 40.4587 79.7699 40.7711 80.0143L51.7616 87.5284C52.5737 88.0782 53.6983 87.4673 53.6358 86.4898L52.9486 71.9503C52.9486 71.5838 52.7612 71.2173 52.4488 71.034L30.8426 56.5556C30.5302 56.3112 30.3428 55.9447 30.3428 55.5781V48.4305C30.3428 48.1862 30.4053 47.8807 30.5927 47.6975L38.3971 38.0452C38.7094 37.6176 39.2717 37.4954 39.7715 37.6786L67.9326 47.8807C68.1825 48.0029 68.4948 48.0029 68.7447 47.8807L96.9106 37.6786C97.4104 37.4954 97.9679 37.6786 98.2802 38.0452L106.089 47.6975C106.277 47.8807 106.339 48.1862 106.339 48.4305V55.5781C106.339 55.9447 106.152 56.3112 105.84 56.5556L84.2333 71.034C84.0459 71.2783 83.8585 71.6449 83.8585 72.0114L83.1713 86.5509C83.1088 87.5284 84.2333 88.1393 85.0455 87.5895L96.036 80.0753C96.3484 79.831 96.5358 79.5255 96.5358 79.0979L96.5983 70.8507C96.5983 70.4842 96.7857 70.1176 97.098 69.8733L104.59 64.9249C105.402 64.3751 106.464 64.9249 106.464 65.9024V97.9137Z" fill="#fffff"></path></svg>`;
 });
 const WalletIcon = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let { className = "" } = $$props;
@@ -5928,250 +5928,6 @@ const WalletIcon = create_ssr_component(($$result, $$props, $$bindings, slots) =
 const authSignedInStore = derived(
   authStore,
   ({ identity }) => identity !== null && identity !== void 0
-);
-var define_process_env_default$a = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
-function createUserStore() {
-  const { subscribe: subscribe2, set } = writable(null);
-  async function sync() {
-    let localStorageString = localStorage.getItem("user_profile_data");
-    if (localStorageString) {
-      const localProfile = JSON.parse(localStorageString);
-      set(localProfile);
-      return;
-    }
-    try {
-      await cacheProfile();
-    } catch (error) {
-      console.error("Error fetching user profile:", error);
-      throw error;
-    }
-  }
-  async function updateUsername(username) {
-    try {
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        define_process_env_default$a.OPENWSL_BACKEND_CANISTER_ID ?? ""
-      );
-      let dto = {
-        username
-      };
-      const result = await identityActor.updateUsername(dto);
-      if (isError(result)) {
-        console.error("Error updating username");
-        return;
-      }
-      await cacheProfile();
-      return result;
-    } catch (error) {
-      console.error("Error updating username:", error);
-      throw error;
-    }
-  }
-  async function updateFavouriteTeam(favouriteTeamId) {
-    try {
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        define_process_env_default$a.OPENWSL_BACKEND_CANISTER_ID ?? ""
-      );
-      let dto = {
-        favouriteClubId: favouriteTeamId
-      };
-      const result = await identityActor.updateFavouriteClub(dto);
-      if (isError(result)) {
-        console.error("Error updating favourite team");
-        return;
-      }
-      await cacheProfile();
-      return result;
-    } catch (error) {
-      console.error("Error updating favourite team:", error);
-      throw error;
-    }
-  }
-  async function updateProfilePicture(picture) {
-    try {
-      const maxPictureSize = 1e3;
-      const extension = getFileExtensionFromFile(picture);
-      if (picture.size > maxPictureSize * 1024) {
-        return null;
-      }
-      const reader = new FileReader();
-      reader.readAsArrayBuffer(picture);
-      reader.onloadend = async () => {
-        const arrayBuffer = reader.result;
-        const uint8Array = new Uint8Array(arrayBuffer);
-        try {
-          const identityActor = await ActorFactory.createIdentityActor(
-            authStore,
-            define_process_env_default$a.OPENWSL_BACKEND_CANISTER_ID ?? ""
-          );
-          let dto = {
-            profilePicture: uint8Array,
-            extension
-          };
-          const result = await identityActor.updateProfilePicture(dto);
-          if (isError(result)) {
-            console.error("Error updating profile picture");
-            return;
-          }
-          await cacheProfile();
-          return result;
-        } catch (error) {
-          console.error(error);
-        }
-      };
-    } catch (error) {
-      console.error("Error updating username:", error);
-      throw error;
-    }
-  }
-  function getFileExtensionFromFile(file) {
-    const filename = file.name;
-    const lastIndex = filename.lastIndexOf(".");
-    return lastIndex !== -1 ? filename.substring(lastIndex + 1) : "";
-  }
-  async function isUsernameAvailable(username) {
-    const identityActor = await ActorFactory.createIdentityActor(
-      authStore,
-      define_process_env_default$a.OPENWSL_BACKEND_CANISTER_ID
-    );
-    let dto = {
-      username
-    };
-    return await identityActor.isUsernameValid(dto);
-  }
-  async function cacheProfile() {
-    const identityActor = await ActorFactory.createIdentityActor(
-      authStore,
-      define_process_env_default$a.OPENWSL_BACKEND_CANISTER_ID
-    );
-    let getProfileResponse = await identityActor.getProfile();
-    let error = isError(getProfileResponse);
-    if (error) {
-      console.error("Error fetching user profile");
-      return;
-    }
-    let profileData = getProfileResponse.ok;
-    set(profileData);
-  }
-  async function withdrawFPL(withdrawalAddress, withdrawalAmount) {
-    try {
-      let identity;
-      authStore.subscribe(async (auth) => {
-        identity = auth.identity;
-      });
-      if (!identity) {
-        return;
-      }
-      let principalId = identity.getPrincipal();
-      const agent = await createAgent({
-        identity,
-        host: "https://identity.ic0.app",
-        fetchRootKey: define_process_env_default$a.DFX_NETWORK === "local"
-      });
-      const { transfer } = IcrcLedgerCanister.create({
-        agent,
-        canisterId: define_process_env_default$a.DFX_NETWORK === "ic" ? Principal.fromText("ddsp7-7iaaa-aaaaq-aacqq-cai") : Principal.fromText("avqkn-guaaa-aaaaa-qaaea-cai")
-      });
-      if (principalId) {
-        try {
-          let transfer_result = await transfer({
-            to: {
-              owner: Principal.fromText(withdrawalAddress),
-              subaccount: []
-            },
-            fee: 100000n,
-            memo: new Uint8Array(Text.encodeValue("0")),
-            from_subaccount: void 0,
-            created_at_time: BigInt(Date.now()) * BigInt(1e6),
-            amount: withdrawalAmount - 100000n
-          });
-        } catch (err) {
-          console.error(err.errorType);
-        }
-      }
-    } catch (error) {
-      console.error("Error withdrawing FPL.", error);
-      throw error;
-    }
-  }
-  async function getFPLBalance() {
-    let identity;
-    authStore.subscribe(async (auth) => {
-      identity = auth.identity;
-    });
-    if (!identity) {
-      return 0n;
-    }
-    let principalId = identity.getPrincipal();
-    const agent = await createAgent({
-      identity,
-      host: "https://identity.ic0.app",
-      fetchRootKey: define_process_env_default$a.DFX_NETWORK === "local"
-    });
-    const { balance } = IcrcLedgerCanister.create({
-      agent,
-      canisterId: Principal.fromText("ddsp7-7iaaa-aaaaq-aacqq-cai")
-    });
-    if (principalId) {
-      try {
-        let result = await balance({
-          owner: principalId,
-          certified: false
-        });
-        return result;
-      } catch (err) {
-        console.error(err);
-      }
-    }
-    return 0n;
-  }
-  return {
-    subscribe: subscribe2,
-    sync,
-    updateUsername,
-    updateFavouriteTeam,
-    updateProfilePicture,
-    isUsernameAvailable,
-    cacheProfile,
-    withdrawFPL,
-    getFPLBalance
-  };
-}
-const userStore = createUserStore();
-const userGetProfilePicture = derived(
-  userStore,
-  ($user) => {
-    try {
-      let byteArray;
-      if ($user && $user.profilePicture) {
-        if (Array.isArray($user.profilePicture) && $user.profilePicture[0] instanceof Uint8Array) {
-          byteArray = $user.profilePicture[0];
-          return `data:image/${$user.profilePictureType};base64,${uint8ArrayToBase64(byteArray)}`;
-        } else if ($user.profilePicture instanceof Uint8Array) {
-          return `data:${$user.profilePictureType};base64,${uint8ArrayToBase64(
-            $user.profilePicture
-          )}`;
-        } else {
-          if (typeof $user.profilePicture === "string") {
-            if ($user.profilePicture.startsWith("data:image")) {
-              return $user.profilePicture;
-            } else {
-              return `data:${$user.profilePictureType};base64,${$user.profilePicture}`;
-            }
-          }
-        }
-      }
-      return "/profile_placeholder.png";
-    } catch (error) {
-      console.error(error);
-      return "/profile_placeholder.png";
-    }
-  }
-);
-derived(
-  userStore,
-  (user) => user !== null && user !== void 0 ? user.favouriteTeamId : 0
 );
 function createCountryStore() {
   const { subscribe: subscribe2, set } = writable([]);
@@ -6204,13 +5960,13 @@ function createSeasonStore() {
   };
 }
 const seasonStore = createSeasonStore();
-var define_process_env_default$9 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+var define_process_env_default$b = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class PlayerService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
-      idlFactory,
-      define_process_env_default$9.OPENWSL_BACKEND_CANISTER_ID
+      idlFactory$1,
+      define_process_env_default$b.OPENFPL_BACKEND_CANISTER_ID
     );
   }
   async getPlayers() {
@@ -6250,13 +6006,13 @@ function createPlayerStore() {
   };
 }
 const playerStore = createPlayerStore();
-var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+var define_process_env_default$a = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class PlayerEventsService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
-      idlFactory,
-      define_process_env_default$8.OPENWSL_BACKEND_CANISTER_ID
+      idlFactory$1,
+      define_process_env_default$a.OPENFPL_BACKEND_CANISTER_ID
     );
   }
   async getPlayerDetailsForGameweek() {
@@ -6388,101 +6144,13 @@ function createPlayerEventsStore() {
   };
 }
 const playerEventsStore = createPlayerEventsStore();
-function createWeeklyLeaderboardStore() {
-  const { subscribe: subscribe2, set } = writable(null);
-  return {
-    subscribe: subscribe2,
-    setWeeklyLeaderboard: (leaderboard) => set(leaderboard)
-  };
-}
-const weeklyLeaderboardStore = createWeeklyLeaderboardStore();
-var define_process_env_default$7 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
-class DataHashService {
-  actor;
-  constructor() {
-    this.actor = ActorFactory.createActor(
-      idlFactory,
-      define_process_env_default$7.OPENWSL_BACKEND_CANISTER_ID
-    );
-  }
-  async getDataHashes() {
-    const result = await this.actor.getDataHashes();
-    if (isError(result))
-      throw new Error("Failed to fetch data hashes");
-    return result.ok;
-  }
-}
-var define_process_env_default$6 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
-class CountryService {
-  actor;
-  constructor() {
-    this.actor = ActorFactory.createActor(
-      idlFactory,
-      define_process_env_default$6.OPENWSL_BACKEND_CANISTER_ID
-    );
-  }
-  async getCountries() {
-    const result = await this.actor.getCountries();
-    if (isError(result))
-      throw new Error("Failed to fetch countries");
-    return result.ok;
-  }
-}
-var define_process_env_default$5 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
-class SystemService {
-  actor;
-  constructor() {
-    this.actor = ActorFactory.createActor(
-      idlFactory,
-      define_process_env_default$5.OPENWSL_BACKEND_CANISTER_ID
-    );
-  }
-  async getSystemState() {
-    const result = await this.actor.getSystemState();
-    if (isError(result))
-      throw new Error("Failed to fetch system state");
-    return result.ok;
-  }
-}
-var define_process_env_default$4 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
-class SeasonService {
-  actor;
-  constructor() {
-    this.actor = ActorFactory.createActor(
-      idlFactory,
-      define_process_env_default$4.OPENWSL_BACKEND_CANISTER_ID
-    );
-  }
-  async getSeasons() {
-    const result = await this.actor.getSeasons();
-    if (isError(result))
-      throw new Error("Failed to fetch seasons");
-    return result.ok;
-  }
-}
-var define_process_env_default$3 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
-class ClubService {
-  actor;
-  constructor() {
-    this.actor = ActorFactory.createActor(
-      idlFactory,
-      define_process_env_default$3.OPENWSL_BACKEND_CANISTER_ID
-    );
-  }
-  async getClubs() {
-    const result = await this.actor.getClubs();
-    if (isError(result))
-      throw new Error("Failed to fetch clubs");
-    return result.ok;
-  }
-}
-var define_process_env_default$2 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+var define_process_env_default$9 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class WeeklyLeaderboardService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory$1,
-      define_process_env_default$2.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default$9.OPENFPL_BACKEND_CANISTER_ID
     );
   }
   async getWeeklyLeaderboard(offset, seasonId, limit, gameweek) {
@@ -6496,6 +6164,103 @@ class WeeklyLeaderboardService {
     const result = await this.actor.getWeeklyLeaderboard(dto);
     if (isError(result))
       throw new Error("Failed to fetch countries");
+    return result.ok;
+  }
+}
+function createWeeklyLeaderboardStore() {
+  const { subscribe: subscribe2, set } = writable(null);
+  async function getWeeklyLeaderboard(seasonId, gameweek, page2, offset) {
+    return new WeeklyLeaderboardService().getWeeklyLeaderboard(
+      offset,
+      seasonId,
+      page2,
+      gameweek
+    );
+  }
+  return {
+    subscribe: subscribe2,
+    setWeeklyLeaderboard: (leaderboard) => set(leaderboard),
+    getWeeklyLeaderboard
+  };
+}
+const weeklyLeaderboardStore = createWeeklyLeaderboardStore();
+var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+class DataHashService {
+  actor;
+  constructor() {
+    this.actor = ActorFactory.createActor(
+      idlFactory$1,
+      define_process_env_default$8.OPENFPL_BACKEND_CANISTER_ID
+    );
+  }
+  async getDataHashes() {
+    const result = await this.actor.getDataHashes();
+    if (isError(result))
+      throw new Error("Failed to fetch data hashes");
+    return result.ok;
+  }
+}
+var define_process_env_default$7 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+class CountryService {
+  actor;
+  constructor() {
+    this.actor = ActorFactory.createActor(
+      idlFactory$1,
+      define_process_env_default$7.OPENFPL_BACKEND_CANISTER_ID
+    );
+  }
+  async getCountries() {
+    const result = await this.actor.getCountries();
+    if (isError(result))
+      throw new Error("Failed to fetch countries");
+    return result.ok;
+  }
+}
+var define_process_env_default$6 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+class SystemService {
+  actor;
+  constructor() {
+    this.actor = ActorFactory.createActor(
+      idlFactory$1,
+      define_process_env_default$6.OPENFPL_BACKEND_CANISTER_ID
+    );
+  }
+  async getSystemState() {
+    const result = await this.actor.getSystemState();
+    if (isError(result))
+      throw new Error("Failed to fetch system state");
+    return result.ok;
+  }
+}
+var define_process_env_default$5 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+class SeasonService {
+  actor;
+  constructor() {
+    this.actor = ActorFactory.createActor(
+      idlFactory$1,
+      define_process_env_default$5.OPENFPL_BACKEND_CANISTER_ID
+    );
+  }
+  async getSeasons() {
+    const result = await this.actor.getSeasons();
+    if (isError(result))
+      throw new Error("Failed to fetch seasons");
+    return result.ok;
+  }
+}
+var define_process_env_default$4 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+class ClubService {
+  actor;
+  constructor() {
+    this.actor = ActorFactory.createActor(
+      idlFactory$1,
+      define_process_env_default$4.OPENFPL_BACKEND_CANISTER_ID
+    );
+  }
+  async getClubs() {
+    const result = await this.actor.getClubs();
+    if (isError(result))
+      throw new Error("Failed to fetch clubs");
     return result.ok;
   }
 }
@@ -6649,6 +6414,271 @@ class StoreManager {
   }
 }
 new StoreManager();
+var define_process_env_default$3 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+class UserService {
+  constructor() {
+    authStore.sync();
+  }
+  async isAdmin() {
+    const identityActor = await ActorFactory.createIdentityActor(
+      authStore,
+      define_process_env_default$3.OPENFPL_BACKEND_CANISTER_ID
+    );
+    const result = await identityActor.isAdmin();
+    if (isError(result)) {
+      throw new Error("Failed to check is admin");
+    }
+    return result.ok;
+  }
+}
+var define_process_env_default$2 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+function createUserStore() {
+  const { subscribe: subscribe2, set } = writable(null);
+  async function sync() {
+    let localStorageString = localStorage.getItem("user_profile_data");
+    if (localStorageString) {
+      const localProfile = JSON.parse(localStorageString);
+      set(localProfile);
+      return;
+    }
+    try {
+      await cacheProfile();
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+      throw error;
+    }
+  }
+  async function isAdmin() {
+    return new UserService().isAdmin();
+  }
+  async function updateUsername(username) {
+    try {
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        define_process_env_default$2.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
+      let dto = {
+        username
+      };
+      const result = await identityActor.updateUsername(dto);
+      if (isError(result)) {
+        console.error("Error updating username");
+        return;
+      }
+      await cacheProfile();
+      return result;
+    } catch (error) {
+      console.error("Error updating username:", error);
+      throw error;
+    }
+  }
+  async function updateFavouriteTeam(favouriteTeamId) {
+    try {
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        define_process_env_default$2.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
+      let dto = {
+        favouriteClubId: favouriteTeamId
+      };
+      const result = await identityActor.updateFavouriteClub(dto);
+      if (isError(result)) {
+        console.error("Error updating favourite team");
+        return;
+      }
+      await cacheProfile();
+      return result;
+    } catch (error) {
+      console.error("Error updating favourite team:", error);
+      throw error;
+    }
+  }
+  async function updateProfilePicture(picture) {
+    try {
+      const maxPictureSize = 1e3;
+      const extension = getFileExtensionFromFile(picture);
+      if (picture.size > maxPictureSize * 1024) {
+        return null;
+      }
+      const reader = new FileReader();
+      reader.readAsArrayBuffer(picture);
+      reader.onloadend = async () => {
+        const arrayBuffer = reader.result;
+        const uint8Array = new Uint8Array(arrayBuffer);
+        try {
+          const identityActor = await ActorFactory.createIdentityActor(
+            authStore,
+            define_process_env_default$2.OPENFPL_BACKEND_CANISTER_ID ?? ""
+          );
+          let dto = {
+            profilePicture: uint8Array,
+            extension
+          };
+          const result = await identityActor.updateProfilePicture(dto);
+          if (isError(result)) {
+            console.error("Error updating profile picture");
+            return;
+          }
+          await cacheProfile();
+          return result;
+        } catch (error) {
+          console.error(error);
+        }
+      };
+    } catch (error) {
+      console.error("Error updating username:", error);
+      throw error;
+    }
+  }
+  function getFileExtensionFromFile(file) {
+    const filename = file.name;
+    const lastIndex = filename.lastIndexOf(".");
+    return lastIndex !== -1 ? filename.substring(lastIndex + 1) : "";
+  }
+  async function isUsernameAvailable(username) {
+    const identityActor = await ActorFactory.createIdentityActor(
+      authStore,
+      define_process_env_default$2.OPENFPL_BACKEND_CANISTER_ID
+    );
+    let dto = {
+      username
+    };
+    return await identityActor.isUsernameValid(dto);
+  }
+  async function cacheProfile() {
+    const identityActor = await ActorFactory.createIdentityActor(
+      authStore,
+      define_process_env_default$2.OPENFPL_BACKEND_CANISTER_ID
+    );
+    let getProfileResponse = await identityActor.getProfile();
+    let error = isError(getProfileResponse);
+    if (error) {
+      console.error("Error fetching user profile");
+      return;
+    }
+    let profileData = getProfileResponse.ok;
+    set(profileData);
+  }
+  async function withdrawFPL(withdrawalAddress, withdrawalAmount) {
+    try {
+      let identity;
+      authStore.subscribe(async (auth) => {
+        identity = auth.identity;
+      });
+      if (!identity) {
+        return;
+      }
+      let principalId = identity.getPrincipal();
+      const agent = await createAgent({
+        identity,
+        host: "https://identity.ic0.app",
+        fetchRootKey: define_process_env_default$2.DFX_NETWORK === "local"
+      });
+      const { transfer } = IcrcLedgerCanister.create({
+        agent,
+        canisterId: define_process_env_default$2.DFX_NETWORK === "ic" ? Principal.fromText("ddsp7-7iaaa-aaaaq-aacqq-cai") : Principal.fromText("avqkn-guaaa-aaaaa-qaaea-cai")
+      });
+      if (principalId) {
+        try {
+          let transfer_result = await transfer({
+            to: {
+              owner: Principal.fromText(withdrawalAddress),
+              subaccount: []
+            },
+            fee: 100000n,
+            memo: new Uint8Array(Text.encodeValue("0")),
+            from_subaccount: void 0,
+            created_at_time: BigInt(Date.now()) * BigInt(1e6),
+            amount: withdrawalAmount - 100000n
+          });
+        } catch (err) {
+          console.error(err.errorType);
+        }
+      }
+    } catch (error) {
+      console.error("Error withdrawing FPL.", error);
+      throw error;
+    }
+  }
+  async function getFPLBalance() {
+    let identity;
+    authStore.subscribe(async (auth) => {
+      identity = auth.identity;
+    });
+    if (!identity) {
+      return 0n;
+    }
+    let principalId = identity.getPrincipal();
+    const agent = await createAgent({
+      identity,
+      host: "https://identity.ic0.app",
+      fetchRootKey: define_process_env_default$2.DFX_NETWORK === "local"
+    });
+    const { balance } = IcrcLedgerCanister.create({
+      agent,
+      canisterId: Principal.fromText("ddsp7-7iaaa-aaaaq-aacqq-cai")
+    });
+    if (principalId) {
+      try {
+        let result = await balance({
+          owner: principalId,
+          certified: false
+        });
+        return result;
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    return 0n;
+  }
+  return {
+    subscribe: subscribe2,
+    sync,
+    updateUsername,
+    updateFavouriteTeam,
+    updateProfilePicture,
+    isUsernameAvailable,
+    cacheProfile,
+    withdrawFPL,
+    getFPLBalance,
+    isAdmin
+  };
+}
+const userStore = createUserStore();
+const userGetProfilePicture = derived(
+  userStore,
+  ($user) => {
+    try {
+      let byteArray;
+      if ($user && $user.profilePicture) {
+        if (Array.isArray($user.profilePicture) && $user.profilePicture[0] instanceof Uint8Array) {
+          byteArray = $user.profilePicture[0];
+          return `data:image/${$user.profilePictureType};base64,${uint8ArrayToBase64(byteArray)}`;
+        } else if ($user.profilePicture instanceof Uint8Array) {
+          return `data:${$user.profilePictureType};base64,${uint8ArrayToBase64(
+            $user.profilePicture
+          )}`;
+        } else {
+          if (typeof $user.profilePicture === "string") {
+            if ($user.profilePicture.startsWith("data:image")) {
+              return $user.profilePicture;
+            } else {
+              return `data:${$user.profilePictureType};base64,${$user.profilePicture}`;
+            }
+          }
+        }
+      }
+      return "/profile_placeholder.png";
+    } catch (error) {
+      console.error(error);
+      return "/profile_placeholder.png";
+    }
+  }
+);
+derived(
+  userStore,
+  (user) => user !== null && user !== void 0 ? user.favouriteTeamId : 0
+);
 const Header = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let currentClass;
   let currentBorder;
@@ -6690,7 +6720,7 @@ const JunoIcon = create_ssr_component(($$result, $$props, $$bindings, slots) => 
   return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"${add_attribute("class", className, 0)} fill="currentColor" viewBox="0 0 130 130"><g id="Layer_1-2"><g><path d="M91.99,64.798c0,-20.748 -16.845,-37.593 -37.593,-37.593l-0.003,-0c-20.749,-0 -37.594,16.845 -37.594,37.593l0,0.004c0,20.748 16.845,37.593 37.594,37.593l0.003,0c20.748,0 37.593,-16.845 37.593,-37.593l0,-0.004Z"></path><circle cx="87.153" cy="50.452" r="23.247" style="fill:#7888ff;"></circle></g></g></svg>`;
 });
 const Footer = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  return `<footer class="bg-gray-900 text-white py-3"><div class="container mx-1 xs:mx-2 md:mx-auto flex flex-col md:flex-row items-start md:items-center justify-between text-xs"><div class="flex-1" data-svelte-h="svelte-1784upv"><div class="flex justify-start"><div class="flex flex-row pl-4"><a href="https://oc.app/community/uf3iv-naaaa-aaaar-ar3ta-cai/?ref=zv6hh-xaaaa-aaaar-ac35q-cai" target="_blank" rel="noopener noreferrer"><img src="/openchat.png" class="h-4 w-auto mb-2 mr-2" alt="OpenChat"></a> <a href="https://x.com/OpenFPL_DAO" target="_blank" rel="noopener noreferrer"><img src="/twitter.png" class="h-4 w-auto mr-2 mb-2" alt="X"></a> <a href="https://github.com/jamesbeadle/OpenFPL" target="_blank" rel="noopener noreferrer"><img src="/github.png" class="h-4 w-auto mb-2" alt="GitHub"></a></div></div> <div class="flex justify-start"><div class="flex flex-col md:flex-row md:space-x-2 pl-4"><a href="/gameplay-rules" class="hover:text-gray-300 md:hidden lg:block">Gameplay Rules</a> <a href="/gameplay-rules" class="hover:text-gray-300 hidden md:block lg:hidden">Rules</a> <span class="hidden md:flex">|</span> <a href="/terms" class="hover:text-gray-300">Terms &amp; Conditions</a></div></div></div> <div class="flex-0"><a href="/"><b class="px-4 mt-2 md:mt-0 md:px-10 flex items-center">${validate_component(OpenFPLIcon, "OpenFplIcon").$$render($$result, { className: "h-6 w-auto mr-2" }, {}, {})}OpenFPL</b></a></div> <div class="flex-1"><div class="flex justify-end"><div class="text-right px-4 md:px-0 mt-1 md:mt-0 md:mr-4"><a href="https://juno.build" target="_blank" class="hover:text-gray-300 flex items-center">Sponsored By juno.build
+  return `<footer class="bg-gray-900 text-white py-3"><div class="container mx-1 xs:mx-2 md:mx-auto flex flex-col md:flex-row items-start md:items-center justify-between text-xs"><div class="flex-1" data-svelte-h="svelte-1fjfhgh"><div class="flex justify-start"><div class="flex flex-row pl-4"><a href="https://oc.app/community/uf3iv-naaaa-aaaar-ar3ta-cai/?ref=zv6hh-xaaaa-aaaar-ac35q-cai" target="_blank" rel="noopener noreferrer"><img src="/openchat.png" class="h-4 w-auto mb-2 mr-2" alt="OpenChat"></a> <a href="https://x.com/OpenFPL_DAO" target="_blank" rel="noopener noreferrer"><img src="/twitter.png" class="h-4 w-auto mr-2 mb-2" alt="X"></a> <a href="https://github.com/jamesbeadle/OpenFPL" target="_blank" rel="noopener noreferrer"><img src="/github.png" class="h-4 w-auto mb-2" alt="GitHub"></a></div></div> <div class="flex justify-start"><div class="flex flex-col md:flex-row md:space-x-2 pl-4"><a href="/whitepaper" class="hover:text-gray-300">Whitepaper</a> <span class="hidden md:flex">|</span> <a href="/gameplay-rules" class="hover:text-gray-300 md:hidden lg:block">Gameplay Rules</a> <a href="/gameplay-rules" class="hover:text-gray-300 hidden md:block lg:hidden">Rules</a> <span class="hidden md:flex">|</span> <a href="/terms" class="hover:text-gray-300">Terms &amp; Conditions</a></div></div></div> <div class="flex-0"><a href="/"><b class="px-4 mt-2 md:mt-0 md:px-10 flex items-center">${validate_component(OpenFPLIcon, "OpenFplIcon").$$render($$result, { className: "h-6 w-auto mr-2" }, {}, {})}OpenFPL</b></a></div> <div class="flex-1"><div class="flex justify-end"><div class="text-right px-4 md:px-0 mt-1 md:mt-0 md:mr-4"><a href="https://juno.build" target="_blank" class="hover:text-gray-300 flex items-center">Sponsored By juno.build
             ${validate_component(JunoIcon, "JunoIcon").$$render($$result, { className: "h-8 w-auto ml-2" }, {}, {})}</a></div></div></div></div></footer>`;
 });
 const css$3 = {
@@ -6741,7 +6771,7 @@ const Local_spinner = create_ssr_component(($$result, $$props, $$bindings, slots
   $$result.css.add(css$2);
   return `<div class="local-spinner svelte-pvdm52"></div>`;
 });
-var define_process_env_default$1 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+var define_process_env_default$1 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 function createMonthlyLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage = 25;
@@ -6751,8 +6781,8 @@ function createMonthlyLeaderboardStore() {
     systemState = value;
   });
   let actor = ActorFactory.createActor(
-    idlFactory,
-    define_process_env_default$1.OPENWSL_BACKEND_CANISTER_ID
+    idlFactory$1,
+    define_process_env_default$1.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync(seasonId, month, clubId) {
     let category2 = "monthly_leaderboards";
@@ -6859,7 +6889,7 @@ function createMonthlyLeaderboardStore() {
   };
 }
 createMonthlyLeaderboardStore();
-var define_process_env_default = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 22 };
+var define_process_env_default = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 function createSeasonLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage = 25;
@@ -6869,8 +6899,8 @@ function createSeasonLeaderboardStore() {
     systemState = value;
   });
   let actor = ActorFactory.createActor(
-    idlFactory,
-    define_process_env_default.OPENWSL_BACKEND_CANISTER_ID
+    idlFactory$1,
+    define_process_env_default.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync(seasonId) {
     let category2 = "season_leaderboard";
@@ -6974,14 +7004,14 @@ function createSeasonLeaderboardStore() {
 }
 createSeasonLeaderboardStore();
 const css$1 = {
-  code: ".local-spinner.svelte-1qjdn91{border:5px solid rgba(255, 255, 255, 0.3);border-top:5px solid white;border-radius:50%;width:50px;height:50px;position:relative;margin:0 auto;animation:svelte-1qjdn91-spin 1s linear infinite}@keyframes svelte-1qjdn91-spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}",
+  code: ".local-spinner.svelte-1mszak5{border:5px solid rgba(255, 255, 255, 0.3);border-top:5px solid white;border-radius:50%;width:50px;height:50px;position:relative;margin:0 auto;animation:svelte-1mszak5-spin 1s linear infinite}@keyframes svelte-1mszak5-spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}",
   map: null
 };
 const Relative_spinner = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$result.css.add(css$1);
-  return `<div class="local-spinner svelte-1qjdn91"></div>`;
+  return `<div class="local-spinner svelte-1mszak5"></div>`;
 });
-const Page$8 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$9 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_clubStore;
   let $$unsubscribe_systemStore;
   $$unsubscribe_clubStore = subscribe(clubStore, (value) => value);
@@ -7006,7 +7036,7 @@ const Page$8 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$7 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$8 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $clubStore, $$unsubscribe_clubStore;
   let $$unsubscribe_playerStore;
   let $$unsubscribe_fixtureStore;
@@ -7039,13 +7069,13 @@ const Page$7 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$6 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$7 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $clubStore, $$unsubscribe_clubStore;
   $$unsubscribe_clubStore = subscribe(clubStore, (value) => $clubStore = value);
   $$unsubscribe_clubStore();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
-      return `<div class="page-header-wrapper flex w-full"><div class="content-panel w-full"><div class="w-full grid grid-cols-1 md:grid-cols-4 gap-4 mt-4"><p class="col-span-1 md:col-span-4 text-center w-full mb-4" data-svelte-h="svelte-18c4wpm">Super League Clubs</p> ${each($clubStore.sort((a, b) => a.id - b.id), (team) => {
+      return `<div class="page-header-wrapper flex w-full"><div class="content-panel w-full"><div class="w-full grid grid-cols-1 md:grid-cols-4 gap-4 mt-4"><p class="col-span-1 md:col-span-4 text-center w-full mb-4" data-svelte-h="svelte-gufabx">Premier League Clubs</p> ${each($clubStore.sort((a, b) => a.id - b.id), (team) => {
         return `<div class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"><div class="flex items-center space-x-4 w-full">${validate_component(BadgeIcon, "BadgeIcon").$$render(
           $$result,
           {
@@ -7065,11 +7095,11 @@ const css = {
   code: ".striped.svelte-a09ql9 tr.svelte-a09ql9:nth-child(odd){background-color:rgba(46, 50, 58, 0.6)}",
   map: null
 };
-const Page$5 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$6 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$result.css.add(css);
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
-      return `<div class="bg-panel rounded-md p-4 mt-4" data-svelte-h="svelte-5pjk1o"><h1 class="default-header">OpenWSL Gameplay Rules</h1> <div><p class="my-2">Please see the below OpenWSL fantasy football gameplay rules.</p> <p class="my-2">Each user begins with £300m to purchase players for their team. The
+      return `<div class="bg-panel rounded-md p-4 mt-4" data-svelte-h="svelte-ay59zg"><h1 class="default-header">OpenFPL Gameplay Rules</h1> <div><p class="my-2">Please see the below OpenFPL fantasy football gameplay rules.</p> <p class="my-2">Each user begins with £300m to purchase players for their team. The
         value of a player can go up or down depending on how the player is rated
         in the DAO. Provided a certain voting threshold is reached for either a
         £0.25m increase or decrease, the player&#39;s value will change in that
@@ -7077,7 +7107,7 @@ const Page$5 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
         (the first game has kicked off and the final game has not finished).</p> <p class="my-2">Each team has 11 players, with no more than 2 selected from any single
         team. The team must be in a valid formation, with 1 goalkeeper, 3-5
         defenders, 3-5 midfielders and 1-3 strikers.</p> <p class="my-2">Users will setup their team before the gameweek deadline each week. When
-        playing OpenWSL, users have the chance to win FPL tokens depending on
+        playing OpenFPL, users have the chance to win FPL tokens depending on
         how well the players in their team perform.</p> <p class="my-2">In January, a user can change their entire team once.</p> <p class="my-2">A user is allowed to make 3 transfers per week which are never carried
         over.</p> <p class="my-2">Each week a user can select a star player. This player will receive
         double points for the gameweek. If one is not set by the start of the
@@ -7095,7 +7125,7 @@ const Page$5 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$4 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$5 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_selectedGameweek;
   let $$unsubscribe_loadingGameweekDetail;
   let $page, $$unsubscribe_page;
@@ -7118,7 +7148,7 @@ const Page$4 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$3 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$4 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_fantasyTeam;
   let $$unsubscribe_loadingPlayers;
   let $$unsubscribe_availableFormations;
@@ -7167,7 +7197,7 @@ const Page$3 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$2 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$3 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $clubStore, $$unsubscribe_clubStore;
   let $fixtureStore, $$unsubscribe_fixtureStore;
   let $$unsubscribe_playerStore;
@@ -7200,7 +7230,7 @@ const Page$2 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$1 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$2 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_userStore;
   $$unsubscribe_userStore = subscribe(userStore, (value) => value);
   $$unsubscribe_userStore();
@@ -7210,10 +7240,10 @@ const Page$1 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$1 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
-      return `<div class="bg-panel rounded-md p-4 mt-4" data-svelte-h="svelte-1r29bmc"><h1 class="default-header">OpenWSL DAO Terms &amp; Conditions</h1> <div><p class="my-2 text-xs">Last Updated: 13th October 2023</p> <p class="my-4">By accessing the OpenFPL website (&quot;Site&quot;) and participating in the
+      return `<div class="bg-panel rounded-md p-4 mt-4" data-svelte-h="svelte-p7ybpc"><h1 class="default-header">OpenFPL DAO Terms &amp; Conditions</h1> <div><p class="my-2 text-xs">Last Updated: 13th October 2023</p> <p class="my-4">By accessing the OpenFPL website (&quot;Site&quot;) and participating in the
         OpenFPL Fantasy Football DAO (&quot;Service&quot;), you agree to comply with and
         be bound by the following Terms and Conditions.</p> <h2 class="default-sub-header">Acceptance of Terms</h2> <p class="my-4">You acknowledge that you have read, understood, and agree to be bound by
         these Terms. These Terms are subject to change by a DAO proposal and
@@ -7227,10 +7257,68 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
+const Vision = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  return `<div class="m-4" data-svelte-h="svelte-nvmvhm"><h1 class="default-header">Our Vision</h1> <p class="my-4">OpenFPL was created as our answer to the question:</p> <p class="my-2"><i>&quot;How do you introduce the most new users to the Internet Computer
+      Blockchain?&quot;</i>.</p> <p class="my-4">Football is the most popular sport in the world, with billions of fans, the
+    leading fantasy football game engages over 10 million players a season.
+    OpenFPL is a better, more equitable, decentralised fantasy football platform
+    for football fans worldwide. We have used our football knowledge to create a
+    more engaging game, coupled with token distribution to ensure users are more
+    equitably rewarded for their successful pariticipation.</p> <p class="my-4 default-header">Why The Internet Computer?</p> <p>The Internet Computer (IC) is the only computer system in the world that
+    allows users of an online service to truly own that service. The IC&#39;s unique
+    architecture allows the interface the user engages with to be stored on the
+    network, bypassing the big tech companies who do not have an interest in
+    providing decentralised services. The IC not only has the capabilities to
+    shift power structures in the tech world, it is built with its own
+    decentralised service creation infrastructure that allow services like
+    OpenFPL to become Decentralised Autonomous Organisations (DAOs). OpenFPL
+    will transform fantasy Premier League football using this DAO architecture
+    into a decentralised service that is more engaging for its users, rewarding
+    football fans for their insight and participation in football.</p> <p class="my-4">OpenFPL is more than a decentralised service, it is a brand that has
+    multiple viable revenue streams. The ICPFA will distribute this value to
+    token holders through inflation resistant tokenomics. Through a
+    mechanisation of purchasing &amp; burning exchange $FPL, we aim to keep the
+    total supply at 100 million, while building up a healthy treasury for the
+    DAO to utilise as it wishes.</p> <p class="my-4">OpenFPL will create a platform Premier League fans feel at home using, with
+    their input shaping the service. Our features are designed to enhance user
+    engagement on the platform. These include more detailed and varied gameplay,
+    community-based player valuations, customisable private leagues, and
+    collaborations with football content creators. As we attract more users,
+    engagement within the OpenFPL ecosystem will grow, which should contribute
+    to the growth and value of the $FPL governance token.</p> <p class="my-4">Our vision for OpenFPL encompasses a commitment to societal impact,
+    specifically through our organisation, the ICPFA. The ICPFA will be focused
+    on supporting grassroots football initiatives, demonstrating our belief in
+    OpenFPL&#39;s ability to bring about positive change in the football community
+    using the IC.</p> <p class="my-4 mb-4">In essence OpenFPL will be the world&#39;s game on the world&#39;s computer. A truly
+    decentralised service, the fans home for Premier League football.</p></div>`;
+});
+const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
+    default: () => {
+      return `<div class="bg-panel mt-4"><h1 class="p-4 mx-1 default-header" data-svelte-h="svelte-pit84d">OpenFPL Whitepaper</h1> <ul class="flex flex-nowrap overflow-x-auto bg-light-gray border-b border-gray-700 px-4 pt-2"><li${add_attribute("class", `mr-4 ${"active-tab"}`, 0)}><button${add_attribute("class", `p-2 ${"text-white"}`, 0)}>Vision</button></li> <li${add_attribute("class", `mr-4 ${""}`, 0)}><button${add_attribute(
+        "class",
+        `p-2 ${"text-gray-400"}`,
+        0
+      )}>Gameplay</button></li> <li${add_attribute("class", `mr-4 ${""}`, 0)}><button${add_attribute("class", `p-2 ${"text-gray-400"}`, 0)}>DAO</button></li> <li${add_attribute("class", `mr-4 ${""}`, 0)}><button${add_attribute(
+        "class",
+        `p-2 ${"text-gray-400"}`,
+        0
+      )}>Tokenomics</button></li> <li${add_attribute("class", `mr-4 ${""}`, 0)}><button${add_attribute("class", `p-2 ${"text-gray-400"}`, 0)}>Revenue</button></li> <li${add_attribute("class", `mr-4 ${""}`, 0)}><button${add_attribute(
+        "class",
+        `p-2 ${"text-gray-400"}`,
+        0
+      )}>Marketing</button></li> <li${add_attribute("class", `mr-4 ${""}`, 0)}><button${add_attribute(
+        "class",
+        `p-2 ${"text-gray-400"}`,
+        0
+      )}>Architecture</button></li> <li${add_attribute("class", `mr-4 ${""}`, 0)}><button${add_attribute("class", `p-2 ${"text-gray-400"}`, 0)}>Roadmap</button></li></ul> ${`${validate_component(Vision, "Vision").$$render($$result, {}, {}, {})}`}</div>`;
+    }
+  })}`;
+});
 export {
   Error$1 as E,
   Layout$1 as L,
-  Page$8 as P,
+  Page$9 as P,
   Server as S,
   set_building as a,
   set_manifest as b,
@@ -7240,14 +7328,15 @@ export {
   set_read_implementation as f,
   get_hooks as g,
   set_safe_public_env as h,
-  Page$7 as i,
-  Page$6 as j,
-  Page$5 as k,
-  Page$4 as l,
-  Page$3 as m,
-  Page$2 as n,
+  Page$8 as i,
+  Page$7 as j,
+  Page$6 as k,
+  Page$5 as l,
+  Page$4 as m,
+  Page$3 as n,
   options as o,
-  Page$1 as p,
-  Page as q,
+  Page$2 as p,
+  Page$1 as q,
+  Page as r,
   set_assets as s
 };

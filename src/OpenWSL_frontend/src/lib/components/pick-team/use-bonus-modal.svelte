@@ -28,20 +28,31 @@
 
   onMount(async () => {
     await storeManager.syncStores();
+    getUniqueCountries();
   });
 
   const getUniqueCountries = () => {
+    console.log("getting unique countries");
+    console.log($countryStore);
+    console.log($fantasyTeam);
+
     if (!$countryStore || !$fantasyTeam || !$fantasyTeam.playerIds) {
       return [];
     }
 
     const fantasyTeamPlayerIds = new Set($fantasyTeam.playerIds);
     const countriesOfFantasyTeamPlayers = $countryStore
-      .filter((country) => fantasyTeamPlayerIds.has(country.id))
+      .filter((country) =>
+        $playerStore.some(
+          (player) =>
+            fantasyTeamPlayerIds.has(player.id) && player.nationality === country.id
+        )
+      )
       .map((country) => country.name);
 
     return [...new Set(countriesOfFantasyTeamPlayers)].sort();
   };
+
 
   const getPlayerNames = () => {
     return $playerStore

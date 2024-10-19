@@ -27,6 +27,7 @@
   actor Self {
       
     private stable var dataInitialised = false;
+    private var leagueApplications: [(FootballTypes.LeagueId, Base.CanisterId)] = [(1, Environment.OPENFPL_BACKEND_CANISTER_ID), (1, Environment.OPENWSL_BACKEND_CANISTER_ID)];
 
     private stable var leagues : [FootballTypes.League] = [
       {
@@ -1030,7 +1031,7 @@
 
     //League admin functions
 
-    public shared ({ caller }) func createLeague(dto: RequestDTOs.CreateLeagueDTO) : async Result.Result<(), T.Error> {
+    public shared ({ caller }) func createLeague(dto: GovernanceDTOs.CreateLeagueDTO) : async Result.Result<(), T.Error> {
       assert callerAllowed(caller);
       var nextId: FootballTypes.LeagueId = 1;
 
@@ -1066,178 +1067,36 @@
       return #ok();
     };
 
-    public shared ({ caller }) func setLeagueName(leagueId: FootballTypes.LeagueId, leagueName: Text) : async Result.Result<(), T.Error> {
-      assert callerAllowed(caller);
-      leagues := Array.map<FootballTypes.League, FootballTypes.League>(leagues, func(league: FootballTypes.League){
-        if(league.id == leagueId){
-          return {
-            id = league.id;
-            abbreviation = league.abbreviation;
-            countryId = league.countryId;
-            formed = league.formed;
-            governingBody = league.governingBody;
-            logo = league.logo;
-            name = leagueName;
-            teamCount = league.teamCount;
-            relatedGender = league.relatedGender
-
-          }
-        } else { return league }
+    public shared ({ caller }) func updateLeague(dto : GovernanceDTOs.UpdateLeagueDTO) : async Result.Result<(), T.Error> {
+      let league = Array.find<FootballTypes.League>(leagues, func(currentLeague: FootballTypes.League) : Bool {
+        currentLeague.id == dto.leagueId;
       });
-      return #ok();
-    };
 
-
-    public shared ({ caller }) func setAbbreviatedLeagueName(leagueId: FootballTypes.LeagueId, abbreviatedName: Text) : async Result.Result<(), T.Error> {
-      assert callerAllowed(caller);
-      leagues := Array.map<FootballTypes.League, FootballTypes.League>(leagues, func(league: FootballTypes.League){
-        if(league.id == leagueId){
-          return {
-            id = league.id;
-            abbreviation = abbreviatedName;
-            countryId = league.countryId;
-            formed = league.formed;
-            governingBody = league.governingBody;
-            logo = league.logo;
-            name = league.name;
-            teamCount = league.teamCount;
-            relatedGender = league.relatedGender
-
-          }
-        } else { return league }
-      });
-      return #ok();
-    };
-
-
-    public shared ({ caller }) func setLeagueGoverningBody(leagueId: FootballTypes.LeagueId, governingBody: Text) : async Result.Result<(), T.Error> {
-      assert callerAllowed(caller);
-      leagues := Array.map<FootballTypes.League, FootballTypes.League>(leagues, func(league: FootballTypes.League){
-        if(league.id == leagueId){
-          return {
-            id = league.id;
-            abbreviation = league.abbreviation;
-            countryId = league.countryId;
-            formed = league.formed;
-            governingBody = governingBody;
-            logo = league.logo;
-            name = league.name;
-            teamCount = league.teamCount;
-            relatedGender = league.relatedGender
-
-          }
-        } else { return league }
-      });
-      return #ok();
-    };
-
-
-    public shared ({ caller }) func setLeagueGender(leagueId: FootballTypes.LeagueId, gender: Base.Gender) : async Result.Result<(), T.Error> {
-      assert callerAllowed(caller);
-      leagues := Array.map<FootballTypes.League, FootballTypes.League>(leagues, func(league: FootballTypes.League){
-        if(league.id == leagueId){
-          return {
-            id = league.id;
-            abbreviation = league.abbreviation;
-            countryId = league.countryId;
-            formed = league.formed;
-            governingBody = league.governingBody;
-            logo = league.logo;
-            name = league.name;
-            teamCount = league.teamCount;
-            relatedGender = gender
-
-          }
-        } else { return league }
-      });
-      return #ok();
-    };
-
-
-    public shared ({ caller }) func setLeagueDateFormed(leagueId: FootballTypes.LeagueId, dateFormed: Int) : async Result.Result<(), T.Error> {
-      assert callerAllowed(caller);
-      leagues := Array.map<FootballTypes.League, FootballTypes.League>(leagues, func(league: FootballTypes.League){
-        if(league.id == leagueId){
-          return {
-            id = league.id;
-            abbreviation = league.abbreviation;
-            countryId = league.countryId;
-            formed = dateFormed;
-            governingBody = league.governingBody;
-            logo = league.logo;
-            name = league.name;
-            teamCount = league.teamCount;
-            relatedGender = league.relatedGender
-
-          }
-        } else { return league }
-      });
-      return #ok();
-    };
-
-
-    public shared ({ caller }) func setLeagueCountryId(leagueId: FootballTypes.LeagueId, countryId: Base.CountryId) : async Result.Result<(), T.Error> {
-      assert callerAllowed(caller);
-      leagues := Array.map<FootballTypes.League, FootballTypes.League>(leagues, func(league: FootballTypes.League){
-        if(league.id == leagueId){
-          return {
-            id = league.id;
-            abbreviation = league.abbreviation;
-            countryId = countryId;
-            formed = league.formed;
-            governingBody = league.governingBody;
-            logo = league.logo;
-            name = league.name;
-            teamCount = league.teamCount;
-            relatedGender = league.relatedGender
-
-          }
-        } else { return league }
-      });
-      return #ok();
-    };
-
-
-    public shared ({ caller }) func setLeagueLogo(leagueId: FootballTypes.LeagueId, logo: Blob) : async Result.Result<(), T.Error> {
-      assert callerAllowed(caller);
-      leagues := Array.map<FootballTypes.League, FootballTypes.League>(leagues, func(league: FootballTypes.League){
-        if(league.id == leagueId){
-          return {
-            id = league.id;
-            abbreviation = league.abbreviation;
-            countryId = league.countryId;
-            formed = league.formed;
-            governingBody = league.governingBody;
-            logo = logo;
-            name = league.name;
-            teamCount = league.teamCount;
-            relatedGender = league.relatedGender
-
-          }
-        } else { return league }
-      });
-      return #ok();
-    };
-
-    public shared ({ caller }) func setTeamCount(leagueId: FootballTypes.LeagueId, teamCount: Nat8) : async Result.Result<(), T.Error> {
-      assert callerAllowed(caller);
-      leagues := Array.map<FootballTypes.League, FootballTypes.League>(leagues, func(league: FootballTypes.League){
-        if(league.id == leagueId){
-          return {
-            id = league.id;
-            abbreviation = league.abbreviation;
-            countryId = league.countryId;
-            formed = league.formed;
-            governingBody = league.governingBody;
-            logo = league.logo;
-            name = league.name;
-            teamCount = teamCount;
-            relatedGender = league.relatedGender
-
-          }
-        } else { return league }
-      });
-      return #ok();
+      switch(league){
+        case (?_){
+          leagues := Array.map<FootballTypes.League, FootballTypes.League>(leagues, func(currentLeague: FootballTypes.League){
+            if(currentLeague.id == dto.leagueId){
+              return {
+                abbreviation = dto.abbreviation;
+                countryId = dto.countryId;
+                formed = dto.formed;
+                governingBody = dto.governingBody;
+                id = currentLeague.id;
+                logo = dto.logo;
+                name =  dto.name;
+                relatedGender = dto.relatedGender;
+                teamCount = dto.teamCount
+              }
+            } else {
+              return currentLeague;
+            }
+          });
+          return #ok();
+        };
+        case (null){
+          return #err(#NotFound);
+        }
+      };
     };
 
     //Governance execution functions
@@ -1310,6 +1169,7 @@
       };
 
       leaguePlayers := Buffer.toArray(updatedLeaguePlayersBuffer);
+      let _ = await updateDataHashes(leagueId, "players");
 
       return #ok();
     };
@@ -1384,6 +1244,7 @@
       };
 
       leaguePlayers := Buffer.toArray(updatedLeaguePlayersBuffer);
+      let _ = await updateDataHashes(leagueId, "players");
 
       return #ok();
     };
@@ -1470,6 +1331,7 @@
       };
 
       leaguePlayers := Buffer.toArray(updatedLeaguePlayersBuffer);
+      let _ = await updateDataHashes(leagueId, "players");
 
       return #ok();
     };
@@ -1479,15 +1341,18 @@
 
       if(dto.newClubId == 0 and dto.newLeagueId == 0){
         movePlayerToFreeAgents(leagueId, dto.clubId, dto.playerId);
+        let _ = await updateDataHashes(leagueId, "players");
         return #ok();
       };
 
       if(dto.newLeagueId == leagueId){
         movePlayerWithinLeague(leagueId, dto.newClubId, dto.playerId, dto.newShirtNumber);
+        let _ = await updateDataHashes(leagueId, "players");
         return #ok();
       };
 
       movePlayerToLeague(leagueId, dto.clubId, dto.newLeagueId, dto.newClubId, dto.playerId, dto.newShirtNumber);
+      let _ = await updateDataHashes(leagueId, "players");
       
       return #ok();
     };
@@ -1529,6 +1394,7 @@
       });
 
       nextPlayerId += 1;
+      let _ = await updateDataHashes(leagueId, "players");
       return #ok();
     };
 
@@ -1584,6 +1450,7 @@
             return leaguePlayersEntry;
           }
       });
+      let _ = await updateDataHashes(leagueId, "players");
       return #ok();
     };
 
@@ -1653,6 +1520,7 @@
 
       let playerInjuryDuration = #nanoseconds(Int.abs((dto.expectedEndDate - Time.now())));
       await setAndBackupTimer(playerInjuryDuration, "injuryExpired");
+      let _ = await updateDataHashes(leagueId, "players");
       return #ok();
     };
 
@@ -1695,6 +1563,7 @@
           );
         };
       };
+      let _ = await updateDataHashes(leagueId, "players");
       */
       return #err(#NotFound);
     };
@@ -1738,6 +1607,7 @@
           );
         };
       };
+      let _ = await updateDataHashes(leagueId, "players");
       */
       return #err(#NotFound);
     };
@@ -1790,6 +1660,7 @@
         let clubsBuffer = Buffer.fromArray<T.Club>(clubs);
         clubsBuffer.add(newClub);
         clubs := Buffer.toArray(clubsBuffer);
+      let _ = await updateDataHashes(leagueId, "clubs");
         return #ok();
         */
 
@@ -1859,6 +1730,7 @@
             },
         );
         return #ok();
+      let _ = await updateDataHashes(leagueId, "clubs");
         */
       return #err(#NotFound);
     };
@@ -1897,6 +1769,7 @@
           nextSeasonId := nextSeasonId;
         };
       };
+      let _ = await updateDataHashes(leagueId, "seasons");
       */
     };
 
@@ -4373,6 +4246,18 @@
           };
         };
       };
+    };
+
+    private func updateDataHashes(leagueId: FootballTypes.LeagueId, category: Text) : async Result.Result<(), T.Error> {
+      for(leagueApplication in Iter.fromArray(leagueApplications)){
+        if(leagueApplication.0 == leagueId){
+          let application_canister = actor (leagueApplication.1) : actor {
+            updateDataHashes : (category: Text) -> async Result.Result<(), T.Error>;
+          };
+          let _ = await application_canister.updateDataHashes(category);
+        };
+      };
+      return #ok();
     };
 
   };
