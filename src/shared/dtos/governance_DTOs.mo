@@ -74,7 +74,6 @@ module GovernanceDTOs {
     valueQuarterMillions : Nat16;
     dateOfBirth : Int;
     nationality : Base.CountryId;
-    gender: Base.Gender;
   };
 
   public type UpdatePlayerDTO = {

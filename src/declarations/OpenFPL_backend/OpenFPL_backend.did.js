@@ -546,6 +546,7 @@ export const idlFactory = ({ IDL }) => {
       ),
     'isUsernameValid' : IDL.Func([UsernameFilterDTO], [IDL.Bool], ['query']),
     'notifyAppsOfLoan' : IDL.Func([LeagueId, PlayerId], [Result], []),
+    'notifyAppsOfPositionChange' : IDL.Func([LeagueId, PlayerId], [Result], []),
     'saveFantasyTeam' : IDL.Func([UpdateTeamSelectionDTO], [Result], []),
     'searchUsername' : IDL.Func([UsernameFilterDTO], [Result_1], []),
     'snapshotManagers' : IDL.Func([], [Result], []),

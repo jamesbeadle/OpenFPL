@@ -3485,7 +3485,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "5jsh8z"
+  version_hash: "1c61gd3"
 };
 async function get_hooks() {
   return {};
@@ -4243,6 +4243,7 @@ const idlFactory$1 = ({ IDL }) => {
     ),
     "isUsernameValid": IDL.Func([UsernameFilterDTO], [IDL.Bool], ["query"]),
     "notifyAppsOfLoan": IDL.Func([LeagueId, PlayerId], [Result], []),
+    "notifyAppsOfPositionChange": IDL.Func([LeagueId, PlayerId], [Result], []),
     "saveFantasyTeam": IDL.Func([UpdateTeamSelectionDTO], [Result], []),
     "searchUsername": IDL.Func([UsernameFilterDTO], [Result_1], []),
     "snapshotManagers": IDL.Func([], [Result], []),
@@ -5660,6 +5661,7 @@ const idlFactory = ({ IDL }) => {
     ),
     "isUsernameValid": IDL.Func([UsernameFilterDTO], [IDL.Bool], ["query"]),
     "notifyAppsOfLoan": IDL.Func([LeagueId, PlayerId], [Result], []),
+    "notifyAppsOfPositionChange": IDL.Func([LeagueId, PlayerId], [Result], []),
     "saveFantasyTeam": IDL.Func([UpdateTeamSelectionDTO], [Result], []),
     "searchUsername": IDL.Func([UsernameFilterDTO], [Result_1], []),
     "snapshotManagers": IDL.Func([], [Result], []),

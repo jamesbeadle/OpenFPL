@@ -631,6 +631,7 @@ service : {
   getWeeklyLeaderboard: (GetWeeklyLeaderboardDTO) -> (Result_2);
   isUsernameValid: (UsernameFilterDTO) -> (bool) query;
   notifyAppsOfLoan: (LeagueId, PlayerId) -> (Result);
+  notifyAppsOfPositionChange: (LeagueId, PlayerId) -> (Result);
   saveFantasyTeam: (UpdateTeamSelectionDTO) -> (Result);
   searchUsername: (UsernameFilterDTO) -> (Result_1);
   snapshotManagers: () -> (Result);

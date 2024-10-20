@@ -67,7 +67,7 @@
     private stable var untrackedClubs: [FootballTypes.Club] = [];
     private stable var clubsInAdministration: [FootballTypes.Club] = [];
 
-    private stable var nextPlayerId: FootballTypes.PlayerId = 1;
+    private stable var nextPlayerId: FootballTypes.PlayerId = 725;
 
     private stable var timers : [Base.TimerInfo] = [];
 
@@ -1414,49 +1414,64 @@
 
     public shared ( {caller} ) func createPlayer(leagueId: FootballTypes.LeagueId, dto : GovernanceDTOs.CreatePlayerDTO) : async Result.Result<(), T.Error>{
       assert callerAllowed(caller);
-      
-      let newPlayer : FootballTypes.Player = {
-        id = nextPlayerId + 1;
-        leagueId = leagueId;
-        clubId = dto.clubId;
-        position = dto.position;
-        firstName = dto.firstName;
-        lastName = dto.lastName;
-        shirtNumber = dto.shirtNumber;
-        valueQuarterMillions = dto.valueQuarterMillions;
-        dateOfBirth = dto.dateOfBirth;
-        nationality = dto.nationality;
-        seasons = List.nil<FootballTypes.PlayerSeason>();
-        valueHistory = List.nil<FootballTypes.ValueHistory>();
-        status = #Active;
-        parentLeagueId = 0;
-        parentClubId = 0;
-        currentLoanEndDate = 0;
-        latestInjuryEndDate = 0;
-        injuryHistory = List.nil<FootballTypes.InjuryHistory>();
-        retirementDate = 0;
-        transferHistory = List.nil<FootballTypes.TransferHistory>();
-        gender = dto.gender;
-      };
 
-      leaguePlayers := Array.map<(FootballTypes.LeagueId, [FootballTypes.Player]), (FootballTypes.LeagueId, [FootballTypes.Player])>(leaguePlayers, 
-        func(leaguePlayersEntry: (FootballTypes.LeagueId, [FootballTypes.Player])){
-          if(leaguePlayersEntry.0 == leagueId){
-            let updatedPlayersBuffer = Buffer.fromArray<FootballTypes.Player>(leaguePlayersEntry.1);
-            updatedPlayersBuffer.add(newPlayer);
-            return (leaguePlayersEntry.0, Buffer.toArray(updatedPlayersBuffer));
-          } else {
-            return leaguePlayersEntry;
-          }
+      let foundLeague = Array.find<FootballTypes.League>(leagues, func(league: FootballTypes.League) : Bool {
+        league.id == leagueId
       });
 
-      nextPlayerId += 1;
-      let _ = await updateDataHashes(leagueId, "players");
-      return #ok();
+      switch(foundLeague){
+        case (?league){
+      
+          let newPlayer : FootballTypes.Player = {
+            id = nextPlayerId + 1;
+            leagueId = leagueId;
+            clubId = dto.clubId;
+            position = dto.position;
+            firstName = dto.firstName;
+            lastName = dto.lastName;
+            shirtNumber = dto.shirtNumber;
+            valueQuarterMillions = dto.valueQuarterMillions;
+            dateOfBirth = dto.dateOfBirth;
+            nationality = dto.nationality;
+            seasons = List.nil<FootballTypes.PlayerSeason>();
+            valueHistory = List.nil<FootballTypes.ValueHistory>();
+            status = #Active;
+            parentLeagueId = 0;
+            parentClubId = 0;
+            currentLoanEndDate = 0;
+            latestInjuryEndDate = 0;
+            injuryHistory = List.nil<FootballTypes.InjuryHistory>();
+            retirementDate = 0;
+            transferHistory = List.nil<FootballTypes.TransferHistory>();
+            gender = league.relatedGender;
+          };
+
+          leaguePlayers := Array.map<(FootballTypes.LeagueId, [FootballTypes.Player]), (FootballTypes.LeagueId, [FootballTypes.Player])>(leaguePlayers, 
+            func(leaguePlayersEntry: (FootballTypes.LeagueId, [FootballTypes.Player])){
+              if(leaguePlayersEntry.0 == leagueId){
+                let updatedPlayersBuffer = Buffer.fromArray<FootballTypes.Player>(leaguePlayersEntry.1);
+                updatedPlayersBuffer.add(newPlayer);
+                return (leaguePlayersEntry.0, Buffer.toArray(updatedPlayersBuffer));
+              } else {
+                return leaguePlayersEntry;
+              }
+          });
+
+          nextPlayerId += 1;
+          let _ = await updateDataHashes(leagueId, "players");
+          return #ok();
+          
+        };
+        case (null){
+          return #err(#NotFound);
+        }
+      };
     };
 
     public shared ( {caller} ) func updatePlayer(leagueId: FootballTypes.LeagueId, dto : GovernanceDTOs.UpdatePlayerDTO) : async Result.Result<(), T.Error>{
       assert callerAllowed(caller);
+
+      var positionUpdated = false;
 
       leaguePlayers := Array.map<(FootballTypes.LeagueId, [FootballTypes.Player]), (FootballTypes.LeagueId, [FootballTypes.Player])>(leaguePlayers, 
         func(leaguePlayersEntry: (FootballTypes.LeagueId, [FootballTypes.Player])){
@@ -1472,7 +1487,9 @@
 
             switch(existingPlayer){
               case (?currentPlayer){
-
+                if(currentPlayer.position != dto.position){
+                  positionUpdated := true;
+                };
                 let updatedPlayer: FootballTypes.Player = {
                   id = currentPlayer.id;
                   leagueId = currentPlayer.leagueId;
@@ -1509,6 +1526,11 @@
             return leaguePlayersEntry;
           }
       });
+
+      if(positionUpdated){
+        let _ = await notifyAppsOfPositionChange(leagueId, dto.playerId);
+      };
+
       let _ = await updateDataHashes(leagueId, "players");
       return #ok();
     };
@@ -2817,7 +2839,6 @@
       
       //set data
 
-
       ignore Timer.setTimer<system>(#nanoseconds(Int.abs(1)), postUpgradeCallback); 
     };
 
@@ -2825,7 +2846,54 @@
 
     private func postUpgradeCallback() : async (){
       await setSystemTimers();
+
+      //await fixData();
       //dataInitialised := false;
+    };
+
+    private func fixData() : async (){
+      return;
+      //fix this player with the wrong id
+      leaguePlayers := Array.map<
+          (FootballTypes.LeagueId, [FootballTypes.Player]), 
+          (FootballTypes.LeagueId, [FootballTypes.Player])>(
+            leaguePlayers,  func (entry: (FootballTypes.LeagueId, [FootballTypes.Player])){
+              if(entry.0 == 1){
+                return (entry.0, Array.map<FootballTypes.Player, FootballTypes.Player>(entry.1, func(player: FootballTypes.Player){
+                  if(player.id == 2 and player.firstName == "Mikel"){  
+                    
+                    return {
+                      leagueId = player.leagueId;
+                      clubId = player.clubId;
+                      currentLoanEndDate = player.currentLoanEndDate;
+                      dateOfBirth = player.dateOfBirth;
+                      firstName = player.firstName;
+                      gender = player.gender;
+                      id = 725;
+                      injuryHistory = player.injuryHistory;
+                      lastName = player.lastName;
+                      latestInjuryEndDate = player.latestInjuryEndDate;
+                      nationality = player.nationality;
+                      parentLeagueId = player.parentLeagueId;
+                      parentClubId = player.clubId;
+                      position = player.position;
+                      retirementDate = player.retirementDate;
+                      seasons = player.seasons;
+                      shirtNumber = player.shirtNumber;
+                      status = player.status;
+                      transferHistory = player.transferHistory;
+                      valueHistory = player.valueHistory;
+                      valueQuarterMillions = player.valueQuarterMillions;
+                    }
+                  } else {
+                    return player;
+                  }
+                }))
+              } else { return entry }
+            });
+
+          let _ = await updateDataHashes(1, "players");
+      
     };
 
     public shared ({ caller }) func setupData() : async Result.Result<(), T.Error> {
@@ -4347,6 +4415,18 @@
             updateDataHashes : (category: Text) -> async Result.Result<(), T.Error>;
           };
           let _ = await application_canister.updateDataHashes(category);
+        };
+      };
+      return #ok();
+    };
+
+    private func notifyAppsOfPositionChange(leagueId: FootballTypes.LeagueId, playerId: FootballTypes.PlayerId) : async Result.Result<(), T.Error> {
+      for(leagueApplication in Iter.fromArray(leagueApplications)){
+        if(leagueApplication.0 == leagueId){
+          let application_canister = actor (leagueApplication.1) : actor {
+            notifyAppsOfPositionChange : (leagueId: FootballTypes.LeagueId, playerId: FootballTypes.PlayerId) -> async Result.Result<(), T.Error>;
+          };
+          let _ = await application_canister.notifyAppsOfPositionChange(leagueId, playerId);
         };
       };
       return #ok();

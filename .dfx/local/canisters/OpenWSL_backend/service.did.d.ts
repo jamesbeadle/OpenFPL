@@ -501,6 +501,7 @@ export interface _SERVICE {
   getWeeklyLeaderboard: ActorMethod<[GetWeeklyLeaderboardDTO], Result_2>;
   isUsernameValid: ActorMethod<[UsernameFilterDTO], boolean>;
   notifyAppsOfLoan: ActorMethod<[LeagueId, PlayerId], Result>;
+  notifyAppsOfPositionChange: ActorMethod<[LeagueId, PlayerId], Result>;
   saveFantasyTeam: ActorMethod<[UpdateTeamSelectionDTO], Result>;
   searchUsername: ActorMethod<[UsernameFilterDTO], Result_1>;
   snapshotManagers: ActorMethod<[], Result>;

@@ -32,7 +32,6 @@ export interface CreatePlayerDTO {
   'valueQuarterMillions' : number,
   'dateOfBirth' : bigint,
   'nationality' : CountryId,
-  'gender' : Gender,
   'shirtNumber' : number,
   'position' : PlayerPosition,
   'lastName' : string,

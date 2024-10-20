@@ -557,7 +557,13 @@
     };
 
     public shared ({ caller }) func notifyAppsOfLoan(leagueId: FootballTypes.LeagueId, playerId: FootballTypes.PlayerId) : async Result.Result<(), T.Error> {
-      assert Principal.toText(caller) == NetworkEnvironmentVariables.FOOTBALL_GOD_BACKEND_CANISTER_ID;
+      assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
+      await userManager.removePlayerFromTeams(leagueId, playerId);
+      return #ok();
+    };
+
+    public shared ({ caller }) func notifyAppsOfPositionChange(leagueId: FootballTypes.LeagueId, playerId: FootballTypes.PlayerId) : async Result.Result<(), T.Error> {
+      assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
       await userManager.removePlayerFromTeams(leagueId, playerId);
       return #ok();
     };

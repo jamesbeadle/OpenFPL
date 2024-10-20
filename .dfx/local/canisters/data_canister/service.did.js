@@ -58,7 +58,6 @@ export const idlFactory = ({ IDL }) => {
     valueQuarterMillions: IDL.Nat16,
     dateOfBirth: IDL.Int,
     nationality: CountryId,
-    gender: Gender,
     shirtNumber: IDL.Nat8,
     position: PlayerPosition,
     lastName: IDL.Text,

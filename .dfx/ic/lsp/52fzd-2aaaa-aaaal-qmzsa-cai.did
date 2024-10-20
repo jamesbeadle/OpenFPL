@@ -378,7 +378,6 @@ type CreatePlayerDTO =
    clubId: ClubId;
    dateOfBirth: int;
    firstName: text;
-   gender: Gender;
    lastName: text;
    nationality: CountryId;
    position: PlayerPosition;
