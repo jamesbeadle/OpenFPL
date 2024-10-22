@@ -55,7 +55,8 @@
     passMasterPlayerId : 0,
     captainId : 0,
     canisterId: '',
-    monthlyBonusesAvailable : 0
+    monthlyBonusesAvailable : 0,
+    firstGameweek: true
   });
   
 
@@ -104,14 +105,21 @@
       return currentTeam;
     });
 
+    bankBalance.set($fantasyTeam.bankQuarterMillions);
+
+    console.log($fantasyTeam)
+
     if($fantasyTeam.principalId == ""){
       bankBalance.set(1200);
       transfersAvailable.set(Infinity);
       return;
     }
 
-    bankBalance.set($fantasyTeam.bankQuarterMillions);
+    if($fantasyTeam.firstGameweek){
+      transfersAvailable.set(Infinity);
     }
+
+  }
 
 </script>
 

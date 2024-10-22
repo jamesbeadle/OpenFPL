@@ -22,6 +22,16 @@ export interface ClubFilterDTO {
 }
 export type ClubId = number;
 export type CountryId = number;
+export interface CreateClubDTO {
+  secondaryColourHex: string;
+  name: string;
+  friendlyName: string;
+  thirdColourHex: string;
+  abbreviatedName: string;
+  shirtType: ShirtType;
+  primaryColourHex: string;
+  leagueId: LeagueId;
+}
 export interface CreateLeagueDTO {
   logo: Uint8Array | number[];
   name: string;
@@ -352,6 +362,7 @@ export interface _SERVICE {
     boolean
   >;
   checkSeasonComplete: ActorMethod<[LeagueId, SeasonId], boolean>;
+  createClub: ActorMethod<[CreateClubDTO], Result>;
   createLeague: ActorMethod<[CreateLeagueDTO], Result>;
   createNewSeason: ActorMethod<[SystemState], undefined>;
   createPlayer: ActorMethod<[LeagueId, CreatePlayerDTO], Result>;

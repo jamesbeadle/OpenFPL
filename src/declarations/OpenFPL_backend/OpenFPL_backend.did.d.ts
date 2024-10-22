@@ -231,6 +231,7 @@ export interface PickTeamDTO {
   'passMasterGameweek' : GameweekNumber,
   'teamBoostClubId' : ClubId,
   'goalGetterGameweek' : GameweekNumber,
+  'firstGameweek' : boolean,
   'captainFantasticPlayerId' : ClubId,
   'transferWindowGameweek' : GameweekNumber,
   'noEntryGameweek' : GameweekNumber,
@@ -377,19 +378,19 @@ export type Result_20 = { 'ok' : Array<CountryDTO> } |
   { 'err' : Error };
 export type Result_21 = { 'ok' : Array<ClubDTO> } |
   { 'err' : Error };
-export type Result_3 = { 'ok' : bigint } |
+export type Result_3 = { 'ok' : Array<PlayerDTO> } |
   { 'err' : Error };
-export type Result_4 = { 'ok' : GetTopupsDTO } |
+export type Result_4 = { 'ok' : bigint } |
   { 'err' : Error };
-export type Result_5 = { 'ok' : SystemStateDTO } |
+export type Result_5 = { 'ok' : GetTopupsDTO } |
   { 'err' : Error };
-export type Result_6 = { 'ok' : Array<SeasonDTO> } |
+export type Result_6 = { 'ok' : SystemStateDTO } |
   { 'err' : Error };
-export type Result_7 = { 'ok' : SeasonLeaderboardDTO } |
+export type Result_7 = { 'ok' : Array<SeasonDTO> } |
   { 'err' : Error };
-export type Result_8 = { 'ok' : GetRewardPoolDTO } |
+export type Result_8 = { 'ok' : SeasonLeaderboardDTO } |
   { 'err' : Error };
-export type Result_9 = { 'ok' : Array<PlayerDTO> } |
+export type Result_9 = { 'ok' : GetRewardPoolDTO } |
   { 'err' : Error };
 export interface RewardPool {
   'monthlyLeaderboardPool' : bigint,
@@ -481,24 +482,25 @@ export interface _SERVICE {
     Result_17
   >,
   'getFixtures' : ActorMethod<[RequestFixturesDTO], Result_11>,
-  'getLoanedPlayers' : ActorMethod<[ClubFilterDTO], Result_9>,
+  'getLoanedPlayers' : ActorMethod<[ClubFilterDTO], Result_3>,
   'getManager' : ActorMethod<[RequestManagerDTO], Result_1>,
   'getManagerCanisterIds' : ActorMethod<[], Result_16>,
   'getMonthlyLeaderboard' : ActorMethod<[GetMonthlyLeaderboardDTO], Result_15>,
   'getPlayerDetails' : ActorMethod<[GetPlayerDetailsDTO], Result_14>,
   'getPlayerDetailsForGameweek' : ActorMethod<[GameweekFiltersDTO], Result_13>,
-  'getPlayers' : ActorMethod<[], Result_9>,
+  'getPlayers' : ActorMethod<[], Result_3>,
   'getPlayersMap' : ActorMethod<[GameweekFiltersDTO], Result_12>,
   'getPlayersSnapshot' : ActorMethod<[GetSnapshotPlayers], Array<PlayerDTO>>,
   'getPostponedFixtures' : ActorMethod<[], Result_11>,
   'getProfile' : ActorMethod<[], Result_10>,
-  'getRetiredPlayers' : ActorMethod<[ClubFilterDTO], Result_9>,
-  'getRewardPool' : ActorMethod<[GetRewardPoolDTO], Result_8>,
-  'getSeasonLeaderboard' : ActorMethod<[GetSeasonLeaderboardDTO], Result_7>,
-  'getSeasons' : ActorMethod<[], Result_6>,
-  'getSystemState' : ActorMethod<[], Result_5>,
-  'getTopups' : ActorMethod<[GetTopupsDTO], Result_4>,
-  'getTotalManagers' : ActorMethod<[], Result_3>,
+  'getRetiredPlayers' : ActorMethod<[ClubFilterDTO], Result_3>,
+  'getRewardPool' : ActorMethod<[GetRewardPoolDTO], Result_9>,
+  'getSeasonLeaderboard' : ActorMethod<[GetSeasonLeaderboardDTO], Result_8>,
+  'getSeasons' : ActorMethod<[], Result_7>,
+  'getSystemState' : ActorMethod<[], Result_6>,
+  'getTopups' : ActorMethod<[GetTopupsDTO], Result_5>,
+  'getTotalManagers' : ActorMethod<[], Result_4>,
+  'getVerifiedPlayers' : ActorMethod<[], Result_3>,
   'getWeeklyLeaderboard' : ActorMethod<[GetWeeklyLeaderboardDTO], Result_2>,
   'isUsernameValid' : ActorMethod<[UsernameFilterDTO], boolean>,
   'notifyAppsOfLoan' : ActorMethod<[LeagueId, PlayerId], Result>,

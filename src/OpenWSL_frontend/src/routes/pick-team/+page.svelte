@@ -19,7 +19,7 @@
   let availableFormations = writable<string[]>([]);
   let selectedFormation = writable<string>('4-4-2');
   
-  let transfersAvailable = writable<number>(0);  
+  let transfersAvailable = writable<number>(3);  
   let bankBalance = writable<number>(0);
   let teamValue = writable<number>(0);
   let loadingPlayers = writable<boolean>(true);  
@@ -55,7 +55,8 @@
     passMasterPlayerId : 0,
     captainId : 0,
     canisterId: '',
-    monthlyBonusesAvailable : 0
+    monthlyBonusesAvailable : 0,
+    firstGameweek: true
   });
   
 
@@ -88,6 +89,7 @@
     }
 
     let userFantasyTeam = await managerStore.getCurrentTeam();
+    
     fantasyTeam.set(userFantasyTeam);
 
     fantasyTeam.update((currentTeam) => {
@@ -103,13 +105,19 @@
       return currentTeam;
     });
 
+    bankBalance.set($fantasyTeam.bankQuarterMillions);
+
     if($fantasyTeam.principalId == ""){
       bankBalance.set(1200);
+      transfersAvailable.set(Infinity);
       return;
     }
 
-    bankBalance.set($fantasyTeam.bankQuarterMillions);
+    if($fantasyTeam.firstGameweek){
+      transfersAvailable.set(Infinity);
     }
+
+  }
 
 </script>
 
@@ -121,7 +129,7 @@
       {#if $systemStore?.onHold}
         <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-2" role="alert">
           <p class="font-bold">Saving your team is currently disabled</p>
-          <p>but OpenFPL will be back soon.</p>
+          <p>but OpenWSL will be back soon.</p>
         </div>      
       {/if}
       <div class="hidden md:flex">

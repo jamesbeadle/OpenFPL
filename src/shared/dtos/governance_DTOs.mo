@@ -145,4 +145,15 @@ module GovernanceDTOs {
     countryId: Base.CountryId;
     logo: Blob;
   };
+
+  public type CreateClubDTO = {
+    leagueId: FootballTypes.LeagueId;
+    name : Text;
+    friendlyName : Text;
+    primaryColourHex : Text;
+    secondaryColourHex : Text;
+    thirdColourHex : Text;
+    abbreviatedName : Text;
+    shirtType : FootballTypes.ShirtType;
+  };
 };

@@ -395,6 +395,17 @@ type CreateLeagueDTO =
    relatedGender: Gender;
    teamCount: nat8;
  };
+type CreateClubDTO = 
+ record {
+   abbreviatedName: text;
+   friendlyName: text;
+   leagueId: LeagueId;
+   name: text;
+   primaryColourHex: text;
+   secondaryColourHex: text;
+   shirtType: ShirtType;
+   thirdColourHex: text;
+ };
 type CountryId = nat16;
 type ClubId = nat16;
 type ClubFilterDTO = 
@@ -420,6 +431,7 @@ service : {
   checkMonthComplete: (LeagueId, SeasonId, CalendarMonth, GameweekNumber) ->
    (bool);
   checkSeasonComplete: (LeagueId, SeasonId) -> (bool);
+  createClub: (CreateClubDTO) -> (Result);
   createLeague: (CreateLeagueDTO) -> (Result);
   createNewSeason: (SystemState) -> () oneway;
   createPlayer: (LeagueId, CreatePlayerDTO) -> (Result);

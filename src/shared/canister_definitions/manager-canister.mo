@@ -3243,20 +3243,21 @@ actor class _ManagerCanister() {
     return Buffer.toArray(snapshotBuffer);
   };
 
-
-  public func removePlayerFromTeams(leagueId: FootballTypes.LeagueId, playerId : FootballTypes.PlayerId) : async () {
+  public shared ({ caller }) func removePlayerFromTeams(leagueId: FootballTypes.LeagueId, playerId : FootballTypes.PlayerId, parentCanisterId: Base.CanisterId) : async () {
+    assert not Principal.isAnonymous(caller);
+    let backendPrincipalId = Principal.toText(caller);
+    assert backendPrincipalId == controllerPrincipalId;
     for (index in Iter.range(0, 11)) {
-      await removePlayerFromGroup(leagueId, playerId, index);
+      await removePlayerFromGroup(leagueId, playerId, index, parentCanisterId);
     };
-
   };
 
-  private func removePlayerFromGroup(leagueId: FootballTypes.LeagueId, removePlayerId : FootballTypes.PlayerId, managerGroup: Int) : async () {
-    let data_canister = actor (Environment.DATA_CANISTER_ID) : actor {
-      getPlayers : shared query (leagueId: FootballTypes.LeagueId) -> async Result.Result<[DTOs.PlayerDTO], T.Error>;
+  private func removePlayerFromGroup(leagueId: FootballTypes.LeagueId, removePlayerId : FootballTypes.PlayerId, managerGroup: Int, parentCanisterId: Base.CanisterId) : async () {
+    let backend_canister = actor (parentCanisterId) : actor {
+      getVerifiedPlayers : (leagueId: FootballTypes.LeagueId) -> async Result.Result<[DTOs.PlayerDTO], T.Error>;
     };
       
-    let allPlayersResult = await data_canister.getPlayers(leagueId);
+    let allPlayersResult = await backend_canister.getVerifiedPlayers(leagueId);
     switch(allPlayersResult){
       case (#ok allPlayers){
         let removedPlayer = Array.find<DTOs.PlayerDTO>(allPlayers, func(p) { p.id == removePlayerId });

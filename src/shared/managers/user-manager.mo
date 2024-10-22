@@ -216,7 +216,7 @@ module {
       return List.toArray(uniqueManagerCanisterIds);
     };
 
-    public func getCurrentTeam(principalId : Text) : async Result.Result<DTOs.PickTeamDTO, T.Error> {
+    public func getCurrentTeam(principalId : Text, pickTeamSeasonId: FootballTypes.SeasonId, pickTeamGameweek: FootballTypes.GameweekNumber) : async Result.Result<DTOs.PickTeamDTO, T.Error> {
 
       let managerCanisterId = managerCanisterIds.get(principalId);
       switch (managerCanisterId) {
@@ -234,6 +234,18 @@ module {
               return #err(#NotFound);
             };
             case (?foundManager) {
+
+              var firstGameweek = true;
+              let currentManagerSeason = List.find<T.FantasyTeamSeason>(foundManager.history, func(season: T.FantasyTeamSeason) : Bool {
+                season.seasonId == pickTeamSeasonId;
+              });
+
+              switch(currentManagerSeason){
+                case (?foundSeason){
+                  firstGameweek := List.size(foundSeason.gameweeks) == 0;
+                };
+                case (null){ }
+              };
 
               let pickTeamDTO : DTOs.PickTeamDTO = {
                 principalId = foundManager.principalId;
@@ -262,6 +274,7 @@ module {
                 hatTrickHeroGameweek = foundManager.hatTrickHeroGameweek;
                 transferWindowGameweek = foundManager.transferWindowGameweek;
                 canisterId = foundCanisterId;
+                firstGameweek = firstGameweek;
               };
 
               return #ok(pickTeamDTO);
@@ -989,8 +1002,21 @@ module {
           if(overspent(foundManager.bankQuarterMillions, foundManager.playerIds, dto.playerIds, allPlayers)){
             return #err(#TeamOverspend);
           };
-          var transfersAvailable = 2;
-          if(systemState.pickTeamGameweek > 1){
+          
+          var transfersAvailable = 3;
+          var firstGameweek = true;
+          let currentManagerSeason = List.find<T.FantasyTeamSeason>(foundManager.history, func(season: T.FantasyTeamSeason) : Bool {
+            season.seasonId == systemState.pickTeamSeasonId;
+          });
+
+          switch(currentManagerSeason){
+            case (?foundSeason){
+              firstGameweek := List.size(foundSeason.gameweeks) == 0;
+            };
+            case (null){ }
+          };
+          
+          if(not firstGameweek){
             let transfersAvailable = getTransfersAvailable(foundManager, dto.playerIds, allPlayers);
             if (transfersAvailable < 0) {
               return #err(#TooManyTransfers);
@@ -1213,14 +1239,14 @@ module {
 
 
 
-    public func removePlayerFromTeams(leagueId: FootballTypes.LeagueId, playerId : FootballTypes.PlayerId) : async () {
+    public func removePlayerFromTeams(leagueId: FootballTypes.LeagueId, playerId : FootballTypes.PlayerId, parentCanisterId: Base.CanisterId) : async () {
       for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
  
         let manager_canister = actor (canisterId) : actor {
-          removePlayerFromTeams : (leagueId: FootballTypes.LeagueId, playerId : FootballTypes.PlayerId) -> async ();
+          removePlayerFromTeams : (leagueId: FootballTypes.LeagueId, playerId : FootballTypes.PlayerId, parentCanisterId: Base.CanisterId) -> async ();
         };
 
-        await manager_canister.removePlayerFromTeams(leagueId, playerId);
+        await manager_canister.removePlayerFromTeams(leagueId, playerId, parentCanisterId);
       };
     };
 

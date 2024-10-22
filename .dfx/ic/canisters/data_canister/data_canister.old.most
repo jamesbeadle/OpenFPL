@@ -130,6 +130,8 @@ actor {
   stable var leaguePlayers : [(LeagueId, [Player])];
   stable var leagueSeasons : [(LeagueId, [Season])];
   stable var leagues : [League];
+  stable var nextClubId : Nat16;
+  stable var nextLeagueId : Nat16;
   stable var nextPlayerId : Nat16;
   stable var retiredFreeAgents : [Player];
   stable var retiredLeaguePlayers : [(LeagueId, [Player])];

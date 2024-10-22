@@ -108,6 +108,11 @@
       }
     }
 
+    if($fantasyTeam.firstGameweek){
+      transfersAvailable.set(Infinity);
+      canSellPlayer = true;
+    }
+
     fantasyTeam.update((currentTeam) => {
       if (
         currentTeam &&

@@ -13,6 +13,7 @@
   import Time "mo:base/Time";
   import Timer "mo:base/Timer";
   import TrieMap "mo:base/TrieMap";
+import Nat16 "mo:base/Nat16";
 
   import Base "../shared/types/base_types";
   import FootballTypes "../shared/types/football_types";
@@ -67,6 +68,8 @@
     private stable var untrackedClubs: [FootballTypes.Club] = [];
     private stable var clubsInAdministration: [FootballTypes.Club] = [];
 
+    private stable var nextLeagueId: FootballTypes.LeagueId = 10;
+    private stable var nextClubId: FootballTypes.ClubId = 24;
     private stable var nextPlayerId: FootballTypes.PlayerId = 725;
 
     private stable var timers : [Base.TimerInfo] = [];
@@ -1036,22 +1039,6 @@
 
     public shared ({ caller }) func createLeague(dto: GovernanceDTOs.CreateLeagueDTO) : async Result.Result<(), T.Error> {
       assert callerAllowed(caller);
-      var nextId: FootballTypes.LeagueId = 1;
-
-      if(Array.size(leagues) > 0){
-
-        let sortedLeagues = Array.sort(
-          leagues,
-          func(a : FootballTypes.League, b : FootballTypes.League) : Order.Order {
-            if (a.id > b.id) { return #greater };
-            if (a.id == b.id) { return #equal };
-            return #less;
-          },
-        );
-
-        let latestLeague = sortedLeagues[0];
-        nextId := latestLeague.id + 1;
-      };
 
       let leaguesBuffer = Buffer.fromArray<FootballTypes.League>(leagues);
       leaguesBuffer.add({
@@ -1059,7 +1046,7 @@
         countryId = dto.countryId;
         formed = dto.formed;
         governingBody = dto.governingBody;
-        id = nextId;
+        id = nextLeagueId;
         logo = dto.logo;
         name = dto.name;
         teamCount = dto.teamCount;
@@ -1067,6 +1054,20 @@
       });
 
       leagues := Buffer.toArray(leaguesBuffer);
+
+      let leagueSeasonsBuffer = Buffer.fromArray<(FootballTypes.LeagueId, [FootballTypes.Season])>(leagueSeasons);
+      let leaguesClubsBuffer = Buffer.fromArray<(FootballTypes.LeagueId, [FootballTypes.Club])>(leagueClubs);
+      let leaguePlayersBuffer = Buffer.fromArray<(FootballTypes.LeagueId, [FootballTypes.Player])>(leaguePlayers);
+
+      leagueSeasonsBuffer.add((nextLeagueId, []));
+      leaguesClubsBuffer.add((nextLeagueId, []));
+      leaguePlayersBuffer.add((nextLeagueId, []));
+
+      leagueSeasons := Buffer.toArray(leagueSeasonsBuffer);
+      leagueClubs := Buffer.toArray(leaguesClubsBuffer);
+      leaguePlayers := Buffer.toArray(leaguePlayersBuffer);
+
+      nextLeagueId += 1;
       return #ok();
     };
 
@@ -1095,6 +1096,45 @@
             }
           });
           return #ok();
+        };
+        case (null){
+          return #err(#NotFound);
+        }
+      };
+    };
+
+    //Club Functions
+
+    public shared ({ caller }) func createClub(dto: GovernanceDTOs.CreateClubDTO) : async Result.Result<(), T.Error> {
+      assert callerAllowed(caller);
+
+      let leagueResult = Array.find<FootballTypes.League>(leagues, func(league: FootballTypes.League) : Bool {
+        league.id == dto.leagueId
+      });
+
+      switch(leagueResult){
+        case (?foundLeague){
+          leagueClubs := Array.map<(FootballTypes.LeagueId, [FootballTypes.Club]), (FootballTypes.LeagueId, [FootballTypes.Club])>(leagueClubs, func(leagueEntry: (FootballTypes.LeagueId, [FootballTypes.Club])){
+            if(leagueEntry.0 == dto.leagueId){
+              let updatedClubsBuffer = Buffer.fromArray<FootballTypes.Club>(leagueEntry.1);
+              updatedClubsBuffer.add({
+                abbreviatedName = dto.abbreviatedName;
+                friendlyName = dto.friendlyName;
+                id = nextClubId;
+                name = dto.name;
+                primaryColourHex = dto.primaryColourHex;
+                secondaryColourHex = dto.secondaryColourHex;
+                shirtType = dto.shirtType;
+                thirdColourHex = dto.thirdColourHex;
+              });
+              nextClubId += 1;
+              return (leagueEntry.0, Buffer.toArray(updatedClubsBuffer));
+            } else {
+              return leagueEntry;
+            }
+          });
+          return #ok();
+          
         };
         case (null){
           return #err(#NotFound);
@@ -2847,52 +2887,11 @@
     private func postUpgradeCallback() : async (){
       await setSystemTimers();
 
-      //await fixData();
+      await fixData();
       //dataInitialised := false;
     };
 
     private func fixData() : async (){
-      return;
-      //fix this player with the wrong id
-      leaguePlayers := Array.map<
-          (FootballTypes.LeagueId, [FootballTypes.Player]), 
-          (FootballTypes.LeagueId, [FootballTypes.Player])>(
-            leaguePlayers,  func (entry: (FootballTypes.LeagueId, [FootballTypes.Player])){
-              if(entry.0 == 1){
-                return (entry.0, Array.map<FootballTypes.Player, FootballTypes.Player>(entry.1, func(player: FootballTypes.Player){
-                  if(player.id == 2 and player.firstName == "Mikel"){  
-                    
-                    return {
-                      leagueId = player.leagueId;
-                      clubId = player.clubId;
-                      currentLoanEndDate = player.currentLoanEndDate;
-                      dateOfBirth = player.dateOfBirth;
-                      firstName = player.firstName;
-                      gender = player.gender;
-                      id = 725;
-                      injuryHistory = player.injuryHistory;
-                      lastName = player.lastName;
-                      latestInjuryEndDate = player.latestInjuryEndDate;
-                      nationality = player.nationality;
-                      parentLeagueId = player.parentLeagueId;
-                      parentClubId = player.clubId;
-                      position = player.position;
-                      retirementDate = player.retirementDate;
-                      seasons = player.seasons;
-                      shirtNumber = player.shirtNumber;
-                      status = player.status;
-                      transferHistory = player.transferHistory;
-                      valueHistory = player.valueHistory;
-                      valueQuarterMillions = player.valueQuarterMillions;
-                    }
-                  } else {
-                    return player;
-                  }
-                }))
-              } else { return entry }
-            });
-
-          let _ = await updateDataHashes(1, "players");
       
     };
 

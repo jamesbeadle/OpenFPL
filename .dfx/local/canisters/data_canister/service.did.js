@@ -3,17 +3,16 @@ export const idlFactory = ({ IDL }) => {
   const SeasonId = IDL.Nat16;
   const GameweekNumber = IDL.Nat8;
   const CalendarMonth = IDL.Nat8;
-  const Gender = IDL.Variant({ Male: IDL.Null, Female: IDL.Null });
-  const CountryId = IDL.Nat16;
-  const CreateLeagueDTO = IDL.Record({
-    logo: IDL.Vec(IDL.Nat8),
+  const ShirtType = IDL.Variant({ Filled: IDL.Null, Striped: IDL.Null });
+  const CreateClubDTO = IDL.Record({
+    secondaryColourHex: IDL.Text,
     name: IDL.Text,
-    teamCount: IDL.Nat8,
-    relatedGender: Gender,
-    countryId: CountryId,
-    abbreviation: IDL.Text,
-    governingBody: IDL.Text,
-    formed: IDL.Int,
+    friendlyName: IDL.Text,
+    thirdColourHex: IDL.Text,
+    abbreviatedName: IDL.Text,
+    shirtType: ShirtType,
+    primaryColourHex: IDL.Text,
+    leagueId: LeagueId,
   });
   const Error = IDL.Variant({
     MoreThan2PlayersFromClub: IDL.Null,
@@ -34,6 +33,18 @@ export const idlFactory = ({ IDL }) => {
     Not11Players: IDL.Null,
   });
   const Result = IDL.Variant({ ok: IDL.Null, err: Error });
+  const Gender = IDL.Variant({ Male: IDL.Null, Female: IDL.Null });
+  const CountryId = IDL.Nat16;
+  const CreateLeagueDTO = IDL.Record({
+    logo: IDL.Vec(IDL.Nat8),
+    name: IDL.Text,
+    teamCount: IDL.Nat8,
+    relatedGender: Gender,
+    countryId: CountryId,
+    abbreviation: IDL.Text,
+    governingBody: IDL.Text,
+    formed: IDL.Int,
+  });
   const SystemState = IDL.Record({
     pickTeamSeasonId: SeasonId,
     calculationGameweek: GameweekNumber,
@@ -94,7 +105,6 @@ export const idlFactory = ({ IDL }) => {
     playerEventData: IDL.Vec(PlayerEventData),
     leagueId: LeagueId,
   });
-  const ShirtType = IDL.Variant({ Filled: IDL.Null, Striped: IDL.Null });
   const ClubDTO = IDL.Record({
     id: ClubId,
     secondaryColourHex: IDL.Text,
@@ -355,6 +365,7 @@ export const idlFactory = ({ IDL }) => {
       [],
     ),
     checkSeasonComplete: IDL.Func([LeagueId, SeasonId], [IDL.Bool], []),
+    createClub: IDL.Func([CreateClubDTO], [Result], []),
     createLeague: IDL.Func([CreateLeagueDTO], [Result], []),
     createNewSeason: IDL.Func([SystemState], [], ["oneway"]),
     createPlayer: IDL.Func([LeagueId, CreatePlayerDTO], [Result], []),

@@ -56,7 +56,15 @@
 
     public shared ({ caller }) func getCurrentTeam() : async Result.Result<DTOs.PickTeamDTO, T.Error> {
       assert not Principal.isAnonymous(caller);
-      return await userManager.getCurrentTeam(Principal.toText(caller));
+      let systemStateResult = seasonManager.getSystemState();
+      switch(systemStateResult){
+        case (#ok systemState){       
+          return await userManager.getCurrentTeam(Principal.toText(caller), systemState.pickTeamSeasonId, systemState.pickTeamGameweek);
+        };
+        case (#err error){
+          return #err(error);
+        }
+      }
     };
 
     public shared func getManager(dto: Requests.RequestManagerDTO) : async Result.Result<DTOs.ManagerDTO, T.Error> {
@@ -85,6 +93,15 @@
       return await leaderboardManager.getSeasonLeaderboard(dto);
     };
 
+    //No query calls
+
+
+    public shared func getVerifiedPlayers() : async Result.Result<[DTOs.PlayerDTO], T.Error> {
+      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
+        getPlayers : shared query (leagueId: FootballTypes.LeagueId) -> async Result.Result<[DTOs.PlayerDTO], T.Error>;
+      };
+      return await data_canister.getPlayers(Environment.LEAGUE_ID);
+    };
 
     //Query functions:
 
@@ -130,20 +147,10 @@
     };
 
     public shared composite query func getPlayers() : async Result.Result<[DTOs.PlayerDTO], T.Error> {
-     
-      let systemStateResult = await getSystemState();
-      switch(systemStateResult){
-        case (#ok systemState){
-          let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
-            getPlayers : shared query (leagueId: FootballTypes.LeagueId) -> async Result.Result<[DTOs.PlayerDTO], T.Error>;
-          };
-          return await data_canister.getPlayers(Environment.LEAGUE_ID);
-          //return await getLeaguePlayers(Environment.LEAGUE_ID, { seasonId = systemState.pickTeamSeasonId }); //Todo implement when figure out query function
-        };  
-        case (#err error){
-          return #err(error);
-        }
+      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
+        getPlayers : shared query (leagueId: FootballTypes.LeagueId) -> async Result.Result<[DTOs.PlayerDTO], T.Error>;
       };
+      return await data_canister.getPlayers(Environment.LEAGUE_ID);
     };
 
     public shared composite query ( {caller} ) func getPlayersSnapshot(dto: Requests.GetSnapshotPlayers) : async [DTOs.PlayerDTO] {
@@ -558,13 +565,13 @@
 
     public shared ({ caller }) func notifyAppsOfLoan(leagueId: FootballTypes.LeagueId, playerId: FootballTypes.PlayerId) : async Result.Result<(), T.Error> {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
-      await userManager.removePlayerFromTeams(leagueId, playerId);
+      await userManager.removePlayerFromTeams(leagueId, playerId, Environment.BACKEND_CANISTER_ID);
       return #ok();
     };
 
     public shared ({ caller }) func notifyAppsOfPositionChange(leagueId: FootballTypes.LeagueId, playerId: FootballTypes.PlayerId) : async Result.Result<(), T.Error> {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
-      await userManager.removePlayerFromTeams(leagueId, playerId);
+      await userManager.removePlayerFromTeams(leagueId, playerId, Environment.BACKEND_CANISTER_ID);
       return #ok();
     };
 

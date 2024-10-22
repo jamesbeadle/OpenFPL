@@ -41,6 +41,7 @@ module DTOs {
     hatTrickHeroGameweek : FootballTypes.GameweekNumber;
     transferWindowGameweek : FootballTypes.GameweekNumber;
     canisterId: Base.CanisterId;
+    firstGameweek: Bool;
   };
 
   public type ManagerDTO = {
