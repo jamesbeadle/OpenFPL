@@ -6,11 +6,10 @@ import Iter "mo:base/Iter";
 import Principal "mo:base/Principal";
 import Buffer "mo:base/Buffer";
 import DTOs "../../shared/dtos/DTOs";
-import Requests "../../shared/RequestDTOs";
 import Base "../../shared/types/base_types";
 import FootballTypes "../../shared/types/football_types";
 import T "../../shared/types/app_types";
-import RequestDTOs "../../shared/RequestDTOs";
+import RequestDTOs "../../shared/dtos/request_DTOs";
 import Utilities "../../shared/utils/utilities";
 import Management "../../shared/utils/Management";
 import ManagerCanister "../canister_definitions/manager-canister";
@@ -74,7 +73,7 @@ module {
       };
     };
 
-    public func getManager(dto: Requests.RequestManagerDTO, weeklyLeaderboardEntry : ?DTOs.LeaderboardEntryDTO, monthlyLeaderboardEntry : ?DTOs.LeaderboardEntryDTO, seasonLeaderboardEntry : ?DTOs.LeaderboardEntryDTO) : async Result.Result<DTOs.ManagerDTO, T.Error> {
+    public func getManager(dto: RequestDTOs.RequestManagerDTO, weeklyLeaderboardEntry : ?DTOs.LeaderboardEntryDTO, monthlyLeaderboardEntry : ?DTOs.LeaderboardEntryDTO, seasonLeaderboardEntry : ?DTOs.LeaderboardEntryDTO) : async Result.Result<DTOs.ManagerDTO, T.Error> {
       let managerCanisterId = managerCanisterIds.get(dto.managerId);
       
       switch (managerCanisterId) {

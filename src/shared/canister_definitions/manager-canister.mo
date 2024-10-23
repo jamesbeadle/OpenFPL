@@ -22,7 +22,7 @@ import Base "../../shared/types/base_types";
 import FootballTypes "../../shared/types/football_types";
 import T "../../shared/types/app_types";
 import Utilities "../../shared/utils/utilities";
-import Requests "../../shared/RequestDTOs";
+import RequestDTOs "../../shared/dtos/request_DTOs";
 
 actor class _ManagerCanister() {
 
@@ -1867,7 +1867,7 @@ actor class _ManagerCanister() {
 
     let backend_canister = actor (controllerPrincipalId) : actor {
       getPlayerPointsMap : (seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber) -> async [(FootballTypes.PlayerId, DTOs.PlayerScoreDTO)];
-      getPlayersSnapshot : shared query (dto: Requests.GetSnapshotPlayers) -> async [DTOs.PlayerDTO];
+      getPlayersSnapshot : shared query (dto: RequestDTOs.GetSnapshotPlayers) -> async [DTOs.PlayerDTO];
     };
 
     let allPlayersList = await backend_canister.getPlayerPointsMap(seasonId, gameweek);
@@ -2065,7 +2065,7 @@ actor class _ManagerCanister() {
     
     //get the snapshot of the players from the controller canister canister
     let controller_backend_canister = actor (controllerPrincipalId) : actor {
-        getPlayersSnapshot : shared query (dto: Requests.GetSnapshotPlayers) -> async [DTOs.PlayerDTO];
+        getPlayersSnapshot : shared query (dto: RequestDTOs.GetSnapshotPlayers) -> async [DTOs.PlayerDTO];
       };
     let players = await controller_backend_canister.getPlayersSnapshot({
       gameweek;

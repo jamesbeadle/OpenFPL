@@ -5,7 +5,7 @@ import FootballTypes "../../shared/types/football_types";
 import T "../../shared/types/app_types";
 
 import NetworkEnvVars "../network_environment_variables";
-import RequestDTOs "../../shared/RequestDTOs";
+import RequestDTOs "../../shared/dtos/request_DTOs";
 import NetworkEnvironmentVariables "../network_environment_variables";
 
 module {

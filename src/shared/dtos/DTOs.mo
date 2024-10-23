@@ -270,16 +270,6 @@ module DTOs {
     events : [FootballTypes.PlayerEventData];
   };
 
-  public type UpdateSystemStateDTO = {
-    pickTeamSeasonId : FootballTypes.SeasonId;
-    pickTeamGameweek : FootballTypes.GameweekNumber;
-    calculationGameweek : FootballTypes.GameweekNumber;
-    calculationMonth : Base.CalendarMonth;
-    calculationSeasonId : FootballTypes.SeasonId;
-    transferWindowActive : Bool;
-    onHold : Bool;
-  };
-
   public type UpdateFixtureDTO = {
     seasonId : FootballTypes.SeasonId;
     fixtureId : FootballTypes.FixtureId;

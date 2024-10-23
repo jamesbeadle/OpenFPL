@@ -434,6 +434,18 @@ export interface UpdateProfilePictureDTO {
   'profilePicture' : Uint8Array | number[],
   'extension' : string,
 }
+export interface UpdateSystemStateDTO {
+  'pickTeamSeasonId' : SeasonId,
+  'calculationGameweek' : GameweekNumber,
+  'transferWindowActive' : boolean,
+  'pickTeamMonth' : CalendarMonth,
+  'pickTeamGameweek' : GameweekNumber,
+  'version' : string,
+  'calculationMonth' : CalendarMonth,
+  'calculationSeasonId' : SeasonId,
+  'onHold' : boolean,
+  'seasonActive' : boolean,
+}
 export interface UpdateTeamSelectionDTO {
   'playerIds' : Uint16Array | number[],
   'username' : string,
@@ -511,7 +523,7 @@ export interface _SERVICE {
   'updateDataHashes' : ActorMethod<[string], Result>,
   'updateFavouriteClub' : ActorMethod<[UpdateFavouriteClubDTO], Result>,
   'updateProfilePicture' : ActorMethod<[UpdateProfilePictureDTO], Result>,
-  'updateSystemState' : ActorMethod<[SystemStateDTO], Result>,
+  'updateSystemState' : ActorMethod<[UpdateSystemStateDTO], Result>,
   'updateUsername' : ActorMethod<[UpdateUsernameDTO], Result>,
 }
 export declare const idlFactory: IDL.InterfaceFactory;

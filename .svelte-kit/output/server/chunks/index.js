@@ -3485,7 +3485,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1ynpe7y"
+  version_hash: "1upyst2"
 };
 async function get_hooks() {
   return {};
@@ -4169,6 +4169,18 @@ const idlFactory$1 = ({ IDL }) => {
     "profilePicture": IDL.Vec(IDL.Nat8),
     "extension": IDL.Text
   });
+  const UpdateSystemStateDTO = IDL.Record({
+    "pickTeamSeasonId": SeasonId,
+    "calculationGameweek": GameweekNumber,
+    "transferWindowActive": IDL.Bool,
+    "pickTeamMonth": CalendarMonth,
+    "pickTeamGameweek": GameweekNumber,
+    "version": IDL.Text,
+    "calculationMonth": CalendarMonth,
+    "calculationSeasonId": SeasonId,
+    "onHold": IDL.Bool,
+    "seasonActive": IDL.Bool
+  });
   const UpdateUsernameDTO = IDL.Record({ "username": IDL.Text });
   return IDL.Service({
     "calculateGameweekScores": IDL.Func([], [Result], []),
@@ -4252,7 +4264,7 @@ const idlFactory$1 = ({ IDL }) => {
     "updateDataHashes": IDL.Func([IDL.Text], [Result], []),
     "updateFavouriteClub": IDL.Func([UpdateFavouriteClubDTO], [Result], []),
     "updateProfilePicture": IDL.Func([UpdateProfilePictureDTO], [Result], []),
-    "updateSystemState": IDL.Func([SystemStateDTO], [Result], []),
+    "updateSystemState": IDL.Func([UpdateSystemStateDTO], [Result], []),
     "updateUsername": IDL.Func([UpdateUsernameDTO], [Result], [])
   });
 };
@@ -5589,6 +5601,18 @@ const idlFactory = ({ IDL }) => {
     "profilePicture": IDL.Vec(IDL.Nat8),
     "extension": IDL.Text
   });
+  const UpdateSystemStateDTO = IDL.Record({
+    "pickTeamSeasonId": SeasonId,
+    "calculationGameweek": GameweekNumber,
+    "transferWindowActive": IDL.Bool,
+    "pickTeamMonth": CalendarMonth,
+    "pickTeamGameweek": GameweekNumber,
+    "version": IDL.Text,
+    "calculationMonth": CalendarMonth,
+    "calculationSeasonId": SeasonId,
+    "onHold": IDL.Bool,
+    "seasonActive": IDL.Bool
+  });
   const UpdateUsernameDTO = IDL.Record({ "username": IDL.Text });
   return IDL.Service({
     "calculateGameweekScores": IDL.Func([], [Result], []),
@@ -5672,7 +5696,7 @@ const idlFactory = ({ IDL }) => {
     "updateDataHashes": IDL.Func([IDL.Text], [Result], []),
     "updateFavouriteClub": IDL.Func([UpdateFavouriteClubDTO], [Result], []),
     "updateProfilePicture": IDL.Func([UpdateProfilePictureDTO], [Result], []),
-    "updateSystemState": IDL.Func([SystemStateDTO], [Result], []),
+    "updateSystemState": IDL.Func([UpdateSystemStateDTO], [Result], []),
     "updateUsername": IDL.Func([UpdateUsernameDTO], [Result], [])
   });
 };

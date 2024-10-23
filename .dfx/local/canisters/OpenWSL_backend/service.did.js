@@ -472,6 +472,18 @@ export const idlFactory = ({ IDL }) => {
     profilePicture: IDL.Vec(IDL.Nat8),
     extension: IDL.Text,
   });
+  const UpdateSystemStateDTO = IDL.Record({
+    pickTeamSeasonId: SeasonId,
+    calculationGameweek: GameweekNumber,
+    transferWindowActive: IDL.Bool,
+    pickTeamMonth: CalendarMonth,
+    pickTeamGameweek: GameweekNumber,
+    version: IDL.Text,
+    calculationMonth: CalendarMonth,
+    calculationSeasonId: SeasonId,
+    onHold: IDL.Bool,
+    seasonActive: IDL.Bool,
+  });
   const UpdateUsernameDTO = IDL.Record({ username: IDL.Text });
   return IDL.Service({
     calculateGameweekScores: IDL.Func([], [Result], []),
@@ -547,7 +559,7 @@ export const idlFactory = ({ IDL }) => {
     updateDataHashes: IDL.Func([IDL.Text], [Result], []),
     updateFavouriteClub: IDL.Func([UpdateFavouriteClubDTO], [Result], []),
     updateProfilePicture: IDL.Func([UpdateProfilePictureDTO], [Result], []),
-    updateSystemState: IDL.Func([SystemStateDTO], [Result], []),
+    updateSystemState: IDL.Func([UpdateSystemStateDTO], [Result], []),
     updateUsername: IDL.Func([UpdateUsernameDTO], [Result], []),
   });
 };

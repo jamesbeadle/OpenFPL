@@ -21,7 +21,7 @@ import Nat16 "mo:base/Nat16";
   import DTOs "../shared/dtos/DTOs";
   import GovernanceDTOs "../shared/dtos/governance_DTOs";
   import Utilities "../shared/utils/utilities";
-  import RequestDTOs "../shared/RequestDTOs";
+  import RequestDTOs "../shared/dtos/request_DTOs";
   import Environment "environment";
   import Countries "../shared/Countries";
 

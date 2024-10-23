@@ -3,7 +3,7 @@ import Buffer "mo:base/Buffer";
 import Iter "mo:base/Iter";
 import Array "mo:base/Array";
 import DTOs "../../shared/dtos/DTOs";
-import Requests "../../shared/RequestDTOs";
+import RequestDTOs "../../shared/dtos/request_DTOs";
 import FootballTypes "../../shared/types/football_types";
 import T "../../shared/types/app_types";
 import Base "../../shared/types/base_types";
@@ -101,7 +101,7 @@ module {
       });
     };
     
-    public func getPlayersSnapshot(dto: Requests.GetSnapshotPlayers) : [DTOs.PlayerDTO] {
+    public func getPlayersSnapshot(dto: RequestDTOs.GetSnapshotPlayers) : [DTOs.PlayerDTO] {
       let seasonPlayers = Array.find<(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [FootballTypes.Player])])>(playersSnapshots, func(seasonsPlayerSnapshots: (FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [FootballTypes.Player])])) : Bool {
         seasonsPlayerSnapshots.0 == dto.seasonId;
       });
@@ -250,7 +250,7 @@ module {
       //TODO (ENDOFSEASON)
     };
 
-    public func updateSystemStatus(dto: Requests.UpdateSystemStatusDTO) : async Result.Result<(), T.Error> {
+    public func updateSystemState(dto: RequestDTOs.UpdateSystemStateDTO) : async Result.Result<(), T.Error> {
      systemState := {
       calculationGameweek = dto.calculationGameweek;
       calculationMonth = dto.calculationMonth;
@@ -263,6 +263,7 @@ module {
       transferWindowActive = dto.transferWindowActive;
       version = dto.version;
      };
+     await updateDataHash("system_state");
      return #ok();
     };
       
@@ -291,26 +292,6 @@ module {
     public func setStablePlayersSnapshots(stable_players_snapshots : [(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [FootballTypes.Player])])]) {
       playersSnapshots := stable_players_snapshots;
     };
-
-    //Functions to be removed when handed back to SNS
-
-    public func updateSystemState(dto: DTOs.SystemStateDTO) : async Result.Result<(), T.Error> {
-      let updatedSystemState : T.SystemState = {
-        calculationGameweek = dto.calculationGameweek;
-        calculationMonth = dto.calculationMonth;
-        calculationSeasonId = dto.calculationSeasonId;
-        pickTeamSeasonId = dto.pickTeamSeasonId;
-        pickTeamGameweek = dto.pickTeamGameweek;
-        pickTeamMonth = dto.pickTeamMonth;
-        seasonActive = dto.seasonActive;
-        transferWindowActive = dto.transferWindowActive;
-        onHold = dto.onHold;
-        version = dto.version;
-      };
-
-      systemState := updatedSystemState;
-      return #ok();
-    };
-  };
+  }
 
 };

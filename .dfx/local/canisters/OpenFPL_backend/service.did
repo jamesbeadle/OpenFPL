@@ -37,6 +37,19 @@ type UpdateTeamSelectionDTO =
    transferWindowGameweek: GameweekNumber;
    username: text;
  };
+type UpdateSystemStateDTO = 
+ record {
+   calculationGameweek: GameweekNumber;
+   calculationMonth: CalendarMonth;
+   calculationSeasonId: SeasonId;
+   onHold: bool;
+   pickTeamGameweek: GameweekNumber;
+   pickTeamMonth: CalendarMonth;
+   pickTeamSeasonId: SeasonId;
+   seasonActive: bool;
+   transferWindowActive: bool;
+   version: text;
+ };
 type UpdateProfilePictureDTO = 
  record {
    extension: text;
@@ -640,6 +653,6 @@ service : {
   updateDataHashes: (text) -> (Result);
   updateFavouriteClub: (UpdateFavouriteClubDTO) -> (Result);
   updateProfilePicture: (UpdateProfilePictureDTO) -> (Result);
-  updateSystemState: (SystemStateDTO) -> (Result);
+  updateSystemState: (UpdateSystemStateDTO) -> (Result);
   updateUsername: (UpdateUsernameDTO) -> (Result);
 }
