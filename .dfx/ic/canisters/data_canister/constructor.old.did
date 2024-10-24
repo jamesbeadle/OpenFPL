@@ -170,7 +170,11 @@ type RescheduleFixtureDTO =
    updatedFixtureGameweek: GameweekNumber;
  };
 type RequestPlayersDTO = record {seasonId: SeasonId;};
-type RequestFixturesDTO = record {seasonId: SeasonId;};
+type RequestFixturesDTO = 
+ record {
+   leagueId: LeagueId;
+   seasonId: SeasonId;
+ };
 type RecallPlayerDTO = record {playerId: ClubId;};
 type PromoteNewClubDTO = 
  record {
@@ -182,7 +186,12 @@ type PromoteNewClubDTO =
    shirtType: ShirtType;
    thirdColourHex: text;
  };
-type PostponeFixtureDTO = record {fixtureId: FixtureId;};
+type PostponeFixtureDTO = 
+ record {
+   fixtureId: FixtureId;
+   leagueId: LeagueId;
+   seasonId: SeasonId;
+ };
 type PlayerStatus = 
  variant {
    Active;
@@ -287,6 +296,8 @@ type PlayerDTO =
 type MoveFixtureDTO = 
  record {
    fixtureId: FixtureId;
+   leagueId: LeagueId;
+   seasonId: SeasonId;
    updatedFixtureDate: int;
    updatedFixtureGameweek: GameweekNumber;
  };
@@ -437,7 +448,7 @@ service : {
   createPlayer: (LeagueId, CreatePlayerDTO) -> (Result);
   executeSubmitFixtureData: (SubmitFixtureDataDTO) -> ();
   getClubs: (LeagueId) -> (Result_3) query;
-  getFixtures: (LeagueId, RequestFixturesDTO) -> (Result_2) query;
+  getFixtures: (RequestFixturesDTO) -> (Result_2) query;
   getLeagues: () -> (Result_8) query;
   getLoanedPlayers: (LeagueId, ClubFilterDTO) -> (Result_1) query;
   getPlayerDetails: (LeagueId, GetPlayerDetailsDTO) -> (Result_7) query;
@@ -449,9 +460,11 @@ service : {
   getRetiredPlayers: (LeagueId, ClubFilterDTO) -> (Result_1) query;
   getSeasons: (LeagueId) -> (Result_4) query;
   getVerifiedClubs: (LeagueId) -> (Result_3);
-  getVerifiedFixtures: (LeagueId, RequestFixturesDTO) -> (Result_2);
+  getVerifiedFixtures: (RequestFixturesDTO) -> (Result_2);
   getVerifiedPlayers: (LeagueId, RequestPlayersDTO) -> (Result_1);
   loanPlayer: (LeagueId, LoanPlayerDTO) -> (Result);
+  moveFixture: (MoveFixtureDTO) -> (Result);
+  postponeFixture: (PostponeFixtureDTO) -> (Result);
   promoteNewClub: (LeagueId, PromoteNewClubDTO) -> (Result);
   retirePlayer: (LeagueId, RetirePlayerDTO) -> (Result);
   revaluePlayerDown: (LeagueId, RevaluePlayerDownDTO) -> (Result);

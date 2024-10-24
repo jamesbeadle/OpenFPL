@@ -6,6 +6,7 @@ module RequestDTOs {
 
   
   public type RequestFixturesDTO = {
+    leagueId: FootballTypes.LeagueId;
     seasonId: FootballTypes.SeasonId;
   };
 

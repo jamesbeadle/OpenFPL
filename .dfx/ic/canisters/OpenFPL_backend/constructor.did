@@ -226,7 +226,11 @@ type RequestManagerDTO =
    month: CalendarMonth;
    seasonId: SeasonId;
  };
-type RequestFixturesDTO = record {seasonId: SeasonId;};
+type RequestFixturesDTO = 
+ record {
+   leagueId: LeagueId;
+   seasonId: SeasonId;
+ };
 type ProfileDTO = 
  record {
    createDate: int;

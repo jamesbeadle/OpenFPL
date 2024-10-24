@@ -123,9 +123,9 @@
 
     public shared composite query func getFixtures(dto: RequestDTOs.RequestFixturesDTO) : async Result.Result<[DTOs.FixtureDTO], T.Error> {
       let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
-        getFixtures : shared query (leagueId: FootballTypes.LeagueId, dto: RequestDTOs.RequestFixturesDTO) -> async Result.Result<[DTOs.FixtureDTO], T.Error>;
+        getFixtures : shared query (dto: RequestDTOs.RequestFixturesDTO) -> async Result.Result<[DTOs.FixtureDTO], T.Error>;
       };
-      return await data_canister.getFixtures(Environment.LEAGUE_ID, dto);
+      return await data_canister.getFixtures(dto);
       //return await dataManager.getFixtures(Environment.LEAGUE_ID, dto); //Todo implement when figure out query function
     };
 

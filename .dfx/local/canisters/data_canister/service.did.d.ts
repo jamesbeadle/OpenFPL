@@ -125,6 +125,8 @@ export interface MoveFixtureDTO {
   fixtureId: FixtureId;
   updatedFixtureGameweek: GameweekNumber;
   updatedFixtureDate: bigint;
+  seasonId: SeasonId;
+  leagueId: LeagueId;
 }
 export interface PlayerDTO {
   id: number;
@@ -217,6 +219,8 @@ export type PlayerStatus =
   | { Retired: null };
 export interface PostponeFixtureDTO {
   fixtureId: FixtureId;
+  seasonId: SeasonId;
+  leagueId: LeagueId;
 }
 export interface PromoteNewClubDTO {
   secondaryColourHex: string;
@@ -232,6 +236,7 @@ export interface RecallPlayerDTO {
 }
 export interface RequestFixturesDTO {
   seasonId: SeasonId;
+  leagueId: LeagueId;
 }
 export interface RequestPlayersDTO {
   seasonId: SeasonId;
@@ -368,7 +373,7 @@ export interface _SERVICE {
   createPlayer: ActorMethod<[LeagueId, CreatePlayerDTO], Result>;
   executeSubmitFixtureData: ActorMethod<[SubmitFixtureDataDTO], undefined>;
   getClubs: ActorMethod<[LeagueId], Result_3>;
-  getFixtures: ActorMethod<[LeagueId, RequestFixturesDTO], Result_2>;
+  getFixtures: ActorMethod<[RequestFixturesDTO], Result_2>;
   getLeagues: ActorMethod<[], Result_8>;
   getLoanedPlayers: ActorMethod<[LeagueId, ClubFilterDTO], Result_1>;
   getPlayerDetails: ActorMethod<[LeagueId, GetPlayerDetailsDTO], Result_7>;
@@ -382,9 +387,11 @@ export interface _SERVICE {
   getRetiredPlayers: ActorMethod<[LeagueId, ClubFilterDTO], Result_1>;
   getSeasons: ActorMethod<[LeagueId], Result_4>;
   getVerifiedClubs: ActorMethod<[LeagueId], Result_3>;
-  getVerifiedFixtures: ActorMethod<[LeagueId, RequestFixturesDTO], Result_2>;
+  getVerifiedFixtures: ActorMethod<[RequestFixturesDTO], Result_2>;
   getVerifiedPlayers: ActorMethod<[LeagueId, RequestPlayersDTO], Result_1>;
   loanPlayer: ActorMethod<[LeagueId, LoanPlayerDTO], Result>;
+  moveFixture: ActorMethod<[MoveFixtureDTO], Result>;
+  postponeFixture: ActorMethod<[PostponeFixtureDTO], Result>;
   promoteNewClub: ActorMethod<[LeagueId, PromoteNewClubDTO], Result>;
   retirePlayer: ActorMethod<[LeagueId, RetirePlayerDTO], Result>;
   revaluePlayerDown: ActorMethod<[LeagueId, RevaluePlayerDownDTO], Result>;

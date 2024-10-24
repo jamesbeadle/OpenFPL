@@ -116,7 +116,10 @@ export const idlFactory = ({ IDL }) => {
     primaryColourHex: IDL.Text,
   });
   const Result_3 = IDL.Variant({ ok: IDL.Vec(ClubDTO), err: Error });
-  const RequestFixturesDTO = IDL.Record({ seasonId: SeasonId });
+  const RequestFixturesDTO = IDL.Record({
+    seasonId: SeasonId,
+    leagueId: LeagueId,
+  });
   const FixtureStatusType = IDL.Variant({
     Unplayed: IDL.Null,
     Finalised: IDL.Null,
@@ -261,6 +264,18 @@ export const idlFactory = ({ IDL }) => {
     loanClubId: ClubId,
     loanLeagueId: LeagueId,
   });
+  const MoveFixtureDTO = IDL.Record({
+    fixtureId: FixtureId,
+    updatedFixtureGameweek: GameweekNumber,
+    updatedFixtureDate: IDL.Int,
+    seasonId: SeasonId,
+    leagueId: LeagueId,
+  });
+  const PostponeFixtureDTO = IDL.Record({
+    fixtureId: FixtureId,
+    seasonId: SeasonId,
+    leagueId: LeagueId,
+  });
   const PromoteNewClubDTO = IDL.Record({
     secondaryColourHex: IDL.Text,
     name: IDL.Text,
@@ -331,12 +346,6 @@ export const idlFactory = ({ IDL }) => {
   const AddInitialFixturesDTO = IDL.Record({
     seasonFixtures: IDL.Vec(FixtureDTO),
   });
-  const MoveFixtureDTO = IDL.Record({
-    fixtureId: FixtureId,
-    updatedFixtureGameweek: GameweekNumber,
-    updatedFixtureDate: IDL.Int,
-  });
-  const PostponeFixtureDTO = IDL.Record({ fixtureId: FixtureId });
   const RecallPlayerDTO = IDL.Record({ playerId: ClubId });
   const RescheduleFixtureDTO = IDL.Record({
     postponedFixtureId: FixtureId,
@@ -371,11 +380,7 @@ export const idlFactory = ({ IDL }) => {
     createPlayer: IDL.Func([LeagueId, CreatePlayerDTO], [Result], []),
     executeSubmitFixtureData: IDL.Func([SubmitFixtureDataDTO], [], []),
     getClubs: IDL.Func([LeagueId], [Result_3], ["query"]),
-    getFixtures: IDL.Func(
-      [LeagueId, RequestFixturesDTO],
-      [Result_2],
-      ["query"],
-    ),
+    getFixtures: IDL.Func([RequestFixturesDTO], [Result_2], ["query"]),
     getLeagues: IDL.Func([], [Result_8], ["query"]),
     getLoanedPlayers: IDL.Func(
       [LeagueId, ClubFilterDTO],
@@ -410,13 +415,11 @@ export const idlFactory = ({ IDL }) => {
     ),
     getSeasons: IDL.Func([LeagueId], [Result_4], ["query"]),
     getVerifiedClubs: IDL.Func([LeagueId], [Result_3], []),
-    getVerifiedFixtures: IDL.Func(
-      [LeagueId, RequestFixturesDTO],
-      [Result_2],
-      [],
-    ),
+    getVerifiedFixtures: IDL.Func([RequestFixturesDTO], [Result_2], []),
     getVerifiedPlayers: IDL.Func([LeagueId, RequestPlayersDTO], [Result_1], []),
     loanPlayer: IDL.Func([LeagueId, LoanPlayerDTO], [Result], []),
+    moveFixture: IDL.Func([MoveFixtureDTO], [Result], []),
+    postponeFixture: IDL.Func([PostponeFixtureDTO], [Result], []),
     promoteNewClub: IDL.Func([LeagueId, PromoteNewClubDTO], [Result], []),
     retirePlayer: IDL.Func([LeagueId, RetirePlayerDTO], [Result], []),
     revaluePlayerDown: IDL.Func([LeagueId, RevaluePlayerDownDTO], [Result], []),

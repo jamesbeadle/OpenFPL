@@ -353,6 +353,7 @@ export interface ProfileDTO {
 }
 export interface RequestFixturesDTO {
   seasonId: SeasonId;
+  leagueId: LeagueId;
 }
 export interface RequestManagerDTO {
   month: CalendarMonth;

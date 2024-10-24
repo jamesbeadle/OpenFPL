@@ -30,12 +30,16 @@ module GovernanceDTOs {
   };
 
   public type MoveFixtureDTO = {
+    leagueId: FootballTypes.LeagueId;
+    seasonId: FootballTypes.SeasonId;
     fixtureId : FootballTypes.FixtureId;
     updatedFixtureGameweek : FootballTypes.GameweekNumber;
     updatedFixtureDate : Int;
   };
 
   public type PostponeFixtureDTO = {
+    leagueId: FootballTypes.LeagueId;
+    seasonId: FootballTypes.SeasonId;
     fixtureId : FootballTypes.FixtureId;
   };
 

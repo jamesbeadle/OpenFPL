@@ -119,7 +119,11 @@ export const idlFactory = ({ IDL }) => {
     'ok' : FantasyTeamSnapshotDTO,
     'err' : Error,
   });
-  const RequestFixturesDTO = IDL.Record({ 'seasonId' : SeasonId });
+  const LeagueId = IDL.Nat16;
+  const RequestFixturesDTO = IDL.Record({
+    'seasonId' : SeasonId,
+    'leagueId' : LeagueId,
+  });
   const FixtureStatusType = IDL.Variant({
     'Unplayed' : IDL.Null,
     'Finalised' : IDL.Null,
@@ -163,7 +167,6 @@ export const idlFactory = ({ IDL }) => {
     'awayGoals' : IDL.Nat8,
   });
   const Result_11 = IDL.Variant({ 'ok' : IDL.Vec(FixtureDTO), 'err' : Error });
-  const LeagueId = IDL.Nat16;
   const ClubFilterDTO = IDL.Record({
     'clubId' : ClubId,
     'leagueId' : LeagueId,

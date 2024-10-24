@@ -3485,7 +3485,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1upyst2"
+  version_hash: "sj910d"
 };
 async function get_hooks() {
   return {};
@@ -3816,7 +3816,11 @@ const idlFactory$1 = ({ IDL }) => {
     "ok": FantasyTeamSnapshotDTO,
     "err": Error2
   });
-  const RequestFixturesDTO = IDL.Record({ "seasonId": SeasonId });
+  const LeagueId = IDL.Nat16;
+  const RequestFixturesDTO = IDL.Record({
+    "seasonId": SeasonId,
+    "leagueId": LeagueId
+  });
   const FixtureStatusType = IDL.Variant({
     "Unplayed": IDL.Null,
     "Finalised": IDL.Null,
@@ -3860,7 +3864,6 @@ const idlFactory$1 = ({ IDL }) => {
     "awayGoals": IDL.Nat8
   });
   const Result_11 = IDL.Variant({ "ok": IDL.Vec(FixtureDTO), "err": Error2 });
-  const LeagueId = IDL.Nat16;
   const ClubFilterDTO = IDL.Record({
     "clubId": ClubId,
     "leagueId": LeagueId
@@ -4773,6 +4776,7 @@ class FixtureService {
   }
   async getFixtures(seasonId) {
     let dto = {
+      leagueId: 1,
       seasonId
     };
     const result = await this.actor.getFixtures(dto);
@@ -5248,7 +5252,11 @@ const idlFactory = ({ IDL }) => {
     "ok": FantasyTeamSnapshotDTO,
     "err": Error2
   });
-  const RequestFixturesDTO = IDL.Record({ "seasonId": SeasonId });
+  const LeagueId = IDL.Nat16;
+  const RequestFixturesDTO = IDL.Record({
+    "seasonId": SeasonId,
+    "leagueId": LeagueId
+  });
   const FixtureStatusType = IDL.Variant({
     "Unplayed": IDL.Null,
     "Finalised": IDL.Null,
@@ -5292,7 +5300,6 @@ const idlFactory = ({ IDL }) => {
     "awayGoals": IDL.Nat8
   });
   const Result_11 = IDL.Variant({ "ok": IDL.Vec(FixtureDTO), "err": Error2 });
-  const LeagueId = IDL.Nat16;
   const ClubFilterDTO = IDL.Record({
     "clubId": ClubId,
     "leagueId": LeagueId

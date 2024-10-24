@@ -22,6 +22,7 @@ export class FixtureService {
 
   async getFixtures(seasonId: number): Promise<FixtureDTO[]> {
     let dto: RequestFixturesDTO = {
+      leagueId: 2,
       seasonId: seasonId,
     };
     const result = await this.actor.getFixtures(dto);

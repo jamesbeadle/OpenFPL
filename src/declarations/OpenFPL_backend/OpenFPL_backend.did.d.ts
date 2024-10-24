@@ -340,7 +340,10 @@ export interface ProfileDTO {
   'profilePictureType' : string,
   'principalId' : string,
 }
-export interface RequestFixturesDTO { 'seasonId' : SeasonId }
+export interface RequestFixturesDTO {
+  'seasonId' : SeasonId,
+  'leagueId' : LeagueId,
+}
 export interface RequestManagerDTO {
   'month' : CalendarMonth,
   'clubId' : ClubId,

@@ -28,11 +28,11 @@ module {
       return await data_canister.getVerifiedClubs(leagueId);
     };
 
-    public func getVerifiedFixtures(leagueId: FootballTypes.LeagueId, dto: RequestDTOs.RequestFixturesDTO) : async Result.Result<[DTOs.FixtureDTO], T.Error> {
+    public func getVerifiedFixtures(dto: RequestDTOs.RequestFixturesDTO) : async Result.Result<[DTOs.FixtureDTO], T.Error> {
       let data_canister = actor (NetworkEnvVars.DATA_CANISTER_ID) : actor {
-        getVerifiedFixtures : (leagueId: FootballTypes.LeagueId, dto: RequestDTOs.RequestFixturesDTO) -> async Result.Result<[DTOs.FixtureDTO], T.Error>;
+        getVerifiedFixtures : (dto: RequestDTOs.RequestFixturesDTO) -> async Result.Result<[DTOs.FixtureDTO], T.Error>;
       };
-      return await data_canister.getVerifiedFixtures(leagueId, dto);
+      return await data_canister.getVerifiedFixtures(dto);
     };
 
     public func checkGameweekComplete(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber) : async Bool {

@@ -125,20 +125,20 @@ import Nat16 "mo:base/Nat16";
       };
     };
 
-    public shared ( {caller} ) func getVerifiedFixtures(leagueId: FootballTypes.LeagueId, dto: RequestDTOs.RequestFixturesDTO) : async Result.Result<[DTOs.FixtureDTO], T.Error>{
+    public shared ( {caller} ) func getVerifiedFixtures(dto: RequestDTOs.RequestFixturesDTO) : async Result.Result<[DTOs.FixtureDTO], T.Error>{
       assert callerAllowed(caller);
-      return getPrivateFixtures(leagueId, dto);
+      return getPrivateFixtures(dto);
     };
 
-    public shared query ( {caller} ) func getFixtures(leagueId: FootballTypes.LeagueId, dto: RequestDTOs.RequestFixturesDTO) : async Result.Result<[DTOs.FixtureDTO], T.Error>{
+    public shared query ( {caller} ) func getFixtures(dto: RequestDTOs.RequestFixturesDTO) : async Result.Result<[DTOs.FixtureDTO], T.Error>{
       assert callerAllowed(caller);
-      return getPrivateFixtures(leagueId, dto);
+      return getPrivateFixtures(dto);
     };
 
-    private func getPrivateFixtures(leagueId: FootballTypes.LeagueId, dto: RequestDTOs.RequestFixturesDTO) : Result.Result<[DTOs.FixtureDTO], T.Error> {
+    private func getPrivateFixtures(dto: RequestDTOs.RequestFixturesDTO) : Result.Result<[DTOs.FixtureDTO], T.Error> {
       let filteredLeagueSeasons = Array.find<(FootballTypes.LeagueId, [FootballTypes.Season])>(leagueSeasons, 
         func(leagueSeason: (FootballTypes.LeagueId, [FootballTypes.Season])) : Bool{
-            leagueSeason.0 == leagueId;
+            leagueSeason.0 == dto.leagueId;
       });
 
       switch(filteredLeagueSeasons){
@@ -1857,6 +1857,114 @@ import Nat16 "mo:base/Nat16";
         */
       return #err(#NotFound);
     };
+
+    //Move Fixture
+
+    public shared ({ caller }) func moveFixture(dto : GovernanceDTOs.MoveFixtureDTO) : async Result.Result<(), T.Error> {
+      assert callerAllowed(caller);
+
+      leagueSeasons := Array.map<(FootballTypes.LeagueId, [FootballTypes.Season]), (FootballTypes.LeagueId, [FootballTypes.Season])>(
+        leagueSeasons, 
+        func(leagueSeasonEntry: (FootballTypes.LeagueId, [FootballTypes.Season])){
+          if(leagueSeasonEntry.0 == dto.leagueId){
+            return (
+              leagueSeasonEntry.0, 
+              Array.map<FootballTypes.Season, FootballTypes.Season>(leagueSeasonEntry.1, func(season: FootballTypes.Season){
+                if(season.id == dto.seasonId){
+                  return {
+                    fixtures = List.map<FootballTypes.Fixture, FootballTypes.Fixture>(season.fixtures, func(fixture: FootballTypes.Fixture){
+                      if(fixture.id == dto.fixtureId){
+                        return {
+                          awayClubId = fixture.awayClubId;
+                          awayGoals = fixture.awayGoals;
+                          events = fixture.events;
+                          gameweek = dto.updatedFixtureGameweek;
+                          highestScoringPlayerId = fixture.highestScoringPlayerId;
+                          homeClubId = fixture.homeClubId;
+                          homeGoals = fixture.homeGoals;
+                          id = fixture.id;
+                          kickOff = dto.updatedFixtureDate;
+                          seasonId = fixture.seasonId;
+                          status = fixture.status;
+                        }
+                      } else {
+                        return fixture;
+                      };
+                    });
+                    id = season.id;
+                    name = season.name;
+                    postponedFixtures = season.postponedFixtures;
+                    year = season.year;
+                  }
+                } else {
+                  return season;
+                }
+              })
+            )
+          } else { return leagueSeasonEntry}
+        }
+      );
+      let _ = await updateDataHashes(dto.leagueId, "fixtures");
+      return #ok();
+    };
+
+    public shared ({ caller }) func postponeFixture(dto : GovernanceDTOs.PostponeFixtureDTO) : async Result.Result<(), T.Error> {
+      
+      assert callerAllowed(caller);
+
+      leagueSeasons := Array.map<(FootballTypes.LeagueId, [FootballTypes.Season]), (FootballTypes.LeagueId, [FootballTypes.Season])>(
+        leagueSeasons, 
+        func(leagueSeasonEntry: (FootballTypes.LeagueId, [FootballTypes.Season])){
+          if(leagueSeasonEntry.0 == dto.leagueId){
+            return (
+              leagueSeasonEntry.0, 
+              Array.map<FootballTypes.Season, FootballTypes.Season>(leagueSeasonEntry.1, func(season: FootballTypes.Season){
+                if(season.id == dto.seasonId){
+                  let foundFixture = List.find<FootballTypes.Fixture>(season.fixtures, func(fixture: FootballTypes.Fixture): Bool{
+                    fixture.id == dto.fixtureId
+                  });
+                  switch(foundFixture){
+                    case (?fixture){
+                      return {
+                        
+                        fixtures = List.filter<FootballTypes.Fixture>(season.fixtures, func(fixture: FootballTypes.Fixture){
+                          fixture.id != dto.fixtureId
+                        });
+                        id = season.id;
+                        name = season.name;
+                        postponedFixtures = List.append<FootballTypes.Fixture>(season.postponedFixtures, List.make<FootballTypes.Fixture>({
+                          awayClubId = fixture.awayClubId;
+                          awayGoals = fixture.awayGoals;
+                          events = fixture.events;
+                          gameweek = fixture.gameweek;
+                          highestScoringPlayerId = fixture.highestScoringPlayerId;
+                          homeClubId = fixture.homeClubId;
+                          homeGoals = fixture.homeGoals;
+                          id = fixture.id;
+                          kickOff = fixture.kickOff;
+                          seasonId = fixture.seasonId;
+                          status = fixture.status
+                        }));
+                        year = season.year;
+                      }
+                    };
+                    case (null){
+                      return season;
+                    }
+                  }
+                } else {
+                  return season;
+                }
+              })
+            )
+          } else { return leagueSeasonEntry}
+        }
+      );
+      let _ = await updateDataHashes(dto.leagueId, "fixtures");
+      return #ok();
+    };
+
+    //Postpone Fixture
 
     //Game Update Functions
 
