@@ -3023,14 +3023,14 @@ import Nat16 "mo:base/Nat16";
         if(leaguePlayersEntry.0 == 1){
           return (leaguePlayersEntry.0, Array.map<FootballTypes.Player, FootballTypes.Player>(leaguePlayersEntry.1, func(player: FootballTypes.Player){
 
-            if(player.id == 15 and player.lastName == "Nunes"){
+            if(player.id == 4 and player.lastName == "Broadhead"){
               return {
                 clubId = player.clubId;
                 currentLoanEndDate = player.currentLoanEndDate;
                 dateOfBirth = player.dateOfBirth;
                 firstName = player.firstName;
                 gender = player.gender;
-                id = 726;
+                id = 731;
                 injuryHistory = player.injuryHistory;
                 lastName = player.lastName;
                 latestInjuryEndDate = player.latestInjuryEndDate;
@@ -3049,14 +3049,14 @@ import Nat16 "mo:base/Nat16";
               }
             };
 
-            if(player.id == 16 and player.lastName == "Kadioğlu"){
+            if(player.id == 5 and player.lastName == "Fraser"){
               return {
                 clubId = player.clubId;
                 currentLoanEndDate = player.currentLoanEndDate;
                 dateOfBirth = player.dateOfBirth;
                 firstName = player.firstName;
                 gender = player.gender;
-                id = 727;
+                id = 732;
                 injuryHistory = player.injuryHistory;
                 lastName = player.lastName;
                 latestInjuryEndDate = player.latestInjuryEndDate;
@@ -3075,14 +3075,14 @@ import Nat16 "mo:base/Nat16";
               }
             };
 
-            if(player.id == 17 and player.lastName == "Gruda"){
+            if(player.id == 6 and player.lastName == "Irving"){
               return {
                 clubId = player.clubId;
                 currentLoanEndDate = player.currentLoanEndDate;
                 dateOfBirth = player.dateOfBirth;
                 firstName = player.firstName;
                 gender = player.gender;
-                id = 728;
+                id = 733;
                 injuryHistory = player.injuryHistory;
                 lastName = player.lastName;
                 latestInjuryEndDate = player.latestInjuryEndDate;
@@ -3101,16 +3101,16 @@ import Nat16 "mo:base/Nat16";
               }
             };
 
-            if(player.id == 18 and player.lastName == "O riley"){
+            if(player.id == 7 and player.lastName == "Ogbene"){
               return {
                 clubId = player.clubId;
                 currentLoanEndDate = player.currentLoanEndDate;
                 dateOfBirth = player.dateOfBirth;
                 firstName = player.firstName;
                 gender = player.gender;
-                id = 729;
+                id = 734;
                 injuryHistory = player.injuryHistory;
-                lastName = "O'Riley";
+                lastName = player.lastName;
                 latestInjuryEndDate = player.latestInjuryEndDate;
                 leagueId = player.leagueId;
                 nationality = player.nationality;
@@ -3127,14 +3127,144 @@ import Nat16 "mo:base/Nat16";
               }
             };
 
-            if(player.id == 19 and player.lastName == "Rutter"){
+            if(player.id == 8 and player.lastName == "Arrizabalaga"){
               return {
                 clubId = player.clubId;
                 currentLoanEndDate = player.currentLoanEndDate;
                 dateOfBirth = player.dateOfBirth;
                 firstName = player.firstName;
                 gender = player.gender;
-                id = 730;
+                id = 735;
+                injuryHistory = player.injuryHistory;
+                lastName = player.lastName;
+                latestInjuryEndDate = player.latestInjuryEndDate;
+                leagueId = player.leagueId;
+                nationality = player.nationality;
+                parentClubId = player.parentClubId;
+                parentLeagueId = player.parentLeagueId;
+                position = player.position;
+                retirementDate = player.retirementDate;
+                seasons = player.seasons;
+                shirtNumber = player.shirtNumber;
+                status = player.status;
+                transferHistory = player.transferHistory;
+                valueHistory = player.valueHistory;
+                valueQuarterMillions = player.valueQuarterMillions;
+              }
+            };
+
+            if(player.id == 9 and player.lastName == "Dennis"){
+              return {
+                clubId = player.clubId;
+                currentLoanEndDate = player.currentLoanEndDate;
+                dateOfBirth = player.dateOfBirth;
+                firstName = player.firstName;
+                gender = player.gender;
+                id = 736;
+                injuryHistory = player.injuryHistory;
+                lastName = player.lastName;
+                latestInjuryEndDate = player.latestInjuryEndDate;
+                leagueId = player.leagueId;
+                nationality = player.nationality;
+                parentClubId = player.parentClubId;
+                parentLeagueId = player.parentLeagueId;
+                position = player.position;
+                retirementDate = player.retirementDate;
+                seasons = player.seasons;
+                shirtNumber = player.shirtNumber;
+                status = player.status;
+                transferHistory = player.transferHistory;
+                valueHistory = player.valueHistory;
+                valueQuarterMillions = player.valueQuarterMillions;
+              }
+            };
+
+            if(player.id == 10 and player.lastName == "Bevan"){
+              return {
+                clubId = player.clubId;
+                currentLoanEndDate = player.currentLoanEndDate;
+                dateOfBirth = player.dateOfBirth;
+                firstName = player.firstName;
+                gender = player.gender;
+                id = 738;
+                injuryHistory = player.injuryHistory;
+                lastName = player.lastName;
+                latestInjuryEndDate = player.latestInjuryEndDate;
+                leagueId = player.leagueId;
+                nationality = player.nationality;
+                parentClubId = player.parentClubId;
+                parentLeagueId = player.parentLeagueId;
+                position = player.position;
+                retirementDate = player.retirementDate;
+                seasons = player.seasons;
+                shirtNumber = player.shirtNumber;
+                status = player.status;
+                transferHistory = player.transferHistory;
+                valueHistory = player.valueHistory;
+                valueQuarterMillions = player.valueQuarterMillions;
+              }
+            };
+
+            if(player.id == 11 and player.lastName == "Evanilson"){
+              return {
+                clubId = player.clubId;
+                currentLoanEndDate = player.currentLoanEndDate;
+                dateOfBirth = player.dateOfBirth;
+                firstName = player.firstName;
+                gender = player.gender;
+                id = 739;
+                injuryHistory = player.injuryHistory;
+                lastName = player.lastName;
+                latestInjuryEndDate = player.latestInjuryEndDate;
+                leagueId = player.leagueId;
+                nationality = player.nationality;
+                parentClubId = player.parentClubId;
+                parentLeagueId = player.parentLeagueId;
+                position = player.position;
+                retirementDate = player.retirementDate;
+                seasons = player.seasons;
+                shirtNumber = player.shirtNumber;
+                status = player.status;
+                transferHistory = player.transferHistory;
+                valueHistory = player.valueHistory;
+                valueQuarterMillions = player.valueQuarterMillions;
+              }
+            };
+
+            if(player.id == 13 and player.lastName == "Winterbottom"){
+              return {
+                clubId = player.clubId;
+                currentLoanEndDate = player.currentLoanEndDate;
+                dateOfBirth = player.dateOfBirth;
+                firstName = player.firstName;
+                gender = player.gender;
+                id = 740;
+                injuryHistory = player.injuryHistory;
+                lastName = player.lastName;
+                latestInjuryEndDate = player.latestInjuryEndDate;
+                leagueId = player.leagueId;
+                nationality = player.nationality;
+                parentClubId = player.parentClubId;
+                parentLeagueId = player.parentLeagueId;
+                position = player.position;
+                retirementDate = player.retirementDate;
+                seasons = player.seasons;
+                shirtNumber = player.shirtNumber;
+                status = player.status;
+                transferHistory = player.transferHistory;
+                valueHistory = player.valueHistory;
+                valueQuarterMillions = player.valueQuarterMillions;
+              }
+            };
+
+            if(player.id == 14 and player.lastName == "Van Den Berg"){
+              return {
+                clubId = player.clubId;
+                currentLoanEndDate = player.currentLoanEndDate;
+                dateOfBirth = player.dateOfBirth;
+                firstName = player.firstName;
+                gender = player.gender;
+                id = 741;
                 injuryHistory = player.injuryHistory;
                 lastName = player.lastName;
                 latestInjuryEndDate = player.latestInjuryEndDate;
@@ -3159,7 +3289,7 @@ import Nat16 "mo:base/Nat16";
           return leaguePlayersEntry;
         }
       });
-      nextPlayerId := 731;
+      nextPlayerId := 742;
     };
 
     public shared ({ caller }) func setupData() : async Result.Result<(), T.Error> {
