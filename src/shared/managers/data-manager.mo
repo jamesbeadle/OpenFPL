@@ -14,11 +14,11 @@ module {
 
     //verified getters
 
-    public func getVerifiedPlayers(leagueId: FootballTypes.LeagueId, dto: RequestDTOs.RequestPlayersDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
+    public func getVerifiedPlayers(leagueId: FootballTypes.LeagueId) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
       let data_canister = actor (NetworkEnvVars.DATA_CANISTER_ID) : actor {
-        getVerifiedPlayers : (leagueId: FootballTypes.LeagueId, dto: RequestDTOs.RequestPlayersDTO) -> async Result.Result<[DTOs.PlayerDTO], T.Error>;
+        getVerifiedPlayers : (leagueId: FootballTypes.LeagueId) -> async Result.Result<[DTOs.PlayerDTO], T.Error>;
       };
-      return await data_canister.getVerifiedPlayers(leagueId, dto);
+      return await data_canister.getVerifiedPlayers(leagueId);
     };
 
     public func getVerifiedClubs(leagueId: FootballTypes.LeagueId) : async Result.Result<[DTOs.ClubDTO], T.Error>{

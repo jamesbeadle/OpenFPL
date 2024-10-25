@@ -276,7 +276,7 @@
       switch(systemStateResult){
         case (#ok systemState){       
           assert not systemState.onHold;
-          let playersResult = await dataManager.getVerifiedPlayers(Environment.LEAGUE_ID, { seasonId = systemState.pickTeamSeasonId });
+          let playersResult = await dataManager.getVerifiedPlayers(Environment.LEAGUE_ID);
           switch(playersResult){
             case (#ok players){
               return await userManager.saveFantasyTeam(principalId, fantasyTeam, systemState, players);
@@ -379,7 +379,7 @@
       version = "2.0.0";
     };
     private stable var stable_data_hashes : [Base.DataHash] = [];
-    private stable var stable_player_snapshots : [(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [FootballTypes.Player])])] = [];
+    private stable var stable_player_snapshots : [(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])])] = [];
 
     //User Manager stable variables
     private stable var stable_manager_canister_ids : [(Base.PrincipalId, Base.CanisterId)] = [];
@@ -510,8 +510,18 @@
       let systemStateResult = await getSystemState();
       switch(systemStateResult){
         case (#ok systemState){
-          let _ = await userManager.snapshotFantasyTeams(Environment.LEAGUE_ID, systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
-          return #ok();
+
+          let playersResult = await dataManager.getVerifiedPlayers(Environment.LEAGUE_ID); 
+          switch(playersResult){
+            case (#ok players){
+              seasonManager.storePlayersSnapshot(systemState.pickTeamSeasonId, systemState.pickTeamGameweek, players);
+              let _ = await userManager.snapshotFantasyTeams(Environment.LEAGUE_ID, systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
+              return #ok();
+            };
+            case (#err error){
+              return #err(error);
+            }
+          };
         };  
         case (#err error){
           return #err(error);

@@ -2063,7 +2063,6 @@ actor class _ManagerCanister() {
 
   private func snapshotManagers(leagueId: FootballTypes.LeagueId, managerGroup: Int, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth) : async () {
     
-    //get the snapshot of the players from the controller canister canister
     let controller_backend_canister = actor (controllerPrincipalId) : actor {
         getPlayersSnapshot : shared query (dto: RequestDTOs.GetSnapshotPlayers) -> async [DTOs.PlayerDTO];
       };

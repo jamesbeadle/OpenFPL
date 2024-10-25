@@ -74,9 +74,7 @@ type SystemState =
 type SubmitFixtureDataDTO = 
  record {
    fixtureId: FixtureId;
-   gameweek: GameweekNumber;
    leagueId: LeagueId;
-   month: CalendarMonth;
    playerEventData: vec PlayerEventData;
    seasonId: SeasonId;
  };
@@ -169,7 +167,6 @@ type RescheduleFixtureDTO =
    updatedFixtureDate: int;
    updatedFixtureGameweek: GameweekNumber;
  };
-type RequestPlayersDTO = record {seasonId: SeasonId;};
 type RequestFixturesDTO = 
  record {
    leagueId: LeagueId;
@@ -446,7 +443,6 @@ service : {
   createLeague: (CreateLeagueDTO) -> (Result);
   createNewSeason: (SystemState) -> () oneway;
   createPlayer: (LeagueId, CreatePlayerDTO) -> (Result);
-  executeSubmitFixtureData: (SubmitFixtureDataDTO) -> ();
   getClubs: (LeagueId) -> (Result_3) query;
   getFixtures: (RequestFixturesDTO) -> (Result_2) query;
   getLeagues: () -> (Result_8) query;
@@ -461,7 +457,7 @@ service : {
   getSeasons: (LeagueId) -> (Result_4) query;
   getVerifiedClubs: (LeagueId) -> (Result_3);
   getVerifiedFixtures: (RequestFixturesDTO) -> (Result_2);
-  getVerifiedPlayers: (LeagueId, RequestPlayersDTO) -> (Result_1);
+  getVerifiedPlayers: (LeagueId) -> (Result_1);
   loanPlayer: (LeagueId, LoanPlayerDTO) -> (Result);
   moveFixture: (MoveFixtureDTO) -> (Result);
   postponeFixture: (PostponeFixtureDTO) -> (Result);
@@ -474,6 +470,7 @@ service : {
   setGameScore: (LeagueId, SeasonId, FixtureId) -> () oneway;
   setPlayerInjury: (LeagueId, SetPlayerInjuryDTO) -> (Result);
   setupData: () -> (Result);
+  submitFixtureData: (SubmitFixtureDataDTO) -> (Result);
   transferPlayer: (LeagueId, TransferPlayerDTO) -> (Result);
   unretirePlayer: (UnretirePlayerDTO) -> (Result);
   updateClub: (UpdateClubDTO__1) -> (Result);

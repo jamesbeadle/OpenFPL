@@ -330,6 +330,8 @@
     }
 
     try {
+      console.log("saving team")
+      console.log(team)
       await managerStore.saveFantasyTeam(
         team!,
         activeGameweek,

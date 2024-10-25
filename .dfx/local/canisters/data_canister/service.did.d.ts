@@ -238,9 +238,6 @@ export interface RequestFixturesDTO {
   seasonId: SeasonId;
   leagueId: LeagueId;
 }
-export interface RequestPlayersDTO {
-  seasonId: SeasonId;
-}
 export interface RescheduleFixtureDTO {
   postponedFixtureId: FixtureId;
   updatedFixtureGameweek: GameweekNumber;
@@ -283,9 +280,7 @@ export interface SetPlayerInjuryDTO {
 export type ShirtType = { Filled: null } | { Striped: null };
 export interface SubmitFixtureDataDTO {
   fixtureId: FixtureId;
-  month: CalendarMonth;
   seasonId: SeasonId;
-  gameweek: GameweekNumber;
   playerEventData: Array<PlayerEventData>;
   leagueId: LeagueId;
 }
@@ -371,7 +366,6 @@ export interface _SERVICE {
   createLeague: ActorMethod<[CreateLeagueDTO], Result>;
   createNewSeason: ActorMethod<[SystemState], undefined>;
   createPlayer: ActorMethod<[LeagueId, CreatePlayerDTO], Result>;
-  executeSubmitFixtureData: ActorMethod<[SubmitFixtureDataDTO], undefined>;
   getClubs: ActorMethod<[LeagueId], Result_3>;
   getFixtures: ActorMethod<[RequestFixturesDTO], Result_2>;
   getLeagues: ActorMethod<[], Result_8>;
@@ -388,7 +382,7 @@ export interface _SERVICE {
   getSeasons: ActorMethod<[LeagueId], Result_4>;
   getVerifiedClubs: ActorMethod<[LeagueId], Result_3>;
   getVerifiedFixtures: ActorMethod<[RequestFixturesDTO], Result_2>;
-  getVerifiedPlayers: ActorMethod<[LeagueId, RequestPlayersDTO], Result_1>;
+  getVerifiedPlayers: ActorMethod<[LeagueId], Result_1>;
   loanPlayer: ActorMethod<[LeagueId, LoanPlayerDTO], Result>;
   moveFixture: ActorMethod<[MoveFixtureDTO], Result>;
   postponeFixture: ActorMethod<[PostponeFixtureDTO], Result>;
@@ -404,6 +398,7 @@ export interface _SERVICE {
   setGameScore: ActorMethod<[LeagueId, SeasonId, FixtureId], undefined>;
   setPlayerInjury: ActorMethod<[LeagueId, SetPlayerInjuryDTO], Result>;
   setupData: ActorMethod<[], Result>;
+  submitFixtureData: ActorMethod<[SubmitFixtureDataDTO], Result>;
   transferPlayer: ActorMethod<[LeagueId, TransferPlayerDTO], Result>;
   unretirePlayer: ActorMethod<[UnretirePlayerDTO], Result>;
   updateClub: ActorMethod<[UpdateClubDTO__1], Result>;

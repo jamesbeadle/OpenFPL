@@ -1,8 +1,8 @@
-import T "types";
+import Base "./types/base_types";
 module ResponseDTOs {
 
   public type CanisterInfoDTO = {
-    canisterId: T.CanisterId;
+    canisterId: Base.CanisterId;
     cycles: Nat;
   };
 
@@ -16,16 +16,6 @@ module ResponseDTOs {
 
   public type LeaderboardCanistersDTO = {
     canisters: [CanisterInfoDTO];
-  };
-
-  public type AdminDashboardDTO = {
-    openFPLCanisterId: T.CanisterId;
-    openWSLCanisterId: T.CanisterId;
-    dataCanisterId: T.CanisterId;
-    openFPLBackendCycles: Nat;
-    openWSLBackendCycles: Nat;
-    dataCanisterCycles: Nat;
-    managerCanisters: [(T.CanisterId, Nat)];
   };
 
 };

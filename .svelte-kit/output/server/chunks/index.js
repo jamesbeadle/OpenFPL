@@ -3485,7 +3485,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "sj910d"
+  version_hash: "10bcmk6"
 };
 async function get_hooks() {
   return {};
@@ -4798,6 +4798,9 @@ function createFixtureStore() {
     if (fixtures.length == 0) {
       return;
     }
+    fixtures.sort((a, b) => {
+      return new Date(Number(a.kickOff) / 1e6).getTime() - new Date(Number(b.kickOff) / 1e6).getTime();
+    });
     const now = /* @__PURE__ */ new Date();
     return fixtures.find(
       (fixture) => new Date(Number(fixture.kickOff) / 1e6) > now

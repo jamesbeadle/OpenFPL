@@ -284,6 +284,7 @@ module {
     };
 
     public func snapshotFantasyTeams(leagueId: FootballTypes.LeagueId, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth) : async () {
+      
       for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
 
         let manager_canister = actor (canisterId) : actor {
@@ -888,20 +889,17 @@ module {
       let newTeamPlayers = Array.filter<DTOs.PlayerDTO>(
         players,
         func(player : DTOs.PlayerDTO) : Bool {
-          let playerId = player.id;
           let isPlayerIdInNewTeam = Array.find(
             updatedFantasyTeam.playerIds,
             func(id : Nat16) : Bool {
-              return id == playerId;
+              return id == player.id;
             },
           );
           return Option.isSome(isPlayerIdInNewTeam);
         },
       );
 
-     
-      let playerPositions = Array.map<DTOs.PlayerDTO, FootballTypes.PlayerPosition>(newTeamPlayers, func(player : DTOs.PlayerDTO) : FootballTypes.PlayerPosition { return player.position });
-      let playerCount = playerPositions.size();
+     let playerCount = newTeamPlayers.size();
 
       if (playerCount != 11) {
         return #err(#Not11Players);

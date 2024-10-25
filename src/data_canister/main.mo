@@ -22,6 +22,7 @@ import Nat16 "mo:base/Nat16";
   import GovernanceDTOs "../shared/dtos/governance_DTOs";
   import Utilities "../shared/utils/utilities";
   import RequestDTOs "../shared/dtos/request_DTOs";
+  import ResponseDTOs "../shared/dtos/response_DTOs";
   import Environment "environment";
   import Countries "../shared/Countries";
 
@@ -70,7 +71,7 @@ import Nat16 "mo:base/Nat16";
 
     private stable var nextLeagueId: FootballTypes.LeagueId = 10;
     private stable var nextClubId: FootballTypes.ClubId = 24;
-    private stable var nextPlayerId: FootballTypes.PlayerId = 725;
+    private stable var nextPlayerId: FootballTypes.PlayerId = 726;
 
     private stable var timers : [Base.TimerInfo] = [];
 
@@ -83,7 +84,7 @@ import Nat16 "mo:base/Nat16";
 
     //Verified Getters
 
-    public shared ( {caller} ) func getVerifiedPlayers(leagueId: FootballTypes.LeagueId, dto: RequestDTOs.RequestPlayersDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error>{
+    public shared ( {caller} ) func getVerifiedPlayers(leagueId: FootballTypes.LeagueId) : async Result.Result<[DTOs.PlayerDTO], T.Error>{
       assert callerAllowed(caller);
       return getPrivatePlayers(leagueId);
     };
@@ -213,9 +214,6 @@ import Nat16 "mo:base/Nat16";
         }
       };
     };
-
-
-    //getVerifiedPlayers
 
     //Getters
 
@@ -1463,7 +1461,7 @@ import Nat16 "mo:base/Nat16";
         case (?league){
       
           let newPlayer : FootballTypes.Player = {
-            id = nextPlayerId + 1;
+            id = nextPlayerId;
             leagueId = leagueId;
             clubId = dto.clubId;
             position = dto.position;
@@ -2162,20 +2160,34 @@ import Nat16 "mo:base/Nat16";
       });
     };
 
-    public shared ({ caller }) func executeSubmitFixtureData(dto : GovernanceDTOs.SubmitFixtureDataDTO) : async () {
+    public shared ({ caller }) func submitFixtureData(dto : GovernanceDTOs.SubmitFixtureDataDTO) : async Result.Result<(), T.Error>{
       assert callerAllowed(caller);
      
-      addEventsToFixture(dto.leagueId, dto.playerEventData, dto.seasonId, dto.fixtureId);
-      addEventsToPlayers(dto.leagueId, dto.playerEventData, dto.seasonId, dto.gameweek);
-      
       for(leagueApplication in Iter.fromArray(leagueApplications)){
         if(leagueApplication.0 == dto.leagueId){
-          let application_canister = actor (leagueApplication.1) : actor {
-            fixtureDataUpdated : (fixtureId: FootballTypes.FixtureId) -> async Result.Result<(), T.Error>;
+          
+          let backend_canister = actor (Environment.OPENFPL_BACKEND_CANISTER_ID) : actor {
+            getSystemState : shared query () -> async Result.Result<ResponseDTOs.SystemStateDTO, T.Error>;
           };
-          let _ = await application_canister.fixtureDataUpdated(dto.fixtureId);
+          let systemStateResult = await backend_canister.getSystemState();
+          switch(systemStateResult){
+            case (#ok systemState){
+              addEventsToFixture(dto.leagueId, dto.playerEventData, dto.seasonId, dto.fixtureId);
+              addEventsToPlayers(dto.leagueId, dto.playerEventData, dto.seasonId, systemState.calculationGameweek);
+              calculateHighestScoringFixturePlayer();
+              //TODO: Calculate highest scoring player
+              let application_canister = actor (leagueApplication.1) : actor {
+                fixtureDataUpdated : (fixtureId: FootballTypes.FixtureId) -> async Result.Result<(), T.Error>;
+              };
+              let _ = await application_canister.fixtureDataUpdated(dto.fixtureId);
+            };
+            case (#err error){
+              return #err(error)
+            }
+          };
         };
-      };
+      };        
+      return #ok();
     };
 
     //Game State Check Functions
@@ -2529,6 +2541,12 @@ import Nat16 "mo:base/Nat16";
           
         }
       };  
+    };
+
+    private func calculateHighestScoringFixturePlayer() {
+      //now events have been added to all the players in the fixture work out who the highest scoring player is
+        //set that in the fixture
+        //add the highest scoring event to the player for that event
     };
 
     private func updateLeaguePlayer(leagueId: FootballTypes.LeagueId, updatedPlayer: FootballTypes.Player){
@@ -3000,7 +3018,148 @@ import Nat16 "mo:base/Nat16";
     };
 
     private func fixData() : async (){
-      
+      leaguePlayers := Array.map<(FootballTypes.LeagueId, [FootballTypes.Player]), (FootballTypes.LeagueId, [FootballTypes.Player])>(leaguePlayers, 
+        func(leaguePlayersEntry: (FootballTypes.LeagueId, [FootballTypes.Player])){
+        if(leaguePlayersEntry.0 == 1){
+          return (leaguePlayersEntry.0, Array.map<FootballTypes.Player, FootballTypes.Player>(leaguePlayersEntry.1, func(player: FootballTypes.Player){
+
+            if(player.id == 15 and player.lastName == "Nunes"){
+              return {
+                clubId = player.clubId;
+                currentLoanEndDate = player.currentLoanEndDate;
+                dateOfBirth = player.dateOfBirth;
+                firstName = player.firstName;
+                gender = player.gender;
+                id = 726;
+                injuryHistory = player.injuryHistory;
+                lastName = player.lastName;
+                latestInjuryEndDate = player.latestInjuryEndDate;
+                leagueId = player.leagueId;
+                nationality = player.nationality;
+                parentClubId = player.parentClubId;
+                parentLeagueId = player.parentLeagueId;
+                position = player.position;
+                retirementDate = player.retirementDate;
+                seasons = player.seasons;
+                shirtNumber = player.shirtNumber;
+                status = player.status;
+                transferHistory = player.transferHistory;
+                valueHistory = player.valueHistory;
+                valueQuarterMillions = player.valueQuarterMillions;
+              }
+            };
+
+            if(player.id == 16 and player.lastName == "Kadioğlu"){
+              return {
+                clubId = player.clubId;
+                currentLoanEndDate = player.currentLoanEndDate;
+                dateOfBirth = player.dateOfBirth;
+                firstName = player.firstName;
+                gender = player.gender;
+                id = 727;
+                injuryHistory = player.injuryHistory;
+                lastName = player.lastName;
+                latestInjuryEndDate = player.latestInjuryEndDate;
+                leagueId = player.leagueId;
+                nationality = player.nationality;
+                parentClubId = player.parentClubId;
+                parentLeagueId = player.parentLeagueId;
+                position = player.position;
+                retirementDate = player.retirementDate;
+                seasons = player.seasons;
+                shirtNumber = player.shirtNumber;
+                status = player.status;
+                transferHistory = player.transferHistory;
+                valueHistory = player.valueHistory;
+                valueQuarterMillions = player.valueQuarterMillions;
+              }
+            };
+
+            if(player.id == 17 and player.lastName == "Gruda"){
+              return {
+                clubId = player.clubId;
+                currentLoanEndDate = player.currentLoanEndDate;
+                dateOfBirth = player.dateOfBirth;
+                firstName = player.firstName;
+                gender = player.gender;
+                id = 728;
+                injuryHistory = player.injuryHistory;
+                lastName = player.lastName;
+                latestInjuryEndDate = player.latestInjuryEndDate;
+                leagueId = player.leagueId;
+                nationality = player.nationality;
+                parentClubId = player.parentClubId;
+                parentLeagueId = player.parentLeagueId;
+                position = player.position;
+                retirementDate = player.retirementDate;
+                seasons = player.seasons;
+                shirtNumber = player.shirtNumber;
+                status = player.status;
+                transferHistory = player.transferHistory;
+                valueHistory = player.valueHistory;
+                valueQuarterMillions = player.valueQuarterMillions;
+              }
+            };
+
+            if(player.id == 18 and player.lastName == "O riley"){
+              return {
+                clubId = player.clubId;
+                currentLoanEndDate = player.currentLoanEndDate;
+                dateOfBirth = player.dateOfBirth;
+                firstName = player.firstName;
+                gender = player.gender;
+                id = 729;
+                injuryHistory = player.injuryHistory;
+                lastName = "O'Riley";
+                latestInjuryEndDate = player.latestInjuryEndDate;
+                leagueId = player.leagueId;
+                nationality = player.nationality;
+                parentClubId = player.parentClubId;
+                parentLeagueId = player.parentLeagueId;
+                position = player.position;
+                retirementDate = player.retirementDate;
+                seasons = player.seasons;
+                shirtNumber = player.shirtNumber;
+                status = player.status;
+                transferHistory = player.transferHistory;
+                valueHistory = player.valueHistory;
+                valueQuarterMillions = player.valueQuarterMillions;
+              }
+            };
+
+            if(player.id == 19 and player.lastName == "Rutter"){
+              return {
+                clubId = player.clubId;
+                currentLoanEndDate = player.currentLoanEndDate;
+                dateOfBirth = player.dateOfBirth;
+                firstName = player.firstName;
+                gender = player.gender;
+                id = 730;
+                injuryHistory = player.injuryHistory;
+                lastName = player.lastName;
+                latestInjuryEndDate = player.latestInjuryEndDate;
+                leagueId = player.leagueId;
+                nationality = player.nationality;
+                parentClubId = player.parentClubId;
+                parentLeagueId = player.parentLeagueId;
+                position = player.position;
+                retirementDate = player.retirementDate;
+                seasons = player.seasons;
+                shirtNumber = player.shirtNumber;
+                status = player.status;
+                transferHistory = player.transferHistory;
+                valueHistory = player.valueHistory;
+                valueQuarterMillions = player.valueQuarterMillions;
+              }
+            };
+
+            return player;
+          }))
+        } else {
+          return leaguePlayersEntry;
+        }
+      });
+      nextPlayerId := 731;
     };
 
     public shared ({ caller }) func setupData() : async Result.Result<(), T.Error> {

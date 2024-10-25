@@ -84,6 +84,7 @@
 
   async function loadSection2(): Promise<void> {
     try {
+      
       let nextFixture = await fixtureStore.getNextFixture();
       let nextFixtureId = nextFixture ? nextFixture.awayClubId : 0;
 

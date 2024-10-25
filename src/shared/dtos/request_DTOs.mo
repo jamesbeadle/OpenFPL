@@ -22,10 +22,6 @@ module RequestDTOs {
     principalId : Text;
   };
 
-  public type RequestPlayersDTO = {
-    seasonId: FootballTypes.SeasonId;
-  };
-
   public type GetSnapshotPlayers = {
     seasonId: FootballTypes.SeasonId;
     leagueId: FootballTypes.LeagueId;
@@ -57,21 +53,4 @@ module RequestDTOs {
     version: Text;
   };
 
-  public type SnapshotManagersDTO = {
-    leagueId: FootballTypes.LeagueId;
-    seasonId: FootballTypes.SeasonId;
-    gameweek: FootballTypes.GameweekNumber;
-  };
-
-  public type CalculateGameweekScoresDTO = {
-    leagueId: FootballTypes.LeagueId;
-    seasonId: FootballTypes.SeasonId;
-    gameweek: FootballTypes.GameweekNumber;
-  };
-
-  public type CalculateLeaderboardsDTO = {
-    leagueId: FootballTypes.LeagueId;
-    seasonId: FootballTypes.SeasonId;
-    gameweek: FootballTypes.GameweekNumber;
-  };
 };

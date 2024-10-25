@@ -125,7 +125,7 @@ class StoreManager {
       case "fixtures":
         systemStore.subscribe(async (systemState) => {
           const updatedFixtures = await this.fixtureService.getFixtures(
-            systemState?.calculationSeasonId ?? 0,
+            systemState?.pickTeamSeasonId ?? 0,
           );
           fixtureStore.setFixtures(updatedFixtures);
           localStorage.setItem(

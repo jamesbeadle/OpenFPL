@@ -19,8 +19,6 @@ module GovernanceDTOs {
   public type SubmitFixtureDataDTO = {
     seasonId: FootballTypes.SeasonId;
     leagueId: FootballTypes.LeagueId;
-    gameweek : FootballTypes.GameweekNumber;
-    month: Base.CalendarMonth;
     fixtureId : FootballTypes.FixtureId;
     playerEventData : [FootballTypes.PlayerEventData];
   };

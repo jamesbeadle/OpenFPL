@@ -18,6 +18,14 @@ function createFixtureStore() {
     if (fixtures.length == 0) {
       return;
     }
+
+    fixtures.sort((a, b) => {
+      return (
+        new Date(Number(a.kickOff) / 1000000).getTime() -
+        new Date(Number(b.kickOff) / 1000000).getTime()
+      );
+    });
+
     const now = new Date();
     return fixtures.find(
       (fixture) => new Date(Number(fixture.kickOff) / 1000000) > now,
