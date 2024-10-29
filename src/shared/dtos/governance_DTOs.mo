@@ -114,7 +114,7 @@ module GovernanceDTOs {
     shirtType : FootballTypes.ShirtType;
   };
 
-  public type PromoteNewClubDTO = {
+  public type PromoteClubDTO = {
     name : Text;
     friendlyName : Text;
     primaryColourHex : Text;
@@ -122,6 +122,11 @@ module GovernanceDTOs {
     thirdColourHex : Text;
     abbreviatedName : Text;
     shirtType : FootballTypes.ShirtType;
+  };
+
+  public type RelegateClubDTO = {
+    leagueId: FootballTypes.LeagueId;
+    clubId: FootballTypes.ClubId;
   };
   
   public type CreateLeagueDTO = {

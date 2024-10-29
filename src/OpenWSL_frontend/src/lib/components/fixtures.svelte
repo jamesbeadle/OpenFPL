@@ -21,7 +21,8 @@
     ({ fixture }) => fixture.gameweek === selectedGameweek
   );
 
-  $: groupedFixtures = filteredFixtures.reduce(
+  $: groupedFixtures = Object.entries(
+  filteredFixtures.reduce(
     (acc: { [key: string]: FixtureWithTeams[] }, fixtureWithTeams) => {
       const date = new Date(Number(fixtureWithTeams.fixture.kickOff) / 1000000);
       const dateFormatter = new Intl.DateTimeFormat("en-GB", {
@@ -39,7 +40,19 @@
       return acc;
     },
     {} as { [key: string]: FixtureWithTeams[] }
-  );
+  )
+).sort(([dateA], [dateB]) => {
+  const parsedDateA = new Date(dateA);
+  const parsedDateB = new Date(dateB);
+  return parsedDateA.getTime() - parsedDateB.getTime();
+}).reduce((acc, [date, fixtures]) => {
+  acc[date] = fixtures;
+  return acc;
+}, {} as { [key: string]: FixtureWithTeams[] });
+
+
+
+  
 
   onMount(async () => {
     try {

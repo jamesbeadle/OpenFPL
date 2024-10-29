@@ -348,7 +348,7 @@ module {
         };
         case (?foundCanisterId) {
           let manager_canister = actor (foundCanisterId) : actor {
-            getFantasyTeamSnapshot : (dto: DTOs.GetFantasyTeamSnapshotDTO) -> async ?DTOs.FantasyTeamSnapshotDTO;
+            getFantasyTeamSnapshot : (dto: DTOs.GetFantasyTeamSnapshotDTO) -> async ?T.FantasyTeamSnapshot;
           };
       
           let snapshot = await manager_canister.getFantasyTeamSnapshot(dto);
@@ -357,7 +357,50 @@ module {
               return #err(#NotFound);
             };
             case (?foundSnapshot) {
-              #ok(foundSnapshot);
+
+              var favouriteClubId: FootballTypes.ClubId = 0;
+              switch(foundSnapshot.favouriteClubId){
+                case (?foundFavouriteClubId){
+                  favouriteClubId := foundFavouriteClubId;
+                };
+                case (null){
+                }
+              };
+              #ok({
+                bankQuarterMillions = foundSnapshot.bankQuarterMillions;
+                braceBonusGameweek = foundSnapshot.braceBonusGameweek;
+                captainFantasticGameweek = foundSnapshot.captainFantasticGameweek;
+                captainFantasticPlayerId = foundSnapshot.captainFantasticPlayerId;
+                captainId = foundSnapshot.captainId;
+                favouriteClubId = favouriteClubId;
+                gameweek = foundSnapshot.gameweek;
+                goalGetterGameweek = foundSnapshot.goalGetterGameweek;
+                goalGetterPlayerId = foundSnapshot.goalGetterPlayerId;
+                hatTrickHeroGameweek = foundSnapshot.hatTrickHeroGameweek;
+                month = foundSnapshot.month;
+                monthlyBonusesAvailable = foundSnapshot.monthlyBonusesAvailable;
+                monthlyPoints = foundSnapshot.monthlyPoints;
+                noEntryGameweek = foundSnapshot.noEntryGameweek;
+                noEntryPlayerId = foundSnapshot.noEntryPlayerId;
+                oneNationCountryId = foundSnapshot.oneNationCountryId;
+                oneNationGameweek = foundSnapshot.oneNationGameweek;
+                passMasterGameweek = foundSnapshot.passMasterGameweek;
+                passMasterPlayerId = foundSnapshot.passMasterPlayerId;
+                playerIds = foundSnapshot.playerIds;
+                points = foundSnapshot.points;
+                principalId = foundSnapshot.principalId;
+                prospectsGameweek = foundSnapshot.prospectsGameweek;
+                safeHandsGameweek = foundSnapshot.safeHandsGameweek;
+                safeHandsPlayerId = foundSnapshot.safeHandsPlayerId;
+                seasonId = foundSnapshot.seasonId;
+                seasonPoints = foundSnapshot.seasonPoints;
+                teamBoostClubId = foundSnapshot.teamBoostClubId;
+                teamBoostGameweek = foundSnapshot.teamBoostGameweek;
+                teamValueQuarterMillions = foundSnapshot.teamValueQuarterMillions;
+                transferWindowGameweek = foundSnapshot.transferWindowGameweek;
+                transfersAvailable = foundSnapshot.transfersAvailable;
+                username = foundSnapshot.username
+              });
             };
           };
         };
@@ -628,16 +671,57 @@ module {
       switch(manager){
         case (null){ };
         case (?foundManager){
+
+          let goalGetterPlayed = updatedFantasyTeam.goalGetterGameweek == systemState.pickTeamGameweek;
+          let passMasterPlayed = updatedFantasyTeam.passMasterGameweek == systemState.pickTeamGameweek;
+          let noEntryPlayed = updatedFantasyTeam.noEntryGameweek == systemState.pickTeamGameweek;
+          let teamBoostPlayed = updatedFantasyTeam.teamBoostGameweek == systemState.pickTeamGameweek;
+          let safeHandsPlayed = updatedFantasyTeam.safeHandsGameweek == systemState.pickTeamGameweek;
+          let captainFantasticPlayed = updatedFantasyTeam.captainFantasticGameweek == systemState.pickTeamGameweek;
+          let prospectsPlayed = updatedFantasyTeam.prospectsGameweek == systemState.pickTeamGameweek;
+          let oneNationPlayed = updatedFantasyTeam.oneNationGameweek == systemState.pickTeamGameweek;
+          let braceBonusPlayed = updatedFantasyTeam.braceBonusGameweek == systemState.pickTeamGameweek;
+          let hatTrickHeroPlayed = updatedFantasyTeam.hatTrickHeroGameweek == systemState.pickTeamGameweek;
+
+          if(goalGetterPlayed and updatedFantasyTeam.goalGetterPlayerId == 0){
+            return true;
+          };
+
+          if(passMasterPlayed and updatedFantasyTeam.passMasterPlayerId == 0){
+            return true;
+          };
+
+          if(noEntryPlayed and updatedFantasyTeam.noEntryPlayerId == 0){
+            return true;
+          };
+
+          if(teamBoostPlayed and updatedFantasyTeam.teamBoostClubId == 0){
+            return true;
+          };
+
+          if(safeHandsPlayed and updatedFantasyTeam.safeHandsPlayerId == 0){
+            return true;
+          };
+
+          if(captainFantasticPlayed and updatedFantasyTeam.captainFantasticPlayerId == 0){
+            return true;
+          };
+
+          if(oneNationPlayed and updatedFantasyTeam.oneNationCountryId == 0){
+            return true;
+          };
+
+
           var bonusesPlayed: Int = 0;
 
-          if (updatedFantasyTeam.goalGetterGameweek == systemState.pickTeamGameweek and foundManager.goalGetterGameweek != systemState.pickTeamGameweek) {
+          if (goalGetterPlayed and foundManager.goalGetterGameweek != systemState.pickTeamGameweek) {
             bonusesPlayed += 1;
           };
-          if (updatedFantasyTeam.passMasterGameweek == systemState.pickTeamGameweek and foundManager.passMasterGameweek != systemState.pickTeamGameweek) {
+          if (passMasterPlayed and foundManager.passMasterGameweek != systemState.pickTeamGameweek) {
             bonusesPlayed += 1;
           };
           
-          if (updatedFantasyTeam.noEntryGameweek == systemState.pickTeamGameweek and foundManager.noEntryGameweek != systemState.pickTeamGameweek) {
+          if (noEntryPlayed and foundManager.noEntryGameweek != systemState.pickTeamGameweek) {
             let bonusPlayer = List.find<DTOs.PlayerDTO>(
               List.fromArray(players),
               func(player : DTOs.PlayerDTO) : Bool {
@@ -655,10 +739,10 @@ module {
             bonusesPlayed += 1;
           };
           
-          if (updatedFantasyTeam.teamBoostGameweek == systemState.pickTeamGameweek and foundManager.teamBoostGameweek != systemState.pickTeamGameweek) {
+          if (teamBoostPlayed and foundManager.teamBoostGameweek != systemState.pickTeamGameweek) {
             bonusesPlayed += 1;
           };
-          if (updatedFantasyTeam.safeHandsGameweek == systemState.pickTeamGameweek and foundManager.safeHandsGameweek != systemState.pickTeamGameweek) {
+          if (safeHandsPlayed and foundManager.safeHandsGameweek != systemState.pickTeamGameweek) {
             let bonusPlayer = List.find<DTOs.PlayerDTO>(
               List.fromArray(players),
               func(player : DTOs.PlayerDTO) : Bool {
@@ -673,19 +757,19 @@ module {
             };
             bonusesPlayed += 1;
           };
-          if (updatedFantasyTeam.captainFantasticGameweek == systemState.pickTeamGameweek and foundManager.captainFantasticGameweek != systemState.pickTeamGameweek) {
+          if (captainFantasticPlayed and foundManager.captainFantasticGameweek != systemState.pickTeamGameweek) {
             bonusesPlayed += 1;
           };
-          if (updatedFantasyTeam.oneNationGameweek == systemState.pickTeamGameweek and foundManager.oneNationGameweek != systemState.pickTeamGameweek) {
+          if (oneNationPlayed and foundManager.oneNationGameweek != systemState.pickTeamGameweek) {
             bonusesPlayed += 1;
           };
-          if (updatedFantasyTeam.prospectsGameweek == systemState.pickTeamGameweek and foundManager.prospectsGameweek != systemState.pickTeamGameweek) {
+          if (prospectsPlayed and foundManager.prospectsGameweek != systemState.pickTeamGameweek) {
             bonusesPlayed += 1;
           };
-          if (updatedFantasyTeam.braceBonusGameweek == systemState.pickTeamGameweek and foundManager.braceBonusGameweek != systemState.pickTeamGameweek) {
+          if (braceBonusPlayed and foundManager.braceBonusGameweek != systemState.pickTeamGameweek) {
             bonusesPlayed += 1;
           };
-          if (updatedFantasyTeam.hatTrickHeroGameweek == systemState.pickTeamGameweek and foundManager.hatTrickHeroGameweek != systemState.pickTeamGameweek) {
+          if (hatTrickHeroPlayed and foundManager.hatTrickHeroGameweek != systemState.pickTeamGameweek) {
             bonusesPlayed += 1;
           };
 

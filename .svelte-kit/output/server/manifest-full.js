@@ -7,10 +7,10 @@ function __memo(fn) {
 return {
 	appDir: "_app",
 	appPath: "_app",
-	assets: new Set([".DS_Store",".ic-assets.json",".well-known/ic-domains",".well-known/ii-alternative-origins","FPLCoin.png","ICPCoin.png","Manrope-Regular.woff2","adopt.png","adopt_filled.png","apple-touch-icon.png","background.jpg","board.png","brace-bonus.png","captain-fantastic.png","ckBTCCoin.png","ckETHCoin.png","discord.png","favicon.png","favicons/apple-touch-icon.png","favicons/browserconfig.xml","favicons/favicon-16x16.png","favicons/favicon-32x32.png","favicons/favicon.ico","favicons/icon-192x192.png","favicons/icon-512x512.png","favicons/mstile-150x150.png","favicons/safari-pinned-tab.svg","github.png","goal-getter.png","hat-trick-hero.png","manifest.webmanifest","meta-share.jpg","no-entry.png","one-nation.png","openchat.png","pass-master.png","pitch.png","poppins-regular-webfont.woff2","profile_placeholder.png","prospects.png","reject.png","reject_filled.png","safe-hands.png","team-boost.png","telegram.png","twitter.png"]),
+	assets: new Set([".DS_Store",".ic-assets.json",".well-known/ic-domains",".well-known/ii-alternative-origins","FPLCoin.png","ICPCoin.png","Manrope-Regular.woff2","adopt.png","adopt_filled.png","apple-touch-icon.png","background.jpg","board.png","brace-bonus.png","captain-fantastic.png","ckBTCCoin.png","ckETHCoin.png","discord.png","favicon.png","favicons/.DS_Store","favicons/apple-touch-icon.png","favicons/browserconfig.xml","favicons/favicon-16x16.png","favicons/favicon-32x32.png","favicons/favicon.ico","favicons/icon-192x192.png","favicons/icon-512x512.png","favicons/mstile-150x150.png","favicons/safari-pinned-tab.svg","github.png","goal-getter.png","hat-trick-hero.png","manifest.webmanifest","meta-share.jpg","no-entry.png","one-nation.png","openchat.png","pass-master.png","pitch.png","poppins-regular-webfont.woff2","profile_placeholder.png","prospects.png","reject.png","reject_filled.png","safe-hands.png","team-boost.png","twitter.png"]),
 	mimeTypes: {".json":"application/json",".png":"image/png",".woff2":"font/woff2",".jpg":"image/jpeg",".xml":"text/xml",".svg":"image/svg+xml",".webmanifest":"application/manifest+json"},
 	_: {
-		client: {"start":"_app/immutable/entry/start.yhhRHMEL.js","app":"_app/immutable/entry/app.BgqHW9JC.js","imports":["_app/immutable/entry/start.yhhRHMEL.js","_app/immutable/chunks/index.DvzIa2QR.js","_app/immutable/chunks/vendor.DE5Sqftm.js","_app/immutable/entry/app.BgqHW9JC.js","_app/immutable/chunks/index.DvzIa2QR.js","_app/immutable/chunks/vendor.DE5Sqftm.js"],"stylesheets":["_app/immutable/assets/index.BrcfK0HS.css","_app/immutable/assets/index.BrcfK0HS.css"],"fonts":[],"uses_env_dynamic_public":false},
+		client: {"start":"_app/immutable/entry/start.C_gTI46I.js","app":"_app/immutable/entry/app.D5XCa5_B.js","imports":["_app/immutable/entry/start.C_gTI46I.js","_app/immutable/chunks/index.DTt2ITp_.js","_app/immutable/chunks/vendor.Cp0fY2wr.js","_app/immutable/entry/app.D5XCa5_B.js","_app/immutable/chunks/index.DTt2ITp_.js","_app/immutable/chunks/vendor.Cp0fY2wr.js"],"stylesheets":["_app/immutable/assets/index.BBtGfIc5.css","_app/immutable/assets/index.BBtGfIc5.css"],"fonts":[],"uses_env_dynamic_public":false},
 		nodes: [
 			__memo(() => import('./nodes/0.js')),
 			__memo(() => import('./nodes/1.js')),
@@ -22,8 +22,7 @@ return {
 			__memo(() => import('./nodes/7.js')),
 			__memo(() => import('./nodes/8.js')),
 			__memo(() => import('./nodes/9.js')),
-			__memo(() => import('./nodes/10.js')),
-			__memo(() => import('./nodes/11.js'))
+			__memo(() => import('./nodes/10.js'))
 		],
 		routes: [
 			{
@@ -87,13 +86,6 @@ return {
 				pattern: /^\/terms\/?$/,
 				params: [],
 				page: { layouts: [0,], errors: [1,], leaf: 10 },
-				endpoint: null
-			},
-			{
-				id: "/whitepaper",
-				pattern: /^\/whitepaper\/?$/,
-				params: [],
-				page: { layouts: [0,], errors: [1,], leaf: 11 },
 				endpoint: null
 			}
 		],

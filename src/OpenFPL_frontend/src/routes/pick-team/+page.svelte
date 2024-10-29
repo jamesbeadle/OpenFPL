@@ -107,8 +107,6 @@
 
     bankBalance.set($fantasyTeam.bankQuarterMillions);
 
-    console.log($fantasyTeam)
-
     if($fantasyTeam.principalId == ""){
       bankBalance.set(1200);
       transfersAvailable.set(Infinity);
@@ -119,6 +117,8 @@
       transfersAvailable.set(Infinity);
     }
 
+    console.log($fantasyTeam)
+    
   }
 
 </script>

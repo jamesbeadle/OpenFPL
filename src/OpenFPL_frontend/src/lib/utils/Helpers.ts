@@ -1036,6 +1036,7 @@ export function calculatePlayerScore(
   const gameweekFixtures = fixtures
     ? fixtures.filter((fixture) => fixture.gameweek === gameweekData.gameweek)
     : [];
+
   const playerFixtures = gameweekFixtures.filter(
     (fixture) =>
       (fixture.homeClubId === gameweekData.player.clubId ||

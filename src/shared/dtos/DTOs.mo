@@ -150,16 +150,6 @@ module DTOs {
     shirtType : FootballTypes.ShirtType;
   };
 
-  public type PromoteNewClubDTO = {
-    name : Text;
-    friendlyName : Text;
-    primaryColourHex : Text;
-    secondaryColourHex : Text;
-    thirdColourHex : Text;
-    abbreviatedName : Text;
-    shirtType : FootballTypes.ShirtType;
-  };
-
   public type PlayerRatingsDTO = {
     players : [FootballTypes.Player];
     totalEntries : Nat16;

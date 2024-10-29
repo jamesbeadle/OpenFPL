@@ -35,7 +35,7 @@
 
   export let selectedGameweek = writable<number | null>(null);
   export let fantasyTeam = writable<FantasyTeamSnapshot | null>(null);
-  export let loadingGameweek: Writable<boolean>;
+  export let loadingGameweek = writable<boolean>(true);
 
   let isLoading = false;
   let showModal = false;
@@ -74,10 +74,12 @@
 
   async function updateGameweekPlayers() {
     try {
+
       if (!$fantasyTeam) {
         gameweekPlayers.set([]);
         return;
       }
+   
       let fetchedPlayers = await playerEventsStore.getGameweekPlayers(
         $fantasyTeam!,
         1, //TODO Set from dropdown

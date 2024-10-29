@@ -32,9 +32,6 @@
   });
 
   const getUniqueCountries = () => {
-    console.log("getting unique countries");
-    console.log($countryStore);
-    console.log($fantasyTeam);
 
     if (!$countryStore || !$fantasyTeam || !$fantasyTeam.playerIds) {
       return [];

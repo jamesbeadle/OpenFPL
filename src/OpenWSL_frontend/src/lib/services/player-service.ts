@@ -24,14 +24,14 @@ export class PlayerService {
   }
 
   async getLoanedPlayers(clubId: number): Promise<PlayerDTO[]> {
-    const dto: ClubFilterDTO = { leagueId: 1, clubId: clubId };
+    const dto: ClubFilterDTO = { leagueId: 2, clubId: clubId };
     const result = await this.actor.getLoanedPlayers(dto);
     if (isError(result)) throw new Error("Failed to fetch loaned players");
     return result.ok;
   }
 
   async getRetiredPlayers(clubId: number): Promise<PlayerDTO[]> {
-    const dto: ClubFilterDTO = { leagueId: 1, clubId: clubId };
+    const dto: ClubFilterDTO = { leagueId: 2, clubId: clubId };
     const result = await this.actor.getRetiredPlayers(dto);
     if (isError(result)) throw new Error("Failed to fetch retired players");
     return result.ok;

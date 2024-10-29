@@ -5,6 +5,7 @@
   import LocalSpinner from "$lib/components/local-spinner.svelte";
   import ManagerGameweeks from "$lib/components/manager/manager-gameweeks.svelte";
   import { userStore } from "$lib/stores/user-store";
+    import ProfileManagerGameweeks from "$lib/components/manager/profile-manager-gameweeks.svelte";
 
   let activeTab: string = "details";
   let isLoading = true;
@@ -21,9 +22,6 @@
   });
   function setActiveTab(tab: string): void {
     activeTab = tab;
-  }
-  function viewGameweekDetail() {
-
   }
 </script>
 
@@ -58,8 +56,7 @@
           <ProfileDetail />
         {/if}
         {#if activeTab === "gameweeks" && $userStore}
-          <ManagerGameweeks
-            {viewGameweekDetail}
+          <ProfileManagerGameweeks
             principalId={$userStore.principalId}
           />
         {/if}

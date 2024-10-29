@@ -83,7 +83,7 @@
     },
     {
       id: 8,
-      name: "oneNation",
+      name: "One Nation",
       image: "/one-nation.png",
       description:
         "Receive a X2 multiplier for players of a selected nationality.",

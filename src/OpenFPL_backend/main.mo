@@ -68,11 +68,14 @@
     };
 
     public shared func getManager(dto: RequestDTOs.RequestManagerDTO) : async Result.Result<DTOs.ManagerDTO, T.Error> {
+      
+      /*
       let weeklyLeaderboardEntry = await leaderboardManager.getWeeklyLeaderboardEntry(dto.managerId, dto.seasonId, dto.gameweek);
       let monthlyLeaderboardEntry = await leaderboardManager.getMonthlyLeaderboardEntry(dto.managerId, dto.seasonId, dto.month, dto.clubId);
       let seasonLeaderboardEntry = await leaderboardManager.getSeasonLeaderboardEntry(dto.managerId, dto.seasonId);
-
       return await userManager.getManager(dto, weeklyLeaderboardEntry, monthlyLeaderboardEntry, seasonLeaderboardEntry);
+      */
+      return await userManager.getManager(dto, null, null, null);
     };
 
     public shared func getFantasyTeamSnapshot(dto: DTOs.GetFantasyTeamSnapshotDTO) : async Result.Result<DTOs.FantasyTeamSnapshotDTO, T.Error> {
@@ -153,10 +156,11 @@
       return await data_canister.getPlayers(Environment.LEAGUE_ID);
     };
 
-    public shared composite query ( {caller} ) func getPlayersSnapshot(dto: RequestDTOs.GetSnapshotPlayers) : async [DTOs.PlayerDTO] {
+    public shared query ( {caller} ) func getPlayersSnapshot(dto: RequestDTOs.GetSnapshotPlayers) : async [DTOs.PlayerDTO] {
       assert isManagerCanister(Principal.toText(caller));
       return seasonManager.getPlayersSnapshot(dto);
     };
+
 
     public shared composite query func getLoanedPlayers(dto: DTOs.ClubFilterDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
       let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
@@ -181,7 +185,7 @@
       //return await dataManager.getPlayerDetailsForGameweek(Environment.LEAGUE_ID, dto); //Todo implement when figure out query function
     };
 
-    public shared composite query func getPlayersMap(dto: DTOs.GameweekFiltersDTO) : async Result.Result<[(Nat16, DTOs.PlayerScoreDTO)], T.Error> {
+    public shared func getPlayersMap(dto: DTOs.GameweekFiltersDTO) : async Result.Result<[(Nat16, DTOs.PlayerScoreDTO)], T.Error> {
       let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
         getPlayersMap : shared query (leagueId: FootballTypes.LeagueId, dto: DTOs.GameweekFiltersDTO) -> async Result.Result<[(Nat16, DTOs.PlayerScoreDTO)], T.Error>;
       };
@@ -189,7 +193,7 @@
       //return await dataManager.getPlayersMap(Environment.LEAGUE_ID, dto); //Todo implement when figure out query function
     };
 
-    public shared composite query func getPlayerDetails(dto: DTOs.GetPlayerDetailsDTO) : async Result.Result<DTOs.PlayerDetailDTO, T.Error> {
+    public shared func getPlayerDetails(dto: DTOs.GetPlayerDetailsDTO) : async Result.Result<DTOs.PlayerDetailDTO, T.Error> {
       let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
         getPlayerDetailsForGameweek : shared query (leagueId: FootballTypes.LeagueId, dto: DTOs.GetPlayerDetailsDTO) -> async Result.Result<DTOs.PlayerDetailDTO, T.Error>;
       };
@@ -473,7 +477,7 @@
       //set system state
       //await checkCanisterCycles(); 
       //await setSystemTimers();
-      await updateManagerCanisterWasms();
+      //await updateManagerCanisterWasms();
 
       await seasonManager.updateDataHash("clubs");
       await seasonManager.updateDataHash("fixtures");

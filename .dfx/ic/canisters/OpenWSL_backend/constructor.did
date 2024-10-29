@@ -631,12 +631,12 @@ service : {
   getManager: (RequestManagerDTO) -> (Result_1);
   getManagerCanisterIds: () -> (Result_16);
   getMonthlyLeaderboard: (GetMonthlyLeaderboardDTO) -> (Result_15);
-  getPlayerDetails: (GetPlayerDetailsDTO) -> (Result_14) composite_query;
+  getPlayerDetails: (GetPlayerDetailsDTO) -> (Result_14);
   getPlayerDetailsForGameweek: (GameweekFiltersDTO) ->
    (Result_13) composite_query;
   getPlayers: () -> (Result_3) composite_query;
-  getPlayersMap: (GameweekFiltersDTO) -> (Result_12) composite_query;
-  getPlayersSnapshot: (GetSnapshotPlayers) -> (vec PlayerDTO) composite_query;
+  getPlayersMap: (GameweekFiltersDTO) -> (Result_12);
+  getPlayersSnapshot: (GetSnapshotPlayers) -> (vec PlayerDTO) query;
   getPostponedFixtures: () -> (Result_11) composite_query;
   getProfile: () -> (Result_10);
   getRetiredPlayers: (ClubFilterDTO) -> (Result_3) composite_query;

@@ -15,8 +15,7 @@
   } from "$lib/utils/helpers";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import type { ClubDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import type { Principal } from "@dfinity/principal";
-
+  
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import FantasyPlayerDetailModal from "./fantasy-player-detail-modal.svelte";
     import LocalSpinner from "./local-spinner.svelte";
@@ -42,6 +41,7 @@
         { length: $systemStore?.calculationGameweek ?? 1 },
         (_, i) => i + 1
       );
+      selectedGameweek = $systemStore?.calculationGameweek ?? 1;
       let principal = $authStore?.identity?.getPrincipal().toText() ?? "";
       if(principal == ""){
         return;
@@ -188,7 +188,7 @@
         {#if gameweekData.length > 0}
           {#each gameweekData as playerGameweek}
             <button
-              class="flex items-center justify-between p-4 border-b border-gray-700 cursor-pointer lg:px-8 w-full"
+              class="flex justify-between p-4 border-b border-gray-700 cursor-pointer lg:px-8 w-full"
               on:click={() => showDetailModal(playerGameweek)}
             >
               <div class="w-2/12 xs:w-2/12">

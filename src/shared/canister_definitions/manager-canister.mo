@@ -1860,169 +1860,176 @@ actor class _ManagerCanister() {
     return List.fromArray(Buffer.toArray(teamHistoryBuffer));
   };
 
-  public shared ({ caller }) func calculateFantasyTeamScores(leagueId: FootballTypes.LeagueId, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth) : async Nat {
+  public shared ({ caller }) func calculateFantasyTeamScores(leagueId: FootballTypes.LeagueId, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth) : async () {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == controllerPrincipalId;
 
     let backend_canister = actor (controllerPrincipalId) : actor {
-      getPlayerPointsMap : (seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber) -> async [(FootballTypes.PlayerId, DTOs.PlayerScoreDTO)];
-      getPlayersSnapshot : shared query (dto: RequestDTOs.GetSnapshotPlayers) -> async [DTOs.PlayerDTO];
+      getPlayersMap : (dto: DTOs.GameweekFiltersDTO) -> async Result.Result<[(Nat16, DTOs.PlayerScoreDTO)], T.Error>;
+      getPlayersSnapshot : (dto: RequestDTOs.GetSnapshotPlayers) -> async [DTOs.PlayerDTO];
     };
 
-    let allPlayersList = await backend_canister.getPlayerPointsMap(seasonId, gameweek);
+    let allPlayersListResult = await backend_canister.getPlayersMap({ seasonId; gameweek} );
 
     let allPlayers : [DTOs.PlayerDTO] = await backend_canister.getPlayersSnapshot({gameweek; leagueId; seasonId});
     
     let playerIdTrie : TrieMap.TrieMap<FootballTypes.PlayerId, DTOs.PlayerScoreDTO> = TrieMap.TrieMap<FootballTypes.PlayerId, DTOs.PlayerScoreDTO>(Utilities.eqNat16, Utilities.hashNat16);
-    for (player in Iter.fromArray(allPlayersList)) {
-      playerIdTrie.put(player.0, player.1);
-    };
 
-    for (index in Iter.range(0, 11)) {
-      var managers : [T.Manager] = [];
-      switch (index) {
-        case 0 {
-          managers := managerGroup1;
+    switch(allPlayersListResult){
+      case (#ok allPlayersList){
+        
+        for (player in Iter.fromArray(allPlayersList)) {
+          playerIdTrie.put(player.0, player.1);
         };
-        case 1 {
-          managers := managerGroup2;
-        };
-        case 2 {
-          managers := managerGroup3;
-        };
-        case 3 {
-          managers := managerGroup4;
-        };
-        case 4 {
-          managers := managerGroup5;
-        };
-        case 5 {
-          managers := managerGroup6;
-        };
-        case 6 {
-          managers := managerGroup7;
-        };
-        case 7 {
-          managers := managerGroup8;
-        };
-        case 8 {
-          managers := managerGroup9;
-        };
-        case 9 {
-          managers := managerGroup10;
-        };
-        case 10 {
-          managers := managerGroup11;
-        };
-        case 11 {
-          managers := managerGroup12;
-        };
-        case _ {};
-      };
-      for (value in Iter.fromArray(managers)) {
 
-        let currentSeason = List.find<T.FantasyTeamSeason>(
-          value.history,
-          func(teamSeason : T.FantasyTeamSeason) : Bool {
-            return teamSeason.seasonId == seasonId;
-          },
-        );
+        for (index in Iter.range(0, 11)) {
+          var managers : [T.Manager] = [];
+          switch (index) {
+            case 0 {
+              managers := managerGroup1;
+            };
+            case 1 {
+              managers := managerGroup2;
+            };
+            case 2 {
+              managers := managerGroup3;
+            };
+            case 3 {
+              managers := managerGroup4;
+            };
+            case 4 {
+              managers := managerGroup5;
+            };
+            case 5 {
+              managers := managerGroup6;
+            };
+            case 6 {
+              managers := managerGroup7;
+            };
+            case 7 {
+              managers := managerGroup8;
+            };
+            case 8 {
+              managers := managerGroup9;
+            };
+            case 9 {
+              managers := managerGroup10;
+            };
+            case 10 {
+              managers := managerGroup11;
+            };
+            case 11 {
+              managers := managerGroup12;
+            };
+            case _ {};
+          };
+          for (value in Iter.fromArray(managers)) {
 
-        switch (currentSeason) {
-          case (null) {};
-          case (?foundSeason) {
-            let currentSnapshot = List.find<T.FantasyTeamSnapshot>(
-              foundSeason.gameweeks,
-              func(snapshot : T.FantasyTeamSnapshot) : Bool {
-                return snapshot.gameweek == gameweek;
+            let currentSeason = List.find<T.FantasyTeamSeason>(
+              value.history,
+              func(teamSeason : T.FantasyTeamSeason) : Bool {
+                return teamSeason.seasonId == seasonId;
               },
             );
-            switch (currentSnapshot) {
+
+            switch (currentSeason) {
               case (null) {};
-              case (?foundSnapshot) {
+              case (?foundSeason) {
+                let currentSnapshot = List.find<T.FantasyTeamSnapshot>(
+                  foundSeason.gameweeks,
+                  func(snapshot : T.FantasyTeamSnapshot) : Bool {
+                    return snapshot.gameweek == gameweek;
+                  },
+                );
+                switch (currentSnapshot) {
+                  case (null) {};
+                  case (?foundSnapshot) {
 
-                var totalTeamPoints : Int16 = 0;
-                for (playerId in Iter.fromArray(foundSnapshot.playerIds)) {
-                  let playerData = playerIdTrie.get(playerId);
-                  switch (playerData) {
-                    case (null) {};
-                    case (?player) {
+                    var totalTeamPoints : Int16 = 0;
+                    for (playerId in Iter.fromArray(foundSnapshot.playerIds)) {
+                      let playerData = playerIdTrie.get(playerId);
+                      switch (playerData) {
+                        case (null) {};
+                        case (?player) {
 
-                      var totalScore : Int16 = player.points;
+                          var totalScore : Int16 = player.points;
 
-                      // Goal Getter
-                      if (foundSnapshot.goalGetterGameweek == gameweek and foundSnapshot.goalGetterPlayerId == playerId) {
-                        totalScore += calculateGoalPoints(player.position, player.goalsScored);
+                          // Goal Getter
+                          if (foundSnapshot.goalGetterGameweek == gameweek and foundSnapshot.goalGetterPlayerId == playerId) {
+                            totalScore += calculateGoalPoints(player.position, player.goalsScored);
+                          };
+
+                          // Pass Master
+                          if (foundSnapshot.passMasterGameweek == gameweek and foundSnapshot.passMasterPlayerId == playerId) {
+                            totalScore += calculateAssistPoints(player.position, player.assists);
+                          };
+
+                          // No Entry
+                          if (foundSnapshot.noEntryGameweek == gameweek and (player.position == #Goalkeeper or player.position == #Defender) and player.goalsConceded == 0) {
+                            totalScore := totalScore * 3;
+                          };
+
+                          // Team Boost
+                          if (foundSnapshot.teamBoostGameweek == gameweek and player.clubId == foundSnapshot.teamBoostClubId) {
+                            totalScore := totalScore * 2;
+                          };
+
+                          // Safe Hands
+                          if (foundSnapshot.safeHandsGameweek == gameweek and player.position == #Goalkeeper and player.saves > 4) {
+                            totalScore := totalScore * 3;
+                          };
+
+                          // Captain Fantastic
+                          if (foundSnapshot.captainFantasticGameweek == gameweek and foundSnapshot.captainId == playerId and player.goalsScored > 0) {
+                            totalScore := totalScore * 2;
+                          };
+
+                          // oneNation
+                          if (foundSnapshot.oneNationGameweek == gameweek and foundSnapshot.oneNationCountryId == player.nationality) {
+                            totalScore := totalScore * 2;
+                          };
+
+                          // Prospects
+                          if (foundSnapshot.prospectsGameweek == gameweek and Utilities.calculateAgeFromUnix(player.dateOfBirth) < 21) {
+                            totalScore := totalScore * 2;
+                          };
+
+                          // Brace Bonus
+                          if (foundSnapshot.braceBonusGameweek == gameweek and player.goalsScored >= 2) {
+                            totalScore := totalScore * 2;
+                          };
+
+                          // Hat Trick Hero
+                          if (foundSnapshot.hatTrickHeroGameweek == gameweek and player.goalsScored >= 3) {
+                            totalScore := totalScore * 3;
+                          };
+
+                          // Handle captain bonus
+                          if (playerId == foundSnapshot.captainId) {
+                            totalScore := totalScore * 2;
+                          };
+
+                          totalTeamPoints += totalScore;
+                        };
                       };
-
-                      // Pass Master
-                      if (foundSnapshot.passMasterGameweek == gameweek and foundSnapshot.passMasterPlayerId == playerId) {
-                        totalScore += calculateAssistPoints(player.position, player.assists);
-                      };
-
-                      // No Entry
-                      if (foundSnapshot.noEntryGameweek == gameweek and (player.position == #Goalkeeper or player.position == #Defender) and player.goalsConceded == 0) {
-                        totalScore := totalScore * 3;
-                      };
-
-                      // Team Boost
-                      if (foundSnapshot.teamBoostGameweek == gameweek and player.clubId == foundSnapshot.teamBoostClubId) {
-                        totalScore := totalScore * 2;
-                      };
-
-                      // Safe Hands
-                      if (foundSnapshot.safeHandsGameweek == gameweek and player.position == #Goalkeeper and player.saves > 4) {
-                        totalScore := totalScore * 3;
-                      };
-
-                      // Captain Fantastic
-                      if (foundSnapshot.captainFantasticGameweek == gameweek and foundSnapshot.captainId == playerId and player.goalsScored > 0) {
-                        totalScore := totalScore * 2;
-                      };
-
-                      // oneNation
-                      if (foundSnapshot.oneNationGameweek == gameweek and foundSnapshot.oneNationCountryId == player.nationality) {
-                        totalScore := totalScore * 2;
-                      };
-
-                      // Prospects
-                      if (foundSnapshot.prospectsGameweek == gameweek and Utilities.calculateAgeFromUnix(player.dateOfBirth) < 21) {
-                        totalScore := totalScore * 2;
-                      };
-
-                      // Brace Bonus
-                      if (foundSnapshot.braceBonusGameweek == gameweek and player.goalsScored >= 2) {
-                        totalScore := totalScore * 2;
-                      };
-
-                      // Hat Trick Hero
-                      if (foundSnapshot.hatTrickHeroGameweek == gameweek and player.goalsScored >= 3) {
-                        totalScore := totalScore * 3;
-                      };
-
-                      // Handle captain bonus
-                      if (playerId == foundSnapshot.captainId) {
-                        totalScore := totalScore * 2;
-                      };
-
-                      totalTeamPoints += totalScore;
                     };
+
+                    let allPlayerValues = Array.map<DTOs.PlayerDTO, Nat16>(allPlayers, func(player : DTOs.PlayerDTO) : Nat16 { return player.valueQuarterMillions });
+
+                    let totalTeamValue = Array.foldLeft<Nat16, Nat16>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
+
+                    updateSnapshotPoints(value.principalId, seasonId, gameweek, month, totalTeamPoints, totalTeamValue);
                   };
                 };
-
-                let allPlayerValues = Array.map<DTOs.PlayerDTO, Nat16>(allPlayers, func(player : DTOs.PlayerDTO) : Nat16 { return player.valueQuarterMillions });
-
-                let totalTeamValue = Array.foldLeft<Nat16, Nat16>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
-
-                updateSnapshotPoints(value.principalId, seasonId, gameweek, month, totalTeamPoints, totalTeamValue);
               };
             };
           };
         };
+
       };
+      case (#err _){}
     };
-    return 0;
   };
 
   private func calculateGoalPoints(position : FootballTypes.PlayerPosition, goalsScored : Int16) : Int16 {
@@ -3454,6 +3461,7 @@ actor class _ManagerCanister() {
   };
 
   system func postupgrade() {
+    fixData();
     for (index in Iter.fromArray(stable_manager_group_indexes)) {
       managerGroupIndexes.put(index.0, index.1);
     };
@@ -3465,4 +3473,1156 @@ actor class _ManagerCanister() {
       };
     };
   };
+
+  private func fixData(){
+    let managerBuffer = Buffer.fromArray<T.Manager>([]);
+
+    var managers: [T.Manager] = [];
+
+    for (index in Iter.range(0, 11)) {
+     
+      switch (index) {
+        case 0 {
+          managers := managerGroup1;
+        };
+        case 1 {
+          managers := managerGroup2;
+        };
+        case 2 {
+          managers := managerGroup3;
+        };
+        case 3 {
+          managers := managerGroup4;
+        };
+        case 4 {
+          managers := managerGroup5;
+        };
+        case 5 {
+          managers := managerGroup6;
+        };
+        case 6 {
+          managers := managerGroup7;
+        };
+        case 7 {
+          managers := managerGroup8;
+        };
+        case 8 {
+          managers := managerGroup9;
+        };
+        case 9 {
+          managers := managerGroup10;
+        };
+        case 10 {
+          managers := managerGroup11;
+        };
+        case 11 {
+          managers := managerGroup12;
+        };
+        case _ {
+
+        };
+      };
+
+      for (manager in Iter.fromArray(managers)) {
+
+        //if any bonus has a played gameweek but selection is 0 set the played gameweek to 0
+        if(manager.teamBoostGameweek > 0 and manager.teamBoostClubId == 0){
+          managerBuffer.add({
+            bankQuarterMillions = manager.bankQuarterMillions;
+            braceBonusGameweek = manager.braceBonusGameweek;
+            canisterId = manager.canisterId;
+            captainFantasticGameweek = manager.captainFantasticGameweek;
+            captainFantasticPlayerId = manager.captainFantasticPlayerId;
+            captainId = manager.captainId;
+            createDate = manager.createDate;
+            favouriteClubId = manager.favouriteClubId;
+            goalGetterGameweek = manager.goalGetterGameweek;
+            goalGetterPlayerId = manager.goalGetterPlayerId;
+            hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
+            history = List.map<T.FantasyTeamSeason, T.FantasyTeamSeason>(manager.history, func(season: T.FantasyTeamSeason){
+              if(season.seasonId == 1){
+                return {
+                  gameweeks = List.map<T.FantasyTeamSnapshot, T.FantasyTeamSnapshot>(season.gameweeks, func(gameweek: T.FantasyTeamSnapshot){
+                    return {
+                      bankQuarterMillions = gameweek.bankQuarterMillions;
+                      braceBonusGameweek = gameweek.braceBonusGameweek;
+                      captainFantasticGameweek = gameweek.captainFantasticGameweek;
+                      captainFantasticPlayerId = gameweek.captainFantasticPlayerId;
+                      captainId = gameweek.captainId;
+                      favouriteClubId = gameweek.favouriteClubId;
+                      gameweek = gameweek.gameweek;
+                      goalGetterGameweek = gameweek.goalGetterGameweek;
+                      goalGetterPlayerId = gameweek.goalGetterPlayerId;
+                      hatTrickHeroGameweek = gameweek.hatTrickHeroGameweek;
+                      month = gameweek.month;
+                      monthlyBonusesAvailable = gameweek.monthlyBonusesAvailable;
+                      monthlyPoints = gameweek.monthlyPoints;
+                      noEntryGameweek = gameweek.noEntryGameweek;
+                      noEntryPlayerId = gameweek.noEntryPlayerId;
+                      oneNationCountryId = gameweek.oneNationCountryId;
+                      oneNationGameweek = gameweek.oneNationGameweek;
+                      passMasterGameweek = gameweek.passMasterGameweek;
+                      passMasterPlayerId = gameweek.passMasterPlayerId;
+                      playerIds = gameweek.playerIds;
+                      points = gameweek.points;
+                      principalId = gameweek.principalId;
+                      prospectsGameweek = gameweek.prospectsGameweek;
+                      safeHandsGameweek = gameweek.safeHandsGameweek;
+                      safeHandsPlayerId = gameweek.safeHandsPlayerId;
+                      seasonId = gameweek.seasonId;
+                      seasonPoints = gameweek.seasonPoints;
+                      teamBoostClubId = 0;
+                      teamBoostGameweek = 0;
+                      teamValueQuarterMillions = gameweek.teamValueQuarterMillions;
+                      transferWindowGameweek = gameweek.transferWindowGameweek;
+                      transfersAvailable = gameweek.transfersAvailable;
+                      username = gameweek.username;
+                    }
+                  });
+                  seasonId = season.seasonId;
+                  totalPoints = season.totalPoints;
+                }
+              } else {return season};
+            });
+            monthlyBonusesAvailable = manager.monthlyBonusesAvailable;
+            noEntryGameweek = manager.noEntryGameweek;
+            noEntryPlayerId = manager.noEntryPlayerId;
+            oneNationCountryId = manager.oneNationCountryId;
+            oneNationGameweek = manager.oneNationGameweek;
+            passMasterGameweek = manager.passMasterGameweek;
+            passMasterPlayerId = manager.passMasterPlayerId;
+            playerIds = manager.playerIds;
+            principalId = manager.principalId;
+            profilePicture = manager.profilePicture;
+            profilePictureType = manager.profilePictureType;
+            prospectsGameweek = manager.prospectsGameweek;
+            safeHandsGameweek = manager.safeHandsGameweek;
+            safeHandsPlayerId = manager.safeHandsPlayerId;
+            teamBoostClubId = 0;
+            teamBoostGameweek = 0;
+            termsAccepted = manager.termsAccepted;
+            transferWindowGameweek = manager.transferWindowGameweek;
+            transfersAvailable = manager.transfersAvailable;
+            username = manager.username;
+          });
+        } else{
+          managerBuffer.add(manager);
+        }
+      };
+
+      switch (index) {
+        case 0 {
+          managerGroup1 := Buffer.toArray(managerBuffer);
+        };
+        case 1 {
+          managerGroup2 := Buffer.toArray(managerBuffer);
+        };
+        case 2 {
+          managerGroup3 := Buffer.toArray(managerBuffer);
+        };
+        case 3 {
+          managerGroup4 := Buffer.toArray(managerBuffer);
+        };
+        case 4 {
+          managerGroup5 := Buffer.toArray(managerBuffer);
+        };
+        case 5 {
+          managerGroup6 := Buffer.toArray(managerBuffer);
+        };
+        case 6 {
+          managerGroup7 := Buffer.toArray(managerBuffer);
+        };
+        case 7 {
+          managerGroup8 := Buffer.toArray(managerBuffer);
+        };
+        case 8 {
+          managerGroup9 := Buffer.toArray(managerBuffer);
+        };
+        case 9 {
+          managerGroup10 := Buffer.toArray(managerBuffer);
+        };
+        case 10 {
+          managerGroup11 := Buffer.toArray(managerBuffer);
+        };
+        case 11 {
+          managerGroup12 := Buffer.toArray(managerBuffer);
+        };
+        case _ {
+
+        };
+      };
+
+    };
+  };
+
+  private func adjustData(){
+    for (index in Iter.range(0, 11)) {
+
+      switch (index) {
+        case 0 {
+          managerGroup1 := Array.map<T.Manager, T.Manager>(managerGroup1, func(manager: T.Manager){
+            return {
+              bankQuarterMillions = manager.bankQuarterMillions;
+              braceBonusGameweek = manager.braceBonusGameweek;
+              canisterId = manager.canisterId;
+              captainFantasticGameweek = manager.captainFantasticGameweek;
+              captainFantasticPlayerId = manager.captainFantasticPlayerId;
+              captainId  = manager.captainId;
+              createDate = manager.createDate;
+              favouriteClubId = manager.favouriteClubId;
+              goalGetterGameweek = manager.goalGetterGameweek;
+              goalGetterPlayerId = manager.goalGetterPlayerId;
+              hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
+              history = List.map<T.FantasyTeamSeason, T.FantasyTeamSeason>(manager.history, func(season: T.FantasyTeamSeason){
+                return {
+                  gameweeks = List.map<T.FantasyTeamSnapshot, T.FantasyTeamSnapshot>(season.gameweeks, func(gameweekSnapshot: T.FantasyTeamSnapshot){
+                    return {
+                      bankQuarterMillions = gameweekSnapshot.bankQuarterMillions;
+                      braceBonusGameweek = gameweekSnapshot.braceBonusGameweek;
+                      captainFantasticGameweek = gameweekSnapshot.captainFantasticGameweek;
+                      captainFantasticPlayerId = gameweekSnapshot.captainFantasticPlayerId;
+                      captainId = gameweekSnapshot.captainId;
+                      favouriteClubId = gameweekSnapshot.favouriteClubId;
+                      gameweek = gameweekSnapshot.gameweek;
+                      goalGetterGameweek = gameweekSnapshot.goalGetterGameweek;
+                      goalGetterPlayerId = gameweekSnapshot.goalGetterPlayerId;
+                      hatTrickHeroGameweek = gameweekSnapshot.hatTrickHeroGameweek;
+                      month = gameweekSnapshot.month;
+                      monthlyBonusesAvailable = gameweekSnapshot.monthlyBonusesAvailable;
+                      monthlyPoints = gameweekSnapshot.monthlyPoints;
+                      noEntryGameweek = gameweekSnapshot.noEntryGameweek;
+                      noEntryPlayerId = gameweekSnapshot.noEntryPlayerId;
+                      oneNationCountryId = gameweekSnapshot.oneNationCountryId;
+                      oneNationGameweek = gameweekSnapshot.oneNationGameweek;
+                      passMasterGameweek = gameweekSnapshot.passMasterGameweek;
+                      passMasterPlayerId = gameweekSnapshot.passMasterPlayerId;
+                      playerIds = gameweekSnapshot.playerIds;
+                      points = 0;
+                      principalId = gameweekSnapshot.principalId;
+                      prospectsGameweek = gameweekSnapshot.prospectsGameweek;
+                      safeHandsGameweek = gameweekSnapshot.safeHandsGameweek;
+                      safeHandsPlayerId = gameweekSnapshot.safeHandsPlayerId;
+                      seasonId = gameweekSnapshot.seasonId;
+                      seasonPoints = gameweekSnapshot.seasonPoints;
+                      teamBoostClubId = gameweekSnapshot.teamBoostClubId;
+                      teamBoostGameweek = gameweekSnapshot.teamBoostGameweek;
+                      teamValueQuarterMillions = gameweekSnapshot.teamValueQuarterMillions;
+                      transferWindowGameweek = gameweekSnapshot.transferWindowGameweek;
+                      transfersAvailable = gameweekSnapshot.transfersAvailable;
+                      username = gameweekSnapshot.username;
+                    }
+                  });
+                  seasonId = season.seasonId;
+                  totalPoints = 0;
+                }
+              });
+              monthlyBonusesAvailable  = manager.monthlyBonusesAvailable;
+              noEntryGameweek  = manager.noEntryGameweek;
+              noEntryPlayerId  = manager.noEntryPlayerId;
+              oneNationCountryId  = manager.oneNationCountryId;
+              oneNationGameweek  = manager.oneNationGameweek;
+              passMasterGameweek  = manager.passMasterGameweek;
+              passMasterPlayerId  = manager.passMasterPlayerId;
+              playerIds  = manager.playerIds;
+              principalId  = manager.principalId;
+              profilePicture  = manager.profilePicture;
+              profilePictureType  = manager.profilePictureType;
+              prospectsGameweek  = manager.prospectsGameweek;
+              safeHandsGameweek  = manager.safeHandsGameweek;
+              safeHandsPlayerId = manager.safeHandsPlayerId;
+              teamBoostClubId = manager.teamBoostClubId;
+              teamBoostGameweek = manager.teamBoostGameweek;
+              termsAccepted = manager.termsAccepted;
+              transferWindowGameweek = manager.transferWindowGameweek;
+              transfersAvailable = manager.transfersAvailable;
+              username = manager.username;
+            }
+          });
+        };
+        case 1 {
+          managerGroup2 := Array.map<T.Manager, T.Manager>(managerGroup2, func(manager: T.Manager){
+            return {
+              bankQuarterMillions = manager.bankQuarterMillions;
+              braceBonusGameweek = manager.braceBonusGameweek;
+              canisterId = manager.canisterId;
+              captainFantasticGameweek = manager.captainFantasticGameweek;
+              captainFantasticPlayerId = manager.captainFantasticPlayerId;
+              captainId  = manager.captainId;
+              createDate = manager.createDate;
+              favouriteClubId = manager.favouriteClubId;
+              goalGetterGameweek = manager.goalGetterGameweek;
+              goalGetterPlayerId = manager.goalGetterPlayerId;
+              hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
+              history = List.map<T.FantasyTeamSeason, T.FantasyTeamSeason>(manager.history, func(season: T.FantasyTeamSeason){
+                return {
+                  gameweeks = List.map<T.FantasyTeamSnapshot, T.FantasyTeamSnapshot>(season.gameweeks, func(gameweekSnapshot: T.FantasyTeamSnapshot){
+                    return {
+                      bankQuarterMillions = gameweekSnapshot.bankQuarterMillions;
+                      braceBonusGameweek = gameweekSnapshot.braceBonusGameweek;
+                      captainFantasticGameweek = gameweekSnapshot.captainFantasticGameweek;
+                      captainFantasticPlayerId = gameweekSnapshot.captainFantasticPlayerId;
+                      captainId = gameweekSnapshot.captainId;
+                      favouriteClubId = gameweekSnapshot.favouriteClubId;
+                      gameweek = gameweekSnapshot.gameweek;
+                      goalGetterGameweek = gameweekSnapshot.goalGetterGameweek;
+                      goalGetterPlayerId = gameweekSnapshot.goalGetterPlayerId;
+                      hatTrickHeroGameweek = gameweekSnapshot.hatTrickHeroGameweek;
+                      month = gameweekSnapshot.month;
+                      monthlyBonusesAvailable = gameweekSnapshot.monthlyBonusesAvailable;
+                      monthlyPoints = gameweekSnapshot.monthlyPoints;
+                      noEntryGameweek = gameweekSnapshot.noEntryGameweek;
+                      noEntryPlayerId = gameweekSnapshot.noEntryPlayerId;
+                      oneNationCountryId = gameweekSnapshot.oneNationCountryId;
+                      oneNationGameweek = gameweekSnapshot.oneNationGameweek;
+                      passMasterGameweek = gameweekSnapshot.passMasterGameweek;
+                      passMasterPlayerId = gameweekSnapshot.passMasterPlayerId;
+                      playerIds = gameweekSnapshot.playerIds;
+                      points = 0;
+                      principalId = gameweekSnapshot.principalId;
+                      prospectsGameweek = gameweekSnapshot.prospectsGameweek;
+                      safeHandsGameweek = gameweekSnapshot.safeHandsGameweek;
+                      safeHandsPlayerId = gameweekSnapshot.safeHandsPlayerId;
+                      seasonId = gameweekSnapshot.seasonId;
+                      seasonPoints = gameweekSnapshot.seasonPoints;
+                      teamBoostClubId = gameweekSnapshot.teamBoostClubId;
+                      teamBoostGameweek = gameweekSnapshot.teamBoostGameweek;
+                      teamValueQuarterMillions = gameweekSnapshot.teamValueQuarterMillions;
+                      transferWindowGameweek = gameweekSnapshot.transferWindowGameweek;
+                      transfersAvailable = gameweekSnapshot.transfersAvailable;
+                      username = gameweekSnapshot.username;
+                    }
+                  });
+                  seasonId = season.seasonId;
+                  totalPoints = 0;
+                }
+              });
+              monthlyBonusesAvailable  = manager.monthlyBonusesAvailable;
+              noEntryGameweek  = manager.noEntryGameweek;
+              noEntryPlayerId  = manager.noEntryPlayerId;
+              oneNationCountryId  = manager.oneNationCountryId;
+              oneNationGameweek  = manager.oneNationGameweek;
+              passMasterGameweek  = manager.passMasterGameweek;
+              passMasterPlayerId  = manager.passMasterPlayerId;
+              playerIds  = manager.playerIds;
+              principalId  = manager.principalId;
+              profilePicture  = manager.profilePicture;
+              profilePictureType  = manager.profilePictureType;
+              prospectsGameweek  = manager.prospectsGameweek;
+              safeHandsGameweek  = manager.safeHandsGameweek;
+              safeHandsPlayerId = manager.safeHandsPlayerId;
+              teamBoostClubId = manager.teamBoostClubId;
+              teamBoostGameweek = manager.teamBoostGameweek;
+              termsAccepted = manager.termsAccepted;
+              transferWindowGameweek = manager.transferWindowGameweek;
+              transfersAvailable = manager.transfersAvailable;
+              username = manager.username;
+            }
+          });
+        };
+        case 2 {
+          managerGroup3 := Array.map<T.Manager, T.Manager>(managerGroup3, func(manager: T.Manager){
+            return {
+              bankQuarterMillions = manager.bankQuarterMillions;
+              braceBonusGameweek = manager.braceBonusGameweek;
+              canisterId = manager.canisterId;
+              captainFantasticGameweek = manager.captainFantasticGameweek;
+              captainFantasticPlayerId = manager.captainFantasticPlayerId;
+              captainId  = manager.captainId;
+              createDate = manager.createDate;
+              favouriteClubId = manager.favouriteClubId;
+              goalGetterGameweek = manager.goalGetterGameweek;
+              goalGetterPlayerId = manager.goalGetterPlayerId;
+              hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
+              history = List.map<T.FantasyTeamSeason, T.FantasyTeamSeason>(manager.history, func(season: T.FantasyTeamSeason){
+                return {
+                  gameweeks = List.map<T.FantasyTeamSnapshot, T.FantasyTeamSnapshot>(season.gameweeks, func(gameweekSnapshot: T.FantasyTeamSnapshot){
+                    return {
+                      bankQuarterMillions = gameweekSnapshot.bankQuarterMillions;
+                      braceBonusGameweek = gameweekSnapshot.braceBonusGameweek;
+                      captainFantasticGameweek = gameweekSnapshot.captainFantasticGameweek;
+                      captainFantasticPlayerId = gameweekSnapshot.captainFantasticPlayerId;
+                      captainId = gameweekSnapshot.captainId;
+                      favouriteClubId = gameweekSnapshot.favouriteClubId;
+                      gameweek = gameweekSnapshot.gameweek;
+                      goalGetterGameweek = gameweekSnapshot.goalGetterGameweek;
+                      goalGetterPlayerId = gameweekSnapshot.goalGetterPlayerId;
+                      hatTrickHeroGameweek = gameweekSnapshot.hatTrickHeroGameweek;
+                      month = gameweekSnapshot.month;
+                      monthlyBonusesAvailable = gameweekSnapshot.monthlyBonusesAvailable;
+                      monthlyPoints = gameweekSnapshot.monthlyPoints;
+                      noEntryGameweek = gameweekSnapshot.noEntryGameweek;
+                      noEntryPlayerId = gameweekSnapshot.noEntryPlayerId;
+                      oneNationCountryId = gameweekSnapshot.oneNationCountryId;
+                      oneNationGameweek = gameweekSnapshot.oneNationGameweek;
+                      passMasterGameweek = gameweekSnapshot.passMasterGameweek;
+                      passMasterPlayerId = gameweekSnapshot.passMasterPlayerId;
+                      playerIds = gameweekSnapshot.playerIds;
+                      points = 0;
+                      principalId = gameweekSnapshot.principalId;
+                      prospectsGameweek = gameweekSnapshot.prospectsGameweek;
+                      safeHandsGameweek = gameweekSnapshot.safeHandsGameweek;
+                      safeHandsPlayerId = gameweekSnapshot.safeHandsPlayerId;
+                      seasonId = gameweekSnapshot.seasonId;
+                      seasonPoints = gameweekSnapshot.seasonPoints;
+                      teamBoostClubId = gameweekSnapshot.teamBoostClubId;
+                      teamBoostGameweek = gameweekSnapshot.teamBoostGameweek;
+                      teamValueQuarterMillions = gameweekSnapshot.teamValueQuarterMillions;
+                      transferWindowGameweek = gameweekSnapshot.transferWindowGameweek;
+                      transfersAvailable = gameweekSnapshot.transfersAvailable;
+                      username = gameweekSnapshot.username;
+                    }
+                  });
+                  seasonId = season.seasonId;
+                  totalPoints = 0;
+                }
+              });
+              monthlyBonusesAvailable  = manager.monthlyBonusesAvailable;
+              noEntryGameweek  = manager.noEntryGameweek;
+              noEntryPlayerId  = manager.noEntryPlayerId;
+              oneNationCountryId  = manager.oneNationCountryId;
+              oneNationGameweek  = manager.oneNationGameweek;
+              passMasterGameweek  = manager.passMasterGameweek;
+              passMasterPlayerId  = manager.passMasterPlayerId;
+              playerIds  = manager.playerIds;
+              principalId  = manager.principalId;
+              profilePicture  = manager.profilePicture;
+              profilePictureType  = manager.profilePictureType;
+              prospectsGameweek  = manager.prospectsGameweek;
+              safeHandsGameweek  = manager.safeHandsGameweek;
+              safeHandsPlayerId = manager.safeHandsPlayerId;
+              teamBoostClubId = manager.teamBoostClubId;
+              teamBoostGameweek = manager.teamBoostGameweek;
+              termsAccepted = manager.termsAccepted;
+              transferWindowGameweek = manager.transferWindowGameweek;
+              transfersAvailable = manager.transfersAvailable;
+              username = manager.username;
+            }
+          });
+        };
+        case 3 {
+          managerGroup4 := Array.map<T.Manager, T.Manager>(managerGroup4, func(manager: T.Manager){
+            return {
+              bankQuarterMillions = manager.bankQuarterMillions;
+              braceBonusGameweek = manager.braceBonusGameweek;
+              canisterId = manager.canisterId;
+              captainFantasticGameweek = manager.captainFantasticGameweek;
+              captainFantasticPlayerId = manager.captainFantasticPlayerId;
+              captainId  = manager.captainId;
+              createDate = manager.createDate;
+              favouriteClubId = manager.favouriteClubId;
+              goalGetterGameweek = manager.goalGetterGameweek;
+              goalGetterPlayerId = manager.goalGetterPlayerId;
+              hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
+              history = List.map<T.FantasyTeamSeason, T.FantasyTeamSeason>(manager.history, func(season: T.FantasyTeamSeason){
+                return {
+                  gameweeks = List.map<T.FantasyTeamSnapshot, T.FantasyTeamSnapshot>(season.gameweeks, func(gameweekSnapshot: T.FantasyTeamSnapshot){
+                    return {
+                      bankQuarterMillions = gameweekSnapshot.bankQuarterMillions;
+                      braceBonusGameweek = gameweekSnapshot.braceBonusGameweek;
+                      captainFantasticGameweek = gameweekSnapshot.captainFantasticGameweek;
+                      captainFantasticPlayerId = gameweekSnapshot.captainFantasticPlayerId;
+                      captainId = gameweekSnapshot.captainId;
+                      favouriteClubId = gameweekSnapshot.favouriteClubId;
+                      gameweek = gameweekSnapshot.gameweek;
+                      goalGetterGameweek = gameweekSnapshot.goalGetterGameweek;
+                      goalGetterPlayerId = gameweekSnapshot.goalGetterPlayerId;
+                      hatTrickHeroGameweek = gameweekSnapshot.hatTrickHeroGameweek;
+                      month = gameweekSnapshot.month;
+                      monthlyBonusesAvailable = gameweekSnapshot.monthlyBonusesAvailable;
+                      monthlyPoints = gameweekSnapshot.monthlyPoints;
+                      noEntryGameweek = gameweekSnapshot.noEntryGameweek;
+                      noEntryPlayerId = gameweekSnapshot.noEntryPlayerId;
+                      oneNationCountryId = gameweekSnapshot.oneNationCountryId;
+                      oneNationGameweek = gameweekSnapshot.oneNationGameweek;
+                      passMasterGameweek = gameweekSnapshot.passMasterGameweek;
+                      passMasterPlayerId = gameweekSnapshot.passMasterPlayerId;
+                      playerIds = gameweekSnapshot.playerIds;
+                      points = 0;
+                      principalId = gameweekSnapshot.principalId;
+                      prospectsGameweek = gameweekSnapshot.prospectsGameweek;
+                      safeHandsGameweek = gameweekSnapshot.safeHandsGameweek;
+                      safeHandsPlayerId = gameweekSnapshot.safeHandsPlayerId;
+                      seasonId = gameweekSnapshot.seasonId;
+                      seasonPoints = gameweekSnapshot.seasonPoints;
+                      teamBoostClubId = gameweekSnapshot.teamBoostClubId;
+                      teamBoostGameweek = gameweekSnapshot.teamBoostGameweek;
+                      teamValueQuarterMillions = gameweekSnapshot.teamValueQuarterMillions;
+                      transferWindowGameweek = gameweekSnapshot.transferWindowGameweek;
+                      transfersAvailable = gameweekSnapshot.transfersAvailable;
+                      username = gameweekSnapshot.username;
+                    }
+                  });
+                  seasonId = season.seasonId;
+                  totalPoints = 0;
+                }
+              });
+              monthlyBonusesAvailable  = manager.monthlyBonusesAvailable;
+              noEntryGameweek  = manager.noEntryGameweek;
+              noEntryPlayerId  = manager.noEntryPlayerId;
+              oneNationCountryId  = manager.oneNationCountryId;
+              oneNationGameweek  = manager.oneNationGameweek;
+              passMasterGameweek  = manager.passMasterGameweek;
+              passMasterPlayerId  = manager.passMasterPlayerId;
+              playerIds  = manager.playerIds;
+              principalId  = manager.principalId;
+              profilePicture  = manager.profilePicture;
+              profilePictureType  = manager.profilePictureType;
+              prospectsGameweek  = manager.prospectsGameweek;
+              safeHandsGameweek  = manager.safeHandsGameweek;
+              safeHandsPlayerId = manager.safeHandsPlayerId;
+              teamBoostClubId = manager.teamBoostClubId;
+              teamBoostGameweek = manager.teamBoostGameweek;
+              termsAccepted = manager.termsAccepted;
+              transferWindowGameweek = manager.transferWindowGameweek;
+              transfersAvailable = manager.transfersAvailable;
+              username = manager.username;
+            }
+          });
+        };
+        case 4 {
+          managerGroup5 := Array.map<T.Manager, T.Manager>(managerGroup5, func(manager: T.Manager){
+            return {
+              bankQuarterMillions = manager.bankQuarterMillions;
+              braceBonusGameweek = manager.braceBonusGameweek;
+              canisterId = manager.canisterId;
+              captainFantasticGameweek = manager.captainFantasticGameweek;
+              captainFantasticPlayerId = manager.captainFantasticPlayerId;
+              captainId  = manager.captainId;
+              createDate = manager.createDate;
+              favouriteClubId = manager.favouriteClubId;
+              goalGetterGameweek = manager.goalGetterGameweek;
+              goalGetterPlayerId = manager.goalGetterPlayerId;
+              hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
+              history = List.map<T.FantasyTeamSeason, T.FantasyTeamSeason>(manager.history, func(season: T.FantasyTeamSeason){
+                return {
+                  gameweeks = List.map<T.FantasyTeamSnapshot, T.FantasyTeamSnapshot>(season.gameweeks, func(gameweekSnapshot: T.FantasyTeamSnapshot){
+                    return {
+                      bankQuarterMillions = gameweekSnapshot.bankQuarterMillions;
+                      braceBonusGameweek = gameweekSnapshot.braceBonusGameweek;
+                      captainFantasticGameweek = gameweekSnapshot.captainFantasticGameweek;
+                      captainFantasticPlayerId = gameweekSnapshot.captainFantasticPlayerId;
+                      captainId = gameweekSnapshot.captainId;
+                      favouriteClubId = gameweekSnapshot.favouriteClubId;
+                      gameweek = gameweekSnapshot.gameweek;
+                      goalGetterGameweek = gameweekSnapshot.goalGetterGameweek;
+                      goalGetterPlayerId = gameweekSnapshot.goalGetterPlayerId;
+                      hatTrickHeroGameweek = gameweekSnapshot.hatTrickHeroGameweek;
+                      month = gameweekSnapshot.month;
+                      monthlyBonusesAvailable = gameweekSnapshot.monthlyBonusesAvailable;
+                      monthlyPoints = gameweekSnapshot.monthlyPoints;
+                      noEntryGameweek = gameweekSnapshot.noEntryGameweek;
+                      noEntryPlayerId = gameweekSnapshot.noEntryPlayerId;
+                      oneNationCountryId = gameweekSnapshot.oneNationCountryId;
+                      oneNationGameweek = gameweekSnapshot.oneNationGameweek;
+                      passMasterGameweek = gameweekSnapshot.passMasterGameweek;
+                      passMasterPlayerId = gameweekSnapshot.passMasterPlayerId;
+                      playerIds = gameweekSnapshot.playerIds;
+                      points = 0;
+                      principalId = gameweekSnapshot.principalId;
+                      prospectsGameweek = gameweekSnapshot.prospectsGameweek;
+                      safeHandsGameweek = gameweekSnapshot.safeHandsGameweek;
+                      safeHandsPlayerId = gameweekSnapshot.safeHandsPlayerId;
+                      seasonId = gameweekSnapshot.seasonId;
+                      seasonPoints = gameweekSnapshot.seasonPoints;
+                      teamBoostClubId = gameweekSnapshot.teamBoostClubId;
+                      teamBoostGameweek = gameweekSnapshot.teamBoostGameweek;
+                      teamValueQuarterMillions = gameweekSnapshot.teamValueQuarterMillions;
+                      transferWindowGameweek = gameweekSnapshot.transferWindowGameweek;
+                      transfersAvailable = gameweekSnapshot.transfersAvailable;
+                      username = gameweekSnapshot.username;
+                    }
+                  });
+                  seasonId = season.seasonId;
+                  totalPoints = 0;
+                }
+              });
+              monthlyBonusesAvailable  = manager.monthlyBonusesAvailable;
+              noEntryGameweek  = manager.noEntryGameweek;
+              noEntryPlayerId  = manager.noEntryPlayerId;
+              oneNationCountryId  = manager.oneNationCountryId;
+              oneNationGameweek  = manager.oneNationGameweek;
+              passMasterGameweek  = manager.passMasterGameweek;
+              passMasterPlayerId  = manager.passMasterPlayerId;
+              playerIds  = manager.playerIds;
+              principalId  = manager.principalId;
+              profilePicture  = manager.profilePicture;
+              profilePictureType  = manager.profilePictureType;
+              prospectsGameweek  = manager.prospectsGameweek;
+              safeHandsGameweek  = manager.safeHandsGameweek;
+              safeHandsPlayerId = manager.safeHandsPlayerId;
+              teamBoostClubId = manager.teamBoostClubId;
+              teamBoostGameweek = manager.teamBoostGameweek;
+              termsAccepted = manager.termsAccepted;
+              transferWindowGameweek = manager.transferWindowGameweek;
+              transfersAvailable = manager.transfersAvailable;
+              username = manager.username;
+            }
+          });
+        };
+        case 5 {
+          managerGroup6 := Array.map<T.Manager, T.Manager>(managerGroup6, func(manager: T.Manager){
+            return {
+              bankQuarterMillions = manager.bankQuarterMillions;
+              braceBonusGameweek = manager.braceBonusGameweek;
+              canisterId = manager.canisterId;
+              captainFantasticGameweek = manager.captainFantasticGameweek;
+              captainFantasticPlayerId = manager.captainFantasticPlayerId;
+              captainId  = manager.captainId;
+              createDate = manager.createDate;
+              favouriteClubId = manager.favouriteClubId;
+              goalGetterGameweek = manager.goalGetterGameweek;
+              goalGetterPlayerId = manager.goalGetterPlayerId;
+              hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
+              history = List.map<T.FantasyTeamSeason, T.FantasyTeamSeason>(manager.history, func(season: T.FantasyTeamSeason){
+                return {
+                  gameweeks = List.map<T.FantasyTeamSnapshot, T.FantasyTeamSnapshot>(season.gameweeks, func(gameweekSnapshot: T.FantasyTeamSnapshot){
+                    return {
+                      bankQuarterMillions = gameweekSnapshot.bankQuarterMillions;
+                      braceBonusGameweek = gameweekSnapshot.braceBonusGameweek;
+                      captainFantasticGameweek = gameweekSnapshot.captainFantasticGameweek;
+                      captainFantasticPlayerId = gameweekSnapshot.captainFantasticPlayerId;
+                      captainId = gameweekSnapshot.captainId;
+                      favouriteClubId = gameweekSnapshot.favouriteClubId;
+                      gameweek = gameweekSnapshot.gameweek;
+                      goalGetterGameweek = gameweekSnapshot.goalGetterGameweek;
+                      goalGetterPlayerId = gameweekSnapshot.goalGetterPlayerId;
+                      hatTrickHeroGameweek = gameweekSnapshot.hatTrickHeroGameweek;
+                      month = gameweekSnapshot.month;
+                      monthlyBonusesAvailable = gameweekSnapshot.monthlyBonusesAvailable;
+                      monthlyPoints = gameweekSnapshot.monthlyPoints;
+                      noEntryGameweek = gameweekSnapshot.noEntryGameweek;
+                      noEntryPlayerId = gameweekSnapshot.noEntryPlayerId;
+                      oneNationCountryId = gameweekSnapshot.oneNationCountryId;
+                      oneNationGameweek = gameweekSnapshot.oneNationGameweek;
+                      passMasterGameweek = gameweekSnapshot.passMasterGameweek;
+                      passMasterPlayerId = gameweekSnapshot.passMasterPlayerId;
+                      playerIds = gameweekSnapshot.playerIds;
+                      points = 0;
+                      principalId = gameweekSnapshot.principalId;
+                      prospectsGameweek = gameweekSnapshot.prospectsGameweek;
+                      safeHandsGameweek = gameweekSnapshot.safeHandsGameweek;
+                      safeHandsPlayerId = gameweekSnapshot.safeHandsPlayerId;
+                      seasonId = gameweekSnapshot.seasonId;
+                      seasonPoints = gameweekSnapshot.seasonPoints;
+                      teamBoostClubId = gameweekSnapshot.teamBoostClubId;
+                      teamBoostGameweek = gameweekSnapshot.teamBoostGameweek;
+                      teamValueQuarterMillions = gameweekSnapshot.teamValueQuarterMillions;
+                      transferWindowGameweek = gameweekSnapshot.transferWindowGameweek;
+                      transfersAvailable = gameweekSnapshot.transfersAvailable;
+                      username = gameweekSnapshot.username;
+                    }
+                  });
+                  seasonId = season.seasonId;
+                  totalPoints = 0;
+                }
+              });
+              monthlyBonusesAvailable  = manager.monthlyBonusesAvailable;
+              noEntryGameweek  = manager.noEntryGameweek;
+              noEntryPlayerId  = manager.noEntryPlayerId;
+              oneNationCountryId  = manager.oneNationCountryId;
+              oneNationGameweek  = manager.oneNationGameweek;
+              passMasterGameweek  = manager.passMasterGameweek;
+              passMasterPlayerId  = manager.passMasterPlayerId;
+              playerIds  = manager.playerIds;
+              principalId  = manager.principalId;
+              profilePicture  = manager.profilePicture;
+              profilePictureType  = manager.profilePictureType;
+              prospectsGameweek  = manager.prospectsGameweek;
+              safeHandsGameweek  = manager.safeHandsGameweek;
+              safeHandsPlayerId = manager.safeHandsPlayerId;
+              teamBoostClubId = manager.teamBoostClubId;
+              teamBoostGameweek = manager.teamBoostGameweek;
+              termsAccepted = manager.termsAccepted;
+              transferWindowGameweek = manager.transferWindowGameweek;
+              transfersAvailable = manager.transfersAvailable;
+              username = manager.username;
+            }
+          });
+        };
+        case 6 {
+          managerGroup7 := Array.map<T.Manager, T.Manager>(managerGroup7, func(manager: T.Manager){
+            return {
+              bankQuarterMillions = manager.bankQuarterMillions;
+              braceBonusGameweek = manager.braceBonusGameweek;
+              canisterId = manager.canisterId;
+              captainFantasticGameweek = manager.captainFantasticGameweek;
+              captainFantasticPlayerId = manager.captainFantasticPlayerId;
+              captainId  = manager.captainId;
+              createDate = manager.createDate;
+              favouriteClubId = manager.favouriteClubId;
+              goalGetterGameweek = manager.goalGetterGameweek;
+              goalGetterPlayerId = manager.goalGetterPlayerId;
+              hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
+              history = List.map<T.FantasyTeamSeason, T.FantasyTeamSeason>(manager.history, func(season: T.FantasyTeamSeason){
+                return {
+                  gameweeks = List.map<T.FantasyTeamSnapshot, T.FantasyTeamSnapshot>(season.gameweeks, func(gameweekSnapshot: T.FantasyTeamSnapshot){
+                    return {
+                      bankQuarterMillions = gameweekSnapshot.bankQuarterMillions;
+                      braceBonusGameweek = gameweekSnapshot.braceBonusGameweek;
+                      captainFantasticGameweek = gameweekSnapshot.captainFantasticGameweek;
+                      captainFantasticPlayerId = gameweekSnapshot.captainFantasticPlayerId;
+                      captainId = gameweekSnapshot.captainId;
+                      favouriteClubId = gameweekSnapshot.favouriteClubId;
+                      gameweek = gameweekSnapshot.gameweek;
+                      goalGetterGameweek = gameweekSnapshot.goalGetterGameweek;
+                      goalGetterPlayerId = gameweekSnapshot.goalGetterPlayerId;
+                      hatTrickHeroGameweek = gameweekSnapshot.hatTrickHeroGameweek;
+                      month = gameweekSnapshot.month;
+                      monthlyBonusesAvailable = gameweekSnapshot.monthlyBonusesAvailable;
+                      monthlyPoints = gameweekSnapshot.monthlyPoints;
+                      noEntryGameweek = gameweekSnapshot.noEntryGameweek;
+                      noEntryPlayerId = gameweekSnapshot.noEntryPlayerId;
+                      oneNationCountryId = gameweekSnapshot.oneNationCountryId;
+                      oneNationGameweek = gameweekSnapshot.oneNationGameweek;
+                      passMasterGameweek = gameweekSnapshot.passMasterGameweek;
+                      passMasterPlayerId = gameweekSnapshot.passMasterPlayerId;
+                      playerIds = gameweekSnapshot.playerIds;
+                      points = 0;
+                      principalId = gameweekSnapshot.principalId;
+                      prospectsGameweek = gameweekSnapshot.prospectsGameweek;
+                      safeHandsGameweek = gameweekSnapshot.safeHandsGameweek;
+                      safeHandsPlayerId = gameweekSnapshot.safeHandsPlayerId;
+                      seasonId = gameweekSnapshot.seasonId;
+                      seasonPoints = gameweekSnapshot.seasonPoints;
+                      teamBoostClubId = gameweekSnapshot.teamBoostClubId;
+                      teamBoostGameweek = gameweekSnapshot.teamBoostGameweek;
+                      teamValueQuarterMillions = gameweekSnapshot.teamValueQuarterMillions;
+                      transferWindowGameweek = gameweekSnapshot.transferWindowGameweek;
+                      transfersAvailable = gameweekSnapshot.transfersAvailable;
+                      username = gameweekSnapshot.username;
+                    }
+                  });
+                  seasonId = season.seasonId;
+                  totalPoints = 0;
+                }
+              });
+              monthlyBonusesAvailable  = manager.monthlyBonusesAvailable;
+              noEntryGameweek  = manager.noEntryGameweek;
+              noEntryPlayerId  = manager.noEntryPlayerId;
+              oneNationCountryId  = manager.oneNationCountryId;
+              oneNationGameweek  = manager.oneNationGameweek;
+              passMasterGameweek  = manager.passMasterGameweek;
+              passMasterPlayerId  = manager.passMasterPlayerId;
+              playerIds  = manager.playerIds;
+              principalId  = manager.principalId;
+              profilePicture  = manager.profilePicture;
+              profilePictureType  = manager.profilePictureType;
+              prospectsGameweek  = manager.prospectsGameweek;
+              safeHandsGameweek  = manager.safeHandsGameweek;
+              safeHandsPlayerId = manager.safeHandsPlayerId;
+              teamBoostClubId = manager.teamBoostClubId;
+              teamBoostGameweek = manager.teamBoostGameweek;
+              termsAccepted = manager.termsAccepted;
+              transferWindowGameweek = manager.transferWindowGameweek;
+              transfersAvailable = manager.transfersAvailable;
+              username = manager.username;
+            }
+          });
+        };
+        case 7 {
+          managerGroup8 := Array.map<T.Manager, T.Manager>(managerGroup8, func(manager: T.Manager){
+            return {
+              bankQuarterMillions = manager.bankQuarterMillions;
+              braceBonusGameweek = manager.braceBonusGameweek;
+              canisterId = manager.canisterId;
+              captainFantasticGameweek = manager.captainFantasticGameweek;
+              captainFantasticPlayerId = manager.captainFantasticPlayerId;
+              captainId  = manager.captainId;
+              createDate = manager.createDate;
+              favouriteClubId = manager.favouriteClubId;
+              goalGetterGameweek = manager.goalGetterGameweek;
+              goalGetterPlayerId = manager.goalGetterPlayerId;
+              hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
+              history = List.map<T.FantasyTeamSeason, T.FantasyTeamSeason>(manager.history, func(season: T.FantasyTeamSeason){
+                return {
+                  gameweeks = List.map<T.FantasyTeamSnapshot, T.FantasyTeamSnapshot>(season.gameweeks, func(gameweekSnapshot: T.FantasyTeamSnapshot){
+                    return {
+                      bankQuarterMillions = gameweekSnapshot.bankQuarterMillions;
+                      braceBonusGameweek = gameweekSnapshot.braceBonusGameweek;
+                      captainFantasticGameweek = gameweekSnapshot.captainFantasticGameweek;
+                      captainFantasticPlayerId = gameweekSnapshot.captainFantasticPlayerId;
+                      captainId = gameweekSnapshot.captainId;
+                      favouriteClubId = gameweekSnapshot.favouriteClubId;
+                      gameweek = gameweekSnapshot.gameweek;
+                      goalGetterGameweek = gameweekSnapshot.goalGetterGameweek;
+                      goalGetterPlayerId = gameweekSnapshot.goalGetterPlayerId;
+                      hatTrickHeroGameweek = gameweekSnapshot.hatTrickHeroGameweek;
+                      month = gameweekSnapshot.month;
+                      monthlyBonusesAvailable = gameweekSnapshot.monthlyBonusesAvailable;
+                      monthlyPoints = gameweekSnapshot.monthlyPoints;
+                      noEntryGameweek = gameweekSnapshot.noEntryGameweek;
+                      noEntryPlayerId = gameweekSnapshot.noEntryPlayerId;
+                      oneNationCountryId = gameweekSnapshot.oneNationCountryId;
+                      oneNationGameweek = gameweekSnapshot.oneNationGameweek;
+                      passMasterGameweek = gameweekSnapshot.passMasterGameweek;
+                      passMasterPlayerId = gameweekSnapshot.passMasterPlayerId;
+                      playerIds = gameweekSnapshot.playerIds;
+                      points = 0;
+                      principalId = gameweekSnapshot.principalId;
+                      prospectsGameweek = gameweekSnapshot.prospectsGameweek;
+                      safeHandsGameweek = gameweekSnapshot.safeHandsGameweek;
+                      safeHandsPlayerId = gameweekSnapshot.safeHandsPlayerId;
+                      seasonId = gameweekSnapshot.seasonId;
+                      seasonPoints = gameweekSnapshot.seasonPoints;
+                      teamBoostClubId = gameweekSnapshot.teamBoostClubId;
+                      teamBoostGameweek = gameweekSnapshot.teamBoostGameweek;
+                      teamValueQuarterMillions = gameweekSnapshot.teamValueQuarterMillions;
+                      transferWindowGameweek = gameweekSnapshot.transferWindowGameweek;
+                      transfersAvailable = gameweekSnapshot.transfersAvailable;
+                      username = gameweekSnapshot.username;
+                    }
+                  });
+                  seasonId = season.seasonId;
+                  totalPoints = 0;
+                }
+              });
+              monthlyBonusesAvailable  = manager.monthlyBonusesAvailable;
+              noEntryGameweek  = manager.noEntryGameweek;
+              noEntryPlayerId  = manager.noEntryPlayerId;
+              oneNationCountryId  = manager.oneNationCountryId;
+              oneNationGameweek  = manager.oneNationGameweek;
+              passMasterGameweek  = manager.passMasterGameweek;
+              passMasterPlayerId  = manager.passMasterPlayerId;
+              playerIds  = manager.playerIds;
+              principalId  = manager.principalId;
+              profilePicture  = manager.profilePicture;
+              profilePictureType  = manager.profilePictureType;
+              prospectsGameweek  = manager.prospectsGameweek;
+              safeHandsGameweek  = manager.safeHandsGameweek;
+              safeHandsPlayerId = manager.safeHandsPlayerId;
+              teamBoostClubId = manager.teamBoostClubId;
+              teamBoostGameweek = manager.teamBoostGameweek;
+              termsAccepted = manager.termsAccepted;
+              transferWindowGameweek = manager.transferWindowGameweek;
+              transfersAvailable = manager.transfersAvailable;
+              username = manager.username;
+            }
+          });
+        };
+        case 8 {
+          managerGroup9 := Array.map<T.Manager, T.Manager>(managerGroup9, func(manager: T.Manager){
+            return {
+              bankQuarterMillions = manager.bankQuarterMillions;
+              braceBonusGameweek = manager.braceBonusGameweek;
+              canisterId = manager.canisterId;
+              captainFantasticGameweek = manager.captainFantasticGameweek;
+              captainFantasticPlayerId = manager.captainFantasticPlayerId;
+              captainId  = manager.captainId;
+              createDate = manager.createDate;
+              favouriteClubId = manager.favouriteClubId;
+              goalGetterGameweek = manager.goalGetterGameweek;
+              goalGetterPlayerId = manager.goalGetterPlayerId;
+              hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
+              history = List.map<T.FantasyTeamSeason, T.FantasyTeamSeason>(manager.history, func(season: T.FantasyTeamSeason){
+                return {
+                  gameweeks = List.map<T.FantasyTeamSnapshot, T.FantasyTeamSnapshot>(season.gameweeks, func(gameweekSnapshot: T.FantasyTeamSnapshot){
+                    return {
+                      bankQuarterMillions = gameweekSnapshot.bankQuarterMillions;
+                      braceBonusGameweek = gameweekSnapshot.braceBonusGameweek;
+                      captainFantasticGameweek = gameweekSnapshot.captainFantasticGameweek;
+                      captainFantasticPlayerId = gameweekSnapshot.captainFantasticPlayerId;
+                      captainId = gameweekSnapshot.captainId;
+                      favouriteClubId = gameweekSnapshot.favouriteClubId;
+                      gameweek = gameweekSnapshot.gameweek;
+                      goalGetterGameweek = gameweekSnapshot.goalGetterGameweek;
+                      goalGetterPlayerId = gameweekSnapshot.goalGetterPlayerId;
+                      hatTrickHeroGameweek = gameweekSnapshot.hatTrickHeroGameweek;
+                      month = gameweekSnapshot.month;
+                      monthlyBonusesAvailable = gameweekSnapshot.monthlyBonusesAvailable;
+                      monthlyPoints = gameweekSnapshot.monthlyPoints;
+                      noEntryGameweek = gameweekSnapshot.noEntryGameweek;
+                      noEntryPlayerId = gameweekSnapshot.noEntryPlayerId;
+                      oneNationCountryId = gameweekSnapshot.oneNationCountryId;
+                      oneNationGameweek = gameweekSnapshot.oneNationGameweek;
+                      passMasterGameweek = gameweekSnapshot.passMasterGameweek;
+                      passMasterPlayerId = gameweekSnapshot.passMasterPlayerId;
+                      playerIds = gameweekSnapshot.playerIds;
+                      points = 0;
+                      principalId = gameweekSnapshot.principalId;
+                      prospectsGameweek = gameweekSnapshot.prospectsGameweek;
+                      safeHandsGameweek = gameweekSnapshot.safeHandsGameweek;
+                      safeHandsPlayerId = gameweekSnapshot.safeHandsPlayerId;
+                      seasonId = gameweekSnapshot.seasonId;
+                      seasonPoints = gameweekSnapshot.seasonPoints;
+                      teamBoostClubId = gameweekSnapshot.teamBoostClubId;
+                      teamBoostGameweek = gameweekSnapshot.teamBoostGameweek;
+                      teamValueQuarterMillions = gameweekSnapshot.teamValueQuarterMillions;
+                      transferWindowGameweek = gameweekSnapshot.transferWindowGameweek;
+                      transfersAvailable = gameweekSnapshot.transfersAvailable;
+                      username = gameweekSnapshot.username;
+                    }
+                  });
+                  seasonId = season.seasonId;
+                  totalPoints = 0;
+                }
+              });
+              monthlyBonusesAvailable  = manager.monthlyBonusesAvailable;
+              noEntryGameweek  = manager.noEntryGameweek;
+              noEntryPlayerId  = manager.noEntryPlayerId;
+              oneNationCountryId  = manager.oneNationCountryId;
+              oneNationGameweek  = manager.oneNationGameweek;
+              passMasterGameweek  = manager.passMasterGameweek;
+              passMasterPlayerId  = manager.passMasterPlayerId;
+              playerIds  = manager.playerIds;
+              principalId  = manager.principalId;
+              profilePicture  = manager.profilePicture;
+              profilePictureType  = manager.profilePictureType;
+              prospectsGameweek  = manager.prospectsGameweek;
+              safeHandsGameweek  = manager.safeHandsGameweek;
+              safeHandsPlayerId = manager.safeHandsPlayerId;
+              teamBoostClubId = manager.teamBoostClubId;
+              teamBoostGameweek = manager.teamBoostGameweek;
+              termsAccepted = manager.termsAccepted;
+              transferWindowGameweek = manager.transferWindowGameweek;
+              transfersAvailable = manager.transfersAvailable;
+              username = manager.username;
+            }
+          });
+        };
+        case 9 {
+          managerGroup10 := Array.map<T.Manager, T.Manager>(managerGroup10, func(manager: T.Manager){
+            return {
+              bankQuarterMillions = manager.bankQuarterMillions;
+              braceBonusGameweek = manager.braceBonusGameweek;
+              canisterId = manager.canisterId;
+              captainFantasticGameweek = manager.captainFantasticGameweek;
+              captainFantasticPlayerId = manager.captainFantasticPlayerId;
+              captainId  = manager.captainId;
+              createDate = manager.createDate;
+              favouriteClubId = manager.favouriteClubId;
+              goalGetterGameweek = manager.goalGetterGameweek;
+              goalGetterPlayerId = manager.goalGetterPlayerId;
+              hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
+              history = List.map<T.FantasyTeamSeason, T.FantasyTeamSeason>(manager.history, func(season: T.FantasyTeamSeason){
+                return {
+                  gameweeks = List.map<T.FantasyTeamSnapshot, T.FantasyTeamSnapshot>(season.gameweeks, func(gameweekSnapshot: T.FantasyTeamSnapshot){
+                    return {
+                      bankQuarterMillions = gameweekSnapshot.bankQuarterMillions;
+                      braceBonusGameweek = gameweekSnapshot.braceBonusGameweek;
+                      captainFantasticGameweek = gameweekSnapshot.captainFantasticGameweek;
+                      captainFantasticPlayerId = gameweekSnapshot.captainFantasticPlayerId;
+                      captainId = gameweekSnapshot.captainId;
+                      favouriteClubId = gameweekSnapshot.favouriteClubId;
+                      gameweek = gameweekSnapshot.gameweek;
+                      goalGetterGameweek = gameweekSnapshot.goalGetterGameweek;
+                      goalGetterPlayerId = gameweekSnapshot.goalGetterPlayerId;
+                      hatTrickHeroGameweek = gameweekSnapshot.hatTrickHeroGameweek;
+                      month = gameweekSnapshot.month;
+                      monthlyBonusesAvailable = gameweekSnapshot.monthlyBonusesAvailable;
+                      monthlyPoints = gameweekSnapshot.monthlyPoints;
+                      noEntryGameweek = gameweekSnapshot.noEntryGameweek;
+                      noEntryPlayerId = gameweekSnapshot.noEntryPlayerId;
+                      oneNationCountryId = gameweekSnapshot.oneNationCountryId;
+                      oneNationGameweek = gameweekSnapshot.oneNationGameweek;
+                      passMasterGameweek = gameweekSnapshot.passMasterGameweek;
+                      passMasterPlayerId = gameweekSnapshot.passMasterPlayerId;
+                      playerIds = gameweekSnapshot.playerIds;
+                      points = 0;
+                      principalId = gameweekSnapshot.principalId;
+                      prospectsGameweek = gameweekSnapshot.prospectsGameweek;
+                      safeHandsGameweek = gameweekSnapshot.safeHandsGameweek;
+                      safeHandsPlayerId = gameweekSnapshot.safeHandsPlayerId;
+                      seasonId = gameweekSnapshot.seasonId;
+                      seasonPoints = gameweekSnapshot.seasonPoints;
+                      teamBoostClubId = gameweekSnapshot.teamBoostClubId;
+                      teamBoostGameweek = gameweekSnapshot.teamBoostGameweek;
+                      teamValueQuarterMillions = gameweekSnapshot.teamValueQuarterMillions;
+                      transferWindowGameweek = gameweekSnapshot.transferWindowGameweek;
+                      transfersAvailable = gameweekSnapshot.transfersAvailable;
+                      username = gameweekSnapshot.username;
+                    }
+                  });
+                  seasonId = season.seasonId;
+                  totalPoints = 0;
+                }
+              });
+              monthlyBonusesAvailable  = manager.monthlyBonusesAvailable;
+              noEntryGameweek  = manager.noEntryGameweek;
+              noEntryPlayerId  = manager.noEntryPlayerId;
+              oneNationCountryId  = manager.oneNationCountryId;
+              oneNationGameweek  = manager.oneNationGameweek;
+              passMasterGameweek  = manager.passMasterGameweek;
+              passMasterPlayerId  = manager.passMasterPlayerId;
+              playerIds  = manager.playerIds;
+              principalId  = manager.principalId;
+              profilePicture  = manager.profilePicture;
+              profilePictureType  = manager.profilePictureType;
+              prospectsGameweek  = manager.prospectsGameweek;
+              safeHandsGameweek  = manager.safeHandsGameweek;
+              safeHandsPlayerId = manager.safeHandsPlayerId;
+              teamBoostClubId = manager.teamBoostClubId;
+              teamBoostGameweek = manager.teamBoostGameweek;
+              termsAccepted = manager.termsAccepted;
+              transferWindowGameweek = manager.transferWindowGameweek;
+              transfersAvailable = manager.transfersAvailable;
+              username = manager.username;
+            }
+          });
+        };
+        case 10 {
+          
+          managerGroup11 := Array.map<T.Manager, T.Manager>(managerGroup11, func(manager: T.Manager){
+            return {
+              bankQuarterMillions = manager.bankQuarterMillions;
+              braceBonusGameweek = manager.braceBonusGameweek;
+              canisterId = manager.canisterId;
+              captainFantasticGameweek = manager.captainFantasticGameweek;
+              captainFantasticPlayerId = manager.captainFantasticPlayerId;
+              captainId  = manager.captainId;
+              createDate = manager.createDate;
+              favouriteClubId = manager.favouriteClubId;
+              goalGetterGameweek = manager.goalGetterGameweek;
+              goalGetterPlayerId = manager.goalGetterPlayerId;
+              hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
+              history = List.map<T.FantasyTeamSeason, T.FantasyTeamSeason>(manager.history, func(season: T.FantasyTeamSeason){
+                return {
+                  gameweeks = List.map<T.FantasyTeamSnapshot, T.FantasyTeamSnapshot>(season.gameweeks, func(gameweekSnapshot: T.FantasyTeamSnapshot){
+                    return {
+                      bankQuarterMillions = gameweekSnapshot.bankQuarterMillions;
+                      braceBonusGameweek = gameweekSnapshot.braceBonusGameweek;
+                      captainFantasticGameweek = gameweekSnapshot.captainFantasticGameweek;
+                      captainFantasticPlayerId = gameweekSnapshot.captainFantasticPlayerId;
+                      captainId = gameweekSnapshot.captainId;
+                      favouriteClubId = gameweekSnapshot.favouriteClubId;
+                      gameweek = gameweekSnapshot.gameweek;
+                      goalGetterGameweek = gameweekSnapshot.goalGetterGameweek;
+                      goalGetterPlayerId = gameweekSnapshot.goalGetterPlayerId;
+                      hatTrickHeroGameweek = gameweekSnapshot.hatTrickHeroGameweek;
+                      month = gameweekSnapshot.month;
+                      monthlyBonusesAvailable = gameweekSnapshot.monthlyBonusesAvailable;
+                      monthlyPoints = gameweekSnapshot.monthlyPoints;
+                      noEntryGameweek = gameweekSnapshot.noEntryGameweek;
+                      noEntryPlayerId = gameweekSnapshot.noEntryPlayerId;
+                      oneNationCountryId = gameweekSnapshot.oneNationCountryId;
+                      oneNationGameweek = gameweekSnapshot.oneNationGameweek;
+                      passMasterGameweek = gameweekSnapshot.passMasterGameweek;
+                      passMasterPlayerId = gameweekSnapshot.passMasterPlayerId;
+                      playerIds = gameweekSnapshot.playerIds;
+                      points = 0;
+                      principalId = gameweekSnapshot.principalId;
+                      prospectsGameweek = gameweekSnapshot.prospectsGameweek;
+                      safeHandsGameweek = gameweekSnapshot.safeHandsGameweek;
+                      safeHandsPlayerId = gameweekSnapshot.safeHandsPlayerId;
+                      seasonId = gameweekSnapshot.seasonId;
+                      seasonPoints = gameweekSnapshot.seasonPoints;
+                      teamBoostClubId = gameweekSnapshot.teamBoostClubId;
+                      teamBoostGameweek = gameweekSnapshot.teamBoostGameweek;
+                      teamValueQuarterMillions = gameweekSnapshot.teamValueQuarterMillions;
+                      transferWindowGameweek = gameweekSnapshot.transferWindowGameweek;
+                      transfersAvailable = gameweekSnapshot.transfersAvailable;
+                      username = gameweekSnapshot.username;
+                    }
+                  });
+                  seasonId = season.seasonId;
+                  totalPoints = 0;
+                }
+              });
+              monthlyBonusesAvailable  = manager.monthlyBonusesAvailable;
+              noEntryGameweek  = manager.noEntryGameweek;
+              noEntryPlayerId  = manager.noEntryPlayerId;
+              oneNationCountryId  = manager.oneNationCountryId;
+              oneNationGameweek  = manager.oneNationGameweek;
+              passMasterGameweek  = manager.passMasterGameweek;
+              passMasterPlayerId  = manager.passMasterPlayerId;
+              playerIds  = manager.playerIds;
+              principalId  = manager.principalId;
+              profilePicture  = manager.profilePicture;
+              profilePictureType  = manager.profilePictureType;
+              prospectsGameweek  = manager.prospectsGameweek;
+              safeHandsGameweek  = manager.safeHandsGameweek;
+              safeHandsPlayerId = manager.safeHandsPlayerId;
+              teamBoostClubId = manager.teamBoostClubId;
+              teamBoostGameweek = manager.teamBoostGameweek;
+              termsAccepted = manager.termsAccepted;
+              transferWindowGameweek = manager.transferWindowGameweek;
+              transfersAvailable = manager.transfersAvailable;
+              username = manager.username;
+            }
+          });
+        };
+        case 11 {
+          managerGroup12 := Array.map<T.Manager, T.Manager>(managerGroup12, func(manager: T.Manager){
+            return {
+              bankQuarterMillions = manager.bankQuarterMillions;
+              braceBonusGameweek = manager.braceBonusGameweek;
+              canisterId = manager.canisterId;
+              captainFantasticGameweek = manager.captainFantasticGameweek;
+              captainFantasticPlayerId = manager.captainFantasticPlayerId;
+              captainId  = manager.captainId;
+              createDate = manager.createDate;
+              favouriteClubId = manager.favouriteClubId;
+              goalGetterGameweek = manager.goalGetterGameweek;
+              goalGetterPlayerId = manager.goalGetterPlayerId;
+              hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
+              history = List.map<T.FantasyTeamSeason, T.FantasyTeamSeason>(manager.history, func(season: T.FantasyTeamSeason){
+                return {
+                  gameweeks = List.map<T.FantasyTeamSnapshot, T.FantasyTeamSnapshot>(season.gameweeks, func(gameweekSnapshot: T.FantasyTeamSnapshot){
+                    return {
+                      bankQuarterMillions = gameweekSnapshot.bankQuarterMillions;
+                      braceBonusGameweek = gameweekSnapshot.braceBonusGameweek;
+                      captainFantasticGameweek = gameweekSnapshot.captainFantasticGameweek;
+                      captainFantasticPlayerId = gameweekSnapshot.captainFantasticPlayerId;
+                      captainId = gameweekSnapshot.captainId;
+                      favouriteClubId = gameweekSnapshot.favouriteClubId;
+                      gameweek = gameweekSnapshot.gameweek;
+                      goalGetterGameweek = gameweekSnapshot.goalGetterGameweek;
+                      goalGetterPlayerId = gameweekSnapshot.goalGetterPlayerId;
+                      hatTrickHeroGameweek = gameweekSnapshot.hatTrickHeroGameweek;
+                      month = gameweekSnapshot.month;
+                      monthlyBonusesAvailable = gameweekSnapshot.monthlyBonusesAvailable;
+                      monthlyPoints = gameweekSnapshot.monthlyPoints;
+                      noEntryGameweek = gameweekSnapshot.noEntryGameweek;
+                      noEntryPlayerId = gameweekSnapshot.noEntryPlayerId;
+                      oneNationCountryId = gameweekSnapshot.oneNationCountryId;
+                      oneNationGameweek = gameweekSnapshot.oneNationGameweek;
+                      passMasterGameweek = gameweekSnapshot.passMasterGameweek;
+                      passMasterPlayerId = gameweekSnapshot.passMasterPlayerId;
+                      playerIds = gameweekSnapshot.playerIds;
+                      points = 0;
+                      principalId = gameweekSnapshot.principalId;
+                      prospectsGameweek = gameweekSnapshot.prospectsGameweek;
+                      safeHandsGameweek = gameweekSnapshot.safeHandsGameweek;
+                      safeHandsPlayerId = gameweekSnapshot.safeHandsPlayerId;
+                      seasonId = gameweekSnapshot.seasonId;
+                      seasonPoints = gameweekSnapshot.seasonPoints;
+                      teamBoostClubId = gameweekSnapshot.teamBoostClubId;
+                      teamBoostGameweek = gameweekSnapshot.teamBoostGameweek;
+                      teamValueQuarterMillions = gameweekSnapshot.teamValueQuarterMillions;
+                      transferWindowGameweek = gameweekSnapshot.transferWindowGameweek;
+                      transfersAvailable = gameweekSnapshot.transfersAvailable;
+                      username = gameweekSnapshot.username;
+                    }
+                  });
+                  seasonId = season.seasonId;
+                  totalPoints = 0;
+                }
+              });
+              monthlyBonusesAvailable  = manager.monthlyBonusesAvailable;
+              noEntryGameweek  = manager.noEntryGameweek;
+              noEntryPlayerId  = manager.noEntryPlayerId;
+              oneNationCountryId  = manager.oneNationCountryId;
+              oneNationGameweek  = manager.oneNationGameweek;
+              passMasterGameweek  = manager.passMasterGameweek;
+              passMasterPlayerId  = manager.passMasterPlayerId;
+              playerIds  = manager.playerIds;
+              principalId  = manager.principalId;
+              profilePicture  = manager.profilePicture;
+              profilePictureType  = manager.profilePictureType;
+              prospectsGameweek  = manager.prospectsGameweek;
+              safeHandsGameweek  = manager.safeHandsGameweek;
+              safeHandsPlayerId = manager.safeHandsPlayerId;
+              teamBoostClubId = manager.teamBoostClubId;
+              teamBoostGameweek = manager.teamBoostGameweek;
+              termsAccepted = manager.termsAccepted;
+              transferWindowGameweek = manager.transferWindowGameweek;
+              transfersAvailable = manager.transfersAvailable;
+              username = manager.username;
+            }
+          });
+        };
+        case _{};
+      };
+    };
+  }
+
 };

@@ -7,7 +7,7 @@
   import { playerStore } from "$lib/stores/player-store";
 
   import { getPositionAbbreviation, getFlagComponent, convertPlayerPosition } from "../../utils/helpers";
-  import type { PlayerDTO, PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { PlayerDTO, PickTeamDTO } from "../../../../../declarations/OpenWSL_backend/OpenWSL_backend.did";
 
   import AddPlayerModal from "$lib/components/pick-team/add-player-modal.svelte";
   import ConfirmCaptainChange from "./confirm-captain-change.svelte";
@@ -123,6 +123,7 @@
           playerIds: new Uint16Array(11).fill(0),
         };
       }
+      
       return currentTeam;
     });
   }

@@ -8,8 +8,8 @@
   import { formatUnixDateToReadable, formatUnixTimeToTime, getCountdownTime } from "$lib/utils/helpers";
   import type { PickTeamDTO } from "../../../../../declarations/OpenWSL_backend/OpenWSL_backend.did";
   import LocalSpinner from "../local-spinner.svelte";
-  import { storeManager } from "$lib/managers/store-manager";
-  import { seasonStore } from "$lib/stores/season-store";
+    import { storeManager } from "$lib/managers/store-manager";
+    import { seasonStore } from "$lib/stores/season-store";
   
   let isLoading = true;
   let activeSeason = "-";
@@ -87,7 +87,6 @@
       if(totalValue > 0){
         teamValue.set(totalValue / 4);
       }
-      return;
     }
   }
 

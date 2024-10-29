@@ -33,8 +33,8 @@ export class PlayerEventsService {
     }
 
     let dto: GameweekFiltersDTO = {
-      seasonId: (systemState as SystemStateDTO).pickTeamSeasonId,
-      gameweek: (systemState as SystemStateDTO).pickTeamGameweek,
+      seasonId: (systemState as SystemStateDTO).calculationSeasonId,
+      gameweek: (systemState as SystemStateDTO).calculationGameweek,
     };
     const result = await this.actor.getPlayerDetailsForGameweek(dto);
     if (isError(result))

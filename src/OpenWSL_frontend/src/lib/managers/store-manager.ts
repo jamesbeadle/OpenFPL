@@ -62,7 +62,6 @@ class StoreManager {
     }
 
     for (const category of this.categories) {
-      console.log(`syncing ${category}`);
       const categoryHash = newHashes.find((hash) => hash.category === category);
 
       if (categoryHash?.hash !== localStorage.getItem(`${category}_hash`)) {
@@ -125,7 +124,7 @@ class StoreManager {
       case "fixtures":
         systemStore.subscribe(async (systemState) => {
           const updatedFixtures = await this.fixtureService.getFixtures(
-            systemState?.pickTeamSeasonId ?? 0,
+            systemState?.calculationSeasonId ?? 0,
           );
           fixtureStore.setFixtures(updatedFixtures);
           localStorage.setItem(

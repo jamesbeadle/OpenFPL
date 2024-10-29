@@ -115,6 +115,12 @@ export interface InjuryHistory {
   expectedEndDate: bigint;
 }
 export type LeagueId = number;
+export type List = [] | [[InjuryHistory, List]];
+export type List_1 = [] | [[PlayerSeason, List_1]];
+export type List_2 = [] | [[PlayerGameweek, List_2]];
+export type List_3 = [] | [[PlayerEventData, List_3]];
+export type List_4 = [] | [[TransferHistory, List_4]];
+export type List_5 = [] | [[ValueHistory, List_5]];
 export interface LoanPlayerDTO {
   loanEndDate: bigint;
   playerId: ClubId;
@@ -127,6 +133,29 @@ export interface MoveFixtureDTO {
   updatedFixtureDate: bigint;
   seasonId: SeasonId;
   leagueId: LeagueId;
+}
+export interface Player {
+  id: PlayerId;
+  status: PlayerStatus;
+  clubId: ClubId;
+  parentClubId: ClubId;
+  seasons: List_1;
+  valueQuarterMillions: number;
+  dateOfBirth: bigint;
+  injuryHistory: List;
+  transferHistory: List_4;
+  nationality: CountryId;
+  retirementDate: bigint;
+  valueHistory: List_5;
+  latestInjuryEndDate: bigint;
+  gender: Gender;
+  currentLoanEndDate: bigint;
+  shirtNumber: number;
+  parentLeagueId: LeagueId;
+  position: PlayerPosition;
+  lastName: string;
+  leagueId: LeagueId;
+  firstName: string;
 }
 export interface PlayerDTO {
   id: number;
@@ -180,12 +209,18 @@ export type PlayerEventType =
   | { GoalAssisted: null }
   | { OwnGoal: null }
   | { HighestScoringPlayer: null };
+export interface PlayerGameweek {
+  events: List_3;
+  number: GameweekNumber;
+  points: number;
+}
 export interface PlayerGameweekDTO {
   fixtureId: FixtureId;
   events: Array<PlayerEventData>;
   number: number;
   points: number;
 }
+export type PlayerId = number;
 export interface PlayerPointsDTO {
   id: number;
   clubId: ClubId;
@@ -212,6 +247,11 @@ export interface PlayerScoreDTO {
   position: PlayerPosition;
   points: number;
 }
+export interface PlayerSeason {
+  id: SeasonId;
+  gameweeks: List_2;
+  totalPoints: number;
+}
 export type PlayerStatus =
   | { OnLoan: null }
   | { Active: null }
@@ -222,7 +262,7 @@ export interface PostponeFixtureDTO {
   seasonId: SeasonId;
   leagueId: LeagueId;
 }
-export interface PromoteNewClubDTO {
+export interface PromoteClubDTO {
   secondaryColourHex: string;
   name: string;
   friendlyName: string;
@@ -233,6 +273,10 @@ export interface PromoteNewClubDTO {
 }
 export interface RecallPlayerDTO {
   playerId: ClubId;
+}
+export interface RelegateClubDTO {
+  clubId: ClubId;
+  leagueId: LeagueId;
 }
 export interface RequestFixturesDTO {
   seasonId: SeasonId;
@@ -295,6 +339,14 @@ export interface SystemState {
   calculationSeasonId: SeasonId;
   onHold: boolean;
   seasonActive: boolean;
+}
+export interface TransferHistory {
+  transferDate: bigint;
+  loanEndDate: bigint;
+  toLeagueId: LeagueId;
+  toClub: ClubId;
+  fromLeagueId: LeagueId;
+  fromClub: ClubId;
 }
 export interface TransferPlayerDTO {
   clubId: ClubId;
@@ -368,6 +420,7 @@ export interface _SERVICE {
   createPlayer: ActorMethod<[LeagueId, CreatePlayerDTO], Result>;
   getClubs: ActorMethod<[LeagueId], Result_3>;
   getFixtures: ActorMethod<[RequestFixturesDTO], Result_2>;
+  getLeaguePlayers: ActorMethod<[], Array<[LeagueId, Array<Player>]>>;
   getLeagues: ActorMethod<[], Result_8>;
   getLoanedPlayers: ActorMethod<[LeagueId, ClubFilterDTO], Result_1>;
   getPlayerDetails: ActorMethod<[LeagueId, GetPlayerDetailsDTO], Result_7>;
@@ -385,19 +438,19 @@ export interface _SERVICE {
   getVerifiedPlayers: ActorMethod<[LeagueId], Result_1>;
   loanPlayer: ActorMethod<[LeagueId, LoanPlayerDTO], Result>;
   moveFixture: ActorMethod<[MoveFixtureDTO], Result>;
+  populatePlayerEventData: ActorMethod<
+    [SubmitFixtureDataDTO, Array<Player>],
+    [] | [Array<PlayerEventData>]
+  >;
   postponeFixture: ActorMethod<[PostponeFixtureDTO], Result>;
-  promoteNewClub: ActorMethod<[LeagueId, PromoteNewClubDTO], Result>;
+  promoteClub: ActorMethod<[LeagueId, PromoteClubDTO], Result>;
+  recallPlayer: ActorMethod<[LeagueId, RecallPlayerDTO], Result>;
+  relegateClub: ActorMethod<[LeagueId, RelegateClubDTO], Result>;
   retirePlayer: ActorMethod<[LeagueId, RetirePlayerDTO], Result>;
   revaluePlayerDown: ActorMethod<[LeagueId, RevaluePlayerDownDTO], Result>;
   revaluePlayerUp: ActorMethod<[LeagueId, RevaluePlayerUpDTO], Result>;
   setFixtureToComplete: ActorMethod<[LeagueId, SeasonId, FixtureId], undefined>;
-  setFixtureToFinalised: ActorMethod<
-    [LeagueId, SeasonId, FixtureId],
-    undefined
-  >;
-  setGameScore: ActorMethod<[LeagueId, SeasonId, FixtureId], undefined>;
   setPlayerInjury: ActorMethod<[LeagueId, SetPlayerInjuryDTO], Result>;
-  setupData: ActorMethod<[], Result>;
   submitFixtureData: ActorMethod<[SubmitFixtureDataDTO], Result>;
   transferPlayer: ActorMethod<[LeagueId, TransferPlayerDTO], Result>;
   unretirePlayer: ActorMethod<[UnretirePlayerDTO], Result>;
@@ -408,11 +461,15 @@ export interface _SERVICE {
     [LeagueId, AddInitialFixturesDTO],
     Result
   >;
+  validateCreateClub: ActorMethod<[LeagueId, CreateClubDTO], Result>;
+  validateCreateLeague: ActorMethod<[CreateLeagueDTO], Result>;
   validateCreatePlayer: ActorMethod<[LeagueId, CreatePlayerDTO], Result>;
   validateLoanPlayer: ActorMethod<[LeagueId, LoanPlayerDTO], Result>;
   validateMoveFixture: ActorMethod<[LeagueId, MoveFixtureDTO], Result>;
   validatePostponeFixture: ActorMethod<[LeagueId, PostponeFixtureDTO], Result>;
+  validatePromoteClub: ActorMethod<[LeagueId, PromoteClubDTO], Result>;
   validateRecallPlayer: ActorMethod<[LeagueId, RecallPlayerDTO], Result>;
+  validateRelegateClub: ActorMethod<[LeagueId, RelegateClubDTO], Result>;
   validateRescehduleFixture: ActorMethod<
     [LeagueId, RescheduleFixtureDTO],
     Result
@@ -431,6 +488,7 @@ export interface _SERVICE {
   validateTransferPlayer: ActorMethod<[LeagueId, TransferPlayerDTO], Result>;
   validateUnretirePlayer: ActorMethod<[LeagueId, UnretirePlayerDTO], Result>;
   validateUpdateClub: ActorMethod<[LeagueId, UpdateClubDTO], Result>;
+  validateUpdateLeague: ActorMethod<[UpdateLeagueDTO], Result>;
   validateUpdatePlayer: ActorMethod<[LeagueId, UpdatePlayerDTO], Result>;
 }
 export declare const idlFactory: IDL.InterfaceFactory;

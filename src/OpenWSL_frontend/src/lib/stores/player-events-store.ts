@@ -48,6 +48,7 @@ function createPlayerEventsStore() {
         pickTeamGameweek: result.pickTeamGameweek,
         version: result.version,
         calculationMonth: result.calculationMonth,
+        pickTeamMonth: result.pickTeamMonth,
         calculationSeasonId: result.calculationSeasonId,
         onHold: result.onHold,
         seasonActive: result.seasonActive,
@@ -84,8 +85,12 @@ function createPlayerEventsStore() {
       ),
     );
 
-    let allFixtures: FixtureDTO[];
-    fixtureStore.subscribe((value) => (allFixtures = value));
+    let allFixtures: FixtureDTO[] = [];
+
+    const unsubscribeFixtures = fixtureStore.subscribe((fixtures) => {
+      allFixtures = fixtures;
+    });
+    unsubscribeFixtures();
 
     const playersWithPoints = gameweekData.map((entry) => {
       const score = calculatePlayerScore(entry, allFixtures);
@@ -105,7 +110,14 @@ function createPlayerEventsStore() {
   }
 
   async function getPlayerEventsFromLocalStorage(): Promise<PlayerPointsDTO[]> {
-    return [];
+    const cachedPlayersData = localStorage.getItem("player_events");
+    let cachedPlayerEvents: PlayerPointsDTO[] = [];
+    try {
+      cachedPlayerEvents = JSON.parse(cachedPlayersData || "[]");
+    } catch (e) {
+      cachedPlayerEvents = [];
+    }
+    return cachedPlayerEvents;
   }
 
   async function getPlayerEventsFromBackend(

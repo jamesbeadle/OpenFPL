@@ -2,8 +2,6 @@
   import { onMount } from "svelte";
   import { writable, type Writable } from "svelte/store";
   import { page } from "$app/stores";
-  import { systemStore } from "$lib/stores/system-store";
-  import { clubStore } from "$lib/stores/club-store";
   import { managerStore } from "$lib/stores/manager-store";
   import { toastsError } from "$lib/stores/toasts-store";
   import type {
@@ -14,10 +12,10 @@
   import Layout from "../Layout.svelte";
   import ManagerGameweekDetails from "$lib/components/manager/manager-gameweek-details.svelte";
   import ManagerGameweeks from "$lib/components/manager/manager-gameweeks.svelte";
-  import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import { getDateFromBigInt } from "$lib/utils/helpers";
-    import LocalSpinner from "$lib/components/local-spinner.svelte";
-    import { storeManager } from "$lib/managers/store-manager";
+  import LocalSpinner from "$lib/components/local-spinner.svelte";
+  import { storeManager } from "$lib/managers/store-manager";
+    import { clubStore } from "$lib/stores/club-store";
 
   $: id = $page.url.searchParams.get("id");
 
@@ -56,13 +54,10 @@
 
       joinedDate = getDateFromBigInt(Number(manager.createDate));
 
-      /* //TODO
-      favouriteTeam =
-        manager.favouriteClubId > 0
-          ? $clubStore.find((x) => x.id == manager.favouriteClubId) ?? null
+      favouriteTeam = manager.favouriteClubId == null
+          ? $clubStore.find((x) => x.id == manager.favouriteClubId[0]) ?? null
           : null;
       viewGameweekDetail($selectedGameweek!);
-      */
     } catch (error) {
       toastsError({
         msg: { text: "Error fetching manager details." },

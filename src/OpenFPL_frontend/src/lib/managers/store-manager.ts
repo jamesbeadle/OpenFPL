@@ -62,7 +62,6 @@ class StoreManager {
     }
 
     for (const category of this.categories) {
-      console.log(`syncing ${category}`);
       const categoryHash = newHashes.find((hash) => hash.category === category);
 
       if (categoryHash?.hash !== localStorage.getItem(`${category}_hash`)) {

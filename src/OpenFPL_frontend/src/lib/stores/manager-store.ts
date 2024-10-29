@@ -60,6 +60,7 @@ function createManagerStore() {
     captainId: 0,
     monthlyBonusesAvailable: 0,
     canisterId: "",
+    firstGameweek: false,
   };
 
   async function getPublicProfile(principalId: string): Promise<ManagerDTO> {
@@ -67,7 +68,7 @@ function createManagerStore() {
       let dto: RequestManagerDTO = {
         managerId: principalId,
         month: 0,
-        seasonId: 0,
+        seasonId: systemState.calculationSeasonId,
         gameweek: 0,
         clubId: 0,
       };
@@ -113,7 +114,6 @@ function createManagerStore() {
         seasonId,
       };
       let result = await actor.getFantasyTeamSnapshot(dto);
-
       if (isError(result)) {
         console.error("Error fetching fantasy team for gameweek:");
       }
