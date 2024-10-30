@@ -473,27 +473,6 @@ module DTOs {
     rewardPool: T.RewardPool;
   };
 
-  public type GetTopupsDTO = {
-    limit : Nat;
-    offset : Nat;
-    entries: [TopupDTO];
-    totalEntries: Nat;
-  };
-
-  public type GetSystemLogDTO = {
-    limit : Nat;
-    offset : Nat;
-    dateStart : Int;
-    dateEnd: Int;
-    eventType: T.EventLogEntryType;
-    entries: [Base.EventLogEntry];
-    totalEntries: Nat;
-  };
-
-  public type LogStatusDTO = {
-    message: Text;
-  };
-
   public type GetFantasyTeamSnapshotDTO = {
     managerPrincipalId: Base.PrincipalId;
     seasonId: FootballTypes.SeasonId;
@@ -544,5 +523,13 @@ module DTOs {
   public type SystemEnvironmentDTO = {
     leagueId: FootballTypes.LeagueId;
     seasonId: FootballTypes.SeasonId;
+  };
+
+  public type SystemEventDTO = {
+      eventId: Nat;
+      eventTime: Int;
+      eventType: Base.LogEntryType;
+      eventTitle: Text;
+      eventDetail: Text;
   };
 };

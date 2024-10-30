@@ -29,15 +29,15 @@ module BaseTypes {
         cyclesAmount: Nat;
     };
 
-    public type EventLogEntry = {
+    public type SystemLog = {
         eventId: Nat;
         eventTime: Int;
-        eventType: EventLogEntryType;
+        eventType: LogEntryType;
         eventTitle: Text;
         eventDetail: Text;
     };
 
-    public type EventLogEntryType = {
+    public type LogEntryType = {
         #SystemCheck;
         #UnexpectedError;
         #CanisterTopup;

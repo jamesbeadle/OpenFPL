@@ -67,17 +67,13 @@
           )[0].id;
 
 
-      /*
-      //TODO
       let leaderboardData = await weeklyLeaderboardStore.getWeeklyLeaderboard(
         selectedSeasonId,
         selectedGameweek,
         currentPage,
-        $systemStore?.calculationGameweek ?? 1,
-        searchTerm
+        0
       );
       leaderboard = leaderboardData;
-      */
     } catch (error) {
       toastsError({
         msg: { text: "Error fetching leaderboard data." },
@@ -113,7 +109,6 @@
 
     isLoading = true;
     try {
-      /*
       //TODO
       switch (selectedLeaderboardType) {
         case 1:
@@ -121,8 +116,7 @@
             selectedSeasonId,
             selectedGameweek,
             currentPage,
-            $systemStore?.calculationGameweek ?? 1,
-            searchTerm
+            0
           );
           break;
         case 2:
@@ -142,7 +136,6 @@
           );
           break;
       }
-      */
     } catch (error) {
       toastsError({
         msg: { text: "Error fetching leaderboard data." },

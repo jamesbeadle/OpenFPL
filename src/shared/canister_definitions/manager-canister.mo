@@ -63,7 +63,7 @@ actor class _ManagerCanister() {
       controllerPrincipalId := _controllerPrincipalId;
       fixturesPerClub := _fixturesPerClub;
     };
-
+    initialised := true;
   };
 
   public shared ({ caller }) func updateTeamSelection(teamUpdateDTO : DTOs.TeamUpdateDTO, transfersAvailable : Nat8, monthlyBonuses : Nat8, newBankBalance : Nat16) : async Result.Result<(), T.Error> {
@@ -3476,7 +3476,7 @@ actor class _ManagerCanister() {
   };
   
   private func postUpgradeCallback() : async (){
-    
+    initialised := true;
   };
 
 };

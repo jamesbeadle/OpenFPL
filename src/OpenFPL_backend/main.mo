@@ -1,18 +1,13 @@
   import Array "mo:base/Array";
   import Bool "mo:base/Bool";
-  import Buffer "mo:base/Buffer";
   import Int "mo:base/Int";
   import Iter "mo:base/Iter";
   import Principal "mo:base/Principal";
   import Result "mo:base/Result";
-  import Time "mo:base/Time";
   import Timer "mo:base/Timer";
   import Nat64 "mo:base/Nat64";
   import Nat "mo:base/Nat";
   import Option "mo:base/Option";
-  import List "mo:base/List";
-  import Order "mo:base/Order";
-  import Debug "mo:base/Debug";
 
   import Base "../shared/types/base_types";
   import FootballTypes "../shared/types/football_types";
@@ -20,15 +15,14 @@
   import DTOs "../shared/dtos/DTOs";
   import RequestDTOs "../shared/dtos/request_DTOs";
   import Countries "../shared/Countries";
-  import Utilities "../shared/utils/utilities";
 
   import Management "../shared/utils/Management";
   import ManagerCanister "../shared/canister_definitions/manager-canister";
+  import LeaderboardCanister "../shared/canister_definitions/leaderboard-canister";
   import DataManager "../shared/managers/data-manager";
   import LeaderboardManager "../shared/managers/leaderboard-manager";
   import UserManager "../shared/managers/user-manager";
   import SeasonManager "../shared/managers/season-manager";
-  import CyclesDispenser "../shared/cycles-dispenser";
   import Environment "./Environment";
   import NetworkEnvironmentVariables "../shared/network_environment_variables";
 
@@ -38,7 +32,6 @@
     private let dataManager = DataManager.DataManager();
     private let seasonManager = SeasonManager.SeasonManager(Environment.NUM_OF_GAMEWEEKS);
     private let leaderboardManager = LeaderboardManager.LeaderboardManager(Environment.BACKEND_CANISTER_ID, Environment.NUM_OF_GAMEWEEKS, Environment.NUM_OF_MONTHS);
-    private let cyclesDispenser = CyclesDispenser.CyclesDispenser();
     
     private func isManagerCanister(principalId: Text) : Bool {
       let managerCanisterIds = userManager.getUniqueManagerCanisterIds();
@@ -314,25 +307,6 @@
       };
     };
 
-    public shared ({ caller }) func getTopups(dto: DTOs.GetTopupsDTO) : async Result.Result<DTOs.GetTopupsDTO, T.Error> {
-      assert not Principal.isAnonymous(caller);
-      
-      let topups = cyclesDispenser.getStableTopups();
-      let droppedEntries = List.drop<Base.CanisterTopup>(List.fromArray(topups), dto.offset);
-      let paginatedEntries = List.take<Base.CanisterTopup>(droppedEntries, dto.limit);
-
-      return #ok({
-        entries = List.toArray<DTOs.TopupDTO>(List.map<Base.CanisterTopup, DTOs.TopupDTO>(paginatedEntries, func(entry: Base.CanisterTopup) : DTOs.TopupDTO{
-          return {
-            canisterId = entry.canisterId; toppedUpOn = entry.topupTime; topupAmount = entry.cyclesAmount;
-          }
-        }));
-        limit = dto.limit;
-        offset = dto.offset;
-        totalEntries = Array.size(topups);
-      });
-    };
-
     public shared ({ caller }) func updateDataHashes(category: Text) : async Result.Result<(), T.Error> {
       assert not Principal.isAnonymous(caller);
       assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
@@ -492,6 +466,7 @@
       //set system state
       //await checkCanisterCycles(); 
       //await setSystemTimers();
+      await updateLeaderboardCanisterWasms();
       await updateManagerCanisterWasms();
 
       await seasonManager.updateDataHash("clubs");
@@ -503,6 +478,7 @@
       await seasonManager.updateDataHash("player_events");
       await seasonManager.updateDataHash("countries");
       await seasonManager.updateDataHash("system_state");
+      leaderboardManager.setStableWeeklyLeaderboardCanisterIds([(1, [(9, "n26sp-cqaaa-aaaal-qna7q-cai")])]);
     };
 
 
@@ -513,6 +489,18 @@
         await IC.stop_canister({ canister_id = Principal.fromText(canisterId); });
         let oldManagement = actor (canisterId) : actor {};
         let _ = await (system ManagerCanister._ManagerCanister)(#upgrade oldManagement)();
+        await IC.start_canister({ canister_id = Principal.fromText(canisterId); });
+      };
+    };
+
+
+    private func updateLeaderboardCanisterWasms() : async (){
+      let leaderboardCanisterIds = leaderboardManager.getLeaderboardCanisters();
+      let IC : Management.Management = actor (NetworkEnvironmentVariables.Default);
+      for(canisterId in Iter.fromArray(leaderboardCanisterIds)){
+        await IC.stop_canister({ canister_id = Principal.fromText(canisterId); });
+        let oldLeaderboard = actor (canisterId) : actor {};
+        let _ = await (system LeaderboardCanister._LeaderboardCanister)(#upgrade oldLeaderboard)();
         await IC.start_canister({ canister_id = Principal.fromText(canisterId); });
       };
     };
@@ -560,6 +548,15 @@
           return #err(error);
         }
       };
+    };
+
+    public shared func getWeeklyLeaderboards() : async [T.WeeklyLeaderboard]{
+       var leaderboard_canister = actor ("n26sp-cqaaa-aaaal-qna7q-cai") : actor {
+        getWeeklyLeaderboards : () -> async [T.WeeklyLeaderboard];
+      };
+
+      return await leaderboard_canister.getWeeklyLeaderboards();
+
     };
 
     public shared ({ caller }) func calculateLeaderboards() : async Result.Result<(), T.Error> {

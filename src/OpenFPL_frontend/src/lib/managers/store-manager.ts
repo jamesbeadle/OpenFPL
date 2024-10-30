@@ -139,7 +139,7 @@ class StoreManager {
             await this.weeklyLeaderboardService.getWeeklyLeaderboard(
               0,
               systemState?.calculationSeasonId ?? 0,
-              25,
+              0,
               systemState?.calculationGameweek ?? 0,
             );
           weeklyLeaderboardStore.setWeeklyLeaderboard(updatedWeeklyLeaderboard);

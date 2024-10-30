@@ -11,6 +11,7 @@
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
     import LocalSpinner from "./local-spinner.svelte";
     import { storeManager } from "$lib/managers/store-manager";
+    import { page } from "$app/stores";
 
   let isLoading = true;
   let gameweeks = Array.from(
@@ -67,17 +68,13 @@
           )[0].id;
 
 
-      /*
-      //TODO
       let leaderboardData = await weeklyLeaderboardStore.getWeeklyLeaderboard(
         selectedSeasonId,
         selectedGameweek,
         currentPage,
-        $systemStore?.calculationGameweek ?? 1,
-        searchTerm
+        25
       );
       leaderboard = leaderboardData;
-      */
     } catch (error) {
       toastsError({
         msg: { text: "Error fetching leaderboard data." },
@@ -113,16 +110,13 @@
 
     isLoading = true;
     try {
-      /*
-      //TODO
       switch (selectedLeaderboardType) {
         case 1:
           leaderboard = await weeklyLeaderboardStore.getWeeklyLeaderboard(
             selectedSeasonId,
             selectedGameweek,
             currentPage,
-            $systemStore?.calculationGameweek ?? 1,
-            searchTerm
+            25
           );
           break;
         case 2:
@@ -142,7 +136,6 @@
           );
           break;
       }
-      */
     } catch (error) {
       toastsError({
         msg: { text: "Error fetching leaderboard data." },
