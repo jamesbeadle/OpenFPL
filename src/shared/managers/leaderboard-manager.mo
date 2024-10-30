@@ -319,6 +319,7 @@ module {
         finaliseUpdate : (seasonId: FootballTypes.SeasonId, month: Base.CalendarMonth, gameweek: FootballTypes.GameweekNumber) -> async ();
       };
 
+      /*
       if(month > 0){
         for(clubId in Iter.fromArray(clubIds)){
           await leaderboard_canister.prepareForUpdate(seasonId, month, gameweek, clubId);  
@@ -326,8 +327,9 @@ module {
       } else {
         await leaderboard_canister.prepareForUpdate(seasonId, month, gameweek, 0);
       };
-
+      */
       
+      await leaderboard_canister.prepareForUpdate(seasonId, 0, gameweek, 0);
 
       for (canisterId in Iter.fromArray(uniqueManagerCanisterIds)) {
         let manager_canister = actor (canisterId) : actor {
@@ -350,9 +352,11 @@ module {
           );
           await leaderboard_canister.addLeaderboardChunk(seasonId, 0, 0, 0, leaderboardEntries);
           await leaderboard_canister.addLeaderboardChunk(seasonId, 0, gameweek, 0, leaderboardEntries);
+          /*
           for(clubId in Iter.fromArray(clubIds)){
             await leaderboard_canister.addLeaderboardChunk(seasonId, month, 0, clubId, leaderboardEntries);
           };
+          */
         };
       };
 

@@ -67,6 +67,8 @@
     try {
       
       await storeManager.syncStores();
+      console.log("system store")
+      console.log($systemStore)
       onHold.set($systemStore?.onHold ?? true);
       $availableFormations = Object.keys(allFormations);
       
@@ -128,16 +130,10 @@
   {#if isLoading}
     <Spinner />
   {:else}
-    {#if onHold}
+    {#if $onHold}
       <OnHold />
     {:else}
     <div>
-      {#if $systemStore?.onHold}
-        <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-2" role="alert">
-          <p class="font-bold">Saving your team is currently disabled</p>
-          <p>but OpenFPL will be back soon.</p>
-        </div>      
-      {/if}
       <div class="hidden md:flex">
         <PickTeamHeader {fantasyTeam} 
         {transfersAvailable}
