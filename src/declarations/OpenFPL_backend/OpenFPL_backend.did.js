@@ -18,6 +18,7 @@ export const idlFactory = ({ IDL }) => {
     'Not11Players' : IDL.Null,
   });
   const Result = IDL.Variant({ 'ok' : IDL.Null, 'err' : Error });
+  const Result_22 = IDL.Variant({ 'ok' : IDL.Text, 'err' : Error });
   const ClubId = IDL.Nat16;
   const ShirtType = IDL.Variant({ 'Filled' : IDL.Null, 'Striped' : IDL.Null });
   const ClubDTO = IDL.Record({
@@ -167,6 +168,7 @@ export const idlFactory = ({ IDL }) => {
     'awayGoals' : IDL.Nat8,
   });
   const Result_11 = IDL.Variant({ 'ok' : IDL.Vec(FixtureDTO), 'err' : Error });
+  const Result_16 = IDL.Variant({ 'ok' : IDL.Vec(CanisterId), 'err' : Error });
   const ClubFilterDTO = IDL.Record({
     'clubId' : ClubId,
     'leagueId' : LeagueId,
@@ -257,7 +259,6 @@ export const idlFactory = ({ IDL }) => {
     'seasonPositionText' : IDL.Text,
   });
   const Result_1 = IDL.Variant({ 'ok' : ManagerDTO, 'err' : Error });
-  const Result_16 = IDL.Variant({ 'ok' : IDL.Vec(CanisterId), 'err' : Error });
   const GetMonthlyLeaderboardDTO = IDL.Record({
     'month' : CalendarMonth,
     'clubId' : ClubId,
@@ -491,6 +492,7 @@ export const idlFactory = ({ IDL }) => {
   return IDL.Service({
     'calculateGameweekScores' : IDL.Func([], [Result], []),
     'calculateLeaderboards' : IDL.Func([], [Result], []),
+    'getActiveLeaderboardCanisterId' : IDL.Func([], [Result_22], []),
     'getClubs' : IDL.Func([], [Result_21], ['composite_query']),
     'getCountries' : IDL.Func([], [Result_20], ['query']),
     'getCurrentTeam' : IDL.Func([], [Result_19], []),
@@ -505,6 +507,7 @@ export const idlFactory = ({ IDL }) => {
         [Result_11],
         ['composite_query'],
       ),
+    'getLeaderboardCanisterIds' : IDL.Func([], [Result_16], []),
     'getLoanedPlayers' : IDL.Func(
         [ClubFilterDTO],
         [Result_3],

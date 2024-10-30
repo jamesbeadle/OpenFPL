@@ -1,32 +1,36 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import Layout from "../Layout.svelte";
   import { writable } from "svelte/store";
-  import { toastsError } from "$lib/stores/toasts-store";
+  
+  import { storeManager } from "$lib/managers/store-manager";
+  import { systemStore } from "$lib/stores/system-store";
   import { managerStore } from "$lib/stores/manager-store";
-  import PickTeamHeader from "$lib/components/pick-team/pick-team-header.svelte";
-  import PickTeamButtons from "$lib/components/pick-team/pick-team-buttons.svelte";
+  import { toastsError } from "$lib/stores/toasts-store";
+  
   import PickTeamPlayers from "$lib/components/pick-team/pick-team-players.svelte";
-  import BonusPanel from "$lib/components/pick-team/bonus-panel.svelte";
+  import PickTeamButtons from "$lib/components/pick-team/pick-team-buttons.svelte";
+  import PickTeamHeader from "$lib/components/pick-team/pick-team-header.svelte";
   import SimpleFixtures from "$lib/components/simple-fixtures.svelte";
+  import Layout from "../Layout.svelte";
+  
+  import BonusPanel from "$lib/components/pick-team/bonus-panel.svelte";
+  import OnHold from "$lib/components/pick-team/on-hold.svelte";
+  
   import { Spinner } from "@dfinity/gix-components";
-  import type { PickTeamDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { allFormations } from "$lib/utils/pick-team.helpers";
-    import { systemStore } from "$lib/stores/system-store";
-    import OnHold from "$lib/components/pick-team/on-hold.svelte";
-    import { storeManager } from "$lib/managers/store-manager";
-
+  import type { PickTeamDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  
   let availableFormations = writable<string[]>([]);
   let selectedFormation = writable<string>('4-4-2');
   
   let transfersAvailable = writable<number>(3);  
   let bankBalance = writable<number>(0);
-  let teamValue = writable<number>(0);
-  let loadingPlayers = writable<boolean>(true);  
-  let onHold = writable<boolean>(true);  
-
+  let teamValue = writable<number>(0);  
+  let onHold = writable<boolean>(true);
+    
+    
   let isLoading = true;
-  
+  let loadingPlayers = writable<boolean>(true);
   const pitchView = writable(true);
 
   const fantasyTeam = writable<PickTeamDTO>({
@@ -59,12 +63,10 @@
     firstGameweek: true
   });
   
-
   onMount(async () => {
     try {
       
       await storeManager.syncStores();
-
       onHold.set($systemStore?.onHold ?? true);
       $availableFormations = Object.keys(allFormations);
       
@@ -118,7 +120,6 @@
     }
 
     console.log($fantasyTeam)
-    
   }
 
 </script>
@@ -127,6 +128,9 @@
   {#if isLoading}
     <Spinner />
   {:else}
+    {#if onHold}
+      <OnHold />
+    {:else}
     <div>
       {#if $systemStore?.onHold}
         <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-2" role="alert">
@@ -142,6 +146,7 @@
       </div>
       <PickTeamButtons
         {fantasyTeam}
+        startingFantasyTeam={$fantasyTeam}
         {pitchView}
         {selectedFormation}
         {availableFormations}
@@ -172,5 +177,7 @@
       </div>
       <BonusPanel {fantasyTeam}  />
     </div>
+
+    {/if}
   {/if}
 </Layout>

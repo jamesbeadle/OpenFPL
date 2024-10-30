@@ -3436,76 +3436,7 @@
     };
 
     private func postUpgradeCallback() : async (){
-      //await resetData();
       await setSystemTimers();
-    };
-
-    private func resetData() : async (){
-      leagueSeasons := Array.map<(FootballTypes.LeagueId, [FootballTypes.Season]), (FootballTypes.LeagueId, [FootballTypes.Season])>(leagueSeasons, 
-        func(leagueSeasonEntry: (FootballTypes.LeagueId, [FootballTypes.Season])){
-            if(leagueSeasonEntry.0 == 1){
-              return (leagueSeasonEntry.0, Array.map<FootballTypes.Season, FootballTypes.Season>(leagueSeasonEntry.1, func(entry: FootballTypes.Season){
-                return {
-                  fixtures = List.map<FootballTypes.Fixture, FootballTypes.Fixture>(entry.fixtures, func(fixture: FootballTypes.Fixture){
-                      return {
-                        awayClubId = fixture.awayClubId;
-                        awayGoals = 0;
-                        events = List.fromArray([]);
-                        gameweek = fixture.gameweek;
-                        highestScoringPlayerId = 0;
-                        homeClubId = fixture.homeClubId;
-                        homeGoals = 0;
-                        id = fixture.id;
-                        kickOff = fixture.kickOff;
-                        seasonId = fixture.seasonId;
-                        status = #Unplayed
-                      }
-                  });
-                  id = entry.id;
-                  name = entry.name;
-                  postponedFixtures = entry.postponedFixtures;
-                  year = entry.year
-
-                }
-              }))
-            } else{
-              return leagueSeasonEntry;
-            }
-      });
-        
-      leaguePlayers := Array.map<(FootballTypes.LeagueId, [FootballTypes.Player]), (FootballTypes.LeagueId, [FootballTypes.Player])>(leaguePlayers, 
-        func(leaguePlayersEntry: (FootballTypes.LeagueId, [FootballTypes.Player])){
-            if(leaguePlayersEntry.0 == 1){
-              return (leaguePlayersEntry.0, Array.map<FootballTypes.Player, FootballTypes.Player>(leaguePlayersEntry.1, func(entry: FootballTypes.Player){
-                return {
-                  clubId = entry.clubId;
-                  currentLoanEndDate = entry.currentLoanEndDate;
-                  dateOfBirth = entry.dateOfBirth;
-                  firstName = entry.firstName;
-                  gender = entry.gender;
-                  id = entry.id;
-                  injuryHistory = entry.injuryHistory;
-                  lastName = entry.lastName;
-                  latestInjuryEndDate = entry.latestInjuryEndDate;
-                  leagueId = entry.leagueId;
-                  nationality = entry.nationality;
-                  parentClubId = entry.parentClubId;
-                  parentLeagueId = entry.parentLeagueId;
-                  position = entry.position;
-                  retirementDate = entry.retirementDate;
-                  seasons = List.nil<FootballTypes.PlayerSeason>();
-                  shirtNumber = entry.shirtNumber;
-                  status = entry.status;
-                  transferHistory = entry.transferHistory;
-                  valueHistory = entry.valueHistory;
-                  valueQuarterMillions = entry.valueQuarterMillions;
-
-                }
-              }))
-            } else{
-              return leaguePlayersEntry;
-            }
-      });
     };
     
     private func setSystemTimers() : async (){

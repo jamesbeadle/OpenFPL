@@ -140,6 +140,11 @@ type Result_3 =
    err: Error;
    ok: vec PlayerDTO;
  };
+type Result_22 = 
+ variant {
+   err: Error;
+   ok: text;
+ };
 type Result_21 = 
  variant {
    err: Error;
@@ -621,12 +626,14 @@ type CalendarMonth = nat8;
 service : {
   calculateGameweekScores: () -> (Result);
   calculateLeaderboards: () -> (Result);
+  getActiveLeaderboardCanisterId: () -> (Result_22);
   getClubs: () -> (Result_21) composite_query;
   getCountries: () -> (Result_20) query;
   getCurrentTeam: () -> (Result_19);
   getDataHashes: () -> (Result_18) composite_query;
   getFantasyTeamSnapshot: (GetFantasyTeamSnapshotDTO) -> (Result_17);
   getFixtures: (RequestFixturesDTO) -> (Result_11) composite_query;
+  getLeaderboardCanisterIds: () -> (Result_16);
   getLoanedPlayers: (ClubFilterDTO) -> (Result_3) composite_query;
   getManager: (RequestManagerDTO) -> (Result_1);
   getManagerCanisterIds: () -> (Result_16);

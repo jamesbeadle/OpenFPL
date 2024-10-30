@@ -140,6 +140,7 @@
       </div>
       <PickTeamButtons
         {fantasyTeam}
+        startingFantasyTeam={$fantasyTeam}
         {pitchView}
         {selectedFormation}
         {availableFormations}

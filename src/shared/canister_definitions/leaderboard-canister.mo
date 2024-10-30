@@ -12,13 +12,14 @@ import FootballTypes "../../shared/types/football_types";
 import T "../../shared/types/app_types";
 import Utilities "../../shared/utils/utilities";
 
-actor class _LeaderboardCanister(controllerPrincipalId: Base.PrincipalId) {
+actor class _LeaderboardCanister() {
   
   private stable var weekly_leaderboards : [T.WeeklyLeaderboard] = [];
   private stable var monthly_leaderboards : [T.MonthlyLeaderboard] = [];
   private stable var season_leaderboards : [T.SeasonLeaderboard] = [];
 
-  private var entryUpdatesAllowed = false;
+  private stable var entryUpdatesAllowed = false;
+  private stable var controllerPrincipalId = "";
 
   public shared ({ caller }) func prepareForUpdate(seasonId: FootballTypes.SeasonId, month: Base.CalendarMonth, gameweek: FootballTypes.GameweekNumber, clubId: FootballTypes.ClubId) : async () {
     assert not Principal.isAnonymous(caller);
@@ -32,7 +33,7 @@ actor class _LeaderboardCanister(controllerPrincipalId: Base.PrincipalId) {
       return;
     };
 
-    if(month == 0){
+    if(month > 0){
       monthly_leaderboards := Array.filter<T.MonthlyLeaderboard>(monthly_leaderboards, func(leaderboard: T.MonthlyLeaderboard) : Bool{
         leaderboard.seasonId != seasonId and leaderboard.month != month and leaderboard.clubId != clubId;
       });
@@ -56,6 +57,7 @@ actor class _LeaderboardCanister(controllerPrincipalId: Base.PrincipalId) {
 
     if(month == 0){
       addGameweekLeaderboardChunk(seasonId, gameweek, entriesChunk);
+      return;
     };
 
     addMonthLeaderboardChunk(seasonId, month, clubId, entriesChunk);

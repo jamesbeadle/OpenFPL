@@ -555,7 +555,6 @@ service : {
   revaluePlayerDown: (LeagueId, RevaluePlayerDownDTO) -> (Result);
   revaluePlayerUp: (LeagueId, RevaluePlayerUpDTO) -> (Result);
   setFixtureToComplete: (LeagueId, SeasonId, FixtureId) -> () oneway;
-  setFixtureToFinalised: (LeagueId, SeasonId, FixtureId) -> () oneway;
   setPlayerInjury: (LeagueId, SetPlayerInjuryDTO) -> (Result);
   submitFixtureData: (SubmitFixtureDataDTO) -> (Result);
   transferPlayer: (LeagueId, TransferPlayerDTO) -> (Result);

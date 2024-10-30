@@ -9,8 +9,7 @@
   import { getPositionAbbreviation, getFlagComponent, convertPlayerPosition } from "../../utils/helpers";
   import type { PlayerDTO, PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
-  import AddPlayerModal from "$lib/components/pick-team/add-player-modal.svelte";
-  import ConfirmCaptainChange from "./confirm-captain-change.svelte";
+  import ConfirmCaptainChange from "./modals/confirm-captain-change-modal.svelte";
   import AddPlayerIcon from "$lib/icons/AddPlayerIcon.svelte";
   import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
   import ActiveCaptainIcon from "$lib/icons/ActiveCaptainIcon.svelte";
@@ -21,6 +20,7 @@
   import PlayerCaptainIcon from "$lib/icons/PlayerCaptainIcon.svelte";
   import { allFormations, getTeamFormation } from "$lib/utils/pick-team.helpers";
   import LocalSpinner from "../local-spinner.svelte";
+  import AddPlayerModal from "./modals/add-player-modal.svelte";
 
   export let loadingPlayers: Writable<Boolean | null>;
   export let fantasyTeam: Writable<PickTeamDTO | null>;
@@ -30,10 +30,11 @@
   export let transfersAvailable: Writable<number>;  
   export let bankBalance: Writable<number>;
   export let teamValue: Writable<number>;
+
   let pitchHeight = 0;
   let pitchElement: HTMLElement;
-  let showAddPlayer = false;
-  
+  let showAddPlayerModal = false;
+  let showCaptainModal = false;
   let newTeam = true;
   let selectedPosition = -1;
   let selectedColumn = -1;
@@ -44,7 +45,6 @@
 
   $: rowHeight = (pitchHeight * 0.9) / 4;
   $: gridSetupComplete = rowHeight > 0;
-
   $: gridSetup = getGridSetup($selectedFormation);
 
   $: if ($fantasyTeam && $playerStore.length > 0) {
@@ -67,6 +67,7 @@
         window.addEventListener("resize", updatePitchHeight);
         updatePitchHeight();
       }
+      getLocalViewSelection();
 
       await loadData();
     } catch (error) {
@@ -78,12 +79,14 @@
     } 
   });
 
-  async function loadData() {
-
+  function getLocalViewSelection(){
     const storedViewMode = localStorage.getItem("viewMode");
     if (storedViewMode) {
       pitchView.set(storedViewMode === "pitch");
     }
+  }
+
+  async function loadData() {
 
     if (!$fantasyTeam) {
       return;
@@ -164,11 +167,11 @@
   function loadAddPlayer(row: number, col: number) {
     selectedPosition = row;
     selectedColumn = col;
-    showAddPlayer = true;
+    showAddPlayerModal = true;
   }
 
   function closeAddPlayerModal() {
-    showAddPlayer = false;
+    showAddPlayerModal = false;
   }
 
   function handlePlayerSelection(player: PlayerDTO) {
@@ -307,8 +310,6 @@
     $newCaptain = `${player?.firstName} ${player?.lastName}`;
     showCaptainModal = true;
   }
-
-  
 
   function getAvailablePositionIndex(
     position: number,
@@ -461,7 +462,6 @@
     return highestValuedPlayerId;
   }
 
-  let showCaptainModal = false;
   
   function closeCaptainModal() {
     showCaptainModal = false;
@@ -480,7 +480,7 @@
   {handlePlayerSelection}
   filterPosition={selectedPosition}
   filterColumn={selectedColumn}
-  visible={showAddPlayer}
+  visible={showAddPlayerModal}
   {closeAddPlayerModal}
   {fantasyTeam}
   {bankBalance}

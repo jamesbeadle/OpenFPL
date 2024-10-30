@@ -1,20 +1,22 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { storeManager } from "$lib/managers/store-manager";
   import { writable, type Writable } from "svelte/store";
   import { systemStore } from "$lib/stores/system-store";
   import { playerStore } from "$lib/stores/player-store";
   import { managerStore } from "$lib/stores/manager-store";
+  import { seasonStore } from "$lib/stores/season-store";
   import { busyStore } from "@dfinity/gix-components";
   import { toastsError, toastsShow } from "$lib/stores/toasts-store";
   import type { PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { allFormations, getAvailableFormations, getHighestValuedPlayerId, getTeamFormation } from "$lib/utils/pick-team.helpers";
   import { convertPlayerPosition } from "$lib/utils/helpers";
-  import SetTeamName from "./set-team-name.svelte";
+  import SetTeamName from "./modals/set-team-name-modal.svelte";
   import LocalSpinner from "../local-spinner.svelte";
-    import { storeManager } from "$lib/managers/store-manager";
-    import { seasonStore } from "$lib/stores/season-store";
 
+  export let startingFantasyTeam: PickTeamDTO;
   export let fantasyTeam: Writable<PickTeamDTO>;
+  
   export let pitchView: Writable<boolean>;
   export let selectedFormation: Writable<string>;
   export let availableFormations: Writable<string[]>;
@@ -45,6 +47,22 @@
         const newFormation = getTeamFormation($fantasyTeam, $playerStore);
         $selectedFormation = newFormation;
       }
+      console.log("starting fantasy team:")
+      console.log(startingFantasyTeam);
+      console.log("fantasy team:")
+      console.log($fantasyTeam);
+      let usedGoalGetterInSession = $fantasyTeam.goalGetterGameweek != startingFantasyTeam.goalGetterGameweek;
+      let usedPassMasterInSession = $fantasyTeam.passMasterGameweek != startingFantasyTeam.passMasterGameweek;
+      let usedNoEntryInSession = $fantasyTeam.noEntryGameweek != startingFantasyTeam.noEntryGameweek;
+      let usedTeamBoostInSession = $fantasyTeam.teamBoostGameweek != startingFantasyTeam.teamBoostGameweek;
+      let usedSafeHandsInSession = $fantasyTeam.safeHandsGameweek != startingFantasyTeam.safeHandsGameweek;
+      let usedCaptainFantasticInSession = $fantasyTeam.captainFantasticGameweek != startingFantasyTeam.captainFantasticGameweek;
+      let usedProspectsInSession = $fantasyTeam.prospectsGameweek != startingFantasyTeam.prospectsGameweek;
+      let usedOneNationInSession = $fantasyTeam.oneNationGameweek != startingFantasyTeam.oneNationGameweek;
+      let usedBraceBonusInSession = $fantasyTeam.braceBonusGameweek != startingFantasyTeam.braceBonusGameweek;
+      let usedHatTrickHeroInSession = $fantasyTeam.hatTrickHeroGameweek != startingFantasyTeam.hatTrickHeroGameweek;
+      bonusUsedInSession = usedGoalGetterInSession || usedPassMasterInSession || usedNoEntryInSession || usedTeamBoostInSession || usedSafeHandsInSession
+        || usedCaptainFantasticInSession || usedProspectsInSession || usedOneNationInSession || usedBraceBonusInSession ||usedHatTrickHeroInSession
     }
   }
 

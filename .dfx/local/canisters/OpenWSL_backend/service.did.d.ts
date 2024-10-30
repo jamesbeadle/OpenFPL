@@ -379,6 +379,7 @@ export type Result_19 = { ok: PickTeamDTO } | { err: Error };
 export type Result_2 = { ok: WeeklyLeaderboardDTO } | { err: Error };
 export type Result_20 = { ok: Array<CountryDTO> } | { err: Error };
 export type Result_21 = { ok: Array<ClubDTO> } | { err: Error };
+export type Result_22 = { ok: string } | { err: Error };
 export type Result_3 = { ok: Array<PlayerDTO> } | { err: Error };
 export type Result_4 = { ok: bigint } | { err: Error };
 export type Result_5 = { ok: GetTopupsDTO } | { err: Error };
@@ -488,12 +489,14 @@ export interface WeeklyLeaderboardDTO {
 export interface _SERVICE {
   calculateGameweekScores: ActorMethod<[], Result>;
   calculateLeaderboards: ActorMethod<[], Result>;
+  getActiveLeaderboardCanisterId: ActorMethod<[], Result_22>;
   getClubs: ActorMethod<[], Result_21>;
   getCountries: ActorMethod<[], Result_20>;
   getCurrentTeam: ActorMethod<[], Result_19>;
   getDataHashes: ActorMethod<[], Result_18>;
   getFantasyTeamSnapshot: ActorMethod<[GetFantasyTeamSnapshotDTO], Result_17>;
   getFixtures: ActorMethod<[RequestFixturesDTO], Result_11>;
+  getLeaderboardCanisterIds: ActorMethod<[], Result_16>;
   getLoanedPlayers: ActorMethod<[ClubFilterDTO], Result_3>;
   getManager: ActorMethod<[RequestManagerDTO], Result_1>;
   getManagerCanisterIds: ActorMethod<[], Result_16>;

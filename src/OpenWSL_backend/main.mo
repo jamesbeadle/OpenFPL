@@ -344,6 +344,14 @@
       return #ok(userManager.getUniqueManagerCanisterIds());
     };
 
+    public shared func getLeaderboardCanisterIds() : async Result.Result<[Base.CanisterId], T.Error> {
+      return #ok(leaderboardManager.getStableUniqueLeaderboardCanisterIds());
+    };
+
+    public shared func getActiveLeaderboardCanisterId() : async Result.Result<Text, T.Error> {
+      return #ok(leaderboardManager.getStableActiveCanisterId());
+    };
+
     //stable variables
     //TODO: Add back timers
     //private stable var timers : [Base.TimerInfo] = [];
@@ -351,7 +359,10 @@
     //stable variables from managers
 
     //Leaderboard Manager stable variables
-    private stable var stable_leaderboard_canisters: [T.LeaderboardCanister] = [];
+    private stable var stable_unique_weekly_leaderboard_canister_ids: [Base.CanisterId] = [];
+    private stable var stable_weekly_leaderboard_canister_ids: [(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, Base.CanisterId)])] = [];
+    private stable var stable_monthly_leaderboard_canister_ids: [(FootballTypes.SeasonId, [(Base.CalendarMonth, Base.CanisterId)])] = [];
+    private stable var stable_season_leaderboard_canister_ids: [(FootballTypes.SeasonId, Base.CanisterId)] = [];
     
     //Reward Manager stable variables
     private stable var stable_reward_pools : [(FootballTypes.SeasonId, T.RewardPool)] = [];
@@ -394,7 +405,10 @@
 
     system func preupgrade() {
 
-      stable_leaderboard_canisters := leaderboardManager.getStableLeaderboardCanisters();
+      stable_unique_weekly_leaderboard_canister_ids := leaderboardManager.getStableUniqueLeaderboardCanisterIds();
+      stable_weekly_leaderboard_canister_ids := leaderboardManager.getStableWeeklyLeaderboardCanisterIds();
+      stable_monthly_leaderboard_canister_ids := leaderboardManager.getStableMonthlyLeaderboardCanisterIds();
+      stable_season_leaderboard_canister_ids := leaderboardManager.getStableSeasonLeaderboardCanisterIds();
       
       stable_reward_pools := leaderboardManager.getStableRewardPools();
       stable_team_value_leaderboards := leaderboardManager.getStableTeamValueLeaderboards();
@@ -426,7 +440,10 @@
     };
 
     system func postupgrade() {
-      leaderboardManager.setStableWeeklyLeaderboardCanisters(stable_leaderboard_canisters);
+      leaderboardManager.setStableUniqueLeaderboardCanisterIds(stable_unique_weekly_leaderboard_canister_ids);
+      leaderboardManager.setStableWeeklyLeaderboardCanisterIds(stable_weekly_leaderboard_canister_ids);
+      leaderboardManager.setStableMonthlyLeaderboardCanisterIds(stable_monthly_leaderboard_canister_ids);
+      leaderboardManager.setStableSeasonLeaderboardCanisterIds(stable_season_leaderboard_canister_ids);
       
       leaderboardManager.setStableRewardPools(stable_reward_pools);
       leaderboardManager.setStableTeamValueLeaderboards(stable_team_value_leaderboards);
@@ -454,9 +471,6 @@
       userManager.setStableTotalManagers(stable_total_managers);
       userManager.setStableActiveManagerCanisterId(stable_active_manager_canister_id);   
 
-      ignore Timer.setTimer<system>(#nanoseconds(Int.abs(1)), postUpgradeCallback); 
-
-      //TODO Remove
       seasonManager.setStableDataHashes([
         { category = "clubs"; hash = "OPENFPL_1" },
         { category = "fixtures"; hash = "OPENFPL_1" },
@@ -469,6 +483,7 @@
         { category = "system_state"; hash = "OPENFPL_1" },
         { category = "seasons"; hash = "OPENFPL_1" }
       ]);
+      ignore Timer.setTimer<system>(#nanoseconds(Int.abs(1)), postUpgradeCallback); 
     };
 
     private func postUpgradeCallback() : async (){
@@ -477,7 +492,7 @@
       //set system state
       //await checkCanisterCycles(); 
       //await setSystemTimers();
-      //await updateManagerCanisterWasms();
+      await updateManagerCanisterWasms();
 
       await seasonManager.updateDataHash("clubs");
       await seasonManager.updateDataHash("fixtures");

@@ -5,7 +5,7 @@
   import type { PickTeamDTO } from "../../../../../declarations/OpenWSL_backend/OpenWSL_backend.did";
   import type { Bonus } from "$lib/types/bonus";
   import { BonusType } from "$lib/enums/BonusType";
-  import UseBonusModal from "$lib/components/pick-team/use-bonus-modal.svelte";
+  import UseBonusModal from "$lib/components/pick-team/modals/use-bonus-modal.svelte";
   import Tooltip from "../tooltip.svelte";
     import { storeManager } from "$lib/managers/store-manager";
 

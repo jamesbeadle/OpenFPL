@@ -381,6 +381,8 @@ export type Result_20 = { 'ok' : Array<CountryDTO> } |
   { 'err' : Error };
 export type Result_21 = { 'ok' : Array<ClubDTO> } |
   { 'err' : Error };
+export type Result_22 = { 'ok' : string } |
+  { 'err' : Error };
 export type Result_3 = { 'ok' : Array<PlayerDTO> } |
   { 'err' : Error };
 export type Result_4 = { 'ok' : bigint } |
@@ -488,6 +490,7 @@ export interface WeeklyLeaderboardDTO {
 export interface _SERVICE {
   'calculateGameweekScores' : ActorMethod<[], Result>,
   'calculateLeaderboards' : ActorMethod<[], Result>,
+  'getActiveLeaderboardCanisterId' : ActorMethod<[], Result_22>,
   'getClubs' : ActorMethod<[], Result_21>,
   'getCountries' : ActorMethod<[], Result_20>,
   'getCurrentTeam' : ActorMethod<[], Result_19>,
@@ -497,6 +500,7 @@ export interface _SERVICE {
     Result_17
   >,
   'getFixtures' : ActorMethod<[RequestFixturesDTO], Result_11>,
+  'getLeaderboardCanisterIds' : ActorMethod<[], Result_16>,
   'getLoanedPlayers' : ActorMethod<[ClubFilterDTO], Result_3>,
   'getManager' : ActorMethod<[RequestManagerDTO], Result_1>,
   'getManagerCanisterIds' : ActorMethod<[], Result_16>,
