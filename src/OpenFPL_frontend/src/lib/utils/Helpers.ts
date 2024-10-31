@@ -11,7 +11,7 @@ import type {
   FixtureStatusType,
   PlayerEventType,
   PlayerPosition,
-} from "../../../../declarations/OpenWSL_backend/OpenWSL_backend.did";
+} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import type {
   PlayerDTO,
   PlayerPointsDTO,

@@ -5,12 +5,6 @@
   "OpenFPL_frontend": {
     "ic": "5gbds-naaaa-aaaal-qmzqa-cai"
   },
-  "OpenWSL_backend": {
-    "ic": "5bafg-ayaaa-aaaal-qmzqq-cai"
-  },
-  "OpenWSL_frontend": {
-    "ic": "5ido2-wqaaa-aaaal-qmzra-cai"
-  },
   "data_canister": {
     "ic": "52fzd-2aaaa-aaaal-qmzsa-cai"
   }

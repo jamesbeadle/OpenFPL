@@ -67,8 +67,6 @@
     try {
       
       await storeManager.syncStores();
-      console.log("system store")
-      console.log($systemStore)
       onHold.set($systemStore?.onHold ?? true);
       $availableFormations = Object.keys(allFormations);
       
@@ -120,8 +118,6 @@
     if($fantasyTeam.firstGameweek){
       transfersAvailable.set(Infinity);
     }
-
-    console.log($fantasyTeam)
   }
 
 </script>
@@ -142,7 +138,6 @@
       </div>
       <PickTeamButtons
         {fantasyTeam}
-        startingFantasyTeam={$fantasyTeam}
         {pitchView}
         {selectedFormation}
         {availableFormations}

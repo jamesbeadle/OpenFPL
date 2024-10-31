@@ -29,16 +29,14 @@ declare module '$env/static/private' {
 	export const DFX_VERSION: string;
 	export const DFX_NETWORK: string;
 	export const CANISTER_CANDID_PATH_OPENFPL_BACKEND: string;
-	export const CANISTER_ID_OPENFPL_FRONTEND: string;
-	export const CANISTER_ID_SNS_SWAP: string;
+	export const CANISTER_ID_SNS_ROOT: string;
 	export const CANISTER_ID_SNS_LEDGER: string;
-	export const CANISTER_ID_OPENFPL_BACKEND: string;
 	export const CANISTER_ID_SNS_INDEX: string;
 	export const CANISTER_ID_DATA_CANISTER: string;
+	export const CANISTER_ID_SNS_SWAP: string;
+	export const CANISTER_ID_OPENFPL_FRONTEND: string;
 	export const CANISTER_ID_SNS_GOVERNANCE: string;
-	export const CANISTER_ID_SNS_ROOT: string;
-	export const CANISTER_ID_OPENWSL_BACKEND: string;
-	export const CANISTER_ID_OPENWSL_FRONTEND: string;
+	export const CANISTER_ID_OPENFPL_BACKEND: string;
 	export const CANISTER_ID: string;
 	export const CANISTER_CANDID_PATH: string;
 	export const VITE_AUTH_PROVIDER_URL: string;
@@ -103,8 +101,6 @@ declare module '$env/static/private' {
 	export const COLORTERM: string;
 	export const VITE_OPENFPL_BACKEND_CANISTER_ID: string;
 	export const VITE_OPENFPL_FRONTEND_CANISTER_ID: string;
-	export const VITE_OPENWSL_BACKEND_CANISTER_ID: string;
-	export const VITE_OPENWSL_FRONTEND_CANISTER_ID: string;
 	export const VITE_DATA_CANISTER_CANISTER_ID: string;
 }
 
@@ -140,16 +136,14 @@ declare module '$env/dynamic/private' {
 		DFX_VERSION: string;
 		DFX_NETWORK: string;
 		CANISTER_CANDID_PATH_OPENFPL_BACKEND: string;
-		CANISTER_ID_OPENFPL_FRONTEND: string;
-		CANISTER_ID_SNS_SWAP: string;
+		CANISTER_ID_SNS_ROOT: string;
 		CANISTER_ID_SNS_LEDGER: string;
-		CANISTER_ID_OPENFPL_BACKEND: string;
 		CANISTER_ID_SNS_INDEX: string;
 		CANISTER_ID_DATA_CANISTER: string;
+		CANISTER_ID_SNS_SWAP: string;
+		CANISTER_ID_OPENFPL_FRONTEND: string;
 		CANISTER_ID_SNS_GOVERNANCE: string;
-		CANISTER_ID_SNS_ROOT: string;
-		CANISTER_ID_OPENWSL_BACKEND: string;
-		CANISTER_ID_OPENWSL_FRONTEND: string;
+		CANISTER_ID_OPENFPL_BACKEND: string;
 		CANISTER_ID: string;
 		CANISTER_CANDID_PATH: string;
 		VITE_AUTH_PROVIDER_URL: string;
@@ -214,8 +208,6 @@ declare module '$env/dynamic/private' {
 		COLORTERM: string;
 		VITE_OPENFPL_BACKEND_CANISTER_ID: string;
 		VITE_OPENFPL_FRONTEND_CANISTER_ID: string;
-		VITE_OPENWSL_BACKEND_CANISTER_ID: string;
-		VITE_OPENWSL_FRONTEND_CANISTER_ID: string;
 		VITE_DATA_CANISTER_CANISTER_ID: string;
 		[key: `PUBLIC_${string}`]: undefined;
 		[key: `${string}`]: string | undefined;

@@ -2,7 +2,7 @@ import { authStore } from "$lib/stores/auth.store";
 import { systemStore } from "$lib/stores/system-store";
 import { isError, replacer } from "$lib/utils/helpers";
 import { writable } from "svelte/store";
-import { idlFactory } from "../../../../declarations/OpenWSL_backend";
+import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
   DataHashDTO,
   FantasyTeamSnapshot,
@@ -12,7 +12,7 @@ import type {
   PickTeamDTO,
   SystemStateDTO,
   UpdateTeamSelectionDTO,
-} from "../../../../declarations/OpenWSL_backend/OpenWSL_backend.did";
+} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 
 function createManagerStore() {

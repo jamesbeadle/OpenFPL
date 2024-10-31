@@ -168,8 +168,7 @@ export default defineConfig((): UserConfig => {
           network === "ic"
             ? "gyito-zyaaa-aaaaq-aacpq-cai"
             : "b77ix-eeaaa-aaaaa-qaada-cai",
-        TOTAL_GAMEWEEKS: 38, //BUILD VARIABLE
-        //TOTAL_GAMEWEEKS: 22, //BUILD VARIABLE
+        TOTAL_GAMEWEEKS: 38,
       },
       VITE_APP_VERSION: JSON.stringify(version),
       VITE_DFX_NETWORK: JSON.stringify(network),

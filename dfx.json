@@ -14,20 +14,6 @@
       "source": ["build/"],
       "type": "assets"
     },
-    "OpenWSL_backend": {
-      "dependencies": [],
-      "main": "src/OpenWSL_backend/main.mo",
-      "type": "motoko",
-      "optimize": "cycles"
-    },
-    "OpenWSL_frontend": {
-      "dependencies": ["OpenWSL_backend"],
-      "frontend": {
-        "entrypoint": "build/index.html"
-      },
-      "source": ["build/"],
-      "type": "assets"
-    },
     "data_canister": {
       "dependencies": [],
       "main": "src/data_canister/main.mo",

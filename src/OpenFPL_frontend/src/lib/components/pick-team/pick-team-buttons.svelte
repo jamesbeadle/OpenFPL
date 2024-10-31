@@ -14,7 +14,7 @@
   import SetTeamName from "./modals/set-team-name-modal.svelte";
   import LocalSpinner from "../local-spinner.svelte";
 
-  export let startingFantasyTeam: PickTeamDTO;
+  let startingFantasyTeam: PickTeamDTO;
   export let fantasyTeam: Writable<PickTeamDTO>;
   
   export let pitchView: Writable<boolean>;
@@ -43,32 +43,33 @@
 
   $: {
     if ($fantasyTeam) {
+      
       if ($fantasyTeam.playerIds.filter((x) => x > 0).length == 11) {
         const newFormation = getTeamFormation($fantasyTeam, $playerStore);
         $selectedFormation = newFormation;
       }
-      console.log("starting fantasy team:")
-      console.log(startingFantasyTeam);
-      console.log("fantasy team:")
-      console.log($fantasyTeam);
-      let usedGoalGetterInSession = $fantasyTeam.goalGetterGameweek != startingFantasyTeam.goalGetterGameweek;
-      let usedPassMasterInSession = $fantasyTeam.passMasterGameweek != startingFantasyTeam.passMasterGameweek;
-      let usedNoEntryInSession = $fantasyTeam.noEntryGameweek != startingFantasyTeam.noEntryGameweek;
-      let usedTeamBoostInSession = $fantasyTeam.teamBoostGameweek != startingFantasyTeam.teamBoostGameweek;
-      let usedSafeHandsInSession = $fantasyTeam.safeHandsGameweek != startingFantasyTeam.safeHandsGameweek;
-      let usedCaptainFantasticInSession = $fantasyTeam.captainFantasticGameweek != startingFantasyTeam.captainFantasticGameweek;
-      let usedProspectsInSession = $fantasyTeam.prospectsGameweek != startingFantasyTeam.prospectsGameweek;
-      let usedOneNationInSession = $fantasyTeam.oneNationGameweek != startingFantasyTeam.oneNationGameweek;
-      let usedBraceBonusInSession = $fantasyTeam.braceBonusGameweek != startingFantasyTeam.braceBonusGameweek;
-      let usedHatTrickHeroInSession = $fantasyTeam.hatTrickHeroGameweek != startingFantasyTeam.hatTrickHeroGameweek;
-      bonusUsedInSession = usedGoalGetterInSession || usedPassMasterInSession || usedNoEntryInSession || usedTeamBoostInSession || usedSafeHandsInSession
-        || usedCaptainFantasticInSession || usedProspectsInSession || usedOneNationInSession || usedBraceBonusInSession ||usedHatTrickHeroInSession
+
+      if(startingFantasyTeam){
+        let usedGoalGetterInSession = $fantasyTeam.goalGetterGameweek != startingFantasyTeam.goalGetterGameweek;
+        let usedPassMasterInSession = $fantasyTeam.passMasterGameweek != startingFantasyTeam.passMasterGameweek;
+        let usedNoEntryInSession = $fantasyTeam.noEntryGameweek != startingFantasyTeam.noEntryGameweek;
+        let usedTeamBoostInSession = $fantasyTeam.teamBoostGameweek != startingFantasyTeam.teamBoostGameweek;
+        let usedSafeHandsInSession = $fantasyTeam.safeHandsGameweek != startingFantasyTeam.safeHandsGameweek;
+        let usedCaptainFantasticInSession = $fantasyTeam.captainFantasticGameweek != startingFantasyTeam.captainFantasticGameweek;
+        let usedProspectsInSession = $fantasyTeam.prospectsGameweek != startingFantasyTeam.prospectsGameweek;
+        let usedOneNationInSession = $fantasyTeam.oneNationGameweek != startingFantasyTeam.oneNationGameweek;
+        let usedBraceBonusInSession = $fantasyTeam.braceBonusGameweek != startingFantasyTeam.braceBonusGameweek;
+        let usedHatTrickHeroInSession = $fantasyTeam.hatTrickHeroGameweek != startingFantasyTeam.hatTrickHeroGameweek;
+        bonusUsedInSession = usedGoalGetterInSession || usedPassMasterInSession || usedNoEntryInSession || usedTeamBoostInSession || usedSafeHandsInSession
+          || usedCaptainFantasticInSession || usedProspectsInSession || usedOneNationInSession || usedBraceBonusInSession ||usedHatTrickHeroInSession 
+      }
     }
   }
 
   onMount(async () => {
     try {
       await storeManager.syncStores();
+      startingFantasyTeam = $fantasyTeam;
       loadData();
       disableInvalidFormations()
     } catch (error) {
@@ -348,11 +349,7 @@
     }
 
     try {
-      console.log(team!,
-        activeGameweek,
-        bonusUsedInSession,
-        transferWindowPlayedInSession)
-      await managerStore.saveFantasyTeam(
+       await managerStore.saveFantasyTeam(
         team!,
         activeGameweek,
         bonusUsedInSession,

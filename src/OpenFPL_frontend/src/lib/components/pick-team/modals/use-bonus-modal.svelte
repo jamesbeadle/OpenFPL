@@ -86,8 +86,6 @@
   };
 
   function handleUseBonus() {
-    console.log("handle use bonus")
-    console.log($fantasyTeam)
     if (!$fantasyTeam) return;
     let activeGameweek = 1;
     if($systemStore?.pickTeamGameweek){

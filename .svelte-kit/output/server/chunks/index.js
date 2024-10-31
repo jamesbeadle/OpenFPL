@@ -3485,7 +3485,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "hs5sbj"
+  version_hash: "pco5fc"
 };
 async function get_hooks() {
   return {};
@@ -3695,7 +3695,7 @@ function createSystemStore() {
   };
 }
 const systemStore = createSystemStore();
-const idlFactory$1 = ({ IDL }) => {
+const idlFactory = ({ IDL }) => {
   const List = IDL.Rec();
   const Error2 = IDL.Variant({
     "MoreThan2PlayersFromClub": IDL.Null,
@@ -4262,23 +4262,23 @@ const idlFactory$1 = ({ IDL }) => {
     "updateUsername": IDL.Func([UpdateUsernameDTO], [Result], [])
   });
 };
-var define_process_env_default$g = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
-const canisterId$1 = define_process_env_default$g.CANISTER_ID_OPENFPL_BACKEND;
-const createActor$1 = (canisterId2, options2 = {}) => {
+var define_process_env_default$f = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+const canisterId = define_process_env_default$f.CANISTER_ID_OPENFPL_BACKEND;
+const createActor = (canisterId2, options2 = {}) => {
   const agent = options2.agent || new HttpAgent({ ...options2.agentOptions });
   if (options2.agent && options2.agentOptions) {
     console.warn(
       "Detected both agent and agentOptions passed to createActor. Ignoring agentOptions and proceeding with the provided agent."
     );
   }
-  return Actor.createActor(idlFactory$1, {
+  return Actor.createActor(idlFactory, {
     agent,
     canisterId: canisterId2,
     ...options2.actorOptions
   });
 };
-canisterId$1 ? createActor$1(canisterId$1) : void 0;
-var define_process_env_default$f = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+canisterId ? createActor(canisterId) : void 0;
+var define_process_env_default$e = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class ActorFactory {
   static createActor(idlFactory2, canisterId2 = "", identity = null, options2 = null) {
     const hostOptions = {
@@ -4327,11 +4327,11 @@ class ActorFactory {
       });
     }).then((identity) => {
       unsubscribe();
-      return ActorFactory.createActor(idlFactory$1, canisterId2, identity);
+      return ActorFactory.createActor(idlFactory, canisterId2, identity);
     });
   }
   static getGovernanceAgent(identity = null, options2 = null) {
-    let canisterId2 = define_process_env_default$f.CANISTER_ID_SNS_GOVERNANCE;
+    let canisterId2 = define_process_env_default$e.CANISTER_ID_SNS_GOVERNANCE;
     const hostOptions = {
       host: `https://${canisterId2}.icp-api.io`,
       identity
@@ -4750,13 +4750,13 @@ function calculateBonusPoints(gameweekData, fantasyTeam, points) {
   }
   return bonusPoints;
 }
-var define_process_env_default$e = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$d = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class FixtureService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
-      idlFactory$1,
-      define_process_env_default$e.OPENFPL_BACKEND_CANISTER_ID
+      idlFactory,
+      define_process_env_default$d.OPENFPL_BACKEND_CANISTER_ID
     );
   }
   async getPostponedFixtures() {
@@ -5125,581 +5125,7 @@ const Toasts = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     return `${validate_component(Toast, "Toast").$$render($$result, { msg }, {}, {})}`;
   })}</div>` : ``}`;
 });
-const idlFactory = ({ IDL }) => {
-  const Error2 = IDL.Variant({
-    "MoreThan2PlayersFromClub": IDL.Null,
-    "DecodeError": IDL.Null,
-    "NotAllowed": IDL.Null,
-    "DuplicatePlayerInTeam": IDL.Null,
-    "InvalidBonuses": IDL.Null,
-    "TooManyTransfers": IDL.Null,
-    "NotFound": IDL.Null,
-    "NumberPerPositionError": IDL.Null,
-    "TeamOverspend": IDL.Null,
-    "NotAuthorized": IDL.Null,
-    "SelectedCaptainNotInTeam": IDL.Null,
-    "InvalidData": IDL.Null,
-    "SystemOnHold": IDL.Null,
-    "AlreadyExists": IDL.Null,
-    "CanisterCreateError": IDL.Null,
-    "Not11Players": IDL.Null
-  });
-  const Result = IDL.Variant({ "ok": IDL.Null, "err": Error2 });
-  const Result_21 = IDL.Variant({ "ok": IDL.Text, "err": Error2 });
-  const ClubId = IDL.Nat16;
-  const ShirtType = IDL.Variant({ "Filled": IDL.Null, "Striped": IDL.Null });
-  const ClubDTO = IDL.Record({
-    "id": ClubId,
-    "secondaryColourHex": IDL.Text,
-    "name": IDL.Text,
-    "friendlyName": IDL.Text,
-    "thirdColourHex": IDL.Text,
-    "abbreviatedName": IDL.Text,
-    "shirtType": ShirtType,
-    "primaryColourHex": IDL.Text
-  });
-  const Result_20 = IDL.Variant({ "ok": IDL.Vec(ClubDTO), "err": Error2 });
-  const CountryId = IDL.Nat16;
-  const CountryDTO = IDL.Record({
-    "id": CountryId,
-    "code": IDL.Text,
-    "name": IDL.Text
-  });
-  const Result_19 = IDL.Variant({ "ok": IDL.Vec(CountryDTO), "err": Error2 });
-  const GameweekNumber = IDL.Nat8;
-  const CanisterId = IDL.Text;
-  const PickTeamDTO = IDL.Record({
-    "playerIds": IDL.Vec(ClubId),
-    "username": IDL.Text,
-    "goalGetterPlayerId": ClubId,
-    "oneNationCountryId": CountryId,
-    "hatTrickHeroGameweek": GameweekNumber,
-    "transfersAvailable": IDL.Nat8,
-    "oneNationGameweek": GameweekNumber,
-    "teamBoostGameweek": GameweekNumber,
-    "captainFantasticGameweek": GameweekNumber,
-    "bankQuarterMillions": IDL.Nat16,
-    "noEntryPlayerId": ClubId,
-    "safeHandsPlayerId": ClubId,
-    "braceBonusGameweek": GameweekNumber,
-    "passMasterGameweek": GameweekNumber,
-    "teamBoostClubId": ClubId,
-    "goalGetterGameweek": GameweekNumber,
-    "firstGameweek": IDL.Bool,
-    "captainFantasticPlayerId": ClubId,
-    "transferWindowGameweek": GameweekNumber,
-    "noEntryGameweek": GameweekNumber,
-    "prospectsGameweek": GameweekNumber,
-    "safeHandsGameweek": GameweekNumber,
-    "principalId": IDL.Text,
-    "passMasterPlayerId": ClubId,
-    "captainId": ClubId,
-    "canisterId": CanisterId,
-    "monthlyBonusesAvailable": IDL.Nat8
-  });
-  const Result_18 = IDL.Variant({ "ok": PickTeamDTO, "err": Error2 });
-  const DataHashDTO = IDL.Record({ "hash": IDL.Text, "category": IDL.Text });
-  const Result_17 = IDL.Variant({ "ok": IDL.Vec(DataHashDTO), "err": Error2 });
-  const SeasonId = IDL.Nat16;
-  const PrincipalId = IDL.Text;
-  const GetFantasyTeamSnapshotDTO = IDL.Record({
-    "seasonId": SeasonId,
-    "managerPrincipalId": PrincipalId,
-    "gameweek": GameweekNumber
-  });
-  const CalendarMonth = IDL.Nat8;
-  const FantasyTeamSnapshotDTO = IDL.Record({
-    "playerIds": IDL.Vec(ClubId),
-    "month": CalendarMonth,
-    "teamValueQuarterMillions": IDL.Nat16,
-    "username": IDL.Text,
-    "goalGetterPlayerId": ClubId,
-    "oneNationCountryId": CountryId,
-    "hatTrickHeroGameweek": GameweekNumber,
-    "transfersAvailable": IDL.Nat8,
-    "oneNationGameweek": GameweekNumber,
-    "teamBoostGameweek": GameweekNumber,
-    "captainFantasticGameweek": GameweekNumber,
-    "bankQuarterMillions": IDL.Nat16,
-    "noEntryPlayerId": ClubId,
-    "monthlyPoints": IDL.Int16,
-    "safeHandsPlayerId": ClubId,
-    "seasonId": SeasonId,
-    "braceBonusGameweek": GameweekNumber,
-    "favouriteClubId": ClubId,
-    "passMasterGameweek": GameweekNumber,
-    "teamBoostClubId": ClubId,
-    "goalGetterGameweek": GameweekNumber,
-    "captainFantasticPlayerId": ClubId,
-    "gameweek": GameweekNumber,
-    "seasonPoints": IDL.Int16,
-    "transferWindowGameweek": GameweekNumber,
-    "noEntryGameweek": GameweekNumber,
-    "prospectsGameweek": GameweekNumber,
-    "safeHandsGameweek": GameweekNumber,
-    "principalId": IDL.Text,
-    "passMasterPlayerId": ClubId,
-    "captainId": ClubId,
-    "points": IDL.Int16,
-    "monthlyBonusesAvailable": IDL.Nat8
-  });
-  const Result_16 = IDL.Variant({
-    "ok": FantasyTeamSnapshotDTO,
-    "err": Error2
-  });
-  const LeagueId = IDL.Nat16;
-  const RequestFixturesDTO = IDL.Record({
-    "seasonId": SeasonId,
-    "leagueId": LeagueId
-  });
-  const FixtureStatusType = IDL.Variant({
-    "Unplayed": IDL.Null,
-    "Finalised": IDL.Null,
-    "Active": IDL.Null,
-    "Complete": IDL.Null
-  });
-  const FixtureId = IDL.Nat32;
-  const PlayerEventType = IDL.Variant({
-    "PenaltyMissed": IDL.Null,
-    "Goal": IDL.Null,
-    "GoalConceded": IDL.Null,
-    "Appearance": IDL.Null,
-    "PenaltySaved": IDL.Null,
-    "RedCard": IDL.Null,
-    "KeeperSave": IDL.Null,
-    "CleanSheet": IDL.Null,
-    "YellowCard": IDL.Null,
-    "GoalAssisted": IDL.Null,
-    "OwnGoal": IDL.Null,
-    "HighestScoringPlayer": IDL.Null
-  });
-  const PlayerEventData = IDL.Record({
-    "fixtureId": FixtureId,
-    "clubId": ClubId,
-    "playerId": IDL.Nat16,
-    "eventStartMinute": IDL.Nat8,
-    "eventEndMinute": IDL.Nat8,
-    "eventType": PlayerEventType
-  });
-  const FixtureDTO = IDL.Record({
-    "id": IDL.Nat32,
-    "status": FixtureStatusType,
-    "highestScoringPlayerId": IDL.Nat16,
-    "seasonId": SeasonId,
-    "awayClubId": ClubId,
-    "events": IDL.Vec(PlayerEventData),
-    "homeClubId": ClubId,
-    "kickOff": IDL.Int,
-    "homeGoals": IDL.Nat8,
-    "gameweek": GameweekNumber,
-    "awayGoals": IDL.Nat8
-  });
-  const Result_10 = IDL.Variant({ "ok": IDL.Vec(FixtureDTO), "err": Error2 });
-  const Result_15 = IDL.Variant({ "ok": IDL.Vec(CanisterId), "err": Error2 });
-  const ClubFilterDTO = IDL.Record({
-    "clubId": ClubId,
-    "leagueId": LeagueId
-  });
-  const PlayerStatus = IDL.Variant({
-    "OnLoan": IDL.Null,
-    "Active": IDL.Null,
-    "FreeAgent": IDL.Null,
-    "Retired": IDL.Null
-  });
-  const PlayerPosition = IDL.Variant({
-    "Goalkeeper": IDL.Null,
-    "Midfielder": IDL.Null,
-    "Forward": IDL.Null,
-    "Defender": IDL.Null
-  });
-  const PlayerDTO = IDL.Record({
-    "id": IDL.Nat16,
-    "status": PlayerStatus,
-    "clubId": ClubId,
-    "valueQuarterMillions": IDL.Nat16,
-    "dateOfBirth": IDL.Int,
-    "nationality": CountryId,
-    "shirtNumber": IDL.Nat8,
-    "position": PlayerPosition,
-    "lastName": IDL.Text,
-    "firstName": IDL.Text
-  });
-  const Result_3 = IDL.Variant({ "ok": IDL.Vec(PlayerDTO), "err": Error2 });
-  const RequestManagerDTO = IDL.Record({
-    "month": CalendarMonth,
-    "clubId": ClubId,
-    "seasonId": SeasonId,
-    "managerId": IDL.Text,
-    "gameweek": GameweekNumber
-  });
-  const PlayerId = IDL.Nat16;
-  const FantasyTeamSnapshot = IDL.Record({
-    "playerIds": IDL.Vec(PlayerId),
-    "month": CalendarMonth,
-    "teamValueQuarterMillions": IDL.Nat16,
-    "username": IDL.Text,
-    "goalGetterPlayerId": PlayerId,
-    "oneNationCountryId": CountryId,
-    "hatTrickHeroGameweek": GameweekNumber,
-    "transfersAvailable": IDL.Nat8,
-    "oneNationGameweek": GameweekNumber,
-    "teamBoostGameweek": GameweekNumber,
-    "captainFantasticGameweek": GameweekNumber,
-    "bankQuarterMillions": IDL.Nat16,
-    "noEntryPlayerId": PlayerId,
-    "monthlyPoints": IDL.Int16,
-    "safeHandsPlayerId": PlayerId,
-    "seasonId": SeasonId,
-    "braceBonusGameweek": GameweekNumber,
-    "favouriteClubId": IDL.Opt(ClubId),
-    "passMasterGameweek": GameweekNumber,
-    "teamBoostClubId": ClubId,
-    "goalGetterGameweek": GameweekNumber,
-    "captainFantasticPlayerId": PlayerId,
-    "gameweek": GameweekNumber,
-    "seasonPoints": IDL.Int16,
-    "transferWindowGameweek": GameweekNumber,
-    "noEntryGameweek": GameweekNumber,
-    "prospectsGameweek": GameweekNumber,
-    "safeHandsGameweek": GameweekNumber,
-    "principalId": IDL.Text,
-    "passMasterPlayerId": PlayerId,
-    "captainId": PlayerId,
-    "points": IDL.Int16,
-    "monthlyBonusesAvailable": IDL.Nat8
-  });
-  const ManagerDTO = IDL.Record({
-    "username": IDL.Text,
-    "weeklyPosition": IDL.Int,
-    "createDate": IDL.Int,
-    "monthlyPoints": IDL.Int16,
-    "weeklyPoints": IDL.Int16,
-    "weeklyPositionText": IDL.Text,
-    "gameweeks": IDL.Vec(FantasyTeamSnapshot),
-    "favouriteClubId": IDL.Opt(ClubId),
-    "monthlyPosition": IDL.Int,
-    "seasonPosition": IDL.Int,
-    "monthlyPositionText": IDL.Text,
-    "profilePicture": IDL.Opt(IDL.Vec(IDL.Nat8)),
-    "seasonPoints": IDL.Int16,
-    "principalId": IDL.Text,
-    "seasonPositionText": IDL.Text
-  });
-  const Result_1 = IDL.Variant({ "ok": ManagerDTO, "err": Error2 });
-  const GetMonthlyLeaderboardDTO = IDL.Record({
-    "month": CalendarMonth,
-    "clubId": ClubId,
-    "offset": IDL.Nat,
-    "seasonId": SeasonId,
-    "limit": IDL.Nat,
-    "searchTerm": IDL.Text
-  });
-  const LeaderboardEntry = IDL.Record({
-    "username": IDL.Text,
-    "positionText": IDL.Text,
-    "position": IDL.Nat,
-    "principalId": IDL.Text,
-    "points": IDL.Int16
-  });
-  const MonthlyLeaderboardDTO = IDL.Record({
-    "month": IDL.Nat8,
-    "clubId": ClubId,
-    "totalEntries": IDL.Nat,
-    "seasonId": SeasonId,
-    "entries": IDL.Vec(LeaderboardEntry)
-  });
-  const Result_14 = IDL.Variant({
-    "ok": MonthlyLeaderboardDTO,
-    "err": Error2
-  });
-  const GetPlayerDetailsDTO = IDL.Record({
-    "playerId": ClubId,
-    "seasonId": SeasonId
-  });
-  const InjuryHistory = IDL.Record({
-    "description": IDL.Text,
-    "injuryStartDate": IDL.Int,
-    "expectedEndDate": IDL.Int
-  });
-  const PlayerGameweekDTO = IDL.Record({
-    "fixtureId": FixtureId,
-    "events": IDL.Vec(PlayerEventData),
-    "number": IDL.Nat8,
-    "points": IDL.Int16
-  });
-  const ValueHistory = IDL.Record({
-    "oldValue": IDL.Nat16,
-    "changedOn": IDL.Int,
-    "newValue": IDL.Nat16
-  });
-  const PlayerDetailDTO = IDL.Record({
-    "id": ClubId,
-    "status": PlayerStatus,
-    "clubId": ClubId,
-    "parentClubId": ClubId,
-    "valueQuarterMillions": IDL.Nat16,
-    "dateOfBirth": IDL.Int,
-    "injuryHistory": IDL.Vec(InjuryHistory),
-    "seasonId": SeasonId,
-    "gameweeks": IDL.Vec(PlayerGameweekDTO),
-    "nationality": CountryId,
-    "retirementDate": IDL.Int,
-    "valueHistory": IDL.Vec(ValueHistory),
-    "latestInjuryEndDate": IDL.Int,
-    "shirtNumber": IDL.Nat8,
-    "position": PlayerPosition,
-    "lastName": IDL.Text,
-    "firstName": IDL.Text
-  });
-  const Result_13 = IDL.Variant({ "ok": PlayerDetailDTO, "err": Error2 });
-  const GameweekFiltersDTO = IDL.Record({
-    "seasonId": SeasonId,
-    "gameweek": GameweekNumber
-  });
-  const PlayerPointsDTO = IDL.Record({
-    "id": IDL.Nat16,
-    "clubId": ClubId,
-    "events": IDL.Vec(PlayerEventData),
-    "position": PlayerPosition,
-    "gameweek": GameweekNumber,
-    "points": IDL.Int16
-  });
-  const Result_12 = IDL.Variant({
-    "ok": IDL.Vec(PlayerPointsDTO),
-    "err": Error2
-  });
-  const PlayerScoreDTO = IDL.Record({
-    "id": IDL.Nat16,
-    "clubId": ClubId,
-    "assists": IDL.Int16,
-    "dateOfBirth": IDL.Int,
-    "nationality": CountryId,
-    "goalsScored": IDL.Int16,
-    "saves": IDL.Int16,
-    "goalsConceded": IDL.Int16,
-    "events": IDL.Vec(PlayerEventData),
-    "position": PlayerPosition,
-    "points": IDL.Int16
-  });
-  const Result_11 = IDL.Variant({
-    "ok": IDL.Vec(IDL.Tuple(IDL.Nat16, PlayerScoreDTO)),
-    "err": Error2
-  });
-  const GetSnapshotPlayers = IDL.Record({
-    "seasonId": SeasonId,
-    "gameweek": GameweekNumber,
-    "leagueId": LeagueId
-  });
-  const ProfileDTO = IDL.Record({
-    "username": IDL.Text,
-    "termsAccepted": IDL.Bool,
-    "createDate": IDL.Int,
-    "favouriteClubId": IDL.Opt(ClubId),
-    "profilePicture": IDL.Opt(IDL.Vec(IDL.Nat8)),
-    "profilePictureType": IDL.Text,
-    "principalId": IDL.Text
-  });
-  const Result_9 = IDL.Variant({ "ok": ProfileDTO, "err": Error2 });
-  const RewardPool = IDL.Record({
-    "monthlyLeaderboardPool": IDL.Nat64,
-    "allTimeSeasonHighScorePool": IDL.Nat64,
-    "mostValuableTeamPool": IDL.Nat64,
-    "highestScoringMatchPlayerPool": IDL.Nat64,
-    "seasonId": SeasonId,
-    "seasonLeaderboardPool": IDL.Nat64,
-    "allTimeWeeklyHighScorePool": IDL.Nat64,
-    "allTimeMonthlyHighScorePool": IDL.Nat64,
-    "weeklyLeaderboardPool": IDL.Nat64
-  });
-  const GetRewardPoolDTO = IDL.Record({
-    "seasonId": SeasonId,
-    "rewardPool": RewardPool
-  });
-  const Result_8 = IDL.Variant({ "ok": GetRewardPoolDTO, "err": Error2 });
-  const GetSeasonLeaderboardDTO = IDL.Record({
-    "offset": IDL.Nat,
-    "seasonId": SeasonId,
-    "limit": IDL.Nat,
-    "searchTerm": IDL.Text
-  });
-  const SeasonLeaderboardDTO = IDL.Record({
-    "totalEntries": IDL.Nat,
-    "seasonId": SeasonId,
-    "entries": IDL.Vec(LeaderboardEntry)
-  });
-  const Result_7 = IDL.Variant({ "ok": SeasonLeaderboardDTO, "err": Error2 });
-  const SeasonDTO = IDL.Record({
-    "id": SeasonId,
-    "name": IDL.Text,
-    "year": IDL.Nat16
-  });
-  const Result_6 = IDL.Variant({ "ok": IDL.Vec(SeasonDTO), "err": Error2 });
-  const SystemStateDTO = IDL.Record({
-    "pickTeamSeasonId": SeasonId,
-    "calculationGameweek": GameweekNumber,
-    "transferWindowActive": IDL.Bool,
-    "pickTeamMonth": CalendarMonth,
-    "pickTeamGameweek": GameweekNumber,
-    "version": IDL.Text,
-    "calculationMonth": CalendarMonth,
-    "calculationSeasonId": SeasonId,
-    "onHold": IDL.Bool,
-    "seasonActive": IDL.Bool
-  });
-  const Result_5 = IDL.Variant({ "ok": SystemStateDTO, "err": Error2 });
-  const Result_4 = IDL.Variant({ "ok": IDL.Nat, "err": Error2 });
-  const GetWeeklyLeaderboardDTO = IDL.Record({
-    "offset": IDL.Nat,
-    "seasonId": SeasonId,
-    "limit": IDL.Nat,
-    "searchTerm": IDL.Text,
-    "gameweek": GameweekNumber
-  });
-  const WeeklyLeaderboardDTO = IDL.Record({
-    "totalEntries": IDL.Nat,
-    "seasonId": SeasonId,
-    "entries": IDL.Vec(LeaderboardEntry),
-    "gameweek": GameweekNumber
-  });
-  const Result_2 = IDL.Variant({ "ok": WeeklyLeaderboardDTO, "err": Error2 });
-  const UsernameFilterDTO = IDL.Record({ "username": IDL.Text });
-  const UpdateTeamSelectionDTO = IDL.Record({
-    "playerIds": IDL.Vec(ClubId),
-    "username": IDL.Text,
-    "goalGetterPlayerId": ClubId,
-    "oneNationCountryId": CountryId,
-    "hatTrickHeroGameweek": GameweekNumber,
-    "oneNationGameweek": GameweekNumber,
-    "teamBoostGameweek": GameweekNumber,
-    "captainFantasticGameweek": GameweekNumber,
-    "noEntryPlayerId": ClubId,
-    "safeHandsPlayerId": ClubId,
-    "braceBonusGameweek": GameweekNumber,
-    "passMasterGameweek": GameweekNumber,
-    "teamBoostClubId": ClubId,
-    "goalGetterGameweek": GameweekNumber,
-    "captainFantasticPlayerId": ClubId,
-    "transferWindowGameweek": GameweekNumber,
-    "noEntryGameweek": GameweekNumber,
-    "prospectsGameweek": GameweekNumber,
-    "safeHandsGameweek": GameweekNumber,
-    "passMasterPlayerId": ClubId,
-    "captainId": ClubId
-  });
-  const UpdateFavouriteClubDTO = IDL.Record({ "favouriteClubId": ClubId });
-  const UpdateProfilePictureDTO = IDL.Record({
-    "profilePicture": IDL.Vec(IDL.Nat8),
-    "extension": IDL.Text
-  });
-  const UpdateSystemStateDTO = IDL.Record({
-    "pickTeamSeasonId": SeasonId,
-    "calculationGameweek": GameweekNumber,
-    "transferWindowActive": IDL.Bool,
-    "pickTeamMonth": CalendarMonth,
-    "pickTeamGameweek": GameweekNumber,
-    "version": IDL.Text,
-    "calculationMonth": CalendarMonth,
-    "calculationSeasonId": SeasonId,
-    "onHold": IDL.Bool,
-    "seasonActive": IDL.Bool
-  });
-  const UpdateUsernameDTO = IDL.Record({ "username": IDL.Text });
-  return IDL.Service({
-    "calculateGameweekScores": IDL.Func([], [Result], []),
-    "calculateLeaderboards": IDL.Func([], [Result], []),
-    "getActiveLeaderboardCanisterId": IDL.Func([], [Result_21], []),
-    "getClubs": IDL.Func([], [Result_20], ["composite_query"]),
-    "getCountries": IDL.Func([], [Result_19], ["query"]),
-    "getCurrentTeam": IDL.Func([], [Result_18], []),
-    "getDataHashes": IDL.Func([], [Result_17], ["composite_query"]),
-    "getFantasyTeamSnapshot": IDL.Func(
-      [GetFantasyTeamSnapshotDTO],
-      [Result_16],
-      []
-    ),
-    "getFixtures": IDL.Func(
-      [RequestFixturesDTO],
-      [Result_10],
-      ["composite_query"]
-    ),
-    "getLeaderboardCanisterIds": IDL.Func([], [Result_15], []),
-    "getLoanedPlayers": IDL.Func(
-      [ClubFilterDTO],
-      [Result_3],
-      ["composite_query"]
-    ),
-    "getManager": IDL.Func([RequestManagerDTO], [Result_1], []),
-    "getManagerCanisterIds": IDL.Func([], [Result_15], []),
-    "getMonthlyLeaderboard": IDL.Func(
-      [GetMonthlyLeaderboardDTO],
-      [Result_14],
-      []
-    ),
-    "getPlayerDetails": IDL.Func([GetPlayerDetailsDTO], [Result_13], []),
-    "getPlayerDetailsForGameweek": IDL.Func(
-      [GameweekFiltersDTO],
-      [Result_12],
-      ["composite_query"]
-    ),
-    "getPlayers": IDL.Func([], [Result_3], ["composite_query"]),
-    "getPlayersMap": IDL.Func([GameweekFiltersDTO], [Result_11], []),
-    "getPlayersSnapshot": IDL.Func(
-      [GetSnapshotPlayers],
-      [IDL.Vec(PlayerDTO)],
-      ["query"]
-    ),
-    "getPostponedFixtures": IDL.Func([], [Result_10], ["composite_query"]),
-    "getProfile": IDL.Func([], [Result_9], []),
-    "getRetiredPlayers": IDL.Func(
-      [ClubFilterDTO],
-      [Result_3],
-      ["composite_query"]
-    ),
-    "getRewardPool": IDL.Func([GetRewardPoolDTO], [Result_8], []),
-    "getSeasonLeaderboard": IDL.Func(
-      [GetSeasonLeaderboardDTO],
-      [Result_7],
-      []
-    ),
-    "getSeasons": IDL.Func([], [Result_6], ["composite_query"]),
-    "getSystemState": IDL.Func([], [Result_5], ["query"]),
-    "getTotalManagers": IDL.Func([], [Result_4], ["query"]),
-    "getVerifiedPlayers": IDL.Func([], [Result_3], []),
-    "getWeeklyLeaderboard": IDL.Func(
-      [GetWeeklyLeaderboardDTO],
-      [Result_2],
-      []
-    ),
-    "isUsernameValid": IDL.Func([UsernameFilterDTO], [IDL.Bool], ["query"]),
-    "notifyAppsOfLoan": IDL.Func([LeagueId, PlayerId], [Result], []),
-    "notifyAppsOfPositionChange": IDL.Func([LeagueId, PlayerId], [Result], []),
-    "saveFantasyTeam": IDL.Func([UpdateTeamSelectionDTO], [Result], []),
-    "searchUsername": IDL.Func([UsernameFilterDTO], [Result_1], []),
-    "snapshotManagers": IDL.Func([], [Result], []),
-    "updateDataHashes": IDL.Func([IDL.Text], [Result], []),
-    "updateFavouriteClub": IDL.Func([UpdateFavouriteClubDTO], [Result], []),
-    "updateProfilePicture": IDL.Func([UpdateProfilePictureDTO], [Result], []),
-    "updateSystemState": IDL.Func([UpdateSystemStateDTO], [Result], []),
-    "updateUsername": IDL.Func([UpdateUsernameDTO], [Result], [])
-  });
-};
-var define_process_env_default$d = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
-const canisterId = define_process_env_default$d.CANISTER_ID_OPENWSL_BACKEND;
-const createActor = (canisterId2, options2 = {}) => {
-  const agent = options2.agent || new HttpAgent({ ...options2.agentOptions });
-  if (options2.agent && options2.agentOptions) {
-    console.warn(
-      "Detected both agent and agentOptions passed to createActor. Ignoring agentOptions and proceeding with the provided agent."
-    );
-  }
-  return Actor.createActor(idlFactory, {
-    agent,
-    canisterId: canisterId2,
-    ...options2.actorOptions
-  });
-};
-canisterId ? createActor(canisterId) : void 0;
-var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 function createManagerStore() {
   const { subscribe: subscribe2, set } = writable(null);
   let systemState;
@@ -5986,12 +5412,12 @@ function createSeasonStore() {
   };
 }
 const seasonStore = createSeasonStore();
-var define_process_env_default$b = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$b = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class PlayerService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
-      idlFactory$1,
+      idlFactory,
       define_process_env_default$b.OPENFPL_BACKEND_CANISTER_ID
     );
   }
@@ -6032,12 +5458,12 @@ function createPlayerStore() {
   };
 }
 const playerStore = createPlayerStore();
-var define_process_env_default$a = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$a = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class PlayerEventsService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
-      idlFactory$1,
+      idlFactory,
       define_process_env_default$a.OPENFPL_BACKEND_CANISTER_ID
     );
   }
@@ -6181,12 +5607,12 @@ function createPlayerEventsStore() {
   };
 }
 const playerEventsStore = createPlayerEventsStore();
-var define_process_env_default$9 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$9 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class WeeklyLeaderboardService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
-      idlFactory$1,
+      idlFactory,
       define_process_env_default$9.OPENFPL_BACKEND_CANISTER_ID
     );
   }
@@ -6221,12 +5647,12 @@ function createWeeklyLeaderboardStore() {
   };
 }
 const weeklyLeaderboardStore = createWeeklyLeaderboardStore();
-var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class DataHashService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
-      idlFactory$1,
+      idlFactory,
       define_process_env_default$8.OPENFPL_BACKEND_CANISTER_ID
     );
   }
@@ -6237,12 +5663,12 @@ class DataHashService {
     return result.ok;
   }
 }
-var define_process_env_default$7 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$7 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class CountryService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
-      idlFactory$1,
+      idlFactory,
       define_process_env_default$7.OPENFPL_BACKEND_CANISTER_ID
     );
   }
@@ -6253,12 +5679,12 @@ class CountryService {
     return result.ok;
   }
 }
-var define_process_env_default$6 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$6 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class SystemService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
-      idlFactory$1,
+      idlFactory,
       define_process_env_default$6.OPENFPL_BACKEND_CANISTER_ID
     );
   }
@@ -6269,12 +5695,12 @@ class SystemService {
     return result.ok;
   }
 }
-var define_process_env_default$5 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$5 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class SeasonService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
-      idlFactory$1,
+      idlFactory,
       define_process_env_default$5.OPENFPL_BACKEND_CANISTER_ID
     );
   }
@@ -6285,12 +5711,12 @@ class SeasonService {
     return result.ok;
   }
 }
-var define_process_env_default$4 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$4 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class ClubService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
-      idlFactory$1,
+      idlFactory,
       define_process_env_default$4.OPENFPL_BACKEND_CANISTER_ID
     );
   }
@@ -6450,7 +5876,7 @@ class StoreManager {
   }
 }
 new StoreManager();
-var define_process_env_default$3 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$3 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class UserService {
   constructor() {
     authStore.sync();
@@ -6467,7 +5893,7 @@ class UserService {
     return result.ok;
   }
 }
-var define_process_env_default$2 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$2 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 function createUserStore() {
   const { subscribe: subscribe2, set } = writable(null);
   async function sync() {
@@ -6807,7 +6233,7 @@ const Local_spinner = create_ssr_component(($$result, $$props, $$bindings, slots
   $$result.css.add(css$2);
   return `<div class="local-spinner svelte-pvdm52"></div>`;
 });
-var define_process_env_default$1 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$1 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 function createMonthlyLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage = 25;
@@ -6817,7 +6243,7 @@ function createMonthlyLeaderboardStore() {
     systemState = value;
   });
   let actor = ActorFactory.createActor(
-    idlFactory$1,
+    idlFactory,
     define_process_env_default$1.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync(seasonId, month, clubId) {
@@ -6925,7 +6351,7 @@ function createMonthlyLeaderboardStore() {
   };
 }
 createMonthlyLeaderboardStore();
-var define_process_env_default = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", OPENWSL_BACKEND_CANISTER_ID: "5bafg-ayaaa-aaaal-qmzqq-cai", OPENWSL_FRONTEND_CANISTER_ID: "5ido2-wqaaa-aaaal-qmzra-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 function createSeasonLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage = 25;
@@ -6935,7 +6361,7 @@ function createSeasonLeaderboardStore() {
     systemState = value;
   });
   let actor = ActorFactory.createActor(
-    idlFactory$1,
+    idlFactory,
     define_process_env_default.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync(seasonId) {
