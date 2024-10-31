@@ -163,4 +163,9 @@ module GovernanceDTOs {
     abbreviatedName : Text;
     shirtType : FootballTypes.ShirtType;
   };
+
+  public type RemoveClubDTO = {
+    leagueId: FootballTypes.LeagueId;
+    clubId: FootballTypes.ClubId;
+  };
 };

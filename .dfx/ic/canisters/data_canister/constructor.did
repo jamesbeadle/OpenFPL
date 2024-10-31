@@ -181,6 +181,11 @@ type RequestFixturesDTO =
    leagueId: LeagueId;
    seasonId: SeasonId;
  };
+type RemoveClubDTO = 
+ record {
+   clubId: ClubId;
+   leagueId: LeagueId;
+ };
 type RelegateClubDTO = 
  record {
    clubId: ClubId;
@@ -551,6 +556,7 @@ service : {
   promoteClub: (LeagueId, PromoteClubDTO) -> (Result);
   recallPlayer: (LeagueId, RecallPlayerDTO) -> (Result);
   relegateClub: (LeagueId, RelegateClubDTO) -> (Result);
+  removeClub: (RemoveClubDTO) -> (Result);
   retirePlayer: (LeagueId, RetirePlayerDTO) -> (Result);
   revaluePlayerDown: (LeagueId, RevaluePlayerDownDTO) -> (Result);
   revaluePlayerUp: (LeagueId, RevaluePlayerUpDTO) -> (Result);
@@ -583,4 +589,5 @@ service : {
   validateUpdateClub: (LeagueId, UpdateClubDTO) -> (Result);
   validateUpdateLeague: (UpdateLeagueDTO) -> (Result);
   validateUpdatePlayer: (LeagueId, UpdatePlayerDTO) -> (Result);
+  validationRemoveClub: (LeagueId, RemoveClubDTO) -> (Result);
 }

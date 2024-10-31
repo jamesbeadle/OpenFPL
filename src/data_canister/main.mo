@@ -1061,6 +1061,13 @@
       return #err(#NotFound);
     };
 
+    public shared ( {caller} ) func validationRemoveClub(leagueId: FootballTypes.LeagueId, dto : GovernanceDTOs.RemoveClubDTO) : async Result.Result<(), T.Error>{
+      assert callerAllowed(caller);
+      assert leagueExists(leagueId);
+      //TODO (KELLY): Add validation checks
+      return #err(#NotFound);
+    };
+
     public shared ( {caller} ) func validatePromoteClub(leagueId: FootballTypes.LeagueId, dto : GovernanceDTOs.PromoteClubDTO) : async Result.Result<(), T.Error>{
       assert callerAllowed(caller);
       assert leagueExists(leagueId);
@@ -1964,6 +1971,32 @@
           return #err(#NotFound);
         }
       };
+    };
+
+    public shared ( {caller} ) func removeClub(dto: GovernanceDTOs.RemoveClubDTO) : async Result.Result<(), T.Error> {
+      assert callerAllowed(caller);
+
+      let playersResult = getPrivatePlayers(dto.leagueId);
+      switch(playersResult){
+        case (#ok foundPlayers){
+          if(Array.size(foundPlayers) > 0){
+            return #err(#NotAllowed);
+          }
+        };
+        case (#err _) {}
+      };
+      
+      leagueClubs := Array.map<(FootballTypes.LeagueId, [FootballTypes.Club]), (FootballTypes.LeagueId, [FootballTypes.Club])>(leagueClubs, 
+        func(leagueClubsEntry: (FootballTypes.LeagueId, [FootballTypes.Club])){
+          if(leagueClubsEntry.0 == dto.leagueId) {
+            (leagueClubsEntry.0, Array.filter<FootballTypes.Club>(leagueClubsEntry.1, func(club: FootballTypes.Club){
+              club.id != dto.clubId
+            }))
+          } else { return leagueClubsEntry }
+        }
+      );
+
+      return #err(#NotFound);
     };
 
     public shared ({ caller }) func promoteClub(leagueId: FootballTypes.LeagueId, dto : GovernanceDTOs.PromoteClubDTO) : async Result.Result<(), T.Error> {

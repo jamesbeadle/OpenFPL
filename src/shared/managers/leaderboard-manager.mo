@@ -101,19 +101,16 @@ module {
         return #err(#NotAllowed);
       };
 
-      await debugLog("a");
       let gameweekSeason = Array.find(weeklyLeaderboardCanisters, func(seasonEntry: (FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, Base.CanisterId)])) : Bool {
         seasonEntry.0 == dto.seasonId;
       });
 
-      await debugLog("b");
       switch(gameweekSeason){
         case (?foundGameweekSeason){
           let gameweekResult = Array.find(foundGameweekSeason.1, func(gameweekEntry: (FootballTypes.GameweekNumber, Base.CanisterId)) : Bool {
             gameweekEntry.0 == dto.gameweek
           });
-      await debugLog("c");
-
+      
           switch(gameweekResult){
             case(?foundGameweek){
               let canisterId = foundGameweek.1;
@@ -126,16 +123,13 @@ module {
                 limit = 25;
                 offset = dto.offset;
               };
-      await debugLog("d");
 
               let leaderboardEntries = await leaderboard_canister.getWeeklyLeaderboardEntries(dto.seasonId, dto.gameweek, filters, dto.searchTerm);
               switch (leaderboardEntries) {
                 case (null) {
-      await debugLog("e");
                   return #err(#NotFound);
                 };
                 case (?foundLeaderboard) {
-      await debugLog("f");
                   return #ok(foundLeaderboard);
                 };
               };
@@ -147,7 +141,6 @@ module {
         };
         case (null) {}
       };
-      await debugLog("g");
       return #err(#NotFound);
     };
 
@@ -310,15 +303,10 @@ module {
 
     public func calculateLeaderboards(seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth, uniqueManagerCanisterIds : [Base.CanisterId], clubIds: [FootballTypes.ClubId]) : async () {
       
-      await debugLog("Calculating leaderboards");
-
-
       if(activeCanisterId == ""){
         activeCanisterId := await createLeaderboardCanister();
       };
       
-      await debugLog("Defining canister");
-
       var leaderboard_canister = actor (activeCanisterId) : actor {
         getTotalLeaderboards : () -> async Nat;
         addLeaderboardChunk : (seasonId: FootballTypes.SeasonId, month: Base.CalendarMonth, gameweek: FootballTypes.GameweekNumber, clubId: FootballTypes.ClubId, entriesChunk : [T.LeaderboardEntry]) -> async ();
@@ -326,10 +314,8 @@ module {
         finaliseUpdate : (seasonId: FootballTypes.SeasonId, month: Base.CalendarMonth, gameweek: FootballTypes.GameweekNumber) -> async ();
       };
 
-      await debugLog("Getting total leaderboards");
       let totalLeaderboards = await leaderboard_canister.getTotalLeaderboards();
 
-      await debugLog("Calculating leaderboards for " # Nat.toText(totalLeaderboards) # " leaderboards");
       if(totalLeaderboards >= MAX_LEADERBOARDS_PER_CANISTER){
         activeCanisterId := await createLeaderboardCanister();
       };
@@ -350,24 +336,17 @@ module {
         await leaderboard_canister.prepareForUpdate(seasonId, month, gameweek, 0);
       };
       */
-       await debugLog("Preparing to update");
      
       await leaderboard_canister.prepareForUpdate(seasonId, 0, gameweek, 0);
-       await debugLog("Preparing complete");
-
       for (canisterId in Iter.fromArray(uniqueManagerCanisterIds)) {
-       await debugLog("Canister id: " # canisterId);
         let manager_canister = actor (canisterId) : actor {
           getOrderedSnapshots : (seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber) -> async [T.FantasyTeamSnapshot];
         };
 
-        await debugLog("Getting ordered snapshots");
         let orderedSnapshots = await manager_canister.getOrderedSnapshots(seasonId, gameweek);
         
-        await debugLog("Getting ordered snapshots complete");
         let groupedByTeam = groupByTeam(orderedSnapshots);
 
-        await debugLog("Looping");
         for(team in groupedByTeam.entries(
         )){
           let fantasyTeamSnapshots = team.1;
@@ -379,10 +358,8 @@ module {
             },
           );
 
-          await debugLog("Adding chunk 1");
           await leaderboard_canister.addLeaderboardChunk(seasonId, 0, 0, 0, leaderboardEntries);
 
-          await debugLog("Adding chunk 2");
           await leaderboard_canister.addLeaderboardChunk(seasonId, 0, gameweek, 0, leaderboardEntries);
           /*
           for(clubId in Iter.fromArray(clubIds)){
@@ -392,7 +369,6 @@ module {
         };
       };
 
-      await debugLog("Finalising update");
       await leaderboard_canister.finaliseUpdate(seasonId, 0, gameweek);
 
       //store the canister id

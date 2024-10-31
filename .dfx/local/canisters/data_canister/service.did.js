@@ -341,6 +341,10 @@ export const idlFactory = ({ IDL }) => {
     clubId: ClubId,
     leagueId: LeagueId,
   });
+  const RemoveClubDTO = IDL.Record({
+    clubId: ClubId,
+    leagueId: LeagueId,
+  });
   const RetirePlayerDTO = IDL.Record({
     playerId: ClubId,
     retirementDate: IDL.Int,
@@ -487,6 +491,7 @@ export const idlFactory = ({ IDL }) => {
     promoteClub: IDL.Func([LeagueId, PromoteClubDTO], [Result], []),
     recallPlayer: IDL.Func([LeagueId, RecallPlayerDTO], [Result], []),
     relegateClub: IDL.Func([LeagueId, RelegateClubDTO], [Result], []),
+    removeClub: IDL.Func([RemoveClubDTO], [Result], []),
     retirePlayer: IDL.Func([LeagueId, RetirePlayerDTO], [Result], []),
     revaluePlayerDown: IDL.Func([LeagueId, RevaluePlayerDownDTO], [Result], []),
     revaluePlayerUp: IDL.Func([LeagueId, RevaluePlayerUpDTO], [Result], []),
@@ -559,6 +564,7 @@ export const idlFactory = ({ IDL }) => {
     validateUpdateClub: IDL.Func([LeagueId, UpdateClubDTO], [Result], []),
     validateUpdateLeague: IDL.Func([UpdateLeagueDTO], [Result], []),
     validateUpdatePlayer: IDL.Func([LeagueId, UpdatePlayerDTO], [Result], []),
+    validationRemoveClub: IDL.Func([LeagueId, RemoveClubDTO], [Result], []),
   });
 };
 export const init = ({ IDL }) => {

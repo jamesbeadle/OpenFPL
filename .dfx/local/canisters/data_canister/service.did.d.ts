@@ -278,6 +278,10 @@ export interface RelegateClubDTO {
   clubId: ClubId;
   leagueId: LeagueId;
 }
+export interface RemoveClubDTO {
+  clubId: ClubId;
+  leagueId: LeagueId;
+}
 export interface RequestFixturesDTO {
   seasonId: SeasonId;
   leagueId: LeagueId;
@@ -446,6 +450,7 @@ export interface _SERVICE {
   promoteClub: ActorMethod<[LeagueId, PromoteClubDTO], Result>;
   recallPlayer: ActorMethod<[LeagueId, RecallPlayerDTO], Result>;
   relegateClub: ActorMethod<[LeagueId, RelegateClubDTO], Result>;
+  removeClub: ActorMethod<[RemoveClubDTO], Result>;
   retirePlayer: ActorMethod<[LeagueId, RetirePlayerDTO], Result>;
   revaluePlayerDown: ActorMethod<[LeagueId, RevaluePlayerDownDTO], Result>;
   revaluePlayerUp: ActorMethod<[LeagueId, RevaluePlayerUpDTO], Result>;
@@ -490,6 +495,7 @@ export interface _SERVICE {
   validateUpdateClub: ActorMethod<[LeagueId, UpdateClubDTO], Result>;
   validateUpdateLeague: ActorMethod<[UpdateLeagueDTO], Result>;
   validateUpdatePlayer: ActorMethod<[LeagueId, UpdatePlayerDTO], Result>;
+  validationRemoveClub: ActorMethod<[LeagueId, RemoveClubDTO], Result>;
 }
 export declare const idlFactory: IDL.InterfaceFactory;
 export declare const init: (args: { IDL: typeof IDL }) => IDL.Type[];
