@@ -782,9 +782,6 @@ actor class _LeaderboardCanister() {
   };
 
   private func postUpgradeCallback() : async (){
-    await debugLog("Leaderboard canister post upgrade complete");
-    controllerPrincipalId := Environment.OPENFPL_BACKEND_CANISTER_ID;
-    initialised := true;
   };
 
   private func debugLog(text: Text) : async (){

@@ -142,14 +142,6 @@
         </div>
         <div class="vertical-divider" />
         <div class="flex-grow">
-          <p class="content-panel-header">{team?.name}</p>
-          <p class="content-panel-stat">
-            {selectedPlayer?.totalPoints}
-          </p>
-          <p class="content-panel-header">Total Points</p>
-        </div>
-        <div class="vertical-divider" />
-        <div class="flex-grow">
           <p class="content-panel-header">{selectedPlayer?.firstName}</p>
           <p class="content-panel-stat">
             {selectedPlayer?.lastName}

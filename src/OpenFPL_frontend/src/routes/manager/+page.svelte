@@ -203,9 +203,14 @@
         </div>
       </div>
 
-      <div class="flex px-4 lg:hidden mb-2">
+      <div class="flex flex-col px-4 lg:hidden mb-2">
         {#if $fantasyTeam && activeTab === "details"}
-          <span>Total Points: {$fantasyTeam?.points}</span>
+          <div class="flex-row">
+            <span>Total Points: {$fantasyTeam?.points}</span>
+          </div>
+          <div class="flex-row">
+            <span>Total Team Value: £{($fantasyTeam?.teamValueQuarterMillions  / 4).toFixed(2)}m</span>
+          </div>
         {/if}
       </div>
 

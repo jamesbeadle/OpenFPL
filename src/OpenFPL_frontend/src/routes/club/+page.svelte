@@ -64,7 +64,6 @@
       team = $clubStore.find((x) => x.id == id) ?? null;
 
       highestScoringPlayer = $playerStore
-        .sort((a, b) => a.totalPoints - b.totalPoints)
         .sort(
           (a, b) =>
             Number(b.valueQuarterMillions) - Number(a.valueQuarterMillions)
@@ -229,26 +228,18 @@
         <div class="vertical-divider" />
         <div class="flex-grow">
           <p class="content-panel-header">Most Points</p>
-          {#if highestScoringPlayer?.totalPoints == 0}
-            <p class="content-panel-stat">-</p>
-            <p class="content-panel-header">
-              - ({highestScoringPlayer?.totalPoints})
-            </p>
-          {:else}
-            <p class="content-panel-stat">
-              <a href={`/player?id=${highestScoringPlayer?.id}`}
-                >{highestScoringPlayer?.lastName}</a
-              >
-            </p>
-            <p class="content-panel-header">
-              {getPositionText(
-                convertPlayerPosition(
-                  highestScoringPlayer?.position ?? { Goalkeeper: null }
-                )
-              )}
-              ({highestScoringPlayer?.totalPoints})
-            </p>
-          {/if}
+          <p class="content-panel-stat">
+            <a href={`/player?id=${highestScoringPlayer?.id}`}
+              >{highestScoringPlayer?.lastName}</a
+            >
+          </p>
+          <p class="content-panel-header">
+            {getPositionText(
+              convertPlayerPosition(
+                highestScoringPlayer?.position ?? { Goalkeeper: null }
+              )
+            )}
+          </p>
         </div>
       </div>
     </div>
