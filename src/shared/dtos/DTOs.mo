@@ -308,10 +308,6 @@ module DTOs {
     totalEntries : Nat;
   };
 
-  public type CanisterDTO = {
-    canister : T.LeaderboardCanister;
-  };
-
   public type ManagerCanisterDTO = {
     canisterId : Text;
     cycles : Nat;
@@ -450,14 +446,6 @@ module DTOs {
     canisterId: Base.CanisterId;
     lastTopup: Int;
     cyclesBalance: Nat64;
-  };
-
-  public type GetCanistersDTO = {
-    limit : Nat;
-    offset : Nat;
-    entries: [CanisterDTO];
-    totalEntries: Nat;
-    canisterTypeFilter: T.CanisterType;
   };
 
   public type GetTimersDTO = {

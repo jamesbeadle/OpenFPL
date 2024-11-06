@@ -19,13 +19,12 @@ export class WeeklyLeaderboardService {
   async getWeeklyLeaderboard(
     offset: number,
     seasonId: number,
-    limit: number,
     gameweek: number,
   ): Promise<WeeklyLeaderboardDTO> {
     let dto: GetWeeklyLeaderboardDTO = {
       offset: BigInt(offset),
       seasonId: seasonId,
-      limit: BigInt(limit),
+      limit: BigInt(25),
       searchTerm: "",
       gameweek: gameweek,
     };

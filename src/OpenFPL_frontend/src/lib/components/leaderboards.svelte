@@ -44,6 +44,7 @@
     try {
       await storeManager.syncStores();
       
+      /*
       await monthlyLeaderboardStore.sync(
         $systemStore?.calculationSeasonId ?? 1,
         $systemStore?.calculationMonth ?? 8,
@@ -53,6 +54,7 @@
       await seasonLeaderboardStore.sync(
         $systemStore?.calculationSeasonId ?? 1
       );
+      */
 
       selectedSeasonId = $systemStore?.calculationSeasonId ?? 1;
       selectedGameweek = $systemStore?.calculationGameweek ?? 1;
@@ -70,8 +72,7 @@
       let leaderboardData = await weeklyLeaderboardStore.getWeeklyLeaderboard(
         selectedSeasonId,
         selectedGameweek,
-        currentPage,
-        0
+        currentPage
       );
       leaderboard = leaderboardData;
     } catch (error) {
@@ -115,8 +116,7 @@
           leaderboard = await weeklyLeaderboardStore.getWeeklyLeaderboard(
             selectedSeasonId,
             selectedGameweek,
-            currentPage,
-            0
+            currentPage
           );
           break;
         case 2:
@@ -308,6 +308,7 @@
       </div>
     </div>
 
+    <!--
     <div class="flex items-center mb-4 mx-3">
       <input
         type="text"
@@ -323,6 +324,7 @@
         Search
       </button>
     </div>
+    -->
 
     <div class="flex flex-col space-y-4 mt-4">
       <div class="overflow-x-auto flex-1">
@@ -364,7 +366,7 @@
             <button
               on:click={() => changePage(-1)}
               disabled={currentPage === 1}
-              class={`${selectedGameweek === 1 ? "bg-gray-500" : "fpl-button"}
+              class={`${currentPage === 1 ? "bg-gray-500" : "fpl-button"}
               disabled:bg-gray-400 disabled:text-gray-700 disabled:cursor-not-allowed min-w-[100px] default-button`}
             >
               Previous
@@ -376,7 +378,7 @@
               on:click={() => changePage(1)}
               disabled={currentPage >= totalPages}
               class={`${
-                selectedGameweek === $systemStore?.calculationGameweek
+                currentPage >= totalPages
                   ? "bg-gray-500"
                   : "fpl-button"
               } 

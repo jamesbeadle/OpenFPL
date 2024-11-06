@@ -174,29 +174,43 @@ function createManagerStore() {
           bonusPlayed == 1
             ? activeGameweek
             : userFantasyTeam.goalGetterGameweek,
-        goalGetterPlayerId: bonusPlayerId,
+        goalGetterPlayerId: bonusUsedInSession
+          ? bonusPlayerId
+          : userFantasyTeam.goalGetterPlayerId,
         passMasterGameweek:
           bonusPlayed == 2
             ? activeGameweek
             : userFantasyTeam.passMasterGameweek,
-        passMasterPlayerId: bonusPlayerId,
+        passMasterPlayerId: bonusUsedInSession
+          ? bonusPlayerId
+          : userFantasyTeam.passMasterPlayerId,
         noEntryGameweek:
           bonusPlayed == 3 ? activeGameweek : userFantasyTeam.noEntryGameweek,
-        noEntryPlayerId: bonusPlayerId,
+        noEntryPlayerId: bonusUsedInSession
+          ? bonusPlayerId
+          : userFantasyTeam.noEntryPlayerId,
         teamBoostGameweek:
           bonusPlayed == 4 ? activeGameweek : userFantasyTeam.teamBoostGameweek,
-        teamBoostClubId: bonusTeamId,
+        teamBoostClubId: bonusUsedInSession
+          ? bonusTeamId
+          : userFantasyTeam.teamBoostClubId,
         safeHandsGameweek:
           bonusPlayed == 5 ? activeGameweek : userFantasyTeam.safeHandsGameweek,
-        safeHandsPlayerId: bonusPlayerId,
+        safeHandsPlayerId: bonusUsedInSession
+          ? bonusPlayerId
+          : userFantasyTeam.safeHandsPlayerId,
         captainFantasticGameweek:
           bonusPlayed == 6
             ? activeGameweek
             : userFantasyTeam.captainFantasticGameweek,
-        captainFantasticPlayerId: bonusPlayerId,
+        captainFantasticPlayerId: bonusUsedInSession
+          ? bonusPlayerId
+          : userFantasyTeam.captainFantasticPlayerId,
         oneNationGameweek:
           bonusPlayed == 7 ? activeGameweek : userFantasyTeam.oneNationGameweek,
-        oneNationCountryId: bonusCountryId,
+        oneNationCountryId: bonusUsedInSession
+          ? bonusCountryId
+          : userFantasyTeam.oneNationCountryId,
         prospectsGameweek:
           bonusPlayed == 8 ? activeGameweek : userFantasyTeam.prospectsGameweek,
         braceBonusGameweek:
@@ -212,6 +226,9 @@ function createManagerStore() {
           : userFantasyTeam.transferWindowGameweek,
         username: userFantasyTeam.username,
       };
+
+      console.log("about to save fantasy team with dto:");
+      console.log(dto);
 
       let result = await identityActor.saveFantasyTeam(dto);
 

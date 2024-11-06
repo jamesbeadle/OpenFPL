@@ -16,6 +16,7 @@ import Time "mo:base/Time";
 import TrieMap "mo:base/TrieMap";
 import Nat "mo:base/Nat";
 import Nat8 "mo:base/Nat8";
+import Result "mo:base/Result";
 
 import Account "../../shared/lib/Account";
 import Constants "../../shared/utils/Constants";
@@ -30,7 +31,7 @@ import NetworkEnvironmentVariables "../network_environment_variables";
 
 module {
 
-  public class RewardManager(seasonGameweekCount: Nat8, seasonMonthCount: Nat8) {
+  public class RewardManager() {
 
     private var rewardPools : TrieMap.TrieMap<FootballTypes.SeasonId, T.RewardPool> = TrieMap.TrieMap<FootballTypes.SeasonId, T.RewardPool>(Utilities.eqNat16, Utilities.hashNat16);
     private var teamValueLeaderboards : TrieMap.TrieMap<FootballTypes.SeasonId, T.TeamValueLeaderboard> = TrieMap.TrieMap<FootballTypes.SeasonId, T.TeamValueLeaderboard>(Utilities.eqNat16, Utilities.hashNat16);
@@ -49,10 +50,13 @@ module {
     private var monthlyATHPrizePool : Nat64 = 0;
     private var seasonATHPrizePool : Nat64 = 0;
 
+    private var seasonGameweekCount: Nat8 = 0;
+
     public func getRewardPool(seasonId: FootballTypes.SeasonId) : ?T.RewardPool {
         return rewardPools.get(seasonId);
     };
 
+    /*
     public func distributeWeeklyRewards(weeklyLeaderboard : DTOs.WeeklyLeaderboardDTO) : async () {
       
       let rewardPool = rewardPools.get(weeklyLeaderboard.seasonId);
@@ -117,7 +121,7 @@ module {
           for (key in weeklyLeaderboard.entries.keys()) {
             let winner = weeklyLeaderboard.entries[key];
             let prize = Int64.toNat64(Float.toInt64(payoutsArray[key])) * weeklyRewardAmount;
-            await payReward(winner.principalId, prize);
+            //await payReward(winner.principalId, prize);
             rewardBuffer.add({
               principalId = winner.principalId;
               rewardType = #WeeklyLeaderboard;
@@ -138,6 +142,7 @@ module {
         case (null){}
       };
     };
+    */
 
     public func distributeMonthlyRewards(seasonId: FootballTypes.SeasonId, monthlyLeaderboards : [DTOs.MonthlyLeaderboardDTO], uniqueManagerCanisterIds : List.List<Base.CanisterId>) : async () {
       
@@ -252,6 +257,7 @@ module {
       */
     };
 
+    /*
     public func distributeSeasonRewards(seasonLeaderboard : DTOs.SeasonLeaderboardDTO) : async () {
       
       let rewardPool = rewardPools.get(seasonLeaderboard.seasonId);
@@ -260,7 +266,7 @@ module {
           var payouts = List.nil<Float>();
           var currentEntries = List.fromArray(seasonLeaderboard.entries);
 
-          let scaledPercentages = Utilities.scalePercentages(RewardPercentages.percentages, seasonLeaderboard.totalEntries);
+          let scaledPercentages = await Utilities.scalePercentages(RewardPercentages.percentages, seasonLeaderboard.totalEntries);
           
           while (not List.isNil(currentEntries)) {
             let (currentEntry, rest) = List.pop(currentEntries);
@@ -314,7 +320,7 @@ module {
           for (key in seasonLeaderboard.entries.keys()) {
             let winner = seasonLeaderboard.entries[key];
             let prize = Int64.toNat64(Float.toInt64(payoutsArray[key])) * foundRewardPool.seasonLeaderboardPool;
-            await payReward(winner.principalId, prize);
+            //await payReward(winner.principalId, prize);
             rewardBuffer.add({
               principalId = winner.principalId;
               rewardType = #WeeklyLeaderboard;
@@ -425,7 +431,7 @@ module {
           var scaledPercentages = RewardPercentages.percentages;
 
           if (List.size(rewardEntries) < 100) {
-            scaledPercentages := Utilities.scalePercentages(RewardPercentages.percentages, List.size(rewardEntries));
+            scaledPercentages := await Utilities.scalePercentages(RewardPercentages.percentages, List.size(rewardEntries));
           };
 
           let rewardEntriesArray = List.toArray(rewardEntries);
@@ -444,7 +450,7 @@ module {
             let payoutPercentage = scaledPercentages[entry.position - 1];
 
             let prize = Float.fromInt64(Int64.fromNat64(mostValuableTeamPool)) * payoutPercentage;
-            await payReward(entry.principalId, Int64.toNat64(Float.toInt64(prize)));
+            //await payReward(entry.principalId, Int64.toNat64(Float.toInt64(prize)));
             rewardBuffer.add({
               principalId = entry.principalId;
               rewardType = #MostValuableTeam;
@@ -501,7 +507,7 @@ module {
             let managersWithPlayers = Buffer.toArray(managersWithPlayerBuffer);
 
             for (managerPrincipalId in Iter.fromArray(managersWithPlayers)) {
-              await payReward(managerPrincipalId, prize);
+              //await payReward(managerPrincipalId, prize);
               rewardBuffer.add({
                 principalId = managerPrincipalId;
                 rewardType = #WeeklyLeaderboard;
@@ -552,7 +558,7 @@ module {
 
           if (topScore > highestWeeklyScore) {
             weeklyAllTimeHighScores := List.append(weeklyAllTimeHighScores, List.make({ recordType = #WeeklyHighScore; points = topScore; createDate = Time.now() }));
-            await payReward(leaderboardEntries[0].principalId, weeklyRewardPool);
+            //await payReward(leaderboardEntries[0].principalId, weeklyRewardPool);
             weeklyATHPrizePool := 0;
           };
 
@@ -564,7 +570,7 @@ module {
           if (tiedWinners.size() > 1 and topScore > highestWeeklyScore) {
             let payoutPerWinner = Nat64.div(weeklyRewardPool, Nat64.fromNat(tiedWinners.size()));
             for (winner in Iter.fromArray(tiedWinners)) {
-              await payReward(winner.principalId, payoutPerWinner);
+              //await payReward(winner.principalId, payoutPerWinner);
               weeklyAllTimeHighScores := List.append(weeklyAllTimeHighScores, List.make({ recordType = #WeeklyHighScore; points = winner.points; createDate = Time.now() }));
               weeklyATHPrizePool := 0;
             };
@@ -575,7 +581,7 @@ module {
         case null {}
       };
     };
-
+    
     public func distributeMonthlyATHScoreRewards(seasonId: FootballTypes.SeasonId , monthlyLeaderboards : [DTOs.MonthlyLeaderboardDTO]) : async () {
       
       let rewardPool = rewardPools.get(seasonId);
@@ -622,7 +628,7 @@ module {
           if (newRecordSet) {
             let totalPayout = monthlyATHReward * Nat64.fromNat(winners.size());
             for (winner in Iter.fromArray(winners)) {
-              await payReward(winner.principalId, Nat64.div(totalPayout, Nat64.fromNat(winners.size())));
+              //await payReward(winner.principalId, Nat64.div(totalPayout, Nat64.fromNat(winners.size())));
               monthlyAllTimeHighScores := List.append(monthlyAllTimeHighScores, List.make({ recordType = #MonthlyHighScore; points = winner.points; createDate = Time.now() }));
               monthlyATHPrizePool := 0;
             };
@@ -633,6 +639,7 @@ module {
         case (null){};
       };      
     };
+
 
     public func distributeSeasonATHScoreRewards(seasonLeaderboard : DTOs.SeasonLeaderboardDTO) : async () {
 
@@ -663,7 +670,7 @@ module {
 
           if (topScore > highestSeasonScore) {
             seasonAllTimeHighScores := List.append(seasonAllTimeHighScores, List.make({ recordType = #SeasonHighScore; points = topScore; createDate = Time.now() }));
-            await payReward(leaderboardEntries[0].principalId, seasonRewardPool);
+            //await payReward(leaderboardEntries[0].principalId, seasonRewardPool);
             seasonATHPrizePool := 0;
           };
 
@@ -675,7 +682,7 @@ module {
           if (tiedWinners.size() > 1 and topScore > highestSeasonScore) {
             let payoutPerWinner = Nat64.div(seasonRewardPool, Nat64.fromNat(tiedWinners.size()));
             for (winner in Iter.fromArray(tiedWinners)) {
-              await payReward(winner.principalId, payoutPerWinner);
+              //await payReward(winner.principalId, payoutPerWinner);
               seasonAllTimeHighScores := List.append(seasonAllTimeHighScores, List.make({ recordType = #SeasonHighScore; points = winner.points; createDate = Time.now() }));
               seasonATHPrizePool := 0;
             };
@@ -687,6 +694,7 @@ module {
       };    
       
     };
+    */
 
     private func payReward(principalId : Base.PrincipalId, fpl : Nat64) : async () {
       let ledger : SNSToken.Interface = actor (NetworkEnvironmentVariables.SNS_LEDGER_CANISTER_ID);
@@ -826,5 +834,185 @@ module {
     public func setStableSeasonATHPrizePool(stable_season_ath_prize_pool : Nat64) {
       seasonATHPrizePool := stable_season_ath_prize_pool;
     };
+
+    /* Temporary Functions to be removed */
+    
+    public func setupRewardPool(){
+      seasonGameweekCount := 30;
+      rewardPools.put(1, {
+        allTimeMonthlyHighScorePool = 46875;
+        allTimeSeasonHighScorePool = 46875;
+        allTimeWeeklyHighScorePool = 46875;
+        highestScoringMatchPlayerPool = 93750;
+        monthlyLeaderboardPool = 328125;
+        mostValuableTeamPool = 93750;
+        seasonId= 1;
+        seasonLeaderboardPool = 140625;
+        weeklyLeaderboardPool = 140625;
+      });
+    };
+
+  public func calculateGameweekRewards(dto: DTOs.WeeklyLeaderboardDTO): async () {
+
+    let weeklyRewardsBuffer = Buffer.fromArray<T.WeeklyRewards>(List.toArray(weeklyRewards));
+
+    let rewardPoolOpt = rewardPools.get(dto.seasonId);
+    switch (rewardPoolOpt) {
+        case (?rewardPool) {
+            let weeklyRewardAmount = rewardPool.weeklyLeaderboardPool / Nat64.fromNat(Nat8.toNat(seasonGameweekCount));
+
+            let sortedEntries = Array.sort<T.LeaderboardEntry>(dto.entries, compareEntries);
+            let (positions, numPositions) = assignPositions(sortedEntries);
+
+            let scaledPercentages = await scalePercentages(RewardPercentages.percentages, numPositions);
+        
+            let payouts = calculatePayouts(sortedEntries, positions, numPositions, scaledPercentages);
+
+            let rewardEntriesBuffer = Buffer.fromArray<T.RewardEntry>([]);
+            for (i in Iter.range(0, payouts.size() - 1)) {
+
+                let winner = sortedEntries[i];
+                let prize = (payouts[i] / 100) * Float.fromInt64(Int64.fromNat64(weeklyRewardAmount));
+                rewardEntriesBuffer.add({
+                    principalId = winner.principalId;
+                    rewardType = #WeeklyLeaderboard;
+                    position = positions[i];
+                    amount = Int64.toNat64(Float.toInt64(prize));
+                });
+            };
+
+            let newWeeklyRewardsEntry: T.WeeklyRewards = {
+                seasonId = dto.seasonId;
+                gameweek = dto.gameweek;
+                rewards = List.fromArray(Buffer.toArray(rewardEntriesBuffer));
+            };
+            weeklyRewardsBuffer.add(newWeeklyRewardsEntry);
+        };
+        case (null) {
+            await debugLog("No reward pool found for season ID: " # Nat16.toText(dto.seasonId));
+        };
+    };
+
+    weeklyRewards := List.fromArray(Buffer.toArray(weeklyRewardsBuffer));
+  };
+
+  private func compareEntries(a: T.LeaderboardEntry, b: T.LeaderboardEntry): Order.Order {
+      if (a.points > b.points) { #less }
+      else if (a.points < b.points) { #greater }
+      else { #equal };
+  };
+
+  private func assignPositions(sortedEntries: [T.LeaderboardEntry]): ([Nat], Nat) {
+      var positionsBuffer = Buffer.fromArray<Nat>([]);
+      var currentPos: Nat = 1;
+
+      for (i in Iter.range(0, Array.size(sortedEntries) - 1)) {
+          if (i > 0 and sortedEntries[i].points == sortedEntries[i - 1].points) {
+              positionsBuffer.add(Buffer.toArray(positionsBuffer)[i - 1]);
+          } else {
+              positionsBuffer.add(currentPos);
+          };
+          currentPos += 1;
+      };
+
+      let positions = Buffer.toArray(positionsBuffer);
+      let numPositions = if (Array.size(sortedEntries) < 100) {
+          Array.size(sortedEntries)
+      } else {
+          var lastIndex = 99;
+          while (lastIndex + 1 < Array.size(sortedEntries) and positions[lastIndex + 1] == positions[99]) {
+              lastIndex += 1;
+          };
+          lastIndex + 1
+      };
+      
+      return (positions, numPositions);
+  };
+
+  private func calculatePayouts(sortedEntries: [T.LeaderboardEntry], positions: [Nat], numPositions: Nat, scaledPercentages: [Float]): [Float] {
+    let payoutsBuffer = Buffer.fromArray<Float>([]);
+    
+    var i: Nat = 0;
+    while (i < numPositions) {
+        var tieCount: Nat = 1;
+        var totalPercentage: Float = scaledPercentages[positions[i] - 1];
+
+        while (i + tieCount < numPositions and sortedEntries[i + tieCount].points == sortedEntries[i].points) {
+            totalPercentage += scaledPercentages[positions[i + tieCount] - 1];
+            tieCount += 1;
+        };
+
+        let payoutPerPlayer = totalPercentage / Float.fromInt64(Int64.fromNat64(Nat64.fromNat(tieCount)));
+        for (_ in Iter.range(0, tieCount - 1)) {
+            payoutsBuffer.add(payoutPerPlayer);
+        };
+
+        i += tieCount;
+    };
+
+    return Buffer.toArray(payoutsBuffer);
+};
+
+
+  public func scalePercentages(percentages: [Float], actualWinners: Nat): async [Float] {
+    await debugLog("Starting percentage scaling");
+
+    let winnerPercentages = Array.subArray<Float>(percentages, 0, Nat.min(Array.size(percentages), actualWinners));
+    let adjustedBuffer = Buffer.fromArray<Float>(winnerPercentages);
+
+    if (actualWinners < Array.size(percentages)) {
+        let assignedSum = Array.foldLeft<Float, Float>(winnerPercentages, 0.0, func(x, y) { x + y });
+        let unassignedSum = Array.foldLeft<Float, Float>(Array.subArray<Float>(percentages, actualWinners, Array.size(percentages) - actualWinners), 0.0, func(x, y) { x + y });
+
+        adjustedBuffer.clear();
+        for (p in winnerPercentages.vals()) {
+            let proportionalShare = (p / assignedSum) * 100.0;
+            let additionalShare = (unassignedSum * p / assignedSum);
+            adjustedBuffer.add(proportionalShare + additionalShare);
+        }
+    } else {
+        adjustedBuffer.clear();
+        for (p in winnerPercentages.vals()) {
+            adjustedBuffer.add(p);
+        };
+    };
+
+    return Buffer.toArray<Float>(adjustedBuffer);
+};
+
+
+
+
+    public func getWeeklyRewards(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber) : Result.Result<T.WeeklyRewards, T.Error> {
+      
+      let rewards = List.find(weeklyRewards, func(rewardsEntry: T.WeeklyRewards) : Bool {
+        rewardsEntry.seasonId == seasonId and rewardsEntry.gameweek == gameweek;
+      });
+
+      switch(rewards){
+        case (?foundRewards){
+          return #ok(foundRewards);
+        };
+        case (null){}
+      };
+      
+      return #err(#NotFound);
+    };
+
+    private func debugLog(text: Text) : async (){
+      let waterway_labs_canister = actor ("rbqtt-7yaaa-aaaal-qcndq-cai") : actor {
+        logSystemEvent : (dto: DTOs.SystemEventDTO) -> async ();
+      };
+
+      await waterway_labs_canister.logSystemEvent({
+        eventDetail = text;
+        eventId = 0;
+        eventTime = Time.now();
+        eventTitle = "DEBUG";
+        eventType = #SystemCheck;
+      });
+
+    };
+
   };
 };

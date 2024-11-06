@@ -254,7 +254,7 @@ actor class _LeaderboardCanister() {
               return #less;
         });
 
-        let positionedGameweekEntries = Utilities.assignPositionText(List.fromArray<T.LeaderboardEntry>(sortedGameweekEntries)); //TODO (LEADERBOARD) update with football god logic
+        let positionedGameweekEntries = Utilities.assignPositionText(List.fromArray<T.LeaderboardEntry>(sortedGameweekEntries));
 
         var updatedLeaderboard: T.SeasonLeaderboard = {
           seasonId = foundLeaderboard.seasonId;
@@ -285,7 +285,7 @@ actor class _LeaderboardCanister() {
             return #less;
       });
 
-      let positionedGameweekEntries = Utilities.assignPositionText(List.fromArray<T.LeaderboardEntry>(sortedGameweekEntries)); //TODO (LEADERBOARD) update with football god logic
+      let positionedGameweekEntries = Utilities.assignPositionText(List.fromArray<T.LeaderboardEntry>(sortedGameweekEntries));
 
       var updatedLeaderboard: T.MonthlyLeaderboard = {
         seasonId = monthlyLeaderboard.seasonId;
@@ -320,7 +320,7 @@ actor class _LeaderboardCanister() {
               return #less;
         });
 
-        let positionedGameweekEntries = Utilities.assignPositionText(List.fromArray<T.LeaderboardEntry>(sortedGameweekEntries)); //TODO (LEADERBOARD) update with football god logic
+        let positionedGameweekEntries = Utilities.assignPositionText(List.fromArray<T.LeaderboardEntry>(sortedGameweekEntries));
 
         var updatedLeaderboard: T.WeeklyLeaderboard = {
           seasonId = foundLeaderboard.seasonId;
@@ -365,7 +365,7 @@ actor class _LeaderboardCanister() {
             return #less;
           },
         );
-
+        
         let cutoffIndex = 99;
         let lastQualifyingPoints = sortedArray[cutoffIndex].points;
         var lastIndexForPrizes = cutoffIndex;

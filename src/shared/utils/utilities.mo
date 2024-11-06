@@ -17,11 +17,13 @@ import Option "mo:base/Option";
 import Principal "mo:base/Principal";
 import Text "mo:base/Text";
 import Time "mo:base/Time";
+import Buffer "mo:base/Buffer";
 
 import DTOs "../dtos/DTOs";
 import Management "Management";
 import T "../types/app_types";
 import FootballTypes "../types/football_types";
+import NetworkEnvironmentVariables "../network_environment_variables";
 
 
 module {
@@ -429,7 +431,6 @@ module {
   };
 
   public func assignPositionText(sortedEntries : List.List<T.LeaderboardEntry>) : List.List<T.LeaderboardEntry> {
-    //TODO (LEADERBOARD): Copy from football god euro game
     var position = 1;
     var previousScore : ?Int16 = null;
     var currentPosition = 1;
@@ -461,31 +462,33 @@ module {
     return List.map(sortedEntries, updatePosition);
   };  
 
-  public func scalePercentages(percentages : [Float], actualWinners : Nat) : [Float] {
-    let length: Int = Array.size(percentages);
-    
-    if (actualWinners == length) {
-        return percentages;
-    } else if (actualWinners < length) {
-        let truncated = Array.subArray(percentages, 0, actualWinners);
-        let sum = Array.foldLeft<Float, Float>(truncated, 0.0, func(x, y) { x + y });
-        return Array.map<Float, Float>(truncated, func(p) { (p / sum) * 100.0 });
-    } else {
-        let lengthNat: Nat = Nat64.toNat(Nat64.fromIntWrap(length) - 1);
-        let lastPercentage = percentages[lengthNat];
-        let extraWinners: Nat = actualWinners - lengthNat;
-        let tieShare = lastPercentage / Float.fromInt(extraWinners + 1);
-
-        let extended = Array.tabulate<Float>(actualWinners, func(i: Nat) : Float {
-            if (i < length - 1) {
-                return percentages[i];
-            } else {
-                return tieShare;
-            }
-        });
-        return extended;
+  private func debugLog(text: Text) : async (){
+    let waterway_labs_canister = actor (NetworkEnvironmentVariables.WATERWAY_LABS_BACKEND_CANISTER_ID) : actor {
+      logSystemEvent : (dto: DTOs.SystemEventDTO) -> async ();
     };
+
+    await waterway_labs_canister.logSystemEvent({
+      eventDetail = text;
+      eventId = 0;
+      eventTime = Time.now();
+      eventTitle = "DEBUG";
+      eventType = #SystemCheck;
+    });
+
   };
+
+public func intToNat(input: Int) : Nat {
+  return Nat64.toNat(Int64.toNat64(Int64.fromInt(input)))
+};
+
+public func natToInt(input: Nat) : Int {
+  return Int64.toInt(Int64.fromNat64(Nat64.fromNat(input)));
+};
+
+public func natToFloat(input: Nat) : Float {
+  return Float.fromInt(Int64.toInt(Int64.fromNat64(Nat64.fromNat(input))));
+};
+
 
   public func findTiedEntries(entries : List.List<T.LeaderboardEntry>, points : Int16) : List.List<T.LeaderboardEntry> {
     var tiedEntries = List.nil<T.LeaderboardEntry>();

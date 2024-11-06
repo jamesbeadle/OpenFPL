@@ -181,6 +181,11 @@ type RequestFixturesDTO =
    leagueId: LeagueId;
    seasonId: SeasonId;
  };
+type RemoveClubDTO = 
+ record {
+   clubId: ClubId;
+   leagueId: LeagueId;
+ };
 type RelegateClubDTO = 
  record {
    clubId: ClubId;
@@ -513,6 +518,17 @@ type ClubDTO =
    shirtType: ShirtType;
    thirdColourHex: text;
  };
+type Club = 
+ record {
+   abbreviatedName: text;
+   friendlyName: text;
+   id: ClubId;
+   name: text;
+   primaryColourHex: text;
+   secondaryColourHex: text;
+   shirtType: ShirtType;
+   thirdColourHex: text;
+ };
 type CalendarMonth = nat8;
 type AddInitialFixturesDTO = record {seasonFixtures: vec FixtureDTO;};
 service : {
@@ -526,6 +542,10 @@ service : {
   createPlayer: (LeagueId, CreatePlayerDTO) -> (Result);
   getClubs: (LeagueId) -> (Result_3) query;
   getFixtures: (RequestFixturesDTO) -> (Result_2) query;
+  getLeagueClubs: () -> (vec record {
+                               LeagueId;
+                               vec Club;
+                             });
   getLeaguePlayers: () -> (vec record {
                                  LeagueId;
                                  vec Player;
@@ -551,6 +571,7 @@ service : {
   promoteClub: (LeagueId, PromoteClubDTO) -> (Result);
   recallPlayer: (LeagueId, RecallPlayerDTO) -> (Result);
   relegateClub: (LeagueId, RelegateClubDTO) -> (Result);
+  removeClub: (RemoveClubDTO) -> (Result);
   retirePlayer: (LeagueId, RetirePlayerDTO) -> (Result);
   revaluePlayerDown: (LeagueId, RevaluePlayerDownDTO) -> (Result);
   revaluePlayerUp: (LeagueId, RevaluePlayerUpDTO) -> (Result);
@@ -583,4 +604,5 @@ service : {
   validateUpdateClub: (LeagueId, UpdateClubDTO) -> (Result);
   validateUpdateLeague: (UpdateLeagueDTO) -> (Result);
   validateUpdatePlayer: (LeagueId, UpdatePlayerDTO) -> (Result);
+  validationRemoveClub: (LeagueId, RemoveClubDTO) -> (Result);
 }

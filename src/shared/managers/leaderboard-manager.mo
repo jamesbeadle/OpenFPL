@@ -17,19 +17,27 @@ import Buffer "mo:base/Buffer";
 import Array "mo:base/Array";
 import Time "mo:base/Time";
 import Nat "mo:base/Nat";
+import Text "mo:base/Text";
+import Nat64 "mo:base/Nat64";
+import Int "mo:base/Int";
+import Nat16 "mo:base/Nat16";
+import Nat8 "mo:base/Nat8";
 import RewardManager "reward-manager";
 import NetworkEnvironmentVariables "../network_environment_variables";
+import SNSToken "../../shared/sns-wrappers/ledger";
+import Account "../lib/Account";
+import Constants "../../shared/utils/Constants";
 
 module {
 
-  public class LeaderboardManager(controllerPrincipalId: Text, seasonGameweekCount: Nat8, seasonMonthCount: Nat8) {
+  public class LeaderboardManager(controllerPrincipalId: Text) {
    
     private var uniqueLeaderboardCanisterIds: [Base.CanisterId] = [];
     private var weeklyLeaderboardCanisters : [(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, Base.CanisterId)])] = [];
     private var monthlyLeaderboardCanisters : [(FootballTypes.SeasonId, [(Base.CalendarMonth, Base.CanisterId)])] = [];
     private var seasonLeaderboardCanisters : [(FootballTypes.SeasonId, Base.CanisterId)] = [];
      
-    private let rewardManager = RewardManager.RewardManager(seasonGameweekCount, seasonMonthCount);
+    private let rewardManager = RewardManager.RewardManager();
     private var activeCanisterId = "";
     private var MAX_LEADERBOARDS_PER_CANISTER = 500;
 
@@ -458,11 +466,98 @@ module {
         return uniqueLeaderboardCanisterIds;
     };
 
+    //todo remove
+    public func setupRewardPool(){
+      rewardManager.setupRewardPool();
+    };
+
+    //calculate weekly leaderboard rewards
+    public func calculateWeeklyRewards(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber) : async Result.Result<(), T.Error>{
+      
+      let gameweekSeason = Array.find(weeklyLeaderboardCanisters, func(seasonEntry: (FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, Base.CanisterId)])) : Bool {
+        seasonEntry.0 == seasonId;
+      });
+
+      switch(gameweekSeason){
+        case (?foundGameweekSeason){
+          let gameweekResult = Array.find(foundGameweekSeason.1, func(gameweekEntry: (FootballTypes.GameweekNumber, Base.CanisterId)) : Bool {
+            gameweekEntry.0 == gameweek
+          });
+      
+          switch(gameweekResult){
+            case(?foundGameweek){
+              let canisterId = foundGameweek.1;
+
+              let leaderboard_canister = actor (canisterId) : actor {
+                getWeeklyLeaderboardEntries : (seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber, filters: DTOs.PaginationFiltersDTO, searchTerm : Text) -> async ?DTOs.WeeklyLeaderboardDTO;
+              };
+
+              let filters: DTOs.PaginationFiltersDTO = {
+                limit = 250;
+                offset = 0;
+              };
+
+              let leaderboardEntries = await leaderboard_canister.getWeeklyLeaderboardEntries(seasonId, gameweek, filters, "");
+              switch (leaderboardEntries) {
+                case (null) {
+                  return #err(#NotFound);
+                };
+                case (?foundLeaderboard) {
+                  await rewardManager.calculateGameweekRewards(foundLeaderboard);
+                };
+              };
+
+
+            };
+            case (null){}
+          }
+        };
+        case (null) {}
+      };
+      return #err(#NotFound);
+    };
+
+    public func getWeeklyRewards(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber) : Result.Result<T.WeeklyRewards, T.Error> {
+      return rewardManager.getWeeklyRewards(seasonId, gameweek);
+    };
+
     public func getRewardPool(seasonId: FootballTypes.SeasonId) : ?T.RewardPool {
         return rewardManager.getRewardPool(seasonId);
     };
 
-    public func payWeeklyRewards() : async () {
+    public func payWeeklyRewards(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber) : async Result.Result<(), T.Error>{
+      await debugLog("paying weekly rewards");
+      await debugLog("season: " # Nat16.toText(seasonId));
+      await debugLog("gameweek" # Nat8.toText(gameweek));
+      
+      
+      let weeklyRewards = rewardManager.getWeeklyRewards(seasonId, gameweek);
+      switch(weeklyRewards){
+        case (#ok rewardEntries){
+        
+        for(entry in Iter.fromList(rewardEntries.rewards)){
+          //pay the reward
+          let ledger : SNSToken.Interface = actor (NetworkEnvironmentVariables.SNS_LEDGER_CANISTER_ID);
+          
+          await debugLog("Making payment" # entry.principalId);
+          let _ = await ledger.icrc1_transfer ({
+            memo = ?Text.encodeUtf8("0");
+            from_subaccount = ?Account.defaultSubaccount();
+            to = {owner = Principal.fromText(entry.principalId); subaccount = null};
+            amount = Nat64.toNat(entry.amount);
+            fee = ?Nat64.toNat(Constants.FPL_TRANSACTION_FEE);
+            created_at_time = ?Nat64.fromNat(Int.abs(Time.now()))
+          });
+        };
+        return #ok();
+      };
+      case (#err error){
+        return #err(error);
+      }
+      };
+    };
+
+    public func payWeeklyRewardsOLD() : async () {
       //TODO (PAYOUT)
       /* Removed inputs but what should be passed
       weeklyLeaderboard : DTOs.WeeklyLeaderboardDTO, filters: DTOs.GameweekFiltersDTO, fixtures : List.List<DTOs.FixtureDTO>, uniqueManagerCanisterIds: List.List<T.CanisterId>

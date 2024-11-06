@@ -518,6 +518,17 @@ type ClubDTO =
    shirtType: ShirtType;
    thirdColourHex: text;
  };
+type Club = 
+ record {
+   abbreviatedName: text;
+   friendlyName: text;
+   id: ClubId;
+   name: text;
+   primaryColourHex: text;
+   secondaryColourHex: text;
+   shirtType: ShirtType;
+   thirdColourHex: text;
+ };
 type CalendarMonth = nat8;
 type AddInitialFixturesDTO = record {seasonFixtures: vec FixtureDTO;};
 service : {
@@ -531,6 +542,10 @@ service : {
   createPlayer: (LeagueId, CreatePlayerDTO) -> (Result);
   getClubs: (LeagueId) -> (Result_3) query;
   getFixtures: (RequestFixturesDTO) -> (Result_2) query;
+  getLeagueClubs: () -> (vec record {
+                               LeagueId;
+                               vec Club;
+                             });
   getLeaguePlayers: () -> (vec record {
                                  LeagueId;
                                  vec Player;

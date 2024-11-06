@@ -138,6 +138,16 @@ export const idlFactory = ({ IDL }) => {
     awayGoals: IDL.Nat8,
   });
   const Result_2 = IDL.Variant({ ok: IDL.Vec(FixtureDTO), err: Error });
+  const Club = IDL.Record({
+    id: ClubId,
+    secondaryColourHex: IDL.Text,
+    name: IDL.Text,
+    friendlyName: IDL.Text,
+    thirdColourHex: IDL.Text,
+    abbreviatedName: IDL.Text,
+    shirtType: ShirtType,
+    primaryColourHex: IDL.Text,
+  });
   const PlayerId = IDL.Nat16;
   const PlayerStatus = IDL.Variant({
     OnLoan: IDL.Null,
@@ -439,6 +449,11 @@ export const idlFactory = ({ IDL }) => {
     createPlayer: IDL.Func([LeagueId, CreatePlayerDTO], [Result], []),
     getClubs: IDL.Func([LeagueId], [Result_3], ["query"]),
     getFixtures: IDL.Func([RequestFixturesDTO], [Result_2], ["query"]),
+    getLeagueClubs: IDL.Func(
+      [],
+      [IDL.Vec(IDL.Tuple(LeagueId, IDL.Vec(Club)))],
+      [],
+    ),
     getLeaguePlayers: IDL.Func(
       [],
       [IDL.Vec(IDL.Tuple(LeagueId, IDL.Vec(Player)))],

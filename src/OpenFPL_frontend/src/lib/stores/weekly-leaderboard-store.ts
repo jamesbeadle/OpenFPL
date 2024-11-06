@@ -9,12 +9,12 @@ function createWeeklyLeaderboardStore() {
     seasonId: number,
     gameweek: number,
     page: number,
-    offset: number,
   ): Promise<WeeklyLeaderboardDTO | null> {
+    const offset = (page - 1) * 25;
+
     return new WeeklyLeaderboardService().getWeeklyLeaderboard(
       offset,
       seasonId,
-      page,
       gameweek,
     );
   }

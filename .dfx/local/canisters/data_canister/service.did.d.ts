@@ -6,6 +6,16 @@ export interface AddInitialFixturesDTO {
   seasonFixtures: Array<FixtureDTO>;
 }
 export type CalendarMonth = number;
+export interface Club {
+  id: ClubId;
+  secondaryColourHex: string;
+  name: string;
+  friendlyName: string;
+  thirdColourHex: string;
+  abbreviatedName: string;
+  shirtType: ShirtType;
+  primaryColourHex: string;
+}
 export interface ClubDTO {
   id: ClubId;
   secondaryColourHex: string;
@@ -424,6 +434,7 @@ export interface _SERVICE {
   createPlayer: ActorMethod<[LeagueId, CreatePlayerDTO], Result>;
   getClubs: ActorMethod<[LeagueId], Result_3>;
   getFixtures: ActorMethod<[RequestFixturesDTO], Result_2>;
+  getLeagueClubs: ActorMethod<[], Array<[LeagueId, Array<Club>]>>;
   getLeaguePlayers: ActorMethod<[], Array<[LeagueId, Array<Player>]>>;
   getLeagues: ActorMethod<[], Result_8>;
   getLoanedPlayers: ActorMethod<[LeagueId, ClubFilterDTO], Result_1>;

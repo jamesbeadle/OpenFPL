@@ -43,6 +43,7 @@
     try {
       startDotAnimation();
       await storeManager.syncStores();
+      await fetchBalances();
 
       unsubscribeUserProfile = userStore.subscribe((value) => {
         if (!value) {
@@ -59,7 +60,6 @@
       console.error("Error fetching profile detail:", error);
     } finally {
       isLoading = false;
-      await fetchBalances();
     }
   });
 
@@ -73,12 +73,12 @@
 
   async function fetchBalances() {
     try {
+      console.log("fetch balances");
       fplBalance = await userStore.getFPLBalance();
-      fplBalanceFormatted = (Number(fplBalance) / 100_000_000).toFixed(4);
-      if(fplBalance){
-        clearInterval(dot_interval);
-        loadingBalances = false;
-      }
+      console.log(fplBalance);
+      fplBalanceFormatted = Number(fplBalance).toFixed(4);
+      clearInterval(dot_interval);
+      loadingBalances = false;
     } catch (error) {
       toastsError({
         msg: { text: "Error fetching profile detail." },

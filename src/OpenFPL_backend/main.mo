@@ -8,6 +8,8 @@
   import Nat64 "mo:base/Nat64";
   import Nat "mo:base/Nat";
   import Option "mo:base/Option";
+import Text "mo:base/Text";
+import Time "mo:base/Time";
 
   import Base "../shared/types/base_types";
   import FootballTypes "../shared/types/football_types";
@@ -15,6 +17,7 @@
   import DTOs "../shared/dtos/DTOs";
   import RequestDTOs "../shared/dtos/request_DTOs";
   import Countries "../shared/Countries";
+  import FPLLedger "../shared/def/FPLLedger";
 
   import Management "../shared/utils/Management";
   import ManagerCanister "../shared/canister_definitions/manager-canister";
@@ -25,13 +28,16 @@
   import SeasonManager "../shared/managers/season-manager";
   import Environment "./Environment";
   import NetworkEnvironmentVariables "../shared/network_environment_variables";
+  import Account "../shared/lib/Account";
 
   actor Self {
     
+    private let ledger : FPLLedger.Interface = actor (FPLLedger.CANISTER_ID);
+
     private let userManager = UserManager.UserManager(Environment.BACKEND_CANISTER_ID, Environment.NUM_OF_GAMEWEEKS);
     private let dataManager = DataManager.DataManager();
     private let seasonManager = SeasonManager.SeasonManager(Environment.NUM_OF_GAMEWEEKS);
-    private let leaderboardManager = LeaderboardManager.LeaderboardManager(Environment.BACKEND_CANISTER_ID, Environment.NUM_OF_GAMEWEEKS, Environment.NUM_OF_MONTHS);
+    private let leaderboardManager = LeaderboardManager.LeaderboardManager(Environment.BACKEND_CANISTER_ID);
     
     private func isManagerCanister(principalId: Text) : Bool {
       let managerCanisterIds = userManager.getUniqueManagerCanisterIds();
@@ -114,7 +120,6 @@
         getClubs : shared query (leagueId: FootballTypes.LeagueId) -> async Result.Result<[FootballTypes.Club], T.Error>;
       };
       return await data_canister.getClubs(Environment.LEAGUE_ID);
-      //return await dataManager.getClubs(Environment.LEAGUE_ID); //Todo implement when figure out query function
     };
 
     public shared composite query func getFixtures(dto: RequestDTOs.RequestFixturesDTO) : async Result.Result<[DTOs.FixtureDTO], T.Error> {
@@ -122,7 +127,6 @@
         getFixtures : shared query (dto: RequestDTOs.RequestFixturesDTO) -> async Result.Result<[DTOs.FixtureDTO], T.Error>;
       };
       return await data_canister.getFixtures(dto);
-      //return await dataManager.getFixtures(Environment.LEAGUE_ID, dto); //Todo implement when figure out query function
     };
 
     public shared composite query func getSeasons() : async Result.Result<[DTOs.SeasonDTO], T.Error> {
@@ -130,7 +134,6 @@
         getSeasons : shared query (leagueId: FootballTypes.LeagueId) -> async Result.Result<[DTOs.SeasonDTO], T.Error>;
       };
       return await data_canister.getSeasons(Environment.LEAGUE_ID);
-      //return await dataManager.getSeasons(Environment.LEAGUE_ID); //Todo implement when figure out query function
     };
 
     public shared composite query func getPostponedFixtures() : async Result.Result<[DTOs.FixtureDTO], T.Error> {
@@ -167,7 +170,6 @@
         getRetiredPlayers : shared query (leagueId: FootballTypes.LeagueId, dto: DTOs.ClubFilterDTO) -> async Result.Result<[DTOs.PlayerDTO], T.Error>;
       };
       return await data_canister.getRetiredPlayers(Environment.LEAGUE_ID, dto);
-      //return await dataManager.getRetiredPlayers(Environment.LEAGUE_ID, dto); //Todo implement when figure out query function
     };
 
     public shared composite query func getPlayerDetailsForGameweek(dto: DTOs.GameweekFiltersDTO) : async Result.Result<[DTOs.PlayerPointsDTO], T.Error> {
@@ -175,7 +177,6 @@
         getPlayerDetailsForGameweek : shared query (leagueId: FootballTypes.LeagueId, dto: DTOs.GameweekFiltersDTO) -> async Result.Result<[DTOs.PlayerPointsDTO], T.Error>;
       };
       return await data_canister.getPlayerDetailsForGameweek(Environment.LEAGUE_ID, dto);
-      //return await dataManager.getPlayerDetailsForGameweek(Environment.LEAGUE_ID, dto); //Todo implement when figure out query function
     };
 
     public shared func getPlayersMap(dto: DTOs.GameweekFiltersDTO) : async Result.Result<[(Nat16, DTOs.PlayerScoreDTO)], T.Error> {
@@ -183,7 +184,6 @@
         getPlayersMap : shared query (leagueId: FootballTypes.LeagueId, dto: DTOs.GameweekFiltersDTO) -> async Result.Result<[(Nat16, DTOs.PlayerScoreDTO)], T.Error>;
       };
       return await data_canister.getPlayersMap(Environment.LEAGUE_ID, dto);
-      //return await dataManager.getPlayersMap(Environment.LEAGUE_ID, dto); //Todo implement when figure out query function
     };
 
     public shared func getPlayerDetails(dto: DTOs.GetPlayerDetailsDTO) : async Result.Result<DTOs.PlayerDetailDTO, T.Error> {
@@ -191,7 +191,6 @@
         getPlayerDetailsForGameweek : shared query (leagueId: FootballTypes.LeagueId, dto: DTOs.GetPlayerDetailsDTO) -> async Result.Result<DTOs.PlayerDetailDTO, T.Error>;
       };
       return await data_canister.getPlayerDetailsForGameweek(Environment.LEAGUE_ID, dto);
-      //return await dataManager.getPlayerDetails(Environment.LEAGUE_ID, dto); //Todo implement when figure out query function
     };
 
     public shared query func getCountries() : async Result.Result<[DTOs.CountryDTO], T.Error> {
@@ -467,7 +466,7 @@
       //await checkCanisterCycles(); 
       //await setSystemTimers();
       await updateLeaderboardCanisterWasms();
-      await updateManagerCanisterWasms();
+      //await updateManagerCanisterWasms();
 
       await seasonManager.updateDataHash("clubs");
       await seasonManager.updateDataHash("fixtures");
@@ -478,7 +477,8 @@
       await seasonManager.updateDataHash("player_events");
       await seasonManager.updateDataHash("countries");
       await seasonManager.updateDataHash("system_state");
-      leaderboardManager.setStableWeeklyLeaderboardCanisterIds([(1, [(9, "n26sp-cqaaa-aaaal-qna7q-cai")])]);
+      //let _ = await transferFPLToNewBackendCanister();
+      
     };
 
 
@@ -589,6 +589,36 @@
       };
     };
 
+    public shared ({ caller }) func calculateWeeklyRewards(gameweek: FootballTypes.GameweekNumber) : async Result.Result<(), T.Error> {
+      assert Principal.toText(caller) == NetworkEnvironmentVariables.FOOTBALL_GOD_BACKEND_CANISTER_ID;
+      leaderboardManager.setupRewardPool(); //TODO REMOVE
+      let systemStateResult = seasonManager.getSystemState();
+      switch(systemStateResult){
+        case (#ok systemState){       
+          return await leaderboardManager.calculateWeeklyRewards(systemState.calculationSeasonId, gameweek);     };
+        case (#err error){
+          return #err(error);
+        }
+      } 
+    };
+
+    public shared ({ caller }) func payWeeklyRewards(gameweek: FootballTypes.GameweekNumber) : async Result.Result<(), T.Error> {
+      assert Principal.toText(caller) == NetworkEnvironmentVariables.FOOTBALL_GOD_BACKEND_CANISTER_ID;
+      let systemStateResult = seasonManager.getSystemState();
+      switch(systemStateResult){
+        case (#ok systemState){       
+          return await leaderboardManager.payWeeklyRewards(systemState.calculationSeasonId, gameweek);     
+        };
+        case (#err error){
+          return #err(error);
+        }
+      } 
+    };
+
+    public shared query func getWeeklyRewards(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber) : async Result.Result<T.WeeklyRewards, T.Error> {
+      return leaderboardManager.getWeeklyRewards(seasonId, gameweek);
+    };
+
     public shared ({ caller }) func notifyAppsOfLoan(leagueId: FootballTypes.LeagueId, playerId: FootballTypes.PlayerId) : async Result.Result<(), T.Error> {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
       await userManager.removePlayerFromTeams(leagueId, playerId, Environment.BACKEND_CANISTER_ID);
@@ -599,6 +629,21 @@
       assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
       await userManager.removePlayerFromTeams(leagueId, playerId, Environment.BACKEND_CANISTER_ID);
       return #ok();
+    };
+
+    public func transferFPLToNewBackendCanister() : async FPLLedger.TransferResult {
+      
+      let one_hundred_fpl : Nat = 10_000_000_000;
+      let fpl_fee : Nat = 100_000;
+      let e8s = one_hundred_fpl * 100;
+      return await ledger.icrc1_transfer({
+        memo = ?Text.encodeUtf8("0");
+        from_subaccount = ?Account.defaultSubaccount();
+        to = {owner = Principal.fromText(NetworkEnvironmentVariables.OPENFPL_BACKEND_CANISTER_ID); subaccount = null};
+        amount = e8s - fpl_fee;
+        fee = ?fpl_fee;
+        created_at_time =?Nat64.fromNat(Int.abs(Time.now()));
+      });
     };
 
     

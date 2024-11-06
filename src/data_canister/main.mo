@@ -14,6 +14,7 @@
   import Time "mo:base/Time";
   import Timer "mo:base/Timer";
   import TrieMap "mo:base/TrieMap";
+import Nat "mo:base/Nat";
   
   import Base "../shared/types/base_types";
   import FootballTypes "../shared/types/football_types";
@@ -105,6 +106,41 @@
       switch(filteredLeaguePlayers){
         case (?foundLeaguePlayers){             
           return #ok(Array.map<FootballTypes.Player, DTOs.PlayerDTO>(foundLeaguePlayers.1, func(player: FootballTypes.Player){
+            
+            
+            return {
+              clubId = player.clubId;
+              dateOfBirth = player.dateOfBirth;
+              firstName = player.firstName;
+              id = player.id;
+              lastName = player.lastName;
+              nationality = player.nationality;
+              position = player.position;
+              shirtNumber = player.shirtNumber;
+              status = player.status;
+              valueQuarterMillions = player.valueQuarterMillions;
+            };
+
+          }));
+        };
+        case (null){
+          return #err(#NotFound);
+        }
+      };
+    };
+
+    private func getClubPlayers(leagueId: FootballTypes.LeagueId, clubId: FootballTypes.ClubId) : Result.Result<[DTOs.PlayerDTO], T.Error> {
+      let filteredLeaguePlayers = Array.find<(FootballTypes.LeagueId, [FootballTypes.Player])>(leaguePlayers, 
+        func(currentLeaguePlayers: (FootballTypes.LeagueId, [FootballTypes.Player])) : Bool{
+            currentLeaguePlayers.0 == leagueId;
+      });
+
+      switch(filteredLeaguePlayers){
+        case (?foundLeaguePlayers){    
+          let clubPlayers = Array.filter<FootballTypes.Player>(foundLeaguePlayers.1, func(player: FootballTypes.Player) {
+            player.clubId == clubId
+          });         
+          return #ok(Array.map<FootballTypes.Player, DTOs.PlayerDTO>(clubPlayers, func(player: FootballTypes.Player){
             
             
             return {
@@ -1975,8 +2011,8 @@
 
     public shared ( {caller} ) func removeClub(dto: GovernanceDTOs.RemoveClubDTO) : async Result.Result<(), T.Error> {
       assert callerAllowed(caller);
-
-      let playersResult = getPrivatePlayers(dto.leagueId);
+      
+      let playersResult = getClubPlayers(dto.leagueId, dto.clubId);
       switch(playersResult){
         case (#ok foundPlayers){
           if(Array.size(foundPlayers) > 0){
@@ -1995,8 +2031,32 @@
           } else { return leagueClubsEntry }
         }
       );
+      await debugLog("x");
 
       return #err(#NotFound);
+    };
+
+    public shared func getLeagueClubs() : async [(FootballTypes.LeagueId, [FootballTypes.Club])] {
+      return leagueClubs;
+    };
+
+    public shared func getLeaguePlayers() : async [(FootballTypes.LeagueId, [FootballTypes.Player])] {
+      return leaguePlayers;
+    };
+
+    private func debugLog(text: Text) : async (){
+      let waterway_labs_canister = actor ("rbqtt-7yaaa-aaaal-qcndq-cai") : actor {
+        logSystemEvent : (dto: DTOs.SystemEventDTO) -> async ();
+      };
+
+      await waterway_labs_canister.logSystemEvent({
+        eventDetail = text;
+        eventId = 0;
+        eventTime = Time.now();
+        eventTitle = "DEBUG";
+        eventType = #SystemCheck;
+      });
+
     };
 
     public shared ({ caller }) func promoteClub(leagueId: FootballTypes.LeagueId, dto : GovernanceDTOs.PromoteClubDTO) : async Result.Result<(), T.Error> {
@@ -2772,10 +2832,6 @@
           } else { return leagueSeasonsEntry }
       });
       setGameScore(leagueId, seasonId, fixtureId);
-    };
-
-    public shared func getLeaguePlayers() : async [(FootballTypes.LeagueId, [FootballTypes.Player])] {
-      return leaguePlayers;
     };
 
     private func addEventsToPlayers(leagueId: FootballTypes.LeagueId, playerEventData : [FootballTypes.PlayerEventData], seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber) {

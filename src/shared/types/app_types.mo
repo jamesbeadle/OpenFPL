@@ -233,41 +233,6 @@ module AppTypes {
     allTimeSeasonHighScorePool : Nat64;
   };
 
-  public type LeaderboardCanister = {
-    leaderboardType: LeaderboardType;
-    leaderboardInfo: LeaderboardInfo;
-  };
-
-  public type LeaderboardType = {
-    #Weekly;
-    #Monthly;
-    #Season;
-  };
-
-  public type LeaderboardInfo = {
-    #Weekly : WeeklyLeaderboardInfo;
-    #Monthly : MonthlyLeaderboardInfo;
-    #Season : SeasonLeaderboardInfo;
-  };  
-
-  public type WeeklyLeaderboardInfo = {
-    seasonId : FootballTypes.SeasonId;
-    gameweek : FootballTypes.GameweekNumber;
-    canisterId : Text;
-  };
-
-  public type MonthlyLeaderboardInfo = {
-    seasonId : FootballTypes.SeasonId;
-    month : Base.CalendarMonth;
-    canisterId : Text;
-    clubId: FootballTypes.ClubId;
-  };
-
-  public type SeasonLeaderboardInfo = {
-    seasonId : FootballTypes.SeasonId;
-    canisterId : Text;
-  };
-
   public type EntryRequirement = {
     #FreeEntry;
     #InviteOnly;
