@@ -376,6 +376,23 @@ module {
     return Int64.toNat64(Float.toInt64(Float.fromInt64(Int64.fromNat64(amount)) * percentage));
   };
 
+  public func getcCanisterStatus_(a : actor {}, backendCanisterController : ?Principal, IC : Management.Management) : async ?Management.canister_status_result {
+    let cid = { canister_id = Principal.fromActor(a) };
+    switch (backendCanisterController) {
+      case (null) {
+        return null;
+      };
+      case (?_) {
+        let result = await (
+          IC.canister_status({
+            canister_id = cid.canister_id;
+          }),
+        );
+        return ?result;
+      };
+    };
+  };
+
   public func updateCanister_(a : actor {}, backendCanisterController : ?Principal, IC : Management.Management) : async () {
     let cid = { canister_id = Principal.fromActor(a) };
     switch (backendCanisterController) {

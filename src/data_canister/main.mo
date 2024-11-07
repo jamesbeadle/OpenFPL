@@ -793,6 +793,15 @@ import Nat "mo:base/Nat";
       //TODO (KELLY): Add validation checks
     };
 
+    public shared ( {caller} ) func validateSetFreeAgent(leagueId: FootballTypes.LeagueId, dto : GovernanceDTOs.SetFreeAgentDTO) : async Result.Result<(), T.Error>{
+      assert callerAllowed(caller);
+      assert leagueExists(leagueId);
+      assert checkPlayerExists(leagueId, dto.playerId);
+      return #err(#NotFound);
+
+      //TODO (KELLY): Add validation checks
+    };
+
     public shared ( {caller} ) func validateRecallPlayer(leagueId: FootballTypes.LeagueId, dto : GovernanceDTOs.RecallPlayerDTO) : async Result.Result<(), T.Error> {
       
       assert callerAllowed(caller);
@@ -1437,6 +1446,14 @@ import Nat "mo:base/Nat";
       return #ok();
     };
 
+    public shared ( {caller} ) func setFreeAgent(leagueId: FootballTypes.LeagueId, dto : GovernanceDTOs.SetFreeAgentDTO) : async Result.Result<(), T.Error>{
+      assert callerAllowed(caller);
+
+      movePlayerToFreeAgents(leagueId, dto.clubId, dto.playerId);
+      let _ = await updateDataHashes(leagueId, "players");
+      return #ok();
+    };
+
     public shared ( {caller} ) func recallPlayer(leagueId: FootballTypes.LeagueId, dto : GovernanceDTOs.RecallPlayerDTO) : async Result.Result<(), T.Error>{
       assert callerAllowed(caller);
       assert leagueExists(leagueId);
@@ -1445,7 +1462,6 @@ import Nat "mo:base/Nat";
         //call loan expired callback
       return #err(#NotFound);
     };
-
 
     public shared ( {caller} ) func createPlayer(leagueId: FootballTypes.LeagueId, dto : GovernanceDTOs.CreatePlayerDTO) : async Result.Result<(), T.Error>{
       assert callerAllowed(caller);

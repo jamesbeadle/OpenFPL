@@ -98,6 +98,12 @@ type SetPlayerInjuryDTO =
    expectedEndDate: int;
    playerId: ClubId;
  };
+type SetFreeAgentDTO = 
+ record {
+   clubId: ClubId;
+   leagueId: LeagueId;
+   playerId: ClubId;
+ };
 type SeasonId = nat16;
 type SeasonDTO = 
  record {
@@ -576,6 +582,7 @@ service : {
   revaluePlayerDown: (LeagueId, RevaluePlayerDownDTO) -> (Result);
   revaluePlayerUp: (LeagueId, RevaluePlayerUpDTO) -> (Result);
   setFixtureToComplete: (LeagueId, SeasonId, FixtureId) -> () oneway;
+  setFreeAgent: (LeagueId, SetFreeAgentDTO) -> (Result);
   setPlayerInjury: (LeagueId, SetPlayerInjuryDTO) -> (Result);
   submitFixtureData: (SubmitFixtureDataDTO) -> (Result);
   transferPlayer: (LeagueId, TransferPlayerDTO) -> (Result);
@@ -597,6 +604,7 @@ service : {
   validateRetirePlayer: (LeagueId, RetirePlayerDTO) -> (Result);
   validateRevaluePlayerDown: (LeagueId, RevaluePlayerDownDTO) -> (Result);
   validateRevaluePlayerUp: (LeagueId, RevaluePlayerUpDTO) -> (Result);
+  validateSetFreeAgent: (LeagueId, SetFreeAgentDTO) -> (Result);
   validateSetPlayerInjury: (LeagueId, SetPlayerInjuryDTO) -> (Result);
   validateSubmitFixtureData: (LeagueId, SubmitFixtureDataDTO) -> (Result);
   validateTransferPlayer: (LeagueId, TransferPlayerDTO) -> (Result);

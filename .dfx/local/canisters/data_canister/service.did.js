@@ -369,6 +369,11 @@ export const idlFactory = ({ IDL }) => {
     seasonId: SeasonId,
     gameweek: GameweekNumber,
   });
+  const SetFreeAgentDTO = IDL.Record({
+    clubId: ClubId,
+    playerId: ClubId,
+    leagueId: LeagueId,
+  });
   const SetPlayerInjuryDTO = IDL.Record({
     playerId: ClubId,
     description: IDL.Text,
@@ -515,6 +520,7 @@ export const idlFactory = ({ IDL }) => {
       [],
       ["oneway"],
     ),
+    setFreeAgent: IDL.Func([LeagueId, SetFreeAgentDTO], [Result], []),
     setPlayerInjury: IDL.Func([LeagueId, SetPlayerInjuryDTO], [Result], []),
     submitFixtureData: IDL.Func([SubmitFixtureDataDTO], [Result], []),
     transferPlayer: IDL.Func([LeagueId, TransferPlayerDTO], [Result], []),
@@ -556,6 +562,7 @@ export const idlFactory = ({ IDL }) => {
       [Result],
       [],
     ),
+    validateSetFreeAgent: IDL.Func([LeagueId, SetFreeAgentDTO], [Result], []),
     validateSetPlayerInjury: IDL.Func(
       [LeagueId, SetPlayerInjuryDTO],
       [Result],

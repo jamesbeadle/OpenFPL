@@ -318,6 +318,11 @@ export interface RevaluePlayerUpDTO {
 }
 export interface SeasonDTO { 'id' : SeasonId, 'name' : string, 'year' : number }
 export type SeasonId = number;
+export interface SetFreeAgentDTO {
+  'clubId' : ClubId,
+  'playerId' : ClubId,
+  'leagueId' : LeagueId,
+}
 export interface SetPlayerInjuryDTO {
   'playerId' : ClubId,
   'description' : string,
@@ -459,6 +464,7 @@ export interface _SERVICE {
     [LeagueId, SeasonId, FixtureId],
     undefined
   >,
+  'setFreeAgent' : ActorMethod<[LeagueId, SetFreeAgentDTO], Result>,
   'setPlayerInjury' : ActorMethod<[LeagueId, SetPlayerInjuryDTO], Result>,
   'submitFixtureData' : ActorMethod<[SubmitFixtureDataDTO], Result>,
   'transferPlayer' : ActorMethod<[LeagueId, TransferPlayerDTO], Result>,
@@ -495,6 +501,7 @@ export interface _SERVICE {
     [LeagueId, RevaluePlayerUpDTO],
     Result
   >,
+  'validateSetFreeAgent' : ActorMethod<[LeagueId, SetFreeAgentDTO], Result>,
   'validateSetPlayerInjury' : ActorMethod<
     [LeagueId, SetPlayerInjuryDTO],
     Result

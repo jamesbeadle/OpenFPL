@@ -63,6 +63,12 @@ module GovernanceDTOs {
     newShirtNumber: Nat8;
   };
 
+  public type SetFreeAgentDTO = {
+    leagueId: FootballTypes.LeagueId;
+    clubId: FootballTypes.ClubId;
+    playerId : FootballTypes.ClubId;
+  };
+
   public type RecallPlayerDTO = {
     playerId : FootballTypes.ClubId;
   };
