@@ -22,19 +22,13 @@ export class PlayerEventsService {
     );
   }
 
-  async getPlayerDetailsForGameweek(): Promise<PlayerPointsDTO[]> {
-    let systemState: SystemStateDTO | null = null;
-    systemStore.subscribe((value) => {
-      systemState = value as SystemStateDTO;
-    });
-
-    if (systemState == null) {
-      throw new Error("Failed to fetch system state in player events service");
-    }
-
+  async getPlayerDetailsForGameweek(
+    seasonId: number,
+    gameweek: number,
+  ): Promise<PlayerPointsDTO[]> {
     let dto: GameweekFiltersDTO = {
-      seasonId: (systemState as SystemStateDTO).calculationSeasonId,
-      gameweek: (systemState as SystemStateDTO).calculationGameweek,
+      seasonId,
+      gameweek,
     };
     const result = await this.actor.getPlayerDetailsForGameweek(dto);
     if (isError(result))

@@ -105,6 +105,7 @@ module {
     };
 
     public func getWeeklyLeaderboard(dto: DTOs.GetWeeklyLeaderboardDTO) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
+      await debugLog("fetching weekly leaderboard");
       if (dto.limit > 100) {
         return #err(#NotAllowed);
       };
@@ -115,6 +116,7 @@ module {
 
       switch(gameweekSeason){
         case (?foundGameweekSeason){
+          await debugLog("found season");
           let gameweekResult = Array.find(foundGameweekSeason.1, func(gameweekEntry: (FootballTypes.GameweekNumber, Base.CanisterId)) : Bool {
             gameweekEntry.0 == dto.gameweek
           });
@@ -123,6 +125,7 @@ module {
             case(?foundGameweek){
               let canisterId = foundGameweek.1;
 
+              await debugLog("found canister id: " # canisterId);
               let leaderboard_canister = actor (canisterId) : actor {
                 getWeeklyLeaderboardEntries : (seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber, filters: DTOs.PaginationFiltersDTO, searchTerm : Text) -> async ?DTOs.WeeklyLeaderboardDTO;
               };
@@ -378,9 +381,12 @@ module {
       };
 
       await leaderboard_canister.finaliseUpdate(seasonId, 0, gameweek);
+      await debugLog("finalised update");
+
 
       //store the canister id
       if(gameweek == 0 and month == 0){
+        await debugLog("store reference 1");
         //store season canister reference
         let seasonCanisterIdsBuffer = Buffer.fromArray<(FootballTypes.SeasonId, Base.CanisterId)>(seasonLeaderboardCanisters);
         seasonCanisterIdsBuffer.add(seasonId, activeCanisterId);
@@ -389,13 +395,43 @@ module {
       };
 
       if(month == 0){
-        //store gameweek canister
-        let gameweekCanisterIdsBuffer = Buffer.fromArray<(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, Base.CanisterId)])>(weeklyLeaderboardCanisters);
-        gameweekCanisterIdsBuffer.add(seasonId, [(gameweek, activeCanisterId)]);
-        weeklyLeaderboardCanisters := Buffer.toArray(gameweekCanisterIdsBuffer);
-        return
+        await debugLog("store reference 2");
+        
+        let weeklyLeaderboardCanisterBuffer = Buffer.fromArray<(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, Base.CanisterId)])>([]);
+        var seasonExists = false;
+
+        for(canister in Iter.fromArray(weeklyLeaderboardCanisters)){
+          if(canister.0 == seasonId){
+            let gameweekBuffer = Buffer.fromArray<(FootballTypes.GameweekNumber, Base.CanisterId)>([]);
+            var gameweekFound = false;
+            for(existingGameweek in Iter.fromArray(canister.1)){
+              if(existingGameweek.0 == gameweek){
+                gameweekBuffer.add(existingGameweek.0, activeCanisterId);
+                gameweekFound := true;
+              } else {
+                gameweekBuffer.add(existingGameweek);
+              }
+            };
+
+            if(not gameweekFound){
+              gameweekBuffer.add(gameweek, activeCanisterId);
+            };
+            weeklyLeaderboardCanisterBuffer.add((canister.0, Buffer.toArray(gameweekBuffer)));
+            seasonExists := true;
+          } else {
+            weeklyLeaderboardCanisterBuffer.add(canister);
+          }
+        };
+
+        if(not seasonExists){
+            weeklyLeaderboardCanisterBuffer.add(seasonId, [(gameweek, activeCanisterId)]);
+        };
+        
+        weeklyLeaderboardCanisters := Buffer.toArray(weeklyLeaderboardCanisterBuffer);
+        return;
       };
 
+        await debugLog("store reference 3");
       //store month canister id
         let monthCanisterIdsBuffer = Buffer.fromArray<(FootballTypes.SeasonId, [(Base.CalendarMonth, Base.CanisterId)])>(monthlyLeaderboardCanisters);
         monthCanisterIdsBuffer.add(seasonId, [(month, activeCanisterId)]);

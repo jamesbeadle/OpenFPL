@@ -329,6 +329,7 @@ export const idlFactory = ({ IDL }) => {
   const SubmitFixtureDataDTO = IDL.Record({
     fixtureId: FixtureId,
     seasonId: SeasonId,
+    gameweek: GameweekNumber,
     playerEventData: IDL.Vec(PlayerEventData),
     leagueId: LeagueId,
   });

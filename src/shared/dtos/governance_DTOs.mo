@@ -20,6 +20,7 @@ module GovernanceDTOs {
     seasonId: FootballTypes.SeasonId;
     leagueId: FootballTypes.LeagueId;
     fixtureId : FootballTypes.FixtureId;
+    gameweek: FootballTypes.GameweekNumber;
     playerEventData : [FootballTypes.PlayerEventData];
   };
 

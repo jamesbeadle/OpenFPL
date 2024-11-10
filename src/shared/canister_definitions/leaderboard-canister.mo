@@ -570,12 +570,14 @@ actor class _LeaderboardCanister() {
         return null;
       };
       case (?foundLeaderboard) {
+        await debugLog("found leaderboard in canister");
         let filteredEntries = List.filter<T.LeaderboardEntry>(
           foundLeaderboard.entries,
           func(entry : T.LeaderboardEntry) : Bool {
             Text.startsWith(entry.username, #text searchTerm);
           },
         );
+        await debugLog("found total of " # Nat.toText(List.size(filteredEntries)));
 
         let sortedGameweekEntries = Array.sort(List.toArray(filteredEntries), func(entry1: T.LeaderboardEntry, entry2: T.LeaderboardEntry) : Order.Order{
           if (entry1.points < entry2.points) { return #greater };
@@ -592,6 +594,7 @@ actor class _LeaderboardCanister() {
           entries = List.toArray(paginatedEntries);
           totalEntries = List.size(foundLeaderboard.entries);
         };
+        await debugLog("returning");
 
         return ?leaderboardDTO;
       };

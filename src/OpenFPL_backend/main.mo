@@ -465,7 +465,7 @@ import Time "mo:base/Time";
       //set system state
       //await checkCanisterCycles(); 
       //await setSystemTimers();
-      await updateLeaderboardCanisterWasms();
+      //await updateLeaderboardCanisterWasms();
       //await updateManagerCanisterWasms();
 
       await seasonManager.updateDataHash("clubs");
@@ -560,6 +560,7 @@ import Time "mo:base/Time";
     };
 
     public shared ({ caller }) func calculateLeaderboards() : async Result.Result<(), T.Error> {
+      //TODO: Need a way to separate out month
       assert Principal.toText(caller) == NetworkEnvironmentVariables.FOOTBALL_GOD_BACKEND_CANISTER_ID;
       let systemStateResult = await getSystemState();
       switch(systemStateResult){
@@ -575,7 +576,7 @@ import Time "mo:base/Time";
                 return club.id
               });
               let managerCanisterIds = userManager.getUniqueManagerCanisterIds();
-              let _ = leaderboardManager.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth, managerCanisterIds, clubIds);
+              let _ = leaderboardManager.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, 0, managerCanisterIds, clubIds);
               return #ok();
             };
             case (#err error){
@@ -617,6 +618,10 @@ import Time "mo:base/Time";
 
     public shared query func getWeeklyRewards(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber) : async Result.Result<T.WeeklyRewards, T.Error> {
       return leaderboardManager.getWeeklyRewards(seasonId, gameweek);
+    };
+
+    public shared query func getWeeklyCanisters() : async Result.Result<[(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, Base.CanisterId)])], T.Error> {
+      return #ok(stable_weekly_leaderboard_canister_ids);
     };
 
     public shared ({ caller }) func notifyAppsOfLoan(leagueId: FootballTypes.LeagueId, playerId: FootballTypes.PlayerId) : async Result.Result<(), T.Error> {

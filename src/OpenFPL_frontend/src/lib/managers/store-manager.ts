@@ -113,8 +113,12 @@ class StoreManager {
         );
         break;
       case "player_events":
+        const systemState = await this.systemService.getSystemState();
         const updatedPlayerEvents =
-          await this.playerEventsService.getPlayerDetailsForGameweek();
+          await this.playerEventsService.getPlayerDetailsForGameweek(
+            systemState.calculationSeasonId,
+            systemState.calculationGameweek,
+          );
         playerEventsStore.setPlayerEvents(updatedPlayerEvents);
         localStorage.setItem(
           "player_events",
@@ -139,7 +143,6 @@ class StoreManager {
             await this.weeklyLeaderboardService.getWeeklyLeaderboard(
               0,
               systemState?.calculationSeasonId ?? 0,
-              0,
               systemState?.calculationGameweek ?? 0,
             );
           weeklyLeaderboardStore.setWeeklyLeaderboard(updatedWeeklyLeaderboard);

@@ -344,6 +344,7 @@ export type ShirtType = { Filled: null } | { Striped: null };
 export interface SubmitFixtureDataDTO {
   fixtureId: FixtureId;
   seasonId: SeasonId;
+  gameweek: GameweekNumber;
   playerEventData: Array<PlayerEventData>;
   leagueId: LeagueId;
 }

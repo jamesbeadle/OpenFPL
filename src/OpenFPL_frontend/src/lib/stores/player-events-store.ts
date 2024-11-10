@@ -63,6 +63,8 @@ function createPlayerEventsStore() {
       (systemState as SystemStateDTO).calculationGameweek === gameweek
     ) {
       allPlayerEvents = await getPlayerEventsFromLocalStorage();
+      console.log("events from local storage");
+      console.log(allPlayerEvents);
     } else {
       allPlayerEvents = await getPlayerEventsFromBackend(seasonId, gameweek);
     }
