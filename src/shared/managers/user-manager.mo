@@ -143,6 +143,7 @@ module {
                     weeklyPoints =  weeklyPoints;
                     monthlyPoints = monthlyPoints;
                     seasonPoints = seasonPoints;
+                    profilePictureType = foundManager.profilePictureType;
                   };
                   return #ok(managerDTO);
 
@@ -201,6 +202,7 @@ module {
                     weeklyPoints = weeklyPoints;
                     monthlyPoints = monthlyPoints;
                     seasonPoints = seasonPoints;
+                    profilePictureType = foundManager.profilePictureType;
                   };
                   return #ok(managerDTO);
                 };

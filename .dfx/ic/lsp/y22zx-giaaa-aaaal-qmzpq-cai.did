@@ -454,6 +454,7 @@ type ManagerDTO =
    monthlyPositionText: text;
    principalId: text;
    profilePicture: opt blob;
+   profilePictureType: text;
    seasonPoints: int16;
    seasonPosition: int;
    seasonPositionText: text;

@@ -48,6 +48,7 @@ module DTOs {
     principalId : Text;
     username : Text;
     profilePicture : ?Blob;
+    profilePictureType : Text;
     favouriteClubId : ?FootballTypes.ClubId;
     createDate : Int;
     gameweeks : [T.FantasyTeamSnapshot];

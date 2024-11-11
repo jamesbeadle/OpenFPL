@@ -1,8 +1,8 @@
 import { Actor, HttpAgent } from "@dfinity/agent";
 
 // Imports and re-exports candid interface
-import { idlFactory } from "./data_canister.did.js";
-export { idlFactory } from "./data_canister.did.js";
+import { idlFactory } from './data_canister.did.js';
+export { idlFactory } from './data_canister.did.js';
 // CANISTER_ID is replaced by webpack based on node environment
 export const canisterId = process.env.CANISTER_ID_DATA_CANISTER;
 
@@ -18,13 +18,11 @@ export const createActor = (canisterId, options = {}) => {
 
 See https://internetcomputer.org/docs/current/developer-docs/updates/release-notes/ for migration instructions`);
   const agent = options.agent || new HttpAgent({ ...options.agentOptions });
-
+  
   // Fetch root key for certificate validation during development
   if (process.env.DFX_NETWORK !== "ic") {
-    agent.fetchRootKey().catch((err) => {
-      console.warn(
-        "Unable to fetch root key. Check to ensure that your local replica is running",
-      );
+    agent.fetchRootKey().catch(err => {
+      console.warn("Unable to fetch root key. Check to ensure that your local replica is running");
       console.error(err);
     });
   }
@@ -36,7 +34,7 @@ See https://internetcomputer.org/docs/current/developer-docs/updates/release-not
     ...(options ? options.actorOptions : {}),
   });
 };
-
+  
 /**
  * A ready-to-use agent for the data_canister canister
  * @type {import("@dfinity/agent").ActorSubclass<import("./data_canister.did.js")._SERVICE>}

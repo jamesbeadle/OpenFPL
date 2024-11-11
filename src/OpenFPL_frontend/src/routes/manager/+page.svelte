@@ -12,7 +12,7 @@
   import Layout from "../Layout.svelte";
   import ManagerGameweekDetails from "$lib/components/manager/manager-gameweek-details.svelte";
   import ManagerGameweeks from "$lib/components/manager/manager-gameweeks.svelte";
-  import { getDateFromBigInt } from "$lib/utils/helpers";
+  import { getDateFromBigInt, uint8ArrayToBase64 } from "$lib/utils/helpers";
   import LocalSpinner from "$lib/components/local-spinner.svelte";
   import { storeManager } from "$lib/managers/store-manager";
     import { clubStore } from "$lib/stores/club-store";
@@ -44,13 +44,23 @@
       displayName =
         manager.username === manager.principalId ? "Unknown" : manager.username;
 
-      let profilePicture = manager?.profilePicture as unknown as string;
-      let profileSrc =
-        typeof profilePicture === "string" &&
-        profilePicture.startsWith("data:image")
-          ? profilePicture
-          : "/profile_placeholder.png";
-      profilePicture = profileSrc;
+      let profileSrc = "/profile_placeholder.png";
+      let byteArray;
+      if (
+          Array.isArray(manager.profilePicture) &&
+          manager.profilePicture[0] instanceof Uint8Array
+        ) {
+          byteArray = manager.profilePicture[0];
+          profileSrc = `data:image/${
+            manager.profilePictureType
+          };base64,${uint8ArrayToBase64(byteArray)}`;
+        } else if (manager.profilePicture instanceof Uint8Array) {
+          return `data:${manager.profilePictureType};base64,${uint8ArrayToBase64(
+            manager.profilePicture,
+          )}`;
+        } else {
+          profileSrc = `data:${manager.profilePictureType};base64,${manager.profilePicture}`;
+        }
 
       joinedDate = getDateFromBigInt(Number(manager.createDate));
 

@@ -209,6 +209,7 @@ export interface ManagerDTO {
   monthlyPositionText: string;
   profilePicture: [] | [Uint8Array | number[]];
   seasonPoints: number;
+  profilePictureType: string;
   principalId: string;
   seasonPositionText: string;
 }

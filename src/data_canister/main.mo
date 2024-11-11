@@ -1949,7 +1949,7 @@ import HashMap "mo:base/HashMap";
                 case (null) {};
                 case (?events) {
                   addEventsToFixture(dto.leagueId, events, dto.seasonId, dto.fixtureId);
-                  addEventsToPlayers(dto.leagueId, events, dto.seasonId, dto.gameweek);
+                  addEventsToPlayers(dto.leagueId, events, dto.seasonId, dto.gameweek, dto.fixtureId);
                   var highestScoringPlayerId: Nat16 = 0;
                   let highestScoringPlayerEvent = Array.find<FootballTypes.PlayerEventData>(events, func(event: FootballTypes.PlayerEventData) : Bool{
                     event.eventType == #HighestScoringPlayer;
@@ -2840,7 +2840,7 @@ import HashMap "mo:base/HashMap";
       setGameScore(leagueId, seasonId, fixtureId);
     };
 
-    private func addEventsToPlayers(leagueId: FootballTypes.LeagueId, playerEventData : [FootballTypes.PlayerEventData], seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber) {
+    private func addEventsToPlayers(leagueId: FootballTypes.LeagueId, playerEventData : [FootballTypes.PlayerEventData], seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, fixtureId: FootballTypes.FixtureId) {
   
       var updatedSeasons : List.List<FootballTypes.PlayerSeason> = List.nil<FootballTypes.PlayerSeason>();
       let playerEventsMap : TrieMap.TrieMap<Nat16, [FootballTypes.PlayerEventData]> = TrieMap.TrieMap<Nat16, [FootballTypes.PlayerEventData]>(Utilities.eqNat16, Utilities.hashNat16);
@@ -2950,9 +2950,14 @@ import HashMap "mo:base/HashMap";
                               if (gw.number != gameweek) {
                                 return gw;
                               };
+
+                              let otherFixtureEvents = List.filter<FootballTypes.PlayerEventData>(gw.events, func(playerEvent: FootballTypes.PlayerEventData){
+                                playerEvent.fixtureId != fixtureId
+                              });
+
                               return {
                                 number = gw.number;
-                                events = List.append<FootballTypes.PlayerEventData>(gw.events, List.fromArray(playerEventMap.1));
+                                events = List.append<FootballTypes.PlayerEventData>(otherFixtureEvents, List.fromArray(playerEventMap.1));
                                 points = score;
                               };
                             },
@@ -3532,7 +3537,7 @@ import HashMap "mo:base/HashMap";
 
     private func postUpgradeCallback() : async (){
       //await setSystemTimers();
-      fixData();
+      //fixData();
       let _ = await updateDataHashes(1, "players");
       let _ = await updateDataHashes(1, "player_events");
     };

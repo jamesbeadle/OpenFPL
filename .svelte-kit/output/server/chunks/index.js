@@ -3485,7 +3485,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "sz0ziw"
+  version_hash: "1r7p5dm"
 };
 async function get_hooks() {
   return {};
@@ -3954,6 +3954,7 @@ const idlFactory = ({ IDL }) => {
     "monthlyPositionText": IDL.Text,
     "profilePicture": IDL.Opt(IDL.Vec(IDL.Nat8)),
     "seasonPoints": IDL.Int16,
+    "profilePictureType": IDL.Text,
     "principalId": IDL.Text,
     "seasonPositionText": IDL.Text
   });

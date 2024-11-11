@@ -257,6 +257,7 @@ export const idlFactory = ({ IDL }) => {
     'monthlyPositionText' : IDL.Text,
     'profilePicture' : IDL.Opt(IDL.Vec(IDL.Nat8)),
     'seasonPoints' : IDL.Int16,
+    'profilePictureType' : IDL.Text,
     'principalId' : IDL.Text,
     'seasonPositionText' : IDL.Text,
   });
