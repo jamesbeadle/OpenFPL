@@ -105,7 +105,6 @@ module {
     };
 
     public func getWeeklyLeaderboard(dto: DTOs.GetWeeklyLeaderboardDTO) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
-      await debugLog("fetching weekly leaderboard");
       if (dto.limit > 100) {
         return #err(#NotAllowed);
       };
@@ -116,7 +115,6 @@ module {
 
       switch(gameweekSeason){
         case (?foundGameweekSeason){
-          await debugLog("found season");
           let gameweekResult = Array.find(foundGameweekSeason.1, func(gameweekEntry: (FootballTypes.GameweekNumber, Base.CanisterId)) : Bool {
             gameweekEntry.0 == dto.gameweek
           });
@@ -125,7 +123,6 @@ module {
             case(?foundGameweek){
               let canisterId = foundGameweek.1;
 
-              await debugLog("found canister id: " # canisterId);
               let leaderboard_canister = actor (canisterId) : actor {
                 getWeeklyLeaderboardEntries : (seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber, filters: DTOs.PaginationFiltersDTO, searchTerm : Text) -> async ?DTOs.WeeklyLeaderboardDTO;
               };
@@ -381,13 +378,8 @@ module {
       };
 
       await leaderboard_canister.finaliseUpdate(seasonId, 0, gameweek);
-      await debugLog("finalised update");
-
-
-      //store the canister id
+    
       if(gameweek == 0 and month == 0){
-        await debugLog("store reference 1");
-        //store season canister reference
         let seasonCanisterIdsBuffer = Buffer.fromArray<(FootballTypes.SeasonId, Base.CanisterId)>(seasonLeaderboardCanisters);
         seasonCanisterIdsBuffer.add(seasonId, activeCanisterId);
         seasonLeaderboardCanisters := Buffer.toArray(seasonCanisterIdsBuffer);
@@ -395,7 +387,6 @@ module {
       };
 
       if(month == 0){
-        await debugLog("store reference 2");
         
         let weeklyLeaderboardCanisterBuffer = Buffer.fromArray<(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, Base.CanisterId)])>([]);
         var seasonExists = false;
@@ -431,11 +422,9 @@ module {
         return;
       };
 
-        await debugLog("store reference 3");
-      //store month canister id
-        let monthCanisterIdsBuffer = Buffer.fromArray<(FootballTypes.SeasonId, [(Base.CalendarMonth, Base.CanisterId)])>(monthlyLeaderboardCanisters);
-        monthCanisterIdsBuffer.add(seasonId, [(month, activeCanisterId)]);
-        monthlyLeaderboardCanisters := Buffer.toArray(monthCanisterIdsBuffer);
+      let monthCanisterIdsBuffer = Buffer.fromArray<(FootballTypes.SeasonId, [(Base.CalendarMonth, Base.CanisterId)])>(monthlyLeaderboardCanisters);
+      monthCanisterIdsBuffer.add(seasonId, [(month, activeCanisterId)]);
+      monthlyLeaderboardCanisters := Buffer.toArray(monthCanisterIdsBuffer);
      
 
     };
@@ -562,10 +551,6 @@ module {
     };
 
     public func payWeeklyRewards(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber) : async Result.Result<(), T.Error>{
-      await debugLog("paying weekly rewards");
-      await debugLog("season: " # Nat16.toText(seasonId));
-      await debugLog("gameweek" # Nat8.toText(gameweek));
-      
       
       let weeklyRewards = rewardManager.getWeeklyRewards(seasonId, gameweek);
       switch(weeklyRewards){
@@ -575,7 +560,6 @@ module {
           //pay the reward
           let ledger : SNSToken.Interface = actor (NetworkEnvironmentVariables.SNS_LEDGER_CANISTER_ID);
           
-          await debugLog("Making payment" # entry.principalId);
           let _ = await ledger.icrc1_transfer ({
             memo = ?Text.encodeUtf8("0");
             from_subaccount = ?Account.defaultSubaccount();
@@ -774,21 +758,6 @@ module {
 
     public func setStableActiveCanisterId(stable_active_canister_id: Base.CanisterId){
       activeCanisterId := stable_active_canister_id;
-    };
-
-    private func debugLog(text: Text) : async (){
-      let waterway_labs_canister = actor (NetworkEnvironmentVariables.WATERWAY_LABS_BACKEND_CANISTER_ID) : actor {
-        logSystemEvent : (dto: DTOs.SystemEventDTO) -> async ();
-      };
-
-      await waterway_labs_canister.logSystemEvent({
-        eventDetail = text;
-        eventId = 0;
-        eventTime = Time.now();
-        eventTitle = "DEBUG";
-        eventType = #SystemCheck;
-      });
-
     };
   };
 };

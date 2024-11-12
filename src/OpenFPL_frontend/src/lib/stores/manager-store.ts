@@ -227,9 +227,6 @@ function createManagerStore() {
         username: userFantasyTeam.username,
       };
 
-      console.log("about to save fantasy team with dto:");
-      console.log(dto);
-
       let result = await identityActor.saveFantasyTeam(dto);
 
       if (isError(result)) {

@@ -86,9 +86,6 @@
         $selectedGameweek!
       );
 
-      console.log("fetchedPlayers");
-      console.log(fetchedPlayers);
-
       calculateBonusPoints(fetchedPlayers, $fantasyTeam);
       
       gameweekPlayers.set(

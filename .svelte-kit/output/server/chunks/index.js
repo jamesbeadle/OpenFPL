@@ -3485,7 +3485,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "jcivfa"
+  version_hash: "p9pmil"
 };
 async function get_hooks() {
   return {};
@@ -5336,8 +5336,6 @@ function createManagerStore() {
         transferWindowGameweek: transferWindowPlayedInSession ? activeGameweek : userFantasyTeam.transferWindowGameweek,
         username: userFantasyTeam.username
       };
-      console.log("about to save fantasy team with dto:");
-      console.log(dto);
       let result = await identityActor.saveFantasyTeam(dto);
       if (isError(result)) {
         console.error("Error saving fantasy team", result);
@@ -5604,8 +5602,6 @@ function createPlayerEventsStore() {
     }
     if (systemState.calculationSeasonId === seasonId && systemState.calculationGameweek === gameweek) {
       allPlayerEvents = await getPlayerEventsFromLocalStorage();
-      console.log("events from local storage");
-      console.log(allPlayerEvents);
     } else {
       allPlayerEvents = await getPlayerEventsFromBackend(seasonId, gameweek);
     }
@@ -5682,8 +5678,6 @@ class WeeklyLeaderboardService {
       gameweek
     };
     const result = await this.actor.getWeeklyLeaderboard(dto);
-    console.log("weekly result");
-    console.log(result);
     if (isError(result))
       throw new Error("Failed to fetch weekly leaderboard");
     return result.ok;
@@ -6070,6 +6064,7 @@ function createUserStore() {
     return await identityActor.isUsernameValid(dto);
   }
   async function cacheProfile() {
+    await authStore.sync();
     const identityActor = await ActorFactory.createIdentityActor(
       authStore,
       define_process_env_default$2.OPENFPL_BACKEND_CANISTER_ID
@@ -6104,7 +6099,6 @@ function createUserStore() {
       });
       if (principalId) {
         try {
-          console.log(`trying to transfer ${withdrawalAmount}`);
           let transfer_result = await transfer({
             to: {
               owner: Principal.fromText(withdrawalAddress),

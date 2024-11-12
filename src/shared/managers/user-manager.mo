@@ -674,7 +674,6 @@ module {
       switch(manager){
         case (null){ };
         case (?foundManager){
-          await debugLog("Checking bonus for manager " # foundManager.principalId);
           let goalGetterPlayed = updatedFantasyTeam.goalGetterGameweek == systemState.pickTeamGameweek;
           let passMasterPlayed = updatedFantasyTeam.passMasterGameweek == systemState.pickTeamGameweek;
           let noEntryPlayed = updatedFantasyTeam.noEntryGameweek == systemState.pickTeamGameweek;
@@ -685,49 +684,32 @@ module {
           let oneNationPlayed = updatedFantasyTeam.oneNationGameweek == systemState.pickTeamGameweek;
           let braceBonusPlayed = updatedFantasyTeam.braceBonusGameweek == systemState.pickTeamGameweek;
           let hatTrickHeroPlayed = updatedFantasyTeam.hatTrickHeroGameweek == systemState.pickTeamGameweek;
-          await debugLog("Goal getter played " # Bool.toText(goalGetterPlayed));
-          await debugLog("Pass master played " # Bool.toText(passMasterPlayed));
-          await debugLog("No Entry played " # Bool.toText(noEntryPlayed));
-          await debugLog("Team Boost played " # Bool.toText(teamBoostPlayed));
-          await debugLog("Safe Hands played " # Bool.toText(safeHandsPlayed));
-          await debugLog("Captain Fantastic played " # Bool.toText(captainFantasticPlayed));
-          await debugLog("Prospects played " # Bool.toText(prospectsPlayed));
-          await debugLog("One Nation played " # Bool.toText(oneNationPlayed));
-          await debugLog("Brace Bonus played " # Bool.toText(braceBonusPlayed));
-          await debugLog("Hat Trick Hero played " # Bool.toText(hatTrickHeroPlayed));
-
+         
           if(goalGetterPlayed and updatedFantasyTeam.goalGetterPlayerId == 0){
-          await debugLog("A");
             return true;
           };
 
           if(passMasterPlayed and updatedFantasyTeam.passMasterPlayerId == 0){
-          await debugLog("B");
             return true;
           };
 
           if(noEntryPlayed and updatedFantasyTeam.noEntryPlayerId == 0){
-          await debugLog("C");
             return true;
           };
 
           if(teamBoostPlayed and updatedFantasyTeam.teamBoostClubId == 0){
-          await debugLog("D");
             return true;
           };
 
           if(safeHandsPlayed and updatedFantasyTeam.safeHandsPlayerId == 0){
-          await debugLog("E");
             return true;
           };
 
           if(captainFantasticPlayed and updatedFantasyTeam.captainFantasticPlayerId == 0){
-          await debugLog("F");
             return true;
           };
 
           if(oneNationPlayed and updatedFantasyTeam.oneNationCountryId == 0){
-          await debugLog("G");
             return true;
           };
 
@@ -794,72 +776,60 @@ module {
           };
 
           if (bonusesPlayed > 1) {
-            await debugLog("too many");
             return true;
           };      
 
           if(not systemState.seasonActive){
-            await debugLog("not active");
             return false;
           };    
           
           if(updatedFantasyTeam.goalGetterGameweek == systemState.pickTeamGameweek and 
             (foundManager.goalGetterGameweek != systemState.pickTeamGameweek and foundManager.goalGetterGameweek != 0)){
-            await debugLog("a1");
             return true;
           };
           
           if(updatedFantasyTeam.passMasterGameweek == systemState.pickTeamGameweek and 
             (foundManager.passMasterGameweek != systemState.pickTeamGameweek and foundManager.passMasterGameweek != 0)){
-            await debugLog("a2");
             return true;
           };
           
           if(updatedFantasyTeam.noEntryGameweek == systemState.pickTeamGameweek and 
             (foundManager.noEntryGameweek != systemState.pickTeamGameweek and foundManager.noEntryGameweek != 0)){
-            await debugLog("a3");
             return true;
           };
           
           if(updatedFantasyTeam.teamBoostGameweek == systemState.pickTeamGameweek and 
             (foundManager.teamBoostGameweek != systemState.pickTeamGameweek and foundManager.teamBoostGameweek != 0)){
-            await debugLog("a4");
             return true;
           };
           
           if(updatedFantasyTeam.safeHandsGameweek == systemState.pickTeamGameweek and 
             (foundManager.safeHandsGameweek != systemState.pickTeamGameweek and foundManager.safeHandsGameweek != 0)){
-            await debugLog("a5");
             return true;
           };
           
           if(updatedFantasyTeam.captainFantasticGameweek == systemState.pickTeamGameweek and 
             (foundManager.captainFantasticGameweek != systemState.pickTeamGameweek and foundManager.captainFantasticGameweek != 0)){
-            await debugLog("a6");
             return true;
           };
           
           if(updatedFantasyTeam.prospectsGameweek == systemState.pickTeamGameweek and 
             (foundManager.prospectsGameweek != systemState.pickTeamGameweek and foundManager.prospectsGameweek != 0)){
-            await debugLog("a7");
             return true;
           };
           
           if(updatedFantasyTeam.oneNationGameweek == systemState.pickTeamGameweek and 
             (foundManager.oneNationGameweek != systemState.pickTeamGameweek and foundManager.oneNationGameweek != 0)){
-            await debugLog("a8");
             return true;
           };
           
           if(updatedFantasyTeam.braceBonusGameweek == systemState.pickTeamGameweek and 
             (foundManager.braceBonusGameweek != systemState.pickTeamGameweek and foundManager.braceBonusGameweek != 0)){
-            await debugLog("a9");
             return true;
           };
           
           if(updatedFantasyTeam.hatTrickHeroGameweek == systemState.pickTeamGameweek and 
             (foundManager.hatTrickHeroGameweek != systemState.pickTeamGameweek and foundManager.hatTrickHeroGameweek != 0)){
-            await debugLog("a10");
             return true;
           };
 
@@ -1420,21 +1390,6 @@ module {
 
     public func setStableActiveManagerCanisterId(stable_active_manager_canister_id : Base.CanisterId) : () {
       activeManagerCanisterId := stable_active_manager_canister_id;
-    };
-
-    private func debugLog(text: Text) : async (){
-      let waterway_labs_canister = actor (NetworkEnvironmentVariables.WATERWAY_LABS_BACKEND_CANISTER_ID) : actor {
-        logSystemEvent : (dto: DTOs.SystemEventDTO) -> async ();
-      };
-
-      await waterway_labs_canister.logSystemEvent({
-        eventDetail = text;
-        eventId = 0;
-        eventTime = Time.now();
-        eventTitle = "DEBUG";
-        eventType = #SystemCheck;
-      });
-
     };
   }
 };

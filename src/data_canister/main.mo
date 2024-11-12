@@ -2037,7 +2037,6 @@ import HashMap "mo:base/HashMap";
           } else { return leagueClubsEntry }
         }
       );
-      await debugLog("x");
 
       return #err(#NotFound);
     };
@@ -2048,21 +2047,6 @@ import HashMap "mo:base/HashMap";
 
     public shared func getLeaguePlayers() : async [(FootballTypes.LeagueId, [FootballTypes.Player])] {
       return leaguePlayers;
-    };
-
-    private func debugLog(text: Text) : async (){
-      let waterway_labs_canister = actor ("rbqtt-7yaaa-aaaal-qcndq-cai") : actor {
-        logSystemEvent : (dto: DTOs.SystemEventDTO) -> async ();
-      };
-
-      await waterway_labs_canister.logSystemEvent({
-        eventDetail = text;
-        eventId = 0;
-        eventTime = Time.now();
-        eventTitle = "DEBUG";
-        eventType = #SystemCheck;
-      });
-
     };
 
     public shared ({ caller }) func promoteClub(leagueId: FootballTypes.LeagueId, dto : GovernanceDTOs.PromoteClubDTO) : async Result.Result<(), T.Error> {

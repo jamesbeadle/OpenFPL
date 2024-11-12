@@ -48,6 +48,7 @@
   onMount(async () => {
     try {
       startDotAnimation();
+      await userStore.sync();
       await storeManager.syncStores();
       await fetchBalances();
 
@@ -79,13 +80,10 @@
 
   async function fetchBalances() {
     try {
-      console.log("fetching balances")
       fplBalance = await userStore.getFPLBalance();
       const fplBalanceInTokens = Number(fplBalance) / 100_000_000;
       fplBalanceFormatted = fplBalanceInTokens.toFixed(8);
 
-      console.log(fplBalance)
-      console.log(fplBalanceFormatted)
       clearInterval(dot_interval);
       loadingBalances = false;
     } catch (error) {

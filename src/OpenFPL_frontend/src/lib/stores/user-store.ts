@@ -145,6 +145,7 @@ function createUserStore() {
   }
 
   async function cacheProfile() {
+    await authStore.sync();
     const identityActor: any = await ActorFactory.createIdentityActor(
       authStore,
       process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
@@ -194,7 +195,6 @@ function createUserStore() {
 
       if (principalId) {
         try {
-          console.log(`trying to transfer ${withdrawalAmount}`);
           let transfer_result = await transfer({
             to: {
               owner: Principal.fromText(withdrawalAddress),

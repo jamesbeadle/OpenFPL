@@ -892,7 +892,6 @@ module {
             weeklyRewardsBuffer.add(newWeeklyRewardsEntry);
         };
         case (null) {
-            await debugLog("No reward pool found for season ID: " # Nat16.toText(dto.seasonId));
         };
     };
     
@@ -958,8 +957,7 @@ module {
 
 
   public func scalePercentages(percentages: [Float], actualWinners: Nat): async [Float] {
-    await debugLog("Starting percentage scaling");
-
+   
     let winnerPercentages = Array.subArray<Float>(percentages, 0, Nat.min(Array.size(percentages), actualWinners));
     let adjustedBuffer = Buffer.fromArray<Float>(winnerPercentages);
 
@@ -1000,21 +998,6 @@ module {
       };
       
       return #err(#NotFound);
-    };
-
-    private func debugLog(text: Text) : async (){
-      let waterway_labs_canister = actor ("rbqtt-7yaaa-aaaal-qcndq-cai") : actor {
-        logSystemEvent : (dto: DTOs.SystemEventDTO) -> async ();
-      };
-
-      await waterway_labs_canister.logSystemEvent({
-        eventDetail = text;
-        eventId = 0;
-        eventTime = Time.now();
-        eventTitle = "DEBUG";
-        eventType = #SystemCheck;
-      });
-
     };
 
   };

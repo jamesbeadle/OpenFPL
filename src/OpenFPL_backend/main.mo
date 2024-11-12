@@ -29,6 +29,7 @@ import Time "mo:base/Time";
   import Environment "./Environment";
   import NetworkEnvironmentVariables "../shared/network_environment_variables";
   import Account "../shared/lib/Account";
+  import Utilities "../shared/utils/utilities";
 
   actor Self {
     
@@ -461,6 +462,22 @@ import Time "mo:base/Time";
 
     private func postUpgradeCallback() : async (){
 
+      /*
+      let IC : Management.Management = actor (NetworkEnvironmentVariables.Default);
+      
+      let active_leaderboard_canister = actor (stable_active_leaderbord_canister_id) : actor { };
+      let canisterStatusResult = await Utilities.getCanisterStatus_(active_leaderboard_canister, ?Principal.fromActor(Self), IC);
+      
+      switch(canisterStatusResult){
+        case (?canisterStatus){
+        };
+        case (null){
+
+        };
+      };
+      */
+
+      
       //TODO (GO LIVE)
       //set system state
       //await checkCanisterCycles(); 

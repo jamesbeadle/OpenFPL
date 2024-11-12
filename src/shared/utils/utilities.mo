@@ -376,7 +376,7 @@ module {
     return Int64.toNat64(Float.toInt64(Float.fromInt64(Int64.fromNat64(amount)) * percentage));
   };
 
-  public func getcCanisterStatus_(a : actor {}, backendCanisterController : ?Principal, IC : Management.Management) : async ?Management.canister_status_result {
+  public func getCanisterStatus_(a : actor {}, backendCanisterController : ?Principal, IC : Management.Management) : async ?Management.canister_status_result {
     let cid = { canister_id = Principal.fromActor(a) };
     switch (backendCanisterController) {
       case (null) {
