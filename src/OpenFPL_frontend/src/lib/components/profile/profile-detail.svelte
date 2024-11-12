@@ -214,7 +214,7 @@
     visible={showWithdrawFPLModal}
     closeModal={closeWithdrawFPLModal}
     cancelModal={closeWithdrawFPLModal}
-    fplBalance={(fplBalance / 100_000_000n)}
+    fplBalance={fplBalance}
     fplBalanceFormatted={fplBalanceFormatted}
   />
   <div class="container mx-auto p-4">

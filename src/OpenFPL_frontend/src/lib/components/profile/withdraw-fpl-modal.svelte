@@ -25,7 +25,7 @@
     if (!amount) {
       return false;
     }
-    const regex = /^\d+(\.\d{1,4})?$/;
+    const regex = /^\d+(\.\d{1,8})?$/;
     return regex.test(amount);
   }
 
@@ -41,12 +41,17 @@
     }
     
     const amountInE8s = convertToE8s(amount);
+    console.log("comparing")
+    console.log(amountInE8s)
+    console.log(balance)
     return amountInE8s <= BigInt(balance * 100_000_000n);
   }
 
   function setMaxWithdrawAmount() {
-    const maxAmount = Number(fplBalance);
-    withdrawalInputAmount = maxAmount.toFixed(4);
+    const maxAmount = Number(fplBalance) / 100_000_000;
+    console.log("max withdrawal")
+    console.log(fplBalance)
+    withdrawalInputAmount = maxAmount.toFixed(8);
   }
 
   $: isSubmitDisabled = !isPrincipalValid(withdrawalAddress) || !isWithdrawAmountValid(withdrawalInputAmount, fplBalance);
