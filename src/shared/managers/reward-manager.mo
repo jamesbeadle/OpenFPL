@@ -853,8 +853,11 @@ module {
     };
 
   public func calculateGameweekRewards(dto: DTOs.WeeklyLeaderboardDTO): async () {
-
-    let weeklyRewardsBuffer = Buffer.fromArray<T.WeeklyRewards>(List.toArray(weeklyRewards));
+ 
+    let weeklyRewardsExcludingThisWeek = List.filter<T.WeeklyRewards>(weeklyRewards, func(weeklyRewardsEntry: T.WeeklyRewards){
+      not (weeklyRewardsEntry.gameweek == dto.gameweek and weeklyRewardsEntry.seasonId == dto.seasonId)
+    });
+    let weeklyRewardsBuffer = Buffer.fromArray<T.WeeklyRewards>(List.toArray(weeklyRewardsExcludingThisWeek));
 
     let rewardPoolOpt = rewardPools.get(dto.seasonId);
     switch (rewardPoolOpt) {
@@ -872,7 +875,7 @@ module {
             for (i in Iter.range(0, payouts.size() - 1)) {
 
                 let winner = sortedEntries[i];
-                let prize = (payouts[i] / 100) * Float.fromInt64(Int64.fromNat64(weeklyRewardAmount));
+                let prize = (payouts[i] / 100) * Float.fromInt64(Int64.fromNat64(weeklyRewardAmount * 100_000_000));
                 rewardEntriesBuffer.add({
                     principalId = winner.principalId;
                     rewardType = #WeeklyLeaderboard;
@@ -892,7 +895,7 @@ module {
             await debugLog("No reward pool found for season ID: " # Nat16.toText(dto.seasonId));
         };
     };
-
+    
     weeklyRewards := List.fromArray(Buffer.toArray(weeklyRewardsBuffer));
   };
 

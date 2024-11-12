@@ -1,33 +1,39 @@
 <script lang="ts">
+
   import { onMount } from "svelte";
+  import { writable } from "svelte/store";
+  import { busyStore } from "@dfinity/gix-components";
+  
+  import { authStore } from "$lib/stores/auth.store";
   import { userStore } from "$lib/stores/user-store";
   import { clubStore } from "$lib/stores/club-store";
   import { systemStore } from "$lib/stores/system-store";
+  import { userGetProfilePicture } from "$lib/derived/user.derived";
+  import { getDateFromBigInt } from "$lib/utils/helpers";
+  import { storeManager } from "$lib/managers/store-manager";
+  
   import { toastsError, toastsShow } from "$lib/stores/toasts-store";
+  
   import UpdateUsernameModal from "$lib/components/profile/update-username-modal.svelte";
   import UpdateFavouriteTeamModal from "./update-favourite-team-modal.svelte";
-  import { busyStore, Spinner } from "@dfinity/gix-components";
-  import CopyIcon from "$lib/icons/CopyIcon.svelte";
-  import { userGetProfilePicture } from "$lib/derived/user.derived";
-  import LocalSpinner from "../local-spinner.svelte";
   import WithdrawFplModal from "./withdraw-fpl-modal.svelte";
-  import { writable } from "svelte/store";
-  import { authStore } from "$lib/stores/auth.store";
-  import { getDateFromBigInt } from "$lib/utils/helpers";
-    import { storeManager } from "$lib/managers/store-manager";
+  import LocalSpinner from "../local-spinner.svelte";
+  import CopyIcon from "$lib/icons/CopyIcon.svelte";
   
   let showUsernameModal: boolean = false;
   let showFavouriteTeamModal: boolean = false;
-  let fileInput: HTMLInputElement;
-  let gameweek: number = 1;
-  let joinedDate = "";
-  let showFPLModal = false;
-  let dots = writable('.');
+  let showWithdrawFPLModal = false;
   let fplBalance = 0n;
   let fplBalanceFormatted = "0.0000"; 
-  let dot_interval: ReturnType<typeof setInterval>;
+  
   let username = "Not Set";
-
+  let joinedDate = "";
+  let fileInput: HTMLInputElement;
+  
+  let gameweek: number = 1;
+  let dots = writable('.');
+  let dot_interval: ReturnType<typeof setInterval>;
+  
   let unsubscribeUserProfile: () => void;
 
   $: gameweek = $systemStore?.calculationGameweek ?? 1;
@@ -73,10 +79,13 @@
 
   async function fetchBalances() {
     try {
-      console.log("fetch balances");
+      console.log("fetching balances")
       fplBalance = await userStore.getFPLBalance();
-      console.log(fplBalance);
-      fplBalanceFormatted = Number(fplBalance).toFixed(4);
+      const fplBalanceInTokens = Number(fplBalance) / 100_000_000;
+      fplBalanceFormatted = fplBalanceInTokens.toFixed(8);
+
+      console.log(fplBalance)
+      console.log(fplBalanceFormatted)
       clearInterval(dot_interval);
       loadingBalances = false;
     } catch (error) {
@@ -176,11 +185,11 @@
   }
   
   function loadWithdrawFPLModal(){
-    showFPLModal = true;
+    showWithdrawFPLModal = true;
   };
 
   async function closeWithdrawFPLModal(){
-    showFPLModal = false;
+    showWithdrawFPLModal = false;
     startDotAnimation();
     await fetchBalances();
   };
@@ -202,10 +211,10 @@
     cancelModal={cancelFavouriteTeamModal}
   />
   <WithdrawFplModal
-    visible={showFPLModal}
+    visible={showWithdrawFPLModal}
     closeModal={closeWithdrawFPLModal}
     cancelModal={closeWithdrawFPLModal}
-    fplBalance={fplBalance}
+    fplBalance={(fplBalance / 100_000_000n)}
     fplBalanceFormatted={fplBalanceFormatted}
   />
   <div class="container mx-auto p-4">

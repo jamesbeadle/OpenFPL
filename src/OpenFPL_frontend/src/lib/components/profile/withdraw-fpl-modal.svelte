@@ -39,12 +39,13 @@
     if (!isAmountValid(amount)) {
       return false;
     }
+    
     const amountInE8s = convertToE8s(amount);
-    return amountInE8s <= balance;
+    return amountInE8s <= BigInt(balance * 100_000_000n);
   }
 
   function setMaxWithdrawAmount() {
-    const maxAmount = Number(fplBalance) / 100_000_000;
+    const maxAmount = Number(fplBalance);
     withdrawalInputAmount = maxAmount.toFixed(4);
   }
 
@@ -89,7 +90,7 @@
       <button class="times-button" on:click={cancelModal}>&times;</button>
     </div>
     <form on:submit|preventDefault={withdrawFPL}>
-      <p>FPL Balance: {fplBalanceFormatted}</p> <!-- Display formatted balance -->
+      <p>FPL Balance: {fplBalanceFormatted}</p>
       <div class="mt-4">
         <input
           type="text"

@@ -194,6 +194,7 @@ function createUserStore() {
 
       if (principalId) {
         try {
+          console.log(`trying to transfer ${withdrawalAmount}`);
           let transfer_result = await transfer({
             to: {
               owner: Principal.fromText(withdrawalAddress),

@@ -467,7 +467,7 @@ import Time "mo:base/Time";
       //await setSystemTimers();
       //await updateLeaderboardCanisterWasms();
       //await updateManagerCanisterWasms();
-
+      /*
       await seasonManager.updateDataHash("clubs");
       await seasonManager.updateDataHash("fixtures");
       await seasonManager.updateDataHash("weekly_leaderboard");
@@ -477,8 +477,8 @@ import Time "mo:base/Time";
       await seasonManager.updateDataHash("player_events");
       await seasonManager.updateDataHash("countries");
       await seasonManager.updateDataHash("system_state");
+      */
       //let _ = await transferFPLToNewBackendCanister();
-      
     };
 
 
@@ -638,9 +638,9 @@ import Time "mo:base/Time";
 
     public func transferFPLToNewBackendCanister() : async FPLLedger.TransferResult {
       
-      let one_hundred_fpl : Nat = 10_000_000_000;
+      let one_fpl : Nat = 100_000_000;
       let fpl_fee : Nat = 100_000;
-      let e8s = one_hundred_fpl * 100;
+      let e8s = one_fpl * 100_000;
       return await ledger.icrc1_transfer({
         memo = ?Text.encodeUtf8("0");
         from_subaccount = ?Account.defaultSubaccount();
