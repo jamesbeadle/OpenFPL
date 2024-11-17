@@ -4,6 +4,17 @@ import FootballTypes "../types/football_types";
 
 module DTOs {
 
+  public type GetCanistersDTO = {
+    canisterType: T.CanisterType;
+  };
+
+  public type CanisterDTO = {
+    canisterId: Base.CanisterId;
+    cycles: Nat;
+    memoryAllocation: Nat;
+    topups: [Base.CanisterTopup];
+  };
+
   public type ProfileDTO = {
     principalId : Text;
     username : Text;

@@ -1332,6 +1332,10 @@ module {
         await manager_canister.removePlayerFromTeams(leagueId, playerId, parentCanisterId);
       };
     };
+ 
+    public func getManagerCanisterIds() : [(Base.PrincipalId, Base.CanisterId)] {
+      return Iter.toArray(managerCanisterIds.entries());
+    };
 
     //stable getters and setters
 

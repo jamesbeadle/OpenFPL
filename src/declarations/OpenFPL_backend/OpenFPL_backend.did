@@ -192,10 +192,15 @@ type Result_3 =
    err: Error;
    ok: WeeklyLeaderboardDTO;
  };
-type Result_23 = 
+type Result_24 = 
  variant {
    err: Error;
    ok: text;
+ };
+type Result_23 = 
+ variant {
+   err: Error;
+   ok: vec CanisterDTO;
  };
 type Result_22 = 
  variant {
@@ -534,6 +539,7 @@ type GetFantasyTeamSnapshotDTO =
    managerPrincipalId: PrincipalId;
    seasonId: SeasonId;
  };
+type GetCanistersDTO = record {canisterType: CanisterType;};
 type GameweekNumber = nat8;
 type GameweekFiltersDTO = 
  record {
@@ -682,14 +688,36 @@ type ClubDTO =
    shirtType: ShirtType;
    thirdColourHex: text;
  };
+type CanisterType = 
+ variant {
+   Archive;
+   Dapp;
+   Leaderboard;
+   Manager;
+   SNS;
+ };
+type CanisterTopup = 
+ record {
+   canisterId: CanisterId;
+   cyclesAmount: nat;
+   topupTime: int;
+ };
 type CanisterId = text;
+type CanisterDTO = 
+ record {
+   canisterId: CanisterId;
+   cycles: nat;
+   memoryAllocation: nat;
+   topups: vec CanisterTopup;
+ };
 type CalendarMonth = nat8;
 type BlockIndex = nat;
 service : {
   calculateGameweekScores: () -> (Result);
   calculateLeaderboards: () -> (Result);
   calculateWeeklyRewards: (GameweekNumber) -> (Result);
-  getActiveLeaderboardCanisterId: () -> (Result_23);
+  getActiveLeaderboardCanisterId: () -> (Result_24);
+  getCanisters: (GetCanistersDTO) -> (Result_23);
   getClubs: () -> (Result_22) composite_query;
   getCountries: () -> (Result_21) query;
   getCurrentTeam: () -> (Result_20);

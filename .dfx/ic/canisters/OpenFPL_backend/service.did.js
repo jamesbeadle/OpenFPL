@@ -21,7 +21,28 @@ export const idlFactory = ({ IDL }) => {
   });
   const Result = IDL.Variant({ ok: IDL.Null, err: Error });
   const GameweekNumber = IDL.Nat8;
-  const Result_23 = IDL.Variant({ ok: IDL.Text, err: Error });
+  const Result_24 = IDL.Variant({ ok: IDL.Text, err: Error });
+  const CanisterType = IDL.Variant({
+    SNS: IDL.Null,
+    Leaderboard: IDL.Null,
+    Dapp: IDL.Null,
+    Archive: IDL.Null,
+    Manager: IDL.Null,
+  });
+  const GetCanistersDTO = IDL.Record({ canisterType: CanisterType });
+  const CanisterId = IDL.Text;
+  const CanisterTopup = IDL.Record({
+    topupTime: IDL.Int,
+    canisterId: CanisterId,
+    cyclesAmount: IDL.Nat,
+  });
+  const CanisterDTO = IDL.Record({
+    cycles: IDL.Nat,
+    topups: IDL.Vec(CanisterTopup),
+    memoryAllocation: IDL.Nat,
+    canisterId: CanisterId,
+  });
+  const Result_23 = IDL.Variant({ ok: IDL.Vec(CanisterDTO), err: Error });
   const ClubId = IDL.Nat16;
   const ShirtType = IDL.Variant({ Filled: IDL.Null, Striped: IDL.Null });
   const ClubDTO = IDL.Record({
@@ -42,7 +63,6 @@ export const idlFactory = ({ IDL }) => {
     name: IDL.Text,
   });
   const Result_21 = IDL.Variant({ ok: IDL.Vec(CountryDTO), err: Error });
-  const CanisterId = IDL.Text;
   const PickTeamDTO = IDL.Record({
     playerIds: IDL.Vec(ClubId),
     username: IDL.Text,
@@ -540,7 +560,8 @@ export const idlFactory = ({ IDL }) => {
     calculateGameweekScores: IDL.Func([], [Result], []),
     calculateLeaderboards: IDL.Func([], [Result], []),
     calculateWeeklyRewards: IDL.Func([GameweekNumber], [Result], []),
-    getActiveLeaderboardCanisterId: IDL.Func([], [Result_23], []),
+    getActiveLeaderboardCanisterId: IDL.Func([], [Result_24], []),
+    getCanisters: IDL.Func([GetCanistersDTO], [Result_23], []),
     getClubs: IDL.Func([], [Result_22], ["composite_query"]),
     getCountries: IDL.Func([], [Result_21], ["query"]),
     getCurrentTeam: IDL.Func([], [Result_20], []),

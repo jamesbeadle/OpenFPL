@@ -104,6 +104,7 @@ function createUserStore() {
             profilePicture: uint8Array,
             extension: extension,
           };
+
           const result = await identityActor.updateProfilePicture(dto);
           if (isError(result)) {
             console.error("Error updating profile picture");
@@ -123,13 +124,8 @@ function createUserStore() {
   }
 
   function getFileExtensionFromFile(file: File): string {
-    // Use the name property of the File object to get the filename
     const filename = file.name;
-
-    // Extract the extension
     const lastIndex = filename.lastIndexOf(".");
-
-    // Return the extension, ensuring it doesn't return -1 for files without an extension
     return lastIndex !== -1 ? filename.substring(lastIndex + 1) : "";
   }
 

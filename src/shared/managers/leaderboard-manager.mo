@@ -487,7 +487,7 @@ module {
       };
     }; 
 
-    public func getLeaderboardCanisters() : [Base.CanisterId] {
+    public func getUniqueLeaderboardCanisterIds() : [Base.CanisterId] {
         return uniqueLeaderboardCanisterIds;
     };
 

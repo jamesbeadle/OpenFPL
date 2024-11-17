@@ -1,6 +1,8 @@
 // Version: 1.0.0
 type CalendarMonth = Nat8;
 type CanisterId = Text;
+type CanisterTopup =
+  {canisterId : CanisterId; cyclesAmount : Nat; topupTime : Int};
 type ClubId = Nat16;
 type CountryId = Nat16;
 type DataHash = {category : Text; hash : Text};
@@ -119,5 +121,6 @@ actor {
   stable var stable_weekly_ath_prize_pool : Nat64;
   stable var stable_weekly_leaderboard_canister_ids :
     [(SeasonId, [(GameweekNumber, CanisterId)])];
-  stable var stable_weekly_rewards : [WeeklyRewards]
+  stable var stable_weekly_rewards : [WeeklyRewards];
+  stable var topups : [CanisterTopup]
 };

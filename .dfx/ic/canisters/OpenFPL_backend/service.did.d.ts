@@ -4,7 +4,24 @@ import type { IDL } from "@dfinity/candid";
 
 export type BlockIndex = bigint;
 export type CalendarMonth = number;
+export interface CanisterDTO {
+  cycles: bigint;
+  topups: Array<CanisterTopup>;
+  memoryAllocation: bigint;
+  canisterId: CanisterId;
+}
 export type CanisterId = string;
+export interface CanisterTopup {
+  topupTime: bigint;
+  canisterId: CanisterId;
+  cyclesAmount: bigint;
+}
+export type CanisterType =
+  | { SNS: null }
+  | { Leaderboard: null }
+  | { Dapp: null }
+  | { Archive: null }
+  | { Manager: null };
 export interface ClubDTO {
   id: ClubId;
   secondaryColourHex: string;
@@ -141,6 +158,9 @@ export interface GameweekFiltersDTO {
   gameweek: GameweekNumber;
 }
 export type GameweekNumber = number;
+export interface GetCanistersDTO {
+  canisterType: CanisterType;
+}
 export interface GetFantasyTeamSnapshotDTO {
   seasonId: SeasonId;
   managerPrincipalId: PrincipalId;
@@ -378,7 +398,8 @@ export type Result_2 = { ok: WeeklyRewards } | { err: Error };
 export type Result_20 = { ok: PickTeamDTO } | { err: Error };
 export type Result_21 = { ok: Array<CountryDTO> } | { err: Error };
 export type Result_22 = { ok: Array<ClubDTO> } | { err: Error };
-export type Result_23 = { ok: string } | { err: Error };
+export type Result_23 = { ok: Array<CanisterDTO> } | { err: Error };
+export type Result_24 = { ok: string } | { err: Error };
 export type Result_3 = { ok: WeeklyLeaderboardDTO } | { err: Error };
 export type Result_4 =
   | {
@@ -528,7 +549,8 @@ export interface _SERVICE {
   calculateGameweekScores: ActorMethod<[], Result>;
   calculateLeaderboards: ActorMethod<[], Result>;
   calculateWeeklyRewards: ActorMethod<[GameweekNumber], Result>;
-  getActiveLeaderboardCanisterId: ActorMethod<[], Result_23>;
+  getActiveLeaderboardCanisterId: ActorMethod<[], Result_24>;
+  getCanisters: ActorMethod<[GetCanistersDTO], Result_23>;
   getClubs: ActorMethod<[], Result_22>;
   getCountries: ActorMethod<[], Result_21>;
   getCurrentTeam: ActorMethod<[], Result_20>;

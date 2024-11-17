@@ -9,7 +9,7 @@
   },
   "_index.js": {
     "css": [
-      "_app/immutable/assets/index.Cxb9CIm_.css"
+      "_app/immutable/assets/index.Rv2hwZu0.css"
     ],
     "file": "chunks/index.js",
     "imports": [
@@ -50,6 +50,14 @@
     ],
     "isEntry": true,
     "src": "src/OpenFPL_frontend/src/routes/+page.svelte"
+  },
+  "src/OpenFPL_frontend/src/routes/canisters/+page.svelte": {
+    "file": "entries/pages/canisters/_page.svelte.js",
+    "imports": [
+      "_index.js"
+    ],
+    "isEntry": true,
+    "src": "src/OpenFPL_frontend/src/routes/canisters/+page.svelte"
   },
   "src/OpenFPL_frontend/src/routes/club/+page.svelte": {
     "file": "entries/pages/club/_page.svelte.js",

@@ -269,9 +269,7 @@ module AppTypes {
   public type CanisterType = {
     #SNS;
     #Manager;
-    #WeeklyLeaderboard;
-    #MonthlyLeaderboard;
-    #SeasonLeaderboard;
+    #Leaderboard;
     #Archive;
     #Dapp;
   };
