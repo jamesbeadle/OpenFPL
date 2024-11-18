@@ -3406,7 +3406,7 @@ actor class _ManagerCanister() {
                   history = manager.history;
                   monthlyBonusesAvailable = manager.monthlyBonusesAvailable;
                   profilePicture = manager.profilePicture;
-                  transfersAvailable = manager.transfersAvailable;
+                  transfersAvailable = manager.transfersAvailable + 1;
                   profilePictureType = manager.profilePictureType;
                   canisterId = manager.canisterId;
                 };

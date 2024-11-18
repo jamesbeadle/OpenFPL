@@ -795,7 +795,7 @@ import Buffer "mo:base/Buffer";
       //set system state
       //await setSystemTimers();
       //await updateLeaderboardCanisterWasms();
-      //await updateManagerCanisterWasms();
+      await updateManagerCanisterWasms();
       /*
       await seasonManager.updateDataHash("clubs");
       await seasonManager.updateDataHash("fixtures");
