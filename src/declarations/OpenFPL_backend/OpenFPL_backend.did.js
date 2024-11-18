@@ -39,7 +39,7 @@ export const idlFactory = ({ IDL }) => {
   const CanisterDTO = IDL.Record({
     'cycles' : IDL.Nat,
     'topups' : IDL.Vec(CanisterTopup),
-    'memoryAllocation' : IDL.Nat,
+    'computeAllocation' : IDL.Nat,
     'canisterId' : CanisterId,
   });
   const Result_23 = IDL.Variant({ 'ok' : IDL.Vec(CanisterDTO), 'err' : Error });

@@ -11,7 +11,7 @@ module DTOs {
   public type CanisterDTO = {
     canisterId: Base.CanisterId;
     cycles: Nat;
-    memoryAllocation: Nat;
+    computeAllocation: Nat;
     topups: [Base.CanisterTopup];
   };
 

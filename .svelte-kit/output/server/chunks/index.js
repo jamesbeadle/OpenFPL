@@ -3485,7 +3485,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1chxjtl"
+  version_hash: "k67spc"
 };
 async function get_hooks() {
   return {};
@@ -3736,7 +3736,7 @@ const idlFactory = ({ IDL }) => {
   const CanisterDTO = IDL.Record({
     "cycles": IDL.Nat,
     "topups": IDL.Vec(CanisterTopup),
-    "memoryAllocation": IDL.Nat,
+    "computeAllocation": IDL.Nat,
     "canisterId": CanisterId
   });
   const Result_23 = IDL.Variant({ "ok": IDL.Vec(CanisterDTO), "err": Error2 });
@@ -4594,6 +4594,13 @@ function convertFixtureStatus(fixtureStatus) {
 }
 function isError(response) {
   return response && response.err !== void 0;
+}
+function formatCycles(cycles) {
+  const trillionsOfCycles = Number(cycles) / 1e12;
+  return trillionsOfCycles.toLocaleString(void 0, {
+    minimumFractionDigits: 4,
+    maximumFractionDigits: 4
+  }) + "T";
 }
 function extractPlayerData(playerPointsDTO, player) {
   let goals = 0, assists = 0, redCards = 0, yellowCards = 0, missedPenalties = 0, ownGoals = 0, saves = 0, cleanSheets = 0, penaltySaves = 0, goalsConceded = 0, appearance = 0, highestScoringPlayerId = 0;
@@ -6610,11 +6617,27 @@ function createCanisterStore() {
 }
 const canisterStore = createCanisterStore();
 const Page$9 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let selectedCanisterType = 0;
   let loadingCanisters = true;
   let canisters = [];
   async function loadCanisters() {
     loadingCanisters = true;
-    let dto = { canisterType: { Dapp: null } };
+    let filterCanisterType = { Dapp: null };
+    switch (selectedCanisterType) {
+      case 0:
+        filterCanisterType = { Dapp: null };
+        break;
+      case 1:
+        filterCanisterType = { Manager: null };
+        break;
+      case 2:
+        filterCanisterType = { Leaderboard: null };
+        break;
+      case 3:
+        filterCanisterType = { SNS: null };
+        break;
+    }
+    let dto = { canisterType: filterCanisterType };
     canisters = await canisterStore.getCanisters(dto);
     loadingCanisters = false;
   }
@@ -6625,12 +6648,11 @@ const Page$9 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   }
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
-      return `<div class="page-header-wrapper flex w-full"><div class="content-panel w-full"><div class="w-full grid grid-cols-1 md:grid-cols-4 gap-4 mt-4"><p class="col-span-1 md:col-span-4 text-center w-full mb-4" data-svelte-h="svelte-xpogdc">OpenFPL Managed Canisters</p> <div class="flex flex-col"><p data-svelte-h="svelte-h45z0h">Select Canister Type</p> <select class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[125px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-5lwl8t">App</option><option${add_attribute("value", 1, 0)} data-svelte-h="svelte-1bi7nmy">Manager</option><option${add_attribute("value", 2, 0)} data-svelte-h="svelte-1qpuhlz">Leaderboard</option><option${add_attribute("value", 3, 0)} data-svelte-h="svelte-txi41b">SNS</option></select></div> ${loadingCanisters ? `${validate_component(Widget_spinner, "WidgetSpinner").$$render($$result, {}, {}, {})}` : ``} ${each(canisters, (canister) => {
-        return `<div class="row"><div class="col-1/4"><p>Canister Id: ${escape(canister.canisterId)}</p></div> <div class="col-1/4"><p>Cycles Balance: ${escape(canister.cycles)}</p></div> <div class="col-1/4"><p>Memory Allocation: ${escape(canister.memoryAllocation)}</p></div> <div class="col-1/4"><p>Total topups: ${escape(canister.topups.length)}</p></div> </div>`;
-      })}</div></div></div>`;
+      return `<div class="page-header-wrapper flex w-full"><div class="content-panel w-full"><div class="w-full grid grid-cols-1 md:grid-cols-4 gap-4 mt-4"><p class="col-span-1 md:col-span-4 text-center w-full mb-4" data-svelte-h="svelte-xpogdc">OpenFPL Managed Canisters</p> <div class="flex flex-col"><p class="w-full text-left p-2" data-svelte-h="svelte-12vwuzn">Select Canister Type</p> <select class="p-2 fpl-dropdown text-left mx-0 md:mx-2 min-w-[125px]"><option${add_attribute("value", 0, 0)} data-svelte-h="svelte-5lwl8t">App</option><option${add_attribute("value", 1, 0)} data-svelte-h="svelte-1bi7nmy">Manager</option><option${add_attribute("value", 2, 0)} data-svelte-h="svelte-1qpuhlz">Leaderboard</option><option${add_attribute("value", 3, 0)} data-svelte-h="svelte-txi41b">SNS</option></select></div> ${loadingCanisters ? `${validate_component(Widget_spinner, "WidgetSpinner").$$render($$result, {}, {}, {})}` : `${each(canisters, (canister) => {
+        return `<div class="row"><div class="col-1/4"><p>Canister Id: ${escape(canister.canisterId)}</p></div> <div class="col-1/4"><p>Cycles Balance: ${escape(formatCycles(canister.cycles))}</p></div> <div class="col-1/4"><p>Compute Allocation: ${escape(canister.computeAllocation)}</p></div> <div class="col-1/4"><p>Total topups: ${escape(canister.topups.length)}</p></div> </div>`;
+      })}`}</div></div></div>`;
     }
-  })}
-  wq`;
+  })}`;
 });
 const Page$8 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $clubStore, $$unsubscribe_clubStore;

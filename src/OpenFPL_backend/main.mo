@@ -361,7 +361,7 @@ import Buffer "mo:base/Buffer";
                     canistersBuffer.add({
                       canisterId = Principal.toText(foundCanisterId);
                       cycles = foundStatus.cycles;
-                      memoryAllocation = foundStatus.settings.memory_allocation;
+                      computeAllocation = foundStatus.settings.compute_allocation;
                       topups = canisterTopups;
                     });
 
@@ -393,7 +393,7 @@ import Buffer "mo:base/Buffer";
             canistersBuffer.add({
               canisterId = canisterId;
               cycles = canisterInfo.cycles;
-              memoryAllocation = canisterInfo.settings.memory_allocation;
+              computeAllocation = canisterInfo.settings.compute_allocation;
               topups = canisterTopups;
             });
           };
@@ -418,7 +418,7 @@ import Buffer "mo:base/Buffer";
             canistersBuffer.add({
               canisterId = canisterId;
               cycles = canisterInfo.cycles;
-              memoryAllocation = canisterInfo.settings.memory_allocation;
+              computeAllocation = canisterInfo.settings.compute_allocation;
               topups = canisterTopups;
             });
           };
@@ -439,7 +439,7 @@ import Buffer "mo:base/Buffer";
                     canistersBuffer.add({
                       canisterId = Principal.toText(foundCanisterId);
                       cycles = foundStatus.cycles;
-                      memoryAllocation = foundStatus.settings.memory_allocation;
+                      computeAllocation = foundStatus.settings.compute_allocation;
                       topups = canisterTopups;
                     });
 
@@ -472,7 +472,7 @@ import Buffer "mo:base/Buffer";
                     canistersBuffer.add({
                       canisterId = Principal.toText(foundCanisterId);
                       cycles = foundStatus.cycles;
-                      memoryAllocation = foundStatus.settings.memory_allocation;
+                      computeAllocation = foundStatus.settings.compute_allocation;
                       topups = canisterTopups;
                     });
 
@@ -483,6 +483,49 @@ import Buffer "mo:base/Buffer";
               case (null){}
             };
           };
+
+          //TODO: Remove after assigned to SNS
+          let IC : Management.Management = actor (NetworkEnvironmentVariables.Default);
+          let frontendCanisterInfo = await (
+            IC.canister_status(
+              {
+                canister_id = Principal.fromText(Environment.FRONTEND_CANISTER_ID); 
+                num_requested_changes = null
+              }),
+          );
+
+          let frontendCanisterTopups = Array.filter<Base.CanisterTopup>(topups, func(topup: Base.CanisterTopup){
+            topup.canisterId == Environment.FRONTEND_CANISTER_ID;
+          });
+
+          canistersBuffer.add({
+            canisterId = Environment.FRONTEND_CANISTER_ID;
+            cycles = frontendCanisterInfo.cycles;
+            computeAllocation = frontendCanisterInfo.settings.compute_allocation;
+            topups = frontendCanisterTopups;
+          });
+
+          //TODO: Remove after assigned to SNS
+          let dataCanisterInfo = await (
+            IC.canister_status(
+              {
+                canister_id = Principal.fromText(NetworkEnvironmentVariables.DATA_CANISTER_ID); 
+                num_requested_changes = null
+              }),
+          );
+
+          let dataCanisterTopups = Array.filter<Base.CanisterTopup>(topups, func(topup: Base.CanisterTopup){
+            topup.canisterId == NetworkEnvironmentVariables.DATA_CANISTER_ID;
+          });
+
+          canistersBuffer.add({
+            canisterId = NetworkEnvironmentVariables.DATA_CANISTER_ID;
+            cycles = dataCanisterInfo.cycles;
+            computeAllocation = dataCanisterInfo.settings.compute_allocation;
+            topups = dataCanisterTopups;
+          });
+
+          
         };
       };
 
@@ -501,8 +544,6 @@ import Buffer "mo:base/Buffer";
     };
 
     private func checkCanisterCycles() : async () {
-      let canisterCyclesTriggerAmountBuffer = Buffer.fromArray<(Base.CanisterId, Nat)>([]);
-      
       let root_canister = actor (NetworkEnvironmentVariables.SNS_ROOT_CANISTER_ID) : actor {
         get_sns_canisters_summary : (request: Root.GetSnsCanistersSummaryRequest) -> async Root.GetSnsCanistersSummaryResponse;
       };
@@ -518,120 +559,97 @@ import Buffer "mo:base/Buffer";
       for(dappCanister in Iter.fromArray(dappsMinusBackend)){
         switch(dappCanister.canister_id){
           case (?foundCanisterId){
-            canisterCyclesTriggerAmountBuffer.add(Principal.toText(foundCanisterId), 50_000_000_000_000);        
+            let ignoreCanister = 
+              Principal.toText(foundCanisterId) == "bboqb-jiaaa-aaaal-qb6ea-cai" or 
+              Principal.toText(foundCanisterId) == "bgpwv-eqaaa-aaaal-qb6eq-cai" or 
+              Principal.toText(foundCanisterId) == "hqfmc-cqaaa-aaaal-qitcq-cai";
+            if(not ignoreCanister){
+              await queryAndTopupCanister(Principal.toText(foundCanisterId), 50_000_000_000_000, 25_000_000_000_000);
+            }
           };
           case (null){}
         };
       };
 
       //TODO: Remove after assigned to SNS
-      canisterCyclesTriggerAmountBuffer.add(Environment.FRONTEND_CANISTER_ID, 50_000_000_000_000);
-
+      await queryAndTopupCanister(Environment.FRONTEND_CANISTER_ID, 50_000_000_000_000, 25_000_000_000_000);
+      await queryAndTopupCanister(NetworkEnvironmentVariables.DATA_CANISTER_ID, 50_000_000_000_000, 25_000_000_000_000);
+       
       let managerCanisterIds = userManager.getUniqueManagerCanisterIds();
       for(canisterId in Iter.fromArray(managerCanisterIds)){
-        canisterCyclesTriggerAmountBuffer.add(canisterId, 50_000_000_000_000);        
+        await queryAndTopupCanister(canisterId, 50_000_000_000_000, 25_000_000_000_000);
       };
 
       let leaderboardCanisterIds = leaderboardManager.getUniqueLeaderboardCanisterIds();
       for(canisterId in Iter.fromArray(leaderboardCanisterIds)){
-        canisterCyclesTriggerAmountBuffer.add(canisterId, 50_000_000_000_000);        
+        await queryAndTopupCanister(canisterId, 50_000_000_000_000, 25_000_000_000_000);
       };
 
-      switch(summaryResult.index){
-        case (?foundCanister){
-          switch(foundCanister.canister_id){
-            case (?foundCanisterId){
-              canisterCyclesTriggerAmountBuffer.add(Principal.toText(foundCanisterId), 50_000_000_000_000); 
-            };
-            case (null){};
-          };
-        };
-        case (null){}
+      await topupCanister(summaryResult.index, 50_000_000_000_000, 25_000_000_000_000);
+      await topupCanister(summaryResult.governance, 50_000_000_000_000, 25_000_000_000_000);
+      await topupCanister(summaryResult.ledger, 50_000_000_000_000, 25_000_000_000_000);
+      await topupCanister(summaryResult.root, 50_000_000_000_000, 25_000_000_000_000);
+      await topupCanister(summaryResult.swap, 5_000_000_000_000, 2_500_000_000_000);
+      for(canisterId in Iter.fromArray(summaryResult.archives)){
+        await topupCanister(?canisterId, 5_000_000_000_000, 2_500_000_000_000);
       };
-
-      switch(summaryResult.governance){
-        case (?foundCanister){
-          switch(foundCanister.canister_id){
-            case (?foundCanisterId){
-              canisterCyclesTriggerAmountBuffer.add(Principal.toText(foundCanisterId), 50_000_000_000_000); 
-            };
-            case (null){};
-          };
-        };
-        case (null){}
-      };
-
-      switch(summaryResult.ledger){
-        case (?foundCanister){
-          switch(foundCanister.canister_id){
-            case (?foundCanisterId){
-              canisterCyclesTriggerAmountBuffer.add(Principal.toText(foundCanisterId), 50_000_000_000_000); 
-            };
-            case (null){};
-          };
-        };
-        case (null){}
-      };
-
-      switch(summaryResult.root){
-        case (?foundCanister){
-          switch(foundCanister.canister_id){
-            case (?foundCanisterId){
-              canisterCyclesTriggerAmountBuffer.add(Principal.toText(foundCanisterId), 50_000_000_000_000); 
-            };
-            case (null){};
-          };
-        };
-        case (null){}
-      };
-
-      switch(summaryResult.swap){
-        case (?foundCanister){
-          switch(foundCanister.canister_id){
-            case (?foundCanisterId){
-              canisterCyclesTriggerAmountBuffer.add(Principal.toText(foundCanisterId), 5_000_000_000_000); 
-            };
-            case (null){};
-          };
-        };
-        case (null){}
-      };
-
-      for(canister in Iter.fromArray(summaryResult.archives)){
-        switch(canister.canister_id){
-          case (?foundCanisterId){
-            canisterCyclesTriggerAmountBuffer.add(Principal.toText(foundCanisterId), 5_000_000_000_000); 
-          };
-          case (null){};
-        };
-      };
-
-      for(canister in Iter.fromArray(Buffer.toArray(canisterCyclesTriggerAmountBuffer))){
-        let IC : Management.Management = actor (NetworkEnvironmentVariables.Default);
-        let canisterActor = actor (canister.0) : actor { };
-    
-        let canisterStatusResult = await Utilities.getCanisterStatus_(canisterActor, ?Principal.fromActor(Self), IC);
       
-        switch(canisterStatusResult){
-          case (?canisterStatus){
-        
-            if(canisterStatus.cycles < canister.1){
-              let topupAmount = canister.1 / 2;
-              await Utilities.topup_canister_(canisterActor, IC, topupAmount);
-              let topupsBuffer = Buffer.fromArray<Base.CanisterTopup>(topups);
-              topupsBuffer.add({
-                canisterId = canister.0; 
-                cyclesAmount = topupAmount; 
-                topupTime = Time.now();
-              });
-              topups := Buffer.toArray(topupsBuffer);
-            }
-          };
-          case (null){};
-        };
-      };
-
       ignore Timer.setTimer<system>(#nanoseconds(Int.abs(86_400_000_000_000)), checkCanisterCycles);
+    };
+
+    private func topupCanister(canisterSummary: ?Root.CanisterSummary, topupTriggerAmount: Nat, topupAmount: Nat) : async(){
+      switch(canisterSummary){
+        case (?foundCanister){
+          switch(foundCanister.status){
+            case (?foundStatus){
+              if(foundStatus.cycles < topupTriggerAmount){
+                switch(foundCanister.canister_id){
+                  case (?foundCanisterId){
+                    let IC : Management.Management = actor (NetworkEnvironmentVariables.Default);
+                    let canisterActor = actor (Principal.toText(foundCanisterId)) : actor { };
+                    await Utilities.topup_canister_(canisterActor, IC, topupAmount);
+                    
+                    let topupsBuffer = Buffer.fromArray<Base.CanisterTopup>(topups);
+                    topupsBuffer.add({
+                      canisterId = Principal.toText(foundCanisterId); 
+                      cyclesAmount = topupAmount; 
+                      topupTime = Time.now();
+                    });
+                    topups := Buffer.toArray(topupsBuffer);
+                  };
+                  case (null){};
+                };
+              };
+            };
+            case(null){};
+          };
+        };
+        case (null){}
+      };
+    };
+
+    private func queryAndTopupCanister(canisterId: Base.CanisterId, cyclesTriggerAmount: Nat, topupAmount: Nat) : async(){
+      let IC : Management.Management = actor (NetworkEnvironmentVariables.Default);
+      let canisterActor = actor (canisterId) : actor { };
+
+      let canisterStatusResult = await Utilities.getCanisterStatus_(canisterActor, ?Principal.fromActor(Self), IC);
+      
+      switch(canisterStatusResult){
+        case (?canisterStatus){
+      
+          if(canisterStatus.cycles < cyclesTriggerAmount){
+            await Utilities.topup_canister_(canisterActor, IC, topupAmount);
+            let topupsBuffer = Buffer.fromArray<Base.CanisterTopup>(topups);
+            topupsBuffer.add({
+              canisterId = canisterId; 
+              cyclesAmount = topupAmount; 
+              topupTime = Time.now();
+            });
+            topups := Buffer.toArray(topupsBuffer);
+          }
+        };
+        case (null){};
+      };
     };
 
     //stable variables
@@ -771,7 +789,7 @@ import Buffer "mo:base/Buffer";
 
     private func postUpgradeCallback() : async (){
      
-      //await checkCanisterCycles(); //ADD AFTER I've CHECKED CURRENT BALANCES 
+      await checkCanisterCycles();
       
       //TODO (GO LIVE)
       //set system state

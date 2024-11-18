@@ -706,8 +706,8 @@ type CanisterId = text;
 type CanisterDTO = 
  record {
    canisterId: CanisterId;
+   computeAllocation: nat;
    cycles: nat;
-   memoryAllocation: nat;
    topups: vec CanisterTopup;
  };
 type CalendarMonth = nat8;

@@ -6,6 +6,7 @@
     import WidgetSpinner from "$lib/components/widget-spinner.svelte";
     import type { CanisterDTO, CanisterType, GetCanistersDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     import { canisterStore } from "$lib/stores/canister-store";
+    import { formatCycles } from "$lib/utils/helpers";
   
     let selectedCanisterType = 0;
     let loadingCanisters = true;
@@ -35,8 +36,24 @@
 
     async function loadCanisters(){
       loadingCanisters = true;
+      let filterCanisterType: CanisterType = { Dapp : null};
+      switch(selectedCanisterType){
+        case (0):
+          filterCanisterType = { Dapp : null }
+        break;
+        case (1):
+          filterCanisterType = { Manager : null }
+        break;
+        case (2):
+          filterCanisterType = { Leaderboard : null }
+        break;
+        case (3):
+          filterCanisterType = { SNS : null }
+        break;
+      }
+
       let dto: GetCanistersDTO = {
-        canisterType: { Dapp : null}
+        canisterType: filterCanisterType
       };
       canisters = await canisterStore.getCanisters(dto);
       loadingCanisters = false;
@@ -51,9 +68,9 @@
             OpenFPL Managed Canisters
           </p>
           <div class="flex flex-col">
-            <p>Select Canister Type</p>
+            <p class="w-full text-left p-2">Select Canister Type</p>
             <select
-              class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[125px]"
+              class="p-2 fpl-dropdown text-left mx-0 md:mx-2 min-w-[125px]"
               bind:value={selectedCanisterType}
               >
                 <option value={0}>App</option>
@@ -65,27 +82,26 @@
 
           {#if loadingCanisters}
             <WidgetSpinner />
+          {:else}
+            {#each canisters as canister}
+              <div class="row">
+                <div class="col-1/4">
+                  <p>Canister Id: {canister.canisterId}</p>
+                </div>
+                <div class="col-1/4">
+                  <p>Cycles Balance: {formatCycles(canister.cycles)}</p>
+                </div>
+                <div class="col-1/4">
+                  <p>Compute Allocation: {canister.computeAllocation}</p>
+                </div>
+                <div class="col-1/4">
+                  <p>Total topups: {canister.topups.length}</p>
+                </div>
+              </div>
+            {/each}
           {/if}
-
-          {#each canisters as canister}
-            <div class="row">
-              <div class="col-1/4">
-                <p>Canister Id: {canister.canisterId}</p>
-              </div>
-              <div class="col-1/4">
-                <p>Cycles Balance: {canister.cycles}</p>
-              </div>
-              <div class="col-1/4">
-                <p>Memory Allocation: {canister.memoryAllocation}</p>
-              </div>
-              <div class="col-1/4">
-                <p>Total topups: {canister.topups.length}</p>
-              </div>
-            </div>
-          {/each}
 
         </div>
       </div>
     </div>
   </Layout>
-  wq

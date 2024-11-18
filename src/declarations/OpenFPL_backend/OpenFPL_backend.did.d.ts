@@ -7,7 +7,7 @@ export type CalendarMonth = number;
 export interface CanisterDTO {
   'cycles' : bigint,
   'topups' : Array<CanisterTopup>,
-  'memoryAllocation' : bigint,
+  'computeAllocation' : bigint,
   'canisterId' : CanisterId,
 }
 export type CanisterId = string;
