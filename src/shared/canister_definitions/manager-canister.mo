@@ -3488,7 +3488,7 @@ actor class _ManagerCanister() {
   };
   
   private func postUpgradeCallback() : async (){
-    initialised := true;
+    
   };
 
 };

@@ -3485,7 +3485,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "k67spc"
+  version_hash: "noqahf"
 };
 async function get_hooks() {
   return {};
@@ -6776,12 +6776,6 @@ const Page$4 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_systemStore;
   let $$unsubscribe_onHold;
   $$unsubscribe_systemStore = subscribe(systemStore, (value) => value);
-  let availableFormations = writable([]);
-  $$unsubscribe_availableFormations = subscribe(availableFormations, (value) => value);
-  let onHold = writable(true);
-  $$unsubscribe_onHold = subscribe(onHold, (value) => value);
-  let loadingPlayers = writable(true);
-  $$unsubscribe_loadingPlayers = subscribe(loadingPlayers, (value) => value);
   const fantasyTeam = writable({
     playerIds: [],
     oneNationCountryId: 0,
@@ -6812,6 +6806,12 @@ const Page$4 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     firstGameweek: true
   });
   $$unsubscribe_fantasyTeam = subscribe(fantasyTeam, (value) => value);
+  let availableFormations = writable([]);
+  $$unsubscribe_availableFormations = subscribe(availableFormations, (value) => value);
+  const onHold = writable(false);
+  $$unsubscribe_onHold = subscribe(onHold, (value) => value);
+  let loadingPlayers = writable(true);
+  $$unsubscribe_loadingPlayers = subscribe(loadingPlayers, (value) => value);
   $$unsubscribe_fantasyTeam();
   $$unsubscribe_loadingPlayers();
   $$unsubscribe_availableFormations();

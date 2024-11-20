@@ -19,20 +19,7 @@
   import { Spinner } from "@dfinity/gix-components";
   import { allFormations } from "$lib/utils/pick-team.helpers";
   import type { PickTeamDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  
-  let availableFormations = writable<string[]>([]);
-  let selectedFormation = writable<string>('4-4-2');
-  
-  let transfersAvailable = writable<number>(3);  
-  let bankBalance = writable<number>(0);
-  let teamValue = writable<number>(0);  
-  let onHold = writable<boolean>(true);
     
-    
-  let isLoading = true;
-  let loadingPlayers = writable<boolean>(true);
-  const pitchView = writable(true);
-
   const fantasyTeam = writable<PickTeamDTO>({
     playerIds: [],
     oneNationCountryId: 0,
@@ -63,13 +50,24 @@
     firstGameweek: true
   });
   
+  let transfersAvailable = writable<number>(3);  
+  let bankBalance = writable<number>(1200);
+  let teamValue = writable<number>(0);  
+
+  let availableFormations = writable<string[]>([]);
+  let selectedFormation = writable<string>('4-4-2');
+  
+  const pitchView = writable(true);
+  const onHold = writable<boolean>(false);
+  let loadingPlayers = writable<boolean>(true);
+  let isLoading = true;
+  
   onMount(async () => {
     try {
       
       await storeManager.syncStores();
-      onHold.set($systemStore?.onHold ?? true);
-      $availableFormations = Object.keys(allFormations);
-      
+      onHold.set($systemStore?.onHold ?? false);
+      $availableFormations = Object.keys(allFormations);     
       await loadData();
     } catch (error) {
       toastsError({

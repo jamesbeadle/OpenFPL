@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { storeManager } from "$lib/managers/store-manager";
   import { writable, type Writable } from "svelte/store";
   import { systemStore } from "$lib/stores/system-store";
   import { playerStore } from "$lib/stores/player-store";
@@ -68,7 +67,6 @@
 
   onMount(async () => {
     try {
-      await storeManager.syncStores();
       startingFantasyTeam = $fantasyTeam;
       loadData();
       disableInvalidFormations()
