@@ -125,11 +125,11 @@ import Buffer "mo:base/Buffer";
       return await data_canister.getClubs(Environment.LEAGUE_ID);
     };
 
-    public shared composite query func getFixtures(dto: RequestDTOs.RequestFixturesDTO) : async Result.Result<[DTOs.FixtureDTO], T.Error> {
+    public shared composite query func getFixtures(leagueId: FootballTypes.LeagueId) : async Result.Result<[DTOs.FixtureDTO], T.Error> {
       let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
-        getFixtures : shared query (dto: RequestDTOs.RequestFixturesDTO) -> async Result.Result<[DTOs.FixtureDTO], T.Error>;
+        getFixtures : shared query (leagueId: FootballTypes.LeagueId) -> async Result.Result<[DTOs.FixtureDTO], T.Error>;
       };
-      return await data_canister.getFixtures(dto);
+      return await data_canister.getFixtures(leagueId);
     };
 
     public shared composite query func getSeasons() : async Result.Result<[DTOs.SeasonDTO], T.Error> {
@@ -794,18 +794,18 @@ import Buffer "mo:base/Buffer";
       //TODO (GO LIVE)
       //set system state
       //await setSystemTimers();
-      await updateLeaderboardCanisterWasms();
-      await updateManagerCanisterWasms();
-      /*
+      //await updateLeaderboardCanisterWasms();
+      //await updateManagerCanisterWasms();
+      await seasonManager.updateDataHash("system_state");
+      await seasonManager.updateDataHash("countries");
       await seasonManager.updateDataHash("clubs");
       await seasonManager.updateDataHash("fixtures");
+      await seasonManager.updateDataHash("players");
+      await seasonManager.updateDataHash("player_events");
       await seasonManager.updateDataHash("weekly_leaderboard");
       await seasonManager.updateDataHash("monthly_leaderboards");
       await seasonManager.updateDataHash("season_leaderboard");
-      await seasonManager.updateDataHash("players");
-      await seasonManager.updateDataHash("player_events");
-      await seasonManager.updateDataHash("countries");
-      await seasonManager.updateDataHash("system_state");
+      /*
       */
       //let _ = await transferFPLToNewBackendCanister();
     };

@@ -548,7 +548,7 @@ service : {
   createNewSeason: (SystemState) -> () oneway;
   createPlayer: (LeagueId, CreatePlayerDTO) -> (Result);
   getClubs: (LeagueId) -> (Result_3) query;
-  getFixtures: (RequestFixturesDTO) -> (Result_2) query;
+  getFixtures: (LeagueId) -> (Result_2) query;
   getLeagueClubs: () -> (vec record {
                                LeagueId;
                                vec Club;

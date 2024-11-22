@@ -30,6 +30,12 @@ module FootballTypes {
     logo: Blob;
   };
 
+  public type LeagueStatus = {
+    leagueId: LeagueId;
+    activeSeasonId: FootballTypes.SeasonId;
+    lastConfirmedGameweek: FootballTypes.GameweekNumber;
+  };
+
   public type Club = {
     id : ClubId;
     name : Text;

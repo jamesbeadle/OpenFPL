@@ -293,11 +293,6 @@ type RequestManagerDTO =
    month: CalendarMonth;
    seasonId: SeasonId;
  };
-type RequestFixturesDTO = 
- record {
-   leagueId: LeagueId;
-   seasonId: SeasonId;
- };
 type ProfileDTO = 
  record {
    createDate: int;
@@ -723,7 +718,7 @@ service : {
   getCurrentTeam: () -> (Result_20);
   getDataHashes: () -> (Result_19) composite_query;
   getFantasyTeamSnapshot: (GetFantasyTeamSnapshotDTO) -> (Result_18);
-  getFixtures: (RequestFixturesDTO) -> (Result_12) composite_query;
+  getFixtures: (LeagueId) -> (Result_12) composite_query;
   getLeaderboardCanisterIds: () -> (Result_17);
   getLoanedPlayers: (ClubFilterDTO) -> (Result_5) composite_query;
   getManager: (RequestManagerDTO) -> (Result_1);

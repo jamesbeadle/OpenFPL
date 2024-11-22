@@ -439,7 +439,7 @@ export interface _SERVICE {
   createNewSeason: ActorMethod<[SystemState], undefined>;
   createPlayer: ActorMethod<[LeagueId, CreatePlayerDTO], Result>;
   getClubs: ActorMethod<[LeagueId], Result_3>;
-  getFixtures: ActorMethod<[RequestFixturesDTO], Result_2>;
+  getFixtures: ActorMethod<[LeagueId], Result_2>;
   getLeagueClubs: ActorMethod<[], Array<[LeagueId, Array<Club>]>>;
   getLeaguePlayers: ActorMethod<[], Array<[LeagueId, Array<Player>]>>;
   getLeagues: ActorMethod<[], Result_8>;

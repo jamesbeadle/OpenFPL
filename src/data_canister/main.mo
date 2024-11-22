@@ -60,6 +60,19 @@ import HashMap "mo:base/HashMap";
       }
     ]; 
 
+    private stable var leagueStatuses: [FootballTypes.LeagueStatus] = [
+      {
+        activeSeasonId = 1;
+        lastConfirmedGameweek = 11;
+        leagueId = 1
+      },
+      {
+        activeSeasonId = 1;
+        lastConfirmedGameweek = 0;
+        leagueId = 2
+      }
+    ]; 
+
     private stable var leagueSeasons: [(FootballTypes.LeagueId, [FootballTypes.Season])] = [];
     private stable var leagueClubs: [(FootballTypes.LeagueId, [FootballTypes.Club])] = [];
     private stable var leaguePlayers: [(FootballTypes.LeagueId, [FootballTypes.Player])] = [];
@@ -170,9 +183,20 @@ import HashMap "mo:base/HashMap";
       return getPrivateFixtures(dto);
     };
 
-    public shared query ( {caller} ) func getFixtures(dto: RequestDTOs.RequestFixturesDTO) : async Result.Result<[DTOs.FixtureDTO], T.Error>{
+    public shared query ( {caller} ) func getFixtures(leagueId: FootballTypes.LeagueId) : async Result.Result<[DTOs.FixtureDTO], T.Error>{
       assert callerAllowed(caller);
-      return getPrivateFixtures(dto);
+      let seasonResult = Array.find<FootballTypes.LeagueStatus>(leagueStatuses, func(entry: FootballTypes.LeagueStatus) : Bool {
+        entry.leagueId == leagueId;
+      });
+      
+      switch(seasonResult){
+        case (?foundSeason){
+          return getPrivateFixtures({leagueId; seasonId = foundSeason.activeSeasonId});
+        };
+        case (null){
+          return #err(#NotFound);
+        }
+      };
     };
 
     private func getPrivateFixtures(dto: RequestDTOs.RequestFixturesDTO) : Result.Result<[DTOs.FixtureDTO], T.Error> {

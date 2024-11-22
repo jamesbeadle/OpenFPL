@@ -91,10 +91,6 @@ export const idlFactory = ({ IDL }) => {
     primaryColourHex: IDL.Text,
   });
   const Result_3 = IDL.Variant({ ok: IDL.Vec(ClubDTO), err: Error });
-  const RequestFixturesDTO = IDL.Record({
-    seasonId: SeasonId,
-    leagueId: LeagueId,
-  });
   const FixtureStatusType = IDL.Variant({
     Unplayed: IDL.Null,
     Finalised: IDL.Null,
@@ -307,6 +303,10 @@ export const idlFactory = ({ IDL }) => {
     ok: IDL.Vec(IDL.Tuple(IDL.Nat16, PlayerScoreDTO)),
     err: Error,
   });
+  const RequestFixturesDTO = IDL.Record({
+    seasonId: SeasonId,
+    leagueId: LeagueId,
+  });
   const SeasonDTO = IDL.Record({
     id: SeasonId,
     name: IDL.Text,
@@ -454,7 +454,7 @@ export const idlFactory = ({ IDL }) => {
     createNewSeason: IDL.Func([SystemState], [], ["oneway"]),
     createPlayer: IDL.Func([LeagueId, CreatePlayerDTO], [Result], []),
     getClubs: IDL.Func([LeagueId], [Result_3], ["query"]),
-    getFixtures: IDL.Func([RequestFixturesDTO], [Result_2], ["query"]),
+    getFixtures: IDL.Func([LeagueId], [Result_2], ["query"]),
     getLeagueClubs: IDL.Func(
       [],
       [IDL.Vec(IDL.Tuple(LeagueId, IDL.Vec(Club)))],
