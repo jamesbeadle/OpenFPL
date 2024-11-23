@@ -2283,6 +2283,10 @@ import HashMap "mo:base/HashMap";
       });
     };
 
+    public shared func getBetslipFixtures(dto: RequestDTOs.GetBetslipFixturesDTO) : async Result.Result<[DTOs.FixtureDTO], T.Error>{
+      return #err(#NotFound); //TODO: Implement
+    };
+
     private func finaliseFixture(leagueId: FootballTypes.LeagueId, seasonId: FootballTypes.SeasonId, fixtureId: FootballTypes.FixtureId, highestScoringPlayerId: FootballTypes.PlayerId){
       leagueSeasons := Array.map<(FootballTypes.LeagueId, [FootballTypes.Season]), (FootballTypes.LeagueId, [FootballTypes.Season])>(leagueSeasons, 
         func (leagueSeasonsEntry: (FootballTypes.LeagueId, [FootballTypes.Season])){

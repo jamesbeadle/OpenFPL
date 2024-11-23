@@ -1,6 +1,7 @@
 
 import FootballTypes "../types/football_types";
 import Base "../types/base_types";
+import BettingTypes "../types/betting_types";
 
 module RequestDTOs {
 
@@ -51,6 +52,10 @@ module RequestDTOs {
     transferWindowActive : Bool;
     onHold : Bool;
     version: Text;
+  };
+
+  public type GetBetslipFixturesDTO = {
+    selections: [BettingTypes.Selection];
   };
 
 };
