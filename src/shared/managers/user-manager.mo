@@ -242,9 +242,11 @@ module {
                 season.seasonId == pickTeamSeasonId;
               });
 
+              let hasPlayersInTeam = Array.size(foundManager.playerIds) > 0;
+          
               switch(currentManagerSeason){
                 case (?foundSeason){
-                  firstGameweek := List.size(foundSeason.gameweeks) == 0;
+                  firstGameweek := List.size(foundSeason.gameweeks) == 0 or not hasPlayersInTeam;
                 };
                 case (null){ }
               };
@@ -1098,8 +1100,10 @@ module {
             };
             case (null){ }
           };
+
+          let hasPlayersInTeam = Array.size(foundManager.playerIds) > 0;
           
-          if(not firstGameweek){
+          if(not firstGameweek and hasPlayersInTeam){
             let transfersAvailable = getTransfersAvailable(foundManager, dto.playerIds, allPlayers);
             if (transfersAvailable < 0) {
               return #err(#TooManyTransfers);

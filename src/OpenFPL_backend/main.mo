@@ -56,6 +56,10 @@ import Buffer "mo:base/Buffer";
       return await userManager.getProfile({ principalId = Principal.toText(caller) });
     };
 
+    public shared ({ caller }) func getTestManager() : async Result.Result<DTOs.PickTeamDTO, T.Error> {
+      return await userManager.getCurrentTeam("agygk-bf7lt-eytr3-pw6qt-t5mmt-ftqhu-x2pe7-xupeh-ftxc3-abjqw-yqe", 1, 12);
+    };
+
     public shared ({ caller }) func getCurrentTeam() : async Result.Result<DTOs.PickTeamDTO, T.Error> {
       assert not Principal.isAnonymous(caller);
       let systemStateResult = seasonManager.getSystemState();

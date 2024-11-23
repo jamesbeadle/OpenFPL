@@ -154,17 +154,17 @@ type RewardEntry =
 type Result_9 = 
  variant {
    err: Error;
-   ok: SeasonLeaderboardDTO;
+   ok: vec SeasonDTO;
  };
 type Result_8 = 
  variant {
    err: Error;
-   ok: vec SeasonDTO;
+   ok: SystemStateDTO;
  };
 type Result_7 = 
  variant {
    err: Error;
-   ok: SystemStateDTO;
+   ok: ProfileDTO;
  };
 type Result_6 = 
  variant {
@@ -268,12 +268,12 @@ type Result_12 =
 type Result_11 = 
  variant {
    err: Error;
-   ok: ProfileDTO;
+   ok: GetRewardPoolDTO;
  };
 type Result_10 = 
  variant {
    err: Error;
-   ok: GetRewardPoolDTO;
+   ok: SeasonLeaderboardDTO;
  };
 type Result_1 = 
  variant {
@@ -291,11 +291,6 @@ type RequestManagerDTO =
    gameweek: GameweekNumber;
    managerId: text;
    month: CalendarMonth;
-   seasonId: SeasonId;
- };
-type RequestFixturesDTO = 
- record {
-   leagueId: LeagueId;
    seasonId: SeasonId;
  };
 type ProfileDTO = 
@@ -723,7 +718,7 @@ service : {
   getCurrentTeam: () -> (Result_20);
   getDataHashes: () -> (Result_19) composite_query;
   getFantasyTeamSnapshot: (GetFantasyTeamSnapshotDTO) -> (Result_18);
-  getFixtures: (RequestFixturesDTO) -> (Result_12) composite_query;
+  getFixtures: (LeagueId) -> (Result_12) composite_query;
   getLeaderboardCanisterIds: () -> (Result_17);
   getLoanedPlayers: (ClubFilterDTO) -> (Result_5) composite_query;
   getManager: (RequestManagerDTO) -> (Result_1);
@@ -736,12 +731,13 @@ service : {
   getPlayersMap: (GameweekFiltersDTO) -> (Result_13);
   getPlayersSnapshot: (GetSnapshotPlayers) -> (vec PlayerDTO) query;
   getPostponedFixtures: () -> (Result_12) composite_query;
-  getProfile: () -> (Result_11);
+  getProfile: () -> (Result_7);
   getRetiredPlayers: (ClubFilterDTO) -> (Result_5) composite_query;
-  getRewardPool: (GetRewardPoolDTO) -> (Result_10);
-  getSeasonLeaderboard: (GetSeasonLeaderboardDTO) -> (Result_9);
-  getSeasons: () -> (Result_8) composite_query;
-  getSystemState: () -> (Result_7) query;
+  getRewardPool: (GetRewardPoolDTO) -> (Result_11);
+  getSeasonLeaderboard: (GetSeasonLeaderboardDTO) -> (Result_10);
+  getSeasons: () -> (Result_9) composite_query;
+  getSystemState: () -> (Result_8) query;
+  getTestManager: () -> (Result_7);
   getTotalManagers: () -> (Result_6) query;
   getVerifiedPlayers: () -> (Result_5);
   getWeeklyCanisters: () -> (Result_4) query;
