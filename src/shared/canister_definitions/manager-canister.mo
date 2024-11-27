@@ -1,9 +1,14 @@
 import Array "mo:base/Array";
+import Bool "mo:base/Bool";
 import Buffer "mo:base/Buffer";
-import Cycles "mo:base/ExperimentalCycles";
+import Environment "../network_environment_variables";
+import Int "mo:base/Int";
+import Int16 "mo:base/Int16";
 import Iter "mo:base/Iter";
 import List "mo:base/List";
+import Nat "mo:base/Nat";
 import Nat8 "mo:base/Nat8";
+import Nat16 "mo:base/Nat16";
 import Option "mo:base/Option";
 import Order "mo:base/Order";
 import Principal "mo:base/Principal";
@@ -11,20 +16,13 @@ import Result "mo:base/Result";
 import Text "mo:base/Text";
 import Timer "mo:base/Timer";
 import TrieMap "mo:base/TrieMap";
-import Nat "mo:base/Nat";
-import Debug "mo:base/Debug";
-import Int16 "mo:base/Int16";
-import Nat16 "mo:base/Nat16";
-import Int "mo:base/Int";
-import Bool "mo:base/Bool";
-import Environment "../network_environment_variables";
 
-import DTOs "../../shared/dtos/DTOs";
 import Base "../../shared/types/base_types";
+import DTOs "../../shared/dtos/DTOs";
 import FootballTypes "../../shared/types/football_types";
+import RequestDTOs "../../shared/dtos/request_DTOs";
 import T "../../shared/types/app_types";
 import Utilities "../../shared/utils/utilities";
-import RequestDTOs "../../shared/dtos/request_DTOs";
 
 actor class _ManagerCanister() {
 
@@ -43,6 +41,7 @@ actor class _ManagerCanister() {
   private stable var managerGroup10 : [T.Manager] = [];
   private stable var managerGroup11 : [T.Manager] = [];
   private stable var managerGroup12 : [T.Manager] = [];
+
   private stable var cyclesCheckTimerId : ?Timer.TimerId = null;
   private stable var activeGroupIndex : Nat8 = 0;
   private stable var totalManagers = 0;
@@ -2810,47 +2809,132 @@ actor class _ManagerCanister() {
     assert backendPrincipalId == controllerPrincipalId;
 
     for (index in Iter.range(0, 11)) {
+      var managers: [T.Manager] = [];
+
       switch (index) {
         case 0 {
-          managerGroup1 := resetManagerBonuses(managerGroup1);
+          managers := managerGroup1;
         };
         case 1 {
-          managerGroup2 := resetManagerBonuses(managerGroup2);
+          managers := managerGroup2;
         };
         case 2 {
-          managerGroup3 := resetManagerBonuses(managerGroup3);
+          managers := managerGroup3;
         };
         case 3 {
-          managerGroup4 := resetManagerBonuses(managerGroup4);
+          managers := managerGroup4;
         };
         case 4 {
-          managerGroup5 := resetManagerBonuses(managerGroup5);
+          managers := managerGroup5;
         };
         case 5 {
-          managerGroup6 := resetManagerBonuses(managerGroup6);
+          managers := managerGroup6;
         };
         case 6 {
-          managerGroup7 := resetManagerBonuses(managerGroup7);
+          managers := managerGroup7;
         };
         case 7 {
-          managerGroup8 := resetManagerBonuses(managerGroup8);
+          managers := managerGroup8;
         };
         case 8 {
-          managerGroup9 := resetManagerBonuses(managerGroup9);
+          managers := managerGroup9;
         };
         case 9 {
-          managerGroup10 := resetManagerBonuses(managerGroup10);
+          managers := managerGroup10;
         };
         case 10 {
-          managerGroup11 := resetManagerBonuses(managerGroup11);
+          managers := managerGroup11;
         };
         case 11 {
-          managerGroup12 := resetManagerBonuses(managerGroup12);
+          managers := managerGroup12;
         };
         case _ {
 
         };
       };
+
+      let managerBuffer = Buffer.fromArray<T.Manager>([]);
+      for (manager in Iter.fromArray(managers)) {
+
+        let updatedManager : T.Manager = {
+          principalId = manager.principalId;
+          username = manager.username;
+          termsAccepted = manager.termsAccepted;
+          favouriteClubId = manager.favouriteClubId;
+          createDate = manager.createDate;
+          history = manager.history;
+          profilePicture = manager.profilePicture;
+          profilePictureType = manager.profilePictureType;
+          transfersAvailable = manager.transfersAvailable;
+          monthlyBonusesAvailable = 2;
+          bankQuarterMillions = manager.bankQuarterMillions;
+          playerIds = manager.playerIds;
+          captainId = manager.captainId;
+          goalGetterGameweek = manager.goalGetterGameweek;
+          goalGetterPlayerId = manager.goalGetterPlayerId;
+          passMasterGameweek = manager.passMasterGameweek;
+          passMasterPlayerId = manager.passMasterPlayerId;
+          noEntryGameweek = manager.noEntryGameweek;
+          noEntryPlayerId = manager.noEntryPlayerId;
+          teamBoostGameweek = manager.teamBoostGameweek;
+          teamBoostClubId = manager.teamBoostClubId;
+          safeHandsGameweek = manager.safeHandsGameweek;
+          safeHandsPlayerId = manager.safeHandsPlayerId;
+          captainFantasticGameweek = manager.captainFantasticGameweek;
+          captainFantasticPlayerId = manager.captainFantasticPlayerId;
+          oneNationGameweek = manager.oneNationGameweek;
+          oneNationCountryId = manager.oneNationCountryId;
+          prospectsGameweek = manager.prospectsGameweek;
+          braceBonusGameweek = manager.braceBonusGameweek;
+          hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
+          transferWindowGameweek = manager.transferWindowGameweek;
+          canisterId = manager.canisterId;
+        };
+        managerBuffer.add(updatedManager);
+      };
+
+      switch (index) {
+        case 0 {
+          managerGroup1 := Buffer.toArray(managerBuffer);
+        };
+        case 1 {
+          managerGroup2 := Buffer.toArray(managerBuffer);
+        };
+        case 2 {
+          managerGroup3 := Buffer.toArray(managerBuffer);
+        };
+        case 3 {
+          managerGroup4 := Buffer.toArray(managerBuffer);
+        };
+        case 4 {
+          managerGroup5 := Buffer.toArray(managerBuffer);
+        };
+        case 5 {
+          managerGroup6 := Buffer.toArray(managerBuffer);
+        };
+        case 6 {
+          managerGroup7 := Buffer.toArray(managerBuffer);
+        };
+        case 7 {
+          managerGroup8 := Buffer.toArray(managerBuffer);
+        };
+        case 8 {
+          managerGroup9 := Buffer.toArray(managerBuffer);
+        };
+        case 9 {
+          managerGroup10 := Buffer.toArray(managerBuffer);
+        };
+        case 10 {
+          managerGroup11 := Buffer.toArray(managerBuffer);
+        };
+        case 11 {
+          managerGroup12 := Buffer.toArray(managerBuffer);
+        };
+        case _ {
+
+        };
+      };
+
     };
   };
 
@@ -2910,139 +2994,145 @@ actor class _ManagerCanister() {
     */
   };
 
-  private func resetManagerBonuses(managers : [T.Manager]) : [T.Manager] {
-    let managerBuffer = Buffer.fromArray<T.Manager>([]);
-    for (manager in Iter.fromArray(managers)) {
-
-      let updatedManager : T.Manager = {
-        principalId = manager.principalId;
-        username = manager.username;
-        termsAccepted = manager.termsAccepted;
-        favouriteClubId = manager.favouriteClubId;
-        createDate = manager.createDate;
-        history = manager.history;
-        profilePicture = manager.profilePicture;
-        profilePictureType = manager.profilePictureType;
-        transfersAvailable = manager.transfersAvailable;
-        monthlyBonusesAvailable = 2;
-        bankQuarterMillions = manager.bankQuarterMillions;
-        playerIds = manager.playerIds;
-        captainId = manager.captainId;
-        goalGetterGameweek = manager.goalGetterGameweek;
-        goalGetterPlayerId = manager.goalGetterPlayerId;
-        passMasterGameweek = manager.passMasterGameweek;
-        passMasterPlayerId = manager.passMasterPlayerId;
-        noEntryGameweek = manager.noEntryGameweek;
-        noEntryPlayerId = manager.noEntryPlayerId;
-        teamBoostGameweek = manager.teamBoostGameweek;
-        teamBoostClubId = manager.teamBoostClubId;
-        safeHandsGameweek = manager.safeHandsGameweek;
-        safeHandsPlayerId = manager.safeHandsPlayerId;
-        captainFantasticGameweek = manager.captainFantasticGameweek;
-        captainFantasticPlayerId = manager.captainFantasticPlayerId;
-        oneNationGameweek = manager.oneNationGameweek;
-        oneNationCountryId = manager.oneNationCountryId;
-        prospectsGameweek = manager.prospectsGameweek;
-        braceBonusGameweek = manager.braceBonusGameweek;
-        hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
-        transferWindowGameweek = manager.transferWindowGameweek;
-        canisterId = manager.canisterId;
-      };
-      managerBuffer.add(updatedManager);
-    };
-    return Buffer.toArray(managerBuffer);
-  };
-
   public shared ({ caller }) func resetWeeklyTransfers() : async () {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == controllerPrincipalId;
 
     for (index in Iter.range(0, 11)) {
+      var managers : [T.Manager] = [];
       switch (index) {
         case 0 {
-          managerGroup1 := resetManagerWeeklyTransfers(managerGroup1);
+          managers := managerGroup1;
         };
         case 1 {
-          managerGroup2 := resetManagerWeeklyTransfers(managerGroup2);
+          managers := managerGroup2;
         };
         case 2 {
-          managerGroup3 := resetManagerWeeklyTransfers(managerGroup3);
+          managers := managerGroup3;
         };
         case 3 {
-          managerGroup4 := resetManagerWeeklyTransfers(managerGroup4);
+          managers := managerGroup4;
         };
         case 4 {
-          managerGroup5 := resetManagerWeeklyTransfers(managerGroup5);
+          managers := managerGroup5;
         };
         case 5 {
-          managerGroup6 := resetManagerWeeklyTransfers(managerGroup6);
+          managers := managerGroup6;
         };
         case 6 {
-          managerGroup7 := resetManagerWeeklyTransfers(managerGroup7);
+          managers := managerGroup7;
         };
         case 7 {
-          managerGroup8 := resetManagerWeeklyTransfers(managerGroup8);
+          managers := managerGroup8;
         };
         case 8 {
-          managerGroup9 := resetManagerWeeklyTransfers(managerGroup9);
+          managers := managerGroup9;
         };
         case 9 {
-          managerGroup10 := resetManagerWeeklyTransfers(managerGroup10);
+          managers := managerGroup10;
         };
         case 10 {
-          managerGroup11 := resetManagerWeeklyTransfers(managerGroup11);
+          managers := managerGroup11;
         };
         case 11 {
-          managerGroup12 := resetManagerWeeklyTransfers(managerGroup12);
+          managers := managerGroup12;
         };
         case _ {
 
         };
       };
-    };
-  };
 
-  private func resetManagerWeeklyTransfers(managers : [T.Manager]) : [T.Manager] {
-    let managerBuffer = Buffer.fromArray<T.Manager>([]);
-    for (manager in Iter.fromArray(managers)) {
-      let updatedManager : T.Manager = {
-        principalId = manager.principalId;
-        username = manager.username;
-        termsAccepted = manager.termsAccepted;
-        favouriteClubId = manager.favouriteClubId;
-        createDate = manager.createDate;
-        history = manager.history;
-        profilePicture = manager.profilePicture;
-        profilePictureType = manager.profilePictureType;
-        transfersAvailable = 3;
-        monthlyBonusesAvailable = manager.monthlyBonusesAvailable;
-        bankQuarterMillions = manager.bankQuarterMillions;
-        playerIds = manager.playerIds;
-        captainId = manager.captainId;
-        goalGetterGameweek = manager.goalGetterGameweek;
-        goalGetterPlayerId = manager.goalGetterPlayerId;
-        passMasterGameweek = manager.passMasterGameweek;
-        passMasterPlayerId = manager.passMasterPlayerId;
-        noEntryGameweek = manager.noEntryGameweek;
-        noEntryPlayerId = manager.noEntryPlayerId;
-        teamBoostGameweek = manager.teamBoostGameweek;
-        teamBoostClubId = manager.teamBoostClubId;
-        safeHandsGameweek = manager.safeHandsGameweek;
-        safeHandsPlayerId = manager.safeHandsPlayerId;
-        captainFantasticGameweek = manager.captainFantasticGameweek;
-        captainFantasticPlayerId = manager.captainFantasticPlayerId;
-        oneNationGameweek = manager.oneNationGameweek;
-        oneNationCountryId = manager.oneNationCountryId;
-        prospectsGameweek = manager.prospectsGameweek;
-        braceBonusGameweek = manager.braceBonusGameweek;
-        hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
-        transferWindowGameweek = manager.transferWindowGameweek;
-        canisterId = manager.canisterId;
+      let managerBuffer = Buffer.fromArray<T.Manager>([]);
+      for (manager in Iter.fromArray(managers)) {
+        let updatedManager : T.Manager = {
+          principalId = manager.principalId;
+          username = manager.username;
+          termsAccepted = manager.termsAccepted;
+          favouriteClubId = manager.favouriteClubId;
+          createDate = manager.createDate;
+          history = manager.history;
+          profilePicture = manager.profilePicture;
+          profilePictureType = manager.profilePictureType;
+          transfersAvailable = 3;
+          monthlyBonusesAvailable = manager.monthlyBonusesAvailable;
+          bankQuarterMillions = manager.bankQuarterMillions;
+          playerIds = manager.playerIds;
+          captainId = manager.captainId;
+          goalGetterGameweek = manager.goalGetterGameweek;
+          goalGetterPlayerId = manager.goalGetterPlayerId;
+          passMasterGameweek = manager.passMasterGameweek;
+          passMasterPlayerId = manager.passMasterPlayerId;
+          noEntryGameweek = manager.noEntryGameweek;
+          noEntryPlayerId = manager.noEntryPlayerId;
+          teamBoostGameweek = manager.teamBoostGameweek;
+          teamBoostClubId = manager.teamBoostClubId;
+          safeHandsGameweek = manager.safeHandsGameweek;
+          safeHandsPlayerId = manager.safeHandsPlayerId;
+          captainFantasticGameweek = manager.captainFantasticGameweek;
+          captainFantasticPlayerId = manager.captainFantasticPlayerId;
+          oneNationGameweek = manager.oneNationGameweek;
+          oneNationCountryId = manager.oneNationCountryId;
+          prospectsGameweek = manager.prospectsGameweek;
+          braceBonusGameweek = manager.braceBonusGameweek;
+          hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
+          transferWindowGameweek = manager.transferWindowGameweek;
+          canisterId = manager.canisterId;
+        };
+        managerBuffer.add(updatedManager);
       };
-      managerBuffer.add(updatedManager);
+
+      switch (index) {
+        case 0 {
+          managerGroup1 := Buffer.toArray(managerBuffer);
+        };
+        case 1 {
+          managerGroup2 := Buffer.toArray(managerBuffer);
+        };
+        case 2 {
+          managerGroup3 := Buffer.toArray(managerBuffer);
+        };
+        case 3 {
+          managerGroup4 := Buffer.toArray(managerBuffer);
+        };
+        case 4 {
+          managerGroup5 := Buffer.toArray(managerBuffer);
+        };
+        case 5 {
+          managerGroup6 := Buffer.toArray(managerBuffer);
+        };
+        case 6 {
+          managerGroup7 := Buffer.toArray(managerBuffer);
+        };
+        case 7 {
+          managerGroup8 := Buffer.toArray(managerBuffer);
+        };
+        case 8 {
+          managerGroup9 := Buffer.toArray(managerBuffer);
+        };
+        case 9 {
+          managerGroup10 := Buffer.toArray(managerBuffer);
+        };
+        case 10 {
+          managerGroup11 := Buffer.toArray(managerBuffer);
+        };
+        case 11 {
+          managerGroup12 := Buffer.toArray(managerBuffer);
+        };
+        case _ {
+
+        };
+      };
+
     };
-    return Buffer.toArray(managerBuffer);
+
+
+
+
+
+
+
+
   };
 
   public shared ({ caller }) func getClubManagers(clubId : FootballTypes.ClubId) : async [Base.PrincipalId] {
