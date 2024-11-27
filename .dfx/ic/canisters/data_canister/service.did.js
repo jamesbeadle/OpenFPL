@@ -80,24 +80,106 @@ export const idlFactory = ({ IDL }) => {
     'lastName' : IDL.Text,
     'firstName' : IDL.Text,
   });
-  const ClubDTO = IDL.Record({
-    'id' : ClubId,
-    'secondaryColourHex' : IDL.Text,
-    'name' : IDL.Text,
-    'friendlyName' : IDL.Text,
-    'thirdColourHex' : IDL.Text,
-    'abbreviatedName' : IDL.Text,
-    'shirtType' : ShirtType,
-    'primaryColourHex' : IDL.Text,
+  const SelectionStatus = IDL.Variant({
+    'Void' : IDL.Null,
+    'Unsettled' : IDL.Null,
+    'Settled' : IDL.Null,
   });
-  const Result_3 = IDL.Variant({ 'ok' : IDL.Vec(ClubDTO), 'err' : Error });
+  const BetResult = IDL.Variant({
+    'Won' : IDL.Null,
+    'Lost' : IDL.Null,
+    'Open' : IDL.Null,
+  });
+  const FixtureId = IDL.Nat32;
+  const PlayerId = IDL.Nat16;
+  const PlayerEventDetail = IDL.Record({
+    'clubId' : ClubId,
+    'playerId' : PlayerId,
+    'minute' : IDL.Nat8,
+  });
+  const ClubEventDetail = IDL.Record({ 'clubId' : ClubId });
+  const MatchResult = IDL.Variant({
+    'HomeWin' : IDL.Null,
+    'Draw' : IDL.Null,
+    'AwayWin' : IDL.Null,
+  });
+  const CorrectResultDetail = IDL.Record({ 'matchResult' : MatchResult });
+  const ScoreDetail = IDL.Record({
+    'homeGoals' : IDL.Nat8,
+    'awayGoals' : IDL.Nat8,
+  });
+  const BothTeamsToScoreDetail = IDL.Record({ 'bothTeamsToScore' : IDL.Bool });
+  const HalfTimeFullTimeResultDetail = IDL.Record({
+    'fullTimeResult' : MatchResult,
+    'halfTimeResult' : MatchResult,
+  });
+  const PlayerGroupEventDetail = IDL.Record({
+    'clubId' : ClubId,
+    'playerId' : PlayerId,
+  });
+  const BothTeamsToScoreAndWinnerDetail = IDL.Record({
+    'bothTeamsToScore' : IDL.Bool,
+    'matchResult' : MatchResult,
+  });
+  const SelectionDetail = IDL.Variant({
+    'MissPenalty' : PlayerEventDetail,
+    'LastAssist' : PlayerEventDetail,
+    'PenaltyMissed' : ClubEventDetail,
+    'FirstAssist' : PlayerEventDetail,
+    'AnytimeGoalscorer' : PlayerEventDetail,
+    'CorrectResult' : CorrectResultDetail,
+    'HalfTimeScore' : ScoreDetail,
+    'BothTeamsToScore' : BothTeamsToScoreDetail,
+    'HalfTimeFullTimeResult' : HalfTimeFullTimeResultDetail,
+    'LastGoalscorer' : PlayerEventDetail,
+    'RedCard' : PlayerEventDetail,
+    'ScoreHatrick' : PlayerGroupEventDetail,
+    'CorrectScore' : ScoreDetail,
+    'AnytimeAssist' : PlayerEventDetail,
+    'YellowCard' : PlayerEventDetail,
+    'BothTeamsToScoreAndWinner' : BothTeamsToScoreAndWinnerDetail,
+    'FirstGoalscorer' : PlayerEventDetail,
+    'ScoreBrace' : PlayerGroupEventDetail,
+  });
+  const Category = IDL.Variant({
+    'MissPenalty' : IDL.Null,
+    'LastAssist' : IDL.Null,
+    'PenaltyMissed' : IDL.Null,
+    'FirstAssist' : IDL.Null,
+    'AnytimeGoalscorer' : IDL.Null,
+    'CorrectResult' : IDL.Null,
+    'HalfTimeScore' : IDL.Null,
+    'BothTeamsToScore' : IDL.Null,
+    'HalfTimeFullTimeResult' : IDL.Null,
+    'LastGoalscorer' : IDL.Null,
+    'RedCard' : IDL.Null,
+    'ScoreHatrick' : IDL.Null,
+    'CorrectScore' : IDL.Null,
+    'AnytimeAssist' : IDL.Null,
+    'YellowCard' : IDL.Null,
+    'BothTeamsToScoreAndWinner' : IDL.Null,
+    'FirstGoalscorer' : IDL.Null,
+    'ScoreBrace' : IDL.Null,
+  });
+  const Selection = IDL.Record({
+    'status' : SelectionStatus,
+    'result' : BetResult,
+    'fixtureId' : FixtureId,
+    'winnings' : IDL.Float64,
+    'odds' : IDL.Float64,
+    'stake' : IDL.Nat64,
+    'selectionDetail' : SelectionDetail,
+    'selectionType' : Category,
+  });
+  const GetBetslipFixturesDTO = IDL.Record({
+    'selections' : IDL.Vec(Selection),
+  });
   const FixtureStatusType = IDL.Variant({
     'Unplayed' : IDL.Null,
     'Finalised' : IDL.Null,
     'Active' : IDL.Null,
     'Complete' : IDL.Null,
   });
-  const FixtureId = IDL.Nat32;
   const PlayerEventType = IDL.Variant({
     'PenaltyMissed' : IDL.Null,
     'Goal' : IDL.Null,
@@ -134,6 +216,17 @@ export const idlFactory = ({ IDL }) => {
     'awayGoals' : IDL.Nat8,
   });
   const Result_2 = IDL.Variant({ 'ok' : IDL.Vec(FixtureDTO), 'err' : Error });
+  const ClubDTO = IDL.Record({
+    'id' : ClubId,
+    'secondaryColourHex' : IDL.Text,
+    'name' : IDL.Text,
+    'friendlyName' : IDL.Text,
+    'thirdColourHex' : IDL.Text,
+    'abbreviatedName' : IDL.Text,
+    'shirtType' : ShirtType,
+    'primaryColourHex' : IDL.Text,
+  });
+  const Result_3 = IDL.Variant({ 'ok' : IDL.Vec(ClubDTO), 'err' : Error });
   const Club = IDL.Record({
     'id' : ClubId,
     'secondaryColourHex' : IDL.Text,
@@ -144,7 +237,6 @@ export const idlFactory = ({ IDL }) => {
     'shirtType' : ShirtType,
     'primaryColourHex' : IDL.Text,
   });
-  const PlayerId = IDL.Nat16;
   const PlayerStatus = IDL.Variant({
     'OnLoan' : IDL.Null,
     'Active' : IDL.Null,
@@ -453,6 +545,7 @@ export const idlFactory = ({ IDL }) => {
     'createLeague' : IDL.Func([CreateLeagueDTO], [Result], []),
     'createNewSeason' : IDL.Func([SystemState], [], ['oneway']),
     'createPlayer' : IDL.Func([LeagueId, CreatePlayerDTO], [Result], []),
+    'getBetslipFixtures' : IDL.Func([GetBetslipFixturesDTO], [Result_2], []),
     'getClubs' : IDL.Func([LeagueId], [Result_3], ['query']),
     'getFixtures' : IDL.Func([LeagueId], [Result_2], ['query']),
     'getLeagueClubs' : IDL.Func(

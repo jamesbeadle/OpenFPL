@@ -20,12 +20,8 @@ export class FixtureService {
     return result.ok;
   }
 
-  async getFixtures(seasonId: number): Promise<FixtureDTO[]> {
-    let dto: RequestFixturesDTO = {
-      leagueId: 1,
-      seasonId: seasonId,
-    };
-    const result = await this.actor.getFixtures(dto);
+  async getFixtures(): Promise<FixtureDTO[]> {
+    const result = await this.actor.getFixtures(1); //TODO: Set from store
     if (isError(result)) throw new Error("Failed to fetch fixtures");
     return result.ok;
   }

@@ -8,15 +8,20 @@
   import Nat64 "mo:base/Nat64";
   import Nat "mo:base/Nat";
   import Option "mo:base/Option";
-import Text "mo:base/Text";
-import Time "mo:base/Time";
-import Buffer "mo:base/Buffer";
+  import Text "mo:base/Text";
+  import Time "mo:base/Time";
+  import Buffer "mo:base/Buffer";
+import List "mo:base/List";
+import Debug "mo:base/Debug";
+import Nat16 "mo:base/Nat16";
+import Nat8 "mo:base/Nat8";
 
   import Base "../shared/types/base_types";
   import FootballTypes "../shared/types/football_types";
   import T "../shared/types/app_types";
   import DTOs "../shared/dtos/DTOs";
   import RequestDTOs "../shared/dtos/request_DTOs";
+  import ResponseDTOs "../shared/dtos/response_DTOs";
   import Countries "../shared/Countries";
   import FPLLedger "../shared/def/FPLLedger";
   import Root "../shared/sns-wrappers/root";
@@ -30,7 +35,6 @@ import Buffer "mo:base/Buffer";
   import SeasonManager "../shared/managers/season-manager";
   import Environment "./Environment";
   import NetworkEnvironmentVariables "../shared/network_environment_variables";
-  import Account "../shared/lib/Account";
   import Utilities "../shared/utils/utilities";
 
   actor Self {
@@ -54,10 +58,6 @@ import Buffer "mo:base/Buffer";
     public shared ({ caller }) func getProfile() : async Result.Result<DTOs.ProfileDTO, T.Error> {
       assert not Principal.isAnonymous(caller);
       return await userManager.getProfile({ principalId = Principal.toText(caller) });
-    };
-
-    public shared ({ caller }) func getTestManager() : async Result.Result<DTOs.PickTeamDTO, T.Error> {
-      return await userManager.getCurrentTeam("agygk-bf7lt-eytr3-pw6qt-t5mmt-ftqhu-x2pe7-xupeh-ftxc3-abjqw-yqe", 1, 12);
     };
 
     public shared ({ caller }) func getCurrentTeam() : async Result.Result<DTOs.PickTeamDTO, T.Error> {
@@ -809,11 +809,7 @@ import Buffer "mo:base/Buffer";
       await seasonManager.updateDataHash("weekly_leaderboard");
       await seasonManager.updateDataHash("monthly_leaderboards");
       await seasonManager.updateDataHash("season_leaderboard");
-      /*
-      */
-      //let _ = await transferFPLToNewBackendCanister();
     };
-
 
     private func updateManagerCanisterWasms() : async (){
       let managerCanisterIds = userManager.getUniqueManagerCanisterIds();
@@ -825,7 +821,6 @@ import Buffer "mo:base/Buffer";
         await IC.start_canister({ canister_id = Principal.fromText(canisterId); });
       };
     };
-
 
     private func updateLeaderboardCanisterWasms() : async (){
       let leaderboardCanisterIds = leaderboardManager.getUniqueLeaderboardCanisterIds();
@@ -855,7 +850,7 @@ import Buffer "mo:base/Buffer";
           switch(playersResult){
             case (#ok players){
               seasonManager.storePlayersSnapshot(systemState.pickTeamSeasonId, systemState.pickTeamGameweek, players);
-              let _ = await userManager.snapshotFantasyTeams(Environment.LEAGUE_ID, systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
+              let _ = await userManager.snapshotFantasyTeams(Environment.LEAGUE_ID, systemState.pickTeamSeasonId, systemState.pickTeamGameweek, systemState.pickTeamMonth);
               return #ok();
             };
             case (#err error){
@@ -949,8 +944,21 @@ import Buffer "mo:base/Buffer";
       } 
     };
 
-    public shared query func getWeeklyRewards(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber) : async Result.Result<T.WeeklyRewards, T.Error> {
-      return leaderboardManager.getWeeklyRewards(seasonId, gameweek);
+    public shared query func getWeeklyRewards(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber) : async Result.Result<ResponseDTOs.WeeklyRewardsDTO, T.Error> {
+      Debug.print("Getting weekly rewards " # Nat16.toText(seasonId) # ", gameweek " # Nat8.toText(gameweek)); 
+      let weeklyRewardsResult = leaderboardManager.getWeeklyRewards(seasonId, gameweek);
+      switch(weeklyRewardsResult){
+        case (#ok foundRewards){
+          return #ok({
+            gameweek = gameweek;
+            seasonId = seasonId;
+            rewards = List.toArray(foundRewards.rewards);
+          })
+        };
+        case (#err _){
+          return #err(#NotFound);
+        }
+      };
     };
 
     public shared query func getWeeklyCanisters() : async Result.Result<[(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, Base.CanisterId)])], T.Error> {
@@ -963,26 +971,16 @@ import Buffer "mo:base/Buffer";
       return #ok();
     };
 
-    public shared ({ caller }) func notifyAppsOfPositionChange(leagueId: FootballTypes.LeagueId, playerId: FootballTypes.PlayerId) : async Result.Result<(), T.Error> {
+    public shared ({ caller }) func notifyAppsOfTransfer(leagueId: FootballTypes.LeagueId, playerId: FootballTypes.PlayerId) : async Result.Result<(), T.Error> {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
       await userManager.removePlayerFromTeams(leagueId, playerId, Environment.BACKEND_CANISTER_ID);
       return #ok();
     };
 
-    public func transferFPLToNewBackendCanister() : async FPLLedger.TransferResult {
-      
-      let one_fpl : Nat = 100_000_000;
-      let fpl_fee : Nat = 100_000;
-      let e8s = one_fpl * 1_764_900;
-      //1764900
-      return await ledger.icrc1_transfer({
-        memo = ?Text.encodeUtf8("0");
-        from_subaccount = ?Account.defaultSubaccount();
-        to = {owner = Principal.fromText(NetworkEnvironmentVariables.OPENFPL_BACKEND_CANISTER_ID); subaccount = null};
-        amount = e8s - fpl_fee;
-        fee = ?fpl_fee;
-        created_at_time =?Nat64.fromNat(Int.abs(Time.now()));
-      });
+    public shared ({ caller }) func notifyAppsOfPositionChange(leagueId: FootballTypes.LeagueId, playerId: FootballTypes.PlayerId) : async Result.Result<(), T.Error> {
+      assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
+      await userManager.removePlayerFromTeams(leagueId, playerId, Environment.BACKEND_CANISTER_ID);
+      return #ok();
     };
-
+    
   };

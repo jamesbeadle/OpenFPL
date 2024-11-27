@@ -1,16 +1,20 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { toastsError } from "$lib/stores/toasts-store";
-  import { clubStore } from "$lib/stores/club-store";
+  
+  import { storeManager } from "$lib/managers/store-manager";
   import { systemStore } from "$lib/stores/system-store";
-  import { authSignedInStore } from "$lib/derived/auth.derived";
-  import { userGetFavouriteTeam } from "$lib/derived/user.derived";
+  import { clubStore } from "$lib/stores/club-store";
   import { weeklyLeaderboardStore } from "$lib/stores/weekly-leaderboard-store";
   import { monthlyLeaderboardStore } from "$lib/stores/monthly-leaderboard-store";
   import { seasonLeaderboardStore } from "$lib/stores/season-leaderboard-store";
+  import { authSignedInStore } from "$lib/derived/auth.derived";
+  import { userGetFavouriteTeam } from "$lib/derived/user.derived";
+  
+  import type { LeaderboardEntry, RewardEntry } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  
+  import LocalSpinner from "./local-spinner.svelte";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
-    import LocalSpinner from "./local-spinner.svelte";
-    import { storeManager } from "$lib/managers/store-manager";
+  import { formatE8s } from "$lib/utils/helpers";
 
   let isLoading = true;
   let gameweeks = Array.from(
@@ -69,17 +73,8 @@
           )[0].id;
 
 
-      let leaderboardData = await weeklyLeaderboardStore.getWeeklyLeaderboard(
-        selectedSeasonId,
-        selectedGameweek,
-        currentPage
-      );
-      leaderboard = leaderboardData;
+      await loadLeaderboardData();
     } catch (error) {
-      toastsError({
-        msg: { text: "Error fetching leaderboard data." },
-        err: error,
-      });
       console.error("Error fetching leaderboard data:", error);
     } finally {
       isLoading = false;
@@ -136,16 +131,56 @@
           );
           break;
       }
+      const rewardsResult = await weeklyLeaderboardStore.getWeeklyRewards(
+        selectedSeasonId,
+        selectedGameweek
+      );
+      console.log("rewardsResult");
+      console.log(rewardsResult);
+
+      if (rewardsResult) {
+        leaderboard.entries = mergeLeaderboardWithRewards(
+          leaderboard.entries,
+          rewardsResult.rewards
+        );
+      } else {
+        console.error("Error fetching rewards:", rewardsResult.err);
+        leaderboard.entries = mergeLeaderboardWithRewards(leaderboard.entries, []);
+      }
+
     } catch (error) {
-      toastsError({
-        msg: { text: "Error fetching leaderboard data." },
-        err: error,
-      });
+      leaderboard = null;
       console.error("Error fetching leaderboard data:", error);
     } finally {
       isLoading = false;
     }
   }
+
+  function mergeLeaderboardWithRewards(
+    leaderboardEntries: LeaderboardEntry[], // Now accepting an array of entries
+    rewards: RewardEntry[]
+  ): LeaderboardEntry[] {
+
+    // Create a map of rewards keyed by principalId
+    const rewardMap = new Map(
+      rewards.map((reward) => [reward.principalId, reward.amount])
+    );
+
+    console.log("Leaderboard Principal IDs:", leaderboardEntries.map(e => e.principalId));
+    console.log("Reward Principal IDs:", rewards.map(r => r.principalId));
+
+    console.log("Leaderboard Entries:", leaderboardEntries);
+    console.log("Rewards Map:", rewardMap);
+    
+
+    // Map over leaderboard entries and add the reward field
+    return leaderboardEntries.map((entry) => ({
+      ...entry,
+      reward: rewardMap.get(entry.principalId) ?? 0,
+    }));
+  }
+
+
 
   const changeGameweek = (delta: number) => {
     selectedGameweek = Math.max(1, Math.min(Number(process.env.TOTAL_GAMEWEEKS), selectedGameweek + delta));
@@ -332,9 +367,10 @@
           class="flex justify-between p-2 border border-gray-700 py-4 bg-light-gray"
         >
           <div class="w-2/12 xs:w-2/12 px-4">Pos</div>
-          <div class="w-5/12 xs:w-4/12 px-4">Manager</div>
+          <div class="w-3/12 xs:w-4/12 px-4">Manager</div>
           <div class="w-2/12 xs:w-2/12 px-4">Points</div>
-          <div class="w-3/12 xs:w-4/12 px-4">&nbsp;</div>
+          <div class="w-2/12 xs:w-2/12 px-4">FPL</div>
+          <div class="w-3/12 xs:w-1/12 px-4">&nbsp;</div>
         </div>
 
         {#if leaderboard && leaderboard.entries && leaderboard.entries.length > 0}
@@ -344,15 +380,14 @@
                 class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer"
               >
                 <div class="w-2/12 xs:w-2/12 px-4">{entry.positionText}</div>
-                <div class="w-5/12 xs:w-4/12 px-4">
+                <div class="w-3/12 xs:w-4/12 px-4">
                   {entry.principalId === entry.username
                     ? "Unknown"
                     : entry.username}
                 </div>
                 <div class="w-2/12 xs:w-2/12 px-4">{entry.points}</div>
-                <div
-                  class="w-3/12 xs:w-4/12 flex items-center justify-center xs:justify-center"
-                >
+                <div class="w-2/12 xs:w-2/12 px-4">{ entry.reward == 0 ? 0 : formatE8s(entry.reward)} FPL</div>
+                <div class="w-3/12 xs:w-1/12 flex items-center justify-center xs:justify-center">
                   <span class="flex items-center">
                     <ViewDetailsIcon className="w-5 xs:w-6 lg:w-7" />
                     <span class="hidden xs:flex ml-1 lg:ml-2">View Details</span

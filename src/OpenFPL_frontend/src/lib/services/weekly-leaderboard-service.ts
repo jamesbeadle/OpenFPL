@@ -32,4 +32,11 @@ export class WeeklyLeaderboardService {
     if (isError(result)) throw new Error("Failed to fetch weekly leaderboard");
     return result.ok;
   }
+
+  async getWeeklyRewards(seasonId: number, gameweek: number): Promise<any> {
+    const result = await this.actor.getWeeklyRewards(seasonId, gameweek);
+    if (isError(result))
+      throw new Error("Failed to fetch weekly leaderboard rewards");
+    return result.ok;
+  }
 }

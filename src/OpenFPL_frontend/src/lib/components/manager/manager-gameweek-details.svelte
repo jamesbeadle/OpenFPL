@@ -1,14 +1,18 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { writable, type Writable } from "svelte/store";
+  import { writable } from "svelte/store";
+
+  import { storeManager } from "$lib/managers/store-manager";
   import { systemStore } from "$lib/stores/system-store";
-  import { toastsError } from "$lib/stores/toasts-store";
+  import { countryStore } from "$lib/stores/country-store";
+  import { seasonStore } from "$lib/stores/season-store";
   import { clubStore } from "$lib/stores/club-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { playerStore } from "$lib/stores/player-store";
   import { playerEventsStore } from "$lib/stores/player-events-store";
+  import { toastsError } from "$lib/stores/toasts-store";
+
   import {
-    calculateAgeFromNanoseconds,
     convertPlayerPosition,
     getFlagComponent,
     getPositionAbbreviation,
@@ -18,24 +22,18 @@
     FantasyTeamSnapshot,
     PlayerDTO,
   } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+
   import type { GameweekData } from "$lib/interfaces/GameweekData";
+
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import FantasyPlayerDetailModal from "../fantasy-player-detail-modal.svelte";
   import ActiveCaptainIcon from "$lib/icons/ActiveCaptainIcon.svelte";
-  import { countryStore } from "$lib/stores/country-store";
-    import LocalSpinner from "../local-spinner.svelte";
-    import { seasonStore } from "$lib/stores/season-store";
-    import { storeManager } from "$lib/managers/store-manager";
+  import LocalSpinner from "../local-spinner.svelte";
+  import { calculateBonusPoints } from "$lib/utils/pick-team.helpers";
 
-  let gameweekPlayers = writable<GameweekData[]>([]);
-  let gameweeks = Array.from(
-    { length: $systemStore?.pickTeamGameweek ?? 1 },
-    (_, i) => i + 1
-  );
-
+  export let loadingGameweek = writable<boolean>(true);
   export let selectedGameweek = writable<number | null>(null);
   export let fantasyTeam = writable<FantasyTeamSnapshot | null>(null);
-  export let loadingGameweek = writable<boolean>(true);
 
   let isLoading = false;
   let showModal = false;
@@ -43,6 +41,12 @@
   let selectedOpponentTeam: ClubDTO;
   let selectedGameweekData: GameweekData;
   let activeSeasonName: string;
+
+  let gameweekPlayers = writable<GameweekData[]>([]);
+  let gameweeks = Array.from(
+    { length: $systemStore?.pickTeamGameweek ?? 1 },
+    (_, i) => i + 1
+  );
 
   $: if ($fantasyTeam && $selectedGameweek && $selectedGameweek > 0) {
     updateGameweekPlayers();
@@ -151,100 +155,6 @@
 
   function closeDetailModal() {
     showModal = false;
-  }
-
-  function calculateBonusPoints(
-  gameweekData: GameweekData[],
-  fantasyTeam: FantasyTeamSnapshot
-) {
-    gameweekData.forEach((data) => {
-      let bonusPoints = 0;
-      if (
-        fantasyTeam.goalGetterPlayerId === data.player.id &&
-        fantasyTeam.goalGetterGameweek === data.gameweek
-      ) {
-        bonusPoints += data.goals * data.goalPoints * 2;
-      }
-
-      if (
-        fantasyTeam.passMasterPlayerId === data.player.id &&
-        fantasyTeam.passMasterGameweek === data.gameweek
-      ) {
-        bonusPoints += data.assists * data.assistPoints * 2;
-      }
-
-      if (
-        fantasyTeam.noEntryPlayerId === data.player.id &&
-        fantasyTeam.noEntryGameweek === data.gameweek &&
-        data.cleanSheets > 0 
-      ) {
-        bonusPoints += data.points * 2;
-      }
-
-      if (
-        fantasyTeam.teamBoostClubId === data.player.clubId &&
-        fantasyTeam.teamBoostGameweek === data.gameweek
-      ) {
-        bonusPoints += data.points;
-      }
-
-      if (
-        fantasyTeam.safeHandsPlayerId === data.player.id &&
-        fantasyTeam.safeHandsGameweek === data.gameweek &&
-        data.saves >= 5
-      ) {
-        bonusPoints += data.points * 2;
-      }
-
-      if (
-        fantasyTeam.oneNationCountryId === data.nationalityId &&
-        fantasyTeam.oneNationGameweek === data.gameweek
-      ) {
-        bonusPoints += data.points;
-      }
-
-      if (
-        isPlayerUnder21(data.player) &&
-        fantasyTeam.prospectsGameweek === data.gameweek
-      ) {
-        bonusPoints += data.points;
-      }
-
-      if (
-        fantasyTeam.braceBonusGameweek === data.gameweek &&
-        data.goals >= 2
-      ) {
-        bonusPoints += data.points;
-      }
-
-      if (
-        fantasyTeam.hatTrickHeroGameweek === data.gameweek &&
-        data.goals >= 3
-      ) {
-        bonusPoints += data.points * 2;
-      }
-
-      data.bonusPoints = bonusPoints;
-      data.totalPoints = data.points + bonusPoints;
-
-      if (
-        fantasyTeam.captainFantasticPlayerId === data.player.id &&
-        fantasyTeam.captainFantasticGameweek === data.gameweek &&
-        data.goals > 0
-      ) {
-        if (fantasyTeam.captainId === data.player.id) {
-          data.totalPoints *= 2;
-        }
-      } else if (fantasyTeam.captainId === data.player.id) {
-        data.totalPoints *= 2;
-      }
-    });
-  }
-
-
-  function isPlayerUnder21(player: PlayerDTO): boolean {
-    let playerAge = calculateAgeFromNanoseconds(Number(player.dateOfBirth));
-    return playerAge < 21;
   }
 
 </script>

@@ -5,12 +5,9 @@ import Array "mo:base/Array";
 import Order "mo:base/Order";
 import Iter "mo:base/Iter";
 import Buffer "mo:base/Buffer";
-import Time "mo:base/Time";
 import Timer "mo:base/Timer";
 import Int "mo:base/Int";
 import Option "mo:base/Option";
-import Nat16 "mo:base/Nat16";
-import Nat8 "mo:base/Nat8";
 import Nat "mo:base/Nat";
 
 import DTOs "../../shared/dtos/DTOs";
@@ -331,9 +328,10 @@ actor class _LeaderboardCanister() {
 
         let leaderboardBuffer = Buffer.fromArray<T.WeeklyLeaderboard>(
           Array.filter<T.WeeklyLeaderboard>(weekly_leaderboards, func(leaderboard: T.WeeklyLeaderboard){
-            return leaderboard.seasonId != seasonId or gameweek != gameweek
+            return not (leaderboard.seasonId == seasonId and leaderboard.gameweek == gameweek);
           })
         );
+
         leaderboardBuffer.add(updatedLeaderboard);
         weekly_leaderboards := Buffer.toArray(leaderboardBuffer);
       };

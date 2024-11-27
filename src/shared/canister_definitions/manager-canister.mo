@@ -16,6 +16,7 @@ import Debug "mo:base/Debug";
 import Int16 "mo:base/Int16";
 import Nat16 "mo:base/Nat16";
 import Int "mo:base/Int";
+import Bool "mo:base/Bool";
 import Environment "../network_environment_variables";
 
 import DTOs "../../shared/dtos/DTOs";
@@ -3282,7 +3283,9 @@ actor class _ManagerCanister() {
         let removedPlayer = Array.find<DTOs.PlayerDTO>(allPlayers, func(p) { p.id == removePlayerId });
 
         switch (removedPlayer) {
-          case (null) {};
+          case (null) {
+            //removeMissingPlayer(playerId); TODO NEED TO FIX
+          };
           case (?foundRemovedPlayer) {
             let playerValue = foundRemovedPlayer.valueQuarterMillions;
             let managerBuffer = Buffer.fromArray<T.Manager>([]);
@@ -3490,5 +3493,8 @@ actor class _ManagerCanister() {
   private func postUpgradeCallback() : async (){
     
   };
+
+
+
 
 };

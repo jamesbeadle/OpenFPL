@@ -13,12 +13,9 @@ import { PlayerEventsService } from "$lib/services/player-events-service";
 import type { GameweekData } from "$lib/interfaces/GameweekData";
 import { systemStore } from "./system-store";
 import { playerStore } from "./player-store";
-import {
-  calculateBonusPoints,
-  calculatePlayerScore,
-  extractPlayerData,
-} from "$lib/utils/helpers";
+import { calculatePlayerScore, extractPlayerData } from "$lib/utils/helpers";
 import { fixtureStore } from "./fixture-store";
+import { getTotalBonusPoints } from "$lib/utils/pick-team.helpers";
 
 function createPlayerEventsStore() {
   const { subscribe, set } = writable<PlayerPointsDTO[]>([]);
@@ -94,7 +91,7 @@ function createPlayerEventsStore() {
 
     const playersWithPoints = gameweekData.map((entry) => {
       const score = calculatePlayerScore(entry, allFixtures);
-      const bonusPoints = calculateBonusPoints(entry, fantasyTeam, score);
+      const bonusPoints = getTotalBonusPoints(entry, fantasyTeam, score);
       const captainPoints =
         entry.player.id === fantasyTeam.captainId ? score + bonusPoints : 0;
 

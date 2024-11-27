@@ -47,8 +47,6 @@
 
   onMount(async () => {
     try {
-
-
       await storeManager.syncStores();
 
       authStore.subscribe((store) => {

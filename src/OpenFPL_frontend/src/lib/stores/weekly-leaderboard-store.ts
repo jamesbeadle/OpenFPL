@@ -19,11 +19,19 @@ function createWeeklyLeaderboardStore() {
     );
   }
 
+  async function getWeeklyRewards(
+    seasonId: number,
+    gameweek: number,
+  ): Promise<any> {
+    return new WeeklyLeaderboardService().getWeeklyRewards(seasonId, gameweek);
+  }
+
   return {
     subscribe,
     setWeeklyLeaderboard: (leaderboard: WeeklyLeaderboardDTO) =>
       set(leaderboard),
     getWeeklyLeaderboard,
+    getWeeklyRewards,
   };
 }
 

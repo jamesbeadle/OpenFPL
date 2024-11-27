@@ -105,12 +105,55 @@ type SetFreeAgentDTO =
    leagueId: LeagueId;
    playerId: ClubId;
  };
+type SelectionStatus = 
+ variant {
+   Settled;
+   Unsettled;
+   Void;
+ };
+type SelectionDetail = 
+ variant {
+   AnytimeAssist: PlayerEventDetail;
+   AnytimeGoalscorer: PlayerEventDetail;
+   BothTeamsToScore: BothTeamsToScoreDetail;
+   BothTeamsToScoreAndWinner: BothTeamsToScoreAndWinnerDetail;
+   CorrectResult: CorrectResultDetail;
+   CorrectScore: ScoreDetail;
+   FirstAssist: PlayerEventDetail;
+   FirstGoalscorer: PlayerEventDetail;
+   HalfTimeFullTimeResult: HalfTimeFullTimeResultDetail;
+   HalfTimeScore: ScoreDetail;
+   LastAssist: PlayerEventDetail;
+   LastGoalscorer: PlayerEventDetail;
+   MissPenalty: PlayerEventDetail;
+   PenaltyMissed: ClubEventDetail;
+   RedCard: PlayerEventDetail;
+   ScoreBrace: PlayerGroupEventDetail;
+   ScoreHatrick: PlayerGroupEventDetail;
+   YellowCard: PlayerEventDetail;
+ };
+type Selection = 
+ record {
+   fixtureId: FixtureId;
+   odds: float64;
+   result: BetResult;
+   selectionDetail: SelectionDetail;
+   selectionType: Category;
+   stake: nat64;
+   status: SelectionStatus;
+   winnings: float64;
+ };
 type SeasonId = nat16;
 type SeasonDTO = 
  record {
    id: SeasonId;
    name: text;
    year: nat16;
+ };
+type ScoreDetail = 
+ record {
+   awayGoals: nat8;
+   homeGoals: nat8;
  };
 type RevaluePlayerUpDTO = 
  record {
@@ -259,6 +302,11 @@ type PlayerPointsDTO =
    position: PlayerPosition;
  };
 type PlayerId = nat16;
+type PlayerGroupEventDetail = 
+ record {
+   clubId: ClubId;
+   playerId: PlayerId;
+ };
 type PlayerGameweekDTO = 
  record {
    events: vec PlayerEventData;
@@ -286,6 +334,12 @@ type PlayerEventType =
    PenaltySaved;
    RedCard;
    YellowCard;
+ };
+type PlayerEventDetail = 
+ record {
+   clubId: ClubId;
+   minute: nat8;
+   playerId: PlayerId;
  };
 type PlayerEventData = 
  record {
@@ -361,6 +415,12 @@ type MoveFixtureDTO =
    updatedFixtureDate: int;
    updatedFixtureGameweek: GameweekNumber;
  };
+type MatchResult = 
+ variant {
+   AwayWin;
+   Draw;
+   HomeWin;
+ };
 type LoanPlayerDTO = 
  record {
    loanClubId: ClubId;
@@ -405,11 +465,17 @@ type InjuryHistory =
    expectedEndDate: int;
    injuryStartDate: int;
  };
+type HalfTimeFullTimeResultDetail = 
+ record {
+   fullTimeResult: MatchResult;
+   halfTimeResult: MatchResult;
+ };
 type GetPlayerDetailsDTO = 
  record {
    playerId: ClubId;
    seasonId: SeasonId;
  };
+type GetBetslipFixturesDTO = record {selections: vec Selection;};
 type Gender = 
  variant {
    Female;
@@ -508,12 +574,14 @@ type CreateClubDTO =
    thirdColourHex: text;
  };
 type CountryId = nat16;
+type CorrectResultDetail = record {matchResult: MatchResult;};
 type ClubId = nat16;
 type ClubFilterDTO = 
  record {
    clubId: ClubId;
    leagueId: LeagueId;
  };
+type ClubEventDetail = record {clubId: ClubId;};
 type ClubDTO = 
  record {
    abbreviatedName: text;
@@ -536,7 +604,40 @@ type Club =
    shirtType: ShirtType;
    thirdColourHex: text;
  };
+type Category = 
+ variant {
+   AnytimeAssist;
+   AnytimeGoalscorer;
+   BothTeamsToScore;
+   BothTeamsToScoreAndWinner;
+   CorrectResult;
+   CorrectScore;
+   FirstAssist;
+   FirstGoalscorer;
+   HalfTimeFullTimeResult;
+   HalfTimeScore;
+   LastAssist;
+   LastGoalscorer;
+   MissPenalty;
+   PenaltyMissed;
+   RedCard;
+   ScoreBrace;
+   ScoreHatrick;
+   YellowCard;
+ };
 type CalendarMonth = nat8;
+type BothTeamsToScoreDetail = record {bothTeamsToScore: bool;};
+type BothTeamsToScoreAndWinnerDetail = 
+ record {
+   bothTeamsToScore: bool;
+   matchResult: MatchResult;
+ };
+type BetResult = 
+ variant {
+   Lost;
+   Open;
+   Won;
+ };
 type AddInitialFixturesDTO = record {seasonFixtures: vec FixtureDTO;};
 service : {
   checkGameweekComplete: (LeagueId, SeasonId, GameweekNumber) -> (bool);
@@ -547,6 +648,7 @@ service : {
   createLeague: (CreateLeagueDTO) -> (Result);
   createNewSeason: (SystemState) -> () oneway;
   createPlayer: (LeagueId, CreatePlayerDTO) -> (Result);
+  getBetslipFixtures: (GetBetslipFixturesDTO) -> (Result_2);
   getClubs: (LeagueId) -> (Result_3) query;
   getFixtures: (LeagueId) -> (Result_2) query;
   getLeagueClubs: () -> (vec record {

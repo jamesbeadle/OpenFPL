@@ -45,6 +45,12 @@ type League =
     teamCount : Nat8
   };
 type LeagueId = Nat16;
+type LeagueStatus =
+  {
+    activeSeasonId : SeasonId;
+    lastConfirmedGameweek : GameweekNumber;
+    leagueId : LeagueId
+  };
 type List<T> = ?(T, List<T>);
 type Player =
   {
@@ -129,6 +135,7 @@ actor {
   stable var leagueClubs : [(LeagueId, [Club])];
   stable var leaguePlayers : [(LeagueId, [Player])];
   stable var leagueSeasons : [(LeagueId, [Season])];
+  stable var leagueStatuses : [LeagueStatus];
   stable var leagues : [League];
   stable var nextClubId : Nat16;
   stable var nextLeagueId : Nat16;

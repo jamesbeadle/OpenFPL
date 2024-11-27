@@ -182,6 +182,25 @@ export function getPositionAbbreviation(position: Position): string {
   }
 }
 
+export function convertPositionToAbbreviation(
+  position: PlayerPosition,
+): string {
+  let positionString = Object.keys(position)[0];
+
+  switch (positionString) {
+    case "Goalkeeper":
+      return "GK";
+    case "Defender":
+      return "DF";
+    case "Midfielder":
+      return "MF";
+    case "Forward":
+      return "FW";
+    default:
+      return "-";
+  }
+}
+
 export function convertDateToReadable(nanoseconds: number): string {
   const milliseconds = nanoseconds / 1e6;
   const date = new Date(milliseconds);
@@ -1052,114 +1071,4 @@ export function calculatePlayerScore(
 
   score += gameweekData.assists * pointsForAssist;
   return score;
-}
-
-export function calculateBonusPoints(
-  gameweekData: GameweekData,
-  fantasyTeam: FantasyTeamSnapshot,
-  points: number,
-): number {
-  if (!gameweekData) {
-    console.error("No gameweek data found:", gameweekData);
-    return 0;
-  }
-
-  let bonusPoints = 0;
-  var pointsForGoal = 0;
-  var pointsForAssist = 0;
-  switch (convertPlayerPosition(gameweekData.player.position)) {
-    case 0:
-      pointsForGoal = 20;
-      pointsForAssist = 15;
-      break;
-    case 1:
-      pointsForGoal = 20;
-      pointsForAssist = 15;
-      break;
-    case 2:
-      pointsForGoal = 15;
-      pointsForAssist = 10;
-      break;
-    case 3:
-      pointsForGoal = 10;
-      pointsForAssist = 10;
-      break;
-  }
-
-  if (
-    fantasyTeam.goalGetterGameweek === gameweekData.gameweek &&
-    fantasyTeam.goalGetterPlayerId === gameweekData.player.id
-  ) {
-    bonusPoints = gameweekData.goals * pointsForGoal * 2;
-  }
-
-  if (
-    fantasyTeam.passMasterGameweek === gameweekData.gameweek &&
-    fantasyTeam.passMasterPlayerId === gameweekData.player.id
-  ) {
-    bonusPoints = gameweekData.assists * pointsForAssist * 2;
-  }
-
-  if (
-    fantasyTeam.noEntryGameweek === gameweekData.gameweek &&
-    fantasyTeam.noEntryPlayerId === gameweekData.player.id &&
-    (convertPlayerPosition(gameweekData.player.position) === 0 ||
-      convertPlayerPosition(gameweekData.player.position) === 1) &&
-    gameweekData.cleanSheets
-  ) {
-    bonusPoints = points * 2;
-  }
-
-  if (
-    fantasyTeam.safeHandsGameweek === gameweekData.gameweek &&
-    convertPlayerPosition(gameweekData.player.position) === 0 &&
-    gameweekData.saves >= 5
-  ) {
-    bonusPoints = points * 2;
-  }
-
-  if (
-    fantasyTeam.captainFantasticGameweek === gameweekData.gameweek &&
-    fantasyTeam.captainId === gameweekData.player.id &&
-    gameweekData.goals > 0
-  ) {
-    bonusPoints = points;
-  }
-
-  if (
-    fantasyTeam.oneNationGameweek === gameweekData.gameweek &&
-    fantasyTeam.oneNationCountryId === gameweekData.player.nationality
-  ) {
-    bonusPoints = points * 2;
-  }
-
-  if (
-    fantasyTeam.prospectsGameweek === gameweekData.gameweek &&
-    calculateAgeFromNanoseconds(Number(gameweekData.player.dateOfBirth)) < 21
-  ) {
-    bonusPoints = points * 2;
-  }
-
-  if (
-    fantasyTeam.braceBonusGameweek === gameweekData.gameweek &&
-    gameweekData.goals >= 2
-  ) {
-    bonusPoints = points;
-  }
-
-  if (
-    fantasyTeam.hatTrickHeroGameweek === gameweekData.gameweek &&
-    gameweekData.goals >= 3
-  ) {
-    bonusPoints = points * 2;
-  }
-
-  if (
-    fantasyTeam.teamBoostGameweek === gameweekData.gameweek &&
-    gameweekData.player.clubId === fantasyTeam.teamBoostClubId
-  ) {
-    bonusPoints = points;
-  }
-
-  return bonusPoints;
 }

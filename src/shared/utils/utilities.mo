@@ -479,32 +479,17 @@ module {
     return List.map(sortedEntries, updatePosition);
   };  
 
-  private func debugLog(text: Text) : async (){
-    let waterway_labs_canister = actor (NetworkEnvironmentVariables.WATERWAY_LABS_BACKEND_CANISTER_ID) : actor {
-      logSystemEvent : (dto: DTOs.SystemEventDTO) -> async ();
-    };
-
-    await waterway_labs_canister.logSystemEvent({
-      eventDetail = text;
-      eventId = 0;
-      eventTime = Time.now();
-      eventTitle = "DEBUG";
-      eventType = #SystemCheck;
-    });
-
+  public func intToNat(input: Int) : Nat {
+    return Nat64.toNat(Int64.toNat64(Int64.fromInt(input)))
   };
 
-public func intToNat(input: Int) : Nat {
-  return Nat64.toNat(Int64.toNat64(Int64.fromInt(input)))
-};
+  public func natToInt(input: Nat) : Int {
+    return Int64.toInt(Int64.fromNat64(Nat64.fromNat(input)));
+  };
 
-public func natToInt(input: Nat) : Int {
-  return Int64.toInt(Int64.fromNat64(Nat64.fromNat(input)));
-};
-
-public func natToFloat(input: Nat) : Float {
-  return Float.fromInt(Int64.toInt(Int64.fromNat64(Nat64.fromNat(input))));
-};
+  public func natToFloat(input: Nat) : Float {
+    return Float.fromInt(Int64.toInt(Int64.fromNat64(Nat64.fromNat(input))));
+  };
 
 
   public func findTiedEntries(entries : List.List<T.LeaderboardEntry>, points : Int16) : List.List<T.LeaderboardEntry> {

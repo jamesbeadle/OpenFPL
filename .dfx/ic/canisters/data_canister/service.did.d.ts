@@ -3,7 +3,33 @@ import type { ActorMethod } from '@dfinity/agent';
 import type { IDL } from '@dfinity/candid';
 
 export interface AddInitialFixturesDTO { 'seasonFixtures' : Array<FixtureDTO> }
+export type BetResult = { 'Won' : null } |
+  { 'Lost' : null } |
+  { 'Open' : null };
+export interface BothTeamsToScoreAndWinnerDetail {
+  'bothTeamsToScore' : boolean,
+  'matchResult' : MatchResult,
+}
+export interface BothTeamsToScoreDetail { 'bothTeamsToScore' : boolean }
 export type CalendarMonth = number;
+export type Category = { 'MissPenalty' : null } |
+  { 'LastAssist' : null } |
+  { 'PenaltyMissed' : null } |
+  { 'FirstAssist' : null } |
+  { 'AnytimeGoalscorer' : null } |
+  { 'CorrectResult' : null } |
+  { 'HalfTimeScore' : null } |
+  { 'BothTeamsToScore' : null } |
+  { 'HalfTimeFullTimeResult' : null } |
+  { 'LastGoalscorer' : null } |
+  { 'RedCard' : null } |
+  { 'ScoreHatrick' : null } |
+  { 'CorrectScore' : null } |
+  { 'AnytimeAssist' : null } |
+  { 'YellowCard' : null } |
+  { 'BothTeamsToScoreAndWinner' : null } |
+  { 'FirstGoalscorer' : null } |
+  { 'ScoreBrace' : null };
 export interface Club {
   'id' : ClubId,
   'secondaryColourHex' : string,
@@ -24,8 +50,10 @@ export interface ClubDTO {
   'shirtType' : ShirtType,
   'primaryColourHex' : string,
 }
+export interface ClubEventDetail { 'clubId' : ClubId }
 export interface ClubFilterDTO { 'clubId' : ClubId, 'leagueId' : LeagueId }
 export type ClubId = number;
+export interface CorrectResultDetail { 'matchResult' : MatchResult }
 export type CountryId = number;
 export interface CreateClubDTO {
   'secondaryColourHex' : string,
@@ -109,9 +137,14 @@ export interface GameweekFiltersDTO {
 export type GameweekNumber = number;
 export type Gender = { 'Male' : null } |
   { 'Female' : null };
+export interface GetBetslipFixturesDTO { 'selections' : Array<Selection> }
 export interface GetPlayerDetailsDTO {
   'playerId' : ClubId,
   'seasonId' : SeasonId,
+}
+export interface HalfTimeFullTimeResultDetail {
+  'fullTimeResult' : MatchResult,
+  'halfTimeResult' : MatchResult,
 }
 export interface InjuryHistory {
   'description' : string,
@@ -131,6 +164,9 @@ export interface LoanPlayerDTO {
   'loanClubId' : ClubId,
   'loanLeagueId' : LeagueId,
 }
+export type MatchResult = { 'HomeWin' : null } |
+  { 'Draw' : null } |
+  { 'AwayWin' : null };
 export interface MoveFixtureDTO {
   'fixtureId' : FixtureId,
   'updatedFixtureGameweek' : GameweekNumber,
@@ -200,6 +236,11 @@ export interface PlayerEventData {
   'eventEndMinute' : number,
   'eventType' : PlayerEventType,
 }
+export interface PlayerEventDetail {
+  'clubId' : ClubId,
+  'playerId' : PlayerId,
+  'minute' : number,
+}
 export type PlayerEventType = { 'PenaltyMissed' : null } |
   { 'Goal' : null } |
   { 'GoalConceded' : null } |
@@ -222,6 +263,10 @@ export interface PlayerGameweekDTO {
   'events' : Array<PlayerEventData>,
   'number' : number,
   'points' : number,
+}
+export interface PlayerGroupEventDetail {
+  'clubId' : ClubId,
+  'playerId' : PlayerId,
 }
 export type PlayerId = number;
 export interface PlayerPointsDTO {
@@ -316,8 +361,40 @@ export interface RevaluePlayerUpDTO {
   'seasonId' : SeasonId,
   'gameweek' : GameweekNumber,
 }
+export interface ScoreDetail { 'homeGoals' : number, 'awayGoals' : number }
 export interface SeasonDTO { 'id' : SeasonId, 'name' : string, 'year' : number }
 export type SeasonId = number;
+export interface Selection {
+  'status' : SelectionStatus,
+  'result' : BetResult,
+  'fixtureId' : FixtureId,
+  'winnings' : number,
+  'odds' : number,
+  'stake' : bigint,
+  'selectionDetail' : SelectionDetail,
+  'selectionType' : Category,
+}
+export type SelectionDetail = { 'MissPenalty' : PlayerEventDetail } |
+  { 'LastAssist' : PlayerEventDetail } |
+  { 'PenaltyMissed' : ClubEventDetail } |
+  { 'FirstAssist' : PlayerEventDetail } |
+  { 'AnytimeGoalscorer' : PlayerEventDetail } |
+  { 'CorrectResult' : CorrectResultDetail } |
+  { 'HalfTimeScore' : ScoreDetail } |
+  { 'BothTeamsToScore' : BothTeamsToScoreDetail } |
+  { 'HalfTimeFullTimeResult' : HalfTimeFullTimeResultDetail } |
+  { 'LastGoalscorer' : PlayerEventDetail } |
+  { 'RedCard' : PlayerEventDetail } |
+  { 'ScoreHatrick' : PlayerGroupEventDetail } |
+  { 'CorrectScore' : ScoreDetail } |
+  { 'AnytimeAssist' : PlayerEventDetail } |
+  { 'YellowCard' : PlayerEventDetail } |
+  { 'BothTeamsToScoreAndWinner' : BothTeamsToScoreAndWinnerDetail } |
+  { 'FirstGoalscorer' : PlayerEventDetail } |
+  { 'ScoreBrace' : PlayerGroupEventDetail };
+export type SelectionStatus = { 'Void' : null } |
+  { 'Unsettled' : null } |
+  { 'Settled' : null };
 export interface SetFreeAgentDTO {
   'clubId' : ClubId,
   'playerId' : ClubId,
@@ -425,6 +502,7 @@ export interface _SERVICE {
   'createLeague' : ActorMethod<[CreateLeagueDTO], Result>,
   'createNewSeason' : ActorMethod<[SystemState], undefined>,
   'createPlayer' : ActorMethod<[LeagueId, CreatePlayerDTO], Result>,
+  'getBetslipFixtures' : ActorMethod<[GetBetslipFixturesDTO], Result_2>,
   'getClubs' : ActorMethod<[LeagueId], Result_3>,
   'getFixtures' : ActorMethod<[LeagueId], Result_2>,
   'getLeagueClubs' : ActorMethod<[], Array<[LeagueId, Array<Club>]>>,

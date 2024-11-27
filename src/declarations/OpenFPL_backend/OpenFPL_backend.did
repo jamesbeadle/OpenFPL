@@ -1,7 +1,7 @@
-type WeeklyRewards = 
+type WeeklyRewardsDTO = 
  record {
    gameweek: GameweekNumber;
-   rewards: List;
+   rewards: vec RewardEntry;
    seasonId: SeasonId;
  };
 type WeeklyLeaderboardDTO = 
@@ -13,7 +13,7 @@ type WeeklyLeaderboardDTO =
  };
 type WeeklyLeaderboard = 
  record {
-   entries: List_1;
+   entries: List;
    gameweek: GameweekNumber;
    seasonId: SeasonId;
    totalEntries: nat;
@@ -69,27 +69,6 @@ type UpdateProfilePictureDTO =
    profilePicture: blob;
  };
 type UpdateFavouriteClubDTO = record {favouriteClubId: ClubId;};
-type TransferResult = 
- variant {
-   Err: TransferError;
-   Ok: BlockIndex;
- };
-type TransferError = 
- variant {
-   BadBurn: record {min_burn_amount: Tokens;};
-   BadFee: record {expected_fee: Tokens;};
-   CreatedInFuture: record {ledger_time: Timestamp;};
-   Duplicate: record {duplicate_of: BlockIndex;};
-   GenericError: record {
-                   error_code: nat;
-                   message: text;
-                 };
-   InsufficientFunds: record {balance: Tokens;};
-   TemporarilyUnavailable;
-   TooOld;
- };
-type Tokens = nat;
-type Timestamp = nat64;
 type SystemStateDTO = 
  record {
    calculationGameweek: GameweekNumber;
@@ -154,17 +133,17 @@ type RewardEntry =
 type Result_9 = 
  variant {
    err: Error;
-   ok: vec SeasonDTO;
+   ok: SeasonLeaderboardDTO;
  };
 type Result_8 = 
  variant {
    err: Error;
-   ok: SystemStateDTO;
+   ok: vec SeasonDTO;
  };
 type Result_7 = 
  variant {
    err: Error;
-   ok: ProfileDTO;
+   ok: SystemStateDTO;
  };
 type Result_6 = 
  variant {
@@ -220,7 +199,7 @@ type Result_20 =
 type Result_2 = 
  variant {
    err: Error;
-   ok: WeeklyRewards;
+   ok: WeeklyRewardsDTO;
  };
 type Result_19 = 
  variant {
@@ -268,12 +247,12 @@ type Result_12 =
 type Result_11 = 
  variant {
    err: Error;
-   ok: GetRewardPoolDTO;
+   ok: ProfileDTO;
  };
 type Result_10 = 
  variant {
    err: Error;
-   ok: SeasonLeaderboardDTO;
+   ok: GetRewardPoolDTO;
  };
 type Result_1 = 
  variant {
@@ -463,14 +442,9 @@ type ManagerDTO =
    weeklyPosition: int;
    weeklyPositionText: text;
  };
-type List_1 = 
- opt record {
-       LeaderboardEntry;
-       List_1;
-     };
 type List = 
  opt record {
-       RewardEntry;
+       LeaderboardEntry;
        List;
      };
 type LeagueId = nat16;
@@ -706,7 +680,6 @@ type CanisterDTO =
    topups: vec CanisterTopup;
  };
 type CalendarMonth = nat8;
-type BlockIndex = nat;
 service : {
   calculateGameweekScores: () -> (Result);
   calculateLeaderboards: () -> (Result);
@@ -731,13 +704,12 @@ service : {
   getPlayersMap: (GameweekFiltersDTO) -> (Result_13);
   getPlayersSnapshot: (GetSnapshotPlayers) -> (vec PlayerDTO) query;
   getPostponedFixtures: () -> (Result_12) composite_query;
-  getProfile: () -> (Result_7);
+  getProfile: () -> (Result_11);
   getRetiredPlayers: (ClubFilterDTO) -> (Result_5) composite_query;
-  getRewardPool: (GetRewardPoolDTO) -> (Result_11);
-  getSeasonLeaderboard: (GetSeasonLeaderboardDTO) -> (Result_10);
-  getSeasons: () -> (Result_9) composite_query;
-  getSystemState: () -> (Result_8) query;
-  getTestManager: () -> (Result_7);
+  getRewardPool: (GetRewardPoolDTO) -> (Result_10);
+  getSeasonLeaderboard: (GetSeasonLeaderboardDTO) -> (Result_9);
+  getSeasons: () -> (Result_8) composite_query;
+  getSystemState: () -> (Result_7) query;
   getTotalManagers: () -> (Result_6) query;
   getVerifiedPlayers: () -> (Result_5);
   getWeeklyCanisters: () -> (Result_4) query;
@@ -747,11 +719,11 @@ service : {
   isUsernameValid: (UsernameFilterDTO) -> (bool) query;
   notifyAppsOfLoan: (LeagueId, PlayerId) -> (Result);
   notifyAppsOfPositionChange: (LeagueId, PlayerId) -> (Result);
+  notifyAppsOfTransfer: (LeagueId, PlayerId) -> (Result);
   payWeeklyRewards: (GameweekNumber) -> (Result);
   saveFantasyTeam: (UpdateTeamSelectionDTO) -> (Result);
   searchUsername: (UsernameFilterDTO) -> (Result_1);
   snapshotManagers: () -> (Result);
-  transferFPLToNewBackendCanister: () -> (TransferResult);
   updateDataHashes: (text) -> (Result);
   updateFavouriteClub: (UpdateFavouriteClubDTO) -> (Result);
   updateProfilePicture: (UpdateProfilePictureDTO) -> (Result);

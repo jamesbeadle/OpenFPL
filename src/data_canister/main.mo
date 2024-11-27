@@ -1439,7 +1439,7 @@ import HashMap "mo:base/HashMap";
 
                 let _ = await updateDataHashes(leagueId, "players");
                 let _ = await updateDataHashes(dto.loanLeagueId, "players");
-                let _ = await notifyAppsOfLoan(leagueId, dto.playerId);
+                let _ = await notifyAppsOfLoan(dto.loanLeagueId, dto.playerId);
                 return #ok();
               };
               case (null){ }
@@ -1468,7 +1468,8 @@ import HashMap "mo:base/HashMap";
 
       movePlayerToLeague(leagueId, dto.clubId, dto.newLeagueId, dto.newClubId, dto.playerId, dto.newShirtNumber);
       let _ = await updateDataHashes(leagueId, "players");
-      
+      let _ = await notifyAppsOfTransfer(leagueId, dto.playerId);
+
       return #ok();
     };
 
@@ -1477,6 +1478,8 @@ import HashMap "mo:base/HashMap";
 
       movePlayerToFreeAgents(leagueId, dto.clubId, dto.playerId);
       let _ = await updateDataHashes(leagueId, "players");
+      let _ = await notifyAppsOfTransfer(leagueId, dto.playerId);
+      
       return #ok();
     };
 
@@ -1486,6 +1489,7 @@ import HashMap "mo:base/HashMap";
       
       //TODO: recall from loan
         //call loan expired callback
+      let _ = await notifyAppsOfTransfer(leagueId, dto.playerId);
       return #err(#NotFound);
     };
 
@@ -1727,6 +1731,7 @@ import HashMap "mo:base/HashMap";
       };
       let _ = await updateDataHashes(leagueId, "players");
       */
+      //TODO notify apps of retirement
       return #err(#NotFound);
     };
 
@@ -3305,6 +3310,11 @@ import HashMap "mo:base/HashMap";
               }
             }
           );
+
+          //TODO: Notify app of player transfers, this has not been happening
+          
+
+
         };
         case (null){ }
       };
@@ -3548,63 +3558,8 @@ import HashMap "mo:base/HashMap";
     };
 
     private func postUpgradeCallback() : async (){
-      //await setSystemTimers();
-      //fixData();
       let _ = await updateDataHashes(1, "players");
       let _ = await updateDataHashes(1, "player_events");
-    };
-
-    private func fixData(){
-      leaguePlayers := Array.map<(FootballTypes.LeagueId, [FootballTypes.Player]), (FootballTypes.LeagueId, [FootballTypes.Player])>(leaguePlayers, func(leaguePlayersEntry: (FootballTypes.LeagueId, [FootballTypes.Player])){
-        return (leaguePlayersEntry.0, Array.map<FootballTypes.Player, FootballTypes.Player>(leaguePlayersEntry.1, func(player: FootballTypes.Player){
-          
-          return {
-            clubId = player.clubId;
-            currentLoanEndDate = player.currentLoanEndDate;
-            dateOfBirth = player.dateOfBirth;
-            firstName = player.firstName;
-            gender = player.gender;
-            id = player.id;
-            injuryHistory = player.injuryHistory;
-            lastName = player.lastName;
-            latestInjuryEndDate = player.latestInjuryEndDate;
-            leagueId = player.leagueId;
-            nationality = player.nationality;
-            parentClubId = player.parentClubId;
-            parentLeagueId = player.parentLeagueId;
-            position = player.position;
-            retirementDate = player.retirementDate;
-            seasons = List.map<FootballTypes.PlayerSeason, FootballTypes.PlayerSeason>(player.seasons, func(playerSeason: FootballTypes.PlayerSeason){
-              return {
-                gameweeks = List.map<FootballTypes.PlayerGameweek, FootballTypes.PlayerGameweek>(playerSeason.gameweeks, func(playerGameweek: FootballTypes.PlayerGameweek){
-                  if(playerGameweek.number == 11){
-                    return {
-                      events = List.filter<FootballTypes.PlayerEventData>(playerGameweek.events, func(eventData: FootballTypes.PlayerEventData){
-                        return eventData.fixtureId > 10;
-                      });
-                      number = playerGameweek.number; 
-                      points = playerGameweek.points;
-                    }
-                  } else {
-                    return playerGameweek;
-                  };
-                  
-                });
-                id = playerSeason.id;
-                totalPoints = playerSeason.totalPoints;
-              };
-            });
-            shirtNumber = player.shirtNumber;
-            status = player.status;
-            transferHistory = player.transferHistory;
-            valueHistory = player.valueHistory;
-            valueQuarterMillions = player.valueQuarterMillions;
-
-          };
-
-          return player;
-        }));
-      });
     };
     
     private func setSystemTimers() : async (){
@@ -3660,6 +3615,18 @@ import HashMap "mo:base/HashMap";
             notifyAppsOfLoan : (leagueId: FootballTypes.LeagueId, playerId: FootballTypes.PlayerId) -> async Result.Result<(), T.Error>;
           };
           let _ = await application_canister.notifyAppsOfLoan(leagueId, playerId);
+        };
+      };
+      return #ok();
+    };
+
+    private func notifyAppsOfTransfer(leagueId: FootballTypes.LeagueId, playerId: FootballTypes.PlayerId) : async Result.Result<(), T.Error> {
+      for(leagueApplication in Iter.fromArray(leagueApplications)){
+        if(leagueApplication.0 == leagueId){
+          let application_canister = actor (leagueApplication.1) : actor {
+            notifyAppsOfTransfer : (leagueId: FootballTypes.LeagueId, playerId: FootballTypes.PlayerId) -> async Result.Result<(), T.Error>;
+          };
+          let _ = await application_canister.notifyAppsOfTransfer(leagueId, playerId);
         };
       };
       return #ok();

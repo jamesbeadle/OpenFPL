@@ -126,16 +126,12 @@ class StoreManager {
         );
         break;
       case "fixtures":
-        systemStore.subscribe(async (systemState) => {
-          const updatedFixtures = await this.fixtureService.getFixtures(
-            systemState?.calculationSeasonId ?? 0,
-          );
-          fixtureStore.setFixtures(updatedFixtures);
-          localStorage.setItem(
-            "fixtures",
-            JSON.stringify(updatedFixtures, replacer),
-          );
-        });
+        const updatedFixtures = await this.fixtureService.getFixtures();
+        fixtureStore.setFixtures(updatedFixtures);
+        localStorage.setItem(
+          "fixtures",
+          JSON.stringify(updatedFixtures, replacer),
+        );
         break;
       case "weekly_leaderboard":
         systemStore.subscribe(async (systemState) => {
