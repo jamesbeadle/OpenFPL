@@ -799,7 +799,7 @@ import Nat8 "mo:base/Nat8";
       //set system state
       //await setSystemTimers();
       //await updateLeaderboardCanisterWasms();
-      await updateManagerCanisterWasms();
+      //await updateManagerCanisterWasms();
       await seasonManager.updateDataHash("system_state");
       await seasonManager.updateDataHash("countries");
       await seasonManager.updateDataHash("clubs");
