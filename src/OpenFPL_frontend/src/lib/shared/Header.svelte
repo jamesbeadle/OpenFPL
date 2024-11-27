@@ -9,17 +9,19 @@
   import { authSignedInStore } from "$lib/derived/auth.derived";
   import { userGetProfilePicture } from "$lib/derived/user.derived";
   import { storeManager } from "$lib/managers/store-manager";
+    import { userStore } from "$lib/stores/user-store";
 
   let menuOpen = false;
   let showProfileDropdown = false;
   let unsubscribeLogin: () => void;
 
   onMount(async () => {
-    if (typeof window !== "undefined") {
-      document.addEventListener("click", closeDropdownOnClickOutside);
-    }
     try {
+      console.log("header loaded")
       await storeManager.syncStores();
+      if (typeof window !== "undefined") {
+        document.addEventListener("click", closeDropdownOnClickOutside);
+      }
     } catch (error) {
       toastsError({
         msg: { text: "Error syncing authentication." },

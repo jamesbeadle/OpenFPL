@@ -3597,7 +3597,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "eaznkn"
+  version_hash: "f95ic7"
 };
 async function get_hooks() {
   return {};
@@ -12010,6 +12010,7 @@ class StoreManager {
     this.weeklyLeaderboardService = new WeeklyLeaderboardService();
   }
   async syncStores() {
+    await userStore.sync();
     const newHashes = await this.dataHashService.getDataHashes();
     let error = isError(newHashes);
     if (error) {

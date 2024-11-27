@@ -18,6 +18,7 @@ import { FixtureService } from "$lib/services/fixture-service";
 import { WeeklyLeaderboardService } from "$lib/services/weekly-leaderboard-service";
 
 import { isError, replacer } from "$lib/utils/helpers";
+import { userStore } from "$lib/stores/user-store";
 
 class StoreManager {
   private dataHashService: DataHashService;
@@ -53,6 +54,7 @@ class StoreManager {
   }
 
   async syncStores(): Promise<void> {
+    await userStore.sync();
     const newHashes = await this.dataHashService.getDataHashes();
 
     let error = isError(newHashes);

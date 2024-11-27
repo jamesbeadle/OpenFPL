@@ -1,10 +1,9 @@
 import { authStore } from "$lib/stores/auth.store";
 import { systemStore } from "$lib/stores/system-store";
-import { isError, replacer } from "$lib/utils/helpers";
+import { isError } from "$lib/utils/helpers";
 import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
-  DataHashDTO,
   FantasyTeamSnapshot,
   GetFantasyTeamSnapshotDTO,
   RequestManagerDTO,
