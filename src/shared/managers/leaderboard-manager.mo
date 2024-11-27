@@ -380,13 +380,26 @@ module {
       await leaderboard_canister.finaliseUpdate(seasonId, 0, gameweek);
     
       if(gameweek == 0 and month == 0){
-        let seasonCanisterIdsBuffer = Buffer.fromArray<(FootballTypes.SeasonId, Base.CanisterId)>(seasonLeaderboardCanisters);
-        seasonCanisterIdsBuffer.add(seasonId, activeCanisterId);
-        seasonLeaderboardCanisters := Buffer.toArray(seasonCanisterIdsBuffer);
+        addSeasonLeaderboardCanisterId(seasonId);
         return;
       };
 
       if(month == 0){
+        addWeeklyLeaderboardCanisterId(seasonId, gameweek);
+        return;
+      };
+
+      addMonthlyLeaderboardCanisterId(seasonId, month);
+
+    };
+
+    private func addSeasonLeaderboardCanisterId(seasonId: FootballTypes.SeasonId){
+      let seasonCanisterIdsBuffer = Buffer.fromArray<(FootballTypes.SeasonId, Base.CanisterId)>(seasonLeaderboardCanisters);
+      seasonCanisterIdsBuffer.add(seasonId, activeCanisterId);
+      seasonLeaderboardCanisters := Buffer.toArray(seasonCanisterIdsBuffer);
+    };
+    
+    private func addWeeklyLeaderboardCanisterId(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber){
         
         let weeklyLeaderboardCanisterBuffer = Buffer.fromArray<(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, Base.CanisterId)])>([]);
         var seasonExists = false;
@@ -419,14 +432,13 @@ module {
         };
         
         weeklyLeaderboardCanisters := Buffer.toArray(weeklyLeaderboardCanisterBuffer);
-        return;
-      };
+    };
+
+    private func addMonthlyLeaderboardCanisterId(seasonId: FootballTypes.SeasonId, month: Base.CalendarMonth){
 
       let monthCanisterIdsBuffer = Buffer.fromArray<(FootballTypes.SeasonId, [(Base.CalendarMonth, Base.CanisterId)])>(monthlyLeaderboardCanisters);
       monthCanisterIdsBuffer.add(seasonId, [(month, activeCanisterId)]);
       monthlyLeaderboardCanisters := Buffer.toArray(monthCanisterIdsBuffer);
-     
-
     };
 
     private func groupByTeam(snapshots : [T.FantasyTeamSnapshot]) : TrieMap.TrieMap<FootballTypes.ClubId, [T.FantasyTeamSnapshot]> {
@@ -758,6 +770,18 @@ module {
 
     public func setStableActiveCanisterId(stable_active_canister_id: Base.CanisterId){
       activeCanisterId := stable_active_canister_id;
+    };
+
+    public func fixData() {
+      weeklyLeaderboardCanisters := [
+        (1, 
+          [
+            (9, "n26sp-cqaaa-aaaal-qna7q-cai"),
+            (10, "n26sp-cqaaa-aaaal-qna7q-cai"),
+            (11, "n26sp-cqaaa-aaaal-qna7q-cai"),
+            (12, "n26sp-cqaaa-aaaal-qna7q-cai")
+          ])
+      ];
     };
   };
 };

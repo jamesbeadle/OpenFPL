@@ -794,7 +794,7 @@ import Nat8 "mo:base/Nat8";
     private func postUpgradeCallback() : async (){
      
       await checkCanisterCycles();
-      
+      //leaderboardManager.fixData();
       //TODO (GO LIVE)
       //set system state
       //await setSystemTimers();
