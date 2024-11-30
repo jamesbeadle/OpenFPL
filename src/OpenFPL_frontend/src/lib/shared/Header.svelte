@@ -17,7 +17,6 @@
 
   onMount(async () => {
     try {
-      console.log("header loaded")
       await storeManager.syncStores();
       if (typeof window !== "undefined") {
         document.addEventListener("click", closeDropdownOnClickOutside);

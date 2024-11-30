@@ -135,8 +135,6 @@
         selectedSeasonId,
         selectedGameweek
       );
-      console.log("rewardsResult");
-      console.log(rewardsResult);
 
       if (rewardsResult) {
         leaderboard.entries = mergeLeaderboardWithRewards(
@@ -157,23 +155,15 @@
   }
 
   function mergeLeaderboardWithRewards(
-    leaderboardEntries: LeaderboardEntry[], // Now accepting an array of entries
+    leaderboardEntries: LeaderboardEntry[],
     rewards: RewardEntry[]
   ): LeaderboardEntry[] {
 
-    // Create a map of rewards keyed by principalId
     const rewardMap = new Map(
       rewards.map((reward) => [reward.principalId, reward.amount])
     );
-
-    console.log("Leaderboard Principal IDs:", leaderboardEntries.map(e => e.principalId));
-    console.log("Reward Principal IDs:", rewards.map(r => r.principalId));
-
-    console.log("Leaderboard Entries:", leaderboardEntries);
-    console.log("Rewards Map:", rewardMap);
     
 
-    // Map over leaderboard entries and add the reward field
     return leaderboardEntries.map((entry) => ({
       ...entry,
       reward: rewardMap.get(entry.principalId) ?? 0,
