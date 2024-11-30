@@ -133,17 +133,17 @@ type RewardEntry =
 type Result_9 = 
  variant {
    err: Error;
-   ok: SeasonLeaderboardDTO;
+   ok: vec SeasonDTO;
  };
 type Result_8 = 
  variant {
    err: Error;
-   ok: vec SeasonDTO;
+   ok: SystemStateDTO;
  };
 type Result_7 = 
  variant {
    err: Error;
-   ok: SystemStateDTO;
+   ok: PickTeamDTO;
  };
 type Result_6 = 
  variant {
@@ -194,7 +194,7 @@ type Result_21 =
 type Result_20 = 
  variant {
    err: Error;
-   ok: PickTeamDTO;
+   ok: vec DataHashDTO;
  };
 type Result_2 = 
  variant {
@@ -204,34 +204,29 @@ type Result_2 =
 type Result_19 = 
  variant {
    err: Error;
-   ok: vec DataHashDTO;
+   ok: FantasyTeamSnapshotDTO;
  };
 type Result_18 = 
  variant {
    err: Error;
-   ok: FantasyTeamSnapshotDTO;
+   ok: vec CanisterId;
  };
 type Result_17 = 
  variant {
    err: Error;
-   ok: vec CanisterId;
+   ok: MonthlyLeaderboardDTO;
  };
 type Result_16 = 
  variant {
    err: Error;
-   ok: MonthlyLeaderboardDTO;
+   ok: PlayerDetailDTO;
  };
 type Result_15 = 
  variant {
    err: Error;
-   ok: PlayerDetailDTO;
- };
-type Result_14 = 
- variant {
-   err: Error;
    ok: vec PlayerPointsDTO;
  };
-type Result_13 = 
+type Result_14 = 
  variant {
    err: Error;
    ok: vec record {
@@ -239,20 +234,25 @@ type Result_13 =
              PlayerScoreDTO;
            };
  };
-type Result_12 = 
+type Result_13 = 
  variant {
    err: Error;
    ok: vec FixtureDTO;
  };
-type Result_11 = 
+type Result_12 = 
  variant {
    err: Error;
    ok: ProfileDTO;
  };
-type Result_10 = 
+type Result_11 = 
  variant {
    err: Error;
    ok: GetRewardPoolDTO;
+ };
+type Result_10 = 
+ variant {
+   err: Error;
+   ok: SeasonLeaderboardDTO;
  };
 type Result_1 = 
  variant {
@@ -688,28 +688,30 @@ service : {
   getCanisters: (GetCanistersDTO) -> (Result_23);
   getClubs: () -> (Result_22) composite_query;
   getCountries: () -> (Result_21) query;
-  getCurrentTeam: () -> (Result_20);
-  getDataHashes: () -> (Result_19) composite_query;
-  getFantasyTeamSnapshot: (GetFantasyTeamSnapshotDTO) -> (Result_18);
-  getFixtures: (LeagueId) -> (Result_12) composite_query;
-  getLeaderboardCanisterIds: () -> (Result_17);
+  getCurrentTeam: () -> (Result_7);
+  getDataHashes: () -> (Result_20) composite_query;
+  getFantasyTeamSnapshot: (GetFantasyTeamSnapshotDTO) -> (Result_19);
+  getFixtures: (LeagueId) -> (Result_13) composite_query;
+  getLeaderboardCanisterIds: () -> (Result_18);
   getLoanedPlayers: (ClubFilterDTO) -> (Result_5) composite_query;
   getManager: (RequestManagerDTO) -> (Result_1);
-  getManagerCanisterIds: () -> (Result_17);
-  getMonthlyLeaderboard: (GetMonthlyLeaderboardDTO) -> (Result_16);
-  getPlayerDetails: (GetPlayerDetailsDTO) -> (Result_15);
+  getManagerCanisterIds: () -> (Result_18);
+  getMonthlyLeaderboard: (GetMonthlyLeaderboardDTO) -> (Result_17);
+  getPlayerDetails: (GetPlayerDetailsDTO) -> (Result_16);
   getPlayerDetailsForGameweek: (GameweekFiltersDTO) ->
-   (Result_14) composite_query;
+   (Result_15) composite_query;
   getPlayers: () -> (Result_5) composite_query;
-  getPlayersMap: (GameweekFiltersDTO) -> (Result_13);
+  getPlayersMap: (GameweekFiltersDTO) -> (Result_14);
   getPlayersSnapshot: (GetSnapshotPlayers) -> (vec PlayerDTO) query;
-  getPostponedFixtures: () -> (Result_12) composite_query;
-  getProfile: () -> (Result_11);
+  getPostponedFixtures: () -> (Result_13) composite_query;
+  getProfile: () -> (Result_12);
   getRetiredPlayers: (ClubFilterDTO) -> (Result_5) composite_query;
-  getRewardPool: (GetRewardPoolDTO) -> (Result_10);
-  getSeasonLeaderboard: (GetSeasonLeaderboardDTO) -> (Result_9);
-  getSeasons: () -> (Result_8) composite_query;
-  getSystemState: () -> (Result_7) query;
+  getRewardPool: (GetRewardPoolDTO) -> (Result_11);
+  getSantiTeam: () -> (Result_7);
+  getSeasonLeaderboard: (GetSeasonLeaderboardDTO) -> (Result_10);
+  getSeasons: () -> (Result_9) composite_query;
+  getSystemState: () -> (Result_8) query;
+  getTeejayTeam: () -> (Result_7);
   getTotalManagers: () -> (Result_6) query;
   getVerifiedPlayers: () -> (Result_5);
   getWeeklyCanisters: () -> (Result_4) query;

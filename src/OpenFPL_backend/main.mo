@@ -982,5 +982,15 @@ import Nat8 "mo:base/Nat8";
       await userManager.removePlayerFromTeams(leagueId, playerId, Environment.BACKEND_CANISTER_ID);
       return #ok();
     };
+
+    public shared func getSantiTeam() : async Result.Result<DTOs.PickTeamDTO, T.Error> {
+
+        return await userManager.getCurrentTeam("hleiq-733i7-v4lpr-icvux-5zb3v-2l7my-wkolj-k3btw-f2mm2-zqxz6-qae", 1, 14);
+    };
+
+    public shared func getTeejayTeam() : async Result.Result<DTOs.PickTeamDTO, T.Error> {
+
+        return await userManager.getCurrentTeam("rh66j-xmyrv-sg7xg-sgjpo-bk3st-tqwkj-3mxjr-enyr7-par4b-vuorx-zqe", 1, 14);
+    };
     
   };
