@@ -1234,7 +1234,7 @@ import HashMap "mo:base/HashMap";
       };
 
       leaguePlayers := Buffer.toArray(updatedLeaguePlayersBuffer);
-      let _ = await updateDataHashes(leagueId, "players");
+      ignore updateDataHashes(leagueId, "players");
 
       return #ok();
     };
@@ -1311,7 +1311,7 @@ import HashMap "mo:base/HashMap";
       };
 
       leaguePlayers := Buffer.toArray(updatedLeaguePlayersBuffer);
-      let _ = await updateDataHashes(leagueId, "players");
+      ignore updateDataHashes(leagueId, "players");
 
       return #ok();
     };
@@ -1370,7 +1370,7 @@ import HashMap "mo:base/HashMap";
               } else { return entry }
             });
 
-        let _ = await updateDataHashes(leagueId, "players");
+        ignore updateDataHashes(leagueId, "players");
       } else {
 
         let currentLeaguePlayersSet = Array.find<(FootballTypes.LeagueId, [FootballTypes.Player])>(leaguePlayers, func(playersSet: (FootballTypes.LeagueId, [FootballTypes.Player])) : Bool {
@@ -1435,11 +1435,11 @@ import HashMap "mo:base/HashMap";
                 );
 
                 let loanTimerDuration = #nanoseconds(Int.abs((dto.loanEndDate - Time.now())));
-                await setAndBackupTimer(loanTimerDuration, "loanExpired");
+                ignore setAndBackupTimer(loanTimerDuration, "loanExpired");
 
-                let _ = await updateDataHashes(leagueId, "players");
-                let _ = await updateDataHashes(dto.loanLeagueId, "players");
-                let _ = await notifyAppsOfLoan(dto.loanLeagueId, dto.playerId);
+                ignore updateDataHashes(leagueId, "players");
+                ignore updateDataHashes(dto.loanLeagueId, "players");
+                ignore notifyAppsOfLoan(dto.loanLeagueId, dto.playerId);
                 return #ok();
               };
               case (null){ }
@@ -1456,19 +1456,19 @@ import HashMap "mo:base/HashMap";
 
       if(dto.newClubId == 0 and dto.newLeagueId == 0){
         movePlayerToFreeAgents(leagueId, dto.clubId, dto.playerId);
-        let _ = await updateDataHashes(leagueId, "players");
+        ignore updateDataHashes(leagueId, "players");
         return #ok();
       };
 
       if(dto.newLeagueId == leagueId){
         movePlayerWithinLeague(leagueId, dto.newClubId, dto.playerId, dto.newShirtNumber);
-        let _ = await updateDataHashes(leagueId, "players");
+        ignore updateDataHashes(leagueId, "players");
         return #ok();
       };
 
       movePlayerToLeague(leagueId, dto.clubId, dto.newLeagueId, dto.newClubId, dto.playerId, dto.newShirtNumber);
-      let _ = await updateDataHashes(leagueId, "players");
-      let _ = await notifyAppsOfTransfer(leagueId, dto.playerId);
+      ignore updateDataHashes(leagueId, "players");
+      ignore notifyAppsOfTransfer(leagueId, dto.playerId);
 
       return #ok();
     };
@@ -1477,8 +1477,8 @@ import HashMap "mo:base/HashMap";
       assert callerAllowed(caller);
 
       movePlayerToFreeAgents(leagueId, dto.clubId, dto.playerId);
-      let _ = await updateDataHashes(leagueId, "players");
-      let _ = await notifyAppsOfTransfer(leagueId, dto.playerId);
+      ignore updateDataHashes(leagueId, "players");
+      ignore notifyAppsOfTransfer(leagueId, dto.playerId);
       
       return #ok();
     };
@@ -1489,7 +1489,7 @@ import HashMap "mo:base/HashMap";
       
       //TODO: recall from loan
         //call loan expired callback
-      let _ = await notifyAppsOfTransfer(leagueId, dto.playerId);
+      ignore notifyAppsOfTransfer(leagueId, dto.playerId);
       return #err(#NotFound);
     };
 
@@ -1539,7 +1539,7 @@ import HashMap "mo:base/HashMap";
           });
 
           nextPlayerId += 1;
-          let _ = await updateDataHashes(leagueId, "players");
+          ignore updateDataHashes(leagueId, "players");
           return #ok();
           
         };
@@ -1609,10 +1609,10 @@ import HashMap "mo:base/HashMap";
       });
 
       if(positionUpdated){
-        let _ = await notifyAppsOfPositionChange(leagueId, dto.playerId);
+        ignore notifyAppsOfPositionChange(leagueId, dto.playerId);
       };
 
-      let _ = await updateDataHashes(leagueId, "players");
+      ignore updateDataHashes(leagueId, "players");
       return #ok();
     };
 
@@ -1683,8 +1683,8 @@ import HashMap "mo:base/HashMap";
       );
 
       let playerInjuryDuration = #nanoseconds(Int.abs((dto.expectedEndDate - Time.now())));
-      await setAndBackupTimer(playerInjuryDuration, "injuryExpired");
-      let _ = await updateDataHashes(leagueId, "players");
+      ignore setAndBackupTimer(playerInjuryDuration, "injuryExpired");
+      ignore updateDataHashes(leagueId, "players");
       return #ok();
     };
 
@@ -1729,7 +1729,7 @@ import HashMap "mo:base/HashMap";
           );
         };
       };
-      let _ = await updateDataHashes(leagueId, "players");
+      ignore updateDataHashes(leagueId, "players");
       */
       //TODO notify apps of retirement
       return #err(#NotFound);
@@ -1774,7 +1774,7 @@ import HashMap "mo:base/HashMap";
           );
         };
       };
-      let _ = await updateDataHashes(leagueId, "players");
+      ignore updateDataHashes(leagueId, "players");
       */
       return #err(#NotFound);
     };
@@ -1896,7 +1896,7 @@ import HashMap "mo:base/HashMap";
           } else { return leagueSeasonEntry}
         }
       );
-      let _ = await updateDataHashes(dto.leagueId, "fixtures");
+      ignore updateDataHashes(dto.leagueId, "fixtures");
       return #ok();
     };
 
@@ -1952,7 +1952,7 @@ import HashMap "mo:base/HashMap";
           } else { return leagueSeasonEntry}
         }
       );
-      let _ = await updateDataHashes(dto.leagueId, "fixtures");
+      ignore updateDataHashes(dto.leagueId, "fixtures");
       return #ok();
     };
 
@@ -1992,9 +1992,9 @@ import HashMap "mo:base/HashMap";
                     }
                   };
                   finaliseFixture(dto.leagueId, dto.seasonId, dto.fixtureId, highestScoringPlayerId);
-                  let _ = await updateDataHashes(dto.leagueId, "players");
-                  let _ = await updateDataHashes(dto.leagueId, "fixtures");
-                  let _ = await updateDataHashes(dto.leagueId, "player_events");
+                  ignore updateDataHashes(dto.leagueId, "players");
+                  ignore updateDataHashes(dto.leagueId, "fixtures");
+                  ignore updateDataHashes(dto.leagueId, "player_events");
                 };
               };
             };
@@ -2126,7 +2126,7 @@ import HashMap "mo:base/HashMap";
         let clubsBuffer = Buffer.fromArray<T.Club>(clubs);
         clubsBuffer.add(newClub);
         clubs := Buffer.toArray(clubsBuffer);
-      let _ = await updateDataHashes(leagueId, "clubs");
+      ignore updateDataHashes(leagueId, "clubs");
         return #ok();
         */
 
@@ -2201,7 +2201,7 @@ import HashMap "mo:base/HashMap";
             },
         );
         return #ok();
-      let _ = await updateDataHashes(leagueId, "clubs");
+      ignore updateDataHashes(leagueId, "clubs");
         */
       return #err(#NotFound);
     };
@@ -2240,7 +2240,7 @@ import HashMap "mo:base/HashMap";
           nextSeasonId := nextSeasonId;
         };
       };
-      let _ = await updateDataHashes(leagueId, "seasons");
+      ignore updateDataHashes(leagueId, "seasons");
       */
     };
 
@@ -3523,7 +3523,7 @@ import HashMap "mo:base/HashMap";
           playerId = player.id;
         };
 
-        await executeRecallPlayer(recallPlayerDTO);
+        ignore executeRecallPlayer(recallPlayerDTO);
       };
       */
     };
@@ -3541,7 +3541,7 @@ import HashMap "mo:base/HashMap";
       );
 
       for (player in Iter.fromArray(playersNoLongerInjured)) {
-        let _ = await executeResetPlayerInjury(player.id);
+        ignore executeResetPlayerInjury(player.id);
       };
       return #ok();
       */
@@ -3558,8 +3558,6 @@ import HashMap "mo:base/HashMap";
     };
 
     private func postUpgradeCallback() : async (){
-      let _ = await updateDataHashes(1, "players");
-      let _ = await updateDataHashes(1, "player_events");
     };
     
     private func setSystemTimers() : async (){
@@ -3590,7 +3588,7 @@ import HashMap "mo:base/HashMap";
           let application_canister = actor (leagueApplication.1) : actor {
             updateDataHashes : (category: Text) -> async Result.Result<(), T.Error>;
           };
-          let _ = await application_canister.updateDataHashes(category);
+         ignore application_canister.updateDataHashes(category);
         };
       };
       return #ok();
@@ -3602,7 +3600,7 @@ import HashMap "mo:base/HashMap";
           let application_canister = actor (leagueApplication.1) : actor {
             notifyAppsOfPositionChange : (leagueId: FootballTypes.LeagueId, playerId: FootballTypes.PlayerId) -> async Result.Result<(), T.Error>;
           };
-          let _ = await application_canister.notifyAppsOfPositionChange(leagueId, playerId);
+          ignore application_canister.notifyAppsOfPositionChange(leagueId, playerId);
         };
       };
       return #ok();
@@ -3614,7 +3612,7 @@ import HashMap "mo:base/HashMap";
           let application_canister = actor (leagueApplication.1) : actor {
             notifyAppsOfLoan : (leagueId: FootballTypes.LeagueId, playerId: FootballTypes.PlayerId) -> async Result.Result<(), T.Error>;
           };
-          let _ = await application_canister.notifyAppsOfLoan(leagueId, playerId);
+          ignore application_canister.notifyAppsOfLoan(leagueId, playerId);
         };
       };
       return #ok();
@@ -3626,7 +3624,7 @@ import HashMap "mo:base/HashMap";
           let application_canister = actor (leagueApplication.1) : actor {
             notifyAppsOfTransfer : (leagueId: FootballTypes.LeagueId, playerId: FootballTypes.PlayerId) -> async Result.Result<(), T.Error>;
           };
-          let _ = await application_canister.notifyAppsOfTransfer(leagueId, playerId);
+          ignore application_canister.notifyAppsOfTransfer(leagueId, playerId);
         };
       };
       return #ok();

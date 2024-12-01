@@ -316,7 +316,7 @@ import Nat8 "mo:base/Nat8";
     public shared ({ caller }) func updateDataHashes(category: Text) : async Result.Result<(), T.Error> {
       assert not Principal.isAnonymous(caller);
       assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
-      await seasonManager.updateDataHash(category);      
+      ignore seasonManager.updateDataHash(category);      
       return #ok();
     };
 
@@ -568,7 +568,7 @@ import Nat8 "mo:base/Nat8";
               Principal.toText(foundCanisterId) == "bgpwv-eqaaa-aaaal-qb6eq-cai" or 
               Principal.toText(foundCanisterId) == "hqfmc-cqaaa-aaaal-qitcq-cai";
             if(not ignoreCanister){
-              await queryAndTopupCanister(Principal.toText(foundCanisterId), 50_000_000_000_000, 25_000_000_000_000);
+              ignore queryAndTopupCanister(Principal.toText(foundCanisterId), 50_000_000_000_000, 25_000_000_000_000);
             }
           };
           case (null){}
@@ -576,26 +576,26 @@ import Nat8 "mo:base/Nat8";
       };
 
       //TODO: Remove after assigned to SNS
-      await queryAndTopupCanister(Environment.FRONTEND_CANISTER_ID, 50_000_000_000_000, 25_000_000_000_000);
-      await queryAndTopupCanister(NetworkEnvironmentVariables.DATA_CANISTER_ID, 50_000_000_000_000, 25_000_000_000_000);
+      ignore queryAndTopupCanister(Environment.FRONTEND_CANISTER_ID, 50_000_000_000_000, 25_000_000_000_000);
+      ignore queryAndTopupCanister(NetworkEnvironmentVariables.DATA_CANISTER_ID, 50_000_000_000_000, 25_000_000_000_000);
        
       let managerCanisterIds = userManager.getUniqueManagerCanisterIds();
       for(canisterId in Iter.fromArray(managerCanisterIds)){
-        await queryAndTopupCanister(canisterId, 50_000_000_000_000, 25_000_000_000_000);
+        ignore queryAndTopupCanister(canisterId, 50_000_000_000_000, 25_000_000_000_000);
       };
 
       let leaderboardCanisterIds = leaderboardManager.getUniqueLeaderboardCanisterIds();
       for(canisterId in Iter.fromArray(leaderboardCanisterIds)){
-        await queryAndTopupCanister(canisterId, 50_000_000_000_000, 25_000_000_000_000);
+        ignore queryAndTopupCanister(canisterId, 50_000_000_000_000, 25_000_000_000_000);
       };
 
-      await topupCanister(summaryResult.index, 50_000_000_000_000, 25_000_000_000_000);
-      await topupCanister(summaryResult.governance, 50_000_000_000_000, 25_000_000_000_000);
-      await topupCanister(summaryResult.ledger, 50_000_000_000_000, 25_000_000_000_000);
-      await topupCanister(summaryResult.root, 50_000_000_000_000, 25_000_000_000_000);
-      await topupCanister(summaryResult.swap, 5_000_000_000_000, 2_500_000_000_000);
+      ignore topupCanister(summaryResult.index, 50_000_000_000_000, 25_000_000_000_000);
+      ignore topupCanister(summaryResult.governance, 50_000_000_000_000, 25_000_000_000_000);
+      ignore topupCanister(summaryResult.ledger, 50_000_000_000_000, 25_000_000_000_000);
+      ignore topupCanister(summaryResult.root, 50_000_000_000_000, 25_000_000_000_000);
+      ignore topupCanister(summaryResult.swap, 5_000_000_000_000, 2_500_000_000_000);
       for(canisterId in Iter.fromArray(summaryResult.archives)){
-        await topupCanister(?canisterId, 5_000_000_000_000, 2_500_000_000_000);
+        ignore topupCanister(?canisterId, 5_000_000_000_000, 2_500_000_000_000);
       };
       
       ignore Timer.setTimer<system>(#nanoseconds(Int.abs(86_400_000_000_000)), checkCanisterCycles);
@@ -611,7 +611,7 @@ import Nat8 "mo:base/Nat8";
                   case (?foundCanisterId){
                     let IC : Management.Management = actor (NetworkEnvironmentVariables.Default);
                     let canisterActor = actor (Principal.toText(foundCanisterId)) : actor { };
-                    await Utilities.topup_canister_(canisterActor, IC, topupAmount);
+                    ignore Utilities.topup_canister_(canisterActor, IC, topupAmount);
                     
                     let topupsBuffer = Buffer.fromArray<Base.CanisterTopup>(topups);
                     topupsBuffer.add({
@@ -642,7 +642,7 @@ import Nat8 "mo:base/Nat8";
         case (?canisterStatus){
       
           if(canisterStatus.cycles < cyclesTriggerAmount){
-            await Utilities.topup_canister_(canisterActor, IC, topupAmount);
+            ignore Utilities.topup_canister_(canisterActor, IC, topupAmount);
             let topupsBuffer = Buffer.fromArray<Base.CanisterTopup>(topups);
             topupsBuffer.add({
               canisterId = canisterId; 
@@ -792,23 +792,23 @@ import Nat8 "mo:base/Nat8";
     };
 
     private func postUpgradeCallback() : async (){
-     
-      await checkCanisterCycles();
-      //leaderboardManager.fixData();
+    
       //TODO (GO LIVE)
       //set system state
-      //await setSystemTimers();
-      //await updateLeaderboardCanisterWasms();
-      //await updateManagerCanisterWasms();
-      await seasonManager.updateDataHash("system_state");
-      await seasonManager.updateDataHash("countries");
-      await seasonManager.updateDataHash("clubs");
-      await seasonManager.updateDataHash("fixtures");
-      await seasonManager.updateDataHash("players");
-      await seasonManager.updateDataHash("player_events");
-      await seasonManager.updateDataHash("weekly_leaderboard");
-      await seasonManager.updateDataHash("monthly_leaderboards");
-      await seasonManager.updateDataHash("season_leaderboard");
+      //ignore setSystemTimers();
+    
+      ignore updateLeaderboardCanisterWasms();
+      ignore updateManagerCanisterWasms();
+      ignore seasonManager.updateDataHash("system_state");
+      ignore seasonManager.updateDataHash("countries");
+      ignore seasonManager.updateDataHash("clubs");
+      ignore seasonManager.updateDataHash("fixtures");
+      ignore seasonManager.updateDataHash("players");
+      ignore seasonManager.updateDataHash("player_events");
+      ignore seasonManager.updateDataHash("weekly_leaderboard");
+      ignore seasonManager.updateDataHash("monthly_leaderboards");
+      ignore seasonManager.updateDataHash("season_leaderboard");
+      ignore checkCanisterCycles();
     };
 
     private func updateManagerCanisterWasms() : async (){
@@ -979,7 +979,7 @@ import Nat8 "mo:base/Nat8";
 
     public shared ({ caller }) func notifyAppsOfPositionChange(leagueId: FootballTypes.LeagueId, playerId: FootballTypes.PlayerId) : async Result.Result<(), T.Error> {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
-      await userManager.removePlayerFromTeams(leagueId, playerId, Environment.BACKEND_CANISTER_ID);
+      ignore userManager.removePlayerFromTeams(leagueId, playerId, Environment.BACKEND_CANISTER_ID);
       return #ok();
     };
 

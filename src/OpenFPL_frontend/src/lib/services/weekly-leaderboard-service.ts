@@ -4,6 +4,7 @@ import { isError } from "../utils/helpers";
 import type {
   GetWeeklyLeaderboardDTO,
   WeeklyLeaderboardDTO,
+  WeeklyRewardsDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 export class WeeklyLeaderboardService {
@@ -33,10 +34,15 @@ export class WeeklyLeaderboardService {
     return result.ok;
   }
 
-  async getWeeklyRewards(seasonId: number, gameweek: number): Promise<any> {
+  async getWeeklyRewards(
+    seasonId: number,
+    gameweek: number,
+  ): Promise<WeeklyRewardsDTO | null> {
     const result = await this.actor.getWeeklyRewards(seasonId, gameweek);
-    if (isError(result))
-      throw new Error("Failed to fetch weekly leaderboard rewards");
+    if (isError(result)) {
+      return null;
+    }
+
     return result.ok;
   }
 }

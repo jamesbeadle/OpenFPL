@@ -142,7 +142,6 @@
           rewardsResult.rewards
         );
       } else {
-        console.error("Error fetching rewards:", rewardsResult.err);
         leaderboard.entries = mergeLeaderboardWithRewards(leaderboard.entries, []);
       }
 

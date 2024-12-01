@@ -3597,7 +3597,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "xu9lf4"
+  version_hash: "qh123a"
 };
 async function get_hooks() {
   return {};
@@ -3900,9 +3900,9 @@ const idlFactory = ({ IDL }) => {
     "canisterId": CanisterId,
     "monthlyBonusesAvailable": IDL.Nat8
   });
-  const Result_20 = IDL.Variant({ "ok": PickTeamDTO, "err": Error2 });
+  const Result_7 = IDL.Variant({ "ok": PickTeamDTO, "err": Error2 });
   const DataHashDTO = IDL.Record({ "hash": IDL.Text, "category": IDL.Text });
-  const Result_19 = IDL.Variant({ "ok": IDL.Vec(DataHashDTO), "err": Error2 });
+  const Result_20 = IDL.Variant({ "ok": IDL.Vec(DataHashDTO), "err": Error2 });
   const SeasonId = IDL.Nat16;
   const PrincipalId = IDL.Text;
   const GetFantasyTeamSnapshotDTO = IDL.Record({
@@ -3946,7 +3946,7 @@ const idlFactory = ({ IDL }) => {
     "points": IDL.Int16,
     "monthlyBonusesAvailable": IDL.Nat8
   });
-  const Result_18 = IDL.Variant({
+  const Result_19 = IDL.Variant({
     "ok": FantasyTeamSnapshotDTO,
     "err": Error2
   });
@@ -3993,8 +3993,8 @@ const idlFactory = ({ IDL }) => {
     "gameweek": GameweekNumber,
     "awayGoals": IDL.Nat8
   });
-  const Result_12 = IDL.Variant({ "ok": IDL.Vec(FixtureDTO), "err": Error2 });
-  const Result_17 = IDL.Variant({ "ok": IDL.Vec(CanisterId), "err": Error2 });
+  const Result_13 = IDL.Variant({ "ok": IDL.Vec(FixtureDTO), "err": Error2 });
+  const Result_18 = IDL.Variant({ "ok": IDL.Vec(CanisterId), "err": Error2 });
   const ClubFilterDTO = IDL.Record({
     "clubId": ClubId,
     "leagueId": LeagueId
@@ -4108,7 +4108,7 @@ const idlFactory = ({ IDL }) => {
     "seasonId": SeasonId,
     "entries": IDL.Vec(LeaderboardEntry)
   });
-  const Result_16 = IDL.Variant({
+  const Result_17 = IDL.Variant({
     "ok": MonthlyLeaderboardDTO,
     "err": Error2
   });
@@ -4151,7 +4151,7 @@ const idlFactory = ({ IDL }) => {
     "lastName": IDL.Text,
     "firstName": IDL.Text
   });
-  const Result_15 = IDL.Variant({ "ok": PlayerDetailDTO, "err": Error2 });
+  const Result_16 = IDL.Variant({ "ok": PlayerDetailDTO, "err": Error2 });
   const GameweekFiltersDTO = IDL.Record({
     "seasonId": SeasonId,
     "gameweek": GameweekNumber
@@ -4164,7 +4164,7 @@ const idlFactory = ({ IDL }) => {
     "gameweek": GameweekNumber,
     "points": IDL.Int16
   });
-  const Result_14 = IDL.Variant({
+  const Result_15 = IDL.Variant({
     "ok": IDL.Vec(PlayerPointsDTO),
     "err": Error2
   });
@@ -4181,7 +4181,7 @@ const idlFactory = ({ IDL }) => {
     "position": PlayerPosition,
     "points": IDL.Int16
   });
-  const Result_13 = IDL.Variant({
+  const Result_14 = IDL.Variant({
     "ok": IDL.Vec(IDL.Tuple(IDL.Nat16, PlayerScoreDTO)),
     "err": Error2
   });
@@ -4199,7 +4199,7 @@ const idlFactory = ({ IDL }) => {
     "profilePictureType": IDL.Text,
     "principalId": IDL.Text
   });
-  const Result_11 = IDL.Variant({ "ok": ProfileDTO, "err": Error2 });
+  const Result_12 = IDL.Variant({ "ok": ProfileDTO, "err": Error2 });
   const RewardPool = IDL.Record({
     "monthlyLeaderboardPool": IDL.Nat64,
     "allTimeSeasonHighScorePool": IDL.Nat64,
@@ -4215,7 +4215,7 @@ const idlFactory = ({ IDL }) => {
     "seasonId": SeasonId,
     "rewardPool": RewardPool
   });
-  const Result_10 = IDL.Variant({ "ok": GetRewardPoolDTO, "err": Error2 });
+  const Result_11 = IDL.Variant({ "ok": GetRewardPoolDTO, "err": Error2 });
   const GetSeasonLeaderboardDTO = IDL.Record({
     "offset": IDL.Nat,
     "seasonId": SeasonId,
@@ -4227,13 +4227,13 @@ const idlFactory = ({ IDL }) => {
     "seasonId": SeasonId,
     "entries": IDL.Vec(LeaderboardEntry)
   });
-  const Result_9 = IDL.Variant({ "ok": SeasonLeaderboardDTO, "err": Error2 });
+  const Result_10 = IDL.Variant({ "ok": SeasonLeaderboardDTO, "err": Error2 });
   const SeasonDTO = IDL.Record({
     "id": SeasonId,
     "name": IDL.Text,
     "year": IDL.Nat16
   });
-  const Result_8 = IDL.Variant({ "ok": IDL.Vec(SeasonDTO), "err": Error2 });
+  const Result_9 = IDL.Variant({ "ok": IDL.Vec(SeasonDTO), "err": Error2 });
   const SystemStateDTO = IDL.Record({
     "pickTeamSeasonId": SeasonId,
     "calculationGameweek": GameweekNumber,
@@ -4246,7 +4246,7 @@ const idlFactory = ({ IDL }) => {
     "onHold": IDL.Bool,
     "seasonActive": IDL.Bool
   });
-  const Result_7 = IDL.Variant({ "ok": SystemStateDTO, "err": Error2 });
+  const Result_8 = IDL.Variant({ "ok": SystemStateDTO, "err": Error2 });
   const Result_6 = IDL.Variant({ "ok": IDL.Nat, "err": Error2 });
   const Result_4 = IDL.Variant({
     "ok": IDL.Vec(
@@ -4347,55 +4347,57 @@ const idlFactory = ({ IDL }) => {
     "getCanisters": IDL.Func([GetCanistersDTO], [Result_23], []),
     "getClubs": IDL.Func([], [Result_22], ["composite_query"]),
     "getCountries": IDL.Func([], [Result_21], ["query"]),
-    "getCurrentTeam": IDL.Func([], [Result_20], []),
-    "getDataHashes": IDL.Func([], [Result_19], ["composite_query"]),
+    "getCurrentTeam": IDL.Func([], [Result_7], []),
+    "getDataHashes": IDL.Func([], [Result_20], ["composite_query"]),
     "getFantasyTeamSnapshot": IDL.Func(
       [GetFantasyTeamSnapshotDTO],
-      [Result_18],
+      [Result_19],
       []
     ),
-    "getFixtures": IDL.Func([LeagueId], [Result_12], ["composite_query"]),
-    "getLeaderboardCanisterIds": IDL.Func([], [Result_17], []),
+    "getFixtures": IDL.Func([LeagueId], [Result_13], ["composite_query"]),
+    "getLeaderboardCanisterIds": IDL.Func([], [Result_18], []),
     "getLoanedPlayers": IDL.Func(
       [ClubFilterDTO],
       [Result_5],
       ["composite_query"]
     ),
     "getManager": IDL.Func([RequestManagerDTO], [Result_1], []),
-    "getManagerCanisterIds": IDL.Func([], [Result_17], []),
+    "getManagerCanisterIds": IDL.Func([], [Result_18], []),
     "getMonthlyLeaderboard": IDL.Func(
       [GetMonthlyLeaderboardDTO],
-      [Result_16],
+      [Result_17],
       []
     ),
-    "getPlayerDetails": IDL.Func([GetPlayerDetailsDTO], [Result_15], []),
+    "getPlayerDetails": IDL.Func([GetPlayerDetailsDTO], [Result_16], []),
     "getPlayerDetailsForGameweek": IDL.Func(
       [GameweekFiltersDTO],
-      [Result_14],
+      [Result_15],
       ["composite_query"]
     ),
     "getPlayers": IDL.Func([], [Result_5], ["composite_query"]),
-    "getPlayersMap": IDL.Func([GameweekFiltersDTO], [Result_13], []),
+    "getPlayersMap": IDL.Func([GameweekFiltersDTO], [Result_14], []),
     "getPlayersSnapshot": IDL.Func(
       [GetSnapshotPlayers],
       [IDL.Vec(PlayerDTO)],
       ["query"]
     ),
-    "getPostponedFixtures": IDL.Func([], [Result_12], ["composite_query"]),
-    "getProfile": IDL.Func([], [Result_11], []),
+    "getPostponedFixtures": IDL.Func([], [Result_13], ["composite_query"]),
+    "getProfile": IDL.Func([], [Result_12], []),
     "getRetiredPlayers": IDL.Func(
       [ClubFilterDTO],
       [Result_5],
       ["composite_query"]
     ),
-    "getRewardPool": IDL.Func([GetRewardPoolDTO], [Result_10], []),
+    "getRewardPool": IDL.Func([GetRewardPoolDTO], [Result_11], []),
+    "getSantiTeam": IDL.Func([], [Result_7], []),
     "getSeasonLeaderboard": IDL.Func(
       [GetSeasonLeaderboardDTO],
-      [Result_9],
+      [Result_10],
       []
     ),
-    "getSeasons": IDL.Func([], [Result_8], ["composite_query"]),
-    "getSystemState": IDL.Func([], [Result_7], ["query"]),
+    "getSeasons": IDL.Func([], [Result_9], ["composite_query"]),
+    "getSystemState": IDL.Func([], [Result_8], ["query"]),
+    "getTeejayTeam": IDL.Func([], [Result_7], []),
     "getTotalManagers": IDL.Func([], [Result_6], ["query"]),
     "getVerifiedPlayers": IDL.Func([], [Result_5], []),
     "getWeeklyCanisters": IDL.Func([], [Result_4], ["query"]),
@@ -11882,8 +11884,9 @@ class WeeklyLeaderboardService {
   }
   async getWeeklyRewards(seasonId, gameweek) {
     const result = await this.actor.getWeeklyRewards(seasonId, gameweek);
-    if (isError(result))
-      throw new Error("Failed to fetch weekly leaderboard rewards");
+    if (isError(result)) {
+      return null;
+    }
     return result.ok;
   }
 }

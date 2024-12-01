@@ -1,5 +1,8 @@
 import { writable } from "svelte/store";
-import type { WeeklyLeaderboardDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type {
+  WeeklyLeaderboardDTO,
+  WeeklyRewardsDTO,
+} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { WeeklyLeaderboardService } from "$lib/services/weekly-leaderboard-service";
 
 function createWeeklyLeaderboardStore() {
@@ -22,7 +25,7 @@ function createWeeklyLeaderboardStore() {
   async function getWeeklyRewards(
     seasonId: number,
     gameweek: number,
-  ): Promise<any> {
+  ): Promise<WeeklyRewardsDTO | null> {
     return new WeeklyLeaderboardService().getWeeklyRewards(seasonId, gameweek);
   }
 
