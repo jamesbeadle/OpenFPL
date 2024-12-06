@@ -30,7 +30,6 @@ declare module '$env/static/private' {
 	export const DFX_NETWORK: string;
 	export const CANISTER_ID_OPENFPL_FRONTEND: string;
 	export const CANISTER_ID_OPENFPL_BACKEND: string;
-	export const CANISTER_ID_DATA_CANISTER: string;
 	export const CANISTER_ID_SNS_GOVERNANCE: string;
 	export const CANISTER_ID_SNS_INDEX: string;
 	export const CANISTER_ID_SNS_LEDGER: string;
@@ -101,7 +100,6 @@ declare module '$env/static/private' {
 	export const COLORTERM: string;
 	export const VITE_OPENFPL_BACKEND_CANISTER_ID: string;
 	export const VITE_OPENFPL_FRONTEND_CANISTER_ID: string;
-	export const VITE_DATA_CANISTER_CANISTER_ID: string;
 }
 
 /**
@@ -137,7 +135,6 @@ declare module '$env/dynamic/private' {
 		DFX_NETWORK: string;
 		CANISTER_ID_OPENFPL_FRONTEND: string;
 		CANISTER_ID_OPENFPL_BACKEND: string;
-		CANISTER_ID_DATA_CANISTER: string;
 		CANISTER_ID_SNS_GOVERNANCE: string;
 		CANISTER_ID_SNS_INDEX: string;
 		CANISTER_ID_SNS_LEDGER: string;
@@ -208,7 +205,6 @@ declare module '$env/dynamic/private' {
 		COLORTERM: string;
 		VITE_OPENFPL_BACKEND_CANISTER_ID: string;
 		VITE_OPENFPL_FRONTEND_CANISTER_ID: string;
-		VITE_DATA_CANISTER_CANISTER_ID: string;
 		[key: `PUBLIC_${string}`]: undefined;
 		[key: `${string}`]: string | undefined;
 	}

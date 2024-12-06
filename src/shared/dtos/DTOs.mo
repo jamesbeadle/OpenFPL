@@ -138,16 +138,8 @@ module DTOs {
     username : Text
   };  
 
-  public type SystemStateDTO = {
-    calculationGameweek : FootballTypes.GameweekNumber;
-    calculationMonth : Base.CalendarMonth;
-    calculationSeasonId : FootballTypes.SeasonId;
-    pickTeamGameweek : FootballTypes.GameweekNumber;
-    pickTeamSeasonId : FootballTypes.SeasonId;
-    pickTeamMonth : Base.CalendarMonth;
-    transferWindowActive : Bool;
+  public type AppStatusDTO = {
     onHold : Bool;
-    seasonActive: Bool;
     version: Text;
   };
 

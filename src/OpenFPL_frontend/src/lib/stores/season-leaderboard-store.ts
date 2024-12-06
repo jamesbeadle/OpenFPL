@@ -1,11 +1,10 @@
-import { systemStore } from "$lib/stores/system-store";
+import { leagueStore } from "$lib/stores/league-store";
 import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
   DataHashDTO,
   GetSeasonLeaderboardDTO,
   SeasonLeaderboardDTO,
-  SystemStateDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { isError, replacer } from "../utils/helpers";
@@ -15,10 +14,6 @@ function createSeasonLeaderboardStore() {
   const itemsPerPage = 25;
   const category = "season_leaderboard";
 
-  let systemState: SystemStateDTO;
-  systemStore.subscribe((value) => {
-    systemState = value as SystemStateDTO;
-  });
   let actor: any = ActorFactory.createActor(
     idlFactory,
     process.env.OPENFPL_BACKEND_CANISTER_ID,
@@ -95,7 +90,8 @@ function createSeasonLeaderboardStore() {
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
 
-    if (currentPage <= 4 && seasonId == systemState?.calculationSeasonId) {
+    let leagueStatus = await leagueStore.getLeagueStatus();
+    if (currentPage <= 4 && seasonId == leagueStatus.activeSeasonId) {
       const cachedData = localStorage.getItem(category);
 
       if (cachedData && cachedData != "undefined") {

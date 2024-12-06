@@ -2,13 +2,14 @@
   import { onMount } from "svelte";
   import { clubStore } from "$lib/stores/club-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
-  import { systemStore } from "$lib/stores/system-store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import type { ClubDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { ClubDTO, LeagueStatus } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
   import { convertFixtureStatus, formatUnixTimeToTime } from "../utils/helpers";
     import { storeManager } from "$lib/managers/store-manager";
+    import { leagueStore } from "$lib/stores/league-store";
 
+  let leagueStatus: LeagueStatus;
   let fixturesWithTeams: FixtureWithTeams[] = [];
   let selectedGameweek: number;
   let gameweeks = Array.from({ length: Number(process.env.TOTAL_GAMEWEEKS) }, (_, i) => i + 1);
@@ -39,7 +40,8 @@
 
   onMount(async () => {
     await storeManager.syncStores();
-    selectedGameweek = $systemStore?.calculationGameweek ?? 1;
+    leagueStatus = await leagueStore.getLeagueStatus();
+    selectedGameweek = leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek ?? 1;
     fixturesWithTeams = $fixtureStore.map((fixture) => ({
       fixture,
       homeTeam: getTeamFromId(fixture.homeClubId),

@@ -1,5 +1,4 @@
 import { countryStore } from "$lib/stores/country-store";
-import { systemStore } from "$lib/stores/system-store";
 import { seasonStore } from "$lib/stores/season-store";
 import { clubStore } from "$lib/stores/club-store";
 import { playerStore } from "$lib/stores/player-store";
@@ -8,8 +7,9 @@ import { fixtureStore } from "$lib/stores/fixture-store";
 import { weeklyLeaderboardStore } from "$lib/stores/weekly-leaderboard-store";
 
 import { DataHashService } from "$lib/services/data-hash-service";
+import { AppService } from "$lib/services/app-service";
+import { LeagueService } from "$lib/services/league-service";
 import { CountryService } from "$lib/services/country-service";
-import { SystemService } from "$lib/services/system-service";
 import { SeasonService } from "$lib/services/season-service";
 import { ClubService } from "$lib/services/club-service";
 import { PlayerService } from "$lib/services/player-service";
@@ -19,11 +19,14 @@ import { WeeklyLeaderboardService } from "$lib/services/weekly-leaderboard-servi
 
 import { isError, replacer } from "$lib/utils/helpers";
 import { userStore } from "$lib/stores/user-store";
+import { leagueStore } from "$lib/stores/league-store";
+import { appStore } from "$lib/stores/app-store";
 
 class StoreManager {
   private dataHashService: DataHashService;
   private countryService: CountryService;
-  private systemService: SystemService;
+  private appService: AppService;
+  private leagueService: LeagueService;
   private seasonService: SeasonService;
   private clubService: ClubService;
   private playerService: PlayerService;
@@ -33,7 +36,8 @@ class StoreManager {
 
   private categories: string[] = [
     "countries",
-    "system_state",
+    "app_status",
+    "league_status",
     "seasons",
     "clubs",
     "players",
@@ -44,7 +48,8 @@ class StoreManager {
   constructor() {
     this.dataHashService = new DataHashService();
     this.countryService = new CountryService();
-    this.systemService = new SystemService();
+    this.appService = new AppService();
+    this.leagueService = new LeagueService();
     this.seasonService = new SeasonService();
     this.clubService = new ClubService();
     this.playerService = new PlayerService();
@@ -85,12 +90,20 @@ class StoreManager {
           JSON.stringify(updatedCountries, replacer),
         );
         break;
-      case "system_state":
-        const updatedSystemState = await this.systemService.getSystemState();
-        systemStore.setSystemState(updatedSystemState);
+      case "league_status":
+        const updatedLeagueStatus = await this.leagueService.getLeagueStatus();
+        leagueStore.setLeagueStatus(updatedLeagueStatus);
         localStorage.setItem(
-          "system_state",
-          JSON.stringify(updatedSystemState, replacer),
+          "league_status",
+          JSON.stringify(updatedLeagueStatus, replacer),
+        );
+        break;
+      case "app_status":
+        const updatedAppStatus = await this.appService.getAppStatus();
+        appStore.setAppStatus(updatedAppStatus);
+        localStorage.setItem(
+          "app_status",
+          JSON.stringify(updatedAppStatus, replacer),
         );
         break;
       case "seasons":
@@ -115,11 +128,13 @@ class StoreManager {
         );
         break;
       case "player_events":
-        const systemState = await this.systemService.getSystemState();
+        const leagueStatus = await this.leagueService.getLeagueStatus();
         const updatedPlayerEvents =
           await this.playerEventsService.getPlayerDetailsForGameweek(
-            systemState.calculationSeasonId,
-            systemState.calculationGameweek,
+            leagueStatus.activeSeasonId,
+            leagueStatus.activeGameweek == 0
+              ? leagueStatus.unplayedGameweek
+              : leagueStatus.activeGameweek,
           );
         playerEventsStore.setPlayerEvents(updatedPlayerEvents);
         localStorage.setItem(
@@ -136,12 +151,12 @@ class StoreManager {
         );
         break;
       case "weekly_leaderboard":
-        systemStore.subscribe(async (systemState) => {
+        leagueStore.subscribe(async (leagueStatus) => {
           const updatedWeeklyLeaderboard =
             await this.weeklyLeaderboardService.getWeeklyLeaderboard(
               0,
-              systemState?.calculationSeasonId ?? 0,
-              systemState?.calculationGameweek ?? 0,
+              leagueStatus?.activeSeasonId ?? 0,
+              leagueStatus?.activeGameweek ?? 0,
             );
           weeklyLeaderboardStore.setWeeklyLeaderboard(updatedWeeklyLeaderboard);
           localStorage.setItem(
@@ -161,9 +176,13 @@ class StoreManager {
         const cachedCountries = JSON.parse(cachedData || "[]");
         countryStore.setCountries(cachedCountries);
         break;
-      case "system_state":
-        const cachedSystemState = JSON.parse(cachedData || "null");
-        systemStore.setSystemState(cachedSystemState);
+      case "app_status":
+        const cachedAppStatus = JSON.parse(cachedData || "null");
+        appStore.setAppStatus(cachedAppStatus);
+        break;
+      case "league_status":
+        const cachedLeagueStatus = JSON.parse(cachedData || "null");
+        leagueStore.setLeagueStatus(cachedLeagueStatus);
         break;
       case "seasons":
         const cachedSeasons = JSON.parse(cachedData || "");

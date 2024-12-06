@@ -3,26 +3,29 @@
   import { toastsError } from "$lib/stores/toasts-store";
   import { clubStore } from "$lib/stores/club-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
-  import { systemStore } from "$lib/stores/system-store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import { updateTableData } from "../utils/helpers";
-  import type { ClubDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { ClubDTO, LeagueStatus } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
-    import { storeManager } from "$lib/managers/store-manager";
+  import { storeManager } from "$lib/managers/store-manager";
+    import { leagueStore } from "$lib/stores/league-store";
 
   let fixturesWithTeams: FixtureWithTeams[] = [];
   let selectedGameweek: number;
-  let gameweeks = Array.from(
-    { length: $systemStore?.calculationGameweek ?? 1 },
-    (_, i) => i + 1
-  );
+  let leagueStatus: LeagueStatus;
+  let gameweeks: number[];
   let tableData: any[] = [];
 
   onMount(async () => {
     try {
       
       await storeManager.syncStores();
-      selectedGameweek = $systemStore?.calculationGameweek ?? 1;
+      leagueStatus = await leagueStore.getLeagueStatus();
+      gameweeks = Array.from(
+        { length: leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek ?? 1 },
+        (_, i) => i + 1
+      );
+      selectedGameweek = leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek ?? 1;
 
       fixturesWithTeams = $fixtureStore.map((fixture) => ({
         fixture,
@@ -79,12 +82,12 @@
 
     <button
       class={`${
-        selectedGameweek === $systemStore?.calculationGameweek
+        selectedGameweek === (leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek)
           ? "bg-gray-500"
           : "fpl-button"
       } default-button ml-1`}
       on:click={() => changeGameweek(1)}
-      disabled={selectedGameweek === $systemStore?.calculationGameweek}
+      disabled={selectedGameweek === (leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek)}
     >
       &gt;
     </button>

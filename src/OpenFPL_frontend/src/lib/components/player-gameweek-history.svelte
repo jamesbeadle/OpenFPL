@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { page } from "$app/stores";
-  import { systemStore } from "$lib/stores/system-store";
   import { toastsError } from "$lib/stores/toasts-store";
   import { seasonStore } from "$lib/stores/season-store";
   import { clubStore } from "$lib/stores/club-store";
@@ -11,6 +10,7 @@
   import PlayerGameweekModal from "./player-gameweek-modal.svelte";
   import type {
     ClubDTO,
+    LeagueStatus,
     PlayerDetailDTO,
     PlayerGameweekDTO,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
@@ -18,8 +18,10 @@
   import { playerEventsStore } from "$lib/stores/player-events-store";
     import LocalSpinner from "./local-spinner.svelte";
     import { storeManager } from "$lib/managers/store-manager";
+    import { leagueStore } from "$lib/stores/league-store";
 
   let isLoading = true;
+  let leagueStatus: LeagueStatus;
   let selectedGameweek: number;
   let fixturesWithTeams: FixtureWithTeams[] = [];
   let playerDetails: PlayerDetailDTO;
@@ -34,8 +36,9 @@
   onMount(async () => {
     try {
       await storeManager.syncStores();
-      seasonName = await seasonStore.getSeasonName($systemStore?.calculationSeasonId ?? 0) ?? "";
-      selectedGameweek = $systemStore?.calculationGameweek ?? 1;
+      leagueStatus = await leagueStore.getLeagueStatus();
+      seasonName = await seasonStore.getSeasonName(leagueStatus.activeSeasonId ?? 0) ?? "";
+      selectedGameweek = leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek ?? 1;
 
       fixturesWithTeams = $fixtureStore.map((fixture) => ({
         fixture,
@@ -45,7 +48,7 @@
 
       playerDetails = await playerEventsStore.getPlayerDetails(
         id,
-        $systemStore?.calculationSeasonId ?? 1
+        leagueStatus.activeSeasonId ?? 1
       );
     } catch (error) {
       toastsError({

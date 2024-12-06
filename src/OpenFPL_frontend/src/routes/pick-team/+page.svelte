@@ -3,7 +3,7 @@
   import { writable } from "svelte/store";
   
   import { storeManager } from "$lib/managers/store-manager";
-  import { systemStore } from "$lib/stores/system-store";
+  import { appStore } from "$lib/stores/app-store";
   import { managerStore } from "$lib/stores/manager-store";
   import { toastsError } from "$lib/stores/toasts-store";
   
@@ -66,7 +66,9 @@
     try {
       
       await storeManager.syncStores();
-      onHold.set($systemStore?.onHold ?? false);
+      console.log("app store")
+      console.log($appStore)
+      onHold.set($appStore?.onHold ?? false);
       $availableFormations = Object.keys(allFormations);     
       await loadData();
     } catch (error) {

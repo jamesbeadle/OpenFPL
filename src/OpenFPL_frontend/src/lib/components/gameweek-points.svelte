@@ -2,7 +2,6 @@
   import { onMount } from "svelte";
 
   import { clubStore } from "$lib/stores/club-store";
-  import { systemStore } from "$lib/stores/system-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { toastsError } from "$lib/stores/toasts-store";
   import { managerStore } from "$lib/stores/manager-store";
@@ -14,7 +13,7 @@
     getPositionAbbreviation,
   } from "$lib/utils/helpers";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
-  import type { ClubDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { ClubDTO, LeagueStatus } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import FantasyPlayerDetailModal from "./fantasy-player-detail-modal.svelte";
@@ -32,16 +31,17 @@
   let selectedOpponentTeam: ClubDTO;
   let selectedGameweekData: GameweekData;
   let activeSeasonName: string;
+  let leagueStatus: LeagueStatus;
 
   onMount(async () => {
     try {
       await storeManager.syncStores();
-      activeSeasonName = await seasonStore.getSeasonName($systemStore?.calculationSeasonId ?? 0) ?? "";
+      activeSeasonName = await seasonStore.getSeasonName(leagueStatus.activeSeasonId ?? 0) ?? "";
       gameweeks = Array.from(
-        { length: $systemStore?.calculationGameweek ?? 1 },
+        { length: leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek ?? 1 },
         (_, i) => i + 1
       );
-      selectedGameweek = $systemStore?.calculationGameweek ?? 1;
+      selectedGameweek = leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek ?? 1;
       let principal = $authStore?.identity?.getPrincipal().toText() ?? "";
       if(principal == ""){
         return;
@@ -72,7 +72,7 @@
 
     let fantasyTeam = await managerStore.getFantasyTeamForGameweek(
       principal,
-      $systemStore?.calculationSeasonId ?? 1,
+      leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek ?? 1,
       selectedGameweek
     );
 
@@ -163,12 +163,12 @@
 
           <button
             class={`${
-              selectedGameweek === $systemStore?.calculationGameweek
+              selectedGameweek === (leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek)
                 ? "bg-gray-500"
                 : "fpl-button"
             } default-button ml-1`}
             on:click={() => changeGameweek(1)}
-            disabled={selectedGameweek === $systemStore?.calculationGameweek}
+            disabled={selectedGameweek === (leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek)}
           >
             &gt;
           </button>

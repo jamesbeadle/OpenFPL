@@ -1,17 +1,18 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { writable, type Writable } from "svelte/store";
-  import { systemStore } from "$lib/stores/system-store";
+  import { leagueStore } from "$lib/stores/league-store";
   import { playerStore } from "$lib/stores/player-store";
   import { managerStore } from "$lib/stores/manager-store";
   import { seasonStore } from "$lib/stores/season-store";
   import { busyStore } from "@dfinity/gix-components";
   import { toastsError, toastsShow } from "$lib/stores/toasts-store";
-  import type { PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { AppStatusDTO, LeagueStatus, PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { allFormations, getAvailableFormations, getHighestValuedPlayerId, getTeamFormation } from "$lib/utils/pick-team.helpers";
   import { convertPlayerPosition } from "$lib/utils/helpers";
   import SetTeamName from "./modals/set-team-name-modal.svelte";
   import LocalSpinner from "../local-spinner.svelte";
+    import { appStore } from "$lib/stores/app-store";
 
   let startingFantasyTeam: PickTeamDTO;
   export let fantasyTeam: Writable<PickTeamDTO>;
@@ -23,7 +24,7 @@
   export let bankBalance: Writable<number>;
   
   let isSaveButtonActive: boolean;
-
+  
   let activeSeason: string;
   let activeGameweek: number;
   let newUsername = writable("");
@@ -34,6 +35,8 @@
   let transferWindowPlayed = false;
   let transferWindowPlayedInSession = false;
   let isLoading = true;
+  let leagueStatus: LeagueStatus;
+  let appStatus: AppStatusDTO;
 
   $: if ($fantasyTeam && $playerStore.length > 0) {
     disableInvalidFormations();
@@ -67,6 +70,8 @@
 
   onMount(async () => {
     try {
+      leagueStatus = await leagueStore.getLeagueStatus();
+      appStatus = await appStore.getAppStatus();
       startingFantasyTeam = $fantasyTeam;
       loadData();
       disableInvalidFormations()
@@ -82,11 +87,12 @@
   });
   
   async function loadData() {
-    let foundSeason = $seasonStore.find(x => x.id == $systemStore?.pickTeamSeasonId);
+
+    let foundSeason = $seasonStore.find(x => x.id == leagueStatus.activeSeasonId);
     if(foundSeason){
       activeSeason = foundSeason.name;
     }
-    activeGameweek = $systemStore?.pickTeamGameweek ?? 1;
+    activeGameweek = leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek ?? 1;
 
     const storedViewMode = localStorage.getItem("viewMode");
     if (storedViewMode) {
@@ -142,7 +148,7 @@
       }
     }
 
-    if($systemStore?.onHold){
+    if(appStatus.onHold){
       return false;
     }
 
@@ -428,7 +434,7 @@
       <div
         class="flex flex-col md:flex-row w-full md:justify-end gap-4 mr-0 md:mr-4 order-1 md:order-3 mt-2 md:mt-0"
       >
-        {#if $systemStore && $systemStore.transferWindowActive && $systemStore.seasonActive && $systemStore.calculationMonth == 1}
+        {#if leagueStatus.transferWindowActive && leagueStatus.seasonActive && leagueStatus.activeMonth == 1}
           <button
             disabled={transferWindowPlayed}
             on:click={playTransferWindow}
@@ -531,7 +537,7 @@
             Save
           </button>
         </div>
-        {#if $systemStore && $systemStore.transferWindowActive && $systemStore.seasonActive && $systemStore.calculationMonth == 1}
+        {#if leagueStatus.transferWindowActive && leagueStatus.seasonActive && leagueStatus.activeMonth == 1}
           <div class="flex flex-row mx-4 space-x-1 mb-4">
             <button
               disabled={transferWindowPlayed}

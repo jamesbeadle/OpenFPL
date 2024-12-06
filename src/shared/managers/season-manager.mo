@@ -2,30 +2,19 @@ import Result "mo:base/Result";
 import Buffer "mo:base/Buffer";
 import Iter "mo:base/Iter";
 import Array "mo:base/Array";
-import List "mo:base/List";
 import DTOs "../../shared/dtos/DTOs";
 import RequestDTOs "../../shared/dtos/request_DTOs";
 import FootballTypes "../../shared/types/football_types";
 import T "../../shared/types/app_types";
 import Base "../../shared/types/base_types";
 import SHA224 "../../shared/lib/SHA224";
-import Utilities "../../shared/utils/utilities";
-import NetworkEnvironmentVariables "../network_environment_variables";
 
 module {
 
-  public class SeasonManager(totalGameweeks: Nat8) {
+  public class SeasonManager() {
 
-    var systemState : T.SystemState = {
-      calculationGameweek = 7;
-      calculationMonth = 10;
-      calculationSeasonId = 1;
+    var appStatus : T.AppStatus = {
       onHold = false;
-      pickTeamGameweek = 7;
-      pickTeamMonth = 10;
-      pickTeamSeasonId = 1;
-      seasonActive = true;
-      transferWindowActive = false;
       version = "2.0.0";
     };
      
@@ -38,32 +27,17 @@ module {
       { category = "players"; hash = "OPENFPL_1" },
       { category = "player_events"; hash = "OPENFPL_1" },
       { category = "countries"; hash = "OPENFPL_1" },
-      { category = "system_state"; hash = "OPENFPL_1" },
+      { category = "app_status"; hash = "OPENFPL_1" },
+      { category = "league_status"; hash = "OPENFPL_1" },
       { category = "seasons"; hash = "OPENFPL_1" }
     ];
 
+    private var leagueGameweekStatuses: [T.LeagueGameweekStatus] = [];
+    private var leagueMonthStatuses: [T.LeagueMonthStatus] = [];
+    private var leagueSeasonStatuses: [T.LeagueSeasonStatus] = [];
+
     private var playersSnapshots: [(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])])] = [];
-
-    public func updateInitialSystemState(firstSeasonFixture: DTOs.FixtureDTO) : async () {
-      
-      let firstKickOffMonth = Utilities.unixTimeToMonth(firstSeasonFixture.kickOff);
-
-      let updatedSystemState : T.SystemState = {
-        calculationGameweek = 1;
-        calculationMonth = firstKickOffMonth;
-        calculationSeasonId = systemState.pickTeamSeasonId;
-        pickTeamSeasonId = systemState.pickTeamSeasonId;
-        pickTeamGameweek = 1;
-        pickTeamMonth = firstKickOffMonth;
-        seasonActive = false;
-        transferWindowActive = true;
-        onHold = false;
-        version = systemState.version;
-      };
-
-      systemState := updatedSystemState;
-    };
-
+  
     public func updateDataHash(category : Text) : async () {
       let hashBuffer = Buffer.fromArray<Base.DataHash>([]);
       var updated = false;
@@ -87,18 +61,10 @@ module {
       return #ok(dataHashes)
     };
     
-    public func getSystemState() : Result.Result<DTOs.SystemStateDTO, T.Error> {
+    public func getAppStatus() : Result.Result<DTOs.AppStatusDTO, T.Error> {
       return #ok({
-        calculationGameweek = systemState.calculationGameweek;
-        calculationMonth = systemState.calculationMonth;
-        calculationSeasonId = systemState.calculationSeasonId;
-        onHold = systemState.onHold;
-        pickTeamGameweek = systemState.pickTeamGameweek;
-        pickTeamSeasonId = systemState.pickTeamSeasonId;
-        seasonActive = systemState.seasonActive;
-        transferWindowActive = systemState.transferWindowActive;
-        version = systemState.version;
-        pickTeamMonth = systemState.pickTeamMonth;
+        onHold = appStatus.onHold;
+        version = appStatus.version;
       });
     };
 
@@ -112,8 +78,38 @@ module {
 
       switch(existingSeasonsSnapshot){
         case(?foundSeasonSnapshot){
-          //add or replace 
+          let existingGameweekSnapshot = Array.find<(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])>(foundSeasonSnapshot.1, func(gameweekEntry: (FootballTypes.GameweekNumber, [DTOs.PlayerDTO])) : Bool {
+            gameweekEntry.0 == gameweek;
+          });
 
+          switch(existingGameweekSnapshot){
+            case (?_){
+              playersSnapshots := Array.map<(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])]), (FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])])>(playersSnapshots, func(seasonsSnapshotEntry: (FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])])){
+                if(seasonsSnapshotEntry.0 == seasonId) {
+                  return (seasonsSnapshotEntry.0, Array.map<(FootballTypes.GameweekNumber, [DTOs.PlayerDTO]), (FootballTypes.GameweekNumber, [DTOs.PlayerDTO])>(seasonsSnapshotEntry.1, func(gameweekEntry: (FootballTypes.GameweekNumber, [DTOs.PlayerDTO])){
+                    if(gameweekEntry.0 == gameweek){
+                      return (gameweekEntry.0, players);
+                    } else{
+                      return gameweekEntry;
+                    };
+                  }));
+                } else {
+                  return seasonsSnapshotEntry;
+                }
+              });
+            };
+            case (null){
+              playersSnapshots := Array.map<(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])]), (FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])])>(playersSnapshots, func(seasonsSnapshotEntry: (FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])])){
+                if(seasonsSnapshotEntry.0 == seasonId) {
+                  let updatedGameweeksBuffer = Buffer.fromArray<(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])>(seasonsSnapshotEntry.1);
+                  updatedGameweeksBuffer.add(gameweek, players);
+                  return (seasonsSnapshotEntry.0, Buffer.toArray(updatedGameweeksBuffer));
+                } else {
+                  return seasonsSnapshotEntry;
+                }
+              });
+            }
+          };
         };
         case (null){
           let newEntry: (FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])]) = (seasonId, [
@@ -125,10 +121,6 @@ module {
           playersSnapshots := Buffer.toArray(playerSnapshotsBuffer);
         }
       };
-
-      //store the players snapshot but replace if already exists
-
-
     };
 
     public func getPlayersSnapshot(dto: RequestDTOs.GetSnapshotPlayers) : [DTOs.PlayerDTO] {
@@ -153,144 +145,39 @@ module {
 
       return [];
     };
-
-
-
-    public func setNextPickTeamGameweek() : async () {
-      
-      var pickTeamGameweek : FootballTypes.GameweekNumber = 1;
-      if (systemState.pickTeamGameweek < totalGameweeks) {
-        pickTeamGameweek := systemState.pickTeamGameweek + 1;
-      };
-
-      let updatedSystemState : T.SystemState = {
-        calculationGameweek = systemState.calculationGameweek;
-        calculationMonth = systemState.calculationMonth;
-        calculationSeasonId = systemState.calculationSeasonId;
-        pickTeamGameweek = pickTeamGameweek;
-        pickTeamMonth = systemState.pickTeamMonth;
-        pickTeamSeasonId = systemState.pickTeamSeasonId;
-        transferWindowActive = systemState.transferWindowActive;
-        seasonActive = true;
-        onHold = systemState.onHold;
-        version = systemState.version;
-      };
-
-      systemState := updatedSystemState;
-    };
-
-    public func setFixturesToActive() : async () {
-      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
-        setFixturesToActive : (seasonId : FootballTypes.SeasonId) -> async ();
-      };
-      return await data_canister.setFixturesToActive(systemState.pickTeamSeasonId);
-    };
-
-    public func setFixturesToCompleted() : async () {
-      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
-        setFixturesToCompleted : (seasonId : FootballTypes.SeasonId) -> async ();
-      };
-      return await data_canister.setFixturesToCompleted(systemState.pickTeamSeasonId);
-    };
-
-    public func incrementCalculationGameweek() : async () {
-      
-      let updatedSystemState : T.SystemState = {
-        calculationGameweek = systemState.calculationGameweek + 1;
-        calculationMonth = systemState.calculationMonth;
-        calculationSeasonId = systemState.calculationSeasonId;
-        pickTeamSeasonId = systemState.pickTeamSeasonId;
-        pickTeamGameweek = systemState.pickTeamGameweek;
-        pickTeamMonth = systemState.pickTeamMonth;
-        seasonActive = systemState.seasonActive;
-        transferWindowActive = systemState.transferWindowActive;
-        onHold = systemState.onHold;
-        version = systemState.version;
-      };
-
-      systemState := updatedSystemState;
-    };
-
-    public func incrementCalculationMonth() : async () {
-      
-      var month = systemState.calculationMonth;
-      if (month == 12) {
-        month := 1;
-      } else {
-        month := month + 1;
-      };
-
-      let updatedSystemState : T.SystemState = {
-        calculationGameweek = systemState.calculationGameweek;
-        calculationMonth = month;
-        calculationSeasonId = systemState.calculationSeasonId;
-        pickTeamSeasonId = systemState.pickTeamSeasonId;
-        pickTeamGameweek = systemState.pickTeamGameweek;
-        pickTeamMonth = systemState.pickTeamMonth;
-        seasonActive = systemState.seasonActive;
-        transferWindowActive = systemState.transferWindowActive;
-        onHold = systemState.onHold;
-        version = systemState.version;
-      };
-
-      systemState := updatedSystemState;
-    };
-
-    public func incrementCalculationSeason() : async () {
-      
-      var seasonId = systemState.calculationSeasonId;
-      
-      var nextSeasonId = seasonId + 1;
-
-      let updatedSystemState : T.SystemState = {
-        calculationGameweek = systemState.calculationGameweek;
-        calculationMonth = systemState.calculationMonth;
-        calculationSeasonId = nextSeasonId;
-        pickTeamSeasonId = systemState.pickTeamSeasonId;
-        pickTeamGameweek = systemState.pickTeamGameweek;
-        pickTeamMonth = systemState.pickTeamMonth;
-        seasonActive = systemState.seasonActive;
-        transferWindowActive = systemState.transferWindowActive;
-        onHold = systemState.onHold;
-        version = systemState.version;
-      };
-
-      systemState := updatedSystemState;
-    };
-
-    public func transferWindowStart() : async (){
-      //TODO (ENDOFSEASON)
-    };
-
-    public func transferWindowEnd() : async (){
-      //TODO (ENDOFSEASON)
-    };
-
-    public func updateSystemState(dto: RequestDTOs.UpdateSystemStateDTO) : async Result.Result<(), T.Error> {
-     systemState := {
-      calculationGameweek = dto.calculationGameweek;
-      calculationMonth = dto.calculationMonth;
-      calculationSeasonId  = dto.calculationSeasonId;
-      onHold  = dto.onHold;
-      pickTeamGameweek = dto.pickTeamGameweek;
-      pickTeamMonth = dto.pickTeamMonth;
-      pickTeamSeasonId = dto.pickTeamSeasonId;
-      seasonActive = dto.seasonActive;
-      transferWindowActive = dto.transferWindowActive;
-      version = dto.version;
-     };
-     await updateDataHash("system_state");
-     return #ok();
-    };
       
     //Stable variable functions
 
-    public func getStableSystemState() : T.SystemState {
-      return systemState;
+    public func getStableAppStatus() : T.AppStatus {
+      return appStatus;
     };
 
-    public func setStableSystemState(stable_system_state : T.SystemState) {
-      systemState := stable_system_state;
+    public func setStableAppStatus(stable_app_status : T.AppStatus) {
+      appStatus := stable_app_status;
+    };
+
+    public func getStableLeagueGameweekStatuses() : [T.LeagueGameweekStatus]{
+      return leagueGameweekStatuses;
+    };
+
+    public func setStableLeagueGameweekStatuses(stable_league_gameweek_statuses: [T.LeagueGameweekStatus]){
+      leagueGameweekStatuses := stable_league_gameweek_statuses;
+    };
+
+    public func getStableLeagueMonthStatuses() : [T.LeagueMonthStatus]{
+      return leagueMonthStatuses;
+    };
+
+    public func setStableLeagueMonthStatuses(stable_league_month_statuses: [T.LeagueMonthStatus]){
+      leagueMonthStatuses := stable_league_month_statuses;
+    };
+
+    public func getStableLeagueSeasonStatuses() : [T.LeagueSeasonStatus]{
+      return leagueSeasonStatuses;
+    };
+
+    public func setStableLeagueSeasonStatuses(stable_league_season_statuses: [T.LeagueSeasonStatus]){
+      leagueSeasonStatuses := stable_league_season_statuses;
     };
 
     public func getStableDataHashes() : [Base.DataHash] {
@@ -308,6 +195,22 @@ module {
     public func setStablePlayersSnapshots(stable_players_snapshots : [(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])])]) {
       playersSnapshots := stable_players_snapshots;
     };
+
+    public func putOnHold() : async (){
+      appStatus := {
+        onHold = true;
+        version = appStatus.version;
+      };
+      await updateDataHash("app_status");
+    };
+
+    public func removeOnHold() : async (){
+      appStatus := {
+        onHold = false;
+        version = appStatus.version;
+      };
+      await updateDataHash("app_status");
+    }
   }
 
 };

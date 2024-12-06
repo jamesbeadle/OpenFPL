@@ -2,15 +2,16 @@
   import { onMount } from "svelte";
   import { type Writable } from "svelte/store";
   import { toastsError } from "$lib/stores/toasts-store";
-  import { systemStore } from "$lib/stores/system-store";
+  import { leagueStore } from "$lib/stores/league-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { playerStore } from "$lib/stores/player-store";
   import { formatUnixDateToReadable, formatUnixTimeToTime, getCountdownTime } from "$lib/utils/helpers";
-  import type { PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { LeagueStatus, PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import LocalSpinner from "../local-spinner.svelte";
   import { seasonStore } from "$lib/stores/season-store";
   
   let isLoading = true;
+  let leagueStatus: LeagueStatus;
   let activeSeason = "-";
   let activeGameweek = 1;
 
@@ -27,16 +28,14 @@
   export let fantasyTeam: Writable<PickTeamDTO | null>;
 
   onMount(async () => {
-
-    let foundSeason = $seasonStore.find(x => x.id == $systemStore?.pickTeamSeasonId);
+    leagueStatus = await leagueStore.getLeagueStatus();
+    let foundSeason = $seasonStore.find(x => x.id == leagueStatus.activeSeasonId);
     if(foundSeason){
       activeSeason = foundSeason.name;
     }
 
-    if($systemStore?.pickTeamGameweek){
-      activeGameweek = $systemStore?.pickTeamGameweek
-    }
-
+    activeGameweek = leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek;
+    
     try {
       updateTeamValue();
       setCountdownTimer();
@@ -52,7 +51,7 @@
   });
 
   async function setCountdownTimer() {
-    let gameweekFixtures = $fixtureStore.filter(x => x.gameweek == $systemStore?.pickTeamGameweek)
+    let gameweekFixtures = $fixtureStore.filter(x => x.gameweek == (leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek))
     .sort((a, b) => Number(a.kickOff) - Number(b.kickOff));
 
     let earliestFixture = gameweekFixtures[0];

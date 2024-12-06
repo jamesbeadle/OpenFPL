@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { type Writable } from "svelte/store";
-  import { systemStore } from "$lib/stores/system-store";
   import { clubStore } from "$lib/stores/club-store";
   import { playerStore } from "$lib/stores/player-store";
 
@@ -11,6 +10,7 @@
   import { Modal } from "@dfinity/gix-components";
   import { countryStore } from "$lib/stores/country-store";
   import { convertPlayerPosition } from "$lib/utils/helpers";
+    import { leagueStore } from "$lib/stores/league-store";
     
   export let visible: boolean;
   export let fantasyTeam: Writable<PickTeamDTO | null>;
@@ -85,11 +85,15 @@
     return 0;
   };
 
-  function handleUseBonus() {
+  async function handleUseBonus() {
     if (!$fantasyTeam) return;
     let activeGameweek = 1;
-    if($systemStore?.pickTeamGameweek){
-      activeGameweek = $systemStore?.pickTeamGameweek
+
+
+    let leagueStatus = await leagueStore.getLeagueStatus();
+
+    if(leagueStatus.activeGameweek){
+      activeGameweek = leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek
     }
     
     $bonuses[bonus.id - 1].usedGameweek = activeGameweek

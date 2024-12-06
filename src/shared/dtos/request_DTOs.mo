@@ -41,15 +41,15 @@ module RequestDTOs {
     allTimeSeasonHighScorePool : Nat64;
   };
 
-  public type UpdateSystemStateDTO = {
-    pickTeamSeasonId : FootballTypes.SeasonId;
-    pickTeamGameweek : FootballTypes.GameweekNumber;
-    pickTeamMonth: Base.CalendarMonth;
-    calculationGameweek : FootballTypes.GameweekNumber;
-    calculationMonth : Base.CalendarMonth;
-    calculationSeasonId : FootballTypes.SeasonId;
+  public type UpdateLeagueStatusDTO = {
+    seasonId : FootballTypes.SeasonId;
+    gameweek : FootballTypes.GameweekNumber;
+    month: Base.CalendarMonth;
     seasonActive : Bool;
     transferWindowActive : Bool;
+  };
+
+  public type UpdateAppStatusDTO = {
     onHold : Bool;
     version: Text;
   };

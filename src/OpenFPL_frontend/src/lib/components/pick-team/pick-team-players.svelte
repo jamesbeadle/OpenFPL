@@ -2,12 +2,11 @@
   import { onMount } from "svelte";
   import { writable, type Writable } from "svelte/store";
   import { toastsError } from "$lib/stores/toasts-store";
-  import { systemStore } from "$lib/stores/system-store";
   import { clubStore } from "$lib/stores/club-store";
   import { playerStore } from "$lib/stores/player-store";
 
   import { getPositionAbbreviation, getFlagComponent, convertPlayerPosition } from "../../utils/helpers";
-  import type { PlayerDTO, PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { PlayerDTO, PickTeamDTO, LeagueStatus } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   import ConfirmCaptainChange from "./modals/confirm-captain-change-modal.svelte";
   import AddPlayerIcon from "$lib/icons/AddPlayerIcon.svelte";
@@ -31,6 +30,7 @@
   export let bankBalance: Writable<number>;
   export let teamValue: Writable<number>;
 
+  let leagueStatus: LeagueStatus;
   let pitchHeight = 0;
   let pitchElement: HTMLElement;
   let showAddPlayerModal = false;
@@ -98,7 +98,7 @@
         bankBalance.set(Number($fantasyTeam.bankQuarterMillions));
     }
 
-    let activeGameweek = $systemStore?.pickTeamGameweek ?? 1;
+    let activeGameweek = leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek ?? 1;
 
     if (!newTeam && activeGameweek > 1) {
       if ($fantasyTeam.transferWindowGameweek == activeGameweek) {
@@ -186,7 +186,7 @@
         $selectedFormation = newFormation;
         addPlayerToTeam(player, $fantasyTeam, newFormation);
       }
-      if (!newTeam && $systemStore?.pickTeamGameweek! > 1) {
+      if (!newTeam && leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek > 1) {
         transfersAvailable.update((n) => (n > 0 ? n - 1 : 0));
         if ($transfersAvailable <= 0) {
           canSellPlayer = false;
@@ -431,7 +431,7 @@
       newPlayerIds[playerIndex] = 0;
 
       if (sessionAddedPlayers.includes(playerId)) {
-        if (!newTeam && $systemStore?.pickTeamGameweek! > 1) {
+        if (!newTeam && leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek > 1) {
           transfersAvailable.update((n) => n + 1);
         }
         sessionAddedPlayers = sessionAddedPlayers.filter(

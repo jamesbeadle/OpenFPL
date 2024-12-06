@@ -3,7 +3,6 @@
   import { writable } from "svelte/store";
 
   import { storeManager } from "$lib/managers/store-manager";
-  import { systemStore } from "$lib/stores/system-store";
   import { countryStore } from "$lib/stores/country-store";
   import { seasonStore } from "$lib/stores/season-store";
   import { clubStore } from "$lib/stores/club-store";
@@ -20,6 +19,7 @@
   import type {
     ClubDTO,
     FantasyTeamSnapshot,
+    LeagueStatus,
     PlayerDTO,
   } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
@@ -30,6 +30,7 @@
   import ActiveCaptainIcon from "$lib/icons/ActiveCaptainIcon.svelte";
   import LocalSpinner from "../local-spinner.svelte";
   import { calculateBonusPoints } from "$lib/utils/pick-team.helpers";
+    import { leagueStore } from "$lib/stores/league-store";
 
   export let loadingGameweek = writable<boolean>(true);
   export let selectedGameweek = writable<number | null>(null);
@@ -43,10 +44,8 @@
   let activeSeasonName: string;
 
   let gameweekPlayers = writable<GameweekData[]>([]);
-  let gameweeks = Array.from(
-    { length: $systemStore?.pickTeamGameweek ?? 1 },
-    (_, i) => i + 1
-  );
+  let leagueStatus: LeagueStatus;
+  let gameweeks: number[];
 
   $: if ($fantasyTeam && $selectedGameweek && $selectedGameweek > 0) {
     updateGameweekPlayers();
@@ -58,8 +57,13 @@
 
   onMount(async () => {
     try {
+      leagueStatus = await leagueStore.getLeagueStatus();
+      gameweeks = Array.from(
+        { length: leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek ?? 1 },
+        (_, i) => i + 1
+      );
       await storeManager.syncStores();
-      activeSeasonName = await seasonStore.getSeasonName($systemStore?.pickTeamSeasonId ?? 0) ?? "";
+      activeSeasonName = await seasonStore.getSeasonName(leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek ?? 0) ?? "";
       if (!$fantasyTeam) {
         $gameweekPlayers = [];
         return;
@@ -197,12 +201,12 @@
 
           <button
             class={`${
-              $selectedGameweek === $systemStore?.pickTeamGameweek
+              $selectedGameweek === (leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek)
                 ? "bg-gray-500"
                 : "fpl-button"
             } default-button ml-1`}
             on:click={() => changeGameweek(1)}
-            disabled={$selectedGameweek === $systemStore?.pickTeamGameweek}
+            disabled={$selectedGameweek === (leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek)}
           >
             &gt;
           </button>

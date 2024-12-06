@@ -2,20 +2,20 @@ import { writable } from "svelte/store";
 import type {
   FantasyTeamSnapshot,
   PlayerPointsDTO,
-  SystemStateDTO,
-} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-import type {
+  AppStatusDTO,
   FixtureDTO,
   PlayerDetailDTO,
   PlayerDTO,
-} from "../../../../declarations/data_canister/data_canister.did";
+  LeagueStatus,
+} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { PlayerEventsService } from "$lib/services/player-events-service";
 import type { GameweekData } from "$lib/interfaces/GameweekData";
-import { systemStore } from "./system-store";
 import { playerStore } from "./player-store";
 import { calculatePlayerScore, extractPlayerData } from "$lib/utils/helpers";
 import { fixtureStore } from "./fixture-store";
 import { getTotalBonusPoints } from "$lib/utils/pick-team.helpers";
+import { appStore } from "./app-store";
+import { leagueStore } from "./league-store";
 
 function createPlayerEventsStore() {
   const { subscribe, set } = writable<PlayerPointsDTO[]>([]);
@@ -33,31 +33,28 @@ function createPlayerEventsStore() {
     gameweek: number,
   ): Promise<GameweekData[]> {
     let allPlayerEvents: PlayerPointsDTO[] = [];
-    let systemState: SystemStateDTO | null = null;
-    systemStore.subscribe((result) => {
+    let appStatus: AppStatusDTO | null = null;
+    appStore.subscribe((result) => {
       if (result == null) {
-        throw new Error("Failed to subscribe to system store");
+        throw new Error("Failed to subscribe to application store");
       }
-      systemState = {
-        pickTeamSeasonId: result.pickTeamSeasonId,
-        calculationGameweek: result.calculationGameweek,
-        transferWindowActive: result.transferWindowActive,
-        pickTeamGameweek: result.pickTeamGameweek,
+      appStatus = {
         version: result.version,
-        calculationMonth: result.calculationMonth,
-        pickTeamMonth: result.pickTeamMonth,
-        calculationSeasonId: result.calculationSeasonId,
         onHold: result.onHold,
-        seasonActive: result.seasonActive,
       };
     });
-    if (systemState == null) {
-      throw new Error("Failed to subscribe to system store");
-    }
+
+    let leagueStatus: LeagueStatus | null = null;
+    leagueStore.subscribe((result) => {
+      if (result == null) {
+        throw new Error("Failed to subscribe to league store");
+      }
+      leagueStatus = result;
+    });
 
     if (
-      (systemState as SystemStateDTO).calculationSeasonId === seasonId &&
-      (systemState as SystemStateDTO).calculationGameweek === gameweek
+      leagueStatus!.activeSeasonId === seasonId &&
+      leagueStatus!.activeGameweek === gameweek
     ) {
       allPlayerEvents = await getPlayerEventsFromLocalStorage();
     } else {

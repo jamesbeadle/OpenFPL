@@ -6,16 +6,13 @@ import type { TeamStats } from "$lib/types/team-stats";
 import * as FlagIcons from "svelte-flag-icons";
 import type {
   ClubDTO,
-  FantasyTeamSnapshot,
+  PlayerDTO,
+  PlayerPointsDTO,
   FixtureDTO,
   FixtureStatusType,
   PlayerEventType,
   PlayerPosition,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-import type {
-  PlayerDTO,
-  PlayerPointsDTO,
-} from "../../../../declarations/data_canister/data_canister.did";
 import type { GameweekData } from "$lib/interfaces/GameweekData";
 import EnglandFlag from "../flags/england.svelte"; // Custom Svelte component for England
 import ScotlandFlag from "../flags/scotland.svelte"; // Custom Svelte component for Scotland

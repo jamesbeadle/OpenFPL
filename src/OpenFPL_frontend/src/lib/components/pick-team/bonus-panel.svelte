@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { systemStore } from "$lib/stores/system-store";
   import { writable, type Writable } from "svelte/store";
   import type { PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { Bonus } from "$lib/types/bonus";
@@ -8,6 +7,7 @@
   import UseBonusModal from "$lib/components/pick-team/modals/use-bonus-modal.svelte";
   import Tooltip from "../tooltip.svelte";
     import { storeManager } from "$lib/managers/store-manager";
+    import { leagueStore } from "$lib/stores/league-store";
 
   export let fantasyTeam: Writable<PickTeamDTO | null>;
 
@@ -117,7 +117,11 @@
 
   $: if ($fantasyTeam) {
     updateBonuses();
-    $weeklyBonusPlayed = bonusPlayedThisWeek();
+    setWeeklyBonusPlayed();
+  }
+
+  async function setWeeklyBonusPlayed(){
+    $weeklyBonusPlayed = await bonusPlayedThisWeek();
   }
 
   function updateBonuses() {
@@ -131,7 +135,7 @@
 
   onMount(async () => {
     updateBonuses();
-    $weeklyBonusPlayed = bonusPlayedThisWeek();
+    await setWeeklyBonusPlayed();
   });
   let showModal: boolean = false;
   let selectedBonusId = 0;
@@ -206,9 +210,10 @@
     }
   }
 
-  function bonusPlayedThisWeek(): boolean {
+  async function bonusPlayedThisWeek(): Promise<boolean> {
     if (!$fantasyTeam) return false;
-    let activeGameweek = $systemStore?.pickTeamGameweek;
+    let leagueStatus = await leagueStore.getLeagueStatus();
+    let activeGameweek = leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek;
     let bonusPlayed: boolean =
       $fantasyTeam?.goalGetterGameweek == activeGameweek ||
       $fantasyTeam?.passMasterGameweek == activeGameweek ||

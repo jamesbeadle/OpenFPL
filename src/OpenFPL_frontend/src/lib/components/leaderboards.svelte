@@ -2,7 +2,6 @@
   import { onMount } from "svelte";
   
   import { storeManager } from "$lib/managers/store-manager";
-  import { systemStore } from "$lib/stores/system-store";
   import { clubStore } from "$lib/stores/club-store";
   import { weeklyLeaderboardStore } from "$lib/stores/weekly-leaderboard-store";
   import { monthlyLeaderboardStore } from "$lib/stores/monthly-leaderboard-store";
@@ -10,17 +9,16 @@
   import { authSignedInStore } from "$lib/derived/auth.derived";
   import { userGetFavouriteTeam } from "$lib/derived/user.derived";
   
-  import type { LeaderboardEntry, RewardEntry } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { LeaderboardEntry, LeagueStatus, RewardEntry } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   
   import LocalSpinner from "./local-spinner.svelte";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import { formatE8s } from "$lib/utils/helpers";
+    import { leagueStore } from "$lib/stores/league-store";
 
   let isLoading = true;
-  let gameweeks = Array.from(
-    { length: $systemStore?.calculationGameweek ?? 1 },
-    (_, i) => i + 1
-  );
+  let leagueStatus: LeagueStatus;
+  let gameweeks: number[];
   let currentPage = 1;
   let itemsPerPage = 25;
 
@@ -47,7 +45,11 @@
   onMount(async () => {
     try {
       await storeManager.syncStores();
-      
+      leagueStatus = await leagueStore.getLeagueStatus();
+      gameweeks = Array.from(
+        { length: leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek ?? 1 },
+        (_, i) => i + 1
+      );
       /*
       await monthlyLeaderboardStore.sync(
         $systemStore?.calculationSeasonId ?? 1,
@@ -60,9 +62,9 @@
       );
       */
 
-      selectedSeasonId = $systemStore?.calculationSeasonId ?? 1;
-      selectedGameweek = $systemStore?.calculationGameweek ?? 1;
-      selectedMonth = $systemStore?.calculationMonth ?? 8;
+      selectedSeasonId = leagueStatus.activeSeasonId ?? 1;
+      selectedGameweek = leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek ?? 1;
+      selectedMonth = leagueStatus.activeMonth ?? 8;
       selectedTeamId = $authSignedInStore
         ? $userGetFavouriteTeam ??
           $clubStore.sort((a, b) =>
@@ -258,12 +260,12 @@
             </select>
             <button
               class={`${
-                selectedGameweek === $systemStore?.calculationGameweek
+                selectedGameweek === (leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek)
                   ? "bg-gray-500"
                   : "fpl-button"
               } default-button ml-1`}
               on:click={() => changeGameweek(1)}
-              disabled={selectedGameweek === $systemStore?.calculationGameweek}
+              disabled={selectedGameweek === (leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek)}
               >&gt;</button
             >
           </div>

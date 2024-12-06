@@ -208,17 +208,36 @@ module AppTypes {
     dataHashes: [Base.DataHash];
   };
 
-  public type SystemState = {
-    pickTeamSeasonId : FootballTypes.SeasonId;
-    pickTeamGameweek : FootballTypes.GameweekNumber;
-    pickTeamMonth: Base.CalendarMonth;
-    calculationGameweek : FootballTypes.GameweekNumber;
-    calculationMonth : Base.CalendarMonth;
-    calculationSeasonId : FootballTypes.SeasonId;
-    seasonActive : Bool;
-    transferWindowActive : Bool;
+  public type LeagueGameweekStatus = {
+    leagueId: FootballTypes.LeagueId;
+    seasonId: FootballTypes.SeasonId;
+    gameweek: FootballTypes.GameweekNumber;
+    status: LeaderboardStatus;
+  };
+
+  public type LeagueMonthStatus = {
+    leagueId: FootballTypes.LeagueId;
+    seasonId: FootballTypes.SeasonId;
+    month: Base.CalendarMonth;
+    status: LeaderboardStatus;
+  };
+
+  public type LeagueSeasonStatus = {
+    leagueId: FootballTypes.LeagueId;
+    seasonId: FootballTypes.SeasonId;
+    status: LeaderboardStatus;
+  };
+  
+  public type AppStatus = {
     onHold : Bool;
     version: Text;
+  };
+
+  public type LeaderboardStatus = {
+    #NotStarted;
+    #Active;
+    #Settled;
+    #Void;
   };
 
   public type RewardPool = {

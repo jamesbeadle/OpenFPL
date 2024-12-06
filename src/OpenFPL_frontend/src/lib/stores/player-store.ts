@@ -1,6 +1,6 @@
 import { writable } from "svelte/store";
-import type { PlayerDTO } from "../../../../declarations/data_canister/data_canister.did";
 import { PlayerService } from "$lib/services/player-service";
+import type { PlayerDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 function createPlayerStore() {
   const { subscribe, set } = writable<PlayerDTO[]>([]);

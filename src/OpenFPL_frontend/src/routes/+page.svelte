@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { authStore } from "$lib/stores/auth.store";
-  import { systemStore } from "$lib/stores/system-store";
+  import { leagueStore } from "$lib/stores/league-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { clubStore } from "$lib/stores/club-store";
   import { toastsError } from "$lib/stores/toasts-store";
@@ -15,6 +15,7 @@
   import type {
     LeaderboardEntry,
     ClubDTO,
+    LeagueStatus,
   } from "../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import Layout from "./Layout.svelte";
   import FixturesComponent from "$lib/components/fixtures.svelte";
@@ -27,6 +28,7 @@
     import { seasonStore } from "$lib/stores/season-store";
     import { storeManager } from "$lib/managers/store-manager";
 
+  let leagueStatus: LeagueStatus;
   let activeTab: string = "fixtures";
   let managerCount = 0;
   let countdownDays = "00";
@@ -48,12 +50,13 @@
   onMount(async () => {
     try {
       await storeManager.syncStores();
+      leagueStatus = await leagueStore.getLeagueStatus();
 
       authStore.subscribe((store) => {
         isLoggedIn = store.identity !== null && store.identity !== undefined;
       });
       
-      seasonName = await seasonStore.getSeasonName($systemStore?.pickTeamSeasonId ?? 0) ?? "";
+      seasonName = await seasonStore.getSeasonName(leagueStatus.activeSeasonId ?? 0) ?? "";
       
       loadSection1();
       loadSection2();
@@ -145,7 +148,7 @@
         <div class="flex-grow">
           <p class="content-panel-header">Gameweek</p>
           <p class="content-panel-stat">
-            {$systemStore?.pickTeamGameweek}
+            {leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek }
           </p>
           <p class="content-panel-header">
             {seasonName}
@@ -336,12 +339,12 @@
           <div class="vertical-divider" />
           <div class="flex-grow">
             <p class="content-panel-header">
-              GW {$systemStore?.calculationGameweek} High Score
+              GW {leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek} High Score
             </p>
             <p class="content-panel-stat max-w-[200px] truncate">
               {#if weeklyLeader}
                 <a
-                  href={`/manager?id=${weeklyLeader.principalId}&gw=${$systemStore?.calculationGameweek}`}
+                  href={`/manager?id=${weeklyLeader.principalId}&gw=${leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek}`}
                   >{weeklyLeader.principalId === weeklyLeader.username
                     ? "Unknown"
                     : weeklyLeader.username}</a

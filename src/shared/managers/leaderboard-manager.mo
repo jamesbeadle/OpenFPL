@@ -336,6 +336,7 @@ module {
       };
 
       /*
+      //TODO: Need a way to separate out month
       if(month > 0){
         for(clubId in Iter.fromArray(clubIds)){
           await leaderboard_canister.prepareForUpdate(seasonId, month, gameweek, clubId);  
@@ -770,18 +771,6 @@ module {
 
     public func setStableActiveCanisterId(stable_active_canister_id: Base.CanisterId){
       activeCanisterId := stable_active_canister_id;
-    };
-
-    public func fixData() {
-      weeklyLeaderboardCanisters := [
-        (1, 
-          [
-            (9, "n26sp-cqaaa-aaaal-qna7q-cai"),
-            (10, "n26sp-cqaaa-aaaal-qna7q-cai"),
-            (11, "n26sp-cqaaa-aaaal-qna7q-cai"),
-            (12, "n26sp-cqaaa-aaaal-qna7q-cai")
-          ])
-      ];
     };
   };
 };

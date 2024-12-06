@@ -3597,7 +3597,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "qh123a"
+  version_hash: "1pfey1p"
 };
 async function get_hooks() {
   return {};
@@ -3799,14 +3799,6 @@ const initAuthStore = () => {
   };
 };
 const authStore = initAuthStore();
-function createSystemStore() {
-  const { subscribe: subscribe2, set } = writable(null);
-  return {
-    subscribe: subscribe2,
-    setSystemState: (systemState) => set(systemState)
-  };
-}
-const systemStore = createSystemStore();
 const idlFactory = ({ IDL }) => {
   const List = IDL.Rec();
   const Error2 = IDL.Variant({
@@ -3829,7 +3821,12 @@ const idlFactory = ({ IDL }) => {
   });
   const Result = IDL.Variant({ "ok": IDL.Null, "err": Error2 });
   const GameweekNumber = IDL.Nat8;
-  const Result_24 = IDL.Variant({ "ok": IDL.Text, "err": Error2 });
+  const Result_25 = IDL.Variant({ "ok": IDL.Text, "err": Error2 });
+  const AppStatusDTO = IDL.Record({
+    "version": IDL.Text,
+    "onHold": IDL.Bool
+  });
+  const Result_24 = IDL.Variant({ "ok": AppStatusDTO, "err": Error2 });
   const CanisterType = IDL.Variant({
     "SNS": IDL.Null,
     "Leaderboard": IDL.Null,
@@ -3900,9 +3897,9 @@ const idlFactory = ({ IDL }) => {
     "canisterId": CanisterId,
     "monthlyBonusesAvailable": IDL.Nat8
   });
-  const Result_7 = IDL.Variant({ "ok": PickTeamDTO, "err": Error2 });
+  const Result_20 = IDL.Variant({ "ok": PickTeamDTO, "err": Error2 });
   const DataHashDTO = IDL.Record({ "hash": IDL.Text, "category": IDL.Text });
-  const Result_20 = IDL.Variant({ "ok": IDL.Vec(DataHashDTO), "err": Error2 });
+  const Result_19 = IDL.Variant({ "ok": IDL.Vec(DataHashDTO), "err": Error2 });
   const SeasonId = IDL.Nat16;
   const PrincipalId = IDL.Text;
   const GetFantasyTeamSnapshotDTO = IDL.Record({
@@ -3946,7 +3943,7 @@ const idlFactory = ({ IDL }) => {
     "points": IDL.Int16,
     "monthlyBonusesAvailable": IDL.Nat8
   });
-  const Result_19 = IDL.Variant({
+  const Result_18 = IDL.Variant({
     "ok": FantasyTeamSnapshotDTO,
     "err": Error2
   });
@@ -3993,8 +3990,24 @@ const idlFactory = ({ IDL }) => {
     "gameweek": GameweekNumber,
     "awayGoals": IDL.Nat8
   });
-  const Result_13 = IDL.Variant({ "ok": IDL.Vec(FixtureDTO), "err": Error2 });
-  const Result_18 = IDL.Variant({ "ok": IDL.Vec(CanisterId), "err": Error2 });
+  const Result_11 = IDL.Variant({ "ok": IDL.Vec(FixtureDTO), "err": Error2 });
+  const Result_16 = IDL.Variant({ "ok": IDL.Vec(CanisterId), "err": Error2 });
+  const LeagueStatus = IDL.Record({
+    "transferWindowEndMonth": IDL.Nat8,
+    "transferWindowEndDay": IDL.Nat8,
+    "transferWindowStartMonth": IDL.Nat8,
+    "transferWindowActive": IDL.Bool,
+    "totalGameweeks": IDL.Nat8,
+    "completedGameweek": GameweekNumber,
+    "transferWindowStartDay": IDL.Nat8,
+    "unplayedGameweek": GameweekNumber,
+    "activeMonth": CalendarMonth,
+    "activeSeasonId": SeasonId,
+    "activeGameweek": GameweekNumber,
+    "leagueId": LeagueId,
+    "seasonActive": IDL.Bool
+  });
+  const Result_17 = IDL.Variant({ "ok": LeagueStatus, "err": Error2 });
   const ClubFilterDTO = IDL.Record({
     "clubId": ClubId,
     "leagueId": LeagueId
@@ -4108,7 +4121,7 @@ const idlFactory = ({ IDL }) => {
     "seasonId": SeasonId,
     "entries": IDL.Vec(LeaderboardEntry)
   });
-  const Result_17 = IDL.Variant({
+  const Result_15 = IDL.Variant({
     "ok": MonthlyLeaderboardDTO,
     "err": Error2
   });
@@ -4151,7 +4164,7 @@ const idlFactory = ({ IDL }) => {
     "lastName": IDL.Text,
     "firstName": IDL.Text
   });
-  const Result_16 = IDL.Variant({ "ok": PlayerDetailDTO, "err": Error2 });
+  const Result_14 = IDL.Variant({ "ok": PlayerDetailDTO, "err": Error2 });
   const GameweekFiltersDTO = IDL.Record({
     "seasonId": SeasonId,
     "gameweek": GameweekNumber
@@ -4164,7 +4177,7 @@ const idlFactory = ({ IDL }) => {
     "gameweek": GameweekNumber,
     "points": IDL.Int16
   });
-  const Result_15 = IDL.Variant({
+  const Result_13 = IDL.Variant({
     "ok": IDL.Vec(PlayerPointsDTO),
     "err": Error2
   });
@@ -4181,7 +4194,7 @@ const idlFactory = ({ IDL }) => {
     "position": PlayerPosition,
     "points": IDL.Int16
   });
-  const Result_14 = IDL.Variant({
+  const Result_12 = IDL.Variant({
     "ok": IDL.Vec(IDL.Tuple(IDL.Nat16, PlayerScoreDTO)),
     "err": Error2
   });
@@ -4199,7 +4212,7 @@ const idlFactory = ({ IDL }) => {
     "profilePictureType": IDL.Text,
     "principalId": IDL.Text
   });
-  const Result_12 = IDL.Variant({ "ok": ProfileDTO, "err": Error2 });
+  const Result_10 = IDL.Variant({ "ok": ProfileDTO, "err": Error2 });
   const RewardPool = IDL.Record({
     "monthlyLeaderboardPool": IDL.Nat64,
     "allTimeSeasonHighScorePool": IDL.Nat64,
@@ -4215,7 +4228,7 @@ const idlFactory = ({ IDL }) => {
     "seasonId": SeasonId,
     "rewardPool": RewardPool
   });
-  const Result_11 = IDL.Variant({ "ok": GetRewardPoolDTO, "err": Error2 });
+  const Result_9 = IDL.Variant({ "ok": GetRewardPoolDTO, "err": Error2 });
   const GetSeasonLeaderboardDTO = IDL.Record({
     "offset": IDL.Nat,
     "seasonId": SeasonId,
@@ -4227,26 +4240,13 @@ const idlFactory = ({ IDL }) => {
     "seasonId": SeasonId,
     "entries": IDL.Vec(LeaderboardEntry)
   });
-  const Result_10 = IDL.Variant({ "ok": SeasonLeaderboardDTO, "err": Error2 });
+  const Result_8 = IDL.Variant({ "ok": SeasonLeaderboardDTO, "err": Error2 });
   const SeasonDTO = IDL.Record({
     "id": SeasonId,
     "name": IDL.Text,
     "year": IDL.Nat16
   });
-  const Result_9 = IDL.Variant({ "ok": IDL.Vec(SeasonDTO), "err": Error2 });
-  const SystemStateDTO = IDL.Record({
-    "pickTeamSeasonId": SeasonId,
-    "calculationGameweek": GameweekNumber,
-    "transferWindowActive": IDL.Bool,
-    "pickTeamMonth": CalendarMonth,
-    "pickTeamGameweek": GameweekNumber,
-    "version": IDL.Text,
-    "calculationMonth": CalendarMonth,
-    "calculationSeasonId": SeasonId,
-    "onHold": IDL.Bool,
-    "seasonActive": IDL.Bool
-  });
-  const Result_8 = IDL.Variant({ "ok": SystemStateDTO, "err": Error2 });
+  const Result_7 = IDL.Variant({ "ok": IDL.Vec(SeasonDTO), "err": Error2 });
   const Result_6 = IDL.Variant({ "ok": IDL.Nat, "err": Error2 });
   const Result_4 = IDL.Variant({
     "ok": IDL.Vec(
@@ -4326,78 +4326,69 @@ const idlFactory = ({ IDL }) => {
     "profilePicture": IDL.Vec(IDL.Nat8),
     "extension": IDL.Text
   });
-  const UpdateSystemStateDTO = IDL.Record({
-    "pickTeamSeasonId": SeasonId,
-    "calculationGameweek": GameweekNumber,
-    "transferWindowActive": IDL.Bool,
-    "pickTeamMonth": CalendarMonth,
-    "pickTeamGameweek": GameweekNumber,
-    "version": IDL.Text,
-    "calculationMonth": CalendarMonth,
-    "calculationSeasonId": SeasonId,
-    "onHold": IDL.Bool,
-    "seasonActive": IDL.Bool
-  });
   const UpdateUsernameDTO = IDL.Record({ "username": IDL.Text });
   return IDL.Service({
     "calculateGameweekScores": IDL.Func([], [Result], []),
     "calculateLeaderboards": IDL.Func([], [Result], []),
     "calculateWeeklyRewards": IDL.Func([GameweekNumber], [Result], []),
-    "getActiveLeaderboardCanisterId": IDL.Func([], [Result_24], []),
+    "getActiveLeaderboardCanisterId": IDL.Func([], [Result_25], []),
+    "getAppStatus": IDL.Func([], [Result_24], ["query"]),
     "getCanisters": IDL.Func([GetCanistersDTO], [Result_23], []),
     "getClubs": IDL.Func([], [Result_22], ["composite_query"]),
     "getCountries": IDL.Func([], [Result_21], ["query"]),
-    "getCurrentTeam": IDL.Func([], [Result_7], []),
-    "getDataHashes": IDL.Func([], [Result_20], ["composite_query"]),
+    "getCurrentTeam": IDL.Func([], [Result_20], []),
+    "getDataHashes": IDL.Func([], [Result_19], ["composite_query"]),
     "getFantasyTeamSnapshot": IDL.Func(
       [GetFantasyTeamSnapshotDTO],
-      [Result_19],
+      [Result_18],
       []
     ),
-    "getFixtures": IDL.Func([LeagueId], [Result_13], ["composite_query"]),
-    "getLeaderboardCanisterIds": IDL.Func([], [Result_18], []),
+    "getFixtures": IDL.Func([LeagueId], [Result_11], ["composite_query"]),
+    "getLeaderboardCanisterIds": IDL.Func([], [Result_16], []),
+    "getLeagueStatus": IDL.Func([], [Result_17], []),
     "getLoanedPlayers": IDL.Func(
       [ClubFilterDTO],
       [Result_5],
       ["composite_query"]
     ),
     "getManager": IDL.Func([RequestManagerDTO], [Result_1], []),
-    "getManagerCanisterIds": IDL.Func([], [Result_18], []),
+    "getManagerCanisterIds": IDL.Func([], [Result_16], []),
     "getMonthlyLeaderboard": IDL.Func(
       [GetMonthlyLeaderboardDTO],
-      [Result_17],
+      [Result_15],
       []
     ),
-    "getPlayerDetails": IDL.Func([GetPlayerDetailsDTO], [Result_16], []),
+    "getPlayerDetails": IDL.Func([GetPlayerDetailsDTO], [Result_14], []),
     "getPlayerDetailsForGameweek": IDL.Func(
       [GameweekFiltersDTO],
-      [Result_15],
+      [Result_13],
       ["composite_query"]
     ),
     "getPlayers": IDL.Func([], [Result_5], ["composite_query"]),
-    "getPlayersMap": IDL.Func([GameweekFiltersDTO], [Result_14], []),
+    "getPlayersMap": IDL.Func([GameweekFiltersDTO], [Result_12], []),
     "getPlayersSnapshot": IDL.Func(
       [GetSnapshotPlayers],
       [IDL.Vec(PlayerDTO)],
       ["query"]
     ),
-    "getPostponedFixtures": IDL.Func([], [Result_13], ["composite_query"]),
-    "getProfile": IDL.Func([], [Result_12], []),
+    "getPostponedFixtures": IDL.Func(
+      [LeagueId],
+      [Result_11],
+      ["composite_query"]
+    ),
+    "getProfile": IDL.Func([], [Result_10], []),
     "getRetiredPlayers": IDL.Func(
       [ClubFilterDTO],
       [Result_5],
       ["composite_query"]
     ),
-    "getRewardPool": IDL.Func([GetRewardPoolDTO], [Result_11], []),
-    "getSantiTeam": IDL.Func([], [Result_7], []),
+    "getRewardPool": IDL.Func([GetRewardPoolDTO], [Result_9], []),
     "getSeasonLeaderboard": IDL.Func(
       [GetSeasonLeaderboardDTO],
-      [Result_10],
+      [Result_8],
       []
     ),
-    "getSeasons": IDL.Func([], [Result_9], ["composite_query"]),
-    "getSystemState": IDL.Func([], [Result_8], ["query"]),
-    "getTeejayTeam": IDL.Func([], [Result_7], []),
+    "getSeasons": IDL.Func([], [Result_7], ["composite_query"]),
     "getTotalManagers": IDL.Func([], [Result_6], ["query"]),
     "getVerifiedPlayers": IDL.Func([], [Result_5], []),
     "getWeeklyCanisters": IDL.Func([], [Result_4], ["query"]),
@@ -4423,12 +4414,11 @@ const idlFactory = ({ IDL }) => {
     "updateDataHashes": IDL.Func([IDL.Text], [Result], []),
     "updateFavouriteClub": IDL.Func([UpdateFavouriteClubDTO], [Result], []),
     "updateProfilePicture": IDL.Func([UpdateProfilePictureDTO], [Result], []),
-    "updateSystemState": IDL.Func([UpdateSystemStateDTO], [Result], []),
     "updateUsername": IDL.Func([UpdateUsernameDTO], [Result], [])
   });
 };
-var define_process_env_default$g = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
-const canisterId = define_process_env_default$g.CANISTER_ID_OPENFPL_BACKEND;
+var define_process_env_default$h = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+const canisterId = define_process_env_default$h.CANISTER_ID_OPENFPL_BACKEND;
 const createActor = (canisterId2, options2 = {}) => {
   const agent = options2.agent || new HttpAgent({ ...options2.agentOptions });
   if (options2.agent && options2.agentOptions) {
@@ -4443,7 +4433,7 @@ const createActor = (canisterId2, options2 = {}) => {
   });
 };
 canisterId ? createActor(canisterId) : void 0;
-var define_process_env_default$f = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$g = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class ActorFactory {
   static createActor(idlFactory2, canisterId2 = "", identity = null, options2 = null) {
     const hostOptions = {
@@ -4496,7 +4486,7 @@ class ActorFactory {
     });
   }
   static getGovernanceAgent(identity = null, options2 = null) {
-    let canisterId2 = define_process_env_default$f.CANISTER_ID_SNS_GOVERNANCE;
+    let canisterId2 = define_process_env_default$g.CANISTER_ID_SNS_GOVERNANCE;
     const hostOptions = {
       host: `https://${canisterId2}.icp-api.io`,
       identity
@@ -10897,7 +10887,35 @@ function calculatePlayerScore(gameweekData, fixtures) {
   score += gameweekData.assists * pointsForAssist;
   return score;
 }
-var define_process_env_default$e = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$f = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+class LeagueService {
+  actor;
+  constructor() {
+    this.actor = ActorFactory.createActor(
+      idlFactory,
+      define_process_env_default$f.OPENFPL_BACKEND_CANISTER_ID
+    );
+  }
+  async getLeagueStatus() {
+    const result = await this.actor.getLeagueStatus();
+    if (isError(result))
+      throw new Error("Failed to fetch league status");
+    return result.ok;
+  }
+}
+function createLeagueStore() {
+  const { subscribe: subscribe2, set } = writable(null);
+  async function getLeagueStatus() {
+    return await new LeagueService().getLeagueStatus();
+  }
+  return {
+    subscribe: subscribe2,
+    getLeagueStatus,
+    setLeagueStatus: (leagueStatus) => set(leagueStatus)
+  };
+}
+const leagueStore = createLeagueStore();
+var define_process_env_default$e = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class FixtureService {
   actor;
   constructor() {
@@ -11282,13 +11300,9 @@ const toastsError = ({
     level: "error"
   });
 };
-var define_process_env_default$d = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$d = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 function createManagerStore() {
   const { subscribe: subscribe2, set } = writable(null);
-  let systemState;
-  systemStore.subscribe((value) => {
-    systemState = value;
-  });
   let actor = ActorFactory.createActor(
     idlFactory,
     define_process_env_default$d.OPENFPL_BACKEND_CANISTER_ID
@@ -11328,11 +11342,12 @@ function createManagerStore() {
     firstGameweek: false
   };
   async function getPublicProfile(principalId) {
+    let leagueStatus = await leagueStore.getLeagueStatus();
     try {
       let dto = {
         managerId: principalId,
         month: 0,
-        seasonId: systemState.calculationSeasonId,
+        seasonId: leagueStatus.activeSeasonId,
         gameweek: 0,
         clubId: 0
       };
@@ -11569,7 +11584,7 @@ function createSeasonStore() {
   };
 }
 const seasonStore = createSeasonStore();
-var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class PlayerService {
   actor;
   constructor() {
@@ -11615,7 +11630,7 @@ function createPlayerStore() {
   };
 }
 const playerStore = createPlayerStore();
-var define_process_env_default$b = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$b = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class PlayerEventsService {
   actor;
   constructor() {
@@ -11772,6 +11787,34 @@ function getTotalBonusPoints(gameweekData, fantasyTeam, points) {
   }
   return bonusPoints;
 }
+var define_process_env_default$a = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+class AppService {
+  actor;
+  constructor() {
+    this.actor = ActorFactory.createActor(
+      idlFactory,
+      define_process_env_default$a.OPENFPL_BACKEND_CANISTER_ID
+    );
+  }
+  async getAppStatus() {
+    const result = await this.actor.getAppStatus();
+    if (isError(result))
+      throw new Error("Failed to fetch system state");
+    return result.ok;
+  }
+}
+function createAppStore() {
+  const { subscribe: subscribe2, set } = writable(null);
+  async function getAppStatus() {
+    return await new AppService().getAppStatus();
+  }
+  return {
+    subscribe: subscribe2,
+    getAppStatus,
+    setAppStatus: (appStatus) => set(appStatus)
+  };
+}
+const appStore = createAppStore();
 function createPlayerEventsStore() {
   const { subscribe: subscribe2, set } = writable([]);
   async function getPlayerDetails(playerId, seasonId) {
@@ -11779,28 +11822,23 @@ function createPlayerEventsStore() {
   }
   async function getGameweekPlayers(fantasyTeam, seasonId, gameweek) {
     let allPlayerEvents = [];
-    let systemState = null;
-    systemStore.subscribe((result) => {
+    appStore.subscribe((result) => {
       if (result == null) {
-        throw new Error("Failed to subscribe to system store");
+        throw new Error("Failed to subscribe to application store");
       }
-      systemState = {
-        pickTeamSeasonId: result.pickTeamSeasonId,
-        calculationGameweek: result.calculationGameweek,
-        transferWindowActive: result.transferWindowActive,
-        pickTeamGameweek: result.pickTeamGameweek,
+      ({
         version: result.version,
-        calculationMonth: result.calculationMonth,
-        pickTeamMonth: result.pickTeamMonth,
-        calculationSeasonId: result.calculationSeasonId,
-        onHold: result.onHold,
-        seasonActive: result.seasonActive
-      };
+        onHold: result.onHold
+      });
     });
-    if (systemState == null) {
-      throw new Error("Failed to subscribe to system store");
-    }
-    if (systemState.calculationSeasonId === seasonId && systemState.calculationGameweek === gameweek) {
+    let leagueStatus = null;
+    leagueStore.subscribe((result) => {
+      if (result == null) {
+        throw new Error("Failed to subscribe to league store");
+      }
+      leagueStatus = result;
+    });
+    if (leagueStatus.activeSeasonId === seasonId && leagueStatus.activeGameweek === gameweek) {
       allPlayerEvents = await getPlayerEventsFromLocalStorage();
     } else {
       allPlayerEvents = await getPlayerEventsFromBackend(seasonId, gameweek);
@@ -11860,13 +11898,13 @@ function createPlayerEventsStore() {
   };
 }
 const playerEventsStore = createPlayerEventsStore();
-var define_process_env_default$a = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$9 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class WeeklyLeaderboardService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory,
-      define_process_env_default$a.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default$9.OPENFPL_BACKEND_CANISTER_ID
     );
   }
   async getWeeklyLeaderboard(offset, seasonId, gameweek) {
@@ -11911,13 +11949,13 @@ function createWeeklyLeaderboardStore() {
   };
 }
 const weeklyLeaderboardStore = createWeeklyLeaderboardStore();
-var define_process_env_default$9 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class DataHashService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory,
-      define_process_env_default$9.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default$8.OPENFPL_BACKEND_CANISTER_ID
     );
   }
   async getDataHashes() {
@@ -11927,13 +11965,13 @@ class DataHashService {
     return result.ok;
   }
 }
-var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$7 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class CountryService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory,
-      define_process_env_default$8.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default$7.OPENFPL_BACKEND_CANISTER_ID
     );
   }
   async getCountries() {
@@ -11943,23 +11981,7 @@ class CountryService {
     return result.ok;
   }
 }
-var define_process_env_default$7 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
-class SystemService {
-  actor;
-  constructor() {
-    this.actor = ActorFactory.createActor(
-      idlFactory,
-      define_process_env_default$7.OPENFPL_BACKEND_CANISTER_ID
-    );
-  }
-  async getSystemState() {
-    const result = await this.actor.getSystemState();
-    if (isError(result))
-      throw new Error("Failed to fetch system state");
-    return result.ok;
-  }
-}
-var define_process_env_default$6 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$6 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class SeasonService {
   actor;
   constructor() {
@@ -11975,7 +11997,7 @@ class SeasonService {
     return result.ok;
   }
 }
-var define_process_env_default$5 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$5 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class ClubService {
   actor;
   constructor() {
@@ -11995,7 +12017,8 @@ class StoreManager {
   constructor() {
     this.categories = [
       "countries",
-      "system_state",
+      "app_status",
+      "league_status",
       "seasons",
       "clubs",
       "players",
@@ -12004,7 +12027,8 @@ class StoreManager {
     ];
     this.dataHashService = new DataHashService();
     this.countryService = new CountryService();
-    this.systemService = new SystemService();
+    this.appService = new AppService();
+    this.leagueService = new LeagueService();
     this.seasonService = new SeasonService();
     this.clubService = new ClubService();
     this.playerService = new PlayerService();
@@ -12040,12 +12064,20 @@ class StoreManager {
           JSON.stringify(updatedCountries, replacer)
         );
         break;
-      case "system_state":
-        const updatedSystemState = await this.systemService.getSystemState();
-        systemStore.setSystemState(updatedSystemState);
+      case "league_status":
+        const updatedLeagueStatus = await this.leagueService.getLeagueStatus();
+        leagueStore.setLeagueStatus(updatedLeagueStatus);
         localStorage.setItem(
-          "system_state",
-          JSON.stringify(updatedSystemState, replacer)
+          "league_status",
+          JSON.stringify(updatedLeagueStatus, replacer)
+        );
+        break;
+      case "app_status":
+        const updatedAppStatus = await this.appService.getAppStatus();
+        appStore.setAppStatus(updatedAppStatus);
+        localStorage.setItem(
+          "app_status",
+          JSON.stringify(updatedAppStatus, replacer)
         );
         break;
       case "seasons":
@@ -12070,10 +12102,10 @@ class StoreManager {
         );
         break;
       case "player_events":
-        const systemState = await this.systemService.getSystemState();
+        const leagueStatus = await this.leagueService.getLeagueStatus();
         const updatedPlayerEvents = await this.playerEventsService.getPlayerDetailsForGameweek(
-          systemState.calculationSeasonId,
-          systemState.calculationGameweek
+          leagueStatus.activeSeasonId,
+          leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek
         );
         playerEventsStore.setPlayerEvents(updatedPlayerEvents);
         localStorage.setItem(
@@ -12090,11 +12122,11 @@ class StoreManager {
         );
         break;
       case "weekly_leaderboard":
-        systemStore.subscribe(async (systemState2) => {
+        leagueStore.subscribe(async (leagueStatus2) => {
           const updatedWeeklyLeaderboard = await this.weeklyLeaderboardService.getWeeklyLeaderboard(
             0,
-            systemState2?.calculationSeasonId ?? 0,
-            systemState2?.calculationGameweek ?? 0
+            leagueStatus2?.activeSeasonId ?? 0,
+            leagueStatus2?.activeGameweek ?? 0
           );
           weeklyLeaderboardStore.setWeeklyLeaderboard(updatedWeeklyLeaderboard);
           localStorage.setItem(
@@ -12112,9 +12144,13 @@ class StoreManager {
         const cachedCountries = JSON.parse(cachedData || "[]");
         countryStore.setCountries(cachedCountries);
         break;
-      case "system_state":
-        const cachedSystemState = JSON.parse(cachedData || "null");
-        systemStore.setSystemState(cachedSystemState);
+      case "app_status":
+        const cachedAppStatus = JSON.parse(cachedData || "null");
+        appStore.setAppStatus(cachedAppStatus);
+        break;
+      case "league_status":
+        const cachedLeagueStatus = JSON.parse(cachedData || "null");
+        leagueStore.setLeagueStatus(cachedLeagueStatus);
         break;
       case "seasons":
         const cachedSeasons = JSON.parse(cachedData || "");
@@ -12140,7 +12176,7 @@ class StoreManager {
   }
 }
 new StoreManager();
-var define_process_env_default$4 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$4 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class UserService {
   constructor() {
     authStore.sync();
@@ -12157,7 +12193,7 @@ class UserService {
     return result.ok;
   }
 }
-var define_process_env_default$3 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$3 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 function createUserStore() {
   const { subscribe: subscribe2, set } = writable(null);
   async function sync() {
@@ -12498,15 +12534,19 @@ const Local_spinner = create_ssr_component(($$result, $$props, $$bindings, slots
   $$result.css.add(css$3);
   return `<div class="local-spinner svelte-pvdm52"></div>`;
 });
-var define_process_env_default$2 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+const css$2 = {
+  code: ".local-spinner.svelte-1mszak5{border:5px solid rgba(255, 255, 255, 0.3);border-top:5px solid white;border-radius:50%;width:50px;height:50px;position:relative;margin:0 auto;animation:svelte-1mszak5-spin 1s linear infinite}@keyframes svelte-1mszak5-spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}",
+  map: null
+};
+const Relative_spinner = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  $$result.css.add(css$2);
+  return `<div class="local-spinner svelte-1mszak5"></div>`;
+});
+var define_process_env_default$2 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 function createMonthlyLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage = 25;
   const category = "monthly_leaderboard_data";
-  let systemState;
-  systemStore.subscribe((value) => {
-    systemState = value;
-  });
   let actor = ActorFactory.createActor(
     idlFactory,
     define_process_env_default$2.OPENFPL_BACKEND_CANISTER_ID
@@ -12561,7 +12601,8 @@ function createMonthlyLeaderboardStore() {
   async function getMonthlyLeaderboard(seasonId, clubId, month, currentPage, searchTerm) {
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
-    if (currentPage <= 4 && month == systemState?.calculationMonth) {
+    let leagueStatus = await leagueStore.getLeagueStatus();
+    if (currentPage <= 4 && month == leagueStatus?.activeMonth) {
       const cachedData = localStorage.getItem(category);
       if (cachedData && cachedData != "undefined") {
         let cachedMonthlyLeaderboard;
@@ -12616,15 +12657,11 @@ function createMonthlyLeaderboardStore() {
   };
 }
 createMonthlyLeaderboardStore();
-var define_process_env_default$1 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$1 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 function createSeasonLeaderboardStore() {
   const { subscribe: subscribe2, set } = writable(null);
   const itemsPerPage = 25;
   const category = "season_leaderboard";
-  let systemState;
-  systemStore.subscribe((value) => {
-    systemState = value;
-  });
   let actor = ActorFactory.createActor(
     idlFactory,
     define_process_env_default$1.OPENFPL_BACKEND_CANISTER_ID
@@ -12684,7 +12721,8 @@ function createSeasonLeaderboardStore() {
   async function getSeasonLeaderboard(seasonId, currentPage, searchTerm) {
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
-    if (currentPage <= 4 && seasonId == systemState?.calculationSeasonId) {
+    let leagueStatus = await leagueStore.getLeagueStatus();
+    if (currentPage <= 4 && seasonId == leagueStatus.activeSeasonId) {
       const cachedData = localStorage.getItem(category);
       if (cachedData && cachedData != "undefined") {
         let cachedSeasonLeaderboard;
@@ -12730,21 +12768,10 @@ function createSeasonLeaderboardStore() {
   };
 }
 createSeasonLeaderboardStore();
-const css$2 = {
-  code: ".local-spinner.svelte-1mszak5{border:5px solid rgba(255, 255, 255, 0.3);border-top:5px solid white;border-radius:50%;width:50px;height:50px;position:relative;margin:0 auto;animation:svelte-1mszak5-spin 1s linear infinite}@keyframes svelte-1mszak5-spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}",
-  map: null
-};
-const Relative_spinner = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  $$result.css.add(css$2);
-  return `<div class="local-spinner svelte-1mszak5"></div>`;
-});
 const Page$a = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_clubStore;
-  let $$unsubscribe_systemStore;
   $$unsubscribe_clubStore = subscribe(clubStore, (value) => value);
-  $$unsubscribe_systemStore = subscribe(systemStore, (value) => value);
   $$unsubscribe_clubStore();
-  $$unsubscribe_systemStore();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
       return `<div class="flex page-header-wrapper">${`<div class="flex items-center justify-center content-panel lg:w-1/2">${validate_component(Relative_spinner, "RelativeSpinner").$$render($$result, {}, {}, {})}</div>`} ${`<div class="flex lg:hidden"><div class="flex items-center justify-center content-panel">${validate_component(Relative_spinner, "RelativeSpinner").$$render($$result, {}, {}, {})}</div></div> <div class="hidden w-1/2 lg:flex"><div class="flex items-center justify-center content-panel">${validate_component(Relative_spinner, "RelativeSpinner").$$render($$result, {}, {}, {})}</div></div>`}</div> <div class="rounded-md bg-panel"><ul class="flex px-1 pt-2 mb-4 border-b border-gray-700 bg-light-gray md:px-4 contained-text"><li${add_attribute("class", `mr-1 md:mr-4 ${"active-tab"}`, 0)}><button${add_attribute(
@@ -12771,7 +12798,7 @@ const Widget_spinner = create_ssr_component(($$result, $$props, $$bindings, slot
   $$result.css.add(css$1);
   return `<div class="widget svelte-1tvdi4g" data-svelte-h="svelte-qgbhb9"><div class="widget-spinner svelte-1tvdi4g"></div> </div>`;
 });
-var define_process_env_default = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DATA_CANISTER_CANISTER_ID: "52fzd-2aaaa-aaaal-qmzsa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class CanisterService {
   actor;
   constructor() {
@@ -12853,13 +12880,11 @@ const Page$8 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $clubStore, $$unsubscribe_clubStore;
   let $$unsubscribe_playerStore;
   let $$unsubscribe_fixtureStore;
-  let $$unsubscribe_systemStore;
   let $$unsubscribe_seasonStore;
   let $page, $$unsubscribe_page;
   $$unsubscribe_clubStore = subscribe(clubStore, (value) => $clubStore = value);
   $$unsubscribe_playerStore = subscribe(playerStore, (value) => value);
   $$unsubscribe_fixtureStore = subscribe(fixtureStore, (value) => value);
-  $$unsubscribe_systemStore = subscribe(systemStore, (value) => value);
   $$unsubscribe_seasonStore = subscribe(seasonStore, (value) => value);
   $$unsubscribe_page = subscribe(page, (value) => $page = value);
   let fixturesWithTeams = [];
@@ -12873,7 +12898,6 @@ const Page$8 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_clubStore();
   $$unsubscribe_playerStore();
   $$unsubscribe_fixtureStore();
-  $$unsubscribe_systemStore();
   $$unsubscribe_seasonStore();
   $$unsubscribe_page();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
@@ -13097,9 +13121,9 @@ const Page$4 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_fantasyTeam;
   let $$unsubscribe_loadingPlayers;
   let $$unsubscribe_availableFormations;
-  let $$unsubscribe_systemStore;
+  let $$unsubscribe_appStore;
   let $$unsubscribe_onHold;
-  $$unsubscribe_systemStore = subscribe(systemStore, (value) => value);
+  $$unsubscribe_appStore = subscribe(appStore, (value) => value);
   const fantasyTeam = writable({
     playerIds: [],
     oneNationCountryId: 0,
@@ -13139,7 +13163,7 @@ const Page$4 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_fantasyTeam();
   $$unsubscribe_loadingPlayers();
   $$unsubscribe_availableFormations();
-  $$unsubscribe_systemStore();
+  $$unsubscribe_appStore();
   $$unsubscribe_onHold();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
@@ -13151,16 +13175,14 @@ const Page$3 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $clubStore, $$unsubscribe_clubStore;
   let $fixtureStore, $$unsubscribe_fixtureStore;
   let $$unsubscribe_playerStore;
-  let $systemStore, $$unsubscribe_systemStore;
   let $page, $$unsubscribe_page;
   let $$unsubscribe_countryStore;
   $$unsubscribe_clubStore = subscribe(clubStore, (value) => $clubStore = value);
   $$unsubscribe_fixtureStore = subscribe(fixtureStore, (value) => $fixtureStore = value);
   $$unsubscribe_playerStore = subscribe(playerStore, (value) => value);
-  $$unsubscribe_systemStore = subscribe(systemStore, (value) => $systemStore = value);
   $$unsubscribe_page = subscribe(page, (value) => $page = value);
   $$unsubscribe_countryStore = subscribe(countryStore, (value) => value);
-  let selectedGameweek = $systemStore?.pickTeamGameweek ?? 1;
+  let selectedGameweek = 1;
   let fixturesWithTeams = [];
   Number($page.url.searchParams.get("id"));
   {
@@ -13171,7 +13193,6 @@ const Page$3 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_clubStore();
   $$unsubscribe_fixtureStore();
   $$unsubscribe_playerStore();
-  $$unsubscribe_systemStore();
   $$unsubscribe_page();
   $$unsubscribe_countryStore();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {

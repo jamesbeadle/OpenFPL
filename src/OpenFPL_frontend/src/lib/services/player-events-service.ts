@@ -3,14 +3,12 @@ import { ActorFactory } from "../../utils/ActorFactory";
 import { isError } from "../utils/helpers";
 import type {
   PlayerPointsDTO,
-  SystemStateDTO,
-} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-import type {
+  AppStatusDTO,
   GameweekFiltersDTO,
   GetPlayerDetailsDTO,
   PlayerDetailDTO,
-} from "../../../../declarations/data_canister/data_canister.did";
-import { systemStore } from "$lib/stores/system-store";
+} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import { leagueStore } from "$lib/stores/league-store";
 
 export class PlayerEventsService {
   private actor: any;

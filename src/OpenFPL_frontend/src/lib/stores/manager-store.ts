@@ -1,5 +1,5 @@
 import { authStore } from "$lib/stores/auth.store";
-import { systemStore } from "$lib/stores/system-store";
+import { leagueStore } from "$lib/stores/league-store";
 import { isError } from "$lib/utils/helpers";
 import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
@@ -9,18 +9,12 @@ import type {
   RequestManagerDTO,
   ManagerDTO,
   PickTeamDTO,
-  SystemStateDTO,
   UpdateTeamSelectionDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 
 function createManagerStore() {
   const { subscribe, set } = writable<PickTeamDTO | null>(null);
-
-  let systemState: SystemStateDTO;
-  systemStore.subscribe((value) => {
-    systemState = value as SystemStateDTO;
-  });
 
   let actor: any = ActorFactory.createActor(
     idlFactory,
@@ -63,11 +57,12 @@ function createManagerStore() {
   };
 
   async function getPublicProfile(principalId: string): Promise<ManagerDTO> {
+    let leagueStatus = await leagueStore.getLeagueStatus();
     try {
       let dto: RequestManagerDTO = {
         managerId: principalId,
         month: 0,
-        seasonId: systemState.calculationSeasonId,
+        seasonId: leagueStatus.activeSeasonId,
         gameweek: 0,
         clubId: 0,
       };

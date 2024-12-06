@@ -3,7 +3,6 @@
   import { clubStore } from "$lib/stores/club-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { playerStore } from "$lib/stores/player-store";
-  import { systemStore } from "$lib/stores/system-store";
   import { toastsError } from "$lib/stores/toasts-store";
   import Layout from "../Layout.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
@@ -16,6 +15,7 @@
     FixtureDTO,
     ClubDTO,
     PlayerDTO,
+    LeagueStatus,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import {
     updateTableData,
@@ -26,8 +26,10 @@
     import LoanedPlayers from "$lib/components/club/loaned-players.svelte";
     import { seasonStore } from "$lib/stores/season-store";
     import { storeManager } from "$lib/managers/store-manager";
+    import { leagueStore } from "$lib/stores/league-store";
 
   let isLoading = true;
+  let leagueStatus: LeagueStatus;
   let fixturesWithTeams: FixtureWithTeams[] = [];
   let selectedGameweek: number;
   let team: ClubDTO | null = null;
@@ -45,9 +47,9 @@
   onMount(async () => {
     try {
       await storeManager.syncStores();
-
-      seasonName = $seasonStore.find(x => x.id == $systemStore?.pickTeamSeasonId)?.name ?? "";
-      selectedGameweek = $systemStore?.pickTeamGameweek ?? 1;
+      leagueStatus = await leagueStore.getLeagueStatus();
+      seasonName = $seasonStore.find(x => x.id == leagueStatus.activeSeasonId)?.name ?? "";
+      selectedGameweek = leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek ?? 1;
 
       let teamFixtures = $fixtureStore.filter(
         (x) => x.homeClubId === id || x.awayClubId === id

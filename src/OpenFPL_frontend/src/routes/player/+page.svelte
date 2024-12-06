@@ -4,7 +4,7 @@
   import { playerStore } from "$lib/stores/player-store";
   import { clubStore } from "$lib/stores/club-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
-  import { systemStore } from "$lib/stores/system-store";
+  import { leagueStore } from "$lib/stores/league-store";
   import { toastsError } from "$lib/stores/toasts-store";
   import {
     calculateAgeFromNanoseconds,
@@ -22,6 +22,7 @@
     FixtureDTO,
     ClubDTO,
     PlayerDTO,
+    LeagueStatus,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
   import Layout from "../Layout.svelte";
@@ -34,7 +35,8 @@
 
   $: id = Number($page.url.searchParams.get("id"));
 
-  let selectedGameweek: number = $systemStore?.pickTeamGameweek ?? 1;
+  let leagueStatus: LeagueStatus;
+  let selectedGameweek: number = 1;
   let selectedPlayer: PlayerDTO | null = null;
   let fixturesWithTeams: FixtureWithTeams[] = [];
   let team: ClubDTO | null = null;
@@ -56,6 +58,8 @@
     try {
       
       await storeManager.syncStores();
+      leagueStatus = await leagueStore.getLeagueStatus();
+      selectedGameweek = leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek;
 
       selectedPlayer = $playerStore.find((x) => x.id === id) ?? null;
       team = $clubStore.find((x) => x.id === selectedPlayer?.clubId) ?? null;

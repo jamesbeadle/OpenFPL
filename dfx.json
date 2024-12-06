@@ -14,12 +14,6 @@
       "source": ["build/"],
       "type": "assets"
     },
-    "data_canister": {
-      "dependencies": [],
-      "main": "src/data_canister/main.mo",
-      "type": "motoko",
-      "optimize": "cycles"
-    },
     "sns_governance": {
       "build": "",
       "candid": "governance/candid/sns_governance.did",

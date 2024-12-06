@@ -29,8 +29,6 @@ module {
 
   public class UserManager(controllerPrincipalId: Base.PrincipalId, fixturesPerClub: Nat8) {
     
-    //need to store for each league the manager canister id dictionary
-
     private var managerCanisterIds :  TrieMap.TrieMap<Base.PrincipalId, Base.CanisterId> = TrieMap.TrieMap<Base.PrincipalId, Base.CanisterId>(Text.equal, Text.hash);
     private var usernames: TrieMap.TrieMap<Base.PrincipalId, Text> = TrieMap.TrieMap<Base.PrincipalId, Text>(Text.equal, Text.hash);
 
@@ -218,7 +216,7 @@ module {
       return List.toArray(uniqueManagerCanisterIds);
     };
 
-    public func getCurrentTeam(principalId : Text, pickTeamSeasonId: FootballTypes.SeasonId, pickTeamGameweek: FootballTypes.GameweekNumber) : async Result.Result<DTOs.PickTeamDTO, T.Error> {
+    public func getCurrentTeam(principalId : Text, currentSeasonId: FootballTypes.SeasonId) : async Result.Result<DTOs.PickTeamDTO, T.Error> {
 
       let managerCanisterId = managerCanisterIds.get(principalId);
       switch (managerCanisterId) {
@@ -239,7 +237,7 @@ module {
 
               var firstGameweek = true;
               let currentManagerSeason = List.find<T.FantasyTeamSeason>(foundManager.history, func(season: T.FantasyTeamSeason) : Bool {
-                season.seasonId == pickTeamSeasonId;
+                season.seasonId == currentSeasonId;
               });
 
               let hasPlayersInTeam = Array.size(foundManager.playerIds) > 0;
@@ -451,7 +449,7 @@ module {
       return false;
     };
 
-    public func updateUsername(managerPrincipalId : Base.PrincipalId, username: Text, systemState: DTOs.SystemStateDTO) : async Result.Result<(), T.Error> {
+    public func updateUsername(managerPrincipalId : Base.PrincipalId, username: Text, gameweek: FootballTypes.GameweekNumber) : async Result.Result<(), T.Error> {
       if (not isUsernameValid(username)) {
         return #err(#InvalidData);
       };
@@ -463,7 +461,7 @@ module {
       let managerCanisterId = managerCanisterIds.get(managerPrincipalId);
       switch(managerCanisterId){
         case (null){
-          return await createNewManager(managerPrincipalId, username, 0, null, "", null, systemState, []);
+          return await createNewManager(managerPrincipalId, username, 0, null, "", null, gameweek, []);
         };  
         case (?foundManagerCanisterId){
           
@@ -480,7 +478,7 @@ module {
       };
     };
 
-    private func createNewManager(managerPrincipalId: Base.PrincipalId, username: Text, favouriteClubId: FootballTypes.ClubId, profilePicture: ?Blob, profilePictureType: Text, dto : ?DTOs.UpdateTeamSelectionDTO, systemState: DTOs.SystemStateDTO, players: [DTOs.PlayerDTO]) : async Result.Result<(), T.Error>{
+    private func createNewManager(managerPrincipalId: Base.PrincipalId, username: Text, favouriteClubId: FootballTypes.ClubId, profilePicture: ?Blob, profilePictureType: Text, dto : ?DTOs.UpdateTeamSelectionDTO, gameweek: FootballTypes.GameweekNumber, players: [DTOs.PlayerDTO]) : async Result.Result<(), T.Error>{
       
       if(activeManagerCanisterId == ""){
         activeManagerCanisterId := await createManagerCanister();
@@ -512,20 +510,20 @@ module {
         case (null){ };
         case (?foundDTO){
 
-        if (await invalidBonuses(null, foundDTO, systemState, players)) {
+        if (await invalidBonuses(null, foundDTO, gameweek, players)) {
           return #err(#InvalidBonuses);
         };
 
-        var bonusPlayed = foundDTO.goalGetterGameweek == systemState.pickTeamGameweek 
-          or foundDTO.passMasterGameweek == systemState.pickTeamGameweek 
-          or foundDTO.noEntryGameweek == systemState.pickTeamGameweek 
-          or foundDTO.teamBoostGameweek == systemState.pickTeamGameweek 
-          or foundDTO.safeHandsGameweek == systemState.pickTeamGameweek 
-          or foundDTO.captainFantasticGameweek == systemState.pickTeamGameweek 
-          or foundDTO.oneNationGameweek == systemState.pickTeamGameweek 
-          or foundDTO.prospectsGameweek == systemState.pickTeamGameweek 
-          or foundDTO.braceBonusGameweek == systemState.pickTeamGameweek 
-          or foundDTO.hatTrickHeroGameweek == systemState.pickTeamGameweek;
+        var bonusPlayed = foundDTO.goalGetterGameweek == gameweek 
+          or foundDTO.passMasterGameweek == gameweek 
+          or foundDTO.noEntryGameweek == gameweek 
+          or foundDTO.teamBoostGameweek == gameweek 
+          or foundDTO.safeHandsGameweek == gameweek 
+          or foundDTO.captainFantasticGameweek == gameweek 
+          or foundDTO.oneNationGameweek == gameweek 
+          or foundDTO.prospectsGameweek == gameweek 
+          or foundDTO.braceBonusGameweek == gameweek 
+          or foundDTO.hatTrickHeroGameweek == gameweek;
 
           if(bonusPlayed){
             monthlyBonuses := 1;
@@ -672,20 +670,20 @@ module {
       return canisterId;
     };
 
-    private func invalidBonuses(manager: ?T.Manager, updatedFantasyTeam : DTOs.UpdateTeamSelectionDTO, systemState: DTOs.SystemStateDTO, players : [DTOs.PlayerDTO]) : async Bool {
+    private func invalidBonuses(manager: ?T.Manager, updatedFantasyTeam : DTOs.UpdateTeamSelectionDTO, gameweek: FootballTypes.GameweekNumber, players : [DTOs.PlayerDTO]) : async Bool {
       switch(manager){
         case (null){ };
         case (?foundManager){
-          let goalGetterPlayed = updatedFantasyTeam.goalGetterGameweek == systemState.pickTeamGameweek;
-          let passMasterPlayed = updatedFantasyTeam.passMasterGameweek == systemState.pickTeamGameweek;
-          let noEntryPlayed = updatedFantasyTeam.noEntryGameweek == systemState.pickTeamGameweek;
-          let teamBoostPlayed = updatedFantasyTeam.teamBoostGameweek == systemState.pickTeamGameweek;
-          let safeHandsPlayed = updatedFantasyTeam.safeHandsGameweek == systemState.pickTeamGameweek;
-          let captainFantasticPlayed = updatedFantasyTeam.captainFantasticGameweek == systemState.pickTeamGameweek;
-          let prospectsPlayed = updatedFantasyTeam.prospectsGameweek == systemState.pickTeamGameweek;
-          let oneNationPlayed = updatedFantasyTeam.oneNationGameweek == systemState.pickTeamGameweek;
-          let braceBonusPlayed = updatedFantasyTeam.braceBonusGameweek == systemState.pickTeamGameweek;
-          let hatTrickHeroPlayed = updatedFantasyTeam.hatTrickHeroGameweek == systemState.pickTeamGameweek;
+          let goalGetterPlayed = updatedFantasyTeam.goalGetterGameweek == gameweek;
+          let passMasterPlayed = updatedFantasyTeam.passMasterGameweek == gameweek;
+          let noEntryPlayed = updatedFantasyTeam.noEntryGameweek == gameweek;
+          let teamBoostPlayed = updatedFantasyTeam.teamBoostGameweek == gameweek;
+          let safeHandsPlayed = updatedFantasyTeam.safeHandsGameweek == gameweek;
+          let captainFantasticPlayed = updatedFantasyTeam.captainFantasticGameweek == gameweek;
+          let prospectsPlayed = updatedFantasyTeam.prospectsGameweek == gameweek;
+          let oneNationPlayed = updatedFantasyTeam.oneNationGameweek == gameweek;
+          let braceBonusPlayed = updatedFantasyTeam.braceBonusGameweek == gameweek;
+          let hatTrickHeroPlayed = updatedFantasyTeam.hatTrickHeroGameweek == gameweek;
          
           if(goalGetterPlayed and updatedFantasyTeam.goalGetterPlayerId == 0){
             return true;
@@ -718,14 +716,14 @@ module {
 
           var bonusesPlayed: Int = 0;
 
-          if (goalGetterPlayed and foundManager.goalGetterGameweek != systemState.pickTeamGameweek) {
+          if (goalGetterPlayed and foundManager.goalGetterGameweek != gameweek) {
             bonusesPlayed += 1;
           };
-          if (passMasterPlayed and foundManager.passMasterGameweek != systemState.pickTeamGameweek) {
+          if (passMasterPlayed and foundManager.passMasterGameweek != gameweek) {
             bonusesPlayed += 1;
           };
           
-          if (noEntryPlayed and foundManager.noEntryGameweek != systemState.pickTeamGameweek) {
+          if (noEntryPlayed and foundManager.noEntryGameweek != gameweek) {
             let bonusPlayer = List.find<DTOs.PlayerDTO>(
               List.fromArray(players),
               func(player : DTOs.PlayerDTO) : Bool {
@@ -743,10 +741,10 @@ module {
             bonusesPlayed += 1;
           };
           
-          if (teamBoostPlayed and foundManager.teamBoostGameweek != systemState.pickTeamGameweek) {
+          if (teamBoostPlayed and foundManager.teamBoostGameweek != gameweek) {
             bonusesPlayed += 1;
           };
-          if (safeHandsPlayed and foundManager.safeHandsGameweek != systemState.pickTeamGameweek) {
+          if (safeHandsPlayed and foundManager.safeHandsGameweek != gameweek) {
             let bonusPlayer = List.find<DTOs.PlayerDTO>(
               List.fromArray(players),
               func(player : DTOs.PlayerDTO) : Bool {
@@ -761,77 +759,73 @@ module {
             };
             bonusesPlayed += 1;
           };
-          if (captainFantasticPlayed and foundManager.captainFantasticGameweek != systemState.pickTeamGameweek) {
+          if (captainFantasticPlayed and foundManager.captainFantasticGameweek != gameweek) {
             bonusesPlayed += 1;
           };
-          if (oneNationPlayed and foundManager.oneNationGameweek != systemState.pickTeamGameweek) {
+          if (oneNationPlayed and foundManager.oneNationGameweek != gameweek) {
             bonusesPlayed += 1;
           };
-          if (prospectsPlayed and foundManager.prospectsGameweek != systemState.pickTeamGameweek) {
+          if (prospectsPlayed and foundManager.prospectsGameweek != gameweek) {
             bonusesPlayed += 1;
           };
-          if (braceBonusPlayed and foundManager.braceBonusGameweek != systemState.pickTeamGameweek) {
+          if (braceBonusPlayed and foundManager.braceBonusGameweek != gameweek) {
             bonusesPlayed += 1;
           };
-          if (hatTrickHeroPlayed and foundManager.hatTrickHeroGameweek != systemState.pickTeamGameweek) {
+          if (hatTrickHeroPlayed and foundManager.hatTrickHeroGameweek != gameweek) {
             bonusesPlayed += 1;
           };
 
           if (bonusesPlayed > 1) {
             return true;
-          };      
-
-          if(not systemState.seasonActive){
-            return false;
-          };    
+          };  
           
-          if(updatedFantasyTeam.goalGetterGameweek == systemState.pickTeamGameweek and 
-            (foundManager.goalGetterGameweek != systemState.pickTeamGameweek and foundManager.goalGetterGameweek != 0)){
+          if(updatedFantasyTeam.goalGetterGameweek == gameweek and 
+            (foundManager.goalGetterGameweek != gameweek and foundManager.goalGetterGameweek != 0)){
             return true;
           };
           
-          if(updatedFantasyTeam.passMasterGameweek == systemState.pickTeamGameweek and 
-            (foundManager.passMasterGameweek != systemState.pickTeamGameweek and foundManager.passMasterGameweek != 0)){
+          if(updatedFantasyTeam.passMasterGameweek == gameweek and 
+            (foundManager.passMasterGameweek != gameweek and foundManager.passMasterGameweek != 0)){
             return true;
           };
           
-          if(updatedFantasyTeam.noEntryGameweek == systemState.pickTeamGameweek and 
-            (foundManager.noEntryGameweek != systemState.pickTeamGameweek and foundManager.noEntryGameweek != 0)){
+          if(updatedFantasyTeam.noEntryGameweek == gameweek and 
+            (foundManager.noEntryGameweek != gameweek and foundManager.noEntryGameweek != 0)){
             return true;
           };
           
-          if(updatedFantasyTeam.teamBoostGameweek == systemState.pickTeamGameweek and 
-            (foundManager.teamBoostGameweek != systemState.pickTeamGameweek and foundManager.teamBoostGameweek != 0)){
+          if(updatedFantasyTeam.teamBoostGameweek == gameweek and 
+            (foundManager.teamBoostGameweek != gameweek and foundManager.teamBoostGameweek != 0)){
             return true;
           };
           
-          if(updatedFantasyTeam.safeHandsGameweek == systemState.pickTeamGameweek and 
-            (foundManager.safeHandsGameweek != systemState.pickTeamGameweek and foundManager.safeHandsGameweek != 0)){
+          if(updatedFantasyTeam.safeHandsGameweek == gameweek and 
+            (foundManager.safeHandsGameweek != gameweek and foundManager.safeHandsGameweek != 0)){
             return true;
           };
           
-          if(updatedFantasyTeam.captainFantasticGameweek == systemState.pickTeamGameweek and 
-            (foundManager.captainFantasticGameweek != systemState.pickTeamGameweek and foundManager.captainFantasticGameweek != 0)){
+          if(updatedFantasyTeam.captainFantasticGameweek == gameweek and 
+            (foundManager.captainFantasticGameweek != gameweek and foundManager.captainFantasticGameweek != 0)){
             return true;
           };
           
-          if(updatedFantasyTeam.prospectsGameweek == systemState.pickTeamGameweek and 
-            (foundManager.prospectsGameweek != systemState.pickTeamGameweek and foundManager.prospectsGameweek != 0)){
+          if(updatedFantasyTeam.prospectsGameweek == gameweek and 
+            (foundManager.prospectsGameweek != gameweek and foundManager.prospectsGameweek != 0)){
             return true;
           };
           
-          if(updatedFantasyTeam.oneNationGameweek == systemState.pickTeamGameweek and 
-            (foundManager.oneNationGameweek != systemState.pickTeamGameweek and foundManager.oneNationGameweek != 0)){
+          if(updatedFantasyTeam.oneNationGameweek == gameweek and 
+            (foundManager.oneNationGameweek != gameweek and foundManager.oneNationGameweek != 0)){
             return true;
           };
           
-          if(updatedFantasyTeam.braceBonusGameweek == systemState.pickTeamGameweek and 
-            (foundManager.braceBonusGameweek != systemState.pickTeamGameweek and foundManager.braceBonusGameweek != 0)){
+          if(updatedFantasyTeam.braceBonusGameweek == gameweek and 
+            (foundManager.braceBonusGameweek != gameweek and foundManager.braceBonusGameweek != 0)){
             return true;
           };
           
-          if(updatedFantasyTeam.hatTrickHeroGameweek == systemState.pickTeamGameweek and 
-            (foundManager.hatTrickHeroGameweek != systemState.pickTeamGameweek and foundManager.hatTrickHeroGameweek != 0)){
+          if(updatedFantasyTeam.hatTrickHeroGameweek == gameweek and 
+            (foundManager.hatTrickHeroGameweek != gameweek and foundManager.hatTrickHeroGameweek != 0)){
             return true;
           };
 
@@ -852,7 +846,7 @@ module {
       return false;
     };
 
-    public func updateFavouriteClub(managerPrincipalId : Base.PrincipalId, favouriteClubId : FootballTypes.ClubId, systemState : DTOs.SystemStateDTO, activeClubs : [FootballTypes.Club]) : async Result.Result<(), T.Error> {
+    public func updateFavouriteClub(managerPrincipalId : Base.PrincipalId, favouriteClubId : FootballTypes.ClubId, gameweek: FootballTypes.GameweekNumber, activeClubs : [FootballTypes.Club]) : async Result.Result<(), T.Error> {
 
       let isClubActive = Array.find(
         activeClubs,
@@ -871,7 +865,7 @@ module {
       let managerCanisterId = managerCanisterIds.get(managerPrincipalId);
       switch(managerCanisterId){
         case (null){
-          return await createNewManager(managerPrincipalId, "", favouriteClubId, null, "", null, systemState, []);
+          return await createNewManager(managerPrincipalId, "", favouriteClubId, null, "", null, gameweek, []);
         };  
         case (?foundManagerCanisterId){
           
@@ -887,7 +881,7 @@ module {
       };
     };
 
-    public func updateProfilePicture(managerPrincipalId: Base.PrincipalId, dto: DTOs.UpdateProfilePictureDTO, systemState: DTOs.SystemStateDTO) : async Result.Result<(), T.Error> {
+    public func updateProfilePicture(managerPrincipalId: Base.PrincipalId, dto: DTOs.UpdateProfilePictureDTO, gameweek: FootballTypes.GameweekNumber) : async Result.Result<(), T.Error> {
 
       if (invalidProfilePicture(dto.profilePicture)) {
 
@@ -897,7 +891,7 @@ module {
       let managerCanisterId = managerCanisterIds.get(managerPrincipalId);
       switch(managerCanisterId){
         case (null){
-          return await createNewManager(managerPrincipalId, "", 0, ?dto.profilePicture, dto.extension, null, systemState, []);
+          return await createNewManager(managerPrincipalId, "", 0, ?dto.profilePicture, dto.extension, null, gameweek, []);
         };  
         case (?foundManagerCanisterId){
           
@@ -918,12 +912,8 @@ module {
       return (sizeInKB <= 0 or sizeInKB > 500);
     };
 
-    public func saveFantasyTeam(managerPrincipalId: Base.PrincipalId, updatedFantasyTeamDTO : DTOs.UpdateTeamSelectionDTO, systemState : DTOs.SystemStateDTO, players : [DTOs.PlayerDTO]) : async Result.Result<(), T.Error> {
+    public func saveFantasyTeam(managerPrincipalId: Base.PrincipalId, updatedFantasyTeamDTO : DTOs.UpdateTeamSelectionDTO, seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber, players : [DTOs.PlayerDTO]) : async Result.Result<(), T.Error> {
       
-      if (systemState.onHold) {
-        return #err(#SystemOnHold);
-      };
-
       let teamValidResult = teamValid(updatedFantasyTeamDTO, players);
       switch(teamValidResult){
         case (#ok _){ };
@@ -948,11 +938,11 @@ module {
       switch(managerCanisterId){
         case (null){
       
-          result := ?(await createNewManager(managerPrincipalId, updatedFantasyTeamDTO.username, 0, null, "", ?updatedFantasyTeamDTO, systemState, players));
+          result := ?(await createNewManager(managerPrincipalId, updatedFantasyTeamDTO.username, 0, null, "", ?updatedFantasyTeamDTO, gameweek, players));
         };  
         case (?foundManagerCanisterId){
       
-          result := ?(await updateFantasyTeam(foundManagerCanisterId, managerPrincipalId, updatedFantasyTeamDTO, systemState, players));
+          result := ?(await updateFantasyTeam(foundManagerCanisterId, managerPrincipalId, updatedFantasyTeamDTO, seasonId, gameweek, players));
         }
       };
 
@@ -1066,15 +1056,16 @@ module {
       return #ok();
     };
 
-     private func updateFantasyTeam(managerCanisterId: Base.CanisterId, managerPrincipalId: Base.PrincipalId, dto : DTOs.UpdateTeamSelectionDTO, systemState: DTOs.SystemStateDTO, allPlayers: [DTOs.PlayerDTO]) : async Result.Result<(), T.Error>{
+     private func updateFantasyTeam(managerCanisterId: Base.CanisterId, managerPrincipalId: Base.PrincipalId, dto : DTOs.UpdateTeamSelectionDTO, seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber, allPlayers: [DTOs.PlayerDTO]) : async Result.Result<(), T.Error>{
       let manager_canister = actor (managerCanisterId) : actor {
         getManager : Base.PrincipalId -> async ?T.Manager;
         updateTeamSelection : (updateManagerDTO : DTOs.TeamUpdateDTO, transfersAvailable : Nat8, monthlyBonuses : Nat8, newBankBalance : Nat16) -> async Result.Result<(), T.Error>;
       };
 
       let manager = await manager_canister.getManager(managerPrincipalId);  
-          
-      if (await invalidBonuses(manager, dto, systemState, allPlayers)) {
+              
+
+      if (await invalidBonuses(manager, dto, gameweek, allPlayers)) {
         return #err(#InvalidBonuses);
       };
 
@@ -1091,7 +1082,7 @@ module {
           var transfersAvailable = 3;
           var firstGameweek = true;
           let currentManagerSeason = List.find<T.FantasyTeamSeason>(foundManager.history, func(season: T.FantasyTeamSeason) : Bool {
-            season.seasonId == systemState.pickTeamSeasonId;
+            season.seasonId == seasonId;
           });
 
           switch(currentManagerSeason){
@@ -1104,13 +1095,13 @@ module {
           let hasPlayersInTeam = Array.size(foundManager.playerIds) > 0;
           
           if(not firstGameweek and hasPlayersInTeam){
-            let transfersAvailable = getTransfersAvailable(foundManager, dto.playerIds, allPlayers);
+            transfersAvailable := getTransfersAvailable(foundManager, dto.playerIds, allPlayers);
             if (transfersAvailable < 0) {
               return #err(#TooManyTransfers);
             };
           };
           
-          var monthlyBonuses = getMonthlyBonuses(foundManager, dto, systemState);
+          var monthlyBonuses = getMonthlyBonuses(foundManager, dto, gameweek);
           var newBankBalance = getNewBankBalance(foundManager, dto, allPlayers);
           return await manager_canister.updateTeamSelection({
             principalId = managerPrincipalId;
@@ -1191,7 +1182,7 @@ module {
       return false;
     };
 
-    private func getTransfersAvailable(manager: T.Manager, updatedPlayerIds: [FootballTypes.PlayerId], allPlayers: [DTOs.PlayerDTO]) : Int {
+    private func getTransfersAvailable(manager: T.Manager, updatedPlayerIds: [FootballTypes.PlayerId], allPlayers: [DTOs.PlayerDTO]) : Nat {
       
 
       let newPlayers = Array.filter<DTOs.PlayerDTO>(
@@ -1230,11 +1221,11 @@ module {
         },
       );
 
-      let transfersAvailable: Int = Int64.toInt(Int64.fromNat64(Nat64.fromNat(Nat8.toNat(manager.transfersAvailable)))) -  Array.size(additions);
+      let transfersAvailable: Nat = Nat8.toNat(manager.transfersAvailable) -  Array.size(additions);
       return transfersAvailable;
     };
 
-     private func getMonthlyBonuses(manager: T.Manager, dto: DTOs.UpdateTeamSelectionDTO, systemState: DTOs.SystemStateDTO) : Nat8 {
+     private func getMonthlyBonuses(manager: T.Manager, dto: DTOs.UpdateTeamSelectionDTO, gameweek: FootballTypes.GameweekNumber) : Nat8 {
       
       var monthlyBonuses = manager.monthlyBonusesAvailable;
       if(monthlyBonuses == 0){
@@ -1244,16 +1235,16 @@ module {
       
 
       var newBonusPlayed = 
-        (dto.goalGetterGameweek == systemState.pickTeamGameweek and manager.goalGetterGameweek == 0) 
-        or (dto.passMasterGameweek == systemState.pickTeamGameweek and manager.passMasterGameweek == 0)
-        or (dto.noEntryGameweek == systemState.pickTeamGameweek and manager.noEntryGameweek == 0)
-        or (dto.teamBoostGameweek == systemState.pickTeamGameweek and manager.teamBoostGameweek == 0)
-        or (dto.safeHandsGameweek == systemState.pickTeamGameweek and manager.safeHandsGameweek == 0)
-        or (dto.captainFantasticGameweek == systemState.pickTeamGameweek and manager.captainFantasticGameweek == 0)
-        or (dto.oneNationGameweek == systemState.pickTeamGameweek and manager.oneNationGameweek == 0)
-        or (dto.prospectsGameweek == systemState.pickTeamGameweek and manager.prospectsGameweek == 0)
-        or (dto.braceBonusGameweek == systemState.pickTeamGameweek and manager.braceBonusGameweek == 0)
-        or (dto.hatTrickHeroGameweek == systemState.pickTeamGameweek and manager.hatTrickHeroGameweek == 0);
+        (dto.goalGetterGameweek == gameweek and manager.goalGetterGameweek == 0) 
+        or (dto.passMasterGameweek == gameweek and manager.passMasterGameweek == 0)
+        or (dto.noEntryGameweek == gameweek and manager.noEntryGameweek == 0)
+        or (dto.teamBoostGameweek == gameweek and manager.teamBoostGameweek == 0)
+        or (dto.safeHandsGameweek == gameweek and manager.safeHandsGameweek == 0)
+        or (dto.captainFantasticGameweek == gameweek and manager.captainFantasticGameweek == 0)
+        or (dto.oneNationGameweek == gameweek and manager.oneNationGameweek == 0)
+        or (dto.prospectsGameweek == gameweek and manager.prospectsGameweek == 0)
+        or (dto.braceBonusGameweek == gameweek and manager.braceBonusGameweek == 0)
+        or (dto.hatTrickHeroGameweek == gameweek and manager.hatTrickHeroGameweek == 0);
       
       if(newBonusPlayed){
         monthlyBonuses := monthlyBonuses - 1;  

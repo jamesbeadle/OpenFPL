@@ -11,10 +11,10 @@
   import Text "mo:base/Text";
   import Time "mo:base/Time";
   import Buffer "mo:base/Buffer";
-import List "mo:base/List";
-import Debug "mo:base/Debug";
-import Nat16 "mo:base/Nat16";
-import Nat8 "mo:base/Nat8";
+  import List "mo:base/List";
+  import Debug "mo:base/Debug";
+  import Nat16 "mo:base/Nat16";
+  import Nat8 "mo:base/Nat8";
 
   import Base "../shared/types/base_types";
   import FootballTypes "../shared/types/football_types";
@@ -23,7 +23,6 @@ import Nat8 "mo:base/Nat8";
   import RequestDTOs "../shared/dtos/request_DTOs";
   import ResponseDTOs "../shared/dtos/response_DTOs";
   import Countries "../shared/Countries";
-  import FPLLedger "../shared/def/FPLLedger";
   import Root "../shared/sns-wrappers/root";
 
   import Management "../shared/utils/Management";
@@ -39,11 +38,9 @@ import Nat8 "mo:base/Nat8";
 
   actor Self {
     
-    private let ledger : FPLLedger.Interface = actor (FPLLedger.CANISTER_ID);
-
     private let userManager = UserManager.UserManager(Environment.BACKEND_CANISTER_ID, Environment.NUM_OF_GAMEWEEKS);
     private let dataManager = DataManager.DataManager();
-    private let seasonManager = SeasonManager.SeasonManager(Environment.NUM_OF_GAMEWEEKS);
+    private let seasonManager = SeasonManager.SeasonManager();
     private let leaderboardManager = LeaderboardManager.LeaderboardManager(Environment.BACKEND_CANISTER_ID);
     
     private func isManagerCanister(principalId: Text) : Bool {
@@ -62,10 +59,10 @@ import Nat8 "mo:base/Nat8";
 
     public shared ({ caller }) func getCurrentTeam() : async Result.Result<DTOs.PickTeamDTO, T.Error> {
       assert not Principal.isAnonymous(caller);
-      let systemStateResult = seasonManager.getSystemState();
-      switch(systemStateResult){
-        case (#ok systemState){       
-          return await userManager.getCurrentTeam(Principal.toText(caller), systemState.pickTeamSeasonId, systemState.pickTeamGameweek);
+      let leagueStatusResult = await getLeagueStatus();
+      switch(leagueStatusResult){
+        case (#ok leagueStatus){       
+          return await userManager.getCurrentTeam(Principal.toText(caller), leagueStatus.activeSeasonId);
         };
         case (#err error){
           return #err(error);
@@ -73,15 +70,19 @@ import Nat8 "mo:base/Nat8";
       }
     };
 
+    public shared func getLeagueStatus() : async Result.Result<FootballTypes.LeagueStatus, T.Error> {
+      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
+        getLeagueStatus : shared query (leagueId: FootballTypes.LeagueId) -> async Result.Result<FootballTypes.LeagueStatus, T.Error>;
+      };
+      return await data_canister.getLeagueStatus(Environment.LEAGUE_ID);
+    };
+
     public shared func getManager(dto: RequestDTOs.RequestManagerDTO) : async Result.Result<DTOs.ManagerDTO, T.Error> {
       
-      /*
       let weeklyLeaderboardEntry = await leaderboardManager.getWeeklyLeaderboardEntry(dto.managerId, dto.seasonId, dto.gameweek);
       let monthlyLeaderboardEntry = await leaderboardManager.getMonthlyLeaderboardEntry(dto.managerId, dto.seasonId, dto.month, dto.clubId);
       let seasonLeaderboardEntry = await leaderboardManager.getSeasonLeaderboardEntry(dto.managerId, dto.seasonId);
       return await userManager.getManager(dto, weeklyLeaderboardEntry, monthlyLeaderboardEntry, seasonLeaderboardEntry);
-      */
-      return await userManager.getManager(dto, null, null, null);
     };
 
     public shared func getFantasyTeamSnapshot(dto: DTOs.GetFantasyTeamSnapshotDTO) : async Result.Result<DTOs.FantasyTeamSnapshotDTO, T.Error> {
@@ -102,8 +103,7 @@ import Nat8 "mo:base/Nat8";
       return await leaderboardManager.getSeasonLeaderboard(dto);
     };
 
-    //No query calls
-
+    //Verified (non query) calls for when consensus required
 
     public shared func getVerifiedPlayers() : async Result.Result<[DTOs.PlayerDTO], T.Error> {
       let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
@@ -118,8 +118,8 @@ import Nat8 "mo:base/Nat8";
       return seasonManager.getDataHashes();
     };
 
-    public shared query func getSystemState() : async Result.Result<DTOs.SystemStateDTO, T.Error> {
-      return seasonManager.getSystemState();
+    public shared query func getAppStatus() : async Result.Result<DTOs.AppStatusDTO, T.Error> {
+      return seasonManager.getAppStatus();
     };
 
     public shared composite query func getClubs() : async Result.Result<[DTOs.ClubDTO], T.Error> {
@@ -143,9 +143,11 @@ import Nat8 "mo:base/Nat8";
       return await data_canister.getSeasons(Environment.LEAGUE_ID);
     };
 
-    public shared composite query func getPostponedFixtures() : async Result.Result<[DTOs.FixtureDTO], T.Error> {
-      return #err(#NotFound);
-      //return await dataManager.getPostponedFixtures(Environment.LEAGUE_ID);
+    public shared composite query func getPostponedFixtures(leagueId: FootballTypes.LeagueId) : async Result.Result<[DTOs.FixtureDTO], T.Error> {
+      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
+        getPostponedFixtures : shared query (leagueId: FootballTypes.LeagueId) -> async Result.Result<[DTOs.FixtureDTO], T.Error>;
+      };
+      return await data_canister.getPostponedFixtures(leagueId);
     };
 
     public shared query func getTotalManagers() : async Result.Result<Nat, T.Error> {
@@ -163,7 +165,6 @@ import Nat8 "mo:base/Nat8";
       assert isManagerCanister(Principal.toText(caller));
       return seasonManager.getPlayersSnapshot(dto);
     };
-
 
     public shared composite query func getLoanedPlayers(dto: DTOs.ClubFilterDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
       let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
@@ -217,10 +218,10 @@ import Nat8 "mo:base/Nat8";
       assert not Principal.isAnonymous(caller);
       let principalId = Principal.toText(caller);
 
-      let systemStateResult = seasonManager.getSystemState();
-      switch(systemStateResult){
-        case (#ok systemState){       
-          return await userManager.updateUsername(principalId, dto.username, systemState);   
+      let leagueStatusResult = await getLeagueStatus();
+      switch(leagueStatusResult){
+        case (#ok leagueStatus){       
+          return await userManager.updateUsername(principalId, dto.username, leagueStatus.unplayedGameweek);   
         };
         case (#err error){
           return #err(error);
@@ -232,14 +233,14 @@ import Nat8 "mo:base/Nat8";
       assert not Principal.isAnonymous(caller);
       let principalId = Principal.toText(caller);
       
-      let systemStateResult = seasonManager.getSystemState();
-      switch(systemStateResult){
-        case (#ok systemState){       
+      let leagueStatusResult = await getLeagueStatus();
+      switch(leagueStatusResult){
+        case (#ok leagueStatus){       
 
           let clubsResult = await dataManager.getVerifiedClubs(Environment.LEAGUE_ID);
           switch(clubsResult){
             case (#ok clubs){
-              return await userManager.updateFavouriteClub(principalId, dto.favouriteClubId, systemState, clubs);
+              return await userManager.updateFavouriteClub(principalId, dto.favouriteClubId, leagueStatus.unplayedGameweek, clubs);
             };
             case (#err error){
               return #err(error);
@@ -256,15 +257,15 @@ import Nat8 "mo:base/Nat8";
       assert not Principal.isAnonymous(caller);
       let principalId = Principal.toText(caller);
 
-      let systemStateResult = seasonManager.getSystemState();
-      switch(systemStateResult){
-        case (#ok systemState){       
+      let leagueStatusResult = await getLeagueStatus();
+      switch(leagueStatusResult){
+        case (#ok leagueStatus){       
 
           return await userManager.updateProfilePicture(principalId, {
             extension = dto.extension;
             managerId = principalId;
             profilePicture = dto.profilePicture;
-          }, systemState);
+          }, leagueStatus.unplayedGameweek);
         };
         case (#err error){
           return #err(error);
@@ -275,14 +276,31 @@ import Nat8 "mo:base/Nat8";
     public shared ({ caller }) func saveFantasyTeam(fantasyTeam : DTOs.UpdateTeamSelectionDTO) : async Result.Result<(), T.Error> {
       assert not Principal.isAnonymous(caller);
       let principalId = Principal.toText(caller);
-      let systemStateResult = seasonManager.getSystemState();
-      switch(systemStateResult){
-        case (#ok systemState){       
-          assert not systemState.onHold;
+      let leagueStatusResult = await getLeagueStatus();
+
+      let appStatusResult = seasonManager.getAppStatus();
+      switch(appStatusResult){
+        case (#ok appStatus){
+          if (appStatus.onHold) {
+            return #err(#SystemOnHold);
+          };
+        };
+        case (#err error){
+          return #err(error);
+        }
+      };
+      
+      switch(leagueStatusResult){
+        case (#ok leagueStatus){     
+
+          if(not leagueStatus.seasonActive){
+            return #err(#NotAllowed);
+          };    
+          
           let playersResult = await dataManager.getVerifiedPlayers(Environment.LEAGUE_ID);
           switch(playersResult){
             case (#ok players){
-              return await userManager.saveFantasyTeam(principalId, fantasyTeam, systemState, players);
+              return await userManager.saveFantasyTeam(principalId, fantasyTeam, leagueStatus.activeSeasonId, leagueStatus.unplayedGameweek, players);
             };
             case (#err error){
               return #err(error);
@@ -685,18 +703,15 @@ import Nat8 "mo:base/Nat8";
     private stable var stable_active_leaderbord_canister_id : Base.CanisterId = "";
 
     //Season Manager stable variables
-    private stable var stable_system_state : T.SystemState = {
-      calculationGameweek = 7;
-      calculationMonth = 10;
-      calculationSeasonId = 1;
+    private stable var stable_app_status : T.AppStatus = {
       onHold = false;
-      pickTeamGameweek = 7;
-      pickTeamMonth = 10;
-      pickTeamSeasonId = 1;
-      seasonActive = true;
-      transferWindowActive = false;
       version = "2.0.0";
     };
+
+    private stable var stable_league_gameweek_statuses: [T.LeagueGameweekStatus] = [];
+    private stable var stable_league_month_statuses: [T.LeagueMonthStatus] = [];
+    private stable var stable_league_season_statuses: [T.LeagueSeasonStatus] = [];
+
     private stable var stable_data_hashes : [Base.DataHash] = [];
     private stable var stable_player_snapshots : [(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])])] = [];
 
@@ -732,7 +747,11 @@ import Nat8 "mo:base/Nat8";
 
       stable_active_leaderbord_canister_id := leaderboardManager.getStableActiveCanisterId();
 
-      stable_system_state := seasonManager.getStableSystemState();
+      stable_app_status := seasonManager.getStableAppStatus();
+      stable_league_gameweek_statuses := seasonManager.getStableLeagueGameweekStatuses();
+      stable_league_month_statuses := seasonManager.getStableLeagueMonthStatuses();
+      stable_league_season_statuses := seasonManager.getStableLeagueSeasonStatuses();
+
       stable_data_hashes := seasonManager.getStableDataHashes();
       stable_player_snapshots := seasonManager.getStablePlayersSnapshots();
 
@@ -766,7 +785,7 @@ import Nat8 "mo:base/Nat8";
       leaderboardManager.setStableSeasonATHPrizePool(stable_season_ath_prize_pool);
       leaderboardManager.setStableActiveCanisterId(stable_active_leaderbord_canister_id);
 
-      seasonManager.setStableSystemState(stable_system_state);
+      seasonManager.setStableAppStatus(stable_app_status);
       seasonManager.setStableDataHashes(stable_data_hashes);
       seasonManager.setStablePlayersSnapshots(stable_player_snapshots);
 
@@ -776,30 +795,23 @@ import Nat8 "mo:base/Nat8";
       userManager.setStableTotalManagers(stable_total_managers);
       userManager.setStableActiveManagerCanisterId(stable_active_manager_canister_id);   
 
-      seasonManager.setStableDataHashes([
-        { category = "clubs"; hash = "OPENFPL_1" },
-        { category = "fixtures"; hash = "OPENFPL_1" },
-        { category = "weekly_leaderboard"; hash = "OPENFPL_1" },
-        { category = "monthly_leaderboards"; hash = "OPENFPL_1" },
-        { category = "season_leaderboard"; hash = "OPENFPL_1" },
-        { category = "players"; hash = "OPENFPL_1" },
-        { category = "player_events"; hash = "OPENFPL_1" },
-        { category = "countries"; hash = "OPENFPL_1" },
-        { category = "system_state"; hash = "OPENFPL_1" },
-        { category = "seasons"; hash = "OPENFPL_1" }
-      ]);
       ignore Timer.setTimer<system>(#nanoseconds(Int.abs(1)), postUpgradeCallback); 
     };
 
     private func postUpgradeCallback() : async (){
-    
+      await seasonManager.putOnHold();
+
       //TODO (GO LIVE)
       //set system state
       //ignore setSystemTimers();
+      
     
-      ignore updateLeaderboardCanisterWasms();
-      ignore updateManagerCanisterWasms();
-      ignore seasonManager.updateDataHash("system_state");
+      //ignore updateLeaderboardCanisterWasms();
+      //ignore updateManagerCanisterWasms();
+      //await userManager.resetWeeklyTransfers();
+
+      ignore seasonManager.updateDataHash("app_status");
+      ignore seasonManager.updateDataHash("league_status");
       ignore seasonManager.updateDataHash("countries");
       ignore seasonManager.updateDataHash("clubs");
       ignore seasonManager.updateDataHash("fixtures");
@@ -835,23 +847,22 @@ import Nat8 "mo:base/Nat8";
 
     //Functions to be removed when handed back to SNS
 
-    public shared ({ caller }) func updateSystemState(dto: RequestDTOs.UpdateSystemStateDTO) : async Result.Result<(), T.Error> {
-      assert Principal.toText(caller) == NetworkEnvironmentVariables.FOOTBALL_GOD_BACKEND_CANISTER_ID;
-      return await seasonManager.updateSystemState(dto);
-    };
-
     public shared ({ caller }) func snapshotManagers() : async Result.Result<(), T.Error> {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.FOOTBALL_GOD_BACKEND_CANISTER_ID;
-      let systemStateResult = await getSystemState();
-      switch(systemStateResult){
-        case (#ok systemState){
+      let leagueStatusResult = await getLeagueStatus();
+      switch(leagueStatusResult){
+        case (#ok leagueStatus){
 
           let playersResult = await dataManager.getVerifiedPlayers(Environment.LEAGUE_ID); 
           switch(playersResult){
             case (#ok players){
-              seasonManager.storePlayersSnapshot(systemState.pickTeamSeasonId, systemState.pickTeamGameweek, players);
-              let _ = await userManager.snapshotFantasyTeams(Environment.LEAGUE_ID, systemState.pickTeamSeasonId, systemState.pickTeamGameweek, systemState.pickTeamMonth);
-              return #ok();
+              if(leagueStatus.activeGameweek > 0){
+                seasonManager.storePlayersSnapshot(leagueStatus.activeSeasonId, leagueStatus.activeGameweek, players);
+                let _ = await userManager.snapshotFantasyTeams(Environment.LEAGUE_ID, leagueStatus.activeSeasonId, leagueStatus.activeGameweek, leagueStatus.activeMonth);
+                return #ok();
+              } else{
+                return #err(#InvalidData);
+              };
             };
             case (#err error){
               return #err(error);
@@ -866,11 +877,16 @@ import Nat8 "mo:base/Nat8";
 
     public shared ({ caller }) func calculateGameweekScores() : async Result.Result<(), T.Error> {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.FOOTBALL_GOD_BACKEND_CANISTER_ID;
-      let systemStateResult = await getSystemState();
-      switch(systemStateResult){
-        case (#ok systemState){
-          let _ = await userManager.calculateFantasyTeamScores(Environment.LEAGUE_ID, systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth);
-          return #ok();
+      let leagueStatusResult = await getLeagueStatus();
+      switch(leagueStatusResult){
+        case (#ok leagueStatus){
+          if(leagueStatus.activeGameweek > 0){
+            let _ = await userManager.calculateFantasyTeamScores(Environment.LEAGUE_ID, leagueStatus.activeSeasonId, leagueStatus.activeGameweek, leagueStatus.activeMonth);
+            return #ok();
+          } else {
+            let _ = await userManager.calculateFantasyTeamScores(Environment.LEAGUE_ID, leagueStatus.activeSeasonId, leagueStatus.completedGameweek, leagueStatus.activeMonth);
+            return #ok();
+          };          
         };  
         case (#err error){
           return #err(error);
@@ -888,11 +904,10 @@ import Nat8 "mo:base/Nat8";
     };
 
     public shared ({ caller }) func calculateLeaderboards() : async Result.Result<(), T.Error> {
-      //TODO: Need a way to separate out month
       assert Principal.toText(caller) == NetworkEnvironmentVariables.FOOTBALL_GOD_BACKEND_CANISTER_ID;
-      let systemStateResult = await getSystemState();
-      switch(systemStateResult){
-        case (#ok systemState){
+      let leagueStatusResult = await getLeagueStatus();
+      switch(leagueStatusResult){
+        case (#ok leagueStatus){
           let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
             getClubs : shared query (leagueId: FootballTypes.LeagueId) -> async Result.Result<[FootballTypes.Club], T.Error>;
           };
@@ -904,8 +919,13 @@ import Nat8 "mo:base/Nat8";
                 return club.id
               });
               let managerCanisterIds = userManager.getUniqueManagerCanisterIds();
-              let _ = leaderboardManager.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, 0, managerCanisterIds, clubIds);
-              return #ok();
+              if(leagueStatus.activeGameweek > 0){           
+                let _ = leaderboardManager.calculateLeaderboards(leagueStatus.activeSeasonId, leagueStatus.activeGameweek, 0, managerCanisterIds, clubIds);
+                return #ok();
+              } else {
+                let _ = leaderboardManager.calculateLeaderboards(leagueStatus.activeSeasonId, leagueStatus.completedGameweek, 0, managerCanisterIds, clubIds);
+                return #ok();
+              };          
             };
             case (#err error){
               return #err(error)
@@ -920,11 +940,10 @@ import Nat8 "mo:base/Nat8";
 
     public shared ({ caller }) func calculateWeeklyRewards(gameweek: FootballTypes.GameweekNumber) : async Result.Result<(), T.Error> {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.FOOTBALL_GOD_BACKEND_CANISTER_ID;
-      leaderboardManager.setupRewardPool(); //TODO REMOVE
-      let systemStateResult = seasonManager.getSystemState();
-      switch(systemStateResult){
-        case (#ok systemState){       
-          return await leaderboardManager.calculateWeeklyRewards(systemState.calculationSeasonId, gameweek);     };
+      let leagueStatusResult = await getLeagueStatus();
+      switch(leagueStatusResult){
+        case (#ok leagueStatus){       
+          return await leaderboardManager.calculateWeeklyRewards(leagueStatus.activeSeasonId, gameweek);     };
         case (#err error){
           return #err(error);
         }
@@ -933,10 +952,10 @@ import Nat8 "mo:base/Nat8";
 
     public shared ({ caller }) func payWeeklyRewards(gameweek: FootballTypes.GameweekNumber) : async Result.Result<(), T.Error> {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.FOOTBALL_GOD_BACKEND_CANISTER_ID;
-      let systemStateResult = seasonManager.getSystemState();
-      switch(systemStateResult){
-        case (#ok systemState){       
-          return await leaderboardManager.payWeeklyRewards(systemState.calculationSeasonId, gameweek);     
+      let leagueStatusResult = await getLeagueStatus();
+      switch(leagueStatusResult){
+        case (#ok leagueStatus){       
+          return await leaderboardManager.payWeeklyRewards(leagueStatus.activeSeasonId, gameweek);     
         };
         case (#err error){
           return #err(error);
@@ -945,7 +964,6 @@ import Nat8 "mo:base/Nat8";
     };
 
     public shared query func getWeeklyRewards(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber) : async Result.Result<ResponseDTOs.WeeklyRewardsDTO, T.Error> {
-      Debug.print("Getting weekly rewards " # Nat16.toText(seasonId) # ", gameweek " # Nat8.toText(gameweek)); 
       let weeklyRewardsResult = leaderboardManager.getWeeklyRewards(seasonId, gameweek);
       switch(weeklyRewardsResult){
         case (#ok foundRewards){
@@ -981,16 +999,6 @@ import Nat8 "mo:base/Nat8";
       assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
       ignore userManager.removePlayerFromTeams(leagueId, playerId, Environment.BACKEND_CANISTER_ID);
       return #ok();
-    };
-
-    public shared func getSantiTeam() : async Result.Result<DTOs.PickTeamDTO, T.Error> {
-
-        return await userManager.getCurrentTeam("hleiq-733i7-v4lpr-icvux-5zb3v-2l7my-wkolj-k3btw-f2mm2-zqxz6-qae", 1, 14);
-    };
-
-    public shared func getTeejayTeam() : async Result.Result<DTOs.PickTeamDTO, T.Error> {
-
-        return await userManager.getCurrentTeam("rh66j-xmyrv-sg7xg-sgjpo-bk3st-tqwkj-3mxjr-enyr7-par4b-vuorx-zqe", 1, 14);
     };
     
   };

@@ -7,7 +7,6 @@
   import { authStore } from "$lib/stores/auth.store";
   import { userStore } from "$lib/stores/user-store";
   import { clubStore } from "$lib/stores/club-store";
-  import { systemStore } from "$lib/stores/system-store";
   import { userGetProfilePicture } from "$lib/derived/user.derived";
   import { getDateFromBigInt } from "$lib/utils/helpers";
   import { storeManager } from "$lib/managers/store-manager";
@@ -35,8 +34,6 @@
   let dot_interval: ReturnType<typeof setInterval>;
   
   let unsubscribeUserProfile: () => void;
-
-  $: gameweek = $systemStore?.calculationGameweek ?? 1;
 
   $: teamName =
     $clubStore.find((x) => x.id == $userStore?.favouriteClubId)?.friendlyName ??
