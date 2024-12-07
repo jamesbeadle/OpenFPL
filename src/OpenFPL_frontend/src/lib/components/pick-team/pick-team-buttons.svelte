@@ -135,6 +135,9 @@
   }
 
   function checkSaveButtonConditions(): boolean {
+    if(isLoading){
+      return false;
+    }
     const teamCount = new Map();
     for (const playerId of $fantasyTeam?.playerIds || []) {
       if (playerId > 0) {

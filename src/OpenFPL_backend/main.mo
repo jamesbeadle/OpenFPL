@@ -334,7 +334,7 @@
     public shared ({ caller }) func updateDataHashes(category: Text) : async Result.Result<(), T.Error> {
       assert not Principal.isAnonymous(caller);
       assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
-      ignore seasonManager.updateDataHash(category);      
+      await seasonManager.updateDataHash(category);      
       return #ok();
     };
 
@@ -586,7 +586,7 @@
               Principal.toText(foundCanisterId) == "bgpwv-eqaaa-aaaal-qb6eq-cai" or 
               Principal.toText(foundCanisterId) == "hqfmc-cqaaa-aaaal-qitcq-cai";
             if(not ignoreCanister){
-              ignore queryAndTopupCanister(Principal.toText(foundCanisterId), 50_000_000_000_000, 25_000_000_000_000);
+              await queryAndTopupCanister(Principal.toText(foundCanisterId), 50_000_000_000_000, 25_000_000_000_000);
             }
           };
           case (null){}
@@ -594,29 +594,30 @@
       };
 
       //TODO: Remove after assigned to SNS
-      ignore queryAndTopupCanister(Environment.FRONTEND_CANISTER_ID, 50_000_000_000_000, 25_000_000_000_000);
-      ignore queryAndTopupCanister(NetworkEnvironmentVariables.DATA_CANISTER_ID, 50_000_000_000_000, 25_000_000_000_000);
+      await queryAndTopupCanister(Environment.FRONTEND_CANISTER_ID, 50_000_000_000_000, 25_000_000_000_000);
+      await queryAndTopupCanister(NetworkEnvironmentVariables.DATA_CANISTER_ID, 50_000_000_000_000, 25_000_000_000_000);
        
       let managerCanisterIds = userManager.getUniqueManagerCanisterIds();
       for(canisterId in Iter.fromArray(managerCanisterIds)){
-        ignore queryAndTopupCanister(canisterId, 50_000_000_000_000, 25_000_000_000_000);
+        await queryAndTopupCanister(canisterId, 50_000_000_000_000, 25_000_000_000_000);
       };
 
       let leaderboardCanisterIds = leaderboardManager.getUniqueLeaderboardCanisterIds();
       for(canisterId in Iter.fromArray(leaderboardCanisterIds)){
-        ignore queryAndTopupCanister(canisterId, 50_000_000_000_000, 25_000_000_000_000);
+        await queryAndTopupCanister(canisterId, 50_000_000_000_000, 25_000_000_000_000);
       };
 
-      ignore topupCanister(summaryResult.index, 50_000_000_000_000, 25_000_000_000_000);
-      ignore topupCanister(summaryResult.governance, 50_000_000_000_000, 25_000_000_000_000);
-      ignore topupCanister(summaryResult.ledger, 50_000_000_000_000, 25_000_000_000_000);
-      ignore topupCanister(summaryResult.root, 50_000_000_000_000, 25_000_000_000_000);
-      ignore topupCanister(summaryResult.swap, 5_000_000_000_000, 2_500_000_000_000);
+      await topupCanister(summaryResult.index, 50_000_000_000_000, 25_000_000_000_000);
+      await topupCanister(summaryResult.governance, 50_000_000_000_000, 25_000_000_000_000);
+      await topupCanister(summaryResult.ledger, 50_000_000_000_000, 25_000_000_000_000);
+      await topupCanister(summaryResult.root, 50_000_000_000_000, 25_000_000_000_000);
+      await topupCanister(summaryResult.swap, 5_000_000_000_000, 2_500_000_000_000);
       for(canisterId in Iter.fromArray(summaryResult.archives)){
-        ignore topupCanister(?canisterId, 5_000_000_000_000, 2_500_000_000_000);
+        await topupCanister(?canisterId, 5_000_000_000_000, 2_500_000_000_000);
       };
       
       ignore Timer.setTimer<system>(#nanoseconds(Int.abs(86_400_000_000_000)), checkCanisterCycles);
+      return;
     };
 
     private func topupCanister(canisterSummary: ?Root.CanisterSummary, topupTriggerAmount: Nat, topupAmount: Nat) : async(){
@@ -629,7 +630,7 @@
                   case (?foundCanisterId){
                     let IC : Management.Management = actor (NetworkEnvironmentVariables.Default);
                     let canisterActor = actor (Principal.toText(foundCanisterId)) : actor { };
-                    ignore Utilities.topup_canister_(canisterActor, IC, topupAmount);
+                    await Utilities.topup_canister_(canisterActor, IC, topupAmount);
                     
                     let topupsBuffer = Buffer.fromArray<Base.CanisterTopup>(topups);
                     topupsBuffer.add({
@@ -660,7 +661,7 @@
         case (?canisterStatus){
       
           if(canisterStatus.cycles < cyclesTriggerAmount){
-            ignore Utilities.topup_canister_(canisterActor, IC, topupAmount);
+            await Utilities.topup_canister_(canisterActor, IC, topupAmount);
             let topupsBuffer = Buffer.fromArray<Base.CanisterTopup>(topups);
             topupsBuffer.add({
               canisterId = canisterId; 
@@ -810,17 +811,17 @@
       //ignore updateManagerCanisterWasms();
       //await userManager.resetWeeklyTransfers();
 
-      ignore seasonManager.updateDataHash("app_status");
-      ignore seasonManager.updateDataHash("league_status");
-      ignore seasonManager.updateDataHash("countries");
-      ignore seasonManager.updateDataHash("clubs");
-      ignore seasonManager.updateDataHash("fixtures");
-      ignore seasonManager.updateDataHash("players");
-      ignore seasonManager.updateDataHash("player_events");
-      ignore seasonManager.updateDataHash("weekly_leaderboard");
-      ignore seasonManager.updateDataHash("monthly_leaderboards");
-      ignore seasonManager.updateDataHash("season_leaderboard");
-      ignore checkCanisterCycles();
+      await seasonManager.updateDataHash("app_status");
+      await seasonManager.updateDataHash("league_status");
+      await seasonManager.updateDataHash("countries");
+      await seasonManager.updateDataHash("clubs");
+      await seasonManager.updateDataHash("fixtures");
+      await seasonManager.updateDataHash("players");
+      await seasonManager.updateDataHash("player_events");
+      await seasonManager.updateDataHash("weekly_leaderboard");
+      await seasonManager.updateDataHash("monthly_leaderboards");
+      await seasonManager.updateDataHash("season_leaderboard");
+      await checkCanisterCycles();
     };
 
     private func updateManagerCanisterWasms() : async (){
@@ -997,7 +998,7 @@
 
     public shared ({ caller }) func notifyAppsOfPositionChange(leagueId: FootballTypes.LeagueId, playerId: FootballTypes.PlayerId) : async Result.Result<(), T.Error> {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
-      ignore userManager.removePlayerFromTeams(leagueId, playerId, Environment.BACKEND_CANISTER_ID);
+      await userManager.removePlayerFromTeams(leagueId, playerId, Environment.BACKEND_CANISTER_ID);
       return #ok();
     };
     
