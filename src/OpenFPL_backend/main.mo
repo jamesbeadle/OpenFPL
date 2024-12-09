@@ -800,7 +800,8 @@
     };
 
     private func postUpgradeCallback() : async (){
-      await seasonManager.putOnHold();
+      await seasonManager.putOnHold();       
+
 
       //TODO (GO LIVE)
       //set system state
@@ -847,6 +848,27 @@
     };
 
     //Functions to be removed when handed back to SNS
+
+    public shared query func getSystemState() : async Result.Result<ResponseDTOs.AppStatusDTO, T.Error> {
+      let appStatusResult = seasonManager.getAppStatus();
+      switch(appStatusResult){
+        case (#ok appStatus){          
+          return #ok({
+            onHold = appStatus.onHold; 
+            version = appStatus.version;
+          }); 
+        };
+        case (#err error){
+          return #err(error);
+        }
+      };
+    };
+
+    public shared ({ caller }) func updateSystemState(dto: RequestDTOs.UpdateAppStatusDTO) : async Result.Result<(), T.Error> {
+      assert Principal.toText(caller) == NetworkEnvironmentVariables.FOOTBALL_GOD_BACKEND_CANISTER_ID;
+      seasonManager.updateSystemStatus(dto);
+      return #ok();
+    };
 
     public shared ({ caller }) func snapshotManagers() : async Result.Result<(), T.Error> {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.FOOTBALL_GOD_BACKEND_CANISTER_ID;

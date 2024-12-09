@@ -210,6 +210,13 @@ module {
         version = appStatus.version;
       };
       await updateDataHash("app_status");
+    };
+
+    public func updateSystemStatus(dto: RequestDTOs.UpdateAppStatusDTO) {
+      appStatus := {
+        onHold = dto.onHold;
+        version = dto.version;
+      };
     }
   }
 

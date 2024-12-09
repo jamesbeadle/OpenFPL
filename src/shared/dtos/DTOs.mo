@@ -264,14 +264,6 @@ module DTOs {
     events : [FootballTypes.PlayerEventData];
   };
 
-  public type UpdateFixtureDTO = {
-    seasonId : FootballTypes.SeasonId;
-    fixtureId : FootballTypes.FixtureId;
-    gameweek : FootballTypes.GameweekNumber;
-    kickOff : Int;
-    status : FootballTypes.FixtureStatusType;
-  };
-
   public type FootballLeagueDTO = {
     id: FootballTypes.LeagueId;
     name: Text;
