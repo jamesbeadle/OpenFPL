@@ -3597,7 +3597,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "ombbmd"
+  version_hash: "s7cipk"
 };
 async function get_hooks() {
   return {};
@@ -3799,6 +3799,14 @@ const initAuthStore = () => {
   };
 };
 const authStore = initAuthStore();
+function createLeagueStore() {
+  const { subscribe: subscribe2, set } = writable(null);
+  return {
+    subscribe: subscribe2,
+    setLeagueStatus: (leagueStatus) => set(leagueStatus)
+  };
+}
+const leagueStore = createLeagueStore();
 const idlFactory = ({ IDL }) => {
   const List = IDL.Rec();
   const Error2 = IDL.Variant({
@@ -4414,6 +4422,7 @@ const idlFactory = ({ IDL }) => {
       ["query"]
     ),
     "isUsernameValid": IDL.Func([UsernameFilterDTO], [IDL.Bool], ["query"]),
+    "notifyAppsOfGameweekStarting": IDL.Func([], [Result], []),
     "notifyAppsOfLoan": IDL.Func([LeagueId, PlayerId], [Result], []),
     "notifyAppsOfPositionChange": IDL.Func([LeagueId, PlayerId], [Result], []),
     "notifyAppsOfTransfer": IDL.Func([LeagueId, PlayerId], [Result], []),
@@ -10899,40 +10908,12 @@ function calculatePlayerScore(gameweekData, fixtures) {
   return score;
 }
 var define_process_env_default$f = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
-class LeagueService {
-  actor;
-  constructor() {
-    this.actor = ActorFactory.createActor(
-      idlFactory,
-      define_process_env_default$f.OPENFPL_BACKEND_CANISTER_ID
-    );
-  }
-  async getLeagueStatus() {
-    const result = await this.actor.getLeagueStatus();
-    if (isError(result))
-      throw new Error("Failed to fetch league status");
-    return result.ok;
-  }
-}
-function createLeagueStore() {
-  const { subscribe: subscribe2, set } = writable(null);
-  async function getLeagueStatus() {
-    return await new LeagueService().getLeagueStatus();
-  }
-  return {
-    subscribe: subscribe2,
-    getLeagueStatus,
-    setLeagueStatus: (leagueStatus) => set(leagueStatus)
-  };
-}
-const leagueStore = createLeagueStore();
-var define_process_env_default$e = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class FixtureService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory,
-      define_process_env_default$e.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default$f.OPENFPL_BACKEND_CANISTER_ID
     );
   }
   async getPostponedFixtures() {
@@ -11311,12 +11292,12 @@ const toastsError = ({
     level: "error"
   });
 };
-var define_process_env_default$d = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$e = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 function createManagerStore() {
   const { subscribe: subscribe2, set } = writable(null);
   let actor = ActorFactory.createActor(
     idlFactory,
-    define_process_env_default$d.OPENFPL_BACKEND_CANISTER_ID
+    define_process_env_default$e.OPENFPL_BACKEND_CANISTER_ID
   );
   let newManager = {
     playerIds: [],
@@ -11407,7 +11388,7 @@ function createManagerStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default$d.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$e.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.getCurrentTeam();
       if (isError(result)) {
@@ -11434,7 +11415,7 @@ function createManagerStore() {
       }
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        define_process_env_default$d.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        define_process_env_default$e.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       let dto = {
         playerIds: userFantasyTeam.playerIds,
@@ -11595,13 +11576,13 @@ function createSeasonStore() {
   };
 }
 const seasonStore = createSeasonStore();
-var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$d = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class PlayerService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory,
-      define_process_env_default$c.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default$d.OPENFPL_BACKEND_CANISTER_ID
     );
   }
   async getPlayers() {
@@ -11641,13 +11622,13 @@ function createPlayerStore() {
   };
 }
 const playerStore = createPlayerStore();
-var define_process_env_default$b = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class PlayerEventsService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory,
-      define_process_env_default$b.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default$c.OPENFPL_BACKEND_CANISTER_ID
     );
   }
   async getPlayerDetailsForGameweek(seasonId, gameweek) {
@@ -11798,13 +11779,13 @@ function getTotalBonusPoints(gameweekData, fantasyTeam, points) {
   }
   return bonusPoints;
 }
-var define_process_env_default$a = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$b = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class AppService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory,
-      define_process_env_default$a.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default$b.OPENFPL_BACKEND_CANISTER_ID
     );
   }
   async getAppStatus() {
@@ -11909,13 +11890,13 @@ function createPlayerEventsStore() {
   };
 }
 const playerEventsStore = createPlayerEventsStore();
-var define_process_env_default$9 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$a = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class WeeklyLeaderboardService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory,
-      define_process_env_default$9.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default$a.OPENFPL_BACKEND_CANISTER_ID
     );
   }
   async getWeeklyLeaderboard(offset, seasonId, gameweek) {
@@ -11960,8 +11941,24 @@ function createWeeklyLeaderboardStore() {
   };
 }
 const weeklyLeaderboardStore = createWeeklyLeaderboardStore();
-var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$9 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class DataHashService {
+  actor;
+  constructor() {
+    this.actor = ActorFactory.createActor(
+      idlFactory,
+      define_process_env_default$9.OPENFPL_BACKEND_CANISTER_ID
+    );
+  }
+  async getDataHashes() {
+    const result = await this.actor.getDataHashes();
+    if (isError(result))
+      throw new Error("Failed to fetch data hashes");
+    return result.ok;
+  }
+}
+var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+class LeagueService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
@@ -11969,10 +11966,11 @@ class DataHashService {
       define_process_env_default$8.OPENFPL_BACKEND_CANISTER_ID
     );
   }
-  async getDataHashes() {
-    const result = await this.actor.getDataHashes();
+  async getLeagueStatus() {
+    console.log("BACKEND CALL TO GET LEAGUE STATUS");
+    const result = await this.actor.getLeagueStatus();
     if (isError(result))
-      throw new Error("Failed to fetch data hashes");
+      throw new Error("Failed to fetch league status");
     return result.ok;
   }
 }
@@ -12186,7 +12184,7 @@ class StoreManager {
     }
   }
 }
-new StoreManager();
+const storeManager = new StoreManager();
 var define_process_env_default$4 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class UserService {
   constructor() {
@@ -12732,45 +12730,48 @@ function createSeasonLeaderboardStore() {
   async function getSeasonLeaderboard(seasonId, currentPage, searchTerm) {
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
-    let leagueStatus = await leagueStore.getLeagueStatus();
-    if (currentPage <= 4 && seasonId == leagueStatus.activeSeasonId) {
-      const cachedData = localStorage.getItem(category);
-      if (cachedData && cachedData != "undefined") {
-        let cachedSeasonLeaderboard;
-        cachedSeasonLeaderboard = JSON.parse(
-          cachedData || "{entries: [], seasonId: 0, totalEntries: 0n }"
-        );
-        if (cachedSeasonLeaderboard) {
-          return {
-            ...cachedSeasonLeaderboard,
-            entries: cachedSeasonLeaderboard.entries.slice(
-              offset,
-              offset + limit
-            )
-          };
+    await storeManager.syncStores();
+    let dto = null;
+    leagueStore.subscribe(async (value) => {
+      if (!value) {
+        return;
+      }
+      if (currentPage <= 4 && seasonId == value.activeSeasonId) {
+        const cachedData = localStorage.getItem(category);
+        if (cachedData && cachedData != "undefined") {
+          let cachedSeasonLeaderboard;
+          cachedSeasonLeaderboard = JSON.parse(
+            cachedData || "{entries: [], seasonId: 0, totalEntries: 0n }"
+          );
+          if (cachedSeasonLeaderboard) {
+            return {
+              ...cachedSeasonLeaderboard,
+              entries: cachedSeasonLeaderboard.entries.slice(
+                offset,
+                offset + limit
+              )
+            };
+          }
         }
       }
-    }
-    let dto = {
-      offset: BigInt(offset),
-      seasonId,
-      limit: BigInt(limit),
-      searchTerm: ""
-    };
-    let result = await actor.getSeasonLeaderboard(dto);
-    if (isError(result)) {
-      return {
-        totalEntries: 0n,
-        seasonId: 1,
-        entries: []
+      let dto2 = {
+        offset: BigInt(offset),
+        seasonId,
+        limit: BigInt(limit),
+        searchTerm: ""
       };
-    }
-    let leaderboardData = result.ok;
-    localStorage.setItem(
-      category,
-      JSON.stringify(leaderboardData.ok, replacer)
-    );
-    return leaderboardData;
+      let result = await actor.getSeasonLeaderboard(dto2);
+      if (isError(result)) {
+        return {
+          totalEntries: 0n,
+          seasonId: 1,
+          entries: []
+        };
+      }
+      dto2 = result.ok;
+      localStorage.setItem(category, JSON.stringify(dto2, replacer));
+    });
+    return dto;
   }
   return {
     subscribe: subscribe2,

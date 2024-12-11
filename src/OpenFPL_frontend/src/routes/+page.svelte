@@ -50,7 +50,6 @@
   onMount(async () => {
     try {
       await storeManager.syncStores();
-      leagueStatus = await leagueStore.getLeagueStatus();
 
       authStore.subscribe((store) => {
         isLoggedIn = store.identity !== null && store.identity !== undefined;

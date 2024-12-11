@@ -58,7 +58,7 @@
     try {
       
       await storeManager.syncStores();
-      leagueStatus = await leagueStore.getLeagueStatus();
+      
       selectedGameweek = leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek;
 
       selectedPlayer = $playerStore.find((x) => x.id === id) ?? null;

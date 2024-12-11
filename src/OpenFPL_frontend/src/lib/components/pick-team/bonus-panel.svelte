@@ -1,15 +1,14 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { writable, type Writable } from "svelte/store";
-  import type { PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { LeagueStatus, PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { Bonus } from "$lib/types/bonus";
   import { BonusType } from "$lib/enums/BonusType";
   import UseBonusModal from "$lib/components/pick-team/modals/use-bonus-modal.svelte";
   import Tooltip from "../tooltip.svelte";
-    import { storeManager } from "$lib/managers/store-manager";
-    import { leagueStore } from "$lib/stores/league-store";
 
   export let fantasyTeam: Writable<PickTeamDTO | null>;
+  export let leagueStatus: LeagueStatus;
 
   let bonuses = writable<Bonus[]>([
     {
@@ -212,7 +211,6 @@
 
   async function bonusPlayedThisWeek(): Promise<boolean> {
     if (!$fantasyTeam) return false;
-    let leagueStatus = await leagueStore.getLeagueStatus();
     let activeGameweek = leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek;
     let bonusPlayed: boolean =
       $fantasyTeam?.goalGetterGameweek == activeGameweek ||

@@ -800,7 +800,7 @@
     };
 
     private func postUpgradeCallback() : async (){
-      await seasonManager.putOnHold();       
+      //await seasonManager.putOnHold();       
 
 
       //TODO (GO LIVE)
@@ -867,6 +867,7 @@
     public shared ({ caller }) func updateSystemState(dto: RequestDTOs.UpdateAppStatusDTO) : async Result.Result<(), T.Error> {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.FOOTBALL_GOD_BACKEND_CANISTER_ID;
       seasonManager.updateSystemStatus(dto);
+      await seasonManager.updateDataHash("app_status");
       return #ok();
     };
 
@@ -1006,6 +1007,7 @@
       return #ok(stable_weekly_leaderboard_canister_ids);
     };
 
+    //TODO remove league id and use environent variable
     public shared ({ caller }) func notifyAppsOfLoan(leagueId: FootballTypes.LeagueId, playerId: FootballTypes.PlayerId) : async Result.Result<(), T.Error> {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
       await userManager.removePlayerFromTeams(leagueId, playerId, Environment.BACKEND_CANISTER_ID);
@@ -1021,6 +1023,12 @@
     public shared ({ caller }) func notifyAppsOfPositionChange(leagueId: FootballTypes.LeagueId, playerId: FootballTypes.PlayerId) : async Result.Result<(), T.Error> {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
       await userManager.removePlayerFromTeams(leagueId, playerId, Environment.BACKEND_CANISTER_ID);
+      return #ok();
+    };
+
+     public shared ({ caller }) func notifyAppsOfGameweekStarting() : async Result.Result<(), T.Error> {
+      assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
+      await userManager.resetWeeklyTransfers();
       return #ok();
     };
     

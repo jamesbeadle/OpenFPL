@@ -13,7 +13,7 @@
 # generated files
 src/declarations/
 
-# frontend code
+# frontend codeF
 node_modules/
 dist/
 

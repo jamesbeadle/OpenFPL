@@ -18,7 +18,8 @@
   
   import { Spinner } from "@dfinity/gix-components";
   import { allFormations } from "$lib/utils/pick-team.helpers";
-  import type { PickTeamDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { LeagueStatus, PickTeamDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import { leagueStore } from "$lib/stores/league-store";
     
   const fantasyTeam = writable<PickTeamDTO>({
     playerIds: [],
@@ -60,14 +61,14 @@
   const pitchView = writable(true);
   const onHold = writable<boolean>(false);
   let loadingPlayers = writable<boolean>(true);
+  let leagueStatus: LeagueStatus;
   let isLoading = true;
   
   onMount(async () => {
     try {
       
       await storeManager.syncStores();
-      console.log("app store")
-      console.log($appStore)
+      
       onHold.set($appStore?.onHold ?? false);
       $availableFormations = Object.keys(allFormations);     
       await loadData();
@@ -115,6 +116,9 @@
       return;
     }
 
+    console.log("checking fantasy team")
+    console.log($fantasyTeam)
+
     if($fantasyTeam.firstGameweek){
       transfersAvailable.set(Infinity);
     }
@@ -134,7 +138,8 @@
         <PickTeamHeader {fantasyTeam} 
         {transfersAvailable}
         {bankBalance}
-        {teamValue}/>
+        {teamValue}
+        {leagueStatus}/>
       </div>
       <PickTeamButtons
         {fantasyTeam}
@@ -143,6 +148,7 @@
         {availableFormations}
         {transfersAvailable}
         {bankBalance}
+        {leagueStatus}
       />
       <div class="flex flex-col xl:flex-row mt-2 xl:mt-0">
         <PickTeamPlayers
@@ -153,6 +159,7 @@
           {transfersAvailable}
           {bankBalance}
           {teamValue}
+          {leagueStatus}
         />
         <div class="hidden xl:flex w-full xl:w-1/2 ml-2">
           <SimpleFixtures />
@@ -163,10 +170,11 @@
             {transfersAvailable}
             {bankBalance}
             {teamValue}
+            {leagueStatus}
           />
         </div>
       </div>
-      <BonusPanel {fantasyTeam}  />
+      <BonusPanel {fantasyTeam} {leagueStatus}  />
     </div>
 
     {/if}

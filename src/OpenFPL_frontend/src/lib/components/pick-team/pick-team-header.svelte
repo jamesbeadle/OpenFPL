@@ -9,9 +9,15 @@
   import type { LeagueStatus, PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import LocalSpinner from "../local-spinner.svelte";
   import { seasonStore } from "$lib/stores/season-store";
+
+  export let transfersAvailable: Writable<number>;  
+  export let bankBalance: Writable<number>;
+  export let teamValue: Writable<number>;
+
+  export let fantasyTeam: Writable<PickTeamDTO | null>;
+  export let leagueStatus: LeagueStatus;
   
   let isLoading = true;
-  let leagueStatus: LeagueStatus;
   let activeSeason = "-";
   let activeGameweek = 1;
 
@@ -21,14 +27,7 @@
   let countdownHours = "00";
   let countdownMinutes = "00";
 
-  export let transfersAvailable: Writable<number>;  
-  export let bankBalance: Writable<number>;
-  export let teamValue: Writable<number>;
-  
-  export let fantasyTeam: Writable<PickTeamDTO | null>;
-
   onMount(async () => {
-    leagueStatus = await leagueStore.getLeagueStatus();
     let foundSeason = $seasonStore.find(x => x.id == leagueStatus.activeSeasonId);
     if(foundSeason){
       activeSeason = foundSeason.name;

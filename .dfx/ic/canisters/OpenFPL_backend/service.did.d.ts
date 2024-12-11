@@ -568,6 +568,7 @@ export interface _SERVICE {
   getWeeklyLeaderboards: ActorMethod<[], Array<WeeklyLeaderboard>>;
   getWeeklyRewards: ActorMethod<[SeasonId, GameweekNumber], Result_2>;
   isUsernameValid: ActorMethod<[UsernameFilterDTO], boolean>;
+  notifyAppsOfGameweekStarting: ActorMethod<[], Result>;
   notifyAppsOfLoan: ActorMethod<[LeagueId, PlayerId], Result>;
   notifyAppsOfPositionChange: ActorMethod<[LeagueId, PlayerId], Result>;
   notifyAppsOfTransfer: ActorMethod<[LeagueId, PlayerId], Result>;

@@ -613,6 +613,7 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'isUsernameValid' : IDL.Func([UsernameFilterDTO], [IDL.Bool], ['query']),
+    'notifyAppsOfGameweekStarting' : IDL.Func([], [Result], []),
     'notifyAppsOfLoan' : IDL.Func([LeagueId, PlayerId], [Result], []),
     'notifyAppsOfPositionChange' : IDL.Func([LeagueId, PlayerId], [Result], []),
     'notifyAppsOfTransfer' : IDL.Func([LeagueId, PlayerId], [Result], []),

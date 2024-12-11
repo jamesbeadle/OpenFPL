@@ -5,13 +5,8 @@ import { writable } from "svelte/store";
 function createLeagueStore() {
   const { subscribe, set } = writable<LeagueStatus | null>(null);
 
-  async function getLeagueStatus(): Promise<LeagueStatus> {
-    return await new LeagueService().getLeagueStatus();
-  }
-
   return {
     subscribe,
-    getLeagueStatus,
     setLeagueStatus: (leagueStatus: LeagueStatus) => set(leagueStatus),
   };
 }

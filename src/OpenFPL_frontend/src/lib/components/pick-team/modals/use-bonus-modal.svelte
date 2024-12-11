@@ -5,14 +5,14 @@
   import { playerStore } from "$lib/stores/player-store";
 
   import type { Bonus } from "$lib/types/bonus";
-  import type { PickTeamDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { LeagueStatus, PickTeamDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { BonusType } from "$lib/enums/BonusType";
   import { Modal } from "@dfinity/gix-components";
   import { countryStore } from "$lib/stores/country-store";
   import { convertPlayerPosition } from "$lib/utils/helpers";
-    import { leagueStore } from "$lib/stores/league-store";
     
   export let visible: boolean;
+  export let leagueStatus: LeagueStatus;
   export let fantasyTeam: Writable<PickTeamDTO | null>;
   export let bonusUsedInSession: Writable<boolean>;
   export let closeBonusModal: () => void;
@@ -88,9 +88,6 @@
   async function handleUseBonus() {
     if (!$fantasyTeam) return;
     let activeGameweek = 1;
-
-
-    let leagueStatus = await leagueStore.getLeagueStatus();
 
     if(leagueStatus.activeGameweek){
       activeGameweek = leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek

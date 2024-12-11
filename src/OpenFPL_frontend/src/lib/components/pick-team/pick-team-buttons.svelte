@@ -22,6 +22,7 @@
   export let availableFormations: Writable<string[]>;
   export let transfersAvailable: Writable<number>;
   export let bankBalance: Writable<number>;
+  export let leagueStatus: LeagueStatus;
   
   let isSaveButtonActive: boolean;
   
@@ -35,7 +36,6 @@
   let transferWindowPlayed = false;
   let transferWindowPlayedInSession = false;
   let isLoading = true;
-  let leagueStatus: LeagueStatus;
   let appStatus: AppStatusDTO;
 
   $: if ($fantasyTeam && $playerStore.length > 0) {
@@ -70,7 +70,6 @@
 
   onMount(async () => {
     try {
-      leagueStatus = await leagueStore.getLeagueStatus();
       appStatus = await appStore.getAppStatus();
       startingFantasyTeam = $fantasyTeam;
       loadData();

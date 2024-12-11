@@ -734,6 +734,7 @@ service : {
   getWeeklyLeaderboards: () -> (vec WeeklyLeaderboard);
   getWeeklyRewards: (SeasonId, GameweekNumber) -> (Result_2) query;
   isUsernameValid: (UsernameFilterDTO) -> (bool) query;
+  notifyAppsOfGameweekStarting: () -> (Result);
   notifyAppsOfLoan: (LeagueId, PlayerId) -> (Result);
   notifyAppsOfPositionChange: (LeagueId, PlayerId) -> (Result);
   notifyAppsOfTransfer: (LeagueId, PlayerId) -> (Result);

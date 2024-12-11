@@ -8,6 +8,7 @@ import type {
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { isError, replacer } from "../utils/helpers";
+import { storeManager } from "$lib/managers/store-manager";
 
 function createSeasonLeaderboardStore() {
   const { subscribe, set } = writable<SeasonLeaderboardDTO | null>(null);
@@ -86,56 +87,59 @@ function createSeasonLeaderboardStore() {
     seasonId: number,
     currentPage: number,
     searchTerm: string,
-  ): Promise<SeasonLeaderboardDTO> {
+  ): Promise<SeasonLeaderboardDTO | null> {
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
+    await storeManager.syncStores();
 
-    let leagueStatus = await leagueStore.getLeagueStatus();
-    if (currentPage <= 4 && seasonId == leagueStatus.activeSeasonId) {
-      const cachedData = localStorage.getItem(category);
+    let dto: SeasonLeaderboardDTO | null = null;
+    leagueStore.subscribe(async (value) => {
+      if (!value) {
+        return;
+      }
+      if (currentPage <= 4 && seasonId == value.activeSeasonId) {
+        const cachedData = localStorage.getItem(category);
 
-      if (cachedData && cachedData != "undefined") {
-        let cachedSeasonLeaderboard: SeasonLeaderboardDTO;
-        cachedSeasonLeaderboard = JSON.parse(
-          cachedData || "{entries: [], seasonId: 0, totalEntries: 0n }",
-        );
+        if (cachedData && cachedData != "undefined") {
+          let cachedSeasonLeaderboard: SeasonLeaderboardDTO;
+          cachedSeasonLeaderboard = JSON.parse(
+            cachedData || "{entries: [], seasonId: 0, totalEntries: 0n }",
+          );
 
-        if (cachedSeasonLeaderboard) {
-          return {
-            ...cachedSeasonLeaderboard,
-            entries: cachedSeasonLeaderboard.entries.slice(
-              offset,
-              offset + limit,
-            ),
-          };
+          if (cachedSeasonLeaderboard) {
+            return {
+              ...cachedSeasonLeaderboard,
+              entries: cachedSeasonLeaderboard.entries.slice(
+                offset,
+                offset + limit,
+              ),
+            };
+          }
         }
       }
-    }
 
-    let dto: GetSeasonLeaderboardDTO = {
-      offset: BigInt(offset),
-      seasonId: seasonId,
-      limit: BigInt(limit),
-      searchTerm: "",
-    };
-    let result = await actor.getSeasonLeaderboard(dto);
-
-    if (isError(result)) {
-      return {
-        totalEntries: 0n,
-        seasonId: 1,
-        entries: [],
+      let dto: GetSeasonLeaderboardDTO = {
+        offset: BigInt(offset),
+        seasonId: seasonId,
+        limit: BigInt(limit),
+        searchTerm: "",
       };
-    }
+      let result = await actor.getSeasonLeaderboard(dto);
 
-    let leaderboardData = result.ok;
+      if (isError(result)) {
+        return {
+          totalEntries: 0n,
+          seasonId: 1,
+          entries: [],
+        };
+      }
 
-    localStorage.setItem(
-      category,
-      JSON.stringify(leaderboardData.ok, replacer),
-    );
+      dto = result.ok;
 
-    return leaderboardData;
+      localStorage.setItem(category, JSON.stringify(dto, replacer));
+    });
+
+    return dto;
   }
 
   return {

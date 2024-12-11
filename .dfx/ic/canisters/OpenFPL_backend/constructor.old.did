@@ -744,6 +744,6 @@ service : {
   updateDataHashes: (text) -> (Result);
   updateFavouriteClub: (UpdateFavouriteClubDTO) -> (Result);
   updateProfilePicture: (UpdateProfilePictureDTO) -> (Result);
-  updateSystemStatus: (UpdateAppStatusDTO) -> (Result);
+  updateSystemState: (UpdateAppStatusDTO) -> (Result);
   updateUsername: (UpdateUsernameDTO) -> (Result);
 }

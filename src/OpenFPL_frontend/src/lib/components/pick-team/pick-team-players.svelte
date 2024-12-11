@@ -20,6 +20,8 @@
   import { allFormations, getTeamFormation } from "$lib/utils/pick-team.helpers";
   import LocalSpinner from "../local-spinner.svelte";
   import AddPlayerModal from "./modals/add-player-modal.svelte";
+    import { leagueStore } from "$lib/stores/league-store";
+    import { storeManager } from "$lib/managers/store-manager";
 
   export let loadingPlayers: Writable<Boolean | null>;
   export let fantasyTeam: Writable<PickTeamDTO | null>;
@@ -29,8 +31,8 @@
   export let transfersAvailable: Writable<number>;  
   export let bankBalance: Writable<number>;
   export let teamValue: Writable<number>;
+  export let leagueStatus: LeagueStatus;
 
-  let leagueStatus: LeagueStatus;
   let pitchHeight = 0;
   let pitchElement: HTMLElement;
   let showAddPlayerModal = false;
@@ -68,7 +70,7 @@
         updatePitchHeight();
       }
       getLocalViewSelection();
-
+      
       await loadData();
     } catch (error) {
       toastsError({
