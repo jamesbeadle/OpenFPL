@@ -50,6 +50,10 @@
   onMount(async () => {
     try {
       await storeManager.syncStores();
+      if(!$leagueStore){
+        return
+      };
+      leagueStatus = $leagueStore;
 
       authStore.subscribe((store) => {
         isLoggedIn = store.identity !== null && store.identity !== undefined;

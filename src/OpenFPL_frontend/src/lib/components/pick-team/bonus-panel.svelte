@@ -235,6 +235,7 @@
       {bonusUsedInSession}
       {updateBonuses}
       {bonuses}
+      {leagueStatus}
     />
   {/if}
   <div class="flex flex-col md:flex-row bonus-panel-inner">

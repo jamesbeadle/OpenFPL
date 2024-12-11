@@ -531,8 +531,6 @@ export interface WeeklyRewardsDTO {
   gameweek: GameweekNumber;
 }
 export interface _SERVICE {
-  calculateGameweekScores: ActorMethod<[], Result>;
-  calculateLeaderboards: ActorMethod<[], Result>;
   calculateWeeklyRewards: ActorMethod<[GameweekNumber], Result>;
   getActiveLeaderboardCanisterId: ActorMethod<[], Result_26>;
   getAppStatus: ActorMethod<[], Result_25>;
@@ -568,14 +566,14 @@ export interface _SERVICE {
   getWeeklyLeaderboards: ActorMethod<[], Array<WeeklyLeaderboard>>;
   getWeeklyRewards: ActorMethod<[SeasonId, GameweekNumber], Result_2>;
   isUsernameValid: ActorMethod<[UsernameFilterDTO], boolean>;
-  notifyAppsOfGameweekStarting: ActorMethod<[], Result>;
+  notifyAppsOfFixtureFinalised: ActorMethod<[SeasonId, GameweekNumber], Result>;
+  notifyAppsOfGameweekStarting: ActorMethod<[SeasonId, GameweekNumber], Result>;
   notifyAppsOfLoan: ActorMethod<[LeagueId, PlayerId], Result>;
   notifyAppsOfPositionChange: ActorMethod<[LeagueId, PlayerId], Result>;
   notifyAppsOfTransfer: ActorMethod<[LeagueId, PlayerId], Result>;
   payWeeklyRewards: ActorMethod<[GameweekNumber], Result>;
   saveFantasyTeam: ActorMethod<[UpdateTeamSelectionDTO], Result>;
   searchUsername: ActorMethod<[UsernameFilterDTO], Result_1>;
-  snapshotManagers: ActorMethod<[], Result>;
   updateDataHashes: ActorMethod<[string], Result>;
   updateFavouriteClub: ActorMethod<[UpdateFavouriteClubDTO], Result>;
   updateProfilePicture: ActorMethod<[UpdateProfilePictureDTO], Result>;

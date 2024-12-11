@@ -47,6 +47,10 @@
   onMount(async () => {
     try {
       await storeManager.syncStores();
+      if(!$leagueStore){
+        return
+      };
+      leagueStatus = $leagueStore;
       
       seasonName = $seasonStore.find(x => x.id == leagueStatus.activeSeasonId)?.name ?? "";
       selectedGameweek = leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek ?? 1;

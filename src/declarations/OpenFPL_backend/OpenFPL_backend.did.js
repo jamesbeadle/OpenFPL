@@ -1,5 +1,6 @@
 export const idlFactory = ({ IDL }) => {
   const List = IDL.Rec();
+  const GameweekNumber = IDL.Nat8;
   const Error = IDL.Variant({
     'MoreThan2PlayersFromClub' : IDL.Null,
     'DecodeError' : IDL.Null,
@@ -19,7 +20,6 @@ export const idlFactory = ({ IDL }) => {
     'Not11Players' : IDL.Null,
   });
   const Result = IDL.Variant({ 'ok' : IDL.Null, 'err' : Error });
-  const GameweekNumber = IDL.Nat8;
   const Result_26 = IDL.Variant({ 'ok' : IDL.Text, 'err' : Error });
   const AppStatusDTO__1 = IDL.Record({
     'version' : IDL.Text,
@@ -536,8 +536,6 @@ export const idlFactory = ({ IDL }) => {
   });
   const UpdateUsernameDTO = IDL.Record({ 'username' : IDL.Text });
   return IDL.Service({
-    'calculateGameweekScores' : IDL.Func([], [Result], []),
-    'calculateLeaderboards' : IDL.Func([], [Result], []),
     'calculateWeeklyRewards' : IDL.Func([GameweekNumber], [Result], []),
     'getActiveLeaderboardCanisterId' : IDL.Func([], [Result_26], []),
     'getAppStatus' : IDL.Func([], [Result_25], ['query']),
@@ -613,14 +611,22 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'isUsernameValid' : IDL.Func([UsernameFilterDTO], [IDL.Bool], ['query']),
-    'notifyAppsOfGameweekStarting' : IDL.Func([], [Result], []),
+    'notifyAppsOfFixtureFinalised' : IDL.Func(
+        [SeasonId, GameweekNumber],
+        [Result],
+        [],
+      ),
+    'notifyAppsOfGameweekStarting' : IDL.Func(
+        [SeasonId, GameweekNumber],
+        [Result],
+        [],
+      ),
     'notifyAppsOfLoan' : IDL.Func([LeagueId, PlayerId], [Result], []),
     'notifyAppsOfPositionChange' : IDL.Func([LeagueId, PlayerId], [Result], []),
     'notifyAppsOfTransfer' : IDL.Func([LeagueId, PlayerId], [Result], []),
     'payWeeklyRewards' : IDL.Func([GameweekNumber], [Result], []),
     'saveFantasyTeam' : IDL.Func([UpdateTeamSelectionDTO], [Result], []),
     'searchUsername' : IDL.Func([UsernameFilterDTO], [Result_1], []),
-    'snapshotManagers' : IDL.Func([], [Result], []),
     'updateDataHashes' : IDL.Func([IDL.Text], [Result], []),
     'updateFavouriteClub' : IDL.Func([UpdateFavouriteClubDTO], [Result], []),
     'updateProfilePicture' : IDL.Func([UpdateProfilePictureDTO], [Result], []),

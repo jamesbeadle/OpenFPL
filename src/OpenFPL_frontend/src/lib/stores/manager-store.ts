@@ -10,8 +10,10 @@ import type {
   ManagerDTO,
   PickTeamDTO,
   UpdateTeamSelectionDTO,
+  LeagueStatus,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
+import { storeManager } from "$lib/managers/store-manager";
 
 function createManagerStore() {
   const { subscribe, set } = writable<PickTeamDTO | null>(null);
@@ -57,12 +59,19 @@ function createManagerStore() {
   };
 
   async function getPublicProfile(principalId: string): Promise<ManagerDTO> {
-    let leagueStatus = await leagueStore.getLeagueStatus();
+    await storeManager.syncStores();
     try {
+      let leagueStatus: LeagueStatus | null = null;
+      leagueStore.subscribe((result) => {
+        if (result == null) {
+          throw new Error("Failed to subscribe to league store");
+        }
+        leagueStatus = result;
+      });
       let dto: RequestManagerDTO = {
         managerId: principalId,
         month: 0,
-        seasonId: leagueStatus.activeSeasonId,
+        seasonId: leagueStatus!.activeGameweek,
         gameweek: 0,
         clubId: 0,
       };

@@ -28,6 +28,7 @@
   let countdownMinutes = "00";
 
   onMount(async () => {
+    
     let foundSeason = $seasonStore.find(x => x.id == leagueStatus.activeSeasonId);
     if(foundSeason){
       activeSeason = foundSeason.name;

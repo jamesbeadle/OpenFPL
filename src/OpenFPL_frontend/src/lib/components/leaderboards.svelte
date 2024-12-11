@@ -45,7 +45,10 @@
   onMount(async () => {
     try {
       await storeManager.syncStores();
-      leagueStatus = await leagueStore.getLeagueStatus();
+      if(!$leagueStore){
+        return
+      };
+      leagueStatus = $leagueStore;
       gameweeks = Array.from(
         { length: leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek ?? 1 },
         (_, i) => i + 1

@@ -871,6 +871,8 @@
       return #ok();
     };
 
+    /*
+
     public shared ({ caller }) func snapshotManagers() : async Result.Result<(), T.Error> {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.FOOTBALL_GOD_BACKEND_CANISTER_ID;
       let leagueStatusResult = await getLeagueStatus();
@@ -918,6 +920,8 @@
       };
     };
 
+    */
+
     public shared func getWeeklyLeaderboards() : async [T.WeeklyLeaderboard]{
        var leaderboard_canister = actor ("n26sp-cqaaa-aaaal-qna7q-cai") : actor {
         getWeeklyLeaderboards : () -> async [T.WeeklyLeaderboard];
@@ -926,7 +930,7 @@
       return await leaderboard_canister.getWeeklyLeaderboards();
 
     };
-
+    /*
     public shared ({ caller }) func calculateLeaderboards() : async Result.Result<(), T.Error> {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.FOOTBALL_GOD_BACKEND_CANISTER_ID;
       let leagueStatusResult = await getLeagueStatus();
@@ -961,7 +965,7 @@
         }
       };
     };
-
+    */
     public shared ({ caller }) func calculateWeeklyRewards(gameweek: FootballTypes.GameweekNumber) : async Result.Result<(), T.Error> {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.FOOTBALL_GOD_BACKEND_CANISTER_ID;
       let leagueStatusResult = await getLeagueStatus();
@@ -1026,9 +1030,36 @@
       return #ok();
     };
 
-     public shared ({ caller }) func notifyAppsOfGameweekStarting() : async Result.Result<(), T.Error> {
+     public shared ({ caller }) func notifyAppsOfGameweekStarting(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber) : async Result.Result<(), T.Error> {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
+      let _ = await userManager.snapshotFantasyTeams(Environment.LEAGUE_ID, seasonId, gameweek, 0); //TODO MONTH
       await userManager.resetWeeklyTransfers();
+      return #ok();
+    };
+
+    public shared ({ caller }) func notifyAppsOfFixtureFinalised(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber) : async Result.Result<(), T.Error> {
+      
+      assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
+      let _ = await userManager.calculateFantasyTeamScores(Environment.LEAGUE_ID, seasonId, gameweek, 0); //TODO month shouldn't be passed in
+
+      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
+        getClubs : shared query (leagueId: FootballTypes.LeagueId) -> async Result.Result<[FootballTypes.Club], T.Error>;
+      };
+      let clubsResult = await data_canister.getClubs(Environment.LEAGUE_ID);
+
+      switch(clubsResult){
+        case (#ok clubs){
+          let clubIds = Array.map<DTOs.ClubDTO, FootballTypes.ClubId>(clubs, func(club: DTOs.ClubDTO){
+            return club.id
+          });
+          let managerCanisterIds = userManager.getUniqueManagerCanisterIds();
+          let _ = leaderboardManager.calculateLeaderboards(seasonId, gameweek, 0, managerCanisterIds, clubIds);   
+        };
+        case (#err error){
+          return #err(error)
+        }
+      };
+     
       return #ok();
     };
     

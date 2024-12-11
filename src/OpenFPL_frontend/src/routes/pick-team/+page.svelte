@@ -68,6 +68,10 @@
     try {
       
       await storeManager.syncStores();
+      if(!$leagueStore){
+        return
+      };
+      leagueStatus = $leagueStore;
       
       onHold.set($appStore?.onHold ?? false);
       $availableFormations = Object.keys(allFormations);     

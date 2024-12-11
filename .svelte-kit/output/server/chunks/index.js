@@ -3597,7 +3597,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "s7cipk"
+  version_hash: "1g2ttlo"
 };
 async function get_hooks() {
   return {};
@@ -3809,6 +3809,7 @@ function createLeagueStore() {
 const leagueStore = createLeagueStore();
 const idlFactory = ({ IDL }) => {
   const List = IDL.Rec();
+  const GameweekNumber = IDL.Nat8;
   const Error2 = IDL.Variant({
     "MoreThan2PlayersFromClub": IDL.Null,
     "DecodeError": IDL.Null,
@@ -3828,7 +3829,6 @@ const idlFactory = ({ IDL }) => {
     "Not11Players": IDL.Null
   });
   const Result = IDL.Variant({ "ok": IDL.Null, "err": Error2 });
-  const GameweekNumber = IDL.Nat8;
   const Result_26 = IDL.Variant({ "ok": IDL.Text, "err": Error2 });
   const AppStatusDTO__1 = IDL.Record({
     "version": IDL.Text,
@@ -4345,8 +4345,6 @@ const idlFactory = ({ IDL }) => {
   });
   const UpdateUsernameDTO = IDL.Record({ "username": IDL.Text });
   return IDL.Service({
-    "calculateGameweekScores": IDL.Func([], [Result], []),
-    "calculateLeaderboards": IDL.Func([], [Result], []),
     "calculateWeeklyRewards": IDL.Func([GameweekNumber], [Result], []),
     "getActiveLeaderboardCanisterId": IDL.Func([], [Result_26], []),
     "getAppStatus": IDL.Func([], [Result_25], ["query"]),
@@ -4422,14 +4420,22 @@ const idlFactory = ({ IDL }) => {
       ["query"]
     ),
     "isUsernameValid": IDL.Func([UsernameFilterDTO], [IDL.Bool], ["query"]),
-    "notifyAppsOfGameweekStarting": IDL.Func([], [Result], []),
+    "notifyAppsOfFixtureFinalised": IDL.Func(
+      [SeasonId, GameweekNumber],
+      [Result],
+      []
+    ),
+    "notifyAppsOfGameweekStarting": IDL.Func(
+      [SeasonId, GameweekNumber],
+      [Result],
+      []
+    ),
     "notifyAppsOfLoan": IDL.Func([LeagueId, PlayerId], [Result], []),
     "notifyAppsOfPositionChange": IDL.Func([LeagueId, PlayerId], [Result], []),
     "notifyAppsOfTransfer": IDL.Func([LeagueId, PlayerId], [Result], []),
     "payWeeklyRewards": IDL.Func([GameweekNumber], [Result], []),
     "saveFantasyTeam": IDL.Func([UpdateTeamSelectionDTO], [Result], []),
     "searchUsername": IDL.Func([UsernameFilterDTO], [Result_1], []),
-    "snapshotManagers": IDL.Func([], [Result], []),
     "updateDataHashes": IDL.Func([IDL.Text], [Result], []),
     "updateFavouriteClub": IDL.Func([UpdateFavouriteClubDTO], [Result], []),
     "updateProfilePicture": IDL.Func([UpdateProfilePictureDTO], [Result], []),
@@ -11292,259 +11298,6 @@ const toastsError = ({
     level: "error"
   });
 };
-var define_process_env_default$e = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
-function createManagerStore() {
-  const { subscribe: subscribe2, set } = writable(null);
-  let actor = ActorFactory.createActor(
-    idlFactory,
-    define_process_env_default$e.OPENFPL_BACKEND_CANISTER_ID
-  );
-  let newManager = {
-    playerIds: [],
-    oneNationCountryId: 0,
-    username: "",
-    goalGetterPlayerId: 0,
-    hatTrickHeroGameweek: 0,
-    transfersAvailable: 0,
-    termsAccepted: false,
-    teamBoostGameweek: 0,
-    captainFantasticGameweek: 0,
-    createDate: 0n,
-    oneNationGameweek: 0,
-    bankQuarterMillions: 0,
-    noEntryPlayerId: 0,
-    safeHandsPlayerId: 0,
-    history: [],
-    braceBonusGameweek: 0,
-    favouriteClubId: 0,
-    passMasterGameweek: 0,
-    teamBoostClubId: 0,
-    goalGetterGameweek: 0,
-    captainFantasticPlayerId: 0,
-    profilePicture: [],
-    transferWindowGameweek: 0,
-    noEntryGameweek: 0,
-    prospectsGameweek: 0,
-    safeHandsGameweek: 0,
-    principalId: "",
-    passMasterPlayerId: 0,
-    captainId: 0,
-    monthlyBonusesAvailable: 0,
-    canisterId: "",
-    firstGameweek: false
-  };
-  async function getPublicProfile(principalId) {
-    let leagueStatus = await leagueStore.getLeagueStatus();
-    try {
-      let dto = {
-        managerId: principalId,
-        month: 0,
-        seasonId: leagueStatus.activeSeasonId,
-        gameweek: 0,
-        clubId: 0
-      };
-      let result = await actor.getManager(dto);
-      if (isError(result)) {
-        console.error("Error getting public profile");
-      }
-      let profile = result.ok;
-      return profile;
-    } catch (error) {
-      console.error("Error fetching manager profile for gameweek:", error);
-      throw error;
-    }
-  }
-  async function getTotalManagers() {
-    try {
-      let result = await actor.getTotalManagers();
-      if (isError(result)) {
-        console.error("Error getting total managers");
-      }
-      const managerCountData = result.ok;
-      return Number(managerCountData);
-    } catch (error) {
-      console.error("Error fetching total managers:", error);
-      throw error;
-    }
-  }
-  async function getFantasyTeamForGameweek(managerId, seasonId, gameweek) {
-    try {
-      let dto = {
-        managerPrincipalId: managerId,
-        gameweek,
-        seasonId
-      };
-      let result = await actor.getFantasyTeamSnapshot(dto);
-      if (isError(result)) {
-        console.error("Error fetching fantasy team for gameweek:");
-      }
-      return result.ok;
-    } catch (error) {
-      console.error("Error fetching fantasy team for gameweek:", error);
-      throw error;
-    }
-  }
-  async function getCurrentTeam() {
-    try {
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        define_process_env_default$e.OPENFPL_BACKEND_CANISTER_ID ?? ""
-      );
-      const result = await identityActor.getCurrentTeam();
-      if (isError(result)) {
-        return newManager;
-      }
-      let fantasyTeam = result.ok;
-      return fantasyTeam;
-    } catch (error) {
-      console.error("Error fetching fantasy team:", error);
-      throw error;
-    }
-  }
-  async function saveFantasyTeam(userFantasyTeam, activeGameweek, bonusUsedInSession, transferWindowPlayedInSession) {
-    try {
-      let bonusPlayed = 0;
-      let bonusPlayerId = 0;
-      let bonusTeamId = 0;
-      let bonusCountryId = 0;
-      if (bonusUsedInSession) {
-        bonusPlayerId = getBonusPlayerId(userFantasyTeam, activeGameweek);
-        bonusTeamId = getBonusTeamId(userFantasyTeam, activeGameweek);
-        bonusPlayed = getBonusPlayed(userFantasyTeam, activeGameweek);
-        bonusCountryId = getBonusCountryId(userFantasyTeam, activeGameweek);
-      }
-      const identityActor = await ActorFactory.createIdentityActor(
-        authStore,
-        define_process_env_default$e.OPENFPL_BACKEND_CANISTER_ID ?? ""
-      );
-      let dto = {
-        playerIds: userFantasyTeam.playerIds,
-        captainId: userFantasyTeam.captainId,
-        goalGetterGameweek: bonusPlayed == 1 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
-        goalGetterPlayerId: bonusUsedInSession ? bonusPlayerId : userFantasyTeam.goalGetterPlayerId,
-        passMasterGameweek: bonusPlayed == 2 ? activeGameweek : userFantasyTeam.passMasterGameweek,
-        passMasterPlayerId: bonusUsedInSession ? bonusPlayerId : userFantasyTeam.passMasterPlayerId,
-        noEntryGameweek: bonusPlayed == 3 ? activeGameweek : userFantasyTeam.noEntryGameweek,
-        noEntryPlayerId: bonusUsedInSession ? bonusPlayerId : userFantasyTeam.noEntryPlayerId,
-        teamBoostGameweek: bonusPlayed == 4 ? activeGameweek : userFantasyTeam.teamBoostGameweek,
-        teamBoostClubId: bonusUsedInSession ? bonusTeamId : userFantasyTeam.teamBoostClubId,
-        safeHandsGameweek: bonusPlayed == 5 ? activeGameweek : userFantasyTeam.safeHandsGameweek,
-        safeHandsPlayerId: bonusUsedInSession ? bonusPlayerId : userFantasyTeam.safeHandsPlayerId,
-        captainFantasticGameweek: bonusPlayed == 6 ? activeGameweek : userFantasyTeam.captainFantasticGameweek,
-        captainFantasticPlayerId: bonusUsedInSession ? bonusPlayerId : userFantasyTeam.captainFantasticPlayerId,
-        oneNationGameweek: bonusPlayed == 7 ? activeGameweek : userFantasyTeam.oneNationGameweek,
-        oneNationCountryId: bonusUsedInSession ? bonusCountryId : userFantasyTeam.oneNationCountryId,
-        prospectsGameweek: bonusPlayed == 8 ? activeGameweek : userFantasyTeam.prospectsGameweek,
-        braceBonusGameweek: bonusPlayed == 9 ? activeGameweek : userFantasyTeam.braceBonusGameweek,
-        hatTrickHeroGameweek: bonusPlayed == 10 ? activeGameweek : userFantasyTeam.hatTrickHeroGameweek,
-        transferWindowGameweek: transferWindowPlayedInSession ? activeGameweek : userFantasyTeam.transferWindowGameweek,
-        username: userFantasyTeam.username
-      };
-      let result = await identityActor.saveFantasyTeam(dto);
-      if (isError(result)) {
-        console.error("Error saving fantasy team", result);
-        return;
-      }
-      const fantasyTeam = result.ok;
-      return fantasyTeam;
-    } catch (error) {
-      console.error("Error saving fantasy team:", error);
-      throw error;
-    }
-  }
-  function getBonusPlayed(userFantasyTeam, activeGameweek) {
-    let bonusPlayed = 0;
-    if (userFantasyTeam.goalGetterGameweek === activeGameweek) {
-      bonusPlayed = 1;
-    }
-    if (userFantasyTeam.passMasterGameweek === activeGameweek) {
-      bonusPlayed = 2;
-    }
-    if (userFantasyTeam.noEntryGameweek === activeGameweek) {
-      bonusPlayed = 3;
-    }
-    if (userFantasyTeam.teamBoostGameweek === activeGameweek) {
-      bonusPlayed = 4;
-    }
-    if (userFantasyTeam.safeHandsGameweek === activeGameweek) {
-      bonusPlayed = 5;
-    }
-    if (userFantasyTeam.captainFantasticGameweek === activeGameweek) {
-      bonusPlayed = 6;
-    }
-    if (userFantasyTeam.prospectsGameweek === activeGameweek) {
-      bonusPlayed = 7;
-    }
-    if (userFantasyTeam.oneNationGameweek === activeGameweek) {
-      bonusPlayed = 8;
-    }
-    if (userFantasyTeam.hatTrickHeroGameweek === activeGameweek) {
-      bonusPlayed = 9;
-    }
-    if (userFantasyTeam.hatTrickHeroGameweek === activeGameweek) {
-      bonusPlayed = 10;
-    }
-    return bonusPlayed;
-  }
-  function getBonusPlayerId(userFantasyTeam, activeGameweek) {
-    let bonusPlayerId = 0;
-    if (userFantasyTeam.goalGetterGameweek === activeGameweek) {
-      bonusPlayerId = userFantasyTeam.goalGetterPlayerId;
-    }
-    if (userFantasyTeam.passMasterGameweek === activeGameweek) {
-      bonusPlayerId = userFantasyTeam.passMasterPlayerId;
-    }
-    if (userFantasyTeam.noEntryGameweek === activeGameweek) {
-      bonusPlayerId = userFantasyTeam.noEntryPlayerId;
-    }
-    if (userFantasyTeam.safeHandsGameweek === activeGameweek) {
-      bonusPlayerId = userFantasyTeam.safeHandsPlayerId;
-    }
-    if (userFantasyTeam.captainFantasticGameweek === activeGameweek) {
-      bonusPlayerId = userFantasyTeam.captainId;
-    }
-    return bonusPlayerId;
-  }
-  function getBonusTeamId(userFantasyTeam, activeGameweek) {
-    let bonusTeamId = 0;
-    if (userFantasyTeam.teamBoostGameweek === activeGameweek) {
-      bonusTeamId = userFantasyTeam.teamBoostClubId;
-    }
-    return bonusTeamId;
-  }
-  function getBonusCountryId(userFantasyTeam, activeGameweek) {
-    let bonusCountryId = 0;
-    if (userFantasyTeam.oneNationGameweek === activeGameweek) {
-      bonusCountryId = userFantasyTeam.oneNationCountryId;
-    }
-    return bonusCountryId;
-  }
-  return {
-    subscribe: subscribe2,
-    getTotalManagers,
-    getFantasyTeamForGameweek,
-    getCurrentTeam,
-    saveFantasyTeam,
-    getPublicProfile
-  };
-}
-createManagerStore();
-const OpenFPLIcon = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let { className = "" } = $$props;
-  if ($$props.className === void 0 && $$bindings.className && className !== void 0)
-    $$bindings.className(className);
-  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"${add_attribute("class", className, 0)} fill="currentColor" viewBox="0 0 137 188"><path d="M68.8457 0C43.0009 4.21054 19.8233 14.9859 0.331561 30.5217L0.264282 30.6627V129.685L68.7784 187.97L136.528 129.685L136.543 30.6204C117.335 15.7049 94.1282 4.14474 68.8457 0ZM82.388 145.014C82.388 145.503 82.0804 145.992 81.5806 146.114L68.7784 150.329C68.5285 150.39 68.2786 150.39 68.0287 150.329L55.2265 146.114C54.7267 145.931 54.4143 145.503 54.4143 145.014V140.738C54.4143 140.31 54.6642 139.883 55.039 139.7L67.8413 133.102C68.2161 132.919 68.591 132.919 68.9658 133.102L81.768 139.7C82.1429 139.883 82.388 140.31 82.388 140.738V145.014ZM106.464 97.9137C106.464 98.3414 106.214 98.769 105.777 98.9523L96.6607 103.534C96.036 103.84 95.8486 104.573 96.1609 105.122L105.027 121.189C105.277 121.678 105.215 122.228 104.84 122.594L89.7262 137.134C89.2889 137.561 88.6641 137.561 88.1644 137.256L70.9313 125.099C70.369 124.671 70.2441 123.877 70.7439 123.327L84.4208 108.421C85.2329 107.505 84.2958 106.161 83.1713 106.527L68.7447 111.109C68.4948 111.17 68.2449 111.17 67.9951 111.109L53.6358 106.527C52.4488 106.161 51.5742 107.566 52.3863 108.421L66.0584 123.327C66.5582 123.877 66.4332 124.671 65.871 125.099L48.6379 137.256C48.1381 137.561 47.5134 137.561 47.0761 137.134L31.9671 122.533C31.5923 122.167 31.5298 121.617 31.7797 121.128L40.6461 105.061C40.9585 104.45 40.7086 103.778 40.1463 103.473L31.03 98.8912C30.6552 98.7079 30.3428 98.2803 30.3428 97.8526V65.8413C30.3428 64.9249 31.4049 64.314 32.217 64.8639L39.709 69.8122C40.0214 70.0565 40.2088 70.362 40.2088 70.7896L40.2713 79.0368C40.2713 79.4034 40.4587 79.7699 40.7711 80.0143L51.7616 87.5284C52.5737 88.0782 53.6983 87.4673 53.6358 86.4898L52.9486 71.9503C52.9486 71.5838 52.7612 71.2173 52.4488 71.034L30.8426 56.5556C30.5302 56.3112 30.3428 55.9447 30.3428 55.5781V48.4305C30.3428 48.1862 30.4053 47.8807 30.5927 47.6975L38.3971 38.0452C38.7094 37.6176 39.2717 37.4954 39.7715 37.6786L67.9326 47.8807C68.1825 48.0029 68.4948 48.0029 68.7447 47.8807L96.9106 37.6786C97.4104 37.4954 97.9679 37.6786 98.2802 38.0452L106.089 47.6975C106.277 47.8807 106.339 48.1862 106.339 48.4305V55.5781C106.339 55.9447 106.152 56.3112 105.84 56.5556L84.2333 71.034C84.0459 71.2783 83.8585 71.6449 83.8585 72.0114L83.1713 86.5509C83.1088 87.5284 84.2333 88.1393 85.0455 87.5895L96.036 80.0753C96.3484 79.831 96.5358 79.5255 96.5358 79.0979L96.5983 70.8507C96.5983 70.4842 96.7857 70.1176 97.098 69.8733L104.59 64.9249C105.402 64.3751 106.464 64.9249 106.464 65.9024V97.9137Z" fill="#fffff"></path></svg>`;
-});
-const WalletIcon = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let { className = "" } = $$props;
-  if ($$props.className === void 0 && $$bindings.className && className !== void 0)
-    $$bindings.className(className);
-  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true"${add_attribute("class", className, 0)} fill="currentColor" viewBox="0 0 24 24"><path d="M12.136.326A1.5 1.5 0 0 1 14 1.78V3h.5A1.5 1.5 0 0 1 16 4.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 13.5v-9a1.5 1.5 0 0 1 1.432-1.499L12.136.326zM5.562 3H13V1.78a.5.5 0 0 0-.621-.484L5.562 3zM1.5 4a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-13z"></path><path d="M15.5,6.5v3a1,1,0,0,1-1,1h-3.5v-5H14.5A1,1,0,0,1,15.5,6.5Z"></path><path d="M12,8a.5,.5 0,1,1,.001,0Z"></path></svg>`;
-});
-const authSignedInStore = derived(
-  authStore,
-  ({ identity }) => identity !== null && identity !== void 0
-);
 function createCountryStore() {
   const { subscribe: subscribe2, set } = writable([]);
   return {
@@ -11576,13 +11329,13 @@ function createSeasonStore() {
   };
 }
 const seasonStore = createSeasonStore();
-var define_process_env_default$d = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$e = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class PlayerService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory,
-      define_process_env_default$d.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default$e.OPENFPL_BACKEND_CANISTER_ID
     );
   }
   async getPlayers() {
@@ -11622,13 +11375,13 @@ function createPlayerStore() {
   };
 }
 const playerStore = createPlayerStore();
-var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$d = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class PlayerEventsService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory,
-      define_process_env_default$c.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default$d.OPENFPL_BACKEND_CANISTER_ID
     );
   }
   async getPlayerDetailsForGameweek(seasonId, gameweek) {
@@ -11779,13 +11532,13 @@ function getTotalBonusPoints(gameweekData, fantasyTeam, points) {
   }
   return bonusPoints;
 }
-var define_process_env_default$b = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$c = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class AppService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory,
-      define_process_env_default$b.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default$c.OPENFPL_BACKEND_CANISTER_ID
     );
   }
   async getAppStatus() {
@@ -11890,13 +11643,13 @@ function createPlayerEventsStore() {
   };
 }
 const playerEventsStore = createPlayerEventsStore();
-var define_process_env_default$a = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$b = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class WeeklyLeaderboardService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory,
-      define_process_env_default$a.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default$b.OPENFPL_BACKEND_CANISTER_ID
     );
   }
   async getWeeklyLeaderboard(offset, seasonId, gameweek) {
@@ -11941,13 +11694,13 @@ function createWeeklyLeaderboardStore() {
   };
 }
 const weeklyLeaderboardStore = createWeeklyLeaderboardStore();
-var define_process_env_default$9 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$a = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class DataHashService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory,
-      define_process_env_default$9.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default$a.OPENFPL_BACKEND_CANISTER_ID
     );
   }
   async getDataHashes() {
@@ -11957,13 +11710,13 @@ class DataHashService {
     return result.ok;
   }
 }
-var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$9 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class LeagueService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory,
-      define_process_env_default$8.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default$9.OPENFPL_BACKEND_CANISTER_ID
     );
   }
   async getLeagueStatus() {
@@ -11974,13 +11727,13 @@ class LeagueService {
     return result.ok;
   }
 }
-var define_process_env_default$7 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$8 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class CountryService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory,
-      define_process_env_default$7.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default$8.OPENFPL_BACKEND_CANISTER_ID
     );
   }
   async getCountries() {
@@ -11990,13 +11743,13 @@ class CountryService {
     return result.ok;
   }
 }
-var define_process_env_default$6 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$7 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class SeasonService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory,
-      define_process_env_default$6.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default$7.OPENFPL_BACKEND_CANISTER_ID
     );
   }
   async getSeasons() {
@@ -12006,13 +11759,13 @@ class SeasonService {
     return result.ok;
   }
 }
-var define_process_env_default$5 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+var define_process_env_default$6 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class ClubService {
   actor;
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory,
-      define_process_env_default$5.OPENFPL_BACKEND_CANISTER_ID
+      define_process_env_default$6.OPENFPL_BACKEND_CANISTER_ID
     );
   }
   async getClubs() {
@@ -12022,6 +11775,238 @@ class ClubService {
     return result.ok;
   }
 }
+var define_process_env_default$5 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+class UserService {
+  constructor() {
+    authStore.sync();
+  }
+  async isAdmin() {
+    const identityActor = await ActorFactory.createIdentityActor(
+      authStore,
+      define_process_env_default$5.OPENFPL_BACKEND_CANISTER_ID
+    );
+    const result = await identityActor.isAdmin();
+    if (isError(result)) {
+      throw new Error("Failed to check is admin");
+    }
+    return result.ok;
+  }
+}
+var define_process_env_default$4 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
+function createUserStore() {
+  const { subscribe: subscribe2, set } = writable(null);
+  async function sync() {
+    let localStorageString = localStorage.getItem("user_profile_data");
+    if (localStorageString) {
+      const localProfile = JSON.parse(localStorageString);
+      set(localProfile);
+      return;
+    }
+    try {
+      await cacheProfile();
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+      throw error;
+    }
+  }
+  async function isAdmin() {
+    return new UserService().isAdmin();
+  }
+  async function updateUsername(username) {
+    try {
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        define_process_env_default$4.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
+      let dto = {
+        username
+      };
+      const result = await identityActor.updateUsername(dto);
+      if (isError(result)) {
+        console.error("Error updating username");
+        return;
+      }
+      await cacheProfile();
+      return result;
+    } catch (error) {
+      console.error("Error updating username:", error);
+      throw error;
+    }
+  }
+  async function updateFavouriteTeam(favouriteTeamId) {
+    try {
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        define_process_env_default$4.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
+      let dto = {
+        favouriteClubId: favouriteTeamId
+      };
+      const result = await identityActor.updateFavouriteClub(dto);
+      if (isError(result)) {
+        console.error("Error updating favourite team");
+        return;
+      }
+      await cacheProfile();
+      return result;
+    } catch (error) {
+      console.error("Error updating favourite team:", error);
+      throw error;
+    }
+  }
+  async function updateProfilePicture(picture) {
+    try {
+      const maxPictureSize = 1e3;
+      const extension = getFileExtensionFromFile(picture);
+      if (picture.size > maxPictureSize * 1024) {
+        return null;
+      }
+      const reader = new FileReader();
+      reader.readAsArrayBuffer(picture);
+      reader.onloadend = async () => {
+        const arrayBuffer = reader.result;
+        const uint8Array = new Uint8Array(arrayBuffer);
+        try {
+          const identityActor = await ActorFactory.createIdentityActor(
+            authStore,
+            define_process_env_default$4.OPENFPL_BACKEND_CANISTER_ID ?? ""
+          );
+          let dto = {
+            profilePicture: uint8Array,
+            extension
+          };
+          const result = await identityActor.updateProfilePicture(dto);
+          if (isError(result)) {
+            console.error("Error updating profile picture");
+            return;
+          }
+          await cacheProfile();
+          return result;
+        } catch (error) {
+          console.error(error);
+        }
+      };
+    } catch (error) {
+      console.error("Error updating username:", error);
+      throw error;
+    }
+  }
+  function getFileExtensionFromFile(file) {
+    const filename = file.name;
+    const lastIndex = filename.lastIndexOf(".");
+    return lastIndex !== -1 ? filename.substring(lastIndex + 1) : "";
+  }
+  async function isUsernameAvailable(username) {
+    const identityActor = await ActorFactory.createIdentityActor(
+      authStore,
+      define_process_env_default$4.OPENFPL_BACKEND_CANISTER_ID
+    );
+    let dto = {
+      username
+    };
+    return await identityActor.isUsernameValid(dto);
+  }
+  async function cacheProfile() {
+    await authStore.sync();
+    const identityActor = await ActorFactory.createIdentityActor(
+      authStore,
+      define_process_env_default$4.OPENFPL_BACKEND_CANISTER_ID
+    );
+    let getProfileResponse = await identityActor.getProfile();
+    let error = isError(getProfileResponse);
+    if (error) {
+      console.error("Error fetching user profile");
+      return;
+    }
+    let profileData = getProfileResponse.ok;
+    set(profileData);
+  }
+  async function withdrawFPL(withdrawalAddress, withdrawalAmount) {
+    try {
+      let identity;
+      authStore.subscribe(async (auth) => {
+        identity = auth.identity;
+      });
+      if (!identity) {
+        return;
+      }
+      let principalId = identity.getPrincipal();
+      const agent = await createAgent({
+        identity,
+        host: "https://identity.ic0.app",
+        fetchRootKey: define_process_env_default$4.DFX_NETWORK === "local"
+      });
+      const { transfer } = IcrcLedgerCanister.create({
+        agent,
+        canisterId: define_process_env_default$4.DFX_NETWORK === "ic" ? Principal.fromText("ddsp7-7iaaa-aaaaq-aacqq-cai") : Principal.fromText("avqkn-guaaa-aaaaa-qaaea-cai")
+      });
+      if (principalId) {
+        try {
+          let transfer_result = await transfer({
+            to: {
+              owner: Principal.fromText(withdrawalAddress),
+              subaccount: []
+            },
+            fee: 100000n,
+            memo: new Uint8Array(Text.encodeValue("0")),
+            from_subaccount: void 0,
+            created_at_time: BigInt(Date.now()) * BigInt(1e6),
+            amount: withdrawalAmount - 100000n
+          });
+        } catch (err) {
+          console.error(err.errorType);
+        }
+      }
+    } catch (error) {
+      console.error("Error withdrawing FPL.", error);
+      throw error;
+    }
+  }
+  async function getFPLBalance() {
+    let identity;
+    authStore.subscribe(async (auth) => {
+      identity = auth.identity;
+    });
+    if (!identity) {
+      return 0n;
+    }
+    let principalId = identity.getPrincipal();
+    const agent = await createAgent({
+      identity,
+      host: "https://identity.ic0.app",
+      fetchRootKey: define_process_env_default$4.DFX_NETWORK === "local"
+    });
+    const { balance } = IcrcLedgerCanister.create({
+      agent,
+      canisterId: Principal.fromText("ddsp7-7iaaa-aaaaq-aacqq-cai")
+    });
+    if (principalId) {
+      try {
+        let result = await balance({
+          owner: principalId,
+          certified: false
+        });
+        return result;
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    return 0n;
+  }
+  return {
+    subscribe: subscribe2,
+    sync,
+    updateUsername,
+    updateFavouriteTeam,
+    updateProfilePicture,
+    isUsernameAvailable,
+    cacheProfile,
+    withdrawFPL,
+    getFPLBalance,
+    isAdmin
+  };
+}
+const userStore = createUserStore();
 class StoreManager {
   constructor() {
     this.categories = [
@@ -12185,238 +12170,266 @@ class StoreManager {
   }
 }
 const storeManager = new StoreManager();
-var define_process_env_default$4 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
-class UserService {
-  constructor() {
-    authStore.sync();
-  }
-  async isAdmin() {
-    const identityActor = await ActorFactory.createIdentityActor(
-      authStore,
-      define_process_env_default$4.OPENFPL_BACKEND_CANISTER_ID
-    );
-    const result = await identityActor.isAdmin();
-    if (isError(result)) {
-      throw new Error("Failed to check is admin");
-    }
-    return result.ok;
-  }
-}
 var define_process_env_default$3 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
-function createUserStore() {
+function createManagerStore() {
   const { subscribe: subscribe2, set } = writable(null);
-  async function sync() {
-    let localStorageString = localStorage.getItem("user_profile_data");
-    if (localStorageString) {
-      const localProfile = JSON.parse(localStorageString);
-      set(localProfile);
-      return;
-    }
+  let actor = ActorFactory.createActor(
+    idlFactory,
+    define_process_env_default$3.OPENFPL_BACKEND_CANISTER_ID
+  );
+  let newManager = {
+    playerIds: [],
+    oneNationCountryId: 0,
+    username: "",
+    goalGetterPlayerId: 0,
+    hatTrickHeroGameweek: 0,
+    transfersAvailable: 0,
+    termsAccepted: false,
+    teamBoostGameweek: 0,
+    captainFantasticGameweek: 0,
+    createDate: 0n,
+    oneNationGameweek: 0,
+    bankQuarterMillions: 0,
+    noEntryPlayerId: 0,
+    safeHandsPlayerId: 0,
+    history: [],
+    braceBonusGameweek: 0,
+    favouriteClubId: 0,
+    passMasterGameweek: 0,
+    teamBoostClubId: 0,
+    goalGetterGameweek: 0,
+    captainFantasticPlayerId: 0,
+    profilePicture: [],
+    transferWindowGameweek: 0,
+    noEntryGameweek: 0,
+    prospectsGameweek: 0,
+    safeHandsGameweek: 0,
+    principalId: "",
+    passMasterPlayerId: 0,
+    captainId: 0,
+    monthlyBonusesAvailable: 0,
+    canisterId: "",
+    firstGameweek: false
+  };
+  async function getPublicProfile(principalId) {
+    await storeManager.syncStores();
     try {
-      await cacheProfile();
+      let leagueStatus = null;
+      leagueStore.subscribe((result2) => {
+        if (result2 == null) {
+          throw new Error("Failed to subscribe to league store");
+        }
+        leagueStatus = result2;
+      });
+      let dto = {
+        managerId: principalId,
+        month: 0,
+        seasonId: leagueStatus.activeGameweek,
+        gameweek: 0,
+        clubId: 0
+      };
+      let result = await actor.getManager(dto);
+      if (isError(result)) {
+        console.error("Error getting public profile");
+      }
+      let profile = result.ok;
+      return profile;
     } catch (error) {
-      console.error("Error fetching user profile:", error);
+      console.error("Error fetching manager profile for gameweek:", error);
       throw error;
     }
   }
-  async function isAdmin() {
-    return new UserService().isAdmin();
+  async function getTotalManagers() {
+    try {
+      let result = await actor.getTotalManagers();
+      if (isError(result)) {
+        console.error("Error getting total managers");
+      }
+      const managerCountData = result.ok;
+      return Number(managerCountData);
+    } catch (error) {
+      console.error("Error fetching total managers:", error);
+      throw error;
+    }
   }
-  async function updateUsername(username) {
+  async function getFantasyTeamForGameweek(managerId, seasonId, gameweek) {
+    try {
+      let dto = {
+        managerPrincipalId: managerId,
+        gameweek,
+        seasonId
+      };
+      let result = await actor.getFantasyTeamSnapshot(dto);
+      if (isError(result)) {
+        console.error("Error fetching fantasy team for gameweek:");
+      }
+      return result.ok;
+    } catch (error) {
+      console.error("Error fetching fantasy team for gameweek:", error);
+      throw error;
+    }
+  }
+  async function getCurrentTeam() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
         define_process_env_default$3.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      let dto = {
-        username
-      };
-      const result = await identityActor.updateUsername(dto);
+      const result = await identityActor.getCurrentTeam();
       if (isError(result)) {
-        console.error("Error updating username");
-        return;
+        return newManager;
       }
-      await cacheProfile();
-      return result;
+      let fantasyTeam = result.ok;
+      return fantasyTeam;
     } catch (error) {
-      console.error("Error updating username:", error);
+      console.error("Error fetching fantasy team:", error);
       throw error;
     }
   }
-  async function updateFavouriteTeam(favouriteTeamId) {
+  async function saveFantasyTeam(userFantasyTeam, activeGameweek, bonusUsedInSession, transferWindowPlayedInSession) {
     try {
+      let bonusPlayed = 0;
+      let bonusPlayerId = 0;
+      let bonusTeamId = 0;
+      let bonusCountryId = 0;
+      if (bonusUsedInSession) {
+        bonusPlayerId = getBonusPlayerId(userFantasyTeam, activeGameweek);
+        bonusTeamId = getBonusTeamId(userFantasyTeam, activeGameweek);
+        bonusPlayed = getBonusPlayed(userFantasyTeam, activeGameweek);
+        bonusCountryId = getBonusCountryId(userFantasyTeam, activeGameweek);
+      }
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
         define_process_env_default$3.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       let dto = {
-        favouriteClubId: favouriteTeamId
+        playerIds: userFantasyTeam.playerIds,
+        captainId: userFantasyTeam.captainId,
+        goalGetterGameweek: bonusPlayed == 1 ? activeGameweek : userFantasyTeam.goalGetterGameweek,
+        goalGetterPlayerId: bonusUsedInSession ? bonusPlayerId : userFantasyTeam.goalGetterPlayerId,
+        passMasterGameweek: bonusPlayed == 2 ? activeGameweek : userFantasyTeam.passMasterGameweek,
+        passMasterPlayerId: bonusUsedInSession ? bonusPlayerId : userFantasyTeam.passMasterPlayerId,
+        noEntryGameweek: bonusPlayed == 3 ? activeGameweek : userFantasyTeam.noEntryGameweek,
+        noEntryPlayerId: bonusUsedInSession ? bonusPlayerId : userFantasyTeam.noEntryPlayerId,
+        teamBoostGameweek: bonusPlayed == 4 ? activeGameweek : userFantasyTeam.teamBoostGameweek,
+        teamBoostClubId: bonusUsedInSession ? bonusTeamId : userFantasyTeam.teamBoostClubId,
+        safeHandsGameweek: bonusPlayed == 5 ? activeGameweek : userFantasyTeam.safeHandsGameweek,
+        safeHandsPlayerId: bonusUsedInSession ? bonusPlayerId : userFantasyTeam.safeHandsPlayerId,
+        captainFantasticGameweek: bonusPlayed == 6 ? activeGameweek : userFantasyTeam.captainFantasticGameweek,
+        captainFantasticPlayerId: bonusUsedInSession ? bonusPlayerId : userFantasyTeam.captainFantasticPlayerId,
+        oneNationGameweek: bonusPlayed == 7 ? activeGameweek : userFantasyTeam.oneNationGameweek,
+        oneNationCountryId: bonusUsedInSession ? bonusCountryId : userFantasyTeam.oneNationCountryId,
+        prospectsGameweek: bonusPlayed == 8 ? activeGameweek : userFantasyTeam.prospectsGameweek,
+        braceBonusGameweek: bonusPlayed == 9 ? activeGameweek : userFantasyTeam.braceBonusGameweek,
+        hatTrickHeroGameweek: bonusPlayed == 10 ? activeGameweek : userFantasyTeam.hatTrickHeroGameweek,
+        transferWindowGameweek: transferWindowPlayedInSession ? activeGameweek : userFantasyTeam.transferWindowGameweek,
+        username: userFantasyTeam.username
       };
-      const result = await identityActor.updateFavouriteClub(dto);
+      let result = await identityActor.saveFantasyTeam(dto);
       if (isError(result)) {
-        console.error("Error updating favourite team");
+        console.error("Error saving fantasy team", result);
         return;
       }
-      await cacheProfile();
-      return result;
+      const fantasyTeam = result.ok;
+      return fantasyTeam;
     } catch (error) {
-      console.error("Error updating favourite team:", error);
+      console.error("Error saving fantasy team:", error);
       throw error;
     }
   }
-  async function updateProfilePicture(picture) {
-    try {
-      const maxPictureSize = 1e3;
-      const extension = getFileExtensionFromFile(picture);
-      if (picture.size > maxPictureSize * 1024) {
-        return null;
-      }
-      const reader = new FileReader();
-      reader.readAsArrayBuffer(picture);
-      reader.onloadend = async () => {
-        const arrayBuffer = reader.result;
-        const uint8Array = new Uint8Array(arrayBuffer);
-        try {
-          const identityActor = await ActorFactory.createIdentityActor(
-            authStore,
-            define_process_env_default$3.OPENFPL_BACKEND_CANISTER_ID ?? ""
-          );
-          let dto = {
-            profilePicture: uint8Array,
-            extension
-          };
-          const result = await identityActor.updateProfilePicture(dto);
-          if (isError(result)) {
-            console.error("Error updating profile picture");
-            return;
-          }
-          await cacheProfile();
-          return result;
-        } catch (error) {
-          console.error(error);
-        }
-      };
-    } catch (error) {
-      console.error("Error updating username:", error);
-      throw error;
+  function getBonusPlayed(userFantasyTeam, activeGameweek) {
+    let bonusPlayed = 0;
+    if (userFantasyTeam.goalGetterGameweek === activeGameweek) {
+      bonusPlayed = 1;
     }
-  }
-  function getFileExtensionFromFile(file) {
-    const filename = file.name;
-    const lastIndex = filename.lastIndexOf(".");
-    return lastIndex !== -1 ? filename.substring(lastIndex + 1) : "";
-  }
-  async function isUsernameAvailable(username) {
-    const identityActor = await ActorFactory.createIdentityActor(
-      authStore,
-      define_process_env_default$3.OPENFPL_BACKEND_CANISTER_ID
-    );
-    let dto = {
-      username
-    };
-    return await identityActor.isUsernameValid(dto);
-  }
-  async function cacheProfile() {
-    await authStore.sync();
-    const identityActor = await ActorFactory.createIdentityActor(
-      authStore,
-      define_process_env_default$3.OPENFPL_BACKEND_CANISTER_ID
-    );
-    let getProfileResponse = await identityActor.getProfile();
-    let error = isError(getProfileResponse);
-    if (error) {
-      console.error("Error fetching user profile");
-      return;
+    if (userFantasyTeam.passMasterGameweek === activeGameweek) {
+      bonusPlayed = 2;
     }
-    let profileData = getProfileResponse.ok;
-    set(profileData);
+    if (userFantasyTeam.noEntryGameweek === activeGameweek) {
+      bonusPlayed = 3;
+    }
+    if (userFantasyTeam.teamBoostGameweek === activeGameweek) {
+      bonusPlayed = 4;
+    }
+    if (userFantasyTeam.safeHandsGameweek === activeGameweek) {
+      bonusPlayed = 5;
+    }
+    if (userFantasyTeam.captainFantasticGameweek === activeGameweek) {
+      bonusPlayed = 6;
+    }
+    if (userFantasyTeam.prospectsGameweek === activeGameweek) {
+      bonusPlayed = 7;
+    }
+    if (userFantasyTeam.oneNationGameweek === activeGameweek) {
+      bonusPlayed = 8;
+    }
+    if (userFantasyTeam.hatTrickHeroGameweek === activeGameweek) {
+      bonusPlayed = 9;
+    }
+    if (userFantasyTeam.hatTrickHeroGameweek === activeGameweek) {
+      bonusPlayed = 10;
+    }
+    return bonusPlayed;
   }
-  async function withdrawFPL(withdrawalAddress, withdrawalAmount) {
-    try {
-      let identity;
-      authStore.subscribe(async (auth) => {
-        identity = auth.identity;
-      });
-      if (!identity) {
-        return;
-      }
-      let principalId = identity.getPrincipal();
-      const agent = await createAgent({
-        identity,
-        host: "https://identity.ic0.app",
-        fetchRootKey: define_process_env_default$3.DFX_NETWORK === "local"
-      });
-      const { transfer } = IcrcLedgerCanister.create({
-        agent,
-        canisterId: define_process_env_default$3.DFX_NETWORK === "ic" ? Principal.fromText("ddsp7-7iaaa-aaaaq-aacqq-cai") : Principal.fromText("avqkn-guaaa-aaaaa-qaaea-cai")
-      });
-      if (principalId) {
-        try {
-          let transfer_result = await transfer({
-            to: {
-              owner: Principal.fromText(withdrawalAddress),
-              subaccount: []
-            },
-            fee: 100000n,
-            memo: new Uint8Array(Text.encodeValue("0")),
-            from_subaccount: void 0,
-            created_at_time: BigInt(Date.now()) * BigInt(1e6),
-            amount: withdrawalAmount - 100000n
-          });
-        } catch (err) {
-          console.error(err.errorType);
-        }
-      }
-    } catch (error) {
-      console.error("Error withdrawing FPL.", error);
-      throw error;
+  function getBonusPlayerId(userFantasyTeam, activeGameweek) {
+    let bonusPlayerId = 0;
+    if (userFantasyTeam.goalGetterGameweek === activeGameweek) {
+      bonusPlayerId = userFantasyTeam.goalGetterPlayerId;
     }
+    if (userFantasyTeam.passMasterGameweek === activeGameweek) {
+      bonusPlayerId = userFantasyTeam.passMasterPlayerId;
+    }
+    if (userFantasyTeam.noEntryGameweek === activeGameweek) {
+      bonusPlayerId = userFantasyTeam.noEntryPlayerId;
+    }
+    if (userFantasyTeam.safeHandsGameweek === activeGameweek) {
+      bonusPlayerId = userFantasyTeam.safeHandsPlayerId;
+    }
+    if (userFantasyTeam.captainFantasticGameweek === activeGameweek) {
+      bonusPlayerId = userFantasyTeam.captainId;
+    }
+    return bonusPlayerId;
   }
-  async function getFPLBalance() {
-    let identity;
-    authStore.subscribe(async (auth) => {
-      identity = auth.identity;
-    });
-    if (!identity) {
-      return 0n;
+  function getBonusTeamId(userFantasyTeam, activeGameweek) {
+    let bonusTeamId = 0;
+    if (userFantasyTeam.teamBoostGameweek === activeGameweek) {
+      bonusTeamId = userFantasyTeam.teamBoostClubId;
     }
-    let principalId = identity.getPrincipal();
-    const agent = await createAgent({
-      identity,
-      host: "https://identity.ic0.app",
-      fetchRootKey: define_process_env_default$3.DFX_NETWORK === "local"
-    });
-    const { balance } = IcrcLedgerCanister.create({
-      agent,
-      canisterId: Principal.fromText("ddsp7-7iaaa-aaaaq-aacqq-cai")
-    });
-    if (principalId) {
-      try {
-        let result = await balance({
-          owner: principalId,
-          certified: false
-        });
-        return result;
-      } catch (err) {
-        console.error(err);
-      }
+    return bonusTeamId;
+  }
+  function getBonusCountryId(userFantasyTeam, activeGameweek) {
+    let bonusCountryId = 0;
+    if (userFantasyTeam.oneNationGameweek === activeGameweek) {
+      bonusCountryId = userFantasyTeam.oneNationCountryId;
     }
-    return 0n;
+    return bonusCountryId;
   }
   return {
     subscribe: subscribe2,
-    sync,
-    updateUsername,
-    updateFavouriteTeam,
-    updateProfilePicture,
-    isUsernameAvailable,
-    cacheProfile,
-    withdrawFPL,
-    getFPLBalance,
-    isAdmin
+    getTotalManagers,
+    getFantasyTeamForGameweek,
+    getCurrentTeam,
+    saveFantasyTeam,
+    getPublicProfile
   };
 }
-const userStore = createUserStore();
+createManagerStore();
+const OpenFPLIcon = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let { className = "" } = $$props;
+  if ($$props.className === void 0 && $$bindings.className && className !== void 0)
+    $$bindings.className(className);
+  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"${add_attribute("class", className, 0)} fill="currentColor" viewBox="0 0 137 188"><path d="M68.8457 0C43.0009 4.21054 19.8233 14.9859 0.331561 30.5217L0.264282 30.6627V129.685L68.7784 187.97L136.528 129.685L136.543 30.6204C117.335 15.7049 94.1282 4.14474 68.8457 0ZM82.388 145.014C82.388 145.503 82.0804 145.992 81.5806 146.114L68.7784 150.329C68.5285 150.39 68.2786 150.39 68.0287 150.329L55.2265 146.114C54.7267 145.931 54.4143 145.503 54.4143 145.014V140.738C54.4143 140.31 54.6642 139.883 55.039 139.7L67.8413 133.102C68.2161 132.919 68.591 132.919 68.9658 133.102L81.768 139.7C82.1429 139.883 82.388 140.31 82.388 140.738V145.014ZM106.464 97.9137C106.464 98.3414 106.214 98.769 105.777 98.9523L96.6607 103.534C96.036 103.84 95.8486 104.573 96.1609 105.122L105.027 121.189C105.277 121.678 105.215 122.228 104.84 122.594L89.7262 137.134C89.2889 137.561 88.6641 137.561 88.1644 137.256L70.9313 125.099C70.369 124.671 70.2441 123.877 70.7439 123.327L84.4208 108.421C85.2329 107.505 84.2958 106.161 83.1713 106.527L68.7447 111.109C68.4948 111.17 68.2449 111.17 67.9951 111.109L53.6358 106.527C52.4488 106.161 51.5742 107.566 52.3863 108.421L66.0584 123.327C66.5582 123.877 66.4332 124.671 65.871 125.099L48.6379 137.256C48.1381 137.561 47.5134 137.561 47.0761 137.134L31.9671 122.533C31.5923 122.167 31.5298 121.617 31.7797 121.128L40.6461 105.061C40.9585 104.45 40.7086 103.778 40.1463 103.473L31.03 98.8912C30.6552 98.7079 30.3428 98.2803 30.3428 97.8526V65.8413C30.3428 64.9249 31.4049 64.314 32.217 64.8639L39.709 69.8122C40.0214 70.0565 40.2088 70.362 40.2088 70.7896L40.2713 79.0368C40.2713 79.4034 40.4587 79.7699 40.7711 80.0143L51.7616 87.5284C52.5737 88.0782 53.6983 87.4673 53.6358 86.4898L52.9486 71.9503C52.9486 71.5838 52.7612 71.2173 52.4488 71.034L30.8426 56.5556C30.5302 56.3112 30.3428 55.9447 30.3428 55.5781V48.4305C30.3428 48.1862 30.4053 47.8807 30.5927 47.6975L38.3971 38.0452C38.7094 37.6176 39.2717 37.4954 39.7715 37.6786L67.9326 47.8807C68.1825 48.0029 68.4948 48.0029 68.7447 47.8807L96.9106 37.6786C97.4104 37.4954 97.9679 37.6786 98.2802 38.0452L106.089 47.6975C106.277 47.8807 106.339 48.1862 106.339 48.4305V55.5781C106.339 55.9447 106.152 56.3112 105.84 56.5556L84.2333 71.034C84.0459 71.2783 83.8585 71.6449 83.8585 72.0114L83.1713 86.5509C83.1088 87.5284 84.2333 88.1393 85.0455 87.5895L96.036 80.0753C96.3484 79.831 96.5358 79.5255 96.5358 79.0979L96.5983 70.8507C96.5983 70.4842 96.7857 70.1176 97.098 69.8733L104.59 64.9249C105.402 64.3751 106.464 64.9249 106.464 65.9024V97.9137Z" fill="#fffff"></path></svg>`;
+});
+const WalletIcon = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let { className = "" } = $$props;
+  if ($$props.className === void 0 && $$bindings.className && className !== void 0)
+    $$bindings.className(className);
+  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true"${add_attribute("class", className, 0)} fill="currentColor" viewBox="0 0 24 24"><path d="M12.136.326A1.5 1.5 0 0 1 14 1.78V3h.5A1.5 1.5 0 0 1 16 4.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 13.5v-9a1.5 1.5 0 0 1 1.432-1.499L12.136.326zM5.562 3H13V1.78a.5.5 0 0 0-.621-.484L5.562 3zM1.5 4a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-13z"></path><path d="M15.5,6.5v3a1,1,0,0,1-1,1h-3.5v-5H14.5A1,1,0,0,1,15.5,6.5Z"></path><path d="M12,8a.5,.5 0,1,1,.001,0Z"></path></svg>`;
+});
+const authSignedInStore = derived(
+  authStore,
+  ({ identity }) => identity !== null && identity !== void 0
+);
 const userGetProfilePicture = derived(
   userStore,
   ($user) => {
@@ -12782,8 +12795,11 @@ function createSeasonLeaderboardStore() {
 createSeasonLeaderboardStore();
 const Page$a = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_clubStore;
+  let $$unsubscribe_leagueStore;
   $$unsubscribe_clubStore = subscribe(clubStore, (value) => value);
+  $$unsubscribe_leagueStore = subscribe(leagueStore, (value) => value);
   $$unsubscribe_clubStore();
+  $$unsubscribe_leagueStore();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
       return `<div class="flex page-header-wrapper">${`<div class="flex items-center justify-center content-panel lg:w-1/2">${validate_component(Relative_spinner, "RelativeSpinner").$$render($$result, {}, {}, {})}</div>`} ${`<div class="flex lg:hidden"><div class="flex items-center justify-center content-panel">${validate_component(Relative_spinner, "RelativeSpinner").$$render($$result, {}, {}, {})}</div></div> <div class="hidden w-1/2 lg:flex"><div class="flex items-center justify-center content-panel">${validate_component(Relative_spinner, "RelativeSpinner").$$render($$result, {}, {}, {})}</div></div>`}</div> <div class="rounded-md bg-panel"><ul class="flex px-1 pt-2 mb-4 border-b border-gray-700 bg-light-gray md:px-4 contained-text"><li${add_attribute("class", `mr-1 md:mr-4 ${"active-tab"}`, 0)}><button${add_attribute(
@@ -12893,11 +12909,13 @@ const Page$8 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_playerStore;
   let $$unsubscribe_fixtureStore;
   let $$unsubscribe_seasonStore;
+  let $$unsubscribe_leagueStore;
   let $page, $$unsubscribe_page;
   $$unsubscribe_clubStore = subscribe(clubStore, (value) => $clubStore = value);
   $$unsubscribe_playerStore = subscribe(playerStore, (value) => value);
   $$unsubscribe_fixtureStore = subscribe(fixtureStore, (value) => value);
   $$unsubscribe_seasonStore = subscribe(seasonStore, (value) => value);
+  $$unsubscribe_leagueStore = subscribe(leagueStore, (value) => value);
   $$unsubscribe_page = subscribe(page, (value) => $page = value);
   let fixturesWithTeams = [];
   let selectedGameweek;
@@ -12911,6 +12929,7 @@ const Page$8 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_playerStore();
   $$unsubscribe_fixtureStore();
   $$unsubscribe_seasonStore();
+  $$unsubscribe_leagueStore();
   $$unsubscribe_page();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
@@ -13134,8 +13153,10 @@ const Page$4 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_loadingPlayers;
   let $$unsubscribe_availableFormations;
   let $$unsubscribe_appStore;
+  let $$unsubscribe_leagueStore;
   let $$unsubscribe_onHold;
   $$unsubscribe_appStore = subscribe(appStore, (value) => value);
+  $$unsubscribe_leagueStore = subscribe(leagueStore, (value) => value);
   const fantasyTeam = writable({
     playerIds: [],
     oneNationCountryId: 0,
@@ -13176,6 +13197,7 @@ const Page$4 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_loadingPlayers();
   $$unsubscribe_availableFormations();
   $$unsubscribe_appStore();
+  $$unsubscribe_leagueStore();
   $$unsubscribe_onHold();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {

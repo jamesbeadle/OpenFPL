@@ -20,6 +20,7 @@
     import LocalSpinner from "./local-spinner.svelte";
     import { seasonStore } from "../stores/season-store";
     import { storeManager } from "$lib/managers/store-manager";
+    import { leagueStore } from "$lib/stores/league-store";
 
   let isLoading = true;
   let selectedGameweek: number;
@@ -36,6 +37,10 @@
   onMount(async () => {
     try {
       await storeManager.syncStores();
+      if(!$leagueStore){
+        return
+      };
+      leagueStatus = $leagueStore;
       activeSeasonName = await seasonStore.getSeasonName(leagueStatus.activeSeasonId ?? 0) ?? "";
       gameweeks = Array.from(
         { length: leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek ?? 1 },
