@@ -3,7 +3,6 @@
     import { page } from "$app/stores";
     import { playerStore } from "$lib/stores/player-store";
     import { managerStore } from "$lib/stores/manager-store";
-    import { toastsError } from "$lib/stores/toasts-store";
     import type {
       FantasyTeamSnapshot,
       ManagerDTO,
@@ -11,10 +10,11 @@
     import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
     import { getFlagComponent } from "$lib/utils/helpers";
     import { countryStore } from "$lib/stores/country-store";
-    import LocalSpinner from "../local-spinner.svelte";
+    import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
     import { authStore } from "$lib/stores/auth.store";
     import { storeManager } from "$lib/managers/store-manager";
       import { goto } from "$app/navigation";
+    import { toasts } from "$lib/stores/toasts-store";
   
     export let principalId = "";
     let manager: ManagerDTO;
@@ -32,9 +32,9 @@
   
         manager = await managerStore.getPublicProfile(principalId);
       } catch (error) {
-        toastsError({
-          msg: { text: "Error fetching manager gameweeks." },
-          err: error,
+        toasts.addToast({
+          message: "Error fetching manager gameweeks." ,
+          type: "error"
         });
         console.error("Error fetching manager gameweeks:", error);
       } finally {

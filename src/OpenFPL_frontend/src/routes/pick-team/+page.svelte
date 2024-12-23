@@ -5,7 +5,7 @@
   import { storeManager } from "$lib/managers/store-manager";
   import { appStore } from "$lib/stores/app-store";
   import { managerStore } from "$lib/stores/manager-store";
-  import { toastsError } from "$lib/stores/toasts-store";
+  import { toasts } from '$lib/stores/toasts-store';
   
   import PickTeamPlayers from "$lib/components/pick-team/pick-team-players.svelte";
   import PickTeamButtons from "$lib/components/pick-team/pick-team-buttons.svelte";
@@ -16,10 +16,10 @@
   import BonusPanel from "$lib/components/pick-team/bonus-panel.svelte";
   import OnHold from "$lib/components/pick-team/on-hold.svelte";
   
-  import { Spinner } from "@dfinity/gix-components";
   import { allFormations } from "$lib/utils/pick-team.helpers";
   import type { LeagueStatus, PickTeamDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     import { leagueStore } from "$lib/stores/league-store";
+    import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
     
   const fantasyTeam = writable<PickTeamDTO>({
     playerIds: [],
@@ -77,10 +77,7 @@
       $availableFormations = Object.keys(allFormations);     
       await loadData();
     } catch (error) {
-      toastsError({
-        msg: { text: "Error fetching team details." },
-        err: error,
-      });
+      toasts.addToast({ message: "Error fetching team details.", type: 'error' });
       console.error("Error fetching team details:", error);
     } finally {
       isLoading = false;
@@ -120,9 +117,6 @@
       return;
     }
 
-    console.log("checking fantasy team")
-    console.log($fantasyTeam)
-
     if($fantasyTeam.firstGameweek){
       transfersAvailable.set(Infinity);
     }
@@ -132,7 +126,7 @@
 
 <Layout>
   {#if isLoading}
-    <Spinner />
+    <LocalSpinner />
   {:else}
     {#if $onHold}
       <OnHold />

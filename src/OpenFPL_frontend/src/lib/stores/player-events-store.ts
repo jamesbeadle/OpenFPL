@@ -52,9 +52,12 @@ function createPlayerEventsStore() {
       leagueStatus = result;
     });
 
+    let activeOrUnplayedGameweek =
+      await leagueStore.getActiveOrUnplayedGameweek();
+
     if (
       leagueStatus!.activeSeasonId === seasonId &&
-      leagueStatus!.activeGameweek === gameweek
+      activeOrUnplayedGameweek === gameweek
     ) {
       allPlayerEvents = await getPlayerEventsFromLocalStorage();
     } else {

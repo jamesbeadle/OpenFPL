@@ -5,7 +5,7 @@
   import type { Bonus } from "$lib/types/bonus";
   import { BonusType } from "$lib/enums/BonusType";
   import UseBonusModal from "$lib/components/pick-team/modals/use-bonus-modal.svelte";
-  import Tooltip from "../tooltip.svelte";
+  import Tooltip from "$lib/components/shared/tooltip.svelte";
 
   export let fantasyTeam: Writable<PickTeamDTO | null>;
   export let leagueStatus: LeagueStatus;

@@ -1,12 +1,12 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { toastsError } from "$lib/stores/toasts-store";
     import Layout from "../Layout.svelte";
     import { storeManager } from "$lib/managers/store-manager";
-    import WidgetSpinner from "$lib/components/widget-spinner.svelte";
+    import WidgetSpinner from "$lib/components/shared/widget-spinner.svelte";
     import type { CanisterDTO, CanisterType, GetCanistersDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     import { canisterStore } from "$lib/stores/canister-store";
     import { formatCycles } from "$lib/utils/helpers";
+    import { toasts } from "$lib/stores/toasts-store";
   
     let selectedCanisterType = 0;
     let loadingCanisters = true;
@@ -20,9 +20,9 @@
         };
         canisters = await canisterStore.getCanisters(dto)
       } catch (error) {
-        toastsError({
-          msg: { text: "Error loading canisters." },
-          err: error,
+        toasts.addToast({
+          message: "Error loading canisters.",
+        type: "error"
         });
         console.error("Error fetching league table:", error);
       } finally {

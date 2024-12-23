@@ -9,7 +9,6 @@
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { playerStore } from "$lib/stores/player-store";
   import { playerEventsStore } from "$lib/stores/player-events-store";
-  import { toastsError } from "$lib/stores/toasts-store";
 
   import {
     convertPlayerPosition,
@@ -26,11 +25,12 @@
   import type { GameweekData } from "$lib/interfaces/GameweekData";
 
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import FantasyPlayerDetailModal from "../fantasy-player-detail-modal.svelte";
+  import FantasyPlayerDetailModal from "./fantasy-player-detail-modal.svelte";
   import ActiveCaptainIcon from "$lib/icons/ActiveCaptainIcon.svelte";
-  import LocalSpinner from "../local-spinner.svelte";
+  import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
   import { calculateBonusPoints } from "$lib/utils/pick-team.helpers";
     import { leagueStore } from "$lib/stores/league-store";
+    import { toasts } from "$lib/stores/toasts-store";
 
   export let loadingGameweek = writable<boolean>(true);
   export let selectedGameweek = writable<number | null>(null);
@@ -74,9 +74,9 @@
       }
       updateGameweekPlayers();
     } catch (error) {
-      toastsError({
-        msg: { text: "Error fetching manager gameweek detail." },
-        err: error,
+      toasts.addToast({
+        message: "Error fetching manager gameweek detail.",
+        type: "error"
       });
       console.error("Error fetching manager gameweek detail:", error);
     } finally {
@@ -111,9 +111,9 @@
         })
       );
     } catch (error) {
-      toastsError({
-        msg: { text: "Error updating gameweek players." },
-        err: error,
+      toasts.addToast({
+        message: "Error updating gameweek players." ,
+        type: "error"
       });
       console.error("Error updating gameweek players:", error);
     } finally {
@@ -153,9 +153,9 @@
       selectedOpponentTeam = $clubStore.find((x) => x.id === opponentId)!;
       showModal = true;
     } catch (error) {
-      toastsError({
-        msg: { text: "Error loading gameweek detail." },
-        err: error,
+      toasts.addToast({
+        message: "Error loading gameweek detail.",
+        type: "error"
       });
       console.error("Error loading gameweek detail:", error);
     }

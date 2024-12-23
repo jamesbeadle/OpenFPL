@@ -4,7 +4,6 @@
   import { leagueStore } from "$lib/stores/league-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { clubStore } from "$lib/stores/club-store";
-  import { toastsError } from "$lib/stores/toasts-store";
   import { managerStore } from "$lib/stores/manager-store";
   import {
     formatUnixDateToReadable,
@@ -19,14 +18,14 @@
   } from "../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import Layout from "./Layout.svelte";
   import FixturesComponent from "$lib/components/fixtures.svelte";
-  import GamweekPointsComponent from "$lib/components/gameweek-points.svelte";
+  import GamweekPointsComponent from "$lib/components/manager/gameweek-points.svelte";
   import LeaderboardsComponent from "$lib/components/leaderboards.svelte";
   import LeagueTableComponent from "$lib/components/league-table.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import { weeklyLeaderboardStore } from "$lib/stores/weekly-leaderboard-store";
-  import RelativeSpinner from "$lib/components/relative-spinner.svelte";
-    import { seasonStore } from "$lib/stores/season-store";
-    import { storeManager } from "$lib/managers/store-manager";
+  import RelativeSpinner from "$lib/components/shared/relative-spinner.svelte";
+  import { seasonStore } from "$lib/stores/season-store";
+  import { storeManager } from "$lib/managers/store-manager";
+    import { toasts } from "$lib/stores/toasts-store";
 
   let leagueStatus: LeagueStatus;
   let activeTab: string = "fixtures";
@@ -66,9 +65,9 @@
       loadSection3();
       
     } catch (error) {
-      toastsError({
-        msg: { text: "Error fetching homepage data." },
-        err: error,
+      toasts.addToast({
+        message: "Error fetching homepage data.",
+        type: "error"
       });
       console.error("Error fetching homepage data:", error);
     } finally {
@@ -157,7 +156,7 @@
             {seasonName}
           </p>
         </div>
-        <div class="vertical-divider" />
+        <div class="vertical-divider"></div>
         <div class="flex-grow">
           <p class="content-panel-header">Managers</p>
           <p class="content-panel-stat">
@@ -165,7 +164,7 @@
           </p>
           <p class="content-panel-header">Total</p>
         </div>
-        <div class="vertical-divider" />
+        <div class="vertical-divider"></div>
         <div class="flex-grow">
           <p class="hidden md:block content-panel-header">Weekly Prize Pool</p>
           <p class="md:hidden content-panel-header">Weekly</p>
@@ -243,7 +242,7 @@
               </div>
             </div>
           </div>
-          <div class="vertical-divider" />
+          <div class="vertical-divider"></div>
           <div class="flex-grow">
             <p class="content-panel-header">Kick Off</p>
             <div class="flex">
@@ -327,7 +326,7 @@
               </div>
             </div>
           </div>
-          <div class="vertical-divider" />
+          <div class="vertical-divider"></div>
           <div class="flex-grow">
             <p class="content-panel-header">Kick Off</p>
             <p class="content-panel-stat">
@@ -339,7 +338,7 @@
               {nextFixtureDate}
             </p>
           </div>
-          <div class="vertical-divider" />
+          <div class="vertical-divider"></div>
           <div class="flex-grow">
             <p class="content-panel-header">
               GW {leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek} High Score

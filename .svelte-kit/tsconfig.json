@@ -38,6 +38,12 @@
 		"../tests/**/*.svelte"
 	],
 	"exclude": [
-		"../node_modules/**"
+		"../node_modules/**",
+		"../src/OpenFPL_frontend/src/service-worker.js",
+		"../src/OpenFPL_frontend/src/service-worker/**/*.js",
+		"../src/OpenFPL_frontend/src/service-worker.ts",
+		"../src/OpenFPL_frontend/src/service-worker/**/*.ts",
+		"../src/OpenFPL_frontend/src/service-worker.d.ts",
+		"../src/OpenFPL_frontend/src/service-worker/**/*.d.ts"
 	]
 }

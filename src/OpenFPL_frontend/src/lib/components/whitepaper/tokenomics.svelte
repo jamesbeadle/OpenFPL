@@ -76,120 +76,122 @@
     <table
       class="w-full text-right border-collapse striped mb-8 mt-4 text-xs lg:text-base"
     >
-      <tr class="text-right">
-        <th class="text-left px-4">Year</th>
-        <th>1</th>
-        <th>2</th>
-        <th>3</th>
-        <th>4</th>
-        <th>5</th>
-        <th>6</th>
-        <th>7</th>
-        <th>8</th>
-      </tr>
-      <tr>
-        <td class="h-6"><span /></td>
-      </tr>
-      <tr>
-        <td class="text-left px-4">Managers</td>
-        <td>10,000</td>
-        <td>50,000</td>
-        <td>250,000</td>
-        <td>1,000,000</td>
-        <td>2,500,000</td>
-        <td>5,000,000</td>
-        <td>7,500,000</td>
-        <td>10,000,000</td>
-      </tr>
-      <tr>
-        <td class="h-6"><span /></td>
-      </tr>
-      <tr>
-        <td class="text-left px-4" colspan="9">Revenue:</td>
-      </tr>
-      <tr>
-        <td class="text-left px-4">Private Leagues</td>
-        <td>500</td>
-        <td>2,500</td>
-        <td>12,500</td>
-        <td>50,000</td>
-        <td>125,000</td>
-        <td>250,000</td>
-        <td>375,000</td>
-        <td>500,000</td>
-      </tr>
+      <tbody>
+        <tr class="text-right">
+          <th class="text-left px-4">Year</th>
+          <th>1</th>
+          <th>2</th>
+          <th>3</th>
+          <th>4</th>
+          <th>5</th>
+          <th>6</th>
+          <th>7</th>
+          <th>8</th>
+        </tr>
+        <tr>
+          <td class="h-6"><span /></td>
+        </tr>
+        <tr>
+          <td class="text-left px-4">Managers</td>
+          <td>10,000</td>
+          <td>50,000</td>
+          <td>250,000</td>
+          <td>1,000,000</td>
+          <td>2,500,000</td>
+          <td>5,000,000</td>
+          <td>7,500,000</td>
+          <td>10,000,000</td>
+        </tr>
+        <tr>
+          <td class="h-6"><span /></td>
+        </tr>
+        <tr>
+          <td class="text-left px-4" colspan="9">Revenue:</td>
+        </tr>
+        <tr>
+          <td class="text-left px-4">Private Leagues</td>
+          <td>500</td>
+          <td>2,500</td>
+          <td>12,500</td>
+          <td>50,000</td>
+          <td>125,000</td>
+          <td>250,000</td>
+          <td>375,000</td>
+          <td>500,000</td>
+        </tr>
 
-      <tr>
-        <td class="text-left px-4">Merchandising</td>
-        <td>5,000</td>
-        <td>25,000</td>
-        <td>125,000</td>
-        <td>500,000</td>
-        <td>1,250,000</td>
-        <td>2,500,000</td>
-        <td>3,750,000</td>
-        <td>5,000,000</td>
-      </tr>
+        <tr>
+          <td class="text-left px-4">Merchandising</td>
+          <td>5,000</td>
+          <td>25,000</td>
+          <td>125,000</td>
+          <td>500,000</td>
+          <td>1,250,000</td>
+          <td>2,500,000</td>
+          <td>3,750,000</td>
+          <td>5,000,000</td>
+        </tr>
 
-      <tr>
-        <td class="text-left px-4">Content Subscriptions</td>
-        <td>10</td>
-        <td>50</td>
-        <td>250</td>
-        <td>1,000</td>
-        <td>2,500</td>
-        <td>5,000</td>
-        <td>7,500</td>
-        <td>10,000</td>
-      </tr>
+        <tr>
+          <td class="text-left px-4">Content Subscriptions</td>
+          <td>10</td>
+          <td>50</td>
+          <td>250</td>
+          <td>1,000</td>
+          <td>2,500</td>
+          <td>5,000</td>
+          <td>7,500</td>
+          <td>10,000</td>
+        </tr>
 
-      <tr>
-        <td class="text-left px-4">Advertising</td>
-        <td>1,930</td>
-        <td>9,648</td>
-        <td>48,241</td>
-        <td>192,963</td>
-        <td>482,407</td>
-        <td>964,815</td>
-        <td>1,447,222</td>
-        <td>1,929,630</td>
-      </tr>
+        <tr>
+          <td class="text-left px-4">Advertising</td>
+          <td>1,930</td>
+          <td>9,648</td>
+          <td>48,241</td>
+          <td>192,963</td>
+          <td>482,407</td>
+          <td>964,815</td>
+          <td>1,447,222</td>
+          <td>1,929,630</td>
+        </tr>
 
-      <tr>
-        <td class="text-left px-4">API Data Feed Subscriptions</td>
-        <td>370</td>
-        <td>1,850</td>
-        <td>9,250</td>
-        <td>37,000</td>
-        <td>92,500</td>
-        <td>185,000</td>
-        <td>277,500</td>
-        <td>370,000</td>
-      </tr>
-      <tr>
-        <td colspan="9" class="h-6"><span /></td>
-      </tr>
+        <tr>
+          <td class="text-left px-4">API Data Feed Subscriptions</td>
+          <td>370</td>
+          <td>1,850</td>
+          <td>9,250</td>
+          <td>37,000</td>
+          <td>92,500</td>
+          <td>185,000</td>
+          <td>277,500</td>
+          <td>370,000</td>
+        </tr>
+        <tr>
+          <td colspan="9" class="h-6"><span /></td>
+        </tr>
 
-      <tr class="font-bold">
-        <td class="text-left px-4">Total Revenue</td>
-        <td>7,810</td>
-        <td>39,048</td>
-        <td>195,241</td>
-        <td>780,963</td>
-        <td>1,952,407</td>
-        <td>3,904,815</td>
-        <td>5,857,222</td>
-        <td>7,809,630</td>
-      </tr>
+        <tr class="font-bold">
+          <td class="text-left px-4">Total Revenue</td>
+          <td>7,810</td>
+          <td>39,048</td>
+          <td>195,241</td>
+          <td>780,963</td>
+          <td>1,952,407</td>
+          <td>3,904,815</td>
+          <td>5,857,222</td>
+          <td>7,809,630</td>
+        </tr>
 
-      <tr>
-        <td colspan="9" class="h-6"><span /></td>
-      </tr>
+        <tr>
+          <td colspan="9" class="h-6"><span /></td>
+        </tr>
 
-      <tr class="font-bold">
-        <td class="text-left px-4" colspan="8">DAO Valuation:</td>
-        <td><b>10,834,969 ICP</b></td>
-      </tr>
+        <tr class="font-bold">
+          <td class="text-left px-4" colspan="8">DAO Valuation:</td>
+          <td><b>10,834,969 ICP</b></td>
+        </tr>
+      </tbody>
     </table>
   </div>
   <p>The following assumptions have been made:</p>
@@ -204,213 +206,219 @@
     <li>In game advertising charged at $0.50 cost per mile.</li>
   </ul>
   <table class="w-full text-right border-collapse striped mb-8 mt-4 md:hidden">
-    <tr class="text-right">
-      <th class="text-left">Year</th>
-      <th>1</th>
-      <th>2</th>
-      <th>3</th>
-      <th>4</th>
-    </tr>
-    <tr>
-      <td class="h-6"><span /></td>
-    </tr>
-    <tr>
-      <td class="text-left">Managers</td>
-      <td>10,000</td>
-      <td>50,000</td>
-      <td>250,000</td>
-      <td>1,000,000</td>
-    </tr>
-    <tr>
-      <td class="h-6"><span /></td>
-    </tr>
-    <tr>
-      <td class="text-left" colspan="5">Revenue:</td>
-    </tr>
-    <tr>
-      <td class="text-left">Private Leagues</td>
-      <td>500</td>
-      <td>2,500</td>
-      <td>12,500</td>
-      <td>50,000</td>
-    </tr>
+    <tbody>
+      <tr class="text-right">
+        <th class="text-left">Year</th>
+        <th>1</th>
+        <th>2</th>
+        <th>3</th>
+        <th>4</th>
+      </tr>
+      <tr>
+        <td class="h-6"><span /></td>
+      </tr>
+      <tr>
+        <td class="text-left">Managers</td>
+        <td>10,000</td>
+        <td>50,000</td>
+        <td>250,000</td>
+        <td>1,000,000</td>
+      </tr>
+      <tr>
+        <td class="h-6"><span /></td>
+      </tr>
+      <tr>
+        <td class="text-left" colspan="5">Revenue:</td>
+      </tr>
+      <tr>
+        <td class="text-left">Private Leagues</td>
+        <td>500</td>
+        <td>2,500</td>
+        <td>12,500</td>
+        <td>50,000</td>
+      </tr>
 
-    <tr>
-      <td class="text-left">Merchandising</td>
-      <td>5,000</td>
-      <td>25,000</td>
-      <td>125,000</td>
-      <td>500,000</td>
-    </tr>
+      <tr>
+        <td class="text-left">Merchandising</td>
+        <td>5,000</td>
+        <td>25,000</td>
+        <td>125,000</td>
+        <td>500,000</td>
+      </tr>
 
-    <tr>
-      <td class="text-left">Content Subscriptions</td>
-      <td>10</td>
-      <td>50</td>
-      <td>250</td>
-      <td>1,000</td>
-    </tr>
+      <tr>
+        <td class="text-left">Content Subscriptions</td>
+        <td>10</td>
+        <td>50</td>
+        <td>250</td>
+        <td>1,000</td>
+      </tr>
 
-    <tr>
-      <td class="text-left">Advertising</td>
-      <td>482,407</td>
-      <td>964,815</td>
-      <td>1,447,222</td>
-      <td>1,929,630</td>
-    </tr>
+      <tr>
+        <td class="text-left">Advertising</td>
+        <td>482,407</td>
+        <td>964,815</td>
+        <td>1,447,222</td>
+        <td>1,929,630</td>
+      </tr>
 
-    <tr>
-      <td class="text-left">API Data Feed Subscriptions</td>
-      <td>370</td>
-      <td>1,850</td>
-      <td>9,250</td>
-      <td>37,000</td>
-    </tr>
+      <tr>
+        <td class="text-left">API Data Feed Subscriptions</td>
+        <td>370</td>
+        <td>1,850</td>
+        <td>9,250</td>
+        <td>37,000</td>
+      </tr>
 
-    <tr>
-      <td colspan="5" class="h-6"><span /></td>
-    </tr>
+      <tr>
+        <td colspan="5" class="h-6"><span /></td>
+      </tr>
 
-    <tr class="font-bold">
-      <td class="text-left">Total</td>
-      <td>~0.007m</td>
-      <td>~0.039m</td>
-      <td>~0.19m</td>
-      <td>~0.78m</td>
-    </tr>
+      <tr class="font-bold">
+        <td class="text-left">Total</td>
+        <td>~0.007m</td>
+        <td>~0.039m</td>
+        <td>~0.19m</td>
+        <td>~0.78m</td>
+      </tr>
+    <tbody>
   </table>
 
   <table class="w-full text-right border-collapse striped mb-8 mt-4 md:hidden">
-    <tr class="text-right">
-      <th class="text-left">Year</th>
-      <th>5</th>
-      <th>6</th>
-      <th>7</th>
-      <th>8</th>
-    </tr>
-    <tr>
-      <td class="h-6"><span /></td>
-    </tr>
-    <tr>
-      <td class="text-left">Managers</td>
-      <td>2.5m</td>
-      <td>5.0m</td>
-      <td>7,5m</td>
-      <td>10m</td>
-    </tr>
-    <tr>
-      <td class="h-6"><span /></td>
-    </tr>
-    <tr>
-      <td class="text-left" colspan="5">Revenue:</td>
-    </tr>
-    <tr>
-      <td class="text-left">Private Leagues</td>
-      <td>0.125m</td>
-      <td>0.25m</td>
-      <td>0.375m</td>
-      <td>0.5m</td>
-    </tr>
+    <tbody>
+      <tr class="text-right">
+        <th class="text-left">Year</th>
+        <th>5</th>
+        <th>6</th>
+        <th>7</th>
+        <th>8</th>
+      </tr>
+      <tr>
+        <td class="h-6"><span /></td>
+      </tr>
+      <tr>
+        <td class="text-left">Managers</td>
+        <td>2.5m</td>
+        <td>5.0m</td>
+        <td>7,5m</td>
+        <td>10m</td>
+      </tr>
+      <tr>
+        <td class="h-6"><span /></td>
+      </tr>
+      <tr>
+        <td class="text-left" colspan="5">Revenue:</td>
+      </tr>
+      <tr>
+        <td class="text-left">Private Leagues</td>
+        <td>0.125m</td>
+        <td>0.25m</td>
+        <td>0.375m</td>
+        <td>0.5m</td>
+      </tr>
 
-    <tr>
-      <td class="text-left">Merchandising</td>
-      <td>1.25m</td>
-      <td>2.5m</td>
-      <td>3.75m</td>
-      <td>5m</td>
-    </tr>
+      <tr>
+        <td class="text-left">Merchandising</td>
+        <td>1.25m</td>
+        <td>2.5m</td>
+        <td>3.75m</td>
+        <td>5m</td>
+      </tr>
 
-    <tr>
-      <td class="text-left">Content Subscriptions</td>
-      <td>2,500</td>
-      <td>5,000</td>
-      <td>7,500</td>
-      <td>10,000</td>
-    </tr>
+      <tr>
+        <td class="text-left">Content Subscriptions</td>
+        <td>2,500</td>
+        <td>5,000</td>
+        <td>7,500</td>
+        <td>10,000</td>
+      </tr>
 
-    <tr>
-      <td class="text-left">Advertising</td>
-      <td>0.48m</td>
-      <td>0.96m</td>
-      <td>1.44m</td>
-      <td>1.92m</td>
-    </tr>
+      <tr>
+        <td class="text-left">Advertising</td>
+        <td>0.48m</td>
+        <td>0.96m</td>
+        <td>1.44m</td>
+        <td>1.92m</td>
+      </tr>
 
-    <tr>
-      <td class="text-left">API Data Feed Subscriptions</td>
-      <td>0.09m</td>
-      <td>0.18m</td>
-      <td>0.27m</td>
-      <td>0.37m</td>
-    </tr>
+      <tr>
+        <td class="text-left">API Data Feed Subscriptions</td>
+        <td>0.09m</td>
+        <td>0.18m</td>
+        <td>0.27m</td>
+        <td>0.37m</td>
+      </tr>
 
-    <tr>
-      <td colspan="5" class="h-6"><span /></td>
-    </tr>
+      <tr>
+        <td colspan="5" class="h-6"><span /></td>
+      </tr>
 
-    <tr class="font-bold">
-      <td class="text-left">Total</td>
-      <td>~1.95m</td>
-      <td>~3.9m</td>
-      <td>~5.8m</td>
-      <td>~7.8m</td>
-    </tr>
+      <tr class="font-bold">
+        <td class="text-left">Total</td>
+        <td>~1.95m</td>
+        <td>~3.9m</td>
+        <td>~5.8m</td>
+        <td>~7.8m</td>
+      </tr>
 
-    <tr>
-      <td colspan="5" class="h-6"><span /></td>
-    </tr>
+      <tr>
+        <td colspan="5" class="h-6"><span /></td>
+      </tr>
 
-    <tr class="font-bold">
-      <td class="text-left" colspan="4">SNS Value (25%)</td>
-      <td>1,531,250</td>
-    </tr>
+      <tr class="font-bold">
+        <td class="text-left" colspan="4">SNS Value (25%)</td>
+        <td>1,531,250</td>
+      </tr>
+    </tbody>
   </table>
 
   <h2 class="default-sub-header mt-4">
     SNS Decentralisation Sale Configuration
   </h2>
   <table class="w-full text-left border-collapse striped mb-8 mt-4">
-    <tr>
-      <th>Configuration</th>
-      <th>Value</th>
-    </tr>
-    <tr>
-      <td class="h-6"><span /></td>
-    </tr>
-    <tr>
-      <td>The total number of FPL tokens to be sold.</td>
-      <td>25,000,000 (25%)</td>
-    </tr>
-    <tr>
-      <td>The maximum ICP to be raised.</td>
-      <td>1,000,000</td>
-    </tr>
-    <tr>
-      <td
-        >The minimum ICP to be raised (otherwise sale fails and ICP returned).</td
-      >
-      <td>100</td>
-    </tr>
-    <tr>
-      <td>The ICP from the Community Fund.</td>
-      <td>Matched Funding Enabled</td>
-    </tr>
-    <tr>
-      <td>Sale start date.</td>
-      <td>15th March 2024</td>
-    </tr>
-    <tr>
-      <td>Minimum number of sale participants.</td>
-      <td>100</td>
-    </tr>
-    <tr>
-      <td>Minimum ICP per buyer.</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <td>Maximum ICP per buyer.</td>
-      <td>100,000</td>
-    </tr>
+    <tbody>
+      <tr>
+        <th>Configuration</th>
+        <th>Value</th>
+      </tr>
+      <tr>
+        <td class="h-6"><span /></td>
+      </tr>
+      <tr>
+        <td>The total number of FPL tokens to be sold.</td>
+        <td>25,000,000 (25%)</td>
+      </tr>
+      <tr>
+        <td>The maximum ICP to be raised.</td>
+        <td>1,000,000</td>
+      </tr>
+      <tr>
+        <td
+          >The minimum ICP to be raised (otherwise sale fails and ICP returned).</td
+        >
+        <td>100</td>
+      </tr>
+      <tr>
+        <td>The ICP from the Community Fund.</td>
+        <td>Matched Funding Enabled</td>
+      </tr>
+      <tr>
+        <td>Sale start date.</td>
+        <td>15th March 2024</td>
+      </tr>
+      <tr>
+        <td>Minimum number of sale participants.</td>
+        <td>100</td>
+      </tr>
+      <tr>
+        <td>Minimum ICP per buyer.</td>
+        <td>1</td>
+      </tr>
+      <tr>
+        <td>Maximum ICP per buyer.</td>
+        <td>100,000</td>
+      </tr>
+    </tbody>
   </table>
 
   <h2 class="default-sub-header mt-4">Mitigation against a 51% Attack</h2>

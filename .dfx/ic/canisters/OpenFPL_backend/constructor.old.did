@@ -696,8 +696,6 @@ type AppStatusDTO =
    version: text;
  };
 service : {
-  calculateGameweekScores: () -> (Result);
-  calculateLeaderboards: () -> (Result);
   calculateWeeklyRewards: (GameweekNumber) -> (Result);
   getActiveLeaderboardCanisterId: () -> (Result_26);
   getAppStatus: () -> (Result_25) query;
@@ -727,6 +725,7 @@ service : {
   getSeasonLeaderboard: (GetSeasonLeaderboardDTO) -> (Result_9);
   getSeasons: () -> (Result_8) composite_query;
   getSystemState: () -> (Result_7) query;
+  getTopups: () -> (vec CanisterTopup) query;
   getTotalManagers: () -> (Result_6) query;
   getVerifiedPlayers: () -> (Result_5);
   getWeeklyCanisters: () -> (Result_4) query;
@@ -734,14 +733,14 @@ service : {
   getWeeklyLeaderboards: () -> (vec WeeklyLeaderboard);
   getWeeklyRewards: (SeasonId, GameweekNumber) -> (Result_2) query;
   isUsernameValid: (UsernameFilterDTO) -> (bool) query;
-  notifyAppsOfGameweekStarting: () -> (Result);
+  notifyAppsOfFixtureFinalised: (SeasonId, GameweekNumber) -> (Result);
+  notifyAppsOfGameweekStarting: (SeasonId, GameweekNumber) -> (Result);
   notifyAppsOfLoan: (LeagueId, PlayerId) -> (Result);
   notifyAppsOfPositionChange: (LeagueId, PlayerId) -> (Result);
   notifyAppsOfTransfer: (LeagueId, PlayerId) -> (Result);
   payWeeklyRewards: (GameweekNumber) -> (Result);
   saveFantasyTeam: (UpdateTeamSelectionDTO) -> (Result);
   searchUsername: (UsernameFilterDTO) -> (Result_1);
-  snapshotManagers: () -> (Result);
   updateDataHashes: (text) -> (Result);
   updateFavouriteClub: (UpdateFavouriteClubDTO) -> (Result);
   updateProfilePicture: (UpdateProfilePictureDTO) -> (Result);

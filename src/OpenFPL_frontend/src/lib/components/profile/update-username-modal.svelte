@@ -1,12 +1,14 @@
 <script lang="ts">
+    import { toasts } from "$lib/stores/toasts-store";
   import { userStore } from "$lib/stores/user-store";
-  import { toastsError, toastsShow } from "$lib/stores/toasts-store";
-  import { Modal, busyStore } from "@dfinity/gix-components";
+  import Modal from "$lib/components/shared/modal.svelte";
 
   export let visible: boolean;
   export let closeModal: () => void;
   export let cancelModal: () => void;
   export let newUsername: string = "";
+
+  let updatingUsername = false;
 
   function isDisplayNameValid(displayName: string): boolean {
     if (!displayName) {
@@ -23,38 +25,31 @@
   $: isSubmitDisabled = !isDisplayNameValid(newUsername);
 
   async function updateUsername() {
-    busyStore.startBusy({
-      initiator: "update-name",
-      text: "Updating username...",
-    });
+    updatingUsername=true;
     try {
       await userStore.updateUsername(newUsername);
       await userStore.sync();
       await closeModal();
-      toastsShow({
-        text: "Username updated.",
-        level: "success",
+      toasts.addToast({
+        message: "Username updated.",
+        type: "success",
         duration: 2000,
       });
     } catch (error) {
-      toastsError({
-        msg: { text: "Error updating username." },
-        err: error,
+      toasts.addToast({
+        message:  "Error updating username.",
+        type: "error",
       });
       console.error("Error updating username:", error);
       cancelModal();
     } finally {
-      busyStore.stopBusy("update-name");
+      updatingUsername = false;
     }
   }
 </script>
 
-<Modal {visible} on:nnsClose={cancelModal}>
+<Modal showModal={visible} onClose={cancelModal} title="Update Username">
   <div class="mx-4 p-4">
-    <div class="flex justify-between items-center my-2">
-      <h3 class="default-header">Update Username</h3>
-      <button class="times-button" on:click={cancelModal}>&times;</button>
-    </div>
     <form on:submit|preventDefault={updateUsername}>
       <div class="mt-4">
         <input

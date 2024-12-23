@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { toastsError } from "$lib/stores/toasts-store";
   import { clubStore } from "$lib/stores/club-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
@@ -9,6 +8,7 @@
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
   import { storeManager } from "$lib/managers/store-manager";
     import { leagueStore } from "$lib/stores/league-store";
+    import { toasts } from "$lib/stores/toasts-store";
 
   let fixturesWithTeams: FixtureWithTeams[] = [];
   let selectedGameweek: number;
@@ -36,9 +36,9 @@
         awayTeam: getTeamFromId(fixture.awayClubId),
       }));
     } catch (error) {
-      toastsError({
-        msg: { text: "Error fetching league table." },
-        err: error,
+      toasts.addToast({
+        message:"Error fetching league table.",
+        type: "error"
       });
       console.error("Error fetching league table:", error);
     } finally {

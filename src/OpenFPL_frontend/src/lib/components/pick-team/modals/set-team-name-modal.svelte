@@ -1,6 +1,6 @@
 <script lang="ts">
+    import Modal from "$lib/components/shared/modal.svelte";
   import { userStore } from "$lib/stores/user-store";
-  import { Modal } from "@dfinity/gix-components";
   import type { Writable } from "svelte/store";
 
   export let visible: boolean;
@@ -39,12 +39,8 @@
     !isDisplayNameValid($newUsername) || !isUsernameAvailable;
 </script>
 
-<Modal {visible} on:nnsClose={cancelModal}>
+<Modal showModal={visible} onClose={cancelModal} title="Set Fantasy Team Name">
   <div class="mx-4 p-4">
-    <div class="flex justify-between items-center my-2">
-      <h3 class="default-header">Set Fantasy Team Name</h3>
-      <button class="times-button" on:click={cancelModal}>&times;</button>
-    </div>
     <p>Please enter a team name for the OpenFPL leaderboards:</p>
     <form on:submit|preventDefault={setUsername}>
       <div class="mt-4">

@@ -17,7 +17,6 @@ export class LeagueService {
   }
 
   async getLeagueStatus(): Promise<LeagueStatus> {
-    console.log("BACKEND CALL TO GET LEAGUE STATUS");
     const result = await this.actor.getLeagueStatus();
     if (isError(result)) throw new Error("Failed to fetch league status");
     return result.ok;

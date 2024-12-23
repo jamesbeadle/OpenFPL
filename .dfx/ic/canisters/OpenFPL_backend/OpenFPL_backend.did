@@ -711,6 +711,7 @@ service : {
   getLoanedPlayers: (ClubFilterDTO) -> (Result_5) composite_query;
   getManager: (RequestManagerDTO) -> (Result_1);
   getManagerCanisterIds: () -> (Result_17);
+  getManagerSnapshotData: () -> (vec FantasyTeamSnapshot);
   getMonthlyLeaderboard: (GetMonthlyLeaderboardDTO) -> (Result_16);
   getPlayerDetails: (GetPlayerDetailsDTO) -> (Result_15);
   getPlayerDetailsForGameweek: (GameweekFiltersDTO) ->
@@ -725,6 +726,7 @@ service : {
   getSeasonLeaderboard: (GetSeasonLeaderboardDTO) -> (Result_9);
   getSeasons: () -> (Result_8) composite_query;
   getSystemState: () -> (Result_7) query;
+  getTopups: () -> (vec CanisterTopup) query;
   getTotalManagers: () -> (Result_6) query;
   getVerifiedPlayers: () -> (Result_5);
   getWeeklyCanisters: () -> (Result_4) query;

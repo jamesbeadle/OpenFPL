@@ -1,25 +1,14 @@
 import { authStore, type AuthSignInParams } from "$lib/stores/auth.store";
-import { toastsClean, toastsError, toastsShow } from "$lib/stores/toasts-store";
+import { toasts } from "$lib/stores/toasts-store";
 import type { ToastMsg } from "$lib/types/toast";
 import { replaceHistory } from "$lib/utils/route.utils";
-import type { ToastLevel } from "@dfinity/gix-components";
-import { busyStore } from "@dfinity/gix-components";
 import { isNullish } from "@dfinity/utils";
 
 export const signIn = async (
   params: AuthSignInParams,
 ): Promise<{ success: "ok" | "cancelled" | "error"; err?: unknown }> => {
-  busyStore.startBusy({
-    initiator: "sign-in",
-    text: "Connecting...",
-  });
-
   try {
     await authStore.signIn(params);
-
-    // We clean previous messages in case user was signed out automatically before sign-in again.
-    toastsClean();
-
     return { success: "ok" };
   } catch (err: unknown) {
     if (err === "UserInterrupt") {
@@ -27,14 +16,13 @@ export const signIn = async (
       return { success: "cancelled" };
     }
 
-    toastsError({
-      msg: { text: `Something went wrong while sign-in.` },
-      err,
+    toasts.addToast({
+      message: `Something went wrong while sign-in.`,
+      type: "error",
     });
 
     return { success: "error", err };
   } finally {
-    busyStore.stopBusy("sign-in");
   }
 };
 
@@ -50,10 +38,6 @@ export const idleSignOut = async () =>
 
 const logout = async ({ msg = undefined }: { msg?: ToastMsg }) => {
   // To mask not operational UI (a side effect of sometimes slow JS loading after window.reload because of service worker and no cache).
-  busyStore.startBusy({
-    initiator: "sign-out",
-    text: "Disconnecting...",
-  });
 
   await authStore.signOut();
 
@@ -67,7 +51,6 @@ const logout = async ({ msg = undefined }: { msg?: ToastMsg }) => {
   // Information the user want to preserve across sign-in. e.g. if I select the light theme, logout and sign-in again, I am happy if the dapp still uses the light theme.
 
   // We reload the page to make sure all the states are cleared
-  busyStore.stopBusy("sign-out");
   window.location.reload();
 };
 
@@ -101,12 +84,6 @@ export const displayAndCleanLogoutMsg = () => {
   if (isNullish(msg)) {
     return;
   }
-
-  // For simplicity reason we assume the level pass as query params is one of the type ToastLevel
-  const level: ToastLevel =
-    (urlParams.get(PARAM_LEVEL) as ToastLevel | null) ?? "success";
-
-  toastsShow({ text: decodeURI(msg), level });
 
   cleanUpMsgUrl();
 };

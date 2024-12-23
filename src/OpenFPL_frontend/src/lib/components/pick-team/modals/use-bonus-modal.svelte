@@ -7,9 +7,9 @@
   import type { Bonus } from "$lib/types/bonus";
   import type { LeagueStatus, PickTeamDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { BonusType } from "$lib/enums/BonusType";
-  import { Modal } from "@dfinity/gix-components";
   import { countryStore } from "$lib/stores/country-store";
   import { convertPlayerPosition } from "$lib/utils/helpers";
+  import Modal from "$lib/components/shared/modal.svelte";
     
   export let visible: boolean;
   export let leagueStatus: LeagueStatus;
@@ -232,12 +232,8 @@
   })();
 </script>
 
-<Modal {visible} on:nnsClose={closeBonusModal}>
+<Modal showModal={visible} onClose={closeBonusModal} title="Use Bonus">
   <div class="mx-4 p-4">
-    <div class="flex justify-between items-center my-2">
-      <h3 class="default-header">Use Bonus</h3>
-      <button class="times-button" on:click={closeBonusModal}>&times;</button>
-    </div>
     <img src={bonus.image} class="w-16 mx-auto block" alt={bonus.name} />
     <div class="mt-3 text-center">
       <h3 class="default-header">{bonus.name}</h3>

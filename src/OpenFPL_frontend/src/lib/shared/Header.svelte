@@ -1,7 +1,6 @@
 <script lang="ts">
   import { page } from "$app/stores";
   import { authStore, type AuthSignInParams } from "$lib/stores/auth.store"
-  import { toastsError } from "$lib/stores/toasts-store";
   import OpenFPLIcon from "$lib/icons/OpenFPLIcon.svelte";
   import WalletIcon from "$lib/icons/WalletIcon.svelte";
   import { onMount, onDestroy } from "svelte";
@@ -10,6 +9,7 @@
   import { userGetProfilePicture } from "$lib/derived/user.derived";
   import { storeManager } from "$lib/managers/store-manager";
     import { userStore } from "$lib/stores/user-store";
+    import { toasts } from "$lib/stores/toasts-store";
 
   let menuOpen = false;
   let showProfileDropdown = false;
@@ -22,9 +22,9 @@
         document.addEventListener("click", closeDropdownOnClickOutside);
       }
     } catch (error) {
-      toastsError({
-        msg: { text: "Error syncing authentication." },
-        err: error,
+      toasts.addToast({
+        message: "Error syncing authentication." ,
+        type: "error"
       });
       console.error("Error syncing authentication:", error);
     }

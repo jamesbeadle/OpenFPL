@@ -2,7 +2,6 @@
 
   import { onMount } from "svelte";
   import { writable } from "svelte/store";
-  import { busyStore } from "@dfinity/gix-components";
   
   import { authStore } from "$lib/stores/auth.store";
   import { userStore } from "$lib/stores/user-store";
@@ -11,19 +10,19 @@
   import { getDateFromBigInt } from "$lib/utils/helpers";
   import { storeManager } from "$lib/managers/store-manager";
   
-  import { toastsError, toastsShow } from "$lib/stores/toasts-store";
-  
   import UpdateUsernameModal from "$lib/components/profile/update-username-modal.svelte";
   import UpdateFavouriteTeamModal from "./update-favourite-team-modal.svelte";
   import WithdrawFplModal from "./withdraw-fpl-modal.svelte";
-  import LocalSpinner from "../local-spinner.svelte";
+  import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
   import CopyIcon from "$lib/icons/CopyIcon.svelte";
+    import { toasts } from "$lib/stores/toasts-store";
   
   let showUsernameModal: boolean = false;
   let showFavouriteTeamModal: boolean = false;
   let showWithdrawFPLModal = false;
   let fplBalance = 0n;
   let fplBalanceFormatted = "0.0000"; 
+  let uploadingImage = false;
   
   let username = "Not Set";
   let joinedDate = "";
@@ -57,9 +56,9 @@
         joinedDate = getDateFromBigInt(Number(value.createDate));
       });
     } catch (error) {
-      toastsError({
-        msg: { text: "Error fetching profile detail." },
-        err: error,
+      toasts.addToast({
+        message: "Error fetching profile detail." ,
+        type: "error",
       });
       console.error("Error fetching profile detail:", error);
     } finally {
@@ -84,9 +83,9 @@
       clearInterval(dot_interval);
       loadingBalances = false;
     } catch (error) {
-      toastsError({
-        msg: { text: "Error fetching profile detail." },
-        err: error,
+      toasts.addToast({
+        message: "Error fetching profile detail.",
+        type: "error",
       });
       console.error("Error fetching profile detail:", error);
       clearInterval(dot_interval);
@@ -139,29 +138,26 @@
   }
 
   async function uploadProfileImage(file: File) {
-    busyStore.startBusy({
-      initiator: "upload-image",
-      text: "Uploading profile picture...",
-    });
+    uploadingImage = true;
 
     try {
       await userStore.updateProfilePicture(file);
       await userStore.cacheProfile();
       await userStore.sync();
 
-      toastsShow({
-        text: "Profile image updated.",
-        level: "success",
+      toasts.addToast({
+        message: "Profile image updated.",
+        type: "success",
         duration: 2000,
       });
     } catch (error) {
-      toastsError({
-        msg: { text: "Error updating profile image." },
-        err: error,
+      toasts.addToast({
+        message: "Error updating profile image." ,
+        type: "error",
       });
       console.error("Error updating profile image", error);
     } finally {
-      busyStore.stopBusy("upload-image");
+      uploadingImage = false;
     }
   }
 
@@ -169,9 +165,9 @@
     try {
       const textToCopy = $userStore ? $userStore.principalId : "";
       await navigator.clipboard.writeText(textToCopy);
-      toastsShow({
-        text: "Copied to clipboard.",
-        level: "success",
+      toasts.addToast({
+        message: "Copied to clipboard.",
+        type: "success",
         duration: 2000,
       });
     } catch (err) {

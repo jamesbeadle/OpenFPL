@@ -51,81 +51,83 @@
       </p>
 
       <table class="w-full border-collapse striped mb-8 mt-4">
-        <tr>
-          <th class="text-left px-4 py-2">For</th>
-          <th class="text-left">Points</th>
-        </tr>
-        <tr>
-          <td class="text-left px-4 py-2">Appearing in the game.</td>
-          <td>5</td>
-        </tr>
-        <tr>
-          <td class="text-left px-4 py-2">Every 3 saves a goalkeeper makes.</td>
-          <td>5</td>
-        </tr>
-        <tr>
-          <td class="text-left px-4 py-2">Goalkeeper or defender cleansheet.</td
-          >
-          <td>10</td>
-        </tr>
-        <tr>
-          <td class="text-left px-4 py-2">Forward scores a goal.</td>
-          <td>10</td>
-        </tr>
-        <tr>
-          <td class="text-left px-4 py-2"
-            >Midfielder or Forward assists a goal.</td
-          >
-          <td>10</td>
-        </tr>
-        <tr>
-          <td class="text-left px-4 py-2">Midfielder scores a goal.</td>
-          <td>15</td>
-        </tr>
-        <tr>
-          <td class="text-left px-4 py-2"
-            >Goalkeeper or defender assists a goal.</td
-          >
-          <td>15</td>
-        </tr>
-        <tr>
-          <td class="text-left px-4 py-2"
-            >Goalkeeper or defender scores a goal.</td
-          >
-          <td>20</td>
-        </tr>
-        <tr>
-          <td class="text-left px-4 py-2">Goalkeeper saves a penalty.</td>
-          <td>20</td>
-        </tr>
-        <tr>
-          <td class="text-left px-4 py-2"
-            >Player is highest scoring player in match.</td
-          >
-          <td>25</td>
-        </tr>
-        <tr>
-          <td class="text-left px-4 py-2">Player receives a red card.</td>
-          <td>-20</td>
-        </tr>
-        <tr>
-          <td class="text-left px-4 py-2">Player misses a penalty.</td>
-          <td>-15</td>
-        </tr>
-        <tr>
-          <td class="text-left px-4 py-2"
-            >Each time a goalkeeper or defender concedes 2 goals.</td
-          >
-          <td>-15</td>
-        </tr>
-        <tr>
-          <td class="text-left px-4 py-2">A player scores an own goal.</td>
-          <td>-10</td>
-        </tr>
-        <tr>
-          <td class="text-left px-4 py-2">A player receives a yellow card.</td>
-          <td>-5</td>
-        </tr>
+        <tbody>
+          <tr>
+            <th class="text-left px-4 py-2">For</th>
+            <th class="text-left">Points</th>
+          </tr>
+          <tr>
+            <td class="text-left px-4 py-2">Appearing in the game.</td>
+            <td>5</td>
+          </tr>
+          <tr>
+            <td class="text-left px-4 py-2">Every 3 saves a goalkeeper makes.</td>
+            <td>5</td>
+          </tr>
+          <tr>
+            <td class="text-left px-4 py-2">Goalkeeper or defender cleansheet.</td
+            >
+            <td>10</td>
+          </tr>
+          <tr>
+            <td class="text-left px-4 py-2">Forward scores a goal.</td>
+            <td>10</td>
+          </tr>
+          <tr>
+            <td class="text-left px-4 py-2"
+              >Midfielder or Forward assists a goal.</td
+            >
+            <td>10</td>
+          </tr>
+          <tr>
+            <td class="text-left px-4 py-2">Midfielder scores a goal.</td>
+            <td>15</td>
+          </tr>
+          <tr>
+            <td class="text-left px-4 py-2"
+              >Goalkeeper or defender assists a goal.</td
+            >
+            <td>15</td>
+          </tr>
+          <tr>
+            <td class="text-left px-4 py-2"
+              >Goalkeeper or defender scores a goal.</td
+            >
+            <td>20</td>
+          </tr>
+          <tr>
+            <td class="text-left px-4 py-2">Goalkeeper saves a penalty.</td>
+            <td>20</td>
+          </tr>
+          <tr>
+            <td class="text-left px-4 py-2"
+              >Player is highest scoring player in match.</td
+            >
+            <td>25</td>
+          </tr>
+          <tr>
+            <td class="text-left px-4 py-2">Player receives a red card.</td>
+            <td>-20</td>
+          </tr>
+          <tr>
+            <td class="text-left px-4 py-2">Player misses a penalty.</td>
+            <td>-15</td>
+          </tr>
+          <tr>
+            <td class="text-left px-4 py-2"
+              >Each time a goalkeeper or defender concedes 2 goals.</td
+            >
+            <td>-15</td>
+          </tr>
+          <tr>
+            <td class="text-left px-4 py-2">A player scores an own goal.</td>
+            <td>-10</td>
+          </tr>
+          <tr>
+            <td class="text-left px-4 py-2">A player receives a yellow card.</td>
+            <td>-5</td>
+          </tr>
+        </tbody>
       </table>
 
       <h2 class="default-sub-header">Bonuses</h2>
@@ -135,75 +137,77 @@
       </p>
 
       <table class="w-full border-collapse striped mb-8 mt-4">
-        <tr>
-          <th class="text-left px-4 py-2">Bonus</th>
-          <th class="text-left">Description</th>
-        </tr>
-        <tr>
-          <td class="text-left px-4 py-2">Goal Getter</td>
-          <td
-            >Select a player you think will score in a game to receive a X3
-            mulitplier for each goal scored.</td
-          >
-        </tr>
-        <tr>
-          <td class="text-left px-4 py-2">Pass Master</td>
-          <td
-            >Select a player you think will assist in a game to receive a X3
-            mulitplier for each assist.</td
-          >
-        </tr>
-        <tr>
-          <td class="text-left px-4 py-2">No Entry</td>
-          <td
-            >Select a goalkeeper or defender you think will keep a clean sheet
-            to receive a X3 multipler on their total score.</td
-          >
-        </tr>
-        <tr>
-          <td class="text-left px-4 py-2">Team Boost</td>
-          <td
-            >Receive a X2 multiplier from all players from a single club that
-            are in your team.</td
-          >
-        </tr>
-        <tr>
-          <td class="text-left px-4 py-2">Safe Hands</td>
-          <td
-            >Receive a X3 multiplier on your goalkeeper if they make 5 saves in
-            a match.</td
-          >
-        </tr>
-        <tr>
-          <td class="text-left px-4 py-2">Captain Fantastic</td>
-          <td
-            >Receive a X2 multiplier on your team captain's score if they score
-            a goal in a match.</td
-          >
-        </tr>
-        <tr>
-          <td class="text-left px-4 py-2">One Nation</td>
-          <td>Receive a X2 multiplier for players of a selected nationality.</td
-          >
-        </tr>
-        <tr>
-          <td class="text-left px-4 py-2">Prospects</td>
-          <td>Receive a X2 multiplier for players under the age of 21.</td>
-        </tr>
-        <tr>
-          <td class="text-left px-4 py-2">Brace Bonus</td>
-          <td
-            >Receive a X2 multiplier on a player's score if they score 2 or more
-            goals in a game. Applies to every player who scores a brace.</td
-          >
-        </tr>
-        <tr>
-          <td class="text-left px-4 py-2">Hat Trick Hero</td>
-          <td
-            >Receive a X3 multiplier on a player's score if they score 3 or more
-            goals in a game. Applies to every player who scores a hat-trick.</td
-          >
-        </tr>
+        <tbody>
+          <tr>
+            <th class="text-left px-4 py-2">Bonus</th>
+            <th class="text-left">Description</th>
+          </tr>
+          <tr>
+            <td class="text-left px-4 py-2">Goal Getter</td>
+            <td
+              >Select a player you think will score in a game to receive a X3
+              mulitplier for each goal scored.</td
+            >
+          </tr>
+          <tr>
+            <td class="text-left px-4 py-2">Pass Master</td>
+            <td
+              >Select a player you think will assist in a game to receive a X3
+              mulitplier for each assist.</td
+            >
+          </tr>
+          <tr>
+            <td class="text-left px-4 py-2">No Entry</td>
+            <td
+              >Select a goalkeeper or defender you think will keep a clean sheet
+              to receive a X3 multipler on their total score.</td
+            >
+          </tr>
+          <tr>
+            <td class="text-left px-4 py-2">Team Boost</td>
+            <td
+              >Receive a X2 multiplier from all players from a single club that
+              are in your team.</td
+            >
+          </tr>
+          <tr>
+            <td class="text-left px-4 py-2">Safe Hands</td>
+            <td
+              >Receive a X3 multiplier on your goalkeeper if they make 5 saves in
+              a match.</td
+            >
+          </tr>
+          <tr>
+            <td class="text-left px-4 py-2">Captain Fantastic</td>
+            <td
+              >Receive a X2 multiplier on your team captain's score if they score
+              a goal in a match.</td
+            >
+          </tr>
+          <tr>
+            <td class="text-left px-4 py-2">One Nation</td>
+            <td>Receive a X2 multiplier for players of a selected nationality.</td
+            >
+          </tr>
+          <tr>
+            <td class="text-left px-4 py-2">Prospects</td>
+            <td>Receive a X2 multiplier for players under the age of 21.</td>
+          </tr>
+          <tr>
+            <td class="text-left px-4 py-2">Brace Bonus</td>
+            <td
+              >Receive a X2 multiplier on a player's score if they score 2 or more
+              goals in a game. Applies to every player who scores a brace.</td
+            >
+          </tr>
+          <tr>
+            <td class="text-left px-4 py-2">Hat Trick Hero</td>
+            <td
+              >Receive a X3 multiplier on a player's score if they score 3 or more
+              goals in a game. Applies to every player who scores a hat-trick.</td
+            >
+          </tr>
+        </tbody>
       </table>
     </div>
   </div>

@@ -1,14 +1,15 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { type Writable } from "svelte/store";
-  import { toastsError } from "$lib/stores/toasts-store";
   import { leagueStore } from "$lib/stores/league-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { playerStore } from "$lib/stores/player-store";
   import { formatUnixDateToReadable, formatUnixTimeToTime, getCountdownTime } from "$lib/utils/helpers";
   import type { LeagueStatus, PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import LocalSpinner from "../local-spinner.svelte";
+
+  import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
   import { seasonStore } from "$lib/stores/season-store";
+    import { toasts } from "$lib/stores/toasts-store";
 
   export let transfersAvailable: Writable<number>;  
   export let bankBalance: Writable<number>;
@@ -40,9 +41,9 @@
       updateTeamValue();
       setCountdownTimer();
     } catch (error) {
-      toastsError({
-        msg: { text: "Error fetching pick team header data." },
-        err: error,
+      toasts.addToast({
+        message: "Error fetching pick team header data.",
+        type: "error"
       });
       console.error("Error fetching pick team header data:", error);
     } finally {
@@ -107,7 +108,7 @@
       </div>
 
 
-      <div class="vertical-divider" />
+      <div class="vertical-divider"></div>
 
 
       <div class="flex-grow my-2 xl:mb-0">
@@ -123,9 +124,8 @@
           {nextFixtureDate} | {nextFixtureTime}
         </p>
       </div>
-
-
-      <div class="vertical-divider" />
+      
+      <div class="vertical-divider"></div>
 
 
       <div class="flex-grow my-4 xl:mb-0">
@@ -149,7 +149,7 @@
         <p class="content-panel-header">GBP</p>
       </div>
 
-      <div class="vertical-divider" />
+      <div class="vertical-divider"></div>
 
       <div class="flex-grow my-4 xl:mb-0">
         <p class="content-panel-header">Bank Balance</p>
@@ -159,7 +159,7 @@
         <p class="content-panel-header">GBP</p>
       </div>
 
-      <div class="vertical-divider" />
+      <div class="vertical-divider"></div>
 
       <div class="flex-grow my-4 xl:mb-0">
         <p class="content-panel-header">Transfers</p>

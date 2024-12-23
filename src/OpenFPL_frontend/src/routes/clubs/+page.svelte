@@ -1,19 +1,19 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { toastsError } from "$lib/stores/toasts-store";
   import { clubStore } from "$lib/stores/club-store";
   import Layout from "../Layout.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
     import { storeManager } from "$lib/managers/store-manager";
+    import { toasts } from "$lib/stores/toasts-store";
 
   onMount(async () => {
     try {
       await storeManager.syncStores();
       
     } catch (error) {
-      toastsError({
-        msg: { text: "Error fetching league table." },
-        err: error,
+      toasts.addToast({
+        message: "Error fetching league table." ,
+        type: "error"
       });
       console.error("Error fetching league table:", error);
     } finally {

@@ -3,12 +3,11 @@
   import { clubStore } from "$lib/stores/club-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { playerStore } from "$lib/stores/player-store";
-  import { toastsError } from "$lib/stores/toasts-store";
   import Layout from "../Layout.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import { page } from "$app/stores";
-  import TeamPlayers from "$lib/components/team-players.svelte";
-  import TeamFixtures from "$lib/components/team-fixtures.svelte";
+  import TeamPlayers from "$lib/components/club/team-players.svelte";
+  import TeamFixtures from "$lib/components/club/team-fixtures.svelte";
   import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
   import type {
@@ -22,11 +21,12 @@
     getPositionText,
     convertPlayerPosition,
   } from "../../lib/utils/helpers";
-  import { Spinner } from "@dfinity/gix-components";
     import LoanedPlayers from "$lib/components/club/loaned-players.svelte";
     import { seasonStore } from "$lib/stores/season-store";
     import { storeManager } from "$lib/managers/store-manager";
     import { leagueStore } from "$lib/stores/league-store";
+    import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
+    import { toasts } from "$lib/stores/toasts-store";
 
   let isLoading = true;
   let leagueStatus: LeagueStatus;
@@ -80,10 +80,8 @@
       nextFixtureHomeTeam = getTeamFromId(nextFixture?.homeClubId ?? 0) ?? null;
       nextFixtureAwayTeam = getTeamFromId(nextFixture?.awayClubId ?? 0) ?? null;
     } catch (error) {
-      toastsError({
-        msg: { text: "Error fetching club details." },
-        err: error,
-      });
+      toasts.addToast( { message: "Error fetching club details.",
+      type: "error" });
       console.error("Error fetching club details:", error);
     } finally {
       isLoading = false;
@@ -123,7 +121,7 @@
 
 <Layout>
   {#if isLoading}
-    <Spinner />
+    <LocalSpinner />
   {:else}
     <div class="page-header-wrapper flex">
       <div class="content-panel">
@@ -149,7 +147,7 @@
             {team?.abbreviatedName}
           </p>
         </div>
-        <div class="vertical-divider" />
+        <div class="vertical-divider"></div>
         <div class="flex-grow">
           <p class="content-panel-header">Players</p>
           <p class="content-panel-stat">
@@ -157,7 +155,7 @@
           </p>
           <p class="content-panel-header">Total</p>
         </div>
-        <div class="vertical-divider" />
+        <div class="vertical-divider"></div>
         <div class="flex-grow">
           <p class="content-panel-header">League Position</p>
           <p class="content-panel-stat">
@@ -222,7 +220,7 @@
             </a>
           </div>
         </div>
-        <div class="vertical-divider" />
+        <div class="vertical-divider"></div>
         <div class="flex-grow flex flex-col">
           <p class="content-panel-header">League Points</p>
           <p class="content-panel-stat">
@@ -231,7 +229,7 @@
           <p class="content-panel-header">Total</p>
         </div>
 
-        <div class="vertical-divider" />
+        <div class="vertical-divider"></div>
         <div class="flex-grow">
           <p class="content-panel-header">Most Points</p>
           <p class="content-panel-stat">

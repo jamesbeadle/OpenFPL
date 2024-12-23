@@ -1,7 +1,9 @@
+import { ActorFactory } from "../../utils/ActorFactory";
+import { storeManager } from "$lib/managers/store-manager";
 import { authStore } from "$lib/stores/auth.store";
 import { leagueStore } from "$lib/stores/league-store";
+
 import { isError } from "$lib/utils/helpers";
-import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
   FantasyTeamSnapshot,
@@ -12,12 +14,8 @@ import type {
   UpdateTeamSelectionDTO,
   LeagueStatus,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-import { ActorFactory } from "../../utils/ActorFactory";
-import { storeManager } from "$lib/managers/store-manager";
 
 function createManagerStore() {
-  const { subscribe, set } = writable<PickTeamDTO | null>(null);
-
   let actor: any = ActorFactory.createActor(
     idlFactory,
     process.env.OPENFPL_BACKEND_CANISTER_ID,
@@ -61,6 +59,8 @@ function createManagerStore() {
   async function getPublicProfile(principalId: string): Promise<ManagerDTO> {
     await storeManager.syncStores();
     try {
+      let activeOrUnplayedGameweek =
+        await leagueStore.getActiveOrUnplayedGameweek();
       let leagueStatus: LeagueStatus | null = null;
       leagueStore.subscribe((result) => {
         if (result == null) {
@@ -71,10 +71,11 @@ function createManagerStore() {
       let dto: RequestManagerDTO = {
         managerId: principalId,
         month: 0,
-        seasonId: leagueStatus!.activeGameweek,
-        gameweek: 0,
+        seasonId: leagueStatus!.activeSeasonId,
+        gameweek: activeOrUnplayedGameweek,
         clubId: 0,
       };
+
       let result = await actor.getManager(dto);
 
       if (isError(result)) {
@@ -350,7 +351,6 @@ function createManagerStore() {
   }
 
   return {
-    subscribe,
     getTotalManagers,
     getFantasyTeamForGameweek,
     getCurrentTeam,

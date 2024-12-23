@@ -559,6 +559,7 @@ export const idlFactory = ({ IDL }) => {
     ),
     getManager: IDL.Func([RequestManagerDTO], [Result_1], []),
     getManagerCanisterIds: IDL.Func([], [Result_17], []),
+    getManagerSnapshotData: IDL.Func([], [IDL.Vec(FantasyTeamSnapshot)], []),
     getMonthlyLeaderboard: IDL.Func(
       [GetMonthlyLeaderboardDTO],
       [Result_16],
@@ -592,6 +593,7 @@ export const idlFactory = ({ IDL }) => {
     getSeasonLeaderboard: IDL.Func([GetSeasonLeaderboardDTO], [Result_9], []),
     getSeasons: IDL.Func([], [Result_8], ["composite_query"]),
     getSystemState: IDL.Func([], [Result_7], ["query"]),
+    getTopups: IDL.Func([], [IDL.Vec(CanisterTopup)], ["query"]),
     getTotalManagers: IDL.Func([], [Result_6], ["query"]),
     getVerifiedPlayers: IDL.Func([], [Result_5], []),
     getWeeklyCanisters: IDL.Func([], [Result_4], ["query"]),

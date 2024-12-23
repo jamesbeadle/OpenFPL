@@ -2,7 +2,6 @@
   import { onMount } from "svelte";
   import { clubStore } from "$lib/stores/club-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
-  import { toastsError } from "$lib/stores/toasts-store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import {
     formatUnixTimeToTime,
@@ -11,8 +10,9 @@
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
     import { storeManager } from "$lib/managers/store-manager";
     import { leagueStore } from "$lib/stores/league-store";
-    import LocalSpinner from "./local-spinner.svelte";
-    import RelativeSpinner from "./relative-spinner.svelte";
+    import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
+    import RelativeSpinner from "$lib/components/shared/relative-spinner.svelte";
+    import { toasts } from "$lib/stores/toasts-store";
 
   let isLoading = true;
   let leagueStatus: LeagueStatus;
@@ -26,33 +26,33 @@
   );
 
   $: groupedFixtures = Object.entries(
-  filteredFixtures.reduce(
-    (acc: { [key: string]: FixtureWithTeams[] }, fixtureWithTeams) => {
-      const date = new Date(Number(fixtureWithTeams.fixture.kickOff) / 1000000);
-      const dateFormatter = new Intl.DateTimeFormat("en-GB", {
-        weekday: "long",
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-      });
-      const dateKey = dateFormatter.format(date);
+    filteredFixtures.reduce(
+      (acc: { [key: string]: FixtureWithTeams[] }, fixtureWithTeams) => {
+        const date = new Date(Number(fixtureWithTeams.fixture.kickOff) / 1000000);
+        const dateFormatter = new Intl.DateTimeFormat("en-GB", {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        });
+        const dateKey = dateFormatter.format(date);
 
-      if (!acc[dateKey]) {
-        acc[dateKey] = [];
-      }
-      acc[dateKey].push(fixtureWithTeams);
-      return acc;
-    },
-    {} as { [key: string]: FixtureWithTeams[] }
-  )
-).sort(([dateA], [dateB]) => {
-  const parsedDateA = new Date(dateA);
-  const parsedDateB = new Date(dateB);
-  return parsedDateA.getTime() - parsedDateB.getTime();
-}).reduce((acc, [date, fixtures]) => {
-  acc[date] = fixtures;
-  return acc;
-}, {} as { [key: string]: FixtureWithTeams[] });
+        if (!acc[dateKey]) {
+          acc[dateKey] = [];
+        }
+        acc[dateKey].push(fixtureWithTeams);
+        return acc;
+      },
+      {} as { [key: string]: FixtureWithTeams[] }
+    )
+  ).sort(([dateA], [dateB]) => {
+    const parsedDateA = new Date(dateA);
+    const parsedDateB = new Date(dateB);
+    return parsedDateA.getTime() - parsedDateB.getTime();
+  }).reduce((acc, [date, fixtures]) => {
+    acc[date] = fixtures;
+    return acc;
+  }, {} as { [key: string]: FixtureWithTeams[] });
 
 
 
@@ -73,9 +73,9 @@
       }));
       
     } catch (error) {
-      toastsError({
-        msg: { text: "Error fetching fixtures data." },
-        err: error,
+      toasts.addToast({
+        message: "Error fetching fixtures data.",
+        type: "error" 
       });
       console.error("Error fetching fixtures data:", error);
     } finally {

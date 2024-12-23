@@ -23,6 +23,7 @@ import Option "mo:base/Option";
 import Blob "mo:base/Blob";
 import Nat16 "mo:base/Nat16";
 import Bool "mo:base/Bool";
+import Debug "mo:base/Debug";
 import NetworkEnvironmentVariables "../network_environment_variables";
 
 module {
@@ -37,8 +38,9 @@ module {
     private var activeManagerCanisterId : Base.CanisterId = "";    
     
     public func getProfile(request: RequestDTOs.RequestProfileDTO) : async Result.Result<DTOs.ProfileDTO, T.Error> {
-        
+      
       let userManagerCanisterId = managerCanisterIds.get(request.principalId);
+      
       switch(userManagerCanisterId){
         case (?foundUserCanisterId){
 
@@ -46,25 +48,25 @@ module {
               getManager : Base.PrincipalId -> async ?T.Manager;
           };
           let manager = await manager_canister.getManager(request.principalId);
+          
           switch (manager) {
               case (null) {
                   return #err(#NotFound);
               };
               case (?foundManager) {
 
-              let profileDTO : DTOs.ProfileDTO = {
-                  principalId = request.principalId;
-                  username = foundManager.username;
-                  termsAccepted = foundManager.termsAccepted;
-                  profilePicture = foundManager.profilePicture;
-                  profilePictureType = foundManager.profilePictureType;
-                  favouriteClubId = foundManager.favouriteClubId;
-                  createDate = foundManager.createDate;
-              };
-              return #ok(profileDTO);
+                let profileDTO : DTOs.ProfileDTO = {
+                    principalId = request.principalId;
+                    username = foundManager.username;
+                    termsAccepted = foundManager.termsAccepted;
+                    profilePicture = foundManager.profilePicture;
+                    profilePictureType = foundManager.profilePictureType;
+                    favouriteClubId = foundManager.favouriteClubId;
+                    createDate = foundManager.createDate;
+                };
+                return #ok(profileDTO);
               };
           };
-
         };
         case (null){
             return #err(#NotFound);
@@ -73,6 +75,7 @@ module {
     };
 
     public func getManager(dto: RequestDTOs.RequestManagerDTO, weeklyLeaderboardEntry : ?DTOs.LeaderboardEntryDTO, monthlyLeaderboardEntry : ?DTOs.LeaderboardEntryDTO, seasonLeaderboardEntry : ?DTOs.LeaderboardEntryDTO) : async Result.Result<DTOs.ManagerDTO, T.Error> {
+      
       let managerCanisterId = managerCanisterIds.get(dto.managerId);
       
       switch (managerCanisterId) {
@@ -84,13 +87,12 @@ module {
             getManager : Base.PrincipalId -> async ?T.Manager;
           };
       
-          let manager = await manager_canister.getManager(dto.managerId);
+         let manager = await manager_canister.getManager(dto.managerId);
           switch (manager) {
             case (null) {
               return #err(#NotFound);
             };
             case (?foundManager) {
-             
               for (managerSeason in Iter.fromList(foundManager.history)) {
                 if (managerSeason.seasonId == dto.seasonId) {
 
@@ -1330,6 +1332,24 @@ module {
  
     public func getManagerCanisterIds() : [(Base.PrincipalId, Base.CanisterId)] {
       return Iter.toArray(managerCanisterIds.entries());
+    };
+
+    //AI based functions to get manager snapshots
+    public func getManagerSnapshotData() : async [T.FantasyTeamSnapshot] {
+      
+      let managerSnapshotsBuffer = Buffer.fromArray<T.FantasyTeamSnapshot>([]);
+      
+      for(canister in Iter.fromList(uniqueManagerCanisterIds)){
+
+        let manager_canister = actor (canister) : actor {
+          getSnapshots : () -> async [T.FantasyTeamSnapshot];
+        };
+        let managerSnapshots = await manager_canister.getSnapshots();
+        
+        managerSnapshotsBuffer.append(Buffer.fromArray(managerSnapshots));
+      };
+
+      return Buffer.toArray(managerSnapshotsBuffer);
     };
 
     //stable getters and setters

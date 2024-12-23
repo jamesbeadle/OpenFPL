@@ -3,13 +3,13 @@
   import { writable, type Writable } from "svelte/store";
   import { clubStore } from "$lib/stores/club-store";
   import { playerStore } from "$lib/stores/player-store";
-  import { toastsError } from "$lib/stores/toasts-store";
   import type { PlayerDTO, PickTeamDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import AddIcon from "$lib/icons/AddIcon.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import { Modal } from "@dfinity/gix-components";
   import { convertPlayerPosition } from "$lib/utils/helpers";
   import { allFormations } from "$lib/utils/pick-team.helpers";
+    import { toasts } from "$lib/stores/toasts-store";
+    import Modal from "$lib/components/shared/modal.svelte";
 
   export let visible: boolean;
   export let closeAddPlayerModal: () => void;
@@ -97,9 +97,9 @@
       let team = $fantasyTeam;
       teamPlayerCounts = countPlayersByTeam(team?.playerIds ?? []);
     } catch (error) {
-      toastsError({
-        msg: { text: "Error fetching add player data." },
-        err: error,
+      toasts.addToast({
+        message: "Error fetching add player data.",
+        type: "error",
       });
       console.error("Error fetching add player data:", error);
     } finally {
@@ -192,14 +192,8 @@
   }
 </script>
 
-<Modal {visible} on:nnsClose={closeAddPlayerModal}>
+<Modal showModal={visible} onClose={closeAddPlayerModal} title="Select Player">
   <div class="p-2">
-    <div class="flex justify-between items-center">
-      <h3 class="default-header">Select Player</h3>
-      <button class="times-button" on:click={closeAddPlayerModal}
-        >&times;</button
-      >
-    </div>
     <div>
       <div class="grid grid-cols-2 gap-1">
         <div>

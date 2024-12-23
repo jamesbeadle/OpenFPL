@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { writable, type Writable } from "svelte/store";
-  import { toastsError } from "$lib/stores/toasts-store";
   import { clubStore } from "$lib/stores/club-store";
   import { playerStore } from "$lib/stores/player-store";
 
@@ -18,10 +17,11 @@
   import OpenChatIcon from "$lib/icons/OpenChatIcon.svelte";
   import PlayerCaptainIcon from "$lib/icons/PlayerCaptainIcon.svelte";
   import { allFormations, getTeamFormation } from "$lib/utils/pick-team.helpers";
-  import LocalSpinner from "../local-spinner.svelte";
+  import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
   import AddPlayerModal from "./modals/add-player-modal.svelte";
     import { leagueStore } from "$lib/stores/league-store";
     import { storeManager } from "$lib/managers/store-manager";
+    import { toasts } from "$lib/stores/toasts-store";
 
   export let loadingPlayers: Writable<Boolean | null>;
   export let fantasyTeam: Writable<PickTeamDTO | null>;
@@ -73,9 +73,9 @@
       
       await loadData();
     } catch (error) {
-      toastsError({
-        msg: { text: "Error fetching team details." },
-        err: error,
+      toasts.addToast({
+        message: "Error fetching team details." ,
+        type: "error"
       });
       console.error("Error fetching team details:", error);
     } 

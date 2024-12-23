@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
   import ProfileDetail from "$lib/components/profile/profile-detail.svelte";
   import Layout from "../Layout.svelte";
-  import LocalSpinner from "$lib/components/local-spinner.svelte";
+  import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
   import ManagerGameweeks from "$lib/components/manager/manager-gameweeks.svelte";
   import { userStore } from "$lib/stores/user-store";
     import ProfileManagerGameweeks from "$lib/components/manager/profile-manager-gameweeks.svelte";

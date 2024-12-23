@@ -1,7 +1,7 @@
 <script lang="ts">
+    import { toasts } from "$lib/stores/toasts-store";
   import { userStore } from "$lib/stores/user-store";
-  import { toastsError, toastsShow } from "$lib/stores/toasts-store";
-  import { Modal, busyStore } from "@dfinity/gix-components";
+  import Modal from "$lib/components/shared/modal.svelte";
 
   export let visible: boolean;
   export let closeModal: () => void;
@@ -10,6 +10,8 @@
   export let withdrawalInputAmount: string = "";
   export let fplBalance: bigint;
   export let fplBalanceFormatted: string;
+
+  let withdrawing = false;
 
   let errorMessage: string = "";
 
@@ -56,39 +58,29 @@
     : "";
 
   async function withdrawFPL() {
-    busyStore.startBusy({
-      initiator: "withdraw-fpl",
-      text: "Withdrawing FPL...",
-    });
+    withdrawing = true;
     try {
       const amountInE8s = convertToE8s(withdrawalInputAmount);
       await userStore.withdrawFPL(withdrawalAddress, amountInE8s);
-      toastsShow({
-        text: "FPL successfully withdrawn.",
-        level: "success",
+      toasts.addToast( { 
+        message: "FPL successfully withdrawn.",
+        type: "success",
         duration: 2000,
       });
-      busyStore.stopBusy("withdraw-fpl");
-      await closeModal();
     } catch (error) {
-      toastsError({
-        msg: { text: "Error withdrawing FPL." },
-        err: error,
+      toasts.addToast({ 
+        message: "Error withdrawing FPL."
       });
       console.error("Error withdrawing FPL:", error);
-      cancelModal();
     } finally {
-      busyStore.stopBusy("withdraw-fpl");
+      cancelModal();
+      withdrawing = false;
     }
   }
 </script>
 
-<Modal {visible} on:nnsClose={cancelModal}>
+<Modal showModal={visible} onClose={closeModal} title="Withdraw FPL">
   <div class="mx-4 p-4">
-    <div class="flex justify-between items-center my-2">
-      <h3 class="default-header">Withdraw FPL</h3>
-      <button class="times-button" on:click={cancelModal}>&times;</button>
-    </div>
     <form on:submit|preventDefault={withdrawFPL}>
       <p>FPL Balance: {fplBalanceFormatted}</p>
       <div class="mt-4">

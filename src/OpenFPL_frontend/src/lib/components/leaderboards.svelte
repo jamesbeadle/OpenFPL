@@ -11,7 +11,7 @@
   
   import type { LeaderboardEntry, LeagueStatus, RewardEntry } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   
-  import LocalSpinner from "./local-spinner.svelte";
+  import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import { formatE8s } from "$lib/utils/helpers";
     import { leagueStore } from "$lib/stores/league-store";

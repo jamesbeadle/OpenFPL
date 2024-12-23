@@ -80,9 +80,14 @@
     public shared func getManager(dto: RequestDTOs.RequestManagerDTO) : async Result.Result<DTOs.ManagerDTO, T.Error> {
       
       let weeklyLeaderboardEntry = await leaderboardManager.getWeeklyLeaderboardEntry(dto.managerId, dto.seasonId, dto.gameweek);
-      let monthlyLeaderboardEntry = await leaderboardManager.getMonthlyLeaderboardEntry(dto.managerId, dto.seasonId, dto.month, dto.clubId);
-      let seasonLeaderboardEntry = await leaderboardManager.getSeasonLeaderboardEntry(dto.managerId, dto.seasonId);
-      return await userManager.getManager(dto, weeklyLeaderboardEntry, monthlyLeaderboardEntry, seasonLeaderboardEntry);
+      
+      /*
+        //TODO: We are putting any monthly rewards and calculations on hold until we are able to setup a testing framework outside of what is provided by DFINITY.
+        let monthlyLeaderboardEntry = await leaderboardManager.getMonthlyLeaderboardEntry(dto.managerId, dto.seasonId, dto.month, dto.clubId);
+        let seasonLeaderboardEntry = await leaderboardManager.getSeasonLeaderboardEntry(dto.managerId, dto.seasonId);
+      */
+
+      return await userManager.getManager(dto, weeklyLeaderboardEntry, null, null);
     };
 
     public shared func getFantasyTeamSnapshot(dto: DTOs.GetFantasyTeamSnapshotDTO) : async Result.Result<DTOs.FantasyTeamSnapshotDTO, T.Error> {
@@ -800,18 +805,17 @@
     };
 
     private func postUpgradeCallback() : async (){
-      //await seasonManager.putOnHold();       
-
+      //await seasonManager.putOnHold();  
+      
 
       //TODO (GO LIVE)
       //set system state
       //ignore setSystemTimers();
       
-    
-      //ignore updateLeaderboardCanisterWasms();
-      //ignore updateManagerCanisterWasms();
+      ignore updateLeaderboardCanisterWasms();
+      await updateManagerCanisterWasms();
       //await userManager.resetWeeklyTransfers();
-
+        
       await seasonManager.updateDataHash("app_status");
       await seasonManager.updateDataHash("league_status");
       await seasonManager.updateDataHash("countries");
@@ -822,7 +826,27 @@
       await seasonManager.updateDataHash("weekly_leaderboard");
       await seasonManager.updateDataHash("monthly_leaderboards");
       await seasonManager.updateDataHash("season_leaderboard");
-      await checkCanisterCycles();
+      //await checkCanisterCycles();
+      await manuallyPayRewards();
+    };
+
+    private func calculateGWRewards() : async (){
+      let leagueStatusResult = await getLeagueStatus();
+      switch(leagueStatusResult){
+        case (#ok leagueStatus){       
+          let _ = await leaderboardManager.calculateWeeklyRewards(leagueStatus.activeSeasonId, 16, leagueStatus.totalGameweeks);     };
+        case (#err _){}
+      } 
+    };
+
+    private func manuallyPayRewards() : async () {
+      let leagueStatusResult = await getLeagueStatus();
+      switch(leagueStatusResult){
+        case (#ok leagueStatus){       
+          let _ = await leaderboardManager.payWeeklyRewards(leagueStatus.activeSeasonId, 16);     
+        };
+        case (#err _){ }
+      } 
     };
 
     private func updateManagerCanisterWasms() : async (){
@@ -971,7 +995,7 @@
       let leagueStatusResult = await getLeagueStatus();
       switch(leagueStatusResult){
         case (#ok leagueStatus){       
-          return await leaderboardManager.calculateWeeklyRewards(leagueStatus.activeSeasonId, gameweek);     };
+          return await leaderboardManager.calculateWeeklyRewards(leagueStatus.activeSeasonId, gameweek, leagueStatus.totalGameweeks);     };
         case (#err error){
           return #err(error);
         }
@@ -1011,16 +1035,26 @@
       return #ok(stable_weekly_leaderboard_canister_ids);
     };
 
+    //AI model training endpoints
+
+    public shared ({ caller }) func getManagerSnapshotData() : async [T.FantasyTeamSnapshot] {
+      assert Principal.toText(caller) == Environment.WATERWAY_LABS_BACKEND_CANISTER_ID;
+      return await userManager.getManagerSnapshotData();
+    };
+
+
     //TODO remove league id and use environent variable
     public shared ({ caller }) func notifyAppsOfLoan(leagueId: FootballTypes.LeagueId, playerId: FootballTypes.PlayerId) : async Result.Result<(), T.Error> {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
       await userManager.removePlayerFromTeams(leagueId, playerId, Environment.BACKEND_CANISTER_ID);
+      await seasonManager.updateDataHash("players");
       return #ok();
     };
 
     public shared ({ caller }) func notifyAppsOfTransfer(leagueId: FootballTypes.LeagueId, playerId: FootballTypes.PlayerId) : async Result.Result<(), T.Error> {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
       await userManager.removePlayerFromTeams(leagueId, playerId, Environment.BACKEND_CANISTER_ID);
+      await seasonManager.updateDataHash("players");
       return #ok();
     };
 
@@ -1030,10 +1064,11 @@
       return #ok();
     };
 
-     public shared ({ caller }) func notifyAppsOfGameweekStarting(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber) : async Result.Result<(), T.Error> {
+    public shared ({ caller }) func notifyAppsOfGameweekStarting(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber) : async Result.Result<(), T.Error> {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
       let _ = await userManager.snapshotFantasyTeams(Environment.LEAGUE_ID, seasonId, gameweek, 0); //TODO MONTH
       await userManager.resetWeeklyTransfers();
+      await seasonManager.updateDataHash("league_status");
       return #ok();
     };
 
@@ -1059,8 +1094,14 @@
           return #err(error)
         }
       };
+
+      await seasonManager.updateDataHash("league_status");
      
       return #ok();
+    };
+
+    public shared query func getTopups() : async [Base.CanisterTopup] {
+      return topups;
     };
     
   };

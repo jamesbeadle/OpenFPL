@@ -47,16 +47,14 @@ module {
     private var monthlyATHPrizePool : Nat64 = 0;
     private var seasonATHPrizePool : Nat64 = 0;
 
-    private var seasonGameweekCount: Nat8 = 0;
-
-    public func calculateGameweekRewards(dto: DTOs.WeeklyLeaderboardDTO): async () {
-  
+    public func calculateGameweekRewards(dto: DTOs.WeeklyLeaderboardDTO, seasonGameweekCount: Nat8): async () {
       let weeklyRewardsExcludingThisWeek = List.filter<T.WeeklyRewards>(weeklyRewards, func(weeklyRewardsEntry: T.WeeklyRewards){
         not (weeklyRewardsEntry.gameweek == dto.gameweek and weeklyRewardsEntry.seasonId == dto.seasonId)
       });
       let weeklyRewardsBuffer = Buffer.fromArray<T.WeeklyRewards>(List.toArray(weeklyRewardsExcludingThisWeek));
 
       let rewardPoolOpt = rewardPools.get(dto.seasonId);
+
       switch (rewardPoolOpt) {
           case (?rewardPool) {
               let weeklyRewardAmount = rewardPool.weeklyLeaderboardPool / Nat64.fromNat(Nat8.toNat(seasonGameweekCount));              
@@ -71,12 +69,11 @@ module {
               
               let rewardEntriesBuffer = Buffer.fromArray<T.RewardEntry>([]);
               for (i in Iter.range(0, payoutPercentages.size() - 1)) {
+                  
                   let winner = topEntries[i];
                   let totalPrizePoolE8s: Nat64 = weeklyRewardAmount * 100_000_000;
                   let userPrizeE8s = Float.fromInt64(Int64.fromNat64(totalPrizePoolE8s)) * payoutPercentages[i];
-                  let userPrizeFPL = userPrizeE8s / 100_000_000; 
 
-                  Debug.print(winner.principalId # ": " # Float.toText(userPrizeFPL) # " FPL");
                   rewardEntriesBuffer.add({
                       principalId = winner.principalId;
                       rewardType = #WeeklyLeaderboard;
@@ -356,9 +353,8 @@ module {
     };
 
     /* Temporary Functions to be removed */
-    
+    /*
     public func setupRewardPool(){
-      seasonGameweekCount := 30;
       rewardPools.put(1, {
         allTimeMonthlyHighScorePool = 46875;
         allTimeSeasonHighScorePool = 46875;
@@ -371,6 +367,7 @@ module {
         weeklyLeaderboardPool = 140625;
       });
     };
+    */
 
   };
 };

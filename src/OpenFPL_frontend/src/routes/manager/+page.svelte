@@ -9,7 +9,6 @@
   import { playerStore } from "$lib/stores/player-store";
   import { playerEventsStore } from "$lib/stores/player-events-store";
 
-  import { toastsError } from "$lib/stores/toasts-store";
   import type {
     FantasyTeamSnapshot,
     ClubDTO,
@@ -21,9 +20,10 @@
   import { calculateBonusPoints, getTeamFormationReadOnly } from "$lib/utils/pick-team.helpers";
   
   import Layout from "../Layout.svelte";
-  import LocalSpinner from "$lib/components/local-spinner.svelte";
+  import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
   import ManagerGameweeks from "$lib/components/manager/manager-gameweeks.svelte";
   import ReadOnlyPitchView from "$lib/components/manager/read-only-pitch-view.svelte";
+    import { toasts } from "$lib/stores/toasts-store";
 
   $: id = $page.url.searchParams.get("id");
   $: formation = "4-4-2";
@@ -70,9 +70,9 @@
           : null;
       viewGameweekDetail($selectedGameweek!);
     } catch (error) {
-      toastsError({
-        msg: { text: "Error fetching manager details." },
-        err: error,
+      toasts.addToast({
+        message: "Error fetching manager details.",
+        type: "error"
       });
       console.error("Error fetching manager details:", error);
     } finally {
@@ -167,9 +167,9 @@
         })
       );
     } catch (error) {
-      toastsError({
-        msg: { text: "Error updating gameweek players." },
-        err: error,
+      toasts.addToast({
+        message: "Error updating gameweek players." ,
+        type: "error"
       });
       console.error("Error updating gameweek players:", error);
     } finally {
@@ -192,7 +192,7 @@
               <img class="w-20" src={profilePicture} alt={displayName} />
             </div>
     
-            <div class="vertical-divider" />
+            <div class="vertical-divider"></div>
     
             <div class="flex-grow">
               <p class="content-panel-header">Manager</p>
@@ -204,7 +204,7 @@
               </p>
             </div>
     
-            <div class="vertical-divider" />
+            <div class="vertical-divider"></div>
     
             <div class="flex-grow">
               <!-- //TODO
@@ -236,7 +236,7 @@
               <p class="content-panel-header">Weekly</p>
             </div>
     
-            <div class="vertical-divider" />
+            <div class="vertical-divider"></div>
 
             <div class="w-full">
               <p class="content-panel-header">
@@ -254,7 +254,7 @@
               </p>
               <p class="content-panel-header">Club</p>
             </div>
-            <div class="vertical-divider" />
+            <div class="vertical-divider"></div>
             <div class="w-full">
               <p class="content-panel-header">
                 {selectedSeason}

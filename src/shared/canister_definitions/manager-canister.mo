@@ -16,6 +16,7 @@ import Result "mo:base/Result";
 import Text "mo:base/Text";
 import Timer "mo:base/Timer";
 import TrieMap "mo:base/TrieMap";
+import Debug "mo:base/Debug";
 
 import Base "../../shared/types/base_types";
 import DTOs "../../shared/dtos/DTOs";
@@ -1737,8 +1738,7 @@ actor class _ManagerCanister() {
   };
 
   private func mergeManagerSnapshot(manager : T.Manager, seasonId: FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth, weeklyPoints : Int16, monthlyPoints : Int16, seasonPoints : Int16, teamValueQuarterMillions : Nat16) : T.FantasyTeamSnapshot {
-    //todo, this merge should be to create a snapshot
-    
+     
     return {
       principalId = manager.principalId;
       username = manager.username;
@@ -2670,7 +2670,7 @@ actor class _ManagerCanister() {
   //To confirm as not called yet as timers not active or reward not setup
 
 
-
+  //TODO: Implement in the 2025/26 season as it would be unfair to pay a reward on a subset of the seasons fixtures as we had errors at the beginning of 2024/25
   public shared ({ caller }) func getMostValuableTeams(seasonId : FootballTypes.SeasonId) : async [T.FantasyTeamSnapshot] {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
@@ -3516,7 +3516,69 @@ actor class _ManagerCanister() {
 
   };
 
+  //AI Based Data Functions
 
+  public shared ({ caller }) func getSnapshots() : async [T.FantasyTeamSnapshot] {
+    
+    assert not Principal.isAnonymous(caller);
+    let backendPrincipalId = Principal.toText(caller);
+    assert backendPrincipalId == controllerPrincipalId;
+
+    let managerSnapshotsBuffer = Buffer.fromArray<T.FantasyTeamSnapshot>([]);
+
+    for (index in Iter.range(0, 11)) {
+      var managers: [T.Manager] = [];
+      switch (index) {
+        case 0 {
+          managers := managerGroup1;
+        };
+        case 1 {
+          managers := managerGroup2;
+        };
+        case 2 {
+          managers := managerGroup3;
+        };
+        case 3 {
+          managers := managerGroup4;
+        };
+        case 4 {
+          managers := managerGroup5;
+        };
+        case 5 {
+          managers := managerGroup6;
+        };
+        case 6 {
+          managers := managerGroup7;
+        };
+        case 7 {
+          managers := managerGroup8;
+        };
+        case 8 {
+          managers := managerGroup9;
+        };
+        case 9 {
+          managers := managerGroup10;
+        };
+        case 10 {
+          managers := managerGroup11;
+        };
+        case 11 {
+          managers := managerGroup12;
+        };
+        case _{};
+      };
+
+      for (manager in Iter.fromArray(managers)) {
+        for(season in Iter.fromList(manager.history)){
+          for(gameweek in Iter.fromList(season.gameweeks)){
+            managerSnapshotsBuffer.add(gameweek);
+          }
+        };
+      };
+    };
+
+    return Buffer.toArray(managerSnapshotsBuffer);
+  };
 
 
 

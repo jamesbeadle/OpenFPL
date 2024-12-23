@@ -22,6 +22,7 @@ import Nat64 "mo:base/Nat64";
 import Int "mo:base/Int";
 import Nat16 "mo:base/Nat16";
 import Nat8 "mo:base/Nat8";
+import Debug "mo:base/Debug";
 import RewardManager "reward-manager";
 import NetworkEnvironmentVariables "../network_environment_variables";
 import SNSToken "../../shared/sns-wrappers/ledger";
@@ -336,7 +337,7 @@ module {
       };
 
       /*
-      //TODO: Need a way to separate out month
+      //TODO: Need a way to separate out month as before we had the leaderboards in individual canisters but now we have them in a single canister
       if(month > 0){
         for(clubId in Iter.fromArray(clubIds)){
           await leaderboard_canister.prepareForUpdate(seasonId, month, gameweek, clubId);  
@@ -367,7 +368,7 @@ module {
             },
           );
 
-          await leaderboard_canister.addLeaderboardChunk(seasonId, 0, 0, 0, leaderboardEntries);
+          //await leaderboard_canister.addLeaderboardChunk(seasonId, 0, 0, 0, leaderboardEntries);
 
           await leaderboard_canister.addLeaderboardChunk(seasonId, 0, gameweek, 0, leaderboardEntries);
           /*
@@ -505,12 +506,14 @@ module {
     };
 
     //todo remove
+    /*
     public func setupRewardPool(){
       rewardManager.setupRewardPool();
     };
+    */
 
     //calculate weekly leaderboard rewards
-    public func calculateWeeklyRewards(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber) : async Result.Result<(), T.Error>{
+    public func calculateWeeklyRewards(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber, seasonGameweekCount: Nat8) : async Result.Result<(), T.Error>{
       
       let gameweekSeason = Array.find(weeklyLeaderboardCanisters, func(seasonEntry: (FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, Base.CanisterId)])) : Bool {
         seasonEntry.0 == seasonId;
@@ -541,7 +544,8 @@ module {
                   return #err(#NotFound);
                 };
                 case (?foundLeaderboard) {
-                  await rewardManager.calculateGameweekRewards(foundLeaderboard);
+                  await rewardManager.calculateGameweekRewards(foundLeaderboard, seasonGameweekCount);
+                  return #ok();
                 };
               };
 
@@ -772,5 +776,6 @@ module {
     public func setStableActiveCanisterId(stable_active_canister_id: Base.CanisterId){
       activeCanisterId := stable_active_canister_id;
     };
+
   };
 };

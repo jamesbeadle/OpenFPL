@@ -5,7 +5,6 @@
   import { clubStore } from "$lib/stores/club-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { leagueStore } from "$lib/stores/league-store";
-  import { toastsError } from "$lib/stores/toasts-store";
   import {
     calculateAgeFromNanoseconds,
     convertDateToReadable,
@@ -26,12 +25,13 @@
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
   import Layout from "../Layout.svelte";
-  import PlayerGameweekHistory from "$lib/components/player-gameweek-history.svelte";
+  import PlayerGameweekHistory from "$lib/components/player/player-gameweek-history.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
   import { countryStore } from "$lib/stores/country-store";
-    import LocalSpinner from "$lib/components/local-spinner.svelte";
+  import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
     import { storeManager } from "$lib/managers/store-manager";
+    import { toasts } from "$lib/stores/toasts-store";
 
   $: id = Number($page.url.searchParams.get("id"));
 
@@ -90,9 +90,9 @@
       countdownHours = countdownTime.hours.toString();
       countdownMinutes = countdownTime.minutes.toString();
     } catch (error) {
-      toastsError({
-        msg: { text: "Error fetching player details." },
-        err: error,
+      toasts.addToast({
+        message:"Error fetching player details.",
+        type: "error"
       });
       console.error("Error fetching data:", error);
     } finally {
@@ -144,7 +144,7 @@
             Shirt: {selectedPlayer?.shirtNumber}
           </p>
         </div>
-        <div class="vertical-divider" />
+        <div class="vertical-divider"></div>
         <div class="flex-grow">
           <p class="content-panel-header">{selectedPlayer?.firstName}</p>
           <p class="content-panel-stat">
@@ -217,7 +217,7 @@
             </a>
           </div>
         </div>
-        <div class="vertical-divider" />
+        <div class="vertical-divider"></div>
         <div class="flex-grow flex flex-col">
           <p class="content-panel-header">Kick Off:</p>
           <p class="content-panel-stat">
@@ -232,7 +232,7 @@
             {nextFixtureDateSmall}
           </p>
         </div>
-        <div class="vertical-divider" />
+        <div class="vertical-divider"></div>
         <div class="flex-grow flex flex-col">
           <p class="content-panel-header">Age</p>
           <p class="content-panel-stat">
