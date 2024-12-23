@@ -1,6 +1,6 @@
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type { AppStatusDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-import { ActorFactory } from "../../utils/ActorFactory";
+import { ActorFactory } from "../utils/actor.factory";
 import { isError } from "../utils/helpers";
 
 export class AppService {

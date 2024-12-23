@@ -6,7 +6,7 @@ import type {
   GetSeasonLeaderboardDTO,
   SeasonLeaderboardDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-import { ActorFactory } from "../../utils/ActorFactory";
+import { ActorFactory } from "../utils/actor.factory";
 import { isError, replacer } from "../utils/helpers";
 import { storeManager } from "$lib/managers/store-manager";
 

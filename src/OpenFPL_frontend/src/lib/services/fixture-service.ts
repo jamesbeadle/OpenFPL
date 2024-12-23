@@ -1,5 +1,5 @@
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
-import { ActorFactory } from "../../utils/ActorFactory";
+import { ActorFactory } from "../utils/actor.factory";
 import { isError } from "../utils/helpers";
 import type { FixtureDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import type { RequestFixturesDTO } from "../../../../declarations/data_canister/data_canister.did";

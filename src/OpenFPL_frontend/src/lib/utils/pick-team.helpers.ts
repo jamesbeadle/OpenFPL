@@ -1,4 +1,3 @@
-import { Position } from "$lib/enums/Position";
 import type { FormationDetails } from "$lib/interfaces/FormationDetails";
 import type { GameweekData } from "$lib/interfaces/GameweekData";
 import type {

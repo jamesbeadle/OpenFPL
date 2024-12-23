@@ -1,6 +1,3 @@
-import { FixtureStatus } from "$lib/enums/FixtureStatus";
-import { PlayerEvent } from "$lib/enums/PlayerEvent";
-import { Position } from "$lib/enums/Position";
 import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
 import type { TeamStats } from "$lib/types/team-stats";
 import * as FlagIcons from "svelte-flag-icons";
@@ -139,40 +136,38 @@ export function convertDateInputToUnixNano(dateString: string): bigint {
   return BigInt(unixTimeMillis) * BigInt(1000000);
 }
 
-export function getPositionText(position: Position): string {
+export function getPositionText(position: number): string {
   switch (position) {
-    case Position.GOALKEEPER:
+    case 0:
       return "Goalkeeper";
-    case Position.DEFENDER:
+    case 1:
       return "Defender";
-    case Position.MIDFIELDER:
+    case 2:
       return "Midfielder";
-    case Position.FORWARD:
+    case 3:
       return "Forward";
     default:
       return "Unknown position";
   }
 }
 
-export function convertPlayerPosition(
-  playerPosition: PlayerPosition,
-): Position {
-  if ("Goalkeeper" in playerPosition) return Position.GOALKEEPER;
-  if ("Defender" in playerPosition) return Position.DEFENDER;
-  if ("Midfielder" in playerPosition) return Position.MIDFIELDER;
-  if ("Forward" in playerPosition) return Position.FORWARD;
-  return Position.GOALKEEPER;
+export function convertPlayerPosition(playerPosition: PlayerPosition): number {
+  if ("Goalkeeper" in playerPosition) return 0;
+  if ("Defender" in playerPosition) return 1;
+  if ("Midfielder" in playerPosition) return 2;
+  if ("Forward" in playerPosition) return 3;
+  return 0;
 }
 
-export function getPositionAbbreviation(position: Position): string {
+export function getPositionAbbreviation(position: number): string {
   switch (position) {
-    case Position.GOALKEEPER:
+    case 0:
       return "GK";
-    case Position.DEFENDER:
+    case 1:
       return "DF";
-    case Position.MIDFIELDER:
+    case 2:
       return "MF";
-    case Position.FORWARD:
+    case 3:
       return "FW";
     default:
       return "-";
@@ -706,48 +701,44 @@ function initTeamData(
   }
 }
 
-export function convertEvent(playerEvent: PlayerEventType): PlayerEvent {
-  if ("Appearance" in playerEvent) return PlayerEvent.Appearance;
-  if ("Goal" in playerEvent) return PlayerEvent.Goal;
-  if ("GoalAssisted" in playerEvent) return PlayerEvent.GoalAssisted;
-  if ("GoalConceded" in playerEvent) return PlayerEvent.GoalConceded;
-  if ("KeeperSave" in playerEvent) return PlayerEvent.KeeperSave;
-  if ("CleanSheet" in playerEvent) return PlayerEvent.CleanSheet;
-  if ("PenaltySaved" in playerEvent) return PlayerEvent.PenaltySaved;
-  if ("PenaltyMissed" in playerEvent) return PlayerEvent.PenaltyMissed;
-  if ("YellowCard" in playerEvent) return PlayerEvent.YellowCard;
-  if ("RedCard" in playerEvent) return PlayerEvent.RedCard;
-  if ("OwnGoal" in playerEvent) return PlayerEvent.OwnGoal;
-  if ("HighestScoringPlayer" in playerEvent)
-    return PlayerEvent.HighestScoringPlayer;
-  return PlayerEvent.Appearance;
+export function convertEvent(playerEvent: PlayerEventType): number {
+  if ("Appearance" in playerEvent) return 0;
+  if ("Goal" in playerEvent) return 1;
+  if ("GoalAssisted" in playerEvent) return 2;
+  if ("GoalConceded" in playerEvent) return 3;
+  if ("KeeperSave" in playerEvent) return 4;
+  if ("CleanSheet" in playerEvent) return 5;
+  if ("PenaltySaved" in playerEvent) return 6;
+  if ("PenaltyMissed" in playerEvent) return 7;
+  if ("YellowCard" in playerEvent) return 8;
+  if ("RedCard" in playerEvent) return 9;
+  if ("OwnGoal" in playerEvent) return 10;
+  if ("HighestScoringPlayer" in playerEvent) return 11;
+  return 0;
 }
 
-export function convertIntToEvent(playerEvent: PlayerEvent): PlayerEventType {
-  if (playerEvent == PlayerEvent.Appearance) return { Appearance: null };
-  if (playerEvent == PlayerEvent.Goal) return { Goal: null };
-  if (playerEvent == PlayerEvent.GoalAssisted) return { GoalAssisted: null };
-  if (playerEvent == PlayerEvent.GoalConceded) return { GoalConceded: null };
-  if (playerEvent == PlayerEvent.KeeperSave) return { KeeperSave: null };
-  if (playerEvent == PlayerEvent.CleanSheet) return { CleanSheet: null };
-  if (playerEvent == PlayerEvent.PenaltySaved) return { PenaltySaved: null };
-  if (playerEvent == PlayerEvent.PenaltyMissed) return { PenaltyMissed: null };
-  if (playerEvent == PlayerEvent.YellowCard) return { YellowCard: null };
-  if (playerEvent == PlayerEvent.RedCard) return { RedCard: null };
-  if (playerEvent == PlayerEvent.OwnGoal) return { OwnGoal: null };
-  if (playerEvent == PlayerEvent.HighestScoringPlayer)
-    return { HighestScoringPlayer: null };
+export function convertIntToEvent(playerEvent: number): PlayerEventType {
+  if (playerEvent == 0) return { Appearance: null };
+  if (playerEvent == 1) return { Goal: null };
+  if (playerEvent == 2) return { GoalAssisted: null };
+  if (playerEvent == 3) return { GoalConceded: null };
+  if (playerEvent == 4) return { KeeperSave: null };
+  if (playerEvent == 5) return { CleanSheet: null };
+  if (playerEvent == 6) return { PenaltySaved: null };
+  if (playerEvent == 7) return { PenaltyMissed: null };
+  if (playerEvent == 8) return { YellowCard: null };
+  if (playerEvent == 9) return { RedCard: null };
+  if (playerEvent == 10) return { OwnGoal: null };
+  if (playerEvent == 11) return { HighestScoringPlayer: null };
   return { Appearance: null };
 }
 
-export function convertFixtureStatus(
-  fixtureStatus: FixtureStatusType,
-): FixtureStatus {
-  if ("Unplayed" in fixtureStatus) return FixtureStatus.UNPLAYED;
-  if ("Active" in fixtureStatus) return FixtureStatus.ACTIVE;
-  if ("Complete" in fixtureStatus) return FixtureStatus.COMPLETED;
-  if ("Finalised" in fixtureStatus) return FixtureStatus.FINALISED;
-  return FixtureStatus.UNPLAYED;
+export function convertFixtureStatus(fixtureStatus: FixtureStatusType): number {
+  if ("Unplayed" in fixtureStatus) return 0;
+  if ("Active" in fixtureStatus) return 1;
+  if ("Complete" in fixtureStatus) return 2;
+  if ("Finalised" in fixtureStatus) return 3;
+  return 0;
 }
 
 export function getDateFromBigInt(dateMS: number): string {

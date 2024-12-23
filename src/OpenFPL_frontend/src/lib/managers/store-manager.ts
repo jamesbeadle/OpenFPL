@@ -59,9 +59,8 @@ class StoreManager {
   }
 
   async syncStores(): Promise<void> {
-    await userStore.sync();
     const newHashes = await this.dataHashService.getDataHashes();
-
+    
     let error = isError(newHashes);
     if (error) {
       console.error("Error fetching data hashes.");

@@ -3,9 +3,9 @@
   import { writable, type Writable } from "svelte/store";
   import type { LeagueStatus, PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { Bonus } from "$lib/types/bonus";
-  import { BonusType } from "$lib/enums/BonusType";
   import UseBonusModal from "$lib/components/pick-team/modals/use-bonus-modal.svelte";
   import Tooltip from "$lib/components/shared/tooltip.svelte";
+    import { BonusType } from "$lib/enums/BonusType";
 
   export let fantasyTeam: Writable<PickTeamDTO | null>;
   export let leagueStatus: LeagueStatus;
@@ -17,7 +17,7 @@
       image: "/goal-getter.png",
       description:
         "Select a player you think will score in a game to receive a X3 mulitplier for each goal scored.",
-      selectionType: BonusType.PLAYER,
+      selectionType: 0,
       isUsed: isBonusUsed(1),
       usedGameweek: $fantasyTeam?.goalGetterGameweek ?? 0
     },
@@ -27,7 +27,7 @@
       image: "/pass-master.png",
       description:
         "Select a player you think will assist in a game to receive a X3 mulitplier for each assist.",
-      selectionType: BonusType.PLAYER,
+      selectionType: 0,
       isUsed: isBonusUsed(2),
       usedGameweek: $fantasyTeam?.passMasterGameweek ?? 0
     },
@@ -37,7 +37,7 @@
       image: "/no-entry.png",
       description:
         "Select a goalkeeper or defender you think will keep a clean sheet to receive a X3 multipler on their total score.",
-      selectionType: BonusType.PLAYER,
+      selectionType: 0,
       isUsed: isBonusUsed(3),
       usedGameweek: $fantasyTeam?.noEntryGameweek ?? 0
     },
@@ -47,7 +47,7 @@
       image: "/team-boost.png",
       description:
         "Receive a X2 multiplier from all players from a single club that are in your team.",
-      selectionType: BonusType.TEAM,
+      selectionType: 1,
       isUsed: isBonusUsed(4),
       usedGameweek: $fantasyTeam?.teamBoostGameweek ?? 0
     },

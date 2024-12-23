@@ -4967,7 +4967,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1xf1o2m"
+  version_hash: "dgxzbu"
 };
 async function get_hooks() {
   let handle;
@@ -5991,35 +5991,6 @@ class ActorFactory {
     return new HttpAgent({ ...options2.agentOptions });
   }
 }
-var FixtureStatus = /* @__PURE__ */ ((FixtureStatus2) => {
-  FixtureStatus2[FixtureStatus2["UNPLAYED"] = 0] = "UNPLAYED";
-  FixtureStatus2[FixtureStatus2["ACTIVE"] = 1] = "ACTIVE";
-  FixtureStatus2[FixtureStatus2["COMPLETED"] = 2] = "COMPLETED";
-  FixtureStatus2[FixtureStatus2["FINALISED"] = 3] = "FINALISED";
-  return FixtureStatus2;
-})(FixtureStatus || {});
-var PlayerEvent = /* @__PURE__ */ ((PlayerEvent2) => {
-  PlayerEvent2[PlayerEvent2["Appearance"] = 0] = "Appearance";
-  PlayerEvent2[PlayerEvent2["Goal"] = 1] = "Goal";
-  PlayerEvent2[PlayerEvent2["GoalAssisted"] = 2] = "GoalAssisted";
-  PlayerEvent2[PlayerEvent2["GoalConceded"] = 3] = "GoalConceded";
-  PlayerEvent2[PlayerEvent2["KeeperSave"] = 4] = "KeeperSave";
-  PlayerEvent2[PlayerEvent2["CleanSheet"] = 5] = "CleanSheet";
-  PlayerEvent2[PlayerEvent2["PenaltySaved"] = 6] = "PenaltySaved";
-  PlayerEvent2[PlayerEvent2["PenaltyMissed"] = 7] = "PenaltyMissed";
-  PlayerEvent2[PlayerEvent2["YellowCard"] = 8] = "YellowCard";
-  PlayerEvent2[PlayerEvent2["RedCard"] = 9] = "RedCard";
-  PlayerEvent2[PlayerEvent2["OwnGoal"] = 10] = "OwnGoal";
-  PlayerEvent2[PlayerEvent2["HighestScoringPlayer"] = 11] = "HighestScoringPlayer";
-  return PlayerEvent2;
-})(PlayerEvent || {});
-var Position = /* @__PURE__ */ ((Position2) => {
-  Position2[Position2["GOALKEEPER"] = 0] = "GOALKEEPER";
-  Position2[Position2["DEFENDER"] = 1] = "DEFENDER";
-  Position2[Position2["MIDFIELDER"] = 2] = "MIDFIELDER";
-  Position2[Position2["FORWARD"] = 3] = "FORWARD";
-  return Position2;
-})(Position || {});
 function Ad($$payload, $$props) {
   const $$sanitized_props = sanitize_props($$props);
   const $$restProps = rest_props($$sanitized_props, ["size", "role", "ariaLabel"]);
@@ -11166,11 +11137,11 @@ function replacer(key2, value) {
   }
 }
 function convertPlayerPosition(playerPosition) {
-  if ("Goalkeeper" in playerPosition) return Position.GOALKEEPER;
-  if ("Defender" in playerPosition) return Position.DEFENDER;
-  if ("Midfielder" in playerPosition) return Position.MIDFIELDER;
-  if ("Forward" in playerPosition) return Position.FORWARD;
-  return Position.GOALKEEPER;
+  if ("Goalkeeper" in playerPosition) return 0;
+  if ("Defender" in playerPosition) return 1;
+  if ("Midfielder" in playerPosition) return 2;
+  if ("Forward" in playerPosition) return 3;
+  return 0;
 }
 function convertPositionToAbbreviation(position) {
   let positionString = Object.keys(position)[0];
@@ -11660,27 +11631,26 @@ function initTeamData(teamId, table, teams) {
   }
 }
 function convertEvent(playerEvent) {
-  if ("Appearance" in playerEvent) return PlayerEvent.Appearance;
-  if ("Goal" in playerEvent) return PlayerEvent.Goal;
-  if ("GoalAssisted" in playerEvent) return PlayerEvent.GoalAssisted;
-  if ("GoalConceded" in playerEvent) return PlayerEvent.GoalConceded;
-  if ("KeeperSave" in playerEvent) return PlayerEvent.KeeperSave;
-  if ("CleanSheet" in playerEvent) return PlayerEvent.CleanSheet;
-  if ("PenaltySaved" in playerEvent) return PlayerEvent.PenaltySaved;
-  if ("PenaltyMissed" in playerEvent) return PlayerEvent.PenaltyMissed;
-  if ("YellowCard" in playerEvent) return PlayerEvent.YellowCard;
-  if ("RedCard" in playerEvent) return PlayerEvent.RedCard;
-  if ("OwnGoal" in playerEvent) return PlayerEvent.OwnGoal;
-  if ("HighestScoringPlayer" in playerEvent)
-    return PlayerEvent.HighestScoringPlayer;
-  return PlayerEvent.Appearance;
+  if ("Appearance" in playerEvent) return 0;
+  if ("Goal" in playerEvent) return 1;
+  if ("GoalAssisted" in playerEvent) return 2;
+  if ("GoalConceded" in playerEvent) return 3;
+  if ("KeeperSave" in playerEvent) return 4;
+  if ("CleanSheet" in playerEvent) return 5;
+  if ("PenaltySaved" in playerEvent) return 6;
+  if ("PenaltyMissed" in playerEvent) return 7;
+  if ("YellowCard" in playerEvent) return 8;
+  if ("RedCard" in playerEvent) return 9;
+  if ("OwnGoal" in playerEvent) return 10;
+  if ("HighestScoringPlayer" in playerEvent) return 11;
+  return 0;
 }
 function convertFixtureStatus(fixtureStatus) {
-  if ("Unplayed" in fixtureStatus) return FixtureStatus.UNPLAYED;
-  if ("Active" in fixtureStatus) return FixtureStatus.ACTIVE;
-  if ("Complete" in fixtureStatus) return FixtureStatus.COMPLETED;
-  if ("Finalised" in fixtureStatus) return FixtureStatus.FINALISED;
-  return FixtureStatus.UNPLAYED;
+  if ("Unplayed" in fixtureStatus) return 0;
+  if ("Active" in fixtureStatus) return 1;
+  if ("Complete" in fixtureStatus) return 2;
+  if ("Finalised" in fixtureStatus) return 3;
+  return 0;
 }
 function isError(response) {
   return response && response.err !== void 0;
@@ -12371,6 +12341,7 @@ class DataHashService {
   }
   async getDataHashes() {
     const result = await this.actor.getDataHashes();
+    console.log(result);
     if (isError(result)) throw new Error("Failed to fetch data hashes");
     return result.ok;
   }
@@ -12441,6 +12412,7 @@ var define_process_env_default$4 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-a
 function createUserStore() {
   const { subscribe, set: set2 } = writable(null);
   async function sync() {
+    console.log("syncing user store");
     let localStorageString = localStorage.getItem("user_profile_data");
     if (localStorageString) {
       const localProfile = JSON.parse(localStorageString);
@@ -12448,6 +12420,7 @@ function createUserStore() {
       return;
     }
     try {
+      console.log("caching profile");
       await cacheProfile();
     } catch (error) {
       console.error("Error fetching user profile:", error);
@@ -12552,7 +12525,6 @@ function createUserStore() {
     return await identityActor.isUsernameValid(dto);
   }
   async function cacheProfile() {
-    await authStore.sync();
     const identityActor = await ActorFactory.createIdentityActor(
       authStore,
       define_process_env_default$4.OPENFPL_BACKEND_CANISTER_ID
@@ -12563,6 +12535,8 @@ function createUserStore() {
       console.error("Error fetching user profile");
       return;
     }
+    console.log("profile response");
+    console.log(getProfileResponse);
     let profileData = getProfileResponse.ok;
     set2(profileData);
   }
@@ -12645,7 +12619,6 @@ function createUserStore() {
     updateFavouriteTeam,
     updateProfilePicture,
     isUsernameAvailable,
-    cacheProfile,
     withdrawFPL,
     getFPLBalance,
     isAdmin
@@ -12686,8 +12659,8 @@ class StoreManager {
     this.weeklyLeaderboardService = new WeeklyLeaderboardService();
   }
   async syncStores() {
-    await userStore.sync();
     const newHashes = await this.dataHashService.getDataHashes();
+    console.log(newHashes);
     let error = isError(newHashes);
     if (error) {
       console.error("Error fetching data hashes.");

@@ -815,7 +815,8 @@
       ignore updateLeaderboardCanisterWasms();
       await updateManagerCanisterWasms();
       //await userManager.resetWeeklyTransfers();
-        
+      //await calculateGWLeaderboard(1,17);
+      // await calculateGWRewards(17);
       await seasonManager.updateDataHash("app_status");
       await seasonManager.updateDataHash("league_status");
       await seasonManager.updateDataHash("countries");
@@ -826,15 +827,37 @@
       await seasonManager.updateDataHash("weekly_leaderboard");
       await seasonManager.updateDataHash("monthly_leaderboards");
       await seasonManager.updateDataHash("season_leaderboard");
+      
       //await checkCanisterCycles();
-      await manuallyPayRewards();
+      //await manuallyPayRewards();
     };
 
-    private func calculateGWRewards() : async (){
+    private func calculateGWLeaderboard(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber) : async (){
+     
+      let _ = await userManager.calculateFantasyTeamScores(Environment.LEAGUE_ID, seasonId, gameweek, 0);
+      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
+        getClubs : shared query (leagueId: FootballTypes.LeagueId) -> async Result.Result<[FootballTypes.Club], T.Error>;
+      };
+      let clubsResult = await data_canister.getClubs(Environment.LEAGUE_ID);
+
+      switch(clubsResult){
+        case (#ok clubs){
+          let clubIds = Array.map<DTOs.ClubDTO, FootballTypes.ClubId>(clubs, func(club: DTOs.ClubDTO){
+            return club.id
+          });
+          let managerCanisterIds = userManager.getUniqueManagerCanisterIds();
+          let _ = leaderboardManager.calculateLeaderboards(seasonId, gameweek, 0, managerCanisterIds, clubIds);
+        };
+        case (#err _){
+        }
+      };
+    };
+
+    private func calculateGWRewards(gameweek: FootballTypes.GameweekNumber) : async (){
       let leagueStatusResult = await getLeagueStatus();
       switch(leagueStatusResult){
         case (#ok leagueStatus){       
-          let _ = await leaderboardManager.calculateWeeklyRewards(leagueStatus.activeSeasonId, 16, leagueStatus.totalGameweeks);     };
+          let _ = await leaderboardManager.calculateWeeklyRewards(leagueStatus.activeSeasonId, gameweek, leagueStatus.totalGameweeks);     };
         case (#err _){}
       } 
     };
