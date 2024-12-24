@@ -8,10 +8,10 @@
 </script>
 
 <Modal showModal={visible} onClose={onClose} title="Captain Change">
-  <div class="p-4">
+  <div>
     <div class="my-5">
       <h1>Please confirm your captain change to {newCaptain}</h1>
-      <p class="text-gray-600">
+      <p class="text-sm mt-2">
         This will only take effect after you save your team.
       </p>
     </div>

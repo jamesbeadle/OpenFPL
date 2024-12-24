@@ -81,9 +81,9 @@
         </button>
         <button
           class={`px-4 py-2 ${
-            isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"
+            isSubmitDisabled ? "bg-gray-500" : "bg-BrandPurple"
           } 
-          default-button fpl-purple-btn`}
+          default-button bg-BrandPurplebtn`}
           on:click={updateFavouriteTeam}
           disabled={isSubmitDisabled}>Update</button
         >

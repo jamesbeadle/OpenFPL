@@ -58,21 +58,21 @@
     >
       <div
         bind:this={modalElement}
-        class="bg-BrandYellow rounded-lg shadow-lg max-w-lg md:max-w-3xl w-full mx-4 text-black outline-none focus:outline-none"
+        class="bg-BrandBlack rounded shadow max-w-lg md:max-w-3xl w-full mx-4 text-white outline-none focus:outline-none"
         tabindex="-1"
       >
-        <header class="flex items-center justify-between py-2 px-6">
-          <h2 class="text-3xl condensed">{title}</h2>
+        <header class="flex items-center justify-between p-4">
+          <h2 class="text-xl condensed">{title}</h2>
           <button
             type="button"
             class="text-black"
             aria-label="Close modal"
             on:click={onClose}
           >
-            <CrossIcon className="w-6" />
+            <CrossIcon className="w-4" fill='white' />
           </button>
         </header>
-        <div class="bg-white p-6 rounded-b-lg overflow-auto max-h-[80vh]">
+        <div class="bg-Brand p-6 rounded-b-lg overflow-auto max-h-[80vh]">
           <slot />
         </div>
       </div>

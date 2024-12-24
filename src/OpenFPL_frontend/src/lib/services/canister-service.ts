@@ -17,6 +17,7 @@ export class CanisterService {
   }
 
   async getCanisters(dto: GetCanistersDTO): Promise<CanisterDTO[]> {
+    console.log("Service: get canisters");
     const result = await this.actor.getCanisters(dto);
     if (isError(result)) throw new Error("Failed to fetch canisters");
     return result.ok;

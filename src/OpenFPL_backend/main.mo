@@ -812,7 +812,7 @@
       //set system state
       //ignore setSystemTimers();
       
-      ignore updateLeaderboardCanisterWasms();
+      await updateLeaderboardCanisterWasms();
       await updateManagerCanisterWasms();
       //await userManager.resetWeeklyTransfers();
       //await calculateGWLeaderboard(1,17);
@@ -866,7 +866,7 @@
       let leagueStatusResult = await getLeagueStatus();
       switch(leagueStatusResult){
         case (#ok leagueStatus){       
-          let _ = await leaderboardManager.payWeeklyRewards(leagueStatus.activeSeasonId, 16);     
+          let _ = await leaderboardManager.payWeeklyRewards(leagueStatus.activeSeasonId, 17);     
         };
         case (#err _){ }
       } 

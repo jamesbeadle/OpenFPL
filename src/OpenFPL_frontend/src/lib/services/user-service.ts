@@ -15,6 +15,7 @@ export class UserService {
       authStore,
       process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
     );
+    console.log("Service: is admin");
     const result: any = await identityActor.isAdmin();
     if (isError(result)) {
       throw new Error("Failed to check is admin");

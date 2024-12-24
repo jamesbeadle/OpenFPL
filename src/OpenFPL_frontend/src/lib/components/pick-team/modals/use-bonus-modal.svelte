@@ -304,9 +304,9 @@
         </button>
         <button
           class={`px-4 py-2 ${
-            isUseButtonEnabled ? "fpl-purple-btn" : "bg-gray-500"
+            isUseButtonEnabled ? "bg-BrandPurple" : "bg-gray-500"
           } 
-          default-button fpl-purple-btn`}
+          default-button bg-BrandPurple`}
           on:click={handleUseBonus}
           disabled={!isUseButtonEnabled}
         >

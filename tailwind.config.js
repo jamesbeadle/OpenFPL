@@ -37,10 +37,14 @@ export default {
     },
     extend: {
       colors: {
-        BRAND: "#2ce3a6",
-        WSLGRAY: "#736370",
-        WSLPINK: "#F156D2",
-        WSLOFFPINK: "#B36DA5",
+        BrandBlack: "#161819",
+        BrandGray: "#2E323A",
+        BrandLightGray: "#454B56",
+        BrandGreen: "#2CE3A6",
+        BrandPurple: "#7F56F1",
+        BrandWarning: "#EFA53A",
+        BrandSuccess: "#64AD54",
+        BrandSlateGray: "#5A5A5A",
       },
     },
   },

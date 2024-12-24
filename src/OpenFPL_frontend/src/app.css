@@ -31,12 +31,8 @@ input {
   background-color: rgba(46, 50, 58, 0.6);
 }
 
-.fpl-purple-btn {
-  background-color: #7f56f1;
-}
-
 .fpl-cancel-btn {
-  background-color: #f27557;
+  @apply bg-BrandBlack border border-BrandSlateGray rounded-sm;
 }
 
 .oc-logo {

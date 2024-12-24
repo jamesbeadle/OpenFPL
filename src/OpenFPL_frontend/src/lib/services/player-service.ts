@@ -18,12 +18,14 @@ export class PlayerService {
   }
 
   async getPlayers(): Promise<PlayerDTO[]> {
+    console.log("Service: get players");
     const result = await this.actor.getPlayers();
     if (isError(result)) throw new Error("Failed to fetch players");
     return result.ok;
   }
 
   async getLoanedPlayers(clubId: number): Promise<PlayerDTO[]> {
+    console.log("Service: get loaned players");
     const dto: ClubFilterDTO = { leagueId: 1, clubId: clubId };
     const result = await this.actor.getLoanedPlayers(dto);
     if (isError(result)) throw new Error("Failed to fetch loaned players");
@@ -31,6 +33,7 @@ export class PlayerService {
   }
 
   async getRetiredPlayers(clubId: number): Promise<PlayerDTO[]> {
+    console.log("Service: get retired players");
     const dto: ClubFilterDTO = { leagueId: 1, clubId: clubId };
     const result = await this.actor.getRetiredPlayers(dto);
     if (isError(result)) throw new Error("Failed to fetch retired players");

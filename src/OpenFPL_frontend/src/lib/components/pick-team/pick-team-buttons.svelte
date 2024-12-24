@@ -437,7 +437,7 @@
             on:click={playTransferWindow}
             class={`btn w-full md:w-auto px-4 py-2 rounded  
               ${
-                !transferWindowPlayed ? "fpl-purple-btn" : "bg-gray-500"
+                !transferWindowPlayed ? "bg-BrandPurple" : "bg-gray-500"
               } text-white min-w-[125px]`}
           >
             Use Transfer Window Bonus
@@ -452,7 +452,7 @@
             ${
               $fantasyTeam?.playerIds &&
               $fantasyTeam?.playerIds.filter((x) => x === 0).length > 0
-                ? "fpl-purple-btn"
+                ? "bg-BrandPurple"
                 : "bg-gray-500"
             } text-white min-w-[125px]`}
         >
@@ -462,7 +462,7 @@
           disabled={!isSaveButtonActive}
           on:click={saveFantasyTeam}
           class={`btn w-full md:w-auto px-4 py-2 rounded ${
-            isSaveButtonActive ? "fpl-purple-btn" : "bg-gray-500"
+            isSaveButtonActive ? "bg-BrandPurple" : "bg-gray-500"
           } text-white min-w-[125px]`}
         >
           Save Team
@@ -518,7 +518,7 @@
               ${
                 $fantasyTeam?.playerIds &&
                 $fantasyTeam?.playerIds.filter((x) => x === 0).length > 0
-                  ? "fpl-purple-btn"
+                  ? "bg-BrandPurple"
                   : "bg-gray-500"
               } text-white`}
           >
@@ -528,7 +528,7 @@
             disabled={!isSaveButtonActive}
             on:click={saveFantasyTeam}
             class={`side-button-base ${
-              isSaveButtonActive ? "fpl-purple-btn" : "bg-gray-500"
+              isSaveButtonActive ? "bg-BrandPurple" : "bg-gray-500"
             } text-white`}
           >
             Save
@@ -541,7 +541,7 @@
               on:click={playTransferWindow}
               class={`btn w-full px-4 py-2 rounded  
                 ${
-                  !transferWindowPlayed ? "fpl-purple-btn" : "bg-gray-500"
+                  !transferWindowPlayed ? "bg-BrandPurple" : "bg-gray-500"
                 } text-white min-w-[125px]`}
             >
               Use Transfer Window Bonus

@@ -199,9 +199,19 @@
   function normalizeString(str: string) {
     return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   }
+
+  function closeModal(){
+    filterTeam = -1;
+    filterSurname = "";
+    minValue = 0;
+    maxValue = 0;
+    currentPage = 1;
+    closeAddPlayerModal();
+  }
+  
 </script>
 
-<Modal showModal={visible} onClose={closeAddPlayerModal} title="Select Player">
+<Modal showModal={visible} onClose={closeModal} title="Select Player">
   {#if isLoading}
     <WidgetSpinner />
   {:else}

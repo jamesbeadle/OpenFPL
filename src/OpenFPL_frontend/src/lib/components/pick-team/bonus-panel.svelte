@@ -273,7 +273,7 @@
               <div class="w-full px-1 sm:px-4 mb-2 sm:mb-4">
                 <button
                   on:click={() => showBonusModal(bonus.id)}
-                  class="fpl-purple-btn rounded-md w-full py-1 min-h-[40px] smaller-text"
+                  class="bg-BrandPurple rounded-md w-full py-1 min-h-[40px] smaller-text"
                   >View</button
                 >
               </div>
@@ -317,7 +317,7 @@
               <div class="w-full px-1 sm:px-4 mb-2 sm:mb-4">
                 <button
                   on:click={() => showBonusModal(bonus.id)}
-                  class="fpl-purple-btn rounded-md w-full py-1 min-h-[40px] smaller-text"
+                  class="bg-BrandPurple rounded-md w-full py-1 min-h-[40px] smaller-text"
                   >Use</button
                 >
               </div>
@@ -363,7 +363,7 @@
               <div class="w-full px-1 flex justify-center">
                 <button
                   on:click={() => showBonusModal(bonus.id)}
-                  class="fpl-purple-btn rounded-md py-1 px-2">View</button
+                  class="bg-BrandPurple rounded-md py-1 px-2">View</button
                 >
               </div>
             {:else}
