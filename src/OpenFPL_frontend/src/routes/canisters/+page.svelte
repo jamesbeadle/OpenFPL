@@ -63,44 +63,57 @@
   <Layout>
     <div class="page-header-wrapper flex w-full">
       <div class="content-panel w-full">
-        <div class="w-full grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
-          <p class="col-span-1 md:col-span-4 text-center w-full mb-4">
+        <div class="w-full mt-4 px-2">
+  
+          <p class="text-center w-full mb-6 text-xl font-semibold">
             OpenFPL Managed Canisters
           </p>
-          <div class="flex flex-col">
-            <p class="w-full text-left p-2">Select Canister Type</p>
+  
+          <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 mb-4">
+            <label class="font-medium" for="canisterType">Select Canister Type:</label>
             <select
-              class="p-2 fpl-dropdown text-left mx-0 md:mx-2 min-w-[125px]"
+              id="canisterType"
+              class="fpl-dropdown"
               bind:value={selectedCanisterType}
-              >
-                <option value={0}>App</option>
-                <option value={1}>Manager</option>
-                <option value={2}>Leaderboard</option>
-                <option value={3}>SNS</option>
-              </select>
+            >
+              <option value={0}>App</option>
+              <option value={1}>Manager</option>
+              <option value={2}>Leaderboard</option>
+              <option value={3}>SNS</option>
+            </select>
           </div>
-
+  
           {#if loadingCanisters}
-            <WidgetSpinner />
+            <div class="flex justify-center">
+              <WidgetSpinner />
+            </div>
           {:else}
-            {#each canisters as canister}
-              <div class="row">
-                <div class="col-1/4">
-                  <p>Canister Id: {canister.canisterId}</p>
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {#each canisters as canister}
+                <div class="border border-gray-200 rounded shadow-sm p-4 flex flex-col space-y-2">
+                  <p class="font-medium">Canister Id</p>
+                  <p class="text-gray-600 break-all">
+                    {canister.canisterId}
+                  </p>
+  
+                  <p class="font-medium mt-2">Cycles Balance</p>
+                  <p class="text-gray-600">
+                    {formatCycles(canister.cycles)}
+                  </p>
+  
+                  <p class="font-medium mt-2">Compute Allocation</p>
+                  <p class="text-gray-600">
+                    {canister.computeAllocation}
+                  </p>
+  
+                  <p class="font-medium mt-2">Total Topups</p>
+                  <p class="text-gray-600">
+                    {canister.topups.length}
+                  </p>
                 </div>
-                <div class="col-1/4">
-                  <p>Cycles Balance: {formatCycles(canister.cycles)}</p>
-                </div>
-                <div class="col-1/4">
-                  <p>Compute Allocation: {canister.computeAllocation}</p>
-                </div>
-                <div class="col-1/4">
-                  <p>Total topups: {canister.topups.length}</p>
-                </div>
-              </div>
-            {/each}
+              {/each}
+            </div>
           {/if}
-
         </div>
       </div>
     </div>

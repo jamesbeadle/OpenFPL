@@ -4967,7 +4967,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "fq9gzd"
+  version_hash: "1828thx"
 };
 async function get_hooks() {
   let handle;
@@ -13587,19 +13587,21 @@ function _page$9($$payload, $$props) {
   }
   Layout($$payload, {
     children: ($$payload2) => {
-      $$payload2.out += `<div class="page-header-wrapper flex w-full"><div class="content-panel w-full"><div class="w-full grid grid-cols-1 md:grid-cols-4 gap-4 mt-4"><p class="col-span-1 md:col-span-4 text-center w-full mb-4">OpenFPL Managed Canisters</p> <div class="flex flex-col"><p class="w-full text-left p-2">Select Canister Type</p> <select class="p-2 fpl-dropdown text-left mx-0 md:mx-2 min-w-[125px]"><option${attr("value", 0)}>App</option><option${attr("value", 1)}>Manager</option><option${attr("value", 2)}>Leaderboard</option><option${attr("value", 3)}>SNS</option></select></div> `;
+      $$payload2.out += `<div class="page-header-wrapper flex w-full"><div class="content-panel w-full"><div class="w-full mt-4 px-2"><p class="text-center w-full mb-6 text-xl font-semibold">OpenFPL Managed Canisters</p> <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 mb-4"><label class="font-medium" for="canisterType">Select Canister Type:</label> <select id="canisterType" class="fpl-dropdown"><option${attr("value", 0)}>App</option><option${attr("value", 1)}>Manager</option><option${attr("value", 2)}>Leaderboard</option><option${attr("value", 3)}>SNS</option></select></div> `;
       if (loadingCanisters) {
         $$payload2.out += "<!--[-->";
+        $$payload2.out += `<div class="flex justify-center">`;
         Widget_spinner($$payload2);
+        $$payload2.out += `<!----></div>`;
       } else {
         $$payload2.out += "<!--[!-->";
         const each_array = ensure_array_like(canisters);
-        $$payload2.out += `<!--[-->`;
+        $$payload2.out += `<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"><!--[-->`;
         for (let $$index = 0, $$length = each_array.length; $$index < $$length; $$index++) {
           let canister = each_array[$$index];
-          $$payload2.out += `<div class="row"><div class="col-1/4"><p>Canister Id: ${escape_html(canister.canisterId)}</p></div> <div class="col-1/4"><p>Cycles Balance: ${escape_html(formatCycles(canister.cycles))}</p></div> <div class="col-1/4"><p>Compute Allocation: ${escape_html(canister.computeAllocation)}</p></div> <div class="col-1/4"><p>Total topups: ${escape_html(canister.topups.length)}</p></div></div>`;
+          $$payload2.out += `<div class="border border-gray-200 rounded shadow-sm p-4 flex flex-col space-y-2"><p class="font-medium">Canister Id</p> <p class="text-gray-600 break-all">${escape_html(canister.canisterId)}</p> <p class="font-medium mt-2">Cycles Balance</p> <p class="text-gray-600">${escape_html(formatCycles(canister.cycles))}</p> <p class="font-medium mt-2">Compute Allocation</p> <p class="text-gray-600">${escape_html(canister.computeAllocation)}</p> <p class="font-medium mt-2">Total Topups</p> <p class="text-gray-600">${escape_html(canister.topups.length)}</p></div>`;
         }
-        $$payload2.out += `<!--]-->`;
+        $$payload2.out += `<!--]--></div>`;
       }
       $$payload2.out += `<!--]--></div></div></div>`;
     },
