@@ -4967,7 +4967,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "vhma0j"
+  version_hash: "fq9gzd"
 };
 async function get_hooks() {
   let handle;
@@ -11937,7 +11937,7 @@ function createClubStore() {
   const { subscribe, set: set2 } = writable([]);
   return {
     subscribe,
-    setClubs: (clubs) => set2(clubs)
+    setClubs: (clubs) => set2(clubs.sort((a, b) => a.friendlyName.localeCompare(b.friendlyName)))
   };
 }
 const clubStore = createClubStore();

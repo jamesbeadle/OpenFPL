@@ -68,24 +68,6 @@ input {
   color: white;
 }
 
-.modal {
-  position: fixed !important;
-  z-index: 9999 !important;
-  background-color: rgba(36, 37, 41, 0.7) !important;
-}
-
-.modal .content {
-  left: 0 !important;
-  right: 0 !important;
-  background-color: #161819 !important;
-  border-radius: 8px;
-  border: 1px solid #2e323a !important;
-}
-
-.modal .container {
-  border-radius: 0px !important;
-}
-
 .toast {
   background-color: #2ce3a6 !important;
   padding-left: 16px !important;

@@ -6,7 +6,8 @@ function createClubStore() {
 
   return {
     subscribe,
-    setClubs: (clubs: ClubDTO[]) => set(clubs),
+    setClubs: (clubs: ClubDTO[]) =>
+      set(clubs.sort((a, b) => a.friendlyName.localeCompare(b.friendlyName))),
   };
 }
 

@@ -16,12 +16,12 @@
   let startingFantasyTeam: PickTeamDTO;
   export let fantasyTeam: Writable<PickTeamDTO>;
   
-  export let pitchView: Writable<boolean>;
   export let selectedFormation: Writable<string>;
   export let availableFormations: Writable<string[]>;
   export let transfersAvailable: Writable<number>;
   export let bankBalance: Writable<number>;
   export let leagueStatus: LeagueStatus;
+  export let pitchView: Writable<Boolean>;
   
   let isSaveButtonActive: boolean;
   
@@ -36,6 +36,8 @@
   let transferWindowPlayedInSession = false;
   let isLoading = true;
   let appStatus: AppStatusDTO;
+
+  let pitchViewActive = true;
 
   $: if ($fantasyTeam && $playerStore.length > 0) {
     disableInvalidFormations();
@@ -94,7 +96,8 @@
 
     const storedViewMode = localStorage.getItem("viewMode");
     if (storedViewMode) {
-      pitchView.set(storedViewMode === "pitch");
+      pitchViewActive = storedViewMode === "pitch";
+      pitchView.set(pitchViewActive);
     }
 
     let transferWindowGameweek = $fantasyTeam?.transferWindowGameweek ?? 0;
@@ -115,11 +118,13 @@
   }
 
   function showPitchView() {
-    pitchView.set(true);
+    pitchViewActive = true;
+    pitchView.set(pitchViewActive);
   }
 
   function showListView() {
-    pitchView.set(false);
+    pitchViewActive = false;
+    pitchView.set(pitchViewActive);
   }
 
   function disableInvalidFormations() {
@@ -396,7 +401,7 @@
       <div class="flex flex-row justify-between md:justify-start flex-grow ml-4">
         <button
           class={`btn ${
-            pitchView ? `fpl-button` : `inactive-btn`
+            pitchViewActive ? `fpl-button` : `inactive-btn`
           } tab-switcher-label rounded-l-md`}
           on:click={showPitchView}
         >
@@ -404,7 +409,7 @@
         </button>
         <button
           class={`btn ${
-            !pitchView ? `fpl-button` : `inactive-btn`
+            !pitchViewActive ? `fpl-button` : `inactive-btn`
           } tab-switcher-label rounded-r-md`}
           on:click={showListView}
         >
@@ -480,7 +485,7 @@
         <div class="flex flex-row ml-4" style="margin-top: 2px;">
           <button
             class={`btn ${
-              pitchView ? `fpl-button` : `inactive-btn`
+              pitchViewActive ? `fpl-button` : `inactive-btn`
             } rounded-l-md tab-switcher-label`}
             on:click={showPitchView}
           >
@@ -488,7 +493,7 @@
           </button>
           <button
             class={`btn ${
-              !pitchView ? `fpl-button` : `inactive-btn`
+              !pitchViewActive ? `fpl-button` : `inactive-btn`
             } rounded-r-md tab-switcher-label`}
             on:click={showListView}
           >
