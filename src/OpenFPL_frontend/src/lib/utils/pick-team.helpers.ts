@@ -5,7 +5,7 @@ import type {
   PickTeamDTO,
   PlayerDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-import { calculateAgeFromNanoseconds, convertPlayerPosition } from "./helpers";
+import { calculateAgeFromNanoseconds, convertPositionToIndex } from "./helpers";
 
 export const allFormations: Record<string, FormationDetails> = {
   "3-4-3": { positions: [0, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3] },
@@ -28,7 +28,7 @@ export function getTeamFormation(
     const teamPlayer = allPlayers.find((p) => p.id === id);
 
     if (teamPlayer) {
-      positionCounts[convertPlayerPosition(teamPlayer.position)]++;
+      positionCounts[convertPositionToIndex(teamPlayer.position)]++;
     }
   });
 
@@ -73,7 +73,7 @@ export function getTeamFormationReadOnly(
     const teamPlayer = allPlayers.find((p) => p.id === id);
 
     if (teamPlayer) {
-      positionCounts[convertPlayerPosition(teamPlayer.position)]++;
+      positionCounts[convertPositionToIndex(teamPlayer.position)]++;
     }
   });
 
@@ -112,7 +112,7 @@ export function getAvailableFormations(
   team.playerIds.forEach((id: number) => {
     const teamPlayer = players.find((p) => p.id === id);
     if (teamPlayer) {
-      positionCounts[convertPlayerPosition(teamPlayer.position)]++;
+      positionCounts[convertPositionToIndex(teamPlayer.position)]++;
     }
   });
 
@@ -151,7 +151,7 @@ export function isValidFormation(
   team.playerIds.forEach((id) => {
     const teamPlayer = players.find((p) => p.id === id);
     if (teamPlayer) {
-      positionCounts[convertPlayerPosition(teamPlayer.position)]++;
+      positionCounts[convertPositionToIndex(teamPlayer.position)]++;
     }
   });
 
@@ -317,7 +317,7 @@ export function getTotalBonusPoints(
   let bonusPoints = 0;
   var pointsForGoal = 0;
   var pointsForAssist = 0;
-  switch (convertPlayerPosition(gameweekData.player.position)) {
+  switch (convertPositionToIndex(gameweekData.player.position)) {
     case 0:
       pointsForGoal = 20;
       pointsForAssist = 15;
@@ -353,8 +353,8 @@ export function getTotalBonusPoints(
   if (
     fantasyTeam.noEntryGameweek === gameweekData.gameweek &&
     fantasyTeam.noEntryPlayerId === gameweekData.player.id &&
-    (convertPlayerPosition(gameweekData.player.position) === 0 ||
-      convertPlayerPosition(gameweekData.player.position) === 1) &&
+    (convertPositionToIndex(gameweekData.player.position) === 0 ||
+      convertPositionToIndex(gameweekData.player.position) === 1) &&
     gameweekData.cleanSheets
   ) {
     bonusPoints = points * 2;
@@ -362,7 +362,7 @@ export function getTotalBonusPoints(
 
   if (
     fantasyTeam.safeHandsGameweek === gameweekData.gameweek &&
-    convertPlayerPosition(gameweekData.player.position) === 0 &&
+    convertPositionToIndex(gameweekData.player.position) === 0 &&
     gameweekData.saves >= 5
   ) {
     bonusPoints = points * 2;

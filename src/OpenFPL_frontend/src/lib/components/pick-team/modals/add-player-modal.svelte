@@ -1,15 +1,19 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { writable, type Writable } from "svelte/store";
+  import { toasts } from "$lib/stores/toasts-store";
+  
   import { clubStore } from "$lib/stores/club-store";
   import { playerStore } from "$lib/stores/player-store";
+  
+  import { allFormations } from "$lib/utils/pick-team.helpers";
+  import { convertPositionToIndex } from "$lib/utils/helpers";
   import type { PlayerDTO, PickTeamDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  
   import AddIcon from "$lib/icons/AddIcon.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import { convertPlayerPosition } from "$lib/utils/helpers";
-  import { allFormations } from "$lib/utils/pick-team.helpers";
-    import { toasts } from "$lib/stores/toasts-store";
-    import Modal from "$lib/components/shared/modal.svelte";
+  import Modal from "$lib/components/shared/modal.svelte";
+    import WidgetSpinner from "$lib/components/shared/widget-spinner.svelte";
 
   export let visible: boolean;
   export let closeAddPlayerModal: () => void;
@@ -37,7 +41,7 @@
       
       return (
         (filterTeam === -1 || player.clubId === filterTeam) &&
-        (filterPosition === -1 || convertPlayerPosition(player.position) === filterPosition) &&
+        (filterPosition === -1 || convertPositionToIndex(player.position) === filterPosition) &&
         filterColumn > -2 &&
         (adjustedMinValue === 0 || player.valueQuarterMillions >= adjustedMinValue) &&
         (adjustedMaxValue === 0 || player.valueQuarterMillions <= adjustedMaxValue) &&
@@ -60,6 +64,11 @@
   let filteredPlayers: PlayerDTO[] = [];
 
   onMount(async () => {
+    filterTeam = -1;
+    filterSurname = "";
+    minValue = 0;
+    maxValue = 0;
+    currentPage = 1;
     await filterPlayers();
   });
    
@@ -143,11 +152,11 @@
       team.playerIds.forEach((id) => {
         const teamPlayer = $playerStore.find((p) => p.id === id);
         if (teamPlayer) {
-          positionCounts[convertPlayerPosition(teamPlayer.position)]++;
+          positionCounts[convertPositionToIndex(teamPlayer.position)]++;
         }
       });
 
-    positionCounts[convertPlayerPosition(player.position)]++;
+    positionCounts[convertPositionToIndex(player.position)]++;
 
     const isFormationValid = Object.keys(allFormations).some((formation) => {
       const [def, mid, fwd] = formation.split("-").map(Number);
@@ -193,153 +202,157 @@
 </script>
 
 <Modal showModal={visible} onClose={closeAddPlayerModal} title="Select Player">
-  <div class="p-2">
-    <div>
-      <div class="grid grid-cols-2 gap-1">
-        <div>
-          <label for="filterTeam">Filter by Team:</label>
-          <select
-            id="filterTeam"
-            class="mt-1 block w-full py-2 text-white fpl-dropdown bigger-text"
-            bind:value={filterTeam}
-          >
-            <option value={-1}>All</option>
-            {#each $clubStore as team}
-              <option value={team.id}>{team.friendlyName}</option>
-            {/each}
-          </select>
+  {#if isLoading}
+    <WidgetSpinner />
+  {:else}
+    <div class="p-2">
+      <div>
+        <div class="grid grid-cols-2 gap-1">
+          <div>
+            <label for="filterTeam">Filter by Team:</label>
+            <select
+              id="filterTeam"
+              class="mt-1 block w-full py-2 text-white fpl-dropdown bigger-text"
+              bind:value={filterTeam}
+            >
+              <option value={-1}>All</option>
+              {#each $clubStore as team}
+                <option value={team.id}>{team.friendlyName}</option>
+              {/each}
+            </select>
+          </div>
+          <div>
+            <label for="filterPosition">Filter by Position:</label>
+            <select
+              id="filterPosition"
+              class="mt-1 block w-full py-2 text-white fpl-dropdown"
+              bind:value={filterPosition}
+            >
+              <option value={-1}>All</option>
+              <option value={0}>Goalkeepers</option>
+              <option value={1}>Defenders</option>
+              <option value={2}>Midfielders</option>
+              <option value={3}>Forwards</option>
+            </select>
+          </div>
         </div>
-        <div>
-          <label for="filterPosition">Filter by Position:</label>
-          <select
-            id="filterPosition"
-            class="mt-1 block w-full py-2 text-white fpl-dropdown"
-            bind:value={filterPosition}
-          >
-            <option value={-1}>All</option>
-            <option value={0}>Goalkeepers</option>
-            <option value={1}>Defenders</option>
-            <option value={2}>Midfielders</option>
-            <option value={3}>Forwards</option>
-          </select>
-        </div>
-      </div>
 
-      <div class="grid grid-cols-2 gap-4 my-2">
-        <div>
-          <label for="minValue">Min Value:</label>
+        <div class="grid grid-cols-2 gap-4 my-2">
+          <div>
+            <label for="minValue">Min Value:</label>
+            <input
+              id="minValue"
+              type="number"
+              class="mt-1 block w-full p-2 bg-gray-700 text-white fpl-dropdown"
+              bind:value={minValue}
+            />
+          </div>
+          <div>
+            <label for="maxValue">Max Value:</label>
+            <input
+              id="maxValue"
+              type="number"
+              class="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md fpl-dropdown"
+              bind:value={maxValue}
+            />
+          </div>
+        </div>
+
+        <div class="my-4">
+          <label for="filterSurname">Search by Name:</label>
           <input
-            id="minValue"
-            type="number"
-            class="mt-1 block w-full p-2 bg-gray-700 text-white fpl-dropdown"
-            bind:value={minValue}
+            id="filterSurname"
+            type="text"
+            class="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md"
+            placeholder="Enter"
+            bind:value={filterSurname}
           />
         </div>
-        <div>
-          <label for="maxValue">Max Value:</label>
-          <input
-            id="maxValue"
-            type="number"
-            class="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md fpl-dropdown"
-            bind:value={maxValue}
-          />
+
+        <div class="my-4">
+          <label for="bankBalance"
+            >Available Balance: <b>£{($bankBalance / 4).toFixed(2)}m</b></label
+          >
         </div>
       </div>
 
-      <div class="my-4">
-        <label for="filterSurname">Search by Name:</label>
-        <input
-          id="filterSurname"
-          type="text"
-          class="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md"
-          placeholder="Enter"
-          bind:value={filterSurname}
-        />
-      </div>
-
-      <div class="my-4">
-        <label for="bankBalance"
-          >Available Balance: <b>£{($bankBalance / 4).toFixed(2)}m</b></label
-        >
-      </div>
-    </div>
-
-    <div class="overflow-x-auto flex-1">
-      <div
-        class="flex justify-between border border-gray-700 py-2 bg-light-gray border-b border-gray-700"
-      >
-        <div class="w-1/12 text-center">Pos</div>
-        <div class="w-2/12">Player</div>
-        <div class="w-2/12">Team</div>
-        <div class="w-2/12">Value</div>
-        <div class="w-1/12">PTS</div>
-        <div class="w-3/12">&nbsp</div>
-      </div>
-
-      {#each paginatedPlayers as player, index}
+      <div class="overflow-x-auto flex-1">
         <div
-          class="flex items-center justify-between py-2 border-b border-gray-700 cursor-pointer"
+          class="flex justify-between border border-gray-700 py-2 bg-light-gray border-b border-gray-700"
         >
-          <div class="w-1/12 text-center">
-            {#if Object.keys(player.position).includes("Goalkeeper")}GK{/if}
-            {#if Object.keys(player.position).includes("Defender")}DF{/if}
-            {#if Object.keys(player.position).includes("Midfielder")}MF{/if}
-            {#if Object.keys(player.position).includes("Forward")}FW{/if}
-          </div>
-
-          <div class="w-2/12">
-            {`${
-              player.firstName.length > 0
-                ? player.firstName.charAt(0) + "."
-                : ""
-            } ${player.lastName}`}
-          </div>
-          <div class="w-2/12">
-            <p class="flex items-center">
-              <BadgeIcon
-                className="w-6 h-6 mr-2"
-                primaryColour={player.team?.primaryColourHex}
-                secondaryColour={player.team?.secondaryColourHex}
-                thirdColour={player.team?.thirdColourHex}
-              />
-              {player.team?.abbreviatedName}
-            </p>
-          </div>
-          <div class="w-2/12">
-            £{(player.valueQuarterMillions / 4).toFixed(2)}m
-          </div>
-          <div class="w-1/12">{player.totalPoints}</div>
-          <div class="w-3/12 flex justify-center items-center">
-            {#if disableReasons[index]}
-              <span class="text-xxs text-center">{disableReasons[index]}</span>
-            {:else}
-              <button
-                on:click={() => selectPlayer(player)}
-                class="rounded fpl-button flex items-center"
-              >
-                <AddIcon className="w-6 h-6 p-2" />
-              </button>
-            {/if}
-          </div>
+          <div class="w-1/12 text-center">Pos</div>
+          <div class="w-2/12">Player</div>
+          <div class="w-2/12">Team</div>
+          <div class="w-2/12">Value</div>
+          <div class="w-1/12">PTS</div>
+          <div class="w-3/12">&nbsp</div>
         </div>
-      {/each}
-    </div>
 
-    <div class="justify-center mt-4 pb-4 overflow-x-auto">
-      <div class="flex space-x-1 min-w-max">
-        {#each Array(Math.ceil(filteredPlayers.length / pageSize)) as _, index}
-          <button
-            class={`px-4 py-2 rounded-md ${
-              index + 1 === currentPage ? "fpl-button" : ""
-            }`}
-            on:click={() => goToPage(index + 1)}
+        {#each paginatedPlayers as player, index}
+          <div
+            class="flex items-center justify-between py-2 border-b border-gray-700 cursor-pointer"
           >
-            {index + 1}
-          </button>
+            <div class="w-1/12 text-center">
+              {#if Object.keys(player.position).includes("Goalkeeper")}GK{/if}
+              {#if Object.keys(player.position).includes("Defender")}DF{/if}
+              {#if Object.keys(player.position).includes("Midfielder")}MF{/if}
+              {#if Object.keys(player.position).includes("Forward")}FW{/if}
+            </div>
+
+            <div class="w-2/12">
+              {`${
+                player.firstName.length > 0
+                  ? player.firstName.charAt(0) + "."
+                  : ""
+              } ${player.lastName}`}
+            </div>
+            <div class="w-2/12">
+              <p class="flex items-center">
+                <BadgeIcon
+                  className="w-6 h-6 mr-2"
+                  primaryColour={player.team?.primaryColourHex}
+                  secondaryColour={player.team?.secondaryColourHex}
+                  thirdColour={player.team?.thirdColourHex}
+                />
+                {player.team?.abbreviatedName}
+              </p>
+            </div>
+            <div class="w-2/12">
+              £{(player.valueQuarterMillions / 4).toFixed(2)}m
+            </div>
+            <div class="w-1/12">{player.totalPoints}</div>
+            <div class="w-3/12 flex justify-center items-center">
+              {#if disableReasons[index]}
+                <span class="text-xxs text-center">{disableReasons[index]}</span>
+              {:else}
+                <button
+                  on:click={() => selectPlayer(player)}
+                  class="rounded fpl-button flex items-center"
+                >
+                  <AddIcon className="w-6 h-6 p-2" />
+                </button>
+              {/if}
+            </div>
+          </div>
         {/each}
       </div>
+
+      <div class="justify-center mt-4 pb-4 overflow-x-auto">
+        <div class="flex space-x-1 min-w-max">
+          {#each Array(Math.ceil(filteredPlayers.length / pageSize)) as _, index}
+            <button
+              class={`px-4 py-2 rounded-md ${
+                index + 1 === currentPage ? "fpl-button" : ""
+              }`}
+              on:click={() => goToPage(index + 1)}
+            >
+              {index + 1}
+            </button>
+          {/each}
+        </div>
+      </div>
     </div>
-  </div>
+  {/if}
 </Modal>
 
 <style>

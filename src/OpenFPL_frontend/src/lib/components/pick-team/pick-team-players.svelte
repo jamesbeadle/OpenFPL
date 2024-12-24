@@ -4,7 +4,7 @@
   import { clubStore } from "$lib/stores/club-store";
   import { playerStore } from "$lib/stores/player-store";
 
-  import { getPositionAbbreviation, getFlagComponent, convertPlayerPosition } from "../../utils/helpers";
+  import { getPositionAbbreviation, getFlagComponent, convertPositionToIndex } from "../../utils/helpers";
   import type { PlayerDTO, PickTeamDTO, LeagueStatus } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   import ConfirmCaptainChange from "./modals/confirm-captain-change-modal.svelte";
@@ -17,13 +17,10 @@
   import OpenChatIcon from "$lib/icons/OpenChatIcon.svelte";
   import PlayerCaptainIcon from "$lib/icons/PlayerCaptainIcon.svelte";
   import { allFormations, getTeamFormation } from "$lib/utils/pick-team.helpers";
-  import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
   import AddPlayerModal from "./modals/add-player-modal.svelte";
-    import { leagueStore } from "$lib/stores/league-store";
-    import { storeManager } from "$lib/managers/store-manager";
-    import { toasts } from "$lib/stores/toasts-store";
+  import { toasts } from "$lib/stores/toasts-store";
+  import WidgetSpinner from "../shared/widget-spinner.svelte";
 
-  export let loadingPlayers: Writable<Boolean | null>;
   export let fantasyTeam: Writable<PickTeamDTO | null>;
   export let pitchView: Writable<boolean>;
 
@@ -33,6 +30,7 @@
   export let teamValue: Writable<number>;
   export let leagueStatus: LeagueStatus;
 
+  let isLoading = true;
   let pitchHeight = 0;
   let pitchElement: HTMLElement;
   let showAddPlayerModal = false;
@@ -78,7 +76,9 @@
         type: "error"
       });
       console.error("Error fetching team details:", error);
-    } 
+    } finally {
+      isLoading = false;
+    }
   });
 
   function getLocalViewSelection(){
@@ -221,11 +221,11 @@
     team.playerIds.forEach((id) => {
       const teamPlayer = $playerStore.find((p) => p.id === id);
       if (teamPlayer) {
-        positionCounts[convertPlayerPosition(teamPlayer.position)]++;
+        positionCounts[convertPositionToIndex(teamPlayer.position)]++;
       }
     });
 
-    positionCounts[convertPlayerPosition(player.position)]++;
+    positionCounts[convertPositionToIndex(player.position)]++;
 
     const [def, mid, fwd] = formation.split("-").map(Number);
     const minDef = Math.max(0, def - (positionCounts[1] || 0));
@@ -248,7 +248,7 @@
     formation: string
   ) {
     const indexToAdd = getAvailablePositionIndex(
-      convertPlayerPosition(player.position),
+      convertPositionToIndex(player.position),
       team,
       formation
     );
@@ -336,11 +336,11 @@
     team.playerIds.forEach((id) => {
       const teamPlayer = $playerStore.find((p) => p.id === id);
       if (teamPlayer) {
-        positionCounts[convertPlayerPosition(teamPlayer.position)]++;
+        positionCounts[convertPositionToIndex(teamPlayer.position)]++;
       }
     });
 
-    positionCounts[convertPlayerPosition(player.position)]++;
+    positionCounts[convertPositionToIndex(player.position)]++;
 
     let bestFitFormation: string | null = null;
     let minimumAdditionalPlayersNeeded = Number.MAX_SAFE_INTEGER;
@@ -370,8 +370,8 @@
 
       if (
         additionalPlayersNeeded < minimumAdditionalPlayersNeeded &&
-        formationDetails[convertPlayerPosition(player.position)] >
-          positionCounts[convertPlayerPosition(player.position)] - 1
+        formationDetails[convertPositionToIndex(player.position)] >
+          positionCounts[convertPositionToIndex(player.position)] - 1
       ) {
         bestFitFormation = formation;
         minimumAdditionalPlayersNeeded = additionalPlayersNeeded;
@@ -397,7 +397,7 @@
       if (player) {
         for (let i = 0; i < newFormationArray.length; i++) {
           if (
-            newFormationArray[i] === convertPlayerPosition(player.position) &&
+            newFormationArray[i] === convertPositionToIndex(player.position) &&
             newPlayerIds[i] === 0
           ) {
             newPlayerIds[i] = playerId;
@@ -488,8 +488,8 @@
   {bankBalance}
 />
 
-{#if $loadingPlayers}
-  <LocalSpinner />
+{#if isLoading}
+  <WidgetSpinner />
 {:else}
   {#if $pitchView}
     <div class="relative w-full xl:w-1/2 mt-2">
@@ -608,7 +608,7 @@
                         >
                           <p class="hidden sm:flex sm:min-w-[15px]">
                             {getPositionAbbreviation(
-                              convertPlayerPosition(player.position)
+                              convertPositionToIndex(player.position)
                             )}
                           </p>
                           <svelte:component

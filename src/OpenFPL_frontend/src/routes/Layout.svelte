@@ -12,8 +12,8 @@
   import { initAuthWorker } from "$lib/services/worker.auth.services";
   import { storeManager } from "$lib/managers/store-manager";
   import { toasts } from "$lib/stores/toasts-store";
-  import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
   import Toasts from "$lib/components/toasts/toasts.svelte";
+    import RelativeSpinner from "$lib/components/shared/relative-spinner.svelte";
 
   const init = async () => await Promise.all([syncAuthStore()]);
 
@@ -64,16 +64,16 @@
 <svelte:window on:storage={syncAuthStore} />
 {#await init()}
   <div in:fade>
-    <LocalSpinner />
+    <RelativeSpinner />
   </div>
 {:then _}
   <div class="flex flex-col h-screen justify-between default-text">
-    <Toasts />
-     <Header />
+    <Header />
     <main class="page-wrapper">
       <slot />
     </main>
     <Footer />
+    <Toasts />
   </div>
 {/await}
 

@@ -136,7 +136,7 @@ export function convertDateInputToUnixNano(dateString: string): bigint {
   return BigInt(unixTimeMillis) * BigInt(1000000);
 }
 
-export function getPositionText(position: number): string {
+export function getPositionIndexToText(position: number): string {
   switch (position) {
     case 0:
       return "Goalkeeper";
@@ -151,7 +151,7 @@ export function getPositionText(position: number): string {
   }
 }
 
-export function convertPlayerPosition(playerPosition: PlayerPosition): number {
+export function convertPositionToIndex(playerPosition: PlayerPosition): number {
   if ("Goalkeeper" in playerPosition) return 0;
   if ("Defender" in playerPosition) return 1;
   if ("Midfielder" in playerPosition) return 2;
@@ -855,7 +855,7 @@ export function extractPlayerData(
         break;
       case 1:
         goals += 1;
-        switch (convertPlayerPosition(playerPointsDTO.position)) {
+        switch (convertPositionToIndex(playerPointsDTO.position)) {
           case 0:
           case 1:
             goalPoints += 20;
@@ -870,7 +870,7 @@ export function extractPlayerData(
         break;
       case 2:
         assists += 1;
-        switch (convertPlayerPosition(playerPointsDTO.position)) {
+        switch (convertPositionToIndex(playerPointsDTO.position)) {
           case 0:
           case 1:
             assistPoints += 15;
@@ -884,7 +884,7 @@ export function extractPlayerData(
       case 3:
         goalsConceded += 1;
         if (
-          convertPlayerPosition(playerPointsDTO.position) < 2 &&
+          convertPositionToIndex(playerPointsDTO.position) < 2 &&
           goalsConceded % 2 === 0
         ) {
           goalsConcededPoints += -15;
@@ -896,7 +896,7 @@ export function extractPlayerData(
       case 5:
         cleanSheets += 1;
         if (
-          convertPlayerPosition(playerPointsDTO.position) < 2 &&
+          convertPositionToIndex(playerPointsDTO.position) < 2 &&
           goalsConceded === 0
         ) {
           cleanSheetPoints += 10;
@@ -996,7 +996,7 @@ export function calculatePlayerScore(
     score += pointsForYellowCard * gameweekData.yellowCards;
   }
 
-  switch (convertPlayerPosition(gameweekData.player.position)) {
+  switch (convertPositionToIndex(gameweekData.player.position)) {
     case 0:
       pointsForGoal = 20;
       pointsForAssist = 15;

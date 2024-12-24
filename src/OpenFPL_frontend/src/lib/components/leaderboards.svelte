@@ -11,10 +11,10 @@
   
   import type { LeaderboardEntry, LeagueStatus, RewardEntry } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   
-  import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import { formatE8s } from "$lib/utils/helpers";
     import { leagueStore } from "$lib/stores/league-store";
+    import WidgetSpinner from "./shared/widget-spinner.svelte";
 
   let isLoading = true;
   let leagueStatus: LeagueStatus;
@@ -219,7 +219,7 @@
 </script>
 
 {#if isLoading}
-  <LocalSpinner />
+  <WidgetSpinner />
   <p class="w-full px-4 mb-4">Loading leaderboard.</p>
 {:else}
   <div class="flex flex-col space-y-4">

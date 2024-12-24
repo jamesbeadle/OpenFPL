@@ -11,7 +11,7 @@
   import { playerEventsStore } from "$lib/stores/player-events-store";
 
   import {
-    convertPlayerPosition,
+    convertPositionToIndex,
     getFlagComponent,
     getPositionAbbreviation,
   } from "$lib/utils/helpers";
@@ -27,12 +27,11 @@
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import FantasyPlayerDetailModal from "./fantasy-player-detail-modal.svelte";
   import ActiveCaptainIcon from "$lib/icons/ActiveCaptainIcon.svelte";
-  import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
   import { calculateBonusPoints } from "$lib/utils/pick-team.helpers";
     import { leagueStore } from "$lib/stores/league-store";
     import { toasts } from "$lib/stores/toasts-store";
+    import WidgetSpinner from "../shared/widget-spinner.svelte";
 
-  export let loadingGameweek = writable<boolean>(true);
   export let selectedGameweek = writable<number | null>(null);
   export let fantasyTeam = writable<FantasyTeamSnapshot | null>(null);
 
@@ -80,7 +79,7 @@
       });
       console.error("Error fetching manager gameweek detail:", error);
     } finally {
-      $loadingGameweek = false;
+      isLoading = false;
     }
   });
 
@@ -168,7 +167,7 @@
 </script>
 
 {#if isLoading}
-  <LocalSpinner />
+  <WidgetSpinner />
 {:else}
   {#if showModal}
     <FantasyPlayerDetailModal
@@ -270,7 +269,7 @@
                     <ActiveCaptainIcon className="w-5 sm:w-6 md:w-7" />
                   {:else}
                     {getPositionAbbreviation(
-                      convertPlayerPosition(data.player.position)
+                      convertPositionToIndex(data.player.position)
                     )}
                   {/if}
                 </div>
@@ -456,7 +455,7 @@
                     <ActiveCaptainIcon className="w-5" />
                   {:else}
                     {getPositionAbbreviation(
-                      convertPlayerPosition(data.player.position)
+                      convertPositionToIndex(data.player.position)
                     )}
                   {/if}
                 </div>

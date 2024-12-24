@@ -13,9 +13,9 @@
   import UpdateUsernameModal from "$lib/components/profile/update-username-modal.svelte";
   import UpdateFavouriteTeamModal from "./update-favourite-team-modal.svelte";
   import WithdrawFplModal from "./withdraw-fpl-modal.svelte";
-  import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
   import CopyIcon from "$lib/icons/CopyIcon.svelte";
-    import { toasts } from "$lib/stores/toasts-store";
+  import { toasts } from "$lib/stores/toasts-store";
+  import WidgetSpinner from "../shared/widget-spinner.svelte";
   
   let showUsernameModal: boolean = false;
   let showFavouriteTeamModal: boolean = false;
@@ -187,7 +187,7 @@
 </script>
 
 {#if isLoading}
-  <LocalSpinner />
+  <WidgetSpinner />
 {:else}
   <UpdateUsernameModal
     newUsername={$userStore ? $userStore.username : ""}

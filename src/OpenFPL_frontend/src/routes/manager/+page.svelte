@@ -20,10 +20,10 @@
   import { calculateBonusPoints, getTeamFormationReadOnly } from "$lib/utils/pick-team.helpers";
   
   import Layout from "../Layout.svelte";
-  import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
   import ManagerGameweeks from "$lib/components/manager/manager-gameweeks.svelte";
   import ReadOnlyPitchView from "$lib/components/manager/read-only-pitch-view.svelte";
     import { toasts } from "$lib/stores/toasts-store";
+    import WidgetSpinner from "$lib/components/shared/widget-spinner.svelte";
 
   $: id = $page.url.searchParams.get("id");
   $: formation = "4-4-2";
@@ -180,7 +180,7 @@
 
 <Layout>
   {#if isLoading}
-    <LocalSpinner />
+    <WidgetSpinner />
   {:else}
 
     <div class="flex flex-col lg:flex-row">

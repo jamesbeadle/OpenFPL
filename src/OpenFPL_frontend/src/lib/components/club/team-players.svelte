@@ -4,10 +4,10 @@
   import type { PlayerDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import {
     calculateAgeFromNanoseconds,
-    convertPlayerPosition,
+    convertPositionToIndex,
     getFlagComponent,
     getPositionAbbreviation,
-    getPositionText,
+    getPositionIndexToText,
   } from "../../utils/helpers";
   export let players: PlayerDTO[] = [];
   let selectedPosition = -1;
@@ -15,7 +15,7 @@
     selectedPosition === -1
       ? players
       : players.filter(
-          (p) => convertPlayerPosition(p.position) === selectedPosition
+          (p) => convertPositionToIndex(p.position) === selectedPosition
         );
   let positionValues: number[] = Object.values(Position).filter(
     (value) => typeof value === "number"
@@ -33,7 +33,7 @@
         >
           <option value={-1}>All</option>
           {#each positionValues as position}
-            <option value={position}>{getPositionText(position)}</option>
+            <option value={position}>{getPositionIndexToText(position)}</option>
           {/each}
         </select>
       </div>
@@ -63,7 +63,7 @@
             {player.shirtNumber === 0 ? "-" : player.shirtNumber}
           </div>
           <div class="flex items-center w-2/12">
-            {getPositionAbbreviation(convertPlayerPosition(player.position))}
+            {getPositionAbbreviation(convertPositionToIndex(player.position))}
           </div>
           <div class="flex items-center w-6/12 sm:w-4/12 lg:w-3/12 xl:w-3/12">
             <svelte:component

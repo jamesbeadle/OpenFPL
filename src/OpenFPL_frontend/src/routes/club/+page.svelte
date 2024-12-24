@@ -18,15 +18,15 @@
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import {
     updateTableData,
-    getPositionText,
-    convertPlayerPosition,
+    getPositionIndexToText,
+    convertPositionToIndex,
   } from "../../lib/utils/helpers";
     import LoanedPlayers from "$lib/components/club/loaned-players.svelte";
     import { seasonStore } from "$lib/stores/season-store";
     import { storeManager } from "$lib/managers/store-manager";
     import { leagueStore } from "$lib/stores/league-store";
-    import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
     import { toasts } from "$lib/stores/toasts-store";
+    import WidgetSpinner from "$lib/components/shared/widget-spinner.svelte";
 
   let isLoading = true;
   let leagueStatus: LeagueStatus;
@@ -121,7 +121,7 @@
 
 <Layout>
   {#if isLoading}
-    <LocalSpinner />
+    <WidgetSpinner />
   {:else}
     <div class="page-header-wrapper flex">
       <div class="content-panel">
@@ -238,8 +238,8 @@
             >
           </p>
           <p class="content-panel-header">
-            {getPositionText(
-              convertPlayerPosition(
+            {getPositionIndexToText(
+              convertPositionToIndex(
                 highestScoringPlayer?.position ?? { Goalkeeper: null }
               )
             )}

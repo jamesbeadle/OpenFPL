@@ -19,7 +19,7 @@
   import { allFormations } from "$lib/utils/pick-team.helpers";
   import type { LeagueStatus, PickTeamDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     import { leagueStore } from "$lib/stores/league-store";
-    import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
+    import WidgetSpinner from "$lib/components/shared/widget-spinner.svelte";
     
   const fantasyTeam = writable<PickTeamDTO>({
     playerIds: [],
@@ -126,7 +126,7 @@
 
 <Layout>
   {#if isLoading}
-    <LocalSpinner />
+    <WidgetSpinner />
   {:else}
     {#if $onHold}
       <OnHold />
@@ -150,7 +150,6 @@
       />
       <div class="flex flex-col xl:flex-row mt-2 xl:mt-0">
         <PickTeamPlayers
-          {loadingPlayers}
           {fantasyTeam}
           {pitchView}
           {selectedFormation}

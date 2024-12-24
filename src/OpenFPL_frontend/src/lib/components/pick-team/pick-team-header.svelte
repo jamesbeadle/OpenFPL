@@ -1,15 +1,14 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { type Writable } from "svelte/store";
-  import { leagueStore } from "$lib/stores/league-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { playerStore } from "$lib/stores/player-store";
   import { formatUnixDateToReadable, formatUnixTimeToTime, getCountdownTime } from "$lib/utils/helpers";
   import type { LeagueStatus, PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
-  import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
   import { seasonStore } from "$lib/stores/season-store";
     import { toasts } from "$lib/stores/toasts-store";
+    import WidgetSpinner from "../shared/widget-spinner.svelte";
 
   export let transfersAvailable: Writable<number>;  
   export let bankBalance: Writable<number>;
@@ -90,10 +89,10 @@
 
 </script>
 
-<div class="flex page-header-wrapper w-full">
-  {#if isLoading}
-    <LocalSpinner />
-  {:else}
+{#if isLoading}
+  <WidgetSpinner />
+{:else}
+  <div class="flex page-header-wrapper w-full">
     <div class="content-panel lg:w-1/2">
 
 
@@ -169,5 +168,5 @@
         <p class="content-panel-header">Available</p>
       </div>
     </div>
-  {/if}
-</div>
+  </div>
+{/if}

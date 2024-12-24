@@ -8,7 +8,7 @@
   import type { LeagueStatus, PickTeamDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { BonusType } from "$lib/enums/BonusType";
   import { countryStore } from "$lib/stores/country-store";
-  import { convertPlayerPosition } from "$lib/utils/helpers";
+  import { convertPositionToIndex } from "$lib/utils/helpers";
   import Modal from "$lib/components/shared/modal.svelte";
     
   export let visible: boolean;
@@ -77,7 +77,7 @@
 
     for (const playerId of $fantasyTeam.playerIds) {
       const player = $playerStore.find((p) => p.id === playerId);
-      if (player && convertPlayerPosition(player.position) === 0) {
+      if (player && convertPositionToIndex(player.position) === 0) {
         return player.id;
       }
     }

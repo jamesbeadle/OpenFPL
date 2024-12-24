@@ -8,13 +8,13 @@
   import {
     calculateAgeFromNanoseconds,
     convertDateToReadable,
-    convertPlayerPosition,
+    convertPositionToIndex,
     formatUnixDateToReadable,
     formatUnixDateToSmallReadable,
     formatUnixTimeToTime,
     getCountdownTime,
     getFlagComponent,
-    getPositionText,
+    getPositionIndexToText,
     updateTableData,
   } from "../../lib/utils/helpers";
   import type {
@@ -29,9 +29,9 @@
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
   import { countryStore } from "$lib/stores/country-store";
-  import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
     import { storeManager } from "$lib/managers/store-manager";
     import { toasts } from "$lib/stores/toasts-store";
+    import WidgetSpinner from "$lib/components/shared/widget-spinner.svelte";
 
   $: id = Number($page.url.searchParams.get("id"));
 
@@ -120,14 +120,14 @@
 
 <Layout>
   {#if isLoading}
-    <LocalSpinner />
+    <WidgetSpinner />
   {:else}
     <div class="page-header-wrapper flex">
       <div class="content-panel">
         <div class="flex-grow flex flex-col items-center">
           <p class="content-panel-header">
-            {getPositionText(
-              convertPlayerPosition(
+            {getPositionIndexToText(
+              convertPositionToIndex(
                 selectedPlayer?.position ?? { Goalkeeper: null }
               ) ?? -1
             )}

@@ -2,13 +2,14 @@
     import { toasts } from "$lib/stores/toasts-store";
   import { userStore } from "$lib/stores/user-store";
   import Modal from "$lib/components/shared/modal.svelte";
+    import WidgetSpinner from "../shared/widget-spinner.svelte";
 
   export let visible: boolean;
   export let closeModal: () => void;
   export let cancelModal: () => void;
   export let newUsername: string = "";
 
-  let updatingUsername = false;
+  let isLoading = false;
 
   function isDisplayNameValid(displayName: string): boolean {
     if (!displayName) {
@@ -25,7 +26,7 @@
   $: isSubmitDisabled = !isDisplayNameValid(newUsername);
 
   async function updateUsername() {
-    updatingUsername=true;
+    isLoading=true;
     try {
       await userStore.updateUsername(newUsername);
       await userStore.sync();
@@ -43,12 +44,15 @@
       console.error("Error updating username:", error);
       cancelModal();
     } finally {
-      updatingUsername = false;
+      isLoading = false;
     }
   }
 </script>
 
 <Modal showModal={visible} onClose={cancelModal} title="Update Username">
+  {#if isLoading}
+    <WidgetSpinner />
+  {:else}
   <div class="mx-4 p-4">
     <form on:submit|preventDefault={updateUsername}>
       <div class="mt-4">
@@ -79,4 +83,5 @@
       </div>
     </form>
   </div>
+  {/if}
 </Modal>

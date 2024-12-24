@@ -4967,7 +4967,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "dgxzbu"
+  version_hash: "bsbdxy"
 };
 async function get_hooks() {
   let handle;
@@ -11136,7 +11136,7 @@ function replacer(key2, value) {
     return value;
   }
 }
-function convertPlayerPosition(playerPosition) {
+function convertPositionToIndex(playerPosition) {
   if ("Goalkeeper" in playerPosition) return 0;
   if ("Defender" in playerPosition) return 1;
   if ("Midfielder" in playerPosition) return 2;
@@ -11672,7 +11672,7 @@ function extractPlayerData(playerPointsDTO, player) {
         break;
       case 1:
         goals += 1;
-        switch (convertPlayerPosition(playerPointsDTO.position)) {
+        switch (convertPositionToIndex(playerPointsDTO.position)) {
           case 0:
           case 1:
             goalPoints += 20;
@@ -11687,7 +11687,7 @@ function extractPlayerData(playerPointsDTO, player) {
         break;
       case 2:
         assists += 1;
-        switch (convertPlayerPosition(playerPointsDTO.position)) {
+        switch (convertPositionToIndex(playerPointsDTO.position)) {
           case 0:
           case 1:
             assistPoints += 15;
@@ -11700,7 +11700,7 @@ function extractPlayerData(playerPointsDTO, player) {
         break;
       case 3:
         goalsConceded += 1;
-        if (convertPlayerPosition(playerPointsDTO.position) < 2 && goalsConceded % 2 === 0) {
+        if (convertPositionToIndex(playerPointsDTO.position) < 2 && goalsConceded % 2 === 0) {
           goalsConcededPoints += -15;
         }
         break;
@@ -11709,7 +11709,7 @@ function extractPlayerData(playerPointsDTO, player) {
         break;
       case 5:
         cleanSheets += 1;
-        if (convertPlayerPosition(playerPointsDTO.position) < 2 && goalsConceded === 0) {
+        if (convertPositionToIndex(playerPointsDTO.position) < 2 && goalsConceded === 0) {
           cleanSheetPoints += 10;
         }
         break;
@@ -11793,7 +11793,7 @@ function calculatePlayerScore(gameweekData, fixtures) {
   if (gameweekData.yellowCards > 0) {
     score += pointsForYellowCard * gameweekData.yellowCards;
   }
-  switch (convertPlayerPosition(gameweekData.player.position)) {
+  switch (convertPositionToIndex(gameweekData.player.position)) {
     case 0:
       pointsForGoal = 20;
       pointsForAssist = 15;
@@ -12119,7 +12119,7 @@ function getTotalBonusPoints(gameweekData, fantasyTeam, points) {
   let bonusPoints = 0;
   var pointsForGoal = 0;
   var pointsForAssist = 0;
-  switch (convertPlayerPosition(gameweekData.player.position)) {
+  switch (convertPositionToIndex(gameweekData.player.position)) {
     case 0:
       pointsForGoal = 20;
       pointsForAssist = 15;
@@ -12143,10 +12143,10 @@ function getTotalBonusPoints(gameweekData, fantasyTeam, points) {
   if (fantasyTeam.passMasterGameweek === gameweekData.gameweek && fantasyTeam.passMasterPlayerId === gameweekData.player.id) {
     bonusPoints = gameweekData.assists * pointsForAssist * 2;
   }
-  if (fantasyTeam.noEntryGameweek === gameweekData.gameweek && fantasyTeam.noEntryPlayerId === gameweekData.player.id && (convertPlayerPosition(gameweekData.player.position) === 0 || convertPlayerPosition(gameweekData.player.position) === 1) && gameweekData.cleanSheets) {
+  if (fantasyTeam.noEntryGameweek === gameweekData.gameweek && fantasyTeam.noEntryPlayerId === gameweekData.player.id && (convertPositionToIndex(gameweekData.player.position) === 0 || convertPositionToIndex(gameweekData.player.position) === 1) && gameweekData.cleanSheets) {
     bonusPoints = points * 2;
   }
-  if (fantasyTeam.safeHandsGameweek === gameweekData.gameweek && convertPlayerPosition(gameweekData.player.position) === 0 && gameweekData.saves >= 5) {
+  if (fantasyTeam.safeHandsGameweek === gameweekData.gameweek && convertPositionToIndex(gameweekData.player.position) === 0 && gameweekData.saves >= 5) {
     bonusPoints = points * 2;
   }
   if (fantasyTeam.captainFantasticGameweek === gameweekData.gameweek && fantasyTeam.captainId === gameweekData.player.id && gameweekData.goals > 0) {
@@ -12341,7 +12341,6 @@ class DataHashService {
   }
   async getDataHashes() {
     const result = await this.actor.getDataHashes();
-    console.log(result);
     if (isError(result)) throw new Error("Failed to fetch data hashes");
     return result.ok;
   }
@@ -12412,7 +12411,6 @@ var define_process_env_default$4 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-a
 function createUserStore() {
   const { subscribe, set: set2 } = writable(null);
   async function sync() {
-    console.log("syncing user store");
     let localStorageString = localStorage.getItem("user_profile_data");
     if (localStorageString) {
       const localProfile = JSON.parse(localStorageString);
@@ -12420,7 +12418,6 @@ function createUserStore() {
       return;
     }
     try {
-      console.log("caching profile");
       await cacheProfile();
     } catch (error) {
       console.error("Error fetching user profile:", error);
@@ -12535,8 +12532,6 @@ function createUserStore() {
       console.error("Error fetching user profile");
       return;
     }
-    console.log("profile response");
-    console.log(getProfileResponse);
     let profileData = getProfileResponse.ok;
     set2(profileData);
   }
@@ -12615,6 +12610,7 @@ function createUserStore() {
   return {
     subscribe,
     sync,
+    cacheProfile,
     updateUsername,
     updateFavouriteTeam,
     updateProfilePicture,
@@ -12659,8 +12655,8 @@ class StoreManager {
     this.weeklyLeaderboardService = new WeeklyLeaderboardService();
   }
   async syncStores() {
+    console.log("Getting data hashes");
     const newHashes = await this.dataHashService.getDataHashes();
-    console.log(newHashes);
     let error = isError(newHashes);
     if (error) {
       console.error("Error fetching data hashes.");
@@ -12677,6 +12673,7 @@ class StoreManager {
     }
   }
   async syncCategory(category) {
+    console.log(`Syncing data category: ${category}`);
     switch (category) {
       case "countries":
         const updatedCountries = await this.countryService.getCountries();
@@ -13180,13 +13177,10 @@ function Footer($$payload) {
   JunoIcon($$payload, { className: "h-8 w-auto ml-2" });
   $$payload.out += `<!----></a></div></div></div></div></footer>`;
 }
-function Local_spinner($$payload) {
-  $$payload.out += `<div class="local-spinner svelte-pvdm52"></div>`;
-}
 function Toast_item($$payload, $$props) {
   push();
   let toast = $$props["toast"];
-  $$payload.out += `<div class="fixed right-0 top-0 m-4 p-4 bg-gray-800 text-white rounded shadow-md" style="max-width: 300px"><div class="flex items-start"><div class="flex-1"><p class="mb-0">${escape_html(toast.message)}</p></div> <button class="ml-2">×</button></div></div>`;
+  $$payload.out += `<div class="fixed top-0 left-0 right-0 z-[9999] p-4 bg-green-600 text-white shadow-md flex justify-between items-center"><span>${escape_html(toast.message)}</span> <button class="font-bold ml-4">×</button></div>`;
   bind_props($$props, { toast });
   pop();
 }
@@ -13203,6 +13197,9 @@ function Toasts($$payload) {
   $$payload.out += `<!--]-->`;
   if ($$store_subs) unsubscribe_stores($$store_subs);
 }
+function Relative_spinner($$payload) {
+  $$payload.out += `<div class="local-spinner svelte-1mszak5"></div>`;
+}
 function Layout($$payload, $$props) {
   push();
   var $$store_subs;
@@ -13218,18 +13215,18 @@ function Layout($$payload, $$props) {
     init2(),
     () => {
       $$payload.out += `<div>`;
-      Local_spinner($$payload);
+      Relative_spinner($$payload);
       $$payload.out += `<!----></div>`;
     },
     (_) => {
       $$payload.out += `<div class="flex flex-col h-screen justify-between default-text">`;
-      Toasts($$payload);
-      $$payload.out += `<!----> `;
       Header($$payload);
       $$payload.out += `<!----> <main class="page-wrapper svelte-cbh2q9"><!---->`;
       slot($$payload, $$props, "default", {});
       $$payload.out += `<!----></main> `;
       Footer($$payload);
+      $$payload.out += `<!----> `;
+      Toasts($$payload);
       $$payload.out += `<!----></div>`;
     }
   );
@@ -13250,8 +13247,8 @@ function BadgeIcon($$payload, $$props) {
     thirdColour
   });
 }
-function Relative_spinner($$payload) {
-  $$payload.out += `<div class="local-spinner svelte-1mszak5"></div>`;
+function Widget_spinner($$payload) {
+  $$payload.out += `<div class="widget svelte-1tvdi4g"><div class="widget-spinner svelte-1tvdi4g"></div></div>`;
 }
 var define_process_env_default$2 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 function createMonthlyLeaderboardStore() {
@@ -13519,9 +13516,6 @@ function _page$a($$payload, $$props) {
   });
   pop();
 }
-function Widget_spinner($$payload) {
-  $$payload.out += `<div class="widget svelte-1tvdi4g"><div class="widget-spinner svelte-1tvdi4g"></div></div>`;
-}
 var define_process_env_default = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 class CanisterService {
   actor;
@@ -13623,7 +13617,7 @@ function _page$8($$payload, $$props) {
     children: ($$payload2) => {
       {
         $$payload2.out += "<!--[-->";
-        Local_spinner($$payload2);
+        Widget_spinner($$payload2);
       }
       $$payload2.out += `<!--]-->`;
     },
@@ -13634,27 +13628,16 @@ function _page$8($$payload, $$props) {
 }
 function _page$7($$payload, $$props) {
   push();
-  var $$store_subs;
   Layout($$payload, {
     children: ($$payload2) => {
-      const each_array = ensure_array_like(store_get($$store_subs ??= {}, "$clubStore", clubStore).sort((a, b) => a.id - b.id));
-      $$payload2.out += `<div class="page-header-wrapper flex w-full"><div class="content-panel w-full"><div class="w-full grid grid-cols-1 md:grid-cols-4 gap-4 mt-4"><p class="col-span-1 md:col-span-4 text-center w-full mb-4">Premier League Clubs</p> <!--[-->`;
-      for (let $$index = 0, $$length = each_array.length; $$index < $$length; $$index++) {
-        let team = each_array[$$index];
-        $$payload2.out += `<div class="flex flex-col items-center bg-gray-700 rounded shadow p-4 w-full"><div class="flex items-center space-x-4 w-full">`;
-        BadgeIcon($$payload2, {
-          primaryColour: team.primaryColourHex,
-          secondaryColour: team.secondaryColourHex,
-          thirdColour: team.thirdColourHex,
-          className: "w-8"
-        });
-        $$payload2.out += `<!----> <p class="flex-grow text-lg md:text-sm">${escape_html(team.friendlyName)}</p> <a class="mt-auto self-end"${attr("href", `/club?id=${team.id}`)}><button class="fpl-button text-white font-bold py-2 px-4 rounded self-end">View</button></a></div></div>`;
+      {
+        $$payload2.out += "<!--[-->";
+        Widget_spinner($$payload2);
       }
-      $$payload2.out += `<!--]--></div></div></div>`;
+      $$payload2.out += `<!--]-->`;
     },
     $$slots: { default: true }
   });
-  if ($$store_subs) unsubscribe_stores($$store_subs);
   pop();
 }
 function _page$6($$payload) {
@@ -13831,7 +13814,7 @@ function _page$5($$payload, $$props) {
     children: ($$payload2) => {
       if (isLoading) {
         $$payload2.out += "<!--[-->";
-        Local_spinner($$payload2);
+        Widget_spinner($$payload2);
       } else {
         $$payload2.out += "<!--[!-->";
         $$payload2.out += `<div class="flex flex-col lg:flex-row"><div class="w-full lg:w-1/2 order-1 lg:order-2"><div class="page-header-wrapper fle w-full"><div class="content-panel w-full"><div class="flex"><img class="w-20"${attr("src", profilePicture)}${attr("alt", displayName)}></div> <div class="vertical-divider"></div> <div class="flex-grow"><p class="content-panel-header">Manager</p> <p class="content-panel-stat">${escape_html(displayName)}</p> <p class="content-panel-header">Joined: ${escape_html(joinedDate)}</p></div> <div class="vertical-divider"></div> <div class="flex-grow"></div></div> <div class="content-panel w-full flex-row"><div class="w-full"><p class="content-panel-header">Leaderboards</p> <p class="content-panel-stat">${escape_html(manager.weeklyPosition)} <span class="text-xs">(${escape_html(manager.weeklyPoints.toLocaleString())})</span></p> <p class="content-panel-header">Weekly</p></div> <div class="vertical-divider"></div> <div class="w-full"><p class="content-panel-header"></p> <p class="content-panel-stat">${escape_html(manager.monthlyPosition)} <span class="text-xs">(${escape_html("-")})</span></p> <p class="content-panel-header">Club</p></div> <div class="vertical-divider"></div> <div class="w-full"><p class="content-panel-header">${escape_html(selectedSeason)}</p> <p class="content-panel-stat">${escape_html(manager.seasonPosition)} <span class="text-xs">(${escape_html(manager.seasonPoints.toLocaleString())})</span></p> <p class="content-panel-header">Season</p></div></div> <div class="flex flex-col px-4 mb-2">`;
@@ -13865,7 +13848,7 @@ function _page$4($$payload, $$props) {
     children: ($$payload2) => {
       {
         $$payload2.out += "<!--[-->";
-        Local_spinner($$payload2);
+        Widget_spinner($$payload2);
       }
       $$payload2.out += `<!--]-->`;
     },
@@ -13886,7 +13869,7 @@ function _page$3($$payload, $$props) {
     children: ($$payload2) => {
       {
         $$payload2.out += "<!--[-->";
-        Local_spinner($$payload2);
+        Widget_spinner($$payload2);
       }
       $$payload2.out += `<!--]-->`;
     },
@@ -13901,7 +13884,7 @@ function _page$2($$payload, $$props) {
     children: ($$payload2) => {
       {
         $$payload2.out += "<!--[-->";
-        Local_spinner($$payload2);
+        Widget_spinner($$payload2);
       }
       $$payload2.out += `<!--]-->`;
     },

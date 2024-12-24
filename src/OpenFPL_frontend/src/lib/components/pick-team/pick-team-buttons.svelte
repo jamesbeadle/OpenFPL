@@ -7,11 +7,11 @@
   import { seasonStore } from "$lib/stores/season-store";
   import type { AppStatusDTO, LeagueStatus, PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { allFormations, getAvailableFormations, getHighestValuedPlayerId, getTeamFormation } from "$lib/utils/pick-team.helpers";
-  import { convertPlayerPosition } from "$lib/utils/helpers";
+  import { convertPositionToIndex } from "$lib/utils/helpers";
   import SetTeamName from "./modals/set-team-name-modal.svelte";
-  import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
     import { appStore } from "$lib/stores/app-store";
     import { toasts } from "$lib/stores/toasts-store";
+    import WidgetSpinner from "../shared/widget-spinner.svelte";
 
   let startingFantasyTeam: PickTeamDTO;
   export let fantasyTeam: Writable<PickTeamDTO>;
@@ -36,7 +36,6 @@
   let transferWindowPlayedInSession = false;
   let isLoading = true;
   let appStatus: AppStatusDTO;
-  let savingTeam = false;
 
   $: if ($fantasyTeam && $playerStore.length > 0) {
     disableInvalidFormations();
@@ -217,7 +216,7 @@
     team.playerIds.forEach((id) => {
       const teamPlayer = $playerStore.find((p) => p.id === id);
       if (teamPlayer) {
-        positionCounts[convertPlayerPosition(teamPlayer.position)]++;
+        positionCounts[convertPositionToIndex(teamPlayer.position)]++;
       }
     });
 
@@ -268,7 +267,7 @@
       const availablePlayers = $playerStore
         .filter(
           (player) =>
-            convertPlayerPosition(player.position) === position &&
+          convertPositionToIndex(player.position) === position &&
             !updatedFantasyTeam.playerIds.includes(player.id) &&
             (teamCounts.get(player.clubId) || 0) < 2
         )
@@ -321,6 +320,7 @@
   }
 
   async function saveFantasyTeam() {
+    
     if (!$fantasyTeam) {
       return;
     }
@@ -330,7 +330,7 @@
       return;
     }
 
-    savingTeam = true;
+    isLoading = true;
 
     let team = $fantasyTeam;
     if (team?.captainId === 0 || !team?.playerIds.includes(team?.captainId)) {
@@ -370,7 +370,7 @@
       });
       console.error("Error saving team:", error);
     } finally {
-      savingTeam = false;
+      isLoading = false;
     }
   }
 
@@ -380,7 +380,7 @@
 </script>
 
 {#if isLoading}
-  <LocalSpinner />
+  <WidgetSpinner />
 {:else}
   <SetTeamName
     visible={showUsernameModal}

@@ -15,10 +15,10 @@
   } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
   import { playerEventsStore } from "$lib/stores/player-events-store";
-  import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
     import { storeManager } from "$lib/managers/store-manager";
     import { leagueStore } from "$lib/stores/league-store";
     import { toasts } from "$lib/stores/toasts-store";
+    import WidgetSpinner from "../shared/widget-spinner.svelte";
 
   let isLoading = true;
   let leagueStatus: LeagueStatus;
@@ -114,7 +114,7 @@
 </script>
 
 {#if isLoading}
-  <LocalSpinner />
+  <WidgetSpinner />
 {:else}
   {#if playerDetails}
     <PlayerGameweekModal

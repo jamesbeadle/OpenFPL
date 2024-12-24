@@ -10,10 +10,10 @@
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import { getFlagComponent } from "$lib/utils/helpers";
   import { countryStore } from "$lib/stores/country-store";
-  import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
     import { authStore } from "$lib/stores/auth.store";
     import { storeManager } from "$lib/managers/store-manager";
     import { toasts } from "$lib/stores/toasts-store";
+    import WidgetSpinner from "../shared/widget-spinner.svelte";
 
   export let principalId = "";
   export let viewGameweekDetail: (selectedGameweek: number) => void;
@@ -70,7 +70,7 @@
 </script>
 
 {#if isLoading}
-  <LocalSpinner />
+  <WidgetSpinner />
 {:else}
   <div class="flex flex-col space-y-4 mt-4">
     <div class="overflow-x-auto flex-1">

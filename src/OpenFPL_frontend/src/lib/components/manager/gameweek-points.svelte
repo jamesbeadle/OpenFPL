@@ -8,7 +8,7 @@
   import { authStore } from "$lib/stores/auth.store";
 
   import {
-    convertPlayerPosition,
+    convertPositionToIndex,
     getPositionAbbreviation,
   } from "$lib/utils/helpers";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
@@ -16,11 +16,11 @@
   
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import FantasyPlayerDetailModal from "./fantasy-player-detail-modal.svelte";
-  import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
     import { seasonStore } from "../../stores/season-store";
     import { storeManager } from "$lib/managers/store-manager";
     import { leagueStore } from "$lib/stores/league-store";
     import { toasts } from "$lib/stores/toasts-store";
+    import WidgetSpinner from "../shared/widget-spinner.svelte";
 
   let isLoading = true;
   let selectedGameweek: number;
@@ -130,7 +130,7 @@
 </script>
 
 {#if isLoading}
-  <LocalSpinner />
+  <WidgetSpinner />
 {:else}
   {#if showModal}
     <FantasyPlayerDetailModal
@@ -198,7 +198,7 @@
             >
               <div class="w-2/12 xs:w-2/12">
                 {getPositionAbbreviation(
-                  convertPlayerPosition(playerGameweek.player.position)
+                  convertPositionToIndex(playerGameweek.player.position)
                 )}
               </div>
               <div class="w-6/12 xs:w-4/12">

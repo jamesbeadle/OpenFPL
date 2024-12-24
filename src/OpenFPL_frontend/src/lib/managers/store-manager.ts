@@ -59,8 +59,9 @@ class StoreManager {
   }
 
   async syncStores(): Promise<void> {
+    console.log("Getting data hashes");
     const newHashes = await this.dataHashService.getDataHashes();
-    
+
     let error = isError(newHashes);
     if (error) {
       console.error("Error fetching data hashes.");
@@ -80,6 +81,7 @@ class StoreManager {
   }
 
   private async syncCategory(category: string): Promise<void> {
+    console.log(`Syncing data category: ${category}`);
     switch (category) {
       case "countries":
         const updatedCountries = await this.countryService.getCountries();

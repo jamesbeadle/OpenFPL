@@ -256,6 +256,7 @@ function createUserStore() {
   return {
     subscribe,
     sync,
+    cacheProfile,
     updateUsername,
     updateFavouriteTeam,
     updateProfilePicture,

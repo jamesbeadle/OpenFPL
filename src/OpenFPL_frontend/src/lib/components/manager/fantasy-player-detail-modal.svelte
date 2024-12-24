@@ -2,7 +2,7 @@
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import type { ClubDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import { convertPlayerPosition, getFlagComponent } from "../../utils/helpers";
+  import { convertPositionToIndex, getFlagComponent } from "../../utils/helpers";
   import Modal from "$lib/components/shared/modal.svelte";
 
   export let visible: boolean;
@@ -108,7 +108,7 @@
       </div>
     </div>
 
-    {#if convertPlayerPosition(gameweekData.player.position) < 2}
+    {#if convertPositionToIndex(gameweekData.player.position) < 2}
       <div class="flex justify-between items-center p-2">
         <div class="w-3/6">Clean Sheet</div>
         <div class="w-2/6">
@@ -130,7 +130,7 @@
       </div>
     {/if}
 
-    {#if convertPlayerPosition(gameweekData.player.position) === 0}
+    {#if convertPositionToIndex(gameweekData.player.position) === 0}
       <div class="flex justify-between items-center p-2">
         <div class="w-3/6">Saves</div>
         <div class="w-2/6">{gameweekData.saves}</div>

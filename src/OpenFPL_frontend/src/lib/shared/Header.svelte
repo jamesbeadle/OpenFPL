@@ -8,7 +8,6 @@
   import { authSignedInStore } from "$lib/derived/auth.derived";
   import { userGetProfilePicture } from "$lib/derived/user.derived";
   import { storeManager } from "$lib/managers/store-manager";
-    import { userStore } from "$lib/stores/user-store";
     import { toasts } from "$lib/stores/toasts-store";
 
   let menuOpen = false;
