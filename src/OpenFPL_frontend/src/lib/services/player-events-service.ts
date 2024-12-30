@@ -28,7 +28,6 @@ export class PlayerEventsService {
       seasonId,
       gameweek,
     };
-    console.log("Service: get player details for gameweek");
     const result = await this.actor.getPlayerDetailsForGameweek(dto);
     if (isError(result))
       throw new Error(
@@ -46,7 +45,6 @@ export class PlayerEventsService {
         playerId: playerId,
         seasonId: seasonId,
       };
-      console.log("Service: get player details");
       let result = await this.actor.getPlayerDetails(dto);
 
       if (isError(result)) {

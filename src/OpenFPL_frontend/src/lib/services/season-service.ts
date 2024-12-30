@@ -14,7 +14,6 @@ export class SeasonService {
   }
 
   async getSeasons(): Promise<SeasonDTO[]> {
-    console.log("Service: get seasons");
     const result = await this.actor.getSeasons();
     if (isError(result)) throw new Error("Failed to fetch seasons");
     return result.ok;

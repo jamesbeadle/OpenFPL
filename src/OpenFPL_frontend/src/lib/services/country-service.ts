@@ -14,7 +14,6 @@ export class CountryService {
   }
 
   async getCountries(): Promise<CountryDTO[]> {
-    console.log("Service: get countries");
     const result = await this.actor.getCountries();
     if (isError(result)) throw new Error("Failed to fetch countries");
     return result.ok;

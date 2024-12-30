@@ -14,7 +14,6 @@ export class DataHashService {
   }
 
   async getDataHashes(): Promise<DataHashDTO[]> {
-    console.log("Service: get data hashes");
     const result = await this.actor.getDataHashes();
     if (isError(result)) throw new Error("Failed to fetch data hashes");
     return result.ok;

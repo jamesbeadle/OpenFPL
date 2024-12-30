@@ -14,14 +14,12 @@ export class FixtureService {
   }
 
   async getPostponedFixtures(): Promise<FixtureDTO[]> {
-    console.log("Service: get postponed fixtures");
     const result = await this.actor.getPostponedFixtures();
     if (isError(result)) throw new Error("Failed to fetch postponed fixtures");
     return result.ok;
   }
 
   async getFixtures(): Promise<FixtureDTO[]> {
-    console.log("Service: get fixtures");
     const result = await this.actor.getFixtures(1); //TODO: Set from store
     if (isError(result)) throw new Error("Failed to fetch fixtures");
     return result.ok;

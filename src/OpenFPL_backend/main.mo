@@ -97,7 +97,7 @@
     //Leaderboard calls:
 
     public shared func getWeeklyLeaderboard(dto: DTOs.GetWeeklyLeaderboardDTO) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
-      return await leaderboardManager.getWeeklyLeaderboard(dto);
+     return await leaderboardManager.getWeeklyLeaderboard(dto);
     };
 
     public shared func getMonthlyLeaderboard(dto: DTOs.GetMonthlyLeaderboardDTO) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error> {
@@ -811,12 +811,9 @@
       //TODO (GO LIVE)
       //set system state
       //ignore setSystemTimers();
-      
-      await updateLeaderboardCanisterWasms();
-      await updateManagerCanisterWasms();
-      //await userManager.resetWeeklyTransfers();
-      //await calculateGWLeaderboard(1,17);
-      // await calculateGWRewards(17);
+     
+      //await updateLeaderboardCanisterWasms();
+      //await updateManagerCanisterWasms();
       await seasonManager.updateDataHash("app_status");
       await seasonManager.updateDataHash("league_status");
       await seasonManager.updateDataHash("countries");
@@ -828,8 +825,13 @@
       await seasonManager.updateDataHash("monthly_leaderboards");
       await seasonManager.updateDataHash("season_leaderboard");
       
-      //await checkCanisterCycles();
-      //await manuallyPayRewards();
+      //await calculateGWLeaderboard(1,16);
+      
+      //await calculateGWRewards(16);
+      
+      //await userManager.resetWeeklyTransfers();
+       //await checkCanisterCycles();
+      //await manuallyPayRewards(18);
     };
 
     private func calculateGWLeaderboard(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber) : async (){
@@ -862,11 +864,11 @@
       } 
     };
 
-    private func manuallyPayRewards() : async () {
+    private func manuallyPayRewards(gameweek: FootballTypes.GameweekNumber) : async () {
       let leagueStatusResult = await getLeagueStatus();
       switch(leagueStatusResult){
         case (#ok leagueStatus){       
-          let _ = await leaderboardManager.payWeeklyRewards(leagueStatus.activeSeasonId, 17);     
+          let _ = await leaderboardManager.payWeeklyRewards(leagueStatus.activeSeasonId, gameweek);     
         };
         case (#err _){ }
       } 

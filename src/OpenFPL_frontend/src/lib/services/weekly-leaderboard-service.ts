@@ -29,7 +29,6 @@ export class WeeklyLeaderboardService {
       searchTerm: "",
       gameweek: gameweek,
     };
-    console.log("Service: get weekly leaderboard");
     const result = await this.actor.getWeeklyLeaderboard(dto);
     if (isError(result)) throw new Error("Failed to fetch weekly leaderboard");
     return result.ok;

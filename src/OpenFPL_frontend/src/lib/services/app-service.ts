@@ -14,7 +14,6 @@ export class AppService {
   }
 
   async getAppStatus(): Promise<AppStatusDTO> {
-    console.log("Service: get app status");
     const result = await this.actor.getAppStatus();
     if (isError(result)) throw new Error("Failed to fetch system state");
     return result.ok;

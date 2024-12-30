@@ -25,7 +25,6 @@
 
     onMount(async () => {
       try {
-        console.log("Loading loaned players");
         await storeManager.syncStores();
         if(clubId){
           loanedPlayers = await playerStore.getLoanedPlayers(clubId);

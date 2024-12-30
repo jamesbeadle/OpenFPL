@@ -4967,7 +4967,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1828thx"
+  version_hash: "1omqt80"
 };
 async function get_hooks() {
   let handle;
@@ -11850,7 +11850,6 @@ class LeagueService {
     );
   }
   async getLeagueStatus() {
-    console.log("Service: get league status");
     const result = await this.actor.getLeagueStatus();
     if (isError(result)) throw new Error("Failed to fetch league status");
     return result.ok;
@@ -11892,13 +11891,11 @@ class FixtureService {
     );
   }
   async getPostponedFixtures() {
-    console.log("Service: get postponed fixtures");
     const result = await this.actor.getPostponedFixtures();
     if (isError(result)) throw new Error("Failed to fetch postponed fixtures");
     return result.ok;
   }
   async getFixtures() {
-    console.log("Service: get fixtures");
     const result = await this.actor.getFixtures(1);
     if (isError(result)) throw new Error("Failed to fetch fixtures");
     return result.ok;
@@ -11982,20 +11979,17 @@ class PlayerService {
     );
   }
   async getPlayers() {
-    console.log("Service: get players");
     const result = await this.actor.getPlayers();
     if (isError(result)) throw new Error("Failed to fetch players");
     return result.ok;
   }
   async getLoanedPlayers(clubId) {
-    console.log("Service: get loaned players");
     const dto = { leagueId: 1, clubId };
     const result = await this.actor.getLoanedPlayers(dto);
     if (isError(result)) throw new Error("Failed to fetch loaned players");
     return result.ok;
   }
   async getRetiredPlayers(clubId) {
-    console.log("Service: get retired players");
     const dto = { leagueId: 1, clubId };
     const result = await this.actor.getRetiredPlayers(dto);
     if (isError(result)) throw new Error("Failed to fetch retired players");
@@ -12032,7 +12026,6 @@ class PlayerEventsService {
       seasonId,
       gameweek
     };
-    console.log("Service: get player details for gameweek");
     const result = await this.actor.getPlayerDetailsForGameweek(dto);
     if (isError(result))
       throw new Error(
@@ -12046,7 +12039,6 @@ class PlayerEventsService {
         playerId,
         seasonId
       };
-      console.log("Service: get player details");
       let result = await this.actor.getPlayerDetails(dto);
       if (isError(result)) {
         console.error("Error fetching player details");
@@ -12187,7 +12179,6 @@ class AppService {
     );
   }
   async getAppStatus() {
-    console.log("Service: get app status");
     const result = await this.actor.getAppStatus();
     if (isError(result)) throw new Error("Failed to fetch system state");
     return result.ok;
@@ -12306,7 +12297,6 @@ class WeeklyLeaderboardService {
       searchTerm: "",
       gameweek
     };
-    console.log("Service: get weekly leaderboard");
     const result = await this.actor.getWeeklyLeaderboard(dto);
     if (isError(result)) throw new Error("Failed to fetch weekly leaderboard");
     return result.ok;
@@ -12350,7 +12340,6 @@ class DataHashService {
     );
   }
   async getDataHashes() {
-    console.log("Service: get data hashes");
     const result = await this.actor.getDataHashes();
     if (isError(result)) throw new Error("Failed to fetch data hashes");
     return result.ok;
@@ -12366,7 +12355,6 @@ class CountryService {
     );
   }
   async getCountries() {
-    console.log("Service: get countries");
     const result = await this.actor.getCountries();
     if (isError(result)) throw new Error("Failed to fetch countries");
     return result.ok;
@@ -12382,7 +12370,6 @@ class SeasonService {
     );
   }
   async getSeasons() {
-    console.log("Service: get seasons");
     const result = await this.actor.getSeasons();
     if (isError(result)) throw new Error("Failed to fetch seasons");
     return result.ok;
@@ -12398,7 +12385,6 @@ class ClubService {
     );
   }
   async getClubs() {
-    console.log("Service: get clubs");
     const result = await this.actor.getClubs();
     if (isError(result)) throw new Error("Failed to fetch clubs");
     return result.ok;
@@ -12414,7 +12400,6 @@ class UserService {
       authStore,
       define_process_env_default$5.OPENFPL_BACKEND_CANISTER_ID
     );
-    console.log("Service: is admin");
     const result = await identityActor.isAdmin();
     if (isError(result)) {
       throw new Error("Failed to check is admin");
@@ -12670,7 +12655,6 @@ class StoreManager {
     this.weeklyLeaderboardService = new WeeklyLeaderboardService();
   }
   async syncStores() {
-    console.log("Getting data hashes");
     const newHashes = await this.dataHashService.getDataHashes();
     let error = isError(newHashes);
     if (error) {
@@ -12688,7 +12672,6 @@ class StoreManager {
     }
   }
   async syncCategory(category) {
-    console.log(`Syncing data category: ${category}`);
     switch (category) {
       case "countries":
         const updatedCountries = await this.countryService.getCountries();
@@ -13541,7 +13524,6 @@ class CanisterService {
     );
   }
   async getCanisters(dto) {
-    console.log("Service: get canisters");
     const result = await this.actor.getCanisters(dto);
     if (isError(result)) throw new Error("Failed to fetch canisters");
     return result.ok;

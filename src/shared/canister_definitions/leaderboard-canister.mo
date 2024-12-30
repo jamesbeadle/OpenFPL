@@ -47,29 +47,49 @@ actor class _LeaderboardCanister() {
     initialised := true;
   };
 
-  public shared ({ caller }) func prepareForUpdate(seasonId: FootballTypes.SeasonId, month: Base.CalendarMonth, gameweek: FootballTypes.GameweekNumber, clubId: FootballTypes.ClubId) : async () {
+  public shared ({ caller }) func prepareForUpdate(
+    seasonId : FootballTypes.SeasonId,
+    month    : Base.CalendarMonth,
+    gameweek : FootballTypes.GameweekNumber,
+    clubId   : FootballTypes.ClubId
+  ) : async () {
+    // Ensure only the controller can make changes.
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == controllerPrincipalId;
 
-    if(month == 0 and gameweek == 0){
-      season_leaderboards := Array.filter<T.SeasonLeaderboard>(season_leaderboards, func(leaderboard: T.SeasonLeaderboard) : Bool{
-        leaderboard.seasonId != seasonId;
-      });
+    if (month == 0 and gameweek == 0) {
+      season_leaderboards := Array.filter<T.SeasonLeaderboard>(
+        season_leaderboards,
+        func (leaderboard : T.SeasonLeaderboard) : Bool {
+          leaderboard.seasonId != seasonId
+        }
+      );
       return;
     };
 
-    if(month > 0){
-      monthly_leaderboards := Array.filter<T.MonthlyLeaderboard>(monthly_leaderboards, func(leaderboard: T.MonthlyLeaderboard) : Bool{
-        leaderboard.seasonId != seasonId and leaderboard.month != month and leaderboard.clubId != clubId;
-      });
+    if (month > 0) {
+      monthly_leaderboards := Array.filter<T.MonthlyLeaderboard>(
+        monthly_leaderboards,
+        func (leaderboard : T.MonthlyLeaderboard) : Bool {
+          not (leaderboard.seasonId == seasonId
+            and leaderboard.month == month
+            and leaderboard.clubId == clubId)
+        }
+      );
       return;
     };
-    weekly_leaderboards := Array.filter<T.WeeklyLeaderboard>(weekly_leaderboards, func(leaderboard: T.WeeklyLeaderboard) : Bool{
-      leaderboard.seasonId != seasonId and leaderboard.gameweek != gameweek;
-    });
+
+    weekly_leaderboards := Array.filter<T.WeeklyLeaderboard>(
+      weekly_leaderboards,
+      func (leaderboard : T.WeeklyLeaderboard) : Bool {
+        not (leaderboard.seasonId == seasonId
+          and leaderboard.gameweek == gameweek)
+      }
+    );
     entryUpdatesAllowed := true;
   };
+
 
   public shared ({ caller }) func addLeaderboardChunk(seasonId: FootballTypes.SeasonId, month: Base.CalendarMonth, gameweek: FootballTypes.GameweekNumber, clubId: FootballTypes.ClubId, entriesChunk : [T.LeaderboardEntry]) : async () {
     assert not Principal.isAnonymous(caller);
@@ -271,7 +291,7 @@ actor class _LeaderboardCanister() {
   private func calculateMonthlyLeaderboards(seasonId: FootballTypes.SeasonId, month: Base.CalendarMonth){
     
     let currentLeaderboards = Array.filter(monthly_leaderboards, func(leaderboard: T.MonthlyLeaderboard) : Bool {
-      leaderboard.seasonId == seasonId and month == month
+      leaderboard.seasonId == seasonId and leaderboard.month == month
     });
 
     for(monthlyLeaderboard in Iter.fromArray(currentLeaderboards)){
