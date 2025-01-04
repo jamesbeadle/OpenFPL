@@ -146,7 +146,6 @@ export const idlFactory = ({ IDL }) => {
     'ok' : FantasyTeamSnapshotDTO,
     'err' : Error,
   });
-  const LeagueId = IDL.Nat16;
   const FixtureStatusType = IDL.Variant({
     'Unplayed' : IDL.Null,
     'Finalised' : IDL.Null,
@@ -191,6 +190,7 @@ export const idlFactory = ({ IDL }) => {
   });
   const Result_12 = IDL.Variant({ 'ok' : IDL.Vec(FixtureDTO), 'err' : Error });
   const Result_17 = IDL.Variant({ 'ok' : IDL.Vec(CanisterId), 'err' : Error });
+  const LeagueId = IDL.Nat16;
   const LeagueStatus = IDL.Record({
     'transferWindowEndMonth' : IDL.Nat8,
     'transferWindowEndDay' : IDL.Nat8,
@@ -549,7 +549,7 @@ export const idlFactory = ({ IDL }) => {
         [Result_19],
         [],
       ),
-    'getFixtures' : IDL.Func([LeagueId], [Result_12], ['composite_query']),
+    'getFixtures' : IDL.Func([], [Result_12], ['composite_query']),
     'getLeaderboardCanisterIds' : IDL.Func([], [Result_17], []),
     'getLeagueStatus' : IDL.Func([], [Result_18], []),
     'getLoanedPlayers' : IDL.Func(

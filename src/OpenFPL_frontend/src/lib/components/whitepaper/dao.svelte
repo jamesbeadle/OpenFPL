@@ -371,9 +371,3 @@
     </li>
   </ul>
 </div>
-
-<style>
-  .striped tr:nth-child(odd) {
-    background-color: rgba(46, 50, 58, 0.6);
-  }
-</style>

@@ -22,61 +22,7 @@ function createMonthlyLeaderboardStore() {
   );
 
   async function sync(seasonId: number, month: number, clubId: number) {
-    let category = "monthly_leaderboards";
-    const newHashValues = await actor.getDataHashes();
-
-    let error = isError(newHashValues);
-    if (error) {
-      console.error("Error syncing monthly leaderboard store");
-      return;
-    }
-
-    let dataCacheValues: DataHashDTO[] = newHashValues.ok;
-
-    let categoryHash =
-      dataCacheValues.find((x: DataHashDTO) => x.category === category) ?? null;
-
-    const localHash = localStorage.getItem(`${category}_hash`);
-
-    if (categoryHash?.hash != localHash) {
-      const limit = itemsPerPage;
-      const offset = 0;
-
-      let dto: GetMonthlyLeaderboardDTO = {
-        seasonId: seasonId,
-        month: month,
-        searchTerm: "",
-        clubId: clubId,
-        offset: BigInt(offset),
-        limit: BigInt(limit),
-      };
-      let result = await actor.getMonthlyLeaderboard(dto);
-      if (isError(result)) {
-        let emptyLeaderboard = {
-          entries: [],
-          month: 0,
-          seasonId: 0,
-          totalEntries: 0n,
-        };
-        localStorage.setItem(
-          category,
-          JSON.stringify(emptyLeaderboard, replacer),
-        );
-        localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
-
-        console.error("error fetching leaderboard store");
-        return;
-      }
-
-      let updatedLeaderboardData = result.ok;
-
-      localStorage.setItem(
-        category,
-        JSON.stringify(updatedLeaderboardData.ok, replacer),
-      );
-      localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
-      set(updatedLeaderboardData.ok);
-    }
+    //TODO
   }
 
   async function getMonthlyLeaderboard(
@@ -88,61 +34,14 @@ function createMonthlyLeaderboardStore() {
   ): Promise<MonthlyLeaderboardDTO> {
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
-
-    let leagueStatus = await leagueStore.getLeagueStatus();
-    if (currentPage <= 4 && month == leagueStatus?.activeMonth) {
-      const cachedData = localStorage.getItem(category);
-
-      if (cachedData && cachedData != "undefined") {
-        let cachedMonthlyLeaderboard: MonthlyLeaderboardDTO;
-        cachedMonthlyLeaderboard = JSON.parse(cachedData, replacer);
-
-        if (cachedMonthlyLeaderboard) {
-          return {
-            ...cachedMonthlyLeaderboard,
-            entries: cachedMonthlyLeaderboard.entries.slice(
-              offset,
-              offset + limit,
-            ),
-          };
-        }
-      }
-    }
-
-    let dto: GetMonthlyLeaderboardDTO = {
-      offset: BigInt(offset),
-      seasonId: seasonId,
-      limit: BigInt(limit),
-      searchTerm: searchTerm,
-      month: month,
-      clubId: clubId,
+    //TODO
+    return {
+      month: 0,
+      clubId: 0,
+      totalEntries: 0n,
+      seasonId: 0,
+      entries: [],
     };
-    let result = await actor.getMonthlyLeaderboards(dto);
-
-    if (isError(result)) {
-      let emptyLeaderboard = {
-        month: 0,
-        clubId: 0,
-        totalEntries: 0n,
-        seasonId: 0,
-        entries: [],
-      };
-      localStorage.setItem(
-        category,
-        JSON.stringify(emptyLeaderboard, replacer),
-      );
-      return {
-        entries: [],
-        clubId: 0,
-        month: 0,
-        seasonId: 0,
-        totalEntries: 0n,
-      };
-    }
-
-    localStorage.setItem(category, JSON.stringify(result.ok, replacer));
-
-    return result;
   }
 
   return {

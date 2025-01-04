@@ -14,6 +14,7 @@ import type {
   UpdateTeamSelectionDTO,
   LeagueStatus,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import { toasts } from "./toasts-store";
 
 function createManagerStore() {
   let actor: any = ActorFactory.createActor(
@@ -239,10 +240,18 @@ function createManagerStore() {
       }
 
       const fantasyTeam = result.ok;
+      toasts.addToast({
+        message: "Team saved successully!",
+        type: "success",
+        duration: 2000,
+      });
       return fantasyTeam;
     } catch (error) {
       console.error("Error saving fantasy team:", error);
-      throw error;
+      toasts.addToast({
+        message: "Error saving team.",
+        type: "error",
+      });
     }
   }
 

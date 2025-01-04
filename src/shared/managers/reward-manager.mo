@@ -99,18 +99,16 @@ module {
     private func filterTop100IncludingTies(entries: [T.LeaderboardEntry]) : [T.LeaderboardEntry] {
       let entryBuffer = Buffer.fromArray<T.LeaderboardEntry>([]);
       
-      var maxPosition = 100; // Define the cutoff threshold
-      var lastPosition = 0;  // Track the last position added to handle ties
+      var maxPosition = 100;
+      var lastPosition = 0;
 
       label tieLoop for (entry in entries.vals()) {
-          // Stop if we've exceeded the max position and the entry isn't tied
           if (entry.position > maxPosition and entry.position != lastPosition) {
               break tieLoop;
           };
 
-          // Add the entry to the buffer
           entryBuffer.add(entry);
-          lastPosition := entry.position; // Update the last position
+          lastPosition := entry.position;
       };
       
       Buffer.toArray(entryBuffer);
@@ -158,7 +156,6 @@ module {
                 0.0;
             };
 
-            // Check for tied entries
             while (
                 i + tieCount < Array.size(sortedEntries) and 
                 sortedEntries[i + tieCount].points == sortedEntries[i].points
@@ -169,23 +166,19 @@ module {
                 tieCount += 1;
             };
 
-            // Calculate average percentage for tied entries
             let averagePercentage = totalPercentage / Float.fromInt(tieCount);
 
-            // Update the buffer for tied entries
             for (j in Iter.range(i, i + tieCount - 1)) {
                 if (j < adjustedPercentagesBuffer.size()) {
                     adjustedPercentagesBuffer.put(j, averagePercentage);
                 } else {
-                    adjustedPercentagesBuffer.add(averagePercentage); // Add if beyond buffer size
+                    adjustedPercentagesBuffer.add(averagePercentage);
                 };
             };
 
-            // Move to the next group of entries
             i += tieCount;
         };
 
-        // Adjust percentages to ensure they sum to 1 using Buffer
         let adjustedPercentages = Buffer.toArray(adjustedPercentagesBuffer);
         let sumPercentages = Array.foldLeft<Float, Float>(
             adjustedPercentages,

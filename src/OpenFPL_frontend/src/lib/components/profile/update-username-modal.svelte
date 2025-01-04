@@ -1,12 +1,10 @@
 <script lang="ts">
-    import { toasts } from "$lib/stores/toasts-store";
+  import { toasts } from "$lib/stores/toasts-store";
   import { userStore } from "$lib/stores/user-store";
   import Modal from "$lib/components/shared/modal.svelte";
-    import WidgetSpinner from "../shared/widget-spinner.svelte";
+  import WidgetSpinner from "../shared/widget-spinner.svelte";
 
-  export let visible: boolean;
-  export let closeModal: () => void;
-  export let cancelModal: () => void;
+  export let visible: boolean = false;
   export let newUsername: string = "";
 
   let isLoading = false;
@@ -47,6 +45,16 @@
       isLoading = false;
     }
   }
+
+  async function closeModal() {
+    await userStore.cacheProfile();
+    visible = false;
+  }
+
+  function cancelModal() {
+    visible = false;
+  }
+  
 </script>
 
 <Modal showModal={visible} onClose={cancelModal} title="Update Username">

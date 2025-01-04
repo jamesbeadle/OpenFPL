@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
   import { authStore, type AuthSignInParams } from "$lib/stores/auth.store"
   import OpenFPLIcon from "$lib/icons/OpenFPLIcon.svelte";
   import WalletIcon from "$lib/icons/WalletIcon.svelte";
@@ -37,12 +37,12 @@
   });
 
   $: currentClass = (route: string) =>
-    $page.url.pathname === route
+    page.url.pathname === route
       ? "text-blue-500 nav-underline active"
       : "nav-underline";
 
   $: currentBorder = (route: string) =>
-    $page.url.pathname === route ? "active-border" : "";
+    page.url.pathname === route ? "active-border" : "";
 
   function toggleMenu() {
     menuOpen = !menuOpen;

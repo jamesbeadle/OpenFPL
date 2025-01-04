@@ -18,11 +18,7 @@
 	}
 </script>
 
-<div
-  class="fixed top-0 left-0 right-0 z-[9999] 
-         p-4 bg-green-600 text-white shadow-md 
-         flex justify-between items-center"
->
+<div class={`fixed top-0 left-0 right-0 z-[9999] p-4 text-white shadow-md flex justify-between items-center bg-${toast.type}`}>
   <span>{toast.message}</span>
   <button class="font-bold ml-4" on:click={closeToast}>
     &times;

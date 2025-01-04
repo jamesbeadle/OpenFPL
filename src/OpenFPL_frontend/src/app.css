@@ -2,8 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
 .modal-backdrop {
   z-index: 1000;
+}
+
+.modal-row {
+  @apply flex justify-between items-center p-2;
+}
+
+.modal-header-row {
+  @apply mt-2 flex justify-between items-center mt-4 bg-light-gray p-2 border-t border-b border-gray-600;
 }
 
 .fpl-button {
@@ -82,18 +96,26 @@ input {
 
 .unplayed-divider {
   background-color: #949494;
+  @apply status-divider;
 }
 
 .active-divider {
   background-color: #2c8be3;
+  @apply status-divider;
 }
 
 .complete-divider {
   background-color: #2ce3a6;
+  @apply status-divider;
 }
 
 .finalised-divider {
   background-color: #7f56f1;
+  @apply status-divider;
+}
+
+.status-divider {
+  @apply w-[4px] bg-gray-400 mr-2;
 }
 
 .active-border {
@@ -110,7 +132,7 @@ input {
 }
 
 .page-header-wrapper {
-  @apply flex-col lg:flex-row lg:space-x-4;
+  @apply flex w-full flex-col lg:flex-row lg:space-x-4;
 }
 
 .content-panel {
@@ -129,12 +151,6 @@ input {
 }
 
 .vertical-divider {
-  min-width: 2px;
-  min-height: 50px;
-  @apply flex-shrink-0 w-px bg-gray-400 self-stretch;
-}
-
-.vertical-divider-thin {
   min-width: 1px;
   min-height: 50px;
   background-color: #37393c;
@@ -276,36 +292,63 @@ header {
   color: #cf5d43;
 }
 
-/* Extra small devices (portrait phones, less than 480px) */
-@media (min-width: 480px) {
+.striped tr:nth-child(odd) {
+  background-color: rgba(46, 50, 58, 0.6);
 }
 
-/* Small devices (landscape phones, 640px and up) */
-@media (min-width: 640px) {
-  /* Your CSS here */
+.top-player-detail {
+  @apply min-w-[60px] xs:min-w-[90px] sm:min-w-[120px] max-w-[60px] xs:max-w-[90px] sm:max-w-[120px];
 }
 
-/* Medium devices (tablets, 768px and up) */
-@media (min-width: 768px) {
-  /* Your CSS here */
+.captain-icon {
+  @apply w-3 xs:w-4 h-3 xs:h-4 sm:w-7 sm:h-7 md:w-6 md:h-6;
 }
 
-/* Large devices (desktops, 1024px and up) */
-@media (min-width: 1024px) {
-  /* Your CSS here */
+.bonus-panel-inner {
+  background-color: rgba(46, 50, 58, 0.9);
 }
 
-/* Extra large devices (large desktops, 1280px and up) */
-@media (min-width: 1280px) {
-  /* Your CSS here */
+.file-upload-wrapper {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  width: 100%;
 }
 
-/* 2XL devices (larger desktops, 1536px and up) */
-@media (min-width: 1536px) {
-  /* Your CSS here */
+.btn-file-upload {
+  width: 100%;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 1em;
+  cursor: pointer;
+  text-align: center;
+  display: block;
 }
 
-/* 3XL devices (extra large desktops, 1920px and up) */
-@media (min-width: 1920px) {
-  /* Your CSS here */
+input[type="file"] {
+  font-size: 100px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.truncate-50 {
+  @apply truncate min-w-[50px] max-w-[50px] xs:min-w-[60px] xs:max-w-[60px];
+}
+
+.bg-info {
+  @apply bg-BrandPurple;
+}
+
+.bg-success {
+  @apply bg-BrandSuccess;
+}
+
+.bg-error {
+  @apply bg-BrandWarning;
 }

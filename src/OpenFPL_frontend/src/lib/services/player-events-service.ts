@@ -3,12 +3,11 @@ import { ActorFactory } from "../utils/actor.factory";
 import { isError } from "../utils/helpers";
 import type {
   PlayerPointsDTO,
-  AppStatusDTO,
   GameweekFiltersDTO,
   GetPlayerDetailsDTO,
   PlayerDetailDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-import { leagueStore } from "$lib/stores/league-store";
+import { toasts } from "$lib/stores/toasts-store";
 
 export class PlayerEventsService {
   private actor: any;
@@ -23,7 +22,9 @@ export class PlayerEventsService {
   async getPlayerDetailsForGameweek(
     seasonId: number,
     gameweek: number,
-  ): Promise<PlayerPointsDTO[]> {
+  ): Promise<PlayerPointsDTO[] | undefined> {
+    try {
+    } catch (error) {}
     let dto: GameweekFiltersDTO = {
       seasonId,
       gameweek,
@@ -39,7 +40,7 @@ export class PlayerEventsService {
   async getPlayerDetails(
     playerId: number,
     seasonId: number,
-  ): Promise<PlayerDetailDTO> {
+  ): Promise<PlayerDetailDTO | undefined> {
     try {
       let dto: GetPlayerDetailsDTO = {
         playerId: playerId,
@@ -61,7 +62,7 @@ export class PlayerEventsService {
   async getPlayerEvents(
     seasonId: number,
     gameweek: number,
-  ): Promise<PlayerPointsDTO[]> {
+  ): Promise<PlayerPointsDTO[] | undefined> {
     try {
       let dto: GameweekFiltersDTO = {
         seasonId,
@@ -75,8 +76,11 @@ export class PlayerEventsService {
 
       return result.ok;
     } catch (error) {
-      console.error("Error fetching player details for gameweek:", error);
-      throw error;
+      console.error("Error fetching player events: ", error);
+      toasts.addToast({
+        type: "error",
+        message: "Error fetching player events.",
+      });
     }
   }
 }

@@ -73,6 +73,7 @@
           </button>
         </header>
         <div class="bg-Brand p-6 rounded-b-lg overflow-auto max-h-[80vh]">
+          <div class=""></div>
           <slot />
         </div>
       </div>

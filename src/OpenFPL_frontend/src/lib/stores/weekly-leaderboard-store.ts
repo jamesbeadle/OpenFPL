@@ -12,7 +12,7 @@ function createWeeklyLeaderboardStore() {
     seasonId: number,
     gameweek: number,
     page: number,
-  ): Promise<WeeklyLeaderboardDTO | null> {
+  ): Promise<WeeklyLeaderboardDTO | undefined> {
     const offset = (page - 1) * 25;
 
     return new WeeklyLeaderboardService().getWeeklyLeaderboard(
@@ -25,7 +25,7 @@ function createWeeklyLeaderboardStore() {
   async function getWeeklyRewards(
     seasonId: number,
     gameweek: number,
-  ): Promise<WeeklyRewardsDTO | null> {
+  ): Promise<WeeklyRewardsDTO | undefined> {
     return new WeeklyLeaderboardService().getWeeklyRewards(seasonId, gameweek);
   }
 

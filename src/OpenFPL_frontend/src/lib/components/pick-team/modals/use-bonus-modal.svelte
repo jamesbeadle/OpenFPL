@@ -5,14 +5,14 @@
   import { playerStore } from "$lib/stores/player-store";
 
   import type { Bonus } from "$lib/types/bonus";
-  import type { LeagueStatus, PickTeamDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { PickTeamDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { BonusType } from "$lib/enums/BonusType";
   import { countryStore } from "$lib/stores/country-store";
   import { convertPositionToIndex } from "$lib/utils/helpers";
   import Modal from "$lib/components/shared/modal.svelte";
+    import { leagueStore } from "$lib/stores/league-store";
     
   export let visible: boolean;
-  export let leagueStatus: LeagueStatus;
   export let fantasyTeam: Writable<PickTeamDTO | null>;
   export let bonusUsedInSession: Writable<boolean>;
   export let closeBonusModal: () => void;
@@ -89,8 +89,8 @@
     if (!$fantasyTeam) return;
     let activeGameweek = 1;
 
-    if(leagueStatus.activeGameweek){
-      activeGameweek = leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek
+    if($leagueStore!.activeGameweek){
+      activeGameweek = $leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek
     }
     
     $bonuses[bonus.id - 1].usedGameweek = activeGameweek

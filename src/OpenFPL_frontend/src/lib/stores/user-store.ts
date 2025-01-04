@@ -32,10 +32,6 @@ function createUserStore() {
     }
   }
 
-  async function isAdmin(): Promise<boolean> {
-    return new UserService().isAdmin();
-  }
-
   async function updateUsername(username: string): Promise<any> {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
@@ -141,20 +137,8 @@ function createUserStore() {
   }
 
   async function cacheProfile() {
-    const identityActor: any = await ActorFactory.createIdentityActor(
-      authStore,
-      process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
-    );
-    let getProfileResponse = await identityActor.getProfile();
-    let error = isError(getProfileResponse);
-    if (error) {
-      console.error("Error fetching user profile");
-      return;
-    }
-
-    let profileData = getProfileResponse.ok;
-
-    set(profileData);
+    let profile = new UserService().getUser();
+    set(profile);
   }
 
   async function withdrawFPL(
@@ -263,7 +247,6 @@ function createUserStore() {
     isUsernameAvailable,
     withdrawFPL,
     getFPLBalance,
-    isAdmin,
   };
 }
 

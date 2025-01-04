@@ -9,6 +9,9 @@ import type {
   FixtureStatusType,
   PlayerEventType,
   PlayerPosition,
+  FantasyTeamSnapshot,
+  LeaderboardEntry,
+  RewardEntry,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import type { GameweekData } from "$lib/interfaces/GameweekData";
 import EnglandFlag from "../flags/england.svelte"; // Custom Svelte component for England
@@ -1059,4 +1062,138 @@ export function calculatePlayerScore(
 
   score += gameweekData.assists * pointsForAssist;
   return score;
+}
+
+export function getFixturesWithTeams(
+  clubs: ClubDTO[],
+  fixtures: FixtureDTO[],
+): FixtureWithTeams[] {
+  return fixtures
+    .sort((a, b) => Number(a.kickOff) - Number(b.kickOff))
+    .map((fixture) => ({
+      fixture,
+      homeTeam: clubs.find((club) => club.id === fixture.homeClubId),
+      awayTeam: clubs.find((club) => club.id === fixture.awayClubId),
+    }));
+}
+
+export function getPlayerName(player: PlayerDTO): string {
+  return player.firstName != ""
+    ? player.firstName.charAt(0) + "." + " " + player.lastName
+    : player.lastName;
+}
+
+export function getActualIndex(
+  rowIndex: number,
+  colIndex: number,
+  gridSetup: number[][],
+): number {
+  let startIndex = gridSetup
+    .slice(0, rowIndex)
+    .reduce((sum, currentRow) => sum + currentRow.length, 0);
+  return startIndex + colIndex;
+}
+
+export function reduceFilteredFixtures(filteredFixtures: FixtureWithTeams[]): {
+  [key: string]: FixtureWithTeams[];
+} {
+  return filteredFixtures.reduce(
+    (acc: { [key: string]: FixtureWithTeams[] }, fixtureWithTeams) => {
+      const date = new Date(Number(fixtureWithTeams.fixture.kickOff) / 1000000);
+      const dateFormatter = new Intl.DateTimeFormat("en-GB", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      });
+      const dateKey = dateFormatter.format(date);
+
+      if (!acc[dateKey]) {
+        acc[dateKey] = [];
+      }
+      acc[dateKey].push(fixtureWithTeams);
+      return acc;
+    },
+    {} as { [key: string]: FixtureWithTeams[] },
+  );
+}
+
+export function isAmountValid(amount: string): boolean {
+  if (!amount) {
+    return false;
+  }
+  const regex = /^\d+(\.\d{1,8})?$/;
+  return regex.test(amount);
+}
+
+export function isPrincipalValid(principalId: string): boolean {
+  if (!principalId) {
+    return false;
+  }
+  const regex = /^([a-z2-7]{5}-){10}[a-z2-7]{3}$/i;
+  return regex.test(principalId);
+}
+
+export function convertToE8s(amount: string): bigint {
+  const [whole, fraction = ""] = amount.split(".");
+  const fractionPadded = (fraction + "00000000").substring(0, 8);
+  return BigInt(whole) * 100_000_000n + BigInt(fractionPadded);
+}
+
+export function getBonusIcon(snapshot: FantasyTeamSnapshot): string {
+  if (snapshot.goalGetterGameweek === snapshot.gameweek) {
+    return `<img src="/goal-getter.png" alt="Bonus" class="w-6 md:w-9" />`;
+  } else if (snapshot.passMasterGameweek === snapshot.gameweek) {
+    return `<img src="/pass-master.png" alt="Bonus" class="w-6 md:w-9" />`;
+  } else if (snapshot.noEntryGameweek === snapshot.gameweek) {
+    return `<img src="/no-entry.png" alt="Bonus" class="w-6 md:w-9" />`;
+  } else if (snapshot.teamBoostGameweek === snapshot.gameweek) {
+    return `<img src="/team-boost.png" alt="Bonus" class="w-6 md:w-9" />`;
+  } else if (snapshot.safeHandsGameweek === snapshot.gameweek) {
+    return `<img src="/safe-hands.png" alt="Bonus" class="w-6 md:w-9" />`;
+  } else if (snapshot.captainFantasticGameweek === snapshot.gameweek) {
+    return `<img src="/captain-fantastic.png" alt="Bonus" class="w-6 md:w-9" />`;
+  } else if (snapshot.prospectsGameweek === snapshot.gameweek) {
+    return `<img src="/prospects.png" alt="Bonus" class="w-6 md:w-9" />`;
+  } else if (snapshot.oneNationGameweek === snapshot.gameweek) {
+    return `<img src="/one-nation.png" alt="Bonus" class="w-6 md:w-9" />`;
+  } else if (snapshot.braceBonusGameweek === snapshot.gameweek) {
+    return `<img src="/brace-bonus.png" alt="Bonus" class="w-6 md:w-9" />`;
+  } else if (snapshot.hatTrickHeroGameweek === snapshot.gameweek) {
+    return `<img src="/hat-trick-hero.png" alt="Bonus" class="w-6 md:w-9" />`;
+  } else {
+    return "-";
+  }
+}
+
+export function mergeLeaderboardWithRewards(
+  leaderboardEntries: LeaderboardEntry[],
+  rewards: RewardEntry[],
+): LeaderboardEntry[] {
+  const rewardMap = new Map(
+    rewards.map((reward) => [reward.principalId, reward.amount]),
+  );
+
+  return leaderboardEntries.map((entry) => ({
+    ...entry,
+    reward: rewardMap.get(entry.principalId) ?? 0,
+  }));
+}
+
+export function getGameweeks(totalGameweeks: number): number[] {
+  return Array.from({ length: totalGameweeks }, (_, i) => i + 1);
+}
+
+export function normaliseString(str: string) {
+  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
+export function addTeamDataToPlayers(
+  clubs: ClubDTO[],
+  players: PlayerDTO[],
+): any[] {
+  return players.map((player) => {
+    const team = clubs.find((t) => t.id === player.clubId);
+    return { ...player, team };
+  });
 }

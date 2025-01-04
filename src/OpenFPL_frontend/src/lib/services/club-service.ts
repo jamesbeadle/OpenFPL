@@ -1,3 +1,4 @@
+import { toasts } from "$lib/stores/toasts-store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type { ClubDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../utils/actor.factory";
@@ -13,9 +14,14 @@ export class ClubService {
     );
   }
 
-  async getClubs(): Promise<ClubDTO[]> {
-    const result = await this.actor.getClubs();
-    if (isError(result)) throw new Error("Failed to fetch clubs");
-    return result.ok;
+  async getClubs(): Promise<ClubDTO[] | undefined> {
+    try {
+      const result = await this.actor.getClubs();
+      if (isError(result)) throw new Error("Failed to fetch clubs");
+      return result.ok;
+    } catch (error) {
+      console.error("Error fetching clubs: ", error);
+      toasts.addToast({ type: "error", message: "Error fetching clubs." });
+    }
   }
 }

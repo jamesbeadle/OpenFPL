@@ -4,54 +4,39 @@
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { playerStore } from "$lib/stores/player-store";
   import { formatUnixDateToReadable, formatUnixTimeToTime, getCountdownTime } from "$lib/utils/helpers";
-  import type { LeagueStatus, PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   import { seasonStore } from "$lib/stores/season-store";
-    import { toasts } from "$lib/stores/toasts-store";
-    import WidgetSpinner from "../shared/widget-spinner.svelte";
-
-  export let transfersAvailable: Writable<number>;  
-  export let bankBalance: Writable<number>;
-  export let teamValue: Writable<number>;
-
+  import PageHeader from "../shared/panels/page-header.svelte";
+  import { leagueStore } from "$lib/stores/league-store";
+  import ContentPanel from "../shared/panels/content-panel.svelte";
+  import HeaderContentPanel from "../shared/panels/header-content-panel.svelte";
+  import HeaderCountdownPanel from "../shared/panels/header-countdown-panel.svelte";
+ 
   export let fantasyTeam: Writable<PickTeamDTO | null>;
-  export let leagueStatus: LeagueStatus;
   
   let isLoading = true;
   let activeSeason = "-";
   let activeGameweek = 1;
-
   let nextFixtureDate = "-";
   let nextFixtureTime = "-";
-  let countdownDays = "00";
-  let countdownHours = "00";
-  let countdownMinutes = "00";
+  let teamValue: Writable<number>;
+  let countdownTime: { days: number; hours: number; minutes: number; };
 
   onMount(async () => {
     
-    let foundSeason = $seasonStore.find(x => x.id == leagueStatus.activeSeasonId);
+    let foundSeason = $seasonStore.find(x => x.id == $leagueStore!.activeSeasonId);
     if(foundSeason){
       activeSeason = foundSeason.name;
     }
-
-    activeGameweek = leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek;
-    
-    try {
-      updateTeamValue();
-      setCountdownTimer();
-    } catch (error) {
-      toasts.addToast({
-        message: "Error fetching pick team header data.",
-        type: "error"
-      });
-      console.error("Error fetching pick team header data:", error);
-    } finally {
-      isLoading = false;
-    }
+    activeGameweek = $leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek;
+    updateTeamValue();
+    setCountdownTimer();
+    isLoading = false;
   });
 
   async function setCountdownTimer() {
-    let gameweekFixtures = $fixtureStore.filter(x => x.gameweek == (leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek))
+    let gameweekFixtures = $fixtureStore.filter(x => x.gameweek == ($leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek))
     .sort((a, b) => Number(a.kickOff) - Number(b.kickOff));
 
     let earliestFixture = gameweekFixtures[0];
@@ -65,10 +50,7 @@
     nextFixtureDate = formatUnixDateToReadable(oneHourBeforeKickOff);
     nextFixtureTime = formatUnixTimeToTime(oneHourBeforeKickOff);
 
-    let countdownTime = getCountdownTime(oneHourBeforeKickOff);
-    countdownDays = countdownTime.days.toString();
-    countdownHours = countdownTime.hours.toString();
-    countdownMinutes = countdownTime.minutes.toString();
+    countdownTime = getCountdownTime(oneHourBeforeKickOff);
   }
 
   function updateTeamValue() {
@@ -89,84 +71,19 @@
 
 </script>
 
-{#if isLoading}
-  <WidgetSpinner />
-{:else}
-  <div class="flex page-header-wrapper w-full">
-    <div class="content-panel lg:w-1/2">
-
-
-      <div class="flex-grow my-2 xl:mb-0">
-        <p class="content-panel-header">Gameweek</p>
-        <p class="content-panel-stat">
-          {activeGameweek}
-        </p>
-        <p class="content-panel-header">
-          {activeSeason}
-        </p>
-      </div>
-
-
-      <div class="vertical-divider"></div>
-
-
-      <div class="flex-grow my-2 xl:mb-0">
-        <p class="content-panel-header">Kick Off:</p>
-        <div class="flex">
-          <p class="content-panel-stat">
-            {countdownDays}<span class="countdown-text">d</span>
-            : {countdownHours}<span class="countdown-text">h</span>
-            : {countdownMinutes}<span class="countdown-text">m</span>
-          </p>
-        </div>
-        <p class="content-panel-header">
-          {nextFixtureDate} | {nextFixtureTime}
-        </p>
-      </div>
-      
-      <div class="vertical-divider"></div>
-
-
-      <div class="flex-grow my-4 xl:mb-0">
-        <p class="content-panel-header">Players</p>
-        <p class="content-panel-stat">
-          {$fantasyTeam?.playerIds.filter((x) => x > 0).length}/11
-        </p>
-        <p class="content-panel-header">Selected</p>
-      </div>
-
-
-
-    </div>
-
-    <div class="content-panel lg:w-1/2">
-      <div class="flex-grow my-4 xl:mb-0">
-        <p class="content-panel-header">Team Value</p>
-        <p class="content-panel-stat">
-          £{$teamValue.toFixed(2)}m
-        </p>
-        <p class="content-panel-header">GBP</p>
-      </div>
-
-      <div class="vertical-divider"></div>
-
-      <div class="flex-grow my-4 xl:mb-0">
-        <p class="content-panel-header">Bank Balance</p>
-        <p class="content-panel-stat">
-          £{($bankBalance / 4).toFixed(2)}m
-        </p>
-        <p class="content-panel-header">GBP</p>
-      </div>
-
-      <div class="vertical-divider"></div>
-
-      <div class="flex-grow my-4 xl:mb-0">
-        <p class="content-panel-header">Transfers</p>
-        <p class="content-panel-stat">
-          {$transfersAvailable === Infinity ? "Unlimited" : $transfersAvailable}
-        </p>
-        <p class="content-panel-header">Available</p>
-      </div>
-    </div>
-  </div>
-{/if}
+<PageHeader>
+  <ContentPanel>
+    <HeaderContentPanel header="Gameweek" content={`${activeGameweek}`} footer={activeSeason} loading={false} />
+    <div class="vertical-divider"></div>
+    <HeaderCountdownPanel header="Kick Off" footer={`${nextFixtureDate} | ${nextFixtureTime}`} countdownDays={countdownTime.days} countdownHours={countdownTime.hours}  countdownMinutes={countdownTime.minutes} loading={false} />    
+    <div class="vertical-divider"></div>
+    <HeaderContentPanel header="Players" content={`£${$fantasyTeam?.playerIds.filter((x) => x > 0).length}/11`} footer="Selected" loading={false} />
+  </ContentPanel>
+  <ContentPanel>
+    <HeaderContentPanel header="Team Value" content={`£${$teamValue.toFixed(2)}m`} footer="GBP" loading={false} />
+    <div class="vertical-divider"></div>
+    <HeaderContentPanel header="Bank Balance" content={`£${($fantasyTeam ? $fantasyTeam?.bankQuarterMillions  / 4 : 300).toFixed(2)}m`} footer="GBP" loading={false} />
+    <div class="vertical-divider"></div>
+    <HeaderContentPanel header="Transfers" content={`${(!$fantasyTeam || $fantasyTeam.firstGameweek || $fantasyTeam.transferWindowGameweek == $leagueStore!.unplayedGameweek) ? "Unlimited" : $fantasyTeam.transfersAvailable}`} footer="GBP" loading={false} />
+  </ContentPanel>
+</PageHeader>

@@ -533,7 +533,7 @@ export interface _SERVICE {
     [GetFantasyTeamSnapshotDTO],
     Result_19
   >,
-  'getFixtures' : ActorMethod<[LeagueId], Result_12>,
+  'getFixtures' : ActorMethod<[], Result_12>,
   'getLeaderboardCanisterIds' : ActorMethod<[], Result_17>,
   'getLeagueStatus' : ActorMethod<[], Result_18>,
   'getLoanedPlayers' : ActorMethod<[ClubFilterDTO], Result_5>,

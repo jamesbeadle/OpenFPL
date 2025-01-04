@@ -61,7 +61,11 @@ function createPlayerEventsStore() {
     ) {
       allPlayerEvents = await getPlayerEventsFromLocalStorage();
     } else {
-      allPlayerEvents = await getPlayerEventsFromBackend(seasonId, gameweek);
+      let allPlayerEventsResult = await getPlayerEventsFromBackend(
+        seasonId,
+        gameweek,
+      );
+      allPlayerEvents = allPlayerEventsResult ? allPlayerEventsResult : [];
     }
 
     let allPlayers: PlayerDTO[] = [];
@@ -120,7 +124,7 @@ function createPlayerEventsStore() {
   async function getPlayerEventsFromBackend(
     seasonId: number,
     gameweek: number,
-  ): Promise<PlayerPointsDTO[]> {
+  ): Promise<PlayerPointsDTO[] | undefined> {
     return new PlayerEventsService().getPlayerEvents(seasonId, gameweek);
   }
 

@@ -5,7 +5,9 @@ import type {
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 function createCanisterStore() {
-  async function getCanisters(dto: GetCanistersDTO): Promise<CanisterDTO[]> {
+  async function getCanisters(
+    dto: GetCanistersDTO,
+  ): Promise<CanisterDTO[] | undefined> {
     return new CanisterService().getCanisters(dto);
   }
 

@@ -5,7 +5,7 @@ import { FixtureService } from "$lib/services/fixture-service";
 function createFixtureStore() {
   const { subscribe, set } = writable<FixtureDTO[]>([]);
 
-  async function getPostponedFixtures(): Promise<FixtureDTO[]> {
+  async function getPostponedFixtures(): Promise<FixtureDTO[] | undefined> {
     return new FixtureService().getPostponedFixtures();
   }
 

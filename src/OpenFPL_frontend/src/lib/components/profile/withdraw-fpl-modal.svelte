@@ -1,9 +1,10 @@
 <script lang="ts">
-    import { toasts } from "$lib/stores/toasts-store";
   import { userStore } from "$lib/stores/user-store";
+  import { toasts } from "$lib/stores/toasts-store";
+  import { convertToE8s, isAmountValid, isPrincipalValid } from "$lib/utils/helpers";
   import Modal from "$lib/components/shared/modal.svelte";
-    import WidgetSpinner from "../shared/widget-spinner.svelte";
-
+  import WidgetSpinner from "../shared/widget-spinner.svelte";
+  
   export let visible: boolean;
   export let closeModal: () => void;
   export let cancelModal: () => void;
@@ -13,30 +14,7 @@
   export let fplBalanceFormatted: string;
 
   let isLoading = false;
-
   let errorMessage: string = "";
-
-  function isPrincipalValid(principalId: string): boolean {
-    if (!principalId) {
-      return false;
-    }
-    const regex = /^([a-z2-7]{5}-){10}[a-z2-7]{3}$/i;
-    return regex.test(principalId);
-  }
-
-  function isAmountValid(amount: string): boolean {
-    if (!amount) {
-      return false;
-    }
-    const regex = /^\d+(\.\d{1,8})?$/;
-    return regex.test(amount);
-  }
-
-  function convertToE8s(amount: string): bigint {
-    const [whole, fraction = ""] = amount.split(".");
-    const fractionPadded = (fraction + "00000000").substring(0, 8);
-    return (BigInt(whole) * 100_000_000n) + BigInt(fractionPadded);
-  }
 
   function isWithdrawAmountValid(amount: string, balance: bigint): boolean {
     if (!isAmountValid(amount)) {
@@ -88,25 +66,11 @@
       <form on:submit|preventDefault={withdrawFPL}>
         <p>FPL Balance: {fplBalanceFormatted}</p>
         <div class="mt-4">
-          <input
-            type="text"
-            class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
-            placeholder="Withdrawal Address"
-            bind:value={withdrawalAddress}
-          />
+          <input type="text" class="fpl-button" placeholder="Withdrawal Address" bind:value={withdrawalAddress} />
         </div>
         <div class="mt-4 flex items-center">
-          <input
-            type="text"
-            class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black mr-2"
-            placeholder="Withdrawal Amount"
-            bind:value={withdrawalInputAmount}
-          />
-          <button
-            type="button"
-            class="text-sm md:text-sm p-1 md:p-2 px-2 md:px-4 rounded fpl-button"
-            on:click={setMaxWithdrawAmount}
-          >
+          <input type="text" class="fpl-button mr-2" placeholder="Withdrawal Amount" bind:value={withdrawalInputAmount} />
+          <button type="button" class="text-sm md:text-sm p-1 md:p-2 px-2 md:px-4 rounded fpl-button" on:click={setMaxWithdrawAmount}>
             Max
           </button>
         </div>
@@ -114,20 +78,10 @@
           <div class="mt-2 text-red-600">{errorMessage}</div>
         {/if}
         <div class="items-center py-3 flex space-x-4 flex-row">
-          <button
-            class="px-4 py-2 default-button fpl-cancel-btn"
-            type="button"
-            on:click={cancelModal}
-          >
+          <button class="px-4 py-2 default-button fpl-cancel-btn" type="button"on:click={cancelModal}>
             Cancel
           </button>
-          <button
-            class={`px-4 py-2 ${
-              isSubmitDisabled ? "bg-gray-500" : "bg-BrandPurple"
-            } default-button`}
-            type="submit"
-            disabled={isSubmitDisabled}
-          >
+          <button class={`px-4 py-2 ${ isSubmitDisabled ? "bg-gray-500" : "bg-BrandPurple"} default-button`} type="submit" disabled={isSubmitDisabled}>
             Withdraw
           </button>
         </div>

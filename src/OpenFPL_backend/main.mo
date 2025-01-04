@@ -134,11 +134,11 @@
       return await data_canister.getClubs(Environment.LEAGUE_ID);
     };
 
-    public shared composite query func getFixtures(leagueId: FootballTypes.LeagueId) : async Result.Result<[DTOs.FixtureDTO], T.Error> {
+    public shared composite query func getFixtures() : async Result.Result<[DTOs.FixtureDTO], T.Error> {
       let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
         getFixtures : shared query (leagueId: FootballTypes.LeagueId) -> async Result.Result<[DTOs.FixtureDTO], T.Error>;
       };
-      return await data_canister.getFixtures(leagueId);
+      return await data_canister.getFixtures(Environment.LEAGUE_ID);
     };
 
     public shared composite query func getSeasons() : async Result.Result<[DTOs.SeasonDTO], T.Error> {
@@ -825,13 +825,12 @@
       await seasonManager.updateDataHash("monthly_leaderboards");
       await seasonManager.updateDataHash("season_leaderboard");
       
-      //await calculateGWLeaderboard(1,16);
-      
-      //await calculateGWRewards(16);
+      //await calculateGWLeaderboard(1,19);
+      //await calculateGWRewards(19);
       
       //await userManager.resetWeeklyTransfers();
-       //await checkCanisterCycles();
-      //await manuallyPayRewards(18);
+      //await checkCanisterCycles();
+      //await manuallyPayRewards(19);
     };
 
     private func calculateGWLeaderboard(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber) : async (){
@@ -971,6 +970,7 @@
 
     */
 
+  //TODO fix to live canister
     public shared func getWeeklyLeaderboards() : async [T.WeeklyLeaderboard]{
        var leaderboard_canister = actor ("n26sp-cqaaa-aaaal-qna7q-cai") : actor {
         getWeeklyLeaderboards : () -> async [T.WeeklyLeaderboard];

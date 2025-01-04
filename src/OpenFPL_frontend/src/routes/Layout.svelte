@@ -7,13 +7,13 @@
   
   import Header from "$lib/shared/Header.svelte";
   import Footer from "$lib/shared/Footer.svelte";
+  import RelativeSpinner from "$lib/components/shared/relative-spinner.svelte";
   import "../app.css";
 
   import { initAuthWorker } from "$lib/services/worker.auth.services";
   import { storeManager } from "$lib/managers/store-manager";
   import { toasts } from "$lib/stores/toasts-store";
   import Toasts from "$lib/components/toasts/toasts.svelte";
-    import RelativeSpinner from "$lib/components/shared/relative-spinner.svelte";
 
   const init = async () => await Promise.all([syncAuthStore()]);
 
@@ -32,17 +32,9 @@
 
   let worker: { syncAuthIdle: (auth: AuthStoreData) => void } | undefined;
 
-  onMount(async () => (worker = await initAuthWorker()));
-
   onMount(async () => {
-    try {
-      await storeManager.syncStores();
-    } catch (error) {
-      toasts.addToast( { message: "Error mounting application data.",
-      type: "error" });
-      console.error("Error mounting application data:", error);
-    } finally {
-    }
+    worker = await initAuthWorker();
+    await storeManager.syncStores();
   });
 
   $: worker, $authStore, (() => worker?.syncAuthIdle($authStore))();
@@ -76,11 +68,3 @@
     <Toasts />
   </div>
 {/await}
-
-<style>
-  main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
-</style>

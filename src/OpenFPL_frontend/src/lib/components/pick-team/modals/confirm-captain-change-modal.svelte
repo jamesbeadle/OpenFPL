@@ -1,10 +1,12 @@
 <script lang="ts">
-    import Modal from "$lib/components/shared/modal.svelte";
-  import ActiveCaptainIcon from "$lib/icons/ActiveCaptainIcon.svelte";
+  import Modal from "$lib/components/shared/modal.svelte";
   export let visible = false;
   export let onConfirm: () => void;
-  export let onClose: () => void;
   export let newCaptain = "";
+
+  function onClose() {
+    visible = false;
+  }
 </script>
 
 <Modal showModal={visible} onClose={onClose} title="Captain Change">
@@ -21,9 +23,7 @@
         type="button"
         on:click={onClose}>Cancel</button
       >
-      <button class="default-button fpl-button" on:click={onConfirm}
-        >Confirm</button
-      >
+      <button class="default-button fpl-button" on:click={onConfirm}>Confirm</button>
     </div>
   </div>
 </Modal>

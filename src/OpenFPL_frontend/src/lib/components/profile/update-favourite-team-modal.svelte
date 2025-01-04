@@ -3,12 +3,11 @@
   import { userStore } from "$lib/stores/user-store";
   import { clubStore } from "$lib/stores/club-store";
   import { storeManager } from "$lib/managers/store-manager";
-    import { toasts } from "$lib/stores/toasts-store";
     import Modal from "$lib/components/shared/modal.svelte";
+    import { toasts } from "$lib/stores/toasts-store";
+    import WidgetSpinner from "../shared/widget-spinner.svelte";
 
   export let visible: boolean;
-  export let closeModal: () => void;
-  export let cancelModal: () => void;
   export let newFavouriteTeam: number = 0;
 
   let isLoading = true;
@@ -44,11 +43,20 @@
       isLoading = false;
     }
   }
+  
+  async function closeModal() {
+    await userStore.cacheProfile();
+    visible = false;
+  }
+
+  function cancelModal() {
+    visible = false;
+  }
 </script>
 
 <Modal showModal={visible} onClose={cancelModal} title="Update Favourite Team">
   {#if isLoading}
-
+    <WidgetSpinner />
   {:else}
     <div class="mx-4 p-4">
       <div class="w-full border border-gray-500 mt-4 mb-2">
@@ -63,20 +71,13 @@
         </select>
       </div>
 
-      <div
-        class="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4 mb-1 mt-4"
-        role="alert"
-      >
+      <div class="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4 mb-1 mt-4" role="alert">
         <p>Warning</p>
         <p>You can only set your favourite team once per season.</p>
       </div>
 
       <div class="items-center py-3 flex space-x-4">
-        <button
-          class="px-4 py-2 default-button fpl-cancel-btn"
-          type="button"
-          on:click={cancelModal}
-        >
+        <button class="px-4 py-2 default-button fpl-cancel-btn" type="button" on:click={cancelModal}>
           Cancel
         </button>
         <button

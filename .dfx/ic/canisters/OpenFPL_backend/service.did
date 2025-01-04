@@ -705,7 +705,7 @@ service : {
   getCurrentTeam: () -> (Result_21);
   getDataHashes: () -> (Result_20) composite_query;
   getFantasyTeamSnapshot: (GetFantasyTeamSnapshotDTO) -> (Result_19);
-  getFixtures: (LeagueId) -> (Result_12) composite_query;
+  getFixtures: () -> (Result_12) composite_query;
   getLeaderboardCanisterIds: () -> (Result_17);
   getLeagueStatus: () -> (Result_18);
   getLoanedPlayers: (ClubFilterDTO) -> (Result_5) composite_query;

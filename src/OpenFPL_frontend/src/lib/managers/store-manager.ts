@@ -21,6 +21,7 @@ import { isError, replacer } from "$lib/utils/helpers";
 import { userStore } from "$lib/stores/user-store";
 import { leagueStore } from "$lib/stores/league-store";
 import { appStore } from "$lib/stores/app-store";
+import { toasts } from "$lib/stores/toasts-store";
 
 class StoreManager {
   private dataHashService: DataHashService;
@@ -60,13 +61,9 @@ class StoreManager {
 
   async syncStores(): Promise<void> {
     const newHashes = await this.dataHashService.getDataHashes();
-
-    let error = isError(newHashes);
-    if (error) {
-      console.error("Error fetching data hashes.");
+    if (newHashes == undefined) {
       return;
     }
-
     for (const category of this.categories) {
       const categoryHash = newHashes.find((hash) => hash.category === category);
 
@@ -83,6 +80,9 @@ class StoreManager {
     switch (category) {
       case "countries":
         const updatedCountries = await this.countryService.getCountries();
+        if (!updatedCountries) {
+          return;
+        }
         countryStore.setCountries(updatedCountries);
         localStorage.setItem(
           "countries",
@@ -91,6 +91,9 @@ class StoreManager {
         break;
       case "league_status":
         const updatedLeagueStatus = await this.leagueService.getLeagueStatus();
+        if (!updatedLeagueStatus) {
+          return;
+        }
         leagueStore.setLeagueStatus(updatedLeagueStatus);
         localStorage.setItem(
           "league_status",
@@ -99,6 +102,9 @@ class StoreManager {
         break;
       case "app_status":
         const updatedAppStatus = await this.appService.getAppStatus();
+        if (!updatedAppStatus) {
+          return;
+        }
         appStore.setAppStatus(updatedAppStatus);
         localStorage.setItem(
           "app_status",
@@ -107,6 +113,9 @@ class StoreManager {
         break;
       case "seasons":
         const updatedSeasons = await this.seasonService.getSeasons();
+        if (!updatedSeasons) {
+          return;
+        }
         seasonStore.setSeasons(updatedSeasons);
         localStorage.setItem(
           "seasons",
@@ -115,11 +124,17 @@ class StoreManager {
         break;
       case "clubs":
         const updatedClubs = await this.clubService.getClubs();
+        if (!updatedClubs) {
+          return;
+        }
         clubStore.setClubs(updatedClubs);
         localStorage.setItem("clubs", JSON.stringify(updatedClubs, replacer));
         break;
       case "players":
         const updatedPlayers = await this.playerService.getPlayers();
+        if (!updatedPlayers) {
+          return;
+        }
         playerStore.setPlayers(updatedPlayers);
         localStorage.setItem(
           "players",
@@ -128,6 +143,9 @@ class StoreManager {
         break;
       case "player_events":
         const leagueStatus = await this.leagueService.getLeagueStatus();
+        if (!leagueStatus) {
+          return;
+        }
         const updatedPlayerEvents =
           await this.playerEventsService.getPlayerDetailsForGameweek(
             leagueStatus.activeSeasonId,
@@ -135,6 +153,9 @@ class StoreManager {
               ? leagueStatus.unplayedGameweek
               : leagueStatus.activeGameweek,
           );
+        if (!updatedPlayerEvents) {
+          return;
+        }
         playerEventsStore.setPlayerEvents(updatedPlayerEvents);
         localStorage.setItem(
           "player_events",
@@ -143,6 +164,9 @@ class StoreManager {
         break;
       case "fixtures":
         const updatedFixtures = await this.fixtureService.getFixtures();
+        if (!updatedFixtures) {
+          return;
+        }
         fixtureStore.setFixtures(updatedFixtures);
         localStorage.setItem(
           "fixtures",
@@ -151,12 +175,18 @@ class StoreManager {
         break;
       case "weekly_leaderboard":
         leagueStore.subscribe(async (leagueStatus) => {
+          if (!leagueStatus) {
+            return;
+          }
           const updatedWeeklyLeaderboard =
             await this.weeklyLeaderboardService.getWeeklyLeaderboard(
               0,
               leagueStatus?.activeSeasonId ?? 0,
               leagueStatus?.activeGameweek ?? 0,
             );
+          if (!updatedWeeklyLeaderboard) {
+            return;
+          }
           weeklyLeaderboardStore.setWeeklyLeaderboard(updatedWeeklyLeaderboard);
           localStorage.setItem(
             "weekly_leaderboard",

@@ -15,7 +15,7 @@
       "_vendor.js"
     ],
     "css": [
-      "_app/immutable/assets/index.yn7f-zCh.css"
+      "_app/immutable/assets/index.KLV_1GcI.css"
     ]
   },
   "_vendor.js": {
@@ -71,15 +71,6 @@
     "file": "entries/pages/club/_page.svelte.js",
     "name": "entries/pages/club/_page.svelte",
     "src": "src/OpenFPL_frontend/src/routes/club/+page.svelte",
-    "isEntry": true,
-    "imports": [
-      "_index.js"
-    ]
-  },
-  "src/OpenFPL_frontend/src/routes/clubs/+page.svelte": {
-    "file": "entries/pages/clubs/_page.svelte.js",
-    "name": "entries/pages/clubs/_page.svelte",
-    "src": "src/OpenFPL_frontend/src/routes/clubs/+page.svelte",
     "isEntry": true,
     "imports": [
       "_index.js"
