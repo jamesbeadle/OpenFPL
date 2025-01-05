@@ -412,6 +412,7 @@ export const idlFactory = ({ IDL }) => {
     'principalId' : IDL.Text,
   });
   const Result_11 = IDL.Variant({ 'ok' : ProfileDTO, 'err' : Error });
+  const GetRewardPoolDTO = IDL.Record({ 'seasonId' : SeasonId });
   const RewardPool = IDL.Record({
     'monthlyLeaderboardPool' : IDL.Nat64,
     'allTimeSeasonHighScorePool' : IDL.Nat64,
@@ -423,11 +424,11 @@ export const idlFactory = ({ IDL }) => {
     'allTimeMonthlyHighScorePool' : IDL.Nat64,
     'weeklyLeaderboardPool' : IDL.Nat64,
   });
-  const GetRewardPoolDTO = IDL.Record({
+  const RewardPoolDTO = IDL.Record({
     'seasonId' : SeasonId,
     'rewardPool' : RewardPool,
   });
-  const Result_10 = IDL.Variant({ 'ok' : GetRewardPoolDTO, 'err' : Error });
+  const Result_10 = IDL.Variant({ 'ok' : RewardPoolDTO, 'err' : Error });
   const GetSeasonLeaderboardDTO = IDL.Record({
     'offset' : IDL.Nat,
     'seasonId' : SeasonId,

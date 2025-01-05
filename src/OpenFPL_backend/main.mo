@@ -323,8 +323,7 @@
       return await userManager.getManagerByUsername(dto.username);
     };
 
-    public shared ({ caller }) func getRewardPool(dto: DTOs.GetRewardPoolDTO) : async Result.Result<DTOs.GetRewardPoolDTO, T.Error> {
-      assert not Principal.isAnonymous(caller);
+    public shared ({ caller }) func getRewardPool(dto: DTOs.GetRewardPoolDTO) : async Result.Result<DTOs.RewardPoolDTO, T.Error> {
       let rewardPool = leaderboardManager.getRewardPool(dto.seasonId);
       switch(rewardPool){
         case (null){
@@ -805,15 +804,27 @@
     };
 
     private func postUpgradeCallback() : async (){
-      //await seasonManager.putOnHold();  
       
 
       //TODO (GO LIVE)
       //set system state
       //ignore setSystemTimers();
      
+      await seasonManager.addNewDataHash("reward_pool");
+      //await calculateGWLeaderboard(1,19);
+      //await calculateGWRewards(19);
+      //await userManager.resetWeeklyTransfers();
+      //await checkCanisterCycles();
+      //await manuallyPayRewards(19);
+
+      //await seasonManager.putOnHold();  
       //await updateLeaderboardCanisterWasms();
       //await updateManagerCanisterWasms();
+      await updateAllDataHashes();
+    };
+
+    private func updateAllDataHashes() : async (){
+
       await seasonManager.updateDataHash("app_status");
       await seasonManager.updateDataHash("league_status");
       await seasonManager.updateDataHash("countries");
@@ -824,13 +835,7 @@
       await seasonManager.updateDataHash("weekly_leaderboard");
       await seasonManager.updateDataHash("monthly_leaderboards");
       await seasonManager.updateDataHash("season_leaderboard");
-      
-      //await calculateGWLeaderboard(1,19);
-      //await calculateGWRewards(19);
-      
-      //await userManager.resetWeeklyTransfers();
-      //await checkCanisterCycles();
-      //await manuallyPayRewards(19);
+      await seasonManager.updateDataHash("reward_pool");
     };
 
     private func calculateGWLeaderboard(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber) : async (){

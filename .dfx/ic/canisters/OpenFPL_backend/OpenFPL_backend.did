@@ -90,6 +90,11 @@ type RewardType =
    WeeklyATHScore;
    WeeklyLeaderboard;
  };
+type RewardPoolDTO = 
+ record {
+   rewardPool: RewardPool;
+   seasonId: SeasonId;
+ };
 type RewardPool = 
  record {
    allTimeMonthlyHighScorePool: nat64;
@@ -241,7 +246,7 @@ type Result_11 =
 type Result_10 = 
  variant {
    err: Error;
-   ok: GetRewardPoolDTO;
+   ok: RewardPoolDTO;
  };
 type Result_1 = 
  variant {
@@ -488,11 +493,7 @@ type GetSeasonLeaderboardDTO =
    searchTerm: text;
    seasonId: SeasonId;
  };
-type GetRewardPoolDTO = 
- record {
-   rewardPool: RewardPool;
-   seasonId: SeasonId;
- };
+type GetRewardPoolDTO = record {seasonId: SeasonId;};
 type GetPlayerDetailsDTO = 
  record {
    playerId: ClubId;

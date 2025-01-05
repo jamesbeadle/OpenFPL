@@ -90,6 +90,11 @@ type RewardType =
    WeeklyATHScore;
    WeeklyLeaderboard;
  };
+type RewardPoolDTO = 
+ record {
+   rewardPool: RewardPool;
+   seasonId: SeasonId;
+ };
 type RewardPool = 
  record {
    allTimeMonthlyHighScorePool: nat64;
@@ -241,7 +246,7 @@ type Result_11 =
 type Result_10 = 
  variant {
    err: Error;
-   ok: GetRewardPoolDTO;
+   ok: RewardPoolDTO;
  };
 type Result_1 = 
  variant {
@@ -488,11 +493,7 @@ type GetSeasonLeaderboardDTO =
    searchTerm: text;
    seasonId: SeasonId;
  };
-type GetRewardPoolDTO = 
- record {
-   rewardPool: RewardPool;
-   seasonId: SeasonId;
- };
+type GetRewardPoolDTO = record {seasonId: SeasonId;};
 type GetPlayerDetailsDTO = 
  record {
    playerId: ClubId;
@@ -705,7 +706,7 @@ service : {
   getCurrentTeam: () -> (Result_21);
   getDataHashes: () -> (Result_20) composite_query;
   getFantasyTeamSnapshot: (GetFantasyTeamSnapshotDTO) -> (Result_19);
-  getFixtures: (LeagueId) -> (Result_12) composite_query;
+  getFixtures: () -> (Result_12) composite_query;
   getLeaderboardCanisterIds: () -> (Result_17);
   getLeagueStatus: () -> (Result_18);
   getLoanedPlayers: (ClubFilterDTO) -> (Result_5) composite_query;

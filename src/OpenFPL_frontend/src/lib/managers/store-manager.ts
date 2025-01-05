@@ -17,11 +17,11 @@ import { PlayerEventsService } from "$lib/services/player-events-service";
 import { FixtureService } from "$lib/services/fixture-service";
 import { WeeklyLeaderboardService } from "$lib/services/weekly-leaderboard-service";
 
-import { isError, replacer } from "$lib/utils/helpers";
-import { userStore } from "$lib/stores/user-store";
+import { replacer } from "$lib/utils/helpers";
 import { leagueStore } from "$lib/stores/league-store";
 import { appStore } from "$lib/stores/app-store";
-import { toasts } from "$lib/stores/toasts-store";
+import { RewardPoolService } from "$lib/services/reward-pool-service";
+import { rewardPoolStore } from "$lib/stores/reward-pool-store";
 
 class StoreManager {
   private dataHashService: DataHashService;
@@ -34,6 +34,7 @@ class StoreManager {
   private playerEventsService: PlayerEventsService;
   private fixtureService: FixtureService;
   private weeklyLeaderboardService: WeeklyLeaderboardService;
+  private rewardPoolService: RewardPoolService;
 
   private categories: string[] = [
     "countries",
@@ -44,6 +45,7 @@ class StoreManager {
     "players",
     "player_events",
     "fixtures",
+    "reward_pool",
   ];
 
   constructor() {
@@ -57,6 +59,7 @@ class StoreManager {
     this.playerEventsService = new PlayerEventsService();
     this.fixtureService = new FixtureService();
     this.weeklyLeaderboardService = new WeeklyLeaderboardService();
+    this.rewardPoolService = new RewardPoolService();
   }
 
   async syncStores(): Promise<void> {
@@ -194,6 +197,24 @@ class StoreManager {
           );
         });
         break;
+      case "reward_pool":
+        leagueStore.subscribe(async (leagueStatus) => {
+          if (!leagueStatus) {
+            return;
+          }
+          const updatedRewardPool = await this.rewardPoolService.getRewardPool(
+            leagueStatus.activeSeasonId,
+          );
+          if (!updatedRewardPool) {
+            return;
+          }
+          rewardPoolStore.setRewardPool(updatedRewardPool);
+          localStorage.setItem(
+            "reward_pool",
+            JSON.stringify(updatedRewardPool, replacer),
+          );
+        });
+        break;
     }
   }
 
@@ -232,6 +253,10 @@ class StoreManager {
       case "weekly_leaderboard":
         const cachedWeeklyLeaderboard = JSON.parse(cachedData || "null");
         weeklyLeaderboardStore.setWeeklyLeaderboard(cachedWeeklyLeaderboard);
+        break;
+      case "reward_pool":
+        const cachedRewardPool = JSON.parse(cachedData || "null");
+        rewardPoolStore.setRewardPool(cachedRewardPool);
         break;
     }
   }

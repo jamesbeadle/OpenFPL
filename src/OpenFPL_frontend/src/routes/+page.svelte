@@ -18,9 +18,7 @@
   let activeTab: string = "fixtures";
   let isLoggedIn = false;
   let isLoading = true;
-  let seasonId = 0;
   let seasonName = "";
-  let gameweek = 0;
 
   const tabs = [
     { id: "fixtures", label: "Fixtures", authOnly: false },
@@ -39,9 +37,7 @@
   });
 
   async function loadCurrentStatusDetails(){
-    seasonId = $leagueStore?.activeSeasonId ?? 1;
     seasonName = await seasonStore.getSeasonName($leagueStore?.activeSeasonId ?? 1) ?? "-";
-    gameweek = await leagueStore.getActiveOrUnplayedGameweek();
   }
 
   function setActiveTab(tab: string): void {
@@ -53,7 +49,7 @@
   {#if isLoading}
     <WidgetSpinner />
   {:else}
-    <HomepageHeader {seasonId} {seasonName} {gameweek} />
+    <HomepageHeader {seasonName} />
 
     <div class="bg-panel">
       <TabContainer {tabs} {activeTab} {setActiveTab} isLoggedIn={isLoggedIn}  />

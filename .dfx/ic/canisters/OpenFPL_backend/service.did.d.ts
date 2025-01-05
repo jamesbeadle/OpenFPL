@@ -187,7 +187,6 @@ export interface GetPlayerDetailsDTO {
 }
 export interface GetRewardPoolDTO {
   seasonId: SeasonId;
-  rewardPool: RewardPool;
 }
 export interface GetSeasonLeaderboardDTO {
   offset: bigint;
@@ -399,7 +398,7 @@ export interface RequestManagerDTO {
 }
 export type Result = { ok: null } | { err: Error };
 export type Result_1 = { ok: ManagerDTO } | { err: Error };
-export type Result_10 = { ok: GetRewardPoolDTO } | { err: Error };
+export type Result_10 = { ok: RewardPoolDTO } | { err: Error };
 export type Result_11 = { ok: ProfileDTO } | { err: Error };
 export type Result_12 = { ok: Array<FixtureDTO> } | { err: Error };
 export type Result_13 =
@@ -446,6 +445,10 @@ export interface RewardPool {
   allTimeWeeklyHighScorePool: bigint;
   allTimeMonthlyHighScorePool: bigint;
   weeklyLeaderboardPool: bigint;
+}
+export interface RewardPoolDTO {
+  seasonId: SeasonId;
+  rewardPool: RewardPool;
 }
 export type RewardType =
   | { MonthlyLeaderboard: null }

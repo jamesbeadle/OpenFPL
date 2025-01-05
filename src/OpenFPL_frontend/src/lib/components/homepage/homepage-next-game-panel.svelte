@@ -39,10 +39,6 @@
 {#if loadingNextFixture}
     <LoadingDots />
 {:else}
-    {#if !noNextFixture}
-        <p class="content-panel-header">Upcoming Game</p>
-    {/if}
-
     <div class="flex items-center justify-start mb-2 ml-1">
         {#if loadingNextFixture}
             <LoadingDots />

@@ -454,7 +454,6 @@ module DTOs {
 
   public type GetRewardPoolDTO = {
     seasonId: FootballTypes.SeasonId;
-    rewardPool: T.RewardPool;
   };
 
   public type GetFantasyTeamSnapshotDTO = {

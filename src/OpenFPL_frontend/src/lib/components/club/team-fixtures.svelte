@@ -15,7 +15,7 @@
   import FixtureTypeFilter from "../shared/filters/fixture-type-filter.svelte";
   import { writable } from "svelte/store";
   import TeamFixturesTableHeader from "./team-fixtures-table-header.svelte";
-  import FixtureShirtsVersus from "../shared/panels/fixture-shirts-versus.svelte";
+    import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
 
   export let clubId: number | null = null;
 
@@ -54,7 +54,14 @@
       >
         <div class="w-1/6 md:ml-4">{fixture.gameweek}</div>
         <div class="w-1/3 flex">
-          <FixtureShirtsVersus {fixture} homeClub={homeTeam!} awayClub={awayTeam!} />
+            <a class="flex-row items-center" href={`/club?id=${fixture.homeClubId}`}>
+              <BadgeIcon club={homeTeam!} className="h-6 mr-2" />
+              {homeTeam ? homeTeam.friendlyName : ""}
+            </a>
+            <a class="flex-row items-center" href={`/club?id=${fixture.awayClubId}`}>
+              <BadgeIcon club={awayTeam!} className="h-6 mr-2" />
+              {awayTeam ? awayTeam.friendlyName : ""}
+            </a>
         </div>
         <div class="hidden md:flex w-1/3">
           {formatUnixDateToReadable(fixture.kickOff)}

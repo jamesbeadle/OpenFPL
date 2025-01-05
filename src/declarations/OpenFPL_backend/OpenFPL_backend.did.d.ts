@@ -168,10 +168,7 @@ export interface GetPlayerDetailsDTO {
   'playerId' : ClubId,
   'seasonId' : SeasonId,
 }
-export interface GetRewardPoolDTO {
-  'seasonId' : SeasonId,
-  'rewardPool' : RewardPool,
-}
+export interface GetRewardPoolDTO { 'seasonId' : SeasonId }
 export interface GetSeasonLeaderboardDTO {
   'offset' : bigint,
   'seasonId' : SeasonId,
@@ -381,7 +378,7 @@ export type Result = { 'ok' : null } |
   { 'err' : Error };
 export type Result_1 = { 'ok' : ManagerDTO } |
   { 'err' : Error };
-export type Result_10 = { 'ok' : GetRewardPoolDTO } |
+export type Result_10 = { 'ok' : RewardPoolDTO } |
   { 'err' : Error };
 export type Result_11 = { 'ok' : ProfileDTO } |
   { 'err' : Error };
@@ -449,6 +446,10 @@ export interface RewardPool {
   'allTimeWeeklyHighScorePool' : bigint,
   'allTimeMonthlyHighScorePool' : bigint,
   'weeklyLeaderboardPool' : bigint,
+}
+export interface RewardPoolDTO {
+  'seasonId' : SeasonId,
+  'rewardPool' : RewardPool,
 }
 export type RewardType = { 'MonthlyLeaderboard' : null } |
   { 'MostValuableTeam' : null } |

@@ -154,7 +154,7 @@ input {
   min-width: 1px;
   min-height: 50px;
   background-color: #37393c;
-  @apply flex-shrink-0 w-px self-stretch;
+  @apply flex-shrink-0 w-px self-stretch mx-2;
 }
 
 .horizontal-divider {
@@ -351,4 +351,8 @@ input[type="file"] {
 
 .bg-error {
   @apply bg-BrandWarning;
+}
+
+.header-badge {
+  @apply h-6 sm:h-7 md:h-8 xl:h-10 m-2 sm:my-4;
 }

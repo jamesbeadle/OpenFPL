@@ -18,7 +18,7 @@
             nextFixtureHomeTeam ? nextFixtureHomeTeam.id : -1
           }`}
         >
-          <BadgeIcon className="h-4 sm:h-6 my-2 sm:my-4" club={nextFixtureHomeTeam} />
+          <BadgeIcon className="header-badge" club={nextFixtureHomeTeam!} />
           <span class="content-panel-header">
             {nextFixtureHomeTeam ? nextFixtureHomeTeam.abbreviatedName : ""}
           </span>
@@ -29,7 +29,7 @@
             nextFixtureAwayTeam ? nextFixtureAwayTeam.id : -1
           }`}
         >
-          <BadgeIcon className="h-4 sm:h-6 my-2 sm:my-4" club={nextFixtureAwayTeam}
+          <BadgeIcon className="header-badge" club={nextFixtureAwayTeam!}
           />
           <span class="content-panel-header">{
             nextFixtureAwayTeam ? nextFixtureAwayTeam.abbreviatedName : ""}

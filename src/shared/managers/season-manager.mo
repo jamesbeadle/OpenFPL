@@ -57,6 +57,14 @@ module {
 
       dataHashes := Buffer.toArray<Base.DataHash>(hashBuffer);
     };
+
+    public func addNewDataHash(category: Text) : async () {
+      let hashBuffer = Buffer.fromArray<Base.DataHash>(dataHashes);
+      let randomHash = await SHA224.getRandomHash();
+      hashBuffer.add({ category = category; hash = randomHash });
+      dataHashes := Buffer.toArray<Base.DataHash>(hashBuffer);
+    };
+
     public func getDataHashes() : Result.Result<[DTOs.DataHashDTO], T.Error> {
       return #ok(dataHashes)
     };

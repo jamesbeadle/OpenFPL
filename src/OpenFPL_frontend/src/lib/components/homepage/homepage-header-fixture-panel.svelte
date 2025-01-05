@@ -15,34 +15,23 @@
     </div>
 {:else}
 
-    <div class="flex">
+    <div class="flex flex-col">
         <a 
-            class="flex flex-col items-center justify-center"
+            class="flex flex-row items-center justify-center" 
             href={`/club?id=${nextFixtureHomeTeam.id}`}
         >
-            <BadgeIcon
-                className="h-4 sm:h-6 my-2 sm:my-4"
-                club={nextFixtureHomeTeam}
-            />
+            <BadgeIcon className="header-badge" club={nextFixtureHomeTeam} />
             <span class="content-panel-header">
-                {nextFixtureHomeTeam.abbreviatedName}
+                {nextFixtureHomeTeam.friendlyName}
             </span>
         </a>
-    </div>
-    <div class="flex justify-center ml-1 mr-1 w-v">
-        <p class="mt-2 mb-2">v</p>
-    </div>
-    <div class="flex">
         <a
-            class="flex flex-col items-center justify-center"
+        class="flex flex-row items-center justify-center" 
             href={`/club?id=${nextFixtureAwayTeam.id}`}
         >
-            <BadgeIcon
-                className="h-4 sm:h-6 my-2 sm:my-4"
-                club={nextFixtureAwayTeam}
-            />
+            <BadgeIcon className="header-badge" club={nextFixtureAwayTeam} />
             <span class="content-panel-header">
-                {nextFixtureAwayTeam.abbreviatedName}
+                {nextFixtureAwayTeam.friendlyName}
             </span>
         </a>
     </div>

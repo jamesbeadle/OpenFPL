@@ -4,14 +4,12 @@
     import HomepageGameweekPanel from "./homepage-gameweek-panel.svelte";
     import HomepageNextGamePanel from "./homepage-next-game-panel.svelte";
 
-    export let seasonId: number;
     export let seasonName: string;
-    export let gameweek: number;
 </script>
 
 <PageHeader>
   <ContentPanel>
-    <HomepageGameweekPanel {seasonId} {seasonName} {gameweek}/>
+    <HomepageGameweekPanel {seasonName}/>
   </ContentPanel>
   <ContentPanel>
     <HomepageNextGamePanel />

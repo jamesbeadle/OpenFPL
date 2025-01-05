@@ -9,8 +9,8 @@
   import WidgetSpinner from "../shared/widget-spinner.svelte";
   import { writable } from "svelte/store";
   import GameweekFilter from "../shared/filters/gameweek-filter.svelte";
-  import FixtureShirtsVersus from "../shared/panels/fixture-shirts-versus.svelte";
   import FixtureStatus from "./fixture-status.svelte";
+    import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
 
   let isLoading = true;
   let gameweeks = getGameweeks(Number(process.env.TOTAL_GAMEWEEKS));
@@ -49,21 +49,24 @@
               class={`flex flex-row items-center py-2 border-b border-gray-700  
                 ${ Object.keys(fixture.status)[0] != "Finalised" ? "text-gray-400" : "text-white" }`}
             >
-              <div class="flex w-5/12 xs:w-4/12 md:w-3/12 lg:w-3/12 space-x-2 sm:space-x-3 lg:space-x-4 justify-center items-center">
-                <FixtureShirtsVersus {fixture} homeClub={homeTeam!} awayClub={awayTeam!} />
+
+              <div class="flex flex-col w-7/12 xs:w-6/12 md:w-5/12 lg:w-5/12 space-y-2">
+                <a class="flex flex-row items-center" href={`/club?id=${fixture.homeClubId}`}>
+                  <BadgeIcon club={homeTeam!} className="h-6 mr-2 ml-4" />
+                  {homeTeam ? homeTeam.friendlyName : ""}
+                </a>
+                <a class="flex flex-row items-center" href={`/club?id=${fixture.awayClubId}`}>
+                  <BadgeIcon club={awayTeam!} className="h-6 mr-2 ml-4" />
+                  {awayTeam ? awayTeam.friendlyName : ""}
+                </a>
               </div>
 
               <div class="flex w-5/12 xs:w-4/12 md:w-3/12 lg:w-3/12 flex-col">
-                <a href={`/club?id=${fixture.homeClubId}`}>{homeTeam ? homeTeam.friendlyName : ""}</a>
-                <a href={`/club?id=${fixture.awayClubId}`}>{awayTeam ? awayTeam.friendlyName : ""}</a>
-              </div>
-
-              <div class="flex w-2/12 xs:w-2/12 md:w-2/12 lg:w-1/12 flex-col">
                 <span>{Object.keys(fixture.status)[0] != "Finalised" ? "-" : fixture.homeGoals}</span>
                 <span>{Object.keys(fixture.status)[0] != "Finalised" ? "-" : fixture.awayGoals}</span>
               </div>
 
-              <div class="hidden xs:flex xs:w-2/12 md:w-2/12 lg:w-3/12 lg:justify-center">
+              <div class="hidden xs:flex xs:w-2/12 md:w-2/12 lg:w-2/12 lg:justify-center">
                 <span class="ml-4 xs:ml-0 text-left">{formatUnixTimeToTime(fixture.kickOff)}</span>
               </div>
 

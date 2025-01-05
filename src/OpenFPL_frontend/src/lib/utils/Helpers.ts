@@ -818,6 +818,13 @@ export function formatE8s(e8Value: bigint): string {
     maximumFractionDigits: 4,
   });
 }
+export function formatWholeE8s(e8Value: bigint): string {
+  const value = Number(e8Value) / 100_000_000;
+  return value.toLocaleString(undefined, {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  });
+}
 
 export function formatCycles(cycles: bigint): string {
   const trillionsOfCycles = Number(cycles) / 1_000_000_000_000;
