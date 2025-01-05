@@ -5,10 +5,7 @@
   import { leagueStore } from "$lib/stores/league-store";
   import { playerStore } from "$lib/stores/player-store";
   import { clubStore } from "$lib/stores/club-store";
-  import type {
-    ClubDTO,
-    PlayerDTO
-  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { ClubDTO, PlayerDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import PlayerGameweekHistory from "$lib/components/player/player-gameweek-history.svelte";
     
   import Layout from "../Layout.svelte";

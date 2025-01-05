@@ -37,10 +37,8 @@
     <WidgetSpinner />
   {:else}
     <ClubHeader clubId={id} />
-
     <div class="bg-panel">
-      <TabContainer {activeTab} {setActiveTab} {tabs} isLoggedIn={false}  />
-
+      <TabContainer {activeTab} {setActiveTab} {tabs} isLoggedIn={false} />
       {#if activeTab === "players"}
         <TeamPlayers clubId={id} />
       {:else if activeTab === "fixtures"}

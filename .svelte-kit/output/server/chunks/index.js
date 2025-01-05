@@ -4903,7 +4903,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1xknrgw"
+  version_hash: "o4bbx9"
 };
 async function get_hooks() {
   let handle;
@@ -7245,6 +7245,9 @@ const authSignedInStore = derived(
 const userGetProfilePicture = derived(
   userStore,
   ($user) => {
+    if (!$user) {
+      return "/profile_placeholder.png";
+    }
     return getProfilePictureString($user.profilePicture);
   }
 );
@@ -7329,8 +7332,8 @@ function Footer($$payload) {
   JunoIcon($$payload, { className: "h-8 w-auto ml-2" });
   $$payload.out += `<!----></a></div></div></div></div></footer>`;
 }
-function Relative_spinner($$payload) {
-  $$payload.out += `<div class="local-spinner svelte-1mszak5"></div>`;
+function Widget_spinner($$payload) {
+  $$payload.out += `<div class="widget svelte-1tvdi4g"><div class="widget-spinner svelte-1tvdi4g"></div></div>`;
 }
 function Toast_item($$payload, $$props) {
   push();
@@ -7367,7 +7370,7 @@ function Layout($$payload, $$props) {
     init2(),
     () => {
       $$payload.out += `<div>`;
-      Relative_spinner($$payload);
+      Widget_spinner($$payload);
       $$payload.out += `<!----></div>`;
     },
     (_) => {
@@ -7385,6 +7388,16 @@ function Layout($$payload, $$props) {
   $$payload.out += `<!---->`;
   if ($$store_subs) unsubscribe_stores($$store_subs);
   pop();
+}
+function Content_panel($$payload, $$props) {
+  $$payload.out += `<div class="content-panel"><!---->`;
+  slot($$payload, $$props, "default", {});
+  $$payload.out += `<!----></div>`;
+}
+function Page_header($$payload, $$props) {
+  $$payload.out += `<div class="page-header-wrapper"><!---->`;
+  slot($$payload, $$props, "default", {});
+  $$payload.out += `<!----></div>`;
 }
 var define_process_env_default$3 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 function createManagerStore() {
@@ -7637,9 +7650,6 @@ function createManagerStore() {
   };
 }
 createManagerStore();
-function Widget_spinner($$payload) {
-  $$payload.out += `<div class="widget svelte-1tvdi4g"><div class="widget-spinner svelte-1tvdi4g"></div></div>`;
-}
 var define_process_env_default$2 = { OPENFPL_BACKEND_CANISTER_ID: "y22zx-giaaa-aaaal-qmzpq-cai", OPENFPL_FRONTEND_CANISTER_ID: "5gbds-naaaa-aaaal-qmzqa-cai", DFX_NETWORK: "ic", CANISTER_ID_SNS_GOVERNANCE: "detjl-sqaaa-aaaaq-aacqa-cai", CANISTER_ID_SNS_ROOT: "gyito-zyaaa-aaaaq-aacpq-cai", TOTAL_GAMEWEEKS: 38 };
 function createMonthlyLeaderboardStore() {
   const { subscribe, set: set2 } = writable(null);
@@ -7882,29 +7892,39 @@ function _page$8($$payload, $$props) {
   }
   Layout($$payload, {
     children: ($$payload2) => {
-      const each_array = ensure_array_like(dropdownOptions);
-      $$payload2.out += `<div class="page-header-wrapper flex w-full"><div class="content-panel w-full"><div class="w-full mt-4 px-2"><p class="text-center w-full mb-6 text-xl font-semibold">OpenFPL Managed Canisters</p> <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 mb-4"><label class="font-medium" for="canisterType">Select Canister Type:</label> <select id="canisterType" class="fpl-dropdown"><!--[-->`;
-      for (let $$index = 0, $$length = each_array.length; $$index < $$length; $$index++) {
-        let option = each_array[$$index];
-        $$payload2.out += `<option${attr("value", option.id)}>option.name</option>`;
-      }
-      $$payload2.out += `<!--]--></select></div> `;
-      if (loadingCanisters) {
-        $$payload2.out += "<!--[-->";
-        $$payload2.out += `<div class="flex justify-center">`;
-        Widget_spinner($$payload2);
-        $$payload2.out += `<!----></div>`;
-      } else {
-        $$payload2.out += "<!--[!-->";
-        const each_array_1 = ensure_array_like(canisters);
-        $$payload2.out += `<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"><!--[-->`;
-        for (let $$index_1 = 0, $$length = each_array_1.length; $$index_1 < $$length; $$index_1++) {
-          let canister = each_array_1[$$index_1];
-          $$payload2.out += `<div class="border border-gray-200 rounded shadow-sm p-4 flex flex-col space-y-2"><p class="font-medium">Canister Id: ${escape_html(canister.canisterId)}</p> <p class="font-medium mt-2">Cycles Balance: ${escape_html(formatCycles(canister.cycles))}</p> <p class="font-medium mt-2">Compute Allocation: ${escape_html(canister.computeAllocation)}</p> <p class="font-medium mt-2">Total Topups: ${escape_html(canister.topups.length)}</p></div>`;
-        }
-        $$payload2.out += `<!--]--></div>`;
-      }
-      $$payload2.out += `<!--]--></div></div></div>`;
+      Page_header($$payload2, {
+        children: ($$payload3) => {
+          Content_panel($$payload3, {
+            children: ($$payload4) => {
+              const each_array = ensure_array_like(dropdownOptions);
+              $$payload4.out += `<div class="w-full mt-4 px-2"><p class="text-center w-full mb-6 text-xl font-semibold">OpenFPL Managed Canisters</p> <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 mb-4"><label class="font-medium" for="canisterType">Select Canister Type:</label> <select id="canisterType" class="fpl-dropdown"><!--[-->`;
+              for (let $$index = 0, $$length = each_array.length; $$index < $$length; $$index++) {
+                let option = each_array[$$index];
+                $$payload4.out += `<option${attr("value", option.id)}>option.name</option>`;
+              }
+              $$payload4.out += `<!--]--></select></div> `;
+              if (loadingCanisters) {
+                $$payload4.out += "<!--[-->";
+                $$payload4.out += `<div class="flex justify-center">`;
+                Widget_spinner($$payload4);
+                $$payload4.out += `<!----></div>`;
+              } else {
+                $$payload4.out += "<!--[!-->";
+                const each_array_1 = ensure_array_like(canisters);
+                $$payload4.out += `<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"><!--[-->`;
+                for (let $$index_1 = 0, $$length = each_array_1.length; $$index_1 < $$length; $$index_1++) {
+                  let canister = each_array_1[$$index_1];
+                  $$payload4.out += `<div class="border border-gray-200 rounded shadow-sm p-4 flex flex-col space-y-2"><p class="font-medium">Canister Id: ${escape_html(canister.canisterId)}</p> <p class="font-medium mt-2">Cycles Balance: ${escape_html(formatCycles(canister.cycles))}</p> <p class="font-medium mt-2">Compute Allocation: ${escape_html(canister.computeAllocation)}</p> <p class="font-medium mt-2">Total Topups: ${escape_html(canister.topups.length)}</p></div>`;
+                }
+                $$payload4.out += `<!--]--></div>`;
+              }
+              $$payload4.out += `<!--]--></div>`;
+            },
+            $$slots: { default: true }
+          });
+        },
+        $$slots: { default: true }
+      });
     },
     $$slots: { default: true }
   });

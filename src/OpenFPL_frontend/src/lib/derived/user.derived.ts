@@ -5,6 +5,9 @@ import { derived, type Readable } from "svelte/store";
 export const userGetProfilePicture: Readable<string> = derived(
   userStore,
   ($user) => {
+    if (!$user) {
+      return "/profile_placeholder.png";
+    }
     return getProfilePictureString($user.profilePicture);
   },
 );

@@ -66,7 +66,7 @@
     {#if nextFixture}
       <HeaderFixturePanel loading={isLoading} {nextFixtureHomeTeam} {nextFixtureAwayTeam} />
       <div class="vertical-divider"></div>
-      <HeaderCountdownPanel loading={isLoading} countdownDays={countdownTime.days} countdownHours={countdownTime.hours} countdownMinutes={countdownTime.minutes} header="Upcoming Fixture" footer={`${formatUnixDateToSmallReadable(nextFixture.kickOff).toString()} ${formatUnixTimeToTime(nextFixture.kickOff)}`} />
+      <HeaderCountdownPanel loading={isLoading} {countdownTime} header="Upcoming Fixture" footer={`${formatUnixDateToSmallReadable(nextFixture.kickOff).toString()} ${formatUnixTimeToTime(nextFixture.kickOff)}`} />
     {:else}
         <p>No fixtures for the season have been announced.</p>
     {/if}

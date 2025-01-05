@@ -169,7 +169,7 @@ export function isValidFormation(
   return totalPlayers + additionalPlayersNeeded <= 11;
 }
 
-export function isBonusConditionMet(team: PickTeamDTO | null): boolean {
+export function isBonusConditionMet(team: PickTeamDTO | undefined): boolean {
   if (!team) {
     return false;
   }
@@ -628,7 +628,7 @@ export function checkBonusUsedInSession(
 }
 
 export function isBonusUsed(
-  fantasyTeam: PickTeamDTO | null,
+  fantasyTeam: PickTeamDTO | undefined,
   bonusId: number,
 ): boolean {
   if (!fantasyTeam) return false;
@@ -685,7 +685,7 @@ export function isBonusUsed(
 }
 
 export function bonusPlayedThisWeek(
-  fantasyTeam: PickTeamDTO | null,
+  fantasyTeam: PickTeamDTO | undefined,
   leagueStatus: LeagueStatus | null,
 ): boolean {
   if (!fantasyTeam || !leagueStatus) return false;

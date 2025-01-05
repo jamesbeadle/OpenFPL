@@ -13,13 +13,13 @@
   import DesktopButtons from "./desktop-buttons.svelte";
   import MobileButtons from "./mobile-buttons.svelte";
 
-  export let fantasyTeam: Writable<PickTeamDTO>;
+  export let fantasyTeam: Writable<PickTeamDTO | undefined>;
   export let selectedFormation: Writable<string>;
   export let availableFormations: Writable<string[]>;
   export let pitchView: Writable<Boolean>;
 
   let startingFantasyTeam: PickTeamDTO;
-  let isSaveButtonActive: Writable<boolean>;
+  let isSaveButtonActive = writable(false);
   let activeSeason: string;
   let activeGameweek: number;
   let newUsername = writable("");
@@ -53,7 +53,7 @@
   onMount(async () => {
     let appStatusResult = await appStore.getAppStatus();
     appStatus = appStatusResult ? appStatusResult : appStatus;
-    startingFantasyTeam = $fantasyTeam;
+    startingFantasyTeam = $fantasyTeam!;
     loadData();
     disableInvalidFormations()
     isLoading = false;
@@ -118,12 +118,12 @@
   function playTransferWindow() {
     transferWindowPlayedInSession = true;
     $transferWindowPlayed = true;
-    fantasyTeam.set({ ...$fantasyTeam, transferWindowGameweek: $leagueStore!.unplayedGameweek });
+    fantasyTeam.set({ ...$fantasyTeam!, transferWindowGameweek: $leagueStore!.unplayedGameweek });
   }
 
   async function updateUsername() {
     if ($newUsername == "") { return; }
-    fantasyTeam.set({ ...$fantasyTeam, username: $newUsername });
+    fantasyTeam.set({ ...$fantasyTeam!, username: $newUsername });
     showUsernameModal = false;
     saveFantasyTeam();
   }

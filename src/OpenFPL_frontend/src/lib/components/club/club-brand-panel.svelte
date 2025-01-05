@@ -6,7 +6,6 @@
     export let club: ClubDTO;
 </script>
 
-
 <div class="flex-grow flex flex-col items-center">
   <p class="content-panel-header">
     {club.friendlyName}

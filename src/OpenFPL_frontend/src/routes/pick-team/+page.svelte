@@ -17,16 +17,15 @@
   import BonusPanel from "$lib/components/pick-team/bonus-panel.svelte";
   import OnHold from "$lib/components/pick-team/on-hold.svelte";
     
-  let fantasyTeam: Writable<PickTeamDTO>;
-  let availableFormations: Writable<string[]>;
-  let selectedFormation: Writable<string>;
+  let fantasyTeam = writable<PickTeamDTO | undefined>(undefined);
+  let availableFormations = writable(Object.keys(allFormations));   
+  let selectedFormation = writable('4-4-2');
   const pitchView = writable(true);
   
   let isLoading = true;
   
   onMount(async () => {
       await storeManager.syncStores();
-      $availableFormations = Object.keys(allFormations);   
       await loadData();
       isLoading = false;
   });
@@ -37,7 +36,6 @@
     if (storedViewMode) {
       pitchView.set(storedViewMode === "pitch");
     }
-
     let userFantasyTeam = await managerStore.getCurrentTeam();
     
     fantasyTeam.set(userFantasyTeam);

@@ -7,7 +7,7 @@
   
   import Header from "$lib/shared/Header.svelte";
   import Footer from "$lib/shared/Footer.svelte";
-  import RelativeSpinner from "$lib/components/shared/relative-spinner.svelte";
+  import WidgetSpinner from "$lib/components/shared/widget-spinner.svelte";
   import "../app.css";
 
   import { initAuthWorker } from "$lib/services/worker.auth.services";
@@ -18,9 +18,7 @@
   const init = async () => await Promise.all([syncAuthStore()]);
 
   const syncAuthStore = async () => {
-    if (!browser) {
-      return;
-    }
+    if (!browser) { return; }
 
     try {
       await authStore.sync();
@@ -56,7 +54,7 @@
 <svelte:window on:storage={syncAuthStore} />
 {#await init()}
   <div in:fade>
-    <RelativeSpinner />
+    <WidgetSpinner />
   </div>
 {:then _}
   <div class="flex flex-col h-screen justify-between default-text">

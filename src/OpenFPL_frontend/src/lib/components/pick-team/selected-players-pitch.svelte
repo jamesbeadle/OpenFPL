@@ -12,7 +12,7 @@
     import PitchPlayer from "./pitch-player.svelte";
 
     export let selectedFormation: Writable<string>;
-    export let fantasyTeam: Writable<PickTeamDTO>;
+    export let fantasyTeam: Writable<PickTeamDTO | undefined>;
     export let loadAddPlayer: (row: number, col: number) => void;
     export let canSellPlayer: Writable<boolean>;
     export let sessionAddedPlayers: Writable<number[]>;

@@ -6,7 +6,7 @@
   import ProfileDetail from "$lib/components/profile/profile-detail.svelte";
   import ProfileManagerGameweeks from "$lib/components/manager/profile-manager-gameweeks.svelte";
   import WidgetSpinner from "$lib/components/shared/widget-spinner.svelte";
-    import TabContainer from "$lib/components/shared/tab-container.svelte";
+  import TabContainer from "$lib/components/shared/tab-container.svelte";
 
   const tabs = [
     { id: "details", label: "Details", authOnly: false },
@@ -17,16 +17,10 @@
   let isLoading = true;
 
   onMount(async () => {
-    try{
-      userStore.sync();
-    }
-    catch (err){
-      console.error("Error loading auth details");
-    }
-    finally{
-      isLoading = false;
-    };
+    await userStore.sync();
+    isLoading = false;
   });
+
   function setActiveTab(tab: string): void {
     activeTab = tab;
   }
@@ -46,9 +40,7 @@
         {/if}
 
         {#if activeTab === "gameweeks" && $userStore}
-          <ProfileManagerGameweeks
-            principalId={$userStore.principalId}
-          />
+          <ProfileManagerGameweeks principalId={$userStore.principalId} />
         {/if}
 
       </div>

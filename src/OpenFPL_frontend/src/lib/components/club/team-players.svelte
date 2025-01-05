@@ -1,21 +1,19 @@
 <script lang="ts">
-  import { Position } from "$lib/enums/Position";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
-    import { onMount } from "svelte";
+  import { onMount } from "svelte";
   import type { PlayerDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import {
     calculateAgeFromNanoseconds,
     convertPositionToIndex,
     getFlagComponent,
-    getPositionAbbreviation,
-    getPositionIndexToText,
+    getPositionAbbreviation
   } from "../../utils/helpers";
-    import { playerStore } from "$lib/stores/player-store";
-    import { writable } from "svelte/store";
-    import PositionFilter from "../shared/position-filter.svelte";
-    import TeamPlayersTableHeader from "./team-players-table-header.svelte";
-  export let clubId;
+  import { playerStore } from "$lib/stores/player-store";
+  import { writable } from "svelte/store";
+  import PositionFilter from "../shared/position-filter.svelte";
+  import TeamPlayersTableHeader from "./team-players-table-header.svelte";
 
+  export let clubId;
 
   onMount(async () => {
     players = $playerStore.filter((x) => x.clubId == clubId)
@@ -23,8 +21,7 @@
 
   let players: PlayerDTO[] = [];
   let selectedPosition = writable(-1);
-  $: filteredPlayers =
-    $selectedPosition === -1
+  $: filteredPlayers = $selectedPosition === -1
       ? players
       : players.filter(
           (p) => convertPositionToIndex(p.position) === $selectedPosition
@@ -60,7 +57,7 @@
             £{(player.valueQuarterMillions / 4).toFixed(2)}m
           </div>
           <div class="hidden lg:flex items-center w-1/12">
-            {0} <!-- //TODO -->
+            {0} <!-- //TODO - Why no points -->
           </div>
           <div class="flex w-2/12 justify-center xl:justify-start xl:w-1/12">
             <ViewDetailsIcon className="w-4 sm:w-5 md:w-6 xl:w-7" />

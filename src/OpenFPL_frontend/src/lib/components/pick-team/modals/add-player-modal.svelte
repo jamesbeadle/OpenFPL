@@ -15,7 +15,7 @@
 
   export let visible: boolean;
   export let handlePlayerSelection: (player: PlayerDTO) => void;
-  export let fantasyTeam: Writable<PickTeamDTO>;
+  export let fantasyTeam: Writable<PickTeamDTO | undefined>;
   export let filterPosition = writable(-1);
 
   const pageSize = 10;
@@ -29,7 +29,7 @@
 
   $: paginatedPlayers = addTeamDataToPlayers($clubStore, filteredPlayers.slice(($currentPage - 1) * pageSize, $currentPage * pageSize));
   $: teamPlayerCounts = countPlayersByTeam($playerStore, $fantasyTeam?.playerIds ?? []);
-  $: disableReasons = paginatedPlayers.map((player) => reasonToDisablePlayer($fantasyTeam, $playerStore, player, teamPlayerCounts));
+  $: disableReasons = paginatedPlayers.map((player) => reasonToDisablePlayer($fantasyTeam!, $playerStore, player, teamPlayerCounts));
 
   $: { 
     if ( $filterTeam !== -1 || $filterPosition !== -1 || $minValue !== 0 || $maxValue !== 0 || $filterSurname !== "" ) {
@@ -42,7 +42,7 @@
   onMount(async () => {
     resetFilters();
     await filterPlayers();
-    teamPlayerCounts = countPlayersByTeam($playerStore, $fantasyTeam.playerIds ?? []);
+    teamPlayerCounts = countPlayersByTeam($playerStore, $fantasyTeam!.playerIds ?? []);
     isLoading = false;
   });
   

@@ -14,7 +14,7 @@
   import SelectedPlayersList from "./selected-players-list.svelte";
   import { convertPositionToIndex } from "$lib/utils/helpers";
   
-  export let fantasyTeam: Writable<PickTeamDTO>;
+  export let fantasyTeam: Writable<PickTeamDTO | undefined>;
   export let pitchView: Writable<boolean>;
   export let selectedFormation: Writable<string>;
 
@@ -90,13 +90,13 @@
       selectedColumn = -1;
       if(!$fantasyTeam){ return };
       fantasyTeam.update((currentTeam) => {
-        const playerIndex = currentTeam.playerIds.indexOf(playerId);
+        const playerIndex = currentTeam!.playerIds.indexOf(playerId);
         if (playerIndex === -1) {
           console.error("Player not found in the team.");
           return currentTeam;
         }
 
-        const newPlayerIds = Uint16Array.from(currentTeam.playerIds);
+        const newPlayerIds = Uint16Array.from(currentTeam!.playerIds);
         newPlayerIds[playerIndex] = 0;
 
         let transfersAvailable = $fantasyTeam.transfersAvailable;
@@ -108,7 +108,7 @@
           $sessionAddedPlayers = $sessionAddedPlayers.filter((id) => id !== playerId);
         }
         let bankQuarterMillions = $fantasyTeam.bankQuarterMillions + $playerStore.find((x) => x.id === playerId)!.valueQuarterMillions;
-        return { ...currentTeam, playerIds: newPlayerIds, bankQuarterMillions, transfersAvailable };
+        return { ...currentTeam!, playerIds: newPlayerIds, bankQuarterMillions, transfersAvailable };
       })
   }
 
@@ -119,7 +119,7 @@
 
   function setTeamValue() {
     let totalValue = 0;
-    $fantasyTeam.playerIds.forEach((id) => {
+    $fantasyTeam!.playerIds.forEach((id) => {
       const player = $playerStore.find((p) => p.id === id);
       if (player) {
         totalValue += player.valueQuarterMillions;
@@ -127,15 +127,15 @@
     });
     
     let updatedFantasyTeam = {
-      ...$fantasyTeam,
+      ...$fantasyTeam!,
       teamValue: totalValue / 4,
     };
     fantasyTeam.set(updatedFantasyTeam);
   }
 
   function setTeamFormation(){
-    if ($fantasyTeam.playerIds.filter((x) => x > 0).length == 11) {
-      const newFormation = getTeamFormation($fantasyTeam, $playerStore);
+    if ($fantasyTeam!.playerIds.filter((x) => x > 0).length == 11) {
+      const newFormation = getTeamFormation($fantasyTeam!, $playerStore);
       $selectedFormation = newFormation;
     }
   }
@@ -144,42 +144,44 @@
     $selectedPosition = -1;
     selectedColumn = -1;
     fantasyTeam.update((currentTeam) => {
-      return { ...currentTeam, captainId: $newCaptainId };
+      return { ...currentTeam!, captainId: $newCaptainId };
     });
     showCaptainModal = false;
   }
 
-
   function handlePlayerSelection(player: PlayerDTO) {
-      if (canAddPlayerToCurrentFormation($playerStore, player, $fantasyTeam, $selectedFormation)) 
-      {
-        addPlayerToTeam(player, $selectedFormation);
-      } else {
-        const newFormation = findValidFormationWithPlayer($playerStore, $fantasyTeam, player, $selectedFormation);
-        fantasyTeam.update((team) => {
-          return {
-            ...team,
-            playerIds: repositionPlayersForNewFormation($playerStore, $fantasyTeam, newFormation)
-          };
-        });
-        $selectedFormation = newFormation;
-        addPlayerToTeam(player, newFormation);
-      }
+    if (canAddPlayerToCurrentFormation($playerStore, player, $fantasyTeam!, $selectedFormation)) 
+    {
+      addPlayerToTeam(player, $selectedFormation);
+    } else {
+      const newFormation = findValidFormationWithPlayer($playerStore, $fantasyTeam!, player, $selectedFormation);
+      fantasyTeam.update((team) => {
+        return {
+          ...team!,
+          playerIds: repositionPlayersForNewFormation($playerStore, $fantasyTeam!, newFormation),
+          bankQuarterMillions: team!.bankQuarterMillions - player.valueQuarterMillions
+        };
+      });
+      $selectedFormation = newFormation;
+      addPlayerToTeam(player, newFormation);
     }
-
+    if (!$sessionAddedPlayers.includes(player.id)) {
+      $sessionAddedPlayers.push(player.id);
+    }
+  }
 
   function addPlayerToTeam(player: PlayerDTO,formation: string) {
-    const indexToAdd = getAvailablePositionIndex(convertPositionToIndex(player.position), $fantasyTeam, formation);
+    const indexToAdd = getAvailablePositionIndex(convertPositionToIndex(player.position), $fantasyTeam!, formation);
     if (indexToAdd === -1) {
       console.error("No available position to add the player.");
       return;
     }
 
     fantasyTeam.update((currentTeam) => {
-      const newPlayerIds = Uint16Array.from(currentTeam.playerIds);
+      const newPlayerIds = Uint16Array.from(currentTeam!.playerIds);
       if (indexToAdd < newPlayerIds.length) {
         newPlayerIds[indexToAdd] = player.id;
-        return { ...currentTeam, playerIds: newPlayerIds };
+        return { ...currentTeam!, playerIds: newPlayerIds };
       } else {
         console.error(
           "Index out of bounds when attempting to add player to team."
@@ -188,9 +190,9 @@
       }
     });
 
-    if ($fantasyTeam.captainId > 0 && $fantasyTeam.playerIds.filter((x) => x == $fantasyTeam.captainId).length == 0) 
+    if ($fantasyTeam!.captainId > 0 && $fantasyTeam!.playerIds.filter((x) => x == $fantasyTeam!.captainId).length == 0) 
     {
-      newCaptainId.set(getHighestValuedPlayerId($fantasyTeam, $playerStore));
+      newCaptainId.set(getHighestValuedPlayerId($fantasyTeam!, $playerStore));
       changeCaptain();
     }
   }

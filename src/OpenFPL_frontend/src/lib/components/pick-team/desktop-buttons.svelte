@@ -8,7 +8,7 @@
     export let availableFormations: Writable<string[]>;
     export let transferWindowPlayed: Writable<boolean>;
     export let isSaveButtonActive: Writable<boolean>;
-    export let fantasyTeam: Writable<PickTeamDTO>;
+    export let fantasyTeam: Writable<PickTeamDTO | undefined>;
     export let showPitchView : () => void;
     export let showListView : () => void;
     export let playTransferWindow : () => void;

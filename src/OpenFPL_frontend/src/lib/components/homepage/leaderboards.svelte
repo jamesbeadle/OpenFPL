@@ -25,8 +25,8 @@
   let itemsPerPage = 25;
   let selectedSeasonId: number;
   let selectedGameweek = writable(1);
-  let selectedMonth: Writable<number>;
-  let selectedTeamId: Writable<number>;
+  let selectedMonth = writable(0);
+  let selectedTeamId = writable(0);
   let leaderboard: any;
 
   $: $selectedTeamIndex = $clubStore.findIndex((team) => team.id === $selectedTeamId);

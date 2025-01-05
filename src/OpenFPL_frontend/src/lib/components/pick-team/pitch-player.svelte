@@ -8,7 +8,7 @@
     import { convertPositionToIndex, getFlagComponent, getPlayerName, getPositionAbbreviation } from "$lib/utils/helpers";
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
 
-    export let fantasyTeam: Writable<PickTeamDTO>;
+    export let fantasyTeam: Writable<PickTeamDTO | undefined>;
     export let player: PlayerDTO;
     export let club: ClubDTO;
     export let canSellPlayer: Writable<boolean>;

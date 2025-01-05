@@ -6,7 +6,8 @@
     import type { CanisterDTO, CanisterType, GetCanistersDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     import { canisterStore } from "$lib/stores/canister-store";
     import { formatCycles } from "$lib/utils/helpers";
-    import { toasts } from "$lib/stores/toasts-store";
+    import PageHeader from "$lib/components/shared/panels/page-header.svelte";
+    import ContentPanel from "$lib/components/shared/panels/content-panel.svelte";
   
     let selectedCanisterType = 0;
     let loadingCanisters = true;
@@ -55,8 +56,8 @@
   </script>
   
   <Layout>
-    <div class="page-header-wrapper flex w-full">
-      <div class="content-panel w-full">
+    <PageHeader>
+      <ContentPanel>
         <div class="w-full mt-4 px-2">
           <p class="text-center w-full mb-6 text-xl font-semibold">
             OpenFPL Managed Canisters
@@ -88,6 +89,6 @@
             </div>
           {/if}
         </div>
-      </div>
-    </div>
+      </ContentPanel>
+    </PageHeader>
   </Layout>

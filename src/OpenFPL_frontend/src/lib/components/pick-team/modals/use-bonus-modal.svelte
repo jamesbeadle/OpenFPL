@@ -13,7 +13,7 @@
     import { leagueStore } from "$lib/stores/league-store";
     
   export let visible: boolean;
-  export let fantasyTeam: Writable<PickTeamDTO | null>;
+  export let fantasyTeam: Writable<PickTeamDTO | undefined>;
   export let bonusUsedInSession: Writable<boolean>;
   export let closeBonusModal: () => void;
   export let bonus: Bonus;

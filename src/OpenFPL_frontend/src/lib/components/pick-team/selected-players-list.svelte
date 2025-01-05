@@ -12,7 +12,7 @@
     import { clubStore } from "$lib/stores/club-store";
     
     export let selectedFormation: Writable<string>;
-    export let fantasyTeam: Writable<PickTeamDTO>;
+    export let fantasyTeam: Writable<PickTeamDTO | undefined>;
     export let loadAddPlayer: (row: number, col: number) => void;
     export let removePlayer: (playerId: number) => void;
     export let setCaptain: (playerId: number) => void;

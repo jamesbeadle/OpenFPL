@@ -5,11 +5,11 @@
   import type { Bonus } from "$lib/types/bonus";
   import UseBonusModal from "$lib/components/pick-team/modals/use-bonus-modal.svelte";
   import Tooltip from "$lib/components/shared/tooltip.svelte";
-    import { BonusType } from "$lib/enums/BonusType";
-    import { leagueStore } from "$lib/stores/league-store";
-    import { bonusPlayedThisWeek, isBonusUsed } from "$lib/utils/pick-team.helpers";
+  import { BonusType } from "$lib/enums/BonusType";
+  import { leagueStore } from "$lib/stores/league-store";
+  import { bonusPlayedThisWeek, isBonusUsed } from "$lib/utils/pick-team.helpers";
 
-  export let fantasyTeam: Writable<PickTeamDTO | null>;
+  export let fantasyTeam: Writable<PickTeamDTO | undefined>;
 
   let bonuses = writable<Bonus[]>([
     {
@@ -19,7 +19,7 @@
       description:
         "Select a player you think will score in a game to receive a X3 mulitplier for each goal scored.",
       selectionType: 0,
-      isUsed: isBonusUsed($fantasyTeam, 1),
+      isUsed: isBonusUsed($fantasyTeam!, 1),
       usedGameweek: $fantasyTeam?.goalGetterGameweek ?? 0
     },
     {
@@ -29,7 +29,7 @@
       description:
         "Select a player you think will assist in a game to receive a X3 mulitplier for each assist.",
       selectionType: 0,
-      isUsed: isBonusUsed($fantasyTeam, 2),
+      isUsed: isBonusUsed($fantasyTeam!, 2),
       usedGameweek: $fantasyTeam?.passMasterGameweek ?? 0
     },
     {
@@ -39,7 +39,7 @@
       description:
         "Select a goalkeeper or defender you think will keep a clean sheet to receive a X3 multipler on their total score.",
       selectionType: 0,
-      isUsed: isBonusUsed($fantasyTeam, 3),
+      isUsed: isBonusUsed($fantasyTeam!, 3),
       usedGameweek: $fantasyTeam?.noEntryGameweek ?? 0
     },
     {
@@ -49,7 +49,7 @@
       description:
         "Receive a X2 multiplier from all players from a single club that are in your team.",
       selectionType: 1,
-      isUsed: isBonusUsed($fantasyTeam, 4),
+      isUsed: isBonusUsed($fantasyTeam!, 4),
       usedGameweek: $fantasyTeam?.teamBoostGameweek ?? 0
     },
     {
@@ -59,7 +59,7 @@
       description:
         "Receive a X3 multiplier on your goalkeeper if they make 5 saves in a match.",
       selectionType: BonusType.AUTOMATIC,
-      isUsed: isBonusUsed($fantasyTeam, 5),
+      isUsed: isBonusUsed($fantasyTeam!, 5),
       usedGameweek: $fantasyTeam?.safeHandsGameweek ?? 0
     },
     {
@@ -69,7 +69,7 @@
       description:
         "Receive a X2 multiplier on your team captain's score if they score a goal in a match.",
       selectionType: BonusType.AUTOMATIC,
-      isUsed: isBonusUsed($fantasyTeam, 6),
+      isUsed: isBonusUsed($fantasyTeam!, 6),
       usedGameweek: $fantasyTeam?.captainFantasticGameweek ?? 0
     },
     {
@@ -78,7 +78,7 @@
       image: "/prospects.png",
       description: "Receive a X2 multiplier for players under the age of 21.",
       selectionType: BonusType.AUTOMATIC,
-      isUsed: isBonusUsed($fantasyTeam, 7),
+      isUsed: isBonusUsed($fantasyTeam!, 7),
       usedGameweek: $fantasyTeam?.prospectsGameweek ?? 0
     },
     {
@@ -88,7 +88,7 @@
       description:
         "Receive a X2 multiplier for players of a selected nationality.",
       selectionType: BonusType.COUNTRY,
-      isUsed: isBonusUsed($fantasyTeam, 8),
+      isUsed: isBonusUsed($fantasyTeam!, 8),
       usedGameweek: $fantasyTeam?.oneNationGameweek ?? 0
     },
     {
@@ -98,7 +98,7 @@
       description:
         "Receive a X2 multiplier on a player's score if they score 2 or more goals in a game. Applies to every player who scores a brace.",
       selectionType: BonusType.AUTOMATIC,
-      isUsed: isBonusUsed($fantasyTeam, 9),
+      isUsed: isBonusUsed($fantasyTeam!, 9),
       usedGameweek: $fantasyTeam?.braceBonusGameweek ?? 0
     },
     {
@@ -108,7 +108,7 @@
       description:
         "Receive a X3 multiplier on a player's score if they score 3 or more goals in a game. Applies to every player who scores a hat-trick.",
       selectionType: BonusType.AUTOMATIC,
-      isUsed: isBonusUsed($fantasyTeam, 10),
+      isUsed: isBonusUsed($fantasyTeam!, 10),
       usedGameweek: $fantasyTeam?.hatTrickHeroGameweek ?? 0
     },
   ]);
@@ -121,14 +121,14 @@
   }
 
   async function setWeeklyBonusPlayed(){
-    $weeklyBonusPlayed = bonusPlayedThisWeek($fantasyTeam, $leagueStore);
+    $weeklyBonusPlayed = bonusPlayedThisWeek($fantasyTeam!, $leagueStore);
   }
 
   function updateBonuses() {
     bonuses.update(bonusArray => {
       return bonusArray.map(bonus => ({
         ...bonus,
-        isUsed: isBonusUsed($fantasyTeam, bonus.id)
+        isUsed: isBonusUsed($fantasyTeam!, bonus.id)
       }));
     });
   }
@@ -143,6 +143,7 @@
   $: leftPanelBonuses = $bonuses.slice(0, 5);
   $: rightPanelBonuses = $bonuses.slice(5, 10);
   let bonusUsedInSession = writable<boolean>(false);
+    
 
   function showBonusModal(bonusId: number): void {
     selectedBonusId = bonusId;

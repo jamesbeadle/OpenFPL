@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { type Writable } from "svelte/store";
+  import { writable, type Writable } from "svelte/store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { playerStore } from "$lib/stores/player-store";
   import { formatUnixDateToReadable, formatUnixTimeToTime, getCountdownTime } from "$lib/utils/helpers";
@@ -13,14 +13,14 @@
   import HeaderContentPanel from "../shared/panels/header-content-panel.svelte";
   import HeaderCountdownPanel from "../shared/panels/header-countdown-panel.svelte";
  
-  export let fantasyTeam: Writable<PickTeamDTO | null>;
+  export let fantasyTeam: Writable<PickTeamDTO | undefined>;
   
   let isLoading = true;
   let activeSeason = "-";
   let activeGameweek = 1;
   let nextFixtureDate = "-";
   let nextFixtureTime = "-";
-  let teamValue: Writable<number>;
+  let teamValue = writable(0);
   let countdownTime: { days: number; hours: number; minutes: number; };
 
   onMount(async () => {
@@ -75,7 +75,7 @@
   <ContentPanel>
     <HeaderContentPanel header="Gameweek" content={`${activeGameweek}`} footer={activeSeason} loading={false} />
     <div class="vertical-divider"></div>
-    <HeaderCountdownPanel header="Kick Off" footer={`${nextFixtureDate} | ${nextFixtureTime}`} countdownDays={countdownTime.days} countdownHours={countdownTime.hours}  countdownMinutes={countdownTime.minutes} loading={false} />    
+    <HeaderCountdownPanel header="Kick Off" footer={`${nextFixtureDate} | ${nextFixtureTime}`} {countdownTime} loading={false} />    
     <div class="vertical-divider"></div>
     <HeaderContentPanel header="Players" content={`£${$fantasyTeam?.playerIds.filter((x) => x > 0).length}/11`} footer="Selected" loading={false} />
   </ContentPanel>
