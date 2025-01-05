@@ -201,9 +201,9 @@
 
     public shared func getPlayerDetails(dto: DTOs.GetPlayerDetailsDTO) : async Result.Result<DTOs.PlayerDetailDTO, T.Error> {
       let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
-        getPlayerDetailsForGameweek : shared query (leagueId: FootballTypes.LeagueId, dto: DTOs.GetPlayerDetailsDTO) -> async Result.Result<DTOs.PlayerDetailDTO, T.Error>;
+        getPlayerDetails : shared query (leagueId: FootballTypes.LeagueId, dto: DTOs.GetPlayerDetailsDTO) -> async Result.Result<DTOs.PlayerDetailDTO, T.Error>;
       };
-      return await data_canister.getPlayerDetailsForGameweek(Environment.LEAGUE_ID, dto);
+      return await data_canister.getPlayerDetails(Environment.LEAGUE_ID, dto);
     };
 
     public shared query func getCountries() : async Result.Result<[DTOs.CountryDTO], T.Error> {
@@ -810,7 +810,7 @@
       //set system state
       //ignore setSystemTimers();
      
-      await seasonManager.addNewDataHash("reward_pool");
+      //await seasonManager.addNewDataHash("reward_pool");
       //await calculateGWLeaderboard(1,19);
       //await calculateGWRewards(19);
       //await userManager.resetWeeklyTransfers();
@@ -820,6 +820,7 @@
       //await seasonManager.putOnHold();  
       //await updateLeaderboardCanisterWasms();
       //await updateManagerCanisterWasms();
+      //seasonManager.removeDuplicateHashes();
       await updateAllDataHashes();
     };
 

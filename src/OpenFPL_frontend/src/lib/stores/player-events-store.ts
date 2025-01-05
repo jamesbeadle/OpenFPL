@@ -23,7 +23,7 @@ function createPlayerEventsStore() {
   async function getPlayerDetails(
     playerId: number,
     seasonId: number,
-  ): Promise<PlayerDetailDTO> {
+  ): Promise<PlayerDetailDTO | undefined> {
     return new PlayerEventsService().getPlayerDetails(playerId, seasonId);
   }
 

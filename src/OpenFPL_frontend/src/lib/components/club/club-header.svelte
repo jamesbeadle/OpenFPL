@@ -14,6 +14,7 @@
   import ClubBrandPanel from "./club-brand-panel.svelte";
   import PageHeader from "../shared/panels/page-header.svelte";
   import ContentPanel from "../shared/panels/content-panel.svelte";
+    import WidgetSpinner from "../shared/widget-spinner.svelte";
   
   export let clubId: ClubId;
 
@@ -62,18 +63,22 @@
 </script>
 
 <PageHeader>
-  <ContentPanel>
-    <ClubBrandPanel {club} />
-    <div class="vertical-divider"></div>
-    <HeaderContentPanel header="Players" content={$playerStore.filter((x) => x.clubId == clubId).length.toString()} footer="Total" loading={false} />
-    <div class="vertical-divider"></div>
-    <HeaderContentPanel header="League Position" content={getTeamPosition(clubId).toString()} footer={seasonName} loading={false} />
-  </ContentPanel>
-  <ContentPanel>
-    <HeaderFixturePanel header="Next Game" {nextFixtureAwayTeam} {nextFixtureHomeTeam} />
-    <div class="vertical-divider"></div>
-    <HeaderContentPanel header="League Points" content={getTeamPoints(clubId).toString()} footer="Total" loading={false} />
-    <div class="vertical-divider"></div>
-    <HeaderContentPanel header="Most Valuable Player" content={highestScoringPlayer?.lastName ?? "-"} footer={Object.keys(highestScoringPlayer?.position ?? { Goalkeeper: null })[0].toString()} loading={false} />
-  </ContentPanel>
+  {#if isLoading}
+    <WidgetSpinner />
+  {:else}
+    <ContentPanel>
+      <ClubBrandPanel {club} />
+      <div class="vertical-divider"></div>
+      <HeaderContentPanel header="Players" content={$playerStore.filter((x) => x.clubId == clubId).length.toString()} footer="Total" loading={false} />
+      <div class="vertical-divider"></div>
+      <HeaderContentPanel header="League Position" content={getTeamPosition(clubId).toString()} footer={seasonName} loading={false} />
+    </ContentPanel>
+    <ContentPanel>
+      <HeaderFixturePanel header="Next Game" {nextFixtureAwayTeam} {nextFixtureHomeTeam} />
+      <div class="vertical-divider"></div>
+      <HeaderContentPanel header="League Points" content={getTeamPoints(clubId).toString()} footer="Total" loading={false} />
+      <div class="vertical-divider"></div>
+      <HeaderContentPanel header="Most Valuable Player" content={highestScoringPlayer?.lastName ?? "-"} footer={Object.keys(highestScoringPlayer?.position ?? { Goalkeeper: null })[0].toString()} loading={false} />
+    </ContentPanel>
+  {/if}
 </PageHeader>

@@ -33,7 +33,8 @@
       seasonName = await seasonStore.getSeasonName($leagueStore!.activeSeasonId ?? 0) ?? "";
       fixturesWithTeams = getFixturesWithTeams($clubStore, $fixtureStore);
       $selectedGameweek = $leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek;
-      playerDetails = await playerEventsStore.getPlayerDetails(id, $leagueStore!.activeSeasonId);
+      let playerDetailsResult = await playerEventsStore.getPlayerDetails(id, $leagueStore!.activeSeasonId);
+      playerDetails = playerDetailsResult ? playerDetailsResult : playerDetails;
       isLoading = false;
   });
 

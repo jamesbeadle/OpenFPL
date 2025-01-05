@@ -2,6 +2,7 @@ import Result "mo:base/Result";
 import Buffer "mo:base/Buffer";
 import Iter "mo:base/Iter";
 import Array "mo:base/Array";
+import Option "mo:base/Option";
 import DTOs "../../shared/dtos/DTOs";
 import RequestDTOs "../../shared/dtos/request_DTOs";
 import FootballTypes "../../shared/types/football_types";
@@ -59,10 +60,15 @@ module {
     };
 
     public func addNewDataHash(category: Text) : async () {
-      let hashBuffer = Buffer.fromArray<Base.DataHash>(dataHashes);
-      let randomHash = await SHA224.getRandomHash();
-      hashBuffer.add({ category = category; hash = randomHash });
-      dataHashes := Buffer.toArray<Base.DataHash>(hashBuffer);
+      let exists = Array.find<Base.DataHash>(dataHashes, func(foundHash: Base.DataHash) : Bool {
+        foundHash.category == category;
+      });
+      if(Option.isNull(exists)){
+        let hashBuffer = Buffer.fromArray<Base.DataHash>(dataHashes);
+        let randomHash = await SHA224.getRandomHash();
+        hashBuffer.add({ category = category; hash = randomHash });
+        dataHashes := Buffer.toArray<Base.DataHash>(hashBuffer);
+      }
     };
 
     public func getDataHashes() : Result.Result<[DTOs.DataHashDTO], T.Error> {
