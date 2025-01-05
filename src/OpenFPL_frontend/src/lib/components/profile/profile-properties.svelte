@@ -75,9 +75,9 @@
   </div>
   <UpdateUsernameModal
     newUsername={$userStore.username}
-    visible={showUsernameModal}
+    bind:visible={showUsernameModal}
   />
   <UpdateFavouriteTeamModal
     newFavouriteTeam={$userStore.favouriteClubId}
-    visible={showFavouriteTeamModal}
+    bind:visible={showFavouriteTeamModal}
   />

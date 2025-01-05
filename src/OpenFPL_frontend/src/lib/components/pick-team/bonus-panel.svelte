@@ -158,7 +158,7 @@
 <div class="bg-panel flex-1 my-4 lg:mb-0">
   {#if selectedBonusId > 0}
     <UseBonusModal
-      visible={showModal}
+      bind:visible={showModal}
       bonus={$bonuses[selectedBonusId - 1]}
       {closeBonusModal}
       {fantasyTeam}

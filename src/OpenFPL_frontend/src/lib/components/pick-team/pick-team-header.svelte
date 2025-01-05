@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { writable, type Writable } from "svelte/store";
+  import { type Writable } from "svelte/store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { playerStore } from "$lib/stores/player-store";
   import { formatUnixDateToReadable, formatUnixTimeToTime, getCountdownTime } from "$lib/utils/helpers";
@@ -14,13 +14,13 @@
   import HeaderCountdownPanel from "../shared/panels/header-countdown-panel.svelte";
  
   export let fantasyTeam: Writable<PickTeamDTO | undefined>;
+  export let teamValue: Writable<number>;
   
   let isLoading = true;
   let activeSeason = "-";
   let activeGameweek = 1;
   let nextFixtureDate = "-";
   let nextFixtureTime = "-";
-  let teamValue = writable(0);
   let countdownTime: { days: number; hours: number; minutes: number; };
 
   onMount(async () => {

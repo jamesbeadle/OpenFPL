@@ -67,7 +67,7 @@
       opponentTeam={selectedOpponent}
       playerTeam={$clubStore.find((team) => team.id === playerDetails.clubId)}
       {closeDetailModal}
-      visible={showModal}
+      bind:visible={showModal}
       playerDetail={playerDetails}
       gameweek={$selectedGameweek}
       seasonName={seasonName};

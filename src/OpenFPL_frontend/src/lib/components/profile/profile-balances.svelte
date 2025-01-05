@@ -57,7 +57,7 @@
   </div>
 
   <WithdrawFplModal
-    visible={showWithdrawFPLModal}
+    bind:visible={showWithdrawFPLModal}
     closeModal={closeWithdrawFPLModal}
     cancelModal={closeWithdrawFPLModal}
     fplBalance={fplBalance}

@@ -164,7 +164,7 @@
   <WidgetSpinner />
 {:else}
   <SetTeamName
-    visible={showUsernameModal}
+    bind:visible={showUsernameModal}
     setUsername={updateUsername}
     cancelModal={closeUsernameModal}
     {newUsername}

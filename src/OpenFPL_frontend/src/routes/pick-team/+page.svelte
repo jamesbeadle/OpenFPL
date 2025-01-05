@@ -16,11 +16,11 @@
   import SimpleFixtures from "$lib/components/simple-fixtures.svelte";
   import BonusPanel from "$lib/components/pick-team/bonus-panel.svelte";
   import OnHold from "$lib/components/pick-team/on-hold.svelte";
-    import { clubStore } from "$lib/stores/club-store";
     
   let fantasyTeam = writable<PickTeamDTO | undefined>(undefined);
   let availableFormations = writable(Object.keys(allFormations));   
   let selectedFormation = writable('4-4-2');
+  let teamValue = writable(0);
   const pitchView = writable(true);
   
   let isLoading = true;
@@ -65,10 +65,10 @@
       <OnHold />
     {:else}
     <div>
-      <PickTeamHeader {fantasyTeam} />
+      <PickTeamHeader {fantasyTeam} {teamValue} />
       <PickTeamButtons {fantasyTeam} {pitchView} {selectedFormation} {availableFormations} />
       <div class="flex flex-col xl:flex-row mt-2 xl:mt-0">
-        <PickTeamPlayers {fantasyTeam} {pitchView} {selectedFormation} />
+        <PickTeamPlayers {fantasyTeam} {pitchView} {selectedFormation} {teamValue} />
         <div class="hidden xl:flex w-full xl:w-1/2 ml-2">
           <SimpleFixtures />
         </div>

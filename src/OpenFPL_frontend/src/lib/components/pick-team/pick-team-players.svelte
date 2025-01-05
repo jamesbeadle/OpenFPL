@@ -17,6 +17,7 @@
   export let fantasyTeam: Writable<PickTeamDTO | undefined>;
   export let pitchView: Writable<boolean>;
   export let selectedFormation: Writable<string>;
+  export let teamValue: Writable<number>;
 
   let isLoading = true;
   let showAddPlayerModal = false;
@@ -64,9 +65,12 @@
   }
   
   function loadAddPlayer(row: number, col: number) {
+    console.log("Loading add player modal")
     $selectedPosition = row;
     selectedColumn = col;
     showAddPlayerModal = true;
+    console.log(showAddPlayerModal)
+    
   }
 
   function setCaptain(playerId: number) {
@@ -107,8 +111,18 @@
           }
           $sessionAddedPlayers = $sessionAddedPlayers.filter((id) => id !== playerId);
         }
+
+        let newTeamValue = 0;
+        newPlayerIds.forEach((id) => {
+          const player = $playerStore.find((p) => p.id === id);
+          if (player) {
+            newTeamValue += player.valueQuarterMillions;
+          }
+        });
+        teamValue.set(newTeamValue / 4);
+        
         let bankQuarterMillions = $fantasyTeam.bankQuarterMillions + $playerStore.find((x) => x.id === playerId)!.valueQuarterMillions;
-        return { ...currentTeam!, playerIds: newPlayerIds, bankQuarterMillions, transfersAvailable };
+        return { ...currentTeam!, playerIds: newPlayerIds, bankQuarterMillions, transfersAvailable, teamValue };
       })
   }
 
@@ -181,7 +195,19 @@
       const newPlayerIds = Uint16Array.from(currentTeam!.playerIds);
       if (indexToAdd < newPlayerIds.length) {
         newPlayerIds[indexToAdd] = player.id;
-        return { ...currentTeam!, playerIds: newPlayerIds };
+
+        let newTeamValue = 0;
+        newPlayerIds.forEach((id) => {
+          const player = $playerStore.find((p) => p.id === id);
+          if (player) {
+            newTeamValue += player.valueQuarterMillions;
+          }
+        });
+        teamValue.set(newTeamValue / 4);
+
+        let bankQuarterMillions = currentTeam!.bankQuarterMillions - player.valueQuarterMillions;
+      
+        return { ...currentTeam!, playerIds: newPlayerIds, teamValue, bankQuarterMillions };
       } else {
         console.error(
           "Index out of bounds when attempting to add player to team."
@@ -201,14 +227,14 @@
 
 <ConfirmCaptainChange
   newCaptain={$newCaptain}
-  visible={showCaptainModal}
+  bind:visible={showCaptainModal}
   onConfirm={changeCaptain}
 />
 
 <AddPlayerModal
   {handlePlayerSelection}
   filterPosition={selectedPosition}
-  visible={showAddPlayerModal}
+  bind:visible={showAddPlayerModal}
   {fantasyTeam}
 />
 
