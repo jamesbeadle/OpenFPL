@@ -7,6 +7,7 @@
     import PlayerCaptainIcon from "$lib/icons/PlayerCaptainIcon.svelte";
     import { convertPositionToIndex, getFlagComponent, getPlayerName, getPositionAbbreviation } from "$lib/utils/helpers";
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
+    import { onMount } from "svelte";
 
     export let fantasyTeam: Writable<PickTeamDTO | undefined>;
     export let player: PlayerDTO;

@@ -5,7 +5,7 @@
   import { leagueStore } from "$lib/stores/league-store";
   import { seasonStore } from "$lib/stores/season-store";
   import { playerEventsStore } from "$lib/stores/player-events-store";
-  import type { ClubDTO, FantasyTeamSnapshot, LeagueStatus } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { ClubDTO, FantasyTeamSnapshot } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import { calculateBonusPoints, sortPlayersByPointsThenValue } from "$lib/utils/pick-team.helpers";
   import WidgetSpinner from "../shared/widget-spinner.svelte";
@@ -26,7 +26,6 @@
   let activeSeasonName: string;
 
   let gameweekPlayers = writable<GameweekData[]>([]);
-  let leagueStatus: LeagueStatus;
   let gameweeks: number[];
 
   $: if ($fantasyTeam && $selectedGameweek && $selectedGameweek > 0) {
@@ -39,9 +38,8 @@
 
   onMount(async () => {
     await storeManager.syncStores();
-    leagueStatus = $leagueStore!;
-    gameweeks = getGameweeks(leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek ?? 1)
-    activeSeasonName = await seasonStore.getSeasonName(leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek ?? 0) ?? "";
+    gameweeks = getGameweeks($leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek ?? 1)
+    activeSeasonName = await seasonStore.getSeasonName($leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek ?? 0) ?? "";
     if (!$fantasyTeam) { return; }
     updateGameweekPlayers();
     isLoading = false;
@@ -77,7 +75,7 @@
     />
   {/if}
   <div class="flex flex-col">
-      <GameweekFilter {selectedGameweek} {gameweeks} {leagueStatus} {changeGameweek} />
+      <GameweekFilter {selectedGameweek} {gameweeks} {changeGameweek} />
   </div>
   <ManagerGameweekDetailTable {fantasyTeam} {selectedGameweekData} {gameweekPlayers} {selectedTeam} {selectedOpponentTeam} {showModal} />
   <ScoreAbbreviationKey />

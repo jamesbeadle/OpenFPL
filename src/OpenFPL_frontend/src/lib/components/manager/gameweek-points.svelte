@@ -15,6 +15,7 @@
   import { writable } from "svelte/store";
   import GameweekPointsTable from "./gameweek-points-table.svelte";
   import { getGameweeks } from "$lib/utils/helpers";
+    import { leagueStore } from "$lib/stores/league-store";
 
   let isLoading = true;
   let selectedGameweek = writable(1);
@@ -25,13 +26,12 @@
   let selectedOpponentTeam: ClubDTO;
   let selectedGameweekData: GameweekData;
   let activeSeasonName: string;
-  let leagueStatus: LeagueStatus;
 
   onMount(async () => {
     await storeManager.syncStores();
-    activeSeasonName = await seasonStore.getSeasonName(leagueStatus.activeSeasonId ?? 0) ?? "";
-    gameweeks = getGameweeks(leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek ?? 1);
-    $selectedGameweek = leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek ?? 1;
+    activeSeasonName = await seasonStore.getSeasonName($leagueStore!.activeSeasonId ?? 0) ?? "";
+    gameweeks = getGameweeks($leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek ?? 1);
+    $selectedGameweek = $leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek ?? 1;
     let principal = $authStore?.identity?.getPrincipal().toText() ?? "";
     if(principal == ""){
       return;
@@ -52,13 +52,13 @@
 
     let fantasyTeam = await managerStore.getFantasyTeamForGameweek(
       principal,
-      leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek ?? 1,
+      $leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek ?? 1,
       $selectedGameweek
     );
 
     if (!fantasyTeam) { return; }
 
-    let unsortedData = await playerEventsStore.getGameweekPlayers(fantasyTeam, leagueStatus.activeSeasonId, $selectedGameweek);
+    let unsortedData = await playerEventsStore.getGameweekPlayers(fantasyTeam, $leagueStore!.activeSeasonId, $selectedGameweek);
     $gameweekData = unsortedData.sort((a, b) => b.points - a.points);
   }
 
@@ -94,7 +94,7 @@
     />
   {/if}
   <div class="flex flex-col">
-    <GameweekFilter {selectedGameweek} {changeGameweek} {gameweeks} {leagueStatus} />
+    <GameweekFilter {selectedGameweek} {changeGameweek} {gameweeks} />
     <GameweekPointsTable {gameweekData} {showDetailModal} />
   </div>
 {/if}

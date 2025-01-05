@@ -36,7 +36,7 @@
     <div class="flex items-center justify-between py-2 bg-light-gray">
       <h1 class="mx-4 m-2 side-panel-header">Fixtures</h1>
     </div>
-    <GameweekFilter {selectedGameweek} {gameweeks} {changeGameweek} leagueStatus={$leagueStore!} />
+    <GameweekFilter {selectedGameweek} {gameweeks} {changeGameweek} />
     <div>
       {#each Object.entries(groupedFixtures) as [date, fixtures]}
         <div class="flex items-center justify-between border-b border-gray-700 py-2 bg-light-gray">
@@ -49,11 +49,11 @@
             <div class="flex w-full items-center space-x-10 mx-4 xs:mx-8">
               <div class="flex flex-col w-3/6 min-w-[100px] md:min-w-[200px]">
                 <a class="my-1 flex items-center" href={`/club?id=${fixture.homeClubId}`}>
-                  <BadgeIcon club={homeTeam} className="w-4 mr-1" />
+                  <BadgeIcon club={homeTeam!} className="w-4 mr-1" />
                   {homeTeam ? homeTeam.friendlyName : ""}
                 </a>
                 <a class="my-1 flex items-center" href={`/club?id=${fixture.awayClubId}`}>
-                  <BadgeIcon club={awayTeam} className="w-4 mr-1" />
+                  <BadgeIcon club={awayTeam!} className="w-4 mr-1" />
                   {awayTeam ? awayTeam.friendlyName : ""}
                 </a>
               </div>

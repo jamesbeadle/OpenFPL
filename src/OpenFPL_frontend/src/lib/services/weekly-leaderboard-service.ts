@@ -49,12 +49,6 @@ export class WeeklyLeaderboardService {
     gameweek: number,
   ): Promise<WeeklyRewardsDTO | undefined> {
     try {
-      //TODO: REmove
-      return {
-        seasonId: 1,
-        rewards: [],
-        gameweek: 1,
-      };
       const result = await this.actor.getWeeklyRewards(seasonId, gameweek);
       if (isError(result)) throw new Error("Failed to get weekly rewards");
       return result.ok;

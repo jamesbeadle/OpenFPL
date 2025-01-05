@@ -1,16 +1,15 @@
 <script lang="ts">
+    import { leagueStore } from "$lib/stores/league-store";
     import type { Writable } from "svelte/store";
-    import type { LeagueStatus } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-
+    
     export let selectedGameweek: Writable<number | null>;
     export let gameweeks: number[];
-    export let leagueStatus: LeagueStatus;
     export let changeGameweek : (gameweek: number) => void;
 
 </script>
 
 
-<div class="ml-4 mt-4">
+<div class="p-4">
     <button
       class={`${
         $selectedGameweek === 1 ? "bg-gray-500" : "fpl-button"
@@ -28,12 +27,12 @@
     </select>
     <button
       class={`${
-        $selectedGameweek === (leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek)
+        $selectedGameweek === ($leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek)
           ? "bg-gray-500"
           : "fpl-button"
       } default-button ml-1`}
       on:click={() => changeGameweek(1)}
-      disabled={$selectedGameweek === (leagueStatus.activeGameweek == 0 ? leagueStatus.unplayedGameweek : leagueStatus.activeGameweek)}
+      disabled={$selectedGameweek === ($leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek)}
       >&gt;</button
     >
   </div>

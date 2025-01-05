@@ -16,6 +16,7 @@
   import SimpleFixtures from "$lib/components/simple-fixtures.svelte";
   import BonusPanel from "$lib/components/pick-team/bonus-panel.svelte";
   import OnHold from "$lib/components/pick-team/on-hold.svelte";
+    import { clubStore } from "$lib/stores/club-store";
     
   let fantasyTeam = writable<PickTeamDTO | undefined>(undefined);
   let availableFormations = writable(Object.keys(allFormations));   

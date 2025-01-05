@@ -88,7 +88,7 @@
       <div class="flex flex-col sm:flex-row gap-4 sm:gap-8">
         <LeaderboardFilter {selectedLeaderboardType} {changeLeaderboardType} />
         {#if $selectedLeaderboardType === 1}
-          <GameweekFilter {selectedGameweek} {changeGameweek} leagueStatus={$leagueStore!} {gameweeks} />
+          <GameweekFilter {selectedGameweek} {changeGameweek} {gameweeks} />
         {/if}
         {#if $selectedLeaderboardType === 2}
           <LeaderboardMonthFilter {selectedMonth} {selectedTeamId} {selectedTeamIndex} />

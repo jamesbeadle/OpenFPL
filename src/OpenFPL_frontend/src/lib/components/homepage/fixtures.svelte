@@ -37,7 +37,7 @@
 {:else}
   <div class="flex flex-col">
     <div class="flex flex-col sm:flex-row gap-4 sm:gap-8">
-      <GameweekFilter {selectedGameweek} {gameweeks} {changeGameweek} leagueStatus={$leagueStore!}/>
+      <GameweekFilter {selectedGameweek} {gameweeks} {changeGameweek}/>
     </div>
     <div>
       {#each Object.entries(groupedFixtures) as [date, fixtures]}

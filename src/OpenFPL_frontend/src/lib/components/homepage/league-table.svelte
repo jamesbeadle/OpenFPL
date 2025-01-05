@@ -37,7 +37,7 @@
   <WidgetSpinner />
 {:else}
   <div class="flex flex-col sm:flex-row gap-4 sm:gap-8">
-    <GameweekFilter {selectedGameweek} {gameweeks} {changeGameweek} leagueStatus={$leagueStore!} />
+    <GameweekFilter {selectedGameweek} {gameweeks} {changeGameweek} />
   </div>
 
   <div class="flex flex-col">

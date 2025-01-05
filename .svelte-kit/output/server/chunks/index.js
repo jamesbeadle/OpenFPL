@@ -4903,7 +4903,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "o4bbx9"
+  version_hash: "1gxpmeo"
 };
 async function get_hooks() {
   let handle;
@@ -6606,11 +6606,6 @@ class WeeklyLeaderboardService {
   }
   async getWeeklyRewards(seasonId, gameweek) {
     try {
-      return {
-        seasonId: 1,
-        rewards: [],
-        gameweek: 1
-      };
       const result = await this.actor.getWeeklyRewards(seasonId, gameweek);
       if (isError(result)) throw new Error("Failed to get weekly rewards");
       return result.ok;
