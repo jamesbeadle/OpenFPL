@@ -5,7 +5,6 @@
   import { storeManager } from "$lib/managers/store-manager";
   import { managerStore } from "$lib/stores/manager-store";
   import { playerStore } from "$lib/stores/player-store";
-  import { toasts } from "$lib/stores/toasts-store";
   import type {
     FantasyTeamSnapshot,
     ManagerDTO
@@ -20,13 +19,14 @@
   import ManagerHeader from "$lib/components/manager/manager-header.svelte";
     
   $: id = page.url.searchParams.get("id");
+  $: gw = page.url.searchParams.get("gw");
   $: formation = "4-4-2";
   $: gridSetup = getGridSetup(formation);
 
   let isLoading = true;
   let activeTab: string = "details";
   let fantasyTeam: Writable<FantasyTeamSnapshot | null> = writable(null);
-  let selectedGameweek = writable(1);
+  let selectedGameweek = writable(0);
   let loadingGameweekDetail: Writable<boolean> = writable(false);
   let gameweekPlayers = writable<GameweekData[]>([]);
   let manager: ManagerDTO;
@@ -38,7 +38,8 @@
 
   onMount(async () => {
     await storeManager.syncStores();
-    manager = await managerStore.getPublicProfile(id ?? "");
+    $selectedGameweek = Number(gw);
+    manager = await managerStore.getPublicProfile(id ?? "", $selectedGameweek);
     formation = getTeamFormationReadOnly($fantasyTeam, $playerStore);
     gridSetup = getGridSetup(formation);
     viewGameweekDetail($selectedGameweek!);

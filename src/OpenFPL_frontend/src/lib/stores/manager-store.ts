@@ -57,11 +57,12 @@ function createManagerStore() {
     firstGameweek: false,
   };
 
-  async function getPublicProfile(principalId: string): Promise<ManagerDTO> {
+  async function getPublicProfile(
+    principalId: string,
+    gameweek: number,
+  ): Promise<ManagerDTO> {
     await storeManager.syncStores();
     try {
-      let activeOrUnplayedGameweek =
-        await leagueStore.getActiveOrUnplayedGameweek();
       let leagueStatus: LeagueStatus | null = null;
       leagueStore.subscribe((result) => {
         if (result == null) {
@@ -73,7 +74,7 @@ function createManagerStore() {
         managerId: principalId,
         month: 0,
         seasonId: leagueStatus!.activeSeasonId,
-        gameweek: activeOrUnplayedGameweek,
+        gameweek: gameweek,
         clubId: 0,
       };
 
@@ -109,8 +110,8 @@ function createManagerStore() {
 
   async function getFantasyTeamForGameweek(
     managerId: string,
-    seasonId: number,
     gameweek: number,
+    seasonId: number,
   ): Promise<FantasyTeamSnapshot | null> {
     try {
       let dto: GetFantasyTeamSnapshotDTO = {

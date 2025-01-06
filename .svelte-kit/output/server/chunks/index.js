@@ -4903,7 +4903,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "khucds"
+  version_hash: "1iz2vb3"
 };
 async function get_hooks() {
   let handle;
@@ -6594,8 +6594,9 @@ class WeeklyLeaderboardService {
         gameweek
       };
       const result = await this.actor.getWeeklyLeaderboard(dto);
-      if (isError(result))
-        throw new Error("Failed to fetch weekly leaderboard");
+      if (isError(result)) {
+        return;
+      }
       return result.ok;
     } catch (error) {
       console.error("Failed to get weekly leaderboard: ", error);
@@ -6608,7 +6609,9 @@ class WeeklyLeaderboardService {
   async getWeeklyRewards(seasonId, gameweek) {
     try {
       const result = await this.actor.getWeeklyRewards(seasonId, gameweek);
-      if (isError(result)) throw new Error("Failed to get weekly rewards");
+      if (isError(result)) {
+        return;
+      }
       return result.ok;
     } catch (error) {
       console.error("Failed to get weekly rewards: ", error);
@@ -6910,8 +6913,8 @@ class StoreManager {
           }
           const updatedWeeklyLeaderboard = await this.weeklyLeaderboardService.getWeeklyLeaderboard(
             0,
-            leagueStatus2?.activeSeasonId ?? 0,
-            leagueStatus2?.activeGameweek ?? 0
+            leagueStatus2.activeSeasonId,
+            leagueStatus2.activeGameweek == 0 ? leagueStatus2.completedGameweek : leagueStatus2.activeGameweek
           );
           if (!updatedWeeklyLeaderboard) {
             return;
@@ -7495,10 +7498,9 @@ function createManagerStore() {
     canisterId: "",
     firstGameweek: false
   };
-  async function getPublicProfile(principalId) {
+  async function getPublicProfile(principalId, gameweek) {
     await storeManager.syncStores();
     try {
-      let activeOrUnplayedGameweek = await leagueStore.getActiveOrUnplayedGameweek();
       let leagueStatus = null;
       leagueStore.subscribe((result2) => {
         if (result2 == null) {
@@ -7510,7 +7512,7 @@ function createManagerStore() {
         managerId: principalId,
         month: 0,
         seasonId: leagueStatus.activeSeasonId,
-        gameweek: activeOrUnplayedGameweek,
+        gameweek,
         clubId: 0
       };
       let result = await actor.getManager(dto);
@@ -7537,7 +7539,7 @@ function createManagerStore() {
       throw error;
     }
   }
-  async function getFantasyTeamForGameweek(managerId, seasonId, gameweek) {
+  async function getFantasyTeamForGameweek(managerId, gameweek, seasonId) {
     try {
       let dto = {
         managerPrincipalId: managerId,
@@ -8013,6 +8015,7 @@ function _page$5($$payload, $$props) {
   push();
   let formation;
   page.url.searchParams.get("id");
+  page.url.searchParams.get("gw");
   formation = "4-4-2";
   getGridSetup(formation);
   Layout($$payload, {

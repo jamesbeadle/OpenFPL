@@ -184,8 +184,10 @@ class StoreManager {
           const updatedWeeklyLeaderboard =
             await this.weeklyLeaderboardService.getWeeklyLeaderboard(
               0,
-              leagueStatus?.activeSeasonId ?? 0,
-              leagueStatus?.activeGameweek ?? 0,
+              leagueStatus.activeSeasonId,
+              leagueStatus.activeGameweek == 0
+                ? leagueStatus.completedGameweek
+                : leagueStatus.activeGameweek,
             );
           if (!updatedWeeklyLeaderboard) {
             return;

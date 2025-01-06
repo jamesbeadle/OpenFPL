@@ -110,6 +110,8 @@ module {
                     case (null) {};
                     case (?foundEntry) {
                       weeklyPosition := foundEntry.position;
+                      weeklyPoints := foundEntry.points;
+                      weeklyPositionText := foundEntry.positionText;
                     };
                   };
 
@@ -117,6 +119,8 @@ module {
                     case (null) {};
                     case (?foundEntry) {
                       monthlyPosition := foundEntry.position;
+                      monthlyPoints := foundEntry.points;
+                      monthlyPositionText := foundEntry.positionText;
                     };
                   };
 
@@ -124,6 +128,8 @@ module {
                     case (null) {};
                     case (?foundEntry) {
                       seasonPosition := foundEntry.position;
+                      seasonPoints := foundEntry.points;
+                      seasonPositionText := foundEntry.positionText;
                     };
                   };
 
@@ -346,7 +352,6 @@ module {
 
     public func getFantasyTeamSnapshot(dto: DTOs.GetFantasyTeamSnapshotDTO) : async Result.Result<DTOs.FantasyTeamSnapshotDTO, T.Error>{
      let managerCanisterId = managerCanisterIds.get(dto.managerPrincipalId);
-      
       switch (managerCanisterId) {
         case (null) {
           return #err(#NotFound);
@@ -355,8 +360,8 @@ module {
           let manager_canister = actor (foundCanisterId) : actor {
             getFantasyTeamSnapshot : (dto: DTOs.GetFantasyTeamSnapshotDTO) -> async ?T.FantasyTeamSnapshot;
           };
-      
-          let snapshot = await manager_canister.getFantasyTeamSnapshot(dto);
+    
+         let snapshot = await manager_canister.getFantasyTeamSnapshot(dto);
           switch (snapshot) {
             case (null) {
               return #err(#NotFound);

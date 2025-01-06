@@ -53,7 +53,7 @@
     let fantasyTeam = await managerStore.getFantasyTeamForGameweek(
       principal,
       $leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek ?? 1,
-      $selectedGameweek
+      $leagueStore!.activeSeasonId
     );
 
     if (!fantasyTeam) { return; }

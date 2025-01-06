@@ -23,20 +23,34 @@
   let totalPages = writable<number>(0);
   let selectedTeamIndex = writable<number>(0);
   let itemsPerPage = 25;
-  let selectedSeasonId: number;
+  let selectedSeasonId = writable(1);
   let selectedGameweek = writable(1);
   let selectedMonth = writable(0);
   let selectedTeamId = writable(0);
   let leaderboard: any;
 
-  $: $selectedTeamIndex = $clubStore.findIndex((team) => team.id === $selectedTeamId);
-  $: selectedLeaderboardType, selectedTeamIndex, selectedGameweek, selectedMonth, selectedTeamId, currentPage, loadLeaderboardData();
-  $: if (leaderboard && leaderboard.totalEntries) { $totalPages = Math.ceil(Number(leaderboard.totalEntries) / itemsPerPage); }
+  $: selectedTeamIndex.set(
+    $clubStore.findIndex((team) => team.id === $selectedTeamId)
+  );
+
+  $: {
+    $selectedLeaderboardType;
+    $selectedTeamIndex;
+    $selectedGameweek;
+    $selectedMonth;
+    $selectedTeamId;
+    $currentPage;
+    loadLeaderboardData();
+  }
+
+  $: if (leaderboard && leaderboard.totalEntries) {
+    totalPages.set(Math.ceil(Number(leaderboard.totalEntries) / 25));
+  }
 
   onMount(async () => {
     await storeManager.syncStores();
     gameweeks = getGameweeks($leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek ?? 1 ) 
-    selectedSeasonId = $leagueStore!.activeSeasonId;
+    $selectedSeasonId = $leagueStore!.activeSeasonId;
     $selectedGameweek = $leagueStore!.activeGameweek == 0 ? $leagueStore!.completedGameweek : $leagueStore!.activeGameweek ?? 1;
     $selectedMonth = $leagueStore!.activeMonth ?? 8;
     let firstClubId = $clubStore.sort((a, b) => a.friendlyName.localeCompare(b.friendlyName))[0].id
@@ -50,17 +64,17 @@
     isLoading = true;
     switch ($selectedLeaderboardType) {
       case 1:
-        leaderboard = await weeklyLeaderboardStore.getWeeklyLeaderboard(selectedSeasonId, $selectedGameweek, $currentPage);
-        const rewardsResult = await weeklyLeaderboardStore.getWeeklyRewards(selectedSeasonId, $selectedGameweek);
+        leaderboard = await weeklyLeaderboardStore.getWeeklyLeaderboard($selectedSeasonId, $selectedGameweek, $currentPage);
+        const rewardsResult = await weeklyLeaderboardStore.getWeeklyRewards($selectedSeasonId, $selectedGameweek);
         if(leaderboard && rewardsResult){
           leaderboard.entries = mergeLeaderboardWithRewards(leaderboard.entries, rewardsResult ? rewardsResult.rewards : []);
         }
         break;
       case 2:
-        leaderboard = await monthlyLeaderboardStore.getMonthlyLeaderboard(selectedSeasonId, $selectedTeamId, $selectedMonth, $currentPage, "");
+        leaderboard = await monthlyLeaderboardStore.getMonthlyLeaderboard($selectedSeasonId, $selectedTeamId, $selectedMonth, $currentPage, "");
         break;
       case 3:
-        leaderboard = await seasonLeaderboardStore.getSeasonLeaderboard(selectedSeasonId, $currentPage, "");
+        leaderboard = await seasonLeaderboardStore.getSeasonLeaderboard($selectedSeasonId, $currentPage, "");
         break;
     }
     isLoading = false;

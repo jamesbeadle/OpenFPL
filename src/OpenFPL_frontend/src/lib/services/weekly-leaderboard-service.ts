@@ -31,9 +31,11 @@ export class WeeklyLeaderboardService {
         searchTerm: "",
         gameweek: gameweek,
       };
+
       const result = await this.actor.getWeeklyLeaderboard(dto);
-      if (isError(result))
-        throw new Error("Failed to fetch weekly leaderboard");
+      if (isError(result)) {
+        return;
+      }
       return result.ok;
     } catch (error) {
       console.error("Failed to get weekly leaderboard: ", error);
@@ -50,7 +52,9 @@ export class WeeklyLeaderboardService {
   ): Promise<WeeklyRewardsDTO | undefined> {
     try {
       const result = await this.actor.getWeeklyRewards(seasonId, gameweek);
-      if (isError(result)) throw new Error("Failed to get weekly rewards");
+      if (isError(result)) {
+        return;
+      }
       return result.ok;
     } catch (error) {
       console.error("Failed to get weekly rewards: ", error);

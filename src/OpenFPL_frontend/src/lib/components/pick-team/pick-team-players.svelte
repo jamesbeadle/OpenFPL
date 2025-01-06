@@ -65,12 +65,9 @@
   }
   
   function loadAddPlayer(row: number, col: number) {
-    console.log("Loading add player modal")
     $selectedPosition = row;
     selectedColumn = col;
     showAddPlayerModal = true;
-    console.log(showAddPlayerModal)
-    
   }
 
   function setCaptain(playerId: number) {
@@ -207,7 +204,9 @@
 
         let bankQuarterMillions = currentTeam!.bankQuarterMillions - player.valueQuarterMillions;
       
-        return { ...currentTeam!, playerIds: newPlayerIds, teamValue, bankQuarterMillions };
+        let transfersAvailable = currentTeam!.transfersAvailable - 1;
+
+        return { ...currentTeam!, playerIds: newPlayerIds, teamValue, bankQuarterMillions, transfersAvailable };
       } else {
         console.error(
           "Index out of bounds when attempting to add player to team."

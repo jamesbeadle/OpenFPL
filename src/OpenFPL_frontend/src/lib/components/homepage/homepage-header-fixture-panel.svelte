@@ -17,7 +17,7 @@
 
     <div class="flex flex-col">
         <a 
-            class="flex flex-row items-center justify-center" 
+            class="flex flex-row items-center" 
             href={`/club?id=${nextFixtureHomeTeam.id}`}
         >
             <BadgeIcon className="header-badge" club={nextFixtureHomeTeam} />
@@ -26,7 +26,7 @@
             </span>
         </a>
         <a
-        class="flex flex-row items-center justify-center" 
+        class="flex flex-row items-center" 
             href={`/club?id=${nextFixtureAwayTeam.id}`}
         >
             <BadgeIcon className="header-badge" club={nextFixtureAwayTeam} />

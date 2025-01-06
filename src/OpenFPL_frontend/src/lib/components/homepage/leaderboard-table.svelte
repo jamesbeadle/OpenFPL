@@ -32,7 +32,7 @@
               <div class="w-2/12 xs:w-2/12 px-4">{entry.positionText}</div>
               <div class="w-3/12 xs:w-4/12 px-4"> {entry.principalId === entry.username ? "Unknown" : entry.username}</div>
               <div class="w-2/12 xs:w-2/12 px-4">{entry.points}</div>
-              <div class="w-2/12 xs:w-2/12 px-4">{ entry.reward == 0 ? 0 : formatE8s(entry.reward)} FPL</div>
+              <div class="w-2/12 xs:w-2/12 px-4">{ entry.reward ? entry.reward == 0 ? 0 : formatE8s(entry.reward) : '-'} FPL</div>
               <div class="w-3/12 xs:w-1/12 flex items-center justify-center xs:justify-center">
                 <span class="flex items-center">
                   <ViewDetailsIcon className="w-5 xs:w-6 lg:w-7" />
