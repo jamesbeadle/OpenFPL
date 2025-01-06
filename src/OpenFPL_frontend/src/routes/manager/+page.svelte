@@ -29,7 +29,7 @@
   let selectedGameweek = writable(0);
   let loadingGameweekDetail: Writable<boolean> = writable(false);
   let gameweekPlayers = writable<GameweekData[]>([]);
-  let manager: ManagerDTO;
+  let manager: Writable<ManagerDTO | null> = writable(null);
 
   const tabs = [
     { id: "details", label: "Details", authOnly: false },
@@ -39,7 +39,7 @@
   onMount(async () => {
     await storeManager.syncStores();
     $selectedGameweek = Number(gw);
-    manager = await managerStore.getPublicProfile(id ?? "", $selectedGameweek);
+    $manager = await managerStore.getPublicProfile(id ?? "", $selectedGameweek);
     formation = getTeamFormationReadOnly($fantasyTeam, $playerStore);
     gridSetup = getGridSetup(formation);
     viewGameweekDetail($selectedGameweek!);
@@ -55,7 +55,7 @@
 
   function viewGameweekDetail(gw: number) {
     $selectedGameweek = gw;
-    fantasyTeam.set(manager.gameweeks.find((x) => x.gameweek === $selectedGameweek)!);
+    fantasyTeam.set($manager!.gameweeks.find((x) => x.gameweek === $selectedGameweek)!);
     setActiveTab("details");
   }
 </script>
@@ -64,7 +64,7 @@
   {#if isLoading}
     <WidgetSpinner />
   {:else}
-    <ManagerHeader {manager} />
+    <ManagerHeader manager={$manager!} />
 
     <div class="bg-panel">
       <TabContainer {tabs} {activeTab} {setActiveTab} isLoggedIn={false}  />
@@ -74,7 +74,7 @@
       {/if}
 
       {#if activeTab === "gameweeks"}
-        <ManagerGameweeks {viewGameweekDetail} principalId={manager.principalId} />
+        <ManagerGameweeks {viewGameweekDetail} {manager} />
       {/if}
     </div>
   {/if}
