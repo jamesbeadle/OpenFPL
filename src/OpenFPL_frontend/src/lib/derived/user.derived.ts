@@ -14,24 +14,29 @@ export const userGetProfilePicture: Readable<string> = derived(
 
 export function getProfilePictureString(profilePicture: any): string {
   try {
-    let byteArray;
-    if (profilePicture) {
-      if (
-        Array.isArray(profilePicture) &&
-        profilePicture[0] instanceof Uint8Array
-      ) {
-        byteArray = profilePicture[0];
-        return `data:image/${profilePicture};base64,${uint8ArrayToBase64(byteArray)}`;
-      } else if (profilePicture instanceof Uint8Array) {
-        return `data:${profilePicture};base64,${uint8ArrayToBase64(
-          profilePicture,
-        )}`;
-      } else {
-        if (typeof profilePicture === "string") {
-          return `data:${profilePicture};base64,${profilePicture}`;
-        }
-      }
+    if (!profilePicture) {
+      return "/profile_placeholder.png";
     }
+
+    if (
+      Array.isArray(profilePicture) &&
+      profilePicture[0] instanceof Uint8Array
+    ) {
+      const byteArray = profilePicture[0];
+      return `data:image/png;base64,${uint8ArrayToBase64(byteArray)}`;
+    }
+
+    if (profilePicture instanceof Uint8Array) {
+      return `data:image/png;base64,${uint8ArrayToBase64(profilePicture)}`;
+    }
+
+    if (typeof profilePicture === "string") {
+      if (profilePicture.startsWith("data:image/")) {
+        return profilePicture;
+      }
+      return `data:image/png;base64,${profilePicture}`;
+    }
+
     return "/profile_placeholder.png";
   } catch (error) {
     console.error(error);

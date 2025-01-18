@@ -61,7 +61,7 @@
                 </a>
               </div>
 
-              <div class="flex w-5/12 xs:w-4/12 md:w-3/12 lg:w-3/12 flex-col">
+              <div class="flex w-5/12 xs:w-4/12 md:w-3/12 lg:w-3/12 flex-col text-center items-center justify-center">
                 <span>{Object.keys(fixture.status)[0] != "Finalised" ? "-" : fixture.homeGoals}</span>
                 <span>{Object.keys(fixture.status)[0] != "Finalised" ? "-" : fixture.awayGoals}</span>
               </div>

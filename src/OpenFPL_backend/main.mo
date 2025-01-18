@@ -620,7 +620,7 @@
         await topupCanister(?canisterId, 5_000_000_000_000, 2_500_000_000_000);
       };
       
-      ignore Timer.setTimer<system>(#nanoseconds(Int.abs(86_400_000_000_000)), checkCanisterCycles);
+      //ignore Timer.setTimer<system>(#nanoseconds(Int.abs(86_400_000_000_000)), checkCanisterCycles);
       return;
     };
 
@@ -811,14 +811,14 @@
       //ignore setSystemTimers();
      
       //await seasonManager.addNewDataHash("reward_pool");
-      //await calculateGWLeaderboard(1,19);
-      //await calculateGWRewards(19);
+      //await calculateGWRewards(21);
       //await userManager.resetWeeklyTransfers();
       //await checkCanisterCycles();
-      //await manuallyPayRewards(19);
+      //await manuallyPayRewards(21);
 
       //await seasonManager.putOnHold();  
       //await updateLeaderboardCanisterWasms();
+      //await calculateGWLeaderboard(1,21);
       //await updateManagerCanisterWasms();
       //seasonManager.removeDuplicateHashes();
       await updateAllDataHashes();
@@ -1134,5 +1134,54 @@
     public shared query func getTopups() : async [Base.CanisterTopup] {
       return topups;
     };
+
+
+
+    public shared query func getEveryPlayer() : async [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])] {
+      let playersBuffer = Buffer.fromArray<(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])>([]);
+      let players1 = seasonManager.getPlayersSnapshot({  leagueId = 1; seasonId = 1; gameweek = 1 });
+      let players2 = seasonManager.getPlayersSnapshot({  leagueId = 1; seasonId = 1; gameweek = 2 });
+      let players3 = seasonManager.getPlayersSnapshot({  leagueId = 1; seasonId = 1; gameweek = 3 });
+      let players4 = seasonManager.getPlayersSnapshot({  leagueId = 1; seasonId = 1; gameweek = 4 });
+      let players5 = seasonManager.getPlayersSnapshot({  leagueId = 1; seasonId = 1; gameweek = 5 });
+      let players6 = seasonManager.getPlayersSnapshot({  leagueId = 1; seasonId = 1; gameweek = 6 });
+      let players7 = seasonManager.getPlayersSnapshot({  leagueId = 1; seasonId = 1; gameweek = 7 });
+      let players8 = seasonManager.getPlayersSnapshot({  leagueId = 1; seasonId = 1; gameweek = 8 });
+      let players9 = seasonManager.getPlayersSnapshot({  leagueId = 1; seasonId = 1; gameweek = 9 });
+      let players10 = seasonManager.getPlayersSnapshot({  leagueId = 1; seasonId = 1; gameweek = 10 });
+      let players11 = seasonManager.getPlayersSnapshot({  leagueId = 1; seasonId = 1; gameweek = 11 });
+      let players12 = seasonManager.getPlayersSnapshot({  leagueId = 1; seasonId = 1; gameweek = 12 });
+      let players13 = seasonManager.getPlayersSnapshot({  leagueId = 1; seasonId = 1; gameweek = 13 });
+      let players14 = seasonManager.getPlayersSnapshot({  leagueId = 1; seasonId = 1; gameweek = 14 });
+      let players15 = seasonManager.getPlayersSnapshot({  leagueId = 1; seasonId = 1; gameweek = 15 });
+      let players16 = seasonManager.getPlayersSnapshot({  leagueId = 1; seasonId = 1; gameweek = 16 });
+      let players17 = seasonManager.getPlayersSnapshot({  leagueId = 1; seasonId = 1; gameweek = 17 });
+      let players18 = seasonManager.getPlayersSnapshot({  leagueId = 1; seasonId = 1; gameweek = 18 });
+      let players19 = seasonManager.getPlayersSnapshot({  leagueId = 1; seasonId = 1; gameweek = 19 });
+      let players20 = seasonManager.getPlayersSnapshot({  leagueId = 1; seasonId = 1; gameweek = 20 });
+
+      playersBuffer.add(1, players1);
+      playersBuffer.add(2, players2);
+      playersBuffer.add(3, players3);
+      playersBuffer.add(4, players4);
+      playersBuffer.add(5, players5);
+      playersBuffer.add(6, players6);
+      playersBuffer.add(7, players7);
+      playersBuffer.add(8, players8);
+      playersBuffer.add(9, players9);
+      playersBuffer.add(10, players10);
+      playersBuffer.add(11, players11);
+      playersBuffer.add(12, players12);
+      playersBuffer.add(13, players13);
+      playersBuffer.add(14, players14);
+      playersBuffer.add(15, players15);
+      playersBuffer.add(16, players16);
+      playersBuffer.add(17, players17);
+      playersBuffer.add(18, players18);
+      playersBuffer.add(19, players19);
+      playersBuffer.add(20, players20);
+      
+      return Buffer.toArray(playersBuffer);
+    }
     
   };

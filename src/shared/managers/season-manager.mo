@@ -231,7 +231,7 @@ module {
         onHold = dto.onHold;
         version = dto.version;
       };
-    }
+    };
   }
 
 };

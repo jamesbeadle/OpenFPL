@@ -84,8 +84,8 @@
     $selectedGameweek = Math.max(1, Math.min(Number(process.env.TOTAL_GAMEWEEKS), $selectedGameweek + delta));
   };
 
-  function changePage(delta: number) {
-    $currentPage = Math.max(1, Math.min($totalPages, $currentPage + delta));
+  function changePage(page: number) {
+    $currentPage = Math.max(1, Math.min($totalPages, page));
   }
 
   function changeLeaderboardType(change: number) {

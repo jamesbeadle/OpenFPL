@@ -4903,7 +4903,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "vrep00"
+  version_hash: "dv0tbs"
 };
 async function get_hooks() {
   let handle;
@@ -5266,6 +5266,30 @@ const idlFactory = ({ IDL }) => {
   const Result_21 = IDL.Variant({ "ok": PickTeamDTO, "err": Error2 });
   const DataHashDTO = IDL.Record({ "hash": IDL.Text, "category": IDL.Text });
   const Result_20 = IDL.Variant({ "ok": IDL.Vec(DataHashDTO), "err": Error2 });
+  const PlayerStatus = IDL.Variant({
+    "OnLoan": IDL.Null,
+    "Active": IDL.Null,
+    "FreeAgent": IDL.Null,
+    "Retired": IDL.Null
+  });
+  const PlayerPosition = IDL.Variant({
+    "Goalkeeper": IDL.Null,
+    "Midfielder": IDL.Null,
+    "Forward": IDL.Null,
+    "Defender": IDL.Null
+  });
+  const PlayerDTO = IDL.Record({
+    "id": IDL.Nat16,
+    "status": PlayerStatus,
+    "clubId": ClubId,
+    "valueQuarterMillions": IDL.Nat16,
+    "dateOfBirth": IDL.Int,
+    "nationality": CountryId,
+    "shirtNumber": IDL.Nat8,
+    "position": PlayerPosition,
+    "lastName": IDL.Text,
+    "firstName": IDL.Text
+  });
   const SeasonId = IDL.Nat16;
   const PrincipalId = IDL.Text;
   const GetFantasyTeamSnapshotDTO = IDL.Record({
@@ -5377,30 +5401,6 @@ const idlFactory = ({ IDL }) => {
   const ClubFilterDTO = IDL.Record({
     "clubId": ClubId,
     "leagueId": LeagueId
-  });
-  const PlayerStatus = IDL.Variant({
-    "OnLoan": IDL.Null,
-    "Active": IDL.Null,
-    "FreeAgent": IDL.Null,
-    "Retired": IDL.Null
-  });
-  const PlayerPosition = IDL.Variant({
-    "Goalkeeper": IDL.Null,
-    "Midfielder": IDL.Null,
-    "Forward": IDL.Null,
-    "Defender": IDL.Null
-  });
-  const PlayerDTO = IDL.Record({
-    "id": IDL.Nat16,
-    "status": PlayerStatus,
-    "clubId": ClubId,
-    "valueQuarterMillions": IDL.Nat16,
-    "dateOfBirth": IDL.Int,
-    "nationality": CountryId,
-    "shirtNumber": IDL.Nat8,
-    "position": PlayerPosition,
-    "lastName": IDL.Text,
-    "firstName": IDL.Text
   });
   const Result_5 = IDL.Variant({ "ok": IDL.Vec(PlayerDTO), "err": Error2 });
   const RequestManagerDTO = IDL.Record({
@@ -5712,6 +5712,11 @@ const idlFactory = ({ IDL }) => {
     "getCountries": IDL.Func([], [Result_22], ["query"]),
     "getCurrentTeam": IDL.Func([], [Result_21], []),
     "getDataHashes": IDL.Func([], [Result_20], ["composite_query"]),
+    "getEveryPlayer": IDL.Func(
+      [],
+      [IDL.Vec(IDL.Tuple(GameweekNumber, IDL.Vec(PlayerDTO)))],
+      ["query"]
+    ),
     "getFantasyTeamSnapshot": IDL.Func(
       [GetFantasyTeamSnapshotDTO],
       [Result_19],
@@ -7213,7 +7218,7 @@ function createUserStore() {
     return await identityActor.isUsernameValid(dto);
   }
   async function cacheProfile() {
-    let profile = new UserService().getUser();
+    let profile = await new UserService().getUser();
     set2(profile);
   }
   async function withdrawFPL(withdrawalAddress, withdrawalAmount) {
@@ -7312,20 +7317,21 @@ const userGetProfilePicture = derived(
 );
 function getProfilePictureString(profilePicture) {
   try {
-    let byteArray;
-    if (profilePicture) {
-      if (Array.isArray(profilePicture) && profilePicture[0] instanceof Uint8Array) {
-        byteArray = profilePicture[0];
-        return `data:image/${profilePicture};base64,${uint8ArrayToBase64(byteArray)}`;
-      } else if (profilePicture instanceof Uint8Array) {
-        return `data:${profilePicture};base64,${uint8ArrayToBase64(
-          profilePicture
-        )}`;
-      } else {
-        if (typeof profilePicture === "string") {
-          return `data:${profilePicture};base64,${profilePicture}`;
-        }
+    if (!profilePicture) {
+      return "/profile_placeholder.png";
+    }
+    if (Array.isArray(profilePicture) && profilePicture[0] instanceof Uint8Array) {
+      const byteArray = profilePicture[0];
+      return `data:image/png;base64,${uint8ArrayToBase64(byteArray)}`;
+    }
+    if (profilePicture instanceof Uint8Array) {
+      return `data:image/png;base64,${uint8ArrayToBase64(profilePicture)}`;
+    }
+    if (typeof profilePicture === "string") {
+      if (profilePicture.startsWith("data:image/")) {
+        return profilePicture;
       }
+      return `data:image/png;base64,${profilePicture}`;
     }
     return "/profile_placeholder.png";
   } catch (error) {
@@ -7476,7 +7482,7 @@ function createManagerStore() {
     captainFantasticGameweek: 0,
     createDate: 0n,
     oneNationGameweek: 0,
-    bankQuarterMillions: 0,
+    bankQuarterMillions: 1200,
     noEntryPlayerId: 0,
     safeHandsPlayerId: 0,
     history: [],
@@ -7498,7 +7504,7 @@ function createManagerStore() {
     canisterId: "",
     firstGameweek: false
   };
-  async function getPublicProfile(principalId, gameweek) {
+  async function getPublicProfile(principalId) {
     await storeManager.syncStores();
     try {
       let leagueStatus = null;
@@ -7512,7 +7518,7 @@ function createManagerStore() {
         managerId: principalId,
         month: 0,
         seasonId: leagueStatus.activeSeasonId,
-        gameweek,
+        gameweek: leagueStatus.completedGameweek,
         clubId: 0
       };
       let result = await actor.getManager(dto);

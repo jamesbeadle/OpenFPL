@@ -99,6 +99,30 @@ export const idlFactory = ({ IDL }) => {
   const Result_21 = IDL.Variant({ ok: PickTeamDTO, err: Error });
   const DataHashDTO = IDL.Record({ hash: IDL.Text, category: IDL.Text });
   const Result_20 = IDL.Variant({ ok: IDL.Vec(DataHashDTO), err: Error });
+  const PlayerStatus = IDL.Variant({
+    OnLoan: IDL.Null,
+    Active: IDL.Null,
+    FreeAgent: IDL.Null,
+    Retired: IDL.Null,
+  });
+  const PlayerPosition = IDL.Variant({
+    Goalkeeper: IDL.Null,
+    Midfielder: IDL.Null,
+    Forward: IDL.Null,
+    Defender: IDL.Null,
+  });
+  const PlayerDTO = IDL.Record({
+    id: IDL.Nat16,
+    status: PlayerStatus,
+    clubId: ClubId,
+    valueQuarterMillions: IDL.Nat16,
+    dateOfBirth: IDL.Int,
+    nationality: CountryId,
+    shirtNumber: IDL.Nat8,
+    position: PlayerPosition,
+    lastName: IDL.Text,
+    firstName: IDL.Text,
+  });
   const SeasonId = IDL.Nat16;
   const PrincipalId = IDL.Text;
   const GetFantasyTeamSnapshotDTO = IDL.Record({
@@ -210,30 +234,6 @@ export const idlFactory = ({ IDL }) => {
   const ClubFilterDTO = IDL.Record({
     clubId: ClubId,
     leagueId: LeagueId,
-  });
-  const PlayerStatus = IDL.Variant({
-    OnLoan: IDL.Null,
-    Active: IDL.Null,
-    FreeAgent: IDL.Null,
-    Retired: IDL.Null,
-  });
-  const PlayerPosition = IDL.Variant({
-    Goalkeeper: IDL.Null,
-    Midfielder: IDL.Null,
-    Forward: IDL.Null,
-    Defender: IDL.Null,
-  });
-  const PlayerDTO = IDL.Record({
-    id: IDL.Nat16,
-    status: PlayerStatus,
-    clubId: ClubId,
-    valueQuarterMillions: IDL.Nat16,
-    dateOfBirth: IDL.Int,
-    nationality: CountryId,
-    shirtNumber: IDL.Nat8,
-    position: PlayerPosition,
-    lastName: IDL.Text,
-    firstName: IDL.Text,
   });
   const Result_5 = IDL.Variant({ ok: IDL.Vec(PlayerDTO), err: Error });
   const RequestManagerDTO = IDL.Record({
@@ -545,6 +545,11 @@ export const idlFactory = ({ IDL }) => {
     getCountries: IDL.Func([], [Result_22], ["query"]),
     getCurrentTeam: IDL.Func([], [Result_21], []),
     getDataHashes: IDL.Func([], [Result_20], ["composite_query"]),
+    getEveryPlayer: IDL.Func(
+      [],
+      [IDL.Vec(IDL.Tuple(GameweekNumber, IDL.Vec(PlayerDTO)))],
+      ["query"],
+    ),
     getFantasyTeamSnapshot: IDL.Func(
       [GetFantasyTeamSnapshotDTO],
       [Result_19],

@@ -85,7 +85,7 @@
     <WidgetSpinner />
   {:else}
     <div class="p-2">
-      <AddPlayerFilterRow {filterTeam} {filterPosition} />
+      <AddPlayerFilterRow {filterTeam} {filterPosition} {filterSurname} {maxValue} {minValue} />
       <div class="overflow-x-auto flex-1">
         <AddPlayerTableHaeder />
         {#each paginatedPlayers as player, index}

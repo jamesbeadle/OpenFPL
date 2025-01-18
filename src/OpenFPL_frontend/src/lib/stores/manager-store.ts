@@ -34,7 +34,7 @@ function createManagerStore() {
     captainFantasticGameweek: 0,
     createDate: 0n,
     oneNationGameweek: 0,
-    bankQuarterMillions: 0,
+    bankQuarterMillions: 1200,
     noEntryPlayerId: 0,
     safeHandsPlayerId: 0,
     history: [],
@@ -57,10 +57,7 @@ function createManagerStore() {
     firstGameweek: false,
   };
 
-  async function getPublicProfile(
-    principalId: string,
-    gameweek: number,
-  ): Promise<ManagerDTO> {
+  async function getPublicProfile(principalId: string): Promise<ManagerDTO> {
     await storeManager.syncStores();
     try {
       let leagueStatus: LeagueStatus | null = null;
@@ -74,7 +71,7 @@ function createManagerStore() {
         managerId: principalId,
         month: 0,
         seasonId: leagueStatus!.activeSeasonId,
-        gameweek: gameweek,
+        gameweek: leagueStatus!.completedGameweek,
         clubId: 0,
       };
 

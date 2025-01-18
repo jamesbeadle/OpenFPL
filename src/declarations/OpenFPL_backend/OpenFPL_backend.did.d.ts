@@ -530,6 +530,7 @@ export interface _SERVICE {
   'getCountries' : ActorMethod<[], Result_22>,
   'getCurrentTeam' : ActorMethod<[], Result_21>,
   'getDataHashes' : ActorMethod<[], Result_20>,
+  'getEveryPlayer' : ActorMethod<[], Array<[GameweekNumber, Array<PlayerDTO>]>>,
   'getFantasyTeamSnapshot' : ActorMethod<
     [GetFantasyTeamSnapshotDTO],
     Result_19

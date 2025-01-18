@@ -137,7 +137,7 @@ function createUserStore() {
   }
 
   async function cacheProfile() {
-    let profile = new UserService().getUser();
+    let profile = await new UserService().getUser();
     set(profile);
   }
 

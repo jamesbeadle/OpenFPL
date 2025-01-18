@@ -9,6 +9,7 @@ import Timer "mo:base/Timer";
 import Int "mo:base/Int";
 import Option "mo:base/Option";
 import Nat "mo:base/Nat";
+import TrieMap "mo:base/TrieMap";
 
 import DTOs "../../shared/dtos/DTOs";
 import Base "../../shared/types/base_types";
@@ -53,7 +54,6 @@ actor class _LeaderboardCanister() {
     gameweek : FootballTypes.GameweekNumber,
     clubId   : FootballTypes.ClubId
   ) : async () {
-    // Ensure only the controller can make changes.
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == controllerPrincipalId;
@@ -331,7 +331,9 @@ actor class _LeaderboardCanister() {
     switch(currentLeaderboard){
       case (?foundLeaderboard){
 
-        let sortedGameweekEntries = Array.sort(List.toArray(foundLeaderboard.entries), func(entry1: T.LeaderboardEntry, entry2: T.LeaderboardEntry) : Order.Order{
+        let dedupedEntries = removeDuplicateEntries(List.toArray(foundLeaderboard.entries));
+
+        let sortedGameweekEntries = Array.sort(dedupedEntries, func(entry1: T.LeaderboardEntry, entry2: T.LeaderboardEntry) : Order.Order{
           if (entry1.points < entry2.points) { return #greater };
           if (entry1.points == entry2.points) { return #equal };
               return #less;
@@ -358,6 +360,22 @@ actor class _LeaderboardCanister() {
       case (null){}
     };   
   };
+
+  private func removeDuplicateEntries(entries : [T.LeaderboardEntry]) : [T.LeaderboardEntry] {
+  let seen = TrieMap.TrieMap<Text, Bool>(Text.equal, Text.hash);
+
+  let buffer = Buffer.fromArray<T.LeaderboardEntry>([]);
+
+  for (entry in Iter.fromArray(entries)) {
+    if (seen.get(entry.principalId) == null) {
+      seen.put(entry.principalId, true);
+      buffer.add(entry);
+    }
+  };
+
+  return Buffer.toArray(buffer);
+};
+
 
   public shared query ({ caller }) func getWeeklyRewardLeaderboard(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber) : async ?DTOs.WeeklyLeaderboardDTO {
     assert not Principal.isAnonymous(caller);

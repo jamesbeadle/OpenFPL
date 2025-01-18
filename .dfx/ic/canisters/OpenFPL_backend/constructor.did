@@ -705,6 +705,10 @@ service : {
   getCountries: () -> (Result_22) query;
   getCurrentTeam: () -> (Result_21);
   getDataHashes: () -> (Result_20) composite_query;
+  getEveryPlayer: () -> (vec record {
+                               GameweekNumber;
+                               vec PlayerDTO;
+                             }) query;
   getFantasyTeamSnapshot: (GetFantasyTeamSnapshotDTO) -> (Result_19);
   getFixtures: () -> (Result_12) composite_query;
   getLeaderboardCanisterIds: () -> (Result_17);

@@ -77,7 +77,7 @@
     <div class="vertical-divider"></div>
     <HeaderCountdownPanel header="Kick Off" footer={`${nextFixtureDate} | ${nextFixtureTime}`} {countdownTime} loading={false} />    
     <div class="vertical-divider"></div>
-    <HeaderContentPanel header="Players" content={`£${$fantasyTeam?.playerIds.filter((x) => x > 0).length}/11`} footer="Selected" loading={false} />
+    <HeaderContentPanel header="Players" content={`${$fantasyTeam?.playerIds.filter((x) => x > 0).length}/11`} footer="Selected" loading={false} />
   </ContentPanel>
   <ContentPanel>
     <HeaderContentPanel header="Team Value" content={`£${$teamValue.toFixed(2)}m`} footer="GBP" loading={false} />

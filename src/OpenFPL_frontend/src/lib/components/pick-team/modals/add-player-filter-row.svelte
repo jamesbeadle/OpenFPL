@@ -4,6 +4,9 @@
 
     export let filterTeam: Writable<number>;
     export let filterPosition: Writable<number>;
+    export let minValue: Writable<number>;
+    export let maxValue: Writable<number>;
+    export let filterSurname: Writable<string>;
 
 </script>
 <div class="grid grid-cols-2 gap-1">
@@ -27,3 +30,35 @@
     </select>
     </div>
 </div>
+
+<div class="grid grid-cols-2 gap-4 my-2">
+    <div>
+      <label for="minValue">Min Value:</label>
+      <input
+        id="minValue"
+        type="number"
+        class="mt-1 block w-full p-2 bg-gray-700 text-white fpl-dropdown"
+        bind:value={$minValue}
+      />
+    </div>
+    <div>
+      <label for="maxValue">Max Value:</label>
+      <input
+        id="maxValue"
+        type="number"
+        class="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md fpl-dropdown"
+        bind:value={$maxValue}
+      />
+    </div>
+  </div>
+
+  <div class="my-4">
+    <label for="filterSurname">Search by Name:</label>
+    <input
+      id="filterSurname"
+      type="text"
+      class="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md"
+      placeholder="Enter"
+      bind:value={$filterSurname}
+    />
+  </div>
