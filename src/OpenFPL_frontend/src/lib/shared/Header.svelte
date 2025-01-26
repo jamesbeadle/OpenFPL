@@ -94,6 +94,7 @@
       <button
         class="menu-toggle md:hidden focus:outline-none"
         on:click={toggleMenu}
+        aria-label="Toggle Menu"
       >
         <svg
           width="24"

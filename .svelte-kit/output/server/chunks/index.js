@@ -4903,7 +4903,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "k4s0ew"
+  version_hash: "16tu8es"
 };
 async function get_hooks() {
   let handle;
@@ -7369,7 +7369,7 @@ function Header($$payload, $$props) {
   currentBorder = (route) => page.url.pathname === route ? "active-border" : "";
   $$payload.out += `<header><nav class="text-white"><div class="px-4 h-16 flex justify-between items-center w-full"><a href="/" class="hover:text-gray-400 flex items-center">`;
   OpenFPLIcon($$payload, { className: "h-8 w-auto" });
-  $$payload.out += `<!----><b class="ml-2">OpenFPL</b></a> <button class="menu-toggle md:hidden focus:outline-none"><svg width="24" height="18" viewBox="0 0 24 18" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><rect width="24" height="2" rx="1" fill="currentColor"></rect><rect y="8" width="24" height="2" rx="1" fill="currentColor"></rect><rect y="16" width="24" height="2" rx="1" fill="currentColor"></rect></svg></button> `;
+  $$payload.out += `<!----><b class="ml-2">OpenFPL</b></a> <button class="menu-toggle md:hidden focus:outline-none" aria-label="Toggle Menu"><svg width="24" height="18" viewBox="0 0 24 18" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><rect width="24" height="2" rx="1" fill="currentColor"></rect><rect y="8" width="24" height="2" rx="1" fill="currentColor"></rect><rect y="16" width="24" height="2" rx="1" fill="currentColor"></rect></svg></button> `;
   if (store_get($$store_subs ??= {}, "$authSignedInStore", authSignedInStore)) {
     $$payload.out += "<!--[-->";
     $$payload.out += `<ul class="hidden md:flex h-16"><li class="mx-2 flex items-center h-16"><a href="/"${attr("class", `flex items-center h-full nav-underline hover:text-gray-400 $${stringify(currentClass("/"))}`)}><span class="flex items-center h-full px-4">Home</span></a></li> <li class="mx-2 flex items-center h-16"><a href="/pick-team"${attr("class", `flex items-center h-full nav-underline hover:text-gray-400 $${stringify(currentClass("/pick-team"))}`)}><span class="flex items-center h-full px-4">Squad Selection</span></a></li> <li class="flex flex-1 items-center"><div class="relative inline-block"><button${attr("class", `h-full flex items-center rounded-sm ${currentBorder("/profile")}`)}><img${attr("src", store_get($$store_subs ??= {}, "$userGetProfilePicture", userGetProfilePicture))} alt="Profile" class="h-12 rounded-sm profile-pic" aria-label="Toggle Profile"></button> <div${attr("class", `absolute right-0 top-full w-48 bg-black rounded-b-md rounded-l-md shadow-lg z-50 profile-dropdown ${showProfileDropdown ? "block" : "hidden"}`)}><ul class="text-gray-700"><li><a href="/profile" class="flex items-center h-full w-full nav-underline hover:text-gray-400"><span class="flex items-center h-full w-full"><img${attr("src", store_get($$store_subs ??= {}, "$userGetProfilePicture", userGetProfilePicture))} alt="logo" class="h-8 my-2 ml-4 mr-2"> <p class="w-full min-w-[125px] max-w-[125px] truncate">Profile</p></span></a></li> <li><button class="flex items-center justify-center px-4 pb-2 pt-1 text-white rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button">Disconnect `;
