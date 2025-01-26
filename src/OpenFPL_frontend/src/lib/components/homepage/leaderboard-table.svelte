@@ -8,10 +8,10 @@
     export let leaderboard: any;
 
     export let selectedGameweek: Writable<number>;
-    export let currentPage: Writable<number>;
-    export let totalPages: Writable<number>;
+    export let currentPage: number = 1;
+    export let totalPages: number = 0;
+    export let onPageChange: (page: number) => void;
 
-    export let changePage: (delta: number) => void;
     
 </script>
 
@@ -42,7 +42,11 @@
             </div>
           </a>
         {/each}
-        <Pagination onPageChange={changePage} {currentPage} {totalPages} />
+        <Pagination
+          {currentPage}
+          {totalPages}
+          {onPageChange}
+          />
       {:else}
         <p class="w-full p-4">No leaderboard data.</p>
       {/if}

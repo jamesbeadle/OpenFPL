@@ -4903,7 +4903,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "dv0tbs"
+  version_hash: "k4s0ew"
 };
 async function get_hooks() {
   let handle;
@@ -5272,6 +5272,7 @@ const idlFactory = ({ IDL }) => {
     "FreeAgent": IDL.Null,
     "Retired": IDL.Null
   });
+  const LeagueId = IDL.Nat16;
   const PlayerPosition = IDL.Variant({
     "Goalkeeper": IDL.Null,
     "Midfielder": IDL.Null,
@@ -5282,12 +5283,16 @@ const idlFactory = ({ IDL }) => {
     "id": IDL.Nat16,
     "status": PlayerStatus,
     "clubId": ClubId,
+    "parentClubId": ClubId,
     "valueQuarterMillions": IDL.Nat16,
     "dateOfBirth": IDL.Int,
     "nationality": CountryId,
+    "currentLoanEndDate": IDL.Int,
     "shirtNumber": IDL.Nat8,
+    "parentLeagueId": LeagueId,
     "position": PlayerPosition,
     "lastName": IDL.Text,
+    "leagueId": LeagueId,
     "firstName": IDL.Text
   });
   const SeasonId = IDL.Nat16;
@@ -5381,7 +5386,6 @@ const idlFactory = ({ IDL }) => {
   });
   const Result_12 = IDL.Variant({ "ok": IDL.Vec(FixtureDTO), "err": Error2 });
   const Result_17 = IDL.Variant({ "ok": IDL.Vec(CanisterId), "err": Error2 });
-  const LeagueId = IDL.Nat16;
   const LeagueStatus = IDL.Record({
     "transferWindowEndMonth": IDL.Nat8,
     "transferWindowEndDay": IDL.Nat8,
@@ -7524,6 +7528,7 @@ function createManagerStore() {
       let result = await actor.getManager(dto);
       if (isError(result)) {
         console.error("Error getting public profile");
+        return null;
       }
       let profile = result.ok;
       return profile;

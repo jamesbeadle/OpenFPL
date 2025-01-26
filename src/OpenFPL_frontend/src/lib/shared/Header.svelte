@@ -8,11 +8,10 @@
   import { authSignedInStore } from "$lib/derived/auth.derived";
   import { userGetProfilePicture } from "$lib/derived/user.derived";
   import { storeManager } from "$lib/managers/store-manager";
-    import { toasts } from "$lib/stores/toasts-store";
+  import { toasts } from "$lib/stores/toasts-store";
 
   let menuOpen = false;
   let showProfileDropdown = false;
-  let unsubscribeLogin: () => void;
 
   onMount(async () => {
     try {
@@ -30,7 +29,6 @@
   });
 
   onDestroy(() => {
-    unsubscribeLogin?.();
     if (typeof window !== "undefined") {
       document.removeEventListener("click", closeDropdownOnClickOutside);
     }

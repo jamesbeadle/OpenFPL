@@ -274,12 +274,16 @@ export interface PlayerDTO {
   'id' : number,
   'status' : PlayerStatus,
   'clubId' : ClubId,
+  'parentClubId' : ClubId,
   'valueQuarterMillions' : number,
   'dateOfBirth' : bigint,
   'nationality' : CountryId,
+  'currentLoanEndDate' : bigint,
   'shirtNumber' : number,
+  'parentLeagueId' : LeagueId,
   'position' : PlayerPosition,
   'lastName' : string,
+  'leagueId' : LeagueId,
   'firstName' : string,
 }
 export interface PlayerDetailDTO {

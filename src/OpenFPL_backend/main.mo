@@ -811,17 +811,17 @@
       //ignore setSystemTimers();
      
       //await seasonManager.addNewDataHash("reward_pool");
-      //await calculateGWRewards(21);
+      //await calculateGWRewards(22);
       //await userManager.resetWeeklyTransfers();
       //await checkCanisterCycles();
-      //await manuallyPayRewards(21);
-
+      //await manuallyPayRewards(22);
       //await seasonManager.putOnHold();  
-      //await updateLeaderboardCanisterWasms();
       //await calculateGWLeaderboard(1,21);
-      //await updateManagerCanisterWasms();
       //seasonManager.removeDuplicateHashes();
-      await updateAllDataHashes();
+
+      //await updateLeaderboardCanisterWasms();
+      //await updateManagerCanisterWasms();
+      //await updateAllDataHashes();
     };
 
     private func updateAllDataHashes() : async (){

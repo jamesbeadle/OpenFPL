@@ -369,11 +369,15 @@ type PlayerDetailDTO =
 type PlayerDTO = 
  record {
    clubId: ClubId;
+   currentLoanEndDate: int;
    dateOfBirth: int;
    firstName: text;
    id: nat16;
    lastName: text;
+   leagueId: LeagueId;
    nationality: CountryId;
+   parentClubId: ClubId;
+   parentLeagueId: LeagueId;
    position: PlayerPosition;
    shirtNumber: nat8;
    status: PlayerStatus;

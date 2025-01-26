@@ -57,7 +57,9 @@ function createManagerStore() {
     firstGameweek: false,
   };
 
-  async function getPublicProfile(principalId: string): Promise<ManagerDTO> {
+  async function getPublicProfile(
+    principalId: string,
+  ): Promise<ManagerDTO | null> {
     await storeManager.syncStores();
     try {
       let leagueStatus: LeagueStatus | null = null;
@@ -79,6 +81,7 @@ function createManagerStore() {
 
       if (isError(result)) {
         console.error("Error getting public profile");
+        return null;
       }
 
       let profile = result.ok;

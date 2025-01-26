@@ -56,7 +56,7 @@
           {username}
         {/if}
       </h2>
-      <button class="fpl-button" on:click={displayUsernameModal}>Update</button>
+      <button class="p-1 md:p-2 px-2 md:px-4 fpl-button" on:click={displayUsernameModal}>Update</button>
       <p class="mb-1 mt-4">Favourite Team:</p>
       <h2 class="default-header mb-1 md:mb-2">{teamName == "" ? "Not Set" : teamName}</h2>
       

@@ -159,6 +159,19 @@ module DTOs {
     totalEntries : Nat16;
   };
 
+  public type OldPlayerDTO = {
+    id : Nat16;
+    clubId : FootballTypes.ClubId;
+    position : FootballTypes.PlayerPosition;
+    firstName : Text;
+    lastName : Text;
+    shirtNumber : Nat8;
+    valueQuarterMillions : Nat16;
+    dateOfBirth : Int;
+    nationality : Base.CountryId;
+    status : FootballTypes.PlayerStatus;
+  };
+
   public type PlayerDTO = {
     id : Nat16;
     clubId : FootballTypes.ClubId;
@@ -170,6 +183,10 @@ module DTOs {
     dateOfBirth : Int;
     nationality : Base.CountryId;
     status : FootballTypes.PlayerStatus;
+    leagueId: FootballTypes.LeagueId;
+    parentLeagueId: FootballTypes.LeagueId;
+    parentClubId: FootballTypes.ClubId;
+    currentLoanEndDate: Int;
   };
 
   public type SnapshotPlayerDTO = {

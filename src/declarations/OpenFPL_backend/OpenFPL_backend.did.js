@@ -105,6 +105,7 @@ export const idlFactory = ({ IDL }) => {
     'FreeAgent' : IDL.Null,
     'Retired' : IDL.Null,
   });
+  const LeagueId = IDL.Nat16;
   const PlayerPosition = IDL.Variant({
     'Goalkeeper' : IDL.Null,
     'Midfielder' : IDL.Null,
@@ -115,12 +116,16 @@ export const idlFactory = ({ IDL }) => {
     'id' : IDL.Nat16,
     'status' : PlayerStatus,
     'clubId' : ClubId,
+    'parentClubId' : ClubId,
     'valueQuarterMillions' : IDL.Nat16,
     'dateOfBirth' : IDL.Int,
     'nationality' : CountryId,
+    'currentLoanEndDate' : IDL.Int,
     'shirtNumber' : IDL.Nat8,
+    'parentLeagueId' : LeagueId,
     'position' : PlayerPosition,
     'lastName' : IDL.Text,
+    'leagueId' : LeagueId,
     'firstName' : IDL.Text,
   });
   const SeasonId = IDL.Nat16;
@@ -214,7 +219,6 @@ export const idlFactory = ({ IDL }) => {
   });
   const Result_12 = IDL.Variant({ 'ok' : IDL.Vec(FixtureDTO), 'err' : Error });
   const Result_17 = IDL.Variant({ 'ok' : IDL.Vec(CanisterId), 'err' : Error });
-  const LeagueId = IDL.Nat16;
   const LeagueStatus = IDL.Record({
     'transferWindowEndMonth' : IDL.Nat8,
     'transferWindowEndDay' : IDL.Nat8,

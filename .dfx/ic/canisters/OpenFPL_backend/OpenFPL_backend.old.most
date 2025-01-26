@@ -41,11 +41,15 @@ type MonthlyRewards =
 type PlayerDTO =
   {
     clubId : ClubId;
+    currentLoanEndDate : Int;
     dateOfBirth : Int;
     firstName : Text;
     id : Nat16;
     lastName : Text;
+    leagueId : LeagueId;
     nationality : CountryId;
+    parentClubId : ClubId;
+    parentLeagueId : LeagueId;
     position : PlayerPosition;
     shirtNumber : Nat8;
     status : PlayerStatus;

@@ -18,9 +18,9 @@
 
   let isLoading = true;
   let gameweeks: number[];
-  let currentPage = writable<number>(1);
+  let currentPage = 1;
   let selectedLeaderboardType = writable<number>(1);
-  let totalPages = writable<number>(0);
+  let totalPages = 0;
   let selectedTeamIndex = writable<number>(0);
   let itemsPerPage = 25;
   let selectedSeasonId = writable(1);
@@ -39,12 +39,12 @@
     $selectedGameweek;
     $selectedMonth;
     $selectedTeamId;
-    $currentPage;
+    currentPage;
     loadLeaderboardData();
   }
 
   $: if (leaderboard && leaderboard.totalEntries) {
-    totalPages.set(Math.ceil(Number(leaderboard.totalEntries) / 25));
+    totalPages = Math.ceil(Number(leaderboard.totalEntries) / 25);
   }
 
   onMount(async () => {
@@ -64,17 +64,17 @@
     isLoading = true;
     switch ($selectedLeaderboardType) {
       case 1:
-        leaderboard = await weeklyLeaderboardStore.getWeeklyLeaderboard($selectedSeasonId, $selectedGameweek, $currentPage);
+        leaderboard = await weeklyLeaderboardStore.getWeeklyLeaderboard($selectedSeasonId, $selectedGameweek, currentPage);
         const rewardsResult = await weeklyLeaderboardStore.getWeeklyRewards($selectedSeasonId, $selectedGameweek);
         if(leaderboard && rewardsResult){
           leaderboard.entries = mergeLeaderboardWithRewards(leaderboard.entries, rewardsResult ? rewardsResult.rewards : []);
         }
         break;
       case 2:
-        leaderboard = await monthlyLeaderboardStore.getMonthlyLeaderboard($selectedSeasonId, $selectedTeamId, $selectedMonth, $currentPage, "");
+        leaderboard = await monthlyLeaderboardStore.getMonthlyLeaderboard($selectedSeasonId, $selectedTeamId, $selectedMonth, currentPage, "");
         break;
       case 3:
-        leaderboard = await seasonLeaderboardStore.getSeasonLeaderboard($selectedSeasonId, $currentPage, "");
+        leaderboard = await seasonLeaderboardStore.getSeasonLeaderboard($selectedSeasonId, currentPage, "");
         break;
     }
     isLoading = false;
@@ -84,8 +84,10 @@
     $selectedGameweek = Math.max(1, Math.min(Number(process.env.TOTAL_GAMEWEEKS), $selectedGameweek + delta));
   };
 
-  function changePage(page: number) {
-    $currentPage = Math.max(1, Math.min($totalPages, page));
+  
+
+  function handlePageChange(newPage: number) {
+    currentPage = Math.max(1, Math.min(newPage, totalPages));
   }
 
   function changeLeaderboardType(change: number) {
@@ -109,6 +111,6 @@
         {/if}
       </div>
     </div>
-    <LeaderboardTable {leaderboard} {changePage} {currentPage} {totalPages} {selectedGameweek} />
+    <LeaderboardTable {leaderboard} onPageChange={handlePageChange} {currentPage} {totalPages} {selectedGameweek} />
   </div>
 {/if}
