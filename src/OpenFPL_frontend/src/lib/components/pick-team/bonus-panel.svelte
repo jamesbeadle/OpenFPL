@@ -135,8 +135,6 @@
 
   onMount(async () => {
     updateBonuses();
-
-    console.log($bonuses)
     await setWeeklyBonusPlayed();
   });
   let showModal: boolean = false;

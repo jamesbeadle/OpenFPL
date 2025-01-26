@@ -53,7 +53,6 @@
       }
       return currentTeam;
     });
-    console.log($fantasyTeam)
   }
 
 </script>

@@ -89,7 +89,7 @@
     if (!$fantasyTeam) return;
     let activeGameweek = 1;
 
-    if($leagueStore!.activeGameweek){
+    if($leagueStore!.activeGameweek == 0){
       activeGameweek = $leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek
     }
     

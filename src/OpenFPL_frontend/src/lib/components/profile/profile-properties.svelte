@@ -25,8 +25,6 @@
       await storeManager.syncStores();
 
       unsubscribeUserProfile = userStore.subscribe((value) => {
-        console.log("found user")
-        console.log(value)
         if (!value) { return; }
         username = value.username;
         joinedDate = getDateFromBigInt(Number(value.createDate));

@@ -39,7 +39,7 @@
   onMount(async () => {
     await storeManager.syncStores();
     $selectedGameweek = Number(gw);
-    $manager = await managerStore.getPublicProfile(id ?? "", $selectedGameweek);
+    $manager = await managerStore.getPublicProfile(id ?? "");
     formation = getTeamFormationReadOnly($fantasyTeam, $playerStore);
     gridSetup = getGridSetup(formation);
     viewGameweekDetail($selectedGameweek!);
