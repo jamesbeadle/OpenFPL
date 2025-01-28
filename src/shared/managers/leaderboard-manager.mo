@@ -311,7 +311,8 @@ module {
     };
 
     public func calculateLeaderboards(seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth, uniqueManagerCanisterIds : [Base.CanisterId], clubIds: [FootballTypes.ClubId]) : async () {
-      
+      Debug.print("calculating leaderboards");
+      Debug.print(activeCanisterId);
       if(activeCanisterId == ""){
         activeCanisterId := await createLeaderboardCanister();
       };
@@ -325,6 +326,8 @@ module {
 
       let totalLeaderboards = await leaderboard_canister.getTotalLeaderboards();
 
+      Debug.print("Total LEaderboards");
+      Debug.print(debug_show totalLeaderboards);
       if(totalLeaderboards >= MAX_LEADERBOARDS_PER_CANISTER){
         activeCanisterId := await createLeaderboardCanister();
       };
@@ -514,7 +517,6 @@ module {
 
     //calculate weekly leaderboard rewards
     public func calculateWeeklyRewards(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber, seasonGameweekCount: Nat8) : async Result.Result<(), T.Error>{
-      
       let gameweekSeason = Array.find(weeklyLeaderboardCanisters, func(seasonEntry: (FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, Base.CanisterId)])) : Bool {
         seasonEntry.0 == seasonId;
       });
@@ -524,6 +526,8 @@ module {
           let gameweekResult = Array.find(foundGameweekSeason.1, func(gameweekEntry: (FootballTypes.GameweekNumber, Base.CanisterId)) : Bool {
             gameweekEntry.0 == gameweek
           });
+
+
       
           switch(gameweekResult){
             case(?foundGameweek){
@@ -538,7 +542,10 @@ module {
                 offset = 0;
               };
 
+              Debug.print("getting");
               let leaderboardEntries = await leaderboard_canister.getWeeklyLeaderboardEntries(seasonId, gameweek, filters, "");
+              Debug.print("leaderboard entries");
+              Debug.print(debug_show leaderboardEntries);
               switch (leaderboardEntries) {
                 case (null) {
                   return #err(#NotFound);

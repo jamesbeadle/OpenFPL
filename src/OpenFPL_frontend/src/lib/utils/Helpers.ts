@@ -18,6 +18,7 @@ import EnglandFlag from "../flags/england.svelte"; // Custom Svelte component fo
 import ScotlandFlag from "../flags/scotland.svelte"; // Custom Svelte component for Scotland
 import WalesFlag from "../flags/wales.svelte"; // Custom Svelte component for Wales
 import NorthernIrelandFlag from "../flags/northern_ireland.svelte";
+import type { FixtureWithClubs } from "$lib/derived/fixtures-with-clubs.derived";
 
 export function uint8ArrayToBase64(bytes: Uint8Array): string {
   const binary = Array.from(bytes)
@@ -1101,12 +1102,12 @@ export function getActualIndex(
   return startIndex + colIndex;
 }
 
-export function reduceFilteredFixtures(filteredFixtures: FixtureWithTeams[]): {
-  [key: string]: FixtureWithTeams[];
+export function reduceFilteredFixtures(filteredFixtures: FixtureWithClubs[]): {
+  [key: string]: FixtureWithClubs[];
 } {
   return filteredFixtures.reduce(
-    (acc: { [key: string]: FixtureWithTeams[] }, fixtureWithTeams) => {
-      const date = new Date(Number(fixtureWithTeams.fixture.kickOff) / 1000000);
+    (acc: { [key: string]: FixtureWithClubs[] }, fixtureWithTeams) => {
+      const date = new Date(Number(fixtureWithTeams.kickOff) / 1000000);
       const dateFormatter = new Intl.DateTimeFormat("en-GB", {
         weekday: "long",
         day: "numeric",
@@ -1121,7 +1122,7 @@ export function reduceFilteredFixtures(filteredFixtures: FixtureWithTeams[]): {
       acc[dateKey].push(fixtureWithTeams);
       return acc;
     },
-    {} as { [key: string]: FixtureWithTeams[] },
+    {} as { [key: string]: FixtureWithClubs[] },
   );
 }
 

@@ -11,10 +11,10 @@ import Option "mo:base/Option";
 import Nat "mo:base/Nat";
 import TrieMap "mo:base/TrieMap";
 
-import DTOs "../../shared/dtos/DTOs";
 import Base "../../shared/types/base_types";
 import FootballTypes "../../shared/types/football_types";
 import T "../../shared/types/app_types";
+import Queries "../dtos/queries";
 import Utilities "../../shared/utils/utilities";
 import Environment "../network_environment_variables";
 
@@ -27,12 +27,9 @@ actor class _LeaderboardCanister() {
   private stable var entryUpdatesAllowed = false;
   private stable var controllerPrincipalId = "";
   private stable var initialised = false;
-  
-  //remove debug only
-  public shared func getWeeklyLeaderboards() : async [T.WeeklyLeaderboard]{
-    return weekly_leaderboards;
-  };
 
+  private let LEADERBOARD_ROW_COUNT_LIMIT = 25;
+  
   public shared ({caller}) func initialise(_controllerPrincipalId: Text) : async (){
     if(initialised){
       return;
@@ -377,7 +374,7 @@ actor class _LeaderboardCanister() {
 };
 
 
-  public shared query ({ caller }) func getWeeklyRewardLeaderboard(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber) : async ?DTOs.WeeklyLeaderboardDTO {
+  public shared query ({ caller }) func getWeeklyRewardLeaderboard(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber) : async ?Queries.WeeklyLeaderboardDTO {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == controllerPrincipalId;
@@ -448,149 +445,7 @@ actor class _LeaderboardCanister() {
     };
   };
 
-  public shared query ({ caller }) func getSeasonRewardLeaderboard(seasonId: FootballTypes.SeasonId) : async ?DTOs.SeasonLeaderboardDTO {
-    assert not Principal.isAnonymous(caller);
-    let principalId = Principal.toText(caller);
-    assert principalId == controllerPrincipalId;
-
-    var currentLeaderboard: ?T.SeasonLeaderboard = null;
-
-    currentLeaderboard := Array.find(weekly_leaderboards, func(leaderboard: T.SeasonLeaderboard) : Bool {
-      leaderboard.seasonId == seasonId
-    });
-
-    switch (currentLeaderboard) {
-      case (null) { return null };
-      case (?foundLeaderboard) {
-
-        let entriesArray = List.toArray(foundLeaderboard.entries);
-        let sortedArray = Array.sort(
-          entriesArray,
-          func(a : T.LeaderboardEntry, b : T.LeaderboardEntry) : Order.Order {
-            if (a.points < b.points) { return #greater };
-            if (a.points == b.points) { return #equal };
-            return #less;
-          },
-        );
-
-        let cutoffIndex = 99;
-        let lastQualifyingPoints = sortedArray[cutoffIndex].points;
-        var lastIndexForPrizes = cutoffIndex;
-        let totalEntries : Nat = List.size(foundLeaderboard.entries);
-
-        if (totalEntries <= 0) {
-          return null;
-        };
-
-        let totalEntriesIndex : Nat = totalEntries - 1;
-
-        while (
-          lastIndexForPrizes < totalEntriesIndex and List.toArray(foundLeaderboard.entries)[lastIndexForPrizes + 1].points == lastQualifyingPoints,
-        ) {
-          lastIndexForPrizes := lastIndexForPrizes + 1;
-        };
-
-        let indexes : [Nat] = Array.tabulate<Nat>(Array.size(sortedArray), func(i : Nat) : Nat { i });
-
-        let entriesWithIndex : [(T.LeaderboardEntry, Nat)] = Array.map<Nat, (T.LeaderboardEntry, Nat)>(indexes, func(i : Nat) : (T.LeaderboardEntry, Nat) { (sortedArray[i], i) });
-
-        let qualifyingEntriesWithIndex = Array.filter(
-          entriesWithIndex,
-          func(pair : (T.LeaderboardEntry, Nat)) : Bool {
-            let (_, index) = pair;
-            index <= lastIndexForPrizes;
-          },
-        );
-
-        let qualifyingEntries = Array.map(
-          qualifyingEntriesWithIndex,
-          func(pair : (T.LeaderboardEntry, Nat)) : T.LeaderboardEntry {
-            let (entry, _) = pair;
-            entry;
-          },
-        );
-        return ?{
-          seasonId = seasonId;
-          entries = qualifyingEntries;
-          totalEntries = Array.size(qualifyingEntries);
-        };
-      };
-    };
-  };
-
-  public shared query ({ caller }) func getMonthlyRewardLeaderboard(seasonId: FootballTypes.SeasonId, month: Base.CalendarMonth, clubId: FootballTypes.ClubId) : async ?DTOs.MonthlyLeaderboardDTO {
-    assert not Principal.isAnonymous(caller);
-    let principalId = Principal.toText(caller);
-    assert principalId == controllerPrincipalId;
-
-    var currentLeaderboard: ?T.MonthlyLeaderboard = null;
-
-    currentLeaderboard := Array.find(monthly_leaderboards, func(leaderboard: T.MonthlyLeaderboard) : Bool {
-      leaderboard.seasonId == seasonId and leaderboard.month == month and leaderboard.clubId == clubId
-    });
-
-    switch (currentLeaderboard) {
-      case (null) { return null };
-      case (?foundLeaderboard) {
-
-        let entriesArray = List.toArray(foundLeaderboard.entries);
-        let sortedArray = Array.sort(
-          entriesArray,
-          func(a : T.LeaderboardEntry, b : T.LeaderboardEntry) : Order.Order {
-            if (a.points < b.points) { return #greater };
-            if (a.points == b.points) { return #equal };
-            return #less;
-          },
-        );
-
-        let cutoffIndex = 99;
-        let lastQualifyingPoints = sortedArray[cutoffIndex].points;
-        var lastIndexForPrizes = cutoffIndex;
-        let totalEntries : Nat = List.size(foundLeaderboard.entries);
-
-        if (totalEntries <= 0) {
-          return null;
-        };
-
-        let totalEntriesIndex : Nat = totalEntries - 1;
-
-        while (
-          lastIndexForPrizes < totalEntriesIndex and List.toArray(foundLeaderboard.entries)[lastIndexForPrizes + 1].points == lastQualifyingPoints,
-        ) {
-          lastIndexForPrizes := lastIndexForPrizes + 1;
-        };
-
-        let indexes : [Nat] = Array.tabulate<Nat>(Array.size(sortedArray), func(i : Nat) : Nat { i });
-
-        let entriesWithIndex : [(T.LeaderboardEntry, Nat)] = Array.map<Nat, (T.LeaderboardEntry, Nat)>(indexes, func(i : Nat) : (T.LeaderboardEntry, Nat) { (sortedArray[i], i) });
-
-        let qualifyingEntriesWithIndex = Array.filter(
-          entriesWithIndex,
-          func(pair : (T.LeaderboardEntry, Nat)) : Bool {
-            let (_, index) = pair;
-            index <= lastIndexForPrizes;
-          },
-        );
-
-        let qualifyingEntries = Array.map(
-          qualifyingEntriesWithIndex,
-          func(pair : (T.LeaderboardEntry, Nat)) : T.LeaderboardEntry {
-            let (entry, _) = pair;
-            entry;
-          },
-        );
-        return ?{
-          seasonId = seasonId;
-          entries = qualifyingEntries;
-          totalEntries = Array.size(qualifyingEntries);
-          month = month;
-          clubId = clubId;
-        };
-      };
-    };
-  };
-
-  public shared ({ caller }) func getWeeklyLeaderboardEntries(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber, filters: DTOs.PaginationFiltersDTO, searchTerm : Text) : async ?DTOs.WeeklyLeaderboardDTO {
+  public shared ({ caller }) func getWeeklyLeaderboardEntries(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber, offset: Nat, searchTerm : Text) : async ?Queries.WeeklyLeaderboardDTO {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == controllerPrincipalId;
@@ -619,10 +474,10 @@ actor class _LeaderboardCanister() {
               return #less;
         });
 
-        let droppedEntries = List.drop<T.LeaderboardEntry>(List.fromArray(sortedGameweekEntries), filters.offset);
-        let paginatedEntries = List.take<T.LeaderboardEntry>(droppedEntries, filters.limit);
+        let droppedEntries = List.drop<T.LeaderboardEntry>(List.fromArray(sortedGameweekEntries), offset);
+        let paginatedEntries = List.take<T.LeaderboardEntry>(droppedEntries, LEADERBOARD_ROW_COUNT_LIMIT);
 
-        let leaderboardDTO : DTOs.WeeklyLeaderboardDTO = {
+        let leaderboardDTO: Queries.WeeklyLeaderboardDTO = {
           seasonId = foundLeaderboard.seasonId;
           gameweek = foundLeaderboard.gameweek;
           entries = List.toArray(paginatedEntries);
@@ -634,83 +489,7 @@ actor class _LeaderboardCanister() {
     };
   };
 
-  public shared query ({ caller }) func getMonthlyLeaderboardEntries(seasonId: FootballTypes.SeasonId, month: Base.CalendarMonth, clubId: FootballTypes.ClubId, filters: DTOs.PaginationFiltersDTO, searchTerm : Text) : async ?DTOs.MonthlyLeaderboardDTO {
-    assert not Principal.isAnonymous(caller);
-    let principalId = Principal.toText(caller);
-    assert principalId == controllerPrincipalId;
-
-    var currentLeaderboard: ?T.MonthlyLeaderboard = null;
-
-    currentLeaderboard := Array.find(monthly_leaderboards, func(leaderboard: T.MonthlyLeaderboard) : Bool {
-      leaderboard.seasonId == seasonId and leaderboard.month == month and leaderboard.clubId == clubId
-    });
-
-    switch (currentLeaderboard) {
-      case (null) {
-        return null;
-      };
-      case (?foundLeaderboard) {
-        let filteredEntries = List.filter<T.LeaderboardEntry>(
-          foundLeaderboard.entries,
-          func(entry : T.LeaderboardEntry) : Bool {
-            Text.startsWith(entry.username, #text searchTerm);
-          },
-        );
-
-        let droppedEntries = List.drop<T.LeaderboardEntry>(filteredEntries, filters.offset);
-        let paginatedEntries = List.take<T.LeaderboardEntry>(droppedEntries, filters.limit);
-
-        let leaderboardDTO : DTOs.MonthlyLeaderboardDTO = {
-          seasonId = foundLeaderboard.seasonId;
-          month = foundLeaderboard.month;
-          clubId = foundLeaderboard.clubId;
-          entries = List.toArray(paginatedEntries);
-          totalEntries = List.size(foundLeaderboard.entries);
-        };
-
-        return ?leaderboardDTO;
-      };
-    };
-  };
-
-  public shared query ({ caller }) func getSeasonLeaderboardEntries(seasonId: FootballTypes.SeasonId, filters: DTOs.PaginationFiltersDTO, searchTerm : Text) : async ?DTOs.SeasonLeaderboardDTO {
-    assert not Principal.isAnonymous(caller);
-    let principalId = Principal.toText(caller);
-    assert principalId == controllerPrincipalId;
-
-    var currentLeaderboard: ?T.WeeklyLeaderboard = null;
-
-    currentLeaderboard := Array.find(weekly_leaderboards, func(leaderboard: T.SeasonLeaderboard) : Bool {
-      leaderboard.seasonId == seasonId;
-    });
-
-    switch (currentLeaderboard) {
-      case (null) {
-        return null;
-      };
-      case (?foundLeaderboard) {
-        let filteredEntries = List.filter<T.LeaderboardEntry>(
-          foundLeaderboard.entries,
-          func(entry : T.LeaderboardEntry) : Bool {
-            Text.startsWith(entry.username, #text searchTerm);
-          },
-        );
-
-        let droppedEntries = List.drop<T.LeaderboardEntry>(filteredEntries, filters.offset);
-        let paginatedEntries = List.take<T.LeaderboardEntry>(droppedEntries, filters.limit);
-
-        let leaderboardDTO : DTOs.SeasonLeaderboardDTO = {
-          seasonId = foundLeaderboard.seasonId;
-          entries = List.toArray(paginatedEntries);
-          totalEntries = List.size(foundLeaderboard.entries);
-        };
-
-        return ?leaderboardDTO;
-      };
-    };
-  };
-
-  public shared query ({ caller }) func getWeeklyLeaderboardEntry(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber, principalId : Text) : async ?DTOs.LeaderboardEntryDTO {
+  public shared query ({ caller }) func getWeeklyLeaderboardEntry(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber, principalId : Text) : async ?Queries.LeaderboardEntryDTO {
     assert not Principal.isAnonymous(caller);
     let callerPrincipalId = Principal.toText(caller);
     assert callerPrincipalId == controllerPrincipalId;
@@ -728,59 +507,7 @@ actor class _LeaderboardCanister() {
       case (?foundLeaderboard) {
         let _ = List.find<T.LeaderboardEntry>(
           foundLeaderboard.entries,
-          func(entry : DTOs.LeaderboardEntryDTO) : Bool {
-            return entry.principalId == principalId;
-          },
-        );
-      };
-    };
-  };
-
-  public shared query ({ caller }) func getMonthlyLeaderboardEntry(seasonId: FootballTypes.SeasonId, month: Base.CalendarMonth, clubId: FootballTypes.ClubId, principalId : Text) : async ?DTOs.LeaderboardEntryDTO {
-    assert not Principal.isAnonymous(caller);
-    let callerPrincipalId = Principal.toText(caller);
-    assert callerPrincipalId == controllerPrincipalId;
-
-    var currentLeaderboard: ?T.MonthlyLeaderboard = null;
-
-    currentLeaderboard := Array.find(monthly_leaderboards, func(leaderboard: T.MonthlyLeaderboard) : Bool {
-      leaderboard.seasonId == seasonId and leaderboard.month == month and leaderboard.clubId == clubId;
-    });
-
-    switch (currentLeaderboard) {
-      case (null) {
-        return null;
-      };
-      case (?foundLeaderboard) {
-        let _ = List.find<T.LeaderboardEntry>(
-          foundLeaderboard.entries,
-          func(entry : DTOs.LeaderboardEntryDTO) : Bool {
-            return entry.principalId == principalId;
-          },
-        );
-      };
-    };
-  };
-
-  public shared query ({ caller }) func getSeasonLeaderboardEntry(seasonId: FootballTypes.SeasonId, principalId : Text) : async ?DTOs.LeaderboardEntryDTO {
-    assert not Principal.isAnonymous(caller);
-    let callerPrincipalId = Principal.toText(caller);
-    assert callerPrincipalId == controllerPrincipalId;
-
-    var currentLeaderboard: ?T.SeasonLeaderboard = null;
-
-    currentLeaderboard := Array.find(weekly_leaderboards, func(leaderboard: T.SeasonLeaderboard) : Bool {
-      leaderboard.seasonId == seasonId;
-    });
-
-    switch (currentLeaderboard) {
-      case (null) {
-        return null;
-      };
-      case (?foundLeaderboard) {
-        let _ = List.find<T.LeaderboardEntry>(
-          foundLeaderboard.entries,
-          func(entry : DTOs.LeaderboardEntryDTO) : Bool {
+          func(entry : Queries.LeaderboardEntryDTO) : Bool {
             return entry.principalId == principalId;
           },
         );

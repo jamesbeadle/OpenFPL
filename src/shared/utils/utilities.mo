@@ -19,10 +19,10 @@ import Text "mo:base/Text";
 import Time "mo:base/Time";
 import Buffer "mo:base/Buffer";
 
-import DTOs "../dtos/DTOs";
 import Management "Management";
 import T "../types/app_types";
 import FootballTypes "../types/football_types";
+import DTOs "../dtos/dtos";
 import NetworkEnvironmentVariables "../network_environment_variables";
 
 

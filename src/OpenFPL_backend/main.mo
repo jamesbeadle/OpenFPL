@@ -811,17 +811,19 @@
       //ignore setSystemTimers();
      
       //await seasonManager.addNewDataHash("reward_pool");
-      //await calculateGWRewards(22);
       //await userManager.resetWeeklyTransfers();
       //await checkCanisterCycles();
-      //await manuallyPayRewards(22);
       //await seasonManager.putOnHold();  
-      //await calculateGWLeaderboard(1,21);
       //seasonManager.removeDuplicateHashes();
 
-      //await updateLeaderboardCanisterWasms();
-      //await updateManagerCanisterWasms();
-      //await updateAllDataHashes();
+      await updateLeaderboardCanisterWasms();
+      await updateManagerCanisterWasms();
+      await updateAllDataHashes();
+      
+      await calculateGWLeaderboard(1,23);
+      //await calculateGWRewards(23);
+      //await manuallyPayRewards(23);
+      
     };
 
     private func updateAllDataHashes() : async (){
@@ -840,8 +842,9 @@
     };
 
     private func calculateGWLeaderboard(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber) : async (){
-     
+      Debug.print("Calculating gameweek leaderboards");
       let _ = await userManager.calculateFantasyTeamScores(Environment.LEAGUE_ID, seasonId, gameweek, 0);
+      Debug.print("Getting Clubs");
       let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
         getClubs : shared query (leagueId: FootballTypes.LeagueId) -> async Result.Result<[FootballTypes.Club], T.Error>;
       };
@@ -852,6 +855,7 @@
           let clubIds = Array.map<DTOs.ClubDTO, FootballTypes.ClubId>(clubs, func(club: DTOs.ClubDTO){
             return club.id
           });
+          Debug.print("calculating leaderboards");
           let managerCanisterIds = userManager.getUniqueManagerCanisterIds();
           let _ = leaderboardManager.calculateLeaderboards(seasonId, gameweek, 0, managerCanisterIds, clubIds);
         };

@@ -48,6 +48,7 @@ module {
     private var seasonATHPrizePool : Nat64 = 0;
 
     public func calculateGameweekRewards(dto: DTOs.WeeklyLeaderboardDTO, seasonGameweekCount: Nat8): async () {
+      Debug.print("calculating gameweek rewards");
       let weeklyRewardsExcludingThisWeek = List.filter<T.WeeklyRewards>(weeklyRewards, func(weeklyRewardsEntry: T.WeeklyRewards){
         not (weeklyRewardsEntry.gameweek == dto.gameweek and weeklyRewardsEntry.seasonId == dto.seasonId)
       });
@@ -57,6 +58,8 @@ module {
 
       switch (rewardPoolOpt) {
           case (?rewardPool) {
+              Debug.print("found reward pool");
+              Debug.print(debug_show rewardPool);
               let weeklyRewardAmount = rewardPool.weeklyLeaderboardPool / Nat64.fromNat(Nat8.toNat(seasonGameweekCount));              
               let topEntries = filterTop100IncludingTies(dto.entries);
               
