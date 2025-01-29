@@ -12,15 +12,11 @@
   import Time "mo:base/Time";
   import Buffer "mo:base/Buffer";
   import List "mo:base/List";
-  import Debug "mo:base/Debug";
-  import Nat16 "mo:base/Nat16";
-  import Nat8 "mo:base/Nat8";
 
   import Base "../shared/types/base_types";
   import FootballTypes "../shared/types/football_types";
   import T "../shared/types/app_types";
   import DTOs "../shared/dtos/DTOs";
-  import Countries "../shared/Countries";
   import Root "../shared/sns-wrappers/root";
 
   import Management "../shared/utils/Management";
@@ -95,81 +91,18 @@
 
     //Query functions:
 
-    public shared composite query func getDataHashes() : async Result.Result<[DTOs.DataHashDTO], T.Error> {
-      return seasonManager.getDataHashes();
-    };
-
     public shared query func getAppStatus() : async Result.Result<DTOs.AppStatusDTO, T.Error> {
       return seasonManager.getAppStatus();
     };
 
-    public shared composite query func getClubs() : async Result.Result<[DTOs.ClubDTO], T.Error> {
-      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
-        getClubs : shared query (leagueId: FootballTypes.LeagueId) -> async Result.Result<[FootballTypes.Club], T.Error>;
-      };
-      return await data_canister.getClubs(Environment.LEAGUE_ID);
-    };
-
-    public shared composite query func getFixtures() : async Result.Result<[DTOs.FixtureDTO], T.Error> {
-      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
-        getFixtures : shared query (leagueId: FootballTypes.LeagueId) -> async Result.Result<[DTOs.FixtureDTO], T.Error>;
-      };
-      return await data_canister.getFixtures(Environment.LEAGUE_ID);
-    };
-
-    public shared composite query func getSeasons() : async Result.Result<[DTOs.SeasonDTO], T.Error> {
-       let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
-        getSeasons : shared query (leagueId: FootballTypes.LeagueId) -> async Result.Result<[DTOs.SeasonDTO], T.Error>;
-      };
-      return await data_canister.getSeasons(Environment.LEAGUE_ID);
-    };
-
-    public shared composite query func getPostponedFixtures(leagueId: FootballTypes.LeagueId) : async Result.Result<[DTOs.FixtureDTO], T.Error> {
-      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
-        getPostponedFixtures : shared query (leagueId: FootballTypes.LeagueId) -> async Result.Result<[DTOs.FixtureDTO], T.Error>;
-      };
-      return await data_canister.getPostponedFixtures(leagueId);
-    };
 
     public shared query func getTotalManagers() : async Result.Result<Nat, T.Error> {
       return userManager.getTotalManagers();
     };
 
-    public shared composite query func getPlayers() : async Result.Result<[DTOs.PlayerDTO], T.Error> {
-      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
-        getPlayers : shared query (leagueId: FootballTypes.LeagueId) -> async Result.Result<[DTOs.PlayerDTO], T.Error>;
-      };
-      return await data_canister.getPlayers(Environment.LEAGUE_ID);
-    };
-
     public shared query ( {caller} ) func getPlayersSnapshot(dto: Queries.GetSnapshotPlayersDTO) : async [DTOs.PlayerDTO] {
       assert isManagerCanister(Principal.toText(caller));
       return seasonManager.getPlayersSnapshot(dto);
-    };
-
-    public shared composite query func getPlayerPoints(dto: Queries.GetPlayerPointsDTO) : async Result.Result<[DTOs.PlayerPointsDTO], T.Error> {
-      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
-        getPlayerPoints : shared query (leagueId: FootballTypes.LeagueId, dto: Queries.GetPlayerPointsDTO) -> async Result.Result<[DTOs.PlayerPointsDTO], T.Error>;
-      };
-      return await data_canister.getPlayerPoints(Environment.LEAGUE_ID, dto);
-    };
-
-    public shared func getPlayersMap(dto: Queries.GetPlayersMap) : async Result.Result<[Queries.PlayerMap], T.Error> {
-      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
-        getPlayersMap : shared query (leagueId: FootballTypes.LeagueId, dto: Queries.GetPlayersMap) -> async Result.Result<[(Nat16, DTOs.PlayerScoreDTO)], T.Error>;
-      };
-      return await data_canister.getPlayersMap(Environment.LEAGUE_ID, dto);
-    };
-
-    public shared func getPlayerDetails(dto: Queries.GetPlayerDetailsDTO) : async Result.Result<DTOs.PlayerDetailDTO, T.Error> {
-      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
-        getPlayerDetails : shared query (leagueId: FootballTypes.LeagueId, dto: Queries.GetPlayerDetailsDTO) -> async Result.Result<DTOs.PlayerDetailDTO, T.Error>;
-      };
-      return await data_canister.getPlayerDetails(Environment.LEAGUE_ID, dto);
-    };
-
-    public shared query func getCountries() : async Result.Result<[DTOs.CountryDTO], T.Error> {
-      return #ok(Countries.countries);
     };
 
     public shared query ({ caller }) func isUsernameValid(dto: Queries.IsUsernameValid) : async Bool {
@@ -214,7 +147,7 @@
           let playersResult = await dataManager.getVerifiedPlayers(Environment.LEAGUE_ID);
           switch(playersResult){
             case (#ok players){
-              return await userManager.saveTeamSelection(principalId, dto, leagueStatus.activeSeasonId, leagueStatus.unplayedGameweek, players);
+              return await userManager.saveTeamSelection(principalId, dto, leagueStatus.activeSeasonId, players);
             };
             case (#err error){
               return #err(error);
@@ -251,15 +184,7 @@
             return #err(#NotAllowed);
           };    
           
-          let playersResult = await dataManager.getVerifiedPlayers(Environment.LEAGUE_ID);
-          switch(playersResult){
-            case (#ok players){
-              return await userManager.saveBonusSelection(principalId, dto, leagueStatus.activeSeasonId, leagueStatus.unplayedGameweek, players);
-            };
-            case (#err error){
-              return #err(error);
-            }
-          }
+          return await userManager.saveBonusSelection(principalId, dto, leagueStatus.unplayedGameweek);
         };
         case (#err error){
           return #err(error);
@@ -291,21 +216,7 @@
     public shared ({ caller }) func updateProfilePicture(dto: Commands.UpdateProfilePictureDTO) : async Result.Result<(), T.Error> {
       assert not Principal.isAnonymous(caller);
       let principalId = Principal.toText(caller);
-
-      let leagueStatusResult = await getLeagueStatus();
-      switch(leagueStatusResult){
-        case (#ok leagueStatus){       
-
-          return await userManager.updateProfilePicture(principalId, {
-            extension = dto.extension;
-            managerId = principalId;
-            profilePicture = dto.profilePicture;
-          }, leagueStatus.unplayedGameweek);
-        };
-        case (#err error){
-          return #err(error);
-        }
-      };      
+      return await userManager.updateProfilePicture(principalId, dto);     
     };
 
     public shared ({ caller }) func searchUsername(dto: Queries.GetManagerByUsername) : async Result.Result<DTOs.ManagerDTO, T.Error> {
@@ -552,6 +463,7 @@
       return buffer;
     };
 
+    //TODO
     private func checkCanisterCycles() : async () {
       let root_canister = actor (NetworkEnvironmentVariables.SNS_ROOT_CANISTER_ID) : actor {
         get_sns_canisters_summary : (request: Root.GetSnsCanistersSummaryRequest) -> async Root.GetSnsCanistersSummaryResponse;
@@ -841,35 +753,9 @@
     };
 
     private func calculateGWLeaderboard(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber) : async (){
-      Debug.print("Calculating gameweek leaderboards");
       let _ = await userManager.calculateFantasyTeamScores(Environment.LEAGUE_ID, seasonId, gameweek, 0);
-      Debug.print("Getting Clubs");
-      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
-        getClubs : shared query (leagueId: FootballTypes.LeagueId) -> async Result.Result<[FootballTypes.Club], T.Error>;
-      };
-      let clubsResult = await data_canister.getClubs(Environment.LEAGUE_ID);
-
-      switch(clubsResult){
-        case (#ok clubs){
-          let clubIds = Array.map<DTOs.ClubDTO, FootballTypes.ClubId>(clubs, func(club: DTOs.ClubDTO){
-            return club.id
-          });
-          Debug.print("calculating leaderboards");
-          let managerCanisterIds = userManager.getUniqueManagerCanisterIds();
-          let _ = leaderboardManager.calculateLeaderboards(seasonId, gameweek, 0, managerCanisterIds, clubIds);
-        };
-        case (#err _){
-        }
-      };
-    };
-
-    private func calculateGWRewards(gameweek: FootballTypes.GameweekNumber) : async (){
-      let leagueStatusResult = await getLeagueStatus();
-      switch(leagueStatusResult){
-        case (#ok leagueStatus){       
-          let _ = await leaderboardManager.calculateWeeklyRewards(leagueStatus.activeSeasonId, gameweek);     };
-        case (#err _){}
-      } 
+      let managerCanisterIds = userManager.getUniqueManagerCanisterIds();
+      let _ = leaderboardManager.calculateLeaderboards(seasonId, gameweek, 0, managerCanisterIds);
     };
 
     private func manuallyPayRewards(gameweek: FootballTypes.GameweekNumber) : async () {
@@ -1102,24 +988,8 @@
       
       assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
       let _ = await userManager.calculateFantasyTeamScores(Environment.LEAGUE_ID, seasonId, gameweek, 0); //TODO month shouldn't be passed in
-
-      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
-        getClubs : shared query (leagueId: FootballTypes.LeagueId) -> async Result.Result<[FootballTypes.Club], T.Error>;
-      };
-      let clubsResult = await data_canister.getClubs(Environment.LEAGUE_ID);
-
-      switch(clubsResult){
-        case (#ok clubs){
-          let clubIds = Array.map<DTOs.ClubDTO, FootballTypes.ClubId>(clubs, func(club: DTOs.ClubDTO){
-            return club.id
-          });
-          let managerCanisterIds = userManager.getUniqueManagerCanisterIds();
-          let _ = leaderboardManager.calculateLeaderboards(seasonId, gameweek, 0, managerCanisterIds, clubIds);   
-        };
-        case (#err error){
-          return #err(error)
-        }
-      };
+      let managerCanisterIds = userManager.getUniqueManagerCanisterIds();
+      let _ = leaderboardManager.calculateLeaderboards(seasonId, gameweek, 0, managerCanisterIds);   
 
       await seasonManager.updateDataHash("league_status");
      

@@ -14,15 +14,12 @@ import Management "../../shared/utils/Management";
 import ManagerCanister "../canister_definitions/manager-canister";
 import Cycles "mo:base/ExperimentalCycles";
 import Time "mo:base/Time";
-import Int64 "mo:base/Int64";
 import Nat64 "mo:base/Nat64";
 import Nat8 "mo:base/Nat8";
 import Array "mo:base/Array";
 import Option "mo:base/Option";
-import Blob "mo:base/Blob";
 import Nat16 "mo:base/Nat16";
 import Bool "mo:base/Bool";
-import Debug "mo:base/Debug";
 import NetworkEnvironmentVariables "../network_environment_variables";
 import Queries "../cqrs/queries";
 import Commands "../cqrs/commands";
@@ -451,7 +448,7 @@ module {
       };
     };
 
-    public func updateProfilePicture(managerPrincipalId: Base.PrincipalId, dto: Commands.UpdateProfilePictureDTO, gameweek: FootballTypes.GameweekNumber) : async Result.Result<(), T.Error> {
+    public func updateProfilePicture(managerPrincipalId: Base.PrincipalId, dto: Commands.UpdateProfilePictureDTO) : async Result.Result<(), T.Error> {
 
       if (not Utilities.isProfilePictureValid(dto.profilePicture)) {
         return #err(#InvalidData);
@@ -472,22 +469,21 @@ module {
       };
     };
 
-    public func saveBonusSelection(managerPrincipalId: Base.PrincipalId, dto : Commands.SaveBonusDTO, seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber, players : [DTOs.PlayerDTO]) : async Result.Result<(), T.Error> {
+    public func saveBonusSelection(managerPrincipalId: Base.PrincipalId, dto : Commands.SaveBonusDTO, gameweek: FootballTypes.GameweekNumber) : async Result.Result<(), T.Error> {
       
       let managerCanisterId = managerCanisterIds.get(managerPrincipalId);
       
-      var result: ?Result.Result<(), T.Error> = null;
       switch(managerCanisterId){
         case (null){
           return #err(#NotFound);
         };  
         case (?foundManagerCanisterId){
-          return await useBonus(foundManagerCanisterId, managerPrincipalId, dto, seasonId, gameweek, players);
+          return await useBonus(foundManagerCanisterId, managerPrincipalId, dto, gameweek);
         }
       };
     };
 
-    public func saveTeamSelection(managerPrincipalId: Base.PrincipalId, dto : Commands.SaveTeamDTO, seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber, players : [DTOs.PlayerDTO]) : async Result.Result<(), T.Error> {
+    public func saveTeamSelection(managerPrincipalId: Base.PrincipalId, dto : Commands.SaveTeamDTO, seasonId: FootballTypes.SeasonId, players : [DTOs.PlayerDTO]) : async Result.Result<(), T.Error> {
       
       let teamValidResult = Utilities.teamValid(dto, players);
       switch(teamValidResult){
@@ -499,13 +495,12 @@ module {
       
       let managerCanisterId = managerCanisterIds.get(managerPrincipalId);
       
-      var result: ?Result.Result<(), T.Error> = null;
       switch(managerCanisterId){
         case (null){
           return #err(#NotFound);
         };  
         case (?foundManagerCanisterId){
-          return await updateFantasyTeam(foundManagerCanisterId, managerPrincipalId, dto, seasonId, gameweek, players);
+          return await updateFantasyTeam(foundManagerCanisterId, managerPrincipalId, dto, seasonId, players);
         }
       };
     };
@@ -569,7 +564,7 @@ module {
       return await new_manager_canister.addNewManager(newManager);
     };
 
-    private func updateFantasyTeam(managerCanisterId: Base.CanisterId, managerPrincipalId: Base.PrincipalId, dto : Commands.SaveTeamDTO, seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber, allPlayers: [DTOs.PlayerDTO]) : async Result.Result<(), T.Error>{
+    private func updateFantasyTeam(managerCanisterId: Base.CanisterId, managerPrincipalId: Base.PrincipalId, dto : Commands.SaveTeamDTO, seasonId: FootballTypes.SeasonId, allPlayers: [DTOs.PlayerDTO]) : async Result.Result<(), T.Error>{
       let manager_canister = actor (managerCanisterId) : actor {
         getManager : Base.PrincipalId -> async ?T.Manager;
         updateTeamSelection : (updateManagerDTO : Commands.SaveTeamDTO, transfersAvailable : Nat8, newBankBalance : Nat16) -> async Result.Result<(), T.Error>;
@@ -623,7 +618,7 @@ module {
       };
     };
 
-    private func useBonus(managerCanisterId: Base.CanisterId, managerPrincipalId: Base.PrincipalId, dto : Commands.SaveBonusDTO, seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber, allPlayers: [DTOs.PlayerDTO]) : async Result.Result<(), T.Error>{
+    private func useBonus(managerCanisterId: Base.CanisterId, managerPrincipalId: Base.PrincipalId, dto : Commands.SaveBonusDTO, gameweek: FootballTypes.GameweekNumber) : async Result.Result<(), T.Error>{
       let manager_canister = actor (managerCanisterId) : actor {
         getManager : Base.PrincipalId -> async ?T.Manager;
         useBonus : (updateManagerDTO : Commands.SaveBonusDTO, monthlyBonuses : Nat8) -> async Result.Result<(), T.Error>;

@@ -16,7 +16,6 @@ import Result "mo:base/Result";
 import Text "mo:base/Text";
 import Timer "mo:base/Timer";
 import TrieMap "mo:base/TrieMap";
-import Debug "mo:base/Debug";
 
 import Base "../../shared/types/base_types";
 import DTOs "../../shared/dtos/dtos";
@@ -1513,17 +1512,17 @@ actor class _ManagerCanister() {
 
   //Admin functions implemented to be called by timers
 
-  public shared ({ caller }) func snapshotFantasyTeams(leagueId: FootballTypes.LeagueId, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth) : async () {
+  public shared ({ caller }) func snapshotFantasyTeams(seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth) : async () {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == controllerPrincipalId;
 
     for (index in Iter.range(0, 11)) {
-      await snapshotManagers(leagueId, index, seasonId, gameweek, month); 
+      await snapshotManagers(index, seasonId, gameweek, month); 
     };
   };
 
-  private func snapshotManagers(leagueId: FootballTypes.LeagueId, managerGroup: Int, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth) : async () {
+  private func snapshotManagers(managerGroup: Int, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth) : async () {
     
     let controller_backend_canister = actor (controllerPrincipalId) : actor {
       getPlayersSnapshot : shared query (dto: Queries.GetSnapshotPlayersDTO) -> async [DTOs.PlayerDTO];
@@ -2625,24 +2624,6 @@ actor class _ManagerCanister() {
           };   
         };
         case (null){}
-      }
-    };
-    return Buffer.toArray(managerIdBuffer);
-  };
-
-  //TODO (PAYOUT) use in reward pool calculation
-  private func getGroupNonClubManagerIds(managers : [T.Manager], clubId : FootballTypes.ClubId) : [Base.PrincipalId] {
-    let managerIdBuffer = Buffer.fromArray<Base.PrincipalId>([]);
-    for (manager in Iter.fromArray(managers)) {
-      switch(manager.favouriteClubId){
-        case (?foundClubId){ 
-          if (foundClubId != clubId and foundClubId > 0) {
-            managerIdBuffer.add(manager.principalId);
-          };
-        };
-        case (null){
-          managerIdBuffer.add(manager.principalId);
-        }
       }
     };
     return Buffer.toArray(managerIdBuffer);

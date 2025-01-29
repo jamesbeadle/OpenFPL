@@ -1,6 +1,5 @@
 
 import Result "mo:base/Result";
-import List "mo:base/List";
 import TrieMap "mo:base/TrieMap";
 import Principal "mo:base/Principal";
 import DTOs "../../shared/dtos/DTOs";
@@ -20,9 +19,6 @@ import Nat "mo:base/Nat";
 import Text "mo:base/Text";
 import Nat64 "mo:base/Nat64";
 import Int "mo:base/Int";
-import Nat16 "mo:base/Nat16";
-import Nat8 "mo:base/Nat8";
-import Debug "mo:base/Debug";
 import RewardManager "reward-manager";
 import NetworkEnvironmentVariables "../network_environment_variables";
 import SNSToken "../../shared/sns-wrappers/ledger";
@@ -57,30 +53,6 @@ module {
           switch(gameweekResult){
             case(?foundGameweek){
               return ?foundGameweek.1;
-            };
-            case (null){}
-          }
-        };
-        case (null) {}
-      };
-
-      return null;
-    };
-
-    public func getMonthlyCanisterId(seasonId : FootballTypes.SeasonId, month : Base.CalendarMonth, clubId: FootballTypes.ClubId) : async ?Text {
-      let monthSeason = Array.find(monthlyLeaderboardCanisters, func(seasonEntry: (FootballTypes.SeasonId, [(Base.CalendarMonth, Base.CanisterId)])) : Bool {
-        seasonEntry.0 == seasonId;
-      });
-
-      switch(monthSeason){
-        case (?foundMonthSeason){
-          let monthResult = Array.find(foundMonthSeason.1, func(monthEntry: (Base.CalendarMonth, Base.CanisterId)) : Bool {
-            monthEntry.0 == month
-          });
-
-          switch(monthResult){
-            case(?foundMonth){
-              return ?foundMonth.1;
             };
             case (null){}
           }
@@ -238,9 +210,7 @@ module {
       return null;
     };
 
-    public func calculateLeaderboards(seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth, uniqueManagerCanisterIds : [Base.CanisterId], clubIds: [FootballTypes.ClubId]) : async () {
-      Debug.print("calculating leaderboards");
-      Debug.print(activeCanisterId);
+    public func calculateLeaderboards(seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth, uniqueManagerCanisterIds : [Base.CanisterId]) : async () {
       if(activeCanisterId == ""){
         activeCanisterId := await createLeaderboardCanister();
       };
@@ -254,8 +224,6 @@ module {
 
       let totalLeaderboards = await leaderboard_canister.getTotalLeaderboards();
 
-      Debug.print("Total LEaderboards");
-      Debug.print(debug_show totalLeaderboards);
       if(totalLeaderboards >= MAX_LEADERBOARDS_PER_CANISTER){
         activeCanisterId := await createLeaderboardCanister();
       };
