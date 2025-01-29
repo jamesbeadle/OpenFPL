@@ -14,11 +14,14 @@ module Queries {
 
     public type GetManagerDTO = {
         principalId: Base.PrincipalId;
+        seasonId: FootballTypes.SeasonId;
         month: Base.CalendarMonth;
         gameweek: FootballTypes.GameweekNumber;
     };
 
     public type GetManagerGameweekDTO = {
+        principalId: Base.PrincipalId;
+        seasonId: FootballTypes.SeasonId;
         gameweek: FootballTypes.GameweekNumber;
     };
 
@@ -30,23 +33,8 @@ module Queries {
         searchTerm : Text;
     };
 
-    public type WeeklyLeaderboardDTO = {
-        seasonId : FootballTypes.SeasonId;
-        gameweek : FootballTypes.GameweekNumber;
-        entries : [LeaderboardEntryDTO];
-        totalEntries : Nat;
+    public type GetTeamSelectionDTO = {
     };
-
-
-    public type LeaderboardEntryDTO = {
-        position : Int;
-        positionText : Text;
-        username : Text;
-        principalId : Text;
-        points : Int16;
-    };
-
-    public type GetTeamSelectionDTO = {};
 
     public type TeamSelectionDTO = {
         principalId : Text;
@@ -90,14 +78,6 @@ module Queries {
         entries : [AppTypes.RewardEntry];
     };
 
-    public type GetRewardsPoolDTO = {
-        seasonId: FootballTypes.SeasonId;
-    };
-
-    public type RewardsPoolDTO = {
-
-    };
-
     public type GetCanistersDTO = {
         canisterType: AppTypes.CanisterType;
     };
@@ -109,21 +89,64 @@ module Queries {
         topups: [Base.CanisterTopup];
     };
 
+    public type GetPlayerPointsDTO = {
+        playerId : FootballTypes.ClubId;
+        seasonId : FootballTypes.SeasonId;
+    };
+
+    public type GetAppStatusDTO = {};
+
+    public type GetSnapshotPlayersDTO = {
+        seasonId: FootballTypes.SeasonId;
+        gameweek: FootballTypes.GameweekNumber;
+    };
+
+    public type GetPlayersMapDTO = {
+        seasonId : FootballTypes.SeasonId;
+        gameweek : FootballTypes.GameweekNumber;
+    };
+
+    public type GetWeeklyLeaderboardEntriesDTO = {
+        seasonId: FootballTypes.SeasonId;
+        gameweek: FootballTypes.GameweekNumber;
+        offset: Nat;
+        searchTerm : Text;
+    };
+
+    public type GetWeeklyRewardWinnersDTO = {
+        seasonId: FootballTypes.SeasonId;
+        gameweek: FootballTypes.GameweekNumber;
+    };
+
+    public type GetPlayersMap = {
+        seasonId: FootballTypes.SeasonId;
+        gameweek: FootballTypes.GameweekNumber;
+    };
+
+    public type PlayerMap = (Nat16, DTOs.PlayerScoreDTO);
+
     public type GetPlayerDetailsDTO = {
         playerId : FootballTypes.ClubId;
         seasonId : FootballTypes.SeasonId;
     };
 
-    public type PlayerDetailsDTO = {
-
+    public type IsUsernameValid = {
+        username: Text;
     };
 
-    public type GetAppStatusDTO = {};
-
-    public type AppStatusDTO = {
-        onHold : Bool;
-        version: Text;
+    public type GetManagerByUsername = {
+        username: Text;
     };
 
+    public type GetWeeklyRewardsDTO = {
+        seasonId: FootballTypes.SeasonId;
+        gameweek: FootballTypes.GameweekNumber;
+    };
+
+    public type WeeklyRewardsDTO = {
+        seasonId : FootballTypes.SeasonId;
+        gameweek : FootballTypes.GameweekNumber;
+        rewards : [AppTypes.RewardEntry];
+    };
 
 };

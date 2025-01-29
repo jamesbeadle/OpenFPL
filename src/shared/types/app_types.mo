@@ -240,17 +240,20 @@ module AppTypes {
     #Void;
   };
 
-  public type RewardPool = {
-    seasonId : FootballTypes.SeasonId;
-    seasonLeaderboardPool : Nat64;
-    monthlyLeaderboardPool : Nat64;
-    weeklyLeaderboardPool : Nat64;
-    mostValuableTeamPool : Nat64;
-    highestScoringMatchPlayerPool : Nat64;
-    allTimeWeeklyHighScorePool : Nat64;
-    allTimeMonthlyHighScorePool : Nat64;
-    allTimeSeasonHighScorePool : Nat64;
+  public type RewardRates = {
+    seasonId: FootballTypes.SeasonId;
+    startDate: Int;
+    seasonLeaderboardRewardRate : Nat64;
+    monthlyLeaderboardRewardRate : Nat64;
+    weeklyLeaderboardRewardRate : Nat64;
+    mostValuableTeamRewardRate : Nat64;
+    highestScoringMatchRewardRate : Nat64;
+    allTimeWeeklyHighScoreRewardRate : Nat64;
+    allTimeMonthlyHighScoreRewardRate : Nat64;
+    allTimeSeasonHighScoreRewardRate : Nat64;
   };
+
+
 
   public type EntryRequirement = {
     #FreeEntry;

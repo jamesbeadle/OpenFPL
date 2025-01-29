@@ -4,11 +4,12 @@ import Iter "mo:base/Iter";
 import Array "mo:base/Array";
 import Option "mo:base/Option";
 import DTOs "../../shared/dtos/DTOs";
-import RequestDTOs "../../shared/dtos/request_DTOs";
 import FootballTypes "../../shared/types/football_types";
 import T "../../shared/types/app_types";
 import Base "../../shared/types/base_types";
 import SHA224 "../../shared/lib/SHA224";
+import Queries "../cqrs/queries";
+import Commands "../cqrs/commands";
 
 module {
 
@@ -137,7 +138,7 @@ module {
       };
     };
 
-    public func getPlayersSnapshot(dto: RequestDTOs.GetSnapshotPlayers) : [DTOs.PlayerDTO] {
+    public func getPlayersSnapshot(dto: Queries.GetSnapshotPlayersDTO) : [DTOs.PlayerDTO] {
       let seasonPlayers = Array.find<(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])])>(playersSnapshots, func(seasonsPlayerSnapshots: (FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])])) : Bool {
         seasonsPlayerSnapshots.0 == dto.seasonId;
       });
@@ -226,7 +227,7 @@ module {
       await updateDataHash("app_status");
     };
 
-    public func updateSystemStatus(dto: RequestDTOs.UpdateAppStatusDTO) {
+    public func updateSystemStatus(dto: Commands.UpdateAppStatusDTO) {
       appStatus := {
         onHold = dto.onHold;
         version = dto.version;

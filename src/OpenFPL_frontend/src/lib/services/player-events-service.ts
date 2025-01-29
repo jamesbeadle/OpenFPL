@@ -19,7 +19,7 @@ export class PlayerEventsService {
     );
   }
 
-  async getPlayerDetailsForGameweek(
+  async getPlayerPoints(
     seasonId: number,
     gameweek: number,
   ): Promise<PlayerPointsDTO[] | undefined> {
@@ -29,7 +29,7 @@ export class PlayerEventsService {
       seasonId,
       gameweek,
     };
-    const result = await this.actor.getPlayerDetailsForGameweek(dto);
+    const result = await this.actor.getPlayerPoints(dto);
     if (isError(result))
       throw new Error(
         "Failed to fetch player details for gameweek in player events service",
@@ -68,7 +68,7 @@ export class PlayerEventsService {
         seasonId,
         gameweek,
       };
-      let result = await this.actor.getPlayerDetailsForGameweek(dto);
+      let result = await this.actor.getPlayerPoints(dto);
 
       if (isError(result)) {
         console.error("Error fetching player details for gameweek");

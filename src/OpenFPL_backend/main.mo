@@ -20,8 +20,6 @@
   import FootballTypes "../shared/types/football_types";
   import T "../shared/types/app_types";
   import DTOs "../shared/dtos/DTOs";
-  import RequestDTOs "../shared/dtos/request_DTOs";
-  import ResponseDTOs "../shared/dtos/response_DTOs";
   import Countries "../shared/Countries";
   import Root "../shared/sns-wrappers/root";
 
@@ -35,6 +33,8 @@
   import Environment "./Environment";
   import NetworkEnvironmentVariables "../shared/network_environment_variables";
   import Utilities "../shared/utils/utilities";
+  import Commands "../shared/cqrs/commands";
+  import Queries "../shared/cqrs/queries";
 
   actor Self {
     
@@ -54,10 +54,10 @@
 
     public shared ({ caller }) func getProfile() : async Result.Result<DTOs.ProfileDTO, T.Error> {
       assert not Principal.isAnonymous(caller);
-      return await userManager.getProfile({ principalId = Principal.toText(caller) });
+      return await userManager.getProfile(Principal.toText(caller));
     };
 
-    public shared ({ caller }) func getCurrentTeam() : async Result.Result<DTOs.PickTeamDTO, T.Error> {
+    public shared ({ caller }) func getCurrentTeam() : async Result.Result<Queries.TeamSelectionDTO, T.Error> {
       assert not Principal.isAnonymous(caller);
       let leagueStatusResult = await getLeagueStatus();
       switch(leagueStatusResult){
@@ -77,44 +77,20 @@
       return await data_canister.getLeagueStatus(Environment.LEAGUE_ID);
     };
 
-    public shared func getManager(dto: RequestDTOs.RequestManagerDTO) : async Result.Result<DTOs.ManagerDTO, T.Error> {
+    public shared func getManager(dto: Queries.GetManagerDTO) : async Result.Result<DTOs.ManagerDTO, T.Error> {
       
-      let weeklyLeaderboardEntry = await leaderboardManager.getWeeklyLeaderboardEntry(dto.managerId, dto.seasonId, dto.gameweek);
-      
-      /*
-        //TODO: We are putting any monthly rewards and calculations on hold until we are able to setup a testing framework outside of what is provided by DFINITY.
-        let monthlyLeaderboardEntry = await leaderboardManager.getMonthlyLeaderboardEntry(dto.managerId, dto.seasonId, dto.month, dto.clubId);
-        let seasonLeaderboardEntry = await leaderboardManager.getSeasonLeaderboardEntry(dto.managerId, dto.seasonId);
-      */
-
+      let weeklyLeaderboardEntry = await leaderboardManager.getWeeklyLeaderboardEntry(dto.principalId, dto.seasonId, dto.gameweek);
       return await userManager.getManager(dto, weeklyLeaderboardEntry, null, null);
     };
 
-    public shared func getFantasyTeamSnapshot(dto: DTOs.GetFantasyTeamSnapshotDTO) : async Result.Result<DTOs.FantasyTeamSnapshotDTO, T.Error> {
+    public shared func getFantasyTeamSnapshot(dto: Queries.GetManagerGameweekDTO) : async Result.Result<DTOs.ManagerGameweekDTO, T.Error> {
       return await userManager.getFantasyTeamSnapshot(dto);
     };
 
     //Leaderboard calls:
 
-    public shared func getWeeklyLeaderboard(dto: DTOs.GetWeeklyLeaderboardDTO) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
+    public shared func getWeeklyLeaderboard(dto: Queries.GetWeeklyLeaderboardDTO) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
      return await leaderboardManager.getWeeklyLeaderboard(dto);
-    };
-
-    public shared func getMonthlyLeaderboard(dto: DTOs.GetMonthlyLeaderboardDTO) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error> {
-      return await leaderboardManager.getMonthlyLeaderboard(dto);
-    };
-
-    public shared func getSeasonLeaderboard(dto: DTOs.GetSeasonLeaderboardDTO) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error> {
-      return await leaderboardManager.getSeasonLeaderboard(dto);
-    };
-
-    //Verified (non query) calls for when consensus required
-
-    public shared func getVerifiedPlayers() : async Result.Result<[DTOs.PlayerDTO], T.Error> {
-      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
-        getPlayers : shared query (leagueId: FootballTypes.LeagueId) -> async Result.Result<[DTOs.PlayerDTO], T.Error>;
-      };
-      return await data_canister.getPlayers(Environment.LEAGUE_ID);
     };
 
     //Query functions:
@@ -166,42 +142,28 @@
       return await data_canister.getPlayers(Environment.LEAGUE_ID);
     };
 
-    public shared query ( {caller} ) func getPlayersSnapshot(dto: RequestDTOs.GetSnapshotPlayers) : async [DTOs.PlayerDTO] {
+    public shared query ( {caller} ) func getPlayersSnapshot(dto: Queries.GetSnapshotPlayersDTO) : async [DTOs.PlayerDTO] {
       assert isManagerCanister(Principal.toText(caller));
       return seasonManager.getPlayersSnapshot(dto);
     };
 
-    public shared composite query func getLoanedPlayers(dto: DTOs.ClubFilterDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
+    public shared composite query func getPlayerPoints(dto: Queries.GetPlayerPointsDTO) : async Result.Result<[DTOs.PlayerPointsDTO], T.Error> {
       let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
-        getLoanedPlayers : shared query (leagueId: FootballTypes.LeagueId, dto: DTOs.ClubFilterDTO) -> async Result.Result<[DTOs.PlayerDTO], T.Error>;
+        getPlayerPoints : shared query (leagueId: FootballTypes.LeagueId, dto: Queries.GetPlayerPointsDTO) -> async Result.Result<[DTOs.PlayerPointsDTO], T.Error>;
       };
-      return await data_canister.getLoanedPlayers(Environment.LEAGUE_ID, dto);
+      return await data_canister.getPlayerPoints(Environment.LEAGUE_ID, dto);
     };
 
-    public shared composite query func getRetiredPlayers(dto: DTOs.ClubFilterDTO) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
+    public shared func getPlayersMap(dto: Queries.GetPlayersMap) : async Result.Result<[Queries.PlayerMap], T.Error> {
       let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
-        getRetiredPlayers : shared query (leagueId: FootballTypes.LeagueId, dto: DTOs.ClubFilterDTO) -> async Result.Result<[DTOs.PlayerDTO], T.Error>;
-      };
-      return await data_canister.getRetiredPlayers(Environment.LEAGUE_ID, dto);
-    };
-
-    public shared composite query func getPlayerDetailsForGameweek(dto: DTOs.GameweekFiltersDTO) : async Result.Result<[DTOs.PlayerPointsDTO], T.Error> {
-      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
-        getPlayerDetailsForGameweek : shared query (leagueId: FootballTypes.LeagueId, dto: DTOs.GameweekFiltersDTO) -> async Result.Result<[DTOs.PlayerPointsDTO], T.Error>;
-      };
-      return await data_canister.getPlayerDetailsForGameweek(Environment.LEAGUE_ID, dto);
-    };
-
-    public shared func getPlayersMap(dto: DTOs.GameweekFiltersDTO) : async Result.Result<[(Nat16, DTOs.PlayerScoreDTO)], T.Error> {
-      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
-        getPlayersMap : shared query (leagueId: FootballTypes.LeagueId, dto: DTOs.GameweekFiltersDTO) -> async Result.Result<[(Nat16, DTOs.PlayerScoreDTO)], T.Error>;
+        getPlayersMap : shared query (leagueId: FootballTypes.LeagueId, dto: Queries.GetPlayersMap) -> async Result.Result<[(Nat16, DTOs.PlayerScoreDTO)], T.Error>;
       };
       return await data_canister.getPlayersMap(Environment.LEAGUE_ID, dto);
     };
 
-    public shared func getPlayerDetails(dto: DTOs.GetPlayerDetailsDTO) : async Result.Result<DTOs.PlayerDetailDTO, T.Error> {
+    public shared func getPlayerDetails(dto: Queries.GetPlayerDetailsDTO) : async Result.Result<DTOs.PlayerDetailDTO, T.Error> {
       let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
-        getPlayerDetails : shared query (leagueId: FootballTypes.LeagueId, dto: DTOs.GetPlayerDetailsDTO) -> async Result.Result<DTOs.PlayerDetailDTO, T.Error>;
+        getPlayerDetails : shared query (leagueId: FootballTypes.LeagueId, dto: Queries.GetPlayerDetailsDTO) -> async Result.Result<DTOs.PlayerDetailDTO, T.Error>;
       };
       return await data_canister.getPlayerDetails(Environment.LEAGUE_ID, dto);
     };
@@ -210,75 +172,22 @@
       return #ok(Countries.countries);
     };
 
-    public shared query ({ caller }) func isUsernameValid(dto: DTOs.UsernameFilterDTO) : async Bool {
+    public shared query ({ caller }) func isUsernameValid(dto: Queries.IsUsernameValid) : async Bool {
       assert not Principal.isAnonymous(caller);
-      let usernameValid = userManager.isUsernameValid(dto.username);
+      let usernameValid = Utilities.isUsernameValid(dto.username);
       let usernameTaken = userManager.isUsernameTaken(dto.username, Principal.toText(caller));
       return usernameValid and not usernameTaken;
     };
 
-    //Update functions:
+    //User update functions:
 
-    public shared ({ caller }) func updateUsername(dto: DTOs.UpdateUsernameDTO) : async Result.Result<(), T.Error> {
+    public shared ({ caller }) func createManager(dto : Commands.CreateManagerDTO) : async Result.Result<(), T.Error> {
       assert not Principal.isAnonymous(caller);
       let principalId = Principal.toText(caller);
-
-      let leagueStatusResult = await getLeagueStatus();
-      switch(leagueStatusResult){
-        case (#ok leagueStatus){       
-          return await userManager.updateUsername(principalId, dto.username, leagueStatus.unplayedGameweek);   
-        };
-        case (#err error){
-          return #err(error);
-        }
-      }
+      return await userManager.createManager(principalId, dto);
     };
 
-    public shared ({ caller }) func updateFavouriteClub(dto: DTOs.UpdateFavouriteClubDTO) : async Result.Result<(), T.Error> {
-      assert not Principal.isAnonymous(caller);
-      let principalId = Principal.toText(caller);
-      
-      let leagueStatusResult = await getLeagueStatus();
-      switch(leagueStatusResult){
-        case (#ok leagueStatus){       
-
-          let clubsResult = await dataManager.getVerifiedClubs(Environment.LEAGUE_ID);
-          switch(clubsResult){
-            case (#ok clubs){
-              return await userManager.updateFavouriteClub(principalId, dto.favouriteClubId, leagueStatus.unplayedGameweek, clubs);
-            };
-            case (#err error){
-              return #err(error);
-            }
-          };
-        };
-        case (#err error){
-          return #err(error);
-        }
-      };
-    };
-
-    public shared ({ caller }) func updateProfilePicture(dto: DTOs.UpdateProfilePictureDTO) : async Result.Result<(), T.Error> {
-      assert not Principal.isAnonymous(caller);
-      let principalId = Principal.toText(caller);
-
-      let leagueStatusResult = await getLeagueStatus();
-      switch(leagueStatusResult){
-        case (#ok leagueStatus){       
-
-          return await userManager.updateProfilePicture(principalId, {
-            extension = dto.extension;
-            managerId = principalId;
-            profilePicture = dto.profilePicture;
-          }, leagueStatus.unplayedGameweek);
-        };
-        case (#err error){
-          return #err(error);
-        }
-      };      
-    };
-
-    public shared ({ caller }) func saveFantasyTeam(fantasyTeam : DTOs.UpdateTeamSelectionDTO) : async Result.Result<(), T.Error> {
+    public shared ({ caller }) func saveTeamSelection(dto : Commands.SaveTeamDTO) : async Result.Result<(), T.Error> {
       assert not Principal.isAnonymous(caller);
       let principalId = Principal.toText(caller);
       let leagueStatusResult = await getLeagueStatus();
@@ -305,7 +214,7 @@
           let playersResult = await dataManager.getVerifiedPlayers(Environment.LEAGUE_ID);
           switch(playersResult){
             case (#ok players){
-              return await userManager.saveFantasyTeam(principalId, fantasyTeam, leagueStatus.activeSeasonId, leagueStatus.unplayedGameweek, players);
+              return await userManager.saveTeamSelection(principalId, dto, leagueStatus.activeSeasonId, leagueStatus.unplayedGameweek, players);
             };
             case (#err error){
               return #err(error);
@@ -318,21 +227,95 @@
       };
     };
 
-    public shared ({ caller }) func searchUsername(dto: DTOs.UsernameFilterDTO) : async Result.Result<DTOs.ManagerDTO, T.Error> {
+    public shared ({ caller }) func saveBonusSelection(dto : Commands.SaveBonusDTO) : async Result.Result<(), T.Error> {
+      assert not Principal.isAnonymous(caller);
+      let principalId = Principal.toText(caller);
+      let leagueStatusResult = await getLeagueStatus();
+
+      let appStatusResult = seasonManager.getAppStatus();
+      switch(appStatusResult){
+        case (#ok appStatus){
+          if (appStatus.onHold) {
+            return #err(#SystemOnHold);
+          };
+        };
+        case (#err error){
+          return #err(error);
+        }
+      };
+      
+      switch(leagueStatusResult){
+        case (#ok leagueStatus){     
+
+          if(not leagueStatus.seasonActive){
+            return #err(#NotAllowed);
+          };    
+          
+          let playersResult = await dataManager.getVerifiedPlayers(Environment.LEAGUE_ID);
+          switch(playersResult){
+            case (#ok players){
+              return await userManager.saveBonusSelection(principalId, dto, leagueStatus.activeSeasonId, leagueStatus.unplayedGameweek, players);
+            };
+            case (#err error){
+              return #err(error);
+            }
+          }
+        };
+        case (#err error){
+          return #err(error);
+        }
+      };
+    };
+
+    public shared ({ caller }) func updateUsername(dto: Commands.UpdateUsernameDTO) : async Result.Result<(), T.Error> {
+      assert not Principal.isAnonymous(caller);
+      let principalId = Principal.toText(caller);
+      return await userManager.updateUsername(principalId, dto); 
+    };
+
+    public shared ({ caller }) func updateFavouriteClub(dto: Commands.UpdateFavouriteClubDTO) : async Result.Result<(), T.Error> {
+      assert not Principal.isAnonymous(caller);
+      let principalId = Principal.toText(caller);
+      
+      let clubsResult = await dataManager.getVerifiedClubs(Environment.LEAGUE_ID);
+      switch(clubsResult){
+        case (#ok clubs){
+          return await userManager.updateFavouriteClub(principalId, dto, clubs);
+        };
+        case (#err error){
+          return #err(error);
+        }
+      };
+    };
+
+    public shared ({ caller }) func updateProfilePicture(dto: Commands.UpdateProfilePictureDTO) : async Result.Result<(), T.Error> {
+      assert not Principal.isAnonymous(caller);
+      let principalId = Principal.toText(caller);
+
+      let leagueStatusResult = await getLeagueStatus();
+      switch(leagueStatusResult){
+        case (#ok leagueStatus){       
+
+          return await userManager.updateProfilePicture(principalId, {
+            extension = dto.extension;
+            managerId = principalId;
+            profilePicture = dto.profilePicture;
+          }, leagueStatus.unplayedGameweek);
+        };
+        case (#err error){
+          return #err(error);
+        }
+      };      
+    };
+
+    public shared ({ caller }) func searchUsername(dto: Queries.GetManagerByUsername) : async Result.Result<DTOs.ManagerDTO, T.Error> {
       assert not Principal.isAnonymous(caller);
       return await userManager.getManagerByUsername(dto.username);
     };
 
-    public shared ({ caller }) func getRewardPool(dto: DTOs.GetRewardPoolDTO) : async Result.Result<DTOs.RewardPoolDTO, T.Error> {
-      let rewardPool = leaderboardManager.getRewardPool(dto.seasonId);
-      switch(rewardPool){
-        case (null){
-          return #err(#NotFound);
-        };
-        case (?foundRewardPool){
-          return #ok({rewardPool = foundRewardPool; seasonId = dto.seasonId});
-        }
-      };
+    public shared func getActiveRewardRates() : async Result.Result<DTOs.RewardRatesDTO, T.Error> {
+      let rewardRates = leaderboardManager.getActiveRewardRates();
+      return #ok(rewardRates);
     };
 
     public shared ({ caller }) func updateDataHashes(category: Text) : async Result.Result<(), T.Error> {
@@ -356,8 +339,8 @@
     
     //Canister topup functions
   
-    public shared func getCanisters(dto: DTOs.GetCanistersDTO) : async Result.Result<[DTOs.CanisterDTO], T.Error> {
-      let canistersBuffer = Buffer.fromArray<DTOs.CanisterDTO>([]);
+    public shared func getCanisters(dto: Queries.GetCanistersDTO) : async Result.Result<[Queries.CanisterDTO], T.Error> {
+      let canistersBuffer = Buffer.fromArray<Queries.CanisterDTO>([]);
       let root_canister = actor (NetworkEnvironmentVariables.SNS_ROOT_CANISTER_ID) : actor {
         get_sns_canisters_summary : (request: Root.GetSnsCanistersSummaryRequest) -> async Root.GetSnsCanistersSummaryResponse;
       };
@@ -692,7 +675,19 @@
     private stable var stable_season_leaderboard_canister_ids: [(FootballTypes.SeasonId, Base.CanisterId)] = [];
     
     //Reward Manager stable variables
-    private stable var stable_reward_pools : [(FootballTypes.SeasonId, T.RewardPool)] = [];
+    private stable var stable_active_reward_rates : T.RewardRates = {
+      allTimeMonthlyHighScoreRewardRate = 0;
+      allTimeSeasonHighScoreRewardRate = 0;
+      allTimeWeeklyHighScoreRewardRate = 0;
+      highestScoringMatchRewardRate = 0;
+      monthlyLeaderboardRewardRate = 0;
+      mostValuableTeamRewardRate = 0;
+      seasonId = 0;
+      seasonLeaderboardRewardRate = 0;
+      startDate = 0;
+      weeklyLeaderboardRewardRate = 0;
+    };
+    private stable var stable_historic_reward_rates : [T.RewardRates] = [];
     private stable var stable_team_value_leaderboards : [(FootballTypes.SeasonId, T.TeamValueLeaderboard)] = [];
     private stable var stable_weekly_rewards : [T.WeeklyRewards] = [];
     private stable var stable_monthly_rewards : [T.MonthlyRewards] = [];
@@ -735,7 +730,9 @@
       stable_monthly_leaderboard_canister_ids := leaderboardManager.getStableMonthlyLeaderboardCanisterIds();
       stable_season_leaderboard_canister_ids := leaderboardManager.getStableSeasonLeaderboardCanisterIds();
       
-      stable_reward_pools := leaderboardManager.getStableRewardPools();
+      stable_active_reward_rates := leaderboardManager.getStableActiveRewardRates();
+      stable_historic_reward_rates := leaderboardManager.getStableHistoricRewardRates();
+      
       stable_team_value_leaderboards := leaderboardManager.getStableTeamValueLeaderboards();
       stable_weekly_rewards := leaderboardManager.getStableWeeklyRewards();
       stable_monthly_rewards := leaderboardManager.getStableMonthlyRewards();
@@ -774,7 +771,9 @@
       leaderboardManager.setStableMonthlyLeaderboardCanisterIds(stable_monthly_leaderboard_canister_ids);
       leaderboardManager.setStableSeasonLeaderboardCanisterIds(stable_season_leaderboard_canister_ids);
       
-      leaderboardManager.setStableRewardPools(stable_reward_pools);
+      leaderboardManager.setStableActiveRewardRates(stable_active_reward_rates);
+      leaderboardManager.setStableHistoricRewardRates(stable_historic_reward_rates);
+      
       leaderboardManager.setStableTeamValueLeaderboards(stable_team_value_leaderboards);
       leaderboardManager.setStableWeeklyRewards(stable_weekly_rewards);
       leaderboardManager.setStableMonthlyRewards(stable_monthly_rewards);
@@ -868,7 +867,7 @@
       let leagueStatusResult = await getLeagueStatus();
       switch(leagueStatusResult){
         case (#ok leagueStatus){       
-          let _ = await leaderboardManager.calculateWeeklyRewards(leagueStatus.activeSeasonId, gameweek, leagueStatus.totalGameweeks);     };
+          let _ = await leaderboardManager.calculateWeeklyRewards(leagueStatus.activeSeasonId, gameweek);     };
         case (#err _){}
       } 
     };
@@ -907,7 +906,7 @@
 
     //Functions to be removed when handed back to SNS
 
-    public shared query func getSystemState() : async Result.Result<ResponseDTOs.AppStatusDTO, T.Error> {
+    public shared query func getSystemState() : async Result.Result<DTOs.AppStatusDTO, T.Error> {
       let appStatusResult = seasonManager.getAppStatus();
       switch(appStatusResult){
         case (#ok appStatus){          
@@ -922,7 +921,7 @@
       };
     };
 
-    public shared ({ caller }) func updateSystemState(dto: RequestDTOs.UpdateAppStatusDTO) : async Result.Result<(), T.Error> {
+    public shared ({ caller }) func updateSystemState(dto: Commands.UpdateAppStatusDTO) : async Result.Result<(), T.Error> {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.FOOTBALL_GOD_BACKEND_CANISTER_ID;
       seasonManager.updateSystemStatus(dto);
       await seasonManager.updateDataHash("app_status");
@@ -1030,7 +1029,7 @@
       let leagueStatusResult = await getLeagueStatus();
       switch(leagueStatusResult){
         case (#ok leagueStatus){       
-          return await leaderboardManager.calculateWeeklyRewards(leagueStatus.activeSeasonId, gameweek, leagueStatus.totalGameweeks);     };
+          return await leaderboardManager.calculateWeeklyRewards(leagueStatus.activeSeasonId, gameweek);     };
         case (#err error){
           return #err(error);
         }
@@ -1050,13 +1049,13 @@
       } 
     };
 
-    public shared query func getWeeklyRewards(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber) : async Result.Result<ResponseDTOs.WeeklyRewardsDTO, T.Error> {
-      let weeklyRewardsResult = leaderboardManager.getWeeklyRewards(seasonId, gameweek);
+    public shared query func getWeeklyRewards(dto: Queries.GetWeeklyRewardsDTO) : async Result.Result<Queries.WeeklyRewardsDTO, T.Error> {
+      let weeklyRewardsResult = leaderboardManager.getWeeklyRewards(dto.seasonId, dto.gameweek);
       switch(weeklyRewardsResult){
         case (#ok foundRewards){
           return #ok({
-            gameweek = gameweek;
-            seasonId = seasonId;
+            gameweek = dto.gameweek;
+            seasonId = dto.seasonId;
             rewards = List.toArray(foundRewards.rewards);
           })
         };
@@ -1069,14 +1068,6 @@
     public shared query func getWeeklyCanisters() : async Result.Result<[(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, Base.CanisterId)])], T.Error> {
       return #ok(stable_weekly_leaderboard_canister_ids);
     };
-
-    //AI model training endpoints
-
-    public shared ({ caller }) func getManagerSnapshotData() : async [T.FantasyTeamSnapshot] {
-      assert Principal.toText(caller) == Environment.WATERWAY_LABS_BACKEND_CANISTER_ID;
-      return await userManager.getManagerSnapshotData();
-    };
-
 
     //TODO remove league id and use environent variable
     public shared ({ caller }) func notifyAppsOfLoan(leagueId: FootballTypes.LeagueId, playerId: FootballTypes.PlayerId) : async Result.Result<(), T.Error> {

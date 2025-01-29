@@ -19,11 +19,12 @@ import TrieMap "mo:base/TrieMap";
 import Debug "mo:base/Debug";
 
 import Base "../../shared/types/base_types";
-import DTOs "../../shared/dtos/DTOs";
+import DTOs "../../shared/dtos/dtos";
 import FootballTypes "../../shared/types/football_types";
-import RequestDTOs "../../shared/dtos/request_DTOs";
 import T "../../shared/types/app_types";
 import Utilities "../../shared/utils/utilities";
+import Commands "../cqrs/commands";
+import Queries "../cqrs/queries";
 
 actor class _ManagerCanister() {
 
@@ -67,21 +68,21 @@ actor class _ManagerCanister() {
     initialised := true;
   };
 
-  public shared ({ caller }) func updateTeamSelection(teamUpdateDTO : DTOs.TeamUpdateDTO, transfersAvailable : Nat8, monthlyBonuses : Nat8, newBankBalance : Nat16) : async Result.Result<(), T.Error> {
+  public shared ({ caller }) func updateTeamSelection(dto: Commands.SaveTeamDTO, managerPrincipalId: Base.PrincipalId, transfersAvailable : Nat8, newBankBalance : Nat16) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == controllerPrincipalId;
 
     let managerBuffer = Buffer.fromArray<T.Manager>([]);
-    let managerGroupIndex = managerGroupIndexes.get(teamUpdateDTO.principalId);
+    let managerGroupIndex = managerGroupIndexes.get(managerPrincipalId);
     switch (managerGroupIndex) {
       case (null) {};
       case (?foundGroupIndex) {
         switch (foundGroupIndex) {
           case 0 {
             for (manager in Iter.fromArray(managerGroup1)) {
-              if (manager.principalId == teamUpdateDTO.principalId) {
-                managerBuffer.add(mergeTeamSelection(teamUpdateDTO.updatedTeamSelection, manager, transfersAvailable, monthlyBonuses, newBankBalance));
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeTeamSelection(dto, manager, transfersAvailable, newBankBalance));
               } else {
                 managerBuffer.add(manager);
               };
@@ -90,8 +91,8 @@ actor class _ManagerCanister() {
           };
           case 1 {
             for (manager in Iter.fromArray(managerGroup2)) {
-              if (manager.principalId == teamUpdateDTO.principalId) {
-                managerBuffer.add(mergeTeamSelection(teamUpdateDTO.updatedTeamSelection, manager, transfersAvailable, monthlyBonuses, newBankBalance));
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeTeamSelection(dto, manager, transfersAvailable, newBankBalance));
               } else {
                 managerBuffer.add(manager);
               };
@@ -100,8 +101,8 @@ actor class _ManagerCanister() {
           };
           case 2 {
             for (manager in Iter.fromArray(managerGroup3)) {
-              if (manager.principalId == teamUpdateDTO.principalId) {
-                managerBuffer.add(mergeTeamSelection(teamUpdateDTO.updatedTeamSelection, manager, transfersAvailable, monthlyBonuses, newBankBalance));
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeTeamSelection(dto, manager, transfersAvailable, newBankBalance));
               } else {
                 managerBuffer.add(manager);
               };
@@ -110,8 +111,8 @@ actor class _ManagerCanister() {
           };
           case 3 {
             for (manager in Iter.fromArray(managerGroup4)) {
-              if (manager.principalId == teamUpdateDTO.principalId) {
-                managerBuffer.add(mergeTeamSelection(teamUpdateDTO.updatedTeamSelection, manager, transfersAvailable, monthlyBonuses, newBankBalance));
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeTeamSelection(dto, manager, transfersAvailable, newBankBalance));
               } else {
                 managerBuffer.add(manager);
               };
@@ -120,8 +121,8 @@ actor class _ManagerCanister() {
           };
           case 4 {
             for (manager in Iter.fromArray(managerGroup5)) {
-              if (manager.principalId == teamUpdateDTO.principalId) {
-                managerBuffer.add(mergeTeamSelection(teamUpdateDTO.updatedTeamSelection, manager, transfersAvailable, monthlyBonuses, newBankBalance));
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeTeamSelection(dto, manager, transfersAvailable, newBankBalance));
               } else {
                 managerBuffer.add(manager);
               };
@@ -130,8 +131,8 @@ actor class _ManagerCanister() {
           };
           case 5 {
             for (manager in Iter.fromArray(managerGroup6)) {
-              if (manager.principalId == teamUpdateDTO.principalId) {
-                managerBuffer.add(mergeTeamSelection(teamUpdateDTO.updatedTeamSelection, manager, transfersAvailable, monthlyBonuses, newBankBalance));
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeTeamSelection(dto, manager, transfersAvailable, newBankBalance));
               } else {
                 managerBuffer.add(manager);
               };
@@ -140,8 +141,8 @@ actor class _ManagerCanister() {
           };
           case 6 {
             for (manager in Iter.fromArray(managerGroup7)) {
-              if (manager.principalId == teamUpdateDTO.principalId) {
-                managerBuffer.add(mergeTeamSelection(teamUpdateDTO.updatedTeamSelection, manager, transfersAvailable, monthlyBonuses, newBankBalance));
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeTeamSelection(dto, manager, transfersAvailable, newBankBalance));
               } else {
                 managerBuffer.add(manager);
               };
@@ -150,8 +151,8 @@ actor class _ManagerCanister() {
           };
           case 7 {
             for (manager in Iter.fromArray(managerGroup8)) {
-              if (manager.principalId == teamUpdateDTO.principalId) {
-                managerBuffer.add(mergeTeamSelection(teamUpdateDTO.updatedTeamSelection, manager, transfersAvailable, monthlyBonuses, newBankBalance));
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeTeamSelection(dto, manager, transfersAvailable, newBankBalance));
               } else {
                 managerBuffer.add(manager);
               };
@@ -160,8 +161,8 @@ actor class _ManagerCanister() {
           };
           case 8 {
             for (manager in Iter.fromArray(managerGroup9)) {
-              if (manager.principalId == teamUpdateDTO.principalId) {
-                managerBuffer.add(mergeTeamSelection(teamUpdateDTO.updatedTeamSelection, manager, transfersAvailable, monthlyBonuses, newBankBalance));
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeTeamSelection(dto, manager, transfersAvailable, newBankBalance));
               } else {
                 managerBuffer.add(manager);
               };
@@ -170,8 +171,8 @@ actor class _ManagerCanister() {
           };
           case 9 {
             for (manager in Iter.fromArray(managerGroup10)) {
-              if (manager.principalId == teamUpdateDTO.principalId) {
-                managerBuffer.add(mergeTeamSelection(teamUpdateDTO.updatedTeamSelection, manager, transfersAvailable, monthlyBonuses, newBankBalance));
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeTeamSelection(dto, manager, transfersAvailable, newBankBalance));
               } else {
                 managerBuffer.add(manager);
               };
@@ -180,8 +181,8 @@ actor class _ManagerCanister() {
           };
           case 10 {
             for (manager in Iter.fromArray(managerGroup11)) {
-              if (manager.principalId == teamUpdateDTO.principalId) {
-                managerBuffer.add(mergeTeamSelection(teamUpdateDTO.updatedTeamSelection, manager, transfersAvailable, monthlyBonuses, newBankBalance));
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeTeamSelection(dto, manager, transfersAvailable, newBankBalance));
               } else {
                 managerBuffer.add(manager);
               };
@@ -190,8 +191,8 @@ actor class _ManagerCanister() {
           };
           case 11 {
             for (manager in Iter.fromArray(managerGroup12)) {
-              if (manager.principalId == teamUpdateDTO.principalId) {
-                managerBuffer.add(mergeTeamSelection(teamUpdateDTO.updatedTeamSelection, manager, transfersAvailable, monthlyBonuses, newBankBalance));
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeTeamSelection(dto, manager, transfersAvailable, newBankBalance));
               } else {
                 managerBuffer.add(manager);
               };
@@ -206,64 +207,66 @@ actor class _ManagerCanister() {
 
   };
 
-  private func mergeTeamSelection(dto : DTOs.UpdateTeamSelectionDTO, manager : T.Manager, transfersAvailable : Nat8, monthlyBonusesAvailable : Nat8, newBankBalance : Nat16) : T.Manager {
-    
-    var username = manager.username;
-    if(dto.username != ""){
-      username := dto.username;
+  private func mergeTeamSelection(dto : Commands.SaveTeamDTO, manager : T.Manager, transfersAvailable : Nat8, newBankBalance : Nat16) : T.Manager {
+    var updatedTransferWindowGameweek = manager.transferWindowGameweek;
+    switch(dto.transferWindowGameweek){
+      case (?foundGameweek){
+        updatedTransferWindowGameweek := foundGameweek;
+      };
+      case (null){}
     };
 
     return {
       principalId = manager.principalId;
-      username = username;
+      username = manager.username;
       favouriteClubId = manager.favouriteClubId;
       createDate = manager.createDate;
       termsAccepted = manager.termsAccepted;
       profilePicture = manager.profilePicture;
       transfersAvailable = transfersAvailable;
-      monthlyBonusesAvailable = monthlyBonusesAvailable;
+      monthlyBonusesAvailable = manager.monthlyBonusesAvailable;
       bankQuarterMillions = newBankBalance;
       playerIds = dto.playerIds;
       captainId = dto.captainId;
-      goalGetterGameweek = dto.goalGetterGameweek;
-      goalGetterPlayerId = dto.goalGetterPlayerId;
-      passMasterGameweek = dto.passMasterGameweek;
-      passMasterPlayerId = dto.passMasterPlayerId;
-      noEntryGameweek = dto.noEntryGameweek;
-      noEntryPlayerId = dto.noEntryPlayerId;
-      teamBoostGameweek = dto.teamBoostGameweek;
-      teamBoostClubId = dto.teamBoostClubId;
-      safeHandsGameweek = dto.safeHandsGameweek;
-      safeHandsPlayerId = dto.safeHandsPlayerId;
-      captainFantasticGameweek = dto.captainFantasticGameweek;
-      captainFantasticPlayerId = dto.captainFantasticPlayerId;
-      oneNationGameweek = dto.oneNationGameweek;
-      oneNationCountryId = dto.oneNationCountryId;
-      prospectsGameweek = dto.prospectsGameweek;
-      braceBonusGameweek = dto.braceBonusGameweek;
-      hatTrickHeroGameweek = dto.hatTrickHeroGameweek;
-      transferWindowGameweek = dto.transferWindowGameweek;
+      goalGetterGameweek = manager.goalGetterGameweek;
+      goalGetterPlayerId = manager.goalGetterPlayerId;
+      passMasterGameweek = manager.passMasterGameweek;
+      passMasterPlayerId = manager.passMasterPlayerId;
+      noEntryGameweek = manager.noEntryGameweek;
+      noEntryPlayerId = manager.noEntryPlayerId;
+      teamBoostGameweek = manager.teamBoostGameweek;
+      teamBoostClubId = manager.teamBoostClubId;
+      safeHandsGameweek = manager.safeHandsGameweek;
+      safeHandsPlayerId = manager.safeHandsPlayerId;
+      captainFantasticGameweek = manager.captainFantasticGameweek;
+      captainFantasticPlayerId = manager.captainFantasticPlayerId;
+      oneNationGameweek = manager.oneNationGameweek;
+      oneNationCountryId = manager.oneNationCountryId;
+      prospectsGameweek = manager.prospectsGameweek;
+      braceBonusGameweek = manager.braceBonusGameweek;
+      hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
+      transferWindowGameweek = updatedTransferWindowGameweek;
       history = manager.history;
       profilePictureType = manager.profilePictureType;
       canisterId = manager.canisterId;
     };
   };
 
-  public shared ({ caller }) func updateUsername(dto : DTOs.UsernameUpdateDTO) : async Result.Result<(), T.Error> {
+  public shared ({ caller }) func useBonus(dto: Commands.SaveBonusDTO, managerPrincipalId: Base.PrincipalId, transfersAvailable : Nat8, monthlyBonuses : Nat8, newBankBalance : Nat16) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == controllerPrincipalId;
 
     let managerBuffer = Buffer.fromArray<T.Manager>([]);
-    let managerGroupIndex = managerGroupIndexes.get(dto.principalId);
+    let managerGroupIndex = managerGroupIndexes.get(managerPrincipalId);
     switch (managerGroupIndex) {
       case (null) {};
       case (?foundGroupIndex) {
         switch (foundGroupIndex) {
           case 0 {
             for (manager in Iter.fromArray(managerGroup1)) {
-              if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeManagerUsername(manager, dto.updatedUsername.username));
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeBonus(dto, manager, transfersAvailable, monthlyBonuses, newBankBalance));
               } else {
                 managerBuffer.add(manager);
               };
@@ -272,8 +275,8 @@ actor class _ManagerCanister() {
           };
           case 1 {
             for (manager in Iter.fromArray(managerGroup2)) {
-              if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeManagerUsername(manager, dto.updatedUsername.username));
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeBonus(dto, manager, transfersAvailable, monthlyBonuses, newBankBalance));
               } else {
                 managerBuffer.add(manager);
               };
@@ -282,8 +285,8 @@ actor class _ManagerCanister() {
           };
           case 2 {
             for (manager in Iter.fromArray(managerGroup3)) {
-              if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeManagerUsername(manager, dto.updatedUsername.username));
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeBonus(dto, manager, transfersAvailable, monthlyBonuses, newBankBalance));
               } else {
                 managerBuffer.add(manager);
               };
@@ -292,8 +295,8 @@ actor class _ManagerCanister() {
           };
           case 3 {
             for (manager in Iter.fromArray(managerGroup4)) {
-              if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeManagerUsername(manager, dto.updatedUsername.username));
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeBonus(dto, manager, transfersAvailable, monthlyBonuses, newBankBalance));
               } else {
                 managerBuffer.add(manager);
               };
@@ -302,8 +305,8 @@ actor class _ManagerCanister() {
           };
           case 4 {
             for (manager in Iter.fromArray(managerGroup5)) {
-              if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeManagerUsername(manager, dto.updatedUsername.username));
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeBonus(dto, manager, transfersAvailable, monthlyBonuses, newBankBalance));
               } else {
                 managerBuffer.add(manager);
               };
@@ -312,8 +315,8 @@ actor class _ManagerCanister() {
           };
           case 5 {
             for (manager in Iter.fromArray(managerGroup6)) {
-              if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeManagerUsername(manager, dto.updatedUsername.username));
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeBonus(dto, manager, transfersAvailable, monthlyBonuses, newBankBalance));
               } else {
                 managerBuffer.add(manager);
               };
@@ -322,8 +325,8 @@ actor class _ManagerCanister() {
           };
           case 6 {
             for (manager in Iter.fromArray(managerGroup7)) {
-              if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeManagerUsername(manager, dto.updatedUsername.username));
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeBonus(dto, manager, transfersAvailable, monthlyBonuses, newBankBalance));
               } else {
                 managerBuffer.add(manager);
               };
@@ -332,8 +335,8 @@ actor class _ManagerCanister() {
           };
           case 7 {
             for (manager in Iter.fromArray(managerGroup8)) {
-              if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeManagerUsername(manager, dto.updatedUsername.username));
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeBonus(dto, manager, transfersAvailable, monthlyBonuses, newBankBalance));
               } else {
                 managerBuffer.add(manager);
               };
@@ -342,8 +345,8 @@ actor class _ManagerCanister() {
           };
           case 8 {
             for (manager in Iter.fromArray(managerGroup9)) {
-              if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeManagerUsername(manager, dto.updatedUsername.username));
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeBonus(dto, manager, transfersAvailable, monthlyBonuses, newBankBalance));
               } else {
                 managerBuffer.add(manager);
               };
@@ -352,8 +355,8 @@ actor class _ManagerCanister() {
           };
           case 9 {
             for (manager in Iter.fromArray(managerGroup10)) {
-              if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeManagerUsername(manager, dto.updatedUsername.username));
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeBonus(dto, manager, transfersAvailable, monthlyBonuses, newBankBalance));
               } else {
                 managerBuffer.add(manager);
               };
@@ -362,8 +365,8 @@ actor class _ManagerCanister() {
           };
           case 10 {
             for (manager in Iter.fromArray(managerGroup11)) {
-              if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeManagerUsername(manager, dto.updatedUsername.username));
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeBonus(dto, manager, transfersAvailable, monthlyBonuses, newBankBalance));
               } else {
                 managerBuffer.add(manager);
               };
@@ -372,8 +375,203 @@ actor class _ManagerCanister() {
           };
           case 11 {
             for (manager in Iter.fromArray(managerGroup12)) {
-              if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeManagerUsername(manager, dto.updatedUsername.username));
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeBonus(dto, manager, transfersAvailable, monthlyBonuses, newBankBalance));
+              } else {
+                managerBuffer.add(manager);
+              };
+            };
+            managerGroup12 := Buffer.toArray(managerBuffer);
+          };
+          case _ {};
+        };
+      };
+    };
+    return #ok;
+
+  };
+
+  private func mergeBonus(dto : Commands.SaveBonusDTO, manager : T.Manager, transfersAvailable : Nat8, monthlyBonusesAvailable : Nat8, newBankBalance : Nat16) : T.Manager {
+    
+    var updatedGoalGetterGameweek = Utilities.valueOrDefaultGameweek(dto.goalGetterGameweek, manager.goalGetterGameweek);
+    var updatedGoalGetterPlayerId = Utilities.valueOrDefaultPlayerId(dto.goalGetterPlayerId, manager.goalGetterPlayerId);
+    var updatedPassMasterGameweek = Utilities.valueOrDefaultGameweek(dto.passMasterGameweek, manager.passMasterGameweek);
+    var updatedPassMasterPlayerId = Utilities.valueOrDefaultPlayerId(dto.passMasterPlayerId, manager.passMasterPlayerId);
+    var updatedNoEntryGameweek = Utilities.valueOrDefaultGameweek(dto.noEntryGameweek, manager.noEntryGameweek);
+    var updatedNoEntryPlayerId = Utilities.valueOrDefaultPlayerId(dto.noEntryPlayerId, manager.noEntryPlayerId);
+    var updatedTeamBoostGameweek = Utilities.valueOrDefaultGameweek(dto.teamBoostGameweek, manager.teamBoostGameweek);
+    var updatedTeamBoostClubId = Utilities.valueOrDefaultClubId(dto.teamBoostClubId, manager.teamBoostClubId);
+    var updatedSafeHandsGameweek = Utilities.valueOrDefaultGameweek(dto.safeHandsGameweek, manager.safeHandsGameweek);
+    var updatedSafeHandsPlayerId = Utilities.valueOrDefaultPlayerId(dto.safeHandsPlayerId, manager.safeHandsPlayerId);
+    var updatedCaptainFantasticGameweek = Utilities.valueOrDefaultGameweek(dto.captainFantasticGameweek, manager.captainFantasticGameweek);
+    var updatedCaptainFantasticPlayerId = Utilities.valueOrDefaultPlayerId(dto.captainFantasticPlayerId, manager.captainFantasticPlayerId);
+    var updatedOneNationGameweek = Utilities.valueOrDefaultGameweek(dto.oneNationGameweek, manager.oneNationGameweek);
+    var updatedOneNationCountryId = Utilities.valueOrDefaultCountryId(dto.oneNationCountryId, manager.oneNationCountryId);
+    var updatedProspectsGameweek = Utilities.valueOrDefaultGameweek(dto.prospectsGameweek, manager.prospectsGameweek);
+    var updatedBraceBonusGameweek = Utilities.valueOrDefaultGameweek(dto.braceBonusGameweek, manager.braceBonusGameweek);
+    var updatedHatTrickHeroGameweek = Utilities.valueOrDefaultGameweek(dto.hatTrickHeroGameweek, manager.hatTrickHeroGameweek);
+
+    return {
+      principalId = manager.principalId;
+      username = manager.username;
+      favouriteClubId = manager.favouriteClubId;
+      createDate = manager.createDate;
+      termsAccepted = manager.termsAccepted;
+      profilePicture = manager.profilePicture;
+      transfersAvailable = transfersAvailable;
+      monthlyBonusesAvailable = monthlyBonusesAvailable;
+      bankQuarterMillions = newBankBalance;
+      playerIds = manager.playerIds;
+      captainId = manager.captainId;
+      goalGetterGameweek = updatedGoalGetterGameweek;
+      goalGetterPlayerId = updatedGoalGetterPlayerId;
+      passMasterGameweek = updatedPassMasterGameweek;
+      passMasterPlayerId = updatedPassMasterPlayerId;
+      noEntryGameweek = updatedNoEntryGameweek;
+      noEntryPlayerId = updatedNoEntryPlayerId;
+      teamBoostGameweek = updatedTeamBoostGameweek;
+      teamBoostClubId = updatedTeamBoostClubId;
+      safeHandsGameweek = updatedSafeHandsGameweek;
+      safeHandsPlayerId = updatedSafeHandsPlayerId;
+      captainFantasticGameweek = updatedCaptainFantasticGameweek;
+      captainFantasticPlayerId = updatedCaptainFantasticPlayerId;
+      oneNationGameweek = updatedOneNationGameweek;
+      oneNationCountryId = updatedOneNationCountryId;
+      prospectsGameweek = updatedProspectsGameweek;
+      braceBonusGameweek = updatedBraceBonusGameweek;
+      hatTrickHeroGameweek = updatedHatTrickHeroGameweek;
+      transferWindowGameweek = manager.transferWindowGameweek;
+      history = manager.history;
+      profilePictureType = manager.profilePictureType;
+      canisterId = manager.canisterId;
+    };
+  };
+
+  public shared ({ caller }) func updateUsername(managerPrincipalId: Base.PrincipalId, dto : Commands.UpdateUsernameDTO) : async Result.Result<(), T.Error> {
+    assert not Principal.isAnonymous(caller);
+    let backendPrincipalId = Principal.toText(caller);
+    assert backendPrincipalId == controllerPrincipalId;
+
+    let managerBuffer = Buffer.fromArray<T.Manager>([]);
+    let managerGroupIndex = managerGroupIndexes.get(managerPrincipalId);
+    switch (managerGroupIndex) {
+      case (null) {};
+      case (?foundGroupIndex) {
+        switch (foundGroupIndex) {
+          case 0 {
+            for (manager in Iter.fromArray(managerGroup1)) {
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeManagerUsername(manager, dto.username));
+              } else {
+                managerBuffer.add(manager);
+              };
+            };
+            managerGroup1 := Buffer.toArray(managerBuffer);
+          };
+          case 1 {
+            for (manager in Iter.fromArray(managerGroup2)) {
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeManagerUsername(manager, dto.username));
+              } else {
+                managerBuffer.add(manager);
+              };
+            };
+            managerGroup2 := Buffer.toArray(managerBuffer);
+          };
+          case 2 {
+            for (manager in Iter.fromArray(managerGroup3)) {
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeManagerUsername(manager, dto.username));
+              } else {
+                managerBuffer.add(manager);
+              };
+            };
+            managerGroup3 := Buffer.toArray(managerBuffer);
+          };
+          case 3 {
+            for (manager in Iter.fromArray(managerGroup4)) {
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeManagerUsername(manager, dto.username));
+              } else {
+                managerBuffer.add(manager);
+              };
+            };
+            managerGroup4 := Buffer.toArray(managerBuffer);
+          };
+          case 4 {
+            for (manager in Iter.fromArray(managerGroup5)) {
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeManagerUsername(manager, dto.username));
+              } else {
+                managerBuffer.add(manager);
+              };
+            };
+            managerGroup5 := Buffer.toArray(managerBuffer);
+          };
+          case 5 {
+            for (manager in Iter.fromArray(managerGroup6)) {
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeManagerUsername(manager, dto.username));
+              } else {
+                managerBuffer.add(manager);
+              };
+            };
+            managerGroup6 := Buffer.toArray(managerBuffer);
+          };
+          case 6 {
+            for (manager in Iter.fromArray(managerGroup7)) {
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeManagerUsername(manager, dto.username));
+              } else {
+                managerBuffer.add(manager);
+              };
+            };
+            managerGroup7 := Buffer.toArray(managerBuffer);
+          };
+          case 7 {
+            for (manager in Iter.fromArray(managerGroup8)) {
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeManagerUsername(manager, dto.username));
+              } else {
+                managerBuffer.add(manager);
+              };
+            };
+            managerGroup8 := Buffer.toArray(managerBuffer);
+          };
+          case 8 {
+            for (manager in Iter.fromArray(managerGroup9)) {
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeManagerUsername(manager, dto.username));
+              } else {
+                managerBuffer.add(manager);
+              };
+            };
+            managerGroup9 := Buffer.toArray(managerBuffer);
+          };
+          case 9 {
+            for (manager in Iter.fromArray(managerGroup10)) {
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeManagerUsername(manager, dto.username));
+              } else {
+                managerBuffer.add(manager);
+              };
+            };
+            managerGroup10 := Buffer.toArray(managerBuffer);
+          };
+          case 10 {
+            for (manager in Iter.fromArray(managerGroup11)) {
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeManagerUsername(manager, dto.username));
+              } else {
+                managerBuffer.add(manager);
+              };
+            };
+            managerGroup11 := Buffer.toArray(managerBuffer);
+          };
+          case 11 {
+            for (manager in Iter.fromArray(managerGroup12)) {
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeManagerUsername(manager, dto.username));
               } else {
                 managerBuffer.add(manager);
               };
@@ -425,21 +623,21 @@ actor class _ManagerCanister() {
     };
   };
 
-  public shared ({ caller }) func updateProfilePicture(dto : DTOs.ProfilePictureUpdateDTO) : async Result.Result<(), T.Error> {
+  public shared ({ caller }) func updateProfilePicture(managerPrincipalId: Base.PrincipalId, dto : Commands.UpdateProfilePictureDTO) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == controllerPrincipalId;
 
     let managerBuffer = Buffer.fromArray<T.Manager>([]);
-    let managerGroupIndex = managerGroupIndexes.get(dto.principalId);
+    let managerGroupIndex = managerGroupIndexes.get(managerPrincipalId);
     switch (managerGroupIndex) {
       case (null) {};
       case (?foundGroupIndex) {
         switch (foundGroupIndex) {
           case 0 {
             for (manager in Iter.fromArray(managerGroup1)) {
-              if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeManagerProfilePicture(manager, dto.updatedProfilePicture.profilePicture, dto.updatedProfilePicture.extension));
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeManagerProfilePicture(manager, dto.profilePicture, dto.extension));
               } else {
                 managerBuffer.add(manager);
               };
@@ -448,8 +646,8 @@ actor class _ManagerCanister() {
           };
           case 1 {
             for (manager in Iter.fromArray(managerGroup2)) {
-              if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeManagerProfilePicture(manager, dto.updatedProfilePicture.profilePicture, dto.updatedProfilePicture.extension));
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeManagerProfilePicture(manager, dto.profilePicture, dto.extension));
               } else {
                 managerBuffer.add(manager);
               };
@@ -458,8 +656,8 @@ actor class _ManagerCanister() {
           };
           case 2 {
             for (manager in Iter.fromArray(managerGroup3)) {
-              if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeManagerProfilePicture(manager, dto.updatedProfilePicture.profilePicture, dto.updatedProfilePicture.extension));
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeManagerProfilePicture(manager, dto.profilePicture, dto.extension));
               } else {
                 managerBuffer.add(manager);
               };
@@ -468,8 +666,8 @@ actor class _ManagerCanister() {
           };
           case 3 {
             for (manager in Iter.fromArray(managerGroup4)) {
-              if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeManagerProfilePicture(manager, dto.updatedProfilePicture.profilePicture, dto.updatedProfilePicture.extension));
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeManagerProfilePicture(manager, dto.profilePicture, dto.extension));
               } else {
                 managerBuffer.add(manager);
               };
@@ -478,8 +676,8 @@ actor class _ManagerCanister() {
           };
           case 4 {
             for (manager in Iter.fromArray(managerGroup5)) {
-              if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeManagerProfilePicture(manager, dto.updatedProfilePicture.profilePicture, dto.updatedProfilePicture.extension));
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeManagerProfilePicture(manager, dto.profilePicture, dto.extension));
               } else {
                 managerBuffer.add(manager);
               };
@@ -488,8 +686,8 @@ actor class _ManagerCanister() {
           };
           case 5 {
             for (manager in Iter.fromArray(managerGroup6)) {
-              if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeManagerProfilePicture(manager, dto.updatedProfilePicture.profilePicture, dto.updatedProfilePicture.extension));
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeManagerProfilePicture(manager, dto.profilePicture, dto.extension));
               } else {
                 managerBuffer.add(manager);
               };
@@ -498,8 +696,8 @@ actor class _ManagerCanister() {
           };
           case 6 {
             for (manager in Iter.fromArray(managerGroup7)) {
-              if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeManagerProfilePicture(manager, dto.updatedProfilePicture.profilePicture, dto.updatedProfilePicture.extension));
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeManagerProfilePicture(manager, dto.profilePicture, dto.extension));
               } else {
                 managerBuffer.add(manager);
               };
@@ -508,8 +706,8 @@ actor class _ManagerCanister() {
           };
           case 7 {
             for (manager in Iter.fromArray(managerGroup8)) {
-              if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeManagerProfilePicture(manager, dto.updatedProfilePicture.profilePicture, dto.updatedProfilePicture.extension));
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeManagerProfilePicture(manager, dto.profilePicture, dto.extension));
               } else {
                 managerBuffer.add(manager);
               };
@@ -518,8 +716,8 @@ actor class _ManagerCanister() {
           };
           case 8 {
             for (manager in Iter.fromArray(managerGroup9)) {
-              if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeManagerProfilePicture(manager, dto.updatedProfilePicture.profilePicture, dto.updatedProfilePicture.extension));
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeManagerProfilePicture(manager, dto.profilePicture, dto.extension));
               } else {
                 managerBuffer.add(manager);
               };
@@ -528,8 +726,8 @@ actor class _ManagerCanister() {
           };
           case 9 {
             for (manager in Iter.fromArray(managerGroup10)) {
-              if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeManagerProfilePicture(manager, dto.updatedProfilePicture.profilePicture, dto.updatedProfilePicture.extension));
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeManagerProfilePicture(manager, dto.profilePicture, dto.extension));
               } else {
                 managerBuffer.add(manager);
               };
@@ -538,8 +736,8 @@ actor class _ManagerCanister() {
           };
           case 10 {
             for (manager in Iter.fromArray(managerGroup11)) {
-              if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeManagerProfilePicture(manager, dto.updatedProfilePicture.profilePicture, dto.updatedProfilePicture.extension));
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeManagerProfilePicture(manager, dto.profilePicture, dto.extension));
               } else {
                 managerBuffer.add(manager);
               };
@@ -548,8 +746,8 @@ actor class _ManagerCanister() {
           };
           case 11 {
             for (manager in Iter.fromArray(managerGroup12)) {
-              if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeManagerProfilePicture(manager, dto.updatedProfilePicture.profilePicture, dto.updatedProfilePicture.extension));
+              if (manager.principalId == managerPrincipalId) {
+                managerBuffer.add(mergeManagerProfilePicture(manager, dto.profilePicture, dto.extension));
               } else {
                 managerBuffer.add(manager);
               };
@@ -601,20 +799,20 @@ actor class _ManagerCanister() {
     };
   };
 
-  public shared ({ caller }) func updateFavouriteClub(dto : DTOs.FavouriteClubUpdateDTO) : async Result.Result<(), T.Error> {
+  public shared ({ caller }) func updateFavouriteClub(managerPrincipalId: Base.PrincipalId, dto : Commands.UpdateFavouriteClubDTO) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == controllerPrincipalId;
 
     let managerBuffer = Buffer.fromArray<T.Manager>([]);
-    let managerGroupIndex = managerGroupIndexes.get(dto.principalId);
+    let managerGroupIndex = managerGroupIndexes.get(managerPrincipalId);
     switch (managerGroupIndex) {
       case (null) {};
       case (?foundGroupIndex) {
         switch (foundGroupIndex) {
           case 0 {
             for (manager in Iter.fromArray(managerGroup1)) {
-              if (manager.principalId == dto.principalId) {
+              if (manager.principalId == managerPrincipalId) {
                 managerBuffer.add(mergeManagerFavouriteClub(manager,dto.favouriteClubId));
               } else {
                 managerBuffer.add(manager);
@@ -624,7 +822,7 @@ actor class _ManagerCanister() {
           };
           case 1 {
             for (manager in Iter.fromArray(managerGroup2)) {
-              if (manager.principalId == dto.principalId) {
+              if (manager.principalId == managerPrincipalId) {
                 managerBuffer.add(mergeManagerFavouriteClub(manager,dto.favouriteClubId));
               } else {
                 managerBuffer.add(manager);
@@ -634,7 +832,7 @@ actor class _ManagerCanister() {
           };
           case 2 {
             for (manager in Iter.fromArray(managerGroup3)) {
-              if (manager.principalId == dto.principalId) {
+              if (manager.principalId == managerPrincipalId) {
                 managerBuffer.add(mergeManagerFavouriteClub(manager,dto.favouriteClubId));
               } else {
                 managerBuffer.add(manager);
@@ -644,7 +842,7 @@ actor class _ManagerCanister() {
           };
           case 3 {
             for (manager in Iter.fromArray(managerGroup4)) {
-              if (manager.principalId == dto.principalId) {
+              if (manager.principalId == managerPrincipalId) {
                 managerBuffer.add(mergeManagerFavouriteClub(manager,dto.favouriteClubId));
               } else {
                 managerBuffer.add(manager);
@@ -654,7 +852,7 @@ actor class _ManagerCanister() {
           };
           case 4 {
             for (manager in Iter.fromArray(managerGroup5)) {
-              if (manager.principalId == dto.principalId) {
+              if (manager.principalId == managerPrincipalId) {
                 managerBuffer.add(mergeManagerFavouriteClub(manager,dto.favouriteClubId));
               } else {
                 managerBuffer.add(manager);
@@ -664,7 +862,7 @@ actor class _ManagerCanister() {
           };
           case 5 {
             for (manager in Iter.fromArray(managerGroup6)) {
-              if (manager.principalId == dto.principalId) {
+              if (manager.principalId == managerPrincipalId) {
                 managerBuffer.add(mergeManagerFavouriteClub(manager,dto.favouriteClubId));
               } else {
                 managerBuffer.add(manager);
@@ -674,7 +872,7 @@ actor class _ManagerCanister() {
           };
           case 6 {
             for (manager in Iter.fromArray(managerGroup7)) {
-              if (manager.principalId == dto.principalId) {
+              if (manager.principalId == managerPrincipalId) {
                 managerBuffer.add(mergeManagerFavouriteClub(manager,dto.favouriteClubId));
               } else {
                 managerBuffer.add(manager);
@@ -684,7 +882,7 @@ actor class _ManagerCanister() {
           };
           case 7 {
             for (manager in Iter.fromArray(managerGroup8)) {
-              if (manager.principalId == dto.principalId) {
+              if (manager.principalId == managerPrincipalId) {
                 managerBuffer.add(mergeManagerFavouriteClub(manager,dto.favouriteClubId));
               } else {
                 managerBuffer.add(manager);
@@ -694,7 +892,7 @@ actor class _ManagerCanister() {
           };
           case 8 {
             for (manager in Iter.fromArray(managerGroup9)) {
-              if (manager.principalId == dto.principalId) {
+              if (manager.principalId == managerPrincipalId) {
                 managerBuffer.add(mergeManagerFavouriteClub(manager,dto.favouriteClubId));
               } else {
                 managerBuffer.add(manager);
@@ -704,7 +902,7 @@ actor class _ManagerCanister() {
           };
           case 9 {
             for (manager in Iter.fromArray(managerGroup10)) {
-              if (manager.principalId == dto.principalId) {
+              if (manager.principalId == managerPrincipalId) {
                 managerBuffer.add(mergeManagerFavouriteClub(manager,dto.favouriteClubId));
               } else {
                 managerBuffer.add(manager);
@@ -714,7 +912,7 @@ actor class _ManagerCanister() {
           };
           case 10 {
             for (manager in Iter.fromArray(managerGroup11)) {
-              if (manager.principalId == dto.principalId) {
+              if (manager.principalId == managerPrincipalId) {
                 managerBuffer.add(mergeManagerFavouriteClub(manager,dto.favouriteClubId));
               } else {
                 managerBuffer.add(manager);
@@ -724,7 +922,7 @@ actor class _ManagerCanister() {
           };
           case 11 {
             for (manager in Iter.fromArray(managerGroup12)) {
-              if (manager.principalId == dto.principalId) {
+              if (manager.principalId == managerPrincipalId) {
                 managerBuffer.add(mergeManagerFavouriteClub(manager,dto.favouriteClubId));
               } else {
                 managerBuffer.add(manager);
@@ -1055,12 +1253,12 @@ actor class _ManagerCanister() {
     return Buffer.toArray(allManagersBuffer);
   };
 
-  public shared ({ caller }) func getFantasyTeamSnapshot(dto: DTOs.GetFantasyTeamSnapshotDTO) : async ?T.FantasyTeamSnapshot {
+  public shared ({ caller }) func getFantasyTeamSnapshot(managerPrincipalId: Base.PrincipalId, dto: Queries.GetManagerGameweekDTO) : async ?T.FantasyTeamSnapshot {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == controllerPrincipalId;
 
-    let managerGroupIndex = managerGroupIndexes.get(dto.managerPrincipalId);
+    let managerGroupIndex = managerGroupIndexes.get(dto.principalId);
 
     var managers: [T.Manager] = [];
 
@@ -1113,7 +1311,7 @@ actor class _ManagerCanister() {
 
 
         for (manager in Iter.fromArray(managers)) {
-          if (manager.principalId == dto.managerPrincipalId) {
+          if (manager.principalId == managerPrincipalId) {
             switch (manager.history) {
               case (null) {    };
               case (history) {
@@ -1328,12 +1526,11 @@ actor class _ManagerCanister() {
   private func snapshotManagers(leagueId: FootballTypes.LeagueId, managerGroup: Int, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth) : async () {
     
     let controller_backend_canister = actor (controllerPrincipalId) : actor {
-      getPlayersSnapshot : shared query (dto: RequestDTOs.GetSnapshotPlayers) -> async [DTOs.PlayerDTO];
+      getPlayersSnapshot : shared query (dto: Queries.GetSnapshotPlayersDTO) -> async [DTOs.PlayerDTO];
     };
 
     let players = await controller_backend_canister.getPlayersSnapshot({
       gameweek;
-      leagueId;
       seasonId
     });
 
@@ -1856,8 +2053,8 @@ actor class _ManagerCanister() {
     assert backendPrincipalId == controllerPrincipalId;
 
     let backend_canister = actor (controllerPrincipalId) : actor {
-      getPlayersMap : (dto: DTOs.GameweekFiltersDTO) -> async Result.Result<[(Nat16, DTOs.PlayerScoreDTO)], T.Error>;
-      getPlayersSnapshot : (dto: RequestDTOs.GetSnapshotPlayers) -> async [DTOs.PlayerDTO];
+      getPlayersMap : (dto: Queries.GetPlayersMapDTO) -> async Result.Result<[(Nat16, DTOs.PlayerScoreDTO)], T.Error>;
+      getPlayersSnapshot : (dto: Queries.GetSnapshotPlayersDTO) -> async [DTOs.PlayerDTO];
     };
 
     let allPlayersListResult = await backend_canister.getPlayersMap({ seasonId; gameweek} );

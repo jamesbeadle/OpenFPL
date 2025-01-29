@@ -4,7 +4,6 @@ import FootballTypes "../../shared/types/football_types";
 import T "../../shared/types/app_types";
 
 import NetworkEnvVars "../network_environment_variables";
-import RequestDTOs "../../shared/dtos/request_DTOs";
 
 module {
 
@@ -24,11 +23,11 @@ module {
       return await data_canister.getVerifiedClubs(leagueId);
     };
 
-    public func getVerifiedFixtures(dto: RequestDTOs.RequestFixturesDTO) : async Result.Result<[DTOs.FixtureDTO], T.Error> {
+    public func getVerifiedFixtures(leagueId: FootballTypes.LeagueId) : async Result.Result<[DTOs.FixtureDTO], T.Error> {
       let data_canister = actor (NetworkEnvVars.DATA_CANISTER_ID) : actor {
-        getVerifiedFixtures : (dto: RequestDTOs.RequestFixturesDTO) -> async Result.Result<[DTOs.FixtureDTO], T.Error>;
+        getVerifiedFixtures : (leagueId: FootballTypes.LeagueId) -> async Result.Result<[DTOs.FixtureDTO], T.Error>;
       };
-      return await data_canister.getVerifiedFixtures(dto);
+      return await data_canister.getVerifiedFixtures(leagueId);
     };
 
   };

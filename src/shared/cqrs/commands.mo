@@ -4,17 +4,27 @@ import Base "../types/base_types";
 
 module Commands {
 
-  public type SaveProfileDTO = {
-    username : ?Text;
-    favouriteClubId : ?FootballTypes.ClubId;
-    profilePicture : ?Blob;
-    extension : ?Text;
+  public type UpdateUsernameDTO = {
+    username : Text;
+  };
+
+  public type UpdateFavouriteClubDTO = {
+    favouriteClubId : FootballTypes.ClubId;
+  };
+
+  public type UpdateProfilePictureDTO = {
+    profilePicture : Blob;
+    extension : Text;
   };
 
   public type SaveTeamDTO = {
     teamName: ?Text;
-    playerIds : ?[FootballTypes.ClubId];
-    captainId : ?FootballTypes.ClubId;
+    playerIds : [FootballTypes.PlayerId];
+    captainId : FootballTypes.ClubId;
+    transferWindowGameweek : ?FootballTypes.GameweekNumber;
+  };
+
+  public type SaveBonusDTO = {
     goalGetterGameweek : ?FootballTypes.GameweekNumber;
     goalGetterPlayerId : ?FootballTypes.ClubId;
     passMasterGameweek : ?FootballTypes.GameweekNumber;
@@ -32,7 +42,6 @@ module Commands {
     prospectsGameweek : ?FootballTypes.GameweekNumber;
     braceBonusGameweek : ?FootballTypes.GameweekNumber;
     hatTrickHeroGameweek : ?FootballTypes.GameweekNumber;
-    transferWindowGameweek : ?FootballTypes.GameweekNumber;
   };
 
   public type LoanPlayerDTO = {
@@ -96,4 +105,13 @@ module Commands {
     updatedFixtureDate: Int;
   };
 
+  public type UpdateAppStatusDTO = {
+    onHold : Bool;
+    version: Text;
+  };
+
+  public type CreateManagerDTO = {
+    username: Text;
+    favouriteClubId: ?FootballTypes.ClubId;
+  };
 };

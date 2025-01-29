@@ -14,7 +14,8 @@ import TrieMap "mo:base/TrieMap";
 import Base "../../shared/types/base_types";
 import FootballTypes "../../shared/types/football_types";
 import T "../../shared/types/app_types";
-import Queries "../dtos/queries";
+import Queries "../cqrs/queries";
+import DTOs "../dtos/dtos";
 import Utilities "../../shared/utils/utilities";
 import Environment "../network_environment_variables";
 
@@ -374,7 +375,7 @@ actor class _LeaderboardCanister() {
 };
 
 
-  public shared query ({ caller }) func getWeeklyRewardLeaderboard(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber) : async ?Queries.WeeklyLeaderboardDTO {
+  public shared query ({ caller }) func getWeeklyRewardLeaderboard(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber) : async ?DTOs.WeeklyLeaderboardDTO {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == controllerPrincipalId;
@@ -445,7 +446,7 @@ actor class _LeaderboardCanister() {
     };
   };
 
-  public shared ({ caller }) func getWeeklyLeaderboardEntries(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber, offset: Nat, searchTerm : Text) : async ?Queries.WeeklyLeaderboardDTO {
+  public shared ({ caller }) func getWeeklyLeaderboardEntries(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber, offset: Nat, searchTerm : Text) : async ?DTOs.WeeklyLeaderboardDTO {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == controllerPrincipalId;
@@ -477,7 +478,7 @@ actor class _LeaderboardCanister() {
         let droppedEntries = List.drop<T.LeaderboardEntry>(List.fromArray(sortedGameweekEntries), offset);
         let paginatedEntries = List.take<T.LeaderboardEntry>(droppedEntries, LEADERBOARD_ROW_COUNT_LIMIT);
 
-        let leaderboardDTO: Queries.WeeklyLeaderboardDTO = {
+        let leaderboardDTO: DTOs.WeeklyLeaderboardDTO = {
           seasonId = foundLeaderboard.seasonId;
           gameweek = foundLeaderboard.gameweek;
           entries = List.toArray(paginatedEntries);
@@ -489,7 +490,7 @@ actor class _LeaderboardCanister() {
     };
   };
 
-  public shared query ({ caller }) func getWeeklyLeaderboardEntry(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber, principalId : Text) : async ?Queries.LeaderboardEntryDTO {
+  public shared query ({ caller }) func getWeeklyLeaderboardEntry(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber, principalId : Text) : async ?DTOs.LeaderboardEntryDTO {
     assert not Principal.isAnonymous(caller);
     let callerPrincipalId = Principal.toText(caller);
     assert callerPrincipalId == controllerPrincipalId;
@@ -507,7 +508,7 @@ actor class _LeaderboardCanister() {
       case (?foundLeaderboard) {
         let _ = List.find<T.LeaderboardEntry>(
           foundLeaderboard.entries,
-          func(entry : Queries.LeaderboardEntryDTO) : Bool {
+          func(entry : DTOs.LeaderboardEntryDTO) : Bool {
             return entry.principalId == principalId;
           },
         );
