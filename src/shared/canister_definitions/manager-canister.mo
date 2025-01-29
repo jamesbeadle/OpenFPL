@@ -58,6 +58,7 @@ actor class _ManagerCanister() {
       return;
     };
 
+    //TODO: Environment variable should be set to openfpl not both - needs to be more abstract
     let callerInArray = Array.find<Base.CanisterId>([Environment.OPENFPL_BACKEND_CANISTER_ID, Environment.OPENWSL_BACKEND_CANISTER_ID], func(canisterId: Base.CanisterId) : Bool{
       canisterId == Principal.toText(caller);
     });

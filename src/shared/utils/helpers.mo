@@ -5,9 +5,6 @@ import Int64 "mo:base/Int64";
 import Nat "mo:base/Nat";
 import Nat64 "mo:base/Nat64";
 import Text "mo:base/Text";
-import Array "mo:base/Array";
-import FootballTypes "../types/football_types";
-
 
 module {
 
@@ -58,20 +55,6 @@ module {
       }
     };
     Text.map(t, charToLower)
-  };
-
-  public func getLatestFixtureTime(fixtures : [FootballTypes.Fixture]) : Int {
-    return Array.foldLeft(
-      fixtures,
-      fixtures[0].kickOff,
-      func(acc : Int, fixture : FootballTypes.Fixture) : Int {
-        if (fixture.kickOff > acc) {
-          return fixture.kickOff;
-        } else {
-          return acc;
-        };
-      },
-    );
   };
 
 };

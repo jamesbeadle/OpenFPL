@@ -19,24 +19,6 @@ import BaseTypes "../types/base_types";
 
 module {
 
-  public func getTeamValue(playerIds: [FootballTypes.PlayerId], allPlayers: [DTOs.PlayerDTO]) : Nat16 {
-      let updatedPlayers = Array.filter<DTOs.PlayerDTO>(
-        allPlayers,
-        func(player : DTOs.PlayerDTO) : Bool {
-          let playerId = player.id;
-          let isPlayerIdInNewTeam = Array.find(
-            playerIds,
-            func(id : Nat16) : Bool {
-              return id == playerId;
-            },
-          );
-          return Option.isSome(isPlayerIdInNewTeam);
-        },
-      );
-
-      return Array.foldLeft<DTOs.PlayerDTO, Nat16>(updatedPlayers, 0, func(sumSoFar, x) = sumSoFar + x.valueQuarterMillions);
-  };
-
   public func selectedBonusPlayedAlready(manager: T.Manager, saveBonusDTO: Commands.SaveBonusDTO) : Bool {
       switch(saveBonusDTO.goalGetterGameweek){
         case (?_){

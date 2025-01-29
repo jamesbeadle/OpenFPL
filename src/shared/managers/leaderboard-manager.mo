@@ -24,7 +24,7 @@ import RewardManager "reward-manager";
 import NetworkEnvironmentVariables "../network_environment_variables";
 import SNSToken "../../shared/sns-wrappers/ledger";
 import Account "../lib/Account";
-import Constants "../../shared/utils/Constants";
+import Constants "../../shared/def/Constants";
 import Queries "../cqrs/queries";
 
 module {
