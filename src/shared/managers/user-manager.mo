@@ -9,7 +9,6 @@ import DTOs "../../shared/dtos/DTOs";
 import Base "../../shared/types/base_types";
 import FootballTypes "../../shared/types/football_types";
 import T "../../shared/types/app_types";
-import Utilities "../../shared/utils/utilities";
 import Management "../../shared/utils/Management";
 import ManagerCanister "../canister_definitions/manager-canister";
 import Cycles "mo:base/ExperimentalCycles";
@@ -23,6 +22,10 @@ import Bool "mo:base/Bool";
 import NetworkEnvironmentVariables "../network_environment_variables";
 import Queries "../cqrs/queries";
 import Commands "../cqrs/commands";
+import CanisterUtilities "../utils/canister_utilities";
+import Helpers "../utils/helpers";
+import ProfileUtilities "../utils/profile_utilities";
+import PickTeamUtilities "../utils/pick_team_utilities";
 
 module {
 
@@ -365,8 +368,8 @@ module {
     public func isUsernameTaken(username : Text, principalId : Text) : Bool {
       for (managerUsername in usernames.entries()) {
 
-        let lowerCaseUsername = Utilities.toLowercase(username);
-        let existingUsername = Utilities.toLowercase(managerUsername.1);
+        let lowerCaseUsername = Helpers.toLowercase(username);
+        let existingUsername = Helpers.toLowercase(managerUsername.1);
 
         if (lowerCaseUsername == existingUsername and managerUsername.0 != principalId) {
           return true;
@@ -393,7 +396,7 @@ module {
     };
 
     public func updateUsername(managerPrincipalId : Base.PrincipalId, dto: Commands.UpdateUsernameDTO) : async Result.Result<(), T.Error> {
-      if (not Utilities.isUsernameValid(dto.username)) {
+      if (not ProfileUtilities.isUsernameValid(dto.username)) {
         return #err(#InvalidData);
       };
 
@@ -450,7 +453,7 @@ module {
 
     public func updateProfilePicture(managerPrincipalId: Base.PrincipalId, dto: Commands.UpdateProfilePictureDTO) : async Result.Result<(), T.Error> {
 
-      if (not Utilities.isProfilePictureValid(dto.profilePicture)) {
+      if (not ProfileUtilities.isProfilePictureValid(dto.profilePicture)) {
         return #err(#InvalidData);
       };
 
@@ -485,7 +488,7 @@ module {
 
     public func saveTeamSelection(managerPrincipalId: Base.PrincipalId, dto : Commands.SaveTeamDTO, seasonId: FootballTypes.SeasonId, players : [DTOs.PlayerDTO]) : async Result.Result<(), T.Error> {
       
-      let teamValidResult = Utilities.teamValid(dto, players);
+      let teamValidResult = PickTeamUtilities.teamValid(dto, players);
       switch(teamValidResult){
         case (#ok _){ };
         case (#err errorResult){
@@ -578,7 +581,7 @@ module {
         };
         case (?foundManager){
 
-          if(Utilities.overspent(foundManager.bankQuarterMillions, foundManager.playerIds, dto.playerIds, allPlayers)){
+          if(PickTeamUtilities.overspent(foundManager.bankQuarterMillions, foundManager.playerIds, dto.playerIds, allPlayers)){
             return #err(#TeamOverspend);
           };
           
@@ -598,13 +601,13 @@ module {
           let hasPlayersInTeam = Array.size(foundManager.playerIds) > 0;
           
           if(not firstGameweek and hasPlayersInTeam){
-            transfersAvailable := Utilities.getTransfersAvailable(foundManager, dto.playerIds, allPlayers);
+            transfersAvailable := PickTeamUtilities.getTransfersAvailable(foundManager, dto.playerIds, allPlayers);
             if (transfersAvailable < 0) {
               return #err(#TooManyTransfers);
             };
           };
           
-          var newBankBalanceResult = Utilities.getNewBankBalance(foundManager, dto, allPlayers);
+          var newBankBalanceResult = PickTeamUtilities.getNewBankBalance(foundManager, dto, allPlayers);
           switch(newBankBalanceResult){
             case (#ok newBankBalance){
               return await manager_canister.updateTeamSelection(dto
@@ -633,7 +636,7 @@ module {
         };
         case (?foundManager){
 
-          let bonusAlreadyPaid = Utilities.selectedBonusPlayedAlready(foundManager, dto);
+          let bonusAlreadyPaid = PickTeamUtilities.selectedBonusPlayedAlready(foundManager, dto);
           if(bonusAlreadyPaid){
             return #err(#InvalidBonuses);
           };
@@ -642,7 +645,7 @@ module {
             return #err(#InvalidBonuses);
           };
 
-          if(Utilities.isGameweekBonusUsed(foundManager, gameweek)){
+          if(PickTeamUtilities.isGameweekBonusUsed(foundManager, gameweek)){
             return #err(#InvalidBonuses);
           };
 
@@ -739,7 +742,7 @@ module {
       await canister.initialise(controllerPrincipalId, fixturesPerClub);
       let IC : Management.Management = actor (NetworkEnvironmentVariables.Default);
       let principal = ?Principal.fromText(controllerPrincipalId);
-      let _ = await Utilities.updateCanister_(canister, principal, IC);
+      let _ = await CanisterUtilities.updateCanister_(canister, principal, IC);
 
       let canister_principal = Principal.fromActor(canister);
       let canisterId = Principal.toText(canister_principal);

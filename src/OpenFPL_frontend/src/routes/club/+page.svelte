@@ -7,7 +7,6 @@
   import WidgetSpinner from "$lib/components/shared/widget-spinner.svelte";
   import TeamPlayers from "$lib/components/club/team-players.svelte";
   import TeamFixtures from "$lib/components/club/team-fixtures.svelte";
-  import LoanedPlayers from "$lib/components/club/loaned-players.svelte";
   import TabContainer from "$lib/components/shared/tab-container.svelte";
   import ClubHeader from "$lib/components/club/club-header.svelte";
 
@@ -43,8 +42,6 @@
         <TeamPlayers clubId={id} />
       {:else if activeTab === "fixtures"}
         <TeamFixtures clubId={id} />
-      {:else if activeTab === "loaned-players"}
-        <LoanedPlayers clubId={id} />
       {/if}
     </div>
   {/if}

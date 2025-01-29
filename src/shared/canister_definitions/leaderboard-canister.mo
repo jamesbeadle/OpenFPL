@@ -14,10 +14,9 @@ import TrieMap "mo:base/TrieMap";
 import Base "../../shared/types/base_types";
 import FootballTypes "../../shared/types/football_types";
 import T "../../shared/types/app_types";
-import Queries "../cqrs/queries";
 import DTOs "../dtos/dtos";
-import Utilities "../../shared/utils/utilities";
 import Environment "../network_environment_variables";
+import LeaderboardUtilities "../utils/leaderboard_utilities";
 
 actor class _LeaderboardCanister() {
   
@@ -269,7 +268,7 @@ actor class _LeaderboardCanister() {
               return #less;
         });
 
-        let positionedGameweekEntries = Utilities.assignPositionText(List.fromArray<T.LeaderboardEntry>(sortedGameweekEntries));
+        let positionedGameweekEntries = LeaderboardUtilities.assignPositionText(List.fromArray<T.LeaderboardEntry>(sortedGameweekEntries));
 
         var updatedLeaderboard: T.SeasonLeaderboard = {
           seasonId = foundLeaderboard.seasonId;
@@ -300,7 +299,7 @@ actor class _LeaderboardCanister() {
             return #less;
       });
 
-      let positionedGameweekEntries = Utilities.assignPositionText(List.fromArray<T.LeaderboardEntry>(sortedGameweekEntries));
+      let positionedGameweekEntries = LeaderboardUtilities.assignPositionText(List.fromArray<T.LeaderboardEntry>(sortedGameweekEntries));
 
       var updatedLeaderboard: T.MonthlyLeaderboard = {
         seasonId = monthlyLeaderboard.seasonId;
@@ -337,7 +336,7 @@ actor class _LeaderboardCanister() {
               return #less;
         });
 
-        let positionedGameweekEntries = Utilities.assignPositionText(List.fromArray<T.LeaderboardEntry>(sortedGameweekEntries));
+        let positionedGameweekEntries = LeaderboardUtilities.assignPositionText(List.fromArray<T.LeaderboardEntry>(sortedGameweekEntries));
 
         var updatedLeaderboard: T.WeeklyLeaderboard = {
           seasonId = foundLeaderboard.seasonId;

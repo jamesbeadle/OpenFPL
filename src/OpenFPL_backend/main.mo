@@ -28,7 +28,8 @@
   import SeasonManager "../shared/managers/season-manager";
   import Environment "./Environment";
   import NetworkEnvironmentVariables "../shared/network_environment_variables";
-  import Utilities "../shared/utils/utilities";
+  import ProfileUtilities "../shared/utils/profile_utilities";
+  import CanisterUtilities "../shared/utils/canister_utilities";
   import Commands "../shared/cqrs/commands";
   import Queries "../shared/cqrs/queries";
 
@@ -78,7 +79,7 @@
 
     public shared query ({ caller }) func isUsernameValid(dto: Queries.IsUsernameValid) : async Bool {
       assert not Principal.isAnonymous(caller);
-      let usernameValid = Utilities.isUsernameValid(dto.username);
+      let usernameValid = ProfileUtilities.isUsernameValid(dto.username);
       let usernameTaken = userManager.isUsernameTaken(dto.username, Principal.toText(caller));
       return usernameValid and not usernameTaken;
     };
@@ -528,7 +529,7 @@
                   case (?foundCanisterId){
                     let IC : Management.Management = actor (NetworkEnvironmentVariables.Default);
                     let canisterActor = actor (Principal.toText(foundCanisterId)) : actor { };
-                    await Utilities.topup_canister_(canisterActor, IC, topupAmount);
+                    await CanisterUtilities.topup_canister_(canisterActor, IC, topupAmount);
                     
                     let topupsBuffer = Buffer.fromArray<Base.CanisterTopup>(topups);
                     topupsBuffer.add({
@@ -553,13 +554,13 @@
       let IC : Management.Management = actor (NetworkEnvironmentVariables.Default);
       let canisterActor = actor (canisterId) : actor { };
 
-      let canisterStatusResult = await Utilities.getCanisterStatus_(canisterActor, ?Principal.fromActor(Self), IC);
+      let canisterStatusResult = await CanisterUtilities.getCanisterStatus_(canisterActor, ?Principal.fromActor(Self), IC);
       
       switch(canisterStatusResult){
         case (?canisterStatus){
       
           if(canisterStatus.cycles < cyclesTriggerAmount){
-            await Utilities.topup_canister_(canisterActor, IC, topupAmount);
+            await CanisterUtilities.topup_canister_(canisterActor, IC, topupAmount);
             let topupsBuffer = Buffer.fromArray<Base.CanisterTopup>(topups);
             topupsBuffer.add({
               canisterId = canisterId; 

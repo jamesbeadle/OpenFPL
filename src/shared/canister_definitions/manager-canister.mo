@@ -21,9 +21,11 @@ import Base "../../shared/types/base_types";
 import DTOs "../../shared/dtos/dtos";
 import FootballTypes "../../shared/types/football_types";
 import T "../../shared/types/app_types";
-import Utilities "../../shared/utils/utilities";
 import Commands "../cqrs/commands";
 import Queries "../cqrs/queries";
+import DateTimeUtilities "../utils/date_time_utilities";
+import ComparisonUtilities "../utils/type_comparison_utilities";
+import PickTeamUtilities "../utils/pick_team_utilities";
 
 actor class _ManagerCanister() {
 
@@ -392,23 +394,23 @@ actor class _ManagerCanister() {
 
   private func mergeBonus(dto : Commands.SaveBonusDTO, manager : T.Manager, transfersAvailable : Nat8, monthlyBonusesAvailable : Nat8, newBankBalance : Nat16) : T.Manager {
     
-    var updatedGoalGetterGameweek = Utilities.valueOrDefaultGameweek(dto.goalGetterGameweek, manager.goalGetterGameweek);
-    var updatedGoalGetterPlayerId = Utilities.valueOrDefaultPlayerId(dto.goalGetterPlayerId, manager.goalGetterPlayerId);
-    var updatedPassMasterGameweek = Utilities.valueOrDefaultGameweek(dto.passMasterGameweek, manager.passMasterGameweek);
-    var updatedPassMasterPlayerId = Utilities.valueOrDefaultPlayerId(dto.passMasterPlayerId, manager.passMasterPlayerId);
-    var updatedNoEntryGameweek = Utilities.valueOrDefaultGameweek(dto.noEntryGameweek, manager.noEntryGameweek);
-    var updatedNoEntryPlayerId = Utilities.valueOrDefaultPlayerId(dto.noEntryPlayerId, manager.noEntryPlayerId);
-    var updatedTeamBoostGameweek = Utilities.valueOrDefaultGameweek(dto.teamBoostGameweek, manager.teamBoostGameweek);
-    var updatedTeamBoostClubId = Utilities.valueOrDefaultClubId(dto.teamBoostClubId, manager.teamBoostClubId);
-    var updatedSafeHandsGameweek = Utilities.valueOrDefaultGameweek(dto.safeHandsGameweek, manager.safeHandsGameweek);
-    var updatedSafeHandsPlayerId = Utilities.valueOrDefaultPlayerId(dto.safeHandsPlayerId, manager.safeHandsPlayerId);
-    var updatedCaptainFantasticGameweek = Utilities.valueOrDefaultGameweek(dto.captainFantasticGameweek, manager.captainFantasticGameweek);
-    var updatedCaptainFantasticPlayerId = Utilities.valueOrDefaultPlayerId(dto.captainFantasticPlayerId, manager.captainFantasticPlayerId);
-    var updatedOneNationGameweek = Utilities.valueOrDefaultGameweek(dto.oneNationGameweek, manager.oneNationGameweek);
-    var updatedOneNationCountryId = Utilities.valueOrDefaultCountryId(dto.oneNationCountryId, manager.oneNationCountryId);
-    var updatedProspectsGameweek = Utilities.valueOrDefaultGameweek(dto.prospectsGameweek, manager.prospectsGameweek);
-    var updatedBraceBonusGameweek = Utilities.valueOrDefaultGameweek(dto.braceBonusGameweek, manager.braceBonusGameweek);
-    var updatedHatTrickHeroGameweek = Utilities.valueOrDefaultGameweek(dto.hatTrickHeroGameweek, manager.hatTrickHeroGameweek);
+    var updatedGoalGetterGameweek = PickTeamUtilities.valueOrDefaultGameweek(dto.goalGetterGameweek, manager.goalGetterGameweek);
+    var updatedGoalGetterPlayerId = PickTeamUtilities.valueOrDefaultPlayerId(dto.goalGetterPlayerId, manager.goalGetterPlayerId);
+    var updatedPassMasterGameweek = PickTeamUtilities.valueOrDefaultGameweek(dto.passMasterGameweek, manager.passMasterGameweek);
+    var updatedPassMasterPlayerId = PickTeamUtilities.valueOrDefaultPlayerId(dto.passMasterPlayerId, manager.passMasterPlayerId);
+    var updatedNoEntryGameweek = PickTeamUtilities.valueOrDefaultGameweek(dto.noEntryGameweek, manager.noEntryGameweek);
+    var updatedNoEntryPlayerId = PickTeamUtilities.valueOrDefaultPlayerId(dto.noEntryPlayerId, manager.noEntryPlayerId);
+    var updatedTeamBoostGameweek = PickTeamUtilities.valueOrDefaultGameweek(dto.teamBoostGameweek, manager.teamBoostGameweek);
+    var updatedTeamBoostClubId = PickTeamUtilities.valueOrDefaultClubId(dto.teamBoostClubId, manager.teamBoostClubId);
+    var updatedSafeHandsGameweek = PickTeamUtilities.valueOrDefaultGameweek(dto.safeHandsGameweek, manager.safeHandsGameweek);
+    var updatedSafeHandsPlayerId = PickTeamUtilities.valueOrDefaultPlayerId(dto.safeHandsPlayerId, manager.safeHandsPlayerId);
+    var updatedCaptainFantasticGameweek = PickTeamUtilities.valueOrDefaultGameweek(dto.captainFantasticGameweek, manager.captainFantasticGameweek);
+    var updatedCaptainFantasticPlayerId = PickTeamUtilities.valueOrDefaultPlayerId(dto.captainFantasticPlayerId, manager.captainFantasticPlayerId);
+    var updatedOneNationGameweek = PickTeamUtilities.valueOrDefaultGameweek(dto.oneNationGameweek, manager.oneNationGameweek);
+    var updatedOneNationCountryId = PickTeamUtilities.valueOrDefaultCountryId(dto.oneNationCountryId, manager.oneNationCountryId);
+    var updatedProspectsGameweek = PickTeamUtilities.valueOrDefaultGameweek(dto.prospectsGameweek, manager.prospectsGameweek);
+    var updatedBraceBonusGameweek = PickTeamUtilities.valueOrDefaultGameweek(dto.braceBonusGameweek, manager.braceBonusGameweek);
+    var updatedHatTrickHeroGameweek = PickTeamUtilities.valueOrDefaultGameweek(dto.hatTrickHeroGameweek, manager.hatTrickHeroGameweek);
 
     return {
       principalId = manager.principalId;
@@ -2060,7 +2062,7 @@ actor class _ManagerCanister() {
 
     let allPlayers : [DTOs.PlayerDTO] = await backend_canister.getPlayersSnapshot({gameweek; leagueId; seasonId});
     
-    let playerIdTrie : TrieMap.TrieMap<FootballTypes.PlayerId, DTOs.PlayerScoreDTO> = TrieMap.TrieMap<FootballTypes.PlayerId, DTOs.PlayerScoreDTO>(Utilities.eqNat16, Utilities.hashNat16);
+    let playerIdTrie : TrieMap.TrieMap<FootballTypes.PlayerId, DTOs.PlayerScoreDTO> = TrieMap.TrieMap<FootballTypes.PlayerId, DTOs.PlayerScoreDTO>(ComparisonUtilities.eqNat16, ComparisonUtilities.hashNat16);
 
     switch(allPlayersListResult){
       case (#ok allPlayersList){
@@ -2188,7 +2190,7 @@ actor class _ManagerCanister() {
                           };
 
                           // Prospects
-                          if (foundSnapshot.prospectsGameweek == gameweek and Utilities.calculateAgeFromUnix(player.dateOfBirth) < 21) {
+                          if (foundSnapshot.prospectsGameweek == gameweek and DateTimeUtilities.calculateAgeFromUnix(player.dateOfBirth) < 21) {
                             totalScore := totalScore * 2;
                           };
 

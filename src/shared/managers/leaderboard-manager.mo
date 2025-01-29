@@ -6,7 +6,8 @@ import DTOs "../../shared/dtos/DTOs";
 import Base "../../shared/types/base_types";
 import FootballTypes "../../shared/types/football_types";
 import T "../../shared/types/app_types";
-import Utilities "../../shared/utils/utilities";
+import ComparisonUtilities "../../shared/utils/type_comparison_utilities";
+import CanisterUtilities "../../shared/utils/canister_utilities";
 import Management "../../shared/utils/Management";
 import NetworkEnvVars "../network_environment_variables";
 import LeaderboardCanister "../canister_definitions/leaderboard-canister";
@@ -343,7 +344,7 @@ module {
     };
 
     private func groupByTeam(snapshots : [T.FantasyTeamSnapshot]) : TrieMap.TrieMap<FootballTypes.ClubId, [T.FantasyTeamSnapshot]> {
-      let groupedTeams : TrieMap.TrieMap<FootballTypes.ClubId, [T.FantasyTeamSnapshot]> = TrieMap.TrieMap<FootballTypes.ClubId, [T.FantasyTeamSnapshot]>(Utilities.eqNat16, Utilities.hashNat16);
+      let groupedTeams : TrieMap.TrieMap<FootballTypes.ClubId, [T.FantasyTeamSnapshot]> = TrieMap.TrieMap<FootballTypes.ClubId, [T.FantasyTeamSnapshot]>(ComparisonUtilities.eqNat16, ComparisonUtilities.hashNat16);
 
       for (fantasyTeam in Iter.fromArray(snapshots)) {
         switch(fantasyTeam.favouriteClubId){
@@ -374,7 +375,7 @@ module {
       await canister.initialise(controllerPrincipalId);
       let IC : Management.Management = actor (NetworkEnvVars.Default);
       let principal = ?Principal.fromText(controllerPrincipalId);
-      let _ = await Utilities.updateCanister_(canister, principal, IC);
+      let _ = await CanisterUtilities.updateCanister_(canister, principal, IC);
       
       let canister_principal = Principal.fromActor(canister);
       let canisterId = Principal.toText(canister_principal);

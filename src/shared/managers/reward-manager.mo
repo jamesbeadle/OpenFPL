@@ -1,30 +1,19 @@
 import Array "mo:base/Array";
 import Buffer "mo:base/Buffer";
 import Float "mo:base/Float";
-import Int "mo:base/Int";
 import Int64 "mo:base/Int64";
 import Iter "mo:base/Iter";
 import List "mo:base/List";
 import Nat64 "mo:base/Nat64";
-import Principal "mo:base/Principal";
-import Text "mo:base/Text";
-import Time "mo:base/Time";
 import TrieMap "mo:base/TrieMap";
 import Nat "mo:base/Nat";
-import Nat8 "mo:base/Nat8";
 import Result "mo:base/Result";
-import Debug "mo:base/Debug";
 
-import Account "../../shared/lib/Account";
-import Constants "../../shared/utils/Constants";
 import DTOs "../../shared/dtos/DTOs";
 import RewardPercentages "../../shared/utils/RewardPercentages";
-import SNSToken "../../shared/sns-wrappers/ledger";
-import Base "../../shared/types/base_types";
 import FootballTypes "../../shared/types/football_types";
 import T "../../shared/types/app_types";
-import Utilities "../../shared/utils/utilities";
-import NetworkEnvironmentVariables "../network_environment_variables";
+import Comparison "../../shared/utils/type_comparison_utilities";
 
 module {
 
@@ -43,7 +32,7 @@ module {
       startDate = 0;
       weeklyLeaderboardRewardRate = 0;
     };
-    private var teamValueLeaderboards : TrieMap.TrieMap<FootballTypes.SeasonId, T.TeamValueLeaderboard> = TrieMap.TrieMap<FootballTypes.SeasonId, T.TeamValueLeaderboard>(Utilities.eqNat16, Utilities.hashNat16);
+    private var teamValueLeaderboards : TrieMap.TrieMap<FootballTypes.SeasonId, T.TeamValueLeaderboard> = TrieMap.TrieMap<FootballTypes.SeasonId, T.TeamValueLeaderboard>(Comparison.eqNat16, Comparison.hashNat16);
 
     private var seasonRewards : List.List<T.SeasonRewards> = List.nil();
     private var monthlyRewards : List.List<T.MonthlyRewards> = List.nil();
@@ -253,8 +242,8 @@ module {
     public func setStableTeamValueLeaderboards(stable_team_value_leaderboards : [(FootballTypes.SeasonId, T.TeamValueLeaderboard)]) {
       teamValueLeaderboards := TrieMap.fromEntries<FootballTypes.SeasonId, T.TeamValueLeaderboard>(
         Iter.fromArray(stable_team_value_leaderboards),
-        Utilities.eqNat16,
-        Utilities.hashNat16,
+        Comparison.eqNat16,
+        Comparison.hashNat16,
       );
     };
 

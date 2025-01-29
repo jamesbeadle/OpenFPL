@@ -38,7 +38,7 @@ type LeagueSeasonStatus =
 type List<T> = ?(T, List<T>);
 type MonthlyRewards =
   {month : CalendarMonth; rewards : List<RewardEntry>; seasonId : SeasonId};
-type PlayerDTO =
+type PlayerDTO__1 =
   {
     clubId : ClubId;
     currentLoanEndDate : Int;
@@ -66,17 +66,18 @@ type RewardEntry =
     principalId : Text;
     rewardType : RewardType
   };
-type RewardPool =
+type RewardRates =
   {
-    allTimeMonthlyHighScorePool : Nat64;
-    allTimeSeasonHighScorePool : Nat64;
-    allTimeWeeklyHighScorePool : Nat64;
-    highestScoringMatchPlayerPool : Nat64;
-    monthlyLeaderboardPool : Nat64;
-    mostValuableTeamPool : Nat64;
+    allTimeMonthlyHighScoreRewardRate : Nat64;
+    allTimeSeasonHighScoreRewardRate : Nat64;
+    allTimeWeeklyHighScoreRewardRate : Nat64;
+    highestScoringMatchRewardRate : Nat64;
+    monthlyLeaderboardRewardRate : Nat64;
+    mostValuableTeamRewardRate : Nat64;
     seasonId : SeasonId;
-    seasonLeaderboardPool : Nat64;
-    weeklyLeaderboardPool : Nat64
+    seasonLeaderboardRewardRate : Nat64;
+    startDate : Int;
+    weeklyLeaderboardRewardRate : Nat64
   };
 type RewardType =
   {
@@ -103,9 +104,23 @@ type WeeklyRewards =
 actor {
   stable var stable_active_leaderbord_canister_id : Text;
   stable var stable_active_manager_canister_id : Text;
+  stable var stable_active_reward_rates :
+    {
+      allTimeMonthlyHighScoreRewardRate : Nat64;
+      allTimeSeasonHighScoreRewardRate : Nat64;
+      allTimeWeeklyHighScoreRewardRate : Nat64;
+      highestScoringMatchRewardRate : Nat64;
+      monthlyLeaderboardRewardRate : Nat64;
+      mostValuableTeamRewardRate : Nat64;
+      seasonId : SeasonId;
+      seasonLeaderboardRewardRate : Nat64;
+      startDate : Int;
+      weeklyLeaderboardRewardRate : Nat64
+    };
   stable var stable_app_status : {onHold : Bool; version : Text};
   stable var stable_data_hashes : [DataHash];
   stable var stable_high_scoring_player_rewards : [RewardsList];
+  stable var stable_historic_reward_rates : [RewardRates];
   stable var stable_league_gameweek_statuses : [LeagueGameweekStatus];
   stable var stable_league_month_statuses : [LeagueMonthStatus];
   stable var stable_league_season_statuses : [LeagueSeasonStatus];
@@ -117,8 +132,7 @@ actor {
   stable var stable_monthly_rewards : [MonthlyRewards];
   stable var stable_most_valuable_team_rewards : [RewardsList];
   stable var stable_player_snapshots :
-    [(SeasonId, [(GameweekNumber, [PlayerDTO])])];
-  stable var stable_reward_pools : [(SeasonId, RewardPool)];
+    [(SeasonId, [(GameweekNumber, [PlayerDTO__1])])];
   stable var stable_season_all_time_high_scores : [HighScoreRecord];
   stable var stable_season_ath_prize_pool : Nat64;
   stable var stable_season_leaderboard_canister_ids :
