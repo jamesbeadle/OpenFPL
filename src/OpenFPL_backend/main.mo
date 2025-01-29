@@ -46,7 +46,7 @@
       }));
     }; 
 
-    //Manager calls
+    //Manager getters
 
     public shared ({ caller }) func getProfile() : async Result.Result<DTOs.ProfileDTO, T.Error> {
       assert not Principal.isAnonymous(caller);
@@ -66,13 +66,6 @@
       }
     };
 
-    public shared func getLeagueStatus() : async Result.Result<FootballTypes.LeagueStatus, T.Error> {
-      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
-        getLeagueStatus : shared query (leagueId: FootballTypes.LeagueId) -> async Result.Result<FootballTypes.LeagueStatus, T.Error>;
-      };
-      return await data_canister.getLeagueStatus(Environment.LEAGUE_ID);
-    };
-
     public shared func getManager(dto: Queries.GetManagerDTO) : async Result.Result<DTOs.ManagerDTO, T.Error> {
       
       let weeklyLeaderboardEntry = await leaderboardManager.getWeeklyLeaderboardEntry(dto.principalId, dto.seasonId, dto.gameweek);
@@ -83,28 +76,6 @@
       return await userManager.getFantasyTeamSnapshot(dto);
     };
 
-    //Leaderboard calls:
-
-    public shared func getWeeklyLeaderboard(dto: Queries.GetWeeklyLeaderboardDTO) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
-     return await leaderboardManager.getWeeklyLeaderboard(dto);
-    };
-
-    //Query functions:
-
-    public shared query func getAppStatus() : async Result.Result<DTOs.AppStatusDTO, T.Error> {
-      return seasonManager.getAppStatus();
-    };
-
-
-    public shared query func getTotalManagers() : async Result.Result<Nat, T.Error> {
-      return userManager.getTotalManagers();
-    };
-
-    public shared query ( {caller} ) func getPlayersSnapshot(dto: Queries.GetSnapshotPlayersDTO) : async [DTOs.PlayerDTO] {
-      assert isManagerCanister(Principal.toText(caller));
-      return seasonManager.getPlayersSnapshot(dto);
-    };
-
     public shared query ({ caller }) func isUsernameValid(dto: Queries.IsUsernameValid) : async Bool {
       assert not Principal.isAnonymous(caller);
       let usernameValid = Utilities.isUsernameValid(dto.username);
@@ -112,7 +83,35 @@
       return usernameValid and not usernameTaken;
     };
 
-    //User update functions:
+    public shared query func getTotalManagers() : async Result.Result<Nat, T.Error> {
+      return userManager.getTotalManagers();
+    };
+
+    //Leaderboard getters:
+
+    public shared func getWeeklyLeaderboard(dto: Queries.GetWeeklyLeaderboardDTO) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
+     return await leaderboardManager.getWeeklyLeaderboard(dto);
+    };
+
+    //Status getters:
+
+    public shared query func getAppStatus() : async Result.Result<DTOs.AppStatusDTO, T.Error> {
+      return seasonManager.getAppStatus();
+    };
+
+    public shared query ( {caller} ) func getPlayersSnapshot(dto: Queries.GetSnapshotPlayersDTO) : async [DTOs.PlayerDTO] {
+      assert isManagerCanister(Principal.toText(caller));
+      return seasonManager.getPlayersSnapshot(dto);
+    };
+
+    private func getLeagueStatus() : async Result.Result<FootballTypes.LeagueStatus, T.Error> {
+      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
+        getLeagueStatus : shared query (leagueId: FootballTypes.LeagueId) -> async Result.Result<FootballTypes.LeagueStatus, T.Error>;
+      };
+      return await data_canister.getLeagueStatus(Environment.LEAGUE_ID);
+    };
+
+    //Manager update functions:
 
     public shared ({ caller }) func createManager(dto : Commands.CreateManagerDTO) : async Result.Result<(), T.Error> {
       assert not Principal.isAnonymous(caller);
@@ -717,7 +716,6 @@
     private func postUpgradeCallback() : async (){
       
 
-      //TODO (GO LIVE)
       //set system state
       //ignore setSystemTimers();
      
@@ -814,102 +812,6 @@
       return #ok();
     };
 
-    /*
-
-    public shared ({ caller }) func snapshotManagers() : async Result.Result<(), T.Error> {
-      assert Principal.toText(caller) == NetworkEnvironmentVariables.FOOTBALL_GOD_BACKEND_CANISTER_ID;
-      let leagueStatusResult = await getLeagueStatus();
-      switch(leagueStatusResult){
-        case (#ok leagueStatus){
-
-          let playersResult = await dataManager.getVerifiedPlayers(Environment.LEAGUE_ID); 
-          switch(playersResult){
-            case (#ok players){
-              if(leagueStatus.activeGameweek > 0){
-                seasonManager.storePlayersSnapshot(leagueStatus.activeSeasonId, leagueStatus.activeGameweek, players);
-                let _ = await userManager.snapshotFantasyTeams(Environment.LEAGUE_ID, leagueStatus.activeSeasonId, leagueStatus.activeGameweek, leagueStatus.activeMonth);
-                return #ok();
-              } else{
-                return #err(#InvalidData);
-              };
-            };
-            case (#err error){
-              return #err(error);
-            }
-          };
-        };  
-        case (#err error){
-          return #err(error);
-        }
-      };
-    };
-
-    public shared ({ caller }) func calculateGameweekScores() : async Result.Result<(), T.Error> {
-      assert Principal.toText(caller) == NetworkEnvironmentVariables.FOOTBALL_GOD_BACKEND_CANISTER_ID;
-      let leagueStatusResult = await getLeagueStatus();
-      switch(leagueStatusResult){
-        case (#ok leagueStatus){
-          if(leagueStatus.activeGameweek > 0){
-            let _ = await userManager.calculateFantasyTeamScores(Environment.LEAGUE_ID, leagueStatus.activeSeasonId, leagueStatus.activeGameweek, leagueStatus.activeMonth);
-            return #ok();
-          } else {
-            let _ = await userManager.calculateFantasyTeamScores(Environment.LEAGUE_ID, leagueStatus.activeSeasonId, leagueStatus.completedGameweek, leagueStatus.activeMonth);
-            return #ok();
-          };          
-        };  
-        case (#err error){
-          return #err(error);
-        }
-      };
-    };
-
-    */
-
-  //TODO fix to live canister
-    public shared func getWeeklyLeaderboards() : async [T.WeeklyLeaderboard]{
-       var leaderboard_canister = actor ("n26sp-cqaaa-aaaal-qna7q-cai") : actor {
-        getWeeklyLeaderboards : () -> async [T.WeeklyLeaderboard];
-      };
-
-      return await leaderboard_canister.getWeeklyLeaderboards();
-
-    };
-    /*
-    public shared ({ caller }) func calculateLeaderboards() : async Result.Result<(), T.Error> {
-      assert Principal.toText(caller) == NetworkEnvironmentVariables.FOOTBALL_GOD_BACKEND_CANISTER_ID;
-      let leagueStatusResult = await getLeagueStatus();
-      switch(leagueStatusResult){
-        case (#ok leagueStatus){
-          let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
-            getClubs : shared query (leagueId: FootballTypes.LeagueId) -> async Result.Result<[FootballTypes.Club], T.Error>;
-          };
-          let clubsResult = await data_canister.getClubs(Environment.LEAGUE_ID);
-
-          switch(clubsResult){
-            case (#ok clubs){
-              let clubIds = Array.map<DTOs.ClubDTO, FootballTypes.ClubId>(clubs, func(club: DTOs.ClubDTO){
-                return club.id
-              });
-              let managerCanisterIds = userManager.getUniqueManagerCanisterIds();
-              if(leagueStatus.activeGameweek > 0){           
-                let _ = leaderboardManager.calculateLeaderboards(leagueStatus.activeSeasonId, leagueStatus.activeGameweek, 0, managerCanisterIds, clubIds);
-                return #ok();
-              } else {
-                let _ = leaderboardManager.calculateLeaderboards(leagueStatus.activeSeasonId, leagueStatus.completedGameweek, 0, managerCanisterIds, clubIds);
-                return #ok();
-              };          
-            };
-            case (#err error){
-              return #err(error)
-            }
-          };
-        };  
-        case (#err error){
-          return #err(error);
-        }
-      };
-    };
-    */
     public shared ({ caller }) func calculateWeeklyRewards(gameweek: FootballTypes.GameweekNumber) : async Result.Result<(), T.Error> {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.FOOTBALL_GOD_BACKEND_CANISTER_ID;
       let leagueStatusResult = await getLeagueStatus();
@@ -955,24 +857,23 @@
       return #ok(stable_weekly_leaderboard_canister_ids);
     };
 
-    //TODO remove league id and use environent variable
-    public shared ({ caller }) func notifyAppsOfLoan(leagueId: FootballTypes.LeagueId, playerId: FootballTypes.PlayerId) : async Result.Result<(), T.Error> {
+    public shared ({ caller }) func notifyAppsOfLoan(playerId: FootballTypes.PlayerId) : async Result.Result<(), T.Error> {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
-      await userManager.removePlayerFromTeams(leagueId, playerId, Environment.BACKEND_CANISTER_ID);
+      await userManager.removePlayerFromTeams(Environment.LEAGUE_ID, playerId, Environment.BACKEND_CANISTER_ID);
       await seasonManager.updateDataHash("players");
       return #ok();
     };
 
-    public shared ({ caller }) func notifyAppsOfTransfer(leagueId: FootballTypes.LeagueId, playerId: FootballTypes.PlayerId) : async Result.Result<(), T.Error> {
+    public shared ({ caller }) func notifyAppsOfTransfer(playerId: FootballTypes.PlayerId) : async Result.Result<(), T.Error> {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
-      await userManager.removePlayerFromTeams(leagueId, playerId, Environment.BACKEND_CANISTER_ID);
+      await userManager.removePlayerFromTeams(Environment.LEAGUE_ID, playerId, Environment.BACKEND_CANISTER_ID);
       await seasonManager.updateDataHash("players");
       return #ok();
     };
 
-    public shared ({ caller }) func notifyAppsOfPositionChange(leagueId: FootballTypes.LeagueId, playerId: FootballTypes.PlayerId) : async Result.Result<(), T.Error> {
+    public shared ({ caller }) func notifyAppsOfPositionChange(playerId: FootballTypes.PlayerId) : async Result.Result<(), T.Error> {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
-      await userManager.removePlayerFromTeams(leagueId, playerId, Environment.BACKEND_CANISTER_ID);
+      await userManager.removePlayerFromTeams(Environment.LEAGUE_ID, playerId, Environment.BACKEND_CANISTER_ID);
       return #ok();
     };
 
