@@ -4903,7 +4903,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1tn1esx"
+  version_hash: "1seuwpj"
 };
 async function get_hooks() {
   let handle;
@@ -5191,7 +5191,7 @@ const idlFactory = ({ IDL }) => {
     "username": IDL.Text,
     "favouriteClubId": IDL.Opt(ClubId)
   });
-  const Result_13 = IDL.Variant({ "ok": IDL.Text, "err": Error2 });
+  const Result_14 = IDL.Variant({ "ok": IDL.Text, "err": Error2 });
   const RewardRatesDTO = IDL.Record({
     "monthlyLeaderboardRewardRate": IDL.Nat64,
     "allTimeSeasonHighScoreRewardRate": IDL.Nat64,
@@ -5202,7 +5202,7 @@ const idlFactory = ({ IDL }) => {
     "weeklyLeaderboardRewardRate": IDL.Nat64,
     "allTimeWeeklyHighScoreRewardRate": IDL.Nat64
   });
-  const Result_12 = IDL.Variant({ "ok": RewardRatesDTO, "err": Error2 });
+  const Result_13 = IDL.Variant({ "ok": RewardRatesDTO, "err": Error2 });
   const AppStatusDTO = IDL.Record({
     "version": IDL.Text,
     "onHold": IDL.Bool
@@ -5228,7 +5228,7 @@ const idlFactory = ({ IDL }) => {
     "computeAllocation": IDL.Nat,
     "canisterId": CanisterId
   });
-  const Result_11 = IDL.Variant({ "ok": IDL.Vec(CanisterDTO), "err": Error2 });
+  const Result_12 = IDL.Variant({ "ok": IDL.Vec(CanisterDTO), "err": Error2 });
   const CountryId = IDL.Nat16;
   const TeamSelectionDTO = IDL.Record({
     "playerIds": IDL.Vec(ClubId),
@@ -5259,36 +5259,9 @@ const idlFactory = ({ IDL }) => {
     "canisterId": CanisterId,
     "monthlyBonusesAvailable": IDL.Nat8
   });
-  const Result_10 = IDL.Variant({ "ok": TeamSelectionDTO, "err": Error2 });
-  const PlayerStatus = IDL.Variant({
-    "OnLoan": IDL.Null,
-    "Active": IDL.Null,
-    "FreeAgent": IDL.Null,
-    "Retired": IDL.Null
-  });
-  const LeagueId = IDL.Nat16;
-  const PlayerPosition = IDL.Variant({
-    "Goalkeeper": IDL.Null,
-    "Midfielder": IDL.Null,
-    "Forward": IDL.Null,
-    "Defender": IDL.Null
-  });
-  const PlayerDTO = IDL.Record({
-    "id": IDL.Nat16,
-    "status": PlayerStatus,
-    "clubId": ClubId,
-    "parentClubId": ClubId,
-    "valueQuarterMillions": IDL.Nat16,
-    "dateOfBirth": IDL.Int,
-    "nationality": CountryId,
-    "currentLoanEndDate": IDL.Int,
-    "shirtNumber": IDL.Nat8,
-    "parentLeagueId": LeagueId,
-    "position": PlayerPosition,
-    "lastName": IDL.Text,
-    "leagueId": LeagueId,
-    "firstName": IDL.Text
-  });
+  const Result_11 = IDL.Variant({ "ok": TeamSelectionDTO, "err": Error2 });
+  const DataHashDTO = IDL.Record({ "hash": IDL.Text, "category": IDL.Text });
+  const Result_10 = IDL.Variant({ "ok": IDL.Vec(DataHashDTO), "err": Error2 });
   const SeasonId = IDL.Nat16;
   const PrincipalId = IDL.Text;
   const GetManagerGameweekDTO = IDL.Record({
@@ -5363,6 +5336,35 @@ const idlFactory = ({ IDL }) => {
   const GetSnapshotPlayersDTO = IDL.Record({
     "seasonId": SeasonId,
     "gameweek": GameweekNumber
+  });
+  const PlayerStatus = IDL.Variant({
+    "OnLoan": IDL.Null,
+    "Active": IDL.Null,
+    "FreeAgent": IDL.Null,
+    "Retired": IDL.Null
+  });
+  const LeagueId = IDL.Nat16;
+  const PlayerPosition = IDL.Variant({
+    "Goalkeeper": IDL.Null,
+    "Midfielder": IDL.Null,
+    "Forward": IDL.Null,
+    "Defender": IDL.Null
+  });
+  const PlayerDTO = IDL.Record({
+    "id": IDL.Nat16,
+    "status": PlayerStatus,
+    "clubId": ClubId,
+    "parentClubId": ClubId,
+    "valueQuarterMillions": IDL.Nat16,
+    "dateOfBirth": IDL.Int,
+    "nationality": CountryId,
+    "currentLoanEndDate": IDL.Int,
+    "shirtNumber": IDL.Nat8,
+    "parentLeagueId": LeagueId,
+    "position": PlayerPosition,
+    "lastName": IDL.Text,
+    "leagueId": LeagueId,
+    "firstName": IDL.Text
   });
   const ProfileDTO = IDL.Record({
     "username": IDL.Text,
@@ -5468,16 +5470,12 @@ const idlFactory = ({ IDL }) => {
   return IDL.Service({
     "calculateWeeklyRewards": IDL.Func([GameweekNumber], [Result], []),
     "createManager": IDL.Func([CreateManagerDTO], [Result], []),
-    "getActiveLeaderboardCanisterId": IDL.Func([], [Result_13], []),
-    "getActiveRewardRates": IDL.Func([], [Result_12], []),
+    "getActiveLeaderboardCanisterId": IDL.Func([], [Result_14], []),
+    "getActiveRewardRates": IDL.Func([], [Result_13], []),
     "getAppStatus": IDL.Func([], [Result_6], ["query"]),
-    "getCanisters": IDL.Func([GetCanistersDTO], [Result_11], []),
-    "getCurrentTeam": IDL.Func([], [Result_10], []),
-    "getEveryPlayer": IDL.Func(
-      [],
-      [IDL.Vec(IDL.Tuple(GameweekNumber, IDL.Vec(PlayerDTO)))],
-      ["query"]
-    ),
+    "getCanisters": IDL.Func([GetCanistersDTO], [Result_12], []),
+    "getCurrentTeam": IDL.Func([], [Result_11], []),
+    "getDataHashes": IDL.Func([], [Result_10], ["composite_query"]),
     "getFantasyTeamSnapshot": IDL.Func(
       [GetManagerGameweekDTO],
       [Result_9],

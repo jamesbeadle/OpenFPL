@@ -31,6 +31,10 @@ export interface CreateManagerDTO {
   username: string;
   favouriteClubId: [] | [ClubId];
 }
+export interface DataHashDTO {
+  hash: string;
+  category: string;
+}
 export type Error =
   | { MoreThan2PlayersFromClub: null }
   | { DecodeError: null }
@@ -184,10 +188,11 @@ export interface ProfileDTO {
 }
 export type Result = { ok: null } | { err: Error };
 export type Result_1 = { ok: ManagerDTO } | { err: Error };
-export type Result_10 = { ok: TeamSelectionDTO } | { err: Error };
-export type Result_11 = { ok: Array<CanisterDTO> } | { err: Error };
-export type Result_12 = { ok: RewardRatesDTO } | { err: Error };
-export type Result_13 = { ok: string } | { err: Error };
+export type Result_10 = { ok: Array<DataHashDTO> } | { err: Error };
+export type Result_11 = { ok: TeamSelectionDTO } | { err: Error };
+export type Result_12 = { ok: Array<CanisterDTO> } | { err: Error };
+export type Result_13 = { ok: RewardRatesDTO } | { err: Error };
+export type Result_14 = { ok: string } | { err: Error };
 export type Result_2 = { ok: WeeklyRewardsDTO } | { err: Error };
 export type Result_3 = { ok: WeeklyLeaderboardDTO } | { err: Error };
 export type Result_4 =
@@ -308,12 +313,12 @@ export interface WeeklyRewardsDTO {
 export interface _SERVICE {
   calculateWeeklyRewards: ActorMethod<[GameweekNumber], Result>;
   createManager: ActorMethod<[CreateManagerDTO], Result>;
-  getActiveLeaderboardCanisterId: ActorMethod<[], Result_13>;
-  getActiveRewardRates: ActorMethod<[], Result_12>;
+  getActiveLeaderboardCanisterId: ActorMethod<[], Result_14>;
+  getActiveRewardRates: ActorMethod<[], Result_13>;
   getAppStatus: ActorMethod<[], Result_6>;
-  getCanisters: ActorMethod<[GetCanistersDTO], Result_11>;
-  getCurrentTeam: ActorMethod<[], Result_10>;
-  getEveryPlayer: ActorMethod<[], Array<[GameweekNumber, Array<PlayerDTO>]>>;
+  getCanisters: ActorMethod<[GetCanistersDTO], Result_12>;
+  getCurrentTeam: ActorMethod<[], Result_11>;
+  getDataHashes: ActorMethod<[], Result_10>;
   getFantasyTeamSnapshot: ActorMethod<[GetManagerGameweekDTO], Result_9>;
   getLeaderboardCanisterIds: ActorMethod<[], Result_8>;
   getManager: ActorMethod<[GetManagerDTO], Result_1>;

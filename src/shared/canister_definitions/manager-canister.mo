@@ -1512,8 +1512,114 @@ actor class _ManagerCanister() {
     return totalManagers;
   };
 
+  public shared ({ caller }) func getClubManagers(clubId : FootballTypes.ClubId) : async [Base.PrincipalId] {
+    assert not Principal.isAnonymous(caller);
+    let backendPrincipalId = Principal.toText(caller);
+    assert backendPrincipalId == controllerPrincipalId;
 
-  //Admin functions implemented to be called by timers
+    let clubManagerIdBuffer = Buffer.fromArray<Base.PrincipalId>([]);
+
+    for (index in Iter.range(0, 11)) {
+      switch (index) {
+        case 0 {
+          let clubManagerIds = getGroupClubManagerIds(managerGroup1, clubId);
+          for (managerId in Iter.fromArray(clubManagerIds)) {
+            clubManagerIdBuffer.add(managerId);
+          };
+        };
+        case 1 {
+          let clubManagerIds = getGroupClubManagerIds(managerGroup2, clubId);
+          for (managerId in Iter.fromArray(clubManagerIds)) {
+            clubManagerIdBuffer.add(managerId);
+          };
+        };
+        case 2 {
+          let clubManagerIds = getGroupClubManagerIds(managerGroup3, clubId);
+          for (managerId in Iter.fromArray(clubManagerIds)) {
+            clubManagerIdBuffer.add(managerId);
+          };
+        };
+        case 3 {
+          let clubManagerIds = getGroupClubManagerIds(managerGroup4, clubId);
+          for (managerId in Iter.fromArray(clubManagerIds)) {
+            clubManagerIdBuffer.add(managerId);
+          };
+        };
+        case 4 {
+          let clubManagerIds = getGroupClubManagerIds(managerGroup5, clubId);
+          for (managerId in Iter.fromArray(clubManagerIds)) {
+            clubManagerIdBuffer.add(managerId);
+          };
+        };
+        case 5 {
+          let clubManagerIds = getGroupClubManagerIds(managerGroup6, clubId);
+          for (managerId in Iter.fromArray(clubManagerIds)) {
+            clubManagerIdBuffer.add(managerId);
+          };
+        };
+        case 6 {
+          let clubManagerIds = getGroupClubManagerIds(managerGroup7, clubId);
+          for (managerId in Iter.fromArray(clubManagerIds)) {
+            clubManagerIdBuffer.add(managerId);
+          };
+        };
+        case 7 {
+          let clubManagerIds = getGroupClubManagerIds(managerGroup8, clubId);
+          for (managerId in Iter.fromArray(clubManagerIds)) {
+            clubManagerIdBuffer.add(managerId);
+          };
+        };
+        case 8 {
+          let clubManagerIds = getGroupClubManagerIds(managerGroup9, clubId);
+          for (managerId in Iter.fromArray(clubManagerIds)) {
+            clubManagerIdBuffer.add(managerId);
+          };
+        };
+        case 9 {
+          let clubManagerIds = getGroupClubManagerIds(managerGroup10, clubId);
+          for (managerId in Iter.fromArray(clubManagerIds)) {
+            clubManagerIdBuffer.add(managerId);
+          };
+        };
+        case 10 {
+          let clubManagerIds = getGroupClubManagerIds(managerGroup11, clubId);
+          for (managerId in Iter.fromArray(clubManagerIds)) {
+            clubManagerIdBuffer.add(managerId);
+          };
+        };
+        case 11 {
+          let clubManagerIds = getGroupClubManagerIds(managerGroup12, clubId);
+          for (managerId in Iter.fromArray(clubManagerIds)) {
+            clubManagerIdBuffer.add(managerId);
+          };
+        };
+        case _ {
+
+        };
+      };
+    };
+
+    return Buffer.toArray(clubManagerIdBuffer);
+  };
+
+  private func getGroupClubManagerIds(managers : [T.Manager], clubId : FootballTypes.ClubId) : [Base.PrincipalId] {
+    let managerIdBuffer = Buffer.fromArray<Base.PrincipalId>([]);
+    for (manager in Iter.fromArray(managers)) {
+      switch(manager.favouriteClubId){
+        case (?foundClubId){ 
+          if (foundClubId == clubId) {
+            managerIdBuffer.add(manager.principalId);
+          };   
+        };
+        case (null){}
+      }
+    };
+    return Buffer.toArray(managerIdBuffer);
+  };
+
+  //Timer callback functions
+
+  //Snapshot teams:
 
   public shared ({ caller }) func snapshotFantasyTeams(seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth) : async () {
     assert not Principal.isAnonymous(caller);
@@ -2015,7 +2121,7 @@ actor class _ManagerCanister() {
     };
   };
 
-   private func mergeExistingHistory(existingHistory : List.List<T.FantasyTeamSeason>, fantasyTeamSnapshot : T.FantasyTeamSnapshot, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber) : List.List<T.FantasyTeamSeason> {
+  private func mergeExistingHistory(existingHistory : List.List<T.FantasyTeamSeason>, fantasyTeamSnapshot : T.FantasyTeamSnapshot, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber) : List.List<T.FantasyTeamSeason> {
 
     let teamHistoryBuffer = Buffer.fromArray<T.FantasyTeamSeason>([]);
 
@@ -2048,6 +2154,8 @@ actor class _ManagerCanister() {
 
     return List.fromArray(Buffer.toArray(teamHistoryBuffer));
   };
+
+  //Calculate teams scores
 
   public shared ({ caller }) func calculateFantasyTeamScores(leagueId: FootballTypes.LeagueId, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth) : async () {
     assert not Principal.isAnonymous(caller);
@@ -2250,6 +2358,219 @@ actor class _ManagerCanister() {
       case (#Forward) { return 20 * assists };
     };
   };
+
+  //Remove player from teams
+
+  public shared ({ caller }) func removePlayerFromTeams(leagueId: FootballTypes.LeagueId, playerId : FootballTypes.PlayerId, parentCanisterId: Base.CanisterId) : async () {
+    assert not Principal.isAnonymous(caller);
+    let backendPrincipalId = Principal.toText(caller);
+    assert backendPrincipalId == controllerPrincipalId;
+    for (index in Iter.range(0, 11)) {
+      await removePlayerFromGroup(leagueId, playerId, index, parentCanisterId);
+    };
+  };
+
+  private func removePlayerFromGroup(leagueId: FootballTypes.LeagueId, removePlayerId : FootballTypes.PlayerId, managerGroup: Int, parentCanisterId: Base.CanisterId) : async () {
+    let backend_canister = actor (parentCanisterId) : actor {
+      getVerifiedPlayers : (leagueId: FootballTypes.LeagueId) -> async Result.Result<[DTOs.PlayerDTO], T.Error>;
+    };
+      
+    let allPlayersResult = await backend_canister.getVerifiedPlayers(leagueId);
+    switch(allPlayersResult){
+      case (#ok allPlayers){
+        let removedPlayer = Array.find<DTOs.PlayerDTO>(allPlayers, func(p) { p.id == removePlayerId });
+
+        switch (removedPlayer) {
+          case (null) {
+            //removeMissingPlayer(playerId); TODO NEED TO FIX
+          };
+          case (?foundRemovedPlayer) {
+            let playerValue = foundRemovedPlayer.valueQuarterMillions;
+            let managerBuffer = Buffer.fromArray<T.Manager>([]);
+            
+                
+            var managers: [T.Manager] = [];
+
+            switch (managerGroup) {
+              case 0 {
+                managers := managerGroup1;
+              };
+              case 1 {
+                managers := managerGroup2;
+              };
+              case 2 {
+                managers := managerGroup3;
+              };
+              case 3 {
+                managers := managerGroup4;
+              };
+              case 4 {
+                managers := managerGroup5;
+              };
+              case 5 {
+                managers := managerGroup6;
+              };
+              case 6 {
+                managers := managerGroup7;
+              };
+              case 7 {
+                managers := managerGroup8;
+              };
+              case 8 {
+                managers := managerGroup9;
+              };
+              case 9 {
+                managers := managerGroup10;
+              };
+              case 10 {
+                managers := managerGroup11;
+              };
+              case 11 {
+                managers := managerGroup12;
+              };
+              case _ {
+
+              };
+            };
+            
+            for (manager in Iter.fromArray(managers)) {
+              let playerIdBuffer = Buffer.fromArray<FootballTypes.PlayerId>([]);
+              var playerRemoved = false;
+              for (playerId in Iter.fromArray(manager.playerIds)) {
+                if (playerId == removePlayerId) {
+                  playerIdBuffer.add(0);
+                  playerRemoved := true;
+                } else {
+                  playerIdBuffer.add(playerId);
+                };
+              };
+              if (playerRemoved) {
+                var captainId = manager.captainId;
+                if (captainId == removePlayerId) {
+                  let highestValuedPlayer = Array.foldLeft<FootballTypes.PlayerId, ?DTOs.PlayerDTO>(
+                    manager.playerIds,
+                    null,
+                    func(highest, id) : ?DTOs.PlayerDTO {
+                      if (id == removePlayerId or id == 0) { return highest };
+                      let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p) { p.id == id });
+                      switch (highest, player) {
+                        case (null, ?p) {
+                          ?p;
+                        };
+                        case (?h, ?p) {
+                          if (p.valueQuarterMillions > h.valueQuarterMillions) {
+                            ?p;
+                          } else {
+                            ?h;
+                          };
+                        };
+                        case (_, null) {
+                          highest;
+                        };
+                      };
+                    },
+                  );
+                  switch (highestValuedPlayer) {
+                    case (?player) {
+                      captainId := player.id;
+                    };
+                    case null {};
+                  };
+                };
+                let newManager : T.Manager = {
+                  principalId = manager.principalId;
+                  username = manager.username;
+                  termsAccepted = manager.termsAccepted;
+                  favouriteClubId = manager.favouriteClubId;
+                  bankQuarterMillions = manager.bankQuarterMillions + playerValue;
+                  playerIds = Buffer.toArray(playerIdBuffer);
+                  captainId = captainId;
+                  goalGetterGameweek = manager.goalGetterGameweek;
+                  goalGetterPlayerId = manager.goalGetterPlayerId;
+                  passMasterGameweek = manager.passMasterGameweek;
+                  passMasterPlayerId = manager.passMasterPlayerId;
+                  noEntryGameweek = manager.noEntryGameweek;
+                  noEntryPlayerId = manager.noEntryPlayerId;
+                  teamBoostGameweek = manager.teamBoostGameweek;
+                  teamBoostClubId = manager.teamBoostClubId;
+                  safeHandsGameweek = manager.safeHandsGameweek;
+                  safeHandsPlayerId = manager.safeHandsPlayerId;
+                  captainFantasticGameweek = manager.captainFantasticGameweek;
+                  captainFantasticPlayerId = manager.captainFantasticPlayerId;
+                  oneNationGameweek = manager.oneNationGameweek;
+                  oneNationCountryId = manager.oneNationCountryId;
+                  prospectsGameweek = manager.prospectsGameweek;
+                  braceBonusGameweek = manager.braceBonusGameweek;
+                  hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
+                  transferWindowGameweek = manager.transferWindowGameweek;
+                  createDate = manager.createDate;
+                  history = manager.history;
+                  monthlyBonusesAvailable = manager.monthlyBonusesAvailable;
+                  profilePicture = manager.profilePicture;
+                  transfersAvailable = manager.transfersAvailable + 1;
+                  profilePictureType = manager.profilePictureType;
+                  canisterId = manager.canisterId;
+                };
+
+                managerBuffer.add(newManager);
+              } else {
+                managerBuffer.add(manager);
+              };
+            };
+                
+
+            switch (managerGroup) {
+              case 0 {
+                managerGroup1 := Buffer.toArray(managerBuffer);
+              };
+              case 1 {
+                managerGroup2 := Buffer.toArray(managerBuffer);
+              };
+              case 2 {
+                managerGroup3 := Buffer.toArray(managerBuffer);
+              };
+              case 3 {
+                managerGroup4 := Buffer.toArray(managerBuffer);
+              };
+              case 4 {
+                managerGroup5 := Buffer.toArray(managerBuffer);
+              };
+              case 5 {
+                managerGroup6 := Buffer.toArray(managerBuffer);
+              };
+              case 6 {
+                managerGroup7 := Buffer.toArray(managerBuffer);
+              };
+              case 7 {
+                managerGroup8 := Buffer.toArray(managerBuffer);
+              };
+              case 8 {
+                managerGroup9 := Buffer.toArray(managerBuffer);
+              };
+              case 9 {
+                managerGroup10 := Buffer.toArray(managerBuffer);
+              };
+              case 10 {
+                managerGroup11 := Buffer.toArray(managerBuffer);
+              };
+              case 11 {
+                managerGroup12 := Buffer.toArray(managerBuffer);
+              };
+              case _ {
+
+              };
+            };
+          };
+        };
+
+      };
+      case (#err _){
+
+      }
+    };
+  };
+
+  //Team reset callback functions
 
   public shared ({ caller }) func resetBonusesAvailable() : async () {
     assert not Principal.isAnonymous(caller);
@@ -2525,320 +2846,6 @@ actor class _ManagerCanister() {
 
 
 
-  };
-
-  public shared ({ caller }) func getClubManagers(clubId : FootballTypes.ClubId) : async [Base.PrincipalId] {
-    assert not Principal.isAnonymous(caller);
-    let backendPrincipalId = Principal.toText(caller);
-    assert backendPrincipalId == controllerPrincipalId;
-
-    let clubManagerIdBuffer = Buffer.fromArray<Base.PrincipalId>([]);
-
-    for (index in Iter.range(0, 11)) {
-      switch (index) {
-        case 0 {
-          let clubManagerIds = getGroupClubManagerIds(managerGroup1, clubId);
-          for (managerId in Iter.fromArray(clubManagerIds)) {
-            clubManagerIdBuffer.add(managerId);
-          };
-        };
-        case 1 {
-          let clubManagerIds = getGroupClubManagerIds(managerGroup2, clubId);
-          for (managerId in Iter.fromArray(clubManagerIds)) {
-            clubManagerIdBuffer.add(managerId);
-          };
-        };
-        case 2 {
-          let clubManagerIds = getGroupClubManagerIds(managerGroup3, clubId);
-          for (managerId in Iter.fromArray(clubManagerIds)) {
-            clubManagerIdBuffer.add(managerId);
-          };
-        };
-        case 3 {
-          let clubManagerIds = getGroupClubManagerIds(managerGroup4, clubId);
-          for (managerId in Iter.fromArray(clubManagerIds)) {
-            clubManagerIdBuffer.add(managerId);
-          };
-        };
-        case 4 {
-          let clubManagerIds = getGroupClubManagerIds(managerGroup5, clubId);
-          for (managerId in Iter.fromArray(clubManagerIds)) {
-            clubManagerIdBuffer.add(managerId);
-          };
-        };
-        case 5 {
-          let clubManagerIds = getGroupClubManagerIds(managerGroup6, clubId);
-          for (managerId in Iter.fromArray(clubManagerIds)) {
-            clubManagerIdBuffer.add(managerId);
-          };
-        };
-        case 6 {
-          let clubManagerIds = getGroupClubManagerIds(managerGroup7, clubId);
-          for (managerId in Iter.fromArray(clubManagerIds)) {
-            clubManagerIdBuffer.add(managerId);
-          };
-        };
-        case 7 {
-          let clubManagerIds = getGroupClubManagerIds(managerGroup8, clubId);
-          for (managerId in Iter.fromArray(clubManagerIds)) {
-            clubManagerIdBuffer.add(managerId);
-          };
-        };
-        case 8 {
-          let clubManagerIds = getGroupClubManagerIds(managerGroup9, clubId);
-          for (managerId in Iter.fromArray(clubManagerIds)) {
-            clubManagerIdBuffer.add(managerId);
-          };
-        };
-        case 9 {
-          let clubManagerIds = getGroupClubManagerIds(managerGroup10, clubId);
-          for (managerId in Iter.fromArray(clubManagerIds)) {
-            clubManagerIdBuffer.add(managerId);
-          };
-        };
-        case 10 {
-          let clubManagerIds = getGroupClubManagerIds(managerGroup11, clubId);
-          for (managerId in Iter.fromArray(clubManagerIds)) {
-            clubManagerIdBuffer.add(managerId);
-          };
-        };
-        case 11 {
-          let clubManagerIds = getGroupClubManagerIds(managerGroup12, clubId);
-          for (managerId in Iter.fromArray(clubManagerIds)) {
-            clubManagerIdBuffer.add(managerId);
-          };
-        };
-        case _ {
-
-        };
-      };
-    };
-
-    return Buffer.toArray(clubManagerIdBuffer);
-  };
-
-  private func getGroupClubManagerIds(managers : [T.Manager], clubId : FootballTypes.ClubId) : [Base.PrincipalId] {
-    let managerIdBuffer = Buffer.fromArray<Base.PrincipalId>([]);
-    for (manager in Iter.fromArray(managers)) {
-      switch(manager.favouriteClubId){
-        case (?foundClubId){ 
-          if (foundClubId == clubId) {
-            managerIdBuffer.add(manager.principalId);
-          };   
-        };
-        case (null){}
-      }
-    };
-    return Buffer.toArray(managerIdBuffer);
-  };
-
-  public shared ({ caller }) func removePlayerFromTeams(leagueId: FootballTypes.LeagueId, playerId : FootballTypes.PlayerId, parentCanisterId: Base.CanisterId) : async () {
-    assert not Principal.isAnonymous(caller);
-    let backendPrincipalId = Principal.toText(caller);
-    assert backendPrincipalId == controllerPrincipalId;
-    for (index in Iter.range(0, 11)) {
-      await removePlayerFromGroup(leagueId, playerId, index, parentCanisterId);
-    };
-  };
-
-  private func removePlayerFromGroup(leagueId: FootballTypes.LeagueId, removePlayerId : FootballTypes.PlayerId, managerGroup: Int, parentCanisterId: Base.CanisterId) : async () {
-    let backend_canister = actor (parentCanisterId) : actor {
-      getVerifiedPlayers : (leagueId: FootballTypes.LeagueId) -> async Result.Result<[DTOs.PlayerDTO], T.Error>;
-    };
-      
-    let allPlayersResult = await backend_canister.getVerifiedPlayers(leagueId);
-    switch(allPlayersResult){
-      case (#ok allPlayers){
-        let removedPlayer = Array.find<DTOs.PlayerDTO>(allPlayers, func(p) { p.id == removePlayerId });
-
-        switch (removedPlayer) {
-          case (null) {
-            //removeMissingPlayer(playerId); TODO NEED TO FIX
-          };
-          case (?foundRemovedPlayer) {
-            let playerValue = foundRemovedPlayer.valueQuarterMillions;
-            let managerBuffer = Buffer.fromArray<T.Manager>([]);
-            
-                
-            var managers: [T.Manager] = [];
-
-            switch (managerGroup) {
-              case 0 {
-                managers := managerGroup1;
-              };
-              case 1 {
-                managers := managerGroup2;
-              };
-              case 2 {
-                managers := managerGroup3;
-              };
-              case 3 {
-                managers := managerGroup4;
-              };
-              case 4 {
-                managers := managerGroup5;
-              };
-              case 5 {
-                managers := managerGroup6;
-              };
-              case 6 {
-                managers := managerGroup7;
-              };
-              case 7 {
-                managers := managerGroup8;
-              };
-              case 8 {
-                managers := managerGroup9;
-              };
-              case 9 {
-                managers := managerGroup10;
-              };
-              case 10 {
-                managers := managerGroup11;
-              };
-              case 11 {
-                managers := managerGroup12;
-              };
-              case _ {
-
-              };
-            };
-            
-            for (manager in Iter.fromArray(managers)) {
-              let playerIdBuffer = Buffer.fromArray<FootballTypes.PlayerId>([]);
-              var playerRemoved = false;
-              for (playerId in Iter.fromArray(manager.playerIds)) {
-                if (playerId == removePlayerId) {
-                  playerIdBuffer.add(0);
-                  playerRemoved := true;
-                } else {
-                  playerIdBuffer.add(playerId);
-                };
-              };
-              if (playerRemoved) {
-                var captainId = manager.captainId;
-                if (captainId == removePlayerId) {
-                  let highestValuedPlayer = Array.foldLeft<FootballTypes.PlayerId, ?DTOs.PlayerDTO>(
-                    manager.playerIds,
-                    null,
-                    func(highest, id) : ?DTOs.PlayerDTO {
-                      if (id == removePlayerId or id == 0) { return highest };
-                      let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p) { p.id == id });
-                      switch (highest, player) {
-                        case (null, ?p) {
-                          ?p;
-                        };
-                        case (?h, ?p) {
-                          if (p.valueQuarterMillions > h.valueQuarterMillions) {
-                            ?p;
-                          } else {
-                            ?h;
-                          };
-                        };
-                        case (_, null) {
-                          highest;
-                        };
-                      };
-                    },
-                  );
-                  switch (highestValuedPlayer) {
-                    case (?player) {
-                      captainId := player.id;
-                    };
-                    case null {};
-                  };
-                };
-                let newManager : T.Manager = {
-                  principalId = manager.principalId;
-                  username = manager.username;
-                  termsAccepted = manager.termsAccepted;
-                  favouriteClubId = manager.favouriteClubId;
-                  bankQuarterMillions = manager.bankQuarterMillions + playerValue;
-                  playerIds = Buffer.toArray(playerIdBuffer);
-                  captainId = captainId;
-                  goalGetterGameweek = manager.goalGetterGameweek;
-                  goalGetterPlayerId = manager.goalGetterPlayerId;
-                  passMasterGameweek = manager.passMasterGameweek;
-                  passMasterPlayerId = manager.passMasterPlayerId;
-                  noEntryGameweek = manager.noEntryGameweek;
-                  noEntryPlayerId = manager.noEntryPlayerId;
-                  teamBoostGameweek = manager.teamBoostGameweek;
-                  teamBoostClubId = manager.teamBoostClubId;
-                  safeHandsGameweek = manager.safeHandsGameweek;
-                  safeHandsPlayerId = manager.safeHandsPlayerId;
-                  captainFantasticGameweek = manager.captainFantasticGameweek;
-                  captainFantasticPlayerId = manager.captainFantasticPlayerId;
-                  oneNationGameweek = manager.oneNationGameweek;
-                  oneNationCountryId = manager.oneNationCountryId;
-                  prospectsGameweek = manager.prospectsGameweek;
-                  braceBonusGameweek = manager.braceBonusGameweek;
-                  hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
-                  transferWindowGameweek = manager.transferWindowGameweek;
-                  createDate = manager.createDate;
-                  history = manager.history;
-                  monthlyBonusesAvailable = manager.monthlyBonusesAvailable;
-                  profilePicture = manager.profilePicture;
-                  transfersAvailable = manager.transfersAvailable + 1;
-                  profilePictureType = manager.profilePictureType;
-                  canisterId = manager.canisterId;
-                };
-
-                managerBuffer.add(newManager);
-              } else {
-                managerBuffer.add(manager);
-              };
-            };
-                
-
-            switch (managerGroup) {
-              case 0 {
-                managerGroup1 := Buffer.toArray(managerBuffer);
-              };
-              case 1 {
-                managerGroup2 := Buffer.toArray(managerBuffer);
-              };
-              case 2 {
-                managerGroup3 := Buffer.toArray(managerBuffer);
-              };
-              case 3 {
-                managerGroup4 := Buffer.toArray(managerBuffer);
-              };
-              case 4 {
-                managerGroup5 := Buffer.toArray(managerBuffer);
-              };
-              case 5 {
-                managerGroup6 := Buffer.toArray(managerBuffer);
-              };
-              case 6 {
-                managerGroup7 := Buffer.toArray(managerBuffer);
-              };
-              case 7 {
-                managerGroup8 := Buffer.toArray(managerBuffer);
-              };
-              case 8 {
-                managerGroup9 := Buffer.toArray(managerBuffer);
-              };
-              case 9 {
-                managerGroup10 := Buffer.toArray(managerBuffer);
-              };
-              case 10 {
-                managerGroup11 := Buffer.toArray(managerBuffer);
-              };
-              case 11 {
-                managerGroup12 := Buffer.toArray(managerBuffer);
-              };
-              case _ {
-
-              };
-            };
-          };
-        };
-
-      };
-      case (#err _){
-
-      }
-    };
   };
 
   public shared ({ caller }) func resetFantasyTeams() : async () {
@@ -3292,82 +3299,6 @@ actor class _ManagerCanister() {
 
   };
 
-  //AI Based Data Functions
-
-  public shared ({ caller }) func getSnapshots() : async [T.FantasyTeamSnapshot] {
-    
-    assert not Principal.isAnonymous(caller);
-    let backendPrincipalId = Principal.toText(caller);
-    assert backendPrincipalId == controllerPrincipalId;
-
-    let managerSnapshotsBuffer = Buffer.fromArray<T.FantasyTeamSnapshot>([]);
-
-    for (index in Iter.range(0, 11)) {
-      var managers: [T.Manager] = [];
-      switch (index) {
-        case 0 {
-          managers := managerGroup1;
-        };
-        case 1 {
-          managers := managerGroup2;
-        };
-        case 2 {
-          managers := managerGroup3;
-        };
-        case 3 {
-          managers := managerGroup4;
-        };
-        case 4 {
-          managers := managerGroup5;
-        };
-        case 5 {
-          managers := managerGroup6;
-        };
-        case 6 {
-          managers := managerGroup7;
-        };
-        case 7 {
-          managers := managerGroup8;
-        };
-        case 8 {
-          managers := managerGroup9;
-        };
-        case 9 {
-          managers := managerGroup10;
-        };
-        case 10 {
-          managers := managerGroup11;
-        };
-        case 11 {
-          managers := managerGroup12;
-        };
-        case _{};
-      };
-
-      for (manager in Iter.fromArray(managers)) {
-        for(season in Iter.fromList(manager.history)){
-          for(gameweek in Iter.fromList(season.gameweeks)){
-            managerSnapshotsBuffer.add(gameweek);
-          }
-        };
-      };
-    };
-
-    return Buffer.toArray(managerSnapshotsBuffer);
-  };
-
-
-
-
-
-
-
-
-
-
-
-
-
   system func preupgrade() {
     stable_manager_group_indexes := Iter.toArray(managerGroupIndexes.entries());
   };
@@ -3389,8 +3320,5 @@ actor class _ManagerCanister() {
   private func postUpgradeCallback() : async (){
     
   };
-
-
-
 
 };

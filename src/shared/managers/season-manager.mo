@@ -21,17 +21,11 @@ module {
     };
      
     private var dataHashes : [Base.DataHash] = [
-      { category = "clubs"; hash = "OPENFPL_1" },
-      { category = "fixtures"; hash = "OPENFPL_1" },
       { category = "weekly_leaderboard"; hash = "OPENFPL_1" },
       { category = "monthly_leaderboards"; hash = "OPENFPL_1" },
       { category = "season_leaderboard"; hash = "OPENFPL_1" },
-      { category = "players"; hash = "OPENFPL_1" },
-      { category = "player_events"; hash = "OPENFPL_1" },
-      { category = "countries"; hash = "OPENFPL_1" },
       { category = "app_status"; hash = "OPENFPL_1" },
-      { category = "league_status"; hash = "OPENFPL_1" },
-      { category = "seasons"; hash = "OPENFPL_1" }
+      { category = "reward_rates"; hash = "OPENFPL_1" },
     ];
 
     private var leagueGameweekStatuses: [T.LeagueGameweekStatus] = [];

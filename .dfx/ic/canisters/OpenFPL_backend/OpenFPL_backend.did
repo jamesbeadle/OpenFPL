@@ -156,25 +156,30 @@ type Result_2 =
    err: Error;
    ok: WeeklyRewardsDTO;
  };
-type Result_13 = 
+type Result_14 = 
  variant {
    err: Error;
    ok: text;
  };
-type Result_12 = 
+type Result_13 = 
  variant {
    err: Error;
    ok: RewardRatesDTO;
  };
-type Result_11 = 
+type Result_12 = 
  variant {
    err: Error;
    ok: vec CanisterDTO;
  };
-type Result_10 = 
+type Result_11 = 
  variant {
    err: Error;
    ok: TeamSelectionDTO;
+ };
+type Result_10 = 
+ variant {
+   err: Error;
+   ok: vec DataHashDTO;
  };
 type Result_1 = 
  variant {
@@ -347,6 +352,11 @@ type Error =
    TeamOverspend;
    TooManyTransfers;
  };
+type DataHashDTO = 
+ record {
+   category: text;
+   hash: text;
+ };
 type CreateManagerDTO = 
  record {
    favouriteClubId: opt ClubId;
@@ -385,15 +395,12 @@ type AppStatusDTO =
 service : {
   calculateWeeklyRewards: (GameweekNumber) -> (Result);
   createManager: (CreateManagerDTO) -> (Result);
-  getActiveLeaderboardCanisterId: () -> (Result_13);
-  getActiveRewardRates: () -> (Result_12);
+  getActiveLeaderboardCanisterId: () -> (Result_14);
+  getActiveRewardRates: () -> (Result_13);
   getAppStatus: () -> (Result_6) query;
-  getCanisters: (GetCanistersDTO) -> (Result_11);
-  getCurrentTeam: () -> (Result_10);
-  getEveryPlayer: () -> (vec record {
-                               GameweekNumber;
-                               vec PlayerDTO;
-                             }) query;
+  getCanisters: (GetCanistersDTO) -> (Result_12);
+  getCurrentTeam: () -> (Result_11);
+  getDataHashes: () -> (Result_10) composite_query;
   getFantasyTeamSnapshot: (GetManagerGameweekDTO) -> (Result_9);
   getLeaderboardCanisterIds: () -> (Result_8);
   getManager: (GetManagerDTO) -> (Result_1);

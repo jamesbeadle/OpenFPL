@@ -212,5 +212,6 @@ module DTOs {
         allTimeMonthlyHighScoreRewardRate : Nat64;
         allTimeSeasonHighScoreRewardRate : Nat64;
     };
+    
 
 };
