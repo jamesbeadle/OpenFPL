@@ -14,6 +14,7 @@ echo "Register $CANISTER with SNS"
 
 CANISTER_ID=$(dfx -qq canister --network $NETWORK id $CANISTER)
 
+echo "Found $CANISTER_ID"
 PROPOSAL="(record { title=\"$TITLE\"; url=\"$URL\"; summary=\"$SUMMARY\"; action=opt variant {RegisterDappCanisters = record {canister_ids=vec {principal \"$CANISTER_ID\"}}}})"
 
 ../utils/submit_proposal.sh "$PROPOSAL"
