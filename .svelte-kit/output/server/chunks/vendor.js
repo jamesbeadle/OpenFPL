@@ -1,4 +1,2 @@
 const BROWSER = false;
-export {
-  BROWSER as B
-};
+export { BROWSER as B };

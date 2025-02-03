@@ -5,6 +5,4 @@ import "@dfinity/utils";
 import "@dfinity/candid/lib/cjs/idl.js";
 import "@dfinity/ledger-icrc";
 import "@dfinity/principal";
-export {
-  m as default
-};
+export { m as default };

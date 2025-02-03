@@ -1,15 +1,18 @@
-import { AuthClient, IdbStorage, KEY_STORAGE_DELEGATION } from "@dfinity/auth-client";
+import {
+  AuthClient,
+  IdbStorage,
+  KEY_STORAGE_DELEGATION,
+} from "@dfinity/auth-client";
 import { DelegationChain, isDelegationValid } from "@dfinity/identity";
-BigInt(
-  60 * 60 * 1e3 * 1e3 * 1e3 * 24 * 14
-);
+BigInt(60 * 60 * 1e3 * 1e3 * 1e3 * 24 * 14);
 const AUTH_TIMER_INTERVAL = 1e3;
-const createAuthClient = () => AuthClient.create({
-  idleOptions: {
-    disableIdle: true,
-    disableDefaultIdleCallback: true
-  }
-});
+const createAuthClient = () =>
+  AuthClient.create({
+    idleOptions: {
+      disableIdle: true,
+      disableDefaultIdleCallback: true,
+    },
+  });
 onmessage = ({ data }) => {
   const { msg } = data;
   switch (msg) {
@@ -22,7 +25,8 @@ onmessage = ({ data }) => {
   }
 };
 let timer = void 0;
-const startIdleTimer = () => timer = setInterval(async () => await onIdleSignOut(), AUTH_TIMER_INTERVAL);
+const startIdleTimer = () =>
+  (timer = setInterval(async () => await onIdleSignOut(), AUTH_TIMER_INTERVAL));
 const stopIdleTimer = () => {
   if (!timer) {
     return;
@@ -33,7 +37,7 @@ const stopIdleTimer = () => {
 const onIdleSignOut = async () => {
   const [auth, chain] = await Promise.all([
     checkAuthentication(),
-    checkDelegationChain()
+    checkDelegationChain(),
   ]);
   if (auth && chain.valid && chain.delegation !== null) {
     emitExpirationTime(chain.delegation);
@@ -47,13 +51,12 @@ const checkAuthentication = async () => {
 };
 const checkDelegationChain = async () => {
   const idbStorage = new IdbStorage();
-  const delegationChain = await idbStorage.get(
-    KEY_STORAGE_DELEGATION
-  );
-  const delegation = delegationChain !== null ? DelegationChain.fromJSON(delegationChain) : null;
+  const delegationChain = await idbStorage.get(KEY_STORAGE_DELEGATION);
+  const delegation =
+    delegationChain !== null ? DelegationChain.fromJSON(delegationChain) : null;
   return {
     valid: delegation !== null && isDelegationValid(delegation),
-    delegation
+    delegation,
   };
 };
 const logout = () => {
@@ -65,11 +68,12 @@ const emitExpirationTime = (delegation) => {
   if (expirationTime === void 0) {
     return;
   }
-  const authRemainingTime = new Date(Number(expirationTime / BigInt(1e6))).getTime() - Date.now();
+  const authRemainingTime =
+    new Date(Number(expirationTime / BigInt(1e6))).getTime() - Date.now();
   postMessage({
     msg: "delegationRemainingTime",
     data: {
-      authRemainingTime
-    }
+      authRemainingTime,
+    },
   });
 };

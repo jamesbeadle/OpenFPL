@@ -1,5 +1,3 @@
 import { n } from "../../../chunks/index.js";
 import "@dfinity/agent";
-export {
-  n as default
-};
+export { n as default };

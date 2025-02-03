@@ -1,4 +1,2 @@
 import { L } from "../../chunks/index.js";
-export {
-  L as default
-};
+export { L as default };
