@@ -23,6 +23,7 @@ module AppTypes {
     #InvalidBonuses;
     #TeamOverspend;
     #TooManyTransfers;
+    #InvalidGameweek;
   };
 
 
