@@ -9,7 +9,7 @@ import TrieMap "mo:base/TrieMap";
 import Nat "mo:base/Nat";
 import Result "mo:base/Result";
 
-import DTOs "../../shared/dtos/DTOs";
+import DTOs "../../shared/dtos/dtos";
 import RewardPercentages "../../shared/def/RewardPercentages";
 import FootballTypes "../../shared/types/football_types";
 import T "../../shared/types/app_types";

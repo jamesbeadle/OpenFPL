@@ -16,7 +16,7 @@
   import Base "../shared/types/base_types";
   import FootballTypes "../shared/types/football_types";
   import T "../shared/types/app_types";
-  import DTOs "../shared/dtos/DTOs";
+  import DTOs "../shared/dtos/dtos";
   import Root "../shared/sns-wrappers/root";
 
   import Management "../shared/utils/Management";

@@ -2,7 +2,7 @@
 import Result "mo:base/Result";
 import TrieMap "mo:base/TrieMap";
 import Principal "mo:base/Principal";
-import DTOs "../../shared/dtos/DTOs";
+import DTOs "../../shared/dtos/dtos";
 import Base "../../shared/types/base_types";
 import FootballTypes "../../shared/types/football_types";
 import T "../../shared/types/app_types";

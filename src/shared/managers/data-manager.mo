@@ -1,5 +1,5 @@
 import Result "mo:base/Result";
-import DTOs "../../shared/dtos/DTOs";
+import DTOs "../../shared/dtos/dtos";
 import FootballTypes "../../shared/types/football_types";
 import T "../../shared/types/app_types";
 
