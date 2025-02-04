@@ -3,7 +3,7 @@ import Buffer "mo:base/Buffer";
 import Iter "mo:base/Iter";
 import Array "mo:base/Array";
 import Option "mo:base/Option";
-import DTOs "../../shared/dtos/DTOs";
+import DTOs "../../shared/dtos/dtos";
 import FootballTypes "../../shared/types/football_types";
 import T "../../shared/types/app_types";
 import Base "../../shared/types/base_types";
