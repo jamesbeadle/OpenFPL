@@ -4,7 +4,7 @@ import Iter "mo:base/Iter";
 import Array "mo:base/Array";
 import Option "mo:base/Option";
 import DTOs "../../shared/dtos/dtos";
-import FootballTypes "../../shared/types/football_types";
+import FootballTypes "mo:football-types";
 import T "../../shared/types/app_types";
 import Base "../../shared/types/base_types";
 import SHA224 "../../shared/lib/SHA224";

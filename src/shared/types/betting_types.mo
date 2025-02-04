@@ -1,5 +1,5 @@
 import Base "base_types";
-import FootballTypes "football_types";
+import FootballTypes "mo:football-types";
 
 
 module BettingTypes {

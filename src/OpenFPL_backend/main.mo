@@ -14,7 +14,7 @@
   import List "mo:base/List";
 
   import Base "../shared/types/base_types";
-  import FootballTypes "../shared/types/football_types";
+  import FootballTypes "mo:football-types";
   import T "../shared/types/app_types";
   import DTOs "../shared/dtos/dtos";
   import Root "../shared/sns-wrappers/root";

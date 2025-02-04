@@ -12,7 +12,7 @@ import Text "mo:base/Text";
 import Result "mo:base/Result";
 import TrieMap "mo:base/TrieMap";
 import T "../types/app_types";
-import FootballTypes "../types/football_types";
+import FootballTypes "mo:football-types";
 import DTOs "../dtos/dtos";
 import Commands "../cqrs/commands";
 import BaseTypes "../types/base_types";
