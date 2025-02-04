@@ -8,14 +8,14 @@
 **/.DS_Store
 
 # dfx temporary files
-#.dfx/
+.dfx/
 
-# generated files
-src/declarations/
-
-# frontend codeF
+# frontend code
 node_modules/
 dist/
 
-.mops/
+.mops
+
+.svelte-kit/
+
 sns/utils/ic_admin.pem
