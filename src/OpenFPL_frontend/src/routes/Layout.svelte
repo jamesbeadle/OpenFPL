@@ -4,6 +4,7 @@
   import { fade } from "svelte/transition";
   import { browser } from "$app/environment";
   import { authStore, type AuthStoreData } from "$lib/stores/auth.store";
+  import { userStore } from "$lib/stores/user-store";
   
   import Header from "$lib/shared/Header.svelte";
   import Footer from "$lib/shared/Footer.svelte";
@@ -15,7 +16,12 @@
   import { toasts } from "$lib/stores/toasts-store";
   import Toasts from "$lib/components/toasts/toasts.svelte";
 
-  const init = async () => await Promise.all([syncAuthStore()]);
+  const init = async () => {
+    await syncAuthStore();
+    if ($authStore?.identity) {
+      await userStore.sync();
+    }
+  };
 
   const syncAuthStore = async () => {
     if (!browser) { return; }
@@ -57,7 +63,7 @@
     <WidgetSpinner />
   </div>
 {:then _}
-  <div class="flex flex-col h-screen justify-between default-text">
+  <div class="flex flex-col justify-between h-screen default-text">
     <Header />
     <main class="page-wrapper">
       <slot />
