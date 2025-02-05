@@ -1,15 +1,15 @@
 import { Actor, HttpAgent } from "@dfinity/agent";
 
 // Imports and re-exports candid interface
-import { idlFactory } from "./sns_swap.did.js";
-export { idlFactory } from "./sns_swap.did.js";
+import { idlFactory } from "./data_canister.did.js";
+export { idlFactory } from "./data_canister.did.js";
 
 /* CANISTER_ID is replaced by webpack based on node environment
  * Note: canister environment variable will be standardized as
  * process.env.CANISTER_ID_<CANISTER_NAME_UPPERCASE>
  * beginning in dfx 0.15.0
  */
-export const canisterId = process.env.CANISTER_ID_SNS_SWAP;
+export const canisterId = process.env.CANISTER_ID_DATA_CANISTER;
 
 export const createActor = (canisterId, options = {}) => {
   const agent = options.agent || new HttpAgent({ ...options.agentOptions });
@@ -38,4 +38,4 @@ export const createActor = (canisterId, options = {}) => {
   });
 };
 
-export const sns_swap = canisterId ? createActor(canisterId) : undefined;
+export const data_canister = canisterId ? createActor(canisterId) : undefined;

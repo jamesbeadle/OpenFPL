@@ -3,7 +3,7 @@
     import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
     import type { GameweekData } from "$lib/interfaces/GameweekData";
     import { convertPositionToAbbreviation, getFlagComponent, getPlayerName } from "$lib/utils/helpers";
-    import type { ClubDTO } from "../../../../../declarations/data_canister/data_canister.did";
+    import type { ClubDTO } from "../../../../../external_declarations/data_canister/data_canister.did";
 
     export let clubData: ClubDTO;
     export let playerData: GameweekData;

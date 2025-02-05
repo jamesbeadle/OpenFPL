@@ -1,6 +1,6 @@
 import { toasts } from "$lib/stores/toasts-store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
-import type { ClubDTO } from "../../../../declarations/data_canister/data_canister.did";
+import type { ClubDTO } from "../../../../external_declarations/data_canister/data_canister.did";
 import { ActorFactory } from "../utils/actor.factory";
 import { isError } from "../utils/helpers";
 

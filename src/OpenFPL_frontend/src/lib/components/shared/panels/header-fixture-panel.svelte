@@ -1,6 +1,6 @@
 <script lang="ts">
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-    import type { ClubDTO, PlayerDTO } from "../../../../../../declarations/data_canister/data_canister.did";
+    import type { ClubDTO, PlayerDTO } from "../../../../../../external_declarations/data_canister/data_canister.did";
     
     export let header: string;
     export let nextFixtureHomeTeam: ClubDTO | undefined;

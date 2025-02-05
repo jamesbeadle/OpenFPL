@@ -1,7 +1,7 @@
 <script lang="ts">
     import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
     import { convertPositionToIndex, getPositionIndexToText } from "$lib/utils/helpers";
-    import type { ClubDTO, PlayerDTO } from "../../../../../declarations/data_canister/data_canister.did";
+    import type { ClubDTO, PlayerDTO } from "../../../../../external_declarations/data_canister/data_canister.did";
 
     export let player: PlayerDTO;
     export let club: ClubDTO;

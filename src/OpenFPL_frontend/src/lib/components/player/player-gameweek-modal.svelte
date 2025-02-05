@@ -5,7 +5,7 @@
     PlayerDetailDTO,
     PlayerEventData,
     PlayerGameweekDTO,
-  } from "../../../../../declarations/data_canister/data_canister.did";
+  } from "../../../../../external_declarations/data_canister/data_canister.did";
   import { getFlagComponent } from "../../utils/helpers";
   import Modal from "$lib/components/shared/modal.svelte";
 

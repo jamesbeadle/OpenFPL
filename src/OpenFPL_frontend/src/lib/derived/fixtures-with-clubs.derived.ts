@@ -4,7 +4,7 @@ import { clubStore } from "../stores/club-store";
 import type {
   ClubDTO,
   FixtureDTO,
-} from "../../../../declarations/data_canister/data_canister.did";
+} from "../../../../external_declarations/data_canister/data_canister.did";
 
 export interface FixtureWithClubs extends FixtureDTO {
   homeClub?: ClubDTO;

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { convertPositionToIndex, getFlagComponent, getPlayerName } from "../../utils/helpers";
-  import type { ClubDTO } from "../../../../../declarations/data_canister/data_canister.did";
+  import type { ClubDTO } from "../../../../../external_declarations/data_canister/data_canister.did";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import Modal from "$lib/components/shared/modal.svelte";
   import FantasyPlayerDetailRow from "./fantasy-player-detail-row.svelte";

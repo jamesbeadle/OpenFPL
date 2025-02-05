@@ -5,7 +5,7 @@
   import { playerStore } from "$lib/stores/player-store";
   import { countPlayersByTeam, reasonToDisablePlayer, sortPlayersByClubThenValue } from "$lib/utils/pick-team.helpers";
   import { addTeamDataToPlayers, convertPositionToIndex, normaliseString } from "$lib/utils/helpers";
-  import type { PlayerDTO } from "../../../../../../declarations/data_canister/data_canister.did";
+  import type { PlayerDTO } from "../../../../../../external_declarations/data_canister/data_canister.did";
   import Modal from "$lib/components/shared/modal.svelte";
   import WidgetSpinner from "$lib/components/shared/widget-spinner.svelte";
   import AddPlayerModalPagination from "./add-player-modal-pagination.svelte";

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { ClubDTO } from "../../../../../declarations/data_canister/data_canister.did";
+    import type { ClubDTO } from "../../../../../external_declarations/data_canister/data_canister.did";
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
     import type { Writable } from "svelte/store";
 

@@ -5,6 +5,7 @@ This guide outlines the steps to install dependencies, deploy the backend, gener
 ## Prerequisites
 
 Ensure you have the following installed:
+
 - [DFX](https://internetcomputer.org/docs/current/developer-docs/getting-started/quickstart) (Dfinity SDK)
 - [Node.js and npm](https://nodejs.org/)
 
@@ -49,4 +50,3 @@ npm test
 ```
 
 This will run the test scripts configured in your project.
-

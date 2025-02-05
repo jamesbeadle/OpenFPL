@@ -1,17 +1,14 @@
 import type { FormationDetails } from "$lib/interfaces/FormationDetails";
 import type { GameweekData } from "$lib/interfaces/GameweekData";
-import type { LeagueStatus } from "../../../../declarations/data_canister/data_canister.did";
 import type {
   AppStatusDTO,
   ManagerGameweekDTO,
-  TeamSelectionDTO,
-  ManagerGameweekDTO,
-  TeamSelectionDTO,
   PlayerDTO,
+  TeamSelectionDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import type { LeagueStatus } from "$lib/types/league-status";
 import { playerStore } from "$lib/stores/player-store";
-import { calculateAgeFromNanoseconds, convertPositionToIndex } from "./Helpers";
+import { calculateAgeFromNanoseconds, convertPositionToIndex } from "./helpers";
 
 export const allFormations: Record<string, FormationDetails> = {
   "3-4-3": { positions: [0, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3] },
@@ -173,7 +170,9 @@ export function isValidFormation(
   return totalPlayers + additionalPlayersNeeded <= 11;
 }
 
-export function isBonusConditionMet(team: TeamSelectionDTO | undefined): boolean {
+export function isBonusConditionMet(
+  team: TeamSelectionDTO | undefined,
+): boolean {
   if (!team) {
     return false;
   }
@@ -711,15 +710,15 @@ export function bonusPlayedThisWeek(
 
 export function updateTeamValue(fantasyTeam: TeamSelectionDTO): number {
   if (!fantasyTeam) return 0;
-  
+
   let playerStoreValue: PlayerDTO[] = [];
-  playerStore.subscribe(value => playerStoreValue = value)();
-  
+  playerStore.subscribe((value) => (playerStoreValue = value))();
+
   const totalValue = Array.from(fantasyTeam.playerIds).reduce((sum, id) => {
-    const player = playerStoreValue.find(p => p.id === id);
+    const player = playerStoreValue.find((p) => p.id === id);
     return sum + (player?.valueQuarterMillions || 0);
   }, 0);
-  
+
   return totalValue / 4;
 }
 
@@ -733,7 +732,9 @@ export function autofillTeam(
     playerIds: Uint16Array.from(fantasyTeam.playerIds),
   };
 
-  const originalPlayerCount = fantasyTeam.playerIds.filter(id => id > 0).length;
+  const originalPlayerCount = fantasyTeam.playerIds.filter(
+    (id) => id > 0,
+  ).length;
   let remainingBudget = fantasyTeam.bankQuarterMillions;
 
   const teamCounts = new Map<number, number>();
@@ -789,9 +790,14 @@ export function autofillTeam(
   }
 
   if (!fantasyTeam.firstGameweek) {
-    const newPlayerCount = updatedFantasyTeam.playerIds.filter(id => id > 0).length;
+    const newPlayerCount = updatedFantasyTeam.playerIds.filter(
+      (id) => id > 0,
+    ).length;
     const transfersUsed = newPlayerCount - originalPlayerCount;
-    updatedFantasyTeam.transfersAvailable = Math.max(0, fantasyTeam.transfersAvailable - transfersUsed);
+    updatedFantasyTeam.transfersAvailable = Math.max(
+      0,
+      fantasyTeam.transfersAvailable - transfersUsed,
+    );
   }
 
   return updatedFantasyTeam;

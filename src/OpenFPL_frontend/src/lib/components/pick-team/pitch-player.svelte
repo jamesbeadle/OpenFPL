@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { Writable } from "svelte/store";
-    import type { ClubDTO, PlayerDTO } from "../../../../../declarations/data_canister/data_canister.did";
+    import type { ClubDTO, PlayerDTO } from "../../../../../external_declarations/data_canister/data_canister.did";
     import RemovePlayerIcon from "$lib/icons/RemovePlayerIcon.svelte";
     import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
     import ActiveCaptainIcon from "$lib/icons/ActiveCaptainIcon.svelte";

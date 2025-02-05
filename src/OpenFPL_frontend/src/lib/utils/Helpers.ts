@@ -8,7 +8,7 @@ import type {
   FixtureStatusType,
   PlayerEventType,
   PlayerPosition,
-} from "../../../../declarations/data_canister/data_canister.did";
+} from "../../../../external_declarations/data_canister/data_canister.did";
 import type {
   PlayerDTO,
   ManagerGameweekDTO,
@@ -17,11 +17,10 @@ import type {
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 import type { GameweekData } from "$lib/interfaces/GameweekData";
-import EnglandFlag from "../flags/england.svelte"; // Custom Svelte component for England
-import ScotlandFlag from "../flags/scotland.svelte"; // Custom Svelte component for Scotland
-import WalesFlag from "../flags/wales.svelte"; // Custom Svelte component for Wales
+import EnglandFlag from "../flags/england.svelte";
+import ScotlandFlag from "../flags/scotland.svelte";
+import WalesFlag from "../flags/wales.svelte";
 import NorthernIrelandFlag from "../flags/northern_ireland.svelte";
-import type { FixtureWithClubs } from "$lib/derived/fixtures-with-clubs.derived";
 
 export function uint8ArrayToBase64(bytes: Uint8Array): string {
   const binary = Array.from(bytes)

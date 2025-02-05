@@ -1,7 +1,7 @@
 <script lang="ts">
   import { type Writable } from "svelte/store";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
-  import type { ClubDTO } from "../../../../../declarations/data_canister/data_canister.did";
+  import type { ClubDTO } from "../../../../../external_declarations/data_canister/data_canister.did";
   import { playerStore } from "$lib/stores/player-store";
   import { clubStore } from "$lib/stores/club-store";
   import { fixtureStore } from "$lib/stores/fixture-store";

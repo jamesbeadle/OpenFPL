@@ -13,7 +13,7 @@ import type {
   SaveTeamDTO,
   TeamSelectionDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-import type { LeagueStatus } from "../../../../declarations/data_canister/data_canister.did";
+import type { LeagueStatus } from "../../../../external_declarations/data_canister/data_canister.did";
 
 function createManagerStore() {
   let actor: any = ActorFactory.createActor(

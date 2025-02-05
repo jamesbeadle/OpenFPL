@@ -13,7 +13,7 @@
   import GameweekFilter from "../shared/filters/gameweek-filter.svelte";
   import { getGameweeks } from "$lib/utils/helpers";
   import type { ManagerGameweekDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import type { ClubDTO } from "../../../../../declarations/data_canister/data_canister.did";
+  import type { ClubDTO } from "../../../../../external_declarations/data_canister/data_canister.did";
   
   export let selectedGameweek = writable<number | null>(null);
   export let fantasyTeam = writable<ManagerGameweekDTO | null>(null);

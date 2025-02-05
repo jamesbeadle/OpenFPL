@@ -1,8 +1,8 @@
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import { ActorFactory } from "../utils/actor.factory";
-import { isError } from "../utils/helpers";
 import { toasts } from "$lib/stores/toasts-store";
-import type { FixtureDTO } from "../../../../declarations/data_canister/data_canister.did";
+import type { FixtureDTO } from "../../../../external_declarations/data_canister/data_canister.did";
+import { isError } from "$lib/utils/helpers";
 
 export class FixtureService {
   private actor: any;

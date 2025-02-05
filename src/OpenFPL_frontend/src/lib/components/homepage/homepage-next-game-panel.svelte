@@ -3,7 +3,7 @@
     import { fixtureStore } from "$lib/stores/fixture-store";
     import { clubStore } from "$lib/stores/club-store";
     import { formatUnixDateToSmallReadable, formatUnixTimeToTime, getCountdownTime } from "../../utils/helpers";
-    import type { ClubDTO, FixtureDTO } from "../../../../../declarations/data_canister/data_canister.did";
+    import type { ClubDTO, FixtureDTO } from "../../../../../external_declarations/data_canister/data_canister.did";
     import HeaderCountdownPanel from "../shared/panels/header-countdown-panel.svelte";
     import HeaderFixturePanel from "./homepage-header-fixture-panel.svelte";
     import LoadingDots from "../shared/loading-dots.svelte";

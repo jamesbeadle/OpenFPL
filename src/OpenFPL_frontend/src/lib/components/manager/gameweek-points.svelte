@@ -8,7 +8,7 @@
   import { playerEventsStore } from "$lib/stores/player-events-store";
   import { authStore } from "$lib/stores/auth.store";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
-  import type { ClubDTO, LeagueStatus } from "../../../../../declarations/data_canister/data_canister.did";
+  import type { ClubDTO, LeagueStatus } from "../../../../../external_declarations/data_canister/data_canister.did";
   import FantasyPlayerDetailModal from "../fantasy-team/fantasy-player-detail-modal.svelte";
   import WidgetSpinner from "../shared/widget-spinner.svelte";
   import GameweekFilter from "../shared/filters/gameweek-filter.svelte";

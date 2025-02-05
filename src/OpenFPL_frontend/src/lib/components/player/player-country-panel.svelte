@@ -1,7 +1,7 @@
 <script lang="ts">
     import { countryStore } from "$lib/stores/country-store";
     import { getFlagComponent } from "$lib/utils/helpers";
-    import type { PlayerDTO } from "../../../../../declarations/data_canister/data_canister.did";
+    import type { PlayerDTO } from "../../../../../external_declarations/data_canister/data_canister.did";
 
     export let player: PlayerDTO;
 </script>

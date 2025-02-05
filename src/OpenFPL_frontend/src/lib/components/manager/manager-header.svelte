@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import type { ClubDTO } from "../../../../../declarations/data_canister/data_canister.did";
+    import type { ClubDTO } from "../../../../../external_declarations/data_canister/data_canister.did";
     import HeaderContentPanel from "../shared/panels/header-content-panel.svelte";
     import { clubStore } from "$lib/stores/club-store";
     import { getProfilePictureString } from "$lib/derived/user.derived";

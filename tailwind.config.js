@@ -45,7 +45,7 @@ export default {
         BrandWarning: "#EFA53A",
         BrandSuccess: "#64AD54",
         BrandSlateGray: "#5A5A5A",
-        BrandRed: "#FF403C"
+        BrandRed: "#FF403C",
       },
     },
   },

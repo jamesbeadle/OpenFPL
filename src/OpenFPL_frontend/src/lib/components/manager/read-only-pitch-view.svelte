@@ -9,7 +9,7 @@
   import { getActualIndex } from "$lib/utils/helpers";
   import { calculateBonusPoints, getGridSetup, getTeamFormationReadOnly, sortPlayersByPointsThenValue } from "$lib/utils/pick-team.helpers";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
-  import type { ClubDTO, GameweekNumber } from "../../../../../declarations/data_canister/data_canister.did";
+  import type { ClubDTO, GameweekNumber } from "../../../../../external_declarations/data_canister/data_canister.did";
   import ManagerPitchPlayer from "./manager-pitch-player.svelte";
   import { playerStore } from "$lib/stores/player-store";
   import WidgetSpinner from "../shared/widget-spinner.svelte";
