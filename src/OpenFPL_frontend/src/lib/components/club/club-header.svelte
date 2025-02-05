@@ -6,7 +6,7 @@
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { clubStore } from "$lib/stores/club-store";
   import { playerStore } from "$lib/stores/player-store";
-  import type { ClubDTO, ClubId, FixtureDTO, PlayerDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { ClubDTO, ClubId, FixtureDTO, PlayerDTO } from "../../../../../declarations/data_canister/data_canister.did";
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
   import HeaderContentPanel from "$lib/components/shared/panels/header-content-panel.svelte";
   import HeaderFixturePanel from "$lib/components/shared/panels/header-fixture-panel.svelte";

@@ -1,7 +1,6 @@
 <script lang="ts">
     import type { Writable } from "svelte/store";
     import { getGridSetup } from "$lib/utils/pick-team.helpers";
-    import type { PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     import AddIcon from "$lib/icons/AddIcon.svelte";
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
     import ActiveCaptainIcon from "$lib/icons/ActiveCaptainIcon.svelte";
@@ -10,9 +9,10 @@
     import { getActualIndex } from "$lib/utils/helpers";
     import { playerStore } from "$lib/stores/player-store";
     import { clubStore } from "$lib/stores/club-store";
+    import type { TeamSelectionDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     
     export let selectedFormation: Writable<string>;
-    export let fantasyTeam: Writable<PickTeamDTO | undefined>;
+    export let fantasyTeam: Writable<TeamSelectionDTO | undefined>;
     export let loadAddPlayer: (row: number, col: number) => void;
     export let removePlayer: (playerId: number) => void;
     export let setCaptain: (playerId: number) => void;

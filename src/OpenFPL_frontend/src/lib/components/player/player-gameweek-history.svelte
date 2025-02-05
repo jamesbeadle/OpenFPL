@@ -8,7 +8,7 @@
   import { clubStore } from "$lib/stores/club-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { playerEventsStore } from "$lib/stores/player-events-store";
-  import type { ClubDTO, PlayerDetailDTO, PlayerGameweekDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { ClubDTO, PlayerDetailDTO, PlayerGameweekDTO } from "../../../../../declarations/data_canister/data_canister.did";
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
   import { getFixturesWithTeams } from "$lib/utils/helpers";
   import PlayerGameweekModal from "./player-gameweek-modal.svelte";

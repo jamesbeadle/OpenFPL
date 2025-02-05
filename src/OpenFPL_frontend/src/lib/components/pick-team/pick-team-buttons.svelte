@@ -4,7 +4,6 @@
   import { playerStore } from "$lib/stores/player-store";
   import { managerStore } from "$lib/stores/manager-store";
   import { seasonStore } from "$lib/stores/season-store";
-  import type { AppStatusDTO, PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { allFormations, autofillTeam, checkBonusUsedInSession, checkSaveButtonConditions, getAvailableFormations, getHighestValuedPlayerId, getTeamFormation, isBonusConditionMet, isValidFormation } from "$lib/utils/pick-team.helpers";
   import SetTeamName from "./modals/set-team-name-modal.svelte";
   import { appStore } from "$lib/stores/app-store";
@@ -12,13 +11,14 @@
   import { leagueStore } from "$lib/stores/league-store";
   import DesktopButtons from "./desktop-buttons.svelte";
   import MobileButtons from "./mobile-buttons.svelte";
+    import type { AppStatusDTO, TeamSelectionDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
-  export let fantasyTeam: Writable<PickTeamDTO | undefined>;
+  export let fantasyTeam: Writable<TeamSelectionDTO | undefined>;
   export let selectedFormation: Writable<string>;
   export let availableFormations: Writable<string[]>;
   export let pitchView: Writable<Boolean>;
 
-  let startingFantasyTeam: PickTeamDTO;
+  let startingFantasyTeam: TeamSelectionDTO;
   let isSaveButtonActive = writable(false);
   let activeSeason: string;
   let activeGameweek: number;

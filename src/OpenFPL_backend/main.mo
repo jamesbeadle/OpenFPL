@@ -22,10 +22,10 @@
   import Management "../shared/utils/Management";
   import ManagerCanister "../shared/canister_definitions/manager-canister";
   import LeaderboardCanister "../shared/canister_definitions/leaderboard-canister";
-  import DataManager "../shared/managers/data-manager";
   import LeaderboardManager "../shared/managers/leaderboard-manager";
   import UserManager "../shared/managers/user-manager";
   import SeasonManager "../shared/managers/season-manager";
+  import DataManager "../shared/managers/data-manager";
   import Environment "./Environment";
   import NetworkEnvironmentVariables "../shared/network_environment_variables";
   import ProfileUtilities "../shared/utils/profile_utilities";
@@ -36,10 +36,10 @@
   actor Self {
     
     private let userManager = UserManager.UserManager(Environment.BACKEND_CANISTER_ID, Environment.NUM_OF_GAMEWEEKS);
-    private let dataManager = DataManager.DataManager();
     private let seasonManager = SeasonManager.SeasonManager();
     private let leaderboardManager = LeaderboardManager.LeaderboardManager(Environment.BACKEND_CANISTER_ID);
-    
+    private let dataManager = DataManager.DataManager();
+
     private func isManagerCanister(principalId: Text) : Bool {
       let managerCanisterIds = userManager.getUniqueManagerCanisterIds();
       return Option.isSome(Array.find<Base.PrincipalId>(managerCanisterIds, func(dataAdmin: Base.PrincipalId) : Bool{
@@ -720,12 +720,9 @@
 
     private func postUpgradeCallback() : async (){
       
-
-      //set system state
-      //ignore setSystemTimers();
+      
       //await checkCanisterCycles();
      
-
       await updateLeaderboardCanisterWasms();
       await updateManagerCanisterWasms();
       await updateAllDataHashes();

@@ -5,7 +5,6 @@
   import { leagueStore } from "$lib/stores/league-store";
   import { seasonStore } from "$lib/stores/season-store";
   import { playerEventsStore } from "$lib/stores/player-events-store";
-  import type { ClubDTO, FantasyTeamSnapshot } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import { calculateBonusPoints, sortPlayersByPointsThenValue } from "$lib/utils/pick-team.helpers";
   import WidgetSpinner from "../shared/widget-spinner.svelte";
@@ -14,9 +13,11 @@
   import FantasyPlayerDetailModal from "../fantasy-team/fantasy-player-detail-modal.svelte";
   import GameweekFilter from "../shared/filters/gameweek-filter.svelte";
     import { getGameweeks } from "$lib/utils/helpers";
+    import type { ManagerDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import type { ClubDTO } from "../../../../../declarations/data_canister/data_canister.did";
   
   export let selectedGameweek = writable<number | null>(null);
-  export let fantasyTeam = writable<FantasyTeamSnapshot | null>(null);
+  export let fantasyTeam = writable<ManagerDTO | null>(null);
 
   let isLoading = false;
   let showModal = false;

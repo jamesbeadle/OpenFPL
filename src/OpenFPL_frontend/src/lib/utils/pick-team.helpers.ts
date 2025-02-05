@@ -1,10 +1,10 @@
 import type { FormationDetails } from "$lib/interfaces/FormationDetails";
 import type { GameweekData } from "$lib/interfaces/GameweekData";
+import type { LeagueStatus } from "../../../../declarations/data_canister/data_canister.did";
 import type {
   AppStatusDTO,
-  FantasyTeamSnapshot,
-  LeagueStatus,
-  PickTeamDTO,
+  ManagerGameweekDTO,
+  TeamSelectionDTO,
   PlayerDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { calculateAgeFromNanoseconds, convertPositionToIndex } from "./helpers";
@@ -20,7 +20,7 @@ export const allFormations: Record<string, FormationDetails> = {
 };
 
 export function getTeamFormation(
-  team: PickTeamDTO,
+  team: TeamSelectionDTO,
   allPlayers: PlayerDTO[],
 ): string {
   let teamFormation: string = "4-4-2";
@@ -62,7 +62,7 @@ export function getTeamFormation(
 }
 
 export function getTeamFormationReadOnly(
-  team: FantasyTeamSnapshot | null,
+  team: ManagerGameweekDTO | null,
   allPlayers: PlayerDTO[],
 ): string {
   let teamFormation: string = "4-4-2";
@@ -108,7 +108,7 @@ export function getTeamFormationReadOnly(
 
 export function getAvailableFormations(
   players: PlayerDTO[],
-  team: PickTeamDTO,
+  team: TeamSelectionDTO,
 ): string[] {
   const positionCounts: Record<number, number> = { 0: 0, 1: 0, 2: 0, 3: 0 };
   team.playerIds.forEach((id: number) => {
@@ -145,7 +145,7 @@ export function getAvailableFormations(
 }
 
 export function isValidFormation(
-  team: PickTeamDTO,
+  team: TeamSelectionDTO,
   selectedFormation: string,
   players: PlayerDTO[],
 ): boolean {
@@ -169,7 +169,7 @@ export function isValidFormation(
   return totalPlayers + additionalPlayersNeeded <= 11;
 }
 
-export function isBonusConditionMet(team: PickTeamDTO | undefined): boolean {
+export function isBonusConditionMet(team: TeamSelectionDTO | undefined): boolean {
   if (!team) {
     return false;
   }
@@ -202,7 +202,7 @@ export function isBonusConditionMet(team: PickTeamDTO | undefined): boolean {
 }
 
 export function getHighestValuedPlayerId(
-  team: PickTeamDTO,
+  team: TeamSelectionDTO,
   players: PlayerDTO[],
 ): number {
   let highestValue = 0;
@@ -221,7 +221,7 @@ export function getHighestValuedPlayerId(
 
 export function calculateBonusPoints(
   gameweekData: GameweekData[],
-  fantasyTeam: FantasyTeamSnapshot,
+  fantasyTeam: ManagerGameweekDTO,
 ) {
   gameweekData.forEach((data) => {
     let bonusPoints = 0;
@@ -333,7 +333,7 @@ function isPlayerUnder21(player: PlayerDTO): boolean {
 
 export function getTotalBonusPoints(
   gameweekData: GameweekData,
-  fantasyTeam: FantasyTeamSnapshot,
+  fantasyTeam: ManagerGameweekDTO,
   points: number,
 ): number {
   if (!gameweekData) {
@@ -444,7 +444,7 @@ export function getTotalBonusPoints(
 export function canAddPlayerToCurrentFormation(
   players: PlayerDTO[],
   player: PlayerDTO,
-  team: PickTeamDTO,
+  team: TeamSelectionDTO,
   formation: string,
 ): boolean {
   const positionCounts: { [key: number]: number } = {
@@ -476,7 +476,7 @@ export function canAddPlayerToCurrentFormation(
 
 export function findValidFormationWithPlayer(
   players: PlayerDTO[],
-  team: PickTeamDTO,
+  team: TeamSelectionDTO,
   player: PlayerDTO,
   selectedFormation: string,
 ): string {
@@ -536,7 +536,7 @@ export function findValidFormationWithPlayer(
 
 export function getAvailablePositionIndex(
   position: number,
-  team: PickTeamDTO,
+  team: TeamSelectionDTO,
   formation: string,
 ): number {
   const formationArray = allFormations[formation].positions;
@@ -550,7 +550,7 @@ export function getAvailablePositionIndex(
 
 export function repositionPlayersForNewFormation(
   players: PlayerDTO[],
-  fantasyTeam: PickTeamDTO,
+  fantasyTeam: TeamSelectionDTO,
   newFormation: string,
 ): number[] {
   const newFormationArray = allFormations[newFormation].positions;
@@ -588,8 +588,8 @@ export function getGridSetup(formation: string): number[][] {
 }
 
 export function checkBonusUsedInSession(
-  fantasyTeam: PickTeamDTO,
-  startingFantasyTeam: PickTeamDTO,
+  fantasyTeam: TeamSelectionDTO,
+  startingFantasyTeam: TeamSelectionDTO,
 ): boolean {
   let usedGoalGetterInSession =
     fantasyTeam.goalGetterGameweek != startingFantasyTeam.goalGetterGameweek;
@@ -628,7 +628,7 @@ export function checkBonusUsedInSession(
 }
 
 export function isBonusUsed(
-  fantasyTeam: PickTeamDTO | undefined,
+  fantasyTeam: TeamSelectionDTO | undefined,
   bonusId: number,
 ): boolean {
   if (!fantasyTeam) return false;
@@ -685,7 +685,7 @@ export function isBonusUsed(
 }
 
 export function bonusPlayedThisWeek(
-  fantasyTeam: PickTeamDTO | undefined,
+  fantasyTeam: TeamSelectionDTO | undefined,
   leagueStatus: LeagueStatus | null,
 ): boolean {
   if (!fantasyTeam || !leagueStatus) return false;
@@ -706,10 +706,10 @@ export function bonusPlayedThisWeek(
 }
 
 export function autofillTeam(
-  fantasyTeam: PickTeamDTO,
+  fantasyTeam: TeamSelectionDTO,
   players: PlayerDTO[],
   selectedFormation: string,
-): PickTeamDTO {
+): TeamSelectionDTO {
   let updatedFantasyTeam = {
     ...fantasyTeam,
     playerIds: Uint16Array.from(fantasyTeam.playerIds),
@@ -788,7 +788,7 @@ export function countPlayersByTeam(
 }
 
 export function reasonToDisablePlayer(
-  team: PickTeamDTO,
+  team: TeamSelectionDTO,
   players: PlayerDTO[],
   player: PlayerDTO,
   teamPlayerCounts: Record<number, number>,
@@ -841,7 +841,7 @@ export function reasonToDisablePlayer(
 
 export function checkSaveButtonConditions(
   isLoading: boolean,
-  fantasyTeam: PickTeamDTO,
+  fantasyTeam: TeamSelectionDTO,
   players: PlayerDTO[],
   appStatus: AppStatusDTO,
   selectedFormation: string,

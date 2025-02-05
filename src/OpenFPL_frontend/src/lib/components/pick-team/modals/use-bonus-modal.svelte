@@ -5,15 +5,15 @@
   import { playerStore } from "$lib/stores/player-store";
 
   import type { Bonus } from "$lib/types/bonus";
-  import type { PickTeamDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { BonusType } from "$lib/enums/BonusType";
   import { countryStore } from "$lib/stores/country-store";
   import { convertPositionToIndex } from "$lib/utils/helpers";
   import Modal from "$lib/components/shared/modal.svelte";
-    import { leagueStore } from "$lib/stores/league-store";
+  import { leagueStore } from "$lib/stores/league-store";
+  import type { TeamSelectionDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     
   export let visible: boolean;
-  export let fantasyTeam: Writable<PickTeamDTO | undefined>;
+  export let fantasyTeam: Writable<TeamSelectionDTO | undefined>;
   export let bonusUsedInSession: Writable<boolean>;
   export let closeBonusModal: () => void;
   export let bonus: Bonus;

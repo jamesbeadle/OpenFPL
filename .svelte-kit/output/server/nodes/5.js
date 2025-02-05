@@ -3,6 +3,6 @@
 export const index = 5;
 let component_cache;
 export const component = async () => component_cache ??= (await import('../entries/pages/gameplay-rules/_page.svelte.js')).default;
-export const imports = ["_app/immutable/nodes/5.C53_i_29.js","_app/immutable/chunks/index.BD1-Avof.js","_app/immutable/chunks/vendor.D6LFIRIk.js"];
-export const stylesheets = ["_app/immutable/assets/index.DI_gyc2R.css"];
+export const imports = ["_app/immutable/nodes/5.C7VQp-qV.js","_app/immutable/chunks/index.DrWzKATK.js","_app/immutable/chunks/vendor.mDcLQhi8.js"];
+export const stylesheets = ["_app/immutable/assets/index.3x8TuEHK.css"];
 export const fonts = [];

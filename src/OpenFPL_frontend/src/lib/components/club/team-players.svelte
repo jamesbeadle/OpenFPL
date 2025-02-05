@@ -1,7 +1,7 @@
 <script lang="ts">
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import { onMount } from "svelte";
-  import type { PlayerDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { PlayerDTO } from "../../../../../declarations/data_canister/data_canister.did";
   import {
     calculateAgeFromNanoseconds,
     convertPositionToIndex,

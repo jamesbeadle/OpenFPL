@@ -6,7 +6,7 @@ import type {
   GameweekFiltersDTO,
   GetPlayerDetailsDTO,
   PlayerDetailDTO,
-} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+} from "../../../../declarations/data_canister/data_canister.did";
 import { toasts } from "$lib/stores/toasts-store";
 
 export class PlayerEventsService {

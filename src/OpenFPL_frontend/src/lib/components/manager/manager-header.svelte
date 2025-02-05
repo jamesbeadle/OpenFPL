@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import type { ClubDTO, ManagerDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import type { ClubDTO } from "../../../../../declarations/data_canister/data_canister.did";
     import HeaderContentPanel from "../shared/panels/header-content-panel.svelte";
     import { clubStore } from "$lib/stores/club-store";
     import { getProfilePictureString } from "$lib/derived/user.derived";
@@ -10,6 +10,7 @@
     import ManagerFavouriteTeamPanel from "./manager-favourite-team-panel.svelte";
     import WidgetSpinner from "../shared/widget-spinner.svelte";
     import { writable } from "svelte/store";
+    import type { ManagerDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
     export let manager: ManagerDTO;
     

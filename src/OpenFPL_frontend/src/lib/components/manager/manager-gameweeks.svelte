@@ -1,10 +1,10 @@
 <script lang="ts">
   import { playerStore } from "$lib/stores/player-store";
   import { countryStore } from "$lib/stores/country-store";
-  import type { ManagerDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { getBonusIcon, getFlagComponent, getPlayerName } from "$lib/utils/helpers";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import type { Writable } from "svelte/store";
+  import type { ManagerDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   export let manager: Writable<ManagerDTO | null>;
   export let viewGameweekDetail: (selectedGameweek: number) => void;

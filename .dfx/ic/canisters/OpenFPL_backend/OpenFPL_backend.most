@@ -38,7 +38,7 @@ type LeagueSeasonStatus =
 type List<T> = ?(T, List<T>);
 type MonthlyRewards =
   {month : CalendarMonth; rewards : List<RewardEntry>; seasonId : SeasonId};
-type PlayerDTO__1 =
+type PlayerDTO =
   {
     clubId : ClubId;
     currentLoanEndDate : Int;
@@ -132,7 +132,7 @@ actor {
   stable var stable_monthly_rewards : [MonthlyRewards];
   stable var stable_most_valuable_team_rewards : [RewardsList];
   stable var stable_player_snapshots :
-    [(SeasonId, [(GameweekNumber, [PlayerDTO__1])])];
+    [(SeasonId, [(GameweekNumber, [PlayerDTO])])];
   stable var stable_season_all_time_high_scores : [HighScoreRecord];
   stable var stable_season_ath_prize_pool : Nat64;
   stable var stable_season_leaderboard_canister_ids :

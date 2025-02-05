@@ -7,14 +7,14 @@
   import { clubStore } from "$lib/stores/club-store";
   import AddPlayerIcon from "$lib/icons/AddPlayerIcon.svelte";
   import { getGridSetup } from "$lib/utils/pick-team.helpers";
-  import type { PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { getActualIndex } from "$lib/utils/helpers";
   import WidgetSpinner from "../shared/widget-spinner.svelte";
   import SponsorshipBoard from "./sponsorship-board.svelte";
   import PitchPlayer from "./pitch-player.svelte";
+    import type { TeamSelectionDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   export let selectedFormation: Writable<string>;
-  export let fantasyTeam: Writable<PickTeamDTO | undefined>;
+  export let fantasyTeam: Writable<TeamSelectionDTO | undefined>;
   export let loadAddPlayer: (row: number, col: number) => void;
   export let canSellPlayer: Writable<boolean>;
   export let sessionAddedPlayers: Writable<number[]>;

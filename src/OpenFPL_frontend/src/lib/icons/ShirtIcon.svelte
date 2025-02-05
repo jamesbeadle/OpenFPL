@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { ClubDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import type { ClubDTO } from "../../../../declarations/data_canister/data_canister.did";
 
     export let className = "";
     export let club: ClubDTO;

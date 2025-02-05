@@ -3,7 +3,6 @@
   import { page } from "$app/state";
   import { playerStore } from "$lib/stores/player-store";
   import { managerStore } from "$lib/stores/manager-store";
-  import type { ManagerDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import { getBonusIcon, getFlagComponent, getPlayerName } from "$lib/utils/helpers";
   import { countryStore } from "$lib/stores/country-store";
@@ -12,6 +11,7 @@
   import { goto } from "$app/navigation";
   import WidgetSpinner from "../shared/widget-spinner.svelte";
   import SortIcon from "$lib/icons/SortIcon.svelte";
+    import type { ManagerDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   export let principalId = "";
   let manager: ManagerDTO | null;

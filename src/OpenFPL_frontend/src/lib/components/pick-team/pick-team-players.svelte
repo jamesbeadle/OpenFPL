@@ -5,7 +5,7 @@
   import { leagueStore } from "$lib/stores/league-store";
   import { playerStore } from "$lib/stores/player-store";
   import { canAddPlayerToCurrentFormation, findValidFormationWithPlayer, getAvailablePositionIndex, getHighestValuedPlayerId, getTeamFormation, repositionPlayersForNewFormation } from "$lib/utils/pick-team.helpers";
-  import type { PlayerDTO, PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { PlayerDTO } from "../../../../../declarations/data_canister/data_canister.did";
 
   import ConfirmCaptainChange from "./modals/confirm-captain-change-modal.svelte";
   import AddPlayerModal from "./modals/add-player-modal.svelte";
@@ -13,8 +13,9 @@
   import SelectedPlayersPitch from "./selected-players-pitch.svelte";
   import SelectedPlayersList from "./selected-players-list.svelte";
   import { convertPositionToIndex } from "$lib/utils/helpers";
+    import type { TeamSelectionDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   
-  export let fantasyTeam: Writable<PickTeamDTO | undefined>;
+  export let fantasyTeam: Writable<TeamSelectionDTO | undefined>;
   export let pitchView: Writable<boolean>;
   export let selectedFormation: Writable<string>;
   export let teamValue: Writable<number>;

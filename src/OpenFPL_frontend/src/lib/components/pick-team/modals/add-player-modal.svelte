@@ -5,17 +5,18 @@
   import { playerStore } from "$lib/stores/player-store";
   import { countPlayersByTeam, reasonToDisablePlayer, sortPlayersByClubThenValue } from "$lib/utils/pick-team.helpers";
   import { addTeamDataToPlayers, convertPositionToIndex, normaliseString } from "$lib/utils/helpers";
-  import type { PlayerDTO, PickTeamDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { PlayerDTO } from "../../../../../../declarations/data_canister/data_canister.did";
   import Modal from "$lib/components/shared/modal.svelte";
   import WidgetSpinner from "$lib/components/shared/widget-spinner.svelte";
   import AddPlayerModalPagination from "./add-player-modal-pagination.svelte";
   import AddPlayerTableRow from "./add-player-table-row.svelte";
   import AddPlayerFilterRow from "./add-player-filter-row.svelte";
   import AddPlayerTableHaeder from "./add-player-table-haeder.svelte";
+    import type { TeamSelectionDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   export let visible: boolean;
   export let handlePlayerSelection: (player: PlayerDTO) => void;
-  export let fantasyTeam: Writable<PickTeamDTO | undefined>;
+  export let fantasyTeam: Writable<TeamSelectionDTO | undefined>;
   export let filterPosition = writable(-1);
 
   const pageSize = 10;

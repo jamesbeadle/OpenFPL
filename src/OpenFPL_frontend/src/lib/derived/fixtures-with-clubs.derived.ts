@@ -1,8 +1,7 @@
 import { derived } from "svelte/store";
 import { fixtureStore } from "../stores/fixture-store";
 import { clubStore } from "../stores/club-store";
-import type { FixtureDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-import type { ClubDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type { ClubDTO, FixtureDTO } from "../../../../declarations/data_canister/data_canister.did";
 
 export interface FixtureWithClubs extends FixtureDTO {
   homeClub?: ClubDTO;

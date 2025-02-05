@@ -15,7 +15,7 @@
       ClubDTO,
       PlayerDTO,
       GameweekNumber,
-    } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    } from "../../../../../declarations/data_canister/data_canister.did";
     import HeaderCountdownPanel from "../shared/panels/header-countdown-panel.svelte";
     import PlayerAgePanel from "./player-age-panel.svelte";
     import HeaderFixturePanel from "../homepage/homepage-header-fixture-panel.svelte";
