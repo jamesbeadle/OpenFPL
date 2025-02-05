@@ -1,6 +1,6 @@
 import Result "mo:base/Result";
 import DTOs "../../shared/dtos/dtos";
-import FootballTypes "../../shared/types/football_types";
+import FootballTypes "mo:football-types";
 import T "../../shared/types/app_types";
 
 import NetworkEnvVars "../network_environment_variables";

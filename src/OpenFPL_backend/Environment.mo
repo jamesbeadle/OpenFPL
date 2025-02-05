@@ -1,4 +1,4 @@
-import FootballTypes "../shared/types/football_types";
+import FootballTypes "mo:football-types";
 
 module Environment {
 

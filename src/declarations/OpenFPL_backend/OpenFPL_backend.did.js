@@ -11,6 +11,7 @@ export const idlFactory = ({ IDL }) => {
     'NumberPerPositionError' : IDL.Null,
     'TeamOverspend' : IDL.Null,
     'NotAuthorized' : IDL.Null,
+    'InvalidGameweek' : IDL.Null,
     'SelectedCaptainNotInTeam' : IDL.Null,
     'InvalidData' : IDL.Null,
     'SystemOnHold' : IDL.Null,

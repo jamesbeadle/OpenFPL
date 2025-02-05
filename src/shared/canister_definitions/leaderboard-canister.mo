@@ -12,7 +12,7 @@ import Nat "mo:base/Nat";
 import TrieMap "mo:base/TrieMap";
 
 import Base "../../shared/types/base_types";
-import FootballTypes "../../shared/types/football_types";
+import FootballTypes "mo:football-types";
 import T "../../shared/types/app_types";
 import DTOs "../dtos/dtos";
 import Environment "../network_environment_variables";
