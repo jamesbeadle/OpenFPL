@@ -2,8 +2,9 @@
   import { onMount } from "svelte";
   import { type Writable } from "svelte/store";
   import { fixtureStore } from "$lib/stores/fixture-store";
-  import { playerStore } from "$lib/stores/player-store";
-  import { formatUnixDateToReadable, formatUnixTimeToTime, getCountdownTime } from "$lib/utils/helpers";
+  import { updateTeamValue } from "$lib/utils/pick-team.helpers";
+  import { formatUnixDateToReadable, formatUnixTimeToTime, getCountdownTime } from "$lib/utils/Helpers";
+  import type { TeamSelectionDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   import { seasonStore } from "$lib/stores/season-store";
   import PageHeader from "../shared/panels/page-header.svelte";
@@ -11,7 +12,6 @@
   import ContentPanel from "../shared/panels/content-panel.svelte";
   import HeaderContentPanel from "../shared/panels/header-content-panel.svelte";
   import HeaderCountdownPanel from "../shared/panels/header-countdown-panel.svelte";
-    import type { TeamSelectionDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
  
   export let fantasyTeam: Writable<TeamSelectionDTO | undefined>;
   export let teamValue: Writable<number>;
@@ -24,13 +24,16 @@
   let countdownTime: { days: number; hours: number; minutes: number; };
 
   onMount(async () => {
-    
     let foundSeason = $seasonStore.find(x => x.id == $leagueStore!.activeSeasonId);
     if(foundSeason){
       activeSeason = foundSeason.name;
     }
     activeGameweek = $leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek;
-    updateTeamValue();
+    if ($fantasyTeam) {
+      teamValue.set(updateTeamValue($fantasyTeam));
+    } else {
+      teamValue.set(0);
+    }
     setCountdownTimer();
     isLoading = false;
   });
@@ -51,22 +54,6 @@
     nextFixtureTime = formatUnixTimeToTime(oneHourBeforeKickOff);
 
     countdownTime = getCountdownTime(oneHourBeforeKickOff);
-  }
-
-  function updateTeamValue() {
-    if ($fantasyTeam) {
-      let totalValue = 0;
-      $fantasyTeam.playerIds.forEach((id) => {
-        const player = $playerStore.find((p) => p.id === id);
-        if (player) {
-          totalValue += player.valueQuarterMillions;
-        }
-      });
-      
-      if(totalValue > 0){
-        teamValue.set(totalValue / 4);
-      }
-    }
   }
 
 </script>

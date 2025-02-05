@@ -14,9 +14,16 @@
     export let playTransferWindow : () => void;
     export let autoFillFantasyTeam : () => void;
     export let saveFantasyTeam : () => void;
+    export let handleResetTeam: () => void;
+    export let startingFantasyTeam: TeamSelectionDTO;
     
+    $: showResetButton = $fantasyTeam?.playerIds && startingFantasyTeam?.playerIds && (
+      (startingFantasyTeam.playerIds.filter(id => id > 0).length === 11 && 
+       $fantasyTeam.playerIds.filter(id => id > 0).length < startingFantasyTeam.playerIds.filter(id => id > 0).length) ||
+      !$fantasyTeam.playerIds.every((id, index) => id === startingFantasyTeam.playerIds[index])
+    );   
 </script>
-<div class="bg-panel xs:flex flex-row">
+<div class="flex-row bg-panel xs:flex">
     <div class="w-full xs:w-1/2">
       <div class="flex flex-row ml-4" style="margin-top: 2px;">
         <button
@@ -41,7 +48,7 @@
       <div class="flex flex-row items-center mx-4 mt-3">
         <p class="mr-2">Formation:</p>
         <select
-          class="px-4 xs:mb-1 border-sm fpl-dropdown text-center text-center w-full"
+          class="w-full px-4 text-center xs:mb-1 border-sm fpl-dropdown"
           bind:value={$selectedFormation}
         >
           {#each $availableFormations as formation}
@@ -65,6 +72,14 @@
         >
           Auto Fill
         </button>
+        {#if showResetButton}
+          <button
+            on:click={handleResetTeam}
+            class="side-button-base bg-BrandRed"
+          >
+            Reset Team
+          </button>
+        {/if}
         <button
           disabled={!$isSaveButtonActive}
           on:click={saveFantasyTeam}
@@ -76,7 +91,7 @@
         </button>
       </div>
       {#if $leagueStore!.transferWindowActive && $leagueStore!.seasonActive && $leagueStore!.activeMonth == 1}
-        <div class="flex flex-row mx-4 space-x-1 mb-4">
+        <div class="flex flex-row mx-4 mb-4 space-x-1">
           <button
             disabled={$transferWindowPlayed}
             on:click={playTransferWindow}

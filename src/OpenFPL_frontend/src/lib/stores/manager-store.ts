@@ -53,7 +53,7 @@ function createManagerStore() {
     captainId: 0,
     monthlyBonusesAvailable: 0,
     canisterId: "",
-    firstGameweek: false,
+    firstGameweek: true,
   };
 
   async function getPublicProfile(
