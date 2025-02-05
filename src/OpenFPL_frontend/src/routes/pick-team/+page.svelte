@@ -5,7 +5,7 @@
   import { storeManager } from "$lib/managers/store-manager";
   import { managerStore } from "$lib/stores/manager-store";
   import { appStore } from "$lib/stores/app-store";
-  import type { PickTeamDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { TeamSelectionDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { allFormations } from "$lib/utils/pick-team.helpers";
   
   import Layout from "../Layout.svelte";
@@ -17,11 +17,12 @@
   import BonusPanel from "$lib/components/pick-team/bonus-panel.svelte";
   import OnHold from "$lib/components/pick-team/on-hold.svelte";
     
-  let fantasyTeam = writable<PickTeamDTO | undefined>(undefined);
+  let fantasyTeam = writable<TeamSelectionDTO | undefined>(undefined);
   let availableFormations = writable(Object.keys(allFormations));   
   let selectedFormation = writable('4-4-2');
   let teamValue = writable(0);
   const pitchView = writable(true);
+  let sessionAddedPlayers = writable<number[]>([]);
   
   let isLoading = true;
   
@@ -66,10 +67,17 @@
     {:else}
     <div>
       <PickTeamHeader {fantasyTeam} {teamValue} />
-      <PickTeamButtons {fantasyTeam} {pitchView} {selectedFormation} {availableFormations} />
-      <div class="flex flex-col xl:flex-row mt-2 xl:mt-0">
-        <PickTeamPlayers {fantasyTeam} {pitchView} {selectedFormation} {teamValue} />
-        <div class="hidden xl:flex w-full xl:w-1/2 ml-2">
+      <PickTeamButtons 
+        {fantasyTeam} 
+        {pitchView} 
+        {selectedFormation} 
+        {availableFormations}
+        {teamValue}
+        {sessionAddedPlayers}
+      />
+      <div class="flex flex-col mt-2 xl:flex-row xl:mt-0">
+        <PickTeamPlayers {fantasyTeam} {pitchView} {selectedFormation} {teamValue} {sessionAddedPlayers} />
+        <div class="hidden w-full ml-2 xl:flex xl:w-1/2">
           <SimpleFixtures />
         </div>
       </div>

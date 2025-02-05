@@ -3,16 +3,19 @@ import type { TeamStats } from "$lib/types/team-stats";
 import * as FlagIcons from "svelte-flag-icons";
 import type {
   ClubDTO,
-  PlayerDTO,
   PlayerPointsDTO,
   FixtureDTO,
   FixtureStatusType,
   PlayerEventType,
   PlayerPosition,
-  FantasyTeamSnapshot,
-  LeaderboardEntry,
+} from "../../../../declarations/data_canister/data_canister.did";
+import type {
+  PlayerDTO,
+  ManagerGameweekDTO,
+  LeaderboardEntryDTO,
   RewardEntry,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+
 import type { GameweekData } from "$lib/interfaces/GameweekData";
 import EnglandFlag from "../flags/england.svelte"; // Custom Svelte component for England
 import ScotlandFlag from "../flags/scotland.svelte"; // Custom Svelte component for Scotland
@@ -1102,12 +1105,13 @@ export function getActualIndex(
   return startIndex + colIndex;
 }
 
-export function reduceFilteredFixtures(filteredFixtures: FixtureWithClubs[]): {
-  [key: string]: FixtureWithClubs[];
+export function reduceFilteredFixtures(filteredFixtures: FixtureWithTeams[]): {
+  [key: string]: FixtureWithTeams[];
 } {
   return filteredFixtures.reduce(
-    (acc: { [key: string]: FixtureWithClubs[] }, fixtureWithTeams) => {
-      const date = new Date(Number(fixtureWithTeams.kickOff) / 1000000);
+    (acc: { [key: string]: FixtureWithTeams[] }, fixture) => {
+      const kickOff = fixture.fixture.kickOff;
+      const date = new Date(Number(kickOff) / 1000000);
       const dateFormatter = new Intl.DateTimeFormat("en-GB", {
         weekday: "long",
         day: "numeric",
@@ -1119,10 +1123,10 @@ export function reduceFilteredFixtures(filteredFixtures: FixtureWithClubs[]): {
       if (!acc[dateKey]) {
         acc[dateKey] = [];
       }
-      acc[dateKey].push(fixtureWithTeams);
+      acc[dateKey].push(fixture);
       return acc;
     },
-    {} as { [key: string]: FixtureWithClubs[] },
+    {} as { [key: string]: FixtureWithTeams[] },
   );
 }
 
@@ -1148,7 +1152,7 @@ export function convertToE8s(amount: string): bigint {
   return BigInt(whole) * 100_000_000n + BigInt(fractionPadded);
 }
 
-export function getBonusIcon(snapshot: FantasyTeamSnapshot): string {
+export function getBonusIcon(snapshot: ManagerGameweekDTO): string {
   if (snapshot.goalGetterGameweek === snapshot.gameweek) {
     return `<img src="/goal-getter.png" alt="Bonus" class="w-6 md:w-9" />`;
   } else if (snapshot.passMasterGameweek === snapshot.gameweek) {
@@ -1175,9 +1179,9 @@ export function getBonusIcon(snapshot: FantasyTeamSnapshot): string {
 }
 
 export function mergeLeaderboardWithRewards(
-  leaderboardEntries: LeaderboardEntry[],
+  leaderboardEntries: LeaderboardEntryDTO[],
   rewards: RewardEntry[],
-): LeaderboardEntry[] {
+): LeaderboardEntryDTO[] {
   const rewardMap = new Map(
     rewards.map((reward) => [reward.principalId, reward.amount]),
   );

@@ -4,19 +4,22 @@
   import { playerStore } from "$lib/stores/player-store";
   import { managerStore } from "$lib/stores/manager-store";
   import { seasonStore } from "$lib/stores/season-store";
-  import { allFormations, autofillTeam, checkBonusUsedInSession, checkSaveButtonConditions, getAvailableFormations, getHighestValuedPlayerId, getTeamFormation, isBonusConditionMet, isValidFormation } from "$lib/utils/pick-team.helpers";
+  import type { AppStatusDTO, TeamSelectionDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import { allFormations, autofillTeam, checkBonusUsedInSession, checkSaveButtonConditions, getAvailableFormations, getHighestValuedPlayerId, getTeamFormation, isBonusConditionMet, isValidFormation, updateTeamValue } from "$lib/utils/pick-team.helpers";
   import SetTeamName from "./modals/set-team-name-modal.svelte";
   import { appStore } from "$lib/stores/app-store";
   import WidgetSpinner from "../shared/widget-spinner.svelte";
   import { leagueStore } from "$lib/stores/league-store";
   import DesktopButtons from "./desktop-buttons.svelte";
   import MobileButtons from "./mobile-buttons.svelte";
-    import type { AppStatusDTO, TeamSelectionDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import { toasts } from "$lib/stores/toasts-store";
 
   export let fantasyTeam: Writable<TeamSelectionDTO | undefined>;
   export let selectedFormation: Writable<string>;
   export let availableFormations: Writable<string[]>;
   export let pitchView: Writable<Boolean>;
+  export let teamValue: Writable<number>;
+  export let sessionAddedPlayers: Writable<number[]>;
 
   let startingFantasyTeam: TeamSelectionDTO;
   let isSaveButtonActive = writable(false);
@@ -112,7 +115,26 @@
 
   function autoFillFantasyTeam() {
     if (!$fantasyTeam || !$playerStore) return;
+    
+    if (!$fantasyTeam.firstGameweek && $fantasyTeam.transferWindowGameweek !== $leagueStore!.unplayedGameweek) {
+      const emptySlots = 11 - $fantasyTeam.playerIds.filter(id => id > 0).length;
+      if (emptySlots > $fantasyTeam.transfersAvailable) {
+        toasts.addToast({
+          message: `Cannot auto-fill team - insufficient transfers available (${emptySlots} needed, ${$fantasyTeam.transfersAvailable} remaining)`,
+          type: "error",
+          duration: 2000
+        });
+        return;
+      }
+    }
+    
+    const oldPlayerIds = new Set($fantasyTeam.playerIds);
     $fantasyTeam = autofillTeam($fantasyTeam, $playerStore, $selectedFormation);
+
+    const newPlayers = $fantasyTeam.playerIds.filter(id => id > 0 && !oldPlayerIds.has(id));
+    $sessionAddedPlayers = [...$sessionAddedPlayers, ...newPlayers];
+    
+    teamValue.set(updateTeamValue($fantasyTeam));
   }
 
   function playTransferWindow() {
@@ -158,6 +180,22 @@
   function closeUsernameModal() {
     showUsernameModal = false;
   }
+
+  function handleResetTeam() {
+    if (!$fantasyTeam || !startingFantasyTeam) return;
+    
+    $fantasyTeam = {
+      ...startingFantasyTeam,
+      playerIds: Uint16Array.from(startingFantasyTeam.playerIds)
+    };
+    teamValue.set(updateTeamValue($fantasyTeam));
+    
+    toasts.addToast({
+      message: "Team reset successfully",
+      type: "info",
+      duration: 2000
+    });
+  }
 </script>
 
 {#if isLoading}
@@ -170,7 +208,7 @@
     {newUsername}
   />
 
-  <div class="hidden xl:flex flex-col md:flex-row">
+  <div class="flex-col hidden xl:flex md:flex-row">
     <DesktopButtons 
       {pitchViewActive} 
       {selectedFormation} 
@@ -178,14 +216,17 @@
       {transferWindowPlayed} 
       {isSaveButtonActive} 
       {fantasyTeam}
+      {startingFantasyTeam}
       {showPitchView}
       {showListView}
       {playTransferWindow}
       {autoFillFantasyTeam}
-      {saveFantasyTeam} />
+      {saveFantasyTeam}
+      {handleResetTeam}
+    />
   </div>
 
-  <div class="flex xl:hidden flex-col">
+  <div class="flex flex-col xl:hidden">
     <MobileButtons 
       {pitchViewActive} 
       {selectedFormation} 
@@ -193,11 +234,13 @@
       {transferWindowPlayed} 
       {isSaveButtonActive} 
       {fantasyTeam}
+      {startingFantasyTeam}
       {showPitchView}
       {showListView}
       {playTransferWindow}
       {autoFillFantasyTeam}
       {saveFantasyTeam}
+      {handleResetTeam}
     />
   </div>
 {/if}
