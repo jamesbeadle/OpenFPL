@@ -2,11 +2,12 @@
     import ActiveCaptainIcon from "$lib/icons/ActiveCaptainIcon.svelte";
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
     import { convertPositionToIndex, getFlagComponent, getPlayerName, getPositionAbbreviation } from "$lib/utils/helpers";
-    import type { ClubDTO, FantasyTeamSnapshot, PlayerDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import type { ClubDTO, PlayerDTO } from "../../../../../declarations/data_canister/data_canister.did";
     import type { GameweekData } from "$lib/interfaces/GameweekData";
     import type { Writable } from "svelte/store";
+    import type { ManagerGameweekDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
-    export let fantasyTeam: Writable<FantasyTeamSnapshot | null>
+    export let fantasyTeam: Writable<ManagerGameweekDTO | null>
     export let playerDTO: PlayerDTO;
     export let data: GameweekData;
     export let playerTeam: ClubDTO;

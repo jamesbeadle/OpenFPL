@@ -1,7 +1,7 @@
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import { ActorFactory } from "../utils/actor.factory";
 import { isError } from "../utils/helpers";
-import type { DataHashDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type { DataHashDTO } from "../../../../declarations/data_canister/data_canister.did";
 import { toasts } from "$lib/stores/toasts-store";
 
 export class DataHashService {

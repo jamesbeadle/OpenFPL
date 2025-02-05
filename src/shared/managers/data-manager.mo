@@ -23,13 +23,6 @@ module {
       return await data_canister.getVerifiedClubs(leagueId);
     };
 
-    public func getVerifiedFixtures(leagueId: FootballTypes.LeagueId) : async Result.Result<[DTOs.FixtureDTO], T.Error> {
-      let data_canister = actor (NetworkEnvVars.DATA_CANISTER_ID) : actor {
-        getVerifiedFixtures : (leagueId: FootballTypes.LeagueId) -> async Result.Result<[DTOs.FixtureDTO], T.Error>;
-      };
-      return await data_canister.getVerifiedFixtures(leagueId);
-    };
-
   };
 
 };

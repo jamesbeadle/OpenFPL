@@ -5,18 +5,18 @@
   import { leagueStore } from "$lib/stores/league-store";
   import { seasonStore } from "$lib/stores/season-store";
   import { playerEventsStore } from "$lib/stores/player-events-store";
-  import type { ClubDTO, FantasyTeamSnapshot } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import { calculateBonusPoints, sortPlayersByPointsThenValue } from "$lib/utils/pick-team.helpers";
   import WidgetSpinner from "../shared/widget-spinner.svelte";
   import ManagerGameweekDetailTable from "./manager-gameweek-detail-table.svelte";
   import ScoreAbbreviationKey from "../shared/score-abbreviation-key.svelte";
-  import FantasyPlayerDetailModal from "../fantasy-team/fantasy-player-detail-modal.svelte";
   import GameweekFilter from "../shared/filters/gameweek-filter.svelte";
-    import { getGameweeks } from "$lib/utils/helpers";
+  import { getGameweeks } from "$lib/utils/helpers";
+  import type { ManagerGameweekDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { ClubDTO } from "../../../../../declarations/data_canister/data_canister.did";
   
   export let selectedGameweek = writable<number | null>(null);
-  export let fantasyTeam = writable<FantasyTeamSnapshot | null>(null);
+  export let fantasyTeam = writable<ManagerGameweekDTO | null>(null);
 
   let isLoading = false;
   let showModal = false;
@@ -65,18 +65,9 @@
 {#if isLoading}
   <WidgetSpinner />
 {:else}
-  {#if showModal}
-    <FantasyPlayerDetailModal
-      playerTeam={selectedTeam}
-      opponentTeam={selectedOpponentTeam}
-      seasonName={activeSeasonName}
-      bind:visible={showModal}
-      gameweekData={selectedGameweekData}
-    />
-  {/if}
   <div class="flex flex-col">
       <GameweekFilter {selectedGameweek} {gameweeks} {changeGameweek} />
   </div>
-  <ManagerGameweekDetailTable {fantasyTeam} {selectedGameweekData} {gameweekPlayers} {selectedTeam} {selectedOpponentTeam} {showModal} />
+  <ManagerGameweekDetailTable {activeSeasonName} {fantasyTeam} {gameweekPlayers} {showModal} />
   <ScoreAbbreviationKey />
 {/if}

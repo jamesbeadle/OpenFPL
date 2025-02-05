@@ -1,14 +1,15 @@
 <script lang="ts">
     import type { Writable } from "svelte/store";
-    import type { ClubDTO, PickTeamDTO, PlayerDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import type { ClubDTO, PlayerDTO } from "../../../../../declarations/data_canister/data_canister.did";
     import RemovePlayerIcon from "$lib/icons/RemovePlayerIcon.svelte";
     import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
     import ActiveCaptainIcon from "$lib/icons/ActiveCaptainIcon.svelte";
     import PlayerCaptainIcon from "$lib/icons/PlayerCaptainIcon.svelte";
     import { convertPositionToIndex, getFlagComponent, getPlayerName, getPositionAbbreviation } from "$lib/utils/helpers";
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
+    import type { TeamSelectionDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
-    export let fantasyTeam: Writable<PickTeamDTO | undefined>;
+    export let fantasyTeam: Writable<TeamSelectionDTO | undefined>;
     export let player: PlayerDTO;
     export let club: ClubDTO;
     export let canSellPlayer: Writable<boolean>;

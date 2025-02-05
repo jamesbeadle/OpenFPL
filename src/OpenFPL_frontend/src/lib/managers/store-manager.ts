@@ -5,6 +5,10 @@ import { playerStore } from "$lib/stores/player-store";
 import { playerEventsStore } from "$lib/stores/player-events-store";
 import { fixtureStore } from "$lib/stores/fixture-store";
 import { weeklyLeaderboardStore } from "$lib/stores/weekly-leaderboard-store";
+import { leagueStore } from "$lib/stores/league-store";
+import { appStore } from "$lib/stores/app-store";
+import { RewardRatesService } from "$lib/services/reward-rates-service";
+import { rewardRatesStore } from "$lib/stores/reward-pool-store";
 
 import { DataHashService } from "$lib/services/data-hash-service";
 import { AppService } from "$lib/services/app-service";
@@ -18,10 +22,6 @@ import { FixtureService } from "$lib/services/fixture-service";
 import { WeeklyLeaderboardService } from "$lib/services/weekly-leaderboard-service";
 
 import { replacer } from "$lib/utils/helpers";
-import { leagueStore } from "$lib/stores/league-store";
-import { appStore } from "$lib/stores/app-store";
-import { RewardPoolService } from "$lib/services/reward-pool-service";
-import { rewardPoolStore } from "$lib/stores/reward-pool-store";
 
 class StoreManager {
   private dataHashService: DataHashService;
@@ -34,7 +34,7 @@ class StoreManager {
   private playerEventsService: PlayerEventsService;
   private fixtureService: FixtureService;
   private weeklyLeaderboardService: WeeklyLeaderboardService;
-  private rewardPoolService: RewardPoolService;
+  private rewardRatesService: RewardRatesService;
 
   private categories: string[] = [
     "countries",
@@ -45,7 +45,7 @@ class StoreManager {
     "players",
     "player_events",
     "fixtures",
-    "reward_pool",
+    "reward_rates",
   ];
 
   constructor() {
@@ -59,7 +59,7 @@ class StoreManager {
     this.playerEventsService = new PlayerEventsService();
     this.fixtureService = new FixtureService();
     this.weeklyLeaderboardService = new WeeklyLeaderboardService();
-    this.rewardPoolService = new RewardPoolService();
+    this.rewardRatesService = new RewardRatesService();
   }
 
   async syncStores(): Promise<void> {
@@ -199,21 +199,20 @@ class StoreManager {
           );
         });
         break;
-      case "reward_pool":
+      case "reward_rates":
         leagueStore.subscribe(async (leagueStatus) => {
           if (!leagueStatus) {
             return;
           }
-          const updatedRewardPool = await this.rewardPoolService.getRewardPool(
-            leagueStatus.activeSeasonId,
-          );
-          if (!updatedRewardPool) {
+          const updatedRewardRates =
+            await this.rewardRatesService.getRewardRates();
+          if (!updatedRewardRates) {
             return;
           }
-          rewardPoolStore.setRewardPool(updatedRewardPool);
+          rewardRatesStore.setRewardRates(updatedRewardRates);
           localStorage.setItem(
-            "reward_pool",
-            JSON.stringify(updatedRewardPool, replacer),
+            "reward_rates",
+            JSON.stringify(updatedRewardRates, replacer),
           );
         });
         break;
@@ -256,9 +255,9 @@ class StoreManager {
         const cachedWeeklyLeaderboard = JSON.parse(cachedData || "null");
         weeklyLeaderboardStore.setWeeklyLeaderboard(cachedWeeklyLeaderboard);
         break;
-      case "reward_pool":
-        const cachedRewardPool = JSON.parse(cachedData || "null");
-        rewardPoolStore.setRewardPool(cachedRewardPool);
+      case "reward_rates":
+        const cachedRewardRates = JSON.parse(cachedData || "null");
+        rewardRatesStore.setRewardRates(cachedRewardRates);
         break;
     }
   }

@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { Writable } from "svelte/store";
-    import type { PlayerDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import type { PlayerDTO } from "../../../../../../declarations/data_canister/data_canister.did";
     export let filteredPlayers: PlayerDTO[];
     export let currentPage: Writable<number>;
     const pageSize = 10;

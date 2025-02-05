@@ -5,7 +5,7 @@
     PlayerDetailDTO,
     PlayerEventData,
     PlayerGameweekDTO,
-  } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  } from "../../../../../declarations/data_canister/data_canister.did";
   import { getFlagComponent } from "../../utils/helpers";
   import Modal from "$lib/components/shared/modal.svelte";
 

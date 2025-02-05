@@ -1,7 +1,7 @@
 <script lang="ts">
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
     import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
-    import type { ClubDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import type { ClubDTO } from "../../../../../declarations/data_canister/data_canister.did";
 
     export let club: ClubDTO;
 </script>

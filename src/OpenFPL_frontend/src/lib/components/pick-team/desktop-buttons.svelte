@@ -1,14 +1,14 @@
 <script lang="ts">
     import type { Writable } from "svelte/store";
     import { leagueStore } from "$lib/stores/league-store";
-    import type { PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import type { TeamSelectionDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
     export let pitchViewActive: Writable<boolean>;
     export let selectedFormation: Writable<string>;
     export let availableFormations: Writable<string[]>;
     export let transferWindowPlayed: Writable<boolean>;
     export let isSaveButtonActive: Writable<boolean>;
-    export let fantasyTeam: Writable<PickTeamDTO | undefined>;
+    export let fantasyTeam: Writable<TeamSelectionDTO | undefined>;
     export let showPitchView : () => void;
     export let showListView : () => void;
     export let playTransferWindow : () => void;

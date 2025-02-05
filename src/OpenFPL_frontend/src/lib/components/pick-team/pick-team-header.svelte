@@ -4,7 +4,6 @@
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { playerStore } from "$lib/stores/player-store";
   import { formatUnixDateToReadable, formatUnixTimeToTime, getCountdownTime } from "$lib/utils/helpers";
-  import type { PickTeamDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   import { seasonStore } from "$lib/stores/season-store";
   import PageHeader from "../shared/panels/page-header.svelte";
@@ -12,8 +11,9 @@
   import ContentPanel from "../shared/panels/content-panel.svelte";
   import HeaderContentPanel from "../shared/panels/header-content-panel.svelte";
   import HeaderCountdownPanel from "../shared/panels/header-countdown-panel.svelte";
+    import type { TeamSelectionDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
  
-  export let fantasyTeam: Writable<PickTeamDTO | undefined>;
+  export let fantasyTeam: Writable<TeamSelectionDTO | undefined>;
   export let teamValue: Writable<number>;
   
   let isLoading = true;

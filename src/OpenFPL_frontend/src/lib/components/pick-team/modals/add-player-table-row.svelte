@@ -2,7 +2,7 @@
     import AddIcon from "$lib/icons/AddIcon.svelte";
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
     import { getPlayerName } from "$lib/utils/helpers";
-    import type { PlayerDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import type { PlayerDTO } from "../../../../../../declarations/data_canister/data_canister.did";
 
     export let player: any;
     export let index: number;
