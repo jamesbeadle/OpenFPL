@@ -25,7 +25,7 @@ export const idlFactory = ({ IDL }) => {
     username: IDL.Text,
     favouriteClubId: IDL.Opt(ClubId),
   });
-  const Result_14 = IDL.Variant({ ok: IDL.Text, err: Error });
+  const Result_15 = IDL.Variant({ ok: IDL.Text, err: Error });
   const RewardRatesDTO = IDL.Record({
     monthlyLeaderboardRewardRate: IDL.Nat64,
     allTimeSeasonHighScoreRewardRate: IDL.Nat64,
@@ -36,12 +36,12 @@ export const idlFactory = ({ IDL }) => {
     weeklyLeaderboardRewardRate: IDL.Nat64,
     allTimeWeeklyHighScoreRewardRate: IDL.Nat64,
   });
-  const Result_13 = IDL.Variant({ ok: RewardRatesDTO, err: Error });
+  const Result_14 = IDL.Variant({ ok: RewardRatesDTO, err: Error });
   const AppStatusDTO = IDL.Record({
     version: IDL.Text,
     onHold: IDL.Bool,
   });
-  const Result_6 = IDL.Variant({ ok: AppStatusDTO, err: Error });
+  const Result_7 = IDL.Variant({ ok: AppStatusDTO, err: Error });
   const CanisterType = IDL.Variant({
     SNS: IDL.Null,
     Leaderboard: IDL.Null,
@@ -62,7 +62,7 @@ export const idlFactory = ({ IDL }) => {
     computeAllocation: IDL.Nat,
     canisterId: CanisterId,
   });
-  const Result_12 = IDL.Variant({ ok: IDL.Vec(CanisterDTO), err: Error });
+  const Result_13 = IDL.Variant({ ok: IDL.Vec(CanisterDTO), err: Error });
   const CountryId = IDL.Nat16;
   const TeamSelectionDTO = IDL.Record({
     playerIds: IDL.Vec(ClubId),
@@ -93,9 +93,9 @@ export const idlFactory = ({ IDL }) => {
     canisterId: CanisterId,
     monthlyBonusesAvailable: IDL.Nat8,
   });
-  const Result_11 = IDL.Variant({ ok: TeamSelectionDTO, err: Error });
+  const Result_12 = IDL.Variant({ ok: TeamSelectionDTO, err: Error });
   const DataHashDTO = IDL.Record({ hash: IDL.Text, category: IDL.Text });
-  const Result_10 = IDL.Variant({ ok: IDL.Vec(DataHashDTO), err: Error });
+  const Result_11 = IDL.Variant({ ok: IDL.Vec(DataHashDTO), err: Error });
   const SeasonId = IDL.Nat16;
   const PrincipalId = IDL.Text;
   const GetManagerGameweekDTO = IDL.Record({
@@ -140,8 +140,8 @@ export const idlFactory = ({ IDL }) => {
     points: IDL.Int16,
     monthlyBonusesAvailable: IDL.Nat8,
   });
-  const Result_9 = IDL.Variant({ ok: ManagerGameweekDTO, err: Error });
-  const Result_8 = IDL.Variant({ ok: IDL.Vec(CanisterId), err: Error });
+  const Result_10 = IDL.Variant({ ok: ManagerGameweekDTO, err: Error });
+  const Result_9 = IDL.Variant({ ok: IDL.Vec(CanisterId), err: Error });
   const GetManagerDTO = IDL.Record({
     month: CalendarMonth,
     seasonId: SeasonId,
@@ -209,8 +209,9 @@ export const idlFactory = ({ IDL }) => {
     profilePictureType: IDL.Text,
     principalId: IDL.Text,
   });
-  const Result_7 = IDL.Variant({ ok: ProfileDTO, err: Error });
-  const Result_5 = IDL.Variant({ ok: IDL.Nat, err: Error });
+  const Result_8 = IDL.Variant({ ok: ProfileDTO, err: Error });
+  const Result_6 = IDL.Variant({ ok: IDL.Nat, err: Error });
+  const Result_5 = IDL.Variant({ ok: IDL.Vec(PlayerDTO), err: Error });
   const Result_4 = IDL.Variant({
     ok: IDL.Vec(
       IDL.Tuple(SeasonId, IDL.Vec(IDL.Tuple(GameweekNumber, CanisterId))),
@@ -304,25 +305,26 @@ export const idlFactory = ({ IDL }) => {
   return IDL.Service({
     calculateWeeklyRewards: IDL.Func([GameweekNumber], [Result], []),
     createManager: IDL.Func([CreateManagerDTO], [Result], []),
-    getActiveLeaderboardCanisterId: IDL.Func([], [Result_14], []),
-    getActiveRewardRates: IDL.Func([], [Result_13], []),
-    getAppStatus: IDL.Func([], [Result_6], ["query"]),
-    getCanisters: IDL.Func([GetCanistersDTO], [Result_12], []),
-    getCurrentTeam: IDL.Func([], [Result_11], []),
-    getDataHashes: IDL.Func([], [Result_10], ["composite_query"]),
-    getFantasyTeamSnapshot: IDL.Func([GetManagerGameweekDTO], [Result_9], []),
-    getLeaderboardCanisterIds: IDL.Func([], [Result_8], []),
+    getActiveLeaderboardCanisterId: IDL.Func([], [Result_15], []),
+    getActiveRewardRates: IDL.Func([], [Result_14], []),
+    getAppStatus: IDL.Func([], [Result_7], ["query"]),
+    getCanisters: IDL.Func([GetCanistersDTO], [Result_13], []),
+    getCurrentTeam: IDL.Func([], [Result_12], []),
+    getDataHashes: IDL.Func([], [Result_11], ["composite_query"]),
+    getFantasyTeamSnapshot: IDL.Func([GetManagerGameweekDTO], [Result_10], []),
+    getLeaderboardCanisterIds: IDL.Func([], [Result_9], []),
     getManager: IDL.Func([GetManagerDTO], [Result_1], []),
-    getManagerCanisterIds: IDL.Func([], [Result_8], []),
+    getManagerCanisterIds: IDL.Func([], [Result_9], []),
     getPlayersSnapshot: IDL.Func(
       [GetSnapshotPlayersDTO],
       [IDL.Vec(PlayerDTO)],
       ["query"],
     ),
-    getProfile: IDL.Func([], [Result_7], []),
-    getSystemState: IDL.Func([], [Result_6], ["query"]),
+    getProfile: IDL.Func([], [Result_8], []),
+    getSystemState: IDL.Func([], [Result_7], ["query"]),
     getTopups: IDL.Func([], [IDL.Vec(CanisterTopup)], ["query"]),
-    getTotalManagers: IDL.Func([], [Result_5], ["query"]),
+    getTotalManagers: IDL.Func([], [Result_6], ["query"]),
+    getVerifiedPlayers: IDL.Func([], [Result_5], []),
     getWeeklyCanisters: IDL.Func([], [Result_4], ["query"]),
     getWeeklyLeaderboard: IDL.Func([GetWeeklyLeaderboardDTO], [Result_3], []),
     getWeeklyRewards: IDL.Func([GetWeeklyRewardsDTO], [Result_2], ["query"]),

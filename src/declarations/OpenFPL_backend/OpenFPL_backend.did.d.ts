@@ -189,11 +189,12 @@ export interface ProfileDTO {
 }
 export type Result = { ok: null } | { err: Error };
 export type Result_1 = { ok: ManagerDTO } | { err: Error };
-export type Result_10 = { ok: Array<DataHashDTO> } | { err: Error };
-export type Result_11 = { ok: TeamSelectionDTO } | { err: Error };
-export type Result_12 = { ok: Array<CanisterDTO> } | { err: Error };
-export type Result_13 = { ok: RewardRatesDTO } | { err: Error };
-export type Result_14 = { ok: string } | { err: Error };
+export type Result_10 = { ok: ManagerGameweekDTO } | { err: Error };
+export type Result_11 = { ok: Array<DataHashDTO> } | { err: Error };
+export type Result_12 = { ok: TeamSelectionDTO } | { err: Error };
+export type Result_13 = { ok: Array<CanisterDTO> } | { err: Error };
+export type Result_14 = { ok: RewardRatesDTO } | { err: Error };
+export type Result_15 = { ok: string } | { err: Error };
 export type Result_2 = { ok: WeeklyRewardsDTO } | { err: Error };
 export type Result_3 = { ok: WeeklyLeaderboardDTO } | { err: Error };
 export type Result_4 =
@@ -201,11 +202,11 @@ export type Result_4 =
       ok: Array<[SeasonId, Array<[GameweekNumber, CanisterId]>]>;
     }
   | { err: Error };
-export type Result_5 = { ok: bigint } | { err: Error };
-export type Result_6 = { ok: AppStatusDTO } | { err: Error };
-export type Result_7 = { ok: ProfileDTO } | { err: Error };
-export type Result_8 = { ok: Array<CanisterId> } | { err: Error };
-export type Result_9 = { ok: ManagerGameweekDTO } | { err: Error };
+export type Result_5 = { ok: Array<PlayerDTO> } | { err: Error };
+export type Result_6 = { ok: bigint } | { err: Error };
+export type Result_7 = { ok: AppStatusDTO } | { err: Error };
+export type Result_8 = { ok: ProfileDTO } | { err: Error };
+export type Result_9 = { ok: Array<CanisterId> } | { err: Error };
 export interface RewardEntry {
   rewardType: RewardType;
   position: bigint;
@@ -314,21 +315,22 @@ export interface WeeklyRewardsDTO {
 export interface _SERVICE {
   calculateWeeklyRewards: ActorMethod<[GameweekNumber], Result>;
   createManager: ActorMethod<[CreateManagerDTO], Result>;
-  getActiveLeaderboardCanisterId: ActorMethod<[], Result_14>;
-  getActiveRewardRates: ActorMethod<[], Result_13>;
-  getAppStatus: ActorMethod<[], Result_6>;
-  getCanisters: ActorMethod<[GetCanistersDTO], Result_12>;
-  getCurrentTeam: ActorMethod<[], Result_11>;
-  getDataHashes: ActorMethod<[], Result_10>;
-  getFantasyTeamSnapshot: ActorMethod<[GetManagerGameweekDTO], Result_9>;
-  getLeaderboardCanisterIds: ActorMethod<[], Result_8>;
+  getActiveLeaderboardCanisterId: ActorMethod<[], Result_15>;
+  getActiveRewardRates: ActorMethod<[], Result_14>;
+  getAppStatus: ActorMethod<[], Result_7>;
+  getCanisters: ActorMethod<[GetCanistersDTO], Result_13>;
+  getCurrentTeam: ActorMethod<[], Result_12>;
+  getDataHashes: ActorMethod<[], Result_11>;
+  getFantasyTeamSnapshot: ActorMethod<[GetManagerGameweekDTO], Result_10>;
+  getLeaderboardCanisterIds: ActorMethod<[], Result_9>;
   getManager: ActorMethod<[GetManagerDTO], Result_1>;
-  getManagerCanisterIds: ActorMethod<[], Result_8>;
+  getManagerCanisterIds: ActorMethod<[], Result_9>;
   getPlayersSnapshot: ActorMethod<[GetSnapshotPlayersDTO], Array<PlayerDTO>>;
-  getProfile: ActorMethod<[], Result_7>;
-  getSystemState: ActorMethod<[], Result_6>;
+  getProfile: ActorMethod<[], Result_8>;
+  getSystemState: ActorMethod<[], Result_7>;
   getTopups: ActorMethod<[], Array<CanisterTopup>>;
-  getTotalManagers: ActorMethod<[], Result_5>;
+  getTotalManagers: ActorMethod<[], Result_6>;
+  getVerifiedPlayers: ActorMethod<[], Result_5>;
   getWeeklyCanisters: ActorMethod<[], Result_4>;
   getWeeklyLeaderboard: ActorMethod<[GetWeeklyLeaderboardDTO], Result_3>;
   getWeeklyRewards: ActorMethod<[GetWeeklyRewardsDTO], Result_2>;

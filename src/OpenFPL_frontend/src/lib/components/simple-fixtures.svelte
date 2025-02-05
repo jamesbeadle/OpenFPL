@@ -3,14 +3,14 @@
   import { clubStore } from "$lib/stores/club-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
-  import { convertFixtureStatus, formatUnixTimeToTime, getFixturesWithTeams, getGameweeks, reduceFilteredFixtures } from "../utils/Helpers";
+  import type { FixtureWithClubs } from "$lib/types/fixture-with-clubs";
+  import { convertFixtureStatus, formatUnixTimeToTime, getFixturesWithTeams, getGameweeks, reduceFilteredFixtures } from "../utils/helpers";
   import { storeManager } from "$lib/managers/store-manager";
   import { leagueStore } from "$lib/stores/league-store";
   import GameweekFilter from "./shared/filters/gameweek-filter.svelte";
   import { writable } from "svelte/store";
 
-  let fixturesWithTeams: FixtureWithTeams[] = [];
+  let fixturesWithTeams: FixtureWithClubs[] = [];
   let selectedGameweek = writable(1);
   let gameweeks = getGameweeks(Number(process.env.TOTAL_GAMEWEEKS));
   

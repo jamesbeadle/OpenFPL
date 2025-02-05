@@ -5,13 +5,13 @@
   import { leagueStore } from "$lib/stores/league-store";
   import { playerStore } from "$lib/stores/player-store";
   import { clubStore } from "$lib/stores/club-store";
-  import type { ClubDTO, PlayerDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import PlayerGameweekHistory from "$lib/components/player/player-gameweek-history.svelte";
     
   import Layout from "../Layout.svelte";
   import WidgetSpinner from "$lib/components/shared/widget-spinner.svelte";
   import PlayerHeader from "$lib/components/player/player-header.svelte";
   import TabContainer from "$lib/components/shared/tab-container.svelte";
+  import type { ClubDTO, PlayerDTO } from "../../../../external_declarations/data_canister/data_canister.did";
 
   $: id = Number(page.url.searchParams.get("id"));
 

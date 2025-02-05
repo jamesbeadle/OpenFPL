@@ -1,15 +1,7 @@
 import { derived } from "svelte/store";
 import { fixtureStore } from "../stores/fixture-store";
 import { clubStore } from "../stores/club-store";
-import type {
-  ClubDTO,
-  FixtureDTO,
-} from "../../../../external_declarations/data_canister/data_canister.did";
-
-export interface FixtureWithClubs extends FixtureDTO {
-  homeClub?: ClubDTO;
-  awayClub?: ClubDTO;
-}
+import type { FixtureWithClubs } from "$lib/types/fixture-with-clubs";
 
 export const fixtureWithClubsStore = derived(
   [fixtureStore, clubStore],

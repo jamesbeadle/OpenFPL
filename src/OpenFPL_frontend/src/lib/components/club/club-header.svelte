@@ -7,7 +7,7 @@
   import { clubStore } from "$lib/stores/club-store";
   import { playerStore } from "$lib/stores/player-store";
   import type { ClubDTO, ClubId, FixtureDTO, PlayerDTO } from "../../../../../external_declarations/data_canister/data_canister.did";
-  import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
+  import type { FixtureWithClubs } from "$lib/types/fixture-with-clubs";
   import HeaderContentPanel from "$lib/components/shared/panels/header-content-panel.svelte";
   import HeaderFixturePanel from "$lib/components/shared/panels/header-fixture-panel.svelte";
   import { getFixturesWithTeams, updateTableData } from "$lib/utils/helpers";
@@ -23,7 +23,7 @@
   let nextFixture: FixtureDTO | null;
   let nextFixtureHomeTeam: ClubDTO | undefined;
   let nextFixtureAwayTeam: ClubDTO | undefined;
-  let fixturesWithTeams: FixtureWithTeams[] = [];
+  let fixturesWithTeams: FixtureWithClubs[] = [];
   let selectedGameweek = writable(1);
   let tableData: any[] = [];
   let highestScoringPlayer: PlayerDTO | null = null;

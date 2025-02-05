@@ -51,6 +51,13 @@
       return seasonManager.getDataHashes();
     };
 
+    public shared func getVerifiedPlayers() : async Result.Result<[DTOs.PlayerDTO], T.Error> {
+      let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
+        getPlayers : shared query (leagueId: FootballTypes.LeagueId) -> async Result.Result<[DTOs.PlayerDTO], T.Error>;
+      };
+      return await data_canister.getPlayers(Environment.LEAGUE_ID);
+    };
+
     //Manager getters
 
     public shared ({ caller }) func getProfile() : async Result.Result<DTOs.ProfileDTO, T.Error> {

@@ -12,7 +12,7 @@
   import WidgetSpinner from "../shared/widget-spinner.svelte";
   import SelectedPlayersPitch from "./selected-players-pitch.svelte";
   import SelectedPlayersList from "./selected-players-list.svelte";
-  import { convertPositionToIndex } from "$lib/utils/Helpers";
+  import { convertPositionToIndex } from "$lib/utils/helpers";
   
   export let fantasyTeam: Writable<TeamSelectionDTO | undefined>;
   export let pitchView: Writable<boolean>;

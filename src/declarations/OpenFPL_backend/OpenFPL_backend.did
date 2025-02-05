@@ -113,27 +113,27 @@ type RewardEntry =
 type Result_9 = 
  variant {
    err: Error;
-   ok: ManagerGameweekDTO;
+   ok: vec CanisterId;
  };
 type Result_8 = 
  variant {
    err: Error;
-   ok: vec CanisterId;
+   ok: ProfileDTO;
  };
 type Result_7 = 
  variant {
    err: Error;
-   ok: ProfileDTO;
+   ok: AppStatusDTO;
  };
 type Result_6 = 
  variant {
    err: Error;
-   ok: AppStatusDTO;
+   ok: nat;
  };
 type Result_5 = 
  variant {
    err: Error;
-   ok: nat;
+   ok: vec PlayerDTO;
  };
 type Result_4 = 
  variant {
@@ -156,30 +156,35 @@ type Result_2 =
    err: Error;
    ok: WeeklyRewardsDTO;
  };
-type Result_14 = 
+type Result_15 = 
  variant {
    err: Error;
    ok: text;
  };
-type Result_13 = 
+type Result_14 = 
  variant {
    err: Error;
    ok: RewardRatesDTO;
  };
-type Result_12 = 
+type Result_13 = 
  variant {
    err: Error;
    ok: vec CanisterDTO;
  };
-type Result_11 = 
+type Result_12 = 
  variant {
    err: Error;
    ok: TeamSelectionDTO;
  };
-type Result_10 = 
+type Result_11 = 
  variant {
    err: Error;
    ok: vec DataHashDTO;
+ };
+type Result_10 = 
+ variant {
+   err: Error;
+   ok: ManagerGameweekDTO;
  };
 type Result_1 = 
  variant {
@@ -396,21 +401,22 @@ type AppStatusDTO =
 service : {
   calculateWeeklyRewards: (GameweekNumber) -> (Result);
   createManager: (CreateManagerDTO) -> (Result);
-  getActiveLeaderboardCanisterId: () -> (Result_14);
-  getActiveRewardRates: () -> (Result_13);
-  getAppStatus: () -> (Result_6) query;
-  getCanisters: (GetCanistersDTO) -> (Result_12);
-  getCurrentTeam: () -> (Result_11);
-  getDataHashes: () -> (Result_10) composite_query;
-  getFantasyTeamSnapshot: (GetManagerGameweekDTO) -> (Result_9);
-  getLeaderboardCanisterIds: () -> (Result_8);
+  getActiveLeaderboardCanisterId: () -> (Result_15);
+  getActiveRewardRates: () -> (Result_14);
+  getAppStatus: () -> (Result_7) query;
+  getCanisters: (GetCanistersDTO) -> (Result_13);
+  getCurrentTeam: () -> (Result_12);
+  getDataHashes: () -> (Result_11) composite_query;
+  getFantasyTeamSnapshot: (GetManagerGameweekDTO) -> (Result_10);
+  getLeaderboardCanisterIds: () -> (Result_9);
   getManager: (GetManagerDTO) -> (Result_1);
-  getManagerCanisterIds: () -> (Result_8);
+  getManagerCanisterIds: () -> (Result_9);
   getPlayersSnapshot: (GetSnapshotPlayersDTO) -> (vec PlayerDTO) query;
-  getProfile: () -> (Result_7);
-  getSystemState: () -> (Result_6) query;
+  getProfile: () -> (Result_8);
+  getSystemState: () -> (Result_7) query;
   getTopups: () -> (vec CanisterTopup) query;
-  getTotalManagers: () -> (Result_5) query;
+  getTotalManagers: () -> (Result_6) query;
+  getVerifiedPlayers: () -> (Result_5);
   getWeeklyCanisters: () -> (Result_4) query;
   getWeeklyLeaderboard: (GetWeeklyLeaderboardDTO) -> (Result_3);
   getWeeklyRewards: (GetWeeklyRewardsDTO) -> (Result_2) query;

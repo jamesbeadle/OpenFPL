@@ -9,7 +9,7 @@
     formatUnixTimeToTime,
     getFixturesWithTeams,
   } from "../../utils/helpers";
-  import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
+  import type { FixtureWithClubs } from "$lib/types/fixture-with-clubs";
   import { storeManager } from "$lib/managers/store-manager";
   import WidgetSpinner from "../shared/widget-spinner.svelte";
   import FixtureTypeFilter from "../shared/filters/fixture-type-filter.svelte";
@@ -19,7 +19,7 @@
 
   export let clubId: number | null = null;
 
-  let fixturesWithTeams: FixtureWithTeams[] = [];
+  let fixturesWithTeams: FixtureWithClubs[] = [];
   let selectedFixtureType = writable(-1);
 
   let isLoading = true;

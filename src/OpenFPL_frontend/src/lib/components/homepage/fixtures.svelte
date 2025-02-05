@@ -7,8 +7,9 @@
   import { writable } from "svelte/store";
   import GameweekFilter from "../shared/filters/gameweek-filter.svelte";
   import FixtureStatus from "./fixture-status.svelte";
-    import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-    import { fixtureWithClubsStore, type FixtureWithClubs } from "$lib/derived/fixtures-with-clubs.derived";
+  import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
+  import { fixtureWithClubsStore } from "$lib/derived/fixtures-with-clubs.derived";
+  import type { FixtureWithClubs } from "$lib/types/fixture-with-clubs";
 
   let isLoading = true;
   let gameweeks = getGameweeks(Number(process.env.TOTAL_GAMEWEEKS));
@@ -16,7 +17,7 @@
   let mergedFixtures: FixtureWithClubs[] = [];
 
   $: filteredFixtures = mergedFixtures.filter(
-    ({ gameweek }) => gameweek === $selectedGameweek
+    x => x.fixture.gameweek === $selectedGameweek
   );
   $: groupedFixtures = reduceFilteredFixtures(filteredFixtures);
 

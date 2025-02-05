@@ -4,14 +4,14 @@
   import { fixtureStore } from "$lib/stores/fixture-store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import { getFixturesWithTeams, getGameweeks, updateTableData } from "../../utils/helpers";
-  import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
+  import type { FixtureWithClubs } from "$lib/types/fixture-with-clubs";
   import { storeManager } from "$lib/managers/store-manager";
   import { leagueStore } from "$lib/stores/league-store";
   import WidgetSpinner from "../shared/widget-spinner.svelte";
   import { writable } from "svelte/store";
   import GameweekFilter from "../shared/filters/gameweek-filter.svelte";
 
-  let fixturesWithTeams: FixtureWithTeams[] = [];
+  let fixturesWithTeams: FixtureWithClubs[] = [];
   let selectedGameweek = writable(1);
   let gameweeks: number[];
   let tableData: any[] = [];

@@ -1,4 +1,4 @@
-import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
+import type { FixtureWithClubs } from "$lib/types/fixture-with-clubs";
 import type { TeamStats } from "$lib/types/team-stats";
 import * as FlagIcons from "svelte-flag-icons";
 import type {

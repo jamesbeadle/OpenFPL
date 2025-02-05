@@ -9,7 +9,7 @@
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { playerEventsStore } from "$lib/stores/player-events-store";
   import type { ClubDTO, PlayerDetailDTO, PlayerGameweekDTO } from "../../../../../external_declarations/data_canister/data_canister.did";
-  import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
+  import type { FixtureWithClubs } from "$lib/types/fixture-with-clubs";
   import { getFixturesWithTeams } from "$lib/utils/helpers";
   import PlayerGameweekModal from "./player-gameweek-modal.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
@@ -19,7 +19,7 @@
   
   let isLoading = true;
   let selectedGameweek = writable(1);
-  let fixturesWithTeams: FixtureWithTeams[] = [];
+  let fixturesWithTeams: FixtureWithClubs[] = [];
   let playerDetails: PlayerDetailDTO;
   let selectedOpponent: ClubDTO | null = null;
   let selectedPlayerGameweek: PlayerGameweekDTO | null = null;

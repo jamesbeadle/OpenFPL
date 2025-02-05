@@ -3,7 +3,7 @@
   import { type Writable } from "svelte/store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { updateTeamValue } from "$lib/utils/pick-team.helpers";
-  import { formatUnixDateToReadable, formatUnixTimeToTime, getCountdownTime } from "$lib/utils/Helpers";
+  import { formatUnixDateToReadable, formatUnixTimeToTime, getCountdownTime } from "$lib/utils/helpers";
   import type { TeamSelectionDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   import { seasonStore } from "$lib/stores/season-store";

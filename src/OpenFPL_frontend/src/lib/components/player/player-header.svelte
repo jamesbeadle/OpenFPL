@@ -9,7 +9,7 @@
       formatUnixDateToSmallReadable,
       formatUnixTimeToTime,
       getCountdownTime,
-    } from "../../../lib/utils/helpers";
+    } from "../../utils/helpers";
     import type {
       FixtureDTO,
       ClubDTO,
