@@ -14,7 +14,7 @@
   import List "mo:base/List";
 
   import Base "../shared/types/base_types";
-  import FootballTypes "../shared/types/football_types";
+  import FootballTypes "mo:football-types";
   import T "../shared/types/app_types";
   import DTOs "../shared/dtos/dtos";
   import Root "../shared/sns-wrappers/root";
@@ -124,6 +124,34 @@
       return await userManager.createManager(principalId, dto);
     };
 
+    private func validateGameweeks(dto:Commands.SaveBonusDTO, currentGameweek: FootballTypes.GameweekNumber) : Bool {
+      let gameweeks = [
+        dto.goalGetterGameweek,
+        dto.passMasterGameweek,
+        dto.noEntryGameweek,
+        dto.teamBoostGameweek,
+        dto.safeHandsGameweek,
+        dto.captainFantasticGameweek,
+        dto.oneNationGameweek,
+        dto.prospectsGameweek,
+        dto.braceBonusGameweek,
+        dto.hatTrickHeroGameweek
+      ];
+
+      for(gameweek in gameweeks.vals()){
+        switch(gameweek){
+          case (?gw){
+            if (gw != currentGameweek){
+              return false;
+            };
+          };
+          case (null) {}; //ignoring missing gameweeks
+        };
+      };
+
+      return true;
+    };
+
     public shared ({ caller }) func saveTeamSelection(dto : Commands.SaveTeamDTO) : async Result.Result<(), T.Error> {
       assert not Principal.isAnonymous(caller);
       let principalId = Principal.toText(caller);
@@ -187,6 +215,11 @@
           if(not leagueStatus.seasonActive){
             return #err(#NotAllowed);
           };    
+          
+          // validating gameweeks in the DTO
+          if (not validateGameweeks(dto, leagueStatus.unplayedGameweek)){
+            return #err(#InvalidGameweek);
+          };
           
           return await userManager.saveBonusSelection(principalId, dto, leagueStatus.unplayedGameweek);
         };

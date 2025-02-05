@@ -38,6 +38,7 @@ export type Error = { 'MoreThan2PlayersFromClub' : null } |
   { 'NumberPerPositionError' : null } |
   { 'TeamOverspend' : null } |
   { 'NotAuthorized' : null } |
+  { 'InvalidGameweek' : null } |
   { 'SelectedCaptainNotInTeam' : null } |
   { 'InvalidData' : null } |
   { 'SystemOnHold' : null } |

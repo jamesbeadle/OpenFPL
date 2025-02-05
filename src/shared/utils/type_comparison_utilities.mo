@@ -5,7 +5,7 @@ import Nat8 "mo:base/Nat8";
 import Nat16 "mo:base/Nat16";
 import Nat32 "mo:base/Nat32";
 
-import FootballTypes "../types/football_types";
+import FootballTypes "mo:football-types";
 
 
 module {

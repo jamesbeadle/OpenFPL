@@ -1,5 +1,5 @@
 
-import FootballTypes "../types/football_types";
+import FootballTypes "mo:football-types";
 import Base "../types/base_types";
 
 module Commands {

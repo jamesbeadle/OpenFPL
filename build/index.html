@@ -73,10 +73,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="#2CE3A6" />
     <meta name="apple-mobile-web-app-title" content="OpenFPL" />
-    <link
-      rel="apple-touch-icon"
-      href="/favicons/apple-touch-icon.png"
-    />
+    <link rel="apple-touch-icon" href="/favicons/apple-touch-icon.png" />
     <link
       rel="mask-icon"
       href="/favicons/safari-pinned-tab.svg"
@@ -85,18 +82,18 @@
 
     <!-- MS -->
     <meta name="msapplication-TileColor" content="#2CE3A6" />
-    <meta
-      name="msapplication-config"
-      content="/favicons/browserconfig.xml"
-    />
+    <meta name="msapplication-config" content="/favicons/browserconfig.xml" />
 
     <meta content="#2CE3A6" name="theme-color" />
-    
-		<link href="/_app/immutable/assets/index.DI_gyc2R.css" rel="stylesheet">
-		<link rel="modulepreload" href="/_app/immutable/entry/start.Cq8iZZiq.js">
-		<link rel="modulepreload" href="/_app/immutable/chunks/index.BD1-Avof.js">
-		<link rel="modulepreload" href="/_app/immutable/chunks/vendor.D6LFIRIk.js">
-		<link rel="modulepreload" href="/_app/immutable/entry/app.BbRm3fzu.js">
+
+    <link href="/_app/immutable/assets/index.DI_gyc2R.css" rel="stylesheet" />
+    <link rel="modulepreload" href="/_app/immutable/entry/start.Cq8iZZiq.js" />
+    <link rel="modulepreload" href="/_app/immutable/chunks/index.BD1-Avof.js" />
+    <link
+      rel="modulepreload"
+      href="/_app/immutable/chunks/vendor.D6LFIRIk.js"
+    />
+    <link rel="modulepreload" href="/_app/immutable/entry/app.BbRm3fzu.js" />
 
     <style>
       html,
@@ -110,8 +107,7 @@
         font-family: "Poppins";
         font-style: normal;
         font-weight: 400;
-        src: url("/poppins-regular-webfont.woff2")
-          format("woff2");
+        src: url("/poppins-regular-webfont.woff2") format("woff2");
       }
 
       @font-face {
@@ -253,23 +249,23 @@
   </head>
   <body data-sveltekit-preload-data="hover">
     <div style="display: contents">
-			<script>
-				{
-					__sveltekit_1seuwpj = {
-						base: ""
-					};
+      <script>
+        {
+          __sveltekit_1seuwpj = {
+            base: "",
+          };
 
-					const element = document.currentScript.parentElement;
+          const element = document.currentScript.parentElement;
 
-					Promise.all([
-						import("/_app/immutable/entry/start.Cq8iZZiq.js"),
-						import("/_app/immutable/entry/app.BbRm3fzu.js")
-					]).then(([kit, app]) => {
-						kit.start(app, element);
-					});
-				}
-			</script>
-		</div>
+          Promise.all([
+            import("/_app/immutable/entry/start.Cq8iZZiq.js"),
+            import("/_app/immutable/entry/app.BbRm3fzu.js"),
+          ]).then(([kit, app]) => {
+            kit.start(app, element);
+          });
+        }
+      </script>
+    </div>
 
     <svg
       id="app-spinner"
