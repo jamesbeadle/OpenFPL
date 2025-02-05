@@ -6,7 +6,13 @@ import { leagueStore } from "$lib/stores/league-store";
 import { isError } from "$lib/utils/helpers";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import { toasts } from "./toasts-store";
-import type { GetManagerDTO, GetManagerGameweekDTO, ManagerDTO, SaveTeamDTO, TeamSelectionDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type {
+  GetManagerDTO,
+  GetManagerGameweekDTO,
+  ManagerDTO,
+  SaveTeamDTO,
+  TeamSelectionDTO,
+} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import type { LeagueStatus } from "../../../../declarations/data_canister/data_canister.did";
 
 function createManagerStore() {
@@ -66,7 +72,7 @@ function createManagerStore() {
         principalId,
         month: 0,
         seasonId: leagueStatus!.activeSeasonId,
-        gameweek: leagueStatus!.completedGameweek
+        gameweek: leagueStatus!.completedGameweek,
       };
 
       let result = await actor.getManager(dto);

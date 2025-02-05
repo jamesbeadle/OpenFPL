@@ -169,7 +169,9 @@ export function isValidFormation(
   return totalPlayers + additionalPlayersNeeded <= 11;
 }
 
-export function isBonusConditionMet(team: TeamSelectionDTO | undefined): boolean {
+export function isBonusConditionMet(
+  team: TeamSelectionDTO | undefined,
+): boolean {
   if (!team) {
     return false;
   }

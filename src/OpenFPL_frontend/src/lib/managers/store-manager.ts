@@ -204,7 +204,8 @@ class StoreManager {
           if (!leagueStatus) {
             return;
           }
-          const updatedRewardRates = await this.rewardRatesService.getRewardRates();
+          const updatedRewardRates =
+            await this.rewardRatesService.getRewardRates();
           if (!updatedRewardRates) {
             return;
           }

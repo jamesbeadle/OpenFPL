@@ -1,0 +1,650 @@
+type WeeklyLeaderboardDTO = 
+ record {
+   entries: vec LeaderboardEntry;
+   gameweek: GameweekNumber;
+   seasonId: SeasonId;
+   totalEntries: nat;
+ };
+type ValueHistory = 
+ record {
+   changedOn: int;
+   newValue: nat16;
+   oldValue: nat16;
+ };
+type UsernameFilterDTO = record {username: text;};
+type UpdateUsernameDTO = record {username: text;};
+type UpdateTeamSelectionDTO = 
+ record {
+   braceBonusGameweek: GameweekNumber;
+   captainFantasticGameweek: GameweekNumber;
+   captainFantasticPlayerId: ClubId;
+   captainId: ClubId;
+   goalGetterGameweek: GameweekNumber;
+   goalGetterPlayerId: ClubId;
+   hatTrickHeroGameweek: GameweekNumber;
+   noEntryGameweek: GameweekNumber;
+   noEntryPlayerId: ClubId;
+   oneNationCountryId: CountryId;
+   oneNationGameweek: GameweekNumber;
+   passMasterGameweek: GameweekNumber;
+   passMasterPlayerId: ClubId;
+   playerIds: vec ClubId;
+   prospectsGameweek: GameweekNumber;
+   safeHandsGameweek: GameweekNumber;
+   safeHandsPlayerId: ClubId;
+   teamBoostClubId: ClubId;
+   teamBoostGameweek: GameweekNumber;
+   transferWindowGameweek: GameweekNumber;
+   username: text;
+ };
+type UpdateSystemStateDTO = 
+ record {
+   calculationGameweek: GameweekNumber;
+   calculationMonth: CalendarMonth;
+   calculationSeasonId: SeasonId;
+   onHold: bool;
+   pickTeamGameweek: GameweekNumber;
+   pickTeamMonth: CalendarMonth;
+   pickTeamSeasonId: SeasonId;
+   seasonActive: bool;
+   transferWindowActive: bool;
+   version: text;
+ };
+type UpdateProfilePictureDTO = 
+ record {
+   extension: text;
+   profilePicture: blob;
+ };
+type UpdateFavouriteClubDTO = record {favouriteClubId: ClubId;};
+type SystemStateDTO = 
+ record {
+   calculationGameweek: GameweekNumber;
+   calculationMonth: CalendarMonth;
+   calculationSeasonId: SeasonId;
+   onHold: bool;
+   pickTeamGameweek: GameweekNumber;
+   pickTeamMonth: CalendarMonth;
+   pickTeamSeasonId: SeasonId;
+   seasonActive: bool;
+   transferWindowActive: bool;
+   version: text;
+ };
+type ShirtType = 
+ variant {
+   Filled;
+   Striped;
+ };
+type SeasonLeaderboardDTO = 
+ record {
+   entries: vec LeaderboardEntry;
+   seasonId: SeasonId;
+   totalEntries: nat;
+ };
+type SeasonId = nat16;
+type SeasonDTO = 
+ record {
+   id: SeasonId;
+   name: text;
+   year: nat16;
+ };
+type RewardPool = 
+ record {
+   allTimeMonthlyHighScorePool: nat64;
+   allTimeSeasonHighScorePool: nat64;
+   allTimeWeeklyHighScorePool: nat64;
+   highestScoringMatchPlayerPool: nat64;
+   monthlyLeaderboardPool: nat64;
+   mostValuableTeamPool: nat64;
+   seasonId: SeasonId;
+   seasonLeaderboardPool: nat64;
+   weeklyLeaderboardPool: nat64;
+ };
+type Result_9 = 
+ variant {
+   err: Error;
+   ok: ProfileDTO;
+ };
+type Result_8 = 
+ variant {
+   err: Error;
+   ok: GetRewardPoolDTO;
+ };
+type Result_7 = 
+ variant {
+   err: Error;
+   ok: SeasonLeaderboardDTO;
+ };
+type Result_6 = 
+ variant {
+   err: Error;
+   ok: vec SeasonDTO;
+ };
+type Result_5 = 
+ variant {
+   err: Error;
+   ok: SystemStateDTO;
+ };
+type Result_4 = 
+ variant {
+   err: Error;
+   ok: nat;
+ };
+type Result_3 = 
+ variant {
+   err: Error;
+   ok: vec PlayerDTO;
+ };
+type Result_21 = 
+ variant {
+   err: Error;
+   ok: text;
+ };
+type Result_20 = 
+ variant {
+   err: Error;
+   ok: vec ClubDTO;
+ };
+type Result_2 = 
+ variant {
+   err: Error;
+   ok: WeeklyLeaderboardDTO;
+ };
+type Result_19 = 
+ variant {
+   err: Error;
+   ok: vec CountryDTO;
+ };
+type Result_18 = 
+ variant {
+   err: Error;
+   ok: PickTeamDTO;
+ };
+type Result_17 = 
+ variant {
+   err: Error;
+   ok: vec DataHashDTO;
+ };
+type Result_16 = 
+ variant {
+   err: Error;
+   ok: FantasyTeamSnapshotDTO;
+ };
+type Result_15 = 
+ variant {
+   err: Error;
+   ok: vec CanisterId;
+ };
+type Result_14 = 
+ variant {
+   err: Error;
+   ok: MonthlyLeaderboardDTO;
+ };
+type Result_13 = 
+ variant {
+   err: Error;
+   ok: PlayerDetailDTO;
+ };
+type Result_12 = 
+ variant {
+   err: Error;
+   ok: vec PlayerPointsDTO;
+ };
+type Result_11 = 
+ variant {
+   err: Error;
+   ok: vec record {
+             nat16;
+             PlayerScoreDTO;
+           };
+ };
+type Result_10 = 
+ variant {
+   err: Error;
+   ok: vec FixtureDTO;
+ };
+type Result_1 = 
+ variant {
+   err: Error;
+   ok: ManagerDTO;
+ };
+type Result = 
+ variant {
+   err: Error;
+   ok;
+ };
+type RequestManagerDTO = 
+ record {
+   clubId: ClubId;
+   gameweek: GameweekNumber;
+   managerId: text;
+   month: CalendarMonth;
+   seasonId: SeasonId;
+ };
+type RequestFixturesDTO = 
+ record {
+   leagueId: LeagueId;
+   seasonId: SeasonId;
+ };
+type ProfileDTO = 
+ record {
+   createDate: int;
+   favouriteClubId: opt ClubId;
+   principalId: text;
+   profilePicture: opt blob;
+   profilePictureType: text;
+   termsAccepted: bool;
+   username: text;
+ };
+type PrincipalId = text;
+type PlayerStatus = 
+ variant {
+   Active;
+   FreeAgent;
+   OnLoan;
+   Retired;
+ };
+type PlayerScoreDTO = 
+ record {
+   assists: int16;
+   clubId: ClubId;
+   dateOfBirth: int;
+   events: vec PlayerEventData;
+   goalsConceded: int16;
+   goalsScored: int16;
+   id: nat16;
+   nationality: CountryId;
+   points: int16;
+   position: PlayerPosition;
+   saves: int16;
+ };
+type PlayerPosition = 
+ variant {
+   Defender;
+   Forward;
+   Goalkeeper;
+   Midfielder;
+ };
+type PlayerPointsDTO = 
+ record {
+   clubId: ClubId;
+   events: vec PlayerEventData;
+   gameweek: GameweekNumber;
+   id: nat16;
+   points: int16;
+   position: PlayerPosition;
+ };
+type PlayerId = nat16;
+type PlayerGameweekDTO = 
+ record {
+   events: vec PlayerEventData;
+   fixtureId: FixtureId;
+   number: nat8;
+   points: int16;
+ };
+type PlayerEventType = 
+ variant {
+   Appearance;
+   CleanSheet;
+   Goal;
+   GoalAssisted;
+   GoalConceded;
+   HighestScoringPlayer;
+   KeeperSave;
+   OwnGoal;
+   PenaltyMissed;
+   PenaltySaved;
+   RedCard;
+   YellowCard;
+ };
+type PlayerEventData = 
+ record {
+   clubId: ClubId;
+   eventEndMinute: nat8;
+   eventStartMinute: nat8;
+   eventType: PlayerEventType;
+   fixtureId: FixtureId;
+   playerId: nat16;
+ };
+type PlayerDetailDTO = 
+ record {
+   clubId: ClubId;
+   dateOfBirth: int;
+   firstName: text;
+   gameweeks: vec PlayerGameweekDTO;
+   id: ClubId;
+   injuryHistory: vec InjuryHistory;
+   lastName: text;
+   latestInjuryEndDate: int;
+   nationality: CountryId;
+   parentClubId: ClubId;
+   position: PlayerPosition;
+   retirementDate: int;
+   seasonId: SeasonId;
+   shirtNumber: nat8;
+   status: PlayerStatus;
+   valueHistory: vec ValueHistory;
+   valueQuarterMillions: nat16;
+ };
+type PlayerDTO = 
+ record {
+   clubId: ClubId;
+   dateOfBirth: int;
+   firstName: text;
+   id: nat16;
+   lastName: text;
+   nationality: CountryId;
+   position: PlayerPosition;
+   shirtNumber: nat8;
+   status: PlayerStatus;
+   valueQuarterMillions: nat16;
+ };
+type PickTeamDTO = 
+ record {
+   bankQuarterMillions: nat16;
+   braceBonusGameweek: GameweekNumber;
+   canisterId: CanisterId;
+   captainFantasticGameweek: GameweekNumber;
+   captainFantasticPlayerId: ClubId;
+   captainId: ClubId;
+   firstGameweek: bool;
+   goalGetterGameweek: GameweekNumber;
+   goalGetterPlayerId: ClubId;
+   hatTrickHeroGameweek: GameweekNumber;
+   monthlyBonusesAvailable: nat8;
+   noEntryGameweek: GameweekNumber;
+   noEntryPlayerId: ClubId;
+   oneNationCountryId: CountryId;
+   oneNationGameweek: GameweekNumber;
+   passMasterGameweek: GameweekNumber;
+   passMasterPlayerId: ClubId;
+   playerIds: vec ClubId;
+   principalId: text;
+   prospectsGameweek: GameweekNumber;
+   safeHandsGameweek: GameweekNumber;
+   safeHandsPlayerId: ClubId;
+   teamBoostClubId: ClubId;
+   teamBoostGameweek: GameweekNumber;
+   transferWindowGameweek: GameweekNumber;
+   transfersAvailable: nat8;
+   username: text;
+ };
+type MonthlyLeaderboardDTO = 
+ record {
+   clubId: ClubId;
+   entries: vec LeaderboardEntry;
+   month: nat8;
+   seasonId: SeasonId;
+   totalEntries: nat;
+ };
+type ManagerDTO = 
+ record {
+   createDate: int;
+   favouriteClubId: opt ClubId;
+   gameweeks: vec FantasyTeamSnapshot;
+   monthlyPoints: int16;
+   monthlyPosition: int;
+   monthlyPositionText: text;
+   principalId: text;
+   profilePicture: opt blob;
+   seasonPoints: int16;
+   seasonPosition: int;
+   seasonPositionText: text;
+   username: text;
+   weeklyPoints: int16;
+   weeklyPosition: int;
+   weeklyPositionText: text;
+ };
+type LeagueId = nat16;
+type LeaderboardEntry = 
+ record {
+   points: int16;
+   position: nat;
+   positionText: text;
+   principalId: text;
+   username: text;
+ };
+type InjuryHistory = 
+ record {
+   description: text;
+   expectedEndDate: int;
+   injuryStartDate: int;
+ };
+type GetWeeklyLeaderboardDTO = 
+ record {
+   gameweek: GameweekNumber;
+   limit: nat;
+   offset: nat;
+   searchTerm: text;
+   seasonId: SeasonId;
+ };
+type GetSnapshotPlayers = 
+ record {
+   gameweek: GameweekNumber;
+   leagueId: LeagueId;
+   seasonId: SeasonId;
+ };
+type GetSeasonLeaderboardDTO = 
+ record {
+   limit: nat;
+   offset: nat;
+   searchTerm: text;
+   seasonId: SeasonId;
+ };
+type GetRewardPoolDTO = 
+ record {
+   rewardPool: RewardPool;
+   seasonId: SeasonId;
+ };
+type GetPlayerDetailsDTO = 
+ record {
+   playerId: ClubId;
+   seasonId: SeasonId;
+ };
+type GetMonthlyLeaderboardDTO = 
+ record {
+   clubId: ClubId;
+   limit: nat;
+   month: CalendarMonth;
+   offset: nat;
+   searchTerm: text;
+   seasonId: SeasonId;
+ };
+type GetFantasyTeamSnapshotDTO = 
+ record {
+   gameweek: GameweekNumber;
+   managerPrincipalId: PrincipalId;
+   seasonId: SeasonId;
+ };
+type GameweekNumber = nat8;
+type GameweekFiltersDTO = 
+ record {
+   gameweek: GameweekNumber;
+   seasonId: SeasonId;
+ };
+type FixtureStatusType = 
+ variant {
+   Active;
+   Complete;
+   Finalised;
+   Unplayed;
+ };
+type FixtureId = nat32;
+type FixtureDTO = 
+ record {
+   awayClubId: ClubId;
+   awayGoals: nat8;
+   events: vec PlayerEventData;
+   gameweek: GameweekNumber;
+   highestScoringPlayerId: nat16;
+   homeClubId: ClubId;
+   homeGoals: nat8;
+   id: nat32;
+   kickOff: int;
+   seasonId: SeasonId;
+   status: FixtureStatusType;
+ };
+type FantasyTeamSnapshotDTO = 
+ record {
+   bankQuarterMillions: nat16;
+   braceBonusGameweek: GameweekNumber;
+   captainFantasticGameweek: GameweekNumber;
+   captainFantasticPlayerId: ClubId;
+   captainId: ClubId;
+   favouriteClubId: ClubId;
+   gameweek: GameweekNumber;
+   goalGetterGameweek: GameweekNumber;
+   goalGetterPlayerId: ClubId;
+   hatTrickHeroGameweek: GameweekNumber;
+   month: CalendarMonth;
+   monthlyBonusesAvailable: nat8;
+   monthlyPoints: int16;
+   noEntryGameweek: GameweekNumber;
+   noEntryPlayerId: ClubId;
+   oneNationCountryId: CountryId;
+   oneNationGameweek: GameweekNumber;
+   passMasterGameweek: GameweekNumber;
+   passMasterPlayerId: ClubId;
+   playerIds: vec ClubId;
+   points: int16;
+   principalId: text;
+   prospectsGameweek: GameweekNumber;
+   safeHandsGameweek: GameweekNumber;
+   safeHandsPlayerId: ClubId;
+   seasonId: SeasonId;
+   seasonPoints: int16;
+   teamBoostClubId: ClubId;
+   teamBoostGameweek: GameweekNumber;
+   teamValueQuarterMillions: nat16;
+   transferWindowGameweek: GameweekNumber;
+   transfersAvailable: nat8;
+   username: text;
+ };
+type FantasyTeamSnapshot = 
+ record {
+   bankQuarterMillions: nat16;
+   braceBonusGameweek: GameweekNumber;
+   captainFantasticGameweek: GameweekNumber;
+   captainFantasticPlayerId: PlayerId;
+   captainId: PlayerId;
+   favouriteClubId: opt ClubId;
+   gameweek: GameweekNumber;
+   goalGetterGameweek: GameweekNumber;
+   goalGetterPlayerId: PlayerId;
+   hatTrickHeroGameweek: GameweekNumber;
+   month: CalendarMonth;
+   monthlyBonusesAvailable: nat8;
+   monthlyPoints: int16;
+   noEntryGameweek: GameweekNumber;
+   noEntryPlayerId: PlayerId;
+   oneNationCountryId: CountryId;
+   oneNationGameweek: GameweekNumber;
+   passMasterGameweek: GameweekNumber;
+   passMasterPlayerId: PlayerId;
+   playerIds: vec PlayerId;
+   points: int16;
+   principalId: text;
+   prospectsGameweek: GameweekNumber;
+   safeHandsGameweek: GameweekNumber;
+   safeHandsPlayerId: PlayerId;
+   seasonId: SeasonId;
+   seasonPoints: int16;
+   teamBoostClubId: ClubId;
+   teamBoostGameweek: GameweekNumber;
+   teamValueQuarterMillions: nat16;
+   transferWindowGameweek: GameweekNumber;
+   transfersAvailable: nat8;
+   username: text;
+ };
+type Error = 
+ variant {
+   AlreadyExists;
+   CanisterCreateError;
+   DecodeError;
+   DuplicatePlayerInTeam;
+   InvalidBonuses;
+   InvalidData;
+   MoreThan2PlayersFromClub;
+   Not11Players;
+   NotAllowed;
+   NotAuthorized;
+   NotFound;
+   NumberPerPositionError;
+   SelectedCaptainNotInTeam;
+   SystemOnHold;
+   TeamOverspend;
+   TooManyTransfers;
+ };
+type DataHashDTO = 
+ record {
+   category: text;
+   hash: text;
+ };
+type CountryId = nat16;
+type CountryDTO = 
+ record {
+   code: text;
+   id: CountryId;
+   name: text;
+ };
+type ClubId = nat16;
+type ClubFilterDTO = 
+ record {
+   clubId: ClubId;
+   leagueId: LeagueId;
+ };
+type ClubDTO = 
+ record {
+   abbreviatedName: text;
+   friendlyName: text;
+   id: ClubId;
+   name: text;
+   primaryColourHex: text;
+   secondaryColourHex: text;
+   shirtType: ShirtType;
+   thirdColourHex: text;
+ };
+type CanisterId = text;
+type CalendarMonth = nat8;
+service : {
+  calculateGameweekScores: () -> (Result);
+  calculateLeaderboards: () -> (Result);
+  getActiveLeaderboardCanisterId: () -> (Result_21);
+  getClubs: () -> (Result_20) composite_query;
+  getCountries: () -> (Result_19) query;
+  getCurrentTeam: () -> (Result_18);
+  getDataHashes: () -> (Result_17) composite_query;
+  getFantasyTeamSnapshot: (GetFantasyTeamSnapshotDTO) -> (Result_16);
+  getFixtures: (RequestFixturesDTO) -> (Result_10) composite_query;
+  getLeaderboardCanisterIds: () -> (Result_15);
+  getLoanedPlayers: (ClubFilterDTO) -> (Result_3) composite_query;
+  getManager: (RequestManagerDTO) -> (Result_1);
+  getManagerCanisterIds: () -> (Result_15);
+  getMonthlyLeaderboard: (GetMonthlyLeaderboardDTO) -> (Result_14);
+  getPlayerDetails: (GetPlayerDetailsDTO) -> (Result_13);
+  getPlayerDetailsForGameweek: (GameweekFiltersDTO) ->
+   (Result_12) composite_query;
+  getPlayers: () -> (Result_3) composite_query;
+  getPlayersMap: (GameweekFiltersDTO) -> (Result_11);
+  getPlayersSnapshot: (GetSnapshotPlayers) -> (vec PlayerDTO) query;
+  getPostponedFixtures: () -> (Result_10) composite_query;
+  getProfile: () -> (Result_9);
+  getRetiredPlayers: (ClubFilterDTO) -> (Result_3) composite_query;
+  getRewardPool: (GetRewardPoolDTO) -> (Result_8);
+  getSeasonLeaderboard: (GetSeasonLeaderboardDTO) -> (Result_7);
+  getSeasons: () -> (Result_6) composite_query;
+  getSystemState: () -> (Result_5) query;
+  getTotalManagers: () -> (Result_4) query;
+  getVerifiedPlayers: () -> (Result_3);
+  getWeeklyLeaderboard: (GetWeeklyLeaderboardDTO) -> (Result_2);
+  isUsernameValid: (UsernameFilterDTO) -> (bool) query;
+  notifyAppsOfLoan: (LeagueId, PlayerId) -> (Result);
+  notifyAppsOfPositionChange: (LeagueId, PlayerId) -> (Result);
+  saveFantasyTeam: (UpdateTeamSelectionDTO) -> (Result);
+  searchUsername: (UsernameFilterDTO) -> (Result_1);
+  snapshotManagers: () -> (Result);
+  updateDataHashes: (text) -> (Result);
+  updateFavouriteClub: (UpdateFavouriteClubDTO) -> (Result);
+  updateProfilePicture: (UpdateProfilePictureDTO) -> (Result);
+  updateSystemState: (UpdateSystemStateDTO) -> (Result);
+  updateUsername: (UpdateUsernameDTO) -> (Result);
+}

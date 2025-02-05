@@ -1,7 +1,10 @@
 import { derived } from "svelte/store";
 import { fixtureStore } from "../stores/fixture-store";
 import { clubStore } from "../stores/club-store";
-import type { ClubDTO, FixtureDTO } from "../../../../declarations/data_canister/data_canister.did";
+import type {
+  ClubDTO,
+  FixtureDTO,
+} from "../../../../declarations/data_canister/data_canister.did";
 
 export interface FixtureWithClubs extends FixtureDTO {
   homeClub?: ClubDTO;
