@@ -1,4 +1,4 @@
-import { idlFactory } from "../../../../declarations/OpenFPL_backend";
+import { authStore } from "$lib/stores/auth.store";
 import { ActorFactory } from "../utils/actor.factory";
 import { isError } from "../utils/helpers";
 import type {
@@ -6,18 +6,14 @@ import type {
   GameweekFiltersDTO,
   GetPlayerDetailsDTO,
   PlayerDetailDTO,
+  LeagueId,
 } from "../../../../external_declarations/data_canister/data_canister.did";
 import { toasts } from "$lib/stores/toasts-store";
 
 export class PlayerEventsService {
   private actor: any;
 
-  constructor() {
-    this.actor = ActorFactory.createActor(
-      idlFactory,
-      process.env.OPENFPL_BACKEND_CANISTER_ID,
-    );
-  }
+  constructor() {}
 
   async getPlayerPoints(
     seasonId: number,
@@ -46,7 +42,13 @@ export class PlayerEventsService {
         playerId: playerId,
         seasonId: seasonId,
       };
-      let result = await this.actor.getPlayerDetails(dto);
+      const identityActor: any = await ActorFactory.createDataCanisterIdentityActor(
+        authStore,
+        process.env.CANISTER_ID_DATA ?? "",
+      );
+      const leagueId: LeagueId = 1;
+      
+      let result = await identityActor.getPlayerDetails(leagueId, dto);
 
       if (isError(result)) {
         console.error("Error fetching player details");
@@ -68,7 +70,12 @@ export class PlayerEventsService {
         seasonId,
         gameweek,
       };
-      let result = await this.actor.getPlayerPoints(dto);
+      const identityActor: any = await ActorFactory.createDataCanisterIdentityActor(
+        authStore,
+        process.env.CANISTER_ID_DATA ?? "",
+      );
+      const leagueId: LeagueId = 1;
+      let result = await identityActor.getPlayerDetailsForGameweek(leagueId, dto);
 
       if (isError(result)) {
         console.error("Error fetching player details for gameweek");

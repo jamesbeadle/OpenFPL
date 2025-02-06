@@ -1,5 +1,5 @@
 import { writable } from "svelte/store";
-import type { ClubDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type { ClubDTO } from "../../../../external_declarations/data_canister/data_canister.did";
 
 function createClubStore() {
   const { subscribe, set } = writable<ClubDTO[]>([]);

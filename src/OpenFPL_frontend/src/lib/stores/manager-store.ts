@@ -10,6 +10,7 @@ import type {
   GetManagerDTO,
   GetManagerGameweekDTO,
   ManagerDTO,
+  ManagerGameweekDTO,
   SaveTeamDTO,
   TeamSelectionDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
@@ -110,7 +111,7 @@ function createManagerStore() {
     managerId: string,
     gameweek: number,
     seasonId: number,
-  ): Promise<TeamSelectionDTO | null> {
+  ): Promise<ManagerGameweekDTO | null> {
     try {
       let dto: GetManagerGameweekDTO = {
         principalId: managerId,

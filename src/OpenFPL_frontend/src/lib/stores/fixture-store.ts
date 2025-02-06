@@ -1,5 +1,5 @@
 import { writable } from "svelte/store";
-import type { FixtureDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type { FixtureDTO } from "../../../../external_declarations/data_canister/data_canister.did";
 import { FixtureService } from "$lib/services/fixture-service";
 
 function createFixtureStore() {

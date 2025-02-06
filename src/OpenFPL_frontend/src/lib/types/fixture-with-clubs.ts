@@ -5,6 +5,6 @@ import type {
 
 export type FixtureWithClubs = {
   fixture: FixtureDTO;
-  homeTeam: ClubDTO | undefined;
-  awayTeam: ClubDTO | undefined;
+  homeClub: ClubDTO | undefined;
+  awayClub: ClubDTO | undefined;
 };

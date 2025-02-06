@@ -1,22 +1,22 @@
-import { idlFactory } from "../../../../declarations/OpenFPL_backend";
+import { authStore } from "$lib/stores/auth.store";
 import { ActorFactory } from "../utils/actor.factory";
 import { isError } from "../utils/helpers";
-import type { PlayerDTO } from "../../../../external_declarations/data_canister/data_canister.did";
+import type { PlayerDTO, LeagueId } from "../../../../external_declarations/data_canister/data_canister.did";
 import { toasts } from "$lib/stores/toasts-store";
 
 export class PlayerService {
   private actor: any;
 
-  constructor() {
-    this.actor = ActorFactory.createActor(
-      idlFactory,
-      process.env.OPENFPL_BACKEND_CANISTER_ID,
-    );
-  }
+  constructor() {}
 
   async getPlayers(): Promise<PlayerDTO[] | undefined> {
     try {
-      const result = await this.actor.getPlayers();
+      const identityActor: any = await ActorFactory.createDataCanisterIdentityActor(
+        authStore,
+        process.env.CANISTER_ID_DATA ?? "",
+      );
+      const leagueId: LeagueId = 1;
+      const result = await identityActor.getPlayers(leagueId);
       if (isError(result)) throw new Error("Failed to fetch league players");
       return result.ok;
     } catch (error) {

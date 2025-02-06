@@ -1,5 +1,5 @@
 import { writable } from "svelte/store";
-import type { SeasonDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type { SeasonDTO } from "../../../../external_declarations/data_canister/data_canister.did";
 
 function createSeasonStore() {
   const { subscribe, set } = writable<SeasonDTO[]>([]);

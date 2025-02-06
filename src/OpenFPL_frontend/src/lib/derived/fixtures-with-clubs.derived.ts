@@ -18,7 +18,7 @@ export const fixtureWithClubsStore = derived(
       );
 
       return {
-        ...fixture,
+        fixture,
         homeClub,
         awayClub,
       } as FixtureWithClubs;

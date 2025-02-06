@@ -6,7 +6,7 @@ import type {
   PlayerDTO,
   TeamSelectionDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-import type { LeagueStatus } from "$lib/types/league-status";
+import type { LeagueStatus } from "../../../../external_declarations/data_canister/data_canister.did";
 import { playerStore } from "$lib/stores/player-store";
 import { calculateAgeFromNanoseconds, convertPositionToIndex } from "./helpers";
 
