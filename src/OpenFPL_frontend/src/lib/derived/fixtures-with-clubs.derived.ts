@@ -10,17 +10,17 @@ export const fixtureWithClubsStore = derived(
       return [];
     }
     return $fixtureStore.map((fixture) => {
-      const homeClub = $clubStore.find(
+      const homeTeam = $clubStore.find(
         (club) => Number(club.id) === Number(fixture.homeClubId),
       );
-      const awayClub = $clubStore.find(
+      const awayTeam = $clubStore.find(
         (club) => Number(club.id) === Number(fixture.awayClubId),
       );
 
       return {
-        ...fixture,
-        homeClub,
-        awayClub,
+        fixture,
+        homeTeam,
+        awayTeam,
       } as FixtureWithClubs;
     });
   },
