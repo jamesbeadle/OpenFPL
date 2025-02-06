@@ -6,7 +6,7 @@
   import { managerStore } from "$lib/stores/manager-store";
   import { playerStore } from "$lib/stores/player-store";
   import type {
-    FantasyTeamSnapshot,
+    ManagerGameweekDTO,
     ManagerDTO
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
@@ -25,7 +25,7 @@
 
   let isLoading = true;
   let activeTab: string = "details";
-  let fantasyTeam: Writable<FantasyTeamSnapshot | null> = writable(null);
+  let fantasyTeam: Writable<ManagerGameweekDTO | null> = writable(null);
   let selectedGameweek = writable(0);
   let loadingGameweekDetail: Writable<boolean> = writable(false);
   let gameweekPlayers = writable<GameweekData[]>([]);

@@ -42,19 +42,19 @@
         <div class="flex items-center justify-between py-2 border-b border-gray-700 bg-light-gray">
           <h2 class="ml-4">{date}</h2>
         </div>
-        {#each fixtures as { fixture, homeTeam, awayTeam }}
+        {#each fixtures as { fixture, homeClub, awayClub }}
           <div class={`flex items-center justify-between py-2 border-b border-gray-700
               ${ convertFixtureStatus(fixture.status) < 3 ? "text-gray-400" : "text-white" }`}
           >
             <div class="flex items-center w-full mx-4 space-x-10 xs:mx-8">
               <div class="flex flex-col w-3/6 min-w-[100px] md:min-w-[200px]">
                 <a class="flex items-center my-1" href={`/club?id=${fixture.homeClubId}`}>
-                  <BadgeIcon club={homeTeam!} className="w-4 mr-1" />
-                  {homeTeam ? homeTeam.friendlyName : ""}
+                  <BadgeIcon club={homeClub!} className="w-4 mr-1" />
+                  {homeClub ? homeClub.friendlyName : ""}
                 </a>
                 <a class="flex items-center my-1" href={`/club?id=${fixture.awayClubId}`}>
-                  <BadgeIcon club={awayTeam!} className="w-4 mr-1" />
-                  {awayTeam ? awayTeam.friendlyName : ""}
+                  <BadgeIcon club={awayClub!} className="w-4 mr-1" />
+                  {awayClub ? awayClub.friendlyName : ""}
                 </a>
               </div>
               <div class="flex flex-col items-center justify-center w-1/6">

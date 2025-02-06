@@ -40,7 +40,7 @@
 
   function getOpponentFromFixtureId(fixtureId: number): ClubDTO {
     let fixture = fixturesWithTeams.find((f) => f.fixture.id === fixtureId);
-    let opponentId = fixture?.homeTeam?.id === playerDetails.clubId ? fixture?.awayTeam?.id : fixture?.homeTeam?.id;
+    let opponentId = fixture?.homeClub?.id === playerDetails.clubId ? fixture?.awayClub?.id : fixture?.homeClub?.id;
     return $clubStore.find((team) => team.id === opponentId)!;
   }
 
@@ -74,22 +74,22 @@
     />
   {/if}
   <div class="flex flex-col">
-    <div class="overflow-x-auto flex-1">
+    <div class="flex-1 overflow-x-auto">
       <PlayerGameweekHistoryHeader />
       {#each playerDetails.gameweeks as gameweek}
         {@const opponent = getOpponentFromFixtureId(gameweek.fixtureId)}
         <button
-          class="w-full flex items-center justify-between p-2 py-4 border-b border-gray-700 cursor-pointer"
+          class="flex items-center justify-between w-full p-2 py-4 border-b border-gray-700 cursor-pointer"
           on:click={() => showDetailModal(gameweek, opponent)}
         >
-          <div class="w-1/6 md:w-1/4 px-4">{gameweek.number}</div>
-          <div class="w-2/6 md:w-1/4 md:w-1/6 px-4">
+          <div class="w-1/6 px-4 md:w-1/4">{gameweek.number}</div>
+          <div class="w-2/6 px-4 md:w-1/4 md:w-1/6">
             <div class="flex items-center">
               <BadgeIcon className="w-6 mr-2" club={opponent!} /> {opponent?.friendlyName}
             </div>
           </div>
-          <div class="w-1/6 md:w-1/4 px-4">{gameweek.points}</div>
-          <div class="w-2/6 md:w-1/4 px-4 flex items-center">
+          <div class="w-1/6 px-4 md:w-1/4">{gameweek.points}</div>
+          <div class="flex items-center w-2/6 px-4 md:w-1/4">
             <span class="flex items-center">
               <ViewDetailsIcon className="w-6 mr-2" />View Details
             </span>

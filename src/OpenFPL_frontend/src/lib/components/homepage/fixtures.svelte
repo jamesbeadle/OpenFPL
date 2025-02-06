@@ -37,48 +37,48 @@
   <WidgetSpinner />
 {:else}
   <div class="flex flex-col">
-    <div class="flex flex-col sm:flex-row gap-4 sm:gap-8">
+    <div class="flex flex-col gap-4 sm:flex-row sm:gap-8">
       <GameweekFilter {selectedGameweek} {gameweeks} {changeGameweek}/>
     </div>
     <div>
       {#each Object.entries(groupedFixtures) as [date, fixtures]}
-          <div class="flex items-center justify-between border border-gray-700 py-4 bg-light-gray">
+          <div class="flex items-center justify-between py-4 border border-gray-700 bg-light-gray">
             <h2 class="ml-4">{date}</h2>
           </div>
           {#each fixtures as fixture}
             <div
               class={`flex flex-row items-center py-2 border-b border-gray-700  
-                ${ Object.keys(fixture.status)[0] != "Finalised" ? "text-gray-400" : "text-white" }`}
+                ${ Object.keys(fixture.fixture.status)[0] != "Finalised" ? "text-gray-400" : "text-white" }`}
             >
 
-              <div class="flex flex-col w-7/12 xs:w-6/12 md:w-5/12 lg:w-5/12 space-y-2">
-                <a class="flex flex-row items-center" href={`/club?id=${fixture.homeClubId}`}>
+              <div class="flex flex-col w-7/12 space-y-2 xs:w-6/12 md:w-5/12 lg:w-5/12">
+                <a class="flex flex-row items-center" href={`/club?id=${fixture.fixture.homeClubId}`}>
                   <BadgeIcon club={fixture.homeClub!} className="h-6 mr-2 ml-4" />
                   {fixture.homeClub! ? fixture.homeClub!.friendlyName : ""}
                 </a>
-                <a class="flex flex-row items-center" href={`/club?id=${fixture.awayClubId}`}>
+                <a class="flex flex-row items-center" href={`/club?id=${fixture.fixture.awayClubId}`}>
                   <BadgeIcon club={fixture.awayClub!} className="h-6 mr-2 ml-4" />
                   {fixture.awayClub! ? fixture.awayClub.friendlyName : ""}
                 </a>
               </div>
 
-              <div class="flex w-5/12 xs:w-4/12 md:w-3/12 lg:w-3/12 flex-col text-center items-center justify-center">
-                <span>{Object.keys(fixture.status)[0] != "Finalised" ? "-" : fixture.homeGoals}</span>
-                <span>{Object.keys(fixture.status)[0] != "Finalised" ? "-" : fixture.awayGoals}</span>
+              <div class="flex flex-col items-center justify-center w-5/12 text-center xs:w-4/12 md:w-3/12 lg:w-3/12">
+                <span>{Object.keys(fixture.fixture.status)[0] != "Finalised" ? "-" : fixture.fixture.homeGoals}</span>
+                <span>{Object.keys(fixture.fixture.status)[0] != "Finalised" ? "-" : fixture.fixture.awayGoals}</span>
               </div>
 
               <div class="hidden xs:flex xs:w-2/12 md:w-2/12 lg:w-2/12 lg:justify-center">
-                <span class="ml-4 xs:ml-0 text-left">{formatUnixTimeToTime(fixture.kickOff)}</span>
+                <span class="ml-4 text-left xs:ml-0">{formatUnixTimeToTime(fixture.fixture.kickOff)}</span>
               </div>
 
               <div class="hidden md:flex md:w-2/12 lg:w-2/12">
-                <FixtureStatus fixtureStatus={Object.keys(fixture.status)[0]} />
+                <FixtureStatus fixtureStatus={Object.keys(fixture.fixture.status)[0]} />
 
-                <span class="ml-4 md:ml-0 text-left">
-                  {#if Object.keys(fixture.status)[0] == "Unplayed"}Unplayed{/if}
-                  {#if Object.keys(fixture.status)[0] == "Active"}Active{/if}
-                  {#if Object.keys(fixture.status)[0] == "Complete"}Complete{/if}
-                  {#if Object.keys(fixture.status)[0] == "Finalised"}Finalised{/if}
+                <span class="ml-4 text-left md:ml-0">
+                  {#if Object.keys(fixture.fixture.status)[0] == "Unplayed"}Unplayed{/if}
+                  {#if Object.keys(fixture.fixture.status)[0] == "Active"}Active{/if}
+                  {#if Object.keys(fixture.fixture.status)[0] == "Complete"}Complete{/if}
+                  {#if Object.keys(fixture.fixture.status)[0] == "Finalised"}Finalised{/if}
                 </span>
               </div>
             </div>
