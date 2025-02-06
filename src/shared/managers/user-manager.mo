@@ -19,7 +19,6 @@ import Array "mo:base/Array";
 import Option "mo:base/Option";
 import Nat16 "mo:base/Nat16";
 import Bool "mo:base/Bool";
-import Debug "mo:base/Debug";
 import NetworkEnvironmentVariables "../network_environment_variables";
 import Queries "../cqrs/queries";
 import Commands "../cqrs/commands";
