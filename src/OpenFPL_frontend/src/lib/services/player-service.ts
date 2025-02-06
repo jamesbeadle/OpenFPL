@@ -1,7 +1,10 @@
 import { authStore } from "$lib/stores/auth.store";
 import { ActorFactory } from "../utils/actor.factory";
 import { isError } from "../utils/helpers";
-import type { PlayerDTO, LeagueId } from "../../../../external_declarations/data_canister/data_canister.did";
+import type {
+  PlayerDTO,
+  LeagueId,
+} from "../../../../external_declarations/data_canister/data_canister.did";
 import { toasts } from "$lib/stores/toasts-store";
 
 export class PlayerService {
@@ -11,10 +14,11 @@ export class PlayerService {
 
   async getPlayers(): Promise<PlayerDTO[] | undefined> {
     try {
-      const identityActor: any = await ActorFactory.createDataCanisterIdentityActor(
-        authStore,
-        process.env.CANISTER_ID_DATA ?? "",
-      );
+      const identityActor: any =
+        await ActorFactory.createDataCanisterIdentityActor(
+          authStore,
+          process.env.CANISTER_ID_DATA ?? "",
+        );
       const leagueId: LeagueId = 1;
       const result = await identityActor.getPlayers(leagueId);
       if (isError(result)) throw new Error("Failed to fetch league players");

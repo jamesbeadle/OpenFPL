@@ -773,9 +773,9 @@
       
       //await checkCanisterCycles();
      
-      await updateLeaderboardCanisterWasms();
-      await updateManagerCanisterWasms();
-      await updateAllDataHashes();
+      //await updateLeaderboardCanisterWasms();
+      //await updateManagerCanisterWasms();
+     //await updateAllDataHashes();
       
       //await calculateGWLeaderboard(1,23);
       //await calculateGWRewards(23);

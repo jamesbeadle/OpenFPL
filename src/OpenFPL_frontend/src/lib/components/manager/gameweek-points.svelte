@@ -31,7 +31,7 @@
     await storeManager.syncStores();
     activeSeasonName = await seasonStore.getSeasonName($leagueStore!.activeSeasonId ?? 0) ?? "";
     gameweeks = getGameweeks($leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek ?? 1);
-    $selectedGameweek = $leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek ?? 1;
+    $selectedGameweek = $leagueStore!.activeGameweek == 0 ? $leagueStore!.completedGameweek : $leagueStore!.activeGameweek ?? 1;
     let principal = $authStore?.identity?.getPrincipal().toText() ?? "";
     if(principal == ""){
       return;
@@ -52,7 +52,7 @@
 
     let fantasyTeam = await managerStore.getFantasyTeamForGameweek(
       principal,
-      $leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek ?? 1,
+      $selectedGameweek,
       $leagueStore!.activeSeasonId
     );
 

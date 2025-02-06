@@ -42,12 +42,13 @@ export class PlayerEventsService {
         playerId: playerId,
         seasonId: seasonId,
       };
-      const identityActor: any = await ActorFactory.createDataCanisterIdentityActor(
-        authStore,
-        process.env.CANISTER_ID_DATA ?? "",
-      );
+      const identityActor: any =
+        await ActorFactory.createDataCanisterIdentityActor(
+          authStore,
+          process.env.CANISTER_ID_DATA ?? "",
+        );
       const leagueId: LeagueId = 1;
-      
+
       let result = await identityActor.getPlayerDetails(leagueId, dto);
 
       if (isError(result)) {
@@ -70,12 +71,16 @@ export class PlayerEventsService {
         seasonId,
         gameweek,
       };
-      const identityActor: any = await ActorFactory.createDataCanisterIdentityActor(
-        authStore,
-        process.env.CANISTER_ID_DATA ?? "",
-      );
+      const identityActor: any =
+        await ActorFactory.createDataCanisterIdentityActor(
+          authStore,
+          process.env.CANISTER_ID_DATA ?? "",
+        );
       const leagueId: LeagueId = 1;
-      let result = await identityActor.getPlayerDetailsForGameweek(leagueId, dto);
+      let result = await identityActor.getPlayerDetailsForGameweek(
+        leagueId,
+        dto,
+      );
 
       if (isError(result)) {
         console.error("Error fetching player details for gameweek");

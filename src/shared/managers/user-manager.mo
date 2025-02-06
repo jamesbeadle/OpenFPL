@@ -19,6 +19,7 @@ import Array "mo:base/Array";
 import Option "mo:base/Option";
 import Nat16 "mo:base/Nat16";
 import Bool "mo:base/Bool";
+import Debug "mo:base/Debug";
 import NetworkEnvironmentVariables "../network_environment_variables";
 import Queries "../cqrs/queries";
 import Commands "../cqrs/commands";
@@ -302,10 +303,10 @@ module {
         };
         case (?foundCanisterId) {
           let manager_canister = actor (foundCanisterId) : actor {
-            getFantasyTeamSnapshot : (dto: Queries.GetManagerGameweekDTO) -> async ?T.FantasyTeamSnapshot;
+            getFantasyTeamSnapshot : (managerPrincipalId: Base.PrincipalId, dto: Queries.GetManagerGameweekDTO) -> async ?T.FantasyTeamSnapshot;
           };
     
-         let snapshot = await manager_canister.getFantasyTeamSnapshot(dto);
+         let snapshot = await manager_canister.getFantasyTeamSnapshot(dto.principalId, dto);
           switch (snapshot) {
             case (null) {
               return #err(#NotFound);

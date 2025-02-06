@@ -1264,7 +1264,6 @@ actor class _ManagerCanister() {
 
     var managers: [T.Manager] = [];
 
-
     switch (managerGroupIndex) {
       case (null) {};
       case (?foundGroupIndex) {

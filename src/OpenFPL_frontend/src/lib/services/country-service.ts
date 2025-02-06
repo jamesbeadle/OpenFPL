@@ -11,10 +11,11 @@ export class CountryService {
 
   async getCountries(): Promise<CountryDTO[] | undefined> {
     try {
-      const identityActor: any = await ActorFactory.createDataCanisterIdentityActor(
-        authStore,
-        process.env.CANISTER_ID_DATA ?? "",
-      );
+      const identityActor: any =
+        await ActorFactory.createDataCanisterIdentityActor(
+          authStore,
+          process.env.CANISTER_ID_DATA ?? "",
+        );
       const result = await identityActor.getCountries();
       if (isError(result)) throw new Error("Failed to fetch countries");
       return result.ok;
