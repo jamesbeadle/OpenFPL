@@ -113,7 +113,10 @@ type RewardEntry =
 type Result_9 = 
  variant {
    err: Error;
-   ok: vec CanisterId;
+   ok: vec record {
+             nat16;
+             PlayerScoreDTO;
+           };
  };
 type Result_8 = 
  variant {
@@ -156,35 +159,40 @@ type Result_2 =
    err: Error;
    ok: WeeklyRewardsDTO;
  };
-type Result_15 = 
+type Result_16 = 
  variant {
    err: Error;
    ok: text;
  };
-type Result_14 = 
+type Result_15 = 
  variant {
    err: Error;
    ok: RewardRatesDTO;
  };
-type Result_13 = 
+type Result_14 = 
  variant {
    err: Error;
    ok: vec CanisterDTO;
  };
-type Result_12 = 
+type Result_13 = 
  variant {
    err: Error;
    ok: TeamSelectionDTO;
  };
-type Result_11 = 
+type Result_12 = 
  variant {
    err: Error;
    ok: vec DataHashDTO;
  };
-type Result_10 = 
+type Result_11 = 
  variant {
    err: Error;
    ok: ManagerGameweekDTO;
+ };
+type Result_10 = 
+ variant {
+   err: Error;
+   ok: vec CanisterId;
  };
 type Result_1 = 
  variant {
@@ -214,6 +222,20 @@ type PlayerStatus =
    OnLoan;
    Retired;
  };
+type PlayerScoreDTO = 
+ record {
+   assists: int16;
+   clubId: ClubId;
+   dateOfBirth: int;
+   events: vec PlayerEventData;
+   goalsConceded: int16;
+   goalsScored: int16;
+   id: nat16;
+   nationality: CountryId;
+   points: int16;
+   position: PlayerPosition;
+   saves: int16;
+ };
 type PlayerPosition = 
  variant {
    Defender;
@@ -222,6 +244,30 @@ type PlayerPosition =
    Midfielder;
  };
 type PlayerId = nat16;
+type PlayerEventType = 
+ variant {
+   Appearance;
+   CleanSheet;
+   Goal;
+   GoalAssisted;
+   GoalConceded;
+   HighestScoringPlayer;
+   KeeperSave;
+   OwnGoal;
+   PenaltyMissed;
+   PenaltySaved;
+   RedCard;
+   YellowCard;
+ };
+type PlayerEventData = 
+ record {
+   clubId: ClubId;
+   eventEndMinute: nat8;
+   eventStartMinute: nat8;
+   eventType: PlayerEventType;
+   fixtureId: FixtureId;
+   playerId: nat16;
+ };
 type PlayerDTO = 
  record {
    clubId: ClubId;
@@ -322,6 +368,11 @@ type GetSnapshotPlayersDTO =
    gameweek: GameweekNumber;
    seasonId: SeasonId;
  };
+type GetPlayersMapDTO = 
+ record {
+   gameweek: GameweekNumber;
+   seasonId: SeasonId;
+ };
 type GetManagerGameweekDTO = 
  record {
    gameweek: GameweekNumber;
@@ -338,6 +389,7 @@ type GetManagerDTO =
 type GetManagerByUsername = record {username: text;};
 type GetCanistersDTO = record {canisterType: CanisterType;};
 type GameweekNumber = nat8;
+type FixtureId = nat32;
 type Error = 
  variant {
    AlreadyExists;
@@ -401,16 +453,17 @@ type AppStatusDTO =
 service : {
   calculateWeeklyRewards: (GameweekNumber) -> (Result);
   createManager: (CreateManagerDTO) -> (Result);
-  getActiveLeaderboardCanisterId: () -> (Result_15);
-  getActiveRewardRates: () -> (Result_14);
+  getActiveLeaderboardCanisterId: () -> (Result_16);
+  getActiveRewardRates: () -> (Result_15);
   getAppStatus: () -> (Result_7) query;
-  getCanisters: (GetCanistersDTO) -> (Result_13);
-  getCurrentTeam: () -> (Result_12);
-  getDataHashes: () -> (Result_11) composite_query;
-  getFantasyTeamSnapshot: (GetManagerGameweekDTO) -> (Result_10);
-  getLeaderboardCanisterIds: () -> (Result_9);
+  getCanisters: (GetCanistersDTO) -> (Result_14);
+  getCurrentTeam: () -> (Result_13);
+  getDataHashes: () -> (Result_12) composite_query;
+  getFantasyTeamSnapshot: (GetManagerGameweekDTO) -> (Result_11);
+  getLeaderboardCanisterIds: () -> (Result_10);
   getManager: (GetManagerDTO) -> (Result_1);
-  getManagerCanisterIds: () -> (Result_9);
+  getManagerCanisterIds: () -> (Result_10);
+  getPlayersMap: (GetPlayersMapDTO) -> (Result_9);
   getPlayersSnapshot: (GetSnapshotPlayersDTO) -> (vec PlayerDTO) query;
   getProfile: () -> (Result_8);
   getSystemState: () -> (Result_7) query;

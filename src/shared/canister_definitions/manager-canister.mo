@@ -1633,11 +1633,11 @@ actor class _ManagerCanister() {
 
   private func snapshotManagers(managerGroup: Int, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth) : async () {
     
-    let controller_backend_canister = actor (controllerPrincipalId) : actor {
+    let backend_canister = actor (controllerPrincipalId) : actor {
       getPlayersSnapshot : shared query (dto: Queries.GetSnapshotPlayersDTO) -> async [DTOs.PlayerDTO];
     };
 
-    let players = await controller_backend_canister.getPlayersSnapshot({
+    let players = await backend_canister.getPlayersSnapshot({
       gameweek;
       seasonId
     });
@@ -2164,7 +2164,7 @@ actor class _ManagerCanister() {
 
     let backend_canister = actor (controllerPrincipalId) : actor {
       getPlayersMap : (dto: Queries.GetPlayersMapDTO) -> async Result.Result<[(Nat16, DTOs.PlayerScoreDTO)], T.Error>;
-      getPlayersSnapshot : (dto: Queries.GetSnapshotPlayersDTO) -> async [DTOs.PlayerDTO];
+      getPlayersSnapshot : shared query (dto: Queries.GetSnapshotPlayersDTO) -> async [DTOs.PlayerDTO];
     };
 
     let allPlayersListResult = await backend_canister.getPlayersMap({ seasonId; gameweek} );

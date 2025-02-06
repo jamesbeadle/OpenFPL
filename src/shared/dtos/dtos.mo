@@ -4,7 +4,6 @@ import Base "../types/base_types";
 
 module DTOs {
 
-
     public type SeasonDTO = 
     {
         id: FootballTypes.SeasonId;

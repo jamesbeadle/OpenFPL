@@ -51,11 +51,26 @@
       return seasonManager.getDataHashes();
     };
 
-    public shared func getVerifiedPlayers() : async Result.Result<[DTOs.PlayerDTO], T.Error> {
+    //Manager canister callback functions
+
+    public shared ( {caller} ) func getVerifiedPlayers() : async Result.Result<[DTOs.PlayerDTO], T.Error> {
+      assert isManagerCanister(Principal.toText(caller));
+      return await dataManager.getVerifiedPlayers(Environment.LEAGUE_ID);
+    };
+
+    public shared query ( {caller} ) func getPlayersSnapshot(dto: Queries.GetSnapshotPlayersDTO) : async [DTOs.PlayerDTO] {
+      assert isManagerCanister(Principal.toText(caller));
+      return seasonManager.getPlayersSnapshot(dto);
+    };
+
+    public shared ( {caller} ) func getPlayersMap(dto: Queries.GetPlayersMapDTO) : async Result.Result<[(Nat16, DTOs.PlayerScoreDTO)], T.Error> {
+      assert isManagerCanister(Principal.toText(caller));
+      
       let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
-        getPlayers : shared query (leagueId: FootballTypes.LeagueId) -> async Result.Result<[DTOs.PlayerDTO], T.Error>;
+        getPlayersMap : shared query (leagueId: FootballTypes.LeagueId, dto: Queries.GetPlayersMapDTO) -> async Result.Result<[(Nat16, DTOs.PlayerScoreDTO)], T.Error>;
       };
-      return await data_canister.getPlayers(Environment.LEAGUE_ID);
+
+      return await data_canister.getPlayersMap(Environment.LEAGUE_ID, dto);
     };
 
     //Manager getters
@@ -109,11 +124,6 @@
 
     public shared query func getAppStatus() : async Result.Result<DTOs.AppStatusDTO, T.Error> {
       return seasonManager.getAppStatus();
-    };
-
-    public shared query ( {caller} ) func getPlayersSnapshot(dto: Queries.GetSnapshotPlayersDTO) : async [DTOs.PlayerDTO] {
-      assert isManagerCanister(Principal.toText(caller));
-      return seasonManager.getPlayersSnapshot(dto);
     };
 
     private func getLeagueStatus() : async Result.Result<FootballTypes.LeagueStatus, T.Error> {
