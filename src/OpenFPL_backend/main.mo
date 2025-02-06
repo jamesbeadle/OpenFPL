@@ -33,6 +33,10 @@
   import Commands "../shared/cqrs/commands";
   import Queries "../shared/cqrs/queries";
 
+
+  import Encoding "mo:base64";  // Provides Base64 encoding/decoding (URL-safe)
+import Text "mo:base/Text";
+
   actor Self {
     
     private let userManager = UserManager.UserManager(Environment.BACKEND_CANISTER_ID, Environment.NUM_OF_GAMEWEEKS);
@@ -986,6 +990,57 @@
       verifiedUsers.put(msg.caller, true);
       #ok()
   };
+  type Header = {
+  alg: Text;
+  typ: Text;
+  kid: ?Text;
+};
+
+type Payload = { /* define fields like iss, sub, exp, nbf, vc, vp, etc. as needed */ };
+
+func decodeJWT(jwt: Text) : ?(Header, Payload, Blob) {
+    // Split JWT into [header, payload, signature]
+    let parts = Text.split(jwt, ".");
+    if (parts.size() != 3) { 
+        return null;  // Invalid JWT format
+    };
+    let hEnc = parts[0];
+    let pEnc = parts[1];
+    let sEnc = parts[2];
+
+    switch (parts) {
+      case [hEnc, pEnc, sEnc] {
+        // now you can use hEnc, pEnc, sEnc
+      };
+      case _ {
+        return null;  // or handle the error
+      };
+    };
+
+    let [hEnc, pEnc, sEnc] = [parts[0], parts[1], parts[2]];
+
+    // Decode Base64URL (add padding if needed) for header and payload
+    let headerBytesResult = Encoding.Base64.decodeUtf8(hEnc); 
+    let payloadBytesResult = Encoding.Base64.decodeUtf8(pEnc);
+    if (headerBytesResult == null or payloadBytesResult == null) {
+        return null;
+    };
+    let headerJson = headerBytesResult!;
+    let payloadJson = payloadBytesResult!;
+
+    // (Assume we have a JSON library or parser available)
+    let header : Header = JSON.parse<Header>(headerJson);
+    let payload : Payload = JSON.parse<Payload>(payloadJson);
+
+    // Decode signature (Base64URL to raw bytes)
+    let sigBytesResult = Encoding.Base64.decode(sEnc);
+    if (sigBytesResult == null) {
+        return null;
+    };
+    let signature : Blob = sigBytesResult!;
+    return ?(header, payload, signature);
+};
+
 
     
   };

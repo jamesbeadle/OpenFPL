@@ -1,5 +1,6 @@
 import { requestVerifiablePresentation, type VerifiablePresentationResponse } from "@dfinity/verifiable-credentials/request-verifiable-presentation";
 import { Principal } from "@dfinity/principal";
+import { userStore } from "$lib/stores/user-store";
 class VerificationManager {
     requestVerification = async (verifyPrincipal: Principal): Promise<void> => {
         try {
@@ -34,7 +35,7 @@ class VerificationManager {
           });
       
           // Send JWT to your backend canister for verification
-          await backendCanister.verifyCredential(jwt);
+          await userStore.verifyCredential(jwt);
       
         } catch (error) {
           console.error('Verification failed:', error);
@@ -42,3 +43,5 @@ class VerificationManager {
         }
       };
 }
+
+export const verificationManager = new VerificationManager();

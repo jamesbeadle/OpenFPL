@@ -10,6 +10,8 @@
     import { authStore } from "$lib/stores/auth.store";
     import { appStore } from "$lib/stores/app-store";
     import LoadingDots from "../shared/loading-dots.svelte";
+    import { verificationManager } from "$lib/managers/verification-manager";
+    import { Principal } from "@dfinity/principal";
 
     let isLoading = true;
     $: teamName = $clubStore.find((x) => x.id == $userStore?.favouriteClubId)?.friendlyName ?? "";
@@ -19,6 +21,8 @@
     let joinedDate = "";
     let gameweek: number = 1;
     let unsubscribeUserProfile: () => void;
+    let principalId = "";
+    let verified = false;
   
     onMount(async () => {
       await userStore.sync();
@@ -27,6 +31,7 @@
       unsubscribeUserProfile = userStore.subscribe((value) => {
         if (!value) { return; }
         username = value.username;
+        principalId = value.principalId;
         joinedDate = getDateFromBigInt(Number(value.createDate));
       });
       isLoading = false;
@@ -42,6 +47,13 @@
 
   async function copyTextAndShowToast() {
     await appStore.copyTextAndShowToast($userStore ? $userStore.principalId : "");
+  }
+
+  async function beginVerification() {
+    if(isLoading || principalId == ""){
+      return
+    }
+    verificationManager.requestVerification(Principal.fromText(principalId));
   }
 </script>
 <div class="w-full md:w-1/2 lg:w-2/3 xl:w-3/4 md:px-2 mb-4 md:mb-0">
@@ -94,6 +106,14 @@
           <CopyIcon className="w-7 xs:w-6 text-left" fill="#FFFFFF" />
         </button>
       </div>
+      {#if verified}
+        <p>Verified</p>
+      {:else}
+        <div class="flex flex-col w-100">
+          <p class="text-xs">Decide AI Verification:</p>
+          <button on:click={beginVerification} class="fpl-button w-100">Verify</button>
+        </div>
+      {/if}
     </div>
   </div>
   {#if !isLoading}
