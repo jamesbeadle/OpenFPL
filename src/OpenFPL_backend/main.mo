@@ -944,5 +944,48 @@
       return topups;
     };
 
+    //Verification Endpoints
+    public shared(msg) func verifyCredential(jwt : Text) : async Result.Result<(), Text> {
+    // Decode and verify JWT signature using IC crypto primitives
+      let decoded = try {
+          DecodeJWT.decode(jwt);
+      } catch (e) {
+          return #err("Invalid JWT");
+      };
+      
+      // Extract and verify the credentials
+      let credentials = decoded.verifiableCredentials;
+      
+      // Verify we have exactly two credentials
+      if (credentials.size() != 2) {
+          return #err("Invalid credential structure");
+      };
+
+      // Verify the proof of uniqueness credential
+      let pohCredential = credentials[1];
+      
+      // Verify credential type
+      if (not Array.find(pohCredential.types, func(t) { t == "ProofOfUniqueness" })) {
+          return #err("Invalid credential type");
+      };
+
+      // Verify issuer is Decide ID canister
+      if (pohCredential.issuer != Principal.fromText("qgxyr-pyaaa-aaaah-qdcwq-cai")) {
+          return #err("Invalid issuer");
+      };
+
+      // Verify the minimum verification date matches exactly what we requested
+      let receivedDate = pohCredential.getMinimumVerificationDate();
+      let requestedDate = "2024-12-10T00:00:00Z";
+      
+      if (receivedDate != requestedDate) {
+          return #err("Minimum verification date does not match requested date");
+      };
+
+      // Store the verified state
+      verifiedUsers.put(msg.caller, true);
+      #ok()
+  };
+
     
   };
