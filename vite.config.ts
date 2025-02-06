@@ -160,6 +160,7 @@ export default defineConfig((): UserConfig => {
             ? "gyito-zyaaa-aaaaq-aacpq-cai"
             : "b77ix-eeaaa-aaaaa-qaada-cai",
         TOTAL_GAMEWEEKS: 38,
+        CANISTER_ID_DATA: "52fzd-2aaaa-aaaal-qmzsa-cai",
       },
       VITE_APP_VERSION: JSON.stringify(version),
       VITE_DFX_NETWORK: JSON.stringify(network),

@@ -627,7 +627,7 @@ export function getFlagComponent(countryId: number) {
 }
 
 export function updateTableData(
-  fixtures: FixtureWithTeams[],
+  fixtures: FixtureWithClubs[],
   teams: ClubDTO[],
   selectedGameweek: number,
 ): TeamStats[] {
@@ -1077,7 +1077,7 @@ export function calculatePlayerScore(
 export function getFixturesWithTeams(
   clubs: ClubDTO[],
   fixtures: FixtureDTO[],
-): FixtureWithTeams[] {
+): FixtureWithClubs[] {
   return fixtures
     .sort((a, b) => Number(a.kickOff) - Number(b.kickOff))
     .map((fixture) => ({
@@ -1104,11 +1104,11 @@ export function getActualIndex(
   return startIndex + colIndex;
 }
 
-export function reduceFilteredFixtures(filteredFixtures: FixtureWithTeams[]): {
-  [key: string]: FixtureWithTeams[];
+export function reduceFilteredFixtures(filteredFixtures: FixtureWithClubs[]): {
+  [key: string]: FixtureWithClubs[];
 } {
   return filteredFixtures.reduce(
-    (acc: { [key: string]: FixtureWithTeams[] }, fixture) => {
+    (acc: { [key: string]: FixtureWithClubs[] }, fixture) => {
       const kickOff = fixture.fixture.kickOff;
       const date = new Date(Number(kickOff) / 1000000);
       const dateFormatter = new Intl.DateTimeFormat("en-GB", {
@@ -1125,7 +1125,7 @@ export function reduceFilteredFixtures(filteredFixtures: FixtureWithTeams[]): {
       acc[dateKey].push(fixture);
       return acc;
     },
-    {} as { [key: string]: FixtureWithTeams[] },
+    {} as { [key: string]: FixtureWithClubs[] },
   );
 }
 

@@ -1,5 +1,5 @@
 import { LeagueService } from "$lib/services/league-service";
-import type { LeagueStatus } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type { LeagueStatus } from "../../../../external_declarations/data_canister/data_canister.did";
 import { writable } from "svelte/store";
 
 function createLeagueStore() {

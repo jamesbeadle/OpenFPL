@@ -1,22 +1,22 @@
 import { toasts } from "$lib/stores/toasts-store";
-import { idlFactory } from "../../../../declarations/OpenFPL_backend";
-import type { LeagueStatus } from "../../../../external_declarations/data_canister/data_canister.did";
+import { authStore } from "$lib/stores/auth.store";
+import type { LeagueStatus, LeagueId } from "../../../../external_declarations/data_canister/data_canister.did";
 import { ActorFactory } from "../utils/actor.factory";
 import { isError } from "../utils/helpers";
 
 export class LeagueService {
   private actor: any;
 
-  constructor() {
-    this.actor = ActorFactory.createActor(
-      idlFactory,
-      process.env.OPENFPL_BACKEND_CANISTER_ID,
-    );
-  }
+  constructor() {}
 
   async getLeagueStatus(): Promise<LeagueStatus | undefined> {
     try {
-      const result = await this.actor.getLeagueStatus();
+      const identityActor: any = await ActorFactory.createDataCanisterIdentityActor(
+        authStore,
+        process.env.CANISTER_ID_DATA ?? "",
+      );
+      const leagueId: LeagueId = 1;
+      const result = await identityActor.getLeagueStatus(leagueId);
       if (isError(result)) throw new Error("Failed to fetch league status");
       return result.ok;
     } catch (error) {

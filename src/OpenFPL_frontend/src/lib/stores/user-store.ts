@@ -10,7 +10,7 @@ import type { OptionIdentity } from "$lib/types/identity";
 import type {
   UpdateFavouriteClubDTO,
   UpdateProfilePictureDTO,
-  UsernameFilterDTO,
+  UpdateUsernameDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { UserService } from "$lib/services/user-service";
 
@@ -39,7 +39,7 @@ function createUserStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
 
-      let dto: UsernameFilterDTO = {
+      let dto: UpdateUsernameDTO = {
         username: username,
       };
       const result = await identityActor.updateUsername(dto);
@@ -130,7 +130,7 @@ function createUserStore() {
       authStore,
       process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
     );
-    let dto: UsernameFilterDTO = {
+    let dto: UpdateUsernameDTO = {
       username: username,
     };
     return await identityActor.isUsernameValid(dto);

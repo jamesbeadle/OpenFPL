@@ -1,13 +1,15 @@
 import { writable } from "svelte/store";
 import type {
-  FantasyTeamSnapshot,
-  PlayerPointsDTO,
+  ManagerGameweekDTO,
   AppStatusDTO,
-  FixtureDTO,
-  PlayerDetailDTO,
   PlayerDTO,
-  LeagueStatus,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type {
+  PlayerPointsDTO,
+  PlayerDetailDTO,
+  LeagueStatus,
+  FixtureDTO,
+} from "../../../../external_declarations/data_canister/data_canister.did";
 import { PlayerEventsService } from "$lib/services/player-events-service";
 import type { GameweekData } from "$lib/interfaces/GameweekData";
 import { playerStore } from "./player-store";
@@ -28,7 +30,7 @@ function createPlayerEventsStore() {
   }
 
   async function getGameweekPlayers(
-    fantasyTeam: FantasyTeamSnapshot,
+    fantasyTeam: ManagerGameweekDTO,
     seasonId: number,
     gameweek: number,
   ): Promise<GameweekData[]> {

@@ -1,4 +1,4 @@
-import { idlFactory } from "../../../../declarations/OpenFPL_backend";
+import { authStore } from "$lib/stores/auth.store";
 import { ActorFactory } from "../utils/actor.factory";
 import { isError } from "../utils/helpers";
 import type { CountryDTO } from "../../../../external_declarations/data_canister/data_canister.did";
@@ -7,16 +7,15 @@ import { toasts } from "$lib/stores/toasts-store";
 export class CountryService {
   private actor: any;
 
-  constructor() {
-    this.actor = ActorFactory.createActor(
-      idlFactory,
-      process.env.OPENFPL_BACKEND_CANISTER_ID,
-    );
-  }
+  constructor() {}
 
   async getCountries(): Promise<CountryDTO[] | undefined> {
     try {
-      const result = await this.actor.getCountries();
+      const identityActor: any = await ActorFactory.createDataCanisterIdentityActor(
+        authStore,
+        process.env.CANISTER_ID_DATA ?? "",
+      );
+      const result = await identityActor.getCountries();
       if (isError(result)) throw new Error("Failed to fetch countries");
       return result.ok;
     } catch (error) {

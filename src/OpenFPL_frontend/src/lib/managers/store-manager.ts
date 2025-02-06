@@ -150,7 +150,7 @@ class StoreManager {
           return;
         }
         const updatedPlayerEvents =
-          await this.playerEventsService.getPlayerPoints(
+          await this.playerEventsService.getPlayerEvents(
             leagueStatus.activeSeasonId,
             leagueStatus.activeGameweek == 0
               ? leagueStatus.unplayedGameweek
