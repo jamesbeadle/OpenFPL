@@ -17,6 +17,7 @@ import T "../../shared/types/app_types";
 import DTOs "../dtos/dtos";
 import Environment "../network_environment_variables";
 import LeaderboardUtilities "../utils/leaderboard_utilities";
+import Queries "../cqrs/queries";
 
 actor class _LeaderboardCanister() {
   
@@ -445,7 +446,7 @@ actor class _LeaderboardCanister() {
     };
   };
 
-  public shared ({ caller }) func getWeeklyLeaderboardEntries(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber, offset: Nat, searchTerm : Text) : async ?DTOs.WeeklyLeaderboardDTO {
+  public shared ({ caller }) func getWeeklyLeaderboardEntries(dto: Queries.GetWeeklyLeaderboardEntriesDTO) : async ?DTOs.WeeklyLeaderboardDTO {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == controllerPrincipalId;
@@ -453,7 +454,7 @@ actor class _LeaderboardCanister() {
     var currentLeaderboard: ?T.WeeklyLeaderboard = null;
 
     currentLeaderboard := Array.find(weekly_leaderboards, func(leaderboard: T.WeeklyLeaderboard) : Bool {
-      leaderboard.seasonId == seasonId and leaderboard.gameweek == gameweek;
+      leaderboard.seasonId == dto.seasonId and leaderboard.gameweek == dto.gameweek;
     });
 
     switch (currentLeaderboard) {
@@ -464,7 +465,8 @@ actor class _LeaderboardCanister() {
         let filteredEntries = List.filter<T.LeaderboardEntry>(
           foundLeaderboard.entries,
           func(entry : T.LeaderboardEntry) : Bool {
-            Text.startsWith(entry.username, #text searchTerm);
+            let term = dto.searchTerm;
+            Text.startsWith(entry.username, #text term);
           },
         );
 
@@ -474,7 +476,7 @@ actor class _LeaderboardCanister() {
               return #less;
         });
 
-        let droppedEntries = List.drop<T.LeaderboardEntry>(List.fromArray(sortedGameweekEntries), offset);
+        let droppedEntries = List.drop<T.LeaderboardEntry>(List.fromArray(sortedGameweekEntries), dto.offset);
         let paginatedEntries = List.take<T.LeaderboardEntry>(droppedEntries, LEADERBOARD_ROW_COUNT_LIMIT);
 
         let leaderboardDTO: DTOs.WeeklyLeaderboardDTO = {

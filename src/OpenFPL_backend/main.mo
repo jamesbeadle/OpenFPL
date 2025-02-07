@@ -773,7 +773,7 @@
       
       //await checkCanisterCycles();
      
-      //await updateLeaderboardCanisterWasms();
+      await updateLeaderboardCanisterWasms();
       //await updateManagerCanisterWasms();
      //await updateAllDataHashes();
       
