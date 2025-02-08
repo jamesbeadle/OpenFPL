@@ -773,7 +773,7 @@
       
       //await checkCanisterCycles();
      
-      await updateLeaderboardCanisterWasms();
+      //await updateLeaderboardCanisterWasms();
       //await updateManagerCanisterWasms();
      //await updateAllDataHashes();
       
@@ -900,6 +900,17 @@
       return #ok(stable_weekly_leaderboard_canister_ids);
     };
 
+    /*
+    notifyAppsOfLoan
+notifyAppsOfLoanExpired
+notifyAppsOfTransfer
+notifyAppsOfRetirement
+notifyAppsOfPositionChange
+notifyAppsOfGameweekStarting
+notifyAppsOfFixtureFinalised
+notifyAppsOfSeasonComplete
+    */
+
     public shared ({ caller }) func notifyAppsOfLoan(playerId: FootballTypes.PlayerId) : async Result.Result<(), T.Error> {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
       await userManager.removePlayerFromTeams(Environment.LEAGUE_ID, playerId, Environment.BACKEND_CANISTER_ID);
@@ -907,10 +918,26 @@
       return #ok();
     };
 
+    public shared ({ caller }) func notifyAppsOfLoanExpired(playerId: FootballTypes.PlayerId) : async Result.Result<(), T.Error> {
+      assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
+      
+      //TODO
+
+      return #ok();
+    };
+
     public shared ({ caller }) func notifyAppsOfTransfer(playerId: FootballTypes.PlayerId) : async Result.Result<(), T.Error> {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
       await userManager.removePlayerFromTeams(Environment.LEAGUE_ID, playerId, Environment.BACKEND_CANISTER_ID);
       await seasonManager.updateDataHash("players");
+      return #ok();
+    };
+
+    public shared ({ caller }) func notifyAppsOfRetirement(playerId: FootballTypes.PlayerId) : async Result.Result<(), T.Error> {
+      assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
+
+      //TODO
+
       return #ok();
     };
 
@@ -936,6 +963,15 @@
       let _ = leaderboardManager.calculateLeaderboards(seasonId, gameweek, 0, managerCanisterIds);   
 
       await seasonManager.updateDataHash("league_status");
+     
+      return #ok();
+    };
+
+    public shared ({ caller }) func notifyAppsOfSeasonComplete(seasonId: FootballTypes.SeasonId) : async Result.Result<(), T.Error> {
+      
+      assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
+      
+      //TODO
      
       return #ok();
     };

@@ -379,7 +379,10 @@ export interface _SERVICE {
   notifyAppsOfFixtureFinalised: ActorMethod<[SeasonId, GameweekNumber], Result>;
   notifyAppsOfGameweekStarting: ActorMethod<[SeasonId, GameweekNumber], Result>;
   notifyAppsOfLoan: ActorMethod<[PlayerId], Result>;
+  notifyAppsOfLoanExpired: ActorMethod<[PlayerId], Result>;
   notifyAppsOfPositionChange: ActorMethod<[PlayerId], Result>;
+  notifyAppsOfRetirement: ActorMethod<[PlayerId], Result>;
+  notifyAppsOfSeasonComplete: ActorMethod<[SeasonId], Result>;
   notifyAppsOfTransfer: ActorMethod<[PlayerId], Result>;
   payWeeklyRewards: ActorMethod<[GameweekNumber], Result>;
   saveBonusSelection: ActorMethod<[SaveBonusDTO], Result>;

@@ -477,7 +477,10 @@ service : {
   notifyAppsOfFixtureFinalised: (SeasonId, GameweekNumber) -> (Result);
   notifyAppsOfGameweekStarting: (SeasonId, GameweekNumber) -> (Result);
   notifyAppsOfLoan: (PlayerId) -> (Result);
+  notifyAppsOfLoanExpired: (PlayerId) -> (Result);
   notifyAppsOfPositionChange: (PlayerId) -> (Result);
+  notifyAppsOfRetirement: (PlayerId) -> (Result);
+  notifyAppsOfSeasonComplete: (SeasonId) -> (Result);
   notifyAppsOfTransfer: (PlayerId) -> (Result);
   payWeeklyRewards: (GameweekNumber) -> (Result);
   saveBonusSelection: (SaveBonusDTO) -> (Result);
