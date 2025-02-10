@@ -65,7 +65,6 @@
     }
 
     let unsortedData = await playerEventsStore.getGameweekPlayers(fantasyTeam, $leagueStore!.activeSeasonId, $selectedGameweek);
-    console.log(unsortedData);
     $gameweekData = unsortedData.sort((a, b) => b.points - a.points);
     isLoading = false;
   }
