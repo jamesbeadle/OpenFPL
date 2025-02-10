@@ -15,7 +15,7 @@ import T "../types/app_types";
 import FootballTypes "mo:waterway-mops/FootballTypes";
 import DTOs "../dtos/dtos";
 import Commands "../cqrs/commands";
-import BaseTypes "../types/base_types";
+import BaseTypes "mo:waterway-mops/BaseTypes";
 
 module {
 
