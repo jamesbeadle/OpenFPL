@@ -29,17 +29,13 @@ export class DataHashService {
 
   async getDataCanisterDataHashes(): Promise<DataHashDTO[] | undefined> {
     try {
-      console.log("getting data canister hashes");
-      console.log(process.env);
       const identityActor: any =
         await ActorFactory.createDataCanisterIdentityActor(
           authStore,
           process.env.CANISTER_ID_DATA ?? "",
         );
-      console.log("calling data canister");
       const result = await identityActor.getDataHashes(process.env.LEAGUE_ID);
 
-      console.log(result);
       if (isError(result))
         throw new Error("Failed to fetch data hashes from data cansiter.");
       return result.ok;
