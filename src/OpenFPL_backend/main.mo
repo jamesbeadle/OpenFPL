@@ -900,17 +900,6 @@
       return #ok(stable_weekly_leaderboard_canister_ids);
     };
 
-    /*
-    notifyAppsOfLoan
-notifyAppsOfLoanExpired
-notifyAppsOfTransfer
-notifyAppsOfRetirement
-notifyAppsOfPositionChange
-notifyAppsOfGameweekStarting
-notifyAppsOfFixtureFinalised
-notifyAppsOfSeasonComplete
-    */
-
     public shared ({ caller }) func notifyAppsOfLoan(playerId: FootballTypes.PlayerId) : async Result.Result<(), T.Error> {
       assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
       await userManager.removePlayerFromTeams(Environment.LEAGUE_ID, playerId, Environment.BACKEND_CANISTER_ID);
