@@ -63,12 +63,39 @@ class StoreManager {
   }
 
   async syncStores(): Promise<void> {
-    const newHashes = await this.dataHashService.getDataHashes();
-    if (newHashes == undefined) {
+    await this.syncAppDataHashes();
+    await this.syncADataCanisterDataHashes();
+  }
+
+  private async syncAppDataHashes(): Promise<void> {
+    const appDataHashes = await this.dataHashService.getAppDataHashes();
+    if (appDataHashes == undefined) {
       return;
     }
     for (const category of this.categories) {
-      const categoryHash = newHashes.find((hash) => hash.category === category);
+      const categoryHash = appDataHashes.find(
+        (hash) => hash.category === category,
+      );
+
+      if (categoryHash?.hash !== localStorage.getItem(`${category}_hash`)) {
+        await this.syncCategory(category);
+        localStorage.setItem(`${category}_hash`, categoryHash?.hash || "");
+      } else {
+        this.loadFromCache(category);
+      }
+    }
+  }
+
+  private async syncADataCanisterDataHashes(): Promise<void> {
+    const appDataHashes =
+      await this.dataHashService.getDataCanisterDataHashes();
+    if (appDataHashes == undefined) {
+      return;
+    }
+    for (const category of this.categories) {
+      const categoryHash = appDataHashes.find(
+        (hash) => hash.category === category,
+      );
 
       if (categoryHash?.hash !== localStorage.getItem(`${category}_hash`)) {
         await this.syncCategory(category);
