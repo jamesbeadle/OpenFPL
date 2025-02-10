@@ -4,21 +4,26 @@
     
     export let selectedTeamId: Writable<number | null>;
     export let changeTeam : (clubId: number) => void;
+
+    $: if ($clubStore.length && !$selectedTeamId) {
+        $selectedTeamId = $clubStore[0].id;
+    }
 </script>
 
+<div class="flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
+    <div class="flex items-center">
+        <button class="mr-1 default-button fpl-button" on:click={() => changeTeam(-1)}>
+            &lt;
+        </button>
 
-<div class="ml-4 mt-4">
-    <button class="fpl-button default-button" on:click={() => changeTeam(-1)}>
-        &lt;
-    </button>
+        <select class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[125px]" bind:value={$selectedTeamId}>
+            {#each $clubStore.sort( (a, b) => a.friendlyName.localeCompare(b.friendlyName) ) as team}
+                <option value={team.id}>{team.friendlyName}</option>
+            {/each}
+        </select>
 
-    <select class="p-2 fpl-dropdown my-4 min-w-[100px]" bind:value={$selectedTeamId}>
-        {#each $clubStore.sort( (a, b) => a.friendlyName.localeCompare(b.friendlyName) ) as team}
-            <option value={team.id}>{team.friendlyName}</option>
-        {/each}
-    </select>
-
-    <button class="default-button fpl-button ml-1" on:click={() => changeTeam(1)}>
-        &gt;
-    </button>
+        <button class="ml-3 default-button fpl-button" on:click={() => changeTeam(1)}>
+            &gt;
+        </button>
+    </div>
 </div>
