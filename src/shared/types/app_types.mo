@@ -1,9 +1,9 @@
 import List "mo:base/List";
 import Base "base_types";
-import FootballTypes "mo:football-types";
+import FootballTypes "mo:waterway-mops/FootballTypes";
 
 module AppTypes {
-  
+
   public type TokenId = Nat16;
 
   public type Error = {
@@ -26,12 +26,11 @@ module AppTypes {
     #InvalidGameweek;
   };
 
-
   //Manager types
 
   public type Manager = {
     principalId : Base.PrincipalId;
-    canisterId: Base.CanisterId;
+    canisterId : Base.CanisterId;
     username : Text;
     termsAccepted : Bool;
     profilePicture : ?Blob;
@@ -60,7 +59,7 @@ module AppTypes {
     prospectsGameweek : FootballTypes.GameweekNumber;
     braceBonusGameweek : FootballTypes.GameweekNumber;
     hatTrickHeroGameweek : FootballTypes.GameweekNumber;
-    transferWindowGameweek : FootballTypes.GameweekNumber;    
+    transferWindowGameweek : FootballTypes.GameweekNumber;
     history : List.List<FantasyTeamSeason>;
   };
 
@@ -120,7 +119,7 @@ module AppTypes {
     seasonPoints : Int16;
     transferWindowGameweek : FootballTypes.GameweekNumber;
     month : Base.CalendarMonth;
-    seasonId: FootballTypes.SeasonId;
+    seasonId : FootballTypes.SeasonId;
   };
 
   public type WeeklyRewards = {
@@ -176,7 +175,7 @@ module AppTypes {
     month : Base.CalendarMonth;
     entries : List.List<LeaderboardEntry>;
     totalEntries : Nat;
-    clubId: FootballTypes.ClubId;
+    clubId : FootballTypes.ClubId;
   };
 
   public type SeasonLeaderboard = {
@@ -206,32 +205,32 @@ module AppTypes {
   };
 
   public type DataHashes = {
-    dataHashes: [Base.DataHash];
+    dataHashes : [Base.DataHash];
   };
 
   public type LeagueGameweekStatus = {
-    leagueId: FootballTypes.LeagueId;
-    seasonId: FootballTypes.SeasonId;
-    gameweek: FootballTypes.GameweekNumber;
-    status: LeaderboardStatus;
+    leagueId : FootballTypes.LeagueId;
+    seasonId : FootballTypes.SeasonId;
+    gameweek : FootballTypes.GameweekNumber;
+    status : LeaderboardStatus;
   };
 
   public type LeagueMonthStatus = {
-    leagueId: FootballTypes.LeagueId;
-    seasonId: FootballTypes.SeasonId;
-    month: Base.CalendarMonth;
-    status: LeaderboardStatus;
+    leagueId : FootballTypes.LeagueId;
+    seasonId : FootballTypes.SeasonId;
+    month : Base.CalendarMonth;
+    status : LeaderboardStatus;
   };
 
   public type LeagueSeasonStatus = {
-    leagueId: FootballTypes.LeagueId;
-    seasonId: FootballTypes.SeasonId;
-    status: LeaderboardStatus;
+    leagueId : FootballTypes.LeagueId;
+    seasonId : FootballTypes.SeasonId;
+    status : LeaderboardStatus;
   };
-  
+
   public type AppStatus = {
     onHold : Bool;
-    version: Text;
+    version : Text;
   };
 
   public type LeaderboardStatus = {
@@ -242,8 +241,8 @@ module AppTypes {
   };
 
   public type RewardRates = {
-    seasonId: FootballTypes.SeasonId;
-    startDate: Int;
+    seasonId : FootballTypes.SeasonId;
+    startDate : Int;
     seasonLeaderboardRewardRate : Nat64;
     monthlyLeaderboardRewardRate : Nat64;
     weeklyLeaderboardRewardRate : Nat64;
@@ -254,8 +253,6 @@ module AppTypes {
     allTimeSeasonHighScoreRewardRate : Nat64;
   };
 
-
-
   public type EntryRequirement = {
     #FreeEntry;
     #InviteOnly;
@@ -264,11 +261,11 @@ module AppTypes {
   };
 
   public type TokenInfo = {
-    id: TokenId;
-    ticker: Text;
-    canisterId: Base.CanisterId;
-    tokenImageURL: Text;
-    fee: Nat;
+    id : TokenId;
+    ticker : Text;
+    canisterId : Base.CanisterId;
+    tokenImageURL : Text;
+    fee : Nat;
   };
 
   public type PaymentChoice = {

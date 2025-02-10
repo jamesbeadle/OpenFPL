@@ -1,14 +1,12 @@
-
-import FootballTypes "mo:football-types";
+import FootballTypes "mo:waterway-mops/FootballTypes";
 import Base "../types/base_types";
 
 module DTOs {
 
-    public type SeasonDTO = 
-    {
-        id: FootballTypes.SeasonId;
-        name: Text;
-        year: Nat16;
+    public type SeasonDTO = {
+        id : FootballTypes.SeasonId;
+        name : Text;
+        year : Nat16;
     };
 
     public type FixtureDTO = {
@@ -77,7 +75,7 @@ module DTOs {
         seasonPoints : Int16;
         transferWindowGameweek : FootballTypes.GameweekNumber;
         month : Base.CalendarMonth;
-        seasonId: FootballTypes.SeasonId;
+        seasonId : FootballTypes.SeasonId;
     };
 
     public type ProfileDTO = {
@@ -101,12 +99,11 @@ module DTOs {
         dateOfBirth : Int;
         nationality : Base.CountryId;
         status : FootballTypes.PlayerStatus;
-        leagueId: FootballTypes.LeagueId;
-        parentLeagueId: FootballTypes.LeagueId;
-        parentClubId: FootballTypes.ClubId;
-        currentLoanEndDate: Int;
+        leagueId : FootballTypes.LeagueId;
+        parentLeagueId : FootballTypes.LeagueId;
+        parentClubId : FootballTypes.ClubId;
+        currentLoanEndDate : Int;
     };
-
 
     public type PlayerDetailDTO = {
         id : FootballTypes.PlayerId;
@@ -182,7 +179,7 @@ module DTOs {
 
     public type AppStatusDTO = {
         onHold : Bool;
-        version: Text;
+        version : Text;
     };
 
     public type PlayerPointsDTO = {
@@ -193,7 +190,6 @@ module DTOs {
         position : FootballTypes.PlayerPosition;
         events : [FootballTypes.PlayerEventData];
     };
-
 
     public type CountryDTO = {
         id : Base.CountryId;
@@ -211,6 +207,5 @@ module DTOs {
         allTimeMonthlyHighScoreRewardRate : Nat64;
         allTimeSeasonHighScoreRewardRate : Nat64;
     };
-    
 
 };

@@ -5,8 +5,7 @@ import Nat8 "mo:base/Nat8";
 import Nat16 "mo:base/Nat16";
 import Nat32 "mo:base/Nat32";
 
-import FootballTypes "mo:football-types";
-
+import FootballTypes "mo:waterway-mops/FootballTypes";
 
 module {
 
@@ -15,7 +14,7 @@ module {
   };
 
   public let hashNat8 = func(key : Nat8) : Hash.Hash {
-    Nat32.fromNat(Nat8.toNat(key) % (2 ** 32 -1));
+    Nat32.fromNat(Nat8.toNat(key) % (2 ** 32 - 1));
   };
 
   public let eqNat16 = func(a : Nat16, b : Nat16) : Bool {
@@ -23,7 +22,7 @@ module {
   };
 
   public let hashNat16 = func(key : Nat16) : Hash.Hash {
-    Nat32.fromNat(Nat16.toNat(key) % (2 ** 32 -1));
+    Nat32.fromNat(Nat16.toNat(key) % (2 ** 32 - 1));
   };
 
   public let eqNat32 = func(a : Nat32, b : Nat32) : Bool {
@@ -31,7 +30,7 @@ module {
   };
 
   public let hashNat32 = func(key : Nat32) : Hash.Hash {
-    Nat32.fromNat(Nat32.toNat(key) % (2 ** 32 -1));
+    Nat32.fromNat(Nat32.toNat(key) % (2 ** 32 - 1));
   };
 
   public func eqPlayerEventData(event1 : FootballTypes.PlayerEventData, event2 : FootballTypes.PlayerEventData) : Bool {
