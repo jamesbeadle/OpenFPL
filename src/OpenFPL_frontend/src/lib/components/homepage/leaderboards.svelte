@@ -6,7 +6,6 @@
   import { clubStore } from "$lib/stores/club-store";
   import { weeklyLeaderboardStore } from "$lib/stores/weekly-leaderboard-store";
   import { monthlyLeaderboardStore } from "$lib/stores/monthly-leaderboard-store";
-  import { seasonLeaderboardStore } from "$lib/stores/season-leaderboard-store";
   import { authSignedInStore } from "$lib/derived/auth.derived";
   import { userGetFavouriteTeam } from "$lib/derived/user.derived";
   import { getGameweeks, mergeLeaderboardWithRewards } from "$lib/utils/helpers";
@@ -72,9 +71,6 @@
         break;
       case 2:
         leaderboard = await monthlyLeaderboardStore.getMonthlyLeaderboard($selectedSeasonId, $selectedTeamId, $selectedMonth, currentPage, "");
-        break;
-      case 3:
-        leaderboard = await seasonLeaderboardStore.getSeasonLeaderboard($selectedSeasonId, currentPage, "");
         break;
     }
     isLoading = false;
