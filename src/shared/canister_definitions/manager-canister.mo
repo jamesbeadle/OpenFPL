@@ -17,7 +17,7 @@ import Text "mo:base/Text";
 import Timer "mo:base/Timer";
 import TrieMap "mo:base/TrieMap";
 
-import Base "../../shared/types/base_types";
+import Base "mo:waterway-mops/BaseTypes";
 import DTOs "../../shared/dtos/dtos";
 import FootballTypes "mo:waterway-mops/FootballTypes";
 import T "../../shared/types/app_types";

@@ -13,7 +13,7 @@ import Time "mo:base/Time";
 import Buffer "mo:base/Buffer";
 import List "mo:base/List";
 
-import Base "../shared/types/base_types";
+import Base "mo:waterway-mops/BaseTypes";
 import FootballTypes "mo:waterway-mops/FootballTypes";
 import T "../shared/types/app_types";
 import DTOs "../shared/dtos/dtos";

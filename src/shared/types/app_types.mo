@@ -1,5 +1,5 @@
 import List "mo:base/List";
-import Base "base_types";
+import Base "mo:waterway-mops/BaseTypes";
 import FootballTypes "mo:waterway-mops/FootballTypes";
 
 module AppTypes {

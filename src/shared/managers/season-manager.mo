@@ -6,7 +6,7 @@ import Option "mo:base/Option";
 import DTOs "../../shared/dtos/dtos";
 import FootballTypes "mo:waterway-mops/FootballTypes";
 import T "../../shared/types/app_types";
-import Base "../../shared/types/base_types";
+import Base "mo:waterway-mops/BaseTypes";
 import SHA224 "../../shared/lib/SHA224";
 import Queries "../cqrs/queries";
 import Commands "../cqrs/commands";

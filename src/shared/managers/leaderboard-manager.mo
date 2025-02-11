@@ -2,7 +2,7 @@ import Result "mo:base/Result";
 import TrieMap "mo:base/TrieMap";
 import Principal "mo:base/Principal";
 import DTOs "../../shared/dtos/dtos";
-import Base "../../shared/types/base_types";
+import Base "mo:waterway-mops/BaseTypes";
 import FootballTypes "mo:waterway-mops/FootballTypes";
 import T "../../shared/types/app_types";
 import ComparisonUtilities "../../shared/utils/type_comparison_utilities";

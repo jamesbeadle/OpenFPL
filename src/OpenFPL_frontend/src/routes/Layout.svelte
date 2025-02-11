@@ -15,6 +15,7 @@
   import { storeManager } from "$lib/managers/store-manager";
   import { toasts } from "$lib/stores/toasts-store";
   import Toasts from "$lib/components/toasts/toasts.svelte";
+    import { appStore } from "$lib/stores/app-store";
 
   const init = async () => {
     await syncAuthStore();
@@ -39,6 +40,7 @@
   onMount(async () => {
     worker = await initAuthWorker();
     await storeManager.syncStores();
+    await appStore.checkServerVersion();
   });
 
   $: worker, $authStore, (() => worker?.syncAuthIdle($authStore))();

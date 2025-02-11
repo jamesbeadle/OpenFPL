@@ -6,7 +6,7 @@ import Iter "mo:base/Iter";
 import Principal "mo:base/Principal";
 import Buffer "mo:base/Buffer";
 import DTOs "../../shared/dtos/dtos";
-import Base "../../shared/types/base_types";
+import Base "mo:waterway-mops/BaseTypes";
 import FootballTypes "mo:waterway-mops/FootballTypes";
 import T "../../shared/types/app_types";
 import Management "../../shared/utils/Management";

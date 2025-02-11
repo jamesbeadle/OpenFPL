@@ -11,7 +11,7 @@ import Option "mo:base/Option";
 import Nat "mo:base/Nat";
 import TrieMap "mo:base/TrieMap";
 
-import Base "../../shared/types/base_types";
+import Base "mo:waterway-mops/BaseTypes";
 import FootballTypes "mo:waterway-mops/FootballTypes";
 import T "../../shared/types/app_types";
 import DTOs "../dtos/dtos";

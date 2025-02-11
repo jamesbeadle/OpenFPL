@@ -1,5 +1,5 @@
 import FootballTypes "mo:waterway-mops/FootballTypes";
-import Base "../types/base_types";
+import Base "mo:waterway-mops/BaseTypes";
 
 module Commands {
 
