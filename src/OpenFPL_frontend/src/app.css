@@ -353,6 +353,10 @@ input[type="file"] {
   @apply bg-BrandWarning;
 }
 
+.bg-frontend-update {
+  @apply bg-BrandSlateGray;
+}
+
 .header-badge {
   @apply h-6 sm:h-7 md:h-8 xl:h-10 m-2 sm:my-4;
 }
