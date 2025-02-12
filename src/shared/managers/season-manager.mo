@@ -4,9 +4,9 @@ import Iter "mo:base/Iter";
 import Array "mo:base/Array";
 import Option "mo:base/Option";
 import DTOs "../../shared/dtos/dtos";
-import FootballTypes "mo:football-types";
+import FootballTypes "mo:waterway-mops/FootballTypes";
 import T "../../shared/types/app_types";
-import Base "../../shared/types/base_types";
+import Base "mo:waterway-mops/BaseTypes";
 import SHA224 "../../shared/lib/SHA224";
 import Queries "../cqrs/queries";
 import Commands "../cqrs/commands";
@@ -19,7 +19,7 @@ module {
       onHold = false;
       version = "2.0.0";
     };
-     
+
     private var dataHashes : [Base.DataHash] = [
       { category = "weekly_leaderboard"; hash = "OPENFPL_1" },
       { category = "monthly_leaderboards"; hash = "OPENFPL_1" },
@@ -28,12 +28,12 @@ module {
       { category = "reward_rates"; hash = "OPENFPL_1" },
     ];
 
-    private var leagueGameweekStatuses: [T.LeagueGameweekStatus] = [];
-    private var leagueMonthStatuses: [T.LeagueMonthStatus] = [];
-    private var leagueSeasonStatuses: [T.LeagueSeasonStatus] = [];
+    private var leagueGameweekStatuses : [T.LeagueGameweekStatus] = [];
+    private var leagueMonthStatuses : [T.LeagueMonthStatus] = [];
+    private var leagueSeasonStatuses : [T.LeagueSeasonStatus] = [];
 
-    private var playersSnapshots: [(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])])] = [];
-  
+    private var playersSnapshots : [(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])])] = [];
+
     public func updateDataHash(category : Text) : async () {
       let hashBuffer = Buffer.fromArray<Base.DataHash>([]);
       var updated = false;
@@ -46,30 +46,33 @@ module {
         } else { hashBuffer.add(hashObj) };
       };
 
-      if(not updated){
-          let randomHash = await SHA224.getRandomHash();
-          hashBuffer.add({ category = category; hash = randomHash });
+      if (not updated) {
+        let randomHash = await SHA224.getRandomHash();
+        hashBuffer.add({ category = category; hash = randomHash });
       };
 
       dataHashes := Buffer.toArray<Base.DataHash>(hashBuffer);
     };
 
-    public func addNewDataHash(category: Text) : async () {
-      let exists = Array.find<Base.DataHash>(dataHashes, func(foundHash: Base.DataHash) : Bool {
-        foundHash.category == category;
-      });
-      if(Option.isNull(exists)){
+    public func addNewDataHash(category : Text) : async () {
+      let exists = Array.find<Base.DataHash>(
+        dataHashes,
+        func(foundHash : Base.DataHash) : Bool {
+          foundHash.category == category;
+        },
+      );
+      if (Option.isNull(exists)) {
         let hashBuffer = Buffer.fromArray<Base.DataHash>(dataHashes);
         let randomHash = await SHA224.getRandomHash();
         hashBuffer.add({ category = category; hash = randomHash });
         dataHashes := Buffer.toArray<Base.DataHash>(hashBuffer);
-      }
+      };
     };
 
     public func getDataHashes() : Result.Result<[DTOs.DataHashDTO], T.Error> {
-      return #ok(dataHashes)
+      return #ok(dataHashes);
     };
-    
+
     public func getAppStatus() : Result.Result<DTOs.AppStatusDTO, T.Error> {
       return #ok({
         onHold = appStatus.onHold;
@@ -77,84 +80,104 @@ module {
       });
     };
 
-    public func storePlayersSnapshot(seasonId: FootballTypes.SeasonId, gameweek: FootballTypes.GameweekNumber, players: [DTOs.PlayerDTO]){
-      
+    public func storePlayersSnapshot(seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, players : [DTOs.PlayerDTO]) {
+
       let existingSeasonsSnapshot = Array.find<(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])])>(
-        playersSnapshots, 
-        func(seasonPlayersEntry: (FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])])) : Bool {
-          seasonPlayersEntry.0 == seasonId
-      });
+        playersSnapshots,
+        func(seasonPlayersEntry : (FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])])) : Bool {
+          seasonPlayersEntry.0 == seasonId;
+        },
+      );
 
-      switch(existingSeasonsSnapshot){
-        case(?foundSeasonSnapshot){
-          let existingGameweekSnapshot = Array.find<(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])>(foundSeasonSnapshot.1, func(gameweekEntry: (FootballTypes.GameweekNumber, [DTOs.PlayerDTO])) : Bool {
-            gameweekEntry.0 == gameweek;
-          });
+      switch (existingSeasonsSnapshot) {
+        case (?foundSeasonSnapshot) {
+          let existingGameweekSnapshot = Array.find<(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])>(
+            foundSeasonSnapshot.1,
+            func(gameweekEntry : (FootballTypes.GameweekNumber, [DTOs.PlayerDTO])) : Bool {
+              gameweekEntry.0 == gameweek;
+            },
+          );
 
-          switch(existingGameweekSnapshot){
-            case (?_){
-              playersSnapshots := Array.map<(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])]), (FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])])>(playersSnapshots, func(seasonsSnapshotEntry: (FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])])){
-                if(seasonsSnapshotEntry.0 == seasonId) {
-                  return (seasonsSnapshotEntry.0, Array.map<(FootballTypes.GameweekNumber, [DTOs.PlayerDTO]), (FootballTypes.GameweekNumber, [DTOs.PlayerDTO])>(seasonsSnapshotEntry.1, func(gameweekEntry: (FootballTypes.GameweekNumber, [DTOs.PlayerDTO])){
-                    if(gameweekEntry.0 == gameweek){
-                      return (gameweekEntry.0, players);
-                    } else{
-                      return gameweekEntry;
-                    };
-                  }));
-                } else {
-                  return seasonsSnapshotEntry;
-                }
-              });
+          switch (existingGameweekSnapshot) {
+            case (?_) {
+              playersSnapshots := Array.map<(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])]), (FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])])>(
+                playersSnapshots,
+                func(seasonsSnapshotEntry : (FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])])) {
+                  if (seasonsSnapshotEntry.0 == seasonId) {
+                    return (
+                      seasonsSnapshotEntry.0,
+                      Array.map<(FootballTypes.GameweekNumber, [DTOs.PlayerDTO]), (FootballTypes.GameweekNumber, [DTOs.PlayerDTO])>(
+                        seasonsSnapshotEntry.1,
+                        func(gameweekEntry : (FootballTypes.GameweekNumber, [DTOs.PlayerDTO])) {
+                          if (gameweekEntry.0 == gameweek) {
+                            return (gameweekEntry.0, players);
+                          } else {
+                            return gameweekEntry;
+                          };
+                        },
+                      ),
+                    );
+                  } else {
+                    return seasonsSnapshotEntry;
+                  };
+                },
+              );
             };
-            case (null){
-              playersSnapshots := Array.map<(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])]), (FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])])>(playersSnapshots, func(seasonsSnapshotEntry: (FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])])){
-                if(seasonsSnapshotEntry.0 == seasonId) {
-                  let updatedGameweeksBuffer = Buffer.fromArray<(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])>(seasonsSnapshotEntry.1);
-                  updatedGameweeksBuffer.add(gameweek, players);
-                  return (seasonsSnapshotEntry.0, Buffer.toArray(updatedGameweeksBuffer));
-                } else {
-                  return seasonsSnapshotEntry;
-                }
-              });
-            }
+            case (null) {
+              playersSnapshots := Array.map<(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])]), (FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])])>(
+                playersSnapshots,
+                func(seasonsSnapshotEntry : (FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])])) {
+                  if (seasonsSnapshotEntry.0 == seasonId) {
+                    let updatedGameweeksBuffer = Buffer.fromArray<(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])>(seasonsSnapshotEntry.1);
+                    updatedGameweeksBuffer.add(gameweek, players);
+                    return (seasonsSnapshotEntry.0, Buffer.toArray(updatedGameweeksBuffer));
+                  } else {
+                    return seasonsSnapshotEntry;
+                  };
+                },
+              );
+            };
           };
         };
-        case (null){
-          let newEntry: (FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])]) = (seasonId, [
-            (gameweek, players)
-          ]);
+        case (null) {
+          let newEntry : (FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])]) = (seasonId, [(gameweek, players)]);
 
           let playerSnapshotsBuffer = Buffer.fromArray<(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])])>(playersSnapshots);
           playerSnapshotsBuffer.add(newEntry);
           playersSnapshots := Buffer.toArray(playerSnapshotsBuffer);
-        }
+        };
       };
     };
 
-    public func getPlayersSnapshot(dto: Queries.GetSnapshotPlayersDTO) : [DTOs.PlayerDTO] {
-      let seasonPlayers = Array.find<(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])])>(playersSnapshots, func(seasonsPlayerSnapshots: (FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])])) : Bool {
-        seasonsPlayerSnapshots.0 == dto.seasonId;
-      });
+    public func getPlayersSnapshot(dto : Queries.GetSnapshotPlayersDTO) : [DTOs.PlayerDTO] {
+      let seasonPlayers = Array.find<(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])])>(
+        playersSnapshots,
+        func(seasonsPlayerSnapshots : (FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])])) : Bool {
+          seasonsPlayerSnapshots.0 == dto.seasonId;
+        },
+      );
 
-      switch(seasonPlayers){
-        case (?foundSeasonPlayers){
-          let gameweekPlayers = Array.find<(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])>(foundSeasonPlayers.1, func(gameweekPlayers: (FootballTypes.GameweekNumber, [DTOs.PlayerDTO])) : Bool {
-           gameweekPlayers.0 == dto.gameweek;
-          });
-          switch(gameweekPlayers){
-            case (?foundGameweekPlayers){
+      switch (seasonPlayers) {
+        case (?foundSeasonPlayers) {
+          let gameweekPlayers = Array.find<(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])>(
+            foundSeasonPlayers.1,
+            func(gameweekPlayers : (FootballTypes.GameweekNumber, [DTOs.PlayerDTO])) : Bool {
+              gameweekPlayers.0 == dto.gameweek;
+            },
+          );
+          switch (gameweekPlayers) {
+            case (?foundGameweekPlayers) {
               return foundGameweekPlayers.1;
             };
-            case (null){}
-          }
+            case (null) {};
+          };
         };
-        case (null){}
+        case (null) {};
       };
 
       return [];
     };
-      
+
     //Stable variable functions
 
     public func getStableAppStatus() : T.AppStatus {
@@ -165,27 +188,27 @@ module {
       appStatus := stable_app_status;
     };
 
-    public func getStableLeagueGameweekStatuses() : [T.LeagueGameweekStatus]{
+    public func getStableLeagueGameweekStatuses() : [T.LeagueGameweekStatus] {
       return leagueGameweekStatuses;
     };
 
-    public func setStableLeagueGameweekStatuses(stable_league_gameweek_statuses: [T.LeagueGameweekStatus]){
+    public func setStableLeagueGameweekStatuses(stable_league_gameweek_statuses : [T.LeagueGameweekStatus]) {
       leagueGameweekStatuses := stable_league_gameweek_statuses;
     };
 
-    public func getStableLeagueMonthStatuses() : [T.LeagueMonthStatus]{
+    public func getStableLeagueMonthStatuses() : [T.LeagueMonthStatus] {
       return leagueMonthStatuses;
     };
 
-    public func setStableLeagueMonthStatuses(stable_league_month_statuses: [T.LeagueMonthStatus]){
+    public func setStableLeagueMonthStatuses(stable_league_month_statuses : [T.LeagueMonthStatus]) {
       leagueMonthStatuses := stable_league_month_statuses;
     };
 
-    public func getStableLeagueSeasonStatuses() : [T.LeagueSeasonStatus]{
+    public func getStableLeagueSeasonStatuses() : [T.LeagueSeasonStatus] {
       return leagueSeasonStatuses;
     };
 
-    public func setStableLeagueSeasonStatuses(stable_league_season_statuses: [T.LeagueSeasonStatus]){
+    public func setStableLeagueSeasonStatuses(stable_league_season_statuses : [T.LeagueSeasonStatus]) {
       leagueSeasonStatuses := stable_league_season_statuses;
     };
 
@@ -205,7 +228,7 @@ module {
       playersSnapshots := stable_players_snapshots;
     };
 
-    public func putOnHold() : async (){
+    public func putOnHold() : async () {
       appStatus := {
         onHold = true;
         version = appStatus.version;
@@ -213,7 +236,7 @@ module {
       await updateDataHash("app_status");
     };
 
-    public func removeOnHold() : async (){
+    public func removeOnHold() : async () {
       appStatus := {
         onHold = false;
         version = appStatus.version;
@@ -221,7 +244,7 @@ module {
       await updateDataHash("app_status");
     };
 
-    public func updateSystemStatus(dto: Commands.UpdateAppStatusDTO) {
+    public func updateSystemStatus(dto : Commands.UpdateAppStatusDTO) {
       appStatus := {
         onHold = dto.onHold;
         version = dto.version;

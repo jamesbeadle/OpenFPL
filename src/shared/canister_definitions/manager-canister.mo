@@ -17,9 +17,9 @@ import Text "mo:base/Text";
 import Timer "mo:base/Timer";
 import TrieMap "mo:base/TrieMap";
 
-import Base "../../shared/types/base_types";
+import Base "mo:waterway-mops/BaseTypes";
 import DTOs "../../shared/dtos/dtos";
-import FootballTypes "mo:football-types";
+import FootballTypes "mo:waterway-mops/FootballTypes";
 import T "../../shared/types/app_types";
 import Commands "../cqrs/commands";
 import Queries "../cqrs/queries";
@@ -51,26 +51,29 @@ actor class _ManagerCanister() {
 
   private stable var initialised = false;
   private stable var controllerPrincipalId = "";
-  private stable var fixturesPerClub: Nat8 = 0;
+  private stable var fixturesPerClub : Nat8 = 0;
 
-  public shared ({caller}) func initialise(_controllerPrincipalId: Text, _fixturesPerClub: Nat8) : async (){
-    if(initialised){
+  public shared ({ caller }) func initialise(_controllerPrincipalId : Text, _fixturesPerClub : Nat8) : async () {
+    if (initialised) {
       return;
     };
 
     //TODO: Environment variable should be set to openfpl not both - needs to be more abstract
-    let callerInArray = Array.find<Base.CanisterId>([Environment.OPENFPL_BACKEND_CANISTER_ID, Environment.OPENWSL_BACKEND_CANISTER_ID], func(canisterId: Base.CanisterId) : Bool{
-      canisterId == Principal.toText(caller);
-    });
+    let callerInArray = Array.find<Base.CanisterId>(
+      [Environment.OPENFPL_BACKEND_CANISTER_ID, Environment.OPENWSL_BACKEND_CANISTER_ID],
+      func(canisterId : Base.CanisterId) : Bool {
+        canisterId == Principal.toText(caller);
+      },
+    );
 
-    if(Option.isSome(callerInArray)){
+    if (Option.isSome(callerInArray)) {
       controllerPrincipalId := _controllerPrincipalId;
       fixturesPerClub := _fixturesPerClub;
     };
     initialised := true;
   };
 
-  public shared ({ caller }) func updateTeamSelection(dto: Commands.SaveTeamDTO, managerPrincipalId: Base.PrincipalId, transfersAvailable : Nat8, newBankBalance : Nat16) : async Result.Result<(), T.Error> {
+  public shared ({ caller }) func updateTeamSelection(dto : Commands.SaveTeamDTO, managerPrincipalId : Base.PrincipalId, transfersAvailable : Nat8, newBankBalance : Nat16) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == controllerPrincipalId;
@@ -211,11 +214,11 @@ actor class _ManagerCanister() {
 
   private func mergeTeamSelection(dto : Commands.SaveTeamDTO, manager : T.Manager, transfersAvailable : Nat8, newBankBalance : Nat16) : T.Manager {
     var updatedTransferWindowGameweek = manager.transferWindowGameweek;
-    switch(dto.transferWindowGameweek){
-      case (?foundGameweek){
+    switch (dto.transferWindowGameweek) {
+      case (?foundGameweek) {
         updatedTransferWindowGameweek := foundGameweek;
       };
-      case (null){}
+      case (null) {};
     };
 
     return {
@@ -254,7 +257,7 @@ actor class _ManagerCanister() {
     };
   };
 
-  public shared ({ caller }) func useBonus(dto: Commands.SaveBonusDTO, managerPrincipalId: Base.PrincipalId, transfersAvailable : Nat8, monthlyBonuses : Nat8, newBankBalance : Nat16) : async Result.Result<(), T.Error> {
+  public shared ({ caller }) func useBonus(dto : Commands.SaveBonusDTO, managerPrincipalId : Base.PrincipalId, transfersAvailable : Nat8, monthlyBonuses : Nat8, newBankBalance : Nat16) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == controllerPrincipalId;
@@ -394,7 +397,7 @@ actor class _ManagerCanister() {
   };
 
   private func mergeBonus(dto : Commands.SaveBonusDTO, manager : T.Manager, transfersAvailable : Nat8, monthlyBonusesAvailable : Nat8, newBankBalance : Nat16) : T.Manager {
-    
+
     var updatedGoalGetterGameweek = PickTeamUtilities.valueOrDefaultGameweek(dto.goalGetterGameweek, manager.goalGetterGameweek);
     var updatedGoalGetterPlayerId = PickTeamUtilities.valueOrDefaultPlayerId(dto.goalGetterPlayerId, manager.goalGetterPlayerId);
     var updatedPassMasterGameweek = PickTeamUtilities.valueOrDefaultGameweek(dto.passMasterGameweek, manager.passMasterGameweek);
@@ -449,7 +452,7 @@ actor class _ManagerCanister() {
     };
   };
 
-  public shared ({ caller }) func updateUsername(managerPrincipalId: Base.PrincipalId, dto : Commands.UpdateUsernameDTO) : async Result.Result<(), T.Error> {
+  public shared ({ caller }) func updateUsername(managerPrincipalId : Base.PrincipalId, dto : Commands.UpdateUsernameDTO) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == controllerPrincipalId;
@@ -625,7 +628,7 @@ actor class _ManagerCanister() {
     };
   };
 
-  public shared ({ caller }) func updateProfilePicture(managerPrincipalId: Base.PrincipalId, dto : Commands.UpdateProfilePictureDTO) : async Result.Result<(), T.Error> {
+  public shared ({ caller }) func updateProfilePicture(managerPrincipalId : Base.PrincipalId, dto : Commands.UpdateProfilePictureDTO) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == controllerPrincipalId;
@@ -801,7 +804,7 @@ actor class _ManagerCanister() {
     };
   };
 
-  public shared ({ caller }) func updateFavouriteClub(managerPrincipalId: Base.PrincipalId, dto : Commands.UpdateFavouriteClubDTO) : async Result.Result<(), T.Error> {
+  public shared ({ caller }) func updateFavouriteClub(managerPrincipalId : Base.PrincipalId, dto : Commands.UpdateFavouriteClubDTO) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == controllerPrincipalId;
@@ -815,7 +818,7 @@ actor class _ManagerCanister() {
           case 0 {
             for (manager in Iter.fromArray(managerGroup1)) {
               if (manager.principalId == managerPrincipalId) {
-                managerBuffer.add(mergeManagerFavouriteClub(manager,dto.favouriteClubId));
+                managerBuffer.add(mergeManagerFavouriteClub(manager, dto.favouriteClubId));
               } else {
                 managerBuffer.add(manager);
               };
@@ -825,7 +828,7 @@ actor class _ManagerCanister() {
           case 1 {
             for (manager in Iter.fromArray(managerGroup2)) {
               if (manager.principalId == managerPrincipalId) {
-                managerBuffer.add(mergeManagerFavouriteClub(manager,dto.favouriteClubId));
+                managerBuffer.add(mergeManagerFavouriteClub(manager, dto.favouriteClubId));
               } else {
                 managerBuffer.add(manager);
               };
@@ -835,7 +838,7 @@ actor class _ManagerCanister() {
           case 2 {
             for (manager in Iter.fromArray(managerGroup3)) {
               if (manager.principalId == managerPrincipalId) {
-                managerBuffer.add(mergeManagerFavouriteClub(manager,dto.favouriteClubId));
+                managerBuffer.add(mergeManagerFavouriteClub(manager, dto.favouriteClubId));
               } else {
                 managerBuffer.add(manager);
               };
@@ -845,7 +848,7 @@ actor class _ManagerCanister() {
           case 3 {
             for (manager in Iter.fromArray(managerGroup4)) {
               if (manager.principalId == managerPrincipalId) {
-                managerBuffer.add(mergeManagerFavouriteClub(manager,dto.favouriteClubId));
+                managerBuffer.add(mergeManagerFavouriteClub(manager, dto.favouriteClubId));
               } else {
                 managerBuffer.add(manager);
               };
@@ -855,7 +858,7 @@ actor class _ManagerCanister() {
           case 4 {
             for (manager in Iter.fromArray(managerGroup5)) {
               if (manager.principalId == managerPrincipalId) {
-                managerBuffer.add(mergeManagerFavouriteClub(manager,dto.favouriteClubId));
+                managerBuffer.add(mergeManagerFavouriteClub(manager, dto.favouriteClubId));
               } else {
                 managerBuffer.add(manager);
               };
@@ -865,7 +868,7 @@ actor class _ManagerCanister() {
           case 5 {
             for (manager in Iter.fromArray(managerGroup6)) {
               if (manager.principalId == managerPrincipalId) {
-                managerBuffer.add(mergeManagerFavouriteClub(manager,dto.favouriteClubId));
+                managerBuffer.add(mergeManagerFavouriteClub(manager, dto.favouriteClubId));
               } else {
                 managerBuffer.add(manager);
               };
@@ -875,7 +878,7 @@ actor class _ManagerCanister() {
           case 6 {
             for (manager in Iter.fromArray(managerGroup7)) {
               if (manager.principalId == managerPrincipalId) {
-                managerBuffer.add(mergeManagerFavouriteClub(manager,dto.favouriteClubId));
+                managerBuffer.add(mergeManagerFavouriteClub(manager, dto.favouriteClubId));
               } else {
                 managerBuffer.add(manager);
               };
@@ -885,7 +888,7 @@ actor class _ManagerCanister() {
           case 7 {
             for (manager in Iter.fromArray(managerGroup8)) {
               if (manager.principalId == managerPrincipalId) {
-                managerBuffer.add(mergeManagerFavouriteClub(manager,dto.favouriteClubId));
+                managerBuffer.add(mergeManagerFavouriteClub(manager, dto.favouriteClubId));
               } else {
                 managerBuffer.add(manager);
               };
@@ -895,7 +898,7 @@ actor class _ManagerCanister() {
           case 8 {
             for (manager in Iter.fromArray(managerGroup9)) {
               if (manager.principalId == managerPrincipalId) {
-                managerBuffer.add(mergeManagerFavouriteClub(manager,dto.favouriteClubId));
+                managerBuffer.add(mergeManagerFavouriteClub(manager, dto.favouriteClubId));
               } else {
                 managerBuffer.add(manager);
               };
@@ -905,7 +908,7 @@ actor class _ManagerCanister() {
           case 9 {
             for (manager in Iter.fromArray(managerGroup10)) {
               if (manager.principalId == managerPrincipalId) {
-                managerBuffer.add(mergeManagerFavouriteClub(manager,dto.favouriteClubId));
+                managerBuffer.add(mergeManagerFavouriteClub(manager, dto.favouriteClubId));
               } else {
                 managerBuffer.add(manager);
               };
@@ -915,7 +918,7 @@ actor class _ManagerCanister() {
           case 10 {
             for (manager in Iter.fromArray(managerGroup11)) {
               if (manager.principalId == managerPrincipalId) {
-                managerBuffer.add(mergeManagerFavouriteClub(manager,dto.favouriteClubId));
+                managerBuffer.add(mergeManagerFavouriteClub(manager, dto.favouriteClubId));
               } else {
                 managerBuffer.add(manager);
               };
@@ -925,7 +928,7 @@ actor class _ManagerCanister() {
           case 11 {
             for (manager in Iter.fromArray(managerGroup12)) {
               if (manager.principalId == managerPrincipalId) {
-                managerBuffer.add(mergeManagerFavouriteClub(manager,dto.favouriteClubId));
+                managerBuffer.add(mergeManagerFavouriteClub(manager, dto.favouriteClubId));
               } else {
                 managerBuffer.add(manager);
               };
@@ -1255,14 +1258,14 @@ actor class _ManagerCanister() {
     return Buffer.toArray(allManagersBuffer);
   };
 
-  public shared ({ caller }) func getFantasyTeamSnapshot(managerPrincipalId: Base.PrincipalId, dto: Queries.GetManagerGameweekDTO) : async ?T.FantasyTeamSnapshot {
+  public shared ({ caller }) func getFantasyTeamSnapshot(managerPrincipalId : Base.PrincipalId, dto : Queries.GetManagerGameweekDTO) : async ?T.FantasyTeamSnapshot {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == controllerPrincipalId;
 
     let managerGroupIndex = managerGroupIndexes.get(dto.principalId);
 
-    var managers: [T.Manager] = [];
+    var managers : [T.Manager] = [];
 
     switch (managerGroupIndex) {
       case (null) {};
@@ -1310,25 +1313,24 @@ actor class _ManagerCanister() {
           };
         };
 
-
         for (manager in Iter.fromArray(managers)) {
           if (manager.principalId == managerPrincipalId) {
             switch (manager.history) {
-              case (null) {    };
+              case (null) {};
               case (history) {
-                for(season in Iter.fromList(history)){
-                  if(season.seasonId == dto.seasonId){
-                    for(gameweek in Iter.fromList(season.gameweeks)){
-                      if(gameweek.gameweek == dto.gameweek){
+                for (season in Iter.fromList(history)) {
+                  if (season.seasonId == dto.seasonId) {
+                    for (gameweek in Iter.fromList(season.gameweeks)) {
+                      if (gameweek.gameweek == dto.gameweek) {
                         return ?gameweek;
-                      };  
+                      };
                     };
                   };
-                };  
+                };
               };
             };
 
-          }
+          };
         };
       };
     };
@@ -1336,7 +1338,7 @@ actor class _ManagerCanister() {
   };
 
   public shared ({ caller }) func getOrderedSnapshots(seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber) : async [T.FantasyTeamSnapshot] {
-    
+
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == controllerPrincipalId;
@@ -1344,7 +1346,7 @@ actor class _ManagerCanister() {
     let allManagersBuffer = Buffer.fromArray<T.FantasyTeamSnapshot>([]);
     for (index in Iter.range(0, 11)) {
 
-      var managers: [T.Manager] = [];
+      var managers : [T.Manager] = [];
       switch (index) {
         case 0 {
           managers := managerGroup1;
@@ -1382,7 +1384,7 @@ actor class _ManagerCanister() {
         case 11 {
           managers := managerGroup12;
         };
-        case _{};
+        case _ {};
       };
 
       for (manager in Iter.fromArray(managers)) {
@@ -1604,14 +1606,14 @@ actor class _ManagerCanister() {
   private func getGroupClubManagerIds(managers : [T.Manager], clubId : FootballTypes.ClubId) : [Base.PrincipalId] {
     let managerIdBuffer = Buffer.fromArray<Base.PrincipalId>([]);
     for (manager in Iter.fromArray(managers)) {
-      switch(manager.favouriteClubId){
-        case (?foundClubId){ 
+      switch (manager.favouriteClubId) {
+        case (?foundClubId) {
           if (foundClubId == clubId) {
             managerIdBuffer.add(manager.principalId);
-          };   
+          };
         };
-        case (null){}
-      }
+        case (null) {};
+      };
     };
     return Buffer.toArray(managerIdBuffer);
   };
@@ -1626,24 +1628,24 @@ actor class _ManagerCanister() {
     assert backendPrincipalId == controllerPrincipalId;
 
     for (index in Iter.range(0, 11)) {
-      await snapshotManagers(index, seasonId, gameweek, month); 
+      await snapshotManagers(index, seasonId, gameweek, month);
     };
   };
 
-  private func snapshotManagers(managerGroup: Int, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth) : async () {
-    
+  private func snapshotManagers(managerGroup : Int, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth) : async () {
+
     let backend_canister = actor (controllerPrincipalId) : actor {
-      getPlayersSnapshot : shared query (dto: Queries.GetSnapshotPlayersDTO) -> async [DTOs.PlayerDTO];
+      getPlayersSnapshot : shared query (dto : Queries.GetSnapshotPlayersDTO) -> async [DTOs.PlayerDTO];
     };
 
     let players = await backend_canister.getPlayersSnapshot({
       gameweek;
-      seasonId
+      seasonId;
     });
 
     let managerBuffer = Buffer.fromArray<T.Manager>([]);
-    
-    var managers: [T.Manager] = [];
+
+    var managers : [T.Manager] = [];
 
     switch (managerGroup) {
       case 0 {
@@ -1703,12 +1705,20 @@ actor class _ManagerCanister() {
               },
             );
 
-            let managerPlayers = Array.filter<DTOs.PlayerDTO>(players, func(player){
-              Option.isSome(Array.find<FootballTypes.PlayerId>(manager.playerIds, func(playerId) : Bool{
-                playerId == player.id
-              }))
-            });
-            
+            let managerPlayers = Array.filter<DTOs.PlayerDTO>(
+              players,
+              func(player) {
+                Option.isSome(
+                  Array.find<FootballTypes.PlayerId>(
+                    manager.playerIds,
+                    func(playerId) : Bool {
+                      playerId == player.id;
+                    },
+                  )
+                );
+              },
+            );
+
             let allPlayerValues = Array.map<DTOs.PlayerDTO, Nat16>(managerPlayers, func(player : DTOs.PlayerDTO) : Nat16 { return player.valueQuarterMillions });
             let totalTeamValue = Array.foldLeft<Nat16, Nat16>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
 
@@ -1760,16 +1770,24 @@ actor class _ManagerCanister() {
           };
         },
       );
-      
-      let updatedSeasonsBuffer = Buffer.fromArray<T.FantasyTeamSeason>(List.toArray(updatedSeasons));
-      
-      if(not seasonFound){
 
-        let managerPlayers = Array.filter<DTOs.PlayerDTO>(players, func(player){
-          Option.isSome(Array.find<FootballTypes.PlayerId>(manager.playerIds, func(playerId) : Bool{
-            playerId == player.id
-          }))
-        });
+      let updatedSeasonsBuffer = Buffer.fromArray<T.FantasyTeamSeason>(List.toArray(updatedSeasons));
+
+      if (not seasonFound) {
+
+        let managerPlayers = Array.filter<DTOs.PlayerDTO>(
+          players,
+          func(player) {
+            Option.isSome(
+              Array.find<FootballTypes.PlayerId>(
+                manager.playerIds,
+                func(playerId) : Bool {
+                  playerId == player.id;
+                },
+              )
+            );
+          },
+        );
 
         let allPlayerValues = Array.map<DTOs.PlayerDTO, Nat16>(managerPlayers, func(player : DTOs.PlayerDTO) : Nat16 { return player.valueQuarterMillions });
         let totalTeamValue = Array.foldLeft<Nat16, Nat16>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
@@ -1813,7 +1831,7 @@ actor class _ManagerCanister() {
         updatedSeasonsBuffer.add({
           gameweeks = List.fromArray([newSnapshot]);
           seasonId = seasonId;
-          totalPoints = 0
+          totalPoints = 0;
         });
       };
 
@@ -1854,7 +1872,7 @@ actor class _ManagerCanister() {
       };
       managerBuffer.add(updatedManager);
     };
-    
+
     switch (managerGroup) {
       case 0 {
         managerGroup1 := Buffer.toArray(managerBuffer);
@@ -1895,7 +1913,7 @@ actor class _ManagerCanister() {
       case _ {
 
       };
-    };  
+    };
   };
 
   private func updateSnapshotPoints(principalId : Text, seasonId : Nat16, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth, teamPoints : Int16, teamValueQuarterMillions : Nat16) : () {
@@ -1903,7 +1921,7 @@ actor class _ManagerCanister() {
     let managerBuffer = Buffer.fromArray<T.Manager>([]);
     let managerGroupIndex = managerGroupIndexes.get(principalId);
 
-    var managers: [T.Manager] = [];
+    var managers : [T.Manager] = [];
 
     switch (managerGroupIndex) {
       case (null) {};
@@ -1951,7 +1969,6 @@ actor class _ManagerCanister() {
           };
         };
 
-
         for (manager in Iter.fromArray(managers)) {
           if (manager.principalId == principalId) {
             let teamHistoryBuffer = Buffer.fromArray<T.FantasyTeamSeason>([]);
@@ -1984,7 +2001,7 @@ actor class _ManagerCanister() {
 
                 let newSnapshot = mergeManagerSnapshot(manager, seasonId, gameweek, month, teamPoints, monthlyPoints, seasonPoints, teamValueQuarterMillions);
                 let updatedHistory = mergeExistingHistory(existingHistory, newSnapshot, seasonId, gameweek);
-                
+
                 let updatedManager = mergeManagerHistory(manager, updatedHistory);
                 managerBuffer.add(updatedManager);
               };
@@ -1994,7 +2011,6 @@ actor class _ManagerCanister() {
             managerBuffer.add(manager);
           };
         };
-
 
         switch (foundGroupIndex) {
           case 0 {
@@ -2041,8 +2057,8 @@ actor class _ManagerCanister() {
     };
   };
 
-  private func mergeManagerSnapshot(manager : T.Manager, seasonId: FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth, weeklyPoints : Int16, monthlyPoints : Int16, seasonPoints : Int16, teamValueQuarterMillions : Nat16) : T.FantasyTeamSnapshot {
-     
+  private func mergeManagerSnapshot(manager : T.Manager, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth, weeklyPoints : Int16, monthlyPoints : Int16, seasonPoints : Int16, teamValueQuarterMillions : Nat16) : T.FantasyTeamSnapshot {
+
     return {
       principalId = manager.principalId;
       username = manager.username;
@@ -2130,7 +2146,7 @@ actor class _ManagerCanister() {
 
         for (snapshot in List.toIter<T.FantasyTeamSnapshot>(season.gameweeks)) {
           if (snapshot.gameweek != gameweek) {
-            snapshotBuffer.add(snapshot)
+            snapshotBuffer.add(snapshot);
           };
         };
 
@@ -2156,25 +2172,32 @@ actor class _ManagerCanister() {
 
   //Calculate teams scores
 
-  public shared ({ caller }) func calculateFantasyTeamScores(leagueId: FootballTypes.LeagueId, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth) : async () {
+  public shared ({ caller }) func calculateFantasyTeamScores(leagueId : FootballTypes.LeagueId, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth) : async () {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == controllerPrincipalId;
 
     let backend_canister = actor (controllerPrincipalId) : actor {
-      getPlayersMap : (dto: Queries.GetPlayersMapDTO) -> async Result.Result<[(Nat16, DTOs.PlayerScoreDTO)], T.Error>;
-      getPlayersSnapshot : shared query (dto: Queries.GetSnapshotPlayersDTO) -> async [DTOs.PlayerDTO];
+      getPlayersMap : (dto : Queries.GetPlayersMapDTO) -> async Result.Result<[(Nat16, DTOs.PlayerScoreDTO)], T.Error>;
+      getPlayersSnapshot : shared query (dto : Queries.GetSnapshotPlayersDTO) -> async [DTOs.PlayerDTO];
     };
 
-    let allPlayersListResult = await backend_canister.getPlayersMap({ seasonId; gameweek} );
+    let allPlayersListResult = await backend_canister.getPlayersMap({
+      seasonId;
+      gameweek;
+    });
 
-    let allPlayers : [DTOs.PlayerDTO] = await backend_canister.getPlayersSnapshot({gameweek; leagueId; seasonId});
-    
+    let allPlayers : [DTOs.PlayerDTO] = await backend_canister.getPlayersSnapshot({
+      gameweek;
+      leagueId;
+      seasonId;
+    });
+
     let playerIdTrie : TrieMap.TrieMap<FootballTypes.PlayerId, DTOs.PlayerScoreDTO> = TrieMap.TrieMap<FootballTypes.PlayerId, DTOs.PlayerScoreDTO>(ComparisonUtilities.eqNat16, ComparisonUtilities.hashNat16);
 
-    switch(allPlayersListResult){
-      case (#ok allPlayersList){
-        
+    switch (allPlayersListResult) {
+      case (#ok allPlayersList) {
+
         for (player in Iter.fromArray(allPlayersList)) {
           playerIdTrie.put(player.0, player.1);
         };
@@ -2249,15 +2272,18 @@ actor class _ManagerCanister() {
                       switch (playerData) {
                         case (null) {};
                         case (?player) {
-                          
-                          let playerDTO = Array.find(allPlayers, func(foundPlayerDTO: DTOs.PlayerDTO) : Bool {
-                            foundPlayerDTO.id == player.id;
-                          });
-                          switch(playerDTO){
-                            case (?foundPlayerDTO){                              
+
+                          let playerDTO = Array.find(
+                            allPlayers,
+                            func(foundPlayerDTO : DTOs.PlayerDTO) : Bool {
+                              foundPlayerDTO.id == player.id;
+                            },
+                          );
+                          switch (playerDTO) {
+                            case (?foundPlayerDTO) {
                               fantasyTeamPlayersBuffer.add(foundPlayerDTO);
                             };
-                            case (null){}
+                            case (null) {};
                           };
 
                           var totalScore : Int16 = player.points;
@@ -2322,7 +2348,7 @@ actor class _ManagerCanister() {
                       };
                     };
 
-                    let thisTeamsPlayers: [DTOs.PlayerDTO] = Buffer.toArray(fantasyTeamPlayersBuffer);
+                    let thisTeamsPlayers : [DTOs.PlayerDTO] = Buffer.toArray(fantasyTeamPlayersBuffer);
                     let allPlayerValues = Array.map<DTOs.PlayerDTO, Nat16>(thisTeamsPlayers, func(player : DTOs.PlayerDTO) : Nat16 { return player.valueQuarterMillions });
 
                     let totalTeamValue = Array.foldLeft<Nat16, Nat16>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
@@ -2336,7 +2362,7 @@ actor class _ManagerCanister() {
         };
 
       };
-      case (#err _){}
+      case (#err _) {};
     };
   };
 
@@ -2360,7 +2386,7 @@ actor class _ManagerCanister() {
 
   //Remove player from teams
 
-  public shared ({ caller }) func removePlayerFromTeams(leagueId: FootballTypes.LeagueId, playerId : FootballTypes.PlayerId, parentCanisterId: Base.CanisterId) : async () {
+  public shared ({ caller }) func removePlayerFromTeams(leagueId : FootballTypes.LeagueId, playerId : FootballTypes.PlayerId, parentCanisterId : Base.CanisterId) : async () {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == controllerPrincipalId;
@@ -2369,14 +2395,14 @@ actor class _ManagerCanister() {
     };
   };
 
-  private func removePlayerFromGroup(leagueId: FootballTypes.LeagueId, removePlayerId : FootballTypes.PlayerId, managerGroup: Int, parentCanisterId: Base.CanisterId) : async () {
+  private func removePlayerFromGroup(leagueId : FootballTypes.LeagueId, removePlayerId : FootballTypes.PlayerId, managerGroup : Int, parentCanisterId : Base.CanisterId) : async () {
     let backend_canister = actor (parentCanisterId) : actor {
-      getVerifiedPlayers : (leagueId: FootballTypes.LeagueId) -> async Result.Result<[DTOs.PlayerDTO], T.Error>;
+      getVerifiedPlayers : (leagueId : FootballTypes.LeagueId) -> async Result.Result<[DTOs.PlayerDTO], T.Error>;
     };
-      
+
     let allPlayersResult = await backend_canister.getVerifiedPlayers(leagueId);
-    switch(allPlayersResult){
-      case (#ok allPlayers){
+    switch (allPlayersResult) {
+      case (#ok allPlayers) {
         let removedPlayer = Array.find<DTOs.PlayerDTO>(allPlayers, func(p) { p.id == removePlayerId });
 
         switch (removedPlayer) {
@@ -2386,9 +2412,8 @@ actor class _ManagerCanister() {
           case (?foundRemovedPlayer) {
             let playerValue = foundRemovedPlayer.valueQuarterMillions;
             let managerBuffer = Buffer.fromArray<T.Manager>([]);
-            
-                
-            var managers: [T.Manager] = [];
+
+            var managers : [T.Manager] = [];
 
             switch (managerGroup) {
               case 0 {
@@ -2431,7 +2456,7 @@ actor class _ManagerCanister() {
 
               };
             };
-            
+
             for (manager in Iter.fromArray(managers)) {
               let playerIdBuffer = Buffer.fromArray<FootballTypes.PlayerId>([]);
               var playerRemoved = false;
@@ -2516,7 +2541,6 @@ actor class _ManagerCanister() {
                 managerBuffer.add(manager);
               };
             };
-                
 
             switch (managerGroup) {
               case 0 {
@@ -2563,9 +2587,9 @@ actor class _ManagerCanister() {
         };
 
       };
-      case (#err _){
+      case (#err _) {
 
-      }
+      };
     };
   };
 
@@ -2577,7 +2601,7 @@ actor class _ManagerCanister() {
     assert backendPrincipalId == controllerPrincipalId;
 
     for (index in Iter.range(0, 11)) {
-      var managers: [T.Manager] = [];
+      var managers : [T.Manager] = [];
 
       switch (index) {
         case 0 {
@@ -2838,463 +2862,492 @@ actor class _ManagerCanister() {
 
     };
 
-
-
-
-
-
-
-
   };
 
   public shared ({ caller }) func resetFantasyTeams() : async () {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == controllerPrincipalId;
-    
-    managerGroup1 := Array.map<T.Manager, T.Manager>(managerGroup1, func(manager: T.Manager){
-      return {
-        bankQuarterMillions = 1200;
-        braceBonusGameweek = 0;
-        canisterId = manager.canisterId;
-        captainFantasticGameweek = 0;
-        captainFantasticPlayerId = 0;
-        captainId = 0;
-        createDate = manager.createDate;
-        favouriteClubId = manager.favouriteClubId;
-        goalGetterGameweek = 0;
-        goalGetterPlayerId = 0;
-        hatTrickHeroGameweek = 0;
-        history = List.nil();
-        monthlyBonusesAvailable = 2;
-        noEntryGameweek = 0;
-        noEntryPlayerId = 0;
-        oneNationCountryId = 0;
-        oneNationGameweek = 0;
-        passMasterGameweek = 0;
-        passMasterPlayerId = 0;
-        playerIds = [];
-        principalId = manager.principalId;
-        profilePicture = manager.profilePicture;
-        profilePictureType = manager.profilePictureType;
-        prospectsGameweek = 0;
-        safeHandsGameweek = 0;
-        safeHandsPlayerId = 0;
-        teamBoostClubId = 0;
-        teamBoostGameweek = 0;
-        termsAccepted = manager.termsAccepted;
-        transferWindowGameweek = 0;
-        transfersAvailable = 3;
-        username = manager.username;
-      }
-    });
 
-    managerGroup2 := Array.map<T.Manager, T.Manager>(managerGroup2, func(manager: T.Manager){
-      return {
-        bankQuarterMillions = 1200;
-        braceBonusGameweek = 0;
-        canisterId = manager.canisterId;
-        captainFantasticGameweek = 0;
-        captainFantasticPlayerId = 0;
-        captainId = 0;
-        createDate = manager.createDate;
-        favouriteClubId = manager.favouriteClubId;
-        goalGetterGameweek = 0;
-        goalGetterPlayerId = 0;
-        hatTrickHeroGameweek = 0;
-        history = List.nil();
-        monthlyBonusesAvailable = 2;
-        noEntryGameweek = 0;
-        noEntryPlayerId = 0;
-        oneNationCountryId = 0;
-        oneNationGameweek = 0;
-        passMasterGameweek = 0;
-        passMasterPlayerId = 0;
-        playerIds = [];
-        principalId = manager.principalId;
-        profilePicture = manager.profilePicture;
-        profilePictureType = manager.profilePictureType;
-        prospectsGameweek = 0;
-        safeHandsGameweek = 0;
-        safeHandsPlayerId = 0;
-        teamBoostClubId = 0;
-        teamBoostGameweek = 0;
-        termsAccepted = manager.termsAccepted;
-        transferWindowGameweek = 0;
-        transfersAvailable = 3;
-        username = manager.username;
-      }
-    });
+    managerGroup1 := Array.map<T.Manager, T.Manager>(
+      managerGroup1,
+      func(manager : T.Manager) {
+        return {
+          bankQuarterMillions = 1200;
+          braceBonusGameweek = 0;
+          canisterId = manager.canisterId;
+          captainFantasticGameweek = 0;
+          captainFantasticPlayerId = 0;
+          captainId = 0;
+          createDate = manager.createDate;
+          favouriteClubId = manager.favouriteClubId;
+          goalGetterGameweek = 0;
+          goalGetterPlayerId = 0;
+          hatTrickHeroGameweek = 0;
+          history = List.nil();
+          monthlyBonusesAvailable = 2;
+          noEntryGameweek = 0;
+          noEntryPlayerId = 0;
+          oneNationCountryId = 0;
+          oneNationGameweek = 0;
+          passMasterGameweek = 0;
+          passMasterPlayerId = 0;
+          playerIds = [];
+          principalId = manager.principalId;
+          profilePicture = manager.profilePicture;
+          profilePictureType = manager.profilePictureType;
+          prospectsGameweek = 0;
+          safeHandsGameweek = 0;
+          safeHandsPlayerId = 0;
+          teamBoostClubId = 0;
+          teamBoostGameweek = 0;
+          termsAccepted = manager.termsAccepted;
+          transferWindowGameweek = 0;
+          transfersAvailable = 3;
+          username = manager.username;
+        };
+      },
+    );
 
-    managerGroup3 := Array.map<T.Manager, T.Manager>(managerGroup3, func(manager: T.Manager){
-      return {
-        bankQuarterMillions = 1200;
-        braceBonusGameweek = 0;
-        canisterId = manager.canisterId;
-        captainFantasticGameweek = 0;
-        captainFantasticPlayerId = 0;
-        captainId = 0;
-        createDate = manager.createDate;
-        favouriteClubId = manager.favouriteClubId;
-        goalGetterGameweek = 0;
-        goalGetterPlayerId = 0;
-        hatTrickHeroGameweek = 0;
-        history = List.nil();
-        monthlyBonusesAvailable = 2;
-        noEntryGameweek = 0;
-        noEntryPlayerId = 0;
-        oneNationCountryId = 0;
-        oneNationGameweek = 0;
-        passMasterGameweek = 0;
-        passMasterPlayerId = 0;
-        playerIds = [];
-        principalId = manager.principalId;
-        profilePicture = manager.profilePicture;
-        profilePictureType = manager.profilePictureType;
-        prospectsGameweek = 0;
-        safeHandsGameweek = 0;
-        safeHandsPlayerId = 0;
-        teamBoostClubId = 0;
-        teamBoostGameweek = 0;
-        termsAccepted = manager.termsAccepted;
-        transferWindowGameweek = 0;
-        transfersAvailable = 3;
-        username = manager.username;
-      }
-    });
+    managerGroup2 := Array.map<T.Manager, T.Manager>(
+      managerGroup2,
+      func(manager : T.Manager) {
+        return {
+          bankQuarterMillions = 1200;
+          braceBonusGameweek = 0;
+          canisterId = manager.canisterId;
+          captainFantasticGameweek = 0;
+          captainFantasticPlayerId = 0;
+          captainId = 0;
+          createDate = manager.createDate;
+          favouriteClubId = manager.favouriteClubId;
+          goalGetterGameweek = 0;
+          goalGetterPlayerId = 0;
+          hatTrickHeroGameweek = 0;
+          history = List.nil();
+          monthlyBonusesAvailable = 2;
+          noEntryGameweek = 0;
+          noEntryPlayerId = 0;
+          oneNationCountryId = 0;
+          oneNationGameweek = 0;
+          passMasterGameweek = 0;
+          passMasterPlayerId = 0;
+          playerIds = [];
+          principalId = manager.principalId;
+          profilePicture = manager.profilePicture;
+          profilePictureType = manager.profilePictureType;
+          prospectsGameweek = 0;
+          safeHandsGameweek = 0;
+          safeHandsPlayerId = 0;
+          teamBoostClubId = 0;
+          teamBoostGameweek = 0;
+          termsAccepted = manager.termsAccepted;
+          transferWindowGameweek = 0;
+          transfersAvailable = 3;
+          username = manager.username;
+        };
+      },
+    );
 
-    managerGroup4 := Array.map<T.Manager, T.Manager>(managerGroup4, func(manager: T.Manager){
-      return {
-        bankQuarterMillions = 1200;
-        braceBonusGameweek = 0;
-        canisterId = manager.canisterId;
-        captainFantasticGameweek = 0;
-        captainFantasticPlayerId = 0;
-        captainId = 0;
-        createDate = manager.createDate;
-        favouriteClubId = manager.favouriteClubId;
-        goalGetterGameweek = 0;
-        goalGetterPlayerId = 0;
-        hatTrickHeroGameweek = 0;
-        history = List.nil();
-        monthlyBonusesAvailable = 2;
-        noEntryGameweek = 0;
-        noEntryPlayerId = 0;
-        oneNationCountryId = 0;
-        oneNationGameweek = 0;
-        passMasterGameweek = 0;
-        passMasterPlayerId = 0;
-        playerIds = [];
-        principalId = manager.principalId;
-        profilePicture = manager.profilePicture;
-        profilePictureType = manager.profilePictureType;
-        prospectsGameweek = 0;
-        safeHandsGameweek = 0;
-        safeHandsPlayerId = 0;
-        teamBoostClubId = 0;
-        teamBoostGameweek = 0;
-        termsAccepted = manager.termsAccepted;
-        transferWindowGameweek = 0;
-        transfersAvailable = 3;
-        username = manager.username;
-      }
-    });
+    managerGroup3 := Array.map<T.Manager, T.Manager>(
+      managerGroup3,
+      func(manager : T.Manager) {
+        return {
+          bankQuarterMillions = 1200;
+          braceBonusGameweek = 0;
+          canisterId = manager.canisterId;
+          captainFantasticGameweek = 0;
+          captainFantasticPlayerId = 0;
+          captainId = 0;
+          createDate = manager.createDate;
+          favouriteClubId = manager.favouriteClubId;
+          goalGetterGameweek = 0;
+          goalGetterPlayerId = 0;
+          hatTrickHeroGameweek = 0;
+          history = List.nil();
+          monthlyBonusesAvailable = 2;
+          noEntryGameweek = 0;
+          noEntryPlayerId = 0;
+          oneNationCountryId = 0;
+          oneNationGameweek = 0;
+          passMasterGameweek = 0;
+          passMasterPlayerId = 0;
+          playerIds = [];
+          principalId = manager.principalId;
+          profilePicture = manager.profilePicture;
+          profilePictureType = manager.profilePictureType;
+          prospectsGameweek = 0;
+          safeHandsGameweek = 0;
+          safeHandsPlayerId = 0;
+          teamBoostClubId = 0;
+          teamBoostGameweek = 0;
+          termsAccepted = manager.termsAccepted;
+          transferWindowGameweek = 0;
+          transfersAvailable = 3;
+          username = manager.username;
+        };
+      },
+    );
 
-    managerGroup5 := Array.map<T.Manager, T.Manager>(managerGroup5, func(manager: T.Manager){
-      return {
-        bankQuarterMillions = 1200;
-        braceBonusGameweek = 0;
-        canisterId = manager.canisterId;
-        captainFantasticGameweek = 0;
-        captainFantasticPlayerId = 0;
-        captainId = 0;
-        createDate = manager.createDate;
-        favouriteClubId = manager.favouriteClubId;
-        goalGetterGameweek = 0;
-        goalGetterPlayerId = 0;
-        hatTrickHeroGameweek = 0;
-        history = List.nil();
-        monthlyBonusesAvailable = 2;
-        noEntryGameweek = 0;
-        noEntryPlayerId = 0;
-        oneNationCountryId = 0;
-        oneNationGameweek = 0;
-        passMasterGameweek = 0;
-        passMasterPlayerId = 0;
-        playerIds = [];
-        principalId = manager.principalId;
-        profilePicture = manager.profilePicture;
-        profilePictureType = manager.profilePictureType;
-        prospectsGameweek = 0;
-        safeHandsGameweek = 0;
-        safeHandsPlayerId = 0;
-        teamBoostClubId = 0;
-        teamBoostGameweek = 0;
-        termsAccepted = manager.termsAccepted;
-        transferWindowGameweek = 0;
-        transfersAvailable = 3;
-        username = manager.username;
-      }
-    });
+    managerGroup4 := Array.map<T.Manager, T.Manager>(
+      managerGroup4,
+      func(manager : T.Manager) {
+        return {
+          bankQuarterMillions = 1200;
+          braceBonusGameweek = 0;
+          canisterId = manager.canisterId;
+          captainFantasticGameweek = 0;
+          captainFantasticPlayerId = 0;
+          captainId = 0;
+          createDate = manager.createDate;
+          favouriteClubId = manager.favouriteClubId;
+          goalGetterGameweek = 0;
+          goalGetterPlayerId = 0;
+          hatTrickHeroGameweek = 0;
+          history = List.nil();
+          monthlyBonusesAvailable = 2;
+          noEntryGameweek = 0;
+          noEntryPlayerId = 0;
+          oneNationCountryId = 0;
+          oneNationGameweek = 0;
+          passMasterGameweek = 0;
+          passMasterPlayerId = 0;
+          playerIds = [];
+          principalId = manager.principalId;
+          profilePicture = manager.profilePicture;
+          profilePictureType = manager.profilePictureType;
+          prospectsGameweek = 0;
+          safeHandsGameweek = 0;
+          safeHandsPlayerId = 0;
+          teamBoostClubId = 0;
+          teamBoostGameweek = 0;
+          termsAccepted = manager.termsAccepted;
+          transferWindowGameweek = 0;
+          transfersAvailable = 3;
+          username = manager.username;
+        };
+      },
+    );
 
-    managerGroup6 := Array.map<T.Manager, T.Manager>(managerGroup6, func(manager: T.Manager){
-      return {
-        bankQuarterMillions = 1200;
-        braceBonusGameweek = 0;
-        canisterId = manager.canisterId;
-        captainFantasticGameweek = 0;
-        captainFantasticPlayerId = 0;
-        captainId = 0;
-        createDate = manager.createDate;
-        favouriteClubId = manager.favouriteClubId;
-        goalGetterGameweek = 0;
-        goalGetterPlayerId = 0;
-        hatTrickHeroGameweek = 0;
-        history = List.nil();
-        monthlyBonusesAvailable = 2;
-        noEntryGameweek = 0;
-        noEntryPlayerId = 0;
-        oneNationCountryId = 0;
-        oneNationGameweek = 0;
-        passMasterGameweek = 0;
-        passMasterPlayerId = 0;
-        playerIds = [];
-        principalId = manager.principalId;
-        profilePicture = manager.profilePicture;
-        profilePictureType = manager.profilePictureType;
-        prospectsGameweek = 0;
-        safeHandsGameweek = 0;
-        safeHandsPlayerId = 0;
-        teamBoostClubId = 0;
-        teamBoostGameweek = 0;
-        termsAccepted = manager.termsAccepted;
-        transferWindowGameweek = 0;
-        transfersAvailable = 3;
-        username = manager.username;
-      }
-    });
+    managerGroup5 := Array.map<T.Manager, T.Manager>(
+      managerGroup5,
+      func(manager : T.Manager) {
+        return {
+          bankQuarterMillions = 1200;
+          braceBonusGameweek = 0;
+          canisterId = manager.canisterId;
+          captainFantasticGameweek = 0;
+          captainFantasticPlayerId = 0;
+          captainId = 0;
+          createDate = manager.createDate;
+          favouriteClubId = manager.favouriteClubId;
+          goalGetterGameweek = 0;
+          goalGetterPlayerId = 0;
+          hatTrickHeroGameweek = 0;
+          history = List.nil();
+          monthlyBonusesAvailable = 2;
+          noEntryGameweek = 0;
+          noEntryPlayerId = 0;
+          oneNationCountryId = 0;
+          oneNationGameweek = 0;
+          passMasterGameweek = 0;
+          passMasterPlayerId = 0;
+          playerIds = [];
+          principalId = manager.principalId;
+          profilePicture = manager.profilePicture;
+          profilePictureType = manager.profilePictureType;
+          prospectsGameweek = 0;
+          safeHandsGameweek = 0;
+          safeHandsPlayerId = 0;
+          teamBoostClubId = 0;
+          teamBoostGameweek = 0;
+          termsAccepted = manager.termsAccepted;
+          transferWindowGameweek = 0;
+          transfersAvailable = 3;
+          username = manager.username;
+        };
+      },
+    );
 
-    managerGroup7 := Array.map<T.Manager, T.Manager>(managerGroup7, func(manager: T.Manager){
-      return {
-        bankQuarterMillions = 1200;
-        braceBonusGameweek = 0;
-        canisterId = manager.canisterId;
-        captainFantasticGameweek = 0;
-        captainFantasticPlayerId = 0;
-        captainId = 0;
-        createDate = manager.createDate;
-        favouriteClubId = manager.favouriteClubId;
-        goalGetterGameweek = 0;
-        goalGetterPlayerId = 0;
-        hatTrickHeroGameweek = 0;
-        history = List.nil();
-        monthlyBonusesAvailable = 2;
-        noEntryGameweek = 0;
-        noEntryPlayerId = 0;
-        oneNationCountryId = 0;
-        oneNationGameweek = 0;
-        passMasterGameweek = 0;
-        passMasterPlayerId = 0;
-        playerIds = [];
-        principalId = manager.principalId;
-        profilePicture = manager.profilePicture;
-        profilePictureType = manager.profilePictureType;
-        prospectsGameweek = 0;
-        safeHandsGameweek = 0;
-        safeHandsPlayerId = 0;
-        teamBoostClubId = 0;
-        teamBoostGameweek = 0;
-        termsAccepted = manager.termsAccepted;
-        transferWindowGameweek = 0;
-        transfersAvailable = 3;
-        username = manager.username;
-      }
-    });
+    managerGroup6 := Array.map<T.Manager, T.Manager>(
+      managerGroup6,
+      func(manager : T.Manager) {
+        return {
+          bankQuarterMillions = 1200;
+          braceBonusGameweek = 0;
+          canisterId = manager.canisterId;
+          captainFantasticGameweek = 0;
+          captainFantasticPlayerId = 0;
+          captainId = 0;
+          createDate = manager.createDate;
+          favouriteClubId = manager.favouriteClubId;
+          goalGetterGameweek = 0;
+          goalGetterPlayerId = 0;
+          hatTrickHeroGameweek = 0;
+          history = List.nil();
+          monthlyBonusesAvailable = 2;
+          noEntryGameweek = 0;
+          noEntryPlayerId = 0;
+          oneNationCountryId = 0;
+          oneNationGameweek = 0;
+          passMasterGameweek = 0;
+          passMasterPlayerId = 0;
+          playerIds = [];
+          principalId = manager.principalId;
+          profilePicture = manager.profilePicture;
+          profilePictureType = manager.profilePictureType;
+          prospectsGameweek = 0;
+          safeHandsGameweek = 0;
+          safeHandsPlayerId = 0;
+          teamBoostClubId = 0;
+          teamBoostGameweek = 0;
+          termsAccepted = manager.termsAccepted;
+          transferWindowGameweek = 0;
+          transfersAvailable = 3;
+          username = manager.username;
+        };
+      },
+    );
 
-    managerGroup8 := Array.map<T.Manager, T.Manager>(managerGroup8, func(manager: T.Manager){
-      return {
-        bankQuarterMillions = 1200;
-        braceBonusGameweek = 0;
-        canisterId = manager.canisterId;
-        captainFantasticGameweek = 0;
-        captainFantasticPlayerId = 0;
-        captainId = 0;
-        createDate = manager.createDate;
-        favouriteClubId = manager.favouriteClubId;
-        goalGetterGameweek = 0;
-        goalGetterPlayerId = 0;
-        hatTrickHeroGameweek = 0;
-        history = List.nil();
-        monthlyBonusesAvailable = 2;
-        noEntryGameweek = 0;
-        noEntryPlayerId = 0;
-        oneNationCountryId = 0;
-        oneNationGameweek = 0;
-        passMasterGameweek = 0;
-        passMasterPlayerId = 0;
-        playerIds = [];
-        principalId = manager.principalId;
-        profilePicture = manager.profilePicture;
-        profilePictureType = manager.profilePictureType;
-        prospectsGameweek = 0;
-        safeHandsGameweek = 0;
-        safeHandsPlayerId = 0;
-        teamBoostClubId = 0;
-        teamBoostGameweek = 0;
-        termsAccepted = manager.termsAccepted;
-        transferWindowGameweek = 0;
-        transfersAvailable = 3;
-        username = manager.username;
-      }
-    });
+    managerGroup7 := Array.map<T.Manager, T.Manager>(
+      managerGroup7,
+      func(manager : T.Manager) {
+        return {
+          bankQuarterMillions = 1200;
+          braceBonusGameweek = 0;
+          canisterId = manager.canisterId;
+          captainFantasticGameweek = 0;
+          captainFantasticPlayerId = 0;
+          captainId = 0;
+          createDate = manager.createDate;
+          favouriteClubId = manager.favouriteClubId;
+          goalGetterGameweek = 0;
+          goalGetterPlayerId = 0;
+          hatTrickHeroGameweek = 0;
+          history = List.nil();
+          monthlyBonusesAvailable = 2;
+          noEntryGameweek = 0;
+          noEntryPlayerId = 0;
+          oneNationCountryId = 0;
+          oneNationGameweek = 0;
+          passMasterGameweek = 0;
+          passMasterPlayerId = 0;
+          playerIds = [];
+          principalId = manager.principalId;
+          profilePicture = manager.profilePicture;
+          profilePictureType = manager.profilePictureType;
+          prospectsGameweek = 0;
+          safeHandsGameweek = 0;
+          safeHandsPlayerId = 0;
+          teamBoostClubId = 0;
+          teamBoostGameweek = 0;
+          termsAccepted = manager.termsAccepted;
+          transferWindowGameweek = 0;
+          transfersAvailable = 3;
+          username = manager.username;
+        };
+      },
+    );
 
-    managerGroup9 := Array.map<T.Manager, T.Manager>(managerGroup9, func(manager: T.Manager){
-      return {
-        bankQuarterMillions = 1200;
-        braceBonusGameweek = 0;
-        canisterId = manager.canisterId;
-        captainFantasticGameweek = 0;
-        captainFantasticPlayerId = 0;
-        captainId = 0;
-        createDate = manager.createDate;
-        favouriteClubId = manager.favouriteClubId;
-        goalGetterGameweek = 0;
-        goalGetterPlayerId = 0;
-        hatTrickHeroGameweek = 0;
-        history = List.nil();
-        monthlyBonusesAvailable = 2;
-        noEntryGameweek = 0;
-        noEntryPlayerId = 0;
-        oneNationCountryId = 0;
-        oneNationGameweek = 0;
-        passMasterGameweek = 0;
-        passMasterPlayerId = 0;
-        playerIds = [];
-        principalId = manager.principalId;
-        profilePicture = manager.profilePicture;
-        profilePictureType = manager.profilePictureType;
-        prospectsGameweek = 0;
-        safeHandsGameweek = 0;
-        safeHandsPlayerId = 0;
-        teamBoostClubId = 0;
-        teamBoostGameweek = 0;
-        termsAccepted = manager.termsAccepted;
-        transferWindowGameweek = 0;
-        transfersAvailable = 3;
-        username = manager.username;
-      }
-    });
+    managerGroup8 := Array.map<T.Manager, T.Manager>(
+      managerGroup8,
+      func(manager : T.Manager) {
+        return {
+          bankQuarterMillions = 1200;
+          braceBonusGameweek = 0;
+          canisterId = manager.canisterId;
+          captainFantasticGameweek = 0;
+          captainFantasticPlayerId = 0;
+          captainId = 0;
+          createDate = manager.createDate;
+          favouriteClubId = manager.favouriteClubId;
+          goalGetterGameweek = 0;
+          goalGetterPlayerId = 0;
+          hatTrickHeroGameweek = 0;
+          history = List.nil();
+          monthlyBonusesAvailable = 2;
+          noEntryGameweek = 0;
+          noEntryPlayerId = 0;
+          oneNationCountryId = 0;
+          oneNationGameweek = 0;
+          passMasterGameweek = 0;
+          passMasterPlayerId = 0;
+          playerIds = [];
+          principalId = manager.principalId;
+          profilePicture = manager.profilePicture;
+          profilePictureType = manager.profilePictureType;
+          prospectsGameweek = 0;
+          safeHandsGameweek = 0;
+          safeHandsPlayerId = 0;
+          teamBoostClubId = 0;
+          teamBoostGameweek = 0;
+          termsAccepted = manager.termsAccepted;
+          transferWindowGameweek = 0;
+          transfersAvailable = 3;
+          username = manager.username;
+        };
+      },
+    );
 
-    managerGroup10 := Array.map<T.Manager, T.Manager>(managerGroup10, func(manager: T.Manager){
-      return {
-        bankQuarterMillions = 1200;
-        braceBonusGameweek = 0;
-        canisterId = manager.canisterId;
-        captainFantasticGameweek = 0;
-        captainFantasticPlayerId = 0;
-        captainId = 0;
-        createDate = manager.createDate;
-        favouriteClubId = manager.favouriteClubId;
-        goalGetterGameweek = 0;
-        goalGetterPlayerId = 0;
-        hatTrickHeroGameweek = 0;
-        history = List.nil();
-        monthlyBonusesAvailable = 2;
-        noEntryGameweek = 0;
-        noEntryPlayerId = 0;
-        oneNationCountryId = 0;
-        oneNationGameweek = 0;
-        passMasterGameweek = 0;
-        passMasterPlayerId = 0;
-        playerIds = [];
-        principalId = manager.principalId;
-        profilePicture = manager.profilePicture;
-        profilePictureType = manager.profilePictureType;
-        prospectsGameweek = 0;
-        safeHandsGameweek = 0;
-        safeHandsPlayerId = 0;
-        teamBoostClubId = 0;
-        teamBoostGameweek = 0;
-        termsAccepted = manager.termsAccepted;
-        transferWindowGameweek = 0;
-        transfersAvailable = 3;
-        username = manager.username;
-      }
-    });
-    
-    managerGroup11 := Array.map<T.Manager, T.Manager>(managerGroup11, func(manager: T.Manager){
-      return {
-        bankQuarterMillions = 1200;
-        braceBonusGameweek = 0;
-        canisterId = manager.canisterId;
-        captainFantasticGameweek = 0;
-        captainFantasticPlayerId = 0;
-        captainId = 0;
-        createDate = manager.createDate;
-        favouriteClubId = manager.favouriteClubId;
-        goalGetterGameweek = 0;
-        goalGetterPlayerId = 0;
-        hatTrickHeroGameweek = 0;
-        history = List.nil();
-        monthlyBonusesAvailable = 2;
-        noEntryGameweek = 0;
-        noEntryPlayerId = 0;
-        oneNationCountryId = 0;
-        oneNationGameweek = 0;
-        passMasterGameweek = 0;
-        passMasterPlayerId = 0;
-        playerIds = [];
-        principalId = manager.principalId;
-        profilePicture = manager.profilePicture;
-        profilePictureType = manager.profilePictureType;
-        prospectsGameweek = 0;
-        safeHandsGameweek = 0;
-        safeHandsPlayerId = 0;
-        teamBoostClubId = 0;
-        teamBoostGameweek = 0;
-        termsAccepted = manager.termsAccepted;
-        transferWindowGameweek = 0;
-        transfersAvailable = 3;
-        username = manager.username;
-      }
-    });
+    managerGroup9 := Array.map<T.Manager, T.Manager>(
+      managerGroup9,
+      func(manager : T.Manager) {
+        return {
+          bankQuarterMillions = 1200;
+          braceBonusGameweek = 0;
+          canisterId = manager.canisterId;
+          captainFantasticGameweek = 0;
+          captainFantasticPlayerId = 0;
+          captainId = 0;
+          createDate = manager.createDate;
+          favouriteClubId = manager.favouriteClubId;
+          goalGetterGameweek = 0;
+          goalGetterPlayerId = 0;
+          hatTrickHeroGameweek = 0;
+          history = List.nil();
+          monthlyBonusesAvailable = 2;
+          noEntryGameweek = 0;
+          noEntryPlayerId = 0;
+          oneNationCountryId = 0;
+          oneNationGameweek = 0;
+          passMasterGameweek = 0;
+          passMasterPlayerId = 0;
+          playerIds = [];
+          principalId = manager.principalId;
+          profilePicture = manager.profilePicture;
+          profilePictureType = manager.profilePictureType;
+          prospectsGameweek = 0;
+          safeHandsGameweek = 0;
+          safeHandsPlayerId = 0;
+          teamBoostClubId = 0;
+          teamBoostGameweek = 0;
+          termsAccepted = manager.termsAccepted;
+          transferWindowGameweek = 0;
+          transfersAvailable = 3;
+          username = manager.username;
+        };
+      },
+    );
 
-    managerGroup12 := Array.map<T.Manager, T.Manager>(managerGroup12, func(manager: T.Manager){
-      return {
-        bankQuarterMillions = 1200;
-        braceBonusGameweek = 0;
-        canisterId = manager.canisterId;
-        captainFantasticGameweek = 0;
-        captainFantasticPlayerId = 0;
-        captainId = 0;
-        createDate = manager.createDate;
-        favouriteClubId = manager.favouriteClubId;
-        goalGetterGameweek = 0;
-        goalGetterPlayerId = 0;
-        hatTrickHeroGameweek = 0;
-        history = List.nil();
-        monthlyBonusesAvailable = 2;
-        noEntryGameweek = 0;
-        noEntryPlayerId = 0;
-        oneNationCountryId = 0;
-        oneNationGameweek = 0;
-        passMasterGameweek = 0;
-        passMasterPlayerId = 0;
-        playerIds = [];
-        principalId = manager.principalId;
-        profilePicture = manager.profilePicture;
-        profilePictureType = manager.profilePictureType;
-        prospectsGameweek = 0;
-        safeHandsGameweek = 0;
-        safeHandsPlayerId = 0;
-        teamBoostClubId = 0;
-        teamBoostGameweek = 0;
-        termsAccepted = manager.termsAccepted;
-        transferWindowGameweek = 0;
-        transfersAvailable = 3;
-        username = manager.username;
-      }
-    });
+    managerGroup10 := Array.map<T.Manager, T.Manager>(
+      managerGroup10,
+      func(manager : T.Manager) {
+        return {
+          bankQuarterMillions = 1200;
+          braceBonusGameweek = 0;
+          canisterId = manager.canisterId;
+          captainFantasticGameweek = 0;
+          captainFantasticPlayerId = 0;
+          captainId = 0;
+          createDate = manager.createDate;
+          favouriteClubId = manager.favouriteClubId;
+          goalGetterGameweek = 0;
+          goalGetterPlayerId = 0;
+          hatTrickHeroGameweek = 0;
+          history = List.nil();
+          monthlyBonusesAvailable = 2;
+          noEntryGameweek = 0;
+          noEntryPlayerId = 0;
+          oneNationCountryId = 0;
+          oneNationGameweek = 0;
+          passMasterGameweek = 0;
+          passMasterPlayerId = 0;
+          playerIds = [];
+          principalId = manager.principalId;
+          profilePicture = manager.profilePicture;
+          profilePictureType = manager.profilePictureType;
+          prospectsGameweek = 0;
+          safeHandsGameweek = 0;
+          safeHandsPlayerId = 0;
+          teamBoostClubId = 0;
+          teamBoostGameweek = 0;
+          termsAccepted = manager.termsAccepted;
+          transferWindowGameweek = 0;
+          transfersAvailable = 3;
+          username = manager.username;
+        };
+      },
+    );
+
+    managerGroup11 := Array.map<T.Manager, T.Manager>(
+      managerGroup11,
+      func(manager : T.Manager) {
+        return {
+          bankQuarterMillions = 1200;
+          braceBonusGameweek = 0;
+          canisterId = manager.canisterId;
+          captainFantasticGameweek = 0;
+          captainFantasticPlayerId = 0;
+          captainId = 0;
+          createDate = manager.createDate;
+          favouriteClubId = manager.favouriteClubId;
+          goalGetterGameweek = 0;
+          goalGetterPlayerId = 0;
+          hatTrickHeroGameweek = 0;
+          history = List.nil();
+          monthlyBonusesAvailable = 2;
+          noEntryGameweek = 0;
+          noEntryPlayerId = 0;
+          oneNationCountryId = 0;
+          oneNationGameweek = 0;
+          passMasterGameweek = 0;
+          passMasterPlayerId = 0;
+          playerIds = [];
+          principalId = manager.principalId;
+          profilePicture = manager.profilePicture;
+          profilePictureType = manager.profilePictureType;
+          prospectsGameweek = 0;
+          safeHandsGameweek = 0;
+          safeHandsPlayerId = 0;
+          teamBoostClubId = 0;
+          teamBoostGameweek = 0;
+          termsAccepted = manager.termsAccepted;
+          transferWindowGameweek = 0;
+          transfersAvailable = 3;
+          username = manager.username;
+        };
+      },
+    );
+
+    managerGroup12 := Array.map<T.Manager, T.Manager>(
+      managerGroup12,
+      func(manager : T.Manager) {
+        return {
+          bankQuarterMillions = 1200;
+          braceBonusGameweek = 0;
+          canisterId = manager.canisterId;
+          captainFantasticGameweek = 0;
+          captainFantasticPlayerId = 0;
+          captainId = 0;
+          createDate = manager.createDate;
+          favouriteClubId = manager.favouriteClubId;
+          goalGetterGameweek = 0;
+          goalGetterPlayerId = 0;
+          hatTrickHeroGameweek = 0;
+          history = List.nil();
+          monthlyBonusesAvailable = 2;
+          noEntryGameweek = 0;
+          noEntryPlayerId = 0;
+          oneNationCountryId = 0;
+          oneNationGameweek = 0;
+          passMasterGameweek = 0;
+          passMasterPlayerId = 0;
+          playerIds = [];
+          principalId = manager.principalId;
+          profilePicture = manager.profilePicture;
+          profilePictureType = manager.profilePictureType;
+          prospectsGameweek = 0;
+          safeHandsGameweek = 0;
+          safeHandsPlayerId = 0;
+          teamBoostClubId = 0;
+          teamBoostGameweek = 0;
+          termsAccepted = manager.termsAccepted;
+          transferWindowGameweek = 0;
+          transfersAvailable = 3;
+          username = manager.username;
+        };
+      },
+    );
 
   };
 
@@ -3313,11 +3366,11 @@ actor class _ManagerCanister() {
         cyclesCheckTimerId := null;
       };
     };
-    ignore Timer.setTimer<system>(#nanoseconds(Int.abs(1)), postUpgradeCallback); 
+    ignore Timer.setTimer<system>(#nanoseconds(Int.abs(1)), postUpgradeCallback);
   };
-  
-  private func postUpgradeCallback() : async (){
-    
+
+  private func postUpgradeCallback() : async () {
+
   };
 
 };

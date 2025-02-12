@@ -6,8 +6,8 @@ import Iter "mo:base/Iter";
 import Principal "mo:base/Principal";
 import Buffer "mo:base/Buffer";
 import DTOs "../../shared/dtos/dtos";
-import Base "../../shared/types/base_types";
-import FootballTypes "mo:football-types";
+import Base "mo:waterway-mops/BaseTypes";
+import FootballTypes "mo:waterway-mops/FootballTypes";
 import T "../../shared/types/app_types";
 import Management "../../shared/utils/Management";
 import ManagerCanister "../canister_definitions/manager-canister";
@@ -29,59 +29,58 @@ import PickTeamUtilities "../utils/pick_team_utilities";
 
 module {
 
-  public class UserManager(controllerPrincipalId: Base.PrincipalId, fixturesPerClub: Nat8) {
-    
-    private var managerCanisterIds :  TrieMap.TrieMap<Base.PrincipalId, Base.CanisterId> = TrieMap.TrieMap<Base.PrincipalId, Base.CanisterId>(Text.equal, Text.hash);
-    private var usernames: TrieMap.TrieMap<Base.PrincipalId, Text> = TrieMap.TrieMap<Base.PrincipalId, Text>(Text.equal, Text.hash);
+  public class UserManager(controllerPrincipalId : Base.PrincipalId, fixturesPerClub : Nat8) {
 
-    private var uniqueManagerCanisterIds: List.List<Base.CanisterId> = List.nil();
+    private var managerCanisterIds : TrieMap.TrieMap<Base.PrincipalId, Base.CanisterId> = TrieMap.TrieMap<Base.PrincipalId, Base.CanisterId>(Text.equal, Text.hash);
+    private var usernames : TrieMap.TrieMap<Base.PrincipalId, Text> = TrieMap.TrieMap<Base.PrincipalId, Text>(Text.equal, Text.hash);
+
+    private var uniqueManagerCanisterIds : List.List<Base.CanisterId> = List.nil();
     private var totalManagers : Nat = 0;
-    private var activeManagerCanisterId : Base.CanisterId = "";    
-
+    private var activeManagerCanisterId : Base.CanisterId = "";
 
     //Getters
 
-    public func getProfile(managerPrincipalId: Base.PrincipalId) : async Result.Result<DTOs.ProfileDTO, T.Error> {
-      
+    public func getProfile(managerPrincipalId : Base.PrincipalId) : async Result.Result<DTOs.ProfileDTO, T.Error> {
+
       let userManagerCanisterId = managerCanisterIds.get(managerPrincipalId);
-      
-      switch(userManagerCanisterId){
-        case (?foundUserCanisterId){
+
+      switch (userManagerCanisterId) {
+        case (?foundUserCanisterId) {
 
           let manager_canister = actor (foundUserCanisterId) : actor {
-              getManager : Base.PrincipalId -> async ?T.Manager;
+            getManager : Base.PrincipalId -> async ?T.Manager;
           };
           let manager = await manager_canister.getManager(managerPrincipalId);
-          
-          switch (manager) {
-              case (null) {
-                  return #err(#NotFound);
-              };
-              case (?foundManager) {
 
-                let profileDTO : DTOs.ProfileDTO = {
-                    principalId = managerPrincipalId;
-                    username = foundManager.username;
-                    termsAccepted = foundManager.termsAccepted;
-                    profilePicture = foundManager.profilePicture;
-                    profilePictureType = foundManager.profilePictureType;
-                    favouriteClubId = foundManager.favouriteClubId;
-                    createDate = foundManager.createDate;
-                };
-                return #ok(profileDTO);
+          switch (manager) {
+            case (null) {
+              return #err(#NotFound);
+            };
+            case (?foundManager) {
+
+              let profileDTO : DTOs.ProfileDTO = {
+                principalId = managerPrincipalId;
+                username = foundManager.username;
+                termsAccepted = foundManager.termsAccepted;
+                profilePicture = foundManager.profilePicture;
+                profilePictureType = foundManager.profilePictureType;
+                favouriteClubId = foundManager.favouriteClubId;
+                createDate = foundManager.createDate;
               };
+              return #ok(profileDTO);
+            };
           };
         };
-        case (null){
-            return #err(#NotFound);
-        }
+        case (null) {
+          return #err(#NotFound);
+        };
       };
     };
 
-    public func getManager(dto: Queries.GetManagerDTO, weeklyLeaderboardEntry : ?DTOs.LeaderboardEntryDTO, monthlyLeaderboardEntry : ?DTOs.LeaderboardEntryDTO, seasonLeaderboardEntry : ?DTOs.LeaderboardEntryDTO) : async Result.Result<DTOs.ManagerDTO, T.Error> {
-      
+    public func getManager(dto : Queries.GetManagerDTO, weeklyLeaderboardEntry : ?DTOs.LeaderboardEntryDTO, monthlyLeaderboardEntry : ?DTOs.LeaderboardEntryDTO, seasonLeaderboardEntry : ?DTOs.LeaderboardEntryDTO) : async Result.Result<DTOs.ManagerDTO, T.Error> {
+
       let managerCanisterId = managerCanisterIds.get(dto.principalId);
-      
+
       switch (managerCanisterId) {
         case (null) {
           return #err(#NotFound);
@@ -90,8 +89,8 @@ module {
           let manager_canister = actor (foundCanisterId) : actor {
             getManager : Base.PrincipalId -> async ?T.Manager;
           };
-      
-         let manager = await manager_canister.getManager(dto.principalId);
+
+          let manager = await manager_canister.getManager(dto.principalId);
           switch (manager) {
             case (null) {
               return #err(#NotFound);
@@ -150,7 +149,7 @@ module {
                     weeklyPositionText = weeklyPositionText;
                     monthlyPositionText = monthlyPositionText;
                     seasonPositionText = seasonPositionText;
-                    weeklyPoints =  weeklyPoints;
+                    weeklyPoints = weeklyPoints;
                     monthlyPoints = monthlyPoints;
                     seasonPoints = seasonPoints;
                     profilePictureType = foundManager.profilePictureType;
@@ -168,11 +167,11 @@ module {
 
     public func getManagerByUsername(username : Text) : async Result.Result<DTOs.ManagerDTO, T.Error> {
 
-      for (managerUsername in usernames.entries()){
-        if(managerUsername.1 == username){
+      for (managerUsername in usernames.entries()) {
+        if (managerUsername.1 == username) {
           let managerPrincipalId = managerUsername.0;
           let managerCanisterId = managerCanisterIds.get(managerPrincipalId);
-          switch(managerCanisterId){
+          switch (managerCanisterId) {
             case null { return #err(#NotFound) };
             case (?foundCanisterId) {
               let manager_canister = actor (foundCanisterId) : actor {
@@ -185,7 +184,7 @@ module {
                   return #err(#NotFound);
                 };
                 case (?foundManager) {
-                  
+
                   var weeklyPosition : Int = 0;
                   var weeklyPoints : Int16 = 0;
                   var monthlyPosition : Int = 0;
@@ -195,7 +194,7 @@ module {
                   var weeklyPositionText = "N/A";
                   var monthlyPositionText = "N/A";
                   var seasonPositionText = "N/A";
-                  
+
                   let managerDTO : DTOs.ManagerDTO = {
                     principalId = managerPrincipalId;
                     username = foundManager.username;
@@ -217,14 +216,14 @@ module {
                   return #ok(managerDTO);
                 };
               };
-            }
+            };
           };
         };
       };
       return #err(#NotFound);
     };
 
-    public func getCurrentTeam(managerPrincipalId: Base.PrincipalId, currentSeasonId: FootballTypes.SeasonId) : async Result.Result<Queries.TeamSelectionDTO, T.Error> {
+    public func getCurrentTeam(managerPrincipalId : Base.PrincipalId, currentSeasonId : FootballTypes.SeasonId) : async Result.Result<Queries.TeamSelectionDTO, T.Error> {
 
       let managerCanisterId = managerCanisterIds.get(managerPrincipalId);
       switch (managerCanisterId) {
@@ -244,17 +243,20 @@ module {
             case (?foundManager) {
 
               var firstGameweek = true;
-              let currentManagerSeason = List.find<T.FantasyTeamSeason>(foundManager.history, func(season: T.FantasyTeamSeason) : Bool {
-                season.seasonId == currentSeasonId;
-              });
+              let currentManagerSeason = List.find<T.FantasyTeamSeason>(
+                foundManager.history,
+                func(season : T.FantasyTeamSeason) : Bool {
+                  season.seasonId == currentSeasonId;
+                },
+              );
 
               let hasPlayersInTeam = Array.size(foundManager.playerIds) > 0;
-          
-              switch(currentManagerSeason){
-                case (?foundSeason){
+
+              switch (currentManagerSeason) {
+                case (?foundSeason) {
                   firstGameweek := List.size(foundSeason.gameweeks) == 0 or not hasPlayersInTeam;
                 };
-                case (null){ }
+                case (null) {};
               };
 
               let pickTeamDTO : Queries.TeamSelectionDTO = {
@@ -294,18 +296,18 @@ module {
       };
     };
 
-    public func getFantasyTeamSnapshot(dto: Queries.GetManagerGameweekDTO) : async Result.Result<DTOs.ManagerGameweekDTO, T.Error>{
-     let managerCanisterId = managerCanisterIds.get(dto.principalId);
+    public func getFantasyTeamSnapshot(dto : Queries.GetManagerGameweekDTO) : async Result.Result<DTOs.ManagerGameweekDTO, T.Error> {
+      let managerCanisterId = managerCanisterIds.get(dto.principalId);
       switch (managerCanisterId) {
         case (null) {
           return #err(#NotFound);
         };
         case (?foundCanisterId) {
           let manager_canister = actor (foundCanisterId) : actor {
-            getFantasyTeamSnapshot : (managerPrincipalId: Base.PrincipalId, dto: Queries.GetManagerGameweekDTO) -> async ?T.FantasyTeamSnapshot;
+            getFantasyTeamSnapshot : (managerPrincipalId : Base.PrincipalId, dto : Queries.GetManagerGameweekDTO) -> async ?T.FantasyTeamSnapshot;
           };
-    
-         let snapshot = await manager_canister.getFantasyTeamSnapshot(dto.principalId, dto);
+
+          let snapshot = await manager_canister.getFantasyTeamSnapshot(dto.principalId, dto);
           switch (snapshot) {
             case (null) {
               return #err(#NotFound);
@@ -345,18 +347,18 @@ module {
                 teamValueQuarterMillions = foundSnapshot.teamValueQuarterMillions;
                 transferWindowGameweek = foundSnapshot.transferWindowGameweek;
                 transfersAvailable = foundSnapshot.transfersAvailable;
-                username = foundSnapshot.username
+                username = foundSnapshot.username;
               });
             };
           };
         };
       };
     };
- 
+
     public func getManagerCanisterIds() : [(Base.PrincipalId, Base.CanisterId)] {
       return Iter.toArray(managerCanisterIds.entries());
     };
-    
+
     public func getUniqueManagerCanisterIds() : [Base.CanisterId] {
       return List.toArray(uniqueManagerCanisterIds);
     };
@@ -381,21 +383,21 @@ module {
 
     //User updates
 
-    public func createManager(managerPrincipalId : Base.PrincipalId, dto: Commands.CreateManagerDTO) : async Result.Result<(), T.Error> {
-      
+    public func createManager(managerPrincipalId : Base.PrincipalId, dto : Commands.CreateManagerDTO) : async Result.Result<(), T.Error> {
+
       let managerCanisterId = managerCanisterIds.get(managerPrincipalId);
-      
-      switch(managerCanisterId){
-        case (null){
+
+      switch (managerCanisterId) {
+        case (null) {
           return await createNewManager(managerPrincipalId, dto);
-        };  
-        case (?_){
+        };
+        case (?_) {
           return #err(#AlreadyExists);
-        }
+        };
       };
     };
 
-    public func updateUsername(managerPrincipalId : Base.PrincipalId, dto: Commands.UpdateUsernameDTO) : async Result.Result<(), T.Error> {
+    public func updateUsername(managerPrincipalId : Base.PrincipalId, dto : Commands.UpdateUsernameDTO) : async Result.Result<(), T.Error> {
       if (not ProfileUtilities.isUsernameValid(dto.username)) {
         return #err(#InvalidData);
       };
@@ -405,22 +407,22 @@ module {
       };
 
       let managerCanisterId = managerCanisterIds.get(managerPrincipalId);
-      switch(managerCanisterId){
-        case (null){
+      switch (managerCanisterId) {
+        case (null) {
           return #err(#NotFound);
-        };  
-        case (?foundManagerCanisterId){
-          
+        };
+        case (?foundManagerCanisterId) {
+
           let manager_canister = actor (foundManagerCanisterId) : actor {
             updateUsername : (dto : Commands.UpdateUsernameDTO) -> async Result.Result<(), T.Error>;
           };
           usernames.put(managerPrincipalId, dto.username);
           return await manager_canister.updateUsername(dto);
-        }
+        };
       };
     };
 
-    public func updateFavouriteClub(managerPrincipalId : Base.PrincipalId, dto: Commands.UpdateFavouriteClubDTO, activeClubs : [FootballTypes.Club]) : async Result.Result<(), T.Error> {
+    public func updateFavouriteClub(managerPrincipalId : Base.PrincipalId, dto : Commands.UpdateFavouriteClubDTO, activeClubs : [FootballTypes.Club]) : async Result.Result<(), T.Error> {
 
       let isClubActive = Array.find(
         activeClubs,
@@ -437,85 +439,84 @@ module {
       };
 
       let managerCanisterId = managerCanisterIds.get(managerPrincipalId);
-      switch(managerCanisterId){
-        case (null){
+      switch (managerCanisterId) {
+        case (null) {
           return #err(#NotFound);
-        };  
-        case (?foundManagerCanisterId){
-          
+        };
+        case (?foundManagerCanisterId) {
+
           let manager_canister = actor (foundManagerCanisterId) : actor {
             updateFavouriteClub : (dto : Commands.UpdateFavouriteClubDTO) -> async Result.Result<(), T.Error>;
           };
           return await manager_canister.updateFavouriteClub(dto);
-        }
+        };
       };
     };
 
-    public func updateProfilePicture(managerPrincipalId: Base.PrincipalId, dto: Commands.UpdateProfilePictureDTO) : async Result.Result<(), T.Error> {
+    public func updateProfilePicture(managerPrincipalId : Base.PrincipalId, dto : Commands.UpdateProfilePictureDTO) : async Result.Result<(), T.Error> {
 
       if (not ProfileUtilities.isProfilePictureValid(dto.profilePicture)) {
         return #err(#InvalidData);
       };
 
       let managerCanisterId = managerCanisterIds.get(managerPrincipalId);
-      switch(managerCanisterId){
-        case (null){
+      switch (managerCanisterId) {
+        case (null) {
           return #err(#NotFound);
-        };  
-        case (?foundManagerCanisterId){
-          
+        };
+        case (?foundManagerCanisterId) {
+
           let manager_canister = actor (foundManagerCanisterId) : actor {
             updateProfilePicture : (dto : Commands.UpdateProfilePictureDTO) -> async Result.Result<(), T.Error>;
           };
           return await manager_canister.updateProfilePicture(dto);
-        }
+        };
       };
     };
 
-    public func saveBonusSelection(managerPrincipalId: Base.PrincipalId, dto : Commands.SaveBonusDTO, gameweek: FootballTypes.GameweekNumber) : async Result.Result<(), T.Error> {
-      
+    public func saveBonusSelection(managerPrincipalId : Base.PrincipalId, dto : Commands.SaveBonusDTO, gameweek : FootballTypes.GameweekNumber) : async Result.Result<(), T.Error> {
+
       let managerCanisterId = managerCanisterIds.get(managerPrincipalId);
-      
-      switch(managerCanisterId){
-        case (null){
+
+      switch (managerCanisterId) {
+        case (null) {
           return #err(#NotFound);
-        };  
-        case (?foundManagerCanisterId){
+        };
+        case (?foundManagerCanisterId) {
           return await useBonus(foundManagerCanisterId, managerPrincipalId, dto, gameweek);
-        }
+        };
       };
     };
 
-    public func saveTeamSelection(managerPrincipalId: Base.PrincipalId, dto : Commands.SaveTeamDTO, seasonId: FootballTypes.SeasonId, players : [DTOs.PlayerDTO]) : async Result.Result<(), T.Error> {
-      
+    public func saveTeamSelection(managerPrincipalId : Base.PrincipalId, dto : Commands.SaveTeamDTO, seasonId : FootballTypes.SeasonId, players : [DTOs.PlayerDTO]) : async Result.Result<(), T.Error> {
+
       let teamValidResult = PickTeamUtilities.teamValid(dto, players);
-      switch(teamValidResult){
-        case (#ok _){ };
-        case (#err errorResult){
+      switch (teamValidResult) {
+        case (#ok _) {};
+        case (#err errorResult) {
           return #err(errorResult);
-        }
+        };
       };
-      
+
       let managerCanisterId = managerCanisterIds.get(managerPrincipalId);
-      
-      switch(managerCanisterId){
-        case (null){
+
+      switch (managerCanisterId) {
+        case (null) {
           return #err(#NotFound);
-        };  
-        case (?foundManagerCanisterId){
+        };
+        case (?foundManagerCanisterId) {
           return await updateFantasyTeam(foundManagerCanisterId, managerPrincipalId, dto, seasonId, players);
-        }
+        };
       };
     };
-
 
     //Private data modification functions
 
-    private func createNewManager(managerPrincipalId : Base.PrincipalId, dto: Commands.CreateManagerDTO) : async Result.Result<(), T.Error>{
-      if(activeManagerCanisterId == ""){
+    private func createNewManager(managerPrincipalId : Base.PrincipalId, dto : Commands.CreateManagerDTO) : async Result.Result<(), T.Error> {
+      if (activeManagerCanisterId == "") {
         activeManagerCanisterId := await createManagerCanister();
       };
-      
+
       let manager_canister = actor (activeManagerCanisterId) : actor {
         getTotalManagers : () -> async Nat;
       };
@@ -567,123 +568,117 @@ module {
       return await new_manager_canister.addNewManager(newManager);
     };
 
-    private func updateFantasyTeam(managerCanisterId: Base.CanisterId, managerPrincipalId: Base.PrincipalId, dto : Commands.SaveTeamDTO, seasonId: FootballTypes.SeasonId, allPlayers: [DTOs.PlayerDTO]) : async Result.Result<(), T.Error>{
+    private func updateFantasyTeam(managerCanisterId : Base.CanisterId, managerPrincipalId : Base.PrincipalId, dto : Commands.SaveTeamDTO, seasonId : FootballTypes.SeasonId, allPlayers : [DTOs.PlayerDTO]) : async Result.Result<(), T.Error> {
       let manager_canister = actor (managerCanisterId) : actor {
         getManager : Base.PrincipalId -> async ?T.Manager;
         updateTeamSelection : (updateManagerDTO : Commands.SaveTeamDTO, transfersAvailable : Nat8, newBankBalance : Nat16) -> async Result.Result<(), T.Error>;
       };
 
-      let manager = await manager_canister.getManager(managerPrincipalId);  
-            
-      switch(manager){
-        case (null){
+      let manager = await manager_canister.getManager(managerPrincipalId);
+
+      switch (manager) {
+        case (null) {
           return #err(#NotFound);
         };
-        case (?foundManager){
+        case (?foundManager) {
 
-          if(PickTeamUtilities.overspent(foundManager.bankQuarterMillions, foundManager.playerIds, dto.playerIds, allPlayers)){
+          if (PickTeamUtilities.overspent(foundManager.bankQuarterMillions, foundManager.playerIds, dto.playerIds, allPlayers)) {
             return #err(#TeamOverspend);
           };
-          
+
           var transfersAvailable = 3;
           var firstGameweek = true;
-          let currentManagerSeason = List.find<T.FantasyTeamSeason>(foundManager.history, func(season: T.FantasyTeamSeason) : Bool {
-            season.seasonId == seasonId;
-          });
+          let currentManagerSeason = List.find<T.FantasyTeamSeason>(
+            foundManager.history,
+            func(season : T.FantasyTeamSeason) : Bool {
+              season.seasonId == seasonId;
+            },
+          );
 
-          switch(currentManagerSeason){
-            case (?foundSeason){
+          switch (currentManagerSeason) {
+            case (?foundSeason) {
               firstGameweek := List.size(foundSeason.gameweeks) == 0;
             };
-            case (null){ }
+            case (null) {};
           };
 
           let hasPlayersInTeam = Array.size(foundManager.playerIds) > 0;
-          
-          if(not firstGameweek and hasPlayersInTeam){
+
+          if (not firstGameweek and hasPlayersInTeam) {
             transfersAvailable := PickTeamUtilities.getTransfersAvailable(foundManager, dto.playerIds, allPlayers);
             if (transfersAvailable < 0) {
               return #err(#TooManyTransfers);
             };
           };
-          
+
           var newBankBalanceResult = PickTeamUtilities.getNewBankBalance(foundManager, dto, allPlayers);
-          switch(newBankBalanceResult){
-            case (#ok newBankBalance){
-              return await manager_canister.updateTeamSelection(dto
-              , Nat8.fromNat(Nat64.toNat(Nat64.fromIntWrap(transfersAvailable))), newBankBalance);
+          switch (newBankBalanceResult) {
+            case (#ok newBankBalance) {
+              return await manager_canister.updateTeamSelection(
+                dto,
+                Nat8.fromNat(Nat64.toNat(Nat64.fromIntWrap(transfersAvailable))),
+                newBankBalance,
+              );
             };
-            case (#err error){
+            case (#err error) {
               return #err(error);
-            }
+            };
           };
-        }
+        };
       };
     };
 
-    private func useBonus(managerCanisterId: Base.CanisterId, managerPrincipalId: Base.PrincipalId, dto : Commands.SaveBonusDTO, gameweek: FootballTypes.GameweekNumber) : async Result.Result<(), T.Error>{
+    private func useBonus(managerCanisterId : Base.CanisterId, managerPrincipalId : Base.PrincipalId, dto : Commands.SaveBonusDTO, gameweek : FootballTypes.GameweekNumber) : async Result.Result<(), T.Error> {
       let manager_canister = actor (managerCanisterId) : actor {
         getManager : Base.PrincipalId -> async ?T.Manager;
         useBonus : (updateManagerDTO : Commands.SaveBonusDTO, monthlyBonuses : Nat8) -> async Result.Result<(), T.Error>;
       };
 
-      let manager = await manager_canister.getManager(managerPrincipalId);  
-              
+      let manager = await manager_canister.getManager(managerPrincipalId);
 
-      switch(manager){
-        case (null){
+      switch (manager) {
+        case (null) {
           return #err(#NotFound);
         };
-        case (?foundManager){
+        case (?foundManager) {
 
           let bonusAlreadyPaid = PickTeamUtilities.selectedBonusPlayedAlready(foundManager, dto);
-          if(bonusAlreadyPaid){
+          if (bonusAlreadyPaid) {
             return #err(#InvalidBonuses);
           };
 
-          if(foundManager.monthlyBonusesAvailable == 0){
+          if (foundManager.monthlyBonusesAvailable == 0) {
             return #err(#InvalidBonuses);
           };
 
-          if(PickTeamUtilities.isGameweekBonusUsed(foundManager, gameweek)){
+          if (PickTeamUtilities.isGameweekBonusUsed(foundManager, gameweek)) {
             return #err(#InvalidBonuses);
           };
 
           return await manager_canister.useBonus(dto, foundManager.monthlyBonusesAvailable - 1);
-        }
+        };
       };
     };
 
-
-
-
-
-
-
-
-
-
-
-
     //Called by application
 
-    public func snapshotFantasyTeams(leagueId: FootballTypes.LeagueId, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth) : async () {
-      
+    public func snapshotFantasyTeams(leagueId : FootballTypes.LeagueId, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth) : async () {
+
       for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
 
         let manager_canister = actor (canisterId) : actor {
-          snapshotFantasyTeams : (leagueId: FootballTypes.LeagueId, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth) -> async ();
+          snapshotFantasyTeams : (leagueId : FootballTypes.LeagueId, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth) -> async ();
         };
 
         await manager_canister.snapshotFantasyTeams(leagueId, seasonId, gameweek, month);
       };
     };
 
-    public func calculateFantasyTeamScores(leagueId: FootballTypes.LeagueId, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth) : async () {
+    public func calculateFantasyTeamScores(leagueId : FootballTypes.LeagueId, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth) : async () {
       for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
 
         let manager_canister = actor (canisterId) : actor {
-          calculateFantasyTeamScores : (leagueId: FootballTypes.LeagueId, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth) -> async ();
+          calculateFantasyTeamScores : (leagueId : FootballTypes.LeagueId, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth) -> async ();
         };
 
         await manager_canister.calculateFantasyTeamScores(leagueId, seasonId, gameweek, month);
@@ -723,11 +718,11 @@ module {
       };
     };
 
-    public func removePlayerFromTeams(leagueId: FootballTypes.LeagueId, playerId : FootballTypes.PlayerId, parentCanisterId: Base.CanisterId) : async () {
+    public func removePlayerFromTeams(leagueId : FootballTypes.LeagueId, playerId : FootballTypes.PlayerId, parentCanisterId : Base.CanisterId) : async () {
       for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
- 
+
         let manager_canister = actor (canisterId) : actor {
-          removePlayerFromTeams : (leagueId: FootballTypes.LeagueId, playerId : FootballTypes.PlayerId, parentCanisterId: Base.CanisterId) -> async ();
+          removePlayerFromTeams : (leagueId : FootballTypes.LeagueId, playerId : FootballTypes.PlayerId, parentCanisterId : Base.CanisterId) -> async ();
         };
 
         await manager_canister.removePlayerFromTeams(leagueId, playerId, parentCanisterId);
@@ -750,7 +745,7 @@ module {
       if (canisterId == "") {
         return canisterId;
       };
-      
+
       let uniqueCanisterIdBuffer = Buffer.fromArray<Base.CanisterId>(List.toArray(uniqueManagerCanisterIds));
       uniqueCanisterIdBuffer.add(canisterId);
       uniqueManagerCanisterIds := List.fromArray(Buffer.toArray(uniqueCanisterIdBuffer));
@@ -809,5 +804,5 @@ module {
     public func setStableActiveManagerCanisterId(stable_active_manager_canister_id : Base.CanisterId) : () {
       activeManagerCanisterId := stable_active_manager_canister_id;
     };
-  }
+  };
 };

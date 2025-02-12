@@ -3,7 +3,7 @@ import { writable } from "svelte/store";
 export interface Toast {
   id: number;
   message: string;
-  type?: "info" | "success" | "error";
+  type?: "info" | "success" | "error" | "frontend-update";
   duration?: number;
 }
 

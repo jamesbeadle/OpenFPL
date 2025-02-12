@@ -1,6 +1,5 @@
 //TODO: This can be removed as it comes from FootballGod?
-
-import Base "../types/base_types";
+import Base "mo:waterway-mops/BaseTypes";
 
 module Countries {
 

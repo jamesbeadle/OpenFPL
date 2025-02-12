@@ -1,6 +1,5 @@
-
-import FootballTypes "mo:football-types";
-import Base "../types/base_types";
+import FootballTypes "mo:waterway-mops/FootballTypes";
+import Base "mo:waterway-mops/BaseTypes";
 
 module Commands {
 
@@ -18,7 +17,7 @@ module Commands {
   };
 
   public type SaveTeamDTO = {
-    teamName: ?Text;
+    teamName : ?Text;
     playerIds : [FootballTypes.PlayerId];
     captainId : FootballTypes.ClubId;
     transferWindowGameweek : ?FootballTypes.GameweekNumber;
@@ -45,28 +44,28 @@ module Commands {
   };
 
   public type LoanPlayerDTO = {
-    playerId: FootballTypes.PlayerId;
-    fromLeagueId: FootballTypes.LeagueId;
-    fromClubId: FootballTypes.ClubId;
-    toLeagueId: FootballTypes.LeagueId;
-    toClubId: FootballTypes.ClubId;
+    playerId : FootballTypes.PlayerId;
+    fromLeagueId : FootballTypes.LeagueId;
+    fromClubId : FootballTypes.ClubId;
+    toLeagueId : FootballTypes.LeagueId;
+    toClubId : FootballTypes.ClubId;
   };
 
   public type RecallLoanDTO = {
-    playerId: FootballTypes.PlayerId;
-    recalledFromLeagueId: FootballTypes.LeagueId;
-    recalledFromClubId: FootballTypes.ClubId;
-    recalledToLeagueId: FootballTypes.LeagueId;
-    recalledToClubId: FootballTypes.ClubId;
+    playerId : FootballTypes.PlayerId;
+    recalledFromLeagueId : FootballTypes.LeagueId;
+    recalledFromClubId : FootballTypes.ClubId;
+    recalledToLeagueId : FootballTypes.LeagueId;
+    recalledToClubId : FootballTypes.ClubId;
   };
 
   public type TransferPlayerDTO = {
     playerId : FootballTypes.ClubId;
-    fromLeagueId: FootballTypes.LeagueId;
-    fromClubId: FootballTypes.ClubId;
-    toLeagueId: FootballTypes.LeagueId;
-    toClubId: FootballTypes.ClubId;
-    newShirtNumber: Nat8;
+    fromLeagueId : FootballTypes.LeagueId;
+    fromClubId : FootballTypes.ClubId;
+    toLeagueId : FootballTypes.LeagueId;
+    toClubId : FootballTypes.ClubId;
+    newShirtNumber : Nat8;
   };
 
   public type RetirePlayerDTO = {
@@ -80,38 +79,38 @@ module Commands {
 
   public type ChangePlayerPositionDTO = {
     playerId : FootballTypes.ClubId;
-    newPosition: FootballTypes.PlayerPosition;
+    newPosition : FootballTypes.PlayerPosition;
   };
 
   public type FinaliseFixtureDTO = {
-    fixtureId: FootballTypes.FixtureId;
+    fixtureId : FootballTypes.FixtureId;
   };
 
   public type MoveFixtureDTO = {
-    seasonId: FootballTypes.SeasonId;
-    fixtureId: FootballTypes.FixtureId;
+    seasonId : FootballTypes.SeasonId;
+    fixtureId : FootballTypes.FixtureId;
     updatedFixtureGameweek : FootballTypes.GameweekNumber;
     updatedFixtureDate : Int;
   };
 
   public type PostponeFixtureDTO = {
-    seasonId: FootballTypes.SeasonId;
-    fixtureId: FootballTypes.FixtureId;
+    seasonId : FootballTypes.SeasonId;
+    fixtureId : FootballTypes.FixtureId;
   };
 
   public type RescheduleFixtureDTO = {
-    fixtureId: FootballTypes.FixtureId;
-    updatedFixtureGameweek: FootballTypes.GameweekNumber;
-    updatedFixtureDate: Int;
+    fixtureId : FootballTypes.FixtureId;
+    updatedFixtureGameweek : FootballTypes.GameweekNumber;
+    updatedFixtureDate : Int;
   };
 
   public type UpdateAppStatusDTO = {
     onHold : Bool;
-    version: Text;
+    version : Text;
   };
 
   public type CreateManagerDTO = {
-    username: Text;
-    favouriteClubId: ?FootballTypes.ClubId;
+    username : Text;
+    favouriteClubId : ?FootballTypes.ClubId;
   };
 };

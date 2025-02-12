@@ -19,6 +19,7 @@
 
   let isLoading = true;
   let showNewUserModal = false;
+    import { appStore } from "$lib/stores/app-store";
 
   const init = async () => {
     await syncAuthStore();
@@ -51,6 +52,7 @@
   onMount(async () => {
     worker = await initAuthWorker();
     await storeManager.syncStores();
+    await appStore.checkServerVersion();
   });
 
   $: worker, $authStore, (() => worker?.syncAuthIdle($authStore))();

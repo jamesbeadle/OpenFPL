@@ -1,28 +1,27 @@
-
-import FootballTypes "mo:football-types";
-import Base "../types/base_types";
+import FootballTypes "mo:waterway-mops/FootballTypes";
+import Base "mo:waterway-mops/BaseTypes";
 import AppTypes "../types/app_types";
 import DTOs "../dtos/dtos";
 
 module Queries {
 
-    public type GetFixturesDTO = { };
+    public type GetFixturesDTO = {};
 
     public type FixturesDTO = {
-        fixtures: [DTOs.FixtureDTO]
+        fixtures : [DTOs.FixtureDTO];
     };
 
     public type GetManagerDTO = {
-        principalId: Base.PrincipalId;
-        seasonId: FootballTypes.SeasonId;
-        month: Base.CalendarMonth;
-        gameweek: FootballTypes.GameweekNumber;
+        principalId : Base.PrincipalId;
+        seasonId : FootballTypes.SeasonId;
+        month : Base.CalendarMonth;
+        gameweek : FootballTypes.GameweekNumber;
     };
 
     public type GetManagerGameweekDTO = {
-        principalId: Base.PrincipalId;
-        seasonId: FootballTypes.SeasonId;
-        gameweek: FootballTypes.GameweekNumber;
+        principalId : Base.PrincipalId;
+        seasonId : FootballTypes.SeasonId;
+        gameweek : FootballTypes.GameweekNumber;
     };
 
     public type GetWeeklyLeaderboardDTO = {
@@ -33,8 +32,7 @@ module Queries {
         searchTerm : Text;
     };
 
-    public type GetTeamSelectionDTO = {
-    };
+    public type GetTeamSelectionDTO = {};
 
     public type TeamSelectionDTO = {
         principalId : Text;
@@ -62,31 +60,30 @@ module Queries {
         braceBonusGameweek : FootballTypes.GameweekNumber;
         hatTrickHeroGameweek : FootballTypes.GameweekNumber;
         transferWindowGameweek : FootballTypes.GameweekNumber;
-        canisterId: Base.CanisterId;
-        firstGameweek: Bool;
+        canisterId : Base.CanisterId;
+        firstGameweek : Bool;
     };
 
     public type GetWeeklyRewardsLeaderboardDTO = {
-        seasonId: FootballTypes.SeasonId;
-        gameweek: FootballTypes.GameweekNumber;
+        seasonId : FootballTypes.SeasonId;
+        gameweek : FootballTypes.GameweekNumber;
     };
-    
 
     public type WeeklyRewardsLeaderboardDTO = {
-        seasonId: FootballTypes.SeasonId;
-        gameweek: FootballTypes.GameweekNumber;
+        seasonId : FootballTypes.SeasonId;
+        gameweek : FootballTypes.GameweekNumber;
         entries : [AppTypes.RewardEntry];
     };
 
     public type GetCanistersDTO = {
-        canisterType: AppTypes.CanisterType;
+        canisterType : AppTypes.CanisterType;
     };
 
     public type CanisterDTO = {
-        canisterId: Base.CanisterId;
-        cycles: Nat;
-        computeAllocation: Nat;
-        topups: [Base.CanisterTopup];
+        canisterId : Base.CanisterId;
+        cycles : Nat;
+        computeAllocation : Nat;
+        topups : [Base.CanisterTopup];
     };
 
     public type GetPlayerPointsDTO = {
@@ -97,8 +94,8 @@ module Queries {
     public type GetAppStatusDTO = {};
 
     public type GetSnapshotPlayersDTO = {
-        seasonId: FootballTypes.SeasonId;
-        gameweek: FootballTypes.GameweekNumber;
+        seasonId : FootballTypes.SeasonId;
+        gameweek : FootballTypes.GameweekNumber;
     };
 
     public type GetPlayersMapDTO = {
@@ -107,20 +104,20 @@ module Queries {
     };
 
     public type GetWeeklyLeaderboardEntriesDTO = {
-        seasonId: FootballTypes.SeasonId;
-        gameweek: FootballTypes.GameweekNumber;
-        offset: Nat;
+        seasonId : FootballTypes.SeasonId;
+        gameweek : FootballTypes.GameweekNumber;
+        offset : Nat;
         searchTerm : Text;
     };
 
     public type GetWeeklyRewardWinnersDTO = {
-        seasonId: FootballTypes.SeasonId;
-        gameweek: FootballTypes.GameweekNumber;
+        seasonId : FootballTypes.SeasonId;
+        gameweek : FootballTypes.GameweekNumber;
     };
 
     public type GetPlayersMap = {
-        seasonId: FootballTypes.SeasonId;
-        gameweek: FootballTypes.GameweekNumber;
+        seasonId : FootballTypes.SeasonId;
+        gameweek : FootballTypes.GameweekNumber;
     };
 
     public type PlayerMap = (Nat16, DTOs.PlayerScoreDTO);
@@ -131,16 +128,16 @@ module Queries {
     };
 
     public type IsUsernameValid = {
-        username: Text;
+        username : Text;
     };
 
     public type GetManagerByUsername = {
-        username: Text;
+        username : Text;
     };
 
     public type GetWeeklyRewardsDTO = {
-        seasonId: FootballTypes.SeasonId;
-        gameweek: FootballTypes.GameweekNumber;
+        seasonId : FootballTypes.SeasonId;
+        gameweek : FootballTypes.GameweekNumber;
     };
 
     public type WeeklyRewardsDTO = {
