@@ -18,13 +18,15 @@ import { toasts } from "$lib/stores/toasts-store";
 
 function createUserStore() {
   const { subscribe, set } = writable<any>(null);
-  
+
   async function sync() {
     let localStorageString = localStorage.getItem("user_profile_data");
     if (localStorageString) {
       const localProfile = JSON.parse(localStorageString);
       if (localProfile.profilePicture) {
-        localProfile.profilePicture = new Uint8Array(Object.values(localProfile.profilePicture));
+        localProfile.profilePicture = new Uint8Array(
+          Object.values(localProfile.profilePicture),
+        );
       }
       set(localProfile);
       return;
@@ -178,7 +180,9 @@ function createUserStore() {
     if (profile) {
       const storageProfile = {
         ...profile,
-        profilePicture: profile.profilePicture ? Array.from(profile.profilePicture) : null
+        profilePicture: profile.profilePicture
+          ? Array.from(profile.profilePicture)
+          : null,
       };
       localStorage.setItem("user_profile_data", JSON.stringify(storageProfile));
     }

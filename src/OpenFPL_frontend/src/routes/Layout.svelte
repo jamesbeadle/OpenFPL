@@ -21,21 +21,6 @@
   let showNewUserModal = false;
   import { appStore } from "$lib/stores/app-store";
 
-  $: {
-    if ($authStore?.identity && !isLoading) {
-      (async () => {
-        try {
-          await userStore.sync();
-          if ($userStore === undefined) {
-            showNewUserModal = true;
-          }
-        } catch (error) {
-          console.error("Error syncing user store:", error);
-        }
-      })();
-    }
-  }
-
   const init = async () => {
     await syncAuthStore();
   };
@@ -57,6 +42,18 @@
     worker = await initAuthWorker();
     await storeManager.syncStores();
     await appStore.checkServerVersion();
+    if ($authStore?.identity) {
+      (async () => {
+        try {
+          await userStore.sync();
+          if ($userStore === undefined) {
+            showNewUserModal = true;
+          }
+        } catch (error) {
+          console.error("Error syncing user store:", error);
+        }
+      })();
+    }
     isLoading = false;
   });
 
