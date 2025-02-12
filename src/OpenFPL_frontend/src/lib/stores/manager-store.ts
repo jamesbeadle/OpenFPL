@@ -121,10 +121,18 @@ function createManagerStore() {
       let result = await actor.getFantasyTeamSnapshot(dto);
       if (isError(result)) {
         console.error("Error fetching fantasy team for gameweek:");
+        toasts.addToast({
+          message: `Error Fetching Fantasy Team for Gameweek ${gameweek}`,
+          type: "error",
+        });
       }
       return result.ok;
     } catch (error) {
       console.error("Error fetching fantasy team for gameweek:", error);
+      toasts.addToast({
+        message: `Error Fetching Fantasy Team for Gameweek ${gameweek}`,
+        type: "error",
+      });
       throw error;
     }
   }

@@ -44,19 +44,19 @@
     await appStore.copyTextAndShowToast($userStore ? $userStore.principalId : "");
   }
 </script>
-<div class="w-full md:w-1/2 lg:w-2/3 xl:w-3/4 md:px-2 mb-4 md:mb-0">
-    <div class="md:ml-4 md:px-4 px-4 mt-2 md:mt-1 rounded-lg">
+<div class="w-full mb-4 md:w-1/2 lg:w-2/3 xl:w-3/4 md:px-2 md:mb-0">
+    <div class="px-4 mt-2 rounded-lg md:ml-4 md:px-4 md:mt-1">
       <p class="mb-1">Username:</p>
-      <h2 class="default-header mb-1 md:mb-2">
+      <h2 class="mb-1 default-header md:mb-2">
         {#if isLoading}
           <LoadingDots />
         {:else}
           {username}
         {/if}
       </h2>
-      <button class="p-1 md:p-2 px-2 md:px-4 fpl-button" on:click={displayUsernameModal}>Update</button>
-      <p class="mb-1 mt-4">Favourite Team:</p>
-      <h2 class="default-header mb-1 md:mb-2">{teamName == "" ? "Not Set" : teamName}</h2>
+      <button class="p-1 px-2 rounded md:p-2 md:px-4 fpl-button" on:click={displayUsernameModal}>Update</button>
+      <p class="mt-4 mb-1">Favourite Team:</p>
+      <h2 class="mb-1 default-header md:mb-2">{teamName == "" ? "Not Set" : teamName}</h2>
       
       {#if isLoading}
           <LoadingDots />
@@ -74,8 +74,8 @@
         </button>
         {/if}
 
-      <p class="mb-1 mt-4">Joined:</p>
-      <h2 class="default-header mb-1 md:mb-2">
+      <p class="mt-4 mb-1">Joined:</p>
+      <h2 class="mb-1 default-header md:mb-2">
         {#if isLoading}
           <LoadingDots />
         {:else}

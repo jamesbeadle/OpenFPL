@@ -18,6 +18,7 @@
   onMount(async () => {
     await storeManager.syncStores();
     await userStore.sync();
+    isLoading = false;
   });
 
   async function updateFavouriteTeam() {
@@ -58,8 +59,8 @@
   {#if isLoading}
     <WidgetSpinner />
   {:else}
-    <div class="mx-4 p-4">
-      <div class="w-full border border-gray-500 mt-4 mb-2">
+    <div class="p-4 mx-4">
+      <div class="w-full mt-4 mb-2 border border-gray-500">
         <select
           bind:value={newFavouriteTeam}
           class="w-full p-2 rounded-md fpl-dropdown"
@@ -71,12 +72,12 @@
         </select>
       </div>
 
-      <div class="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4 mb-1 mt-4" role="alert">
+      <div class="p-4 mt-4 mb-1 text-orange-700 bg-orange-100 border-l-4 border-orange-500" role="alert">
         <p>Warning</p>
         <p>You can only set your favourite team once per season.</p>
       </div>
 
-      <div class="items-center py-3 flex space-x-4">
+      <div class="flex items-center py-3 space-x-4">
         <button class="px-4 py-2 default-button fpl-cancel-btn" type="button" on:click={cancelModal}>
           Cancel
         </button>

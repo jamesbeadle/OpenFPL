@@ -9,16 +9,18 @@
   import { authStore } from "$lib/stores/auth.store";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import type { ClubDTO, LeagueStatus } from "../../../../../external_declarations/data_canister/data_canister.did";
+  import type { ManagerGameweekDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import FantasyPlayerDetailModal from "../fantasy-team/fantasy-player-detail-modal.svelte";
   import WidgetSpinner from "../shared/widget-spinner.svelte";
   import GameweekFilter from "../shared/filters/gameweek-filter.svelte";
   import { writable } from "svelte/store";
   import GameweekPointsTable from "./gameweek-points-table.svelte";
   import { getGameweeks } from "$lib/utils/helpers";
-    import { leagueStore } from "$lib/stores/league-store";
+  import { leagueStore } from "$lib/stores/league-store";
 
   let isLoading = true;
   let selectedGameweek = writable(1);
+  let isInitialLoad = true;
   let gameweeks: number[];
   let showModal = false;
   let gameweekData = writable<GameweekData[]>([]);
@@ -26,21 +28,18 @@
   let selectedOpponentTeam: ClubDTO;
   let selectedGameweekData: GameweekData;
   let activeSeasonName: string;
+  let fantasyTeam: ManagerGameweekDTO | null = null;
 
   onMount(async () => {
     await storeManager.syncStores();
     activeSeasonName = await seasonStore.getSeasonName($leagueStore!.activeSeasonId ?? 0) ?? "";
     gameweeks = getGameweeks($leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek ?? 1);
     $selectedGameweek = $leagueStore!.activeGameweek == 0 ? $leagueStore!.completedGameweek : $leagueStore!.activeGameweek ?? 1;
-    let principal = $authStore?.identity?.getPrincipal().toText() ?? "";
-    if(principal == ""){
-      return;
-    }
-    await loadGameweekPoints(principal);
+    isInitialLoad = false;
     isLoading = false;
   });
 
-  $: if ($selectedGameweek && $authStore?.identity?.getPrincipal()) {
+  $: if (!isInitialLoad && $selectedGameweek && $authStore?.identity?.getPrincipal()) {
     let principal = $authStore?.identity?.getPrincipal().toText() ?? "";
     if(principal != ""){
       loadGameweekPoints(principal);
@@ -48,18 +47,26 @@
   }
 
   async function loadGameweekPoints(principal: string) {
-    if (!principal) { return; }
+    isLoading = true;
+    if (!principal) { 
+      isLoading = false;
+      return; 
+    }
 
-    let fantasyTeam = await managerStore.getFantasyTeamForGameweek(
+    fantasyTeam = await managerStore.getFantasyTeamForGameweek(
       principal,
       $selectedGameweek,
       $leagueStore!.activeSeasonId
     );
 
-    if (!fantasyTeam) { return; }
+    if (!fantasyTeam) { 
+      isLoading = false;
+      return; 
+    }
 
     let unsortedData = await playerEventsStore.getGameweekPlayers(fantasyTeam, $leagueStore!.activeSeasonId, $selectedGameweek);
     $gameweekData = unsortedData.sort((a, b) => b.points - a.points);
+    isLoading = false;
   }
 
   const changeGameweek = (delta: number) => {
@@ -83,6 +90,7 @@
 
 {#if isLoading}
   <WidgetSpinner />
+  <p class="pb-4 mb-4 text-center">Getting Gameweek {$selectedGameweek} Data</p>
 {:else}
   {#if showModal}
     <FantasyPlayerDetailModal
@@ -94,7 +102,13 @@
     />
   {/if}
   <div class="flex flex-col">
-    <GameweekFilter {selectedGameweek} {changeGameweek} {gameweeks} />
+    <GameweekFilter 
+      {selectedGameweek} 
+      {gameweeks} 
+      {changeGameweek} 
+      lastGameweek={$leagueStore!.completedGameweek}
+      weeklyPoints={fantasyTeam?.points}
+    />
     <GameweekPointsTable {gameweekData} {showDetailModal} />
   </div>
 {/if}

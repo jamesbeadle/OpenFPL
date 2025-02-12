@@ -3,6 +3,7 @@ import { ActorFactory } from "../utils/actor.factory";
 import { isError } from "../utils/helpers";
 import type {
   GetWeeklyLeaderboardDTO,
+  GetWeeklyRewardsDTO,
   WeeklyLeaderboardDTO,
   WeeklyRewardsDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
@@ -51,7 +52,11 @@ export class WeeklyLeaderboardService {
     gameweek: number,
   ): Promise<WeeklyRewardsDTO | undefined> {
     try {
-      const result = await this.actor.getWeeklyRewards(seasonId, gameweek);
+      let dto: GetWeeklyRewardsDTO = {
+        seasonId: seasonId,
+        gameweek: gameweek,
+      };
+      const result = await this.actor.getWeeklyRewards(dto);
       if (isError(result)) {
         return;
       }

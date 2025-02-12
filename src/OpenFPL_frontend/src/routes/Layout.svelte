@@ -15,13 +15,29 @@
   import { storeManager } from "$lib/managers/store-manager";
   import { toasts } from "$lib/stores/toasts-store";
   import Toasts from "$lib/components/toasts/toasts.svelte";
-    import { appStore } from "$lib/stores/app-store";
+  import NewUserModal from "$lib/components/profile/new-user-modal.svelte";
+
+  let isLoading = true;
+  let showNewUserModal = false;
+  import { appStore } from "$lib/stores/app-store";
+
+  $: {
+    if ($authStore?.identity && !isLoading) {
+      (async () => {
+        try {
+          await userStore.sync();
+          if ($userStore === undefined) {
+            showNewUserModal = true;
+          }
+        } catch (error) {
+          console.error("Error syncing user store:", error);
+        }
+      })();
+    }
+  }
 
   const init = async () => {
     await syncAuthStore();
-    if ($authStore?.identity) {
-      await userStore.sync();
-    }
   };
 
   const syncAuthStore = async () => {
@@ -41,6 +57,7 @@
     worker = await initAuthWorker();
     await storeManager.syncStores();
     await appStore.checkServerVersion();
+    isLoading = false;
   });
 
   $: worker, $authStore, (() => worker?.syncAuthIdle($authStore))();
@@ -72,5 +89,8 @@
     </main>
     <Footer />
     <Toasts />
+    {#if showNewUserModal}
+      <NewUserModal visible={true} />
+    {/if}
   </div>
 {/await}

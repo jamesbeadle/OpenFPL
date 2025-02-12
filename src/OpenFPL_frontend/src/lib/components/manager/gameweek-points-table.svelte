@@ -9,8 +9,8 @@
 
 </script>
 <div class="flex flex-col">
-    <div class="overflow-x-auto flex-1">
-      <div class="flex justify-between border-b border-t border-gray-700 p-4 bg-light-gray lg:px-8">
+    <div class="flex-1 overflow-x-auto">
+      <div class="flex justify-between p-4 border-t border-b border-BrandGray lg:text-center bg-BrandGray/60 lg:px-10">
         <div class="w-2/12 xs:w-2/12">Pos</div>
         <div class="w-6/12 xs:w-4/12">Player</div>
         <div class="w-3/12 xs:w-3/12">Points</div>
@@ -19,7 +19,7 @@
       {#if $gameweekData.length > 0}
         {#each $gameweekData as playerGameweek}
           <button
-            class="flex justify-between p-4 border-b border-gray-700 cursor-pointer lg:px-8 w-full"
+            class="flex justify-between w-full p-4 text-center border-b cursor-pointer border-BrandGray lg:text-center lg:px-10"
             on:click={() => showDetailModal(playerGameweek)}
           >
             <div class="w-2/12 xs:w-2/12">
@@ -32,13 +32,13 @@
                 {getPlayerName(playerGameweek.player)}
                 </a>
             </div>
-            <div class="w-3/12 xs:w-3/12">{playerGameweek.points}</div>
+            <div class="w-2/12 xs:w-3/12">{playerGameweek.points}</div>
             <div
-              class="w-2/12 xs:w-3/12 flex items-center justify-center xs:justify-start"
+              class="flex items-center justify-center w-2/12 xs:w-3/12 xs:justify-start"
             >
               <span class="flex items-center">
                 <ViewDetailsIcon className="w-5 xs:w-6 lg:w-7" /><span
-                  class="hidden xs:flex ml-1 lg:ml-2">View Details</span
+                  class="hidden ml-1 xs:flex lg:ml-2">View Details</span
                 >
               </span>
             </div>

@@ -11,16 +11,21 @@ import type {
   UpdateFavouriteClubDTO,
   UpdateProfilePictureDTO,
   UpdateUsernameDTO,
+  CreateManagerDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { UserService } from "$lib/services/user-service";
+import { toasts } from "$lib/stores/toasts-store";
 
 function createUserStore() {
   const { subscribe, set } = writable<any>(null);
-
+  
   async function sync() {
     let localStorageString = localStorage.getItem("user_profile_data");
     if (localStorageString) {
       const localProfile = JSON.parse(localStorageString);
+      if (localProfile.profilePicture) {
+        localProfile.profilePicture = new Uint8Array(Object.values(localProfile.profilePicture));
+      }
       set(localProfile);
       return;
     }
@@ -28,6 +33,37 @@ function createUserStore() {
       await cacheProfile();
     } catch (error) {
       console.error("Error fetching user profile:", error);
+      throw error;
+    }
+  }
+
+  async function createManager(username: string, favouriteClubId: number) {
+    try {
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
+      );
+      let dto: CreateManagerDTO = {
+        username: username,
+        favouriteClubId: [favouriteClubId],
+      };
+      const result = await identityActor.createManager(dto);
+      if (isError(result)) {
+        console.error("Error creating manager");
+        return;
+      }
+      await cacheProfile();
+      toasts.addToast({
+        type: "success",
+        message: "Manager created successfully.",
+        duration: 2000,
+      });
+    } catch (error) {
+      console.error("Error creating manager:", error);
+      toasts.addToast({
+        type: "error",
+        message: "Error creating manager.",
+      });
       throw error;
     }
   }
@@ -139,6 +175,13 @@ function createUserStore() {
   async function cacheProfile() {
     let profile = await new UserService().getUser();
     set(profile);
+    if (profile) {
+      const storageProfile = {
+        ...profile,
+        profilePicture: profile.profilePicture ? Array.from(profile.profilePicture) : null
+      };
+      localStorage.setItem("user_profile_data", JSON.stringify(storageProfile));
+    }
   }
 
   async function withdrawFPL(
@@ -247,6 +290,7 @@ function createUserStore() {
     isUsernameAvailable,
     withdrawFPL,
     getFPLBalance,
+    createManager,
   };
 }
 

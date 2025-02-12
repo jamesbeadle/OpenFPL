@@ -94,13 +94,14 @@
 
 {#if isLoading}
   <WidgetSpinner />
+  <p class="pb-4 mb-4 text-center">Getting Leaderboard for Gameweek {$selectedGameweek}</p>
 {:else}
   <div class="flex flex-col">
-    <div class="flex flex-col sm:flex-row gap-4 sm:gap-8">
-      <div class="flex flex-col sm:flex-row gap-4 sm:gap-8">
+    <div class="flex flex-col gap-4 sm:flex-row sm:gap-8">
+      <div class="flex flex-col gap-4 sm:flex-row sm:gap-8">
         <LeaderboardFilter {selectedLeaderboardType} {changeLeaderboardType} />
         {#if $selectedLeaderboardType === 1}
-          <GameweekFilter {selectedGameweek} {changeGameweek} {gameweeks} />
+          <GameweekFilter {selectedGameweek} {changeGameweek} {gameweeks} lastGameweek={$leagueStore!.completedGameweek} />
         {/if}
         {#if $selectedLeaderboardType === 2}
           <LeaderboardMonthFilter {selectedMonth} {selectedTeamId} {selectedTeamIndex} />

@@ -28,29 +28,32 @@
     }
 
 </script>
+
 <TeamFilter {selectedTeamId} {changeTeam}  />
 
-<div class="sm:flex sm:items-center sm:mt-0 mt-2 ml-2">
-    <button class="fpl-button default-button" on:click={() => changeMonth(-1)}>
-        &lt;
-    </button>
+<div class="flex flex-col items-center gap-4 pb-4 sm:pb-0 sm:flex-row sm:justify-between">
+    <div class="flex items-center">
+        <button class="mr-1 default-button fpl-button" on:click={() => changeMonth(-1)}>
+            &lt;
+        </button>
 
-    <select class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]" bind:value={$selectedMonth}>
-        <option value={1}>January</option>
-        <option value={2}>February</option>
-        <option value={3}>March</option>
-        <option value={4}>April</option>
-        <option value={5}>May</option>
-        <option value={6}>June</option>
-        <option value={7}>July</option>
-        <option value={8}>August</option>
-        <option value={9}>September</option>
-        <option value={10}>October</option>
-        <option value={11}>November</option>
-        <option value={12}>December</option>
-    </select>
+        <select class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[125px]" bind:value={$selectedMonth}>
+            <option value={1}>January</option>
+            <option value={2}>February</option>
+            <option value={3}>March</option>
+            <option value={4}>April</option>
+            <option value={5}>May</option>
+            <option value={6}>June</option>
+            <option value={7}>July</option>
+            <option value={8}>August</option>
+            <option value={9}>September</option>
+            <option value={10}>October</option>
+            <option value={11}>November</option>
+            <option value={12}>December</option>
+        </select>
 
-    <button class="default-button fpl-button ml-1" on:click={() => changeMonth(1)}>
-        &gt;
-    </button>
+        <button class="ml-3 default-button fpl-button" on:click={() => changeMonth(1)}>
+            &gt;
+        </button>
+    </div>
 </div>
