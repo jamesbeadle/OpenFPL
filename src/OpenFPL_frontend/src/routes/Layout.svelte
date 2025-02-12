@@ -15,11 +15,23 @@
   import { storeManager } from "$lib/managers/store-manager";
   import { toasts } from "$lib/stores/toasts-store";
   import Toasts from "$lib/components/toasts/toasts.svelte";
+  import NewUserModal from "$lib/components/profile/new-user-modal.svelte";
+
+  let isLoading = true;
+  let showNewUserModal = false;
 
   const init = async () => {
     await syncAuthStore();
     if ($authStore?.identity) {
-      await userStore.sync();
+      try {
+        await userStore.sync();
+        if ($userStore === undefined) {
+          console.log("showNewUserModal");
+          showNewUserModal = true;
+        }
+      } catch (error) {
+        console.error("Error syncing user store:", error);
+      }
     }
   };
 
@@ -70,5 +82,6 @@
     </main>
     <Footer />
     <Toasts />
+    <NewUserModal visible={showNewUserModal} />
   </div>
 {/await}
