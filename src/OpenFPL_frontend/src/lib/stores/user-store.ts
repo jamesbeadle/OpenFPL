@@ -1,5 +1,5 @@
 import { authStore } from "$lib/stores/auth.store";
-import { isError } from "$lib/utils/helpers";
+import { isError, replacer } from "$lib/utils/helpers";
 import { writable } from "svelte/store";
 import { Text } from "@dfinity/candid/lib/cjs/idl";
 import { ActorFactory } from "../utils/actor.factory";
@@ -184,7 +184,10 @@ function createUserStore() {
           ? Array.from(profile.profilePicture)
           : null,
       };
-      localStorage.setItem("user_profile_data", JSON.stringify(storageProfile));
+      localStorage.setItem(
+        "user_profile_data",
+        JSON.stringify(storageProfile, replacer),
+      );
     }
   }
 
