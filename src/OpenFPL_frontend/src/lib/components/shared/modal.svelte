@@ -5,6 +5,7 @@
     export let showModal: boolean;
     export let onClose: () => void;
     export let title: string;
+    export let closeOnClickOutside = true;
   
     let modalElement: HTMLDivElement;
     let startOnBackdrop = false;
@@ -34,7 +35,7 @@
     };
   
     const handlePointerUp = (e: PointerEvent) => {
-      if (startOnBackdrop && e.target === e.currentTarget) {
+      if (closeOnClickOutside && startOnBackdrop && e.target === e.currentTarget) {
         onClose();
       }
       startOnBackdrop = false;
@@ -49,7 +50,7 @@
   
   {#if showModal}
     <div
-      class="fixed inset-0 z-40 bg-black bg-opacity-50 flex items-center justify-center backdrop-blur-sm"
+      class="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
       tabindex="-1"
@@ -58,7 +59,7 @@
     >
       <div
         bind:this={modalElement}
-        class="bg-BrandBlack rounded shadow max-w-lg md:max-w-3xl w-full mx-4 text-white outline-none focus:outline-none"
+        class="w-full max-w-lg mx-4 text-white rounded shadow outline-none bg-BrandBlack md:max-w-3xl focus:outline-none"
         tabindex="-1"
       >
         <header class="flex items-center justify-between p-4">

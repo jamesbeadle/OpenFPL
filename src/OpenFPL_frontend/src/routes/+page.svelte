@@ -14,7 +14,7 @@
   import LeagueTableComponent from "$lib/components/homepage/league-table.svelte";
   import WidgetSpinner from "$lib/components/shared/widget-spinner.svelte";
   import TabContainer from "$lib/components/shared/tab-container.svelte";
-    import { appStore } from "$lib/stores/app-store";
+  import { appStore } from "$lib/stores/app-store";
 
   let activeTab: string = "fixtures";
   let isLoggedIn = false;

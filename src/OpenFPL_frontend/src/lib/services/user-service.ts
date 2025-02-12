@@ -12,8 +12,9 @@ export class UserService {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
       let getProfileResponse = await identityActor.getProfile();
-      if (isError(getProfileResponse))
-        throw new Error("Failed to fetch profile");
+      if (isError(getProfileResponse)) {
+        return undefined;
+      }
       return getProfileResponse.ok;
     } catch (error) {
       console.error("Error fetching user profile: ", error);
@@ -21,6 +22,7 @@ export class UserService {
         type: "error",
         message: "Error fetching user profile.",
       });
+      throw error;
     }
   }
 }

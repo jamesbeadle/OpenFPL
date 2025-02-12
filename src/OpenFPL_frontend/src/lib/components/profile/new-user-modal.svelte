@@ -5,9 +5,20 @@
   import { storeManager } from "$lib/managers/store-manager";
   import Modal from "$lib/components/shared/modal.svelte";
   import WidgetSpinner from "../shared/widget-spinner.svelte";
+  import { toasts } from "$lib/stores/toasts-store";
+  import { authStore } from "$lib/stores/auth.store";
+  import { goto } from "$app/navigation";
 
   export let visible: boolean;
   
+  function handleAttemptClose() {
+    toasts.addToast({
+      type: "error",
+      message: "You must set a valid username to continue",
+      duration: 3000,
+    });
+  }
+
   let isLoading = true;
   let username = "";
   let selectedClub = 0;
@@ -18,7 +29,18 @@
 
   let usernameTimeout: NodeJS.Timeout;
 
-  $: isSubmitDisabled = !username || selectedClub === 0 || !usernameAvailable || isCheckingUsername;
+  $: isSubmitDisabled = !username || !usernameAvailable || isCheckingUsername;
+
+  function handleLogout() {
+    toasts.addToast({
+      type: "info",
+      message: "Logged out successfully",
+      duration: 2000,
+    });
+    authStore.signOut();
+    closeModal();
+    goto("/");
+  }
 
   async function checkUsername() {
     if (username.length < 3) {
@@ -56,7 +78,7 @@
   async function createManager() {
     isLoading = true;
     try {
-      await userStore.createManager(username, selectedClub);
+      await userStore.createManager(username, selectedClub || 0);
       closeModal();
     } catch (error) {
       console.error("Error creating manager:", error);
@@ -70,13 +92,21 @@
   }
 </script>
 
-<Modal showModal={visible} onClose={closeModal} title="Profile Settings">
+<Modal showModal={visible} onClose={handleAttemptClose} title="New User Setup" closeOnClickOutside={true}>
   {#if isLoading}
     <WidgetSpinner />
+    <p class="pb-4 mb-4 text-center">Creating new manager...</p>
   {:else}
     <div class="p-4">
       <div class="mb-6">
         <h3 class="mb-2">Display Name</h3>
+        <div class="mb-2 text-sm text-white/50">
+          <p>Username requirements:</p>
+          <ul class="ml-4 list-disc">
+            <li>Between 3-20 characters</li>
+            <li>Only letters, numbers, and spaces allowed</li>
+          </ul>
+        </div>
         <input
           type="text"
           bind:value={username}
@@ -98,12 +128,12 @@
       </div>
 
       <div class="mb-6">
-        <h3 class="mb-2">Favorite Club</h3>
+        <h3 class="mb-2">Favorite Club (Optional)</h3>
         <select
           bind:value={selectedClub}
           class="w-full p-2 text-white rounded-md bg-BrandGray"
         >
-          <option value={0}>Select club</option>
+          <option value={0}>No favorite club</option>
           {#each $clubStore.sort((a, b) => a.friendlyName.localeCompare(b.friendlyName)) as club}
             <option value={club.id}>{club.friendlyName}</option>
           {/each}
@@ -112,13 +142,13 @@
 
       <div class="flex justify-between">
         <button 
-          class="px-8 py-2 text-white border border-white rounded-md"
-          on:click={closeModal}
+          class="px-6 py-2 text-white rounded-md hover:bg-BrandRed/80 bg-BrandRed"
+          on:click={handleLogout}
         >
-          Cancel
+          Logout
         </button>
         <button 
-          class="px-8 py-2 text-white rounded-md bg-BrandPurple disabled:bg-gray-500"
+          class="px-6 py-2 text-white rounded-md hover:bg-BrandPurple/80 bg-BrandPurple disabled:bg-gray-500"
           on:click={createManager}
           disabled={isSubmitDisabled}
         >

@@ -19,21 +19,25 @@
 
   let isLoading = true;
   let showNewUserModal = false;
-    import { appStore } from "$lib/stores/app-store";
+  import { appStore } from "$lib/stores/app-store";
+
+  $: {
+    if ($authStore?.identity && !isLoading) {
+      (async () => {
+        try {
+          await userStore.sync();
+          if ($userStore === undefined) {
+            showNewUserModal = true;
+          }
+        } catch (error) {
+          console.error("Error syncing user store:", error);
+        }
+      })();
+    }
+  }
 
   const init = async () => {
     await syncAuthStore();
-    if ($authStore?.identity) {
-      try {
-        await userStore.sync();
-        if ($userStore === undefined) {
-          console.log("showNewUserModal");
-          showNewUserModal = true;
-        }
-      } catch (error) {
-        console.error("Error syncing user store:", error);
-      }
-    }
   };
 
   const syncAuthStore = async () => {
@@ -53,6 +57,7 @@
     worker = await initAuthWorker();
     await storeManager.syncStores();
     await appStore.checkServerVersion();
+    isLoading = false;
   });
 
   $: worker, $authStore, (() => worker?.syncAuthIdle($authStore))();
@@ -84,6 +89,8 @@
     </main>
     <Footer />
     <Toasts />
-    <NewUserModal visible={showNewUserModal} />
+    {#if showNewUserModal}
+      <NewUserModal visible={true} />
+    {/if}
   </div>
 {/await}
