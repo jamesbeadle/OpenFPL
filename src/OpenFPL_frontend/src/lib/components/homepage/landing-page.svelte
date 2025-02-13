@@ -19,7 +19,7 @@
                 Welcome to OpenFPL
             </h1>
             <h2 class="text-xl text-gray-300">
-                Decentralized Fantasy Premier League
+                Decentralised Fantasy Premier League
             </h2>
         </div>
         <button 
