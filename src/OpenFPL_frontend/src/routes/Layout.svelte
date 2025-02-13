@@ -39,22 +39,31 @@
   let worker: { syncAuthIdle: (auth: AuthStoreData) => void } | undefined;
 
   onMount(async () => {
+    console.log('loading')
     worker = await initAuthWorker();
+    console.log('a')
     await storeManager.syncStores();
+    console.log('b')
     await appStore.checkServerVersion();
+    console.log('c')
     if ($authStore?.identity) {
       (async () => {
         try {
+          console.log('d')
           await userStore.sync();
+          console.log('e')
           if ($userStore === undefined) {
             showNewUserModal = true;
+            console.log('f')
           }
+          console.log('g')
         } catch (error) {
           console.error("Error syncing user store:", error);
         }
       })();
     }
     isLoading = false;
+    console.log('h')
   });
 
   $: worker, $authStore, (() => worker?.syncAuthIdle($authStore))();

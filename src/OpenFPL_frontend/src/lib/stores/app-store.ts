@@ -32,9 +32,15 @@ function createAppStore() {
 
     let status: AppStatusDTO = res!;
 
+    let localVersion = localStorage.getItem("version");
+    if (!localVersion) {
+      localStorage.setItem("version", status.version);
+      return;
+    }
+
     if (status.version !== localStorage.getItem("version")) {
       toasts.addToast({
-        message: `FootballGod V${status.version} is now available. Click here to reload:`,
+        message: `ICFC V${status.version} is now available. Click here to reload:`,
         type: "frontend-update",
       });
     }
