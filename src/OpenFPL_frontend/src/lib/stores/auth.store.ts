@@ -8,6 +8,7 @@ import { createAuthClient } from "$lib/utils/auth.utils";
 import { popupCenter } from "$lib/utils/window.utils";
 import type { AuthClient } from "@dfinity/auth-client";
 import { writable, type Readable } from "svelte/store";
+import { clearProfileFromDB } from "$lib/utils/db.utils";
 
 export interface AuthStoreData {
   identity: OptionIdentity;
@@ -90,7 +91,7 @@ const initAuthStore = (): AuthStore => {
         ...state,
         identity: null,
       }));
-      localStorage.removeItem("user_profile_data");
+      await clearProfileFromDB();
     },
   };
 };

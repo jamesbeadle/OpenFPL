@@ -1,6 +1,7 @@
 import { authStore } from "$lib/stores/auth.store";
-import { isError, replacer } from "$lib/utils/helpers";
-import { writable } from "svelte/store";
+import { isError} from "$lib/utils/helpers";
+import { getProfileFromDB, setProfileToDB } from "$lib/utils/db.utils";
+import { get, writable } from "svelte/store";
 import { Text } from "@dfinity/candid/lib/cjs/idl";
 import { ActorFactory } from "../utils/actor.factory";
 import { createAgent } from "@dfinity/utils";
@@ -12,6 +13,7 @@ import type {
   UpdateProfilePictureDTO,
   UpdateUsernameDTO,
   CreateManagerDTO,
+  ProfileDTO
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { UserService } from "$lib/services/user-service";
 import { toasts } from "$lib/stores/toasts-store";
@@ -19,19 +21,13 @@ import { toasts } from "$lib/stores/toasts-store";
 function createUserStore() {
   const { subscribe, set } = writable<any>(null);
 
-  async function sync() {
-    let localStorageString = localStorage.getItem("user_profile_data");
-    if (localStorageString) {
-      const localProfile = JSON.parse(localStorageString);
-      if (localProfile.profilePicture) {
-        localProfile.profilePicture = new Uint8Array(
-          Object.values(localProfile.profilePicture),
-        );
-      }
-      set(localProfile);
-      return;
-    }
+  async function sync(): Promise<void> {
     try {
+      const localProfile = await getProfileFromDB();
+      if (localProfile) {
+        set(localProfile);
+        return;
+      }
       await cacheProfile();
     } catch (error) {
       console.error("Error fetching user profile:", error);
@@ -54,7 +50,19 @@ function createUserStore() {
         console.error("Error creating manager");
         return;
       }
-      await cacheProfile();
+      const profile: ProfileDTO = {
+        username: username,
+        favouriteClubId: [favouriteClubId] as [number],
+        profilePicture: [],
+        profilePictureType: "",
+        principalId: get(authStore).identity?.getPrincipal().toText() || "",
+        createDate: BigInt(Date.now()*1000000),
+        termsAccepted: false,
+      };
+      set(profile);
+      if (profile) {
+        await setProfileToDB(profile);
+      }
       toasts.addToast({
         type: "success",
         message: "Manager created successfully.",
@@ -177,17 +185,9 @@ function createUserStore() {
   async function cacheProfile() {
     let profile = await new UserService().getUser();
     set(profile);
+
     if (profile) {
-      const storageProfile = {
-        ...profile,
-        profilePicture: profile.profilePicture
-          ? Array.from(profile.profilePicture)
-          : null,
-      };
-      localStorage.setItem(
-        "user_profile_data",
-        JSON.stringify(storageProfile, replacer),
-      );
+      await setProfileToDB(profile);
     }
   }
 
