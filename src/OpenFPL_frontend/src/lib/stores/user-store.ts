@@ -1,5 +1,5 @@
 import { authStore } from "$lib/stores/auth.store";
-import { isError} from "$lib/utils/helpers";
+import { isError } from "$lib/utils/helpers";
 import { getProfileFromDB, setProfileToDB } from "$lib/utils/db.utils";
 import { get, writable } from "svelte/store";
 import { Text } from "@dfinity/candid/lib/cjs/idl";
@@ -13,7 +13,7 @@ import type {
   UpdateProfilePictureDTO,
   UpdateUsernameDTO,
   CreateManagerDTO,
-  ProfileDTO
+  ProfileDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { UserService } from "$lib/services/user-service";
 import { toasts } from "$lib/stores/toasts-store";
@@ -56,7 +56,7 @@ function createUserStore() {
         profilePicture: [],
         profilePictureType: "",
         principalId: get(authStore).identity?.getPrincipal().toText() || "",
-        createDate: BigInt(Date.now()*1000000),
+        createDate: BigInt(Date.now() * 1000000),
         termsAccepted: false,
       };
       set(profile);
