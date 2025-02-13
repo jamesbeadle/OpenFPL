@@ -15,7 +15,7 @@
     <div class="flex flex-col items-center p-8 space-y-8 rounded-lg">
         <OpenFPLIcon className="w-32 h-32" currentColor="#2CE3A6" />
         <div class="space-y-4 text-center">
-            <h1 class="text-4xl font-bold text-transparent bg-gradient-to-r from-emerald-400 to-blue-500 bg-clip-text">
+            <h1 class="text-4xl font-bold text-transparent bg-gradient-to-r from-BrandGreen to-blue-500 bg-clip-text">
                 Welcome to OpenFPL
             </h1>
             <h2 class="text-xl text-gray-300">
