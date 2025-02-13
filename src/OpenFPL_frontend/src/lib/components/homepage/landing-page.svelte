@@ -23,7 +23,7 @@
             </h2>
         </div>
         <button 
-            class="flex items-center px-6 py-3 mt-6 text-lg font-semibold text-white transition-all duration-200 rounded-lg shadow-lg bg-gradient-to-r from-emerald-500 to-blue-600 hover:opacity-90 hover:shadow-emerald-500/20"
+            class="flex items-center px-6 py-3 mt-6 text-lg font-semibold text-white transition-all duration-200 rounded-lg shadow-lg bg-gradient-to-r from-BrandGreen to-blue-600 hover:opacity-90 hover:shadow-emerald-500/20"
             on:click={handleLogin}
         >
             Connect Internet Identity
