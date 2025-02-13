@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   
   import { storeManager } from "$lib/managers/store-manager";
   import { seasonStore } from "$lib/stores/season-store";
@@ -21,6 +21,7 @@
   let isLoggedIn = false;
   let isLoading = true;
   let seasonName = "";
+  let unsubscribe: () => void;
 
   const tabs = [
     { id: "fixtures", label: "Fixtures", authOnly: false },
@@ -30,13 +31,27 @@
   ];
 
   onMount(async () => {
-      await storeManager.syncStores();
-      //await appStore.checkServerVersion();
-      await loadCurrentStatusDetails();
-      authStore.subscribe((store) => {
-        isLoggedIn = store.identity !== null && store.identity !== undefined;
-      });
-      isLoading = false;
+    unsubscribe = authStore.subscribe((store) => {
+      isLoggedIn = store.identity !== null && store.identity !== undefined;
+      if (isLoggedIn) {
+        (async () => {
+          try {
+            await storeManager.syncStores();
+            await appStore.checkServerVersion();
+            await loadCurrentStatusDetails();
+          } catch (error) {
+            console.error("Error syncing stores and getting server version:", error);
+          }
+          isLoading = false;
+        })();
+      } else {
+        isLoading = false;
+      }
+    });
+  });
+
+  onDestroy(() => {
+    if (unsubscribe) unsubscribe();
   });
 
   async function loadCurrentStatusDetails(){
