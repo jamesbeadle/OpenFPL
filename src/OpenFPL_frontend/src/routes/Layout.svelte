@@ -17,6 +17,9 @@
   import Toasts from "$lib/components/toasts/toasts.svelte";
   import NewUserModal from "$lib/components/profile/new-user-modal.svelte";
 
+  export let showHeader = true;
+
+  let hasSynced = false;
   let isLoading = true;
   let showNewUserModal = false;
   import { appStore } from "$lib/stores/app-store";
@@ -39,32 +42,25 @@
   let worker: { syncAuthIdle: (auth: AuthStoreData) => void } | undefined;
 
   onMount(async () => {
-    console.log('loading')
     worker = await initAuthWorker();
-    console.log('a')
     await storeManager.syncStores();
-    console.log('b')
     await appStore.checkServerVersion();
-    console.log('c')
-    if ($authStore?.identity) {
-      (async () => {
-        try {
-          console.log('d')
-          await userStore.sync();
-          console.log('e')
-          if ($userStore === undefined) {
-            showNewUserModal = true;
-            console.log('f')
-          }
-          console.log('g')
-        } catch (error) {
-          console.error("Error syncing user store:", error);
-        }
-      })();
-    }
     isLoading = false;
-    console.log('h')
   });
+
+  $: if ($authStore?.identity && !isLoading && !hasSynced) {
+    (async () => {
+      try {
+        await userStore.sync();
+        if ($userStore === undefined) {
+          showNewUserModal = true;
+        }
+        hasSynced = true;
+      } catch (error) {
+        console.error("Error syncing user store:", error);
+      }
+    })();
+  }
 
   $: worker, $authStore, (() => worker?.syncAuthIdle($authStore))();
 
@@ -89,10 +85,16 @@
   </div>
 {:then _}
   <div class="flex flex-col justify-between h-screen default-text">
-    <Header />
-    <main class="page-wrapper">
-      <slot />
-    </main>
+    {#if showHeader}
+      <Header />
+      <main class="page-wrapper">
+        <slot />
+      </main>
+    {:else}
+      <main class="flex-1">
+        <slot />
+      </main>
+    {/if}
     <Footer />
     <Toasts />
     {#if showNewUserModal}

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   
   import { storeManager } from "$lib/managers/store-manager";
   import { seasonStore } from "$lib/stores/season-store";
@@ -7,6 +7,7 @@
   import { authStore } from "$lib/stores/auth.store";
 
   import Layout from "./Layout.svelte";
+  import LandingPage from "$lib/components/homepage/landing-page.svelte";
   import HomepageHeader from "$lib/components/homepage/homepage-header.svelte";
   import FixturesComponent from "$lib/components/homepage/fixtures.svelte";
   import GamweekPointsComponent from "$lib/components/manager/gameweek-points.svelte";
@@ -20,6 +21,7 @@
   let isLoggedIn = false;
   let isLoading = true;
   let seasonName = "";
+  let unsubscribe: () => void;
 
   const tabs = [
     { id: "fixtures", label: "Fixtures", authOnly: false },
@@ -29,13 +31,27 @@
   ];
 
   onMount(async () => {
-      await storeManager.syncStores();
-      await appStore.checkServerVersion();
-      await loadCurrentStatusDetails();
-      authStore.subscribe((store) => {
-        isLoggedIn = store.identity !== null && store.identity !== undefined;
-      });
-      isLoading = false;
+    unsubscribe = authStore.subscribe((store) => {
+      isLoggedIn = store.identity !== null && store.identity !== undefined;
+      if (isLoggedIn) {
+        (async () => {
+          try {
+            await storeManager.syncStores();
+            await appStore.checkServerVersion();
+            await loadCurrentStatusDetails();
+          } catch (error) {
+            console.error("Error syncing stores and getting server version:", error);
+          }
+          isLoading = false;
+        })();
+      } else {
+        isLoading = false;
+      }
+    });
+  });
+
+  onDestroy(() => {
+    if (unsubscribe) unsubscribe();
   });
 
   async function loadCurrentStatusDetails(){
@@ -45,12 +61,14 @@
   function setActiveTab(tab: string): void {
     activeTab = tab;
   }
+
+  $: showHeader = isLoggedIn;
 </script>
 
-<Layout>
+<Layout {showHeader}>
   {#if isLoading}
     <WidgetSpinner />
-  {:else}
+  {:else if isLoggedIn}
     <HomepageHeader {seasonName} />
 
     <div class="bg-panel">
@@ -67,6 +85,7 @@
       {/if}
       
     </div>
-
+  {:else}
+    <LandingPage />
   {/if}
 </Layout>
