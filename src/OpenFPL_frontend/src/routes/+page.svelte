@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { onMount, onDestroy } from "svelte";
+  import { onMount } from "svelte";
   
-  import { storeManager } from "$lib/managers/store-manager";
   import { seasonStore } from "$lib/stores/season-store";
   import { leagueStore } from "$lib/stores/league-store";
   import { authStore } from "$lib/stores/auth.store";
+  import { globalDataLoaded } from "$lib/managers/store-manager";
 
   import Layout from "./Layout.svelte";
   import LandingPage from "$lib/components/homepage/landing-page.svelte";
@@ -15,13 +15,12 @@
   import LeagueTableComponent from "$lib/components/homepage/league-table.svelte";
   import WidgetSpinner from "$lib/components/shared/widget-spinner.svelte";
   import TabContainer from "$lib/components/shared/tab-container.svelte";
-  import { appStore } from "$lib/stores/app-store";
+  
+  $: isLoggedIn = $authStore?.identity != null;
 
   let activeTab: string = "fixtures";
-  let isLoggedIn = false;
   let isLoading = true;
   let seasonName = "";
-  let unsubscribe: () => void;
 
   const tabs = [
     { id: "fixtures", label: "Fixtures", authOnly: false },
@@ -30,31 +29,16 @@
     { id: "league-table", label: "Table", authOnly: false },
   ];
 
-  onMount(async () => {
-    await storeManager.syncStores();
-
-
-
-    unsubscribe = authStore.subscribe((store) => {
-      isLoggedIn = store.identity !== null && store.identity !== undefined;
-      if (isLoggedIn) {
-        (async () => {
-          try {
-            await appStore.checkServerVersion();
-            await loadCurrentStatusDetails();
-          } catch (error) {
-            console.error("Error syncing stores and getting server version:", error);
-          }
-          isLoading = false;
-        })();
-      } else {
+  onMount(() => {
+    let unsub: () => void = () => {};
+    unsub = globalDataLoaded.subscribe((loaded) => {
+      if (loaded) {
+        loadCurrentStatusDetails();
         isLoading = false;
+        unsub();
       }
     });
-  });
-
-  onDestroy(() => {
-    if (unsubscribe) unsubscribe();
+    isLoading = false;
   });
 
   async function loadCurrentStatusDetails(){
@@ -66,6 +50,10 @@
   }
 
   $: showHeader = isLoggedIn;
+
+  async function handleLogin() {
+    isLoading = false;
+  }
 </script>
 
 <Layout {showHeader}>

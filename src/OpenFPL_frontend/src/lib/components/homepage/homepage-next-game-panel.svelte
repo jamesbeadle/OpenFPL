@@ -2,6 +2,7 @@
     import { onMount } from "svelte";
     import { fixtureStore } from "$lib/stores/fixture-store";
     import { clubStore } from "$lib/stores/club-store";
+    import { globalDataLoaded } from "$lib/managers/store-manager";
     import { formatUnixDateToSmallReadable, formatUnixTimeToTime, getCountdownTime } from "../../utils/helpers";
     import type { ClubDTO, FixtureDTO } from "../../../../../external_declarations/data_canister/data_canister.did";
     import HeaderCountdownPanel from "../shared/panels/header-countdown-panel.svelte";
@@ -16,7 +17,13 @@
     let nextFixtureAwayTeam: ClubDTO;
 
     onMount(() => {
-        loadNextFixture();
+        let unsub: () => void = () => {};
+        unsub = globalDataLoaded.subscribe((loaded) => {
+            if (loaded) {
+            loadNextFixture();
+            unsub();
+            }
+        });
     });
 
     async function loadNextFixture(): Promise<void> {

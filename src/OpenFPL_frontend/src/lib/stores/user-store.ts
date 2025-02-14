@@ -289,6 +289,7 @@ function createUserStore() {
 
   return {
     subscribe,
+    set,
     sync,
     cacheProfile,
     updateUsername,

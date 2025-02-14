@@ -1,13 +1,15 @@
 <script lang="ts">
     import { authStore, type AuthSignInParams } from "$lib/stores/auth.store"
+    import { goto } from "$app/navigation";
     import OpenFPLIcon from "$lib/icons/OpenFPLIcon.svelte";
     import WalletIcon from "$lib/icons/WalletIcon.svelte";
 
-    function handleLogin() {
+    async function handleLoginClick() {
         let params: AuthSignInParams = {
             domain: import.meta.env.VITE_AUTH_PROVIDER_URL,
         };
-        authStore.signIn(params);
+        await authStore.signIn(params);
+        goto("/", {invalidateAll: true});
     }
 </script>
 
@@ -24,7 +26,7 @@
         </div>
         <button 
             class="flex items-center px-6 py-3 mt-6 text-lg font-semibold text-white transition-all duration-200 rounded-lg shadow-lg bg-gradient-to-r from-emerald-500 to-blue-600 hover:opacity-90 hover:shadow-emerald-500/20"
-            on:click={handleLogin}
+            on:click={handleLoginClick}
         >
             Connect Internet Identity
             <WalletIcon className="ml-2 mt-2 h-6 w-6" />

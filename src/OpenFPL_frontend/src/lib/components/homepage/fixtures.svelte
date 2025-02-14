@@ -1,10 +1,10 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { formatUnixTimeToTime, getFixturesWithTeams, getGameweeks, reduceFilteredFixtures } from "../../utils/helpers";
-  import { storeManager } from "$lib/managers/store-manager";
   import { leagueStore } from "$lib/stores/league-store";
   import WidgetSpinner from "../shared/widget-spinner.svelte";
   import { writable } from "svelte/store";
+  import { globalDataLoaded } from "$lib/managers/store-manager";
   import GameweekFilter from "../shared/filters/gameweek-filter.svelte";
   import FixtureStatus from "./fixture-status.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
@@ -21,11 +21,28 @@
     .sort((a, b) => Number(a.fixture.kickOff) - Number(b.fixture.kickOff));
   $: groupedFixtures = reduceFilteredFixtures(filteredFixtures);
 
-  onMount(async () => {
-    await storeManager.syncStores();
-    $selectedGameweek = $leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek ?? 1;
-    mergedFixtures = $fixtureWithClubsStore;
-    isLoading = false;
+  onMount(() => {
+    const unsubscribe = globalDataLoaded.subscribe(async (loaded) => {
+        if (loaded) {
+            try {
+                await Promise.all([
+                    new Promise(resolve => {
+                        $selectedGameweek = $leagueStore!.activeGameweek == 0 
+                            ? $leagueStore!.unplayedGameweek 
+                            : $leagueStore!.activeGameweek ?? 1;
+                        mergedFixtures = $fixtureWithClubsStore;
+                        resolve(null);
+                    })
+                ]);
+                isLoading = false;
+            } catch (error) {
+                console.error('Error loading fixture data:', error);
+            }
+        }
+    });
+    return () => {
+        unsubscribe();
+    };
   });
 
   const changeGameweek = (delta: number) => {

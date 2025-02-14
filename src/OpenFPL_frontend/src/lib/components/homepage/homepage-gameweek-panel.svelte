@@ -5,6 +5,7 @@
     import { formatWholeE8s } from "$lib/utils/helpers";
     import HeaderContentPanel from "../shared/panels/header-content-panel.svelte";
     import { rewardRatesStore } from "$lib/stores/reward-pool-store";
+    import { globalDataLoaded } from "$lib/managers/store-manager";
 
     export let seasonName: string;
 
@@ -14,7 +15,13 @@
     let weeklyPrizePool = "0.0000";
 
     onMount(() => {
-        loadManagerCount();
+        let unsub: () => void = () => {};
+        unsub = globalDataLoaded.subscribe((loaded) => {
+            if (loaded) {
+                loadManagerCount();
+                unsub();
+            }
+        });
         rewardRatesStore.subscribe(rewardRates => {
             if(!rewardRates) {return};
             weeklyPrizePool = formatWholeE8s(BigInt(Math.round(Number(rewardRates.weeklyLeaderboardRewardRate)))).toString();
@@ -28,7 +35,12 @@
     }
 </script>
 
-<HeaderContentPanel header="Gameweek" content={($leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore! .activeGameweek ).toString()} footer={seasonName} loading={loadingRewardRates} />
+<HeaderContentPanel 
+    header="Gameweek" 
+    content={(($leagueStore?.activeGameweek === 0 ? $leagueStore?.unplayedGameweek: $leagueStore?.activeGameweek) || 0).toString()}
+    footer={seasonName} 
+    loading={loadingRewardRates} 
+/>
 <div class="vertical-divider"></div>
 <div class="flex-grow">
     <HeaderContentPanel header="Managers" content={managerCount.toString()} footer="Total" loading={loadingManagerCount} />

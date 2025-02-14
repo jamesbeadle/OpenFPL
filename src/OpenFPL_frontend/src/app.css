@@ -8,6 +8,14 @@ main {
   flex-direction: column;
 }
 
+.bg-background {
+  background-image: url("/background.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
 .modal-backdrop {
   z-index: 1000;
 }
