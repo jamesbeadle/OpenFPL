@@ -22,6 +22,9 @@ import { FixtureService } from "$lib/services/fixture-service";
 import { WeeklyLeaderboardService } from "$lib/services/weekly-leaderboard-service";
 
 import { replacer } from "$lib/utils/helpers";
+import { writable } from "svelte/store";
+
+export const globalDataLoaded = writable(false);
 
 class StoreManager {
   private dataHashService: DataHashService;
@@ -36,17 +39,23 @@ class StoreManager {
   private weeklyLeaderboardService: WeeklyLeaderboardService;
   private rewardRatesService: RewardRatesService;
 
-  private categories: string[] = [
-    "countries",
+  private backendCategories: string[] = [
     "app_status",
+    "reward_rates",
+    "weekly_leaderboard",
+  ];
+
+  private dataCanisterCategories: string[] = [
+    "countries",
     "league_status",
     "seasons",
     "clubs",
     "players",
     "player_events",
     "fixtures",
-    "reward_rates",
   ];
+
+  private isSyncing = false;
 
   constructor() {
     this.dataHashService = new DataHashService();
@@ -63,37 +72,50 @@ class StoreManager {
   }
 
   async syncStores(): Promise<void> {
-    await this.syncAppDataHashes();
-    await this.syncDataCanisterDataHashes();
+    if (this.isSyncing) {
+      return;
+    }
+    this.isSyncing = true;
+    globalDataLoaded.set(false);
+    try {
+      await this.syncAppDataHashes();
+      await this.syncDataCanisterDataHashes();
+      globalDataLoaded.set(true);
+    } catch (error) {
+      console.error('Error syncing stores:', error);
+      globalDataLoaded.set(false);
+      throw error;
+    } finally {
+      this.isSyncing = false;
+    }
   }
 
   private async syncAppDataHashes(): Promise<void> {
     const appDataHashes = await this.dataHashService.getAppDataHashes();
     if (appDataHashes == undefined) {
-      return;
+        return;
     }
-    for (const category of this.categories) {
-      const categoryHash = appDataHashes.find(
-        (hash) => hash.category === category,
-      );
-
-      if (categoryHash?.hash !== localStorage.getItem(`${category}_hash`)) {
-        await this.syncCategory(category);
-        localStorage.setItem(`${category}_hash`, categoryHash?.hash || "");
-      } else {
-        this.loadFromCache(category);
-      }
+    for (const category of this.backendCategories) {
+        const categoryHash = appDataHashes.find(
+            (hash) => hash.category === category,
+        );
+        if (categoryHash?.hash !== localStorage.getItem(`${category}_hash`)) {
+            await this.syncCategory(category);
+            localStorage.setItem(`${category}_hash`, categoryHash?.hash || "");
+        } else {
+            await this.loadFromCache(category);
+        }
     }
   }
 
   private async syncDataCanisterDataHashes(): Promise<void> {
-    const appDataHashes =
-      await this.dataHashService.getDataCanisterDataHashes();
+    const appDataHashes = await this.dataHashService.getDataCanisterDataHashes();
 
     if (appDataHashes == undefined) {
       return;
-    }
-    for (const category of this.categories) {
+    } 
+
+    for (const category of this.dataCanisterCategories) {
       const categoryHash = appDataHashes.find(
         (hash) => hash.category === category,
       );
@@ -102,8 +124,8 @@ class StoreManager {
         await this.syncCategory(category);
         localStorage.setItem(`${category}_hash`, categoryHash?.hash || "");
       } else {
-        this.loadFromCache(category);
-      }
+        await this.loadFromCache(category);
+      } 
     }
   }
 
@@ -247,7 +269,7 @@ class StoreManager {
     }
   }
 
-  private loadFromCache(category: string): void {
+  private async loadFromCache(category: string): Promise<void> {
     const cachedData = localStorage.getItem(category);
 
     switch (category) {

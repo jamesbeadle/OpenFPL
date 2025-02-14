@@ -1,15 +1,14 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import { userStore } from "$lib/stores/user-store";
   import { clubStore } from "$lib/stores/club-store";
-  import { storeManager } from "$lib/managers/store-manager";
   import Modal from "$lib/components/shared/modal.svelte";
   import WidgetSpinner from "../shared/widget-spinner.svelte";
   import { toasts } from "$lib/stores/toasts-store";
-  import { authStore } from "$lib/stores/auth.store";
   import { goto } from "$app/navigation";
 
   export let visible: boolean;
+  export let onSignUpComplete: () => void = () => {};
+  export let onLogout: () => void = () => {};
   
   function handleAttemptClose() {
     toasts.addToast({
@@ -19,7 +18,7 @@
     });
   }
 
-  let isLoading = true;
+  let isLoading = false;
   let username = "";
   let selectedClub = 0;
   let isSubmitDisabled = true;
@@ -31,14 +30,13 @@
 
   $: isSubmitDisabled = !username || !usernameAvailable || isCheckingUsername;
 
-  function handleLogout() {
+  async function handleLogout() {
+    await onLogout();
     toasts.addToast({
       type: "info",
       message: "Logged out successfully",
       duration: 2000,
     });
-    authStore.signOut();
-    closeModal();
     goto("/");
   }
 
@@ -70,16 +68,13 @@
     }
   }
 
-  onMount(async () => {
-    await storeManager.syncStores();
-    isLoading = false;
-  });
-
   async function createManager() {
     isLoading = true;
     try {
-      let result = await userStore.createManager(username, selectedClub);
+      await userStore.createManager(username, selectedClub || 0);
+      onSignUpComplete();
       closeModal();
+      goto("/profile?welcome=true");
     } catch (error) {
       console.error("Error creating manager:", error);
     } finally {
