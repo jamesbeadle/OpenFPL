@@ -64,7 +64,7 @@ class StoreManager {
 
   async syncStores(): Promise<void> {
     await this.syncAppDataHashes();
-    await this.syncADataCanisterDataHashes();
+    await this.syncDataCanisterDataHashes();
   }
 
   private async syncAppDataHashes(): Promise<void> {
@@ -86,9 +86,10 @@ class StoreManager {
     }
   }
 
-  private async syncADataCanisterDataHashes(): Promise<void> {
+  private async syncDataCanisterDataHashes(): Promise<void> {
     const appDataHashes =
       await this.dataHashService.getDataCanisterDataHashes();
+
     if (appDataHashes == undefined) {
       return;
     }

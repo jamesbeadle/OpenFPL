@@ -78,7 +78,7 @@
   async function createManager() {
     isLoading = true;
     try {
-      await userStore.createManager(username, selectedClub || 0);
+      let result = await userStore.createManager(username, selectedClub);
       closeModal();
     } catch (error) {
       console.error("Error creating manager:", error);

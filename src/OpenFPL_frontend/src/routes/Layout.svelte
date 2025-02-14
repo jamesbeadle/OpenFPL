@@ -19,13 +19,13 @@
 
   export let showHeader = true;
 
-  let hasSynced = false;
   let isLoading = true;
   let showNewUserModal = false;
   import { appStore } from "$lib/stores/app-store";
 
   const init = async () => {
-    await syncAuthStore();
+    await Promise.all([syncAuthStore()]);
+    worker = await initAuthWorker();
   };
 
   const syncAuthStore = async () => {
@@ -42,11 +42,13 @@
   let worker: { syncAuthIdle: (auth: AuthStoreData) => void } | undefined;
 
   onMount(async () => {
-    worker = await initAuthWorker();
+    await userStore.sync();
     await storeManager.syncStores();
     await appStore.checkServerVersion();
     isLoading = false;
   });
+
+  /*
 
   $: if ($authStore?.identity && !isLoading && !hasSynced) {
     (async () => {
@@ -61,6 +63,8 @@
       }
     })();
   }
+
+  */
 
   $: worker, $authStore, (() => worker?.syncAuthIdle($authStore))();
 

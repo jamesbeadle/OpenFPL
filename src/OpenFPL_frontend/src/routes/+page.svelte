@@ -31,12 +31,15 @@
   ];
 
   onMount(async () => {
+    await storeManager.syncStores();
+
+
+
     unsubscribe = authStore.subscribe((store) => {
       isLoggedIn = store.identity !== null && store.identity !== undefined;
       if (isLoggedIn) {
         (async () => {
           try {
-            await storeManager.syncStores();
             await appStore.checkServerVersion();
             await loadCurrentStatusDetails();
           } catch (error) {

@@ -12,6 +12,7 @@ import Text "mo:base/Text";
 import Time "mo:base/Time";
 import Buffer "mo:base/Buffer";
 import List "mo:base/List";
+import Debug "mo:base/Debug";
 
 import Base "mo:waterway-mops/BaseTypes";
 import FootballTypes "mo:waterway-mops/FootballTypes";
