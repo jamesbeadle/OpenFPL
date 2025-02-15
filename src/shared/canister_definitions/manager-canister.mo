@@ -51,9 +51,8 @@ actor class _ManagerCanister() {
 
   private stable var initialised = false;
   private stable var controllerPrincipalId = "";
-  private stable var fixturesPerClub : Nat8 = 0;
 
-  public shared ({ caller }) func initialise(_controllerPrincipalId : Text, _fixturesPerClub : Nat8) : async () {
+  public shared ({ caller }) func initialise(_controllerPrincipalId : Text) : async () {
     if (initialised) {
       return;
     };
@@ -68,7 +67,6 @@ actor class _ManagerCanister() {
 
     if (Option.isSome(callerInArray)) {
       controllerPrincipalId := _controllerPrincipalId;
-      fixturesPerClub := _fixturesPerClub;
     };
     initialised := true;
   };

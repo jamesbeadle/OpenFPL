@@ -49,6 +49,7 @@
 
   onMount(async () => {
     worker = await initAuthWorker();
+    await storeManager.syncStores();
     isLoading = false;
   });
 
