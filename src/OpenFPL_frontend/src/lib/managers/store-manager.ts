@@ -82,7 +82,7 @@ class StoreManager {
       await this.syncDataCanisterDataHashes();
       globalDataLoaded.set(true);
     } catch (error) {
-      console.error('Error syncing stores:', error);
+      console.error("Error syncing stores:", error);
       globalDataLoaded.set(false);
       throw error;
     } finally {
@@ -93,27 +93,28 @@ class StoreManager {
   private async syncAppDataHashes(): Promise<void> {
     const appDataHashes = await this.dataHashService.getAppDataHashes();
     if (appDataHashes == undefined) {
-        return;
+      return;
     }
     for (const category of this.backendCategories) {
-        const categoryHash = appDataHashes.find(
-            (hash) => hash.category === category,
-        );
-        if (categoryHash?.hash !== localStorage.getItem(`${category}_hash`)) {
-            await this.syncCategory(category);
-            localStorage.setItem(`${category}_hash`, categoryHash?.hash || "");
-        } else {
-            await this.loadFromCache(category);
-        }
+      const categoryHash = appDataHashes.find(
+        (hash) => hash.category === category,
+      );
+      if (categoryHash?.hash !== localStorage.getItem(`${category}_hash`)) {
+        await this.syncCategory(category);
+        localStorage.setItem(`${category}_hash`, categoryHash?.hash || "");
+      } else {
+        await this.loadFromCache(category);
+      }
     }
   }
 
   private async syncDataCanisterDataHashes(): Promise<void> {
-    const appDataHashes = await this.dataHashService.getDataCanisterDataHashes();
+    const appDataHashes =
+      await this.dataHashService.getDataCanisterDataHashes();
 
     if (appDataHashes == undefined) {
       return;
-    } 
+    }
 
     for (const category of this.dataCanisterCategories) {
       const categoryHash = appDataHashes.find(
@@ -125,7 +126,7 @@ class StoreManager {
         localStorage.setItem(`${category}_hash`, categoryHash?.hash || "");
       } else {
         await this.loadFromCache(category);
-      } 
+      }
     }
   }
 
