@@ -376,14 +376,20 @@ export interface _SERVICE {
   getWeeklyLeaderboard: ActorMethod<[GetWeeklyLeaderboardDTO], Result_3>;
   getWeeklyRewards: ActorMethod<[GetWeeklyRewardsDTO], Result_2>;
   isUsernameValid: ActorMethod<[IsUsernameValid], boolean>;
-  notifyAppsOfFixtureFinalised: ActorMethod<[SeasonId, GameweekNumber], Result>;
-  notifyAppsOfGameweekStarting: ActorMethod<[SeasonId, GameweekNumber], Result>;
-  notifyAppsOfLoan: ActorMethod<[PlayerId], Result>;
-  notifyAppsOfLoanExpired: ActorMethod<[PlayerId], Result>;
-  notifyAppsOfPositionChange: ActorMethod<[PlayerId], Result>;
-  notifyAppsOfRetirement: ActorMethod<[PlayerId], Result>;
-  notifyAppsOfSeasonComplete: ActorMethod<[SeasonId], Result>;
-  notifyAppsOfTransfer: ActorMethod<[PlayerId], Result>;
+  notifyAppsOfFixtureFinalised: ActorMethod<
+    [LeagueId, SeasonId, GameweekNumber],
+    Result
+  >;
+  notifyAppsOfGameweekStarting: ActorMethod<
+    [LeagueId, SeasonId, GameweekNumber],
+    Result
+  >;
+  notifyAppsOfLoan: ActorMethod<[LeagueId, PlayerId], Result>;
+  notifyAppsOfLoanExpired: ActorMethod<[LeagueId, PlayerId], Result>;
+  notifyAppsOfPositionChange: ActorMethod<[LeagueId, PlayerId], Result>;
+  notifyAppsOfRetirement: ActorMethod<[LeagueId, PlayerId], Result>;
+  notifyAppsOfSeasonComplete: ActorMethod<[LeagueId, SeasonId], Result>;
+  notifyAppsOfTransfer: ActorMethod<[LeagueId, PlayerId], Result>;
   payWeeklyRewards: ActorMethod<[GameweekNumber], Result>;
   saveBonusSelection: ActorMethod<[SaveBonusDTO], Result>;
   saveTeamSelection: ActorMethod<[SaveTeamDTO], Result>;
