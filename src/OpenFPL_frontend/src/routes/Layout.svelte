@@ -130,12 +130,12 @@
       <main class="page-wrapper">
         <slot />
       </main>
+      <Footer />
     {:else}
       <main class="flex-1">
         <slot />
       </main>
     {/if}
-    <Footer />
     <Toasts />
     {#if showNewUserModal}
       <NewUserModal visible={true} onSignUpComplete={onUserSignUpComplete} onLogout={onLogout} />
