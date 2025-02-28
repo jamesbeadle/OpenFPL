@@ -1,8 +1,8 @@
 <script lang="ts">
     import JunoIcon from "$lib/icons/JunoIcon.svelte";
 </script>
-<footer class="absolute bottom-0 flex flex-row w-full md:w-1/2">
-    <div class="flex flex-row space-x-2 md:w-1/2">
+<footer class="absolute flex flex-row items-center justify-between w-full bottom-2 md:w-1/2">
+    <div class="flex flex-row space-x-2 md:px-2 md:w-1/2">
         <a
         href="https://oc.app/community/uf3iv-naaaa-aaaar-ar3ta-cai/?ref=zv6hh-xaaaa-aaaar-ac35q-cai"
         target="_blank"
