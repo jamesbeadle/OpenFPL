@@ -548,7 +548,7 @@ module {
         profilePictureType = "";
         transfersAvailable = 3;
         monthlyBonusesAvailable = 2;
-        bankQuarterMillions = 1200;
+        bankQuarterMillions = 1400;
         playerIds = [];
         captainId = 0;
         goalGetterGameweek = 0;

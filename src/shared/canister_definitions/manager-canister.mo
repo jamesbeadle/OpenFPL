@@ -2871,7 +2871,7 @@ actor class _ManagerCanister() {
       managerGroup1,
       func(manager : T.Manager) {
         return {
-          bankQuarterMillions = 1200;
+          bankQuarterMillions = 1400;
           braceBonusGameweek = 0;
           canisterId = manager.canisterId;
           captainFantasticGameweek = 0;
@@ -2911,7 +2911,7 @@ actor class _ManagerCanister() {
       managerGroup2,
       func(manager : T.Manager) {
         return {
-          bankQuarterMillions = 1200;
+          bankQuarterMillions = 1400;
           braceBonusGameweek = 0;
           canisterId = manager.canisterId;
           captainFantasticGameweek = 0;
@@ -2951,7 +2951,7 @@ actor class _ManagerCanister() {
       managerGroup3,
       func(manager : T.Manager) {
         return {
-          bankQuarterMillions = 1200;
+          bankQuarterMillions = 1400;
           braceBonusGameweek = 0;
           canisterId = manager.canisterId;
           captainFantasticGameweek = 0;
@@ -2991,7 +2991,7 @@ actor class _ManagerCanister() {
       managerGroup4,
       func(manager : T.Manager) {
         return {
-          bankQuarterMillions = 1200;
+          bankQuarterMillions = 1400;
           braceBonusGameweek = 0;
           canisterId = manager.canisterId;
           captainFantasticGameweek = 0;
@@ -3031,7 +3031,7 @@ actor class _ManagerCanister() {
       managerGroup5,
       func(manager : T.Manager) {
         return {
-          bankQuarterMillions = 1200;
+          bankQuarterMillions = 1400;
           braceBonusGameweek = 0;
           canisterId = manager.canisterId;
           captainFantasticGameweek = 0;
@@ -3071,7 +3071,7 @@ actor class _ManagerCanister() {
       managerGroup6,
       func(manager : T.Manager) {
         return {
-          bankQuarterMillions = 1200;
+          bankQuarterMillions = 1400;
           braceBonusGameweek = 0;
           canisterId = manager.canisterId;
           captainFantasticGameweek = 0;
@@ -3111,7 +3111,7 @@ actor class _ManagerCanister() {
       managerGroup7,
       func(manager : T.Manager) {
         return {
-          bankQuarterMillions = 1200;
+          bankQuarterMillions = 1400;
           braceBonusGameweek = 0;
           canisterId = manager.canisterId;
           captainFantasticGameweek = 0;
@@ -3151,7 +3151,7 @@ actor class _ManagerCanister() {
       managerGroup8,
       func(manager : T.Manager) {
         return {
-          bankQuarterMillions = 1200;
+          bankQuarterMillions = 1400;
           braceBonusGameweek = 0;
           canisterId = manager.canisterId;
           captainFantasticGameweek = 0;
@@ -3191,7 +3191,7 @@ actor class _ManagerCanister() {
       managerGroup9,
       func(manager : T.Manager) {
         return {
-          bankQuarterMillions = 1200;
+          bankQuarterMillions = 1400;
           braceBonusGameweek = 0;
           canisterId = manager.canisterId;
           captainFantasticGameweek = 0;
@@ -3231,7 +3231,7 @@ actor class _ManagerCanister() {
       managerGroup10,
       func(manager : T.Manager) {
         return {
-          bankQuarterMillions = 1200;
+          bankQuarterMillions = 1400;
           braceBonusGameweek = 0;
           canisterId = manager.canisterId;
           captainFantasticGameweek = 0;
@@ -3271,7 +3271,7 @@ actor class _ManagerCanister() {
       managerGroup11,
       func(manager : T.Manager) {
         return {
-          bankQuarterMillions = 1200;
+          bankQuarterMillions = 1400;
           braceBonusGameweek = 0;
           canisterId = manager.canisterId;
           captainFantasticGameweek = 0;
@@ -3311,7 +3311,7 @@ actor class _ManagerCanister() {
       managerGroup12,
       func(manager : T.Manager) {
         return {
-          bankQuarterMillions = 1200;
+          bankQuarterMillions = 1400;
           braceBonusGameweek = 0;
           canisterId = manager.canisterId;
           captainFantasticGameweek = 0;
@@ -3434,7 +3434,7 @@ actor class _ManagerCanister() {
             createDate = manager.createDate;
             transfersAvailable = 3;
             monthlyBonusesAvailable = 2;
-            bankQuarterMillions = 1200;
+            bankQuarterMillions = 1400;
             playerIds = [0,0,0,0,0,0,0,0,0,0,0];
             captainId = 0;
             goalGetterGameweek = 0;
