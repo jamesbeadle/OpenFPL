@@ -3368,7 +3368,143 @@ actor class _ManagerCanister() {
   };
 
   private func postUpgradeCallback() : async () {
-
+    await systemReset();
   };
+
+    public func systemReset() : async (){
+
+      for (managerGroup in Iter.range(0, 11)) {
+
+        let managerBuffer = Buffer.fromArray<T.Manager>([]);
+
+        var managers : [T.Manager] = [];
+
+        let seasonId: FootballTypes.SeasonId = 1;
+
+        switch (managerGroup) {
+          case 0 {
+            managers := managerGroup1;
+          };
+          case 1 {
+            managers := managerGroup2;
+          };
+          case 2 {
+            managers := managerGroup3;
+          };
+          case 3 {
+            managers := managerGroup4;
+          };
+          case 4 {
+            managers := managerGroup5;
+          };
+          case 5 {
+            managers := managerGroup6;
+          };
+          case 6 {
+            managers := managerGroup7;
+          };
+          case 7 {
+            managers := managerGroup8;
+          };
+          case 8 {
+            managers := managerGroup9;
+          };
+          case 9 {
+            managers := managerGroup10;
+          };
+          case 10 {
+            managers := managerGroup11;
+          };
+          case 11 {
+            managers := managerGroup12;
+          };
+          case _ {
+
+          };
+        };
+
+        for (manager in Iter.fromArray(managers)) {
+
+          let updatedManager : T.Manager = {
+
+            principalId = manager.principalId;
+            username = manager.username;
+            termsAccepted = manager.termsAccepted;
+            favouriteClubId = manager.favouriteClubId;
+            createDate = manager.createDate;
+            transfersAvailable = 3;
+            monthlyBonusesAvailable = 2;
+            bankQuarterMillions = 1200;
+            playerIds = [0,0,0,0,0,0,0,0,0,0,0];
+            captainId = 0;
+            goalGetterGameweek = 0;
+            goalGetterPlayerId = 0;
+            passMasterGameweek = 0;
+            passMasterPlayerId = 0;
+            noEntryGameweek = 0;
+            noEntryPlayerId = 0;
+            teamBoostGameweek = 0;
+            teamBoostClubId = 0;
+            safeHandsGameweek = 0;
+            safeHandsPlayerId = 0;
+            captainFantasticGameweek = 0;
+            captainFantasticPlayerId = 0;
+            oneNationGameweek = 0;
+            oneNationCountryId = 0;
+            prospectsGameweek = 0;
+            braceBonusGameweek = 0;
+            hatTrickHeroGameweek = 0;
+            transferWindowGameweek = 0;
+            history = manager.history;
+            profilePicture = manager.profilePicture;
+            profilePictureType = manager.profilePictureType;
+            canisterId = manager.canisterId;
+          };
+          managerBuffer.add(updatedManager);
+        };
+
+        switch (managerGroup) {
+          case 0 {
+            managerGroup1 := Buffer.toArray(managerBuffer);
+          };
+          case 1 {
+            managerGroup2 := Buffer.toArray(managerBuffer);
+          };
+          case 2 {
+            managerGroup3 := Buffer.toArray(managerBuffer);
+          };
+          case 3 {
+            managerGroup4 := Buffer.toArray(managerBuffer);
+          };
+          case 4 {
+            managerGroup5 := Buffer.toArray(managerBuffer);
+          };
+          case 5 {
+            managerGroup6 := Buffer.toArray(managerBuffer);
+          };
+          case 6 {
+            managerGroup7 := Buffer.toArray(managerBuffer);
+          };
+          case 7 {
+            managerGroup8 := Buffer.toArray(managerBuffer);
+          };
+          case 8 {
+            managerGroup9 := Buffer.toArray(managerBuffer);
+          };
+          case 9 {
+            managerGroup10 := Buffer.toArray(managerBuffer);
+          };
+          case 10 {
+            managerGroup11 := Buffer.toArray(managerBuffer);
+          };
+          case 11 {
+            managerGroup12 := Buffer.toArray(managerBuffer);
+          };
+          case _ {
+
+          };
+        };
+      };
+    }
 
 };

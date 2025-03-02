@@ -30,7 +30,7 @@ import PickTeamUtilities "../utils/pick_team_utilities";
 
 module {
 
-  public class UserManager(controllerPrincipalId : Base.PrincipalId, fixturesPerClub : Nat8) {
+  public class UserManager(controllerPrincipalId : Base.PrincipalId) {
 
     private var managerCanisterIds : TrieMap.TrieMap<Base.PrincipalId, Base.CanisterId> = TrieMap.TrieMap<Base.PrincipalId, Base.CanisterId>(Text.equal, Text.hash);
     private var usernames : TrieMap.TrieMap<Base.PrincipalId, Text> = TrieMap.TrieMap<Base.PrincipalId, Text>(Text.equal, Text.hash);
@@ -287,7 +287,7 @@ module {
                 hatTrickHeroGameweek = foundManager.hatTrickHeroGameweek;
                 transferWindowGameweek = foundManager.transferWindowGameweek;
                 canisterId = foundCanisterId;
-                firstGameweek = firstGameweek;
+                firstGameweek = true;
               };
 
               return #ok(pickTeamDTO);

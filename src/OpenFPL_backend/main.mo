@@ -36,7 +36,7 @@ import Queries "../shared/cqrs/queries";
 
 actor Self {
 
-  private let userManager = UserManager.UserManager(Environment.BACKEND_CANISTER_ID, Environment.NUM_OF_GAMEWEEKS);
+  private let userManager = UserManager.UserManager(Environment.BACKEND_CANISTER_ID);
   private let seasonManager = SeasonManager.SeasonManager();
   private let leaderboardManager = LeaderboardManager.LeaderboardManager(Environment.BACKEND_CANISTER_ID);
   private let dataManager = DataManager.DataManager();
@@ -796,11 +796,11 @@ actor Self {
   };
 
   private func postUpgradeCallback() : async () {
+    await updateManagerCanisterWasms();
 
     //await checkCanisterCycles();
 
     //await updateLeaderboardCanisterWasms();
-    //await updateManagerCanisterWasms();
     //await updateAllDataHashes();
 
     //await calculateGWLeaderboard(1,23);
