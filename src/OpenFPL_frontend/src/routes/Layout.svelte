@@ -1,7 +1,6 @@
 <script lang="ts">
 
   import { onMount} from "svelte";
-  import { goto } from "$app/navigation";
   import { fade } from "svelte/transition";
   import { browser } from "$app/environment";
   import { authStore, type AuthStoreData } from "$lib/stores/auth.store";
