@@ -34,7 +34,7 @@ function createManagerStore() {
     captainFantasticGameweek: 0,
     createDate: 0n,
     oneNationGameweek: 0,
-    bankQuarterMillions: 1200,
+    bankQuarterMillions: 1400,
     noEntryPlayerId: 0,
     safeHandsPlayerId: 0,
     history: [],

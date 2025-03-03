@@ -474,14 +474,16 @@ service : {
   getWeeklyLeaderboard: (GetWeeklyLeaderboardDTO) -> (Result_3);
   getWeeklyRewards: (GetWeeklyRewardsDTO) -> (Result_2) query;
   isUsernameValid: (IsUsernameValid) -> (bool) query;
-  notifyAppsOfFixtureFinalised: (SeasonId, GameweekNumber) -> (Result);
-  notifyAppsOfGameweekStarting: (SeasonId, GameweekNumber) -> (Result);
-  notifyAppsOfLoan: (PlayerId) -> (Result);
-  notifyAppsOfLoanExpired: (PlayerId) -> (Result);
-  notifyAppsOfPositionChange: (PlayerId) -> (Result);
-  notifyAppsOfRetirement: (PlayerId) -> (Result);
-  notifyAppsOfSeasonComplete: (SeasonId) -> (Result);
-  notifyAppsOfTransfer: (PlayerId) -> (Result);
+  notifyAppsOfFixtureFinalised: (LeagueId, SeasonId, GameweekNumber) ->
+   (Result);
+  notifyAppsOfGameweekStarting: (LeagueId, SeasonId, GameweekNumber) ->
+   (Result);
+  notifyAppsOfLoan: (LeagueId, PlayerId) -> (Result);
+  notifyAppsOfLoanExpired: (LeagueId, PlayerId) -> (Result);
+  notifyAppsOfPositionChange: (LeagueId, PlayerId) -> (Result);
+  notifyAppsOfRetirement: (LeagueId, PlayerId) -> (Result);
+  notifyAppsOfSeasonComplete: (LeagueId, SeasonId) -> (Result);
+  notifyAppsOfTransfer: (LeagueId, PlayerId) -> (Result);
   payWeeklyRewards: (GameweekNumber) -> (Result);
   saveBonusSelection: (SaveBonusDTO) -> (Result);
   saveTeamSelection: (SaveTeamDTO) -> (Result);

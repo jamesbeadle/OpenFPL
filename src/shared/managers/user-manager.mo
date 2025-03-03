@@ -30,7 +30,7 @@ import PickTeamUtilities "../utils/pick_team_utilities";
 
 module {
 
-  public class UserManager(controllerPrincipalId : Base.PrincipalId, fixturesPerClub : Nat8) {
+  public class UserManager(controllerPrincipalId : Base.PrincipalId) {
 
     private var managerCanisterIds : TrieMap.TrieMap<Base.PrincipalId, Base.CanisterId> = TrieMap.TrieMap<Base.PrincipalId, Base.CanisterId>(Text.equal, Text.hash);
     private var usernames : TrieMap.TrieMap<Base.PrincipalId, Text> = TrieMap.TrieMap<Base.PrincipalId, Text>(Text.equal, Text.hash);
@@ -287,7 +287,7 @@ module {
                 hatTrickHeroGameweek = foundManager.hatTrickHeroGameweek;
                 transferWindowGameweek = foundManager.transferWindowGameweek;
                 canisterId = foundCanisterId;
-                firstGameweek = firstGameweek;
+                firstGameweek = true;
               };
 
               return #ok(pickTeamDTO);
@@ -390,7 +390,17 @@ module {
 
       switch (managerCanisterId) {
         case (null) {
-          return await createNewManager(managerPrincipalId, dto);
+          let result = await createNewManager(managerPrincipalId, dto);
+          switch(result){
+            case (#ok _){
+              totalManagers := totalManagers + 1;
+              managerCanisterIds.put(managerPrincipalId, activeManagerCanisterId);
+              return #ok();
+            };
+            case (#err error){
+              return #err(error);
+            };
+          }
         };
         case (?_) {
           return #err(#AlreadyExists);
@@ -514,6 +524,7 @@ module {
     //Private data modification functions
 
     private func createNewManager(managerPrincipalId : Base.PrincipalId, dto : Commands.CreateManagerDTO) : async Result.Result<(), T.Error> {
+      
       if (activeManagerCanisterId == "") {
         activeManagerCanisterId := await createManagerCanister();
       };
@@ -537,7 +548,7 @@ module {
         profilePictureType = "";
         transfersAvailable = 3;
         monthlyBonusesAvailable = 2;
-        bankQuarterMillions = 1200;
+        bankQuarterMillions = 1400;
         playerIds = [];
         captainId = 0;
         goalGetterGameweek = 0;
@@ -566,13 +577,15 @@ module {
         addNewManager : (manager : T.Manager) -> async Result.Result<(), T.Error>;
       };
 
-      return await new_manager_canister.addNewManager(newManager);
+      let result = await new_manager_canister.addNewManager(newManager);
+
+      return result;
     };
 
     private func updateFantasyTeam(managerCanisterId : Base.CanisterId, managerPrincipalId : Base.PrincipalId, dto : Commands.SaveTeamDTO, seasonId : FootballTypes.SeasonId, allPlayers : [DTOs.PlayerDTO]) : async Result.Result<(), T.Error> {
       let manager_canister = actor (managerCanisterId) : actor {
         getManager : Base.PrincipalId -> async ?T.Manager;
-        updateTeamSelection : (updateManagerDTO : Commands.SaveTeamDTO, transfersAvailable : Nat8, newBankBalance : Nat16) -> async Result.Result<(), T.Error>;
+        updateTeamSelection : (dto : Commands.SaveTeamDTO, managerPrincipalId : Base.PrincipalId, transfersAvailable : Nat8, newBankBalance : Nat16) -> async Result.Result<(), T.Error>;
       };
 
       let manager = await manager_canister.getManager(managerPrincipalId);
@@ -617,6 +630,7 @@ module {
             case (#ok newBankBalance) {
               return await manager_canister.updateTeamSelection(
                 dto,
+                foundManager.principalId,
                 Nat8.fromNat(Nat64.toNat(Nat64.fromIntWrap(transfersAvailable))),
                 newBankBalance,
               );
@@ -735,7 +749,7 @@ module {
     private func createManagerCanister() : async Text {
       Cycles.add<system>(50_000_000_000_000);
       let canister = await ManagerCanister._ManagerCanister();
-      await canister.initialise(controllerPrincipalId, fixturesPerClub);
+      await canister.initialise(controllerPrincipalId);
       let IC : Management.Management = actor (NetworkEnvironmentVariables.Default);
       let principal = ?Principal.fromText(controllerPrincipalId);
       let _ = await CanisterUtilities.updateCanister_(canister, principal, IC);

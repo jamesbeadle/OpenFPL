@@ -131,7 +131,7 @@ async function updateGameweekPlayers() {
         </span>
       </p>
       {/if}
-      <p>Team Value: {($fantasyTeam?.teamValueQuarterMillions!) / 1200}</p>
+      <p>Team Value: {($fantasyTeam?.teamValueQuarterMillions!) / 1400}</p>
       <p>Transfers Available: {$fantasyTeam?.transfersAvailable}</p>
     </div>
     
