@@ -3368,9 +3368,9 @@ actor class _ManagerCanister() {
   };
 
   private func postUpgradeCallback() : async () {
-    await systemReset();
+    //await systemReset();
   };
-
+/*
     public func systemReset() : async (){
 
       for (managerGroup in Iter.range(0, 11)) {
@@ -3506,5 +3506,6 @@ actor class _ManagerCanister() {
         };
       };
     }
+    */
 
 };

@@ -478,9 +478,9 @@ module {
         case (?foundManagerCanisterId) {
 
           let manager_canister = actor (foundManagerCanisterId) : actor {
-            updateProfilePicture : (dto : Commands.UpdateProfilePictureDTO) -> async Result.Result<(), T.Error>;
+            updateProfilePicture : (managerPrincipalId : Base.PrincipalId, dto : Commands.UpdateProfilePictureDTO) -> async Result.Result<(), T.Error>;
           };
-          return await manager_canister.updateProfilePicture(dto);
+          return await manager_canister.updateProfilePicture(managerPrincipalId, dto);
         };
       };
     };
