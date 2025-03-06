@@ -2,33 +2,63 @@
   import { formatE8s } from "$lib/utils/helpers";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import Pagination from "../shared/pagination.svelte";
-  import {type  Writable, writable} from "svelte/store";
+  import {type Writable, writable, get} from "svelte/store";
 
   export let leaderboard: any;
   export let selectedGameweek: Writable<number>;
   export let currentPage: number = 1;
   export let totalPages: number = 0;
   export let onPageChange: (page: number) => void;
+  export let searchQuery: Writable<string>;
 
-  let searchQuery = writable("");
-  
-  $: if ($searchQuery) {
+  let searchInput: string = "";
+
+  function executeSearch() {
+    searchQuery.set(searchInput);
     currentPage = 1;
     onPageChange(1);
   }
+
+  function resetSearch() {
+    searchInput = "";
+    searchQuery.set("");
+    currentPage = 1;
+    onPageChange(1);
+  }
+
+  function handleKeydown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      executeSearch();
+    }
+  }
 </script>
 
-<div class="mb-6">
-  <div class="relative">
-    <input
+<div class="px-4 mb-6">
+  <div class="relative flex gap-2">
+    <div class="relative flex-1">
+      <input
         type="text"
         placeholder="Search by username..."
-        bind:value={$searchQuery}
+        on:keydown={handleKeydown}
+        bind:value={searchInput}
         class="w-full px-4 py-3 text-white transition-colors border border-gray-700 rounded-lg bg-BrandGray focus:outline-none focus:border-BrandGreen"
-    />
-    <svg class="absolute right-4 top-3.5 md:h-5 md:w-5 h-3 w-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-    </svg>
+      />
+      <svg class="absolute right-4 top-3.5 md:h-5 md:w-5 h-3 w-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+    </div>
+    <button
+      on:click={executeSearch}
+      class="px-4 py-2 text-white transition-colors border border-gray-700 rounded-lg bg-BrandGray hover:bg-BrandGrayShade1 focus:outline-none focus:border-BrandGreen"
+    >
+      Search
+    </button>
+    <button
+      on:click={resetSearch}
+      class="px-4 py-2 text-white transition-colors border border-gray-700 rounded-lg bg-BrandGray hover:bg-BrandGrayShade1 focus:outline-none focus:border-BrandGreen"
+    >
+      Reset
+    </button>
   </div>
 </div>
 
