@@ -12,7 +12,7 @@
 <div class="grid grid-cols-2 gap-1">
     <div>
     <label for="filterTeam">Filter by Team:</label>
-    <select id="filterTeam" class="mt-1 block w-full py-2 text-white fpl-dropdown bigger-text" bind:value={$filterTeam}>
+    <select id="filterTeam" class="block w-full py-2 mt-1 text-white fpl-dropdown focus:outline-none bigger-text" bind:value={$filterTeam}>
         <option value={-1}>All</option>
         {#each $clubStore as team}
         <option value={team.id}>{team.friendlyName}</option>
@@ -21,7 +21,7 @@
     </div>
     <div>
     <label for="filterPosition">Filter by Position:</label>
-    <select id="filterPosition" class="mt-1 block w-full py-2 text-white fpl-dropdown" bind:value={$filterPosition}>
+    <select id="filterPosition" class="block w-full py-2 mt-1 text-white fpl-dropdown focus:outline-none" bind:value={$filterPosition}>
         <option value={-1}>All</option>
         <option value={0}>Goalkeepers</option>
         <option value={1}>Defenders</option>
@@ -37,7 +37,7 @@
       <input
         id="minValue"
         type="number"
-        class="mt-1 block w-full p-2 bg-gray-700 text-white fpl-dropdown"
+        class="block w-full p-2 mt-1 text-white bg-gray-700 fpl-dropdown focus:outline-none"
         bind:value={$minValue}
       />
     </div>
@@ -46,7 +46,7 @@
       <input
         id="maxValue"
         type="number"
-        class="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md fpl-dropdown"
+        class="block w-full p-2 mt-1 text-white bg-gray-700 rounded-md fpl-dropdown focus:outline-none focus:border-BrandGreen"
         bind:value={$maxValue}
       />
     </div>
@@ -57,7 +57,7 @@
     <input
       id="filterSurname"
       type="text"
-      class="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md"
+      class="w-full p-2 mt-2 text-white transition-colors border border-gray-700 rounded-lg bg-BrandGray focus:outline-none focus:border-BrandGreen"
       placeholder="Enter"
       bind:value={$filterSurname}
     />

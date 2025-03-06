@@ -22,7 +22,7 @@
 
   onMount(async () => {
     await storeManager.syncStores();
-    $selectedGameweek = $leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek ?? 1;
+    $selectedGameweek = $leagueStore!.unplayedGameweek;
     fixturesWithTeams = getFixturesWithTeams($clubStore, $fixtureStore);
   });
 

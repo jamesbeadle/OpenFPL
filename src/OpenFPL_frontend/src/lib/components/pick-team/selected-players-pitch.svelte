@@ -11,7 +11,7 @@
   import WidgetSpinner from "../shared/widget-spinner.svelte";
   import SponsorshipBoard from "./sponsorship-board.svelte";
   import PitchPlayer from "./pitch-player.svelte";
-    import type { TeamSelectionDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { TeamSelectionDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   export let selectedFormation: Writable<string>;
   export let fantasyTeam: Writable<TeamSelectionDTO | undefined>;
@@ -48,7 +48,7 @@
   }
 </script>
 
-<div class="relative w-full xl:w-1/2 mt-2">
+<div class="relative w-full mt-2">
   <img
     src="/pitch.png"
     alt="pitch"
@@ -57,7 +57,7 @@
     on:load={onPitchLoad}
   />
   {#if canShowOverlay()}
-    <div class="absolute top-0 left-0 right-0 bottom-0">
+    <div class="absolute top-0 bottom-0 left-0 right-0">
       <div class="flex justify-around w-full h-auto">
         <SponsorshipBoard />
         <SponsorshipBoard />
@@ -65,7 +65,7 @@
 
       {#each gridSetup as row, rowIndex}
         <div
-          class="flex justify-around items-center w-full"
+          class="flex items-center justify-around w-full"
           style="height: {rowHeight}px;"
         >
           {#each row as _, colIndex (colIndex)}
@@ -74,7 +74,7 @@
             {@const playerId = playerIds[actualIndex]}
             {@const player = $playerStore.find((p) => p.id === playerId)}
 
-            <div class="flex flex-col justify-center items-center flex-1 player-card">
+            <div class="flex flex-col items-center justify-center flex-1 player-card">
               {#if playerId > 0 && player}
                 {@const team = $clubStore.find((x) => x.id === player.clubId)}
                 <PitchPlayer

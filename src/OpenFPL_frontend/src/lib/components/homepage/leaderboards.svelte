@@ -50,7 +50,7 @@
     await storeManager.syncStores();
     gameweeks = getGameweeks($leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek ?? 1 ) 
     $selectedSeasonId = $leagueStore!.activeSeasonId;
-    $selectedGameweek = $leagueStore!.activeGameweek == 0 ? $leagueStore!.completedGameweek : $leagueStore!.activeGameweek ?? 1;
+    $selectedGameweek = $leagueStore!.completedGameweek;
     $selectedMonth = $leagueStore!.activeMonth ?? 8;
     let firstClubId = $clubStore.sort((a, b) => a.friendlyName.localeCompare(b.friendlyName))[0].id
     $selectedTeamId = $authSignedInStore ? $userGetFavouriteTeam ?? firstClubId : firstClubId;
@@ -101,7 +101,7 @@
       <div class="flex flex-col gap-4 sm:flex-row sm:gap-8">
         <LeaderboardFilter {selectedLeaderboardType} {changeLeaderboardType} />
         {#if $selectedLeaderboardType === 1}
-          <GameweekFilter {selectedGameweek} {changeGameweek} {gameweeks} lastGameweek={$leagueStore!.completedGameweek} />
+          <GameweekFilter {selectedGameweek} {gameweeks} {changeGameweek} lastGameweek={$leagueStore!.completedGameweek} />
         {/if}
         {#if $selectedLeaderboardType === 2}
           <LeaderboardMonthFilter {selectedMonth} {selectedTeamId} {selectedTeamIndex} />
