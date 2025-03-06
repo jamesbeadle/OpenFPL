@@ -155,7 +155,7 @@
   }
 </script>
 
-<div class="bg-panel flex-1 my-4 lg:mb-0">
+<div class="bg-panel">
   {#if selectedBonusId > 0}
     <UseBonusModal
       bind:visible={showModal}
@@ -168,141 +168,91 @@
     />
   {/if}
   <div class="flex flex-col md:flex-row bonus-panel-inner">
-    <h1 class="m-3 md:m-4">Bonuses</h1>
+    <h1 class="m-4 text-lg lg:text-base">Bonuses</h1>
   </div>
-  <div class="flex flex-col xl:flex-row">
-    <div class="hidden md:flex items-center w-full xl:w-1/2">
-      {#each leftPanelBonuses as bonus}
-        <div
-          class="flex items-center w-1/5 bonus-panel-inner m-1 md:m-2 xl:m-1 my-2 md:my-3 lg:my-4 rounded-lg border border-gray-700"
-        >
-          <div class={`flex flex-col justify-center items-center flex-1`}>
-            <Tooltip text={bonus.description}>
-              <img
-                alt={bonus.name}
-                src={bonus.image}
-                class="h-12 m-2 xl:m-1 mt-4 xl:mt-4 md:h-16"
-              />
-            </Tooltip>
-            <div
-              class="mt-1 mb-1 lg:p-2 p-1 lg:px-4 rounded-md flex items-center min-h-[50px] xl:min-h-[60px]"
-            >
-              <p class="text-center smaller-text">
-                {bonus.name}
-              </p>
-            </div>
-
-            {#if bonus.isUsed}
-              <div class="w-full px-1 sm:px-4 mb-2 sm:mb-4 xl:min-h-[40px]">
-                <p class="text-center xl:mt-1 smaller-text">
-                  Used GW {bonus.usedGameweek}
+  
+  <div class="relative mt-2">
+    <div class="overflow-x-auto overflow-y-visible">
+      <div class="items-center hidden gap-2 px-1 pb-3 md:flex whitespace-nowrap">
+        {#each $bonuses as bonus}
+          <div class="w-[160px] mt-2 flex-shrink-0 border border-gray-700 rounded-lg bonus-panel-inner">
+            <div class="flex flex-col items-center w-full">
+              <div class="flex items-center justify-center w-full h-[80px]">
+                  <Tooltip text={bonus.description}>
+                    <img
+                      alt={bonus.name}
+                      src={bonus.image}
+                      class="h-12 md:h-16"
+                    />
+                  </Tooltip>
+              </div>
+              
+              <div class="w-full px-3 min-h-[60px] flex items-center justify-center">
+                <p class="text-sm text-center">
+                  {bonus.name}
                 </p>
               </div>
-            {:else if !$weeklyBonusPlayed}
-              <div class="w-full px-1 sm:px-4 mb-2 sm:mb-4">
-                <button
-                  on:click={() => showBonusModal(bonus.id)}
-                  class="bg-BrandPurple rounded-md w-full py-1 min-h-[40px] smaller-text"
-                  >View</button
-                >
-              </div>
-            {:else}
-              <div class="w-full px-1 sm:px-4 mb-2 sm:mb-4 xl:min-h-[40px]">
-                <p class="text-center xl:mt-1 smaller-text">1 Per Week</p>
-              </div>
-            {/if}
-          </div>
-        </div>
-      {/each}
-    </div>
-    <div class="hidden md:flex items-center w-full xl:w-1/2">
-      {#each rightPanelBonuses as bonus}
-        <div
-          class="flex items-center w-1/5 bonus-panel-inner m-1 my-2 md:m-2 xl:m-1 rounded-lg border border-gray-700"
-        >
-          <div class={`flex flex-col justify-center items-center flex-1`}>
-            <Tooltip text={bonus.description}>
-              <img
-                alt={bonus.name}
-                src={bonus.image}
-                class="h-12 m-2 xl:m-1 mt-4 xl:mt-4 md:h-16"
-              />
-            </Tooltip>
 
-            <div
-              class="mt-1 mb-1 lg:p-2 p-1 lg:px-4 rounded-md flex items-center min-h-[50px] xl:min-h-[60px]"
-            >
-              <p class="text-center smaller-text">
-                {bonus.name}
-              </p>
+              <div class="w-full px-3 pb-3">
+                {#if bonus.isUsed}
+                  <p class="text-sm text-center">
+                    Used GW {bonus.usedGameweek}
+                  </p>
+                {:else if !$weeklyBonusPlayed}
+                  <button
+                    on:click={() => showBonusModal(bonus.id)}
+                    class="w-full py-2 text-sm rounded-md bg-BrandPurple"
+                  >Use</button>
+                {:else}
+                  <p class="text-sm text-center">1 Per Week</p>
+                {/if}
+              </div>
             </div>
-            {#if bonus.isUsed}
-              <div class="w-full px-1 sm:px-4 mb-2 sm:mb-4 xl:min-h-[40px]">
-                <p class="text-center xl:mt-1 smaller-text">
-                  Used GW {bonus.usedGameweek}
-                </p>
-              </div>
-            {:else if !$weeklyBonusPlayed}
-              <div class="w-full px-1 sm:px-4 mb-2 sm:mb-4">
-                <button
-                  on:click={() => showBonusModal(bonus.id)}
-                  class="bg-BrandPurple rounded-md w-full py-1 min-h-[40px] smaller-text"
-                  >Use</button
-                >
-              </div>
-            {:else}
-              <div class="w-full px-1 sm:px-4 mb-2 sm:mb-4 xl:min-h-[40px]">
-                <p class="text-center xl:mt-1 smaller-text">1 Per Week</p>
-              </div>
-            {/if}
           </div>
-        </div>
-      {/each}
+        {/each}
+      </div>
     </div>
+    <div class="absolute top-0 bottom-0 right-0 hidden w-12 pointer-events-none bg-gradient-to-l from-BrandBlack md:block"></div>
   </div>
 
-  <div class="flex md:hidden flex-col md:mx-2">
-    <div class="flex items-center flex-col mt-1 mx-2 mb-1">
-      {#each $bonuses as bonus}
-        <div
-          class="flex flex-row items-center bonus-panel-inner m-1 rounded-lg border border-gray-700 w-full min-h-[50px]"
-        >
-          <div class="w-2/12 flex items-center justify-center">
-            <Tooltip text={bonus.description}>
-              <img
-                alt={bonus.name}
-                src={bonus.image}
-                class="min-w-[30px] max-w-[30px]"
-              />
-            </Tooltip>
-          </div>
-          <div class="w-6/12">
-            <p class="ml-4">
-              {bonus.name}
-            </p>
-          </div>
-          <div class="w-4/12">
-            {#if bonus.isUsed}
-              <div class="w-full px-1">
-                <p class="text-center">
-                  Used GW {bonus.usedGameweek}
-                </p>
-              </div>
-            {:else if !$weeklyBonusPlayed}
-              <div class="w-full px-1 flex justify-center">
-                <button
-                  on:click={() => showBonusModal(bonus.id)}
-                  class="bg-BrandPurple rounded-md py-1 px-2">View</button
-                >
-              </div>
-            {:else}
-              <div class="w-full px-1 flex justify-center">
-                <p class="text-center">1 Per Week</p>
-              </div>
-            {/if}
-          </div>
+  <!-- Mobile view -->
+  <div class="flex flex-col mx-2 mb-3 md:hidden">
+    {#each $bonuses as bonus}
+      <div class="flex flex-row items-center bonus-panel-inner m-1 rounded-lg border border-gray-700 w-full min-h-[50px]">
+        <div class="flex items-center justify-center w-2/12">
+          <Tooltip text={bonus.description}>
+            <img
+              alt={bonus.name}
+              src={bonus.image}
+              class="min-w-[30px] max-w-[30px]"
+            />
+          </Tooltip>
         </div>
-      {/each}
-    </div>
+        <div class="w-6/12">
+          <p class="ml-4">
+            {bonus.name}
+          </p>
+        </div>
+        <div class="w-4/12">
+          {#if bonus.isUsed}
+            <div class="w-full px-1">
+              <p class="text-center">
+                Used GW {bonus.usedGameweek}
+              </p>
+            </div>
+          {:else if !$weeklyBonusPlayed}
+            <div class="flex justify-center w-full px-1">
+              <button
+                on:click={() => showBonusModal(bonus.id)}
+                class="px-2 py-1 rounded-md bg-BrandPurple">View</button>
+            </div>
+          {:else}
+            <div class="flex justify-center w-full px-1">
+              <p class="text-center">1 Per Week</p>
+            </div>
+          {/if}
+        </div>
+      </div>
+    {/each}
   </div>
 </div>

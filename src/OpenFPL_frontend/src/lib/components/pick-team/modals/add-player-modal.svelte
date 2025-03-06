@@ -3,16 +3,18 @@
   import { writable, type Writable } from "svelte/store";
   import { clubStore } from "$lib/stores/club-store";
   import { playerStore } from "$lib/stores/player-store";
+  import { playerEventsStore } from "$lib/stores/player-events-store";
   import { countPlayersByTeam, reasonToDisablePlayer, sortPlayersByClubThenValue } from "$lib/utils/pick-team.helpers";
   import { addTeamDataToPlayers, convertPositionToIndex, normaliseString } from "$lib/utils/helpers";
-  import type { PlayerDTO } from "../../../../../../external_declarations/data_canister/data_canister.did";
+  import type { PlayerDTO, PlayerDetailDTO } from "../../../../../../external_declarations/data_canister/data_canister.did";
+  import type { TeamSelectionDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  
   import Modal from "$lib/components/shared/modal.svelte";
   import WidgetSpinner from "$lib/components/shared/widget-spinner.svelte";
   import AddPlayerModalPagination from "./add-player-modal-pagination.svelte";
   import AddPlayerTableRow from "./add-player-table-row.svelte";
   import AddPlayerFilterRow from "./add-player-filter-row.svelte";
   import AddPlayerTableHaeder from "./add-player-table-haeder.svelte";
-    import type { TeamSelectionDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   export let visible: boolean;
   export let handlePlayerSelection: (player: PlayerDTO) => void;
@@ -27,8 +29,36 @@
   let currentPage = writable(1);
   let filteredPlayers: PlayerDTO[] = [];
   let isLoading = true;
+  let sortField: 'value' | 'points' = 'value';
+  let sortDirection: 'asc' | 'desc' = 'desc';
 
-  $: paginatedPlayers = addTeamDataToPlayers($clubStore, filteredPlayers.slice(($currentPage - 1) * pageSize, $currentPage * pageSize));
+  let playerPoints = new Map<number, number>();
+
+  async function loadPlayerPoints(players: PlayerDTO[]) {
+    for (const player of players) {
+      const details = await playerEventsStore.getPlayerDetails(player.id, 1);
+      if (details) {
+        const points = details.gameweeks.reduce((sum, gameweek) => sum + gameweek.points, 0);
+        playerPoints.set(player.id, points);
+      }
+    }
+    playerPoints = playerPoints;
+  }
+
+  $: paginatedPlayers = addTeamDataToPlayers(
+    $clubStore, 
+    [...filteredPlayers]
+      .sort((a, b) => {
+        const multiplier = sortDirection === 'asc' ? 1 : -1;
+        if (sortField === 'value') {
+          return (a.valueQuarterMillions - b.valueQuarterMillions) * multiplier;
+        }
+        const aPoints = playerPoints.get(a.id) ?? 0;
+        const bPoints = playerPoints.get(b.id) ?? 0;
+        return (aPoints - bPoints) * multiplier;
+      })
+      .slice(($currentPage - 1) * pageSize, $currentPage * pageSize)
+  );
   $: teamPlayerCounts = countPlayersByTeam($playerStore, $fantasyTeam?.playerIds ?? []);
   $: disableReasons = paginatedPlayers.map((player) => reasonToDisablePlayer($fantasyTeam!, $playerStore, player, teamPlayerCounts));
 
@@ -43,11 +73,12 @@
   onMount(async () => {
     resetFilters();
     await filterPlayers();
+    await loadPlayerPoints(filteredPlayers);
     teamPlayerCounts = countPlayersByTeam($playerStore, $fantasyTeam!.playerIds ?? []);
     isLoading = false;
   });
   
-  function filterPlayers() {
+  async function filterPlayers() {
     filteredPlayers = $playerStore.filter((player) => {
       return (
         ($filterTeam === -1 || player.clubId === $filterTeam) &&
@@ -58,6 +89,7 @@
       );
     });
     sortPlayersByClubThenValue(filteredPlayers, $filterTeam);
+    await loadPlayerPoints(filteredPlayers);
   }
 
   function selectPlayer(player: PlayerDTO) {
@@ -78,7 +110,15 @@
     $maxValue = 0;
     $currentPage = 1;
   }
-  
+
+  function toggleSort(field: 'value' | 'points') {
+    if (sortField === field) {
+      sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      sortField = field;
+      sortDirection = 'desc';
+    }
+  }
 </script>
 
 <Modal showModal={visible} onClose={closeModal} title="Select Player">
@@ -87,8 +127,8 @@
   {:else}
     <div class="p-2">
       <AddPlayerFilterRow {filterTeam} {filterPosition} {filterSurname} {maxValue} {minValue} />
-      <div class="overflow-x-auto flex-1">
-        <AddPlayerTableHaeder />
+      <div class="flex-1 overflow-x-auto">
+        <AddPlayerTableHaeder {sortField} {sortDirection} {toggleSort} />
         {#each paginatedPlayers as player, index}
           <AddPlayerTableRow {player} {index} {disableReasons} {selectPlayer} />
         {/each}

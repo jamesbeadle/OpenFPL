@@ -1,13 +1,26 @@
 <script lang="ts">
+    import { onMount } from "svelte";
+    import { getPlayerName } from "$lib/utils/helpers";
+    import type { PlayerDTO, PlayerDetailDTO } from "../../../../../../external_declarations/data_canister/data_canister.did";
+    import { playerEventsStore } from "$lib/stores/player-events-store";
+    
     import AddIcon from "$lib/icons/AddIcon.svelte";
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-    import { getPlayerName } from "$lib/utils/helpers";
-    import type { PlayerDTO } from "../../../../../../external_declarations/data_canister/data_canister.did";
 
     export let player: any;
     export let index: number;
     export let selectPlayer : (player: PlayerDTO) => void;
     export let disableReasons: (string | null)[];
+
+    let playerDetail: PlayerDetailDTO | undefined;
+    let totalPoints = 0;
+
+    onMount(async () => {
+        playerDetail = await playerEventsStore.getPlayerDetails(player.id, 1);
+        if (playerDetail) {
+            totalPoints = playerDetail.gameweeks.reduce((sum, gameweek) => sum + gameweek.points, 0);
+        }
+    });
 </script>
 <div
 class="flex items-center justify-between py-2 border-b border-gray-700 cursor-pointer"
@@ -34,14 +47,14 @@ class="flex items-center justify-between py-2 border-b border-gray-700 cursor-po
 <div class="w-2/12">
   £{(player.valueQuarterMillions / 4).toFixed(2)}m
 </div>
-<div class="w-1/12">{player.totalPoints}</div>
-<div class="w-3/12 flex justify-center items-center">
+<div class="w-2/12">{totalPoints}</div>
+<div class="flex items-center justify-center w-2/12">
   {#if disableReasons[index]}
-    <span class="text-xxs text-center">{disableReasons[index]}</span>
+    <span class="text-center text-xxs">{disableReasons[index]}</span>
   {:else}
     <button
       on:click={() => selectPlayer(player)}
-      class="rounded fpl-button flex items-center"
+      class="flex items-center rounded fpl-button"
     >
       <AddIcon className="w-6 h-6 p-2" />
     </button>
