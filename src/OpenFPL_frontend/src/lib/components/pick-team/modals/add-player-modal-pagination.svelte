@@ -3,15 +3,17 @@
     import type { PlayerDTO } from "../../../../../../external_declarations/data_canister/data_canister.did";
     export let filteredPlayers: PlayerDTO[];
     export let currentPage: Writable<number>;
+    export let onPageChange: () => void;
     const pageSize = 10;
 
     function goToPage(page: number) {
         $currentPage = page;
+        onPageChange();
     }
 
 </script>
 
-<div class="justify-center mt-4 pb-4 overflow-x-auto">
+<div class="justify-center pb-4 mt-4 overflow-x-auto">
     <div class="flex space-x-1 min-w-max">
       {#each Array(Math.ceil(filteredPlayers.length / pageSize)) as _, index}
         <button

@@ -3,10 +3,11 @@
   import { writable, type Writable } from "svelte/store";
   import { clubStore } from "$lib/stores/club-store";
   import { playerStore } from "$lib/stores/player-store";
+  import { leagueStore } from "$lib/stores/league-store";
   import { playerEventsStore } from "$lib/stores/player-events-store";
   import { countPlayersByTeam, reasonToDisablePlayer, sortPlayersByClubThenValue } from "$lib/utils/pick-team.helpers";
   import { addTeamDataToPlayers, convertPositionToIndex, normaliseString } from "$lib/utils/helpers";
-  import type { PlayerDTO, PlayerDetailDTO } from "../../../../../../external_declarations/data_canister/data_canister.did";
+  import type { PlayerDTO } from "../../../../../../external_declarations/data_canister/data_canister.did";
   import type { TeamSelectionDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   
   import Modal from "$lib/components/shared/modal.svelte";
@@ -34,17 +35,6 @@
 
   let playerPoints = new Map<number, number>();
 
-  async function loadPlayerPoints(players: PlayerDTO[]) {
-    for (const player of players) {
-      const details = await playerEventsStore.getPlayerDetails(player.id, 1);
-      if (details) {
-        const points = details.gameweeks.reduce((sum, gameweek) => sum + gameweek.points, 0);
-        playerPoints.set(player.id, points);
-      }
-    }
-    playerPoints = playerPoints;
-  }
-
   $: paginatedPlayers = addTeamDataToPlayers(
     $clubStore, 
     [...filteredPlayers]
@@ -52,10 +42,12 @@
         const multiplier = sortDirection === 'asc' ? 1 : -1;
         if (sortField === 'value') {
           return (a.valueQuarterMillions - b.valueQuarterMillions) * multiplier;
+        } else if (sortField === 'points') {
+          const aPoints = playerPoints.get(a.id) ?? 0;
+          const bPoints = playerPoints.get(b.id) ?? 0;
+          return (aPoints - bPoints) * multiplier;
         }
-        const aPoints = playerPoints.get(a.id) ?? 0;
-        const bPoints = playerPoints.get(b.id) ?? 0;
-        return (aPoints - bPoints) * multiplier;
+        return 0;
       })
       .slice(($currentPage - 1) * pageSize, $currentPage * pageSize)
   );
@@ -73,7 +65,6 @@
   onMount(async () => {
     resetFilters();
     await filterPlayers();
-    await loadPlayerPoints(filteredPlayers);
     teamPlayerCounts = countPlayersByTeam($playerStore, $fantasyTeam!.playerIds ?? []);
     isLoading = false;
   });
@@ -90,6 +81,14 @@
     });
     sortPlayersByClubThenValue(filteredPlayers, $filterTeam);
     await loadPlayerPoints(filteredPlayers);
+  }
+
+  async function loadPlayerPoints(players: PlayerDTO[]) {
+    await playerEventsStore.loadPlayerScoresMap(1, $leagueStore!.unplayedGameweek);
+    for (const player of players) {
+      playerPoints.set(player.id, playerEventsStore.getPlayerScore(player.id));
+    }
+    playerPoints = playerPoints;
   }
 
   function selectPlayer(player: PlayerDTO) {
@@ -133,7 +132,11 @@
           <AddPlayerTableRow {player} {index} {disableReasons} {selectPlayer} />
         {/each}
       </div>
-      <AddPlayerModalPagination {currentPage} {filteredPlayers} />
+      <AddPlayerModalPagination 
+        {currentPage} 
+        {filteredPlayers} 
+        onPageChange={() => loadPlayerPoints(paginatedPlayers)}
+      />
     </div>
   {/if}
 </Modal>

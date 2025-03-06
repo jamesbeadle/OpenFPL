@@ -7,6 +7,7 @@ import type {
   GetPlayerDetailsDTO,
   PlayerDetailDTO,
   LeagueId,
+  PlayerScoreDTO,
 } from "../../../../external_declarations/data_canister/data_canister.did";
 import { toasts } from "$lib/stores/toasts-store";
 
@@ -92,6 +93,29 @@ export class PlayerEventsService {
       toasts.addToast({
         type: "error",
         message: "Error fetching player events.",
+      });
+    }
+  }
+
+  async getPlayerMap(seasonId: number, gameweek: number): Promise<PlayerScoreDTO[] | undefined> {
+    try {
+      const identityActor: any =
+        await ActorFactory.createDataCanisterIdentityActor(
+          authStore,
+          process.env.CANISTER_ID_DATA ?? "",
+      );
+      let dto: GameweekFiltersDTO = {
+        seasonId,
+        gameweek,
+      };
+      const result = await identityActor.getPlayersMap(dto);
+      if (isError(result)) throw new Error("Failed to fetch player map");
+      return result.ok;
+    } catch (error) {
+      console.error("Error fetching player map: ", error);
+      toasts.addToast({
+        type: "error",
+        message: "Error fetching player map.",
       });
     }
   }

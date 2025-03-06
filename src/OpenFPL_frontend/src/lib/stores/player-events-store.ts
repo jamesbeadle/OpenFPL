@@ -9,6 +9,7 @@ import type {
   PlayerDetailDTO,
   LeagueStatus,
   FixtureDTO,
+  PlayerScoreDTO,
 } from "../../../../external_declarations/data_canister/data_canister.did";
 import { PlayerEventsService } from "$lib/services/player-events-service";
 import type { GameweekData } from "$lib/interfaces/GameweekData";
@@ -21,12 +22,29 @@ import { leagueStore } from "./league-store";
 
 function createPlayerEventsStore() {
   const { subscribe, set } = writable<PlayerPointsDTO[]>([]);
+  let playerScoresMap: Map<number, PlayerScoreDTO> = new Map();
 
   async function getPlayerDetails(
     playerId: number,
     seasonId: number,
   ): Promise<PlayerDetailDTO | undefined> {
     return new PlayerEventsService().getPlayerDetails(playerId, seasonId);
+  }
+
+  async function getPlayerMap( seasonId: number, gameweek: number): Promise<PlayerScoreDTO[] | undefined> {
+    return new PlayerEventsService().getPlayerMap(seasonId, gameweek);
+  }
+
+  async function loadPlayerScoresMap(seasonId: number, gameweek: number) {
+    const playerScores = await getPlayerMap(seasonId, gameweek);
+    if (playerScores) {
+      playerScoresMap = new Map(playerScores.map(score => [score.id, score]));
+    }
+    return playerScoresMap;
+  }
+
+  function getPlayerScore(playerId: number): number {
+    return playerScoresMap.get(playerId)?.points ?? 0;
   }
 
   async function getGameweekPlayers(
@@ -136,6 +154,9 @@ function createPlayerEventsStore() {
     getPlayerDetails,
     getGameweekPlayers,
     getPlayerEventsFromBackend,
+    getPlayerMap,
+    loadPlayerScoresMap,
+    getPlayerScore,
   };
 }
 
