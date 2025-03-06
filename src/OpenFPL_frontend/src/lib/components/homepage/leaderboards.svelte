@@ -40,6 +40,7 @@
     $selectedMonth;
     $selectedTeamId;
     currentPage;
+    $searchQuery;
     loadLeaderboardData();
   }
 
@@ -72,7 +73,7 @@
         );
         const rewardsResult = await weeklyLeaderboardStore.getWeeklyRewards($selectedSeasonId, $selectedGameweek);
         if(leaderboard && rewardsResult){
-          leaderboard.entries = mergeLeaderboardWithRewards(leaderboard.entries, rewardsResult ? rewardsResult.rewards : []);
+          leaderboard.entries = mergeLeaderboardWithRewards(leaderboard.entries, rewardsResult.rewards);
         }
         break;
       case 2:
@@ -114,6 +115,6 @@
         {/if}
       </div>
     </div>
-    <LeaderboardTable {leaderboard} onPageChange={handlePageChange} {currentPage} {totalPages} {selectedGameweek} />
+    <LeaderboardTable {leaderboard} {searchQuery} onPageChange={handlePageChange} {currentPage} {totalPages} {selectedGameweek} />
   </div>
 {/if}

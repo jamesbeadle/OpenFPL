@@ -239,6 +239,7 @@ class StoreManager {
               leagueStatus.activeGameweek == 0
                 ? leagueStatus.completedGameweek
                 : leagueStatus.activeGameweek,
+              "",
             );
           if (!updatedWeeklyLeaderboard) {
             return;
