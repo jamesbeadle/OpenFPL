@@ -31,14 +31,17 @@ function createPlayerEventsStore() {
     return new PlayerEventsService().getPlayerDetails(playerId, seasonId);
   }
 
-  async function getPlayerMap( seasonId: number, gameweek: number): Promise<PlayerScoreDTO[] | undefined> {
+  async function getPlayerMap(
+    seasonId: number,
+    gameweek: number,
+  ): Promise<PlayerScoreDTO[] | undefined> {
     return new PlayerEventsService().getPlayerMap(seasonId, gameweek);
   }
 
   async function loadPlayerScoresMap(seasonId: number, gameweek: number) {
     const playerScores = await getPlayerMap(seasonId, gameweek);
     if (playerScores) {
-      playerScoresMap = new Map(playerScores.map(score => [score.id, score]));
+      playerScoresMap = new Map(playerScores.map((score) => [score.id, score]));
     }
     return playerScoresMap;
   }

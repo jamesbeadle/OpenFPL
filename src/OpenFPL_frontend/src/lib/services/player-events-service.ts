@@ -97,13 +97,16 @@ export class PlayerEventsService {
     }
   }
 
-  async getPlayerMap(seasonId: number, gameweek: number): Promise<PlayerScoreDTO[] | undefined> {
+  async getPlayerMap(
+    seasonId: number,
+    gameweek: number,
+  ): Promise<PlayerScoreDTO[] | undefined> {
     try {
       const identityActor: any =
         await ActorFactory.createDataCanisterIdentityActor(
           authStore,
           process.env.CANISTER_ID_DATA ?? "",
-      );
+        );
       let dto: GameweekFiltersDTO = {
         seasonId,
         gameweek,
