@@ -23,13 +23,14 @@ export class WeeklyLeaderboardService {
     offset: number,
     seasonId: number,
     gameweek: number,
+    searchTerm: string,
   ): Promise<WeeklyLeaderboardDTO | undefined> {
     try {
       let dto: GetWeeklyLeaderboardDTO = {
         offset: BigInt(offset),
         seasonId: seasonId,
         limit: BigInt(25),
-        searchTerm: "",
+        searchTerm: searchTerm,
         gameweek: gameweek,
       };
 

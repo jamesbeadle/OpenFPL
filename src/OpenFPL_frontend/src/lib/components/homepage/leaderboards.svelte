@@ -27,6 +27,7 @@
   let selectedMonth = writable(0);
   let selectedTeamId = writable(0);
   let leaderboard: any;
+  let searchQuery = writable("");
 
   $: selectedTeamIndex.set(
     $clubStore.findIndex((team) => team.id === $selectedTeamId)
@@ -63,7 +64,12 @@
     isLoading = true;
     switch ($selectedLeaderboardType) {
       case 1:
-        leaderboard = await weeklyLeaderboardStore.getWeeklyLeaderboard($selectedSeasonId, $selectedGameweek, currentPage);
+        leaderboard = await weeklyLeaderboardStore.getWeeklyLeaderboard(
+          $selectedSeasonId, 
+          $selectedGameweek, 
+          currentPage,
+          $searchQuery
+        );
         const rewardsResult = await weeklyLeaderboardStore.getWeeklyRewards($selectedSeasonId, $selectedGameweek);
         if(leaderboard && rewardsResult){
           leaderboard.entries = mergeLeaderboardWithRewards(leaderboard.entries, rewardsResult ? rewardsResult.rewards : []);
