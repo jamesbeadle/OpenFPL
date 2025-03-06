@@ -1,7 +1,6 @@
 <script lang="ts">
-    import { onMount } from "svelte";
     import { getPlayerName } from "$lib/utils/helpers";
-    import type { PlayerDTO, PlayerDetailDTO } from "../../../../../../external_declarations/data_canister/data_canister.did";
+    import type { PlayerDTO } from "../../../../../../external_declarations/data_canister/data_canister.did";
     import { playerEventsStore } from "$lib/stores/player-events-store";
     
     import AddIcon from "$lib/icons/AddIcon.svelte";
@@ -12,16 +11,9 @@
     export let selectPlayer : (player: PlayerDTO) => void;
     export let disableReasons: (string | null)[];
 
-    let playerDetail: PlayerDetailDTO | undefined;
-    let totalPoints = 0;
-
-    onMount(async () => {
-        playerDetail = await playerEventsStore.getPlayerDetails(player.id, 1);
-        if (playerDetail) {
-            totalPoints = playerDetail.gameweeks.reduce((sum, gameweek) => sum + gameweek.points, 0);
-        }
-    });
+    $: totalPoints = playerEventsStore.getPlayerScore(player.id);
 </script>
+
 <div
 class="flex items-center justify-between py-2 border-b border-gray-700 cursor-pointer"
 >
