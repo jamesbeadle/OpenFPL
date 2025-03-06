@@ -12,13 +12,14 @@ function createWeeklyLeaderboardStore() {
     seasonId: number,
     gameweek: number,
     page: number,
+    searchTerm: string = "",
   ): Promise<WeeklyLeaderboardDTO | undefined> {
     const offset = (page - 1) * 25;
-
     return new WeeklyLeaderboardService().getWeeklyLeaderboard(
       offset,
       seasonId,
       gameweek,
+      searchTerm,
     );
   }
 
