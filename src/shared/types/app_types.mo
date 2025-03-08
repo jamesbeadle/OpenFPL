@@ -24,6 +24,7 @@ module AppTypes {
     #TeamOverspend;
     #TooManyTransfers;
     #InvalidGameweek;
+    #InsufficientFunds;
   };
 
   //Manager types

@@ -259,7 +259,6 @@ module {
   };
 
   public func getTransfersAvailable(manager : T.Manager, updatedPlayerIds : [FootballTypes.PlayerId], allPlayers : [DTOs.PlayerDTO]) : Nat {
-
     let newPlayers = Array.filter<DTOs.PlayerDTO>(
       allPlayers,
       func(player : DTOs.PlayerDTO) : Bool {
@@ -302,8 +301,13 @@ module {
       },
     );
 
-    let transfersAvailable : Nat = Nat8.toNat(manager.transfersAvailable) - Array.size(additions);
-    return transfersAvailable;
+    let transfersUsed = Array.size(additions);
+    let currentTransfers = Nat8.toNat(manager.transfersAvailable);
+    if (transfersUsed > currentTransfers) {
+      return 0;//no transfers available
+    } else {
+      return currentTransfers - transfersUsed;
+    };
   };
 
   public func isGameweekBonusUsed(manager : T.Manager, gameweek : FootballTypes.GameweekNumber) : Bool {
@@ -311,7 +315,6 @@ module {
   };
 
   public func getNewBankBalance(manager : T.Manager, dto : Commands.SaveTeamDTO, allPlayers : [DTOs.PlayerDTO]) : Result.Result<Nat16, T.Error> {
-
     let updatedPlayers = Array.filter<DTOs.PlayerDTO>(
       allPlayers,
       func(player : DTOs.PlayerDTO) : Bool {
@@ -353,9 +356,14 @@ module {
       },
     );
 
-    let spent = Array.foldLeft<DTOs.PlayerDTO, Nat16>(playersAdded, 0, func(sumSoFar, x) = sumSoFar + x.valueQuarterMillions);
+    let spent = Array.foldLeft<DTOs.PlayerDTO, Nat16>(
+      playersAdded,
+      0,
+      func(sumSoFar, x) = sumSoFar + x.valueQuarterMillions,
+    );
+
     var sold : Nat16 = 0;
-    for (i in Iter.range(0, Array.size(playersRemoved) -1)) {
+    for (i in Iter.range(0, Array.size(playersRemoved) - 1)) {
       let foundPlayer = List.find<DTOs.PlayerDTO>(
         List.fromArray(allPlayers),
         func(player : DTOs.PlayerDTO) : Bool {
@@ -370,7 +378,19 @@ module {
       };
     };
 
-    return #ok(manager.bankQuarterMillions + sold - spent);
+    if (spent <= sold) {
+      let gain = sold - spent;
+      let newBalance = manager.bankQuarterMillions + gain;
+      return #ok(newBalance);
+    } else {
+      let netSpend = spent - sold;
+      if (manager.bankQuarterMillions >= netSpend) {
+        let newBalance = manager.bankQuarterMillions - netSpend;
+        return #ok(newBalance);
+      } else {
+        return #err(#InsufficientFunds);
+      };
+    };
   };
 
   public func valueOrDefaultGameweek(value : ?FootballTypes.GameweekNumber, default : FootballTypes.GameweekNumber) : FootballTypes.GameweekNumber {
