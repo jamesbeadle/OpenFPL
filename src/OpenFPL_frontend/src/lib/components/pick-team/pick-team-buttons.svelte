@@ -68,7 +68,7 @@
     if(foundSeason){
       activeSeason = foundSeason.name;
     }
-    activeGameweek = $leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek ?? 1;
+    activeGameweek = $leagueStore!.unplayedGameweek;
 
     const storedViewMode = localStorage.getItem("viewMode");
     if (storedViewMode) {

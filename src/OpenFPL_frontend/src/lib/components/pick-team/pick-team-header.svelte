@@ -28,7 +28,7 @@
     if(foundSeason){
       activeSeason = foundSeason.name;
     }
-    activeGameweek = $leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek;
+    activeGameweek = $leagueStore!.unplayedGameweek;
     if ($fantasyTeam) {
       teamValue.set(updateTeamValue($fantasyTeam));
     } else {
@@ -39,7 +39,7 @@
   });
 
   async function setCountdownTimer() {
-    let gameweekFixtures = $fixtureStore.filter(x => x.gameweek == ($leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek))
+    let gameweekFixtures = $fixtureStore.filter(x => x.gameweek == ($leagueStore!.unplayedGameweek))
     .sort((a, b) => Number(a.kickOff) - Number(b.kickOff));
 
     let earliestFixture = gameweekFixtures[0];
