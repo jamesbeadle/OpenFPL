@@ -646,7 +646,7 @@ module {
     private func useBonus(managerCanisterId : Base.CanisterId, managerPrincipalId : Base.PrincipalId, dto : Commands.SaveBonusDTO, gameweek : FootballTypes.GameweekNumber) : async Result.Result<(), T.Error> {
       let manager_canister = actor (managerCanisterId) : actor {
         getManager : Base.PrincipalId -> async ?T.Manager;
-        useBonus : (updateManagerDTO : Commands.SaveBonusDTO, monthlyBonuses : Nat8) -> async Result.Result<(), T.Error>;
+        useBonus : (dto : Commands.SaveBonusDTO, managerPrincipalId : Base.PrincipalId, monthlyBonuses : Nat8) -> async Result.Result<(), T.Error>;
       };
 
       let manager = await manager_canister.getManager(managerPrincipalId);
@@ -662,15 +662,19 @@ module {
             return #err(#InvalidBonuses);
           };
 
+          /*
+
           if (foundManager.monthlyBonusesAvailable == 0) {
             return #err(#InvalidBonuses);
           };
+
+          */
 
           if (PickTeamUtilities.isGameweekBonusUsed(foundManager, gameweek)) {
             return #err(#InvalidBonuses);
           };
 
-          return await manager_canister.useBonus(dto, foundManager.monthlyBonusesAvailable - 1);
+          return await manager_canister.useBonus(dto, managerPrincipalId, foundManager.monthlyBonusesAvailable - 1);
         };
       };
     };

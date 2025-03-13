@@ -255,7 +255,7 @@ actor class _ManagerCanister() {
     };
   };
 
-  public shared ({ caller }) func useBonus(dto : Commands.SaveBonusDTO, managerPrincipalId : Base.PrincipalId, transfersAvailable : Nat8, monthlyBonuses : Nat8, newBankBalance : Nat16) : async Result.Result<(), T.Error> {
+  public shared ({ caller }) func useBonus(dto : Commands.SaveBonusDTO, managerPrincipalId : Base.PrincipalId, monthlyBonuses : Nat8) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == controllerPrincipalId;
@@ -269,7 +269,7 @@ actor class _ManagerCanister() {
           case 0 {
             for (manager in Iter.fromArray(managerGroup1)) {
               if (manager.principalId == managerPrincipalId) {
-                managerBuffer.add(mergeBonus(dto, manager, transfersAvailable, monthlyBonuses, newBankBalance));
+                managerBuffer.add(mergeBonus(dto, manager, monthlyBonuses));
               } else {
                 managerBuffer.add(manager);
               };
@@ -279,7 +279,7 @@ actor class _ManagerCanister() {
           case 1 {
             for (manager in Iter.fromArray(managerGroup2)) {
               if (manager.principalId == managerPrincipalId) {
-                managerBuffer.add(mergeBonus(dto, manager, transfersAvailable, monthlyBonuses, newBankBalance));
+                managerBuffer.add(mergeBonus(dto, manager, monthlyBonuses));
               } else {
                 managerBuffer.add(manager);
               };
@@ -289,7 +289,7 @@ actor class _ManagerCanister() {
           case 2 {
             for (manager in Iter.fromArray(managerGroup3)) {
               if (manager.principalId == managerPrincipalId) {
-                managerBuffer.add(mergeBonus(dto, manager, transfersAvailable, monthlyBonuses, newBankBalance));
+                managerBuffer.add(mergeBonus(dto, manager, monthlyBonuses));
               } else {
                 managerBuffer.add(manager);
               };
@@ -299,7 +299,7 @@ actor class _ManagerCanister() {
           case 3 {
             for (manager in Iter.fromArray(managerGroup4)) {
               if (manager.principalId == managerPrincipalId) {
-                managerBuffer.add(mergeBonus(dto, manager, transfersAvailable, monthlyBonuses, newBankBalance));
+                managerBuffer.add(mergeBonus(dto, manager, monthlyBonuses));
               } else {
                 managerBuffer.add(manager);
               };
@@ -309,7 +309,7 @@ actor class _ManagerCanister() {
           case 4 {
             for (manager in Iter.fromArray(managerGroup5)) {
               if (manager.principalId == managerPrincipalId) {
-                managerBuffer.add(mergeBonus(dto, manager, transfersAvailable, monthlyBonuses, newBankBalance));
+                managerBuffer.add(mergeBonus(dto, manager, monthlyBonuses));
               } else {
                 managerBuffer.add(manager);
               };
@@ -319,7 +319,7 @@ actor class _ManagerCanister() {
           case 5 {
             for (manager in Iter.fromArray(managerGroup6)) {
               if (manager.principalId == managerPrincipalId) {
-                managerBuffer.add(mergeBonus(dto, manager, transfersAvailable, monthlyBonuses, newBankBalance));
+                managerBuffer.add(mergeBonus(dto, manager, monthlyBonuses));
               } else {
                 managerBuffer.add(manager);
               };
@@ -329,7 +329,7 @@ actor class _ManagerCanister() {
           case 6 {
             for (manager in Iter.fromArray(managerGroup7)) {
               if (manager.principalId == managerPrincipalId) {
-                managerBuffer.add(mergeBonus(dto, manager, transfersAvailable, monthlyBonuses, newBankBalance));
+                managerBuffer.add(mergeBonus(dto, manager, monthlyBonuses));
               } else {
                 managerBuffer.add(manager);
               };
@@ -339,7 +339,7 @@ actor class _ManagerCanister() {
           case 7 {
             for (manager in Iter.fromArray(managerGroup8)) {
               if (manager.principalId == managerPrincipalId) {
-                managerBuffer.add(mergeBonus(dto, manager, transfersAvailable, monthlyBonuses, newBankBalance));
+                managerBuffer.add(mergeBonus(dto, manager, monthlyBonuses));
               } else {
                 managerBuffer.add(manager);
               };
@@ -349,7 +349,7 @@ actor class _ManagerCanister() {
           case 8 {
             for (manager in Iter.fromArray(managerGroup9)) {
               if (manager.principalId == managerPrincipalId) {
-                managerBuffer.add(mergeBonus(dto, manager, transfersAvailable, monthlyBonuses, newBankBalance));
+                managerBuffer.add(mergeBonus(dto, manager, monthlyBonuses));
               } else {
                 managerBuffer.add(manager);
               };
@@ -359,7 +359,7 @@ actor class _ManagerCanister() {
           case 9 {
             for (manager in Iter.fromArray(managerGroup10)) {
               if (manager.principalId == managerPrincipalId) {
-                managerBuffer.add(mergeBonus(dto, manager, transfersAvailable, monthlyBonuses, newBankBalance));
+                managerBuffer.add(mergeBonus(dto, manager, monthlyBonuses));
               } else {
                 managerBuffer.add(manager);
               };
@@ -369,7 +369,7 @@ actor class _ManagerCanister() {
           case 10 {
             for (manager in Iter.fromArray(managerGroup11)) {
               if (manager.principalId == managerPrincipalId) {
-                managerBuffer.add(mergeBonus(dto, manager, transfersAvailable, monthlyBonuses, newBankBalance));
+                managerBuffer.add(mergeBonus(dto, manager, monthlyBonuses));
               } else {
                 managerBuffer.add(manager);
               };
@@ -379,7 +379,7 @@ actor class _ManagerCanister() {
           case 11 {
             for (manager in Iter.fromArray(managerGroup12)) {
               if (manager.principalId == managerPrincipalId) {
-                managerBuffer.add(mergeBonus(dto, manager, transfersAvailable, monthlyBonuses, newBankBalance));
+                managerBuffer.add(mergeBonus(dto, manager, monthlyBonuses));
               } else {
                 managerBuffer.add(manager);
               };
@@ -394,7 +394,7 @@ actor class _ManagerCanister() {
 
   };
 
-  private func mergeBonus(dto : Commands.SaveBonusDTO, manager : T.Manager, transfersAvailable : Nat8, monthlyBonusesAvailable : Nat8, newBankBalance : Nat16) : T.Manager {
+  private func mergeBonus(dto : Commands.SaveBonusDTO, manager : T.Manager, monthlyBonusesAvailable : Nat8) : T.Manager {
 
     var updatedGoalGetterGameweek = PickTeamUtilities.valueOrDefaultGameweek(dto.goalGetterGameweek, manager.goalGetterGameweek);
     var updatedGoalGetterPlayerId = PickTeamUtilities.valueOrDefaultPlayerId(dto.goalGetterPlayerId, manager.goalGetterPlayerId);
@@ -421,9 +421,9 @@ actor class _ManagerCanister() {
       createDate = manager.createDate;
       termsAccepted = manager.termsAccepted;
       profilePicture = manager.profilePicture;
-      transfersAvailable = transfersAvailable;
+      transfersAvailable = manager.transfersAvailable;
       monthlyBonusesAvailable = monthlyBonusesAvailable;
-      bankQuarterMillions = newBankBalance;
+      bankQuarterMillions = manager.bankQuarterMillions;
       playerIds = manager.playerIds;
       captainId = manager.captainId;
       goalGetterGameweek = updatedGoalGetterGameweek;

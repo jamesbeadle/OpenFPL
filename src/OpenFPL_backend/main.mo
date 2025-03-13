@@ -796,7 +796,7 @@ actor Self {
   };
 
   private func postUpgradeCallback() : async () {
-    //await updateManagerCanisterWasms();
+    await updateManagerCanisterWasms();
 
     //await checkCanisterCycles();
 

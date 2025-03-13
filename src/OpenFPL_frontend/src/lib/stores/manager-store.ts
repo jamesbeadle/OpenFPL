@@ -165,6 +165,12 @@ function createManagerStore() {
     transferWindowPlayedInSession: boolean,
   ): Promise<any> {
     try {
+      console.log("saving fantasy team");
+      console.log(userFantasyTeam);
+      console.log(activeGameweek);
+      console.log(bonusUsedInSession);
+      console.log(transferWindowPlayedInSession);
+
       let bonusPlayed = 0;
       let bonusPlayerId = 0;
       let bonusTeamId = 0;
@@ -184,6 +190,8 @@ function createManagerStore() {
         teamName: [userFantasyTeam.username],
       };
 
+      console.log(dto);
+
       let result = await identityActor.saveTeamSelection(dto);
 
       if (bonusUsedInSession) {
@@ -199,6 +207,9 @@ function createManagerStore() {
           bonusCountryId,
           activeGameweek,
         );
+
+        console.log(bonusDto);
+
         let result = await identityActor.saveBonusSelection(bonusDto);
 
         if (isError(result)) {
