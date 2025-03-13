@@ -165,11 +165,6 @@ function createManagerStore() {
     transferWindowPlayedInSession: boolean,
   ): Promise<any> {
     try {
-      console.log("saving fantasy team");
-      console.log(userFantasyTeam);
-      console.log(activeGameweek);
-      console.log(bonusUsedInSession);
-
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
@@ -183,8 +178,6 @@ function createManagerStore() {
           : [userFantasyTeam.transferWindowGameweek],
         teamName: [userFantasyTeam.username],
       };
-
-      console.log(dto);
 
       let result = await identityActor.saveTeamSelection(dto);
 
@@ -224,6 +217,8 @@ function createManagerStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
 
+      console.log("userFantasyTeam", userFantasyTeam);
+
       bonusPlayerId = getBonusPlayerId(userFantasyTeam, activeGameweek);
       bonusTeamId = getBonusTeamId(userFantasyTeam, activeGameweek);
       bonusPlayed = getBonusPlayed(userFantasyTeam, activeGameweek);
@@ -237,7 +232,7 @@ function createManagerStore() {
         activeGameweek,
       );
 
-      console.log(bonusDto);
+      console.log("bonusDto", bonusDto);
 
       let result = await identityActor.saveBonusSelection(bonusDto);
 
@@ -288,6 +283,7 @@ function createManagerStore() {
       braceBonusGameweek: [],
       hatTrickHeroGameweek: [],
     };
+
     switch (bonusPlayed) {
       case 1:
         bonusDto.goalGetterPlayerId = [bonusPlayerId];
@@ -368,7 +364,7 @@ function createManagerStore() {
       bonusPlayed = 8;
     }
 
-    if (userFantasyTeam.hatTrickHeroGameweek === activeGameweek) {
+    if (userFantasyTeam.braceBonusGameweek === activeGameweek) {
       bonusPlayed = 9;
     }
 
