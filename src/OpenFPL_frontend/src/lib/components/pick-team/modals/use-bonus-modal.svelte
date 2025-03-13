@@ -3,14 +3,14 @@
   import { type Writable } from "svelte/store";
   import { clubStore } from "$lib/stores/club-store";
   import { playerStore } from "$lib/stores/player-store";
-
-  import type { Bonus } from "$lib/types/bonus";
   import { BonusType } from "$lib/enums/BonusType";
   import { countryStore } from "$lib/stores/country-store";
   import { convertPositionToIndex } from "$lib/utils/helpers";
-  import Modal from "$lib/components/shared/modal.svelte";
   import { leagueStore } from "$lib/stores/league-store";
+  import type { Bonus } from "$lib/types/bonus";
   import type { TeamSelectionDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+
+  import Modal from "$lib/components/shared/modal.svelte";
     
   export let visible: boolean;
   export let fantasyTeam: Writable<TeamSelectionDTO | undefined>;
@@ -92,7 +92,10 @@
     if($leagueStore!.activeGameweek == 0){
       activeGameweek = $leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek
     }
-    
+    else{
+      activeGameweek = $leagueStore!.activeGameweek;
+    }
+
     $bonuses[bonus.id - 1].usedGameweek = activeGameweek
     switch (bonus.id) {
       case 1:
@@ -233,16 +236,16 @@
 </script>
 
 <Modal showModal={visible} onClose={closeBonusModal} title="Use Bonus">
-  <div class="mx-4 p-4">
-    <img src={bonus.image} class="w-16 mx-auto block" alt={bonus.name} />
+  <div class="p-4 mx-4">
+    <img src={bonus.image} class="block w-16 mx-auto" alt={bonus.name} />
     <div class="mt-3 text-center">
       <h3 class="default-header">{bonus.name}</h3>
-      <div class="mt-2 px-7 py-3">
+      <div class="py-3 mt-2 px-7">
         <p>{bonus.description}</p>
       </div>
 
       {#if bonus.selectionType === BonusType.PLAYER}
-        <div class="w-full border border-gray-500 my-4">
+        <div class="w-full my-4 border border-gray-500">
           <select
             bind:value={selectedPlayerId}
             class="w-full p-2 rounded-md fpl-dropdown"
@@ -256,7 +259,7 @@
       {/if}
 
       {#if bonus.selectionType === BonusType.COUNTRY}
-        <div class="w-full border border-gray-500 my-4">
+        <div class="w-full my-4 border border-gray-500">
           <select
             bind:value={selectedCountry}
             class="w-full p-2 rounded-md fpl-dropdown"
@@ -270,7 +273,7 @@
       {/if}
 
       {#if bonus.selectionType === BonusType.TEAM}
-        <div class="w-full border border-gray-500 my-4">
+        <div class="w-full my-4 border border-gray-500">
           <select
             bind:value={selectedTeamId}
             class="w-full p-2 rounded-md fpl-dropdown"
@@ -284,7 +287,7 @@
       {/if}
 
       <div
-        class="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4 mb-2"
+        class="p-4 mb-2 text-orange-700 bg-orange-100 border-l-4 border-orange-500"
         role="alert"
       >
         <p>Warning</p>
@@ -294,7 +297,7 @@
         </p>
       </div>
 
-      <div class="items-center py-3 flex space-x-4">
+      <div class="flex items-center py-3 space-x-4">
         <button
           class="px-4 py-2 fpl-cancel-btn default-button"
           type="button"

@@ -1,12 +1,12 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { writable, type Writable } from "svelte/store";
-  import type { Bonus } from "$lib/types/bonus";
-  import UseBonusModal from "$lib/components/pick-team/modals/use-bonus-modal.svelte";
-  import Tooltip from "$lib/components/shared/tooltip.svelte";
-  import { BonusType } from "$lib/enums/BonusType";
-  import { leagueStore } from "$lib/stores/league-store";
-  import { bonusPlayedThisWeek, isBonusUsed } from "$lib/utils/pick-team.helpers";
+    import { onMount } from "svelte";
+    import { writable, type Writable } from "svelte/store";
+    import type { Bonus } from "$lib/types/bonus";
+    import UseBonusModal from "$lib/components/pick-team/modals/use-bonus-modal.svelte";
+    import Tooltip from "$lib/components/shared/tooltip.svelte";
+    import { BonusType } from "$lib/enums/BonusType";
+    import { leagueStore } from "$lib/stores/league-store";
+    import { bonusPlayedThisWeek, isBonusUsed } from "$lib/utils/pick-team.helpers";
     import type { TeamSelectionDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   export let fantasyTeam: Writable<TeamSelectionDTO | undefined>;
@@ -137,11 +137,9 @@
     updateBonuses();
     await setWeeklyBonusPlayed();
   });
+  
   let showModal: boolean = false;
   let selectedBonusId = 0;
-
-  $: leftPanelBonuses = $bonuses.slice(0, 5);
-  $: rightPanelBonuses = $bonuses.slice(5, 10);
   let bonusUsedInSession = writable<boolean>(false);
     
 
