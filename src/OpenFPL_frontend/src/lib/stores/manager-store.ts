@@ -192,7 +192,13 @@ function createManagerStore() {
         bonusPlayed = getBonusPlayed(userFantasyTeam, activeGameweek);
         bonusCountryId = getBonusCountryId(userFantasyTeam, activeGameweek);
 
-        let bonusDto: SaveBonusDTO = getBonusDto(bonusPlayerId, bonusTeamId, bonusPlayed, bonusCountryId, activeGameweek);
+        let bonusDto: SaveBonusDTO = getBonusDto(
+          bonusPlayerId,
+          bonusTeamId,
+          bonusPlayed,
+          bonusCountryId,
+          activeGameweek,
+        );
         let result = await identityActor.saveBonusSelection(bonusDto);
 
         if (isError(result)) {
@@ -229,7 +235,6 @@ function createManagerStore() {
     bonusCountryId: number,
     activeGameweek: number,
   ): SaveBonusDTO {
-
     let bonusDto: SaveBonusDTO = {
       goalGetterPlayerId: [],
       goalGetterGameweek: [],
@@ -248,8 +253,7 @@ function createManagerStore() {
       oneNationGameweek: [],
       braceBonusGameweek: [],
       hatTrickHeroGameweek: [],
-      
-    }
+    };
     switch (bonusPlayed) {
       case 1:
         bonusDto.goalGetterPlayerId = [bonusPlayerId];
