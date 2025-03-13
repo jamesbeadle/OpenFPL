@@ -87,14 +87,7 @@
 
   async function handleUseBonus() {
     if (!$fantasyTeam) return;
-    let activeGameweek = 1;
-
-    if($leagueStore!.activeGameweek == 0){
-      activeGameweek = $leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek
-    }
-    else{
-      activeGameweek = $leagueStore!.activeGameweek;
-    }
+    let activeGameweek = $leagueStore!.unplayedGameweek;
 
     $bonuses[bonus.id - 1].usedGameweek = activeGameweek
     switch (bonus.id) {
