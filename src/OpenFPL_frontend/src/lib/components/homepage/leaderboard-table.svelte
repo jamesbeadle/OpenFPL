@@ -79,7 +79,7 @@
             <div class="w-2/12 px-4 xs:w-2/12">{entry.positionText}</div>
             <div class="w-3/12 px-4 xs:w-4/12">{entry.principalId === entry.username ? "Unknown" : entry.username}</div>
             <div class="w-2/12 px-4 xs:w-2/12">{entry.points}</div>
-            <div class="w-2/12 px-4 xs:w-2/12">{entry.reward ? entry.reward == 0 ? 0 : formatE8s(entry.reward) : '-'} FPL</div>
+            <div class="w-2/12 px-4 xs:w-2/12">{entry.reward ? entry.reward == 0 ? 0 : formatE8s(entry.reward) : '-'} ICFC</div>
             <div class="flex items-center justify-center w-3/12 xs:w-1/12 xs:justify-center">
               <span class="flex items-center">
                   <ViewDetailsIcon className="w-5 xs:w-6 lg:w-7" />

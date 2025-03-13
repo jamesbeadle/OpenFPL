@@ -3,6 +3,7 @@
     import { onMount } from "svelte";
     import LoadingDots from "../shared/loading-dots.svelte";
     import WithdrawFplModal from "./withdraw-fpl-modal.svelte";
+    import ICFCCoinIcon from "$lib/icons/ICFCCoinIcon.svelte";
 
     let loadingBalances = true;
     let showWithdrawFPLModal = false;
@@ -32,18 +33,18 @@
 </script>
 <div class="flex flex-wrap">
     <div class="w-full px-2 mb-4">
-      <div class="mt-4 px-2">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div class="flex items-center p-4 rounded-lg shadow-md border border-gray-700">
-            <img src="/FPLCoin.png" alt="FPL" class="h-12 w-12 md:h-9 md:w-9" />
-            <div class="ml-4 md:ml-3 flex flex-col space-y-2">
+      <div class="px-2 mt-4">
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-4">
+          <div class="flex items-center p-4 border border-gray-700 rounded-lg shadow-md">
+            <ICFCCoinIcon className="h-12 w-12 md:h-9 md:w-9" />
+            <div class="flex flex-col ml-4 space-y-2 md:ml-3">
                 {#if loadingBalances}
                   <LoadingDots />
                 {:else}
                   <p>
-                    {fplBalanceFormatted} FPL
+                    {fplBalanceFormatted} ICFC
                   </p>
-                  <button class="text-sm md:text-sm p-1 md:p-2 px-2 md:px-4 rounded fpl-button"
+                  <button class="p-1 px-2 text-sm rounded md:text-sm md:p-2 md:px-4 fpl-button"
                     on:click={loadWithdrawFPLModal}
                   >
                     Withdraw

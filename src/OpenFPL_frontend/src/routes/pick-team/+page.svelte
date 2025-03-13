@@ -69,6 +69,21 @@
 
 </script>
 
+<svelte:head>
+  <link rel="preload" href="/board.png" as="image" />
+  <link rel="preload" href="/brace-bonus.png" as="image" />
+  <link rel="preload" href="/one-nation.png" as="image" />
+  <link rel="preload" href="/hat-trick-hero.png" as="image" />
+  <link rel="preload" href="/pass-master.png" as="image" />
+  <link rel="preload" href="/prospects.png" as="image" />
+  <link rel="preload" href="/safe-hands.png" as="image" />
+  <link rel="preload" href="/team-boost.png" as="image" />
+  <link rel="preload" href="/goal-getter.png" as="image" />
+  <link rel="preload" href="/no-entry.png" as="image" />
+  <link rel="preload" href="/captain-fantastic.png" as="image" />
+  <link rel="preload" href="/pitch.png" as="image" />
+</svelte:head>
+
 <Layout>
   {#if isLoading}
     <WidgetSpinner />
