@@ -692,10 +692,7 @@ export function bonusPlayedThisWeek(
   leagueStatus: LeagueStatus | null,
 ): boolean {
   if (!fantasyTeam || !leagueStatus) return false;
-  let activeGameweek =
-    leagueStatus.activeGameweek == 0
-      ? leagueStatus.unplayedGameweek
-      : leagueStatus.activeGameweek;
+  let activeGameweek = leagueStatus.unplayedGameweek;
   let bonusPlayed: boolean =
     fantasyTeam.goalGetterGameweek == activeGameweek ||
     fantasyTeam.passMasterGameweek == activeGameweek ||

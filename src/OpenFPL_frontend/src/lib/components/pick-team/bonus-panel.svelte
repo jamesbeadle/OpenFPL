@@ -123,6 +123,7 @@
 
   async function setWeeklyBonusPlayed(){
     $weeklyBonusPlayed = bonusPlayedThisWeek($fantasyTeam!, $leagueStore);
+    console.log("Bonus Played: " + $weeklyBonusPlayed);
   }
 
   function updateBonuses() {

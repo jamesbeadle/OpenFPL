@@ -169,12 +169,6 @@ function createManagerStore() {
       console.log(userFantasyTeam);
       console.log(activeGameweek);
       console.log(bonusUsedInSession);
-      console.log(transferWindowPlayedInSession);
-
-      let bonusPlayed = 0;
-      let bonusPlayerId = 0;
-      let bonusTeamId = 0;
-      let bonusCountryId = 0;
 
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
@@ -195,27 +189,7 @@ function createManagerStore() {
       let result = await identityActor.saveTeamSelection(dto);
 
       if (bonusUsedInSession) {
-        bonusPlayerId = getBonusPlayerId(userFantasyTeam, activeGameweek);
-        bonusTeamId = getBonusTeamId(userFantasyTeam, activeGameweek);
-        bonusPlayed = getBonusPlayed(userFantasyTeam, activeGameweek);
-        bonusCountryId = getBonusCountryId(userFantasyTeam, activeGameweek);
-
-        let bonusDto: SaveBonusDTO = getBonusDto(
-          bonusPlayerId,
-          bonusTeamId,
-          bonusPlayed,
-          bonusCountryId,
-          activeGameweek,
-        );
-
-        console.log(bonusDto);
-
-        let result = await identityActor.saveBonusSelection(bonusDto);
-
-        if (isError(result)) {
-          console.error("Error saving bonus", result);
-          return;
-        }
+        await saveBonus(userFantasyTeam, activeGameweek);
       }
 
       if (isError(result)) {
@@ -236,6 +210,55 @@ function createManagerStore() {
         message: "Error saving team.",
         type: "error",
       });
+    }
+  }
+
+  async function saveBonus( userFantasyTeam: TeamSelectionDTO, activeGameweek: number): Promise<any> {
+    let bonusPlayed = 0;
+    let bonusPlayerId = 0;
+    let bonusTeamId = 0;
+    let bonusCountryId = 0;
+    try {
+      const identityActor: any = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
+      );
+
+      bonusPlayerId = getBonusPlayerId(userFantasyTeam, activeGameweek);
+      bonusTeamId = getBonusTeamId(userFantasyTeam, activeGameweek);
+      bonusPlayed = getBonusPlayed(userFantasyTeam, activeGameweek);
+      bonusCountryId = getBonusCountryId(userFantasyTeam, activeGameweek);
+
+      let bonusDto: SaveBonusDTO = getBonusDto(
+        bonusPlayerId,
+        bonusTeamId,
+        bonusPlayed,
+        bonusCountryId,
+        activeGameweek,
+      );
+
+      console.log(bonusDto);
+
+      let result = await identityActor.saveBonusSelection(bonusDto);
+
+      if (isError(result)) {
+        console.error("Error saving bonus", result);
+        return false;
+      }
+
+      toasts.addToast({
+        message: "Bonus saved successully!",
+        type: "success",
+        duration: 2000,
+      });
+      return true;
+    } catch (error) {
+      console.error("Error saving bonus:", error);
+      toasts.addToast({
+        message: "Error saving bonus.",
+        type: "error",
+      });
+      return false;
     }
   }
 
@@ -417,6 +440,7 @@ function createManagerStore() {
     getCurrentTeam,
     saveFantasyTeam,
     getPublicProfile,
+    saveBonus,
   };
 }
 
