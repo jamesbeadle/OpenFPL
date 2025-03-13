@@ -1,13 +1,14 @@
 <script lang="ts">
-    import { onMount } from "svelte";
-    import { writable, type Writable } from "svelte/store";
-    import type { Bonus } from "$lib/types/bonus";
-    import UseBonusModal from "$lib/components/pick-team/modals/use-bonus-modal.svelte";
-    import Tooltip from "$lib/components/shared/tooltip.svelte";
-    import { BonusType } from "$lib/enums/BonusType";
-    import { leagueStore } from "$lib/stores/league-store";
-    import { bonusPlayedThisWeek, isBonusUsed } from "$lib/utils/pick-team.helpers";
-    import type { TeamSelectionDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import { onMount } from "svelte";
+  import { writable, type Writable } from "svelte/store";
+  import { BonusType } from "$lib/enums/BonusType";
+  import { leagueStore } from "$lib/stores/league-store";
+  import { bonusPlayedThisWeek, isBonusUsed } from "$lib/utils/pick-team.helpers";
+  import type { TeamSelectionDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { Bonus } from "$lib/types/bonus";
+
+  import UseBonusModal from "$lib/components/pick-team/modals/use-bonus-modal.svelte";
+  import Tooltip from "$lib/components/shared/tooltip.svelte";
 
   export let fantasyTeam: Writable<TeamSelectionDTO | undefined>;
 
