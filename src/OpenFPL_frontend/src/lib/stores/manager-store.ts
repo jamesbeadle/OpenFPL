@@ -12,6 +12,7 @@ import type {
   ManagerDTO,
   ManagerGameweekDTO,
   SaveTeamDTO,
+  SaveBonusDTO,
   TeamSelectionDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import type { LeagueStatus } from "../../../../external_declarations/data_canister/data_canister.did";
@@ -169,12 +170,6 @@ function createManagerStore() {
       let bonusTeamId = 0;
       let bonusCountryId = 0;
 
-      if (bonusUsedInSession) {
-        bonusPlayerId = getBonusPlayerId(userFantasyTeam, activeGameweek);
-        bonusTeamId = getBonusTeamId(userFantasyTeam, activeGameweek);
-        bonusPlayed = getBonusPlayed(userFantasyTeam, activeGameweek);
-        bonusCountryId = getBonusCountryId(userFantasyTeam, activeGameweek);
-      }
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
@@ -190,6 +185,21 @@ function createManagerStore() {
       };
 
       let result = await identityActor.saveTeamSelection(dto);
+
+      if (bonusUsedInSession) {
+        bonusPlayerId = getBonusPlayerId(userFantasyTeam, activeGameweek);
+        bonusTeamId = getBonusTeamId(userFantasyTeam, activeGameweek);
+        bonusPlayed = getBonusPlayed(userFantasyTeam, activeGameweek);
+        bonusCountryId = getBonusCountryId(userFantasyTeam, activeGameweek);
+
+        let bonusDto: SaveBonusDTO = getBonusDto(bonusPlayerId, bonusTeamId, bonusPlayed, bonusCountryId, activeGameweek);
+        let result = await identityActor.saveBonusSelection(bonusDto);
+
+        if (isError(result)) {
+          console.error("Error saving bonus", result);
+          return;
+        }
+      }
 
       if (isError(result)) {
         console.error("Error saving fantasy team", result);
@@ -210,6 +220,76 @@ function createManagerStore() {
         type: "error",
       });
     }
+  }
+
+  function getBonusDto(
+    bonusPlayerId: number,
+    bonusTeamId: number,
+    bonusPlayed: number,
+    bonusCountryId: number,
+    activeGameweek: number,
+  ): SaveBonusDTO {
+
+    let bonusDto: SaveBonusDTO = {
+      goalGetterPlayerId: [],
+      goalGetterGameweek: [],
+      passMasterPlayerId: [],
+      passMasterGameweek: [],
+      noEntryPlayerId: [],
+      noEntryGameweek: [],
+      teamBoostClubId: [],
+      teamBoostGameweek: [],
+      safeHandsPlayerId: [],
+      safeHandsGameweek: [],
+      captainFantasticPlayerId: [],
+      captainFantasticGameweek: [],
+      prospectsGameweek: [],
+      oneNationCountryId: [],
+      oneNationGameweek: [],
+      braceBonusGameweek: [],
+      hatTrickHeroGameweek: [],
+      
+    }
+    switch (bonusPlayed) {
+      case 1:
+        bonusDto.goalGetterPlayerId = [bonusPlayerId];
+        bonusDto.goalGetterGameweek = [activeGameweek];
+        break;
+      case 2:
+        bonusDto.passMasterPlayerId = [bonusPlayerId];
+        bonusDto.passMasterGameweek = [activeGameweek];
+        break;
+      case 3:
+        bonusDto.noEntryPlayerId = [bonusPlayerId];
+        bonusDto.noEntryGameweek = [activeGameweek];
+        break;
+      case 4:
+        bonusDto.teamBoostClubId = [bonusTeamId];
+        bonusDto.teamBoostGameweek = [activeGameweek];
+        break;
+      case 5:
+        bonusDto.safeHandsPlayerId = [bonusPlayerId];
+        bonusDto.safeHandsGameweek = [activeGameweek];
+        break;
+      case 6:
+        bonusDto.captainFantasticPlayerId = [bonusPlayerId];
+        bonusDto.captainFantasticGameweek = [activeGameweek];
+        break;
+      case 7:
+        bonusDto.prospectsGameweek = [activeGameweek];
+        break;
+      case 8:
+        bonusDto.oneNationCountryId = [bonusCountryId];
+        bonusDto.oneNationGameweek = [activeGameweek];
+        break;
+      case 9:
+        bonusDto.braceBonusGameweek = [activeGameweek];
+        break;
+      case 10:
+        bonusDto.hatTrickHeroGameweek = [activeGameweek];
+        break;
+    }
+    return bonusDto;
   }
 
   function getBonusPlayed(
