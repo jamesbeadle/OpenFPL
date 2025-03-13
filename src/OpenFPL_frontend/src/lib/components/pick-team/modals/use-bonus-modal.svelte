@@ -173,6 +173,7 @@
       case 7:
         fantasyTeam.update((team) => {
           if (!team) return team;
+          bonusUsedInSession.set(true);
           return {
             ...team,
             prospectsGameweek: activeGameweek,
@@ -183,6 +184,7 @@
       case 8:
         fantasyTeam.update((team) => {
           if (!team) return team;
+          bonusUsedInSession.set(true);
           return {
             ...team,
             oneNationCountry: selectedCountry,

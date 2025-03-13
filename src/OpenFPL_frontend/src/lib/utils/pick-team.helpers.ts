@@ -704,6 +704,8 @@ export function bonusPlayedThisWeek(
     fantasyTeam.safeHandsGameweek == activeGameweek ||
     fantasyTeam.captainFantasticGameweek == activeGameweek ||
     fantasyTeam.braceBonusGameweek == activeGameweek ||
+    fantasyTeam.prospectsGameweek == activeGameweek ||
+    fantasyTeam.oneNationGameweek == activeGameweek ||
     fantasyTeam.hatTrickHeroGameweek == activeGameweek;
   return bonusPlayed;
 }
