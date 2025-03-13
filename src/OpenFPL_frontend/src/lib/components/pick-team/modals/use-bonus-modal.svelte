@@ -3,6 +3,7 @@
   import { type Writable } from "svelte/store";
   import { clubStore } from "$lib/stores/club-store";
   import { playerStore } from "$lib/stores/player-store";
+  import { managerStore } from "$lib/stores/manager-store";
   import { BonusType } from "$lib/enums/BonusType";
   import { countryStore } from "$lib/stores/country-store";
   import { convertPositionToIndex } from "$lib/utils/helpers";
@@ -11,6 +12,7 @@
   import type { TeamSelectionDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   import Modal from "$lib/components/shared/modal.svelte";
+  import WidgetSpinner from "$lib/components/shared/widget-spinner.svelte";
     
   export let visible: boolean;
   export let fantasyTeam: Writable<TeamSelectionDTO | undefined>;
@@ -24,6 +26,7 @@
   let selectedTeamId = 0;
   let selectedPlayerId = 0;
   let selectedCountry = "";
+  let isSubmitting = false;
 
   onMount(async () => {
     getUniqueCountries();
@@ -88,129 +91,131 @@
   async function handleUseBonus() {
     if (!$fantasyTeam) return;
     let activeGameweek = $leagueStore!.unplayedGameweek;
+    
+    try{
+      isSubmitting = true;
+      const isSaved = await managerStore.saveBonus($fantasyTeam, activeGameweek);
 
-    $bonuses[bonus.id - 1].usedGameweek = activeGameweek
-    switch (bonus.id) {
-      case 1:
-        fantasyTeam.update((team) => {
-          if (!team) return team;
-          bonusUsedInSession.set(true);
-          return {
-            ...team,
-            goalGetterPlayerId: selectedPlayerId,
-            goalGetterGameweek: activeGameweek,
-            playerIds: team.playerIds || new Uint16Array(11),
-          };
-        });
-        break;
-      case 2:
-        fantasyTeam.update((team) => {
-          if (!team) return team;
-          bonusUsedInSession.set(true);
-          return {
-            ...team,
-            passMasterPlayerId: selectedPlayerId,
-            passMasterGameweek: activeGameweek,
-            playerIds: team.playerIds || new Uint16Array(11),
-          };
-        });
-        break;
-      case 3:
-        fantasyTeam.update((team) => {
-          if (!team) return team;
-          bonusUsedInSession.set(true);
-          return {
-            ...team,
-            noEntryPlayerId: selectedTeamId,
-            noEntryGameweek: activeGameweek,
-            playerIds: team.playerIds || new Uint16Array(11),
-          };
-        });
-        break;
-      case 4:
-        fantasyTeam.update((team) => {
-          if (!team) return team;
-          bonusUsedInSession.set(true);
-          return {
-            ...team,
-            teamBoostClubId: selectedTeamId,
-            teamBoostGameweek: activeGameweek,
-            playerIds: team.playerIds || new Uint16Array(11),
-          };
-        });
-        break;
-      case 5:
-        fantasyTeam.update((team) => {
-          if (!team) return team;
-          bonusUsedInSession.set(true);
-          return {
-            ...team,
-            safeHandsGameweek: activeGameweek,
-            safeHandsPlayerId: getGoalkeeperId(),
-            playerIds: team.playerIds || new Uint16Array(11),
-          };
-        });
-        break;
-      case 6:
-        fantasyTeam.update((team) => {
-          if (!team) return team;
-          bonusUsedInSession.set(true);
-          return {
-            ...team,
-            captainFantasticPlayerId: $fantasyTeam?.captainId ?? 0,
-            captainFantasticGameweek: activeGameweek,
-            playerIds: team.playerIds || new Uint16Array(11),
-          };
-        });
-        break;
-      case 7:
-        fantasyTeam.update((team) => {
-          if (!team) return team;
-          bonusUsedInSession.set(true);
-          return {
-            ...team,
-            prospectsGameweek: activeGameweek,
-            playerIds: team.playerIds || new Uint16Array(11),
-          };
-        });
-        break;
-      case 8:
-        fantasyTeam.update((team) => {
-          if (!team) return team;
-          bonusUsedInSession.set(true);
-          return {
-            ...team,
-            oneNationCountry: selectedCountry,
-            oneNationGameweek: activeGameweek,
-            playerIds: team.playerIds || new Uint16Array(11),
-          };
-        });
-        break;
-      case 9:
-        fantasyTeam.update((team) => {
-          if (!team) return team;
-          bonusUsedInSession.set(true);
-          return {
-            ...team,
-            braceBonusGameweek: activeGameweek,
-            playerIds: team.playerIds || new Uint16Array(11),
-          };
-        });
-        break;
-      case 10:
-        fantasyTeam.update((team) => {
-          if (!team) return team;
-          bonusUsedInSession.set(true);
-          return {
-            ...team,
-            hatTrickHeroGameweek: activeGameweek,
-            playerIds: team.playerIds || new Uint16Array(11),
-          };
-        });
-        break;
+      if (isSaved) {
+        $bonuses[bonus.id - 1].usedGameweek = activeGameweek
+        switch (bonus.id) {
+          case 1:
+            fantasyTeam.update((team) => {
+              if (!team) return team;
+              return {
+                ...team,
+                goalGetterPlayerId: selectedPlayerId,
+                goalGetterGameweek: activeGameweek,
+                playerIds: team.playerIds || new Uint16Array(11),
+              };
+            });
+            break;
+          case 2:
+            fantasyTeam.update((team) => {
+              if (!team) return team;
+              return {
+                ...team,
+                passMasterPlayerId: selectedPlayerId,
+                passMasterGameweek: activeGameweek,
+                playerIds: team.playerIds || new Uint16Array(11),
+              };
+            });
+            break;
+          case 3:
+            fantasyTeam.update((team) => {
+              if (!team) return team;
+              return {
+                ...team,
+                noEntryPlayerId: selectedTeamId,
+                noEntryGameweek: activeGameweek,
+                playerIds: team.playerIds || new Uint16Array(11),
+              };
+            });
+            break;
+          case 4:
+            fantasyTeam.update((team) => {
+              if (!team) return team;
+              return {
+                ...team,
+                teamBoostClubId: selectedTeamId,
+                teamBoostGameweek: activeGameweek,
+                playerIds: team.playerIds || new Uint16Array(11),
+              };
+            });
+            break;
+          case 5:
+            fantasyTeam.update((team) => {
+              if (!team) return team;
+              return {
+                ...team,
+                safeHandsGameweek: activeGameweek,
+                safeHandsPlayerId: getGoalkeeperId(),
+                playerIds: team.playerIds || new Uint16Array(11),
+              };
+            });
+            break;
+          case 6:
+            fantasyTeam.update((team) => {
+              if (!team) return team;
+              return {
+                ...team,
+                captainFantasticPlayerId: $fantasyTeam?.captainId ?? 0,
+                captainFantasticGameweek: activeGameweek,
+                playerIds: team.playerIds || new Uint16Array(11),
+              };
+            });
+            break;
+          case 7:
+            fantasyTeam.update((team) => {
+              if (!team) return team;
+              return {
+                ...team,
+                prospectsGameweek: activeGameweek,
+                playerIds: team.playerIds || new Uint16Array(11),
+              };
+            });
+            break;
+          case 8:
+            fantasyTeam.update((team) => {
+              if (!team) return team;
+              return {
+                ...team,
+                oneNationCountry: selectedCountry,
+                oneNationGameweek: activeGameweek,
+                playerIds: team.playerIds || new Uint16Array(11),
+              };
+            });
+            break;
+          case 9:
+            fantasyTeam.update((team) => {
+              if (!team) return team;
+              return {
+                ...team,
+                braceBonusGameweek: activeGameweek,
+                playerIds: team.playerIds || new Uint16Array(11),
+              };
+            });
+            break;
+          case 10:
+            fantasyTeam.update((team) => {
+              if (!team) return team;
+              return {
+                ...team,
+                hatTrickHeroGameweek: activeGameweek,
+                playerIds: team.playerIds || new Uint16Array(11),
+              };
+            });
+            break;
+        }
+        updateBonuses();
+        bonusUsedInSession.set(true);
+      }
+    } catch (error) {
+      console.error("Error saving bonus:", error);
+    } finally {
+      isSubmitting = false;
+      closeBonusModal();
     }
-    updateBonuses();
-    closeBonusModal();
   }
 
   $: countries = getUniqueCountries();
@@ -224,8 +229,10 @@
         return selectedTeamId !== 0;
       case BonusType.COUNTRY:
         return selectedCountry !== "";
-      default:
+      case BonusType.AUTOMATIC:
         return true;
+      default:
+        return false;
     }
   })();
 </script>
@@ -233,84 +240,91 @@
 <Modal showModal={visible} onClose={closeBonusModal} title="Use Bonus">
   <div class="p-4 mx-4">
     <img src={bonus.image} class="block w-16 mx-auto" alt={bonus.name} />
-    <div class="mt-3 text-center">
-      <h3 class="default-header">{bonus.name}</h3>
-      <div class="py-3 mt-2 px-7">
-        <p>{bonus.description}</p>
-      </div>
-
-      {#if bonus.selectionType === BonusType.PLAYER}
-        <div class="w-full my-4 border border-gray-500">
-          <select
-            bind:value={selectedPlayerId}
-            class="w-full p-2 rounded-md fpl-dropdown"
-          >
-            <option value={0}>Select Player</option>
-            {#each playerOptions as player}
-              <option value={player.id}>{player.name}</option>
-            {/each}
-          </select>
+    {#if !isSubmitting}
+      <div class="mt-3 text-center">
+        <h3 class="default-header">{bonus.name}</h3>
+        <div class="py-3 mt-2 px-7">
+          <p>{bonus.description}</p>
         </div>
-      {/if}
 
-      {#if bonus.selectionType === BonusType.COUNTRY}
-        <div class="w-full my-4 border border-gray-500">
-          <select
-            bind:value={selectedCountry}
-            class="w-full p-2 rounded-md fpl-dropdown"
-          >
-            <option value={0}>Select Country</option>
-            {#each countries as country}
-              <option value={country}>{country}</option>
-            {/each}
-          </select>
-        </div>
-      {/if}
+        {#if bonus.selectionType === BonusType.PLAYER}
+          <div class="w-full my-4 border border-gray-500">
+            <select
+              bind:value={selectedPlayerId}
+              class="w-full p-2 rounded-md fpl-dropdown"
+            >
+              <option value={0}>Select Player</option>
+              {#each playerOptions as player}
+                <option value={player.id}>{player.name}</option>
+              {/each}
+            </select>
+          </div>
+        {/if}
 
-      {#if bonus.selectionType === BonusType.TEAM}
-        <div class="w-full my-4 border border-gray-500">
-          <select
-            bind:value={selectedTeamId}
-            class="w-full p-2 rounded-md fpl-dropdown"
-          >
-            <option value={0}>Select Team</option>
-            {#each teamOptions as team}
-              <option value={team.id}>{team.name}</option>
-            {/each}
-          </select>
-        </div>
-      {/if}
+        {#if bonus.selectionType === BonusType.COUNTRY}
+          <div class="w-full my-4 border border-gray-500">
+            <select
+              bind:value={selectedCountry}
+              class="w-full p-2 rounded-md fpl-dropdown"
+            >
+              <option value={0}>Select Country</option>
+              {#each countries as country}
+                <option value={country}>{country}</option>
+              {/each}
+            </select>
+          </div>
+        {/if}
 
-      <div
-        class="p-4 mb-2 text-orange-700 bg-orange-100 border-l-4 border-orange-500"
-        role="alert"
-      >
-        <p>Warning</p>
-        <p>
-          Your bonus will be activated when you save your team and it cannot be
-          reversed. A bonus can only be played once per season.
-        </p>
-      </div>
+        {#if bonus.selectionType === BonusType.TEAM}
+          <div class="w-full my-4 border border-gray-500">
+            <select
+              bind:value={selectedTeamId}
+              class="w-full p-2 rounded-md fpl-dropdown"
+            >
+              <option value={0}>Select Team</option>
+              {#each teamOptions as team}
+                <option value={team.id}>{team.name}</option>
+              {/each}
+            </select>
+          </div>
+        {/if}
 
-      <div class="flex items-center py-3 space-x-4">
-        <button
-          class="px-4 py-2 fpl-cancel-btn default-button"
-          type="button"
-          on:click={closeBonusModal}
+        <div
+          class="p-4 mb-2 text-orange-700 bg-orange-100 border-l-4 border-orange-500"
+          role="alert"
         >
-          Cancel
-        </button>
-        <button
-          class={`px-4 py-2 ${
-            isUseButtonEnabled ? "bg-BrandPurple" : "bg-gray-500"
-          } 
-          default-button bg-BrandPurple`}
-          on:click={handleUseBonus}
-          disabled={!isUseButtonEnabled}
-        >
-          Use
-        </button>
+          <p>Warning</p>
+          <p>
+            Your bonus will be activated it cannot be reversed, each bonus can only be played once per season.
+            Please confirm
+          </p>
+        </div>
+
+        <div class="flex items-center justify-center py-3 space-x-4">
+          <button
+            class="px-4 py-2 fpl-cancel-btn default-button"
+            type="button"
+            on:click={closeBonusModal}
+          >
+            Cancel
+          </button>
+          <button
+            class={`px-4 py-2 ${
+              isUseButtonEnabled ? "bg-BrandPurple" : "bg-gray-500"
+            } 
+            default-button bg-BrandPurple`}
+            on:click={handleUseBonus}
+            disabled={!isUseButtonEnabled}
+          >
+            Confirm
+          </button>
+        </div>
       </div>
-    </div>
+    {:else}
+      <div class="flex flex-col items-center justify-center">
+        <WidgetSpinner />
+        <p class="text-xl">Saving Bonus...</p>
+      </div>
+    {/if}
   </div>
 </Modal>
