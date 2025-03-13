@@ -69,7 +69,7 @@
   <ContentPanel>
     <HeaderContentPanel header="Team Value" content={`£${$teamValue.toFixed(2)}m`} footer="GBP" loading={false} />
     <div class="vertical-divider"></div>
-    <HeaderContentPanel header="Bank Balance" content={`£${($fantasyTeam ? $fantasyTeam?.bankQuarterMillions  / 4 : 300).toFixed(2)}m`} footer="GBP" loading={false} />
+    <HeaderContentPanel header="Bank Balance" content={`£${($fantasyTeam ? $fantasyTeam?.bankQuarterMillions  / 4 : 350).toFixed(2)}m`} footer="GBP" loading={false} />
     <div class="vertical-divider"></div>
     <HeaderContentPanel header="Transfers" content={`${(!$fantasyTeam || $fantasyTeam.firstGameweek || $fantasyTeam.transferWindowGameweek == $leagueStore!.unplayedGameweek) ? "Unlimited" : $fantasyTeam.transfersAvailable}`} footer="Available" loading={false} />
   </ContentPanel>

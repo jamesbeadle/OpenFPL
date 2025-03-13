@@ -1,13 +1,14 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { writable, type Writable } from "svelte/store";
-  import type { Bonus } from "$lib/types/bonus";
-  import UseBonusModal from "$lib/components/pick-team/modals/use-bonus-modal.svelte";
-  import Tooltip from "$lib/components/shared/tooltip.svelte";
   import { BonusType } from "$lib/enums/BonusType";
   import { leagueStore } from "$lib/stores/league-store";
   import { bonusPlayedThisWeek, isBonusUsed } from "$lib/utils/pick-team.helpers";
-    import type { TeamSelectionDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { TeamSelectionDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { Bonus } from "$lib/types/bonus";
+
+  import UseBonusModal from "$lib/components/pick-team/modals/use-bonus-modal.svelte";
+  import Tooltip from "$lib/components/shared/tooltip.svelte";
 
   export let fantasyTeam: Writable<TeamSelectionDTO | undefined>;
 
@@ -18,7 +19,7 @@
       image: "/goal-getter.png",
       description:
         "Select a player you think will score in a game to receive a X3 mulitplier for each goal scored.",
-      selectionType: 0,
+      selectionType: BonusType.PLAYER,
       isUsed: isBonusUsed($fantasyTeam!, 1),
       usedGameweek: $fantasyTeam?.goalGetterGameweek ?? 0
     },
@@ -28,7 +29,7 @@
       image: "/pass-master.png",
       description:
         "Select a player you think will assist in a game to receive a X3 mulitplier for each assist.",
-      selectionType: 0,
+      selectionType: BonusType.PLAYER,
       isUsed: isBonusUsed($fantasyTeam!, 2),
       usedGameweek: $fantasyTeam?.passMasterGameweek ?? 0
     },
@@ -38,7 +39,7 @@
       image: "/no-entry.png",
       description:
         "Select a goalkeeper or defender you think will keep a clean sheet to receive a X3 multipler on their total score.",
-      selectionType: 0,
+      selectionType: BonusType.PLAYER,
       isUsed: isBonusUsed($fantasyTeam!, 3),
       usedGameweek: $fantasyTeam?.noEntryGameweek ?? 0
     },
@@ -48,7 +49,7 @@
       image: "/team-boost.png",
       description:
         "Receive a X2 multiplier from all players from a single club that are in your team.",
-      selectionType: 1,
+      selectionType: BonusType.TEAM,
       isUsed: isBonusUsed($fantasyTeam!, 4),
       usedGameweek: $fantasyTeam?.teamBoostGameweek ?? 0
     },
@@ -137,11 +138,9 @@
     updateBonuses();
     await setWeeklyBonusPlayed();
   });
+  
   let showModal: boolean = false;
   let selectedBonusId = 0;
-
-  $: leftPanelBonuses = $bonuses.slice(0, 5);
-  $: rightPanelBonuses = $bonuses.slice(5, 10);
   let bonusUsedInSession = writable<boolean>(false);
     
 

@@ -37,8 +37,6 @@ function createUserStore() {
 
   async function createManager(username: string, favouriteClubId: number) {
     try {
-      console.log("saving manager");
-      console.log(process.env.OPENFPL_BACKEND_CANISTER_ID);
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
@@ -47,10 +45,7 @@ function createUserStore() {
         username: username,
         favouriteClubId: [favouriteClubId],
       };
-      console.log("dto");
-      console.log(dto);
       const result = await identityActor.createManager(dto);
-      console.log(result);
       if (isError(result)) {
         console.error("Error creating manager");
         return;
@@ -190,7 +185,6 @@ function createUserStore() {
   async function cacheProfile() {
     let profile = await new UserService().getUser();
     set(profile);
-
     if (profile) {
       await setProfileToDB(profile);
     }
