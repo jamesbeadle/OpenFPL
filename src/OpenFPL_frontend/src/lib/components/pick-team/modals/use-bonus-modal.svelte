@@ -295,8 +295,8 @@
         >
           <p>Warning</p>
           <p>
-            Your bonus will be activated it cannot be reversed, each bonus can only be played once per season.
-            Please confirm
+            Your bonus will be activated and it cannot be reversed, each bonus can only be played once a season.
+            Please confirm to proceed.
           </p>
         </div>
 
