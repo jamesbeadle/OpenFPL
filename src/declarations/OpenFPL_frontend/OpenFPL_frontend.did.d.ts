@@ -69,7 +69,9 @@ export interface HttpResponse {
   streaming_strategy: [] | [StreamingStrategy];
   status_code: number;
 }
-export type InitArgs = {};
+export interface InitArgs {
+  set_permissions: [] | [SetPermissions];
+}
 export type Key = string;
 export interface ListPermitted {
   permission: Permission;

@@ -18,6 +18,7 @@ export const idlFactory = ({ IDL }) => {
     AlreadyExists: IDL.Null,
     CanisterCreateError: IDL.Null,
     Not11Players: IDL.Null,
+    InsufficientFunds: IDL.Null,
   });
   const Result = IDL.Variant({ ok: IDL.Null, err: Error });
   const ClubId = IDL.Nat16;

@@ -52,7 +52,8 @@ export type Error =
   | { SystemOnHold: null }
   | { AlreadyExists: null }
   | { CanisterCreateError: null }
-  | { Not11Players: null };
+  | { Not11Players: null }
+  | { InsufficientFunds: null };
 export type FixtureId = number;
 export type GameweekNumber = number;
 export interface GetCanistersDTO {

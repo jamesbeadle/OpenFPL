@@ -396,6 +396,7 @@ type Error =
    CanisterCreateError;
    DecodeError;
    DuplicatePlayerInTeam;
+   InsufficientFunds;
    InvalidBonuses;
    InvalidData;
    InvalidGameweek;
