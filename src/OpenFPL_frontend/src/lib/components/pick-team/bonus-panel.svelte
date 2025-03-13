@@ -18,7 +18,7 @@
       image: "/goal-getter.png",
       description:
         "Select a player you think will score in a game to receive a X3 mulitplier for each goal scored.",
-      selectionType: 0,
+      selectionType: BonusType.PLAYER,
       isUsed: isBonusUsed($fantasyTeam!, 1),
       usedGameweek: $fantasyTeam?.goalGetterGameweek ?? 0
     },
@@ -28,7 +28,7 @@
       image: "/pass-master.png",
       description:
         "Select a player you think will assist in a game to receive a X3 mulitplier for each assist.",
-      selectionType: 0,
+      selectionType: BonusType.PLAYER,
       isUsed: isBonusUsed($fantasyTeam!, 2),
       usedGameweek: $fantasyTeam?.passMasterGameweek ?? 0
     },
@@ -38,7 +38,7 @@
       image: "/no-entry.png",
       description:
         "Select a goalkeeper or defender you think will keep a clean sheet to receive a X3 multipler on their total score.",
-      selectionType: 0,
+      selectionType: BonusType.PLAYER,
       isUsed: isBonusUsed($fantasyTeam!, 3),
       usedGameweek: $fantasyTeam?.noEntryGameweek ?? 0
     },
@@ -48,7 +48,7 @@
       image: "/team-boost.png",
       description:
         "Receive a X2 multiplier from all players from a single club that are in your team.",
-      selectionType: 1,
+      selectionType: BonusType.TEAM,
       isUsed: isBonusUsed($fantasyTeam!, 4),
       usedGameweek: $fantasyTeam?.teamBoostGameweek ?? 0
     },
