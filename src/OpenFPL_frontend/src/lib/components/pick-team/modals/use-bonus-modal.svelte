@@ -22,10 +22,11 @@
   export let updateBonuses: () => void;
   export let bonuses: Writable<Bonus[]>;
 
-  let countries: string[];
+  let countries: { id: number; name: string }[];
   let selectedTeamId = 0;
   let selectedPlayerId = 0;
   let selectedCountry = "";
+  let selectedCountryId = 0;
   let isSubmitting = false;
 
   onMount(async () => {
@@ -46,9 +47,9 @@
             fantasyTeamPlayerIds.has(player.id) && player.nationality === country.id
         )
       )
-      .map((country) => country.name);
+      .map((country) => ({ id: country.id, name: country.name }));
 
-    return [...new Set(countriesOfFantasyTeamPlayers)].sort();
+    return [...new Set(countriesOfFantasyTeamPlayers)].sort((a, b) => a.name.localeCompare(b.name));
   };
 
 
@@ -91,126 +92,134 @@
   async function handleUseBonus() {
     if (!$fantasyTeam) return;
     let activeGameweek = $leagueStore!.unplayedGameweek;
+    const originalTeam = { ...$fantasyTeam };
+
+    $bonuses[bonus.id - 1].usedGameweek = activeGameweek
+    switch (bonus.id) {
+      case 1:
+        fantasyTeam.update((team) => {
+          if (!team) return team;
+          return {
+            ...team,
+            goalGetterPlayerId: selectedPlayerId,
+            goalGetterGameweek: activeGameweek,
+            playerIds: team.playerIds || new Uint16Array(11),
+          };
+        });
+        break;
+      case 2:
+        fantasyTeam.update((team) => {
+          if (!team) return team;
+          return {
+            ...team,
+            passMasterPlayerId: selectedPlayerId,
+            passMasterGameweek: activeGameweek,
+            playerIds: team.playerIds || new Uint16Array(11),
+          };
+        });
+        break;
+      case 3:
+        fantasyTeam.update((team) => {
+          if (!team) return team;
+          return {
+            ...team,
+            noEntryPlayerId: selectedPlayerId,
+            noEntryGameweek: activeGameweek,
+            playerIds: team.playerIds || new Uint16Array(11),
+          };
+        });
+        break;
+      case 4:
+        fantasyTeam.update((team) => {
+          if (!team) return team;
+          return {
+            ...team,
+            teamBoostClubId: selectedTeamId,
+            teamBoostGameweek: activeGameweek,
+            playerIds: team.playerIds || new Uint16Array(11),
+          };
+        });
+        break;
+      case 5:
+        fantasyTeam.update((team) => {
+          if (!team) return team;
+          return {
+            ...team,
+            safeHandsGameweek: activeGameweek,
+            safeHandsPlayerId: getGoalkeeperId(),
+            playerIds: team.playerIds || new Uint16Array(11),
+          };
+        });
+        break;
+      case 6:
+        fantasyTeam.update((team) => {
+          if (!team) return team;
+          return {
+            ...team,
+            captainFantasticPlayerId: $fantasyTeam?.captainId ?? 0,
+            captainFantasticGameweek: activeGameweek,
+            playerIds: team.playerIds || new Uint16Array(11),
+          };
+        });
+        break;
+      case 7:
+        fantasyTeam.update((team) => {
+          if (!team) return team;
+          return {
+            ...team,
+            prospectsGameweek: activeGameweek,
+            playerIds: team.playerIds || new Uint16Array(11),
+          };
+        });
+        break;
+      case 8:
+        fantasyTeam.update((team) => {
+          if (!team) return team;
+          return {
+            ...team,
+            oneNationCountryId: selectedCountryId,
+            oneNationCountryName: selectedCountry,
+            oneNationGameweek: activeGameweek,
+            playerIds: team.playerIds || new Uint16Array(11),
+          };
+        });
+        break;
+      case 9:
+        fantasyTeam.update((team) => {
+          if (!team) return team;
+          return {
+            ...team,
+            braceBonusGameweek: activeGameweek,
+            playerIds: team.playerIds || new Uint16Array(11),
+          };
+        });
+        break;
+      case 10:
+        fantasyTeam.update((team) => {
+          if (!team) return team;
+          return {
+            ...team,
+            hatTrickHeroGameweek: activeGameweek,
+            playerIds: team.playerIds || new Uint16Array(11),
+          };
+        });
+        break;
+    }
     
     try{
       isSubmitting = true;
       const isSaved = await managerStore.saveBonus($fantasyTeam, activeGameweek);
 
       if (isSaved) {
-        $bonuses[bonus.id - 1].usedGameweek = activeGameweek
-        switch (bonus.id) {
-          case 1:
-            fantasyTeam.update((team) => {
-              if (!team) return team;
-              return {
-                ...team,
-                goalGetterPlayerId: selectedPlayerId,
-                goalGetterGameweek: activeGameweek,
-                playerIds: team.playerIds || new Uint16Array(11),
-              };
-            });
-            break;
-          case 2:
-            fantasyTeam.update((team) => {
-              if (!team) return team;
-              return {
-                ...team,
-                passMasterPlayerId: selectedPlayerId,
-                passMasterGameweek: activeGameweek,
-                playerIds: team.playerIds || new Uint16Array(11),
-              };
-            });
-            break;
-          case 3:
-            fantasyTeam.update((team) => {
-              if (!team) return team;
-              return {
-                ...team,
-                noEntryPlayerId: selectedTeamId,
-                noEntryGameweek: activeGameweek,
-                playerIds: team.playerIds || new Uint16Array(11),
-              };
-            });
-            break;
-          case 4:
-            fantasyTeam.update((team) => {
-              if (!team) return team;
-              return {
-                ...team,
-                teamBoostClubId: selectedTeamId,
-                teamBoostGameweek: activeGameweek,
-                playerIds: team.playerIds || new Uint16Array(11),
-              };
-            });
-            break;
-          case 5:
-            fantasyTeam.update((team) => {
-              if (!team) return team;
-              return {
-                ...team,
-                safeHandsGameweek: activeGameweek,
-                safeHandsPlayerId: getGoalkeeperId(),
-                playerIds: team.playerIds || new Uint16Array(11),
-              };
-            });
-            break;
-          case 6:
-            fantasyTeam.update((team) => {
-              if (!team) return team;
-              return {
-                ...team,
-                captainFantasticPlayerId: $fantasyTeam?.captainId ?? 0,
-                captainFantasticGameweek: activeGameweek,
-                playerIds: team.playerIds || new Uint16Array(11),
-              };
-            });
-            break;
-          case 7:
-            fantasyTeam.update((team) => {
-              if (!team) return team;
-              return {
-                ...team,
-                prospectsGameweek: activeGameweek,
-                playerIds: team.playerIds || new Uint16Array(11),
-              };
-            });
-            break;
-          case 8:
-            fantasyTeam.update((team) => {
-              if (!team) return team;
-              return {
-                ...team,
-                oneNationCountry: selectedCountry,
-                oneNationGameweek: activeGameweek,
-                playerIds: team.playerIds || new Uint16Array(11),
-              };
-            });
-            break;
-          case 9:
-            fantasyTeam.update((team) => {
-              if (!team) return team;
-              return {
-                ...team,
-                braceBonusGameweek: activeGameweek,
-                playerIds: team.playerIds || new Uint16Array(11),
-              };
-            });
-            break;
-          case 10:
-            fantasyTeam.update((team) => {
-              if (!team) return team;
-              return {
-                ...team,
-                hatTrickHeroGameweek: activeGameweek,
-                playerIds: team.playerIds || new Uint16Array(11),
-              };
-            });
-            break;
-        }
         updateBonuses();
         bonusUsedInSession.set(true);
+      } else {
+        fantasyTeam.set(originalTeam);
+        $bonuses[bonus.id - 1].usedGameweek = 0;
       }
     } catch (error) {
+      fantasyTeam.set(originalTeam);
+      $bonuses[bonus.id - 1].usedGameweek = 0;
       console.error("Error saving bonus:", error);
     } finally {
       isSubmitting = false;
@@ -228,7 +237,7 @@
       case BonusType.TEAM:
         return selectedTeamId !== 0;
       case BonusType.COUNTRY:
-        return selectedCountry !== "";
+        return selectedCountryId !== 0;
       case BonusType.AUTOMATIC:
         return true;
       default:
@@ -264,12 +273,20 @@
         {#if bonus.selectionType === BonusType.COUNTRY}
           <div class="w-full my-4 border border-gray-500">
             <select
-              bind:value={selectedCountry}
+              bind:value={selectedCountryId}
+              on:change={(e) => {
+                const selected = countries.find(c => c.id === Number((e.target as HTMLSelectElement).value));
+                if (selected) {
+                  selectedCountry = selected.name;
+                } else {
+                  selectedCountry = "";
+                }
+              }}
               class="w-full p-2 rounded-md fpl-dropdown"
             >
               <option value={0}>Select Country</option>
               {#each countries as country}
-                <option value={country}>{country}</option>
+                <option value={country.id}>{country.name}</option>
               {/each}
             </select>
           </div>

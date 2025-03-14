@@ -124,7 +124,7 @@
     <WidgetSpinner />
   </div>
 {:then _}
-  <div class="flex flex-col justify-between h-screen default-text ${showHeader ? 'bg-background' : ''}">
+  <div class="flex flex-col justify-between h-screen default-text {showHeader ? 'bg-background' : ''}">
     {#if showHeader}
       <Header onLogout={onLogout} />
       <main class="page-wrapper">

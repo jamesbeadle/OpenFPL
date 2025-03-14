@@ -42,15 +42,17 @@
       const amountInE8s = convertToE8s(withdrawalInputAmount);
       await userStore.withdrawFPL(withdrawalAddress, amountInE8s);
       toasts.addToast( { 
-        message: "FPL successfully withdrawn.",
+        message: "ICFC successfully withdrawn.",
         type: "success",
         duration: 2000,
       });
     } catch (error) {
       toasts.addToast({ 
-        message: "Error withdrawing FPL."
+        message: "Error withdrawing ICFC.",
+        type: "error",
+        duration: 4000,
       });
-      console.error("Error withdrawing FPL:", error);
+      console.error("Error withdrawing ICFC:", error);
     } finally {
       cancelModal();
       isLoading = false;
@@ -58,26 +60,26 @@
   }
 </script>
 
-<Modal showModal={visible} onClose={closeModal} title="Withdraw FPL">
+<Modal showModal={visible} onClose={closeModal} title="Withdraw ICFC">
   {#if isLoading}
     <WidgetSpinner />
   {:else}
-    <div class="mx-4 p-4">
+    <div class="p-4 mx-4">
       <form on:submit|preventDefault={withdrawFPL}>
-        <p>FPL Balance: {fplBalanceFormatted}</p>
+        <p>ICFC Balance: {fplBalanceFormatted}</p>
         <div class="mt-4">
           <input type="text" class="fpl-button" placeholder="Withdrawal Address" bind:value={withdrawalAddress} />
         </div>
-        <div class="mt-4 flex items-center">
-          <input type="text" class="fpl-button mr-2" placeholder="Withdrawal Amount" bind:value={withdrawalInputAmount} />
-          <button type="button" class="text-sm md:text-sm p-1 md:p-2 px-2 md:px-4 rounded fpl-button" on:click={setMaxWithdrawAmount}>
+        <div class="flex items-center mt-4">
+          <input type="text" class="mr-2 fpl-button" placeholder="Withdrawal Amount" bind:value={withdrawalInputAmount} />
+          <button type="button" class="p-1 px-2 text-sm rounded md:text-sm md:p-2 md:px-4 fpl-button" on:click={setMaxWithdrawAmount}>
             Max
           </button>
         </div>
         {#if errorMessage}
           <div class="mt-2 text-red-600">{errorMessage}</div>
         {/if}
-        <div class="items-center py-3 flex space-x-4 flex-row">
+        <div class="flex flex-row items-center py-3 space-x-4">
           <button class="px-4 py-2 default-button fpl-cancel-btn" type="button"on:click={cancelModal}>
             Cancel
           </button>
