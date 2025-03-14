@@ -206,7 +206,10 @@ function createManagerStore() {
     }
   }
 
-  async function saveBonus( userFantasyTeam: TeamSelectionDTO, activeGameweek: number): Promise<any> {
+  async function saveBonus(
+    userFantasyTeam: TeamSelectionDTO,
+    activeGameweek: number,
+  ): Promise<any> {
     let bonusPlayed = 0;
     let bonusPlayerId = 0;
     let bonusTeamId = 0;
