@@ -457,9 +457,9 @@ module {
         case (?foundManagerCanisterId) {
 
           let manager_canister = actor (foundManagerCanisterId) : actor {
-            updateFavouriteClub : (dto : Commands.UpdateFavouriteClubDTO) -> async Result.Result<(), T.Error>;
+            updateFavouriteClub : (managerPrincipalId : Base.PrincipalId, dto : Commands.UpdateFavouriteClubDTO) -> async Result.Result<(), T.Error>;
           };
-          return await manager_canister.updateFavouriteClub(dto);
+          return await manager_canister.updateFavouriteClub(managerPrincipalId, dto);
         };
       };
     };

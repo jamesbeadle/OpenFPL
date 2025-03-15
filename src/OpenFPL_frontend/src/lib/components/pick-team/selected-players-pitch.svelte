@@ -34,6 +34,12 @@
     window.addEventListener("resize", measurePitch);
   });
 
+  $: {
+    console.log("Formation:", $selectedFormation);
+    console.log("Player IDs:", $fantasyTeam?.playerIds);
+    console.log("Grid Setup:", gridSetup);
+}
+
   function onPitchLoad() {
     measurePitch();
   }

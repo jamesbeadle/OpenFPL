@@ -698,7 +698,7 @@ actor Self {
   //Season Manager stable variables
   private stable var stable_app_status : T.AppStatus = {
     onHold = false;
-    version = "2.0.0";
+    version = "2.0.1";
   };
 
   private stable var stable_league_gameweek_statuses : [T.LeagueGameweekStatus] = [];
@@ -796,7 +796,7 @@ actor Self {
   };
 
   private func postUpgradeCallback() : async () {
-    await updateManagerCanisterWasms();
+    //await updateManagerCanisterWasms();
 
     //await checkCanisterCycles();
 
