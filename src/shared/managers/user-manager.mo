@@ -433,7 +433,7 @@ module {
       };
     };
 
-    public func updateFavouriteClub(managerPrincipalId : Base.PrincipalId, dto : Commands.UpdateFavouriteClubDTO, activeClubs : [FootballTypes.Club]) : async Result.Result<(), T.Error> {
+    public func updateFavouriteClub(managerPrincipalId : Base.PrincipalId, dto : Commands.UpdateFavouriteClubDTO, activeClubs : [FootballTypes.Club], seasonActive: Bool) : async Result.Result<(), T.Error> {
 
       let isClubActive = Array.find(
         activeClubs,
@@ -449,6 +449,7 @@ module {
         return #err(#InvalidData);
       };
 
+
       let managerCanisterId = managerCanisterIds.get(managerPrincipalId);
       switch (managerCanisterId) {
         case (null) {
@@ -457,9 +458,31 @@ module {
         case (?foundManagerCanisterId) {
 
           let manager_canister = actor (foundManagerCanisterId) : actor {
-            updateFavouriteClub : (managerPrincipalId : Base.PrincipalId, dto : Commands.UpdateFavouriteClubDTO) -> async Result.Result<(), T.Error>;
+              getManager : Base.PrincipalId -> async ?T.Manager;
+              updateFavouriteClub : (managerPrincipalId : Base.PrincipalId, dto : Commands.UpdateFavouriteClubDTO) -> async Result.Result<(), T.Error>;
           };
-          return await manager_canister.updateFavouriteClub(managerPrincipalId, dto);
+
+          let manager = await manager_canister.getManager(managerPrincipalId);
+          if(not seasonActive){
+              return await manager_canister.updateFavouriteClub(managerPrincipalId, dto);
+          };
+          
+          switch(manager){
+            case (?foundManager){
+              switch(foundManager.favouriteClubId){
+                case (?foundClubId){
+                  if(foundClubId > 0){
+                    return #err(#InvalidData);
+                  };
+                };
+                case (null){};
+              };
+              return await manager_canister.updateFavouriteClub(managerPrincipalId, dto);
+            };
+            case (null){
+              return #err(#NotFound);
+            }
+          }
         };
       };
     };
@@ -681,15 +704,15 @@ module {
 
     //Called by application
 
-    public func snapshotFantasyTeams(leagueId : FootballTypes.LeagueId, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth) : async () {
+    public func snapshotFantasyTeams(seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth) : async () {
 
       for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
 
         let manager_canister = actor (canisterId) : actor {
-          snapshotFantasyTeams : (leagueId : FootballTypes.LeagueId, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth) -> async ();
+          snapshotFantasyTeams : (seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth) -> async ();
         };
 
-        await manager_canister.snapshotFantasyTeams(leagueId, seasonId, gameweek, month);
+        await manager_canister.snapshotFantasyTeams(seasonId, gameweek, month);
       };
     };
 

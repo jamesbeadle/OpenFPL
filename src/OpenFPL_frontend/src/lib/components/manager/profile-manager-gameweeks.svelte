@@ -98,7 +98,11 @@
                     />
                   {/if}
                   <p class="truncate min-w-[40px] max-w-[40px] xxs:min-w-[80px] xxs:max-w-[80px] sm:min-w-[160px] sm:max-w-[160px] md:min-w-none md:max-w-none">
-                    {getPlayerName(captain!)}
+                    {#if captain}
+                      {getPlayerName(captain)}
+                    {:else}
+                      Failed to load captain.
+                    {/if}
                   </p>
                 </div>
                 <div class="w-3/12">{@html getBonusIcon(gameweek)}</div>

@@ -265,7 +265,16 @@ actor Self {
     let clubsResult = await dataManager.getVerifiedClubs(Environment.LEAGUE_ID);
     switch (clubsResult) {
       case (#ok clubs) {
-        return await userManager.updateFavouriteClub(principalId, dto, clubs);
+
+        let statusResult = await getLeagueStatus();
+        switch(statusResult){
+          case (#ok status){
+            return await userManager.updateFavouriteClub(principalId, dto, clubs, status.seasonActive);
+          };
+          case (#err error){
+            return #err(error);
+          }
+        };
       };
       case (#err error) {
         return #err(error);
@@ -698,7 +707,7 @@ actor Self {
   //Season Manager stable variables
   private stable var stable_app_status : T.AppStatus = {
     onHold = false;
-    version = "2.0.1";
+    version = "2.1.0";
   };
 
   private stable var stable_league_gameweek_statuses : [T.LeagueGameweekStatus] = [];
@@ -796,6 +805,13 @@ actor Self {
   };
 
   private func postUpgradeCallback() : async () {
+    /*
+    stable_app_status := {
+      onHold = true;
+      version = "2.0.2"
+    };
+    */
+    //seasonManager.setStableAppStatus(stable_app_status);
     //await updateManagerCanisterWasms();
 
     //await checkCanisterCycles();
@@ -808,6 +824,9 @@ actor Self {
     //await manuallyPayRewards(23);
 
     //todo reset data hash categories
+
+
+    //let _ = await notifyAppsOfGameweekStarting(1,1,29);
 
   };
 
@@ -966,7 +985,7 @@ actor Self {
 
   public shared ({ caller }) func notifyAppsOfGameweekStarting(leagueId: FootballTypes.LeagueId, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber) : async Result.Result<(), T.Error> {
     assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
-    let _ = await userManager.snapshotFantasyTeams(Environment.LEAGUE_ID, seasonId, gameweek, 0); //TODO MONTH
+    let _ = await userManager.snapshotFantasyTeams(seasonId, gameweek, 0); //TODO MONTH
     await userManager.resetWeeklyTransfers();
     await seasonManager.updateDataHash("league_status");
     return #ok();

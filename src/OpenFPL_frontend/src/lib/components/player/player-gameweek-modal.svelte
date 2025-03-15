@@ -96,6 +96,7 @@
 </script>
 
 <Modal showModal={visible} onClose={closeDetailModal} title="Player Detail">
+  {#if playerDetail}
   <div class="mx-4 p-4">
     <div class="flex justify-start items-center w-full">
       <svelte:component
@@ -278,4 +279,5 @@
       </div>
     </div>
   </div>
+  {/if}
 </Modal>

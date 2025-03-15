@@ -60,6 +60,7 @@
   <WidgetSpinner />
 {:else}
   {#if playerDetails}
+  {#if showModal}
     <PlayerGameweekModal
       gameweekDetail={playerDetails.gameweeks.find(
         (x) => x.number === $selectedGameweek
@@ -72,6 +73,7 @@
       gameweek={$selectedGameweek}
       seasonName={seasonName};
     />
+    {/if}
   {/if}
   <div class="flex flex-col">
     <div class="flex-1 overflow-x-auto">
