@@ -255,7 +255,10 @@ module {
 
               switch (currentManagerSeason) {
                 case (?foundSeason) {
-                  firstGameweek := List.size(foundSeason.gameweeks) == 0 or not hasPlayersInTeam;
+                  let validGameweeks = List.filter<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(entry: T.FantasyTeamSnapshot){
+                    entry.gameweek > 28; //Update next season
+                  });
+                  firstGameweek := List.size(validGameweeks) == 0 or not hasPlayersInTeam; 
                 };
                 case (null) {};
               };
@@ -287,7 +290,7 @@ module {
                 hatTrickHeroGameweek = foundManager.hatTrickHeroGameweek;
                 transferWindowGameweek = foundManager.transferWindowGameweek;
                 canisterId = foundCanisterId;
-                firstGameweek = true;
+                firstGameweek = firstGameweek;
               };
 
               return #ok(pickTeamDTO);

@@ -47,5 +47,5 @@
 </div>
 <div class="vertical-divider"></div>
 <div class="flex-grow">
-    <HeaderContentPanel header="Weekly Prize Pool" content={weeklyPrizePool} footer="$FPL" loading={false} />
+    <HeaderContentPanel header="Weekly Prize Pool" content={weeklyPrizePool} footer="$ICFC" loading={false} />
 </div>

@@ -65,7 +65,7 @@ actor Self {
   };
 
   public shared query ({ caller }) func getPlayersSnapshot(dto : Queries.GetSnapshotPlayersDTO) : async [DTOs.PlayerDTO] {
-    assert isManagerCanister(Principal.toText(caller));
+    assert not Principal.isAnonymous(caller);
     return seasonManager.getPlayersSnapshot(dto);
   };
 
@@ -805,19 +805,32 @@ actor Self {
   };
 
   private func postUpgradeCallback() : async () {
+    leaderboardManager.setStableActiveRewardRates(
+      {
+        seasonId = 1;
+        startDate = Time.now();
+        allTimeMonthlyHighScoreRewardRate = 0;
+        allTimeSeasonHighScoreRewardRate = 0;
+        allTimeWeeklyHighScoreRewardRate = 0;
+        monthlyLeaderboardRewardRate = 0;
+        mostValuableTeamRewardRate = 1_000_000_000_000;
+        highestScoringMatchRewardRate = 1_500_000_000_000;
+        seasonLeaderboardRewardRate = 2_500_000_000_000;
+        weeklyLeaderboardRewardRate = 5_000_000_000_000;
+      });
+    await updateAllDataHashes();
+    //await updateManagerCanisterWasms();
     /*
     stable_app_status := {
-      onHold = true;
+      onHold = false;
       version = "2.0.2"
     };
+    seasonManager.setStableAppStatus(stable_app_status);
     */
-    //seasonManager.setStableAppStatus(stable_app_status);
-    //await updateManagerCanisterWasms();
 
     //await checkCanisterCycles();
 
     //await updateLeaderboardCanisterWasms();
-    //await updateAllDataHashes();
 
     //await calculateGWLeaderboard(1,23);
     //await calculateGWRewards(23);
@@ -827,6 +840,7 @@ actor Self {
 
 
     //let _ = await notifyAppsOfGameweekStarting(1,1,29);
+    
 
   };
 
@@ -985,6 +999,20 @@ actor Self {
 
   public shared ({ caller }) func notifyAppsOfGameweekStarting(leagueId: FootballTypes.LeagueId, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber) : async Result.Result<(), T.Error> {
     assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
+
+    let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
+      getPlayers : shared query (leagueId : FootballTypes.LeagueId) -> async Result.Result<[DTOs.PlayerDTO], T.Error>;
+    };
+
+    let playersResult = await data_canister.getPlayers(Environment.LEAGUE_ID);
+
+    switch(playersResult){
+      case (#ok players){
+        seasonManager.storePlayersSnapshot(seasonId, gameweek, players);
+      };
+      case (#err _){}
+    };
+
     let _ = await userManager.snapshotFantasyTeams(seasonId, gameweek, 0); //TODO MONTH
     await userManager.resetWeeklyTransfers();
     await seasonManager.updateDataHash("league_status");
