@@ -825,19 +825,21 @@ actor Self {
   };
 
   private func postUpgradeCallback() : async () {
-    leaderboardManager.setStableActiveRewardRates({
-      seasonId = 1;
-      startDate = Time.now();
-      allTimeMonthlyHighScoreRewardRate = 0;
-      allTimeSeasonHighScoreRewardRate = 0;
-      allTimeWeeklyHighScoreRewardRate = 0;
-      monthlyLeaderboardRewardRate = 0;
-      mostValuableTeamRewardRate = 1_000_000_000_000;
-      highestScoringMatchRewardRate = 1_500_000_000_000;
-      seasonLeaderboardRewardRate = 2_500_000_000_000;
-      weeklyLeaderboardRewardRate = 5_000_000_000_000;
-    });
+    leaderboardManager.setStableActiveRewardRates(
+      {
+        seasonId = 1;
+        startDate = Time.now();
+        allTimeMonthlyHighScoreRewardRate = 0;
+        allTimeSeasonHighScoreRewardRate = 0;
+        allTimeWeeklyHighScoreRewardRate = 0;
+        monthlyLeaderboardRewardRate = 0;
+        mostValuableTeamRewardRate = 1_000_000_000_000;
+        highestScoringMatchRewardRate = 1_500_000_000_000;
+        seasonLeaderboardRewardRate = 2_500_000_000_000;
+        weeklyLeaderboardRewardRate = 5_000_000_000_000;
+      });
     await updateAllDataHashes();
+    */
     //await updateManagerCanisterWasms();
     /*
     stable_app_status := {
@@ -851,7 +853,7 @@ actor Self {
 
     //await updateLeaderboardCanisterWasms();
 
-    //await calculateGWLeaderboard(1,23);
+    //await calculateGWLeaderboard(1,29);
     //await calculateGWRewards(23);
     //await manuallyPayRewards(23);
 

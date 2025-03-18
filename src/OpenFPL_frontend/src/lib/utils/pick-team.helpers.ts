@@ -2,6 +2,7 @@ import type { FormationDetails } from "$lib/interfaces/FormationDetails";
 import type { GameweekData } from "$lib/interfaces/GameweekData";
 import type {
   AppStatusDTO,
+  GameweekNumber,
   ManagerGameweekDTO,
   PlayerDTO,
   TeamSelectionDTO,
@@ -685,6 +686,41 @@ export function isBonusUsed(
     default:
       return false;
   }
+}
+
+export function getBonusUsed(
+  dto: ManagerGameweekDTO,
+  gameweek: GameweekNumber,
+): string {
+  if (dto.goalGetterGameweek == gameweek) {
+    return "Goal Getter";
+  }
+  if (dto.passMasterGameweek == gameweek) {
+    return "Pass Master";
+  }
+  if (dto.noEntryGameweek == gameweek) {
+    return "No Entry";
+  }
+  if (dto.captainFantasticGameweek == gameweek) {
+    return "Captain Fantastic";
+  }
+  if (dto.safeHandsGameweek == gameweek) {
+    return "Safe Hands";
+  }
+  if (dto.prospectsGameweek == gameweek) {
+    return "Prospects";
+  }
+  if (dto.oneNationGameweek == gameweek) {
+    return "One Nation";
+  }
+  if (dto.braceBonusGameweek == gameweek) {
+    return "Brace Bonus";
+  }
+  if (dto.hatTrickHeroGameweek == gameweek) {
+    return "Hat Trick Hero";
+  }
+
+  return "Not Played";
 }
 
 export function bonusPlayedThisWeek(

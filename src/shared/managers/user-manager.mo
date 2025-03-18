@@ -792,7 +792,7 @@ module {
             return #err(#InvalidBonuses);
           };
 
-          return await manager_canister.useBonus(dto, managerPrincipalId, foundManager.monthlyBonusesAvailable - 1);
+          return await manager_canister.useBonus(dto, managerPrincipalId, 2);
         };
       };
     };
