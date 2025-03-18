@@ -39,10 +39,11 @@ module {
     private var totalManagers : Nat = 0;
     private var activeManagerCanisterId : Base.CanisterId = "";
 
+    private var userICFCProfiles : TrieMap.TrieMap<Base.PrincipalId, T.ICFCProfile> = TrieMap.TrieMap<Base.PrincipalId, T.ICFCProfile>(Text.equal, Text.hash);
+
     //Getters
 
     public func getProfile(managerPrincipalId : Base.PrincipalId) : async Result.Result<DTOs.ProfileDTO, T.Error> {
-
       let userManagerCanisterId = managerCanisterIds.get(managerPrincipalId);
 
       switch (userManagerCanisterId) {
@@ -74,6 +75,44 @@ module {
         };
         case (null) {
           return #err(#NotFound);
+        };
+      };
+    };
+
+    public func getUserICFCProfileStatus (managerPrincipalId : Base.PrincipalId) : async Result.Result<T.ICFCLinkStatus, T.Error> {
+      let icfcProfile : ?T.ICFCProfile = userICFCProfiles.get(managerPrincipalId);
+
+      switch (icfcProfile) {
+        case (null) {
+          return #err(#NotFound);
+        };
+        case (?foundICFCProfile) {
+          return #ok(foundICFCProfile.linkStatus);
+        };
+      };
+    };
+
+    public func getUserICFCMembership(managerPrincipalId : Base.PrincipalId) : async Result.Result<Queries.ICFCMembershipDTO, T.Error> {
+
+      let icfcProfile : ?T.ICFCProfile = userICFCProfiles.get(managerPrincipalId);
+
+      switch (icfcProfile) {
+        case (null) {
+          return #err(#NotFound);
+        };
+        case (?icfcProfile) {
+
+          let icfc_canister = actor (NetworkEnvironmentVariables.ICFC_BACKEND_CANISTER_ID) : actor {
+            getICFCMembership : Commands.GetICFCMembership -> async Result.Result<Queries.ICFCMembershipDTO, T.Error>;
+          };
+
+          let icfcMembershipDTO : Commands.GetICFCMembership = {
+            principalId = icfcProfile.principalId;
+
+          };
+
+          return await icfc_canister.getICFCMembership(icfcMembershipDTO);
+
         };
       };
     };
@@ -255,10 +294,13 @@ module {
 
               switch (currentManagerSeason) {
                 case (?foundSeason) {
-                  let validGameweeks = List.filter<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(entry: T.FantasyTeamSnapshot){
-                    entry.gameweek > 28; //Update next season
-                  });
-                  firstGameweek := List.size(validGameweeks) == 0 or not hasPlayersInTeam; 
+                  let validGameweeks = List.filter<T.FantasyTeamSnapshot>(
+                    foundSeason.gameweeks,
+                    func(entry : T.FantasyTeamSnapshot) {
+                      entry.gameweek > 28; //Update next season
+                    },
+                  );
+                  firstGameweek := List.size(validGameweeks) == 0 or not hasPlayersInTeam;
                 };
                 case (null) {};
               };
@@ -387,6 +429,57 @@ module {
 
     //User updates
 
+    public func linkICFCProfile(dto : Commands.NotifyAppofLink) : async Result.Result<(), T.Error> {
+      let icfcProfile : T.ICFCProfile = {
+        principalId = dto.icfcPrincipalId;
+        linkStatus = #PendingVerification;
+      };
+      userICFCProfiles.put(dto.subAppUserPrincipalId, icfcProfile);
+      return #ok();
+    };
+
+    public func verifyICFCProfile(dto : Commands.VerifyICFCProfile) : async Result.Result<(), T.Error> {
+      let icfcProfile : ?T.ICFCProfile = userICFCProfiles.get(dto.principalId);
+
+      switch (icfcProfile) {
+        case (null) {
+          return #err(#NotFound);
+        };
+        case (?foundICFCProfile) {
+
+          let icfc_canister = actor (NetworkEnvironmentVariables.ICFC_BACKEND_CANISTER_ID) : actor {
+            verifySubApp : Commands.VerifySubApp -> async Result.Result<(), T.Error>;
+          };
+
+          let verifySubAppDTO : Commands.VerifySubApp = {
+            subAppUserPrincipalId = dto.principalId;
+            subApp = #OpenFPL;
+            icfcPrincipalId = foundICFCProfile.principalId;
+          };
+
+          let result = await icfc_canister.verifySubApp(verifySubAppDTO);
+          switch (result) {
+            case (#ok(_)) {
+
+              let _ = userICFCProfiles.put(
+                dto.principalId,
+                {
+                  principalId = foundICFCProfile.principalId;
+                  linkStatus = #Verified;
+                },
+              );
+
+              return #ok();
+
+            };
+            case (#err error) {
+              return #err(error);
+            };
+          };
+        };
+      };
+    };
+
     public func createManager(managerPrincipalId : Base.PrincipalId, dto : Commands.CreateManagerDTO) : async Result.Result<(), T.Error> {
 
       let managerCanisterId = managerCanisterIds.get(managerPrincipalId);
@@ -394,16 +487,16 @@ module {
       switch (managerCanisterId) {
         case (null) {
           let result = await createNewManager(managerPrincipalId, dto);
-          switch(result){
-            case (#ok _){
+          switch (result) {
+            case (#ok _) {
               totalManagers := totalManagers + 1;
               managerCanisterIds.put(managerPrincipalId, activeManagerCanisterId);
               return #ok();
             };
-            case (#err error){
+            case (#err error) {
               return #err(error);
             };
-          }
+          };
         };
         case (?_) {
           return #err(#AlreadyExists);
@@ -436,7 +529,7 @@ module {
       };
     };
 
-    public func updateFavouriteClub(managerPrincipalId : Base.PrincipalId, dto : Commands.UpdateFavouriteClubDTO, activeClubs : [FootballTypes.Club], seasonActive: Bool) : async Result.Result<(), T.Error> {
+    public func updateFavouriteClub(managerPrincipalId : Base.PrincipalId, dto : Commands.UpdateFavouriteClubDTO, activeClubs : [FootballTypes.Club], seasonActive : Bool) : async Result.Result<(), T.Error> {
 
       let isClubActive = Array.find(
         activeClubs,
@@ -452,7 +545,6 @@ module {
         return #err(#InvalidData);
       };
 
-
       let managerCanisterId = managerCanisterIds.get(managerPrincipalId);
       switch (managerCanisterId) {
         case (null) {
@@ -461,31 +553,31 @@ module {
         case (?foundManagerCanisterId) {
 
           let manager_canister = actor (foundManagerCanisterId) : actor {
-              getManager : Base.PrincipalId -> async ?T.Manager;
-              updateFavouriteClub : (managerPrincipalId : Base.PrincipalId, dto : Commands.UpdateFavouriteClubDTO) -> async Result.Result<(), T.Error>;
+            getManager : Base.PrincipalId -> async ?T.Manager;
+            updateFavouriteClub : (managerPrincipalId : Base.PrincipalId, dto : Commands.UpdateFavouriteClubDTO) -> async Result.Result<(), T.Error>;
           };
 
           let manager = await manager_canister.getManager(managerPrincipalId);
-          if(not seasonActive){
-              return await manager_canister.updateFavouriteClub(managerPrincipalId, dto);
+          if (not seasonActive) {
+            return await manager_canister.updateFavouriteClub(managerPrincipalId, dto);
           };
-          
-          switch(manager){
-            case (?foundManager){
-              switch(foundManager.favouriteClubId){
-                case (?foundClubId){
-                  if(foundClubId > 0){
+
+          switch (manager) {
+            case (?foundManager) {
+              switch (foundManager.favouriteClubId) {
+                case (?foundClubId) {
+                  if (foundClubId > 0) {
                     return #err(#InvalidData);
                   };
                 };
-                case (null){};
+                case (null) {};
               };
               return await manager_canister.updateFavouriteClub(managerPrincipalId, dto);
             };
-            case (null){
+            case (null) {
               return #err(#NotFound);
-            }
-          }
+            };
+          };
         };
       };
     };
@@ -550,7 +642,7 @@ module {
     //Private data modification functions
 
     private func createNewManager(managerPrincipalId : Base.PrincipalId, dto : Commands.CreateManagerDTO) : async Result.Result<(), T.Error> {
-      
+
       if (activeManagerCanisterId == "") {
         activeManagerCanisterId := await createManagerCanister();
       };
@@ -848,6 +940,19 @@ module {
 
     public func setStableActiveManagerCanisterId(stable_active_manager_canister_id : Base.CanisterId) : () {
       activeManagerCanisterId := stable_active_manager_canister_id;
+    };
+
+    public func getStableUserICFCProfiles() : [(Base.PrincipalId, T.ICFCProfile)] {
+      return Iter.toArray(userICFCProfiles.entries());
+    };
+
+    public func setStableUserICFCProfiles(stable_user_icfc_profiles : [(Base.PrincipalId, T.ICFCProfile)]) : () {
+      let profileMap : TrieMap.TrieMap<Base.PrincipalId, T.ICFCProfile> = TrieMap.TrieMap<Base.PrincipalId, T.ICFCProfile>(Text.equal, Text.hash);
+
+      for (profile in Iter.fromArray(stable_user_icfc_profiles)) {
+        profileMap.put(profile);
+      };
+      userICFCProfiles := profileMap;
     };
   };
 };
