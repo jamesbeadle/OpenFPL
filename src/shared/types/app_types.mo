@@ -303,4 +303,37 @@ module AppTypes {
     #InjuryExpired;
     #TransferWindow;
   };
+
+  public type MembershipType = {
+    #Monthly;
+    #Seasonal;
+    #Lifetime;
+    #Expired;
+    #NotClaimed;
+    #NotEligible;
+  };
+
+  public type ICFCLinkStatus = {
+    #PendingVerification;
+    #Verified;
+  };
+
+  public type MembershipClaim = {
+    membershipType : MembershipType;
+    claimedOn : Int;
+    expiresOn : ?Int;
+  };
+
+  public type ICFCProfile = {
+    principalId : Base.PrincipalId;
+    linkStatus : ICFCLinkStatus;
+  };
+  public type SubApp = {
+    #OpenFPL;
+    #OpenWSL;
+    #JeffBets;
+    #TransferKings;
+    #FootballGod;
+  };
+
 };

@@ -86,6 +86,16 @@ actor Self {
     return await userManager.getProfile(Principal.toText(caller));
   };
 
+  public shared ({caller}) func getICFCProfileStatus(): async Result.Result<T.ICFCLinkStatus, T.Error> {
+    assert not Principal.isAnonymous(caller);
+    return await userManager.getUserICFCProfileStatus(Principal.toText(caller));
+  };
+
+  public shared ({ caller }) func getUserIFCFMembership() : async Result.Result<Queries.ICFCMembershipDTO, T.Error> {
+    assert not Principal.isAnonymous(caller);
+    return await userManager.getUserICFCMembership(Principal.toText(caller));
+  };
+
   public shared ({ caller }) func getCurrentTeam() : async Result.Result<Queries.TeamSelectionDTO, T.Error> {
     assert not Principal.isAnonymous(caller);
     let leagueStatusResult = await getLeagueStatus();
@@ -145,6 +155,14 @@ actor Self {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     return await userManager.createManager(principalId, dto);
+  };
+
+  public shared ({ caller }) func verifyICFCProfile() : async Result.Result<(), T.Error> {
+    assert not Principal.isAnonymous(caller);
+    let dto : Commands.VerifyICFCProfile = {
+      principalId = Principal.toText(caller);
+    };
+    return await userManager.verifyICFCProfile(dto);
   };
 
   private func validateGameweeks(dto : Commands.SaveBonusDTO, currentGameweek : FootballTypes.GameweekNumber) : Bool {
@@ -267,13 +285,13 @@ actor Self {
       case (#ok clubs) {
 
         let statusResult = await getLeagueStatus();
-        switch(statusResult){
-          case (#ok status){
+        switch (statusResult) {
+          case (#ok status) {
             return await userManager.updateFavouriteClub(principalId, dto, clubs, status.seasonActive);
           };
-          case (#err error){
+          case (#err error) {
             return #err(error);
-          }
+          };
         };
       };
       case (#err error) {
@@ -724,6 +742,7 @@ actor Self {
   private stable var stable_total_managers : Nat = 0;
   private stable var stable_active_manager_canister_id : Base.CanisterId = "";
   private stable var topups : [Base.CanisterTopup] = [];
+  private stable var stable_user_icfc_profiles : [(Base.PrincipalId, T.ICFCProfile)] = [];
 
   system func preupgrade() {
 
@@ -764,7 +783,7 @@ actor Self {
     stable_unique_manager_canister_ids := userManager.getStableUniqueManagerCanisterIds();
     stable_total_managers := userManager.getStableTotalManagers();
     stable_active_manager_canister_id := userManager.getStableActiveManagerCanisterId();
-
+    stable_user_icfc_profiles := userManager.getStableUserICFCProfiles();
   };
 
   system func postupgrade() {
@@ -800,12 +819,12 @@ actor Self {
     userManager.setStableUniqueManagerCanisterIds(stable_unique_manager_canister_ids);
     userManager.setStableTotalManagers(stable_total_managers);
     userManager.setStableActiveManagerCanisterId(stable_active_manager_canister_id);
+    userManager.setStableUserICFCProfiles(stable_user_icfc_profiles);
 
     ignore Timer.setTimer<system>(#nanoseconds(Int.abs(1)), postUpgradeCallback);
   };
 
   private func postUpgradeCallback() : async () {
-    /*
     leaderboardManager.setStableActiveRewardRates(
       {
         seasonId = 1;
@@ -840,9 +859,7 @@ actor Self {
 
     //todo reset data hash categories
 
-
     //let _ = await notifyAppsOfGameweekStarting(1,1,29);
-    
 
   };
 
@@ -962,7 +979,13 @@ actor Self {
     return #ok(stable_weekly_leaderboard_canister_ids);
   };
 
-  public shared ({ caller }) func notifyAppsOfLoan(leagueId: FootballTypes.LeagueId, playerId : FootballTypes.PlayerId) : async Result.Result<(), T.Error> {
+  public shared ({ caller }) func notifyAppLink(dto : Commands.NotifyAppofLink) : async Result.Result<(), T.Error> {
+    assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
+    let _ = await userManager.linkICFCProfile(dto);
+    return #ok();
+  };
+
+  public shared ({ caller }) func notifyAppsOfLoan(leagueId : FootballTypes.LeagueId, playerId : FootballTypes.PlayerId) : async Result.Result<(), T.Error> {
     assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
     assert leagueId == Environment.LEAGUE_ID;
     await userManager.removePlayerFromTeams(Environment.LEAGUE_ID, playerId, Environment.BACKEND_CANISTER_ID);
@@ -970,7 +993,7 @@ actor Self {
     return #ok();
   };
 
-  public shared ({ caller }) func notifyAppsOfLoanExpired(leagueId: FootballTypes.LeagueId, playerId : FootballTypes.PlayerId) : async Result.Result<(), T.Error> {
+  public shared ({ caller }) func notifyAppsOfLoanExpired(leagueId : FootballTypes.LeagueId, playerId : FootballTypes.PlayerId) : async Result.Result<(), T.Error> {
     assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
     assert leagueId == Environment.LEAGUE_ID;
     //TODO
@@ -978,14 +1001,14 @@ actor Self {
     return #ok();
   };
 
-  public shared ({ caller }) func notifyAppsOfTransfer(leagueId: FootballTypes.LeagueId, playerId : FootballTypes.PlayerId) : async Result.Result<(), T.Error> {
+  public shared ({ caller }) func notifyAppsOfTransfer(leagueId : FootballTypes.LeagueId, playerId : FootballTypes.PlayerId) : async Result.Result<(), T.Error> {
     assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
     await userManager.removePlayerFromTeams(Environment.LEAGUE_ID, playerId, Environment.BACKEND_CANISTER_ID);
     await seasonManager.updateDataHash("players");
     return #ok();
   };
 
-  public shared ({ caller }) func notifyAppsOfRetirement(leagueId: FootballTypes.LeagueId, playerId : FootballTypes.PlayerId) : async Result.Result<(), T.Error> {
+  public shared ({ caller }) func notifyAppsOfRetirement(leagueId : FootballTypes.LeagueId, playerId : FootballTypes.PlayerId) : async Result.Result<(), T.Error> {
     assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
 
     //TODO
@@ -993,13 +1016,13 @@ actor Self {
     return #ok();
   };
 
-  public shared ({ caller }) func notifyAppsOfPositionChange(leagueId: FootballTypes.LeagueId, playerId : FootballTypes.PlayerId) : async Result.Result<(), T.Error> {
+  public shared ({ caller }) func notifyAppsOfPositionChange(leagueId : FootballTypes.LeagueId, playerId : FootballTypes.PlayerId) : async Result.Result<(), T.Error> {
     assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
     await userManager.removePlayerFromTeams(Environment.LEAGUE_ID, playerId, Environment.BACKEND_CANISTER_ID);
     return #ok();
   };
 
-  public shared ({ caller }) func notifyAppsOfGameweekStarting(leagueId: FootballTypes.LeagueId, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber) : async Result.Result<(), T.Error> {
+  public shared ({ caller }) func notifyAppsOfGameweekStarting(leagueId : FootballTypes.LeagueId, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber) : async Result.Result<(), T.Error> {
     assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
 
     let data_canister = actor (NetworkEnvironmentVariables.DATA_CANISTER_ID) : actor {
@@ -1008,11 +1031,11 @@ actor Self {
 
     let playersResult = await data_canister.getPlayers(Environment.LEAGUE_ID);
 
-    switch(playersResult){
-      case (#ok players){
+    switch (playersResult) {
+      case (#ok players) {
         seasonManager.storePlayersSnapshot(seasonId, gameweek, players);
       };
-      case (#err _){}
+      case (#err _) {};
     };
 
     let _ = await userManager.snapshotFantasyTeams(seasonId, gameweek, 0); //TODO MONTH
@@ -1021,7 +1044,7 @@ actor Self {
     return #ok();
   };
 
-  public shared ({ caller }) func notifyAppsOfFixtureFinalised(leagueId: FootballTypes.LeagueId, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber) : async Result.Result<(), T.Error> {
+  public shared ({ caller }) func notifyAppsOfFixtureFinalised(leagueId : FootballTypes.LeagueId, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber) : async Result.Result<(), T.Error> {
 
     assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
     let _ = await userManager.calculateFantasyTeamScores(Environment.LEAGUE_ID, seasonId, gameweek, 0); //TODO month shouldn't be passed in
@@ -1033,7 +1056,7 @@ actor Self {
     return #ok();
   };
 
-  public shared ({ caller }) func notifyAppsOfSeasonComplete(leagueId: FootballTypes.LeagueId, seasonId : FootballTypes.SeasonId) : async Result.Result<(), T.Error> {
+  public shared ({ caller }) func notifyAppsOfSeasonComplete(leagueId : FootballTypes.LeagueId, seasonId : FootballTypes.SeasonId) : async Result.Result<(), T.Error> {
 
     assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
 

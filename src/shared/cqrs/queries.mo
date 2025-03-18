@@ -146,4 +146,10 @@ module Queries {
         rewards : [AppTypes.RewardEntry];
     };
 
+    public type ICFCMembershipDTO = {
+        membershipType : AppTypes.MembershipType;
+        membershipClaims : [AppTypes.MembershipClaim];
+        membershipExpiryTime : Int;
+    };
+
 };

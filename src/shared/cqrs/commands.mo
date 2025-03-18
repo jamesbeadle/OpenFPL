@@ -1,5 +1,6 @@
 import FootballTypes "mo:waterway-mops/FootballTypes";
 import Base "mo:waterway-mops/BaseTypes";
+import AppTypes "../types/app_types";
 
 module Commands {
 
@@ -112,5 +113,26 @@ module Commands {
   public type CreateManagerDTO = {
     username : Text;
     favouriteClubId : ?FootballTypes.ClubId;
+  };
+
+  public type GetICFCMembership = {
+    principalId : Base.PrincipalId;
+
+  };
+
+  public type NotifyAppofLink = {
+    subAppUserPrincipalId : Base.PrincipalId;
+    subApp : AppTypes.SubApp;
+    icfcPrincipalId : Base.PrincipalId;
+  };
+
+  public type VerifyICFCProfile = {
+    principalId : Base.PrincipalId;
+  };
+
+  public type VerifySubApp = {
+    subAppUserPrincipalId : Base.PrincipalId;
+    subApp : AppTypes.SubApp;
+    icfcPrincipalId : Base.PrincipalId;
   };
 };
