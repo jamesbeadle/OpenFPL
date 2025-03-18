@@ -805,6 +805,7 @@ actor Self {
   };
 
   private func postUpgradeCallback() : async () {
+    /*
     leaderboardManager.setStableActiveRewardRates(
       {
         seasonId = 1;
@@ -819,6 +820,7 @@ actor Self {
         weeklyLeaderboardRewardRate = 5_000_000_000_000;
       });
     await updateAllDataHashes();
+    */
     //await updateManagerCanisterWasms();
     /*
     stable_app_status := {
@@ -832,7 +834,7 @@ actor Self {
 
     //await updateLeaderboardCanisterWasms();
 
-    //await calculateGWLeaderboard(1,23);
+    await calculateGWLeaderboard(1,29);
     //await calculateGWRewards(23);
     //await manuallyPayRewards(23);
 

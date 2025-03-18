@@ -7,7 +7,7 @@
   import { clubStore } from "$lib/stores/club-store";
   import { toasts } from "$lib/stores/toasts-store";
   import { getActualIndex } from "$lib/utils/helpers";
-  import { calculateBonusPoints, getGridSetup, getTeamFormationReadOnly, sortPlayersByPointsThenValue } from "$lib/utils/pick-team.helpers";
+  import { calculateBonusPoints, getBonusUsed, getGridSetup, getTeamFormationReadOnly, isBonusUsed, sortPlayersByPointsThenValue } from "$lib/utils/pick-team.helpers";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import type { ClubDTO, GameweekNumber } from "../../../../../external_declarations/data_canister/data_canister.did";
   import ManagerPitchPlayer from "./manager-pitch-player.svelte";
@@ -106,7 +106,7 @@ async function updateGameweekPlayers() {
   
                 <div class="flex flex-col justify-center items-center flex-1 player-card">
                   {#if playerData && clubData}
-                    <ManagerPitchPlayer {playerData} {clubData} />
+                    <ManagerPitchPlayer {playerData} {clubData} isCaptain={$fantasyTeam?.captainId == playerId} />
                   {/if}
                 </div>
               {/each}
@@ -116,23 +116,24 @@ async function updateGameweekPlayers() {
       {/if}
     {/if}
   </div>
-  <div class="relative hidden lg:flex w-1/2">
+  <div class="relative hidden lg:flex w-1/2 text-lg">
     
-    <div
-      class="flex flex-col w-full justify-between p-2 md:px-4 border border-gray-700 py-4 bg-light-gray"
-    >
-      <p>Username: {$fantasyTeam?.username}</p>
+    <div class="flex flex-col w-full p-4 border border-gray-700 py-4 bg-light-gray space-y-4">
+      <p class="text-3xl">{$fantasyTeam?.username}</p>
+      <p class="text-3xl">{$fantasyTeam?.points} Points</p>
       {#if favouriteTeam}
-      <p class="content-panel-stat flex items-center">
-        Favourite Club: 
-        <span class="flex flex-row items-center">
-          <BadgeIcon className="w-7 mr-2" club={favouriteTeam} />
-          {favouriteTeam.friendlyName}
-        </span>
-      </p>
+        <p class="text-xs">Favourite Club</p>
+        <p class="content-panel-stat flex items-center">
+          <span class="flex flex-row items-center">
+            <BadgeIcon className="w-7 mr-2" club={favouriteTeam} />
+            {favouriteTeam.friendlyName}
+          </span>
+        </p>
       {/if}
-      <p>Team Value: {($fantasyTeam?.teamValueQuarterMillions!) / 1400}</p>
+      <p>Team Value: £{(($fantasyTeam?.teamValueQuarterMillions!) / 4).toFixed(2)}</p>
       <p>Transfers Available: {$fantasyTeam?.transfersAvailable}</p>
+      <p>Bonus Played: {getBonusUsed($fantasyTeam!, $fantasyTeam?.gameweek ?? 0)}</p>
+      
     </div>
     
   </div>  

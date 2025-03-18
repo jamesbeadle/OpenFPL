@@ -108,7 +108,7 @@
       <div class="flex flex-col gap-4 sm:flex-row sm:gap-8">
         <LeaderboardFilter {selectedLeaderboardType} {changeLeaderboardType} />
         {#if $selectedLeaderboardType === 1}
-          <GameweekFilter {selectedGameweek} {gameweeks} {changeGameweek} lastGameweek={$leagueStore!.completedGameweek} />
+          <GameweekFilter {selectedGameweek} {gameweeks} {changeGameweek} lastGameweek={$leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek ?? 1} />
         {/if}
         {#if $selectedLeaderboardType === 2}
           <LeaderboardMonthFilter {selectedMonth} {selectedTeamId} {selectedTeamIndex} />
