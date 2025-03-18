@@ -834,7 +834,7 @@ actor Self {
 
     //await updateLeaderboardCanisterWasms();
 
-    await calculateGWLeaderboard(1,29);
+    //await calculateGWLeaderboard(1,29);
     //await calculateGWRewards(23);
     //await manuallyPayRewards(23);
 
