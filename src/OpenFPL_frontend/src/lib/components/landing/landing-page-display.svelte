@@ -1,6 +1,7 @@
 <script lang="ts">
     import IcpLogo from "$lib/icons/IcpLogo.svelte";
-    import OpenFPLIconWithText from "$lib/icons/OpenFPLIconWithText.svelte";
+    import OpenFplIconWithText from "$lib/icons/OpenFPLIconWithText.svelte";
+
     
     export let handleLoginClick: () => void;
 </script>
@@ -8,7 +9,7 @@
 <div class="relative flex flex-col items-center justify-center w-full md:min-h-screen">
     <div class="items-center w-full max-w-sm mx-4">
         <div class="flex items-center justify-center mb-5">
-            <OpenFPLIconWithText className="w-32 h-32 md:w-40 md:h-40" />
+            <OpenFplIconWithText className="w-32 h-32 md:w-40 md:h-40" />
         </div>
         <p class="mb-8 text-lg text-center text-BrandGrayShade3">
             Decentralised Fantasy Premier League

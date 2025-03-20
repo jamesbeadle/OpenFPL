@@ -6,9 +6,9 @@
   import Layout from "../Layout.svelte";
   import ProfileDetail from "$lib/components/profile/profile-detail.svelte";
   import ProfileManagerGameweeks from "$lib/components/manager/profile-manager-gameweeks.svelte";
-  import WidgetSpinner from "$lib/components/shared/widget-spinner.svelte";
   import TabContainer from "$lib/components/shared/tab-container.svelte";
   import WelcomeBanner from "$lib/components/profile/welcome-banner.svelte";
+  import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
 
   const tabs = [
     { id: "details", label: "Details", authOnly: false },
@@ -35,7 +35,7 @@
 
 <Layout>
   {#if isLoading}
-    <WidgetSpinner />
+    <LocalSpinner />
   {:else}
     <div class="m-4">
       {#if bannerVisible}

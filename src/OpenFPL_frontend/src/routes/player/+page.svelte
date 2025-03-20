@@ -8,10 +8,10 @@
   import PlayerGameweekHistory from "$lib/components/player/player-gameweek-history.svelte";
     
   import Layout from "../Layout.svelte";
-  import WidgetSpinner from "$lib/components/shared/widget-spinner.svelte";
   import PlayerHeader from "$lib/components/player/player-header.svelte";
   import TabContainer from "$lib/components/shared/tab-container.svelte";
   import type { ClubDTO, PlayerDTO } from "../../../../external_declarations/data_canister/data_canister.did";
+    import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
 
   $: id = Number(page.url.searchParams.get("id"));
 
@@ -40,7 +40,7 @@
 
 <Layout>
   {#if isLoading}
-    <WidgetSpinner />
+    <LocalSpinner />
   {:else}
     <PlayerHeader player={selectedPlayer} club={playerClub} gameweek={selectedGameweek} />
     

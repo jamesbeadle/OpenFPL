@@ -8,9 +8,9 @@
     import PageHeader from "../shared/panels/page-header.svelte";
     import ContentPanel from "../shared/panels/content-panel.svelte";
     import ManagerFavouriteTeamPanel from "./manager-favourite-team-panel.svelte";
-    import WidgetSpinner from "../shared/widget-spinner.svelte";
     import { writable } from "svelte/store";
     import type { ManagerDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import LocalSpinner from "../shared/local-spinner.svelte";
 
     export let manager: ManagerDTO;
     
@@ -34,7 +34,7 @@
 </script>
 <PageHeader>
   {#if isLoading}
-    <WidgetSpinner />
+    <LocalSpinner />
   {:else}
     <ContentPanel>
       <div class="flex">

@@ -2,7 +2,7 @@
   import { toasts } from "$lib/stores/toasts-store";
   import { userStore } from "$lib/stores/user-store";
   import Modal from "$lib/components/shared/modal.svelte";
-  import WidgetSpinner from "../shared/widget-spinner.svelte";
+    import LocalSpinner from "../shared/local-spinner.svelte";
 
   export let visible: boolean = false;
   export let newUsername: string = "";
@@ -59,7 +59,7 @@
 
 <Modal showModal={visible} onClose={cancelModal} title="Update Username">
   {#if isLoading}
-    <WidgetSpinner />
+    <LocalSpinner />
   {:else}
   <div class="mx-4 p-4">
     <form on:submit|preventDefault={updateUsername}>

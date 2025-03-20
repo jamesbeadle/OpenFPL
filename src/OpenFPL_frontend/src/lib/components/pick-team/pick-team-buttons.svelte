@@ -8,11 +8,11 @@
   import { allFormations, autofillTeam, checkBonusUsedInSession, checkSaveButtonConditions, getAvailableFormations, getHighestValuedPlayerId, getTeamFormation, isBonusConditionMet, isValidFormation, updateTeamValue } from "$lib/utils/pick-team.helpers";
   import SetTeamName from "./modals/set-team-name-modal.svelte";
   import { appStore } from "$lib/stores/app-store";
-  import WidgetSpinner from "../shared/widget-spinner.svelte";
   import { leagueStore } from "$lib/stores/league-store";
   import DesktopButtons from "./desktop-buttons.svelte";
   import MobileButtons from "./mobile-buttons.svelte";
   import { toasts } from "$lib/stores/toasts-store";
+    import LocalSpinner from "../shared/local-spinner.svelte";
 
   export let fantasyTeam: Writable<TeamSelectionDTO | undefined>;
   export let selectedFormation: Writable<string>;
@@ -199,7 +199,7 @@
 </script>
 
 {#if isLoading}
-  <WidgetSpinner />
+  <LocalSpinner />
 {:else}
   <SetTeamName
     bind:visible={showUsernameModal}

@@ -7,9 +7,9 @@
   import type { FixtureWithClubs } from "$lib/types/fixture-with-clubs";
   import { storeManager } from "$lib/managers/store-manager";
   import { leagueStore } from "$lib/stores/league-store";
-  import WidgetSpinner from "../shared/widget-spinner.svelte";
   import { writable } from "svelte/store";
   import GameweekFilter from "../shared/filters/gameweek-filter.svelte";
+    import LocalSpinner from "../shared/local-spinner.svelte";
 
   let fixturesWithTeams: FixtureWithClubs[] = [];
   let selectedGameweek = writable(1);
@@ -34,7 +34,7 @@
   };
 </script>
 {#if isLoading}
-  <WidgetSpinner />
+  <LocalSpinner />
   <p class="pb-4 mb-4 text-center">Getting League Table for Gameweek {$selectedGameweek}</p>
 {:else}
   <div class="flex flex-col gap-4 sm:flex-row sm:gap-8">

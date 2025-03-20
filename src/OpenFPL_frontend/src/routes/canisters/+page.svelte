@@ -2,12 +2,12 @@
     import { onMount } from "svelte";
     import Layout from "../Layout.svelte";
     import { storeManager } from "$lib/managers/store-manager";
-    import WidgetSpinner from "$lib/components/shared/widget-spinner.svelte";
     import type { CanisterDTO, CanisterType, GetCanistersDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     import { canisterStore } from "$lib/stores/canister-store";
     import { formatCycles } from "$lib/utils/helpers";
     import PageHeader from "$lib/components/shared/panels/page-header.svelte";
     import ContentPanel from "$lib/components/shared/panels/content-panel.svelte";
+    import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
   
     let selectedCanisterType = 0;
     let loadingCanisters = true;
@@ -74,7 +74,7 @@
   
           {#if loadingCanisters}
             <div class="flex justify-center">
-              <WidgetSpinner />
+              <LocalSpinner />
             </div>
           {:else}
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

@@ -9,11 +9,11 @@
   import { authSignedInStore } from "$lib/derived/auth.derived";
   import { userGetFavouriteTeam } from "$lib/derived/user.derived";
   import { getGameweeks, mergeLeaderboardWithRewards } from "$lib/utils/helpers";
-  import WidgetSpinner from "../shared/widget-spinner.svelte";
   import GameweekFilter from "../shared/filters/gameweek-filter.svelte";
   import LeaderboardFilter from "./leaderboard-filter.svelte";
   import LeaderboardMonthFilter from "./leaderboard-month-filter.svelte";
   import LeaderboardTable from "./leaderboard-table.svelte";
+    import LocalSpinner from "../shared/local-spinner.svelte";
 
   let isLoading = true;
   let gameweeks: number[];
@@ -100,7 +100,7 @@
 </script>
 
 {#if isLoading}
-  <WidgetSpinner />
+  <LocalSpinner />
   <p class="pb-4 mb-4 text-center">Getting Leaderboard for Gameweek {$selectedGameweek}</p>
 {:else}
   <div class="flex flex-col">

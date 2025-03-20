@@ -7,22 +7,20 @@
   import { playerEventsStore } from "$lib/stores/player-events-store";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import { calculateBonusPoints, sortPlayersByPointsThenValue } from "$lib/utils/pick-team.helpers";
-  import WidgetSpinner from "../shared/widget-spinner.svelte";
   import ManagerGameweekDetailTable from "./manager-gameweek-detail-table.svelte";
   import ScoreAbbreviationKey from "../shared/score-abbreviation-key.svelte";
   import GameweekFilter from "../shared/filters/gameweek-filter.svelte";
   import { getGameweeks } from "$lib/utils/helpers";
   import type { ManagerGameweekDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { ClubDTO } from "../../../../../external_declarations/data_canister/data_canister.did";
+    import LocalSpinner from "../shared/local-spinner.svelte";
   
   export let selectedGameweek = writable<number | null>(null);
   export let fantasyTeam = writable<ManagerGameweekDTO | null>(null);
 
   let isLoading = false;
   let showModal = false;
-  let selectedTeam: ClubDTO;
-  let selectedOpponentTeam: ClubDTO;
-  let selectedGameweekData: GameweekData;
+  let lastGameweek: number;
   let activeSeasonName: string;
 
   let gameweekPlayers = writable<GameweekData[]>([]);
@@ -39,6 +37,7 @@
   onMount(async () => {
     await storeManager.syncStores();
     gameweeks = getGameweeks($leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek ?? 1)
+    lastGameweek = $leagueStore?.completedGameweek ?? 1;
     activeSeasonName = await seasonStore.getSeasonName($leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek ?? 0) ?? "";
     if (!$fantasyTeam) { return; }
     updateGameweekPlayers();
@@ -63,10 +62,10 @@
 </script>
 
 {#if isLoading}
-  <WidgetSpinner />
+  <LocalSpinner />
 {:else}
   <div class="flex flex-col">
-      <GameweekFilter {selectedGameweek} {gameweeks} {changeGameweek} />
+      <GameweekFilter {lastGameweek} {selectedGameweek} {gameweeks} {changeGameweek} />
   </div>
   <ManagerGameweekDetailTable {activeSeasonName} {fantasyTeam} {gameweekPlayers} {showModal} />
   <ScoreAbbreviationKey />

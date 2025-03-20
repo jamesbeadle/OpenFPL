@@ -14,8 +14,8 @@
   import PlayerGameweekModal from "./player-gameweek-modal.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
-  import WidgetSpinner from "../shared/widget-spinner.svelte";
   import PlayerGameweekHistoryHeader from "./player-gameweek-history-header.svelte";
+    import LocalSpinner from "../shared/local-spinner.svelte";
   
   let isLoading = true;
   let selectedGameweek = writable(1);
@@ -57,7 +57,7 @@
 </script>
 
 {#if isLoading}
-  <WidgetSpinner />
+  <LocalSpinner />
 {:else}
   {#if playerDetails}
   {#if showModal}

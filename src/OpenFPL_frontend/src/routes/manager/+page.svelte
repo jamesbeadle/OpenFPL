@@ -14,9 +14,9 @@
   import Layout from "../Layout.svelte";
   import ManagerGameweeks from "$lib/components/manager/manager-gameweeks.svelte";
   import ReadOnlyPitchView from "$lib/components/manager/read-only-pitch-view.svelte";
-  import WidgetSpinner from "$lib/components/shared/widget-spinner.svelte";
   import TabContainer from "$lib/components/shared/tab-container.svelte";
   import ManagerHeader from "$lib/components/manager/manager-header.svelte";
+    import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
     
   $: id = page.url.searchParams.get("id");
   $: gw = page.url.searchParams.get("gw");
@@ -62,7 +62,7 @@
 
 <Layout>
   {#if isLoading}
-    <WidgetSpinner />
+    <LocalSpinner />
   {:else}
     <ManagerHeader manager={$manager!} />
 

@@ -8,10 +8,10 @@
   import AddPlayerIcon from "$lib/icons/AddPlayerIcon.svelte";
   import { getGridSetup } from "$lib/utils/pick-team.helpers";
   import { getActualIndex } from "$lib/utils/helpers";
-  import WidgetSpinner from "../shared/widget-spinner.svelte";
   import SponsorshipBoard from "./sponsorship-board.svelte";
   import PitchPlayer from "./pitch-player.svelte";
   import type { TeamSelectionDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import LocalSpinner from "../shared/local-spinner.svelte";
 
   export let selectedFormation: Writable<string>;
   export let fantasyTeam: Writable<TeamSelectionDTO | undefined>;
@@ -108,6 +108,6 @@
       {/each}
     </div>
   {:else}
-    <WidgetSpinner />
+    <LocalSpinner />
   {/if}
 </div>

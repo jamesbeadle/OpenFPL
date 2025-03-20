@@ -7,14 +7,13 @@
   import { globalDataLoaded } from "$lib/managers/store-manager";
 
   import Layout from "./Layout.svelte";
-  import LandingPage from "$lib/components/homepage/landing-page.svelte";
   import HomepageHeader from "$lib/components/homepage/homepage-header.svelte";
   import FixturesComponent from "$lib/components/homepage/fixtures.svelte";
   import GamweekPointsComponent from "$lib/components/manager/gameweek-points.svelte";
   import LeaderboardsComponent from "$lib/components/homepage/leaderboards.svelte";
   import LeagueTableComponent from "$lib/components/homepage/league-table.svelte";
-  import WidgetSpinner from "$lib/components/shared/widget-spinner.svelte";
   import TabContainer from "$lib/components/shared/tab-container.svelte";
+  import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
   
   $: isLoggedIn = $authStore?.identity != null;
 
@@ -57,9 +56,9 @@
 </script>
 
 <Layout {showHeader}>
-  {#if isLoading}
-    <WidgetSpinner />
-  {:else if isLoggedIn}
+  {#if isLoading || !isLoggedIn}
+    <LocalSpinner />
+  {:else}
     <HomepageHeader {seasonName} />
 
     <div class="bg-panel">
@@ -74,9 +73,6 @@
       {:else if activeTab === "league-table"}
         <LeagueTableComponent />
       {/if}
-      
     </div>
-  {:else}
-    <LandingPage />
   {/if}
 </Layout>

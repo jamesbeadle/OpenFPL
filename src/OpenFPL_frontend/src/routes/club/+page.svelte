@@ -4,11 +4,11 @@
   import { storeManager } from "$lib/managers/store-manager";
   
   import Layout from "../Layout.svelte";
-  import WidgetSpinner from "$lib/components/shared/widget-spinner.svelte";
   import TeamPlayers from "$lib/components/club/team-players.svelte";
   import TeamFixtures from "$lib/components/club/team-fixtures.svelte";
   import TabContainer from "$lib/components/shared/tab-container.svelte";
   import ClubHeader from "$lib/components/club/club-header.svelte";
+    import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
 
   let isLoading = true;
   
@@ -33,7 +33,7 @@
 
 <Layout>
   {#if isLoading}
-    <WidgetSpinner />
+    <LocalSpinner />
   {:else}
     <ClubHeader clubId={id} />
     <div class="bg-panel">

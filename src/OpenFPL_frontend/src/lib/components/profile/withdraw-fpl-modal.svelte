@@ -3,7 +3,7 @@
   import { toasts } from "$lib/stores/toasts-store";
   import { convertToE8s, isAmountValid, isPrincipalValid } from "$lib/utils/helpers";
   import Modal from "$lib/components/shared/modal.svelte";
-  import WidgetSpinner from "../shared/widget-spinner.svelte";
+    import LocalSpinner from "../shared/local-spinner.svelte";
   
   export let visible: boolean;
   export let closeModal: () => void;
@@ -62,7 +62,7 @@
 
 <Modal showModal={visible} onClose={closeModal} title="Withdraw ICFC">
   {#if isLoading}
-    <WidgetSpinner />
+    <LocalSpinner />
   {:else}
     <div class="p-4 mx-4">
       <form on:submit|preventDefault={withdrawFPL}>

@@ -89,7 +89,7 @@
           <th>8</th>
         </tr>
         <tr>
-          <td class="h-6"><span /></td>
+          <td class="h-6"><span></span></td>
         </tr>
         <tr>
           <td class="text-left px-4">Managers</td>
@@ -103,7 +103,7 @@
           <td>10,000,000</td>
         </tr>
         <tr>
-          <td class="h-6"><span /></td>
+          <td class="h-6"><span></span></td>
         </tr>
         <tr>
           <td class="text-left px-4" colspan="9">Revenue:</td>
@@ -168,7 +168,7 @@
           <td>370,000</td>
         </tr>
         <tr>
-          <td colspan="9" class="h-6"><span /></td>
+          <td colspan="9" class="h-6"><span></span></td>
         </tr>
 
         <tr class="font-bold">
@@ -184,7 +184,7 @@
         </tr>
 
         <tr>
-          <td colspan="9" class="h-6"><span /></td>
+          <td colspan="9" class="h-6"><span></span></td>
         </tr>
 
         <tr class="font-bold">
@@ -215,7 +215,7 @@
         <th>4</th>
       </tr>
       <tr>
-        <td class="h-6"><span /></td>
+        <td class="h-6"><span></span></td>
       </tr>
       <tr>
         <td class="text-left">Managers</td>
@@ -225,7 +225,7 @@
         <td>1,000,000</td>
       </tr>
       <tr>
-        <td class="h-6"><span /></td>
+        <td class="h-6"><span></span></td>
       </tr>
       <tr>
         <td class="text-left" colspan="5">Revenue:</td>
@@ -271,7 +271,7 @@
       </tr>
 
       <tr>
-        <td colspan="5" class="h-6"><span /></td>
+        <td colspan="5" class="h-6"><span></span></td>
       </tr>
 
       <tr class="font-bold">
@@ -294,7 +294,7 @@
         <th>8</th>
       </tr>
       <tr>
-        <td class="h-6"><span /></td>
+        <td class="h-6"><span></span></td>
       </tr>
       <tr>
         <td class="text-left">Managers</td>
@@ -304,7 +304,7 @@
         <td>10m</td>
       </tr>
       <tr>
-        <td class="h-6"><span /></td>
+        <td class="h-6"><span></span></td>
       </tr>
       <tr>
         <td class="text-left" colspan="5">Revenue:</td>
@@ -350,7 +350,7 @@
       </tr>
 
       <tr>
-        <td colspan="5" class="h-6"><span /></td>
+        <td colspan="5" class="h-6"><span></span></td>
       </tr>
 
       <tr class="font-bold">
@@ -362,7 +362,7 @@
       </tr>
 
       <tr>
-        <td colspan="5" class="h-6"><span /></td>
+        <td colspan="5" class="h-6"><span></span></td>
       </tr>
 
       <tr class="font-bold">
@@ -382,7 +382,7 @@
         <th>Value</th>
       </tr>
       <tr>
-        <td class="h-6"><span /></td>
+        <td class="h-6"><span></span></td>
       </tr>
       <tr>
         <td>The total number of FPL tokens to be sold.</td>

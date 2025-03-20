@@ -1,144 +1,135 @@
 <script lang="ts">
-
-  import { onMount} from "svelte";
+  import { onMount } from "svelte"; 
   import { fade } from "svelte/transition";
   import { browser } from "$app/environment";
-  import { authStore, type AuthStoreData } from "$lib/stores/auth.store";
+  import { page } from "$app/state";
+
   import { userStore } from "$lib/stores/user-store";
+  import { initAuthWorker } from "$lib/services/worker.auth.services";
+  import { authStore, type AuthStoreData } from "$lib/stores/auth.store";
   
+  import "../app.css";
+  import Toasts from "$lib/components/toasts/toasts.svelte";
+  import { authSignedInStore } from "$lib/derived/auth.derived";
+  import { toasts } from "$lib/stores/toasts-store";
   import Header from "$lib/shared/Header.svelte";
   import Footer from "$lib/shared/Footer.svelte";
-  import WidgetSpinner from "$lib/components/shared/widget-spinner.svelte";
-  import "../app.css";
-
-  import { initAuthWorker } from "$lib/services/worker.auth.services";
-  import { storeManager} from "$lib/managers/store-manager";
-  import { toasts } from "$lib/stores/toasts-store";
-  import Toasts from "$lib/components/toasts/toasts.svelte";
-  import NewUserModal from "$lib/components/profile/new-user-modal.svelte";
-  import { appStore } from "$lib/stores/app-store";
-
-  import { createDeferred, type Deferred } from "$lib/utils/helpers";
-
-  export let showHeader = true;
-
-  let isLoading = true;
-  let showNewUserModal = false;
-  let hasStartedSync = false;
-  let hasSynced = false;
-  let userSignUpDeferred: Deferred<void> | null = null;
-
-  const init = async () => {
-    await Promise.all([syncAuthStore()]);
-    worker = await initAuthWorker();
-  };
-
-  const syncAuthStore = async () => {
-    if (!browser) { return; }
-
-    try {
-      await authStore.sync();
-    } catch (err: unknown) {
-      toasts.addToast( { message: "Unexpected issue while syncing the status of your authentication.",
-      type: "error" });
-    }
-  };
-
+  import FullScreenSpinner from "$lib/components/shared/full-screen-spinner.svelte";
+    import { storeManager } from "$lib/managers/store-manager";
+    import { appStore } from "$lib/stores/app-store";
+    import CreateNewUser from "$lib/components/profile/create-new-user.svelte";
+    import LandingPage from "$lib/components/landing/landing-page.svelte";
+    
   let worker: { syncAuthIdle: (auth: AuthStoreData) => void } | undefined;
 
-  onMount(async () => {
+  let isLoading = true;
+  let hasProfile = false;
+
+  const init = async () => {
+    await syncAuthStore();
     worker = await initAuthWorker();
+    await appStore.checkServerVersion();
     await storeManager.syncStores();
-    isLoading = false;
+  };
+
+  const syncAuthStore = async (retryCount = 0, maxRetries = 3) => {
+    if (!browser) return;
+
+    try {
+      isLoading = true;
+      await authStore.sync();
+      
+      if (!$authSignedInStore) {
+        hasProfile = false;
+        isLoading = false;
+        return;
+      }
+
+      let profile = $userStore;
+
+      if (!profile && retryCount < maxRetries) {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        return syncAuthStore(retryCount + 1, maxRetries);
+      }
+
+      hasProfile = !!profile;
+      isLoading = false;
+    } catch (err: unknown) {
+      console.error("Error syncing auth store:", err);
+      toasts.addToast({ 
+        message: "Unexpected issue while syncing the status of your authentication.",
+        type: "error" 
+      });
+      isLoading = false;
+    }
+  };
+
+  const handleStorageEvent = (event: StorageEvent) => {
+    syncAuthStore();
+  };
+
+  onMount(async () => {
+    await init();
   });
 
-  async function onUserSignUpComplete() {
-    if (userSignUpDeferred) {
-      userSignUpDeferred.resolve();
-      userSignUpDeferred = null;
-      await syncPage();
+  $: if (browser && $authSignedInStore) {
+    syncAuthStore();
+  }
+
+  $: if (worker && $authStore) {
+    worker.syncAuthIdle($authStore);
+  }
+
+  $: if (browser && $authStore !== undefined) {
+    document.querySelector("body > #app-spinner")?.remove();
+  }
+
+  let currentPathname = '';
+  $: if (browser && page.url) {
+    if (page.url.pathname !== currentPathname) {
+      currentPathname = page.url.pathname;
+      syncAuthStore();
     }
+  }
+
+  $: isWhitepaper = browser && page.url.pathname === "/whitepaper";
+
+  function handleProfileCreated() {
+    hasProfile = true;
+    isLoading = false;
   }
 
   async function onLogout() {
+    isLoading = true;
     await authStore.signOut();
     userStore.set(undefined);
-    hasSynced = false;
-    hasStartedSync = false;
-    userSignUpDeferred = null;
-    showNewUserModal = false;
     isLoading = false;
   }
-
-  async function syncPage() {
-    isLoading = true;
-    try {
-        await storeManager.syncStores();
-        await appStore.checkServerVersion();
-        hasSynced = true;
-        isLoading = false;
-    } catch (error) {
-        console.error('[Layout] Error in syncPage:', error);
-        isLoading = false;
-    }
-  }
-  
-  $: if ($authStore?.identity && !hasSynced && !hasStartedSync && !isLoading) {
-    hasStartedSync = true;
-    (async () => {
-      try {
-        await userStore.sync();
-        if ($userStore === undefined) {
-          showNewUserModal = true;
-          userSignUpDeferred = createDeferred<void>();
-          await userSignUpDeferred.promise;
-        }
-        else {
-          await syncPage();
-        }
-      } catch (error) {
-        console.error("Error syncing user store:", error);
-      }
-    })();
-  }
-
-  $: worker, $authStore, (() => worker?.syncAuthIdle($authStore))();
-
-  $: (() => {
-    if (!browser) {
-      return;
-    }
-
-    if ($authStore === undefined) {
-      return;
-    }
-
-    const spinner = document.querySelector("body > #app-spinner");
-    spinner?.remove();
-  })();
 </script>
 
-<svelte:window on:storage={syncAuthStore} />
+<svelte:window on:storage={handleStorageEvent} />
+
 {#await init()}
   <div in:fade>
-    <WidgetSpinner />
+    <FullScreenSpinner />
   </div>
 {:then _}
-  <div class="flex flex-col justify-between h-screen default-text {showHeader ? 'bg-background' : ''}">
-    {#if showHeader}
-      <Header onLogout={onLogout} />
-      <main class="page-wrapper">
-        <slot />
-      </main>
-      <Footer />
+  <div class="flex w-full h-screen">
+    {#if isLoading}
+      <FullScreenSpinner />
+    {:else if $authSignedInStore && !hasProfile && !isWhitepaper}
+      <CreateNewUser on:profileCreated={handleProfileCreated} />
+    {:else if !$authSignedInStore && !isWhitepaper}
+      <LandingPage />
     {:else}
-      <main class="flex-1">
-        <slot />
-      </main>
+      <div class="relative flex flex-col w-full min-h-screen">
+        <Header {onLogout} />
+        <main class="page-wrapper">
+          <slot />
+        </main>
+        <Footer />
+      </div>
     {/if}
     <Toasts />
-    {#if showNewUserModal}
-      <NewUserModal visible={true} onSignUpComplete={onUserSignUpComplete} onLogout={onLogout} />
-    {/if}
   </div>
 {/await}

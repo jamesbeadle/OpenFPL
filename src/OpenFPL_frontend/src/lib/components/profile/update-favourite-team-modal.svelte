@@ -5,7 +5,7 @@
   import { storeManager } from "$lib/managers/store-manager";
     import Modal from "$lib/components/shared/modal.svelte";
     import { toasts } from "$lib/stores/toasts-store";
-    import WidgetSpinner from "../shared/widget-spinner.svelte";
+    import LocalSpinner from "../shared/local-spinner.svelte";
 
   export let visible: boolean;
   export let newFavouriteTeam: number = 0;
@@ -57,7 +57,7 @@
 
 <Modal showModal={visible} onClose={cancelModal} title="Update Favourite Team">
   {#if isLoading}
-    <WidgetSpinner />
+    <LocalSpinner />
   {:else}
     <div class="p-4 mx-4">
       <div class="w-full mt-4 mb-2 border border-gray-500">

@@ -9,13 +9,13 @@
   import { allFormations } from "$lib/utils/pick-team.helpers";
   
   import Layout from "../Layout.svelte";
-  import WidgetSpinner from "$lib/components/shared/widget-spinner.svelte";
   import PickTeamButtons from "$lib/components/pick-team/pick-team-buttons.svelte";
   import PickTeamHeader from "$lib/components/pick-team/pick-team-header.svelte";
   import SimpleFixtures from "$lib/components/simple-fixtures.svelte";
   import OnHold from "$lib/components/pick-team/on-hold.svelte";
   import PickTeamLeftPanel from "$lib/components/pick-team/pick-team-left-panel.svelte";
   import PickTeamBanner from "$lib/components/pick-team/pick-team-banner.svelte";
+    import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
     
   let fantasyTeam = writable<TeamSelectionDTO | undefined>(undefined);
   let availableFormations = writable(Object.keys(allFormations));   
@@ -86,7 +86,7 @@
 
 <Layout>
   {#if isLoading}
-    <WidgetSpinner />
+    <LocalSpinner />
   {:else}
     {#if $appStore?.onHold}
       <OnHold />

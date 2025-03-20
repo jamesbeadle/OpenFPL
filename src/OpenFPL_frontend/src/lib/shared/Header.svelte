@@ -7,7 +7,6 @@
   import { goto } from "$app/navigation";
   import { authSignedInStore } from "$lib/derived/auth.derived";
   import { userGetProfilePicture } from "$lib/derived/user.derived";
-  import { storeManager } from "$lib/managers/store-manager";
   import { toasts } from "$lib/stores/toasts-store";
 
   export let onLogout: () => void = () => {};

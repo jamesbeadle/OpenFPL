@@ -2,7 +2,6 @@
   import { onMount } from "svelte";
   import { formatUnixTimeToTime, getFixturesWithTeams, getGameweeks, reduceFilteredFixtures } from "../../utils/helpers";
   import { leagueStore } from "$lib/stores/league-store";
-  import WidgetSpinner from "../shared/widget-spinner.svelte";
   import { writable } from "svelte/store";
   import { globalDataLoaded } from "$lib/managers/store-manager";
   import GameweekFilter from "../shared/filters/gameweek-filter.svelte";
@@ -10,6 +9,7 @@
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import { fixtureWithClubsStore } from "$lib/derived/fixtures-with-clubs.derived";
   import type { FixtureWithClubs } from "$lib/types/fixture-with-clubs";
+    import LocalSpinner from "../shared/local-spinner.svelte";
 
   let isLoading = true;
   let gameweeks = getGameweeks(Number(process.env.TOTAL_GAMEWEEKS));
@@ -51,7 +51,7 @@
 
 </script>
 {#if isLoading}
-  <WidgetSpinner />
+  <LocalSpinner />
   <p class="pb-4 mb-4 text-center">Loading Fixture Information for Gameweek {$selectedGameweek}</p>
 {:else}
   <div class="flex flex-col">

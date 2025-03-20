@@ -6,7 +6,9 @@
   .widget {
     position: relative;
     width: 100%;
-    height: 200px;
+    height: 50px;
+    margin-top: 25px;
+    margin-bottom: 25px;
   }
 
   .widget-spinner {

@@ -12,7 +12,7 @@
   import type { TeamSelectionDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   import Modal from "$lib/components/shared/modal.svelte";
-  import WidgetSpinner from "$lib/components/shared/widget-spinner.svelte";
+    import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
     
   export let visible: boolean;
   export let fantasyTeam: Writable<TeamSelectionDTO | undefined>;
@@ -339,7 +339,7 @@
       </div>
     {:else}
       <div class="flex flex-col items-center justify-center">
-        <WidgetSpinner />
+        <LocalSpinner />
         <p class="text-xl">Saving Bonus...</p>
       </div>
     {/if}

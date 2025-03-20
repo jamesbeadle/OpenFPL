@@ -9,10 +9,10 @@
 
   import ConfirmCaptainChange from "./modals/confirm-captain-change-modal.svelte";
   import AddPlayerModal from "./modals/add-player-modal.svelte";
-  import WidgetSpinner from "../shared/widget-spinner.svelte";
   import SelectedPlayersPitch from "./selected-players-pitch.svelte";
   import SelectedPlayersList from "./selected-players-list.svelte";
   import { convertPositionToIndex } from "$lib/utils/helpers";
+    import LocalSpinner from "../shared/local-spinner.svelte";
   
   export let fantasyTeam: Writable<TeamSelectionDTO | undefined>;
   export let pitchView: Writable<boolean>;
@@ -251,7 +251,7 @@
 />
 
 {#if isLoading}
-  <WidgetSpinner />
+  <LocalSpinner />
 {:else}
   {#if $pitchView}
     <SelectedPlayersPitch {selectedFormation} {fantasyTeam} {canSellPlayer} {sessionAddedPlayers} {loadAddPlayer} {removePlayer} {setCaptain} />

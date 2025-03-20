@@ -8,12 +8,12 @@
   import { sortPlayersByClubThenValue } from "$lib/utils/pick-team.helpers";
   import { addTeamDataToPlayers, convertPositionToIndex, normaliseString } from "$lib/utils/helpers";
   
-  import WidgetSpinner from "$lib/components/shared/widget-spinner.svelte";
   import PlayerFilterRow from "./player-filter-row.svelte";
   import PlayerTableHaeder from "./player-table-header.svelte";
   import PlayerTableRow from "./player-table-row.svelte";
   import type { PlayerDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import PlayerModalPagination from "./player-modal-pagination.svelte";
+    import LocalSpinner from "../shared/local-spinner.svelte";
 
   export let filterPosition = writable(-1);
 
@@ -109,7 +109,7 @@
 </script>
 
 {#if isLoading}
-    <WidgetSpinner />
+    <LocalSpinner />
   {:else}
     <div class="p-2">
       <PlayerFilterRow {filterTeam} {filterPosition} {filterSurname} {maxValue} {minValue} />

@@ -11,12 +11,12 @@
   import type { ClubDTO, LeagueStatus } from "../../../../../external_declarations/data_canister/data_canister.did";
   import type { ManagerGameweekDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import FantasyPlayerDetailModal from "../fantasy-team/fantasy-player-detail-modal.svelte";
-  import WidgetSpinner from "../shared/widget-spinner.svelte";
   import GameweekFilter from "../shared/filters/gameweek-filter.svelte";
   import { writable } from "svelte/store";
   import GameweekPointsTable from "./gameweek-points-table.svelte";
   import { getGameweeks } from "$lib/utils/helpers";
   import { leagueStore } from "$lib/stores/league-store";
+    import LocalSpinner from "../shared/local-spinner.svelte";
 
   let isLoading = true;
   let selectedGameweek = writable(1);
@@ -89,7 +89,7 @@
 </script>
 
 {#if isLoading}
-  <WidgetSpinner />
+  <LocalSpinner />
   <p class="pb-4 mb-4 text-center">Getting Gameweek {$selectedGameweek} Data</p>
 {:else}
   {#if showModal}

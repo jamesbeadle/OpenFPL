@@ -12,9 +12,9 @@
   import type { ClubDTO, GameweekNumber } from "../../../../../external_declarations/data_canister/data_canister.did";
   import ManagerPitchPlayer from "./manager-pitch-player.svelte";
   import { playerStore } from "$lib/stores/player-store";
-  import WidgetSpinner from "../shared/widget-spinner.svelte";
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
     import type { ManagerGameweekDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import LocalSpinner from "../shared/local-spinner.svelte";
 
   export let fantasyTeam: Writable<ManagerGameweekDTO | null>;
   export let gridSetup: number[][];
@@ -79,7 +79,7 @@ async function updateGameweekPlayers() {
 }
 </script>
 {#if isLoading}
-  <WidgetSpinner />
+  <LocalSpinner />
 {:else}
 <div class="relative w-full flex flex-row">
   <div class="relative w-full lg:w-1/2 mt-2">
@@ -91,7 +91,7 @@ async function updateGameweekPlayers() {
       on:load={onPitchLoad} 
     />
     {#if isLoading}
-      <WidgetSpinner />
+      <LocalSpinner />
     {:else}
       {#if gridSetup && rowHeight}
         <div class="absolute top-0 left-0 right-0 bottom-0">

@@ -9,9 +9,9 @@
   import { authStore } from "$lib/stores/auth.store";
   import { storeManager } from "$lib/managers/store-manager";
   import { goto } from "$app/navigation";
-  import WidgetSpinner from "../shared/widget-spinner.svelte";
   import SortIcon from "$lib/icons/SortIcon.svelte";
     import type { ManagerDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import LocalSpinner from "../shared/local-spinner.svelte";
 
   export let principalId = "";
   let manager: ManagerDTO | null;
@@ -49,7 +49,7 @@
 </script>
 
 {#if isLoading}
-<WidgetSpinner />
+<LocalSpinner />
 {:else}
   {#if manager}
     <div class="flex flex-col">

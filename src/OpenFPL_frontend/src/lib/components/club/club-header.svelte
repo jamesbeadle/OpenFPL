@@ -14,7 +14,7 @@
   import ClubBrandPanel from "./club-brand-panel.svelte";
   import PageHeader from "../shared/panels/page-header.svelte";
   import ContentPanel from "../shared/panels/content-panel.svelte";
-    import WidgetSpinner from "../shared/widget-spinner.svelte";
+    import LocalSpinner from "../shared/local-spinner.svelte";
   
   export let clubId: ClubId;
 
@@ -64,7 +64,7 @@
 
 <PageHeader>
   {#if isLoading}
-    <WidgetSpinner />
+    <LocalSpinner />
   {:else}
     <ContentPanel>
       <ClubBrandPanel {club} />
