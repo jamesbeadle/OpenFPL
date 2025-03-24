@@ -825,6 +825,10 @@ actor Self {
   };
 
   private func postUpgradeCallback() : async () {
+    /*
+    await updateAllDataHashes();
+    await updateManagerCanisterWasms();
+    await updateLeaderboardCanisterWasms();
     leaderboardManager.setStableActiveRewardRates({
       seasonId = 1;
       startDate = Time.now();
@@ -837,9 +841,8 @@ actor Self {
       seasonLeaderboardRewardRate = 2_500_000_000_000;
       weeklyLeaderboardRewardRate = 5_000_000_000_000;
     });
-    await updateAllDataHashes();
+    */
 
-    //await updateManagerCanisterWasms();
     /*
     stable_app_status := {
       onHold = false;
@@ -850,7 +853,6 @@ actor Self {
 
     //await checkCanisterCycles();
 
-    //await updateLeaderboardCanisterWasms();
 
     //await calculateGWLeaderboard(1,29);
     //await calculateGWRewards(23);

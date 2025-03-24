@@ -3369,7 +3369,7 @@ actor class _ManagerCanister() {
 
   private func postUpgradeCallback() : async () {
     
-    let _ = await resetWeeklyTransfers();
+    //let _ = await resetWeeklyTransfers();
     //await systemReset();
   };
 /*

@@ -17,6 +17,11 @@ type UpdateProfilePictureDTO =
    extension: text;
    profilePicture: blob;
  };
+type UpdateICFCProfile = 
+ record {
+   subApp: SubApp;
+   subAppUserPrincipalId: PrincipalId;
+ };
 type UpdateFavouriteClubDTO = record {favouriteClubId: ClubId;};
 type UpdateAppStatusDTO = 
  record {
@@ -52,6 +57,14 @@ type TeamSelectionDTO =
    transferWindowGameweek: GameweekNumber;
    transfersAvailable: nat8;
    username: text;
+ };
+type SubApp = 
+ variant {
+   FootballGod;
+   JeffBets;
+   OpenFPL;
+   OpenWSL;
+   TransferKings;
  };
 type SeasonId = nat16;
 type SaveTeamDTO = 
@@ -113,25 +126,22 @@ type RewardEntry =
 type Result_9 = 
  variant {
    err: Error;
-   ok: vec record {
-             nat16;
-             PlayerScoreDTO;
-           };
+   ok: ProfileDTO;
  };
 type Result_8 = 
  variant {
    err: Error;
-   ok: ProfileDTO;
+   ok: AppStatusDTO;
  };
 type Result_7 = 
  variant {
    err: Error;
-   ok: AppStatusDTO;
+   ok: nat;
  };
 type Result_6 = 
  variant {
    err: Error;
-   ok: nat;
+   ok: ICFCMembershipDTO;
  };
 type Result_5 = 
  variant {
@@ -159,40 +169,53 @@ type Result_2 =
    err: Error;
    ok: WeeklyRewardsDTO;
  };
-type Result_16 = 
+type Result_18 = 
  variant {
    err: Error;
    ok: text;
  };
-type Result_15 = 
+type Result_17 = 
  variant {
    err: Error;
    ok: RewardRatesDTO;
  };
-type Result_14 = 
+type Result_16 = 
  variant {
    err: Error;
    ok: vec CanisterDTO;
  };
-type Result_13 = 
+type Result_15 = 
  variant {
    err: Error;
    ok: TeamSelectionDTO;
  };
-type Result_12 = 
+type Result_14 = 
  variant {
    err: Error;
    ok: vec DataHashDTO;
  };
-type Result_11 = 
+type Result_13 = 
  variant {
    err: Error;
    ok: ManagerGameweekDTO;
  };
-type Result_10 = 
+type Result_12 = 
+ variant {
+   err: Error;
+   ok: ICFCLinkStatus;
+ };
+type Result_11 = 
  variant {
    err: Error;
    ok: vec CanisterId;
+ };
+type Result_10 = 
+ variant {
+   err: Error;
+   ok: vec record {
+             nat16;
+             PlayerScoreDTO;
+           };
  };
 type Result_1 = 
  variant {
@@ -285,6 +308,27 @@ type PlayerDTO =
    status: PlayerStatus;
    valueQuarterMillions: nat16;
  };
+type NotifyAppofLink = 
+ record {
+   icfcPrincipalId: PrincipalId;
+   subApp: SubApp;
+   subAppUserPrincipalId: PrincipalId;
+ };
+type MembershipType = 
+ variant {
+   Expired;
+   Lifetime;
+   Monthly;
+   NotClaimed;
+   NotEligible;
+   Seasonal;
+ };
+type MembershipClaim = 
+ record {
+   claimedOn: int;
+   expiresOn: opt int;
+   membershipType: MembershipType;
+ };
 type ManagerGameweekDTO = 
  record {
    bankQuarterMillions: nat16;
@@ -350,6 +394,17 @@ type LeaderboardEntryDTO =
    username: text;
  };
 type IsUsernameValid = record {username: text;};
+type ICFCMembershipDTO = 
+ record {
+   membershipClaims: vec MembershipClaim;
+   membershipExpiryTime: int;
+   membershipType: MembershipType;
+ };
+type ICFCLinkStatus = 
+ variant {
+   PendingVerification;
+   Verified;
+ };
 type GetWeeklyRewardsDTO = 
  record {
    gameweek: GameweekNumber;
@@ -454,27 +509,31 @@ type AppStatusDTO =
 service : {
   calculateWeeklyRewards: (GameweekNumber) -> (Result);
   createManager: (CreateManagerDTO) -> (Result);
-  getActiveLeaderboardCanisterId: () -> (Result_16);
-  getActiveRewardRates: () -> (Result_15);
-  getAppStatus: () -> (Result_7) query;
-  getCanisters: (GetCanistersDTO) -> (Result_14);
-  getCurrentTeam: () -> (Result_13);
-  getDataHashes: () -> (Result_12) composite_query;
-  getFantasyTeamSnapshot: (GetManagerGameweekDTO) -> (Result_11);
-  getLeaderboardCanisterIds: () -> (Result_10);
+  getActiveLeaderboardCanisterId: () -> (Result_18);
+  getActiveRewardRates: () -> (Result_17);
+  getAppStatus: () -> (Result_8) query;
+  getCanisters: (GetCanistersDTO) -> (Result_16);
+  getCurrentTeam: () -> (Result_15);
+  getDataHashes: () -> (Result_14) composite_query;
+  getFantasyTeamSnapshot: (GetManagerGameweekDTO) -> (Result_13);
+  getICFCProfileStatus: () -> (Result_12);
+  getLeaderboardCanisterIds: () -> (Result_11);
   getManager: (GetManagerDTO) -> (Result_1);
-  getManagerCanisterIds: () -> (Result_10);
-  getPlayersMap: (GetPlayersMapDTO) -> (Result_9);
+  getManagerCanisterIds: () -> (Result_11);
+  getPlayersMap: (GetPlayersMapDTO) -> (Result_10);
   getPlayersSnapshot: (GetSnapshotPlayersDTO) -> (vec PlayerDTO) query;
-  getProfile: () -> (Result_8);
-  getSystemState: () -> (Result_7) query;
+  getProfile: () -> (Result_9);
+  getSystemState: () -> (Result_8) query;
   getTopups: () -> (vec CanisterTopup) query;
-  getTotalManagers: () -> (Result_6) query;
+  getTotalManagers: () -> (Result_7) query;
+  getUserIFCFMembership: () -> (Result_6);
   getVerifiedPlayers: () -> (Result_5);
   getWeeklyCanisters: () -> (Result_4) query;
   getWeeklyLeaderboard: (GetWeeklyLeaderboardDTO) -> (Result_3);
   getWeeklyRewards: (GetWeeklyRewardsDTO) -> (Result_2) query;
   isUsernameValid: (IsUsernameValid) -> (bool) query;
+  noitifyAppofICFCProfileUpdate: (UpdateICFCProfile) -> (Result);
+  notifyAppLink: (NotifyAppofLink) -> (Result);
   notifyAppsOfFixtureFinalised: (LeagueId, SeasonId, GameweekNumber) ->
    (Result);
   notifyAppsOfGameweekStarting: (LeagueId, SeasonId, GameweekNumber) ->
@@ -494,4 +553,5 @@ service : {
   updateProfilePicture: (UpdateProfilePictureDTO) -> (Result);
   updateSystemState: (UpdateAppStatusDTO) -> (Result);
   updateUsername: (UpdateUsernameDTO) -> (Result);
+  verifyICFCProfile: () -> (Result);
 }
