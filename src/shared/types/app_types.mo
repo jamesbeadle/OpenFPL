@@ -327,6 +327,7 @@ module AppTypes {
   public type ICFCProfile = {
     principalId : Base.PrincipalId;
     linkStatus : ICFCLinkStatus;
+    dataHash : Text;
   };
   public type SubApp = {
     #OpenFPL;

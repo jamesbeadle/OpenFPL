@@ -27,6 +27,7 @@ import CanisterUtilities "../utils/canister_utilities";
 import Helpers "../utils/helpers";
 import ProfileUtilities "../utils/profile_utilities";
 import PickTeamUtilities "../utils/pick_team_utilities";
+import SHA224 "../lib/SHA224";
 
 module {
 
@@ -433,6 +434,7 @@ module {
       let icfcProfile : T.ICFCProfile = {
         principalId = dto.icfcPrincipalId;
         linkStatus = #PendingVerification;
+        dataHash = await SHA224.getRandomHash();
       };
       userICFCProfiles.put(dto.subAppUserPrincipalId, icfcProfile);
       return #ok();
@@ -466,6 +468,7 @@ module {
                 {
                   principalId = foundICFCProfile.principalId;
                   linkStatus = #Verified;
+                  dataHash = await SHA224.getRandomHash();
                 },
               );
 
@@ -476,6 +479,27 @@ module {
               return #err(error);
             };
           };
+        };
+      };
+    };
+    public func updateICFCProfile(dto : Commands.UpdateICFCProfile) : async Result.Result<(), T.Error> {
+      let icfcProfile : ?T.ICFCProfile = userICFCProfiles.get(dto.subAppUserPrincipalId);
+
+      switch (icfcProfile) {
+        case (null) {
+          return #err(#NotFound);
+        };
+        case (?foundICFCProfile) {
+          let newHash = await SHA224.getRandomHash();
+          let _ = userICFCProfiles.put(
+            dto.subAppUserPrincipalId,
+            {
+              principalId = foundICFCProfile.principalId;
+              linkStatus = foundICFCProfile.linkStatus;
+              dataHash = newHash;
+            },
+          );
+          return #ok();
         };
       };
     };
