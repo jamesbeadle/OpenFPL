@@ -86,7 +86,7 @@ actor Self {
     return await userManager.getProfile(Principal.toText(caller));
   };
 
-  public shared ({caller}) func getICFCProfileStatus(): async Result.Result<T.ICFCLinkStatus, T.Error> {
+  public shared ({ caller }) func getICFCProfileStatus() : async Result.Result<T.ICFCLinkStatus, T.Error> {
     assert not Principal.isAnonymous(caller);
     return await userManager.getUserICFCProfileStatus(Principal.toText(caller));
   };
@@ -825,21 +825,20 @@ actor Self {
   };
 
   private func postUpgradeCallback() : async () {
-    leaderboardManager.setStableActiveRewardRates(
-      {
-        seasonId = 1;
-        startDate = Time.now();
-        allTimeMonthlyHighScoreRewardRate = 0;
-        allTimeSeasonHighScoreRewardRate = 0;
-        allTimeWeeklyHighScoreRewardRate = 0;
-        monthlyLeaderboardRewardRate = 0;
-        mostValuableTeamRewardRate = 1_000_000_000_000;
-        highestScoringMatchRewardRate = 1_500_000_000_000;
-        seasonLeaderboardRewardRate = 2_500_000_000_000;
-        weeklyLeaderboardRewardRate = 5_000_000_000_000;
-      });
+    leaderboardManager.setStableActiveRewardRates({
+      seasonId = 1;
+      startDate = Time.now();
+      allTimeMonthlyHighScoreRewardRate = 0;
+      allTimeSeasonHighScoreRewardRate = 0;
+      allTimeWeeklyHighScoreRewardRate = 0;
+      monthlyLeaderboardRewardRate = 0;
+      mostValuableTeamRewardRate = 1_000_000_000_000;
+      highestScoringMatchRewardRate = 1_500_000_000_000;
+      seasonLeaderboardRewardRate = 2_500_000_000_000;
+      weeklyLeaderboardRewardRate = 5_000_000_000_000;
+    });
     await updateAllDataHashes();
-    */
+
     //await updateManagerCanisterWasms();
     /*
     stable_app_status := {
@@ -980,8 +979,14 @@ actor Self {
   };
 
   public shared ({ caller }) func notifyAppLink(dto : Commands.NotifyAppofLink) : async Result.Result<(), T.Error> {
-    assert Principal.toText(caller) == NetworkEnvironmentVariables.DATA_CANISTER_ID;
+    assert Principal.toText(caller) == NetworkEnvironmentVariables.ICFC_BACKEND_CANISTER_ID;
     let _ = await userManager.linkICFCProfile(dto);
+    return #ok();
+  };
+
+  public shared ({ caller }) func noitifyAppofICFCProfileUpdate(dto : Commands.UpdateICFCProfile) : async Result.Result<(), T.Error> {
+    assert Principal.toText(caller) == NetworkEnvironmentVariables.ICFC_BACKEND_CANISTER_ID;
+    let _ = await userManager.updateICFCProfile(dto);
     return #ok();
   };
 

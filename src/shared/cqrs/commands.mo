@@ -135,4 +135,9 @@ module Commands {
     subApp : AppTypes.SubApp;
     icfcPrincipalId : Base.PrincipalId;
   };
+
+  public type UpdateICFCProfile = {
+    subAppUserPrincipalId : Base.PrincipalId;
+    subApp : AppTypes.SubApp;
+  };
 };
