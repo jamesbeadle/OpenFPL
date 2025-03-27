@@ -93,6 +93,29 @@ module {
       };
     };
 
+    public func getICFCProfileSummary(dto : Queries.GetICFCProfile) : async Result.Result<Queries.ICFCProfile, T.Error> {
+      let icfcProfile : ?T.ICFCProfile = userICFCProfiles.get(dto.principalId);
+
+      switch (icfcProfile) {
+        case (null) {
+          return #err(#NotFound);
+        };
+        case (?icfcProfile) {
+
+          let icfc_canister = actor (NetworkEnvironmentVariables.ICFC_BACKEND_CANISTER_ID) : actor {
+            getICFCProfileSummary : Queries.GetICFCProfile -> async Result.Result<Queries.ICFCProfile, T.Error>
+          };
+
+          let icfcMembershipDTO : Queries.GetICFCProfile = {
+            principalId = icfcProfile.principalId;
+          };
+
+          return await icfc_canister.getICFCProfileSummary(icfcMembershipDTO);
+
+        };
+      };
+    };
+
     public func getUserICFCMembership(managerPrincipalId : Base.PrincipalId) : async Result.Result<Queries.ICFCMembershipDTO, T.Error> {
 
       let icfcProfile : ?T.ICFCProfile = userICFCProfiles.get(managerPrincipalId);
@@ -117,6 +140,7 @@ module {
         };
       };
     };
+
 
     public func getManager(dto : Queries.GetManagerDTO, weeklyLeaderboardEntry : ?DTOs.LeaderboardEntryDTO, monthlyLeaderboardEntry : ?DTOs.LeaderboardEntryDTO, seasonLeaderboardEntry : ?DTOs.LeaderboardEntryDTO) : async Result.Result<DTOs.ManagerDTO, T.Error> {
 

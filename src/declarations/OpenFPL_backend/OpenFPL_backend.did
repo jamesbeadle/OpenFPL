@@ -19,6 +19,7 @@ type UpdateProfilePictureDTO =
  };
 type UpdateICFCProfile = 
  record {
+   membershipType: MembershipType;
    subApp: SubApp;
    subAppUserPrincipalId: PrincipalId;
  };
@@ -169,35 +170,40 @@ type Result_2 =
    err: Error;
    ok: WeeklyRewardsDTO;
  };
-type Result_18 = 
+type Result_19 = 
  variant {
    err: Error;
    ok: text;
  };
-type Result_17 = 
+type Result_18 = 
  variant {
    err: Error;
    ok: RewardRatesDTO;
  };
-type Result_16 = 
+type Result_17 = 
  variant {
    err: Error;
    ok: vec CanisterDTO;
  };
-type Result_15 = 
+type Result_16 = 
  variant {
    err: Error;
    ok: TeamSelectionDTO;
  };
-type Result_14 = 
+type Result_15 = 
  variant {
    err: Error;
    ok: vec DataHashDTO;
  };
-type Result_13 = 
+type Result_14 = 
  variant {
    err: Error;
    ok: ManagerGameweekDTO;
+ };
+type Result_13 = 
+ variant {
+   err: Error;
+   ok: ICFCProfile;
  };
 type Result_12 = 
  variant {
@@ -311,8 +317,19 @@ type PlayerDTO =
 type NotifyAppofLink = 
  record {
    icfcPrincipalId: PrincipalId;
+   membershipType: MembershipType;
    subApp: SubApp;
    subAppUserPrincipalId: PrincipalId;
+ };
+type MembershipType__1 = 
+ variant {
+   Expired;
+   Founding;
+   Lifetime;
+   Monthly;
+   NotClaimed;
+   NotEligible;
+   Seasonal;
  };
 type MembershipType = 
  variant {
@@ -323,6 +340,12 @@ type MembershipType =
    NotClaimed;
    NotEligible;
    Seasonal;
+ };
+type MembershipClaim__1 = 
+ record {
+   claimedOn: int;
+   expiresOn: opt int;
+   membershipType: MembershipType__1;
  };
 type MembershipClaim = 
  record {
@@ -395,6 +418,21 @@ type LeaderboardEntryDTO =
    username: text;
  };
 type IsUsernameValid = record {username: text;};
+type ICFCProfile = 
+ record {
+   createdOn: int;
+   displayName: text;
+   favouriteClubId: opt ClubId;
+   favouriteLeagueId: opt LeagueId;
+   membershipClaims: vec MembershipClaim__1;
+   membershipExpiryTime: int;
+   membershipType: MembershipType__1;
+   nationalityId: opt CountryId;
+   principalId: PrincipalId;
+   profilePicture: opt blob;
+   termsAgreed: bool;
+   username: text;
+ };
 type ICFCMembershipDTO = 
  record {
    membershipClaims: vec MembershipClaim;
@@ -510,13 +548,14 @@ type AppStatusDTO =
 service : {
   calculateWeeklyRewards: (GameweekNumber) -> (Result);
   createManager: (CreateManagerDTO) -> (Result);
-  getActiveLeaderboardCanisterId: () -> (Result_18);
-  getActiveRewardRates: () -> (Result_17);
+  getActiveLeaderboardCanisterId: () -> (Result_19);
+  getActiveRewardRates: () -> (Result_18);
   getAppStatus: () -> (Result_8) query;
-  getCanisters: (GetCanistersDTO) -> (Result_16);
-  getCurrentTeam: () -> (Result_15);
-  getDataHashes: () -> (Result_14) composite_query;
-  getFantasyTeamSnapshot: (GetManagerGameweekDTO) -> (Result_13);
+  getCanisters: (GetCanistersDTO) -> (Result_17);
+  getCurrentTeam: () -> (Result_16);
+  getDataHashes: () -> (Result_15) composite_query;
+  getFantasyTeamSnapshot: (GetManagerGameweekDTO) -> (Result_14);
+  getICFCProfile: () -> (Result_13);
   getICFCProfileStatus: () -> (Result_12);
   getLeaderboardCanisterIds: () -> (Result_11);
   getManager: (GetManagerDTO) -> (Result_1);

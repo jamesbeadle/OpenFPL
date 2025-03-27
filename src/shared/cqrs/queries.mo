@@ -2,6 +2,7 @@ import FootballTypes "mo:waterway-mops/FootballTypes";
 import Base "mo:waterway-mops/BaseTypes";
 import AppTypes "../types/app_types";
 import DTOs "../dtos/dtos";
+import Membership "../types/membership_types";
 
 module Queries {
 
@@ -150,6 +151,26 @@ module Queries {
         membershipType : AppTypes.MembershipType;
         membershipClaims : [AppTypes.MembershipClaim];
         membershipExpiryTime : Int;
+    };
+
+    public type GetICFCProfile = {
+        principalId : Base.PrincipalId;
+    };
+
+
+    public type ICFCProfile = {
+        principalId : Base.PrincipalId;
+        username : Text;
+        displayName : Text;
+        membershipType : Membership.MembershipType;
+        membershipClaims : [Membership.MembershipClaim];
+        createdOn : Int;
+        profilePicture : ?Blob;
+        termsAgreed : Bool;
+        membershipExpiryTime : Int;
+        favouriteLeagueId : ?FootballTypes.LeagueId;
+        favouriteClubId : ?FootballTypes.ClubId;
+        nationalityId : ?Base.CountryId;
     };
 
 };

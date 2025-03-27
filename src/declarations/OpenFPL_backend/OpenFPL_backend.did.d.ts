@@ -98,6 +98,20 @@ export interface ICFCMembershipDTO {
   membershipType: MembershipType;
   membershipExpiryTime: bigint;
 }
+export interface ICFCProfile {
+  username: string;
+  displayName: string;
+  createdOn: bigint;
+  favouriteClubId: [] | [ClubId];
+  membershipClaims: Array<MembershipClaim__1>;
+  profilePicture: [] | [Uint8Array | number[]];
+  membershipType: MembershipType__1;
+  termsAgreed: boolean;
+  membershipExpiryTime: bigint;
+  favouriteLeagueId: [] | [LeagueId];
+  nationalityId: [] | [CountryId];
+  principalId: PrincipalId;
+}
 export interface IsUsernameValid {
   username: string;
 }
@@ -167,7 +181,20 @@ export interface MembershipClaim {
   claimedOn: bigint;
   membershipType: MembershipType;
 }
+export interface MembershipClaim__1 {
+  expiresOn: [] | [bigint];
+  claimedOn: bigint;
+  membershipType: MembershipType__1;
+}
 export type MembershipType =
+  | { Founding: null }
+  | { NotClaimed: null }
+  | { Seasonal: null }
+  | { Lifetime: null }
+  | { Monthly: null }
+  | { NotEligible: null }
+  | { Expired: null };
+export type MembershipType__1 =
   | { Founding: null }
   | { NotClaimed: null }
   | { Seasonal: null }
@@ -179,6 +206,7 @@ export interface NotifyAppofLink {
   icfcPrincipalId: PrincipalId;
   subApp: SubApp;
   subAppUserPrincipalId: PrincipalId;
+  membershipType: MembershipType;
 }
 export interface PlayerDTO {
   id: number;
@@ -258,12 +286,13 @@ export type Result_10 =
   | { err: Error };
 export type Result_11 = { ok: Array<CanisterId> } | { err: Error };
 export type Result_12 = { ok: ICFCLinkStatus } | { err: Error };
-export type Result_13 = { ok: ManagerGameweekDTO } | { err: Error };
-export type Result_14 = { ok: Array<DataHashDTO> } | { err: Error };
-export type Result_15 = { ok: TeamSelectionDTO } | { err: Error };
-export type Result_16 = { ok: Array<CanisterDTO> } | { err: Error };
-export type Result_17 = { ok: RewardRatesDTO } | { err: Error };
-export type Result_18 = { ok: string } | { err: Error };
+export type Result_13 = { ok: ICFCProfile } | { err: Error };
+export type Result_14 = { ok: ManagerGameweekDTO } | { err: Error };
+export type Result_15 = { ok: Array<DataHashDTO> } | { err: Error };
+export type Result_16 = { ok: TeamSelectionDTO } | { err: Error };
+export type Result_17 = { ok: Array<CanisterDTO> } | { err: Error };
+export type Result_18 = { ok: RewardRatesDTO } | { err: Error };
+export type Result_19 = { ok: string } | { err: Error };
 export type Result_2 = { ok: WeeklyRewardsDTO } | { err: Error };
 export type Result_3 = { ok: WeeklyLeaderboardDTO } | { err: Error };
 export type Result_4 =
@@ -372,6 +401,7 @@ export interface UpdateFavouriteClubDTO {
 export interface UpdateICFCProfile {
   subApp: SubApp;
   subAppUserPrincipalId: PrincipalId;
+  membershipType: MembershipType;
 }
 export interface UpdateProfilePictureDTO {
   profilePicture: Uint8Array | number[];
@@ -394,13 +424,14 @@ export interface WeeklyRewardsDTO {
 export interface _SERVICE {
   calculateWeeklyRewards: ActorMethod<[GameweekNumber], Result>;
   createManager: ActorMethod<[CreateManagerDTO], Result>;
-  getActiveLeaderboardCanisterId: ActorMethod<[], Result_18>;
-  getActiveRewardRates: ActorMethod<[], Result_17>;
+  getActiveLeaderboardCanisterId: ActorMethod<[], Result_19>;
+  getActiveRewardRates: ActorMethod<[], Result_18>;
   getAppStatus: ActorMethod<[], Result_8>;
-  getCanisters: ActorMethod<[GetCanistersDTO], Result_16>;
-  getCurrentTeam: ActorMethod<[], Result_15>;
-  getDataHashes: ActorMethod<[], Result_14>;
-  getFantasyTeamSnapshot: ActorMethod<[GetManagerGameweekDTO], Result_13>;
+  getCanisters: ActorMethod<[GetCanistersDTO], Result_17>;
+  getCurrentTeam: ActorMethod<[], Result_16>;
+  getDataHashes: ActorMethod<[], Result_15>;
+  getFantasyTeamSnapshot: ActorMethod<[GetManagerGameweekDTO], Result_14>;
+  getICFCProfile: ActorMethod<[], Result_13>;
   getICFCProfileStatus: ActorMethod<[], Result_12>;
   getLeaderboardCanisterIds: ActorMethod<[], Result_11>;
   getManager: ActorMethod<[GetManagerDTO], Result_1>;

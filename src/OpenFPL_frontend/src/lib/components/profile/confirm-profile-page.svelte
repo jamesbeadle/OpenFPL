@@ -5,9 +5,6 @@
     import { toasts } from "$lib/stores/toasts-store";
     import Header from "$lib/shared/Header.svelte";
     import { clubStore } from "$lib/stores/club-store";
-    import type { ICFCMembershipDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-    
-    export let membership: ICFCMembershipDTO | undefined = undefined;
   
     let isLoading = false;
     let username = "";
@@ -18,6 +15,8 @@
     let usernameAvailable = false;
   
     let usernameTimeout: NodeJS.Timeout;
+  
+    $: isSubmitDisabled = !username || !usernameAvailable;
   
     async function checkUsername() {
       if (username.length < 5) {

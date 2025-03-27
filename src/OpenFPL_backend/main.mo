@@ -54,6 +54,7 @@ actor Self {
   };
 
   public shared composite query func getDataHashes() : async Result.Result<[DTOs.DataHashDTO], T.Error> {
+    //TODO Who is the only person who should be calling this
     return seasonManager.getDataHashes();
   };
 
@@ -65,7 +66,7 @@ actor Self {
   };
 
   public shared query ({ caller }) func getPlayersSnapshot(dto : Queries.GetSnapshotPlayersDTO) : async [DTOs.PlayerDTO] {
-    assert not Principal.isAnonymous(caller);
+    assert not Principal.isAnonymous(caller); //TODO WHo should be calling this
     return seasonManager.getPlayersSnapshot(dto);
   };
 
@@ -83,21 +84,32 @@ actor Self {
 
   public shared ({ caller }) func getProfile() : async Result.Result<DTOs.ProfileDTO, T.Error> {
     assert not Principal.isAnonymous(caller);
+    assert await hasMembership(Principal.toText(caller));
+    
     return await userManager.getProfile(Principal.toText(caller));
   };
 
   public shared ({ caller }) func getICFCProfileStatus() : async Result.Result<T.ICFCLinkStatus, T.Error> {
     assert not Principal.isAnonymous(caller);
+    assert await hasMembership(Principal.toText(caller));
     return await userManager.getUserICFCProfileStatus(Principal.toText(caller));
+  };
+
+  public shared ({ caller }) func getICFCProfile() : async Result.Result<Queries.ICFCProfile, T.Error> {
+    assert not Principal.isAnonymous(caller);
+    assert await hasMembership(Principal.toText(caller));
+    return await userManager.getICFCProfileSummary({ principalId = Principal.toText(caller) });
   };
 
   public shared ({ caller }) func getUserIFCFMembership() : async Result.Result<Queries.ICFCMembershipDTO, T.Error> {
     assert not Principal.isAnonymous(caller);
+    assert await hasMembership(Principal.toText(caller));
     return await userManager.getUserICFCMembership(Principal.toText(caller));
   };
 
   public shared ({ caller }) func getCurrentTeam() : async Result.Result<Queries.TeamSelectionDTO, T.Error> {
     assert not Principal.isAnonymous(caller);
+    assert await hasMembership(Principal.toText(caller));
     let leagueStatusResult = await getLeagueStatus();
     switch (leagueStatusResult) {
       case (#ok leagueStatus) {
@@ -111,11 +123,14 @@ actor Self {
 
   public shared func getManager(dto : Queries.GetManagerDTO) : async Result.Result<DTOs.ManagerDTO, T.Error> {
 
+    //TODO who should be able to access
+
     let weeklyLeaderboardEntry = await leaderboardManager.getWeeklyLeaderboardEntry(dto.principalId, dto.seasonId, dto.gameweek);
     return await userManager.getManager(dto, weeklyLeaderboardEntry, null, null);
   };
 
   public shared func getFantasyTeamSnapshot(dto : Queries.GetManagerGameweekDTO) : async Result.Result<DTOs.ManagerGameweekDTO, T.Error> {
+    //TODO who should be able to access
     return await userManager.getFantasyTeamSnapshot(dto);
   };
 
@@ -153,12 +168,14 @@ actor Self {
 
   public shared ({ caller }) func createManager(dto : Commands.CreateManagerDTO) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
+    assert await hasMembership(Principal.toText(caller));
     let principalId = Principal.toText(caller);
     return await userManager.createManager(principalId, dto);
   };
 
   public shared ({ caller }) func verifyICFCProfile() : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
+    assert await hasMembership(Principal.toText(caller));
     let dto : Commands.VerifyICFCProfile = {
       principalId = Principal.toText(caller);
     };
@@ -195,6 +212,7 @@ actor Self {
 
   public shared ({ caller }) func saveTeamSelection(dto : Commands.SaveTeamDTO) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
+    assert await hasMembership(Principal.toText(caller));
     let principalId = Principal.toText(caller);
     let leagueStatusResult = await getLeagueStatus();
 
@@ -235,6 +253,7 @@ actor Self {
 
   public shared ({ caller }) func saveBonusSelection(dto : Commands.SaveBonusDTO) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
+    assert await hasMembership(Principal.toText(caller));
     let principalId = Principal.toText(caller);
     let leagueStatusResult = await getLeagueStatus();
 
@@ -272,12 +291,14 @@ actor Self {
 
   public shared ({ caller }) func updateUsername(dto : Commands.UpdateUsernameDTO) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
+    assert await hasMembership(Principal.toText(caller));
     let principalId = Principal.toText(caller);
     return await userManager.updateUsername(principalId, dto);
   };
 
   public shared ({ caller }) func updateFavouriteClub(dto : Commands.UpdateFavouriteClubDTO) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
+    assert await hasMembership(Principal.toText(caller));
     let principalId = Principal.toText(caller);
 
     let clubsResult = await dataManager.getVerifiedClubs(Environment.LEAGUE_ID);
@@ -302,12 +323,14 @@ actor Self {
 
   public shared ({ caller }) func updateProfilePicture(dto : Commands.UpdateProfilePictureDTO) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
+    assert await hasMembership(Principal.toText(caller));
     let principalId = Principal.toText(caller);
     return await userManager.updateProfilePicture(principalId, dto);
   };
 
   public shared ({ caller }) func searchUsername(dto : Queries.GetManagerByUsername) : async Result.Result<DTOs.ManagerDTO, T.Error> {
     assert not Principal.isAnonymous(caller);
+    assert await hasMembership(Principal.toText(caller));
     return await userManager.getManagerByUsername(dto.username);
   };
 
@@ -870,6 +893,20 @@ actor Self {
     await seasonManager.updateDataHash("monthly_leaderboards");
     await seasonManager.updateDataHash("season_leaderboard");
     await seasonManager.updateDataHash("reward_rates");
+  };
+
+  private func hasMembership(caller: Base.PrincipalId) : async Bool {
+    let membershipResult = await userManager.getUserICFCMembership(caller);
+    switch(membershipResult){
+      case (#ok membership){
+        let membershipType = membership.membershipType;
+        if(membershipType == #Founding or membershipType == #Lifetime or membershipType == #Monthly or membershipType == #Seasonal){
+          return true;
+        };
+      };
+      case (#err _){}
+    };
+    return false;
   };
 
   private func calculateGWLeaderboard(seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber) : async () {

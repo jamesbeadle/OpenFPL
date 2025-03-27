@@ -138,7 +138,7 @@
       </main>
       <Footer />
     {:else if $authSignedInStore && !hasProfile}
-      <CreateNewUser on:profileCreated={handleProfileCreated} />
+      <CreateNewUser on:profileCreated={handleProfileCreated} {membership} />
     {:else}
       <LandingPage />
     {/if}
