@@ -262,6 +262,7 @@ export const idlFactory = ({ IDL }) => {
   const Result_9 = IDL.Variant({ ok: ProfileDTO, err: Error });
   const Result_7 = IDL.Variant({ ok: IDL.Nat, err: Error });
   const MembershipType = IDL.Variant({
+    Founding: IDL.Null,
     NotClaimed: IDL.Null,
     Seasonal: IDL.Null,
     Lifetime: IDL.Null,

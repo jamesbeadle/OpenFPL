@@ -308,6 +308,7 @@ module AppTypes {
     #Monthly;
     #Seasonal;
     #Lifetime;
+    #Founding;
     #Expired;
     #NotClaimed;
     #NotEligible;

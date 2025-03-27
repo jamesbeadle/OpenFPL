@@ -14,6 +14,7 @@ import type {
   UpdateUsernameDTO,
   CreateManagerDTO,
   ProfileDTO,
+  ICFCMembershipDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { UserService } from "$lib/services/user-service";
 import { toasts } from "$lib/stores/toasts-store";
@@ -286,6 +287,12 @@ function createUserStore() {
     return 0n;
   }
 
+  async function getUserIFCFMembership(): Promise<
+    ICFCMembershipDTO | undefined
+  > {
+    return await new UserService().getUserIFCFMembership();
+  }
+
   return {
     subscribe,
     set,
@@ -298,6 +305,7 @@ function createUserStore() {
     withdrawFPL,
     getFPLBalance,
     createManager,
+    getUserIFCFMembership,
   };
 }
 
