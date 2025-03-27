@@ -325,6 +325,7 @@ module AppTypes {
   };
 
   public type ICFCProfile = {
+    membershipType : MembershipType;
     principalId : Base.PrincipalId;
     linkStatus : ICFCLinkStatus;
     dataHash : Text;

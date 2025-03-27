@@ -80,7 +80,7 @@ module {
       };
     };
 
-    public func getUserICFCProfileStatus (managerPrincipalId : Base.PrincipalId) : async Result.Result<T.ICFCLinkStatus, T.Error> {
+    public func getUserICFCProfileStatus(managerPrincipalId : Base.PrincipalId) : async Result.Result<T.ICFCLinkStatus, T.Error> {
       let icfcProfile : ?T.ICFCProfile = userICFCProfiles.get(managerPrincipalId);
 
       switch (icfcProfile) {
@@ -435,6 +435,7 @@ module {
         principalId = dto.icfcPrincipalId;
         linkStatus = #PendingVerification;
         dataHash = await SHA224.getRandomHash();
+        membershipType = dto.membershipType;
       };
       userICFCProfiles.put(dto.subAppUserPrincipalId, icfcProfile);
       return #ok();
@@ -469,6 +470,7 @@ module {
                   principalId = foundICFCProfile.principalId;
                   linkStatus = #Verified;
                   dataHash = await SHA224.getRandomHash();
+                  membershipType = foundICFCProfile.membershipType;
                 },
               );
 
@@ -497,6 +499,7 @@ module {
               principalId = foundICFCProfile.principalId;
               linkStatus = foundICFCProfile.linkStatus;
               dataHash = newHash;
+              membershipType = dto.membershipType;
             },
           );
           return #ok();
