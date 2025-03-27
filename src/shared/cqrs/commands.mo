@@ -121,6 +121,7 @@ module Commands {
   };
 
   public type NotifyAppofLink = {
+    membershipType : AppTypes.MembershipType;
     subAppUserPrincipalId : Base.PrincipalId;
     subApp : AppTypes.SubApp;
     icfcPrincipalId : Base.PrincipalId;
@@ -139,5 +140,6 @@ module Commands {
   public type UpdateICFCProfile = {
     subAppUserPrincipalId : Base.PrincipalId;
     subApp : AppTypes.SubApp;
+    membershipType : AppTypes.MembershipType;
   };
 };
