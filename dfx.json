@@ -1,17 +1,35 @@
 {
   "canisters": {
+    "data_canister": {
+      "build": "",
+      "candid": "https://raw.githubusercontent.com/jamesbeadle/football_god/refs/heads/master/src/declarations/data_canister/data_canister.did",
+      "wasm": "https://github.com/jamesbeadle/football_god/raw/refs/heads/master/governance/wasms/data_canister.wasm.gz",
+      "remote": {
+        "id": {
+          "ic": "52fzd-2aaaa-aaaal-qmzsa-cai",
+          "local": "52fzd-2aaaa-aaaal-qmzsa-cai"
+        }
+      },
+      "type": "custom"
+    },
     "OpenFPL_backend": {
-      "dependencies": [],
+      "dependencies": [
+        "data_canister"
+      ],
       "main": "src/OpenFPL_backend/main.mo",
       "type": "motoko",
       "optimize": "cycles"
     },
     "OpenFPL_frontend": {
-      "dependencies": ["OpenFPL_backend"],
+      "dependencies": [
+        "OpenFPL_backend"
+      ],
       "frontend": {
         "entrypoint": "build/index.html"
       },
-      "source": ["build/"],
+      "source": [
+        "build/"
+      ],
       "type": "assets"
     },
     "sns_governance": {
