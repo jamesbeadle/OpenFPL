@@ -260,7 +260,7 @@ actor class _ManagerCanister() {
     };
   };
 
-  public shared ({ caller }) func useBonus(dto : UserCommands.PlayBonus, monthlyBonuses : Nat8) : async Result.Result<(), MopsEnums.Error> {
+  public shared ({ caller }) func useBonus(dto : UserCommands.PlayBonus, monthlyBonuses : Nat8, gameweek: ICFCTypes.GameweekNumber) : async Result.Result<(), MopsEnums.Error> {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == Environment.BACKEND_CANISTER_ID;
@@ -274,7 +274,7 @@ actor class _ManagerCanister() {
           case 0 {
             for (manager in Iter.fromArray(managerGroup1)) {
               if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeBonus(dto, manager, monthlyBonuses));
+                managerBuffer.add(mergeBonus(dto, manager, monthlyBonuses, gameweek));
               } else {
                 managerBuffer.add(manager);
               };

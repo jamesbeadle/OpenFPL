@@ -9,15 +9,10 @@ module MopsEnums {
     #InvalidData;
     #SystemOnHold;
     #CanisterCreateError;
-    #Not11Players;
-    #DuplicatePlayerInTeam;
-    #MoreThan2PlayersFromClub;
-    #NumberPerPositionError;
-    #SelectedCaptainNotInTeam;
-    #InvalidBonuses;
-    #TeamOverspend;
-    #TooManyTransfers;
-    #InvalidGameweek;
+    #IncorrectSetup;
+    #DuplicateData;
+    #MaxDataExceeded;
+    #InvalidProperty;
     #InsufficientFunds;
   };
 
