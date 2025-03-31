@@ -15,9 +15,7 @@ import Text "mo:base/Text";
 import TrieMap "mo:base/TrieMap";
 
 import UserCommands "../commands/user_commands";
-import MopsEnums "../cleanup/mops_enums";
 import AppTypes "../types/app_types";
-import FootballGodQueries "../cleanup/football_god_queries";
 
 module {
 

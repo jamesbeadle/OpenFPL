@@ -2,13 +2,7 @@
 
 import Base "mo:waterway-mops/BaseTypes";
 import FootballTypes "mo:waterway-mops/FootballTypes";
-import Root "./cleanup/sns-wrappers/root";
-
-//TODO - John we use these in each project so mops?
-import Management "./cleanup/Management";
-//TODO Do I need 2 environment variables/
 import Environment "./Environment";
-import Queries "./cleanup/football_god_queries"; //TODO Refactor and remove
 
 
 /* ----- Mops Packages ----- */

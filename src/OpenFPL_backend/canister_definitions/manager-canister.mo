@@ -2,10 +2,6 @@
 // John should just be commands queries ids enums
 import Base "mo:waterway-mops/BaseTypes";
 import FootballTypes "mo:waterway-mops/FootballTypes";
-import ICFCTypes "../cleanup/icfc_types";
-import MopsCanisterIds "../cleanup/mops_canister_ids";
-import FootballQueries "../cleanup/football_god_queries";
-import MopsEnums "../cleanup/mops_enums";
 
 
 /* ----- Mops Packages ----- */
@@ -48,8 +44,6 @@ import AppTypes "../types/app_types";
 
 import PickTeamUtilities "../utilities/pick_team_utilities";
 import Environment "../Environment";
-import MopsIds "../cleanup/mops_ids";
-import MopsBaseTypes "../cleanup/mops_base_types";
 
 
 actor class _ManagerCanister() {

@@ -18,13 +18,9 @@ import Bool "mo:base/Bool";
 import Debug "mo:base/Debug";
 import UserQueries "../queries/user_queries";
 import AppTypes "../types/app_types";
-import MopsEnums "../cleanup/mops_enums";
-import MopsIcfcEnums "../cleanup/mops_icfc_enums";
 import LeaderboardQueries "../queries/leaderboard_queries";
 import UserCommands "../commands/user_commands";
-import FootballGodQueries "../cleanup/football_god_queries";
 import PickTeamUtilities "../utilities/pick_team_utilities";
-import Management "../cleanup/Management";
 import ManagerCanister "../canister_definitions/manager-canister";
 
 module {

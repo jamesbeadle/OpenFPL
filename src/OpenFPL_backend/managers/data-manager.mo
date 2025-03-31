@@ -1,8 +1,5 @@
 import Result "mo:base/Result";
-import DTOs "../../shared/dtos/dtos";
 import FootballTypes "mo:waterway-mops/FootballTypes";
-import MopsEnums "../mops/mops_enums";
-import MopsCanisterIds "../cleanup/mops_canister_ids";
 
 module {
 

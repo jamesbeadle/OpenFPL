@@ -1,11 +1,11 @@
-import MopsEnums "../cleanup/mops_enums";
-import MopsIds "../cleanup/mops_ids";
+import Enums "mo:waterway-mops/Enums";
+import Ids "mo:waterway-mops/Ids";
 
 module CanisterQueries {
 
 
     public type GetCanisters = {
-        canisterType : MopsEnums.CanisterType;
+        canisterType : Enums.CanisterType;
     };
 
     public type Canisters = {
@@ -13,7 +13,7 @@ module CanisterQueries {
     };
 
     public type Canister = {
-        canisterId : MopsIds.CanisterId;
+        canisterId : Ids.CanisterId;
         cycles : Nat;
         computeAllocation : Nat;
         topups : [CanisterTopup];

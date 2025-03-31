@@ -1,30 +1,30 @@
 import FootballTypes "mo:waterway-mops/FootballTypes";
+import Ids "mo:waterway-mops/Ids";
 import Enums "../enums/enums";
-import MopsIds "../cleanup/mops_ids";
 
 module UserCommands = {
 
     public type LinkICFCProfile = {
-        principalId: MopsIds.PrincipalId;
-        openFPLPrincipalId: MopsIds.PrincipalId;
-        icfcPrincipalId: MopsIds.PrincipalId;
+        principalId: Ids.PrincipalId;
+        openFPLPrincipalId: Ids.PrincipalId;
+        icfcPrincipalId: Ids.PrincipalId;
         favouriteClubId: FootballTypes.ClubId;
     };
 
     public type SetFavouriteClub = {
-        principalId: MopsIds.PrincipalId;
+        principalId: Ids.PrincipalId;
         favouriteClubId: FootballTypes.ClubId;
     };
 
     public type SaveFantasyTeam = {
-        principalId: MopsIds.PrincipalId;
+        principalId: Ids.PrincipalId;
         playerIds : [FootballTypes.PlayerId];
         captainId : FootballTypes.ClubId;
         playTransferWindowBonus: Bool;
     };
 
     public type PlayBonus = {
-        principalId: MopsIds.PrincipalId;
+        principalId: Ids.PrincipalId;
         bonusType: Enums.BonusType;
     };
 

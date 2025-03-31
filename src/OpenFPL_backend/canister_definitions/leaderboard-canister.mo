@@ -13,10 +13,10 @@ import TrieMap "mo:base/TrieMap";
 
 import Base "mo:waterway-mops/BaseTypes";
 import FootballTypes "mo:waterway-mops/FootballTypes";
+import CanisterIds "mo:waterway-mops/CanisterIds";
 import LeaderboardQueries "../../OpenFPL_backend/queries/leaderboard_queries";
 import LeaderboardUtilities "../utilities/leaderboard_utilities";
 import AppTypes "../types/app_types";
-import MopsCanisterIds "../cleanup/mops_canister_ids";
 
 actor class _LeaderboardCanister() {
 
@@ -36,7 +36,7 @@ actor class _LeaderboardCanister() {
   ) : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert principalId == MopsCanisterIds.OPENFPL_BACKEND_CANISTER_ID;
+    assert principalId == CanisterIds.OPENFPL_BACKEND_CANISTER_ID;
 
     if (month == 0 and gameweek == 0) {
       season_leaderboards := Array.filter<AppTypes.SeasonLeaderboard>(
@@ -74,7 +74,7 @@ actor class _LeaderboardCanister() {
   public shared ({ caller }) func addLeaderboardChunk(seasonId : FootballTypes.SeasonId, month : Base.CalendarMonth, gameweek : FootballTypes.GameweekNumber, clubId : FootballTypes.ClubId, entriesChunk : [AppTypes.LeaderboardEntry]) : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert principalId == MopsCanisterIds.OPENFPL_BACKEND_CANISTER_ID;
+    assert principalId == CanisterIds.OPENFPL_BACKEND_CANISTER_ID;
 
     if (month == 0 and gameweek == 0) {
       addSeasonLeaderboardChunk(seasonId, entriesChunk);
@@ -92,7 +92,7 @@ actor class _LeaderboardCanister() {
   public shared ({ caller }) func finaliseUpdate(seasonId : FootballTypes.SeasonId, month : Base.CalendarMonth, gameweek : FootballTypes.GameweekNumber) : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert principalId == MopsCanisterIds.OPENFPL_BACKEND_CANISTER_ID;
+    assert principalId == CanisterIds.OPENFPL_BACKEND_CANISTER_ID;
     entryUpdatesAllowed := false;
 
     await calculateLeaderboards(seasonId, gameweek, month);
@@ -399,7 +399,7 @@ actor class _LeaderboardCanister() {
   public shared query ({ caller }) func getWeeklyRewardLeaderboard(seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber) : async ?LeaderboardQ.WeeklyLeaderboardDTO {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert principalId == MopsCanisterIds.OPENFPL_BACKEND_CANISTER_ID;
+    assert principalId == CanisterIds.OPENFPL_BACKEND_CANISTER_ID;
 
     var currentLeaderboard : ?AppTypes.WeeklyLeaderboard = null;
 
@@ -475,7 +475,7 @@ actor class _LeaderboardCanister() {
   public shared ({ caller }) func getWeeklyLeaderboardEntries(dto : LeaderboardQueries.GetWeeklyLeaderboard) : async ?LeaderboardQueries.WeeklyLeaderboard {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert principalId == MopsCanisterIds.OPENFPL_BACKEND_CANISTER_ID;
+    assert principalId == CanisterIds.OPENFPL_BACKEND_CANISTER_ID;
 
     var currentLeaderboard : ?AppTypes.WeeklyLeaderboard = null;
 
@@ -527,7 +527,7 @@ actor class _LeaderboardCanister() {
   public shared query ({ caller }) func getWeeklyLeaderboardEntry(seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, principalId : Text) : async ?DTOs.LeaderboardEntryDTO {
     assert not Principal.isAnonymous(caller);
     let callerPrincipalId = Principal.toText(caller);
-    assert callerPrincipalId == MopsCanisterIds.OPENFPL_BACKEND_CANISTER_ID;
+    assert callerPrincipalId == CanisterIds.OPENFPL_BACKEND_CANISTER_ID;
 
     var currentLeaderboard : ?AppTypes.WeeklyLeaderboard = null;
 
@@ -556,7 +556,7 @@ actor class _LeaderboardCanister() {
   public shared ({ caller }) func getTotalLeaderboards() : async Nat {
     assert not Principal.isAnonymous(caller);
     let callerPrincipalId = Principal.toText(caller);
-    assert callerPrincipalId == MopsCanisterIds.OPENFPL_BACKEND_CANISTER_ID;
+    assert callerPrincipalId == CanisterIds.OPENFPL_BACKEND_CANISTER_ID;
 
     return Array.size(weekly_leaderboards) + Array.size(monthly_leaderboards) + Array.size(season_leaderboards);
   };

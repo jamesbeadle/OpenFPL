@@ -1,16 +1,16 @@
-import FootballTypes "mo:waterway-mops/FootballTypes"; //TODO replace with ID link
 import BaseTypes "mo:waterway-mops/BaseTypes";
+import Ids "mo:waterway-mops/Ids";
+import FootballTypes "mo:waterway-mops/FootballTypes";
 import Enums "../enums/enums";
-import MopsIds "../cleanup/mops_ids";
 
 module UserQueries = {
 
     public type GetProfile = {
-        principalId : MopsIds.PrincipalId;
+        principalId : Ids.PrincipalId;
     };
 
     public type Profile = {
-        principalId : MopsIds.PrincipalId;
+        principalId : Ids.PrincipalId;
         username : Text;
         termsAccepted : Bool;
         profilePicture : ?Blob;
@@ -22,7 +22,7 @@ module UserQueries = {
     public type GetICFCProfile = {};
     
     public type ICFCProfile = {
-        principalId : MopsIds.PrincipalId;
+        principalId : Ids.PrincipalId;
         username : Text;
         displayName : Text;
         membershipType : Enums.MembershipType;
@@ -33,7 +33,7 @@ module UserQueries = {
         membershipExpiryTime : Int;
         favouriteLeagueId : ?FootballTypes.LeagueId;
         favouriteClubId : ?FootballTypes.ClubId;
-        nationalityId : ?MopsIds.CountryId;
+        nationalityId : ?Ids.CountryId;
     };
 
     public type MembershipClaim = {
@@ -47,7 +47,7 @@ module UserQueries = {
     };
 
     public type Manager = {
-        principalId : MopsIds.PrincipalId;
+        principalId : Ids.PrincipalId;
         username : Text;
         profilePicture : ?Blob;
         profilePictureType : Text;
@@ -89,7 +89,7 @@ module UserQueries = {
         captainFantasticGameweek : FootballTypes.GameweekNumber;
         captainFantasticPlayerId : FootballTypes.PlayerId;
         oneNationGameweek : FootballTypes.GameweekNumber;
-        oneNationCountryId : MopsIds.CountryId;
+        oneNationCountryId : Ids.CountryId;
         prospectsGameweek : FootballTypes.GameweekNumber;
         braceBonusGameweek : FootballTypes.GameweekNumber;
         hatTrickHeroGameweek : FootballTypes.GameweekNumber;
@@ -124,21 +124,21 @@ module UserQueries = {
         captainFantasticGameweek : FootballTypes.GameweekNumber;
         captainFantasticPlayerId : FootballTypes.ClubId;
         oneNationGameweek : FootballTypes.GameweekNumber;
-        oneNationCountryId : MopsIds.CountryId;
+        oneNationCountryId : Ids.CountryId;
         prospectsGameweek : FootballTypes.GameweekNumber;
         braceBonusGameweek : FootballTypes.GameweekNumber;
         hatTrickHeroGameweek : FootballTypes.GameweekNumber;
         transferWindowGameweek : FootballTypes.GameweekNumber;
-        canisterId : MopsIds.CanisterId;
+        canisterId : Ids.CanisterId;
         firstGameweek : Bool;
     };
 
     public type GetFantasyTeamSnapshot = {
-        principalId : MopsIds.PrincipalId;
+        principalId : Ids.PrincipalId;
     };
 
     public type FantasyTeamSnapshot = {
-        principalId : MopsIds.PrincipalId;
+        principalId : Ids.PrincipalId;
         username : Text;
         favouriteClubId : ?FootballTypes.ClubId;
         monthlyBonusesAvailable : Nat8;
@@ -161,7 +161,7 @@ module UserQueries = {
         captainFantasticGameweek : FootballTypes.GameweekNumber;
         captainFantasticPlayerId : FootballTypes.PlayerId;
         oneNationGameweek : FootballTypes.GameweekNumber;
-        oneNationCountryId : BaseTypes.CountryId;
+        oneNationCountryId : Ids.CountryId;
         prospectsGameweek : FootballTypes.GameweekNumber;
         braceBonusGameweek : FootballTypes.GameweekNumber;
         hatTrickHeroGameweek : FootballTypes.GameweekNumber;

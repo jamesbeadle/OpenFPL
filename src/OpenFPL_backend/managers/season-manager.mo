@@ -3,20 +3,17 @@ import Buffer "mo:base/Buffer";
 import Iter "mo:base/Iter";
 import Array "mo:base/Array";
 import Option "mo:base/Option";
-import DTOs "../../shared/dtos/dtos";
 import FootballTypes "mo:waterway-mops/FootballTypes";
-import T "../../shared/types/app_types";
 import Base "mo:waterway-mops/BaseTypes";
-import MopsEnums "../../OpenFPL_backend/mops/mops_enums";
+import BaseTypes "mo:waterway-mops/BaseTypes";
 import AppCommands "../../OpenFPL_backend/commands/app_commands";
-import FootballGodQueries "../../shared/cqrs/football_god_queries";
-import SHA224 "../cleanup/SHA224";
+import AppTypes "../types/app_types";
 
 module {
 
   public class SeasonManager() {
 
-    var appStatus : T.AppStatus = {
+    var appStatus : BaseTypes.AppStatus = {
       onHold = false;
       version = "2.0.0";
     };
@@ -29,9 +26,9 @@ module {
       { category = "reward_rates"; hash = "OPENFPL_1" },
     ];
 
-    private var leagueGameweekStatuses : [T.LeagueGameweekStatus] = [];
-    private var leagueMonthStatuses : [T.LeagueMonthStatus] = [];
-    private var leagueSeasonStatuses : [T.LeagueSeasonStatus] = [];
+    private var leagueGameweekStatuses : [AppTypes.LeagueGameweekStatus] = [];
+    private var leagueMonthStatuses : [AppTypes.LeagueMonthStatus] = [];
+    private var leagueSeasonStatuses : [AppTypes.LeagueSeasonStatus] = [];
 
     private var playersSnapshots : [(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])])] = [];
 

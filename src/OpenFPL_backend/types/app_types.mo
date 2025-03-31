@@ -1,20 +1,21 @@
-import ICFCEnums "../cleanup/mops_icfc_enums"; //TODO Move to mops
 
 import List "mo:base/List";
-import Base "mo:waterway-mops/BaseTypes";
 import FootballTypes "mo:waterway-mops/FootballTypes";
+import Ids "mo:waterway-mops/Ids";
+import BaseTypes "mo:waterway-mops/BaseTypes";
+import ICFCEnums "mo:waterway-mops/ICFCEnums";
 import Enums "../enums/enums";
 
 module AppTypes {
 
-  public type TokenId = Nat16;
+  public type TokenId = Nat16; // TODO Move
 
 
   //Manager types
 
   public type Manager = {
-    principalId : Base.PrincipalId;
-    canisterId : Base.CanisterId;
+    principalId : Ids.PrincipalId;
+    canisterId : Ids.CanisterId;
     username : Text;
     termsAccepted : Bool;
     profilePicture : ?Blob;
@@ -39,7 +40,7 @@ module AppTypes {
     captainFantasticGameweek : FootballTypes.GameweekNumber;
     captainFantasticPlayerId : FootballTypes.PlayerId;
     oneNationGameweek : FootballTypes.GameweekNumber;
-    oneNationCountryId : Base.CountryId;
+    oneNationCountryId : Ids.CountryId;
     prospectsGameweek : FootballTypes.GameweekNumber;
     braceBonusGameweek : FootballTypes.GameweekNumber;
     hatTrickHeroGameweek : FootballTypes.GameweekNumber;
@@ -77,7 +78,7 @@ module AppTypes {
     captainFantasticGameweek : FootballTypes.GameweekNumber;
     captainFantasticPlayerId : FootballTypes.PlayerId;
     oneNationGameweek : FootballTypes.GameweekNumber;
-    oneNationCountryId : Base.CountryId;
+    oneNationCountryId : Ids.CountryId;
     prospectsGameweek : FootballTypes.GameweekNumber;
     braceBonusGameweek : FootballTypes.GameweekNumber;
     hatTrickHeroGameweek : FootballTypes.GameweekNumber;
@@ -85,7 +86,7 @@ module AppTypes {
     monthlyPoints : Int16;
     seasonPoints : Int16;
     transferWindowGameweek : FootballTypes.GameweekNumber;
-    month : Base.CalendarMonth;
+    month : BaseTypes.CalendarMonth;
     seasonId : FootballTypes.SeasonId;
   };
 
@@ -97,14 +98,14 @@ module AppTypes {
 
   public type MonthlyClubRewards = {
     seasonId : FootballTypes.SeasonId;
-    month : Base.CalendarMonth;
+    month : BaseTypes.CalendarMonth;
     clubId : FootballTypes.ClubId;
     rewards : List.List<RewardEntry>;
   };
 
   public type MonthlyRewards = {
     seasonId : FootballTypes.SeasonId;
-    month : Base.CalendarMonth;
+    month : BaseTypes.CalendarMonth;
     rewards : List.List<RewardEntry>;
   };
 
@@ -139,7 +140,7 @@ module AppTypes {
 
   public type MonthlyLeaderboard = {
     seasonId : FootballTypes.SeasonId;
-    month : Base.CalendarMonth;
+    month : BaseTypes.CalendarMonth;
     entries : List.List<LeaderboardEntry>;
     totalEntries : Nat;
     clubId : FootballTypes.ClubId;
@@ -166,13 +167,13 @@ module AppTypes {
   };
 
   public type LoanTimer = {
-    timerInfo : Base.TimerInfo;
+    timerInfo : BaseTypes.TimerInfo;
     playerId : Nat16;
     expires : Int;
   };
 
   public type DataHashes = {
-    dataHashes : [Base.DataHash];
+    dataHashes : [BaseTypes.DataHash];
   };
 
   public type LeagueGameweekStatus = {
@@ -185,7 +186,7 @@ module AppTypes {
   public type LeagueMonthStatus = {
     leagueId : FootballTypes.LeagueId;
     seasonId : FootballTypes.SeasonId;
-    month : Base.CalendarMonth;
+    month : BaseTypes.CalendarMonth;
     status : Enums.LeaderboardStatus;
   };
 
@@ -216,7 +217,7 @@ module AppTypes {
   public type TokenInfo = {
     id : TokenId;
     ticker : Text;
-    canisterId : Base.CanisterId;
+    canisterId : Ids.CanisterId;
     tokenImageURL : Text;
     fee : Nat;
   };
@@ -229,7 +230,7 @@ module AppTypes {
 
   public type ICFCProfile = {
     membershipType : Enums.MembershipType;
-    principalId : Base.PrincipalId;
+    principalId : Ids.PrincipalId;
     linkStatus : ICFCEnums.ICFCLinkStatus;
     dataHash : Text;
   };

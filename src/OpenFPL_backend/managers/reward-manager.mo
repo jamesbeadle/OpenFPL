@@ -9,12 +9,9 @@ import TrieMap "mo:base/TrieMap";
 import Nat "mo:base/Nat";
 import Result "mo:base/Result";
 
-import RewardPercentages "../cleanup/def/RewardPercentages";
 import FootballTypes "mo:waterway-mops/FootballTypes";
 import AppTypes "../types/app_types";
 import LeaderboardQueries "../queries/leaderboard_queries";
-import MopsEnums "../cleanup/mops_enums";
-import BaseUtilities "../cleanup/base_utilities";
 
 module {
 
