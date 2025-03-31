@@ -16,6 +16,7 @@ import TrieMap "mo:base/TrieMap";
 
 import UserCommands "../commands/user_commands";
 import AppTypes "../types/app_types";
+import DataCanister "canister:data_canister";
 
 module {
 
