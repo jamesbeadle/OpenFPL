@@ -8,7 +8,7 @@ import Root "./cleanup/sns-wrappers/root";
 import Management "./cleanup/Management";
 //TODO Do I need 2 environment variables/
 import Environment "./Environment";
-import ProfileUtilities "./utilities/profile_utilities";
+import Queries "./cleanup/football_god_queries"; //TODO Refactor and remove
 
 
 /* ----- Mops Packages ----- */
@@ -35,8 +35,6 @@ import LeaderboardCanister "./canister_definitions/leaderboard-canister";
 
 
 /* ----- Queries ----- */
-
-import Queries "./cleanup/football_god_queries"; //TODO Refactor and remove
 
 import AppQueries "./queries/app_queries";
 import LeaderboardQueries "./queries/leaderboard_queries";
@@ -178,15 +176,6 @@ actor Self {
     assert principalId == dto.principalId;
     assert await hasMembership(principalId);
     return await userManager.getICFCProfile({ principalId = Principal.toText(caller) });
-  };
-
-  public shared query ({ caller }) func isUsernameValid(dto : UserQueries.IsUsernameValid) : async Bool {
-    assert not Principal.isAnonymous(caller);
-    let principalId = Principal.toText(caller);
-    assert principalId == dto.principalId;
-    let usernameValid = ProfileUtilities.isUsernameValid(dto.username);
-    let usernameTaken = userManager.isUsernameTaken(dto.username, principalId);
-    return usernameValid and not usernameTaken;
   };
 
   // TODO: John I don't think we need the following 2 icfc profile functions as the one above should cover it:

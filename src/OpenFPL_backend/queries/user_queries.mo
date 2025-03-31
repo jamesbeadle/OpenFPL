@@ -133,14 +133,6 @@ module UserQueries = {
         firstGameweek : Bool;
     };
 
-    public type IsUsernameValid = {
-        username : Text;
-    };
-
-    public type UsernameValid = {
-        valid: Bool;
-    };
-
     public type GetFantasyTeamSnapshot = {
         principalId : MopsIds.PrincipalId;
     };
