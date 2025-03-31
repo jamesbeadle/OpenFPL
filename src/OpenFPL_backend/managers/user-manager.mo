@@ -17,6 +17,15 @@ import Nat16 "mo:base/Nat16";
 import Bool "mo:base/Bool";
 import Debug "mo:base/Debug";
 import UserQueries "../queries/user_queries";
+import AppTypes "../types/app_types";
+import MopsEnums "../cleanup/mops_enums";
+import MopsIcfcEnums "../cleanup/mops_icfc_enums";
+import LeaderboardQueries "../queries/leaderboard_queries";
+import UserCommands "../commands/user_commands";
+import FootballGodQueries "../cleanup/football_god_queries";
+import PickTeamUtilities "../utilities/pick_team_utilities";
+import Management "../cleanup/Management";
+import ManagerCanister "../canister_definitions/manager-canister";
 
 module {
 
@@ -30,20 +39,20 @@ module {
     private var totalManagers : Nat = 0;
     private var activeManagerCanisterId : Base.CanisterId = "";
 
-    private var userICFCProfiles : TrieMap.TrieMap<Base.PrincipalId, T.ICFCProfile> = TrieMap.TrieMap<Base.PrincipalId, T.ICFCProfile>(Text.equal, Text.hash);
+    private var userICFCProfiles : TrieMap.TrieMap<Base.PrincipalId, UserQueries.ICFCProfile> = TrieMap.TrieMap<Base.PrincipalId, UserQueries.ICFCProfile>(Text.equal, Text.hash);
 
     //Getters
 
-    public func getProfile(managerPrincipalId : Base.PrincipalId) : async Result.Result<DTOs.ProfileDTO, MopsEnums.Error> {
-      let userManagerCanisterId = managerCanisterIds.get(managerPrincipalId);
+    public func getProfile(dto: UserQueries.GetProfile) : async Result.Result<UserQueries.Profile, MopsEnums.Error> {
+      let userManagerCanisterId = managerCanisterIds.get(dto.principalId);
 
       switch (userManagerCanisterId) {
         case (?foundUserCanisterId) {
 
           let manager_canister = actor (foundUserCanisterId) : actor {
-            getManager : Base.PrincipalId -> async ?T.Manager;
+            getManager : Base.PrincipalId -> async ?AppTypes.Manager;
           };
-          let manager = await manager_canister.getManager(managerPrincipalId);
+          let manager = await manager_canister.getManager(dto.principalId);
 
           switch (manager) {
             case (null) {
@@ -51,8 +60,8 @@ module {
             };
             case (?foundManager) {
 
-              let profileDTO : DTOs.ProfileDTO = {
-                principalId = managerPrincipalId;
+              let profileDTO : UserQueries.Profile = {
+                principalId = dto.principalId;
                 username = foundManager.username;
                 termsAccepted = foundManager.termsAccepted;
                 profilePicture = foundManager.profilePicture;
@@ -70,7 +79,7 @@ module {
       };
     };
 
-    public func getUserICFCProfileStatus(managerPrincipalId : Base.PrincipalId) : async Result.Result<ICFCEnums.ICFCLinkStatus, MopsEnums.Error> {
+    public func getUserICFCProfileStatus(managerPrincipalId : Base.PrincipalId) : async Result.Result<MopsIcfcEnums.ICFCLinkStatus, MopsEnums.Error> {
       let icfcProfile : ?T.ICFCProfile = userICFCProfiles.get(managerPrincipalId);
 
       switch (icfcProfile) {
@@ -106,7 +115,7 @@ module {
       };
     };
 
-    public func getManager(dto : UserQueries.GetManager, weeklyLeaderboardEntry : ?DTOs.LeaderboardEntryDTO, monthlyLeaderboardEntry : ?DTOs.LeaderboardEntryDTO, seasonLeaderboardEntry : ?DTOs.LeaderboardEntryDTO) : async Result.Result<DTOs.ManagerDTO, MopsEnums.Error> {
+    public func getManager(dto : UserQueries.GetManager, weeklyLeaderboardEntry : ?LeaderboardQueries.LeaderboardEntry, monthlyLeaderboardEntry : ?LeaderboardQueries.LeaderboardEntry, seasonLeaderboardEntry : ?LeaderboardQueries.LeaderboardEntry) : async Result.Result<UserQueries.Manager, MopsEnums.Error> {
 
       let managerCanisterId = managerCanisterIds.get(dto.principalId);
 
@@ -194,7 +203,7 @@ module {
       };
     };
 
-    public func getManagerByUsername(username : Text) : async Result.Result<DTOs.ManagerDTO, MopsEnums.Error> {
+    public func getManagerByUsername(username : Text) : async Result.Result<UserQueries.Manager, MopsEnums.Error> {
 
       for (managerUsername in usernames.entries()) {
         if (managerUsername.1 == username) {
@@ -339,7 +348,7 @@ module {
         };
         case (?foundCanisterId) {
           let manager_canister = actor (foundCanisterId) : actor {
-            getFantasyTeamSnapshot : (managerPrincipalId : Base.PrincipalId, dto : UserQueries.GetManagerGameweekDTO) -> async ?T.FantasyTeamSnapshot;
+            getFantasyTeamSnapshot : (managerPrincipalId : Base.PrincipalId, dto : UserQueries.GetFantasyTeamSnapshot) -> async ?UserQueries.FantasyTeamSnapshot;
           };
 
           let snapshot = await manager_canister.getFantasyTeamSnapshot(dto.principalId, dto);
@@ -418,7 +427,10 @@ module {
 
     //User updates
 
-    public func linkICFCProfile(dto : Commands.NotifyAppofLink) : async Result.Result<(), MopsEnums.Error> {
+
+    //TODO: I think we only need one
+
+    public func linkICFCProfile(dto : UserCommands.LinkICFCProfile) : async Result.Result<(), MopsEnums.Error> {
       let icfcProfile : T.ICFCProfile = {
         principalId = dto.icfcPrincipalId;
         linkStatus = #PendingVerification;
@@ -429,51 +441,66 @@ module {
       return #ok();
     };
 
-    public func verifyICFCProfile(dto : Commands.VerifyICFCProfile) : async Result.Result<(), MopsEnums.Error> {
-      let icfcProfile : ?T.ICFCProfile = userICFCProfiles.get(dto.principalId);
+    public func updateFavouriteClub(dto : UserCommands.SetFavouriteClub, activeClubs : [FootballTypes.Club], seasonActive : Bool) : async Result.Result<(), MopsEnums.Error> {
 
-      switch (icfcProfile) {
+      // TODO: John, This can set in a profile here and allow to be different in OpenFPL from profile value
+
+      let isClubActive = Array.find(
+        activeClubs,
+        func(club : FootballTypes.Club) : Bool {
+          return club.id == dto.favouriteClubId;
+        },
+      );
+      if (not Option.isSome(isClubActive)) {
+        return #err(#NotFound);
+      };
+
+      if (dto.favouriteClubId <= 0) {
+        return #err(#InvalidData);
+      };
+
+      let managerCanisterId = managerCanisterIds.get(dto.principalId);
+      switch (managerCanisterId) {
         case (null) {
           return #err(#NotFound);
         };
-        case (?foundICFCProfile) {
+        case (?foundManagerCanisterId) {
 
-          let icfc_canister = actor (NetworkEnvironmentVariables.ICFC_BACKEND_CANISTER_ID) : actor {
-            verifySubApp : Commands.VerifySubApp -> async Result.Result<(), MopsEnums.Error>;
+          let manager_canister = actor (foundManagerCanisterId) : actor {
+            getManager : Base.PrincipalId -> async ?AppTypes.Manager;
+            updateFavouriteClub : (dto : UserCommands.SetFavouriteClub) -> async Result.Result<(), MopsEnums.Error>;
           };
 
-          let verifySubAppDTO : Commands.VerifySubApp = {
-            subAppUserPrincipalId = dto.principalId;
-            subApp = #OpenFPL;
-            icfcPrincipalId = foundICFCProfile.principalId;
+          let manager = await manager_canister.getManager(dto.principalId);
+          if (not seasonActive) {
+            return await manager_canister.updateFavouriteClub(dto);
           };
 
-          let result = await icfc_canister.verifySubApp(verifySubAppDTO);
-          switch (result) {
-            case (#ok(_)) {
-
-              let _ = userICFCProfiles.put(
-                dto.principalId,
-                {
-                  principalId = foundICFCProfile.principalId;
-                  linkStatus = #Verified;
-                  dataHash = await SHA224.getRandomHash();
-                  membershipType = foundICFCProfile.membershipType;
-                },
-              );
-
-              return #ok();
-
+          switch (manager) {
+            case (?foundManager) {
+              switch (foundManager.favouriteClubId) {
+                case (?foundClubId) {
+                  if (foundClubId > 0) {
+                    return #err(#InvalidData);
+                  };
+                };
+                case (null) {};
+              };
+              return await manager_canister.updateFavouriteClub(dto);
             };
-            case (#err error) {
-              return #err(error);
+            case (null) {
+              return #err(#NotFound);
             };
           };
         };
       };
     };
 
-    public func updateICFCProfile(dto : Commands.UpdateICFCProfile) : async Result.Result<(), MopsEnums.Error> {
+    //What are we updating here?
+
+    /*
+
+    public func updateICFCProfile(dto : UserCommands.UpdateICFCProfile) : async Result.Result<(), MopsEnums.Error> {
       let icfcProfile : ?T.ICFCProfile = userICFCProfiles.get(dto.subAppUserPrincipalId);
 
       switch (icfcProfile) {
@@ -496,149 +523,26 @@ module {
       };
     };
 
-    public func createManager(managerPrincipalId : Base.PrincipalId, dto : Commands.CreateManagerDTO) : async Result.Result<(), MopsEnums.Error> {
+    */
 
-      let managerCanisterId = managerCanisterIds.get(managerPrincipalId);
+    public func saveBonusSelection(dto : UserCommands.PlayBonus, gameweek : FootballTypes.GameweekNumber) : async Result.Result<(), MopsEnums.Error> {
 
-      switch (managerCanisterId) {
-        case (null) {
-          let result = await createNewManager(managerPrincipalId, dto);
-          switch (result) {
-            case (#ok _) {
-              totalManagers := totalManagers + 1;
-              managerCanisterIds.put(managerPrincipalId, activeManagerCanisterId);
-              return #ok();
-            };
-            case (#err error) {
-              return #err(error);
-            };
-          };
-        };
-        case (?_) {
-          return #err(#AlreadyExists);
-        };
+      if (not validateGameweeks(dto, gameweek)) {
+        return #err(#InvalidGameweek);
       };
-    };
-
-    public func updateUsername(managerPrincipalId : Base.PrincipalId, dto : Commands.UpdateUsernameDTO) : async Result.Result<(), MopsEnums.Error> {
-      if (not ProfileUtilities.isUsernameValid(dto.username)) {
-        return #err(#InvalidData);
-      };
-
-      if (isUsernameTaken(dto.username, managerPrincipalId)) {
-        return #err(#InvalidData);
-      };
-
-      let managerCanisterId = managerCanisterIds.get(managerPrincipalId);
-      switch (managerCanisterId) {
-        case (null) {
-          return #err(#NotFound);
-        };
-        case (?foundManagerCanisterId) {
-
-          let manager_canister = actor (foundManagerCanisterId) : actor {
-            updateUsername : (dto : Commands.UpdateUsernameDTO) -> async Result.Result<(), MopsEnums.Error>;
-          };
-          usernames.put(managerPrincipalId, dto.username);
-          return await manager_canister.updateUsername(dto);
-        };
-      };
-    };
-
-    public func updateFavouriteClub(managerPrincipalId : Base.PrincipalId, dto : Commands.UpdateFavouriteClubDTO, activeClubs : [FootballTypes.Club], seasonActive : Bool) : async Result.Result<(), MopsEnums.Error> {
-
-      let isClubActive = Array.find(
-        activeClubs,
-        func(club : FootballTypes.Club) : Bool {
-          return club.id == dto.favouriteClubId;
-        },
-      );
-      if (not Option.isSome(isClubActive)) {
-        return #err(#NotFound);
-      };
-
-      if (dto.favouriteClubId <= 0) {
-        return #err(#InvalidData);
-      };
-
-      let managerCanisterId = managerCanisterIds.get(managerPrincipalId);
-      switch (managerCanisterId) {
-        case (null) {
-          return #err(#NotFound);
-        };
-        case (?foundManagerCanisterId) {
-
-          let manager_canister = actor (foundManagerCanisterId) : actor {
-            getManager : Base.PrincipalId -> async ?T.Manager;
-            updateFavouriteClub : (managerPrincipalId : Base.PrincipalId, dto : Commands.UpdateFavouriteClubDTO) -> async Result.Result<(), MopsEnums.Error>;
-          };
-
-          let manager = await manager_canister.getManager(managerPrincipalId);
-          if (not seasonActive) {
-            return await manager_canister.updateFavouriteClub(managerPrincipalId, dto);
-          };
-
-          switch (manager) {
-            case (?foundManager) {
-              switch (foundManager.favouriteClubId) {
-                case (?foundClubId) {
-                  if (foundClubId > 0) {
-                    return #err(#InvalidData);
-                  };
-                };
-                case (null) {};
-              };
-              return await manager_canister.updateFavouriteClub(managerPrincipalId, dto);
-            };
-            case (null) {
-              return #err(#NotFound);
-            };
-          };
-        };
-      };
-    };
-
-    public func updateProfilePicture(managerPrincipalId : Base.PrincipalId, dto : Commands.UpdateProfilePictureDTO) : async Result.Result<(), MopsEnums.Error> {
-
-      if (not ProfileUtilities.isProfilePictureValid(dto.profilePicture)) {
-        return #err(#InvalidData);
-      };
-
-      let managerCanisterId = managerCanisterIds.get(managerPrincipalId);
-      switch (managerCanisterId) {
-        case (null) {
-          return #err(#NotFound);
-        };
-        case (?foundManagerCanisterId) {
-
-          let manager_canister = actor (foundManagerCanisterId) : actor {
-            updateProfilePicture : (managerPrincipalId : Base.PrincipalId, dto : Commands.UpdateProfilePictureDTO) -> async Result.Result<(), MopsEnums.Error>;
-          };
-          return await manager_canister.updateProfilePicture(managerPrincipalId, dto);
-        };
-      };
-    };
-
-    public func saveBonusSelection(managerPrincipalId : Base.PrincipalId, dto : Commands.SaveBonusDTO, gameweek : FootballTypes.GameweekNumber) : async Result.Result<(), MopsEnums.Error> {
-
-
-        // validating gameweeks in the DTO
-        if (not validateGameweeks(dto, leagueStatus.unplayedGameweek)) {
-          return #err(#InvalidGameweek);
-        };
-      let managerCanisterId = managerCanisterIds.get(managerPrincipalId);
+      let managerCanisterId = managerCanisterIds.get(dto.principalId);
 
       switch (managerCanisterId) {
         case (null) {
           return #err(#NotFound);
         };
         case (?foundManagerCanisterId) {
-          return await useBonus(foundManagerCanisterId, managerPrincipalId, dto, gameweek);
+          return await useBonus(foundManagerCanisterId, dto, gameweek);
         };
       };
     };
 
-    public func saveTeamSelection(managerPrincipalId : Base.PrincipalId, dto : Commands.SaveTeamDTO, seasonId : FootballTypes.SeasonId, players : [DTOs.PlayerDTO]) : async Result.Result<(), MopsEnums.Error> {
+    public func saveTeamSelection(dto : UserCommands.SaveFantasyTeam, seasonId : FootballTypes.SeasonId, players : [FootballGodQueries.Player]) : async Result.Result<(), MopsEnums.Error> {
 
       let teamValidResult = PickTeamUtilities.teamValid(dto, players);
       switch (teamValidResult) {
@@ -648,21 +552,52 @@ module {
         };
       };
 
-      let managerCanisterId = managerCanisterIds.get(managerPrincipalId);
+      let managerCanisterId = managerCanisterIds.get(dto.principalId);
 
       switch (managerCanisterId) {
         case (null) {
           return #err(#NotFound);
         };
         case (?foundManagerCanisterId) {
-          return await updateFantasyTeam(foundManagerCanisterId, managerPrincipalId, dto, seasonId, players);
+          return await updateFantasyTeam(foundManagerCanisterId, dto, seasonId, players);
         };
       };
     };
 
+
+    private func validateGameweeks(dto : UserCommands.PlayBonus, currentGameweek : FootballTypes.GameweekNumber) : Bool {
+      let gameweeks = [
+        dto.goalGetterGameweek,
+        dto.passMasterGameweek,
+        dto.noEntryGameweek,
+        dto.teamBoostGameweek,
+        dto.safeHandsGameweek,
+        dto.captainFantasticGameweek,
+        dto.oneNationGameweek,
+        dto.prospectsGameweek,
+        dto.braceBonusGameweek,
+        dto.hatTrickHeroGameweek,
+      ];
+
+      for (gameweek in gameweeks.vals()) {
+        switch (gameweek) {
+          case (?gw) {
+            if (gw != currentGameweek) {
+              return false;
+            };
+          };
+          case (null) {}; //ignoring missing gameweeks
+        };
+      };
+
+      return true;
+    };
+
     //Private data modification functions
 
-    private func createNewManager(managerPrincipalId : Base.PrincipalId, dto : Commands.CreateManagerDTO) : async Result.Result<(), MopsEnums.Error> {
+    //need to think when the new manager object is created
+
+    private func createNewManager(dto : UserCommands.LinkICFCProfile) : async Result.Result<(), MopsEnums.Error> {
 
       if (activeManagerCanisterId == "") {
         activeManagerCanisterId := await createManagerCanister();
@@ -677,7 +612,7 @@ module {
         activeManagerCanisterId := await createManagerCanister();
       };
 
-      let newManager : T.Manager = {
+      let newManager : AppTypes.Manager = {
         principalId = managerPrincipalId;
         username = dto.username;
         favouriteClubId = dto.favouriteClubId;
@@ -721,13 +656,13 @@ module {
       return result;
     };
 
-    private func updateFantasyTeam(managerCanisterId : Base.CanisterId, managerPrincipalId : Base.PrincipalId, dto : Commands.SaveTeamDTO, seasonId : FootballTypes.SeasonId, allPlayers : [DTOs.PlayerDTO]) : async Result.Result<(), MopsEnums.Error> {
+    private func updateFantasyTeam(managerCanisterId : Base.CanisterId, dto : UserCommands.SaveFantasyTeam, seasonId : FootballTypes.SeasonId, allPlayers : [FootballGodQueries.Player]) : async Result.Result<(), MopsEnums.Error> {
       let manager_canister = actor (managerCanisterId) : actor {
-        getManager : Base.PrincipalId -> async ?T.Manager;
-        updateTeamSelection : (dto : Commands.SaveTeamDTO, managerPrincipalId : Base.PrincipalId, transfersAvailable : Nat8, newBankBalance : Nat16) -> async Result.Result<(), MopsEnums.Error>;
+        getManager : Base.PrincipalId -> async ?AppTypes.Manager;
+        updateTeamSelection : (dto : UserCommands.SaveFantasyTeam, transfersAvailable : Nat8, newBankBalance : Nat16) -> async Result.Result<(), MopsEnums.Error>;
       };
 
-      let manager = await manager_canister.getManager(managerPrincipalId);
+      let manager = await manager_canister.getManager(dto.principalId);
 
       switch (manager) {
         case (null) {
@@ -741,9 +676,9 @@ module {
 
           var transfersAvailable = 3;
           var firstGameweek = true;
-          let currentManagerSeason = List.find<T.FantasyTeamSeason>(
+          let currentManagerSeason = List.find<AppTypes.FantasyTeamSeason>(
             foundManager.history,
-            func(season : T.FantasyTeamSeason) : Bool {
+            func(season : AppTypes.FantasyTeamSeason) : Bool {
               season.seasonId == seasonId;
             },
           );
@@ -769,7 +704,6 @@ module {
             case (#ok newBankBalance) {
               return await manager_canister.updateTeamSelection(
                 dto,
-                foundManager.principalId,
                 Nat8.fromNat(Nat64.toNat(Nat64.fromIntWrap(transfersAvailable))),
                 newBankBalance,
               );
@@ -782,13 +716,13 @@ module {
       };
     };
 
-    private func useBonus(managerCanisterId : Base.CanisterId, managerPrincipalId : Base.PrincipalId, dto : Commands.SaveBonusDTO, gameweek : FootballTypes.GameweekNumber) : async Result.Result<(), MopsEnums.Error> {
+    private func useBonus(managerCanisterId : Base.CanisterId, dto : UserCommands.PlayBonus, gameweek : FootballTypes.GameweekNumber) : async Result.Result<(), MopsEnums.Error> {
       let manager_canister = actor (managerCanisterId) : actor {
-        getManager : Base.PrincipalId -> async ?T.Manager;
-        useBonus : (dto : Commands.SaveBonusDTO, managerPrincipalId : Base.PrincipalId, monthlyBonuses : Nat8) -> async Result.Result<(), MopsEnums.Error>;
+        getManager : Base.PrincipalId -> async ?AppTypes.Manager;
+        useBonus : (dto : UserCommands.PlayBonus, monthlyBonuses : Nat8) -> async Result.Result<(), MopsEnums.Error>;
       };
 
-      let manager = await manager_canister.getManager(managerPrincipalId);
+      let manager = await manager_canister.getManager(dto.principalId);
 
       switch (manager) {
         case (null) {
@@ -813,7 +747,7 @@ module {
             return #err(#InvalidBonuses);
           };
 
-          return await manager_canister.useBonus(dto, managerPrincipalId, 2);
+          return await manager_canister.useBonus(dto, 2); // TODO: John this needs to not always be 2 
         };
       };
     };
@@ -961,11 +895,11 @@ module {
       activeManagerCanisterId := stable_active_manager_canister_id;
     };
 
-    public func getStableUserICFCProfiles() : [(Base.PrincipalId, T.ICFCProfile)] {
+    public func getStableUserICFCProfiles() : [(Base.PrincipalId, UserQueries.ICFCProfile)] {
       return Iter.toArray(userICFCProfiles.entries());
     };
 
-    public func setStableUserICFCProfiles(stable_user_icfc_profiles : [(Base.PrincipalId, T.ICFCProfile)]) : () {
+    public func setStableUserICFCProfiles(stable_user_icfc_profiles : [(Base.PrincipalId, UserQueries.ICFCProfile)]) : () {
       let profileMap : TrieMap.TrieMap<Base.PrincipalId, T.ICFCProfile> = TrieMap.TrieMap<Base.PrincipalId, T.ICFCProfile>(Text.equal, Text.hash);
 
       for (profile in Iter.fromArray(stable_user_icfc_profiles)) {
@@ -975,35 +909,4 @@ module {
     };
   };
   
-
-  //Manager update functions:
-  /* This is a validator function and should go in the manager file
-  private func validateGameweeks(dto : Commands.SaveBonusDTO, currentGameweek : FootballTypes.GameweekNumber) : Bool {
-    let gameweeks = [
-      dto.goalGetterGameweek,
-      dto.passMasterGameweek,
-      dto.noEntryGameweek,
-      dto.teamBoostGameweek,
-      dto.safeHandsGameweek,
-      dto.captainFantasticGameweek,
-      dto.oneNationGameweek,
-      dto.prospectsGameweek,
-      dto.braceBonusGameweek,
-      dto.hatTrickHeroGameweek,
-    ];
-
-    for (gameweek in gameweeks.vals()) {
-      switch (gameweek) {
-        case (?gw) {
-          if (gw != currentGameweek) {
-            return false;
-          };
-        };
-        case (null) {}; //ignoring missing gameweeks
-      };
-    };
-
-    return true;
-  };
-  */
 };

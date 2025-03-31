@@ -26,23 +26,6 @@ module DTOs {
         events : [FootballTypes.PlayerEventData];
     };
 
-    public type PlayerDTO = {
-        id : Nat16;
-        clubId : FootballTypes.ClubId;
-        position : FootballTypes.PlayerPosition;
-        firstName : Text;
-        lastName : Text;
-        shirtNumber : Nat8;
-        valueQuarterMillions : Nat16;
-        dateOfBirth : Int;
-        nationality : Base.CountryId;
-        status : FootballTypes.PlayerStatus;
-        leagueId : FootballTypes.LeagueId;
-        parentLeagueId : FootballTypes.LeagueId;
-        parentClubId : FootballTypes.ClubId;
-        currentLoanEndDate : Int;
-    };
-
     public type PlayerDetailDTO = {
         id : FootballTypes.PlayerId;
         clubId : FootballTypes.ClubId;

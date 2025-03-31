@@ -9,19 +9,19 @@ import TrieMap "mo:base/TrieMap";
 import Nat "mo:base/Nat";
 import Result "mo:base/Result";
 
-import DTOs "../../shared/dtos/dtos";
-import RewardPercentages "../../shared/def/RewardPercentages";
+import RewardPercentages "../cleanup/def/RewardPercentages";
 import FootballTypes "mo:waterway-mops/FootballTypes";
-import T "../../shared/types/app_types";
-import Comparison "../../shared/utils/type_comparison_utilities";
-import MopsEnums "../mops/mops_enums";
+import AppTypes "../types/app_types";
+import LeaderboardQueries "../queries/leaderboard_queries";
+import MopsEnums "../cleanup/mops_enums";
+import BaseUtilities "../cleanup/base_utilities";
 
 module {
 
   public class RewardManager() {
 
-    private var historicRewardRates : [T.RewardRates] = [];
-    private var activeRewardRates : T.RewardRates = {
+    private var historicRewardRates : [AppTypes.RewardRates] = [];
+    private var activeRewardRates : AppTypes.RewardRates = {
       allTimeMonthlyHighScoreRewardRate = 0;
       allTimeSeasonHighScoreRewardRate = 0;
       allTimeWeeklyHighScoreRewardRate = 0;
@@ -33,30 +33,30 @@ module {
       startDate = 0;
       weeklyLeaderboardRewardRate = 0;
     };
-    private var teamValueLeaderboards : TrieMap.TrieMap<FootballTypes.SeasonId, T.TeamValueLeaderboard> = TrieMap.TrieMap<FootballTypes.SeasonId, T.TeamValueLeaderboard>(Comparison.eqNat16, Comparison.hashNat16);
+    private var teamValueLeaderboards : TrieMap.TrieMap<FootballTypes.SeasonId, AppTypes.TeamValueLeaderboard> = TrieMap.TrieMap<FootballTypes.SeasonId, AppTypes.TeamValueLeaderboard>(BaseUtilities.eqNat16, BaseUtilities.hashNat16);
 
-    private var seasonRewards : List.List<T.SeasonRewards> = List.nil();
-    private var monthlyRewards : List.List<T.MonthlyRewards> = List.nil();
-    private var weeklyRewards : List.List<T.WeeklyRewards> = List.nil();
-    private var mostValuableTeamRewards : List.List<T.RewardsList> = List.nil();
-    private var highScoringPlayerRewards : List.List<T.RewardsList> = List.nil();
+    private var seasonRewards : List.List<AppTypes.SeasonRewards> = List.nil();
+    private var monthlyRewards : List.List<AppTypes.MonthlyRewards> = List.nil();
+    private var weeklyRewards : List.List<AppTypes.WeeklyRewards> = List.nil();
+    private var mostValuableTeamRewards : List.List<AppTypes.RewardsList> = List.nil();
+    private var highScoringPlayerRewards : List.List<AppTypes.RewardsList> = List.nil();
 
-    private var weeklyAllTimeHighScores : List.List<T.HighScoreRecord> = List.nil();
-    private var monthlyAllTimeHighScores : List.List<T.HighScoreRecord> = List.nil();
-    private var seasonAllTimeHighScores : List.List<T.HighScoreRecord> = List.nil();
+    private var weeklyAllTimeHighScores : List.List<AppTypes.HighScoreRecord> = List.nil();
+    private var monthlyAllTimeHighScores : List.List<AppTypes.HighScoreRecord> = List.nil();
+    private var seasonAllTimeHighScores : List.List<AppTypes.HighScoreRecord> = List.nil();
 
     private var weeklyATHPrizePool : Nat64 = 0;
     private var monthlyATHPrizePool : Nat64 = 0;
     private var seasonATHPrizePool : Nat64 = 0;
 
-    public func calculateGameweekRewards(dto : DTOs.WeeklyLeaderboardDTO) : async () {
-      let weeklyRewardsExcludingThisWeek = List.filter<T.WeeklyRewards>(
+    public func calculateGameweekRewards(dto : LeaderboardQueries.WeeklyLeaderboard) : async () {
+      let weeklyRewardsExcludingThisWeek = List.filter<AppTypes.WeeklyRewards>(
         weeklyRewards,
-        func(weeklyRewardsEntry : T.WeeklyRewards) {
+        func(weeklyRewardsEntry : AppTypes.WeeklyRewards) {
           not (weeklyRewardsEntry.gameweek == dto.gameweek and weeklyRewardsEntry.seasonId == dto.seasonId);
         },
       );
-      let weeklyRewardsBuffer = Buffer.fromArray<T.WeeklyRewards>(List.toArray(weeklyRewardsExcludingThisWeek));
+      let weeklyRewardsBuffer = Buffer.fromArray<AppTypes.WeeklyRewards>(List.toArray(weeklyRewardsExcludingThisWeek));
 
       //TODO RECORD THE REWARD POOL AMOUNT TO BE UPDATED MANUALLY
       let weeklyRewardAmount = activeRewardRates.weeklyLeaderboardRewardRate;
@@ -69,7 +69,7 @@ module {
 
       let payoutPercentages = spreadPercentagesOverEntries(topEntries, scaledPercentages);
 
-      let rewardEntriesBuffer = Buffer.fromArray<T.RewardEntry>([]);
+      let rewardEntriesBuffer = Buffer.fromArray<AppTypes.RewardEntry>([]);
       for (i in Iter.range(0, payoutPercentages.size() - 1)) {
 
         let winner = topEntries[i];
@@ -84,7 +84,7 @@ module {
         });
       };
 
-      let newWeeklyRewardsEntry : T.WeeklyRewards = {
+      let newWeeklyRewardsEntry : AppTypes.WeeklyRewards = {
         seasonId = dto.seasonId;
         gameweek = dto.gameweek;
         rewards = List.fromArray(Buffer.toArray(rewardEntriesBuffer));
@@ -93,8 +93,8 @@ module {
       weeklyRewards := List.fromArray(Buffer.toArray(weeklyRewardsBuffer));
     };
 
-    private func filterTop100IncludingTies(entries : [DTOs.LeaderboardEntryDTO]) : [T.LeaderboardEntry] {
-      let entryBuffer = Buffer.fromArray<T.LeaderboardEntry>([]);
+    private func filterTop100IncludingTies(entries : [LeaderboardQueries.LeaderboardEntry]) : [LeaderboardQueries.LeaderboardEntry] {
+      let entryBuffer = Buffer.fromArray<LeaderboardQueries.LeaderboardEntry>([]);
 
       var maxPosition = 100;
       var lastPosition = 0;
@@ -143,7 +143,7 @@ module {
     };
 
     private func spreadPercentagesOverEntries(
-      sortedEntries : [T.LeaderboardEntry],
+      sortedEntries : [LeaderboardQueries.LeaderboardEntry],
       scaledPercentages : [Float],
     ) : [Float] {
 
@@ -202,11 +202,11 @@ module {
       return Buffer.toArray(adjustedPercentagesBuffer);
     };
 
-    public func getWeeklyRewards(seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber) : Result.Result<T.WeeklyRewards, MopsEnums.Error> {
+    public func getWeeklyRewards(seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber) : Result.Result<AppTypes.WeeklyRewards, MopsEnums.Error> {
 
       let rewards = List.find(
         weeklyRewards,
-        func(rewardsEntry : T.WeeklyRewards) : Bool {
+        func(rewardsEntry : AppTypes.WeeklyRewards) : Bool {
           rewardsEntry.seasonId == seasonId and rewardsEntry.gameweek == gameweek;
         },
       );
@@ -221,99 +221,99 @@ module {
       return #err(#NotFound);
     };
 
-    public func getActiveRewardRates() : T.RewardRates {
+    public func getActiveRewardRates() : AppTypes.RewardRates {
       return activeRewardRates;
     };
 
-    public func getStableActiveRewardRates() : T.RewardRates {
+    public func getStableActiveRewardRates() : AppTypes.RewardRates {
       return activeRewardRates;
     };
 
-    public func setStableActiveRewardRates(stable_active_reward_rates : T.RewardRates) {
+    public func setStableActiveRewardRates(stable_active_reward_rates : AppTypes.RewardRates) {
       activeRewardRates := stable_active_reward_rates;
     };
 
-    public func getStableHistoricRewardRates() : [T.RewardRates] {
+    public func getStableHistoricRewardRates() : [AppTypes.RewardRates] {
       return historicRewardRates;
     };
 
-    public func setStableHistoricRewardRates(stable_historic_reward_rates : [T.RewardRates]) {
+    public func setStableHistoricRewardRates(stable_historic_reward_rates : [AppTypes.RewardRates]) {
       historicRewardRates := stable_historic_reward_rates;
     };
 
-    public func getStableTeamValueLeaderboards() : [(FootballTypes.SeasonId, T.TeamValueLeaderboard)] {
+    public func getStableTeamValueLeaderboards() : [(FootballTypes.SeasonId, AppTypes.TeamValueLeaderboard)] {
       return Iter.toArray(teamValueLeaderboards.entries());
     };
 
-    public func setStableTeamValueLeaderboards(stable_team_value_leaderboards : [(FootballTypes.SeasonId, T.TeamValueLeaderboard)]) {
-      teamValueLeaderboards := TrieMap.fromEntries<FootballTypes.SeasonId, T.TeamValueLeaderboard>(
+    public func setStableTeamValueLeaderboards(stable_team_value_leaderboards : [(FootballTypes.SeasonId, AppTypes.TeamValueLeaderboard)]) {
+      teamValueLeaderboards := TrieMap.fromEntries<FootballTypes.SeasonId, AppTypes.TeamValueLeaderboard>(
         Iter.fromArray(stable_team_value_leaderboards),
-        Comparison.eqNat16,
-        Comparison.hashNat16,
+        BaseUtilities.eqNat16,
+        BaseUtilities.hashNat16,
       );
     };
 
-    public func getStableWeeklyRewards() : [T.WeeklyRewards] {
+    public func getStableWeeklyRewards() : [AppTypes.WeeklyRewards] {
       return List.toArray(weeklyRewards);
     };
 
-    public func setStableWeeklyRewards(stable_weekly_rewards : [T.WeeklyRewards]) {
+    public func setStableWeeklyRewards(stable_weekly_rewards : [AppTypes.WeeklyRewards]) {
       weeklyRewards := List.fromArray(stable_weekly_rewards);
     };
 
-    public func getStableMonthlyRewards() : [T.MonthlyRewards] {
+    public func getStableMonthlyRewards() : [AppTypes.MonthlyRewards] {
       return List.toArray(monthlyRewards);
     };
 
-    public func setStableMonthlyRewards(stable_monthly_rewards : [T.MonthlyRewards]) {
+    public func setStableMonthlyRewards(stable_monthly_rewards : [AppTypes.MonthlyRewards]) {
       monthlyRewards := List.fromArray(stable_monthly_rewards);
     };
 
-    public func getStableSeasonRewards() : [T.SeasonRewards] {
+    public func getStableSeasonRewards() : [AppTypes.SeasonRewards] {
       return List.toArray(seasonRewards);
     };
 
-    public func setStableSeasonRewards(stable_season_rewards : [T.SeasonRewards]) {
+    public func setStableSeasonRewards(stable_season_rewards : [AppTypes.SeasonRewards]) {
       seasonRewards := List.fromArray(stable_season_rewards);
     };
 
-    public func getStableMostValuableTeamRewards() : [T.RewardsList] {
+    public func getStableMostValuableTeamRewards() : [AppTypes.RewardsList] {
       return List.toArray(mostValuableTeamRewards);
     };
 
-    public func setStableMostValuableTeamRewards(stable_most_valuable_team_rewards : [T.RewardsList]) {
+    public func setStableMostValuableTeamRewards(stable_most_valuable_team_rewards : [AppTypes.RewardsList]) {
       mostValuableTeamRewards := List.fromArray(stable_most_valuable_team_rewards);
     };
 
-    public func getStableHighestScoringPlayerRewards() : [T.RewardsList] {
+    public func getStableHighestScoringPlayerRewards() : [AppTypes.RewardsList] {
       return List.toArray(highScoringPlayerRewards);
     };
 
-    public func setStableHighestScoringPlayerRewards(stable_highest_scoring_player_rewards : [T.RewardsList]) {
+    public func setStableHighestScoringPlayerRewards(stable_highest_scoring_player_rewards : [AppTypes.RewardsList]) {
       highScoringPlayerRewards := List.fromArray(stable_highest_scoring_player_rewards);
     };
 
-    public func getStableWeeklyAllTimeHighScores() : [T.HighScoreRecord] {
+    public func getStableWeeklyAllTimeHighScores() : [AppTypes.HighScoreRecord] {
       return List.toArray(weeklyAllTimeHighScores);
     };
 
-    public func setStableWeeklyAllTimeHighScores(stable_weekly_ath_scores : [T.HighScoreRecord]) {
+    public func setStableWeeklyAllTimeHighScores(stable_weekly_ath_scores : [AppTypes.HighScoreRecord]) {
       weeklyAllTimeHighScores := List.fromArray(stable_weekly_ath_scores);
     };
 
-    public func getStableMonthlyAllTimeHighScores() : [T.HighScoreRecord] {
+    public func getStableMonthlyAllTimeHighScores() : [AppTypes.HighScoreRecord] {
       return List.toArray(monthlyAllTimeHighScores);
     };
 
-    public func setStableMonthlyAllTimeHighScores(stable_monthly_ath_scores : [T.HighScoreRecord]) {
+    public func setStableMonthlyAllTimeHighScores(stable_monthly_ath_scores : [AppTypes.HighScoreRecord]) {
       monthlyAllTimeHighScores := List.fromArray(stable_monthly_ath_scores);
     };
 
-    public func getStableSeasonAllTimeHighScores() : [T.HighScoreRecord] {
+    public func getStableSeasonAllTimeHighScores() : [AppTypes.HighScoreRecord] {
       return List.toArray(seasonAllTimeHighScores);
     };
 
-    public func setStableSeasonAllTimeHighScores(stable_season_ath_scores : [T.HighScoreRecord]) {
+    public func setStableSeasonAllTimeHighScores(stable_season_ath_scores : [AppTypes.HighScoreRecord]) {
       seasonAllTimeHighScores := List.fromArray(stable_season_ath_scores);
     };
 

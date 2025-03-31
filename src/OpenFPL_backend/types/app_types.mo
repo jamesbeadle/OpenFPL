@@ -1,9 +1,9 @@
+import ICFCEnums "../cleanup/mops_icfc_enums"; //TODO Move to mops
+
 import List "mo:base/List";
 import Base "mo:waterway-mops/BaseTypes";
 import FootballTypes "mo:waterway-mops/FootballTypes";
-import Enums "../../OpenFPL_backend/enums/enums";
-import ICFCEnums "../../OpenFPL_backend/mops/icfc_enums"; //TODO Move to mops
-
+import Enums "../enums/enums";
 
 module AppTypes {
 

@@ -394,41 +394,7 @@ actor Self {
 
 
 
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  /* ----- WIP ----- */
 
 
   /* ----- Football God Data Callback Functions ----- */
@@ -924,10 +890,55 @@ actor Self {
 
 
 
+  /* ----- END WIP ----- */
+
+
+
+
+
+
   /* ----- Canister Lifecycle Management ----- */
 
   system func preupgrade() {
+    getManagerStableVariables();
+  };
 
+  system func postupgrade() {
+    setManagerStableVariables();
+    ignore Timer.setTimer<system>(#nanoseconds(Int.abs(1)), postUpgradeCallback);
+  };
+
+  private func postUpgradeCallback() : async () {  
+    //await updateManagerCanisterWasms();
+    //await updateLeaderboardCanisterWasms();
+  };
+
+
+  /* ----- Canister Update Functions ----- */
+
+  private func updateManagerCanisterWasms() : async () {
+    let managerCanisterIds = userManager.getUniqueManagerCanisterIds();
+    let IC : Management.Management = actor (NetworkEnvironmentVariables.Default);
+    for (canisterId in Iter.fromArray(managerCanisterIds)) {
+      await IC.stop_canister({ canister_id = Principal.fromText(canisterId) });
+      let oldManagement = actor (canisterId) : actor {};
+      let _ = await (system ManagerCanister._ManagerCanister)(#upgrade oldManagement)();
+      await IC.start_canister({ canister_id = Principal.fromText(canisterId) });
+    };
+  };
+
+  private func updateLeaderboardCanisterWasms() : async () {
+    let leaderboardCanisterIds = leaderboardManager.getUniqueLeaderboardCanisterIds();
+    let IC : Management.Management = actor (NetworkEnvironmentVariables.Default);
+    for (canisterId in Iter.fromArray(leaderboardCanisterIds)) {
+      await IC.stop_canister({ canister_id = Principal.fromText(canisterId) });
+      let oldLeaderboard = actor (canisterId) : actor {};
+      let _ = await (system LeaderboardCanister._LeaderboardCanister)(#upgrade oldLeaderboard)();
+      await IC.start_canister({ canister_id = Principal.fromText(canisterId) });
+    };
+  };
+
+  private func getManagerStableVariables(){
     stable_unique_weekly_leaderboard_canister_ids := leaderboardManager.getStableUniqueLeaderboardCanisterIds();
     stable_weekly_leaderboard_canister_ids := leaderboardManager.getStableWeeklyLeaderboardCanisterIds();
     stable_monthly_leaderboard_canister_ids := leaderboardManager.getStableMonthlyLeaderboardCanisterIds();
@@ -968,8 +979,7 @@ actor Self {
     stable_user_icfc_profiles := userManager.getStableUserICFCProfiles();
   };
 
-  system func postupgrade() {
-    
+  private func setManagerStableVariables(){
     leaderboardManager.setStableUniqueLeaderboardCanisterIds(stable_unique_weekly_leaderboard_canister_ids);
     leaderboardManager.setStableWeeklyLeaderboardCanisterIds(stable_weekly_leaderboard_canister_ids);
     leaderboardManager.setStableMonthlyLeaderboardCanisterIds(stable_monthly_leaderboard_canister_ids);
@@ -1003,37 +1013,5 @@ actor Self {
     userManager.setStableTotalManagers(stable_total_managers);
     userManager.setStableActiveManagerCanisterId(stable_active_manager_canister_id);
     userManager.setStableUserICFCProfiles(stable_user_icfc_profiles);
-
-    ignore Timer.setTimer<system>(#nanoseconds(Int.abs(1)), postUpgradeCallback);
-  };
-
-  private func postUpgradeCallback() : async () {  
-    //await updateManagerCanisterWasms();
-    //await updateLeaderboardCanisterWasms();
-  };
-
-
-  /* ----- Canister Update Functions ----- */
-
-  private func updateManagerCanisterWasms() : async () {
-    let managerCanisterIds = userManager.getUniqueManagerCanisterIds();
-    let IC : Management.Management = actor (NetworkEnvironmentVariables.Default);
-    for (canisterId in Iter.fromArray(managerCanisterIds)) {
-      await IC.stop_canister({ canister_id = Principal.fromText(canisterId) });
-      let oldManagement = actor (canisterId) : actor {};
-      let _ = await (system ManagerCanister._ManagerCanister)(#upgrade oldManagement)();
-      await IC.start_canister({ canister_id = Principal.fromText(canisterId) });
-    };
-  };
-
-  private func updateLeaderboardCanisterWasms() : async () {
-    let leaderboardCanisterIds = leaderboardManager.getUniqueLeaderboardCanisterIds();
-    let IC : Management.Management = actor (NetworkEnvironmentVariables.Default);
-    for (canisterId in Iter.fromArray(leaderboardCanisterIds)) {
-      await IC.stop_canister({ canister_id = Principal.fromText(canisterId) });
-      let oldLeaderboard = actor (canisterId) : actor {};
-      let _ = await (system LeaderboardCanister._LeaderboardCanister)(#upgrade oldLeaderboard)();
-      await IC.start_canister({ canister_id = Principal.fromText(canisterId) });
-    };
   };
 };

@@ -4,31 +4,16 @@ import MopsIds "../cleanup/mops_ids";
 
 module UserCommands = {
 
-    public type CreateManager = {
-        username : Text;
-        favouriteClubId : ?FootballTypes.ClubId;
-    };
-
     public type LinkICFCProfile = {
         principalId: MopsIds.PrincipalId;
         openFPLPrincipalId: MopsIds.PrincipalId;
         icfcPrincipalId: MopsIds.PrincipalId;
-    };
-
-    public type SetUsername = {
-        principalId: MopsIds.PrincipalId;
-        username: Text;
-    };
-
-    public type SetProfilePicture = {
-        principalId: MopsIds.PrincipalId;
-        profilePicture: Blob;
-        extension: Text;
+        favouriteClubId: FootballTypes.ClubId;
     };
 
     public type SetFavouriteClub = {
         principalId: MopsIds.PrincipalId;
-        clubId: FootballTypes.ClubId;
+        favouriteClubId: FootballTypes.ClubId;
     };
 
     public type SaveFantasyTeam = {

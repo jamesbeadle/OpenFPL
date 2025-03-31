@@ -5,7 +5,9 @@ import MopsIds "../cleanup/mops_ids";
 
 module UserQueries = {
 
-    public type GetProfile = {};
+    public type GetProfile = {
+        principalId : MopsIds.PrincipalId;
+    };
 
     public type Profile = {
         principalId : MopsIds.PrincipalId;
@@ -140,10 +142,42 @@ module UserQueries = {
     };
 
     public type GetFantasyTeamSnapshot = {
-
+        principalId : MopsIds.PrincipalId;
     };
 
     public type FantasyTeamSnapshot = {
-
+        principalId : MopsIds.PrincipalId;
+        username : Text;
+        favouriteClubId : ?FootballTypes.ClubId;
+        monthlyBonusesAvailable : Nat8;
+        transfersAvailable : Nat8;
+        bankQuarterMillions : Nat16;
+        teamValueQuarterMillions : Nat16;
+        playerIds : [FootballTypes.PlayerId];
+        captainId : FootballTypes.PlayerId;
+        gameweek : FootballTypes.GameweekNumber;
+        goalGetterGameweek : FootballTypes.GameweekNumber;
+        goalGetterPlayerId : FootballTypes.PlayerId;
+        passMasterGameweek : FootballTypes.GameweekNumber;
+        passMasterPlayerId : FootballTypes.PlayerId;
+        noEntryGameweek : FootballTypes.GameweekNumber;
+        noEntryPlayerId : FootballTypes.PlayerId;
+        teamBoostGameweek : FootballTypes.GameweekNumber;
+        teamBoostClubId : FootballTypes.ClubId;
+        safeHandsGameweek : FootballTypes.GameweekNumber;
+        safeHandsPlayerId : FootballTypes.PlayerId;
+        captainFantasticGameweek : FootballTypes.GameweekNumber;
+        captainFantasticPlayerId : FootballTypes.PlayerId;
+        oneNationGameweek : FootballTypes.GameweekNumber;
+        oneNationCountryId : BaseTypes.CountryId;
+        prospectsGameweek : FootballTypes.GameweekNumber;
+        braceBonusGameweek : FootballTypes.GameweekNumber;
+        hatTrickHeroGameweek : FootballTypes.GameweekNumber;
+        points : Int16;
+        monthlyPoints : Int16;
+        seasonPoints : Int16;
+        transferWindowGameweek : FootballTypes.GameweekNumber;
+        month : BaseTypes.CalendarMonth;
+        seasonId : FootballTypes.SeasonId;
     };
 };

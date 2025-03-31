@@ -18,4 +18,17 @@ module ICFCEnums {
     #NotClaimed;
     #NotEligible;
   };
+
+  public type SubApp = {
+    #OpenFPL;
+    #OpenWSL;
+    #JeffBets;
+    #TransferKings;
+    #FootballGod;
+  };
+
+  public type ICFCLinkStatus = {
+    #PendingVerification;
+    #Verified;
+  };
 }
