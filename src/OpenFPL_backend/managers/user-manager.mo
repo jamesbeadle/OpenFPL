@@ -621,6 +621,11 @@ module {
 
     public func saveBonusSelection(managerPrincipalId : Base.PrincipalId, dto : Commands.SaveBonusDTO, gameweek : FootballTypes.GameweekNumber) : async Result.Result<(), MopsEnums.Error> {
 
+
+        // validating gameweeks in the DTO
+        if (not validateGameweeks(dto, leagueStatus.unplayedGameweek)) {
+          return #err(#InvalidGameweek);
+        };
       let managerCanisterId = managerCanisterIds.get(managerPrincipalId);
 
       switch (managerCanisterId) {
@@ -969,4 +974,36 @@ module {
       userICFCProfiles := profileMap;
     };
   };
+  
+
+  //Manager update functions:
+  /* This is a validator function and should go in the manager file
+  private func validateGameweeks(dto : Commands.SaveBonusDTO, currentGameweek : FootballTypes.GameweekNumber) : Bool {
+    let gameweeks = [
+      dto.goalGetterGameweek,
+      dto.passMasterGameweek,
+      dto.noEntryGameweek,
+      dto.teamBoostGameweek,
+      dto.safeHandsGameweek,
+      dto.captainFantasticGameweek,
+      dto.oneNationGameweek,
+      dto.prospectsGameweek,
+      dto.braceBonusGameweek,
+      dto.hatTrickHeroGameweek,
+    ];
+
+    for (gameweek in gameweeks.vals()) {
+      switch (gameweek) {
+        case (?gw) {
+          if (gw != currentGameweek) {
+            return false;
+          };
+        };
+        case (null) {}; //ignoring missing gameweeks
+      };
+    };
+
+    return true;
+  };
+  */
 };
