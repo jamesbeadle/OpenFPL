@@ -1,62 +1,169 @@
-import Array "mo:base/Array";
-import Bool "mo:base/Bool";
-import Int "mo:base/Int";
-import Iter "mo:base/Iter";
-import Principal "mo:base/Principal";
-import Result "mo:base/Result";
-import Timer "mo:base/Timer";
-import Nat64 "mo:base/Nat64";
-import Nat "mo:base/Nat";
-import Option "mo:base/Option";
-import Text "mo:base/Text";
-import Time "mo:base/Time";
-import Buffer "mo:base/Buffer";
-import List "mo:base/List";
-import Debug "mo:base/Debug";
+//TODO - Remove and import correct mops package
 
 import Base "mo:waterway-mops/BaseTypes";
 import FootballTypes "mo:waterway-mops/FootballTypes";
-import T "../shared/types/app_types";
-import DTOs "../shared/dtos/dtos";
-import Root "../shared/sns-wrappers/root";
+import Root "./cleanup/sns-wrappers/root";
 
-import Management "../shared/utils/Management";
-import ManagerCanister "../shared/canister_definitions/manager-canister";
-import LeaderboardCanister "../shared/canister_definitions/leaderboard-canister";
-import LeaderboardManager "../shared/managers/leaderboard-manager";
-import UserManager "../shared/managers/user-manager";
-import SeasonManager "../shared/managers/season-manager";
-import DataManager "../shared/managers/data-manager";
+//TODO - John we use these in each project so mops?
+import Management "./cleanup/Management";
+//TODO Do I need 2 environment variables/
 import Environment "./Environment";
-import NetworkEnvironmentVariables "../shared/network_environment_variables";
-import ProfileUtilities "../shared/utils/profile_utilities";
-import CanisterUtilities "../shared/utils/canister_utilities";
-import Commands "../shared/cqrs/commands";
-import Queries "../shared/cqrs/queries";
+import ProfileUtilities "./utilities/profile_utilities";
+
+
+/* ----- Mops Packages ----- */
+
+import Array "mo:base/Array";
+import Bool "mo:base/Bool";
+import Buffer "mo:base/Buffer";
+import Int "mo:base/Int";
+import Iter "mo:base/Iter";
+import Nat64 "mo:base/Nat64";
+import Nat "mo:base/Nat";
+import Option "mo:base/Option";
+import Principal "mo:base/Principal";
+import Result "mo:base/Result";
+import Text "mo:base/Text";
+import Time "mo:base/Time";
+import Timer "mo:base/Timer";
+
+
+/* ----- Canister Definition Files ----- */
+
+import ManagerCanister "./canister_definitions/manager-canister";
+import LeaderboardCanister "./canister_definitions/leaderboard-canister";
+
+
+/* ----- Queries ----- */
+
+import Queries "./cleanup/football_god_queries"; //TODO Refactor and remove
+
+import AppQueries "./queries/app_queries";
+import LeaderboardQueries "./queries/leaderboard_queries";
+import UserQueries "./queries/user_queries";
+
+
+/* ----- Commands ----- */
+import UserCommands "./commands/user_commands";
+
+
+/* ----- Managers ----- */
+
+import LeaderboardManager "./managers/leaderboard-manager";
+import UserManager "./managers/user-manager";
+import SeasonManager "./managers/season-manager";
+import DataManager "./managers/data-manager";
+
+/* ----- Only Stable Variables Should Use Types ----- */
+
 
 actor Self {
+
+
+  /* ----- Stable Canister Variables ----- */ 
+
+  private stable var stable_active_reward_rates : T.RewardRates = {
+    allTimeMonthlyHighScoreRewardRate = 0;
+    allTimeSeasonHighScoreRewardRate = 0;
+    allTimeWeeklyHighScoreRewardRate = 0;
+    highestScoringMatchRewardRate = 0;
+    monthlyLeaderboardRewardRate = 0;
+    mostValuableTeamRewardRate = 0;
+    seasonId = 0;
+    seasonLeaderboardRewardRate = 0;
+    startDate = 0;
+    weeklyLeaderboardRewardRate = 0;
+  };
+  private stable var stable_historic_reward_rates : [T.RewardRates] = [];
+  private stable var stable_team_value_leaderboards : [(FootballTypes.SeasonId, T.TeamValueLeaderboard)] = [];
+  private stable var stable_weekly_rewards : [T.WeeklyRewards] = [];
+  private stable var stable_monthly_rewards : [T.MonthlyRewards] = [];
+  private stable var stable_season_rewards : [T.SeasonRewards] = [];
+  private stable var stable_most_valuable_team_rewards : [T.RewardsList] = [];
+  private stable var stable_high_scoring_player_rewards : [T.RewardsList] = [];
+  private stable var stable_weekly_all_time_high_scores : [T.HighScoreRecord] = [];
+  private stable var stable_monthly_all_time_high_scores : [T.HighScoreRecord] = [];
+  private stable var stable_season_all_time_high_scores : [T.HighScoreRecord] = [];
+  private stable var stable_weekly_ath_prize_pool : Nat64 = 0;
+  private stable var stable_monthly_ath_prize_pool : Nat64 = 0;
+  private stable var stable_season_ath_prize_pool : Nat64 = 0;
+  private stable var stable_active_leaderbord_canister_id : Base.CanisterId = "";
+
+  //Season Manager stable variables
+  private stable var stable_app_status : T.AppStatus = {
+    onHold = false;
+    version = "2.1.0";
+  };
+
+  private stable var stable_league_gameweek_statuses : [T.LeagueGameweekStatus] = [];
+  private stable var stable_league_month_statuses : [T.LeagueMonthStatus] = [];
+  private stable var stable_league_season_statuses : [T.LeagueSeasonStatus] = [];
+
+  private stable var stable_data_hashes : [Base.DataHash] = [];
+  private stable var stable_player_snapshots : [(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])])] = [];
+
+  //User Manager stable variables
+
+  private stable var stable_manager_canister_ids : [(Base.PrincipalId, Base.CanisterId)] = [];
+  private stable var stable_usernames : [(Base.PrincipalId, Text)] = [];
+  private stable var stable_unique_manager_canister_ids : [Base.CanisterId] = [];
+  private stable var stable_total_managers : Nat = 0;
+  private stable var stable_active_manager_canister_id : Base.CanisterId = "";
+  private stable var topups : [Base.CanisterTopup] = [];
+  private stable var stable_user_icfc_profiles : [(Base.PrincipalId, T.ICFCProfile)] = [];
+
+
+
+  
+  private stable var stable_unique_weekly_leaderboard_canister_ids : [Base.CanisterId] = [];
+  private stable var stable_weekly_leaderboard_canister_ids : [(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, Base.CanisterId)])] = [];
+  private stable var stable_monthly_leaderboard_canister_ids : [(FootballTypes.SeasonId, [(Base.CalendarMonth, Base.CanisterId)])] = [];
+  private stable var stable_season_leaderboard_canister_ids : [(FootballTypes.SeasonId, Base.CanisterId)] = [];
+
+
+  /* ----- Domain Object Managers ----- */ 
 
   private let userManager = UserManager.UserManager(Environment.BACKEND_CANISTER_ID);
   private let seasonManager = SeasonManager.SeasonManager();
   private let leaderboardManager = LeaderboardManager.LeaderboardManager(Environment.BACKEND_CANISTER_ID);
   private let dataManager = DataManager.DataManager();
 
-  private func isManagerCanister(principalId : Text) : Bool {
-    let managerCanisterIds = userManager.getUniqueManagerCanisterIds();
-    return Option.isSome(
-      Array.find<Base.PrincipalId>(
-        managerCanisterIds,
-        func(dataAdmin : Base.PrincipalId) : Bool {
-          dataAdmin == principalId;
-        },
-      )
-    );
-  };
+
+  /* ----- General App Queries ----- */
+
+
+
+
+  /* ----- Data Hash Queries ----- */
 
   public shared composite query func getDataHashes() : async Result.Result<[DTOs.DataHashDTO], T.Error> {
     //TODO Who is the only person who should be calling this
     return seasonManager.getDataHashes();
   };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   //Manager canister callback functions
 
@@ -345,6 +452,8 @@ actor Self {
     await seasonManager.updateDataHash(category);
     return #ok();
   };
+
+  // TODO: John I think these are used by wwl? if not remove 
 
   public shared func getManagerCanisterIds() : async Result.Result<[Base.CanisterId], T.Error> {
     return #ok(userManager.getUniqueManagerCanisterIds());
@@ -712,188 +821,30 @@ actor Self {
   //stable variables from managers
 
   //Leaderboard Manager stable variables
-  private stable var stable_unique_weekly_leaderboard_canister_ids : [Base.CanisterId] = [];
-  private stable var stable_weekly_leaderboard_canister_ids : [(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, Base.CanisterId)])] = [];
-  private stable var stable_monthly_leaderboard_canister_ids : [(FootballTypes.SeasonId, [(Base.CalendarMonth, Base.CanisterId)])] = [];
-  private stable var stable_season_leaderboard_canister_ids : [(FootballTypes.SeasonId, Base.CanisterId)] = [];
-
+  
   //Reward Manager stable variables
-  private stable var stable_active_reward_rates : T.RewardRates = {
-    allTimeMonthlyHighScoreRewardRate = 0;
-    allTimeSeasonHighScoreRewardRate = 0;
-    allTimeWeeklyHighScoreRewardRate = 0;
-    highestScoringMatchRewardRate = 0;
-    monthlyLeaderboardRewardRate = 0;
-    mostValuableTeamRewardRate = 0;
-    seasonId = 0;
-    seasonLeaderboardRewardRate = 0;
-    startDate = 0;
-    weeklyLeaderboardRewardRate = 0;
-  };
-  private stable var stable_historic_reward_rates : [T.RewardRates] = [];
-  private stable var stable_team_value_leaderboards : [(FootballTypes.SeasonId, T.TeamValueLeaderboard)] = [];
-  private stable var stable_weekly_rewards : [T.WeeklyRewards] = [];
-  private stable var stable_monthly_rewards : [T.MonthlyRewards] = [];
-  private stable var stable_season_rewards : [T.SeasonRewards] = [];
-  private stable var stable_most_valuable_team_rewards : [T.RewardsList] = [];
-  private stable var stable_high_scoring_player_rewards : [T.RewardsList] = [];
-  private stable var stable_weekly_all_time_high_scores : [T.HighScoreRecord] = [];
-  private stable var stable_monthly_all_time_high_scores : [T.HighScoreRecord] = [];
-  private stable var stable_season_all_time_high_scores : [T.HighScoreRecord] = [];
-  private stable var stable_weekly_ath_prize_pool : Nat64 = 0;
-  private stable var stable_monthly_ath_prize_pool : Nat64 = 0;
-  private stable var stable_season_ath_prize_pool : Nat64 = 0;
-  private stable var stable_active_leaderbord_canister_id : Base.CanisterId = "";
 
-  //Season Manager stable variables
-  private stable var stable_app_status : T.AppStatus = {
-    onHold = false;
-    version = "2.1.0";
+
+
+
+  private func isManagerCanister(principalId : Text) : Bool {
+    let managerCanisterIds = userManager.getUniqueManagerCanisterIds();
+    return Option.isSome(
+      Array.find<Base.PrincipalId>(
+        managerCanisterIds,
+        func(dataAdmin : Base.PrincipalId) : Bool {
+          dataAdmin == principalId;
+        },
+      )
+    );
   };
 
-  private stable var stable_league_gameweek_statuses : [T.LeagueGameweekStatus] = [];
-  private stable var stable_league_month_statuses : [T.LeagueMonthStatus] = [];
-  private stable var stable_league_season_statuses : [T.LeagueSeasonStatus] = [];
-
-  private stable var stable_data_hashes : [Base.DataHash] = [];
-  private stable var stable_player_snapshots : [(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])])] = [];
-
-  //User Manager stable variables
-  private stable var stable_manager_canister_ids : [(Base.PrincipalId, Base.CanisterId)] = [];
-  private stable var stable_usernames : [(Base.PrincipalId, Text)] = [];
-  private stable var stable_unique_manager_canister_ids : [Base.CanisterId] = [];
-  private stable var stable_total_managers : Nat = 0;
-  private stable var stable_active_manager_canister_id : Base.CanisterId = "";
-  private stable var topups : [Base.CanisterTopup] = [];
-  private stable var stable_user_icfc_profiles : [(Base.PrincipalId, T.ICFCProfile)] = [];
-
-  system func preupgrade() {
-
-    stable_unique_weekly_leaderboard_canister_ids := leaderboardManager.getStableUniqueLeaderboardCanisterIds();
-    stable_weekly_leaderboard_canister_ids := leaderboardManager.getStableWeeklyLeaderboardCanisterIds();
-    stable_monthly_leaderboard_canister_ids := leaderboardManager.getStableMonthlyLeaderboardCanisterIds();
-    stable_season_leaderboard_canister_ids := leaderboardManager.getStableSeasonLeaderboardCanisterIds();
-
-    stable_active_reward_rates := leaderboardManager.getStableActiveRewardRates();
-    stable_historic_reward_rates := leaderboardManager.getStableHistoricRewardRates();
-
-    stable_team_value_leaderboards := leaderboardManager.getStableTeamValueLeaderboards();
-    stable_weekly_rewards := leaderboardManager.getStableWeeklyRewards();
-    stable_monthly_rewards := leaderboardManager.getStableMonthlyRewards();
-    stable_season_rewards := leaderboardManager.getStableSeasonRewards();
-    stable_most_valuable_team_rewards := leaderboardManager.getStableMostValuableTeamRewards();
-    stable_high_scoring_player_rewards := leaderboardManager.getStableHighestScoringPlayerRewards();
-
-    stable_weekly_all_time_high_scores := leaderboardManager.getStableWeeklyAllTimeHighScores();
-    stable_monthly_all_time_high_scores := leaderboardManager.getStableMonthlyAllTimeHighScores();
-    stable_season_all_time_high_scores := leaderboardManager.getStableSeasonAllTimeHighScores();
-    stable_weekly_ath_prize_pool := leaderboardManager.getStableWeeklyATHPrizePool();
-    stable_monthly_ath_prize_pool := leaderboardManager.getStableMonthlyATHPrizePool();
-    stable_season_ath_prize_pool := leaderboardManager.getStableSeasonATHPrizePool();
-
-    stable_active_leaderbord_canister_id := leaderboardManager.getStableActiveCanisterId();
-
-    stable_app_status := seasonManager.getStableAppStatus();
-    stable_league_gameweek_statuses := seasonManager.getStableLeagueGameweekStatuses();
-    stable_league_month_statuses := seasonManager.getStableLeagueMonthStatuses();
-    stable_league_season_statuses := seasonManager.getStableLeagueSeasonStatuses();
-
-    stable_data_hashes := seasonManager.getStableDataHashes();
-    stable_player_snapshots := seasonManager.getStablePlayersSnapshots();
-
-    stable_manager_canister_ids := userManager.getStableManagerCanisterIds();
-    stable_usernames := userManager.getStableUsernames();
-    stable_unique_manager_canister_ids := userManager.getStableUniqueManagerCanisterIds();
-    stable_total_managers := userManager.getStableTotalManagers();
-    stable_active_manager_canister_id := userManager.getStableActiveManagerCanisterId();
-    stable_user_icfc_profiles := userManager.getStableUserICFCProfiles();
-  };
-
-  system func postupgrade() {
-    leaderboardManager.setStableUniqueLeaderboardCanisterIds(stable_unique_weekly_leaderboard_canister_ids);
-    leaderboardManager.setStableWeeklyLeaderboardCanisterIds(stable_weekly_leaderboard_canister_ids);
-    leaderboardManager.setStableMonthlyLeaderboardCanisterIds(stable_monthly_leaderboard_canister_ids);
-    leaderboardManager.setStableSeasonLeaderboardCanisterIds(stable_season_leaderboard_canister_ids);
-
-    leaderboardManager.setStableActiveRewardRates(stable_active_reward_rates);
-    leaderboardManager.setStableHistoricRewardRates(stable_historic_reward_rates);
-
-    leaderboardManager.setStableTeamValueLeaderboards(stable_team_value_leaderboards);
-    leaderboardManager.setStableWeeklyRewards(stable_weekly_rewards);
-    leaderboardManager.setStableMonthlyRewards(stable_monthly_rewards);
-    leaderboardManager.setStableSeasonRewards(stable_season_rewards);
-    leaderboardManager.setStableMostValuableTeamRewards(stable_most_valuable_team_rewards);
-    leaderboardManager.setStableHighestScoringPlayerRewards(stable_high_scoring_player_rewards);
-
-    leaderboardManager.setStableWeeklyAllTimeHighScores(stable_weekly_all_time_high_scores);
-    leaderboardManager.setStableMonthlyAllTimeHighScores(stable_monthly_all_time_high_scores);
-    leaderboardManager.setStableSeasonAllTimeHighScores(stable_season_all_time_high_scores);
-    leaderboardManager.setStableWeeklyATHPrizePool(stable_weekly_ath_prize_pool);
-    leaderboardManager.setStableMonthlyATHPrizePool(stable_monthly_ath_prize_pool);
-    leaderboardManager.setStableSeasonATHPrizePool(stable_season_ath_prize_pool);
-    leaderboardManager.setStableActiveCanisterId(stable_active_leaderbord_canister_id);
-
-    seasonManager.setStableAppStatus(stable_app_status);
-    seasonManager.setStableDataHashes(stable_data_hashes);
-    seasonManager.setStablePlayersSnapshots(stable_player_snapshots);
-
-    userManager.setStableManagerCanisterIds(stable_manager_canister_ids);
-    userManager.setStableUsernames(stable_usernames);
-    userManager.setStableUniqueManagerCanisterIds(stable_unique_manager_canister_ids);
-    userManager.setStableTotalManagers(stable_total_managers);
-    userManager.setStableActiveManagerCanisterId(stable_active_manager_canister_id);
-    userManager.setStableUserICFCProfiles(stable_user_icfc_profiles);
-
-    ignore Timer.setTimer<system>(#nanoseconds(Int.abs(1)), postUpgradeCallback);
-  };
-
-  private func postUpgradeCallback() : async () {
-    /*
-    await updateAllDataHashes();
-    await updateManagerCanisterWasms();
-    await updateLeaderboardCanisterWasms();
-    leaderboardManager.setStableActiveRewardRates({
-      seasonId = 1;
-      startDate = Time.now();
-      allTimeMonthlyHighScoreRewardRate = 0;
-      allTimeSeasonHighScoreRewardRate = 0;
-      allTimeWeeklyHighScoreRewardRate = 0;
-      monthlyLeaderboardRewardRate = 0;
-      mostValuableTeamRewardRate = 1_000_000_000_000;
-      highestScoringMatchRewardRate = 1_500_000_000_000;
-      seasonLeaderboardRewardRate = 2_500_000_000_000;
-      weeklyLeaderboardRewardRate = 5_000_000_000_000;
-    });
-    */
-
-    /*
-    stable_app_status := {
-      onHold = false;
-      version = "2.0.2"
-    };
-    seasonManager.setStableAppStatus(stable_app_status);
-    */
-
-    //await checkCanisterCycles();
 
 
-    //await calculateGWLeaderboard(1,29);
-    //await calculateGWRewards(23);
-    //await manuallyPayRewards(23);
 
-    //todo reset data hash categories
 
-    //let _ = await notifyAppsOfGameweekStarting(1,1,29);
 
-  };
 
-  private func updateAllDataHashes() : async () {
-    await seasonManager.updateDataHash("app_status");
-    await seasonManager.updateDataHash("weekly_leaderboard");
-    await seasonManager.updateDataHash("monthly_leaderboards");
-    await seasonManager.updateDataHash("season_leaderboard");
-    await seasonManager.updateDataHash("reward_rates");
-  };
 
   private func hasMembership(caller: Base.PrincipalId) : async Bool {
     let membershipResult = await userManager.getUserICFCMembership(caller);
@@ -909,113 +860,16 @@ actor Self {
     return false;
   };
 
-  private func calculateGWLeaderboard(seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber) : async () {
-    let _ = await userManager.calculateFantasyTeamScores(Environment.LEAGUE_ID, seasonId, gameweek, 0);
-    let managerCanisterIds = userManager.getUniqueManagerCanisterIds();
-    let _ = leaderboardManager.calculateLeaderboards(seasonId, gameweek, 0, managerCanisterIds);
-  };
 
-  private func manuallyPayRewards(gameweek : FootballTypes.GameweekNumber) : async () {
-    let leagueStatusResult = await getLeagueStatus();
-    switch (leagueStatusResult) {
-      case (#ok leagueStatus) {
-        let _ = await leaderboardManager.payWeeklyRewards(leagueStatus.activeSeasonId, gameweek);
-      };
-      case (#err _) {};
-    };
-  };
 
-  private func updateManagerCanisterWasms() : async () {
-    let managerCanisterIds = userManager.getUniqueManagerCanisterIds();
-    let IC : Management.Management = actor (NetworkEnvironmentVariables.Default);
-    for (canisterId in Iter.fromArray(managerCanisterIds)) {
-      await IC.stop_canister({ canister_id = Principal.fromText(canisterId) });
-      let oldManagement = actor (canisterId) : actor {};
-      let _ = await (system ManagerCanister._ManagerCanister)(#upgrade oldManagement)();
-      await IC.start_canister({ canister_id = Principal.fromText(canisterId) });
-    };
-  };
 
-  private func updateLeaderboardCanisterWasms() : async () {
-    let leaderboardCanisterIds = leaderboardManager.getUniqueLeaderboardCanisterIds();
-    let IC : Management.Management = actor (NetworkEnvironmentVariables.Default);
-    for (canisterId in Iter.fromArray(leaderboardCanisterIds)) {
-      await IC.stop_canister({ canister_id = Principal.fromText(canisterId) });
-      let oldLeaderboard = actor (canisterId) : actor {};
-      let _ = await (system LeaderboardCanister._LeaderboardCanister)(#upgrade oldLeaderboard)();
-      await IC.start_canister({ canister_id = Principal.fromText(canisterId) });
-    };
-  };
 
-  //Functions to be removed when handed back to SNS
 
-  public shared query func getSystemState() : async Result.Result<DTOs.AppStatusDTO, T.Error> {
-    let appStatusResult = seasonManager.getAppStatus();
-    switch (appStatusResult) {
-      case (#ok appStatus) {
-        return #ok({
-          onHold = appStatus.onHold;
-          version = appStatus.version;
-        });
-      };
-      case (#err error) {
-        return #err(error);
-      };
-    };
-  };
 
-  public shared ({ caller }) func updateSystemState(dto : Commands.UpdateAppStatusDTO) : async Result.Result<(), T.Error> {
-    assert Principal.toText(caller) == NetworkEnvironmentVariables.FOOTBALL_GOD_BACKEND_CANISTER_ID;
-    seasonManager.updateSystemStatus(dto);
-    await seasonManager.updateDataHash("app_status");
-    return #ok();
-  };
 
-  public shared ({ caller }) func calculateWeeklyRewards(gameweek : FootballTypes.GameweekNumber) : async Result.Result<(), T.Error> {
-    assert Principal.toText(caller) == NetworkEnvironmentVariables.FOOTBALL_GOD_BACKEND_CANISTER_ID;
-    let leagueStatusResult = await getLeagueStatus();
-    switch (leagueStatusResult) {
-      case (#ok leagueStatus) {
-        return await leaderboardManager.calculateWeeklyRewards(leagueStatus.activeSeasonId, gameweek);
-      };
-      case (#err error) {
-        return #err(error);
-      };
-    };
-  };
 
-  public shared ({ caller }) func payWeeklyRewards(gameweek : FootballTypes.GameweekNumber) : async Result.Result<(), T.Error> {
-    assert Principal.toText(caller) == NetworkEnvironmentVariables.FOOTBALL_GOD_BACKEND_CANISTER_ID;
-    let leagueStatusResult = await getLeagueStatus();
-    switch (leagueStatusResult) {
-      case (#ok leagueStatus) {
-        return await leaderboardManager.payWeeklyRewards(leagueStatus.activeSeasonId, gameweek);
-      };
-      case (#err error) {
-        return #err(error);
-      };
-    };
-  };
+  /* ----- Football God Data Callback Functions ----- */
 
-  public shared query func getWeeklyRewards(dto : Queries.GetWeeklyRewardsDTO) : async Result.Result<Queries.WeeklyRewardsDTO, T.Error> {
-    let weeklyRewardsResult = leaderboardManager.getWeeklyRewards(dto.seasonId, dto.gameweek);
-    switch (weeklyRewardsResult) {
-      case (#ok foundRewards) {
-        return #ok({
-          gameweek = dto.gameweek;
-          seasonId = dto.seasonId;
-          rewards = List.toArray(foundRewards.rewards);
-        });
-      };
-      case (#err _) {
-        return #err(#NotFound);
-      };
-    };
-  };
-
-  public shared query func getWeeklyCanisters() : async Result.Result<[(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, Base.CanisterId)])], T.Error> {
-    return #ok(stable_weekly_leaderboard_canister_ids);
-  };
 
   public shared ({ caller }) func notifyAppLink(dto : Commands.NotifyAppofLink) : async Result.Result<(), T.Error> {
     assert Principal.toText(caller) == NetworkEnvironmentVariables.ICFC_BACKEND_CANISTER_ID;
@@ -1109,8 +963,118 @@ actor Self {
     return #ok();
   };
 
-  public shared query func getTopups() : async [Base.CanisterTopup] {
-    return topups;
+
+  /* ----- Canister Lifecycle Management ----- */
+
+  system func preupgrade() {
+
+    stable_unique_weekly_leaderboard_canister_ids := leaderboardManager.getStableUniqueLeaderboardCanisterIds();
+    stable_weekly_leaderboard_canister_ids := leaderboardManager.getStableWeeklyLeaderboardCanisterIds();
+    stable_monthly_leaderboard_canister_ids := leaderboardManager.getStableMonthlyLeaderboardCanisterIds();
+    stable_season_leaderboard_canister_ids := leaderboardManager.getStableSeasonLeaderboardCanisterIds();
+
+    stable_active_reward_rates := leaderboardManager.getStableActiveRewardRates();
+    stable_historic_reward_rates := leaderboardManager.getStableHistoricRewardRates();
+
+    stable_team_value_leaderboards := leaderboardManager.getStableTeamValueLeaderboards();
+    stable_weekly_rewards := leaderboardManager.getStableWeeklyRewards();
+    stable_monthly_rewards := leaderboardManager.getStableMonthlyRewards();
+    stable_season_rewards := leaderboardManager.getStableSeasonRewards();
+    stable_most_valuable_team_rewards := leaderboardManager.getStableMostValuableTeamRewards();
+    stable_high_scoring_player_rewards := leaderboardManager.getStableHighestScoringPlayerRewards();
+
+    stable_weekly_all_time_high_scores := leaderboardManager.getStableWeeklyAllTimeHighScores();
+    stable_monthly_all_time_high_scores := leaderboardManager.getStableMonthlyAllTimeHighScores();
+    stable_season_all_time_high_scores := leaderboardManager.getStableSeasonAllTimeHighScores();
+    stable_weekly_ath_prize_pool := leaderboardManager.getStableWeeklyATHPrizePool();
+    stable_monthly_ath_prize_pool := leaderboardManager.getStableMonthlyATHPrizePool();
+    stable_season_ath_prize_pool := leaderboardManager.getStableSeasonATHPrizePool();
+
+    stable_active_leaderbord_canister_id := leaderboardManager.getStableActiveCanisterId();
+
+    stable_app_status := seasonManager.getStableAppStatus();
+    stable_league_gameweek_statuses := seasonManager.getStableLeagueGameweekStatuses();
+    stable_league_month_statuses := seasonManager.getStableLeagueMonthStatuses();
+    stable_league_season_statuses := seasonManager.getStableLeagueSeasonStatuses();
+
+    stable_data_hashes := seasonManager.getStableDataHashes();
+    stable_player_snapshots := seasonManager.getStablePlayersSnapshots();
+
+    stable_manager_canister_ids := userManager.getStableManagerCanisterIds();
+    stable_usernames := userManager.getStableUsernames();
+    stable_unique_manager_canister_ids := userManager.getStableUniqueManagerCanisterIds();
+    stable_total_managers := userManager.getStableTotalManagers();
+    stable_active_manager_canister_id := userManager.getStableActiveManagerCanisterId();
+    stable_user_icfc_profiles := userManager.getStableUserICFCProfiles();
   };
 
+  system func postupgrade() {
+    
+    leaderboardManager.setStableUniqueLeaderboardCanisterIds(stable_unique_weekly_leaderboard_canister_ids);
+    leaderboardManager.setStableWeeklyLeaderboardCanisterIds(stable_weekly_leaderboard_canister_ids);
+    leaderboardManager.setStableMonthlyLeaderboardCanisterIds(stable_monthly_leaderboard_canister_ids);
+    leaderboardManager.setStableSeasonLeaderboardCanisterIds(stable_season_leaderboard_canister_ids);
+
+    leaderboardManager.setStableActiveRewardRates(stable_active_reward_rates);
+    leaderboardManager.setStableHistoricRewardRates(stable_historic_reward_rates);
+
+    leaderboardManager.setStableTeamValueLeaderboards(stable_team_value_leaderboards);
+    leaderboardManager.setStableWeeklyRewards(stable_weekly_rewards);
+    leaderboardManager.setStableMonthlyRewards(stable_monthly_rewards);
+    leaderboardManager.setStableSeasonRewards(stable_season_rewards);
+    leaderboardManager.setStableMostValuableTeamRewards(stable_most_valuable_team_rewards);
+    leaderboardManager.setStableHighestScoringPlayerRewards(stable_high_scoring_player_rewards);
+
+    leaderboardManager.setStableWeeklyAllTimeHighScores(stable_weekly_all_time_high_scores);
+    leaderboardManager.setStableMonthlyAllTimeHighScores(stable_monthly_all_time_high_scores);
+    leaderboardManager.setStableSeasonAllTimeHighScores(stable_season_all_time_high_scores);
+    leaderboardManager.setStableWeeklyATHPrizePool(stable_weekly_ath_prize_pool);
+    leaderboardManager.setStableMonthlyATHPrizePool(stable_monthly_ath_prize_pool);
+    leaderboardManager.setStableSeasonATHPrizePool(stable_season_ath_prize_pool);
+    leaderboardManager.setStableActiveCanisterId(stable_active_leaderbord_canister_id);
+
+    seasonManager.setStableAppStatus(stable_app_status);
+    seasonManager.setStableDataHashes(stable_data_hashes);
+    seasonManager.setStablePlayersSnapshots(stable_player_snapshots);
+
+    userManager.setStableManagerCanisterIds(stable_manager_canister_ids);
+    userManager.setStableUsernames(stable_usernames);
+    userManager.setStableUniqueManagerCanisterIds(stable_unique_manager_canister_ids);
+    userManager.setStableTotalManagers(stable_total_managers);
+    userManager.setStableActiveManagerCanisterId(stable_active_manager_canister_id);
+    userManager.setStableUserICFCProfiles(stable_user_icfc_profiles);
+
+    ignore Timer.setTimer<system>(#nanoseconds(Int.abs(1)), postUpgradeCallback);
+  };
+
+  private func postUpgradeCallback() : async () {  
+    //await updateManagerCanisterWasms();
+    //await updateLeaderboardCanisterWasms();
+  };
+
+
+  /* ----- Canister Update Functions ----- */
+
+  private func updateManagerCanisterWasms() : async () {
+    let managerCanisterIds = userManager.getUniqueManagerCanisterIds();
+    let IC : Management.Management = actor (NetworkEnvironmentVariables.Default);
+    for (canisterId in Iter.fromArray(managerCanisterIds)) {
+      await IC.stop_canister({ canister_id = Principal.fromText(canisterId) });
+      let oldManagement = actor (canisterId) : actor {};
+      let _ = await (system ManagerCanister._ManagerCanister)(#upgrade oldManagement)();
+      await IC.start_canister({ canister_id = Principal.fromText(canisterId) });
+    };
+  };
+
+  private func updateLeaderboardCanisterWasms() : async () {
+    let leaderboardCanisterIds = leaderboardManager.getUniqueLeaderboardCanisterIds();
+    let IC : Management.Management = actor (NetworkEnvironmentVariables.Default);
+    for (canisterId in Iter.fromArray(leaderboardCanisterIds)) {
+      await IC.stop_canister({ canister_id = Principal.fromText(canisterId) });
+      let oldLeaderboard = actor (canisterId) : actor {};
+      let _ = await (system LeaderboardCanister._LeaderboardCanister)(#upgrade oldLeaderboard)();
+      await IC.start_canister({ canister_id = Principal.fromText(canisterId) });
+    };
+  };
+  
 };
