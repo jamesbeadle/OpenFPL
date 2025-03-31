@@ -4,6 +4,8 @@ import Base "mo:waterway-mops/BaseTypes";
 import FootballTypes "mo:waterway-mops/FootballTypes";
 import ICFCTypes "../cleanup/icfc_types";
 import MopsCanisterIds "../cleanup/mops_canister_ids";
+import FootballQueries "../cleanup/football_god_queries";
+import MopsEnums "../cleanup/mops_enums";
 
 
 /* ----- Mops Packages ----- */
@@ -30,7 +32,6 @@ import TrieMap "mo:base/TrieMap";
 /* ----- Queries ----- */
 
 import UserQueries "../queries/user_queries";
-import FootballQueries "../cleanup/football_god_queries";
 
 
 /* ----- Commands ----- */
@@ -38,12 +39,17 @@ import FootballQueries "../cleanup/football_god_queries";
 import UserCommands "../commands/user_commands";
 
 
+/* ----- Only Stable Variables Should Use Types ----- */
+
+import AppTypes "../types/app_types";
+
+
 /* ----- Application Environment & Utility Files ----- */ 
 
 import PickTeamUtilities "../utilities/pick_team_utilities";
 import Environment "../Environment";
-import AppTypes "../types/app_types";
-import MopsEnums "../cleanup/mops_enums";
+import MopsIds "../cleanup/mops_ids";
+import MopsBaseTypes "../cleanup/mops_base_types";
 
 
 actor class _ManagerCanister() {
@@ -247,7 +253,7 @@ actor class _ManagerCanister() {
       prospectsGameweek = manager.prospectsGameweek;
       braceBonusGameweek = manager.braceBonusGameweek;
       hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
-      transferWindowGameweek = updatedTransferWindowGameweek;
+      transferWindowGameweek;
       history = manager.history;
       profilePictureType = manager.profilePictureType;
       canisterId = manager.canisterId;
@@ -393,25 +399,70 @@ actor class _ManagerCanister() {
 
   };
 
-  private func mergeBonus(dto : UserCommands.PlayBonus, manager : AppTypes.Manager, monthlyBonusesAvailable : Nat8) : AppTypes.Manager {
+  private func mergeBonus(dto : UserCommands.PlayBonus, manager : AppTypes.Manager, gameweek : FootballTypes.GameweekNumber, monthlyBonusesAvailable : Nat8, bonusPlayerId: FootballTypes.PlayerId, bonusClubId: FootballTypes.ClubId, bonusNationality: MopsIds.CountryId) : AppTypes.Manager {
 
-    var updatedGoalGetterGameweek = PickTeamUtilities.valueOrDefaultGameweek(dto.goalGetterGameweek, manager.goalGetterGameweek);
-    var updatedGoalGetterPlayerId = PickTeamUtilities.valueOrDefaultPlayerId(dto.goalGetterPlayerId, manager.goalGetterPlayerId);
-    var updatedPassMasterGameweek = PickTeamUtilities.valueOrDefaultGameweek(dto.passMasterGameweek, manager.passMasterGameweek);
-    var updatedPassMasterPlayerId = PickTeamUtilities.valueOrDefaultPlayerId(dto.passMasterPlayerId, manager.passMasterPlayerId);
-    var updatedNoEntryGameweek = PickTeamUtilities.valueOrDefaultGameweek(dto.noEntryGameweek, manager.noEntryGameweek);
-    var updatedNoEntryPlayerId = PickTeamUtilities.valueOrDefaultPlayerId(dto.noEntryPlayerId, manager.noEntryPlayerId);
-    var updatedTeamBoostGameweek = PickTeamUtilities.valueOrDefaultGameweek(dto.teamBoostGameweek, manager.teamBoostGameweek);
-    var updatedTeamBoostClubId = PickTeamUtilities.valueOrDefaultClubId(dto.teamBoostClubId, manager.teamBoostClubId);
-    var updatedSafeHandsGameweek = PickTeamUtilities.valueOrDefaultGameweek(dto.safeHandsGameweek, manager.safeHandsGameweek);
-    var updatedSafeHandsPlayerId = PickTeamUtilities.valueOrDefaultPlayerId(dto.safeHandsPlayerId, manager.safeHandsPlayerId);
-    var updatedCaptainFantasticGameweek = PickTeamUtilities.valueOrDefaultGameweek(dto.captainFantasticGameweek, manager.captainFantasticGameweek);
-    var updatedCaptainFantasticPlayerId = PickTeamUtilities.valueOrDefaultPlayerId(dto.captainFantasticPlayerId, manager.captainFantasticPlayerId);
-    var updatedOneNationGameweek = PickTeamUtilities.valueOrDefaultGameweek(dto.oneNationGameweek, manager.oneNationGameweek);
-    var updatedOneNationCountryId = PickTeamUtilities.valueOrDefaultCountryId(dto.oneNationCountryId, manager.oneNationCountryId);
-    var updatedProspectsGameweek = PickTeamUtilities.valueOrDefaultGameweek(dto.prospectsGameweek, manager.prospectsGameweek);
-    var updatedBraceBonusGameweek = PickTeamUtilities.valueOrDefaultGameweek(dto.braceBonusGameweek, manager.braceBonusGameweek);
-    var updatedHatTrickHeroGameweek = PickTeamUtilities.valueOrDefaultGameweek(dto.hatTrickHeroGameweek, manager.hatTrickHeroGameweek);
+
+    var updatedGoalGetterGameweek = manager.goalGetterGameweek;
+    var updatedPassMasterGameweek = manager.passMasterGameweek;
+    var updatedNoEntryGameweek = manager.noEntryGameweek;
+    var updatedTeamBoostGameweek = manager.teamBoostGameweek;
+    var updatedSafeHandsGameweek = manager.safeHandsGameweek;
+    var updatedCaptainFantasticGameweek = manager.captainFantasticGameweek;
+    var updatedOneNationGameweek = manager.oneNationGameweek;
+    var updatedProspectsGameweek = manager.prospectsGameweek;
+    var updatedBraceBonusGameweek = manager.braceBonusGameweek;
+    var updatedHatTrickHeroGameweek = manager.hatTrickHeroGameweek;
+
+    var updatedGoalGetterPlayerId = manager.goalGetterPlayerId;
+    var updatedPassMasterPlayerId = manager.passMasterPlayerId;
+    var updatedNoEntryPlayerId = manager.noEntryPlayerId;
+    var updatedSafeHandsPlayerId = manager.safeHandsPlayerId;
+    var updatedCaptainFantasticPlayerId = manager.captainFantasticPlayerId;
+    
+    var updatedTeamBoostClubId = manager.teamBoostClubId;
+
+    var updatedOneNationCountryId = manager.oneNationCountryId;
+    
+    switch(dto.bonusType){
+      case (#GoalGetter){
+        updatedGoalGetterGameweek := gameweek;
+        updatedGoalGetterPlayerId := bonusPlayerId;
+      };
+      case (#BraceBonus){
+        updatedBraceBonusGameweek := gameweek;
+      };
+      case (#CaptainFantastic){
+        updatedCaptainFantasticGameweek := gameweek;
+        updatedCaptainFantasticPlayerId := bonusPlayerId;
+      };
+      case (#HatTrickHero){
+        updatedHatTrickHeroGameweek := gameweek;
+      };
+      case (#NoEntry){
+        updatedNoEntryGameweek := gameweek;
+        updatedNoEntryPlayerId := bonusPlayerId;
+      };
+      case (#OneNation){
+        updatedOneNationGameweek := gameweek;
+        updatedOneNationCountryId := bonusNationality;
+      };
+      case ( #PassMaster){
+        updatedPassMasterGameweek := gameweek;
+        updatedPassMasterPlayerId := bonusPlayerId;
+      };
+      case (#Prospects){
+        updatedProspectsGameweek := gameweek
+      };
+      case (#SafeHands){
+        updatedSafeHandsGameweek := gameweek;
+        updatedSafeHandsPlayerId := bonusPlayerId;
+      };
+      case (#TeamBoost){
+        updatedTeamBoostGameweek := gameweek;
+        updatedTeamBoostClubId := bonusClubId;
+      };
+
+    };
 
     return {
       principalId = manager.principalId;
@@ -425,6 +476,10 @@ actor class _ManagerCanister() {
       bankQuarterMillions = manager.bankQuarterMillions;
       playerIds = manager.playerIds;
       captainId = manager.captainId;
+      transferWindowGameweek = manager.transferWindowGameweek;
+      history = manager.history;
+      profilePictureType = manager.profilePictureType;
+      canisterId = manager.canisterId;
       goalGetterGameweek = updatedGoalGetterGameweek;
       goalGetterPlayerId = updatedGoalGetterPlayerId;
       passMasterGameweek = updatedPassMasterGameweek;
@@ -442,10 +497,6 @@ actor class _ManagerCanister() {
       prospectsGameweek = updatedProspectsGameweek;
       braceBonusGameweek = updatedBraceBonusGameweek;
       hatTrickHeroGameweek = updatedHatTrickHeroGameweek;
-      transferWindowGameweek = manager.transferWindowGameweek;
-      history = manager.history;
-      profilePictureType = manager.profilePictureType;
-      canisterId = manager.canisterId;
     };
   };
 
