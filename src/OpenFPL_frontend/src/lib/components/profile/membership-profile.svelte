@@ -5,7 +5,7 @@
     import CopyPrincipal from "./copy-principal.svelte";
     import MembershipLinkedModal from "./membership-linked-modal.svelte";
     
-    export let icfcProfile: CombinedProfile | undefined = undefined;
+    //export let icfcProfile: CombinedProfile | undefined = undefined;
   
     let isLoading = false;
 
