@@ -15,6 +15,7 @@
 
     let membershipLinked = false;
     let notLinked = false;
+
     
     async function checkMembership(){
       // TODO Recheck 
@@ -24,6 +25,7 @@
         duration: 2000,
       });
       await checkICFCLinkStatus();
+
     }
 
     async function checkICFCLinkStatus(){
