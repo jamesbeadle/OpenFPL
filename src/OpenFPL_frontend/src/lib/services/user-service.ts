@@ -42,7 +42,7 @@ export class UserService {
       return result.ok;
     } catch (error) {
       console.error("Error checking ICFC link status:", error);
-      return undefined; // Not linked
+      return undefined; 
     }
   }
 
