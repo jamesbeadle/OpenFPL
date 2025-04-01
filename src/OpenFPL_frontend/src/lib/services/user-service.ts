@@ -13,7 +13,7 @@ export class UserService {
       );
       const getProfile: GetProfile = { principalId };
       const result: any = await identityActor.getProfile(getProfile);
-      if (isError(result)) throw new Error("Failed to get profile.");
+      if (isError(result)) return undefined;
       return result.ok;
     } catch (error) {
       console.error("Error fetching user profile: ", error);
@@ -21,7 +21,7 @@ export class UserService {
         type: "error",
         message: "Error fetching user profile.",
       });
-      throw error;
+      return undefined;
     }
   }
 
