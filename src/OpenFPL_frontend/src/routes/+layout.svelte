@@ -20,7 +20,7 @@
   import CreateNewUser from "$lib/components/profile/membership-profile.svelte";
   import LandingPage from "$lib/components/landing/landing-page.svelte";
   import InvalidMembershipPage from "$lib/components/profile/invalid-membership-page.svelte";
-  import type { ICFCMembershipDTO } from "../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { ICFCProfile } from "../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     import { displayAndCleanLogoutMsg } from "$lib/services/auth.services";
     import MembershipProfile from "$lib/components/profile/membership-profile.svelte";
     
@@ -62,7 +62,7 @@
 
   let hasProfile = false;
   let hasValidMembership = false;
-  let membership: ICFCMembershipDTO | undefined = undefined;
+  let icfcProfile: ICFCProfile | undefined = undefined;
 
   /*
   const init = async () => {
@@ -164,7 +164,7 @@
       </main>
       <Footer />
     {:else if $authSignedInStore && !hasProfile}
-      <MembershipProfile {membership} />
+      <MembershipProfile {icfcProfile} />
     {:else}
       <LandingPage />
     {/if}
