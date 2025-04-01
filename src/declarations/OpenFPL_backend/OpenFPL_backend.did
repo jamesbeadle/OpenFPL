@@ -5,6 +5,12 @@ type WeeklyLeaderboard =
    seasonId: SeasonId;
    totalEntries: nat;
  };
+type UpdateICFCProfile = 
+ record {
+   membershipType: MembershipType;
+   subApp: SubApp;
+   subAppUserPrincipalId: PrincipalId;
+ };
 type TeamSetup = 
  record {
    bankQuarterMillions: nat16;
@@ -35,6 +41,14 @@ type TeamSetup =
    transfersAvailable: nat8;
    username: text;
  };
+type SubApp = 
+ variant {
+   FootballGod;
+   JeffBets;
+   OpenFPL;
+   OpenWSL;
+   TransferKings;
+ };
 type SetFavouriteClub = 
  record {
    favouriteClubId: ClubId;
@@ -62,12 +76,12 @@ type RewardRates =
 type Result_9 = 
  variant {
    err: Error;
-   ok: FantasyTeamSnapshot;
+   ok: vec DataHash;
  };
 type Result_8 = 
  variant {
    err: Error;
-   ok: ICFCProfile;
+   ok: FantasyTeamSnapshot;
  };
 type Result_7 = 
  variant {
@@ -87,7 +101,7 @@ type Result_5 =
 type Result_4 = 
  variant {
    err: Error;
-   ok: Profile;
+   ok: CombinedProfile;
  };
 type Result_3 = 
  variant {
@@ -99,25 +113,20 @@ type Result_2 =
    err: Error;
    ok: nat;
  };
-type Result_13 = 
+type Result_12 = 
  variant {
    err: Error;
    ok: text;
  };
-type Result_12 = 
+type Result_11 = 
  variant {
    err: Error;
    ok: RewardRates;
  };
-type Result_11 = 
- variant {
-   err: Error;
-   ok: AppStatus;
- };
 type Result_10 = 
  variant {
    err: Error;
-   ok: vec DataHash;
+   ok: AppStatus;
  };
 type Result_1 = 
  variant {
@@ -128,16 +137,6 @@ type Result =
  variant {
    err: Error;
    ok;
- };
-type Profile = 
- record {
-   createDate: int;
-   favouriteClubId: opt ClubId;
-   principalId: PrincipalId;
-   profilePicture: opt blob;
-   profilePictureType: text;
-   termsAccepted: bool;
-   username: text;
  };
 type PrincipalId = text;
 type PlayersMap = record {playersMap: vec record {
@@ -198,6 +197,23 @@ type PlayBonus =
    playerId: PlayerId;
    principalId: PrincipalId;
  };
+type NotifyAppofLink = 
+ record {
+   icfcPrincipalId: PrincipalId;
+   membershipType: MembershipType;
+   subApp: SubApp;
+   subAppUserPrincipalId: PrincipalId;
+ };
+type MembershipType__1 = 
+ variant {
+   Expired;
+   Founding;
+   Lifetime;
+   Monthly;
+   NotClaimed;
+   NotEligible;
+   Seasonal;
+ };
 type MembershipType = 
  variant {
    Expired;
@@ -212,7 +228,7 @@ type MembershipClaim =
  record {
    claimedOn: int;
    expiresOn: opt int;
-   membershipType: MembershipType;
+   membershipType: MembershipType__1;
  };
 type Manager = 
  record {
@@ -233,6 +249,13 @@ type Manager =
    weeklyPosition: int;
    weeklyPositionText: text;
  };
+type LinkICFCProfile = 
+ record {
+   favouriteClubId: ClubId;
+   icfcMembershipType: MembershipType__1;
+   icfcPrincipalId: PrincipalId;
+   principalId: PrincipalId;
+ };
 type LeagueId = nat16;
 type LeaderboardEntry = 
  record {
@@ -240,21 +263,6 @@ type LeaderboardEntry =
    position: nat;
    positionText: text;
    principalId: text;
-   username: text;
- };
-type ICFCProfile = 
- record {
-   createdOn: int;
-   displayName: text;
-   favouriteClubId: opt ClubId;
-   favouriteLeagueId: opt LeagueId;
-   membershipClaims: vec MembershipClaim;
-   membershipExpiryTime: int;
-   membershipType: MembershipType;
-   nationalityId: opt CountryId;
-   principalId: PrincipalId;
-   profilePicture: opt blob;
-   termsAgreed: bool;
    username: text;
  };
 type GetWeeklyLeaderboard = 
@@ -275,7 +283,6 @@ type GetPlayersMap =
  };
 type GetManagerByUsername = record {username: text;};
 type GetManager = record {principalId: text;};
-type GetICFCProfile = record {principalId: PrincipalId;};
 type GetFantasyTeamSnapshot = 
  record {
    gameweek: GameweekNumber;
@@ -378,6 +385,24 @@ type DataHash =
    hash: text;
  };
 type CountryId = nat16;
+type CombinedProfile = 
+ record {
+   createDate: int;
+   createdOn: int;
+   displayName: text;
+   favouriteClubId: opt ClubId;
+   favouriteLeagueId: opt LeagueId;
+   membershipClaims: vec MembershipClaim;
+   membershipExpiryTime: int;
+   membershipType: MembershipType__1;
+   nationalityId: opt CountryId;
+   principalId: PrincipalId;
+   profilePicture: opt blob;
+   profilePictureType: text;
+   termsAccepted: bool;
+   termsAgreed: bool;
+   username: text;
+ };
 type ClubId = nat16;
 type CanisterId = text;
 type CalendarMonth = nat8;
@@ -400,12 +425,11 @@ type AppStatus =
    version: text;
  };
 service : {
-  getActiveLeaderboardCanisterId: () -> (Result_13);
-  getActiveRewardRates: () -> (Result_12);
-  getAppStatus: () -> (Result_11);
-  getDataHashes: () -> (Result_10);
-  getFantasyTeamSnapshot: (GetFantasyTeamSnapshot) -> (Result_9);
-  getICFCProfile: (GetICFCProfile) -> (Result_8);
+  getActiveLeaderboardCanisterId: () -> (Result_12);
+  getActiveRewardRates: () -> (Result_11);
+  getAppStatus: () -> (Result_10);
+  getDataHashes: () -> (Result_9);
+  getFantasyTeamSnapshot: (GetFantasyTeamSnapshot) -> (Result_8);
   getLeaderboardCanisterIds: () -> (Result_6);
   getManager: (GetManager) -> (Result_7);
   getManagerByUsername: (GetManagerByUsername) -> (Result_7);
@@ -415,6 +439,9 @@ service : {
   getTeamSelection: (GetTeamSetup) -> (Result_3);
   getTotalManagers: () -> (Result_2);
   getWeeklyLeaderboard: (GetWeeklyLeaderboard) -> (Result_1);
+  linkICFCLink: (LinkICFCProfile) -> (Result);
+  noitifyAppofICFCHashUpdate: (UpdateICFCProfile) -> (Result);
+  notifyAppLink: (NotifyAppofLink) -> (Result);
   notifyAppsOfFixtureFinalised: (LeagueId, SeasonId, GameweekNumber) ->
    (Result);
   notifyAppsOfGameweekStarting: (LeagueId, SeasonId, GameweekNumber) ->
