@@ -1,8 +1,5 @@
-<script lang="ts">
-  import Layout from "../+layout.svelte";
-</script>
 
-<Layout>
+
   <div class="p-4 mt-4 bg-panel">
     <h1 class="default-header">OpenFPL Gameplay Rules</h1>
     <div>
@@ -167,4 +164,3 @@
       </table>
     </div>
   </div>
-</Layout>

@@ -1,9 +1,9 @@
 <script lang="ts">
     import IcpLogo from "$lib/icons/IcpLogo.svelte";
     import OpenFplIconWithText from "$lib/icons/OpenFPLIconWithText.svelte";
+    import { isBusy } from "$lib/stores/busy-store";
+    import { signIn } from "$lib/services/auth-services";
 
-    
-    export let handleLoginClick: () => void;
 </script>
 
 <div class="relative flex flex-col items-center justify-center w-full md:min-h-screen">
@@ -22,7 +22,7 @@
         <div class="mx-2 space-y-4">
             <button 
                 class="flex items-center justify-center w-full py-2 mr-8 rounded lg:mx-0 bg-BrandGrayShade1 hover:bg-BrandGrayShade2"
-                on:click={handleLoginClick}
+                onclick={async () => await signIn({})} disabled={$isBusy}
             >
               <span class="mr-2"><IcpLogo /></span> Internet Identity
             </button>
