@@ -37,12 +37,11 @@
       
         <div class="flex items-center space-x-2">
             <a
-                href="https://juno.build"
+                href="https://waterwaylabs.xyz"
                 target="_blank"
                 class="flex items-center hover:text-gray-300"
             >
-            Sponsored By juno.build
-            <JunoIcon className="h-8 w-auto ml-2" />
+            Waterway Labs
         </a>
         </div>
     </div>   

@@ -150,6 +150,9 @@ export interface GetFixtures {
   seasonId: number;
   leagueId: number;
 }
+export interface GetICFCLinkStatus {
+  principalId: PrincipalId;
+}
 export interface GetManager {
   principalId: string;
 }
@@ -193,6 +196,7 @@ export interface GetWeeklyRewardsLeaderboard {
   seasonId: SeasonId;
   gameweek: GameweekNumber;
 }
+export type ICFCLinkStatus = { PendingVerification: null } | { Verified: null };
 export interface LeaderboardEntry {
   username: string;
   positionText: string;
@@ -390,15 +394,16 @@ export type Result_10 = { ok: PlayerDetailsForGameweek } | { err: Error };
 export type Result_11 = { ok: Array<CanisterId> } | { err: Error };
 export type Result_12 = { ok: Manager } | { err: Error };
 export type Result_13 = { ok: LeagueStatus } | { err: Error };
-export type Result_14 = { ok: Fixtures } | { err: Error };
-export type Result_15 = { ok: FantasyTeamSnapshot } | { err: Error };
-export type Result_16 = { ok: Array<DataHash> } | { err: Error };
-export type Result_17 = { ok: Countries } | { err: Error };
-export type Result_18 = { ok: Clubs } | { err: Error };
-export type Result_19 = { ok: AppStatus } | { err: Error };
+export type Result_14 = { ok: ICFCLinkStatus } | { err: Error };
+export type Result_15 = { ok: Fixtures } | { err: Error };
+export type Result_16 = { ok: FantasyTeamSnapshot } | { err: Error };
+export type Result_17 = { ok: Array<DataHash> } | { err: Error };
+export type Result_18 = { ok: Countries } | { err: Error };
+export type Result_19 = { ok: Clubs } | { err: Error };
 export type Result_2 = { ok: WeeklyLeaderboard } | { err: Error };
-export type Result_20 = { ok: RewardRates } | { err: Error };
-export type Result_21 = { ok: string } | { err: Error };
+export type Result_20 = { ok: AppStatus } | { err: Error };
+export type Result_21 = { ok: RewardRates } | { err: Error };
+export type Result_22 = { ok: string } | { err: Error };
 export type Result_3 = { ok: bigint } | { err: Error };
 export type Result_4 = { ok: TeamSetup } | { err: Error };
 export type Result_5 = { ok: Seasons } | { err: Error };
@@ -503,14 +508,15 @@ export interface WeeklyRewardsLeaderboard {
   gameweek: GameweekNumber;
 }
 export interface _SERVICE {
-  getActiveLeaderboardCanisterId: ActorMethod<[], Result_21>;
-  getActiveRewardRates: ActorMethod<[], Result_20>;
-  getAppStatus: ActorMethod<[], Result_19>;
-  getClubs: ActorMethod<[GetClubs], Result_18>;
-  getCountries: ActorMethod<[], Result_17>;
-  getDataHashes: ActorMethod<[], Result_16>;
-  getFantasyTeamSnapshot: ActorMethod<[GetFantasyTeamSnapshot], Result_15>;
-  getFixtures: ActorMethod<[GetFixtures], Result_14>;
+  getActiveLeaderboardCanisterId: ActorMethod<[], Result_22>;
+  getActiveRewardRates: ActorMethod<[], Result_21>;
+  getAppStatus: ActorMethod<[], Result_20>;
+  getClubs: ActorMethod<[GetClubs], Result_19>;
+  getCountries: ActorMethod<[], Result_18>;
+  getDataHashes: ActorMethod<[], Result_17>;
+  getFantasyTeamSnapshot: ActorMethod<[GetFantasyTeamSnapshot], Result_16>;
+  getFixtures: ActorMethod<[GetFixtures], Result_15>;
+  getICFCLinkStatus: ActorMethod<[GetICFCLinkStatus], Result_14>;
   getLeaderboardCanisterIds: ActorMethod<[], Result_11>;
   getLeagueStatus: ActorMethod<[], Result_13>;
   getManager: ActorMethod<[GetManager], Result_12>;
