@@ -1,6 +1,5 @@
-import { LeagueService } from "$lib/services/league-service";
-import type { LeagueStatus } from "../../../../external_declarations/data_canister/data_canister.did";
 import { writable } from "svelte/store";
+import type { LeagueStatus } from "../../../../declarations/data_canister/data_canister.did";
 
 function createLeagueStore() {
   const { subscribe, set } = writable<LeagueStatus | null>(null);

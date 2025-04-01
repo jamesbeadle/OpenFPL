@@ -1,20 +1,16 @@
 <script lang="ts">
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import type {
-    ClubDTO,
-    PlayerDetailDTO,
-    PlayerEventData,
-    PlayerGameweekDTO,
-  } from "../../../../../external_declarations/data_canister/data_canister.did";
   import { getFlagComponent } from "../../utils/helpers";
   import Modal from "$lib/components/shared/modal.svelte";
+    import type { PlayerDetails, PlayerEventData, PlayerGameweek } from "../../../../../declarations/data_canister/data_canister.did";
+    import type { Club } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   export let visible: boolean;
   export let closeDetailModal: () => void;
-  export let playerDetail: PlayerDetailDTO;
-  export let gameweekDetail: PlayerGameweekDTO | null;
-  export let playerTeam: ClubDTO | undefined;
-  export let opponentTeam: ClubDTO | null;
+  export let playerDetail: PlayerDetails;
+  export let gameweekDetail: PlayerGameweek | null;
+  export let playerTeam: Club | undefined;
+  export let opponentTeam: Club | null;
   export let gameweek = 0;
   export let seasonName = "";
 
@@ -75,7 +71,7 @@
       
     });
 
-    let position = Object.keys(playerDetail.position)[0]; 
+    let position = Object.keys(playerDetail.player.position)[0]; 
     if(position == "Forward"){
       pointsForGoal = 10;
       pointsForAssist = 10;
@@ -100,13 +96,13 @@
   <div class="mx-4 p-4">
     <div class="flex justify-start items-center w-full">
       <svelte:component
-        this={getFlagComponent(playerDetail.nationality)}
+        this={getFlagComponent(playerDetail.player.nationality)}
         class="h-20 w-20"
       />
       <div class="w-full flex-col space-y-4 mb-2">
         <h3 class="default-header mb-2">
-          {playerDetail.firstName}
-          {playerDetail.lastName}
+          {playerDetail.player.firstName}
+          {playerDetail.player.lastName}
         </h3>
         <p class="text-gray-400 flex items-center">
           <BadgeIcon className="w-5 h-5 mr-2" club={playerTeam!} />

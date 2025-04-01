@@ -6,12 +6,11 @@
   import { playerStore } from "$lib/stores/player-store";
   import { clubStore } from "$lib/stores/club-store";
   import PlayerGameweekHistory from "$lib/components/player/player-gameweek-history.svelte";
-    
-  import Layout from "../+layout.svelte";
+
   import PlayerHeader from "$lib/components/player/player-header.svelte";
   import TabContainer from "$lib/components/shared/tab-container.svelte";
   import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
-  import type { Club, Player } from "../../../../declarations/data_canister/data_canister.did";
+  import type { Club, Player } from "../../../../../declarations/data_canister/data_canister.did";
 
   $: id = Number(page.url.searchParams.get("id"));
 
@@ -38,18 +37,16 @@
   }
 </script>
 
-<Layout>
   {#if isLoading}
     <LocalSpinner />
   {:else}
     <PlayerHeader player={selectedPlayer} club={playerClub} gameweek={selectedGameweek} />
     
     <div class="bg-panel">
-      <TabContainer {tabs} {activeTab} {setActiveTab} isLoggedIn={false}  />
+      <TabContainer {tabs} {activeTab} {setActiveTab}  />
      
       {#if activeTab === "history"}
         <PlayerGameweekHistory />
       {/if}
     </div>
   {/if}
-</Layout>

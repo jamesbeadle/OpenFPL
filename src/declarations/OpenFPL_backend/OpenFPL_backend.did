@@ -1,9 +1,21 @@
+type WeeklyRewardsLeaderboard = 
+ record {
+   entries: vec RewardEntry;
+   gameweek: GameweekNumber;
+   seasonId: SeasonId;
+ };
 type WeeklyLeaderboard = 
  record {
    entries: vec LeaderboardEntry;
    gameweek: GameweekNumber;
    seasonId: SeasonId;
    totalEntries: nat;
+ };
+type UpdateICFCProfile = 
+ record {
+   membershipType: MembershipType;
+   subApp: SubApp;
+   subAppUserPrincipalId: PrincipalId;
  };
 type TeamSetup = 
  record {
@@ -35,18 +47,49 @@ type TeamSetup =
    transfersAvailable: nat8;
    username: text;
  };
+type SubApp = 
+ variant {
+   FootballGod;
+   JeffBets;
+   OpenFPL;
+   OpenWSL;
+   TransferKings;
+ };
+type ShirtType = 
+ variant {
+   Filled;
+   Striped;
+ };
 type SetFavouriteClub = 
  record {
    favouriteClubId: ClubId;
    principalId: PrincipalId;
  };
+type Seasons = record {seasons: vec Season;};
 type SeasonId = nat16;
+type Season = 
+ record {
+   id: nat16;
+   name: text;
+   year: nat16;
+ };
 type SaveFantasyTeam = 
  record {
    captainId: ClubId;
    playTransferWindowBonus: bool;
    playerIds: vec PlayerId;
    principalId: PrincipalId;
+ };
+type RewardType = 
+ variant {
+   HighestScoringPlayer;
+   MonthlyATHScore;
+   MonthlyLeaderboard;
+   MostValuableTeam;
+   SeasonATHScore;
+   SeasonLeaderboard;
+   WeeklyATHScore;
+   WeeklyLeaderboard;
  };
 type RewardRates = 
  record {
@@ -59,91 +102,161 @@ type RewardRates =
    seasonLeaderboardRewardRate: nat64;
    weeklyLeaderboardRewardRate: nat64;
  };
+type RewardEntry = 
+ record {
+   amount: nat64;
+   position: nat;
+   principalId: text;
+   rewardType: RewardType;
+ };
 type Result_9 = 
  variant {
    err: Error;
-   ok: FantasyTeamSnapshot;
+   ok: Players;
  };
 type Result_8 = 
  variant {
    err: Error;
-   ok: ICFCProfile;
+   ok: PlayersMap;
  };
 type Result_7 = 
  variant {
    err: Error;
-   ok: Manager;
+   ok: PlayersSnapshot;
  };
 type Result_6 = 
  variant {
    err: Error;
-   ok: vec CanisterId;
+   ok: CombinedProfile;
  };
 type Result_5 = 
  variant {
    err: Error;
-   ok: PlayersMap;
+   ok: Seasons;
  };
 type Result_4 = 
  variant {
    err: Error;
-   ok: Profile;
+   ok: TeamSetup;
  };
 type Result_3 = 
  variant {
    err: Error;
-   ok: TeamSetup;
- };
-type Result_2 = 
- variant {
-   err: Error;
    ok: nat;
  };
-type Result_13 = 
+type Result_21 = 
  variant {
    err: Error;
    ok: text;
  };
-type Result_12 = 
+type Result_20 = 
  variant {
    err: Error;
    ok: RewardRates;
  };
-type Result_11 = 
+type Result_2 = 
+ variant {
+   err: Error;
+   ok: WeeklyLeaderboard;
+ };
+type Result_19 = 
  variant {
    err: Error;
    ok: AppStatus;
  };
-type Result_10 = 
+type Result_18 = 
+ variant {
+   err: Error;
+   ok: Clubs;
+ };
+type Result_17 = 
+ variant {
+   err: Error;
+   ok: Countries;
+ };
+type Result_16 = 
  variant {
    err: Error;
    ok: vec DataHash;
  };
+type Result_15 = 
+ variant {
+   err: Error;
+   ok: FantasyTeamSnapshot;
+ };
+type Result_14 = 
+ variant {
+   err: Error;
+   ok: Fixtures;
+ };
+type Result_13 = 
+ variant {
+   err: Error;
+   ok: LeagueStatus;
+ };
+type Result_12 = 
+ variant {
+   err: Error;
+   ok: Manager;
+ };
+type Result_11 = 
+ variant {
+   err: Error;
+   ok: vec CanisterId;
+ };
+type Result_10 = 
+ variant {
+   err: Error;
+   ok: PlayerDetailsForGameweek;
+ };
 type Result_1 = 
  variant {
    err: Error;
-   ok: WeeklyLeaderboard;
+   ok: WeeklyRewardsLeaderboard;
  };
 type Result = 
  variant {
    err: Error;
    ok;
  };
-type Profile = 
- record {
-   createDate: int;
-   favouriteClubId: opt ClubId;
-   principalId: PrincipalId;
-   profilePicture: opt blob;
-   profilePictureType: text;
-   termsAccepted: bool;
-   username: text;
- };
 type PrincipalId = text;
+type PlayersSnapshot = record {players: vec Player;};
 type PlayersMap = record {playersMap: vec record {
                                             nat16;
                                             PlayerScore;
                                           };};
+type Players = record {players: vec Player__1;};
+type Player__1 = 
+ record {
+   clubId: nat16;
+   currentLoanEndDate: int;
+   dateOfBirth: int;
+   firstName: text;
+   id: nat16;
+   lastName: text;
+   leagueId: nat16;
+   nationality: nat16;
+   parentClubId: nat16;
+   parentLeagueId: nat16;
+   position: PlayerPosition__1;
+   shirtNumber: nat8;
+   status: PlayerStatus__1;
+   valueQuarterMillions: nat16;
+ };
+type PlayerStatus__1 = 
+ variant {
+   Active;
+   FreeAgent;
+   OnLoan;
+   Retired;
+ };
+type PlayerStatus = 
+ variant {
+   Active;
+   FreeAgent;
+   OnLoan;
+   Retired;
+ };
 type PlayerScore = 
  record {
    assists: int16;
@@ -155,8 +268,15 @@ type PlayerScore =
    id: nat16;
    nationality: nat16;
    points: int16;
-   position: PlayerPosition;
+   position: PlayerPosition__1;
    saves: int16;
+ };
+type PlayerPosition__1 = 
+ variant {
+   Defender;
+   Forward;
+   Goalkeeper;
+   Midfielder;
  };
 type PlayerPosition = 
  variant {
@@ -164,6 +284,15 @@ type PlayerPosition =
    Forward;
    Goalkeeper;
    Midfielder;
+ };
+type PlayerPoints = 
+ record {
+   clubId: nat16;
+   events: vec PlayerEventData__2;
+   gameweek: nat8;
+   id: nat16;
+   points: int16;
+   position: PlayerPosition__1;
  };
 type PlayerId = nat16;
 type PlayerEventType = 
@@ -190,6 +319,33 @@ type PlayerEventData__2 =
    fixtureId: nat32;
    playerId: nat16;
  };
+type PlayerEventData__1 = 
+ record {
+   clubId: nat16;
+   eventEndMinute: nat8;
+   eventStartMinute: nat8;
+   eventType: PlayerEventType;
+   fixtureId: nat32;
+   playerId: nat16;
+ };
+type PlayerDetailsForGameweek = record {playerPoints: vec PlayerPoints;};
+type Player = 
+ record {
+   clubId: nat16;
+   currentLoanEndDate: int;
+   dateOfBirth: int;
+   firstName: text;
+   id: nat16;
+   lastName: text;
+   leagueId: nat16;
+   nationality: nat16;
+   parentClubId: nat16;
+   parentLeagueId: nat16;
+   position: PlayerPosition;
+   shirtNumber: nat8;
+   status: PlayerStatus;
+   valueQuarterMillions: nat16;
+ };
 type PlayBonus = 
  record {
    bonusType: BonusType;
@@ -197,6 +353,23 @@ type PlayBonus =
    countryId: CountryId;
    playerId: PlayerId;
    principalId: PrincipalId;
+ };
+type NotifyAppofLink = 
+ record {
+   icfcPrincipalId: PrincipalId;
+   membershipType: MembershipType;
+   subApp: SubApp;
+   subAppUserPrincipalId: PrincipalId;
+ };
+type MembershipType__1 = 
+ variant {
+   Expired;
+   Founding;
+   Lifetime;
+   Monthly;
+   NotClaimed;
+   NotEligible;
+   Seasonal;
  };
 type MembershipType = 
  variant {
@@ -212,13 +385,13 @@ type MembershipClaim =
  record {
    claimedOn: int;
    expiresOn: opt int;
-   membershipType: MembershipType;
+   membershipType: MembershipType__1;
  };
 type Manager = 
  record {
    createDate: int;
    favouriteClubId: opt ClubId;
-   gameweeks: vec Gameweek;
+   gameweeks: vec FantasyTeamSnapshot;
    monthlyPoints: int16;
    monthlyPosition: int;
    monthlyPositionText: text;
@@ -233,6 +406,22 @@ type Manager =
    weeklyPosition: int;
    weeklyPositionText: text;
  };
+type LeagueStatus = 
+ record {
+   activeGameweek: nat8;
+   activeMonth: nat8;
+   activeSeasonId: nat16;
+   completedGameweek: nat8;
+   leagueId: nat16;
+   seasonActive: bool;
+   totalGameweeks: nat8;
+   transferWindowActive: bool;
+   transferWindowEndDay: nat8;
+   transferWindowEndMonth: nat8;
+   transferWindowStartDay: nat8;
+   transferWindowStartMonth: nat8;
+   unplayedGameweek: nat8;
+ };
 type LeagueId = nat16;
 type LeaderboardEntry = 
  record {
@@ -242,20 +431,10 @@ type LeaderboardEntry =
    principalId: text;
    username: text;
  };
-type ICFCProfile = 
+type GetWeeklyRewardsLeaderboard = 
  record {
-   createdOn: int;
-   displayName: text;
-   favouriteClubId: opt ClubId;
-   favouriteLeagueId: opt LeagueId;
-   membershipClaims: vec MembershipClaim;
-   membershipExpiryTime: int;
-   membershipType: MembershipType;
-   nationalityId: opt CountryId;
-   principalId: PrincipalId;
-   profilePicture: opt blob;
-   termsAgreed: bool;
-   username: text;
+   gameweek: GameweekNumber;
+   seasonId: SeasonId;
  };
 type GetWeeklyLeaderboard = 
  record {
@@ -266,8 +445,21 @@ type GetWeeklyLeaderboard =
    seasonId: SeasonId;
  };
 type GetTeamSetup = record {principalId: text;};
+type GetSeasons = record {leagueId: nat16;};
 type GetProfile = record {principalId: PrincipalId;};
+type GetPlayersSnapshot = 
+ record {
+   gameweek: GameweekNumber;
+   seasonId: SeasonId;
+ };
 type GetPlayersMap = 
+ record {
+   gameweek: nat8;
+   leagueId: nat16;
+   seasonId: nat16;
+ };
+type GetPlayers = record {leagueId: nat16;};
+type GetPlayerDetailsForGameweek = 
  record {
    gameweek: nat8;
    leagueId: nat16;
@@ -275,49 +467,45 @@ type GetPlayersMap =
  };
 type GetManagerByUsername = record {username: text;};
 type GetManager = record {principalId: text;};
-type GetICFCProfile = record {principalId: PrincipalId;};
+type GetFixtures = 
+ record {
+   leagueId: nat16;
+   seasonId: nat16;
+ };
 type GetFantasyTeamSnapshot = 
  record {
    gameweek: GameweekNumber;
    principalId: PrincipalId;
    seasonId: SeasonId;
  };
+type GetClubs = record {leagueId: nat16;};
 type GameweekNumber = nat8;
-type Gameweek = 
+type Fixtures = 
  record {
-   bankQuarterMillions: nat16;
-   braceBonusGameweek: GameweekNumber;
-   captainFantasticGameweek: GameweekNumber;
-   captainFantasticPlayerId: PlayerId;
-   captainId: PlayerId;
-   favouriteClubId: opt ClubId;
-   gameweek: GameweekNumber;
-   goalGetterGameweek: GameweekNumber;
-   goalGetterPlayerId: PlayerId;
-   hatTrickHeroGameweek: GameweekNumber;
-   month: CalendarMonth;
-   monthlyBonusesAvailable: nat8;
-   monthlyPoints: int16;
-   noEntryGameweek: GameweekNumber;
-   noEntryPlayerId: PlayerId;
-   oneNationCountryId: CountryId;
-   oneNationGameweek: GameweekNumber;
-   passMasterGameweek: GameweekNumber;
-   passMasterPlayerId: PlayerId;
-   playerIds: vec PlayerId;
-   points: int16;
-   principalId: text;
-   prospectsGameweek: GameweekNumber;
-   safeHandsGameweek: GameweekNumber;
-   safeHandsPlayerId: PlayerId;
-   seasonId: SeasonId;
-   seasonPoints: int16;
-   teamBoostClubId: ClubId;
-   teamBoostGameweek: GameweekNumber;
-   teamValueQuarterMillions: nat16;
-   transferWindowGameweek: GameweekNumber;
-   transfersAvailable: nat8;
-   username: text;
+   fixtures: vec Fixture;
+   leagueId: nat16;
+   seasonId: nat16;
+ };
+type FixtureStatusType = 
+ variant {
+   Active;
+   Complete;
+   Finalised;
+   Unplayed;
+ };
+type Fixture = 
+ record {
+   awayClubId: nat16;
+   awayGoals: nat8;
+   events: vec PlayerEventData__1;
+   gameweek: nat8;
+   highestScoringPlayerId: nat16;
+   homeClubId: nat16;
+   homeGoals: nat8;
+   id: nat32;
+   kickOff: int;
+   seasonId: nat16;
+   status: FixtureStatusType;
  };
 type FantasyTeamSnapshot = 
  record {
@@ -378,7 +566,48 @@ type DataHash =
    hash: text;
  };
 type CountryId = nat16;
+type Country = 
+ record {
+   code: text;
+   id: nat16;
+   name: text;
+ };
+type Countries = record {countries: vec Country;};
+type CombinedProfile = 
+ record {
+   createDate: int;
+   createdOn: int;
+   displayName: text;
+   favouriteClubId: opt ClubId;
+   favouriteLeagueId: opt LeagueId;
+   membershipClaims: vec MembershipClaim;
+   membershipExpiryTime: int;
+   membershipType: MembershipType__1;
+   nationalityId: opt CountryId;
+   principalId: PrincipalId;
+   profilePicture: opt blob;
+   profilePictureType: text;
+   termsAccepted: bool;
+   termsAgreed: bool;
+   username: text;
+ };
+type Clubs = 
+ record {
+   clubs: vec Club;
+   leagueId: nat16;
+ };
 type ClubId = nat16;
+type Club = 
+ record {
+   abbreviatedName: text;
+   friendlyName: text;
+   id: nat16;
+   name: text;
+   primaryColourHex: text;
+   secondaryColourHex: text;
+   shirtType: ShirtType;
+   thirdColourHex: text;
+ };
 type CanisterId = text;
 type CalendarMonth = nat8;
 type BonusType = 
@@ -400,21 +629,32 @@ type AppStatus =
    version: text;
  };
 service : {
-  getActiveLeaderboardCanisterId: () -> (Result_13);
-  getActiveRewardRates: () -> (Result_12);
-  getAppStatus: () -> (Result_11);
-  getDataHashes: () -> (Result_10);
-  getFantasyTeamSnapshot: (GetFantasyTeamSnapshot) -> (Result_9);
-  getICFCProfile: (GetICFCProfile) -> (Result_8);
-  getLeaderboardCanisterIds: () -> (Result_6);
-  getManager: (GetManager) -> (Result_7);
-  getManagerByUsername: (GetManagerByUsername) -> (Result_7);
-  getManagerCanisterIds: () -> (Result_6);
-  getPlayersMap: (GetPlayersMap) -> (Result_5);
-  getProfile: (GetProfile) -> (Result_4);
-  getTeamSelection: (GetTeamSetup) -> (Result_3);
-  getTotalManagers: () -> (Result_2);
-  getWeeklyLeaderboard: (GetWeeklyLeaderboard) -> (Result_1);
+  getActiveLeaderboardCanisterId: () -> (Result_21);
+  getActiveRewardRates: () -> (Result_20);
+  getAppStatus: () -> (Result_19);
+  getClubs: (GetClubs) -> (Result_18);
+  getCountries: () -> (Result_17);
+  getDataHashes: () -> (Result_16);
+  getFantasyTeamSnapshot: (GetFantasyTeamSnapshot) -> (Result_15);
+  getFixtures: (GetFixtures) -> (Result_14);
+  getLeaderboardCanisterIds: () -> (Result_11);
+  getLeagueStatus: () -> (Result_13);
+  getManager: (GetManager) -> (Result_12);
+  getManagerByUsername: (GetManagerByUsername) -> (Result_12);
+  getManagerCanisterIds: () -> (Result_11);
+  getPlayerEvents: (GetPlayerDetailsForGameweek) -> (Result_10);
+  getPlayers: (GetPlayers) -> (Result_9);
+  getPlayersMap: (GetPlayersMap) -> (Result_8);
+  getPlayersSnapshot: (GetPlayersSnapshot) -> (Result_7);
+  getProfile: (GetProfile) -> (Result_6);
+  getSeasons: (GetSeasons) -> (Result_5);
+  getTeamSelection: (GetTeamSetup) -> (Result_4);
+  getTotalManagers: () -> (Result_3);
+  getWeeklyLeaderboard: (GetWeeklyLeaderboard) -> (Result_2);
+  getWeeklyRewards: (GetWeeklyRewardsLeaderboard) -> (Result_1) query;
+  linkICFCProfile: () -> (Result);
+  noitifyAppofICFCHashUpdate: (UpdateICFCProfile) -> (Result);
+  notifyAppLink: (NotifyAppofLink) -> (Result);
   notifyAppsOfFixtureFinalised: (LeagueId, SeasonId, GameweekNumber) ->
    (Result);
   notifyAppsOfGameweekStarting: (LeagueId, SeasonId, GameweekNumber) ->

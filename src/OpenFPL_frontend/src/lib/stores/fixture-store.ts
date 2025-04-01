@@ -1,16 +1,16 @@
 import { writable } from "svelte/store";
-import type { FixtureDTO } from "../../../../external_declarations/data_canister/data_canister.did";
 import { FixtureService } from "$lib/services/fixture-service";
+import type { Fixture } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 function createFixtureStore() {
-  const { subscribe, set } = writable<FixtureDTO[]>([]);
+  const { subscribe, set } = writable<Fixture[]>([]);
 
-  async function getPostponedFixtures(): Promise<FixtureDTO[] | undefined> {
+  async function getPostponedFixtures(): Promise<Fixture[] | undefined> {
     return new FixtureService().getPostponedFixtures();
   }
 
-  async function getNextFixture(): Promise<FixtureDTO | undefined> {
-    let fixtures: FixtureDTO[] = [];
+  async function getNextFixture(): Promise<Fixture | undefined> {
+    let fixtures: Fixture[] = [];
     await subscribe((value) => {
       fixtures = value;
     })();
@@ -34,7 +34,7 @@ function createFixtureStore() {
 
   return {
     subscribe,
-    setFixtures: (fixtures: FixtureDTO[]) => set(fixtures),
+    setFixtures: (fixtures: Fixture[]) => set(fixtures),
     getNextFixture,
     getPostponedFixtures,
   };

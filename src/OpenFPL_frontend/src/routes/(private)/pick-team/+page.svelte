@@ -5,10 +5,10 @@
   import { storeManager } from "$lib/managers/store-manager";
   import { managerStore } from "$lib/stores/manager-store";
   import { appStore } from "$lib/stores/app-store";
-  import type { PlayerId, TeamSetup } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { PlayerId, TeamSetup } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { allFormations } from "$lib/utils/pick-team.helpers";
   
-  import Layout from "../+layout.svelte";
+  import Layout from "../../+layout.svelte";
   import PickTeamButtons from "$lib/components/pick-team/pick-team-buttons.svelte";
   import PickTeamHeader from "$lib/components/pick-team/pick-team-header.svelte";
   import SimpleFixtures from "$lib/components/simple-fixtures.svelte";
@@ -84,7 +84,6 @@
   <link rel="preload" href="/pitch.png" as="image" />
 </svelte:head>
 
-<Layout>
   {#if isLoading}
     <LocalSpinner />
   {:else}
@@ -124,4 +123,3 @@
     </div>
     {/if}
   {/if}
-</Layout>

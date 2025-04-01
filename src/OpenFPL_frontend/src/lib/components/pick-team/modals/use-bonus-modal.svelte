@@ -9,13 +9,13 @@
   import { convertPositionToIndex } from "$lib/utils/helpers";
   import { leagueStore } from "$lib/stores/league-store";
   import type { Bonus } from "$lib/types/bonus";
-  import type { TeamSelectionDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-
+  
   import Modal from "$lib/components/shared/modal.svelte";
-    import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
+  import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
+    import type { TeamSetup } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     
   export let visible: boolean;
-  export let fantasyTeam: Writable<TeamSelectionDTO | undefined>;
+  export let fantasyTeam: Writable<TeamSetup | undefined>;
   export let bonusUsedInSession: Writable<boolean>;
   export let closeBonusModal: () => void;
   export let bonus: Bonus;

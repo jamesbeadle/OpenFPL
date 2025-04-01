@@ -1,11 +1,11 @@
 import { writable } from "svelte/store";
-import type { SeasonDTO } from "../../../../external_declarations/data_canister/data_canister.did";
+import type { Season } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 function createSeasonStore() {
-  const { subscribe, set } = writable<SeasonDTO[]>([]);
+  const { subscribe, set } = writable<Season[]>([]);
 
   async function getSeasonName(seasonId: number): Promise<string | undefined> {
-    let seasons: SeasonDTO[] = [];
+    let seasons: Season[] = [];
     await subscribe((value) => {
       seasons = value;
     })();
@@ -24,7 +24,7 @@ function createSeasonStore() {
 
   return {
     subscribe,
-    setSeasons: (seasons: SeasonDTO[]) => set(seasons),
+    setSeasons: (seasons: Season[]) => set(seasons),
     getSeasonName,
   };
 }

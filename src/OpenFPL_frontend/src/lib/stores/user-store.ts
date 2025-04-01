@@ -10,6 +10,7 @@ import { Principal } from "@dfinity/principal";
 import type { OptionIdentity } from "$lib/types/identity";
 import { UserService } from "$lib/services/user-service";
 import type { SetFavouriteClub } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import { userIdCreatedStore } from "$lib/stores/user-control-store";
 
 function createUserStore() {
   const { subscribe, set } = writable<any>(null);
@@ -59,6 +60,7 @@ function createUserStore() {
     set(profile);
     if (profile) {
       await setProfileToDB(profile);
+      userIdCreatedStore.set({ data: profile.principalId, certified: true });
     }
   }
 
@@ -158,13 +160,6 @@ function createUserStore() {
     return 0n;
   }
 
-  /*
-  async function getUserIFCFMembership(): Promise<
-    ICFCMembershipDTO | undefined
-  > {
-    return await new UserService().getUserIFCFMembership();
-  }
-  */
   return {
     subscribe,
     set,
@@ -173,7 +168,6 @@ function createUserStore() {
     updateFavouriteTeam,
     withdrawFPL,
     getFPLBalance,
-    /* //TODO getUserIFCFMembership, */
   };
 }
 

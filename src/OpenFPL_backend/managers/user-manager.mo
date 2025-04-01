@@ -88,6 +88,59 @@ module {
       };
     };
 
+    public func getCombinedProfile(dto : UserQueries.GetProfile) : async Result.Result<UserQueries.CombinedProfile, Enums.Error> {
+      let userManagerCanisterId = managerCanisterIds.get(dto.principalId);
+
+      switch (userManagerCanisterId) {
+        case (?foundUserCanisterId) {
+
+          let manager_canister = actor (foundUserCanisterId) : actor {
+            getManager : Ids.PrincipalId -> async ?AppTypes.Manager;
+          };
+          let manager = await manager_canister.getManager(dto.principalId);
+
+          switch (manager) {
+            case (null) {
+              return #err(#NotFound);
+            };
+            case (?foundManager) {
+
+              let icfcProfileResult = await getICFCProfile(dto);
+
+              switch (icfcProfileResult) {
+                case (#ok icfcProfile) {
+                  let profileDTO : UserQueries.CombinedProfile = {
+                    principalId = dto.principalId;
+                    username = foundManager.username;
+                    termsAccepted = foundManager.termsAccepted;
+                    profilePicture = foundManager.profilePicture;
+                    profilePictureType = foundManager.profilePictureType;
+                    favouriteClubId = foundManager.favouriteClubId;
+                    createDate = foundManager.createDate;
+                    favouriteLeagueId = icfcProfile.favouriteLeagueId;
+                    membershipClaims = icfcProfile.membershipClaims;
+                    membershipExpiryTime = icfcProfile.membershipExpiryTime;
+                    membershipType = icfcProfile.membershipType;
+                    nationalityId = icfcProfile.nationalityId;
+                    termsAgreed = icfcProfile.termsAgreed;
+                    displayName = icfcProfile.displayName;
+                    createdOn = icfcProfile.createdOn;
+                  };
+                  return #ok(profileDTO);
+                };
+                case (#err error) {
+                  return #err(error);
+                };
+              };
+            };
+          };
+        };
+        case (null) {
+          return #err(#NotFound);
+        };
+      };
+    };
+
     public func getUserICFCLinkStatus(managerPrincipalId : Ids.PrincipalId) : async Result.Result<IcfcEnums.ICFCLinkStatus, Enums.Error> {
       let icfcLink : ?UserQueries.ICFCLink = userICFCLinks.get(managerPrincipalId);
 

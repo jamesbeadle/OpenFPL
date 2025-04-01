@@ -2,13 +2,12 @@
   import { onMount } from "svelte";
   import { page } from "$app/state";
   import { storeManager } from "$lib/managers/store-manager";
-  
-  import Layout from "../+layout.svelte";
+
   import TeamPlayers from "$lib/components/club/team-players.svelte";
   import TeamFixtures from "$lib/components/club/team-fixtures.svelte";
   import TabContainer from "$lib/components/shared/tab-container.svelte";
   import ClubHeader from "$lib/components/club/club-header.svelte";
-    import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
+  import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
 
   let isLoading = true;
   
@@ -31,13 +30,12 @@
   }
 </script>
 
-<Layout>
   {#if isLoading}
     <LocalSpinner />
   {:else}
     <ClubHeader clubId={id} />
     <div class="bg-panel">
-      <TabContainer {activeTab} {setActiveTab} {tabs} isLoggedIn={false} />
+      <TabContainer {activeTab} {setActiveTab} {tabs} />
       {#if activeTab === "players"}
         <TeamPlayers clubId={id} />
       {:else if activeTab === "fixtures"}
@@ -45,4 +43,3 @@
       {/if}
     </div>
   {/if}
-</Layout>

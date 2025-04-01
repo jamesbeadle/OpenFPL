@@ -1,13 +1,9 @@
-import { authStore } from "$lib/stores/auth-store";
-import { userStore } from "$lib/stores/user-store";
+import { UserService } from "$lib/services/user-service";
 import { toasts } from "$lib/stores/toasts-store";
 import { userIdCreatedStore } from "$lib/stores/user-control-store";
-import { initErrorSignOut } from "./auth.services";
-import type { UserId } from "$lib/types/user";
-import type { Identity } from "@dfinity/agent";
-import { isNullish, fromNullable } from "@dfinity/utils";
+import { initErrorSignOut } from "./auth-services";
 import type { OptionIdentity } from "$lib/types/identity";
-import type { ProfileDTO } from "../../../../declarations/backend/backend.did";
+import type { CombinedProfile } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 export type InitUserProfileResult = { result: "skip" | "success" | "error" };
 
@@ -19,7 +15,7 @@ export const initUserProfile = async ({
   if (!identity) return { result: "skip" };
 
   try {
-    const profile = await userStore.getProfile();
+    const profile = await new UserService().getUser();
     if (profile) {
       userIdCreatedStore.set({ data: profile.principalId, certified: true });
       return { result: "success" };

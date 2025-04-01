@@ -15,11 +15,10 @@ export class FixtureService {
 
   async getFixtures(): Promise<Fixture[] | undefined> {
     try {
-      const identityActor: any =
-        await ActorFactory.createDataCanisterIdentityActor(
-          authStore,
-          process.env.CANISTER_ID_DATA ?? "",
-        );
+      const identityActor: any = await ActorFactory.createActor(
+        authStore,
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
+      );
       const leagueId: LeagueId = 1;
       const seasonId: SeasonId = 1;
       const result = await identityActor.getFixtures(leagueId, seasonId);
@@ -33,11 +32,10 @@ export class FixtureService {
 
   async getPostponedFixtures(): Promise<Fixture[] | undefined> {
     try {
-      const identityActor: any =
-        await ActorFactory.createDataCanisterIdentityActor(
-          authStore,
-          process.env.CANISTER_ID_DATA ?? "",
-        );
+      const identityActor: any = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
+      );
       const leagueId: LeagueId = 1;
       const result = await identityActor.getPostponedFixtures(leagueId);
       if (isError(result))
