@@ -88,7 +88,7 @@ module {
       };
     };
 
-    public func getUserICFCProfileStatus(managerPrincipalId : Ids.PrincipalId) : async Result.Result<IcfcEnums.ICFCLinkStatus, Enums.Error> {
+    public func getUserICFCLinkStatus(managerPrincipalId : Ids.PrincipalId) : async Result.Result<IcfcEnums.ICFCLinkStatus, Enums.Error> {
       let icfcLink : ?UserQueries.ICFCLink = userICFCLinks.get(managerPrincipalId);
 
       switch (icfcLink) {

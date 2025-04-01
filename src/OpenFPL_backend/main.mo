@@ -4,6 +4,7 @@ import Base "mo:waterway-mops/BaseTypes";
 import Ids "mo:waterway-mops/Ids";
 import BaseTypes "mo:waterway-mops/BaseTypes";
 import Enums "mo:waterway-mops/Enums";
+import ICFCEnums "mo:waterway-mops/ICFCEnums";
 import CanisterIds "mo:waterway-mops/CanisterIds";
 import Management "mo:waterway-mops/Management";
 import CanisterUtilities "mo:waterway-mops/CanisterUtilities";
@@ -168,6 +169,13 @@ actor Self {
     assert principalId == dto.principalId;
     assert await hasMembership(principalId);
     return await userManager.getProfile(dto);
+  };
+
+  public shared ({ caller }) func getICFCLinkStatus(dto : UserQueries.GetICFCLinkStatus) : async Result.Result<ICFCEnums.ICFCLinkStatus, Enums.Error> {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == dto.principalId;
+    return await userManager.getUserICFCLinkStatus(dto.principalId);
   };
 
   public shared ({ caller }) func getICFCProfile(dto : UserQueries.GetICFCProfile) : async Result.Result<UserQueries.ICFCProfile, Enums.Error> {
