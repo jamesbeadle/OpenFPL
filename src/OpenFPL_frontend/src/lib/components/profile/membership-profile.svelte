@@ -4,16 +4,30 @@
     import type { CombinedProfile } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     import CopyPrincipal from "./copy-principal.svelte";
     import MembershipLinkedModal from "./membership-linked-modal.svelte";
+    import { toasts } from "$lib/stores/toasts-store";
     
     //export let icfcProfile: CombinedProfile | undefined = undefined;
   
     let isLoading = false;
 
     let membershipLinked = false;
+    let linkedToICFC = false;
     
     async function checkMembership(){
       // TODO Recheck 
-      
+      toasts.addToast({
+        type: "info",
+        message: "Checking membership...",
+        duration: 2000,
+      });
+
+      //Call Function to check status
+
+      //Show Toast based on status
+
+      //If success, set linkedToICFC to true
+
+
     }
    
 
@@ -24,13 +38,13 @@
 {#if isLoading}
   <LocalSpinner />
 {:else}
-  <div class="flex flex-col w-full h-full max-w-2xl mx-auto">
+  <div class="flex flex-col w-full h-full mx-auto">
       <Header />
-      <div class="flex-1 w-full mt-16 overflow-x-hidden">
+      <div class="flex-1 w-full p-4 overflow-x-hidden">
 
-        <div class="mt-4 border-b border-white/10">
+        <div class="mt-4 space-y-4 border-b border-white/10">
             <div class="flex items-center justify-between">
-                <h3 class="text-2xl text-white cta-text">ICFC Membership Profile</h3>
+                <h3 class="text-3xl text-white">ICFC Membership Profile</h3>
             </div>
 
             <p>
@@ -45,10 +59,10 @@
 
         </div>
 
-        <div class="flex justify-between">
+        <div class="flex justify-center mt-4">
             <button 
-            class="brand-button"
-            on:click={checkMembership}
+              class="fpl-button default-button"
+              on:click={checkMembership}
             >
             Refresh
             </button>

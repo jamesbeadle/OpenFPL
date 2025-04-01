@@ -3,28 +3,31 @@
     import { authStore } from "$lib/stores/auth-store";
     import { toasts } from "$lib/stores/toasts-store";
 
-        async function copyTextAndShowToast(text: string) {
-            try {
-                await navigator.clipboard.writeText(text);
-                toasts.addToast({
+    export let bgColor = "bg-BrandGray";
+    export let borderColor = "border-BrandGrayShade3";
+
+    async function copyTextAndShowToast(text: string) {
+        try {
+            await navigator.clipboard.writeText(text);
+            toasts.addToast({
                 type: "success",
                 message: "Copied to clipboard.",
                 duration: 2000,
-                });
-            } catch (err) {
-                console.error("Failed to copy:", err);
-            }
+            });
+        } catch (err) {
+            console.error("Failed to copy:", err);
         }
+    }
 </script>
 
-<div class="relative bg-BrandGrayShade2 rounded-lg p-4">
+<div class="flex items-center justify-between px-4 py-2 border rounded-lg {bgColor} {borderColor}">
+    <p class="font-mono text-sm truncate text-BrandGrayShade5">
+        {$authStore.identity?.getPrincipal().toString() ?? "Not available"}
+    </p>
     <button 
         on:click={() => { copyTextAndShowToast($authStore.identity?.getPrincipal().toString() ?? "") }}
-        class="absolute top-2 right-2 text-white"
+        class="p-2 ml-2 text-white transition-colors duration-200 rounded-lg hover:bg-BrandGrayShade2"
     >
         <CopyIcon className="w-5 h-5" fill='#FFFFFF' />
     </button>
-    <p class="text-white font-mono text-sm break-all px-4">
-        {$authStore.identity?.getPrincipal().toString() ?? "Not available"}
-    </p>
 </div>
