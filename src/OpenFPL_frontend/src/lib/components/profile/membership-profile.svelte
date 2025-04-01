@@ -1,17 +1,20 @@
 <script lang="ts">
     import LocalSpinner from "../shared/local-spinner.svelte";
     import Header from "$lib/shared/Header.svelte";
-    import type { CombinedProfile } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import type { CombinedProfile, ICFCLinkStatus } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     import CopyPrincipal from "./copy-principal.svelte";
     import MembershipLinkedModal from "./membership-linked-modal.svelte";
     import { toasts } from "$lib/stores/toasts-store";
+    import { userStore } from "$lib/stores/user-store";
+    import { authStore } from "$lib/stores/auth-store";
+    import { get } from "svelte/store";
     
     //export let icfcProfile: CombinedProfile | undefined = undefined;
   
     let isLoading = false;
 
     let membershipLinked = false;
-    let linkedToICFC = false;
+    let notLinked = false;
     
     async function checkMembership(){
       // TODO Recheck 
@@ -20,18 +23,76 @@
         message: "Checking membership...",
         duration: 2000,
       });
-
-      //Call Function to check status
-
-      //Show Toast based on status
-
-      //If success, set linkedToICFC to true
-
-
+      await checkICFCLinkStatus();
     }
-   
 
+    async function checkICFCLinkStatus(){
+      const principalId = get(authStore).identity?.getPrincipal().toString();
+      if (!principalId) return;
+      
+      const icfcLinkStatus = await userStore.getICFCLinkStatus(principalId);
+      if (icfcLinkStatus) {
+        if ('PendingVerification' in icfcLinkStatus) {
+          notLinked = false;
+          toasts.addToast({
+            type: "info",
+            message: "ICFC Membership Pending Verification",
+            duration: 2000,
+          });
+        } else if ('Verified' in icfcLinkStatus) {
+          membershipLinked = true;
+          notLinked = false;
+          toasts.addToast({
+            type: "success",
+            message: "ICFC Membership Linked",
+            duration: 2000,
+          })
+        } 
+      } else {
+            notLinked = true;
+            toasts.addToast({
+              type: "error",
+              message: "ICFC Membership Not Linked",
+              duration: 2000,
+          })
+      }
+    }
 
+    async function handleLinkICFCProfile(){
+      try {
+        isLoading = true;
+        toasts.addToast({
+          type: "info",
+          message: "Linking ICFC Membership...",
+          duration: 2000,
+        });
+        const result = await userStore.linkICFCProfile();
+        if (result) {
+          toasts.addToast({
+            type: "success",
+            message: "ICFC Membership Linked",
+            duration: 2000,
+          });
+          userStore.sync();
+        } else {
+          toasts.addToast({
+            type: "error",
+            message: "Failed to link ICFC Membership",
+            duration: 2000,
+          });
+        }
+      } catch (error) {
+        console.error("Error linking ICFC Membership:", error);
+        toasts.addToast({
+          type: "error",
+          message: "Failed to link ICFC Membership",
+          duration: 4000,
+        });
+      } finally {
+        isLoading = false;
+      }
+    }
+    
   </script>
 
 
@@ -39,35 +100,49 @@
   <LocalSpinner />
 {:else}
   <div class="flex flex-col w-full h-full mx-auto">
-      <Header />
-      <div class="flex-1 w-full p-4 overflow-x-hidden">
-
-        <div class="mt-4 space-y-4 border-b border-white/10">
-            <div class="flex items-center justify-between">
-                <h3 class="text-3xl text-white">ICFC Membership Profile</h3>
-            </div>
-
-            <p>
-              OpenFPL is free to play for ICFC owners who have claimed their membership through <a target="_blank" href="https://icfc.app/memberhsip">icfc.app</a>.
-            </p>
-
-            <p>
-              Please link your below OpenFPL principal ID within your ICFC profile to play:
-            </p>
-
-            <CopyPrincipal />
-
+    <Header />
+    <div class="flex-1 w-full p-6 mx-auto">
+      <div class="p-8 rounded-lg shadow-xl bg-gray-900/50">
+        <div class="mb-8 border-b border-BrandGreen">
+          <h1 class="mb-2 text-4xl font-bold text-white">ICFC Membership Profile</h1>
         </div>
-
-        <div class="flex justify-center mt-4">
-            <button 
-              class="fpl-button default-button"
-              on:click={checkMembership}
+        <div class="space-y-6 text-gray-300">
+          <p class="text-lg">
+            OpenFPL is free to play for ICFC owners who have claimed their membership through 
+            <a 
+              href="https://icfc.app/membership" 
+              target="_blank" 
+              class="underline transition-colors text-BrandGreen hover:text-BrandGreen/80"
             >
-            Refresh
-            </button>
+              icfc.app
+            </a>.
+          </p>
+          <p class="mb-4 text-lg">
+            Please link your below OpenFPL principal ID within your ICFC profile to play:
+          </p>
+          <div class="mb-6">
+            <CopyPrincipal />
+          </div>
+          <div class="flex justify-center pt-4">
+            {#if notLinked}
+              <button 
+                class="fpl-button default-button hover:bg-BrandGreen/80"
+                on:click={checkMembership}
+              >
+                <span>Refresh Status</span>
+              </button>
+            {:else}
+              <button 
+                class="fpl-button default-button hover:bg-BrandGreen/80"
+                on:click={handleLinkICFCProfile}
+              >
+                <span>Link ICFC Membership</span>
+              </button>
+            {/if}
+          </div>
         </div>
       </div>
+    </div>
   </div>
 {/if}
 

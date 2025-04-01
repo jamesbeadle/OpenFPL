@@ -12,6 +12,7 @@ import { UserService } from "$lib/services/user-service";
 import type {
   CombinedProfile,
   SetFavouriteClub,
+  ICFCLinkStatus,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { userIdCreatedStore } from "$lib/stores/user-control-store";
 import { get } from "svelte/store";
@@ -172,6 +173,16 @@ function createUserStore() {
     return new UserService().getUser(principalId);
   }
 
+  async function getICFCLinkStatus(
+    principalId: string,
+  ): Promise<ICFCLinkStatus | undefined> {
+    return new UserService().getICFCLinkStatus(principalId);
+  }
+
+  async function linkICFCProfile(): Promise<boolean> {
+    return new UserService().linkICFCProfile();
+  }
+
   return {
     subscribe,
     set,
@@ -181,6 +192,8 @@ function createUserStore() {
     withdrawFPL,
     getFPLBalance,
     getUser,
+    getICFCLinkStatus,
+    linkICFCProfile,
   };
 }
 

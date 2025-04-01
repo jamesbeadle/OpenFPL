@@ -4,7 +4,9 @@ import { authStore } from "$lib/stores/auth-store";
 import { toasts } from "$lib/stores/toasts-store";
 import type {
   CombinedProfile,
+  GetICFCLinkStatus,
   GetProfile,
+  ICFCLinkStatus,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 export class UserService {
@@ -22,9 +24,40 @@ export class UserService {
       console.error("Error fetching user profile: ", error);
       toasts.addToast({
         type: "error",
-        message: "Error fetching user profile.",
+        message: "User Profile Not Found.",
       });
       return undefined;
+    }
+  }
+
+  async getICFCLinkStatus(principalId: string): Promise<ICFCLinkStatus | undefined> {
+    try {
+      const identityActor: any = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
+      );
+      const getICFCLinkStatus: GetICFCLinkStatus = { principalId };
+      const result: any = await identityActor.getICFCLinkStatus(getICFCLinkStatus);
+      if (isError(result)) return undefined;
+      return result.ok;
+    } catch (error) {
+      console.error("Error checking ICFC link status:", error);
+      return undefined; // Not linked
+    }
+  }
+
+  async linkICFCProfile(): Promise<boolean> {
+    try {
+      const identityActor: any = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
+      );
+      const result: any = await identityActor.linkICFCProfile();
+      if (isError(result)) return false;
+      return true;
+    } catch (error) {
+      console.error("Error linking ICFC profile:", error);
+      return false;
     }
   }
 
