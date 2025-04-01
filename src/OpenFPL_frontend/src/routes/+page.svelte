@@ -49,9 +49,9 @@
 
 </script>
 
-  {#if isLoading}
+{#if isLoading}
     <LocalSpinner />
-  {:else if $authSignedInStore}
+{:else}
     <HomepageHeader {seasonName} />
 
     <div class="bg-panel">
@@ -67,6 +67,4 @@
         <LeagueTableComponent />
       {/if}
     </div>
-  {:else}
-    <LandingPage />
-  {/if}
+{/if}
