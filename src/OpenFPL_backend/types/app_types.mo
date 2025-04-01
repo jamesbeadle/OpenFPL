@@ -1,4 +1,3 @@
-
 import List "mo:base/List";
 import Ids "mo:waterway-mops/Ids";
 import BaseTypes "mo:waterway-mops/BaseTypes";
@@ -11,7 +10,6 @@ import Enums "../enums/enums";
 module AppTypes {
 
   public type TokenId = Nat16; // TODO Move
-
 
   //Manager types
 
@@ -230,7 +228,7 @@ module AppTypes {
     expiresOn : ?Int;
   };
 
-  public type ICFCProfile = {
+  public type ICFCLink = {
     membershipType : Enums.MembershipType;
     principalId : Ids.PrincipalId;
     linkStatus : ICFCEnums.ICFCLinkStatus;

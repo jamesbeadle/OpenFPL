@@ -2,14 +2,15 @@
 import Ids "mo:waterway-mops/Ids";
 import FootballIds "mo:waterway-mops/football/FootballIds";
 import Enums "../enums/enums";
+import ICFCEnums "mo:waterway-mops/ICFCEnums";
 
 module UserCommands = {
 
     public type LinkICFCProfile = {
         principalId: Ids.PrincipalId;
-        openFPLPrincipalId: Ids.PrincipalId;
         icfcPrincipalId: Ids.PrincipalId;
         favouriteClubId: FootballIds.ClubId;
+        icfcMembershipType: Enums.MembershipType;
     };
 
     public type SetFavouriteClub = {
