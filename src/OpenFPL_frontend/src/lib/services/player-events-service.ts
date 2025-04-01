@@ -5,8 +5,10 @@ import { toasts } from "$lib/stores/toasts-store";
 import type { PlayersMap } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import type {
   GetPlayerDetails,
+  GetPlayerDetailsForGameweek,
   GetPlayersMap,
   PlayerDetails,
+  PlayerDetailsForGameweek,
   PlayerPoints,
 } from "../../../../declarations/data_canister/data_canister.did";
 
@@ -21,7 +23,8 @@ export class PlayerEventsService {
   ): Promise<PlayerPoints | undefined> {
     try {
     } catch (error) {}
-    let dto: GetPl = {
+    let dto: GetPlayerDetailsForGameweek = {
+      leagueId: Number(process.env.LEAGUE_ID),
       seasonId,
       gameweek,
     };
@@ -43,11 +46,10 @@ export class PlayerEventsService {
         playerId: playerId,
         seasonId: seasonId,
       };
-      const identityActor: any =
-        await ActorFactory.createDataCanisterIdentityActor(
-          authStore,
-          process.env.CANISTER_ID_DATA ?? "",
-        );
+      const identityActor: any = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
+      );
 
       let result = await identityActor.getPlayerDetails(dto);
 
@@ -65,22 +67,18 @@ export class PlayerEventsService {
   async getPlayerEvents(
     seasonId: number,
     gameweek: number,
-  ): Promise<PlayerPointsDTO[] | undefined> {
+  ): Promise<PlayerDetailsForGameweek | undefined> {
     try {
-      let dto: GameweekFiltersDTO = {
+      let dto: GetPlayerDetailsForGameweek = {
+        leagueId: Number(process.env.LEAGUE_ID),
         seasonId,
         gameweek,
       };
-      const identityActor: any =
-        await ActorFactory.createDataCanisterIdentityActor(
-          authStore,
-          process.env.CANISTER_ID_DATA ?? "",
-        );
-      const leagueId: LeagueId = 1;
-      let result = await identityActor.getPlayerDetailsForGameweek(
-        leagueId,
-        dto,
+      const identityActor: any = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
+      let result = await identityActor.getPlayerDetailsForGameweek(dto);
 
       if (isError(result)) {
         console.error("Error fetching player details for gameweek");
@@ -101,11 +99,10 @@ export class PlayerEventsService {
     gameweek: number,
   ): Promise<PlayersMap | undefined> {
     try {
-      const identityActor: any =
-        await ActorFactory.createDataCanisterIdentityActor(
-          authStore,
-          process.env.CANISTER_ID_DATA ?? "",
-        );
+      const identityActor: any = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
+      );
       let dto: GetPlayersMap = {
         leagueId: Number(process.env.LEAGUE_ID),
         seasonId,

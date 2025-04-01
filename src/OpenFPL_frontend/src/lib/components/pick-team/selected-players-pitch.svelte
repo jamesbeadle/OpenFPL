@@ -10,11 +10,11 @@
   import { getActualIndex } from "$lib/utils/helpers";
   import SponsorshipBoard from "./sponsorship-board.svelte";
   import PitchPlayer from "./pitch-player.svelte";
-  import type { TeamSelectionDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-    import LocalSpinner from "../shared/local-spinner.svelte";
+  import LocalSpinner from "../shared/local-spinner.svelte";
+    import type { TeamSetup } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   export let selectedFormation: Writable<string>;
-  export let fantasyTeam: Writable<TeamSelectionDTO | undefined>;
+  export let fantasyTeam: Writable<TeamSetup | undefined>;
   export let loadAddPlayer: (row: number, col: number) => void;
   export let canSellPlayer: Writable<boolean>;
   export let sessionAddedPlayers: Writable<number[]>;

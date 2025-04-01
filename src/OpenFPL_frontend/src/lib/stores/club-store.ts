@@ -1,12 +1,12 @@
 import { writable } from "svelte/store";
-import type { ClubDTO } from "../../../../external_declarations/data_canister/data_canister.did";
+import type { Club } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 function createClubStore() {
-  const { subscribe, set } = writable<ClubDTO[]>([]);
+  const { subscribe, set } = writable<Club[]>([]);
 
   return {
     subscribe,
-    setClubs: (clubs: ClubDTO[]) =>
+    setClubs: (clubs: Club[]) =>
       set(clubs.sort((a, b) => a.friendlyName.localeCompare(b.friendlyName))),
   };
 }

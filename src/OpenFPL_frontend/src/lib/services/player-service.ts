@@ -6,6 +6,7 @@ import type {
   LeagueId,
   Player,
 } from "../../../../declarations/data_canister/data_canister.did";
+import type { GetPlayersSnapshot, PlayersSnapshot } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 export class PlayerService {
   private actor: any;
@@ -14,11 +15,10 @@ export class PlayerService {
 
   async getPlayers(): Promise<Player[] | undefined> {
     try {
-      const identityActor: any =
-        await ActorFactory.createDataCanisterIdentityActor(
-          authStore,
-          process.env.CANISTER_ID_DATA ?? "",
-        );
+      const identityActor: any = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
+      );
       const leagueId: LeagueId = 1;
       const result = await identityActor.getPlayers(leagueId);
       if (isError(result)) throw new Error("Failed to fetch league players");
@@ -32,8 +32,7 @@ export class PlayerService {
     }
   }
 
-  /* //TODO
-  async getSnapshotPlayers(dto: GetSnapshotPlayersDTO): Promise<PlayerDTO[]> {
+  async getSnapshotPlayers(dto: GetPlayersSnapshot): Promise<PlayersSnapshot | undefined> {
     try {
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
@@ -49,7 +48,5 @@ export class PlayerService {
         message: "Error fetching gameweek players.",
       });
     }
-    return [];
   }
-    */
 }

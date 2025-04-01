@@ -1,5 +1,4 @@
 <script>
-  import JunoIcon from "$lib/icons/JunoIcon.svelte";
   import OpenFplIcon from "$lib/icons/OpenFPLIcon.svelte";
 </script>
 
@@ -64,14 +63,7 @@
     <div class="flex-1">
       <div class="flex justify-end">
         <div class="text-right px-4 md:px-0 mt-1 md:mt-0 md:mr-4">
-          <a
-            href="https://juno.build"
-            target="_blank"
-            class="hover:text-gray-300 flex items-center"
-          >
-            Sponsored By juno.build
-            <JunoIcon className="h-8 w-auto ml-2" />
-          </a>
+          <p>Developed by Waterway Labs</p>
         </div>
       </div>
     </div>

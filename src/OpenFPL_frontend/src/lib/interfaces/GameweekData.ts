@@ -1,7 +1,7 @@
-import type { PlayerDTO } from "../../../../external_declarations/data_canister/data_canister.did";
+import type { Player } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 export interface GameweekData {
-  player: PlayerDTO;
+  player: Player;
   gameweek: number;
   points: number;
   bonusPoints: number;

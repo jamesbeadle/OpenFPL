@@ -1,11 +1,16 @@
 <script lang="ts">
-    import { onDestroy, onMount } from "svelte";
+    import { onDestroy, onMount, type Snippet } from "svelte";
     import CrossIcon from "$lib/icons/CrossIcon.svelte";
   
-    export let showModal: boolean;
-    export let onClose: () => void;
-    export let title: string;
-    export let closeOnClickOutside = true;
+    interface Props {
+      showModal: boolean;
+      onClose: () => void;
+      title: string;
+      closeOnClickOutside?: boolean;
+      children: Snippet;
+    }
+
+    let { showModal, onClose, title, closeOnClickOutside = true, children }: Props = $props();
   
     let modalElement: HTMLDivElement;
     let startOnBackdrop = false;
@@ -75,7 +80,7 @@
         </header>
         <div class="bg-Brand p-6 rounded-b-lg overflow-auto max-h-[80vh]">
           <div class=""></div>
-          <slot />
+          {@render children()}
         </div>
       </div>
     </div>

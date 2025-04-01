@@ -89,7 +89,7 @@ module UserQueries = {
         profilePictureType : Text;
         favouriteClubId : ?FootballIds.ClubId;
         createDate : Int;
-        gameweeks : [Gameweek];
+        gameweeks : [FantasyTeamSnapshot];
         weeklyPosition : Int;
         monthlyPosition : Int;
         seasonPosition : Int;
@@ -99,42 +99,6 @@ module UserQueries = {
         weeklyPoints : Int16;
         monthlyPoints : Int16;
         seasonPoints : Int16;
-    };
-
-    public type Gameweek = {
-        principalId : Text;
-        username : Text;
-        favouriteClubId : ?FootballIds.ClubId;
-        monthlyBonusesAvailable : Nat8;
-        transfersAvailable : Nat8;
-        bankQuarterMillions : Nat16;
-        teamValueQuarterMillions : Nat16;
-        playerIds : [FootballIds.PlayerId];
-        captainId : FootballIds.PlayerId;
-        gameweek : FootballDefinitions.GameweekNumber;
-        goalGetterGameweek : FootballDefinitions.GameweekNumber;
-        goalGetterPlayerId : FootballIds.PlayerId;
-        passMasterGameweek : FootballDefinitions.GameweekNumber;
-        passMasterPlayerId : FootballIds.PlayerId;
-        noEntryGameweek : FootballDefinitions.GameweekNumber;
-        noEntryPlayerId : FootballIds.PlayerId;
-        teamBoostGameweek : FootballDefinitions.GameweekNumber;
-        teamBoostClubId : FootballIds.ClubId;
-        safeHandsGameweek : FootballDefinitions.GameweekNumber;
-        safeHandsPlayerId : FootballIds.PlayerId;
-        captainFantasticGameweek : FootballDefinitions.GameweekNumber;
-        captainFantasticPlayerId : FootballIds.PlayerId;
-        oneNationGameweek : FootballDefinitions.GameweekNumber;
-        oneNationCountryId : Ids.CountryId;
-        prospectsGameweek : FootballDefinitions.GameweekNumber;
-        braceBonusGameweek : FootballDefinitions.GameweekNumber;
-        hatTrickHeroGameweek : FootballDefinitions.GameweekNumber;
-        points : Int16;
-        monthlyPoints : Int16;
-        seasonPoints : Int16;
-        transferWindowGameweek : FootballDefinitions.GameweekNumber;
-        month : BaseDefinitions.CalendarMonth;
-        seasonId : FootballIds.SeasonId;
     };
 
     public type GetTeamSetup = {

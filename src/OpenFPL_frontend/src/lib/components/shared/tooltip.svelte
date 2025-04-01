@@ -1,5 +1,13 @@
 <script lang="ts">
-  export let text: string;
+    import type { Snippet } from "svelte";
+
+  interface Props {
+    text: string;
+    children: Snippet;
+  }
+
+  let { text, children }: Props = $props();
+
   let tooltipVisible = false;
 
   function toggleTooltip() {
@@ -13,7 +21,7 @@
   on:mouseleave={() => (tooltipVisible = false)}
   on:click={toggleTooltip}
 >
-  <slot />
+  {@render children()}
   {#if tooltipVisible}
     <button
       class="absolute z-10 w-auto bg-black text-white text-sm rounded-md shadow-lg p-4 min-w-[200px] text-center whitespace-normal hidden md:flex"

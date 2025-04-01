@@ -1,11 +1,11 @@
 <script lang="ts">
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-    import type { ClubDTO, PlayerDTO } from "../../../../../../external_declarations/data_canister/data_canister.did";
+    import type { Club, Player } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     
     export let header: string;
-    export let nextFixtureHomeTeam: ClubDTO | undefined;
-    export let nextFixtureAwayTeam: ClubDTO | undefined;
-    let highestScoringPlayer: PlayerDTO | null = null;
+    export let nextFixtureHomeTeam: Club | undefined;
+    export let nextFixtureAwayTeam: Club | undefined;
+    let highestScoringPlayer: Player | null = null;
 </script>
 
 <div class="flex-grow">

@@ -1,12 +1,12 @@
 import { writable } from "svelte/store";
-import type { CountryDTO } from "../../../../external_declarations/data_canister/data_canister.did";
+import type { Country } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 function createCountryStore() {
-  const { subscribe, set } = writable<CountryDTO[]>([]);
+  const { subscribe, set } = writable<Country[]>([]);
 
   return {
     subscribe,
-    setCountries: (countries: CountryDTO[]) => set(countries),
+    setCountries: (countries: Country[]) => set(countries),
   };
 }
 

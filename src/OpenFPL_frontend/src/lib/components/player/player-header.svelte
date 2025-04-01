@@ -10,12 +10,6 @@
       formatUnixTimeToTime,
       getCountdownTime,
     } from "../../utils/helpers";
-    import type {
-      FixtureDTO,
-      ClubDTO,
-      PlayerDTO,
-      GameweekNumber,
-    } from "../../../../../external_declarations/data_canister/data_canister.did";
     import HeaderCountdownPanel from "../shared/panels/header-countdown-panel.svelte";
     import PlayerAgePanel from "./player-age-panel.svelte";
     import HeaderFixturePanel from "../homepage/homepage-header-fixture-panel.svelte";
@@ -23,14 +17,15 @@
     import PlayerCountryPanel from "./player-country-panel.svelte";
     import PageHeader from "../shared/panels/page-header.svelte";
     import ContentPanel from "../shared/panels/content-panel.svelte";
+    import type { Club, Fixture, GameweekNumber, Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   
-    export let player: PlayerDTO;
-    export let club: ClubDTO;
+    export let player: Player;
+    export let club: Club;
     export let gameweek: GameweekNumber;
     
-    let nextFixture: FixtureDTO | null = null;
-    let nextFixtureHomeTeam: ClubDTO;
-    let nextFixtureAwayTeam: ClubDTO;
+    let nextFixture: Fixture | null = null;
+    let nextFixtureHomeTeam: Club;
+    let nextFixtureAwayTeam: Club;
 
     let countdownTime: { days: number; hours: number; minutes: number; };
   

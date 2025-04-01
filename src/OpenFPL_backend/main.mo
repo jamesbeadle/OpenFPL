@@ -12,6 +12,7 @@ import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
 import BaseDefinitions "mo:waterway-mops/BaseDefinitions";
 import BaseQueries "mo:waterway-mops/queries/BaseQueries";
 import Root "mo:waterway-mops/sns-wrappers/root";
+import PlayerQueries "mo:waterway-mops/queries/football-queries/PlayerQueries";
 import Environment "./Environment";
 
 /* ----- Mops Packages ----- */
@@ -29,6 +30,7 @@ import Result "mo:base/Result";
 import Text "mo:base/Text";
 import Time "mo:base/Time";
 import Timer "mo:base/Timer";
+import List "mo:base/List";
 
 /* ----- Canister Definition Files ----- */
 
@@ -58,6 +60,7 @@ import AppTypes "types/app_types";
 /* ----- Import Other Canisters ----- */
 import DataCanister "canister:data_canister";
 import CanisterQueries "queries/canister_queries";
+import RewardQueries "queries/reward_queries";
 
 actor Self {
 
@@ -230,15 +233,12 @@ actor Self {
 
   /* ----- User Commands ----- */
 
-  public shared ({ caller }) func linkICFCLink(dto : UserCommands.LinkICFCProfile) : async Result.Result<(), Enums.Error> {
+  public shared ({ caller }) func linkICFCProfile() : async Result.Result<(), Enums.Error> {
     assert not Principal.isAnonymous(caller);
-    let principalId = Principal.toText(caller);
-
-    //TODO: John this needs to link a user from OpenFPL to ICFC
-    //TODO: Also if created and recalled should repull profile picture username and favourite premier league club if premier league club set
+    let principalIdText = Principal.toText(caller);
 
     let dto : ICFCCommands.VerifyICFCProfile = {
-      principalId = Principal.toText(caller);
+      principalId = principalIdText;
     };
     return await userManager.verifyICFCLink(dto);
   };
@@ -347,21 +347,91 @@ actor Self {
     return await leaderboardManager.getWeeklyLeaderboard(dto);
   };
 
-  //TODO: John we need to have endpoints to the data canister from here instead of the frontend to check for approved canisters
-
-  private func getLeagueStatus() : async Result.Result<DataCanister.LeagueStatus, Enums.Error> {
-    let data_canister = actor (CanisterIds.ICFC_DATA_CANISTER_ID) : actor {
-      getLeagueStatus : shared query (leagueId : FootballIds.LeagueId) -> async Result.Result<DataCanister.LeagueStatus, Enums.Error>;
+  public shared query func getWeeklyRewards(dto : RewardQueries.GetWeeklyRewardsLeaderboard) : async Result.Result<RewardQueries.WeeklyRewardsLeaderboard, Enums.Error> {
+    let weeklyRewardsResult = leaderboardManager.getWeeklyRewards(dto.seasonId, dto.gameweek);
+    switch (weeklyRewardsResult) {
+      case (#ok foundRewards) {
+        return #ok({
+          gameweek = dto.gameweek;
+          seasonId = dto.seasonId;
+          entries = List.toArray(foundRewards.rewards);
+        });
+      };
+      case (#err _) {
+        return #err(#NotFound);
+      };
     };
-    return await data_canister.getLeagueStatus(Environment.LEAGUE_ID);
+  };
+  
+
+  public shared ({ caller }) func getLeagueStatus() : async Result.Result<DataCanister.LeagueStatus, Enums.Error> {
+    assert not Principal.isAnonymous(caller);
+    assert await hasMembership(Principal.toText(caller));
+    let data_canister = actor (CanisterIds.ICFC_DATA_CANISTER_ID) : actor {
+      getLeagueStatus : shared query (dto : DataCanister.GetLeagueStatus) -> async Result.Result<DataCanister.LeagueStatus, Enums.Error>;
+    };
+    return await data_canister.getLeagueStatus({ leagueId = Environment.LEAGUE_ID });
   };
 
-  /*
-  public shared query ({ caller }) func getPlayersSnapshot(dto : DataCanister.GetPlayers) : async DataCanister.Players {
-    assert not Principal.isAnonymous(caller); //TODO WHo should be calling this
-    return seasonManager.getPlayersSnapshot(dto);
+  public shared ({ caller }) func getCountries() : async Result.Result<DataCanister.Countries, Enums.Error> {
+     assert not Principal.isAnonymous(caller);
+    assert await hasMembership(Principal.toText(caller));
+    let data_canister = actor (CanisterIds.ICFC_DATA_CANISTER_ID) : actor {
+      getCountries : shared query (dto : DataCanister.GetCountries) -> async Result.Result<DataCanister.Countries, Enums.Error>;
+    };
+    return await data_canister.getCountries({});
   };
-  */
+
+  public shared ({ caller }) func getSeasons(dto : DataCanister.GetSeasons) : async Result.Result<DataCanister.Seasons, Enums.Error> {
+     assert not Principal.isAnonymous(caller);
+    assert await hasMembership(Principal.toText(caller));
+    let data_canister = actor (CanisterIds.ICFC_DATA_CANISTER_ID) : actor {
+      getSeasons : shared query (dto : DataCanister.GetSeasons) -> async Result.Result<DataCanister.Seasons, Enums.Error>;
+    };
+    return await data_canister.getSeasons(dto);
+  };
+
+  public shared ({ caller }) func getClubs(dto : DataCanister.GetClubs) : async Result.Result<DataCanister.Clubs, Enums.Error> {
+     assert not Principal.isAnonymous(caller);
+    assert await hasMembership(Principal.toText(caller));
+    let data_canister = actor (CanisterIds.ICFC_DATA_CANISTER_ID) : actor {
+      getClubs : shared query (dto : DataCanister.GetClubs) -> async Result.Result<DataCanister.Clubs, Enums.Error>;
+    };
+    return await data_canister.getClubs(dto);
+  };
+
+  public shared ({ caller }) func getPlayers(dto: DataCanister.GetPlayers) : async Result.Result<DataCanister.Players, Enums.Error> {
+     assert not Principal.isAnonymous(caller);
+    assert await hasMembership(Principal.toText(caller));
+    let data_canister = actor (CanisterIds.ICFC_DATA_CANISTER_ID) : actor {
+      getPlayers : shared query (dto : DataCanister.GetPlayers) -> async Result.Result<DataCanister.Players, Enums.Error>;
+    };
+    return await data_canister.getPlayers(dto);
+  };
+
+  public shared ({ caller }) func getPlayerEvents(dto : DataCanister.GetPlayerDetailsForGameweek) : async Result.Result<DataCanister.PlayerDetailsForGameweek, Enums.Error> {
+     assert not Principal.isAnonymous(caller);
+    assert await hasMembership(Principal.toText(caller));
+    let data_canister = actor (CanisterIds.ICFC_DATA_CANISTER_ID) : actor {
+      getPlayerEvents : shared query (dto : DataCanister.GetPlayerDetailsForGameweek) -> async Result.Result<DataCanister.PlayerDetailsForGameweek, Enums.Error>;
+    };
+    return await data_canister.getPlayerEvents(dto);
+  };
+
+  public shared ({ caller }) func getFixtures(dto : DataCanister.GetFixtures) : async Result.Result<DataCanister.Fixtures, Enums.Error> {
+    assert not Principal.isAnonymous(caller);
+    assert await hasMembership(Principal.toText(caller));
+    let data_canister = actor (CanisterIds.ICFC_DATA_CANISTER_ID) : actor {
+      getFixtures : shared query (dto : DataCanister.GetFixtures) -> async Result.Result<DataCanister.Fixtures, Enums.Error>;
+    };
+    return await data_canister.getFixtures(dto : DataCanister.GetFixtures);
+  };
+
+  public shared ({ caller }) func getPlayersSnapshot(dto : AppQueries.GetPlayersSnapshot) : async Result.Result<AppQueries.PlayersSnapshot, Enums.Error> {
+    assert not Principal.isAnonymous(caller);
+    assert await hasMembership(Principal.toText(caller));
+    return await seasonManager.getPlayersSnapshot(dto);
+  };
 
   public shared ({ caller }) func getPlayersMap(dto : DataCanister.GetPlayersMap) : async Result.Result<DataCanister.PlayersMap, Enums.Error> {
     assert isManagerCanister(Principal.toText(caller));
