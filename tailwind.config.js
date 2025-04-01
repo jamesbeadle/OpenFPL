@@ -46,6 +46,7 @@ export default {
         BrandSuccess: "#64AD54",
         BrandSlateGray: "#5A5A5A",
         BrandRed: "#FF403C",
+        BrandInfo: "#3CA1FF",
         BrandGrayBg: "#2F2F2F",
         BrandGrayShade1: "#484848",
         BrandGrayShade2: "#8C8C8C",

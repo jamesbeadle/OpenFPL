@@ -138,7 +138,7 @@
 {:else}
   <LayoutController>
     {@render children()}
+  </LayoutController>
   <Toasts />
   <PortalHost />
-  </LayoutController>
 {/if}
