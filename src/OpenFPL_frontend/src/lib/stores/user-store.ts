@@ -167,7 +167,7 @@ function createUserStore() {
     cacheProfile,
     updateFavouriteTeam,
     withdrawFPL,
-    getFPLBalance
+    getFPLBalance,
   };
 }
 

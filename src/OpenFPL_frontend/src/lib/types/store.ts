@@ -1,4 +1,4 @@
 export interface CreatedData<T> {
-    data: T;
-    certified: boolean;
-}  
+  data: T;
+  certified: boolean;
+}
