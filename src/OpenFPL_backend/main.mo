@@ -12,6 +12,7 @@ import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
 import BaseDefinitions "mo:waterway-mops/BaseDefinitions";
 import BaseQueries "mo:waterway-mops/queries/BaseQueries";
 import Root "mo:waterway-mops/sns-wrappers/root";
+import PlayerQueries "mo:waterway-mops/queries/football-queries/PlayerQueries";
 import Environment "./Environment";
 
 /* ----- Mops Packages ----- */
@@ -418,7 +419,7 @@ actor Self {
   };
 
   public shared ({ caller }) func getFixtures(dto : DataCanister.GetFixtures) : async Result.Result<DataCanister.Fixtures, Enums.Error> {
-     assert not Principal.isAnonymous(caller);
+    assert not Principal.isAnonymous(caller);
     assert await hasMembership(Principal.toText(caller));
     let data_canister = actor (CanisterIds.ICFC_DATA_CANISTER_ID) : actor {
       getFixtures : shared query (dto : DataCanister.GetFixtures) -> async Result.Result<DataCanister.Fixtures, Enums.Error>;
@@ -426,12 +427,11 @@ actor Self {
     return await data_canister.getFixtures(dto : DataCanister.GetFixtures);
   };
 
-  /*
-  public shared query ({ caller }) func getPlayersSnapshot(dto : DataCanister.GetPlayers) : async DataCanister.Players {
-    assert not Principal.isAnonymous(caller); //TODO WHo should be calling this
-    return seasonManager.getPlayersSnapshot(dto);
+  public shared ({ caller }) func getPlayersSnapshot(dto : AppQueries.GetPlayersSnapshot) : async Result.Result<AppQueries.PlayersSnapshot, Enums.Error> {
+    assert not Principal.isAnonymous(caller);
+    assert await hasMembership(Principal.toText(caller));
+    return await seasonManager.getPlayersSnapshot(dto);
   };
-  */
 
   public shared ({ caller }) func getPlayersMap(dto : DataCanister.GetPlayersMap) : async Result.Result<DataCanister.PlayersMap, Enums.Error> {
     assert isManagerCanister(Principal.toText(caller));

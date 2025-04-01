@@ -169,6 +169,10 @@ export interface GetPlayersMap {
   gameweek: number;
   leagueId: number;
 }
+export interface GetPlayersSnapshot {
+  seasonId: SeasonId;
+  gameweek: GameweekNumber;
+}
 export interface GetProfile {
   principalId: PrincipalId;
 }
@@ -317,11 +321,16 @@ export interface PlayerPoints {
   id: number;
   clubId: number;
   events: Array<PlayerEventData__2>;
-  position: PlayerPosition;
+  position: PlayerPosition__1;
   gameweek: number;
   points: number;
 }
 export type PlayerPosition =
+  | { Goalkeeper: null }
+  | { Midfielder: null }
+  | { Forward: null }
+  | { Defender: null };
+export type PlayerPosition__1 =
   | { Goalkeeper: null }
   | { Midfielder: null }
   | { Forward: null }
@@ -336,7 +345,7 @@ export interface PlayerScore {
   saves: number;
   goalsConceded: number;
   events: Array<PlayerEventData__2>;
-  position: PlayerPosition;
+  position: PlayerPosition__1;
   points: number;
 }
 export type PlayerStatus =
@@ -344,34 +353,59 @@ export type PlayerStatus =
   | { Active: null }
   | { FreeAgent: null }
   | { Retired: null };
+export type PlayerStatus__1 =
+  | { OnLoan: null }
+  | { Active: null }
+  | { FreeAgent: null }
+  | { Retired: null };
+export interface Player__1 {
+  id: number;
+  status: PlayerStatus__1;
+  clubId: number;
+  parentClubId: number;
+  valueQuarterMillions: number;
+  dateOfBirth: bigint;
+  nationality: number;
+  currentLoanEndDate: bigint;
+  shirtNumber: number;
+  parentLeagueId: number;
+  position: PlayerPosition__1;
+  lastName: string;
+  leagueId: number;
+  firstName: string;
+}
 export interface Players {
-  players: Array<Player>;
+  players: Array<Player__1>;
 }
 export interface PlayersMap {
   playersMap: Array<[number, PlayerScore]>;
 }
+export interface PlayersSnapshot {
+  players: Array<Player>;
+}
 export type PrincipalId = string;
 export type Result = { ok: null } | { err: Error };
 export type Result_1 = { ok: WeeklyRewardsLeaderboard } | { err: Error };
-export type Result_10 = { ok: Array<CanisterId> } | { err: Error };
-export type Result_11 = { ok: Manager } | { err: Error };
-export type Result_12 = { ok: LeagueStatus } | { err: Error };
-export type Result_13 = { ok: Fixtures } | { err: Error };
-export type Result_14 = { ok: FantasyTeamSnapshot } | { err: Error };
-export type Result_15 = { ok: Array<DataHash> } | { err: Error };
-export type Result_16 = { ok: Countries } | { err: Error };
-export type Result_17 = { ok: Clubs } | { err: Error };
-export type Result_18 = { ok: AppStatus } | { err: Error };
-export type Result_19 = { ok: RewardRates } | { err: Error };
+export type Result_10 = { ok: PlayerDetailsForGameweek } | { err: Error };
+export type Result_11 = { ok: Array<CanisterId> } | { err: Error };
+export type Result_12 = { ok: Manager } | { err: Error };
+export type Result_13 = { ok: LeagueStatus } | { err: Error };
+export type Result_14 = { ok: Fixtures } | { err: Error };
+export type Result_15 = { ok: FantasyTeamSnapshot } | { err: Error };
+export type Result_16 = { ok: Array<DataHash> } | { err: Error };
+export type Result_17 = { ok: Countries } | { err: Error };
+export type Result_18 = { ok: Clubs } | { err: Error };
+export type Result_19 = { ok: AppStatus } | { err: Error };
 export type Result_2 = { ok: WeeklyLeaderboard } | { err: Error };
-export type Result_20 = { ok: string } | { err: Error };
+export type Result_20 = { ok: RewardRates } | { err: Error };
+export type Result_21 = { ok: string } | { err: Error };
 export type Result_3 = { ok: bigint } | { err: Error };
 export type Result_4 = { ok: TeamSetup } | { err: Error };
 export type Result_5 = { ok: Seasons } | { err: Error };
 export type Result_6 = { ok: CombinedProfile } | { err: Error };
-export type Result_7 = { ok: PlayersMap } | { err: Error };
-export type Result_8 = { ok: Players } | { err: Error };
-export type Result_9 = { ok: PlayerDetailsForGameweek } | { err: Error };
+export type Result_7 = { ok: PlayersSnapshot } | { err: Error };
+export type Result_8 = { ok: PlayersMap } | { err: Error };
+export type Result_9 = { ok: Players } | { err: Error };
 export interface RewardEntry {
   rewardType: RewardType;
   position: bigint;
@@ -469,22 +503,23 @@ export interface WeeklyRewardsLeaderboard {
   gameweek: GameweekNumber;
 }
 export interface _SERVICE {
-  getActiveLeaderboardCanisterId: ActorMethod<[], Result_20>;
-  getActiveRewardRates: ActorMethod<[], Result_19>;
-  getAppStatus: ActorMethod<[], Result_18>;
-  getClubs: ActorMethod<[GetClubs], Result_17>;
-  getCountries: ActorMethod<[], Result_16>;
-  getDataHashes: ActorMethod<[], Result_15>;
-  getFantasyTeamSnapshot: ActorMethod<[GetFantasyTeamSnapshot], Result_14>;
-  getFixtures: ActorMethod<[GetFixtures], Result_13>;
-  getLeaderboardCanisterIds: ActorMethod<[], Result_10>;
-  getLeagueStatus: ActorMethod<[], Result_12>;
-  getManager: ActorMethod<[GetManager], Result_11>;
-  getManagerByUsername: ActorMethod<[GetManagerByUsername], Result_11>;
-  getManagerCanisterIds: ActorMethod<[], Result_10>;
-  getPlayerEvents: ActorMethod<[GetPlayerDetailsForGameweek], Result_9>;
-  getPlayers: ActorMethod<[GetPlayers], Result_8>;
-  getPlayersMap: ActorMethod<[GetPlayersMap], Result_7>;
+  getActiveLeaderboardCanisterId: ActorMethod<[], Result_21>;
+  getActiveRewardRates: ActorMethod<[], Result_20>;
+  getAppStatus: ActorMethod<[], Result_19>;
+  getClubs: ActorMethod<[GetClubs], Result_18>;
+  getCountries: ActorMethod<[], Result_17>;
+  getDataHashes: ActorMethod<[], Result_16>;
+  getFantasyTeamSnapshot: ActorMethod<[GetFantasyTeamSnapshot], Result_15>;
+  getFixtures: ActorMethod<[GetFixtures], Result_14>;
+  getLeaderboardCanisterIds: ActorMethod<[], Result_11>;
+  getLeagueStatus: ActorMethod<[], Result_13>;
+  getManager: ActorMethod<[GetManager], Result_12>;
+  getManagerByUsername: ActorMethod<[GetManagerByUsername], Result_12>;
+  getManagerCanisterIds: ActorMethod<[], Result_11>;
+  getPlayerEvents: ActorMethod<[GetPlayerDetailsForGameweek], Result_10>;
+  getPlayers: ActorMethod<[GetPlayers], Result_9>;
+  getPlayersMap: ActorMethod<[GetPlayersMap], Result_8>;
+  getPlayersSnapshot: ActorMethod<[GetPlayersSnapshot], Result_7>;
   getProfile: ActorMethod<[GetProfile], Result_6>;
   getSeasons: ActorMethod<[GetSeasons], Result_5>;
   getTeamSelection: ActorMethod<[GetTeamSetup], Result_4>;

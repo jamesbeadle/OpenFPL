@@ -6,7 +6,20 @@ import { leagueStore } from "$lib/stores/league-store";
 import { isError } from "$lib/utils/helpers";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import { toasts } from "./toasts-store";
-import type { BonusType, ClubId, CountryId, FantasyTeamSnapshot, GetFantasyTeamSnapshot, GetManager, LeagueStatus, Manager, PlayBonus, PlayerId, SaveFantasyTeam, TeamSetup } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type {
+  BonusType,
+  ClubId,
+  CountryId,
+  FantasyTeamSnapshot,
+  GetFantasyTeamSnapshot,
+  GetManager,
+  LeagueStatus,
+  Manager,
+  PlayBonus,
+  PlayerId,
+  SaveFantasyTeam,
+  TeamSetup,
+} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 function createManagerStore() {
   let actor: any = ActorFactory.createActor(
@@ -62,7 +75,7 @@ function createManagerStore() {
         leagueStatus = result;
       });
       let dto: GetManager = {
-        principalId
+        principalId,
       };
 
       let result = await actor.getManager(dto);
@@ -165,7 +178,7 @@ function createManagerStore() {
       };
 
       let result = await identityActor.saveTeamSelection(dto);
-      
+
       if (isError(result)) {
         console.error("Error saving fantasy team", result);
         return;
@@ -192,7 +205,7 @@ function createManagerStore() {
     bonusType: BonusType,
     bonusPlayerId: PlayerId,
     bonusTeamId: ClubId,
-    bonusCountryId: CountryId
+    bonusCountryId: CountryId,
   ): Promise<any> {
     try {
       const identityActor: any = await ActorFactory.createIdentityActor(
@@ -205,8 +218,8 @@ function createManagerStore() {
         playerId: bonusPlayerId,
         countryId: bonusCountryId,
         bonusType,
-        principalId
-      }
+        principalId,
+      };
 
       let result = await identityActor.saveBonusSelection(bonusDto);
 
@@ -230,7 +243,6 @@ function createManagerStore() {
       return false;
     }
   }
-
 
   return {
     getTotalManagers,

@@ -13,6 +13,7 @@ import BaseQueries "mo:waterway-mops/queries/BaseQueries";
 import AppCommands "../../OpenFPL_backend/commands/app_commands";
 import AppTypes "../types/app_types";
 import DataCanister "canister:data_canister";
+import AppQueries "../queries/app_queries";
 
 module {
 
@@ -152,11 +153,11 @@ module {
       };
     };
 
-    public func getPlayersSnapshot(dto : DataCanister.GetPlayers, seasonId: FootballIds.SeasonId, gameweek: FootballDefinitions.GameweekNumber) : DataCanister.Players {
+    public func getPlayersSnapshot(dto : AppQueries.GetPlayersSnapshot) : async Result.Result<AppQueries.PlayersSnapshot, Enums.Error> {
       let seasonPlayers = Array.find<(FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [DataCanister.Player])])>(
         playersSnapshots,
         func(seasonsPlayerSnapshots : (FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [DataCanister.Player])])) : Bool {
-          seasonsPlayerSnapshots.0 == seasonId;
+          seasonsPlayerSnapshots.0 == dto.seasonId;
         },
       );
 
@@ -165,12 +166,12 @@ module {
           let gameweekPlayers = Array.find<(FootballDefinitions.GameweekNumber, [DataCanister.Player])>(
             foundSeasonPlayers.1,
             func(gameweekPlayers : (FootballDefinitions.GameweekNumber, [DataCanister.Player])) : Bool {
-              gameweekPlayers.0 == gameweek;
+              gameweekPlayers.0 == dto.gameweek;
             },
           );
           switch (gameweekPlayers) {
             case (?foundGameweekPlayers) {
-              return { players = foundGameweekPlayers.1 };
+              return #ok({ players = foundGameweekPlayers.1 });
             };
             case (null) {};
           };
@@ -178,7 +179,7 @@ module {
         case (null) {};
       };
 
-      return { players = [] };
+      return #err(#NotFound);
     };
 
     //Stable variable functions
