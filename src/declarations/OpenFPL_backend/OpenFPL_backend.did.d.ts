@@ -20,6 +20,23 @@ export type BonusType =
 export type CalendarMonth = number;
 export type CanisterId = string;
 export type ClubId = number;
+export interface CombinedProfile {
+  username: string;
+  displayName: string;
+  termsAccepted: boolean;
+  createdOn: bigint;
+  createDate: bigint;
+  favouriteClubId: [] | [ClubId];
+  membershipClaims: Array<MembershipClaim>;
+  profilePicture: [] | [Uint8Array | number[]];
+  membershipType: MembershipType__1;
+  termsAgreed: boolean;
+  membershipExpiryTime: bigint;
+  favouriteLeagueId: [] | [LeagueId];
+  nationalityId: [] | [CountryId];
+  profilePictureType: string;
+  principalId: PrincipalId;
+}
 export type CountryId = number;
 export interface DataHash {
   hash: string;
@@ -116,9 +133,6 @@ export interface GetFantasyTeamSnapshot {
   gameweek: GameweekNumber;
   principalId: PrincipalId;
 }
-export interface GetICFCProfile {
-  principalId: PrincipalId;
-}
 export interface GetManager {
   principalId: string;
 }
@@ -143,20 +157,6 @@ export interface GetWeeklyLeaderboard {
   searchTerm: string;
   gameweek: GameweekNumber;
 }
-export interface ICFCProfile {
-  username: string;
-  displayName: string;
-  createdOn: bigint;
-  favouriteClubId: [] | [ClubId];
-  membershipClaims: Array<MembershipClaim>;
-  profilePicture: [] | [Uint8Array | number[]];
-  membershipType: MembershipType;
-  termsAgreed: boolean;
-  membershipExpiryTime: bigint;
-  favouriteLeagueId: [] | [LeagueId];
-  nationalityId: [] | [CountryId];
-  principalId: PrincipalId;
-}
 export interface LeaderboardEntry {
   username: string;
   positionText: string;
@@ -165,6 +165,12 @@ export interface LeaderboardEntry {
   points: number;
 }
 export type LeagueId = number;
+export interface LinkICFCProfile {
+  icfcPrincipalId: PrincipalId;
+  favouriteClubId: ClubId;
+  icfcMembershipType: MembershipType__1;
+  principalId: PrincipalId;
+}
 export interface Manager {
   username: string;
   weeklyPosition: bigint;
@@ -186,7 +192,7 @@ export interface Manager {
 export interface MembershipClaim {
   expiresOn: [] | [bigint];
   claimedOn: bigint;
-  membershipType: MembershipType;
+  membershipType: MembershipType__1;
 }
 export type MembershipType =
   | { Founding: null }
@@ -196,6 +202,20 @@ export type MembershipType =
   | { Monthly: null }
   | { NotEligible: null }
   | { Expired: null };
+export type MembershipType__1 =
+  | { Founding: null }
+  | { NotClaimed: null }
+  | { Seasonal: null }
+  | { Lifetime: null }
+  | { Monthly: null }
+  | { NotEligible: null }
+  | { Expired: null };
+export interface NotifyAppofLink {
+  icfcPrincipalId: PrincipalId;
+  subApp: SubApp;
+  subAppUserPrincipalId: PrincipalId;
+  membershipType: MembershipType;
+}
 export interface PlayBonus {
   clubId: ClubId;
   playerId: PlayerId;
@@ -247,29 +267,19 @@ export interface PlayersMap {
   playersMap: Array<[number, PlayerScore]>;
 }
 export type PrincipalId = string;
-export interface Profile {
-  username: string;
-  termsAccepted: boolean;
-  createDate: bigint;
-  favouriteClubId: [] | [ClubId];
-  profilePicture: [] | [Uint8Array | number[]];
-  profilePictureType: string;
-  principalId: PrincipalId;
-}
 export type Result = { ok: null } | { err: Error };
 export type Result_1 = { ok: WeeklyLeaderboard } | { err: Error };
-export type Result_10 = { ok: Array<DataHash> } | { err: Error };
-export type Result_11 = { ok: AppStatus } | { err: Error };
-export type Result_12 = { ok: RewardRates } | { err: Error };
-export type Result_13 = { ok: string } | { err: Error };
+export type Result_10 = { ok: AppStatus } | { err: Error };
+export type Result_11 = { ok: RewardRates } | { err: Error };
+export type Result_12 = { ok: string } | { err: Error };
 export type Result_2 = { ok: bigint } | { err: Error };
 export type Result_3 = { ok: TeamSetup } | { err: Error };
-export type Result_4 = { ok: Profile } | { err: Error };
+export type Result_4 = { ok: CombinedProfile } | { err: Error };
 export type Result_5 = { ok: PlayersMap } | { err: Error };
 export type Result_6 = { ok: Array<CanisterId> } | { err: Error };
 export type Result_7 = { ok: Manager } | { err: Error };
-export type Result_8 = { ok: ICFCProfile } | { err: Error };
-export type Result_9 = { ok: FantasyTeamSnapshot } | { err: Error };
+export type Result_8 = { ok: FantasyTeamSnapshot } | { err: Error };
+export type Result_9 = { ok: Array<DataHash> } | { err: Error };
 export interface RewardRates {
   monthlyLeaderboardRewardRate: bigint;
   allTimeSeasonHighScoreRewardRate: bigint;
@@ -291,6 +301,12 @@ export interface SetFavouriteClub {
   favouriteClubId: ClubId;
   principalId: PrincipalId;
 }
+export type SubApp =
+  | { OpenFPL: null }
+  | { OpenWSL: null }
+  | { FootballGod: null }
+  | { TransferKings: null }
+  | { JeffBets: null };
 export interface TeamSetup {
   playerIds: Uint16Array | number[];
   username: string;
@@ -320,6 +336,11 @@ export interface TeamSetup {
   canisterId: CanisterId;
   monthlyBonusesAvailable: number;
 }
+export interface UpdateICFCProfile {
+  subApp: SubApp;
+  subAppUserPrincipalId: PrincipalId;
+  membershipType: MembershipType;
+}
 export interface WeeklyLeaderboard {
   totalEntries: bigint;
   seasonId: SeasonId;
@@ -327,12 +348,11 @@ export interface WeeklyLeaderboard {
   gameweek: GameweekNumber;
 }
 export interface _SERVICE {
-  getActiveLeaderboardCanisterId: ActorMethod<[], Result_13>;
-  getActiveRewardRates: ActorMethod<[], Result_12>;
-  getAppStatus: ActorMethod<[], Result_11>;
-  getDataHashes: ActorMethod<[], Result_10>;
-  getFantasyTeamSnapshot: ActorMethod<[GetFantasyTeamSnapshot], Result_9>;
-  getICFCProfile: ActorMethod<[GetICFCProfile], Result_8>;
+  getActiveLeaderboardCanisterId: ActorMethod<[], Result_12>;
+  getActiveRewardRates: ActorMethod<[], Result_11>;
+  getAppStatus: ActorMethod<[], Result_10>;
+  getDataHashes: ActorMethod<[], Result_9>;
+  getFantasyTeamSnapshot: ActorMethod<[GetFantasyTeamSnapshot], Result_8>;
   getLeaderboardCanisterIds: ActorMethod<[], Result_6>;
   getManager: ActorMethod<[GetManager], Result_7>;
   getManagerByUsername: ActorMethod<[GetManagerByUsername], Result_7>;
@@ -342,6 +362,9 @@ export interface _SERVICE {
   getTeamSelection: ActorMethod<[GetTeamSetup], Result_3>;
   getTotalManagers: ActorMethod<[], Result_2>;
   getWeeklyLeaderboard: ActorMethod<[GetWeeklyLeaderboard], Result_1>;
+  linkICFCLink: ActorMethod<[LinkICFCProfile], Result>;
+  noitifyAppofICFCHashUpdate: ActorMethod<[UpdateICFCProfile], Result>;
+  notifyAppLink: ActorMethod<[NotifyAppofLink], Result>;
   notifyAppsOfFixtureFinalised: ActorMethod<
     [LeagueId, SeasonId, GameweekNumber],
     Result

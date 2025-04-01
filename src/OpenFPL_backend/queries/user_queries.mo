@@ -3,11 +3,30 @@ import FootballIds "mo:waterway-mops/football/FootballIds";
 import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
 import BaseDefinitions "mo:waterway-mops/BaseDefinitions";
 import Enums "../enums/enums";
+import ICFCEnums "mo:waterway-mops/ICFCEnums";
 
 module UserQueries = {
 
     public type GetProfile = {
         principalId : Ids.PrincipalId;
+    };
+
+    public type CombinedProfile = {
+        principalId : Ids.PrincipalId;
+        username : Text;
+        termsAccepted : Bool;
+        profilePicture : ?Blob;
+        profilePictureType : Text;
+        favouriteClubId : ?FootballIds.ClubId;
+        createDate : Int;
+        displayName : Text;
+        membershipType : Enums.MembershipType;
+        membershipClaims : [MembershipClaim];
+        createdOn : Int;
+        termsAgreed : Bool;
+        membershipExpiryTime : Int;
+        favouriteLeagueId : ?FootballIds.LeagueId;
+        nationalityId : ?Ids.CountryId;
     };
 
     public type Profile = {
@@ -23,7 +42,10 @@ module UserQueries = {
     public type GetICFCProfile = {
         principalId : Ids.PrincipalId;
     };
-    
+    public type GetICFCMembership = {
+        principalId : Ids.PrincipalId;
+    };
+
     public type ICFCProfile = {
         principalId : Ids.PrincipalId;
         username : Text;
@@ -37,6 +59,13 @@ module UserQueries = {
         favouriteLeagueId : ?FootballIds.LeagueId;
         favouriteClubId : ?FootballIds.ClubId;
         nationalityId : ?Ids.CountryId;
+    };
+
+    public type ICFCLink = {
+        membershipType : Enums.MembershipType;
+        principalId : Ids.PrincipalId;
+        linkStatus : ICFCEnums.ICFCLinkStatus;
+        dataHash : Text;
     };
 
     public type MembershipClaim = {
@@ -144,8 +173,8 @@ module UserQueries = {
 
     public type GetFantasyTeamSnapshot = {
         principalId : Ids.PrincipalId;
-        seasonId: FootballIds.SeasonId;
-        gameweek: FootballDefinitions.GameweekNumber;
+        seasonId : FootballIds.SeasonId;
+        gameweek : FootballDefinitions.GameweekNumber;
     };
 
     public type FantasyTeamSnapshot = {

@@ -1,11 +1,11 @@
 <script lang="ts">
     import LocalSpinner from "../shared/local-spinner.svelte";
     import Header from "$lib/shared/Header.svelte";
-    import type { ICFCMembershipDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import type { ICFCProfile } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     import CopyPrincipal from "./copy-principal.svelte";
     import MembershipLinkedModal from "./membership-linked-modal.svelte";
     
-    export let membership: ICFCMembershipDTO | undefined = undefined;
+    export let icfcProfile: ICFCProfile | undefined = undefined;
   
     let isLoading = false;
 
@@ -13,6 +13,7 @@
     
     async function checkMembership(){
       // TODO Recheck 
+      
     }
    
 
