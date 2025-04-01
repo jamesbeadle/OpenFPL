@@ -1,15 +1,14 @@
 import { authStore } from "$lib/stores/auth.store";
 import { ActorFactory } from "../utils/actor.factory";
 import { isError } from "../utils/helpers";
-import type {
-  PlayerPointsDTO,
-  GameweekFiltersDTO,
-  GetPlayerDetailsDTO,
-  PlayerDetailDTO,
-  LeagueId,
-  PlayerScoreDTO,
-} from "../../../../external_declarations/data_canister/data_canister.did";
 import { toasts } from "$lib/stores/toasts-store";
+import type { PlayersMap } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type {
+  GetPlayerDetails,
+  GetPlayersMap,
+  PlayerDetails,
+  PlayerPoints,
+} from "../../../../declarations/data_canister/data_canister.did";
 
 export class PlayerEventsService {
   private actor: any;
@@ -19,10 +18,10 @@ export class PlayerEventsService {
   async getPlayerPoints(
     seasonId: number,
     gameweek: number,
-  ): Promise<PlayerPointsDTO[] | undefined> {
+  ): Promise<PlayerPoints | undefined> {
     try {
     } catch (error) {}
-    let dto: GameweekFiltersDTO = {
+    let dto: GetPl = {
       seasonId,
       gameweek,
     };
@@ -37,9 +36,10 @@ export class PlayerEventsService {
   async getPlayerDetails(
     playerId: number,
     seasonId: number,
-  ): Promise<PlayerDetailDTO | undefined> {
+  ): Promise<PlayerDetails> {
     try {
-      let dto: GetPlayerDetailsDTO = {
+      let dto: GetPlayerDetails = {
+        leagueId: Number(process.env.LEAGUE_ID),
         playerId: playerId,
         seasonId: seasonId,
       };
@@ -48,9 +48,8 @@ export class PlayerEventsService {
           authStore,
           process.env.CANISTER_ID_DATA ?? "",
         );
-      const leagueId: LeagueId = 1;
 
-      let result = await identityActor.getPlayerDetails(leagueId, dto);
+      let result = await identityActor.getPlayerDetails(dto);
 
       if (isError(result)) {
         console.error("Error fetching player details");
@@ -100,19 +99,19 @@ export class PlayerEventsService {
   async getPlayerMap(
     seasonId: number,
     gameweek: number,
-  ): Promise<PlayerScoreDTO[] | undefined> {
+  ): Promise<PlayersMap | undefined> {
     try {
       const identityActor: any =
         await ActorFactory.createDataCanisterIdentityActor(
           authStore,
           process.env.CANISTER_ID_DATA ?? "",
         );
-      let dto: GameweekFiltersDTO = {
+      let dto: GetPlayersMap = {
+        leagueId: Number(process.env.LEAGUE_ID),
         seasonId,
         gameweek,
       };
-      const leagueId: LeagueId = 1;
-      const result = await identityActor.getPlayersMap(leagueId, dto);
+      const result = await identityActor.getPlayersMap(dto);
       if (isError(result)) throw new Error("Failed to fetch player map");
       return result.ok;
     } catch (error) {

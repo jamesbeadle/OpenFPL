@@ -1,26 +1,25 @@
 import type { FixtureWithClubs } from "$lib/types/fixture-with-clubs";
 import type { TeamStats } from "$lib/types/team-stats";
 import * as FlagIcons from "svelte-flag-icons";
-import type {
-  ClubDTO,
-  PlayerPointsDTO,
-  FixtureDTO,
-  FixtureStatusType,
-  PlayerEventType,
-  PlayerPosition,
-} from "../../../../external_declarations/data_canister/data_canister.did";
-import type {
-  PlayerDTO,
-  ManagerGameweekDTO,
-  LeaderboardEntryDTO,
-  RewardEntry,
-} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 import type { GameweekData } from "$lib/interfaces/GameweekData";
 import EnglandFlag from "../flags/england.svelte";
 import ScotlandFlag from "../flags/scotland.svelte";
 import WalesFlag from "../flags/wales.svelte";
 import NorthernIrelandFlag from "../flags/northern_ireland.svelte";
+import type {
+  Club,
+  Fixture,
+  FixtureStatusType,
+  Player,
+  PlayerEventType,
+  PlayerPoints,
+  PlayerPosition,
+} from "../../../../declarations/data_canister/data_canister.did";
+import type {
+  FantasyTeamSnapshot,
+  LeaderboardEntry,
+} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 export function uint8ArrayToBase64(bytes: Uint8Array): string {
   const binary = Array.from(bytes)
@@ -628,7 +627,7 @@ export function getFlagComponent(countryId: number) {
 
 export function updateTableData(
   fixtures: FixtureWithClubs[],
-  teams: ClubDTO[],
+  teams: Club[],
   selectedGameweek: number,
 ): TeamStats[] {
   let tempTable: Record<number, TeamStats> = {};
@@ -688,7 +687,7 @@ export function updateTableData(
 function initTeamData(
   teamId: number,
   table: Record<number, TeamStats>,
-  teams: ClubDTO[],
+  teams: Club[],
 ) {
   if (!table[teamId]) {
     const team = teams.find((t) => t.id === teamId);
@@ -840,8 +839,8 @@ export function formatCycles(cycles: bigint): string {
 }
 
 export function extractPlayerData(
-  playerPointsDTO: PlayerPointsDTO,
-  player: PlayerDTO,
+  playerPointsDTO: PlayerPoints,
+  player: Player,
 ): GameweekData {
   let goals = 0,
     assists = 0,
@@ -967,7 +966,7 @@ export function extractPlayerData(
 
 export function calculatePlayerScore(
   gameweekData: GameweekData,
-  fixtures: FixtureDTO[],
+  fixtures: Fixture[],
 ): number {
   if (!gameweekData) {
     console.error("No gameweek data found:", gameweekData);
@@ -1075,8 +1074,8 @@ export function calculatePlayerScore(
 }
 
 export function getFixturesWithTeams(
-  clubs: ClubDTO[],
-  fixtures: FixtureDTO[],
+  clubs: Club[],
+  fixtures: Fixture[],
 ): FixtureWithClubs[] {
   return fixtures
     .sort((a, b) => Number(a.kickOff) - Number(b.kickOff))
@@ -1087,7 +1086,7 @@ export function getFixturesWithTeams(
     }));
 }
 
-export function getPlayerName(player: PlayerDTO): string {
+export function getPlayerName(player: Player): string {
   return player.firstName != ""
     ? player.firstName.charAt(0) + "." + " " + player.lastName
     : player.lastName;
@@ -1151,7 +1150,7 @@ export function convertToE8s(amount: string): bigint {
   return BigInt(whole) * 100_000_000n + BigInt(fractionPadded);
 }
 
-export function getBonusIcon(snapshot: ManagerGameweekDTO): string {
+export function getBonusIcon(snapshot: FantasyTeamSnapshot): string {
   if (snapshot.goalGetterGameweek === snapshot.gameweek) {
     return `<img src="/goal-getter.png" alt="Bonus" class="w-6 md:w-9" />`;
   } else if (snapshot.passMasterGameweek === snapshot.gameweek) {
@@ -1176,10 +1175,10 @@ export function getBonusIcon(snapshot: ManagerGameweekDTO): string {
     return "-";
   }
 }
-
+/*
 export function mergeLeaderboardWithRewards(
-  leaderboardEntries: LeaderboardEntryDTO[],
-  rewards: RewardEntry[],
+  leaderboardEntries: LeaderboardEntry[],
+  rewards: Reward[],
 ): LeaderboardEntryDTO[] {
   const rewardMap = new Map(
     rewards.map((reward) => [reward.principalId, reward.amount]),
@@ -1190,6 +1189,7 @@ export function mergeLeaderboardWithRewards(
     reward: rewardMap.get(entry.principalId) ?? 0,
   }));
 }
+  */
 
 export function getGameweeks(totalGameweeks: number): number[] {
   return Array.from({ length: totalGameweeks }, (_, i) => i + 1);
@@ -1199,10 +1199,7 @@ export function normaliseString(str: string) {
   return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
 
-export function addTeamDataToPlayers(
-  clubs: ClubDTO[],
-  players: PlayerDTO[],
-): any[] {
+export function addTeamDataToPlayers(clubs: Club[], players: Player[]): any[] {
   return players.map((player) => {
     const team = clubs.find((t) => t.id === player.clubId);
     return { ...player, team };

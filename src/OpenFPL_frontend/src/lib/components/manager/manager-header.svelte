@@ -1,6 +1,5 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import type { ClubDTO } from "../../../../../external_declarations/data_canister/data_canister.did";
     import HeaderContentPanel from "../shared/panels/header-content-panel.svelte";
     import { clubStore } from "$lib/stores/club-store";
     import { getProfilePictureString } from "$lib/derived/user.derived";
@@ -9,15 +8,16 @@
     import ContentPanel from "../shared/panels/content-panel.svelte";
     import ManagerFavouriteTeamPanel from "./manager-favourite-team-panel.svelte";
     import { writable } from "svelte/store";
-    import type { ManagerDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     import LocalSpinner from "../shared/local-spinner.svelte";
+    import type { Club } from "../../../../../declarations/data_canister/data_canister.did";
+    import type { Manager } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
-    export let manager: ManagerDTO;
+    export let manager: Manager;
     
     let isLoading = true;
     let joinedDate = "";
     let profilePicture: string;
-    let favouriteTeam = writable<ClubDTO | null>(null);
+    let favouriteTeam = writable<Club | null>(null);
     let displayName = "";
     let selectedSeason = "";
 

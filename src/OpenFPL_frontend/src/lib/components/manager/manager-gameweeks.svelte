@@ -4,9 +4,9 @@
   import { getBonusIcon, getFlagComponent, getPlayerName } from "$lib/utils/helpers";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import type { Writable } from "svelte/store";
-  import type { ManagerDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import type { Manager } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
-  export let manager: Writable<ManagerDTO | null>;
+  export let manager: Writable<Manager | null>;
   export let viewGameweekDetail: (selectedGameweek: number) => void;
   
 </script>

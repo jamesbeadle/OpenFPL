@@ -1,11 +1,11 @@
 import { toasts } from "$lib/stores/toasts-store";
 import { authStore } from "$lib/stores/auth.store";
-import type {
-  LeagueStatus,
-  LeagueId,
-} from "../../../../external_declarations/data_canister/data_canister.did";
 import { ActorFactory } from "../utils/actor.factory";
 import { isError } from "../utils/helpers";
+import type {
+  LeagueId,
+  LeagueStatus,
+} from "../../../../declarations/data_canister/data_canister.did";
 
 export class LeagueService {
   private actor: any;

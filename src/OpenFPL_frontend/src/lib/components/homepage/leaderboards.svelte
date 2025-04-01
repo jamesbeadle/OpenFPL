@@ -8,7 +8,7 @@
   import { monthlyLeaderboardStore } from "$lib/stores/monthly-leaderboard-store";
   import { authSignedInStore } from "$lib/derived/auth.derived";
   import { userGetFavouriteTeam } from "$lib/derived/user.derived";
-  import { getGameweeks, mergeLeaderboardWithRewards } from "$lib/utils/helpers";
+  import { getGameweeks, /* // TODO mergeLeaderboardWithRewards */ } from "$lib/utils/helpers";
   import GameweekFilter from "../shared/filters/gameweek-filter.svelte";
   import LeaderboardFilter from "./leaderboard-filter.svelte";
   import LeaderboardMonthFilter from "./leaderboard-month-filter.svelte";
@@ -73,7 +73,7 @@
         );
         const rewardsResult = await weeklyLeaderboardStore.getWeeklyRewards($selectedSeasonId, $selectedGameweek);
         if(leaderboard && rewardsResult){
-          leaderboard.entries = mergeLeaderboardWithRewards(leaderboard.entries, rewardsResult.rewards);
+          //leaderboard.entries = mergeLeaderboardWithRewards(leaderboard.entries, rewardsResult.rewards);
         }
         break;
       case 2:

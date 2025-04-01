@@ -1,9 +1,9 @@
 <script lang="ts">
-    import type { ClubDTO } from "../../../../../external_declarations/data_canister/data_canister.did";
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
     import type { Writable } from "svelte/store";
+    import type { Club } from "../../../../../declarations/data_canister/data_canister.did";
 
-    export let favouriteTeam: Writable<ClubDTO | null>;
+    export let favouriteTeam: Writable<Club | null>;
 </script>
 <div class="flex-grow">
     <p class="content-panel-header">Favourite Team</p>

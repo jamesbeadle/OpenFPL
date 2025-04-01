@@ -1,7 +1,6 @@
 <script lang="ts">
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import { onMount } from "svelte";
-  import type { PlayerDTO } from "../../../../../external_declarations/data_canister/data_canister.did";
   import {
     calculateAgeFromNanoseconds,
     convertPositionToIndex,
@@ -12,6 +11,7 @@
   import { writable } from "svelte/store";
   import PositionFilter from "../shared/position-filter.svelte";
   import TeamPlayersTableHeader from "./team-players-table-header.svelte";
+    import type { Player } from "../../../../../declarations/data_canister/data_canister.did";
 
   export let clubId;
 
@@ -19,7 +19,7 @@
     players = $playerStore.filter((x) => x.clubId == clubId)
   });
 
-  let players: PlayerDTO[] = [];
+  let players: Player[] = [];
   let selectedPosition = writable(-1);
   $: filteredPlayers = $selectedPosition === -1
       ? players

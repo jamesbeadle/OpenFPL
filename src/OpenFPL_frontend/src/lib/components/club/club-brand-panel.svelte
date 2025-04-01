@@ -1,9 +1,9 @@
 <script lang="ts">
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
     import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
-    import type { ClubDTO } from "../../../../../external_declarations/data_canister/data_canister.did";
+    import type { Club } from "../../../../../declarations/data_canister/data_canister.did";
 
-    export let club: ClubDTO;
+    export let club: Club;
 </script>
 
 <div class="flex-grow flex flex-col items-center">

@@ -1,14 +1,14 @@
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import { ActorFactory } from "../utils/actor.factory";
 import { isError } from "../utils/helpers";
-import type { DataHashDTO } from "../../../../external_declarations/data_canister/data_canister.did";
 import { toasts } from "$lib/stores/toasts-store";
 import { authStore } from "$lib/stores/auth.store";
+import type { DataHash } from "../../../../declarations/data_canister/data_canister.did";
 
 export class DataHashService {
   constructor() {}
 
-  async getAppDataHashes(): Promise<DataHashDTO[] | undefined> {
+  async getAppDataHashes(): Promise<DataHash[] | undefined> {
     try {
       let actor: any = ActorFactory.createActor(
         idlFactory,
@@ -27,7 +27,7 @@ export class DataHashService {
     }
   }
 
-  async getDataCanisterDataHashes(): Promise<DataHashDTO[] | undefined> {
+  async getDataCanisterDataHashes(): Promise<DataHash[] | undefined> {
     try {
       const identityActor: any =
         await ActorFactory.createDataCanisterIdentityActor(

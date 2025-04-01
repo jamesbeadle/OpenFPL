@@ -4,8 +4,7 @@ import type { OptionIdentity } from "$lib/types/identity";
 import { Actor, HttpAgent } from "@dfinity/agent";
 import type { Unsubscriber } from "svelte/store";
 import { idlFactory as canister } from "../../../../declarations/OpenFPL_backend";
-import { idlFactory as data_canister } from "../../../../external_declarations/data_canister";
-
+import { data_canister } from "../../../../declarations/data_canister";
 export class ActorFactory {
   static createActor(
     idlFactory: any,

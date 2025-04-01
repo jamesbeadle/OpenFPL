@@ -9,14 +9,14 @@
   import { getActualIndex } from "$lib/utils/helpers";
   import { calculateBonusPoints, getBonusUsed, getGridSetup, getTeamFormationReadOnly, isBonusUsed, sortPlayersByPointsThenValue } from "$lib/utils/pick-team.helpers";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
-  import type { ClubDTO, GameweekNumber } from "../../../../../external_declarations/data_canister/data_canister.did";
   import ManagerPitchPlayer from "./manager-pitch-player.svelte";
   import { playerStore } from "$lib/stores/player-store";
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-    import type { ManagerGameweekDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     import LocalSpinner from "../shared/local-spinner.svelte";
+    import type { FantasyTeamSnapshot, GameweekNumber } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import type { Club } from "../../../../../declarations/data_canister/data_canister.did";
 
-  export let fantasyTeam: Writable<ManagerGameweekDTO | null>;
+  export let fantasyTeam: Writable<FantasyTeamSnapshot | null>;
   export let gridSetup: number[][];
   export let gameweekPlayers: Writable<GameweekData[]>;
   export let selectedGameweek: Writable<GameweekNumber>;
@@ -24,7 +24,7 @@
   let pitchHeight = 0;
   let pitchElement: HTMLImageElement | null = null;
   let isLoading = true;
-  let favouriteTeam: ClubDTO | null = null;
+  let favouriteTeam: Club | null = null;
 
   $: rowHeight = (pitchHeight * 0.9) / 4;
   $: gridSetup = getGridSetup( getTeamFormationReadOnly($fantasyTeam!, $playerStore));

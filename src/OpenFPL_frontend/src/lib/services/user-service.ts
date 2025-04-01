@@ -1,14 +1,11 @@
 import { ActorFactory } from "../utils/actor.factory";
 import { isError } from "../utils/helpers";
-import type {
-  ICFCMembershipDTO,
-  ProfileDTO,
-} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { authStore } from "$lib/stores/auth.store";
 import { toasts } from "$lib/stores/toasts-store";
+import type { Profile } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 export class UserService {
-  async getUser(): Promise<ProfileDTO | undefined> {
+  async getUser(): Promise<Profile | undefined> {
     try {
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
@@ -29,6 +26,7 @@ export class UserService {
     }
   }
 
+  /* // TODO
   async getUserIFCFMembership(): Promise<ICFCMembershipDTO | undefined> {
     const identityActor: any = await ActorFactory.createIdentityActor(
       authStore,
@@ -36,4 +34,5 @@ export class UserService {
     );
     return await identityActor.getUserIFCFMembership();
   }
+    */
 }

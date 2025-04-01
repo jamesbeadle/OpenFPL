@@ -2,21 +2,21 @@
     import ActiveCaptainIcon from "$lib/icons/ActiveCaptainIcon.svelte";
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
     import { convertPositionToIndex, getFlagComponent, getPlayerName, getPositionAbbreviation } from "$lib/utils/helpers";
-    import type { ClubDTO, PlayerDTO } from "../../../../../external_declarations/data_canister/data_canister.did";
     import type { GameweekData } from "$lib/interfaces/GameweekData";
     import type { Writable } from "svelte/store";
-    import type { ManagerGameweekDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-
-    export let fantasyTeam: Writable<ManagerGameweekDTO | null>
-    export let playerDTO: PlayerDTO;
+    import type { FantasyTeamSnapshot } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import type { Club, Player } from "../../../../../declarations/data_canister/data_canister.did";
+    
+    export let fantasyTeam: Writable<FantasyTeamSnapshot | null>
+    export let player: Player;
     export let data: GameweekData;
-    export let playerTeam: ClubDTO;
+    export let playerTeam: Club;
 
 </script>
 <div class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer 
-    {$fantasyTeam!.captainId == playerDTO?.id ? 'captain-row' : ''}">
+    {$fantasyTeam!.captainId == player?.id ? 'captain-row' : ''}">
     <div class="w-1/12 text-center items-center justify-center flex">
-        {#if $fantasyTeam!.captainId == playerDTO?.id}
+        {#if $fantasyTeam!.captainId == player?.id}
             <ActiveCaptainIcon className="w-5 sm:w-6 md:w-7" />
         {:else}
             {getPositionAbbreviation(
@@ -33,7 +33,7 @@
         <span class="flex items-center">
             <BadgeIcon club={playerTeam} className="w-4 h-4 mr-1 md:hidden" />
             <p class="truncate min-w-[30px] max-w-[30px] xs:min-w-[50px] xs:max-w-[50px] sm:min-w-[60px] sm:max-w-[60px] md:min-w-[75px] md:max-w-[75px]">
-                {getPlayerName(playerDTO)}
+                {getPlayerName(player)}
             </p>
         </span>
     </div>
@@ -83,8 +83,8 @@
         {data.bonusPoints}
         </div>
     </div>
-    <div class={`w-1/12 text-center ${ $fantasyTeam!.captainId == playerDTO?.id ? "" : "text-gray-500" }`}>
-    {$fantasyTeam!.captainId == playerDTO?.id ? data.points : "-"}
+    <div class={`w-1/12 text-center ${ $fantasyTeam!.captainId == player?.id ? "" : "text-gray-500" }`}>
+    {$fantasyTeam!.captainId == player?.id ? data.points : "-"}
     </div>
     <div class="w-1/12 text-center">{data.totalPoints}</div>
 </div>

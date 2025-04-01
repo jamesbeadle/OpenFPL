@@ -1,18 +1,18 @@
 import { toasts } from "$lib/stores/toasts-store";
 import { authStore } from "$lib/stores/auth.store";
-import type {
-  ClubDTO,
-  LeagueId,
-} from "../../../../external_declarations/data_canister/data_canister.did";
 import { ActorFactory } from "../utils/actor.factory";
 import { isError } from "../utils/helpers";
+import type {
+  Club,
+  LeagueId,
+} from "../../../../declarations/data_canister/data_canister.did";
 
 export class ClubService {
   private actor: any;
 
   constructor() {}
 
-  async getClubs(): Promise<ClubDTO[] | undefined> {
+  async getClubs(): Promise<Club[] | undefined> {
     try {
       const identityActor: any =
         await ActorFactory.createDataCanisterIdentityActor(

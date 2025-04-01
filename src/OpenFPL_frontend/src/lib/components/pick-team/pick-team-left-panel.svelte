@@ -1,10 +1,10 @@
 <script lang="ts">
-  import type { TeamSelectionDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { Writable } from "svelte/store";
   import PickTeamPlayers from "./pick-team-players.svelte";
   import BonusPanel from "./bonus-panel.svelte";
+    import type { TeamSetup } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
-  export let fantasyTeam: Writable<TeamSelectionDTO | undefined>;
+  export let fantasyTeam: Writable<TeamSetup | undefined>;
   export let pitchView: Writable<boolean>;
   export let selectedFormation: Writable<string>;
   export let teamValue: Writable<number>;

@@ -1,11 +1,11 @@
 
 <script lang="ts">
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-    import type { ClubDTO } from "../../../../../external_declarations/data_canister/data_canister.did";
+    import type { Club } from "../../../../../declarations/data_canister/data_canister.did";
     import LoadingDots from "../shared/loading-dots.svelte";
 
-    export let nextFixtureHomeTeam: ClubDTO;
-    export let nextFixtureAwayTeam: ClubDTO;
+    export let nextFixtureHomeTeam: Club;
+    export let nextFixtureAwayTeam: Club;
     export let loading: boolean;
 
 </script>

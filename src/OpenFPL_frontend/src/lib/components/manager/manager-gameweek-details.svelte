@@ -11,12 +11,11 @@
   import ScoreAbbreviationKey from "../shared/score-abbreviation-key.svelte";
   import GameweekFilter from "../shared/filters/gameweek-filter.svelte";
   import { getGameweeks } from "$lib/utils/helpers";
-  import type { ManagerGameweekDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import type { ClubDTO } from "../../../../../external_declarations/data_canister/data_canister.did";
     import LocalSpinner from "../shared/local-spinner.svelte";
+    import type { FantasyTeamSnapshot } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   
   export let selectedGameweek = writable<number | null>(null);
-  export let fantasyTeam = writable<ManagerGameweekDTO | null>(null);
+  export let fantasyTeam = writable<FantasyTeamSnapshot | null>(null);
 
   let isLoading = false;
   let showModal = false;

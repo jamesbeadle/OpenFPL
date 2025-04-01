@@ -6,8 +6,11 @@
   import { managerStore } from "$lib/stores/manager-store";
   import { playerStore } from "$lib/stores/player-store";
   import type {
-    ManagerGameweekDTO,
-    ManagerDTO
+    FantasyTeamSnapshot,
+
+    Manager
+
+
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import { getGridSetup, getTeamFormationReadOnly } from "$lib/utils/pick-team.helpers";
@@ -25,11 +28,11 @@
 
   let isLoading = true;
   let activeTab: string = "details";
-  let fantasyTeam: Writable<ManagerGameweekDTO | null> = writable(null);
+  let fantasyTeam: Writable<FantasyTeamSnapshot | null> = writable(null);
   let selectedGameweek = writable(0);
   let loadingGameweekDetail: Writable<boolean> = writable(false);
   let gameweekPlayers = writable<GameweekData[]>([]);
-  let manager: Writable<ManagerDTO | null> = writable(null);
+  let manager: Writable<Manager | null> = writable(null);
 
   const tabs = [
     { id: "details", label: "Details", authOnly: false },

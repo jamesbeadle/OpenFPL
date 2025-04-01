@@ -1,19 +1,18 @@
 import { authStore } from "$lib/stores/auth.store";
 import { ActorFactory } from "../utils/actor.factory";
 import { isError } from "../utils/helpers";
-import type {
-  PlayerDTO,
-  LeagueId,
-} from "../../../../external_declarations/data_canister/data_canister.did";
 import { toasts } from "$lib/stores/toasts-store";
-import type { GetSnapshotPlayersDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type {
+  LeagueId,
+  Player,
+} from "../../../../declarations/data_canister/data_canister.did";
 
 export class PlayerService {
   private actor: any;
 
   constructor() {}
 
-  async getPlayers(): Promise<PlayerDTO[] | undefined> {
+  async getPlayers(): Promise<Player[] | undefined> {
     try {
       const identityActor: any =
         await ActorFactory.createDataCanisterIdentityActor(
@@ -33,6 +32,7 @@ export class PlayerService {
     }
   }
 
+  /* //TODO
   async getSnapshotPlayers(dto: GetSnapshotPlayersDTO): Promise<PlayerDTO[]> {
     try {
       const identityActor: any = await ActorFactory.createIdentityActor(
@@ -51,4 +51,5 @@ export class PlayerService {
     }
     return [];
   }
+    */
 }

@@ -8,8 +8,6 @@
   import { playerEventsStore } from "$lib/stores/player-events-store";
   import { authStore } from "$lib/stores/auth.store";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
-  import type { ClubDTO, LeagueStatus } from "../../../../../external_declarations/data_canister/data_canister.did";
-  import type { ManagerGameweekDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import FantasyPlayerDetailModal from "../fantasy-team/fantasy-player-detail-modal.svelte";
   import GameweekFilter from "../shared/filters/gameweek-filter.svelte";
   import { writable } from "svelte/store";
@@ -17,6 +15,8 @@
   import { getGameweeks } from "$lib/utils/helpers";
   import { leagueStore } from "$lib/stores/league-store";
     import LocalSpinner from "../shared/local-spinner.svelte";
+    import type { Club } from "../../../../../declarations/data_canister/data_canister.did";
+    import type { FantasyTeamSnapshot } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   let isLoading = true;
   let selectedGameweek = writable(1);
@@ -24,11 +24,11 @@
   let gameweeks: number[];
   let showModal = false;
   let gameweekData = writable<GameweekData[]>([]);
-  let selectedTeam: ClubDTO;
-  let selectedOpponentTeam: ClubDTO;
+  let selectedTeam: Club;
+  let selectedOpponentTeam: Club;
   let selectedGameweekData: GameweekData;
   let activeSeasonName: string;
-  let fantasyTeam: ManagerGameweekDTO | null = null;
+  let fantasyTeam: FantasyTeamSnapshot | null = null;
 
   onMount(async () => {
     await storeManager.syncStores();
