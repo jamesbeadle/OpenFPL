@@ -14,7 +14,7 @@
     let isLoading = false;
 
     let membershipLinked = false;
-    let notLinked = false;
+    let notLinked = true;
 
     
     async function checkMembership(){
