@@ -12,6 +12,7 @@ import type {
   LeagueStatus,
   Player,
   PlayerDetails,
+  PlayerDetailsForGameweek,
   PlayerPoints,
   PlayerScore,
   PlayersMap,
@@ -22,7 +23,7 @@ import type {
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 function createPlayerEventsStore() {
-  const { subscribe, set } = writable<PlayerPoints[]>([]);
+  const { subscribe, set } = writable<PlayerDetailsForGameweek | null>(null);
   let playerScoresMap: Map<number, PlayerScore> = new Map();
 
   async function getPlayerDetails(
@@ -153,13 +154,13 @@ function createPlayerEventsStore() {
   async function getPlayerEventsFromBackend(
     seasonId: number,
     gameweek: number,
-  ): Promise<PlayerPoints[] | undefined> {
+  ): Promise<PlayerDetailsForGameweek | undefined> {
     return new PlayerEventsService().getPlayerEvents(seasonId, gameweek);
   }
 
   return {
     subscribe,
-    setPlayerEvents: (players: PlayerPoints[]) => set(players),
+    setPlayerEvents: (players: PlayerDetailsForGameweek) => set(players),
     getPlayerDetails,
     getGameweekPlayers,
     getPlayerEventsFromBackend,

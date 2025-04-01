@@ -14,11 +14,10 @@ export class ClubService {
 
   async getClubs(): Promise<Club[] | undefined> {
     try {
-      const identityActor: any =
-        await ActorFactory.createIdentityActor(
-          authStore,
-          process.env.BACKEND ?? "",
-        );
+      const identityActor: any = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.BACKEND ?? "",
+      );
       const leagueId: LeagueId = 1;
       const result = await identityActor.getClubs(leagueId);
       if (isError(result)) throw new Error("Failed to fetch clubs");

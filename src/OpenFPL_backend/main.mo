@@ -29,6 +29,7 @@ import Result "mo:base/Result";
 import Text "mo:base/Text";
 import Time "mo:base/Time";
 import Timer "mo:base/Timer";
+import List "mo:base/List";
 
 /* ----- Canister Definition Files ----- */
 
@@ -58,6 +59,7 @@ import AppTypes "types/app_types";
 /* ----- Import Other Canisters ----- */
 import DataCanister "canister:data_canister";
 import CanisterQueries "queries/canister_queries";
+import RewardQueries "queries/reward_queries";
 
 actor Self {
 
@@ -344,7 +346,21 @@ actor Self {
     return await leaderboardManager.getWeeklyLeaderboard(dto);
   };
 
-
+  public shared query func getWeeklyRewards(dto : RewardQueries.GetWeeklyRewardsLeaderboard) : async Result.Result<RewardQueries.WeeklyRewardsLeaderboard, Enums.Error> {
+    let weeklyRewardsResult = leaderboardManager.getWeeklyRewards(dto.seasonId, dto.gameweek);
+    switch (weeklyRewardsResult) {
+      case (#ok foundRewards) {
+        return #ok({
+          gameweek = dto.gameweek;
+          seasonId = dto.seasonId;
+          entries = List.toArray(foundRewards.rewards);
+        });
+      };
+      case (#err _) {
+        return #err(#NotFound);
+      };
+    };
+  };
   
 
   public shared ({ caller }) func getLeagueStatus() : async Result.Result<DataCanister.LeagueStatus, Enums.Error> {

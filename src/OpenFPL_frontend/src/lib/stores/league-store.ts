@@ -1,4 +1,3 @@
-import { LeagueService } from "$lib/services/league-service";
 import { writable } from "svelte/store";
 import type { LeagueStatus } from "../../../../declarations/data_canister/data_canister.did";
 

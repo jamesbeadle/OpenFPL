@@ -4,7 +4,9 @@ import { isError } from "../utils/helpers";
 import { toasts } from "$lib/stores/toasts-store";
 import type {
   GetWeeklyLeaderboard,
+  GetWeeklyRewardsLeaderboard,
   WeeklyLeaderboard,
+  WeeklyRewardsLeaderboard,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 export class WeeklyLeaderboardService {
@@ -45,13 +47,13 @@ export class WeeklyLeaderboardService {
       });
     }
   }
-  /*
+
   async getWeeklyRewards(
     seasonId: number,
     gameweek: number,
-  ): Promise<WeeklyRewardsDTO | undefined> {
+  ): Promise<WeeklyRewardsLeaderboard | undefined> {
     try {
-      let dto: GetWeeklyRewardsDTO = {
+      let dto: GetWeeklyRewardsLeaderboard = {
         seasonId: seasonId,
         gameweek: gameweek,
       };
@@ -68,5 +70,4 @@ export class WeeklyLeaderboardService {
       });
     }
   }
-    */
 }
