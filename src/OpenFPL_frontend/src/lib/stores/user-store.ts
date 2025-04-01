@@ -9,9 +9,12 @@ import { IcrcLedgerCanister } from "@dfinity/ledger-icrc";
 import { Principal } from "@dfinity/principal";
 import type { OptionIdentity } from "$lib/types/identity";
 import { UserService } from "$lib/services/user-service";
-import type { CombinedProfile, SetFavouriteClub } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type {
+  CombinedProfile,
+  SetFavouriteClub,
+} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { userIdCreatedStore } from "$lib/stores/user-control-store";
-import { get } from 'svelte/store';
+import { get } from "svelte/store";
 function createUserStore() {
   const { subscribe, set } = writable<any>(null);
 
@@ -163,7 +166,9 @@ function createUserStore() {
     return 0n;
   }
 
-  async function getUser(principalId: string): Promise<CombinedProfile | undefined> {
+  async function getUser(
+    principalId: string,
+  ): Promise<CombinedProfile | undefined> {
     return new UserService().getUser(principalId);
   }
 
