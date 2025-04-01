@@ -10,6 +10,8 @@
     import MembershipProfile from '$lib/components/profile/membership-profile.svelte';
     import LandingPage from '$lib/components/landing/landing-page.svelte';
     import { UserService } from '$lib/services/user-service';
+    import { authStore } from '$lib/stores/auth-store';
+    import { get } from 'svelte/store';
 
     interface Props {
         children: Snippet;
@@ -30,7 +32,10 @@
         if($userIdCreatedStore?.data) {
             (async () => {
                 try {
-                    profile = await new UserService().getUser();
+                    const principalId = get(authStore).identity?.getPrincipal().toString();
+                    if (!principalId) return;
+                    
+                    profile = await new UserService().getUser(principalId);
                     if (profile) {
                         hasValidMembership = checkValidMembership(profile.membershipType);
                     } else {

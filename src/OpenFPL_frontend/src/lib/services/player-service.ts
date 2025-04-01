@@ -6,7 +6,10 @@ import type {
   LeagueId,
   Player,
 } from "../../../../declarations/data_canister/data_canister.did";
-import type { GetPlayersSnapshot, PlayersSnapshot } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type {
+  GetPlayersSnapshot,
+  PlayersSnapshot,
+} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 export class PlayerService {
   private actor: any;
@@ -32,7 +35,9 @@ export class PlayerService {
     }
   }
 
-  async getSnapshotPlayers(dto: GetPlayersSnapshot): Promise<PlayersSnapshot | undefined> {
+  async getSnapshotPlayers(
+    dto: GetPlayersSnapshot,
+  ): Promise<PlayersSnapshot | undefined> {
     try {
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,

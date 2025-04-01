@@ -9,9 +9,9 @@ import { IcrcLedgerCanister } from "@dfinity/ledger-icrc";
 import { Principal } from "@dfinity/principal";
 import type { OptionIdentity } from "$lib/types/identity";
 import { UserService } from "$lib/services/user-service";
-import type { SetFavouriteClub } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type { CombinedProfile, SetFavouriteClub } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { userIdCreatedStore } from "$lib/stores/user-control-store";
-
+import { get } from 'svelte/store';
 function createUserStore() {
   const { subscribe, set } = writable<any>(null);
 
@@ -56,7 +56,10 @@ function createUserStore() {
   }
 
   async function cacheProfile() {
-    let profile = await new UserService().getUser();
+    const principalId = get(authStore).identity?.getPrincipal().toString();
+    if (!principalId) return;
+
+    let profile = await new UserService().getUser(principalId);
     set(profile);
     if (profile) {
       await setProfileToDB(profile);
@@ -160,6 +163,10 @@ function createUserStore() {
     return 0n;
   }
 
+  async function getUser(principalId: string): Promise<CombinedProfile | undefined> {
+    return new UserService().getUser(principalId);
+  }
+
   return {
     subscribe,
     set,
@@ -168,6 +175,7 @@ function createUserStore() {
     updateFavouriteTeam,
     withdrawFPL,
     getFPLBalance,
+    getUser,
   };
 }
 
