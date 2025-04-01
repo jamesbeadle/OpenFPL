@@ -7,6 +7,11 @@ import Enums "mo:waterway-mops/Enums";
 import CanisterIds "mo:waterway-mops/CanisterIds";
 import Management "mo:waterway-mops/Management";
 import CanisterUtilities "mo:waterway-mops/CanisterUtilities";
+import FootballIds "mo:waterway-mops/football/FootballIds";
+import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
+import BaseDefinitions "mo:waterway-mops/BaseDefinitions";
+import BaseQueries "mo:waterway-mops/queries/BaseQueries";
+import Root "mo:waterway-mops/sns-wrappers/root";
 import Environment "./Environment";
 
 
@@ -56,6 +61,7 @@ import AppTypes "types/app_types";
 
 /* ----- Import Other Canisters ----- */
 import DataCanister "canister:data_canister";
+import CanisterQueries "queries/canister_queries";
 
 actor Self {
 
@@ -75,7 +81,7 @@ actor Self {
     weeklyLeaderboardRewardRate = 0;
   };
   private stable var stable_historic_reward_rates : [AppTypes.RewardRates] = [];
-  private stable var stable_team_value_leaderboards : [(FootballTypes.SeasonId, AppTypes.TeamValueLeaderboard)] = [];
+  private stable var stable_team_value_leaderboards : [(FootballIds.SeasonId, AppTypes.TeamValueLeaderboard)] = [];
   private stable var stable_weekly_rewards : [AppTypes.WeeklyRewards] = [];
   private stable var stable_monthly_rewards : [AppTypes.MonthlyRewards] = [];
   private stable var stable_season_rewards : [AppTypes.SeasonRewards] = [];
@@ -101,7 +107,7 @@ actor Self {
 
   private stable var stable_data_hashes : [Base.DataHash] = [];
 
-  private stable var stable_player_snapshots : [(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DataCanister.Player])])] = [];
+  private stable var stable_player_snapshots : [(FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [DataCanister.Player])])] = [];
 
   //User Manager stable variables
 
@@ -115,9 +121,9 @@ actor Self {
 
 
   private stable var stable_unique_weekly_leaderboard_canister_ids : [Ids.CanisterId] = [];
-  private stable var stable_weekly_leaderboard_canister_ids : [(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, Ids.CanisterId)])] = [];
-  private stable var stable_monthly_leaderboard_canister_ids : [(FootballTypes.SeasonId, [(Base.CalendarMonth, Ids.CanisterId)])] = [];
-  private stable var stable_season_leaderboard_canister_ids : [(FootballTypes.SeasonId, Ids.CanisterId)] = [];
+  private stable var stable_weekly_leaderboard_canister_ids : [(FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, Ids.CanisterId)])] = [];
+  private stable var stable_monthly_leaderboard_canister_ids : [(FootballIds.SeasonId, [(BaseDefinitions.CalendarMonth, Ids.CanisterId)])] = [];
+  private stable var stable_season_leaderboard_canister_ids : [(FootballIds.SeasonId, Ids.CanisterId)] = [];
 
 
   /* ----- Domain Object Managers ----- */ 
@@ -130,21 +136,21 @@ actor Self {
 
   /* ----- General App Queries ----- */
 
-  public shared query func getAppStatus() : async Result.Result<AppQueries.AppStatus, Enums.Error> {
+  public shared ({ caller }) func getAppStatus() : async Result.Result<BaseQueries.AppStatus, Enums.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert await hasMembership(principalId);
     return seasonManager.getAppStatus();
   };
   
-  public shared query func getTotalManagers() : async Result.Result<Nat, Enums.Error> {
+  public shared ({ caller }) func getTotalManagers() : async Result.Result<Nat, Enums.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert await hasMembership(principalId);
     return userManager.getTotalManagers();
   };
 
-  public shared func getActiveRewardRates() : async Result.Result<DTOs.RewardRatesDTO, Enums.Error> {
+  public shared ({ caller }) func getActiveRewardRates() : async Result.Result<AppQueries.RewardRates, Enums.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert await hasMembership(principalId);
@@ -155,7 +161,7 @@ actor Self {
 
   /* ----- Data Hash Queries ----- */
 
-  public shared composite query func getDataHashes() : async Result.Result<[DTOs.DataHashDTO], Enums.Error> {
+  public shared ({ caller }) func getDataHashes() : async Result.Result<[DataCanister.DataHash], Enums.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert await hasMembership(principalId);
@@ -182,33 +188,49 @@ actor Self {
   };
 
   // TODO: John I don't think we need the following 2 icfc profile functions as the one above should cover it:
-
+  /*
   public shared ({ caller }) func getICFCProfileStatus() : async Result.Result<T.ICFCLinkStatus, Enums.Error> {
     assert not Principal.isAnonymous(caller);
     assert await hasMembership(Principal.toText(caller));
     return await userManager.getUserICFCProfileStatus(Principal.toText(caller));
   };
-
   public shared ({ caller }) func getUserIFCFMembership() : async Result.Result<Queries.ICFCMembershipDTO, Enums.Error> {
     assert not Principal.isAnonymous(caller);
     assert await hasMembership(Principal.toText(caller));
     return await userManager.getUserICFCMembership(Principal.toText(caller));
   };
+*/
 
   public shared ({ caller }) func getTeamSelection(dto: UserQueries.GetTeamSetup) : async Result.Result<UserQueries.TeamSetup, Enums.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == dto.principalId;
     assert await hasMembership(principalId);
-    return await userManager.getTeamSelection(dto);
+    let statusResult = await getLeagueStatus();
+    switch (statusResult) {
+      case (#ok status) {
+        return await userManager.getTeamSetup(dto, status.activeSeasonId);
+      };
+      case (#err error) {
+        return #err(error);
+      };
+    };
   };
 
-  public shared func getManager(dto : UserQueries.GetManager) : async Result.Result<UserQueries.Manager, Enums.Error> {
+  public shared ({ caller }) func getManager(dto : UserQueries.GetManager) : async Result.Result<UserQueries.Manager, Enums.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert await hasMembership(principalId);
-    let weeklyLeaderboardEntry = await leaderboardManager.getWeeklyLeaderboardEntry(dto.principalId, dto.seasonId, dto.gameweek);
-    return await userManager.getManager(dto, weeklyLeaderboardEntry, null, null);
+    let statusResult = await getLeagueStatus();
+    switch (statusResult) {
+      case (#ok status) {
+        let weeklyLeaderboardEntry = await leaderboardManager.getWeeklyLeaderboardEntry(dto.principalId, status.activeSeasonId, status.activeGameweek);
+        return await userManager.getManager(dto, status.activeSeasonId, weeklyLeaderboardEntry, null, null);
+      };
+      case (#err error) {
+        return #err(error);
+      };
+    };
   };
   
   public shared ({ caller }) func getManagerByUsername(dto : UserQueries.GetManagerByUsername) : async Result.Result<UserQueries.Manager, Enums.Error> {
@@ -218,7 +240,7 @@ actor Self {
    return await userManager.getManagerByUsername(dto.username);
   };
 
-  public shared func getFantasyTeamSnapshot(dto : UserQueries.GetManagerGameweek) : async Result.Result<DTOs.ManagerGameweekDTO, Enums.Error> {
+  public shared ({ caller }) func getFantasyTeamSnapshot(dto : UserQueries.GetFantasyTeamSnapshot) : async Result.Result<UserQueries.FantasyTeamSnapshot, Enums.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert await hasMembership(principalId);
@@ -227,6 +249,7 @@ actor Self {
   
   /* ----- User Commands ----- */
 
+  /*
   public shared ({ caller }) func linkICFCProfile(dto: UserCommands.LinkICFCProfile) : async Result.Result<(), Enums.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
@@ -235,11 +258,12 @@ actor Self {
     //TODO: John this needs to link a user from OpenFPL to ICFC
     //TODO: Also if created and recalled should repull profile picture username and favourite premier league club if premier league club set
 
-    let dto : Commands.VerifyICFCProfile = {
+    let dto : UserCommands.VerifyICFCProfile = {
       principalId = Principal.toText(caller);
     };
     return await userManager.verifyICFCProfile(dto);
   };
+  */
 
   public shared ({ caller }) func updateFavouriteClub(dto : UserCommands.SetFavouriteClub) : async Result.Result<(), Enums.Error> {
     assert not Principal.isAnonymous(caller);
@@ -253,7 +277,7 @@ actor Self {
         let statusResult = await getLeagueStatus();
         switch (statusResult) {
           case (#ok status) {
-            return await userManager.updateFavouriteClub(principalId, dto, clubs, status.seasonActive);
+            return await userManager.updateFavouriteClub(dto, clubs, status.seasonActive);
           };
           case (#err error) {
             return #err(error);
@@ -294,7 +318,7 @@ actor Self {
         let playersResult = await dataManager.getVerifiedPlayers(Environment.LEAGUE_ID);
         switch (playersResult) {
           case (#ok players) {
-            return await userManager.saveTeamSelection(principalId, dto, leagueStatus.activeSeasonId, players);
+            return await userManager.saveTeamSelection(dto, leagueStatus.activeSeasonId, players);
           };
           case (#err error) {
             return #err(error);
@@ -331,7 +355,7 @@ actor Self {
           return #err(#NotAllowed);
         };
 
-        return await userManager.saveBonusSelection(principalId, dto, leagueStatus.unplayedGameweek);
+        return await userManager.saveBonusSelection(dto, leagueStatus.unplayedGameweek);
       };
       case (#err error) {
         return #err(error);
@@ -350,17 +374,19 @@ actor Self {
 
   //TODO: John we need to have endpoints to the data canister from here instead of the frontend to check for approved canisters
   
-  private func getLeagueStatus() : async Result.Result<FootballTypes.LeagueStatus, Enums.Error> {
+  private func getLeagueStatus() : async Result.Result<DataCanister.LeagueStatus, Enums.Error> {
     let data_canister = actor (CanisterIds.ICFC_DATA_CANISTER_ID) : actor {
-      getLeagueStatus : shared query (leagueId : FootballTypes.LeagueId) -> async Result.Result<FootballTypes.LeagueStatus, Enums.Error>;
+      getLeagueStatus : shared query (leagueId : FootballIds.LeagueId) -> async Result.Result<DataCanister.LeagueStatus, Enums.Error>;
     };
     return await data_canister.getLeagueStatus(Environment.LEAGUE_ID);
   };
 
-  public shared query ({ caller }) func getPlayersSnapshot(dto : DataCanister.GetPlayers) : async [DataCanister.Player] {
+  /*
+  public shared query ({ caller }) func getPlayersSnapshot(dto : DataCanister.GetPlayers) : async DataCanister.Players {
     assert not Principal.isAnonymous(caller); //TODO WHo should be calling this
     return seasonManager.getPlayersSnapshot(dto);
   };
+  */
 
   public shared ({ caller }) func getPlayersMap(dto : DataCanister.GetPlayersMap) : async Result.Result<DataCanister.PlayersMap, Enums.Error> {
     assert isManagerCanister(Principal.toText(caller));
@@ -389,19 +415,21 @@ actor Self {
     return #ok();
   };
 
+  /*
   public shared ({ caller }) func notifyAppLink(dto : UserCommands.NotifyAppofLink) : async Result.Result<(), Enums.Error> {
     assert Principal.toText(caller) == NetworkEnvironmentVariables.ICFC_BACKEND_CANISTER_ID;
     let _ = await userManager.linkICFCProfile(dto);
     return #ok();
   };
 
-  public shared ({ caller }) func noitifyAppofICFCProfileUpdate(dto : Commands.UpdateICFCProfile) : async Result.Result<(), Enums.Error> {
+  public shared ({ caller }) func noitifyAppofICFCProfileUpdate(dto : UserCommands.UpdateICFCProfile) : async Result.Result<(), Enums.Error> {
     assert Principal.toText(caller) == NetworkEnvironmentVariables.ICFC_BACKEND_CANISTER_ID;
     let _ = await userManager.updateICFCProfile(dto);
     return #ok();
   };
+  */
 
-  public shared ({ caller }) func notifyAppsOfLoan(leagueId : FootballTypes.LeagueId, playerId : FootballTypes.PlayerId) : async Result.Result<(), Enums.Error> {
+  public shared ({ caller }) func notifyAppsOfLoan(leagueId : FootballIds.LeagueId, playerId : FootballIds.PlayerId) : async Result.Result<(), Enums.Error> {
     assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
     assert leagueId == Environment.LEAGUE_ID;
     await userManager.removePlayerFromTeams(Environment.LEAGUE_ID, playerId, CanisterIds.OPENFPL_BACKEND_CANISTER_ID);
@@ -409,7 +437,7 @@ actor Self {
     return #ok();
   };
 
-  public shared ({ caller }) func notifyAppsOfLoanExpired(leagueId : FootballTypes.LeagueId, playerId : FootballTypes.PlayerId) : async Result.Result<(), Enums.Error> {
+  public shared ({ caller }) func notifyAppsOfLoanExpired(leagueId : FootballIds.LeagueId, playerId : FootballIds.PlayerId) : async Result.Result<(), Enums.Error> {
     assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
     assert leagueId == Environment.LEAGUE_ID;
     //TODO
@@ -417,14 +445,14 @@ actor Self {
     return #ok();
   };
 
-  public shared ({ caller }) func notifyAppsOfTransfer(leagueId : FootballTypes.LeagueId, playerId : FootballTypes.PlayerId) : async Result.Result<(), Enums.Error> {
+  public shared ({ caller }) func notifyAppsOfTransfer(leagueId : FootballIds.LeagueId, playerId : FootballIds.PlayerId) : async Result.Result<(), Enums.Error> {
     assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
     await userManager.removePlayerFromTeams(Environment.LEAGUE_ID, playerId, CanisterIds.OPENFPL_BACKEND_CANISTER_ID);
     await seasonManager.updateDataHash("players");
     return #ok();
   };
 
-  public shared ({ caller }) func notifyAppsOfRetirement(leagueId : FootballTypes.LeagueId, playerId : FootballTypes.PlayerId) : async Result.Result<(), Enums.Error> {
+  public shared ({ caller }) func notifyAppsOfRetirement(leagueId : FootballIds.LeagueId, playerId : FootballIds.PlayerId) : async Result.Result<(), Enums.Error> {
     assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
 
     //TODO
@@ -432,24 +460,24 @@ actor Self {
     return #ok();
   };
 
-  public shared ({ caller }) func notifyAppsOfPositionChange(leagueId : FootballTypes.LeagueId, playerId : FootballTypes.PlayerId) : async Result.Result<(), Enums.Error> {
+  public shared ({ caller }) func notifyAppsOfPositionChange(leagueId : FootballIds.LeagueId, playerId : FootballIds.PlayerId) : async Result.Result<(), Enums.Error> {
     assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
     await userManager.removePlayerFromTeams(Environment.LEAGUE_ID, playerId, CanisterIds.OPENFPL_BACKEND_CANISTER_ID);
     return #ok();
   };
   
-  public shared ({ caller }) func notifyAppsOfGameweekStarting(leagueId : FootballTypes.LeagueId, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber) : async Result.Result<(), Enums.Error> {
+  public shared ({ caller }) func notifyAppsOfGameweekStarting(leagueId : FootballIds.LeagueId, seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber) : async Result.Result<(), Enums.Error> {
     assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
 
     let data_canister = actor (CanisterIds.ICFC_DATA_CANISTER_ID) : actor {
-      getPlayers : shared query (leagueId : FootballTypes.LeagueId) -> async Result.Result<[DataCanister.Player], Enums.Error>;
+      getPlayers : shared query (leagueId : FootballIds.LeagueId) -> async Result.Result<[DataCanister.Player], Enums.Error>;
     };
 
     let playersResult = await data_canister.getPlayers(Environment.LEAGUE_ID);
 
     switch (playersResult) {
       case (#ok players) {
-        seasonManager.storePlayersSnapshot(seasonId, gameweek, players);
+        seasonManager.storePlayersSnapshot(seasonId, gameweek, { players } );
       };
       case (#err _) {};
     };
@@ -460,7 +488,7 @@ actor Self {
     return #ok();
   };
 
-  public shared ({ caller }) func notifyAppsOfFixtureFinalised(leagueId : FootballTypes.LeagueId, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber) : async Result.Result<(), Enums.Error> {
+  public shared ({ caller }) func notifyAppsOfFixtureFinalised(leagueId : FootballIds.LeagueId, seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber) : async Result.Result<(), Enums.Error> {
 
     assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
     let _ = await userManager.calculateFantasyTeamScores(Environment.LEAGUE_ID, seasonId, gameweek, 0); //TODO month shouldn't be passed in
@@ -472,7 +500,7 @@ actor Self {
     return #ok();
   };
 
-  public shared ({ caller }) func notifyAppsOfSeasonComplete(leagueId : FootballTypes.LeagueId, seasonId : FootballTypes.SeasonId) : async Result.Result<(), Enums.Error> {
+  public shared ({ caller }) func notifyAppsOfSeasonComplete(leagueId : FootballIds.LeagueId, seasonId : FootballIds.SeasonId) : async Result.Result<(), Enums.Error> {
 
     assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
 
@@ -497,6 +525,8 @@ actor Self {
   };
 
   private func hasMembership(caller: Ids.PrincipalId) : async Bool {
+    return true;
+    /*
     let membershipResult = await userManager.getUserICFCMembership(caller);
     switch(membershipResult){
       case (#ok membership){
@@ -508,13 +538,14 @@ actor Self {
       case (#err _){}
     };
     return false;
+    */
   };
 
 
   //TODO: John with the WWL refactoring I'm not sure we need these or atleast they need to be changed to fit in with the cycles management:
 
   private func checkCanisterCycles() : async () {
-    let root_canister = actor (NetworkEnvironmentVariables.SNS_ROOT_CANISTER_ID) : actor {
+    let root_canister = actor (CanisterIds.ICFC_SNS_ROOT_CANISTER_ID) : actor {
       get_sns_canisters_summary : (request : Root.GetSnsCanistersSummaryRequest) -> async Root.GetSnsCanistersSummaryResponse;
     };
 
@@ -524,7 +555,7 @@ actor Self {
     let dappsMinusBackend = Array.filter<Root.CanisterSummary>(
       summaryResult.dapps,
       func(dapp : Root.CanisterSummary) {
-        dapp.canister_id != ?Principal.fromText(NetworkEnvironmentVariables.OPENFPL_BACKEND_CANISTER_ID);
+        dapp.canister_id != ?Principal.fromText(CanisterIds.OPENFPL_BACKEND_CANISTER_ID);
       },
     );
 
@@ -575,7 +606,7 @@ actor Self {
             if (foundStatus.cycles < topupTriggerAmount) {
               switch (foundCanister.canister_id) {
                 case (?foundCanisterId) {
-                  let IC : Management.Management = actor (NetworkEnvironmentVariables.Default);
+                  let IC : Management.Management = actor (CanisterIds.Default);
                   let canisterActor = actor (Principal.toText(foundCanisterId)) : actor {};
                   await CanisterUtilities.topup_canister_(canisterActor, IC, topupAmount);
 
@@ -634,9 +665,10 @@ actor Self {
     return #ok(leaderboardManager.getStableActiveCanisterId());
   };
   
-  public shared func getCanisters(dto : Queries.GetCanistersDTO) : async Result.Result<[Queries.CanisterDTO], Enums.Error> {
-    let canistersBuffer = Buffer.fromArray<Queries.CanisterDTO>([]);
-    let root_canister = actor (NetworkEnvironmentVariables.SNS_ROOT_CANISTER_ID) : actor {
+  /*
+  public shared func getCanisters(dto : CanisterQueries.GetCanisters) : async Result.Result<CanisterQueries.Canisters, Enums.Error> {
+    let canistersBuffer = Buffer.fromArray<CanisterQueries.Canister>([]);
+    let root_canister = actor (CanisterIds.ICFC_SNS_ROOT_CANISTER_ID) : actor {
       get_sns_canisters_summary : (request : Root.GetSnsCanistersSummaryRequest) -> async Root.GetSnsCanistersSummaryResponse;
     };
 
@@ -868,6 +900,7 @@ actor Self {
     };
     return buffer;
   };
+  */
 
   /* ----- END WIP ----- */
 

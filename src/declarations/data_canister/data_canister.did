@@ -1,0 +1,696 @@
+type ValueHistory = 
+ record {
+   changedOn: int;
+   newValue: nat16;
+   oldValue: nat16;
+ };
+type UpdatePlayer = 
+ record {
+   dateOfBirth: int;
+   firstName: text;
+   lastName: text;
+   leagueId: LeagueId;
+   nationality: CountryId;
+   playerId: ClubId;
+   position: PlayerPosition;
+   shirtNumber: nat8;
+ };
+type UpdateLeague = 
+ record {
+   abbreviation: text;
+   countryId: CountryId;
+   formed: int;
+   governingBody: text;
+   leagueId: LeagueId;
+   logo: blob;
+   name: text;
+   relatedGender: Gender;
+   teamCount: nat8;
+ };
+type UpdateClub = 
+ record {
+   abbreviatedName: text;
+   clubId: ClubId;
+   friendlyName: text;
+   leagueId: LeagueId;
+   name: text;
+   primaryColourHex: text;
+   secondaryColourHex: text;
+   shirtType: ShirtType;
+   thirdColourHex: text;
+ };
+type UnretirePlayer = 
+ record {
+   leagueId: LeagueId;
+   newValueQuarterMillions: nat16;
+   playerId: ClubId;
+ };
+type TransferPlayer = 
+ record {
+   clubId: ClubId;
+   leagueId: LeagueId;
+   newClubId: ClubId;
+   newLeagueId: LeagueId;
+   newShirtNumber: nat8;
+   newValueQuarterMillions: nat16;
+   playerId: ClubId;
+ };
+type SubmitFixtureData = 
+ record {
+   fixtureId: FixtureId;
+   gameweek: GameweekNumber;
+   leagueId: LeagueId;
+   playerEventData: vec PlayerEventData;
+   seasonId: SeasonId;
+ };
+type ShirtType = 
+ variant {
+   Filled;
+   Striped;
+ };
+type SetPlayerInjury = 
+ record {
+   description: text;
+   expectedEndDate: int;
+   leagueId: LeagueId;
+   playerId: ClubId;
+ };
+type SetFreeAgent = 
+ record {
+   leagueId: LeagueId;
+   newValueQuarterMillions: nat16;
+   playerId: ClubId;
+ };
+type Seasons = record {seasons: vec Season;};
+type SeasonId = nat16;
+type Season = 
+ record {
+   id: nat16;
+   name: text;
+   year: nat16;
+ };
+type RustResult = 
+ variant {
+   Err: text;
+   Ok: text;
+ };
+type RevaluePlayerUp = 
+ record {
+   leagueId: LeagueId;
+   playerId: PlayerId;
+ };
+type RevaluePlayerDown = 
+ record {
+   leagueId: LeagueId;
+   playerId: PlayerId;
+ };
+type RetiredPlayers = record {players: vec Player;};
+type RetirePlayer = 
+ record {
+   leagueId: LeagueId;
+   playerId: ClubId;
+   retirementDate: int;
+ };
+type Result_9 = 
+ variant {
+   err: Error;
+   ok: LeagueTable;
+ };
+type Result_8 = 
+ variant {
+   err: Error;
+   ok: Leagues;
+ };
+type Result_7 = 
+ variant {
+   err: Error;
+   ok: LoanedPlayers;
+ };
+type Result_6 = 
+ variant {
+   err: Error;
+   ok: PlayerDetails;
+ };
+type Result_5 = 
+ variant {
+   err: Error;
+   ok: PlayerDetailsForGameweek;
+ };
+type Result_4 = 
+ variant {
+   err: Error;
+   ok: Players;
+ };
+type Result_3 = 
+ variant {
+   err: Error;
+   ok: PlayersMap;
+ };
+type Result_2 = 
+ variant {
+   err: Error;
+   ok: PostponedFixtures;
+ };
+type Result_16 = 
+ variant {
+   err: Error;
+   ok: BettableFixtures;
+ };
+type Result_15 = 
+ variant {
+   err: Error;
+   ok: BettableLeagues;
+ };
+type Result_14 = 
+ variant {
+   err: Error;
+   ok: Clubs;
+ };
+type Result_13 = 
+ variant {
+   err: Error;
+   ok: Countries;
+ };
+type Result_12 = 
+ variant {
+   err: Error;
+   ok: DataHashes;
+ };
+type Result_11 = 
+ variant {
+   err: Error;
+   ok: Fixtures;
+ };
+type Result_10 = 
+ variant {
+   err: Error;
+   ok: LeagueStatus;
+ };
+type Result_1 = 
+ variant {
+   err: Error;
+   ok: RetiredPlayers;
+ };
+type Result = 
+ variant {
+   err: Error;
+   ok: Seasons;
+ };
+type RescheduleFixture = 
+ record {
+   fixtureId: FixtureId;
+   leagueId: LeagueId;
+   seasonId: SeasonId;
+   updatedFixtureDate: int;
+   updatedFixtureGameweek: GameweekNumber;
+ };
+type RelegateClub = 
+ record {
+   clubId: ClubId;
+   leagueId: LeagueId;
+   relegatedToLeagueId: LeagueId;
+ };
+type RecallPlayer = 
+ record {
+   leagueId: LeagueId;
+   newValueQuarterMillions: nat16;
+   playerId: ClubId;
+ };
+type PromoteClub = 
+ record {
+   clubId: ClubId;
+   leagueId: LeagueId;
+   toLeagueId: LeagueId;
+ };
+type PostponedFixtures = 
+ record {
+   fixtures: vec Fixture;
+   leagueId: LeagueId;
+   seasonId: SeasonId;
+ };
+type PostponeFixture = 
+ record {
+   fixtureId: FixtureId;
+   leagueId: LeagueId;
+   seasonId: SeasonId;
+ };
+type PlayersMap = record {playersMap: vec record {
+                                            PlayerId;
+                                            PlayerScore;
+                                          };};
+type Players = record {players: vec Player;};
+type PlayerStatus = 
+ variant {
+   Active;
+   FreeAgent;
+   OnLoan;
+   Retired;
+ };
+type PlayerScore = 
+ record {
+   assists: int16;
+   clubId: ClubId;
+   dateOfBirth: int;
+   events: vec PlayerEventData__2;
+   goalsConceded: int16;
+   goalsScored: int16;
+   id: nat16;
+   nationality: CountryId;
+   points: int16;
+   position: PlayerPosition;
+   saves: int16;
+ };
+type PlayerPosition = 
+ variant {
+   Defender;
+   Forward;
+   Goalkeeper;
+   Midfielder;
+ };
+type PlayerPoints = 
+ record {
+   clubId: ClubId;
+   events: vec PlayerEventData__2;
+   gameweek: GameweekNumber;
+   id: nat16;
+   points: int16;
+   position: PlayerPosition;
+ };
+type PlayerId = nat16;
+type PlayerGameweek = 
+ record {
+   events: vec PlayerEventData__2;
+   fixtureId: FixtureId;
+   number: nat8;
+   points: int16;
+ };
+type PlayerEventType = 
+ variant {
+   Appearance;
+   CleanSheet;
+   Goal;
+   GoalAssisted;
+   GoalConceded;
+   HighestScoringPlayer;
+   KeeperSave;
+   OwnGoal;
+   PenaltyMissed;
+   PenaltySaved;
+   RedCard;
+   YellowCard;
+ };
+type PlayerEventData__2 = 
+ record {
+   clubId: ClubId;
+   eventEndMinute: nat8;
+   eventStartMinute: nat8;
+   eventType: PlayerEventType;
+   fixtureId: FixtureId;
+   playerId: nat16;
+ };
+type PlayerEventData__1 = 
+ record {
+   clubId: ClubId;
+   eventEndMinute: nat8;
+   eventStartMinute: nat8;
+   eventType: PlayerEventType;
+   fixtureId: FixtureId;
+   playerId: nat16;
+ };
+type PlayerEventData = 
+ record {
+   clubId: ClubId;
+   eventEndMinute: nat8;
+   eventStartMinute: nat8;
+   eventType: PlayerEventType;
+   fixtureId: FixtureId;
+   playerId: nat16;
+ };
+type PlayerDetailsForGameweek = record {playerPoints: vec PlayerPoints;};
+type PlayerDetails = record {player: DetailedPlayer;};
+type Player = 
+ record {
+   clubId: ClubId;
+   currentLoanEndDate: int;
+   dateOfBirth: int;
+   firstName: text;
+   id: nat16;
+   lastName: text;
+   leagueId: LeagueId;
+   nationality: CountryId;
+   parentClubId: ClubId;
+   parentLeagueId: LeagueId;
+   position: PlayerPosition;
+   shirtNumber: nat8;
+   status: PlayerStatus;
+   valueQuarterMillions: nat16;
+ };
+type MoveFixture = 
+ record {
+   fixtureId: FixtureId;
+   leagueId: LeagueId;
+   seasonId: SeasonId;
+   updatedFixtureDate: int;
+   updatedFixtureGameweek: GameweekNumber;
+ };
+type LoanedPlayers = record {players: vec Player;};
+type LoanPlayer = 
+ record {
+   leagueId: LeagueId;
+   loanClubId: ClubId;
+   loanEndDate: int;
+   loanLeagueId: LeagueId;
+   newValueQuarterMillions: nat16;
+   playerId: ClubId;
+ };
+type Leagues = record {leagues: vec League;};
+type LeagueTableEntry = 
+ record {
+   awayConceded: nat;
+   awayDrawn: nat;
+   awayLost: nat;
+   awayPlayed: nat;
+   awayPoints: nat;
+   awayScored: nat;
+   awayWon: nat;
+   clubId: ClubId;
+   conceded: nat;
+   drawn: nat;
+   homeConceded: nat;
+   homeDrawn: nat;
+   homeLost: nat;
+   homePlayed: nat;
+   homePoints: nat;
+   homeScored: nat;
+   homeWon: nat;
+   lost: nat;
+   played: nat;
+   points: nat;
+   position: nat;
+   scored: nat;
+   won: nat;
+ };
+type LeagueTable = 
+ record {
+   entries: vec LeagueTableEntry;
+   leagueId: LeagueId;
+   seasonId: SeasonId;
+ };
+type LeagueStatus = 
+ record {
+   activeGameweek: GameweekNumber;
+   activeMonth: CalendarMonth;
+   activeSeasonId: SeasonId;
+   completedGameweek: GameweekNumber;
+   leagueId: LeagueId;
+   seasonActive: bool;
+   totalGameweeks: nat8;
+   transferWindowActive: bool;
+   transferWindowEndDay: nat8;
+   transferWindowEndMonth: nat8;
+   transferWindowStartDay: nat8;
+   transferWindowStartMonth: nat8;
+   unplayedGameweek: GameweekNumber;
+ };
+type LeagueId = nat16;
+type League = 
+ record {
+   abbreviation: text;
+   countryId: CountryId;
+   formed: int;
+   governingBody: text;
+   id: LeagueId;
+   logo: blob;
+   name: text;
+   relatedGender: Gender;
+   teamCount: nat8;
+ };
+type InjuryHistory = 
+ record {
+   description: text;
+   expectedEndDate: int;
+   injuryStartDate: int;
+ };
+type InitialFixture = 
+ record {
+   awayClubId: ClubId;
+   gameweek: GameweekNumber;
+   homeClubId: ClubId;
+   kickOff: int;
+ };
+type GetSeasons = record {leagueId: LeagueId;};
+type GetRetiredPlayers = 
+ record {
+   clubId: ClubId;
+   leagueId: LeagueId;
+ };
+type GetPostponedFixtures = record {leagueId: LeagueId;};
+type GetPlayersMap = 
+ record {
+   gameweek: GameweekNumber;
+   leagueId: LeagueId;
+   seasonId: SeasonId;
+ };
+type GetPlayers = record {leagueId: LeagueId;};
+type GetPlayerDetailsForGameweek = 
+ record {
+   gameweek: GameweekNumber;
+   leagueId: LeagueId;
+   seasonId: SeasonId;
+ };
+type GetPlayerDetails = 
+ record {
+   leagueId: LeagueId;
+   playerId: PlayerId;
+   seasonId: SeasonId;
+ };
+type GetLoanedPlayers = record {leagueId: LeagueId;};
+type GetLeagues = record {};
+type GetLeagueTable = 
+ record {
+   leagueId: LeagueId;
+   seasonId: SeasonId;
+ };
+type GetLeagueStatus = record {leagueId: LeagueId;};
+type GetFixtures = 
+ record {
+   leagueId: LeagueId;
+   seasonId: SeasonId;
+ };
+type GetDataHashes = record {leagueId: LeagueId;};
+type GetCountries = record {};
+type GetClubs = record {leagueId: LeagueId;};
+type GetBettableLeagues = record {};
+type GetBettableFixtures = record {leagueId: LeagueId;};
+type Gender = 
+ variant {
+   Female;
+   Male;
+ };
+type GameweekNumber = nat8;
+type Fixtures = 
+ record {
+   fixtures: vec Fixture;
+   leagueId: LeagueId;
+   seasonId: SeasonId;
+ };
+type FixtureStatusType = 
+ variant {
+   Active;
+   Complete;
+   Finalised;
+   Unplayed;
+ };
+type FixtureId = nat32;
+type Fixture = 
+ record {
+   awayClubId: ClubId;
+   awayGoals: nat8;
+   events: vec PlayerEventData__1;
+   gameweek: GameweekNumber;
+   highestScoringPlayerId: PlayerId;
+   homeClubId: ClubId;
+   homeGoals: nat8;
+   id: FixtureId;
+   kickOff: int;
+   seasonId: SeasonId;
+   status: FixtureStatusType;
+ };
+type Error = 
+ variant {
+   AlreadyExists;
+   CanisterCreateError;
+   DecodeError;
+   DuplicateData;
+   FailedInterCanisterCall;
+   IncorrectSetup;
+   InsufficientFunds;
+   InvalidData;
+   InvalidProperty;
+   MaxDataExceeded;
+   NotAllowed;
+   NotAuthorized;
+   NotFound;
+   SystemOnHold;
+ };
+type DetailedPlayer = 
+ record {
+   clubId: ClubId;
+   dateOfBirth: int;
+   firstName: text;
+   gameweeks: vec PlayerGameweek;
+   id: PlayerId;
+   injuryHistory: vec InjuryHistory;
+   lastName: text;
+   latestInjuryEndDate: int;
+   nationality: CountryId;
+   parentClubId: ClubId;
+   position: PlayerPosition;
+   retirementDate: int;
+   seasonId: SeasonId;
+   shirtNumber: nat8;
+   status: PlayerStatus;
+   valueHistory: vec ValueHistory;
+   valueQuarterMillions: nat16;
+ };
+type DataHashes = record {dataHashes: vec DataHash;};
+type DataHash = 
+ record {
+   category: text;
+   hash: text;
+ };
+type CreatePlayer = 
+ record {
+   clubId: ClubId;
+   dateOfBirth: int;
+   firstName: text;
+   lastName: text;
+   leagueId: LeagueId;
+   nationality: CountryId;
+   position: PlayerPosition;
+   shirtNumber: nat8;
+   valueQuarterMillions: nat16;
+ };
+type CreateLeague = 
+ record {
+   abbreviation: text;
+   countryId: CountryId;
+   formed: int;
+   governingBody: text;
+   logo: opt blob;
+   name: text;
+   relatedGender: Gender;
+   teamCount: nat8;
+ };
+type CreateClub = 
+ record {
+   abbreviatedName: text;
+   friendlyName: text;
+   leagueId: LeagueId;
+   name: text;
+   primaryColourHex: text;
+   secondaryColourHex: text;
+   shirtType: ShirtType;
+   thirdColourHex: text;
+ };
+type CountryId = nat16;
+type Country = 
+ record {
+   code: text;
+   id: CountryId;
+   name: text;
+ };
+type Countries = record {countries: vec Country;};
+type Clubs = 
+ record {
+   clubs: vec Club;
+   leagueId: LeagueId;
+ };
+type ClubId = nat16;
+type Club = 
+ record {
+   abbreviatedName: text;
+   friendlyName: text;
+   id: ClubId;
+   name: text;
+   primaryColourHex: text;
+   secondaryColourHex: text;
+   shirtType: ShirtType;
+   thirdColourHex: text;
+ };
+type CalendarMonth = nat8;
+type BettableLeagues = record {leagues: vec League;};
+type BettableFixtures = 
+ record {
+   fixtures: vec Fixture;
+   leagueId: LeagueId;
+   seasonId: SeasonId;
+ };
+type AddInitialFixtures = 
+ record {
+   leagueId: LeagueId;
+   seasonFixtures: vec InitialFixture;
+   seasonId: SeasonId;
+ };
+service : {
+  addInitialFixtures: (AddInitialFixtures) -> ();
+  createClub: (CreateClub) -> ();
+  createLeague: (CreateLeague) -> ();
+  createPlayer: (CreatePlayer) -> ();
+  getBettableFixtures: (GetBettableFixtures) -> (Result_16);
+  getBettableLeagues: (GetBettableLeagues) -> (Result_15) query;
+  getClubs: (GetClubs) -> (Result_14);
+  getCountries: (GetCountries) -> (Result_13) query;
+  getDataHashes: (GetDataHashes) -> (Result_12) query;
+  getFixtures: (GetFixtures) -> (Result_11);
+  getLeagueStatus: (GetLeagueStatus) -> (Result_10) query;
+  getLeagueTable: (GetLeagueTable) -> (Result_9) query;
+  getLeagues: (GetLeagues) -> (Result_8) query;
+  getLoanedPlayers: (GetLoanedPlayers) -> (Result_7) query;
+  getPlayerDetails: (GetPlayerDetails) -> (Result_6) query;
+  getPlayerDetailsForGameweek: (GetPlayerDetailsForGameweek) ->
+   (Result_5) query;
+  getPlayers: (GetPlayers) -> (Result_4);
+  getPlayersMap: (GetPlayersMap) -> (Result_3) query;
+  getPostponedFixtures: (GetPostponedFixtures) -> (Result_2) query;
+  getRetiredPlayers: (GetRetiredPlayers) -> (Result_1) query;
+  getSeasons: (GetSeasons) -> (Result) query;
+  loanPlayer: (LoanPlayer) -> ();
+  moveFixture: (MoveFixture) -> ();
+  postponeFixture: (PostponeFixture) -> ();
+  recallPlayer: (RecallPlayer) -> ();
+  rescheduleFixture: (RescheduleFixture) -> ();
+  retirePlayer: (RetirePlayer) -> ();
+  revaluePlayerDown: (RevaluePlayerDown) -> ();
+  revaluePlayerUp: (RevaluePlayerUp) -> ();
+  setFreeAgent: (SetFreeAgent) -> ();
+  setPlayerInjury: (SetPlayerInjury) -> ();
+  submitFixtureData: (SubmitFixtureData) -> ();
+  transferPlayer: (TransferPlayer) -> ();
+  unretirePlayer: (UnretirePlayer) -> ();
+  updateClub: (UpdateClub) -> ();
+  updateLeague: (UpdateLeague) -> ();
+  updatePlayer: (UpdatePlayer) -> ();
+  validateAddInitialFixtures: (AddInitialFixtures) -> (RustResult);
+  validateCreateClub: (CreateClub) -> (RustResult);
+  validateCreateLeague: (CreateLeague) -> (RustResult);
+  validateCreatePlayer: (CreatePlayer) -> (RustResult);
+  validateLoanPlayer: (LoanPlayer) -> (RustResult);
+  validateMoveFixture: (MoveFixture) -> (RustResult);
+  validatePostponeFixture: (PostponeFixture) -> (RustResult);
+  validatePromoteClub: (PromoteClub) -> (RustResult);
+  validateRecallPlayer: (RecallPlayer) -> (RustResult);
+  validateRelegateClub: (RelegateClub) -> (RustResult);
+  validateRescheduleFixture: (RescheduleFixture) -> (RustResult);
+  validateRetirePlayer: (RetirePlayer) -> (RustResult);
+  validateRevaluePlayerDown: (RevaluePlayerDown) -> (RustResult);
+  validateRevaluePlayerUp: (RevaluePlayerUp) -> (RustResult);
+  validateSetFreeAgent: (SetFreeAgent) -> (RustResult);
+  validateSetPlayerInjury: (SetPlayerInjury) -> (RustResult);
+  validateSubmitFixtureData: (SubmitFixtureData) -> (RustResult);
+  validateTransferPlayer: (TransferPlayer) -> (RustResult);
+  validateUnretirePlayer: (UnretirePlayer) -> (RustResult);
+  validateUpdateClub: (UpdateClub) -> (RustResult);
+  validateUpdateLeague: (UpdateLeague) -> (RustResult);
+  validateUpdatePlayer: (UpdatePlayer) -> (RustResult);
+}

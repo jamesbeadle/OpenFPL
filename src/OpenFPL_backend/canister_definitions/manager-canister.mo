@@ -9,6 +9,7 @@ import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
 import FootballIds "mo:waterway-mops/football/FootballIds";
 import BaseDefinitions "mo:waterway-mops/BaseDefinitions";
 import FootballEnums "mo:waterway-mops/football/FootballEnums";
+import BaseUtilities "mo:waterway-mops/BaseUtilities";
 import DataCanister "canister:data_canister";
 
 
@@ -1333,10 +1334,11 @@ actor class _ManagerCanister() {
   private func snapshotManagers(managerGroup : Int, seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber, month : BaseDefinitions.CalendarMonth) : async () {
 
     let backend_canister = actor (Environment.BACKEND_CANISTER_ID) : actor {
-      getPlayersSnapshot : shared query (dto : FootballQueries.GetSnapshotPlayers) -> async FootballQueries.SnapshotPlayers;
+      getPlayersSnapshot : shared query (dto : DataCanister.GetPlayers) -> async DataCanister.Players;
     };
 
     let players = await backend_canister.getPlayersSnapshot({
+      leagueId = Environment.LEAGUE_ID;
       gameweek;
       seasonId;
     });
@@ -1403,8 +1405,8 @@ actor class _ManagerCanister() {
               },
             );
 
-            let managerPlayers = Array.filter<DTOs.PlayerDTO>(
-              players,
+            let managerPlayers = Array.filter<DataCanister.Player>(
+              players.players,
               func(player) {
                 Option.isSome(
                   Array.find<FootballIds.PlayerId>(
@@ -1417,7 +1419,7 @@ actor class _ManagerCanister() {
               },
             );
 
-            let allPlayerValues = Array.map<DTOs.PlayerDTO, Nat16>(managerPlayers, func(player : DTOs.PlayerDTO) : Nat16 { return player.valueQuarterMillions });
+            let allPlayerValues = Array.map<DataCanister.Player, Nat16>(managerPlayers, func(player : DataCanister.Player) : Nat16 { return player.valueQuarterMillions });
             let totalTeamValue = Array.foldLeft<Nat16, Nat16>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
 
             let newSnapshot : UserQueries.FantasyTeamSnapshot = {
@@ -1473,8 +1475,8 @@ actor class _ManagerCanister() {
 
       if (not seasonFound) {
 
-        let managerPlayers = Array.filter<DTOs.PlayerDTO>(
-          players,
+        let managerPlayers = Array.filter<DataCanister.Player>(
+          players.players,
           func(player) {
             Option.isSome(
               Array.find<FootballIds.PlayerId>(
@@ -1487,7 +1489,7 @@ actor class _ManagerCanister() {
           },
         );
 
-        let allPlayerValues = Array.map<DTOs.PlayerDTO, Nat16>(managerPlayers, func(player : DTOs.PlayerDTO) : Nat16 { return player.valueQuarterMillions });
+        let allPlayerValues = Array.map<DataCanister.Player, Nat16>(managerPlayers, func(player : DataCanister.Player) : Nat16 { return player.valueQuarterMillions });
         let totalTeamValue = Array.foldLeft<Nat16, Nat16>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
 
         let newSnapshot : UserQueries.FantasyTeamSnapshot = {
@@ -1869,7 +1871,7 @@ actor class _ManagerCanister() {
   };
 
   //Calculate teams scores
-  
+  /*
   public shared ({ caller }) func calculateFantasyTeamScores(leagueId : FootballIds.LeagueId, seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber, month : BaseDefinitions.CalendarMonth) : async () {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
@@ -1877,21 +1879,22 @@ actor class _ManagerCanister() {
 
     let backend_canister = actor (Environment.BACKEND_CANISTER_ID) : actor {
       getPlayersMap : (dto : DataCanister.GetPlayersMap) -> async Result.Result<DataCanister.PlayersMap, Enums.Error>;
-      getPlayersSnapshot : shared query (dto : DataCanister.GetSnapshotPlayers) -> async FootballQueries.SnapshotPlayers;
+      getPlayersSnapshot : shared query (dto : DataCanister.GetPlayers) -> async DataCanister.Players;
     };
 
     let allPlayersListResult = await backend_canister.getPlayersMap({
+      leagueId = Environment.LEAGUE_ID;
       seasonId;
       gameweek;
     });
 
-    let allPlayers : [DTOs.PlayerDTO] = await backend_canister.getPlayersSnapshot({
+    let allPlayers : DataCanister.Players = await backend_canister.getPlayersSnapshot({
       gameweek;
       leagueId;
       seasonId;
     });
 
-    let playerIdTrie : TrieMap.TrieMap<FootballIds.PlayerId, DTOs.PlayerScoreDTO> = TrieMap.TrieMap<FootballIds.PlayerId, DTOs.PlayerScoreDTO>(ComparisonUtilities.eqNat16, ComparisonUtilities.hashNat16);
+    let playerIdTrie : TrieMap.TrieMap<FootballIds.PlayerId, DataCanister.Player> = TrieMap.TrieMap<FootballIds.PlayerId, DataCanister.Player>(BaseUtilities.eqNat16, BaseUtilities.hashNat16);
 
     switch (allPlayersListResult) {
       case (#ok allPlayersList) {
@@ -1964,7 +1967,7 @@ actor class _ManagerCanister() {
                   case (?foundSnapshot) {
 
                     var totalTeamPoints : Int16 = 0;
-                    let fantasyTeamPlayersBuffer = Buffer.fromArray<DTOs.PlayerDTO>([]);
+                    let fantasyTeamPlayersBuffer = Buffer.fromArray<DataCanister.Player>([]);
                     for (playerId in Iter.fromArray(foundSnapshot.playerIds)) {
                       let playerData = playerIdTrie.get(playerId);
                       switch (playerData) {
@@ -1972,8 +1975,8 @@ actor class _ManagerCanister() {
                         case (?player) {
 
                           let playerDTO = Array.find(
-                            allPlayers,
-                            func(foundPlayerDTO : DTOs.PlayerDTO) : Bool {
+                            allPlayers.players,
+                            func(foundPlayerDTO : DataCanister.Player) : Bool {
                               foundPlayerDTO.id == player.id;
                             },
                           );
@@ -2046,8 +2049,8 @@ actor class _ManagerCanister() {
                       };
                     };
 
-                    let thisTeamsPlayers : [DTOs.PlayerDTO] = Buffer.toArray(fantasyTeamPlayersBuffer);
-                    let allPlayerValues = Array.map<DTOs.PlayerDTO, Nat16>(thisTeamsPlayers, func(player : DTOs.PlayerDTO) : Nat16 { return player.valueQuarterMillions });
+                    let thisTeamsPlayers : [DataCanister.Player] = Buffer.toArray(fantasyTeamPlayersBuffer);
+                    let allPlayerValues = Array.map<DataCanister.Player, Nat16>(thisTeamsPlayers, func(player : DataCanister.Player) : Nat16 { return player.valueQuarterMillions });
 
                     let totalTeamValue = Array.foldLeft<Nat16, Nat16>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
 
@@ -2063,6 +2066,7 @@ actor class _ManagerCanister() {
       case (#err _) {};
     };
   };
+  */
 
   private func calculateGoalPoints(position : FootballEnums.PlayerPosition, goalsScored : Int16) : Int16 {
     switch (position) {

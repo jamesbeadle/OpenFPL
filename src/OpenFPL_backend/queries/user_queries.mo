@@ -20,7 +20,9 @@ module UserQueries = {
         createDate : Int;
     };
 
-    public type GetICFCProfile = {};
+    public type GetICFCProfile = {
+        principalId : Ids.PrincipalId;
+    };
     
     public type ICFCProfile = {
         principalId : Ids.PrincipalId;
@@ -45,6 +47,10 @@ module UserQueries = {
 
     public type GetManager = {
         principalId : Text;
+    };
+
+    public type GetManagerByUsername = {
+        username : Text;
     };
 
     public type Manager = {
@@ -102,7 +108,9 @@ module UserQueries = {
         seasonId : FootballIds.SeasonId;
     };
 
-    public type GetTeamSetup = {};
+    public type GetTeamSetup = {
+        principalId : Text;
+    };
 
     public type TeamSetup = {
         principalId : Text;
