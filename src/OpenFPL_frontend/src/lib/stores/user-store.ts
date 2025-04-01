@@ -158,13 +158,6 @@ function createUserStore() {
     return 0n;
   }
 
-  /*
-  async function getUserIFCFMembership(): Promise<
-    ICFCMembershipDTO | undefined
-  > {
-    return await new UserService().getUserIFCFMembership();
-  }
-  */
   return {
     subscribe,
     set,
@@ -172,8 +165,7 @@ function createUserStore() {
     cacheProfile,
     updateFavouriteTeam,
     withdrawFPL,
-    getFPLBalance,
-    /* //TODO getUserIFCFMembership, */
+    getFPLBalance
   };
 }
 
