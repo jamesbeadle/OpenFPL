@@ -3,26 +3,28 @@
   import { fade } from "svelte/transition";
   import { browser } from "$app/environment";
   import { page } from "$app/state";
-
+  import { get } from "svelte/store";
   import { userStore } from "$lib/stores/user-store";
   import { initAuthWorker } from "$lib/services/worker.auth.services";
   import { authStore, type AuthStoreData } from "$lib/stores/auth-store";
+  import { authSignedInStore } from "$lib/derived/auth.derived";
+  import { toasts } from "$lib/stores/toasts-store";
+  import { storeManager } from "$lib/managers/store-manager";
+  import { appStore } from "$lib/stores/app-store";
+  import { displayAndCleanLogoutMsg } from "$lib/services/auth.services";
   
   import "../app.css";
   import Toasts from "$lib/components/toasts/toasts.svelte";
-  import { authSignedInStore } from "$lib/derived/auth.derived";
-  import { toasts } from "$lib/stores/toasts-store";
   import Header from "$lib/shared/Header.svelte";
   import Footer from "$lib/shared/Footer.svelte";
   import FullScreenSpinner from "$lib/components/shared/full-screen-spinner.svelte";
-  import { storeManager } from "$lib/managers/store-manager";
-  import { appStore } from "$lib/stores/app-store";
+
   import CreateNewUser from "$lib/components/profile/membership-profile.svelte";
   import LandingPage from "$lib/components/landing/landing-page.svelte";
   import InvalidMembershipPage from "$lib/components/profile/invalid-membership-page.svelte";
-  import type { ICFCMembershipDTO } from "../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-    import { displayAndCleanLogoutMsg } from "$lib/services/auth.services";
-    import MembershipProfile from "$lib/components/profile/membership-profile.svelte";
+  //import type { ICFCMembershipDTO } from "../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+
+  import MembershipProfile from "$lib/components/profile/membership-profile.svelte";
     
   interface Props { children: Snippet }
   let { children }: Props = $props();
@@ -62,7 +64,7 @@
 
   let hasProfile = false;
   let hasValidMembership = false;
-  let membership: ICFCMembershipDTO | undefined = undefined;
+  //let membership: ICFCMembershipDTO | undefined = undefined;
 
   /*
   const init = async () => {
