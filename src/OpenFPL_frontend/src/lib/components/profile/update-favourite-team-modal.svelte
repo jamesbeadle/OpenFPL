@@ -6,6 +6,7 @@
     import Modal from "$lib/components/shared/modal.svelte";
     import { toasts } from "$lib/stores/toasts-store";
     import LocalSpinner from "../shared/local-spinner.svelte";
+    import { authStore } from "$lib/stores/auth-store";
 
   export let visible: boolean;
   export let newFavouriteTeam: number = 0;
@@ -25,7 +26,7 @@
     isLoading = true;
 
     try {
-      await userStore.updateFavouriteTeam(newFavouriteTeam);
+      await userStore.updateFavouriteTeam(newFavouriteTeam, $authStore.identity?.getPrincipal().toString() ?? "");
       await userStore.sync();
       await closeModal();
       toasts.addToast({

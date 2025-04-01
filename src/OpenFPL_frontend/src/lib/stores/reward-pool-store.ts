@@ -1,12 +1,12 @@
 import { writable } from "svelte/store";
-import type { RewardRatesDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type { RewardRates } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 function createRewardRatesStore() {
-  const { subscribe, set } = writable<RewardRatesDTO | undefined>(undefined);
+  const { subscribe, set } = writable<RewardRates | undefined>(undefined);
 
   return {
     subscribe,
-    setRewardRates: (rewardRates: RewardRatesDTO) => set(rewardRates),
+    setRewardRates: (rewardRates: RewardRates) => set(rewardRates),
   };
 }
 

@@ -1,13 +1,13 @@
-import type { AppStatusDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type { AppStatus } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { writable } from "svelte/store";
 import { AppService } from "$lib/services/app-service";
 import { toasts } from "./toasts-store";
 import { isError } from "$lib/utils/helpers";
 
 function createAppStore() {
-  const { subscribe, set } = writable<AppStatusDTO | null>(null);
+  const { subscribe, set } = writable<AppStatus | null>(null);
 
-  async function getAppStatus(): Promise<AppStatusDTO | undefined> {
+  async function getAppStatus(): Promise<AppStatus | undefined> {
     return await new AppService().getAppStatus();
   }
 
@@ -30,7 +30,7 @@ function createAppStore() {
       throw new Error("Error fetching app status");
     }
 
-    let status: AppStatusDTO = res!;
+    let status: AppStatus = res!;
 
     let localVersion = localStorage.getItem("version");
     if (!localVersion) {
@@ -52,7 +52,7 @@ function createAppStore() {
       throw new Error("Error fetching app status");
     }
 
-    let status: AppStatusDTO = res!;
+    let status: AppStatus = res!;
     localStorage.setItem("version", status.version);
     window.location.replace(`${window.location.pathname}?v=${status.version}`);
   }
@@ -60,7 +60,7 @@ function createAppStore() {
   return {
     subscribe,
     getAppStatus,
-    setAppStatus: (appStatus: AppStatusDTO) => set(appStatus),
+    setAppStatus: (appStatus: AppStatus) => set(appStatus),
     copyTextAndShowToast,
     checkServerVersion,
     updateFrontend,

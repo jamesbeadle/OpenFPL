@@ -7,19 +7,18 @@
   import { playerEventsStore } from "$lib/stores/player-events-store";
   import { countPlayersByTeam, reasonToDisablePlayer, sortPlayersByClubThenValue } from "$lib/utils/pick-team.helpers";
   import { addTeamDataToPlayers, convertPositionToIndex, normaliseString } from "$lib/utils/helpers";
-  import type { PlayerDTO } from "../../../../../../external_declarations/data_canister/data_canister.did";
-  import type { TeamSelectionDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   
   import Modal from "$lib/components/shared/modal.svelte";
   import AddPlayerModalPagination from "./add-player-modal-pagination.svelte";
   import AddPlayerTableRow from "./add-player-table-row.svelte";
   import AddPlayerFilterRow from "./add-player-filter-row.svelte";
   import AddPlayerTableHaeder from "./add-player-table-haeder.svelte";
-    import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
+  import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
+    import type { Player, TeamSetup } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   export let visible: boolean;
-  export let handlePlayerSelection: (player: PlayerDTO) => void;
-  export let fantasyTeam: Writable<TeamSelectionDTO | undefined>;
+  export let handlePlayerSelection: (player: Player) => void;
+  export let fantasyTeam: Writable<TeamSetup | undefined>;
   export let filterPosition = writable(-1);
 
   const pageSize = 10;
@@ -28,7 +27,7 @@
   let minValue = writable(0);
   let maxValue = writable(0);
   let currentPage = writable(1);
-  let filteredPlayers: PlayerDTO[] = [];
+  let filteredPlayers: Player[] = [];
   let isLoading = true;
   let sortField: 'value' | 'points' = 'value';
   let sortDirection: 'asc' | 'desc' = 'desc';
@@ -83,7 +82,7 @@
     await loadPlayerPoints(filteredPlayers);
   }
 
-  async function loadPlayerPoints(players: PlayerDTO[]) {
+  async function loadPlayerPoints(players: Player[]) {
     await playerEventsStore.loadPlayerScoresMap(1, $leagueStore!.unplayedGameweek);
     for (const player of players) {
       playerPoints.set(player.id, playerEventsStore.getPlayerScore(player.id));
@@ -91,7 +90,7 @@
     playerPoints = playerPoints;
   }
 
-  function selectPlayer(player: PlayerDTO) {
+  function selectPlayer(player: Player) {
     handlePlayerSelection(player);
     closeModal();
     filteredPlayers = [];

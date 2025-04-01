@@ -9,10 +9,10 @@
     import { getActualIndex } from "$lib/utils/helpers";
     import { playerStore } from "$lib/stores/player-store";
     import { clubStore } from "$lib/stores/club-store";
-    import type { TeamSelectionDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import type { TeamSetup } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     
     export let selectedFormation: Writable<string>;
-    export let fantasyTeam: Writable<TeamSelectionDTO | undefined>;
+    export let fantasyTeam: Writable<TeamSetup | undefined>;
     export let loadAddPlayer: (row: number, col: number) => void;
     export let removePlayer: (playerId: number) => void;
     export let setCaptain: (playerId: number) => void;

@@ -1,10 +1,10 @@
 <script lang="ts">
     import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
     import { convertPositionToIndex, getPositionIndexToText } from "$lib/utils/helpers";
-    import type { ClubDTO, PlayerDTO } from "../../../../../external_declarations/data_canister/data_canister.did";
+    import type { Club, Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
-    export let player: PlayerDTO;
-    export let club: ClubDTO;
+    export let player: Player;
+    export let club: Club;
 </script>
 
 <div class="flex-grow flex flex-col items-center">

@@ -8,21 +8,21 @@
   import { clubStore } from "$lib/stores/club-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { playerEventsStore } from "$lib/stores/player-events-store";
-  import type { ClubDTO, PlayerDetailDTO, PlayerGameweekDTO } from "../../../../../external_declarations/data_canister/data_canister.did";
   import type { FixtureWithClubs } from "$lib/types/fixture-with-clubs";
   import { getFixturesWithTeams } from "$lib/utils/helpers";
   import PlayerGameweekModal from "./player-gameweek-modal.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import PlayerGameweekHistoryHeader from "./player-gameweek-history-header.svelte";
-    import LocalSpinner from "../shared/local-spinner.svelte";
+  import LocalSpinner from "../shared/local-spinner.svelte";
+    import type { Club, PlayerDetails, PlayerGameweek } from "../../../../../declarations/data_canister/data_canister.did";
   
   let isLoading = true;
   let selectedGameweek = writable(1);
   let fixturesWithTeams: FixtureWithClubs[] = [];
-  let playerDetails: PlayerDetailDTO;
-  let selectedOpponent: ClubDTO | null = null;
-  let selectedPlayerGameweek: PlayerGameweekDTO | null = null;
+  let playerDetails: PlayerDetails;
+  let selectedOpponent: Club | null = null;
+  let selectedPlayerGameweek: PlayerGameweek | null = null;
   let showModal: boolean = false;
   let seasonName = "";
 
@@ -38,13 +38,13 @@
       isLoading = false;
   });
 
-  function getOpponentFromFixtureId(fixtureId: number): ClubDTO {
+  function getOpponentFromFixtureId(fixtureId: number): Club {
     let fixture = fixturesWithTeams.find((f) => f.fixture.id === fixtureId);
-    let opponentId = fixture?.homeClub?.id === playerDetails.clubId ? fixture?.awayClub?.id : fixture?.homeClub?.id;
+    let opponentId = fixture?.homeClub?.id === playerDetails.player.clubId ? fixture?.awayClub?.id : fixture?.homeClub?.id;
     return $clubStore.find((team) => team.id === opponentId)!;
   }
 
-  function showDetailModal(playerDetailsDTO: PlayerGameweekDTO, opponent: ClubDTO): void {
+  function showDetailModal(playerDetailsDTO: PlayerGameweek, opponent: Club): void {
     selectedPlayerGameweek = playerDetailsDTO;
     selectedOpponent = opponent;
     showModal = true;
@@ -62,11 +62,11 @@
   {#if playerDetails}
   {#if showModal}
     <PlayerGameweekModal
-      gameweekDetail={playerDetails.gameweeks.find(
+      gameweekDetail={playerDetails.player.gameweeks.find(
         (x) => x.number === $selectedGameweek
       ) ?? null}
       opponentTeam={selectedOpponent}
-      playerTeam={$clubStore.find((team) => team.id === playerDetails.clubId)}
+      playerTeam={$clubStore.find((team) => team.id === playerDetails.player.clubId)}
       {closeDetailModal}
       bind:visible={showModal}
       playerDetail={playerDetails}
@@ -78,7 +78,7 @@
   <div class="flex flex-col">
     <div class="flex-1 overflow-x-auto">
       <PlayerGameweekHistoryHeader />
-      {#each playerDetails.gameweeks as gameweek}
+      {#each playerDetails.player.gameweeks as gameweek}
         {@const opponent = getOpponentFromFixtureId(gameweek.fixtureId)}
         <button
           class="flex items-center justify-between w-full p-2 py-4 border-b border-gray-700 cursor-pointer"

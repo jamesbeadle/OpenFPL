@@ -5,7 +5,6 @@
   import { managerStore } from "$lib/stores/manager-store";
   import { seasonStore } from "$lib/stores/season-store";
   import { allFormations, autofillTeam, checkBonusUsedInSession, checkSaveButtonConditions, getAvailableFormations, getHighestValuedPlayerId, getTeamFormation, isBonusConditionMet, isValidFormation, updateTeamValue } from "$lib/utils/pick-team.helpers";
-  import SetTeamName from "./modals/set-team-name-modal.svelte";
   import { appStore } from "$lib/stores/app-store";
   import { leagueStore } from "$lib/stores/league-store";
   import DesktopButtons from "./desktop-buttons.svelte";
@@ -201,12 +200,6 @@
 {#if isLoading}
   <LocalSpinner />
 {:else}
-  <SetTeamName
-    bind:visible={showUsernameModal}
-    setUsername={updateUsername}
-    cancelModal={closeUsernameModal}
-    {newUsername}
-  />
 
   <div class="flex-col hidden xl:flex md:flex-row">
     <DesktopButtons 

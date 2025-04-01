@@ -11,9 +11,9 @@
   import PlayerFilterRow from "./player-filter-row.svelte";
   import PlayerTableHaeder from "./player-table-header.svelte";
   import PlayerTableRow from "./player-table-row.svelte";
-  import type { PlayerDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import PlayerModalPagination from "./player-modal-pagination.svelte";
     import LocalSpinner from "../shared/local-spinner.svelte";
+    import type { Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   export let filterPosition = writable(-1);
 
@@ -23,7 +23,7 @@
   let minValue = writable(0);
   let maxValue = writable(0);
   let currentPage = writable(1);
-  let filteredPlayers: PlayerDTO[] = [];
+  let filteredPlayers: Player[] = [];
   let isLoading = true;
   let sortField: 'value' | 'points' = 'value';
   let sortDirection: 'asc' | 'desc' = 'desc';
@@ -82,7 +82,7 @@
     await loadPlayerPoints(filteredPlayers);
   }
 
-  async function loadPlayerPoints(players: PlayerDTO[]) {
+  async function loadPlayerPoints(players: Player[]) {
     await playerEventsStore.loadPlayerScoresMap(1, $leagueStore!.unplayedGameweek);
     for (const player of players) {
       playerPoints.set(player.id, playerEventsStore.getPlayerScore(player.id));

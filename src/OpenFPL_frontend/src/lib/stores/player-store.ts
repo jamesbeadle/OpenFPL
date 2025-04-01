@@ -1,22 +1,19 @@
 import { writable } from "svelte/store";
 import { PlayerService } from "$lib/services/player-service";
-import type {
-  GetSnapshotPlayersDTO,
-  PlayerDTO,
-} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type { GetPlayers, Player } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 function createPlayerStore() {
-  const { subscribe, set } = writable<PlayerDTO[]>([]);
+  const { subscribe, set } = writable<Player[]>([]);
 
   async function getSnapshotPlayers(
-    dto: GetSnapshotPlayersDTO,
-  ): Promise<PlayerDTO[]> {
-    return new PlayerService().getSnapshotPlayers(dto);
+    dto: GetPlayers,
+  ): Promise<Player[]> {
+    return new PlayerService().getPlayers(dto);
   }
 
   return {
     subscribe,
-    setPlayers: (players: PlayerDTO[]) => set(players),
+    setPlayers: (players: Player[]) => set(players),
     getSnapshotPlayers,
   };
 }
