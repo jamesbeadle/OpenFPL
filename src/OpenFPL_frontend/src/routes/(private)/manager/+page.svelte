@@ -11,15 +11,15 @@
     Manager
 
 
-  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import { getGridSetup, getTeamFormationReadOnly } from "$lib/utils/pick-team.helpers";
-  import Layout from "../+layout.svelte";
+  import Layout from "../../+layout.svelte";
   import ManagerGameweeks from "$lib/components/manager/manager-gameweeks.svelte";
   import ReadOnlyPitchView from "$lib/components/manager/read-only-pitch-view.svelte";
   import TabContainer from "$lib/components/shared/tab-container.svelte";
   import ManagerHeader from "$lib/components/manager/manager-header.svelte";
-    import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
+  import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
     
   $: id = page.url.searchParams.get("id");
   $: gw = page.url.searchParams.get("gw");
@@ -63,14 +63,13 @@
   }
 </script>
 
-<Layout>
   {#if isLoading}
     <LocalSpinner />
   {:else}
     <ManagerHeader manager={$manager!} />
 
     <div class="bg-panel">
-      <TabContainer {tabs} {activeTab} {setActiveTab} isLoggedIn={false}  />
+      <TabContainer {tabs} {activeTab} {setActiveTab} />
 
       {#if activeTab === "details"}
         <ReadOnlyPitchView {fantasyTeam} {gridSetup} {selectedGameweek} {gameweekPlayers} />
@@ -81,4 +80,3 @@
       {/if}
     </div>
   {/if}
-</Layout>

@@ -4,13 +4,6 @@
     import LandingPageDisplay from "./landing-page-display.svelte";
     import LandingPageFooter from "./landing-page-footer.svelte";
     
-    async function handleLoginClick() {
-        let params: AuthSignInParams = {
-            domain: import.meta.env.VITE_AUTH_PROVIDER_URL,
-        };
-        await authStore.signIn(params);
-        goto("/", {invalidateAll: true});
-    }
 </script>
 
 <svelte:head>
@@ -24,7 +17,7 @@
                 The world's game on the world's computer
             </h1>
             <div class="flex items-center justify-center min-h-[55%] mx-4 my-24 rounded-lg bg-BrandGray md:hidden">
-                <LandingPageDisplay {handleLoginClick} />
+                <LandingPageDisplay />
             </div>
     
             <div class="pt-4 pb-6 md:hidden">
@@ -38,7 +31,7 @@
         </div>
     </div>
     <div class="items-center justify-center hidden w-1/2 h-full md:block md:px-auto">
-        <LandingPageDisplay {handleLoginClick} />
+        <LandingPageDisplay />
         <LandingPageFooter />
     </div>
 </div>

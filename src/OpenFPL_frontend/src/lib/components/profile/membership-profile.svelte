@@ -1,11 +1,11 @@
 <script lang="ts">
     import LocalSpinner from "../shared/local-spinner.svelte";
     import Header from "$lib/shared/Header.svelte";
-    import type { ICFCProfile } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import type { CombinedProfile } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     import CopyPrincipal from "./copy-principal.svelte";
     import MembershipLinkedModal from "./membership-linked-modal.svelte";
     
-    export let icfcProfile: ICFCProfile | undefined = undefined;
+    export let icfcProfile: CombinedProfile | undefined = undefined;
   
     let isLoading = false;
 
@@ -28,7 +28,7 @@
       <Header />
       <div class="flex-1 w-full mt-16 overflow-x-hidden">
 
-        <div class="border-b border-white/10 mt-4">
+        <div class="mt-4 border-b border-white/10">
             <div class="flex items-center justify-between">
                 <h3 class="text-2xl text-white cta-text">ICFC Membership Profile</h3>
             </div>

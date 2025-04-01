@@ -1,6 +1,6 @@
 <script lang="ts">
 
-  import Layout from "../+layout.svelte";
+  import Layout from "../../+layout.svelte";
   import Architecture from "$lib/components/whitepaper/architecture.svelte";
   import Dao from "$lib/components/whitepaper/dao.svelte";
   import Gameplay from "$lib/components/whitepaper/gameplay.svelte";
@@ -9,7 +9,7 @@
   import Roadmap from "$lib/components/whitepaper/roadmap.svelte";
   import Tokenomics from "$lib/components/whitepaper/tokenomics.svelte";
   import Vision from "$lib/components/whitepaper/vision.svelte";
-    import TabContainer from "$lib/components/shared/tab-container.svelte";
+  import TabContainer from "$lib/components/shared/tab-container.svelte";
 
   let activeTab: string = "vision";
 
@@ -30,11 +30,10 @@
 
 </script>
 
-<Layout>
-  <div class="bg-panel mt-4">
+  <div class="mt-4 bg-panel">
     <h1 class="p-4 mx-1 default-header">OpenFPL Whitepaper</h1>
 
-    <TabContainer {tabs} {activeTab} {setActiveTab} isLoggedIn={false}  />
+    <TabContainer {tabs} {activeTab} {setActiveTab} />
 
     {#if activeTab === "vision"}
       <Vision />
@@ -54,4 +53,4 @@
       <Architecture />
     {/if}
   </div>
-</Layout>
+

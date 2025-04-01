@@ -3,7 +3,7 @@ import { toasts } from "$lib/stores/toasts-store";
 import { userIdCreatedStore } from "$lib/stores/user-control-store";
 import { initErrorSignOut } from "./auth-services";
 import type { OptionIdentity } from "$lib/types/identity";
-import type { Profile } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type { CombinedProfile } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 export type InitUserProfileResult = { result: "skip" | "success" | "error" };
 

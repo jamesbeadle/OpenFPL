@@ -3,7 +3,6 @@
   import { userStore } from "$lib/stores/user-store";
   import { browser } from "$app/environment";
 
-  import Layout from "../+layout.svelte";
   import ProfileDetail from "$lib/components/profile/profile-detail.svelte";
   import ProfileManagerGameweeks from "$lib/components/manager/profile-manager-gameweeks.svelte";
   import TabContainer from "$lib/components/shared/tab-container.svelte";
@@ -33,7 +32,6 @@
   }
 </script>
 
-<Layout>
   {#if isLoading}
     <LocalSpinner />
   {:else}
@@ -45,7 +43,7 @@
       {/if}
       <div class="bg-panel">
 
-        <TabContainer {tabs} {activeTab} {setActiveTab} isLoggedIn={false}  />
+        <TabContainer {tabs} {activeTab} {setActiveTab}  />
 
         {#if activeTab === "details"}
           <ProfileDetail />
@@ -58,4 +56,3 @@
       </div>
     </div>
   {/if}
-</Layout>
