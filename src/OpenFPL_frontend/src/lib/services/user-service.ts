@@ -30,19 +30,22 @@ export class UserService {
     }
   }
 
-  async getICFCLinkStatus(principalId: string): Promise<ICFCLinkStatus | undefined> {
+  async getICFCLinkStatus(
+    principalId: string,
+  ): Promise<ICFCLinkStatus | undefined> {
     try {
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
       const getICFCLinkStatus: GetICFCLinkStatus = { principalId };
-      const result: any = await identityActor.getICFCLinkStatus(getICFCLinkStatus);
+      const result: any =
+        await identityActor.getICFCLinkStatus(getICFCLinkStatus);
       if (isError(result)) return undefined;
       return result.ok;
     } catch (error) {
       console.error("Error checking ICFC link status:", error);
-      return undefined; 
+      return undefined;
     }
   }
 
