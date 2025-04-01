@@ -2,10 +2,10 @@ import { ActorFactory } from "../utils/actor.factory";
 import { isError } from "../utils/helpers";
 import { authStore } from "$lib/stores/auth-store";
 import { toasts } from "$lib/stores/toasts-store";
-import type { Profile } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type { CombinedProfile } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 export class UserService {
-  async getUser(): Promise<Profile | undefined> {
+  async getUser(): Promise<CombinedProfile | undefined> {
     try {
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
