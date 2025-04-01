@@ -95,7 +95,9 @@ function createPlayerEventsStore() {
         seasonId,
         gameweek,
       );
-      allPlayerEvents = allPlayerEventsResult ? allPlayerEventsResult : [];
+      allPlayerEvents = allPlayerEventsResult?.playerPoints
+        ? allPlayerEventsResult.playerPoints
+        : [];
     }
 
     let allPlayers: Player[] = [];

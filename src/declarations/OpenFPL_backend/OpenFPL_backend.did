@@ -354,7 +354,7 @@ type Manager =
  record {
    createDate: int;
    favouriteClubId: opt ClubId;
-   gameweeks: vec Gameweek;
+   gameweeks: vec FantasyTeamSnapshot;
    monthlyPoints: int16;
    monthlyPosition: int;
    monthlyPositionText: text;
@@ -438,42 +438,6 @@ type GetFantasyTeamSnapshot =
  };
 type GetClubs = record {leagueId: nat16;};
 type GameweekNumber = nat8;
-type Gameweek = 
- record {
-   bankQuarterMillions: nat16;
-   braceBonusGameweek: GameweekNumber;
-   captainFantasticGameweek: GameweekNumber;
-   captainFantasticPlayerId: PlayerId;
-   captainId: PlayerId;
-   favouriteClubId: opt ClubId;
-   gameweek: GameweekNumber;
-   goalGetterGameweek: GameweekNumber;
-   goalGetterPlayerId: PlayerId;
-   hatTrickHeroGameweek: GameweekNumber;
-   month: CalendarMonth;
-   monthlyBonusesAvailable: nat8;
-   monthlyPoints: int16;
-   noEntryGameweek: GameweekNumber;
-   noEntryPlayerId: PlayerId;
-   oneNationCountryId: CountryId;
-   oneNationGameweek: GameweekNumber;
-   passMasterGameweek: GameweekNumber;
-   passMasterPlayerId: PlayerId;
-   playerIds: vec PlayerId;
-   points: int16;
-   principalId: text;
-   prospectsGameweek: GameweekNumber;
-   safeHandsGameweek: GameweekNumber;
-   safeHandsPlayerId: PlayerId;
-   seasonId: SeasonId;
-   seasonPoints: int16;
-   teamBoostClubId: ClubId;
-   teamBoostGameweek: GameweekNumber;
-   teamValueQuarterMillions: nat16;
-   transferWindowGameweek: GameweekNumber;
-   transfersAvailable: nat8;
-   username: text;
- };
 type Fixtures = 
  record {
    fixtures: vec Fixture;

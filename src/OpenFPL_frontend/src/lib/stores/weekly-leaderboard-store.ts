@@ -1,6 +1,9 @@
 import { writable } from "svelte/store";
 import { WeeklyLeaderboardService } from "$lib/services/weekly-leaderboard-service";
-import type { WeeklyLeaderboard, WeeklyRewardsLeaderboard } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type {
+  WeeklyLeaderboard,
+  WeeklyRewardsLeaderboard,
+} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 function createWeeklyLeaderboardStore() {
   const { subscribe, set } = writable<WeeklyLeaderboard | null>(null);
@@ -29,8 +32,7 @@ function createWeeklyLeaderboardStore() {
 
   return {
     subscribe,
-    setWeeklyLeaderboard: (leaderboard: WeeklyLeaderboard) =>
-      set(leaderboard),
+    setWeeklyLeaderboard: (leaderboard: WeeklyLeaderboard) => set(leaderboard),
     getWeeklyLeaderboard,
     getWeeklyRewards,
   };

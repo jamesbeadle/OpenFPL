@@ -137,41 +137,6 @@ export interface Fixtures {
   fixtures: Array<Fixture>;
   leagueId: number;
 }
-export interface Gameweek {
-  playerIds: Uint16Array | number[];
-  month: CalendarMonth;
-  teamValueQuarterMillions: number;
-  username: string;
-  goalGetterPlayerId: PlayerId;
-  oneNationCountryId: CountryId;
-  hatTrickHeroGameweek: GameweekNumber;
-  transfersAvailable: number;
-  oneNationGameweek: GameweekNumber;
-  teamBoostGameweek: GameweekNumber;
-  captainFantasticGameweek: GameweekNumber;
-  bankQuarterMillions: number;
-  noEntryPlayerId: PlayerId;
-  monthlyPoints: number;
-  safeHandsPlayerId: PlayerId;
-  seasonId: SeasonId;
-  braceBonusGameweek: GameweekNumber;
-  favouriteClubId: [] | [ClubId];
-  passMasterGameweek: GameweekNumber;
-  teamBoostClubId: ClubId;
-  goalGetterGameweek: GameweekNumber;
-  captainFantasticPlayerId: PlayerId;
-  gameweek: GameweekNumber;
-  seasonPoints: number;
-  transferWindowGameweek: GameweekNumber;
-  noEntryGameweek: GameweekNumber;
-  prospectsGameweek: GameweekNumber;
-  safeHandsGameweek: GameweekNumber;
-  principalId: string;
-  passMasterPlayerId: PlayerId;
-  captainId: PlayerId;
-  points: number;
-  monthlyBonusesAvailable: number;
-}
 export type GameweekNumber = number;
 export interface GetClubs {
   leagueId: number;
@@ -254,7 +219,7 @@ export interface Manager {
   monthlyPoints: number;
   weeklyPoints: number;
   weeklyPositionText: string;
-  gameweeks: Array<Gameweek>;
+  gameweeks: Array<FantasyTeamSnapshot>;
   favouriteClubId: [] | [ClubId];
   monthlyPosition: bigint;
   seasonPosition: bigint;
