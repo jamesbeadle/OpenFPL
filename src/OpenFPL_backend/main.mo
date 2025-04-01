@@ -344,13 +344,70 @@ actor Self {
     return await leaderboardManager.getWeeklyLeaderboard(dto);
   };
 
-  //TODO: John we need to have endpoints to the data canister from here instead of the frontend to check for approved canisters
 
-  private func getLeagueStatus() : async Result.Result<DataCanister.LeagueStatus, Enums.Error> {
+  
+
+  public shared ({ caller }) func getLeagueStatus() : async Result.Result<DataCanister.LeagueStatus, Enums.Error> {
+    assert not Principal.isAnonymous(caller);
+    assert await hasMembership(Principal.toText(caller));
     let data_canister = actor (CanisterIds.ICFC_DATA_CANISTER_ID) : actor {
-      getLeagueStatus : shared query (leagueId : FootballIds.LeagueId) -> async Result.Result<DataCanister.LeagueStatus, Enums.Error>;
+      getLeagueStatus : shared query (dto : DataCanister.GetLeagueStatus) -> async Result.Result<DataCanister.LeagueStatus, Enums.Error>;
     };
-    return await data_canister.getLeagueStatus(Environment.LEAGUE_ID);
+    return await data_canister.getLeagueStatus({ leagueId = Environment.LEAGUE_ID });
+  };
+
+  public shared ({ caller }) func getCountries() : async Result.Result<DataCanister.Countries, Enums.Error> {
+     assert not Principal.isAnonymous(caller);
+    assert await hasMembership(Principal.toText(caller));
+    let data_canister = actor (CanisterIds.ICFC_DATA_CANISTER_ID) : actor {
+      getCountries : shared query (dto : DataCanister.GetCountries) -> async Result.Result<DataCanister.Countries, Enums.Error>;
+    };
+    return await data_canister.getCountries({});
+  };
+
+  public shared ({ caller }) func getSeasons(dto : DataCanister.GetSeasons) : async Result.Result<DataCanister.Seasons, Enums.Error> {
+     assert not Principal.isAnonymous(caller);
+    assert await hasMembership(Principal.toText(caller));
+    let data_canister = actor (CanisterIds.ICFC_DATA_CANISTER_ID) : actor {
+      getSeasons : shared query (dto : DataCanister.GetSeasons) -> async Result.Result<DataCanister.Seasons, Enums.Error>;
+    };
+    return await data_canister.getSeasons(dto);
+  };
+
+  public shared ({ caller }) func getClubs(dto : DataCanister.GetClubs) : async Result.Result<DataCanister.Clubs, Enums.Error> {
+     assert not Principal.isAnonymous(caller);
+    assert await hasMembership(Principal.toText(caller));
+    let data_canister = actor (CanisterIds.ICFC_DATA_CANISTER_ID) : actor {
+      getClubs : shared query (dto : DataCanister.GetClubs) -> async Result.Result<DataCanister.Clubs, Enums.Error>;
+    };
+    return await data_canister.getClubs(dto);
+  };
+
+  public shared ({ caller }) func getPlayers(dto: DataCanister.GetPlayers) : async Result.Result<DataCanister.Players, Enums.Error> {
+     assert not Principal.isAnonymous(caller);
+    assert await hasMembership(Principal.toText(caller));
+    let data_canister = actor (CanisterIds.ICFC_DATA_CANISTER_ID) : actor {
+      getPlayers : shared query (dto : DataCanister.GetPlayers) -> async Result.Result<DataCanister.Players, Enums.Error>;
+    };
+    return await data_canister.getPlayers(dto);
+  };
+
+  public shared ({ caller }) func getPlayerEvents(dto : DataCanister.GetPlayerDetailsForGameweek) : async Result.Result<DataCanister.PlayerDetailsForGameweek, Enums.Error> {
+     assert not Principal.isAnonymous(caller);
+    assert await hasMembership(Principal.toText(caller));
+    let data_canister = actor (CanisterIds.ICFC_DATA_CANISTER_ID) : actor {
+      getPlayerEvents : shared query (dto : DataCanister.GetPlayerDetailsForGameweek) -> async Result.Result<DataCanister.PlayerDetailsForGameweek, Enums.Error>;
+    };
+    return await data_canister.getPlayerEvents(dto);
+  };
+
+  public shared ({ caller }) func getFixtures(dto : DataCanister.GetFixtures) : async Result.Result<DataCanister.Fixtures, Enums.Error> {
+     assert not Principal.isAnonymous(caller);
+    assert await hasMembership(Principal.toText(caller));
+    let data_canister = actor (CanisterIds.ICFC_DATA_CANISTER_ID) : actor {
+      getFixtures : shared query (dto : DataCanister.GetFixtures) -> async Result.Result<DataCanister.Fixtures, Enums.Error>;
+    };
+    return await data_canister.getFixtures(dto : DataCanister.GetFixtures);
   };
 
   /*
