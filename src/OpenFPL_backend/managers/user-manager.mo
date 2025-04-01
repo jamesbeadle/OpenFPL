@@ -6,7 +6,6 @@ import Iter "mo:base/Iter";
 import Principal "mo:base/Principal";
 import Buffer "mo:base/Buffer";
 import Base "mo:waterway-mops/BaseTypes";
-import FootballTypes "mo:waterway-mops/FootballTypes";
 import Ids "mo:waterway-mops/Ids";
 import Enums "mo:waterway-mops/Enums";
 import IcfcEnums "mo:waterway-mops/ICFCEnums";
@@ -81,7 +80,7 @@ module {
         };
       };
     };
-/*
+
     public func getUserICFCProfileStatus(managerPrincipalId : Ids.PrincipalId) : async Result.Result<IcfcEnums.ICFCLinkStatus, Enums.Error> {
       let icfcProfile : ?T.ICFCProfile = userICFCProfiles.get(managerPrincipalId);
 
@@ -341,7 +340,7 @@ module {
         };
       };
     };
-*/
+    
     public func getFantasyTeamSnapshot(dto : UserQueries.GetFantasyTeamSnapshot) : async Result.Result<UserQueries.FantasyTeamSnapshot, Enums.Error> {
       let managerCanisterId = managerCanisterIds.get(dto.principalId);
       switch (managerCanisterId) {

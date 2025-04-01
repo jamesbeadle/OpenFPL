@@ -1,4 +1,4 @@
-import FootballTypes "mo:waterway-mops/FootballTypes";
+import FootballIds "mo:waterway-mops/football/FootballIds";
 
 module Environment {
 
@@ -7,7 +7,7 @@ module Environment {
   public let WATERWAY_LABS_BACKEND_CANISTER_ID = "rbqtt-7yaaa-aaaal-qcndq-cai";
   public let ICFC_BACKEND_CANISTER_ID = "cfalf-4yaaa-aaaal-qshrq-cai";
 
-  public let LEAGUE_ID : FootballTypes.LeagueId = 1;
+  public let LEAGUE_ID : FootballIds.LeagueId = 1;
   public let NUM_OF_TEAMS : Nat8 = 20;
   public let NUM_OF_GAMEWEEKS : Nat8 = 38;
   public let NUM_OF_MONTHS : Nat8 = 7;

@@ -1,15 +1,16 @@
-import FootballTypes "mo:waterway-mops/FootballTypes"; //TODO should be just the ids
 import Enums "../enums/enums";
+import FootballIds "mo:waterway-mops/football/FootballIds";
+import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
 module RewardQueries {
 
     public type GetWeeklyRewardsLeaderboard = {
-        seasonId : FootballTypes.SeasonId;
-        gameweek : FootballTypes.GameweekNumber;
+        seasonId : FootballIds.SeasonId;
+        gameweek : FootballDefinitions.GameweekNumber;
     };
 
     public type WeeklyRewardsLeaderboard = {
-        seasonId : FootballTypes.SeasonId;
-        gameweek : FootballTypes.GameweekNumber;
+        seasonId : FootballIds.SeasonId;
+        gameweek : FootballDefinitions.GameweekNumber;
         entries : [RewardEntry];
     };
   

@@ -2,7 +2,6 @@ import Result "mo:base/Result";
 import TrieMap "mo:base/TrieMap";
 import Principal "mo:base/Principal";
 import Base "mo:waterway-mops/BaseTypes";
-import FootballTypes "mo:waterway-mops/FootballTypes";
 import Ids "mo:waterway-mops/Ids";
 import Enums "mo:waterway-mops/Enums";
 import Management "mo:waterway-mops/Management";
@@ -83,7 +82,6 @@ module {
       return null;
     };
 
-    /*
     public func getWeeklyLeaderboard(dto : Queries.GetWeeklyLeaderboardDTO) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
       if (dto.limit > 100) {
         return #err(#NotAllowed);
@@ -261,7 +259,6 @@ module {
         finaliseUpdate : (seasonId : FootballTypes.SeasonId, month : Base.CalendarMonth, gameweek : FootballTypes.GameweekNumber) -> async ();
       };
 
-      /*
       //TODO: Need a way to separate out month as before we had the leaderboards in individual canisters but now we have them in a single canister
       if(month > 0){
         for(clubId in Iter.fromArray(clubIds)){
@@ -270,7 +267,6 @@ module {
       } else {
         await leaderboard_canister.prepareForUpdate(seasonId, month, gameweek, 0);
       };
-      */
 
       await leaderboard_canister.prepareForUpdate(seasonId, 0, gameweek, 0);
       for (canisterId in Iter.fromArray(uniqueManagerCanisterIds)) {
@@ -318,7 +314,6 @@ module {
       addMonthlyLeaderboardCanisterId(seasonId, month);
 
     };
-    */
 
     private func addSeasonLeaderboardCanisterId(seasonId : FootballTypes.SeasonId) {
       let seasonCanisterIdsBuffer = Buffer.fromArray<(FootballTypes.SeasonId, Ids.CanisterId)>(seasonLeaderboardCanisters);

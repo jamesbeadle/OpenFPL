@@ -9,9 +9,10 @@ import TrieMap "mo:base/TrieMap";
 import Nat "mo:base/Nat";
 import Result "mo:base/Result";
 
-import FootballTypes "mo:waterway-mops/FootballTypes";
 import Enums "mo:waterway-mops/Enums";
 import BaseUtilities "mo:waterway-mops/BaseUtilities";
+import FootballIds "mo:waterway-mops/football/FootballIds";
+import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
 import AppTypes "../types/app_types";
 import LeaderboardQueries "../queries/leaderboard_queries";
 import RewardPercentages "../utilities/RewardPercentages";
@@ -33,7 +34,7 @@ module {
       startDate = 0;
       weeklyLeaderboardRewardRate = 0;
     };
-    private var teamValueLeaderboards : TrieMap.TrieMap<FootballTypes.SeasonId, AppTypes.TeamValueLeaderboard> = TrieMap.TrieMap<FootballTypes.SeasonId, AppTypes.TeamValueLeaderboard>(BaseUtilities.eqNat16, BaseUtilities.hashNat16);
+    private var teamValueLeaderboards : TrieMap.TrieMap<FootballIds.SeasonId, AppTypes.TeamValueLeaderboard> = TrieMap.TrieMap<FootballIds.SeasonId, AppTypes.TeamValueLeaderboard>(BaseUtilities.eqNat16, BaseUtilities.hashNat16);
 
     private var seasonRewards : List.List<AppTypes.SeasonRewards> = List.nil();
     private var monthlyRewards : List.List<AppTypes.MonthlyRewards> = List.nil();
@@ -202,7 +203,7 @@ module {
       return Buffer.toArray(adjustedPercentagesBuffer);
     };
 
-    public func getWeeklyRewards(seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber) : Result.Result<AppTypes.WeeklyRewards, Enums.Error> {
+    public func getWeeklyRewards(seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber) : Result.Result<AppTypes.WeeklyRewards, Enums.Error> {
 
       let rewards = List.find(
         weeklyRewards,
@@ -241,12 +242,12 @@ module {
       historicRewardRates := stable_historic_reward_rates;
     };
 
-    public func getStableTeamValueLeaderboards() : [(FootballTypes.SeasonId, AppTypes.TeamValueLeaderboard)] {
+    public func getStableTeamValueLeaderboards() : [(FootballIds.SeasonId, AppTypes.TeamValueLeaderboard)] {
       return Iter.toArray(teamValueLeaderboards.entries());
     };
 
-    public func setStableTeamValueLeaderboards(stable_team_value_leaderboards : [(FootballTypes.SeasonId, AppTypes.TeamValueLeaderboard)]) {
-      teamValueLeaderboards := TrieMap.fromEntries<FootballTypes.SeasonId, AppTypes.TeamValueLeaderboard>(
+    public func setStableTeamValueLeaderboards(stable_team_value_leaderboards : [(FootballIds.SeasonId, AppTypes.TeamValueLeaderboard)]) {
+      teamValueLeaderboards := TrieMap.fromEntries<FootballIds.SeasonId, AppTypes.TeamValueLeaderboard>(
         Iter.fromArray(stable_team_value_leaderboards),
         BaseUtilities.eqNat16,
         BaseUtilities.hashNat16,

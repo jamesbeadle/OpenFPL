@@ -1,5 +1,6 @@
-import FootballTypes "mo:waterway-mops/FootballTypes";
+
 import Ids "mo:waterway-mops/Ids";
+import FootballIds "mo:waterway-mops/football/FootballIds";
 import Enums "../enums/enums";
 
 module UserCommands = {
@@ -8,26 +9,26 @@ module UserCommands = {
         principalId: Ids.PrincipalId;
         openFPLPrincipalId: Ids.PrincipalId;
         icfcPrincipalId: Ids.PrincipalId;
-        favouriteClubId: FootballTypes.ClubId;
+        favouriteClubId: FootballIds.ClubId;
     };
 
     public type SetFavouriteClub = {
         principalId: Ids.PrincipalId;
-        favouriteClubId: FootballTypes.ClubId;
+        favouriteClubId: FootballIds.ClubId;
     };
 
     public type SaveFantasyTeam = {
         principalId: Ids.PrincipalId;
-        playerIds : [FootballTypes.PlayerId];
-        captainId : FootballTypes.ClubId;
+        playerIds : [FootballIds.PlayerId];
+        captainId : FootballIds.ClubId;
         playTransferWindowBonus: Bool;
     };
 
     public type PlayBonus = {
         principalId: Ids.PrincipalId;
         bonusType: Enums.BonusType;
-        playerId: FootballTypes.PlayerId;
-        clubId: FootballTypes.ClubId;
+        playerId: FootballIds.PlayerId;
+        clubId: FootballIds.ClubId;
         countryId: Ids.CountryId;
     };
 

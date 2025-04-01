@@ -1,18 +1,19 @@
-import FootballTypes "mo:waterway-mops/FootballTypes"; // TODO Move to IDs to remove type def
+import FootballIds "mo:waterway-mops/football/FootballIds";
+import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
 
 module LeaderboardQueries = {
 
     public type GetWeeklyLeaderboard = {
-        seasonId : FootballTypes.SeasonId;
-        gameweek : FootballTypes.GameweekNumber;
+        seasonId : FootballIds.SeasonId;
+        gameweek : FootballDefinitions.GameweekNumber;
         limit : Nat;
         offset : Nat;
         searchTerm : Text;
     };
 
     public type WeeklyLeaderboard = {
-        seasonId : FootballTypes.SeasonId;
-        gameweek : FootballTypes.GameweekNumber;
+        seasonId : FootballIds.SeasonId;
+        gameweek : FootballDefinitions.GameweekNumber;
         entries : [LeaderboardEntry];
         totalEntries : Nat;
     };

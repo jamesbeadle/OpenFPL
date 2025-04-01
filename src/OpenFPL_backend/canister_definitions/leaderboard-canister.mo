@@ -7,13 +7,13 @@ import Iter "mo:base/Iter";
 import Buffer "mo:base/Buffer";
 import Timer "mo:base/Timer";
 import Int "mo:base/Int";
-import Option "mo:base/Option";
 import Nat "mo:base/Nat";
 import TrieMap "mo:base/TrieMap";
 
-import Base "mo:waterway-mops/BaseTypes";
-import FootballTypes "mo:waterway-mops/FootballTypes";
 import CanisterIds "mo:waterway-mops/CanisterIds";
+import FootballIds "mo:waterway-mops/football/FootballIds";
+import BaseDefinitions "mo:waterway-mops/BaseDefinitions";
+import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
 import LeaderboardQueries "../../OpenFPL_backend/queries/leaderboard_queries";
 import LeaderboardUtilities "../utilities/leaderboard_utilities";
 import AppTypes "../types/app_types";
@@ -29,10 +29,10 @@ actor class _LeaderboardCanister() {
   private let LEADERBOARD_ROW_COUNT_LIMIT = 25;
 
   public shared ({ caller }) func prepareForUpdate(
-    seasonId : FootballTypes.SeasonId,
-    month : Base.CalendarMonth,
-    gameweek : FootballTypes.GameweekNumber,
-    clubId : FootballTypes.ClubId,
+    seasonId : FootballIds.SeasonId,
+    month : BaseDefinitions.CalendarMonth,
+    gameweek : FootballDefinitions.GameweekNumber,
+    clubId : FootballIds.ClubId,
   ) : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
@@ -71,7 +71,7 @@ actor class _LeaderboardCanister() {
     entryUpdatesAllowed := true;
   };
 
-  public shared ({ caller }) func addLeaderboardChunk(seasonId : FootballTypes.SeasonId, month : Base.CalendarMonth, gameweek : FootballTypes.GameweekNumber, clubId : FootballTypes.ClubId, entriesChunk : [AppTypes.LeaderboardEntry]) : async () {
+  public shared ({ caller }) func addLeaderboardChunk(seasonId : FootballIds.SeasonId, month : BaseDefinitions.CalendarMonth, gameweek : FootballDefinitions.GameweekNumber, clubId : FootballIds.ClubId, entriesChunk : [AppTypes.LeaderboardEntry]) : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == CanisterIds.OPENFPL_BACKEND_CANISTER_ID;
@@ -89,7 +89,7 @@ actor class _LeaderboardCanister() {
     addMonthLeaderboardChunk(seasonId, month, clubId, entriesChunk);
   };
 
-  public shared ({ caller }) func finaliseUpdate(seasonId : FootballTypes.SeasonId, month : Base.CalendarMonth, gameweek : FootballTypes.GameweekNumber) : async () {
+  public shared ({ caller }) func finaliseUpdate(seasonId : FootballIds.SeasonId, month : BaseDefinitions.CalendarMonth, gameweek : FootballDefinitions.GameweekNumber) : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == CanisterIds.OPENFPL_BACKEND_CANISTER_ID;
@@ -98,7 +98,7 @@ actor class _LeaderboardCanister() {
     await calculateLeaderboards(seasonId, gameweek, month);
   };
 
-  private func addGameweekLeaderboardChunk(seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, entriesChunk : [AppTypes.LeaderboardEntry]) {
+  private func addGameweekLeaderboardChunk(seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber, entriesChunk : [AppTypes.LeaderboardEntry]) {
     var currentLeaderboard : ?AppTypes.WeeklyLeaderboard = null;
 
     currentLeaderboard := Array.find(
@@ -142,7 +142,7 @@ actor class _LeaderboardCanister() {
     };
   };
 
-  private func addMonthLeaderboardChunk(seasonId : FootballTypes.SeasonId, month : Base.CalendarMonth, clubId : FootballTypes.ClubId, entriesChunk : [AppTypes.LeaderboardEntry]) {
+  private func addMonthLeaderboardChunk(seasonId : FootballIds.SeasonId, month : BaseDefinitions.CalendarMonth, clubId : FootballIds.ClubId, entriesChunk : [AppTypes.LeaderboardEntry]) {
     var currentLeaderboard : ?AppTypes.MonthlyLeaderboard = null;
 
     currentLeaderboard := Array.find(
@@ -188,7 +188,7 @@ actor class _LeaderboardCanister() {
     };
   };
 
-  private func addSeasonLeaderboardChunk(seasonId : FootballTypes.SeasonId, entriesChunk : [AppTypes.LeaderboardEntry]) {
+  private func addSeasonLeaderboardChunk(seasonId : FootballIds.SeasonId, entriesChunk : [AppTypes.LeaderboardEntry]) {
     var currentLeaderboard : ?AppTypes.SeasonLeaderboard = null;
 
     currentLeaderboard := Array.find(
@@ -230,7 +230,7 @@ actor class _LeaderboardCanister() {
     };
   };
 
-  private func calculateLeaderboards(seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth) : async () {
+  private func calculateLeaderboards(seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber, month : BaseDefinitions.CalendarMonth) : async () {
 
     if (month == 0 and gameweek == 0) {
       calculateSeasonLeaderboard(seasonId);
@@ -245,7 +245,7 @@ actor class _LeaderboardCanister() {
     await calculateWeeklyLeaderboard(seasonId, gameweek);
   };
 
-  private func calculateSeasonLeaderboard(seasonId : FootballTypes.SeasonId) {
+  private func calculateSeasonLeaderboard(seasonId : FootballIds.SeasonId) {
 
     var currentLeaderboard : ?AppTypes.SeasonLeaderboard = null;
 
@@ -288,7 +288,7 @@ actor class _LeaderboardCanister() {
     };
   };
 
-  private func calculateMonthlyLeaderboards(seasonId : FootballTypes.SeasonId, month : Base.CalendarMonth) {
+  private func calculateMonthlyLeaderboards(seasonId : FootballIds.SeasonId, month : BaseDefinitions.CalendarMonth) {
 
     let currentLeaderboards = Array.filter(
       monthly_leaderboards,
@@ -330,7 +330,7 @@ actor class _LeaderboardCanister() {
 
   };
 
-  private func calculateWeeklyLeaderboard(seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber) : async () {
+  private func calculateWeeklyLeaderboard(seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber) : async () {
     var currentLeaderboard : ?AppTypes.WeeklyLeaderboard = null;
 
     currentLeaderboard := Array.find(
@@ -396,7 +396,7 @@ actor class _LeaderboardCanister() {
 
   /* TODO
 
-  public shared query ({ caller }) func getWeeklyRewardLeaderboard(seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber) : async ?LeaderboardQ.WeeklyLeaderboardDTO {
+  public shared query ({ caller }) func getWeeklyRewardLeaderboard(seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber) : async ?LeaderboardQ.WeeklyLeaderboardDTO {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == CanisterIds.OPENFPL_BACKEND_CANISTER_ID;
@@ -524,7 +524,7 @@ actor class _LeaderboardCanister() {
   };
 
 /* TODO
-  public shared query ({ caller }) func getWeeklyLeaderboardEntry(seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, principalId : Text) : async ?DTOs.LeaderboardEntryDTO {
+  public shared query ({ caller }) func getWeeklyLeaderboardEntry(seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber, principalId : Text) : async ?DTOs.LeaderboardEntryDTO {
     assert not Principal.isAnonymous(caller);
     let callerPrincipalId = Principal.toText(caller);
     assert callerPrincipalId == CanisterIds.OPENFPL_BACKEND_CANISTER_ID;

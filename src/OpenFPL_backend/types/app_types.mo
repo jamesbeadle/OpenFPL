@@ -1,9 +1,11 @@
 
 import List "mo:base/List";
-import FootballTypes "mo:waterway-mops/FootballTypes";
 import Ids "mo:waterway-mops/Ids";
 import BaseTypes "mo:waterway-mops/BaseTypes";
 import ICFCEnums "mo:waterway-mops/ICFCEnums";
+import FootballIds "mo:waterway-mops/football/FootballIds";
+import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
+import BaseDefinitions "mo:waterway-mops/BaseDefinitions";
 import Enums "../enums/enums";
 
 module AppTypes {
@@ -21,35 +23,35 @@ module AppTypes {
     profilePicture : ?Blob;
     profilePictureType : Text;
     createDate : Int;
-    favouriteClubId : ?FootballTypes.ClubId;
+    favouriteClubId : ?FootballIds.ClubId;
     transfersAvailable : Nat8;
     monthlyBonusesAvailable : Nat8;
     bankQuarterMillions : Nat16;
-    playerIds : [FootballTypes.PlayerId];
-    captainId : FootballTypes.PlayerId;
-    goalGetterGameweek : FootballTypes.GameweekNumber;
-    goalGetterPlayerId : FootballTypes.PlayerId;
-    passMasterGameweek : FootballTypes.GameweekNumber;
-    passMasterPlayerId : FootballTypes.PlayerId;
-    noEntryGameweek : FootballTypes.GameweekNumber;
-    noEntryPlayerId : FootballTypes.PlayerId;
-    teamBoostGameweek : FootballTypes.GameweekNumber;
-    teamBoostClubId : FootballTypes.ClubId;
-    safeHandsGameweek : FootballTypes.GameweekNumber;
-    safeHandsPlayerId : FootballTypes.PlayerId;
-    captainFantasticGameweek : FootballTypes.GameweekNumber;
-    captainFantasticPlayerId : FootballTypes.PlayerId;
-    oneNationGameweek : FootballTypes.GameweekNumber;
+    playerIds : [FootballIds.PlayerId];
+    captainId : FootballIds.PlayerId;
+    goalGetterGameweek : FootballDefinitions.GameweekNumber;
+    goalGetterPlayerId : FootballIds.PlayerId;
+    passMasterGameweek : FootballDefinitions.GameweekNumber;
+    passMasterPlayerId : FootballIds.PlayerId;
+    noEntryGameweek : FootballDefinitions.GameweekNumber;
+    noEntryPlayerId : FootballIds.PlayerId;
+    teamBoostGameweek : FootballDefinitions.GameweekNumber;
+    teamBoostClubId : FootballIds.ClubId;
+    safeHandsGameweek : FootballDefinitions.GameweekNumber;
+    safeHandsPlayerId : FootballIds.PlayerId;
+    captainFantasticGameweek : FootballDefinitions.GameweekNumber;
+    captainFantasticPlayerId : FootballIds.PlayerId;
+    oneNationGameweek : FootballDefinitions.GameweekNumber;
     oneNationCountryId : Ids.CountryId;
-    prospectsGameweek : FootballTypes.GameweekNumber;
-    braceBonusGameweek : FootballTypes.GameweekNumber;
-    hatTrickHeroGameweek : FootballTypes.GameweekNumber;
-    transferWindowGameweek : FootballTypes.GameweekNumber;
+    prospectsGameweek : FootballDefinitions.GameweekNumber;
+    braceBonusGameweek : FootballDefinitions.GameweekNumber;
+    hatTrickHeroGameweek : FootballDefinitions.GameweekNumber;
+    transferWindowGameweek : FootballDefinitions.GameweekNumber;
     history : List.List<FantasyTeamSeason>;
   };
 
   public type FantasyTeamSeason = {
-    seasonId : FootballTypes.SeasonId;
+    seasonId : FootballIds.SeasonId;
     totalPoints : Int16;
     gameweeks : List.List<FantasyTeamSnapshot>;
   };
@@ -57,60 +59,60 @@ module AppTypes {
   public type FantasyTeamSnapshot = {
     principalId : Text;
     username : Text;
-    favouriteClubId : ?FootballTypes.ClubId;
+    favouriteClubId : ?FootballIds.ClubId;
     monthlyBonusesAvailable : Nat8;
     transfersAvailable : Nat8;
     bankQuarterMillions : Nat16;
     teamValueQuarterMillions : Nat16;
-    playerIds : [FootballTypes.PlayerId];
-    captainId : FootballTypes.PlayerId;
-    gameweek : FootballTypes.GameweekNumber;
-    goalGetterGameweek : FootballTypes.GameweekNumber;
-    goalGetterPlayerId : FootballTypes.PlayerId;
-    passMasterGameweek : FootballTypes.GameweekNumber;
-    passMasterPlayerId : FootballTypes.PlayerId;
-    noEntryGameweek : FootballTypes.GameweekNumber;
-    noEntryPlayerId : FootballTypes.PlayerId;
-    teamBoostGameweek : FootballTypes.GameweekNumber;
-    teamBoostClubId : FootballTypes.ClubId;
-    safeHandsGameweek : FootballTypes.GameweekNumber;
-    safeHandsPlayerId : FootballTypes.PlayerId;
-    captainFantasticGameweek : FootballTypes.GameweekNumber;
-    captainFantasticPlayerId : FootballTypes.PlayerId;
-    oneNationGameweek : FootballTypes.GameweekNumber;
+    playerIds : [FootballIds.PlayerId];
+    captainId : FootballIds.PlayerId;
+    gameweek : FootballDefinitions.GameweekNumber;
+    goalGetterGameweek : FootballDefinitions.GameweekNumber;
+    goalGetterPlayerId : FootballIds.PlayerId;
+    passMasterGameweek : FootballDefinitions.GameweekNumber;
+    passMasterPlayerId : FootballIds.PlayerId;
+    noEntryGameweek : FootballDefinitions.GameweekNumber;
+    noEntryPlayerId : FootballIds.PlayerId;
+    teamBoostGameweek : FootballDefinitions.GameweekNumber;
+    teamBoostClubId : FootballIds.ClubId;
+    safeHandsGameweek : FootballDefinitions.GameweekNumber;
+    safeHandsPlayerId : FootballIds.PlayerId;
+    captainFantasticGameweek : FootballDefinitions.GameweekNumber;
+    captainFantasticPlayerId : FootballIds.PlayerId;
+    oneNationGameweek : FootballDefinitions.GameweekNumber;
     oneNationCountryId : Ids.CountryId;
-    prospectsGameweek : FootballTypes.GameweekNumber;
-    braceBonusGameweek : FootballTypes.GameweekNumber;
-    hatTrickHeroGameweek : FootballTypes.GameweekNumber;
+    prospectsGameweek : FootballDefinitions.GameweekNumber;
+    braceBonusGameweek : FootballDefinitions.GameweekNumber;
+    hatTrickHeroGameweek : FootballDefinitions.GameweekNumber;
     points : Int16;
     monthlyPoints : Int16;
     seasonPoints : Int16;
-    transferWindowGameweek : FootballTypes.GameweekNumber;
-    month : BaseTypes.CalendarMonth;
-    seasonId : FootballTypes.SeasonId;
+    transferWindowGameweek : FootballDefinitions.GameweekNumber;
+    month : BaseDefinitions.CalendarMonth;
+    seasonId : FootballIds.SeasonId;
   };
 
   public type WeeklyRewards = {
-    seasonId : FootballTypes.SeasonId;
-    gameweek : FootballTypes.GameweekNumber;
+    seasonId : FootballIds.SeasonId;
+    gameweek : FootballDefinitions.GameweekNumber;
     rewards : List.List<RewardEntry>;
   };
 
   public type MonthlyClubRewards = {
-    seasonId : FootballTypes.SeasonId;
-    month : BaseTypes.CalendarMonth;
-    clubId : FootballTypes.ClubId;
+    seasonId : FootballIds.SeasonId;
+    month : BaseDefinitions.CalendarMonth;
+    clubId : FootballIds.ClubId;
     rewards : List.List<RewardEntry>;
   };
 
   public type MonthlyRewards = {
-    seasonId : FootballTypes.SeasonId;
-    month : BaseTypes.CalendarMonth;
+    seasonId : FootballIds.SeasonId;
+    month : BaseDefinitions.CalendarMonth;
     rewards : List.List<RewardEntry>;
   };
 
   public type SeasonRewards = {
-    seasonId : FootballTypes.SeasonId;
+    seasonId : FootballIds.SeasonId;
     rewards : List.List<RewardEntry>;
   };
 
@@ -132,22 +134,22 @@ module AppTypes {
   };
 
   public type WeeklyLeaderboard = {
-    seasonId : FootballTypes.SeasonId;
-    gameweek : FootballTypes.GameweekNumber;
+    seasonId : FootballIds.SeasonId;
+    gameweek : FootballDefinitions.GameweekNumber;
     entries : List.List<LeaderboardEntry>;
     totalEntries : Nat;
   };
 
   public type MonthlyLeaderboard = {
-    seasonId : FootballTypes.SeasonId;
-    month : BaseTypes.CalendarMonth;
+    seasonId : FootballIds.SeasonId;
+    month : BaseDefinitions.CalendarMonth;
     entries : List.List<LeaderboardEntry>;
     totalEntries : Nat;
-    clubId : FootballTypes.ClubId;
+    clubId : FootballIds.ClubId;
   };
 
   public type SeasonLeaderboard = {
-    seasonId : FootballTypes.SeasonId;
+    seasonId : FootballIds.SeasonId;
     entries : List.List<LeaderboardEntry>;
     totalEntries : Nat;
   };
@@ -161,7 +163,7 @@ module AppTypes {
   };
 
   public type TeamValueLeaderboard = {
-    seasonId : FootballTypes.SeasonId;
+    seasonId : FootballIds.SeasonId;
     entries : List.List<LeaderboardEntry>;
     totalEntries : Nat;
   };
@@ -177,22 +179,22 @@ module AppTypes {
   };
 
   public type LeagueGameweekStatus = {
-    leagueId : FootballTypes.LeagueId;
-    seasonId : FootballTypes.SeasonId;
-    gameweek : FootballTypes.GameweekNumber;
+    leagueId : FootballIds.LeagueId;
+    seasonId : FootballIds.SeasonId;
+    gameweek : FootballDefinitions.GameweekNumber;
     status : Enums.LeaderboardStatus;
   };
 
   public type LeagueMonthStatus = {
-    leagueId : FootballTypes.LeagueId;
-    seasonId : FootballTypes.SeasonId;
-    month : BaseTypes.CalendarMonth;
+    leagueId : FootballIds.LeagueId;
+    seasonId : FootballIds.SeasonId;
+    month : BaseDefinitions.CalendarMonth;
     status : Enums.LeaderboardStatus;
   };
 
   public type LeagueSeasonStatus = {
-    leagueId : FootballTypes.LeagueId;
-    seasonId : FootballTypes.SeasonId;
+    leagueId : FootballIds.LeagueId;
+    seasonId : FootballIds.SeasonId;
     status : Enums.LeaderboardStatus;
   };
 
@@ -202,7 +204,7 @@ module AppTypes {
   };
 
   public type RewardRates = {
-    seasonId : FootballTypes.SeasonId;
+    seasonId : FootballIds.SeasonId;
     startDate : Int;
     seasonLeaderboardRewardRate : Nat64;
     monthlyLeaderboardRewardRate : Nat64;
