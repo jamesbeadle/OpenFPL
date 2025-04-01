@@ -29,7 +29,7 @@ module {
     private var leagueGameweekStatuses : [AppTypes.LeagueGameweekStatus] = [];
     private var leagueMonthStatuses : [AppTypes.LeagueMonthStatus] = [];
     private var leagueSeasonStatuses : [AppTypes.LeagueSeasonStatus] = [];
-
+/*
     private var playersSnapshots : [(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])])] = [];
 
     public func updateDataHash(category : Text) : async () {
@@ -66,11 +66,9 @@ module {
         dataHashes := Buffer.toArray<Base.DataHash>(hashBuffer);
       };
     };
-
     public func getDataHashes() : Result.Result<[DTOs.DataHashDTO], MopsEnums.Error> {
       return #ok(dataHashes);
     };
-
     public func getAppStatus() : Result.Result<DTOs.AppStatusDTO, MopsEnums.Error> {
       return #ok({
         onHold = appStatus.onHold;
@@ -175,38 +173,39 @@ module {
 
       return [];
     };
+*/
 
     //Stable variable functions
 
-    public func getStableAppStatus() : T.AppStatus {
+    public func getStableAppStatus() : AppTypes.AppStatus {
       return appStatus;
     };
 
-    public func setStableAppStatus(stable_app_status : T.AppStatus) {
+    public func setStableAppStatus(stable_app_status : AppTypes.AppStatus) {
       appStatus := stable_app_status;
     };
 
-    public func getStableLeagueGameweekStatuses() : [T.LeagueGameweekStatus] {
+    public func getStableLeagueGameweekStatuses() : [AppTypes.LeagueGameweekStatus] {
       return leagueGameweekStatuses;
     };
 
-    public func setStableLeagueGameweekStatuses(stable_league_gameweek_statuses : [T.LeagueGameweekStatus]) {
+    public func setStableLeagueGameweekStatuses(stable_league_gameweek_statuses : [AppTypes.LeagueGameweekStatus]) {
       leagueGameweekStatuses := stable_league_gameweek_statuses;
     };
 
-    public func getStableLeagueMonthStatuses() : [T.LeagueMonthStatus] {
+    public func getStableLeagueMonthStatuses() : [AppTypes.LeagueMonthStatus] {
       return leagueMonthStatuses;
     };
 
-    public func setStableLeagueMonthStatuses(stable_league_month_statuses : [T.LeagueMonthStatus]) {
+    public func setStableLeagueMonthStatuses(stable_league_month_statuses : [AppTypes.LeagueMonthStatus]) {
       leagueMonthStatuses := stable_league_month_statuses;
     };
 
-    public func getStableLeagueSeasonStatuses() : [T.LeagueSeasonStatus] {
+    public func getStableLeagueSeasonStatuses() : [AppTypes.LeagueSeasonStatus] {
       return leagueSeasonStatuses;
     };
 
-    public func setStableLeagueSeasonStatuses(stable_league_season_statuses : [T.LeagueSeasonStatus]) {
+    public func setStableLeagueSeasonStatuses(stable_league_season_statuses : [AppTypes.LeagueSeasonStatus]) {
       leagueSeasonStatuses := stable_league_season_statuses;
     };
 
@@ -217,11 +216,10 @@ module {
     public func setStableDataHashes(stable_data_hashes : [Base.DataHash]) {
       dataHashes := stable_data_hashes;
     };
-
+/*
     public func getStablePlayersSnapshots() : [(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])])] {
       return playersSnapshots;
     };
-
     public func setStablePlayersSnapshots(stable_players_snapshots : [(FootballTypes.SeasonId, [(FootballTypes.GameweekNumber, [DTOs.PlayerDTO])])]) {
       playersSnapshots := stable_players_snapshots;
     };
@@ -242,6 +240,7 @@ module {
       await updateDataHash("app_status");
     };
 
+*/
     public func updateSystemStatus(dto : AppCommands.UpdateSystemStatus) {
       appStatus := {
         onHold = dto.onHold;

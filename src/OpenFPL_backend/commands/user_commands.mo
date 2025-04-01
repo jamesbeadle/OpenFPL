@@ -26,6 +26,9 @@ module UserCommands = {
     public type PlayBonus = {
         principalId: Ids.PrincipalId;
         bonusType: Enums.BonusType;
+        playerId: FootballTypes.PlayerId;
+        clubId: FootballTypes.ClubId;
+        countryId: Ids.CountryId;
     };
 
 

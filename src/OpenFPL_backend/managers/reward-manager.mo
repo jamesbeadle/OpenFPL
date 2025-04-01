@@ -10,8 +10,11 @@ import Nat "mo:base/Nat";
 import Result "mo:base/Result";
 
 import FootballTypes "mo:waterway-mops/FootballTypes";
+import Enums "mo:waterway-mops/Enums";
+import BaseUtilities "mo:waterway-mops/BaseUtilities";
 import AppTypes "../types/app_types";
 import LeaderboardQueries "../queries/leaderboard_queries";
+import RewardPercentages "../utilities/RewardPercentages";
 
 module {
 
@@ -199,7 +202,7 @@ module {
       return Buffer.toArray(adjustedPercentagesBuffer);
     };
 
-    public func getWeeklyRewards(seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber) : Result.Result<AppTypes.WeeklyRewards, MopsEnums.Error> {
+    public func getWeeklyRewards(seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber) : Result.Result<AppTypes.WeeklyRewards, Enums.Error> {
 
       let rewards = List.find(
         weeklyRewards,

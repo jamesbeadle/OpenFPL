@@ -2,6 +2,11 @@
 // John should just be commands queries ids enums
 import Base "mo:waterway-mops/BaseTypes";
 import FootballTypes "mo:waterway-mops/FootballTypes";
+import Ids "mo:waterway-mops/Ids";
+import IcfcTypes "mo:waterway-mops/ICFCTypes";
+import Enums "mo:waterway-mops/Enums";
+import BaseTypes "mo:waterway-mops/BaseTypes";
+import DataCanister "canister:data_canister";
 
 
 /* ----- Mops Packages ----- */
@@ -66,13 +71,13 @@ actor class _ManagerCanister() {
 
 
   /* ----- Stable Canister Variables ----- */ 
-  private stable var stable_manager_group_indexes : [(Base.PrincipalId, Nat8)] = [];
+  private stable var stable_manager_group_indexes : [(Ids.PrincipalId, Nat8)] = [];
   private stable var activeGroupIndex : Nat8 = 0;
   private stable var totalManagers = 0;
 
-  private var managerGroupIndexes : TrieMap.TrieMap<Base.PrincipalId, Nat8> = TrieMap.TrieMap<Base.PrincipalId, Nat8>(Text.equal, Text.hash);
+  private var managerGroupIndexes : TrieMap.TrieMap<Ids.PrincipalId, Nat8> = TrieMap.TrieMap<Ids.PrincipalId, Nat8>(Text.equal, Text.hash);
 
-  public shared ({ caller }) func updateTeamSelection(dto : UserCommands.SaveFantasyTeam, transfersAvailable : Nat8, newBankBalance : Nat16, currentGameweek: ICFCTypes.GameweekNumber) : async Result.Result<(), MopsEnums.Error> {
+  public shared ({ caller }) func updateTeamSelection(dto : UserCommands.SaveFantasyTeam, transfersAvailable : Nat8, newBankBalance : Nat16, currentGameweek: IcfcTypes.GameweekNumber) : async Result.Result<(), Enums.Error> {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == Environment.BACKEND_CANISTER_ID;
@@ -211,7 +216,7 @@ actor class _ManagerCanister() {
 
   };
 
-  private func mergeTeamSelection(dto : UserCommands.SaveFantasyTeam, manager : AppTypes.Manager, transfersAvailable : Nat8, newBankBalance : Nat16, currentGameweek: ICFCTypes.GameweekNumber) : AppTypes.Manager {
+  private func mergeTeamSelection(dto : UserCommands.SaveFantasyTeam, manager : AppTypes.Manager, transfersAvailable : Nat8, newBankBalance : Nat16, currentGameweek: IcfcTypes.GameweekNumber) : AppTypes.Manager {
     
     var transferWindowGameweek = manager.transferWindowGameweek;
     if(transferWindowGameweek == 0 and dto.playTransferWindowBonus){
@@ -254,7 +259,7 @@ actor class _ManagerCanister() {
     };
   };
 
-  public shared ({ caller }) func useBonus(dto : UserCommands.PlayBonus, monthlyBonuses : Nat8, gameweek: ICFCTypes.GameweekNumber) : async Result.Result<(), MopsEnums.Error> {
+  public shared ({ caller }) func useBonus(dto : UserCommands.PlayBonus, monthlyBonuses : Nat8, gameweek: IcfcTypes.GameweekNumber) : async Result.Result<(), Enums.Error> {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == Environment.BACKEND_CANISTER_ID;
@@ -268,7 +273,7 @@ actor class _ManagerCanister() {
           case 0 {
             for (manager in Iter.fromArray(managerGroup1)) {
               if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeBonus(dto, manager, monthlyBonuses, gameweek));
+                managerBuffer.add(mergeBonus(dto, manager, gameweek, monthlyBonuses));
               } else {
                 managerBuffer.add(manager);
               };
@@ -278,7 +283,7 @@ actor class _ManagerCanister() {
           case 1 {
             for (manager in Iter.fromArray(managerGroup2)) {
               if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeBonus(dto, manager, monthlyBonuses));
+                managerBuffer.add(mergeBonus(dto, manager, gameweek, monthlyBonuses));
               } else {
                 managerBuffer.add(manager);
               };
@@ -288,7 +293,7 @@ actor class _ManagerCanister() {
           case 2 {
             for (manager in Iter.fromArray(managerGroup3)) {
               if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeBonus(dto, manager, monthlyBonuses));
+                managerBuffer.add(mergeBonus(dto, manager, gameweek, monthlyBonuses));
               } else {
                 managerBuffer.add(manager);
               };
@@ -298,7 +303,7 @@ actor class _ManagerCanister() {
           case 3 {
             for (manager in Iter.fromArray(managerGroup4)) {
               if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeBonus(dto, manager, monthlyBonuses));
+                managerBuffer.add(mergeBonus(dto, manager, gameweek, monthlyBonuses));
               } else {
                 managerBuffer.add(manager);
               };
@@ -308,7 +313,7 @@ actor class _ManagerCanister() {
           case 4 {
             for (manager in Iter.fromArray(managerGroup5)) {
               if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeBonus(dto, manager, monthlyBonuses));
+                managerBuffer.add(mergeBonus(dto, manager, gameweek, monthlyBonuses));
               } else {
                 managerBuffer.add(manager);
               };
@@ -318,7 +323,7 @@ actor class _ManagerCanister() {
           case 5 {
             for (manager in Iter.fromArray(managerGroup6)) {
               if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeBonus(dto, manager, monthlyBonuses));
+                managerBuffer.add(mergeBonus(dto, manager, gameweek, monthlyBonuses));
               } else {
                 managerBuffer.add(manager);
               };
@@ -328,7 +333,7 @@ actor class _ManagerCanister() {
           case 6 {
             for (manager in Iter.fromArray(managerGroup7)) {
               if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeBonus(dto, manager, monthlyBonuses));
+                managerBuffer.add(mergeBonus(dto, manager, gameweek, monthlyBonuses));
               } else {
                 managerBuffer.add(manager);
               };
@@ -338,7 +343,7 @@ actor class _ManagerCanister() {
           case 7 {
             for (manager in Iter.fromArray(managerGroup8)) {
               if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeBonus(dto, manager, monthlyBonuses));
+                managerBuffer.add(mergeBonus(dto, manager, gameweek, monthlyBonuses));
               } else {
                 managerBuffer.add(manager);
               };
@@ -348,7 +353,7 @@ actor class _ManagerCanister() {
           case 8 {
             for (manager in Iter.fromArray(managerGroup9)) {
               if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeBonus(dto, manager, monthlyBonuses));
+                managerBuffer.add(mergeBonus(dto, manager, gameweek, monthlyBonuses));
               } else {
                 managerBuffer.add(manager);
               };
@@ -358,7 +363,7 @@ actor class _ManagerCanister() {
           case 9 {
             for (manager in Iter.fromArray(managerGroup10)) {
               if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeBonus(dto, manager, monthlyBonuses));
+                managerBuffer.add(mergeBonus(dto, manager, gameweek, monthlyBonuses));
               } else {
                 managerBuffer.add(manager);
               };
@@ -368,7 +373,7 @@ actor class _ManagerCanister() {
           case 10 {
             for (manager in Iter.fromArray(managerGroup11)) {
               if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeBonus(dto, manager, monthlyBonuses));
+                managerBuffer.add(mergeBonus(dto, manager, gameweek, monthlyBonuses));
               } else {
                 managerBuffer.add(manager);
               };
@@ -378,7 +383,7 @@ actor class _ManagerCanister() {
           case 11 {
             for (manager in Iter.fromArray(managerGroup12)) {
               if (manager.principalId == dto.principalId) {
-                managerBuffer.add(mergeBonus(dto, manager, monthlyBonuses));
+                managerBuffer.add(mergeBonus(dto, manager, gameweek, monthlyBonuses));
               } else {
                 managerBuffer.add(manager);
               };
@@ -392,8 +397,8 @@ actor class _ManagerCanister() {
     return #ok;
 
   };
-
-  private func mergeBonus(dto : UserCommands.PlayBonus, manager : AppTypes.Manager, gameweek : FootballTypes.GameweekNumber, monthlyBonusesAvailable : Nat8, bonusPlayerId: FootballTypes.PlayerId, bonusClubId: FootballTypes.ClubId, bonusNationality: MopsIds.CountryId) : AppTypes.Manager {
+  
+  private func mergeBonus(dto : UserCommands.PlayBonus, manager : AppTypes.Manager, gameweek : FootballTypes.GameweekNumber, monthlyBonusesAvailable : Nat8) : AppTypes.Manager {
 
 
     var updatedGoalGetterGameweek = manager.goalGetterGameweek;
@@ -420,40 +425,40 @@ actor class _ManagerCanister() {
     switch(dto.bonusType){
       case (#GoalGetter){
         updatedGoalGetterGameweek := gameweek;
-        updatedGoalGetterPlayerId := bonusPlayerId;
+        updatedGoalGetterPlayerId := dto.playerId;
       };
       case (#BraceBonus){
         updatedBraceBonusGameweek := gameweek;
       };
       case (#CaptainFantastic){
         updatedCaptainFantasticGameweek := gameweek;
-        updatedCaptainFantasticPlayerId := bonusPlayerId;
+        updatedCaptainFantasticPlayerId := dto.playerId;
       };
       case (#HatTrickHero){
         updatedHatTrickHeroGameweek := gameweek;
       };
       case (#NoEntry){
         updatedNoEntryGameweek := gameweek;
-        updatedNoEntryPlayerId := bonusPlayerId;
+        updatedNoEntryPlayerId := dto.playerId;
       };
       case (#OneNation){
         updatedOneNationGameweek := gameweek;
-        updatedOneNationCountryId := bonusNationality;
+        updatedOneNationCountryId := dto.countryId;
       };
       case ( #PassMaster){
         updatedPassMasterGameweek := gameweek;
-        updatedPassMasterPlayerId := bonusPlayerId;
+        updatedPassMasterPlayerId := dto.playerId;
       };
       case (#Prospects){
         updatedProspectsGameweek := gameweek
       };
       case (#SafeHands){
         updatedSafeHandsGameweek := gameweek;
-        updatedSafeHandsPlayerId := bonusPlayerId;
+        updatedSafeHandsPlayerId := dto.playerId;
       };
       case (#TeamBoost){
         updatedTeamBoostGameweek := gameweek;
-        updatedTeamBoostClubId := bonusClubId;
+        updatedTeamBoostClubId := dto.clubId;
       };
 
     };
@@ -493,8 +498,8 @@ actor class _ManagerCanister() {
       hatTrickHeroGameweek = updatedHatTrickHeroGameweek;
     };
   };
-
-  public shared ({ caller }) func updateFavouriteClub(dto : UserCommands.SetFavouriteClub) : async Result.Result<(), MopsEnums.Error> {
+  
+  public shared ({ caller }) func updateFavouriteClub(dto : UserCommands.SetFavouriteClub) : async Result.Result<(), Enums.Error> {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == Environment.BACKEND_CANISTER_ID;
@@ -507,7 +512,7 @@ actor class _ManagerCanister() {
         switch (foundGroupIndex) {
           case 0 {
             for (manager in Iter.fromArray(managerGroup1)) {
-              if (manager.principalId == managerPrincipalId) {
+              if (manager.principalId == dto.principalId) {
                 managerBuffer.add(mergeManagerFavouriteClub(manager, dto.favouriteClubId));
               } else {
                 managerBuffer.add(manager);
@@ -517,7 +522,7 @@ actor class _ManagerCanister() {
           };
           case 1 {
             for (manager in Iter.fromArray(managerGroup2)) {
-              if (manager.principalId == managerPrincipalId) {
+              if (manager.principalId == dto.principalId) {
                 managerBuffer.add(mergeManagerFavouriteClub(manager, dto.favouriteClubId));
               } else {
                 managerBuffer.add(manager);
@@ -527,7 +532,7 @@ actor class _ManagerCanister() {
           };
           case 2 {
             for (manager in Iter.fromArray(managerGroup3)) {
-              if (manager.principalId == managerPrincipalId) {
+              if (manager.principalId == dto.principalId) {
                 managerBuffer.add(mergeManagerFavouriteClub(manager, dto.favouriteClubId));
               } else {
                 managerBuffer.add(manager);
@@ -537,7 +542,7 @@ actor class _ManagerCanister() {
           };
           case 3 {
             for (manager in Iter.fromArray(managerGroup4)) {
-              if (manager.principalId == managerPrincipalId) {
+              if (manager.principalId == dto.principalId) {
                 managerBuffer.add(mergeManagerFavouriteClub(manager, dto.favouriteClubId));
               } else {
                 managerBuffer.add(manager);
@@ -547,7 +552,7 @@ actor class _ManagerCanister() {
           };
           case 4 {
             for (manager in Iter.fromArray(managerGroup5)) {
-              if (manager.principalId == managerPrincipalId) {
+              if (manager.principalId == dto.principalId) {
                 managerBuffer.add(mergeManagerFavouriteClub(manager, dto.favouriteClubId));
               } else {
                 managerBuffer.add(manager);
@@ -557,7 +562,7 @@ actor class _ManagerCanister() {
           };
           case 5 {
             for (manager in Iter.fromArray(managerGroup6)) {
-              if (manager.principalId == managerPrincipalId) {
+              if (manager.principalId == dto.principalId) {
                 managerBuffer.add(mergeManagerFavouriteClub(manager, dto.favouriteClubId));
               } else {
                 managerBuffer.add(manager);
@@ -567,7 +572,7 @@ actor class _ManagerCanister() {
           };
           case 6 {
             for (manager in Iter.fromArray(managerGroup7)) {
-              if (manager.principalId == managerPrincipalId) {
+              if (manager.principalId == dto.principalId) {
                 managerBuffer.add(mergeManagerFavouriteClub(manager, dto.favouriteClubId));
               } else {
                 managerBuffer.add(manager);
@@ -577,7 +582,7 @@ actor class _ManagerCanister() {
           };
           case 7 {
             for (manager in Iter.fromArray(managerGroup8)) {
-              if (manager.principalId == managerPrincipalId) {
+              if (manager.principalId == dto.principalId) {
                 managerBuffer.add(mergeManagerFavouriteClub(manager, dto.favouriteClubId));
               } else {
                 managerBuffer.add(manager);
@@ -587,7 +592,7 @@ actor class _ManagerCanister() {
           };
           case 8 {
             for (manager in Iter.fromArray(managerGroup9)) {
-              if (manager.principalId == managerPrincipalId) {
+              if (manager.principalId == dto.principalId) {
                 managerBuffer.add(mergeManagerFavouriteClub(manager, dto.favouriteClubId));
               } else {
                 managerBuffer.add(manager);
@@ -597,7 +602,7 @@ actor class _ManagerCanister() {
           };
           case 9 {
             for (manager in Iter.fromArray(managerGroup10)) {
-              if (manager.principalId == managerPrincipalId) {
+              if (manager.principalId == dto.principalId) {
                 managerBuffer.add(mergeManagerFavouriteClub(manager, dto.favouriteClubId));
               } else {
                 managerBuffer.add(manager);
@@ -607,7 +612,7 @@ actor class _ManagerCanister() {
           };
           case 10 {
             for (manager in Iter.fromArray(managerGroup11)) {
-              if (manager.principalId == managerPrincipalId) {
+              if (manager.principalId == dto.principalId) {
                 managerBuffer.add(mergeManagerFavouriteClub(manager, dto.favouriteClubId));
               } else {
                 managerBuffer.add(manager);
@@ -617,7 +622,7 @@ actor class _ManagerCanister() {
           };
           case 11 {
             for (manager in Iter.fromArray(managerGroup12)) {
-              if (manager.principalId == managerPrincipalId) {
+              if (manager.principalId == dto.principalId) {
                 managerBuffer.add(mergeManagerFavouriteClub(manager, dto.favouriteClubId));
               } else {
                 managerBuffer.add(manager);
@@ -632,7 +637,7 @@ actor class _ManagerCanister() {
 
     return #ok();
   };
-
+  
   private func mergeManagerFavouriteClub(manager : AppTypes.Manager, favouriteClubId : FootballTypes.ClubId) : AppTypes.Manager {
     return {
       principalId = manager.principalId;
@@ -775,12 +780,12 @@ actor class _ManagerCanister() {
     };
   };
 
-  public shared ({ caller }) func getManagersWithPlayer(playerId : FootballTypes.PlayerId) : async [Base.PrincipalId] {
+  public shared ({ caller }) func getManagersWithPlayer(playerId : FootballTypes.PlayerId) : async [Ids.PrincipalId] {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == Environment.BACKEND_CANISTER_ID;
 
-    let allManagersBuffer = Buffer.fromArray<Base.PrincipalId>([]);
+    let allManagersBuffer = Buffer.fromArray<Ids.PrincipalId>([]);
     for (index in Iter.range(0, 11)) {
       switch (index) {
         case 0 {
@@ -947,7 +952,7 @@ actor class _ManagerCanister() {
     };
     return Buffer.toArray(allManagersBuffer);
   };
-
+/*
   public shared ({ caller }) func getFantasyTeamSnapshot(dto : UserQueries.GetFantasyTeamSnapshot) : async ?UserQueries.FantasyTeamSnapshot {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
@@ -1026,7 +1031,7 @@ actor class _ManagerCanister() {
     };
     return null;
   };
-
+*/
   public shared ({ caller }) func getOrderedSnapshots(seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber) : async [UserQueries.FantasyTeamSnapshot] {
 
     assert not Principal.isAnonymous(caller);
@@ -1117,7 +1122,7 @@ actor class _ManagerCanister() {
     return sortedManagerSnapshots;
   };
 
-  public shared ({ caller }) func addNewManager(newManager : AppTypes.Manager) : async Result.Result<(), MopsEnums.Error> {
+  public shared ({ caller }) func addNewManager(newManager : AppTypes.Manager) : async Result.Result<(), Enums.Error> {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == Environment.BACKEND_CANISTER_ID;
@@ -1202,13 +1207,13 @@ actor class _ManagerCanister() {
     assert backendPrincipalId == Environment.BACKEND_CANISTER_ID;
     return totalManagers;
   };
-
-  public shared ({ caller }) func getClubManagers(clubId : FootballTypes.ClubId) : async [Base.PrincipalId] {
+/*
+  public shared ({ caller }) func getClubManagers(clubId : FootballTypes.ClubId) : async [Ids.PrincipalId] {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == Environment.BACKEND_CANISTER_ID;
 
-    let clubManagerIdBuffer = Buffer.fromArray<Base.PrincipalId>([]);
+    let clubManagerIdBuffer = Buffer.fromArray<Ids.PrincipalId>([]);
 
     for (index in Iter.range(0, 11)) {
       switch (index) {
@@ -1292,9 +1297,8 @@ actor class _ManagerCanister() {
 
     return Buffer.toArray(clubManagerIdBuffer);
   };
-
-  private func getGroupClubManagerIds(managers : [AppTypes.Manager], clubId : FootballTypes.ClubId) : [Base.PrincipalId] {
-    let managerIdBuffer = Buffer.fromArray<Base.PrincipalId>([]);
+  private func getGroupClubManagerIds(managers : [AppTypes.Manager], clubId : FootballTypes.ClubId) : [Ids.PrincipalId] {
+    let managerIdBuffer = Buffer.fromArray<Ids.PrincipalId>([]);
     for (manager in Iter.fromArray(managers)) {
       switch (manager.favouriteClubId) {
         case (?foundClubId) {
@@ -1312,7 +1316,7 @@ actor class _ManagerCanister() {
 
   //Snapshot teams:
 
-  public shared ({ caller }) func snapshotFantasyTeams(seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth) : async () {
+  public shared ({ caller }) func snapshotFantasyTeams(seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : BaseTypes.CalendarMonth) : async () {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == Environment.BACKEND_CANISTER_ID;
@@ -1321,8 +1325,7 @@ actor class _ManagerCanister() {
       await snapshotManagers(index, seasonId, gameweek, month);
     };
   };
-
-  private func snapshotManagers(managerGroup : Int, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth) : async () {
+  private func snapshotManagers(managerGroup : Int, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : BaseTypes.CalendarMonth) : async () {
 
     let backend_canister = actor (Environment.BACKEND_CANISTER_ID) : actor {
       getPlayersSnapshot : shared query (dto : FootballQueries.GetSnapshotPlayers) -> async FootballQueries.SnapshotPlayers;
@@ -1605,8 +1608,8 @@ actor class _ManagerCanister() {
       };
     };
   };
-
-  private func updateSnapshotPoints(principalId : Text, seasonId : Nat16, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth, teamPoints : Int16, teamValueQuarterMillions : Nat16) : () {
+*/
+  private func updateSnapshotPoints(principalId : Text, seasonId : Nat16, gameweek : FootballTypes.GameweekNumber, month : BaseTypes.CalendarMonth, teamPoints : Int16, teamValueQuarterMillions : Nat16) : () {
 
     let managerBuffer = Buffer.fromArray<AppTypes.Manager>([]);
     let managerGroupIndex = managerGroupIndexes.get(principalId);
@@ -1747,7 +1750,7 @@ actor class _ManagerCanister() {
     };
   };
 
-  private func mergeManagerSnapshot(manager : AppTypes.Manager, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth, weeklyPoints : Int16, monthlyPoints : Int16, seasonPoints : Int16, teamValueQuarterMillions : Nat16) : UserQueries.FantasyTeamSnapshot {
+  private func mergeManagerSnapshot(manager : AppTypes.Manager, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : BaseTypes.CalendarMonth, weeklyPoints : Int16, monthlyPoints : Int16, seasonPoints : Int16, teamValueQuarterMillions : Nat16) : UserQueries.FantasyTeamSnapshot {
 
     return {
       principalId = manager.principalId;
@@ -1861,14 +1864,14 @@ actor class _ManagerCanister() {
   };
 
   //Calculate teams scores
-
+  /*
   public shared ({ caller }) func calculateFantasyTeamScores(leagueId : FootballTypes.LeagueId, seasonId : FootballTypes.SeasonId, gameweek : FootballTypes.GameweekNumber, month : Base.CalendarMonth) : async () {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == Environment.BACKEND_CANISTER_ID;
 
     let backend_canister = actor (Environment.BACKEND_CANISTER_ID) : actor {
-      getPlayersMap : (dto : FootballQueries.GetPlayersMap) -> async Result.Result<FootballQueries.PlayersMap, MopsEnums.Error>;
+      getPlayersMap : (dto : DataCanister.GetPlayersMap) -> async Result.Result<FootballQueries.PlayersMap, MopsEnums.Error>;
       getPlayersSnapshot : shared query (dto : FootballQueries.GetSnapshotPlayers) -> async FootballQueries.SnapshotPlayers;
     };
 
@@ -2055,7 +2058,8 @@ actor class _ManagerCanister() {
       case (#err _) {};
     };
   };
-
+  */
+  
   private func calculateGoalPoints(position : FootballTypes.PlayerPosition, goalsScored : Int16) : Int16 {
     switch (position) {
       case (#Goalkeeper) { return 40 * goalsScored };
@@ -2076,7 +2080,7 @@ actor class _ManagerCanister() {
 
   //Remove player from teams
 
-  public shared ({ caller }) func removePlayerFromTeams(leagueId : FootballTypes.LeagueId, playerId : FootballTypes.PlayerId, parentCanisterId : Base.CanisterId) : async () {
+  public shared ({ caller }) func removePlayerFromTeams(leagueId : FootballTypes.LeagueId, playerId : FootballTypes.PlayerId, parentCanisterId : Ids.CanisterId) : async () {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == Environment.BACKEND_CANISTER_ID;
@@ -2085,15 +2089,15 @@ actor class _ManagerCanister() {
     };
   };
 
-  private func removePlayerFromGroup(leagueId : FootballTypes.LeagueId, removePlayerId : FootballTypes.PlayerId, managerGroup : Int, parentCanisterId : Base.CanisterId) : async () {
+  private func removePlayerFromGroup(leagueId : FootballTypes.LeagueId, removePlayerId : FootballTypes.PlayerId, managerGroup : Int, parentCanisterId : Ids.CanisterId) : async () {
     let backend_canister = actor (parentCanisterId) : actor {
-      getVerifiedPlayers : (leagueId : FootballTypes.LeagueId) -> async Result.Result<[DTOs.PlayerDTO], MopsEnums.Error>;
+      getVerifiedPlayers : (leagueId : FootballTypes.LeagueId) -> async Result.Result<[DataCanister.PlayerDTO], Enums.Error>;
     };
 
     let allPlayersResult = await backend_canister.getVerifiedPlayers(leagueId);
     switch (allPlayersResult) {
       case (#ok allPlayers) {
-        let removedPlayer = Array.find<DTOs.PlayerDTO>(allPlayers, func(p) { p.id == removePlayerId });
+        let removedPlayer = Array.find<DataCanister.PlayerDTO>(allPlayers, func(p) { p.id == removePlayerId });
 
         switch (removedPlayer) {
           case (null) {
@@ -2161,12 +2165,12 @@ actor class _ManagerCanister() {
               if (playerRemoved) {
                 var captainId = manager.captainId;
                 if (captainId == removePlayerId) {
-                  let highestValuedPlayer = Array.foldLeft<FootballTypes.PlayerId, ?DTOs.PlayerDTO>(
+                  let highestValuedPlayer = Array.foldLeft<FootballTypes.PlayerId, ?DataCanister.PlayerDTO>(
                     manager.playerIds,
                     null,
-                    func(highest, id) : ?DTOs.PlayerDTO {
+                    func(highest, id) : ?DataCanister.PlayerDTO {
                       if (id == removePlayerId or id == 0) { return highest };
-                      let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p) { p.id == id });
+                      let player = Array.find<DataCanister.PlayerDTO>(allPlayers, func(p) { p.id == id });
                       switch (highest, player) {
                         case (null, ?p) {
                           ?p;

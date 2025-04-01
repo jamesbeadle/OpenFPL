@@ -7,6 +7,13 @@ import Principal "mo:base/Principal";
 import Buffer "mo:base/Buffer";
 import Base "mo:waterway-mops/BaseTypes";
 import FootballTypes "mo:waterway-mops/FootballTypes";
+import Ids "mo:waterway-mops/Ids";
+import Enums "mo:waterway-mops/Enums";
+import IcfcEnums "mo:waterway-mops/ICFCEnums";
+import Management "mo:waterway-mops/Management";
+import CanisterUtilities "mo:waterway-mops/CanisterUtilities";
+import CanisterIds "mo:waterway-mops/CanisterIds";
+import Helpers "mo:waterway-mops/Helpers";
 import Cycles "mo:base/ExperimentalCycles";
 import Time "mo:base/Time";
 import Nat64 "mo:base/Nat64";
@@ -29,24 +36,24 @@ module {
 
     //stable use storage storage
 
-    private var managerCanisterIds : TrieMap.TrieMap<Base.PrincipalId, Base.CanisterId> = TrieMap.TrieMap<Base.PrincipalId, Base.CanisterId>(Text.equal, Text.hash);
-    private var usernames : TrieMap.TrieMap<Base.PrincipalId, Text> = TrieMap.TrieMap<Base.PrincipalId, Text>(Text.equal, Text.hash);
-    private var uniqueManagerCanisterIds : List.List<Base.CanisterId> = List.nil();
+    private var managerCanisterIds : TrieMap.TrieMap<Ids.PrincipalId, Ids.CanisterId> = TrieMap.TrieMap<Ids.PrincipalId, Ids.CanisterId>(Text.equal, Text.hash);
+    private var usernames : TrieMap.TrieMap<Ids.PrincipalId, Text> = TrieMap.TrieMap<Ids.PrincipalId, Text>(Text.equal, Text.hash);
+    private var uniqueManagerCanisterIds : List.List<Ids.CanisterId> = List.nil();
     private var totalManagers : Nat = 0;
-    private var activeManagerCanisterId : Base.CanisterId = "";
+    private var activeManagerCanisterId : Ids.CanisterId = "";
 
-    private var userICFCProfiles : TrieMap.TrieMap<Base.PrincipalId, UserQueries.ICFCProfile> = TrieMap.TrieMap<Base.PrincipalId, UserQueries.ICFCProfile>(Text.equal, Text.hash);
+    private var userICFCProfiles : TrieMap.TrieMap<Ids.PrincipalId, UserQueries.ICFCProfile> = TrieMap.TrieMap<Ids.PrincipalId, UserQueries.ICFCProfile>(Text.equal, Text.hash);
 
     //Getters
 
-    public func getProfile(dto: UserQueries.GetProfile) : async Result.Result<UserQueries.Profile, MopsEnums.Error> {
+    public func getProfile(dto: UserQueries.GetProfile) : async Result.Result<UserQueries.Profile, Enums.Error> {
       let userManagerCanisterId = managerCanisterIds.get(dto.principalId);
 
       switch (userManagerCanisterId) {
         case (?foundUserCanisterId) {
 
           let manager_canister = actor (foundUserCanisterId) : actor {
-            getManager : Base.PrincipalId -> async ?AppTypes.Manager;
+            getManager : Ids.PrincipalId -> async ?AppTypes.Manager;
           };
           let manager = await manager_canister.getManager(dto.principalId);
 
@@ -74,8 +81,8 @@ module {
         };
       };
     };
-
-    public func getUserICFCProfileStatus(managerPrincipalId : Base.PrincipalId) : async Result.Result<MopsIcfcEnums.ICFCLinkStatus, MopsEnums.Error> {
+/*
+    public func getUserICFCProfileStatus(managerPrincipalId : Ids.PrincipalId) : async Result.Result<IcfcEnums.ICFCLinkStatus, Enums.Error> {
       let icfcProfile : ?T.ICFCProfile = userICFCProfiles.get(managerPrincipalId);
 
       switch (icfcProfile) {
@@ -88,7 +95,7 @@ module {
       };
     };
 
-    public func getICFCProfile(dto : UserQueries.GetICFCProfile) : async Result.Result<UserQueries.ICFCProfile, MopsEnums.Error> {
+    public func getICFCProfile(dto : UserQueries.GetICFCProfile) : async Result.Result<UserQueries.ICFCProfile, Enums.Error> {
       let icfcProfile : ?T.ICFCProfile = userICFCProfiles.get(dto.principalId);
 
       switch (icfcProfile) {
@@ -98,7 +105,7 @@ module {
         case (?icfcProfile) {
 
           let icfc_canister = actor (NetworkEnvironmentVariables.ICFC_BACKEND_CANISTER_ID) : actor {
-            getICFCProfileSummary : UserQueries.GetICFCProfile -> async Result.Result<UserQueries.ICFCProfile, MopsEnums.Error>
+            getICFCProfileSummary : UserQueries.GetICFCProfile -> async Result.Result<UserQueries.ICFCProfile, Enums.Error>
           };
 
           let icfcMembershipDTO : UserQueries.GetICFCProfile = {
@@ -110,8 +117,8 @@ module {
         };
       };
     };
-
-    public func getManager(dto : UserQueries.GetManager, weeklyLeaderboardEntry : ?LeaderboardQueries.LeaderboardEntry, monthlyLeaderboardEntry : ?LeaderboardQueries.LeaderboardEntry, seasonLeaderboardEntry : ?LeaderboardQueries.LeaderboardEntry) : async Result.Result<UserQueries.Manager, MopsEnums.Error> {
+    
+    public func getManager(dto : UserQueries.GetManager, weeklyLeaderboardEntry : ?LeaderboardQueries.LeaderboardEntry, monthlyLeaderboardEntry : ?LeaderboardQueries.LeaderboardEntry, seasonLeaderboardEntry : ?LeaderboardQueries.LeaderboardEntry) : async Result.Result<UserQueries.Manager, Enums.Error> {
 
       let managerCanisterId = managerCanisterIds.get(dto.principalId);
 
@@ -121,7 +128,7 @@ module {
         };
         case (?foundCanisterId) {
           let manager_canister = actor (foundCanisterId) : actor {
-            getManager : Base.PrincipalId -> async ?T.Manager;
+            getManager : Ids.PrincipalId -> async ?AppTypes.Manager;
           };
 
           let manager = await manager_canister.getManager(dto.principalId);
@@ -199,7 +206,7 @@ module {
       };
     };
 
-    public func getManagerByUsername(username : Text) : async Result.Result<UserQueries.Manager, MopsEnums.Error> {
+    public func getManagerByUsername(username : Text) : async Result.Result<UserQueries.Manager, Enums.Error> {
 
       for (managerUsername in usernames.entries()) {
         if (managerUsername.1 == username) {
@@ -209,7 +216,7 @@ module {
             case null { return #err(#NotFound) };
             case (?foundCanisterId) {
               let manager_canister = actor (foundCanisterId) : actor {
-                getManager : Base.PrincipalId -> async ?T.Manager;
+                getManager : Ids.PrincipalId -> async ?AppTypes.Manager;
               };
 
               let manager = await manager_canister.getManager(managerPrincipalId);
@@ -256,10 +263,9 @@ module {
       };
       return #err(#NotFound);
     };
+    public func getTeamSetup(dto: UserQueries.GetTeamSetup) : async Result.Result<UserQueries.TeamSetup, Enums.Error> {
 
-    public func getTeamSetup(dto: UserQueries.GetTeamSetup) : async Result.Result<UserQueries.TeamSetup, MopsEnums.Error> {
-
-      let managerCanisterId = managerCanisterIds.get(managerPrincipalId);
+      let managerCanisterId = managerCanisterIds.get(dto.principalId);
       switch (managerCanisterId) {
         case (null) {
           return #err(#NotFound);
@@ -267,7 +273,7 @@ module {
         case (?foundCanisterId) {
 
           let manager_canister = actor (foundCanisterId) : actor {
-            getManager : Base.PrincipalId -> async ?T.Manager;
+            getManager : Ids.PrincipalId -> async ?T.Manager;
           };
           let manager = await manager_canister.getManager(managerPrincipalId);
           switch (manager) {
@@ -335,8 +341,8 @@ module {
         };
       };
     };
-
-    public func getFantasyTeamSnapshot(dto : UserQueries.GetFantasyTeamSnapshot) : async Result.Result<UserQueries.FantasyTeamSnapshot, MopsEnums.Error> {
+*/
+    public func getFantasyTeamSnapshot(dto : UserQueries.GetFantasyTeamSnapshot) : async Result.Result<UserQueries.FantasyTeamSnapshot, Enums.Error> {
       let managerCanisterId = managerCanisterIds.get(dto.principalId);
       switch (managerCanisterId) {
         case (null) {
@@ -344,7 +350,7 @@ module {
         };
         case (?foundCanisterId) {
           let manager_canister = actor (foundCanisterId) : actor {
-            getFantasyTeamSnapshot : (managerPrincipalId : Base.PrincipalId, dto : UserQueries.GetFantasyTeamSnapshot) -> async ?UserQueries.FantasyTeamSnapshot;
+            getFantasyTeamSnapshot : (managerPrincipalId : Ids.PrincipalId, dto : UserQueries.GetFantasyTeamSnapshot) -> async ?UserQueries.FantasyTeamSnapshot;
           };
 
           let snapshot = await manager_canister.getFantasyTeamSnapshot(dto.principalId, dto);
@@ -395,15 +401,15 @@ module {
       };
     };
 
-    public func getManagerCanisterIds() : [(Base.PrincipalId, Base.CanisterId)] {
+    public func getManagerCanisterIds() : [(Ids.PrincipalId, Ids.CanisterId)] {
       return Iter.toArray(managerCanisterIds.entries());
     };
 
-    public func getUniqueManagerCanisterIds() : [Base.CanisterId] {
+    public func getUniqueManagerCanisterIds() : [Ids.CanisterId] {
       return List.toArray(uniqueManagerCanisterIds);
     };
 
-    public func getTotalManagers() : Result.Result<Nat, MopsEnums.Error> {
+    public func getTotalManagers() : Result.Result<Nat, Enums.Error> {
       return #ok(totalManagers);
     };
 
@@ -425,8 +431,8 @@ module {
 
 
     //TODO: I think we only need one
-
-    public func linkICFCProfile(dto : UserCommands.LinkICFCProfile) : async Result.Result<(), MopsEnums.Error> {
+/*
+    public func linkICFCProfile(dto : UserCommands.LinkICFCProfile) : async Result.Result<(), Enums.Error> {
       let icfcProfile : T.ICFCProfile = {
         principalId = dto.icfcPrincipalId;
         linkStatus = #PendingVerification;
@@ -436,8 +442,8 @@ module {
       userICFCProfiles.put(dto.subAppUserPrincipalId, icfcProfile);
       return #ok();
     };
-
-    public func updateFavouriteClub(dto : UserCommands.SetFavouriteClub, activeClubs : [FootballTypes.Club], seasonActive : Bool) : async Result.Result<(), MopsEnums.Error> {
+*/
+    public func updateFavouriteClub(dto : UserCommands.SetFavouriteClub, activeClubs : [FootballTypes.Club], seasonActive : Bool) : async Result.Result<(), Enums.Error> {
 
       // TODO: John, This can set in a profile here and allow to be different in OpenFPL from profile value
 
@@ -463,8 +469,8 @@ module {
         case (?foundManagerCanisterId) {
 
           let manager_canister = actor (foundManagerCanisterId) : actor {
-            getManager : Base.PrincipalId -> async ?AppTypes.Manager;
-            updateFavouriteClub : (dto : UserCommands.SetFavouriteClub) -> async Result.Result<(), MopsEnums.Error>;
+            getManager : Ids.PrincipalId -> async ?AppTypes.Manager;
+            updateFavouriteClub : (dto : UserCommands.SetFavouriteClub) -> async Result.Result<(), Enums.Error>;
           };
 
           let manager = await manager_canister.getManager(dto.principalId);
@@ -496,7 +502,7 @@ module {
 
     /*
 
-    public func updateICFCProfile(dto : UserCommands.UpdateICFCProfile) : async Result.Result<(), MopsEnums.Error> {
+    public func updateICFCProfile(dto : UserCommands.UpdateICFCProfile) : async Result.Result<(), Enums.Error> {
       let icfcProfile : ?T.ICFCProfile = userICFCProfiles.get(dto.subAppUserPrincipalId);
 
       switch (icfcProfile) {
@@ -521,11 +527,12 @@ module {
 
     */
 
-    public func saveBonusSelection(dto : UserCommands.PlayBonus, gameweek : FootballTypes.GameweekNumber) : async Result.Result<(), MopsEnums.Error> {
-
+    public func saveBonusSelection(dto : UserCommands.PlayBonus, gameweek : FootballTypes.GameweekNumber) : async Result.Result<(), Enums.Error> {
+/*
       if (not validateGameweeks(dto, gameweek)) {
         return #err(#InvalidGameweek);
       };
+      */
       let managerCanisterId = managerCanisterIds.get(dto.principalId);
 
       switch (managerCanisterId) {
@@ -538,7 +545,8 @@ module {
       };
     };
 
-    public func saveTeamSelection(dto : UserCommands.SaveFantasyTeam, seasonId : FootballTypes.SeasonId, players : [FootballGodQueries.Player]) : async Result.Result<(), MopsEnums.Error> {
+/*
+    public func saveTeamSelection(dto : UserCommands.SaveFantasyTeam, seasonId : FootballTypes.SeasonId, players : [FootballGodQueries.Player]) : async Result.Result<(), Enums.Error> {
 
       let teamValidResult = PickTeamUtilities.teamValid(dto, players);
       switch (teamValidResult) {
@@ -588,12 +596,14 @@ module {
 
       return true;
     };
+    */
 
     //Private data modification functions
 
     //need to think when the new manager object is created
 
-    private func createNewManager(dto : UserCommands.LinkICFCProfile) : async Result.Result<(), MopsEnums.Error> {
+/*
+    private func createNewManager(dto : UserCommands.LinkICFCProfile) : async Result.Result<(), Enums.Error> {
 
       if (activeManagerCanisterId == "") {
         activeManagerCanisterId := await createManagerCanister();
@@ -644,18 +654,17 @@ module {
       };
 
       let new_manager_canister = actor (activeManagerCanisterId) : actor {
-        addNewManager : (manager : T.Manager) -> async Result.Result<(), MopsEnums.Error>;
+        addNewManager : (manager : T.Manager) -> async Result.Result<(), Enums.Error>;
       };
 
       let result = await new_manager_canister.addNewManager(newManager);
 
       return result;
     };
-
-    private func updateFantasyTeam(managerCanisterId : Base.CanisterId, dto : UserCommands.SaveFantasyTeam, seasonId : FootballTypes.SeasonId, allPlayers : [FootballGodQueries.Player]) : async Result.Result<(), MopsEnums.Error> {
+    private func updateFantasyTeam(managerCanisterId : Ids.CanisterId, dto : UserCommands.SaveFantasyTeam, seasonId : FootballTypes.SeasonId, allPlayers : [FootballGodQueries.Player]) : async Result.Result<(), Enums.Error> {
       let manager_canister = actor (managerCanisterId) : actor {
-        getManager : Base.PrincipalId -> async ?AppTypes.Manager;
-        updateTeamSelection : (dto : UserCommands.SaveFantasyTeam, transfersAvailable : Nat8, newBankBalance : Nat16) -> async Result.Result<(), MopsEnums.Error>;
+        getManager : Ids.PrincipalId -> async ?AppTypes.Manager;
+        updateTeamSelection : (dto : UserCommands.SaveFantasyTeam, transfersAvailable : Nat8, newBankBalance : Nat16) -> async Result.Result<(), Enums.Error>;
       };
 
       let manager = await manager_canister.getManager(dto.principalId);
@@ -711,11 +720,11 @@ module {
         };
       };
     };
-
-    private func useBonus(managerCanisterId : Base.CanisterId, dto : UserCommands.PlayBonus, gameweek : FootballTypes.GameweekNumber) : async Result.Result<(), MopsEnums.Error> {
+*/
+    private func useBonus(managerCanisterId : Ids.CanisterId, dto : UserCommands.PlayBonus, gameweek : FootballTypes.GameweekNumber) : async Result.Result<(), Enums.Error> {
       let manager_canister = actor (managerCanisterId) : actor {
-        getManager : Base.PrincipalId -> async ?AppTypes.Manager;
-        useBonus : (dto : UserCommands.PlayBonus, monthlyBonuses : Nat8) -> async Result.Result<(), MopsEnums.Error>;
+        getManager : Ids.PrincipalId -> async ?AppTypes.Manager;
+        useBonus : (dto : UserCommands.PlayBonus, monthlyBonuses : Nat8) -> async Result.Result<(), Enums.Error>;
       };
 
       let manager = await manager_canister.getManager(dto.principalId);
@@ -725,23 +734,23 @@ module {
           return #err(#NotFound);
         };
         case (?foundManager) {
+          /*
+
 
           let bonusAlreadyPaid = PickTeamUtilities.selectedBonusPlayedAlready(foundManager, dto);
           if (bonusAlreadyPaid) {
             return #err(#InvalidBonuses);
           };
 
-          /*
-
           if (foundManager.monthlyBonusesAvailable == 0) {
             return #err(#InvalidBonuses);
           };
 
-          */
-
           if (PickTeamUtilities.isGameweekBonusUsed(foundManager, gameweek)) {
             return #err(#InvalidBonuses);
           };
+
+          */
 
           return await manager_canister.useBonus(dto, 2); // TODO: John this needs to not always be 2 
         };
@@ -806,11 +815,11 @@ module {
       };
     };
 
-    public func removePlayerFromTeams(leagueId : FootballTypes.LeagueId, playerId : FootballTypes.PlayerId, parentCanisterId : Base.CanisterId) : async () {
+    public func removePlayerFromTeams(leagueId : FootballTypes.LeagueId, playerId : FootballTypes.PlayerId, parentCanisterId : Ids.CanisterId) : async () {
       for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
 
         let manager_canister = actor (canisterId) : actor {
-          removePlayerFromTeams : (leagueId : FootballTypes.LeagueId, playerId : FootballTypes.PlayerId, parentCanisterId : Base.CanisterId) -> async ();
+          removePlayerFromTeams : (leagueId : FootballTypes.LeagueId, playerId : FootballTypes.PlayerId, parentCanisterId : Ids.CanisterId) -> async ();
         };
 
         await manager_canister.removePlayerFromTeams(leagueId, playerId, parentCanisterId);
@@ -822,8 +831,8 @@ module {
     private func createManagerCanister() : async Text {
       Cycles.add<system>(50_000_000_000_000);
       let canister = await ManagerCanister._ManagerCanister();
-      let IC : Management.Management = actor (NetworkEnvironmentVariables.Default);
-      let _ = await CanisterUtilities.updateCanister_(canister, Environment.BACKEND_CANISTER_ID, IC);
+      let IC : Management.Management = actor (CanisterIds.Default);
+      let _ = await CanisterUtilities.updateCanister_(canister, ?Principal.fromText(CanisterIds.OPENFPL_BACKEND_CANISTER_ID), IC);
 
       let canister_principal = Principal.fromActor(canister);
       let canisterId = Principal.toText(canister_principal);
@@ -832,7 +841,7 @@ module {
         return canisterId;
       };
 
-      let uniqueCanisterIdBuffer = Buffer.fromArray<Base.CanisterId>(List.toArray(uniqueManagerCanisterIds));
+      let uniqueCanisterIdBuffer = Buffer.fromArray<Ids.CanisterId>(List.toArray(uniqueManagerCanisterIds));
       uniqueCanisterIdBuffer.add(canisterId);
       uniqueManagerCanisterIds := List.fromArray(Buffer.toArray(uniqueCanisterIdBuffer));
       activeManagerCanisterId := canisterId;
@@ -841,12 +850,12 @@ module {
 
     //stable getters and setters
 
-    public func getStableManagerCanisterIds() : [(Base.PrincipalId, Base.CanisterId)] {
+    public func getStableManagerCanisterIds() : [(Ids.PrincipalId, Ids.CanisterId)] {
       return Iter.toArray(managerCanisterIds.entries());
     };
 
-    public func setStableManagerCanisterIds(stable_manager_canister_ids : [(Base.PrincipalId, Base.CanisterId)]) : () {
-      let canisterIds : TrieMap.TrieMap<Base.PrincipalId, Base.CanisterId> = TrieMap.TrieMap<Base.PrincipalId, Base.CanisterId>(Text.equal, Text.hash);
+    public func setStableManagerCanisterIds(stable_manager_canister_ids : [(Ids.PrincipalId, Ids.CanisterId)]) : () {
+      let canisterIds : TrieMap.TrieMap<Ids.PrincipalId, Ids.CanisterId> = TrieMap.TrieMap<Ids.PrincipalId, Ids.CanisterId>(Text.equal, Text.hash);
 
       for (canisterId in Iter.fromArray(stable_manager_canister_ids)) {
         canisterIds.put(canisterId);
@@ -854,12 +863,12 @@ module {
       managerCanisterIds := canisterIds;
     };
 
-    public func getStableUsernames() : [(Base.PrincipalId, Text)] {
+    public func getStableUsernames() : [(Ids.PrincipalId, Text)] {
       return Iter.toArray(usernames.entries());
     };
 
-    public func setStableUsernames(stable_manager_usernames : [(Base.PrincipalId, Text)]) : () {
-      let usernameMap : TrieMap.TrieMap<Base.PrincipalId, Base.CanisterId> = TrieMap.TrieMap<Base.PrincipalId, Base.CanisterId>(Text.equal, Text.hash);
+    public func setStableUsernames(stable_manager_usernames : [(Ids.PrincipalId, Text)]) : () {
+      let usernameMap : TrieMap.TrieMap<Ids.PrincipalId, Ids.CanisterId> = TrieMap.TrieMap<Ids.PrincipalId, Ids.CanisterId>(Text.equal, Text.hash);
 
       for (username in Iter.fromArray(stable_manager_usernames)) {
         usernameMap.put(username);
@@ -867,11 +876,11 @@ module {
       usernames := usernameMap;
     };
 
-    public func getStableUniqueManagerCanisterIds() : [Base.CanisterId] {
+    public func getStableUniqueManagerCanisterIds() : [Ids.CanisterId] {
       return List.toArray(uniqueManagerCanisterIds);
     };
 
-    public func setStableUniqueManagerCanisterIds(stable_unique_manager_canister_ids : [Base.CanisterId]) : () {
+    public func setStableUniqueManagerCanisterIds(stable_unique_manager_canister_ids : [Ids.CanisterId]) : () {
       uniqueManagerCanisterIds := List.fromArray(stable_unique_manager_canister_ids);
     };
 
@@ -887,22 +896,23 @@ module {
       return activeManagerCanisterId;
     };
 
-    public func setStableActiveManagerCanisterId(stable_active_manager_canister_id : Base.CanisterId) : () {
+    public func setStableActiveManagerCanisterId(stable_active_manager_canister_id : Ids.CanisterId) : () {
       activeManagerCanisterId := stable_active_manager_canister_id;
     };
 
-    public func getStableUserICFCProfiles() : [(Base.PrincipalId, UserQueries.ICFCProfile)] {
+    public func getStableUserICFCProfiles() : [(Ids.PrincipalId, UserQueries.ICFCProfile)] {
       return Iter.toArray(userICFCProfiles.entries());
     };
-
-    public func setStableUserICFCProfiles(stable_user_icfc_profiles : [(Base.PrincipalId, UserQueries.ICFCProfile)]) : () {
-      let profileMap : TrieMap.TrieMap<Base.PrincipalId, T.ICFCProfile> = TrieMap.TrieMap<Base.PrincipalId, T.ICFCProfile>(Text.equal, Text.hash);
+/*
+    public func setStableUserICFCProfiles(stable_user_icfc_profiles : [(Ids.PrincipalId, UserQueries.ICFCProfile)]) : () {
+      let profileMap : TrieMap.TrieMap<Ids.PrincipalId, T.ICFCProfile> = TrieMap.TrieMap<Ids.PrincipalId, T.ICFCProfile>(Text.equal, Text.hash);
 
       for (profile in Iter.fromArray(stable_user_icfc_profiles)) {
         profileMap.put(profile);
       };
       userICFCProfiles := profileMap;
     };
+    */
   };
   
 };

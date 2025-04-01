@@ -72,6 +72,7 @@ export type Error =
   | { InvalidData: null }
   | { AlreadyExists: null }
   | { CanisterCreateError: null }
+  | { FailedInterCanisterCall: null }
   | { CanisterFull: null };
 export interface FixtureDTO {
   id: number;
@@ -133,6 +134,36 @@ export interface LeagueStatus {
   activeGameweek: GameweekNumber;
   leagueId: LeagueId;
   seasonActive: boolean;
+}
+export interface LeagueTable {
+  seasonId: SeasonId;
+  entries: Array<LeagueTableEntry>;
+  leagueId: LeagueId;
+}
+export interface LeagueTableEntry {
+  won: bigint;
+  homeDrawn: bigint;
+  clubId: ClubId;
+  awayDrawn: bigint;
+  homeLost: bigint;
+  played: bigint;
+  scored: bigint;
+  lost: bigint;
+  homeWon: bigint;
+  conceded: bigint;
+  awayPoints: bigint;
+  awayWon: bigint;
+  homePoints: bigint;
+  awayConceded: bigint;
+  awayLost: bigint;
+  awayPlayed: bigint;
+  awayScored: bigint;
+  homePlayed: bigint;
+  position: bigint;
+  homeScored: bigint;
+  drawn: bigint;
+  homeConceded: bigint;
+  points: bigint;
 }
 export type List = [] | [[InjuryHistory, List]];
 export type List_1 = [] | [[PlayerSeason, List_1]];
@@ -327,16 +358,21 @@ export interface RescheduleFixtureDTO {
 }
 export type Result = { ok: Array<PlayerDTO> } | { err: Error };
 export type Result_1 = { ok: Array<FixtureDTO> } | { err: Error };
-export type Result_10 = { ok: Array<DataHashDTO> } | { err: Error };
-export type Result_11 = { ok: Array<CountryDTO> } | { err: Error };
+export type Result_10 = { ok: LeagueStatus } | { err: Error };
+export type Result_11 = { ok: Array<[LeagueId, LeagueId]> } | { err: Error };
+export type Result_12 =
+  | { ok: [LeagueId, Uint16Array | number[]] }
+  | { err: Error };
+export type Result_13 = { ok: Array<DataHashDTO> } | { err: Error };
+export type Result_14 = { ok: Array<CountryDTO> } | { err: Error };
 export type Result_2 = { ok: Array<ClubDTO> } | { err: Error };
-export type Result_3 = { ok: Array<SeasonDTO> } | { err: Error };
-export type Result_4 = { ok: Array<[number, PlayerScoreDTO]> } | { err: Error };
-export type Result_5 = { ok: Array<PlayerPointsDTO> } | { err: Error };
-export type Result_6 = { ok: PlayerDetailDTO } | { err: Error };
-export type Result_7 = { ok: Array<LoanedPlayerDTO> } | { err: Error };
-export type Result_8 = { ok: Array<FootballLeagueDTO> } | { err: Error };
-export type Result_9 = { ok: LeagueStatus } | { err: Error };
+export type Result_3 = { ok: Array<FootballLeagueDTO> } | { err: Error };
+export type Result_4 = { ok: Array<SeasonDTO> } | { err: Error };
+export type Result_5 = { ok: Array<[number, PlayerScoreDTO]> } | { err: Error };
+export type Result_6 = { ok: Array<PlayerPointsDTO> } | { err: Error };
+export type Result_7 = { ok: PlayerDetailDTO } | { err: Error };
+export type Result_8 = { ok: Array<LoanedPlayerDTO> } | { err: Error };
+export type Result_9 = { ok: LeagueTable } | { err: Error };
 export interface RetirePlayerDTO {
   playerId: ClubId;
   retirementDate: bigint;
@@ -440,23 +476,28 @@ export interface _SERVICE {
   createClub: ActorMethod<[CreateClubDTO], undefined>;
   createLeague: ActorMethod<[CreateLeagueDTO], undefined>;
   createPlayer: ActorMethod<[CreatePlayerDTO], undefined>;
+  getBettableFixtures: ActorMethod<[LeagueId, SeasonId], Result_1>;
   getClubs: ActorMethod<[LeagueId], Result_2>;
-  getCountries: ActorMethod<[], Result_11>;
-  getDataHashes: ActorMethod<[LeagueId], Result_10>;
+  getCountries: ActorMethod<[], Result_14>;
+  getDataHashes: ActorMethod<[LeagueId], Result_13>;
   getFixtures: ActorMethod<[LeagueId, SeasonId], Result_1>;
-  getLeagueStatus: ActorMethod<[LeagueId], Result_9>;
-  getLeagues: ActorMethod<[], Result_8>;
-  getLoanedPlayers: ActorMethod<[LeagueId], Result_7>;
-  getPlayerDetails: ActorMethod<[LeagueId, GetPlayerDetailsDTO], Result_6>;
+  getLeagueClubsRequiringData: ActorMethod<[LeagueId], Result_12>;
+  getLeagueRelegationPairs: ActorMethod<[], Result_11>;
+  getLeagueStatus: ActorMethod<[LeagueId], Result_10>;
+  getLeagueTable: ActorMethod<[LeagueId, SeasonId], Result_9>;
+  getLeagues: ActorMethod<[], Result_3>;
+  getLoanedPlayers: ActorMethod<[LeagueId], Result_8>;
+  getPlayerDetails: ActorMethod<[LeagueId, GetPlayerDetailsDTO], Result_7>;
   getPlayerDetailsForGameweek: ActorMethod<
     [LeagueId, GameweekFiltersDTO],
-    Result_5
+    Result_6
   >;
   getPlayers: ActorMethod<[LeagueId], Result>;
-  getPlayersMap: ActorMethod<[LeagueId, GameweekFiltersDTO], Result_4>;
+  getPlayersMap: ActorMethod<[LeagueId, GameweekFiltersDTO], Result_5>;
   getPostponedFixtures: ActorMethod<[LeagueId], Result_1>;
   getRetiredPlayers: ActorMethod<[LeagueId, ClubFilterDTO], Result>;
-  getSeasons: ActorMethod<[LeagueId], Result_3>;
+  getSeasons: ActorMethod<[LeagueId], Result_4>;
+  getUpToDateLeagues: ActorMethod<[], Result_3>;
   getVerifiedClubs: ActorMethod<[LeagueId], Result_2>;
   getVerifiedFixtures: ActorMethod<[LeagueId, SeasonId], Result_1>;
   getVerifiedPlayers: ActorMethod<[LeagueId], Result>;
