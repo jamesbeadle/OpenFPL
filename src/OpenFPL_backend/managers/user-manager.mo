@@ -33,6 +33,8 @@ import PickTeamUtilities "../utilities/pick_team_utilities";
 import ManagerCanister "../canister_definitions/manager-canister";
 import DataCanister "canister:data_canister";
 import SHA224 "mo:waterway-mops/SHA224";
+import ICFCCommands "../commands/icfc_commands";
+import Environment "../Environment";
 
 module {
 
@@ -46,11 +48,11 @@ module {
     private var totalManagers : Nat = 0;
     private var activeManagerCanisterId : Ids.CanisterId = "";
 
-    private var userICFCProfiles : TrieMap.TrieMap<Ids.PrincipalId, UserQueries.ICFCProfile> = TrieMap.TrieMap<Ids.PrincipalId, UserQueries.ICFCProfile>(Text.equal, Text.hash);
+    private var userICFCLinks : TrieMap.TrieMap<Ids.PrincipalId, AppTypes.ICFCLink> = TrieMap.TrieMap<Ids.PrincipalId, AppTypes.ICFCLink>(Text.equal, Text.hash);
 
     //Getters
 
-    public func getProfile(dto: UserQueries.GetProfile) : async Result.Result<UserQueries.Profile, Enums.Error> {
+    public func getProfile(dto : UserQueries.GetProfile) : async Result.Result<UserQueries.Profile, Enums.Error> {
       let userManagerCanisterId = managerCanisterIds.get(dto.principalId);
 
       switch (userManagerCanisterId) {
@@ -86,45 +88,54 @@ module {
       };
     };
 
-    /*
     public func getUserICFCProfileStatus(managerPrincipalId : Ids.PrincipalId) : async Result.Result<IcfcEnums.ICFCLinkStatus, Enums.Error> {
-      let icfcProfile : ?UserQueries.ICFCProfile = userICFCProfiles.get(managerPrincipalId);
+      let icfcLink : ?UserQueries.ICFCLink = userICFCLinks.get(managerPrincipalId);
 
-      switch (icfcProfile) {
+      switch (icfcLink) {
         case (null) {
           return #err(#NotFound);
         };
-        case (?foundICFCProfile) {
-          return #ok(foundICFCProfile.linkStatus);
+        case (?foundICFCLink) {
+          return #ok(foundICFCLink.linkStatus);
         };
       };
     };
-    */
 
     public func getICFCProfile(dto : UserQueries.GetICFCProfile) : async Result.Result<UserQueries.ICFCProfile, Enums.Error> {
-      let icfcProfile : ?UserQueries.ICFCProfile = userICFCProfiles.get(dto.principalId);
+      let icfcLink : ?UserQueries.ICFCLink = userICFCLinks.get(dto.principalId);
 
-      switch (icfcProfile) {
+      switch (icfcLink) {
         case (null) {
           return #err(#NotFound);
         };
-        case (?icfcProfile) {
+        case (?icfcLink) {
 
           let icfc_canister = actor (CanisterIds.ICFC_BACKEND_CANISTER_ID) : actor {
-            getICFCProfileSummary : UserQueries.GetICFCProfile -> async Result.Result<UserQueries.ICFCProfile, Enums.Error>
+            getICFCProfileSummary : UserQueries.GetICFCProfile -> async Result.Result<UserQueries.ICFCProfile, Enums.Error>;
           };
 
-          let icfcMembershipDTO : UserQueries.GetICFCProfile = {
-            principalId = icfcProfile.principalId;
+          let dto : UserQueries.GetICFCProfile = {
+            principalId = icfcLink.principalId;
           };
 
-          return await icfc_canister.getICFCProfileSummary(icfcMembershipDTO);
-
+          return await icfc_canister.getICFCProfileSummary(dto);
         };
       };
     };
-    
-    public func getManager(dto : UserQueries.GetManager, seasonId: FootballIds.SeasonId, weeklyLeaderboardEntry : ?LeaderboardQueries.LeaderboardEntry, monthlyLeaderboardEntry : ?LeaderboardQueries.LeaderboardEntry, seasonLeaderboardEntry : ?LeaderboardQueries.LeaderboardEntry) : async Result.Result<UserQueries.Manager, Enums.Error> {
+
+    public func getUserICFCMembership(dto : UserQueries.GetICFCMembership) : async Result.Result<IcfcEnums.MembershipType, Enums.Error> {
+      let icfcLink : ?UserQueries.ICFCLink = userICFCLinks.get(dto.principalId);
+      switch (icfcLink) {
+        case (null) {
+          return #err(#NotFound);
+        };
+        case (?foundICFCLink) {
+          return #ok(foundICFCLink.membershipType);
+        };
+      };
+    };
+
+    public func getManager(dto : UserQueries.GetManager, seasonId : FootballIds.SeasonId, weeklyLeaderboardEntry : ?LeaderboardQueries.LeaderboardEntry, monthlyLeaderboardEntry : ?LeaderboardQueries.LeaderboardEntry, seasonLeaderboardEntry : ?LeaderboardQueries.LeaderboardEntry) : async Result.Result<UserQueries.Manager, Enums.Error> {
 
       let managerCanisterId = managerCanisterIds.get(dto.principalId);
 
@@ -269,8 +280,8 @@ module {
       };
       return #err(#NotFound);
     };
-    
-    public func getTeamSetup(dto: UserQueries.GetTeamSetup, currentSeasonId: FootballIds.SeasonId) : async Result.Result<UserQueries.TeamSetup, Enums.Error> {
+
+    public func getTeamSetup(dto : UserQueries.GetTeamSetup, currentSeasonId : FootballIds.SeasonId) : async Result.Result<UserQueries.TeamSetup, Enums.Error> {
 
       let managerCanisterId = managerCanisterIds.get(dto.principalId);
       switch (managerCanisterId) {
@@ -348,7 +359,7 @@ module {
         };
       };
     };
-    
+
     public func getFantasyTeamSnapshot(dto : UserQueries.GetFantasyTeamSnapshot) : async Result.Result<UserQueries.FantasyTeamSnapshot, Enums.Error> {
       let managerCanisterId = managerCanisterIds.get(dto.principalId);
       switch (managerCanisterId) {
@@ -435,25 +446,61 @@ module {
     };
 
     //User updates
-
-
-    //TODO: I think we only need one
-
-    /*
-
-    public func linkICFCProfile(dto : UserCommands.LinkICFCProfile) : async Result.Result<(), Enums.Error> {
-      let icfcProfile : AppTypes.ICFCProfile = {
+    public func createICFCLink(dto : ICFCCommands.NotifyAppofLink) : async Result.Result<(), Enums.Error> {
+      let icfcLink : AppTypes.ICFCLink = {
         principalId = dto.icfcPrincipalId;
         linkStatus = #PendingVerification;
         dataHash = await SHA224.getRandomHash();
         membershipType = dto.membershipType;
       };
-      userICFCProfiles.put(dto.subAppUserPrincipalId, icfcProfile);
+      userICFCLinks.put(dto.subAppUserPrincipalId, icfcLink);
       return #ok();
     };
 
-    */
-    
+    public func verifyICFCLink(dto : ICFCCommands.VerifyICFCProfile) : async Result.Result<(), Enums.Error> {
+      let icfcLink : ?AppTypes.ICFCLink = userICFCLinks.get(dto.principalId);
+
+      switch (icfcLink) {
+        case (null) {
+          return #err(#NotFound);
+        };
+        case (?foundICFCLink) {
+
+          let icfc_canister = actor (Environment.ICFC_BACKEND_CANISTER_ID) : actor {
+            verifySubApp : ICFCCommands.VerifySubApp -> async Result.Result<(), Enums.Error>;
+          };
+
+          let verifySubAppDTO : ICFCCommands.VerifySubApp = {
+            subAppUserPrincipalId = dto.principalId;
+            subApp = #OpenFPL;
+            icfcPrincipalId = foundICFCLink.principalId;
+          };
+
+          let result = await icfc_canister.verifySubApp(verifySubAppDTO);
+          switch (result) {
+            case (#ok(_)) {
+
+              let _ = userICFCLinks.put(
+                dto.principalId,
+                {
+                  principalId = foundICFCLink.principalId;
+                  linkStatus = #Verified;
+                  dataHash = await SHA224.getRandomHash();
+                  membershipType = foundICFCLink.membershipType;
+                },
+              );
+
+              return #ok();
+
+            };
+            case (#err error) {
+              return #err(error);
+            };
+          };
+        };
+      };
+    };
+
     public func updateFavouriteClub(dto : UserCommands.SetFavouriteClub, activeClubs : [DataCanister.Club], seasonActive : Bool) : async Result.Result<(), Enums.Error> {
 
       // TODO: John, This can set in a profile here and allow to be different in OpenFPL from profile value
@@ -509,24 +556,20 @@ module {
       };
     };
 
-    //What are we updating here?
+    public func updateICFCHash(dto : ICFCCommands.UpdateICFCProfile) : async Result.Result<(), Enums.Error> {
+      let icfcLink : ?AppTypes.ICFCLink = userICFCLinks.get(dto.subAppUserPrincipalId);
 
-    /*
-
-    public func updateICFCProfile(dto : UserCommands.UpdateICFCProfile) : async Result.Result<(), Enums.Error> {
-      let icfcProfile : ?T.ICFCProfile = userICFCProfiles.get(dto.subAppUserPrincipalId);
-
-      switch (icfcProfile) {
+      switch (icfcLink) {
         case (null) {
           return #err(#NotFound);
         };
-        case (?foundICFCProfile) {
+        case (?foundICFCLink) {
           let newHash = await SHA224.getRandomHash();
-          let _ = userICFCProfiles.put(
+          let _ = userICFCLinks.put(
             dto.subAppUserPrincipalId,
             {
-              principalId = foundICFCProfile.principalId;
-              linkStatus = foundICFCProfile.linkStatus;
+              principalId = foundICFCLink.principalId;
+              linkStatus = foundICFCLink.linkStatus;
               dataHash = newHash;
               membershipType = dto.membershipType;
             },
@@ -535,8 +578,6 @@ module {
         };
       };
     };
-
-    */
 
     public func saveBonusSelection(dto : UserCommands.PlayBonus, gameweek : FootballDefinitions.GameweekNumber) : async Result.Result<(), Enums.Error> {
       let managerCanisterId = managerCanisterIds.get(dto.principalId);
@@ -550,7 +591,7 @@ module {
         };
       };
     };
-    
+
     public func saveTeamSelection(dto : UserCommands.SaveFantasyTeam, seasonId : FootballIds.SeasonId, players : [DataCanister.Player]) : async Result.Result<(), Enums.Error> {
 
       let teamValidResult = PickTeamUtilities.teamValid(dto, players);
@@ -576,7 +617,7 @@ module {
     //Private data modification functions
 
     //need to think when the new manager object is created
-/*
+    /*
     private func createNewManager(dto : UserCommands.LinkICFCProfile) : async Result.Result<(), Enums.Error> {
 
       if (activeManagerCanisterId == "") {
@@ -695,7 +736,7 @@ module {
         };
       };
     };
-    
+
     private func useBonus(managerCanisterId : Ids.CanisterId, dto : UserCommands.PlayBonus, gameweek : FootballDefinitions.GameweekNumber) : async Result.Result<(), Enums.Error> {
       let manager_canister = actor (managerCanisterId) : actor {
         getManager : Ids.PrincipalId -> async ?AppTypes.Manager;
@@ -709,7 +750,7 @@ module {
           return #err(#NotFound);
         };
         case (?foundManager) {
-          
+
           let bonusAlreadyPaid = PickTeamUtilities.selectedBonusPlayedAlready(foundManager, dto);
           if (bonusAlreadyPaid) {
             return #err(#InvalidData);
@@ -723,7 +764,7 @@ module {
             return #err(#InvalidData);
           };
 
-          return await manager_canister.useBonus(dto, 2); // TODO: John this needs to not always be 2 
+          return await manager_canister.useBonus(dto, 2); // TODO: John this needs to not always be 2
         };
       };
     };
@@ -871,19 +912,19 @@ module {
       activeManagerCanisterId := stable_active_manager_canister_id;
     };
 
-    public func getStableUserICFCProfiles() : [(Ids.PrincipalId, UserQueries.ICFCProfile)] {
-      return Iter.toArray(userICFCProfiles.entries());
+    public func getStableUserICFCLinks() : [(Ids.PrincipalId, AppTypes.ICFCLink)] {
+      return Iter.toArray(userICFCLinks.entries());
     };
-/*
-    public func setStableUserICFCProfiles(stable_user_icfc_profiles : [(Ids.PrincipalId, UserQueries.ICFCProfile)]) : () {
-      let profileMap : TrieMap.TrieMap<Ids.PrincipalId, T.ICFCProfile> = TrieMap.TrieMap<Ids.PrincipalId, T.ICFCProfile>(Text.equal, Text.hash);
 
-      for (profile in Iter.fromArray(stable_user_icfc_profiles)) {
-        profileMap.put(profile);
+    public func setStableUserICFCLinks(stable_user_icfc_linkss : [(Ids.PrincipalId, AppTypes.ICFCLink)]) : () {
+      let linkMap : TrieMap.TrieMap<Ids.PrincipalId, AppTypes.ICFCLink> = TrieMap.TrieMap<Ids.PrincipalId, AppTypes.ICFCLink>(Text.equal, Text.hash);
+
+      for (link in Iter.fromArray(stable_user_icfc_linkss)) {
+        linkMap.put(link);
       };
-      userICFCProfiles := profileMap;
+      userICFCLinks := linkMap;
     };
-    */
+
   };
-  
+
 };
