@@ -8,8 +8,14 @@
   import { authSignedInStore } from "$lib/derived/auth.derived";
   import { userGetProfilePicture } from "$lib/derived/user.derived";
   import { toasts } from "$lib/stores/toasts-store";
+  import { signOut } from "$lib/services/auth-services";
+   
 
-  export let onLogout: () => void = () => {};
+  async function handleDisconnect(){
+    await signOut();
+    goto('/', { replaceState: true });
+  }
+
 
   let menuOpen = false;
   let showProfileDropdown = false;
@@ -43,17 +49,6 @@
       domain: import.meta.env.VITE_AUTH_PROVIDER_URL,
     };
     authStore.signIn(params);
-  }
-
-  async function handleLogout() {
-    showProfileDropdown = false;
-    await onLogout();
-    toasts.addToast({
-      type: "info",
-      message: "Logged out successfully",
-      duration: 2000,
-    });
-    goto("/");
   }
 
   function toggleProfileDropdown(event: Event) {
@@ -169,7 +164,7 @@
                   <li>
                     <button
                       class="flex items-center justify-center px-4 pt-1 pb-2 text-white rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button"
-                      on:click={handleLogout}
+                      on:click={handleDisconnect}
                     >
                       Disconnect
                       <WalletIcon className="ml-2 h-6 w-6 mt-1" />
@@ -203,7 +198,7 @@
             <li class="p-2">
               <a
                 href="/profile"
-                class="flex h-full w-full nav-underline hover:text-gray-400 w-full ${currentClass(
+                class="flex h-full nav-underline hover:text-gray-400 w-full ${currentClass(
                   '/profile'
                 )}"
               >
@@ -222,7 +217,7 @@
             <li class="px-2">
               <button
                 class="flex items-center w-full h-full hover:text-gray-400"
-                on:click={handleLogout}
+                on:click={handleDisconnect}
               >
                 Disconnect
                 <WalletIcon className="ml-2 h-6 w-6 mt-1" />
