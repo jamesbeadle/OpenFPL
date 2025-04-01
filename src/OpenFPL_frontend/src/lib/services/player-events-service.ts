@@ -44,9 +44,9 @@ export class PlayerEventsService {
         seasonId: seasonId,
       };
       const identityActor: any =
-        await ActorFactory.createDataCanisterIdentityActor(
+        await ActorFactory.createIdentityActor(
           authStore,
-          process.env.CANISTER_ID_DATA ?? "",
+          process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
         );
 
       let result = await identityActor.getPlayerDetails(dto);
@@ -72,9 +72,9 @@ export class PlayerEventsService {
         gameweek,
       };
       const identityActor: any =
-        await ActorFactory.createDataCanisterIdentityActor(
+        await ActorFactory.createIdentityActor(
           authStore,
-          process.env.CANISTER_ID_DATA ?? "",
+          process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
         );
       const leagueId: LeagueId = 1;
       let result = await identityActor.getPlayerDetailsForGameweek(
@@ -102,9 +102,9 @@ export class PlayerEventsService {
   ): Promise<PlayersMap | undefined> {
     try {
       const identityActor: any =
-        await ActorFactory.createDataCanisterIdentityActor(
+        await ActorFactory.createIdentityActor(
           authStore,
-          process.env.CANISTER_ID_DATA ?? "",
+          process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
         );
       let dto: GetPlayersMap = {
         leagueId: Number(process.env.LEAGUE_ID),

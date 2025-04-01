@@ -15,9 +15,9 @@ export class ClubService {
   async getClubs(): Promise<Club[] | undefined> {
     try {
       const identityActor: any =
-        await ActorFactory.createDataCanisterIdentityActor(
+        await ActorFactory.createIdentityActor(
           authStore,
-          process.env.CANISTER_ID_DATA ?? "",
+          process.env.BACKEND ?? "",
         );
       const leagueId: LeagueId = 1;
       const result = await identityActor.getClubs(leagueId);

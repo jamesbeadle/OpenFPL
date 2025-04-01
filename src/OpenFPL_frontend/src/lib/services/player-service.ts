@@ -15,9 +15,9 @@ export class PlayerService {
   async getPlayers(): Promise<Player[] | undefined> {
     try {
       const identityActor: any =
-        await ActorFactory.createDataCanisterIdentityActor(
+        await ActorFactory.createIdentityActor(
           authStore,
-          process.env.CANISTER_ID_DATA ?? "",
+          process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
         );
       const leagueId: LeagueId = 1;
       const result = await identityActor.getPlayers(leagueId);

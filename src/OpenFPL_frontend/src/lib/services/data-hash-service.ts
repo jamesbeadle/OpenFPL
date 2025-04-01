@@ -30,9 +30,9 @@ export class DataHashService {
   async getDataCanisterDataHashes(): Promise<DataHash[] | undefined> {
     try {
       const identityActor: any =
-        await ActorFactory.createDataCanisterIdentityActor(
+        await ActorFactory.createIdentityActor(
           authStore,
-          process.env.CANISTER_ID_DATA ?? "",
+          process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
         );
       const result = await identityActor.getDataHashes(process.env.LEAGUE_ID);
 
