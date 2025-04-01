@@ -228,15 +228,12 @@ actor Self {
 
   /* ----- User Commands ----- */
 
-  public shared ({ caller }) func linkICFCLink(dto : UserCommands.LinkICFCProfile) : async Result.Result<(), Enums.Error> {
+  public shared ({ caller }) func linkICFCProfile() : async Result.Result<(), Enums.Error> {
     assert not Principal.isAnonymous(caller);
-    let principalId = Principal.toText(caller);
-
-    //TODO: John this needs to link a user from OpenFPL to ICFC
-    //TODO: Also if created and recalled should repull profile picture username and favourite premier league club if premier league club set
+    let principalIdText = Principal.toText(caller);
 
     let dto : ICFCCommands.VerifyICFCProfile = {
-      principalId = Principal.toText(caller);
+      principalId = principalIdText;
     };
     return await userManager.verifyICFCLink(dto);
   };
