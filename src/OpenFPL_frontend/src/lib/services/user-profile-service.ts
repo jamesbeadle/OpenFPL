@@ -14,7 +14,7 @@ export const initUserProfile = async ({
   if (!identity) return { result: "skip" };
 
   try {
-    userStore.subscribe(user => {
+    userStore.subscribe((user) => {
       if (user) {
         userIdCreatedStore.set({ data: user.principalId, certified: true });
         return { result: "success" };
