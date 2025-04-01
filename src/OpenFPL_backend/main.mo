@@ -4,6 +4,7 @@ import Base "mo:waterway-mops/BaseTypes";
 import Ids "mo:waterway-mops/Ids";
 import BaseTypes "mo:waterway-mops/BaseTypes";
 import Enums "mo:waterway-mops/Enums";
+import ICFCEnums "mo:waterway-mops/ICFCEnums";
 import CanisterIds "mo:waterway-mops/CanisterIds";
 import Management "mo:waterway-mops/Management";
 import CanisterUtilities "mo:waterway-mops/CanisterUtilities";
@@ -171,6 +172,13 @@ actor Self {
     assert principalId == dto.principalId;
     assert await hasMembership(principalId);
     return await userManager.getCombinedProfile(dto);
+  };
+
+  public shared ({ caller }) func getICFCLinkStatus(dto : UserQueries.GetICFCLinkStatus) : async Result.Result<ICFCEnums.ICFCLinkStatus, Enums.Error> {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == dto.principalId;
+    return await userManager.getUserICFCLinkStatus(dto.principalId);
   };
 
   /*
@@ -362,7 +370,6 @@ actor Self {
       };
     };
   };
-  
 
   public shared ({ caller }) func getLeagueStatus() : async Result.Result<DataCanister.LeagueStatus, Enums.Error> {
     assert not Principal.isAnonymous(caller);
@@ -370,11 +377,13 @@ actor Self {
     let data_canister = actor (CanisterIds.ICFC_DATA_CANISTER_ID) : actor {
       getLeagueStatus : shared query (dto : DataCanister.GetLeagueStatus) -> async Result.Result<DataCanister.LeagueStatus, Enums.Error>;
     };
-    return await data_canister.getLeagueStatus({ leagueId = Environment.LEAGUE_ID });
+    return await data_canister.getLeagueStatus({
+      leagueId = Environment.LEAGUE_ID;
+    });
   };
 
   public shared ({ caller }) func getCountries() : async Result.Result<DataCanister.Countries, Enums.Error> {
-     assert not Principal.isAnonymous(caller);
+    assert not Principal.isAnonymous(caller);
     assert await hasMembership(Principal.toText(caller));
     let data_canister = actor (CanisterIds.ICFC_DATA_CANISTER_ID) : actor {
       getCountries : shared query (dto : DataCanister.GetCountries) -> async Result.Result<DataCanister.Countries, Enums.Error>;
@@ -383,7 +392,7 @@ actor Self {
   };
 
   public shared ({ caller }) func getSeasons(dto : DataCanister.GetSeasons) : async Result.Result<DataCanister.Seasons, Enums.Error> {
-     assert not Principal.isAnonymous(caller);
+    assert not Principal.isAnonymous(caller);
     assert await hasMembership(Principal.toText(caller));
     let data_canister = actor (CanisterIds.ICFC_DATA_CANISTER_ID) : actor {
       getSeasons : shared query (dto : DataCanister.GetSeasons) -> async Result.Result<DataCanister.Seasons, Enums.Error>;
@@ -392,7 +401,7 @@ actor Self {
   };
 
   public shared ({ caller }) func getClubs(dto : DataCanister.GetClubs) : async Result.Result<DataCanister.Clubs, Enums.Error> {
-     assert not Principal.isAnonymous(caller);
+    assert not Principal.isAnonymous(caller);
     assert await hasMembership(Principal.toText(caller));
     let data_canister = actor (CanisterIds.ICFC_DATA_CANISTER_ID) : actor {
       getClubs : shared query (dto : DataCanister.GetClubs) -> async Result.Result<DataCanister.Clubs, Enums.Error>;
@@ -400,8 +409,8 @@ actor Self {
     return await data_canister.getClubs(dto);
   };
 
-  public shared ({ caller }) func getPlayers(dto: DataCanister.GetPlayers) : async Result.Result<DataCanister.Players, Enums.Error> {
-     assert not Principal.isAnonymous(caller);
+  public shared ({ caller }) func getPlayers(dto : DataCanister.GetPlayers) : async Result.Result<DataCanister.Players, Enums.Error> {
+    assert not Principal.isAnonymous(caller);
     assert await hasMembership(Principal.toText(caller));
     let data_canister = actor (CanisterIds.ICFC_DATA_CANISTER_ID) : actor {
       getPlayers : shared query (dto : DataCanister.GetPlayers) -> async Result.Result<DataCanister.Players, Enums.Error>;
@@ -410,7 +419,7 @@ actor Self {
   };
 
   public shared ({ caller }) func getPlayerEvents(dto : DataCanister.GetPlayerDetailsForGameweek) : async Result.Result<DataCanister.PlayerDetailsForGameweek, Enums.Error> {
-     assert not Principal.isAnonymous(caller);
+    assert not Principal.isAnonymous(caller);
     assert await hasMembership(Principal.toText(caller));
     let data_canister = actor (CanisterIds.ICFC_DATA_CANISTER_ID) : actor {
       getPlayerEvents : shared query (dto : DataCanister.GetPlayerDetailsForGameweek) -> async Result.Result<DataCanister.PlayerDetailsForGameweek, Enums.Error>;

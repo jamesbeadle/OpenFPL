@@ -107,8 +107,8 @@ module {
 
               let icfcProfileResult = await getICFCProfile(dto);
 
-              switch(icfcProfileResult){
-                case (#ok icfcProfile){
+              switch (icfcProfileResult) {
+                case (#ok icfcProfile) {
                   let profileDTO : UserQueries.CombinedProfile = {
                     principalId = dto.principalId;
                     username = foundManager.username;
@@ -128,9 +128,9 @@ module {
                   };
                   return #ok(profileDTO);
                 };
-                case (#err error){
+                case (#err error) {
                   return #err(error);
-                }
+                };
               };
             };
           };
@@ -141,7 +141,7 @@ module {
       };
     };
 
-    public func getUserICFCProfileStatus(managerPrincipalId : Ids.PrincipalId) : async Result.Result<IcfcEnums.ICFCLinkStatus, Enums.Error> {
+    public func getUserICFCLinkStatus(managerPrincipalId : Ids.PrincipalId) : async Result.Result<IcfcEnums.ICFCLinkStatus, Enums.Error> {
       let icfcLink : ?UserQueries.ICFCLink = userICFCLinks.get(managerPrincipalId);
 
       switch (icfcLink) {

@@ -144,15 +144,20 @@ type Result_3 =
    err: Error;
    ok: nat;
  };
-type Result_21 = 
+type Result_22 = 
  variant {
    err: Error;
    ok: text;
  };
-type Result_20 = 
+type Result_21 = 
  variant {
    err: Error;
    ok: RewardRates;
+ };
+type Result_20 = 
+ variant {
+   err: Error;
+   ok: AppStatus;
  };
 type Result_2 = 
  variant {
@@ -162,32 +167,32 @@ type Result_2 =
 type Result_19 = 
  variant {
    err: Error;
-   ok: AppStatus;
+   ok: Clubs;
  };
 type Result_18 = 
  variant {
    err: Error;
-   ok: Clubs;
+   ok: Countries;
  };
 type Result_17 = 
  variant {
    err: Error;
-   ok: Countries;
+   ok: vec DataHash;
  };
 type Result_16 = 
  variant {
    err: Error;
-   ok: vec DataHash;
+   ok: FantasyTeamSnapshot;
  };
 type Result_15 = 
  variant {
    err: Error;
-   ok: FantasyTeamSnapshot;
+   ok: Fixtures;
  };
 type Result_14 = 
  variant {
    err: Error;
-   ok: Fixtures;
+   ok: ICFCLinkStatus;
  };
 type Result_13 = 
  variant {
@@ -431,6 +436,11 @@ type LeaderboardEntry =
    principalId: text;
    username: text;
  };
+type ICFCLinkStatus = 
+ variant {
+   PendingVerification;
+   Verified;
+ };
 type GetWeeklyRewardsLeaderboard = 
  record {
    gameweek: GameweekNumber;
@@ -467,6 +477,7 @@ type GetPlayerDetailsForGameweek =
  };
 type GetManagerByUsername = record {username: text;};
 type GetManager = record {principalId: text;};
+type GetICFCLinkStatus = record {principalId: PrincipalId;};
 type GetFixtures = 
  record {
    leagueId: nat16;
@@ -629,14 +640,15 @@ type AppStatus =
    version: text;
  };
 service : {
-  getActiveLeaderboardCanisterId: () -> (Result_21);
-  getActiveRewardRates: () -> (Result_20);
-  getAppStatus: () -> (Result_19);
-  getClubs: (GetClubs) -> (Result_18);
-  getCountries: () -> (Result_17);
-  getDataHashes: () -> (Result_16);
-  getFantasyTeamSnapshot: (GetFantasyTeamSnapshot) -> (Result_15);
-  getFixtures: (GetFixtures) -> (Result_14);
+  getActiveLeaderboardCanisterId: () -> (Result_22);
+  getActiveRewardRates: () -> (Result_21);
+  getAppStatus: () -> (Result_20);
+  getClubs: (GetClubs) -> (Result_19);
+  getCountries: () -> (Result_18);
+  getDataHashes: () -> (Result_17);
+  getFantasyTeamSnapshot: (GetFantasyTeamSnapshot) -> (Result_16);
+  getFixtures: (GetFixtures) -> (Result_15);
+  getICFCLinkStatus: (GetICFCLinkStatus) -> (Result_14);
   getLeaderboardCanisterIds: () -> (Result_11);
   getLeagueStatus: () -> (Result_13);
   getManager: (GetManager) -> (Result_12);

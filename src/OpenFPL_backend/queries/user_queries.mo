@@ -11,6 +11,9 @@ module UserQueries = {
         principalId : Ids.PrincipalId;
     };
 
+    public type GetICFCLinkStatus = {
+        principalId : Ids.PrincipalId;
+    };
     public type CombinedProfile = {
         principalId : Ids.PrincipalId;
         username : Text;
