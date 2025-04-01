@@ -7,7 +7,7 @@
   import { clubStore } from "$lib/stores/club-store";
   import PlayerGameweekHistory from "$lib/components/player/player-gameweek-history.svelte";
     
-  import Layout from "../Layout.svelte";
+  import Layout from "../+layout.svelte";
   import PlayerHeader from "$lib/components/player/player-header.svelte";
   import TabContainer from "$lib/components/shared/tab-container.svelte";
   import LocalSpinner from "$lib/components/shared/local-spinner.svelte";

@@ -1,5 +1,5 @@
 // src/utils/ActorFactory.ts
-import type { AuthStore } from "$lib/stores/auth.store";
+import type { AuthStore } from "$lib/stores/auth-store";
 import type { OptionIdentity } from "$lib/types/identity";
 import { Actor, HttpAgent } from "@dfinity/agent";
 import type { Unsubscriber } from "svelte/store";

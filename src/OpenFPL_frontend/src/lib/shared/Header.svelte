@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from "$app/state";
-  import { authStore, type AuthSignInParams } from "$lib/stores/auth.store"
+  import { authStore, type AuthSignInParams } from "$lib/stores/auth-store"
   import OpenFPLIcon from "$lib/icons/OpenFPLIcon.svelte";
   import WalletIcon from "$lib/icons/WalletIcon.svelte";
   import { onMount, onDestroy } from "svelte";

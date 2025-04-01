@@ -6,7 +6,7 @@
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { managerStore } from "$lib/stores/manager-store";
   import { playerEventsStore } from "$lib/stores/player-events-store";
-  import { authStore } from "$lib/stores/auth.store";
+  import { authStore } from "$lib/stores/auth-store";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import FantasyPlayerDetailModal from "../fantasy-team/fantasy-player-detail-modal.svelte";
   import GameweekFilter from "../shared/filters/gameweek-filter.svelte";

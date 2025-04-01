@@ -1,6 +1,6 @@
 <script lang="ts">
     import CopyIcon from "$lib/icons/CopyIcon.svelte";
-    import { authStore } from "$lib/stores/auth.store";
+    import { authStore } from "$lib/stores/auth-store";
     import { toasts } from "$lib/stores/toasts-store";
 
         async function copyTextAndShowToast(text: string) {

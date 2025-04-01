@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { authStore, type AuthSignInParams } from "$lib/stores/auth.store"
+    import { authStore, type AuthSignInParams } from "$lib/stores/auth-store"
     import { goto } from "$app/navigation";
     import LandingPageDisplay from "./landing-page-display.svelte";
     import LandingPageFooter from "./landing-page-footer.svelte";

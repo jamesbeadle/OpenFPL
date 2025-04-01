@@ -1,6 +1,6 @@
 <script lang="ts">
 
-  import Layout from "../Layout.svelte";
+  import Layout from "../+layout.svelte";
   import Architecture from "$lib/components/whitepaper/architecture.svelte";
   import Dao from "$lib/components/whitepaper/dao.svelte";
   import Gameplay from "$lib/components/whitepaper/gameplay.svelte";

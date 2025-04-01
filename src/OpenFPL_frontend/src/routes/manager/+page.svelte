@@ -14,7 +14,7 @@
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import { getGridSetup, getTeamFormationReadOnly } from "$lib/utils/pick-team.helpers";
-  import Layout from "../Layout.svelte";
+  import Layout from "../+layout.svelte";
   import ManagerGameweeks from "$lib/components/manager/manager-gameweeks.svelte";
   import ReadOnlyPitchView from "$lib/components/manager/read-only-pitch-view.svelte";
   import TabContainer from "$lib/components/shared/tab-container.svelte";

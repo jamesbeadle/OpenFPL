@@ -1,6 +1,6 @@
 import { ActorFactory } from "../utils/actor.factory";
 import { storeManager } from "$lib/managers/store-manager";
-import { authStore } from "$lib/stores/auth.store";
+import { authStore } from "$lib/stores/auth-store";
 import { leagueStore } from "$lib/stores/league-store";
 
 import { isError } from "$lib/utils/helpers";

@@ -1,6 +1,6 @@
 import { ActorFactory } from "../utils/actor.factory";
 import { toasts } from "$lib/stores/toasts-store";
-import { authStore } from "$lib/stores/auth.store";
+import { authStore } from "$lib/stores/auth-store";
 import type {
   Fixture,
   LeagueId,
