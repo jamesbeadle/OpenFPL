@@ -162,14 +162,15 @@ actor Self {
 
   /* ----- User Queries ----- */
 
-  public shared ({ caller }) func getProfile(dto : UserQueries.GetProfile) : async Result.Result<UserQueries.Profile, Enums.Error> {
+  public shared ({ caller }) func getProfile(dto : UserQueries.GetProfile) : async Result.Result<UserQueries.CombinedProfile, Enums.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == dto.principalId;
     assert await hasMembership(principalId);
-    return await userManager.getProfile(dto);
+    return await userManager.getCombinedProfile(dto);
   };
 
+  /*
   public shared ({ caller }) func getICFCProfile(dto : UserQueries.GetICFCProfile) : async Result.Result<UserQueries.ICFCProfile, Enums.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
@@ -179,6 +180,7 @@ actor Self {
       principalId = Principal.toText(caller);
     });
   };
+  */
 
   public shared ({ caller }) func getTeamSelection(dto : UserQueries.GetTeamSetup) : async Result.Result<UserQueries.TeamSetup, Enums.Error> {
     assert not Principal.isAnonymous(caller);

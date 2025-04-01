@@ -11,6 +11,24 @@ module UserQueries = {
         principalId : Ids.PrincipalId;
     };
 
+    public type CombinedProfile = {
+        principalId : Ids.PrincipalId;
+        username : Text;
+        termsAccepted : Bool;
+        profilePicture : ?Blob;
+        profilePictureType : Text;
+        favouriteClubId : ?FootballIds.ClubId;
+        createDate : Int;
+        displayName : Text;
+        membershipType : Enums.MembershipType;
+        membershipClaims : [MembershipClaim];
+        createdOn : Int;
+        termsAgreed : Bool;
+        membershipExpiryTime : Int;
+        favouriteLeagueId : ?FootballIds.LeagueId;
+        nationalityId : ?Ids.CountryId;
+    };
+
     public type Profile = {
         principalId : Ids.PrincipalId;
         username : Text;
