@@ -394,9 +394,8 @@ actor class _LeaderboardCanister() {
     return Buffer.toArray(buffer);
   };
 
-  /* TODO
 
-  public shared query ({ caller }) func getWeeklyRewardLeaderboard(seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber) : async ?LeaderboardQ.WeeklyLeaderboardDTO {
+  public shared query ({ caller }) func getWeeklyRewardLeaderboard(seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber) : async ?LeaderboardQueries.WeeklyLeaderboard {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == CanisterIds.OPENFPL_BACKEND_CANISTER_ID;
@@ -470,8 +469,6 @@ actor class _LeaderboardCanister() {
     };
   };
 
-  */
-
   public shared ({ caller }) func getWeeklyLeaderboardEntries(dto : LeaderboardQueries.GetWeeklyLeaderboard) : async ?LeaderboardQueries.WeeklyLeaderboard {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
@@ -523,8 +520,7 @@ actor class _LeaderboardCanister() {
     };
   };
 
-/* TODO
-  public shared query ({ caller }) func getWeeklyLeaderboardEntry(seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber, principalId : Text) : async ?DTOs.LeaderboardEntryDTO {
+  public shared query ({ caller }) func getWeeklyLeaderboardEntry(seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber, principalId : Text) : async ?LeaderboardQueries.LeaderboardEntry {
     assert not Principal.isAnonymous(caller);
     let callerPrincipalId = Principal.toText(caller);
     assert callerPrincipalId == CanisterIds.OPENFPL_BACKEND_CANISTER_ID;
@@ -545,14 +541,14 @@ actor class _LeaderboardCanister() {
       case (?foundLeaderboard) {
         let _ = List.find<AppTypes.LeaderboardEntry>(
           foundLeaderboard.entries,
-          func(entry : DTOs.LeaderboardEntryDTO) : Bool {
+          func(entry : LeaderboardQueries.LeaderboardEntry) : Bool {
             return entry.principalId == principalId;
           },
         );
       };
     };
   };
-*/
+  
   public shared ({ caller }) func getTotalLeaderboards() : async Nat {
     assert not Principal.isAnonymous(caller);
     let callerPrincipalId = Principal.toText(caller);
