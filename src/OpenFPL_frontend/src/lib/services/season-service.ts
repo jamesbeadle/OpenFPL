@@ -1,18 +1,18 @@
-import { authStore } from "$lib/stores/auth.store";
+import { authStore } from "$lib/stores/auth-store";
 import { ActorFactory } from "../utils/actor.factory";
 import { isError } from "../utils/helpers";
-import type {
-  SeasonDTO,
-  LeagueId,
-} from "../../../../external_declarations/data_canister/data_canister.did";
 import { toasts } from "$lib/stores/toasts-store";
+import type {
+  LeagueId,
+  Season,
+} from "../../../../declarations/data_canister/data_canister.did";
 
 export class SeasonService {
   private actor: any;
 
   constructor() {}
 
-  async getSeasons(): Promise<SeasonDTO[] | undefined> {
+  async getSeasons(): Promise<Season[] | undefined> {
     try {
       const identityActor: any =
         await ActorFactory.createDataCanisterIdentityActor(

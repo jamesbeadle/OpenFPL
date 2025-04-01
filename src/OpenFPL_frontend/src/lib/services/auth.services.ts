@@ -1,4 +1,4 @@
-import { authStore, type AuthSignInParams } from "$lib/stores/auth.store";
+import { authStore, type AuthSignInParams } from "$lib/stores/auth-store";
 import { toasts } from "$lib/stores/toasts-store";
 import type { ToastMsg } from "$lib/types/toast";
 import { replaceHistory } from "$lib/utils/route.utils";

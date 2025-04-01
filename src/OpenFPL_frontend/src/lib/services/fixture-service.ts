@@ -1,19 +1,19 @@
 import { ActorFactory } from "../utils/actor.factory";
 import { toasts } from "$lib/stores/toasts-store";
+import { authStore } from "$lib/stores/auth-store";
 import type {
-  FixtureDTO,
+  Fixture,
   LeagueId,
   SeasonId,
-} from "../../../../external_declarations/data_canister/data_canister.did";
-import { isError } from "../utils/helpers";
-import { authStore } from "$lib/stores/auth.store";
+} from "../../../../declarations/data_canister/data_canister.did";
+import { isError } from "$lib/utils/helpers";
 
 export class FixtureService {
   private actor: any;
 
   constructor() {}
 
-  async getFixtures(): Promise<FixtureDTO[] | undefined> {
+  async getFixtures(): Promise<Fixture[] | undefined> {
     try {
       const identityActor: any =
         await ActorFactory.createDataCanisterIdentityActor(
@@ -31,7 +31,7 @@ export class FixtureService {
     }
   }
 
-  async getPostponedFixtures(): Promise<FixtureDTO[] | undefined> {
+  async getPostponedFixtures(): Promise<Fixture[] | undefined> {
     try {
       const identityActor: any =
         await ActorFactory.createDataCanisterIdentityActor(

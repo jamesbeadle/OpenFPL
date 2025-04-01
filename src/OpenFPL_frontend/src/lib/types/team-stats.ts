@@ -1,6 +1,6 @@
-import type { ClubDTO } from "../../../../external_declarations/data_canister/data_canister.did";
+import type { Club } from "../../../../declarations/data_canister/data_canister.did";
 
-export interface TeamStats extends ClubDTO {
+export interface TeamStats extends Club {
   played: number;
   wins: number;
   draws: number;

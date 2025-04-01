@@ -1,14 +1,14 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { writable, type Writable } from "svelte/store";
+  import { writable } from "svelte/store";
   
   import { storeManager } from "$lib/managers/store-manager";
   import { managerStore } from "$lib/stores/manager-store";
   import { appStore } from "$lib/stores/app-store";
-  import type { TeamSelectionDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { PlayerId, TeamSetup } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { allFormations } from "$lib/utils/pick-team.helpers";
   
-  import Layout from "../Layout.svelte";
+  import Layout from "../+layout.svelte";
   import PickTeamButtons from "$lib/components/pick-team/pick-team-buttons.svelte";
   import PickTeamHeader from "$lib/components/pick-team/pick-team-header.svelte";
   import SimpleFixtures from "$lib/components/simple-fixtures.svelte";
@@ -17,7 +17,7 @@
   import PickTeamBanner from "$lib/components/pick-team/pick-team-banner.svelte";
     import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
     
-  let fantasyTeam = writable<TeamSelectionDTO | undefined>(undefined);
+  let fantasyTeam = writable<TeamSetup | undefined>(undefined);
   let availableFormations = writable(Object.keys(allFormations));   
   let selectedFormation = writable('4-4-2');
   let teamValue = writable(0);
@@ -57,7 +57,7 @@
       return currentTeam;
     });
 
-    if (!hasSeenBanner && (userFantasyTeam.firstGameweek || userFantasyTeam.playerIds.every(id => id === 0))) {
+    if (!hasSeenBanner && (userFantasyTeam.firstGameweek || userFantasyTeam.playerIds.every((id: PlayerId) => id === 0))) {
       showWelcomeBanner = true;
     }
   }

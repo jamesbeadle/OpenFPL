@@ -4,7 +4,6 @@
   import { playerStore } from "$lib/stores/player-store";
   import { managerStore } from "$lib/stores/manager-store";
   import { seasonStore } from "$lib/stores/season-store";
-  import type { AppStatusDTO, TeamSelectionDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { allFormations, autofillTeam, checkBonusUsedInSession, checkSaveButtonConditions, getAvailableFormations, getHighestValuedPlayerId, getTeamFormation, isBonusConditionMet, isValidFormation, updateTeamValue } from "$lib/utils/pick-team.helpers";
   import SetTeamName from "./modals/set-team-name-modal.svelte";
   import { appStore } from "$lib/stores/app-store";
@@ -12,16 +11,17 @@
   import DesktopButtons from "./desktop-buttons.svelte";
   import MobileButtons from "./mobile-buttons.svelte";
   import { toasts } from "$lib/stores/toasts-store";
-    import LocalSpinner from "../shared/local-spinner.svelte";
+  import LocalSpinner from "../shared/local-spinner.svelte";
+  import type { AppStatus, TeamSetup } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
-  export let fantasyTeam: Writable<TeamSelectionDTO | undefined>;
+  export let fantasyTeam: Writable<TeamSetup | undefined>;
   export let selectedFormation: Writable<string>;
   export let availableFormations: Writable<string[]>;
   export let pitchView: Writable<Boolean>;
   export let teamValue: Writable<number>;
   export let sessionAddedPlayers: Writable<number[]>;
 
-  let startingFantasyTeam: TeamSelectionDTO;
+  let startingFantasyTeam: TeamSetup;
   let isSaveButtonActive = writable(false);
   let activeSeason: string;
   let activeGameweek: number;
@@ -31,7 +31,7 @@
   let transferWindowPlayed = writable(false);
   let transferWindowPlayedInSession = false;
   let isLoading = true;
-  let appStatus: AppStatusDTO;
+  let appStatus: AppStatus;
   let pitchViewActive = writable(true);
 
   $: if ($fantasyTeam && $playerStore.length > 0) {
@@ -131,7 +131,7 @@
     const oldPlayerIds = new Set($fantasyTeam.playerIds);
     $fantasyTeam = autofillTeam($fantasyTeam, $playerStore, $selectedFormation);
 
-    const newPlayers = $fantasyTeam.playerIds.filter(id => id > 0 && !oldPlayerIds.has(id));
+    const newPlayers = $fantasyTeam!.playerIds.filter(id => id > 0 && !oldPlayerIds.has(id));
     $sessionAddedPlayers = [...$sessionAddedPlayers, ...newPlayers];
     
     teamValue.set(updateTeamValue($fantasyTeam));

@@ -1,21 +1,21 @@
 <script lang="ts">
   import { type Writable } from "svelte/store";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
-  import type { ClubDTO } from "../../../../../external_declarations/data_canister/data_canister.did";
   import { playerStore } from "$lib/stores/player-store";
   import { clubStore } from "$lib/stores/club-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import GameweekDetailTableRow from "./gameweek-detail-table-row.svelte";
-  import type { ManagerGameweekDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import FantasyPlayerDetailModal from "../fantasy-team/fantasy-player-detail-modal.svelte";
+    import type { FantasyTeamSnapshot } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import type { Club } from "../../../../../declarations/data_canister/data_canister.did";
   
-  export let fantasyTeam: Writable<ManagerGameweekDTO | null>;
+  export let fantasyTeam: Writable<FantasyTeamSnapshot | null>;
   export let gameweekPlayers: Writable<GameweekData[]>;
   export let showModal = false;
   export let activeSeasonName: string;
   
-  let selectedTeam: ClubDTO;
-  let selectedOpponentTeam: ClubDTO;
+  let selectedTeam: Club;
+  let selectedOpponentTeam: Club;
   let selectedGameweekData: GameweekData;
   
   async function showDetailModal(gameweekData: GameweekData) {
@@ -74,7 +74,7 @@
               showDetailModal(data);
             }}
           >
-           <GameweekDetailTableRow fantasyTeam={fantasyTeam} playerDTO={playerDTO!} playerTeam={playerTeam!} {data} />
+           <GameweekDetailTableRow fantasyTeam={fantasyTeam} player={playerDTO!} playerTeam={playerTeam!} {data} />
           </button>
         {/each}
       </div>

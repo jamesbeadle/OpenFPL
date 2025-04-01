@@ -1,9 +1,8 @@
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import { ActorFactory } from "../utils/actor.factory";
 import { isError } from "../utils/helpers";
-import type { SeasonId } from "../../../../external_declarations/data_canister/data_canister.did";
 import { toasts } from "$lib/stores/toasts-store";
-import type { RewardRatesDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type { RewardRates } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 export class RewardRatesService {
   private actor: any;
@@ -15,12 +14,12 @@ export class RewardRatesService {
     );
   }
 
-  async getRewardRates(): Promise<RewardRatesDTO | undefined> {
+  async getRewardRates(): Promise<RewardRates | undefined> {
     try {
       const result = await this.actor.getActiveRewardRates();
       if (isError(result))
         throw new Error("Failed to fetch active reward rates");
-      let rewardRatesResult: RewardRatesDTO = result.ok;
+      let rewardRatesResult: RewardRates = result.ok;
       return rewardRatesResult;
     } catch (error) {
       console.error("Error fetching reward rates: ", error);

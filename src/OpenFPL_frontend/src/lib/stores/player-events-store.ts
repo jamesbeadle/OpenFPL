@@ -1,16 +1,4 @@
 import { writable } from "svelte/store";
-import type {
-  ManagerGameweekDTO,
-  AppStatusDTO,
-  PlayerDTO,
-} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-import type {
-  PlayerPointsDTO,
-  PlayerDetailDTO,
-  LeagueStatus,
-  FixtureDTO,
-  PlayerScoreDTO,
-} from "../../../../external_declarations/data_canister/data_canister.did";
 import { PlayerEventsService } from "$lib/services/player-events-service";
 import type { GameweekData } from "$lib/interfaces/GameweekData";
 import { playerStore } from "./player-store";
@@ -19,29 +7,47 @@ import { fixtureStore } from "./fixture-store";
 import { getTotalBonusPoints } from "$lib/utils/pick-team.helpers";
 import { appStore } from "./app-store";
 import { leagueStore } from "./league-store";
+import type {
+  Fixture,
+  LeagueStatus,
+  Player,
+  PlayerDetails,
+  PlayerPoints,
+  PlayerScore,
+  PlayersMap,
+} from "../../../../declarations/data_canister/data_canister.did";
+import type {
+  AppStatus,
+  FantasyTeamSnapshot,
+} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 function createPlayerEventsStore() {
-  const { subscribe, set } = writable<PlayerPointsDTO[]>([]);
-  let playerScoresMap: Map<number, PlayerScoreDTO> = new Map();
+  const { subscribe, set } = writable<PlayerPoints[]>([]);
+  let playerScoresMap: Map<number, PlayerScore> = new Map();
 
   async function getPlayerDetails(
     playerId: number,
     seasonId: number,
-  ): Promise<PlayerDetailDTO | undefined> {
+  ): Promise<PlayerDetails | undefined> {
     return new PlayerEventsService().getPlayerDetails(playerId, seasonId);
   }
 
   async function getPlayerMap(
     seasonId: number,
     gameweek: number,
-  ): Promise<PlayerScoreDTO[] | undefined> {
+  ): Promise<PlayersMap | undefined> {
     return new PlayerEventsService().getPlayerMap(seasonId, gameweek);
   }
 
   async function loadPlayerScoresMap(seasonId: number, gameweek: number) {
     const playerScores = await getPlayerMap(seasonId, gameweek);
     if (playerScores) {
-      playerScoresMap = new Map(playerScores.map((score) => [score.id, score]));
+      playerScoresMap = new Map(
+        playerScores.playersMap.map(([seasonId, gameweek]) => [
+          gameweek.id,
+          gameweek,
+        ]),
+      );
     }
     return playerScoresMap;
   }
@@ -51,12 +57,12 @@ function createPlayerEventsStore() {
   }
 
   async function getGameweekPlayers(
-    fantasyTeam: ManagerGameweekDTO,
+    fantasyTeam: FantasyTeamSnapshot,
     seasonId: number,
     gameweek: number,
   ): Promise<GameweekData[]> {
-    let allPlayerEvents: PlayerPointsDTO[] = [];
-    let appStatus: AppStatusDTO | null = null;
+    let allPlayerEvents: PlayerPoints[] = [];
+    let appStatus: AppStatus | null = null;
     appStore.subscribe((result) => {
       if (result == null) {
         throw new Error("Failed to subscribe to application store");
@@ -91,7 +97,7 @@ function createPlayerEventsStore() {
       allPlayerEvents = allPlayerEventsResult ? allPlayerEventsResult : [];
     }
 
-    let allPlayers: PlayerDTO[] = [];
+    let allPlayers: Player[] = [];
     const unsubscribe = playerStore.subscribe((players) => {
       allPlayers = players.filter((player) =>
         fantasyTeam.playerIds.includes(player.id),
@@ -109,7 +115,7 @@ function createPlayerEventsStore() {
       ),
     );
 
-    let allFixtures: FixtureDTO[] = [];
+    let allFixtures: Fixture[] = [];
 
     const unsubscribeFixtures = fixtureStore.subscribe((fixtures) => {
       allFixtures = fixtures;
@@ -133,9 +139,9 @@ function createPlayerEventsStore() {
     return await Promise.all(playersWithPoints);
   }
 
-  async function getPlayerEventsFromLocalStorage(): Promise<PlayerPointsDTO[]> {
+  async function getPlayerEventsFromLocalStorage(): Promise<PlayerPoints[]> {
     const cachedPlayersData = localStorage.getItem("player_events");
-    let cachedPlayerEvents: PlayerPointsDTO[] = [];
+    let cachedPlayerEvents: PlayerPoints[] = [];
     try {
       cachedPlayerEvents = JSON.parse(cachedPlayersData || "[]");
     } catch (e) {
@@ -147,13 +153,13 @@ function createPlayerEventsStore() {
   async function getPlayerEventsFromBackend(
     seasonId: number,
     gameweek: number,
-  ): Promise<PlayerPointsDTO[] | undefined> {
+  ): Promise<PlayerPoints[] | undefined> {
     return new PlayerEventsService().getPlayerEvents(seasonId, gameweek);
   }
 
   return {
     subscribe,
-    setPlayerEvents: (players: PlayerPointsDTO[]) => set(players),
+    setPlayerEvents: (players: PlayerPoints[]) => set(players),
     getPlayerDetails,
     getGameweekPlayers,
     getPlayerEventsFromBackend,

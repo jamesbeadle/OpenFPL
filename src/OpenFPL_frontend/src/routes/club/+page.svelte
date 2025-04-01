@@ -3,7 +3,7 @@
   import { page } from "$app/state";
   import { storeManager } from "$lib/managers/store-manager";
   
-  import Layout from "../Layout.svelte";
+  import Layout from "../+layout.svelte";
   import TeamPlayers from "$lib/components/club/team-players.svelte";
   import TeamFixtures from "$lib/components/club/team-fixtures.svelte";
   import TabContainer from "$lib/components/shared/tab-container.svelte";

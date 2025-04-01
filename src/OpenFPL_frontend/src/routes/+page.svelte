@@ -3,10 +3,10 @@
   
   import { seasonStore } from "$lib/stores/season-store";
   import { leagueStore } from "$lib/stores/league-store";
-  import { authStore } from "$lib/stores/auth.store";
+  import { authStore } from "$lib/stores/auth-store";
   import { globalDataLoaded } from "$lib/managers/store-manager";
 
-  import Layout from "./Layout.svelte";
+  import Layout from "./+layout.svelte";
   import HomepageHeader from "$lib/components/homepage/homepage-header.svelte";
   import FixturesComponent from "$lib/components/homepage/fixtures.svelte";
   import GamweekPointsComponent from "$lib/components/manager/gameweek-points.svelte";

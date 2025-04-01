@@ -1,21 +1,21 @@
 <script lang="ts">
     import type { Writable } from "svelte/store";
     import { leagueStore } from "$lib/stores/league-store";
-    import type { TeamSelectionDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import type { TeamSetup } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
     export let pitchViewActive: Writable<boolean>;
     export let selectedFormation: Writable<string>;
     export let availableFormations: Writable<string[]>;
     export let transferWindowPlayed: Writable<boolean>;
     export let isSaveButtonActive: Writable<boolean>;
-    export let fantasyTeam: Writable<TeamSelectionDTO | undefined>;
+    export let fantasyTeam: Writable<TeamSetup | undefined>;
     export let showPitchView : () => void;
     export let showListView : () => void;
     export let playTransferWindow : () => void;
     export let autoFillFantasyTeam : () => void;
     export let saveFantasyTeam : () => void;
     export let handleResetTeam: () => void;
-    export let startingFantasyTeam: TeamSelectionDTO;
+    export let startingFantasyTeam: TeamSetup;
     
     $: showResetButton = $fantasyTeam?.playerIds && startingFantasyTeam?.playerIds && (
       (startingFantasyTeam.playerIds.filter(id => id > 0).length === 11 && 

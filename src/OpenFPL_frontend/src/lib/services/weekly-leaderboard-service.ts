@@ -1,13 +1,11 @@
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import { ActorFactory } from "../utils/actor.factory";
 import { isError } from "../utils/helpers";
-import type {
-  GetWeeklyLeaderboardDTO,
-  GetWeeklyRewardsDTO,
-  WeeklyLeaderboardDTO,
-  WeeklyRewardsDTO,
-} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { toasts } from "$lib/stores/toasts-store";
+import type {
+  GetWeeklyLeaderboard,
+  WeeklyLeaderboard,
+} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 export class WeeklyLeaderboardService {
   private actor: any;
@@ -24,9 +22,9 @@ export class WeeklyLeaderboardService {
     seasonId: number,
     gameweek: number,
     searchTerm: string,
-  ): Promise<WeeklyLeaderboardDTO | undefined> {
+  ): Promise<WeeklyLeaderboard | undefined> {
     try {
-      let dto: GetWeeklyLeaderboardDTO = {
+      let dto: GetWeeklyLeaderboard = {
         offset: BigInt(offset),
         seasonId: seasonId,
         limit: BigInt(25),
@@ -47,7 +45,7 @@ export class WeeklyLeaderboardService {
       });
     }
   }
-
+  /*
   async getWeeklyRewards(
     seasonId: number,
     gameweek: number,
@@ -70,4 +68,5 @@ export class WeeklyLeaderboardService {
       });
     }
   }
+    */
 }

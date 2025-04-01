@@ -10,6 +10,7 @@ import FootballIds "mo:waterway-mops/football/FootballIds";
 import BaseDefinitions "mo:waterway-mops/BaseDefinitions";
 import FootballEnums "mo:waterway-mops/football/FootballEnums";
 import BaseUtilities "mo:waterway-mops/BaseUtilities";
+import DateTimeUtilities "mo:waterway-mops/DateTimeUtilities";
 import DataCanister "canister:data_canister";
 
 
@@ -1870,8 +1871,6 @@ actor class _ManagerCanister() {
     return List.fromArray(Buffer.toArray(teamHistoryBuffer));
   };
 
-  //Calculate teams scores
-  /*
   public shared ({ caller }) func calculateFantasyTeamScores(leagueId : FootballIds.LeagueId, seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber, month : BaseDefinitions.CalendarMonth) : async () {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
@@ -1894,12 +1893,12 @@ actor class _ManagerCanister() {
       seasonId;
     });
 
-    let playerIdTrie : TrieMap.TrieMap<FootballIds.PlayerId, DataCanister.Player> = TrieMap.TrieMap<FootballIds.PlayerId, DataCanister.Player>(BaseUtilities.eqNat16, BaseUtilities.hashNat16);
+    let playerIdTrie : TrieMap.TrieMap<FootballIds.PlayerId, DataCanister.PlayerScore> = TrieMap.TrieMap<FootballIds.PlayerId, DataCanister.PlayerScore>(BaseUtilities.eqNat16, BaseUtilities.hashNat16);
 
     switch (allPlayersListResult) {
       case (#ok allPlayersList) {
 
-        for (player in Iter.fromArray(allPlayersList)) {
+        for (player in Iter.fromArray(allPlayersList.playersMap)) {
           playerIdTrie.put(player.0, player.1);
         };
 
@@ -2066,7 +2065,6 @@ actor class _ManagerCanister() {
       case (#err _) {};
     };
   };
-  */
 
   private func calculateGoalPoints(position : FootballEnums.PlayerPosition, goalsScored : Int16) : Int16 {
     switch (position) {

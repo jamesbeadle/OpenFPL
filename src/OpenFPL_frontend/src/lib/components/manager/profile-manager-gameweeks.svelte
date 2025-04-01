@@ -6,15 +6,15 @@
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import { getBonusIcon, getFlagComponent, getPlayerName } from "$lib/utils/helpers";
   import { countryStore } from "$lib/stores/country-store";
-  import { authStore } from "$lib/stores/auth.store";
+  import { authStore } from "$lib/stores/auth-store";
   import { storeManager } from "$lib/managers/store-manager";
   import { goto } from "$app/navigation";
   import SortIcon from "$lib/icons/SortIcon.svelte";
-    import type { ManagerDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     import LocalSpinner from "../shared/local-spinner.svelte";
+    import type { Manager } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   export let principalId = "";
-  let manager: ManagerDTO | null;
+  let manager: Manager | null;
   let isLoading = true;
   let sortField: 'gameweek' | 'points' = 'gameweek';
   let sortDirection: 'asc' | 'desc' = 'desc';

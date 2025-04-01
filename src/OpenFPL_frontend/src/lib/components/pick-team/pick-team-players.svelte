@@ -5,16 +5,17 @@
   import { leagueStore } from "$lib/stores/league-store";
   import { playerStore } from "$lib/stores/player-store";
   import { canAddPlayerToCurrentFormation, findValidFormationWithPlayer, getAvailablePositionIndex, getHighestValuedPlayerId, getTeamFormation, repositionPlayersForNewFormation } from "$lib/utils/pick-team.helpers";
-  import type { PlayerDTO, TeamSelectionDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-
+  
   import ConfirmCaptainChange from "./modals/confirm-captain-change-modal.svelte";
   import AddPlayerModal from "./modals/add-player-modal.svelte";
   import SelectedPlayersPitch from "./selected-players-pitch.svelte";
   import SelectedPlayersList from "./selected-players-list.svelte";
   import { convertPositionToIndex } from "$lib/utils/helpers";
     import LocalSpinner from "../shared/local-spinner.svelte";
+    import type { TeamSetup } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import type { Player } from "../../../../../declarations/data_canister/data_canister.did";
   
-  export let fantasyTeam: Writable<TeamSelectionDTO | undefined>;
+  export let fantasyTeam: Writable<TeamSetup | undefined>;
   export let pitchView: Writable<boolean>;
   export let selectedFormation: Writable<string>;
   export let teamValue: Writable<number>;
@@ -166,7 +167,7 @@
     showCaptainModal = false;
   }
 
-  function handlePlayerSelection(player: PlayerDTO) {
+  function handlePlayerSelection(player: Player) {
     if (canAddPlayerToCurrentFormation($playerStore, player, $fantasyTeam!, $selectedFormation)) 
     {
       addPlayerToTeam(player, $selectedFormation);
@@ -187,7 +188,7 @@
     }
   }
 
-  function addPlayerToTeam(player: PlayerDTO,formation: string) {
+  function addPlayerToTeam(player: Player, formation: string) {
     const indexToAdd = getAvailablePositionIndex(convertPositionToIndex(player.position), $fantasyTeam!, formation);
     if (indexToAdd === -1) {
       console.error("No available position to add the player.");

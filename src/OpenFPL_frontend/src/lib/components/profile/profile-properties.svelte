@@ -7,7 +7,7 @@
     import UpdateUsernameModal from "./update-username-modal.svelte";
     import { storeManager } from "$lib/managers/store-manager";
     import { getDateFromBigInt } from "$lib/utils/helpers";
-    import { authStore } from "$lib/stores/auth.store";
+    import { authStore } from "$lib/stores/auth-store";
     import { appStore } from "$lib/stores/app-store";
     import LoadingDots from "../shared/loading-dots.svelte";
 

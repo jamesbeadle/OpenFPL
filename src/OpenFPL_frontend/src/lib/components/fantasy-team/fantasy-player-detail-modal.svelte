@@ -1,16 +1,16 @@
 <script lang="ts">
   import { convertPositionToIndex, getFlagComponent, getPlayerName } from "../../utils/helpers";
-  import type { ClubDTO } from "../../../../../external_declarations/data_canister/data_canister.did";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import Modal from "$lib/components/shared/modal.svelte";
   import FantasyPlayerDetailRow from "./fantasy-player-detail-row.svelte";
   import ModalTotalRow from "../shared/modal-total-row.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
+    import type { Club } from "../../../../../declarations/data_canister/data_canister.did";
   
   export let visible: boolean;
   export let gameweekData: GameweekData;
-  export let playerTeam: ClubDTO;
-  export let opponentTeam: ClubDTO;
+  export let playerTeam: Club;
+  export let opponentTeam: Club;
   export let seasonName: string;
 </script>
 

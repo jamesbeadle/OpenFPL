@@ -4,17 +4,17 @@
     import { clubStore } from "$lib/stores/club-store";
     import { globalDataLoaded } from "$lib/managers/store-manager";
     import { formatUnixDateToSmallReadable, formatUnixTimeToTime, getCountdownTime } from "../../utils/helpers";
-    import type { ClubDTO, FixtureDTO } from "../../../../../external_declarations/data_canister/data_canister.did";
     import HeaderCountdownPanel from "../shared/panels/header-countdown-panel.svelte";
     import HeaderFixturePanel from "./homepage-header-fixture-panel.svelte";
     import LoadingDots from "../shared/loading-dots.svelte";
+    import type { Club, Fixture } from "../../../../../declarations/data_canister/data_canister.did";
     
     let loadingNextFixture = true;
     let noNextFixture = false;
-    let nextFixture: FixtureDTO;
+    let nextFixture: Fixture;
     let countdownTime: { days: number; hours: number; minutes: number; };
-    let nextFixtureHomeTeam: ClubDTO;
-    let nextFixtureAwayTeam: ClubDTO;
+    let nextFixtureHomeTeam: Club;
+    let nextFixtureAwayTeam: Club;
 
     onMount(() => {
         let unsub: () => void = () => {};
