@@ -16,7 +16,6 @@
     let membershipLinked = false;
     let notLinked = true;
 
-    
     async function checkMembership(){
       // TODO Recheck 
       toasts.addToast({
@@ -120,11 +119,16 @@
             </a>.
           </p>
           <p class="mb-4 text-lg">
-            Please link your below OpenFPL principal ID within your ICFC profile to play:
+            Please link your below OpenFPL principal ID within your ICFC profile to play and then click the button below to refresh your status.
           </p>
           <div class="mb-6">
             <CopyPrincipal />
           </div>
+          {#if !notLinked}
+            <p class="mb-4 text-lg text-BrandGreen">
+              Your ICFC membership is pending verification. Please click the button below to finalize the linking process.
+            </p>
+          {/if}
           <div class="flex justify-center pt-4">
             {#if notLinked}
               <button 
@@ -135,7 +139,7 @@
               </button>
             {:else}
               <button 
-                class="fpl-button default-button hover:bg-BrandGreen/80"
+                class="fpl-button default-button "
                 on:click={handleLinkICFCProfile}
               >
                 <span>Link ICFC Membership</span>

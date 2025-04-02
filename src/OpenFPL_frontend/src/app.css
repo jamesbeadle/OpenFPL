@@ -31,6 +31,7 @@ main {
 .fpl-button {
   background-color: #2ce3a6;
   color: black;
+  @apply hover:border-BrandSlateGray hover:bg-BrandGreen/80 ;
 }
 
 .fpl-dropdown {
@@ -235,7 +236,7 @@ input {
 }
 
 .default-button {
-  @apply px-3 py-1 rounded md:px-4;
+  @apply p-3 text-lg text-center text-black transition border border-black rounded-lg;
 }
 
 .bg-panel {
