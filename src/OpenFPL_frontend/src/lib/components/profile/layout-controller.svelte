@@ -29,6 +29,8 @@
     }
 
     $effect(() => {
+        console.log('userIdCreatedStore', $userIdCreatedStore);
+        console.log('profile', profile);
         if($userIdCreatedStore?.data) {
             (async () => {
                 try {

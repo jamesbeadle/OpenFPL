@@ -17,14 +17,12 @@
     let notLinked = true;
 
     async function checkMembership(){
-      // TODO Recheck 
       toasts.addToast({
         type: "info",
         message: "Checking membership...",
         duration: 2000,
       });
       await checkICFCLinkStatus();
-
     }
 
     async function checkICFCLinkStatus(){
@@ -70,12 +68,13 @@
         const result = await userStore.linkICFCProfile();
         console.log(result)
         if (result) {
+          await userStore.sync();
           toasts.addToast({
             type: "success",
             message: "ICFC Membership Linked",
             duration: 2000,
           });
-          userStore.sync();
+          window.location.href = "/";
         } else {
           toasts.addToast({
             type: "error",
@@ -120,7 +119,7 @@
             </a>.
           </p>
           <p class="mb-4 text-lg">
-            Please link your below OpenFPL principal ID within your ICFC profile to play and then click the button below to refresh your status.
+            Please link your OpenFPL principal ID within your ICFC profile to play and then click the button below to refresh your status.
           </p>
           <div class="mb-6">
             <CopyPrincipal />
