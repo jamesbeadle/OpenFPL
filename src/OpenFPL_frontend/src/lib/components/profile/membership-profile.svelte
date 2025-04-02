@@ -1,15 +1,13 @@
 <script lang="ts">
     import LocalSpinner from "../shared/local-spinner.svelte";
     import Header from "$lib/shared/Header.svelte";
-    import type { CombinedProfile, ICFCLinkStatus } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     import CopyPrincipal from "./copy-principal.svelte";
     import MembershipLinkedModal from "./membership-linked-modal.svelte";
     import { toasts } from "$lib/stores/toasts-store";
     import { userStore } from "$lib/stores/user-store";
     import { authStore } from "$lib/stores/auth-store";
     import { get } from "svelte/store";
-    
-    //export let icfcProfile: CombinedProfile | undefined = undefined;
+    import { userIdCreatedStore } from "$lib/stores/user-control-store";
   
     let isLoading = false;
 
@@ -46,6 +44,8 @@
             message: "ICFC Membership Linked",
             duration: 2000,
           })
+          userIdCreatedStore.set({ data: principalId, certified: true });
+          window.location.href = "/";
         } 
       } else {
             notLinked = true;
@@ -66,15 +66,25 @@
           duration: 2000,
         });
         const result = await userStore.linkICFCProfile();
-        console.log(result)
-        if (result) {
-          await userStore.sync();
+        console.log('Link result:', result);
+        
+        if (result.success) {
+          const principalId = get(authStore).identity?.getPrincipal().toString();
+          if (!principalId) return;
+          userIdCreatedStore.set({ data: principalId, certified: true });
           toasts.addToast({
             type: "success",
             message: "ICFC Membership Linked",
-            duration: 2000,
+            duration: 5000,
           });
           window.location.href = "/";
+        } else if (result.alreadyExists) {
+          toasts.addToast({
+            type: "info",
+            message: "ICFC Membership already started. Refreshing status...",
+            duration: 2000,
+          });
+          await checkICFCLinkStatus();
         } else {
           toasts.addToast({
             type: "error",
@@ -92,10 +102,8 @@
       } finally {
         isLoading = false;
       }
-    }
-    
+    } 
   </script>
-
 
 {#if isLoading}
   <LocalSpinner />

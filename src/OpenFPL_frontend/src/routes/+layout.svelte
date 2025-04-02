@@ -3,11 +3,8 @@
   import { fade } from "svelte/transition";
   import { browser } from "$app/environment";
   import { get } from "svelte/store";
-  import { userStore } from "$lib/stores/user-store";
   import { initAuthWorker } from "$lib/services/worker.auth.services";
   import { authStore, type AuthStoreData } from "$lib/stores/auth-store";
-  import { authSignedInStore } from "$lib/derived/auth.derived";
-  import { toasts } from "$lib/stores/toasts-store";
   import { storeManager } from "$lib/managers/store-manager";
   import { appStore } from "$lib/stores/app-store";
   import { initUserProfile } from "$lib/services/user-profile-service";
@@ -27,7 +24,8 @@
 
   const init = async () => {
     if (!browser) return;
-    await authStore.sync();
+    //TODO: Add storeManager.syncStores()
+    await Promise.all([authStore.sync(), appStore.checkServerVersion()]);
     displayAndCleanLogoutMsg();
   };
 
