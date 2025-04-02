@@ -463,6 +463,10 @@ export const idlFactory = ({ IDL }) => {
     subAppUserPrincipalId: PrincipalId,
     membershipType: MembershipType,
   });
+  const NotifyAppofRemoveLink = IDL.Record({
+    icfcPrincipalId: PrincipalId,
+    subApp: SubApp,
+  });
   const BonusType = IDL.Variant({
     NoEntry: IDL.Null,
     Prospects: IDL.Null,
@@ -524,6 +528,7 @@ export const idlFactory = ({ IDL }) => {
     linkICFCProfile: IDL.Func([], [Result], []),
     noitifyAppofICFCHashUpdate: IDL.Func([UpdateICFCProfile], [Result], []),
     notifyAppLink: IDL.Func([NotifyAppofLink], [Result], []),
+    notifyAppRemoveLink: IDL.Func([NotifyAppofRemoveLink], [Result], []),
     notifyAppsOfFixtureFinalised: IDL.Func(
       [LeagueId, SeasonId, GameweekNumber],
       [Result],

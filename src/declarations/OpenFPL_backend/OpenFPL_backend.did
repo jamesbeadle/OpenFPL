@@ -359,6 +359,11 @@ type PlayBonus =
    playerId: PlayerId;
    principalId: PrincipalId;
  };
+type NotifyAppofRemoveLink = 
+ record {
+   icfcPrincipalId: PrincipalId;
+   subApp: SubApp;
+ };
 type NotifyAppofLink = 
  record {
    icfcPrincipalId: PrincipalId;
@@ -667,6 +672,7 @@ service : {
   linkICFCProfile: () -> (Result);
   noitifyAppofICFCHashUpdate: (UpdateICFCProfile) -> (Result);
   notifyAppLink: (NotifyAppofLink) -> (Result);
+  notifyAppRemoveLink: (NotifyAppofRemoveLink) -> (Result);
   notifyAppsOfFixtureFinalised: (LeagueId, SeasonId, GameweekNumber) ->
    (Result);
   notifyAppsOfGameweekStarting: (LeagueId, SeasonId, GameweekNumber) ->

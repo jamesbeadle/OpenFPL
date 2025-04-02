@@ -265,6 +265,10 @@ export interface NotifyAppofLink {
   subAppUserPrincipalId: PrincipalId;
   membershipType: MembershipType;
 }
+export interface NotifyAppofRemoveLink {
+  icfcPrincipalId: PrincipalId;
+  subApp: SubApp;
+}
 export interface PlayBonus {
   clubId: ClubId;
   playerId: PlayerId;
@@ -535,6 +539,7 @@ export interface _SERVICE {
   linkICFCProfile: ActorMethod<[], Result>;
   noitifyAppofICFCHashUpdate: ActorMethod<[UpdateICFCProfile], Result>;
   notifyAppLink: ActorMethod<[NotifyAppofLink], Result>;
+  notifyAppRemoveLink: ActorMethod<[NotifyAppofRemoveLink], Result>;
   notifyAppsOfFixtureFinalised: ActorMethod<
     [LeagueId, SeasonId, GameweekNumber],
     Result
