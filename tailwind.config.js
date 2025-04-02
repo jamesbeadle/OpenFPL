@@ -43,7 +43,7 @@ export default {
         BrandGreen: "#2CE3A6",
         BrandPurple: "#7F56F1",
         BrandWarning: "#EFA53A",
-        BrandSuccess: "#64AD54",
+        BrandSuccess: "#66E094",
         BrandSlateGray: "#5A5A5A",
         BrandRed: "#FF403C",
         BrandInfo: "#3CA1FF",

@@ -53,7 +53,8 @@
 {#if $authSignedInStore}
     {#if $userIdCreatedStore?.data}
        {#if !hasValidMembership}
-            <InvalidMembershipPage />
+          <Header />  
+          <InvalidMembershipPage />
         {:else}
             <Header />
                 <main class="page-wrapper">
@@ -67,29 +68,3 @@
 {:else}
     <LandingPage />
 {/if}
-
-
-<!-- {#await init()}
-  <div in:fade>
-    <FullScreenSpinner />
-  </div>
-{:then _}
-  <div class="flex w-full h-screen">
-    {#if isLoading}
-      <FullScreenSpinner />
-    {:else if $authSignedInStore && hasProfile && !hasValidMembership}
-      <InvalidMembershipPage />
-    {:else if $authSignedInStore && hasProfile && hasValidMembership}
-      <Header {onLogout} />
-      <main class="page-wrapper">
-        {@render children()}
-      </main>
-      <Footer />
-    {:else if $authSignedInStore && !hasProfile}
-      <MembershipProfile {icfcProfile} />
-    {:else}
-      <LandingPage />
-    {/if}
-    <Toasts />
-  </div>
-{/await} -->

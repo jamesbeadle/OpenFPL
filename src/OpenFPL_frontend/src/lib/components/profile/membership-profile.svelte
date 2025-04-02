@@ -135,7 +135,7 @@
               </button>
             {:else}
               <button 
-                class="fpl-button default-button hover:bg-BrandGreen/80"
+                class="fpl-button default-button "
                 on:click={handleLinkICFCProfile}
               >
                 <span>Link ICFC Membership</span>
