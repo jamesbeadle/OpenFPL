@@ -118,7 +118,7 @@
             </a>.
           </p>
           <p class="mb-4 text-lg">
-            Please link your below OpenFPL principal ID within your ICFC profile to play and then click the button below to refresh your status.
+            Please link your OpenFPL principal ID within your ICFC profile to play and then click the button below to refresh your status.
           </p>
           <div class="mb-6">
             <CopyPrincipal />
