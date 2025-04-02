@@ -17,14 +17,12 @@
     let notLinked = true;
 
     async function checkMembership(){
-      // TODO Recheck 
       toasts.addToast({
         type: "info",
         message: "Checking membership...",
         duration: 2000,
       });
       await checkICFCLinkStatus();
-
     }
 
     async function checkICFCLinkStatus(){
@@ -69,12 +67,13 @@
         });
         const result = await userStore.linkICFCProfile();
         if (result) {
+          await userStore.sync();
           toasts.addToast({
             type: "success",
             message: "ICFC Membership Linked",
             duration: 2000,
           });
-          userStore.sync();
+          window.location.href = "/";
         } else {
           toasts.addToast({
             type: "error",
