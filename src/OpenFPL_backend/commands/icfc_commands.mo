@@ -1,5 +1,6 @@
 import ICFCEnums "mo:waterway-mops/ICFCEnums";
 import Ids "mo:waterway-mops/Ids";
+import Enums "../enums/enums";
 
 module {
     public type NotifyAppofLink = {
@@ -20,6 +21,11 @@ module {
     };
     public type VerifySubApp = {
         subAppUserPrincipalId : Ids.PrincipalId;
+        subApp : ICFCEnums.SubApp;
+        icfcPrincipalId : Ids.PrincipalId;
+    };
+
+    public type NotifyAppofRemoveLink = {
         subApp : ICFCEnums.SubApp;
         icfcPrincipalId : Ids.PrincipalId;
     };

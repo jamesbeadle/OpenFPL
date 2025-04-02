@@ -510,6 +510,16 @@ module {
       return #ok();
     };
 
+    public func removeICFCLink(dto : ICFCCommands.NotifyAppofRemoveLink) : async Result.Result<(), Enums.Error> {
+      for (icfcLink in userICFCLinks.entries()) {
+        if (icfcLink.1.principalId == dto.icfcPrincipalId) {
+          let _ = userICFCLinks.remove(icfcLink.0);
+          return #ok();
+        };
+      };
+      return #err(#NotFound);
+    };
+
     public func verifyICFCLink(dto : ICFCCommands.VerifyICFCProfile) : async Result.Result<(), Enums.Error> {
       let icfcLink : ?AppTypes.ICFCLink = userICFCLinks.get(dto.principalId);
 

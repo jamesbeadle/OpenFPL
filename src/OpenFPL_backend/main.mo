@@ -471,6 +471,12 @@ actor Self {
     return #ok();
   };
 
+  public shared ({ caller }) func notifyAppRemoveLink(dto : ICFCCommands.NotifyAppofRemoveLink) : async Result.Result<(), Enums.Error> {
+    assert Principal.toText(caller) == Environment.ICFC_BACKEND_CANISTER_ID;
+    let _ = await userManager.removeICFCLink(dto);
+    return #ok();
+  };
+
   public shared ({ caller }) func noitifyAppofICFCHashUpdate(dto : ICFCCommands.UpdateICFCProfile) : async Result.Result<(), Enums.Error> {
     assert Principal.toText(caller) == Environment.ICFC_BACKEND_CANISTER_ID;
     let _ = await userManager.updateICFCHash(dto);
