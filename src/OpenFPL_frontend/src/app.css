@@ -31,7 +31,7 @@ main {
 .fpl-button {
   background-color: #2ce3a6;
   color: black;
-  @apply hover:border-BrandSlateGray hover:bg-BrandGreen/80 ;
+  @apply hover:border-BrandSlateGray hover:bg-BrandGreen/80;
 }
 
 .fpl-dropdown {

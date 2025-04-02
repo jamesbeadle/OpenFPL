@@ -41,6 +41,7 @@ export class UserService {
       const getICFCLinkStatus: GetICFCLinkStatus = { principalId };
       const result: any =
         await identityActor.getICFCLinkStatus(getICFCLinkStatus);
+      console.log(result);
       if (isError(result)) return undefined;
       return result.ok;
     } catch (error) {
@@ -56,6 +57,7 @@ export class UserService {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
       const result: any = await identityActor.linkICFCProfile();
+      console.log(result);
       if (isError(result)) return false;
       return true;
     } catch (error) {

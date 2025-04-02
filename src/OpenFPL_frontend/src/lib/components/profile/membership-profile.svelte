@@ -68,6 +68,7 @@
           duration: 2000,
         });
         const result = await userStore.linkICFCProfile();
+        console.log(result)
         if (result) {
           toasts.addToast({
             type: "success",
