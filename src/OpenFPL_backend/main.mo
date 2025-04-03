@@ -166,19 +166,20 @@ actor Self {
 
   /* ----- User Queries ----- */
 
-  public shared ({ caller }) func getProfile(dto : UserQueries.GetProfile) : async Result.Result<UserQueries.CombinedProfile, Enums.Error> {
+  public shared ({ caller }) func getProfile() : async Result.Result<UserQueries.CombinedProfile, Enums.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert principalId == dto.principalId;
     assert await hasMembership(principalId);
+    let dto : UserQueries.GetProfile = {
+      principalId = Principal.toText(caller);
+    };
     return await userManager.getCombinedProfile(dto);
   };
 
-  public shared ({ caller }) func getICFCLinkStatus(dto : UserQueries.GetICFCLinkStatus) : async Result.Result<ICFCEnums.ICFCLinkStatus, Enums.Error> {
+  public shared ({ caller }) func getICFCLinkStatus() : async Result.Result<ICFCEnums.ICFCLinkStatus, Enums.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert principalId == dto.principalId;
-    return await userManager.getUserICFCLinkStatus(dto.principalId);
+    return await userManager.getUserICFCLinkStatus(principalId);
   };
 
   /*
