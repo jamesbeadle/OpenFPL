@@ -30,7 +30,6 @@
 
     $effect(() => {
         console.log('userIdCreatedStore', $userIdCreatedStore);
-        console.log('profile', profile);
         if($userIdCreatedStore?.data) {
             (async () => {
                 try {
@@ -38,6 +37,7 @@
                     if (!principalId) return;
                     
                     profile = await new UserService().getUser(principalId);
+                    console.log('profile', profile);
                     if (profile) {
                         hasValidMembership = checkValidMembership(profile.membershipType);
                     } else {
