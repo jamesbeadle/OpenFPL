@@ -3,12 +3,10 @@
     import type { Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     export let filteredPlayers: Player[];
     export let currentPage: Writable<number>;
-    export let onPageChange: () => void;
     const pageSize = 10;
 
     function goToPage(page: number) {
         $currentPage = page;
-        onPageChange();
     }
 
 </script>

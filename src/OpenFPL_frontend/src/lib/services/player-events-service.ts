@@ -73,31 +73,4 @@ export class PlayerEventsService {
       });
     }
   }
-
-  async getPlayerMap(
-    seasonId: number,
-    gameweek: number,
-  ): Promise<PlayersMap | undefined> {
-    try {
-      const identityActor: any = await ActorFactory.createIdentityActor(
-        authStore,
-        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
-      );
-      let dto: GetPlayersMap = {
-        leagueId: Number(process.env.LEAGUE_ID),
-        seasonId,
-        gameweek,
-      };
-      const result = await identityActor.getPlayersMap(dto);
-      console.log("Player map: ", result);
-      if (isError(result)) throw new Error("Failed to fetch player map");
-      return result.ok;
-    } catch (error) {
-      console.error("Error fetching player map: ", error);
-      toasts.addToast({
-        type: "error",
-        message: "Error fetching player map.",
-      });
-    }
-  }
 }
