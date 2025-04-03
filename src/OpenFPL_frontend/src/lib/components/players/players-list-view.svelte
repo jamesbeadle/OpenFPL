@@ -78,6 +78,15 @@
       );
     });
     sortPlayersByClubThenValue(filteredPlayers, $filterTeam);
+    //await loadPlayerPoints(filteredPlayers);
+  }
+
+  async function loadPlayerPoints(players: Player[]) {
+    await playerEventsStore.loadPlayerScoresMap(1, $leagueStore!.unplayedGameweek);
+    for (const player of players) {
+      playerPoints.set(player.id, playerEventsStore.getPlayerScore(player.id));
+    }
+    playerPoints = playerPoints;
   }
 
   function resetFilters(){
