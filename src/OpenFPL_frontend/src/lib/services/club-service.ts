@@ -16,7 +16,7 @@ export class ClubService {
     try {
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
-        process.env.BACKEND ?? "",
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
       const leagueId: LeagueId = 1;
       const result = await identityActor.getClubs(leagueId);
