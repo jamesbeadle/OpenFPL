@@ -22,37 +22,12 @@ import type {
 
 function createPlayerEventsStore() {
   const { subscribe, set } = writable<PlayerDetailsForGameweek | null>(null);
-  let playerScoresMap: Map<number, PlayerScore> = new Map();
 
   async function getPlayerDetails(
     playerId: number,
     seasonId: number,
   ): Promise<PlayerDetails | undefined> {
     return new PlayerEventsService().getPlayerDetails(playerId, seasonId);
-  }
-
-  async function getPlayerMap(
-    seasonId: number,
-    gameweek: number,
-  ): Promise<PlayersMap | undefined> {
-    return new PlayerEventsService().getPlayerMap(seasonId, gameweek);
-  }
-
-  async function loadPlayerScoresMap(seasonId: number, gameweek: number) {
-    const playerScores = await getPlayerMap(seasonId, gameweek);
-    if (playerScores) {
-      playerScoresMap = new Map(
-        playerScores.playersMap.map(([seasonId, gameweek]) => [
-          gameweek.id,
-          gameweek,
-        ]),
-      );
-    }
-    return playerScoresMap;
-  }
-
-  function getPlayerScore(playerId: number): number {
-    return playerScoresMap.get(playerId)?.points ?? 0;
   }
 
   async function getGameweekPlayers(
@@ -163,9 +138,6 @@ function createPlayerEventsStore() {
     setPlayerEvents: (players: PlayerDetailsForGameweek) => set(players),
     getGameweekPlayers,
     getPlayerEventsFromBackend,
-    getPlayerMap,
-    loadPlayerScoresMap,
-    getPlayerScore,
     getPlayerDetails,
   };
 }

@@ -79,16 +79,8 @@
       );
     });
     sortPlayersByClubThenValue(filteredPlayers, $filterTeam);
-    await loadPlayerPoints(filteredPlayers);
   }
 
-  async function loadPlayerPoints(players: Player__1[]) {
-    await playerEventsStore.loadPlayerScoresMap(1, $leagueStore!.unplayedGameweek);
-    for (const player of players) {
-      playerPoints.set(player.id, playerEventsStore.getPlayerScore(player.id));
-    }
-    playerPoints = playerPoints;
-  }
 
   function selectPlayer(player: Player__1) {
     handlePlayerSelection(player);
@@ -134,7 +126,6 @@
       <AddPlayerModalPagination 
         {currentPage} 
         {filteredPlayers} 
-        onPageChange={() => loadPlayerPoints(paginatedPlayers)}
       />
     </div>
   {/if}
