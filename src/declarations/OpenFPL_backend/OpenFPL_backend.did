@@ -520,6 +520,13 @@ type ICFCLinkStatus =
    PendingVerification;
    Verified;
  };
+type ICFCLink = 
+ record {
+   dataHash: text;
+   linkStatus: ICFCLinkStatus;
+   membershipType: MembershipType__1;
+   principalId: PrincipalId;
+ };
 type GetWeeklyRewardsLeaderboard = 
  record {
    gameweek: GameweekNumber;
@@ -535,7 +542,6 @@ type GetWeeklyLeaderboard =
  };
 type GetTeamSetup = record {principalId: text;};
 type GetSeasons = record {leagueId: nat16;};
-type GetProfile = record {principalId: PrincipalId;};
 type GetPostponedFixtures = record {leagueId: nat16;};
 type GetPlayersSnapshot = 
  record {
@@ -563,7 +569,6 @@ type GetPlayerDetails =
  };
 type GetManagerByUsername = record {username: text;};
 type GetManager = record {principalId: text;};
-type GetICFCLinkStatus = record {principalId: PrincipalId;};
 type GetFixtures = 
  record {
    leagueId: nat16;
@@ -749,13 +754,17 @@ type AppStatus =
 service : {
   getActiveLeaderboardCanisterId: () -> (Result_24);
   getActiveRewardRates: () -> (Result_23);
+  getAllUserICFCLinks: () -> (vec record {
+                                    PrincipalId;
+                                    ICFCLink;
+                                  });
   getAppStatus: () -> (Result_22);
   getClubs: (GetClubs) -> (Result_21);
   getCountries: () -> (Result_20);
   getDataHashes: () -> (Result_19);
   getFantasyTeamSnapshot: (GetFantasyTeamSnapshot) -> (Result_18);
   getFixtures: (GetFixtures) -> (Result_17);
-  getICFCLinkStatus: (GetICFCLinkStatus) -> (Result_16);
+  getICFCLinkStatus: () -> (Result_16);
   getLeaderboardCanisterIds: () -> (Result_13);
   getLeagueStatus: () -> (Result_15);
   getManager: (GetManager) -> (Result_14);
@@ -767,7 +776,7 @@ service : {
   getPlayersMap: (GetPlayersMap) -> (Result_9);
   getPlayersSnapshot: (GetPlayersSnapshot) -> (Result_8);
   getPostponedFixtures: (GetPostponedFixtures) -> (Result_7);
-  getProfile: (GetProfile) -> (Result_6);
+  getProfile: () -> (Result_6);
   getSeasons: (GetSeasons) -> (Result_5);
   getTeamSelection: (GetTeamSetup) -> (Result_4);
   getTotalManagers: () -> (Result_3);
