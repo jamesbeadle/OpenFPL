@@ -20,7 +20,7 @@ export class FixtureService {
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
-      const leagueId: LeagueId = 1;
+      const leagueId: LeagueId = Number(process.env.LEAGUE_ID);
       const seasonId: SeasonId = 1;
       let dto: GetFixtures = { leagueId, seasonId };
       const result = await identityActor.getFixtures(dto);
@@ -38,7 +38,7 @@ export class FixtureService {
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
-      const leagueId: LeagueId = 1;
+      const leagueId: LeagueId = Number(process.env.LEAGUE_ID);
       const result = await identityActor.getPostponedFixtures(leagueId);
       if (isError(result))
         throw new Error("Failed to fetch postponed fixtures");

@@ -19,7 +19,7 @@ export class ClubService {
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
-      const leagueId: LeagueId = 1;
+      const leagueId: LeagueId = Number(process.env.LEAGUE_ID);
       let dto: GetClubs = { leagueId };
       const result = await identityActor.getClubs(dto);
       if (isError(result)) throw new Error("Failed to fetch clubs");

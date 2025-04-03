@@ -992,6 +992,21 @@ actor Self {
   private func postUpgradeCallback() : async () {
     //await updateManagerCanisterWasms();
     //await updateLeaderboardCanisterWasms();
+
+    seasonManager.setStableDataHashes( [
+      { category = "weekly_leaderboard"; hash = "OPENFPL_2" },
+      { category = "monthly_leaderboards"; hash = "OPENFPL_2" },
+      { category = "season_leaderboard"; hash = "OPENFPL_2" },
+      { category = "app_status"; hash = "OPENFPL_2" },
+      { category = "reward_rates"; hash = "OPENFPL_2" },
+      { category = "clubs"; hash = "OPENFPL_2" },
+      { category = "countries"; hash = "OPENFPL_2" },
+      { category = "fixtures"; hash = "OPENFPL_2" },
+      { category = "player_events"; hash = "OPENFPL_2" },
+      { category = "seasons"; hash = "OPENFPL_2" },
+      { category = "players"; hash = "OPENFPL_2" },
+      { category = "league_status"; hash = "OPENFPL_2" },
+    ]);
   };
 
   /* ----- Canister Update Functions ----- */

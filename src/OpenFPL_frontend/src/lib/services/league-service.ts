@@ -17,7 +17,7 @@ export class LeagueService {
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
-      const leagueId: LeagueId = 1;
+      const leagueId: LeagueId = Number(process.env.LEAGUE_ID);
       const result = await identityActor.getLeagueStatus(leagueId);
       if (isError(result)) throw new Error("Failed to fetch league status");
       return result.ok;
