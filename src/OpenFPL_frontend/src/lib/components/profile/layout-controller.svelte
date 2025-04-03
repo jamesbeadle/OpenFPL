@@ -20,7 +20,7 @@
     }
     let { children }: Props = $props();
 
-    let isLoading = $state(true);
+    let isLoading = $state(false);
     let hasValidMembership = $state(false);
     let profile: CombinedProfile | undefined = $state(undefined);
 
@@ -33,6 +33,7 @@
     }
 
     async function checkProfile() {
+        isLoading = true;
         try {
             const principalId = get(authStore).identity?.getPrincipal().toString();
             if (!principalId) return;
