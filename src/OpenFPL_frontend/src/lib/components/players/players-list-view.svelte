@@ -4,7 +4,6 @@
   import { clubStore } from "$lib/stores/club-store";
   import { playerStore } from "$lib/stores/player-store";
   import { leagueStore } from "$lib/stores/league-store";
-  import { playerEventsStore } from "$lib/stores/player-events-store";
   import { sortPlayersByClubThenValue } from "$lib/utils/pick-team.helpers";
   import { addTeamDataToPlayers, convertPositionToIndex, normaliseString } from "$lib/utils/helpers";
   
@@ -79,15 +78,6 @@
       );
     });
     sortPlayersByClubThenValue(filteredPlayers, $filterTeam);
-    //await loadPlayerPoints(filteredPlayers);
-  }
-
-  async function loadPlayerPoints(players: Player[]) {
-    await playerEventsStore.loadPlayerScoresMap(1, $leagueStore!.unplayedGameweek);
-    for (const player of players) {
-      playerPoints.set(player.id, playerEventsStore.getPlayerScore(player.id));
-    }
-    playerPoints = playerPoints;
   }
 
   function resetFilters(){
@@ -122,7 +112,6 @@
       <PlayerModalPagination 
         {currentPage} 
         {filteredPlayers} 
-        onPageChange={() => loadPlayerPoints(paginatedPlayers)}
       />
     </div>
   {/if}
