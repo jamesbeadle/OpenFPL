@@ -10,7 +10,7 @@ export class DataHashService {
 
   async getAppDataHashes(): Promise<DataHash[] | undefined> {
     try {
-      let actor: any = ActorFactory.createIdentityActor(
+      const actor: any = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );

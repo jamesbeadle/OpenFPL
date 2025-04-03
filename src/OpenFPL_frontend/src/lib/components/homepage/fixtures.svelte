@@ -9,7 +9,7 @@
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import { fixtureWithClubsStore } from "$lib/derived/fixtures-with-clubs.derived";
   import type { FixtureWithClubs } from "$lib/types/fixture-with-clubs";
-    import LocalSpinner from "../shared/local-spinner.svelte";
+  import LocalSpinner from "../shared/local-spinner.svelte";
 
   let isLoading = true;
   let gameweeks = getGameweeks(Number(process.env.TOTAL_GAMEWEEKS));

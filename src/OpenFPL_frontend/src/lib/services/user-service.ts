@@ -39,7 +39,7 @@ export class UserService {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
       const result: any = await identityActor.getICFCLinkStatus();
-      console.log(result);
+      console.log("ICFC Link Status", result);
       if (isError(result)) return undefined;
       return result.ok;
     } catch (error) {

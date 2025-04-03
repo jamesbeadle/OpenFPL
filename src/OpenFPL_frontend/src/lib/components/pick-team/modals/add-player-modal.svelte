@@ -14,10 +14,10 @@
   import AddPlayerFilterRow from "./add-player-filter-row.svelte";
   import AddPlayerTableHaeder from "./add-player-table-haeder.svelte";
   import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
-    import type { Player, TeamSetup } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { Player__1, TeamSetup } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   export let visible: boolean;
-  export let handlePlayerSelection: (player: Player) => void;
+  export let handlePlayerSelection: (player: Player__1) => void;
   export let fantasyTeam: Writable<TeamSetup | undefined>;
   export let filterPosition = writable(-1);
 
@@ -27,7 +27,7 @@
   let minValue = writable(0);
   let maxValue = writable(0);
   let currentPage = writable(1);
-  let filteredPlayers: Player[] = [];
+  let filteredPlayers: Player__1[] = [];
   let isLoading = true;
   let sortField: 'value' | 'points' = 'value';
   let sortDirection: 'asc' | 'desc' = 'desc';
@@ -82,7 +82,7 @@
     await loadPlayerPoints(filteredPlayers);
   }
 
-  async function loadPlayerPoints(players: Player[]) {
+  async function loadPlayerPoints(players: Player__1[]) {
     await playerEventsStore.loadPlayerScoresMap(1, $leagueStore!.unplayedGameweek);
     for (const player of players) {
       playerPoints.set(player.id, playerEventsStore.getPlayerScore(player.id));
@@ -90,7 +90,7 @@
     playerPoints = playerPoints;
   }
 
-  function selectPlayer(player: Player) {
+  function selectPlayer(player: Player__1) {
     handlePlayerSelection(player);
     closeModal();
     filteredPlayers = [];

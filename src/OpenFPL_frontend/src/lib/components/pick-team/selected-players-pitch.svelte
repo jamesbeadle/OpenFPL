@@ -11,7 +11,7 @@
   import SponsorshipBoard from "./sponsorship-board.svelte";
   import PitchPlayer from "./pitch-player.svelte";
   import LocalSpinner from "../shared/local-spinner.svelte";
-    import type { TeamSetup } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { TeamSetup } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   export let selectedFormation: Writable<string>;
   export let fantasyTeam: Writable<TeamSetup | undefined>;
