@@ -91,62 +91,107 @@ module {
     public func getCombinedProfile(dto : UserQueries.GetProfile) : async Result.Result<UserQueries.CombinedProfile, Enums.Error> {
       Debug.print("get combined profile");
       Debug.print(debug_show dto);
-      let userManagerCanisterId = managerCanisterIds.get(dto.principalId);
-      Debug.print(debug_show userManagerCanisterId);
 
-      switch (userManagerCanisterId) {
-        case (?foundUserCanisterId) {
-          Debug.print(debug_show foundUserCanisterId);
+      let icfcProfileResult = await getICFCProfile(dto);
+      Debug.print(debug_show icfcProfileResult);
 
-          let manager_canister = actor (foundUserCanisterId) : actor {
-            getManager : Ids.PrincipalId -> async ?AppTypes.Manager;
-          };
-          let manager = await manager_canister.getManager(dto.principalId);
-          Debug.print(debug_show manager);
+      switch (icfcProfileResult) {
+        case (#ok(icfcProfile)) {
 
-          switch (manager) {
-            case (null) {
-              return #err(#NotFound);
-            };
-            case (?foundManager) {
-              Debug.print(debug_show foundManager);
+          let userManagerCanisterId = managerCanisterIds.get(dto.principalId);
+          Debug.print(debug_show userManagerCanisterId);
 
-              let icfcProfileResult = await getICFCProfile(dto);
-              Debug.print(debug_show icfcProfileResult);
+          switch (userManagerCanisterId) {
+            case (?foundUserCanisterId) {
+              let manager_canister = actor (foundUserCanisterId) : actor {
+                getManager : Ids.PrincipalId -> async ?AppTypes.Manager;
+              };
+              let manager = await manager_canister.getManager(dto.principalId);
+              Debug.print(debug_show manager);
 
-              switch (icfcProfileResult) {
-                case (#ok icfcProfile) {
-                  Debug.print(debug_show icfcProfile);
-                  let profileDTO : UserQueries.CombinedProfile = {
-                    principalId = dto.principalId;
-                    username = foundManager.username;
-                    termsAccepted = foundManager.termsAccepted;
-                    profilePicture = foundManager.profilePicture;
-                    profilePictureType = foundManager.profilePictureType;
-                    favouriteClubId = foundManager.favouriteClubId;
-                    createDate = foundManager.createDate;
-                    favouriteLeagueId = icfcProfile.favouriteLeagueId;
-                    membershipClaims = icfcProfile.membershipClaims;
-                    membershipExpiryTime = icfcProfile.membershipExpiryTime;
-                    membershipType = icfcProfile.membershipType;
-                    nationalityId = icfcProfile.nationalityId;
-                    termsAgreed = icfcProfile.termsAgreed;
-                    displayName = icfcProfile.displayName;
-                    createdOn = icfcProfile.createdOn;
-                  };
-                  return #ok(profileDTO);
+              switch (manager) {
+                case (null) {
+                  return #err(#NotFound);
                 };
-                case (#err error) {
-                  return #err(error);
+                case (?foundManager) {
+                  Debug.print(debug_show foundManager);
+
+                  switch (icfcProfileResult) {
+                    case (#ok icfcProfile) {
+                      Debug.print(debug_show icfcProfile);
+                      let profileDTO : UserQueries.CombinedProfile = {
+                        principalId = dto.principalId;
+                        username = foundManager.username;
+                        termsAccepted = foundManager.termsAccepted;
+                        profilePicture = foundManager.profilePicture;
+                        profilePictureType = foundManager.profilePictureType;
+                        favouriteClubId = foundManager.favouriteClubId;
+                        createDate = foundManager.createDate;
+                        favouriteLeagueId = icfcProfile.favouriteLeagueId;
+                        membershipClaims = icfcProfile.membershipClaims;
+                        membershipExpiryTime = icfcProfile.membershipExpiryTime;
+                        membershipType = icfcProfile.membershipType;
+                        nationalityId = icfcProfile.nationalityId;
+                        termsAgreed = icfcProfile.termsAgreed;
+                        displayName = icfcProfile.displayName;
+                        createdOn = icfcProfile.createdOn;
+                      };
+                      return #ok(profileDTO);
+                    };
+                    case (#err error) {
+                      return #err(error);
+                    };
+                  };
                 };
               };
+
             };
+            case (null) {
+              let icfcLink : ?UserQueries.ICFCLink = userICFCLinks.get(dto.principalId);
+              switch (icfcLink) {
+                case (null) {
+                  return #err(#NotFound);
+                };
+                case (?foundICFCLink) {
+                  let res = await createNewManager(foundICFCLink, icfcProfile);
+                  switch (res) {
+                    case (#err(error)) {
+                      return #err(error);
+                    };
+                    case (#ok(newManager)) {
+                      let profileDTO : UserQueries.CombinedProfile = {
+                        principalId = dto.principalId;
+                        username = newManager.username;
+                        termsAccepted = newManager.termsAccepted;
+                        profilePicture = newManager.profilePicture;
+                        profilePictureType = newManager.profilePictureType;
+                        favouriteClubId = newManager.favouriteClubId;
+                        createDate = newManager.createDate;
+                        favouriteLeagueId = icfcProfile.favouriteLeagueId;
+                        membershipClaims = icfcProfile.membershipClaims;
+                        membershipExpiryTime = icfcProfile.membershipExpiryTime;
+                        membershipType = icfcProfile.membershipType;
+                        nationalityId = icfcProfile.nationalityId;
+                        termsAgreed = icfcProfile.termsAgreed;
+                        displayName = icfcProfile.displayName;
+                        createdOn = icfcProfile.createdOn;
+                      };
+                      return #ok(profileDTO);
+                    };
+                  };
+
+                };
+              };
+
+            };
+
           };
         };
-        case (null) {
-          return #err(#NotFound);
+        case (#err error) {
+          return #err(error);
         };
       };
+
     };
 
     public func getUserICFCLinkStatus(managerPrincipalId : Ids.PrincipalId) : async Result.Result<IcfcEnums.ICFCLinkStatus, Enums.Error> {
@@ -489,7 +534,13 @@ module {
     };
 
     public func getTotalManagers() : Result.Result<Nat, Enums.Error> {
-      return #ok(totalManagers);
+      var count = 0;
+      for (icfcLink in userICFCLinks.vals()) {
+        if (icfcLink.linkStatus == #Verified) {
+          count := count + 1;
+        };
+      };
+      return #ok(count);
     };
 
     public func isUsernameTaken(username : Text, principalId : Text) : Bool {
@@ -693,8 +744,8 @@ module {
     //Private data modification functions
 
     //need to think when the new manager object is created
-    /*
-    private func createNewManager(dto : UserCommands.LinkICFCProfile) : async Result.Result<(), Enums.Error> {
+
+    private func createNewManager(dto : AppTypes.ICFCLink, icfc_profile : UserCommands.ICFCProfile) : async Result.Result<(AppTypes.Manager), Enums.Error> {
 
       if (activeManagerCanisterId == "") {
         activeManagerCanisterId := await createManagerCanister();
@@ -709,13 +760,28 @@ module {
         activeManagerCanisterId := await createManagerCanister();
       };
 
+      var clubId : FootballIds.ClubId = 0;
+      switch (icfc_profile.favouriteLeagueId) {
+        case (?foundLeagueId) {
+          if (foundLeagueId == Environment.LEAGUE_ID) {
+            switch (icfc_profile.favouriteClubId) {
+              case (?foundClubId) {
+                clubId := foundClubId;
+              };
+              case (null) {};
+            };
+          };
+        };
+        case (null) {};
+      };
+
       let newManager : AppTypes.Manager = {
         principalId = dto.principalId;
-        username = dto.username;
-        favouriteClubId = dto.favouriteClubId;
+        username = icfc_profile.username;
+        favouriteClubId = ?clubId;
         createDate = Time.now();
-        termsAccepted = false;
-        profilePicture = null;
+        termsAccepted = true;
+        profilePicture = icfc_profile.profilePicture;
         profilePictureType = "";
         transfersAvailable = 3;
         monthlyBonusesAvailable = 2;
@@ -750,9 +816,19 @@ module {
 
       let result = await new_manager_canister.addNewManager(newManager);
 
-      return result;
+      switch (result) {
+        case (#ok(_)) {
+          let _ = managerCanisterIds.put(dto.principalId, activeManagerCanisterId);
+          let _ = usernames.put(dto.principalId, newManager.username);
+
+          return #ok(newManager);
+        };
+        case (#err error) {
+          return #err(error);
+        };
+      };
     };
-    */
+
     private func updateFantasyTeam(managerCanisterId : Ids.CanisterId, dto : UserCommands.SaveFantasyTeam, seasonId : FootballIds.SeasonId, allPlayers : [DataCanister.Player]) : async Result.Result<(), Enums.Error> {
       let manager_canister = actor (managerCanisterId) : actor {
         getManager : Ids.PrincipalId -> async ?AppTypes.Manager;
