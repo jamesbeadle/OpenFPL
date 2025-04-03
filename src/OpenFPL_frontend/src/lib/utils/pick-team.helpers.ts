@@ -171,9 +171,7 @@ export function isValidFormation(
   return totalPlayers + additionalPlayersNeeded <= 11;
 }
 
-export function isBonusConditionMet(
-  team: TeamSetup | undefined,
-): boolean {
+export function isBonusConditionMet(team: TeamSetup | undefined): boolean {
   if (!team) {
     return false;
   }
