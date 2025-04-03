@@ -1,6 +1,6 @@
 import { openDB, type IDBPDatabase } from "idb";
 import { browser } from "$app/environment";
-import type { Profile } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type { CombinedProfile } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 const DB_NAME = "openFPLUserProfileDB";
 const DB_VERSION = 1;
@@ -19,13 +19,13 @@ if (browser) {
   });
 }
 
-export async function getProfileFromDB(): Promise<Profile | undefined> {
+export async function getProfileFromDB(): Promise<CombinedProfile | undefined> {
   if (!browser || !dbPromise) return undefined;
   const db = await dbPromise;
   return db.get(STORE_NAME, PROFILE_KEY);
 }
 
-export async function setProfileToDB(profile: Profile): Promise<void> {
+export async function setProfileToDB(profile: CombinedProfile): Promise<void> {
   if (!browser || !dbPromise) return;
   const db = await dbPromise;
   await db.put(STORE_NAME, profile, PROFILE_KEY);

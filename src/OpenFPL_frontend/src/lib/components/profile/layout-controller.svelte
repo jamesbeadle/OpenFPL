@@ -22,6 +22,7 @@
     let profile: CombinedProfile | undefined = $state(undefined);
 
     function checkValidMembership(membershipType: MembershipType__1): boolean {
+        console.log("checkValidMembership", membershipType);
         return 'Founding' in membershipType || 
                'Seasonal' in membershipType || 
                'Lifetime' in membershipType || 
