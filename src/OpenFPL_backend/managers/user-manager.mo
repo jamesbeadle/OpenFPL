@@ -109,10 +109,10 @@ module {
               return #err(#NotFound);
             };
             case (?foundManager) {
-            Debug.print(debug_show foundManager);
+              Debug.print(debug_show foundManager);
 
               let icfcProfileResult = await getICFCProfile(dto);
-            Debug.print(debug_show icfcProfileResult);
+              Debug.print(debug_show icfcProfileResult);
 
               switch (icfcProfileResult) {
                 case (#ok icfcProfile) {
@@ -172,10 +172,14 @@ module {
         case (?icfcLink) {
 
           let icfc_canister = actor (CanisterIds.ICFC_BACKEND_CANISTER_ID) : actor {
-            getProfile : UserQueries.GetICFCProfile -> async Result.Result<UserQueries.ICFCProfile, Enums.Error>;
+            getICFCProfile : UserQueries.GetICFCProfile -> async Result.Result<UserQueries.ICFCProfile, Enums.Error>;
           };
 
-          return await icfc_canister.getProfile({ principalId = icfcLink.principalId });
+          let icfc_dto : UserQueries.GetICFCProfile = {
+            principalId = icfcLink.principalId;
+          };
+
+          return await icfc_canister.getICFCProfile(icfc_dto);
         };
       };
     };
