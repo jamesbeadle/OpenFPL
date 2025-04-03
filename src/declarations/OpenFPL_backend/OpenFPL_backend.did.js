@@ -441,7 +441,6 @@ export const idlFactory = ({ IDL }) => {
   });
   const Seasons = IDL.Record({ seasons: IDL.Vec(Season) });
   const Result_5 = IDL.Variant({ ok: Seasons, err: Error });
-  const GetTeamSetup = IDL.Record({ principalId: IDL.Text });
   const TeamSetup = IDL.Record({
     playerIds: IDL.Vec(ClubId),
     username: IDL.Text,
@@ -612,7 +611,7 @@ export const idlFactory = ({ IDL }) => {
     getPostponedFixtures: IDL.Func([GetPostponedFixtures], [Result_7], []),
     getProfile: IDL.Func([], [Result_6], []),
     getSeasons: IDL.Func([GetSeasons], [Result_5], []),
-    getTeamSelection: IDL.Func([GetTeamSetup], [Result_4], []),
+    getTeamSelection: IDL.Func([], [Result_4], []),
     getTotalManagers: IDL.Func([], [Result_3], []),
     getWeeklyLeaderboard: IDL.Func([GetWeeklyLeaderboard], [Result_2], []),
     getWeeklyRewards: IDL.Func(

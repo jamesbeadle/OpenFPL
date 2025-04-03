@@ -540,7 +540,6 @@ type GetWeeklyLeaderboard =
    searchTerm: text;
    seasonId: SeasonId;
  };
-type GetTeamSetup = record {principalId: text;};
 type GetSeasons = record {leagueId: nat16;};
 type GetPostponedFixtures = record {leagueId: nat16;};
 type GetPlayersSnapshot = 
@@ -778,7 +777,7 @@ service : {
   getPostponedFixtures: (GetPostponedFixtures) -> (Result_7);
   getProfile: () -> (Result_6);
   getSeasons: (GetSeasons) -> (Result_5);
-  getTeamSelection: (GetTeamSetup) -> (Result_4);
+  getTeamSelection: () -> (Result_4);
   getTotalManagers: () -> (Result_3);
   getWeeklyLeaderboard: (GetWeeklyLeaderboard) -> (Result_2);
   getWeeklyRewards: (GetWeeklyRewardsLeaderboard) -> (Result_1) query;

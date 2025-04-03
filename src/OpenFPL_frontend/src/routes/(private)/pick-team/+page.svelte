@@ -40,7 +40,7 @@
 
     const hasSeenBanner = localStorage.getItem("hasSeenPickTeamBanner");
     
-    let userFantasyTeam = await managerStore.getCurrentTeam();
+    let userFantasyTeam = await managerStore.getTeamSelection();
     fantasyTeam.set(userFantasyTeam);
 
     fantasyTeam.update((currentTeam) => {
