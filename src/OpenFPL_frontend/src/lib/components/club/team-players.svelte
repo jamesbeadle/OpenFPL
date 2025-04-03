@@ -11,7 +11,7 @@
   import { writable } from "svelte/store";
   import PositionFilter from "../shared/position-filter.svelte";
   import TeamPlayersTableHeader from "./team-players-table-header.svelte";
-  import type { Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { Player__1 } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   export let clubId;
 
@@ -19,7 +19,7 @@
     players = $playerStore.filter((x) => x.clubId == clubId)
   });
 
-  let players: Player[] = [];
+  let players: Player__1[] = [];
   let selectedPosition = writable(-1);
   $: filteredPlayers = $selectedPosition === -1
       ? players

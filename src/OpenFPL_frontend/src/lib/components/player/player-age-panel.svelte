@@ -1,11 +1,11 @@
 <script lang="ts">
     import { calculateAgeFromNanoseconds, convertDateToReadable } from "$lib/utils/helpers";
-    import type { Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import type { Player__1 } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     
-    export let player: Player;
+    export let player: Player__1;
 </script>
 
-<div class="flex-grow flex flex-col">
+<div class="flex flex-col flex-grow">
     <p class="content-panel-header">Age</p>
     <p class="content-panel-stat">
       {calculateAgeFromNanoseconds(

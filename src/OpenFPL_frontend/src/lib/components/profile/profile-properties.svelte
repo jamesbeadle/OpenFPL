@@ -45,22 +45,6 @@
       </h2>
       <p class="mt-4 mb-1">Favourite Team:</p>
       <h2 class="mb-1 default-header md:mb-2">{teamName == "" ? "Not Set" : teamName}</h2>
-      
-      {#if isLoading}
-          <LoadingDots />
-        {:else}
-        <button
-          class={`p-1 md:p-2 px-2 md:px-4 ${
-            gameweek > 1 && ($userStore?.favouriteClubId ?? 0) > 0
-              ? "bg-gray-500"
-              : "fpl-button"
-          } rounded`}
-          on:click={displayFavouriteTeamModal}
-          disabled={gameweek > 1 && ($userStore?.favouriteClubId ?? 0) > 0}
-        >
-          Update
-        </button>
-        {/if}
 
       <p class="mt-4 mb-1">Joined:</p>
       <h2 class="mb-1 default-header md:mb-2">
@@ -72,9 +56,3 @@
         <CopyPrincipal />
     </div>
   </div>
-  {#if !isLoading && showFavouriteTeamModal}
-    <UpdateFavouriteTeamModal
-      newFavouriteTeam={$userStore.favouriteClubId}
-      bind:visible={showFavouriteTeamModal}
-    />
-  {/if}

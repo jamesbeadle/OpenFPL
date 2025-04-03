@@ -1,9 +1,9 @@
 <script lang="ts">
     import { countryStore } from "$lib/stores/country-store";
     import { getFlagComponent } from "$lib/utils/helpers";
-    import type { Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import type { Player__1 } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     
-    export let player: Player;
+    export let player: Player__1;
 </script>
 
 <div class="flex-grow">

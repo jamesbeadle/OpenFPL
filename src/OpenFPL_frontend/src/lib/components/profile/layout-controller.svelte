@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { authSignedInStore } from '$lib/derived/auth.derived';
+    import { authSignedInStore } from '$lib/derived/auth.derived';
     import { userIdCreatedStore } from '$lib/stores/user-control-store';
     import type { Snippet } from 'svelte';
     import type { CombinedProfile, MembershipType__1 } from '../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did';
@@ -12,12 +12,15 @@
     import { UserService } from '$lib/services/user-service';
     import { authStore } from '$lib/stores/auth-store';
     import { get } from 'svelte/store';
+    import LocalSpinner from '$lib/components/shared/local-spinner.svelte';
+    import { onMount } from 'svelte';
 
     interface Props {
         children: Snippet;
     }
     let { children }: Props = $props();
 
+    let isLoading = $state(false);
     let hasValidMembership = $state(false);
     let profile: CombinedProfile | undefined = $state(undefined);
 
@@ -29,31 +32,43 @@
                'Monthly' in membershipType;
     }
 
+    async function checkProfile() {
+        isLoading = true;
+        try {
+            const principalId = get(authStore).identity?.getPrincipal().toString();
+            if (!principalId) return;
+            
+            profile = await new UserService().getUser();
+            console.log('profile', profile);
+            if (profile) {
+                hasValidMembership = checkValidMembership(profile.membershipType);
+            } else {
+                hasValidMembership = false;
+            }
+        } catch (error) {
+            console.error('Error fetching user profile:', error);
+            hasValidMembership = false;
+        } finally {
+            isLoading = false;
+        }
+    }
+
+    onMount(() => {
+        checkProfile();
+    });
+
     $effect(() => {
         console.log('userIdCreatedStore', $userIdCreatedStore);
         if($userIdCreatedStore?.data) {
-            (async () => {
-                try {
-                    const principalId = get(authStore).identity?.getPrincipal().toString();
-                    if (!principalId) return;
-                    
-                    profile = await new UserService().getUser();
-                    console.log('profile', profile);
-                    if (profile) {
-                        hasValidMembership = checkValidMembership(profile.membershipType);
-                    } else {
-                        hasValidMembership = false;
-                    }
-                } catch (error) {
-                    console.error('Error fetching user profile:', error);
-                    hasValidMembership = false;
-                }
-            })();
+            isLoading = true;
+            checkProfile();
         }
     });
 </script>
 
-{#if $authSignedInStore}
+{#if isLoading}
+    <LocalSpinner />
+{:else if $authSignedInStore}
     {#if $userIdCreatedStore?.data}
        {#if !hasValidMembership}
           <Header />  

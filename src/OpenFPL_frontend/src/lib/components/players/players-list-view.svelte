@@ -12,8 +12,8 @@
   import PlayerTableHaeder from "./player-table-header.svelte";
   import PlayerTableRow from "./player-table-row.svelte";
   import PlayerModalPagination from "./player-modal-pagination.svelte";
-    import LocalSpinner from "../shared/local-spinner.svelte";
-    import type { Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import LocalSpinner from "../shared/local-spinner.svelte";
+  import type { Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   export let filterPosition = writable(-1);
 
@@ -69,7 +69,7 @@
     let players = await playerStore.getSnapshotPlayers({ seasonId: $leagueStore?.activeSeasonId ?? 1, gameweek});
     console.log(players);
     if(!players){return}
-    filteredPlayers = players.filter((player) => {
+    filteredPlayers = players.players.filter((player) => {
       return (
         ($filterTeam === -1 || player.clubId === $filterTeam) &&
         ($filterPosition === -1 || convertPositionToIndex(player.position) === $filterPosition) &&

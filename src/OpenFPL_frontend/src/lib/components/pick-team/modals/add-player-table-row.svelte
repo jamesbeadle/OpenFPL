@@ -1,17 +1,22 @@
 <script lang="ts">
     import { getPlayerName } from "$lib/utils/helpers";
     import { playerEventsStore } from "$lib/stores/player-events-store";
+    import { clubStore } from "$lib/stores/club-store";
     
     import AddIcon from "$lib/icons/AddIcon.svelte";
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-    import type { Player } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import type { Player__1, Club } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
-    export let player: Player;
+    export let player: Player__1;
     export let index: number;
-    export let selectPlayer : (player: Player) => void;
+    export let selectPlayer : (player: Player__1) => void;
     export let disableReasons: (string | null)[];
 
+    let club: Club | undefined;
+
     $: totalPoints = playerEventsStore.getPlayerScore(player.id);
+
+    $: club = $clubStore.find((x) => x.id === player.clubId);
 </script>
 
 <div
@@ -31,9 +36,9 @@ class="flex items-center justify-between py-2 border-b border-gray-700 cursor-po
   <p class="flex items-center">
     <BadgeIcon
       className="w-6 h-6 mr-2"
-      club={player.clubId!}
+      club={club!}
     />
-    {player.clubId?.abbreviatedName}
+    {club?.abbreviatedName}
   </p>
 </div>
 <div class="w-2/12">
