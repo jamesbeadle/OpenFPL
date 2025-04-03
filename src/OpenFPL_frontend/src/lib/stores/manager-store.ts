@@ -22,10 +22,6 @@ import type {
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 function createManagerStore() {
-  let actor: any = ActorFactory.createActor(
-    idlFactory,
-    process.env.OPENFPL_BACKEND_CANISTER_ID,
-  );
 
   let newManager = {
     playerIds: [],
@@ -153,13 +149,13 @@ function createManagerStore() {
     }
   }
 
-  async function getCurrentTeam(): Promise<TeamSetup> {
+  async function getTeamSelection(): Promise<TeamSetup> {
     try {
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
-      const result = await identityActor.getCurrentTeam();
+      const result = await identityActor.getTeamSelection();
 
       if (isError(result)) {
         return newManager;
@@ -261,7 +257,7 @@ function createManagerStore() {
   return {
     getTotalManagers,
     getFantasyTeamForGameweek,
-    getCurrentTeam,
+    getTeamSelection,
     saveFantasyTeam,
     getPublicProfile,
     saveBonus,
