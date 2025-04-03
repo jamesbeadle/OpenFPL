@@ -194,12 +194,14 @@ actor Self {
   };
   */
 
-  public shared ({ caller }) func getTeamSelection(dto : UserQueries.GetTeamSetup) : async Result.Result<UserQueries.TeamSetup, Enums.Error> {
+  public shared ({ caller }) func getTeamSelection() : async Result.Result<UserQueries.TeamSetup, Enums.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert principalId == dto.principalId;
     assert await hasMembership(principalId);
     let statusResult = await getLeagueStatus();
+    let dto : UserQueries.GetTeamSetup = {
+      principalId = Principal.toText(caller);
+    };
     switch (statusResult) {
       case (#ok status) {
         return await userManager.getTeamSetup(dto, status.activeSeasonId);
