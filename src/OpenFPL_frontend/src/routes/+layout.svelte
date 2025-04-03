@@ -25,7 +25,7 @@
   const init = async () => {
     if (!browser) return;
     console.log("syncing auth store")
-    await Promise.all([authStore.sync(), appStore.checkServerVersion()]);
+    await authStore.sync();
     displayAndCleanLogoutMsg();
   };
 
