@@ -72,6 +72,7 @@ class StoreManager {
     if (this.isSyncing) {
       return;
     }
+    console.log("syncing stores");
     this.isSyncing = true;
     globalDataLoaded.set(false);
     try {

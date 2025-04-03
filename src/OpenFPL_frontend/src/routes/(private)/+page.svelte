@@ -4,9 +4,10 @@
   import { seasonStore } from "$lib/stores/season-store";
   import { leagueStore } from "$lib/stores/league-store";
   import { globalDataLoaded } from "$lib/managers/store-manager";
-  import { authSignedInStore } from "$lib/derived/auth.derived";
+  import { appStore } from "$lib/stores/app-store";
+  import { userStore } from "$lib/stores/user-store";
+  import { storeManager } from "$lib/managers/store-manager";
   
-
   import HomepageHeader from "$lib/components/homepage/homepage-header.svelte";
   import FixturesComponent from "$lib/components/homepage/fixtures.svelte";
   import GamweekPointsComponent from "$lib/components/manager/gameweek-points.svelte";
@@ -14,8 +15,7 @@
   import LeagueTableComponent from "$lib/components/homepage/league-table.svelte";
   import TabContainer from "$lib/components/shared/tab-container.svelte";
   import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
-  import LandingPage from "$lib/components/landing/landing-page.svelte";
-  
+
   let activeTab: string = "fixtures";
   let isLoading = true;
   let seasonName = "";
