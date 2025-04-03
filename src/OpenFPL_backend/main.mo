@@ -267,6 +267,7 @@ actor Self {
     assert await hasMembership(Principal.toText(caller));
     let principalId = Principal.toText(caller);
     let leagueStatusResult = await getLeagueStatus();
+    assert dto.principalId == principalId;
 
     let appStatusResult = seasonManager.getAppStatus();
     switch (appStatusResult) {
@@ -302,11 +303,13 @@ actor Self {
       };
     };
   };
+  
   public shared ({ caller }) func saveBonusSelection(dto : UserCommands.PlayBonus) : async Result.Result<(), Enums.Error> {
     assert not Principal.isAnonymous(caller);
     assert await hasMembership(Principal.toText(caller));
     let principalId = Principal.toText(caller);
     let leagueStatusResult = await getLeagueStatus();
+    assert dto.principalId == principalId;
 
     let appStatusResult = seasonManager.getAppStatus();
     switch (appStatusResult) {
