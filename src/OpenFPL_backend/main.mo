@@ -425,9 +425,9 @@ actor Self {
     assert not Principal.isAnonymous(caller);
     assert await hasMembership(Principal.toText(caller));
     let data_canister = actor (CanisterIds.ICFC_DATA_CANISTER_ID) : actor {
-      getPlayerEvents : shared query (dto : DataCanister.GetPlayerDetailsForGameweek) -> async Result.Result<DataCanister.PlayerDetailsForGameweek, Enums.Error>;
+      getPlayerDetailsForGameweek : shared query (dto : DataCanister.GetPlayerDetailsForGameweek) -> async Result.Result<DataCanister.PlayerDetailsForGameweek, Enums.Error>;
     };
-    return await data_canister.getPlayerEvents(dto);
+    return await data_canister.getPlayerDetailsForGameweek(dto);
   };
 
   public shared ({ caller }) func getFixtures(dto : DataCanister.GetFixtures) : async Result.Result<DataCanister.Fixtures, Enums.Error> {
