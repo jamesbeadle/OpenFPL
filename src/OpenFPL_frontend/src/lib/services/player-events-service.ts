@@ -89,6 +89,7 @@ export class PlayerEventsService {
         gameweek,
       };
       const result = await identityActor.getPlayersMap(dto);
+      console.log("Player map: ", result);
       if (isError(result)) throw new Error("Failed to fetch player map");
       return result.ok;
     } catch (error) {
