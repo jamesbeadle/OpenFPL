@@ -13,29 +13,6 @@ import type {
 export class UserService {
   async getUser(principalId: string): Promise<CombinedProfile | undefined> {
     try {
-      // Dummy profile for testing
-      const dummyProfile: CombinedProfile = {
-        username: "test_user",
-        displayName: "Test User",
-        termsAccepted: true,
-        createdOn: BigInt(Date.now()),
-        createDate: BigInt(Date.now()),
-        favouriteClubId: [],
-        membershipClaims: [],
-        profilePicture: [],
-        membershipType: { Founding: null }, // or any other type you want to test
-        termsAgreed: true,
-        membershipExpiryTime: BigInt(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
-        favouriteLeagueId: [],
-        nationalityId: [],
-        profilePictureType: "image/jpeg",
-        principalId: principalId,
-      };
-
-      return dummyProfile;
-
-      // Comment out original implementation
-      /*
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
@@ -44,7 +21,6 @@ export class UserService {
       const result: any = await identityActor.getProfile(getProfile);
       if (isError(result)) return undefined;
       return result.ok;
-      */
     } catch (error) {
       console.error("Error fetching user profile: ", error);
       toasts.addToast({
