@@ -230,7 +230,7 @@ module {
     public func setStableDataHashes(stable_data_hashes : [Base.DataHash]) {
       dataHashes := stable_data_hashes;
     };
-/*
+    
     public func getStablePlayersSnapshots() : [(FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [DataCanister.Player])])] {
       return playersSnapshots;
     };
@@ -254,7 +254,6 @@ module {
       await updateDataHash("app_status");
     };
 
-*/
     public func updateSystemStatus(dto : AppCommands.UpdateSystemStatus) {
       appStatus := {
         onHold = dto.onHold;
