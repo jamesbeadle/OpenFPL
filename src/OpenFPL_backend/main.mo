@@ -452,6 +452,22 @@ actor Self {
     return await data_canister.getPlayersMap(dto);
   };
 
+  public shared ({ caller }) func getPlayerDetails(dto : DataCanister.GetPlayerDetails) : async Result.Result<PlayerQueries.PlayerDetails, Enums.Error> {
+    assert not Principal.isAnonymous(caller);
+    let data_canister = actor (CanisterIds.ICFC_DATA_CANISTER_ID) : actor {
+      getPlayerDetails : shared query (dto : DataCanister.GetPlayerDetails) -> async Result.Result<DataCanister.PlayerDetails, Enums.Error>;
+    };
+    return await data_canister.getPlayerDetails(dto);
+  };
+
+  public shared ({ caller }) func getPostponedFixtures(dto : DataCanister.GetPostponedFixtures) : async Result.Result<DataCanister.PostponedFixtures, Enums.Error> {
+    assert not Principal.isAnonymous(caller);
+    let data_canister = actor (CanisterIds.ICFC_DATA_CANISTER_ID) : actor {
+      getPostponedFixtures : shared query (dto : DataCanister.GetPostponedFixtures) -> async Result.Result<DataCanister.PostponedFixtures, Enums.Error>;
+    };
+    return await data_canister.getPostponedFixtures(dto);
+  };
+
   /* ----- WIP ----- */
 
   /* ----- Football God Data Callback Functions ----- */
