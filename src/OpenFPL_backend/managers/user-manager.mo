@@ -714,7 +714,7 @@ module {
       };
     };
 
-    public func saveTeamSelection(dto : UserCommands.SaveFantasyTeam, seasonId : FootballIds.SeasonId, players : [DataCanister.Player]) : async Result.Result<(), Enums.Error> {
+    public func saveTeamSelection(dto : UserCommands.SaveFantasyTeam, seasonId : FootballIds.SeasonId, gameweek: FootballDefinitions.GameweekNumber, players : [DataCanister.Player]) : async Result.Result<(), Enums.Error> {
 
       let teamValidResult = PickTeamUtilities.teamValid(dto, players);
       switch (teamValidResult) {
@@ -731,7 +731,7 @@ module {
           return #err(#NotFound);
         };
         case (?foundManagerCanisterId) {
-          return await updateFantasyTeam(foundManagerCanisterId, dto, seasonId, players);
+          return await updateFantasyTeam(foundManagerCanisterId, dto, seasonId, gameweek, players);
         };
       };
     };
@@ -829,10 +829,10 @@ module {
       };
     };
 
-    private func updateFantasyTeam(managerCanisterId : Ids.CanisterId, dto : UserCommands.SaveFantasyTeam, seasonId : FootballIds.SeasonId, allPlayers : [DataCanister.Player]) : async Result.Result<(), Enums.Error> {
+    private func updateFantasyTeam(managerCanisterId : Ids.CanisterId, dto : UserCommands.SaveFantasyTeam, seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber, allPlayers : [DataCanister.Player]) : async Result.Result<(), Enums.Error> {
       let manager_canister = actor (managerCanisterId) : actor {
         getManager : Ids.PrincipalId -> async ?AppTypes.Manager;
-        updateTeamSelection : (dto : UserCommands.SaveFantasyTeam, transfersAvailable : Nat8, newBankBalance : Nat16) -> async Result.Result<(), Enums.Error>;
+        updateTeamSelection : (dto : UserCommands.SaveFantasyTeam, transfersAvailable : Nat8, newBankBalance : Nat16, gameweek : FootballDefinitions.GameweekNumber) -> async Result.Result<(), Enums.Error>;
       };
 
       let manager = await manager_canister.getManager(dto.principalId);
@@ -879,6 +879,7 @@ module {
                 dto,
                 Nat8.fromNat(Nat64.toNat(Nat64.fromIntWrap(transfersAvailable))),
                 newBankBalance,
+                gameweek
               );
             };
             case (#err error) {

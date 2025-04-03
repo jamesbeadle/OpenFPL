@@ -309,7 +309,7 @@ actor Self {
         let playersResult = await dataManager.getPlayers({ leagueId = Environment.LEAGUE_ID });
         switch (playersResult) {
           case (#ok players) {
-            return await userManager.saveTeamSelection(dto, leagueStatus.activeSeasonId, players.players);
+            return await userManager.saveTeamSelection(dto, leagueStatus.activeSeasonId, leagueStatus.unplayedGameweek, players.players);
           };
           case (#err error) {
             return #err(error);
