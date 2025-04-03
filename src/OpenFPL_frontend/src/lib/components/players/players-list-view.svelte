@@ -79,7 +79,7 @@
       );
     });
     sortPlayersByClubThenValue(filteredPlayers, $filterTeam);
-    await loadPlayerPoints(filteredPlayers);
+    //await loadPlayerPoints(filteredPlayers);
   }
 
   async function loadPlayerPoints(players: Player[]) {
