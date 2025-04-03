@@ -677,6 +677,11 @@ module {
       };
     };
 
+    // Temp Test function
+    public func getAllUserICFCLinks() : async [(Ids.PrincipalId, AppTypes.ICFCLink)] {
+      return Iter.toArray(userICFCLinks.entries());
+    };
+
     //Private data modification functions
 
     //need to think when the new manager object is created

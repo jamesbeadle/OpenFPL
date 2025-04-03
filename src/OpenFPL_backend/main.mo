@@ -468,6 +468,11 @@ actor Self {
     return await data_canister.getPostponedFixtures(dto);
   };
 
+  // Temp Test function
+  public shared func getAllUserICFCLinks() : async [(Ids.PrincipalId, AppTypes.ICFCLink)] {
+    return await userManager.getAllUserICFCLinks();
+  };
+
   /* ----- WIP ----- */
 
   /* ----- Football God Data Callback Functions ----- */
