@@ -17,18 +17,19 @@ import type {
   PlayersMap,
   AppStatus,
   FantasyTeamSnapshot,
+  PlayerDetails,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 function createPlayerEventsStore() {
   const { subscribe, set } = writable<PlayerDetailsForGameweek | null>(null);
   let playerScoresMap: Map<number, PlayerScore> = new Map();
 
-/*   async function getPlayerDetails(
+  async function getPlayerDetails(
     playerId: number,
     seasonId: number,
   ): Promise<PlayerDetails | undefined> {
     return new PlayerEventsService().getPlayerDetails(playerId, seasonId);
-  } */
+  }
 
   async function getPlayerMap(
     seasonId: number,
@@ -165,6 +166,7 @@ function createPlayerEventsStore() {
     getPlayerMap,
     loadPlayerScoresMap,
     getPlayerScore,
+    getPlayerDetails,
   };
 }
 

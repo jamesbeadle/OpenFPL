@@ -7,6 +7,8 @@ import type {
   GetPlayerDetailsForGameweek,
   GetPlayersMap,
   PlayerDetailsForGameweek,
+  PlayerDetails,
+  GetPlayerDetails,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 export class PlayerEventsService {
@@ -14,7 +16,7 @@ export class PlayerEventsService {
 
   constructor() {}
 
-  /* async getPlayerDetails(
+  async getPlayerDetails(
     playerId: number,
     seasonId: number,
   ): Promise<PlayerDetails> {
@@ -40,7 +42,7 @@ export class PlayerEventsService {
       console.error("Error fetching player data:", error);
       throw error;
     }
-  } */
+  }
 
   async getPlayerEvents(
     seasonId: number,
