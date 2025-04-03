@@ -4,8 +4,7 @@
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
 
     export let player: any;
-
-    $: totalPoints = playerEventsStore.getPlayerScore(player.id);
+ 
 </script>
 
 <div
@@ -33,5 +32,5 @@ class="flex items-center justify-between py-2 border-b border-gray-700 cursor-po
 <div class="w-3/12">
   £{(player.valueQuarterMillions / 4).toFixed(2)}m
 </div>
-<div class="w-3/12">{totalPoints}</div>
+<div class="w-3/12">0</div>
 </div>
