@@ -13,7 +13,7 @@
 
 <div class="flex flex-col items-center text-center">
   <div class="flex items-center justify-center">
-    <ShirtIcon className="h-6 xs:h-8 sm:h-10 lg:h-8 lg:h-12 xl:h-14 2xl:h-16" club={clubData} />
+    <ShirtIcon className="h-6 xs:h-8 sm:h-10 lg:h-12 xl:h-14 2xl:h-16" club={clubData} />
   </div>
   <div class="flex flex-col items-center justify-center text-xxs sm:text-xs">
     <div class="flex items-center justify-center bg-gray-700 rounded-t-md md:px-2 sm:py-1 top-player-detail">

@@ -3,12 +3,12 @@ import { PlayerService } from "$lib/services/player-service";
 import type {
   GetPlayers,
   GetPlayersSnapshot,
-  Player,
+  Player__1,
   PlayersSnapshot,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 function createPlayerStore() {
-  const { subscribe, set } = writable<Player[]>([]);
+  const { subscribe, set } = writable<Player__1[]>([]);
 
   async function getSnapshotPlayers(
     dto: GetPlayersSnapshot,
@@ -18,7 +18,7 @@ function createPlayerStore() {
 
   return {
     subscribe,
-    setPlayers: (players: Player[]) => set(players),
+    setPlayers: (players: Player__1[]) => set(players),
     getSnapshotPlayers,
   };
 }

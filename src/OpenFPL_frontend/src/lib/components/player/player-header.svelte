@@ -17,9 +17,9 @@
     import PlayerCountryPanel from "./player-country-panel.svelte";
     import PageHeader from "../shared/panels/page-header.svelte";
     import ContentPanel from "../shared/panels/content-panel.svelte";
-    import type { Club, Fixture, GameweekNumber, Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import type { Club, Fixture, GameweekNumber, Player__1 } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   
-    export let player: Player;
+    export let player: Player__1;
     export let club: Club;
     export let gameweek: GameweekNumber;
     

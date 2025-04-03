@@ -85,7 +85,7 @@
           on:click={() => showDetailModal(gameweek, opponent)}
         >
           <div class="w-1/6 px-4 md:w-1/4">{gameweek.number}</div>
-          <div class="w-2/6 px-4 md:w-1/4 md:w-1/6">
+          <div class="w-2/6 px-4 md:w-1/4">
             <div class="flex items-center">
               <BadgeIcon className="w-6 mr-2" club={opponent!} /> {opponent?.friendlyName}
             </div>

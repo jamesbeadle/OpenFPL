@@ -91,6 +91,7 @@ class StoreManager {
     if (appDataHashes == undefined) {
       return;
     }
+    console.log(appDataHashes);
     for (const category of this.backendCategories) {
       const categoryHash = appDataHashes.find(
         (hash) => hash.category === category,
@@ -107,14 +108,14 @@ class StoreManager {
   private async syncCategory(category: string): Promise<void> {
     switch (category) {
       case "countries":
-        const updatedCountries = await this.countryService.getCountries();
+        let updatedCountries = await this.countryService.getCountries();
         if (!updatedCountries) {
           return;
         }
-        countryStore.setCountries(updatedCountries);
+        countryStore.setCountries(updatedCountries.countries);
         localStorage.setItem(
           "countries",
-          JSON.stringify(updatedCountries, replacer),
+          JSON.stringify(updatedCountries.countries, replacer),
         );
         break;
       case "league_status":
@@ -144,10 +145,10 @@ class StoreManager {
         if (!updatedSeasons) {
           return;
         }
-        seasonStore.setSeasons(updatedSeasons);
+        seasonStore.setSeasons(updatedSeasons.seasons);
         localStorage.setItem(
           "seasons",
-          JSON.stringify(updatedSeasons, replacer),
+          JSON.stringify(updatedSeasons.seasons, replacer),
         );
         break;
       case "clubs":
@@ -155,18 +156,21 @@ class StoreManager {
         if (!updatedClubs) {
           return;
         }
-        clubStore.setClubs(updatedClubs);
-        localStorage.setItem("clubs", JSON.stringify(updatedClubs, replacer));
+        clubStore.setClubs(updatedClubs.clubs);
+        localStorage.setItem(
+          "clubs",
+          JSON.stringify(updatedClubs.clubs, replacer),
+        );
         break;
       case "players":
         const updatedPlayers = await this.playerService.getPlayers();
         if (!updatedPlayers) {
           return;
         }
-        playerStore.setPlayers(updatedPlayers);
+        playerStore.setPlayers(updatedPlayers.players);
         localStorage.setItem(
           "players",
-          JSON.stringify(updatedPlayers, replacer),
+          JSON.stringify(updatedPlayers.players, replacer),
         );
         break;
       case "player_events":
@@ -195,10 +199,10 @@ class StoreManager {
         if (!updatedFixtures) {
           return;
         }
-        fixtureStore.setFixtures(updatedFixtures);
+        fixtureStore.setFixtures(updatedFixtures.fixtures);
         localStorage.setItem(
           "fixtures",
-          JSON.stringify(updatedFixtures, replacer),
+          JSON.stringify(updatedFixtures.fixtures, replacer),
         );
         break;
       case "weekly_leaderboard":
