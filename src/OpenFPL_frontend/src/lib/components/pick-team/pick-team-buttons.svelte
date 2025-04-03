@@ -172,7 +172,7 @@
       team.captainFantasticPlayerId = team?.captainId;
     }
 
-    await managerStore.saveFantasyTeam(team!, activeGameweek, bonusUsedInSession, transferWindowPlayedInSession);
+    await managerStore.saveFantasyTeam(team!, activeGameweek, transferWindowPlayedInSession);
     isLoading = false;
   }
 

@@ -4,7 +4,7 @@ import type { OptionIdentity } from "$lib/types/identity";
 import { Actor, HttpAgent } from "@dfinity/agent";
 import type { Unsubscriber } from "svelte/store";
 import { idlFactory as canister } from "../../../../declarations/OpenFPL_backend";
-import { data_canister } from "../../../../declarations/data_canister";
+
 export class ActorFactory {
   static createActor(
     idlFactory: any,
@@ -57,7 +57,7 @@ export class ActorFactory {
       host:
         process.env.DFX_NETWORK === "ic"
           ? `https://${canisterId}.icp-api.io`
-          : `http://localhost:8080/?canisterId=b77ix-eeaaa-aaaaa-qaada-cai`,
+          : `http://localhost:8080/?canisterId=qhbym-qaaaa-aaaaa-aaafq-cai`,
       identity: identity,
     };
 
@@ -75,42 +75,20 @@ export class ActorFactory {
   }
 
   static createIdentityActor(authStore: AuthStore, canisterId: string) {
+    console.log("creating identity actor");
     let unsubscribe: Unsubscriber;
     return new Promise<OptionIdentity>((resolve, reject) => {
       unsubscribe = authStore.subscribe((store) => {
+        console.log("subscribe auth store");
+        console.log(store);
         if (store.identity) {
           resolve(store.identity);
         }
       });
     }).then((identity) => {
+      console.log("unsubscribe");
       unsubscribe();
       return ActorFactory.createActor(canister, canisterId, identity);
     });
-  }
-
-  static getGovernanceAgent(
-    identity: OptionIdentity = null,
-    options: any = null,
-  ): HttpAgent {
-    let canisterId = process.env.CANISTER_ID_SNS_GOVERNANCE;
-    const hostOptions = {
-      host:
-        process.env.DFX_NETWORK === "ic"
-          ? `https://${canisterId}.icp-api.io`
-          : `http://localhost:8080/?canisterId=${canisterId}`,
-      identity: identity,
-    };
-
-    if (!options) {
-      options = {
-        agentOptions: hostOptions,
-      };
-    } else if (!options.agentOptions) {
-      options.agentOptions = hostOptions;
-    } else {
-      options.agentOptions.host = hostOptions.host;
-    }
-
-    return new HttpAgent({ ...options.agentOptions });
   }
 }

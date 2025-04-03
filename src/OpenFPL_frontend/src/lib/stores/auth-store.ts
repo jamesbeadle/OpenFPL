@@ -2,14 +2,20 @@ import {
   AUTH_MAX_TIME_TO_LIVE,
   AUTH_POPUP_HEIGHT,
   AUTH_POPUP_WIDTH,
-} from "$lib/constants/app.constants";
-import type { OptionIdentity } from "$lib/types/identity";
-import { createAuthClient } from "$lib/utils/auth.utils";
-import { popupCenter } from "$lib/utils/window.utils";
+  DEV,
+  INTERNET_IDENTITY_CANISTER_ID,
+} from "../constants/app.constants";
+import {
+  SignInError,
+  SignInInitError,
+  SignInUserInterruptError,
+} from "$lib/types/errors";
+import type { OptionIdentity } from "../types/identity";
+import { createAuthClient } from "../utils/auth.utils";
+import { popupCenter } from "../utils/window.utils";
 import { type AuthClient, ERROR_USER_INTERRUPT } from "@dfinity/auth-client";
 import { isNullish } from "@dfinity/utils";
 import { writable, type Readable } from "svelte/store";
-import { clearProfileFromDB } from "$lib/utils/db.utils";
 
 export interface AuthStoreData {
   identity: OptionIdentity;
@@ -55,24 +61,30 @@ const initAuthStore = (): AuthStore => {
     signIn: ({ domain }: AuthSignInParams) =>
       // eslint-disable-next-line no-async-promise-executor
       new Promise<void>(async (resolve, reject) => {
-        authClient = authClient ?? (await createAuthClient());
-        const identityProvider = domain;
-
+        if (isNullish(authClient)) {
+          reject(new SignInInitError());
+          return;
+        }
+        //authClient = authClient ?? (await createAuthClient());
+        //const identityProvider = domain;
+        const identityProvider = DEV
+          ? INTERNET_IDENTITY_CANISTER_ID
+          : `https://identity.${domain ?? "internetcomputer.org"}`;
         await authClient?.login({
           maxTimeToLive: AUTH_MAX_TIME_TO_LIVE,
           onSuccess: () => {
-            update((state: AuthStoreData) => ({
-              ...state,
-              identity: authClient?.getIdentity(),
-            }));
-
+            set({ identity: authClient?.getIdentity() });
             resolve();
           },
-          onError: reject,
+          onError: (error?: string) => {
+            if (error === ERROR_USER_INTERRUPT) {
+              reject(new SignInUserInterruptError(error));
+              return;
+            }
+
+            reject(new SignInError(error));
+          },
           identityProvider,
-          ...(isNnsAlternativeOrigin() && {
-            derivationOrigin: NNS_IC_APP_DERIVATION_ORIGIN,
-          }),
           windowOpenerFeatures: popupCenter({
             width: AUTH_POPUP_WIDTH,
             height: AUTH_POPUP_HEIGHT,
@@ -82,16 +94,11 @@ const initAuthStore = (): AuthStore => {
 
     signOut: async () => {
       const client: AuthClient = authClient ?? (await createAuthClient());
-
       await client.logout();
-
       authClient = null;
-
-      update((state: AuthStoreData) => ({
-        ...state,
-        identity: null,
-      }));
-      await clearProfileFromDB();
+      set({ identity: null });
+      localStorage.removeItem("user_profile_data");
+      authClient = await createAuthClient();
     },
   };
 };

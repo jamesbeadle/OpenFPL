@@ -24,12 +24,13 @@
 
   const init = async () => {
     if (!browser) return;
-    //TODO: Add storeManager.syncStores()
+    console.log("syncing auth store")
     await Promise.all([authStore.sync(), appStore.checkServerVersion()]);
     displayAndCleanLogoutMsg();
   };
 
   onMount(async () => {
+    console.log("mounting")
     if (browser) {
       document.querySelector('#app-spinner')?.remove();
     }

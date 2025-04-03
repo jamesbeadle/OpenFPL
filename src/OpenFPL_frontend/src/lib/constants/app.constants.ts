@@ -12,3 +12,6 @@ export const SECONDS_IN_MINUTE = 60;
 export const MINUTES_IN_HOUR = 60;
 export const HOURS_IN_DAY = 24;
 export const DAYS_IN_NON_LEAP_YEAR = 365;
+export const DEV = import.meta.env.DEV;
+export const INTERNET_IDENTITY_CANISTER_ID =
+  "http://localhost:8080/?canisterId=qhbym-qaaaa-aaaaa-aaafq-cai#authorize";
