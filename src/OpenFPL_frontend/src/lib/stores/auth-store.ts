@@ -85,6 +85,9 @@ const initAuthStore = (): AuthStore => {
             reject(new SignInError(error));
           },
           identityProvider,
+          ...(isNnsAlternativeOrigin() && {
+            derivationOrigin: NNS_IC_APP_DERIVATION_ORIGIN,
+          }),
           windowOpenerFeatures: popupCenter({
             width: AUTH_POPUP_WIDTH,
             height: AUTH_POPUP_HEIGHT,
