@@ -22,7 +22,6 @@ import type {
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 function createManagerStore() {
-
   let newManager = {
     playerIds: [],
     oneNationCountryId: 0,
