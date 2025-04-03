@@ -10,8 +10,8 @@
   import { storeManager } from "$lib/managers/store-manager";
   import { goto } from "$app/navigation";
   import SortIcon from "$lib/icons/SortIcon.svelte";
-    import LocalSpinner from "../shared/local-spinner.svelte";
-    import type { Manager } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import LocalSpinner from "../shared/local-spinner.svelte";
+  import type { Manager } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   export let principalId = "";
   let manager: Manager | null;

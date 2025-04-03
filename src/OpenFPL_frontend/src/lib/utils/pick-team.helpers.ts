@@ -1,13 +1,13 @@
 import type { FormationDetails } from "$lib/interfaces/FormationDetails";
 import type { GameweekData } from "$lib/interfaces/GameweekData";
 import type {
-  AppStatusDTO,
+  AppStatus,
   GameweekNumber,
-  ManagerGameweekDTO,
-  PlayerDTO,
-  TeamSelectionDTO,
+  FantasyTeamSnapshot,
+  Player,
+  TeamSetup,
+  LeagueStatus,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-import type { LeagueStatus } from "../../../../external_declarations/data_canister/data_canister.did";
 import { playerStore } from "$lib/stores/player-store";
 import { calculateAgeFromNanoseconds, convertPositionToIndex } from "./helpers";
 
@@ -22,8 +22,8 @@ export const allFormations: Record<string, FormationDetails> = {
 };
 
 export function getTeamFormation(
-  team: TeamSelectionDTO,
-  allPlayers: PlayerDTO[],
+  team: TeamSetup,
+  allPlayers: Player[],
 ): string {
   let teamFormation: string = "4-4-2";
   const positionCounts: Record<number, number> = { 0: 0, 1: 0, 2: 0, 3: 0 };
@@ -64,8 +64,8 @@ export function getTeamFormation(
 }
 
 export function getTeamFormationReadOnly(
-  team: ManagerGameweekDTO | null,
-  allPlayers: PlayerDTO[],
+  team: FantasyTeamSnapshot | null,
+  allPlayers: Player[],
 ): string {
   let teamFormation: string = "4-4-2";
   if (!team) {
@@ -109,8 +109,8 @@ export function getTeamFormationReadOnly(
 }
 
 export function getAvailableFormations(
-  players: PlayerDTO[],
-  team: TeamSelectionDTO,
+  players: Player[],
+  team: TeamSetup,
 ): string[] {
   const positionCounts: Record<number, number> = { 0: 0, 1: 0, 2: 0, 3: 0 };
   team.playerIds.forEach((id: number) => {
@@ -147,9 +147,9 @@ export function getAvailableFormations(
 }
 
 export function isValidFormation(
-  team: TeamSelectionDTO,
+  team: TeamSetup,
   selectedFormation: string,
-  players: PlayerDTO[],
+  players: Player[],
 ): boolean {
   const positionCounts: Record<number, number> = { 0: 0, 1: 0, 2: 0, 3: 0 };
   team.playerIds.forEach((id) => {
@@ -172,7 +172,7 @@ export function isValidFormation(
 }
 
 export function isBonusConditionMet(
-  team: TeamSelectionDTO | undefined,
+  team: TeamSetup | undefined,
 ): boolean {
   if (!team) {
     return false;
@@ -206,8 +206,8 @@ export function isBonusConditionMet(
 }
 
 export function getHighestValuedPlayerId(
-  team: TeamSelectionDTO,
-  players: PlayerDTO[],
+  team: TeamSetup,
+  players: Player[],
 ): number {
   let highestValue = 0;
   let highestValuedPlayerId = 0;
@@ -225,7 +225,7 @@ export function getHighestValuedPlayerId(
 
 export function calculateBonusPoints(
   gameweekData: GameweekData[],
-  fantasyTeam: ManagerGameweekDTO,
+  fantasyTeam: FantasyTeamSnapshot,
 ) {
   gameweekData.forEach((data) => {
     let bonusPoints = 0;
@@ -315,7 +315,7 @@ export function sortPlayersByPointsThenValue(gameweekData: GameweekData[]) {
 }
 
 export function sortPlayersByClubThenValue(
-  players: PlayerDTO[],
+  players: Player[],
   filterTeam: number,
 ) {
   players.sort((a, b) => {
@@ -330,14 +330,14 @@ export function sortPlayersByClubThenValue(
   });
 }
 
-function isPlayerUnder21(player: PlayerDTO): boolean {
+function isPlayerUnder21(player: Player): boolean {
   let playerAge = calculateAgeFromNanoseconds(Number(player.dateOfBirth));
   return playerAge < 21;
 }
 
 export function getTotalBonusPoints(
   gameweekData: GameweekData,
-  fantasyTeam: ManagerGameweekDTO,
+  fantasyTeam: FantasyTeamSnapshot,
   points: number,
 ): number {
   if (!gameweekData) {
@@ -446,9 +446,9 @@ export function getTotalBonusPoints(
 }
 
 export function canAddPlayerToCurrentFormation(
-  players: PlayerDTO[],
-  player: PlayerDTO,
-  team: TeamSelectionDTO,
+  players: Player[],
+  player: Player,
+  team: TeamSetup,
   formation: string,
 ): boolean {
   const positionCounts: { [key: number]: number } = {
@@ -479,9 +479,9 @@ export function canAddPlayerToCurrentFormation(
 }
 
 export function findValidFormationWithPlayer(
-  players: PlayerDTO[],
-  team: TeamSelectionDTO,
-  player: PlayerDTO,
+  players: Player[],
+  team: TeamSetup,
+  player: Player,
   selectedFormation: string,
 ): string {
   const positionCounts: Record<number, number> = { 0: 0, 1: 0, 2: 0, 3: 0 };
@@ -540,7 +540,7 @@ export function findValidFormationWithPlayer(
 
 export function getAvailablePositionIndex(
   position: number,
-  team: TeamSelectionDTO,
+  team: TeamSetup,
   formation: string,
 ): number {
   const formationArray = allFormations[formation].positions;
@@ -553,8 +553,8 @@ export function getAvailablePositionIndex(
 }
 
 export function repositionPlayersForNewFormation(
-  players: PlayerDTO[],
-  fantasyTeam: TeamSelectionDTO,
+  players: Player[],
+  fantasyTeam: TeamSetup,
   newFormation: string,
 ): number[] {
   const newFormationArray = allFormations[newFormation].positions;
@@ -592,8 +592,8 @@ export function getGridSetup(formation: string): number[][] {
 }
 
 export function checkBonusUsedInSession(
-  fantasyTeam: TeamSelectionDTO,
-  startingFantasyTeam: TeamSelectionDTO,
+  fantasyTeam: TeamSetup,
+  startingFantasyTeam: TeamSetup,
 ): boolean {
   let usedGoalGetterInSession =
     fantasyTeam.goalGetterGameweek != startingFantasyTeam.goalGetterGameweek;
@@ -632,7 +632,7 @@ export function checkBonusUsedInSession(
 }
 
 export function isBonusUsed(
-  fantasyTeam: TeamSelectionDTO | undefined,
+  fantasyTeam: TeamSetup | undefined,
   bonusId: number,
 ): boolean {
   if (!fantasyTeam) return false;
@@ -689,7 +689,7 @@ export function isBonusUsed(
 }
 
 export function getBonusUsed(
-  dto: ManagerGameweekDTO,
+  dto: FantasyTeamSnapshot,
   gameweek: GameweekNumber,
 ): string {
   if (dto.goalGetterGameweek == gameweek) {
@@ -724,7 +724,7 @@ export function getBonusUsed(
 }
 
 export function bonusPlayedThisWeek(
-  fantasyTeam: TeamSelectionDTO | undefined,
+  fantasyTeam: TeamSetup | undefined,
   leagueStatus: LeagueStatus | null,
 ): boolean {
   if (!fantasyTeam || !leagueStatus) return false;
@@ -743,10 +743,10 @@ export function bonusPlayedThisWeek(
   return bonusPlayed;
 }
 
-export function updateTeamValue(fantasyTeam: TeamSelectionDTO): number {
+export function updateTeamValue(fantasyTeam: TeamSetup): number {
   if (!fantasyTeam) return 0;
 
-  let playerStoreValue: PlayerDTO[] = [];
+  let playerStoreValue: Player[] = [];
   playerStore.subscribe((value) => (playerStoreValue = value))();
 
   const totalValue = Array.from(fantasyTeam.playerIds).reduce((sum, id) => {
@@ -758,10 +758,10 @@ export function updateTeamValue(fantasyTeam: TeamSelectionDTO): number {
 }
 
 export function autofillTeam(
-  fantasyTeam: TeamSelectionDTO,
-  players: PlayerDTO[],
+  fantasyTeam: TeamSetup,
+  players: Player[],
   selectedFormation: string,
-): TeamSelectionDTO {
+): TeamSetup {
   let updatedFantasyTeam = {
     ...fantasyTeam,
     playerIds: Uint16Array.from(fantasyTeam.playerIds),
@@ -839,7 +839,7 @@ export function autofillTeam(
 }
 
 export function countPlayersByTeam(
-  players: PlayerDTO[],
+  players: Player[],
   playerIds: Uint16Array | number[],
 ): Record<number, number> {
   const counts: Record<number, number> = {};
@@ -856,9 +856,9 @@ export function countPlayersByTeam(
 }
 
 export function reasonToDisablePlayer(
-  team: TeamSelectionDTO,
-  players: PlayerDTO[],
-  player: PlayerDTO,
+  team: TeamSetup,
+  players: Player[],
+  player: Player,
   teamPlayerCounts: Record<number, number>,
 ): string | null {
   const teamCount = teamPlayerCounts[player.clubId] || 0;
@@ -909,9 +909,9 @@ export function reasonToDisablePlayer(
 
 export function checkSaveButtonConditions(
   isLoading: boolean,
-  fantasyTeam: TeamSelectionDTO,
-  players: PlayerDTO[],
-  appStatus: AppStatusDTO,
+  fantasyTeam: TeamSetup,
+  players: Player[],
+  appStatus: AppStatus,
   selectedFormation: string,
 ): boolean {
   if (isLoading) {
