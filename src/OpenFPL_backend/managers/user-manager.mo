@@ -164,14 +164,14 @@ module {
         case (?icfcLink) {
 
           let icfc_canister = actor (CanisterIds.ICFC_BACKEND_CANISTER_ID) : actor {
-            getProfile : UserQueries.GetICFCProfile -> async Result.Result<UserQueries.ICFCProfile, Enums.Error>;
+            getICFCProfile : UserQueries.GetICFCProfile -> async Result.Result<UserQueries.ICFCProfile, Enums.Error>;
           };
 
-          let dto : UserQueries.GetICFCProfile = {
+          let icfc_dto : UserQueries.GetICFCProfile = {
             principalId = icfcLink.principalId;
           };
 
-          return await icfc_canister.getProfile(dto);
+          return await icfc_canister.getICFCProfile(icfc_dto);
         };
       };
     };
