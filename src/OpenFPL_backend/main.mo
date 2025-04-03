@@ -258,6 +258,7 @@ actor Self {
     assert not Principal.isAnonymous(caller);
     assert await hasMembership(Principal.toText(caller));
     let principalId = Principal.toText(caller);
+    assert dto.principalId == principalId;
 
     let clubsResult = await dataManager.getVerifiedClubs(Environment.LEAGUE_ID);
     switch (clubsResult) {
