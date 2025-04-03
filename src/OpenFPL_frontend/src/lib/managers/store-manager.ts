@@ -192,7 +192,7 @@ class StoreManager {
         playerEventsStore.setPlayerEvents(updatedPlayerEvents);
         localStorage.setItem(
           "player_events",
-          JSON.stringify(updatedPlayerEvents, replacer),
+          JSON.stringify(updatedPlayerEvents.playerPoints, replacer),
         );
         break;
       case "fixtures":

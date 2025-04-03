@@ -6,7 +6,6 @@ import type { RewardRates } from "../../../../declarations/OpenFPL_backend/OpenF
 import { authStore } from "$lib/stores/auth-store";
 
 export class RewardRatesService {
-
   async getRewardRates(): Promise<RewardRates | undefined> {
     try {
       const identityActor: any = await ActorFactory.createIdentityActor(
@@ -14,7 +13,8 @@ export class RewardRatesService {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
       const result = await identityActor.getActiveRewardRates();
-      if (isError(result)) throw new Error("Failed to fetch active reward rates");
+      if (isError(result))
+        throw new Error("Failed to fetch active reward rates");
       return result.ok;
     } catch (error) {
       console.error("Error fetching reward rates: ", error);
@@ -24,5 +24,4 @@ export class RewardRatesService {
       });
     }
   }
-
 }
