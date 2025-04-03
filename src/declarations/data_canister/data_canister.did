@@ -518,20 +518,28 @@ type Fixture =
  };
 type Error = 
  variant {
+   AlreadyClaimed;
    AlreadyExists;
    CanisterCreateError;
    DecodeError;
    DuplicateData;
    FailedInterCanisterCall;
+   InEligible;
    IncorrectSetup;
    InsufficientFunds;
+   InsufficientPacketsRemaining;
    InvalidData;
+   InvalidProfilePicture;
    InvalidProperty;
    MaxDataExceeded;
+   NeuronAlreadyUsed;
+   NoPacketsRemaining;
    NotAllowed;
    NotAuthorized;
    NotFound;
    SystemOnHold;
+   TooLong;
+   UpdateFailed;
  };
 type DetailedPlayer = 
  record {

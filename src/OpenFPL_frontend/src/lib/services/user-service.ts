@@ -23,13 +23,13 @@ export class UserService {
         favouriteClubId: [],
         membershipClaims: [],
         profilePicture: [],
-        membershipType: { Founding: null },  // or any other type you want to test
+        membershipType: { Founding: null }, // or any other type you want to test
         termsAgreed: true,
         membershipExpiryTime: BigInt(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
         favouriteLeagueId: [],
         nationalityId: [],
         profilePictureType: "image/jpeg",
-        principalId: principalId
+        principalId: principalId,
       };
 
       return dummyProfile;
@@ -64,7 +64,8 @@ export class UserService {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
       const getICFCLinkStatus: GetICFCLinkStatus = { principalId };
-      const result: any = await identityActor.getICFCLinkStatus(getICFCLinkStatus);
+      const result: any =
+        await identityActor.getICFCLinkStatus(getICFCLinkStatus);
       console.log(result);
       if (isError(result)) return undefined;
       return result.ok;
@@ -74,22 +75,25 @@ export class UserService {
     }
   }
 
-  async linkICFCProfile(): Promise<{ success: boolean; alreadyExists?: boolean }> {
+  async linkICFCProfile(): Promise<{
+    success: boolean;
+    alreadyExists?: boolean;
+  }> {
     try {
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
       const result: Result = await identityActor.linkICFCProfile();
-      console.log('Link ICFC result:', result);
-      
-      if ('err' in result) {
-        if ('AlreadyExists' in result.err) {
+      console.log("Link ICFC result:", result);
+
+      if ("err" in result) {
+        if ("AlreadyExists" in result.err) {
           return { success: false, alreadyExists: true };
         }
         return { success: false, alreadyExists: false };
       }
-      
+
       return { success: true, alreadyExists: false };
     } catch (error) {
       console.error("Error linking ICFC profile:", error);

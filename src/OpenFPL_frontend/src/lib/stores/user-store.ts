@@ -179,7 +179,10 @@ function createUserStore() {
     return new UserService().getICFCLinkStatus(principalId);
   }
 
-  async function linkICFCProfile(): Promise<{ success: boolean; alreadyExists?: boolean }> {
+  async function linkICFCProfile(): Promise<{
+    success: boolean;
+    alreadyExists?: boolean;
+  }> {
     return new UserService().linkICFCProfile();
   }
 

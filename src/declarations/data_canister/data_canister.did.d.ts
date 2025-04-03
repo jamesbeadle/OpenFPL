@@ -98,20 +98,28 @@ export interface DetailedPlayer {
   firstName: string;
 }
 export type Error =
+  | { InvalidProfilePicture: null }
   | { DecodeError: null }
+  | { TooLong: null }
   | { NotAllowed: null }
   | { DuplicateData: null }
   | { InvalidProperty: null }
   | { NotFound: null }
   | { IncorrectSetup: null }
+  | { AlreadyClaimed: null }
   | { NotAuthorized: null }
   | { MaxDataExceeded: null }
   | { InvalidData: null }
   | { SystemOnHold: null }
   | { AlreadyExists: null }
+  | { NoPacketsRemaining: null }
+  | { UpdateFailed: null }
   | { CanisterCreateError: null }
+  | { NeuronAlreadyUsed: null }
   | { FailedInterCanisterCall: null }
-  | { InsufficientFunds: null };
+  | { InsufficientPacketsRemaining: null }
+  | { InsufficientFunds: null }
+  | { InEligible: null };
 export interface Fixture {
   id: FixtureId;
   status: FixtureStatusType;
