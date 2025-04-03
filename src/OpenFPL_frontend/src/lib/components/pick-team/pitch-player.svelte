@@ -6,8 +6,7 @@
     import PlayerCaptainIcon from "$lib/icons/PlayerCaptainIcon.svelte";
     import { convertPositionToIndex, getFlagComponent, getPlayerName, getPositionAbbreviation } from "$lib/utils/helpers";
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-    import type { TeamSetup } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-    import type { Club, Player } from "../../../../../declarations/data_canister/data_canister.did";
+    import type { TeamSetup, Club, Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     
     export let fantasyTeam: Writable<TeamSetup | undefined>;
     export let player: Player;
@@ -20,16 +19,16 @@
 </script>
 
 <div class="flex flex-col items-center text-center">
-    <div class="flex justify-center items-center">
-      <div class="flex justify-between items-end w-full">
+    <div class="flex items-center justify-center">
+      <div class="flex items-end justify-between w-full">
         {#if $canSellPlayer || $sessionAddedPlayers.includes(player.id)}
-          <button on:click={() => removePlayer(player.id)} class="bg-red-600 mb-1 rounded-sm">
+          <button on:click={() => removePlayer(player.id)} class="mb-1 bg-red-600 rounded-sm">
             <RemovePlayerIcon className="w-3 xs:w-4 h-3 xs:h-4 sm:w-6 sm:h-6 p-1" />
           </button>
         {:else}
-          <div class="w-4 h-4 sm:w-6 sm:h-6 p-1">&nbsp;</div>
+          <div class="w-4 h-4 p-1 sm:w-6 sm:h-6">&nbsp;</div>
         {/if}
-        <div class="flex justify-center items-center flex-grow">
+        <div class="flex items-center justify-center flex-grow">
           <ShirtIcon className="h-6 xs:h-12 sm:h-12 md:h-16 lg:h-20 xl:h-12 2xl:h-16" {club} />
         </div>
         {#if $fantasyTeam?.captainId === player.id}
@@ -43,8 +42,8 @@
         {/if}
       </div>
     </div>
-    <div class="flex flex-col justify-center items-center text-xxs sm:text-xs">
-      <div class="flex justify-center items-center bg-gray-700 rounded-t-md md:px-2 sm:py-1 top-player-detail">
+    <div class="flex flex-col items-center justify-center text-xxs sm:text-xs">
+      <div class="flex items-center justify-center bg-gray-700 rounded-t-md md:px-2 sm:py-1 top-player-detail">
         <p class="hidden sm:flex sm:min-w-[15px]">
           {getPositionAbbreviation(convertPositionToIndex(player.position))}
         </p>
@@ -60,7 +59,7 @@
         </p>
       </div>
       <div
-        class="flex justify-center items-center bg-white text-black md:px-2 sm:py-1 rounded-b-md top-player-detail">
+        class="flex items-center justify-center text-black bg-white md:px-2 sm:py-1 rounded-b-md top-player-detail">
         <p class="hidden sm:visible sm:min-w-[20px]">
           {club.abbreviatedName}
         </p>

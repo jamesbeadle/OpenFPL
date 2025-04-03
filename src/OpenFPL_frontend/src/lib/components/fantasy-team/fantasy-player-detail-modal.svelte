@@ -5,7 +5,7 @@
   import FantasyPlayerDetailRow from "./fantasy-player-detail-row.svelte";
   import ModalTotalRow from "../shared/modal-total-row.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-    import type { Club } from "../../../../../declarations/data_canister/data_canister.did";
+  import type { Club } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   
   export let visible: boolean;
   export let gameweekData: GameweekData;

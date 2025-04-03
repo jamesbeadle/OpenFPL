@@ -1,5 +1,5 @@
 import { writable } from "svelte/store";
-import type { LeagueStatus } from "../../../../declarations/data_canister/data_canister.did";
+import type { LeagueStatus } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 function createLeagueStore() {
   const { subscribe, set } = writable<LeagueStatus | null>(null);

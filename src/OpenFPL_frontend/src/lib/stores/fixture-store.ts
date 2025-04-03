@@ -5,10 +5,6 @@ import type { Fixture } from "../../../../declarations/OpenFPL_backend/OpenFPL_b
 function createFixtureStore() {
   const { subscribe, set } = writable<Fixture[]>([]);
 
-  async function getPostponedFixtures(): Promise<Fixture[] | undefined> {
-    return new FixtureService().getPostponedFixtures();
-  }
-
   async function getNextFixture(): Promise<Fixture | undefined> {
     let fixtures: Fixture[] = [];
     await subscribe((value) => {
@@ -36,7 +32,6 @@ function createFixtureStore() {
     subscribe,
     setFixtures: (fixtures: Fixture[]) => set(fixtures),
     getNextFixture,
-    getPostponedFixtures,
   };
 }
 

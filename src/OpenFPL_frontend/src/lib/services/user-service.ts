@@ -17,8 +17,9 @@ export class UserService {
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
-      const getProfile: GetProfile = { principalId };
-      const result: any = await identityActor.getProfile(getProfile);
+      let dto: GetProfile = { principalId };
+      const result: any = await identityActor.getProfile(dto);
+      console.log("profile result in service", result);
       if (isError(result)) {
         console.error("isError fetching user profile: ", result);
         return undefined;

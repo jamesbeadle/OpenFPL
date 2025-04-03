@@ -4,39 +4,17 @@ import { isError } from "../utils/helpers";
 import { toasts } from "$lib/stores/toasts-store";
 import type { PlayersMap } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import type {
-  GetPlayerDetails,
   GetPlayerDetailsForGameweek,
   GetPlayersMap,
-  PlayerDetails,
   PlayerDetailsForGameweek,
-  PlayerPoints,
-} from "../../../../declarations/data_canister/data_canister.did";
+} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 export class PlayerEventsService {
   private actor: any;
 
   constructor() {}
 
-  async getPlayerPoints(
-    seasonId: number,
-    gameweek: number,
-  ): Promise<PlayerPoints | undefined> {
-    try {
-    } catch (error) {}
-    let dto: GetPlayerDetailsForGameweek = {
-      leagueId: Number(process.env.LEAGUE_ID),
-      seasonId,
-      gameweek,
-    };
-    const result = await this.actor.getPlayerPoints(dto);
-    if (isError(result))
-      throw new Error(
-        "Failed to fetch player details for gameweek in player events service",
-      );
-    return result.ok;
-  }
-
-  async getPlayerDetails(
+  /* async getPlayerDetails(
     playerId: number,
     seasonId: number,
   ): Promise<PlayerDetails> {
@@ -62,7 +40,7 @@ export class PlayerEventsService {
       console.error("Error fetching player data:", error);
       throw error;
     }
-  }
+  } */
 
   async getPlayerEvents(
     seasonId: number,
@@ -78,7 +56,7 @@ export class PlayerEventsService {
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
-      let result = await identityActor.getPlayerDetailsForGameweek(dto);
+      let result = await identityActor.getPlayerEvents(dto);
 
       if (isError(result)) {
         console.error("Error fetching player details for gameweek");

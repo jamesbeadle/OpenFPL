@@ -4,8 +4,7 @@
     import { convertPositionToIndex, getFlagComponent, getPlayerName, getPositionAbbreviation } from "$lib/utils/helpers";
     import type { GameweekData } from "$lib/interfaces/GameweekData";
     import type { Writable } from "svelte/store";
-    import type { FantasyTeamSnapshot } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-    import type { Club, Player } from "../../../../../declarations/data_canister/data_canister.did";
+    import type { FantasyTeamSnapshot, Club, Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     
     export let fantasyTeam: Writable<FantasyTeamSnapshot | null>
     export let player: Player;
@@ -15,7 +14,7 @@
 </script>
 <div class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer 
     {$fantasyTeam!.captainId == player?.id ? 'captain-row' : ''}">
-    <div class="w-1/12 text-center items-center justify-center flex">
+    <div class="flex items-center justify-center w-1/12 text-center">
         {#if $fantasyTeam!.captainId == player?.id}
             <ActiveCaptainIcon className="w-5 sm:w-6 md:w-7" />
         {:else}
@@ -24,10 +23,10 @@
             )}
         {/if}
     </div>
-    <div class="w-2/12 flex items-center">
+    <div class="flex items-center w-2/12">
         <svelte:component
             this={getFlagComponent(data.player.nationality)}
-            class="w-4 h-4 mr-1 hidden md:flex"
+            class="hidden w-4 h-4 mr-1 md:flex"
             size="100"
         />
         <span class="flex items-center">
@@ -37,7 +36,7 @@
             </p>
         </span>
     </div>
-    <div class="w-1/12 hidden lg:flex text-center">
+    <div class="hidden w-1/12 text-center lg:flex">
         <a href="/club?id={playerTeam.id}" class="flex items-center">
             <BadgeIcon club={playerTeam} className="w-4 h-4 mr-2 hidden md:flex" />
             <span class="hidden md:flex">
@@ -45,7 +44,7 @@
             </span>
         </a>
     </div>
-    <div class="w-1/2 xxs:w-7/12 lg:7/12 flex">
+    <div class="flex w-1/2 xxs:w-7/12 lg:7/12">
         <div class={`w-1/12 text-center ${ data.appearance > 0 ? "" : "text-gray-500" }`}>
         {data.appearance}
         </div>

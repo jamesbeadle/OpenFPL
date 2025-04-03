@@ -13,9 +13,8 @@
   import ClubBrandPanel from "./club-brand-panel.svelte";
   import PageHeader from "../shared/panels/page-header.svelte";
   import ContentPanel from "../shared/panels/content-panel.svelte";
-    import LocalSpinner from "../shared/local-spinner.svelte";
-    import type { Club, Fixture, Player } from "../../../../../declarations/data_canister/data_canister.did";
-    import type { ClubId } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import LocalSpinner from "../shared/local-spinner.svelte";
+  import type { Club, Fixture, Player, ClubId } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   
   export let clubId: ClubId;
 

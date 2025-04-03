@@ -7,8 +7,8 @@
     import HeaderCountdownPanel from "../shared/panels/header-countdown-panel.svelte";
     import HeaderFixturePanel from "./homepage-header-fixture-panel.svelte";
     import LoadingDots from "../shared/loading-dots.svelte";
-    import type { Club, Fixture } from "../../../../../declarations/data_canister/data_canister.did";
-    
+    import type { Club, Fixture } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+
     let loadingNextFixture = true;
     let noNextFixture = false;
     let nextFixture: Fixture;

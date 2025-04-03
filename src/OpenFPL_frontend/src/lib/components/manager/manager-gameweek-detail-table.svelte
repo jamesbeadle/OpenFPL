@@ -6,8 +6,7 @@
   import { fixtureStore } from "$lib/stores/fixture-store";
   import GameweekDetailTableRow from "./gameweek-detail-table-row.svelte";
   import FantasyPlayerDetailModal from "../fantasy-team/fantasy-player-detail-modal.svelte";
-    import type { FantasyTeamSnapshot } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-    import type { Club } from "../../../../../declarations/data_canister/data_canister.did";
+  import type { FantasyTeamSnapshot, Club } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   
   export let fantasyTeam: Writable<FantasyTeamSnapshot | null>;
   export let gameweekPlayers: Writable<GameweekData[]>;
@@ -40,26 +39,26 @@
 
 <div class="flex flex-col">
     {#if $fantasyTeam}
-      <div class="overflow-x-auto flex-1">
+      <div class="flex-1 overflow-x-auto">
         <div
-          class="flex justify-between p-2 border border-gray-700 py-4 bg-light-gray"
+          class="flex justify-between p-2 py-4 border border-gray-700 bg-light-gray"
         >
           <div class="w-1/12 text-center">Pos</div>
           <div class="w-2/12">Player</div>
-          <div class="w-1/12 hidden lg:flex">Team</div>
-          <div class="w-1/2 xxs:w-7/12 lg:7/12 flex">
-            <div class="w-4/12 xxs:w-1/12 text-center">A</div>
-            <div class="w-4/12 xxs:w-1/12 text-center">HSP</div>
-            <div class="hidden xxs:block w-1/12 text-center">GS</div>
-            <div class="hidden xxs:block w-1/12 text-center">GA</div>
-            <div class="hidden xxs:block w-1/12 text-center">PS</div>
-            <div class="hidden xxs:block w-1/12 text-center">CS</div>
-            <div class="hidden xxs:block w-1/12 text-center">KS</div>
-            <div class="hidden xxs:block w-1/12 text-center">YC</div>
-            <div class="hidden xxs:block w-1/12 text-center">OG</div>
-            <div class="hidden xxs:block w-1/12 text-center">GC</div>
-            <div class="hidden xxs:block w-1/12 text-center">RC</div>
-            <div class="w-4/12 xxs:w-1/12 text-center">B</div>
+          <div class="hidden w-1/12 lg:flex">Team</div>
+          <div class="flex w-1/2 xxs:w-7/12 lg:7/12">
+            <div class="w-4/12 text-center xxs:w-1/12">A</div>
+            <div class="w-4/12 text-center xxs:w-1/12">HSP</div>
+            <div class="hidden w-1/12 text-center xxs:block">GS</div>
+            <div class="hidden w-1/12 text-center xxs:block">GA</div>
+            <div class="hidden w-1/12 text-center xxs:block">PS</div>
+            <div class="hidden w-1/12 text-center xxs:block">CS</div>
+            <div class="hidden w-1/12 text-center xxs:block">KS</div>
+            <div class="hidden w-1/12 text-center xxs:block">YC</div>
+            <div class="hidden w-1/12 text-center xxs:block">OG</div>
+            <div class="hidden w-1/12 text-center xxs:block">GC</div>
+            <div class="hidden w-1/12 text-center xxs:block">RC</div>
+            <div class="w-4/12 text-center xxs:w-1/12">B</div>
           </div>
           <div class="w-1/12 text-center">C</div>
           <div class="w-1/12 text-center">PTS</div>

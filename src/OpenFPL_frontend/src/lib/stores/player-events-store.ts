@@ -11,13 +11,10 @@ import type {
   Fixture,
   LeagueStatus,
   Player,
-  PlayerDetails,
   PlayerDetailsForGameweek,
   PlayerPoints,
   PlayerScore,
   PlayersMap,
-} from "../../../../declarations/data_canister/data_canister.did";
-import type {
   AppStatus,
   FantasyTeamSnapshot,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
@@ -26,12 +23,12 @@ function createPlayerEventsStore() {
   const { subscribe, set } = writable<PlayerDetailsForGameweek | null>(null);
   let playerScoresMap: Map<number, PlayerScore> = new Map();
 
-  async function getPlayerDetails(
+/*   async function getPlayerDetails(
     playerId: number,
     seasonId: number,
   ): Promise<PlayerDetails | undefined> {
     return new PlayerEventsService().getPlayerDetails(playerId, seasonId);
-  }
+  } */
 
   async function getPlayerMap(
     seasonId: number,
@@ -163,7 +160,6 @@ function createPlayerEventsStore() {
   return {
     subscribe,
     setPlayerEvents: (players: PlayerDetailsForGameweek) => set(players),
-    getPlayerDetails,
     getGameweekPlayers,
     getPlayerEventsFromBackend,
     getPlayerMap,

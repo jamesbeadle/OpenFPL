@@ -2,10 +2,11 @@ import { ActorFactory } from "../utils/actor.factory";
 import { toasts } from "$lib/stores/toasts-store";
 import { authStore } from "$lib/stores/auth-store";
 import type {
-  Fixture,
+  Fixtures,
   LeagueId,
   SeasonId,
-} from "../../../../declarations/data_canister/data_canister.did";
+  GetFixtures,
+} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { isError } from "$lib/utils/helpers";
 
 export class FixtureService {
@@ -13,7 +14,7 @@ export class FixtureService {
 
   constructor() {}
 
-  async getFixtures(): Promise<Fixture[] | undefined> {
+  async getFixtures(): Promise<Fixtures | undefined> {
     try {
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
@@ -21,7 +22,8 @@ export class FixtureService {
       );
       const leagueId: LeagueId = 1;
       const seasonId: SeasonId = 1;
-      const result = await identityActor.getFixtures(leagueId, seasonId);
+      let dto: GetFixtures = { leagueId, seasonId };
+      const result = await identityActor.getFixtures(dto);
       if (isError(result)) throw new Error("Failed to fetch fixtures");
       return result.ok;
     } catch (error) {
@@ -30,7 +32,7 @@ export class FixtureService {
     }
   }
 
-  async getPostponedFixtures(): Promise<Fixture[] | undefined> {
+  /* async getPostponedFixtures(): Promise<Fixtures | undefined> {
     try {
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
@@ -45,5 +47,5 @@ export class FixtureService {
       console.error("Error fetching fixtures: ", error);
       toasts.addToast({ type: "error", message: "Error fetching fixtures." });
     }
-  }
+  } */
 }
