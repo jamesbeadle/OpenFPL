@@ -11,6 +11,12 @@ type WeeklyLeaderboard =
    seasonId: SeasonId;
    totalEntries: nat;
  };
+type ValueHistory = 
+ record {
+   changedOn: int;
+   newValue: nat16;
+   oldValue: nat16;
+ };
 type UpdateICFCProfile = 
  record {
    membershipType: MembershipType;
@@ -112,17 +118,17 @@ type RewardEntry =
 type Result_9 = 
  variant {
    err: Error;
-   ok: Players;
+   ok: PlayersMap;
  };
 type Result_8 = 
  variant {
    err: Error;
-   ok: PlayersMap;
+   ok: PlayersSnapshot;
  };
 type Result_7 = 
  variant {
    err: Error;
-   ok: PlayersSnapshot;
+   ok: PostponedFixtures;
  };
 type Result_6 = 
  variant {
@@ -144,20 +150,30 @@ type Result_3 =
    err: Error;
    ok: nat;
  };
-type Result_22 = 
+type Result_24 = 
  variant {
    err: Error;
    ok: text;
  };
-type Result_21 = 
+type Result_23 = 
  variant {
    err: Error;
    ok: RewardRates;
  };
-type Result_20 = 
+type Result_22 = 
  variant {
    err: Error;
    ok: AppStatus;
+ };
+type Result_21 = 
+ variant {
+   err: Error;
+   ok: Clubs;
+ };
+type Result_20 = 
+ variant {
+   err: Error;
+   ok: Countries;
  };
 type Result_2 = 
  variant {
@@ -167,52 +183,52 @@ type Result_2 =
 type Result_19 = 
  variant {
    err: Error;
-   ok: Clubs;
+   ok: vec DataHash;
  };
 type Result_18 = 
  variant {
    err: Error;
-   ok: Countries;
+   ok: FantasyTeamSnapshot;
  };
 type Result_17 = 
  variant {
    err: Error;
-   ok: vec DataHash;
+   ok: Fixtures;
  };
 type Result_16 = 
  variant {
    err: Error;
-   ok: FantasyTeamSnapshot;
+   ok: ICFCLinkStatus;
  };
 type Result_15 = 
  variant {
    err: Error;
-   ok: Fixtures;
+   ok: LeagueStatus;
  };
 type Result_14 = 
  variant {
    err: Error;
-   ok: ICFCLinkStatus;
+   ok: Manager;
  };
 type Result_13 = 
  variant {
    err: Error;
-   ok: LeagueStatus;
+   ok: vec CanisterId;
  };
 type Result_12 = 
  variant {
    err: Error;
-   ok: Manager;
+   ok: PlayerDetails;
  };
 type Result_11 = 
  variant {
    err: Error;
-   ok: vec CanisterId;
+   ok: PlayerDetailsForGameweek;
  };
 type Result_10 = 
  variant {
    err: Error;
-   ok: PlayerDetailsForGameweek;
+   ok: Players;
  };
 type Result_1 = 
  variant {
@@ -225,6 +241,12 @@ type Result =
    ok;
  };
 type PrincipalId = text;
+type PostponedFixtures = 
+ record {
+   fixtures: vec Fixture;
+   leagueId: nat16;
+   seasonId: nat16;
+ };
 type PlayersSnapshot = record {players: vec Player;};
 type PlayersMap = record {playersMap: vec record {
                                             nat16;
@@ -247,6 +269,13 @@ type Player__1 =
    shirtNumber: nat8;
    status: PlayerStatus__1;
    valueQuarterMillions: nat16;
+ };
+type PlayerStatus__2 = 
+ variant {
+   Active;
+   FreeAgent;
+   OnLoan;
+   Retired;
  };
 type PlayerStatus__1 = 
  variant {
@@ -276,6 +305,13 @@ type PlayerScore =
    position: PlayerPosition__1;
    saves: int16;
  };
+type PlayerPosition__2 = 
+ variant {
+   Defender;
+   Forward;
+   Goalkeeper;
+   Midfielder;
+ };
 type PlayerPosition__1 = 
  variant {
    Defender;
@@ -300,6 +336,28 @@ type PlayerPoints =
    position: PlayerPosition__1;
  };
 type PlayerId = nat16;
+type PlayerGameweek = 
+ record {
+   events: vec PlayerEventData;
+   fixtureId: FixtureId;
+   number: nat8;
+   points: int16;
+ };
+type PlayerEventType__1 = 
+ variant {
+   Appearance;
+   CleanSheet;
+   Goal;
+   GoalAssisted;
+   GoalConceded;
+   HighestScoringPlayer;
+   KeeperSave;
+   OwnGoal;
+   PenaltyMissed;
+   PenaltySaved;
+   RedCard;
+   YellowCard;
+ };
 type PlayerEventType = 
  variant {
    Appearance;
@@ -333,7 +391,17 @@ type PlayerEventData__1 =
    fixtureId: nat32;
    playerId: nat16;
  };
+type PlayerEventData = 
+ record {
+   clubId: ClubId;
+   eventEndMinute: nat8;
+   eventStartMinute: nat8;
+   eventType: PlayerEventType__1;
+   fixtureId: FixtureId;
+   playerId: nat16;
+ };
 type PlayerDetailsForGameweek = record {playerPoints: vec PlayerPoints;};
+type PlayerDetails = record {player: DetailedPlayer;};
 type Player = 
  record {
    clubId: nat16;
@@ -441,6 +509,12 @@ type LeaderboardEntry =
    principalId: text;
    username: text;
  };
+type InjuryHistory = 
+ record {
+   description: text;
+   expectedEndDate: int;
+   injuryStartDate: int;
+ };
 type ICFCLinkStatus = 
  variant {
    PendingVerification;
@@ -462,6 +536,7 @@ type GetWeeklyLeaderboard =
 type GetTeamSetup = record {principalId: text;};
 type GetSeasons = record {leagueId: nat16;};
 type GetProfile = record {principalId: PrincipalId;};
+type GetPostponedFixtures = record {leagueId: nat16;};
 type GetPlayersSnapshot = 
  record {
    gameweek: GameweekNumber;
@@ -478,6 +553,12 @@ type GetPlayerDetailsForGameweek =
  record {
    gameweek: nat8;
    leagueId: nat16;
+   seasonId: nat16;
+ };
+type GetPlayerDetails = 
+ record {
+   leagueId: nat16;
+   playerId: nat16;
    seasonId: nat16;
  };
 type GetManagerByUsername = record {username: text;};
@@ -509,6 +590,7 @@ type FixtureStatusType =
    Finalised;
    Unplayed;
  };
+type FixtureId = nat32;
 type Fixture = 
  record {
    awayClubId: nat16;
@@ -575,6 +657,26 @@ type Error =
    NotAuthorized;
    NotFound;
    SystemOnHold;
+ };
+type DetailedPlayer = 
+ record {
+   clubId: ClubId;
+   dateOfBirth: int;
+   firstName: text;
+   gameweeks: vec PlayerGameweek;
+   id: PlayerId;
+   injuryHistory: vec InjuryHistory;
+   lastName: text;
+   latestInjuryEndDate: int;
+   nationality: CountryId;
+   parentClubId: ClubId;
+   position: PlayerPosition__2;
+   retirementDate: int;
+   seasonId: SeasonId;
+   shirtNumber: nat8;
+   status: PlayerStatus__2;
+   valueHistory: vec ValueHistory;
+   valueQuarterMillions: nat16;
  };
 type DataHash = 
  record {
@@ -645,24 +747,26 @@ type AppStatus =
    version: text;
  };
 service : {
-  getActiveLeaderboardCanisterId: () -> (Result_22);
-  getActiveRewardRates: () -> (Result_21);
-  getAppStatus: () -> (Result_20);
-  getClubs: (GetClubs) -> (Result_19);
-  getCountries: () -> (Result_18);
-  getDataHashes: () -> (Result_17);
-  getFantasyTeamSnapshot: (GetFantasyTeamSnapshot) -> (Result_16);
-  getFixtures: (GetFixtures) -> (Result_15);
-  getICFCLinkStatus: (GetICFCLinkStatus) -> (Result_14);
-  getLeaderboardCanisterIds: () -> (Result_11);
-  getLeagueStatus: () -> (Result_13);
-  getManager: (GetManager) -> (Result_12);
-  getManagerByUsername: (GetManagerByUsername) -> (Result_12);
-  getManagerCanisterIds: () -> (Result_11);
-  getPlayerEvents: (GetPlayerDetailsForGameweek) -> (Result_10);
-  getPlayers: (GetPlayers) -> (Result_9);
-  getPlayersMap: (GetPlayersMap) -> (Result_8);
-  getPlayersSnapshot: (GetPlayersSnapshot) -> (Result_7);
+  getActiveLeaderboardCanisterId: () -> (Result_24);
+  getActiveRewardRates: () -> (Result_23);
+  getAppStatus: () -> (Result_22);
+  getClubs: (GetClubs) -> (Result_21);
+  getCountries: () -> (Result_20);
+  getDataHashes: () -> (Result_19);
+  getFantasyTeamSnapshot: (GetFantasyTeamSnapshot) -> (Result_18);
+  getFixtures: (GetFixtures) -> (Result_17);
+  getICFCLinkStatus: (GetICFCLinkStatus) -> (Result_16);
+  getLeaderboardCanisterIds: () -> (Result_13);
+  getLeagueStatus: () -> (Result_15);
+  getManager: (GetManager) -> (Result_14);
+  getManagerByUsername: (GetManagerByUsername) -> (Result_14);
+  getManagerCanisterIds: () -> (Result_13);
+  getPlayerDetails: (GetPlayerDetails) -> (Result_12);
+  getPlayerEvents: (GetPlayerDetailsForGameweek) -> (Result_11);
+  getPlayers: (GetPlayers) -> (Result_10);
+  getPlayersMap: (GetPlayersMap) -> (Result_9);
+  getPlayersSnapshot: (GetPlayersSnapshot) -> (Result_8);
+  getPostponedFixtures: (GetPostponedFixtures) -> (Result_7);
   getProfile: (GetProfile) -> (Result_6);
   getSeasons: (GetSeasons) -> (Result_5);
   getTeamSelection: (GetTeamSetup) -> (Result_4);
