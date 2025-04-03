@@ -204,9 +204,6 @@ export interface GetPostponedFixtures {
 export interface GetSeasons {
   leagueId: number;
 }
-export interface GetTeamSetup {
-  principalId: string;
-}
 export interface GetWeeklyLeaderboard {
   offset: bigint;
   seasonId: SeasonId;
@@ -620,7 +617,7 @@ export interface _SERVICE {
   getPostponedFixtures: ActorMethod<[GetPostponedFixtures], Result_7>;
   getProfile: ActorMethod<[], Result_6>;
   getSeasons: ActorMethod<[GetSeasons], Result_5>;
-  getTeamSelection: ActorMethod<[GetTeamSetup], Result_4>;
+  getTeamSelection: ActorMethod<[], Result_4>;
   getTotalManagers: ActorMethod<[], Result_3>;
   getWeeklyLeaderboard: ActorMethod<[GetWeeklyLeaderboard], Result_2>;
   getWeeklyRewards: ActorMethod<[GetWeeklyRewardsLeaderboard], Result_1>;
