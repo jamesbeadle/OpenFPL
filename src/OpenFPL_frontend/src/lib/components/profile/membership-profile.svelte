@@ -27,7 +27,7 @@
       const principalId = get(authStore).identity?.getPrincipal().toString();
       if (!principalId) return;
       
-      const icfcLinkStatus = await userStore.getICFCLinkStatus(principalId);
+      const icfcLinkStatus = await userStore.getICFCLinkStatus();
       if (icfcLinkStatus) {
         if ('PendingVerification' in icfcLinkStatus) {
           notLinked = false;

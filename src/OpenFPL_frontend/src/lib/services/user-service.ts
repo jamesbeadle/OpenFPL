@@ -4,21 +4,18 @@ import { authStore } from "$lib/stores/auth-store";
 import { toasts } from "$lib/stores/toasts-store";
 import type {
   CombinedProfile,
-  GetICFCLinkStatus,
-  GetProfile,
   ICFCLinkStatus,
   Result,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 export class UserService {
-  async getUser(principalId: string): Promise<CombinedProfile | undefined> {
+  async getUser(): Promise<CombinedProfile | undefined> {
     try {
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
-      let dto: GetProfile = { principalId };
-      const result: any = await identityActor.getProfile(dto);
+      const result: any = await identityActor.getProfile();
       console.log("profile result in service", result);
       if (isError(result)) {
         console.error("isError fetching user profile: ", result);
@@ -35,17 +32,13 @@ export class UserService {
     }
   }
 
-  async getICFCLinkStatus(
-    principalId: string,
-  ): Promise<ICFCLinkStatus | undefined> {
+  async getICFCLinkStatus(): Promise<ICFCLinkStatus | undefined> {
     try {
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
-      const getICFCLinkStatus: GetICFCLinkStatus = { principalId };
-      const result: any =
-        await identityActor.getICFCLinkStatus(getICFCLinkStatus);
+      const result: any = await identityActor.getICFCLinkStatus();
       console.log(result);
       if (isError(result)) return undefined;
       return result.ok;

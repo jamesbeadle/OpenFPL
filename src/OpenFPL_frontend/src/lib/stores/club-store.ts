@@ -1,5 +1,8 @@
 import { writable } from "svelte/store";
-import type { Club, Clubs } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type {
+  Club,
+  Clubs,
+} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ClubService } from "../services/club-service";
 
 function createClubStore() {

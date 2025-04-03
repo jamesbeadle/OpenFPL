@@ -4,7 +4,6 @@ import { isError } from "../utils/helpers";
 import { toasts } from "$lib/stores/toasts-store";
 import type { Countries } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
-
 export class CountryService {
   private actor: any;
 

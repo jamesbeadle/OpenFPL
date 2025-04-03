@@ -12,7 +12,7 @@ function createCountryStore() {
   return {
     subscribe,
     setCountries: (countries: Country[]) => set(countries),
-    getCountries
+    getCountries,
   };
 }
 
