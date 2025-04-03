@@ -24,7 +24,7 @@ module {
       version = "2.0.0";
     };
 
-    private var dataHashes : [Base.DataHash] = [[
+    private var dataHashes : [Base.DataHash] = [
       { category = "weekly_leaderboard"; hash = "OPENFPL_2" },
       { category = "monthly_leaderboards"; hash = "OPENFPL_2" },
       { category = "season_leaderboard"; hash = "OPENFPL_2" },
