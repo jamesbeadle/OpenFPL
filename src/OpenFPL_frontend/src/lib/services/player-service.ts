@@ -21,7 +21,7 @@ export class PlayerService {
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
-      const leagueId: LeagueId = 1;
+      const leagueId: LeagueId = Number(process.env.LEAGUE_ID);
       let dto: GetPlayers = { leagueId };
       const result = await identityActor.getPlayers(dto);
       if (isError(result)) throw new Error("Failed to fetch league players");
