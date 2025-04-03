@@ -4,9 +4,8 @@ import { isError } from "../utils/helpers";
 import { toasts } from "$lib/stores/toasts-store";
 import type {
   LeagueId,
-  Player,
-} from "../../../../declarations/data_canister/data_canister.did";
-import type {
+  Players,
+  GetPlayers,
   GetPlayersSnapshot,
   PlayersSnapshot,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
@@ -16,14 +15,15 @@ export class PlayerService {
 
   constructor() {}
 
-  async getPlayers(): Promise<Player[] | undefined> {
+  async getPlayers(): Promise<Players | undefined> {
     try {
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
       const leagueId: LeagueId = 1;
-      const result = await identityActor.getPlayers(leagueId);
+      let dto: GetPlayers = { leagueId };
+      const result = await identityActor.getPlayers(dto);
       if (isError(result)) throw new Error("Failed to fetch league players");
       return result.ok;
     } catch (error) {

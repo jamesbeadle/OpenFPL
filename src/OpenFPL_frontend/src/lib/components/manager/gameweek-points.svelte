@@ -14,9 +14,9 @@
   import GameweekPointsTable from "./gameweek-points-table.svelte";
   import { getGameweeks } from "$lib/utils/helpers";
   import { leagueStore } from "$lib/stores/league-store";
-    import LocalSpinner from "../shared/local-spinner.svelte";
-    import type { Club } from "../../../../../declarations/data_canister/data_canister.did";
-    import type { FantasyTeamSnapshot } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import LocalSpinner from "../shared/local-spinner.svelte";
+
+  import type { FantasyTeamSnapshot, Club } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   let isLoading = true;
   let selectedGameweek = writable(1);

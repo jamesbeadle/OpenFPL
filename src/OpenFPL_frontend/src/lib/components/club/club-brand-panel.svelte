@@ -1,16 +1,16 @@
 <script lang="ts">
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
     import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
-    import type { Club } from "../../../../../declarations/data_canister/data_canister.did";
+    import type { Club } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
     export let club: Club;
 </script>
 
-<div class="flex-grow flex flex-col items-center">
+<div class="flex flex-col items-center flex-grow">
   <p class="content-panel-header">
     {club.friendlyName}
   </p>
-  <div class="py-2 flex space-x-4">
+  <div class="flex py-2 space-x-4">
     <BadgeIcon club={club} className="h-4" />
     <ShirtIcon className="h-4" club={club} />
   </div>

@@ -4,7 +4,7 @@
   import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import { convertPositionToAbbreviation, getFlagComponent, getPlayerName } from "$lib/utils/helpers";
-    import type { Club } from "../../../../../declarations/data_canister/data_canister.did";
+  import type { Club } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   export let clubData: Club;
   export let playerData: GameweekData;
@@ -12,11 +12,11 @@
 </script>
 
 <div class="flex flex-col items-center text-center">
-  <div class="flex justify-center items-center">
+  <div class="flex items-center justify-center">
     <ShirtIcon className="h-6 xs:h-8 sm:h-10 lg:h-8 lg:h-12 xl:h-14 2xl:h-16" club={clubData} />
   </div>
-  <div class="flex flex-col justify-center items-center text-xxs sm:text-xs">
-    <div class="flex justify-center items-center bg-gray-700 rounded-t-md md:px-2 sm:py-1 top-player-detail">
+  <div class="flex flex-col items-center justify-center text-xxs sm:text-xs">
+    <div class="flex items-center justify-center bg-gray-700 rounded-t-md md:px-2 sm:py-1 top-player-detail">
       <p class="hidden sm:flex sm:min-w-[15px]">
         {convertPositionToAbbreviation(playerData.player.position)}
       </p>

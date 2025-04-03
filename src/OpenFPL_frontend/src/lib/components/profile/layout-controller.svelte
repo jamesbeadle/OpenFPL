@@ -37,7 +37,7 @@
                     const principalId = get(authStore).identity?.getPrincipal().toString();
                     if (!principalId) return;
                     
-                    profile = await new UserService().getUser(principalId);
+                    profile = await new UserService().getUser();
                     console.log('profile', profile);
                     if (profile) {
                         hasValidMembership = checkValidMembership(profile.membershipType);

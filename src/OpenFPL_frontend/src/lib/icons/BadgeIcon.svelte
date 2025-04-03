@@ -1,8 +1,8 @@
 <script lang="ts">
-  import type { ClubDTO } from "../../../../external_declarations/data_canister/data_canister.did";
+  import type { Club } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   export let className = "";
-  export let club: ClubDTO;
+  export let club: Club;
 </script>
 
 <svg

@@ -2,14 +2,14 @@ import { authStore } from "$lib/stores/auth-store";
 import { ActorFactory } from "../utils/actor.factory";
 import { isError } from "../utils/helpers";
 import { toasts } from "$lib/stores/toasts-store";
-import type { Country } from "../../../../declarations/data_canister/data_canister.did";
+import type { Countries } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 export class CountryService {
   private actor: any;
 
   constructor() {}
 
-  async getCountries(): Promise<Country[] | undefined> {
+  async getCountries(): Promise<Countries | undefined> {
     try {
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,

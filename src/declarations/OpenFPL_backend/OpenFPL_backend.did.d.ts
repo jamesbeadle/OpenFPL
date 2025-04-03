@@ -170,9 +170,6 @@ export interface GetFixtures {
   seasonId: number;
   leagueId: number;
 }
-export interface GetICFCLinkStatus {
-  principalId: PrincipalId;
-}
 export interface GetManager {
   principalId: string;
 }
@@ -204,9 +201,6 @@ export interface GetPlayersSnapshot {
 export interface GetPostponedFixtures {
   leagueId: number;
 }
-export interface GetProfile {
-  principalId: PrincipalId;
-}
 export interface GetSeasons {
   leagueId: number;
 }
@@ -223,6 +217,12 @@ export interface GetWeeklyLeaderboard {
 export interface GetWeeklyRewardsLeaderboard {
   seasonId: SeasonId;
   gameweek: GameweekNumber;
+}
+export interface ICFCLink {
+  dataHash: string;
+  membershipType: MembershipType__1;
+  linkStatus: ICFCLinkStatus;
+  principalId: PrincipalId;
 }
 export type ICFCLinkStatus = { PendingVerification: null } | { Verified: null };
 export interface InjuryHistory {
@@ -599,13 +599,14 @@ export interface WeeklyRewardsLeaderboard {
 export interface _SERVICE {
   getActiveLeaderboardCanisterId: ActorMethod<[], Result_24>;
   getActiveRewardRates: ActorMethod<[], Result_23>;
+  getAllUserICFCLinks: ActorMethod<[], Array<[PrincipalId, ICFCLink]>>;
   getAppStatus: ActorMethod<[], Result_22>;
   getClubs: ActorMethod<[GetClubs], Result_21>;
   getCountries: ActorMethod<[], Result_20>;
   getDataHashes: ActorMethod<[], Result_19>;
   getFantasyTeamSnapshot: ActorMethod<[GetFantasyTeamSnapshot], Result_18>;
   getFixtures: ActorMethod<[GetFixtures], Result_17>;
-  getICFCLinkStatus: ActorMethod<[GetICFCLinkStatus], Result_16>;
+  getICFCLinkStatus: ActorMethod<[], Result_16>;
   getLeaderboardCanisterIds: ActorMethod<[], Result_13>;
   getLeagueStatus: ActorMethod<[], Result_15>;
   getManager: ActorMethod<[GetManager], Result_14>;
@@ -617,7 +618,7 @@ export interface _SERVICE {
   getPlayersMap: ActorMethod<[GetPlayersMap], Result_9>;
   getPlayersSnapshot: ActorMethod<[GetPlayersSnapshot], Result_8>;
   getPostponedFixtures: ActorMethod<[GetPostponedFixtures], Result_7>;
-  getProfile: ActorMethod<[GetProfile], Result_6>;
+  getProfile: ActorMethod<[], Result_6>;
   getSeasons: ActorMethod<[GetSeasons], Result_5>;
   getTeamSelection: ActorMethod<[GetTeamSetup], Result_4>;
   getTotalManagers: ActorMethod<[], Result_3>;

@@ -11,9 +11,8 @@
   import SelectedPlayersPitch from "./selected-players-pitch.svelte";
   import SelectedPlayersList from "./selected-players-list.svelte";
   import { convertPositionToIndex } from "$lib/utils/helpers";
-    import LocalSpinner from "../shared/local-spinner.svelte";
-    import type { TeamSetup } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-    import type { Player } from "../../../../../declarations/data_canister/data_canister.did";
+  import LocalSpinner from "../shared/local-spinner.svelte";
+  import type { TeamSetup, Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   
   export let fantasyTeam: Writable<TeamSetup | undefined>;
   export let pitchView: Writable<boolean>;

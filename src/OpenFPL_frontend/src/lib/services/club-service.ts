@@ -3,23 +3,25 @@ import { authStore } from "$lib/stores/auth-store";
 import { ActorFactory } from "../utils/actor.factory";
 import { isError } from "../utils/helpers";
 import type {
-  Club,
+  Clubs,
   LeagueId,
-} from "../../../../declarations/data_canister/data_canister.did";
+  GetClubs,
+} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 export class ClubService {
   private actor: any;
 
   constructor() {}
 
-  async getClubs(): Promise<Club[] | undefined> {
+  async getClubs(): Promise<Clubs | undefined> {
     try {
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
       const leagueId: LeagueId = 1;
-      const result = await identityActor.getClubs(leagueId);
+      let dto: GetClubs = { leagueId };
+      const result = await identityActor.getClubs(dto);
       if (isError(result)) throw new Error("Failed to fetch clubs");
       return result.ok;
     } catch (error) {

@@ -89,26 +89,34 @@ module {
     };
 
     public func getCombinedProfile(dto : UserQueries.GetProfile) : async Result.Result<UserQueries.CombinedProfile, Enums.Error> {
+      Debug.print("get combined profile");
+      Debug.print(debug_show dto);
       let userManagerCanisterId = managerCanisterIds.get(dto.principalId);
+      Debug.print(debug_show userManagerCanisterId);
 
       switch (userManagerCanisterId) {
         case (?foundUserCanisterId) {
+          Debug.print(debug_show foundUserCanisterId);
 
           let manager_canister = actor (foundUserCanisterId) : actor {
             getManager : Ids.PrincipalId -> async ?AppTypes.Manager;
           };
           let manager = await manager_canister.getManager(dto.principalId);
+          Debug.print(debug_show manager);
 
           switch (manager) {
             case (null) {
               return #err(#NotFound);
             };
             case (?foundManager) {
+              Debug.print(debug_show foundManager);
 
               let icfcProfileResult = await getICFCProfile(dto);
+              Debug.print(debug_show icfcProfileResult);
 
               switch (icfcProfileResult) {
                 case (#ok icfcProfile) {
+                  Debug.print(debug_show icfcProfile);
                   let profileDTO : UserQueries.CombinedProfile = {
                     principalId = dto.principalId;
                     username = foundManager.username;

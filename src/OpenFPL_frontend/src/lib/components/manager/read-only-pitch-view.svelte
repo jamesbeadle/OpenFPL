@@ -11,10 +11,10 @@
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import ManagerPitchPlayer from "./manager-pitch-player.svelte";
   import { playerStore } from "$lib/stores/player-store";
-    import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-    import LocalSpinner from "../shared/local-spinner.svelte";
-    import type { FantasyTeamSnapshot, GameweekNumber } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-    import type { Club } from "../../../../../declarations/data_canister/data_canister.did";
+  import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
+  import LocalSpinner from "../shared/local-spinner.svelte";
+  import type { FantasyTeamSnapshot, GameweekNumber, Club } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+
 
   export let fantasyTeam: Writable<FantasyTeamSnapshot | null>;
   export let gridSetup: number[][];
@@ -81,8 +81,8 @@ async function updateGameweekPlayers() {
 {#if isLoading}
   <LocalSpinner />
 {:else}
-<div class="relative w-full flex flex-row">
-  <div class="relative w-full lg:w-1/2 mt-2">
+<div class="relative flex flex-row w-full">
+  <div class="relative w-full mt-2 lg:w-1/2">
     <img 
       src="/pitch.png" 
       alt="pitch" 
@@ -94,9 +94,9 @@ async function updateGameweekPlayers() {
       <LocalSpinner />
     {:else}
       {#if gridSetup && rowHeight}
-        <div class="absolute top-0 left-0 right-0 bottom-0">
+        <div class="absolute top-0 bottom-0 left-0 right-0">
           {#each gridSetup as row, rowIndex}
-            <div class="flex justify-around items-center w-full" style="height: {rowHeight}px;">
+            <div class="flex items-center justify-around w-full" style="height: {rowHeight}px;">
               {#each row as _, colIndex (colIndex)}
                 {@const actualIndex = getActualIndex(rowIndex, colIndex, gridSetup)}
                 {@const playerIds = $fantasyTeam?.playerIds ?? []}
@@ -104,7 +104,7 @@ async function updateGameweekPlayers() {
                 {@const playerData = $gameweekPlayers.find((data) => data.player.id === playerId) ?? null}
                 {@const clubData = $clubStore.find((club) => club.id === playerData?.player.clubId) ?? null}
   
-                <div class="flex flex-col justify-center items-center flex-1 player-card">
+                <div class="flex flex-col items-center justify-center flex-1 player-card">
                   {#if playerData && clubData}
                     <ManagerPitchPlayer {playerData} {clubData} isCaptain={$fantasyTeam?.captainId == playerId} />
                   {/if}
@@ -116,14 +116,14 @@ async function updateGameweekPlayers() {
       {/if}
     {/if}
   </div>
-  <div class="relative hidden lg:flex w-1/2 text-lg">
+  <div class="relative hidden w-1/2 text-lg lg:flex">
     
-    <div class="flex flex-col w-full p-4 border border-gray-700 py-4 bg-light-gray space-y-4">
+    <div class="flex flex-col w-full p-4 py-4 space-y-4 border border-gray-700 bg-light-gray">
       <p class="text-3xl">{$fantasyTeam?.username}</p>
       <p class="text-3xl">{$fantasyTeam?.points} Points</p>
       {#if favouriteTeam}
         <p class="text-xs">Favourite Club</p>
-        <p class="content-panel-stat flex items-center">
+        <p class="flex items-center content-panel-stat">
           <span class="flex flex-row items-center">
             <BadgeIcon className="w-7 mr-2" club={favouriteTeam} />
             {favouriteTeam.friendlyName}

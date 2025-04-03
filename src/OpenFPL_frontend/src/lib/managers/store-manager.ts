@@ -43,9 +43,6 @@ class StoreManager {
     "app_status",
     "reward_rates",
     "weekly_leaderboard",
-  ];
-
-  private dataCanisterCategories: string[] = [
     "countries",
     "league_status",
     "seasons",
@@ -79,7 +76,6 @@ class StoreManager {
     globalDataLoaded.set(false);
     try {
       await this.syncAppDataHashes();
-      await this.syncDataCanisterDataHashes();
       globalDataLoaded.set(true);
     } catch (error) {
       console.error("Error syncing stores:", error);
@@ -99,28 +95,6 @@ class StoreManager {
       const categoryHash = appDataHashes.find(
         (hash) => hash.category === category,
       );
-      if (categoryHash?.hash !== localStorage.getItem(`${category}_hash`)) {
-        await this.syncCategory(category);
-        localStorage.setItem(`${category}_hash`, categoryHash?.hash || "");
-      } else {
-        await this.loadFromCache(category);
-      }
-    }
-  }
-
-  private async syncDataCanisterDataHashes(): Promise<void> {
-    const appDataHashes =
-      await this.dataHashService.getDataCanisterDataHashes();
-
-    if (appDataHashes == undefined) {
-      return;
-    }
-
-    for (const category of this.dataCanisterCategories) {
-      const categoryHash = appDataHashes.find(
-        (hash) => hash.category === category,
-      );
-
       if (categoryHash?.hash !== localStorage.getItem(`${category}_hash`)) {
         await this.syncCategory(category);
         localStorage.setItem(`${category}_hash`, categoryHash?.hash || "");

@@ -1,7 +1,7 @@
 
 <script lang="ts">
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-    import type { Club } from "../../../../../declarations/data_canister/data_canister.did";
+    import type { Club } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     import LoadingDots from "../shared/loading-dots.svelte";
 
     export let nextFixtureHomeTeam: Club;

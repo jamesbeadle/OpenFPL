@@ -5,8 +5,7 @@ import { isError } from "../utils/helpers";
 import type {
   LeagueId,
   LeagueStatus,
-} from "../../../../declarations/data_canister/data_canister.did";
-
+} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 export class LeagueService {
   private actor: any;
 
