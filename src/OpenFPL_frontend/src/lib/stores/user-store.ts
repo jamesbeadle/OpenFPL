@@ -63,7 +63,7 @@ function createUserStore() {
     const principalId = get(authStore).identity?.getPrincipal().toString();
     if (!principalId) return;
 
-    let profile = await new UserService().getUser(principalId);
+    let profile = await new UserService().getUser();
     set(profile);
     if (profile) {
       await setProfileToDB(profile);
@@ -167,16 +167,12 @@ function createUserStore() {
     return 0n;
   }
 
-  async function getUser(
-    principalId: string,
-  ): Promise<CombinedProfile | undefined> {
-    return new UserService().getUser(principalId);
+  async function getUser(): Promise<CombinedProfile | undefined> {
+    return new UserService().getUser();
   }
 
-  async function getICFCLinkStatus(
-    principalId: string,
-  ): Promise<ICFCLinkStatus | undefined> {
-    return new UserService().getICFCLinkStatus(principalId);
+  async function getICFCLinkStatus(): Promise<ICFCLinkStatus | undefined> {
+    return new UserService().getICFCLinkStatus();
   }
 
   async function linkICFCProfile(): Promise<{

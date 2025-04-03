@@ -9,8 +9,7 @@
     import ManagerFavouriteTeamPanel from "./manager-favourite-team-panel.svelte";
     import { writable } from "svelte/store";
     import LocalSpinner from "../shared/local-spinner.svelte";
-    import type { Club } from "../../../../../declarations/data_canister/data_canister.did";
-    import type { Manager } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import type { Manager, Club } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
     export let manager: Manager;
     

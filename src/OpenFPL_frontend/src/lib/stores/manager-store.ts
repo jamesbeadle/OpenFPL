@@ -74,11 +74,16 @@ function createManagerStore() {
         }
         leagueStatus = result;
       });
+
+      const identityActor: any = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
+      );
       let dto: GetManager = {
         principalId,
       };
 
-      let result = await actor.getManager(dto);
+      let result = await identityActor.getManager(dto);
 
       if (isError(result)) {
         console.error("Error getting public profile");
@@ -95,7 +100,11 @@ function createManagerStore() {
 
   async function getTotalManagers(): Promise<number> {
     try {
-      let result = await actor.getTotalManagers();
+      const identityActor: any = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
+      );
+      let result = await identityActor.getTotalManagers();
 
       if (isError(result)) {
         console.error("Error getting total managers");
@@ -120,7 +129,12 @@ function createManagerStore() {
         gameweek,
         seasonId,
       };
-      let result = await actor.getFantasyTeamSnapshot(dto);
+
+      const identityActor: any = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
+      );
+      let result = await identityActor.getFantasyTeamSnapshot(dto);
       if (isError(result)) {
         console.error("Error fetching fantasy team for gameweek:");
         toasts.addToast({

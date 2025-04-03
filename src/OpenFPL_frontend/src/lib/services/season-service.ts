@@ -4,22 +4,24 @@ import { isError } from "../utils/helpers";
 import { toasts } from "$lib/stores/toasts-store";
 import type {
   LeagueId,
-  Season,
-} from "../../../../declarations/data_canister/data_canister.did";
+  Seasons,
+  GetSeasons,
+} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 export class SeasonService {
   private actor: any;
 
   constructor() {}
 
-  async getSeasons(): Promise<Season[] | undefined> {
+  async getSeasons(): Promise<Seasons | undefined> {
     try {
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
       const leagueId: LeagueId = 1;
-      const result = await identityActor.getSeasons(leagueId);
+      let dto: GetSeasons = { leagueId };
+      const result = await identityActor.getSeasons(dto);
       if (isError(result)) throw new Error("Failed to fetch seasons");
       return result.ok;
     } catch (error) {

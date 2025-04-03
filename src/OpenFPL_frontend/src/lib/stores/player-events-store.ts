@@ -11,15 +11,13 @@ import type {
   Fixture,
   LeagueStatus,
   Player,
-  PlayerDetails,
   PlayerDetailsForGameweek,
   PlayerPoints,
   PlayerScore,
   PlayersMap,
-} from "../../../../declarations/data_canister/data_canister.did";
-import type {
   AppStatus,
   FantasyTeamSnapshot,
+  PlayerDetails,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 function createPlayerEventsStore() {
@@ -163,12 +161,12 @@ function createPlayerEventsStore() {
   return {
     subscribe,
     setPlayerEvents: (players: PlayerDetailsForGameweek) => set(players),
-    getPlayerDetails,
     getGameweekPlayers,
     getPlayerEventsFromBackend,
     getPlayerMap,
     loadPlayerScoresMap,
     getPlayerScore,
+    getPlayerDetails,
   };
 }
 

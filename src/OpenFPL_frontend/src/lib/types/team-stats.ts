@@ -1,4 +1,4 @@
-import type { Club } from "../../../../declarations/data_canister/data_canister.did";
+import type { Club } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 export interface TeamStats extends Club {
   played: number;

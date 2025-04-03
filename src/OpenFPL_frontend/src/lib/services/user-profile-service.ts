@@ -20,7 +20,7 @@ export const initUserProfile = async ({
     const principalId = get(authStore).identity?.getPrincipal().toString();
     if (!principalId) return { result: "skip" };
 
-    const profile = await userStore.getUser(principalId);
+    const profile = await userStore.getUser();
     console.log("profile in initUserProfile", profile);
     if (profile) {
       userIdCreatedStore.set({ data: profile.principalId, certified: true });

@@ -10,7 +10,7 @@
   import PlayerHeader from "$lib/components/player/player-header.svelte";
   import TabContainer from "$lib/components/shared/tab-container.svelte";
   import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
-  import type { Club, Player } from "../../../../../declarations/data_canister/data_canister.did";
+  import type { Club, Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   $: id = Number(page.url.searchParams.get("id"));
 

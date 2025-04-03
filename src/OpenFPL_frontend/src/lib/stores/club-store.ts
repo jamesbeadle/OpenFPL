@@ -1,8 +1,16 @@
 import { writable } from "svelte/store";
-import type { Club } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type {
+  Club,
+  Clubs,
+} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import { ClubService } from "../services/club-service";
 
 function createClubStore() {
   const { subscribe, set } = writable<Club[]>([]);
+
+  async function getClubs(): Promise<Clubs | undefined> {
+    return new ClubService().getClubs();
+  }
 
   return {
     subscribe,

@@ -15,8 +15,6 @@ import type {
   PlayerEventType,
   PlayerPoints,
   PlayerPosition,
-} from "../../../../declarations/data_canister/data_canister.did";
-import type {
   FantasyTeamSnapshot,
   LeaderboardEntry,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";

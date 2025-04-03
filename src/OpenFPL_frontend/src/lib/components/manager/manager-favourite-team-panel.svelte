@@ -1,14 +1,14 @@
 <script lang="ts">
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
     import type { Writable } from "svelte/store";
-    import type { Club } from "../../../../../declarations/data_canister/data_canister.did";
+    import type { Club } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
     export let favouriteTeam: Writable<Club | null>;
 </script>
 <div class="flex-grow">
     <p class="content-panel-header">Favourite Team</p>
     {#if $favouriteTeam}
-        <p class="content-panel-stat flex items-center">
+        <p class="flex items-center content-panel-stat">
             <BadgeIcon className="w-7 mr-2" club={$favouriteTeam} />
             {$favouriteTeam.abbreviatedName ?? "-"}
         </p>
