@@ -21,6 +21,7 @@ export const initUserProfile = async ({
     if (!principalId) return { result: "skip" };
 
     const profile = await userStore.getUser(principalId);
+    console.log("profile in initUserProfile", profile);
     if (profile) {
       userIdCreatedStore.set({ data: profile.principalId, certified: true });
       return { result: "success" };

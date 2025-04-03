@@ -39,6 +39,7 @@
     if (identity) {
       try {
         await initUserProfile({ identity });
+        console.log("initUserProfile")
       } catch (err) {
         console.error('initUserProfile error:', err);
       }
