@@ -1,7 +1,6 @@
 import { ActorFactory } from "../utils/actor.factory";
 import { isError } from "../utils/helpers";
 import { authStore } from "$lib/stores/auth-store";
-import { toasts } from "$lib/stores/toasts-store";
 import type {
   CombinedProfile,
   ICFCLinkStatus,
@@ -24,10 +23,6 @@ export class UserService {
       return result.ok;
     } catch (error) {
       console.error("Error fetching user profile: ", error);
-      toasts.addToast({
-        type: "error",
-        message: "User Profile Not Found.",
-      });
       return undefined;
     }
   }
