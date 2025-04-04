@@ -3056,6 +3056,12 @@ actor class _ManagerCanister() {
   };
 
   system func postupgrade() {
+    let indexMap : TrieMap.TrieMap<Ids.PrincipalId, Nat8> = TrieMap.TrieMap<Ids.PrincipalId, Nat8>(Text.equal, Text.hash);
+
+    for (link in Iter.fromArray(stable_manager_group_indexes)) {
+      indexMap.put(link);
+    };
+    managerGroupIndexes := indexMap;
     ignore Timer.setTimer<system>(#nanoseconds(Int.abs(1)), postUpgradeCallback);
   };
 
