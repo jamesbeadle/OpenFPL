@@ -33,6 +33,7 @@ import PickTeamUtilities "../utilities/pick_team_utilities";
 import ManagerCanister "../canister_definitions/manager-canister";
 import DataCanister "canister:data_canister";
 import SHA224 "mo:waterway-mops/SHA224";
+import IcfcTypes "mo:waterway-mops/ICFCTypes";
 import ICFCCommands "../commands/icfc_commands";
 import Environment "../Environment";
 
@@ -714,7 +715,7 @@ module {
       };
     };
 
-    public func saveTeamSelection(dto : UserCommands.SaveFantasyTeam, seasonId : FootballIds.SeasonId, gameweek: FootballDefinitions.GameweekNumber, players : [DataCanister.Player]) : async Result.Result<(), Enums.Error> {
+    public func saveTeamSelection(dto : UserCommands.SaveFantasyTeam, seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber, players : [DataCanister.Player]) : async Result.Result<(), Enums.Error> {
 
       let teamValidResult = PickTeamUtilities.teamValid(dto, players);
       switch (teamValidResult) {
@@ -879,7 +880,7 @@ module {
                 dto,
                 Nat8.fromNat(Nat64.toNat(Nat64.fromIntWrap(transfersAvailable))),
                 newBankBalance,
-                gameweek
+                gameweek,
               );
             };
             case (#err error) {
@@ -893,7 +894,7 @@ module {
     private func useBonus(managerCanisterId : Ids.CanisterId, dto : UserCommands.PlayBonus, gameweek : FootballDefinitions.GameweekNumber) : async Result.Result<(), Enums.Error> {
       let manager_canister = actor (managerCanisterId) : actor {
         getManager : Ids.PrincipalId -> async ?AppTypes.Manager;
-        useBonus : (dto : UserCommands.PlayBonus, monthlyBonuses : Nat8) -> async Result.Result<(), Enums.Error>;
+        useBonus : (dto : UserCommands.PlayBonus, monthlyBonuses : Nat8, gameweek : IcfcTypes.GameweekNumber) -> async Result.Result<(), Enums.Error>;
       };
 
       let manager = await manager_canister.getManager(dto.principalId);
@@ -917,7 +918,7 @@ module {
             return #err(#InvalidData);
           };
 
-          return await manager_canister.useBonus(dto, 2); // TODO: John this needs to not always be 2
+          return await manager_canister.useBonus(dto, 2, gameweek); // TODO: John this needs to not always be 2
         };
       };
     };
