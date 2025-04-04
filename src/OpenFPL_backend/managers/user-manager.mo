@@ -122,7 +122,7 @@ module {
                       Debug.print(debug_show icfcProfile);
                       let profileDTO : UserQueries.CombinedProfile = {
                         principalId = dto.principalId;
-                        username = foundManager.username;
+                        username = icfcProfile.username;
                         termsAccepted = foundManager.termsAccepted;
                         profilePicture = foundManager.profilePicture;
                         profilePictureType = foundManager.profilePictureType;
@@ -162,7 +162,7 @@ module {
                     case (#ok(newManager)) {
                       let profileDTO : UserQueries.CombinedProfile = {
                         principalId = dto.principalId;
-                        username = newManager.username;
+                        username = icfcProfile.username;
                         termsAccepted = newManager.termsAccepted;
                         profilePicture = newManager.profilePicture;
                         profilePictureType = newManager.profilePictureType;
@@ -188,7 +188,7 @@ module {
 
           };
         };
-        case (#err error) {
+        case (#err(error)) {
           return #err(error);
         };
       };
@@ -301,25 +301,36 @@ module {
                     };
                   };
 
-                  let managerDTO : UserQueries.Manager = {
-                    principalId = foundManager.principalId;
-                    username = foundManager.username;
-                    profilePicture = foundManager.profilePicture;
-                    favouriteClubId = foundManager.favouriteClubId;
-                    createDate = foundManager.createDate;
-                    gameweeks = List.toArray(managerSeason.gameweeks);
-                    weeklyPosition = weeklyPosition;
-                    monthlyPosition = monthlyPosition;
-                    seasonPosition = seasonPosition;
-                    weeklyPositionText = weeklyPositionText;
-                    monthlyPositionText = monthlyPositionText;
-                    seasonPositionText = seasonPositionText;
-                    weeklyPoints = weeklyPoints;
-                    monthlyPoints = monthlyPoints;
-                    seasonPoints = seasonPoints;
-                    profilePictureType = foundManager.profilePictureType;
+                  let icfcProfileResult = await getICFCProfile(dto);
+                  Debug.print(debug_show icfcProfileResult);
+
+                  switch (icfcProfileResult) {
+                    case (#ok(icfcProfile)) {
+
+                      let managerDTO : UserQueries.Manager = {
+                        principalId = foundManager.principalId;
+                        username = icfcProfile.username;
+                        profilePicture = foundManager.profilePicture;
+                        favouriteClubId = foundManager.favouriteClubId;
+                        createDate = icfcProfile.createdOn;
+                        gameweeks = List.toArray(managerSeason.gameweeks);
+                        weeklyPosition = weeklyPosition;
+                        monthlyPosition = monthlyPosition;
+                        seasonPosition = seasonPosition;
+                        weeklyPositionText = weeklyPositionText;
+                        monthlyPositionText = monthlyPositionText;
+                        seasonPositionText = seasonPositionText;
+                        weeklyPoints = weeklyPoints;
+                        monthlyPoints = monthlyPoints;
+                        seasonPoints = seasonPoints;
+                        profilePictureType = foundManager.profilePictureType;
+                      };
+                      return #ok(managerDTO);
+                    };
+                    case (#err(error)) {
+                      return #err(error);
+                    };
                   };
-                  return #ok(managerDTO);
 
                 };
               };
