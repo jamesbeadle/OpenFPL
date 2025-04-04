@@ -164,6 +164,14 @@ actor Self {
     return seasonManager.getDataHashes();
   };
 
+  public shared ({ caller }) func getICFCDataHash() : async Result.Result<Text, Enums.Error> {
+    assert not Principal.isAnonymous(caller);
+    let dto : UserQueries.GetICFCDataHash = {
+      principalId = Principal.toText(caller);
+    };
+    return userManager.getICFCDataHash(dto);
+  };
+
   /* ----- User Queries ----- */
 
   public shared ({ caller }) func getProfile() : async Result.Result<UserQueries.CombinedProfile, Enums.Error> {
@@ -260,7 +268,9 @@ actor Self {
     let principalId = Principal.toText(caller);
     assert dto.principalId == principalId;
 
-    let clubsResult = await dataManager.getClubs({ leagueId = Environment.LEAGUE_ID });
+    let clubsResult = await dataManager.getClubs({
+      leagueId = Environment.LEAGUE_ID;
+    });
     switch (clubsResult) {
       case (#ok clubs) {
 
@@ -306,7 +316,9 @@ actor Self {
           return #err(#NotAllowed);
         };
 
-        let playersResult = await dataManager.getPlayers({ leagueId = Environment.LEAGUE_ID });
+        let playersResult = await dataManager.getPlayers({
+          leagueId = Environment.LEAGUE_ID;
+        });
         switch (playersResult) {
           case (#ok players) {
             return await userManager.saveTeamSelection(dto, leagueStatus.activeSeasonId, leagueStatus.unplayedGameweek, players.players);
@@ -518,7 +530,9 @@ actor Self {
 
   public shared ({ caller }) func notifyAppsOfGameweekStarting(leagueId : FootballIds.LeagueId, seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber) : async Result.Result<(), Enums.Error> {
     assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
-    let playersResult = await dataManager.getPlayers({ leagueId = Environment.LEAGUE_ID });
+    let playersResult = await dataManager.getPlayers({
+      leagueId = Environment.LEAGUE_ID;
+    });
 
     switch (playersResult) {
       case (#ok players) {
