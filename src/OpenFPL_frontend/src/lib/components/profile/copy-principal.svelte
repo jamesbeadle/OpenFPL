@@ -26,7 +26,7 @@
     </p>
     <button 
         on:click={() => { copyTextAndShowToast($authStore.identity?.getPrincipal().toString() ?? "") }}
-        class="p-2 ml-2 text-white transition-colors duration-200 rounded-lg hover:bg-BrandGrayShade2"
+        class="p-2 ml-2 text-white transition-colors duration-200 rounded-lg hover:bg-BrandGrayShade1"
     >
         <CopyIcon className="w-5 h-5" fill='#FFFFFF' />
     </button>

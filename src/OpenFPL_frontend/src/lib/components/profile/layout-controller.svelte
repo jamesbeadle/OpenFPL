@@ -1,20 +1,18 @@
 <script lang="ts">
     import { authSignedInStore } from '$lib/derived/auth.derived';
     import { userIdCreatedStore } from '$lib/stores/user-control-store';
-    import type { Snippet } from 'svelte';
+    import { userStore } from '$lib/stores/user-store';
+    import { get } from 'svelte/store';
+    import { onMount, type Snippet } from 'svelte';
     import type { CombinedProfile, MembershipType__1 } from '../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did';
-
+    
     import Header from '$lib/shared/Header.svelte';
     import Footer from '$lib/shared/Footer.svelte';
     import InvalidMembershipPage from '$lib/components/profile/invalid-membership-page.svelte';
     import MembershipProfile from '$lib/components/profile/membership-profile.svelte';
     import LandingPage from '$lib/components/landing/landing-page.svelte';
-    import { UserService } from '$lib/services/user-service';
-    import { authStore } from '$lib/stores/auth-store';
-    import { get } from 'svelte/store';
-    import LocalSpinner from '$lib/components/shared/local-spinner.svelte';
-    import { onMount } from 'svelte';
-
+    import FullScreenSpinner from '../shared/full-screen-spinner.svelte';
+    
     interface Props {
         children: Snippet;
     }
@@ -23,6 +21,8 @@
     let isLoading = $state(false);
     let hasValidMembership = $state(false);
     let profile: CombinedProfile | undefined = $state(undefined);
+    let loadingMessage = $state("");
+    let profileChecked = $state(false);
 
     function checkValidMembership(membershipType: MembershipType__1): boolean {
         console.log("checkValidMembership", membershipType);
@@ -33,27 +33,35 @@
     }
 
     async function checkProfile() {
+        let i = 1;
+        console.log("checkProfile", i);
         isLoading = true;
         try {
-            const principalId = get(authStore).identity?.getPrincipal().toString();
-            if (!principalId) return;
+            if (!get(authSignedInStore)) return;
             
-            profile = await new UserService().getUser();
+            loadingMessage = "Searching for Profile";
+            profile = await userStore.getUser();
             console.log('profile', profile);
             if (profile) {
+                loadingMessage = "Found Profile, checking membership";
                 hasValidMembership = checkValidMembership(profile.membershipType);
             } else {
+                loadingMessage = "Profile not found";
                 hasValidMembership = false;
             }
         } catch (error) {
+            loadingMessage = "Profile not found";
             console.error('Error fetching user profile:', error);
             hasValidMembership = false;
         } finally {
             isLoading = false;
+            profileChecked = true;
         }
+        i++;
     }
 
     onMount(() => {
+        console.log("onMount checkProfile");
         checkProfile();
     });
 
@@ -67,20 +75,22 @@
 </script>
 
 {#if isLoading}
-    <LocalSpinner />
+    <FullScreenSpinner message={loadingMessage} />
 {:else if $authSignedInStore}
     {#if $userIdCreatedStore?.data}
-       {#if !hasValidMembership}
+       {#if !hasValidMembership && profileChecked}
           <Header />  
           <InvalidMembershipPage />
-        {:else}
-            <Header />
-                <main class="page-wrapper">
+        {:else if profileChecked}
+            <div class="flex flex-col min-h-screen">
+                <Header />
+                <main class="flex-grow page-wrapper">
                     {@render children()}
                 </main>
-            <Footer />
+                <Footer />
+            </div>
         {/if}
-    {:else}
+    {:else if profileChecked}
         <MembershipProfile />
     {/if}
 {:else}
