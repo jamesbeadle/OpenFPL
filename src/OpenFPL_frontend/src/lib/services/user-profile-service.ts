@@ -2,7 +2,7 @@ import { userStore } from "$lib/stores/user-store";
 import { toasts } from "$lib/stores/toasts-store";
 import { userIdCreatedStore } from "$lib/stores/user-control-store";
 import { initErrorSignOut } from "./auth-services";
-import { authStore } from "$lib/stores/auth-store";
+import { authSignedInStore } from "$lib/derived/auth.derived";
 import type { OptionIdentity } from "$lib/types/identity";
 import type { CombinedProfile } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { get } from "svelte/store";
@@ -17,8 +17,7 @@ export const initUserProfile = async ({
   if (!identity) return { result: "skip" };
 
   try {
-    const principalId = get(authStore).identity?.getPrincipal().toString();
-    if (!principalId) return { result: "skip" };
+    if (!get(authSignedInStore)) return { result: "skip" };
 
     const profile = await userStore.getUser();
     console.log("profile in initUserProfile", profile);

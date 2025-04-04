@@ -42,7 +42,6 @@ class="flex items-center justify-between py-2 border-b border-gray-700 cursor-po
 <div class="w-2/12">
   £{(player.valueQuarterMillions / 4).toFixed(2)}m
 </div>
-<div class="w-2/12">0</div>
 <div class="flex items-center justify-center w-2/12">
   {#if disableReasons[index]}
     <span class="text-center text-xxs">{disableReasons[index]}</span>

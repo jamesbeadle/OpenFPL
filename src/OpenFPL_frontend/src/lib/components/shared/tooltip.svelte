@@ -8,7 +8,7 @@
 
   let { text, children }: Props = $props();
 
-  let tooltipVisible = false;
+  let tooltipVisible = $state(false);
 
   function toggleTooltip() {
     tooltipVisible = !tooltipVisible;
@@ -17,24 +17,22 @@
 
 <button
   class="relative z-10 flex items-center"
-  on:mouseenter={() => (tooltipVisible = true)}
-  on:mouseleave={() => (tooltipVisible = false)}
-  on:click={toggleTooltip}
+  onmouseenter={() => (tooltipVisible = true)}
+  onmouseleave={() => (tooltipVisible = false)}
+  onclick={toggleTooltip}
 >
   {@render children()}
   {#if tooltipVisible}
-    <button
+    <div
       class="absolute z-10 w-auto bg-black text-white text-sm rounded-md shadow-lg p-4 min-w-[200px] text-center whitespace-normal hidden md:flex"
       style="transform: translate(-50%, -50%); top: 100%; left: 80%;"
-      on:click={toggleTooltip}
     >
       {text}
-    </button>
-    <button
+    </div>
+    <div
       class="absolute z-10 w-auto bg-black text-white text-sm rounded-md shadow-lg p-4 min-w-[200px] text-center whitespace-normal flex md:hidden"
-      on:click={toggleTooltip}
     >
       {text}
-    </button>
+    </div>
   {/if}
 </button>
