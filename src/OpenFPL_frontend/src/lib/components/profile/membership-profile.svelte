@@ -1,5 +1,5 @@
 <script lang="ts">
-  import LocalSpinner from "../shared/local-spinner.svelte";
+  import FullScreenSpinner from "../shared/full-screen-spinner.svelte";
   import Header from "$lib/shared/Header.svelte";
   import CopyPrincipal from "./copy-principal.svelte";
   import MembershipLinkedModal from "./membership-linked-modal.svelte";
@@ -14,17 +14,14 @@
 
   let membershipLinked = $state(false);
   let notLinked = $state(true);
+  let loadingMessage = $state("");
 
   onMount(async () => {
     await checkMembership();
   });
 
   async function checkMembership(){
-    toasts.addToast({
-      type: "info",
-      message: "Checking membership...",
-      duration: 2000,
-    });
+    loadingMessage = "Checking ICFC Link Status";
     await checkICFCLinkStatus();
   }
 
@@ -42,7 +39,7 @@
           toasts.addToast({
             type: "info",
             message: "ICFC Membership Pending Verification",
-            duration: 2000,
+            duration: 4000,
           });
         } else if ('Verified' in icfcLinkStatus) {
           membershipLinked = true;
@@ -50,24 +47,24 @@
           toasts.addToast({
             type: "success",
             message: "ICFC Membership Linked",
-            duration: 2000,
+            duration: 4000,
           })
           userIdCreatedStore.set({ data: principalId, certified: true });
-          window.location.href = "/";
+          //window.location.href = "/";
         } 
       } else {
             notLinked = true;
             toasts.addToast({
               type: "error",
-              message: "ICFC Membership Not Linked",
-              duration: 2000,
+              message: "Please Start ICFC Membership Link Process",
+              duration: 4000,
           })
       }
     } catch (error) {
       console.error("Error checking ICFC link status:", error);
       toasts.addToast({
         type: "error",
-        message: "Failed to check ICFC link status",
+        message: "Error Checking ICFC Link Status",
         duration: 4000,
       });
     } finally {
@@ -78,11 +75,7 @@
   async function handleLinkICFCProfile(){
     try {
       isLoading = true;
-      toasts.addToast({
-        type: "info",
-        message: "Linking ICFC Membership...",
-        duration: 2000,
-      });
+      loadingMessage = "Linking ICFC Membership";
       const result = await userStore.linkICFCProfile();
       console.log('Link result:', result);
       
@@ -99,15 +92,16 @@
       } else if (result.alreadyExists) {
         toasts.addToast({
           type: "info",
-          message: "ICFC Membership already started. Refreshing status...",
-          duration: 2000,
+          message: "This Principal ID is already linked to an ICFC Membership",
+          duration: 4000,
         });
+        loadingMessage = "Re-checking ICFC Link Status";
         await checkMembership();
       } else {
         toasts.addToast({
           type: "error",
           message: "Failed to link ICFC Membership",
-          duration: 2000,
+          duration: 5000,
         });
       }
     } catch (error) {
@@ -115,7 +109,7 @@
       toasts.addToast({
         type: "error",
         message: "Failed to link ICFC Membership",
-        duration: 4000,
+        duration: 5000,
       });
     } finally {
       isLoading = false;
@@ -124,7 +118,7 @@
 </script>
 
 {#if isLoading}
-<LocalSpinner />
+<FullScreenSpinner message={loadingMessage} />
 {:else}
 <div class="flex flex-col w-full h-full mx-auto">
   <Header />
@@ -148,10 +142,10 @@
           Please link your OpenFPL principal ID within your ICFC profile to play and then click the button below to refresh your status.
         </p>
         <div class="mb-6">
-          <CopyPrincipal />
+          <CopyPrincipal bgColor="bg-transparent" borderColor="border-BrandGreen" />
         </div>
         {#if !notLinked}
-          <p class="mb-4 text-lg text-BrandGreen">
+          <p class="px-2 mb-4 text-lg text-BrandGreen">
             Your ICFC membership is pending verification. Please click the button below to finalize the linking process.
           </p>
         {/if}

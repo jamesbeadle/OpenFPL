@@ -31,6 +31,7 @@ main {
 .fpl-button {
   background-color: #2ce3a6;
   color: black;
+  border: 1px solid black;
   @apply hover:border-BrandSlateGray hover:bg-BrandGreen/80;
 }
 
@@ -236,7 +237,7 @@ input {
 }
 
 .default-button {
-  @apply p-3 text-lg text-center text-black transition border border-black rounded-lg;
+  @apply px-3 py-1 text-lg text-center text-black transition border border-black rounded-lg md:px-4;
 }
 
 .bg-panel {

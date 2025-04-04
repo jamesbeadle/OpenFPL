@@ -5,15 +5,16 @@
   import { playerStore } from "$lib/stores/player-store";
   import { managerStore } from "$lib/stores/manager-store";
   import { BonusType } from "$lib/enums/BonusType";
+  import type { BonusType as BonusName } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { countryStore } from "$lib/stores/country-store";
   import { convertPositionToIndex } from "$lib/utils/helpers";
   import { leagueStore } from "$lib/stores/league-store";
   import type { Bonus } from "$lib/types/bonus";
-  
+  import type { TeamSetup } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import { authStore } from "$lib/stores/auth-store";
   import Modal from "$lib/components/shared/modal.svelte";
   import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
-    import type { TeamSetup } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-    
+  
   export let visible: boolean;
   export let fantasyTeam: Writable<TeamSetup | undefined>;
   export let bonusUsedInSession: Writable<boolean>;
@@ -208,7 +209,14 @@
     
     try{
       isSubmitting = true;
-      const isSaved = await managerStore.saveBonus($fantasyTeam, activeGameweek);
+
+      const principalId = $authStore.identity?.getPrincipal().toString() ?? "Not available";
+      const bonusPlayed = getBonusPlayed($fantasyTeam, activeGameweek);
+      const bonusPlayerId = getBonusPlayerId($fantasyTeam, activeGameweek);
+      const bonusTeamId = getBonusTeamId($fantasyTeam, activeGameweek);
+      const bonusCountryId = getBonusCountryId($fantasyTeam, activeGameweek);
+
+      const isSaved = await managerStore.saveBonus(principalId, bonusPlayed, bonusPlayerId, bonusTeamId, bonusCountryId);
 
       if (isSaved) {
         updateBonuses();
@@ -225,6 +233,107 @@
       isSubmitting = false;
       closeBonusModal();
     }
+  }
+
+  function getBonusPlayed(userFantasyTeam: TeamSetup, activeGameweek: number): BonusName {
+    let bonusPlayed: BonusName = { NoEntry: null };
+
+    if (userFantasyTeam.goalGetterGameweek === activeGameweek) {
+      bonusPlayed = { GoalGetter: null };
+    }
+
+    if (userFantasyTeam.passMasterGameweek === activeGameweek) {
+      bonusPlayed = { PassMaster: null };
+    }
+
+    if (userFantasyTeam.noEntryGameweek === activeGameweek) {
+      bonusPlayed = { NoEntry: null };
+    }
+
+    if (userFantasyTeam.teamBoostGameweek === activeGameweek) {
+      bonusPlayed = { TeamBoost: null };
+    }
+
+    if (userFantasyTeam.safeHandsGameweek === activeGameweek) {
+      bonusPlayed = { SafeHands: null };
+    }
+
+    if (userFantasyTeam.captainFantasticGameweek === activeGameweek) {
+      bonusPlayed = { CaptainFantastic: null };
+    }
+
+    if (userFantasyTeam.prospectsGameweek === activeGameweek) {
+      bonusPlayed = { Prospects: null };
+    }
+
+    if (userFantasyTeam.oneNationGameweek === activeGameweek) {
+      bonusPlayed = { OneNation: null };
+    }
+
+    if (userFantasyTeam.braceBonusGameweek === activeGameweek) {
+      bonusPlayed = { BraceBonus: null };
+    }
+
+    if (userFantasyTeam.hatTrickHeroGameweek === activeGameweek) {
+      bonusPlayed = { HatTrickHero: null };
+    }
+
+    return bonusPlayed;
+  }
+
+  function getBonusPlayerId(
+    userFantasyTeam: TeamSetup,
+    activeGameweek: number,
+  ): number {
+    let bonusPlayerId = 0;
+
+    if (userFantasyTeam.goalGetterGameweek === activeGameweek) {
+      bonusPlayerId = userFantasyTeam.goalGetterPlayerId;
+    }
+
+    if (userFantasyTeam.passMasterGameweek === activeGameweek) {
+      bonusPlayerId = userFantasyTeam.passMasterPlayerId;
+    }
+
+    if (userFantasyTeam.noEntryGameweek === activeGameweek) {
+      bonusPlayerId = userFantasyTeam.noEntryPlayerId;
+    }
+
+    if (userFantasyTeam.safeHandsGameweek === activeGameweek) {
+      bonusPlayerId = userFantasyTeam.safeHandsPlayerId;
+    }
+
+    if (userFantasyTeam.captainFantasticGameweek === activeGameweek) {
+      bonusPlayerId = userFantasyTeam.captainId;
+    }
+
+    return bonusPlayerId;
+  }
+
+  function getBonusTeamId(
+    userFantasyTeam: TeamSetup,
+    activeGameweek: number,
+  ): number {
+    let bonusTeamId = 0;
+
+    if (userFantasyTeam.teamBoostGameweek === activeGameweek) {
+      bonusTeamId = userFantasyTeam.teamBoostClubId;
+    }
+
+    return bonusTeamId;
+  }
+
+  function getBonusCountryId(
+    userFantasyTeam: TeamSetup,
+    activeGameweek: number,
+  ): number {
+    let bonusCountryId = 0;
+
+    if (userFantasyTeam.oneNationGameweek === activeGameweek) {
+      bonusCountryId = userFantasyTeam.oneNationCountryId;
+    }
+
+    return bonusCountryId;
   }
 
   $: countries = getUniqueCountries();
@@ -319,7 +428,7 @@
 
         <div class="flex items-center justify-center py-3 space-x-4">
           <button
-            class="px-4 py-2 fpl-cancel-btn default-button"
+            class="px-4 py-2 border rounded-sm border-BrandSlateGray bg-BrandRed default-button"
             type="button"
             on:click={closeBonusModal}
           >
