@@ -108,6 +108,10 @@ module UserQueries = {
         principalId : Text;
     };
 
+    public type GetICFCDataHash = {
+        principalId : Ids.PrincipalId;
+    };
+
     public type TeamSetup = {
         principalId : Text;
         username : Text;

@@ -88,6 +88,17 @@ module {
         };
       };
     };
+    public func getICFCDataHash(dto : UserQueries.GetICFCDataHash) : Result.Result<Text, Enums.Error> {
+      let icfcLink : ?UserQueries.ICFCLink = userICFCLinks.get(dto.principalId);
+      switch (icfcLink) {
+        case (null) {
+          return #err(#NotFound);
+        };
+        case (?foundICFCLink) {
+          return #ok(foundICFCLink.dataHash);
+        };
+      };
+    };
 
     public func getCombinedProfile(dto : UserQueries.GetProfile) : async Result.Result<UserQueries.CombinedProfile, Enums.Error> {
       Debug.print("get combined profile");
