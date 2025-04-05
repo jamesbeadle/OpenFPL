@@ -806,7 +806,7 @@ module {
         termsAccepted = true;
         profilePicture = icfc_profile.profilePicture;
         profilePictureType = "";
-        transfersAvailable = 3;
+        transfersAvailable = 11;
         monthlyBonusesAvailable = 2;
         bankQuarterMillions = 1400;
         playerIds = [];
