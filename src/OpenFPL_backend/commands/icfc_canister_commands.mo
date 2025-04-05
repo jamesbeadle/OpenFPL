@@ -1,6 +1,5 @@
 import ICFCEnums "mo:waterway-mops/ICFCEnums";
 import Ids "mo:waterway-mops/Ids";
-import Enums "../enums/enums";
 
 module {
     public type NotifyAppofLink = {

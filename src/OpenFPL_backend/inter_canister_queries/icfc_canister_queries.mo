@@ -1,36 +1,12 @@
 import Ids "mo:waterway-mops/Ids";
 import FootballIds "mo:waterway-mops/football/FootballIds";
-import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
-import BaseDefinitions "mo:waterway-mops/BaseDefinitions";
 import Enums "../enums/enums";
-import ICFCEnums "mo:waterway-mops/ICFCEnums";
-
-module UserQueries = {
-
-    public type GetICFCLinkStatus = {
-    };
-
-    public type CombinedProfile = {
-        username : Text;
-        termsAccepted : Bool;
-        profilePicture : ?Blob;
-        profilePictureType : Text;
-        favouriteClubId : ?FootballIds.ClubId;
-        createDate : Int;
-        displayName : Text;
-        membershipType : Enums.MembershipType;
-        membershipClaims : [MembershipClaim];
-        createdOn : Int;
-        termsAgreed : Bool;
-        membershipExpiryTime : Int;
-        favouriteLeagueId : ?FootballIds.LeagueId;
-        nationalityId : ?Ids.CountryId;
-    };
-
+module ICFCCanisterQueries {
     public type GetICFCProfile = {
+        principalId : Ids.PrincipalId;
     };
-
     public type GetICFCMembership = {
+        principalId : Ids.PrincipalId;
     };
 
     public type ICFCProfile = {
@@ -51,7 +27,7 @@ module UserQueries = {
     public type ICFCLink = {
         membershipType : Enums.MembershipType;
         principalId : Ids.PrincipalId;
-        linkStatus : ICFCEnums.ICFCLinkStatus;
+        //linkStatus : ICFCEnums.ICFCLinkStatus;
         dataHash : Text;
     };
 
@@ -90,6 +66,10 @@ module UserQueries = {
 
     public type GetTeamSetup = {
         principalId : Text;
+    };
+
+    public type GetICFCDataHash = {
+        principalId : Ids.PrincipalId;
     };
 
     public type TeamSetup = {
@@ -163,4 +143,4 @@ module UserQueries = {
         month : BaseDefinitions.CalendarMonth;
         seasonId : FootballIds.SeasonId;
     };
-};
+}
