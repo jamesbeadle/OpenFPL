@@ -32,6 +32,7 @@ import Text "mo:base/Text";
 import Time "mo:base/Time";
 import Timer "mo:base/Timer";
 import List "mo:base/List";
+import Debug "mo:base/Debug";
 
 /* ----- Canister Definition Files ----- */
 
@@ -436,7 +437,12 @@ actor Self {
 
   public shared ({ caller }) func getPlayersSnapshot(dto : AppQueries.GetPlayersSnapshot) : async Result.Result<AppQueries.PlayersSnapshot, Enums.Error> {
     assert not Principal.isAnonymous(caller);
-    assert await hasMembership(Principal.toText(caller));
+    
+    let validMembership = await hasMembership(Principal.toText(caller));
+    let managerCanister = isManagerCanister(Principal.toText(caller));
+
+    assert validMembership or managerCanister;
+
     return await seasonManager.getPlayersSnapshot(dto);
   };
 
@@ -973,8 +979,12 @@ actor Self {
   };
 
   private func postUpgradeCallback() : async () {
-    //await updateManagerCanisterWasms();
-    //await updateLeaderboardCanisterWasms();
+    seasonManager.setStableAppStatus({
+      onHold = true; version = "V.0.9.9";
+      
+    });
+        await seasonManager.updateDataHash("app_status");
+
   };
 
   /* ----- Canister Update Functions ----- */

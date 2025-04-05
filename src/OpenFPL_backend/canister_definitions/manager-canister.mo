@@ -38,6 +38,7 @@ import TrieMap "mo:base/TrieMap";
 /* ----- Queries ----- */
 
 import UserQueries "../queries/user_queries";
+import AppQueries "../queries/app_queries";
 
 
 /* ----- Commands ----- */
@@ -1335,13 +1336,12 @@ actor class _ManagerCanister() {
   private func snapshotManagers(managerGroup : Int, seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber, month : BaseDefinitions.CalendarMonth) : async () {
 
     let backend_canister = actor (Environment.BACKEND_CANISTER_ID) : actor {
-      getPlayersSnapshot : shared query (dto : DataCanister.GetPlayers) -> async DataCanister.Players;
+      getPlayersSnapshot : shared (dto : AppQueries.GetPlayersSnapshot) -> async DataCanister.Players;
     };
 
     let players = await backend_canister.getPlayersSnapshot({
-      leagueId = Environment.LEAGUE_ID;
-      gameweek;
       seasonId;
+      gameweek;
     });
 
     let managerBuffer = Buffer.fromArray<AppTypes.Manager>([]);
