@@ -127,7 +127,7 @@ module {
                         principalId = dto.principalId;
                         username = icfcProfile.username;
                         termsAccepted = foundManager.termsAccepted;
-                        profilePicture = foundManager.profilePicture;
+                        profilePicture = icfcProfile.profilePicture;
                         profilePictureType = foundManager.profilePictureType;
                         favouriteClubId = icfcProfile.favouriteClubId;
                         createDate = foundManager.createDate;
