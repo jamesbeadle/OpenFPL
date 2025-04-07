@@ -27,6 +27,21 @@ export interface Club {
   primaryColourHex: string;
 }
 export type ClubId = number;
+export interface ClubSummary {
+  clubId: ClubId;
+  clubName: string;
+  totalValue: number;
+  positionText: string;
+  primaryColour: string;
+  shirtType: ShirtType;
+  thirdColour: string;
+  secondaryColour: string;
+  position: bigint;
+  leagueId: LeagueId;
+}
+export interface ClubValueLeaderboard {
+  clubs: Array<ClubSummary>;
+}
 export interface Clubs {
   clubs: Array<Club>;
   leagueId: LeagueId;
@@ -150,6 +165,7 @@ export interface GetBettableFixtures {
   leagueId: LeagueId;
 }
 export type GetBettableLeagues = {};
+export type GetClubValueLeaderboard = {};
 export interface GetClubs {
   leagueId: LeagueId;
 }
@@ -431,8 +447,9 @@ export type Result_11 = { ok: Fixtures } | { err: Error };
 export type Result_12 = { ok: DataHashes } | { err: Error };
 export type Result_13 = { ok: Countries } | { err: Error };
 export type Result_14 = { ok: Clubs } | { err: Error };
-export type Result_15 = { ok: BettableLeagues } | { err: Error };
-export type Result_16 = { ok: BettableFixtures } | { err: Error };
+export type Result_15 = { ok: ClubValueLeaderboard } | { err: Error };
+export type Result_16 = { ok: BettableLeagues } | { err: Error };
+export type Result_17 = { ok: BettableFixtures } | { err: Error };
 export type Result_2 = { ok: PostponedFixtures } | { err: Error };
 export type Result_3 = { ok: PlayersMap } | { err: Error };
 export type Result_4 = { ok: Players } | { err: Error };
@@ -542,8 +559,9 @@ export interface _SERVICE {
   createClub: ActorMethod<[CreateClub], undefined>;
   createLeague: ActorMethod<[CreateLeague], undefined>;
   createPlayer: ActorMethod<[CreatePlayer], undefined>;
-  getBettableFixtures: ActorMethod<[GetBettableFixtures], Result_16>;
-  getBettableLeagues: ActorMethod<[GetBettableLeagues], Result_15>;
+  getBettableFixtures: ActorMethod<[GetBettableFixtures], Result_17>;
+  getBettableLeagues: ActorMethod<[GetBettableLeagues], Result_16>;
+  getClubValueLeaderboard: ActorMethod<[GetClubValueLeaderboard], Result_15>;
   getClubs: ActorMethod<[GetClubs], Result_14>;
   getCountries: ActorMethod<[GetCountries], Result_13>;
   getDataHashes: ActorMethod<[GetDataHashes], Result_12>;

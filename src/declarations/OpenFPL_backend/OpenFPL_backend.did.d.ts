@@ -270,7 +270,7 @@ export interface Manager {
 }
 export interface MembershipClaim {
   expiresOn: [] | [bigint];
-  claimedOn: bigint;
+  purchasedOn: bigint;
   membershipType: MembershipType__1;
 }
 export type MembershipType =
