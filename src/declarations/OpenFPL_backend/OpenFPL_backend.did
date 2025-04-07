@@ -461,9 +461,9 @@ type MembershipType =
  };
 type MembershipClaim = 
  record {
-   claimedOn: int;
    expiresOn: opt int;
    membershipType: MembershipType__1;
+   purchasedOn: int;
  };
 type Manager = 
  record {

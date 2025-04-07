@@ -411,7 +411,7 @@ export const idlFactory = ({ IDL }) => {
   const Result_7 = IDL.Variant({ ok: PostponedFixtures, err: Error });
   const MembershipClaim = IDL.Record({
     expiresOn: IDL.Opt(IDL.Int),
-    claimedOn: IDL.Int,
+    purchasedOn: IDL.Int,
     membershipType: MembershipType__1,
   });
   const LeagueId = IDL.Nat16;
