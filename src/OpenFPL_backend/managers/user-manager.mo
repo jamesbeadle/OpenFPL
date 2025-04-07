@@ -129,7 +129,7 @@ module {
                         termsAccepted = foundManager.termsAccepted;
                         profilePicture = foundManager.profilePicture;
                         profilePictureType = foundManager.profilePictureType;
-                        favouriteClubId = foundManager.favouriteClubId;
+                        favouriteClubId = icfcProfile.favouriteClubId;
                         createDate = foundManager.createDate;
                         favouriteLeagueId = icfcProfile.favouriteLeagueId;
                         membershipClaims = icfcProfile.membershipClaims;
