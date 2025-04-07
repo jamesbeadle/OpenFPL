@@ -1,5 +1,7 @@
 import FootballIds "mo:waterway-mops/football/FootballIds";
 import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
+import BaseDefinitions "mo:waterway-mops/BaseDefinitions";
+import Ids "mo:waterway-mops/Ids";
 import DataCanister "canister:data_canister";
 
 module AppQueries {
@@ -18,6 +20,7 @@ module AppQueries {
         allTimeMonthlyHighScoreRewardRate : Nat64;
         allTimeSeasonHighScoreRewardRate : Nat64;
     };
+
     public type GetPlayersSnapshot = {
         seasonId: FootballIds.SeasonId;
         gameweek: FootballDefinitions.GameweekNumber;
@@ -27,39 +30,23 @@ module AppQueries {
         players: [DataCanister.Player]
     };
 
-
     public type GetWeeklyLeaderboard = {
         seasonId : FootballIds.SeasonId;
         gameweek : FootballDefinitions.GameweekNumber;
-        limit : Nat;
-        offset : Nat;
+        page: Nat;
         searchTerm : Text;
     };
 
     public type WeeklyLeaderboard = {
         seasonId : FootballIds.SeasonId;
         gameweek : FootballDefinitions.GameweekNumber;
-        entries : [LeaderboardEntry];
+        entries : [WeeklyLeaderboardEntry];
+        page: Nat;
         totalEntries : Nat;
+        searchTerm : Text;
     };
 
-    public type GetMonthlyLeaderboard = {
-
-    };
-
-    public type MonthlyLeaderboard = {
-
-    };
-
-    public type GetSeasonLeaderboard = {
-
-    };
-
-    public type SeasonLeaderboard = {
-
-    };
-
-    public type LeaderboardEntry = {
+    public type WeeklyLeaderboardEntry = {
         principalId : Text;
         username: Text;
         displayName: Text;
@@ -67,7 +54,63 @@ module AppQueries {
         profilePicture : ?Blob;
         position : Nat;
         positionText : Text;
-        username : Text;
         points : Int16;
+        prize: Nat;
+    };
+
+    public type GetMonthlyLeaderboard = {
+        seasonId : FootballIds.SeasonId;
+        month : BaseDefinitions.CalendarMonth;
+        club: FootballIds.ClubId;
+        page: Nat;
+        searchTerm : Text;
+    };
+
+    public type MonthlyLeaderboard = {
+        seasonId : FootballIds.SeasonId;
+        month : BaseDefinitions.CalendarMonth;
+        entries : [MonthlyLeaderboardEntry];
+        page: Nat;
+        totalEntries : Nat;
+        searchTerm : Text;
+    };
+
+    public type MonthlyLeaderboardEntry = {
+        principalId : Text;
+        username: Text;
+        displayName: Text;
+        nationality: ?Ids.CountryId;
+        profilePicture : ?Blob;
+        position : Nat;
+        positionText : Text;
+        points : Int16;
+        clubId: FootballIds.ClubId;
+        prize: Nat;
+    };
+
+    public type GetSeasonLeaderboard = {
+        seasonId : FootballIds.SeasonId;
+        page: Nat;
+        searchTerm : Text;
+    };
+
+    public type SeasonLeaderboard = {
+        seasonId : FootballIds.SeasonId;
+        entries : [SeasonLeaderboardEntry];
+        page: Nat;
+        totalEntries : Nat;
+        searchTerm : Text;
+    };
+
+    public type SeasonLeaderboardEntry = {
+        principalId : Text;
+        username: Text;
+        displayName: Text;
+        nationality: ?Ids.CountryId;
+        profilePicture : ?Blob;
+        position : Nat;
+        positionText : Text;
+        points : Int16;
+        prize: Nat;
     };
 }

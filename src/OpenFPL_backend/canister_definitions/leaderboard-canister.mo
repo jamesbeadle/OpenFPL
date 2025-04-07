@@ -14,9 +14,9 @@ import CanisterIds "mo:waterway-mops/CanisterIds";
 import FootballIds "mo:waterway-mops/football/FootballIds";
 import BaseDefinitions "mo:waterway-mops/BaseDefinitions";
 import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
-import LeaderboardQueries "../../OpenFPL_backend/queries/leaderboard_queries";
 import LeaderboardUtilities "../utilities/leaderboard_utilities";
 import AppTypes "../types/app_types";
+import AppQueries "../frontend_queries/app_queries";
 
 actor class _LeaderboardCanister() {
 
@@ -27,6 +27,173 @@ actor class _LeaderboardCanister() {
   private stable var entryUpdatesAllowed = false;
 
   private let LEADERBOARD_ROW_COUNT_LIMIT = 25;
+  /* Queries */
+  
+  public shared query ({ caller }) func getWeeklyRewardLeaderboard(seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber) : async ?AppQueries.WeeklyLeaderboard {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == CanisterIds.OPENFPL_BACKEND_CANISTER_ID;
+
+    var currentLeaderboard : ?AppTypes.WeeklyLeaderboard = null;
+
+    currentLeaderboard := Array.find(
+      weekly_leaderboards,
+      func(leaderboard : AppTypes.WeeklyLeaderboard) : Bool {
+        leaderboard.seasonId == seasonId and leaderboard.gameweek == gameweek;
+      },
+    );
+
+    switch (currentLeaderboard) {
+      case (null) { return null };
+      case (?foundLeaderboard) {
+
+        let entriesArray = List.toArray(foundLeaderboard.entries);
+        let sortedArray = Array.sort(
+          entriesArray,
+          func(a : AppTypes.LeaderboardEntry, b : AppTypes.LeaderboardEntry) : Order.Order {
+            if (a.points < b.points) { return #greater };
+            if (a.points == b.points) { return #equal };
+            return #less;
+          },
+        );
+
+        let cutoffIndex = 99;
+        let lastQualifyingPoints = sortedArray[cutoffIndex].points;
+        var lastIndexForPrizes = cutoffIndex;
+        let totalEntries : Nat = List.size(foundLeaderboard.entries);
+
+        if (totalEntries <= 0) {
+          return null;
+        };
+
+        let totalEntriesIndex : Nat = totalEntries - 1;
+
+        while (
+          lastIndexForPrizes < totalEntriesIndex and List.toArray(foundLeaderboard.entries)[lastIndexForPrizes + 1].points == lastQualifyingPoints
+        ) {
+          lastIndexForPrizes := lastIndexForPrizes + 1;
+        };
+
+        let indexes : [Nat] = Array.tabulate<Nat>(Array.size(sortedArray), func(i : Nat) : Nat { i });
+
+        let entriesWithIndex : [(AppTypes.LeaderboardEntry, Nat)] = Array.map<Nat, (AppTypes.LeaderboardEntry, Nat)>(indexes, func(i : Nat) : (AppTypes.LeaderboardEntry, Nat) { (sortedArray[i], i) });
+
+        let qualifyingEntriesWithIndex = Array.filter(
+          entriesWithIndex,
+          func(pair : (AppTypes.LeaderboardEntry, Nat)) : Bool {
+            let (_, index) = pair;
+            index <= lastIndexForPrizes;
+          },
+        );
+
+        let qualifyingEntries = Array.map(
+          qualifyingEntriesWithIndex,
+          func(pair : (AppTypes.LeaderboardEntry, Nat)) : AppTypes.LeaderboardEntry {
+            let (entry, _) = pair;
+            entry;
+          },
+        );
+        return ?{
+          seasonId = seasonId;
+          gameweek = gameweek;
+          entries = qualifyingEntries;
+          totalEntries = Array.size(qualifyingEntries);
+        };
+      };
+    };
+  };
+
+  public shared ({ caller }) func getWeeklyLeaderboardEntries(dto : AppQueries.GetWeeklyLeaderboard) : async ?AppQueries.WeeklyLeaderboard {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == CanisterIds.OPENFPL_BACKEND_CANISTER_ID;
+
+    var currentLeaderboard : ?AppTypes.WeeklyLeaderboard = null;
+
+    currentLeaderboard := Array.find(
+      weekly_leaderboards,
+      func(leaderboard : AppTypes.WeeklyLeaderboard) : Bool {
+        leaderboard.seasonId == dto.seasonId and leaderboard.gameweek == dto.gameweek;
+      },
+    );
+
+    switch (currentLeaderboard) {
+      case (null) {
+        return null;
+      };
+      case (?foundLeaderboard) {
+        let filteredEntries = List.filter<AppTypes.LeaderboardEntry>(
+          foundLeaderboard.entries,
+          func(entry : AppTypes.LeaderboardEntry) : Bool {
+            let term = dto.searchTerm;
+            Text.startsWith(entry.username, #text term);
+          },
+        );
+
+        let sortedGameweekEntries = Array.sort(
+          List.toArray(filteredEntries),
+          func(entry1 : AppTypes.LeaderboardEntry, entry2 : AppTypes.LeaderboardEntry) : Order.Order {
+            if (entry1.points < entry2.points) { return #greater };
+            if (entry1.points == entry2.points) { return #equal };
+            return #less;
+          },
+        );
+
+        let droppedEntries = List.drop<AppTypes.LeaderboardEntry>(List.fromArray(sortedGameweekEntries), dto.offset);
+        let paginatedEntries = List.take<AppTypes.LeaderboardEntry>(droppedEntries, LEADERBOARD_ROW_COUNT_LIMIT);
+
+        let leaderboardDTO : LeaderboardQueries.WeeklyLeaderboard = {
+          seasonId = foundLeaderboard.seasonId;
+          gameweek = foundLeaderboard.gameweek;
+          entries = List.toArray(paginatedEntries);
+          totalEntries = List.size(foundLeaderboard.entries);
+        };
+
+        return ?leaderboardDTO;
+      };
+    };
+  };
+
+  public shared query ({ caller }) func getWeeklyLeaderboardEntry(seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber, principalId : Text) : async ?LeaderboardQueries.LeaderboardEntry {
+    assert not Principal.isAnonymous(caller);
+    let callerPrincipalId = Principal.toText(caller);
+    assert callerPrincipalId == CanisterIds.OPENFPL_BACKEND_CANISTER_ID;
+
+    var currentLeaderboard : ?AppTypes.WeeklyLeaderboard = null;
+
+    currentLeaderboard := Array.find(
+      weekly_leaderboards,
+      func(leaderboard : AppTypes.WeeklyLeaderboard) : Bool {
+        leaderboard.seasonId == seasonId and leaderboard.gameweek == gameweek;
+      },
+    );
+
+    switch (currentLeaderboard) {
+      case (null) {
+        return null;
+      };
+      case (?foundLeaderboard) {
+        let _ = List.find<AppTypes.LeaderboardEntry>(
+          foundLeaderboard.entries,
+          func(entry : LeaderboardQueries.LeaderboardEntry) : Bool {
+            return entry.principalId == principalId;
+          },
+        );
+      };
+    };
+  };
+  
+  public shared ({ caller }) func getTotalLeaderboards() : async Nat {
+    assert not Principal.isAnonymous(caller);
+    let callerPrincipalId = Principal.toText(caller);
+    assert callerPrincipalId == CanisterIds.OPENFPL_BACKEND_CANISTER_ID;
+
+    return Array.size(weekly_leaderboards) + Array.size(monthly_leaderboards) + Array.size(season_leaderboards);
+  };
+
+  /* Commands */
+
+  /* Chunked Transfer Code for Large Leaderboards */
 
   public shared ({ caller }) func prepareForUpdate(
     seasonId : FootballIds.SeasonId,
@@ -97,6 +264,9 @@ actor class _LeaderboardCanister() {
 
     await calculateLeaderboards(seasonId, gameweek, month);
   };
+
+
+  /* ----- Private Data Modification Functions ----- */
 
   private func addGameweekLeaderboardChunk(seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber, entriesChunk : [AppTypes.LeaderboardEntry]) {
     var currentLeaderboard : ?AppTypes.WeeklyLeaderboard = null;
@@ -392,169 +562,6 @@ actor class _LeaderboardCanister() {
     };
 
     return Buffer.toArray(buffer);
-  };
-
-
-  public shared query ({ caller }) func getWeeklyRewardLeaderboard(seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber) : async ?LeaderboardQueries.WeeklyLeaderboard {
-    assert not Principal.isAnonymous(caller);
-    let principalId = Principal.toText(caller);
-    assert principalId == CanisterIds.OPENFPL_BACKEND_CANISTER_ID;
-
-    var currentLeaderboard : ?AppTypes.WeeklyLeaderboard = null;
-
-    currentLeaderboard := Array.find(
-      weekly_leaderboards,
-      func(leaderboard : AppTypes.WeeklyLeaderboard) : Bool {
-        leaderboard.seasonId == seasonId and leaderboard.gameweek == gameweek;
-      },
-    );
-
-    switch (currentLeaderboard) {
-      case (null) { return null };
-      case (?foundLeaderboard) {
-
-        let entriesArray = List.toArray(foundLeaderboard.entries);
-        let sortedArray = Array.sort(
-          entriesArray,
-          func(a : AppTypes.LeaderboardEntry, b : AppTypes.LeaderboardEntry) : Order.Order {
-            if (a.points < b.points) { return #greater };
-            if (a.points == b.points) { return #equal };
-            return #less;
-          },
-        );
-
-        let cutoffIndex = 99;
-        let lastQualifyingPoints = sortedArray[cutoffIndex].points;
-        var lastIndexForPrizes = cutoffIndex;
-        let totalEntries : Nat = List.size(foundLeaderboard.entries);
-
-        if (totalEntries <= 0) {
-          return null;
-        };
-
-        let totalEntriesIndex : Nat = totalEntries - 1;
-
-        while (
-          lastIndexForPrizes < totalEntriesIndex and List.toArray(foundLeaderboard.entries)[lastIndexForPrizes + 1].points == lastQualifyingPoints
-        ) {
-          lastIndexForPrizes := lastIndexForPrizes + 1;
-        };
-
-        let indexes : [Nat] = Array.tabulate<Nat>(Array.size(sortedArray), func(i : Nat) : Nat { i });
-
-        let entriesWithIndex : [(AppTypes.LeaderboardEntry, Nat)] = Array.map<Nat, (AppTypes.LeaderboardEntry, Nat)>(indexes, func(i : Nat) : (AppTypes.LeaderboardEntry, Nat) { (sortedArray[i], i) });
-
-        let qualifyingEntriesWithIndex = Array.filter(
-          entriesWithIndex,
-          func(pair : (AppTypes.LeaderboardEntry, Nat)) : Bool {
-            let (_, index) = pair;
-            index <= lastIndexForPrizes;
-          },
-        );
-
-        let qualifyingEntries = Array.map(
-          qualifyingEntriesWithIndex,
-          func(pair : (AppTypes.LeaderboardEntry, Nat)) : AppTypes.LeaderboardEntry {
-            let (entry, _) = pair;
-            entry;
-          },
-        );
-        return ?{
-          seasonId = seasonId;
-          gameweek = gameweek;
-          entries = qualifyingEntries;
-          totalEntries = Array.size(qualifyingEntries);
-        };
-      };
-    };
-  };
-
-  public shared ({ caller }) func getWeeklyLeaderboardEntries(dto : LeaderboardQueries.GetWeeklyLeaderboard) : async ?LeaderboardQueries.WeeklyLeaderboard {
-    assert not Principal.isAnonymous(caller);
-    let principalId = Principal.toText(caller);
-    assert principalId == CanisterIds.OPENFPL_BACKEND_CANISTER_ID;
-
-    var currentLeaderboard : ?AppTypes.WeeklyLeaderboard = null;
-
-    currentLeaderboard := Array.find(
-      weekly_leaderboards,
-      func(leaderboard : AppTypes.WeeklyLeaderboard) : Bool {
-        leaderboard.seasonId == dto.seasonId and leaderboard.gameweek == dto.gameweek;
-      },
-    );
-
-    switch (currentLeaderboard) {
-      case (null) {
-        return null;
-      };
-      case (?foundLeaderboard) {
-        let filteredEntries = List.filter<AppTypes.LeaderboardEntry>(
-          foundLeaderboard.entries,
-          func(entry : AppTypes.LeaderboardEntry) : Bool {
-            let term = dto.searchTerm;
-            Text.startsWith(entry.username, #text term);
-          },
-        );
-
-        let sortedGameweekEntries = Array.sort(
-          List.toArray(filteredEntries),
-          func(entry1 : AppTypes.LeaderboardEntry, entry2 : AppTypes.LeaderboardEntry) : Order.Order {
-            if (entry1.points < entry2.points) { return #greater };
-            if (entry1.points == entry2.points) { return #equal };
-            return #less;
-          },
-        );
-
-        let droppedEntries = List.drop<AppTypes.LeaderboardEntry>(List.fromArray(sortedGameweekEntries), dto.offset);
-        let paginatedEntries = List.take<AppTypes.LeaderboardEntry>(droppedEntries, LEADERBOARD_ROW_COUNT_LIMIT);
-
-        let leaderboardDTO : LeaderboardQueries.WeeklyLeaderboard = {
-          seasonId = foundLeaderboard.seasonId;
-          gameweek = foundLeaderboard.gameweek;
-          entries = List.toArray(paginatedEntries);
-          totalEntries = List.size(foundLeaderboard.entries);
-        };
-
-        return ?leaderboardDTO;
-      };
-    };
-  };
-
-  public shared query ({ caller }) func getWeeklyLeaderboardEntry(seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber, principalId : Text) : async ?LeaderboardQueries.LeaderboardEntry {
-    assert not Principal.isAnonymous(caller);
-    let callerPrincipalId = Principal.toText(caller);
-    assert callerPrincipalId == CanisterIds.OPENFPL_BACKEND_CANISTER_ID;
-
-    var currentLeaderboard : ?AppTypes.WeeklyLeaderboard = null;
-
-    currentLeaderboard := Array.find(
-      weekly_leaderboards,
-      func(leaderboard : AppTypes.WeeklyLeaderboard) : Bool {
-        leaderboard.seasonId == seasonId and leaderboard.gameweek == gameweek;
-      },
-    );
-
-    switch (currentLeaderboard) {
-      case (null) {
-        return null;
-      };
-      case (?foundLeaderboard) {
-        let _ = List.find<AppTypes.LeaderboardEntry>(
-          foundLeaderboard.entries,
-          func(entry : LeaderboardQueries.LeaderboardEntry) : Bool {
-            return entry.principalId == principalId;
-          },
-        );
-      };
-    };
-  };
-  
-  public shared ({ caller }) func getTotalLeaderboards() : async Nat {
-    assert not Principal.isAnonymous(caller);
-    let callerPrincipalId = Principal.toText(caller);
-    assert callerPrincipalId == CanisterIds.OPENFPL_BACKEND_CANISTER_ID;
-
-    return Array.size(weekly_leaderboards) + Array.size(monthly_leaderboards) + Array.size(season_leaderboards);
   };
 
   system func preupgrade() {};

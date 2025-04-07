@@ -10,10 +10,9 @@ import Enums "mo:waterway-mops/Enums";
 import FootballIds "mo:waterway-mops/football/FootballIds";
 import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
 import BaseQueries "mo:waterway-mops/queries/BaseQueries";
-import AppCommands "../../OpenFPL_backend/commands/app_commands";
 import AppTypes "../types/app_types";
 import DataCanister "canister:data_canister";
-import AppQueries "../queries/app_queries";
+import AppQueries "../frontend_queries/app_queries";
 
 module {
 
@@ -252,13 +251,6 @@ module {
         version = appStatus.version;
       };
       await updateDataHash("app_status");
-    };
-
-    public func updateSystemStatus(dto : AppCommands.UpdateSystemStatus) {
-      appStatus := {
-        onHold = dto.onHold;
-        version = dto.version;
-      };
     };
   }
 

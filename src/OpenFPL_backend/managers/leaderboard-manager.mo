@@ -22,7 +22,6 @@ import Nat64 "mo:base/Nat64";
 import Int "mo:base/Int";
 import RewardManager "reward-manager";
 import AppTypes "../types/app_types";
-import LeaderboardQueries "../queries/leaderboard_queries";
 import LeaderboardCanister "../canister_definitions/leaderboard-canister";
 
 module {
