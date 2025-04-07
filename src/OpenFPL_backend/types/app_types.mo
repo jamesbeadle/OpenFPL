@@ -224,7 +224,7 @@ module AppTypes {
 
   public type MembershipClaim = {
     membershipType : Enums.MembershipType;
-    claimedOn : Int;
+    purchasedOn : Int;
     expiresOn : ?Int;
   };
 
