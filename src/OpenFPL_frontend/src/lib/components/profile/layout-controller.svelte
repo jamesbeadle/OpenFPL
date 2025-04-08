@@ -81,7 +81,7 @@
           <Header />  
           <InvalidMembershipPage />
         {:else if profileChecked}
-            <div class="flex flex-col min-h-screen">
+            <div class="flex flex-col min-h-screen bg-background">
                 <Header />
                 <main class="flex-grow page-wrapper">
                     {@render children()}
@@ -96,7 +96,7 @@
     {#if page.route.id === '/'}
         <LandingPage />
     {:else}
-        <div class="flex flex-col min-h-screen">
+        <div class="flex flex-col min-h-screen bg-background">
             <Header />
             <main class="flex-grow page-wrapper">
                 {@render children()}

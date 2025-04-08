@@ -271,6 +271,7 @@ class StoreManager {
         if (!updatedICFCDataHash) {
           return;
         }
+        userStore.set(updatedICFCDataHash);
         setProfileToDB(updatedICFCDataHash);
     }
   }

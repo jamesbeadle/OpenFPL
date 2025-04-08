@@ -19,7 +19,6 @@
   let bannerVisible = false;
 
   const urlParams = browser ? new URLSearchParams(window.location.search) : null;
-  const showWelcome = urlParams?.get('welcome') === 'true';
 
   onMount(async () => {
     await userStore.sync();
