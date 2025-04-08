@@ -5,6 +5,7 @@
     import { get } from 'svelte/store';
     import { onMount, type Snippet } from 'svelte';
     import type { CombinedProfile, MembershipType__1 } from '../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did';
+    import { page } from '$app/state';
     
     import Header from '$lib/shared/Header.svelte';
     import Footer from '$lib/shared/Footer.svelte';
@@ -33,8 +34,6 @@
     }
 
     async function checkProfile() {
-        let i = 1;
-        console.log("checkProfile", i);
         isLoading = true;
         try {
             if (!get(authSignedInStore)) return;
@@ -55,9 +54,9 @@
             hasValidMembership = false;
         } finally {
             isLoading = false;
+            console.log("checkProfile finished");
             profileChecked = true;
         }
-        i++;
     }
 
     onMount(() => {
@@ -77,11 +76,11 @@
 {#if isLoading}
     <FullScreenSpinner message={loadingMessage} />
 {:else if $authSignedInStore}
-    {#if $userIdCreatedStore?.data}
+    <!-- {#if $userIdCreatedStore?.data}
        {#if !hasValidMembership && profileChecked}
           <Header />  
           <InvalidMembershipPage />
-        {:else if profileChecked}
+        {:else if profileChecked} -->
             <div class="flex flex-col min-h-screen">
                 <Header />
                 <main class="flex-grow page-wrapper">
@@ -89,10 +88,20 @@
                 </main>
                 <Footer />
             </div>
-        {/if}
+        <!-- {/if}
     {:else if profileChecked}
         <MembershipProfile />
-    {/if}
+    {/if} -->
 {:else}
-    <LandingPage />
+    {#if page.route.id === '/'}
+        <LandingPage />
+    {:else}
+        <div class="flex flex-col min-h-screen">
+            <Header />
+            <main class="flex-grow page-wrapper">
+                {@render children()}
+            </main>
+            <Footer />
+        </div>
+    {/if}
 {/if}
