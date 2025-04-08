@@ -76,11 +76,11 @@
 {#if isLoading}
     <FullScreenSpinner message={loadingMessage} />
 {:else if $authSignedInStore}
-    <!-- {#if $userIdCreatedStore?.data}
+    {#if $userIdCreatedStore?.data}
        {#if !hasValidMembership && profileChecked}
           <Header />  
           <InvalidMembershipPage />
-        {:else if profileChecked} -->
+        {:else if profileChecked}
             <div class="flex flex-col min-h-screen">
                 <Header />
                 <main class="flex-grow page-wrapper">
@@ -88,10 +88,10 @@
                 </main>
                 <Footer />
             </div>
-        <!-- {/if}
+        {/if}
     {:else if profileChecked}
         <MembershipProfile />
-    {/if} -->
+    {/if}
 {:else}
     {#if page.route.id === '/'}
         <LandingPage />
