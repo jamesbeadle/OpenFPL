@@ -4,6 +4,7 @@
   import { seasonStore } from "$lib/stores/season-store";
   import { leagueStore } from "$lib/stores/league-store";
   import { authSignedInStore } from "$lib/derived/auth.derived";
+  import { userIdCreatedStore } from '$lib/stores/user-control-store';
   import { appStore } from "$lib/stores/app-store";
   import { userStore } from "$lib/stores/user-store";
   import { storeManager } from "$lib/managers/store-manager";
@@ -16,10 +17,10 @@
   import TabContainer from "$lib/components/shared/tab-container.svelte";
   import FullScreenSpinner from "$lib/components/shared/full-screen-spinner.svelte";
 
-  let activeTab: string = "fixtures";
-  let isLoading = true;
-  let loadingMessage = "Loading";
-  let seasonName = "";
+  let activeTab: string = $state("fixtures");
+  let isLoading = $state(true);
+  let loadingMessage = $state("Loading");
+  let seasonName = $state("");
 
   const tabs = [
     { id: "fixtures", label: "Fixtures", authOnly: false },
@@ -28,26 +29,31 @@
     { id: "league-table", label: "Table", authOnly: false },
   ];
 
-  onMount(async () => {
-    if(!$authSignedInStore) {
+  onMount(() => {
+    if (!$authSignedInStore) {
       isLoading = false;
-      return;
     }
-    loadingMessage = "Loading Data";
-    try {
-      await Promise.all([
-        storeManager.syncStores(),
-        appStore.checkServerVersion(),
-        userStore.sync()
-      ]);
-      loadingMessage = "Getting Season Name";
-      loadCurrentStatusDetails();
-      loadingMessage = "Loading Complete";
-    } catch (error) {
-      console.error('Error loading data:', error);
-      loadingMessage = "Error Loading Data";
+  });
+
+  $effect(() => {
+    if ($userIdCreatedStore?.data) {
+        isLoading = true;
+        loadingMessage = "Loading Data";
+        Promise.all([
+            storeManager.syncStores(),
+            appStore.checkServerVersion(),
+            userStore.sync()
+        ]).then(() => {
+            loadingMessage = "Getting Season Name";
+            loadCurrentStatusDetails();
+            loadingMessage = "Loading Complete";
+        }).catch(error => {
+            console.error('Error loading data:', error);
+            loadingMessage = "Error Loading Data";
+        }).finally(() => {
+            isLoading = false;
+        });
     }
-    isLoading = false;
   });
 
   async function loadCurrentStatusDetails(){
