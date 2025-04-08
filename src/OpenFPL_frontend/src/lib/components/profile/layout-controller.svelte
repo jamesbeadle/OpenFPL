@@ -33,8 +33,6 @@
     }
 
     async function checkProfile() {
-        let i = 1;
-        console.log("checkProfile", i);
         isLoading = true;
         try {
             if (!get(authSignedInStore)) return;
@@ -57,7 +55,6 @@
             isLoading = false;
             profileChecked = true;
         }
-        i++;
     }
 
     onMount(() => {
