@@ -3,6 +3,14 @@
     import OpenFplIconWithText from "$lib/icons/OpenFPLIconWithText.svelte";
     import { isBusy } from "$lib/stores/busy-store";
     import { signIn } from "$lib/services/auth-services";
+    import { type AuthSignInParams } from "$lib/stores/auth-store"
+
+    async function handleLogin() {
+    let params: AuthSignInParams = {
+      domain: import.meta.env.VITE_AUTH_PROVIDER_URL,
+    };
+    await signIn(params);
+  }
 
 </script>
 
@@ -22,7 +30,7 @@
         <div class="mx-2 space-y-4">
             <button 
                 class="flex items-center justify-center w-full py-2 mr-8 rounded lg:mx-0 bg-BrandGrayShade1 hover:bg-BrandGrayShade2"
-                onclick={async () => await signIn({})} disabled={$isBusy}
+                onclick={handleLogin} disabled={$isBusy}
             >
               <span class="mr-2"><IcpLogo /></span> Internet Identity
             </button>

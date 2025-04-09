@@ -36,7 +36,7 @@
     const identity = get(authStore).identity;
     if (identity) {
       try {
-        loadingMessage = "Initalizing User Layout";
+        loadingMessage = "Initalizing User Profile";
         await initUserProfile({ identity });
         console.log("Finished initUserProfile")
       } catch (err) {

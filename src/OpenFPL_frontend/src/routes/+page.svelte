@@ -3,7 +3,8 @@
   
   import { seasonStore } from "$lib/stores/season-store";
   import { leagueStore } from "$lib/stores/league-store";
-  import { globalDataLoaded } from "$lib/managers/store-manager";
+  import { authSignedInStore } from "$lib/derived/auth.derived";
+  import { userIdCreatedStore } from '$lib/stores/user-control-store';
   import { appStore } from "$lib/stores/app-store";
   import { userStore } from "$lib/stores/user-store";
   import { storeManager } from "$lib/managers/store-manager";
@@ -14,11 +15,12 @@
   import LeaderboardsComponent from "$lib/components/homepage/leaderboards.svelte";
   import LeagueTableComponent from "$lib/components/homepage/league-table.svelte";
   import TabContainer from "$lib/components/shared/tab-container.svelte";
-  import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
+  import FullScreenSpinner from "$lib/components/shared/full-screen-spinner.svelte";
 
-  let activeTab: string = "fixtures";
-  let isLoading = true;
-  let seasonName = "";
+  let activeTab: string = $state("fixtures");
+  let isLoading = $state(true);
+  let loadingMessage = $state("Loading");
+  let seasonName = $state("");
 
   const tabs = [
     { id: "fixtures", label: "Fixtures", authOnly: false },
@@ -28,15 +30,30 @@
   ];
 
   onMount(() => {
-    let unsub: () => void = () => {};
-    unsub = globalDataLoaded.subscribe((loaded) => {
-      if (loaded) {
-        loadCurrentStatusDetails();
-        isLoading = false;
-        unsub();
-      }
-    });
-    isLoading = false;
+    if (!$authSignedInStore) {
+      isLoading = false;
+    }
+  });
+
+  $effect(() => {
+    if ($userIdCreatedStore?.data) {
+        isLoading = true;
+        loadingMessage = "Loading Data";
+        Promise.all([
+            storeManager.syncStores(),
+            appStore.checkServerVersion(),
+            userStore.sync()
+        ]).then(() => {
+            loadingMessage = "Getting Season Name";
+            loadCurrentStatusDetails();
+            loadingMessage = "Loading Complete";
+        }).catch(error => {
+            console.error('Error loading data:', error);
+            loadingMessage = "Error Loading Data";
+        }).finally(() => {
+            isLoading = false;
+        });
+    }
   });
 
   async function loadCurrentStatusDetails(){
@@ -50,7 +67,7 @@
 </script>
 
 {#if isLoading}
-    <LocalSpinner />
+    <FullScreenSpinner message={loadingMessage} />
 {:else}
     <HomepageHeader {seasonName} />
 

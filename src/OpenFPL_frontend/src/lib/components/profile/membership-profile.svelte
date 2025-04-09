@@ -44,11 +44,6 @@
         } else if ('Verified' in icfcLinkStatus) {
           membershipLinked = true;
           notLinked = false;
-          toasts.addToast({
-            type: "success",
-            message: "ICFC Membership Linked",
-            duration: 4000,
-          })
           userIdCreatedStore.set({ data: principalId, certified: true });
           //window.location.href = "/";
         } 
