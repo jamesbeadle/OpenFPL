@@ -458,10 +458,18 @@ actor Self {
   /* ----- Football God Callback Canister Interface ----- */
   
   public shared ({ caller }) func addInitialFixtureNotification(dto: MopsLeagueNotificationCommands.AddInitialFixtureNotification) : async Result.Result<(), Enums.Error>{
+    
+    //This notification will inform the fantasy football platform that new league fixtures are available for the app
+    //This will set the current league up so users can pick their team
+    
+    
     return #err(#NotFound);
   };
   
   public shared ({ caller }) func beginSeasonNotification(dto: MopsLeagueNotificationCommands.BeginSeasonNotification) : async Result.Result<(), Enums.Error>{
+    
+    //I believe this will be a useful display property that can be set but equally can be inferred by the triggering of any gameweek begin command
+
     return #err(#NotFound);
   };
   
@@ -478,6 +486,11 @@ actor Self {
       case (#err _) {};
     };
 
+    //Snapshot a users fantasy team
+
+    //Check to see if the bonuses are reset based on the bonus gameweek logic
+
+
     let _ = await userManager.snapshotFantasyTeams(seasonId, gameweek, 0); //TODO MONTH
     await userManager.resetWeeklyTransfers();
     await seasonManager.updateDataHash("league_status");
@@ -485,6 +498,9 @@ actor Self {
   };
   
   public shared ({ caller }) func completeGameweekNotification(dto: MopsLeagueNotificationCommands.CompleteGameweekNotification) : async Result.Result<(), Enums.Error>{
+    
+    //This would be a useful event to move current unplayed gameweeks 
+
     return #err(#NotFound);
   };
   
@@ -492,6 +508,10 @@ actor Self {
     assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
     let _ = await userManager.calculateFantasyTeamScores(Environment.LEAGUE_ID, seasonId, gameweek, 0); //TODO month shouldn't be passed in
     let managerCanisterIds = userManager.getUniqueManagerCanisterIds();
+
+
+    //An important event when a fixture is notified
+
     let _ = leaderboardManager.calculateLeaderboards(seasonId, gameweek, 0, managerCanisterIds);
 
     await seasonManager.updateDataHash("league_status");
@@ -508,11 +528,17 @@ actor Self {
   };
   
   public shared ({ caller }) func revaluePlayerUpNotification(dto: MopsPlayerNotificationCommands.PlayerChangeNotification) : async Result.Result<(), Enums.Error>{
+    
+    //recaluclate any manager total team values
+
     return #err(#NotFound);
   };
 
   public shared ({ caller }) func revaluePlayerDownNotification(dto: MopsPlayerNotificationCommands.PlayerChangeNotification) : async Result.Result<(), Enums.Error>{
-    return #err(#NotFound);
+      
+    //recaluclate any manager total team values
+
+     return #err(#NotFound);
   };
   
   public shared ({ caller }) func loanPlayerNotification(dto: MopsPlayerNotificationCommands.PlayerChangeNotification) : async Result.Result<(), Enums.Error>{
@@ -543,19 +569,18 @@ actor Self {
   };
   
   public shared ({ caller }) func setFreeAgentNotification(dto: MopsPlayerNotificationCommands.PlayerChangeNotification) : async Result.Result<(), Enums.Error>{
+    
+    //TODO - This player is a free agent so remove from everyones team
+    
     return #err(#NotFound);
   };
   
   public shared ({ caller }) func retirePlayerNotification(dto: MopsPlayerNotificationCommands.PlayerChangeNotification) : async Result.Result<(), Enums.Error>{
     assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
 
-    //TODO
+    //TODO - This player has retired so remove from everyones team
 
     return #ok();
-  };
-  
-  public shared ({ caller }) func unretirePlayerNotification(dto: MopsPlayerNotificationCommands.PlayerChangeNotification) : async Result.Result<(), Enums.Error>{
-    return #err(#NotFound);
   };
   
   public shared ({ caller }) func changePlayerPositionNotification(dto: MopsPlayerNotificationCommands.PlayerChangeNotification) : async Result.Result<(), Enums.Error>{
