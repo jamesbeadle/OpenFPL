@@ -191,18 +191,6 @@ actor Self {
     return await userManager.getUserICFCLinkStatus(principalId);
   };
 
-  /*
-  public shared ({ caller }) func getICFCProfile(dto : UserQueries.GetICFCProfile) : async Result.Result<UserQueries.ICFCProfile, Enums.Error> {
-    assert not Principal.isAnonymous(caller);
-    let principalId = Principal.toText(caller);
-    assert principalId == dto.principalId;
-    assert await hasMembership(principalId);
-    return await userManager.getICFCProfile({
-      principalId = Principal.toText(caller);
-    });
-  };
-  */
-
   public shared ({ caller }) func getTeamSelection() : async Result.Result<UserQueries.TeamSetup, Enums.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
@@ -466,75 +454,18 @@ actor Self {
     return await userManager.getAllUserICFCLinks();
   };
 
-  /* ----- WIP ----- */
 
-  /* ----- Football God Data Callback Functions ----- */
-
-  //TODO: Not sure why not called notify - this needs to be looked at
-
-  public shared ({ caller }) func updateDataHashes(category : Text) : async Result.Result<(), Enums.Error> {
-    assert not Principal.isAnonymous(caller);
-    assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
-    await seasonManager.updateDataHash(category);
-    return #ok();
+  /* ----- Football God Callback Canister Interface ----- */
+  
+  public shared ({ caller }) func addInitialFixtureNotification(dto: MopsLeagueNotificationCommands.AddInitialFixtureNotification) : async Result.Result<(), Enums.Error>{
+    return #err(#NotFound);
   };
-
-  public shared ({ caller }) func notifyAppLink(dto : ICFCCommands.NotifyAppofLink) : async Result.Result<(), Enums.Error> {
-    assert Principal.toText(caller) == Environment.ICFC_BACKEND_CANISTER_ID;
-    let _ = await userManager.createICFCLink(dto);
-    return #ok();
+  
+  public shared ({ caller }) func beginSeasonNotification(dto: MopsLeagueNotificationCommands.BeginSeasonNotification) : async Result.Result<(), Enums.Error>{
+    return #err(#NotFound);
   };
-
-  public shared ({ caller }) func notifyAppRemoveLink(dto : ICFCCommands.NotifyAppofRemoveLink) : async Result.Result<(), Enums.Error> {
-    assert Principal.toText(caller) == Environment.ICFC_BACKEND_CANISTER_ID;
-    let _ = await userManager.removeICFCLink(dto);
-    return #ok();
-  };
-
-  public shared ({ caller }) func noitifyAppofICFCHashUpdate(dto : ICFCCommands.UpdateICFCProfile) : async Result.Result<(), Enums.Error> {
-    assert Principal.toText(caller) == Environment.ICFC_BACKEND_CANISTER_ID;
-    let _ = await userManager.updateICFCHash(dto);
-    return #ok();
-  };
-
-  public shared ({ caller }) func notifyAppsOfLoan(leagueId : FootballIds.LeagueId, playerId : FootballIds.PlayerId) : async Result.Result<(), Enums.Error> {
-    assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
-    assert leagueId == Environment.LEAGUE_ID;
-    await userManager.removePlayerFromTeams(Environment.LEAGUE_ID, playerId, CanisterIds.OPENFPL_BACKEND_CANISTER_ID);
-    await seasonManager.updateDataHash("players");
-    return #ok();
-  };
-
-  public shared ({ caller }) func notifyAppsOfLoanExpired(leagueId : FootballIds.LeagueId, playerId : FootballIds.PlayerId) : async Result.Result<(), Enums.Error> {
-    assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
-    assert leagueId == Environment.LEAGUE_ID;
-    //TODO
-
-    return #ok();
-  };
-
-  public shared ({ caller }) func notifyAppsOfTransfer(leagueId : FootballIds.LeagueId, playerId : FootballIds.PlayerId) : async Result.Result<(), Enums.Error> {
-    assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
-    await userManager.removePlayerFromTeams(Environment.LEAGUE_ID, playerId, CanisterIds.OPENFPL_BACKEND_CANISTER_ID);
-    await seasonManager.updateDataHash("players");
-    return #ok();
-  };
-
-  public shared ({ caller }) func notifyAppsOfRetirement(leagueId : FootballIds.LeagueId, playerId : FootballIds.PlayerId) : async Result.Result<(), Enums.Error> {
-    assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
-
-    //TODO
-
-    return #ok();
-  };
-
-  public shared ({ caller }) func notifyAppsOfPositionChange(leagueId : FootballIds.LeagueId, playerId : FootballIds.PlayerId) : async Result.Result<(), Enums.Error> {
-    assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
-    await userManager.removePlayerFromTeams(Environment.LEAGUE_ID, playerId, CanisterIds.OPENFPL_BACKEND_CANISTER_ID);
-    return #ok();
-  };
-
-  public shared ({ caller }) func notifyAppsOfGameweekStarting(leagueId : FootballIds.LeagueId, seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber) : async Result.Result<(), Enums.Error> {
+  
+  public shared ({ caller }) func beginGameweekNotification(dto: MopsLeagueNotificationCommands.BeginGameweekNotification) : async Result.Result<(), Enums.Error>{
     assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
     let playersResult = await dataManager.getPlayers({
       leagueId = Environment.LEAGUE_ID;
@@ -552,9 +483,12 @@ actor Self {
     await seasonManager.updateDataHash("league_status");
     return #ok();
   };
-
-  public shared ({ caller }) func notifyAppsOfFixtureFinalised(leagueId : FootballIds.LeagueId, seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber) : async Result.Result<(), Enums.Error> {
-
+  
+  public shared ({ caller }) func completeGameweekNotification(dto: MopsLeagueNotificationCommands.CompleteGameweekNotification) : async Result.Result<(), Enums.Error>{
+    return #err(#NotFound);
+  };
+  
+  public shared ({ caller }) func finaliseFixtureNotification(dto: MopsLeagueNotificationCommands.CompleteFixtureNotification) : async Result.Result<(), Enums.Error>{
     assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
     let _ = await userManager.calculateFantasyTeamScores(Environment.LEAGUE_ID, seasonId, gameweek, 0); //TODO month shouldn't be passed in
     let managerCanisterIds = userManager.getUniqueManagerCanisterIds();
@@ -564,13 +498,113 @@ actor Self {
 
     return #ok();
   };
-
-  public shared ({ caller }) func notifyAppsOfSeasonComplete(leagueId : FootballIds.LeagueId, seasonId : FootballIds.SeasonId) : async Result.Result<(), Enums.Error> {
-
+  
+  public shared ({ caller }) func completeSeasonNotification(dto: MopsLeagueNotificationCommands.CompleteSeasonNotification) : async Result.Result<(), Enums.Error>{
     assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
 
     //TODO
 
+    return #ok();
+  };
+  
+  public shared ({ caller }) func revaluePlayerUpNotification(dto: MopsPlayerNotificationCommands.PlayerChangeNotification) : async Result.Result<(), Enums.Error>{
+    return #err(#NotFound);
+  };
+
+  public shared ({ caller }) func revaluePlayerDownNotification(dto: MopsPlayerNotificationCommands.PlayerChangeNotification) : async Result.Result<(), Enums.Error>{
+    return #err(#NotFound);
+  };
+  
+  public shared ({ caller }) func loanPlayerNotification(dto: MopsPlayerNotificationCommands.PlayerChangeNotification) : async Result.Result<(), Enums.Error>{
+    assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
+    assert leagueId == Environment.LEAGUE_ID;
+    await userManager.removePlayerFromTeams(Environment.LEAGUE_ID, playerId, CanisterIds.OPENFPL_BACKEND_CANISTER_ID);
+    await seasonManager.updateDataHash("players");
+    return #ok();
+  };
+  
+  public shared ({ caller }) func recallPlayerNotification(dto: MopsPlayerNotificationCommands.PlayerChangeNotification) : async Result.Result<(), Enums.Error>{
+    return #err(#NotFound);
+  };
+  
+  public shared ({ caller }) func expireLoanNotification(dto: MopsPlayerNotificationCommands.PlayerChangeNotification) : async Result.Result<(), Enums.Error>{
+    assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
+    assert leagueId == Environment.LEAGUE_ID;
+    //TODO
+
+    return #ok();
+  };
+  
+  public shared ({ caller }) func transferPlayerNotification(dto: MopsPlayerNotificationCommands.PlayerChangeNotification) : async Result.Result<(), Enums.Error>{
+    assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
+    await userManager.removePlayerFromTeams(Environment.LEAGUE_ID, playerId, CanisterIds.OPENFPL_BACKEND_CANISTER_ID);
+    await seasonManager.updateDataHash("players");
+    return #ok();
+  };
+  
+  public shared ({ caller }) func setFreeAgentNotification(dto: MopsPlayerNotificationCommands.PlayerChangeNotification) : async Result.Result<(), Enums.Error>{
+    return #err(#NotFound);
+  };
+  
+  public shared ({ caller }) func retirePlayerNotification(dto: MopsPlayerNotificationCommands.PlayerChangeNotification) : async Result.Result<(), Enums.Error>{
+    assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
+
+    //TODO
+
+    return #ok();
+  };
+  
+  public shared ({ caller }) func unretirePlayerNotification(dto: MopsPlayerNotificationCommands.PlayerChangeNotification) : async Result.Result<(), Enums.Error>{
+    return #err(#NotFound);
+  };
+  
+  public shared ({ caller }) func changePlayerPositionNotification(dto: MopsPlayerNotificationCommands.PlayerChangeNotification) : async Result.Result<(), Enums.Error>{
+    assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
+    await userManager.removePlayerFromTeams(Environment.LEAGUE_ID, playerId, CanisterIds.OPENFPL_BACKEND_CANISTER_ID);
+    return #ok();
+  };
+  
+
+
+
+
+
+
+  /* ----- WIP ----- */
+
+
+  //TODO: Not sure why not called notify - this needs to be looked at
+
+  /*
+
+  // TODO Removed as OpenFPL should just get automatically updated hashes from Football God 
+
+  public shared ({ caller }) func updateDataHashes(category : Text) : async Result.Result<(), Enums.Error> {
+    assert not Principal.isAnonymous(caller);
+    assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
+    await seasonManager.updateDataHash(category);
+    return #ok();
+  };
+  */
+
+
+  /* ----- ICFC Canister Callback Functions ----- */
+
+  public shared ({ caller }) func notifyAppLink(dto : ICFCCommands.NotifyAppofLink) : async Result.Result<(), Enums.Error> {
+    assert Principal.toText(caller) == Environment.ICFC_BACKEND_CANISTER_ID;
+    let _ = await userManager.createICFCLink(dto);
+    return #ok();
+  };
+
+  public shared ({ caller }) func notifyAppRemoveLink(dto : ICFCCommands.NotifyAppofRemoveLink) : async Result.Result<(), Enums.Error> {
+    assert Principal.toText(caller) == Environment.ICFC_BACKEND_CANISTER_ID;
+    let _ = await userManager.removeICFCLink(dto);
+    return #ok();
+  };
+
+  public shared ({ caller }) func noitifyAppofICFCHashUpdate(dto : ICFCCommands.UpdateICFCProfile) : async Result.Result<(), Enums.Error> {
+    assert Principal.toText(caller) == Environment.ICFC_BACKEND_CANISTER_ID;
+    let _ = await userManager.updateICFCHash(dto);
     return #ok();
   };
 

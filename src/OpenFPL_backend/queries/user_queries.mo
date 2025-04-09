@@ -2,7 +2,6 @@ import Ids "mo:waterway-mops/Ids";
 import FootballIds "mo:waterway-mops/football/FootballIds";
 import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
 import BaseDefinitions "mo:waterway-mops/BaseDefinitions";
-import Enums "../enums/enums";
 import ICFCEnums "mo:waterway-mops/ICFCEnums";
 
 module UserQueries = {
@@ -23,7 +22,7 @@ module UserQueries = {
         favouriteClubId : ?FootballIds.ClubId;
         createDate : Int;
         displayName : Text;
-        membershipType : Enums.MembershipType;
+        membershipType : ICFCEnums.MembershipType;
         membershipClaims : [MembershipClaim];
         createdOn : Int;
         termsAgreed : Bool;
@@ -53,7 +52,7 @@ module UserQueries = {
         principalId : Ids.PrincipalId;
         username : Text;
         displayName : Text;
-        membershipType : Enums.MembershipType;
+        membershipType : ICFCEnums.MembershipType;
         membershipClaims : [MembershipClaim];
         createdOn : Int;
         profilePicture : ?Blob;
@@ -65,14 +64,14 @@ module UserQueries = {
     };
 
     public type ICFCLink = {
-        membershipType : Enums.MembershipType;
+        membershipType : ICFCEnums.MembershipType;
         principalId : Ids.PrincipalId;
         linkStatus : ICFCEnums.ICFCLinkStatus;
         dataHash : Text;
     };
 
     public type MembershipClaim = {
-        membershipType : Enums.MembershipType;
+        membershipType : ICFCEnums.MembershipType;
         purchasedOn : Int;
         expiresOn : ?Int;
     };

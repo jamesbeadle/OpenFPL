@@ -5,7 +5,7 @@ import ICFCEnums "mo:waterway-mops/ICFCEnums";
 import FootballIds "mo:waterway-mops/football/FootballIds";
 import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
 import BaseDefinitions "mo:waterway-mops/BaseDefinitions";
-import Enums "../enums/enums";
+import AppEnums "../enums/app_enums";
 
 module AppTypes {
 
@@ -120,13 +120,13 @@ module AppTypes {
 
   public type RewardEntry = {
     principalId : Text;
-    rewardType : Enums.RewardType;
+    rewardType : AppEnums.RewardType;
     position : Nat;
     amount : Nat64;
   };
 
   public type HighScoreRecord = {
-    recordType : Enums.RecordType;
+    recordType : AppEnums.RecordType;
     points : Int16;
     createDate : Int;
   };
@@ -180,20 +180,20 @@ module AppTypes {
     leagueId : FootballIds.LeagueId;
     seasonId : FootballIds.SeasonId;
     gameweek : FootballDefinitions.GameweekNumber;
-    status : Enums.LeaderboardStatus;
+    status : AppEnums.LeaderboardStatus;
   };
 
   public type LeagueMonthStatus = {
     leagueId : FootballIds.LeagueId;
     seasonId : FootballIds.SeasonId;
     month : BaseDefinitions.CalendarMonth;
-    status : Enums.LeaderboardStatus;
+    status : AppEnums.LeaderboardStatus;
   };
 
   public type LeagueSeasonStatus = {
     leagueId : FootballIds.LeagueId;
     seasonId : FootballIds.SeasonId;
-    status : Enums.LeaderboardStatus;
+    status : AppEnums.LeaderboardStatus;
   };
 
   public type AppStatus = {
@@ -223,13 +223,13 @@ module AppTypes {
   };
 
   public type MembershipClaim = {
-    membershipType : Enums.MembershipType;
+    membershipType : AppEnums.MembershipType;
     purchasedOn : Int;
     expiresOn : ?Int;
   };
 
   public type ICFCLink = {
-    membershipType : Enums.MembershipType;
+    membershipType : AppEnums.MembershipType;
     principalId : Ids.PrincipalId;
     linkStatus : ICFCEnums.ICFCLinkStatus;
     dataHash : Text;
