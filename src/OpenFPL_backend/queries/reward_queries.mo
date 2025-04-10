@@ -1,6 +1,7 @@
-import Enums "../enums/enums";
+
 import FootballIds "mo:waterway-mops/football/FootballIds";
 import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
+import AppEnums "../enums/app_enums";
 module RewardQueries {
 
     public type GetWeeklyRewardsLeaderboard = {
@@ -16,7 +17,7 @@ module RewardQueries {
   
     public type RewardEntry = {
         principalId : Text;
-        rewardType : Enums.RewardType;
+        rewardType : AppEnums.RewardType;
         position : Nat;
         amount : Nat64;
     };

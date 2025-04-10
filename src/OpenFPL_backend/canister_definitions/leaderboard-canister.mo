@@ -394,82 +394,7 @@ actor class _LeaderboardCanister() {
     return Buffer.toArray(buffer);
   };
 
-
-  public shared query ({ caller }) func getWeeklyRewardLeaderboard(seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber) : async ?LeaderboardQueries.WeeklyLeaderboard {
-    assert not Principal.isAnonymous(caller);
-    let principalId = Principal.toText(caller);
-    assert principalId == CanisterIds.OPENFPL_BACKEND_CANISTER_ID;
-
-    var currentLeaderboard : ?AppTypes.WeeklyLeaderboard = null;
-
-    currentLeaderboard := Array.find(
-      weekly_leaderboards,
-      func(leaderboard : AppTypes.WeeklyLeaderboard) : Bool {
-        leaderboard.seasonId == seasonId and leaderboard.gameweek == gameweek;
-      },
-    );
-
-    switch (currentLeaderboard) {
-      case (null) { return null };
-      case (?foundLeaderboard) {
-
-        let entriesArray = List.toArray(foundLeaderboard.entries);
-        let sortedArray = Array.sort(
-          entriesArray,
-          func(a : AppTypes.LeaderboardEntry, b : AppTypes.LeaderboardEntry) : Order.Order {
-            if (a.points < b.points) { return #greater };
-            if (a.points == b.points) { return #equal };
-            return #less;
-          },
-        );
-
-        let cutoffIndex = 99;
-        let lastQualifyingPoints = sortedArray[cutoffIndex].points;
-        var lastIndexForPrizes = cutoffIndex;
-        let totalEntries : Nat = List.size(foundLeaderboard.entries);
-
-        if (totalEntries <= 0) {
-          return null;
-        };
-
-        let totalEntriesIndex : Nat = totalEntries - 1;
-
-        while (
-          lastIndexForPrizes < totalEntriesIndex and List.toArray(foundLeaderboard.entries)[lastIndexForPrizes + 1].points == lastQualifyingPoints
-        ) {
-          lastIndexForPrizes := lastIndexForPrizes + 1;
-        };
-
-        let indexes : [Nat] = Array.tabulate<Nat>(Array.size(sortedArray), func(i : Nat) : Nat { i });
-
-        let entriesWithIndex : [(AppTypes.LeaderboardEntry, Nat)] = Array.map<Nat, (AppTypes.LeaderboardEntry, Nat)>(indexes, func(i : Nat) : (AppTypes.LeaderboardEntry, Nat) { (sortedArray[i], i) });
-
-        let qualifyingEntriesWithIndex = Array.filter(
-          entriesWithIndex,
-          func(pair : (AppTypes.LeaderboardEntry, Nat)) : Bool {
-            let (_, index) = pair;
-            index <= lastIndexForPrizes;
-          },
-        );
-
-        let qualifyingEntries = Array.map(
-          qualifyingEntriesWithIndex,
-          func(pair : (AppTypes.LeaderboardEntry, Nat)) : AppTypes.LeaderboardEntry {
-            let (entry, _) = pair;
-            entry;
-          },
-        );
-        return ?{
-          seasonId = seasonId;
-          gameweek = gameweek;
-          entries = qualifyingEntries;
-          totalEntries = Array.size(qualifyingEntries);
-        };
-      };
-    };
-  };
-
-  public shared ({ caller }) func getWeeklyLeaderboardEntries(dto : LeaderboardQueries.GetWeeklyLeaderboard) : async ?LeaderboardQueries.WeeklyLeaderboard {
+  public shared ({ caller }) func getWeeklyLeaderboard(dto : LeaderboardQueries.GetWeeklyLeaderboard) : async ?LeaderboardQueries.WeeklyLeaderboard {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == CanisterIds.OPENFPL_BACKEND_CANISTER_ID;
@@ -505,13 +430,38 @@ actor class _LeaderboardCanister() {
           },
         );
 
+
+
+        //Reward leaderboard code
+
+
+        //Reward leaderboard code
+
+
+
+
         let droppedEntries = List.drop<AppTypes.LeaderboardEntry>(List.fromArray(sortedGameweekEntries), dto.offset);
         let paginatedEntries = List.take<AppTypes.LeaderboardEntry>(droppedEntries, LEADERBOARD_ROW_COUNT_LIMIT);
 
         let leaderboardDTO : LeaderboardQueries.WeeklyLeaderboard = {
           seasonId = foundLeaderboard.seasonId;
           gameweek = foundLeaderboard.gameweek;
-          entries = List.toArray(paginatedEntries);
+          entries = 
+            Array.map<AppTypes.LeaderboardEntry, LeaderboardQueries.LeaderboardEntry>(List.toArray(paginatedEntries), 
+            func(entry: AppTypes.LeaderboardEntry){
+              return {
+                bonusPlayed = null; // TODO
+                membershipLevel = #Founding; // TODO
+                nationalityId = null; // TODO
+                points = entry.points;
+                position = entry.position;
+                positionText = entry.positionText;
+                principalId = entry.principalId;
+                profilePicture = null; // TODO
+                rewardAmount = null; // TODO
+                username = entry.username;
+              }
+          });
           totalEntries = List.size(foundLeaderboard.entries);
         };
 

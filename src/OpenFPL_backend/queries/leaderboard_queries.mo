@@ -1,5 +1,9 @@
 import FootballIds "mo:waterway-mops/football/FootballIds";
 import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
+import Ids "mo:waterway-mops/Ids";
+import IcfcEnums "mo:waterway-mops/ICFCEnums";
+import AppTypes "../types/app_types";
+import AppEnums "../enums/app_enums";
 
 module LeaderboardQueries = {
 
@@ -38,8 +42,13 @@ module LeaderboardQueries = {
         position : Nat;
         positionText : Text;
         username : Text;
-        principalId : Text;
+        principalId : Ids.PrincipalId;
         points : Int16;
+        nationalityId: ?Ids.CountryId;
+        membershipLevel: IcfcEnums.MembershipType;
+        bonusPlayed: ?AppEnums.BonusType;
+        profilePicture: ?Blob;
+        rewardAmount: ?Nat64;
     };
 
 
