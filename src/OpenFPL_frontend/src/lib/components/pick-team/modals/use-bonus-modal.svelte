@@ -5,7 +5,7 @@
   import { playerStore } from "$lib/stores/player-store";
   import { managerStore } from "$lib/stores/manager-store";
   import { BonusType } from "$lib/enums/BonusType";
-  import type { BonusType as BonusName } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { BonusType as BonusName, PlayerPosition__1 } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { countryStore } from "$lib/stores/country-store";
   import { convertPositionToIndex } from "$lib/utils/helpers";
   import { leagueStore } from "$lib/stores/league-store";
@@ -23,16 +23,32 @@
   export let updateBonuses: () => void;
   export let bonuses: Writable<Bonus[]>;
 
-  let countries: { id: number; name: string }[];
+  let countries: { id: number; name: string }[] = [];
+  let playerOptions: { id: number; name: string }[] = [];
+  let teamOptions: { id: number; name: string }[] = [];
   let selectedTeamId = 0;
   let selectedPlayerId = 0;
   let selectedCountry = "";
   let selectedCountryId = 0;
   let isSubmitting = false;
 
-  onMount(async () => {
-    getUniqueCountries();
+  onMount(() => {
+    initializeOptions();
   });
+
+  function initializeOptions() {
+    switch (bonus.selectionType) {
+      case BonusType.PLAYER:
+        playerOptions = getPlayerNames();
+        break;
+      case BonusType.TEAM:
+        teamOptions = getRelatedTeamNames();
+        break;
+      case BonusType.COUNTRY:
+        countries = getUniqueCountries();
+        break;
+    }
+  }
 
   const getUniqueCountries = () => {
 
@@ -55,9 +71,21 @@
 
 
   const getPlayerNames = () => {
-    return $playerStore
-      .filter((p) => isPlayerInFantasyTeam(p.id))
-      .map((p) => ({ id: p.id, name: `${p.firstName} ${p.lastName}` }));
+    const playersInTeam = $playerStore.filter(p => isPlayerInFantasyTeam(p.id));
+
+    if (bonus.id === 3) {
+        return playersInTeam
+            .filter(p => convertPositionToIndex(p.position) <= 1)
+            .map(p => ({ 
+                id: p.id, 
+                name: `${p.firstName} ${p.lastName}` 
+            }));
+    }
+
+    return playersInTeam.map(p => ({ 
+        id: p.id, 
+        name: `${p.firstName} ${p.lastName}` 
+    }));
   };
 
   const isPlayerInFantasyTeam = (playerId: number): boolean => {
@@ -336,9 +364,14 @@
     return bonusCountryId;
   }
 
-  $: countries = getUniqueCountries();
-  $: playerOptions = getPlayerNames();
-  $: teamOptions = getRelatedTeamNames();
+  $: if (visible) {
+    selectedTeamId = 0;
+    selectedPlayerId = 0;
+    selectedCountry = "";
+    selectedCountryId = 0;
+    initializeOptions();
+  }
+
   $: isUseButtonEnabled = (() => {
     switch (bonus.selectionType) {
       case BonusType.PLAYER:

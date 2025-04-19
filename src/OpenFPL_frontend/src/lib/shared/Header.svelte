@@ -8,7 +8,7 @@
   import { authSignedInStore } from "$lib/derived/auth.derived";
   import { userGetProfilePicture } from "$lib/derived/user.derived";
   import { toasts } from "$lib/stores/toasts-store";
-  import { signOut } from "$lib/services/auth-services";
+  import { signOut, signIn } from "$lib/services/auth-services";
    
 
   async function handleDisconnect(){
@@ -44,11 +44,11 @@
     menuOpen = !menuOpen;
   }
 
-  function handleLogin() {
+  async function handleLogin() {
     let params: AuthSignInParams = {
       domain: import.meta.env.VITE_AUTH_PROVIDER_URL,
     };
-    authStore.signIn(params);
+    await signIn(params);
   }
 
   function toggleProfileDropdown(event: Event) {

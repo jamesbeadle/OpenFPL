@@ -9,6 +9,7 @@ import { leagueStore } from "$lib/stores/league-store";
 import { appStore } from "$lib/stores/app-store";
 import { RewardRatesService } from "$lib/services/reward-rates-service";
 import { rewardRatesStore } from "$lib/stores/reward-pool-store";
+import { userStore } from "$lib/stores/user-store";
 
 import { DataHashService } from "$lib/services/data-hash-service";
 import { AppService } from "$lib/services/app-service";
@@ -20,7 +21,9 @@ import { PlayerService } from "$lib/services/player-service";
 import { PlayerEventsService } from "$lib/services/player-events-service";
 import { FixtureService } from "$lib/services/fixture-service";
 import { WeeklyLeaderboardService } from "$lib/services/weekly-leaderboard-service";
+import { UserService } from "$lib/services/user-service";
 
+import { getProfileFromDB, setProfileToDB } from "$lib/utils/db.utils";
 import { replacer } from "$lib/utils/helpers";
 import { writable } from "svelte/store";
 
@@ -38,6 +41,7 @@ class StoreManager {
   private fixtureService: FixtureService;
   private weeklyLeaderboardService: WeeklyLeaderboardService;
   private rewardRatesService: RewardRatesService;
+  private userService: UserService;
 
   private backendCategories: string[] = [
     "app_status",
@@ -66,17 +70,20 @@ class StoreManager {
     this.fixtureService = new FixtureService();
     this.weeklyLeaderboardService = new WeeklyLeaderboardService();
     this.rewardRatesService = new RewardRatesService();
+    this.userService = new UserService();
   }
 
   async syncStores(): Promise<void> {
     if (this.isSyncing) {
       return;
     }
-    console.log("syncing stores");
     this.isSyncing = true;
     globalDataLoaded.set(false);
     try {
-      await this.syncAppDataHashes();
+      await Promise.all([
+        this.syncAppDataHashes(),
+        this.syncICFCDataHash(),
+      ]);
       globalDataLoaded.set(true);
     } catch (error) {
       console.error("Error syncing stores:", error);
@@ -92,7 +99,6 @@ class StoreManager {
     if (appDataHashes == undefined) {
       return;
     }
-    console.log(appDataHashes);
     for (const category of this.backendCategories) {
       const categoryHash = appDataHashes.find(
         (hash) => hash.category === category,
@@ -103,6 +109,19 @@ class StoreManager {
       } else {
         await this.loadFromCache(category);
       }
+    }
+  }
+
+  private async syncICFCDataHash(): Promise<void> {
+    const icfcDataHash = await this.dataHashService.getICFCDataHash();
+    if (icfcDataHash == undefined) {
+      return;
+    }
+    if (icfcDataHash !== localStorage.getItem(`icfc_data_hash`)) {
+      await this.syncCategory("icfc_data_hash");
+      localStorage.setItem(`icfc_data_hash`, icfcDataHash || "");
+    } else {
+      await this.loadFromCache("icfc_data_hash");
     }
   }
 
@@ -247,6 +266,13 @@ class StoreManager {
           );
         });
         break;
+      case "icfc_data_hash":
+        const updatedICFCDataHash = await this.userService.getUser();
+        if (!updatedICFCDataHash) {
+          return;
+        }
+        userStore.set(updatedICFCDataHash);
+        setProfileToDB(updatedICFCDataHash);
     }
   }
 
@@ -289,6 +315,13 @@ class StoreManager {
       case "reward_rates":
         const cachedRewardRates = JSON.parse(cachedData || "null");
         rewardRatesStore.setRewardRates(cachedRewardRates);
+        break;
+      case "icfc_data_hash":
+        const cachedProfile = getProfileFromDB();
+        if (!cachedProfile) {
+          return;
+        }
+        userStore.set(cachedProfile);
         break;
     }
   }
