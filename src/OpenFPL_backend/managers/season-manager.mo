@@ -39,9 +39,15 @@ module {
       { category = "league_status"; hash = "OPENFPL_2" },
     ];
 
+    /*
+
+    //TODO I don't use this
+
     private var leagueGameweekStatuses : [AppTypes.LeagueGameweekStatus] = [];
     private var leagueMonthStatuses : [AppTypes.LeagueMonthStatus] = [];
     private var leagueSeasonStatuses : [AppTypes.LeagueSeasonStatus] = [];
+
+    */
 
     private var playersSnapshots : [(FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [DataCanister.Player])])] = [];
 
@@ -189,6 +195,24 @@ module {
       return #err(#NotFound);
     };
 
+    public func resetAllDataHashes() : async () {
+
+      //todo it's best to keep a copy in the backend canister so we can call with a query call
+
+      await updateDataHash("weekly_leaderboard");
+      await updateDataHash("monthly_leaderboards");
+      await updateDataHash("season_leaderboard");
+      await updateDataHash("app_status");
+      await updateDataHash("reward_rates");
+      await updateDataHash("clubs");
+      await updateDataHash("countries");
+      await updateDataHash("fixtures");
+      await updateDataHash("player_events");
+      await updateDataHash("seasons");
+      await updateDataHash("players");
+      await updateDataHash("league_status");
+    };
+
     //Stable variable functions
 
     public func getStableAppStatus() : AppTypes.AppStatus {
@@ -199,6 +223,7 @@ module {
       appStatus := stable_app_status;
     };
 
+    /* Don't think we need
     public func getStableLeagueGameweekStatuses() : [AppTypes.LeagueGameweekStatus] {
       return leagueGameweekStatuses;
     };
@@ -222,6 +247,7 @@ module {
     public func setStableLeagueSeasonStatuses(stable_league_season_statuses : [AppTypes.LeagueSeasonStatus]) {
       leagueSeasonStatuses := stable_league_season_statuses;
     };
+    */
 
     public func getStableDataHashes() : [Base.DataHash] {
       return dataHashes;

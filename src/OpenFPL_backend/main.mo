@@ -14,7 +14,12 @@ import BaseDefinitions "mo:waterway-mops/BaseDefinitions";
 import BaseQueries "mo:waterway-mops/queries/BaseQueries";
 import Root "mo:waterway-mops/sns-wrappers/root";
 import PlayerQueries "mo:waterway-mops/queries/football-queries/PlayerQueries";
-import Environment "./Environment";
+import Environment "Environment";
+import LeagueNotificationCommands "mo:waterway-mops/football/LeagueNotificationCommands";
+import PlayerNotificationCommands "mo:waterway-mops/football/PlayerNotificationCommands";
+import BaseUtilities "mo:waterway-mops/BaseUtilities";
+import DateTimeUtilities "mo:waterway-mops/DateTimeUtilities";
+import DataCanister "canister:data_canister";
 
 /* ----- Mops Packages ----- */
 
@@ -33,6 +38,7 @@ import Time "mo:base/Time";
 import Timer "mo:base/Timer";
 import List "mo:base/List";
 import Debug "mo:base/Debug";
+import Order "mo:base/Order";
 
 /* ----- Canister Definition Files ----- */
 
@@ -48,6 +54,7 @@ import UserQueries "./queries/user_queries";
 /* ----- Commands ----- */
 import UserCommands "./commands/user_commands";
 import ICFCCommands "./commands/icfc_commands";
+import MopsPayoutCommands "mops_payout_commands"; // TODO Move to Mops
 
 /* ----- Managers ----- */
 
@@ -60,7 +67,6 @@ import AppTypes "types/app_types";
 /* ----- Only Stable Variables Should Use Types ----- */
 
 /* ----- Import Other Canisters ----- */
-import DataCanister "canister:data_canister";
 import CanisterQueries "queries/canister_queries";
 import RewardQueries "queries/reward_queries";
 
@@ -216,8 +222,20 @@ actor Self {
     let statusResult = await getLeagueStatus();
     switch (statusResult) {
       case (#ok status) {
-        let weeklyLeaderboardEntry = await leaderboardManager.getWeeklyLeaderboardEntry(dto.principalId, status.activeSeasonId, status.activeGameweek);
-        return await userManager.getManager(dto, status.activeSeasonId, weeklyLeaderboardEntry, null, null);
+
+
+        /* 
+          // TOOD: Again this is just for display purposes so you cans see some high level information in the manager object but at this point the calculation process is too long
+            //We should possible just track this informaation directly in the manager object and not call out to get the information as it'll be more expenive.
+
+            An example of one of the calls to get the weekly leaderboard information
+
+
+          let weeklyLeaderboardEntry = await leaderboardManager.getWeeklyLeaderboardEntry(dto.principalId, status.activeSeasonId, status.activeGameweek);
+
+        */
+
+        return await userManager.getManager(dto, status.activeSeasonId, null, null, null);
       };
       case (#err error) {
         return #err(error);
@@ -457,23 +475,13 @@ actor Self {
 
   /* ----- Football God Callback Canister Interface ----- */
   
-  public shared ({ caller }) func addInitialFixtureNotification(dto: MopsLeagueNotificationCommands.AddInitialFixtureNotification) : async Result.Result<(), Enums.Error>{
-    
-    //This notification will inform the fantasy football platform that new league fixtures are available for the app
-    //This will set the current league up so users can pick their team
-    
-    
-    return #err(#NotFound);
+  public shared ({ caller }) func addInitialFixtureNotification(dto: LeagueNotificationCommands.AddInitialFixtureNotification) : async Result.Result<(), Enums.Error>{
+    await seasonManager.resetAllDataHashes();
+    await userManager.resetFantasyTeams();
+    return #ok();
   };
   
-  public shared ({ caller }) func beginSeasonNotification(dto: MopsLeagueNotificationCommands.BeginSeasonNotification) : async Result.Result<(), Enums.Error>{
-    
-    //I believe this will be a useful display property that can be set but equally can be inferred by the triggering of any gameweek begin command
-
-    return #err(#NotFound);
-  };
-  
-  public shared ({ caller }) func beginGameweekNotification(dto: MopsLeagueNotificationCommands.BeginGameweekNotification) : async Result.Result<(), Enums.Error>{
+  public shared ({ caller }) func beginGameweekNotification(dto: LeagueNotificationCommands.BeginGameweekNotification) : async Result.Result<(), Enums.Error>{
     assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
     let playersResult = await dataManager.getPlayers({
       leagueId = Environment.LEAGUE_ID;
@@ -481,45 +489,104 @@ actor Self {
 
     switch (playersResult) {
       case (#ok players) {
-        seasonManager.storePlayersSnapshot(seasonId, gameweek, { players = players.players });
+
+
+
+        let seasonState = await dataManager.getLeagueStatus({leagueId = dto.leagueId});
+        switch(seasonState){
+          case (#ok foundState){
+
+            seasonManager.storePlayersSnapshot(dto.seasonId, dto.gameweek, players);
+            await userManager.snapshotFantasyTeams(dto.seasonId, dto.gameweek, foundState.activeMonth);
+            await userManager.resetWeeklyTransfers();
+            await seasonManager.updateDataHash("league_status");
+            await checkMonthRollover(dto, foundState);
+            return #ok();
+            
+
+          };
+          case (#err error){
+            return #err(error);
+          }
+        };
+
       };
-      case (#err _) {};
+      case (#err _) {
+        return #err(#NotFound);
+      };
     };
+  };
 
-    //Snapshot a users fantasy team
+  private func checkMonthRollover(dto: LeagueNotificationCommands.BeginGameweekNotification, leagueStatus: DataCanister.LeagueStatus) : async (){
 
-    //Check to see if the bonuses are reset based on the bonus gameweek logic
+    let priorGameweek: FootballDefinitions.GameweekNumber = leagueStatus.activeGameweek - 1;
+    let fixtures = await dataManager.getFixtures({ leagueId = dto.leagueId; seasonId = dto.seasonId });
 
+    switch(fixtures){
+      case(#ok foundFixtures){
 
-    let _ = await userManager.snapshotFantasyTeams(seasonId, gameweek, 0); //TODO MONTH
-    await userManager.resetWeeklyTransfers();
-    await seasonManager.updateDataHash("league_status");
-    return #ok();
+        let gameweekFixtures = Array.filter<DataCanister.Fixture>(foundFixtures.fixtures, func(entry: DataCanister.Fixture){
+          entry.gameweek == (leagueStatus.activeGameweek - 1);
+        });
+
+        let sortedFixtures = Array.sort<DataCanister.Fixture>(gameweekFixtures,
+          func(entry1 : DataCanister.Fixture, entry2 : DataCanister.Fixture) : Order.Order {
+            if (entry1.kickOff > entry2.kickOff) { return #less };
+            if (entry1.kickOff == entry2.kickOff) { return #equal };
+            return #greater;
+          },
+        );
+
+        if(Array.size(sortedFixtures) > 0){
+          let firstGameweekFixture: DataCanister.Fixture = sortedFixtures[0];
+          var priorGameweekMonth: BaseDefinitions.CalendarMonth = DateTimeUtilities.unixTimeToMonth(firstGameweekFixture.kickOff);
+          if(leagueStatus.activeMonth > priorGameweekMonth){
+            await userManager.resetBonuses();
+          };
+        };
+      };
+      case (#err _){};
+    };  
   };
   
-  public shared ({ caller }) func completeGameweekNotification(dto: MopsLeagueNotificationCommands.CompleteGameweekNotification) : async Result.Result<(), Enums.Error>{
+  public shared ({ caller }) func completeGameweekNotification(dto: LeagueNotificationCommands.CompleteGameweekNotification) : async Result.Result<(), Enums.Error>{
+    
+
     
     //This would be a useful event to move current unplayed gameweeks 
 
-    return #err(#NotFound);
+    //check finalisation of season
+      //
+
+    await userManager.calculateWeeklyLeaderboard(foundState.activeMonth, priorGameweekMonth);
+    await userManager.calculateMonthlyLeaderboards(foundState.activeMonth, priorGameweekMonth);
+    await userManager.calculateSeasonLeaderboard(foundState.activeMonth, priorGameweekMonth);
+
+    let icfc_backend_canister = actor (CanisterIds.ICFC_BACKEND_CANISTER_ID) : actor {
+      requestLeaderboardPayout : (dto: MopsPayoutCommands.LeaderboardPayoutRequest) -> async Result.Result<(), Enums.Error>
+    };
+
+    let _ = await icfc_backend_canister.requestLeaderboardPayout({});
+
+    return #ok();
   };
   
-  public shared ({ caller }) func finaliseFixtureNotification(dto: MopsLeagueNotificationCommands.CompleteFixtureNotification) : async Result.Result<(), Enums.Error>{
+  public shared ({ caller }) func finaliseFixtureNotification(dto: LeagueNotificationCommands.CompleteFixtureNotification) : async Result.Result<(), Enums.Error>{
     assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
-    let _ = await userManager.calculateFantasyTeamScores(Environment.LEAGUE_ID, seasonId, gameweek, 0); //TODO month shouldn't be passed in
+    let _ = await userManager.calculateFantasyTeamScores(Environment.LEAGUE_ID, dto.seasonId, gameweek, 0); //TODO month shouldn't be passed in
     let managerCanisterIds = userManager.getUniqueManagerCanisterIds();
 
 
     //An important event when a fixture is notified
 
-    let _ = leaderboardManager.calculateLeaderboards(seasonId, gameweek, 0, managerCanisterIds);
+    let _ = leaderboardManager.calculateLeaderboards(dto.seasonId, gameweek, 0, managerCanisterIds);
 
     await seasonManager.updateDataHash("league_status");
 
     return #ok();
   };
   
-  public shared ({ caller }) func completeSeasonNotification(dto: MopsLeagueNotificationCommands.CompleteSeasonNotification) : async Result.Result<(), Enums.Error>{
+  public shared ({ caller }) func completeSeasonNotification(dto: LeagueNotificationCommands.CompleteSeasonNotification) : async Result.Result<(), Enums.Error>{
     assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
 
     //TODO
@@ -527,33 +594,33 @@ actor Self {
     return #ok();
   };
   
-  public shared ({ caller }) func revaluePlayerUpNotification(dto: MopsPlayerNotificationCommands.PlayerChangeNotification) : async Result.Result<(), Enums.Error>{
+  public shared ({ caller }) func revaluePlayerUpNotification(dto: PlayerNotificationCommands.PlayerChangeNotification) : async Result.Result<(), Enums.Error>{
     
     //recaluclate any manager total team values
 
     return #err(#NotFound);
   };
 
-  public shared ({ caller }) func revaluePlayerDownNotification(dto: MopsPlayerNotificationCommands.PlayerChangeNotification) : async Result.Result<(), Enums.Error>{
+  public shared ({ caller }) func revaluePlayerDownNotification(dto: PlayerNotificationCommands.PlayerChangeNotification) : async Result.Result<(), Enums.Error>{
       
     //recaluclate any manager total team values
 
      return #err(#NotFound);
   };
   
-  public shared ({ caller }) func loanPlayerNotification(dto: MopsPlayerNotificationCommands.PlayerChangeNotification) : async Result.Result<(), Enums.Error>{
+  public shared ({ caller }) func loanPlayerNotification(dto: PlayerNotificationCommands.PlayerChangeNotification) : async Result.Result<(), Enums.Error>{
     assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
-    assert leagueId == Environment.LEAGUE_ID;
-    await userManager.removePlayerFromTeams(Environment.LEAGUE_ID, playerId, CanisterIds.OPENFPL_BACKEND_CANISTER_ID);
+    assert dto.leagueId == Environment.LEAGUE_ID;
+    await userManager.removePlayerFromTeams(Environment.LEAGUE_ID, dto.playerId, CanisterIds.OPENFPL_BACKEND_CANISTER_ID);
     await seasonManager.updateDataHash("players");
     return #ok();
   };
   
-  public shared ({ caller }) func recallPlayerNotification(dto: MopsPlayerNotificationCommands.PlayerChangeNotification) : async Result.Result<(), Enums.Error>{
+  public shared ({ caller }) func recallPlayerNotification(dto: PlayerNotificationCommands.PlayerChangeNotification) : async Result.Result<(), Enums.Error>{
     return #err(#NotFound);
   };
   
-  public shared ({ caller }) func expireLoanNotification(dto: MopsPlayerNotificationCommands.PlayerChangeNotification) : async Result.Result<(), Enums.Error>{
+  public shared ({ caller }) func expireLoanNotification(dto: PlayerNotificationCommands.PlayerChangeNotification) : async Result.Result<(), Enums.Error>{
     assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
     assert leagueId == Environment.LEAGUE_ID;
     //TODO
@@ -561,21 +628,21 @@ actor Self {
     return #ok();
   };
   
-  public shared ({ caller }) func transferPlayerNotification(dto: MopsPlayerNotificationCommands.PlayerChangeNotification) : async Result.Result<(), Enums.Error>{
+  public shared ({ caller }) func transferPlayerNotification(dto: PlayerNotificationCommands.PlayerChangeNotification) : async Result.Result<(), Enums.Error>{
     assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
-    await userManager.removePlayerFromTeams(Environment.LEAGUE_ID, playerId, CanisterIds.OPENFPL_BACKEND_CANISTER_ID);
+    await userManager.removePlayerFromTeams(Environment.LEAGUE_ID, dto.playerId, CanisterIds.OPENFPL_BACKEND_CANISTER_ID);
     await seasonManager.updateDataHash("players");
     return #ok();
   };
   
-  public shared ({ caller }) func setFreeAgentNotification(dto: MopsPlayerNotificationCommands.PlayerChangeNotification) : async Result.Result<(), Enums.Error>{
+  public shared ({ caller }) func setFreeAgentNotification(dto: PlayerNotificationCommands.PlayerChangeNotification) : async Result.Result<(), Enums.Error>{
     
     //TODO - This player is a free agent so remove from everyones team
     
     return #err(#NotFound);
   };
   
-  public shared ({ caller }) func retirePlayerNotification(dto: MopsPlayerNotificationCommands.PlayerChangeNotification) : async Result.Result<(), Enums.Error>{
+  public shared ({ caller }) func retirePlayerNotification(dto: PlayerNotificationCommands.PlayerChangeNotification) : async Result.Result<(), Enums.Error>{
     assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
 
     //TODO - This player has retired so remove from everyones team
@@ -583,35 +650,12 @@ actor Self {
     return #ok();
   };
   
-  public shared ({ caller }) func changePlayerPositionNotification(dto: MopsPlayerNotificationCommands.PlayerChangeNotification) : async Result.Result<(), Enums.Error>{
+  public shared ({ caller }) func changePlayerPositionNotification(dto: PlayerNotificationCommands.PlayerChangeNotification) : async Result.Result<(), Enums.Error>{
     assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
-    await userManager.removePlayerFromTeams(Environment.LEAGUE_ID, playerId, CanisterIds.OPENFPL_BACKEND_CANISTER_ID);
+    await userManager.removePlayerFromTeams(Environment.LEAGUE_ID, dto.playerId, CanisterIds.OPENFPL_BACKEND_CANISTER_ID);
     return #ok();
   };
   
-
-
-
-
-
-
-  /* ----- WIP ----- */
-
-
-  //TODO: Not sure why not called notify - this needs to be looked at
-
-  /*
-
-  // TODO Removed as OpenFPL should just get automatically updated hashes from Football God 
-
-  public shared ({ caller }) func updateDataHashes(category : Text) : async Result.Result<(), Enums.Error> {
-    assert not Principal.isAnonymous(caller);
-    assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
-    await seasonManager.updateDataHash(category);
-    return #ok();
-  };
-  */
-
 
   /* ----- ICFC Canister Callback Functions ----- */
 
@@ -632,6 +676,7 @@ actor Self {
     let _ = await userManager.updateICFCHash(dto);
     return #ok();
   };
+
 
   /* ----- Private Motoko Actor Functions ----- */
 
@@ -787,245 +832,6 @@ actor Self {
     return #ok(leaderboardManager.getStableActiveCanisterId());
   };
 
-  /*
-  public shared func getCanisters(dto : CanisterQueries.GetCanisters) : async Result.Result<CanisterQueries.Canisters, Enums.Error> {
-    let canistersBuffer = Buffer.fromArray<CanisterQueries.Canister>([]);
-    let root_canister = actor (CanisterIds.ICFC_SNS_ROOT_CANISTER_ID) : actor {
-      get_sns_canisters_summary : (request : Root.GetSnsCanistersSummaryRequest) -> async Root.GetSnsCanistersSummaryResponse;
-    };
-
-    switch (dto.canisterType) {
-      case (#SNS) {
-
-        let summaryResult = await root_canister.get_sns_canisters_summary({
-          update_canister_list = ?false;
-        });
-        var snsCanistersBuffer = Buffer.fromArray<Root.CanisterSummary>([]);
-
-        snsCanistersBuffer := appendSNSCanister(snsCanistersBuffer, summaryResult.governance);
-        snsCanistersBuffer := appendSNSCanister(snsCanistersBuffer, summaryResult.root);
-        snsCanistersBuffer := appendSNSCanister(snsCanistersBuffer, summaryResult.swap);
-        snsCanistersBuffer := appendSNSCanister(snsCanistersBuffer, summaryResult.ledger);
-        snsCanistersBuffer := appendSNSCanister(snsCanistersBuffer, summaryResult.index);
-
-        for (canister in Iter.fromArray(Buffer.toArray(snsCanistersBuffer))) {
-          switch (canister.canister_id) {
-            case (?foundCanisterId) {
-              let canisterTopups = Array.filter<Base.CanisterTopup>(
-                topups,
-                func(topup : Base.CanisterTopup) {
-                  topup.canisterId == Principal.toText(foundCanisterId);
-                },
-              );
-
-              switch (canister.status) {
-                case (?foundStatus) {
-
-                  canistersBuffer.add({
-                    canisterId = Principal.toText(foundCanisterId);
-                    cycles = foundStatus.cycles;
-                    computeAllocation = foundStatus.settings.compute_allocation;
-                    topups = canisterTopups;
-                  });
-
-                };
-                case (null) {};
-              };
-            };
-            case (null) {};
-          };
-        };
-      };
-      case (#Manager) {
-        let managerCanisterIds = userManager.getUniqueManagerCanisterIds();
-        for (canisterId in Iter.fromArray(managerCanisterIds)) {
-
-          let IC : Management.Management = actor (NetworkEnvironmentVariables.Default);
-          let canisterInfo = await (
-            IC.canister_status({
-              canister_id = Principal.fromText(canisterId);
-              num_requested_changes = null;
-            })
-          );
-
-          let canisterTopups = Array.filter<Base.CanisterTopup>(
-            topups,
-            func(topup : Base.CanisterTopup) {
-              topup.canisterId == canisterId;
-            },
-          );
-
-          canistersBuffer.add({
-            canisterId = canisterId;
-            cycles = canisterInfo.cycles;
-            computeAllocation = canisterInfo.settings.compute_allocation;
-            topups = canisterTopups;
-          });
-        };
-      };
-      case (#Leaderboard) {
-        let leaderboardCanisterIds = leaderboardManager.getUniqueLeaderboardCanisterIds();
-        for (canisterId in Iter.fromArray(leaderboardCanisterIds)) {
-
-          let IC : Management.Management = actor (NetworkEnvironmentVariables.Default);
-          let canisterInfo = await (
-            IC.canister_status({
-              canister_id = Principal.fromText(canisterId);
-              num_requested_changes = null;
-            })
-          );
-
-          let canisterTopups = Array.filter<Base.CanisterTopup>(
-            topups,
-            func(topup : Base.CanisterTopup) {
-              topup.canisterId == canisterId;
-            },
-          );
-
-          canistersBuffer.add({
-            canisterId = canisterId;
-            cycles = canisterInfo.cycles;
-            computeAllocation = canisterInfo.settings.compute_allocation;
-            topups = canisterTopups;
-          });
-        };
-      };
-      case (#Archive) {
-        let summaryResult = await root_canister.get_sns_canisters_summary({
-          update_canister_list = ?false;
-        });
-
-        for (archiveCanister in Iter.fromArray(summaryResult.archives)) {
-          switch (archiveCanister.canister_id) {
-            case (?foundCanisterId) {
-              let canisterTopups = Array.filter<Base.CanisterTopup>(
-                topups,
-                func(topup : Base.CanisterTopup) {
-                  topup.canisterId == Principal.toText(foundCanisterId);
-                },
-              );
-
-              switch (archiveCanister.status) {
-                case (?foundStatus) {
-
-                  canistersBuffer.add({
-                    canisterId = Principal.toText(foundCanisterId);
-                    cycles = foundStatus.cycles;
-                    computeAllocation = foundStatus.settings.compute_allocation;
-                    topups = canisterTopups;
-                  });
-
-                };
-                case (null) {};
-              };
-            };
-            case (null) {};
-          };
-        };
-      };
-      case (#Dapp) {
-        let summaryResult = await root_canister.get_sns_canisters_summary({
-          update_canister_list = ?false;
-        });
-        let dappsMinusBackend = Array.filter<Root.CanisterSummary>(
-          summaryResult.dapps,
-          func(dapp : Root.CanisterSummary) {
-            dapp.canister_id != ?Principal.fromText(NetworkEnvironmentVariables.OPENFPL_BACKEND_CANISTER_ID);
-          },
-        );
-        for (dappCanister in Iter.fromArray(dappsMinusBackend)) {
-          switch (dappCanister.canister_id) {
-            case (?foundCanisterId) {
-              let canisterTopups = Array.filter<Base.CanisterTopup>(
-                topups,
-                func(topup : Base.CanisterTopup) {
-                  topup.canisterId == Principal.toText(foundCanisterId);
-                },
-              );
-
-              switch (dappCanister.status) {
-                case (?foundStatus) {
-
-                  canistersBuffer.add({
-                    canisterId = Principal.toText(foundCanisterId);
-                    cycles = foundStatus.cycles;
-                    computeAllocation = foundStatus.settings.compute_allocation;
-                    topups = canisterTopups;
-                  });
-
-                };
-                case (null) {};
-              };
-            };
-            case (null) {};
-          };
-        };
-
-        //TODO: Remove after assigned to SNS
-        let IC : Management.Management = actor (NetworkEnvironmentVariables.Default);
-        let frontendCanisterInfo = await (
-          IC.canister_status({
-            canister_id = Principal.fromText(Environment.FRONTEND_CANISTER_ID);
-            num_requested_changes = null;
-          })
-        );
-
-        let frontendCanisterTopups = Array.filter<Base.CanisterTopup>(
-          topups,
-          func(topup : Base.CanisterTopup) {
-            topup.canisterId == Environment.FRONTEND_CANISTER_ID;
-          },
-        );
-
-        canistersBuffer.add({
-          canisterId = Environment.FRONTEND_CANISTER_ID;
-          cycles = frontendCanisterInfo.cycles;
-          computeAllocation = frontendCanisterInfo.settings.compute_allocation;
-          topups = frontendCanisterTopups;
-        });
-
-        //TODO: Remove after assigned to SNS
-        let dataCanisterInfo = await (
-          IC.canister_status({
-            canister_id = Principal.fromText(CanisterIds.ICFC_DATA_CANISTER_ID);
-            num_requested_changes = null;
-          })
-        );
-
-        let dataCanisterTopups = Array.filter<Base.CanisterTopup>(
-          topups,
-          func(topup : Base.CanisterTopup) {
-            topup.canisterId == CanisterIds.ICFC_DATA_CANISTER_ID;
-          },
-        );
-
-        canistersBuffer.add({
-          canisterId = CanisterIds.ICFC_DATA_CANISTER_ID;
-          cycles = dataCanisterInfo.cycles;
-          computeAllocation = dataCanisterInfo.settings.compute_allocation;
-          topups = dataCanisterTopups;
-        });
-
-      };
-    };
-
-    return #ok(Buffer.toArray(canistersBuffer));
-  };
-
-  private func appendSNSCanister(buffer : Buffer.Buffer<Root.CanisterSummary>, canisterSummary : ?Root.CanisterSummary) : Buffer.Buffer<Root.CanisterSummary> {
-
-    switch (canisterSummary) {
-      case (?foundCanister) {
-        buffer.add(foundCanister);
-      };
-      case (null) {};
-    };
-    return buffer;
-  };
-  */
-
-  /* ----- END WIP ----- */
-
   /* ----- Canister Lifecycle Management ----- */
 
   system func preupgrade() {
@@ -1096,9 +902,6 @@ actor Self {
     stable_active_leaderbord_canister_id := leaderboardManager.getStableActiveCanisterId();
 
     stable_app_status := seasonManager.getStableAppStatus();
-    stable_league_gameweek_statuses := seasonManager.getStableLeagueGameweekStatuses();
-    stable_league_month_statuses := seasonManager.getStableLeagueMonthStatuses();
-    stable_league_season_statuses := seasonManager.getStableLeagueSeasonStatuses();
 
     stable_data_hashes := seasonManager.getStableDataHashes();
     //stable_player_snapshots := seasonManager.getStablePlayersSnapshots();

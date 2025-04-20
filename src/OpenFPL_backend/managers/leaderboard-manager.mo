@@ -142,7 +142,7 @@ module {
       return #err(#NotFound);
     };
 
-    public func getWeeklyLeaderboardEntry(principalId : Text, seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber) : async ?LeaderboardQueries.LeaderboardEntry {
+    public func getWeeklyLeaderboardEntry(principalId : Text, seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber) : async ?AppTypes.LeaderboardEntry {
 
       let gameweekSeason = Array.find(
         weeklyLeaderboardCanisters,
@@ -164,7 +164,7 @@ module {
             case (?foundGameweek) {
               let canisterId = foundGameweek.1;
               let weekly_leaderboard_canister = actor (canisterId) : actor {
-                getWeeklyLeaderboardEntry : (seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber, principalId : Text) -> async ?LeaderboardQueries.LeaderboardEntry;
+                getWeeklyLeaderboardEntry : (seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber, principalId : Text) -> async ?AppTypes.LeaderboardEntry;
               };
 
               let leaderboardEntry = await weekly_leaderboard_canister.getWeeklyLeaderboardEntry(seasonId, gameweek, principalId);

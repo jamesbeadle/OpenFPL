@@ -111,6 +111,11 @@ module {
           positionText = entry.positionText;
           principalId = entry.principalId;
           username = entry.username;
+          bonusPlayed = entry.bonusPlayed;
+          membershipLevel = entry.membershipLevel;
+          nationalityId = entry.nationalityId;
+          profilePicture = entry.profilePicture;
+          rewardAmount = entry.rewardAmount;
         });
         lastPosition := entry.position;
       };
