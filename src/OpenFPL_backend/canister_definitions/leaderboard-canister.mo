@@ -470,7 +470,7 @@ actor class _LeaderboardCanister() {
     };
   };
 
-  public shared query ({ caller }) func getWeeklyLeaderboardEntry(seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber, principalId : Text) : async ?LeaderboardQueries.LeaderboardEntry {
+  public shared query ({ caller }) func getWeeklyLeaderboardEntry(seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber, principalId : Text) : async ?AppTypes.LeaderboardEntry {
     assert not Principal.isAnonymous(caller);
     let callerPrincipalId = Principal.toText(caller);
     assert callerPrincipalId == CanisterIds.OPENFPL_BACKEND_CANISTER_ID;
@@ -489,9 +489,9 @@ actor class _LeaderboardCanister() {
         return null;
       };
       case (?foundLeaderboard) {
-        let _ = List.find<AppTypes.LeaderboardEntry>(
+        return List.find<AppTypes.LeaderboardEntry>(
           foundLeaderboard.entries,
-          func(entry : LeaderboardQueries.LeaderboardEntry) : Bool {
+          func(entry : AppTypes.LeaderboardEntry) : Bool {
             return entry.principalId == principalId;
           },
         );

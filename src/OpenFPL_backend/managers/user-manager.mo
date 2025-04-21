@@ -571,7 +571,6 @@ module {
       return false;
     };
 
-    //User updates
     public func createICFCLink(dto : ICFCCommands.NotifyAppofLink) : async Result.Result<(), Enums.Error> {
       let icfcLink : AppTypes.ICFCLink = {
         principalId = dto.icfcPrincipalId;
@@ -972,7 +971,7 @@ module {
       };
     };
 
-    public func resetBonusesAvailable() : async () {
+    public func resetBonuses() : async () {
       for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
 
         let manager_canister = actor (canisterId) : actor {

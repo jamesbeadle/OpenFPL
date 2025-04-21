@@ -7,6 +7,8 @@ module Environment {
   public let WATERWAY_LABS_BACKEND_CANISTER_ID = "rbqtt-7yaaa-aaaal-qcndq-cai";
   public let ICFC_BACKEND_CANISTER_ID = "cfalf-4yaaa-aaaal-qshrq-cai";
 
+  public let OpenFPL_FRONTEND_CANISTER_ID = "5gbds-naaaa-aaaal-qmzqa-cai";
+
   public let LEAGUE_ID : FootballIds.LeagueId = 1;
   public let NUM_OF_TEAMS : Nat8 = 20;
   public let NUM_OF_GAMEWEEKS : Nat8 = 38;
