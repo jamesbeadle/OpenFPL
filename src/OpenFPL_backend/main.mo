@@ -68,6 +68,7 @@ import AppTypes "types/app_types";
 /* ----- WWL Canister Management ----- */
 import CanisterCommands "mo:waterway-mops/canister-management/CanisterCommands";
 import CanisterQueries "mo:waterway-mops/canister-management/CanisterQueries";
+import CanisterManager "mo:waterway-mops/canister-management/CanisterManager";
 
 /* ----- Only Stable Variables Should Use Types ----- */
 
@@ -142,6 +143,7 @@ actor Self {
   private let leaderboardManager = LeaderboardManager.LeaderboardManager();
 
   private let dataManager = DataManager.DataManager();
+  private let canisterManager = CanisterManager.CanisterManager();
 
   /* ----- General App Queries ----- */
 
@@ -785,35 +787,6 @@ actor Self {
     return false;
   };
 
-  //TODO: John with the WWL refactoring I'm not sure we need these or atleast they need to be changed to fit in with the cycles management:
-  /* ----- WWL Canister Management ----- */
-  public shared ({ caller }) func getProjectCanisters() : async Result.Result<CanisterQueries.ProjectCanisters, Enums.Error> {
-    assert not Principal.isAnonymous(caller);
-    assert Principal.toText(caller) == CanisterIds.WATERWAY_LABS_BACKEND_CANISTER_ID;
-
-    var projectCanisters : [CanisterQueries.Canister] = [];
-
-    var backend_dto : CanisterQueries.Canister = {
-      canisterId = CanisterIds.OPENFPL_BACKEND_CANISTER_ID;
-      canisterType = #Static;
-      canisterName = "OpenFPL Backend Canister";
-      app = #OpenFPL;
-    };
-    projectCanisters := Array.append<CanisterQueries.Canister>(projectCanisters, [backend_dto]);
-
-    let frontend_dto : CanisterQueries.Canister = {
-      canisterId = Environment.OpenFPL_FRONTEND_CANISTER_ID;
-      canisterType = #Static;
-      canisterName = "OpenFPL Frontend Canister";
-      app = #OpenFPL;
-    };
-    projectCanisters := Array.append<CanisterQueries.Canister>(projectCanisters, [frontend_dto]);
-
-    let res : CanisterQueries.ProjectCanisters = {
-      entries = projectCanisters;
-    };
-    return #ok(res);
-  };
   // private func checkCanisterCycles() : async () {
   //   let root_canister = actor (CanisterIds.ICFC_SNS_ROOT_CANISTER_ID) : actor {
   //     get_sns_canisters_summary : (request : Root.GetSnsCanistersSummaryRequest) -> async Root.GetSnsCanistersSummaryResponse;
@@ -1052,5 +1025,69 @@ actor Self {
     userManager.setStableTotalManagers(stable_total_managers);
     userManager.setStableActiveManagerCanisterId(stable_active_manager_canister_id);
     userManager.setStableUserICFCLinks(stable_user_icfc_links);
+  };
+
+  /* ----- WWL Canister Management ----- */
+  public shared ({ caller }) func getProjectCanisters() : async Result.Result<CanisterQueries.ProjectCanisters, Enums.Error> {
+    assert not Principal.isAnonymous(caller);
+    assert Principal.toText(caller) == CanisterIds.WATERWAY_LABS_BACKEND_CANISTER_ID;
+
+    var projectCanisters : [CanisterQueries.Canister] = [];
+
+    let managerCanisterIds = userManager.getUniqueManagerCanisterIds();
+    for (canisterId in Iter.fromArray(managerCanisterIds)) {
+      let manager_dto : CanisterQueries.Canister = {
+        canisterId = canisterId;
+        canisterType = #Dynamic;
+        canisterName = "OpenFPL Manager Canister";
+        app = #OpenFPL;
+      };
+      projectCanisters := Array.append<CanisterQueries.Canister>(projectCanisters, [manager_dto]);
+    };
+
+    let leaderboardCanisterIds = leaderboardManager.getUniqueLeaderboardCanisterIds();
+    for (canisterId in Iter.fromArray(leaderboardCanisterIds)) {
+      let leaderboard_dto : CanisterQueries.Canister = {
+        canisterId = canisterId;
+        canisterType = #Dynamic;
+        canisterName = "OpenFPL Leaderboard Canister";
+        app = #OpenFPL;
+      };
+      projectCanisters := Array.append<CanisterQueries.Canister>(projectCanisters, [leaderboard_dto]);
+    };
+
+    var backend_dto : CanisterQueries.Canister = {
+      canisterId = CanisterIds.OPENFPL_BACKEND_CANISTER_ID;
+      canisterType = #Static;
+      canisterName = "OpenFPL Backend Canister";
+      app = #OpenFPL;
+    };
+    projectCanisters := Array.append<CanisterQueries.Canister>(projectCanisters, [backend_dto]);
+
+    let frontend_dto : CanisterQueries.Canister = {
+      canisterId = Environment.OpenFPL_FRONTEND_CANISTER_ID;
+      canisterType = #Static;
+      canisterName = "OpenFPL Frontend Canister";
+      app = #OpenFPL;
+    };
+    projectCanisters := Array.append<CanisterQueries.Canister>(projectCanisters, [frontend_dto]);
+
+    let res : CanisterQueries.ProjectCanisters = {
+      entries = projectCanisters;
+    };
+    return #ok(res);
+  };
+
+  public shared ({ caller }) func addController(dto : CanisterCommands.AddController) : async Result.Result<(), Enums.Error> {
+    assert not Principal.isAnonymous(caller);
+    assert Principal.toText(caller) == CanisterIds.WATERWAY_LABS_BACKEND_CANISTER_ID;
+    let result = await canisterManager.addController(dto);
+    return result;
+  };
+  public shared ({ caller }) func removeController(dto : CanisterCommands.RemoveController) : async Result.Result<(), Enums.Error> {
+    assert not Principal.isAnonymous(caller);
+    assert Principal.toText(caller) == CanisterIds.WATERWAY_LABS_BACKEND_CANISTER_ID;
+    let result = await canisterManager.removeController(dto);
+    return result;
   };
 };
