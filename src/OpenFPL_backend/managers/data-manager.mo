@@ -14,13 +14,6 @@ module {
       return await data_canister.getLeagueStatus(dto);
     };
 
-    public func getCountries(dto : DataCanister.GetCountries) : async Result.Result<DataCanister.Countries, Enums.Error> {
-      let data_canister = actor (CanisterIds.ICFC_DATA_CANISTER_ID) : actor {
-        getCountries : shared (dto : DataCanister.GetCountries) -> async Result.Result<DataCanister.Countries, Enums.Error>;
-      };
-      return await data_canister.getCountries(dto);
-    };
-
     public func getSeasons(dto : DataCanister.GetSeasons) : async Result.Result<DataCanister.Seasons, Enums.Error> {
      let data_canister = actor (CanisterIds.ICFC_DATA_CANISTER_ID) : actor {
         getSeasons : shared (dto : DataCanister.GetSeasons) -> async Result.Result<DataCanister.Seasons, Enums.Error>;
