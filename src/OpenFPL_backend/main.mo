@@ -551,16 +551,8 @@ actor Self {
   
   public shared ({ caller }) func completeGameweekNotification(dto: LeagueNotificationCommands.CompleteGameweekNotification) : async Result.Result<(), Enums.Error>{
     
-
-    
-    //This would be a useful event to move current unplayed gameweeks 
-
-    //check finalisation of season
-      //
-
-    await userManager.calculateWeeklyLeaderboard(foundState.activeMonth, priorGameweekMonth);
-    await userManager.calculateMonthlyLeaderboards(foundState.activeMonth, priorGameweekMonth);
-    await userManager.calculateSeasonLeaderboard(foundState.activeMonth, priorGameweekMonth);
+    let managerCanisterIds = userManager.getUniqueManagerCanisterIds();
+    let _ = leaderboardManager.calculateLeaderboards(dto.seasonId, dto.gameweek, 0, managerCanisterIds);
 
     let icfc_backend_canister = actor (CanisterIds.ICFC_BACKEND_CANISTER_ID) : actor {
       requestLeaderboardPayout : (dto: MopsPayoutCommands.LeaderboardPayoutRequest) -> async Result.Result<(), Enums.Error>
@@ -573,13 +565,8 @@ actor Self {
   
   public shared ({ caller }) func finaliseFixtureNotification(dto: LeagueNotificationCommands.CompleteFixtureNotification) : async Result.Result<(), Enums.Error>{
     assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
-    let _ = await userManager.calculateFantasyTeamScores(Environment.LEAGUE_ID, dto.seasonId, gameweek, 0); //TODO month shouldn't be passed in
+    let _ = await userManager.calculateFantasyTeamScores(Environment.LEAGUE_ID, dto.seasonId, dto.fixtureGameweek, dto.fixtureMonth);
     let managerCanisterIds = userManager.getUniqueManagerCanisterIds();
-
-
-    //An important event when a fixture is notified
-
-    let _ = leaderboardManager.calculateLeaderboards(dto.seasonId, gameweek, 0, managerCanisterIds);
 
     await seasonManager.updateDataHash("league_status");
 
@@ -622,7 +609,9 @@ actor Self {
   
   public shared ({ caller }) func expireLoanNotification(dto: PlayerNotificationCommands.PlayerChangeNotification) : async Result.Result<(), Enums.Error>{
     assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
-    assert leagueId == Environment.LEAGUE_ID;
+    assert dto.leagueId == Environment.LEAGUE_ID;
+
+    
     //TODO
 
     return #ok();
