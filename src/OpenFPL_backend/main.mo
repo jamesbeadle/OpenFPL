@@ -599,16 +599,24 @@ actor Self {
           token = #ICFC;
         };
 
-        let _ = await icfc_backend_canister.requestLeaderboardPayout(payoutRequest);
-        stable_leaderboard_payout_requests := Array.append<LeaderboardPayoutCommands.PayoutRequest>(
-          stable_leaderboard_payout_requests,
-          [{
-            seasonId = dto.seasonId;
-            gameweek = dto.gameweek;
-            payoutStatus = #Pending;
-            payoutDate = null;
-          }],
-        );
+        let res = await icfc_backend_canister.requestLeaderboardPayout(payoutRequest);
+
+        switch (res) {
+          case (#ok(_)) {
+            stable_leaderboard_payout_requests := Array.append<LeaderboardPayoutCommands.PayoutRequest>(
+              stable_leaderboard_payout_requests,
+              [{
+                seasonId = dto.seasonId;
+                gameweek = dto.gameweek;
+                payoutStatus = #Pending;
+                payoutDate = null;
+              }],
+            );
+          };
+          case (#err(error)) {
+            return #err(error);
+          };
+        };
 
         return #ok();
       };
@@ -619,9 +627,10 @@ actor Self {
 
   };
 
-  public shared ({ caller }) func completeLeaderboardPayoutNotification(dto : LeaderboardPayoutCommands.CompleteLeaderboardPayout) : async Result.Result<(), Enums.Error> {
+  /* ----- ICFC Callback for paid LeaderBoard ----- */
+  public shared ({ caller }) func leaderboardPaid(dto : LeaderboardPayoutCommands.CompleteLeaderboardPayout) : async Result.Result<(), Enums.Error> {
     assert Principal.toText(caller) == CanisterIds.ICFC_BACKEND_CANISTER_ID;
-    // TODO - find the season and gameweek and update the payout status
+
     let foundPayoutRequest = Array.find<LeaderboardPayoutCommands.PayoutRequest>(
       stable_leaderboard_payout_requests,
       func(entry : LeaderboardPayoutCommands.PayoutRequest) : Bool {
@@ -633,21 +642,19 @@ actor Self {
         return #err(#NotFound);
       };
       case (foundPayoutRequest) {
-        stable_leaderboard_payout_requests := Array.filter<LeaderboardPayoutCommands.PayoutRequest>(
+        stable_leaderboard_payout_requests := Array.map(
           stable_leaderboard_payout_requests,
-          func(entry : LeaderboardPayoutCommands.PayoutRequest) : Bool {
-            entry.seasonId != dto.seasonId or entry.gameweek != dto.gameweek;
+          func(entry : LeaderboardPayoutCommands.PayoutRequest) : LeaderboardPayoutCommands.PayoutRequest {
+            if (entry.seasonId == dto.seasonId and entry.gameweek == dto.gameweek) {
+              return {
+                seasonId = entry.seasonId;
+                gameweek = entry.gameweek;
+                payoutStatus = #Paid;
+                payoutDate = ?Time.now();
+              };
+            };
+            return entry;
           },
-        );
-
-        stable_leaderboard_payout_requests := Array.append<LeaderboardPayoutCommands.PayoutRequest>(
-          stable_leaderboard_payout_requests,
-          [{
-            seasonId = dto.seasonId;
-            gameweek = dto.gameweek;
-            payoutStatus = #Paid;
-            payoutDate = ?Time.now();
-          }],
         );
       };
     };
