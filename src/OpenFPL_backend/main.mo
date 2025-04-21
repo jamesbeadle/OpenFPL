@@ -623,6 +623,30 @@ actor Self {
         entry.seasonId == dto.seasonId and entry.gameweek == dto.gameweek;
       },
     );
+    switch (foundPayoutRequest) {
+      case (null) {
+        return #err(#NotFound);
+      };
+      case (foundPayoutRequest) {
+        stable_leaderboard_payout_requests := Array.filter<LeaderboardPayoutCommands.PayoutRequest>(
+          stable_leaderboard_payout_requests,
+          func(entry : LeaderboardPayoutCommands.PayoutRequest) : Bool {
+            entry.seasonId != dto.seasonId or entry.gameweek != dto.gameweek;
+          },
+        );
+
+        stable_leaderboard_payout_requests := Array.append<LeaderboardPayoutCommands.PayoutRequest>(
+          stable_leaderboard_payout_requests,
+          [{
+            seasonId = dto.seasonId;
+            gameweek = dto.gameweek;
+            payoutStatus = #Paid;
+            payoutDate = ?Time.now();
+          }],
+        );
+      };
+    };
+    
     return #ok();
   };
 
