@@ -69,6 +69,7 @@ import AppTypes "types/app_types";
 import CanisterCommands "mo:waterway-mops/canister-management/CanisterCommands";
 import CanisterQueries "mo:waterway-mops/canister-management/CanisterQueries";
 import CanisterManager "mo:waterway-mops/canister-management/CanisterManager";
+import FixtureQueries "mo:waterway-mops/queries/football-queries/FixtureQueries";
 
 /* ----- Only Stable Variables Should Use Types ----- */
 
@@ -664,12 +665,54 @@ actor Self {
 
   public shared ({ caller }) func finaliseFixtureNotification(dto : LeagueNotificationCommands.CompleteFixtureNotification) : async Result.Result<(), Enums.Error> {
     assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
-    let _ = await userManager.calculateFantasyTeamScores(Environment.LEAGUE_ID, dto.seasonId, dto.fixtureId, dto.fixtureMonth);
-    let managerCanisterIds = userManager.getUniqueManagerCanisterIds();
 
-    await seasonManager.updateDataHash("league_status");
+    let fixtures = await getFixtures({ leagueId = Environment.LEAGUE_ID; seasonId = dto.seasonId });
 
-    return #ok();
+    switch(fixtures){
+      case (#ok foundFixtures){
+        
+        let fixture = Array.find<FixtureQueries.Fixture>(foundFixtures.fixtures, func(entry:FixtureQueries.Fixture) : Bool {
+          entry.id == dto.fixtureId;
+        });
+
+        switch(fixture){
+          case (?foundFixture){
+
+            let fixtureGameweekFixtures = Array.filter<FixtureQueries.Fixture>(foundFixtures.fixtures, func(entry: FixtureQueries.Fixture){
+              entry.gameweek == foundFixture.gameweek; 
+            });
+
+            let sortedFixtures = Array.sort<DataCanister.Fixture>(
+              fixtureGameweekFixtures,
+              func(entry1 : DataCanister.Fixture, entry2 : DataCanister.Fixture) : Order.Order {
+                if (entry1.kickOff > entry2.kickOff) { return #less };
+                if (entry1.kickOff == entry2.kickOff) { return #equal };
+                return #greater;
+              },
+            );
+
+            if (Array.size(sortedFixtures) > 0) {
+              let firstGameweekFixture : DataCanister.Fixture = sortedFixtures[0];
+              var fixtureMonth : BaseDefinitions.CalendarMonth = DateTimeUtilities.unixTimeToMonth(firstGameweekFixture.kickOff);
+              let _ = await userManager.calculateFantasyTeamScores(Environment.LEAGUE_ID, dto.seasonId, foundFixture.gameweek, fixtureMonth);
+              await seasonManager.updateDataHash("league_status");
+              return #ok();  
+            };
+
+            return #err(#NotFound);
+            
+          };
+          case (null){
+            return #err(#NotFound);
+          }
+        };
+
+      };
+      case (#err error){
+        return #err(error);
+      }
+    };
+
   };
 
   public shared ({ caller }) func completeSeasonNotification(dto : LeagueNotificationCommands.CompleteSeasonNotification) : async Result.Result<(), Enums.Error> {
