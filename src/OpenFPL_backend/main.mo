@@ -7,7 +7,6 @@ import Enums "mo:waterway-mops/Enums";
 import ICFCEnums "mo:waterway-mops/ICFCEnums";
 import CanisterIds "mo:waterway-mops/CanisterIds";
 import Management "mo:waterway-mops/Management";
-import CanisterUtilities "mo:waterway-mops/CanisterUtilities";
 import FootballIds "mo:waterway-mops/football/FootballIds";
 import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
 import BaseDefinitions "mo:waterway-mops/BaseDefinitions";
@@ -593,32 +592,27 @@ actor Self {
         };
 
         let payoutRequest : LeaderboardPayoutCommands.LeaderboardPayoutRequest = {
-          app = #ICFC;
+          app = #OpenFPL;
           entries = entries;
           gameweek = dto.gameweek;
           seasonId = dto.seasonId;
-          token = #ICFC;
+          token = BaseUtilities.tokenToText(#ICFC);
         };
 
-        let res = await icfc_backend_canister.requestLeaderboardPayout(payoutRequest);
-
-        switch (res) {
-          case (#ok(_)) {
-            stable_leaderboard_payout_requests := Array.append<LeaderboardPayoutCommands.PayoutRequest>(
-              stable_leaderboard_payout_requests,
-              [{
-                seasonId = dto.seasonId;
-                gameweek = dto.gameweek;
-                payoutStatus = #Pending;
-                payoutDate = null;
-              }],
-            );
-          };
-          case (#err(error)) {
-            return #err(error);
-          };
+        let sendReq = await icfc_backend_canister.requestLeaderboardPayout(payoutRequest);
+        let #ok(_) = sendReq else {
+          return sendReq;
         };
 
+        stable_leaderboard_payout_requests := Array.append<LeaderboardPayoutCommands.PayoutRequest>(
+          stable_leaderboard_payout_requests,
+          [{
+            seasonId = dto.seasonId;
+            gameweek = dto.gameweek;
+            payoutStatus = #Pending;
+            payoutDate = null;
+          }],
+        );
         return #ok();
       };
       case (#err(error)) {
@@ -666,21 +660,30 @@ actor Self {
   public shared ({ caller }) func finaliseFixtureNotification(dto : LeagueNotificationCommands.CompleteFixtureNotification) : async Result.Result<(), Enums.Error> {
     assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
 
-    let fixtures = await getFixtures({ leagueId = Environment.LEAGUE_ID; seasonId = dto.seasonId });
+    let fixtures = await getFixtures({
+      leagueId = Environment.LEAGUE_ID;
+      seasonId = dto.seasonId;
+    });
 
-    switch(fixtures){
-      case (#ok foundFixtures){
-        
-        let fixture = Array.find<FixtureQueries.Fixture>(foundFixtures.fixtures, func(entry:FixtureQueries.Fixture) : Bool {
-          entry.id == dto.fixtureId;
-        });
+    switch (fixtures) {
+      case (#ok foundFixtures) {
 
-        switch(fixture){
-          case (?foundFixture){
+        let fixture = Array.find<FixtureQueries.Fixture>(
+          foundFixtures.fixtures,
+          func(entry : FixtureQueries.Fixture) : Bool {
+            entry.id == dto.fixtureId;
+          },
+        );
 
-            let fixtureGameweekFixtures = Array.filter<FixtureQueries.Fixture>(foundFixtures.fixtures, func(entry: FixtureQueries.Fixture){
-              entry.gameweek == foundFixture.gameweek; 
-            });
+        switch (fixture) {
+          case (?foundFixture) {
+
+            let fixtureGameweekFixtures = Array.filter<FixtureQueries.Fixture>(
+              foundFixtures.fixtures,
+              func(entry : FixtureQueries.Fixture) {
+                entry.gameweek == foundFixture.gameweek;
+              },
+            );
 
             let sortedFixtures = Array.sort<DataCanister.Fixture>(
               fixtureGameweekFixtures,
@@ -696,21 +699,21 @@ actor Self {
               var fixtureMonth : BaseDefinitions.CalendarMonth = DateTimeUtilities.unixTimeToMonth(firstGameweekFixture.kickOff);
               let _ = await userManager.calculateFantasyTeamScores(Environment.LEAGUE_ID, dto.seasonId, foundFixture.gameweek, fixtureMonth);
               await seasonManager.updateDataHash("league_status");
-              return #ok();  
+              return #ok();
             };
 
             return #err(#NotFound);
-            
+
           };
-          case (null){
+          case (null) {
             return #err(#NotFound);
-          }
+          };
         };
 
       };
-      case (#err error){
+      case (#err error) {
         return #err(error);
-      }
+      };
     };
 
   };
