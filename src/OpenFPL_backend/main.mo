@@ -11,7 +11,6 @@ import FootballIds "mo:waterway-mops/football/FootballIds";
 import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
 import BaseDefinitions "mo:waterway-mops/BaseDefinitions";
 import BaseQueries "mo:waterway-mops/queries/BaseQueries";
-import Root "mo:waterway-mops/sns-wrappers/root";
 import PlayerQueries "mo:waterway-mops/queries/football-queries/PlayerQueries";
 import Environment "Environment";
 import LeagueNotificationCommands "mo:waterway-mops/football/LeagueNotificationCommands";
@@ -563,7 +562,7 @@ actor Self {
   };
 
   public shared ({ caller }) func completeGameweekNotification(dto : LeagueNotificationCommands.CompleteGameweekNotification) : async Result.Result<(), Enums.Error> {
-
+    assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
     let managerCanisterIds = userManager.getUniqueManagerCanisterIds();
     let _ = leaderboardManager.calculateLeaderboards(dto.seasonId, dto.gameweek, 0, managerCanisterIds);
 
@@ -585,15 +584,17 @@ actor Self {
         var entries : [LeaderboardPayoutCommands.LeaderboardEntry] = [];
         for (entry in Iter.fromArray(foundLeaderboard.entries)) {
           let leaderboardEntry : LeaderboardPayoutCommands.LeaderboardEntry = {
-            principalId = entry.principalId;
+            appPrincipalId = entry.principalId;
             rewardAmount = entry.rewardAmount;
+            payoutStatus = #Pending;
+            payoutDate = null;
           };
           entries := Array.append<LeaderboardPayoutCommands.LeaderboardEntry>(entries, [leaderboardEntry]);
         };
 
         let payoutRequest : LeaderboardPayoutCommands.LeaderboardPayoutRequest = {
           app = #OpenFPL;
-          entries = entries;
+          leaderboard = entries;
           gameweek = dto.gameweek;
           seasonId = dto.seasonId;
           token = BaseUtilities.tokenToText(#ICFC);
@@ -609,8 +610,9 @@ actor Self {
           [{
             seasonId = dto.seasonId;
             gameweek = dto.gameweek;
-            payoutStatus = #Pending;
-            payoutDate = null;
+            leaderboard = entries;
+            totalEntries = Array.size(entries);
+            totalPaid = 0;
           }],
         );
         return #ok();
@@ -644,8 +646,9 @@ actor Self {
               return {
                 seasonId = entry.seasonId;
                 gameweek = entry.gameweek;
-                payoutStatus = #Paid;
-                payoutDate = ?Time.now();
+                leaderboard = dto.leaderboard;
+                totalEntries = dto.totalEntries;
+                totalPaid = dto.totalPaid;
               };
             };
             return entry;
