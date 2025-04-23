@@ -13,7 +13,10 @@
   import TeamPlayersTableHeader from "./team-players-table-header.svelte";
   import type { Player__1 } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
-  export let clubId;
+  interface Props {
+    clubId: number;
+  }
+  let { clubId }: Props = $props();
 
   onMount(async () => {
     players = $playerStore.filter((x) => x.clubId == clubId)

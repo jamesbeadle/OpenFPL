@@ -4,8 +4,11 @@
     import { convertPositionToIndex, getPlayerName, getPositionAbbreviation } from "$lib/utils/helpers";
     import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
     
-    export let gameweekData: Writable<GameweekData[]>;
-    export let showDetailModal: (gameweekData: GameweekData) => void;
+    interface Props {
+      gameweekData: Writable<GameweekData[]>;
+      showDetailModal: (gameweekData: GameweekData) => void;
+    }
+    let { gameweekData, showDetailModal }: Props = $props();
 
 </script>
 <div class="flex flex-col">

@@ -7,7 +7,10 @@
     import { rewardRatesStore } from "$lib/stores/reward-pool-store";
     import { globalDataLoaded } from "$lib/managers/store-manager";
 
-    export let seasonName: string;
+    interface Props {
+        seasonName: string;
+    }
+    let { seasonName }: Props = $props();
 
     let loadingRewardRates = true;
     let loadingManagerCount = true;

@@ -16,10 +16,13 @@
   import LocalSpinner from "../shared/local-spinner.svelte";
   import type { Club, Fixture, Player, ClubId } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   
-  export let clubId: ClubId;
+  
+  interface Props {
+    club: Club;
+  }
+  let { club }: Props = $props();
 
   let isLoading = true;
-  let club: Club;
   let nextFixture: Fixture | null;
   let nextFixtureHomeTeam: Club | undefined;
   let nextFixtureAwayTeam: Club | undefined;

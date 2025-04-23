@@ -15,11 +15,13 @@
   import LocalSpinner from "../shared/local-spinner.svelte";
   import type { FantasyTeamSnapshot, GameweekNumber, Club } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
-
-  export let fantasyTeam: Writable<FantasyTeamSnapshot | null>;
-  export let gridSetup: number[][];
-  export let gameweekPlayers: Writable<GameweekData[]>;
-  export let selectedGameweek: Writable<GameweekNumber>;
+  interface Props {
+    fantasyTeam: Writable<FantasyTeamSnapshot | null>;
+      gridSetup: number[][];
+      gameweekPlayers: Writable<GameweekData[]>;
+        selectedGameweek: Writable<GameweekNumber>;
+  }
+  let { fantasyTeam, gridSetup, gameweekPlayers, selectedGameweek }: Props = $props();
   
   let pitchHeight = 0;
   let pitchElement: HTMLImageElement | null = null;

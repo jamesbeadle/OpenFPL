@@ -3,7 +3,11 @@
     import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
     import type { Club } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
-    export let club: Club;
+    interface Props {
+        club: Club;
+    }
+    let {  club }: Props = $props();
+    
 </script>
 
 <div class="flex flex-col items-center flex-grow">

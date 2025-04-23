@@ -3,9 +3,12 @@
     import TeamFilter from "./team-filter.svelte";
     import { clubStore } from "$lib/stores/club-store";
 
-    export let selectedTeamIndex: Writable<number>;
-    export let selectedTeamId: Writable<number>;
-    export let selectedMonth: Writable<number>;
+    interface Props {
+        selectedTeamIndex: Writable<number>;
+        selectedTeamId: Writable<number>;
+        selectedMonth: Writable<number>;
+    }
+    let { selectedTeamIndex, selectedTeamId, selectedMonth }: Props = $props();
 
     function changeTeam(delta: number) {
         $selectedTeamIndex =

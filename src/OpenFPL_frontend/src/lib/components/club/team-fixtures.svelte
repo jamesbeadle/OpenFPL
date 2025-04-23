@@ -15,9 +15,12 @@
   import { writable } from "svelte/store";
   import TeamFixturesTableHeader from "./team-fixtures-table-header.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-    import LocalSpinner from "../shared/local-spinner.svelte";
+  import LocalSpinner from "../shared/local-spinner.svelte";
 
-  export let clubId: number | null = null;
+  interface Props {
+    clubId: number;
+  }
+  let { clubId }: Props = $props();
 
   let fixturesWithTeams: FixtureWithClubs[] = [];
   let selectedFixtureType = writable(-1);

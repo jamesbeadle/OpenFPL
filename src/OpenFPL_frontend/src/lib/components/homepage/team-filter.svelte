@@ -1,10 +1,13 @@
 <script lang="ts">
     import { clubStore } from "$lib/stores/club-store";
     import type { Writable } from "svelte/store";
-    
-    export let selectedTeamId: Writable<number | null>;
-    export let changeTeam : (clubId: number) => void;
 
+    interface Props {
+        selectedTeamId: Writable<number | null>;
+        changeTeam : (clubId: number) => void;
+    }
+    let { selectedTeamId, changeTeam }: Props = $props();
+    
     $: if ($clubStore.length && !$selectedTeamId) {
         $selectedTeamId = $clubStore[0].id;
     }

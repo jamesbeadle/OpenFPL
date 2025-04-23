@@ -6,9 +6,13 @@
   import { convertPositionToAbbreviation, getFlagComponent, getPlayerName } from "$lib/utils/helpers";
   import type { Club } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
-  export let clubData: Club;
-  export let playerData: GameweekData;
-  export let isCaptain: boolean;
+  interface Props {
+    clubData: Club;
+    playerData: GameweekData;
+    isCaptain: boolean;
+  }
+  let { clubData, playerData, isCaptain }: Props = $props();
+  
 </script>
 
 <div class="flex flex-col items-center text-center">

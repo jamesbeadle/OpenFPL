@@ -4,7 +4,10 @@
     import HomepageGameweekPanel from "./homepage-gameweek-panel.svelte";
     import HomepageNextGamePanel from "./homepage-next-game-panel.svelte";
 
-    export let seasonName: string;
+    interface Props {
+      seasonName: string
+    }
+    let { seasonName }: Props = $props();
 </script>
 
 <PageHeader>

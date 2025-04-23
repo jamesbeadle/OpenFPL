@@ -7,11 +7,14 @@
   import GameweekDetailTableRow from "./gameweek-detail-table-row.svelte";
   import FantasyPlayerDetailModal from "../fantasy-team/fantasy-player-detail-modal.svelte";
   import type { FantasyTeamSnapshot, Club } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  
-  export let fantasyTeam: Writable<FantasyTeamSnapshot | null>;
-  export let gameweekPlayers: Writable<GameweekData[]>;
-  export let showModal = false;
-  export let activeSeasonName: string;
+
+  interface Props {
+    fantasyTeam: Writable<FantasyTeamSnapshot | null>;
+    gameweekPlayers: Writable<GameweekData[]>;
+    showModal: boolean;
+    activeSeasonName: string;
+  }
+  let { fantasyTeam, gameweekPlayers, showModal, activeSeasonName }: Props = $props();
   
   let selectedTeam: Club;
   let selectedOpponentTeam: Club;

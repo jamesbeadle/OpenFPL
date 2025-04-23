@@ -4,12 +4,15 @@
   import Pagination from "../shared/pagination.svelte";
   import {type Writable, writable, get} from "svelte/store";
 
-  export let leaderboard: any;
-  export let selectedGameweek: Writable<number>;
-  export let currentPage: number = 1;
-  export let totalPages: number = 0;
-  export let onPageChange: (page: number) => void;
-  export let searchQuery: Writable<string>;
+  interface Props {
+    leaderboard: any;
+    selectedGameweek: Writable<number>;
+    currentPage: number;
+    totalPages: number;
+    onPageChange: (page: number) => void;
+    searchQuery: Writable<string>;
+  }
+  let { leaderboard, selectedGameweek, currentPage, totalPages, onPageChange, searchQuery }: Props = $props();
 
   let searchInput: string = "";
 

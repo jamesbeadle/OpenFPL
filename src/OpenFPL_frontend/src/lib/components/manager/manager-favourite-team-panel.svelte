@@ -3,7 +3,11 @@
     import type { Writable } from "svelte/store";
     import type { Club } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
-    export let favouriteTeam: Writable<Club | null>;
+    interface Props {
+        favouriteTeam: Writable<Club | null>;
+    }
+    let { favouriteTeam }: Props = $props();
+    
 </script>
 <div class="flex-grow">
     <p class="content-panel-header">Favourite Team</p>

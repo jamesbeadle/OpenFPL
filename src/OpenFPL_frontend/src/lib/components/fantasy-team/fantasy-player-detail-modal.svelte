@@ -7,11 +7,15 @@
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import type { Club } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   
-  export let visible: boolean;
-  export let gameweekData: GameweekData;
-  export let playerTeam: Club;
-  export let opponentTeam: Club;
-  export let seasonName: string;
+  interface Props {
+    visible: boolean;
+    gameweekData: GameweekData;
+    playerTeam: Club;
+    opponentTeam: Club;
+    seasonName: string;
+  }
+  let { visible, gameweekData, playerTeam, opponentTeam, seasonName }: Props = $props();
+
 </script>
 
 <Modal showModal={visible} onClose={() => {visible = false;}} title="Player Detail">

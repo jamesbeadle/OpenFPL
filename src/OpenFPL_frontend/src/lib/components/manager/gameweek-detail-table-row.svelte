@@ -6,10 +6,13 @@
     import type { Writable } from "svelte/store";
     import type { FantasyTeamSnapshot, Club, Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     
-    export let fantasyTeam: Writable<FantasyTeamSnapshot | null>
-    export let player: Player;
-    export let data: GameweekData;
-    export let playerTeam: Club;
+    interface Props {
+        fantasyTeam: Writable<FantasyTeamSnapshot | null>;
+        player: Player;
+        data: GameweekData;
+        playerTeam: Club;
+    }
+    let { fantasyTeam, player, data, playerTeam }: Props = $props();
 
 </script>
 <div class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer 

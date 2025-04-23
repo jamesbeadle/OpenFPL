@@ -1,8 +1,12 @@
 <script lang="ts">
     import type { Writable } from "svelte/store";
+    
+    interface Props {
+        changeLeaderboardType : (delta: number) => void
+        selectedLeaderboardType : Writable<number>;
+    }
+    let { changeLeaderboardType, selectedLeaderboardType }: Props = $props();
 
-    export let changeLeaderboardType : (delta: number) => void;
-    export let selectedLeaderboardType : Writable<number>;
 </script>
 <div class="mt-6 xs:p-4 xs:mt-0 {$selectedLeaderboardType === 3 ? 'pb-6' : ''}">
     <div class="flex flex-col items-center gap-4 sm:flex-row sm:justify-between">

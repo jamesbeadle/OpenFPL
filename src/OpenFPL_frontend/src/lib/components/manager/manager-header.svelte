@@ -11,7 +11,10 @@
     import LocalSpinner from "../shared/local-spinner.svelte";
     import type { Manager, Club } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
-    export let manager: Manager;
+    interface Props {
+      manager: Manager;
+    }
+    let { manager }: Props = $props();
     
     let isLoading = true;
     let joinedDate = "";

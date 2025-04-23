@@ -13,7 +13,11 @@
   import LocalSpinner from "../shared/local-spinner.svelte";
   import type { Manager } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
-  export let principalId = "";
+  interface Props {
+    principalId: string;
+  }
+  let { principalId }: Props = $props();
+
   let manager: Manager | null;
   let isLoading = true;
   let sortField: 'gameweek' | 'points' = 'gameweek';
