@@ -15,12 +15,12 @@
     }
     let { manager }: Props = $props();
     
-    let isLoading = true;
-    let joinedDate = "";
-    let profilePicture: string;
+    let isLoading = $state(true);
+    let joinedDate = $state("");
+    let profilePicture = $state("");
     let favouriteTeam = $state<Club | null>(null);
-    let displayName = "";
-    let selectedSeason = "";
+    let displayName = $state("");
+    let selectedSeason = $state("");
 
     onMount(async () => {
       displayName = manager.username === manager.principalId ? "Unknown" : manager.username;

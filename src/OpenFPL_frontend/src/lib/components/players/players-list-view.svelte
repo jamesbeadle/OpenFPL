@@ -24,10 +24,10 @@
   let minValue = $state(0);
   let maxValue = $state(0);
   let currentPage = $state(1);
-  let filteredPlayers: Player[] = [];
-  let isLoading = true;
-  let sortField: 'value' | 'points' = 'value';
-  let sortDirection: 'asc' | 'desc' = 'desc';
+  let filteredPlayers: Player[] = $state([]);
+  let isLoading = $state(true);
+  let sortField: 'value' | 'points' = $state('value');
+  let sortDirection: 'asc' | 'desc' = $state('desc');
 
   let playerPoints = new Map<number, number>();
 

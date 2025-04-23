@@ -16,6 +16,14 @@ export interface BettableLeagues {
   leagues: Array<League>;
 }
 export type CalendarMonth = number;
+export interface Canister {
+  app: WaterwayLabsApp;
+  canisterName: string;
+  canisterType: CanisterType;
+  canisterId: CanisterId;
+}
+export type CanisterId = string;
+export type CanisterType = { SNS: null } | { Dynamic: null } | { Static: null };
 export interface Club {
   id: ClubId;
   secondaryColourHex: string;
@@ -28,16 +36,28 @@ export interface Club {
 }
 export type ClubId = number;
 export interface ClubSummary {
+  mvp: MostValuablePlayer;
   clubId: ClubId;
   clubName: string;
+  totalMFValue: number;
+  totalGKValue: number;
+  totalPlayers: number;
   totalValue: number;
+  totalDefenders: number;
+  totalForwards: number;
   positionText: string;
   primaryColour: string;
+  totalGoalkeepers: number;
+  gender: Gender;
   shirtType: ShirtType;
+  totalDFValue: number;
   thirdColour: string;
   secondaryColour: string;
+  totalFWValue: number;
   position: bigint;
+  priorValue: number;
   leagueId: LeagueId;
+  totalMidfielders: number;
 }
 export interface ClubValueLeaderboard {
   clubs: Array<ClubSummary>;
@@ -45,14 +65,6 @@ export interface ClubValueLeaderboard {
 export interface Clubs {
   clubs: Array<Club>;
   leagueId: LeagueId;
-}
-export interface Countries {
-  countries: Array<Country>;
-}
-export interface Country {
-  id: CountryId;
-  code: string;
-  name: string;
 }
 export type CountryId = number;
 export interface CreateClub {
@@ -92,6 +104,14 @@ export interface DataHash {
 }
 export interface DataHashes {
   dataHashes: Array<DataHash>;
+}
+export interface DataTotals {
+  totalGovernanceRewards: bigint;
+  totalPlayers: bigint;
+  totalClubs: bigint;
+  totalNeurons: bigint;
+  totalProposals: bigint;
+  totalLeagues: bigint;
 }
 export interface DetailedPlayer {
   id: PlayerId;
@@ -169,10 +189,10 @@ export type GetClubValueLeaderboard = {};
 export interface GetClubs {
   leagueId: LeagueId;
 }
-export type GetCountries = {};
 export interface GetDataHashes {
   leagueId: LeagueId;
 }
+export type GetDataTotals = {};
 export interface GetFixtures {
   seasonId: SeasonId;
   leagueId: LeagueId;
@@ -198,6 +218,7 @@ export interface GetPlayerDetailsForGameweek {
   gameweek: GameweekNumber;
   leagueId: LeagueId;
 }
+export type GetPlayerValueLeaderboard = {};
 export interface GetPlayers {
   leagueId: LeagueId;
 }
@@ -297,6 +318,12 @@ export interface LoanPlayer {
 }
 export interface LoanedPlayers {
   players: Array<Player>;
+}
+export interface MostValuablePlayer {
+  id: PlayerId;
+  value: number;
+  lastName: string;
+  firstName: string;
 }
 export interface MoveFixture {
   fixtureId: FixtureId;
@@ -402,6 +429,18 @@ export type PlayerStatus =
   | { Active: null }
   | { FreeAgent: null }
   | { Retired: null };
+export interface PlayerSummary {
+  clubId: ClubId;
+  totalValue: number;
+  playerId: PlayerId;
+  positionText: string;
+  position: bigint;
+  priorValue: number;
+  leagueId: LeagueId;
+}
+export interface PlayerValueLeaderboard {
+  players: Array<PlayerSummary>;
+}
 export interface Players {
   players: Array<Player>;
 }
@@ -440,24 +479,27 @@ export interface RescheduleFixture {
   seasonId: SeasonId;
   leagueId: LeagueId;
 }
-export type Result = { ok: Seasons } | { err: Error };
-export type Result_1 = { ok: RetiredPlayers } | { err: Error };
-export type Result_10 = { ok: LeagueStatus } | { err: Error };
-export type Result_11 = { ok: Fixtures } | { err: Error };
-export type Result_12 = { ok: DataHashes } | { err: Error };
-export type Result_13 = { ok: Countries } | { err: Error };
-export type Result_14 = { ok: Clubs } | { err: Error };
-export type Result_15 = { ok: ClubValueLeaderboard } | { err: Error };
-export type Result_16 = { ok: BettableLeagues } | { err: Error };
-export type Result_17 = { ok: BettableFixtures } | { err: Error };
-export type Result_2 = { ok: PostponedFixtures } | { err: Error };
-export type Result_3 = { ok: PlayersMap } | { err: Error };
-export type Result_4 = { ok: Players } | { err: Error };
-export type Result_5 = { ok: PlayerDetailsForGameweek } | { err: Error };
-export type Result_6 = { ok: PlayerDetails } | { err: Error };
-export type Result_7 = { ok: LoanedPlayers } | { err: Error };
-export type Result_8 = { ok: Leagues } | { err: Error };
-export type Result_9 = { ok: LeagueTable } | { err: Error };
+export type Result = { ok: null } | { err: Error };
+export type Result_1 = { ok: Seasons } | { err: Error };
+export type Result_10 = { ok: Leagues } | { err: Error };
+export type Result_11 = { ok: LeagueTable } | { err: Error };
+export type Result_12 = { ok: LeagueStatus } | { err: Error };
+export type Result_13 = { ok: Fixtures } | { err: Error };
+export type Result_14 = { ok: DataTotals } | { err: Error };
+export type Result_15 = { ok: DataHashes } | { err: Error };
+export type Result_16 = { ok: Clubs } | { err: Error };
+export type Result_17 = { ok: ClubValueLeaderboard } | { err: Error };
+export type Result_18 = { ok: Canister } | { err: Error };
+export type Result_19 = { ok: BettableLeagues } | { err: Error };
+export type Result_2 = { ok: RetiredPlayers } | { err: Error };
+export type Result_20 = { ok: BettableFixtures } | { err: Error };
+export type Result_3 = { ok: PostponedFixtures } | { err: Error };
+export type Result_4 = { ok: PlayersMap } | { err: Error };
+export type Result_5 = { ok: Players } | { err: Error };
+export type Result_6 = { ok: PlayerValueLeaderboard } | { err: Error };
+export type Result_7 = { ok: PlayerDetailsForGameweek } | { err: Error };
+export type Result_8 = { ok: PlayerDetails } | { err: Error };
+export type Result_9 = { ok: LoanedPlayers } | { err: Error };
 export interface RetirePlayer {
   playerId: ClubId;
   retirementDate: bigint;
@@ -496,12 +538,23 @@ export interface SetPlayerInjury {
   expectedEndDate: bigint;
 }
 export type ShirtType = { Filled: null } | { Striped: null };
+export interface Snapshot {
+  id: SnapshotId;
+  total_size: bigint;
+  taken_at_timestamp: bigint;
+}
+export type SnapshotId = Uint8Array | number[];
 export interface SubmitFixtureData {
   fixtureId: FixtureId;
   seasonId: SeasonId;
   gameweek: GameweekNumber;
   playerEventData: Array<PlayerEventData>;
   leagueId: LeagueId;
+}
+export interface TopupCanister {
+  app: WaterwayLabsApp;
+  cycles: bigint;
+  canisterId: CanisterId;
 }
 export interface TransferPlayer {
   clubId: ClubId;
@@ -554,32 +607,52 @@ export interface ValueHistory {
   changedOn: bigint;
   newValue: number;
 }
+export type WaterwayLabsApp =
+  | { OpenFPL: null }
+  | { OpenWSL: null }
+  | { ICPCasino: null }
+  | { FootballGod: null }
+  | { ICF1: null }
+  | { ICFC: null }
+  | { ICGC: null }
+  | { ICPFA: null }
+  | { TransferKings: null }
+  | { JeffBets: null }
+  | { OpenBook: null }
+  | { OpenCare: null }
+  | { OpenChef: null }
+  | { OpenBeats: null }
+  | { WaterwayLabs: null };
 export interface _SERVICE {
   addInitialFixtures: ActorMethod<[AddInitialFixtures], undefined>;
+  calculateDataTotals: ActorMethod<[], undefined>;
   createClub: ActorMethod<[CreateClub], undefined>;
   createLeague: ActorMethod<[CreateLeague], undefined>;
   createPlayer: ActorMethod<[CreatePlayer], undefined>;
-  getBettableFixtures: ActorMethod<[GetBettableFixtures], Result_17>;
-  getBettableLeagues: ActorMethod<[GetBettableLeagues], Result_16>;
-  getClubValueLeaderboard: ActorMethod<[GetClubValueLeaderboard], Result_15>;
-  getClubs: ActorMethod<[GetClubs], Result_14>;
-  getCountries: ActorMethod<[GetCountries], Result_13>;
-  getDataHashes: ActorMethod<[GetDataHashes], Result_12>;
-  getFixtures: ActorMethod<[GetFixtures], Result_11>;
-  getLeagueStatus: ActorMethod<[GetLeagueStatus], Result_10>;
-  getLeagueTable: ActorMethod<[GetLeagueTable], Result_9>;
-  getLeagues: ActorMethod<[GetLeagues], Result_8>;
-  getLoanedPlayers: ActorMethod<[GetLoanedPlayers], Result_7>;
-  getPlayerDetails: ActorMethod<[GetPlayerDetails], Result_6>;
+  getBettableFixtures: ActorMethod<[GetBettableFixtures], Result_20>;
+  getBettableLeagues: ActorMethod<[GetBettableLeagues], Result_19>;
+  getCanisterInfo: ActorMethod<[], Result_18>;
+  getClubValueLeaderboard: ActorMethod<[GetClubValueLeaderboard], Result_17>;
+  getClubs: ActorMethod<[GetClubs], Result_16>;
+  getDataHashes: ActorMethod<[GetDataHashes], Result_15>;
+  getDataTotals: ActorMethod<[GetDataTotals], Result_14>;
+  getFixtures: ActorMethod<[GetFixtures], Result_13>;
+  getLeagueStatus: ActorMethod<[GetLeagueStatus], Result_12>;
+  getLeagueTable: ActorMethod<[GetLeagueTable], Result_11>;
+  getLeagues: ActorMethod<[GetLeagues], Result_10>;
+  getLoanedPlayers: ActorMethod<[GetLoanedPlayers], Result_9>;
+  getPlayerDetails: ActorMethod<[GetPlayerDetails], Result_8>;
   getPlayerDetailsForGameweek: ActorMethod<
     [GetPlayerDetailsForGameweek],
-    Result_5
+    Result_7
   >;
-  getPlayers: ActorMethod<[GetPlayers], Result_4>;
-  getPlayersMap: ActorMethod<[GetPlayersMap], Result_3>;
-  getPostponedFixtures: ActorMethod<[GetPostponedFixtures], Result_2>;
-  getRetiredPlayers: ActorMethod<[GetRetiredPlayers], Result_1>;
-  getSeasons: ActorMethod<[GetSeasons], Result>;
+  getPlayerValueLeaderboard: ActorMethod<[GetPlayerValueLeaderboard], Result_6>;
+  getPlayers: ActorMethod<[GetPlayers], Result_5>;
+  getPlayersMap: ActorMethod<[GetPlayersMap], Result_4>;
+  getPostponedFixtures: ActorMethod<[GetPostponedFixtures], Result_3>;
+  getRetiredPlayers: ActorMethod<[GetRetiredPlayers], Result_2>;
+  getSeasons: ActorMethod<[GetSeasons], Result_1>;
+  getSnapshotIds: ActorMethod<[], Array<Snapshot>>;
   loanPlayer: ActorMethod<[LoanPlayer], undefined>;
   moveFixture: ActorMethod<[MoveFixture], undefined>;
   postponeFixture: ActorMethod<[PostponeFixture], undefined>;
@@ -591,6 +664,7 @@ export interface _SERVICE {
   setFreeAgent: ActorMethod<[SetFreeAgent], undefined>;
   setPlayerInjury: ActorMethod<[SetPlayerInjury], undefined>;
   submitFixtureData: ActorMethod<[SubmitFixtureData], undefined>;
+  transferCycles: ActorMethod<[TopupCanister], Result>;
   transferPlayer: ActorMethod<[TransferPlayer], undefined>;
   unretirePlayer: ActorMethod<[UnretirePlayer], undefined>;
   updateClub: ActorMethod<[UpdateClub], undefined>;

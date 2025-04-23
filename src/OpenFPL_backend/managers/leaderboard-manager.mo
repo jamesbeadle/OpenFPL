@@ -43,12 +43,6 @@ module {
 
     public func getWeeklyLeaderboard(dto : LeaderboardQueries.GetWeeklyLeaderboard) : async Result.Result<LeaderboardQueries.WeeklyLeaderboard, Enums.Error> {
       
-      // TODO
-      
-      if (dto.limit > 100) {
-        return #err(#NotAllowed);
-      };
-
       let gameweekSeason = Array.find(
         weeklyLeaderboardCanisters,
         func(seasonEntry : (FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, Ids.CanisterId)])) : Bool {
@@ -75,10 +69,9 @@ module {
 
               let entriesDTO : LeaderboardQueries.GetWeeklyLeaderboard = {
                 gameweek = foundGameweek.0;
-                offset = dto.offset;
+                page = dto.page;
                 searchTerm = dto.searchTerm;
                 seasonId = foundGameweekSeason.0;
-                limit = 10;
               };
 
               let leaderboardEntries = await leaderboard_canister.getWeeklyLeaderboardEntries(entriesDTO);
@@ -138,6 +131,7 @@ module {
 
     public func getMonthlyLeaderboard(dto: LeaderboardQueries.GetMonthlyLeaderboard) : async Result.Result<LeaderboardQueries.MonthlyLeaderboard, Enums.Error> {
 // TODO
+return #err(#NotFound);
     };
 
     public func getMonthlyLeaderboardEntry(principalId : Text, seasonId : FootballIds.SeasonId, month : BaseDefinitions.CalendarMonth, clubId : FootballIds.ClubId) : async ?LeaderboardQueries.LeaderboardEntry {
@@ -178,6 +172,7 @@ module {
 
     public func getSeasonLeaderboard(dto: LeaderboardQueries.GetSeasonLeaderboard) : async Result.Result<LeaderboardQueries.SeasonLeaderboard, Enums.Error> {
 // TODO
+return #err(#NotFound);
     };
 
     public func getSeasonLeaderboardEntry(principalId : Text, seasonId : FootballIds.SeasonId) : async ?LeaderboardQueries.LeaderboardEntry {
@@ -207,6 +202,7 @@ module {
 
     public func mostValuableTeamLeaderboard(dto: LeaderboardQueries.GetMostValuableTeamLeaderboard) : async Result.Result<LeaderboardQueries.MostValuableTeamLeaderboard, Enums.Error> {
       // TODO
+return #err(#NotFound);
     };
 
 

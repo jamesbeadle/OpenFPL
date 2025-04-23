@@ -2,19 +2,18 @@
     import { clubStore } from "$lib/stores/club-store";
     import { userStore } from "$lib/stores/user-store";
     import { onMount } from "svelte";
-    import UpdateFavouriteTeamModal from "./update-favourite-team-modal.svelte";
     import { storeManager } from "$lib/managers/store-manager";
     import { getDateFromBigInt } from "$lib/utils/helpers";
     import LoadingDots from "../shared/loading-dots.svelte";
     import CopyPrincipal from "./copy-principal.svelte";
 
-    let isLoading = true;
-    $: teamName = $clubStore.find((x) => x.id == $userStore?.favouriteClubId)?.friendlyName ?? "";
+    let isLoading = $state(true);
     let showFavouriteTeamModal: boolean = false;
-    let username = "";
-    let joinedDate = "";
+    let username = $state("");
+    let joinedDate = $state("");
     let gameweek: number = 1;
     let unsubscribeUserProfile: () => void;
+    let teamName = $state("");
   
     onMount(async () => {
       await userStore.sync();
@@ -29,7 +28,7 @@
     });
   
   $effect(() => {
-      
+    teamName = $clubStore.find((x) => x.id == $userStore?.favouriteClubId)?.friendlyName ?? "";
   });
 
 
@@ -57,6 +56,6 @@
         {:else}
           {joinedDate}
         {/if}</h2>
-        <CopyPrincipal />
+        <CopyPrincipal  bgColor="gray" borderColor="white"/>
     </div>
   </div>

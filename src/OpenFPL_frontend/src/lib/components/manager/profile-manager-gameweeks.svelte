@@ -11,27 +11,27 @@
   import { goto } from "$app/navigation";
   import SortIcon from "$lib/icons/SortIcon.svelte";
   import LocalSpinner from "../shared/local-spinner.svelte";
-  import type { Manager } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { FantasyTeamSnapshot, Manager } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   interface Props {
     principalId: string;
   }
   let { principalId }: Props = $props();
 
-  let manager: Manager | null;
-  let isLoading = true;
-  let sortField: 'gameweek' | 'points' = 'gameweek';
-  let sortDirection: 'asc' | 'desc' = 'desc';
+  let manager: Manager | null = $state(null);
+  let isLoading = $state(true);
+  let sortField: 'gameweek' | 'points' = $state('gameweek');
+  let sortDirection: 'asc' | 'desc' = $state('desc');
+  let sortedGameweeks: FantasyTeamSnapshot[] | undefined = $state(undefined);
   
   $effect(() => {
-
-  });
-
-  $: id = page.url.searchParams.get("id") ?? principalId;
-  $: sortedGameweeks = manager?.gameweeks ? [...manager.gameweeks].sort((a, b) => {
+    sortedGameweeks = manager?.gameweeks ? [...manager.gameweeks].sort((a, b) => {
     const multiplier = sortDirection === 'asc' ? 1 : -1;
     return (a[sortField] - b[sortField]) * multiplier;
   }) : [];
+  });
+
+  let id = page.url.searchParams.get("id") ?? principalId;
 
   onMount(async () => {
     await storeManager.syncStores();
@@ -98,12 +98,9 @@
               <div class="flex items-center justify-between p-2 py-4 text-left border-b border-gray-700 cursor-pointer md:px-4 hover:bg-gray-800">
                 <div class="w-2/12">{gameweek.gameweek}</div>
                 <div class="flex items-center w-4/12">
-                  {#if playerCountry}
-                    <svelte:component
-                      this={getFlagComponent(captain?.nationality ?? 0)}
-                      class="hidden mr-4 w-9 h-9 md:flex"
-                      size="100"
-                    />
+                  {#if captain?.nationality! > 0}
+                    {@const flag = getFlagComponent(captain?.nationality!)}
+                    <flag class="w-12 h-12 xs:w-16 xs:h-16"></flag>
                   {/if}
                   <p class="truncate min-w-[40px] max-w-[40px] xxs:min-w-[80px] xxs:max-w-[80px] sm:min-w-[160px] sm:max-w-[160px] md:min-w-none md:max-w-none">
                     {#if captain}

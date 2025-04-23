@@ -566,12 +566,10 @@ actor Self {
       requestLeaderboardPayout : (dto : LeaderboardPayoutCommands.LeaderboardPayoutRequest) -> async Result.Result<(), Enums.Error>;
     };
 
-    // TODO: remove offset and limit
     let weeklyLeaderboardResult = await leaderboardManager.getWeeklyLeaderboard({
       seasonId = dto.seasonId;
       gameweek = dto.gameweek;
-      limit = 0;
-      offset = 0;
+      page = 0;
       searchTerm = "";
     });
 

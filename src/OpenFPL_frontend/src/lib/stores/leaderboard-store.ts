@@ -1,24 +1,31 @@
 import { LeaderboardService } from "$lib/services/leaderboard-service";
 import type {
   GetWeeklyLeaderboard,
-  WeeklyLeaderboard
+  WeeklyLeaderboard,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 function createLeaderboardStore() {
-
-  async function getWeeklyLeaderboard(dto: GetWeeklyLeaderboard): Promise<WeeklyLeaderboard | undefined> {
+  async function getWeeklyLeaderboard(
+    dto: GetWeeklyLeaderboard,
+  ): Promise<WeeklyLeaderboard | undefined> {
     return new LeaderboardService().getWeeklyLeaderboard(dto);
   }
 
-  async function getMonthlyLeaderboard(dto: GetWeeklyLeaderboard): Promise<WeeklyLeaderboard | undefined> {
+  async function getMonthlyLeaderboard(
+    dto: GetWeeklyLeaderboard,
+  ): Promise<WeeklyLeaderboard | undefined> {
     return new LeaderboardService().getWeeklyLeaderboard(dto);
   }
 
-  async function getSeasonLeaderboard(dto: GetWeeklyLeaderboard): Promise<WeeklyLeaderboard | undefined> {
+  async function getSeasonLeaderboard(
+    dto: GetWeeklyLeaderboard,
+  ): Promise<WeeklyLeaderboard | undefined> {
     return new LeaderboardService().getWeeklyLeaderboard(dto);
   }
 
-  async function getMostValuableTeamsLeaderboard(dto: GetWeeklyLeaderboard): Promise<WeeklyLeaderboard | undefined> {
+  async function getMostValuableTeamsLeaderboard(
+    dto: GetWeeklyLeaderboard,
+  ): Promise<WeeklyLeaderboard | undefined> {
     return new LeaderboardService().getWeeklyLeaderboard(dto);
   }
 
@@ -26,7 +33,7 @@ function createLeaderboardStore() {
     getWeeklyLeaderboard,
     getMonthlyLeaderboard,
     getSeasonLeaderboard,
-    getMostValuableTeamsLeaderboard
+    getMostValuableTeamsLeaderboard,
   };
 }
 

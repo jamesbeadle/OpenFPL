@@ -9,20 +9,15 @@
   import HomepageGameweekPanel from "./homepage-gameweek-panel.svelte";
   import HomepageNextGamePanel from "./homepage-next-game-panel.svelte";
 
-    let isLoading = true;
-    let seasonName = "";
+    let isLoading = $state(true);
+    let seasonName = $state("");
 
     onMount(() => {
-    let unsub: () => void = () => {};
-    unsub = globalDataLoaded.subscribe((loaded) => {
-      if (loaded) {
+    if(globalDataLoaded){
         loadCurrentStatusDetails();
         isLoading = false;
-        unsub();
       }
     });
-    isLoading = false;
-  });
 
     async function loadCurrentStatusDetails(){
       seasonName = await seasonStore.getSeasonName($leagueStore?.activeSeasonId ?? 1) ?? "-";

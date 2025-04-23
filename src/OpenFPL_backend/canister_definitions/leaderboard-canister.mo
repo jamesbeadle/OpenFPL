@@ -438,9 +438,7 @@ actor class _LeaderboardCanister() {
         //Reward leaderboard code
 
 
-
-
-        let droppedEntries = List.drop<AppTypes.LeaderboardEntry>(List.fromArray(sortedGameweekEntries), dto.offset);
+        let droppedEntries = List.drop<AppTypes.LeaderboardEntry>(List.fromArray(sortedGameweekEntries), ((dto.page - 1) * LEADERBOARD_ROW_COUNT_LIMIT));
         let paginatedEntries = List.take<AppTypes.LeaderboardEntry>(droppedEntries, LEADERBOARD_ROW_COUNT_LIMIT);
 
         let leaderboardDTO : LeaderboardQueries.WeeklyLeaderboard = {

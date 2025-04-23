@@ -10,11 +10,6 @@ module LeaderboardQueries = {
         seasonId : FootballIds.SeasonId;
         gameweek : FootballDefinitions.GameweekNumber;
         page : Nat;
-    };
-
-    public type GetLeaderbaordEntryByUsername = {
-        seasonId : FootballIds.SeasonId;
-        gameweek : FootballDefinitions.GameweekNumber;
         searchTerm : Text;
     };
 

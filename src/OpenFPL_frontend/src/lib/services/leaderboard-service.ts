@@ -18,9 +18,10 @@ export class LeaderboardService {
     );
   }
 
-  async getWeeklyLeaderboard(dto: GetWeeklyLeaderboard): Promise<WeeklyLeaderboard | undefined> {
+  async getWeeklyLeaderboard(
+    dto: GetWeeklyLeaderboard,
+  ): Promise<WeeklyLeaderboard | undefined> {
     try {
-
       const result = await this.actor.getWeeklyLeaderboard(dto);
       if (isError(result)) {
         return;

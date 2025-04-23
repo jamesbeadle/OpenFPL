@@ -18,7 +18,7 @@
   }
   let { fantasyTeam, teamValue }: Props = $props();
   
-  let isLoading = true;
+  let isLoading = $state(true);
   let activeSeason = $state("-");
   let activeGameweek = $state(1);
   let nextFixtureDate = $state("-");

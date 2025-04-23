@@ -27,13 +27,13 @@
     }
     let { player, club, gameweek }: Props = $props();
     
-    let nextFixture: Fixture | null = null;
-    let nextFixtureHomeTeam: Club;
-    let nextFixtureAwayTeam: Club;
+    let nextFixture: Fixture | null = $state(null);
+    let nextFixtureHomeTeam: Club | undefined = $state(undefined);
+    let nextFixtureAwayTeam: Club | undefined = $state(undefined);
 
-    let countdownTime: { days: number; hours: number; minutes: number; };
+    let countdownTime: { days: number; hours: number; minutes: number; } = $state({ days: 0, hours: 0, minutes: 0 });
   
-    let isLoading = true;
+    let isLoading = $state(true);
   
     onMount(async () => {
       await storeManager.syncStores();
@@ -63,7 +63,7 @@
   </ContentPanel>
   <ContentPanel>
     {#if nextFixture}
-      <HeaderFixturePanel loading={isLoading} {nextFixtureHomeTeam} {nextFixtureAwayTeam} />
+      <HeaderFixturePanel loading={isLoading} nextFixtureHomeTeam={nextFixtureHomeTeam!} nextFixtureAwayTeam={nextFixtureAwayTeam!} />
       <div class="vertical-divider"></div>
       <HeaderCountdownPanel loading={isLoading} {countdownTime} header="Upcoming Fixture" footer={`${formatUnixDateToSmallReadable(nextFixture.kickOff).toString()} ${formatUnixTimeToTime(nextFixture.kickOff)}`} />
     {:else}
