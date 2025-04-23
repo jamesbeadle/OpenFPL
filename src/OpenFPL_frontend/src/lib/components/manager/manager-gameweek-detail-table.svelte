@@ -1,5 +1,4 @@
 w<script lang="ts">
-  import { type Writable } from "svelte/store";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import { playerStore } from "$lib/stores/player-store";
   import { clubStore } from "$lib/stores/club-store";
@@ -9,8 +8,8 @@ w<script lang="ts">
   import type { FantasyTeamSnapshot, Club } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   interface Props {
-    fantasyTeam: Writable<FantasyTeamSnapshot | null>;
-    gameweekPlayers: Writable<GameweekData[]>;
+    fantasyTeam: FantasyTeamSnapshot | null;
+    gameweekPlayers: GameweekData[];
     showModal: boolean;
     activeSeasonName: string;
   }

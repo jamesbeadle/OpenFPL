@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { page } from "$app/state";
-  import { writable } from "svelte/store";
   import { storeManager } from "$lib/managers/store-manager";
   import { leagueStore } from "$lib/stores/league-store";
   import { seasonStore } from "$lib/stores/season-store";
@@ -18,7 +17,7 @@
   import type { Club, PlayerDetails, PlayerGameweek } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   
   let isLoading = true;
-  let selectedGameweek = writable(1);
+  let selectedGameweek = $state(1);
   let fixturesWithTeams: FixtureWithClubs[] = [];
   let playerDetails: PlayerDetails;
   let selectedOpponent: Club | null = null;

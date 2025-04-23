@@ -1,15 +1,14 @@
 <script lang="ts">
-    import type { Writable } from "svelte/store";
     import { leagueStore } from "$lib/stores/league-store";
     import type { TeamSetup } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
     interface Props {
-      pitchViewActive: Writable<boolean>;
-      selectedFormation: Writable<string>;
-      availableFormations: Writable<string[]>;
-      transferWindowPlayed: Writable<boolean>;
-      isSaveButtonActive: Writable<boolean>;
-      fantasyTeam: Writable<TeamSetup | undefined>;
+      pitchViewActive: boolean;
+      selectedFormation: string;
+      availableFormations: string[];
+      transferWindowPlayed: boolean;
+      isSaveButtonActive: boolean;
+      fantasyTeam: TeamSetup | undefined;
       showPitchView : () => void;
       showListView : () => void;
       playTransferWindow : () => void;

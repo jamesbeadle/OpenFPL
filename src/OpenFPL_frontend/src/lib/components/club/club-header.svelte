@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { writable } from "svelte/store";
   import { leagueStore } from "$lib/stores/league-store";
   import { seasonStore } from "$lib/stores/season-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
@@ -27,7 +26,7 @@
   let nextFixtureHomeTeam: Club | undefined = $state(undefined);
   let nextFixtureAwayTeam: Club | undefined = $state(undefined);
   let fixturesWithTeams: FixtureWithClubs[] = $state([]);
-  let selectedGameweek = writable(1);
+  let selectedGameweek = $state(1);
   let tableData: any[] = [];
   let highestScoringPlayer: Player | null = $state(null);
   let seasonName = $state("");

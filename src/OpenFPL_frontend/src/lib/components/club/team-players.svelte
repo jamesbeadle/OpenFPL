@@ -8,7 +8,6 @@
     getPositionAbbreviation
   } from "../../utils/helpers";
   import { playerStore } from "$lib/stores/player-store";
-  import { writable } from "svelte/store";
   import PositionFilter from "../shared/position-filter.svelte";
   import TeamPlayersTableHeader from "./team-players-table-header.svelte";
   import type { Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
@@ -25,7 +24,7 @@
   });
 
   let players: Player[] = [];
-  let selectedPosition = writable(-1);
+  let selectedPosition = $state(-1);
   $effect(() => {
     filteredPlayers = $selectedPosition === -1
       ? players

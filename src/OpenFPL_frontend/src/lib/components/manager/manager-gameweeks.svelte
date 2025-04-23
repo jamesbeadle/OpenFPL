@@ -3,11 +3,10 @@
   import { countryStore } from "$lib/stores/country-store";
   import { getBonusIcon, getFlagComponent, getPlayerName } from "$lib/utils/helpers";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
-  import type { Writable } from "svelte/store";
   import type { Manager } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   interface Props {
-    manager: Writable<Manager | null>;
+    manager: Manager | null;
     viewGameweekDetail: (selectedGameweek: number) => void;
   }
   let { manager, viewGameweekDetail }: Props = $props();

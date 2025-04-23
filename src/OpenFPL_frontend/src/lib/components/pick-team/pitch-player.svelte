@@ -1,5 +1,4 @@
 <script lang="ts">
-    import type { Writable } from "svelte/store";
     import RemovePlayerIcon from "$lib/icons/RemovePlayerIcon.svelte";
     import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
     import ActiveCaptainIcon from "$lib/icons/ActiveCaptainIcon.svelte";
@@ -9,11 +8,11 @@
     import type { TeamSetup, Club, Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     
     interface Props {
-      fantasyTeam: Writable<TeamSetup | undefined>;
+      fantasyTeam: TeamSetup | undefined;
       player: Player;
       club: Club;
-      canSellPlayer: Writable<boolean>;
-      sessionAddedPlayers: Writable<number[]>;
+      canSellPlayer: boolean;
+      sessionAddedPlayers: number[];
       removePlayer: (playerId: number) => void;
       setCaptain: (playerId: number) => void;
     }

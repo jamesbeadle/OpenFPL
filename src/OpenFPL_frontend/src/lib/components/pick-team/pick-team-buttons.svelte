@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { writable, type Writable } from "svelte/store";
   import { playerStore } from "$lib/stores/player-store";
   import { managerStore } from "$lib/stores/manager-store";
   import { seasonStore } from "$lib/stores/season-store";
@@ -14,27 +13,27 @@
   import type { AppStatus, TeamSetup } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
     interface Props {
-      fantasyTeam: Writable<TeamSetup | undefined>;
-      selectedFormation: Writable<string>;
-      availableFormations: Writable<string[]>;
-      pitchView: Writable<Boolean>;
-      teamValue: Writable<number>;
-      sessionAddedPlayers: Writable<number[]>;
+      fantasyTeam: TeamSetup | undefined;
+      selectedFormation: string;
+      availableFormations: string[];
+      pitchView: Boolean;
+      teamValue: number;
+      sessionAddedPlayers: number[];
     }
     let { fantasyTeam,selectedFormation, availableFormations,  pitchView, teamValue, sessionAddedPlayers }: Props = $props();
   
   let startingFantasyTeam: TeamSetup | undefined = $state(undefined);
-  let isSaveButtonActive = writable(false);
+  let isSaveButtonActive = $state(false);
   let activeSeason: string;
   let activeGameweek: number;
-  let newUsername = writable("");
+  let newUsername = $state("");
   let showUsernameModal = false;
   let bonusUsedInSession = false;
-  let transferWindowPlayed = writable(false);
+  let transferWindowPlayed = $state(false);
   let transferWindowPlayedInSession = false;
   let isLoading = $state(true);
   let appStatus: AppStatus;
-  let pitchViewActive = writable(true);
+  let pitchViewActive = $state(true);
 
   $effect(() => {
     if ($fantasyTeam && $playerStore.length > 0) {

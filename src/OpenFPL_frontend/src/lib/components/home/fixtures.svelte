@@ -4,7 +4,6 @@
     import { leagueStore } from "$lib/stores/league-store";
     
     import { formatUnixTimeToTime, getGameweeks, reduceFilteredFixtures } from "../../utils/helpers";
-    import { writable } from "svelte/store";
     import { globalDataLoaded } from "$lib/managers/store-manager";
     import GameweekFilter from "../shared/filters/gameweek-filter.svelte";
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
@@ -15,7 +14,7 @@
   
     let isLoading = $state(true);
     let gameweeks = getGameweeks(Number(process.env.TOTAL_GAMEWEEKS));
-    let selectedGameweek = writable(1);
+    let selectedGameweek = $state(1);
     let filteredFixtures: FixtureWithClubs[] = [];
     let mergedFixtures: FixtureWithClubs[] = [];
     let groupedFixtures: { [key: string]: FixtureWithClubs[]; } = $state({ ['']: [] });

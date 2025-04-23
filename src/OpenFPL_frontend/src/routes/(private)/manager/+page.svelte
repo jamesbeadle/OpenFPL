@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { writable, type Writable } from "svelte/store";
   import { page } from "$app/state";
   import { storeManager } from "$lib/managers/store-manager";
   import { managerStore } from "$lib/stores/manager-store";
@@ -22,11 +21,11 @@
 
   let isLoading = $state(true);
   let activeTab: string = $state("details");
-  let fantasyTeam: Writable<FantasyTeamSnapshot | null> = writable(null);
-  let selectedGameweek = writable(0);
-  let loadingGameweekDetail: Writable<boolean> = writable(false);
-  let gameweekPlayers = writable<GameweekData[]>([]);
-  let manager: Writable<Manager | null> = writable(null);
+  let fantasyTeam: FantasyTeamSnapshot | null = $state(null);
+  let selectedGameweek = $state(0);
+  let loadingGameweekDetail: boolean = $state(false);
+  let gameweekPlayers = $state<GameweekData[]>([]);
+  let manager: Manager | null = $state(null);
 
   const tabs = [
     { id: "details", label: "Details", authOnly: false },

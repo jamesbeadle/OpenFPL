@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { type Writable } from "svelte/store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { updateTeamValue } from "$lib/utils/pick-team.helpers";
   import { formatUnixDateToReadable, formatUnixTimeToTime, getCountdownTime } from "$lib/utils/helpers";
@@ -14,8 +13,8 @@
   import type { TeamSetup } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
  
   interface Props {
-    fantasyTeam: Writable<TeamSetup | undefined>;
-    teamValue: Writable<number>;
+    fantasyTeam: TeamSetup | undefined;
+    teamValue: number;
   }
   let { fantasyTeam, teamValue }: Props = $props();
   

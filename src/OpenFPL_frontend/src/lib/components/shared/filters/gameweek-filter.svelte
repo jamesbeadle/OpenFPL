@@ -1,8 +1,7 @@
 <script lang="ts">
-    import type { Writable } from "svelte/store";
     
     interface Props {
-      selectedGameweek: Writable<number | null>;
+      selectedGameweek: number | null;
       gameweeks: number[];
       changeGameweek: (gameweek: number) => void;
       lastGameweek: number;

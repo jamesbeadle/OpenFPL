@@ -1,10 +1,9 @@
 <script lang="ts">
-    import type { Writable } from "svelte/store";
     import type { Player } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     
     interface Props {
       filteredPlayers : Player[];
-      currentPage: Writable<number>;
+      currentPage: number;
     }
     let { filteredPlayers, currentPage }: Props = $props();
 

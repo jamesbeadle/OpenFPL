@@ -19,9 +19,8 @@ import { PlayerService } from "$lib/services/player-service";
 import { PlayerEventsService } from "$lib/services/player-events-service";
 import { FixtureService } from "$lib/services/fixture-service";
 import { replacer } from "$lib/utils/helpers";
-import { writable } from "svelte/store";
 
-export const globalDataLoaded = writable(false);
+export const globalDataLoaded = $state(false);
 
 class StoreManager {
   private dataHashService: DataHashService;

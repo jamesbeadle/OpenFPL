@@ -1,8 +1,7 @@
 <script lang="ts">
-    import type { Writable } from "svelte/store";
 
     interface Props {
-      selectedFixtureType: Writable<number>;
+      selectedFixtureType: number;
     }
     let { selectedFixtureType }: Props = $props();
 

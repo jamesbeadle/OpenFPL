@@ -3,7 +3,7 @@
   import HomepageHeader from "$lib/components/homepage/homepage-header.svelte";
 
   import TabContainer from "$lib/components/shared/tab-container.svelte";
-  import MyPoints from "$lib/components/home/my-points.svelte";
+  import Points from "$lib/components/home/points.svelte";
   import LeaderboardsComponent from "$lib/components/home/leaderboards.svelte";
   import FixturesComponent from "$lib/components/home/fixtures.svelte";
   import MvpsComponent from "$lib/components/home/mvps.svelte";
@@ -13,7 +13,7 @@
   let activeTab: string = "points";
 
   const tabs = [
-    { id: "points", label: "My Points" },
+    { id: "points", label: "Points" },
     { id: "leaderboards", label: "Leaderboards" },
     { id: "fixtures", label: "Fixtures" },
     { id: "mvps", label: "MVPs" },
@@ -33,7 +33,7 @@
   <TabContainer {tabs} {activeTab} {setActiveTab} />
   
   {#if activeTab === "points"}
-    <MyPoints />
+    <Points />
   {:else if activeTab === "leaderboards"}
     <LeaderboardsComponent />
   {:else if activeTab === "fixtures"}

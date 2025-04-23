@@ -1,11 +1,10 @@
 <script lang="ts">
     import type { GameweekData } from "$lib/interfaces/GameweekData";
-    import type { Writable } from "svelte/store";
     import { convertPositionToIndex, getPlayerName, getPositionAbbreviation } from "$lib/utils/helpers";
     import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
     
     interface Props {
-      gameweekData: Writable<GameweekData[]>;
+      gameweekData: GameweekData[];
       showDetailModal: (gameweekData: GameweekData) => void;
     }
     let { gameweekData, showDetailModal }: Props = $props();

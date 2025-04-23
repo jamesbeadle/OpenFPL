@@ -1,5 +1,4 @@
 <script lang="ts">
-    import type { Writable } from "svelte/store";
     import { getGridSetup } from "$lib/utils/pick-team.helpers";
     import AddIcon from "$lib/icons/AddIcon.svelte";
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
@@ -12,13 +11,13 @@
     import type { TeamSetup } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     
     interface Props {
-      selectedFormation: Writable<string>;
-      fantasyTeam: Writable<TeamSetup | undefined>;
+      selectedFormation: string;
+      fantasyTeam: TeamSetup | undefined;
       loadAddPlayer: (row: number, col: number) => void;
       removePlayer: (playerId: number) => void;
       setCaptain: (playerId: number) => void;
-      canSellPlayer: Writable<boolean>;
-      sessionAddedPlayers: Writable<number[]>;
+      canSellPlayer: boolean;
+      sessionAddedPlayers: number[];
     }
     let { selectedFormation, fantasyTeam, loadAddPlayer, removePlayer, setCaptain, canSellPlayer, sessionAddedPlayers }: Props = $props();
     let gridSetup: number[][] = $state([]);

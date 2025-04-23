@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { type Writable } from "svelte/store";
   import { clubStore } from "$lib/stores/club-store";
   import { playerStore } from "$lib/stores/player-store";
   import { managerStore } from "$lib/stores/manager-store";
@@ -18,12 +17,12 @@
 
   interface Props {
     visible: boolean;
-    fantasyTeam: Writable<TeamSetup | undefined>;
-    bonusUsedInSession: Writable<boolean>;
+    fantasyTeam: TeamSetup | undefined;
+    bonusUsedInSession: boolean;
     closeBonusModal: () => void;
     bonus: Bonus;
     updateBonuses: () => void;
-    bonuses: Writable<Bonus[]>;
+    bonuses: Bonus[];
   }
   let { visible, fantasyTeam, bonusUsedInSession, closeBonusModal, bonus, updateBonuses, bonuses }: Props = $props();
 

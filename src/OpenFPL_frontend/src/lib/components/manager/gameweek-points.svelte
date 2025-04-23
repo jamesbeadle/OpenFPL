@@ -10,8 +10,7 @@
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import FantasyPlayerDetailModal from "../fantasy-team/fantasy-player-detail-modal.svelte";
   import GameweekFilter from "../shared/filters/gameweek-filter.svelte";
-  import { writable } from "svelte/store";
-  import GameweekPointsTable from "./gameweek-points-table.svelte";
+  import GameweekPointsTable from "../home/points/points-table.svelte";
   import { getGameweeks } from "$lib/utils/helpers";
   import { leagueStore } from "$lib/stores/league-store";
   import LocalSpinner from "../shared/local-spinner.svelte";
@@ -19,11 +18,11 @@
   import type { FantasyTeamSnapshot, Club } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   let isLoading = true;
-  let selectedGameweek = writable(1);
+  let selectedGameweek = $state(1);
   let isInitialLoad = true;
   let gameweeks: number[];
   let showModal = false;
-  let gameweekData = writable<GameweekData[]>([]);
+  let gameweekData = $state<GameweekData[]>([]);
   let selectedTeam: Club;
   let selectedOpponentTeam: Club;
   let selectedGameweekData: GameweekData;
@@ -107,7 +106,6 @@
       {gameweeks} 
       {changeGameweek} 
       lastGameweek={$leagueStore!.completedGameweek}
-      weeklyPoints={fantasyTeam?.points}
     />
     <GameweekPointsTable {gameweekData} {showDetailModal} />
   </div>

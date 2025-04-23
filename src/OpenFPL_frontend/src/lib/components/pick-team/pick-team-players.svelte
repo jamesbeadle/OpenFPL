@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { writable, type Writable } from "svelte/store";
 
   import { leagueStore } from "$lib/stores/league-store";
   import { playerStore } from "$lib/stores/player-store";
@@ -15,23 +14,23 @@
   import type { TeamSetup, Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   
   interface Props {
-    fantasyTeam: Writable<TeamSetup | undefined>;
-    pitchView: Writable<boolean>;
-    selectedFormation: Writable<string>;
-    teamValue: Writable<number>;
-    sessionAddedPlayers: Writable<number[]>;
+    fantasyTeam: TeamSetup | undefined;
+    pitchView: boolean;
+    selectedFormation: string;
+    teamValue: number;
+    sessionAddedPlayers: number[];
   }
   let { fantasyTeam, teamValue, pitchView, selectedFormation, sessionAddedPlayers }: Props = $props();
 
   let isLoading = $state(true);
   let showAddPlayerModal = $state(false);
-  let showCaptainModal = false;
+  let showCaptainModal = $state(false);
   let newTeam = true;
-  let selectedPosition = writable(-1);
+  let selectedPosition = $state(-1);
   let selectedColumn = -1;
-  let canSellPlayer = writable(true);
-  let newCaptainId = writable<number>(0);
-  let newCaptain = writable<string>("");
+  let canSellPlayer = $state(true);
+  let newCaptainId = $state(0);
+  let newCaptain = $state("");
   let positionsChanged = new Set<number>();
   let startingTeamPlayerIds: number[] = [];
 

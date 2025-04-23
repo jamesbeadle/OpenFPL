@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { writable, type Writable } from "svelte/store";
   import { clubStore } from "$lib/stores/club-store";
   import { playerStore } from "$lib/stores/player-store";
   import { leagueStore } from "$lib/stores/league-store";
@@ -20,17 +19,17 @@
   interface Props {
     visible: boolean;
     handlePlayerSelection: (player: Player) => void;
-    fantasyTeam: Writable<TeamSetup | undefined>;
-    filterPosition: Writable<number>;
+    fantasyTeam: TeamSetup | undefined;
+    filterPosition: number;
   }
   let { visible, handlePlayerSelection, fantasyTeam, filterPosition }: Props = $props();
 
   const pageSize = 10;
-  let filterTeam = writable(-1);
-  let filterSurname = writable("");
-  let minValue = writable(0);
-  let maxValue = writable(0);
-  let currentPage = writable(1);
+  let filterTeam = $state(-1);
+  let filterSurname = $state("");
+  let minValue = $state(0);
+  let maxValue = $state(0);
+  let currentPage = $state(1);
   let filteredPlayers: Player[] = [];
   let isLoading = true;
   let sortField: 'value' | 'points' = 'value';

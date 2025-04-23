@@ -1,9 +1,8 @@
 <script lang="ts">
     import { clubStore } from "$lib/stores/club-store";
-    import type { Writable } from "svelte/store";
 
     interface Props {
-        selectedTeamId: Writable<number | null>;
+        selectedTeamId: number | null;
         changeTeam : (clubId: number) => void;
     }
     let { selectedTeamId, changeTeam }: Props = $props();

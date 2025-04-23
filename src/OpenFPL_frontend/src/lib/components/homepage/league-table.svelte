@@ -7,12 +7,11 @@
   import type { FixtureWithClubs } from "$lib/types/fixture-with-clubs";
   import { storeManager } from "$lib/managers/store-manager";
   import { leagueStore } from "$lib/stores/league-store";
-  import { writable } from "svelte/store";
   import GameweekFilter from "../shared/filters/gameweek-filter.svelte";
     import LocalSpinner from "../shared/local-spinner.svelte";
 
   let fixturesWithTeams: FixtureWithClubs[] = $state([]);
-  let selectedGameweek = writable(1);
+  let selectedGameweek = $state(1);
   let gameweeks: number[] = $state([]);
   let tableData: any[] = $state([]);
   let isLoading = $state(true);

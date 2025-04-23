@@ -1,11 +1,10 @@
 <script lang="ts">
     import { Position } from "$lib/enums/Position";
     import { getPositionIndexToText } from "$lib/utils/helpers";
-    import type { Writable } from "svelte/store";
 
 
     interface Props {
-      selectedPosition: Writable<number>;
+      selectedPosition: number;
     }
     let { selectedPosition }: Props = $props();
     

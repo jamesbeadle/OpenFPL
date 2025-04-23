@@ -3,11 +3,10 @@
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
     import { convertPositionToIndex, getFlagComponent, getPlayerName, getPositionAbbreviation } from "$lib/utils/helpers";
     import type { GameweekData } from "$lib/interfaces/GameweekData";
-    import type { Writable } from "svelte/store";
     import type { FantasyTeamSnapshot, Club, Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     
     interface Props {
-        fantasyTeam: Writable<FantasyTeamSnapshot | null>;
+        fantasyTeam: FantasyTeamSnapshot | null;
         player: Player;
         data: GameweekData;
         playerTeam: Club;

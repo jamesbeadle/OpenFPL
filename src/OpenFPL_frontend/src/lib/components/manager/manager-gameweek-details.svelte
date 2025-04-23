@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { writable, type Writable } from "svelte/store";
   import { storeManager } from "$lib/managers/store-manager";
   import { leagueStore } from "$lib/stores/league-store";
   import { seasonStore } from "$lib/stores/season-store";
@@ -15,8 +14,8 @@
   import type { FantasyTeamSnapshot } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   
   interface Props {
-    selectedGameweek: Writable<number | null>;
-    fantasyTeam: Writable<FantasyTeamSnapshot | null>;
+    selectedGameweek: number | null;
+    fantasyTeam: FantasyTeamSnapshot | null;
   }
   let { selectedGameweek, fantasyTeam }: Props = $props();
 
@@ -25,7 +24,7 @@
   let lastGameweek: number = $state(0);
   let activeSeasonName: string = $state("");
 
-  let gameweekPlayers = writable<GameweekData[]>([]);
+  let gameweekPlayers = $state<GameweekData[]>([]);
   let gameweeks: number[] = $state([]);
 
   $effect(() => {

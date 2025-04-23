@@ -1,10 +1,9 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { writable, type Writable } from "svelte/store";
     import { storeManager } from "$lib/managers/store-manager";
     import { leagueStore } from "$lib/stores/league-store";
     import { clubStore } from "$lib/stores/club-store";
-    import { weeklyLeaderboardStore } from "$lib/stores/leaderboard-store";
+    import { leaderboardStore } from "$lib/stores/leaderboard-store";
     import { authSignedInStore } from "$lib/derived/auth.derived";
     import { userGetFavouriteTeam } from "$lib/derived/user.derived";
     import { getGameweeks } from "$lib/utils/helpers";
@@ -18,15 +17,15 @@
     let isLoading = $state(true);
     let gameweeks: number[] = $state([]);
     let currentPage = $state(1);
-    let selectedLeaderboardType = writable<number>(1);
+    let selectedLeaderboardType = $state(1);
     let totalPages = $state(0);
-    let selectedTeamIndex = writable<number>(0);
-    let selectedSeasonId = writable(1);
-    let selectedGameweek = writable(1);
-    let selectedMonth = writable(0);
-    let selectedTeamId = writable(0);
+    let selectedTeamIndex = $state(0);
+    let selectedSeasonId = $state(1);
+    let selectedGameweek = $state(1);
+    let selectedMonth = $state(0);
+    let selectedTeamId = $state(0);
     let leaderboard: any = $state(undefined);
-    let searchQuery = writable("");
+    let searchQuery = $state("");
   
     $effect(() => {
         selectedTeamIndex.set($clubStore.findIndex((team) => team.id === $selectedTeamId));

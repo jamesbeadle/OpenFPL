@@ -1,13 +1,12 @@
 <script lang="ts">
     import { clubStore } from "$lib/stores/club-store";
-    import type { Writable } from "svelte/store";
 
     interface Props {
-      filterTeam: Writable<number>;
-      filterPosition: Writable<number>;
-      minValue: Writable<number>;
-      maxValue: Writable<number>;
-      filterSurname: Writable<string>;
+      filterTeam: number;
+      filterPosition: number;
+      minValue: number;
+      maxValue: number;
+      filterSurname: string;
     }
     let { filterTeam, filterPosition, minValue, maxValue, filterSurname }: Props = $props();
 

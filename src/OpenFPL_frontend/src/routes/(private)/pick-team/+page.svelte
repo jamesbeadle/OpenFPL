@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { writable } from "svelte/store";
   
   import { storeManager } from "$lib/managers/store-manager";
   import { managerStore } from "$lib/stores/manager-store";
@@ -16,12 +15,12 @@
   import PickTeamBanner from "$lib/components/pick-team/pick-team-banner.svelte";
   import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
     
-  let fantasyTeam = writable<TeamSetup | undefined>(undefined);
-  let availableFormations = writable(Object.keys(allFormations));   
-  let selectedFormation = writable('4-4-2');
-  let teamValue = writable(0);
-  const pitchView = writable(true);
-  let sessionAddedPlayers = writable<number[]>([]);
+  let fantasyTeam = $state<TeamSetup | undefined>(undefined);
+  let availableFormations = $state(Object.keys(allFormations));   
+  let selectedFormation = $state('4-4-2');
+  let teamValue = $state(0);
+  const pitchView = $state(true);
+  let sessionAddedPlayers = $state<number[]>([]);
   
   let isLoading = true;
   let showWelcomeBanner = false;

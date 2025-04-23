@@ -12,7 +12,6 @@
   import type { FixtureWithClubs } from "$lib/types/fixture-with-clubs";
   import { storeManager } from "$lib/managers/store-manager";
   import FixtureTypeFilter from "../shared/filters/fixture-type-filter.svelte";
-  import { writable } from "svelte/store";
   import TeamFixturesTableHeader from "./team-fixtures-table-header.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import LocalSpinner from "../shared/local-spinner.svelte";
@@ -24,7 +23,7 @@
 
   let filteredFixtures: FixtureWithClubs[] = $state([]);
   let fixturesWithTeams: FixtureWithClubs[] = [];
-  let selectedFixtureType = writable(-1);
+  let selectedFixtureType = $state(-1);
 
   let isLoading = $state(true);
 

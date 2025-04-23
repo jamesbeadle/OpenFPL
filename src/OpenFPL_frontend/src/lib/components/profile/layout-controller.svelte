@@ -24,7 +24,12 @@
     let profile: CombinedProfile | undefined = $state(undefined);
     let loadingMessage = $state("");
     let profileChecked = $state(false);
+    let isMenuOpen = $state(false);
 
+    function toggleMenu() {
+        isMenuOpen = !isMenuOpen;
+    }
+    
     function checkValidMembership(membershipType: MembershipType__1): boolean {
         console.log("checkValidMembership", membershipType);
         return 'Founding' in membershipType || 
@@ -78,8 +83,8 @@
 {#if isLoading}
     <FullScreenSpinner message={loadingMessage} />
 {:else if $authSignedInStore}
-    <Header />  
-    <Sidebar {isMenuOpen} {toggleMenu} isSaleOnly={false} />
+    <Header {toggleMenu} />  
+    <Sidebar {isMenuOpen} {toggleMenu} />
     {#if $userIdCreatedStore?.data}
        {#if !hasValidMembership && profileChecked}
           <InvalidMembershipPage />

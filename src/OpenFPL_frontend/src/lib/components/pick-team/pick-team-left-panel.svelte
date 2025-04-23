@@ -1,15 +1,14 @@
 <script lang="ts">
-  import type { Writable } from "svelte/store";
   import PickTeamPlayers from "./pick-team-players.svelte";
   import BonusPanel from "./bonus-panel.svelte";
   import type { TeamSetup } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   interface Props {
-    fantasyTeam: Writable<TeamSetup | undefined>;
-    teamValue: Writable<number>;
-    pitchView: Writable<boolean>;
-    selectedFormation: Writable<string>;
-    sessionAddedPlayers: Writable<number[]>;
+    fantasyTeam: TeamSetup | undefined;
+    teamValue: number;
+    pitchView: boolean;
+    selectedFormation: string;
+    sessionAddedPlayers: number[];
   }
   let { fantasyTeam, teamValue, pitchView, selectedFormation, sessionAddedPlayers }: Props = $props();
 </script>

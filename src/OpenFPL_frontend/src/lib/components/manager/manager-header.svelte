@@ -7,7 +7,6 @@
     import PageHeader from "../shared/panels/page-header.svelte";
     import ContentPanel from "../shared/panels/content-panel.svelte";
     import ManagerFavouriteTeamPanel from "./manager-favourite-team-panel.svelte";
-    import { writable } from "svelte/store";
     import LocalSpinner from "../shared/local-spinner.svelte";
     import type { Manager, Club } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
@@ -19,7 +18,7 @@
     let isLoading = true;
     let joinedDate = "";
     let profilePicture: string;
-    let favouriteTeam = writable<Club | null>(null);
+    let favouriteTeam = $state<Club | null>(null);
     let displayName = "";
     let selectedSeason = "";
 

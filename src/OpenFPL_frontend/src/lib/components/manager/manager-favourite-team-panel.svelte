@@ -1,10 +1,9 @@
 <script lang="ts">
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-    import type { Writable } from "svelte/store";
     import type { Club } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
     interface Props {
-        favouriteTeam: Writable<Club | null>;
+        favouriteTeam: Club | null;
     }
     let { favouriteTeam }: Props = $props();
     

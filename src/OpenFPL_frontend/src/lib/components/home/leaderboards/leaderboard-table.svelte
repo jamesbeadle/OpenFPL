@@ -2,15 +2,14 @@
   import { formatE8s } from "$lib/utils/helpers";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import Pagination from "../../shared/pagination.svelte";
-  import {type Writable, writable, get} from "svelte/store";
 
   interface Props {
     leaderboard: any;
-    selectedGameweek: Writable<number>;
+    selectedGameweek: number;
     currentPage: number;
     totalPages: number;
     onPageChange: (page: number) => void;
-    searchQuery: Writable<string>;
+    searchQuery: string;
   }
   let { leaderboard, selectedGameweek, currentPage, totalPages, onPageChange, searchQuery }: Props = $props();
 

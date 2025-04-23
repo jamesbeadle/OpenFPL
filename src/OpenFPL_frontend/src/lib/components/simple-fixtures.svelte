@@ -8,10 +8,9 @@
   import { storeManager } from "$lib/managers/store-manager";
   import { leagueStore } from "$lib/stores/league-store";
   import GameweekFilter from "./shared/filters/gameweek-filter.svelte";
-  import { writable } from "svelte/store";
 
   let fixturesWithTeams: FixtureWithClubs[] = [];
-  let selectedGameweek = writable(1);
+  let selectedGameweek = $state(1);
   let gameweeks = getGameweeks(Number(process.env.TOTAL_GAMEWEEKS));
   let filteredFixtures: FixtureWithClubs[] = $state([]);
   let groupedFixtures: {[key: string]: FixtureWithClubs[];} = $state({['']: []});

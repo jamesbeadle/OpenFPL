@@ -1,9 +1,8 @@
 <script lang="ts">
-    import type { Writable } from "svelte/store";
     
     interface Props {
         changeLeaderboardType : (delta: number) => void
-        selectedLeaderboardType : Writable<number>;
+        selectedLeaderboardType : number;
     }
     let { changeLeaderboardType, selectedLeaderboardType }: Props = $props();
 

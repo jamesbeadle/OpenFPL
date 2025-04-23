@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { writable, type Writable } from "svelte/store";
   import { BonusType } from "$lib/enums/BonusType";
   import { leagueStore } from "$lib/stores/league-store";
   import { bonusPlayedThisWeek, isBonusUsed } from "$lib/utils/pick-team.helpers";
@@ -11,11 +10,11 @@
   import type { TeamSetup } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   interface Props {
-    fantasyTeam: Writable<TeamSetup | undefined>;
+    fantasyTeam: TeamSetup | undefined;
   }
   let { fantasyTeam }: Props = $props();
 
-  let bonuses = writable<Bonus[]>([
+  let bonuses = $state<Bonus[]>([
     {
       id: 1,
       name: "Goal Getter",
@@ -117,7 +116,7 @@
     },
   ]);
 
-  let weeklyBonusPlayed = writable<Boolean>(false);
+  let weeklyBonusPlayed = $state<Boolean>(false);
   
   $effect(() => {
 
@@ -149,7 +148,7 @@
   
   let showModal: boolean = false;
   let selectedBonusId = 0;
-  let bonusUsedInSession = writable<boolean>(false);
+  let bonusUsedInSession = $state<boolean>(false);
     
 
   function showBonusModal(bonusId: number): void {
