@@ -5,13 +5,18 @@
   import Modal from "$lib/components/shared/modal.svelte";
     import LocalSpinner from "../shared/local-spinner.svelte";
   
-  export let visible: boolean;
-  export let closeModal: () => void;
-  export let cancelModal: () => void;
-  export let withdrawalAddress: string = "";
-  export let withdrawalInputAmount: string = "";
-  export let fplBalance: bigint;
-  export let fplBalanceFormatted: string;
+  
+    interface Props {
+      visible: boolean; 
+      closeModal: () => void;
+      cancelModal: () => void;
+      withdrawalAddress: string;
+      withdrawalInputAmount: string;
+      fplBalance: bigint;
+      fplBalanceFormatted: string;
+    }
+    let { visible, closeModal, cancelModal, withdrawalAddress, withdrawalInputAmount, fplBalance, fplBalanceFormatted }: Props = $props();
+
 
   let isLoading = false;
   let errorMessage: string = "";

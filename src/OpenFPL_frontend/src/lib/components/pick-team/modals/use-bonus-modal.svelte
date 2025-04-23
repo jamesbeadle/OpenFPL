@@ -15,13 +15,18 @@
   import Modal from "$lib/components/shared/modal.svelte";
   import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
   
-  export let visible: boolean;
-  export let fantasyTeam: Writable<TeamSetup | undefined>;
-  export let bonusUsedInSession: Writable<boolean>;
-  export let closeBonusModal: () => void;
-  export let bonus: Bonus;
-  export let updateBonuses: () => void;
-  export let bonuses: Writable<Bonus[]>;
+
+  interface Props {
+    visible: boolean;
+    fantasyTeam: Writable<TeamSetup | undefined>;
+    bonusUsedInSession: Writable<boolean>;
+    closeBonusModal: () => void;
+    bonus: Bonus;
+    updateBonuses: () => void;
+    bonuses: Writable<Bonus[]>;
+  }
+  let { visible, fantasyTeam, bonusUsedInSession, closeBonusModal, bonus, updateBonuses, bonuses }: Props = $props();
+
 
   let countries: { id: number; name: string }[];
   let selectedTeamId = 0;

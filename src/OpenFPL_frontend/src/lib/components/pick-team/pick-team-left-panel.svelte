@@ -4,11 +4,14 @@
   import BonusPanel from "./bonus-panel.svelte";
   import type { TeamSetup } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
-  export let fantasyTeam: Writable<TeamSetup | undefined>;
-  export let pitchView: Writable<boolean>;
-  export let selectedFormation: Writable<string>;
-  export let teamValue: Writable<number>;
-  export let sessionAddedPlayers: Writable<number[]>;
+  interface Props {
+    fantasyTeam: Writable<TeamSetup | undefined>;
+    teamValue: Writable<number>;
+    pitchView: Writable<boolean>;
+    selectedFormation: Writable<string>;
+    sessionAddedPlayers: Writable<number[]>;
+  }
+  let { fantasyTeam, teamValue, pitchView, selectedFormation, sessionAddedPlayers }: Props = $props();
 </script>
 
 <div class="flex flex-col w-full">

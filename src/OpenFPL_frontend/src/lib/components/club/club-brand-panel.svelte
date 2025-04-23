@@ -4,10 +4,10 @@
     import type { Club } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
     interface Props {
-        club: Club;
+      club: Club;
     }
     let {  club }: Props = $props();
-    
+
 </script>
 
 <div class="flex flex-col items-center flex-grow">

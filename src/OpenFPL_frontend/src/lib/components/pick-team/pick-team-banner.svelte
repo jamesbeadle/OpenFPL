@@ -1,8 +1,13 @@
 <script lang="ts">
     import { slide } from 'svelte/transition';
+
+    interface Props {
+        visible: boolean;
+        onDismiss: () => void;
+    }
+    let { visible, onDismiss }: Props = $props();
     
-    export let visible = true;
-    export let onDismiss = () => {};
+    
     let currentStep = 1;
     const totalSteps = 2;
 

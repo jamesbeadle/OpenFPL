@@ -4,7 +4,12 @@
 	import type { Toast } from '$lib/stores/toasts-store';
     import { appStore } from '$lib/stores/app-store';
 
-	export let toast: Toast;
+
+	interface Props {
+		toast: Toast;
+    }
+    let { toast }: Props = $props();
+
 
 	let timer: ReturnType<typeof setTimeout> | null = null;
 

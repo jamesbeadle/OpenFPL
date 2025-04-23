@@ -11,13 +11,17 @@
     import { clubStore } from "$lib/stores/club-store";
     import type { TeamSetup } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     
-    export let selectedFormation: Writable<string>;
-    export let fantasyTeam: Writable<TeamSetup | undefined>;
-    export let loadAddPlayer: (row: number, col: number) => void;
-    export let removePlayer: (playerId: number) => void;
-    export let setCaptain: (playerId: number) => void;
-    export let canSellPlayer: Writable<boolean>;
-    export let sessionAddedPlayers: Writable<number[]>;
+    interface Props {
+      selectedFormation: Writable<string>;
+      fantasyTeam: Writable<TeamSetup | undefined>;
+      loadAddPlayer: (row: number, col: number) => void;
+      removePlayer: (playerId: number) => void;
+      setCaptain: (playerId: number) => void;
+      canSellPlayer: Writable<boolean>;
+      sessionAddedPlayers: Writable<number[]>;
+    }
+    let { selectedFormation, fantasyTeam, loadAddPlayer, removePlayer, setCaptain, canSellPlayer, sessionAddedPlayers }: Props = $props();
+    
 
     $: gridSetup = getGridSetup($selectedFormation);
 

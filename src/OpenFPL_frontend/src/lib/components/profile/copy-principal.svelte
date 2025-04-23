@@ -3,9 +3,12 @@
     import { authStore } from "$lib/stores/auth-store";
     import { toasts } from "$lib/stores/toasts-store";
 
-    export let bgColor = "bg-BrandGray";
-    export let borderColor = "border-BrandGrayShade3";
-
+    interface Props {
+        bgColor: string;
+        borderColor: string;
+    }
+    let { bgColor, borderColor }: Props = $props();
+    
     async function copyTextAndShowToast(text: string) {
         try {
             await navigator.clipboard.writeText(text);

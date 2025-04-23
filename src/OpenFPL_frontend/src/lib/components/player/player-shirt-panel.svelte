@@ -1,10 +1,13 @@
 <script lang="ts">
     import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
     import { convertPositionToIndex, getPositionIndexToText } from "$lib/utils/helpers";
-    import type { Club, Player__1 } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import type { Club, Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
-    export let player: Player__1;
-    export let club: Club;
+    interface Props {
+      player: Player;
+      club: Club;
+    }
+    let { player, club }: Props = $props();
 </script>
 
 <div class="flex flex-col items-center flex-grow">

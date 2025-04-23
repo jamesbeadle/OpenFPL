@@ -2,7 +2,10 @@
     import { goto } from "$app/navigation";
     import Modal from "../shared/modal.svelte";
     
-    export let visible: boolean = false;
+    interface Props {
+      visible: boolean; 
+    }
+    let { visible }: Props = $props();
 
     function begin() {
       goto('/');

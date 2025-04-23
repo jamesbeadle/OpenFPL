@@ -3,7 +3,12 @@
     import { getPositionIndexToText } from "$lib/utils/helpers";
     import type { Writable } from "svelte/store";
 
-    export let selectedPosition: Writable<number>;
+
+    interface Props {
+      selectedPosition: Writable<number>;
+    }
+    let { selectedPosition }: Props = $props();
+    
 
     let positionValues: number[] = Object.values(Position).filter(
         (value) => typeof value === "number"

@@ -13,14 +13,18 @@
   import LocalSpinner from "../shared/local-spinner.svelte";
   import type { TeamSetup } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
-  export let selectedFormation: Writable<string>;
-  export let fantasyTeam: Writable<TeamSetup | undefined>;
-  export let loadAddPlayer: (row: number, col: number) => void;
-  export let canSellPlayer: Writable<boolean>;
-  export let sessionAddedPlayers: Writable<number[]>;
-  export let removePlayer: (playerId: number) => void;
-  export let setCaptain: (playerId: number) => void;
-
+  interface Props {
+    selectedFormation: Writable<string>;
+    fantasyTeam: Writable<TeamSetup | undefined>;
+    loadAddPlayer: (row: number, col: number) => void;
+    canSellPlayer: Writable<boolean>;
+    sessionAddedPlayers: Writable<number[]>;
+    removePlayer: (playerId: number) => void;
+    setCaptain: (playerId: number) => void;
+  }
+  let { selectedFormation, fantasyTeam, loadAddPlayer, canSellPlayer, sessionAddedPlayers, removePlayer, setCaptain }: Props = $props();
+  
+  
   let pitchHeight = 0;
   let pitchElement: HTMLImageElement | null = null;
 

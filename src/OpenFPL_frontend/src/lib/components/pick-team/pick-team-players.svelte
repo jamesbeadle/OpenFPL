@@ -12,13 +12,16 @@
   import SelectedPlayersList from "./selected-players-list.svelte";
   import { convertPositionToIndex } from "$lib/utils/helpers";
   import LocalSpinner from "../shared/local-spinner.svelte";
-  import type { TeamSetup, Player__1 } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { TeamSetup, Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   
-  export let fantasyTeam: Writable<TeamSetup | undefined>;
-  export let pitchView: Writable<boolean>;
-  export let selectedFormation: Writable<string>;
-  export let teamValue: Writable<number>;
-  export let sessionAddedPlayers: Writable<number[]>;
+  interface Props {
+    fantasyTeam: Writable<TeamSetup | undefined>;
+    pitchView: Writable<boolean>;
+    selectedFormation: Writable<string>;
+    teamValue: Writable<number>;
+    sessionAddedPlayers: Writable<number[]>;
+  }
+  let { fantasyTeam, teamValue, pitchView, selectedFormation, sessionAddedPlayers }: Props = $props();
 
   let isLoading = true;
   let showAddPlayerModal = false;
@@ -166,7 +169,7 @@
     showCaptainModal = false;
   }
 
-  function handlePlayerSelection(player: Player__1) {
+  function handlePlayerSelection(player: Player) {
     if (canAddPlayerToCurrentFormation($playerStore, player, $fantasyTeam!, $selectedFormation)) 
     {
       addPlayerToTeam(player, $selectedFormation);
@@ -187,7 +190,7 @@
     }
   }
 
-  function addPlayerToTeam(player: Player__1, formation: string) {
+  function addPlayerToTeam(player: Player, formation: string) {
     const indexToAdd = getAvailablePositionIndex(convertPositionToIndex(player.position), $fantasyTeam!, formation);
     if (indexToAdd === -1) {
       console.error("No available position to add the player.");

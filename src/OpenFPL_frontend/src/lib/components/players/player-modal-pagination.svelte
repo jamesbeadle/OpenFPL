@@ -1,9 +1,13 @@
 <script lang="ts">
     import type { Writable } from "svelte/store";
     import type { Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-    export let filteredPlayers: Player[];
-    export let currentPage: Writable<number>;
-    const pageSize = 10;
+    
+    interface Props {
+      filteredPlayers: Player[];
+      currentPage: Writable<number>;
+      pageSize: number;
+    }
+    let { filteredPlayers, currentPage, pageSize  }: Props = $props();
 
     function goToPage(page: number) {
         $currentPage = page;

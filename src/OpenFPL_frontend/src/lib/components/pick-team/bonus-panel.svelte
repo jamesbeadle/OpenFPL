@@ -8,9 +8,12 @@
 
   import UseBonusModal from "$lib/components/pick-team/modals/use-bonus-modal.svelte";
   import Tooltip from "$lib/components/shared/tooltip.svelte";
-    import type { TeamSetup } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { TeamSetup } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
-  export let fantasyTeam: Writable<TeamSetup | undefined>;
+  interface Props {
+    fantasyTeam: Writable<TeamSetup | undefined>;
+  }
+  let { fantasyTeam }: Props = $props();
 
   let bonuses = writable<Bonus[]>([
     {

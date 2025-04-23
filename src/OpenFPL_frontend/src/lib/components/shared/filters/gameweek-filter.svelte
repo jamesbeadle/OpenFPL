@@ -2,11 +2,15 @@
     import { leagueStore } from "$lib/stores/league-store";
     import type { Writable } from "svelte/store";
     
-    export let selectedGameweek: Writable<number | null>;
-    export let gameweeks: number[];
-    export let changeGameweek: (gameweek: number) => void;
-    export let lastGameweek: number;
-    export let weeklyPoints: number | undefined = undefined;
+    interface Props {
+      selectedGameweek: Writable<number | null>;
+      gameweeks: number[];
+      changeGameweek: (gameweek: number) => void;
+      lastGameweek: number;
+      weeklyPoints: number | undefined;
+    }
+    let { selectedGameweek, gameweeks, changeGameweek, lastGameweek, weeklyPoints }: Props = $props();
+
 </script>
 <div class="p-4">
     <div class="flex flex-col items-center gap-4 sm:flex-row sm:justify-between">

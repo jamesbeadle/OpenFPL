@@ -2,11 +2,14 @@
     import { clubStore } from "$lib/stores/club-store";
     import type { Writable } from "svelte/store";
 
-    export let filterTeam: Writable<number>;
-    export let filterPosition: Writable<number>;
-    export let minValue: Writable<number>;
-    export let maxValue: Writable<number>;
-    export let filterSurname: Writable<string>;
+    interface Props {
+      filterTeam: Writable<number>;
+      filterPosition: Writable<number>;
+      minValue: Writable<number>;
+      maxValue: Writable<number>;
+      filterSurname: Writable<string>;
+    }
+    let { filterTeam, filterPosition, minValue, maxValue, filterSurname  }: Props = $props();
 
 </script>
 <div class="grid grid-cols-2 gap-1">

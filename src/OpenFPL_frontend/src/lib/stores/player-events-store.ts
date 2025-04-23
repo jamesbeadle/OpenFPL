@@ -10,7 +10,7 @@ import { leagueStore } from "./league-store";
 import type {
   Fixture,
   LeagueStatus,
-  Player__1,
+  Player,
   PlayerDetailsForGameweek,
   PlayerPoints,
   PlayerScore,
@@ -73,7 +73,7 @@ function createPlayerEventsStore() {
         : [];
     }
 
-    let allPlayers: Player__1[] = [];
+    let allPlayers: Player[] = [];
     const unsubscribe = playerStore.subscribe((players) => {
       allPlayers = players.filter((player) =>
         fantasyTeam.playerIds.includes(player.id),

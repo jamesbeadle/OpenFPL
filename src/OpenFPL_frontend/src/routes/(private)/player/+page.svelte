@@ -10,12 +10,12 @@
   import PlayerHeader from "$lib/components/player/player-header.svelte";
   import TabContainer from "$lib/components/shared/tab-container.svelte";
   import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
-  import type { Club, Player__1 } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { Club, Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   $: id = Number(page.url.searchParams.get("id"));
 
   let selectedGameweek: number = 1;
-  let selectedPlayer: Player__1;
+  let selectedPlayer: Player;
   let playerClub: Club;
   let activeTab: string = "history";
   let isLoading = true;

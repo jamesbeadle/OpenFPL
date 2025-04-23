@@ -14,7 +14,10 @@
   import LocalSpinner from "../shared/local-spinner.svelte";
   import type { Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
-  export let filterPosition = writable(-1);
+  interface Props {
+    filterPosition: Writable<number>;
+  }
+  let { filterPosition }: Props = $props();
 
   const pageSize = 10;
   let filterTeam = writable(-1);

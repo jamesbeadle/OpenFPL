@@ -1,8 +1,14 @@
-<script>
-  export let className = "";
-  export let primaryColour = "";
-  export let secondaryColour = "";
-  export let thirdColour = "";
+<script lang="ts">
+
+
+	interface Props {
+		className: string;
+		primaryColour: string;
+		secondaryColour: string;
+		thirdColour: string;
+  }
+  let { className, primaryColour, secondaryColour, thirdColour }: Props = $props();
+  
 </script>
 
 <svg

@@ -1,10 +1,14 @@
 <script lang="ts">
     import LoadingDots from "../loading-dots.svelte";
 
-    export let header: string;
-    export let content: string;
-    export let footer: string;
-    export let loading: boolean;
+    interface Props {
+        header: string;
+        content: string;
+        footer: string;
+        loading: boolean;
+    }
+    let { header, content, footer, loading }: Props = $props();
+
 </script>
 
 <div class="flex-grow">

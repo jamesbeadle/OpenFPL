@@ -14,12 +14,16 @@
   import AddPlayerFilterRow from "./add-player-filter-row.svelte";
   import AddPlayerTableHaeder from "./add-player-table-haeder.svelte";
   import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
-  import type { Player__1, TeamSetup } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { Player, TeamSetup } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
-  export let visible: boolean;
-  export let handlePlayerSelection: (player: Player__1) => void;
-  export let fantasyTeam: Writable<TeamSetup | undefined>;
-  export let filterPosition = writable(-1);
+
+  interface Props {
+    visible: boolean;
+    handlePlayerSelection: (player: Player) => void;
+    fantasyTeam: Writable<TeamSetup | undefined>;
+    filterPosition: Writable<number>;
+  }
+  let { visible, handlePlayerSelection, fantasyTeam, filterPosition }: Props = $props();
 
   const pageSize = 10;
   let filterTeam = writable(-1);
@@ -27,7 +31,7 @@
   let minValue = writable(0);
   let maxValue = writable(0);
   let currentPage = writable(1);
-  let filteredPlayers: Player__1[] = [];
+  let filteredPlayers: Player[] = [];
   let isLoading = true;
   let sortField: 'value' | 'points' = 'value';
   let sortDirection: 'asc' | 'desc' = 'desc';
@@ -82,7 +86,7 @@
   }
 
 
-  function selectPlayer(player: Player__1) {
+  function selectPlayer(player: Player) {
     handlePlayerSelection(player);
     closeModal();
     filteredPlayers = [];

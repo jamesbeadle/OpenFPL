@@ -3,19 +3,22 @@
     import { leagueStore } from "$lib/stores/league-store";
     import type { TeamSetup } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
-    export let pitchViewActive: Writable<boolean>;
-    export let selectedFormation: Writable<string>;
-    export let availableFormations: Writable<string[]>;
-    export let transferWindowPlayed: Writable<boolean>;
-    export let isSaveButtonActive: Writable<boolean>;
-    export let fantasyTeam: Writable<TeamSetup | undefined>;
-    export let showPitchView : () => void;
-    export let showListView : () => void;
-    export let playTransferWindow : () => void;
-    export let autoFillFantasyTeam : () => void;
-    export let saveFantasyTeam : () => void;
-    export let handleResetTeam: () => void;
-    export let startingFantasyTeam: TeamSetup;
+    interface Props {
+      pitchViewActive: Writable<boolean>;
+      selectedFormation: Writable<string>;
+      availableFormations: Writable<string[]>;
+      transferWindowPlayed: Writable<boolean>;
+      isSaveButtonActive: Writable<boolean>;
+      fantasyTeam: Writable<TeamSetup | undefined>;
+      showPitchView : () => void;
+      showListView : () => void;
+      playTransferWindow : () => void;
+      autoFillFantasyTeam : () => void;
+      saveFantasyTeam : () => void;
+      handleResetTeam: () => void;
+      startingFantasyTeam: TeamSetup;
+    }
+    let { pitchViewActive, selectedFormation, availableFormations, transferWindowPlayed, isSaveButtonActive, fantasyTeam, showPitchView, showListView, playTransferWindow, autoFillFantasyTeam, saveFantasyTeam, handleResetTeam, startingFantasyTeam }: Props = $props();
     
     $: showResetButton = $fantasyTeam?.playerIds && startingFantasyTeam?.playerIds && (
       (startingFantasyTeam.playerIds.filter(id => id > 0).length === 11 && 

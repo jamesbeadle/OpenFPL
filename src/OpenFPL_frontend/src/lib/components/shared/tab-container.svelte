@@ -1,9 +1,13 @@
 <script lang="ts">
     import { authSignedInStore } from "$lib/derived/auth.derived";
-    export let activeTab: string;
-    export let setActiveTab: (tabName: string) => void;
 
-    export let tabs:  { id: string; label: string; authOnly: boolean }[];
+    interface Props {
+        activeTab: string;
+        setActiveTab: (tabName: string) => void;
+        tabs:  { id: string; label: string; authOnly: boolean }
+    }
+    let { activeTab, setActiveTab, tabs }: Props = $props();
+
     let isLoggedIn: boolean = $authSignedInStore;
 
 </script>

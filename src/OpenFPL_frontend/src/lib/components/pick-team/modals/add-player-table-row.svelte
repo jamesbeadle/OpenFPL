@@ -5,12 +5,15 @@
     
     import AddIcon from "$lib/icons/AddIcon.svelte";
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-    import type { Player__1, Club } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-
-    export let player: Player__1;
-    export let index: number;
-    export let selectPlayer : (player: Player__1) => void;
-    export let disableReasons: (string | null)[];
+    import type { Club, Player } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    
+    interface Props {
+      player: Player;
+      index: number;
+      selectPlayer : (player: Player) => void;
+      disableReasons: (string | null)[];
+    }
+    let { player, index, selectPlayer, disableReasons }: Props = $props();
 
     let club: Club | undefined;
 

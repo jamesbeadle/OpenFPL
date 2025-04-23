@@ -4,14 +4,18 @@
   import Modal from "$lib/components/shared/modal.svelte";
   import type { Club, PlayerDetails, PlayerEventData, PlayerGameweek } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
-  export let visible: boolean;
-  export let closeDetailModal: () => void;
-  export let playerDetail: PlayerDetails;
-  export let gameweekDetail: PlayerGameweek | null;
-  export let playerTeam: Club | undefined;
-  export let opponentTeam: Club | null;
-  export let gameweek = 0;
-  export let seasonName = "";
+
+  interface Props {
+    visible: boolean;
+    closeDetailModal: () => void;
+    playerDetail: PlayerDetails;
+    gameweekDetail: PlayerGameweek | null;
+    playerTeam: Club | undefined;
+    opponentTeam: Club | null;
+    gameweek: number;
+    seasonName: string;
+  }
+  let { visible, closeDetailModal, playerDetail, gameweekDetail, playerTeam, opponentTeam, gameweek, seasonName }: Props = $props();
 
   let appearanceEvents: PlayerEventData[] = [];
   let concededEvents: PlayerEventData[] = [];

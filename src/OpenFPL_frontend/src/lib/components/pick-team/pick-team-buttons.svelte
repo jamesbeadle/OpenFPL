@@ -13,12 +13,17 @@
   import LocalSpinner from "../shared/local-spinner.svelte";
   import type { AppStatus, TeamSetup } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
-  export let fantasyTeam: Writable<TeamSetup | undefined>;
-  export let selectedFormation: Writable<string>;
-  export let availableFormations: Writable<string[]>;
-  export let pitchView: Writable<Boolean>;
-  export let teamValue: Writable<number>;
-  export let sessionAddedPlayers: Writable<number[]>;
+  <script lang="ts">
+    interface Props {
+      fantasyTeam: Writable<TeamSetup | undefined>;
+      selectedFormation: Writable<string>;
+      availableFormations: Writable<string[]>;
+      pitchView: Writable<Boolean>;
+      teamValue: Writable<number>;
+      sessionAddedPlayers: Writable<number[]>;
+    }
+    let { fantasyTeam,selectedFormation, availableFormations,  pitchView, teamValue, sessionAddedPlayers }: Props = $props();
+  </script>
 
   let startingFantasyTeam: TeamSetup;
   let isSaveButtonActive = writable(false);

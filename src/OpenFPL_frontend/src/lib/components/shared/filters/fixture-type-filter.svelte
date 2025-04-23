@@ -1,7 +1,11 @@
 <script lang="ts">
     import type { Writable } from "svelte/store";
 
-    export let selectedFixtureType: Writable<number>;
+    interface Props {
+      selectedFixtureType: Writable<number>;
+    }
+    let { selectedFixtureType }: Props = $props();
+
 </script>
 <div class="flex p-4">
     <div class="flex items-center">

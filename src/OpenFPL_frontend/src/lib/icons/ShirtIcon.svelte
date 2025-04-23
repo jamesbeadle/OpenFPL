@@ -1,8 +1,11 @@
 <script lang="ts">
-    import type { Club } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { Club } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
-    export let className = "";
-    export let club: Club;
+  interface Props {
+      className: string;
+      club: Club;
+  }
+  let { className, club }: Props = $props();
 </script>
 
 <svg

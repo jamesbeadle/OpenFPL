@@ -1,7 +1,11 @@
 <script lang="ts">
     import { slide } from 'svelte/transition';
     
-    export let visible = true;
+    interface Props {
+      visible: boolean; 
+    }
+    let { visible }: Props = $props();
+    
     let showSecondMessage = false;
 
     function dismiss() {

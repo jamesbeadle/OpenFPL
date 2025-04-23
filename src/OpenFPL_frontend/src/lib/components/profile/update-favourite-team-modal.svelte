@@ -8,8 +8,12 @@
     import LocalSpinner from "../shared/local-spinner.svelte";
     import { authStore } from "$lib/stores/auth-store";
 
-  export let visible: boolean;
-  export let newFavouriteTeam: number = 0;
+  
+    interface Props {
+      visible: boolean; 
+      newFavouriteTeam: number
+    }
+    let { visible, newFavouriteTeam }: Props = $props();
 
   let isLoading = true;
 

@@ -1,7 +1,11 @@
-<script>
-  export let size = '24'; 
-  export let role = 'img';
-  export let ariaLabel = 'flag of England'; 
+<script lang="ts">
+
+	interface Props {
+		size: string;
+		role: string;
+		ariaLabel: string;
+  }
+  let { size, role, ariaLabel }: Props = $props();
 </script>
 
 <svg

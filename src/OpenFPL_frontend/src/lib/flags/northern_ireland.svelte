@@ -1,8 +1,12 @@
+<script lang="ts">
 
-<script>
-  export let size = '24'; 
-  export let role = 'img';
-  export let ariaLabel = 'flag of Northern Ireland'; 
+	interface Props {
+		size: string;
+		role: string;
+		ariaLabel: string;
+  }
+  let { size, role, ariaLabel }: Props = $props();
+  
 </script>
 
 <svg

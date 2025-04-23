@@ -8,14 +8,17 @@
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
     import type { TeamSetup, Club, Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     
-    export let fantasyTeam: Writable<TeamSetup | undefined>;
-    export let player: Player;
-    export let club: Club;
-    export let canSellPlayer: Writable<boolean>;
-    export let sessionAddedPlayers: Writable<number[]>;
-    export let removePlayer: (playerId: number) => void;
-    export let setCaptain: (playerId: number) => void;
-
+    interface Props {
+      fantasyTeam: Writable<TeamSetup | undefined>;
+      player: Player;
+      club: Club;
+      canSellPlayer: Writable<boolean>;
+      sessionAddedPlayers: Writable<number[]>;
+      removePlayer: (playerId: number) => void;
+      setCaptain: (playerId: number) => void;
+    }
+    let { fantasyTeam, player, club, canSellPlayer, sessionAddedPlayers, removePlayer, setCaptain }: Props = $props();
+    
 </script>
 
 <div class="flex flex-col items-center text-center">

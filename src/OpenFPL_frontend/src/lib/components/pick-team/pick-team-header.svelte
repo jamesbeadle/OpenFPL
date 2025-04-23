@@ -11,10 +11,13 @@
   import ContentPanel from "../shared/panels/content-panel.svelte";
   import HeaderContentPanel from "../shared/panels/header-content-panel.svelte";
   import HeaderCountdownPanel from "../shared/panels/header-countdown-panel.svelte";
-    import type { TeamSetup } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { TeamSetup } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
  
-  export let fantasyTeam: Writable<TeamSetup | undefined>;
-  export let teamValue: Writable<number>;
+  interface Props {
+    fantasyTeam: Writable<TeamSetup | undefined>;
+    teamValue: Writable<number>;
+  }
+  let { fantasyTeam, teamValue }: Props = $props();
   
   let isLoading = true;
   let activeSeason = "-";

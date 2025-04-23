@@ -1,7 +1,11 @@
 <script lang="ts">
-  export let currentPage: number;
-  export let totalPages: number;
-  export let onPageChange: (page: number) => void;
+
+  interface Props {
+    currentPage: number;
+    totalPages: number;
+    onPageChange: (page: number) => void;
+  }
+  let { currentPage, totalPages, onPageChange }: Props = $props();
 
   let firstVisiblePage = 1;
 
