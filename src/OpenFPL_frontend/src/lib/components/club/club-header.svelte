@@ -14,14 +14,15 @@
   import PageHeader from "../shared/panels/page-header.svelte";
   import ContentPanel from "../shared/panels/content-panel.svelte";
   import LocalSpinner from "../shared/local-spinner.svelte";
-  import type { Club, Fixture, Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { Club, ClubId, Fixture, Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   
   interface Props {
-    club: Club;
+    clubId: ClubId;
   }
-  let { club }: Props = $props();
+  let { clubId }: Props = $props();
 
   let isLoading = $state(true);
+  let club: Club | undefined = $state(undefined)
   let nextFixture: Fixture | null = $state(null);
   let nextFixtureHomeTeam: Club | undefined = $state(undefined);
   let nextFixtureAwayTeam: Club | undefined = $state(undefined);
@@ -38,14 +39,14 @@
   });
 
   onMount(async () => {
-      club = $clubStore.find((x) => x.id == club.id)!;
+      club = $clubStore.find((x) => x.id == clubId)!;
       seasonName = $seasonStore.find(x => x.id == $leagueStore!.activeSeasonId)?.name ?? "";
       $selectedGameweek = $leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek ?? 1;
 
-      let teamFixtures = $fixtureStore.filter((x) => x.homeClubId === club.id || x.awayClubId === club.id);
+      let teamFixtures = $fixtureStore.filter((x) => x.homeClubId === clubId || x.awayClubId === clubId);
       fixturesWithTeams = getFixturesWithTeams($clubStore, teamFixtures);
       
-      highestScoringPlayer = $playerStore.filter(x => x.clubId == club.id)
+      highestScoringPlayer = $playerStore.filter(x => x.clubId == clubId)
         .sort((a, b) => Number(b.valueQuarterMillions) - Number(a.valueQuarterMillions))[0];
 
       nextFixture = teamFixtures.find((x) => x.gameweek === $selectedGameweek) ?? null;
@@ -71,16 +72,16 @@
     <LocalSpinner />
   {:else}
     <ContentPanel>
-      <ClubBrandPanel {club} />
+      <ClubBrandPanel club={club!} />
       <div class="vertical-divider"></div>
-      <HeaderContentPanel header="Players" content={$playerStore.filter((x) => x.clubId == club.id).length.toString()} footer="Total" loading={false} />
+      <HeaderContentPanel header="Players" content={$playerStore.filter((x) => x.clubId == clubId).length.toString()} footer="Total" loading={false} />
       <div class="vertical-divider"></div>
-      <HeaderContentPanel header="League Position" content={getTeamPosition(club.id).toString()} footer={seasonName} loading={false} />
+      <HeaderContentPanel header="League Position" content={getTeamPosition(clubId).toString()} footer={seasonName} loading={false} />
     </ContentPanel>
     <ContentPanel>
       <HeaderFixturePanel header="Next Game" {nextFixtureAwayTeam} {nextFixtureHomeTeam} />
       <div class="vertical-divider"></div>
-      <HeaderContentPanel header="League Points" content={getTeamPoints(club.id).toString()} footer="Total" loading={false} />
+      <HeaderContentPanel header="League Points" content={getTeamPoints(clubId).toString()} footer="Total" loading={false} />
       <div class="vertical-divider"></div>
       <HeaderContentPanel header="Most Valuable Player" content={highestScoringPlayer?.lastName ?? "-"} footer={Object.keys(highestScoringPlayer?.position ?? { Goalkeeper: null })[0].toString()} loading={false} />
     </ContentPanel>

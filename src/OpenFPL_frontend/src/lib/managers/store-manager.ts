@@ -4,7 +4,7 @@ import { clubStore } from "$lib/stores/club-store";
 import { playerStore } from "$lib/stores/player-store";
 import { playerEventsStore } from "$lib/stores/player-events-store";
 import { fixtureStore } from "$lib/stores/fixture-store";
-import { weeklyLeaderboardStore } from "$lib/stores/weekly-leaderboard-store";
+import { weeklyLeaderboardStore } from "$lib/stores/leaderboard-store";
 import { leagueStore } from "$lib/stores/league-store";
 import { appStore } from "$lib/stores/app-store";
 import { RewardRatesService } from "$lib/services/reward-rates-service";
@@ -19,7 +19,7 @@ import { ClubService } from "$lib/services/club-service";
 import { PlayerService } from "$lib/services/player-service";
 import { PlayerEventsService } from "$lib/services/player-events-service";
 import { FixtureService } from "$lib/services/fixture-service";
-import { WeeklyLeaderboardService } from "$lib/services/weekly-leaderboard-service";
+import { WeeklyLeaderboardService } from "$lib/services/leaderboard-service";
 
 import { replacer } from "$lib/utils/helpers";
 import { writable } from "svelte/store";

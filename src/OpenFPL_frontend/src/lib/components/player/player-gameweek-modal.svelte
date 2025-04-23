@@ -37,6 +37,10 @@
 
   var pointsForGoal = 20;
   var pointsForAssist = 15;
+  
+  $effect(() => {
+      
+  });
 
   $: if (gameweekDetail) {
     appearanceEvents = [];

@@ -25,7 +25,7 @@
     <div class="flex items-center justify-center">
       <div class="flex items-end justify-between w-full">
         {#if $canSellPlayer || $sessionAddedPlayers.includes(player.id)}
-          <button on:click={() => removePlayer(player.id)} class="mb-1 bg-red-600 rounded-sm">
+          <button onclick={() => removePlayer(player.id)} class="mb-1 bg-red-600 rounded-sm">
             <RemovePlayerIcon className="w-3 xs:w-4 h-3 xs:h-4 sm:w-6 sm:h-6 p-1" />
           </button>
         {:else}
@@ -39,7 +39,7 @@
             <ActiveCaptainIcon className="captain-icon"/>
           </span>
         {:else}
-          <button on:click={() => setCaptain(player.id)} class="mb-1">
+          <button onclick={() => setCaptain(player.id)} class="mb-1">
             <PlayerCaptainIcon className="captain-icon" />
           </button>
         {/if}

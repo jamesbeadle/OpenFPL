@@ -1,6 +1,6 @@
 <script lang="ts">
   import FullScreenSpinner from "../shared/full-screen-spinner.svelte";
-  import Header from "$lib/shared/Header.svelte";
+  import Header from "$lib/shared/header.svelte";
   import CopyPrincipal from "./copy-principal.svelte";
   import MembershipLinkedModal from "./membership-linked-modal.svelte";
   import { toasts } from "$lib/stores/toasts-store";
@@ -173,5 +173,5 @@
 {/if}
 
 {#if membershipLinked}
-<MembershipLinkedModal />
+  <MembershipLinkedModal visible={membershipLinked} />
 {/if}

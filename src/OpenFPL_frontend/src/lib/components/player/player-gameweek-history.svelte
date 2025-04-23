@@ -25,6 +25,10 @@
   let selectedPlayerGameweek: PlayerGameweek | null = null;
   let showModal: boolean = false;
   let seasonName = "";
+  
+  $effect(() => {
+      
+  });
 
   $: id = Number(page.url.searchParams.get("id"));
 
@@ -82,7 +86,7 @@
         {@const opponent = getOpponentFromFixtureId(gameweek.fixtureId)}
         <button
           class="flex items-center justify-between w-full p-2 py-4 border-b border-gray-700 cursor-pointer"
-          on:click={() => showDetailModal(gameweek, opponent)}
+          onclick={() => showDetailModal(gameweek, opponent)}
         >
           <div class="w-1/6 px-4 md:w-1/4">{gameweek.number}</div>
           <div class="w-2/6 px-4 md:w-1/4">

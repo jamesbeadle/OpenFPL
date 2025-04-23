@@ -8,10 +8,12 @@
   let { currentPage, totalPages, onPageChange }: Props = $props();
 
   let firstVisiblePage = 1;
-
-  $: if (currentPage !== firstVisiblePage) {
-    firstVisiblePage = currentPage;
-  }
+  
+  $effect(() => {
+    if (currentPage !== firstVisiblePage) {
+      firstVisiblePage = currentPage;
+    }
+  });
 
   function goTo(page: number) {
     page = Math.max(1, Math.min(page, totalPages));
@@ -57,7 +59,7 @@
 
 <div class="flex flex-wrap items-center justify-center my-4 gap-1">
   <button
-    on:click={previous}
+    onclick={previous}
     disabled={currentPage <= 1}
     class="px-3 py-1 mx-1 text-sm border rounded-md hover:bg-gray-200 disabled:opacity-50"
   >
@@ -71,7 +73,7 @@
       <button
         class="px-3 py-1 mx-1 text-sm border rounded-md hover:bg-gray-200"
         class:selected={page === currentPage}
-        on:click={() => goTo(page)}
+        onclick={() => goTo(page)}
       >
         {page}
       </button>
@@ -79,7 +81,7 @@
   {/each}
 
   <button
-    on:click={next}
+    onclick={next}
     disabled={currentPage >= totalPages}
     class="px-3 py-1 mx-1 text-sm border rounded-md hover:bg-gray-200 disabled:opacity-50"
   >

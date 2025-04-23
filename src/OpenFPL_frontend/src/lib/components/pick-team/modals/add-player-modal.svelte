@@ -37,6 +37,10 @@
   let sortDirection: 'asc' | 'desc' = 'desc';
 
   let playerPoints = new Map<number, number>();
+  
+  $effect(() => {
+      
+  });
 
   $: paginatedPlayers = addTeamDataToPlayers(
     $clubStore, 

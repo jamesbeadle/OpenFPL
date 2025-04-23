@@ -27,6 +27,10 @@
   let pitchElement: HTMLImageElement | null = null;
   let isLoading = true;
   let favouriteTeam: Club | null = null;
+  
+  $effect(() => {
+
+  });
 
   $: rowHeight = (pitchHeight * 0.9) / 4;
   $: gridSetup = getGridSetup( getTeamFormationReadOnly($fantasyTeam!, $playerStore));
@@ -89,7 +93,7 @@ async function updateGameweekPlayers() {
       src="/pitch.png" 
       alt="pitch" 
       class="w-full h-auto" 
-      bind:this={pitchElement}
+      this={pitchElement}
       on:load={onPitchLoad} 
     />
     {#if isLoading}

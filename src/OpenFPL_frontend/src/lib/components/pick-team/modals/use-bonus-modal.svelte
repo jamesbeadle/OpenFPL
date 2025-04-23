@@ -341,6 +341,10 @@
     return bonusCountryId;
   }
 
+  $effect(() => {
+      
+  });
+
   $: countries = getUniqueCountries();
   $: playerOptions = getPlayerNames();
   $: teamOptions = getRelatedTeamNames();
@@ -387,8 +391,8 @@
         {#if bonus.selectionType === BonusType.COUNTRY}
           <div class="w-full my-4 border border-gray-500">
             <select
-              bind:value={selectedCountryId}
-              on:change={(e) => {
+              value={selectedCountryId}
+              onchange={(e) => {
                 const selected = countries.find(c => c.id === Number((e.target as HTMLSelectElement).value));
                 if (selected) {
                   selectedCountry = selected.name;
@@ -435,7 +439,7 @@
           <button
             class="px-4 py-2 border rounded-sm border-BrandSlateGray bg-BrandRed default-button"
             type="button"
-            on:click={closeBonusModal}
+            onclick={closeBonusModal}
           >
             Cancel
           </button>
@@ -444,7 +448,7 @@
               isUseButtonEnabled ? "bg-BrandPurple" : "bg-gray-500"
             } 
             default-button bg-BrandPurple`}
-            on:click={handleUseBonus}
+            onclick={handleUseBonus}
             disabled={!isUseButtonEnabled}
           >
             Confirm

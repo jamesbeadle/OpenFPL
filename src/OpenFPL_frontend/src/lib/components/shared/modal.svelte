@@ -12,7 +12,7 @@
 
     let { showModal, onClose, title, closeOnClickOutside = true, children }: Props = $props();
   
-    let modalElement: HTMLDivElement;
+    let modalElement: HTMLDivElement | undefined = $state(undefined);
     let startOnBackdrop = false;
   
     const handleKeydown = (e: KeyboardEvent) => {
@@ -59,8 +59,8 @@
       role="dialog"
       aria-modal="true"
       tabindex="-1"
-      on:pointerdown={handlePointerDown}
-      on:pointerup={handlePointerUp}
+      onpointerdown={handlePointerDown}
+      onpointerup={handlePointerUp}
     >
       <div
         bind:this={modalElement}
@@ -73,7 +73,7 @@
             type="button"
             class="text-black"
             aria-label="Close modal"
-            on:click={onClose}
+            onclick={onClose}
           >
             <CrossIcon className="w-4" fill='white' />
           </button>

@@ -62,7 +62,7 @@
     <div class="flex-0">
       <a href="/">
         <b class="flex items-center px-4 mt-2 md:mt-0 md:px-10"
-          ><OpenFplIcon className="h-6 w-auto mr-2" />OpenFPL</b
+          ><OpenFplIcon currentColor='white' className="h-6 w-auto mr-2" />OpenFPL</b
         >
       </a>
     </div>

@@ -23,8 +23,8 @@
   }
   let { fantasyTeam, teamValue, pitchView, selectedFormation, sessionAddedPlayers }: Props = $props();
 
-  let isLoading = true;
-  let showAddPlayerModal = false;
+  let isLoading = $state(true);
+  let showAddPlayerModal = $state(false);
   let showCaptainModal = false;
   let newTeam = true;
   let selectedPosition = writable(-1);
@@ -132,10 +132,12 @@
     })
   }
 
-  $: if ($fantasyTeam) {
-    setTeamValue();
-    setTeamFormation();
-  }
+  $effect(() => {
+    if ($fantasyTeam) {
+      setTeamValue();
+      setTeamFormation();
+    }
+  });
 
   function setTeamValue() {
     let totalValue = 0;

@@ -25,6 +25,10 @@
     await userStore.sync();
     isLoading = false;
   });
+  
+  $effect(() => {
+      
+  });
 
   async function updateFavouriteTeam() {
     isLoading = true;
@@ -83,7 +87,7 @@
       </div>
 
       <div class="flex items-center py-3 space-x-4">
-        <button class="px-4 py-2 default-button fpl-cancel-btn" type="button" on:click={cancelModal}>
+        <button class="px-4 py-2 default-button fpl-cancel-btn" type="button" onclick={cancelModal}>
           Cancel
         </button>
         <button
@@ -91,7 +95,7 @@
             isSubmitDisabled ? "bg-gray-500" : "bg-BrandPurple"
           } 
           default-button bg-BrandPurplebtn`}
-          on:click={updateFavouriteTeam}
+          onclick={updateFavouriteTeam}
           disabled={isSubmitDisabled}>Update</button
         >
       </div>

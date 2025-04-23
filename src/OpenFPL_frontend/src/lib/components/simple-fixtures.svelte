@@ -13,12 +13,15 @@
   let fixturesWithTeams: FixtureWithClubs[] = [];
   let selectedGameweek = writable(1);
   let gameweeks = getGameweeks(Number(process.env.TOTAL_GAMEWEEKS));
+  let filteredFixtures: FixtureWithClubs[] = $state([]);
+  let groupedFixtures: {[key: string]: FixtureWithClubs[];} = $state({['']: []});
   
-  $: filteredFixtures = fixturesWithTeams.filter(
-    ({ fixture }) => fixture.gameweek === $selectedGameweek
-  );
-
-  $: groupedFixtures = reduceFilteredFixtures(filteredFixtures);
+  $effect(() => {
+    filteredFixtures = fixturesWithTeams.filter(
+      ({ fixture }) => fixture.gameweek === $selectedGameweek
+    );
+    groupedFixtures = reduceFilteredFixtures(filteredFixtures);
+  });
 
   onMount(async () => {
     await storeManager.syncStores();

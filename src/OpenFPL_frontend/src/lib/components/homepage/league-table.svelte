@@ -11,11 +11,11 @@
   import GameweekFilter from "../shared/filters/gameweek-filter.svelte";
     import LocalSpinner from "../shared/local-spinner.svelte";
 
-  let fixturesWithTeams: FixtureWithClubs[] = [];
+  let fixturesWithTeams: FixtureWithClubs[] = $state([]);
   let selectedGameweek = writable(1);
-  let gameweeks: number[];
-  let tableData: any[] = [];
-  let isLoading = true;
+  let gameweeks: number[] = $state([]);
+  let tableData: any[] = $state([]);
+  let isLoading = $state(true);
 
   onMount(async () => {
     await storeManager.syncStores();
@@ -24,10 +24,12 @@
     fixturesWithTeams = getFixturesWithTeams($clubStore, $fixtureStore);
     isLoading = false;
   });
-
-  $: if ($fixtureStore.length > 0 && $clubStore.length > 0) {
-    tableData = updateTableData(fixturesWithTeams, $clubStore, $selectedGameweek);
-  }
+  
+  $effect(() => {
+    if ($fixtureStore.length > 0 && $clubStore.length > 0) {
+      tableData = updateTableData(fixturesWithTeams, $clubStore, $selectedGameweek);
+    }
+  });
 
   const changeGameweek = (delta: number) => {
     $selectedGameweek = Math.max(1, Math.min(Number(process.env.TOTAL_GAMEWEEKS), $selectedGameweek + delta));

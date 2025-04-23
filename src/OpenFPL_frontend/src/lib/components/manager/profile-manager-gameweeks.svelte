@@ -22,6 +22,10 @@
   let isLoading = true;
   let sortField: 'gameweek' | 'points' = 'gameweek';
   let sortDirection: 'asc' | 'desc' = 'desc';
+  
+  $effect(() => {
+
+  });
 
   $: id = page.url.searchParams.get("id") ?? principalId;
   $: sortedGameweeks = manager?.gameweeks ? [...manager.gameweeks].sort((a, b) => {
@@ -61,7 +65,7 @@
         <div class="flex justify-between p-2 py-4 border border-gray-700 md:px-4 bg-light-gray">
           <button 
             class="flex items-center w-2/12 cursor-pointer" 
-            on:click={() => toggleSort('gameweek')}
+            onclick={() => toggleSort('gameweek')}
           >
             GW
             <SortIcon 
@@ -75,7 +79,7 @@
           <div class="w-3/12">Bonus</div>
           <button 
             class="flex items-center w-2/12 cursor-pointer" 
-            on:click={() => toggleSort('points')}
+            onclick={() => toggleSort('points')}
           >
             Points
             <SortIcon 
@@ -90,7 +94,7 @@
           {#each sortedGameweeks as gameweek}
             {@const captain = $playerStore.find((x) => x.id === gameweek.captainId)}
             {@const playerCountry = $countryStore ? $countryStore.find((x) => x.id === captain?.nationality) : null}
-            <button class="w-full" on:click={() => viewGameweekDetail(gameweek.gameweek)}>
+            <button class="w-full" onclick={() => viewGameweekDetail(gameweek.gameweek)}>
               <div class="flex items-center justify-between p-2 py-4 text-left border-b border-gray-700 cursor-pointer md:px-4 hover:bg-gray-800">
                 <div class="w-2/12">{gameweek.gameweek}</div>
                 <div class="flex items-center w-4/12">

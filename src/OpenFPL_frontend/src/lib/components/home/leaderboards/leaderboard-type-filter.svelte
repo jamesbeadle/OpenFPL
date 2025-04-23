@@ -13,18 +13,19 @@
         <div class="flex items-center">
             <button
                 class="mr-1 default-button fpl-button"
-                on:click={() => changeLeaderboardType(-1)}>&lt;</button>
+                onclick={() => changeLeaderboardType(-1)}>&lt;</button>
             <select
                 class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[125px]"
-                bind:value={$selectedLeaderboardType}
+                value={$selectedLeaderboardType}
             >
                 <option value={1}>Weekly</option>
                 <option value={2}>Monthly</option>
                 <option value={3}>Season</option>
+                <option value={4}>Most Valuable Team</option>
             </select>
             <button
                 class="ml-3 default-button fpl-button"
-                on:click={() => changeLeaderboardType(1)}>&gt;
+                onclick={() => changeLeaderboardType(1)}>&gt;
             </button>
         </div>
     </div>

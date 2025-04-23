@@ -73,8 +73,6 @@ import FixtureQueries "mo:waterway-mops/queries/football-queries/FixtureQueries"
 
 /* ----- Only Stable Variables Should Use Types ----- */
 
-/* ----- Import Other Canisters ----- */
-import RewardQueries "queries/reward_queries";
 
 actor Self {
 
@@ -388,20 +386,16 @@ actor Self {
     return await leaderboardManager.getWeeklyLeaderboard(dto);
   };
 
-  public shared query func getWeeklyRewards(dto : RewardQueries.GetWeeklyRewardsLeaderboard) : async Result.Result<RewardQueries.WeeklyRewardsLeaderboard, Enums.Error> {
-    let weeklyRewardsResult = leaderboardManager.getWeeklyRewards(dto.seasonId, dto.gameweek);
-    switch (weeklyRewardsResult) {
-      case (#ok foundRewards) {
-        return #ok({
-          gameweek = dto.gameweek;
-          seasonId = dto.seasonId;
-          entries = List.toArray(foundRewards.rewards);
-        });
-      };
-      case (#err _) {
-        return #err(#NotFound);
-      };
-    };
+  public shared func getMonthlyLeaderboard(dto : LeaderboardQueries.GetMonthlyLeaderboard) : async Result.Result<LeaderboardQueries.MonthlyLeaderboard, Enums.Error> {
+    return await leaderboardManager.getMonthlyLeaderboard(dto);
+  };
+
+  public shared func getSeasonLeaderboard(dto : LeaderboardQueries.GetSeasonLeaderboard) : async Result.Result<LeaderboardQueries.SeasonLeaderboard, Enums.Error> {
+    return await leaderboardManager.getSeasonLeaderboard(dto);
+  };
+
+  public shared func mostValuableTeamLeaderboard(dto : LeaderboardQueries.GetMostValuableTeamLeaderboard) : async Result.Result<LeaderboardQueries.MostValuableTeamLeaderboard, Enums.Error> {
+    return await leaderboardManager.mostValuableTeamLeaderboard(dto);
   };
 
   public shared ({ caller }) func getLeagueStatus() : async Result.Result<DataCanister.LeagueStatus, Enums.Error> {

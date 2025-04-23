@@ -39,7 +39,7 @@
                 {/if}
             </div>
             <button 
-                on:click={dismiss}
+                onclick={dismiss}
                 class="self-center px-6 py-2 font-medium transition-colors rounded-lg bg-white/10 hover:bg-white/20"
             >
                 {!showSecondMessage ? 'Got it!' : 'Let\'s go!'}

@@ -118,6 +118,10 @@
   ]);
 
   let weeklyBonusPlayed = writable<Boolean>(false);
+  
+  $effect(() => {
+
+  });
 
   $: if ($fantasyTeam) {
     updateBonuses();
@@ -161,7 +165,7 @@
 <div class="bg-panel">
   {#if selectedBonusId > 0}
     <UseBonusModal
-      bind:visible={showModal}
+      visible={showModal}
       bonus={$bonuses[selectedBonusId - 1]}
       {closeBonusModal}
       {fantasyTeam}
@@ -203,7 +207,7 @@
                   </p>
                 {:else if !$weeklyBonusPlayed}
                   <button
-                    on:click={() => showBonusModal(bonus.id)}
+                    onclick={() => showBonusModal(bonus.id)}
                     class="w-full py-2 text-sm rounded-md bg-BrandPurple"
                   >Use</button>
                 {:else}
@@ -246,7 +250,7 @@
           {:else if !$weeklyBonusPlayed}
             <div class="flex justify-center w-full px-1">
               <button
-                on:click={() => showBonusModal(bonus.id)}
+                onclick={() => showBonusModal(bonus.id)}
                 class="px-2 py-1 rounded-md bg-BrandPurple">View</button>
             </div>
           {:else}

@@ -21,9 +21,10 @@
       sessionAddedPlayers: Writable<number[]>;
     }
     let { selectedFormation, fantasyTeam, loadAddPlayer, removePlayer, setCaptain, canSellPlayer, sessionAddedPlayers }: Props = $props();
-    
-
-    $: gridSetup = getGridSetup($selectedFormation);
+    let gridSetup: number[][] = $state([]);
+    $effect(() => {
+      gridSetup = getGridSetup($selectedFormation);
+    });
 
 </script>
 
@@ -60,7 +61,7 @@
                   <ActiveCaptainIcon className="w-6 h-6" />
                 </span>
               {:else}
-                <button on:click={() => setCaptain(player.id)}>
+                <button onclick={() => setCaptain(player.id)}>
                   <PlayerCaptainIcon className="w-6 h-6" />
                 </button>
               {/if}
@@ -74,7 +75,7 @@
             </div>
             <div class="w-1/6 flex items-center">
               {#if canSellPlayer || $sessionAddedPlayers.includes(player.id)}
-                <button on:click={() => removePlayer(player.id)} class="bg-red-600 mb-1 rounded-sm">
+                <button onclick={() => removePlayer(player.id)} class="bg-red-600 mb-1 rounded-sm">
                   <RemovePlayerIcon className="w-6 h-6 p-2" />
                 </button>
               {:else}
@@ -87,7 +88,7 @@
             <div class="w-1/3">-</div>
             <div class="w-1/6">-</div>
             <div class="w-1/6 flex items-center">
-              <button on:click={() => loadAddPlayer(rowIndex, colIndex)} class="rounded fpl-button flex items-center">
+              <button onclick={() => loadAddPlayer(rowIndex, colIndex)} class="rounded fpl-button flex items-center">
                 <AddIcon className="w-6 h-6 p-2" />
               </button>
             </div>

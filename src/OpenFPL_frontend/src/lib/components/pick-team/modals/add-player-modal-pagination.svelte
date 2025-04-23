@@ -23,7 +23,7 @@
           class={`px-4 py-2 rounded-md ${
             index + 1 === $currentPage ? "fpl-button" : ""
           }`}
-          on:click={() => goToPage(index + 1)}
+          onclick={() => goToPage(index + 1)}
         >
           {index + 1}
         </button>

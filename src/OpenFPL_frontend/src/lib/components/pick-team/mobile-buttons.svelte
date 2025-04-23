@@ -19,12 +19,14 @@
       startingFantasyTeam: TeamSetup;
     }
     let { pitchViewActive, selectedFormation, availableFormations, transferWindowPlayed, isSaveButtonActive, fantasyTeam, showPitchView, showListView, playTransferWindow, autoFillFantasyTeam, saveFantasyTeam, handleResetTeam, startingFantasyTeam }: Props = $props();
-    
-    $: showResetButton = $fantasyTeam?.playerIds && startingFantasyTeam?.playerIds && (
-      (startingFantasyTeam.playerIds.filter(id => id > 0).length === 11 && 
-       $fantasyTeam.playerIds.filter(id => id > 0).length < startingFantasyTeam.playerIds.filter(id => id > 0).length) ||
-      !$fantasyTeam.playerIds.every((id, index) => id === startingFantasyTeam.playerIds[index])
-    );   
+    let showResetButton : boolean | undefined = $state(undefined);
+    $effect(() => {
+      showResetButton = $fantasyTeam?.playerIds && startingFantasyTeam?.playerIds && (
+        (startingFantasyTeam.playerIds.filter(id => id > 0).length === 11 && 
+        $fantasyTeam.playerIds.filter(id => id > 0).length < startingFantasyTeam.playerIds.filter(id => id > 0).length) ||
+        !$fantasyTeam.playerIds.every((id, index) => id === startingFantasyTeam.playerIds[index])
+      );   
+    });
 </script>
 <div class="flex-row bg-panel xs:flex">
     <div class="w-full xs:w-1/2">
@@ -33,7 +35,7 @@
           class={`btn ${
             $pitchViewActive ? `fpl-button` : `inactive-btn`
           } rounded-l-md tab-switcher-label`}
-          on:click={showPitchView}
+          onclick={showPitchView}
         >
           Pitch View
         </button>
@@ -41,7 +43,7 @@
           class={`btn ${
             !$pitchViewActive ? `fpl-button` : `inactive-btn`
           } rounded-r-md tab-switcher-label`}
-          on:click={showListView}
+          onclick={showListView}
         >
           List View
         </button>
@@ -52,7 +54,7 @@
         <p class="mr-2">Formation:</p>
         <select
           class="w-full px-4 text-center xs:mb-1 border-sm fpl-dropdown"
-          bind:value={$selectedFormation}
+          value={$selectedFormation}
         >
           {#each $availableFormations as formation}
             <option value={formation}>{formation}</option>
@@ -64,7 +66,7 @@
           disabled={$fantasyTeam?.playerIds
             ? $fantasyTeam?.playerIds.filter((x) => x === 0).length === 0
             : true}
-          on:click={autoFillFantasyTeam}
+          onclick={autoFillFantasyTeam}
           class={`side-button-base  
             ${
               $fantasyTeam?.playerIds &&
@@ -77,7 +79,7 @@
         </button>
         {#if showResetButton}
           <button
-            on:click={handleResetTeam}
+            onclick={handleResetTeam}
             class="side-button-base bg-BrandRed"
           >
             Reset Team
@@ -85,7 +87,7 @@
         {/if}
         <button
           disabled={!$isSaveButtonActive}
-          on:click={saveFantasyTeam}
+          onclick={saveFantasyTeam}
           class={`side-button-base ${
             $isSaveButtonActive ? "bg-BrandPurple" : "bg-gray-500"
           } text-white`}
@@ -97,7 +99,7 @@
         <div class="flex flex-row mx-4 mb-4 space-x-1">
           <button
             disabled={$transferWindowPlayed}
-            on:click={playTransferWindow}
+            onclick={playTransferWindow}
             class={`btn w-full px-4 py-2 rounded  
               ${
                 !$transferWindowPlayed ? "bg-BrandPurple" : "bg-gray-500"

@@ -13,7 +13,6 @@
   import LocalSpinner from "../shared/local-spinner.svelte";
   import type { AppStatus, TeamSetup } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
-  <script lang="ts">
     interface Props {
       fantasyTeam: Writable<TeamSetup | undefined>;
       selectedFormation: Writable<string>;
@@ -23,9 +22,8 @@
       sessionAddedPlayers: Writable<number[]>;
     }
     let { fantasyTeam,selectedFormation, availableFormations,  pitchView, teamValue, sessionAddedPlayers }: Props = $props();
-  </script>
-
-  let startingFantasyTeam: TeamSetup;
+  
+  let startingFantasyTeam: TeamSetup | undefined = $state(undefined);
   let isSaveButtonActive = writable(false);
   let activeSeason: string;
   let activeGameweek: number;
@@ -34,28 +32,27 @@
   let bonusUsedInSession = false;
   let transferWindowPlayed = writable(false);
   let transferWindowPlayedInSession = false;
-  let isLoading = true;
+  let isLoading = $state(true);
   let appStatus: AppStatus;
   let pitchViewActive = writable(true);
 
-  $: if ($fantasyTeam && $playerStore.length > 0) {
-    disableInvalidFormations();
-    $isSaveButtonActive = checkSaveButtonConditions(isLoading, $fantasyTeam, $playerStore, appStatus, $selectedFormation);
-  }
-
-  $: {
-    if ($fantasyTeam) {
-      
-      if ($fantasyTeam.playerIds.filter((x) => x > 0).length == 11) {
-        const newFormation = getTeamFormation($fantasyTeam, $playerStore);
-        $selectedFormation = newFormation;
-      }
-
-      if(startingFantasyTeam){
-        bonusUsedInSession = checkBonusUsedInSession($fantasyTeam, startingFantasyTeam);
-      }
+  $effect(() => {
+    if ($fantasyTeam && $playerStore.length > 0) {
+      disableInvalidFormations();
+      $isSaveButtonActive = checkSaveButtonConditions(isLoading, $fantasyTeam, $playerStore, appStatus, $selectedFormation);
     }
-  }
+    if ($fantasyTeam) {
+        
+        if ($fantasyTeam.playerIds.filter((x) => x > 0).length == 11) {
+          const newFormation = getTeamFormation($fantasyTeam, $playerStore);
+          $selectedFormation = newFormation;
+        }
+
+        if(startingFantasyTeam){
+          bonusUsedInSession = checkBonusUsedInSession($fantasyTeam, startingFantasyTeam);
+        }
+      }
+  });
 
   onMount(async () => {
     let appStatusResult = await appStore.getAppStatus();
@@ -214,7 +211,7 @@
       {transferWindowPlayed} 
       {isSaveButtonActive} 
       {fantasyTeam}
-      {startingFantasyTeam}
+      startingFantasyTeam={startingFantasyTeam!}
       {showPitchView}
       {showListView}
       {playTransferWindow}
@@ -232,7 +229,7 @@
       {transferWindowPlayed} 
       {isSaveButtonActive} 
       {fantasyTeam}
-      {startingFantasyTeam}
+      startingFantasyTeam={startingFantasyTeam!}
       {showPitchView}
       {showListView}
       {playTransferWindow}

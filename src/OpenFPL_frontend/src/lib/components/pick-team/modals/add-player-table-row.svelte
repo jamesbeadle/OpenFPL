@@ -17,6 +17,10 @@
 
     let club: Club | undefined;
 
+    $effect(() => {
+      
+    });
+
     $: club = $clubStore.find((x) => x.id === player.clubId);
 </script>
 
@@ -50,7 +54,7 @@ class="flex items-center justify-between py-2 border-b border-gray-700 cursor-po
     <span class="text-center text-xxs">{disableReasons[index]}</span>
   {:else}
     <button
-      on:click={() => selectPlayer(player)}
+      onclick={() => selectPlayer(player)}
       class="flex items-center rounded fpl-button"
     >
       <AddIcon className="w-6 h-6 p-2" />

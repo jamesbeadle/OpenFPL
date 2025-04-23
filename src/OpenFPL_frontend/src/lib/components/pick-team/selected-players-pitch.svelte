@@ -28,6 +28,10 @@
   let pitchHeight = 0;
   let pitchElement: HTMLImageElement | null = null;
 
+  $effect(() => {
+      
+  });
+
   $: rowHeight = (pitchHeight * 0.9) / 4;
   $: gridSetup = getGridSetup($selectedFormation);
 
@@ -98,7 +102,7 @@
                 />
               {:else}
                 <button
-                  on:click={() => loadAddPlayer(rowIndex, colIndex)}
+                  onclick={() => loadAddPlayer(rowIndex, colIndex)}
                   class="flex items-center"
                 >
                   <AddPlayerIcon

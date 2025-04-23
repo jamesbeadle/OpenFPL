@@ -21,10 +21,12 @@
   let seasonName = "";
 
   const tabs = [
-    { id: "fixtures", label: "Fixtures", authOnly: false },
-    { id: "points", label: "Points", authOnly: true },
-    { id: "leaderboards", label: "Leaderboards", authOnly: false },
-    { id: "league-table", label: "Table", authOnly: false },
+    { id: "points", label: "My Points" },
+    { id: "leaderboards", label: "Leaderboards" },
+    { id: "fixtures", label: "Fixtures" },
+    { id: "mvps", label: "MVPs" },
+    { id: "league-table", label: "League Table" },
+    { id: "trophy-room", label: "Trophy Room" },
   ];
 
   onMount(() => {
@@ -57,14 +59,18 @@
     <div class="bg-panel">
       <TabContainer {tabs} {activeTab} {setActiveTab} />
       
-      {#if activeTab === "fixtures"}
-        <FixturesComponent />
-      {:else if activeTab === "points"}
+      {#if activeTab === "points"}
         <GamweekPointsComponent />
       {:else if activeTab === "leaderboards"}
         <LeaderboardsComponent />
+      {:else if activeTab === "fixtures"}
+      <FixturesComponent />
+      {:else if activeTab === "mvps"}
+        <MVPsComponent />
       {:else if activeTab === "league-table"}
         <LeagueTableComponent />
+      {:else if activeTab === "trophy-room"}
+        <TrophyRoomComponent />
       {/if}
     </div>
 {/if}

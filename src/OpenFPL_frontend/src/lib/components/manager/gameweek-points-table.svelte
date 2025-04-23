@@ -23,7 +23,7 @@
         {#each $gameweekData as playerGameweek}
           <button
             class="flex justify-between w-full p-4 text-center border-b cursor-pointer border-BrandGray lg:text-center lg:px-10"
-            on:click={() => showDetailModal(playerGameweek)}
+            onclick={() => showDetailModal(playerGameweek)}
           >
             <div class="w-2/12 xs:w-2/12">
               {getPositionAbbreviation(

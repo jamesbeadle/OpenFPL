@@ -6,9 +6,8 @@
       gameweeks: number[];
       changeGameweek: (gameweek: number) => void;
       lastGameweek: number;
-      weeklyPoints: number | undefined;
     }
-    let { selectedGameweek, gameweeks, changeGameweek, lastGameweek, weeklyPoints }: Props = $props();
+    let { selectedGameweek, gameweeks, changeGameweek, lastGameweek }: Props = $props();
 
 </script>
 <div class="p-4">
@@ -43,11 +42,5 @@
               &gt;
             </button>
         </div>
-        {#if weeklyPoints !== undefined}
-          <div class="flex items-center gap-2 px-4 py-2 text-lg font-medium rounded-md bg-BrandGray/60">
-            <span class="text-gray-300">Total Gameweek Points:</span>
-            <span class="text-white">{weeklyPoints}</span>
-          </div>
-        {/if}
     </div>
 </div>

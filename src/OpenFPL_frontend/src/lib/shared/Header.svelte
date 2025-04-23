@@ -17,8 +17,10 @@
   }
 
 
-  let menuOpen = false;
-  let showProfileDropdown = false;
+  let menuOpen = $state(false);
+  let showProfileDropdown = $state(false);
+  let currentClass = $state("");
+  let currentBorder = $state("");
 
   onMount(() => {
     if (typeof window !== "undefined") {
@@ -31,14 +33,15 @@
       document.removeEventListener("click", closeDropdownOnClickOutside);
     }
   });
-
-  $: currentClass = (route: string) =>
+  
+  $effect(() => {
+    currentClass = (route: string) =>
     page.url.pathname === route
       ? "text-blue-500 nav-underline active"
       : "nav-underline";
-
-  $: currentBorder = (route: string) =>
+      currentBorder = (route: string) =>
     page.url.pathname === route ? "active-border" : "";
+  });
 
   function toggleMenu() {
     menuOpen = !menuOpen;
@@ -81,11 +84,11 @@
   <nav class="text-white">
     <div class="flex items-center justify-between w-full h-16 px-4">
       <a href="/" class="flex items-center hover:text-gray-400">
-        <OpenFPLIcon className="h-8 w-auto" /><b class="ml-2">OpenFPL</b>
+        <OpenFPLIcon currentColor="white" className="h-8 w-auto" /><b class="ml-2">OpenFPL</b>
       </a>
       <button
         class="menu-toggle md:hidden focus:outline-none"
-        on:click={toggleMenu}
+        onclick={toggleMenu}
         aria-label="Toggle Menu"
       >
         <svg
@@ -126,7 +129,7 @@
           <li class="flex items-center flex-1">
             <div class="relative inline-block">
               <button
-                on:click={toggleProfileDropdown}
+                onclick={toggleProfileDropdown}
                 class={`h-full flex items-center rounded-sm ${currentBorder(
                   "/profile"
                 )}`}
@@ -164,7 +167,7 @@
                   <li>
                     <button
                       class="flex items-center justify-center px-4 pt-1 pb-2 text-white rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button"
-                      on:click={handleDisconnect}
+                      onclick={handleDisconnect}
                     >
                       Disconnect
                       <WalletIcon className="ml-2 h-6 w-6 mt-1" />
@@ -192,7 +195,7 @@
               <a
                 href="/pick-team"
                 class={currentClass("/pick-team")}
-                on:click={toggleMenu}>Squad Selection</a
+                onclick={toggleMenu}>Squad Selection</a
               >
             </li>
             <li class="p-2">
@@ -217,7 +220,7 @@
             <li class="px-2">
               <button
                 class="flex items-center w-full h-full hover:text-gray-400"
-                on:click={handleDisconnect}
+                onclick={handleDisconnect}
               >
                 Disconnect
                 <WalletIcon className="ml-2 h-6 w-6 mt-1" />
@@ -230,7 +233,7 @@
           <li class="flex items-center h-16 mx-2">
             <button
               class="flex items-center justify-center px-4 py-2 text-white bg-blue-500 rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button"
-              on:click={handleLogin}
+              onclick={handleLogin}
             >
               Connect
               <WalletIcon className="ml-2 h-6 w-6 mt-1" />
@@ -246,7 +249,7 @@
             <li class="p-2">
               <button
                 class="flex items-center justify-center px-4 py-2 text-white bg-blue-500 rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button"
-                on:click={handleLogin}
+                onclick={handleLogin}
               >
                 Connect
                 <WalletIcon className="ml-2 h-6 w-6 mt-1" />

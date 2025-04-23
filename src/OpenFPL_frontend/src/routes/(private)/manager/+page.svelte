@@ -14,13 +14,14 @@
   import ManagerHeader from "$lib/components/manager/manager-header.svelte";
   import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
     
-  $: id = page.url.searchParams.get("id");
-  $: gw = page.url.searchParams.get("gw");
-  $: formation = "4-4-2";
-  $: gridSetup = getGridSetup(formation);
+  let id = $state(page.url.searchParams.get("id"));
+  let gw = $state(page.url.searchParams.get("gw"));
+  let formation = $state("4-4-2");
+  let gridSetup : number[][] = $state([]);
+  
 
-  let isLoading = true;
-  let activeTab: string = "details";
+  let isLoading = $state(true);
+  let activeTab: string = $state("details");
   let fantasyTeam: Writable<FantasyTeamSnapshot | null> = writable(null);
   let selectedGameweek = writable(0);
   let loadingGameweekDetail: Writable<boolean> = writable(false);
@@ -40,6 +41,10 @@
     gridSetup = getGridSetup(formation);
     viewGameweekDetail($selectedGameweek!);
     isLoading = false;
+  });
+  
+  $effect(() => {
+    gridSetup = getGridSetup(formation);
   });
 
   function setActiveTab(tab: string): void {

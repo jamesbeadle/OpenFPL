@@ -27,6 +27,10 @@
       });
       isLoading = false;
     });
+  
+  $effect(() => {
+      
+  });
 
 
     function displayFavouriteTeamModal(): void {

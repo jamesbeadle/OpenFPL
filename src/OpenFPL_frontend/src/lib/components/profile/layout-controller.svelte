@@ -6,8 +6,8 @@
     import { onMount, type Snippet } from 'svelte';
     import type { CombinedProfile, MembershipType__1 } from '../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did';
     
-    import Header from '$lib/shared/Header.svelte';
-    import Footer from '$lib/shared/Footer.svelte';
+    import Header from '$lib/shared/header.svelte';
+    import Footer from '$lib/shared/footer.svelte';
     import InvalidMembershipPage from '$lib/components/profile/invalid-membership-page.svelte';
     import MembershipProfile from '$lib/components/profile/membership-profile.svelte';
     import LandingPage from '$lib/components/landing/landing-page.svelte';
@@ -77,13 +77,13 @@
 {#if isLoading}
     <FullScreenSpinner message={loadingMessage} />
 {:else if $authSignedInStore}
+    <Header />  
+    <Sidebar {isMenuOpen} {toggleMenu} isSaleOnly={false} />
     {#if $userIdCreatedStore?.data}
        {#if !hasValidMembership && profileChecked}
-          <Header />  
           <InvalidMembershipPage />
         {:else if profileChecked}
             <div class="flex flex-col min-h-screen">
-                <Header />
                 <main class="flex-grow page-wrapper">
                     {@render children()}
                 </main>

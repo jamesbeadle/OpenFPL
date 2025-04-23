@@ -21,13 +21,13 @@
   let { selectedGameweek, fantasyTeam }: Props = $props();
 
 
-  let isLoading = false;
-  let showModal = false;
-  let lastGameweek: number;
-  let activeSeasonName: string;
+  let isLoading = $state(false);
+  let showModal = $state(false);
+  let lastGameweek: number = $state(0);
+  let activeSeasonName: string = $state("");
 
   let gameweekPlayers = writable<GameweekData[]>([]);
-  let gameweeks: number[];
+  let gameweeks: number[] = $state([]);
 
   $effect(() => {
     if ($fantasyTeam && $selectedGameweek && $selectedGameweek > 0) {

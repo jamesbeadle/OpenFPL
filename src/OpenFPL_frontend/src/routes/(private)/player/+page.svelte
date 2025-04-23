@@ -12,13 +12,13 @@
   import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
   import type { Club, Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
-  $: id = Number(page.url.searchParams.get("id"));
+  let id = Number(page.url.searchParams.get("id"));
 
-  let selectedGameweek: number = 1;
-  let selectedPlayer: Player;
-  let playerClub: Club;
-  let activeTab: string = "history";
-  let isLoading = true;
+  let selectedGameweek: number = $state(1);
+  let selectedPlayer: Player | undefined = $state(undefined);
+  let playerClub: Club | undefined = $state(undefined);
+  let activeTab: string = $state("history");
+  let isLoading = $state(true);
 
   const tabs = [
     { id: "history", label: "Gameweek History", authOnly: false }
@@ -31,16 +31,20 @@
     playerClub = $clubStore.find((x) => x.id === selectedPlayer?.clubId)!;
     isLoading = false;
   });
+  
+  $effect(() => {
+      
+  });
 
   function setActiveTab(tab: string): void {
     activeTab = tab;
   }
 </script>
 
-  {#if isLoading}
+  {#if isLoading && selectedPlayer && playerClub}
     <LocalSpinner />
   {:else}
-    <PlayerHeader player={selectedPlayer} club={playerClub} gameweek={selectedGameweek} />
+    <PlayerHeader player={selectedPlayer!} club={playerClub!} gameweek={selectedGameweek} />
     
     <div class="bg-panel">
       <TabContainer {tabs} {activeTab} {setActiveTab}  />

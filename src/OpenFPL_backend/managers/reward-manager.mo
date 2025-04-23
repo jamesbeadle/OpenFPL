@@ -208,25 +208,6 @@ module {
       return Buffer.toArray(adjustedPercentagesBuffer);
     };
 
-    public func getWeeklyRewards(seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber) : Result.Result<AppTypes.WeeklyRewards, Enums.Error> {
-
-      let rewards = List.find(
-        weeklyRewards,
-        func(rewardsEntry : AppTypes.WeeklyRewards) : Bool {
-          rewardsEntry.seasonId == seasonId and rewardsEntry.gameweek == gameweek;
-        },
-      );
-
-      switch (rewards) {
-        case (?foundRewards) {
-          return #ok(foundRewards);
-        };
-        case (null) {};
-      };
-
-      return #err(#NotFound);
-    };
-
     public func getActiveRewardRates() : AppTypes.RewardRates {
       return activeRewardRates;
     };

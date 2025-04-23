@@ -429,97 +429,10 @@ module {
     public func getUniqueLeaderboardCanisterIds() : [Ids.CanisterId] {
       return uniqueLeaderboardCanisterIds;
     };
-    /*
-    public func calculateWeeklyRewards(seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber) : async Result.Result<(), Enums.Error> {
-      let gameweekSeason = Array.find(
-        weeklyLeaderboardCanisters,
-        func(seasonEntry : (FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, Ids.CanisterId)])) : Bool {
-          seasonEntry.0 == seasonId;
-        },
-      );
-
-      switch (gameweekSeason) {
-        case (?foundGameweekSeason) {
-          let gameweekResult = Array.find(
-            foundGameweekSeason.1,
-            func(gameweekEntry : (FootballDefinitions.GameweekNumber, Ids.CanisterId)) : Bool {
-              gameweekEntry.0 == gameweek;
-            },
-          );
-
-          switch (gameweekResult) {
-            case (?foundGameweek) {
-              let canisterId = foundGameweek.1;
-
-              let leaderboard_canister = actor (canisterId) : actor {
-                getWeeklyRewardWinners : (dto : LeaderboardQueries.GetWeeklyRewardWinners) -> async ?DTOs.WeeklyLeaderboardDTO;
-              };
-
-              let entriesDTO : Queries.GetWeeklyRewardWinnersDTO = {
-                seasonId = foundGameweekSeason.0;
-                gameweek = foundGameweek.0;
-              };
-
-              let leaderboardEntries = await leaderboard_canister.getWeeklyRewardWinners(entriesDTO);
-
-              switch (leaderboardEntries) {
-                case (null) {
-                  return #err(#NotFound);
-                };
-                case (?foundLeaderboard) {
-                  await rewardManager.calculateGameweekRewards(foundLeaderboard);
-                  return #ok();
-                };
-              };
-
-            };
-            case (null) {};
-          };
-        };
-        case (null) {};
-      };
-      return #err(#NotFound);
-    };
-    */
-
-    public func getWeeklyRewards(seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber) : Result.Result<AppTypes.WeeklyRewards, Enums.Error> {
-      return rewardManager.getWeeklyRewards(seasonId, gameweek);
-    };
 
     public func getActiveRewardRates() : AppTypes.RewardRates {
       return rewardManager.getActiveRewardRates();
     };
-
-    /*
-    public func payWeeklyRewards(seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber) : async Result.Result<(), Enums.Error> {
-
-      let weeklyRewards = rewardManager.getWeeklyRewards(seasonId, gameweek);
-      switch (weeklyRewards) {
-        case (#ok rewardEntries) {
-
-          for (entry in Iter.fromList(rewardEntries.rewards)) {
-            let ledger : SNSToken.Interface = actor (NetworkEnvironmentVariables.SNS_LEDGER_CANISTER_ID);
-
-            let _ = await ledger.icrc1_transfer({
-              memo = ?Text.encodeUtf8("0");
-              from_subaccount = ?Account.defaultSubaccount();
-              to = {
-                owner = Principal.fromText(entry.principalId);
-                subaccount = null;
-              };
-              amount = Nat64.toNat(entry.amount);
-              fee = ?Nat64.toNat(Constants.FPL_TRANSACTION_FEE);
-              created_at_time = ?Nat64.fromNat(Int.abs(Time.now()));
-            });
-          };
-          return #ok();
-        };
-        case (#err error) {
-          return #err(error);
-        };
-      };
-    };
-    */
 
     //Statble Storage
 

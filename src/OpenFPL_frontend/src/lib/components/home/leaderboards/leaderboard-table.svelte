@@ -1,7 +1,7 @@
 <script lang="ts">
   import { formatE8s } from "$lib/utils/helpers";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
-  import Pagination from "../shared/pagination.svelte";
+  import Pagination from "../../shared/pagination.svelte";
   import {type Writable, writable, get} from "svelte/store";
 
   interface Props {
@@ -14,7 +14,7 @@
   }
   let { leaderboard, selectedGameweek, currentPage, totalPages, onPageChange, searchQuery }: Props = $props();
 
-  let searchInput: string = "";
+  let searchInput: string = $state("");
 
   function executeSearch() {
     searchQuery.set(searchInput);
@@ -42,8 +42,8 @@
       <input
         type="text"
         placeholder="Search by username..."
-        on:keydown={handleKeydown}
-        bind:value={searchInput}
+        onkeydown={handleKeydown}
+        value={searchInput}
         class="w-full px-4 py-3 text-white transition-colors border border-gray-700 rounded-lg bg-BrandGray focus:outline-none focus:border-BrandGreen"
       />
       <svg class="absolute right-4 top-3.5 md:h-5 md:w-5 h-3 w-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -51,13 +51,13 @@
       </svg>
     </div>
     <button
-      on:click={executeSearch}
+      onclick={executeSearch}
       class="px-4 py-2 text-white transition-colors border border-gray-700 rounded-lg bg-BrandGray hover:bg-BrandGrayShade1 focus:outline-none focus:border-BrandGreen"
     >
       Search
     </button>
     <button
-      on:click={resetSearch}
+      onclick={resetSearch}
       class="px-4 py-2 text-white transition-colors border border-gray-700 rounded-lg bg-BrandGray hover:bg-BrandGrayShade1 focus:outline-none focus:border-BrandGreen"
     >
       Reset
