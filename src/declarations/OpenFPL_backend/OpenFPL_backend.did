@@ -1,6 +1,6 @@
 type WeeklyLeaderboard = 
  record {
-   entries: vec LeaderboardEntry;
+   entries: vec LeaderboardEntry__1;
    gameweek: GameweekNumber;
    seasonId: SeasonId;
    totalEntries: nat;
@@ -99,7 +99,7 @@ type SetFavouriteClub =
 type Seasons = record {seasons: vec Season;};
 type SeasonLeaderboard = 
  record {
-   entries: vec LeaderboardEntry;
+   entries: vec LeaderboardEntry__1;
    seasonId: SeasonId;
    totalEntries: nat;
  };
@@ -163,45 +163,50 @@ type Result_3 =
    err: Error;
    ok: nat;
  };
-type Result_27 = 
+type Result_28 = 
  variant {
    err: Error;
    ok: RewardRates;
  };
-type Result_26 = 
+type Result_27 = 
  variant {
    err: Error;
    ok: AppStatus;
  };
-type Result_25 = 
+type Result_26 = 
  variant {
    err: Error;
    ok: Clubs;
  };
-type Result_24 = 
+type Result_25 = 
  variant {
    err: Error;
    ok: Countries;
  };
-type Result_23 = 
+type Result_24 = 
  variant {
    err: Error;
    ok: vec DataHash;
  };
-type Result_22 = 
+type Result_23 = 
  variant {
    err: Error;
    ok: FantasyTeamSnapshot;
  };
-type Result_21 = 
+type Result_22 = 
  variant {
    err: Error;
    ok: Fixtures;
  };
-type Result_20 = 
+type Result_21 = 
  variant {
    err: Error;
    ok: text;
+ };
+type Result_20 = 
+ variant {
+   err: Error;
+   ok: ICFCLinkStatus;
  };
 type Result_2 = 
  variant {
@@ -211,7 +216,7 @@ type Result_2 =
 type Result_19 = 
  variant {
    err: Error;
-   ok: ICFCLinkStatus;
+   ok: vec ICFCLinks;
  };
 type Result_18 = 
  variant {
@@ -467,6 +472,11 @@ type PlayBonus =
    playerId: PlayerId;
    principalId: PrincipalId;
  };
+type PayoutStatus = 
+ variant {
+   Paid;
+   Pending;
+ };
 type NotifyAppofRemoveLink = 
  record {
    icfcPrincipalId: PrincipalId;
@@ -488,7 +498,7 @@ type MostValuableTeamLeaderboard =
 type MonthlyLeaderboard = 
  record {
    club: ClubId;
-   entries: vec LeaderboardEntry;
+   entries: vec LeaderboardEntry__1;
    month: GameweekNumber;
    seasonId: SeasonId;
    totalEntries: nat;
@@ -555,7 +565,7 @@ type LeagueStatus =
    unplayedGameweek: nat8;
  };
 type LeagueId = nat16;
-type LeaderboardEntry = 
+type LeaderboardEntry__1 = 
  record {
    bonusPlayed: opt BonusType;
    membershipLevel: MembershipType;
@@ -568,11 +578,25 @@ type LeaderboardEntry =
    rewardAmount: opt nat64;
    username: text;
  };
+type LeaderboardEntry = 
+ record {
+   appPrincipalId: PrincipalId;
+   payoutDate: opt int;
+   payoutStatus: PayoutStatus;
+   rewardAmount: opt nat64;
+ };
 type InjuryHistory = 
  record {
    description: text;
    expectedEndDate: int;
    injuryStartDate: int;
+ };
+type ICFCLinks = 
+ record {
+   icfcPrincipalId: PrincipalId;
+   membershipType: MembershipType;
+   subApp: SubApp;
+   subAppUserPrincipalId: PrincipalId;
  };
 type ICFCLinkStatus = 
  variant {
@@ -638,6 +662,7 @@ type GetMonthlyLeaderboard =
  };
 type GetManagerByUsername = record {username: text;};
 type GetManager = record {principalId: text;};
+type GetICFCLinks = record {};
 type GetFixtures = 
  record {
    leagueId: nat16;
@@ -781,7 +806,10 @@ type CompleteSeasonNotification =
 type CompleteLeaderboardPayout = 
  record {
    gameweek: GameweekNumber;
+   leaderboard: vec LeaderboardEntry;
    seasonId: SeasonId;
+   totalEntries: nat;
+   totalPaid: nat;
  };
 type CompleteGameweekNotification = 
  record {
@@ -885,20 +913,21 @@ service : {
   completeSeasonNotification: (CompleteSeasonNotification) -> (Result);
   expireLoanNotification: (PlayerChangeNotification) -> (Result);
   finaliseFixtureNotification: (CompleteFixtureNotification) -> (Result);
-  getActiveLeaderboardCanisterId: () -> (Result_20);
-  getActiveRewardRates: () -> (Result_27);
+  getActiveLeaderboardCanisterId: () -> (Result_21);
+  getActiveRewardRates: () -> (Result_28);
   getAllUserICFCLinks: () -> (vec record {
                                     PrincipalId;
                                     ICFCLink;
                                   });
-  getAppStatus: () -> (Result_26);
-  getClubs: (GetClubs) -> (Result_25);
-  getCountries: () -> (Result_24);
-  getDataHashes: () -> (Result_23);
-  getFantasyTeamSnapshot: (GetFantasyTeamSnapshot) -> (Result_22);
-  getFixtures: (GetFixtures) -> (Result_21);
-  getICFCDataHash: () -> (Result_20);
-  getICFCLinkStatus: () -> (Result_19);
+  getAppStatus: () -> (Result_27);
+  getClubs: (GetClubs) -> (Result_26);
+  getCountries: () -> (Result_25);
+  getDataHashes: () -> (Result_24);
+  getFantasyTeamSnapshot: (GetFantasyTeamSnapshot) -> (Result_23);
+  getFixtures: (GetFixtures) -> (Result_22);
+  getICFCDataHash: () -> (Result_21);
+  getICFCLinkStatus: () -> (Result_20);
+  getICFCProfileLinks: (GetICFCLinks) -> (Result_19);
   getLeaderboardCanisterIds: () -> (Result_16);
   getLeagueStatus: () -> (Result_18);
   getManager: (GetManager) -> (Result_17);
