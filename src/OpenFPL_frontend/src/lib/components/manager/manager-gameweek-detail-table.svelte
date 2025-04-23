@@ -15,9 +15,9 @@ w<script lang="ts">
   }
   let { fantasyTeam, gameweekPlayers, showModal, activeSeasonName }: Props = $props();
   
-  let selectedTeam: Club;
-  let selectedOpponentTeam: Club;
-  let selectedGameweekData: GameweekData;
+  let selectedTeam: Club | undefined = $state(undefined);
+  let selectedOpponentTeam: Club | undefined = $state(undefined);
+  let selectedGameweekData: GameweekData | undefined = $state(undefined);
   
   async function showDetailModal(gameweekData: GameweekData) {
     selectedGameweekData = gameweekData;
@@ -66,7 +66,7 @@ w<script lang="ts">
           <div class="w-1/12 text-center">PTS</div>
         </div>
 
-        {#each $gameweekPlayers as data}
+        {#each gameweekPlayers as data}
           {@const playerDTO = $playerStore.find((x) => x.id === data.player.id) ?? null}
           {@const playerTeam = $clubStore.find((x) => x.id === data.player.clubId) ?? null}
           <button
@@ -86,10 +86,10 @@ w<script lang="ts">
 
   {#if showModal}
     <FantasyPlayerDetailModal
-      playerTeam={selectedTeam}
-      opponentTeam={selectedOpponentTeam}
+      playerTeam={selectedTeam!}
+      opponentTeam={selectedOpponentTeam!}
       seasonName={activeSeasonName}
       visible={showModal}
-      gameweekData={selectedGameweekData}
+      gameweekData={selectedGameweekData!}
     />
   {/if}

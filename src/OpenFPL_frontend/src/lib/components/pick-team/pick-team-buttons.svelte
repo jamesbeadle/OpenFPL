@@ -38,7 +38,7 @@
   $effect(() => {
     if (fantasyTeam && $playerStore.length > 0) {
       disableInvalidFormations();
-      $isSaveButtonActive = checkSaveButtonConditions(isLoading, fantasyTeam, $playerStore, appStatus, selectedFormation);
+      isSaveButtonActive = checkSaveButtonConditions(isLoading, fantasyTeam, $playerStore, appStatus, selectedFormation);
     }
     if (fantasyTeam) {
         
@@ -72,45 +72,39 @@
 
     const storedViewMode = localStorage.getItem("viewMode");
     if (storedViewMode) {
-      $pitchViewActive = storedViewMode === "pitch";
-      pitchView.set($pitchViewActive);
+      pitchViewActive = storedViewMode === "pitch";
+      pitchView = pitchViewActive;
     }
 
     let transferWindowGameweek = fantasyTeam?.transferWindowGameweek ?? 0;
-    $transferWindowPlayed = transferWindowGameweek > 0;
+    transferWindowPlayed = transferWindowGameweek > 0;
 
-    fantasyTeam.update((currentTeam) => {
-      if (
-        currentTeam &&
-        (!currentTeam.playerIds || currentTeam.playerIds.length !== 11)
-      ) {
-        return {
-          ...currentTeam,
+    if (fantasyTeam && (!fantasyTeam.playerIds || fantasyTeam.playerIds.length !== 11)) {
+        fantasyTeam = {
+          ...fantasyTeam,
           playerIds: new Uint16Array(11).fill(0),
         };
       }
-      return currentTeam;
-    });
   }
 
   function showPitchView() {
-    $pitchViewActive = true;
-    pitchView.set($pitchViewActive);
+    pitchViewActive = true;
+    pitchView = pitchViewActive;
   }
 
   function showListView() {
-    $pitchViewActive = false;
-    pitchView.set($pitchViewActive);
+    pitchViewActive = false;
+    pitchView = pitchViewActive;
   }
 
   function disableInvalidFormations() {
     if (!fantasyTeam || !fantasyTeam.playerIds || fantasyTeam.principalId == '') {
-      availableFormations.set(Object.keys(allFormations));
+      availableFormations = Object.keys(allFormations);
       return;
     }
 
     const formations = getAvailableFormations($playerStore, fantasyTeam);
-    availableFormations.set(formations);
+    availableFormations = formations;
   }
 
   function autoFillFantasyTeam() {
@@ -132,20 +126,20 @@
     fantasyTeam = autofillTeam(fantasyTeam, $playerStore, selectedFormation);
 
     const newPlayers = fantasyTeam!.playerIds.filter(id => id > 0 && !oldPlayerIds.has(id));
-    $sessionAddedPlayers = [...$sessionAddedPlayers, ...newPlayers];
+    sessionAddedPlayers = [...sessionAddedPlayers, ...newPlayers];
     
-    teamValue.set(updateTeamValue(fantasyTeam));
+    teamValue = fantasyTeam;
   }
 
   function playTransferWindow() {
     transferWindowPlayedInSession = true;
-    $transferWindowPlayed = true;
-    fantasyTeam.set({ ...fantasyTeam!, transferWindowGameweek: $leagueStore!.unplayedGameweek });
+    transferWindowPlayed = true;
+    fantasyTeam = { ...fantasyTeam!, transferWindowGameweek: $leagueStore!.unplayedGameweek };
   }
 
   async function updateUsername() {
-    if ($newUsername == "") { return; }
-    fantasyTeam.set({ ...fantasyTeam!, username: $newUsername });
+    if (newUsername == "") { return; }
+    fantasyTeam = { ...fantasyTeam!, username: newUsername };
     showUsernameModal = false;
     saveFantasyTeam();
   }
@@ -188,7 +182,7 @@
       ...startingFantasyTeam,
       playerIds: Uint16Array.from(startingFantasyTeam.playerIds)
     };
-    teamValue.set(updateTeamValue(fantasyTeam));
+    teamValue = updateTeamValue(fantasyTeam);
     
     toasts.addToast({
       message: "Team reset successfully",

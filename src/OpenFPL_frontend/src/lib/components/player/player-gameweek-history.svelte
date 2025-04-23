@@ -23,7 +23,7 @@
   let selectedOpponent: Club | null = null;
   let selectedPlayerGameweek: PlayerGameweek | null = null;
   let showModal: boolean = false;
-  let seasonName = "";
+  let seasonName = $state("");
   let id = Number(page.url.searchParams.get("id"));
 
   onMount(async () => {
@@ -69,7 +69,7 @@
       visible={showModal}
       playerDetail={playerDetails}
       gameweek={selectedGameweek}
-      seasonName={seasonName};
+      {seasonName}
     />
     {/if}
   {/if}

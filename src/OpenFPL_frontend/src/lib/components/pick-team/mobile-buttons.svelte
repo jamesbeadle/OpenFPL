@@ -32,7 +32,7 @@
       <div class="flex flex-row ml-4" style="margin-top: 2px;">
         <button
           class={`btn ${
-            $pitchViewActive ? `fpl-button` : `inactive-btn`
+            pitchViewActive ? `fpl-button` : `inactive-btn`
           } rounded-l-md tab-switcher-label`}
           onclick={showPitchView}
         >
@@ -40,7 +40,7 @@
         </button>
         <button
           class={`btn ${
-            !$pitchViewActive ? `fpl-button` : `inactive-btn`
+            !pitchViewActive ? `fpl-button` : `inactive-btn`
           } rounded-r-md tab-switcher-label`}
           onclick={showListView}
         >
@@ -55,7 +55,7 @@
           class="w-full px-4 text-center xs:mb-1 border-sm fpl-dropdown"
           value={selectedFormation}
         >
-          {#each $availableFormations as formation}
+          {#each availableFormations as formation}
             <option value={formation}>{formation}</option>
           {/each}
         </select>
@@ -85,10 +85,10 @@
           </button>
         {/if}
         <button
-          disabled={!$isSaveButtonActive}
+          disabled={!isSaveButtonActive}
           onclick={saveFantasyTeam}
           class={`side-button-base ${
-            $isSaveButtonActive ? "bg-BrandPurple" : "bg-gray-500"
+            isSaveButtonActive ? "bg-BrandPurple" : "bg-gray-500"
           } text-white`}
         >
           Save
@@ -97,11 +97,11 @@
       {#if $leagueStore!.transferWindowActive && $leagueStore!.seasonActive && $leagueStore!.activeMonth == 1}
         <div class="flex flex-row mx-4 mb-4 space-x-1">
           <button
-            disabled={$transferWindowPlayed}
+            disabled={transferWindowPlayed}
             onclick={playTransferWindow}
             class={`btn w-full px-4 py-2 rounded  
               ${
-                !$transferWindowPlayed ? "bg-BrandPurple" : "bg-gray-500"
+                !transferWindowPlayed ? "bg-BrandPurple" : "bg-gray-500"
               } text-white min-w-[125px]`}
           >
             Use Transfer Window Bonus

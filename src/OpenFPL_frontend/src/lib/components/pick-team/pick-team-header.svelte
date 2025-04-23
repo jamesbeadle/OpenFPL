@@ -19,11 +19,11 @@
   let { fantasyTeam, teamValue }: Props = $props();
   
   let isLoading = true;
-  let activeSeason = "-";
-  let activeGameweek = 1;
-  let nextFixtureDate = "-";
-  let nextFixtureTime = "-";
-  let countdownTime: { days: number; hours: number; minutes: number; };
+  let activeSeason = $state("-");
+  let activeGameweek = $state(1);
+  let nextFixtureDate = $state("-");
+  let nextFixtureTime = $state("-");
+  let countdownTime: { days: number; hours: number; minutes: number; } = $state({days: 0, hours: 0, minutes: 0});
 
   onMount(async () => {
     console.log('team:')
@@ -34,9 +34,9 @@
     }
     activeGameweek = $leagueStore!.unplayedGameweek;
     if (fantasyTeam) {
-      teamValue.set(updateTeamValue(fantasyTeam));
+      teamValue = updateTeamValue(fantasyTeam);
     } else {
-      teamValue.set(0);
+      teamValue = 0;
     }
     setCountdownTimer();
     isLoading = false;
@@ -71,7 +71,7 @@
     <HeaderContentPanel header="Players" content={`${fantasyTeam?.playerIds.filter((x) => x > 0).length}/11`} footer="Selected" loading={false} />
   </ContentPanel>
   <ContentPanel>
-    <HeaderContentPanel header="Team Value" content={`£${$teamValue.toFixed(2)}m`} footer="GBP" loading={false} />
+    <HeaderContentPanel header="Team Value" content={`£${teamValue.toFixed(2)}m`} footer="GBP" loading={false} />
     <div class="vertical-divider"></div>
     <HeaderContentPanel header="Bank Balance" content={`£${(fantasyTeam ? fantasyTeam?.bankQuarterMillions  / 4 : 350).toFixed(2)}m`} footer="GBP" loading={false} />
     <div class="vertical-divider"></div>

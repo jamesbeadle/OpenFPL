@@ -27,7 +27,7 @@
       profilePicture = getProfilePictureString(manager);
       joinedDate = getDateFromBigInt(Number(manager.createDate));
 
-      $favouriteTeam = manager.favouriteClubId 
+      favouriteTeam = manager.favouriteClubId 
           ? $clubStore.find((x) => x.id == manager.favouriteClubId[0]) ?? null
           : null;
       isLoading = false;
@@ -49,7 +49,7 @@
     <ContentPanel>
       <HeaderContentPanel header="Leaderboards" content={`${manager.weeklyPosition} (${manager.weeklyPoints.toLocaleString()})`} footer="Weekly" loading={isLoading} />
       <div class="vertical-divider"></div>
-      <HeaderContentPanel header={$favouriteTeam?.friendlyName ?? "Not Entered"} content={`${manager.monthlyPosition} (${manager.monthlyPoints.toLocaleString()})`} footer="Club" loading={isLoading} />
+      <HeaderContentPanel header={favouriteTeam?.friendlyName ?? "Not Entered"} content={`${manager.monthlyPosition} (${manager.monthlyPoints.toLocaleString()})`} footer="Club" loading={isLoading} />
       <div class="vertical-divider"></div>
       <HeaderContentPanel header={selectedSeason} content={`${manager.seasonPosition} (${manager.seasonPoints.toLocaleString()})`} footer="Season" loading={isLoading} />
     </ContentPanel>

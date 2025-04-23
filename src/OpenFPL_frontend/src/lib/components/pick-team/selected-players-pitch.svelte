@@ -60,7 +60,7 @@
     src="/pitch.png"
     alt="pitch"
     class="w-full h-auto"
-    this={pitchElement}
+    bind:this={pitchElement}
     onload={onPitchLoad}
   />
   {#if canShowOverlay()}

@@ -23,20 +23,21 @@
   let { fantasyTeam, gridSetup, gameweekPlayers, selectedGameweek }: Props = $props();
   
   let pitchHeight = 0;
-  let pitchElement: HTMLImageElement | null = null;
-  let isLoading = true;
-  let favouriteTeam: Club | null = null;
-  
-  $effect(() => {
+  let pitchElement: HTMLImageElement | null = $state(null);
+  let isLoading = $state(true);
+  let favouriteTeam: Club | null = $state(null);
+  let rowHeight = $state(0);
 
+  $effect(() => {
+    rowHeight = (pitchHeight * 0.9) / 4;
+    gridSetup = getGridSetup( getTeamFormationReadOnly(fantasyTeam!, $playerStore));
   });
 
-  $: rowHeight = (pitchHeight * 0.9) / 4;
-  $: gridSetup = getGridSetup( getTeamFormationReadOnly(fantasyTeam!, $playerStore));
-
-  $: if (fantasyTeam || selectedGameweek > 0) {
-    updateGameweekPlayers();
-  }
+  $effect(() => {
+    if (fantasyTeam || selectedGameweek > 0) {
+      updateGameweekPlayers();
+    }
+  })
 
   onMount(async () => {
     if (!browser) return;
@@ -56,7 +57,7 @@ function measurePitch() {
 
 async function updateGameweekPlayers() {
   try {
-    if (!fantasyTeam) { gameweekPlayers.set([]); return; }
+    if (!fantasyTeam) { gameweekPlayers = []; return; }
 
     let favouriteClubId = fantasyTeam.favouriteClubId[0];
 
@@ -74,7 +75,7 @@ async function updateGameweekPlayers() {
     );
     calculateBonusPoints(fetchedPlayers, fantasyTeam);
     sortPlayersByPointsThenValue(fetchedPlayers);
-    gameweekPlayers.set(fetchedPlayers);
+    gameweekPlayers = fetchedPlayers;
   } catch (error) {
     toasts.addToast({ type: "error", message: "Error updating gameweek players." });
     console.error("Error updating gameweek players:", error);
@@ -92,7 +93,7 @@ async function updateGameweekPlayers() {
       src="/pitch.png" 
       alt="pitch" 
       class="w-full h-auto" 
-      this={pitchElement}
+      bind:this={pitchElement}
       onload={onPitchLoad} 
     />
     {#if isLoading}

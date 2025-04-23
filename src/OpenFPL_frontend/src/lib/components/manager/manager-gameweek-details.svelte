@@ -53,7 +53,7 @@
     let fetchedPlayers = await playerEventsStore.getGameweekPlayers(fantasyTeam!, $leagueStore?.activeSeasonId!, selectedGameweek!);
     calculateBonusPoints(fetchedPlayers, fantasyTeam!);
     sortPlayersByPointsThenValue(fetchedPlayers);
-    gameweekPlayers.set(fetchedPlayers);
+    gameweekPlayers = fetchedPlayers;
   }
 
   const changeGameweek = (delta: number) => {

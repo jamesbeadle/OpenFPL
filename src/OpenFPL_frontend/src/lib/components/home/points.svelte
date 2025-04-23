@@ -96,11 +96,11 @@
   {:else}
     {#if showModal}
       <FantasyPlayerDetailModal
-        playerTeam={selectedTeam}
-        opponentTeam={selectedOpponentTeam}
+        playerTeam={selectedTeam!}
+        opponentTeam={selectedOpponentTeam!}
         seasonName={activeSeasonName}
         visible={showModal}
-        gameweekData={selectedGameweekData}
+        gameweekData={selectedGameweekData!}
       />
     {/if}
     <div class="flex flex-col">

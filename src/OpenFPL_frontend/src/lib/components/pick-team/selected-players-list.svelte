@@ -73,7 +73,7 @@
               £{(player.valueQuarterMillions / 4).toFixed(2)}m
             </div>
             <div class="w-1/6 flex items-center">
-              {#if canSellPlayer || $sessionAddedPlayers.includes(player.id)}
+              {#if canSellPlayer || sessionAddedPlayers.includes(player.id)}
                 <button onclick={() => removePlayer(player.id)} class="bg-red-600 mb-1 rounded-sm">
                   <RemovePlayerIcon className="w-6 h-6 p-2" />
                 </button>

@@ -16,14 +16,14 @@
   let searchInput: string = $state("");
 
   function executeSearch() {
-    searchQuery.set(searchInput);
+    searchQuery = searchInput;
     currentPage = 1;
     onPageChange(1);
   }
 
   function resetSearch() {
     searchInput = "";
-    searchQuery.set("");
+    searchQuery = "";
     currentPage = 1;
     onPageChange(1);
   }

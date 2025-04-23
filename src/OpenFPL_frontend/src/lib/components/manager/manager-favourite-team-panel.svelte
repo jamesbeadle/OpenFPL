@@ -10,13 +10,13 @@
 </script>
 <div class="flex-grow">
     <p class="content-panel-header">Favourite Team</p>
-    {#if $favouriteTeam}
+    {#if favouriteTeam}
         <p class="flex items-center content-panel-stat">
-            <BadgeIcon className="w-7 mr-2" club={$favouriteTeam} />
-            {$favouriteTeam.abbreviatedName ?? "-"}
+            <BadgeIcon className="w-7 mr-2" club={favouriteTeam} />
+            {favouriteTeam.abbreviatedName ?? "-"}
         </p>
         <p class="content-panel-header">
-          {$favouriteTeam.name}
+          {favouriteTeam.name}
         </p>
     {:else}
         <p class="content-panel-header">
